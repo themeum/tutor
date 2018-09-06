@@ -156,14 +156,14 @@ class Post_types{
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'thumbnail', 'excerpt')
+			'supports'           => array( 'title', 'editor', 'thumbnail')
 		);
 
 		register_post_type( 'lesson', $args );
 
 
 
-
+/*
 
 		// Add new taxonomy, NOT hierarchical (like tags)
 		$labels = array(
@@ -230,7 +230,7 @@ class Post_types{
 		);
 
 		register_taxonomy( 'lesson-tag', 'lesson', $args );
-
+*/
 
 
 	}

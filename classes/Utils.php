@@ -251,4 +251,12 @@ class Utils {
 		echo '</pre>';
 	}
 
+	public function get_courses(){
+		global $wpdb;
+
+		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'course' ");
+
+		return $query;
+	}
+
 }

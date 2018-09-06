@@ -1,4 +1,4 @@
-<select name="lms_option[<?php echo $field['field_key']; ?>]">
+<select name="lms_option[<?php echo $field['field_key']; ?>]" class="select2">
     <?php
     if ( ! isset($field['select_options']) || $field['select_options'] !== false){
         echo '<option value="-1">'.__('Select Option', 'lms').'</option>';

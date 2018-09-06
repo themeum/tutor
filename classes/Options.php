@@ -62,8 +62,8 @@ class Options {
 	public function options_attr(){
 		$pages = lms_utils()->get_pages();
 
-		$course_base = lms_utils()->course_archive_page_url();
-		$lesson_url = $course_base.'sample-course/<code>lessons</code>/sample-lesson/';
+		//$course_base = lms_utils()->course_archive_page_url();
+		$lesson_url = site_url().'/course/'.'sample-course/<code>lessons</code>/sample-lesson/';
 
 		$student_url = lms_utils()->student_url();
 

@@ -1,6 +1,10 @@
 jQuery(document).ready(function($){
     'use strict';
 
+    if (jQuery().select2){
+        $('.select2').select2();
+    }
+
     /**
      * Option Settings Nav Tab
      */
@@ -56,8 +60,45 @@ jQuery(document).ready(function($){
                 $input.val(ui.value);
             }
         });
-    })
+    });
 
+
+    /**
+     * Course and lesson sorting
+     */
+
+    $( ".course-contents" ).sortable({
+        handle: ".course-move-handle",
+        start: function(e, ui){
+            ui.placeholder.css('visibility', 'visible');
+        },
+    });
+    $( ".lms-lessions" ).sortable({
+        connectWith: ".lms-lessions",
+        start: function(e, ui){
+            ui.placeholder.css('visibility', 'visible');
+        },
+        stop: function(e, ui){
+            var topics = {};
+
+            $('.lms-topics-wrap').each(function(index, item){
+                var $topic = $(this);
+                var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
+                var lessons = {};
+
+                $topic.find('.lms-lesson').each(function(lessonIndex, lessonItem){
+                    lessons[lessonIndex] = lessonIndex;
+                });
+
+                topics[topics_id] = lessons;
+            });
+
+            $('#lms_topics_lessons_sorting').val(JSON.stringify(topics));
+
+            console.log(JSON.stringify($('#lms_topics_lessons_sorting').val()));
+
+        },
+    });
 
 
 });

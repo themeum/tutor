@@ -18,6 +18,8 @@ class init{
 	private $post_types;
 	private $assets;
 	private $course;
+	private $lesson;
+	private $rewrite_rules;
 
 	function __construct() {
 		$this->path = plugin_dir_path(LMS_FILE);
@@ -34,6 +36,8 @@ class init{
 		$this->assets = new Assets();
 		$this->admin = new Admin();
 		$this->course = new Course();
+		$this->lesson = new Lesson();
+		$this->rewrite_rules = new Rewrite_Rules();
 	}
 	/**
 	 * @param $className
