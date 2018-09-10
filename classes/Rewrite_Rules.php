@@ -30,7 +30,7 @@ class Rewrite_Rules{
 	function change_lesson_single_url($post_link, $id=0){
 		$post = get_post($id);
 		if( is_object($post) && $post->post_type == 'lesson'){
-			$course_id = (int) get_post_meta(get_the_ID(), '_lms_attached_course_id', true);
+			$course_id = (int) get_post_meta(get_the_ID(), '_lms_course_id_for_lesson', true);
 			if ($course_id){
 				$course = get_post($course_id);
 				if ($course){

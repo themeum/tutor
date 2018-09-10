@@ -255,6 +255,61 @@ class Utils {
 		global $wpdb;
 
 		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'course' ");
+		return $query;
+	}
+
+	public function get_lesson($course_id = 0){
+		if (!$course_id){
+			return array();
+		}
+
+		$args = array(
+			'post_type'  => 'lesson',
+			'meta_query' => array(
+				array(
+					'key'     => '_lms_course_id_for_lesson',
+					'value'   => $course_id,
+					'compare' => '=',
+				),
+			),
+		);
+
+		$query = new \WP_Query($args);
+
+		return $query;
+
+	}
+
+	public function get_topics($course_id = 0){
+		if (!$course_id){
+			return array();
+		}
+
+		$args = array(
+			'post_type'  => 'topics',
+			'post_parent'  => $course_id,
+			'orderby' => 'menu_order',
+			'order'   => 'ASC',
+		);
+
+		$query = new \WP_Query($args);
+
+		return $query;
+	}
+
+	public function get_lessons_by_topic($topics_id = 0){
+		if (!$topics_id){
+			return array();
+		}
+
+		$args = array(
+			'post_type'  => 'lesson',
+			'post_parent'  => $topics_id,
+			'orderby' => 'menu_order',
+			'order'   => 'ASC',
+		);
+
+		$query = new \WP_Query($args);
 
 		return $query;
 	}

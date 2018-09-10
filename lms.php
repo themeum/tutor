@@ -22,12 +22,22 @@ if ( ! defined( 'ABSPATH' ) )
 define('LMS_VERSION', '1.0.0');
 define('LMS_FILE', __FILE__);
 
+function lms(){
+	$info = array(
+		'path' => plugin_dir_path(LMS_FILE),
+		'url' => plugin_dir_url(LMS_FILE),
+		'basename' => plugin_basename(LMS_FILE),
+		'version' => LMS_VERSION
+	);
+
+	return (object) $info;
+}
+
 include 'classes/init.php';
 
 function lms_utils(){
 	return new \LMS\Utils();
 }
-function lms(){
-	return new \LMS\init();
-}
-lms()->run(); //Boom
+
+$lms = new \LMS\init();
+$lms->run(); //Boom

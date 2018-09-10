@@ -11,14 +11,12 @@
             <option value=""><?php _e('Select a course'); ?></option>
 
 	        <?php
-            $course_id = get_post_meta(get_the_ID(), '_lms_attached_course_id', true);
+            $course_id = get_post_meta(get_the_ID(), '_lms_course_id_for_lesson', true);
 	        foreach ($courses as $course){
 		        echo "<option value='{$course->ID}' ".selected($course->ID, $course_id)." >{$course->post_title}</option>";
 	        }
 	        ?>
         </select>
-
-
 
         <p class="desc">
             <?php _e('Select the course to access this lesson on that course', 'lms'); ?>

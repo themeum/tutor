@@ -141,6 +141,11 @@ Course adding page
 #lms-course-topics .lms-lesson {
     padding: 10px;
 }
+#lms-course-topics .drop-lessons{
+    border: 1px dashed #dddddd;
+    padding: 10px 25px;
+    background-color: #f4f4f4;
+}
 #lms-course-topics .lms-lesson:hover{
     background-color: #EEEEEE;
 }
@@ -160,4 +165,17 @@ Course adding page
 }
 .lms-untopics-lessons{
     margin-top: 50px;
+}
+.lms-metabox-add-topics, .lms-topics-edit-form {
+    background: #f1f1f1;
+    padding: 20px;
+}
+.lms-metabox-add-topics .lms-option-field-row{
+    padding: 15px 0;
+}
+.lms-metabox-add-topics .lms-option-field-row:last-child, .lms-topics-edit-form .lms-option-field-row:last-child{
+    border-bottom: none;
+}
+.topic-edit-icon{
+    cursor: pointer;
 }

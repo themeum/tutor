@@ -72,32 +72,79 @@ jQuery(document).ready(function($){
         start: function(e, ui){
             ui.placeholder.css('visibility', 'visible');
         },
+        stop: function(e, ui){
+            lms_sorting_topics_and_lesson();
+        },
     });
-    $( ".lms-lessions" ).sortable({
+    $( ".lms-lessions:not(.drop-lessons)" ).sortable({
         connectWith: ".lms-lessions",
+        items: "div.lms-lesson",
         start: function(e, ui){
             ui.placeholder.css('visibility', 'visible');
         },
         stop: function(e, ui){
-            var topics = {};
-
-            $('.lms-topics-wrap').each(function(index, item){
-                var $topic = $(this);
-                var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
-                var lessons = {};
-
-                $topic.find('.lms-lesson').each(function(lessonIndex, lessonItem){
-                    lessons[lessonIndex] = lessonIndex;
-                });
-
-                topics[topics_id] = lessons;
-            });
-
-            $('#lms_topics_lessons_sorting').val(JSON.stringify(topics));
-
-            console.log(JSON.stringify($('#lms_topics_lessons_sorting').val()));
-
+            lms_sorting_topics_and_lesson();
         },
+    });
+
+    function lms_sorting_topics_and_lesson(){
+        var topics = {};
+        $('.lms-topics-wrap').each(function(index, item){
+            var $topic = $(this);
+            var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
+            var lessons = {};
+
+            $topic.find('.lms-lesson').each(function(lessonIndex, lessonItem){
+                var $lesson = $(this);
+                var lesson_id = parseInt($lesson.attr('id').match(/\d+/)[0], 10);
+
+                lessons[lessonIndex] = lesson_id;
+            });
+            topics[index] = { 'topic_id' : topics_id, 'lesson_ids' : lessons };
+
+            //Hide drop element
+            if ($topic.find('.lms-lesson').length){
+                $topic.find('.drop-lessons').hide();
+            }else{
+                $topic.find('.drop-lessons').show();
+            }
+
+        });
+        $('#lms_topics_lessons_sorting').val(JSON.stringify(topics));
+        //console.log(topics);
+    }
+
+    $(document).on('click', '.topic-edit-icon', function (e) {
+        e.preventDefault();
+        $(this).closest('.lms-topics-top').find('.lms-topics-edit-form').slideToggle();
+    });
+
+    $(document).on('click', '.lms-topics-edit-button', function(e){
+        e.preventDefault();
+        var $button = $(this);
+        var $topic = $button.closest('.lms-topics-wrap');
+        var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
+        var topic_title = $button.closest('.lms-topics-wrap').find('[name="topic_title"]').val();
+        var topic_summery = $button.closest('.lms-topics-wrap').find('[name="topic_summery"]').val();
+
+        var data = {topic_title: topic_title, topic_summery : topic_summery, topic_id : topics_id, action: 'lms_update_topic'};
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : data,
+            beforeSend: function () {
+                $button.addClass('updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+                    $button.closest('.lms-topics-wrap').find('span.topic-inner-title').text(topic_title);
+                    $button.closest('.lms-topics-wrap').find('.lms-topics-edit-form').slideUp();
+                }
+            },
+            complete: function () {
+                $button.removeClass('updating-message');
+            }
+        });
     });
 
 

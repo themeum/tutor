@@ -10,6 +10,16 @@ class Lesson {
 		add_action('save_post_lesson', array($this, 'save_lesson_meta'));
 
 		add_filter('get_sample_permalink', array($this, 'change_lesson_permalink'), 10, 2);
+
+		add_action('admin_init', array($this, 'flush_rewrite_rules'));
+
+		/**
+		 * Add Column
+		 */
+
+		add_filter( 'manage_lesson_posts_columns', array($this, 'add_column'), 10,1 );
+		add_action( 'manage_lesson_posts_custom_column' , array($this, 'custom_lesson_column'), 10, 2 );
+
 	}
 
 	/**
@@ -29,7 +39,7 @@ class Lesson {
 		}
 		$course_id = (int) sanitize_text_field($_POST['selected_course']);
 		if ($course_id){
-			update_post_meta($post_ID, '_lms_attached_course_id', $course_id);
+			update_post_meta($post_ID, '_lms_course_id_for_lesson', $course_id);
 		}
 	}
 
@@ -46,7 +56,7 @@ class Lesson {
 		$uri_base = trailingslashit(site_url());
 
 		$sample_course = "sample-course";
-		$is_course = get_post_meta(get_the_ID(), '_lms_attached_course_id', true);
+		$is_course = get_post_meta(get_the_ID(), '_lms_course_id_for_lesson', true);
 		if ($is_course){
 			$course = get_post($is_course);
 			$sample_course = $course->post_name;
@@ -56,6 +66,41 @@ class Lesson {
 		$uri[0] = $new_course_base;
 		return $uri;
 	}
+
+
+	public function flush_rewrite_rules(){
+		$is_required_flush = get_option('required_rewrite_flush');
+		if ($is_required_flush){
+			flush_rewrite_rules();
+		}
+	}
+
+
+	public function add_column($columns){
+		$date_col = $columns['date'];
+		unset($columns['date']);
+		$columns['course'] = __('Course', 'lms');
+		$columns['date'] = $date_col;
+
+		return $columns;
+	}
+
+	/**
+	 * @param $column
+	 * @param $post_id
+	 *
+	 */
+	public function custom_lesson_column($column, $post_id ){
+		if ($column === 'course'){
+
+			$course_id = get_post_meta($post_id, '_lms_course_id_for_lesson', true);
+			if ($course_id){
+				echo '<a href="'.admin_url('post.php?post='.$course_id.'&action=edit').'">'.get_the_title($course_id).'</a>';
+			}
+
+		}
+	}
+
 
 }
 
