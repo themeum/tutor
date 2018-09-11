@@ -22,6 +22,14 @@
                     <i class="dashicons dashicons-move course-move-handle"></i>
                     <span class="topic-inner-title"><?php echo $topic->post_title; ?></span>
                     <i class="dashicons dashicons-edit topic-edit-icon"></i>
+
+                    <span class="topic-delete-btn">
+                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?action=lms_delete_topic&topic_id='.$topic->ID), lms()->nonce_action, lms()->nonce); ?>" title="<?php _e('Delete Topic',
+                            'lms');
+                        ?>">
+                            <i class="dashicons dashicons-trash"></i>
+                        </a>
+                    </span>
                 </h3>
 
                 <div class="lms-topics-edit-form" style="display: none;">
@@ -56,7 +64,6 @@
                 </div>
 
             </div>
-
 
             <div class="lms-lessions">
 				<?php

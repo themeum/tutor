@@ -79,6 +79,18 @@ class Options {
 						'label' => __('General', 'lms'),
 						'desc' => __('General Settings', 'lms'),
 						'fields' => array(
+							'load_lms_css' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Load LMS default CSS', 'lms'),
+								'default'   => '1',
+								'desc'      => __('If theme has own styling, then you can turn it off to load CSS from the plugin directory', 'lms'),
+							),
+							'load_lms_js' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Load LMS default JavaScript', 'lms'),
+								'default'   => '1',
+								'desc'      => __('If theme has own styling, then you can turn it off to load JavaScript from the plugin directory', 'lms'),
+							),
 							'access_permission' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Access Permission', 'lms'),
@@ -144,6 +156,13 @@ class Options {
 								'default'   => '0',
 								'options'   => $pages,
 								'desc'      => __('This page will show students enrolled course', 'lms'),
+							),
+							'courses_col_per_row' => array(
+								'type'      => 'slider',
+								'label'     => __('Col per row', 'lms'),
+								'default'   => '4',
+								'options'   => array('min'=> 1, 'max' => 6),
+								'desc'      => __('Show col per row', 'lms'),
 							),
 							'courses_per_page' => array(
 								'type'      => 'slider',

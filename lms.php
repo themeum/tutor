@@ -27,7 +27,9 @@ function lms(){
 		'path' => plugin_dir_path(LMS_FILE),
 		'url' => plugin_dir_url(LMS_FILE),
 		'basename' => plugin_basename(LMS_FILE),
-		'version' => LMS_VERSION
+		'version' => LMS_VERSION,
+		'nonce_action' => 'lms_nonce_action',
+		'nonce' => '_wpnonce',
 	);
 
 	return (object) $info;

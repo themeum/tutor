@@ -8,6 +8,7 @@ class Assets{
 
 	public function __construct() {
 		add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
+		add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
 	}
 
 
@@ -21,6 +22,14 @@ class Assets{
 		wp_enqueue_script('jquery-ui-slider');
 		wp_enqueue_script('lms-select2', lms()->url.'assets/packages/select2/select2.min.js', array('jquery'), lms()->version, true );
 		wp_enqueue_script('lms-admin', lms()->url.'assets/js/lms-admin.js', array('jquery'), lms()->version, true );
+	}
+
+	/**
+	 * Load frontend scripts
+	 */
+	public function frontend_scripts(){
+		wp_enqueue_style('lms-frontend', lms()->url.'assets/css/lms-front.css', array(), lms()->version);
+
 	}
 
 

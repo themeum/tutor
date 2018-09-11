@@ -179,3 +179,18 @@ Course adding page
 .topic-edit-icon{
     cursor: pointer;
 }
+.topic-delete-btn{
+    float: right;
+}
+
+.topic-delete-btn a{
+    display: block;
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    padding: 6px;
+    border-radius: 50%;
+}
+.topic-delete-btn a:hover {
+    color: #ffffff;
+    background-color: #ff0000;
+}

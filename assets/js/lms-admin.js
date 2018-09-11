@@ -147,6 +147,15 @@ jQuery(document).ready(function($){
         });
     });
 
+    /**
+     * Confirmation for deleting Topic
+     */
+    $(document).on('click', '.topic-delete-btn a', function(e){
+        if ( ! confirm('Are you sure to delete?')){
+            e.preventDefault();
+        }
+    })
+
 
 });
 

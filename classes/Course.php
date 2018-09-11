@@ -14,6 +14,7 @@ class Course {
 		add_filter( 'manage_course_posts_columns', array($this, 'add_column'), 10,1 );
 		add_action( 'manage_course_posts_custom_column' , array($this, 'custom_lesson_column'), 10, 2 );
 
+		add_action('admin_action_lms_delete_topic', array($this, 'lms_delete_topic'));
 	}
 
 	/**
@@ -161,6 +162,36 @@ class Course {
 			echo $count_lesson;
 		}
 	}
+
+
+	public function lms_delete_topic(){
+		if (!isset($_GET[lms()->nonce]) || !wp_verify_nonce($_GET[lms()->nonce], lms()->nonce_action)) {
+			exit();
+		}
+		if ( ! isset($_GET['topic_id'])){
+			exit();
+		}
+
+		global $wpdb;
+
+		$topic_id = (int) sanitize_text_field($_GET['topic_id']);
+		$wpdb->update(
+			$wpdb->posts,
+			array('post_parent' => 0),
+			array('post_parent' => $topic_id)
+		);
+
+		$wpdb->delete(
+			$wpdb->postmeta,
+			array('post_id' => $topic_id)
+		);
+
+		wp_delete_post($topic_id);
+
+		wp_safe_redirect(wp_get_referer());
+
+	}
+
 
 }
 

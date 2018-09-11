@@ -1,0 +1,35 @@
+div[class*="lms-course-col"] {
+    background: #fff;
+    color: #29303b;
+    display: inline-block;
+    font-size: small;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 1px 1px rgba(20,23,28,.1),0 3px 1px 0 rgba(20,23,28,.1);
+    vertical-align: top;
+}
+.lms-course-col-4{
+    width: 24%;
+}
+.lms-course-loop-title {
+    padding: 10px;
+}
+.lms-course-loop-title h2{
+    font-size: 1rem;
+}
+.lms-course-filter-wrap{
+    clear: both;
+    margin-bottom: 20px;
+}
+.lms-course-archive-results-wrap{
+    float: left;
+    width: 45%;
+}
+.lms-course-archive-filters-wrap{
+    float: right;
+    width: 45%;
+    text-align: right;
+}
+.lms-courses{
+    clear: both;
+}

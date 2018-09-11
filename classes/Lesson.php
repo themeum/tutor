@@ -53,17 +53,22 @@ class Lesson {
 	 */
 
 	public function change_lesson_permalink($uri, $lesson_id){
-		$uri_base = trailingslashit(site_url());
+		$post = get_post($lesson_id);
 
-		$sample_course = "sample-course";
-		$is_course = get_post_meta(get_the_ID(), '_lms_course_id_for_lesson', true);
-		if ($is_course){
-			$course = get_post($is_course);
-			$sample_course = $course->post_name;
+		if ($post && $post->post_type === 'lesson'){
+			$uri_base = trailingslashit(site_url());
+
+			$sample_course = "sample-course";
+			$is_course = get_post_meta(get_the_ID(), '_lms_course_id_for_lesson', true);
+			if ($is_course){
+				$course = get_post($is_course);
+				$sample_course = $course->post_name;
+			}
+
+			$new_course_base = $uri_base."course/{$sample_course}/lesson/%pagename%/";
+			$uri[0] = $new_course_base;
 		}
 
-		$new_course_base = $uri_base."course/{$sample_course}/lesson/%pagename%/";
-		$uri[0] = $new_course_base;
 		return $uri;
 	}
 
