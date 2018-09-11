@@ -10,6 +10,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$courseCols = lms_utils()->get_option( 'courses_col_per_row', 4 );
+
 ?>
 
-<div class="lms-courses lms-courses-loop-wrap">
+<div class="lms-courses lms-courses-loop-wrap lms-courses-layout-<?php echo $courseCols; ?>">
