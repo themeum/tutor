@@ -7,6 +7,16 @@ if ( ! defined( 'ABSPATH' ) )
 
 class Utils {
 
+	/**
+	 * @param null $key
+	 * @param bool $default
+	 *
+	 * @return array|bool|mixed
+	 *
+	 * Get option data
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_option($key = null, $default = false){
 		$option = (array) maybe_unserialize(get_option('lms_option'));
 
@@ -39,6 +49,18 @@ class Utils {
 		return $default;
 	}
 
+	/**
+	 * @param null $key
+	 * @param array $array
+	 *
+	 * @return array|bool|mixed
+	 *
+	 * get array value by dot notation
+	 *
+	 * @since v.1.0.0
+	 *
+	 */
+
 	public function avalue_dot($key = null, $array = array()){
 		if ( ! $key || ! is_array($array) || ! count($array) ){
 			return false;
@@ -56,6 +78,11 @@ class Utils {
 		return $value;
 	}
 
+	/**
+	 * @return array
+	 *
+	 * Get all pages
+	 */
 	public function get_pages(){
 		$pages = array();
 		$wp_pages = get_pages();
@@ -67,6 +94,11 @@ class Utils {
 		return $pages;
 	}
 
+	/**
+	 * @return string
+	 *
+	 * Get course archive URL
+	 */
 	public function course_archive_page_url(){
 		$course_page_url = trailingslashit(site_url()).'course';
 
@@ -77,6 +109,14 @@ class Utils {
 		}
 		return trailingslashit($course_page_url);
 	}
+
+	/**
+	 * @param int $student_id
+	 *
+	 * @return string
+	 *
+	 * Get student URL
+	 */
 
 	public function student_url($student_id = 0){
 		$site_url = trailingslashit(site_url()).'student/';
@@ -99,10 +139,21 @@ class Utils {
 
 	}
 
+	/**
+	 * @return bool
+	 *
+	 * Check if WooCommerce Activated
+	 */
+
 	public function has_wc(){
 		return class_exists( 'woocommerce' );
 	}
 
+	/**
+	 * @return mixed
+	 *
+	 *
+	 */
 	public function languages(){
 		$language_codes = array(
 			'en' => 'English' ,
@@ -258,9 +309,23 @@ class Utils {
 		return $query;
 	}
 
+	public function get_course_count(){
+		global $wpdb;
+
+		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'course'; ");
+		return $count;
+	}
+
+	public function get_lesson_count(){
+		global $wpdb;
+
+		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'lesson'; ");
+		return $count;
+	}
+
 	public function get_lesson($course_id = 0){
 		if (!$course_id){
-			return array();
+			$course_id = get_the_ID();
 		}
 
 		$args = array(
@@ -282,7 +347,7 @@ class Utils {
 
 	public function get_topics($course_id = 0){
 		if (!$course_id){
-			return array();
+			$course_id = get_the_ID();
 		}
 
 		$args = array(
@@ -299,7 +364,7 @@ class Utils {
 
 	public function get_lessons_by_topic($topics_id = 0){
 		if (!$topics_id){
-			return array();
+			$topics_id = get_the_ID();
 		}
 
 		$args = array(
@@ -313,5 +378,7 @@ class Utils {
 
 		return $query;
 	}
+
+
 
 }

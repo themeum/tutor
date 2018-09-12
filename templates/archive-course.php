@@ -28,9 +28,7 @@ get_header(); ?>
 				 */
 				do_action('lms_course/archive/before_loop_course');
 
-
 				lms_load_template('loop.course');
-
 
 				/**
 				 * @hook lms_course/archive/after_loop_course

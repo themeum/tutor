@@ -33,3 +33,56 @@ div[class*="lms-course-col"] {
 .lms-courses{
     clear: both;
 }
+.lms-loop-author{
+    padding: 0 10px;
+    color: #BBBBBB;
+}
+.lms-full-width-course-top{
+    background-color: #505763;
+    padding: 50px 0;
+    color: #ffffff;
+}
+.lms-course-benefits-wrap {
+    margin: 20px 0;
+    background-color: #f9f9f9;
+    border: 1px solid #dedfe0;
+    padding: 10px 15px;
+}
+
+ul.lms-course-benefits-items{
+    list-style: none;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+ul.lms-course-benefits-items li{
+    width: 45%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+/**
+Topics
+ */
+
+.lms-course-topics-header{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+.lms-course-topics-header-left, .lms-course-topics-header-right{
+    display: flex;
+    width: 45%;
+}
+.lms-course-topics-header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+    padding-right: 30px;
+    width: 50%;
+}
+.lms-course-topics-contents .lms-course-lessons{
+    margin-left: 30px;
+}

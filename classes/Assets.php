@@ -30,6 +30,8 @@ class Assets{
 	public function frontend_scripts(){
 		wp_enqueue_style('lms-frontend', lms()->url.'assets/css/lms-front.css', array(), lms()->version);
 
+		wp_enqueue_script('lms-frontend', lms()->url.'assets/js/lms-front.js', array('jquery'), lms()->version, true );
+
 	}
 
 

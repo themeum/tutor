@@ -1,5 +1,8 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) )
+	exit;
+
 /**
  * @param null $template
  *
@@ -115,8 +118,9 @@ if( ! function_exists('lms_course_loop_wrap_classes')) {
 
 if ( ! function_exists('lms_container_classes')) {
 	function lms_container_classes( $echo = true ) {
+
 		$classes = apply_filters( 'lms_container_classes', array(
-			'lms-courses-wrap',
+			'lms-wrap lms-courses-wrap',
 			'wrap',
 		) );
 
@@ -127,6 +131,16 @@ if ( ! function_exists('lms_container_classes')) {
 		}
 
 		return $class;
+	}
+}
+if ( ! function_exists('lms_post_class')) {
+	function lms_post_class() {
+		$classes = apply_filters( 'lms_post_class', array(
+			'lms-wrap',
+			'wrap',
+		) );
+
+		post_class( $classes );
 	}
 }
 
@@ -140,3 +154,114 @@ if ( ! function_exists('lms_course_archive_filter_bar')) {
 	}
 }
 
+/**
+ * Get the post thumbnail
+ */
+if ( ! function_exists('get_lms_course_thumbnail')) {
+	function get_lms_course_thumbnail() {
+		$post_id           = get_the_ID();
+		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
+
+		if ( $post_thumbnail_id ) {
+			$size = 'post-thumbnail';
+			$size = apply_filters( 'post_thumbnail_size', $size, $post_id );
+			$html = wp_get_attachment_image( $post_thumbnail_id, $size, false );
+		} else {
+			$placeHolderUrl = lms()->url . 'assets/images/placeholder.jpg';
+			$html = '<img src="' . $placeHolderUrl . '" />';
+		}
+
+		echo $html;
+	}
+}
+
+function lms_course_loop_author(){
+	ob_start();
+	lms_load_template( 'loop.course-author' );
+	$output = apply_filters( 'lms_course_archive_filter_bar', ob_get_clean() );
+
+	echo $output;
+}
+
+/**
+ * @param int $post_id
+ *
+ * echo the excerpt of LMS post type
+ */
+if ( ! function_exists('lms_the_excerpt')) {
+	function lms_the_excerpt( $post_id = 0 ) {
+		if ( ! $post_id ) {
+			$post_id = get_the_ID();
+		}
+		echo lms_get_the_excerpt( $post_id );
+	}
+}
+/**
+ * @param int $post_id
+ *
+ * @return mixed
+ *
+ * Return excerpt of LMS post type
+ */
+if ( ! function_exists('lms_get_the_excerpt')) {
+	function lms_get_the_excerpt( $post_id = 0 ) {
+		if ( ! $post_id ) {
+			$post_id = get_the_ID();
+		}
+
+		return apply_filters( 'lms_get_the_excerpt', get_the_excerpt( $post_id ) );
+	}
+}
+
+/**
+ * @return mixed
+ *
+ * return course author
+ */
+
+if ( ! function_exists('get_lms_course_author')) {
+	function get_lms_course_author() {
+		global $post;
+
+		return apply_filters( 'get_lms_course_author', get_the_author_meta( 'display_name', $post->post_author ) );
+	}
+}
+
+if ( ! function_exists('lms_course_benefits')) {
+	function lms_course_benefits( $course_id = 0 ) {
+		if ( ! $course_id ) {
+			$course_id = get_the_ID();
+		}
+
+		$benefits = get_post_meta( $course_id, '_lms_course_benefits', true );
+
+		return apply_filters( 'lms_course_benefits', $benefits );
+	}
+}
+
+if ( ! function_exists('lms_course_benefits_html')) {
+	function lms_course_benefits_html($echo = true) {
+		ob_start();
+		lms_load_template( 'single.course-benefits' );
+		$output = apply_filters( 'lms_course_benefits_html', ob_get_clean() );
+
+		if ($echo){
+			echo $output;
+		}
+		return $output;
+	}
+}
+
+if ( ! function_exists('lms_course_topics')) {
+	function lms_course_topics( $echo = true ) {
+		ob_start();
+		lms_load_template( 'single.course-topics' );
+		$output = apply_filters( 'lms_course_topics', ob_get_clean() );
+
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+}

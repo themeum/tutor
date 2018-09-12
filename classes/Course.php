@@ -21,6 +21,7 @@ class Course {
 	 * Registering metabox
 	 */
 	public function register_meta_box(){
+		add_meta_box( 'lms-course-benefits', __( 'What will i learn', 'lms' ), array($this, 'course_benefits_meta_box'), 'course' );
 		add_meta_box( 'lms-course-topics', __( 'Topics', 'lms' ), array($this, 'course_meta_box'), 'course' );
 	}
 
@@ -28,6 +29,9 @@ class Course {
 		include  lms()->path.'views/metabox/course-topics.php';
 	}
 
+	public function course_benefits_meta_box(){
+		include  lms()->path.'views/metabox/course-benefits.php';
+	}
 
 	/**
 	 * @param $post_ID
@@ -55,6 +59,10 @@ class Course {
 		}
 
 
+		if ( ! empty($_POST['course_benefits'])){
+			$course_benefits = wp_kses_post($_POST['course_benefits']);
+			update_post_meta($post_ID, '_lms_course_benefits', $course_benefits);
+		}
 
 		/**
 		 * Sorting Topics and lesson

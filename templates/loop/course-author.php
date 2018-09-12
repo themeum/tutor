@@ -9,4 +9,6 @@
  */
 ?>
 
-<a href="<?php the_permalink(); ?>"> <?php get_lms_course_thumbnail(); ?> </a>
+<div class="lms-loop-author">
+    <p><?php echo get_the_author(); ?></p>
+</div>
