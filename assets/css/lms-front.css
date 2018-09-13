@@ -86,3 +86,10 @@ Topics
 .lms-course-topics-contents .lms-course-lessons{
     margin-left: 30px;
 }
+.lms-wrap .lms-single-course-segment{
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+.lms-course-enroll-wrap{
+    padding: 20px 0;
+}

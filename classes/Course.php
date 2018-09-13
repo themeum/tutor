@@ -15,13 +15,17 @@ class Course {
 		add_action( 'manage_course_posts_custom_column' , array($this, 'custom_lesson_column'), 10, 2 );
 
 		add_action('admin_action_lms_delete_topic', array($this, 'lms_delete_topic'));
+
+
+		//Frontend Action
+		add_action('template_redirect', array($this, 'enroll_now'));
 	}
 
 	/**
 	 * Registering metabox
 	 */
 	public function register_meta_box(){
-		add_meta_box( 'lms-course-benefits', __( 'What will i learn', 'lms' ), array($this, 'course_benefits_meta_box'), 'course' );
+		add_meta_box( 'lms-course-additional-data', __( 'Additional Data', 'lms' ), array($this, 'course_additional_data_meta_box'), 'course' );
 		add_meta_box( 'lms-course-topics', __( 'Topics', 'lms' ), array($this, 'course_meta_box'), 'course' );
 	}
 
@@ -29,8 +33,8 @@ class Course {
 		include  lms()->path.'views/metabox/course-topics.php';
 	}
 
-	public function course_benefits_meta_box(){
-		include  lms()->path.'views/metabox/course-benefits.php';
+	public function course_additional_data_meta_box(){
+		include  lms()->path.'views/metabox/course-additional-data.php';
 	}
 
 	/**
@@ -62,6 +66,16 @@ class Course {
 		if ( ! empty($_POST['course_benefits'])){
 			$course_benefits = wp_kses_post($_POST['course_benefits']);
 			update_post_meta($post_ID, '_lms_course_benefits', $course_benefits);
+		}
+
+		if ( ! empty($_POST['course_requirements'])){
+			$requirements = wp_kses_post($_POST['course_requirements']);
+			update_post_meta($post_ID, '_lms_course_requirements', $requirements);
+		}
+
+		if ( ! empty($_POST['course_target_audience'])){
+			$target_audience = wp_kses_post($_POST['course_target_audience']);
+			update_post_meta($post_ID, '_lms_course_target_audience', $target_audience);
 		}
 
 		/**
@@ -198,6 +212,86 @@ class Course {
 
 		wp_safe_redirect(wp_get_referer());
 
+	}
+
+	public function enroll_now(){
+		//Checking if action comes from Enroll form
+		if ( ! isset($_POST['lms_course_action']) || $_POST['lms_course_action'] !== '_lms_course_enroll_now' || ! isset($_POST['lms_course_id']) ){
+			return;
+		}
+		//Checking Nonce
+		lms_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
+		if ( ! $user_id){
+			exit(__('Please Sign In first', 'lms'));
+		}
+
+		$course_id = (int) sanitize_text_field($_POST['lms_course_id']);
+		$user_id = get_current_user_id();
+
+		/**
+		 * TODO: need to check purchase information
+		 */
+
+
+		$is_purchasable = lms_utils()->is_course_purchasable($course_id);
+
+		/**
+		 * If is is not purchasable, it's free, and enroll right now
+		 *
+		 * if purchasable, then process purchase.
+		 *
+		 * @since: v.1.0.0
+		 */
+		if ($is_purchasable){
+			//process purchase
+
+		}else{
+			//Free enroll
+			$this->do_enroll($course_id);
+		}
+
+
+		$referer_url = wp_get_referer();
+		wp_redirect($referer_url);
+	}
+
+
+
+	/**
+	 * Saving enroll information to posts table
+	 * post_author = enrolled_student_id (wp_users id)
+	 * post_parent = enrolled course id
+	 *
+	 * @type: call when need
+	 * @return bool;
+	 */
+	public function do_enroll($course_id = 0){
+		if ( ! $course_id){
+			return false;
+		}
+		$user_id = get_current_user_id();
+
+		$title = __('Course Enrolled', 'lms')." &ndash; ".date_i18n(get_option('date_format')) .' @ '.date_i18n(get_option('time_format') ) ;
+		$enroll_data = array(
+			'post_type'     => 'lms_enrolled',
+			'post_title'    => $title,
+			'post_status'   => 'enrolled',
+			'post_author'   => $user_id,
+			'post_parent'   => $course_id,
+		);
+
+		// Insert the post into the database
+		$isEnrolled = wp_insert_post( $enroll_data );
+		if ($isEnrolled) {
+			//Mark Current User as Students with user meta data
+			update_user_meta( $user_id, '_is_lms_student', time() );
+
+			return true;
+		}
+
+		return false;
 	}
 
 

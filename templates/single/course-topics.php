@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 ?>
 
-<div class="lms-course-topics-wrap">
+<div class="lms-single-course-segment  lms-course-topics-wrap">
 
 	<div class="lms-course-topics-header">
 		<div class="lms-course-topics-header-left">

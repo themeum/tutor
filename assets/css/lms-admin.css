@@ -182,7 +182,9 @@ Course adding page
 .topic-delete-btn{
     float: right;
 }
-
+.text-muted{
+    color: #cccccc;
+}
 .topic-delete-btn a{
     display: block;
     border: 1px solid #ff0000;

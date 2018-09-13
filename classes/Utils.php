@@ -379,6 +379,92 @@ class Utils {
 		return $query;
 	}
 
+	public function checking_nonce($request_method = 'post'){
+		if ($request_method === 'post'){
+			if (!isset($_POST[lms()->nonce]) || !wp_verify_nonce($_POST[lms()->nonce], lms()->nonce_action)) {
+				exit();
+			}
+		}else{
+			if (!isset($_GET[lms()->nonce]) || !wp_verify_nonce($_GET[lms()->nonce], lms()->nonce_action)) {
+				exit();
+			}
+		}
+	}
 
+	/**
+	 * @param int $course_id
+	 *
+	 * @return bool
+	 */
+	public function is_course_purchasable($course_id = 0){
+		if ( ! $this->has_wc()){
+			return false;
+		}
+		if ( ! $course_id){
+			$course_id = get_the_ID();
+		}
+		if ( ! $course_id){
+			return false;
+		}
+		$has_product_id = get_post_meta($course_id, '_product_id', true);
+		if ($has_product_id){
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param int $course_id
+	 *
+	 * @return bool
+	 *
+	 * Check if current user has been enrolled or not
+	 */
+	public function is_enrolled($course_id = 0, $user_id = 0){
+		if ( ! $course_id){
+			$course_id = get_the_ID();
+			if ( ! $course_id){
+				return false;
+			}
+		}
+
+		if ( ! $user_id){
+			$user_id = get_current_user_id();
+			if ( ! $user_id){
+				return false;
+			}
+		}
+
+		global $wpdb;
+
+		$getEnrolledInfo = (bool) $wpdb->get_var("select count(ID) from {$wpdb->posts} WHERE post_type = 'lms_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} ");
+
+		return $getEnrolledInfo;
+	}
+
+	public function start_course_url($course_id = 0){
+		if ( ! $course_id){
+			$course_id = get_the_ID();
+			if ( ! $course_id){
+				return false;
+			}
+		}
+		global $wpdb;
+
+		$lessons = $wpdb->get_col(" select {$wpdb->postmeta}.post_id from {$wpdb->postmeta} WHERE  meta_key = '_lms_course_id_for_lesson' AND meta_value = {$course_id};");
+
+		if ( ! empty($lessons)){
+			$lessons = implode(',', $lessons);
+
+			$lesson_id = $wpdb->get_var("select {$wpdb->posts}.ID from {$wpdb->posts} WHERE post_type = 'lesson' AND ID in($lessons) ORDER BY menu_order ASC limit 1 ; ");
+
+			if ($lesson_id){
+				return get_permalink($lesson_id);
+			}
+		}
+
+		return false;
+	}
 
 }
