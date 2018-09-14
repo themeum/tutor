@@ -93,3 +93,42 @@ Topics
 .lms-course-enroll-wrap{
     padding: 20px 0;
 }
+.lms-wrap .lms-course-enrolled-wrap{
+    background: #ecffec;
+    padding: 20px;
+    border: 1px solid #b7d6b7;
+}
+.lms-wrap .lms-notice-warning{
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    padding: 20px;
+}
+a.lms-button{
+    background-color: #333333;
+    color: #ffffff;
+    display: inline-block;
+    padding: 10px 20px;
+}
+a.lms-button:hover {
+    color: #eeeeee;
+}
+.course-enrolled-nav-wrap{
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #dedfe0;
+    margin-top: 10px;
+}
+.lms-wrap nav.course-enrolled-nav ul{
+    list-style: none;
+    margin: 0;
+}
+.lms-wrap nav.course-enrolled-nav ul li{
+    display: inline-block;
+}
+.lms-wrap nav.course-enrolled-nav ul li a{
+    padding: 10px 15px;
+    display: block;
+}
+.lms-wrap nav.course-enrolled-nav ul li.active a{
+    background-color: #333333;
+    color: #ffffff;
+}

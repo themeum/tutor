@@ -8,8 +8,8 @@
  * @url https://themeum.com
  */
 
+global $post;
 $content = get_the_content();
-
 if ( empty($content)){
 	return;
 }

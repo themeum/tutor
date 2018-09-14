@@ -417,10 +417,11 @@ class Utils {
 	/**
 	 * @param int $course_id
 	 *
-	 * @return bool
+	 * @return array|bool|null|object|void
 	 *
 	 * Check if current user has been enrolled or not
 	 */
+
 	public function is_enrolled($course_id = 0, $user_id = 0){
 		if ( ! $course_id){
 			$course_id = get_the_ID();
@@ -438,12 +439,73 @@ class Utils {
 
 		global $wpdb;
 
-		$getEnrolledInfo = (bool) $wpdb->get_var("select count(ID) from {$wpdb->posts} WHERE post_type = 'lms_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} ");
+		$getEnrolledInfo = $wpdb->get_row("select ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'lms_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} ");
 
-		return $getEnrolledInfo;
+		if ($getEnrolledInfo){
+			return $getEnrolledInfo;
+		}
+
+		return false;
 	}
 
-	public function start_course_url($course_id = 0){
+	/**
+	 * @param int $lesson_id
+	 * @param int $user_id
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Get the course Enrolled confirmation by lesson ID
+	 *
+	 * @since v.1.0.0
+	 */
+
+	public function is_course_enrolled_by_lesson($lesson_id = 0, $user_id = 0){
+		if ( ! $lesson_id){
+			$lesson_id = get_the_ID();
+			if ( ! $lesson_id){
+				return false;
+			}
+		}
+
+		if ( ! $user_id){
+			$user_id = get_current_user_id();
+			if ( ! $user_id){
+				return false;
+			}
+		}
+
+		return $this->is_enrolled($this->get_course_id_by_lesson($lesson_id));
+	}
+
+	/**
+	 * @param int $lesson_id
+	 *
+	 * @return bool|mixed
+	 *
+	 * Get the course ID by Lesson
+	 *
+	 * @since v.1.0.0
+	 */
+	public function get_course_id_by_lesson($lesson_id = 0){
+		if ( ! $lesson_id){
+			$lesson_id = get_the_ID();
+			if ( ! $lesson_id){
+				return false;
+			}
+		}
+		return get_post_meta($lesson_id, '_lms_course_id_for_lesson', true);
+	}
+
+	/**
+	 * @param int $course_id
+	 *
+	 * @return bool|false|string
+	 *
+	 * Get first lesson of a course
+	 *
+	 * @since v.1.0.0
+	 */
+	public function get_course_first_lesson($course_id = 0){
 		if ( ! $course_id){
 			$course_id = get_the_ID();
 			if ( ! $course_id){
@@ -452,19 +514,31 @@ class Utils {
 		}
 		global $wpdb;
 
-		$lessons = $wpdb->get_col(" select {$wpdb->postmeta}.post_id from {$wpdb->postmeta} WHERE  meta_key = '_lms_course_id_for_lesson' AND meta_value = {$course_id};");
+		$lessons = $wpdb->get_var(" select main_posts.ID from {$wpdb->posts} main_posts 
+					WHERE  post_parent = 
+					(SELECT sub_posts.ID FROM {$wpdb->posts} sub_posts 
+					WHERE post_type = 'topics' AND 
+					sub_posts.post_parent = {$course_id} ORDER BY sub_posts.menu_order ASC LIMIT 1 )  
+					ORDER BY main_posts.menu_order ASC LIMIT 1 ;");
 
-		if ( ! empty($lessons)){
-			$lessons = implode(',', $lessons);
-
-			$lesson_id = $wpdb->get_var("select {$wpdb->posts}.ID from {$wpdb->posts} WHERE post_type = 'lesson' AND ID in($lessons) ORDER BY menu_order ASC limit 1 ; ");
-
-			if ($lesson_id){
-				return get_permalink($lesson_id);
-			}
+		if ($lessons){
+			return get_permalink($lessons);
 		}
 
 		return false;
 	}
+
+
+	public function course_sub_pages(){
+		$nav_items = array(
+			'overview' => __('Overview', 'lms'),
+			'content' => __('Content', 'lms'),
+			'questions' => __('Questions', 'lms'),
+			'announcements' => __('Announcements', 'lms'),
+		);
+
+		return apply_filters('lms_course/single/enrolled/nav_items', $nav_items);
+	}
+
 
 }

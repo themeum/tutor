@@ -23,7 +23,6 @@ if ( ! function_exists('lms_get_template')) {
 		$template_location = trailingslashit( get_template_directory() ) . "lms/{$template}.php";
 		if ( ! file_exists( $template_location ) ) {
 			$template_location = trailingslashit( lms()->path ) . "templates/{$template}.php";
-
 		}
 
 		return $template_location;
@@ -288,7 +287,7 @@ if ( ! function_exists('lms_course_benefits')) {
 if ( ! function_exists('lms_course_benefits_html')) {
 	function lms_course_benefits_html($echo = true) {
 		ob_start();
-		lms_load_template( 'single.course-benefits' );
+		lms_load_template( 'single.course.course-benefits' );
 		$output = apply_filters( 'lms_course/single/benefits_html', ob_get_clean() );
 
 		if ($echo){
@@ -310,7 +309,7 @@ if ( ! function_exists('lms_course_benefits_html')) {
 if ( ! function_exists('lms_course_topics')) {
 	function lms_course_topics( $echo = true ) {
 		ob_start();
-		lms_load_template( 'single.course-topics' );
+		lms_load_template( 'single.course.course-topics' );
 		$output = apply_filters( 'lms_course/single/topics', ob_get_clean() );
 		wp_reset_postdata();
 
@@ -360,7 +359,7 @@ if ( ! function_exists('lms_course_requirements')) {
 if ( ! function_exists('lms_course_requirements_html')) {
 	function lms_course_requirements_html($echo = true) {
 		ob_start();
-		lms_load_template( 'single.course-requirements' );
+		lms_load_template( 'single.course.course-requirements' );
 		$output = apply_filters( 'lms_course/single/requirements_html', ob_get_clean() );
 
 		if ($echo){
@@ -409,7 +408,7 @@ if ( ! function_exists('lms_course_target_audience')) {
 if ( ! function_exists('lms_course_target_audience_html')) {
 	function lms_course_target_audience_html($echo = true) {
 		ob_start();
-		lms_load_template( 'single.course-target-audience' );
+		lms_load_template( 'single.course.course-target-audience' );
 		$output = apply_filters( 'lms_course/single/audience_html', ob_get_clean() );
 
 		if ($echo){
@@ -431,7 +430,7 @@ if ( ! function_exists('lms_course_target_audience_html')) {
 if ( ! function_exists('lms_course_content')) {
 	function lms_course_content( $echo = true ) {
 		ob_start();
-		lms_load_template( 'single.course-content' );
+		lms_load_template( 'single.course.course-content' );
 		$output = apply_filters( 'lms_course/single/content', ob_get_clean() );
 
 		if ( $echo ) {
@@ -450,7 +449,7 @@ if ( ! function_exists('lms_course_content')) {
 if ( ! function_exists('lms_course_lead_info')) {
 	function lms_course_lead_info( $echo = true ) {
 		ob_start();
-		lms_load_template( 'single.lead-info' );
+		lms_load_template( 'single.course.lead-info' );
 		$output = apply_filters( 'lms_course/single/lead_info', ob_get_clean() );
 
 		if ( $echo ) {
@@ -460,6 +459,21 @@ if ( ! function_exists('lms_course_lead_info')) {
 		return $output;
 	}
 }
+
+
+function lms_course_enrolled_lead_info( $echo = true){
+
+	ob_start();
+	lms_load_template( 'single.course.enrolled.lead-info' );
+	$output = apply_filters( 'lms_course/single/enrolled/lead_info', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
+
+	return $output;
+}
+
 /**
  * @param bool $echo
  *
@@ -480,7 +494,7 @@ if ( ! function_exists('lms_course_enroll_box')) {
 
 		if ($isLoggedIn) {
 			if ( $enrolled ) {
-				lms_load_template( 'single.course-enrolled' );
+				lms_load_template( 'single.course.course-enrolled' );
 				$output = apply_filters( 'lms_course/single/enrolled', ob_get_clean() );
 			} else {
 				$lms_form_class = apply_filters( 'lms_enroll_form_classes', array(
@@ -492,14 +506,14 @@ if ( ! function_exists('lms_course_enroll_box')) {
 					<?php wp_nonce_field( lms()->nonce_action, lms()->nonce ); ?>
 					<input type="hidden" name="lms_course_id" value="<?php echo get_the_ID(); ?>">
 					<input type="hidden" name="lms_course_action" value="_lms_course_enroll_now">
-					<?php lms_load_template( 'single.course-enroll' ); ?>
+					<?php lms_load_template( 'single.course.course-enroll' ); ?>
 				</form>
 
 				<?php
 				$output = apply_filters( 'lms_course/single/enroll', ob_get_clean() );
 			}
 		}else{
-			lms_load_template( 'single.login' );
+			lms_load_template( 'single.course.login' );
 
 			$output = apply_filters( 'lms_course/global/login', ob_get_clean() );
 		}
@@ -509,4 +523,22 @@ if ( ! function_exists('lms_course_enroll_box')) {
 
 		return $output;
 	}
+}
+
+if ( ! function_exists('lms_course_enrolled_nav')) {
+	function lms_course_enrolled_nav($echo = true) {
+		ob_start();
+		lms_load_template( 'single.course.enrolled.nav' );
+		$output = apply_filters( 'lms_course/single/enrolled/nav', ob_get_clean() );
+
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+}
+
+function lms_course_enrolled_content_topics_lesson(){
+    echo 'Hello Content';
 }
