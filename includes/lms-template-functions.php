@@ -455,7 +455,6 @@ if ( ! function_exists('lms_course_lead_info')) {
 		if ( $echo ) {
 			echo $output;
 		}
-
 		return $output;
 	}
 }
@@ -472,6 +471,37 @@ function lms_course_enrolled_lead_info( $echo = true){
 	}
 
 	return $output;
+}
+
+function lms_lesson_lead_info($lesson_id = 0, $echo = true){
+    if ( ! $lesson_id){
+	    $lesson_id = get_the_ID();
+    }
+
+	ob_start();
+
+    $course_id = lms_utils()->get_course_id_by_lesson($lesson_id);
+
+
+	$course_post_type = lms()->course_post_type;
+	$queryCourse = new WP_Query(array('p' => $course_id, 'post_type' => $course_post_type));
+
+    if ($queryCourse->have_posts()){
+        while ($queryCourse->have_posts()){
+	        $queryCourse->the_post();
+	        lms_load_template( 'single.course.enrolled.lead-info' );
+        }
+        wp_reset_postdata();
+    }
+
+	$output = apply_filters( 'lms_course/single/enrolled/lead_info', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
+
+	return $output;
+
 }
 
 /**
@@ -527,8 +557,33 @@ if ( ! function_exists('lms_course_enroll_box')) {
 
 if ( ! function_exists('lms_course_enrolled_nav')) {
 	function lms_course_enrolled_nav($echo = true) {
+		$course_post_type = lms()->course_post_type;
+		$lesson_post_type = lms()->lesson_post_type;
+
 		ob_start();
-		lms_load_template( 'single.course.enrolled.nav' );
+
+		global $post;
+
+        if ( ! empty($post->post_type) && $post->post_type === $course_post_type){
+
+	        lms_load_template( 'single.course.enrolled.nav' );
+
+        }elseif(! empty($post->post_type) && $post->post_type === $lesson_post_type){
+	        $lesson_id = get_the_ID();
+	        $course_id = lms_utils()->get_course_id_by_lesson($lesson_id);
+
+	        $course_post_type = lms()->course_post_type;
+	        $queryCourse = new WP_Query(array('p' => $course_id, 'post_type' => $course_post_type));
+
+	        if ($queryCourse->have_posts()){
+		        while ($queryCourse->have_posts()){
+			        $queryCourse->the_post();
+			        lms_load_template( 'single.course.enrolled.nav' );
+		        }
+		        wp_reset_postdata();
+	        }
+        }
+
 		$output = apply_filters( 'lms_course/single/enrolled/nav', ob_get_clean() );
 
 		if ( $echo ) {
@@ -537,6 +592,19 @@ if ( ! function_exists('lms_course_enrolled_nav')) {
 
 		return $output;
 	}
+}
+
+if ( ! function_exists('lms_lesson_video')){
+    function lms_lesson_video($echo = true){
+	    ob_start();
+	    lms_load_template( 'single.lesson.video' );
+	    $output = apply_filters( 'lms_lesson/single/video', ob_get_clean() );
+
+	    if ( $echo ) {
+		    echo $output;
+	    }
+	    return $output;
+    }
 }
 
 function lms_course_enrolled_content_topics_lesson(){

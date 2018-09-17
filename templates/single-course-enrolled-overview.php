@@ -30,8 +30,6 @@ get_header();
 	    <?php do_action('lms_course/single/enrolled/after/nav'); ?>
 
 
-
-
 	    <?php do_action('lms_course/single/enrolled/before/requirements'); ?>
 	    <?php lms_course_requirements_html(); ?>
 	    <?php do_action('lms_course/single/enrolled/after/requirements'); ?>
@@ -42,10 +40,7 @@ get_header();
 	    <?php do_action('lms_course/single/enrolled/after/audience'); ?>
 
 
-
-
 	    <?php do_action('lms_course/single/enrolled/after/inner-wrap'); ?>
-
 
     </div><!-- .wrap -->
 

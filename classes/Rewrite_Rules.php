@@ -4,8 +4,12 @@ namespace LMS;
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-class Rewrite_Rules{
+class Rewrite_Rules extends LMS_Base {
+
+
 	public function __construct() {
+		parent::__construct();
+
 		add_filter( 'query_vars', array($this, 'lms_register_query_vars') );
 		add_action('generate_rewrite_rules', array($this, 'add_rewrite_rules'));
 
@@ -22,7 +26,7 @@ class Rewrite_Rules{
 	public function add_rewrite_rules($wp_rewrite){
 		$new_rules = array(
 			//Lesson
-			'course/(.+?)/lesson/(.+?)/?$' => 'index.php?post_type=lesson&name='. $wp_rewrite->preg_index(2),
+			$this->course_post_type."/(.+?)/{$this->lesson_post_type}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=". $wp_rewrite->preg_index(2),
 		);
 
 		//Nav Items
@@ -31,7 +35,7 @@ class Rewrite_Rules{
 
 		if (is_array($course_nav_items) && count($course_nav_items)){
 			foreach ($course_nav_items as $nav_key => $nav_item){
-				$new_rules["course/(.+?)/{$nav_key}/?$"] ='index.php?post_type=course&name='.$wp_rewrite->preg_index(1).'&course_subpage='.$nav_key;
+				$new_rules[$this->course_post_type."/(.+?)/{$nav_key}/?$"] ='index.php?post_type=course&name='.$wp_rewrite->preg_index(1).'&course_subpage='.$nav_key;
 			}
 		}
 
@@ -48,15 +52,15 @@ class Rewrite_Rules{
 	 */
 	function change_lesson_single_url($post_link, $id=0){
 		$lesson = get_post($id);
-		if( is_object($lesson) && $lesson->post_type == 'lesson'){
+		if( is_object($lesson) && $lesson->post_type == $this->lesson_post_type){
 			global $wpdb;
 
 			$course_id = get_post_meta($lesson->ID, '_lms_course_id_for_lesson', true);
 			if ($course_id){
 				$course = $wpdb->get_row("select {$wpdb->posts}.post_name from {$wpdb->posts} where ID = {$course_id} ");
-				return home_url('/course/'.$course->post_name.'/lesson/'. $lesson->post_name.'/');
+				return home_url("/{$this->course_post_type}/".$course->post_name."/{$this->lesson_post_type}/". $lesson->post_name.'/');
 			}else{
-				return home_url('/course/sample-course/lesson/'. $lesson->post_name.'/');
+				return home_url("/{$this->course_post_type}/sample-course/{$this->lesson_post_type}/". $lesson->post_name.'/');
 			}
 
 		}

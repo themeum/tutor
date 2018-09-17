@@ -100,8 +100,8 @@ class Utils {
 	 * Get course archive URL
 	 */
 	public function course_archive_page_url(){
-		$course_page_url = trailingslashit(site_url()).'course';
-
+		$course_post_type = lms()->course_post_type;
+		$course_page_url = trailingslashit(site_url()).$course_post_type;
 
 		$course_archive_page = lms_utils()->get_option('course_archive_page');
 		if ($course_archive_page && $course_archive_page !== '-1'){
@@ -305,21 +305,24 @@ class Utils {
 	public function get_courses(){
 		global $wpdb;
 
-		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'course' ");
+		$course_post_type = lms()->course_post_type;
+		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = '{$course_post_type}' ");
 		return $query;
 	}
 
 	public function get_course_count(){
 		global $wpdb;
 
-		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'course'; ");
+		$course_post_type = lms()->course_post_type;
+		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = '{$course_post_type}'; ");
 		return $count;
 	}
 
 	public function get_lesson_count(){
 		global $wpdb;
 
-		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'lesson'; ");
+		$lesson_post_type = lms()->lesson_post_type;
+		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = '{$lesson_post_type}'; ");
 		return $count;
 	}
 
@@ -328,8 +331,9 @@ class Utils {
 			$course_id = get_the_ID();
 		}
 
+		$lesson_post_type = lms()->lesson_post_type;
 		$args = array(
-			'post_type'  => 'lesson',
+			'post_type'  => $lesson_post_type,
 			'meta_query' => array(
 				array(
 					'key'     => '_lms_course_id_for_lesson',
@@ -367,8 +371,9 @@ class Utils {
 			$topics_id = get_the_ID();
 		}
 
+		$lesson_post_type = lms()->lesson_post_type;
 		$args = array(
-			'post_type'  => 'lesson',
+			'post_type'  => $lesson_post_type,
 			'post_parent'  => $topics_id,
 			'orderby' => 'menu_order',
 			'order'   => 'ASC',
@@ -540,5 +545,23 @@ class Utils {
 		return apply_filters('lms_course/single/enrolled/nav_items', $nav_items);
 	}
 
+	/**
+	 * @param int $lesson_id
+	 *
+	 * @return bool|array
+	 *
+	 * @since v.1.0.0
+	 */
+	public function get_video($lesson_id = 0){
+		if ( ! $lesson_id){
+			$lesson_id = get_the_ID();
+			if ( ! $lesson_id){
+				return false;
+			}
+		}
+		$video = maybe_unserialize(get_post_meta($lesson_id, '_video', true));
+
+		return $video;
+	}
 
 }

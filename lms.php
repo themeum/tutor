@@ -30,6 +30,8 @@ function lms(){
 		'version' => LMS_VERSION,
 		'nonce_action' => 'lms_nonce_action',
 		'nonce' => '_wpnonce',
+		'course_post_type' => apply_filters('lms_course_post_type', 'course'),
+		'lesson_post_type' => apply_filters('lms_lesson_post_type', 'lesson'),
 	);
 
 	return (object) $info;

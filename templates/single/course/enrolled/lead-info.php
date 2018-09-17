@@ -11,7 +11,6 @@
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
-
 ?>
 
 <div class="lms-full-width-course-top lms-course-top-info">
@@ -27,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) )
         <div class="lms-course-enrolled-info">
             <p>
 		        <?php
-		        $enrolled = lms_utils()->is_enrolled();
+                $enrolled = lms_utils()->is_enrolled();
 		        _e(sprintf("Enrolled at : %s", date(get_option('date_format'), strtotime($enrolled->post_date)) ), 'lms');
 		        ?>
             </p>

@@ -154,7 +154,85 @@ jQuery(document).ready(function($){
         if ( ! confirm('Are you sure to delete?')){
             e.preventDefault();
         }
-    })
+    });
+
+
+    /**
+     * Lesson Video
+     */
+
+    $(document).on('change', '.lms_lesson_video_source', function(e){
+        var selector = $(this).val();
+        $('[class^="video_source_wrap"]').hide();
+        $('.video_source_wrap_'+selector).show();
+    });
+
+
+
+
+    $(document).on( 'click', '.video_source_wrap_self_hosted .video_upload_btn',  function( event ){
+        event.preventDefault();
+
+        var $that = $(this);
+        var frame;
+        // If the media frame already exists, reopen it.
+        if ( frame ) {
+            frame.open();
+            return;
+        }
+
+        // Create a new media frame
+        frame = wp.media({
+            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            button: {
+                text: 'Use this media'
+            },
+            multiple: false  // Set to true to allow multiple files to be selected
+        });
+
+        // When an image is selected in the media frame...
+        frame.on( 'select', function() {
+            // Get media attachment details from the frame state
+            var attachment = frame.state().get('selection').first().toJSON();
+            $that.closest('.video_source_wrap_self_hosted').find('span.video_media_id').text(attachment.id).closest('p').show();
+            $that.closest('.video_source_wrap_self_hosted').find('input').val(attachment.id);
+        });
+        // Finally, open the modal on click
+        frame.open();
+    });
+
+
+    //lms_video_poster_upload_btn
+    $(document).on( 'click', '.lms_video_poster_upload_btn',  function( event ){
+        event.preventDefault();
+
+        var $that = $(this);
+        var frame;
+        // If the media frame already exists, reopen it.
+        if ( frame ) {
+            frame.open();
+            return;
+        }
+
+        // Create a new media frame
+        frame = wp.media({
+            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            button: {
+                text: 'Use this media'
+            },
+            multiple: false  // Set to true to allow multiple files to be selected
+        });
+
+        // When an image is selected in the media frame...
+        frame.on( 'select', function() {
+            // Get media attachment details from the frame state
+            var attachment = frame.state().get('selection').first().toJSON();
+            $that.closest('.lms-video-poster-wrap').find('.video-poster-img').html('<img src="'+attachment.url+'" alt="" />');
+            $that.closest('.lms-video-poster-wrap').find('input').val(attachment.id);
+        });
+        // Finally, open the modal on click
+        frame.open();
+    });
 
 
 });

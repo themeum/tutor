@@ -26,21 +26,53 @@ class Lesson {
 	 * Registering metabox
 	 */
 	public function register_meta_box(){
-		add_meta_box( 'lms-course-select', __( 'Select Course', 'lms' ), array($this, 'lesson_metabox'), 'lesson' );
+		$lesson_post_type = lms()->lesson_post_type;
+
+		add_meta_box( 'lms-course-select', __( 'Select Course', 'lms' ), array($this, 'lesson_metabox'), $lesson_post_type );
+		add_meta_box( 'lms-lesson-videos', __( 'Lesson Video', 'lms' ), array($this, 'lesson_video_metabox'), $lesson_post_type );
 	}
 
 	public function lesson_metabox(){
 		include  lms()->path.'views/metabox/lesson-metabox.php';
 	}
 
+	public function lesson_video_metabox(){
+		include  lms()->path.'views/metabox/lesson-video-metabox.php';
+	}
+
 	public function save_lesson_meta($post_ID){
-		if ( ! isset($_POST['selected_course'])){
-			return;
+		//Course
+		if (isset($_POST['selected_course'])) {
+			$course_id = (int) sanitize_text_field( $_POST['selected_course'] );
+			if ( $course_id ) {
+				update_post_meta( $post_ID, '_lms_course_id_for_lesson', $course_id );
+			}
 		}
-		$course_id = (int) sanitize_text_field($_POST['selected_course']);
-		if ($course_id){
-			update_post_meta($post_ID, '_lms_course_id_for_lesson', $course_id);
+
+		//Video
+		if ( ! empty($_POST['video']['source'])){
+			$video = $this->sanitize_array($_POST['video']);
+			update_post_meta($post_ID, '_video', $video);
 		}
+	}
+
+	public function sanitize_array($input = array()){
+		$array = array();
+
+		if (is_array($input) && count($input)){
+			foreach ($input as $key => $value){
+				if (is_array($value)){
+					$array[$key] = $this->sanitize_array($value);
+				}else{
+					$key = sanitize_text_field($key);
+					$value = sanitize_text_field($value);
+					$array[$key] = $value;
+				}
+
+			}
+		}
+
+		return $array;
 	}
 
 	/**
@@ -54,8 +86,9 @@ class Lesson {
 
 	public function change_lesson_permalink($uri, $lesson_id){
 		$post = get_post($lesson_id);
+		$lesson_post_type = lms()->lesson_post_type;
 
-		if ($post && $post->post_type === 'lesson'){
+		if ($post && $post->post_type === $lesson_post_type){
 			$uri_base = trailingslashit(site_url());
 
 			$sample_course = "sample-course";

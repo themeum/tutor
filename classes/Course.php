@@ -25,8 +25,8 @@ class Course {
 	 * Registering metabox
 	 */
 	public function register_meta_box(){
-		add_meta_box( 'lms-course-additional-data', __( 'Additional Data', 'lms' ), array($this, 'course_additional_data_meta_box'), 'course' );
-		add_meta_box( 'lms-course-topics', __( 'Topics', 'lms' ), array($this, 'course_meta_box'), 'course' );
+		add_meta_box( 'lms-course-additional-data', __( 'Additional Data', 'lms' ), array($this, 'course_additional_data_meta_box'), lms()->course_post_type );
+		add_meta_box( 'lms-course-topics', __( 'Topics', 'lms' ), array($this, 'course_meta_box'), lms()->course_post_type );
 	}
 
 	public function course_meta_box(){

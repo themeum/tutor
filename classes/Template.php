@@ -27,7 +27,8 @@ class Template {
 
 		$post_type = get_query_var('post_type');
 
-		if ($post_type === 'course' && $wp_query->is_archive){
+		$course_post_type = lms()->course_post_type;
+		if ($post_type === $course_post_type && $wp_query->is_archive){
 			$template = lms_get_template('archive-course');
 			return $template;
 		}
@@ -44,7 +45,9 @@ class Template {
 	public function load_single_course_template($template){
 		global $wp_query;
 
-		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === 'course'){
+		$course_post_type = lms()->course_post_type;
+
+		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $course_post_type){
 
 			if (empty( $wp_query->query_vars['course_subpage'])) {
 
@@ -66,7 +69,8 @@ class Template {
 	public function load_single_lesson_template($template){
 		global $wp_query;
 
-		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === 'lesson'){
+		$lesson_post_type = lms()->lesson_post_type;
+		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $lesson_post_type){
 			if (is_user_logged_in()){
 				$is_course_enrolled = lms_utils()->is_course_enrolled_by_lesson();
 

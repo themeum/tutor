@@ -132,3 +132,31 @@ a.lms-button:hover {
     background-color: #333333;
     color: #ffffff;
 }
+
+/**
+Lesson Single Page
+ */
+
+
+.lms-wrap{
+    margin-top: 20px;
+}
+.lms-wrap .lms-lesson-single-wrap{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+.lms-wrap .lms-topics-wrap{
+    width: 30%;
+}
+.lms-wrap .lms-lesson-content-wrap{
+    width: 65%;
+    margin-left: 3%;
+}
+
+.lms-wrap .lms-topics-wrap .lms-topics-in-single-lesson .lms-lessons-under-topic .active a{
+    color: blue;
+}
+.lms-wrap .lms-lesson-video-wrap{
+    margin-bottom: 20px;
+}

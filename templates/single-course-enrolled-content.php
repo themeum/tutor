@@ -33,8 +33,6 @@ get_header();
 
 
 
-
-
     </div><!-- .wrap -->
 
 <?php do_action('lms_course/single/enrolled/after/wrap'); ?>
