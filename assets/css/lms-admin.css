@@ -215,3 +215,22 @@ Course adding page
     max-width: 200px;
     height: auto;
 }
+.lms-added-attachments-wrap{
+    margin-bottom: 50px;
+}
+.lms-added-attachments-wrap a{
+    text-decoration: none;
+}
+a.lms-delete-attachment {
+    border: 1px solid #ff0000;
+    padding: 5px;
+    border-radius: 50%;
+    display: inline-block;
+    line-height: 7px;
+    color: #ff0000;
+}
+
+a.lms-delete-attachment:hover {
+    background-color: #ff0000;
+    color: #ffffff;
+}

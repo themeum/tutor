@@ -30,12 +30,10 @@ $poster_url = $poster ? wp_get_attachment_url($poster) : '';
 if ($video){
 	?>
     <div class="lms-single-lesson-segment lms-lesson-video-wrap">
-
         <video poster="<?php echo $poster_url; ?>" id="lmsPlayer" playsinline controls>
             <source src="<?php echo wp_get_attachment_url($sourceVideoID); ?>" type="video/mp4">
             <!--<source src="/path/to/video.webm" type="video/webm">-->
         </video>
-
     </div>
 <?php } ?>
 

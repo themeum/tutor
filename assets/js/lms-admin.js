@@ -234,6 +234,46 @@ jQuery(document).ready(function($){
         frame.open();
     });
 
+    $(document).on('click', 'a.lms-delete-attachment', function(e){
+        e.preventDefault();
+        $(this).closest('.lms-added-attachment').remove();
+    });
+
+    $(document).on('click', '.lmsUploadAttachmentBtn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+
+        var frame;
+        // If the media frame already exists, reopen it.
+        if ( frame ) {
+            frame.open();
+            return;
+        }
+        // Create a new media frame
+        frame = wp.media({
+            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            button: {
+                text: 'Use this media'
+            },
+            multiple: true  // Set to true to allow multiple files to be selected
+        });
+        // When an image is selected in the media frame...
+        frame.on( 'select', function() {
+            // Get media attachment details from the frame state
+            var attachments = frame.state().get('selection').toJSON();
+            if (attachments.length){
+                for (var i=0; i < attachments.length; i++){
+                    var attachment = attachments[i];
+
+                    var inputHtml = '<div class="lms-added-attachment"><p> <a href="javascript:;" class="lms-delete-attachment">×</a> <span> <a href="'+attachment.url+'">'+attachment.filename+'</a> </span> </p><input type="hidden" name="lms_attachments[]" value="'+attachment.id+'"></div>';
+                    $that.closest('.lms-lesson-attachments-metabox').find('.lms-added-attachments-wrap').append(inputHtml);
+                }
+            }
+        });
+        // Finally, open the modal on click
+        frame.open();
+    })
 
 });
 

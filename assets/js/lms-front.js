@@ -6,10 +6,6 @@ jQuery(document).ready(function($){
         $(this).closest('form').submit();
     });
 
-
-
-
-
     if (typeof Plyr !== 'undefined') {
         const player = new Plyr('#lmsPlayer');
         player.on('timeupdate', function(event){
@@ -18,7 +14,5 @@ jQuery(document).ready(function($){
             console.log(instance.duration);
         });
     }
-
-
 });
 

@@ -533,7 +533,12 @@ class Utils {
 		return false;
 	}
 
-
+	/*
+	 *
+	 * Get course sub pages in course dashboard
+	 *
+	 * @since v.1.0.0
+	 */
 	public function course_sub_pages(){
 		$nav_items = array(
 			'overview' => __('Overview', 'lms'),
@@ -559,9 +564,118 @@ class Utils {
 				return false;
 			}
 		}
-		$video = maybe_unserialize(get_post_meta($lesson_id, '_video', true));
 
-		return $video;
+		$attachments = get_post_meta($lesson_id, '_video', true);
+		if ($attachments) {
+			$attachments = maybe_unserialize($attachments);
+		}
+
+		return $attachments;
+	}
+
+	/**
+	 * @param int $lesson_id
+	 *
+	 * @return bool|mixed
+	 *
+	 * @since v.1.0.0
+	 */
+	public function get_lesson_attachments($lesson_id = 0){
+		if ( ! $lesson_id){
+			$lesson_id = get_the_ID();
+			if ( ! $lesson_id){
+				return false;
+			}
+		}
+
+		$attachments_arr = array();
+
+		$attachments = maybe_unserialize(get_post_meta($lesson_id, '_lms_attachments', true));
+		if ( is_array($attachments) && count($attachments)) {
+			foreach ( $attachments as $attachment ) {
+				$url       = wp_get_attachment_url( $attachment );
+				$file_type = wp_check_filetype( $url );
+				$ext       = $file_type['ext'];
+				$title = get_the_title($attachment);
+
+				$size_bytes = filesize( get_attached_file( $attachment ));
+				$size = size_format( $size_bytes, 2 );
+
+				$icon = includes_url("images/media/default.png");
+				$type = wp_ext2type($ext);
+				if ($type){
+					$icon = includes_url("images/media/{$type}.png");
+				}
+
+				$data = array(
+					'object'        => 'lesson',
+					'lesson_id'     => $lesson_id,
+					'id'            => $attachment,
+					'url'           => $url,
+					'name'          => $title.'.'.$ext,
+					'title'         => $title,
+					'ext'           => $ext,
+					'size'          => $size,
+					'size_bytes'    => $size_bytes,
+					'icon'          => $icon,
+				);
+
+				$attachments_arr[] = (object) apply_filters('lms/attachments', $data);
+			}
+		}
+		
+		return $attachments_arr;
+	}
+
+	/**
+	 * @param $seconds
+	 *
+	 * @return string
+	 *
+	 * return seconds to formatted playtime
+	 */
+	public function playtime_string($seconds) {
+		$sign = (($seconds < 0) ? '-' : '');
+		$seconds = round(abs($seconds));
+		$H = (int) floor( $seconds                            / 3600);
+		$M = (int) floor(($seconds - (3600 * $H)            ) /   60);
+		$S = (int) round( $seconds - (3600 * $H) - (60 * $M)        );
+		return $sign.($H ? $H.':' : '').($H ? str_pad($M, 2, '0', STR_PAD_LEFT) : intval($M)).':'.str_pad($S, 2, 0, STR_PAD_LEFT);
+	}
+
+
+	public function get_video_info($lesson_id = 0){
+		if ( ! $lesson_id){
+			$lesson_id = get_the_ID();
+			if ( ! $lesson_id){
+				return false;
+			}
+		}
+
+		$video = lms_utils()->get_video($lesson_id);
+		if ( ! $video){
+			return false;
+		}
+
+
+
+		$info = array(
+			'playtime' => '00:00',
+		);
+
+		$videoSource = lms_utils()->avalue_dot('source', $video);
+		if ($videoSource === 'self_hosted'){
+			$sourceVideoID = lms_utils()->avalue_dot('source_self_hosted', $video);
+			$video_info = get_post_meta($sourceVideoID, '_wp_attachment_metadata', true);
+
+			if ($video_info){
+				$info['playtime'] = $video_info['length_formatted'];
+			}
+
+		}
+
+		return (object) $info;
+
 	}
 
 }

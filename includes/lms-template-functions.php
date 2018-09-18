@@ -607,6 +607,32 @@ if ( ! function_exists('lms_lesson_video')){
     }
 }
 
+
+if ( ! function_exists('lms_lesson_attachments')){
+	function lms_lesson_attachments($echo = true){
+		ob_start();
+		lms_load_template( 'single.lesson.attachments' );
+		$output = apply_filters( 'lms_lesson/single/attachments', ob_get_clean() );
+
+		if ( $echo ) {
+			echo $output;
+		}
+		return $output;
+	}
+}
+
+function lms_lessons_as_list($echo = true){
+	ob_start();
+	lms_load_template( 'single.lesson.lesson_lists' );
+	$output = apply_filters( 'lms_lesson/single/lesson_lists', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
+	return $output;
+}
+
+
 function lms_course_enrolled_content_topics_lesson(){
     echo 'Hello Content';
 }

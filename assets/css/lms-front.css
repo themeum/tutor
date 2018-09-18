@@ -33,6 +33,11 @@ div[class*="lms-course-col"] {
 .lms-courses{
     clear: both;
 }
+.clearfix:before, .clearfix:after{
+    display: block;
+    clear: both;
+    content: "";
+}
 .lms-loop-author{
     padding: 0 10px;
     color: #BBBBBB;
@@ -154,9 +159,66 @@ Lesson Single Page
     margin-left: 3%;
 }
 
+.lms-wrap .lms-topics-lesson-list .lms-topics-in-single-lesson {
+    background-color: #FDFDFD;
+    border: 1px solid #dddddd;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+.lms-wrap .lms-topics-lesson-list .lms-topics-in-single-lesson .lms-topics-title h2{
+    font-size: 18px;
+}
+
+.lms-wrap .lms-topics-lesson-list .lms-topics-in-single-lesson .lms-lessons-under-topic p{
+    margin: 0;
+}
+
 .lms-wrap .lms-topics-wrap .lms-topics-in-single-lesson .lms-lessons-under-topic .active a{
     color: blue;
 }
+.lms-wrap .lms-topics-wrap .lms-topics-in-single-lesson .lms-lessons-under-topic a {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+}
+.lms-wrap .lms-topics-wrap .lms-topics-in-single-lesson .lms-lessons-under-topic a .play_icon{
+    max-width: 16px;
+}
+.lms-wrap .lms-topics-wrap .lms-topics-in-single-lesson .lms-lessons-under-topic a span.lesson_title {
+    flex: 1;
+}
+.lms-wrap .lms-topics-wrap .lms-topics-in-single-lesson .lms-lessons-under-topic a span.play_icon {
+    margin-right: 5px;
+}
 .lms-wrap .lms-lesson-video-wrap{
     margin-bottom: 20px;
+}
+.lms-wrap .lms-lesson-attachments-wrap{
+    margin: 50px 0;
+}
+.lms-wrap .lms-lesson-icon{
+    float: left;
+}
+.lms-wrap .lms-lesson-icon img{
+    max-width: 40px;
+    display: block;
+}
+.lms-wrap .lms-lesson-info {
+    padding-left: 60px;
+}
+.lms-wrap .lms-lesson-info p{
+    margin: 0;
+}
+.lms-wrap .lms-lesson-info span{
+    font-size: 12px;
+    color: #bbb3b9;
+}
+.lms-wrap a.lms-lesson-attachment{
+    border: 1px solid #dddddd;
+    display: inline-block;
+    padding: 10px;
+    margin: 0 5px;
+}
+.lms-wrap a.lms-lesson-attachment:hover {
+    border: 1px solid #cccccc;
 }

@@ -30,6 +30,7 @@ class Lesson {
 
 		add_meta_box( 'lms-course-select', __( 'Select Course', 'lms' ), array($this, 'lesson_metabox'), $lesson_post_type );
 		add_meta_box( 'lms-lesson-videos', __( 'Lesson Video', 'lms' ), array($this, 'lesson_video_metabox'), $lesson_post_type );
+		add_meta_box( 'lms-lesson-attachments', __( 'Attachments', 'lms' ), array($this, 'lesson_attachments_metabox'), $lesson_post_type );
 	}
 
 	public function lesson_metabox(){
@@ -40,6 +41,16 @@ class Lesson {
 		include  lms()->path.'views/metabox/lesson-video-metabox.php';
 	}
 
+	public function lesson_attachments_metabox(){
+		include  lms()->path.'views/metabox/lesson-attachments-metabox.php';
+	}
+
+	/**
+	 * @param $post_ID
+	 *
+	 * Saving lesson meta and assets
+	 *
+	 */
 	public function save_lesson_meta($post_ID){
 		//Course
 		if (isset($_POST['selected_course'])) {
@@ -54,6 +65,14 @@ class Lesson {
 			$video = $this->sanitize_array($_POST['video']);
 			update_post_meta($post_ID, '_video', $video);
 		}
+
+		//Attachments
+		$attachments = array();
+		if ( ! empty($_POST['lms_attachments'])){
+			$attachments = array_unique($this->sanitize_array($_POST['lms_attachments']));
+		}
+		update_post_meta($post_ID, '_lms_attachments', $attachments);
+
 	}
 
 	public function sanitize_array($input = array()){
