@@ -11,6 +11,8 @@
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
+
+global $wp_query;
 ?>
 
 <div class="lms-full-width-course-top lms-course-top-info">
@@ -22,22 +24,31 @@ if ( ! defined( 'ABSPATH' ) )
 			<?php lms_the_excerpt(); ?>
         </div>
 
-
         <div class="lms-course-enrolled-info">
             <p>
-		        <?php
-                $enrolled = lms_utils()->is_enrolled();
-		        _e(sprintf("Enrolled at : %s", date(get_option('date_format'), strtotime($enrolled->post_date)) ), 'lms');
-		        ?>
+				<?php
+				$enrolled = lms_utils()->is_enrolled();
+				_e(sprintf("Enrolled at : %s", date(get_option('date_format'), strtotime($enrolled->post_date)) ), 'lms');
+				?>
             </p>
 
-	        <?php
-	        $lesson_url = lms_utils()->get_course_first_lesson();
-	        if ($lesson_url){
-		        ?>
-                <a href="<?php echo $lesson_url; ?>" class="lms-button"><?php _e('Continue to lesson', 'lms'); ?></a>
-	        <?php } ?>
+            <div class="lms-lead-info-btn-group">
+				<?php
+				if ( $wp_query->query['post_type'] !== 'lesson') {
+					$lesson_url = lms_utils()->get_course_first_lesson();
+					if ( $lesson_url ) {
+						?>
+                        <a href="<?php echo $lesson_url; ?>" class="lms-button"><?php _e( 'Continue to lesson', 'lms' ); ?></a>
+					<?php }
+				}
+				?>
 
+                <a href="<?php echo get_the_permalink(); ?>" class="lms-button"><?php _e('Course Home', 'lms'); ?></a>
+
+
+                <?php lms_course_mark_complete_html(); ?>
+
+            </div>
         </div>
 
         <div class="lms-course-lead-meta">

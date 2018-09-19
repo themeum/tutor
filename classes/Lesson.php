@@ -4,10 +4,12 @@ namespace LMS;
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-class Lesson {
+class Lesson extends LMS_Base {
 	public function __construct() {
+		parent::__construct();
+
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
-		add_action('save_post_lesson', array($this, 'save_lesson_meta'));
+		add_action('save_post_'.$this->lesson_post_type, array($this, "save_lesson_meta"));
 
 		add_filter('get_sample_permalink', array($this, 'change_lesson_permalink'), 10, 2);
 
@@ -17,16 +19,18 @@ class Lesson {
 		 * Add Column
 		 */
 
-		add_filter( 'manage_lesson_posts_columns', array($this, 'add_column'), 10,1 );
-		add_action( 'manage_lesson_posts_custom_column' , array($this, 'custom_lesson_column'), 10, 2 );
+		add_filter( "manage_{$this->lesson_post_type}_posts_columns", array($this, 'add_column'), 10,1 );
+		add_action( "manage_{$this->lesson_post_type}_posts_custom_column" , array($this, 'custom_lesson_column'), 10, 2 );
 
+		//Frontend Action
+		add_action('template_redirect', array($this, 'mark_lesson_complete'));
 	}
 
 	/**
 	 * Registering metabox
 	 */
 	public function register_meta_box(){
-		$lesson_post_type = lms()->lesson_post_type;
+		$lesson_post_type = $this->lesson_post_type;
 
 		add_meta_box( 'lms-course-select', __( 'Select Course', 'lms' ), array($this, 'lesson_metabox'), $lesson_post_type );
 		add_meta_box( 'lms-lesson-videos', __( 'Lesson Video', 'lms' ), array($this, 'lesson_video_metabox'), $lesson_post_type );
@@ -69,29 +73,11 @@ class Lesson {
 		//Attachments
 		$attachments = array();
 		if ( ! empty($_POST['lms_attachments'])){
-			$attachments = array_unique($this->sanitize_array($_POST['lms_attachments']));
+			$attachments = lms_utils()->sanitize_array($_POST['lms_attachments']);
+			$attachments = array_unique($attachments);
 		}
 		update_post_meta($post_ID, '_lms_attachments', $attachments);
 
-	}
-
-	public function sanitize_array($input = array()){
-		$array = array();
-
-		if (is_array($input) && count($input)){
-			foreach ($input as $key => $value){
-				if (is_array($value)){
-					$array[$key] = $this->sanitize_array($value);
-				}else{
-					$key = sanitize_text_field($key);
-					$value = sanitize_text_field($value);
-					$array[$key] = $value;
-				}
-
-			}
-		}
-
-		return $array;
 	}
 
 	/**
@@ -105,9 +91,8 @@ class Lesson {
 
 	public function change_lesson_permalink($uri, $lesson_id){
 		$post = get_post($lesson_id);
-		$lesson_post_type = lms()->lesson_post_type;
 
-		if ($post && $post->post_type === $lesson_post_type){
+		if ($post && $post->post_type === $this->lesson_post_type){
 			$uri_base = trailingslashit(site_url());
 
 			$sample_course = "sample-course";
@@ -158,6 +143,36 @@ class Lesson {
 		}
 	}
 
+	/**
+	 *
+	 * Mark lesson completed
+	 *
+	 * @since v.1.0.0
+	 */
+	public function mark_lesson_complete(){
+		if ( ! isset($_POST['lms_action'])  ||  $_POST['lms_action'] !== 'lms_complete_lesson' ){
+			return;
+		}
+		//Checking nonce
+		lms_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
+
+		//TODO: need to show view if not signed_in
+		if ( ! $user_id){
+			die(__('Please Sign-In', 'lms'));
+		}
+
+		$lesson_id = (int) sanitize_text_field($_POST['lesson_id']);
+
+		/**
+		 * Marking lesson at user meta, meta format, _lms_completed_lesson_id_{id} and value = time();
+		 */
+
+		update_user_meta($user_id, '_lms_completed_lesson_id_'.$lesson_id, time());
+
+		wp_redirect(get_the_permalink($lesson_id));
+	}
 
 }
 

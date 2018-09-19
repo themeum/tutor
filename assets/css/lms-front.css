@@ -141,8 +141,6 @@ a.lms-button:hover {
 /**
 Lesson Single Page
  */
-
-
 .lms-wrap{
     margin-top: 20px;
 }
@@ -170,7 +168,7 @@ Lesson Single Page
 }
 
 .lms-wrap .lms-topics-lesson-list .lms-topics-in-single-lesson .lms-lessons-under-topic p{
-    margin: 0;
+    margin: 0 0 10px 0;
 }
 
 .lms-wrap .lms-topics-wrap .lms-topics-in-single-lesson .lms-lessons-under-topic .active a{
@@ -190,26 +188,37 @@ Lesson Single Page
 .lms-wrap .lms-topics-wrap .lms-topics-in-single-lesson .lms-lessons-under-topic a span.play_icon {
     margin-right: 5px;
 }
+.lms-wrap .lms-topics-wrap .lms-topics-in-single-lesson .lms-lessons-under-topic a span.play_duration {
+    color: #666666;
+}
+.lms-wrap .lms-topics-wrap .lms-topics-in-single-lesson .lms-lessons-under-topic a span.is_completed {
+    border: 1px solid #cccccc;
+    border-radius: 50%;
+    padding: 0 3px;
+    line-height: 22px;
+    vertical-align: top;
+    margin-left: 7px;
+}
 .lms-wrap .lms-lesson-video-wrap{
     margin-bottom: 20px;
 }
-.lms-wrap .lms-lesson-attachments-wrap{
+.lms-wrap .lms-attachments-wrap{
     margin: 50px 0;
 }
-.lms-wrap .lms-lesson-icon{
+.lms-wrap .lms-attachment-icon{
     float: left;
 }
-.lms-wrap .lms-lesson-icon img{
+.lms-wrap .lms-attachment-icon img{
     max-width: 40px;
     display: block;
 }
-.lms-wrap .lms-lesson-info {
+.lms-wrap .lms-attachment-info {
     padding-left: 60px;
 }
-.lms-wrap .lms-lesson-info p{
+.lms-wrap .lms-attachment-info p{
     margin: 0;
 }
-.lms-wrap .lms-lesson-info span{
+.lms-wrap .lms-attachment-info span{
     font-size: 12px;
     color: #bbb3b9;
 }
@@ -217,7 +226,7 @@ Lesson Single Page
     border: 1px solid #dddddd;
     display: inline-block;
     padding: 10px;
-    margin: 0 5px;
+    margin: 5px;
 }
 .lms-wrap a.lms-lesson-attachment:hover {
     border: 1px solid #cccccc;

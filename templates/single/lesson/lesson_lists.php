@@ -46,13 +46,15 @@ $currentPost = $post;
 								if ($video){
 									$play_time = $video->playtime;
 								}
-								?>
+
+								$is_completed_lesson = lms_utils()->is_completed_lesson();
+                                ?>
                                 <p class="<?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
                                     <a href="<?php the_permalink(); ?>">
 										<?php if ($play_time){ ?>
                                             <span class="play_icon">
-                                                        <img src="<?php echo lms()->url.'assets/images/play-button.png'; ?>" />
-                                                    </span>
+                                                <img src="<?php echo lms()->url.'assets/images/play-button.png'; ?>" />
+                                            </span>
 										<?php } ?>
 
                                         <span class="lesson_title"><?php the_title(); ?></span>
@@ -61,6 +63,9 @@ $currentPost = $post;
                                             <span class="play_duration"><?php echo $play_time; ?></span>
 										<?php } ?>
 
+	                                    <?php if ($is_completed_lesson){ ?>
+                                            <span class="is_completed">&check;</span>
+	                                    <?php } ?>
                                     </a>
                                 </p>
 								<?php

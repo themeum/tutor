@@ -24,37 +24,25 @@ $currentPost = $post;
 
 
     <div <?php lms_post_class(); ?>>
-
         <div class="lms-lesson-single-wrap">
 
             <div class="lms-topics-wrap">
-
-
 	            <?php lms_lessons_as_list(); ?>
-
-
             </div>
 
 
             <div class="lms-lesson-content-wrap">
 
 				<?php lms_lesson_video(); ?>
-
 				<?php the_content(); ?>
-
-				<?php lms_lesson_attachments(); ?>
-
+				<?php get_lms_posts_attachments(); ?>
+				<?php lms_lesson_mark_complete_html(); ?>
 
             </div>
 
         </div>
-
-
-
     </div><!-- .wrap -->
 
-<?php do_action('lms_lesson/single/after/wrap'); ?>
+<?php do_action('lms_lesson/single/after/wrap');
 
-
-<?php
 get_footer();

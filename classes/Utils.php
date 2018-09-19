@@ -574,23 +574,23 @@ class Utils {
 	}
 
 	/**
-	 * @param int $lesson_id
+	 * @param int $post_id
 	 *
 	 * @return bool|mixed
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_lesson_attachments($lesson_id = 0){
-		if ( ! $lesson_id){
-			$lesson_id = get_the_ID();
-			if ( ! $lesson_id){
+	public function get_attachments($post_id = 0){
+		if ( ! $post_id){
+			$post_id = get_the_ID();
+			if ( ! $post_id){
 				return false;
 			}
 		}
-
 		$attachments_arr = array();
 
-		$attachments = maybe_unserialize(get_post_meta($lesson_id, '_lms_attachments', true));
+		$attachments = maybe_unserialize(get_post_meta($post_id, '_lms_attachments', true));
+		
 		if ( is_array($attachments) && count($attachments)) {
 			foreach ( $attachments as $attachment ) {
 				$url       = wp_get_attachment_url( $attachment );
@@ -608,8 +608,7 @@ class Utils {
 				}
 
 				$data = array(
-					'object'        => 'lesson',
-					'lesson_id'     => $lesson_id,
+					'post_id'       => $post_id,
 					'id'            => $attachment,
 					'url'           => $url,
 					'name'          => $title.'.'.$ext,
@@ -620,12 +619,13 @@ class Utils {
 					'icon'          => $icon,
 				);
 
-				$attachments_arr[] = (object) apply_filters('lms/attachments', $data);
+				$attachments_arr[] = (object) apply_filters('lms/posts/attachments', $data);
 			}
 		}
 		
 		return $attachments_arr;
 	}
+	
 
 	/**
 	 * @param $seconds
@@ -633,6 +633,8 @@ class Utils {
 	 * @return string
 	 *
 	 * return seconds to formatted playtime
+	 *
+	 * @since v.1.0.0
 	 */
 	public function playtime_string($seconds) {
 		$sign = (($seconds < 0) ? '-' : '');
@@ -643,6 +645,13 @@ class Utils {
 		return $sign.($H ? $H.':' : '').($H ? str_pad($M, 2, '0', STR_PAD_LEFT) : intval($M)).':'.str_pad($S, 2, 0, STR_PAD_LEFT);
 	}
 
+	/**
+	 * @param int $lesson_id
+	 *
+	 * @return bool|object
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function get_video_info($lesson_id = 0){
 		if ( ! $lesson_id){
@@ -656,8 +665,6 @@ class Utils {
 		if ( ! $video){
 			return false;
 		}
-
-
 
 		$info = array(
 			'playtime' => '00:00',
@@ -675,7 +682,84 @@ class Utils {
 		}
 
 		return (object) $info;
+	}
 
+	/**
+	 * @param int $lesson_id
+	 * @param int $user_id
+	 *
+	 * @return bool|mixed
+	 *
+	 * @since v.1.0.0
+	 */
+
+	public function is_completed_lesson($lesson_id = 0, $user_id = 0){
+		if ( ! $lesson_id){
+			$lesson_id = get_the_ID();
+			if ( ! $lesson_id){
+				return false;
+			}
+		}
+
+		if ( ! $user_id){
+			$user_id = get_current_user_id();
+			if ( ! $user_id){
+				return false;
+			}
+		}
+
+		$is_completed = get_user_meta($user_id, '_lms_completed_lesson_id_'.$lesson_id, true);
+
+		if ($is_completed){
+			return $is_completed;
+		}
+
+		return false;
+	}
+
+
+	public function is_completed_course($course_id = 0, $user_id = 0){
+		if ( ! $course_id){
+			$course_id = get_the_ID();
+			if ( ! $course_id){
+				return false;
+			}
+		}
+
+		if ( ! $user_id){
+			$user_id = get_current_user_id();
+			if ( ! $user_id){
+				return false;
+			}
+		}
+
+		$is_completed = get_user_meta($user_id, '_lms_completed_course_id_'.$course_id, true);
+
+		if ($is_completed){
+			return $is_completed;
+		}
+
+		return false;
+	}
+
+
+	public function sanitize_array($input = array()){
+		$array = array();
+
+		if (is_array($input) && count($input)){
+			foreach ($input as $key => $value){
+				if (is_array($value)){
+					$array[$key] = $this->sanitize_array($value);
+				}else{
+					$key = sanitize_text_field($key);
+					$value = sanitize_text_field($value);
+					$array[$key] = $value;
+				}
+
+			}
+		}
+
+		return $array;
 	}
 
 }

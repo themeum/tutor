@@ -607,11 +607,20 @@ if ( ! function_exists('lms_lesson_video')){
     }
 }
 
-
-if ( ! function_exists('lms_lesson_attachments')){
-	function lms_lesson_attachments($echo = true){
+/**
+ *
+ * Get all lessons attachments
+ *
+ * @param bool $echo
+ *
+ * @return mixed
+ *
+ * @since v.1.0.0
+ */
+if ( ! function_exists('get_lms_posts_attachments')){
+	function get_lms_posts_attachments($echo = true){
 		ob_start();
-		lms_load_template( 'single.lesson.attachments' );
+		lms_load_template( 'global.attachments' );
 		$output = apply_filters( 'lms_lesson/single/attachments', ob_get_clean() );
 
 		if ( $echo ) {
@@ -621,17 +630,56 @@ if ( ! function_exists('lms_lesson_attachments')){
 	}
 }
 
-function lms_lessons_as_list($echo = true){
-	ob_start();
-	lms_load_template( 'single.lesson.lesson_lists' );
-	$output = apply_filters( 'lms_lesson/single/lesson_lists', ob_get_clean() );
+/**
+ * @param bool $echo
+ *
+ * @return mixed
+ *
+ * Get the lessons with topics
+ *
+ * @since v.1.0.0
+ */
+if ( ! function_exists('lms_lessons_as_list')) {
+	function lms_lessons_as_list( $echo = true ) {
+		ob_start();
+		lms_load_template( 'single.lesson.lesson_lists' );
+		$output = apply_filters( 'lms_lesson/single/lesson_lists', ob_get_clean() );
 
-	if ( $echo ) {
-		echo $output;
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
 	}
-	return $output;
 }
 
+if ( ! function_exists('lms_lesson_mark_complete_html')) {
+	function lms_lesson_mark_complete_html( $echo = true ) {
+		ob_start();
+		lms_load_template( 'single.lesson.complete_form' );
+		$output = apply_filters( 'lms_lesson/single/complete_form', ob_get_clean() );
+
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+}
+
+if ( ! function_exists('lms_course_mark_complete_html')) {
+	function lms_course_mark_complete_html( $echo = true ) {
+		ob_start();
+		lms_load_template( 'single.course.complete_form' );
+		$output = apply_filters( 'lms_course/single/complete_form', ob_get_clean() );
+
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+}
 
 function lms_course_enrolled_content_topics_lesson(){
     echo 'Hello Content';

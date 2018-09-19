@@ -4,29 +4,35 @@ namespace LMS;
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-class Course {
+class Course extends LMS_Base {
 	public function __construct() {
+		parent::__construct();
+
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
-		add_action('save_post_course', array($this, 'save_course_meta'));
+		add_action('save_post_'.$this->course_post_type, array($this, 'save_course_meta'));
 		add_action('wp_ajax_lms_update_topic', array($this, 'lms_update_topic'));
 
 		//Add Column
-		add_filter( 'manage_course_posts_columns', array($this, 'add_column'), 10,1 );
-		add_action( 'manage_course_posts_custom_column' , array($this, 'custom_lesson_column'), 10, 2 );
+		add_filter( "manage_{$this->course_post_type}_posts_columns", array($this, 'add_column'), 10,1 );
+		add_action( "manage_{$this->course_post_type}_posts_custom_column" , array($this, 'custom_lesson_column'), 10, 2 );
 
 		add_action('admin_action_lms_delete_topic', array($this, 'lms_delete_topic'));
 
 
 		//Frontend Action
 		add_action('template_redirect', array($this, 'enroll_now'));
+		add_action('template_redirect', array($this, 'mark_course_complete'));
 	}
 
 	/**
 	 * Registering metabox
 	 */
 	public function register_meta_box(){
-		add_meta_box( 'lms-course-additional-data', __( 'Additional Data', 'lms' ), array($this, 'course_additional_data_meta_box'), lms()->course_post_type );
-		add_meta_box( 'lms-course-topics', __( 'Topics', 'lms' ), array($this, 'course_meta_box'), lms()->course_post_type );
+		$coursePostType = lms()->course_post_type;
+		
+		add_meta_box( 'lms-course-additional-data', __( 'Additional Data', 'lms' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
+		add_meta_box( 'lms-course-topics', __( 'Topics', 'lms' ), array($this, 'course_meta_box'), $coursePostType );
+		add_meta_box( 'lms-course-attachments', __( 'Attachments', 'lms' ), array($this, 'course_attachments_metabox'), $coursePostType );
 	}
 
 	public function course_meta_box(){
@@ -35,6 +41,10 @@ class Course {
 
 	public function course_additional_data_meta_box(){
 		include  lms()->path.'views/metabox/course-additional-data.php';
+	}
+
+	public function course_attachments_metabox(){
+		include  lms()->path.'views/metabox/course-attachments-metabox.php';
 	}
 
 	/**
@@ -131,6 +141,14 @@ class Course {
 			}
 
 		}
+
+		//Attachments
+		$attachments = array();
+		if ( ! empty($_POST['lms_attachments'])){
+			$attachments = lms_utils()->sanitize_array($_POST['lms_attachments']);
+			$attachments = array_unique($attachments);
+		}
+		update_post_meta($post_ID, '_lms_attachments', $attachments);
 
 	}
 
@@ -294,6 +312,36 @@ class Course {
 		return false;
 	}
 
+	/**
+	 *
+	 * Mark complete completed
+	 *
+	 * @since v.1.0.0
+	 */
+	public function mark_course_complete(){
+		if ( ! isset($_POST['lms_action'])  ||  $_POST['lms_action'] !== 'lms_complete_course' ){
+			return;
+		}
+		//Checking nonce
+		lms_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
+
+		//TODO: need to show view if not signed_in
+		if ( ! $user_id){
+			die(__('Please Sign-In', 'lms'));
+		}
+
+		$course_id = (int) sanitize_text_field($_POST['course_id']);
+
+		/**
+		 * Marking course at user meta, meta format, _lms_completed_course_id_{id} and value = time();
+		 */
+
+		update_user_meta($user_id, '_lms_completed_course_id_'.$course_id, time());
+
+		wp_redirect(get_the_permalink($course_id));
+	}
 
 }
 
