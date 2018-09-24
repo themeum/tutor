@@ -33,6 +33,7 @@ class Course extends LMS_Base {
 		add_meta_box( 'lms-course-additional-data', __( 'Additional Data', 'lms' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'lms-course-topics', __( 'Topics', 'lms' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'lms-course-attachments', __( 'Attachments', 'lms' ), array($this, 'course_attachments_metabox'), $coursePostType );
+		add_meta_box( 'lms-course-videos', __( 'Video', 'lms' ), array($this, 'video_metabox'), $coursePostType );
 	}
 
 	public function course_meta_box(){
@@ -45,6 +46,10 @@ class Course extends LMS_Base {
 
 	public function course_attachments_metabox(){
 		include  lms()->path.'views/metabox/course-attachments-metabox.php';
+	}
+
+	public function video_metabox(){
+		include  lms()->path.'views/metabox/video-metabox.php';
 	}
 
 	/**
@@ -91,7 +96,6 @@ class Course extends LMS_Base {
 		/**
 		 * Sorting Topics and lesson
 		 */
-
 		if ( ! empty($_POST['lms_topics_lessons_sorting'])){
 			$new_order = sanitize_text_field(stripslashes($_POST['lms_topics_lessons_sorting']));
 			$order = json_decode($new_order, true);
@@ -149,6 +153,12 @@ class Course extends LMS_Base {
 			$attachments = array_unique($attachments);
 		}
 		update_post_meta($post_ID, '_lms_attachments', $attachments);
+
+		//Video
+		if ( ! empty($_POST['video']['source'])){
+			$video = lms_utils()->sanitize_array($_POST['video']);
+			update_post_meta($post_ID, '_video', $video);
+		}
 
 	}
 
@@ -340,9 +350,8 @@ class Course extends LMS_Base {
 
 		update_user_meta($user_id, '_lms_completed_course_id_'.$course_id, time());
 
+
 		wp_redirect(get_the_permalink($course_id));
 	}
 
 }
-
-

@@ -13,7 +13,6 @@ get_header();
 
 <?php do_action('lms_course/single/enrolled/before/wrap'); ?>
 
-
 <?php do_action('lms_course/single/enrolled/before/lead_info'); ?>
 <?php lms_course_enrolled_lead_info(); ?>
 <?php do_action('lms_course/single/enrolled/after/lead_info'); ?>
@@ -26,6 +25,7 @@ get_header();
 		<?php lms_course_enrolled_nav(); ?>
 		<?php do_action('lms_course/single/enrolled/after/nav'); ?>
 
+		<?php lms_course_video(); ?>
 
 		<?php do_action('lms_course/single/enrolled/before/topics'); ?>
 		<?php lms_course_topics(); ?>

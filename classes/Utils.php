@@ -101,7 +101,7 @@ class Utils {
 	 */
 	public function course_archive_page_url(){
 		$course_post_type = lms()->course_post_type;
-		$course_page_url = trailingslashit(site_url()).$course_post_type;
+		$course_page_url = trailingslashit(home_url()).$course_post_type;
 
 		$course_archive_page = lms_utils()->get_option('course_archive_page');
 		if ($course_archive_page && $course_archive_page !== '-1'){
@@ -119,7 +119,7 @@ class Utils {
 	 */
 
 	public function student_url($student_id = 0){
-		$site_url = trailingslashit(site_url()).'student/';
+		$site_url = trailingslashit(home_url()).'student/';
 		$user_name = '';
 
 		if ( ! $student_id){
@@ -551,21 +551,21 @@ class Utils {
 	}
 
 	/**
-	 * @param int $lesson_id
+	 * @param int $post_id
 	 *
 	 * @return bool|array
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_video($lesson_id = 0){
-		if ( ! $lesson_id){
-			$lesson_id = get_the_ID();
-			if ( ! $lesson_id){
+	public function get_video($post_id = 0){
+		if ( ! $post_id){
+			$post_id = get_the_ID();
+			if ( ! $post_id){
 				return false;
 			}
 		}
 
-		$attachments = get_post_meta($lesson_id, '_video', true);
+		$attachments = get_post_meta($post_id, '_video', true);
 		if ($attachments) {
 			$attachments = maybe_unserialize($attachments);
 		}
@@ -670,15 +670,20 @@ class Utils {
 			'playtime' => '00:00',
 		);
 
+		$types = array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg");
+
 		$videoSource = lms_utils()->avalue_dot('source', $video);
 		if ($videoSource === 'self_hosted'){
 			$sourceVideoID = lms_utils()->avalue_dot('source_self_hosted', $video);
 			$video_info = get_post_meta($sourceVideoID, '_wp_attachment_metadata', true);
 
 			if ($video_info){
-				$info['playtime'] = $video_info['length_formatted'];
+				$path               = get_attached_file($sourceVideoID);
+				$info['playtime']   = $video_info['length_formatted'];
+				$info['path']       = $path;
+				$info['ext']        = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+				$info['type']       = $types[$info['ext']];
 			}
-
 		}
 
 		return (object) $info;
@@ -742,7 +747,13 @@ class Utils {
 		return false;
 	}
 
-
+	/**
+	 * @param array $input
+	 *
+	 * @return array
+	 *
+	 * Sanitize input array
+	 */
 	public function sanitize_array($input = array()){
 		$array = array();
 
@@ -755,11 +766,140 @@ class Utils {
 					$value = sanitize_text_field($value);
 					$array[$key] = $value;
 				}
-
 			}
 		}
 
 		return $array;
+	}
+	
+	public function has_video_in_single($post_id = 0){
+		if (is_single()) {
+			if ( ! $post_id ) {
+				$post_id = get_the_ID();
+				if ( ! $post_id ) {
+					return false;
+				}
+			}
+
+			$video = $this->get_video( $post_id );
+			if ( $video ) {
+				return $video;
+			}
+		}
+		return false;
+
+	}
+
+
+	public function get_students($start = 0, $limit = 10, $search_term = '', $course_id = 0){
+		$meta_key = '_is_lms_student';
+		if ($course_id){
+			$meta_key = '_lms_completed_course_id_'.$meta_key;
+		}
+		global $wpdb;
+
+
+		if ($search_term){
+			$search_term = " AND ( {$wpdb->users}.display_name LIKE '%{$search_term}%' OR {$wpdb->users}.user_email LIKE '%{$search_term}%' ) ";
+		}
+
+		$students = $wpdb->get_results("SELECT SQL_CALC_FOUND_ROWS {$wpdb->users}.* FROM {$wpdb->users} 
+			INNER JOIN {$wpdb->usermeta} 
+			ON ( {$wpdb->users}.ID = {$wpdb->usermeta
+			}.user_id ) 
+			WHERE 1=1 AND ( {$wpdb->usermeta}.meta_key = '{$meta_key}' )  {$search_term}
+			ORDER BY {$wpdb->usermeta}.meta_value DESC 
+			LIMIT {$start}, {$limit} ");
+
+		return $students;
+	}
+
+	/**
+	 * @return int
+	 *
+	 * @since v.1.0.0
+	 *
+	 * get the total students
+	 * pass course id to get course wise total students
+	 */
+	public function get_total_students($search_term = '', $course_id = 0){
+		$meta_key = '_is_lms_student';
+		if ($course_id){
+			$meta_key = '_lms_completed_course_id_'.$meta_key;
+		}
+
+		global $wpdb;
+
+		if ($search_term){
+			$search_term = " AND ( {$wpdb->users}.display_name LIKE '%{$search_term}%' OR {$wpdb->users}.user_email LIKE '%{$search_term}%' ) ";
+		}
+
+		$count = $wpdb->get_var("SELECT COUNT({$wpdb->users}.ID) FROM {$wpdb->users} INNER JOIN {$wpdb->usermeta} ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id ) WHERE 1=1 AND ( {$wpdb->usermeta}.meta_key = '{$meta_key}' ) $search_term ");
+
+		return (int) $count;
+	}
+
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool|\WP_Query
+	 *
+	 * Return courses by user_id
+	 */
+	public function get_courses_by_user($user_id = 0){
+		if ( ! $user_id){
+			$user_id = get_current_user_id();
+			if ( ! $user_id){
+				return false;
+			}
+		}
+
+		global $wpdb;
+
+		$meta_key = '_lms_completed_course_id_';
+
+		$course_id_query = $wpdb->get_col("select meta_key from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key LIKE '%{$meta_key}%' ");
+
+		$course_ids = array();
+
+		if (is_array($course_id_query) && count($course_id_query)){
+			foreach ($course_id_query as $user_meta_col){
+				$course_ids[] = str_replace($meta_key, '', $user_meta_col);
+			}
+		}else{
+			return false;
+		}
+
+		if (count($course_ids)){
+			$course_post_type = lms()->course_post_type;
+			$course_args = array(
+				'post_type' => $course_post_type,
+				'post_status' => 'publish',
+				'post__in'      => $course_ids,
+			);
+
+			return new \WP_Query($course_args);
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param int $post_id
+	 *
+	 * @return string
+	 *
+	 * Get the video streaming URL by post/lesson/course ID
+	 */
+	public function get_video_stream_url($post_id = 0){
+		if ( ! $post_id ) {
+			$post_id = get_the_ID();
+		}
+		$post = get_post($post_id);
+
+		$video_url = home_url().'/video-url/'.$post->post_name;
+		return $video_url;
 	}
 
 }

@@ -28,10 +28,13 @@ class Assets{
 	 * Load frontend scripts
 	 */
 	public function frontend_scripts(){
-		//Plyr
-		wp_enqueue_style('lms-plyr', lms()->url.'assets/packages/plyr/plyr.css', array(), lms()->version);
-		wp_enqueue_script('lms-plyr', lms()->url.'assets/packages/plyr/plyr.polyfilled.min.js', array('jquery'), lms()->version, true );
 
+		//Including player assets if video exists
+		if (lms_utils()->has_video_in_single()) {
+			//Plyr
+			wp_enqueue_style( 'lms-plyr', lms()->url . 'assets/packages/plyr/plyr.css', array(), lms()->version );
+			wp_enqueue_script( 'lms-plyr', lms()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array( 'jquery' ), lms()->version, true );
+		}
 
 
 		wp_enqueue_style('lms-frontend', lms()->url.'assets/css/lms-front.css', array(), lms()->version);

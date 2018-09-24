@@ -15,11 +15,13 @@ class Rewrite_Rules extends LMS_Base {
 
 		//Lesson Permalink
 		add_filter('post_type_link', array($this, 'change_lesson_single_url'), 1, 2);
+
 	}
 
 
 	public function lms_register_query_vars( $vars ) {
 		$vars[] = 'course_subpage';
+		$vars[] = 'lesson_video';
 		return $vars;
 	}
 
@@ -27,6 +29,8 @@ class Rewrite_Rules extends LMS_Base {
 		$new_rules = array(
 			//Lesson
 			$this->course_post_type."/(.+?)/{$this->lesson_post_type}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=". $wp_rewrite->preg_index(2),
+
+			"video-url/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=". $wp_rewrite->preg_index(1),
 		);
 
 		//Nav Items

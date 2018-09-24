@@ -28,6 +28,7 @@ get_header();
 		<?php lms_course_enroll_box(); ?>
 		<?php do_action('lms_course/single/after/enroll'); ?>
 
+		<?php lms_course_video(); ?>
 
 		<?php do_action('lms_course/single/before/benefits'); ?>
 		<?php lms_course_benefits_html(); ?>

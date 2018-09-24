@@ -42,7 +42,7 @@ class Lesson extends LMS_Base {
 	}
 
 	public function lesson_video_metabox(){
-		include  lms()->path.'views/metabox/lesson-video-metabox.php';
+		include  lms()->path.'views/metabox/video-metabox.php';
 	}
 
 	public function lesson_attachments_metabox(){
@@ -66,7 +66,7 @@ class Lesson extends LMS_Base {
 
 		//Video
 		if ( ! empty($_POST['video']['source'])){
-			$video = $this->sanitize_array($_POST['video']);
+			$video = lms_utils()->sanitize_array($_POST['video']);
 			update_post_meta($post_ID, '_video', $video);
 		}
 
