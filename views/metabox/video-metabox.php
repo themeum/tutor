@@ -5,7 +5,7 @@ $videoSource = lms_utils()->avalue_dot('source', $video);
 $runtimeHours = lms_utils()->avalue_dot('runtime.hours', $video);
 $runtimeMinutes = lms_utils()->avalue_dot('runtime.minutes', $video);
 $runtimeSeconds = lms_utils()->avalue_dot('runtime.seconds', $video);
-$sourceVideoID = lms_utils()->avalue_dot('source_self_hosted', $video);
+$sourceVideoID = lms_utils()->avalue_dot('source_video_id', $video);
 $poster = lms_utils()->avalue_dot('poster', $video);
 ?>
 
@@ -30,7 +30,7 @@ $poster = lms_utils()->avalue_dot('poster', $video);
 
             <div class="video_source_wrap_self_hosted"  style="display: <?php echo $videoSource === 'self_hosted' ? 'block' : 'none'; ?>;">
                 <a href="javascript:;" class="video_upload_btn"><i class="dashicons dashicons-upload"></i> </a>
-                <input type="hidden" name="video[source_self_hosted]" value="<?php echo $sourceVideoID; ?>" >
+                <input type="hidden" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
                 <p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e('Media ID', 'lms'); ?>: <span class="video_media_id"><?php echo $sourceVideoID;
 						?></span></p>
             </div>

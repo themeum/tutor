@@ -29,9 +29,10 @@ class Video_Stream {
 	private $end    = -1;
 	private $size   = 0;
 
-	private $videoFormats = array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg");
+	private $videoFormats;
 
 	function __construct($filePath) {
+		$this->videoFormats = apply_filters('lms_video_types', array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg")) ;
 		$this->path = $filePath;
 	}
 
@@ -60,26 +61,8 @@ class Video_Stream {
 		header("Accept-Ranges: 0-".$this->end);
 
 		if (isset($_SERVER['HTTP_RANGE'])) {
-			$c_start = $this->start;
 			$c_end = $this->end;
-
 			list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
-
-			/*
-			if (strpos($_SERVER['HTTP_RANGE'], '=') == false) {
-				// the name and value are delimited by a colon instead of an =
-				list(, $range) = explode(':', $_SERVER['HTTP_RANGE'], 2);
-			} else {
-				// this handles most cases where the name and value are delimited by an =
-				list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
-			}
-
-			if (strpos($range, ',') !== false) {
-				header('HTTP/1.1 416 Requested Range Not Satisfiable');
-				header("Content-Range: bytes $this->start-$this->end/$this->size");
-				exit;
-			}
-			*/
 
 			if ($range == '-') {
 				$c_start = $this->size - substr($range, 1);
@@ -103,8 +86,7 @@ class Video_Stream {
 			header("Content-Range: bytes $this->start-$this->end/".$this->size);
 			header("Accept-Ranges: bytes");
 		}
-		else
-		{
+		else {
 			header("Content-Length: ".$this->size);
 		}
 
@@ -113,8 +95,7 @@ class Video_Stream {
 	/**
 	 * close curretly opened stream
 	 */
-	private function end()
-	{
+	private function end() {
 		fclose($this->stream);
 		exit;
 	}
@@ -122,8 +103,7 @@ class Video_Stream {
 	/**
 	 * perform the streaming of calculated range
 	 */
-	private function stream()
-	{
+	private function stream() {
 		$i = $this->start;
 		set_time_limit(0);
 		while(!feof($this->stream) && $i <= $this->end) {
@@ -140,15 +120,12 @@ class Video_Stream {
 	}
 
 	/**
-	 * Start streaming video content
+	 * Start streaming lms video content
 	 */
-	function start()
-	{
+	function start() {
 		$this->open();
 		$this->setHeader();
 		$this->stream();
 		$this->end();
 	}
-
-
 }

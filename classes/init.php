@@ -13,6 +13,7 @@ class init{
 	//Components
 	public $utils;
 	public $admin;
+	public $ajax;
 	public $options;
 
 	private $post_types;
@@ -43,6 +44,7 @@ class init{
 		$this->post_types = new Post_types();
 		$this->assets = new Assets();
 		$this->admin = new Admin();
+		$this->ajax = new Ajax();
 		$this->course = new Course();
 		$this->lesson = new Lesson();
 		$this->rewrite_rules = new Rewrite_Rules();

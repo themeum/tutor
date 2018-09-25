@@ -20,7 +20,7 @@ class Template extends LMS_Base {
 		add_filter( 'template_include', array($this, 'load_single_course_template'), 99 );
 		add_filter( 'template_include', array($this, 'load_single_lesson_template'), 99 );
 
-		add_filter( 'template_include', array($this, 'video_url'), 99 );
+		add_filter( 'template_include', array($this, 'play_private_video'), 99 );
 	}
 
 	/**
@@ -111,16 +111,25 @@ class Template extends LMS_Base {
 		return $template;
 	}
 
-	public function video_url($template){
+	/**
+	 * @param $template
+	 *
+	 * @return mixed
+	 *
+	 * Play the video in this url.
+	 */
+	public function play_private_video($template){
 		global $wp_query;
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['lesson_video']) && $wp_query->query_vars['lesson_video'] === 'true') {
-			//TODO: need to protect un-authinicated users
-
-			$video_info = lms_utils()->get_video_info();
-			if ($video_info){
-				$stream = new Video_Stream($video_info->path);
-				$stream->start();
+			if (lms_utils()->is_course_enrolled_by_lesson()) {
+				$video_info = lms_utils()->get_video_info();
+				if ( $video_info ) {
+					$stream = new Video_Stream( $video_info->path );
+					$stream->start();
+				}
+			}else{
+				_e('Permission denied', 'lms');
 			}
 			exit();
 		}

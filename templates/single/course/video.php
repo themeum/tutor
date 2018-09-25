@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) )
 $video = lms_utils()->get_video();
 
 $videoSource = lms_utils()->avalue_dot('source', $video);
-$sourceVideoID = lms_utils()->avalue_dot('source_self_hosted', $video);
+$sourceVideoID = lms_utils()->avalue_dot('source_video_id', $video);
 
 $runtimeHours = lms_utils()->avalue_dot('runtime.hours', $video);
 $runtimeMinutes = lms_utils()->avalue_dot('runtime.minutes', $video);
