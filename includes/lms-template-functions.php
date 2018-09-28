@@ -628,7 +628,7 @@ if ( ! function_exists('lms_course_enrolled_nav')) {
 if ( ! function_exists('lms_course_video')){
 	function lms_course_video($echo = true){
 		ob_start();
-		lms_load_template( 'single.course.video' );
+		lms_load_template( 'single.video.video' );
 		$output = apply_filters( 'lms_course/single/video', ob_get_clean() );
 
 		if ( $echo ) {
@@ -641,7 +641,7 @@ if ( ! function_exists('lms_course_video')){
 if ( ! function_exists('lms_lesson_video')){
     function lms_lesson_video($echo = true){
 	    ob_start();
-	    lms_load_template( 'single.lesson.video' );
+	    lms_load_template( 'single.video.video' );
 	    $output = apply_filters( 'lms_lesson/single/video', ob_get_clean() );
 
 	    if ( $echo ) {
@@ -716,6 +716,31 @@ if ( ! function_exists('lms_course_mark_complete_html')) {
 		ob_start();
 		lms_load_template( 'single.course.complete_form' );
 		$output = apply_filters( 'lms_course/single/complete_form', ob_get_clean() );
+
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+}
+
+
+/**
+ * @param bool $echo
+ *
+ * @return mixed
+ *
+ * @show progress bar about course complete
+ *
+ * @since v.1.0.0
+ */
+
+if ( ! function_exists('lms_course_completing_progress_bar')) {
+	function lms_course_completing_progress_bar( $echo = true ) {
+		ob_start();
+		lms_load_template( 'single.course.enrolled.completing-progress' );
+		$output = apply_filters( 'lms_course/single/completing-progress-bar', ob_get_clean() );
 
 		if ( $echo ) {
 			echo $output;

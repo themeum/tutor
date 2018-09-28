@@ -29,7 +29,6 @@ class Assets{
 	 */
 	public function frontend_scripts(){
 
-
 		$localize_data = array(
 			'ajaxurl'   => admin_url('admin-ajax.php'),
 			'nonce_key' => lms()->nonce,
@@ -50,15 +49,11 @@ class Assets{
 			if ($best_watch_time > 0){
 				$localize_data['best_watch_time'] = $best_watch_time;
 			}
-
 		}
-
-
 
 		wp_enqueue_style('lms-frontend', lms()->url.'assets/css/lms-front.css', array(), lms()->version);
 		wp_enqueue_script('lms-frontend', lms()->url.'assets/js/lms-front.js', array('jquery'), lms()->version, true );
 		wp_localize_script('lms-frontend', '_lmsobject', $localize_data);
-
 	}
 
 

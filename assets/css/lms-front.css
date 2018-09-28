@@ -198,6 +198,7 @@ Lesson Single Page
     line-height: 22px;
     vertical-align: top;
     margin-left: 7px;
+    height: 22px;
 }
 .lms-wrap .lms-lesson-video-wrap{
     margin-bottom: 20px;
@@ -230,4 +231,25 @@ Lesson Single Page
 }
 .lms-wrap a.lms-lesson-attachment:hover {
     border: 1px solid #cccccc;
+}
+.lms-progress-bar{
+    border: 1px solid #dddddd;
+    background-color: #ffffff;
+    height: 25px;
+    width: 300px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #666666;
+    text-align: center;
+    line-height: 25px;
+    position: relative;
+}
+
+.lms-progress-bar .lms-progress-filled{
+    background-color: #00ff00;
+    height: 23px;
+}
+.lms-progress-percent{
+    position: absolute;
+    top: 0;
 }

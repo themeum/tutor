@@ -32,6 +32,10 @@ global $wp_query;
 				?>
             </p>
 
+            <?php
+            $count_completed_lesson = lms_course_completing_progress_bar();
+            ?>
+
             <div class="lms-lead-info-btn-group">
 				<?php
 				if ( $wp_query->query['post_type'] !== 'lesson') {

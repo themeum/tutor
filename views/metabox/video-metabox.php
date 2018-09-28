@@ -17,7 +17,7 @@ $poster = lms_utils()->avalue_dot('poster', $video);
 
         <select name="video[source]" class="lms_lesson_video_source select2">
             <option value=""><?php _e('Select Video Source', 'lms'); ?></option>
-            <option value="self_hosted" <?php selected('self_hosted', $videoSource); ?> ><?php _e('Self Hosted, WordPress Media', 'lms'); ?></option>
+            <option value="html5" <?php selected('html5', $videoSource); ?> ><?php _e('HTML5 (mp4)', 'lms'); ?></option>
             <option value="youtube" <?php selected('youtube', $videoSource); ?>><?php _e('YouTube', 'lms'); ?></option>
             <option value="vimeo" <?php selected('vimeo', $videoSource); ?>><?php _e('Vimeo', 'lms'); ?></option>
         </select>
@@ -28,7 +28,7 @@ $poster = lms_utils()->avalue_dot('poster', $video);
 
         <div class="lms-lesson-video-input">
 
-            <div class="video_source_wrap_self_hosted"  style="display: <?php echo $videoSource === 'self_hosted' ? 'block' : 'none'; ?>;">
+            <div class="video_source_wrap_html5"  style="display: <?php echo $videoSource === 'html5' ? 'block' : 'none'; ?>;">
                 <a href="javascript:;" class="video_upload_btn"><i class="dashicons dashicons-upload"></i> </a>
                 <input type="hidden" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
                 <p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e('Media ID', 'lms'); ?>: <span class="video_media_id"><?php echo $sourceVideoID;

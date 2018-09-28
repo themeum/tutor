@@ -7,6 +7,7 @@ jQuery(document).ready(function($){
     });
 
     const videoPlayer = {
+        nonce_key : _lmsobject.nonce_key,
         track_player : function(){
             var that = this;
             if (typeof Plyr !== 'undefined') {
@@ -14,10 +15,10 @@ jQuery(document).ready(function($){
 
                 player.on('ready', function(event){
                     const instance = event.detail.plyr;
-
                     if (_lmsobject.best_watch_time > 0) {
                         instance.media.currentTime = _lmsobject.best_watch_time;
                     }
+                    that.sync_time(instance);
                 });
 
                 var tempTimeNow = 0;
@@ -30,42 +31,40 @@ jQuery(document).ready(function($){
                         that.sync_time(instance);
                         tempTimeNow = 0;
                     }
-
                     tempTimeNow++;
                 });
 
+                player.on('ended', function(event){
+                    const instance = event.detail.plyr;
 
-                //TODO: fire sync_time() when video end
+                    var data = {is_ended:true};
+                    that.sync_time(instance, data)
+                });
             }
         },
-
-        sync_time: function(instance){
+        sync_time: function(instance, options){
             /**
              * LMS is sending about video playback information to server.
-             *
              */
+            var data = {action: 'sync_video_playback', currentTime : instance.currentTime, duration:instance.duration,  post_id : _lmsobject.post_id};
+            data[this.nonce_key] = _lmsobject[this.nonce_key];
 
-            var nonce_key = _lmsobject.nonce_key;
-            var data = {action: 'sync_video_playback', currentTime : instance.currentTime, post_id : _lmsobject.post_id};
-            data[nonce_key] = _lmsobject[nonce_key];
+            var data_send = data;
 
-            $.post(_lmsobject.ajaxurl, data);
-
+            if(options){
+                data_send = Object.assign(data, options);
+            }
+            $.post(_lmsobject.ajaxurl, data_send);
         },
-
-
         init: function(){
             this.track_player();
         }
     };
 
-
     /**
      * Fire LMS video
-     *
      * @since v.1.0.0
      */
     videoPlayer.init();
-
 });
 

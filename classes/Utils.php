@@ -62,12 +62,14 @@ class Utils {
 	 */
 
 	public function avalue_dot($key = null, $array = array()){
-		if ( ! $key || ! is_array($array) || ! count($array) ){
+		$array = (array) $array;
+		if ( ! $key || ! count($array) ){
 			return false;
 		}
 		$option_key_array = explode('.', $key);
 
 		$value = $array;
+
 		foreach ($option_key_array as $dotKey){
 			if (isset($value[$dotKey])){
 				$value = $value[$dotKey];
@@ -122,10 +124,7 @@ class Utils {
 		$site_url = trailingslashit(home_url()).'student/';
 		$user_name = '';
 
-		if ( ! $student_id){
-			$student_id = get_current_user_id();
-		}
-
+		$student_id = $this->get_user_id($student_id);
 		if ($student_id){
 
 			$user = get_userdata($student_id);
@@ -327,12 +326,11 @@ class Utils {
 	}
 
 	public function get_lesson($course_id = 0){
-		if (!$course_id){
-			$course_id = get_the_ID();
-		}
+		$course_id = $this->get_post_id($course_id);
 
 		$lesson_post_type = lms()->lesson_post_type;
 		$args = array(
+			'post_status'  => 'publish',
 			'post_type'  => $lesson_post_type,
 			'meta_query' => array(
 				array(
@@ -342,17 +340,43 @@ class Utils {
 				),
 			),
 		);
-
 		$query = new \WP_Query($args);
 
 		return $query;
+	}
 
+	public function get_lesson_count_by_course($course_id = 0){
+		$course_id = $this->get_post_id($course_id);
+		global $wpdb;
+
+		$count_lesson = $wpdb->get_var("select count(meta_id) from {$wpdb->postmeta} where meta_key = '_lms_course_id_for_lesson' AND meta_value = {$course_id} ");
+
+		return (int) $count_lesson;
+	}
+
+	public function get_completed_lesson_count_by_course($course_id = 0, $user_id = 0){
+		$course_id = $this->get_post_id($course_id);
+		$user_id = $this->get_user_id($user_id);
+		global $wpdb;
+
+		$completed_lesson_ids = $wpdb->get_col("select post_id from {$wpdb->postmeta} where meta_key = '_lms_course_id_for_lesson' AND meta_value = {$course_id} ");
+
+		$count = 0;
+		if (is_array($completed_lesson_ids) && count($completed_lesson_ids)){
+			$completed_lesson_meta_ids = array();
+			foreach ($completed_lesson_ids as $lesson_id){
+				$completed_lesson_meta_ids[] = '_lms_completed_lesson_id_'.$lesson_id;
+			}
+			$in_ids = implode("','", $completed_lesson_meta_ids);
+
+			$count = (int) $wpdb->get_var("select count(umeta_id) from {$wpdb->usermeta} WHERE user_id = '{$user_id}' AND meta_key in('{$in_ids}') ");
+		}
+
+		return $count;
 	}
 
 	public function get_topics($course_id = 0){
-		if (!$course_id){
-			$course_id = get_the_ID();
-		}
+		$course_id = $this->get_post_id($course_id);
 
 		$args = array(
 			'post_type'  => 'topics',
@@ -367,9 +391,7 @@ class Utils {
 	}
 
 	public function get_lessons_by_topic($topics_id = 0){
-		if (!$topics_id){
-			$topics_id = get_the_ID();
-		}
+		$topics_id = $this->get_post_id($topics_id);
 
 		$lesson_post_type = lms()->lesson_post_type;
 		$args = array(
@@ -405,12 +427,7 @@ class Utils {
 		if ( ! $this->has_wc()){
 			return false;
 		}
-		if ( ! $course_id){
-			$course_id = get_the_ID();
-		}
-		if ( ! $course_id){
-			return false;
-		}
+		$course_id = $this->get_post_id($course_id);
 		$has_product_id = get_post_meta($course_id, '_product_id', true);
 		if ($has_product_id){
 			return true;
@@ -428,19 +445,8 @@ class Utils {
 	 */
 
 	public function is_enrolled($course_id = 0, $user_id = 0){
-		if ( ! $course_id){
-			$course_id = get_the_ID();
-			if ( ! $course_id){
-				return false;
-			}
-		}
-
-		if ( ! $user_id){
-			$user_id = get_current_user_id();
-			if ( ! $user_id){
-				return false;
-			}
-		}
+		$course_id = $this->get_post_id($course_id);
+		$user_id = $this->get_user_id($user_id);
 
 		global $wpdb;
 
@@ -465,19 +471,8 @@ class Utils {
 	 */
 
 	public function is_course_enrolled_by_lesson($lesson_id = 0, $user_id = 0){
-		if ( ! $lesson_id){
-			$lesson_id = get_the_ID();
-			if ( ! $lesson_id){
-				return false;
-			}
-		}
-
-		if ( ! $user_id){
-			$user_id = get_current_user_id();
-			if ( ! $user_id){
-				return false;
-			}
-		}
+		$lesson_id = $this->get_post_id($lesson_id);
+		$user_id = $this->get_user_id($user_id);
 
 		return $this->is_enrolled($this->get_course_id_by_lesson($lesson_id));
 	}
@@ -492,12 +487,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_course_id_by_lesson($lesson_id = 0){
-		if ( ! $lesson_id){
-			$lesson_id = get_the_ID();
-			if ( ! $lesson_id){
-				return false;
-			}
-		}
+		$lesson_id = $this->get_post_id($lesson_id);
 		return get_post_meta($lesson_id, '_lms_course_id_for_lesson', true);
 	}
 
@@ -511,12 +501,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_course_first_lesson($course_id = 0){
-		if ( ! $course_id){
-			$course_id = get_the_ID();
-			if ( ! $course_id){
-				return false;
-			}
-		}
+		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
 
 		$lessons = $wpdb->get_var(" select main_posts.ID from {$wpdb->posts} main_posts 
@@ -558,18 +543,11 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_video($post_id = 0){
-		if ( ! $post_id){
-			$post_id = get_the_ID();
-			if ( ! $post_id){
-				return false;
-			}
-		}
-
+		$post_id = $this->get_post_id($post_id);
 		$attachments = get_post_meta($post_id, '_video', true);
 		if ($attachments) {
 			$attachments = maybe_unserialize($attachments);
 		}
-
 		return $attachments;
 	}
 
@@ -582,12 +560,7 @@ class Utils {
 	 * Update the video Info
 	 */
 	public function update_video($post_id = 0, $video_data = array()){
-		if ( ! $post_id){
-			$post_id = get_the_ID();
-			if ( ! $post_id){
-				return false;
-			}
-		}
+		$post_id = $this->get_post_id($post_id);
 
 		if (is_array($video_data) && count($video_data)){
 			update_post_meta($post_id, '_video', $video_data);
@@ -602,12 +575,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_attachments($post_id = 0){
-		if ( ! $post_id){
-			$post_id = get_the_ID();
-			if ( ! $post_id){
-				return false;
-			}
-		}
+		$post_id = $this->get_post_id($post_id);
 		$attachments_arr = array();
 
 		$attachments = maybe_unserialize(get_post_meta($post_id, '_lms_attachments', true));
@@ -667,6 +635,40 @@ class Utils {
 	}
 
 	/**
+	 * @param $seconds
+	 *
+	 * @return array
+	 *
+	 * Get the playtime in array
+	 */
+	public function playtime_array($seconds){
+		$run_time_format = array(
+			'hours' => '00',
+			'minutes' => '00',
+			'seconds' => '00',
+		);
+
+		if ($seconds <= 0 ){
+			return $run_time_format;
+		}
+
+		$playTimeString = $this->playtime_string($seconds);
+		$timeInArray = explode(':', $playTimeString);
+
+		$run_time_size = count($timeInArray);
+		if ($run_time_size === 3){
+			$run_time_format['hours'] = $timeInArray[0];
+			$run_time_format['minutes'] = $timeInArray[1];
+			$run_time_format['seconds'] = $timeInArray[2];
+		}elseif($run_time_size === 2){
+			$run_time_format['minutes'] = $timeInArray[0];
+			$run_time_format['seconds'] = $timeInArray[1];
+		}
+
+		return $run_time_format;
+	}
+
+	/**
 	 * @param int $lesson_id
 	 *
 	 * @return bool|object
@@ -675,14 +677,9 @@ class Utils {
 	 */
 
 	public function get_video_info($lesson_id = 0){
-		if ( ! $lesson_id){
-			$lesson_id = get_the_ID();
-			if ( ! $lesson_id){
-				return false;
-			}
-		}
-
+		$lesson_id = $this->get_post_id($lesson_id);
 		$video = $this->get_video($lesson_id);
+
 		if ( ! $video){
 			return false;
 		}
@@ -694,7 +691,7 @@ class Utils {
 		$types = apply_filters('lms_video_types', array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg"));
 
 		$videoSource = $this->avalue_dot('source', $video);
-		if ($videoSource === 'self_hosted'){
+		if ($videoSource === 'html5'){
 			$sourceVideoID = $this->avalue_dot('source_video_id', $video);
 			$video_info = get_post_meta($sourceVideoID, '_wp_attachment_metadata', true);
 
@@ -707,6 +704,8 @@ class Utils {
 			}
 		}
 
+		$info = array_merge($info, $video);
+
 		return (object) $info;
 	}
 
@@ -717,20 +716,15 @@ class Utils {
 	 *
 	 * Ensure if attached video is self hosted or not
 	 */
-	public function is_self_hosted_video($post_id = 0){
-		if ( ! $post_id){
-			$post_id = get_the_ID();
-			if ( ! $post_id){
-				return false;
-			}
-		}
+	public function is_html5_video($post_id = 0){
+		$post_id = $this->get_post_id($post_id);
 
 		$video = $this->get_video($post_id);
 		if ( ! $video){
 			return false;
 		}
 		$videoSource = $this->avalue_dot('source', $video);
-		return $videoSource === 'self_hosted';
+		return $videoSource === 'html5';
 	}
 
 	/**
@@ -743,19 +737,8 @@ class Utils {
 	 */
 
 	public function is_completed_lesson($lesson_id = 0, $user_id = 0){
-		if ( ! $lesson_id){
-			$lesson_id = get_the_ID();
-			if ( ! $lesson_id){
-				return false;
-			}
-		}
-
-		if ( ! $user_id){
-			$user_id = get_current_user_id();
-			if ( ! $user_id){
-				return false;
-			}
-		}
+		$lesson_id = $this->get_post_id($lesson_id);
+		$user_id = $this->get_user_id($user_id);
 
 		$is_completed = get_user_meta($user_id, '_lms_completed_lesson_id_'.$lesson_id, true);
 
@@ -768,19 +751,8 @@ class Utils {
 
 
 	public function is_completed_course($course_id = 0, $user_id = 0){
-		if ( ! $course_id){
-			$course_id = get_the_ID();
-			if ( ! $course_id){
-				return false;
-			}
-		}
-
-		if ( ! $user_id){
-			$user_id = get_current_user_id();
-			if ( ! $user_id){
-				return false;
-			}
-		}
+		$course_id = $this->get_post_id($course_id);
+		$user_id = $this->get_user_id($user_id);
 
 		$is_completed = get_user_meta($user_id, '_lms_completed_course_id_'.$course_id, true);
 
@@ -818,12 +790,7 @@ class Utils {
 	
 	public function has_video_in_single($post_id = 0){
 		if (is_single()) {
-			if ( ! $post_id ) {
-				$post_id = get_the_ID();
-				if ( ! $post_id ) {
-					return false;
-				}
-			}
+			$post_id = $this->get_post_id($post_id);
 
 			$video = $this->get_video( $post_id );
 			if ( $video ) {
@@ -905,13 +872,7 @@ class Utils {
 	 * Return courses by user_id
 	 */
 	public function get_courses_by_user($user_id = 0){
-		if ( ! $user_id){
-			$user_id = get_current_user_id();
-			if ( ! $user_id){
-				return false;
-			}
-		}
-
+		$user_id = $this->get_user_id($user_id);
 		global $wpdb;
 
 		$meta_key = '_lms_completed_course_id_';
@@ -1039,6 +1000,58 @@ class Utils {
 			$lesson_info[$lesson_id][$key] = $value;
 			update_user_meta($user_id, '_lesson_reading_info', $lesson_info);
 		}
+	}
+
+	/**
+	 * @param string $url
+	 *
+	 * @return bool
+	 *
+	 * Get the Youtube Video ID from URL
+	 *
+	 * @since v.1.0.0
+	 */
+	public function get_youtube_video_id($url = ''){
+		if (!$url){
+			return false;
+		}
+		preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match);
+
+		if (isset($match[1])) {
+			$youtube_id = $match[1];
+			return $youtube_id;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param string $url
+	 *
+	 * @return bool
+	 *
+	 * Get the vimeo video id from URL
+	 *
+	 * @since v.1.0.0
+	 */
+	public function get_vimeo_video_id($url = ''){
+		if (preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $url, $match)) {
+			if (isset($match[3])){
+				return $match[3];
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param int $post_id
+	 *
+	 * Mark lesson complete
+	 */
+	public function mark_lesson_complete($post_id = 0, $user_id = 0){
+		$post_id = $this->get_post_id($post_id);
+		$user_id = $this->get_user_id($user_id);
+		update_user_meta($user_id, '_lms_completed_lesson_id_'.$post_id, time());
 	}
 
 }

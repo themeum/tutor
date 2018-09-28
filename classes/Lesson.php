@@ -168,8 +168,7 @@ class Lesson extends LMS_Base {
 		/**
 		 * Marking lesson at user meta, meta format, _lms_completed_lesson_id_{id} and value = time();
 		 */
-
-		update_user_meta($user_id, '_lms_completed_lesson_id_'.$lesson_id, time());
+		lms_utils()->mark_lesson_complete($post_id);
 
 		wp_redirect(get_the_permalink($lesson_id));
 	}

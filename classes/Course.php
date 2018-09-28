@@ -206,10 +206,7 @@ class Course extends LMS_Base {
 	 */
 	public function custom_lesson_column($column, $post_id ){
 		if ($column === 'lessons'){
-			global $wpdb;
-
-			$count_lesson = $wpdb->get_var("select count(meta_id) from {$wpdb->postmeta} where meta_key = '_lms_course_id_for_lesson' AND meta_value = {$post_id} ");
-			echo $count_lesson;
+			echo lms_utils()->get_lesson_count_by_course($post_id);
 		}
 	}
 

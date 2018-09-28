@@ -170,7 +170,7 @@ jQuery(document).ready(function($){
 
 
 
-    $(document).on( 'click', '.video_source_wrap_self_hosted .video_upload_btn',  function( event ){
+    $(document).on( 'click', '.video_source_wrap_html5 .video_upload_btn',  function( event ){
         event.preventDefault();
 
         var $that = $(this);
@@ -194,8 +194,8 @@ jQuery(document).ready(function($){
         frame.on( 'select', function() {
             // Get media attachment details from the frame state
             var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.video_source_wrap_self_hosted').find('span.video_media_id').text(attachment.id).closest('p').show();
-            $that.closest('.video_source_wrap_self_hosted').find('input').val(attachment.id);
+            $that.closest('.video_source_wrap_html5').find('span.video_media_id').text(attachment.id).closest('p').show();
+            $that.closest('.video_source_wrap_html5').find('input').val(attachment.id);
         });
         // Finally, open the modal on click
         frame.open();
