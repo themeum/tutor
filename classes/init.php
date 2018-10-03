@@ -1,11 +1,11 @@
 <?php
-namespace LMS;
+namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 class init{
-	public $version = LMS_VERSION;
+	public $version = TUTOR_VERSION;
 	public $path;
 	public $url;
 	public $basename;
@@ -15,6 +15,7 @@ class init{
 	public $admin;
 	public $ajax;
 	public $options;
+	public $shortcode;
 
 	private $post_types;
 	private $assets;
@@ -22,11 +23,12 @@ class init{
 	private $lesson;
 	private $rewrite_rules;
 	private $template;
+	private $woocommerce;
 
 	function __construct() {
-		$this->path = plugin_dir_path(LMS_FILE);
-		$this->url = plugin_dir_url(LMS_FILE);
-		$this->basename = plugin_basename(LMS_FILE);
+		$this->path = plugin_dir_path(TUTOR_FILE);
+		$this->url = plugin_dir_url(TUTOR_FILE);
+		$this->basename = plugin_basename(TUTOR_FILE);
 
 		/**
 		 * Include Files
@@ -45,10 +47,16 @@ class init{
 		$this->assets = new Assets();
 		$this->admin = new Admin();
 		$this->ajax = new Ajax();
+		$this->options = new Options();
+		$this->shortcode = new Shortcode();
 		$this->course = new Course();
 		$this->lesson = new Lesson();
 		$this->rewrite_rules = new Rewrite_Rules();
 		$this->template = new Template();
+
+		if (tutor_utils()->has_wc()){
+			$this->woocommerce = new  Woo_Commerce();
+		}
 	}
 	/**
 	 * @param $className
@@ -63,7 +71,7 @@ class init{
 				$className
 			);
 
-			$className = str_replace('LMS/', 'classes/', $className);
+			$className = str_replace('TUTOR/', 'classes/', $className);
 			$file_name = $this->path.$className.'.php';
 
 			if (file_exists($file_name) && is_readable( $file_name ) ) {
@@ -73,17 +81,21 @@ class init{
 	}
 
 	public function include_template_functions(){
-		include lms()->path.'includes/lms-template-functions.php';
-		include lms()->path.'includes/lms-template-hook.php';
+		include tutor()->path.'includes/tutor-template-functions.php';
+		include tutor()->path.'includes/tutor-template-hook.php';
 	}
 
-	//Run the LMS right now
+	//Run the TUTOR right now
 	public function run(){
-
-
-
+		register_activation_hook( TUTOR_FILE, array( $this, 'tutor_activate' ) );
 	}
 
+	/**
+	 * Do some task during plugin activation
+	 */
+	public function tutor_activate(){
+		update_option('required_rewrite_flush', time());
+	}
 
 
 }

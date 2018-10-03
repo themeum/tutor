@@ -13,6 +13,6 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 ?>
 
-<div class="lms-login-form-wrap">
+<div class="tutor-login-form-wrap">
 	<?php wp_login_form(); ?>
 </div>

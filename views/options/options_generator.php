@@ -1,10 +1,10 @@
 <div class="wrap">
-    <h1><?php _e('LMS Settings'); ?></h1>
+    <h1><?php _e('TUTOR Settings'); ?></h1>
 
 
-    <form id="lms-option-form" class="lms-option-form" method="post">
-        <?php wp_nonce_field('lms_option_save') ?>
-        <input type="hidden" name="action" value="lms_option_save" >
+    <form id="tutor-option-form" class="tutor-option-form" method="post">
+        <?php wp_nonce_field('tutor_option_save') ?>
+        <input type="hidden" name="action" value="tutor_option_save" >
 
 		<?php
 		$options_attr = $this->options_attr;
@@ -12,7 +12,7 @@
 		if (is_array($options_attr) && count($options_attr)){
 			$first_item = null;
 			?>
-            <ul class="lms-option-nav-tabs">
+            <ul class="tutor-option-nav-tabs">
 				<?php
 				foreach ($options_attr as $key => $option_group){
 					if (empty($option_group)){
@@ -24,7 +24,7 @@
 					$is_first_item = ($first_item === $key);
 					$current_class = $is_first_item ? 'current' : '';
 
-					echo "<li class='option-nav-item {$current_class}'><a href='#{$key}' class='lms-option-nav-item'>{$option_group['label']}</a> </li>";
+					echo "<li class='option-nav-item {$current_class}'><a href='#{$key}' class='tutor-option-nav-item'>{$option_group['label']}</a> </li>";
 				}
 				?>
             </ul>
@@ -38,7 +38,7 @@
 				$is_first_item = ($first_item === $key);
 				?>
 
-                <div id="<?php echo $key; ?>" class="lms-option-nav-page <?php echo $is_first_item ? 'current-page' : ''; ?> " style="display: <?php echo $is_first_item ? 'block' : 'none' ?>;" >
+                <div id="<?php echo $key; ?>" class="tutor-option-nav-page <?php echo $is_first_item ? 'current-page' : ''; ?> " style="display: <?php echo $is_first_item ? 'block' : 'none' ?>;" >
                     <!--<h3><?php /*echo $option_group['label']; */?></h3>-->
 
 					<?php
@@ -46,7 +46,7 @@
 						foreach ($option_group['sections'] as $fgKey => $field_group){
 							?>
 
-                            <div class="lms-option-field-row">
+                            <div class="tutor-option-field-row">
                                 <h2><?php echo $field_group['label']; ?></h2>
                             </div>
 
@@ -66,7 +66,7 @@
 		?>
 
         <p class="submit">
-            <button type="button" id="save_lms_option" class="button button-primary"><?php echo __('Save Settings', 'lms') ?></button>
+            <button type="button" id="save_tutor_option" class="button button-primary"><?php echo __('Save Settings', 'tutor') ?></button>
         </p>
     </form>
 

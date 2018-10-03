@@ -9,4 +9,4 @@
  */
 ?>
 
-<a href="<?php the_permalink(); ?>"> <?php get_lms_course_thumbnail(); ?> </a>
+<a href="<?php the_permalink(); ?>"> <?php get_tutor_course_thumbnail(); ?> </a>

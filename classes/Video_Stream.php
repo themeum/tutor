@@ -6,7 +6,7 @@
  * Time: 4:03 PM
  */
 
-namespace LMS;
+namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) )
 
 /**
  * Class Video_Stream
- * @package LMS
+ * @package TUTOR
  *
- * LMS Video Stream Class
+ * TUTOR Video Stream Class
  * @since v.1.0.0
  */
 
@@ -32,7 +32,7 @@ class Video_Stream {
 	private $videoFormats;
 
 	function __construct($filePath) {
-		$this->videoFormats = apply_filters('lms_video_types', array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg")) ;
+		$this->videoFormats = apply_filters('tutor_video_types', array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg")) ;
 		$this->path = $filePath;
 	}
 
@@ -120,7 +120,7 @@ class Video_Stream {
 	}
 
 	/**
-	 * Start streaming lms video content
+	 * Start streaming tutor video content
 	 */
 	function start() {
 		$this->open();

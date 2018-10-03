@@ -9,6 +9,6 @@
  */
 ?>
 
-<div class="lms-loop-author">
+<div class="tutor-loop-author">
     <p><?php echo get_the_author(); ?></p>
 </div>

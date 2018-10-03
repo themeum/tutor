@@ -11,22 +11,22 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 
-do_action('lms_lesson/single/before/complete_form');
+do_action('tutor_lesson/single/before/complete_form');
 
-$is_completed_lesson = lms_utils()->is_completed_lesson();
+$is_completed_lesson = tutor_utils()->is_completed_lesson();
 if ( ! $is_completed_lesson) {
 	?>
-    <div class="lms-single-lesson-segment lms-lesson-compelte-form-wrap">
+    <div class="tutor-single-lesson-segment tutor-lesson-compelte-form-wrap">
 
         <form method="post">
-			<?php wp_nonce_field( lms()->nonce_action, lms()->nonce ); ?>
+			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
             <input type="hidden" value="<?php echo get_the_ID(); ?>" name="lesson_id"/>
-            <input type="hidden" value="lms_complete_lesson" name="lms_action"/>
+            <input type="hidden" value="tutor_complete_lesson" name="tutor_action"/>
 
-            <button type="submit" class="course-complete-button" name="complete_lesson_btn" value="complete_lesson"><?php _e( 'Complete Lesson', 'lms' ); ?></button>
+            <button type="submit" class="course-complete-button" name="complete_lesson_btn" value="complete_lesson"><?php _e( 'Complete Lesson', 'tutor' ); ?></button>
         </form>
     </div>
 	<?php
 }
-do_action('lms_lesson/single/after/complete_form'); ?>
+do_action('tutor_lesson/single/after/complete_form'); ?>

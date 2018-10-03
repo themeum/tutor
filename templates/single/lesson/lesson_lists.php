@@ -15,45 +15,45 @@ global $post;
 $currentPost = $post;
 ?>
 
-<?php do_action('lms_lesson/single/before/lesson_lists'); ?>
+<?php do_action('tutor_lesson/single/before/lesson_lists'); ?>
 
-    <div class="lms-topics-lesson-list">
+    <div class="tutor-topics-lesson-list">
 		<?php
 
-		$course_id = get_post_meta($post->ID, '_lms_course_id_for_lesson', true);
-		$topics = lms_utils()->get_topics($course_id);
+		$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
+		$topics = tutor_utils()->get_topics($course_id);
 
 		if ($topics->have_posts()){
 
 			while ($topics->have_posts()){ $topics->the_post();
 				?>
 
-                <div class="lms-topics-in-single-lesson">
-                    <div class="lms-topics-title">
+                <div class="tutor-topics-in-single-lesson">
+                    <div class="tutor-topics-title">
                         <h2><?php the_title(); ?></h2>
                     </div>
 
-                    <div class="lms-lessons-under-topic">
+                    <div class="tutor-lessons-under-topic">
 						<?php
-						$lessons = lms_utils()->get_lessons_by_topic(get_the_ID());
+						$lessons = tutor_utils()->get_lessons_by_topic(get_the_ID());
 						if ($lessons->have_posts()){
 							while ($lessons->have_posts()){
 								$lessons->the_post();
 
-								$video = lms_utils()->get_video_info();
+								$video = tutor_utils()->get_video_info();
 
 								$play_time = false;
 								if ($video){
 									$play_time = $video->playtime;
 								}
 
-								$is_completed_lesson = lms_utils()->is_completed_lesson();
+								$is_completed_lesson = tutor_utils()->is_completed_lesson();
                                 ?>
                                 <p class="<?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
                                     <a href="<?php the_permalink(); ?>">
 										<?php if ($play_time){ ?>
                                             <span class="play_icon">
-                                                <img src="<?php echo lms()->url.'assets/images/play-button.png'; ?>" />
+                                                <img src="<?php echo tutor()->url.'assets/images/play-button.png'; ?>" />
                                             </span>
 										<?php } ?>
 
@@ -84,4 +84,4 @@ $currentPost = $post;
 		?>
     </div>
 
-<?php do_action('lms_lesson/single/after/lesson_lists'); ?>
+<?php do_action('tutor_lesson/single/after/lesson_lists'); ?>

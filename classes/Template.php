@@ -4,14 +4,14 @@
  *
  * @since: v.1.0.0
  */
-namespace LMS;
+namespace TUTOR;
 
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 
-class Template extends LMS_Base {
+class Template extends Tutor_Base {
 
 	public function __construct() {
 		parent::__construct();
@@ -21,6 +21,8 @@ class Template extends LMS_Base {
 		add_filter( 'template_include', array($this, 'load_single_lesson_template'), 99 );
 
 		add_filter( 'template_include', array($this, 'play_private_video'), 99 );
+
+		add_filter('the_content', array($this, 'students_dashboard_page'));
 	}
 
 	/**
@@ -39,7 +41,7 @@ class Template extends LMS_Base {
 		$post_type = get_query_var('post_type');
 
 		if ($post_type === $this->course_post_type && $wp_query->is_archive){
-			$template = lms_get_template('archive-course');
+			$template = tutor_get_template('archive-course');
 			return $template;
 		}
 		return $template;
@@ -60,19 +62,19 @@ class Template extends LMS_Base {
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $this->course_post_type){
 
 			if (empty( $wp_query->query_vars['course_subpage'])) {
-				$template = lms_get_template( 'single-course' );
+				$template = tutor_get_template( 'single-course' );
 
 				if ( is_user_logged_in() ) {
-					if ( lms_utils()->is_enrolled() ) {
-						$template = lms_get_template( 'single-course-enrolled' );
+					if ( tutor_utils()->is_enrolled() ) {
+						$template = tutor_get_template( 'single-course-enrolled' );
 					}
 				}
 			}else{
 				//If Course Subpage Exists
 				if ( is_user_logged_in() ) {
-					$template = lms_get_template( 'single-course-enrolled-'.$wp_query->query_vars['course_subpage']);
+					$template = tutor_get_template( 'single-course-enrolled-'.$wp_query->query_vars['course_subpage']);
 				}else{
-					$template = lms_get_template('login');
+					$template = tutor_get_template('login');
 				}
 			}
 			return $template;
@@ -95,16 +97,16 @@ class Template extends LMS_Base {
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $this->lesson_post_type){
 			if (is_user_logged_in()){
-				$is_course_enrolled = lms_utils()->is_course_enrolled_by_lesson();
+				$is_course_enrolled = tutor_utils()->is_course_enrolled_by_lesson();
 
 				if ($is_course_enrolled) {
-					$template = lms_get_template( 'single-lesson' );
+					$template = tutor_get_template( 'single-lesson' );
 				}else{
 					//You need to enroll first
-					$template = lms_get_template( 'single.lesson.required-enroll' );
+					$template = tutor_get_template( 'single.lesson.required-enroll' );
 				}
 			}else{
-				$template = lms_get_template('login');
+				$template = tutor_get_template('login');
 			}
 			return $template;
 		}
@@ -122,19 +124,30 @@ class Template extends LMS_Base {
 		global $wp_query;
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['lesson_video']) && $wp_query->query_vars['lesson_video'] === 'true') {
-			if (lms_utils()->is_course_enrolled_by_lesson()) {
-				$video_info = lms_utils()->get_video_info();
+			if (tutor_utils()->is_course_enrolled_by_lesson()) {
+				$video_info = tutor_utils()->get_video_info();
 				if ( $video_info ) {
 					$stream = new Video_Stream( $video_info->path );
 					$stream->start();
 				}
 			}else{
-				_e('Permission denied', 'lms');
+				_e('Permission denied', 'tutor');
 			}
 			exit();
 		}
 
 		return $template;
+	}
+
+	public function students_dashboard_page($content){
+		$student_dashboard_page_id = (int) tutor_utils()->get_option('student_dashboard');
+		if (! get_the_ID() || $student_dashboard_page_id !== get_the_ID()){
+			return $content;
+		}
+
+		ob_start();
+		tutor_load_template( 'dashboard.student.index' );
+		return apply_filters( 'tutor_dashboard/student/index', ob_get_clean() );
 	}
 
 }

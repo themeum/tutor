@@ -1,5 +1,5 @@
 <?php
-namespace LMS;
+namespace TUTOR;
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
@@ -9,8 +9,8 @@ class Post_types{
 	public $lesson_post_type;
 
 	public function __construct() {
-		$this->course_post_type = lms()->course_post_type;
-		$this->lesson_post_type = lms()->lesson_post_type;
+		$this->course_post_type = tutor()->course_post_type;
+		$this->lesson_post_type = tutor()->lesson_post_type;
 		
 		add_action( 'init', array($this, 'register_course_post_types') );
 		add_action( 'init', array($this, 'register_lesson_post_types') );
@@ -18,25 +18,25 @@ class Post_types{
 	
 	public function register_course_post_types() {
 		$labels = array(
-			'name'               => _x( 'Courses', 'post type general name', 'lms' ),
-			'singular_name'      => _x( 'Course', 'post type singular name', 'lms' ),
-			'menu_name'          => _x( 'Courses', 'admin menu', 'lms' ),
-			'name_admin_bar'     => _x( 'Course', 'add new on admin bar', 'lms' ),
-			'add_new'            => _x( 'Add New', $this->course_post_type, 'lms' ),
-			'add_new_item'       => __( 'Add New Course', 'lms' ),
-			'new_item'           => __( 'New Course', 'lms' ),
-			'edit_item'          => __( 'Edit Course', 'lms' ),
-			'view_item'          => __( 'View Course', 'lms' ),
-			'all_items'          => __( 'All Courses', 'lms' ),
-			'search_items'       => __( 'Search Courses', 'lms' ),
-			'parent_item_colon'  => __( 'Parent Courses:', 'lms' ),
-			'not_found'          => __( 'No courses found.', 'lms' ),
-			'not_found_in_trash' => __( 'No courses found in Trash.', 'lms' )
+			'name'               => _x( 'Courses', 'post type general name', 'tutor' ),
+			'singular_name'      => _x( 'Course', 'post type singular name', 'tutor' ),
+			'menu_name'          => _x( 'Courses', 'admin menu', 'tutor' ),
+			'name_admin_bar'     => _x( 'Course', 'add new on admin bar', 'tutor' ),
+			'add_new'            => _x( 'Add New', $this->course_post_type, 'tutor' ),
+			'add_new_item'       => __( 'Add New Course', 'tutor' ),
+			'new_item'           => __( 'New Course', 'tutor' ),
+			'edit_item'          => __( 'Edit Course', 'tutor' ),
+			'view_item'          => __( 'View Course', 'tutor' ),
+			'all_items'          => __( 'All Courses', 'tutor' ),
+			'search_items'       => __( 'Search Courses', 'tutor' ),
+			'parent_item_colon'  => __( 'Parent Courses:', 'tutor' ),
+			'not_found'          => __( 'No courses found.', 'tutor' ),
+			'not_found_in_trash' => __( 'No courses found in Trash.', 'tutor' )
 		);
 
 		$args = array(
 			'labels'             => $labels,
-			'description'        => __( 'Description.', 'lms' ),
+			'description'        => __( 'Description.', 'tutor' ),
 			'public'             => true,
 			'publicly_queryable' => true,
 			'show_ui'            => true,
@@ -59,22 +59,22 @@ class Post_types{
 		 */
 
 		$labels = array(
-			'name'                       => _x( 'Categories', 'taxonomy general name', 'lms' ),
-			'singular_name'              => _x( 'Category', 'taxonomy singular name', 'lms' ),
-			'search_items'               => __( 'Search Categories', 'lms' ),
-			'popular_items'              => __( 'Popular Categories', 'lms' ),
-			'all_items'                  => __( 'All Categories', 'lms' ),
+			'name'                       => _x( 'Categories', 'taxonomy general name', 'tutor' ),
+			'singular_name'              => _x( 'Category', 'taxonomy singular name', 'tutor' ),
+			'search_items'               => __( 'Search Categories', 'tutor' ),
+			'popular_items'              => __( 'Popular Categories', 'tutor' ),
+			'all_items'                  => __( 'All Categories', 'tutor' ),
 			'parent_item'                => null,
 			'parent_item_colon'          => null,
-			'edit_item'                  => __( 'Edit Category', 'lms' ),
-			'update_item'                => __( 'Update Category', 'lms' ),
-			'add_new_item'               => __( 'Add New Category', 'lms' ),
-			'new_item_name'              => __( 'New Category Name', 'lms' ),
-			'separate_items_with_commas' => __( 'Separate categories with commas', 'lms' ),
-			'add_or_remove_items'        => __( 'Add or remove categories', 'lms' ),
-			'choose_from_most_used'      => __( 'Choose from the most used categories', 'lms' ),
-			'not_found'                  => __( 'No categories found.', 'lms' ),
-			'menu_name'                  => __( 'Categories', 'lms' ),
+			'edit_item'                  => __( 'Edit Category', 'tutor' ),
+			'update_item'                => __( 'Update Category', 'tutor' ),
+			'add_new_item'               => __( 'Add New Category', 'tutor' ),
+			'new_item_name'              => __( 'New Category Name', 'tutor' ),
+			'separate_items_with_commas' => __( 'Separate categories with commas', 'tutor' ),
+			'add_or_remove_items'        => __( 'Add or remove categories', 'tutor' ),
+			'choose_from_most_used'      => __( 'Choose from the most used categories', 'tutor' ),
+			'not_found'                  => __( 'No categories found.', 'tutor' ),
+			'menu_name'                  => __( 'Categories', 'tutor' ),
 		);
 
 		$args = array(
@@ -90,22 +90,22 @@ class Post_types{
 		register_taxonomy( 'course-category', $this->course_post_type, $args );
 
 		$labels = array(
-			'name'                       => _x( 'Tags', 'taxonomy general name', 'lms' ),
-			'singular_name'              => _x( 'Tag', 'taxonomy singular name', 'lms' ),
-			'search_items'               => __( 'Search Tags', 'lms' ),
-			'popular_items'              => __( 'Popular Tags', 'lms' ),
-			'all_items'                  => __( 'All Tags', 'lms' ),
+			'name'                       => _x( 'Tags', 'taxonomy general name', 'tutor' ),
+			'singular_name'              => _x( 'Tag', 'taxonomy singular name', 'tutor' ),
+			'search_items'               => __( 'Search Tags', 'tutor' ),
+			'popular_items'              => __( 'Popular Tags', 'tutor' ),
+			'all_items'                  => __( 'All Tags', 'tutor' ),
 			'parent_item'                => null,
 			'parent_item_colon'          => null,
-			'edit_item'                  => __( 'Edit Tag', 'lms' ),
-			'update_item'                => __( 'Update Tag', 'lms' ),
-			'add_new_item'               => __( 'Add New Tag', 'lms' ),
-			'new_item_name'              => __( 'New Tag Name', 'lms' ),
-			'separate_items_with_commas' => __( 'Separate tags with commas', 'lms' ),
-			'add_or_remove_items'        => __( 'Add or remove tags', 'lms' ),
-			'choose_from_most_used'      => __( 'Choose from the most used tags', 'lms' ),
-			'not_found'                  => __( 'No tags found.', 'lms' ),
-			'menu_name'                  => __( 'Tags', 'lms' ),
+			'edit_item'                  => __( 'Edit Tag', 'tutor' ),
+			'update_item'                => __( 'Update Tag', 'tutor' ),
+			'add_new_item'               => __( 'Add New Tag', 'tutor' ),
+			'new_item_name'              => __( 'New Tag Name', 'tutor' ),
+			'separate_items_with_commas' => __( 'Separate tags with commas', 'tutor' ),
+			'add_or_remove_items'        => __( 'Add or remove tags', 'tutor' ),
+			'choose_from_most_used'      => __( 'Choose from the most used tags', 'tutor' ),
+			'not_found'                  => __( 'No tags found.', 'tutor' ),
+			'menu_name'                  => __( 'Tags', 'tutor' ),
 		);
 
 		$args = array(
@@ -123,25 +123,25 @@ class Post_types{
 
 	public function register_lesson_post_types() {
 		$labels = array(
-			'name'               => _x( 'Lessons', 'post type general name', 'lms' ),
-			'singular_name'      => _x( 'Lesson', 'post type singular name', 'lms' ),
-			'menu_name'          => _x( 'Lessons', 'admin menu', 'lms' ),
-			'name_admin_bar'     => _x( 'Lesson', 'add new on admin bar', 'lms' ),
-			'add_new'            => _x( 'Add New', $this->lesson_post_type, 'lms' ),
-			'add_new_item'       => __( 'Add New Lesson', 'lms' ),
-			'new_item'           => __( 'New Lesson', 'lms' ),
-			'edit_item'          => __( 'Edit Lesson', 'lms' ),
-			'view_item'          => __( 'View Lesson', 'lms' ),
-			'all_items'          => __( 'All Lessons', 'lms' ),
-			'search_items'       => __( 'Search Lessons', 'lms' ),
-			'parent_item_colon'  => __( 'Parent Lessons:', 'lms' ),
-			'not_found'          => __( 'No lessons found.', 'lms' ),
-			'not_found_in_trash' => __( 'No lessons found in Trash.', 'lms' )
+			'name'               => _x( 'Lessons', 'post type general name', 'tutor' ),
+			'singular_name'      => _x( 'Lesson', 'post type singular name', 'tutor' ),
+			'menu_name'          => _x( 'Lessons', 'admin menu', 'tutor' ),
+			'name_admin_bar'     => _x( 'Lesson', 'add new on admin bar', 'tutor' ),
+			'add_new'            => _x( 'Add New', $this->lesson_post_type, 'tutor' ),
+			'add_new_item'       => __( 'Add New Lesson', 'tutor' ),
+			'new_item'           => __( 'New Lesson', 'tutor' ),
+			'edit_item'          => __( 'Edit Lesson', 'tutor' ),
+			'view_item'          => __( 'View Lesson', 'tutor' ),
+			'all_items'          => __( 'All Lessons', 'tutor' ),
+			'search_items'       => __( 'Search Lessons', 'tutor' ),
+			'parent_item_colon'  => __( 'Parent Lessons:', 'tutor' ),
+			'not_found'          => __( 'No lessons found.', 'tutor' ),
+			'not_found_in_trash' => __( 'No lessons found in Trash.', 'tutor' )
 		);
 
 		$args = array(
 			'labels'             => $labels,
-			'description'        => __( 'Description.', 'lms' ),
+			'description'        => __( 'Description.', 'tutor' ),
 			'public'             => true,
 			'publicly_queryable' => true,
 			'show_ui'            => true,

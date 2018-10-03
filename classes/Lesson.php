@@ -1,10 +1,10 @@
 <?php
-namespace LMS;
+namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-class Lesson extends LMS_Base {
+class Lesson extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
@@ -32,21 +32,21 @@ class Lesson extends LMS_Base {
 	public function register_meta_box(){
 		$lesson_post_type = $this->lesson_post_type;
 
-		add_meta_box( 'lms-course-select', __( 'Select Course', 'lms' ), array($this, 'lesson_metabox'), $lesson_post_type );
-		add_meta_box( 'lms-lesson-videos', __( 'Lesson Video', 'lms' ), array($this, 'lesson_video_metabox'), $lesson_post_type );
-		add_meta_box( 'lms-lesson-attachments', __( 'Attachments', 'lms' ), array($this, 'lesson_attachments_metabox'), $lesson_post_type );
+		add_meta_box( 'tutor-course-select', __( 'Select Course', 'tutor' ), array($this, 'lesson_metabox'), $lesson_post_type );
+		add_meta_box( 'tutor-lesson-videos', __( 'Lesson Video', 'tutor' ), array($this, 'lesson_video_metabox'), $lesson_post_type );
+		add_meta_box( 'tutor-lesson-attachments', __( 'Attachments', 'tutor' ), array($this, 'lesson_attachments_metabox'), $lesson_post_type );
 	}
 
 	public function lesson_metabox(){
-		include  lms()->path.'views/metabox/lesson-metabox.php';
+		include  tutor()->path.'views/metabox/lesson-metabox.php';
 	}
 
 	public function lesson_video_metabox(){
-		include  lms()->path.'views/metabox/video-metabox.php';
+		include  tutor()->path.'views/metabox/video-metabox.php';
 	}
 
 	public function lesson_attachments_metabox(){
-		include  lms()->path.'views/metabox/lesson-attachments-metabox.php';
+		include  tutor()->path.'views/metabox/lesson-attachments-metabox.php';
 	}
 
 	/**
@@ -60,23 +60,23 @@ class Lesson extends LMS_Base {
 		if (isset($_POST['selected_course'])) {
 			$course_id = (int) sanitize_text_field( $_POST['selected_course'] );
 			if ( $course_id ) {
-				update_post_meta( $post_ID, '_lms_course_id_for_lesson', $course_id );
+				update_post_meta( $post_ID, '_tutor_course_id_for_lesson', $course_id );
 			}
 		}
 
 		//Video
 		if ( ! empty($_POST['video']['source'])){
-			$video = lms_utils()->sanitize_array($_POST['video']);
+			$video = tutor_utils()->sanitize_array($_POST['video']);
 			update_post_meta($post_ID, '_video', $video);
 		}
 
 		//Attachments
 		$attachments = array();
-		if ( ! empty($_POST['lms_attachments'])){
-			$attachments = lms_utils()->sanitize_array($_POST['lms_attachments']);
+		if ( ! empty($_POST['tutor_attachments'])){
+			$attachments = tutor_utils()->sanitize_array($_POST['tutor_attachments']);
 			$attachments = array_unique($attachments);
 		}
-		update_post_meta($post_ID, '_lms_attachments', $attachments);
+		update_post_meta($post_ID, '_tutor_attachments', $attachments);
 
 	}
 
@@ -96,7 +96,7 @@ class Lesson extends LMS_Base {
 			$uri_base = trailingslashit(site_url());
 
 			$sample_course = "sample-course";
-			$is_course = get_post_meta(get_the_ID(), '_lms_course_id_for_lesson', true);
+			$is_course = get_post_meta(get_the_ID(), '_tutor_course_id_for_lesson', true);
 			if ($is_course){
 				$course = get_post($is_course);
 				$sample_course = $course->post_name;
@@ -121,7 +121,7 @@ class Lesson extends LMS_Base {
 	public function add_column($columns){
 		$date_col = $columns['date'];
 		unset($columns['date']);
-		$columns['course'] = __('Course', 'lms');
+		$columns['course'] = __('Course', 'tutor');
 		$columns['date'] = $date_col;
 
 		return $columns;
@@ -135,7 +135,7 @@ class Lesson extends LMS_Base {
 	public function custom_lesson_column($column, $post_id ){
 		if ($column === 'course'){
 
-			$course_id = get_post_meta($post_id, '_lms_course_id_for_lesson', true);
+			$course_id = get_post_meta($post_id, '_tutor_course_id_for_lesson', true);
 			if ($course_id){
 				echo '<a href="'.admin_url('post.php?post='.$course_id.'&action=edit').'">'.get_the_title($course_id).'</a>';
 			}
@@ -150,25 +150,25 @@ class Lesson extends LMS_Base {
 	 * @since v.1.0.0
 	 */
 	public function mark_lesson_complete(){
-		if ( ! isset($_POST['lms_action'])  ||  $_POST['lms_action'] !== 'lms_complete_lesson' ){
+		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_complete_lesson' ){
 			return;
 		}
 		//Checking nonce
-		lms_utils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
 
 		//TODO: need to show view if not signed_in
 		if ( ! $user_id){
-			die(__('Please Sign-In', 'lms'));
+			die(__('Please Sign-In', 'tutor'));
 		}
 
 		$lesson_id = (int) sanitize_text_field($_POST['lesson_id']);
 
 		/**
-		 * Marking lesson at user meta, meta format, _lms_completed_lesson_id_{id} and value = time();
+		 * Marking lesson at user meta, meta format, _tutor_completed_lesson_id_{id} and value = time();
 		 */
-		lms_utils()->mark_lesson_complete($post_id);
+		tutor_utils()->mark_lesson_complete($post_id);
 
 		wp_redirect(get_the_permalink($lesson_id));
 	}

@@ -16,13 +16,13 @@ if ( empty($content)){
 
 ?>
 
-<div class="lms-single-course-segment  lms-course-content-wrap">
+<div class="tutor-single-course-segment  tutor-course-content-wrap">
 
     <div class="course-content-title">
-        <h4><?php _e('Description', 'lms'); ?></h4>
+        <h4><?php _e('Description', 'tutor'); ?></h4>
     </div>
 
-    <div class="lms-course-content-content">
+    <div class="tutor-course-content-content">
         <?php echo $content; ?>
     </div>
 </div>

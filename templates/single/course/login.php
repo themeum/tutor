@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 ?>
 
-<div class="lms-single-course-segment lms-course-login-wrap">
+<div class="tutor-single-course-segment tutor-course-login-wrap">
     <div class="course-login-title">
-        <h2><?php _e('Please Sign-In to enroll course', 'lms'); ?></h2>
+        <h2><?php _e('Please Sign-In to enroll course', 'tutor'); ?></h2>
     </div>
 
-    <div class="lms-single-course-login-form">
-	    <?php lms_load_template( 'global.login' ); ?>
+    <div class="tutor-single-course-login-form">
+	    <?php tutor_load_template( 'global.login' ); ?>
     </div>
 </div>

@@ -10,23 +10,23 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-$attachments = lms_utils()->get_attachments();
+$attachments = tutor_utils()->get_attachments();
 
-do_action('lms_global/before/attachments');
+do_action('tutor_global/before/attachments');
 
 if (is_array($attachments) && count($attachments)){
 	?>
-    <div class="lms-page-segment lms-attachments-wrap">
-        <h3><?php _e('Attachments', 'lms'); ?></h3>
+    <div class="tutor-page-segment tutor-attachments-wrap">
+        <h3><?php _e('Attachments', 'tutor'); ?></h3>
         <?php
         foreach ($attachments as $attachment){
             ?>
-            <a href="<?php echo $attachment->url; ?>" class="lms-lesson-attachment clearfix">
-                <div class="lms-attachment-icon">
+            <a href="<?php echo $attachment->url; ?>" class="tutor-lesson-attachment clearfix">
+                <div class="tutor-attachment-icon">
                     <img src="<?php echo $attachment->icon; ?>" />
                 </div>
 
-                <div class="lms-attachment-info">
+                <div class="tutor-attachment-info">
                     <p><?php echo $attachment->name; ?></p>
                     <span><?php echo $attachment->size; ?></span>
                 </div>
@@ -37,4 +37,4 @@ if (is_array($attachments) && count($attachments)){
     </div>
 <?php }
 
-do_action('lms_global/after/attachments'); ?>
+do_action('tutor_global/after/attachments'); ?>

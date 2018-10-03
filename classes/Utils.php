@@ -1,5 +1,5 @@
 <?php
-namespace LMS;
+namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
@@ -18,7 +18,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_option($key = null, $default = false){
-		$option = (array) maybe_unserialize(get_option('lms_option'));
+		$option = (array) maybe_unserialize(get_option('tutor_option'));
 
 		if (empty($option) || ! is_array($option)){
 			return $default;
@@ -102,7 +102,7 @@ class Utils {
 	 * Get course archive URL
 	 */
 	public function course_archive_page_url(){
-		$course_post_type = lms()->course_post_type;
+		$course_post_type = tutor()->course_post_type;
 		$course_page_url = trailingslashit(home_url()).$course_post_type;
 
 		$course_archive_page = $this->get_option('course_archive_page');
@@ -145,7 +145,7 @@ class Utils {
 	 */
 
 	public function has_wc(){
-		return class_exists( 'woocommerce' );
+		return  in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ;
 	}
 
 	/**
@@ -292,7 +292,7 @@ class Utils {
 			'zu' => 'Zulu' ,
 		);
 
-		return apply_filters('lms/utils/languages', $language_codes);
+		return apply_filters('tutor/utils/languages', $language_codes);
 	}
 
 	public function print_view($value = ''){
@@ -304,7 +304,7 @@ class Utils {
 	public function get_courses(){
 		global $wpdb;
 
-		$course_post_type = lms()->course_post_type;
+		$course_post_type = tutor()->course_post_type;
 		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = '{$course_post_type}' ");
 		return $query;
 	}
@@ -312,7 +312,7 @@ class Utils {
 	public function get_course_count(){
 		global $wpdb;
 
-		$course_post_type = lms()->course_post_type;
+		$course_post_type = tutor()->course_post_type;
 		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = '{$course_post_type}'; ");
 		return $count;
 	}
@@ -320,7 +320,7 @@ class Utils {
 	public function get_lesson_count(){
 		global $wpdb;
 
-		$lesson_post_type = lms()->lesson_post_type;
+		$lesson_post_type = tutor()->lesson_post_type;
 		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = '{$lesson_post_type}'; ");
 		return $count;
 	}
@@ -328,13 +328,13 @@ class Utils {
 	public function get_lesson($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 
-		$lesson_post_type = lms()->lesson_post_type;
+		$lesson_post_type = tutor()->lesson_post_type;
 		$args = array(
 			'post_status'  => 'publish',
 			'post_type'  => $lesson_post_type,
 			'meta_query' => array(
 				array(
-					'key'     => '_lms_course_id_for_lesson',
+					'key'     => '_tutor_course_id_for_lesson',
 					'value'   => $course_id,
 					'compare' => '=',
 				),
@@ -349,7 +349,7 @@ class Utils {
 		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
 
-		$count_lesson = $wpdb->get_var("select count(meta_id) from {$wpdb->postmeta} where meta_key = '_lms_course_id_for_lesson' AND meta_value = {$course_id} ");
+		$count_lesson = $wpdb->get_var("select count(meta_id) from {$wpdb->postmeta} where meta_key = '_tutor_course_id_for_lesson' AND meta_value = {$course_id} ");
 
 		return (int) $count_lesson;
 	}
@@ -359,13 +359,13 @@ class Utils {
 		$user_id = $this->get_user_id($user_id);
 		global $wpdb;
 
-		$completed_lesson_ids = $wpdb->get_col("select post_id from {$wpdb->postmeta} where meta_key = '_lms_course_id_for_lesson' AND meta_value = {$course_id} ");
+		$completed_lesson_ids = $wpdb->get_col("select post_id from {$wpdb->postmeta} where meta_key = '_tutor_course_id_for_lesson' AND meta_value = {$course_id} ");
 
 		$count = 0;
 		if (is_array($completed_lesson_ids) && count($completed_lesson_ids)){
 			$completed_lesson_meta_ids = array();
 			foreach ($completed_lesson_ids as $lesson_id){
-				$completed_lesson_meta_ids[] = '_lms_completed_lesson_id_'.$lesson_id;
+				$completed_lesson_meta_ids[] = '_tutor_completed_lesson_id_'.$lesson_id;
 			}
 			$in_ids = implode("','", $completed_lesson_meta_ids);
 
@@ -373,6 +373,28 @@ class Utils {
 		}
 
 		return $count;
+	}
+
+	/**
+	 * @param int $course_id
+	 * @param int $user_id
+	 *
+	 * @return float|int
+	 *
+	 */
+
+	public function get_course_completed_percent($course_id = 0, $user_id = 0){
+		$course_id = $this->get_post_id($course_id);
+		$user_id = $this->get_user_id($user_id);
+
+		$total_lesson = $this->get_lesson_count_by_course($course_id);
+		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
+
+		if ($total_lesson > 0 && $completed_lesson > 0){
+			return ($completed_lesson * 100) / $total_lesson;
+		}
+
+		return 0;
 	}
 
 	public function get_topics($course_id = 0){
@@ -393,7 +415,7 @@ class Utils {
 	public function get_lessons_by_topic($topics_id = 0){
 		$topics_id = $this->get_post_id($topics_id);
 
-		$lesson_post_type = lms()->lesson_post_type;
+		$lesson_post_type = tutor()->lesson_post_type;
 		$args = array(
 			'post_type'  => $lesson_post_type,
 			'post_parent'  => $topics_id,
@@ -408,11 +430,11 @@ class Utils {
 
 	public function checking_nonce($request_method = 'post'){
 		if ($request_method === 'post'){
-			if (!isset($_POST[lms()->nonce]) || !wp_verify_nonce($_POST[lms()->nonce], lms()->nonce_action)) {
+			if (!isset($_POST[tutor()->nonce]) || !wp_verify_nonce($_POST[tutor()->nonce], tutor()->nonce_action)) {
 				exit();
 			}
 		}else{
-			if (!isset($_GET[lms()->nonce]) || !wp_verify_nonce($_GET[lms()->nonce], lms()->nonce_action)) {
+			if (!isset($_GET[tutor()->nonce]) || !wp_verify_nonce($_GET[tutor()->nonce], tutor()->nonce_action)) {
 				exit();
 			}
 		}
@@ -428,7 +450,7 @@ class Utils {
 			return false;
 		}
 		$course_id = $this->get_post_id($course_id);
-		$has_product_id = get_post_meta($course_id, '_product_id', true);
+		$has_product_id = get_post_meta($course_id, '_tutor_course_product_id', true);
 		if ($has_product_id){
 			return true;
 		}
@@ -450,7 +472,7 @@ class Utils {
 
 		global $wpdb;
 
-		$getEnrolledInfo = $wpdb->get_row("select ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'lms_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} ");
+		$getEnrolledInfo = $wpdb->get_row("select ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} AND post_status = 'completed'; ");
 
 		if ($getEnrolledInfo){
 			return $getEnrolledInfo;
@@ -488,7 +510,7 @@ class Utils {
 	 */
 	public function get_course_id_by_lesson($lesson_id = 0){
 		$lesson_id = $this->get_post_id($lesson_id);
-		return get_post_meta($lesson_id, '_lms_course_id_for_lesson', true);
+		return get_post_meta($lesson_id, '_tutor_course_id_for_lesson', true);
 	}
 
 	/**
@@ -526,13 +548,13 @@ class Utils {
 	 */
 	public function course_sub_pages(){
 		$nav_items = array(
-			'overview' => __('Overview', 'lms'),
-			'content' => __('Content', 'lms'),
-			'questions' => __('Questions', 'lms'),
-			'announcements' => __('Announcements', 'lms'),
+			'overview' => __('Overview', 'tutor'),
+			'content' => __('Content', 'tutor'),
+			'questions' => __('Questions', 'tutor'),
+			'announcements' => __('Announcements', 'tutor'),
 		);
 
-		return apply_filters('lms_course/single/enrolled/nav_items', $nav_items);
+		return apply_filters('tutor_course/single/enrolled/nav_items', $nav_items);
 	}
 
 	/**
@@ -578,7 +600,7 @@ class Utils {
 		$post_id = $this->get_post_id($post_id);
 		$attachments_arr = array();
 
-		$attachments = maybe_unserialize(get_post_meta($post_id, '_lms_attachments', true));
+		$attachments = maybe_unserialize(get_post_meta($post_id, '_tutor_attachments', true));
 		
 		if ( is_array($attachments) && count($attachments)) {
 			foreach ( $attachments as $attachment ) {
@@ -608,7 +630,7 @@ class Utils {
 					'icon'          => $icon,
 				);
 
-				$attachments_arr[] = (object) apply_filters('lms/posts/attachments', $data);
+				$attachments_arr[] = (object) apply_filters('tutor/posts/attachments', $data);
 			}
 		}
 		
@@ -688,7 +710,7 @@ class Utils {
 			'playtime' => '00:00',
 		);
 
-		$types = apply_filters('lms_video_types', array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg"));
+		$types = apply_filters('tutor_video_types', array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg"));
 
 		$videoSource = $this->avalue_dot('source', $video);
 		if ($videoSource === 'html5'){
@@ -699,6 +721,7 @@ class Utils {
 				$path               = get_attached_file($sourceVideoID);
 				$info['playtime']   = $video_info['length_formatted'];
 				$info['path']       = $path;
+				$info['url']        = wp_get_attachment_url($sourceVideoID);
 				$info['ext']        = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 				$info['type']       = $types[$info['ext']];
 			}
@@ -740,7 +763,7 @@ class Utils {
 		$lesson_id = $this->get_post_id($lesson_id);
 		$user_id = $this->get_user_id($user_id);
 
-		$is_completed = get_user_meta($user_id, '_lms_completed_lesson_id_'.$lesson_id, true);
+		$is_completed = get_user_meta($user_id, '_tutor_completed_lesson_id_'.$lesson_id, true);
 
 		if ($is_completed){
 			return $is_completed;
@@ -754,7 +777,7 @@ class Utils {
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
 
-		$is_completed = get_user_meta($user_id, '_lms_completed_course_id_'.$course_id, true);
+		$is_completed = get_user_meta($user_id, '_tutor_completed_course_id_'.$course_id, true);
 
 		if ($is_completed){
 			return $is_completed;
@@ -817,9 +840,9 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_students($start = 0, $limit = 10, $search_term = '', $course_id = 0){
-		$meta_key = '_is_lms_student';
+		$meta_key = '_is_tutor_student';
 		if ($course_id){
-			$meta_key = '_lms_completed_course_id_'.$meta_key;
+			$meta_key = '_tutor_completed_course_id_'.$meta_key;
 		}
 		global $wpdb;
 
@@ -847,9 +870,9 @@ class Utils {
 	 * pass course id to get course wise total students
 	 */
 	public function get_total_students($search_term = '', $course_id = 0){
-		$meta_key = '_is_lms_student';
+		$meta_key = '_is_tutor_student';
 		if ($course_id){
-			$meta_key = '_lms_completed_course_id_'.$meta_key;
+			$meta_key = '_tutor_completed_course_id_'.$meta_key;
 		}
 
 		global $wpdb;
@@ -875,7 +898,7 @@ class Utils {
 		$user_id = $this->get_user_id($user_id);
 		global $wpdb;
 
-		$meta_key = '_lms_completed_course_id_';
+		$meta_key = '_tutor_completed_course_id_';
 
 		$course_id_query = $wpdb->get_col("select meta_key from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key LIKE '%{$meta_key}%' ");
 		$course_ids = array();
@@ -889,7 +912,7 @@ class Utils {
 		}
 
 		if (count($course_ids)){
-			$course_post_type = lms()->course_post_type;
+			$course_post_type = tutor()->course_post_type;
 			$course_args = array(
 				'post_type' => $course_post_type,
 				'post_status' => 'publish',
@@ -903,6 +926,33 @@ class Utils {
 	}
 
 	/**
+	 * @param int $user_id
+	 *
+	 * @return bool|\WP_Query
+	 *
+	 * Get the enrolled courses by user
+	 */
+	public function get_enrolled_courses_by_user($user_id = 0){
+		global $wpdb;
+
+		$user_id = $this->get_user_id($user_id);
+		$course_ids = $wpdb->get_col("select post_parent from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_author = {$user_id} AND post_status = 'completed'; ");
+
+		if (count($course_ids)){
+			$course_post_type = tutor()->course_post_type;
+			$course_args = array(
+				'post_type'     => $course_post_type,
+				'post_status'   => 'publish',
+				'post__in'      => $course_ids,
+			);
+			return new \WP_Query($course_args);
+		}
+		return false;
+	}
+
+
+
+	/**
 	 * @param int $post_id
 	 *
 	 * @return string
@@ -910,12 +960,16 @@ class Utils {
 	 * Get the video streaming URL by post/lesson/course ID
 	 */
 	public function get_video_stream_url($post_id = 0){
-		if ( ! $post_id ) {
-			$post_id = get_the_ID();
-		}
+		$post_id = $this->get_post_id($post_id);
 		$post = get_post($post_id);
 
-		$video_url = trailingslashit(home_url()).'video-url/'.$post->post_name;
+		if ($post->post_type === tutor()->lesson_post_type ){
+			$video_url = trailingslashit(home_url()).'video-url/'.$post->post_name;
+		}else{
+			$video_info = tutor_utils()->get_video_info($post_id);
+			$video_url =  $video_info->url;
+		}
+
 		return $video_url;
 	}
 
@@ -1051,7 +1105,144 @@ class Utils {
 	public function mark_lesson_complete($post_id = 0, $user_id = 0){
 		$post_id = $this->get_post_id($post_id);
 		$user_id = $this->get_user_id($user_id);
-		update_user_meta($user_id, '_lms_completed_lesson_id_'.$post_id, time());
+		update_user_meta($user_id, '_tutor_completed_lesson_id_'.$post_id, time());
+	}
+
+
+
+	/**
+	 * Saving enroll information to posts table
+	 * post_author = enrolled_student_id (wp_users id)
+	 * post_parent = enrolled course id
+	 *
+	 * @type: call when need
+	 * @return bool;
+	 */
+	public function do_enroll($course_id = 0, $order_id = 0){
+		if ( ! $course_id){
+			return false;
+		}
+
+		do_action('tutor_before_enroll', $course_id);
+		$user_id = get_current_user_id();
+		$title = __('Course Enrolled', 'tutor')." &ndash; ".date_i18n(get_option('date_format')) .' @ '.date_i18n(get_option('time_format') ) ;
+
+		$enrolment_status = 'completed';
+
+		if ($this->is_course_purchasable($course_id)) {
+			/**
+			 * We need to verify this enrollment, we will change the status later after payment confirmation
+			 */
+			$enrolment_status = 'pending';
+		}
+
+		$enroll_data = apply_filters('tutor_enroll_data',
+			array(
+				'post_type'     => 'tutor_enrolled',
+				'post_title'    => $title,
+				'post_status'   => $enrolment_status,
+				'post_author'   => $user_id,
+				'post_parent'   => $course_id,
+			)
+		);
+
+		// Insert the post into the database
+		$isEnrolled = wp_insert_post( $enroll_data );
+		if ($isEnrolled) {
+			do_action('tutor_after_enroll', $course_id, $isEnrolled);
+
+			//Mark Current User as Students with user meta data
+			update_user_meta( $user_id, '_is_tutor_student', time() );
+
+			if ($order_id) {
+				//Mark order for course and user
+				$product_id = $this->get_course_product_id($course_id);
+				update_post_meta( $isEnrolled, '_tutor_enrolled_by_order_id', $order_id );
+				update_post_meta( $isEnrolled, '_tutor_enrolled_by_product_id', $product_id );
+				update_post_meta( $order_id, '_is_tutor_order_for_course', time() );
+				update_post_meta( $order_id, '_tutor_order_for_course_id_'.$course_id, $isEnrolled );
+			}
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get wc product in efficient query
+	 *
+	 * @since v.1.0.0
+	 */
+
+	/**
+	 * @return array|null|object
+	 *
+	 * WooCommerce specific utils
+	 */
+	public function get_wc_products_db(){
+		global $wpdb;
+		$query = $wpdb->get_results("SELECT ID, post_title from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'product' ");
+
+		return $query;
+	}
+
+	public function get_course_product_id($course_id = 0){
+		$course_id = $this->get_post_id($course_id);
+		return (int) get_post_meta($course_id, '_tutor_course_product_id', true);
+	}
+
+	public function product_belongs_with_course($product_id = 0){
+		global $wpdb;
+
+		$query = $wpdb->get_row("select * from {$wpdb->postmeta} WHERE meta_key='_tutor_course_product_id' AND meta_value = {$product_id} limit 1 ");
+		return $query;
+	}
+
+	/**
+	 * #End WooCommerce specific utils
+	 */
+
+
+	public function get_enrolled_statuses(){
+		return array (
+			'pending',
+			'processing',
+			'on-hold',
+			'completed',
+			'cancelled',
+			'refunded',
+			'failed',
+		);
+	}
+
+	public function is_tutor_order($order_id){
+		return get_post_meta($order_id, '_is_tutor_order_for_course', true);
+	}
+
+	/**
+	 * @return mixed
+	 *
+	 * Tutor Dashboard Pages
+	 */
+
+	public function tutor_student_dashboard_pages(){
+		$nav_items = array(
+			'index' => __('Home', 'tutor'),
+			'my-courses' => __('My Courses', 'tutor'),
+			'active-courses' => __('Active Courses', 'tutor'),
+			'completed-courses' => __('Completed Courses', 'tutor'),
+		);
+
+		return apply_filters('tutor_dashboard/student/pages', $nav_items);
+	}
+
+
+	public function get_tutor_dashboard_page_permalink($page_key = '', $page_id = 0){
+		if ($page_key === 'index'){
+			$page_key = '';
+		}
+		$page_id = $this->get_post_id($page_id);
+		return trailingslashit(get_permalink($page_id)).$page_key;
 	}
 
 }

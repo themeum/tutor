@@ -15,34 +15,34 @@ $currentPost = $post;
 ?>
 
 
-<?php do_action('lms_lesson/single/before/wrap'); ?>
+<?php do_action('tutor_lesson/single/before/wrap'); ?>
 
 
-<?php do_action('lms_lesson/single/before/lead_info'); ?>
-<?php lms_lesson_lead_info(); ?>
-<?php do_action('lms_lesson/single/after/lead_info'); ?>
+<?php do_action('tutor_lesson/single/before/lead_info'); ?>
+<?php tutor_lesson_lead_info(); ?>
+<?php do_action('tutor_lesson/single/after/lead_info'); ?>
 
 
-    <div <?php lms_post_class(); ?>>
-        <div class="lms-lesson-single-wrap">
+    <div <?php tutor_post_class(); ?>>
+        <div class="tutor-lesson-single-wrap">
 
-            <div class="lms-topics-wrap">
-	            <?php lms_lessons_as_list(); ?>
+            <div class="tutor-topics-wrap">
+	            <?php tutor_lessons_as_list(); ?>
             </div>
 
 
-            <div class="lms-lesson-content-wrap">
+            <div class="tutor-lesson-content-wrap">
 
-				<?php lms_lesson_video(); ?>
+				<?php tutor_lesson_video(); ?>
 				<?php the_content(); ?>
-				<?php get_lms_posts_attachments(); ?>
-				<?php lms_lesson_mark_complete_html(); ?>
+				<?php get_tutor_posts_attachments(); ?>
+				<?php tutor_lesson_mark_complete_html(); ?>
 
             </div>
 
         </div>
     </div><!-- .wrap -->
 
-<?php do_action('lms_lesson/single/after/wrap');
+<?php do_action('tutor_lesson/single/after/wrap');
 
 get_footer();

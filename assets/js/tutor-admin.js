@@ -2,26 +2,26 @@ jQuery(document).ready(function($){
     'use strict';
 
     if (jQuery().select2){
-        $('.select2').select2();
+        $('.tutor_select2').select2();
     }
 
     /**
      * Option Settings Nav Tab
      */
-    $('.lms-option-nav-tabs li a').click(function(e){
+    $('.tutor-option-nav-tabs li a').click(function(e){
         e.preventDefault();
         var tab_page_id = $(this).attr('href');
         $('.option-nav-item').removeClass('current');
         $(this).closest('li').addClass('current');
-        $('.lms-option-nav-page').hide();
+        $('.tutor-option-nav-page').hide();
         $(tab_page_id).addClass('current-page').show();
     });
 
-    $('#save_lms_option').click(function (e) {
+    $('#save_tutor_option').click(function (e) {
         e.preventDefault();
         $(this).closest('form').submit();
     });
-    $('#lms-option-form').submit(function(e){
+    $('#tutor-option-form').submit(function(e){
         e.preventDefault();
 
         var $form = $(this);
@@ -43,12 +43,12 @@ jQuery(document).ready(function($){
         });
     });
 
-    $('.lms-field-slider').each(function(){
+    $('.tutor-field-slider').each(function(){
         var $slider = $(this);
-        var $input = $slider.closest('.lms-field-type-slider').find('input[type="hidden"]');
-        var $showVal = $slider.closest('.lms-field-type-slider').find('.lms-field-type-slider-value');
-        var min = parseFloat($slider.closest('.lms-field-type-slider').attr('data-min'));
-        var max = parseFloat($slider.closest('.lms-field-type-slider').attr('data-max'));
+        var $input = $slider.closest('.tutor-field-type-slider').find('input[type="hidden"]');
+        var $showVal = $slider.closest('.tutor-field-type-slider').find('.tutor-field-type-slider-value');
+        var min = parseFloat($slider.closest('.tutor-field-type-slider').attr('data-min'));
+        var max = parseFloat($slider.closest('.tutor-field-type-slider').attr('data-max'));
 
         $slider.slider({
             range: "max",
@@ -67,34 +67,35 @@ jQuery(document).ready(function($){
      * Course and lesson sorting
      */
 
-    $( ".course-contents" ).sortable({
-        handle: ".course-move-handle",
-        start: function(e, ui){
-            ui.placeholder.css('visibility', 'visible');
-        },
-        stop: function(e, ui){
-            lms_sorting_topics_and_lesson();
-        },
-    });
-    $( ".lms-lessions:not(.drop-lessons)" ).sortable({
-        connectWith: ".lms-lessions",
-        items: "div.lms-lesson",
-        start: function(e, ui){
-            ui.placeholder.css('visibility', 'visible');
-        },
-        stop: function(e, ui){
-            lms_sorting_topics_and_lesson();
-        },
-    });
-
-    function lms_sorting_topics_and_lesson(){
+    if (jQuery().sortable) {
+        $(".course-contents").sortable({
+            handle: ".course-move-handle",
+            start: function (e, ui) {
+                ui.placeholder.css('visibility', 'visible');
+            },
+            stop: function (e, ui) {
+                tutor_sorting_topics_and_lesson();
+            },
+        });
+        $(".tutor-lessions:not(.drop-lessons)").sortable({
+            connectWith: ".tutor-lessions",
+            items: "div.tutor-lesson",
+            start: function (e, ui) {
+                ui.placeholder.css('visibility', 'visible');
+            },
+            stop: function (e, ui) {
+                tutor_sorting_topics_and_lesson();
+            },
+        });
+    }
+    function tutor_sorting_topics_and_lesson(){
         var topics = {};
-        $('.lms-topics-wrap').each(function(index, item){
+        $('.tutor-topics-wrap').each(function(index, item){
             var $topic = $(this);
             var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
             var lessons = {};
 
-            $topic.find('.lms-lesson').each(function(lessonIndex, lessonItem){
+            $topic.find('.tutor-lesson').each(function(lessonIndex, lessonItem){
                 var $lesson = $(this);
                 var lesson_id = parseInt($lesson.attr('id').match(/\d+/)[0], 10);
 
@@ -103,31 +104,31 @@ jQuery(document).ready(function($){
             topics[index] = { 'topic_id' : topics_id, 'lesson_ids' : lessons };
 
             //Hide drop element
-            if ($topic.find('.lms-lesson').length){
+            if ($topic.find('.tutor-lesson').length){
                 $topic.find('.drop-lessons').hide();
             }else{
                 $topic.find('.drop-lessons').show();
             }
 
         });
-        $('#lms_topics_lessons_sorting').val(JSON.stringify(topics));
+        $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
         //console.log(topics);
     }
 
     $(document).on('click', '.topic-edit-icon', function (e) {
         e.preventDefault();
-        $(this).closest('.lms-topics-top').find('.lms-topics-edit-form').slideToggle();
+        $(this).closest('.tutor-topics-top').find('.tutor-topics-edit-form').slideToggle();
     });
 
-    $(document).on('click', '.lms-topics-edit-button', function(e){
+    $(document).on('click', '.tutor-topics-edit-button', function(e){
         e.preventDefault();
         var $button = $(this);
-        var $topic = $button.closest('.lms-topics-wrap');
+        var $topic = $button.closest('.tutor-topics-wrap');
         var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
-        var topic_title = $button.closest('.lms-topics-wrap').find('[name="topic_title"]').val();
-        var topic_summery = $button.closest('.lms-topics-wrap').find('[name="topic_summery"]').val();
+        var topic_title = $button.closest('.tutor-topics-wrap').find('[name="topic_title"]').val();
+        var topic_summery = $button.closest('.tutor-topics-wrap').find('[name="topic_summery"]').val();
 
-        var data = {topic_title: topic_title, topic_summery : topic_summery, topic_id : topics_id, action: 'lms_update_topic'};
+        var data = {topic_title: topic_title, topic_summery : topic_summery, topic_id : topics_id, action: 'tutor_update_topic'};
         $.ajax({
             url : ajaxurl,
             type : 'POST',
@@ -137,8 +138,8 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 if (data.success){
-                    $button.closest('.lms-topics-wrap').find('span.topic-inner-title').text(topic_title);
-                    $button.closest('.lms-topics-wrap').find('.lms-topics-edit-form').slideUp();
+                    $button.closest('.tutor-topics-wrap').find('span.topic-inner-title').text(topic_title);
+                    $button.closest('.tutor-topics-wrap').find('.tutor-topics-edit-form').slideUp();
                 }
             },
             complete: function () {
@@ -161,7 +162,7 @@ jQuery(document).ready(function($){
      * Lesson Video
      */
 
-    $(document).on('change', '.lms_lesson_video_source', function(e){
+    $(document).on('change', '.tutor_lesson_video_source', function(e){
         var selector = $(this).val();
         $('[class^="video_source_wrap"]').hide();
         $('.video_source_wrap_'+selector).show();
@@ -202,8 +203,8 @@ jQuery(document).ready(function($){
     });
 
 
-    //lms_video_poster_upload_btn
-    $(document).on( 'click', '.lms_video_poster_upload_btn',  function( event ){
+    //tutor_video_poster_upload_btn
+    $(document).on( 'click', '.tutor_video_poster_upload_btn',  function( event ){
         event.preventDefault();
 
         var $that = $(this);
@@ -227,19 +228,19 @@ jQuery(document).ready(function($){
         frame.on( 'select', function() {
             // Get media attachment details from the frame state
             var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.lms-video-poster-wrap').find('.video-poster-img').html('<img src="'+attachment.url+'" alt="" />');
-            $that.closest('.lms-video-poster-wrap').find('input').val(attachment.id);
+            $that.closest('.tutor-video-poster-wrap').find('.video-poster-img').html('<img src="'+attachment.url+'" alt="" />');
+            $that.closest('.tutor-video-poster-wrap').find('input').val(attachment.id);
         });
         // Finally, open the modal on click
         frame.open();
     });
 
-    $(document).on('click', 'a.lms-delete-attachment', function(e){
+    $(document).on('click', 'a.tutor-delete-attachment', function(e){
         e.preventDefault();
-        $(this).closest('.lms-added-attachment').remove();
+        $(this).closest('.tutor-added-attachment').remove();
     });
 
-    $(document).on('click', '.lmsUploadAttachmentBtn', function(e){
+    $(document).on('click', '.tutorUploadAttachmentBtn', function(e){
         e.preventDefault();
 
         var $that = $(this);
@@ -266,8 +267,8 @@ jQuery(document).ready(function($){
                 for (var i=0; i < attachments.length; i++){
                     var attachment = attachments[i];
 
-                    var inputHtml = '<div class="lms-added-attachment"><p> <a href="javascript:;" class="lms-delete-attachment">×</a> <span> <a href="'+attachment.url+'">'+attachment.filename+'</a> </span> </p><input type="hidden" name="lms_attachments[]" value="'+attachment.id+'"></div>';
-                    $that.closest('.lms-lesson-attachments-metabox').find('.lms-added-attachments-wrap').append(inputHtml);
+                    var inputHtml = '<div class="tutor-added-attachment"><p> <a href="javascript:;" class="tutor-delete-attachment">×</a> <span> <a href="'+attachment.url+'">'+attachment.filename+'</a> </span> </p><input type="hidden" name="tutor_attachments[]" value="'+attachment.id+'"></div>';
+                    $that.closest('.tutor-lesson-attachments-metabox').find('.tutor-added-attachments-wrap').append(inputHtml);
                 }
             }
         });

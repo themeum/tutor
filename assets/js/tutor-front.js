@@ -1,28 +1,28 @@
 jQuery(document).ready(function($){
     'use strict';
 
-    $(document).on('change', '.lms-course-filter-form', function(e){
+    $(document).on('change', '.tutor-course-filter-form', function(e){
         e.preventDefault();
         $(this).closest('form').submit();
     });
 
     const videoPlayer = {
-        nonce_key : _lmsobject.nonce_key,
+        nonce_key : _tutorobject.nonce_key,
         track_player : function(){
             var that = this;
             if (typeof Plyr !== 'undefined') {
-                const player = new Plyr('#lmsPlayer');
+                const player = new Plyr('#tutorPlayer');
 
                 player.on('ready', function(event){
                     const instance = event.detail.plyr;
-                    if (_lmsobject.best_watch_time > 0) {
-                        instance.media.currentTime = _lmsobject.best_watch_time;
+                    if (_tutorobject.best_watch_time > 0) {
+                        instance.media.currentTime = _tutorobject.best_watch_time;
                     }
                     that.sync_time(instance);
                 });
 
                 var tempTimeNow = 0;
-                var intervalSeconds = 60; //Send to lms backend about video playing time in this interval
+                var intervalSeconds = 60; //Send to tutor backend about video playing time in this interval
                 player.on('timeupdate', function(event){
                     const instance = event.detail.plyr;
 
@@ -44,17 +44,17 @@ jQuery(document).ready(function($){
         },
         sync_time: function(instance, options){
             /**
-             * LMS is sending about video playback information to server.
+             * TUTOR is sending about video playback information to server.
              */
-            var data = {action: 'sync_video_playback', currentTime : instance.currentTime, duration:instance.duration,  post_id : _lmsobject.post_id};
-            data[this.nonce_key] = _lmsobject[this.nonce_key];
+            var data = {action: 'sync_video_playback', currentTime : instance.currentTime, duration:instance.duration,  post_id : _tutorobject.post_id};
+            data[this.nonce_key] = _tutorobject[this.nonce_key];
 
             var data_send = data;
 
             if(options){
                 data_send = Object.assign(data, options);
             }
-            $.post(_lmsobject.ajaxurl, data_send);
+            $.post(_tutorobject.ajaxurl, data_send);
         },
         init: function(){
             this.track_player();
@@ -62,7 +62,7 @@ jQuery(document).ready(function($){
     };
 
     /**
-     * Fire LMS video
+     * Fire TUTOR video
      * @since v.1.0.0
      */
     videoPlayer.init();

@@ -15,21 +15,21 @@ get_header();
 
 ?>
 
-<?php do_action('lms/template/login/before/wrap'); ?>
-    <div <?php lms_post_class(); ?>>
+<?php do_action('tutor/template/login/before/wrap'); ?>
+    <div <?php tutor_post_class(); ?>>
 
-        <div class="lms-template-segment lms-login-wrap">
-            <div class="lms-login-title">
-                <h2><?php _e('Please Sign-In to view this section', 'lms'); ?></h2>
+        <div class="tutor-template-segment tutor-login-wrap">
+            <div class="tutor-login-title">
+                <h2><?php _e('Please Sign-In to view this section', 'tutor'); ?></h2>
             </div>
 
-            <div class="lms-template-login-form">
-				<?php lms_load_template( 'global.login' ); ?>
+            <div class="tutor-template-login-form">
+				<?php tutor_load_template( 'global.login' ); ?>
             </div>
         </div>
     </div><!-- .wrap -->
 
-<?php do_action('lms/template/login/after/wrap'); ?>
+<?php do_action('tutor/template/login/after/wrap'); ?>
 
 
 

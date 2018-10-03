@@ -37,32 +37,32 @@
 
 
 /**
-LMS CSS
+TUTOR CSS
  */
 
-.lms-option-nav-tabs{
+.tutor-option-nav-tabs{
 
 }
-.lms-option-nav-tabs li{
+.tutor-option-nav-tabs li{
     position: relative;
     display: inline-block;
     margin-right: 20px;
 }
-.lms-option-nav-tabs li:after {
+.tutor-option-nav-tabs li:after {
     content: "|";
     position: absolute;
     top: 0;
     right: -10px;
 }
-.lms-option-nav-tabs li:last-child:after {
+.tutor-option-nav-tabs li:last-child:after {
     content: "";
 }
-.lms-option-nav-tabs li a{
+.tutor-option-nav-tabs li a{
     display: block;
     font-weight: bold;
     text-decoration: none;
 }
-.lms-option-nav-tabs li.current a{
+.tutor-option-nav-tabs li.current a{
     color: #333333;
 }
 
@@ -70,13 +70,13 @@ LMS CSS
 Option Field
  */
 
-.lms-option-field-row {
+.tutor-option-field-row {
     border-bottom: 1px solid #e4e4e4;
     padding: 30px 0;
     font-size: 14px;
     line-height: 1.3
 }
-.lms-option-field-row input[type=text],.lms-option-field-row input[type=email],.lms-option-field-row input[type=number],.lms-option-field-row input[type=password], .lms-option-field-row textarea, .lms-option-field-row .lms-field-type-slider {
+.tutor-option-field-row input[type=text],.tutor-option-field-row input[type=email],.tutor-option-field-row input[type=number],.tutor-option-field-row input[type=password], .tutor-option-field-row textarea, .tutor-option-field-row .tutor-field-type-slider {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 3px;
@@ -89,27 +89,27 @@ Option Field
     width: 400px;
     min-height: 35px
 }
-.lms-option-field {
+.tutor-option-field {
     display: block;
     margin: 0 0 0 200px;
     max-width: 800px
 }
-.lms-option-field-label {
+.tutor-option-field-label {
     display: block;
     float: left;
     width: 200px;
 }
-.lms-option-field-label label {
+.tutor-option-field-label label {
     display: block;
     font-weight: 600
 }
-.lms-option-field p.desc {
+.tutor-option-field p.desc {
     font-style: italic;
     color: #666;
     font-size: 12px;
     line-height: 1.5;
 }
-.lms-option-field-row h2{
+.tutor-option-field-row h2{
     color: #444;
     font-size: 18px;
     font-weight: 700;
@@ -119,11 +119,11 @@ Option Field
 /**
 Group Field Option
  */
-.lms-option-group-field {
+.tutor-option-group-field {
     display: inline-block;
     vertical-align: top;
 }
-.lms-option-group-field input[type=text],.lms-option-group-field input[type=email],.lms-option-group-field input[type=number],.lms-option-group-field input[type=password], .lms-option-group-field textarea, .lms-option-group-field .lms-field-type-slider, .lms-option-group-field select {
+.tutor-option-group-field input[type=text],.tutor-option-group-field input[type=email],.tutor-option-group-field input[type=number],.tutor-option-group-field input[type=password], .tutor-option-group-field textarea, .tutor-option-group-field .tutor-field-type-slider, .tutor-option-group-field select {
     width: 100px;
     margin-right: 5px;
 }
@@ -131,49 +131,49 @@ Group Field Option
 /**
 Course adding page
  */
-#lms-course-topics a{
+#tutor-course-topics a{
     text-decoration: none;
 }
-#lms-course-topics .lms-topics-wrap{
+#tutor-course-topics .tutor-topics-wrap{
     border-bottom: 1px solid #dddddd;
     padding-bottom: 20px;
 }
-#lms-course-topics .lms-lesson {
+#tutor-course-topics .tutor-lesson {
     padding: 10px;
 }
-#lms-course-topics .drop-lessons{
+#tutor-course-topics .drop-lessons{
     border: 1px dashed #dddddd;
     padding: 10px 25px;
     background-color: #f4f4f4;
 }
-#lms-course-topics .lms-lesson:hover{
+#tutor-course-topics .tutor-lesson:hover{
     background-color: #EEEEEE;
 }
-#lms-course-topics .lms-lessions {
+#tutor-course-topics .tutor-lessions {
     padding-left: 30px;
     min-height: 100px;
 }
-#lms-course-topics .lms-lesson-top, #lms-course-topics .lms-lesson-top i {
+#tutor-course-topics .tutor-lesson-top, #tutor-course-topics .tutor-lesson-top i {
     font-size: 15px;
 }
-.lms-topics-wrap, .lms-lesson{
+.tutor-topics-wrap, .tutor-lesson{
     background-color: #ffffff;
 }
 .ui-sortable-placeholder{
     visibility: visible;
     background-color: #dddd;
 }
-.lms-untopics-lessons{
+.tutor-untopics-lessons{
     margin-top: 50px;
 }
-.lms-metabox-add-topics, .lms-topics-edit-form {
+.tutor-metabox-add-topics, .tutor-topics-edit-form {
     background: #f1f1f1;
     padding: 20px;
 }
-.lms-metabox-add-topics .lms-option-field-row{
+.tutor-metabox-add-topics .tutor-option-field-row{
     padding: 15px 0;
 }
-.lms-metabox-add-topics .lms-option-field-row:last-child, .lms-topics-edit-form .lms-option-field-row:last-child{
+.tutor-metabox-add-topics .tutor-option-field-row:last-child, .tutor-topics-edit-form .tutor-option-field-row:last-child{
     border-bottom: none;
 }
 .topic-edit-icon{
@@ -215,13 +215,13 @@ Course adding page
     max-width: 200px;
     height: auto;
 }
-.lms-added-attachments-wrap{
+.tutor-added-attachments-wrap{
     margin-bottom: 50px;
 }
-.lms-added-attachments-wrap a{
+.tutor-added-attachments-wrap a{
     text-decoration: none;
 }
-a.lms-delete-attachment {
+a.tutor-delete-attachment {
     border: 1px solid #ff0000;
     padding: 5px;
     border-radius: 50%;
@@ -230,7 +230,7 @@ a.lms-delete-attachment {
     color: #ff0000;
 }
 
-a.lms-delete-attachment:hover {
+a.tutor-delete-attachment:hover {
     background-color: #ff0000;
     color: #ffffff;
 }

@@ -11,10 +11,10 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-$video_info = lms_utils()->get_video_info();
+$video_info = tutor_utils()->get_video_info();
 
-do_action('lms_lesson/single/before/video');
+do_action('tutor_lesson/single/before/video');
 if ($video_info){
-    lms_load_template('single.video.'.$video_info->source);
+    tutor_load_template('single.video.'.$video_info->source);
 }
-do_action('lms_lesson/single/after/video'); ?>
+do_action('tutor_lesson/single/after/video'); ?>

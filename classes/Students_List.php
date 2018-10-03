@@ -1,14 +1,14 @@
 <?php
-namespace LMS;
+namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-if (! class_exists('LMS_List_Table')){
-	include_once lms()->path.'classes/LMS_List_Table.php';
+if (! class_exists('Tutor_List_Table')){
+	include_once tutor()->path.'classes/Tutor_List_Table.php';
 }
 
-class Students_List extends \LMS_List_Table {
+class Students_List extends \Tutor_List_Table {
 
 	function __construct(){
 		global $status, $page;
@@ -39,7 +39,7 @@ class Students_List extends \LMS_List_Table {
 	function column_completed_course($item){
 		$user_id = $item->ID;
 
-		$courses = lms_utils()->get_courses_by_user($user_id);
+		$courses = tutor_utils()->get_courses_by_user($user_id);
 		if ($courses && is_array($courses->posts) && count($courses->posts)){
 			foreach ($courses->posts as $course){
 				echo '<a href="'.get_the_permalink($course->ID).'" target="_blank">'.$course->post_title.'</a>';
@@ -74,9 +74,9 @@ class Students_List extends \LMS_List_Table {
 	function get_columns(){
 		$columns = array(
 			'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
-			'display_name'      => __('Name', 'lms'),
-			'user_email'        => __('E-Mail', 'lms'),
-			'completed_course'  => __('Completed Course', 'lms'),
+			'display_name'      => __('Name', 'tutor'),
+			'user_email'        => __('E-Mail', 'tutor'),
+			'completed_course'  => __('Completed Course', 'tutor'),
 		);
 		return $columns;
 	}
@@ -119,8 +119,8 @@ class Students_List extends \LMS_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$total_items = lms_utils()->get_total_students($search_term);
-		$this->items = lms_utils()->get_students(($current_page-1)*$per_page, $per_page, $search_term);;
+		$total_items = tutor_utils()->get_total_students($search_term);
+		$this->items = tutor_utils()->get_students(($current_page-1)*$per_page, $per_page, $search_term);;
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,                  //WE have to calculate the total number of items
