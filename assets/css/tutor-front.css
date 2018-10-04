@@ -298,3 +298,8 @@ Tutor Dashboard Content
     background-color: #000000;
     color: #ffffff;
 }
+.tutor-mycourse-wrap {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+}

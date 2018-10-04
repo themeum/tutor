@@ -48,7 +48,19 @@ class Post_types{
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'thumbnail', 'excerpt')
+			'supports'           => array( 'title', 'editor', 'thumbnail', 'excerpt'),
+
+			'capabilities' => array(
+				'edit_post'          => 'edit_tutor_course',
+				'read_post'          => 'read_tutor_course',
+				'delete_post'        => 'delete_tutor_course',
+				'delete_posts'       => 'delete_tutor_courses',
+				'edit_posts'         => 'edit_tutor_courses',
+				'edit_others_posts'  => 'edit_others_tutor_courses',
+				'publish_posts'      => 'publish_tutor_courses',
+				'read_private_posts' => 'read_private_tutor_courses',
+				'create_posts'       => 'edit_tutor_courses',
+			),
 		);
 
 		register_post_type( $this->course_post_type, $args );
@@ -153,7 +165,18 @@ class Post_types{
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'thumbnail')
+			'supports'           => array( 'title', 'editor', 'thumbnail'),
+			'capabilities' => array(
+				'edit_post'          => 'edit_tutor_lesson',
+				'read_post'          => 'read_tutor_lesson',
+				'delete_post'        => 'delete_tutor_lesson',
+				'delete_posts'       => 'delete_tutor_lessons',
+				'edit_posts'         => 'edit_tutor_lessons',
+				'edit_others_posts'  => 'edit_others_tutor_lessons',
+				'publish_posts'      => 'publish_tutor_lessons',
+				'read_private_posts' => 'read_private_tutor_lessons',
+				'create_posts'       => 'edit_tutor_lessons',
+			),
 		);
 
 		register_post_type( $this->lesson_post_type, $args );

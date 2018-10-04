@@ -146,7 +146,11 @@ class Template extends Tutor_Base {
 		}
 
 		ob_start();
-		tutor_load_template( 'dashboard.student.index' );
+		if (is_user_logged_in()){
+			tutor_load_template( 'dashboard.student.index' );
+		}else{
+			tutor_load_template( 'global.login' );
+		}
 		return apply_filters( 'tutor_dashboard/student/index', ob_get_clean() );
 	}
 

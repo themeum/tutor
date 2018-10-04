@@ -1,4 +1,4 @@
-<h1>My Courses</h1>
+<h1><?php _e('My Courses', 'tutor'); ?></h1>
 
 
 <?php
@@ -23,7 +23,6 @@ if ($my_courses->have_posts()):
             </div>
 
             <?php the_excerpt(); ?>
-
 			<?php tutor_course_completing_progress_bar(); ?>
 
         </div>

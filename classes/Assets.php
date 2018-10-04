@@ -9,6 +9,8 @@ class Assets{
 	public function __construct() {
 		add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
 		add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
+
+		add_action( 'admin_head', array($this, 'tutor_add_mce_button'));
 	}
 
 
@@ -57,4 +59,30 @@ class Assets{
 	}
 
 
+	/**
+	 * Add Tinymce button for placing shortcode
+	 */
+	function tutor_add_mce_button() {
+		// check user permissions
+		if ( !current_user_can( 'edit_posts' ) && !current_user_can( 'edit_pages' ) ) {
+			return;
+		}
+		// check if WYSIWYG is enabled
+		if ( 'true' == get_user_option( 'rich_editing' ) ) {
+			add_filter( 'mce_external_plugins', array($this, 'tutor_add_tinymce_js') );
+			add_filter( 'mce_buttons', array($this, 'tutor_register_mce_button') );
+		}
+	}
+	// Declare script for new button
+	function tutor_add_tinymce_js( $plugin_array ) {
+		$plugin_array['tutor_button'] = tutor()->url .'assets/js/mce-button.js';
+		return $plugin_array;
+	}
+	// Register new button in the editor
+	function tutor_register_mce_button( $buttons ) {
+		array_push( $buttons, 'tutor_button' );
+		return $buttons;
+	}
+	
+	
 }

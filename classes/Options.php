@@ -56,6 +56,10 @@ class Options {
 		$option = (array) isset($_POST['tutor_option']) ? $_POST['tutor_option'] : array();
 		$option = apply_filters('tutor_option_input', $option);
 		update_option('tutor_option', $option);
+
+		//re-sync settings
+		init::tutor_activate();
+
 		wp_send_json_success( array('msg' => __('Option Updated', 'tutor') ) );
 	}
 	
@@ -289,9 +293,27 @@ class Options {
 				),
 			),
 
+			'teachers' => array(
+				'label'     => __('Teachers', 'tutor'),
+				'sections'    => array(
+					'general' => array(
+						'label' => __('Student Profile settings', 'tutor'),
+						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
+						'fields' => array(
+							'teacher_can_publish_course' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Can publish course', 'tutor'),
+								'default' => '0',
+								'desc'      => __('Is teacher can publish a course directly or not, if uncheck, they can still add the course and it will goes to admin for review.',	'tutor'),
+							),
+						),
+					),
+				),
+			),
+
+
 			'students' => array(
 				'label'     => __('Students', 'tutor'),
-
 				'sections'    => array(
 					'general' => array(
 						'label' => __('Student Profile settings', 'tutor'),
@@ -327,11 +349,10 @@ class Options {
 
 						),
 					),
-
 				),
-
-
 			),
+
+
 			'video_player' => array(
 				'label'     => __('Video Player', 'tutor'),
 			),

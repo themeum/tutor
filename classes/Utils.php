@@ -305,9 +305,26 @@ class Utils {
 		global $wpdb;
 
 		$course_post_type = tutor()->course_post_type;
-		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = '{$course_post_type}' ");
+		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order 
+				from {$wpdb->posts} WHERE post_status = 'publish'
+				AND post_type = '{$course_post_type}' ");
 		return $query;
 	}
+
+	public function get_courses_for_teachers($teacher_id = 0){
+		global $wpdb;
+
+		$teacher_id = $this->get_user_id($teacher_id);
+
+		$course_post_type = tutor()->course_post_type;
+		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order 
+				from {$wpdb->posts} 
+				WHERE post_author = {$teacher_id}
+				AND post_status IN ('publish', 'pending')
+				AND post_type = '{$course_post_type}' ");
+		return $query;
+	}
+
 
 	public function get_course_count(){
 		global $wpdb;
@@ -886,6 +903,23 @@ class Utils {
 		return (int) $count;
 	}
 
+	public function get_completed_courses_ids_by_user($user_id = 0){
+		global $wpdb;
+
+		$user_id = $this->get_user_id($user_id);
+
+		$meta_key = '_tutor_completed_course_id_';
+		$course_id_query = $wpdb->get_col("select meta_key from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key LIKE '%{$meta_key}%' ");
+		$course_ids = array();
+
+		if (is_array($course_id_query) && count($course_id_query)){
+			foreach ($course_id_query as $user_meta_col){
+				$course_ids[] = str_replace($meta_key, '', $user_meta_col);
+			}
+		}
+
+		return $course_ids;
+	}
 
 	/**
 	 * @param int $user_id
@@ -896,26 +930,13 @@ class Utils {
 	 */
 	public function get_courses_by_user($user_id = 0){
 		$user_id = $this->get_user_id($user_id);
-		global $wpdb;
-
-		$meta_key = '_tutor_completed_course_id_';
-
-		$course_id_query = $wpdb->get_col("select meta_key from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key LIKE '%{$meta_key}%' ");
-		$course_ids = array();
-
-		if (is_array($course_id_query) && count($course_id_query)){
-			foreach ($course_id_query as $user_meta_col){
-				$course_ids[] = str_replace($meta_key, '', $user_meta_col);
-			}
-		}else{
-			return false;
-		}
+		$course_ids = $this->get_completed_courses_ids_by_user($user_id);
 
 		if (count($course_ids)){
 			$course_post_type = tutor()->course_post_type;
 			$course_args = array(
-				'post_type' => $course_post_type,
-				'post_status' => 'publish',
+				'post_type'     => $course_post_type,
+				'post_status'   => 'publish',
 				'post__in'      => $course_ids,
 			);
 
@@ -923,6 +944,59 @@ class Utils {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool|\WP_Query
+	 *
+	 * Get the active course by user
+	 */
+
+	public function get_active_courses_by_user($user_id = 0){
+		$user_id = $this->get_user_id($user_id);
+
+		$course_ids = $this->get_completed_courses_ids_by_user($user_id);
+		$enrolled_course_ids = $this->get_enrolled_courses_ids_by_user($user_id);
+		$active_courses = array_diff($enrolled_course_ids, $course_ids);
+
+		if (count($active_courses)){
+			$course_post_type = tutor()->course_post_type;
+			$course_args = array(
+				'post_type'     => $course_post_type,
+				'post_status'   => 'publish',
+				'post__in'      => $active_courses,
+			);
+
+			return new \WP_Query($course_args);
+		}
+
+		return false;
+	}
+
+	public function get_enrolled_courses_ids_by_user($user_id = 0){
+		global $wpdb;
+		$user_id = $this->get_user_id($user_id);
+		$course_ids = $wpdb->get_col("select post_parent from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_author = {$user_id} AND post_status = 'completed'; ");
+
+		return $course_ids;
+	}
+
+	/**
+	 * @param int $course_id
+	 *
+	 * @return int
+	 *
+	 * Get the total enrolled users at course
+	 */
+	public function count_enrolled_users_by_course($course_id = 0){
+		global $wpdb;
+		$course_id = $this->get_post_id($course_id);
+
+		$course_ids = $wpdb->get_var("select COUNT(ID) from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_status = 'completed'; ");
+
+		return (int) $course_ids;
 	}
 
 	/**
@@ -936,7 +1010,7 @@ class Utils {
 		global $wpdb;
 
 		$user_id = $this->get_user_id($user_id);
-		$course_ids = $wpdb->get_col("select post_parent from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_author = {$user_id} AND post_status = 'completed'; ");
+		$course_ids = $this->get_enrolled_courses_ids_by_user($user_id);
 
 		if (count($course_ids)){
 			$course_post_type = tutor()->course_post_type;
@@ -949,7 +1023,6 @@ class Utils {
 		}
 		return false;
 	}
-
 
 
 	/**
@@ -1108,8 +1181,6 @@ class Utils {
 		update_user_meta($user_id, '_tutor_completed_lesson_id_'.$post_id, time());
 	}
 
-
-
 	/**
 	 * Saving enroll information to posts table
 	 * post_author = enrolled_student_id (wp_users id)
@@ -1201,7 +1272,6 @@ class Utils {
 	/**
 	 * #End WooCommerce specific utils
 	 */
-
 
 	public function get_enrolled_statuses(){
 		return array (

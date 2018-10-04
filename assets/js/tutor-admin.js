@@ -274,7 +274,6 @@ jQuery(document).ready(function($){
         });
         // Finally, open the modal on click
         frame.open();
-    })
+    });
 
 });
-

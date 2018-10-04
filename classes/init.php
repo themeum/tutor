@@ -93,8 +93,82 @@ class init{
 	/**
 	 * Do some task during plugin activation
 	 */
-	public function tutor_activate(){
+	public static function tutor_activate(){
+		//Rewrite Flush
 		update_option('required_rewrite_flush', time());
+		self::manage_tutor_roles_and_permissions();
+	}
+
+	public static function manage_tutor_roles_and_permissions(){
+		/**
+		 * Add role for teacher
+		 */
+		$teacher_role = tutor()->teacher_role;
+
+		remove_role($teacher_role);
+		add_role( $teacher_role, __('Tutor Teacher', 'tutor'), array() );
+		
+		$custom_post_type_permission = array(
+			'edit_tutor_course',
+			'read_tutor_course',
+			'delete_tutor_course',
+			'delete_tutor_courses',
+			'edit_tutor_courses',
+			'edit_others_tutor_courses',
+			'read_private_tutor_courses',
+			'edit_tutor_courses',
+
+			'edit_tutor_lesson',
+			'read_tutor_lesson',
+			'delete_tutor_lesson',
+			'delete_tutor_lessons',
+			'edit_tutor_lessons',
+			'edit_others_tutor_lessons',
+			'read_private_tutor_lessons',
+			'edit_tutor_lessons',
+			'publish_tutor_lessons'
+		);
+
+		$teacher = get_role( $teacher_role );
+		if ( $teacher ) {
+			$teacher_cap = array (
+				'edit_posts',
+				'read',
+				
+				'upload_files',
+				//'level_1',
+				//'level_0',
+				//'delete_posts',
+			);
+
+			$teacher_cap = array_merge($teacher_cap, $custom_post_type_permission);
+
+			$can_publish_course = (bool) tutor_utils()->get_option('teacher_can_publish_course');
+			if ($can_publish_course){
+				$teacher_cap[] = 'publish_tutor_courses';
+			}
+
+			foreach ($teacher_cap as $cap){
+				$teacher->add_cap( $cap );
+			}
+		}
+
+		$administrator = get_role( 'administrator' );
+		if ( $administrator ) {
+			$administrator_cap = array (
+				'manage_tutor',
+			);
+			$administrator_cap = array_merge($administrator_cap, $custom_post_type_permission);
+			$administrator_cap[] = 'publish_tutor_courses';
+
+			foreach ($administrator_cap as $cap){
+				$administrator->add_cap( $cap );
+			}
+		}
+
+
+
+
 	}
 
 
