@@ -23,6 +23,9 @@ class Admin{
 		add_menu_page(__('Tutor', 'tutor'), __('Tutor', 'tutor'), 'manage_tutor', 'tutor', array($this, 'tutor_page'), 'dashicons-welcome-learn-more', 2);
 
 		add_submenu_page('tutor', __('Students', 'tutor'), __('Students', 'tutor'), 'manage_tutor', 'tutor-students', array($this, 'tutor_students') );
+		
+		
+		add_submenu_page('tutor', __('Teachers', 'tutor'), __('Teachers', 'tutor'), 'manage_tutor', 'tutor-teachers', array($this, 'tutor_teachers') );
 	}
 
 	public function tutor_page(){
@@ -32,6 +35,10 @@ class Admin{
 
 	public function tutor_students(){
 		include tutor()->path.'views/pages/students.php';
+	}
+
+	public function tutor_teachers(){
+		include tutor()->path.'views/pages/teachers.php';
 	}
 
 	/**

@@ -23,6 +23,7 @@ class init{
 	private $lesson;
 	private $rewrite_rules;
 	private $template;
+	private $teacher;
 	private $woocommerce;
 
 	function __construct() {
@@ -53,6 +54,7 @@ class init{
 		$this->lesson = new Lesson();
 		$this->rewrite_rules = new Rewrite_Rules();
 		$this->template = new Template();
+		$this->teacher = new  Teacher();
 
 		if (tutor_utils()->has_wc()){
 			$this->woocommerce = new  Woo_Commerce();
@@ -134,11 +136,7 @@ class init{
 			$teacher_cap = array (
 				'edit_posts',
 				'read',
-				
 				'upload_files',
-				//'level_1',
-				//'level_0',
-				//'delete_posts',
 			);
 
 			$teacher_cap = array_merge($teacher_cap, $custom_post_type_permission);
@@ -173,4 +171,3 @@ class init{
 
 
 }
-

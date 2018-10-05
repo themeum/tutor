@@ -325,7 +325,6 @@ class Utils {
 		return $query;
 	}
 
-
 	public function get_course_count(){
 		global $wpdb;
 
@@ -1313,6 +1312,81 @@ class Utils {
 		}
 		$page_id = $this->get_post_id($page_id);
 		return trailingslashit(get_permalink($page_id)).$page_key;
+	}
+
+	public function input_old($input = ''){
+		$value = $this->avalue_dot($input, $_REQUEST);
+		if ($value){
+			return $value;
+		}
+		return '';
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return mixed
+	 *
+	 * Determine if is teacher or not
+	 *
+	 * @since v.1.0.0
+	 */
+	public function is_teacher($user_id = 0){
+		$user_id = $this->get_user_id($user_id);
+		return get_user_meta($user_id, '_is_tutor_teacher', true);
+	}
+
+	public function teacher_status($user_id = 0, $status_name = true){
+		$user_id = $this->get_user_id($user_id);
+
+		$teacher_status = apply_filters('tutor_teacher_statuses', array(
+			'pending' => __('Pending', 'tutor'),
+			'approved' => __('Approved', 'tutor'),
+			'blocked' => __('Blocked', 'tutor'),
+		));
+
+		$status = get_user_meta($user_id, '_tutor_teacher_status', true);
+
+		if (isset($teacher_status[$status])){
+			if ( ! $status_name){
+				return $status;
+			}
+			return $teacher_status[$status];
+		}
+		return false;
+	}
+
+
+	public function get_total_teachers($search_term = ''){
+		$meta_key = '_is_tutor_teacher';
+
+		global $wpdb;
+
+		if ($search_term){
+			$search_term = " AND ( {$wpdb->users}.display_name LIKE '%{$search_term}%' OR {$wpdb->users}.user_email LIKE '%{$search_term}%' ) ";
+		}
+
+		$count = $wpdb->get_var("SELECT COUNT({$wpdb->users}.ID) FROM {$wpdb->users} INNER JOIN {$wpdb->usermeta} ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id ) WHERE 1=1 AND ( {$wpdb->usermeta}.meta_key = '{$meta_key}' ) $search_term ");
+
+		return (int) $count;
+	}
+
+	public function get_teachers($start = 0, $limit = 10, $search_term = ''){
+		$meta_key = '_is_tutor_teacher';
+		global $wpdb;
+		
+		if ($search_term){
+			$search_term = " AND ( {$wpdb->users}.display_name LIKE '%{$search_term}%' OR {$wpdb->users}.user_email LIKE '%{$search_term}%' ) ";
+		}
+
+		$teachers = $wpdb->get_results("SELECT SQL_CALC_FOUND_ROWS {$wpdb->users}.* FROM {$wpdb->users} 
+			INNER JOIN {$wpdb->usermeta} 
+			ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id ) 
+			WHERE 1=1 AND ( {$wpdb->usermeta}.meta_key = '{$meta_key}' )  {$search_term}
+			ORDER BY {$wpdb->usermeta}.meta_value DESC 
+			LIMIT {$start}, {$limit} ");
+
+		return $teachers;
 	}
 
 }

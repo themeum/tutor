@@ -66,5 +66,20 @@ jQuery(document).ready(function($){
      * @since v.1.0.0
      */
     videoPlayer.init();
+
+
+
+    $(document).on('change keyup paste', '.tutor_user_name', function(){
+        $(this).val(tutor_slugify($(this).val()));
+    });
+
+    function tutor_slugify(text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+            .replace(/^-+/, '')             // Trim - from start of text
+            .replace(/-+$/, '');            // Trim - from end of text
+    }
 });
 

@@ -103,7 +103,7 @@ Topics
     padding: 20px;
     border: 1px solid #b7d6b7;
 }
-.tutor-wrap .tutor-notice-warning{
+.tutor-notice-warning{
     background-color: #fcf8e3;
     border-color: #faebcc;
     padding: 20px;
@@ -302,4 +302,31 @@ Tutor Dashboard Content
     margin-bottom: 20px;
     border-bottom: 1px solid #eee;
     padding: 10px 0;
+}
+
+
+/*
+Form CSS
+ */
+
+.tutor-form-row{
+    display: flex;
+    margin: 10px 0;
+}
+.tutor-form-row .tutor-form-group{
+    padding: 10px;
+}
+.tutor-form-col-6{
+    flex: 6;
+}
+.tutor-form-col-12{
+    flex: 12;
+}
+.tutor-form-col-4{
+    flex: 4;
+}
+ul.tutor-required-fields{
+    list-style: none;
+    padding: 10px;
+    margin: 0;
 }

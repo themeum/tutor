@@ -234,3 +234,22 @@ a.tutor-delete-attachment:hover {
     background-color: #ff0000;
     color: #ffffff;
 }
+
+.tutor-status-context{
+    padding: 5px 10px;
+    margin: 5px 0;
+    display: inline-block;
+}
+
+.tutor-status-pending-context{
+    background-color: #EEEEEE;
+}
+
+.tutor-status-approved-context {
+    background-color: #008000;
+    color: #ffffff;
+}
+.tutor-status-blocked-context {
+    background-color: #ff0000;
+    color: #ffffff;
+}

@@ -18,6 +18,13 @@ class Shortcode {
 		add_shortcode('tutor_teacher_registration_form', array($this, 'tutor_teacher_registration_form'));
 	}
 
+	/**
+	 * @return mixed
+	 *
+	 * Tutor Dashboard for students
+	 *
+	 * @since v.1.0.0
+	 */
 	public function tutor_dashboard(){
 		ob_start();
 		if (is_user_logged_in()){
@@ -28,13 +35,17 @@ class Shortcode {
 		return apply_filters( 'tutor_dashboard/student/index', ob_get_clean() );
 	}
 
-
+	/**
+	 * @return mixed
+	 *
+	 * Teacher Registration Shortcode
+	 *
+	 * @since v.1.0.0
+	 */
 	public function tutor_teacher_registration_form(){
-
-
 		ob_start();
 		if (is_user_logged_in()){
-			tutor_load_template( 'global.logged-in' );
+			tutor_load_template( 'dashboard.teacher.logged-in' );
 		}else{
 			tutor_load_template( 'dashboard.teacher.registration' );
 		}
