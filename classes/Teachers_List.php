@@ -42,7 +42,6 @@ class Teachers_List extends \Tutor_List_Table {
 		echo "<span class='tutor-status-context tutor-status-{$status}-context'>{$status_name}</span>";
 	}
 
-
 	function column_display_name($item){
 		//Build row actions
 		$actions = array(
@@ -51,12 +50,18 @@ class Teachers_List extends \Tutor_List_Table {
 		);
 
 		$status = tutor_utils()->teacher_status($item->ID, false);
-		if ($status !== 'approved'){
-			$actions['approved'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Approve</a>',$_REQUEST['page'],'approve',$item->ID);
-		}else{
-			$actions['blocked'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Blocked</a>',$_REQUEST['page'],'blocked',$item->ID);
-		}
 
+		switch ($status){
+			case 'pending':
+				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Approve</a>',$_REQUEST['page'],'approve',$item->ID);
+				break;
+			case 'approved':
+				$actions['blocked'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Blocked</a>',$_REQUEST['page'],'blocked',$item->ID);
+				break;
+			case 'blocked':
+				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Un Block</a>',$_REQUEST['page'],'approve',$item->ID);
+				break;
+		}
 		//Return the title contents
 		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
 			$item->display_name,
@@ -129,13 +134,11 @@ class Teachers_List extends \Tutor_List_Table {
 			wp_redirect(wp_get_referer());
 		}
 
-			//Detect when a bulk action is being triggered...
+		//Detect when a bulk action is being triggered...
 		if( 'delete'===$this->current_action() ) {
 			wp_die('Items deleted (or they would be if we had items to delete)!');
 		}
 	}
-
-
 
 	function prepare_items() {
 		$per_page = 20;
