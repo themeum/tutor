@@ -8,6 +8,8 @@ class Ajax{
 	public function __construct() {
 
 		add_action('wp_ajax_sync_video_playback', array($this, 'sync_video_playback'));
+		add_action('wp_ajax_tutor_place_rating', array($this, 'tutor_place_rating'));
+
 	}
 
 	/**
@@ -50,5 +52,65 @@ class Ajax{
 		}
 		exit();
 	}
+
+
+	public function tutor_place_rating(){
+		global $wpdb;
+
+		$rating = sanitize_text_field(tutor_utils()->avalue_dot('rating', $_POST));
+		$course_id = sanitize_text_field(tutor_utils()->avalue_dot('course_id', $_POST));
+
+		$review = wp_kses_post(tutor_utils()->avalue_dot('review', $_POST));
+
+
+		$user_id = get_current_user_id();
+		$user = get_userdata($user_id);
+		$date = date("Y-m-d H:i:s");
+
+		$previous_rating_id = $wpdb->get_var("select comment_ID from {$wpdb->comments} WHERE comment_post_ID={$course_id} AND user_id = {$user_id} AND comment_type = 'tutor_course_rating' LIMIT 1;");
+
+		if ( $previous_rating_id){
+			if ($review){
+				$wpdb->update( $wpdb->comments, array('comment_content' => $review),
+					array('comment_ID' => $previous_rating_id)
+				);
+			}
+
+			if ($rating){
+				$wpdb->update( $wpdb->commentmeta, array('meta_value' => $rating),
+					array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating')
+				);
+			}
+		}else{
+			$data = array(
+				'comment_post_ID'   => $course_id,
+				'comment_approved'  => 'approved',
+				'comment_type'      => 'tutor_course_rating',
+				'comment_date'      => $date,
+				'comment_date_gmt'  => get_gmt_from_date($date),
+				'user_id'           => $user_id,
+				'comment_author'    => $user->user_login,
+				'comment_agent'     => 'TutorLMSPlugin',
+			);
+			if ($review){
+				$data['comment_content'] = $review;
+			}
+
+			$wpdb->insert($wpdb->comments, $data);
+			$comment_id = (int) $wpdb->insert_id;
+
+			if ($comment_id && $rating){
+				$result = $wpdb->insert( $wpdb->commentmeta, array(
+					'comment_id' => $comment_id,
+					'meta_key' => 'tutor_rating',
+					'meta_value' => $rating
+				) );
+			}
+		}
+
+		wp_send_json_success(__('Rating placed success', 'tutor'));
+	}
+
+
 
 }

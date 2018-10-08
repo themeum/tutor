@@ -31,6 +31,16 @@ class Teachers_List extends \Tutor_List_Table {
 		}
 	}
 
+	function column_total_course($item){
+		$course_post_type = tutor()->course_post_type;
+
+		global $wpdb;
+
+		$total_course = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} WHERE post_author={$item->ID} AND post_type='{$course_post_type}' ");
+
+		echo $total_course;
+	}
+
 	/**
 	 * @param $item
 	 *
@@ -83,6 +93,7 @@ class Teachers_List extends \Tutor_List_Table {
 			'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
 			'display_name'      => __('Name', 'tutor'),
 			'user_email'        => __('E-Mail', 'tutor'),
+			'total_course'      => __('Total Course', 'tutor'),
 			'status'            => __('Status', 'tutor'),
 		);
 		return $columns;

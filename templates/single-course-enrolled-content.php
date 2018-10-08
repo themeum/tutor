@@ -26,7 +26,6 @@ get_header();
 	    <?php do_action('tutor_course/single/enrolled/nav/after'); ?>
 
 
-
 	    <?php do_action('tutor_course/single/enrolled/content/topics_lesson/before'); ?>
 	    <?php tutor_course_enrolled_content_topics_lesson(); ?>
 	    <?php do_action('tutor_course/single/enrolled/content/topics_lesson/after'); ?>

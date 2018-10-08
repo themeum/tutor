@@ -67,8 +67,6 @@ jQuery(document).ready(function($){
      */
     videoPlayer.init();
 
-
-
     $(document).on('change keyup paste', '.tutor_user_name', function(){
         $(this).val(tutor_slugify($(this).val()));
     });
@@ -81,5 +79,61 @@ jQuery(document).ready(function($){
             .replace(/^-+/, '')             // Trim - from start of text
             .replace(/-+$/, '');            // Trim - from end of text
     }
+
+    /**
+     * Hover tutor rating and set value
+     */
+    $(document).on('hover', '.tutor-ratings-wrap i', function(){
+        $(this).closest('.tutor-ratings-wrap').find('i').removeClass('icon-star').addClass('icon-star-empty');
+        var currentRateValue = $(this).attr('data-rating-value');
+        for (var i = 1; i<= currentRateValue; i++){
+            $(this).closest('.tutor-ratings-wrap').find('i[data-rating-value="'+i+'"]').removeClass('icon-star-empty').addClass('icon-star');
+        }
+    });
+
+    $(document).on('click', '.tutor-ratings-wrap i', function(){
+        var rating = $(this).attr('data-rating-value');
+        var course_id = $('input[name="tutor_course_id"]').val();
+        var data = {course_id : course_id, rating:rating, action: 'tutor_place_rating' };
+
+
+        $.post(_tutorobject.ajaxurl, data);
+
+
+
+    });
+
+
+    $(document).on('click', '.tutor_submit_review_btn', function (e) {
+        e.preventDefault();
+
+        var review = $(this).closest('form').find('textarea[name="review"]').val();
+        review = review.trim();
+
+        var course_id = $('input[name="tutor_course_id"]').val();
+        var data = {course_id : course_id, review:review, action: 'tutor_place_rating' };
+
+        if (review) {
+            $.ajax({
+                url: _tutorobject.ajaxurl,
+                type: 'POST',
+                data: data,
+                beforeSend: function () {
+                    //
+                },
+                success: function (data) {
+                    //
+                },
+                complete: function () {
+                    //
+                }
+            });
+        }
+
+
+    });
+
+    //tutor_submit_review_btn
+
 });
 
