@@ -29,6 +29,10 @@ do_action('tutor_course/loop/before_rating');
 do_action('tutor_course/loop/rating');
 do_action('tutor_course/loop/after_rating');
 
+do_action('tutor_course/loop/before_price');
+do_action('tutor_course/loop/price');
+do_action('tutor_course/loop/after_price');
+
 do_action('tutor_course/loop/after_content');
 
 ?>

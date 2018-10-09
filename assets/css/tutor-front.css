@@ -3,8 +3,10 @@
 Icon Css
  */
 
-
 div[class*="tutor-course-col"] {
+
+}
+.tutor-course-loop{
     background: #fff;
     color: #29303b;
     display: inline-block;
@@ -13,13 +15,54 @@ div[class*="tutor-course-col"] {
     position: relative;
     box-shadow: 0 0 1px 1px rgba(20,23,28,.1),0 3px 1px 0 rgba(20,23,28,.1);
     vertical-align: top;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+.tutor-course-loop p{
+    margin: 0;
 }
 .tutor-course-col-4{
-    width: 24%;
+    width: 25%;
 }
-.tutor-course-loop-title {
-    padding: 10px;
+.tutor-course-col-4:nth-child(4) .tutor-course-loop{
+    margin-right: 0;
 }
+.tutor-course-col-3{
+    width: 33.33%;
+}
+.tutor-course-col-3:nth-child(3) .tutor-course-loop{
+    margin-right: 0;
+}
+.tutor-course-col-2{
+    width: 50%;
+}
+.tutor-course-col-2:nth-child(2) .tutor-course-loop{
+    margin-right: 0;
+}
+.tutor-course-col-1{
+    width: 100%;
+}
+.tutor-course-col-1 .tutor-course-loop{
+    width: 100%;
+    margin-right: 0;
+}
+.tutor-course-col-5{
+    width: 20%;
+}
+.tutor-course-col-5:nth-child(5) .tutor-course-loop{
+    margin-right: 0;
+}
+.tutor-course-col-6{
+    width: 16.66%;
+}
+.tutor-course-col-6:nth-child(6) .tutor-course-loop{
+    margin-right: 0;
+}
+.tutor-course-loop-title, .tutor-loop-rating-wrap, .tutor-course-loop-price, .tutor-loo-cart-btn-wrap {
+    padding: 0 10px;
+}
+
 .tutor-course-loop-title h2{
     font-size: 1rem;
 }
@@ -38,6 +81,8 @@ div[class*="tutor-course-col"] {
 }
 .tutor-courses{
     clear: both;
+    display: flex;
+    flex-wrap: wrap;
 }
 .clearfix:before, .clearfix:after{
     display: block;
@@ -145,6 +190,54 @@ a.tutor-button:hover {
     color: #ffffff;
 }
 
+
+.tutor-review-individual-item {
+    display: flex;
+    font-size: 14px;
+    border-top: 1px solid #CCCCCC;
+    padding: 20px 0;
+}
+.tutor-review-individual-item .review-left{
+    display: flex;
+    flex: 0 0 220px;
+}
+.tutor-review-individual-item .review-left .review-avatar{
+    flex: 0 0 70px;
+}
+.tutor-review-individual-item .review-right {
+    margin-left: 20px;
+}
+.tutor-review-individual-item .review-meta {
+    color: #ccc;
+}
+.tutor-review-individual-item .review-time-name p{
+    margin: 0;
+}
+.tutor-review-individual-item .review-left .text-avatar{
+    border-radius: 50%;
+    border: 1px solid #686f7a;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    display: block;
+    line-height: 50px;
+    color: #686f7a;
+    font-size: 14px;
+}
+.review-time-name {
+    flex: 0 0 160px;
+}
+
+.course-avg-rating-wrap{
+    width: 150px;
+    text-align: center;
+}
+.course-avg-rating-wrap .course-avg-rating {
+    font-size: 50px;
+}
+.course-avg-rating-wrap p{
+    margin: 0;
+}
 /**
 Lesson Single Page
  */

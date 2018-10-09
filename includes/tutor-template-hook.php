@@ -13,4 +13,7 @@ add_action('tutor_course/loop/thumbnail', 'tutor_course_loop_thumbnail');
 add_action('tutor_course/loop/title', 'tutor_course_loop_title');
 
 add_action('tutor_course/loop/before_rating', 'tutor_course_loop_author');
+add_action('tutor_course/loop/price', 'tutor_course_loop_price');
+add_action('tutor_course/loop/after_price', 'tutor_course_loop_add_to_cart');
+add_action('tutor_course/loop/rating', 'tutor_course_loop_rating');
 

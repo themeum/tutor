@@ -8,7 +8,6 @@
  * @url https://themeum.com
  */
 
-
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
@@ -55,7 +54,7 @@ global $wp_query;
 
                     <a href="javascript:;" class="write-course-review-link-btn"><?php _e('Write a review', 'tutor'); ?></a>
 
-                    <div class="tutor-write-review-box">
+                    <div class="tutor-write-review-box" style="display: none;">
 
                         <div class="tutor-form-row">
                             <div class="tutor-form-col-6">
@@ -115,8 +114,6 @@ global $wp_query;
 			</span>
         </div>
 	    <?php do_action('tutor_course/single/enrolled/after/lead_info/meta'); ?>
-
-
 
     </div><!-- .wrap -->
 </div>

@@ -113,11 +113,25 @@ if ( ! function_exists('tutor_course_loop_thumbnail')) {
 if( ! function_exists('tutor_course_loop_wrap_classes')) {
 	function tutor_course_loop_wrap_classes( $echo = true ) {
 		$courseID   = get_the_ID();
-		$courseCols = tutor_utils()->get_option( 'courses_col_per_row', 4 );
 		$classes    = apply_filters( 'tutor_course_loop_wrap_classes', array(
 			'tutor-course',
 			'tutor-course-loop',
 			'tutor-course-loop-' . $courseID,
+		) );
+
+		$class = implode( ' ', $classes );
+		if ( $echo ) {
+			echo $class;
+		}
+
+		return $class;
+	}
+}
+
+if( ! function_exists('tutor_course_loop_col_classes')) {
+	function tutor_course_loop_col_classes( $echo = true ) {
+		$courseCols = tutor_utils()->get_option( 'courses_col_per_row', 4 );
+		$classes    = apply_filters( 'tutor_course_loop_col_classes', array(
 			'tutor-course-col-' . $courseCols,
 		) );
 
@@ -129,6 +143,7 @@ if( ! function_exists('tutor_course_loop_wrap_classes')) {
 		return $class;
 	}
 }
+
 
 if ( ! function_exists('tutor_container_classes')) {
 	function tutor_container_classes( $echo = true ) {
@@ -199,11 +214,42 @@ if ( ! function_exists('tutor_course_loop_author')) {
 	function tutor_course_loop_author() {
 		ob_start();
 		tutor_load_template( 'loop.course-author' );
-		$output = apply_filters( 'tutor_course_archive_filter_bar', ob_get_clean() );
+		$output = apply_filters( 'tutor_course_loop_author', ob_get_clean() );
 
 		echo $output;
 	}
 }
+
+if ( ! function_exists('tutor_course_loop_price')) {
+	function tutor_course_loop_price() {
+		ob_start();
+		tutor_load_template( 'loop.course-price' );
+		$output = apply_filters( 'tutor_course_loop_price', ob_get_clean() );
+
+		echo $output;
+	}
+}
+
+if ( ! function_exists('tutor_course_loop_rating')) {
+	function tutor_course_loop_rating() {
+		ob_start();
+		tutor_load_template( 'loop.rating' );
+		$output = apply_filters( 'tutor_course_loop_rating', ob_get_clean() );
+
+		echo $output;
+	}
+}
+
+if ( ! function_exists('tutor_course_loop_add_to_cart')) {
+	function tutor_course_loop_add_to_cart() {
+		ob_start();
+		tutor_load_template( 'loop.add-to-cart' );
+		$output = apply_filters( 'tutor_course_loop_add_to_cart_link', ob_get_clean() );
+
+		echo $output;
+	}
+}
+
 /**
  * @param int $post_id
  *
@@ -423,6 +469,19 @@ if ( ! function_exists('tutor_course_target_audience_html')) {
 	}
 }
 
+if ( ! function_exists('tutor_course_target_reviews_html')) {
+	function tutor_course_target_reviews_html($echo = true) {
+		ob_start();
+		tutor_load_template( 'single.course.reviews' );
+		$output = apply_filters( 'tutor_course/single/reviews_html', ob_get_clean() );
+
+		if ($echo){
+			echo $output;
+		}
+		return $output;
+	}
+}
+
 /**
  * @param bool $echo
  *
@@ -553,23 +612,19 @@ if ( ! function_exists('tutor_lesson_lead_info')) {
 if ( ! function_exists('tutor_course_enroll_box')) {
 	function tutor_course_enroll_box( $echo = true ) {
 		$isLoggedIn = is_user_logged_in();
-
 		$enrolled = tutor_utils()->is_enrolled();
 
 		ob_start();
-
 		if ($isLoggedIn) {
 			if ( $enrolled ) {
 				tutor_load_template( 'single.course.course-enrolled' );
 				$output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
 			} else {
 				tutor_load_template( 'single.course.course-enroll' );
-
 				$output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );
 			}
 		}else{
 			tutor_load_template( 'single.course.login' );
-
 			$output = apply_filters( 'tutor_course/global/login', ob_get_clean() );
 		}
 		if ( $echo ) {
@@ -586,13 +641,10 @@ if ( ! function_exists('tutor_course_enrolled_nav')) {
 		$lesson_post_type = tutor()->lesson_post_type;
 
 		ob_start();
-
 		global $post;
 
         if ( ! empty($post->post_type) && $post->post_type === $course_post_type){
-
 	        tutor_load_template( 'single.course.enrolled.nav' );
-
         }elseif(! empty($post->post_type) && $post->post_type === $lesson_post_type){
 	        $lesson_id = get_the_ID();
 	        $course_id = tutor_utils()->get_course_id_by_lesson($lesson_id);
@@ -608,13 +660,11 @@ if ( ! function_exists('tutor_course_enrolled_nav')) {
 		        wp_reset_postdata();
 	        }
         }
-
 		$output = apply_filters( 'tutor_course/single/enrolled/nav', ob_get_clean() );
 
 		if ( $echo ) {
 			echo $output;
 		}
-
 		return $output;
 	}
 }

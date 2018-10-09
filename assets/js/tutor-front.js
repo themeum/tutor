@@ -96,17 +96,12 @@ jQuery(document).ready(function($){
         var course_id = $('input[name="tutor_course_id"]').val();
         var data = {course_id : course_id, rating:rating, action: 'tutor_place_rating' };
 
-
         $.post(_tutorobject.ajaxurl, data);
-
-
-
     });
 
 
     $(document).on('click', '.tutor_submit_review_btn', function (e) {
         e.preventDefault();
-
         var review = $(this).closest('form').find('textarea[name="review"]').val();
         review = review.trim();
 
@@ -129,11 +124,12 @@ jQuery(document).ready(function($){
                 }
             });
         }
-
-
     });
 
-    //tutor_submit_review_btn
+    $(document).on('click', '.write-course-review-link-btn', function(e){
+        e.preventDefault();
+        $(this).closest('form').find('.tutor-write-review-box').slideToggle();
+    });
 
 });
 

@@ -460,6 +460,8 @@ class Utils {
 	 * @param int $course_id
 	 *
 	 * @return bool
+	 *
+	 * @since v.1.0.0
 	 */
 	public function is_course_purchasable($course_id = 0){
 		if ( ! $this->has_wc()){
@@ -477,9 +479,63 @@ class Utils {
 	/**
 	 * @param int $course_id
 	 *
+	 * @return string
+	 *
+	 * get the course price in HTML format
+	 *
+	 * @since v.1.0.0
+	 */
+	
+	public function get_course_price_html($course_id = 0){
+		$course_id = $this->get_post_id($course_id);
+
+		$price_html = '';
+		if ($this->is_course_purchasable() && $this->has_wc()) {
+			$product_id = tutor_utils()->get_course_product_id($course_id);
+			$product    = wc_get_product( $product_id );
+
+			if ( $product ) {
+				$price_html = '<p class="price"> '.$product->get_price_html().' </p>';
+			}
+		}
+
+		return $price_html;
+	}
+
+	/**
+	 * @param int $course_id
+	 *
+	 * @return null|string
+	 *
+	 * get course price in digits format if any
+	 *
+	 * @since v.1.0.0
+	 */
+
+	public function get_course_price($course_id = 0){
+		$course_id = $this->get_post_id($course_id);
+
+		$price = null;
+		if ($this->is_course_purchasable() && $this->has_wc()) {
+			$product_id = tutor_utils()->get_course_product_id($course_id);
+			$product    = wc_get_product( $product_id );
+
+			if ( $product ) {
+				$price = $product->get_price();
+			}
+		}
+
+		return $price;
+	}
+
+	/**
+	 * @param int $course_id
+	 *
 	 * @return array|bool|null|object
 	 *
 	 * Check if current user has been enrolled or not
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function is_enrolled($course_id = 0, $user_id = 0){
@@ -1390,7 +1446,13 @@ class Utils {
 		return $teachers;
 	}
 
-
+	/**
+	 * @param float $input
+	 *
+	 * @return float|string
+	 *
+	 * Get rating format from value
+	 */
 	public function get_rating_value($input = 0.00){
 
 		if ( $input > 0){
@@ -1411,8 +1473,15 @@ class Utils {
 		return 0.00;
 	}
 
+	/**
+	 * @param float $current_rating
+	 * @param bool $echo
+	 *
+	 * @return string
+	 *
+	 * Generate star rating based in given rating value
+	 */
 	public function star_rating_generator($current_rating = 0.00, $echo = true){
-
 		$output = '';
 
 		for ($i = 1; $i <=5 ; $i++){
@@ -1420,8 +1489,7 @@ class Utils {
 
 			if ($intRating >= $i){
 				$output.= '<i class="icon-star" data-rating-value="'.$i.'"></i>';
-			}
-			else{
+			} else{
 				if ( ($current_rating - $i) == -0.5){
 					$output.= '<i class="icon-star-half-alt" data-rating-value="'.$i.'"></i>';
 				}else{
@@ -1436,6 +1504,68 @@ class Utils {
 		return $output;
 	}
 
+	/**
+	 * @param null $name
+	 *
+	 * @return string
+	 *
+	 * Generate text to avatar
+	 */
+	public function text_avatar_generator($name = null){
+		if ( ! $name){
+			return '';
+		}
+
+		$arr = explode(' ', trim($name));
+
+		if (count($arr) > 1){
+			$first_char = substr($arr[0], 0, 1) ;
+			$second_char = substr($arr[1], 0, 1) ;
+		}else{
+			$first_char = substr($arr[0], 0, 1) ;
+			$second_char = substr($arr[0], 1, 1) ;
+		}
+
+		return strtoupper($first_char.$second_char);
+	}
+
+	/**
+	 * @param int $course_id
+	 * @param int $offset
+	 * @param int $limit
+	 *
+	 * @return array|null|object
+	 *
+	 * get course reviews
+	 *
+	 * @since v.1.0.0
+	 */
+	public function get_course_reviews($course_id = 0, $offset = 0, $limit = 150){
+		$course_id = $this->get_post_id($course_id);
+		global $wpdb;
+
+		$reviews = $wpdb->get_results("select {$wpdb->comments}.comment_ID, 
+			{$wpdb->comments}.comment_post_ID, 
+			{$wpdb->comments}.comment_author, 
+			{$wpdb->comments}.comment_author_email, 
+			{$wpdb->comments}.comment_date, 
+			{$wpdb->comments}.comment_content, 
+			{$wpdb->comments}.user_id, 
+			{$wpdb->commentmeta}.meta_value as rating,
+			{$wpdb->users}.display_name 
+			
+			from {$wpdb->comments}
+			INNER JOIN {$wpdb->commentmeta} 
+			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+			INNER  JOIN {$wpdb->users}
+			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
+			AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
+		);
+
+		return $reviews;
+	}
+
 	public function get_course_rating($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 
@@ -1448,10 +1578,10 @@ class Utils {
 		global $wpdb;
 
 		$rating = $wpdb->get_row("select COUNT(meta_value) as rating_count, SUM(meta_value) as rating_sum from {$wpdb->comments}
-				INNER JOIN {$wpdb->commentmeta} 
-				ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
-				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
-				AND meta_key = 'tutor_rating' ;"
+			INNER JOIN {$wpdb->commentmeta} 
+			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
+			AND meta_key = 'tutor_rating' ;"
 		);
 
 		if ($rating->rating_count){
