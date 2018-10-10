@@ -131,5 +131,39 @@ jQuery(document).ready(function($){
         $(this).closest('form').find('.tutor-write-review-box').slideToggle();
     });
 
+    $(document).on('click', '.tutor-ask-question-btn', function(e){
+        e.preventDefault();
+        $('.tutor-add-question-wrap').slideToggle();
+    });
+    $(document).on('click', '.tutor_question_cancel', function(e){
+        e.preventDefault();
+        $('.tutor-add-question-wrap').toggle();
+    });
+
+
+    $(document).on('submit', '#tutor-ask-question-form', function(e){
+        e.preventDefault();
+
+        var $form = $(this);
+        var data = $(this).serialize()+'&action=tutor_ask_question';
+
+        console.log(data);
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: data,
+            beforeSend: function () {
+                $form.find('.tutor_ask_question_btn').addClass('updating-icon');
+            },
+            success: function (data) {
+                //
+            },
+            complete: function () {
+                $form.find('.tutor_ask_question_btn').removeClass('updating-icon');
+            }
+        });
+    });
+
+
 });
 

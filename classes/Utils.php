@@ -51,6 +51,19 @@ class Utils {
 
 	/**
 	 * @param null $key
+	 * @param bool $value
+	 *
+	 * Update Option
+	 */
+
+	public function update_option($key = null, $value = false){
+		$option = (array) maybe_unserialize(get_option('tutor_option'));
+		$option[$key] = $value;
+		update_option('tutor_option', $option);
+	}
+
+	/**
+	 * @param null $key
 	 * @param array $array
 	 *
 	 * @return array|bool|mixed
@@ -622,8 +635,7 @@ class Utils {
 	public function course_sub_pages(){
 		$nav_items = array(
 			'overview' => __('Overview', 'tutor'),
-			'content' => __('Content', 'tutor'),
-			'questions' => __('Questions', 'tutor'),
+			'questions' => __('Q&A', 'tutor'),
 			'announcements' => __('Announcements', 'tutor'),
 		);
 
@@ -1566,6 +1578,13 @@ class Utils {
 		return $reviews;
 	}
 
+	/**
+	 * @param int $course_id
+	 *
+	 * @return object
+	 *
+	 * Get course rating
+	 */
 	public function get_course_rating($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 
@@ -1597,7 +1616,14 @@ class Utils {
 		return (object) $ratings;
 	}
 
-
+	/**
+	 * @param int $course_id
+	 * @param int $user_id
+	 *
+	 * @return object
+	 *
+	 * Get course rating by user
+	 */
 	public function get_course_rating_by_user($course_id = 0, $user_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
@@ -1625,6 +1651,68 @@ class Utils {
 			);
 		}
 		return (object) $ratings;
+	}
+
+
+	/**
+	 * @param $size
+	 *
+	 * @return bool|int|string
+	 *
+	 * This function transforms the php.ini notation for numbers (like '2M') to an integer.
+	 */
+
+	function let_to_num( $size ) {
+		$l    = substr( $size, -1 );
+		$ret  = substr( $size, 0, -1 );
+		$byte = 1024;
+
+		switch ( strtoupper( $l ) ) {
+			case 'P':
+				$ret *= 1024;
+			// No break.
+			case 'T':
+				$ret *= 1024;
+			// No break.
+			case 'G':
+				$ret *= 1024;
+			// No break.
+			case 'M':
+				$ret *= 1024;
+			// No break.
+			case 'K':
+				$ret *= 1024;
+			// No break.
+		}
+		return $ret;
+	}
+
+
+
+	function get_db_version() {
+		global $wpdb;
+
+		if ( empty( $wpdb->is_mysql ) ) {
+			return array(
+				'string' => '',
+				'number' => '',
+			);
+		}
+
+		if ( $wpdb->use_mysqli ) {
+			$server_info = mysqli_get_server_info( $wpdb->dbh ); // @codingStandardsIgnoreLine.
+		} else {
+			$server_info = mysql_get_server_info( $wpdb->dbh ); // @codingStandardsIgnoreLine.
+		}
+
+		return array(
+			'string' => $server_info,
+			'number' => preg_replace( '/([^\d.]+).*/', '', $server_info ),
+		);
+	}
+
+	public function help_tip($tip = ''){
+		return '<span class="tutor-help-tip" data-tip="' . $tip . '"></span>';
 	}
 
 

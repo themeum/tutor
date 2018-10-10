@@ -794,6 +794,14 @@ if ( ! function_exists('tutor_course_completing_progress_bar')) {
 	}
 }
 
-function tutor_course_enrolled_content_topics_lesson(){
-    echo 'Hello Content';
+function tutor_course_question_and_answer($echo = true){
+	ob_start();
+	tutor_load_template( 'single.course.enrolled.question_and_answer' );
+	$output = apply_filters( 'tutor_course/single/question_and_answer', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
+
+	return $output;
 }

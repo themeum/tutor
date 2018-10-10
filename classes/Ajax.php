@@ -6,10 +6,10 @@ if ( ! defined( 'ABSPATH' ) )
 
 class Ajax{
 	public function __construct() {
-
 		add_action('wp_ajax_sync_video_playback', array($this, 'sync_video_playback'));
 		add_action('wp_ajax_tutor_place_rating', array($this, 'tutor_place_rating'));
 
+		add_action('wp_ajax_tutor_ask_question', array($this, 'tutor_ask_question'));
 	}
 
 	/**
@@ -57,6 +57,8 @@ class Ajax{
 	public function tutor_place_rating(){
 		global $wpdb;
 
+		//TODO: Check nonce
+
 		$rating = sanitize_text_field(tutor_utils()->avalue_dot('rating', $_POST));
 		$course_id = sanitize_text_field(tutor_utils()->avalue_dot('course_id', $_POST));
 
@@ -66,6 +68,8 @@ class Ajax{
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
 		$date = date("Y-m-d H:i:s");
+
+		do_action('tutor_before_rating_placed');
 
 		$previous_rating_id = $wpdb->get_var("select comment_ID from {$wpdb->comments} WHERE comment_post_ID={$course_id} AND user_id = {$user_id} AND comment_type = 'tutor_course_rating' LIMIT 1;");
 
@@ -105,10 +109,54 @@ class Ajax{
 					'meta_key' => 'tutor_rating',
 					'meta_value' => $rating
 				) );
+
+				do_action('tutor_after_rating_placed', $comment_id);
 			}
 		}
 
 		wp_send_json_success(__('Rating placed success', 'tutor'));
+	}
+
+	public function tutor_ask_question(){
+		tutor_utils()->checking_nonce();
+
+		global $wpdb;
+
+		$course_id = (int) sanitize_text_field($_POST['tutor_course_id']);
+		$question_title = sanitize_text_field($_POST['question_title']);
+		$question = wp_kses_post($_POST['question']);
+
+		$user_id = get_current_user_id();
+		$user = get_userdata($user_id);
+		$date = date("Y-m-d H:i:s");
+
+		do_action('tutor_before_add_question');
+
+		$data = apply_filters('tutor_add_question_data', array(
+			'comment_post_ID'   => $course_id,
+			'comment_approved'  => 'approved',
+			'comment_type'      => 'tutor_course_question',
+			'comment_date'      => $date,
+			'comment_date_gmt'  => get_gmt_from_date($date),
+			'comment_content'   => $question,
+			'user_id'           => $user_id,
+			'comment_author'    => $user->user_login,
+			'comment_agent'     => 'TutorLMSPlugin',
+		));
+
+		$wpdb->insert($wpdb->comments, $data);
+		$comment_id = (int) $wpdb->insert_id;
+
+		if ($comment_id){
+			$result = $wpdb->insert( $wpdb->commentmeta, array(
+				'comment_id' => $comment_id,
+				'meta_key' => 'tutor_question_title',
+				'meta_value' => $question_title
+			) );
+		}
+		do_action('tutor_after_add_question', $comment_id);
+
+		wp_send_json_success(__('Question has been added successfully', 'tutor'));
 	}
 
 

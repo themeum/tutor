@@ -253,3 +253,50 @@ a.tutor-delete-attachment:hover {
     background-color: #ff0000;
     color: #ffffff;
 }
+
+table.tutor_status_table td.help {
+    width: 1em;
+}
+table.tutor_status_table td:first-child {
+    width: 25%;
+}
+table.tutor_status_table h2{
+    font-size: 16px;
+    margin: 0;
+}
+table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
+    color: #06d004;
+    background-color: transparent;
+}
+/*
+
+.tutor-help-tip {
+    color: #666;
+    display: inline-block;
+    font-size: 1.1em;
+    font-style: normal;
+    height: 16px;
+    line-height: 16px;
+    position: relative;
+    vertical-align: middle;
+    width: 16px;
+}
+.tutor-help-tip::after {
+    font-family: Dashicons;
+    speak: none;
+    font-weight: 400;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    text-indent: 0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    content: "";
+    cursor: help;
+    font-variant: normal;
+    margin: 0px;
+}*/

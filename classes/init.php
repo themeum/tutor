@@ -99,6 +99,13 @@ class init{
 		//Rewrite Flush
 		update_option('required_rewrite_flush', time());
 		self::manage_tutor_roles_and_permissions();
+
+
+		$is_previously_installed = get_option('tutor_version', TUTOR_VERSION);
+		if ( ! $is_previously_installed){
+			self::save_data();
+			update_option('tutor_version', TUTOR_VERSION);
+		}
 	}
 
 	public static function manage_tutor_roles_and_permissions(){
@@ -163,6 +170,29 @@ class init{
 				$administrator->add_cap( $cap );
 			}
 		}
+	}
+
+	/**
+	 * Save data like page
+	 */
+	public static function save_data(){
+		$student_dashboard_args = array(
+			'post_title'    => __('Student Dashboard', 'tutor'),
+			'post_content'  => '[tutor_dashboard]',
+			'post_type'     => 'page',
+			'post_status'   => 'publish',
+		);
+		$student_dashboard_page_id = wp_insert_post( $student_dashboard_args );
+		tutor_utils()->update_option('student_dashboard', $student_dashboard_page_id);
+
+		$teacher_registration_args = array(
+			'post_title'    => __('Teacher Registration', 'tutor'),
+			'post_content'  => '[tutor_teacher_registration_form]',
+			'post_type'     => 'page',
+			'post_status'   => 'publish',
+		);
+		$teacher_registration_id = wp_insert_post( $teacher_registration_args );
+
 
 	}
 

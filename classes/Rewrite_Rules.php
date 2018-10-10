@@ -15,7 +15,6 @@ class Rewrite_Rules extends Tutor_Base {
 
 		//Lesson Permalink
 		add_filter('post_type_link', array($this, 'change_lesson_single_url'), 1, 2);
-
 	}
 
 
@@ -29,7 +28,7 @@ class Rewrite_Rules extends Tutor_Base {
 	public function add_rewrite_rules($wp_rewrite){
 		$new_rules = array(
 			//Lesson
-			$this->course_post_type."/(.+?)/{$this->lesson_post_type}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=". $wp_rewrite->preg_index(2),
+			$this->course_post_type."/(.+?)/{$this->lesson_base_permalink}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=".$wp_rewrite->preg_index(2),
 
 			"video-url/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=". $wp_rewrite->preg_index(1),
 		);
@@ -67,11 +66,12 @@ class Rewrite_Rules extends Tutor_Base {
 			global $wpdb;
 
 			$course_id = get_post_meta($lesson->ID, '_tutor_course_id_for_lesson', true);
+
 			if ($course_id){
 				$course = $wpdb->get_row("select {$wpdb->posts}.post_name from {$wpdb->posts} where ID = {$course_id} ");
-				return home_url("/{$this->course_post_type}/".$course->post_name."/{$this->lesson_post_type}/". $lesson->post_name.'/');
+				return home_url("/{$this->course_post_type}/".$course->post_name."/{$this->lesson_base_permalink}/". $lesson->post_name.'/');
 			}else{
-				return home_url("/{$this->course_post_type}/sample-course/{$this->lesson_post_type}/". $lesson->post_name.'/');
+				return home_url("/{$this->course_post_type}/sample-course/{$this->lesson_base_permalink}/". $lesson->post_name.'/');
 			}
 
 		}

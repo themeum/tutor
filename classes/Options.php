@@ -352,11 +352,6 @@ class Options {
 				),
 			),
 
-
-			'video_player' => array(
-				'label'     => __('Video Player', 'tutor'),
-			),
-
 			'email_notification' => array(
 				'label'     => __('E-Mail Notification', 'tutor'),
 				'sections'    => array(

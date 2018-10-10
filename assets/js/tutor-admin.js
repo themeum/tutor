@@ -39,6 +39,7 @@ jQuery(document).ready(function($){
             },
             complete: function () {
                 $form.find('.button').removeClass('updating-message');
+                window.location.reload();
             }
         });
     });

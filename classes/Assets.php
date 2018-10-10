@@ -53,9 +53,13 @@ class Assets{
 			}
 		}
 
-		wp_enqueue_style('tutor-frontend', tutor()->url.'assets/css/tutor-front.css', array(), tutor()->version);
-		wp_enqueue_script('tutor-frontend', tutor()->url.'assets/js/tutor-front.js', array('jquery'), tutor()->version, true );
-		wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
+		if (tutor_utils()->get_option('load_tutor_css')){
+			wp_enqueue_style('tutor-frontend', tutor()->url.'assets/css/tutor-front.css', array(), tutor()->version);
+		}
+		if (tutor_utils()->get_option('load_tutor_js')) {
+			wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery' ), tutor()->version, true );
+			wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
+		}
 	}
 
 
