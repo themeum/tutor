@@ -131,17 +131,16 @@ class Ajax{
 		$date = date("Y-m-d H:i:s");
 
 		do_action('tutor_before_add_question');
-
 		$data = apply_filters('tutor_add_question_data', array(
 			'comment_post_ID'   => $course_id,
-			'comment_approved'  => 'approved',
-			'comment_type'      => 'tutor_course_question',
+			'comment_author'    => $user->user_login,
 			'comment_date'      => $date,
 			'comment_date_gmt'  => get_gmt_from_date($date),
 			'comment_content'   => $question,
-			'user_id'           => $user_id,
-			'comment_author'    => $user->user_login,
+			'comment_approved'  => 'waiting_for_answer',
 			'comment_agent'     => 'TutorLMSPlugin',
+			'comment_type'      => 'tutor_q_and_a',
+			'user_id'           => $user_id,
 		));
 
 		$wpdb->insert($wpdb->comments, $data);

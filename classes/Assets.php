@@ -67,6 +67,7 @@ class Assets{
 	 * Add Tinymce button for placing shortcode
 	 */
 	function tutor_add_mce_button() {
+
 		// check user permissions
 		if ( !current_user_can( 'edit_posts' ) && !current_user_can( 'edit_pages' ) ) {
 			return;

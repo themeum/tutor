@@ -1523,7 +1523,7 @@ class Utils {
 	 *
 	 * Generate text to avatar
 	 */
-	public function text_avatar_generator($name = null){
+	public function get_tutor_avatar($name = null){
 		if ( ! $name){
 			return '';
 		}
@@ -1538,7 +1538,12 @@ class Utils {
 			$second_char = substr($arr[0], 1, 1) ;
 		}
 
-		return strtoupper($first_char.$second_char);
+		$initial_avatar = strtoupper($first_char.$second_char);
+
+		$bg_color = '#'.substr(md5($initial_avatar), 0, 6);
+		$initial_avatar = "<span class='tutor-text-avatar' style='background-color: {$bg_color};'>{$initial_avatar}</span>";
+
+		return $initial_avatar;
 	}
 
 	/**
@@ -1714,6 +1719,152 @@ class Utils {
 	public function help_tip($tip = ''){
 		return '<span class="tutor-help-tip" data-tip="' . $tip . '"></span>';
 	}
+
+
+	public function get_top_question($course_id = 0, $user_id = 0, $offset = 0, $limit = 20){
+		$course_id = $this->get_post_id($course_id);
+		$user_id = $this->get_user_id($user_id);
+
+		global $wpdb;
+
+		$questions = $wpdb->get_results("select {$wpdb->comments}.comment_ID, 
+			{$wpdb->comments}.comment_post_ID, 
+			{$wpdb->comments}.comment_author, 
+			{$wpdb->comments}.comment_date, 
+			{$wpdb->comments}.comment_content, 
+			{$wpdb->comments}.user_id, 
+			{$wpdb->commentmeta}.meta_value as question_title,
+			{$wpdb->users}.display_name 
+			
+			from {$wpdb->comments}
+			INNER JOIN {$wpdb->commentmeta} 
+			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+			INNER  JOIN {$wpdb->users}
+			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
+			AND {$wpdb->comments}.user_id = {$user_id}
+			AND {$wpdb->comments}.comment_type	 = 'tutor_q_and_a'
+			AND meta_key = 'tutor_question_title' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
+		);
+
+		return $questions;
+	}
+
+	public function get_total_qa_question($search_term = ''){
+		global $wpdb;
+
+		if ($search_term){
+			$search_term = " AND {$wpdb->commentmeta}.meta_value LIKE '%{$search_term}%' ";
+		}
+
+		$count = $wpdb->get_var("SELECT COUNT({$wpdb->comments}.comment_ID) FROM {$wpdb->comments} 
+			INNER JOIN {$wpdb->commentmeta} 
+			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+			WHERE comment_type	 = 'tutor_q_and_a' AND comment_parent = 0  {$search_term} ");
+
+		return (int) $count;
+	}
+
+	/**
+	 * @param int $start
+	 * @param int $limit
+	 * @param string $search_term
+	 *
+	 * @return array|null|object
+	 *
+	 *
+	 * Get question and answer query
+	 *
+	 * @since v.1.0.0
+	 */
+	public function get_qa_questions($start = 0, $limit = 10, $search_term = '') {
+		global $wpdb;
+
+		if ($search_term){
+			$search_term = " AND {$wpdb->commentmeta}.meta_value LIKE '%{$search_term}%' ";
+		}
+
+		$query = $wpdb->get_results("SELECT 
+			{$wpdb->comments}.comment_ID, 
+			{$wpdb->comments}.comment_post_ID, 
+			{$wpdb->comments}.comment_author, 
+			{$wpdb->comments}.comment_date, 
+			{$wpdb->comments}.comment_content, 
+			{$wpdb->comments}.user_id, 
+			{$wpdb->commentmeta}.meta_value as question_title,
+			{$wpdb->users}.display_name,
+		  
+			{$wpdb->posts}.post_title
+		 
+		 	FROM {$wpdb->comments} 
+			INNER JOIN {$wpdb->commentmeta} 
+			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+			
+			INNER JOIN {$wpdb->posts} 
+			ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
+			
+			INNER  JOIN {$wpdb->users}
+			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+		  
+			WHERE comment_type	 = 'tutor_q_and_a' AND comment_parent = 0  {$search_term} 
+			ORDER BY {$wpdb->comments}.comment_ID DESC 
+			LIMIT {$start},{$limit}; ");
+
+		return $query;
+	}
+
+
+	public function get_qa_question($question_id){
+		global $wpdb;
+		$query = $wpdb->get_row("SELECT 
+			{$wpdb->comments}.comment_ID, 
+			{$wpdb->comments}.comment_post_ID, 
+			{$wpdb->comments}.comment_author, 
+			{$wpdb->comments}.comment_date, 
+			{$wpdb->comments}.comment_content, 
+			{$wpdb->comments}.user_id, 
+			{$wpdb->commentmeta}.meta_value as question_title,
+			{$wpdb->users}.display_name,
+		  
+			{$wpdb->posts}.post_title
+		 
+		 	FROM {$wpdb->comments} 
+			INNER JOIN {$wpdb->commentmeta} 
+			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+			
+			INNER JOIN {$wpdb->posts} 
+			ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
+			
+			INNER  JOIN {$wpdb->users}
+			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+			WHERE comment_type	 = 'tutor_q_and_a' AND {$wpdb->comments}.comment_ID = {$question_id}");
+
+		return $query;
+	}
+
+
+	public function get_qa_answer_by_question($question_id){
+		global $wpdb;
+		$query = $wpdb->get_results("SELECT 
+			{$wpdb->comments}.comment_ID, 
+			{$wpdb->comments}.comment_post_ID, 
+			{$wpdb->comments}.comment_author, 
+			{$wpdb->comments}.comment_date, 
+			{$wpdb->comments}.comment_content, 
+			{$wpdb->comments}.comment_parent,
+			{$wpdb->comments}.user_id,
+			{$wpdb->users}.display_name
+		  		 
+		 	FROM {$wpdb->comments} 
+			
+			INNER  JOIN {$wpdb->users}
+			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+			WHERE comment_type = 'tutor_q_and_a' 
+			AND {$wpdb->comments}.comment_parent = {$question_id} ORDER BY {$wpdb->comments}.comment_ID ASC ");
+
+		return $query;
+	}
+
 
 
 }

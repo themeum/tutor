@@ -156,14 +156,16 @@ jQuery(document).ready(function($){
                 $form.find('.tutor_ask_question_btn').addClass('updating-icon');
             },
             success: function (data) {
-                //
+                if (data.success){
+                    $('.tutor-add-question-wrap').hide();
+                    window.location.reload();
+                }
             },
             complete: function () {
                 $form.find('.tutor_ask_question_btn').removeClass('updating-icon');
             }
         });
     });
-
 
 });
 

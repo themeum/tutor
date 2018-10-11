@@ -25,6 +25,8 @@ class Admin{
 
 		add_submenu_page('tutor', __('Teachers', 'tutor'), __('Teachers', 'tutor'), 'manage_tutor', 'tutor-teachers', array($this, 'tutor_teachers') );
 
+		add_submenu_page('tutor', __('Question & Answer', 'tutor'), __('Question & Answer', 'tutor'), 'manage_tutor', 'question_answer', array($this, 'question_answer') );
+
 		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
 	}
 
@@ -39,6 +41,10 @@ class Admin{
 
 	public function tutor_teachers(){
 		include tutor()->path.'views/pages/teachers.php';
+	}
+
+	public function question_answer(){
+		include tutor()->path.'views/pages/question_answer.php';
 	}
 
 	public function tutor_status(){

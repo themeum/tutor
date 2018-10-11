@@ -24,6 +24,8 @@ class init{
 	private $rewrite_rules;
 	private $template;
 	private $teacher;
+	private $q_and_a;
+
 	private $woocommerce;
 
 	function __construct() {
@@ -55,6 +57,7 @@ class init{
 		$this->rewrite_rules = new Rewrite_Rules();
 		$this->template = new Template();
 		$this->teacher = new  Teacher();
+		$this->q_and_a = new Q_and_A();
 
 		if (tutor_utils()->has_wc()){
 			$this->woocommerce = new  Woo_Commerce();

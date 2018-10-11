@@ -31,9 +31,8 @@
 
     <div class="tutor-add-question-wrap">
 
-
         <form method="post" id="tutor-ask-question-form">
-	        <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
             <input type="hidden" value="add_question" name="tutor_action"/>
             <input type="hidden" value="<?php echo get_the_ID(); ?>" name="tutor_course_id"/>
 
@@ -42,14 +41,15 @@
             </div>
 
             <div class="tutor-form-group">
-                <?php
-                $settings = array(
-                    'media_buttons' => false,
-	                'quicktags' => false,
-                    'editor_height' => 100,
-                );
-                wp_editor(null, 'question', $settings);
-                ?>
+				<?php
+				$settings = array(
+					'teeny' => true,
+					'media_buttons' => false,
+					'quicktags' => false,
+					'editor_height' => 100,
+				);
+				wp_editor(null, 'question', $settings);
+				?>
             </div>
 
             <div class="tutor-form-group">
@@ -62,6 +62,95 @@
     </div>
 
 
+
+    <div class="tutor_question_answer_wrap">
+
+
+
+
+		<?php
+		$questions = tutor_utils()->get_top_question();
+		?>
+
+
+		<?php
+		if (is_array($questions) && count($questions)){
+			foreach ($questions as $question){
+				$answers = tutor_utils()->get_qa_answer_by_question($question->comment_ID);
+				?>
+                <div class="tutor_original_question">
+                    <div class="question-left">
+	                    <?php echo tutor_utils()->get_tutor_avatar($question->display_name); ?>
+                    </div>
+
+                    <div class="question-right">
+                        <div class="question-top-meta">
+                            <p class="review-meta">
+		                        <?php echo $question->display_name; ?> -
+                                <span class="tutor-text-mute"><?php _e(sprintf('%s ago', human_time_diff(strtotime($question->comment_date))), 'lms'); ?></span>
+                            </p>
+                        </div>
+
+                        <div class="tutor_question_area">
+                            <p><strong><?php echo $question->question_title; ?> </strong></p>
+	                        <?php echo wpautop($question->comment_content); ?>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="tutor_admin_answers_list_wrap">
+					<?php
+					if (is_array($answers) && count($answers)){
+						foreach ($answers as $answer){
+							?>
+                            <div class="tutor_individual_answer <?php echo ($question->user_id == $answer->user_id) ? 'tutor-bg-white' : 'tutor-bg-light'
+							?> ">
+                                <div class="question-left">
+	                                <?php echo tutor_utils()->get_tutor_avatar($answer->display_name); ?>
+                                </div>
+
+                                <div class="question-right">
+                                    <div class="question-top-meta">
+                                        <p class="review-meta">
+											<?php echo $answer->display_name; ?> -
+                                            <span class="tutor-text-mute">
+										<?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'lms'); ?>
+									</span>
+                                        </p>
+                                    </div>
+
+                                    <div class="tutor_question_area">
+										<?php echo wpautop(stripslashes($answer->comment_content)); ?>
+                                    </div>
+                                </div>
+                            </div>
+							<?php
+						}
+					}
+					?>
+                </div>
+
+
+
+
+
+				<?php
+			}
+		}
+		?>
+
+
+        <div class="tutor_answer_list">
+
+
+
+
+        </div>
+
+
+    </div>
 
 
 </div>
