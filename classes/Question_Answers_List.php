@@ -15,8 +15,8 @@ class Question_Answers_List extends \Tutor_List_Table {
 
 		//Set parent defaults
 		parent::__construct( array(
-			'singular'  => 'question_answer',     //singular name of the listed records
-			'plural'    => 'question_answers',    //plural name of the listed records
+			'singular'  => 'question',     //singular name of the listed records
+			'plural'    => 'questions',    //plural name of the listed records
 			'ajax'      => false        //does this table support ajax?
 		) );
 	}
@@ -26,6 +26,7 @@ class Question_Answers_List extends \Tutor_List_Table {
 			case 'user_email':
 			case 'display_name':
 			case 'post_title':
+			case 'answer_count':
 				return $item->$column_name;
 			default:
 				return print_r($item,true); //Show the whole array for troubleshooting purposes
@@ -40,6 +41,7 @@ class Question_Answers_List extends \Tutor_List_Table {
 		);
 
 		$actions['answer'] = sprintf('<a href="?page=%s&sub_page=%s&question_id=%s">Answer</a>',$_REQUEST['page'],'answer',$item->comment_ID);
+		//$actions['delete'] = sprintf('<a href="?page=%s&action=%s&question_id=%s">Delete</a>',$_REQUEST['page'],'delete',$item->comment_ID);
 
 		//Return the title contents
 		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
@@ -68,6 +70,7 @@ class Question_Answers_List extends \Tutor_List_Table {
 			'question'          => __('Question', 'tutor'),
 			'display_name'      => __('Student', 'tutor'),
 			'post_title'        => __('Course', 'tutor'),
+			'answer_count'            => __('Answer', 'tutor'),
 		);
 		return $columns;
 	}
@@ -81,15 +84,27 @@ class Question_Answers_List extends \Tutor_List_Table {
 
 	function get_bulk_actions() {
 		$actions = array(
-			//'delete'    => 'Delete'
+			'delete'    => 'Delete'
 		);
 		return $actions;
 	}
 
 	function process_bulk_action() {
+		global $wpdb;
+
 		//Detect when a bulk action is being triggered...
-		if( 'delete'===$this->current_action() ) {
-			wp_die('Items deleted (or they would be if we had items to delete)!');
+		if( 'delete' === $this->current_action() ) {
+			if ( empty($_GET['question']) || ! is_array($_GET['question'])){
+				return;
+			}
+
+			$question_ids = array_map('sanitize_text_field', $_GET['question']);
+			$question_ids = implode( ',', array_map( 'absint', $question_ids ) );
+
+			//Deleting question (comment), child question and question meta (comment meta)
+			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_ID IN($question_ids)" );
+			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_parent IN($question_ids)" );
+			$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE {$wpdb->commentmeta}.comment_id IN($question_ids)" );
 		}
 	}
 

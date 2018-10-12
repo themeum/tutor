@@ -31,6 +31,8 @@ class Assets{
 	 */
 	public function frontend_scripts(){
 
+		wp_enqueue_editor();
+
 		$localize_data = array(
 			'ajaxurl'   => admin_url('admin-ajax.php'),
 			'nonce_key' => tutor()->nonce,

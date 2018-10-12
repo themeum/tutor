@@ -17,7 +17,7 @@ class Course extends Tutor_Base {
 		add_action( "manage_{$this->course_post_type}_posts_custom_column" , array($this, 'custom_lesson_column'), 10, 2 );
 
 		add_action('admin_action_tutor_delete_topic', array($this, 'tutor_delete_topic'));
-
+		add_action('admin_action_tutor_delete_announcement', array($this, 'tutor_delete_announcement'));
 
 		//Frontend Action
 		add_action('template_redirect', array($this, 'enroll_now'));
@@ -34,6 +34,9 @@ class Course extends Tutor_Base {
 		add_meta_box( 'tutor-course-topics', __( 'Topics', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-attachments', __( 'Attachments', 'tutor' ), array($this, 'course_attachments_metabox'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
+
+
+		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
 	}
 
 	public function course_meta_box(){
@@ -50,6 +53,10 @@ class Course extends Tutor_Base {
 
 	public function video_metabox(){
 		include  tutor()->path.'views/metabox/video-metabox.php';
+	}
+
+	public function announcements_metabox(){
+		include  tutor()->path.'views/metabox/announcements-metabox.php';
 	}
 
 	/**
@@ -160,6 +167,25 @@ class Course extends Tutor_Base {
 			update_post_meta($post_ID, '_video', $video);
 		}
 
+
+
+		//Announcements
+		$announcement_title = tutor_utils()->avalue_dot('announcements.title', $_POST );
+		if ( ! empty($announcement_title)){
+			$title = sanitize_text_field(tutor_utils()->avalue_dot('announcements.title', $_POST ));
+			$content = wp_kses_post(tutor_utils()->avalue_dot('announcements.content', $_POST ));
+
+			$post_arr = array(
+				'post_type'    => 'tutor_announcements',
+				'post_title'   => $title,
+				'post_content' => $content,
+				'post_status'  => 'publish',
+				'post_author'  => get_current_user_id(),
+				'post_parent'  => $post_ID,
+			);
+			wp_insert_post( $post_arr );
+		}
+
 	}
 
 
@@ -194,6 +220,8 @@ class Course extends Tutor_Base {
 		$date_col = $columns['date'];
 		unset($columns['date']);
 		$columns['lessons'] = __('Lessons', 'tutor');
+		$columns['students'] = __('Students', 'tutor');
+		$columns['price'] = __('Price', 'tutor');
 		$columns['date'] = $date_col;
 
 		return $columns;
@@ -208,6 +236,21 @@ class Course extends Tutor_Base {
 		if ($column === 'lessons'){
 			echo tutor_utils()->get_lesson_count_by_course($post_id);
 		}
+
+		if ($column === 'students'){
+			echo tutor_utils()->count_enrolled_users_by_course($post_id);
+		}
+
+		if ($column === 'price'){
+			$price = tutor_utils()->get_course_price($post_id);
+
+			if ($price && function_exists('wc_price')){
+				echo wc_price($price);
+			}else{
+				echo 'free';
+			}
+		}
+
 	}
 
 
@@ -234,9 +277,16 @@ class Course extends Tutor_Base {
 		);
 
 		wp_delete_post($topic_id);
-
 		wp_safe_redirect(wp_get_referer());
+	}
 
+	public function tutor_delete_announcement(){
+		tutor_utils()->checking_nonce('get');
+
+		$announcement_id = (int) sanitize_text_field($_GET['topic_id']);
+
+		wp_delete_post($announcement_id);
+		wp_safe_redirect(wp_get_referer());
 	}
 
 	public function enroll_now(){

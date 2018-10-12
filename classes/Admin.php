@@ -20,12 +20,18 @@ class Admin{
 	}
 
 	public function register_menu(){
+		$unanswered_questions = tutor_utils()->unanswered_question_count();
+		$unanswered_bubble = '';
+		if ($unanswered_questions){
+			$unanswered_bubble = '<span class="update-plugins count-'.$unanswered_questions.'"><span class="plugin-count">'.$unanswered_questions.'</span></span>';
+		}
+
 		add_menu_page(__('Tutor', 'tutor'), __('Tutor', 'tutor'), 'manage_tutor', 'tutor', array($this, 'tutor_page'), 'dashicons-welcome-learn-more', 2);
 		add_submenu_page('tutor', __('Students', 'tutor'), __('Students', 'tutor'), 'manage_tutor', 'tutor-students', array($this, 'tutor_students') );
 
 		add_submenu_page('tutor', __('Teachers', 'tutor'), __('Teachers', 'tutor'), 'manage_tutor', 'tutor-teachers', array($this, 'tutor_teachers') );
 
-		add_submenu_page('tutor', __('Question & Answer', 'tutor'), __('Question & Answer', 'tutor'), 'manage_tutor', 'question_answer', array($this, 'question_answer') );
+		add_submenu_page('tutor', __('Q & A', 'tutor'), __('Q & A '.$unanswered_bubble, 'tutor'), 'manage_tutor', 'question_answer', array($this, 'question_answer') );
 
 		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
 	}

@@ -10,7 +10,6 @@ if (isset($_GET['sub_page'])){
     return;
 }
 
-
 $teacherList = new \TUTOR\Question_Answers_List();
 $teacherList->prepare_items();
 ?>

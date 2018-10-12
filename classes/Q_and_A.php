@@ -18,7 +18,6 @@ class Q_and_A{
 
 		$answer = wp_kses_post($_POST['answer']);
 		$question_id = (int) sanitize_text_field($_POST['question_id']);
-
 		$question = tutor_utils()->get_qa_question($question_id);
 
 		$user_id = get_current_user_id();

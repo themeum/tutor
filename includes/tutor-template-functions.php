@@ -805,3 +805,16 @@ function tutor_course_question_and_answer($echo = true){
 
 	return $output;
 }
+
+
+function tutor_course_announcements($echo = true){
+	ob_start();
+	tutor_load_template( 'single.course.enrolled.announcements' );
+	$output = apply_filters( 'tutor_course/single/announcements', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
+
+	return $output;
+}

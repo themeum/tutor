@@ -333,3 +333,23 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
 .tutor-bg-light{
     background-color: #FDFDFD;
 }
+.tutor-announcement {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.announcement-delete-btn{
+    float: right;
+}
+.announcement-delete-btn a{
+    display: block;
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    padding: 6px;
+    border-radius: 50%;
+    text-decoration: none;
+}
+.announcement-delete-btn a:hover {
+    color: #ffffff;
+    background-color: #ff0000;
+}

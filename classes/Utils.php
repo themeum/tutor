@@ -1793,10 +1793,13 @@ class Utils {
 			{$wpdb->comments}.user_id, 
 			{$wpdb->commentmeta}.meta_value as question_title,
 			{$wpdb->users}.display_name,
-		  
-			{$wpdb->posts}.post_title
+			{$wpdb->posts}.post_title,
+			
+			(SELECT COUNT(answers_t.comment_ID) FROM {$wpdb->comments} answers_t
+		  	WHERE answers_t.comment_parent = {$wpdb->comments}.comment_ID ) as answer_count
 		 
 		 	FROM {$wpdb->comments} 
+		
 			INNER JOIN {$wpdb->commentmeta} 
 			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
 			
@@ -1806,13 +1809,12 @@ class Utils {
 			INNER  JOIN {$wpdb->users}
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 		  
-			WHERE comment_type	 = 'tutor_q_and_a' AND comment_parent = 0  {$search_term} 
+			WHERE {$wpdb->comments}.comment_type = 'tutor_q_and_a' AND {$wpdb->comments}.comment_parent = 0  {$search_term} 
 			ORDER BY {$wpdb->comments}.comment_ID DESC 
 			LIMIT {$start},{$limit}; ");
 
 		return $query;
 	}
-
 
 	public function get_qa_question($question_id){
 		global $wpdb;
@@ -1825,7 +1827,6 @@ class Utils {
 			{$wpdb->comments}.user_id, 
 			{$wpdb->commentmeta}.meta_value as question_title,
 			{$wpdb->users}.display_name,
-		  
 			{$wpdb->posts}.post_title
 		 
 		 	FROM {$wpdb->comments} 
@@ -1841,7 +1842,6 @@ class Utils {
 
 		return $query;
 	}
-
 
 	public function get_qa_answer_by_question($question_id){
 		global $wpdb;
@@ -1865,6 +1865,50 @@ class Utils {
 		return $query;
 	}
 
+	public function unanswered_question_count(){
+		global $wpdb;
+
+		$count = $wpdb->get_var("select COUNT({$wpdb->comments}.comment_ID) 
+			from {$wpdb->comments} 
+			WHERE {$wpdb->comments}.comment_type = 'tutor_q_and_a' 
+			AND {$wpdb->comments}.comment_approved = 'waiting_for_answer'
+			AND {$wpdb->comments}.comment_parent = 0;");
+		return (int) $count;
+	}
+
+	/**
+	 * @param int $course_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Return all of announcements for a course
+	 *
+	 * @since v.1.0.0
+	 */
+	public function get_announcements($course_id = 0){
+		$course_id = $this->get_post_id($course_id);
+		global $wpdb;
+
+		$query = $wpdb->get_results("select {$wpdb->posts}.ID, post_author, post_date, post_content, post_title, display_name
+			from {$wpdb->posts}
+			INNER JOIN {$wpdb->users} ON post_author = {$wpdb->users}.ID
+			WHERE post_type = 'tutor_announcements' 
+			AND post_parent = {$course_id} ORDER BY {$wpdb->posts}.ID DESC;");
+		return $query;
+	}
+
+	public function announcement_content($content = ''){
+		$search = array('{user_display_name}');
+
+		$user_display_name = 'User';
+		if (is_user_logged_in()){
+			$user = wp_get_current_user();
+			$user_display_name = $user->display_name;
+		}
+		$replace = array($user_display_name);
+
+		return str_replace($search, $replace, $content);
+	}
 
 
 }
