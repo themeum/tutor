@@ -26,14 +26,24 @@ class Admin{
 			$unanswered_bubble = '<span class="update-plugins count-'.$unanswered_questions.'"><span class="plugin-count">'.$unanswered_questions.'</span></span>';
 		}
 
-		add_menu_page(__('Tutor', 'tutor'), __('Tutor', 'tutor'), 'manage_tutor', 'tutor', array($this, 'tutor_page'), 'dashicons-welcome-learn-more', 2);
+		$course_post_type = tutor()->course_post_type;
+
+		add_menu_page(__('Tutor', 'tutor'), __('Tutor', 'tutor'), 'manage_tutor', 'tutor', null, 'dashicons-welcome-learn-more', 2);
+
+		add_submenu_page('tutor', __('Categories', 'tutor'), __('Categories', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type='.$course_post_type, null );
+		add_submenu_page('tutor', __('Tags', 'tutor'), __('Tags', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type='.$course_post_type, null );
+
 		add_submenu_page('tutor', __('Students', 'tutor'), __('Students', 'tutor'), 'manage_tutor', 'tutor-students', array($this, 'tutor_students') );
 
 		add_submenu_page('tutor', __('Teachers', 'tutor'), __('Teachers', 'tutor'), 'manage_tutor', 'tutor-teachers', array($this, 'tutor_teachers') );
 
 		add_submenu_page('tutor', __('Q & A', 'tutor'), __('Q & A '.$unanswered_bubble, 'tutor'), 'manage_tutor', 'question_answer', array($this, 'question_answer') );
 
+		add_submenu_page('tutor', __('Addons', 'tutor'), __('Addons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(), 'addons_page') );
+
 		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
+
+		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor', array($this, 'tutor_page') );
 	}
 
 	public function tutor_page(){

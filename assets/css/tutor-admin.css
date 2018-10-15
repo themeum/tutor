@@ -353,3 +353,11 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
     color: #ffffff;
     background-color: #ff0000;
 }
+.tutor-label-success{
+    background-color: #06d004;
+    color: #ffffff;
+    padding: 3px 7px;
+}
+.tutor-addons .plugin-card-bottom .plugin-version{
+    display: inline-block;
+}

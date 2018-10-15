@@ -25,6 +25,7 @@ class init{
 	private $template;
 	private $teacher;
 	private $q_and_a;
+	private $quiz;
 
 	private $woocommerce;
 
@@ -38,8 +39,7 @@ class init{
 		 */
 
 		add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
-
-
+		
 		/**
 		 * Loading Autoloader
 		 */
@@ -58,6 +58,7 @@ class init{
 		$this->template = new Template();
 		$this->teacher = new  Teacher();
 		$this->q_and_a = new Q_and_A();
+		$this->quiz = new Quiz();
 
 		if (tutor_utils()->has_wc()){
 			$this->woocommerce = new  Woo_Commerce();
@@ -138,7 +139,17 @@ class init{
 			'edit_others_tutor_lessons',
 			'read_private_tutor_lessons',
 			'edit_tutor_lessons',
-			'publish_tutor_lessons'
+			'publish_tutor_lessons',
+			
+			'edit_tutor_quiz',
+			'read_tutor_quiz',
+			'delete_tutor_quiz',
+			'delete_tutor_quizzes',
+			'edit_tutor_quizzes',
+			'edit_others_tutor_quizzes',
+			'read_private_tutor_quizzes',
+			'edit_tutor_quizzes',
+			'publish_tutor_quizzes'
 		);
 
 		$teacher = get_role( $teacher_role );

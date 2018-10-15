@@ -24,6 +24,15 @@ class Assets{
 		wp_enqueue_script('jquery-ui-slider');
 		wp_enqueue_script('tutor-select2', tutor()->url.'assets/packages/select2/select2.min.js', array('jquery'), tutor()->version, true );
 		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery'), tutor()->version, true );
+
+
+
+		$tutor_localize_data = array();
+		if ( ! empty($_GET['taxonomy']) && ( $_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag') ){
+			$tutor_localize_data['open_tutor_admin_menu'] = true;
+		}
+
+		wp_localize_script('tutor-admin', 'tutor_data', $tutor_localize_data);
 	}
 
 	/**

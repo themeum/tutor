@@ -1,5 +1,5 @@
 <?php
-namespace TUTOR;
+namespace Tutor;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
@@ -85,13 +85,13 @@ class Options {
 						'fields' => array(
 							'load_tutor_css' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Load TUTOR default CSS', 'tutor'),
+								'label'     => __('Load Tutor default CSS', 'tutor'),
 								'default'   => '1',
 								'desc'      => __('If theme has own styling, then you can turn it off to load CSS from the plugin directory', 'tutor'),
 							),
 							'load_tutor_js' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Load TUTOR default JavaScript', 'tutor'),
+								'label'     => __('Load Tutor default JavaScript', 'tutor'),
 								'default'   => '1',
 								'desc'      => __('If theme has own styling, then you can turn it off to load JavaScript from the plugin directory', 'tutor'),
 							),

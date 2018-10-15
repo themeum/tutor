@@ -140,7 +140,11 @@ Topics
     width: 50%;
 }
 .tutor-course-topics-contents .tutor-course-lessons{
-    margin-left: 30px;
+    /*margin-left: 30px;*/
+}
+.tutor-course-topics-contents .tutor-course-lessons h4{
+    font-weight: 300;
+    font-size: 16px;
 }
 .tutor-wrap .tutor-single-course-segment{
     margin-top: 10px;

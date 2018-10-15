@@ -1910,5 +1910,25 @@ class Utils {
 		return str_replace($search, $replace, $content);
 	}
 
+	/**
+	 * @param int $post_id
+	 * @param string $option_key
+	 * @param bool $default
+	 *
+	 * @return array|bool|mixed
+	 *
+	 * Get the quiz option from meta
+	 */
+	public function get_quiz_option($post_id = 0, $option_key = '', $default = false){
+		$post_id = $this->get_post_id($post_id);
+		$get_option_meta = maybe_unserialize(get_post_meta($post_id, 'tutor_quiz_option', true));
+
+		$value = $this->avalue_dot($option_key, $get_option_meta);
+		if ($value){
+			return $value;
+		}
+		return $default;
+	}
+
 
 }

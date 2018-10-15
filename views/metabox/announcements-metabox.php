@@ -1,5 +1,4 @@
 
-
 <div class="tutor-option-field-row">
     <div class="tutor-option-field-label">
         <label for=""><?php _e('Title', 'tutor'); ?></label>
@@ -42,11 +41,9 @@ $announcements = tutor_utils()->get_announcements(get_the_ID());
 if (is_array($announcements) && count($announcements)){
 	?>
     <div class="tutor-announcements-wrap">
-
 		<?php
 		foreach ($announcements as $announcement){
 			?>
-
             <div class="tutor-announcement">
                 <div class="tutor-announcement-title-wrap">
                     <h3><?php echo $announcement->post_title; ?>
@@ -66,17 +63,12 @@ if (is_array($announcements) && count($announcements)){
                 <div class="tutor-announcement-content">
 					<?php echo tutor_utils()->announcement_content(wpautop(stripslashes($announcement->post_content))); ?>
                 </div>
-
-
             </div>
-
-
 
 			<?php
 		}
 		?>
     </div>
-
 	<?php
 }
 ?>

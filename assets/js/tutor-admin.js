@@ -277,4 +277,17 @@ jQuery(document).ready(function($){
         frame.open();
     });
 
+
+    /**
+     * Open Sidebar Menu
+     */
+
+
+    if (tutor_data.open_tutor_admin_menu){
+        var $adminMenu = $('#adminmenu');
+        $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').addClass('wp-has-current-submenu');
+        $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').find('a.wp-has-submenu').removeClass('wp-has-current-submenu').addClass('wp-has-current-submenu');
+    }
+
+
 });

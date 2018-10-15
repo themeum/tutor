@@ -20,7 +20,6 @@ get_header();
 
     <div <?php tutor_post_class(); ?>>
 
-
 	    <?php do_action('tutor_course/single/enrolled/nav/before'); ?>
 	    <?php tutor_course_enrolled_nav(); ?>
 	    <?php do_action('tutor_course/single/enrolled/nav/after'); ?>
@@ -29,8 +28,6 @@ get_header();
 	    <?php do_action('tutor_course/announcements/before'); ?>
 	    <?php tutor_course_announcements(); ?>
 	    <?php do_action('tutor_course/announcements/after'); ?>
-
-
 
     </div><!-- .wrap -->
 
