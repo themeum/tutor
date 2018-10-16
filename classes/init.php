@@ -26,6 +26,7 @@ class init{
 	private $teacher;
 	private $q_and_a;
 	private $quiz;
+	private $question;
 
 	private $woocommerce;
 
@@ -59,6 +60,7 @@ class init{
 		$this->teacher = new  Teacher();
 		$this->q_and_a = new Q_and_A();
 		$this->quiz = new Quiz();
+		$this->question = new Question();
 
 		if (tutor_utils()->has_wc()){
 			$this->woocommerce = new  Woo_Commerce();

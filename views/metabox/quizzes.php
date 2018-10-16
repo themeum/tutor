@@ -5,7 +5,7 @@
 
 	<div class="tutor-option-field-row">
 		<div class="tutor-option-field-label">
-			<label for="">Time Limit</label>
+			<label for=""><?php _e('Time Limit', 'tutor'); ?></label>
 		</div>
 		<div class="tutor-option-field">
 			<div class="tutor-option-gorup-fields-wrap">

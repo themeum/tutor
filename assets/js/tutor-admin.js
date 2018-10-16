@@ -290,4 +290,98 @@ jQuery(document).ready(function($){
     }
 
 
+    /**
+     * Add question answer for quiz
+     */
+
+    $(document).on('change keyup paste', '.question_field_title', function(){
+        var $that = $(this);
+        $that.closest('.single-question-item').find('.tutor-question-item-head').find('.question-title').text($that.val());
+    });
+
+    $(document).on('change', '.question_type_field', function(){
+        var $that = $(this);
+        var option_text = $that.find('option[value="'+$that.val()+'"]').text();
+        $that.closest('.single-question-item').find('.tutor-question-item-head').find('.question-type').text(option_text);
+    });
+
+    $(document).on('click', '.add_answer_option_btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+
+        $that.addClass('updating-message');
+
+
+        console.log("Clicked!");
+
+    });
+
+
+    $(document).on('click', '.add_question_btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+
+        var question_title = $('[name="new_question_title"]').val();
+        var question_type = $('[name="new_question_type"]').val();
+        var quiz_id = $('#post_ID').val();
+
+        var  data = {question_title : question_title, question_type:question_type, quiz_id : quiz_id, action: 'quiz_page_add_new_question' };
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : data,
+            beforeSend: function () {
+                $that.removeClass('updated-message').addClass('updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+
+                }
+            },
+            complete: function () {
+                $that.removeClass('updating-message').addClass('updated-message');
+            }
+        });
+
+        console.log("Clicked!");
+
+    });
+
+    //Show hide question settings
+    $(document).on('click', '.question-action-btn.down', function(e){
+        e.preventDefault();
+        $(this).closest('.single-question-item').find('.quiz-question-form-wrap').toggle();
+    });
+
+
+
+    $(document).on('change', '.single-question-item', function(e){
+        e.preventDefault();
+
+        var data = $(this).find("select, textarea, input").serialize()+'&action=update_tutor_question';
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : data,
+            beforeSend: function () {
+                //
+            },
+            success: function (data) {
+                if (data.success){
+
+                }
+            },
+            complete: function () {
+                //
+            }
+        });
+
+    });
+
+    //single-question-item
+
+
 });

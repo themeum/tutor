@@ -1931,4 +1931,36 @@ class Utils {
 	}
 
 
+	/**
+	 * @param int $quiz_id
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Get the questions by quiz ID
+	 */
+	public function get_questions_by_quiz($quiz_id = 0){
+		$quiz_id = $this->get_post_id($quiz_id);
+		global $wpdb;
+
+		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question'");
+
+		if (is_array($questions) && count($questions)){
+			return $questions;
+		}
+		return false;
+	}
+
+	public function get_question_types($type = null){
+		$types = array(
+			'true_false'        => __('True/False', 'tutor'),
+			'multiple_choice'   => __('Multiple Choice', 'tutor'),
+			'single_choice'     => __('Single Choice', 'tutor'),
+		);
+
+		if (isset($types[$type])){
+			return $types[$type];
+		}
+		return $types;
+	}
+
 }
