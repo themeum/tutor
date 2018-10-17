@@ -1962,5 +1962,24 @@ class Utils {
 		}
 		return $types;
 	}
+	
+	public function get_quiz_answer_options_by_question($question_id){
+		global $wpdb;
+
+		$answer_options = $wpdb->get_results("select 
+			{$wpdb->comments}.comment_ID, 
+			{$wpdb->comments}.comment_post_ID, 
+			{$wpdb->comments}.comment_content
+						
+			FROM {$wpdb->comments}
+			WHERE {$wpdb->comments}.comment_post_ID = {$question_id} 
+			AND {$wpdb->comments}.comment_type = 'quiz_answer_option'
+			ORDER BY {$wpdb->comments}.comment_karma ASC ;");
+
+		if (is_array($answer_options) && count($answer_options)){
+			return $answer_options;
+		}
+		return false;
+	}
 
 }

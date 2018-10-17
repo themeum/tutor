@@ -40,8 +40,7 @@ $questions = tutor_utils()->get_questions_by_quiz($quiz_id)
 					</div>
 
 					<div class="question-actions-wrap">
-						<a href="javascript:;" class="question-action-btn change_type"><i class="dashicons dashicons-randomize"></i> </a>
-						<a href="javascript:;" class="question-action-btn edit"><i class="dashicons dashicons-edit"></i> </a>
+						<span class="tutor-loading-icon-wrap button"></span>
 						<a href="javascript:;" class="question-action-btn trash"><i class="dashicons dashicons-trash"></i> </a>
 						<a href="javascript:;" class="question-action-btn down"><i class="dashicons dashicons-arrow-down-alt2"></i> </a>
 					</div>
@@ -50,12 +49,11 @@ $questions = tutor_utils()->get_questions_by_quiz($quiz_id)
 
 
 
-				<div class="quiz-question-form-wrap">
+				<div class="quiz-question-form-wrap" style="display: none;">
 
 					<div class="question-details">
 
 						<div class="quiz-question-field tutor-flex-row">
-
 							<div class="tutor-flex-col">
 								<p>
 									<label><?php _e('Question Type', 'tutor'); ?></label>
@@ -65,14 +63,11 @@ $questions = tutor_utils()->get_questions_by_quiz($quiz_id)
 									<?php
 									$question_types = tutor_utils()->get_question_types();
 									foreach ($question_types as $type_key => $type_value){
-										echo "<option value='{$type_key}'>{$type_value}</option>";
+										echo "<option value='{$type_key}' ".selected($type_key, $question_type)." >{$type_value}</option>";
 									}
 									?>
 								</select>
-
-
 							</div>
-
 
 							<div class="tutor-flex-col">
 								<p>
@@ -83,7 +78,6 @@ $questions = tutor_utils()->get_questions_by_quiz($quiz_id)
 									<?php _e('When students choose right answer, how mark should he get.'); ?>
 								</p>
 							</div>
-
 
 						</div>
 
@@ -125,72 +119,10 @@ $questions = tutor_utils()->get_questions_by_quiz($quiz_id)
 					<div class="answer-details">
 
 						<div class="answer-entry-wrap">
-
-							<table class="multi-answers-options">
-								<tbody>
-
-								<tr>
-									<th></th>
-									<th><?php _e('Answer text', 'tutor'); ?></th>
-									<th><?php _e('Right', 'tutor'); ?></th>
-									<th>#</th>
-								</tr>
-
-								<tr>
-									<td></td>
-									<td> <input type="text" value="Which computer are you using?"> </td>
-									<td><input name="question_answer[]" type="checkbox" value="correct"></td>
-									<td></td>
-								</tr>
-
-
-								<tr>
-									<td></td>
-									<td> <input type="text" value="Which computer are you using?"> </td>
-									<td><input name="question_answer[]" type="checkbox" value="correct"></td>
-									<td></td>
-								</tr>
-
-
-								<tr>
-									<td></td>
-									<td><input type="text" value="Which computer are you using?"> </td>
-									<td><input name="question_answer[]" type="checkbox" value="correct"></td>
-									<td></td>
-								</tr>
-
-
-								<tr>
-									<td></td>
-									<td> <input type="text" value="Which computer are you using?"> </td>
-									<td><input name="question_answer[]" type="checkbox" value="correct"></td>
-									<td></td>
-								</tr>
-
-
-								<tr>
-									<td></td>
-									<td> <input type="text" value="Which computer are you using?"> </td>
-									<td><input name="question_answer[]" type="checkbox" value="correct"></td>
-									<td></td>
-								</tr>
-
-
-								</tbody>
-
-							</table>
-
-
-							<div class="add_answer_option_wrap">
-								<button type="button" class="button add_answer_option_btn"> <?php _e('Add an option', 'tutor'); ?></button>
-							</div>
-
-
-
+                            <?php
+                            include tutor()->path."views/metabox/quiz/multi-answer-options.php";
+                            ?>
 						</div>
-
-
-
 
 					</div>
 

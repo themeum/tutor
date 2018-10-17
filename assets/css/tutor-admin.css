@@ -425,7 +425,6 @@ table.multi-answers-options{
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
-
 }
 
 table.multi-answers-options th, table.multi-answers-options td{
@@ -441,6 +440,12 @@ table.multi-answers-options td input[type=text]{
     background-color: transparent;
     width: 100%;
 }
+table.multi-answers-options a{
+    text-decoration: none;
+    color: #FF0000;
+}
+
+
 .add_answer_option_wrap {
     margin: 20px 0;
 }
@@ -519,4 +524,10 @@ table.multi-answers-options td input[type=text]{
 }
 .question-actions-wrap a{
     display: inline-block;
+}
+.tutor-loading-icon-wrap.button{
+    vertical-align: unset;
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
 }
