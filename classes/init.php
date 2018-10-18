@@ -27,6 +27,7 @@ class init{
 	private $q_and_a;
 	private $quiz;
 	private $question;
+	private $tools;
 
 	private $woocommerce;
 
@@ -61,6 +62,7 @@ class init{
 		$this->q_and_a = new Q_and_A();
 		$this->quiz = new Quiz();
 		$this->question = new Question();
+		$this->tools = new Tools();
 
 		if (tutor_utils()->has_wc()){
 			$this->woocommerce = new  Woo_Commerce();
@@ -96,6 +98,7 @@ class init{
 	//Run the TUTOR right now
 	public function run(){
 		register_activation_hook( TUTOR_FILE, array( $this, 'tutor_activate' ) );
+		register_deactivation_hook(TUTOR_FILE, array($this, 'tutor_deactivation'));
 	}
 
 	/**
@@ -112,7 +115,21 @@ class init{
 			self::save_data();
 			update_option('tutor_version', TUTOR_VERSION);
 		}
+
+
+
+		//Set Schedule
+		if (! wp_next_scheduled ( 'tutor_once_in_day_run_schedule' )) {
+			wp_schedule_event(time(), 'twicedaily', 'tutor_once_in_day_run_schedule');
+		}
+
 	}
+
+	//Run task on deactivation
+	public function tutor_deactivation() {
+		wp_clear_scheduled_hook('tutor_once_in_day_run_schedule');
+	}
+
 
 	public static function manage_tutor_roles_and_permissions(){
 		/**
@@ -151,7 +168,17 @@ class init{
 			'edit_others_tutor_quizzes',
 			'read_private_tutor_quizzes',
 			'edit_tutor_quizzes',
-			'publish_tutor_quizzes'
+			'publish_tutor_quizzes',
+
+			'edit_tutor_question',
+			'read_tutor_question',
+			'delete_tutor_question',
+			'delete_tutor_questions',
+			'edit_tutor_questions',
+			'edit_others_tutor_questions',
+			'publish_tutor_questions',
+			'read_private_tutor_questions',
+			'edit_tutor_questions',
 		);
 
 		$teacher = get_role( $teacher_role );

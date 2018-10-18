@@ -1942,7 +1942,7 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question'");
+		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question' ORDER BY menu_order ASC ");
 
 		if (is_array($questions) && count($questions)){
 			return $questions;
@@ -1980,6 +1980,28 @@ class Utils {
 			return $answer_options;
 		}
 		return false;
+	}
+
+	/**
+	 * @param $quiz_id
+	 *
+	 * @return int
+	 *
+	 * Get the next question order ID
+	 */
+
+	public function quiz_next_question_order_id($quiz_id){
+		global $wpdb;
+
+		$last_order = (int) $wpdb->get_var("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = {$quiz_id} AND post_type = 'tutor_question';");
+		return $last_order + 1;
+	}
+
+	public function get_quiz_id_by_question($question_id){
+		global $wpdb;
+
+		$quiz_id = $wpdb->get_var("SELECT post_parent FROM {$wpdb->posts} WHERE ID = {$question_id} AND post_type = 'tutor_question' ;");
+		return $quiz_id;
 	}
 
 }

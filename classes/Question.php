@@ -7,14 +7,47 @@ namespace TUTOR;
 class Question {
 
 	public function __construct() {
+		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
+		//save question type during first add question
+		add_action('save_post_tutor_question', array($this, 'save_question_type'), 10, 1);
 
 		add_action('wp_ajax_quiz_page_add_new_question', array($this, 'quiz_page_add_new_question'));
 		add_action('wp_ajax_update_tutor_question', array($this, 'update_tutor_question'));
 		add_action('wp_ajax_quiz_add_answer_to_question', array($this, 'quiz_add_answer_to_question'));
 		add_action('wp_ajax_quiz_delete_answer_option', array($this, 'quiz_delete_answer_option'));
 		add_action('wp_ajax_quiz_question_type_changed', array($this, 'quiz_question_type_changed'));
+		add_action('wp_ajax_quiz_question_delete', array($this, 'quiz_question_delete'));
+		add_action('wp_ajax_sorting_quiz_questions', array($this, 'sorting_quiz_questions'));
+
+
+		add_filter( "manage_tutor_question_posts_columns", array($this, 'add_column'), 10,1 );
+		add_action( "manage_tutor_question_posts_custom_column" , array($this, 'custom_question_column'), 10, 2 );
+
 	}
 
+	public function register_meta_box(){
+		add_meta_box( 'tutor-question', __( 'Question', 'tutor' ), array($this, 'quiz_question'), 'tutor_question' );
+	}
+
+	public function save_question_type($post_ID){
+		$question_type = get_post_meta($post_ID, '_question_type', true);
+		if ( ! $question_type){
+			update_post_meta($post_ID, '_question_type', 'true_false');
+		}
+	}
+
+	public function quiz_question(){
+		global $post;
+		$question = $post;
+
+		$is_question_edit_page = true;
+
+		include tutor()->path."views/metabox/quiz/single-question-item.php";
+	}
+
+	public function quiz_questions(){
+		include  tutor()->path.'views/metabox/quiz_questions.php';
+	}
 
 	public function quiz_page_add_new_question(){
 		global $wpdb;
@@ -23,18 +56,22 @@ class Question {
 		$question_type = sanitize_text_field($_POST['question_type']);
 		$quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
 
+		$question_html = '';
+
+		$next_question_order = tutor_utils()->quiz_next_question_order_id($quiz_id);
+
 		$post_arr = array(
-			'post_type'    => 'tutor_question',
-			'post_title'   => $question_title,
-			'post_status'  => 'publish',
-			'post_author'  => get_current_user_id(),
-			'post_parent'  => $quiz_id,
+			'post_type'     => 'tutor_question',
+			'post_title'    => $question_title,
+			'post_status'   => 'publish',
+			'post_author'   => get_current_user_id(),
+			'post_parent'   => $quiz_id,
+			'menu_order'    => $next_question_order,
 		);
 		$question_id = wp_insert_post( $post_arr );
 
 		if ($question_id){
 			update_post_meta($question_id,'_question_type', $question_type);
-
 
 			/**
 			 * Insert True/False
@@ -66,10 +103,14 @@ class Question {
 				) );
 				$wpdb->insert( $wpdb->comments, $data );
 			}
+
+			ob_start();
+			$question = get_post($question_id);
+			include tutor()->path."views/metabox/quiz/single-question-item.php";
+			$question_html = ob_get_clean();
 		}
 
-		wp_send_json_success();
-
+		wp_send_json_success(array('question_html' => $question_html));
 	}
 
 
@@ -197,7 +238,6 @@ class Question {
 
 		$question = get_post($question_id);
 
-
 		/**
 		 * If we found true false type, we will keep only 2 answer options
 		 */
@@ -208,9 +248,8 @@ class Question {
 
 			$keep_answer_ids = wp_list_pluck($quiz_answer_options, 'comment_ID');
 			$keep_answer_ids = implode( ',', array_map( 'absint', $keep_answer_ids ) );
-			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE comment_ID NOT IN($keep_answer_ids)" );
+			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE comment_post_ID = {$question_id} AND comment_type = 'quiz_answer_option' AND comment_ID NOT IN($keep_answer_ids)" );
 		}
-
 
 		ob_start();
 		include tutor()->path."views/metabox/quiz/multi-answer-options.php";
@@ -219,6 +258,50 @@ class Question {
 		wp_send_json_success(array('multi_answer_options' =>$answer_options ));
 	}
 
+	public function quiz_question_delete(){
+		global $wpdb;
 
+		$question_id = (int) sanitize_text_field($_POST['question_id']);
+		wp_delete_post($question_id, true);
+
+		wp_send_json_success();
+	}
+
+	/**
+	 * Sorting Order
+	 */
+
+	public function sorting_quiz_questions(){
+		global $wpdb;
+		$questions = tutor_utils()->avalue_dot('questions', $_POST);
+		$question_ids = wp_list_pluck($questions, 'question_id');
+
+		$i = 1;
+		foreach ($question_ids as $question_id){
+			$wpdb->update($wpdb->posts, array('menu_order' => $i), array('ID'=> $question_id) );
+			$i++;
+		}
+	}
+
+
+
+	public function add_column($columns){
+		$date_col = $columns['date'];
+		unset($columns['date']);
+		$columns['quiz'] = __('Quiz', 'tutor');
+		$columns['date'] = $date_col;
+
+		return $columns;
+	}
+
+	public function custom_question_column($column, $post_id ){
+		if ($column === 'quiz'){
+			$quiz_id = tutor_utils()->get_quiz_id_by_question($post_id);
+
+			if ($quiz_id){
+				echo '<a href="'.admin_url('post.php?post='.$quiz_id.'&action=edit').'">'.get_the_title($quiz_id).'</a>';
+			}
+		}
+	}
 
 }

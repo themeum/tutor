@@ -340,7 +340,7 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var question_id = $that.closest('.single-question-item').attr('data-question-id');
-        var question_type = $('.question_type_field').val();
+        var question_type = $that.closest('.quiz-question-form-wrap').find('select.question_type_field').val();
 
         var data = {question_id: question_id,  action: 'quiz_add_answer_to_question'};
 
@@ -353,10 +353,14 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 if (data.success){
-                    $that.closest('answer-entry-wrap').find('.multi-answers-options').append(data.data.data_tr);
+                    $that.closest('.answer-entry-wrap').find('table.multi-answers-options').append(data.data.data_tr);
 
                     //Hide add answer button if true false and 2 option exists
-                    if (question_type === 'true_false' && $('.answer-option-row').length >= 2){
+                    if (question_type === 'true_false' && $that.closest('.answer-entry-wrap').find('tr.answer-option-row').length >= 2){
+
+                        console.log(question_type, $that.closest('.answer-entry-wrap').find('tr.answer-option-row').length);
+
+
                         $that.closest('.add_answer_option_wrap').hide();
                     }else{
                         $that.closest('.add_answer_option_wrap').show();
@@ -370,15 +374,22 @@ jQuery(document).ready(function($){
         });
     });
 
-
     $(document).on('click', '.add_question_btn', function(e){
         e.preventDefault();
 
         var $that = $(this);
-
-        var question_title = $('[name="new_question_title"]').val();
+        var $title = $('[name="new_question_title"]');
+        var question_title = $title.val();
         var question_type = $('[name="new_question_type"]').val();
         var quiz_id = $('#post_ID').val();
+
+        //If no question title, stop here
+        if ( ! question_title.length){
+            $title.addClass('tutor-input-text-error');
+            return;
+        }else{
+            $title.removeClass('tutor-input-text-error');
+        }
 
         var  data = {question_title : question_title, question_type:question_type, quiz_id : quiz_id, action: 'quiz_page_add_new_question' };
         $.ajax({
@@ -390,7 +401,10 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 if (data.success){
-
+                    $('.single-question-item .quiz-question-form-wrap').hide();
+                    $('.tutor-quiz-questions-wrap').append(data.data.question_html);
+                    $('.single-question-item:last-child .quiz-question-form-wrap').show();
+                    $title.val('');
                 }
             },
             complete: function () {
@@ -405,8 +419,6 @@ jQuery(document).ready(function($){
         $(this).closest('.single-question-item').find('.quiz-question-form-wrap').toggle();
         $(this).find('i.dashicons').toggleClass('dashicons-arrow-up-alt2 dashicons-arrow-down-alt2');
     });
-
-
 
     $(document).on('change', '.single-question-item', function(e){
         e.preventDefault();
@@ -432,26 +444,87 @@ jQuery(document).ready(function($){
         });
     });
 
-
-
     $(document).on('click', '.quiz-answer-option-delete-btn', function(e){
         e.preventDefault();
         var $that = $(this);
-        var question_type = $('.question_type_field').val();
+        var $closestTable = $that.closest('table');
+        var $loadingIcon = $that.closest('.single-question-item').find('.tutor-loading-icon-wrap');
 
+        var question_type = $that.closest('.quiz-question-form-wrap').find('select.question_type_field').val();
         var answer_option_id = $that.closest('tr').attr('data-answer-option-id');
-        $.post(ajaxurl, {answer_option_id:answer_option_id, action: 'quiz_delete_answer_option'}, function(){
-            $that.closest('tr').remove();
 
-            //Hide add answer button if true false and 2 option exists
-            if (question_type === 'true_false' && $that.closest('table').find('tr.answer-option-row').length >= 2){
-                $that.closest('.answer-entry-wrap').find('.add_answer_option_wrap').hide();
-            }else{
-                $that.closest('.answer-entry-wrap').find('.add_answer_option_wrap').show();
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {answer_option_id:answer_option_id, action: 'quiz_delete_answer_option'},
+            beforeSend: function () {
+                $loadingIcon.addClass('updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+                    $that.closest('tr').remove();
+                    //Hide add answer button if true false and 2 option exists
+                    if (question_type === 'true_false' && $closestTable.find('tr.answer-option-row').length >= 2){
+                        $closestTable.closest('.answer-entry-wrap').find('.add_answer_option_wrap').hide();
+                    }else{
+                        $closestTable.closest('.answer-entry-wrap').find('.add_answer_option_wrap').show();
+                    }
+                }
+            },
+            complete: function () {
+                $loadingIcon.removeClass('updating-message');
             }
-
         });
     });
+
+    $(document).on('click', '.question-action-btn.trash', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var question_id = $that.closest('.single-question-item').attr('data-question-id');
+        var $loadingIcon = $that.closest('.single-question-item').find('.tutor-loading-icon-wrap');
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {question_id:question_id, action: 'quiz_question_delete'},
+            beforeSend: function () {
+                $loadingIcon.addClass('updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+                    $that.closest('.single-question-item').remove();
+                }
+            },
+            complete: function () {
+                $loadingIcon.removeClass('updating-message');
+            }
+        });
+    });
+
+    /**
+     * Sort quiz questions
+     */
+
+    if (jQuery().sortable) {
+        $(".tutor-quiz-questions-wrap").sortable({
+            handle: ".question-short",
+            start: function (e, ui) {
+                ui.placeholder.css('visibility', 'visible');
+            },
+            stop: function (e, ui) {
+                var questions = {};
+                $('.single-question-item').each(function(index, item){
+                    var $question = $(this);
+                    var question_id = parseInt($question.attr('data-question-id').match(/\d+/)[0], 10);
+                    questions[index] = { 'question_id' : question_id };
+                });
+
+                $.post(ajaxurl, {questions : questions, action: 'sorting_quiz_questions'});
+            },
+        });
+    }
+
 
 
 });

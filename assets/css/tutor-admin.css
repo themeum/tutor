@@ -369,7 +369,7 @@ Quiz-question
     margin-top: 20px;
 }
 .quiz-question-form-wrap, .tutor-flex-row{
-    display: flex;
+    display: flex !important;
     flex-direction: row;
 }
 .tutor-flex-col{
@@ -530,4 +530,8 @@ table.multi-answers-options a{
     border: none;
     background-color: transparent;
     box-shadow: none;
+}
+
+.tutor-input-text-error{
+    border: 1px solid #FF0000 !important;
 }
