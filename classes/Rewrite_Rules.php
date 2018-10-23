@@ -27,8 +27,11 @@ class Rewrite_Rules extends Tutor_Base {
 
 	public function add_rewrite_rules($wp_rewrite){
 		$new_rules = array(
-			//Lesson
+			//Lesson Permalink
 			$this->course_post_type."/(.+?)/{$this->lesson_base_permalink}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=".$wp_rewrite->preg_index(2),
+
+			//Quiz Permalink
+			$this->course_post_type."/(.+?)/tutor_quiz/(.+?)/?$" => "index.php?post_type=tutor_quiz&name=".$wp_rewrite->preg_index(2),
 
 			"video-url/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=". $wp_rewrite->preg_index(1),
 		);
@@ -61,17 +64,37 @@ class Rewrite_Rules extends Tutor_Base {
 	 * Change the lesson permalink
 	 */
 	function change_lesson_single_url($post_link, $id=0){
-		$lesson = get_post($id);
-		if( is_object($lesson) && $lesson->post_type == $this->lesson_post_type){
-			global $wpdb;
+		$post = get_post($id);
 
-			$course_id = get_post_meta($lesson->ID, '_tutor_course_id_for_lesson', true);
+		global $wpdb;
+		if( is_object($post) && $post->post_type == $this->lesson_post_type){
+			//Lesson Permalink
+
+			$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
 
 			if ($course_id){
 				$course = $wpdb->get_row("select {$wpdb->posts}.post_name from {$wpdb->posts} where ID = {$course_id} ");
-				return home_url("/{$this->course_post_type}/".$course->post_name."/{$this->lesson_base_permalink}/". $lesson->post_name.'/');
+				return home_url("/{$this->course_post_type}/".$course->post_name."/{$this->lesson_base_permalink}/". $post->post_name.'/');
 			}else{
-				return home_url("/{$this->course_post_type}/sample-course/{$this->lesson_base_permalink}/". $lesson->post_name.'/');
+				return home_url("/{$this->course_post_type}/sample-course/{$this->lesson_base_permalink}/". $post->post_name.'/');
+			}
+		}elseif (is_object($post) && $post->post_type === 'tutor_quiz'){
+			//Quiz Permalink
+
+			$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} ");
+			//Checking if this topic
+			if ($course->post_type !== $this->course_post_type){
+				$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
+			}
+			//Checking if this lesson
+			if ($course->post_type !== $this->course_post_type){
+				$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
+			}
+
+			if ($course){
+				return home_url("/{$this->course_post_type}/".$course->post_name."/tutor_quiz/". $post->post_name.'/');
+			}else{
+				return home_url("/{$this->course_post_type}/sample-course/tutor_quiz/". $post->post_name.'/');
 			}
 
 		}

@@ -26,15 +26,18 @@ $currentPost = $post;
 		if ($topics->have_posts()){
 
 			while ($topics->have_posts()){ $topics->the_post();
+                $topic_id = get_the_ID();
 				?>
 
-                <div class="tutor-topics-in-single-lesson">
+                <div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
                     <div class="tutor-topics-title">
                         <h2><?php the_title(); ?></h2>
                     </div>
 
                     <div class="tutor-lessons-under-topic">
 						<?php
+						do_action('tutor/lesson_list/before/topic', $topic_id);
+
 						$lessons = tutor_utils()->get_lessons_by_topic(get_the_ID());
 						if ($lessons->have_posts()){
 							while ($lessons->have_posts()){
@@ -52,27 +55,70 @@ $currentPost = $post;
                                 <p class="<?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
                                     <a href="<?php the_permalink(); ?>">
 										<?php if ($play_time){ ?>
-                                            <span class="play_icon">
-                                                <img src="<?php echo tutor()->url.'assets/images/play-button.png'; ?>" />
-                                            </span>
-										<?php } ?>
+                                            <i class="icon-play-circled2"></i>
+										<?php }else{
+										    ?>
+                                            <i class="icon-doc-text"></i>
+                                            <?php
+                                        } ?>
 
                                         <span class="lesson_title"><?php the_title(); ?></span>
 
+	                                    <?php if ($is_completed_lesson){ ?>
+                                            <i class="icon-check"></i>
+	                                    <?php } ?>
 										<?php if ($play_time){ ?>
                                             <span class="play_duration"><?php echo $play_time; ?></span>
 										<?php } ?>
 
-	                                    <?php if ($is_completed_lesson){ ?>
-                                            <span class="is_completed">&check;</span>
-	                                    <?php } ?>
                                     </a>
                                 </p>
 								<?php
 							}
 							$lessons->reset_postdata();
 						}
+
+
+						$quizzes = tutor_utils()->get_attached_quiz($topic_id);
+						if ($quizzes){
+							?>
+                            <div class="tutor-quizzes-list">
+								<?php
+								foreach ($quizzes as $quiz){
+									?>
+                                    <p class="quiz-single-item quiz-single-item-<?php echo $quiz->ID; ?>">
+                                        <span class="quiz-icon">
+                                            <i class="icon-clock"></i>
+                                        </span>
+
+                                        <span class="quiz-title">
+                                            <a href="<?php echo get_permalink($quiz->ID); ?>"> <?php echo $quiz->post_title; ?></a>
+
+                                        </span>
+
+                                        <?php $time_limit = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_value');
+                                        if ($time_limit){
+                                            $time_type = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_type');
+                                            echo "<span class='quiz-time-limit'>{$time_limit} {$time_type}</span>";
+                                        }
+                                        ?>
+                                    </p>
+									<?php
+								}
+								?>
+                            </div>
+							<?php
+						}
 						?>
+
+
+
+
+
+
+
+
+                        <?php do_action('tutor/lesson_list/after/topic', $topic_id); ?>
                     </div>
                 </div>
 

@@ -87,6 +87,39 @@
 				}
 				?>
             </div>
+
+
+
+            <div class="tutor_add_quiz_wrap" data-add-quiz-under="<?php echo $topic->ID; ?>">
+
+                <div class="tutor-available-quizzes">
+                    <?php
+                    $attached_quizzes = tutor_utils()->get_attached_quiz($topic->ID);
+                    if ($attached_quizzes){
+                        foreach ($attached_quizzes as $attached_quiz){
+                            ?>
+                            <div id="added-quiz-id-<?php echo $attached_quiz->ID; ?>" class="added-quiz-item added-quiz-item-<?php echo $attached_quiz->ID; ?>" data-quiz-id="<?php echo $attached_quiz->ID; ?>">
+                                <span class="quiz-icon"><i class="dashicons dashicons-clock"></i></span>
+                                <span class="quiz-name">
+                                    <?php edit_post_link( $attached_quiz->post_title, null, null, $attached_quiz->ID ); ?>
+                                </span>
+                                <span class="quiz-control">
+                                    <a href="javascript:;" class="tutor-quiz-delete-btn"><i class="dashicons dashicons-trash"></i></a>
+                                </span>
+                            </div>
+                            <?php
+                        }
+                    }
+                    ?>
+                </div>
+
+                <div class="tutor-add-quiz-button-wrap">
+                    <button type="button" class="button button-default tutor-add-quiz-btn"> <?php _e('Add Topic Quiz', 'tutor'); ?> </button>
+                </div>
+            </div>
+
+
+
         </div>
 		<?php
 	}
@@ -159,3 +192,21 @@
 
 </div>
 
+
+
+<div class="tutor-quizzes-modal-wrap">
+    <div class="tutor-quizzes-modal-content">
+        <div class="quizzes-modal-header">
+            <div class="quizzes-search-bar">
+                <input type="text" class="tutor-quizzes-search-input" placeholder="<?php _e('Search quiz...'); ?>">
+            </div>
+            <div class="quizzes-modal-close-wrap">
+                <a href="javascript:;" class="quizzes-modal-close-btn">&times;</a>
+            </div>
+        </div>
+        <div class="quizzes-modal-container"></div>
+        <div class="quizzes-modal-footer">
+            <button type="button" class="button button-primary add_quiz_to_post_btn"><?php _e('Add Quiz', 'tutor'); ?></button>
+        </div>
+    </div>
+</div>

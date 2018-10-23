@@ -32,6 +32,25 @@
 		</div>
 	</div>
 
+    <div class="tutor-option-field-row">
+        <div class="tutor-option-field-label">
+            <label for=""><?php _e('Attempts Allowed', 'tutor'); ?></label>
+        </div>
+        <div class="tutor-option-field">
+            <?php
+            $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
+            $attempts_allowed = tutor_utils()->get_quiz_option(get_the_ID(), 'attempts_allowed', $default_attempts_allowed);
+            ?>
+
+            <div class="tutor-field-type-slider" data-min="0" data-max="20">
+                <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
+                <div class="tutor-field-slider"></div>
+                <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
+            </div>
+
+            <p class="desc"><?php _e('Restriction on the number of attempts students are allowed at the quiz. 0 for no limit', 'tutor'); ?></p>
+        </div>
+    </div>
 
 	<div class="tutor-option-field-row">
 		<div class="tutor-option-field-label">
@@ -39,7 +58,6 @@
 		</div>
 		<div class="tutor-option-field">
 			<input type="number" name="quiz_option[minus_point]" value="<?php echo tutor_utils()->get_quiz_option(get_the_ID(), 'minus_point', 0) ?>">
-
 			<p class="desc"><?php _e('Should apply minus point for wrong answer, 0 means not applicable', 'tutor'); ?></p>
 		</div>
 	</div>

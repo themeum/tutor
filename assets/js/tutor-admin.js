@@ -526,5 +526,127 @@ jQuery(document).ready(function($){
     }
 
 
+    /**
+     * Quiz Modal
+     */
+
+    $(document).on('click', '.quizzes-modal-close-btn', function(e){
+        e.preventDefault();
+        $('.tutor-quizzes-modal-wrap').removeClass('show');
+    });
+    $(document).on('keyup', function(e){
+        if (e.keyCode === 27){
+            $('.tutor-quizzes-modal-wrap').removeClass('show');
+        }
+    });
+    $(document).on('click', '.tutor-add-quiz-btn', function(e){
+        e.preventDefault();
+        
+        var $that = $(this);
+        var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').attr('data-add-quiz-under');
+        
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {quiz_for_post_id : quiz_for_post_id, action: 'tutor_load_quiz_modal'},
+            beforeSend: function () {
+                $that.addClass('updating-message');
+            },
+            success: function (data) {
+                $('.tutor-quizzes-modal-wrap .quizzes-modal-container').html(data.data.output);
+                $('.tutor-quizzes-modal-wrap').attr('quiz-for-post-id', quiz_for_post_id).addClass('show');
+            },
+            complete: function () {
+                $that.removeClass('updating-message');
+            }
+        });
+    });
+
+    $(document).on('click', '.add_quiz_to_post_btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var $modal = $('.tutor-quizzes-modal-wrap');
+
+        var quiz_for_post_id = $modal.attr('quiz-for-post-id');
+        var data = $modal.find('input').serialize()+'&action=tutor_add_quiz_to_post';
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : data,
+            beforeSend: function () {
+                $that.addClass('updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+                    $('[data-add-quiz-under="'+quiz_for_post_id+'"] .tutor-available-quizzes').html(data.data.output);
+                    $('.tutor-quizzes-modal-wrap').removeClass('show');
+                }
+            },
+            complete: function () {
+                $that.removeClass('updating-message');
+            }
+        });
+    });
+
+
+    $(document).on('change keyup', '.tutor-quizzes-search-input', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var $modal = $('.tutor-quizzes-modal-wrap');
+
+        tutor_delay(function(){
+            var search_terms = $that.val();
+            var quiz_for_post_id = $modal.attr('quiz-for-post-id');
+
+            $.ajax({
+                url : ajaxurl,
+                type : 'POST',
+                data : {quiz_for_post_id : quiz_for_post_id, search_terms : search_terms, action: 'tutor_load_quiz_modal'},
+                beforeSend: function () {
+                    $modal.addClass('loading');
+                },
+                success: function (data) {
+                    if (data.success){
+                        $('.tutor-quizzes-modal-wrap .quizzes-modal-container').html(data.data.output);
+                    }
+                },
+                complete: function () {
+                    $modal.removeClass('loading');
+                }
+            });
+
+        }, 1000)
+    });
+
+    var tutor_delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+            clearTimeout (timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+
+
+
+    $(document).on('click', '.tutor-quiz-delete-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var quiz_id = $that.closest('.added-quiz-item').attr('data-quiz-id');
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {quiz_id:quiz_id, action: 'remove_quiz_from_post'},
+            success: function (data) {
+                if (data.success){
+                    $that.closest('.added-quiz-item').remove();
+                }
+            }
+        });
+    });
 
 });

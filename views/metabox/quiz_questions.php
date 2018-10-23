@@ -1,14 +1,10 @@
-
-
-
 <?php
 $quiz_id = get_the_ID();
+
 $questions = tutor_utils()->get_questions_by_quiz($quiz_id)
 ?>
 
-
 <div class="tutor-quiz-questions-wrap">
-
 	<?php
 	if ($questions){
 		foreach ($questions as $question){
@@ -17,9 +13,6 @@ $questions = tutor_utils()->get_questions_by_quiz($quiz_id)
 	}
 	?>
 </div>
-
-
-
 
 <!-- add new question -->
 <div class="tutor-add-question-wrap">

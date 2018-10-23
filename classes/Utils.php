@@ -1942,7 +1942,7 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question' ORDER BY menu_order ASC ");
+		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question' AND post_parent = {$quiz_id} ORDER BY menu_order ASC ");
 
 		if (is_array($questions) && count($questions)){
 			return $questions;
@@ -2002,6 +2002,86 @@ class Utils {
 
 		$quiz_id = $wpdb->get_var("SELECT post_parent FROM {$wpdb->posts} WHERE ID = {$question_id} AND post_type = 'tutor_question' ;");
 		return $quiz_id;
+	}
+
+	public function get_unattached_quiz($config = array()){
+		global $wpdb;
+
+		$default_attr = array(
+			'search_term' => '',
+			'start' => '0',
+			'limit' => '10',
+			'order' => 'DESC',
+			'order_by' => 'ID',
+		);
+		$attr = array_merge($default_attr, $config);
+		extract($attr);
+
+		$search_query = '';
+		if (! empty($search_term)){
+			$search_query = "AND post_title LIKE '%{$search_term}%'";
+		}
+
+		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_quiz' AND post_status = 'publish' AND post_parent = 0 {$search_query} ORDER BY {$order_by} {$order}  LIMIT {$start},{$limit} ");
+
+		if (is_array($questions) && count($questions)){
+			return $questions;
+		}
+		return false;
+	}
+
+	/**
+	 * @param int $post_id
+	 *
+	 * @return array|bool|null|object
+	 */
+	public function get_attached_quiz($post_id = 0){
+		global $wpdb;
+
+		$post_id = $this->get_post_id($post_id);
+
+		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_quiz' AND post_status = 'publish' AND post_parent = {$post_id}");
+
+		if (is_array($questions) && count($questions)){
+			return $questions;
+		}
+		return false;
+	}
+
+
+	public function get_course_by_quiz($quiz_id){
+		global $wpdb;
+
+		$quiz_id = $this->get_post_id($quiz_id);
+		$post = get_post($quiz_id);
+		
+		$course_post_type = tutor()->course_post_type;
+
+		$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} ");
+		//Checking if this topic
+		if ($course->post_type !== $course_post_type){
+			$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
+		}
+		//Checking if this lesson
+		if ($course->post_type !== $course_post_type){
+			$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
+		}
+
+		return $course;
+	}
+
+	/**
+	 * @param $quiz_id
+	 *
+	 * @return int
+	 */
+	public function total_questions_for_student_by_quiz($quiz_id){
+		$quiz_id = $this->get_post_id($quiz_id);
+		global $wpdb;
+
+		$total_question = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} where post_parent = {$quiz_id} AND post_type = 'tutor_question' ");
+
+		return $total_question;
 	}
 
 }
