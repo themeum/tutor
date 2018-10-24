@@ -222,5 +222,58 @@ jQuery(document).ready(function($){
 
     //tutor_wp_editor_show_btn
 
+
+    /**
+     * Quiz attempt
+     */
+
+    var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
+    var attempt_settings = null;
+    if ($tutor_quiz_time_update.length){
+        attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
+        var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
+
+        var countDownDate = new Date(attempt_settings.quiz_started_at).getTime() + (attempt_meta.time_limit_seconds * 1000);
+        var time_now = new Date(attempt_meta.date_time_now).getTime();
+
+        var tutor_quiz_interval = setInterval(function() {
+            var distance = countDownDate - time_now;
+
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            var countdown_human = '';
+
+            if (days){
+                countdown_human += days + "d ";
+            }
+            if (hours){
+                countdown_human += hours + "h ";
+            }
+            if (minutes){
+                countdown_human += minutes + "m ";
+            }
+            if (seconds){
+                countdown_human += seconds + "s ";
+            }
+
+            if (distance < 0) {
+                clearInterval(tutor_quiz_interval);
+                countdown_human = "EXPIRED";
+
+                //Set the quiz attempt to timeout in ajax
+
+            }
+            time_now = time_now + 1000;
+            $tutor_quiz_time_update.html(countdown_human);
+        }, 1000);
+    }
+
+
+
+
+
 });
 

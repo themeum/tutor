@@ -1,8 +1,6 @@
 
 <div class="tutor-quiz-settings-wrap">
 
-
-
 	<div class="tutor-option-field-row">
 		<div class="tutor-option-field-label">
 			<label for=""><?php _e('Time Limit', 'tutor'); ?></label>

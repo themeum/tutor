@@ -2084,4 +2084,45 @@ class Utils {
 		return $total_question;
 	}
 
+
+	public function is_started_quiz($quiz_id = 0){
+		global $wpdb;
+
+		$quiz_id = $this->get_post_id($quiz_id);
+		$user_id = get_current_user_id();
+
+		$is_started = $wpdb->get_row("SELECT 
+ 			comment_ID,
+ 			comment_post_ID,
+ 			comment_author,
+ 			comment_date as quiz_started_at,
+ 			comment_date_gmt,
+ 			comment_approved as quiz_attempt_status,
+ 			comment_parent,
+ 			user_id
+ 			
+ 			FROM {$wpdb->comments} 
+			WHERE user_id = {$user_id} 
+		  	AND comment_type = 'tutor_quiz_attempt' 
+		  	AND comment_approved = 'quiz_started' 
+		  	AND comment_post_ID = {$quiz_id} ; ");
+
+		return $is_started;
+	}
+
+	public function quiz_attempt_info($quiz_attempt_id){
+		$attempt_info = get_comment_meta($quiz_attempt_id, 'quiz_attempt_info', true);
+		return $attempt_info;
+	}
+
+	public function get_rand_single_question_by_quiz_for_student($quiz_id = 0){
+		global $wpdb;
+
+		$quiz_id = $this->get_post_id($quiz_id);
+
+		$question = $wpdb->get_row("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question' AND post_parent = {$quiz_id} ORDER BY RAND() ;");
+
+		return $question;
+	}
+
 }

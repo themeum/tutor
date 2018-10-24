@@ -134,73 +134,90 @@ class Quiz {
 
 		global $wpdb;
 
-		$user = get_current_user();
 		$user_id = get_current_user_id();
+		$user = get_userdata($user_id);
+
 
 		$quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
 		$quiz = get_post($quiz_id);
 		$date = date("Y-m-d H:i:s");
 
 		$attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
-		
-
-		die(var_dump($attempts_allowed));
 
 		do_action('tutor_before_start_quiz', $quiz_id);
-
 		$data = array(
 			'comment_post_ID'   => $quiz_id, //QuizID
 			'comment_author'    => $user->user_login,
 			'comment_date'      => $date,
 			'comment_date_gmt'  => get_gmt_from_date($date),
-			'comment_approved'  => 'quiz_started',
+			'comment_approved'  => 'quiz_started', //quiz_timeup, quiz_complete
 			'comment_agent'     => 'TutorLMSPlugin',
 			'comment_type'      => 'tutor_quiz_attempt',
 			'comment_parent'    => $quiz->post_parent, //Quiz Parent Attached Course || Lesson || Topic
 			'user_id'           => $user_id,
 		);
 
-
 		$wpdb->insert($wpdb->comments, $data);
 		$attempt_id = (int) $wpdb->insert_id;
 
-
 		$time_limit = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value');
+		$time_limit_seconds = 0;
+		$time_type = 'seconds';
 		if ($time_limit){
 			$time_type = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_type');
+
+			switch ($time_type){
+                case 'seconds':
+	                $time_limit_seconds = $time_limit;
+	                break;
+				case 'minutes':
+					$time_limit_seconds = $time_limit * 60;
+					break;
+				case 'hours':
+					$time_limit_seconds = $time_limit * 60 * 60;
+					break;
+				case 'days':
+					$time_limit_seconds = $time_limit * 60 * 60 * 24;
+					break;
+				case 'weeks':
+					$time_limit_seconds = $time_limit * 60 * 60 * 24 * 7;
+					break;
+			}
 		}
 
 		$quiz_attempt_info = array(
-            'time_limit' => $time_limit,
-            'total_question'    => 0,
-            'answered_question'    => 0,
-            'current_question'    => 0,
-            'given_answers'   => array(),
+            'time_limit'            => $time_limit,
+            'time_type'             => $time_type,
+            'time_limit_seconds'    => $time_limit_seconds,
+            'total_question'        => 0,
+            'answered_question'     => 0,
+            'current_question'      => 0,
+            'answers'               => array(),
         );
 
 		//answers format
 
         /*
         array(
-                'QuestionID' => array('has_correct' => 1, //or 0 for false
+                '0' => array( 'QuestionID' => 344, 'has_correct' => 1, //or 0 for false, 'questionSiNo' => 1
                     'answers_list' => array(
-                            'answers_id' => array('selected_answerId_1', 'selected_answerId_2')
+                            'answers_id' => array('selected_answerId_1', 'selected_answerId_2', 'or_line_answer_text')
+                    )
+                ),
+
+                 '1' => array( 'QuestionID' => 654, 'has_correct' => 0, //or 0 for false, 'questionSiNo' => 2
+                    'answers_list' => array(
+                            'answers_id' => array('selected_answerId_1', 'selected_answerId_2', 'or_line_answer_text')
                     )
                 ),
         );
         */
 
-
-		//update_comment_meta($attempt_id, 'quiz_attempt_info');
-
-        //update_comment_meta($attempt_id, 'grade');
+		update_comment_meta($attempt_id, 'quiz_attempt_info', $quiz_attempt_info);
+        update_comment_meta($attempt_id, 'grade', 'N/A');
 
 		do_action('tutor_after_start_quiz', $quiz_id, $attempt_id);
 
-
-
-
-		die(var_dump($quiz_id));
 
 		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 		die();
