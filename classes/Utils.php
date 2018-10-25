@@ -2110,6 +2110,27 @@ class Utils {
 		return $is_started;
 	}
 
+	public function get_attempt($attempt_id = 0){
+		global $wpdb;
+
+
+		$attempt = $wpdb->get_row("SELECT 
+ 			comment_ID,
+ 			comment_post_ID,
+ 			comment_author,
+ 			comment_date as quiz_started_at,
+ 			comment_date_gmt,
+ 			comment_approved as quiz_attempt_status,
+ 			comment_parent,
+ 			user_id
+ 			
+ 			FROM {$wpdb->comments} 
+		  	WHERE comment_type = 'tutor_quiz_attempt' 
+		  	AND comment_ID = {$attempt_id} ;");
+
+		return $attempt;
+	}
+
 	public function quiz_attempt_info($quiz_attempt_id){
 		$attempt_info = get_comment_meta($quiz_attempt_id, 'quiz_attempt_info', true);
 		return $attempt_info;

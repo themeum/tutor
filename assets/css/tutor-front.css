@@ -586,3 +586,17 @@ Single Quiz
     padding: 50px 0;
     text-align: center;
 }
+.quiz-answer-footer-bar {
+    margin-top: 50px;
+}
+
+.quiz-footer-button button{
+    color: #fff;
+    background-color: #1177d1;
+    border-color: #1177d1;
+}
+.quiz-footer-button button:hover {
+    color: #fff;
+    background-color: #0e63ae;
+    border-color: #0d5ca2;
+}

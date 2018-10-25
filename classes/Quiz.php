@@ -27,6 +27,7 @@ class Quiz {
 
 		//User take the quiz
 		add_action('template_redirect', array($this, 'start_the_quiz'));
+		add_action('template_redirect', array($this, 'answering_quiz'));
 	}
 
 	public function register_meta_box(){
@@ -192,6 +193,7 @@ class Quiz {
             'total_question'        => 0,
             'answered_question'     => 0,
             'current_question'      => 0,
+            'marks_earned'          => 0,
             'answers'               => array(),
         );
 
@@ -199,13 +201,13 @@ class Quiz {
 
         /*
         array(
-                '0' => array( 'QuestionID' => 344, 'has_correct' => 1, //or 0 for false, 'questionSiNo' => 1
+                '0' => array( 'questionID' => 344, 'has_correct' => 1, //or 0 for false, 'questionSiNo' => 1
                     'answers_list' => array(
                             'answers_id' => array('selected_answerId_1', 'selected_answerId_2', 'or_line_answer_text')
                     )
                 ),
 
-                 '1' => array( 'QuestionID' => 654, 'has_correct' => 0, //or 0 for false, 'questionSiNo' => 2
+                 '1' => array( 'questionID' => 654, 'has_correct' => 0, //or 0 for false, 'questionSiNo' => 2
                     'answers_list' => array(
                             'answers_id' => array('selected_answerId_1', 'selected_answerId_2', 'or_line_answer_text')
                     )
@@ -221,6 +223,128 @@ class Quiz {
 
 		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 		die();
+    }
+
+
+    public function answering_quiz(){
+	    if ( ! is_user_logged_in()){
+		    die('Please sign in to do this operation');
+	    }
+
+	    if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_answering_quiz_question' ){
+		    return;
+	    }
+	    //Checking nonce
+	    tutor_utils()->checking_nonce();
+
+	    global $wpdb;
+
+        $user_id = get_current_user_id();
+	    $attempt_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('attempt_id', $_POST));
+	    $post_question_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('quiz_question_id', $_POST));
+	    $attempt = tutor_utils()->get_attempt($attempt_id);
+
+        if ( ! $attempt || $user_id != $attempt->user_id){
+            die('Operation not allowed, attempt not found or permission denied');
+        }
+
+        $attempt_info = tutor_utils()->quiz_attempt_info($attempt_id);
+	    $given_answers = tutor_utils()->avalue_dot("attempt.{$attempt_id}.quiz_question.{$post_question_id}", $_POST);
+
+
+
+	    $plus_mark = 0;
+	    $minus_mark = 0;
+	    $is_answer_corrected = false;
+
+	    if ($given_answers){
+		    $question_type = get_post_meta($post_question_id, '_question_type', true);
+		    $question_mark = get_post_meta($post_question_id, '_question_mark', true);
+
+		    $saved_answers = tutor_utils()->get_quiz_answer_options_by_question($post_question_id);
+		    $corrects_answer_ids = array();
+		    if (is_array($saved_answers) && count($saved_answers)){
+                foreach ($saved_answers as $saved_answer){
+                    $saved_answer_info = json_decode($saved_answer->comment_content);
+
+                    if ( ! empty($saved_answer_info->is_correct) && $saved_answer_info->is_correct){
+	                    $corrects_answer_ids[] = $saved_answer->comment_ID;
+                    }
+                }
+            }
+
+		    // echo '<pre>';
+		    // print_r($corrects_answer_ids);
+		    // die(print_r($saved_answers));
+		    // die(var_dump($question_mark));
+
+
+		    if ($question_type === 'multiple_choice'){
+			    $given_answers = (array) $given_answers;
+		    }
+
+
+		    //TODO: need to provide support for question type more if we add
+		    //Checking if all answer corrects
+            if ($question_type === 'true_false' || $question_type === 'multiple_choice' || $question_type === 'single_choice'){
+
+	            if ($question_type === 'multiple_choice') {
+		            $is_answer_corrected = count(array_intersect($given_answers, $corrects_answer_ids)) == count($given_answers);
+	            }else{
+		            $is_answer_corrected = in_array($given_answers, $corrects_answer_ids);
+                }
+            }
+
+		    if ($is_answer_corrected){
+			    $plus_mark = $question_mark;
+            }else{
+		        //TODO: Do operation for incorrect answer
+            }
+
+		    $answers = array(
+			    'questionID' => $post_question_id, 'status' => 'answered', 'has_correct' => 0, //or 0 for false, 'questionSiNo' => 2
+                'plus_mark' => $plus_mark,
+                'minus_mark' => $minus_mark,
+                'answers_list' => array(
+				    'answer_type' => $question_type,
+				    'answer_ids' => $given_answers
+			    )
+		    );
+        }else{
+		    //If not answered, that means users skipped the questions
+		    $answers = array(
+			    'questionID' => $post_question_id, 'status' => 'skipped', 'has_correct' => 0, //or 0 for false, 'questionSiNo' => 2
+			    'plus_mark' => 0,
+			    'minus_mark' => 0,
+			    'answers_list' => array()
+		    );
+        }
+
+        if ($is_answer_corrected){
+	        if (isset($attempt_info['marks_earned'])){
+	            //If not found
+		        $attempt_info['marks_earned'] = $attempt_info['marks_earned'] + $plus_mark;
+            }else{
+		        $attempt_info['marks_earned'] = $plus_mark;
+	        }
+
+
+        }else{
+            //Todo: mark minus if necessary
+        }
+
+	    $attempt_info['answers'][] = $answers;
+
+
+	    echo '<pre>';
+        //print_r($_POST);
+        print_r($attempt_info);
+
+
+	    die();
+
+	    wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
+	    die();
     }
 
 }

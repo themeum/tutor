@@ -188,7 +188,6 @@ class Question {
 	public function quiz_add_answer_to_question(){
 		global $wpdb;
 
-
 		$question_id = (int) sanitize_text_field($_POST['question_id']);
 		$question_type = get_post_meta($question_id, '_question_type', true);
 
@@ -200,7 +199,6 @@ class Question {
 		if ($question_type === 'true_false'){
 			$answer_option['answer_option_text'] = __('True/False', 'tutor');
 		}
-
 
 		$data = apply_filters('tutor_quiz_adding_answer_option_to_question', array(
 			'comment_post_ID'   => $question_id,

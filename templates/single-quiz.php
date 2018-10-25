@@ -79,6 +79,7 @@ $currentPost = $post;
                         $answers = tutor_utils()->get_quiz_answer_options_by_question($question->ID);
 
                         echo '<pre>';
+                        print_r($is_started_quiz);
                         print_r($question);
                         print_r($answers);
                         echo '</pre>';
@@ -88,26 +89,46 @@ $currentPost = $post;
 
                         <div class="quiz-answers">
 
-	                        <?php
-	                        if ($answers){
-		                        if ($question_type === 'true_false'){
-			                        foreach ($answers as $answer){
-				                        $answer_content = json_decode($answer->comment_content, true);
-				                        ?>
-                                        <label>
-                                            <input name="quiz_question[<?php echo $question->ID; ?>]" type="radio" value="<?php echo $answer->comment_ID;
-					                        ?>">
-					                        <?php
-					                        if (isset($answer_content['answer_option_text'])){
-						                        echo $answer_content['answer_option_text'];
-					                        }
-					                        ?>
-                                        </label>
-				                        <?php
-			                        }
-		                        }
-	                        }
-	                        ?>
+                            <form id="tutor-answering-quiz" method="post">
+			                    <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+
+                                <input type="hidden" value="<?php echo $is_started_quiz->comment_ID; ?>" name="attempt_id" />
+                                <input type="hidden" value="<?php echo $question->ID; ?>" name="quiz_question_id" />
+                                <input type="hidden" value="tutor_answering_quiz_question" name="tutor_action" />
+
+			                    <?php
+			                    if ($answers){
+				                    if ($question_type === 'true_false'){
+					                    echo '<p>'.__('select one :', 'tutor').'</p>';
+					                    foreach ($answers as $answer){
+						                    $answer_content = json_decode($answer->comment_content, true);
+						                    ?>
+                                            <label>
+                                                <input name="attempt[<?php echo $is_started_quiz->comment_ID; ?>][quiz_question][<?php echo $question->ID; ?>]" type="radio" value="<?php echo $answer->comment_ID; ?>">
+							                    <?php
+							                    if (isset($answer_content['answer_option_text'])){
+								                    echo $answer_content['answer_option_text'];
+							                    }
+							                    ?>
+                                            </label>
+						                    <?php
+					                    }
+				                    }
+			                    }
+			                    ?>
+
+
+                                <div class="quiz-answer-footer-bar">
+
+                                    <div class="quiz-footer-button">
+
+                                        <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit"><?php _e('Answer and Next Question', 'tutor'); ?></button>
+
+                                    </div>
+
+                                </div>
+
+                            </form>
 
                         </div>
 
