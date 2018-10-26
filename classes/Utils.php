@@ -2084,7 +2084,6 @@ class Utils {
 		return $total_question;
 	}
 
-
 	public function is_started_quiz($quiz_id = 0){
 		global $wpdb;
 
@@ -2108,6 +2107,30 @@ class Utils {
 		  	AND comment_post_ID = {$quiz_id} ; ");
 
 		return $is_started;
+	}
+
+	/**
+	 * @param $quiz_id
+	 *
+	 * Method for get the total amount of question for a quiz
+	 * Student will answer this amount of question, one quiz have many question
+	 * but student will answer a specific amount of questions
+	 *
+	 * @return int
+	 */
+
+	public function max_questions_for_take_quiz($quiz_id){
+		$quiz_id = $this->get_post_id($quiz_id);
+		global $wpdb;
+
+		$max_questions = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} where post_parent = {$quiz_id} AND post_type = 'tutor_question' ");
+		$max_mentioned = (int) $this->get_quiz_option($quiz_id, 'max_questions_for_answer', 10);
+
+		if ($max_mentioned < $max_questions ){
+			return $max_mentioned;
+		}
+
+		return $max_questions;
 	}
 
 	public function get_attempt($attempt_id = 0){
@@ -2136,14 +2159,79 @@ class Utils {
 		return $attempt_info;
 	}
 
+	public function quiz_update_attempt_info($quiz_attempt_id, $attempt_info = array()){
+		return update_comment_meta($quiz_attempt_id,'quiz_attempt_info', $attempt_info);
+	}
+
 	public function get_rand_single_question_by_quiz_for_student($quiz_id = 0){
 		global $wpdb;
 
 		$quiz_id = $this->get_post_id($quiz_id);
 
-		$question = $wpdb->get_row("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question' AND post_parent = {$quiz_id} ORDER BY RAND() ;");
+		$is_attempt = $this->is_started_quiz($quiz_id);
+		$attempted_question_ids = array();
+		if ($is_attempt){
+			$attempt_info = $this->quiz_attempt_info($is_attempt->comment_ID);
+			$attempted_question_ids = wp_list_pluck($this->avalue_dot('answers', $attempt_info),'questionID');
+		}
+		$attempted_question_ids_string = implode(",", $attempted_question_ids);
+
+		$not_in_sql = "";
+		if (is_array($attempted_question_ids) && count($attempted_question_ids)){
+			$not_in_sql = " AND ID NOT IN({$attempted_question_ids_string}) ";
+		}
+
+		$question = $wpdb->get_row("SELECT ID, post_content, post_title, post_parent 
+			from {$wpdb->posts} WHERE post_type = 'tutor_question' AND post_parent = {$quiz_id} {$not_in_sql} ORDER BY RAND() ;");
 
 		return $question;
 	}
+
+	/**
+	 * @param int $quiz_id
+	 * @param int $user_id
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Get all of the attempts by an user of a quiz
+	 */
+
+	public function quiz_attempts($quiz_id = 0, $user_id = 0){
+		global $wpdb;
+
+		$quiz_id = $this->get_post_id($quiz_id);
+		$user_id = $this->get_user_id($user_id);
+
+		$attempts = $wpdb->get_results("SELECT 
+ 			{$wpdb->comments}.comment_ID,
+ 			comment_post_ID,
+ 			comment_author,
+ 			comment_date as quiz_started_at,
+ 			comment_date_gmt,
+ 			comment_approved as quiz_attempt_status,
+ 			comment_parent,
+ 			user_id,
+ 			
+ 			attempt_info.meta_value as quiz_attempt_info,
+ 			pass_mark.meta_value as pass_mark_percent
+ 			
+ 			FROM {$wpdb->comments} 
+ 			
+ 			LEFT JOIN {$wpdb->commentmeta} attempt_info ON {$wpdb->comments}.comment_ID = attempt_info.comment_id AND attempt_info.meta_key = 'quiz_attempt_info'
+ 			LEFT JOIN {$wpdb->commentmeta} pass_mark ON {$wpdb->comments}.comment_ID = pass_mark.comment_id AND pass_mark.meta_key = 'pass_mark_percent'
+ 			
+			WHERE user_id = {$user_id} 
+		  	AND comment_type = 'tutor_quiz_attempt' 
+		  	AND comment_approved != 'quiz_started' 
+		  	AND comment_post_ID = {$quiz_id} ; ");
+
+		if (is_array($attempts) && count($attempts)){
+			return $attempts;
+		}
+
+		return false;
+	}
+
+
 
 }

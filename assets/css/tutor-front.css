@@ -164,15 +164,19 @@ Topics
     padding: 20px;
     margin-bottom: 10px;
 }
-a.tutor-button{
-    background-color: #333333;
-    color: #ffffff;
+a.tutor-button, .tutor-button{
+    color: #fff;
+    background-color: #1177d1;
+    border-color: #1177d1;
     display: inline-block;
     padding: 10px 20px;
 }
-a.tutor-button:hover {
-    color: #eeeeee;
+a.tutor-button:hover, .tutor-button:hover {
+    color: #fff;
+    background-color: #0e63ae;
+    border-color: #0d5ca2;
 }
+
 .course-enrolled-nav-wrap{
     background-color: #f4f4f4;
     border-bottom: 1px solid #dedfe0;
@@ -589,14 +593,6 @@ Single Quiz
 .quiz-answer-footer-bar {
     margin-top: 50px;
 }
-
-.quiz-footer-button button{
-    color: #fff;
-    background-color: #1177d1;
-    border-color: #1177d1;
-}
-.quiz-footer-button button:hover {
-    color: #fff;
-    background-color: #0e63ae;
-    border-color: #0d5ca2;
+.quiz-attempts-row{
+    display: flex;
 }

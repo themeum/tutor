@@ -67,12 +67,14 @@
 .icon-arrows-cw:before { content: '\e809'; } /* '' */
 .icon-list-alt:before { content: '\e80a'; } /* '' */
 .icon-clock:before { content: '\e80b'; } /* '' */
+.icon-floppy:before { content: '\e80c'; } /* '' */
 .icon-certificate:before { content: '\f0a3'; } /* '' */
 .icon-doc-text:before { content: '\f0f6'; } /* '' */
 .icon-star-half-alt:before { content: '\f123'; } /* '' */
 .icon-graduation-cap:before { content: '\f19d'; } /* '' */
 .icon-file-pdf:before { content: '\f1c1'; } /* '' */
 .icon-hourglass-1:before { content: '\f251'; } /* '' */
+
 /*
    Animation example, for spinners
 */

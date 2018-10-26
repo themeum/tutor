@@ -80,4 +80,16 @@
 	</div>
 
 
+
+    <div class="tutor-option-field-row">
+        <div class="tutor-option-field-label">
+            <label for=""><?php _e('Max questions allowed to answer', 'tutor'); ?></label>
+        </div>
+        <div class="tutor-option-field">
+            <input type="number" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option(get_the_ID(), 'max_questions_for_answer', 10) ?>">
+            <p class="desc"><?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater then available question, then all questions will be available for a student to answer.', 'tutor'); ?></p>
+        </div>
+    </div>
+
+
 </div>

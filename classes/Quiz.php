@@ -28,6 +28,7 @@ class Quiz {
 		//User take the quiz
 		add_action('template_redirect', array($this, 'start_the_quiz'));
 		add_action('template_redirect', array($this, 'answering_quiz'));
+		add_action('template_redirect', array($this, 'finishing_quiz_attempt'));
 	}
 
 	public function register_meta_box(){
@@ -186,11 +187,12 @@ class Quiz {
 			}
 		}
 
+		$max_question_allowed = tutor_utils()->max_questions_for_take_quiz($quiz_id);
 		$quiz_attempt_info = array(
             'time_limit'            => $time_limit,
             'time_type'             => $time_type,
             'time_limit_seconds'    => $time_limit_seconds,
-            'total_question'        => 0,
+            'total_question'        => $max_question_allowed,
             'answered_question'     => 0,
             'current_question'      => 0,
             'marks_earned'          => 0,
@@ -216,7 +218,7 @@ class Quiz {
         */
 
 		update_comment_meta($attempt_id, 'quiz_attempt_info', $quiz_attempt_info);
-        update_comment_meta($attempt_id, 'grade', 'N/A');
+        update_comment_meta($attempt_id, 'pass_mark_percent', 'N/A');
 
 		do_action('tutor_after_start_quiz', $quiz_id, $attempt_id);
 
@@ -257,9 +259,10 @@ class Quiz {
 	    $minus_mark = 0;
 	    $is_answer_corrected = false;
 
+	    $question_type = get_post_meta($post_question_id, '_question_type', true);
+	    $question_mark = get_post_meta($post_question_id, '_question_mark', true);
+
 	    if ($given_answers){
-		    $question_type = get_post_meta($post_question_id, '_question_type', true);
-		    $question_mark = get_post_meta($post_question_id, '_question_mark', true);
 
 		    $saved_answers = tutor_utils()->get_quiz_answer_options_by_question($post_question_id);
 		    $corrects_answer_ids = array();
@@ -320,6 +323,8 @@ class Quiz {
 		    );
         }
 
+	    $answers['question_mark'] = $question_mark;
+
         if ($is_answer_corrected){
 	        if (isset($attempt_info['marks_earned'])){
 	            //If not found
@@ -327,21 +332,72 @@ class Quiz {
             }else{
 		        $attempt_info['marks_earned'] = $plus_mark;
 	        }
-
-
         }else{
+	        if ( ! isset($attempt_info['marks_earned'])){
+		        $attempt_info['marks_earned'] = 0;
+	        }
+
             //Todo: mark minus if necessary
         }
 
 	    $attempt_info['answers'][] = $answers;
 
 
+	    tutor_utils()->quiz_update_attempt_info($attempt_id, $attempt_info);
+
+        /*
 	    echo '<pre>';
         //print_r($_POST);
         print_r($attempt_info);
+	    die();*/
 
-
+	    wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 	    die();
+    }
+
+	/**
+	 * Quiz attempt will be finish here
+     *
+	 */
+
+    public function finishing_quiz_attempt(){
+	    if ( ! is_user_logged_in()){
+		    die('Please sign in to do this operation');
+	    }
+
+	    if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_finish_quiz_attempt' ){
+		    return;
+	    }
+	    //Checking nonce
+	    tutor_utils()->checking_nonce();
+
+	    global $wpdb;
+
+	    $quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
+
+	    $is_started_quiz = tutor_utils()->is_started_quiz();
+	    $attempt_id = $is_started_quiz->comment_ID;
+
+	    if ($is_started_quiz) {
+		    $quiz_attempt_info = tutor_utils()->quiz_attempt_info( $attempt_id );
+
+		    $answers = tutor_utils()->avalue_dot('answers', $quiz_attempt_info);
+
+		    $total_marks = 0;
+		    if (is_array($answers)){
+			    $total_marks = array_sum(wp_list_pluck($answers, 'question_mark'));
+            }
+
+		    $quiz_attempt_info['total_marks'] = $total_marks;
+		    $pass_mark_percent = tutor_utils()->get_quiz_option($quiz_id,'passing_grade');
+		    $quiz_attempt_info['pass_mark_percent'] = $pass_mark_percent;
+
+		    //Updating Attempt Info
+		    update_comment_meta($attempt_id, 'quiz_attempt_info', $quiz_attempt_info);
+		    update_comment_meta($attempt_id, 'pass_mark_percent', $pass_mark_percent);
+		    
+		    $wpdb->update($wpdb->comments, array('comment_approved' => 'quiz_finished'), array('comment_ID' => $attempt_id));
+	    }
 
 	    wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 	    die();

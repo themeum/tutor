@@ -60,9 +60,13 @@ $currentPost = $post;
 		        <?php
 		        $is_started_quiz = tutor_utils()->is_started_quiz();
 
+		        $previous_attempts = tutor_utils()->quiz_attempts();
+
 		        if ($is_started_quiz){
 			        $quiz_attempt_info = tutor_utils()->quiz_attempt_info($is_started_quiz->comment_ID);
 			        $quiz_attempt_info['date_time_now'] = date("Y-m-d H:i:s");
+
+			        $question = tutor_utils()->get_rand_single_question_by_quiz_for_student();
 			        ?>
 
                     <div class="quiz-head-meta-info">
@@ -72,70 +76,86 @@ $currentPost = $post;
                     </div>
 
 
-                    <div id="tutor-quiz-single-wrap">
-                        <?php
-                        $question = tutor_utils()->get_rand_single_question_by_quiz_for_student();
-                        $question_type = get_post_meta($question->ID, '_question_type', true);
-                        $answers = tutor_utils()->get_quiz_answer_options_by_question($question->ID);
+                    <?php if ($question) { ?>
+                        <div id="tutor-quiz-single-wrap">
+					        <?php
+					        $question_type = get_post_meta( $question->ID, '_question_type', true );
+					        $answers       = tutor_utils()->get_quiz_answer_options_by_question( $question->ID );
+					        ?>
 
-                        echo '<pre>';
-                        print_r($is_started_quiz);
-                        print_r($question);
-                        print_r($answers);
-                        echo '</pre>';
-                        ?>
+                            <p class="question-text"><?php echo $question->post_title; ?></p>
 
-                        <p class="question-text"><?php echo $question->post_title; ?></p>
+                            <div class="quiz-answers">
 
-                        <div class="quiz-answers">
+                                <form id="tutor-answering-quiz" method="post">
+							        <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
-                            <form id="tutor-answering-quiz" method="post">
-			                    <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+                                    <input type="hidden" value="<?php echo $is_started_quiz->comment_ID; ?>" name="attempt_id"/>
+                                    <input type="hidden" value="<?php echo $question->ID; ?>" name="quiz_question_id"/>
+                                    <input type="hidden" value="tutor_answering_quiz_question" name="tutor_action"/>
 
-                                <input type="hidden" value="<?php echo $is_started_quiz->comment_ID; ?>" name="attempt_id" />
-                                <input type="hidden" value="<?php echo $question->ID; ?>" name="quiz_question_id" />
-                                <input type="hidden" value="tutor_answering_quiz_question" name="tutor_action" />
-
-			                    <?php
-			                    if ($answers){
-				                    if ($question_type === 'true_false'){
-					                    echo '<p>'.__('select one :', 'tutor').'</p>';
-					                    foreach ($answers as $answer){
-						                    $answer_content = json_decode($answer->comment_content, true);
-						                    ?>
-                                            <label>
-                                                <input name="attempt[<?php echo $is_started_quiz->comment_ID; ?>][quiz_question][<?php echo $question->ID; ?>]" type="radio" value="<?php echo $answer->comment_ID; ?>">
-							                    <?php
-							                    if (isset($answer_content['answer_option_text'])){
-								                    echo $answer_content['answer_option_text'];
-							                    }
-							                    ?>
-                                            </label>
-						                    <?php
-					                    }
-				                    }
-			                    }
-			                    ?>
+							        <?php
+							        if ( $answers ) {
+								        if ( $question_type === 'true_false' ) {
+									        echo '<p>' . __( 'select one :', 'tutor' ) . '</p>';
+									        foreach ( $answers as $answer ) {
+										        $answer_content = json_decode( $answer->comment_content, true );
+										        ?>
+                                                <label>
+                                                    <input name="attempt[<?php echo $is_started_quiz->comment_ID; ?>][quiz_question][<?php echo $question->ID; ?>]"
+                                                           type="radio" value="<?php echo $answer->comment_ID; ?>">
+											        <?php
+											        if ( isset( $answer_content['answer_option_text'] ) ) {
+												        echo $answer_content['answer_option_text'];
+											        }
+											        ?>
+                                                </label>
+										        <?php
+									        }
+								        }
+							        }
+							        ?>
 
 
-                                <div class="quiz-answer-footer-bar">
+                                    <div class="quiz-answer-footer-bar">
 
-                                    <div class="quiz-footer-button">
+                                        <div class="quiz-footer-button">
 
-                                        <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit"><?php _e('Answer and Next Question', 'tutor'); ?></button>
+                                            <button type="submit" name="quiz_answer_submit_btn"
+                                                    value="quiz_answer_submit"><?php _e( 'Answer and Next Question', 'tutor' ); ?></button>
+
+                                        </div>
 
                                     </div>
 
-                                </div>
+                                </form>
 
-                            </form>
+                            </div>
 
                         </div>
 
-                    </div>
+
+				        <?php
+			        }else{
+                        ?>
+
+                        <div class="start-quiz-wrap">
+                            <form id="tutor-finish-quiz" method="post">
+						        <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+
+                                <input type="hidden" value="<?php echo get_the_ID(); ?>" name="quiz_id"/>
+                                <input type="hidden" value="tutor_finish_quiz_attempt" name="tutor_action"/>
+
+                                <button type="submit" class="tutor-button" name="finish_quiz_btn" value="finish_quiz">
+                                    <i class="icon-floppy"></i> <?php _e( 'Finish', 'tutor' ); ?>
+                                </button>
+                            </form>
+                        </div>
+
+                        <?php
+                    }
 
 
-			        <?php
 		        }else{
 			        ?>
                     <div class="start-quiz-wrap">
@@ -145,11 +165,82 @@ $currentPost = $post;
                             <input type="hidden" value="<?php echo get_the_ID(); ?>" name="quiz_id"/>
                             <input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
-                            <button type="submit" class="start-quiz-button" name="start_quiz_btn" value="start_quiz">
+                            <button type="submit" class="tutor-button" name="start_quiz_btn" value="start_quiz">
                                 <i class="icon-hourglass-1"></i> <?php _e( 'Start Quiz', 'tutor' ); ?>
                             </button>
                         </form>
                     </div>
+
+
+                    <?php
+                    if ($previous_attempts){
+                        foreach ( $previous_attempts as $attempt){
+
+                            $attempt_info = maybe_unserialize($attempt->quiz_attempt_info);
+
+                            echo '<pre>';
+                            print_r($attempt);
+                            print_r(maybe_unserialize($attempt->quiz_attempt_info));
+	                        echo '</pre>';
+
+
+	                        //total_question
+                            ?>
+
+
+                            <div class="quiz-attempts-wrap">
+
+                                <table>
+                                    <tr>
+                                        <th><?php _e('Time', 'tutor'); ?></th>
+                                        <th><?php _e('Questions', 'tutor'); ?></th>
+                                        <th><?php _e('Total Marks', 'tutor'); ?></th>
+                                        <th><?php _e('Earned Marks', 'tutor'); ?></th>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+	                                        <?php
+	                                        echo date_i18n(get_option('date_format'), strtotime($attempt->quiz_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->quiz_started_at));
+	                                        ?>
+                                        </td>
+                                        <td>
+	                                        <?php
+	                                        echo tutor_utils()->avalue_dot('total_question', $attempt_info)
+	                                        ?>
+                                        </td>
+
+                                        <td>
+                                            <?php
+                                            $answers_mark = wp_list_pluck(tutor_utils()->avalue_dot('answers', $attempt_info), 'question_mark' );
+                                            $total_marks = array_sum($answers_mark);
+                                            echo $total_marks;
+                                            ?>
+                                        </td>
+
+                                        <td>
+                                            <?php
+                                            $earned_marks = tutor_utils()->avalue_dot('marks_earned', $attempt_info);
+                                            $earned_percentage = ($earned_marks * 100) / $total_marks;
+
+                                            echo $earned_marks."({$earned_percentage}%)";
+                                            ?>
+                                        </td>
+
+                                    </tr>
+
+                                </table>
+
+                            </div>
+
+                            <h3>Hello World</h3>
+
+                            <?php
+                        }
+                    }
+                    ?>
+
+
 		        <?php } ?>
             </div>
 
