@@ -576,6 +576,13 @@ Single Quiz
     padding-bottom: 20px;
     margin-bottom: 20px;
 }
+.tutor-quiz-top a{
+    color: #1177d1;
+}
+
+.tutor-quiz-top a:hover{
+    color: #0e63ae;
+}
 .tutor-quiz-top p{
     margin: 0;
 }
@@ -595,4 +602,14 @@ Single Quiz
 }
 .quiz-attempts-row{
     display: flex;
+}
+span.result-pass{
+    padding: 5px 10px;
+    background-color: #04a704;
+    color: #ffffff;
+}
+span.result-fail{
+    padding: 5px 10px;
+    background-color: #FF0000;
+    color: #ffffff;
 }

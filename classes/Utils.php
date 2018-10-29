@@ -775,6 +775,16 @@ class Utils {
 		return $run_time_format;
 	}
 
+	public function seconds_to_time_context($seconds) {
+		$sign = (($seconds < 0) ? '-' : '');
+		$seconds = round(abs($seconds));
+		$H = (int) floor( $seconds                            / 3600);
+		$M = (int) floor(($seconds - (3600 * $H)            ) /   60);
+		$S = (int) round( $seconds - (3600 * $H) - (60 * $M)        );
+
+		return $sign.($H ? $H.'h ' : '').($H ? str_pad($M, 2, '0', STR_PAD_LEFT) : intval($M)).'m '.str_pad($S, 2, 0, STR_PAD_LEFT).'s';
+	}
+
 	/**
 	 * @param int $lesson_id
 	 *

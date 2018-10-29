@@ -265,6 +265,26 @@ jQuery(document).ready(function($){
 
                 //Set the quiz attempt to timeout in ajax
 
+                var quiz_id = $('#tutor_quiz_id').val();
+                var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
+                var quiz_timeout_data = { quiz_id : quiz_id,  action : 'tutor_quiz_timeout' };
+
+                $.ajax({
+                    url: _tutorobject.ajaxurl,
+                    type: 'POST',
+                    data: quiz_timeout_data,
+                    success: function (data) {
+                        if (data.success){
+                            window.location.reload(true);
+                        }
+                    },
+                    complete: function () {
+                        $('#tutor-quiz-body').html('');
+                        window.location.reload(true);
+                    }
+                });
+
+
             }
             time_now = time_now + 1000;
             $tutor_quiz_time_update.html(countdown_human);

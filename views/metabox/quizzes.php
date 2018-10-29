@@ -50,16 +50,17 @@
         </div>
     </div>
 
+    <!--
 	<div class="tutor-option-field-row">
 		<div class="tutor-option-field-label">
-			<label for=""><?php _e('Minus Point', 'tutor'); ?></label>
+			<label for=""><?php /*_e('Minus Point', 'tutor'); */?></label>
 		</div>
 		<div class="tutor-option-field">
-			<input type="number" name="quiz_option[minus_point]" value="<?php echo tutor_utils()->get_quiz_option(get_the_ID(), 'minus_point', 0) ?>">
-			<p class="desc"><?php _e('Should apply minus point for wrong answer, 0 means not applicable', 'tutor'); ?></p>
+			<input type="number" name="quiz_option[minus_point]" value="<?php /*echo tutor_utils()->get_quiz_option(get_the_ID(), 'minus_point', 0) */?>">
+			<p class="desc"><?php /*_e('Should apply minus point for wrong answer, 0 means not applicable', 'tutor'); */?></p>
 		</div>
 	</div>
-
+-->
 
 	<div class="tutor-option-field-row">
 		<div class="tutor-option-field-label">

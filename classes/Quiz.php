@@ -24,6 +24,8 @@ class Quiz {
 		add_action('wp_ajax_tutor_add_quiz_to_post', array($this, 'tutor_add_quiz_to_post'));
 		add_action('wp_ajax_remove_quiz_from_post', array($this, 'remove_quiz_from_post'));
 
+		add_action('wp_ajax_tutor_quiz_timeout', array($this, 'tutor_quiz_timeout'));
+
 
 		//User take the quiz
 		add_action('template_redirect', array($this, 'start_the_quiz'));
@@ -123,16 +125,16 @@ class Quiz {
 
 
 	public function start_the_quiz(){
-		if ( ! is_user_logged_in()){
-		    //TODO: need to set a view in the next version
-		    die('Please sign in to do this operation');
-        }
-
 		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_start_quiz' ){
 			return;
 		}
 		//Checking nonce
 		tutor_utils()->checking_nonce();
+
+		if ( ! is_user_logged_in()){
+			//TODO: need to set a view in the next version
+			die('Please sign in to do this operation');
+		}
 
 		global $wpdb;
 
@@ -229,15 +231,15 @@ class Quiz {
 
 
     public function answering_quiz(){
-	    if ( ! is_user_logged_in()){
-		    die('Please sign in to do this operation');
-	    }
-
 	    if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_answering_quiz_question' ){
 		    return;
 	    }
 	    //Checking nonce
 	    tutor_utils()->checking_nonce();
+
+	    if ( ! is_user_logged_in()){
+		    die('Please sign in to do this operation');
+	    }
 
 	    global $wpdb;
 
@@ -252,8 +254,6 @@ class Quiz {
 
         $attempt_info = tutor_utils()->quiz_attempt_info($attempt_id);
 	    $given_answers = tutor_utils()->avalue_dot("attempt.{$attempt_id}.quiz_question.{$post_question_id}", $_POST);
-
-
 
 	    $plus_mark = 0;
 	    $minus_mark = 0;
@@ -276,21 +276,13 @@ class Quiz {
                 }
             }
 
-		    // echo '<pre>';
-		    // print_r($corrects_answer_ids);
-		    // die(print_r($saved_answers));
-		    // die(var_dump($question_mark));
-
-
 		    if ($question_type === 'multiple_choice'){
 			    $given_answers = (array) $given_answers;
 		    }
 
-
 		    //TODO: need to provide support for question type more if we add
 		    //Checking if all answer corrects
             if ($question_type === 'true_false' || $question_type === 'multiple_choice' || $question_type === 'single_choice'){
-
 	            if ($question_type === 'multiple_choice') {
 		            $is_answer_corrected = count(array_intersect($given_answers, $corrects_answer_ids)) == count($given_answers);
 	            }else{
@@ -341,15 +333,7 @@ class Quiz {
         }
 
 	    $attempt_info['answers'][] = $answers;
-
-
 	    tutor_utils()->quiz_update_attempt_info($attempt_id, $attempt_info);
-
-        /*
-	    echo '<pre>';
-        //print_r($_POST);
-        print_r($attempt_info);
-	    die();*/
 
 	    wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 	    die();
@@ -361,32 +345,32 @@ class Quiz {
 	 */
 
     public function finishing_quiz_attempt(){
-	    if ( ! is_user_logged_in()){
-		    die('Please sign in to do this operation');
-	    }
-
 	    if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_finish_quiz_attempt' ){
 		    return;
 	    }
 	    //Checking nonce
 	    tutor_utils()->checking_nonce();
 
+	    if ( ! is_user_logged_in()){
+		    die('Please sign in to do this operation');
+	    }
+
+
 	    global $wpdb;
 
 	    $quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
 
-	    $is_started_quiz = tutor_utils()->is_started_quiz();
+	    $is_started_quiz = tutor_utils()->is_started_quiz($quiz_id);
 	    $attempt_id = $is_started_quiz->comment_ID;
 
 	    if ($is_started_quiz) {
 		    $quiz_attempt_info = tutor_utils()->quiz_attempt_info( $attempt_id );
-
 		    $answers = tutor_utils()->avalue_dot('answers', $quiz_attempt_info);
 
 		    $total_marks = 0;
 		    if (is_array($answers)){
 			    $total_marks = array_sum(wp_list_pluck($answers, 'question_mark'));
-            }
+		    }
 
 		    $quiz_attempt_info['total_marks'] = $total_marks;
 		    $pass_mark_percent = tutor_utils()->get_quiz_option($quiz_id,'passing_grade');
@@ -395,12 +379,48 @@ class Quiz {
 		    //Updating Attempt Info
 		    update_comment_meta($attempt_id, 'quiz_attempt_info', $quiz_attempt_info);
 		    update_comment_meta($attempt_id, 'pass_mark_percent', $pass_mark_percent);
-		    
+
 		    $wpdb->update($wpdb->comments, array('comment_approved' => 'quiz_finished'), array('comment_ID' => $attempt_id));
 	    }
 
 	    wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 	    die();
+    }
+
+	/**
+	 * Quiz timeout by ajax
+	 */
+    public function tutor_quiz_timeout(){
+
+	    global $wpdb;
+
+	    $quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
+
+	    $is_started_quiz = tutor_utils()->is_started_quiz($quiz_id);
+	    $attempt_id = $is_started_quiz->comment_ID;
+
+	    if ($is_started_quiz) {
+		    $quiz_attempt_info = tutor_utils()->quiz_attempt_info( $attempt_id );
+		    $answers = tutor_utils()->avalue_dot('answers', $quiz_attempt_info);
+
+		    $total_marks = 0;
+		    if (is_array($answers)){
+			    $total_marks = array_sum(wp_list_pluck($answers, 'question_mark'));
+		    }
+
+		    $quiz_attempt_info['total_marks'] = $total_marks;
+		    $pass_mark_percent = tutor_utils()->get_quiz_option($quiz_id,'passing_grade');
+		    $quiz_attempt_info['pass_mark_percent'] = $pass_mark_percent;
+
+		    //Updating Attempt Info
+		    update_comment_meta($attempt_id, 'quiz_attempt_info', $quiz_attempt_info);
+		    update_comment_meta($attempt_id, 'pass_mark_percent', $pass_mark_percent);
+
+		    $wpdb->update($wpdb->comments, array('comment_approved' => 'quiz_timeout'), array('comment_ID' => $attempt_id));
+		    wp_send_json_success();
+	    }
+
+	    wp_send_json_error(__('Quiz has been timeout already', 'tutor'));
     }
 
 }
