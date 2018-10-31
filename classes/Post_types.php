@@ -66,13 +66,11 @@ class Post_types{
 			),
 		);
 
-		register_post_type( $this->course_post_type, $args );
-
+		register_post_type($this->course_post_type, $args);
 
 		/**
 		 * Taxonomy
 		 */
-
 		$labels = array(
 			'name'                       => _x( 'Categories', 'taxonomy general name', 'tutor' ),
 			'singular_name'              => _x( 'Category', 'taxonomy singular name', 'tutor' ),
@@ -184,9 +182,7 @@ class Post_types{
 
 		register_post_type( $this->lesson_post_type, $args );
 	}
-
-
-
+	
 	public function register_quiz_post_types() {
 		$labels = array(
 			'name'               => _x( 'Quizzes', 'post type general name', 'tutor' ),
@@ -235,11 +231,7 @@ class Post_types{
 
 		register_post_type( 'tutor_quiz', $args );
 	}
-
-
-
-
-
+	
 	public function register_quiz_question_post_types() {
 		$labels = array(
 			'name'               => _x( 'Questions', 'post type general name', 'tutor' ),
@@ -288,7 +280,4 @@ class Post_types{
 
 		register_post_type( 'tutor_question', $args );
 	}
-
-
-
 }

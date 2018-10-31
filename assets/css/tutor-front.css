@@ -613,3 +613,9 @@ span.result-fail{
     background-color: #FF0000;
     color: #ffffff;
 }
+
+p.attempt-reviewed-text{
+    font-size: 12px;
+    color: #584dffe6;
+    margin: 5px 0;
+}

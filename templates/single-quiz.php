@@ -233,7 +233,24 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                         <td>
 											<?php
 											echo date_i18n(get_option('date_format'), strtotime($attempt->quiz_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->quiz_started_at));
+
+											$manual_reviewed = tutor_utils()->avalue_dot('manual_reviewed', $attempt_info);
+											if ($manual_reviewed){
+												if ($manual_reviewed){
+													?>
+                                                    <p class="attempt-reviewed-text">
+                                                        <?php
+                                                        echo __('Manually reviewed at', 'tutor').' <br /> '.date_i18n(get_option('date_format', strtotime($manual_reviewed))).' '.date_i18n(get_option('time_format', strtotime
+                                                        ($manual_reviewed)));
+                                                        ?>
+                                                    </p>
+													<?php
+												}
+                                            }
 											?>
+
+
+
                                         </td>
                                         <td>
 											<?php

@@ -17,6 +17,9 @@ if ( ! defined( 'ABSPATH' ) )
 class Quiz {
 
 	public function __construct() {
+		add_filter( "manage_tutor_quiz_posts_columns", array($this, 'add_column'), 10,1 );
+		add_action( "manage_tutor_quiz_posts_custom_column" , array($this, 'custom_question_column'), 10, 2 );
+
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
 		add_action('save_post_tutor_quiz', array($this, 'save_quiz_meta'));
 
@@ -27,11 +30,45 @@ class Quiz {
 		add_action('wp_ajax_tutor_quiz_timeout', array($this, 'tutor_quiz_timeout'));
 
 
+
+
 		//User take the quiz
 		add_action('template_redirect', array($this, 'start_the_quiz'));
 		add_action('template_redirect', array($this, 'answering_quiz'));
 		add_action('template_redirect', array($this, 'finishing_quiz_attempt'));
+
+
+		add_action('admin_action_review_quiz_answer', array($this, 'review_quiz_answer'));
+
 	}
+
+
+
+	public function add_column($columns){
+		$date_col = $columns['date'];
+		unset($columns['date']);
+		$columns['quiz'] = __('Course', 'tutor');
+		$columns['questions'] = __('Questions', 'tutor');
+		$columns['date'] = $date_col;
+
+		return $columns;
+	}
+
+	public function custom_question_column($column, $post_id ){
+		if ($column === 'quiz'){
+			$quiz = tutor_utils()->get_course_by_quiz($post_id);
+            
+			if ($quiz){
+			    echo '<a href="'.admin_url('post.php?post='.$quiz->ID.'&action=edit').'">'.get_the_title($quiz->ID).'</a>';
+			}
+		}
+
+
+		if ($column === 'questions'){
+            echo tutor_utils()->total_questions_for_student_by_quiz($post_id);
+		}
+	}
+
 
 	public function register_meta_box(){
 		add_meta_box( 'tutor-quiz-questions', __( 'Questions', 'tutor' ), array($this, 'quiz_questions'), 'tutor_quiz' );
@@ -114,15 +151,12 @@ class Quiz {
 		wp_send_json_success(array('output' => $output));
 	}
 
-
 	public function remove_quiz_from_post(){
 		global $wpdb;
 		$quiz_id = (int) tutor_utils()->avalue_dot('quiz_id', $_POST);
 		$wpdb->update($wpdb->posts, array('post_parent' => 0), array('ID' => $quiz_id) );
 		wp_send_json_success();
 	}
-
-
 
 	public function start_the_quiz(){
 		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_start_quiz' ){
@@ -202,7 +236,6 @@ class Quiz {
         );
 
 		//answers format
-
         /*
         array(
                 '0' => array( 'questionID' => 344, 'has_correct' => 1, //or 0 for false, 'questionSiNo' => 1
@@ -220,10 +253,9 @@ class Quiz {
         */
 
 		update_comment_meta($attempt_id, 'quiz_attempt_info', $quiz_attempt_info);
-        update_comment_meta($attempt_id, 'pass_mark_percent', 'N/A');
+        update_comment_meta($attempt_id, 'earned_mark_percent', '0');
 
 		do_action('tutor_after_start_quiz', $quiz_id, $attempt_id);
-
 
 		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 		die();
@@ -259,10 +291,19 @@ class Quiz {
 	    $minus_mark = 0;
 	    $is_answer_corrected = false;
 
+	    $answers = array(
+		    'questionID' => $post_question_id,
+	    );
+
+
 	    $question_type = get_post_meta($post_question_id, '_question_type', true);
 	    $question_mark = get_post_meta($post_question_id, '_question_mark', true);
 
 	    if ($given_answers){
+
+		    $answers['status'] = 'answered';  //or 0 for false, 'questionSiNo' => 2
+		    $answers['has_correct'] = 0;
+
 
 		    $saved_answers = tutor_utils()->get_quiz_answer_options_by_question($post_question_id);
 		    $corrects_answer_ids = array();
@@ -290,21 +331,24 @@ class Quiz {
                 }
             }
 
+
 		    if ($is_answer_corrected){
 			    $plus_mark = $question_mark;
-            }else{
-		        //TODO: Do operation for incorrect answer
+			    $answers['has_correct'] = 1;
+		    }else{
+
+			    //TODO: Do operation for incorrect answer
             }
 
-		    $answers = array(
-			    'questionID' => $post_question_id, 'status' => 'answered', 'has_correct' => 0, //or 0 for false, 'questionSiNo' => 2
-                'plus_mark' => $plus_mark,
-                'minus_mark' => $minus_mark,
-                'answers_list' => array(
-				    'answer_type' => $question_type,
-				    'answer_ids' => $given_answers
-			    )
+		    $answers['plus_mark'] = $plus_mark;
+		    $answers['minus_mark'] = $minus_mark;
+
+		    $answers['answers_list'] = array(
+			    'answer_type' => $question_type,
+			    'answer_ids' => $given_answers
 		    );
+
+
         }else{
 		    //If not answered, that means users skipped the questions
 		    $answers = array(
@@ -377,8 +421,7 @@ class Quiz {
 		    $quiz_attempt_info['pass_mark_percent'] = $pass_mark_percent;
 
 		    //Updating Attempt Info
-		    update_comment_meta($attempt_id, 'quiz_attempt_info', $quiz_attempt_info);
-		    update_comment_meta($attempt_id, 'pass_mark_percent', $pass_mark_percent);
+		    tutor_utils()->quiz_update_attempt_info($attempt_id, $quiz_attempt_info);
 
 		    $wpdb->update($wpdb->comments, array('comment_approved' => 'quiz_finished'), array('comment_ID' => $attempt_id));
 	    }
@@ -391,7 +434,6 @@ class Quiz {
 	 * Quiz timeout by ajax
 	 */
     public function tutor_quiz_timeout(){
-
 	    global $wpdb;
 
 	    $quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
@@ -413,14 +455,45 @@ class Quiz {
 		    $quiz_attempt_info['pass_mark_percent'] = $pass_mark_percent;
 
 		    //Updating Attempt Info
-		    update_comment_meta($attempt_id, 'quiz_attempt_info', $quiz_attempt_info);
-		    update_comment_meta($attempt_id, 'pass_mark_percent', $pass_mark_percent);
+		    tutor_utils()->quiz_update_attempt_info($attempt_id, $quiz_attempt_info);
 
 		    $wpdb->update($wpdb->comments, array('comment_approved' => 'quiz_timeout'), array('comment_ID' => $attempt_id));
 		    wp_send_json_success();
 	    }
 
 	    wp_send_json_error(__('Quiz has been timeout already', 'tutor'));
+    }
+
+
+    public function review_quiz_answer(){
+        $attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
+        $answer_index = (int) sanitize_text_field($_GET['answer_index']);
+        $mark_as = sanitize_text_field($_GET['mark_as']);
+
+        $attempt_info = tutor_utils()->quiz_attempt_info($attempt_id);
+
+	    $previous_answer = $attempt_info['answers'][$answer_index];
+
+	    if ($mark_as === 'correct'){
+		    $previous_answer['has_correct'] = 1;
+		    $previous_answer['plus_mark'] = $previous_answer['question_mark'];
+		    $previous_answer['minus_mark'] = 0;
+		    $attempt_info['marks_earned'] = $attempt_info['marks_earned'] + $previous_answer['question_mark'];
+
+	    }elseif($mark_as === 'incorrect'){
+		    $previous_answer['has_correct'] = 0;
+		    $previous_answer['plus_mark'] = 0;
+		    $previous_answer['minus_mark'] = 0;
+		    $attempt_info['marks_earned'] = $attempt_info['marks_earned'] - $previous_answer['question_mark'];
+        }
+
+	    $attempt_info['answers'][$answer_index] = $previous_answer;
+	    $attempt_info['manual_reviewed'] = time();
+
+	    tutor_utils()->quiz_update_attempt_info($attempt_id, $attempt_info);
+
+	    wp_redirect(admin_url("admin.php?page=tutor_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
+	    die();
     }
 
 }

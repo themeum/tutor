@@ -498,7 +498,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	
+
 	public function get_course_price_html($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 
@@ -686,7 +686,7 @@ class Utils {
 		$attachments_arr = array();
 
 		$attachments = maybe_unserialize(get_post_meta($post_id, '_tutor_attachments', true));
-		
+
 		if ( is_array($attachments) && count($attachments)) {
 			foreach ( $attachments as $attachment ) {
 				$url       = wp_get_attachment_url( $attachment );
@@ -718,10 +718,10 @@ class Utils {
 				$attachments_arr[] = (object) apply_filters('tutor/posts/attachments', $data);
 			}
 		}
-		
+
 		return $attachments_arr;
 	}
-	
+
 
 	/**
 	 * @param $seconds
@@ -905,7 +905,7 @@ class Utils {
 
 		return $array;
 	}
-	
+
 	public function has_video_in_single($post_id = 0){
 		if (is_single()) {
 			$post_id = $this->get_post_id($post_id);
@@ -1453,7 +1453,7 @@ class Utils {
 	public function get_teachers($start = 0, $limit = 10, $search_term = ''){
 		$meta_key = '_is_tutor_teacher';
 		global $wpdb;
-		
+
 		if ($search_term){
 			$search_term = " AND ( {$wpdb->users}.display_name LIKE '%{$search_term}%' OR {$wpdb->users}.user_email LIKE '%{$search_term}%' ) ";
 		}
@@ -1972,7 +1972,7 @@ class Utils {
 		}
 		return $types;
 	}
-	
+
 	public function get_quiz_answer_options_by_question($question_id){
 		global $wpdb;
 
@@ -2064,20 +2064,26 @@ class Utils {
 
 		$quiz_id = $this->get_post_id($quiz_id);
 		$post = get_post($quiz_id);
-		
-		$course_post_type = tutor()->course_post_type;
 
-		$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} ");
-		//Checking if this topic
-		if ($course->post_type !== $course_post_type){
-			$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
-		}
-		//Checking if this lesson
-		if ($course->post_type !== $course_post_type){
-			$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
+		if ($post) {
+			$course_post_type = tutor()->course_post_type;
+			$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
+
+			if ($course) {
+				//Checking if this topic
+				if ( $course->post_type !== $course_post_type ) {
+					$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
+				}
+				//Checking if this lesson
+				if ( $course->post_type !== $course_post_type ) {
+					$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
+				}
+
+				return $course;
+			}
 		}
 
-		return $course;
+		return false;
 	}
 
 	/**
@@ -2170,6 +2176,14 @@ class Utils {
 	}
 
 	public function quiz_update_attempt_info($quiz_attempt_id, $attempt_info = array()){
+
+		$answers = tutor_utils()->avalue_dot('answers', $attempt_info);
+		$total_marks = array_sum(wp_list_pluck($answers, 'question_mark'));
+		$earned_marks = tutor_utils()->avalue_dot('marks_earned', $attempt_info);
+		$earned_mark_percent = $earned_marks > 0 ? ( number_format(($earned_marks * 100) / $total_marks)) : 0;
+		update_comment_meta($quiz_attempt_id, 'earned_mark_percent', $earned_mark_percent);
+
+
 		return update_comment_meta($quiz_attempt_id,'quiz_attempt_info', $attempt_info);
 	}
 
@@ -2242,6 +2256,94 @@ class Utils {
 		return false;
 	}
 
+	public function get_total_quiz_attempts($search_term = ''){
+		global $wpdb;
+
+		if ($search_term){
+			$search_term = " AND ( user_email like '%{$search_term}%' OR display_name like '%{$search_term}%' OR post_title like '%{$search_term}%' ) ";
+		}
+
+		$count = $wpdb->get_var("SELECT COUNT({$wpdb->comments}.comment_ID) FROM {$wpdb->comments} 
+		INNER JOIN {$wpdb->posts} 
+		ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
+			
+		INNER  JOIN {$wpdb->users}
+		ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+
+		WHERE comment_type = 'tutor_quiz_attempt' {$search_term} ");
+
+		return (int) $count;
+	}
+
+	public function get_quiz_attempts($start = 0, $limit = 10, $search_term = '') {
+		global $wpdb;
+
+		if ($search_term){
+			$search_term = " AND ( user_email like '%{$search_term}%' OR display_name like '%{$search_term}%' OR post_title like '%{$search_term}%' ) ";
+		}
+
+		$query = $wpdb->get_results("SELECT 
+			{$wpdb->comments}.comment_ID, 
+			{$wpdb->comments}.comment_post_ID, 
+			{$wpdb->comments}.comment_author, 
+			{$wpdb->comments}.comment_date, 
+			{$wpdb->comments}.comment_content, 
+			{$wpdb->comments}.comment_approved as attempt_status, 
+			{$wpdb->comments}.user_id, 
+			{$wpdb->users}.display_name,
+			{$wpdb->users}.user_email,
+			{$wpdb->posts}.post_title,
+			
+			attempt_info.meta_value as quiz_attempt_info,
+ 			pass_mark.meta_value as pass_mark_percent,
+	
+			(SELECT COUNT(answers_t.comment_ID) FROM {$wpdb->comments} answers_t
+		  	WHERE answers_t.comment_parent = {$wpdb->comments}.comment_ID ) as answer_count
+		 
+		 	FROM {$wpdb->comments} 
+		
+			INNER JOIN {$wpdb->posts} 
+			ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
+			
+			INNER  JOIN {$wpdb->users}
+			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+			
+ 			LEFT JOIN {$wpdb->commentmeta} attempt_info ON {$wpdb->comments}.comment_ID = attempt_info.comment_id AND attempt_info.meta_key = 'quiz_attempt_info'
+ 			LEFT JOIN {$wpdb->commentmeta} pass_mark ON {$wpdb->comments}.comment_ID = pass_mark.comment_id AND pass_mark.meta_key = 'pass_mark_percent'
+ 			
+			WHERE {$wpdb->comments}.comment_type = 'tutor_quiz_attempt' {$search_term} 
+			ORDER BY {$wpdb->comments}.comment_ID DESC 
+			LIMIT {$start},{$limit}; ");
+
+		return $query;
+	}
+
+	public function get_quiz_answers_by_ids($ids){
+		$ids = (array) $ids;
+
+		if (!count($ids)){
+			return false;
+		}
+
+		$in_ids = implode(",", $ids);
+
+		global $wpdb;
+		$query = $wpdb->get_results("SELECT 
+			comment_ID, 
+			comment_content
+		 	FROM {$wpdb->comments} 
+			WHERE comment_type = 'quiz_answer_option' AND comment_ID IN({$in_ids}) ");
+
+		if (is_array($query) && count($query)){
+			return $query;
+		}
+
+		return false;
+	}
+
 
 
 }
+
+
+
