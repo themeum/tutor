@@ -141,6 +141,10 @@ class init{
 		add_role( $teacher_role, __('Tutor Teacher', 'tutor'), array() );
 		
 		$custom_post_type_permission = array(
+			//Manage Teacher
+			'manage_tutor_teacher',
+
+			//Tutor Posts Type Permission
 			'edit_tutor_course',
 			'read_tutor_course',
 			'delete_tutor_course',
