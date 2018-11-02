@@ -16,7 +16,10 @@ class Admin{
 		add_action('admin_menu', array($this, 'register_menu'));
 		add_action('admin_init', array($this, 'filter_posts_for_teachers'));
 
-		add_action( 'load-post.php', array($this, 'check_if_current_users_post') );
+		add_action('load-post.php', array($this, 'check_if_current_users_post') );
+
+		add_action('admin_action_uninstall_tutor_and_erase', array($this, 'erase_tutor_data'));
+		add_filter('plugin_action_links_' . plugin_basename(TUTOR_FILE), array( $this, 'plugin_action_links' ) );
 	}
 
 	public function register_menu(){
@@ -46,6 +49,8 @@ class Admin{
 		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
 
 		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor', array($this, 'tutor_page') );
+
+		add_submenu_page('tutor',__('Tutor Uninstall', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
 	}
 
 	public function tutor_page(){
@@ -71,6 +76,11 @@ class Admin{
 
 	public function tutor_status(){
 		include tutor()->path.'views/pages/status.php';
+	}
+
+
+	public function tutor_uninstall(){
+		include tutor()->path.'views/pages/uninstall.php';
 	}
 
 	/**
@@ -222,6 +232,99 @@ class Admin{
 			'mbstring_enabled'          => extension_loaded( 'mbstring' ),
 		);
 		
+	}
+
+
+	public function erase_tutor_data(){
+		global $wpdb;
+
+		$is_erase_data = tutor_utils()->get_option('delete_on_uninstall');
+		/**D*/ //=> Deleting Data
+
+		$plugin_file = tutor()->basename;
+		if ($is_erase_data && current_user_can( 'deactivate_plugin', $plugin_file )) {
+			/**
+			 * Deleting Post Type, Meta Data, taxonomy
+			 */
+			$course_post_type = tutor()->course_post_type;
+			$lesson_post_type = tutor()->lesson_post_type;
+
+			$post_types = array(
+				$course_post_type,
+				$lesson_post_type,
+				'tutor_quiz',
+				'tutor_question',
+				'tutor_enrolled',
+				'topics',
+				'tutor_enrolled',
+				'tutor_announcements',
+			);
+
+			$post_type_strings = "'".implode("','", $post_types)."'";
+			$tutor_posts = $wpdb->get_col("SELECT ID from {$wpdb->posts} WHERE post_type in({$post_type_strings}) ;");
+
+			if (is_array($tutor_posts) && count($tutor_posts)){
+				foreach ($tutor_posts as $post_id){
+					//Delete categories
+					$terms = wp_get_object_terms( $post_id, 'course-category' );
+					foreach( $terms as $term ){
+						/**D*/ wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-category' );
+					}
+					
+					//Delete tags if available
+					$terms = wp_get_object_terms( $post_id, 'course-tag' );
+					foreach( $terms as $term ){
+						/**D*/ wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-tag' );
+					}
+
+					//Delete All Meta
+					/**D*/ $wpdb->delete($wpdb->postmeta, array('post_id' => $post_id) );
+					/**D*/ $wpdb->delete($wpdb->posts, array('ID' => $post_id) );
+				}
+			}
+
+			/**
+			 * Deleting Comments (reviews, questions, quiz_answers, etc)
+			 */
+			$tutor_comments = $wpdb->get_col("SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;");
+			$comments_ids_strings = "'".implode("','", $tutor_comments)."'";
+			if (is_array($tutor_comments) && count($tutor_comments)){
+				/**D*/ $wpdb->query("DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$comments_ids_strings}) ");
+			}
+			/**D*/ $wpdb->delete($wpdb->comments, array('comment_agent' => 'comment_agent'));
+
+			/**
+			 * Delete Options
+			 */
+
+			/**D*/ delete_option('tutor_option');
+			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_tutor_student'));
+			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_tutor_teacher_approved'));
+			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_tutor_teacher_status'));
+			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_tutor_teacher'));
+			/**D*/ $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE  '%_tutor_completed_lesson_id_%' ");
+
+			deactivate_plugins($plugin_file);
+		}
+		
+		wp_redirect('plugins.php');
+		die();
+	}
+
+	public function plugin_action_links($actions){
+		$is_erase_data = tutor_utils()->get_option('delete_on_uninstall');
+
+		if ($is_erase_data) {
+			$plugin_file = tutor()->basename;
+			if ( current_user_can( 'deactivate_plugin', $plugin_file ) ) {
+				if ( isset( $actions['deactivate'] ) ) {
+					$actions['deactivate'] = '<a href="admin.php?page=tutor-uninstall">' . __('Uninstall', 'tutor') . '</a>';
+				}
+			}
+		}
+
+		$actions['settings'] = '<a href="admin.php?page=tutor">' . __('Settings', 'tutor') . '</a>';
+		return $actions;
 	}
 
 

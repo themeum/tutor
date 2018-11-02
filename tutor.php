@@ -47,9 +47,3 @@ function tutor_utils(){
 
 $tutor = new \TUTOR\init();
 $tutor->run(); //Boom
-
-
-/*
-$admin = get_role( 'contributor' );
-echo '<pre>';
-die(var_export($admin));*/

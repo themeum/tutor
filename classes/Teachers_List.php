@@ -123,7 +123,7 @@ class Teachers_List extends \Tutor_List_Table {
 			update_user_meta($teacher_id, '_tutor_teacher_approved', time());
 
 			$teacher = new \WP_User($teacher_id);
-			$teacher->set_role(tutor()->teacher_role);
+			$teacher->add_role(tutor()->teacher_role);
 
 			//TODO: send E-Mail to this user about teacher approval, should via hook
 			do_action('tutor_after_approved_teacher', $teacher_id);

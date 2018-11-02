@@ -245,12 +245,22 @@ a.tutor-delete-attachment:hover {
     background-color: #EEEEEE;
 }
 
+a.tutor-button{
+    padding: 10px 20px;
+    text-decoration: none;
+    margin-right: 20px;
+}
 .tutor-status-approved-context, .quiz_finished, .tutor-button.button-success {
     background-color: #008000;
     color: #ffffff;
 }
 .tutor-status-blocked-context, .quiz_timeout, .tutor-button.button-danger {
     background-color: #ff0000;
+    color: #ffffff;
+}
+
+.tutor-button.button-warning {
+    background-color: #ffb36d;
     color: #ffffff;
 }
 .tutor-button{
@@ -677,8 +687,6 @@ span.result-fail{
     font-size: 12px;
     color: #584dffe6;
 }
-
-
 .tutor-attempt-student-info, .quiz-attempt-student-info{
     background-color: #ffffff;
     width: 50%;
@@ -698,4 +706,18 @@ span.result-fail{
 
 .tutor-quiz-attempt-info-row .quiz-attempt-info-row .attempt-property-name{
     width: 25%;
+}
+
+
+
+/**
+Uninstall
+ */
+
+.wrap.tutor-uninstall-wrap {
+    background: #fff;
+    padding: 20px;
+}
+.tutor-uninstall-btn-group{
+    margin: 50px 0;
 }

@@ -2151,8 +2151,7 @@ class Utils {
 
 	public function get_attempt($attempt_id = 0){
 		global $wpdb;
-
-
+		
 		$attempt = $wpdb->get_row("SELECT 
  			comment_ID,
  			comment_post_ID,
@@ -2176,13 +2175,11 @@ class Utils {
 	}
 
 	public function quiz_update_attempt_info($quiz_attempt_id, $attempt_info = array()){
-
 		$answers = tutor_utils()->avalue_dot('answers', $attempt_info);
 		$total_marks = array_sum(wp_list_pluck($answers, 'question_mark'));
 		$earned_marks = tutor_utils()->avalue_dot('marks_earned', $attempt_info);
 		$earned_mark_percent = $earned_marks > 0 ? ( number_format(($earned_marks * 100) / $total_marks)) : 0;
 		update_comment_meta($quiz_attempt_id, 'earned_mark_percent', $earned_mark_percent);
-
 
 		return update_comment_meta($quiz_attempt_id,'quiz_attempt_info', $attempt_info);
 	}

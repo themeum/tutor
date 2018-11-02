@@ -82,16 +82,17 @@ class Rewrite_Rules extends Tutor_Base {
 			//Quiz Permalink
 
 			$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} ");
-			//Checking if this topic
-			if ($course->post_type !== $this->course_post_type){
-				$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
-			}
-			//Checking if this lesson
-			if ($course->post_type !== $this->course_post_type){
-				$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
-			}
-
 			if ($course){
+				//Checking if this topic
+				if ($course->post_type !== $this->course_post_type){
+					$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
+				}
+				//Checking if this lesson
+				if ($course->post_type !== $this->course_post_type){
+					$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
+				}
+
+
 				return home_url("/{$this->course_post_type}/".$course->post_name."/tutor_quiz/". $post->post_name.'/');
 			}else{
 				return home_url("/{$this->course_post_type}/sample-course/tutor_quiz/". $post->post_name.'/');

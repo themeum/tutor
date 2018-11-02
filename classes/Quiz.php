@@ -29,17 +29,12 @@ class Quiz {
 
 		add_action('wp_ajax_tutor_quiz_timeout', array($this, 'tutor_quiz_timeout'));
 
-
-
-
 		//User take the quiz
 		add_action('template_redirect', array($this, 'start_the_quiz'));
 		add_action('template_redirect', array($this, 'answering_quiz'));
 		add_action('template_redirect', array($this, 'finishing_quiz_attempt'));
 
-
 		add_action('admin_action_review_quiz_answer', array($this, 'review_quiz_answer'));
-
 	}
 
 
@@ -63,7 +58,6 @@ class Quiz {
 			}
 		}
 
-
 		if ($column === 'questions'){
             echo tutor_utils()->total_questions_for_student_by_quiz($post_id);
 		}
@@ -82,6 +76,7 @@ class Quiz {
 	public function quiz_settings(){
 		include  tutor()->path.'views/metabox/quizzes.php';
 	}
+
 	public function save_quiz_meta($post_ID){
 		if (isset($_POST['quiz_option'])){
 			$quiz_option = tutor_utils()->sanitize_array($_POST['quiz_option']);
@@ -100,9 +95,7 @@ class Quiz {
 			foreach ($quizzes as $quiz){
 				$output .= "<p><label><input type='checkbox' name='quiz_for[{$quiz_for_post_id}][quiz_id][]' value='{$quiz->ID}' > {$quiz->post_title} </label></p>";
 			}
-
 			$output .= '<p class="quiz-search-suggest-text">Search the quiz to get specific quiz</p>';
-
 		}else{
 			$add_question_url = admin_url('post-new.php?post_type=tutor_quiz');
 			$output .= sprintf('No quiz available right now, please %s add some quiz %s', '<a href="'.$add_question_url.'" target="_blank">', '</a>'  );
@@ -174,7 +167,6 @@ class Quiz {
 
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
-
 
 		$quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
 		$quiz = get_post($quiz_id);
@@ -295,15 +287,12 @@ class Quiz {
 		    'questionID' => $post_question_id,
 	    );
 
-
 	    $question_type = get_post_meta($post_question_id, '_question_type', true);
 	    $question_mark = get_post_meta($post_question_id, '_question_mark', true);
 
 	    if ($given_answers){
-
 		    $answers['status'] = 'answered';  //or 0 for false, 'questionSiNo' => 2
 		    $answers['has_correct'] = 0;
-
 
 		    $saved_answers = tutor_utils()->get_quiz_answer_options_by_question($post_question_id);
 		    $corrects_answer_ids = array();
@@ -331,12 +320,10 @@ class Quiz {
                 }
             }
 
-
 		    if ($is_answer_corrected){
 			    $plus_mark = $question_mark;
 			    $answers['has_correct'] = 1;
 		    }else{
-
 			    //TODO: Do operation for incorrect answer
             }
 
@@ -347,8 +334,6 @@ class Quiz {
 			    'answer_type' => $question_type,
 			    'answer_ids' => $given_answers
 		    );
-
-
         }else{
 		    //If not answered, that means users skipped the questions
 		    $answers = array(
@@ -464,6 +449,9 @@ class Quiz {
 	    wp_send_json_error(__('Quiz has been timeout already', 'tutor'));
     }
 
+	/**
+	 * Review the answer and change individual answer result
+	 */
 
     public function review_quiz_answer(){
         $attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
@@ -473,14 +461,15 @@ class Quiz {
         $attempt_info = tutor_utils()->quiz_attempt_info($attempt_id);
 
 	    $previous_answer = $attempt_info['answers'][$answer_index];
+	    $previous_correct = tutor_utils()->avalue_dot('has_correct', $previous_answer);
 
-	    if ($mark_as === 'correct'){
+	    if ($mark_as === 'correct' && ! $previous_correct ){
 		    $previous_answer['has_correct'] = 1;
 		    $previous_answer['plus_mark'] = $previous_answer['question_mark'];
 		    $previous_answer['minus_mark'] = 0;
 		    $attempt_info['marks_earned'] = $attempt_info['marks_earned'] + $previous_answer['question_mark'];
 
-	    }elseif($mark_as === 'incorrect'){
+	    }elseif($mark_as === 'incorrect' && $previous_correct){
 		    $previous_answer['has_correct'] = 0;
 		    $previous_answer['plus_mark'] = 0;
 		    $previous_answer['minus_mark'] = 0;

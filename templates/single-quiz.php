@@ -36,12 +36,13 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                 <div class="tutor-quiz-top-left">
                     <p><?php _e('Quiz', 'tutor'); ?> : <?php echo get_the_title(); ?></p>
                     <p>
-						<?php _e('Course', 'tutor'); ?> :
-						<?php
-						$course = tutor_utils()->get_course_by_quiz(get_the_ID());
-						?>
-
-                        <a href="<?php echo get_the_permalink($course->ID); ?>"><?php echo get_the_title($course->ID); ?></a>
+		                <?php
+		                $course = tutor_utils()->get_course_by_quiz(get_the_ID());
+		                if ($course){
+			                ?>
+			                <?php _e('Course', 'tutor'); ?> :
+                            <a href="<?php echo get_the_permalink($course->ID); ?>"><?php echo get_the_title($course->ID); ?></a>
+		                <?php } ?>
                     </p>
 
                     <p> <?php _e('Attempts Allowed', 'tutor'); ?> : <?php echo $attempts_allowed; ?> </p>

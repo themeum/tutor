@@ -67,7 +67,9 @@ $manual_reviewed = tutor_utils()->avalue_dot('manual_reviewed', $quiz_attempt_in
             <p class="quiz-attempt-info-row">
 		        <?php
 		        $quiz = tutor_utils()->get_course_by_quiz($comment_post_ID);
-		        echo '<span class="attempt-property-name">'.__('Course', 'tutor').'</span> <span class="attempt-property-value"> : '."<a href='".admin_url("post.php?post={$quiz->ID}&action=edit")."'>".get_the_title($quiz->ID)."</a> </span>";
+		        if ($quiz) {
+			        echo '<span class="attempt-property-name">' . __( 'Course', 'tutor' ) . '</span> <span class="attempt-property-value"> : ' . "<a href='" . admin_url( "post.php?post={$quiz->ID}&action=edit" ) . "'>" . get_the_title( $quiz->ID ) . "</a> </span>";
+		        }
 		        ?>
             </p>
 

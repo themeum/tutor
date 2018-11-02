@@ -33,7 +33,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	function column_student($item){
 		$actions = array();
 
-		$actions['answer'] = sprintf('<a href="?page=%s&sub_page=%s&attempt_id=%s">View</a>',$_REQUEST['page'],'view_attempt',$item->comment_ID);
+		$actions['answer'] = sprintf('<a href="?page=%s&sub_page=%s&attempt_id=%s">'.__('Review', 'tutor').'</a>',$_REQUEST['page'],'view_attempt',$item->comment_ID);
 		//$actions['delete'] = sprintf('<a href="?page=%s&action=%s&attempt_id=%s">Delete</a>',$_REQUEST['page'],'delete',$item->comment_ID);
 
 		$quiz_title = '<strong>'.$item->display_name.'</strong> <br />'.$item->user_email.'<br /><br />'. human_time_diff(strtotime
@@ -61,9 +61,11 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 
 	function column_course($item) {
 		$quiz = tutor_utils()->get_course_by_quiz($item->comment_post_ID);
-		$title = get_the_title($quiz->ID);
 
-		return "<a href='".admin_url("post.php?post={$quiz->ID}&action=edit")."'>{$title}</a>";
+		if ($quiz) {
+			$title = get_the_title( $quiz->ID );
+			return "<a href='" . admin_url( "post.php?post={$quiz->ID}&action=edit" ) . "'>{$title}</a>";
+		}
 	}
 
 
