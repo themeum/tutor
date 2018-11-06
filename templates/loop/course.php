@@ -39,12 +39,7 @@ do_action('tutor_course/loop/before_excerpt');
 do_action('tutor_course/loop/excerpt');
 do_action('tutor_course/loop/after_excerpt');
 
-do_action('tutor_course/loop/before_price');
-do_action('tutor_course/loop/price');
-do_action('tutor_course/loop/after_price');
-
 do_action('tutor_course/loop/end_content_wrap');
-
 
 do_action('tutor_course/loop/before_footer');
 do_action('tutor_course/loop/footer');

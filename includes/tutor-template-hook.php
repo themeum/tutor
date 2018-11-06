@@ -14,8 +14,7 @@ add_action('tutor_course/loop/header', 'tutor_course_loop_header');
 add_action('tutor_course/loop/start_content_wrap', 'tutor_course_loop_start_content_wrap');
 add_action('tutor_course/loop/title', 'tutor_course_loop_title');
 add_action('tutor_course/loop/meta', 'tutor_course_loop_meta');
-add_action('tutor_course/loop/price', 'tutor_course_loop_price');
-add_action('tutor_course/loop/after_price', 'tutor_course_loop_add_to_cart');
+
 add_action('tutor_course/loop/rating', 'tutor_course_loop_rating');
 add_action('tutor_course/loop/end_content_wrap', 'tutor_course_loop_end_content_wrap');
 
