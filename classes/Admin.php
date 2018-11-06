@@ -44,6 +44,8 @@ class Admin{
 
 		add_submenu_page('tutor', __('Quiz Attempts', 'tutor'), __('Quiz Attempts', 'tutor'), 'manage_tutor_teacher', 'tutor_quiz_attempts', array($this, 'quiz_attempts') );
 
+		add_submenu_page('tutor', __('E-Mails', 'tutor'), __('E-Mails', 'tutor'), 'manage_tutor_teacher', 'tutor_emails', array($this, 'tutor_emails') );
+
 		add_submenu_page('tutor', __('Addons', 'tutor'), __('Addons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(), 'addons_page') );
 
 		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
@@ -72,6 +74,10 @@ class Admin{
 
 	public function quiz_attempts(){
 		include tutor()->path.'views/pages/quiz_attempts.php';
+	}
+
+	public function tutor_emails(){
+		include tutor()->path.'views/pages/tutor_emails.php';
 	}
 
 	public function tutor_status(){

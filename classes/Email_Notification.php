@@ -16,7 +16,7 @@ class Email_Notification{
 	public function __construct() {
 		$quiz_completed = tutor_utils()->get_option('email_to_students.quiz_completed');
 		if ($quiz_completed){
-			add_action('tutor_quiz_finished_before', array($this, 'tutor_quiz_finished_before'), 10, 1);
+			add_action('tutor_quiz_finished_after', array($this, 'quiz_finished_send_email_to_student'), 10, 1);
 		}
 
 	}
@@ -27,7 +27,7 @@ class Email_Notification{
 	 * @param $attempt_id
 	 */
 
-	public function tutor_quiz_finished_before($attempt_id){
+	public function quiz_finished_send_email_to_student($attempt_id){
 		$attempt = tutor_utils()->get_attempt($attempt_id);
 		$attempt_info = tutor_utils()->quiz_attempt_info($attempt_id);
 
@@ -43,8 +43,6 @@ class Email_Notification{
 
 		$quiz_url = get_the_permalink($quiz_id);
 		$user = get_userdata(tutor_utils()->avalue_dot('user_id', $attempt));
-
-		print_r($user->user_email);
 
 		ob_start();
 		tutor_load_template( 'email.to_student_quiz_completed' );
@@ -74,12 +72,11 @@ class Email_Notification{
 		}
 
 
-		$subject = apply_filters('student_quiz_completed_email_subject', __("We have safely received {$quiz_name}  answers", "tutor"));
+		$subject = apply_filters('student_quiz_completed_email_subject', __("Thank you for {$quiz_name}  answers, we have received", "tutor"));
 		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
 		$header = apply_filters('student_quiz_completed_email_header', $header, $attempt_id);
 
 		$this->send($user->user_email, $subject, $email_tmpl, $header );
-
 	}
 
 
