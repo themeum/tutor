@@ -708,7 +708,13 @@ span.result-fail{
     width: 25%;
 }
 
-
+.tutor-emails-lists-wrap{
+    background-color: #ffffff;
+    padding: 20px;
+}
+.tutor-emails-lists-wrap .wp-list-table td{
+    padding: 10px 20px;
+}
 
 /**
 Uninstall

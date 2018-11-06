@@ -352,12 +352,13 @@ class Course extends Tutor_Base {
 
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 
+		do_action('tutor_course_complete_before', $course_id);
 		/**
 		 * Marking course at user meta, meta format, _tutor_completed_course_id_{id} and value = time();
 		 */
-
 		update_user_meta($user_id, '_tutor_completed_course_id_'.$course_id, time());
 
+		do_action('tutor_course_complete_after', $course_id);
 
 		wp_redirect(get_the_permalink($course_id));
 	}

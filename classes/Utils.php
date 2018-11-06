@@ -867,7 +867,6 @@ class Utils {
 		return false;
 	}
 
-
 	public function is_completed_course($course_id = 0, $user_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);

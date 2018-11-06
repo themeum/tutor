@@ -14,71 +14,11 @@ if ( ! defined( 'ABSPATH' ) )
 class Email_Notification{
 
 	public function __construct() {
-		$quiz_completed = tutor_utils()->get_option('email_to_students.quiz_completed');
-		if ($quiz_completed){
-			add_action('tutor_quiz_finished_after', array($this, 'quiz_finished_send_email_to_student'), 10, 1);
-		}
+		add_action('tutor_quiz_finished_after', array($this, 'quiz_finished_send_email_to_student'), 10, 1);
 
+		add_action('tutor_course_complete_after', array($this, 'course_complete_email_to_student'), 10, 1);
+		add_action('tutor_course_complete_after', array($this, 'course_complete_email_to_teacher'), 10, 1);
 	}
-
-	/**
-	 * Send the quiz to Student
-	 *
-	 * @param $attempt_id
-	 */
-
-	public function quiz_finished_send_email_to_student($attempt_id){
-		$attempt = tutor_utils()->get_attempt($attempt_id);
-		$attempt_info = tutor_utils()->quiz_attempt_info($attempt_id);
-
-		$submission_time = tutor_utils()->avalue_dot('submission_time', $attempt_info);
-		$submission_time = $submission_time ? $submission_time : time();
-
-		$quiz_id = tutor_utils()->avalue_dot('comment_post_ID', $attempt);
-		$quiz_name = get_the_title($quiz_id);
-		$course = tutor_utils()->get_course_by_quiz($quiz_id);
-		$course_id = tutor_utils()->avalue_dot('ID', $course);
-		$course_title = get_the_title($course_id);
-		$submission_time_format = date_i18n(get_option('date_format'), $submission_time).' '.date_i18n(get_option('time_format'), $submission_time);
-
-		$quiz_url = get_the_permalink($quiz_id);
-		$user = get_userdata(tutor_utils()->avalue_dot('user_id', $attempt));
-
-		ob_start();
-		tutor_load_template( 'email.to_student_quiz_completed' );
-		$email_tmpl = apply_filters( 'tutor_email_tpl/quiz_completed', ob_get_clean() );
-
-		$file_tpl_variable = array(
-			'{username}',
-			'{quiz_name}',
-			'{course_name}',
-			'{submission_time}',
-			'{quiz_url}',
-		);
-
-		$replace_data = array(
-			$user->display_name,
-			$quiz_name,
-			$course_title,
-			$submission_time_format,
-			"<a href='{$quiz_url}'>{$quiz_url}</a>",
-		);
-
-		$email_footer_text = tutor_utils()->get_option('email_footer_text');
-
-		$email_tmpl = str_replace($file_tpl_variable, $replace_data, $email_tmpl);
-		if ($email_footer_text){
-			$email_tmpl .= $email_footer_text;
-		}
-
-
-		$subject = apply_filters('student_quiz_completed_email_subject', __("Thank you for {$quiz_name}  answers, we have received", "tutor"));
-		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
-		$header = apply_filters('student_quiz_completed_email_header', $header, $attempt_id);
-
-		$this->send($user->user_email, $subject, $email_tmpl, $header );
-	}
-
 
 	/**
 	 * @param $to
@@ -108,8 +48,6 @@ class Email_Notification{
 		return $return;
 	}
 
-
-
 	/**
 	 * Get the from name for outgoing emails from tutor
 	 *
@@ -132,11 +70,186 @@ class Email_Notification{
 		return sanitize_email( $from_address );
 	}
 
-
-
+	/**
+	 * @return string
+	 *
+	 * Get content type
+	 */
 	public function get_content_type() {
-		return 'text/html';
+		return apply_filters('tutor_email_content_type', 'text/html');
 	}
+
+
+	public function get_message($message = '', $search = array(), $replace = array()){
+
+		$email_footer_text = tutor_utils()->get_option('email_footer_text');
+
+		$message = str_replace($search, $replace, $message);
+		if ($email_footer_text){
+			$message .= $email_footer_text;
+		}
+
+		return $message;
+	}
+
+
+	/**
+	 * @param $course_id
+	 * 
+	 * Send course completion E-Mail to Student
+	 */
+	public function course_complete_email_to_student($course_id){
+		$course_completed_to_student = tutor_utils()->get_option('email_to_students.completed_course');
+
+		if ( ! $course_completed_to_student){
+			return;
+		}
+
+		$user_id = get_current_user_id();
+
+		$course = get_post($course_id);
+		$student = get_userdata($user_id);
+
+		$completion_time = tutor_utils()->is_completed_course($course_id);
+		$completion_time = $completion_time ? $completion_time : time();
+
+		$completion_time_format = date_i18n(get_option('date_format'), $completion_time).' '.date_i18n(get_option('time_format'), $completion_time);
+
+		$file_tpl_variable = array(
+			'{student_username}',
+			'{course_name}',
+			'{completion_time}',
+			'{course_url}',
+		);
+
+		$replace_data = array(
+			$student->display_name,
+			$course->post_title,
+			$completion_time_format,
+			get_the_permalink($course_id),
+		);
+
+		$subject = __('You just completed '.$course->post_title, 'tutor');
+		
+		ob_start();
+		tutor_load_template( 'email.to_student_course_completed' );
+		$email_tpl = apply_filters( 'tutor_email_tpl/course_completed', ob_get_clean() );
+		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
+		
+		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
+		$header = apply_filters('student_course_completed_email_header', $header, $course_id);
+
+		$this->send($student->user_email, $subject, $message, $header);
+	}
+
+
+	public function course_complete_email_to_teacher($course_id){
+		$course_completed_to_teacher = tutor_utils()->get_option('email_to_teachers.a_student_completed_course');
+
+		if ( ! $course_completed_to_teacher){
+			return;
+		}
+
+		$user_id = get_current_user_id();
+		$student = get_userdata($user_id);
+
+		$course = get_post($course_id);
+		$teacher = get_userdata($course->post_author);
+
+		$completion_time = tutor_utils()->is_completed_course($course_id);
+		$completion_time = $completion_time ? $completion_time : time();
+
+		$completion_time_format = date_i18n(get_option('date_format'), $completion_time).' '.date_i18n(get_option('time_format'), $completion_time);
+
+
+		$file_tpl_variable = array(
+			'{teacher_username}',
+			'{student_username}',
+			'{course_name}',
+			'{completion_time}',
+			'{course_url}',
+		);
+
+		$replace_data = array(
+			$teacher->display_name,
+			$student->display_name,
+			$course->post_title,
+			$completion_time_format,
+			get_the_permalink($course_id),
+		);
+
+		$subject = __($student->display_name.' just completed '.$course->post_title, 'tutor');
+
+		ob_start();
+		tutor_load_template( 'email.to_teacher_course_completed' );
+		$email_tpl = apply_filters( 'tutor_email_tpl/course_completed', ob_get_clean() );
+		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
+
+		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
+		$header = apply_filters('student_course_completed_email_header', $header, $course_id);
+
+		$this->send($teacher->user_email, $subject, $message, $header);
+	}
+
+
+	/**
+	 * Send the quiz to Student
+	 *
+	 * @param $attempt_id
+	 */
+
+	public function quiz_finished_send_email_to_student($attempt_id){
+		$quiz_completed = tutor_utils()->get_option('email_to_students.quiz_completed');
+		if ( ! $quiz_completed){
+			return;
+		}
+		
+		$attempt = tutor_utils()->get_attempt($attempt_id);
+		$attempt_info = tutor_utils()->quiz_attempt_info($attempt_id);
+
+		$submission_time = tutor_utils()->avalue_dot('submission_time', $attempt_info);
+		$submission_time = $submission_time ? $submission_time : time();
+
+		$quiz_id = tutor_utils()->avalue_dot('comment_post_ID', $attempt);
+		$quiz_name = get_the_title($quiz_id);
+		$course = tutor_utils()->get_course_by_quiz($quiz_id);
+		$course_id = tutor_utils()->avalue_dot('ID', $course);
+		$course_title = get_the_title($course_id);
+		$submission_time_format = date_i18n(get_option('date_format'), $submission_time).' '.date_i18n(get_option('time_format'), $submission_time);
+
+		$quiz_url = get_the_permalink($quiz_id);
+		$user = get_userdata(tutor_utils()->avalue_dot('user_id', $attempt));
+
+		ob_start();
+		tutor_load_template( 'email.to_student_quiz_completed' );
+		$email_tpl = apply_filters( 'tutor_email_tpl/quiz_completed', ob_get_clean() );
+
+		$file_tpl_variable = array(
+			'{username}',
+			'{quiz_name}',
+			'{course_name}',
+			'{submission_time}',
+			'{quiz_url}',
+		);
+
+		$replace_data = array(
+			$user->display_name,
+			$quiz_name,
+			$course_title,
+			$submission_time_format,
+			"<a href='{$quiz_url}'>{$quiz_url}</a>",
+		);
+		
+		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
+
+		$subject = apply_filters('student_quiz_completed_email_subject', __("Thank you for {$quiz_name}  answers, we have received", "tutor"));
+		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
+		$header = apply_filters('student_quiz_completed_email_header', $header, $attempt_id);
+
+		$this->send($user->user_email, $subject, $message, $header );
+	}
+
+
 
 
 }
