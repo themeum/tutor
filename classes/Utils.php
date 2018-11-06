@@ -502,7 +502,7 @@ class Utils {
 	public function get_course_price_html($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 
-		$price_html = '';
+        $price_html = '<p class="price"> '.__('Free', 'tutor'). ' </p>';
 		if ($this->is_course_purchasable() && $this->has_wc()) {
 			$product_id = tutor_utils()->get_course_product_id($course_id);
 			$product    = wc_get_product( $product_id );
@@ -512,7 +512,7 @@ class Utils {
 			}
 		}
 
-		return $price_html;
+		return apply_filters('tutor_course_price', $price_html, $course_id);
 	}
 
 	/**
