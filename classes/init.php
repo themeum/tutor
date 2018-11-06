@@ -28,6 +28,7 @@ class init{
 	private $quiz;
 	private $question;
 	private $tools;
+	private $email_notification;
 
 	private $woocommerce;
 
@@ -39,7 +40,6 @@ class init{
 		/**
 		 * Include Files
 		 */
-
 		add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
 		
 		/**
@@ -63,6 +63,7 @@ class init{
 		$this->quiz = new Quiz();
 		$this->question = new Question();
 		$this->tools = new Tools();
+		$this->email_notification = new Email_Notification();
 
 		if (tutor_utils()->has_wc()){
 			$this->woocommerce = new  Woo_Commerce();

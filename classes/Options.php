@@ -363,7 +363,7 @@ class Options {
 								'type'      => 'checkbox',
 								'label'     => __('E-Mail to Students', 'tutor'),
 								'options'   => array(
-									'quiz_is_graded' => __('Quiz Graded', 'tutor'),
+									'quiz_completed' => __('Quiz Completed', 'tutor'),
 									'completed_course' => __('Completed a course', 'tutor'),
 								),
 								'desc'      => __('Select notification that will be sent to students',	'tutor'),

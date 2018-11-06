@@ -199,8 +199,7 @@ jQuery(document).ready(function($){
             tinymce: {
                 wpautop:true,
                 //plugins : 'charmap colorpicker compat3x directionality fullscreen hr image lists media paste tabfocus textcolor wordpress wpautoresize wpdialogs wpeditimage wpemoji wpgallery wplink wptextpattern wpview',
-                toolbar1: 'bold italic underline bullist strikethrough numlist  blockquote  alignleft aligncenter alignright undo redo link unlink' +
-                '  spellchecker fullscreen'
+                toolbar1: 'bold italic underline bullist strikethrough numlist  blockquote  alignleft aligncenter alignright undo redo link unlink spellchecker fullscreen'
             },
         };
         wp.editor.initialize('tutor_answer_'+question_id, conf);
@@ -219,9 +218,6 @@ jQuery(document).ready(function($){
         $(this).closest('.tutor_add_answer_wrap').find('.tutor_wp_editor_wrap').toggle();
         $(this).closest('.tutor_wp_editor_show_btn_wrap').toggle();
     });
-
-    //tutor_wp_editor_show_btn
-
 
     /**
      * Quiz attempt
@@ -262,7 +258,6 @@ jQuery(document).ready(function($){
             if (distance < 0) {
                 clearInterval(tutor_quiz_interval);
                 countdown_human = "EXPIRED";
-
                 //Set the quiz attempt to timeout in ajax
 
                 var quiz_id = $('#tutor_quiz_id').val();
@@ -290,10 +285,5 @@ jQuery(document).ready(function($){
             $tutor_quiz_time_update.html(countdown_human);
         }, 1000);
     }
-
-
-
-
-
 });
 

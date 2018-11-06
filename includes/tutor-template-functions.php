@@ -101,15 +101,60 @@ if ( ! function_exists('tutor_course_loop_title')) {
 	}
 }
 
-if ( ! function_exists('tutor_course_loop_thumbnail')) {
-	function tutor_course_loop_thumbnail() {
+
+if ( ! function_exists('tutor_course_loop_header')) {
+	function tutor_course_loop_header() {
 		ob_start();
-		tutor_load_template( 'loop.thumbnail' );
-		$output = apply_filters( 'tutor_course_loop_title', ob_get_clean() );
+		tutor_load_template( 'loop.header' );
+		$output = apply_filters( 'tutor_course_loop_header', ob_get_clean() );
 
 		echo $output;
 	}
 }
+
+if ( ! function_exists('tutor_course_loop_footer')) {
+	function tutor_course_loop_footer() {
+		ob_start();
+		tutor_load_template( 'loop.footer' );
+		$output = apply_filters( 'tutor_course_loop_footer', ob_get_clean() );
+
+		echo $output;
+	}
+}
+
+//tutor_course_loop_footer
+
+
+if ( ! function_exists('tutor_course_loop_start_content_wrap')) {
+	function tutor_course_loop_start_content_wrap() {
+		ob_start();
+		tutor_load_template( 'loop.start_content_wrap' );
+		$output = apply_filters( 'tutor_course_loop_start_content_wrap', ob_get_clean() );
+
+		echo $output;
+	}
+}
+
+if ( ! function_exists('tutor_course_loop_end_content_wrap')) {
+	function tutor_course_loop_end_content_wrap() {
+		ob_start();
+		tutor_load_template( 'loop.end_content_wrap' );
+		$output = apply_filters( 'tutor_course_loop_end_content_wrap', ob_get_clean() );
+
+		echo $output;
+	}
+}
+
+if ( ! function_exists('tutor_course_loop_thumbnail')) {
+	function tutor_course_loop_thumbnail() {
+		ob_start();
+		tutor_load_template( 'loop.thumbnail' );
+		$output = apply_filters( 'tutor_course_loop_thumbnail', ob_get_clean() );
+
+		echo $output;
+	}
+}
+
 if( ! function_exists('tutor_course_loop_wrap_classes')) {
 	function tutor_course_loop_wrap_classes( $echo = true ) {
 		$courseID   = get_the_ID();
@@ -201,6 +246,16 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
 		}
 
 		echo $html;
+	}
+}
+
+if ( ! function_exists('tutor_course_loop_meta')) {
+	function tutor_course_loop_meta() {
+		ob_start();
+		tutor_load_template( 'loop.meta' );
+		$output = apply_filters( 'tutor_course_loop_meta', ob_get_clean() );
+
+		echo $output;
 	}
 }
 
@@ -816,5 +871,38 @@ function tutor_course_announcements($echo = true){
 		echo $output;
 	}
 
+	return $output;
+}
+
+function tutor_single_quiz_top($echo = true){
+	ob_start();
+	tutor_load_template( 'single.quiz.top' );
+	$output = apply_filters( 'tutor_single_quiz/top', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
+	return $output;
+}
+
+function tutor_single_quiz_body($echo = true){
+	ob_start();
+	tutor_load_template( 'single.quiz.body' );
+	$output = apply_filters( 'tutor_single_quiz/body', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
+	return $output;
+}
+
+function tutor_single_quiz_no_course_belongs($echo = true){
+	ob_start();
+	tutor_load_template( 'single.quiz.no_course_belongs' );
+	$output = apply_filters( 'tutor_single_quiz/no_course_belongs', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
 	return $output;
 }

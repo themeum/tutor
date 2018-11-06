@@ -1,0 +1,1 @@
+<div class="tutor-loop-course-footer">footer</div>
