@@ -14,9 +14,15 @@ div[class*="tutor-course-col"] {
     overflow: hidden;
     position: relative;
     vertical-align: top;
-    border: 1px solid #f7f7f7;
     margin-bottom: 30px;
+    border-radius: 4px;
+    transition: 300ms;
 }
+
+.tutor-course-loop:hover{
+    box-shadow: 0 4px 23px rgba(0,0,0,.1);
+}
+
 .tutor-course-loop p{
     margin: 0;
 }
@@ -29,11 +35,19 @@ div[class*="tutor-course-col"] {
 
 .tutor-loop-course-container{
     padding: 20px 15px;
+    border-left: 1px solid #F6FAFB;
+    border-right: 1px solid #F6FAFB;
 }
 
 .tutor-loop-rating-wrap{
     color: #F8C51C;
     margin-bottom: 6px;
+    font-size: 16px;
+}
+
+.tutor-loop-rating-wrap i::before{
+    margin-right: 3px;
+    margin-left: 0;
 }
 
 .tutor-course-loop-title a h2{
@@ -44,8 +58,89 @@ div[class*="tutor-course-col"] {
 
 .tutor-loop-course-footer{
     padding: 10px 15px;
-    border-top: 1px solid #B1B8C9;
+    border: 1px solid #F6FAFB;
+    color: #838791;
+    font-size: 12px;
+    line-height: 17px;
+    line-height: 25px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    position: relative;
 }
+
+.tutor-loop-course-footer::after{
+    content: '';
+    display: table;
+    clear: both;
+}
+
+.tutor-course-loop-price{
+    float: right;
+    color: #3A3E49;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.tutor-course-loop-price .price del{
+    font-size: 14px;
+    opacity: 1;
+    font-weight: 400;
+}
+
+.tutor-course-loop-price ins{
+    background: transparent;
+}
+
+.tutor-loop-course-footer .tutor-loop-cart-btn-wrap{
+    position: absolute;
+    background: blue;
+    left: -1px;
+    top: 0;
+    width: calc(100% + 2px);
+    height: calc(100% + 1px);
+    color: #fff;
+    text-align: center;
+    top: 0;
+    opacity: 0;
+    transition: 100ms;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.tutor-loop-course-footer .tutor-loop-cart-btn-wrap a{
+    color: #fff;
+    font-size: 14px;
+    text-transform: uppercase;
+    line-height: 46px;
+    font-weight: 600;
+    -webkit-animation: rotate_cs 5s infinite; /* Safari 4.0 - 8.0 */
+    animation: rotate_cs 5s infinite;
+}
+
+.tutor-loop-course-footer .tutor-loop-cart-btn-wrap a.added{
+    display: none;
+}
+
+.tutor-loop-course-footer .tutor-loop-cart-btn-wrap a::before{
+    content: '\e801';
+    font-family: "fontello";
+    margin-right: 3px;
+}
+
+
+/* Standard syntax */
+@keyframes mymove {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+.tutor-course-loop:hover .tutor-loop-course-footer .tutor-loop-cart-btn-wrap{
+    opacity: 1;
+}
+
 
 /* layout*/
 .tutor-course-col-4{
