@@ -18,6 +18,9 @@ class Email_Notification{
 
 		add_action('tutor_course_complete_after', array($this, 'course_complete_email_to_student'), 10, 1);
 		add_action('tutor_course_complete_after', array($this, 'course_complete_email_to_teacher'), 10, 1);
+		add_action('tutor_after_enroll', array($this, 'course_enroll_email'), 10, 1);
+		add_action('tutor_after_add_question', array($this, 'tutor_after_add_question'), 10, 2);
+		add_action('tutor_lesson_completed_after', array($this, 'tutor_lesson_completed_after'), 10, 1);
 	}
 
 	/**
@@ -250,6 +253,150 @@ class Email_Notification{
 	}
 
 
+	public function course_enroll_email($course_id){
+		$enroll_notification = tutor_utils()->get_option('email_to_teachers.a_student_enrolled_in_course');
+
+		if ( ! $enroll_notification){
+			return;
+		}
+
+		$user_id = get_current_user_id();
+		$student = get_userdata($user_id);
+
+		$course = get_post($course_id);
+		$teacher = get_userdata($course->post_author);
+
+		$enroll_time = time();
+		$enroll_time_format = date_i18n(get_option('date_format'), $enroll_time).' '.date_i18n(get_option('time_format'), $enroll_time);
+
+		$file_tpl_variable = array(
+			'{teacher_username}',
+			'{student_username}',
+			'{course_name}',
+			'{enroll_time}',
+			'{course_url}',
+		);
+
+		$replace_data = array(
+			$teacher->display_name,
+			$student->display_name,
+			$course->post_title,
+			$enroll_time_format,
+			get_the_permalink($course_id),
+		);
+
+		$subject = __($student->display_name.' enrolled '.$course->post_title, 'tutor');
+
+		ob_start();
+		tutor_load_template( 'email.to_teacher_course_enrolled' );
+		$email_tpl = apply_filters( 'tutor_email_tpl/to_teacher_course_enrolled', ob_get_clean() );
+		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
+
+		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
+		$header = apply_filters('student_course_completed_email_header', $header, $course_id);
+
+		$this->send($teacher->user_email, $subject, $message, $header);
+	}
+
+
+	public function tutor_after_add_question($course_id, $comment_id){
+		$enroll_notification = tutor_utils()->get_option('email_to_teachers.a_student_placed_question');
+		if ( ! $enroll_notification){
+			return;
+		}
+
+		$user_id = get_current_user_id();
+		$student = get_userdata($user_id);
+
+		$course = get_post($course_id);
+		$teacher = get_userdata($course->post_author);
+
+		$get_comment = tutor_utils()->get_qa_question($comment_id);
+		$question = $get_comment->comment_content;
+		$question_title = $get_comment->question_title;
+
+		$file_tpl_variable = array(
+			'{teacher_username}',
+			'{student_username}',
+			'{course_name}',
+			'{course_url}',
+			'{question_title}',
+			'{question}',
+		);
+
+		$replace_data = array(
+			$teacher->display_name,
+			$student->display_name,
+			$course->post_title,
+			get_the_permalink($course_id),
+			$question_title,
+			$question,
+		);
+
+		$subject = __(sprintf('%s Asked a question to %s', $student->display_name, $course->post_title), 'tutor');
+
+		ob_start();
+		tutor_load_template( 'email.to_teacher_asked_question_by_student' );
+		$email_tpl = apply_filters( 'tutor_email_tpl/to_teacher_asked_question_by_student', ob_get_clean() );
+		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
+
+		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
+		$header = apply_filters('to_teacher_asked_question_by_student_email_header', $header, $course_id);
+
+		$this->send($teacher->user_email, $subject, $message, $header);
+	}
+
+
+	public function tutor_lesson_completed_after($lesson_id){
+		$course_completed_to_teacher = tutor_utils()->get_option('email_to_teachers.a_student_completed_lesson');
+
+		if ( ! $course_completed_to_teacher){
+			return;
+		}
+		
+		$user_id = get_current_user_id();
+		$student = get_userdata($user_id);
+		
+		
+		$course_id = tutor_utils()->get_course_id_by_lesson($lesson_id);
+
+		$lesson = get_post($lesson_id);
+		$course = get_post($course_id);
+		$teacher = get_userdata($course->post_author);
+
+		$completion_time =  time();
+		$completion_time_format = date_i18n(get_option('date_format'), $completion_time).' '.date_i18n(get_option('time_format'), $completion_time);
+		
+		$file_tpl_variable = array(
+			'{teacher_username}',
+			'{student_username}',
+			'{course_name}',
+			'{lesson_name}',
+			'{completion_time}',
+			'{lesson_url}',
+		);
+
+		$replace_data = array(
+			$teacher->display_name,
+			$student->display_name,
+			$course->post_title,
+			$lesson->post_title,
+			$completion_time_format,
+			get_the_permalink($lesson_id),
+		);
+
+		$subject = __($student->display_name.' just completed lesson '.$course->post_title, 'tutor');
+
+		ob_start();
+		tutor_load_template( 'email.to_teacher_lesson_completed' );
+		$email_tpl = apply_filters( 'tutor_email_tpl/lesson_completed', ob_get_clean() );
+		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
+
+		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
+		$header = apply_filters('student_lesson_completed_email_header', $header, $lesson_id);
+
+		$this->send($teacher->user_email, $subject, $message, $header);
+	}
 
 
 }

@@ -49,7 +49,6 @@ get_header();
 		<?php tutor_course_content(); ?>
 		<?php do_action('tutor_course/single/after/content'); ?>
 
-
 		<?php do_action('tutor_course/single/before/audience'); ?>
 		<?php tutor_course_target_audience_html(); ?>
 		<?php do_action('tutor_course/single/after/audience'); ?>

@@ -338,6 +338,22 @@ class Utils {
 		return $query;
 	}
 
+	public function get_course_count_by_teacher($teacher_id){
+		global $wpdb;
+
+		$course_post_type = tutor()->course_post_type;
+		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} 
+
+			INNER JOIN {$wpdb->usermeta} ON user_id = {$teacher_id} AND meta_key = '_tutor_teacher_course_id' AND meta_value = ID 
+
+			WHERE post_status = 'publish' 
+			AND post_type = '{$course_post_type}' 
+			
+			; ");
+
+		return $count;
+	}
+
 	public function get_course_count(){
 		global $wpdb;
 
@@ -1467,6 +1483,50 @@ class Utils {
 		return $teachers;
 	}
 
+	public function get_teachers_by_course($course_id = 0){
+		global $wpdb;
+		$course_id = $this->get_post_id($course_id);
+
+		$teachers = $wpdb->get_results("select ID, display_name, 
+			get_course.meta_value as taught_course_id,
+			tutor_job_title.meta_value as tutor_profile_job_title, 
+			tutor_bio.meta_value as tutor_profile_bio,
+			tutor_photo.meta_value as tutor_profile_photo
+			from {$wpdb->users}
+			INNER JOIN {$wpdb->usermeta} get_course ON ID = get_course.user_id AND get_course.meta_value = {$course_id}
+			LEFT JOIN {$wpdb->usermeta} tutor_job_title ON ID = tutor_job_title.user_id AND tutor_job_title.meta_key = '_tutor_profile_job_title'
+			LEFT JOIN {$wpdb->usermeta} tutor_bio ON ID = tutor_bio.user_id AND tutor_bio.meta_key = '_tutor_profile_bio'
+			LEFT JOIN {$wpdb->usermeta} tutor_photo ON ID = tutor_photo.user_id AND tutor_photo.meta_key = '_tutor_profile_photo'
+			");
+
+		if (is_array($teachers) && count($teachers)){
+			return $teachers;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param $teacher_id
+	 *
+	 * Get total Students by teacher
+	 * 1 enrollment = 1 student, so total enrolled for a equivalent total students (Tricks)
+	 *
+	 * @since v.1.0.0
+	 */
+	public function get_total_students_by_teacher($teacher_id){
+		global $wpdb;
+
+		$course_post_type = tutor()->course_post_type;
+		$count = $wpdb->get_var("SELECT COUNT(courses.ID) from {$wpdb->posts} courses
+
+			INNER JOIN {$wpdb->posts} enrolled ON courses.ID = enrolled.post_parent AND enrolled.post_type = 'tutor_enrolled'
+			WHERE courses.post_status = 'publish' 
+			AND courses.post_type = '{$course_post_type}' 
+			AND courses.post_author = {$teacher_id}  ; ");
+		return (int) $count;
+	}
+
 	/**
 	 * @param float $input
 	 *
@@ -1532,11 +1592,19 @@ class Utils {
 	 *
 	 * Generate text to avatar
 	 */
-	public function get_tutor_avatar($name = null){
-		if ( ! $name){
+	public function get_tutor_avatar($user_id = null, $size = 'thumbnail'){
+		global $wpdb;
+
+		if ( ! $user_id){
 			return '';
 		}
 
+		$user = $this->get_tutor_user($user_id);
+		if ($user->tutor_profile_photo){
+			return '<img src="'.wp_get_attachment_image_url($user->tutor_profile_photo, $size).'" class="tutor-image-avatar" alt="" /> ';
+		}
+
+		$name = $user->display_name;
 		$arr = explode(' ', trim($name));
 
 		if (count($arr) > 1){
@@ -1553,6 +1621,23 @@ class Utils {
 		$initial_avatar = "<span class='tutor-text-avatar' style='background-color: {$bg_color};'>{$initial_avatar}</span>";
 
 		return $initial_avatar;
+	}
+
+	public function get_tutor_user($user_id){
+		global $wpdb;
+
+		$user = $wpdb->get_row("select ID, display_name, 
+			tutor_job_title.meta_value as tutor_profile_job_title, 
+			tutor_bio.meta_value as tutor_profile_bio,
+			tutor_photo.meta_value as tutor_profile_photo
+			
+			from {$wpdb->users}
+			LEFT JOIN {$wpdb->usermeta} tutor_job_title ON ID = tutor_job_title.user_id AND tutor_job_title.meta_key = '_tutor_profile_job_title'
+			LEFT JOIN {$wpdb->usermeta} tutor_bio ON ID = tutor_bio.user_id AND tutor_bio.meta_key = '_tutor_profile_bio'
+			LEFT JOIN {$wpdb->usermeta} tutor_photo ON ID = tutor_photo.user_id AND tutor_photo.meta_key = '_tutor_profile_photo'
+			
+			WHERE ID = {$user_id} ");
+		return $user;
 	}
 
 	/**
@@ -2336,8 +2421,6 @@ class Utils {
 
 		return false;
 	}
-
-
 
 }
 

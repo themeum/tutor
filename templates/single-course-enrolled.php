@@ -46,6 +46,12 @@ get_header();
 		<?php tutor_course_target_audience_html(); ?>
 		<?php do_action('tutor_course/single/enrolled/after/audience'); ?>
 
+
+		<?php do_action('tutor_course/single/enrolled/before/teachers'); ?>
+		<?php tutor_course_teachers_html(); ?>
+		<?php do_action('tutor_course/single/enrolled/after/teachers'); ?>
+
+
 		<?php do_action('tutor_course/single/enrolled/before/reviews'); ?>
 		<?php tutor_course_target_reviews_html(); ?>
 		<?php do_action('tutor_course/single/enrolled/after/reviews'); ?>

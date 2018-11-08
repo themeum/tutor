@@ -524,6 +524,20 @@ if ( ! function_exists('tutor_course_target_audience_html')) {
 	}
 }
 
+
+if ( ! function_exists('tutor_course_teachers_html')) {
+	function tutor_course_teachers_html($echo = true) {
+		ob_start();
+		tutor_load_template( 'single.course.teachers' );
+		$output = apply_filters( 'tutor_course/single/teachers_html', ob_get_clean() );
+
+		if ($echo){
+			echo $output;
+		}
+		return $output;
+	}
+}
+
 if ( ! function_exists('tutor_course_target_reviews_html')) {
 	function tutor_course_target_reviews_html($echo = true) {
 		ob_start();

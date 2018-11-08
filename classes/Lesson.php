@@ -165,10 +165,14 @@ class Lesson extends Tutor_Base {
 
 		$lesson_id = (int) sanitize_text_field($_POST['lesson_id']);
 
+		do_action('tutor_lesson_completed_before', $lesson_id);
 		/**
 		 * Marking lesson at user meta, meta format, _tutor_completed_lesson_id_{id} and value = time();
 		 */
 		tutor_utils()->mark_lesson_complete($lesson_id);
+
+		do_action('tutor_lesson_completed_after', $lesson_id);
+
 
 		wp_redirect(get_the_permalink($lesson_id));
 	}

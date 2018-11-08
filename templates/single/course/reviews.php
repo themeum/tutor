@@ -46,7 +46,8 @@ if ( ! is_array($reviews) || ! count($reviews)){
             <div class="tutor-review-individual-item tutor-review-<?php echo $review->comment_ID; ?>">
                 <div class="review-left">
                     <div class="review-avatar">
-	                    <?php echo tutor_utils()->get_tutor_avatar($review->display_name); ?>
+	                    <?php
+                        echo tutor_utils()->get_tutor_avatar($review->user_id); ?>
                     </div>
 
                     <div class="review-time-name">

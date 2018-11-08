@@ -14,8 +14,6 @@
     </div>
     <div class="tutor-option-field">
 		<?php
-
-
 		$editor_settings = array(
 			'teeny'         => true,
 			'media_buttons' => false,

@@ -67,7 +67,8 @@
 				?>
                 <div class="tutor_original_question">
                     <div class="question-left">
-						<?php echo tutor_utils()->get_tutor_avatar($question->display_name); ?>
+						<?php
+                        echo tutor_utils()->get_tutor_avatar($question->user_id); ?>
                     </div>
 
                     <div class="question-right">
@@ -93,7 +94,7 @@
                             <div class="tutor_individual_answer <?php echo ($question->user_id == $answer->user_id) ? 'tutor-bg-white' : 'tutor-bg-light'
 							?> ">
                                 <div class="question-left">
-									<?php echo tutor_utils()->get_tutor_avatar($answer->display_name); ?>
+									<?php echo tutor_utils()->get_tutor_avatar($answer->user_id); ?>
                                 </div>
 
                                 <div class="question-right">
@@ -120,7 +121,7 @@
                 <div class="tutor_add_answer_row">
 
                     <div class="tutor_qa_avatar_left">
-						<?php echo tutor_utils()->get_tutor_avatar($question->display_name); ?>
+						<?php echo tutor_utils()->get_tutor_avatar($question->user_id); ?>
                     </div>
 
 

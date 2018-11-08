@@ -95,10 +95,10 @@ class Options {
 								'default'   => '1',
 								'desc'      => __('If theme has own styling, then you can turn it off to load JavaScript from the plugin directory', 'tutor'),
 							),
-							'access_permission' => array(
+							'student_must_login_to_view_course' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Access Permission', 'tutor'),
-								'desc'      => __('Students must be logged in to view course and lesson', 'tutor'),
+								'label'     => __('Course Permission', 'tutor'),
+								'desc'      => __('Students must be logged in to view course', 'tutor'),
 							),
 							'delete_on_uninstall' => array(
 								'type'      => 'checkbox',
@@ -121,6 +121,7 @@ class Options {
 								'label'     => __('Allow Upload Private Files', 'tutor'),
 								'desc'      => __('This will allow upload files to course and only enrolled students can access these files',	'tutor'),
 							),
+							/*
 							'course_complete_terms' => array(
 								'type'      => 'select',
 								'label'     => __('When course will be complete', 'tutor'),
@@ -130,7 +131,8 @@ class Options {
 									'complete_by_click' =>  __('Manually clicking the (complete course) button ', 'tutor'),
 								),
 								'desc'      => __('Select page to show course archieve page, none will show default course post type',	'tutor'),
-							),
+							),*/
+
 							'display_course_instructors' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Display course Instructors', 'tutor'),
@@ -372,15 +374,13 @@ class Options {
 								'type'      => 'checkbox',
 								'label'     => __('E-Mail to Teachers', 'tutor'),
 								'options'   => array(
-									'a_student_started_course'              => __('A learner starts their course ', 'tutor'),
+									'a_student_enrolled_in_course'              => __('A Student enrolled in course ', 'tutor'),
 									'a_student_completed_course'            => __('A Student Completed Course', 'tutor'),
 									'a_student_completed_lesson'            => __('A Student Completed Lesson', 'tutor'),
-									'a_student_submitted_exam_for_grading'  => __('A Student Submitted Exam for Grading', 'tutor'),
-									'a_student_sent_msg_to_teacher'         => __('A Student Sent Message to teacher', 'tutor'),
+									'a_student_placed_question'             => __('A Student placed question to course', 'tutor'),
 								),
 								'desc'      => __('Select the notifications that will be sent to teachers.',	'tutor'),
 							),
-
 						),
 					),
 					'email_settings' => array(
