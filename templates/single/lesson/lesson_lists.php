@@ -111,13 +111,6 @@ $currentPost = $post;
 						}
 						?>
 
-
-
-
-
-
-
-
                         <?php do_action('tutor/lesson_list/after/topic', $topic_id); ?>
                     </div>
                 </div>
