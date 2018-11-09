@@ -20,7 +20,7 @@ if (is_array($course_requirements) && count($course_requirements)){
 	<div class="tutor-single-course-segment  tutor-course-requirements-wrap">
 
 		<div class="course-requirements-title">
-			<h4><?php _e('Requirements', 'tutor'); ?></h4>
+			<h3 class="tutor-segment-title"><?php _e('Requirements', 'tutor'); ?></h3>
 		</div>
 
 		<div class="tutor-course-requirements-content">

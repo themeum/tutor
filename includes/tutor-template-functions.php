@@ -208,10 +208,10 @@ if ( ! function_exists('tutor_container_classes')) {
 	}
 }
 if ( ! function_exists('tutor_post_class')) {
-	function tutor_post_class() {
+	function tutor_post_class($default = '') {
 		$classes = apply_filters( 'tutor_post_class', array(
 			'tutor-wrap',
-			'wrap',
+            $default
 		) );
 
 		post_class( $classes );
@@ -335,7 +335,8 @@ if ( ! function_exists('tutor_get_the_excerpt')) {
 			$post_id = get_the_ID();
 		}
 
-		return apply_filters( 'tutor_get_the_excerpt', get_the_excerpt( $post_id ) );
+        $get_post = get_post($post_id);
+        return apply_filters( 'tutor_get_the_excerpt', $get_post->post_excerpt );
 	}
 }
 
