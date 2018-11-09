@@ -1716,6 +1716,42 @@ class Utils {
 	}
 
 	/**
+	 * @param $teacher_id
+	 *
+	 * @return object
+	 *
+	 * Get teachers rating
+	 */
+
+	public function get_teacher_ratings($teacher_id){
+		global $wpdb;
+
+		$ratings = array(
+			'rating_count'  => 0,
+			'rating_sum'    => 0,
+			'rating_avg'    => 0.00,
+		);
+
+		$rating = $wpdb->get_row("SELECT COUNT(rating.meta_value) as rating_count, SUM(rating.meta_value) as rating_sum  
+		FROM {$wpdb->usermeta} courses
+		INNER JOIN {$wpdb->comments} reviews ON courses.meta_value = reviews.comment_post_ID AND reviews.comment_type = 'tutor_course_rating'
+		INNER JOIN {$wpdb->commentmeta} rating ON reviews.comment_ID = rating.comment_id AND rating.meta_key = 'tutor_rating'
+		WHERE courses.user_id = {$teacher_id} AND courses.meta_key = '_tutor_teacher_course_id'");
+
+		if ($rating->rating_count){
+			$avg_rating = number_format(($rating->rating_sum / $rating->rating_count), 2);
+
+			$ratings = array(
+				'rating_count'  => $rating->rating_count,
+				'rating_sum'    => $rating->rating_sum,
+				'rating_avg'    => $avg_rating,
+			);
+		}
+
+		return (object) $ratings;
+	}
+
+	/**
 	 * @param int $course_id
 	 * @param int $user_id
 	 *

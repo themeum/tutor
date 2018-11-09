@@ -40,20 +40,22 @@ if ($teachers){
 				</div>
 
 
+
+                <?php
+                $teacher_rating = tutor_utils()->get_teacher_ratings($teacher->ID);
+                ?>
+
 				<div class="single-teacher-bottom">
 
 					<div class="ratings">
 
 						<span class="rating-generated">
-							<?php tutor_utils()->star_rating_generator(3.50); ?>
+							<?php tutor_utils()->star_rating_generator($teacher_rating->rating_avg); ?>
 						</span>
 
 						<?php
-
-
-						echo " <span class='rating-digits'>3.50</span> ";
-						echo " <span class='rating-total-meta'>(172 ratings)</span> ";
-
+						echo " <span class='rating-digits'>{$teacher_rating->rating_avg}</span> ";
+						echo " <span class='rating-total-meta'>({$teacher_rating->rating_count} ".__('ratings', 'tutor').")</span> ";
 						?>
 					</div>
 
@@ -69,8 +71,6 @@ if ($teachers){
 
 						<?php
 						$total_students = tutor_utils()->get_total_students_by_teacher($teacher->ID);
-
-
 						?>
 
 						<p>
