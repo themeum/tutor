@@ -8,6 +8,10 @@
  * @url https://themeum.com
  */
 
+
+
+do_action('tutor_course/single/enrolled/before/teachers');
+
 $teachers = tutor_utils()->get_teachers_by_course();
 if ($teachers){
 	?>
@@ -17,11 +21,7 @@ if ($teachers){
 		<?php
 		foreach ($teachers as $teacher){
 			?>
-
-
-
 			<div class="single-teacher-wrap">
-
 				<div class="single-teacher-top">
 					<div class="teacher-avatar">
 						<?php
@@ -39,16 +39,12 @@ if ($teachers){
 					</div>
 				</div>
 
-
-
                 <?php
                 $teacher_rating = tutor_utils()->get_teacher_ratings($teacher->ID);
                 ?>
 
 				<div class="single-teacher-bottom">
-
 					<div class="ratings">
-
 						<span class="rating-generated">
 							<?php tutor_utils()->star_rating_generator($teacher_rating->rating_avg); ?>
 						</span>
@@ -68,7 +64,6 @@ if ($teachers){
 					</div>
 
 					<div class="students">
-
 						<?php
 						$total_students = tutor_utils()->get_total_students_by_teacher($teacher->ID);
 						?>
@@ -78,17 +73,14 @@ if ($teachers){
 							<?php echo  $total_students; ?>
 							<span class="tutor-text-mute">  <?php _e('students', 'tutor'); ?></span>
 						</p>
-
 					</div>
-
 				</div>
-
 			</div>
-
-
 			<?php
 		}
 		?>
 	</div>
 	<?php
 }
+
+do_action('tutor_course/single/enrolled/after/teachers');

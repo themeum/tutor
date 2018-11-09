@@ -8,6 +8,9 @@
  * @url https://themeum.com
  */
 
+
+do_action('tutor_course/single/before/audience');
+
 $target_audience = tutor_course_target_audience();
 
 if ( empty($target_audience)){
@@ -35,3 +38,6 @@ if (is_array($target_audience) && count($target_audience)){
 	</div>
 
 <?php } ?>
+
+<?php do_action('tutor_course/single/after/audience'); ?>
+

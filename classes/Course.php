@@ -100,6 +100,16 @@ class Course extends Tutor_Base {
 			wp_insert_post( $post_arr );
 		}
 
+		//Course Duration
+		if ( ! empty($_POST['course_duration'])){
+			$video = tutor_utils()->sanitize_array($_POST['course_duration']);
+			update_post_meta($post_ID, '_course_duration', $video);
+		}
+
+		if ( ! empty($_POST['course_level'])){
+			$course_level = sanitize_text_field($_POST['course_level']);
+			update_post_meta($post_ID, '_tutor_course_level', $course_level);
+		}
 
 		if ( ! empty($_POST['course_benefits'])){
 			$course_benefits = wp_kses_post($_POST['course_benefits']);
@@ -116,6 +126,10 @@ class Course extends Tutor_Base {
 			update_post_meta($post_ID, '_tutor_course_target_audience', $target_audience);
 		}
 
+		if ( ! empty($_POST['course_material_includes'])){
+			$material_includes = wp_kses_post($_POST['course_material_includes']);
+			update_post_meta($post_ID, '_tutor_course_material_includes', $material_includes);
+		}
 		/**
 		 * Sorting Topics and lesson
 		 */

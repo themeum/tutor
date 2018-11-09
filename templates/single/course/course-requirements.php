@@ -8,6 +8,9 @@
  * @url https://themeum.com
  */
 
+
+do_action('tutor_course/single/before/requirements');
+
 $course_requirements = tutor_course_requirements();
 
 if ( empty($course_requirements)){
@@ -35,3 +38,5 @@ if (is_array($course_requirements) && count($course_requirements)){
 	</div>
 
 <?php } ?>
+
+<?php do_action('tutor_course/single/after/requirements'); ?>

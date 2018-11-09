@@ -354,6 +354,11 @@ class Utils {
 		return $count;
 	}
 
+	public function get_archive_page_course_count(){
+		global $wp_query;
+		return $wp_query->post_count;
+	}
+
 	public function get_course_count(){
 		global $wpdb;
 
@@ -1722,7 +1727,6 @@ class Utils {
 	 *
 	 * Get teachers rating
 	 */
-
 	public function get_teacher_ratings($teacher_id){
 		global $wpdb;
 
@@ -2457,6 +2461,35 @@ class Utils {
 
 		return false;
 	}
+
+	/**
+	 * @param null $level
+	 *
+	 * @return mixed
+	 *
+	 * Get the users / students / course levels
+	 */
+
+	public function course_levels($level = null){
+		$levels = apply_filters('tutor_course_level', array(
+			'all_levels'    => __('All Levels', 'tutor'),
+			'beginner'      => __('Beginner', 'tutor'),
+			'intermediate'  => __('Intermediate', 'tutor'),
+			'expert'        => __('Expert', 'tutor'),
+		));
+
+		if ($level){
+			if (isset($levels[$level])){
+				return $levels[$level];
+			}else{
+				return '';
+			}
+		}
+
+		return $levels;
+	}
+
+
 
 }
 

@@ -133,15 +133,10 @@ class Options {
 								'desc'      => __('Select page to show course archieve page, none will show default course post type',	'tutor'),
 							),*/
 
-							'display_course_instructors' => array(
+							'display_course_teachers' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Display course Instructors', 'tutor'),
-								'desc'      => __('Show the instructors at single course page',	'tutor'),
-							),
-							'display_course_head_instructors' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Display the head instructors to course', 'tutor'),
-								'desc'      => __('Show the instructors at single course page',	'tutor'),
+								'label'     => __('Display course Teachers', 'tutor'),
+								'desc'      => __('Show the teachers at single course page',	'tutor'),
 							),
 						),
 					),

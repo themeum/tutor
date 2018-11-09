@@ -38,12 +38,23 @@ class Template extends Tutor_Base {
 	public function load_course_archive_template($template){
 		global $wp_query;
 
-		$post_type = get_query_var('post_type');
+		if (is_page()){
+			$page_id = (int) get_the_ID();
+			$selected_archive_page = (int) tutor_utils()->get_option('course_archive_page');
 
-		if ($post_type === $this->course_post_type && $wp_query->is_archive){
+			if ($page_id === $selected_archive_page){
+				query_posts(array('post_type' => $this->course_post_type ));
+			}
+		}
+
+		$post_type = get_query_var('post_type');
+		$course_category = get_query_var('course-category');
+
+		if ( ($post_type === $this->course_post_type || ! empty($course_category) )  && $wp_query->is_archive){
 			$template = tutor_get_template('archive-course');
 			return $template;
 		}
+
 		return $template;
 	}
 

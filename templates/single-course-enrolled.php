@@ -27,43 +27,19 @@ get_header();
 
 		<?php tutor_course_video(); ?>
 
-		<?php do_action('tutor_course/single/enrolled/before/topics'); ?>
 		<?php tutor_course_topics(); ?>
-		<?php do_action('tutor_course/single/enrolled/after/topics'); ?>
-
-
-		<?php do_action('tutor_course/single/enrolled/before/requirements'); ?>
 		<?php tutor_course_requirements_html(); ?>
-		<?php do_action('tutor_course/single/enrolled/after/requirements'); ?>
-
-
-		<?php do_action('tutor_course/single/enrolled/before/content'); ?>
 		<?php tutor_course_content(); ?>
-		<?php do_action('tutor_course/single/enrolled/after/content'); ?>
-
-
-		<?php do_action('tutor_course/single/enrolled/before/audience'); ?>
 		<?php tutor_course_target_audience_html(); ?>
-		<?php do_action('tutor_course/single/enrolled/after/audience'); ?>
-
-
-		<?php do_action('tutor_course/single/enrolled/before/teachers'); ?>
+		<?php tutor_course_material_includes_html(); ?>
 		<?php tutor_course_teachers_html(); ?>
-		<?php do_action('tutor_course/single/enrolled/after/teachers'); ?>
-
-
-		<?php do_action('tutor_course/single/enrolled/before/reviews'); ?>
 		<?php tutor_course_target_reviews_html(); ?>
-		<?php do_action('tutor_course/single/enrolled/after/reviews'); ?>
-
 
 		<?php do_action('tutor_course/single/enrolled/after/inner-wrap'); ?>
-
     </div><!-- .wrap -->
 
 
 <?php do_action('tutor_course/single/enrolled/after/wrap'); ?>
-
 
 <?php
 get_footer();

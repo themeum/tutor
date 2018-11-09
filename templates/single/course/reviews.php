@@ -8,6 +8,11 @@
  * @url https://themeum.com
  */
 
+
+
+do_action('tutor_course/single/enrolled/before/reviews');
+
+
 $reviews = tutor_utils()->get_course_reviews();
 if ( ! is_array($reviews) || ! count($reviews)){
 	return;
@@ -70,3 +75,6 @@ if ( ! is_array($reviews) || ! count($reviews)){
 		?>
     </div>
 </div>
+
+
+<?php do_action('tutor_course/single/enrolled/after/reviews'); ?>
