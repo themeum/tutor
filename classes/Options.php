@@ -189,14 +189,6 @@ class Options {
 								'desc'      => $lesson_url,
 							),
 
-
-							'display_head_instructor_on_lesson' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Display Head Instructor on Lesson', 'tutor'),
-								'default'   => '1',
-								'desc'      => __('This will allow to view head instructor on lesson page',	'tutor'),
-							),
-
 						),
 
 					),
