@@ -8,6 +8,11 @@
  * @url https://themeum.com
  */
 
+
+
+do_action('tutor_course/single/before/benefits');
+
+
 $course_benefits = tutor_course_benefits();
 if ( empty($course_benefits)){
 	return;
@@ -34,3 +39,6 @@ if (is_array($course_benefits) && count($course_benefits)){
 	</div>
 
 <?php } ?>
+
+<?php do_action('tutor_course/single/after/benefits'); ?>
+

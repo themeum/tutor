@@ -131,7 +131,7 @@ class Ajax{
 		$user = get_userdata($user_id);
 		$date = date("Y-m-d H:i:s");
 
-		do_action('tutor_before_add_question');
+		do_action('tutor_before_add_question', $course_id);
 		$data = apply_filters('tutor_add_question_data', array(
 			'comment_post_ID'   => $course_id,
 			'comment_author'    => $user->user_login,
@@ -154,7 +154,7 @@ class Ajax{
 				'meta_value' => $question_title
 			) );
 		}
-		do_action('tutor_after_add_question', $comment_id);
+		do_action('tutor_after_add_question', $course_id, $comment_id);
 
 		wp_send_json_success(__('Question has been added successfully', 'tutor'));
 	}

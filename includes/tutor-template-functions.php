@@ -335,8 +335,8 @@ if ( ! function_exists('tutor_get_the_excerpt')) {
 			$post_id = get_the_ID();
 		}
 
-        $get_post = get_post($post_id);
-        return apply_filters( 'tutor_get_the_excerpt', $get_post->post_excerpt );
+		$get_post = get_post($post_id);
+		return apply_filters( 'tutor_get_the_excerpt', $get_post->post_excerpt );
 	}
 }
 
@@ -354,6 +354,12 @@ if ( ! function_exists('get_tutor_course_author')) {
 		return apply_filters( 'get_tutor_course_author', get_the_author_meta( 'display_name', $post->post_author ) );
 	}
 }
+
+function get_tutor_course_author_id(){
+	global $post;
+	return $post->post_author;
+}
+
 /**
  * @param int $course_id
  *
@@ -517,6 +523,58 @@ if ( ! function_exists('tutor_course_target_audience_html')) {
 		ob_start();
 		tutor_load_template( 'single.course.course-target-audience' );
 		$output = apply_filters( 'tutor_course/single/audience_html', ob_get_clean() );
+
+		if ($echo){
+			echo $output;
+		}
+		return $output;
+	}
+}
+
+
+if ( ! function_exists('tutor_course_material_includes')) {
+	function tutor_course_material_includes( $course_id = 0 ) {
+		if ( ! $course_id ) {
+			$course_id = get_the_ID();
+		}
+		$target_audience = get_post_meta( $course_id, '_tutor_course_material_includes', true );
+
+		$target_audience_array = array();
+		if ($target_audience){
+			$target_audience_array = explode("\n", $target_audience);
+		}
+
+		$array = array_filter(array_map('trim', $target_audience_array));
+		return apply_filters( 'tutor_course/single/material_includes', $array, $course_id );
+	}
+}
+
+if ( ! function_exists('tutor_course_material_includes_html')) {
+	function tutor_course_material_includes_html($echo = true) {
+		ob_start();
+		tutor_load_template( 'single.course.material-includes' );
+		$output = apply_filters( 'tutor_course/single/material_includes', ob_get_clean() );
+
+		if ($echo){
+			echo $output;
+		}
+		return $output;
+	}
+}
+
+//tutor_course_material_includes_html
+
+
+if ( ! function_exists('tutor_course_teachers_html')) {
+	function tutor_course_teachers_html($echo = true) {
+		$display_course_teachers = tutor_utils()->get_option('display_course_teachers');
+		if ( ! $display_course_teachers){
+			return null;
+		}
+
+		ob_start();
+		tutor_load_template( 'single.course.teachers' );
+		$output = apply_filters( 'tutor_course/single/teachers_html', ob_get_clean() );
 
 		if ($echo){
 			echo $output;
@@ -906,4 +964,60 @@ function tutor_single_quiz_no_course_belongs($echo = true){
 		echo $output;
 	}
 	return $output;
+}
+
+function get_tutor_course_level($course_id = 0){
+	if ( ! $course_id){
+		$course_id = get_the_ID();
+	}
+	if ( ! $course_id){
+		return '';
+	}
+
+	$course_level = get_post_meta($course_id, '_tutor_course_level', true);
+
+	if ($course_level){
+		return tutor_utils()->course_levels($course_level);
+	}
+	return false;
+}
+
+if ( ! function_exists('get_tutor_course_duration_context')) {
+	function get_tutor_course_duration_context( $course_id = 0 ) {
+		if ( ! $course_id ) {
+			$course_id = get_the_ID();
+		}
+		if ( ! $course_id ) {
+			return '';
+		}
+		$duration        = get_post_meta( $course_id, '_course_duration', true );
+		$durationHours   = tutor_utils()->avalue_dot( 'hours', $duration );
+		$durationMinutes = tutor_utils()->avalue_dot( 'minutes', $duration );
+		$durationSeconds = tutor_utils()->avalue_dot( 'seconds', $duration );
+
+		if ( $duration ) {
+			$output = '';
+			if ( $durationHours > 0 ) {
+				$output .= $durationHours . " Hours ";
+			}
+
+			if ( $durationMinutes > 0 ) {
+				$output .= $durationMinutes . " Minutes ";
+			}
+
+			return $output;
+		}
+
+		return false;
+	}
+}
+if ( ! function_exists('get_tutor_course_categories')){
+	function get_tutor_course_categories($course_id = 0){
+		if ( ! $course_id ) {
+			$course_id = get_the_ID();
+		}
+		$terms = get_the_terms( $course_id, 'course-category' );
+
+		return $terms;
+	}
 }

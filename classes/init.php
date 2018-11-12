@@ -29,6 +29,7 @@ class init{
 	private $question;
 	private $tools;
 	private $email_notification;
+	private $user;
 
 	private $woocommerce;
 
@@ -64,6 +65,7 @@ class init{
 		$this->question = new Question();
 		$this->tools = new Tools();
 		$this->email_notification = new Email_Notification();
+		$this->user = new User();
 
 		if (tutor_utils()->has_wc()){
 			$this->woocommerce = new  Woo_Commerce();

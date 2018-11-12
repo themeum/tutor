@@ -13,6 +13,10 @@ if ( ! defined( 'ABSPATH' ) )
 
 ?>
 
+
+<?php do_action('tutor_course/single/before/topics'); ?>
+
+
 <div class="tutor-single-course-segment  tutor-course-topics-wrap">
 
 	<div class="tutor-course-topics-header">
@@ -79,3 +83,6 @@ if ( ! defined( 'ABSPATH' ) )
 		?>
 	</div>
 </div>
+
+
+<?php do_action('tutor_course/single/after/topics'); ?>

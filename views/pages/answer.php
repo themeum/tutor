@@ -41,7 +41,8 @@ $question = tutor_utils()->get_qa_question($question_id);
     <div class="tutor-admin-individual-question">
         <div class="tutor_original_question tutor-bg-white ">
             <div class="question-left">
-				<?php echo tutor_utils()->get_tutor_avatar($question->display_name); ?>
+				<?php
+                echo tutor_utils()->get_tutor_avatar($question->user_id); ?>
             </div>
 
             <div class="question-right">
@@ -81,7 +82,8 @@ $question = tutor_utils()->get_qa_question($question_id);
                     <div class="tutor_original_question <?php echo ($question->user_id == $answer->user_id) ? 'tutor-bg-white' : 'tutor-bg-light'
 					?> ">
                         <div class="question-left">
-							<?php echo tutor_utils()->get_tutor_avatar($answer->display_name); ?>
+							<?php
+                            echo tutor_utils()->get_tutor_avatar($answer->user_id); ?>
                         </div>
 
                         <div class="question-right">

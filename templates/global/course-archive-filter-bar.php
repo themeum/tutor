@@ -1,14 +1,9 @@
 <div class="tutor-course-filter-wrap">
-
     <div class="tutor-course-archive-results-wrap">
-
 		<?php
-		$courseCount = tutor_utils()->get_course_count();
-		$lessonCount = tutor_utils()->get_lesson_count();
-
-		_e(sprintf("%s Courses %s Lessons", "<strong>{$courseCount}</strong>", "<strong>{$lessonCount}</strong>"), "tutor");
+		$courseCount = tutor_utils()->get_archive_page_course_count();
+		_e(sprintf("%s Courses", "<strong>{$courseCount}</strong>"), "tutor");
 		?>
-
     </div>
 
     <div class="tutor-course-archive-filters-wrap">
@@ -24,5 +19,4 @@
     </div>
 
     <div style="clear: both;"></div>
-
 </div>

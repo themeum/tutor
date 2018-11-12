@@ -12,6 +12,7 @@
 if ( ! defined( 'ABSPATH' ) )
     exit;
 
+global $post;
 ?>
 
 <div class="tutor-single-course-segment tutor-single-course-lead-info">
@@ -39,7 +40,7 @@ if ( ! defined( 'ABSPATH' ) )
         <ul>
             <li class="tutor-single-course-author-meta">
                 <div class="tutor-single-course-avatar">
-                    <?php echo tutor_utils()->get_tutor_avatar(get_tutor_course_author()); ?>
+                    <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?>
                 </div>
                 <div class="tutor-single-course-author-name">
                     <h6><?php _e('by', 'tutor'); ?></h6>
@@ -97,6 +98,4 @@ if ( ! defined( 'ABSPATH' ) )
         <?php
     }
     ?>
-
-
 </div>

@@ -8,6 +8,11 @@
  * @url https://themeum.com
  */
 
+
+
+do_action('tutor_course/single/enrolled/before/reviews');
+
+
 $reviews = tutor_utils()->get_course_reviews();
 if ( ! is_array($reviews) || ! count($reviews)){
 	return;
@@ -46,7 +51,8 @@ if ( ! is_array($reviews) || ! count($reviews)){
             <div class="tutor-review-individual-item tutor-review-<?php echo $review->comment_ID; ?>">
                 <div class="review-left">
                     <div class="review-avatar">
-	                    <?php echo tutor_utils()->get_tutor_avatar($review->display_name); ?>
+	                    <?php
+                        echo tutor_utils()->get_tutor_avatar($review->user_id); ?>
                     </div>
 
                     <div class="review-time-name">
@@ -69,3 +75,6 @@ if ( ! is_array($reviews) || ! count($reviews)){
 		?>
     </div>
 </div>
+
+
+<?php do_action('tutor_course/single/enrolled/after/reviews'); ?>

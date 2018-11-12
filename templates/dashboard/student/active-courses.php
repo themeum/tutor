@@ -2,6 +2,9 @@
 
 <?php
 $active_courses = tutor_utils()->get_active_courses_by_user();
+if( ! $active_courses){
+    return;
+}
 
 if ($active_courses->have_posts()):
 	while ($active_courses->have_posts()):

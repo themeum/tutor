@@ -453,10 +453,10 @@ div[class*="tutor-course-col"] {
     content: "";
 }
 .tutor-loop-author, .tutor-meta{
-    color: #BBBBBB;
+    color: #bac0cf;
 }
 .tutor-text-mute{
-    color: #BBBBBB;
+    color: #bac0cf;
 }
 
 /**
@@ -510,6 +510,74 @@ a.tutor-button:hover, .tutor-button:hover {
     background-color: #333333;
     color: #ffffff;
 }
+
+/**
+Teacher
+ */
+.single-teacher-wrap{
+    border: 1px solid #e8eff1;
+    margin-bottom: 30px;
+}
+.single-teacher-wrap .single-teacher-top{
+    display: flex;
+    padding: 25px 20px;
+}
+.single-teacher-wrap .single-teacher-top h3, .single-teacher-wrap .single-teacher-top h4 {
+    margin: 0;
+    padding: 0;
+}
+
+.single-teacher-wrap .teacher-avatar{
+    flex: 0 0 70px;
+    text-align: center;
+}
+.single-teacher-wrap .teacher-avatar img{
+    max-width: 50px;
+    height: auto;
+    border-radius: 50%;
+}
+
+.single-teacher-wrap .teacher-name{
+    flex: 0 0 170px;
+}
+.single-teacher-wrap .teacher-name h3{
+    font-size: 16px;
+}
+.single-teacher-wrap .teacher-name h4{
+    font-weight: 300;
+    font-size: 12px;
+    color: #bac0cf;
+}
+.single-teacher-wrap .single-teacher-bottom{
+    display: flex;
+    border-top: 1px solid #e8eff1;
+    min-height: 30px;
+    padding: 20px;
+}
+.single-teacher-wrap .single-teacher-bottom p{
+    margin: 0;
+}
+.single-teacher-wrap .single-teacher-bottom .ratings{
+    flex-basis: 0;
+    flex-grow: 1;
+}
+.single-teacher-wrap .single-teacher-bottom .courses, .single-teacher-wrap .single-teacher-bottom .students{
+    margin: 0 10px;
+}
+
+.single-teacher-wrap .single-teacher-bottom .ratings .rating-total-meta{
+    color: #bac0cf;
+}
+
+.single-teacher-wrap .single-teacher-bottom .ratings .rating-generated{
+    color: #f8c51c;
+}
+
+/**
+Review and rating
+ */
+
+
 .tutor-review-individual-item {
     display: flex;
     font-size: 14px;
@@ -532,7 +600,7 @@ a.tutor-button:hover, .tutor-button:hover {
 .tutor-review-individual-item .review-time-name p{
     margin: 0;
 }
-.review-avatar .tutor-text-avatar{
+.review-avatar .tutor-text-avatar, .teacher-avatar .tutor-text-avatar{
     border-radius: 50%;
     /*border: 1px solid #686f7a;*/
     width: 50px;
@@ -818,6 +886,13 @@ Course question and answer
 }
 .tutor_original_question .question-left{
     flex: 0 0 60px;
+}
+.tutor_original_question .question-left img, .tutor_individual_answer .question-left img, .tutor_qa_avatar_left img, .review-left .review-avatar img{
+    max-width: 60px;
+    height: auto;
+    margin-right: 10px;
+    border: 1px solid #eeee88;
+    padding: 3px;
 }
 .question-right {
     width: 100%;

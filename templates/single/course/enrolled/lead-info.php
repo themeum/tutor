@@ -109,9 +109,47 @@ global $wp_query;
 				<?php _e(sprintf("Created by : %s", get_tutor_course_author()) , 'tutor'); ?>,
 			</span>
 
+	        <?php
+	        $terms = get_tutor_course_categories();
+	        if ($terms){
+		        ?>
+                <span class="tutor-categories">
+                    <?php
+                    foreach ($terms as $term){
+	                    echo '<a href="'.get_term_link($term->term_id).'">'.$term->name.'</a>';
+                    }
+                    ?>
+                </span>
+		        <?php
+	        }
+	        ?>
+
             <span class="tutor-course-lead-updated">
-				<?php _e(sprintf("Last updated : %s", get_the_modified_date()) , 'tutor'); ?>
+				<?php _e(sprintf("Last updated : %s", get_the_modified_date()) , 'tutor'); ?>,
 			</span>
+
+	        <?php $level = get_tutor_course_level();
+	        if ($level){
+		        ?>
+                <span class="tutor-course-lead-level">
+                    <?php _e('Level : '); ?>
+                    <?php echo $level; ?>
+                </span>
+		        <?php
+	        }
+	        ?>
+
+	        <?php $duration = get_tutor_course_duration_context();
+	        if ($duration){
+		        ?>
+                <span class="tutor-course-lead-duration">
+                    <?php _e('Duration : '); ?>
+                    <?php echo $duration; ?>
+                </span>
+		        <?php
+	        }
+	        ?>
+
         </div>
 	    <?php do_action('tutor_course/single/enrolled/after/lead_info/meta'); ?>
 

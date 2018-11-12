@@ -194,18 +194,18 @@
 
 
 
-<div class="tutor-quizzes-modal-wrap">
-    <div class="tutor-quizzes-modal-content">
-        <div class="quizzes-modal-header">
-            <div class="quizzes-search-bar">
-                <input type="text" class="tutor-quizzes-search-input" placeholder="<?php _e('Search quiz...'); ?>">
+<div class="tutor-modal-wrap tutor-quiz-modal-wrap">
+    <div class="tutor-modal-content">
+        <div class="modal-header">
+            <div class="search-bar">
+                <input type="text" class="tutor-modal-search-input" placeholder="<?php _e('Search quiz...'); ?>">
             </div>
-            <div class="quizzes-modal-close-wrap">
-                <a href="javascript:;" class="quizzes-modal-close-btn">&times;</a>
+            <div class="modal-close-wrap">
+                <a href="javascript:;" class="modal-close-btn">&times;</a>
             </div>
         </div>
-        <div class="quizzes-modal-container"></div>
-        <div class="quizzes-modal-footer">
+        <div class="modal-container"></div>
+        <div class="modal-footer">
             <button type="button" class="button button-primary add_quiz_to_post_btn"><?php _e('Add Quiz', 'tutor'); ?></button>
         </div>
     </div>

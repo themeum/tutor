@@ -38,12 +38,23 @@ class Template extends Tutor_Base {
 	public function load_course_archive_template($template){
 		global $wp_query;
 
-		$post_type = get_query_var('post_type');
+		if (is_page()){
+			$page_id = (int) get_the_ID();
+			$selected_archive_page = (int) tutor_utils()->get_option('course_archive_page');
 
-		if ($post_type === $this->course_post_type && $wp_query->is_archive){
+			if ($page_id === $selected_archive_page){
+				query_posts(array('post_type' => $this->course_post_type ));
+			}
+		}
+
+		$post_type = get_query_var('post_type');
+		$course_category = get_query_var('course-category');
+
+		if ( ($post_type === $this->course_post_type || ! empty($course_category) )  && $wp_query->is_archive){
 			$template = tutor_get_template('archive-course');
 			return $template;
 		}
+
 		return $template;
 	}
 
@@ -60,6 +71,12 @@ class Template extends Tutor_Base {
 		global $wp_query;
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $this->course_post_type){
+
+			$student_must_login_to_view_course = tutor_utils()->get_option('student_must_login_to_view_course');
+			if ($student_must_login_to_view_course){
+				return tutor_get_template('login');
+			}
+
 
 			if (empty( $wp_query->query_vars['course_subpage'])) {
 				$template = tutor_get_template( 'single-course' );
