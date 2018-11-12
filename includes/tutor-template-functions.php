@@ -743,24 +743,52 @@ if ( ! function_exists('tutor_course_enroll_box')) {
 		$enrolled = tutor_utils()->is_enrolled();
 
 		ob_start();
+
+		if ( $enrolled ) {
+			tutor_load_template( 'single.course.course-enrolled' );
+			$output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
+		} else {
+			tutor_load_template( 'single.course.course-enroll' );
+			$output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );
+		}
+
+		/*
 		if ($isLoggedIn) {
-			if ( $enrolled ) {
-				tutor_load_template( 'single.course.course-enrolled' );
-				$output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
-			} else {
-				tutor_load_template( 'single.course.course-enroll' );
-				$output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );
-			}
+
 		}else{
 			tutor_load_template( 'single.course.login' );
 			$output = apply_filters( 'tutor_course/global/login', ob_get_clean() );
 		}
+		*/
+
+
 		if ( $echo ) {
 			echo $output;
 		}
 
 		return $output;
 	}
+}
+
+function tutor_single_course_add_to_cart($echo = true){
+	ob_start();
+
+	$isLoggedIn = is_user_logged_in();
+
+	if ($isLoggedIn) {
+		tutor_load_template( 'single.course.add-to-cart' );
+		$output = apply_filters( 'tutor_course/single/add-to-cart', ob_get_clean() );
+
+	}else{
+		tutor_load_template( 'single.course.login' );
+		$output = apply_filters( 'tutor_course/global/login', ob_get_clean() );
+	}
+
+	if ( $echo ) {
+		echo $output;
+	}
+
+	return $output;
 }
 
 if ( ! function_exists('tutor_course_enrolled_nav')) {
