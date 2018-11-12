@@ -138,6 +138,12 @@ class Options {
 								'label'     => __('Display course Teachers', 'tutor'),
 								'desc'      => __('Show the teachers at single course page',	'tutor'),
 							),
+							'enable_q_and_a_on_course' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable Q &amp; A on course', 'tutor'),
+								'default'   => '0',
+								'desc'      => __('Allow student to place their questions and answers on the course page, only enrolled student can do this',	'tutor'),
+							),
 						),
 					),
 					'archive' => array(
@@ -156,7 +162,7 @@ class Options {
 								'label'     => __('Col per row', 'tutor'),
 								'default'   => '4',
 								'options'   => array('min'=> 1, 'max' => 6),
-								'desc'      => __('Show col per row', 'tutor'),
+								'desc'      => __('Show col per row at course listing', 'tutor'),
 							),
 							'courses_per_page' => array(
 								'type'      => 'slider',
@@ -165,19 +171,6 @@ class Options {
 								'options'   => array('min'=> 1, 'max' => 20),
 								'desc'      => __('Course show per page in pagination', 'tutor'),
 							),
-						),
-					),
-
-					'single_course' => array(
-						'label' => __('Single Course', 'tutor'),
-						'desc' => __('Settings will deploy to single course page', 'tutor'),
-						'fields' => array(
-							'enrolled_students_number' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Enrolled Students Number', 'tutor'),
-								'desc'      => __('Display placed students number during add/edit course, uncheck to show real enrolled students total',	'tutor'),
-							),
-
 						),
 					),
 				),
@@ -194,20 +187,6 @@ class Options {
 								'label'     => __('Lesson Permalink Base', 'tutor'),
 								'default'   => 'lessons',
 								'desc'      => $lesson_url,
-							),
-
-							'allow_students_comments_on_lesson' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Allow Student Comments', 'tutor'),
-								'default'   => '0',
-								'desc'      => __('Allow student to place their comments on lesson page, only enrolled student can do this',	'tutor'),
-							),
-
-							'display_head_instructor_on_lesson' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Display Head Instructor on Lesson', 'tutor'),
-								'default'   => '1',
-								'desc'      => __('This will allow to view head instructor on lesson page',	'tutor'),
 							),
 
 						),

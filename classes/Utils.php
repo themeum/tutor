@@ -656,9 +656,13 @@ class Utils {
 	public function course_sub_pages(){
 		$nav_items = array(
 			'overview' => __('Overview', 'tutor'),
-			'questions' => __('Q&A', 'tutor'),
-			'announcements' => __('Announcements', 'tutor'),
 		);
+
+		$enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
+		if ($enable_q_and_a_on_course){
+			$nav_items['questions'] = __('Q&A', 'tutor');
+		}
+		$nav_items['announcements'] = __('Announcements', 'tutor');
 
 		return apply_filters('tutor_course/single/enrolled/nav_items', $nav_items);
 	}

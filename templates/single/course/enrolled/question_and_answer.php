@@ -6,6 +6,12 @@
  * @author themeum
  * @url https://themeum.com
  */
+
+$enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
+if ( ! $enable_q_and_a_on_course) {
+	tutor_load_template( 'single.course.q_and_a_turned_off' );
+	return;
+}
 ?>
 <?php do_action('tutor_course/question_and_answer/before'); ?>
 <div class="tutor-queston-and-answer-wrap">
@@ -14,15 +20,6 @@
         <div class="tutor-ask-question-btn-wrap">
             <a href="javascript:;" class="tutor-ask-question-btn tutor-btn"> <?php _e('Ask a new question', 'tutor'); ?> </a>
         </div>
-
-        <!--
-        <div class="tutor-question-search-form">
-            <form method="get">
-                <input type="text" name="q" value="" placeholder="<?php /*_e('search for a question', 'tutor'); */?>">
-                <button type="submit" name="tutor_question_search_btn"><?php /*_e('Search Question', 'tutor'); */?> </button>
-            </form>
-        </div>
--->
     </div>
 
     <div class="tutor-add-question-wrap" style="display: none;">
