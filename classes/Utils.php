@@ -1605,7 +1605,6 @@ class Utils {
 		}
 
 		$user = $this->get_tutor_user($user_id);
-
 		if ($user->tutor_profile_photo){
 			return '<img src="'.wp_get_attachment_image_url($user->tutor_profile_photo, $size).'" class="tutor-image-avatar" alt="" /> ';
 		}
