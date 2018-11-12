@@ -22,7 +22,7 @@
     margin-left: -15px;
 }
 
-.tutor-col, .tutor-col-1, .tutor-col-2, .tutor-col-3, .tutor-col-4, .tutor-col-5, .tutor-col-6, .tutor-col-7, .tutor-col-8, .tutor-col-9, .tutor-col-10, .tutor-col-11, .tutor-col-12{
+.tutor-col, .tutor-col-3, .tutor-col-4, .tutor-col-6, .tutor-col-8, .tutor-col-9{
     position: relative;
     width: 100%;
     min-height: 1px;
@@ -38,7 +38,7 @@
     max-width: 100%;
 }
 
-.tutor-col-4{
+.tutor-col-3{
     -ms-flex: 0 0 25%;
     flex: 0 0 25%;
     max-width: 25%;
@@ -50,10 +50,22 @@
     max-width: 33.333333%;
 }
 
+.tutor-col-6{
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
 .tutor-col-8{
     -ms-flex: 0 0 66.666666%;
     flex: 0 0 66.666666%;
     max-width: 66.666666%;
+}
+
+.tutor-col-9{
+    -ms-flex: 75%;
+    flex: 0 0 75%;
+    max-width: 75%;
 }
 
 /********************/
