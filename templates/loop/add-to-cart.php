@@ -43,7 +43,7 @@ if ( isset( $args['attributes']['aria-label'] ) ) {
 
 ?>
 
-<div class="tutor-loo-cart-btn-wrap">
+<div class="tutor-loop-cart-btn-wrap">
 	<?php
 	echo apply_filters( 'woocommerce_loop_add_to_cart_link', // WPCS: XSS ok.
 		sprintf( '<a href="%s" data-quantity="%s" class="%s" %s>%s</a>',

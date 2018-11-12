@@ -15,36 +15,33 @@ get_header();
 <?php do_action('tutor_course/single/before/wrap'); ?>
 
 
-<?php do_action('tutor_course/single/before/lead_info'); ?>
-<?php tutor_course_lead_info(); ?>
-<?php do_action('tutor_course/single/after/lead_info'); ?>
+<div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info'); ?>>
+    <div class="tutor-container">
+        <div class="tutor-row">
+            <div class="tutor-col-8">
+                <?php tutor_course_lead_info(); ?>
+                <?php tutor_course_benefits_html(); ?>
+                <?php tutor_course_topics(); ?>
+                <?php tutor_course_content(); ?>
+                <?php tutor_course_target_audience_html(); ?>
+                <?php tutor_course_material_includes_html(); ?>
+                <?php tutor_course_teachers_html(); ?>
+                <?php tutor_course_target_reviews_html(); ?>
 
+            </div> <!-- .tutor-col-8 -->
 
-    <div <?php tutor_post_class(); ?>>
+            <div class="tutor-col-4">
+                <div class="tutor-single-course-sidebar">
+                    <?php tutor_course_enroll_box(); ?>
+                    <?php tutor_course_requirements_html(); ?>
 
-		<?php do_action('tutor_course/single/before/inner-wrap'); ?>
-
-		<?php do_action('tutor_course/single/before/enroll'); ?>
-		<?php tutor_course_enroll_box(); ?>
-		<?php do_action('tutor_course/single/after/enroll'); ?>
-
-		<?php tutor_course_video(); ?>
-		<?php tutor_course_benefits_html(); ?>
-		<?php tutor_course_topics(); ?>
-		<?php tutor_course_requirements_html(); ?>
-		<?php tutor_course_content(); ?>
-		<?php tutor_course_target_audience_html(); ?>
-		<?php tutor_course_material_includes_html(); ?>
-		<?php tutor_course_teachers_html(); ?>
-		<?php tutor_course_target_reviews_html(); ?>
-
-		<?php do_action('tutor_course/single/after/inner-wrap'); ?>
-
-    </div><!-- .wrap -->
-
+                </div> <!-- .tutor-single-course-sidebar -->
+            </div> <!-- .tutor-col-4 -->
+        </div> <!-- .tutor-row -->
+    </div> <!-- .tutor-container -->
+</div>
 
 <?php do_action('tutor_course/single/after/wrap'); ?>
-
 
 <?php
 get_footer();

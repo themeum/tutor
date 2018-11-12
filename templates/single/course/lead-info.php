@@ -10,67 +10,106 @@
 
 
 if ( ! defined( 'ABSPATH' ) )
-	exit;
+    exit;
 
+global $post;
 ?>
 
-<div class="tutor-full-width-course-top tutor-course-top-info">
-    <div <?php tutor_post_class(); ?>>
+<div class="tutor-single-course-segment tutor-single-course-lead-info">
+    <div class="tutor-leadinfo-top-meta">
+        <!-- @TODO Best Selling Badge -->
+        <span class="selling-badge">Bestseller</span>
+        <span class="tutor-single-course-rating">
+            <?php
+                $course_rating = tutor_utils()->get_course_rating();
+                tutor_utils()->star_rating_generator($course_rating->rating_avg);
+            ?>
 
-        <h1 class="tutor-course-header-h1"><?php the_title(); ?></h1>
+            <span class="tutor-single-rating-count">
+                <?php
+                    echo $course_rating->rating_avg;
+                    echo '<i>('.$course_rating->rating_count.')</i>';
+                ?>
+            </span>
+        </span>
+    </div>
 
-        <div class="tutor-course-summery">
-			<?php tutor_the_excerpt(); ?>
-        </div>
+    <h1 class="tutor-course-header-h1"><?php the_title(); ?></h1>
 
-        <div class="tutor-course-lead-meta">
-			<span class="tutor-author">
-				<?php _e(sprintf("Created by : %s", get_tutor_course_author()) , 'tutor'); ?>,
-			</span>
+    <div class="tutor-single-course-meta tutor-meta-top">
+        <ul>
+            <li class="tutor-single-course-author-meta">
+                <div class="tutor-single-course-avatar">
+                    <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?>
+                </div>
+                <div class="tutor-single-course-author-name">
+                    <h6><?php _e('by', 'tutor'); ?></h6>
+                    <?php echo get_tutor_course_author(); ?>
+                </div>
+            </li>
+            <li class="tutor-course-level">
+                <h6><?php _e('Course level:', 'tutor'); ?></h6>
+                <?php echo get_tutor_course_level(); ?>
+            </li>
+        </ul>
 
-			<?php
-			$terms = get_tutor_course_categories();
-			if ($terms){
-				?>
-                <span class="tutor-categories">
+    </div>
+
+    <div class="tutor-single-course-meta tutor-lead-meta">
+        <ul>
+            <?php
+
+                $course_categories = get_tutor_course_categories();
+                if(!empty($course_categories)){
+            ?>
+                <li>
+                    <h6><?php esc_html_e('Categories', 'tutor') ?></h6>
                     <?php
-                    foreach ($terms as $term){
-	                    echo '<a href="'.get_term_link($term->term_id).'">'.$term->name.'</a>';
-                    }
+                        if(is_array($course_categories && count($course_benefits))){
+                             foreach ($course_categories as $course_category){
+                                 $category_name = $course_category->name;
+                                 echo "<span>$category_name</span>";
+                             }
+                        }
+                    ?>
+                </li>
+            <?php } ?>
+
+            <?php
+                $course_duration = get_tutor_course_duration_context();
+                if(!empty($course_duration)){
+            ?>
+                <li>
+                    <h6><?php esc_html_e('Total Hour', 'tutor') ?></h6>
+                    <span><?php echo $course_duration; ?></span>
+                </li>
+            <?php } ?>
+            <li>
+                <h6><?php esc_html_e('Total Enrolled', 'tutor') ?></h6>
+                <span>
+                    <?php
+                        $total_students = tutor_utils()->get_total_students() ? tutor_utils()->get_total_students() : 0;
+                        echo $total_students;
                     ?>
                 </span>
-				<?php
-			}
-			?>
+            </li>
+            <li>
+                <h6><?php esc_html_e('Last Update', 'tutor') ?></h6>
+                <?php echo esc_html(get_the_modified_date()); ?>
+            </li>
+        </ul>
+    </div>
 
-            <span class="tutor-course-lead-updated">
-				<?php _e(sprintf("Last updated : %s", get_the_modified_date()) , 'tutor'); ?>,
-			</span>
+    <?php
+    $excerpt = tutor_get_the_excerpt();
 
-	        <?php $level = get_tutor_course_level();
-	        if ($level){
-		        ?>
-                <span class="tutor-course-lead-level">
-                    <?php _e('Level : '); ?>
-                    <?php echo $level; ?>
-                </span>
-		        <?php
-	        }
-	        ?>
-
-			<?php $duration = get_tutor_course_duration_context();
-			if ($duration){
-				?>
-                <span class="tutor-course-lead-duration">
-                    <?php _e('Duration : '); ?>
-                    <?php echo $duration; ?>
-                </span>
-				<?php
-			}
-			?>
-
-
-
-        </div>
-    </div><!-- .wrap -->
+    if (! empty($excerpt)){
+        ?>
+            <div class="tutor-course-summery">
+                <h3  class="tutor-segment-title"><?php esc_html_e('About Course', 'tutor') ?></h3>
+                <?php echo $excerpt; ?>
+            </div>
+        <?php
+    }
+    ?>
 </div>

@@ -24,7 +24,7 @@ if (is_array($course_benefits) && count($course_benefits)){
 	<div class="tutor-single-course-segment tutor-course-benefits-wrap">
 
 		<div class="course-benefits-title">
-			<h4><?php _e('What Will I Learn?', 'tutor'); ?></h4>
+			<h3 class="tutor-segment-title"><?php _e('What Will I Learn?', 'tutor'); ?></h3>
 		</div>
 
 		<div class="tutor-course-benefits-content">

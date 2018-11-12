@@ -222,10 +222,10 @@ if ( ! function_exists('tutor_container_classes')) {
 	}
 }
 if ( ! function_exists('tutor_post_class')) {
-	function tutor_post_class() {
+	function tutor_post_class($default = '') {
 		$classes = apply_filters( 'tutor_post_class', array(
 			'tutor-wrap',
-			'wrap',
+            $default
 		) );
 
 		post_class( $classes );
@@ -368,6 +368,12 @@ if ( ! function_exists('get_tutor_course_author')) {
 		return apply_filters( 'get_tutor_course_author', get_the_author_meta( 'display_name', $post->post_author ) );
 	}
 }
+
+function get_tutor_course_author_id(){
+	global $post;
+	return $post->post_author;
+}
+
 /**
  * @param int $course_id
  *

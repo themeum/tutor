@@ -285,5 +285,14 @@ jQuery(document).ready(function($){
             $tutor_quiz_time_update.html(countdown_human);
         }, 1000);
     }
+
+    // tutor course content accordion
+    var $tutor_course_title = $('.tutor-course-title');
+
+    $tutor_course_title.on('click', function () {
+        var $lesson = $(this).siblings('.tutor-course-lessons');
+        $lesson.slideToggle();
+    });
+
 });
 

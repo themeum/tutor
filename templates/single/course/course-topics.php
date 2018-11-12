@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 	<div class="tutor-course-topics-header">
 		<div class="tutor-course-topics-header-left">
-			<h3><?php _e('Topics for this course', 'tutor'); ?></h3>
+			<h3 class="tutor-segment-title"><?php _e('Topics for this course', 'tutor'); ?></h3>
 		</div>
 
 		<div class="tutor-course-topics-header-right">
@@ -40,7 +40,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 				<div class="tutor-course-topic">
 					<div class="tutor-course-title">
-						<h2><?php the_title(); ?></h2>
+						<h4><?php the_title(); ?></h4>
 					</div>
 
 
@@ -50,10 +50,23 @@ if ( ! defined( 'ABSPATH' ) )
 						$lessons = tutor_utils()->get_lessons_by_topic(get_the_ID());
 						if ($lessons->have_posts()){
 							while ($lessons->have_posts()){ $lessons->the_post();
+
+                                $video = tutor_utils()->get_video_info();
+
+                                $play_time = false;
+                                if ($video){
+                                    $play_time = $video->playtime;
+                                }
+                                # @TODO: Need An vidoe & Text Icon font
+                                $lesson_icon = $play_time ? 'icon-star-empty' : 'icon-star';
+
 								?>
 
 								<div class="tutor-course-lesson">
-									<h4><?php the_title(); ?></h4>
+									<h4><?php
+                                        echo "<i class='$lesson_icon'></i>";
+                                        the_title();
+                                    ?></h4>
 								</div>
 
 								<?php
