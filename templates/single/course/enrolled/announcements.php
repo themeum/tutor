@@ -10,8 +10,9 @@
 
 $announcements = tutor_utils()->get_announcements(get_the_ID());
 ?>
-<div class="tutor-announcements-wrap">
 
+<?php do_action('tutor_course/announcements/before'); ?>
+<div class="tutor-announcements-wrap">
 	<?php
 	if (is_array($announcements) && count($announcements)){
 		?>
@@ -48,3 +49,5 @@ $announcements = tutor_utils()->get_announcements(get_the_ID());
 	}
 	?>
 </div>
+
+<?php do_action('tutor_course/announcements/after'); ?>

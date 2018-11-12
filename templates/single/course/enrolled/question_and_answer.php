@@ -13,7 +13,7 @@ if ( ! $enable_q_and_a_on_course) {
 	return;
 }
 ?>
-
+<?php do_action('tutor_course/question_and_answer/before'); ?>
 <div class="tutor-queston-and-answer-wrap">
 
     <div class="tutor-question-top">
@@ -156,3 +156,4 @@ if ( ! $enable_q_and_a_on_course) {
     </div>
 
 </div>
+<?php do_action('tutor_course/question_and_answer/after'); ?>

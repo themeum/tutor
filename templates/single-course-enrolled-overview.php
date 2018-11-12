@@ -9,28 +9,21 @@
  */
 
 get_header();
+
+do_action('tutor_course/single/enrolled/before/wrap');
+
 ?>
-
-<?php do_action('tutor_course/single/enrolled/before/wrap'); ?>
-
-<?php do_action('tutor_course/single/enrolled/before/lead_info'); ?>
-<?php tutor_course_enrolled_lead_info(); ?>
-<?php do_action('tutor_course/single/enrolled/after/lead_info'); ?>
-
-    <div <?php tutor_post_class(); ?>>
-		<?php do_action('tutor_course/single/enrolled/before/inner-wrap'); ?>
-
-		<?php do_action('tutor_course/single/enrolled/before/nav'); ?>
-		<?php tutor_course_enrolled_nav(); ?>
-		<?php do_action('tutor_course/single/enrolled/after/nav'); ?>
-
-		<?php get_tutor_posts_attachments(); ?>
-
-		<?php do_action('tutor_course/single/enrolled/after/inner-wrap'); ?>
-
+    <div <?php tutor_post_class('tutor-single-overview-wrap'); ?>>
+        <div class="tutor-container">
+            <div class="tutor-row">
+                <div class="tutor-col">
+                    <?php tutor_course_enrolled_lead_info(); ?>
+                    <?php tutor_course_enrolled_nav(); ?>
+                    <?php get_tutor_posts_attachments(); ?>
+                </div>
+            </div>
+        </div>
     </div><!-- .wrap -->
-
-<?php do_action('tutor_course/single/enrolled/after/wrap'); ?>
-
 <?php
+do_action('tutor_course/single/enrolled/after/wrap');
 get_footer();

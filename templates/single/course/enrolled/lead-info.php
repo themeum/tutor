@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 global $wp_query;
 ?>
-
+<?php do_action('tutor_course/single/enrolled/before/lead_info'); ?>
 <div class="tutor-full-width-course-top tutor-course-top-info">
     <div <?php tutor_post_class(); ?>>
 
@@ -81,9 +81,7 @@ global $wp_query;
 
 
             <?php
-            do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
-            $count_completed_lesson = tutor_course_completing_progress_bar();
-            do_action('tutor_course/single/enrolled/after/lead_info/progress_bar');
+                $count_completed_lesson = tutor_course_completing_progress_bar();
             ?>
 
             <div class="tutor-lead-info-btn-group">
@@ -155,3 +153,5 @@ global $wp_query;
 
     </div><!-- .wrap -->
 </div>
+
+<?php do_action('tutor_course/single/enrolled/after/lead_info'); ?>
