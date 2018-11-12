@@ -46,38 +46,52 @@ global $post;
                     <h6><?php _e('by', 'tutor'); ?></h6>
                     <?php echo get_tutor_course_author(); ?>
                 </div>
-                <div class="tutor-single-course-in">
-                    <h6><?php _e('in'); ?></h6>
-                    Design
-                </div>
             </li>
             <li class="tutor-course-level">
                 <h6><?php _e('Course level:', 'tutor'); ?></h6>
-                <!-- @TODO: Need Course Level -->
-                Intermediate
+                <?php echo get_tutor_course_level(); ?>
             </li>
         </ul>
 
     </div>
 
     <div class="tutor-single-course-meta tutor-lead-meta">
-        <!--
-            @TODO: Need Category Funciton
-            @TODO: Total Course Duration
-        -->
         <ul>
-            <li>
-                <h6><?php esc_html_e('Categories', 'tutor') ?></h6>
-                <a href="#">Ios</a>
-                <a href="#">Apps</a>
-            </li>
-            <li>
-                <h6><?php esc_html_e('Total Hour', 'tutor') ?></h6>
-                <span><?php esc_html_e('34h:06m:50s', 'tutor') ?></span>
-            </li>
+            <?php
+
+                $course_categories = get_tutor_course_categories();
+                if(!empty($course_categories)){
+            ?>
+                <li>
+                    <h6><?php esc_html_e('Categories', 'tutor') ?></h6>
+                    <?php
+                        if(is_array($course_categories && count($course_benefits))){
+                             foreach ($course_categories as $course_category){
+                                 $category_name = $course_category->name;
+                                 echo "<span>$category_name</span>";
+                             }
+                        }
+                    ?>
+                </li>
+            <?php } ?>
+
+            <?php
+                $course_duration = get_tutor_course_duration_context();
+                if(!empty($course_duration)){
+            ?>
+                <li>
+                    <h6><?php esc_html_e('Total Hour', 'tutor') ?></h6>
+                    <span><?php echo $course_duration; ?></span>
+                </li>
+            <?php } ?>
             <li>
                 <h6><?php esc_html_e('Total Enrolled', 'tutor') ?></h6>
-                <span><?php echo tutor_utils()->get_total_students(); ?></span>
+                <span>
+                    <?php
+                        $total_students = tutor_utils()->get_total_students() ? tutor_utils()->get_total_students() : 0;
+                        echo $total_students;
+                    ?>
+                </span>
             </li>
             <li>
                 <h6><?php esc_html_e('Last Update', 'tutor') ?></h6>

@@ -33,16 +33,25 @@ $is_purchasable = tutor_utils()->is_course_purchasable();
     </div>
 
     <!--@TODO: Need Tutor price box description module-->
-    <div class="tutor-price-box-description">
-        <h6>Material Includes</h6>
-        <ul>
-            <li>34 hours on-demand video</li>
-            <li>45 articles</li>
-            <li>Full lifetime access</li>
-            <li>Access on mobile and TV</li>
-            <li>Certificate of Completion</li>
-        </ul>
-    </div>
+
+    <?php
+
+        $material_includes = tutor_course_material_includes();
+        if(!empty($material_includes)){
+        ?>
+            <div class="tutor-price-box-description">
+                <h6><?php esc_html_e('Material Includes', 'tutor') ?></h6>
+                <ul>
+                    <?php if (is_array($material_includes) && count($material_includes)){
+                        foreach ($material_includes as $material){
+                            echo "<li>{$material}</li>";
+                        }
+                    } ?>
+                </ul>
+            </div>
+        <?php
+            }
+        ?>
 
     <div class="tutor-single-enroll-box">
         <?php
