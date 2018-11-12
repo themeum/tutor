@@ -15,7 +15,7 @@ get_header();
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info'); ?>>
     <div class="tutor-container">
         <div class="tutor-row">
-            <div class="col">
+            <div class="tutor-col">
                 <?php do_action('tutor_course/single/enrolled/before/inner-wrap'); ?>
                 <?php tutor_course_enrolled_lead_info(); ?>
                 <?php tutor_course_enrolled_nav(); ?>

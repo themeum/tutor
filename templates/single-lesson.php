@@ -16,33 +16,28 @@ $currentPost = $post;
 
 
 <?php do_action('tutor_lesson/single/before/wrap'); ?>
-
-
-<?php do_action('tutor_lesson/single/before/lead_info'); ?>
-<?php tutor_lesson_lead_info(); ?>
-<?php do_action('tutor_lesson/single/after/lead_info'); ?>
-
-
-    <div <?php tutor_post_class(); ?>>
-        <div class="tutor-lesson-single-wrap">
-
-            <div class="tutor-topics-wrap">
-	            <?php tutor_lessons_as_list(); ?>
+    <div <?php tutor_post_class('tutor-single-lesson-wrap'); ?>>
+        <div class="tutor-container">
+            <div class="tutor-row">
+                <div class="tutor-col">
+                    <?php tutor_lesson_lead_info(); ?>
+                </div>
             </div>
-
-
-            <div class="tutor-lesson-content-wrap">
-
-				<?php tutor_lesson_video(); ?>
-				<?php the_content(); ?>
-				<?php get_tutor_posts_attachments(); ?>
-				<?php tutor_lesson_mark_complete_html(); ?>
-
-            </div>
-
         </div>
-    </div><!-- .wrap -->
-
+        <div class="tutor-container">
+            <div class="tutor-row">
+                <div class="tutor-col-4">
+                    <?php tutor_lessons_as_list(); ?>
+                </div>
+                <div class="tutor-col-8">
+                    <?php tutor_lesson_video(); ?>
+                    <?php the_content(); ?>
+                    <?php get_tutor_posts_attachments(); ?>
+                    <?php tutor_lesson_mark_complete_html(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php do_action('tutor_lesson/single/after/wrap');
 
 get_footer();

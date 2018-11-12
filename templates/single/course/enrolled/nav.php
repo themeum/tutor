@@ -15,6 +15,8 @@ if ( ! defined( 'ABSPATH' ) )
 $course_nav_item = tutor_utils()->course_sub_pages();
 ?>
 
+<?php do_action('tutor_course/single/enrolled/nav/before'); ?>
+
 <div id="course-enrolled-nav-wrap-<?php echo get_the_ID(); ?>" class="course-enrolled-nav-wrap course-enrolled-nav-wrap-<?php the_ID(); ?>">
 	<nav id="course-enrolled-nav-<?php echo get_the_ID(); ?>" class="course-enrolled-nav course-enrolled-nav-<?php the_ID(); ?>">
 		<ul>
@@ -29,3 +31,5 @@ $course_nav_item = tutor_utils()->course_sub_pages();
 		</ul>
 	</nav>
 </div>
+
+<?php do_action('tutor_course/single/enrolled/nav/after'); ?>

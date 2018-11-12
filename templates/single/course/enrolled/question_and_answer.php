@@ -7,7 +7,7 @@
  * @url https://themeum.com
  */
 ?>
-
+<?php do_action('tutor_course/question_and_answer/before'); ?>
 <div class="tutor-queston-and-answer-wrap">
 
     <div class="tutor-question-top">
@@ -159,3 +159,4 @@
     </div>
 
 </div>
+<?php do_action('tutor_course/question_and_answer/after'); ?>
