@@ -11,7 +11,6 @@
 get_header();
 ?>
 
-
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info'); ?>>
     <div class="tutor-container">
         <div class="tutor-row">

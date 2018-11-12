@@ -65,7 +65,7 @@ global $post;
                 <li>
                     <h6><?php esc_html_e('Categories', 'tutor') ?></h6>
                     <?php
-                        if(is_array($course_categories && count($course_benefits))){
+                        if(is_array($course_categories && count($course_categories))){
                              foreach ($course_categories as $course_category){
                                  $category_name = $course_category->name;
                                  echo "<span>$category_name</span>";
