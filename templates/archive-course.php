@@ -49,6 +49,8 @@ get_header(); ?>
 
 		endif; ?>
 
+        <?php tutor_course_archive_pagination(); ?>
+
 		<?php
 		do_action('tutor_course/archive/after_loop');
 		?>

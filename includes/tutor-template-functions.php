@@ -75,6 +75,20 @@ if ( ! function_exists('tutor_course_loop_end')) {
 	}
 }
 
+if ( ! function_exists('tutor_course_archive_pagination')) {
+	function tutor_course_archive_pagination( $echo = true ) {
+		ob_start();
+		tutor_load_template( 'loop.tutor-pagination' );
+
+		$output = apply_filters( 'tutor_course_archive_pagination', ob_get_clean() );
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+}
+
 function tutor_course_loop_before_content(){
 	ob_start();
 	tutor_load_template( 'loop.loop-before-content' );

@@ -16,6 +16,8 @@ class Template extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
+		add_action( 'pre_get_posts', array($this, 'limit_course_query_archive'), 1 );
+
 		add_filter( 'template_include', array($this, 'load_course_archive_template'), 99 );
 		add_filter( 'template_include', array($this, 'load_single_course_template'), 99 );
 		add_filter( 'template_include', array($this, 'load_single_lesson_template'), 99 );
@@ -38,15 +40,6 @@ class Template extends Tutor_Base {
 	public function load_course_archive_template($template){
 		global $wp_query;
 
-		if (is_page()){
-			$page_id = (int) get_the_ID();
-			$selected_archive_page = (int) tutor_utils()->get_option('course_archive_page');
-
-			if ($page_id === $selected_archive_page){
-				query_posts(array('post_type' => $this->course_post_type ));
-			}
-		}
-
 		$post_type = get_query_var('post_type');
 		$course_category = get_query_var('course-category');
 
@@ -56,6 +49,37 @@ class Template extends Tutor_Base {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * @param $query
+	 *
+	 * limit for course archive listing
+	 *
+	 * Make a page to archive listing for courses
+	 */
+	public function limit_course_query_archive($query){
+		if ($query->is_main_query() && ! $query->is_feed() && ! is_admin() && is_page() ){
+			$queried_object = get_queried_object();
+			if ($queried_object instanceof \WP_Post){
+				$page_id = $queried_object->ID;
+				$selected_archive_page = (int) tutor_utils()->get_option('course_archive_page');
+
+				if ($page_id === $selected_archive_page){
+					$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
+					query_posts(array('post_type' => $this->course_post_type, 'paged' => $paged ));
+				}
+			}
+		}
+
+		if ( $query->is_archive ){
+			$post_type = get_query_var('post_type');
+			$course_category = get_query_var('course-category');
+			if ( ($post_type === $this->course_post_type || ! empty($course_category) )){
+				$courses_per_page = (int) tutor_utils()->get_option('courses_per_page', 10);
+				$query->set('posts_per_page', $courses_per_page);
+			}
+		}
 	}
 
 	/**
