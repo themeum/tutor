@@ -24,17 +24,14 @@ $user_name = get_query_var('tutor_student_username');
             <div class="tutor-col-3">
 
 
-
             </div> <!-- .tutor-col-4 -->
 
             <div class="tutor-col-9">
 
-                <h3>Student</h3>
+                <h3>Student Profile</h3>
 
-                <?php
-                print_r($user);
 
-                ?>
+
 
             </div> <!-- .tutor-col-8 -->
 
