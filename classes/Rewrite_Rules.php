@@ -17,11 +17,11 @@ class Rewrite_Rules extends Tutor_Base {
 		add_filter('post_type_link', array($this, 'change_lesson_single_url'), 1, 2);
 	}
 
-
 	public function tutor_register_query_vars( $vars ) {
 		$vars[] = 'course_subpage';
 		$vars[] = 'lesson_video';
 		$vars[] = 'tutor_dashboard_page';
+		$vars[] = 'tutor_student_username';
 		return $vars;
 	}
 
@@ -32,8 +32,10 @@ class Rewrite_Rules extends Tutor_Base {
 
 			//Quiz Permalink
 			$this->course_post_type."/(.+?)/tutor_quiz/(.+?)/?$" => "index.php?post_type=tutor_quiz&name=".$wp_rewrite->preg_index(2),
-
+			//Private Video URL
 			"video-url/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=". $wp_rewrite->preg_index(1),
+			//Student Public Profile URL
+			"student/(.+?)/?$" => "index.php?tutor_student_username=". $wp_rewrite->preg_index(1),
 		);
 
 		//Nav Items

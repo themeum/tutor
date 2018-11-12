@@ -752,16 +752,6 @@ if ( ! function_exists('tutor_course_enroll_box')) {
 			$output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );
 		}
 
-		/*
-		if ($isLoggedIn) {
-
-		}else{
-			tutor_load_template( 'single.course.login' );
-			$output = apply_filters( 'tutor_course/global/login', ob_get_clean() );
-		}
-		*/
-
-
 		if ( $echo ) {
 			echo $output;
 		}
