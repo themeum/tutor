@@ -11,6 +11,8 @@
 get_header();
 
 $user_name = get_query_var('tutor_student_username');
+$get_user = tutor_utils()->get_user_by_login($user_name);
+$user_id = $get_user->ID;
 ?>
 
 <?php do_action('tutor_student/before/wrap'); ?>
@@ -22,34 +24,41 @@ $user_name = get_query_var('tutor_student_username');
             <div class="tutor-container">
 
 				<?php
-				$current_uid = get_current_user_id();
-				$user_data = get_userdata($current_uid);
+
+				$user_data = get_userdata($user_id);
+				$roles = wp_roles();
 				?>
 
                 <div class="tutor-row">
                     <div class="tutor-col-auto">
                         <div class="tutor-dashboard-avater">
 							<?php
-							echo get_avatar($current_uid, '200'); ?>
+							echo tutor_utils()->get_tutor_avatar($user_id, 'thumbnail'); ?>
                         </div>
                     </div>
                     <div class="tutor-col">
                         <div class="tutor-dashboard-student-info">
                             <h3 class="tutor-student-name">
-								<?php
-								echo esc_html($user_data->display_name);
-								?>
+                                <a href="<?php echo tutor_utils()->student_url($user_id); ?>"> <?php echo esc_html($user_data->display_name); ?> </a>
+
                             </h3>
                             <ul class="tutor-dashboard-user-role">
-                                <li>Admin</li>
-                                <li>Student</li>
+								<?php
+								if (is_array($user_data->roles) && count($user_data->roles)){
+									foreach ($user_data->roles as $role){
+										if ( ! empty($roles->roles[$role]['name'])){
+											echo "<li>{$roles->roles[$role]['name']}</li>";
+										}
+									}
+								}
+								?>
                             </ul>
-                            <h4 class="tutor-designation">Founder & Ceo at Tutor</h4>
-                            <h5 class="tutor-dashboard-user-location">
-                                <!-- @TODO: Need Location Icon -->
-                                <i class="icon icon-star-empty"></i>
-                                Boston, MA, United Stats
-                            </h5>
+							<?php
+							$designation = get_user_meta($user_id, '_tutor_profile_job_title', true);
+							if ($designation){
+								echo '<h4 class="tutor-designation">'.$designation.'</h4>';
+							}
+							?>
                         </div>
                         <div class="tutor-dashboard-student-meta">
                             <ul>
@@ -86,10 +95,14 @@ $user_name = get_query_var('tutor_student_username');
                         </ul>
                     </div>
                     <div class="tutor-col-9">
+						<?php
+						$profile_bio = get_user_meta($user_id, '_tutor_profile_bio', true);
+						if ($profile_bio){
+							?>
 
-
-                        <h3>Student Profile</h3>
-
+                            <h3><?php _e('About Me:', 'tutor'); ?></h3>
+							<?php echo wpautop($profile_bio) ?>
+						<?php } ?>
                     </div> <!-- .tutor-col-8 -->
 
 

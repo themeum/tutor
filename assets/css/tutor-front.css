@@ -547,21 +547,25 @@ a.tutor-button:hover, .tutor-button:hover {
     height: 1px;
     width: 100%;
 }
-
+.tutor-student-dashboard-leadinfo {
+    padding-top: 20px;
+}
 .tutor-dashboard-student-info{
     padding-left: 40px;
 }
-
+.tutor-dashboard-student-info h4, .tutor-dashboard-student-info h5{
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
+}
 @media (max-width: 767px) {
     .tutor-dashboard-student-info{
         padding-left: 0;
     }
 }
-
 .tutor-student-dashboard-leadinfo .tutor-dashboard-avater img{
     border-radius: 50%;
 }
-
 .tutor-student-dashboard-leadinfo .tutor-student-name{
     font-size: 24px;
     font-weight: 600;
@@ -578,16 +582,20 @@ a.tutor-button:hover, .tutor-button:hover {
     margin: 0;
     padding: 0;
 }
-
 .tutor-student-dashboard-leadinfo .tutor-dashboard-user-role li{
     display: inline-block;
+    margin-right: 10px;
+}
+.tutor-student-dashboard-leadinfo span.tutor-text-avatar {
+    padding: 30px;
+    font-size: 30px;
+    color: #fff;
 }
 .tutor-student-dashboard-leadinfo .tutor-designation{
     display: inline-block;
     margin: 0;
+    font-weight: 300;
 }
-
-
 .tutor-dashboard-student-meta {
     text-align: right;
 }
@@ -597,8 +605,6 @@ a.tutor-button:hover, .tutor-button:hover {
         text-align: left;
     }
 }
-
-
 .tutor-dashboard-student-meta ul {
     margin: 0;
     padding: 0;
@@ -608,24 +614,18 @@ a.tutor-button:hover, .tutor-button:hover {
     border-top: 1px solid #ddd;
     border-right: 1px solid #ddd;
 }
-
-
 @media (max-width: 991px) {
     .tutor-dashboard-student-meta ul {
         display: block;
         margin-top: 15px;
     }
 }
-
-
 .tutor-dashboard-student-meta li{
     display: inline-block;
     text-align: center;
     padding: 5px 20px;
     border-left: 1px solid #ddd;
 }
-
-
 @media (max-width: 767px) {
     .tutor-dashboard-student-meta li {
         width: 100%;
@@ -634,15 +634,12 @@ a.tutor-button:hover, .tutor-button:hover {
     }
 
 }
-
 .tutor-dashboard-student-meta li h4{
     margin: 0;
 }
-
 .tutor-dashboard-student{
     padding: 30px 0;
 }
-
 .tutor-dashboard-permalinks{
     list-style: none;
     margin: 0 0 20px;
@@ -650,7 +647,6 @@ a.tutor-button:hover, .tutor-button:hover {
     border-radius: 4px;
     padding: 10px 0;
 }
-
 .tutor-dashboard-permalinks li a{
     display: block;
     color: #000;
@@ -662,12 +658,9 @@ a.tutor-button:hover, .tutor-button:hover {
     padding: 20px;
     border-radius: 4px;
 }
-
-
-    /* *********************** */
+/* *********************** */
 /* End Tutor Student Dashboard */
 /* *********************** */
-
 
 /**
 Teacher
@@ -694,7 +687,6 @@ Teacher
     height: auto;
     border-radius: 50%;
 }
-
 .single-teacher-wrap .teacher-name{
     flex: 0 0 170px;
 }
@@ -734,8 +726,6 @@ Teacher
 /**
 Review and rating
  */
-
-
 .tutor-review-individual-item {
     display: flex;
     font-size: 14px;

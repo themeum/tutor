@@ -139,16 +139,31 @@ class Utils {
 
 		$student_id = $this->get_user_id($student_id);
 		if ($student_id){
-
-			$user = get_userdata($student_id);
-			$user_name = $user->user_login;
-
+			global $wpdb;
+			$user = $wpdb->get_row("SELECT user_login from {$wpdb->users} WHERE ID = {$student_id} ");
+			if ($user){
+				$user_name = $user->user_login;
+			}
 		}else{
 			$user_name = 'user_name';
 		}
 
 		return $site_url.$user_name;
 
+	}
+
+	/**
+	 * @param string $user_login
+	 *
+	 * @return array|null|object
+	 *
+	 * Get user by user login
+	 */
+	public function get_user_by_login($user_login = ''){
+		global $wpdb;
+		$user_login = sanitize_text_field($user_login);
+		$user = $wpdb->get_row("SELECT * from {$wpdb->users} WHERE user_login = '{$user_login}'");
+		return $user;
 	}
 
 	/**
