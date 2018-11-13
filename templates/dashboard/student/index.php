@@ -6,14 +6,18 @@ if (isset($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_var
 	$dashboard_page_slug = $wp_query->query_vars['tutor_dashboard_page'];
 }
 
-$current_uid = get_current_user_id();
-$user_data = get_userdata($current_uid);
 
 ?>
 
 
 <div class="tutor-student-dashboard-leadinfo">
     <div class="tutor-container">
+
+        <?php
+            $current_uid = get_current_user_id();
+            $user_data = get_userdata($current_uid);
+        ?>
+
         <div class="tutor-row">
             <div class="tutor-col-auto">
                 <div class="tutor-dashboard-avater">

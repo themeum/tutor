@@ -22,7 +22,7 @@
     margin-left: -15px;
 }
 
-.tutor-col, .tutor-col-3, .tutor-col-4, .tutor-col-6, .tutor-col-8, .tutor-col-9{
+.tutor-col-auto, .tutor-col, .tutor-col-3, .tutor-col-4, .tutor-col-6, .tutor-col-8, .tutor-col-9{
     position: relative;
     width: 100%;
     min-height: 1px;
@@ -73,6 +73,14 @@
     -ms-flex: 75%;
     flex: 0 0 75%;
     max-width: 75%;
+}
+
+@media (max-width: 767px) {
+    .tutor-col-auto, .tutor-col, .tutor-col-3, .tutor-col-4, .tutor-col-6, .tutor-col-8, .tutor-col-9{
+        -ms-flex: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }
 
 /********************/
@@ -544,6 +552,12 @@ a.tutor-button:hover, .tutor-button:hover {
     padding-left: 40px;
 }
 
+@media (max-width: 767px) {
+    .tutor-dashboard-student-info{
+        padding-left: 0;
+    }
+}
+
 .tutor-student-dashboard-leadinfo .tutor-dashboard-avater img{
     border-radius: 50%;
 }
@@ -553,6 +567,12 @@ a.tutor-button:hover, .tutor-button:hover {
     font-weight: 600;
 }
 
+@media (max-width: 767px) {
+    .tutor-student-dashboard-leadinfo .tutor-dashboard-avater img{
+        width: 100px;
+        height: auto;
+    }
+}
 .tutor-student-dashboard-leadinfo ul{
     list-style: none;
     margin: 0;
@@ -571,6 +591,14 @@ a.tutor-button:hover, .tutor-button:hover {
 .tutor-dashboard-student-meta {
     text-align: right;
 }
+
+@media (max-width: 991px) {
+    .tutor-dashboard-student-meta {
+        text-align: left;
+    }
+}
+
+
 .tutor-dashboard-student-meta ul {
     margin: 0;
     padding: 0;
@@ -581,12 +609,32 @@ a.tutor-button:hover, .tutor-button:hover {
     border-right: 1px solid #ddd;
 }
 
+
+@media (max-width: 991px) {
+    .tutor-dashboard-student-meta ul {
+        display: block;
+        margin-top: 15px;
+    }
+}
+
+
 .tutor-dashboard-student-meta li{
     display: inline-block;
     text-align: center;
     padding: 5px 20px;
     border-left: 1px solid #ddd;
 }
+
+
+@media (max-width: 767px) {
+    .tutor-dashboard-student-meta li {
+        width: 100%;
+        text-align: left;
+        display: block;
+    }
+
+}
+
 .tutor-dashboard-student-meta li h4{
     margin: 0;
 }
@@ -597,7 +645,7 @@ a.tutor-button:hover, .tutor-button:hover {
 
 .tutor-dashboard-permalinks{
     list-style: none;
-    margin: 0;
+    margin: 0 0 20px;
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 10px 0;
