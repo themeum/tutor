@@ -30,9 +30,6 @@ $user_name = get_query_var('tutor_student_username');
 
                 <h3>Student Profile</h3>
 
-
-
-
             </div> <!-- .tutor-col-8 -->
 
 
