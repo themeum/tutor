@@ -392,6 +392,22 @@ class Options {
 		if (tutor_utils()->has_wc()) {
 			$attr['woocommerce'] = array(
 				'label' => __( 'WooCommerce', 'tutor' ),
+
+				'sections'    => array(
+					'general' => array(
+						'label' => __('General', 'tutor'),
+						'desc' => __('WooCommerce Settings', 'tutor'),
+						'fields' => array(
+							'enable_course_sell_by_woocommerce' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable WooComerce to sell course', 'tutor'),
+								'desc'      => __('By integrating WooCommerce, you can sell your course',	'tutor'),
+							),
+						),
+					),
+				),
+
+
 			);
 		}
 

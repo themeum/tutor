@@ -501,6 +501,11 @@ class Utils {
 		if ( ! $this->has_wc()){
 			return false;
 		}
+		$course_sell = $this->get_option('enable_course_sell_by_woocommerce');
+		if ( ! $course_sell){
+			return false;
+		}
+
 		$course_id = $this->get_post_id($course_id);
 		$has_product_id = get_post_meta($course_id, '_tutor_course_product_id', true);
 		if ($has_product_id){
