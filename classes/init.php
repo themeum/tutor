@@ -42,7 +42,7 @@ class init{
 		 * Include Files
 		 */
 		add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
-		
+
 		/**
 		 * Loading Autoloader
 		 */
@@ -108,24 +108,25 @@ class init{
 	 * Do some task during plugin activation
 	 */
 	public static function tutor_activate(){
-		//Rewrite Flush
-		update_option('required_rewrite_flush', time());
-		self::manage_tutor_roles_and_permissions();
+		$version = get_option('tutor_version', TUTOR_VERSION);
+		//Save Option
+		if ( ! $version){
+			$options = self::default_options();
+			update_option('tutor_option', $options);
+
+			//Rewrite Flush
+			update_option('required_rewrite_flush', time());
+			self::manage_tutor_roles_and_permissions();
 
 
-		$is_previously_installed = get_option('tutor_version', TUTOR_VERSION);
-		if ( ! $is_previously_installed){
-			self::save_data();
+			self::save_data();//Save initial Page
 			update_option('tutor_version', TUTOR_VERSION);
 		}
-
-
 
 		//Set Schedule
 		if (! wp_next_scheduled ( 'tutor_once_in_day_run_schedule' )) {
 			wp_schedule_event(time(), 'twicedaily', 'tutor_once_in_day_run_schedule');
 		}
-
 	}
 
 	//Run task on deactivation
@@ -142,7 +143,7 @@ class init{
 
 		remove_role($teacher_role);
 		add_role( $teacher_role, __('Tutor Teacher', 'tutor'), array() );
-		
+
 		$custom_post_type_permission = array(
 			//Manage Teacher
 			'manage_tutor_teacher',
@@ -166,7 +167,7 @@ class init{
 			'read_private_tutor_lessons',
 			'edit_tutor_lessons',
 			'publish_tutor_lessons',
-			
+
 			'edit_tutor_quiz',
 			'read_tutor_quiz',
 			'delete_tutor_quiz',
@@ -242,8 +243,45 @@ class init{
 			'post_status'   => 'publish',
 		);
 		$teacher_registration_id = wp_insert_post( $teacher_registration_args );
+	}
 
-
+	public static function default_options(){
+		$options = array (
+			'load_tutor_css' => '1',
+			'load_tutor_js' => '1',
+			'course_allow_upload_private_files' => '1',
+			'display_course_teachers' => '1',
+			'enable_q_and_a_on_course' => '1',
+			'courses_col_per_row' => '3',
+			'courses_per_page' => '3',
+			'lesson_permalink_base' => 'lesson',
+			'quiz_time_limit' =>
+				array (
+					'value' => '0',
+					'time' => 'minutes',
+				),
+			'quiz_when_time_expires' => 'autosubmit',
+			'quiz_attempts_allowed' => '10',
+			'quiz_grade_method' => 'highest_grade',
+			'student_dashboard' => '217',
+			'email_to_students' =>
+				array (
+					'quiz_completed' => '1',
+					'completed_course' => '1',
+				),
+			'email_to_teachers' =>
+				array (
+					'a_student_enrolled_in_course' => '1',
+					'a_student_completed_course' => '1',
+					'a_student_completed_lesson' => '1',
+					'a_student_placed_question' => '1',
+				),
+			'email_from_name' => get_option('blogname'),
+			'email_from_address' => get_option('admin_email'),
+			'email_footer_text' => '',
+			'enable_course_sell_by_woocommerce' => '1',
+		);
+		return $options;
 	}
 
 

@@ -386,9 +386,6 @@ class Options {
 			),
 		);
 
-
-
-
 		if (tutor_utils()->has_wc()) {
 			$attr['woocommerce'] = array(
 				'label' => __( 'WooCommerce', 'tutor' ),
