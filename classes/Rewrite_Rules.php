@@ -21,7 +21,12 @@ class Rewrite_Rules extends Tutor_Base {
 		$vars[] = 'course_subpage';
 		$vars[] = 'lesson_video';
 		$vars[] = 'tutor_dashboard_page';
-		$vars[] = 'tutor_student_username';
+
+		$student_public_url_enable = tutor_utils()->get_option('student_public_url_enable');
+		if ($student_public_url_enable){
+			$vars[] = 'tutor_student_username';
+		}
+
 		return $vars;
 	}
 

@@ -24,7 +24,6 @@ if ($my_courses->have_posts()):
 
             <?php the_excerpt(); ?>
 			<?php tutor_course_completing_progress_bar(); ?>
-
         </div>
 
 		<?php

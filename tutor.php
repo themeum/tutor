@@ -48,8 +48,8 @@ function tutor_utils(){
 $tutor = new \TUTOR\init();
 $tutor->run(); //Boom
 
-
-
+/*
 $options = (array) maybe_unserialize(get_option('tutor_option'));
 echo '<pre>';
 die(var_export($options));
+*/

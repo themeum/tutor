@@ -278,8 +278,6 @@ jQuery(document).ready(function($){
                         window.location.reload(true);
                     }
                 });
-
-
             }
             time_now = time_now + 1000;
             $tutor_quiz_time_update.html(countdown_human);

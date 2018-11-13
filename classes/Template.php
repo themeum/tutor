@@ -76,12 +76,36 @@ class Template extends Tutor_Base {
 			}
 		}
 
-		if ( $query->is_archive ){
+		if ( $query->is_archive && $query->is_main_query() && ! $query->is_feed() && ! is_admin() ){
 			$post_type = get_query_var('post_type');
 			$course_category = get_query_var('course-category');
 			if ( ($post_type === $this->course_post_type || ! empty($course_category) )){
 				$courses_per_page = (int) tutor_utils()->get_option('courses_per_page', 10);
 				$query->set('posts_per_page', $courses_per_page);
+
+				$course_filter = 'newest_first';
+				if ( ! empty($_GET['tutor_course_filter'])){
+					$course_filter = sanitize_text_field($_GET['tutor_course_filter']);
+				}
+				switch ($course_filter){
+					case 'newest_first':
+						$query->set('orderby', 'ID');
+						$query->set('order', 'desc');
+						break;
+					case 'oldest_first':
+						$query->set('orderby', 'ID');
+						$query->set('order', 'asc');
+						break;
+					case 'course_title_az':
+						$query->set('orderby', 'post_title');
+						$query->set('order', 'asc');
+						break;
+					case 'course_title_za':
+						$query->set('orderby', 'post_title');
+						$query->set('order', 'desc');
+						break;
+				}
+
 			}
 		}
 	}

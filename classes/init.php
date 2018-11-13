@@ -247,38 +247,38 @@ class init{
 
 	public static function default_options(){
 		$options = array (
-			'load_tutor_css' => '1',
-			'load_tutor_js' => '1',
+			'load_tutor_css'                    => '1',
+			'load_tutor_js'                     => '1',
 			'course_allow_upload_private_files' => '1',
-			'display_course_teachers' => '1',
-			'enable_q_and_a_on_course' => '1',
-			'courses_col_per_row' => '3',
-			'courses_per_page' => '3',
-			'lesson_permalink_base' => 'lesson',
-			'quiz_time_limit' =>
+			'display_course_teachers'           => '1',
+			'enable_q_and_a_on_course'          => '1',
+			'courses_col_per_row'               => '3',
+			'courses_per_page'                  => '3',
+			'lesson_permalink_base'             => 'lesson',
+			'quiz_time_limit'                   =>
 				array (
 					'value' => '0',
 					'time' => 'minutes',
 				),
-			'quiz_when_time_expires' => 'autosubmit',
-			'quiz_attempts_allowed' => '10',
-			'quiz_grade_method' => 'highest_grade',
-			'student_dashboard' => '217',
-			'email_to_students' =>
+			'quiz_when_time_expires'            => 'autosubmit',
+			'quiz_attempts_allowed'             => '10',
+			'quiz_grade_method'                 => 'highest_grade',
+			'student_public_url_enable'         => '1',
+			'email_to_students'                 =>
 				array (
 					'quiz_completed' => '1',
 					'completed_course' => '1',
 				),
-			'email_to_teachers' =>
+			'email_to_teachers'                     =>
 				array (
-					'a_student_enrolled_in_course' => '1',
-					'a_student_completed_course' => '1',
-					'a_student_completed_lesson' => '1',
-					'a_student_placed_question' => '1',
+					'a_student_enrolled_in_course'  => '1',
+					'a_student_completed_course'    => '1',
+					'a_student_completed_lesson'    => '1',
+					'a_student_placed_question'     => '1',
 				),
-			'email_from_name' => get_option('blogname'),
-			'email_from_address' => get_option('admin_email'),
-			'email_footer_text' => '',
+			'email_from_name'                   => get_option('blogname'),
+			'email_from_address'                => get_option('admin_email'),
+			'email_footer_text'                 => '',
 			'enable_course_sell_by_woocommerce' => '1',
 		);
 		return $options;
