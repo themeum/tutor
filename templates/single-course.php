@@ -35,10 +35,10 @@ get_header();
                     <?php tutor_course_enroll_box(); ?>
                     <?php tutor_course_requirements_html(); ?>
 
-                </div> <!-- .tutor-single-course-sidebar -->
-            </div> <!-- .tutor-col-4 -->
-        </div> <!-- .tutor-row -->
-    </div> <!-- .tutor-container -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php do_action('tutor_course/single/after/wrap'); ?>

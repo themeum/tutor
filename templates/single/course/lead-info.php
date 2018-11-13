@@ -63,15 +63,15 @@ global $post;
 				?>
                 <li>
 					<?php
-					if(is_array($course_categories && count($course_categories))){
-						?>
-                        <h6><?php esc_html_e('Categories', 'tutor') ?></h6>
-						<?php
-						foreach ($course_categories as $course_category){
-							$category_name = $course_category->name;
-							echo "<span>$category_name</span>";
-						}
-					}
+                        if(is_array($course_categories && count($course_categories))){
+                            ?>
+                            <h6><?php esc_html_e('Categories', 'tutor') ?></h6>
+                            <?php
+                            foreach ($course_categories as $course_category){
+                                $category_name = $course_category->name;
+                                echo "<span>$category_name</span>";
+                            }
+                        }
 					?>
                 </li>
 			<?php } ?>
