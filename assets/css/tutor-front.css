@@ -873,6 +873,17 @@ Lesson Single Page
     margin-bottom: 30px;
 }
 
+.tutor-lead-info-btn-group .tutor-course-compelte-form-wrap{
+    display: inline-block;
+}
+
+.tutor-lead-info-btn-group .tutor-course-compelte-form-wrap button{
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    font-weight: normal;
+    font-size: 14px;
+}
 
 /*******************/
 /*tutor review form*/

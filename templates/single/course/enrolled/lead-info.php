@@ -40,7 +40,7 @@ global $post;
                 </div>
                 <div class="tutor-single-course-author-name">
                     <strong><?php _e('by', 'tutor'); ?></strong>
-					<?php echo get_tutor_course_author(); ?>
+                    <a href="<?php echo tutor_utils()->student_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a>
                 </div>
             </li>
             <li class="tutor-course-level">
@@ -53,19 +53,15 @@ global $post;
             </li>
 			<?php
 			$course_categories = get_tutor_course_categories();
-			if(!empty($course_categories)){
+			if(is_array($course_categories) && count($course_categories)){
 				?>
                 <li>
-					<?php
-					if(is_array($course_categories) && count($course_categories)){
-						?>
-                        <strong><?php esc_html_e('Categories', 'tutor') ?></strong>
+                    <strong><?php esc_html_e('Categories', 'tutor') ?></strong>
 						<?php
 						foreach ($course_categories as $course_category){
 							$category_name = $course_category->name;
 							echo "<span>$category_name</span>";
 						}
-					}
 					?>
                 </li>
 			<?php } ?>

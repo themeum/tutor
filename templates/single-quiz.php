@@ -16,7 +16,7 @@ $course = tutor_utils()->get_course_by_quiz(get_the_ID());
 <?php do_action('tutor_quiz/single/before/wrap'); ?>
 
     <div <?php tutor_post_class(); ?>>
-        <div class="tutor-quiz-single-wrap">
+        <div class="tutor-quiz-single-wrap tutor-container">
             <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
 	        <?php
