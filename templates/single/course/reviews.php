@@ -19,60 +19,60 @@ if ( ! is_array($reviews) || ! count($reviews)){
 }
 ?>
 
-<div class="tutor-single-course-segment tutor-course-student-rating-wrap">
+<div class="tutor-single-course-segment">
+
     <div class="course-student-rating-title">
-        <h4><?php _e('Student Feedback', 'tutor'); ?></h4>
+        <h3 class="tutor-segment-title"><?php _e('Student Feedback', 'tutor'); ?></h3>
     </div>
 
-    <div class="course-avg-rating-wrap">
-        <p class="course-avg-rating">
-            <?php
-            $rating = tutor_utils()->get_course_rating();
-            echo $rating->rating_avg;
-            ?>
-        </p>
-        <p class="course-avg-rating-html">
-            <?php tutor_utils()->star_rating_generator($rating->rating_avg); ?>
-        </p>
+    <div class="tutor-course-reviews-wrap">
+        <div class="tutor-course-student-rating-wrap">
+            <div class="course-avg-rating-wrap">
+                <p class="course-avg-rating">
+                    <?php
+                    $rating = tutor_utils()->get_course_rating();
+                    echo $rating->rating_avg;
+                    ?>
+                </p>
+                <p class="course-avg-rating-html">
+                    <?php tutor_utils()->star_rating_generator($rating->rating_avg); ?>
+                </p>
 
-        <p><?php _e('Course Rating', 'tutor'); ?></p>
-    </div>
-</div>
-
-<div class="tutor-single-course-segment  tutor-course-reviews-wrap">
-    <div class="course-target-reviews-title">
-        <h4><?php _e('Reviews', 'tutor'); ?></h4>
-    </div>
-
-    <div class="tutor-course-reviews-list">
-        <?php
-        foreach ($reviews as $review){
-            ?>
-            <div class="tutor-review-individual-item tutor-review-<?php echo $review->comment_ID; ?>">
-                <div class="review-left">
-                    <div class="review-avatar">
-                        <?php
-                        echo tutor_utils()->get_tutor_avatar($review->user_id); ?>
-                    </div>
-
-                    <div class="review-time-name">
-                        <p class="review-meta">
-                            <?php _e(sprintf('%s ago', human_time_diff(strtotime($review->comment_date))), 'lms'); ?>
-                        </p>
-                        <p><?php echo $review->display_name; ?> </p>
-                    </div>
-                </div>
-
-                <div class="review-content review-right">
-                    <div class="individual-review-rating-wrap">
-                        <?php tutor_utils()->star_rating_generator($review->rating); ?>
-                    </div>
-                    <?php echo wpautop($review->comment_content); ?>
-                </div>
+                <p><?php _e('Course Rating', 'tutor'); ?></p>
             </div>
+        </div>
+
+        <div class="tutor-course-reviews-list">
             <?php
-        }
-        ?>
+            foreach ($reviews as $review){
+                ?>
+                <div class="tutor-review-individual-item tutor-review-<?php echo $review->comment_ID; ?>">
+                    <div class="review-left">
+                        <div class="review-avatar">
+                            <?php
+                            echo tutor_utils()->get_tutor_avatar($review->user_id); ?>
+                        </div>
+                        <div class="tutor-review-user-info">
+                            <div class="review-time-name">
+                                <p class="tutor-review-name"><?php echo $review->display_name; ?> </p>
+                                <p class="review-meta">
+                                    <?php _e(sprintf('%s ago', human_time_diff(strtotime($review->comment_date))), 'lms'); ?>
+                                </p>
+                            </div>
+                            <div class="individual-review-rating-wrap">
+                                <?php tutor_utils()->star_rating_generator($review->rating); ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-content review-right">
+                        <?php echo wpautop(stripslashes($review->comment_content)); ?>
+                    </div>
+                </div>
+                <?php
+            }
+            ?>
+        </div>
     </div>
 </div>
 

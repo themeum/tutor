@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) )
 		?>
         <div class="tutor-price-box-description">
             <h6><?php esc_html_e('Material Includes', 'tutor') ?></h6>
-            <ul>
+            <ul class="tutor-custom-list-style">
 				<?php if (is_array($material_includes) && count($material_includes)){
 					foreach ($material_includes as $material){
 						echo "<li>{$material}</li>";

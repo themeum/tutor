@@ -27,7 +27,6 @@ get_header();
                 <?php tutor_course_material_includes_html(); ?>
                 <?php tutor_course_teachers_html(); ?>
                 <?php tutor_course_target_reviews_html(); ?>
-                <?php tutor_course_target_review_form_html(); ?>
             </div> <!-- .tutor-col-8 -->
 
             <div class="tutor-col-4">

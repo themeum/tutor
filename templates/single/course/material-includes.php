@@ -27,7 +27,7 @@ if (is_array($materials) && count($materials)){
 		</div>
 
 		<div class="tutor-course-target-audience-content">
-			<ul class="tutor-course-target-audience-items">
+			<ul class="tutor-course-target-audience-items tutor-custom-list-style">
 				<?php
 				foreach ($materials as $material){
 					echo "<li>{$material}</li>";

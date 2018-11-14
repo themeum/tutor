@@ -27,7 +27,7 @@ if (is_array($course_requirements) && count($course_requirements)){
 		</div>
 
 		<div class="tutor-course-requirements-content">
-			<ul class="tutor-course-requirements-items">
+			<ul class="tutor-course-requirements-items tutor-custom-list-style">
 				<?php
 				foreach ($course_requirements as $requirement){
 					echo "<li>{$requirement}</li>";
