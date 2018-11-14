@@ -173,7 +173,18 @@
     float: left;
     vertical-align: top;
     margin-right: 40px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
+
+.tutor-single-course-meta .tutor-single-course-avatar img{
+    height: 21px;
+    width: 21px;
+    display: block;
+    border-radius: 50%;
+    margin-right: 3px;
+}
+
 .tutor-single-course-meta ul li .tutor-single-course-avatar span{
     height: 21px;
     width: 21px;
@@ -188,7 +199,7 @@
     display: inline-block;
     vertical-align: top;
 }
-.tutor-single-course-meta ul li h6{
+.tutor-single-course-meta ul li strong{
     margin: 0;
     display: inline-block;
     line-height: 21px;
@@ -465,6 +476,17 @@ div[class*="tutor-course-col"] {
     color: #bac0cf;
 }
 
+.tutor-loop-author{
+    overflow: hidden;
+}
+
+.tutor-loop-author .tutor-single-course-avatar img{
+    width: 21px;
+    height: 21px;
+    display: block;
+    border-radius: 50%;
+    margin-right: 3px;
+}
 .tutor-loop-author .tutor-single-course-avatar .tutor-text-avatar{
     height: 21px;
     width: 21px;
@@ -477,12 +499,15 @@ div[class*="tutor-course-col"] {
 
 .tutor-loop-author > div{
     display: inline-block;
+    float: left;
 }
 
-.tutor-loop-author > div h6{
+.tutor-loop-author > div strong{
     display: inline-block;
     margin: 0 2px 0 2px;
     font-size: 14px;
+    color: #000;
+    font-weight: 600;
 }
 
 .tutor-course-lising-category span:not(:last-child):after{
@@ -718,55 +743,7 @@ Teacher
 .single-teacher-wrap .single-teacher-bottom .ratings .rating-generated{
     color: #f8c51c;
 }
-/**
-Review and rating
- */
-.tutor-review-individual-item {
-    display: flex;
-    font-size: 14px;
-    border-top: 1px solid #CCCCCC;
-    padding: 20px 0;
-}
-.tutor-review-individual-item .review-left{
-    display: flex;
-    flex: 0 0 220px;
-}
-.tutor-review-individual-item .review-left .review-avatar{
-    flex: 0 0 70px;
-}
-.tutor-review-individual-item .review-right {
-    margin-left: 20px;
-}
-.tutor-review-individual-item .review-meta {
-    color: #ccc;
-}
-.tutor-review-individual-item .review-time-name p{
-    margin: 0;
-}
-.review-avatar .tutor-text-avatar, .teacher-avatar .tutor-text-avatar{
-    border-radius: 50%;
-    /*border: 1px solid #686f7a;*/
-    width: 50px;
-    height: 50px;
-    text-align: center;
-    display: block;
-    line-height: 50px;
-    color: #ffffff;
-    font-size: 14px;
-}
-.review-time-name {
-    flex: 0 0 160px;
-}
-.course-avg-rating-wrap{
-    width: 150px;
-    text-align: center;
-}
-.course-avg-rating-wrap .course-avg-rating {
-    font-size: 50px;
-}
-.course-avg-rating-wrap p{
-    margin: 0;
-}
+
 /**
 Lesson Single Page
 */
@@ -895,6 +872,7 @@ Lesson Single Page
 .tutor-lead-info-btn-group{
     margin-bottom: 30px;
 }
+
 
 /*******************/
 /*tutor review form*/
@@ -1250,7 +1228,7 @@ p.attempt-reviewed-text{
 }
 
 .course-avg-rating-wrap{
-    padding: 40px 20px 20px 40px;
+    padding: 20px 20px 20px 40px;
 }
 
 .tutor-review-individual-item .review-left{
@@ -1266,6 +1244,12 @@ p.attempt-reviewed-text{
 .tutor-review-individual-item .review-avatar{
     width: 50px;
     float: left;;
+}
+
+.tutor-review-individual-item .review-avatar img{
+    border-radius: 50%;
+    margin: 0;
+    border: none;
 }
 
 .tutor-review-individual-item .tutor-review-user-info{

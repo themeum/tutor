@@ -22,9 +22,7 @@ if (is_array($target_audience) && count($target_audience)){
 
 	<div class="tutor-single-course-segment  tutor-course-target-audience-wrap">
 
-		<div class="course-target-audience-title">
-			<h3 class="tutor-segment-title"><?php _e('Target Audience', 'tutor'); ?></h3>
-		</div>
+        <h3 class="tutor-segment-title"><?php _e('Target Audience', 'tutor'); ?></h3>
 
 		<div class="tutor-course-target-audience-content">
 			<ul class="tutor-course-target-audience-items tutor-custom-list-style">
