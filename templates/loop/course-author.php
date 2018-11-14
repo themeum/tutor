@@ -10,5 +10,8 @@
 ?>
 
 <div class="tutor-loop-author">
-    <p><?php echo get_the_author(); ?></p>
+    <?php
+    global $authordata;
+    ?>
+    <p> <a href="<?php echo tutor_utils()->student_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a> </p>
 </div>

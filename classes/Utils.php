@@ -357,15 +357,31 @@ class Utils {
 
 		$course_post_type = tutor()->course_post_type;
 		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} 
-
 			INNER JOIN {$wpdb->usermeta} ON user_id = {$teacher_id} AND meta_key = '_tutor_teacher_course_id' AND meta_value = ID 
-
 			WHERE post_status = 'publish' 
-			AND post_type = '{$course_post_type}' 
-			
-			; ");
+			AND post_type = '{$course_post_type}' ; ");
 
 		return $count;
+	}
+
+	public function get_courses_by_teacher($teacher_id){
+		global $wpdb;
+
+		$course_post_type = tutor()->course_post_type;
+
+		$querystr = "
+	    SELECT $wpdb->posts.* 
+	    FROM $wpdb->posts
+		INNER JOIN {$wpdb->usermeta} ON $wpdb->usermeta.user_id = {$teacher_id} AND $wpdb->usermeta.meta_key = '_tutor_teacher_course_id' AND $wpdb->usermeta.meta_value = $wpdb->posts.ID 
+	
+	    
+	    WHERE $wpdb->posts.post_status = 'publish' 
+	    AND $wpdb->posts.post_type = '{$course_post_type}'
+	    AND $wpdb->posts.post_date < NOW()
+	    ORDER BY $wpdb->posts.post_date DESC";
+
+		$pageposts = $wpdb->get_results($querystr, OBJECT);
+		return $pageposts;
 	}
 
 	public function get_archive_page_course_count(){
@@ -2554,7 +2570,8 @@ class Utils {
 	public function user_profile_permalinks(){
 		$permalinks = array(
 			'enrolled_course'   => __('Enrolled Course', 'tutor'),
-			'reviews_wrote'     => __('Reviews Wrote', 'tutor'),
+			'courses_taken'     => __('Courses Taken', 'tutor'),
+			'reviews_wrote'     => __('Reviews Written', 'tutor'),
 		);
 		
 		return apply_filters('tutor_public_profile/permalinks', $permalinks);

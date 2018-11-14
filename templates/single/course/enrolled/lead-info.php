@@ -104,7 +104,10 @@ global $wp_query;
 	    <?php do_action('tutor_course/single/enrolled/before/lead_info/meta'); ?>
         <div class="tutor-course-lead-meta">
 			<span class="tutor-author">
-				<?php _e(sprintf("Created by : %s", get_tutor_course_author()) , 'tutor'); ?>,
+				<?php
+				global $authordata;
+
+				_e('Created by:', 'tutor'); ?>, <a href="<?php echo tutor_utils()->student_url($authordata->ID); ?>"><?php echo $authordata->display_name; ?></a>
 			</span>
 
 	        <?php
