@@ -17,8 +17,6 @@ global $post;
 
 <div class="tutor-single-course-segment tutor-single-course-lead-info">
     <div class="tutor-leadinfo-top-meta">
-        <!-- @TODO Best Selling Badge -->
-        <span class="selling-badge">Bestseller</span>
         <span class="tutor-single-course-rating">
             <?php
             $course_rating = tutor_utils()->get_course_rating();

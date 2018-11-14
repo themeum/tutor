@@ -27,7 +27,7 @@ if (is_array($target_audience) && count($target_audience)){
 		</div>
 
 		<div class="tutor-course-target-audience-content">
-			<ul class="tutor-course-target-audience-items">
+			<ul class="tutor-course-target-audience-items tutor-custom-list-style">
 				<?php
 				foreach ($target_audience as $audience){
 					echo "<li>{$audience}</li>";

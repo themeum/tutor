@@ -128,7 +128,7 @@ jQuery(document).ready(function($){
 
     $(document).on('click', '.write-course-review-link-btn', function(e){
         e.preventDefault();
-        $(this).closest('form').find('.tutor-write-review-box').slideToggle();
+        $(this).siblings('.tutor-write-review-form').slideToggle();
     });
 
     $(document).on('click', '.tutor-ask-question-btn', function(e){
