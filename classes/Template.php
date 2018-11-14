@@ -243,7 +243,6 @@ class Template extends Tutor_Base {
 		}
 
 		return $template;
-
 	}
 
 
@@ -257,7 +256,7 @@ class Template extends Tutor_Base {
 			$user = $wpdb->get_row("select display_name from {$wpdb->users} WHERE user_login = '{$user_name}' limit 1; ");
 
 			if ( ! empty($user->display_name)){
-				return sprintf("%s's Home page ", $user->display_name );
+				return sprintf("%s's Profile page ", $user->display_name );
 			}
 		}
 		return '';

@@ -1,54 +1,26 @@
 <?php
-/**
- * Template for displaying course reviews
- *
- * @since v.1.0.0
- *
- * @author Themeum
- * @url https://themeum.com
- */
+$user_name = sanitize_text_field(get_query_var('tutor_student_username'));
+$get_user = tutor_utils()->get_user_by_login($user_name);
+$user_id = $get_user->ID;
 
 
+$reviews = tutor_utils()->get_reviews_by_user($user_id);
 
-do_action('tutor_course/single/enrolled/before/reviews');
-
-
-$reviews = tutor_utils()->get_course_reviews();
 if ( ! is_array($reviews) || ! count($reviews)){
 	return;
 }
 ?>
 
-<div class="tutor-single-course-segment tutor-course-student-rating-wrap">
-    <div class="course-student-rating-title">
-        <h4><?php _e('Student Feedback', 'tutor'); ?></h4>
-    </div>
-
-    <div class="course-avg-rating-wrap">
-        <p class="course-avg-rating">
-            <?php
-            $rating = tutor_utils()->get_course_rating();
-            echo $rating->rating_avg;
-            ?>
-        </p>
-        <p class="course-avg-rating-html">
-            <?php tutor_utils()->star_rating_generator($rating->rating_avg); ?>
-        </p>
-
-        <p><?php _e('Course Rating', 'tutor'); ?></p>
-    </div>
-</div>
-
-<div class="tutor-single-course-segment  tutor-course-reviews-wrap">
+<div class=" tutor-course-reviews-wrap">
     <div class="course-target-reviews-title">
-        <h4><?php _e('Reviews', 'tutor'); ?></h4>
+        <h4><?php _e(sprintf('Reviews wrote by %s ', $get_user->display_name), 'tutor'); ?></h4>
     </div>
 
-    <div class="tutor-course-reviews-list">
+    <div class="tutor-reviews-list">
 		<?php
 		foreach ($reviews as $review){
 			$profile_url = tutor_utils()->student_url($review->user_id);
-            ?>
+			?>
             <div class="tutor-review-individual-item tutor-review-<?php echo $review->comment_ID; ?>">
                 <div class="review-left">
                     <div class="review-avatar">
@@ -67,10 +39,18 @@ if ( ! is_array($reviews) || ! count($reviews)){
                 </div>
 
                 <div class="review-content review-right">
-                    <div class="individual-review-rating-wrap">
-	                    <?php tutor_utils()->star_rating_generator($review->rating); ?>
+
+                    <div class="individual-review-course-name">
+                        <?php _e('On', 'tutor'); ?>
+                        <a href="<?php echo get_the_permalink($review->comment_post_ID); ?>"><?php echo get_the_title
+                        ($review->comment_post_ID);
+                        ?></a>
                     </div>
-                    <?php echo wpautop($review->comment_content); ?>
+
+                    <div class="individual-review-rating-wrap">
+						<?php tutor_utils()->star_rating_generator($review->rating); ?>
+                    </div>
+					<?php echo wpautop($review->comment_content); ?>
                 </div>
             </div>
 			<?php
@@ -78,6 +58,3 @@ if ( ! is_array($reviews) || ! count($reviews)){
 		?>
     </div>
 </div>
-
-
-<?php do_action('tutor_course/single/enrolled/after/reviews'); ?>

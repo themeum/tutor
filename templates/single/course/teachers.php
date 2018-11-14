@@ -20,17 +20,18 @@ if ($teachers){
 	<div class="tutor-course-teachers-wrap">
 		<?php
 		foreach ($teachers as $teacher){
+		    $profile_url = tutor_utils()->student_url($teacher->ID);
 			?>
 			<div class="single-teacher-wrap">
 				<div class="single-teacher-top">
 					<div class="teacher-avatar">
-						<?php
-						echo tutor_utils()->get_tutor_avatar($teacher->ID);
-						?>
+                        <a href="<?php echo $profile_url; ?>">
+	                        <?php echo tutor_utils()->get_tutor_avatar($teacher->ID); ?>
+                        </a>
 					</div>
 
 					<div class="teacher-name">
-						<h3><?php echo $teacher->display_name; ?></h3>
+						<h3><a href="<?php echo $profile_url; ?>"><?php echo $teacher->display_name; ?></a> </h3>
 						<h4><?php echo $teacher->tutor_profile_job_title; ?></h4>
 					</div>
 

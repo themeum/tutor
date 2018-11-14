@@ -149,7 +149,6 @@ class Utils {
 		}
 
 		return $site_url.$user_name;
-
 	}
 
 	/**
@@ -447,7 +446,6 @@ class Utils {
 	 * @return float|int
 	 *
 	 */
-
 	public function get_course_completed_percent($course_id = 0, $user_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
@@ -456,7 +454,7 @@ class Utils {
 		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
 
 		if ($total_lesson > 0 && $completed_lesson > 0){
-			return ($completed_lesson * 100) / $total_lesson;
+			return number_format(($completed_lesson * 100) / $total_lesson, 1);
 		}
 
 		return 0;
@@ -1744,6 +1742,33 @@ class Utils {
 		return (object) $ratings;
 	}
 
+
+	public function get_reviews_by_user($user_id = 0, $offset = 0, $limit = 150){
+		$user_id = $this->get_user_id($user_id);
+		global $wpdb;
+
+		$reviews = $wpdb->get_results("select {$wpdb->comments}.comment_ID, 
+			{$wpdb->comments}.comment_post_ID, 
+			{$wpdb->comments}.comment_author, 
+			{$wpdb->comments}.comment_author_email, 
+			{$wpdb->comments}.comment_date, 
+			{$wpdb->comments}.comment_content, 
+			{$wpdb->comments}.user_id, 
+			{$wpdb->commentmeta}.meta_value as rating,
+			{$wpdb->users}.display_name 
+			
+			from {$wpdb->comments}
+			INNER JOIN {$wpdb->commentmeta} 
+			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+			INNER  JOIN {$wpdb->users}
+			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+			WHERE {$wpdb->comments}.user_id = {$user_id} 
+			AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
+		);
+
+		return $reviews;
+	}
+
 	/**
 	 * @param $teacher_id
 	 *
@@ -1816,6 +1841,18 @@ class Utils {
 		return (object) $ratings;
 	}
 
+	/**
+	 * @param int $user_id
+	 *
+	 * @return null|string
+	 */
+	public function count_reviews_wrote_by_user($user_id = 0){
+		global $wpdb;
+		$user_id = $this->get_user_id($user_id);
+
+		$count_reviews = $wpdb->get_var("SELECT COUNT(comment_ID) from {$wpdb->comments} WHERE user_id = {$user_id} AND comment_type = 'tutor_course_rating' ");
+		return $count_reviews;
+	}
 
 	/**
 	 * @param $size
@@ -2514,6 +2551,14 @@ class Utils {
 	}
 
 
+	public function user_profile_permalinks(){
+		$permalinks = array(
+			'enrolled_course'   => __('Enrolled Course', 'tutor'),
+			'reviews_wrote'     => __('Reviews Wrote', 'tutor'),
+		);
+		
+		return apply_filters('tutor_public_profile/permalinks', $permalinks);
+	}
 
 }
 

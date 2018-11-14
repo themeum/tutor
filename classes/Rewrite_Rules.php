@@ -25,6 +25,7 @@ class Rewrite_Rules extends Tutor_Base {
 		$student_public_url_enable = tutor_utils()->get_option('student_public_url_enable');
 		if ($student_public_url_enable){
 			$vars[] = 'tutor_student_username';
+			$vars[] = 'profile_sub_page';
 		}
 
 		return $vars;
@@ -40,6 +41,7 @@ class Rewrite_Rules extends Tutor_Base {
 			//Private Video URL
 			"video-url/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=". $wp_rewrite->preg_index(1),
 			//Student Public Profile URL
+			"student/(.+?)/(.+?)/?$" => "index.php?tutor_student_username=". $wp_rewrite->preg_index(1)."&profile_sub_page=".$wp_rewrite->preg_index(2),
 			"student/(.+?)/?$" => "index.php?tutor_student_username=". $wp_rewrite->preg_index(1),
 		);
 
