@@ -107,8 +107,8 @@ class init{
 	/**
 	 * Do some task during plugin activation
 	 */
-	public static function tutor_activate(){
-		$version = get_option('tutor_version', TUTOR_VERSION);
+	public function tutor_activate(){
+		$version = get_option('tutor_version');
 		//Save Option
 		if ( ! $version){
 			$options = self::default_options();
@@ -117,7 +117,6 @@ class init{
 			//Rewrite Flush
 			update_option('required_rewrite_flush', time());
 			self::manage_tutor_roles_and_permissions();
-
 
 			self::save_data();//Save initial Page
 			update_option('tutor_version', TUTOR_VERSION);
