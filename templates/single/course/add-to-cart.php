@@ -74,7 +74,7 @@ do_action('tutor_course/single/add-to-cart/before');
 			<input type="hidden" name="tutor_course_id" value="<?php echo get_the_ID(); ?>">
 			<input type="hidden" name="tutor_course_action" value="_tutor_course_enroll_now">
 
-			<div class="tutor-single-course-segment  tutor-course-enroll-wrap">
+			<div class=" tutor-course-enroll-wrap">
 				<h2><?php _e('Free', 'tutor'); ?></h2>
 
 				<button type="submit" class="tutor-btn-enroll tutor-btn tutor-course-purchase-btn">

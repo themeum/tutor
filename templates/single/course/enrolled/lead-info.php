@@ -39,16 +39,16 @@ global $post;
 					<?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?>
                 </div>
                 <div class="tutor-single-course-author-name">
-                    <h6><?php _e('by', 'tutor'); ?></h6>
+                    <strong><?php _e('by', 'tutor'); ?></strong>
 					<?php echo get_tutor_course_author(); ?>
                 </div>
             </li>
             <li class="tutor-course-level">
-                <h6><?php _e('Course level:', 'tutor'); ?></h6>
+                <strong><?php _e('Course level:', 'tutor'); ?></strong>
 				<?php echo get_tutor_course_level(); ?>
             </li>
             <li>
-                <h6><?php esc_html_e('Last Update', 'tutor') ?></h6>
+                <strong><?php esc_html_e('Last Update', 'tutor') ?></strong>
 				<?php echo esc_html(get_the_modified_date()); ?>
             </li>
 			<?php
@@ -59,7 +59,7 @@ global $post;
 					<?php
 					if(is_array($course_categories) && count($course_categories)){
 						?>
-                        <h6><?php esc_html_e('Categories', 'tutor') ?></h6>
+                        <strong><?php esc_html_e('Categories', 'tutor') ?></strong>
 						<?php
 						foreach ($course_categories as $course_category){
 							$category_name = $course_category->name;
@@ -75,7 +75,7 @@ global $post;
 			if(!empty($course_duration)){
 				?>
                 <li>
-                    <h6><?php esc_html_e('Total Hour', 'tutor') ?></h6>
+                    <strong><?php esc_html_e('Total Hour', 'tutor') ?></strong>
                     <span><?php echo $course_duration; ?></span>
                 </li>
 			<?php } ?>

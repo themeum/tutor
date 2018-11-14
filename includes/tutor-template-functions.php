@@ -209,7 +209,7 @@ if ( ! function_exists('tutor_container_classes')) {
 
 		$classes = apply_filters( 'tutor_container_classes', array(
 			'tutor-wrap tutor-courses-wrap',
-			'wrap',
+            'tutor-container'
 		) );
 
 		$class = implode( ' ', $classes );
