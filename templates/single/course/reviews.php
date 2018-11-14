@@ -15,7 +15,7 @@ do_action('tutor_course/single/enrolled/before/reviews');
 
 $reviews = tutor_utils()->get_course_reviews();
 if ( ! is_array($reviews) || ! count($reviews)){
-	return;
+    return;
 }
 ?>
 
@@ -45,13 +45,13 @@ if ( ! is_array($reviews) || ! count($reviews)){
     </div>
 
     <div class="tutor-course-reviews-list">
-		<?php
-		foreach ($reviews as $review){
-			?>
+        <?php
+        foreach ($reviews as $review){
+            ?>
             <div class="tutor-review-individual-item tutor-review-<?php echo $review->comment_ID; ?>">
                 <div class="review-left">
                     <div class="review-avatar">
-	                    <?php
+                        <?php
                         echo tutor_utils()->get_tutor_avatar($review->user_id); ?>
                     </div>
 
@@ -65,16 +65,15 @@ if ( ! is_array($reviews) || ! count($reviews)){
 
                 <div class="review-content review-right">
                     <div class="individual-review-rating-wrap">
-	                    <?php tutor_utils()->star_rating_generator($review->rating); ?>
+                        <?php tutor_utils()->star_rating_generator($review->rating); ?>
                     </div>
                     <?php echo wpautop($review->comment_content); ?>
                 </div>
             </div>
-			<?php
-		}
-		?>
+            <?php
+        }
+        ?>
     </div>
 </div>
-
 
 <?php do_action('tutor_course/single/enrolled/after/reviews'); ?>

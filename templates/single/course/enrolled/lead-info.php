@@ -12,146 +12,125 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 global $wp_query;
+global $post;
 ?>
-<?php do_action('tutor_course/single/enrolled/before/lead_info'); ?>
-<div class="tutor-full-width-course-top tutor-course-top-info">
-    <div <?php tutor_post_class(); ?>>
-
-	    <?php do_action('tutor_course/single/enrolled/before/lead_info/course_title'); ?>
-        <h1 class="tutor-course-header-h1"><?php the_title(); ?></h1>
-	    <?php do_action('tutor_course/single/enrolled/after/lead_info/course_title'); ?>
 
 
-	    <?php do_action('tutor_course/single/enrolled/before/lead_info/excerpt'); ?>
-        <div class="tutor-course-summery">
-			<?php tutor_the_excerpt(); ?>
-        </div>
-	    <?php do_action('tutor_course/single/enrolled/after/lead_info/excerpt'); ?>
 
 
-        <div class="tutor-course-enrolled-info">
-
-	        <?php do_action('tutor_course/single/enrolled/before/lead_info/enrolled_date'); ?>
-            <p>
-				<?php
-				$enrolled = tutor_utils()->is_enrolled();
-				_e(sprintf("Enrolled at : %s", date(get_option('date_format'), strtotime($enrolled->post_date)) ), 'tutor');
-				?>
-            </p>
-	        <?php do_action('tutor_course/single/enrolled/after/lead_info/enrolled_date'); ?>
 
 
-	        <?php do_action('tutor_course/single/enrolled/before/lead_info/review'); ?>
-            <div class="tutor-course-enrolled-review-wrap">
-                <form method="post" class="tutor-write-review-form">
-                    <input type="hidden" name="tutor_course_id" value="<?php echo get_the_ID(); ?>">
-                    <span class="tutor-ratings-wrap">
-                        <?php
-                        $rating = tutor_utils()->get_course_rating_by_user();
-                        tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($rating->rating));
-                        ?>
-                    </span>
-
-                    <a href="javascript:;" class="write-course-review-link-btn"><?php _e('Write a review', 'tutor'); ?></a>
-
-                    <div class="tutor-write-review-box" style="display: none;">
-
-                        <div class="tutor-form-row">
-                            <div class="tutor-form-col-6">
-                                <div class="tutor-form-group">
-                                    <textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo $rating->review; ?></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tutor-form-row">
-                            <div class="tutor-form-col-6">
-                                <div class="tutor-form-group">
-                                    <button type="submit" class="tutor_submit_review_btn"><?php _e('Submit Review', 'tutor'); ?></button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </form>
-            </div>
-
-	        <?php do_action('tutor_course/single/enrolled/after/lead_info/review'); ?>
 
 
+
+    <div class="tutor-single-course-segment tutor-single-course-lead-info">
+        <div class="tutor-leadinfo-top-meta">
+            <!-- @TODO Best Selling Badge -->
+            <span class="selling-badge">Bestseller</span>
+            <span class="tutor-single-course-rating">
             <?php
-                $count_completed_lesson = tutor_course_completing_progress_bar();
+            $course_rating = tutor_utils()->get_course_rating();
+            tutor_utils()->star_rating_generator($course_rating->rating_avg);
             ?>
 
-            <div class="tutor-lead-info-btn-group">
-				<?php
-				if ( $wp_query->query['post_type'] !== 'lesson') {
-					$lesson_url = tutor_utils()->get_course_first_lesson();
-					if ( $lesson_url ) {
-						?>
-                        <a href="<?php echo $lesson_url; ?>" class="tutor-button"><?php _e( 'Continue to lesson', 'tutor' ); ?></a>
-					<?php }
-				}
-				?>
-
-                <a href="<?php echo get_the_permalink(); ?>" class="tutor-button"><?php _e('Course Home', 'tutor'); ?></a>
-
-                <?php tutor_course_mark_complete_html(); ?>
-            </div>
+                <span class="tutor-single-rating-count">
+                <?php
+                echo $course_rating->rating_avg;
+                echo '<i>('.$course_rating->rating_count.')</i>';
+                ?>
+            </span>
+        </span>
         </div>
 
-	    <?php do_action('tutor_course/single/enrolled/before/lead_info/meta'); ?>
-        <div class="tutor-course-lead-meta">
-			<span class="tutor-author">
-				<?php _e(sprintf("Created by : %s", get_tutor_course_author()) , 'tutor'); ?>,
-			</span>
+        <h1 class="tutor-course-header-h1"><?php the_title(); ?></h1>
 
-	        <?php
-	        $terms = get_tutor_course_categories();
-	        if ($terms){
-		        ?>
-                <span class="tutor-categories">
+        <div class="tutor-single-course-meta tutor-meta-top">
+            <ul>
+                <li class="tutor-single-course-author-meta">
+                    <div class="tutor-single-course-avatar">
+                        <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?>
+                    </div>
+                    <div class="tutor-single-course-author-name">
+                        <h6><?php _e('by', 'tutor'); ?></h6>
+                        <?php echo get_tutor_course_author(); ?>
+                    </div>
+                </li>
+                <li class="tutor-course-level">
+                    <h6><?php _e('Course level:', 'tutor'); ?></h6>
+                    <?php echo get_tutor_course_level(); ?>
+                </li>
+                <li>
+                    <h6><?php esc_html_e('Last Update', 'tutor') ?></h6>
+                    <?php echo esc_html(get_the_modified_date()); ?>
+                </li>
+                <?php
+                $course_categories = get_tutor_course_categories();
+                if(!empty($course_categories)){
+                    ?>
+                    <li>
+                        <?php
+                        if(is_array($course_categories) && count($course_categories)){
+                            ?>
+                            <h6><?php esc_html_e('Categories', 'tutor') ?></h6>
+                            <?php
+                            foreach ($course_categories as $course_category){
+                                $category_name = $course_category->name;
+                                echo "<span>$category_name</span>";
+                            }
+                        }
+                        ?>
+                    </li>
+                <?php } ?>
+
+                <?php
+                $course_duration = get_tutor_course_duration_context();
+                if(!empty($course_duration)){
+                    ?>
+                    <li>
+                        <h6><?php esc_html_e('Total Hour', 'tutor') ?></h6>
+                        <span><?php echo $course_duration; ?></span>
+                    </li>
+                <?php } ?>
+            </ul>
+            <div class="tutor-course-enrolled-info">
+
+                <?php do_action('tutor_course/single/enrolled/before/lead_info/enrolled_date'); ?>
+                <p>
                     <?php
-                    foreach ($terms as $term){
-	                    echo '<a href="'.get_term_link($term->term_id).'">'.$term->name.'</a>';
+                    $enrolled = tutor_utils()->is_enrolled();
+                    _e(sprintf("Enrolled at : %s", date(get_option('date_format'), strtotime($enrolled->post_date)) ), 'tutor');
+                    ?>
+                </p>
+                <?php do_action('tutor_course/single/enrolled/after/lead_info/enrolled_date');
+
+                    $count_completed_lesson = tutor_course_completing_progress_bar();
+
+                ?>
+
+                <div class="tutor-lead-info-btn-group">
+                    <?php
+                    if ( $wp_query->query['post_type'] !== 'lesson') {
+                        $lesson_url = tutor_utils()->get_course_first_lesson();
+                        if ( $lesson_url ) {
+                            ?>
+                            <a href="<?php echo $lesson_url; ?>" class="tutor-button"><?php _e( 'Continue to lesson', 'tutor' ); ?></a>
+                        <?php }
                     }
                     ?>
-                </span>
-		        <?php
-	        }
-	        ?>
-
-            <span class="tutor-course-lead-updated">
-				<?php _e(sprintf("Last updated : %s", get_the_modified_date()) , 'tutor'); ?>,
-			</span>
-
-	        <?php $level = get_tutor_course_level();
-	        if ($level){
-		        ?>
-                <span class="tutor-course-lead-level">
-                    <?php _e('Level : '); ?>
-                    <?php echo $level; ?>
-                </span>
-		        <?php
-	        }
-	        ?>
-
-	        <?php $duration = get_tutor_course_duration_context();
-	        if ($duration){
-		        ?>
-                <span class="tutor-course-lead-duration">
-                    <?php _e('Duration : '); ?>
-                    <?php echo $duration; ?>
-                </span>
-		        <?php
-	        }
-	        ?>
-
+                    <a href="<?php echo get_the_permalink(); ?>" class="tutor-button"><?php _e('Course Home', 'tutor'); ?></a>
+                    <?php tutor_course_mark_complete_html(); ?>
+                </div>
+            </div>
         </div>
-	    <?php do_action('tutor_course/single/enrolled/after/lead_info/meta'); ?>
-
-    </div><!-- .wrap -->
-</div>
-
-<?php do_action('tutor_course/single/enrolled/after/lead_info'); ?>
+        <?php
+            $excerpt = tutor_get_the_excerpt();
+            if (! empty($excerpt)){
+                ?>
+                <div class="tutor-course-summery">
+                    <h3  class="tutor-segment-title"><?php esc_html_e('About Course', 'tutor') ?></h3>
+                    <?php echo $excerpt; ?>
+                </div>
+                <?php
+            }
+        ?>
+    </div>
