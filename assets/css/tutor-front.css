@@ -878,12 +878,25 @@ Lesson Single Page
     transform: translateX(-50%);
 }
 .tutor-course-purchase-box{
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
-/*.tutor-course-purchase-box{*/
-    /*margin-bottom: 20px;*/
-/*}*/
+.tutor-price-preview-box .tutor-course-purchase-box button{
+    display: block;
+    width: 100%;
+    background: #1B52D8;
+    border-radius: 3px;
+}
+.tutor-price-preview-box .tutor-course-enrolled-wrap,
+.tutor-price-preview-box .tutor-course-login-wrap,
+.tutor-price-preview-box .tutor-course-login-wrap form,
+.tutor-course-purchase-box form{
+    margin-bottom: 0;
+}
+.tutor-price-preview-box .tutor-course-material-includes-wrap{
+    margin-bottom: 25px;
+}
+
 .tutor-alert-warning{
     padding: 10px;
     color: #8a6d3b;
@@ -1236,34 +1249,26 @@ p.attempt-reviewed-text{
 .tutor-price-box-description ul{
     list-style: none;
 }
-.tutor-course-purchase-box .price{
-    font-size: 35px;
-    margin: 20px 0 10px;
-    text-align: center;
-}
-.tutor-course-purchase-box .price del{
-    font-size: 14px;
-    line-height: 1;
-}
-.tutor-course-purchase-box .price ins{
-    margin-left: 0;
-}
-.tutor-course-purchase-box button{
-    background: #1B52D8;
-    color: #fff;
-    display: block;
-    width: 100%;
-}
-
-.tutor-course-purchase-box button:hover{
-    background: #000;
-}
-
 
 .tutor-course-purchase-box a{
     display: block;
     text-align: center;
     margin-top: 6px;
+}
+
+.tutor-price-preview-box .price{
+    font-size: 35px;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.tutor-price-preview-box .price del{
+    font-size: 14px;
+}
+
+
+.tutor-price-preview-box .price del + ins{
+    margin-left: 0;
 }
 
 /* ************************ */

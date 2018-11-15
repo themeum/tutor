@@ -563,7 +563,7 @@ class Utils {
 		$course_id = $this->get_post_id($course_id);
         $enroll_btn = '<div  class="tutor-loop-cart-btn-wrap"><a href="'. get_the_permalink(). '">'.__('Get Enrolled', 'tutor'). '</a></div>';
         $price_html = '<p class="price"> '.__('Free', 'tutor').$enroll_btn. '</p>';
-		if ($this->is_course_purchasable() && $this->has_wc()) {
+		if ($this->is_course_purchasable()) {
 			$product_id = tutor_utils()->get_course_product_id($course_id);
 			$product    = wc_get_product( $product_id );
 
@@ -571,7 +571,6 @@ class Utils {
 				$price_html = '<p class="price"> '.$product->get_price_html().' </p>';
 			}
 		}
-
 		return apply_filters('tutor_course_price', $price_html, $course_id);
 	}
 

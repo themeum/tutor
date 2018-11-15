@@ -20,7 +20,7 @@ if ( empty($materials)){
 if (is_array($materials) && count($materials)){
 	?>
 
-	<div class="tutor-single-course-segment  tutor-course-target-audience-wrap">
+	<div class="tutor-single-course-segment  tutor-course-material-includes-wrap">
         <h4 class="tutor-segment-title"><?php _e('Material Includes', 'tutor'); ?></h4>
 		<div class="tutor-course-target-audience-content">
 			<ul class="tutor-course-target-audience-items tutor-custom-list-style">
