@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 global $wp_query;
-global $post;
+global $post, $authordata;
 ?>
 <div class="tutor-single-course-segment tutor-single-course-lead-info">
     <div class="tutor-leadinfo-top-meta">

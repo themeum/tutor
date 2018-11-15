@@ -12,7 +12,7 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-global $post;
+global $post, $authordata;
 ?>
 
 <div class="tutor-single-course-segment tutor-single-course-lead-info">
