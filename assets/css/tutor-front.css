@@ -337,7 +337,7 @@ div[class*="tutor-course-col"] {
     margin-left: 0;
 }
 .tutor-course-loop-title a h2{
-    font-size: 20px;
+    font-size: 22px;
     line-height: 26px;
     font-weight: 600;
     margin-bottom: 17px;
@@ -1346,4 +1346,21 @@ p.attempt-reviewed-text{
 .tutor-review-user-info .individual-review-rating-wrap{
     color: #F8C51C;
     margin-left: -2px;
+}
+
+/* ********************* */
+/* Tutor Pagination Wrap */
+/* ********************* */
+
+.tutor-pagination-wrap{
+    text-align: center;
+    padding: 5px;
+
+}
+
+.tutor-pagination-wrap a,
+.tutor-pagination-wrap span{
+    padding: 3px 8px;
+    border: 1px solid #dddddd;
+    display: inline-block;
 }

@@ -31,7 +31,6 @@ do_action('tutor_course/single/enrolled/before/wrap');
                 <div class="tutor-single-course-sidebar">
                     <?php tutor_course_enroll_box(); ?>
                     <?php tutor_course_requirements_html(); ?>
-                    <?php tutor_course_material_includes_html(); ?>
                     <?php tutor_course_target_audience_html(); ?>
                 </div>
             </div>
