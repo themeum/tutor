@@ -23,8 +23,6 @@ get_header();
                 <?php tutor_course_benefits_html(); ?>
                 <?php tutor_course_topics(); ?>
                 <?php tutor_course_content(); ?>
-                <?php tutor_course_target_audience_html(); ?>
-                <?php tutor_course_material_includes_html(); ?>
                 <?php tutor_course_teachers_html(); ?>
                 <?php tutor_course_target_reviews_html(); ?>
             </div> <!-- .tutor-col-8 -->
@@ -33,6 +31,7 @@ get_header();
                 <div class="tutor-single-course-sidebar">
                     <?php tutor_course_enroll_box(); ?>
                     <?php tutor_course_requirements_html(); ?>
+                    <?php tutor_course_target_audience_html(); ?>
                 </div>
             </div>
         </div>

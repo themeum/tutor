@@ -111,7 +111,7 @@ global $post, $authordata;
 	if (! empty($excerpt)){
 		?>
         <div class="tutor-course-summery">
-            <h3  class="tutor-segment-title"><?php esc_html_e('About Course', 'tutor') ?></h3>
+            <h4  class="tutor-segment-title"><?php esc_html_e('About Course', 'tutor') ?></h4>
 			<?php echo $excerpt; ?>
         </div>
 		<?php

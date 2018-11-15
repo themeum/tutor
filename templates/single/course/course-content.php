@@ -21,7 +21,7 @@ if ( empty($content)){
 
 <div class="tutor-single-course-segment  tutor-course-content-wrap">
     <div class="course-content-title">
-        <h3  class="tutor-segment-title"><?php _e('Description', 'tutor'); ?></h3>
+        <h4  class="tutor-segment-title"><?php _e('Description', 'tutor'); ?></h4>
     </div>
 
     <div class="tutor-course-content-content">
