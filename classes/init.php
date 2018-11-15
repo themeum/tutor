@@ -31,9 +31,8 @@ class init{
 	private $email_notification;
 	private $user;
 
-	private $woocommerce;
-
 	function __construct() {
+
 		$this->path = plugin_dir_path(TUTOR_FILE);
 		$this->url = plugin_dir_url(TUTOR_FILE);
 		$this->basename = plugin_basename(TUTOR_FILE);
@@ -48,6 +47,8 @@ class init{
 		 */
 
 		spl_autoload_register(array($this, 'loader'));
+
+		do_action('tutor_before_load');
 
 		$this->post_types = new Post_types();
 		$this->assets = new Assets();
@@ -67,9 +68,7 @@ class init{
 		$this->email_notification = new Email_Notification();
 		$this->user = new User();
 
-		if (tutor_utils()->has_wc()){
-			$this->woocommerce = new  Woo_Commerce();
-		}
+		do_action('tutor_loaded');
 	}
 	/**
 	 * @param $className
@@ -100,8 +99,12 @@ class init{
 
 	//Run the TUTOR right now
 	public function run(){
+		do_action('tutor_before_run');
+
 		register_activation_hook( TUTOR_FILE, array( $this, 'tutor_activate' ) );
 		register_deactivation_hook(TUTOR_FILE, array($this, 'tutor_deactivation'));
+
+		do_action('tutor_after_run');
 	}
 
 	/**

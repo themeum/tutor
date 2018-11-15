@@ -172,7 +172,12 @@ class Utils {
 	 */
 
 	public function has_wc(){
-		return  in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ;
+
+		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
+		$depends = array('woocommerce/woocommerce.php', 'tutor-woocommerce/tutor-woocommerce.php');
+		$has = count(array_intersect($depends, $activated_plugins)) == count($depends);
+
+		return $has;
 	}
 
 	/**
