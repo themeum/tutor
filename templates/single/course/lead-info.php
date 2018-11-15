@@ -86,7 +86,8 @@ global $post, $authordata;
                 <strong><?php esc_html_e('Total Enrolled', 'tutor') ?></strong>
                 <span>
                     <?php
-                    $total_students = tutor_utils()->get_total_students() ? tutor_utils()->get_total_students() : 0;
+                    $get_total_student = tutor_utils()->get_total_students();
+                    $total_students = $get_total_student ? $get_total_student : 0;
                     echo $total_students;
                     ?>
                 </span>

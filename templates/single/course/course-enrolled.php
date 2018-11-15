@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) )
 ?>
 
 <div class="tutor-single-course-segment  tutor-course-enrolled-wrap">
-    <h><?php _e('Enrolled', 'tutor'); ?></h>
+    <h2><?php _e('Enrolled', 'tutor'); ?></h2>
 
     <p>
         <?php
