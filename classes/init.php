@@ -30,6 +30,7 @@ class init{
 	private $tools;
 	private $email_notification;
 	private $user;
+	private $theme_compatibility;
 
 	function __construct() {
 
@@ -67,6 +68,7 @@ class init{
 		$this->tools = new Tools();
 		$this->email_notification = new Email_Notification();
 		$this->user = new User();
+		$this->theme_compatibility = new Theme_Compatibility();
 
 		do_action('tutor_loaded');
 	}
