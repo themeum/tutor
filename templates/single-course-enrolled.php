@@ -9,6 +9,9 @@
  */
 
 get_header();
+
+
+do_action('tutor_course/single/enrolled/before/wrap');
 ?>
 
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info'); ?>>
@@ -36,6 +39,8 @@ get_header();
     </div>
 </div>
 
+
+<?php do_action('tutor_course/single/enrolled/after/wrap'); ?>
 
 <?php
 get_footer();

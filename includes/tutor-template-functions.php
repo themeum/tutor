@@ -319,6 +319,19 @@ if ( ! function_exists('tutor_course_loop_add_to_cart')) {
 	}
 }
 
+
+
+if ( ! function_exists('tutor_course_price')) {
+	function tutor_course_price() {
+		ob_start();
+		tutor_load_template( 'single.course.wc-price-html' );
+		$output = apply_filters( 'tutor_course_price', ob_get_clean() );
+
+		echo $output;
+	}
+}
+
+
 /**
  * @param int $post_id
  *
@@ -760,10 +773,10 @@ if ( ! function_exists('tutor_course_enroll_box')) {
 		ob_start();
 
 		if ( $enrolled ) {
-			tutor_load_template( 'single.course.course-enrolled' );
+			tutor_load_template( 'single.course.course-enrolled-box' );
 			$output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
 		} else {
-			tutor_load_template( 'single.course.course-enroll' );
+			tutor_load_template( 'single.course.course-enroll-box' );
 			$output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );
 		}
 

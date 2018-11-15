@@ -22,9 +22,8 @@ if ( ! defined( 'ABSPATH' ) )
 		}
 		?>
     </div>
-
+	<?php tutor_course_price(); ?>
 	<?php tutor_course_material_includes_html(); ?>
-
 
     <div class="tutor-single-course-segment  tutor-course-enrolled-wrap">
         <h><?php _e('Enrolled', 'tutor'); ?></h>

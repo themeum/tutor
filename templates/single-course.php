@@ -19,12 +19,18 @@ get_header();
     <div class="tutor-container">
         <div class="tutor-row">
             <div class="tutor-col-8">
-                <?php tutor_course_lead_info(); ?>
+
+	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
+
+	            <?php tutor_course_lead_info(); ?>
                 <?php tutor_course_benefits_html(); ?>
                 <?php tutor_course_topics(); ?>
                 <?php tutor_course_content(); ?>
                 <?php tutor_course_teachers_html(); ?>
                 <?php tutor_course_target_reviews_html(); ?>
+
+	            <?php do_action('tutor_course/single/after/inner-wrap'); ?>
+
             </div> <!-- .tutor-col-8 -->
 
             <div class="tutor-col-4">
