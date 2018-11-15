@@ -552,31 +552,6 @@ class Utils {
 	/**
 	 * @param int $course_id
 	 *
-	 * @return string
-	 *
-	 * get the course price in HTML format
-	 *
-	 * @since v.1.0.0
-	 */
-
-	public function get_course_price_html($course_id = 0){
-		$course_id = $this->get_post_id($course_id);
-        $enroll_btn = '<div  class="tutor-loop-cart-btn-wrap"><a href="'. get_the_permalink(). '">'.__('Get Enrolled', 'tutor'). '</a></div>';
-        $price_html = '<p class="price"> '.__('Free', 'tutor').$enroll_btn. '</p>';
-		if ($this->is_course_purchasable()) {
-			$product_id = tutor_utils()->get_course_product_id($course_id);
-			$product    = wc_get_product( $product_id );
-
-			if ( $product ) {
-				$price_html = '<p class="price"> '.$product->get_price_html().' </p>';
-			}
-		}
-		return apply_filters('tutor_course_price', $price_html, $course_id);
-	}
-
-	/**
-	 * @param int $course_id
-	 *
 	 * @return null|string
 	 *
 	 * get course price in digits format if any
