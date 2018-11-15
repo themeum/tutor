@@ -281,8 +281,6 @@ class Question {
 		}
 	}
 
-
-
 	public function add_column($columns){
 		$date_col = $columns['date'];
 		unset($columns['date']);
