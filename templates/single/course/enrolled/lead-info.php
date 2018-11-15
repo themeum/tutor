@@ -77,19 +77,7 @@ global $post, $authordata;
 			<?php } ?>
         </ul>
         <div class="tutor-course-enrolled-info">
-
-			<?php do_action('tutor_course/single/enrolled/before/lead_info/enrolled_date'); ?>
-            <p>
-				<?php
-				$enrolled = tutor_utils()->is_enrolled();
-				_e(sprintf("Enrolled at : %s", date(get_option('date_format'), strtotime($enrolled->post_date)) ), 'tutor');
-				?>
-            </p>
-			<?php do_action('tutor_course/single/enrolled/after/lead_info/enrolled_date');
-
-			$count_completed_lesson = tutor_course_completing_progress_bar();
-
-			?>
+			<?php $count_completed_lesson = tutor_course_completing_progress_bar(); ?>
 
             <div class="tutor-lead-info-btn-group">
 				<?php

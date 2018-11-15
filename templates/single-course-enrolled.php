@@ -26,7 +26,7 @@ get_header();
             </div>
             <div class="tutor-col-4">
                 <div class="tutor-single-course-sidebar">
-                    <?php tutor_course_video(); ?>
+                    <?php tutor_course_enroll_box(); ?>
                     <?php tutor_course_requirements_html(); ?>
                     <?php tutor_course_material_includes_html(); ?>
                     <?php tutor_course_target_audience_html(); ?>
