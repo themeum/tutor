@@ -1,0 +1,111 @@
+@font-face {
+    font-family: 'tutor';
+    src:
+            url('../font/tutor.ttf?3amt2o') format('truetype'),
+            url('../font/tutor.woff?3amt2o') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="tutor-icon-"], [class*=" tutor-icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'tutor' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.tutor-icon-down:before {
+    content: "\e900";
+}
+.tutor-icon-up:before {
+    content: "\e901";
+}
+.tutor-icon-angle-left:before {
+    content: "\e902";
+}
+.tutor-icon-angle-right:before {
+    content: "\e903";
+}
+.tutor-icon-audio-volume:before {
+    content: "\e904";
+}
+.tutor-icon-clock:before {
+    content: "\e905";
+}
+.tutor-icon-document:before {
+    content: "\e906";
+}
+.tutor-icon-facebook:before {
+    content: "\e907";
+}
+.tutor-icon-fav-full:before {
+    content: "\e908";
+}
+.tutor-icon-fav-line:before {
+    content: "\e909";
+}
+.tutor-icon-google:before {
+    content: "\e90a";
+}
+.tutor-icon-grid:before {
+    content: "\e90b";
+}
+.tutor-icon-group:before {
+    content: "\e90c";
+}
+.tutor-icon-linkdin:before {
+    content: "\e90d";
+}
+.tutor-icon-lock:before {
+    content: "\e90e";
+}
+.tutor-icon-mark:before {
+    content: "\e90f";
+}
+.tutor-icon-minus:before {
+    content: "\e910";
+}
+.tutor-icon-mortarboard:before {
+    content: "\e911";
+}
+.tutor-icon-offer:before {
+    content: "\e912";
+}
+.tutor-icon-play:before {
+    content: "\e913";
+}
+.tutor-icon-plus:before {
+    content: "\e914";
+}
+.tutor-icon-shopping-cart:before {
+    content: "\e915";
+}
+.tutor-icon-star-full:before {
+    content: "\e916";
+}
+.tutor-icon-star-half:before {
+    content: "\e917";
+}
+.tutor-icon-star-line:before {
+    content: "\e918";
+}
+.tutor-icon-tumblr:before {
+    content: "\e919";
+}
+.tutor-icon-twitter:before {
+    content: "\e91a";
+}
+.tutor-icon-user:before {
+    content: "\e91b";
+}
+.tutor-icon-youtube:before {
+    content: "\e91c";
+}
