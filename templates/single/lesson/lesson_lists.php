@@ -55,7 +55,7 @@ $currentPost = $post;
                                 <p class="<?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
                                     <a href="<?php the_permalink(); ?>">
 										<?php if ($play_time){ ?>
-                                            <i class="tutor-youtube-youtube"></i>
+                                            <i class="tutor-icon-youtube"></i>
 										<?php }else{
 										    ?>
                                             <i class="tutor-icon-document"></i>

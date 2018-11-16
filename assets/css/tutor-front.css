@@ -102,9 +102,15 @@
 
 }
 
+
 /********************/
 /*start single course*/
 /********************/
+
+.tutor-course-content-content{
+    font-size: 14px;
+    line-height: 21px;
+}
 
 .tutor-single-course-segment{
     margin-bottom: 45px;
@@ -166,6 +172,7 @@
 }
 .tutor-course-summery{
     margin-bottom: 40px;
+    font-size: 14px;
 }
 
 /*tutor course meta*/
@@ -257,9 +264,6 @@
 
 /*.tutor-course-topics-wrap*/
 
-.tutor-course-topics-wrap{
-    margin-top: 30px;
-}
 .tutor-course-topics-header{
     display: flex;
     flex-wrap: wrap;
@@ -629,24 +633,27 @@ a.tutor-button:hover, .tutor-button:hover {
 }
 
 .course-enrolled-nav-wrap{
-    background-color: #f4f4f4;
     border-bottom: 1px solid #dedfe0;
-    margin-top: 10px;
+    margin-bottom: 45px;
 }
 .tutor-wrap nav.course-enrolled-nav ul{
     list-style: none;
-    margin: 0;
+    margin: 0 0 -1px;
 }
 .tutor-wrap nav.course-enrolled-nav ul li{
     display: inline-block;
 }
 .tutor-wrap nav.course-enrolled-nav ul li a{
-    padding: 10px 15px;
     display: block;
+    font-size: 16px;
+    padding: 5px 0 20px;
+    margin-right: 20px;
+    color: #B1B8C9;
+    border-bottom: 2px solid transparent;
 }
 .tutor-wrap nav.course-enrolled-nav ul li.active a{
-    background-color: #333333;
-    color: #ffffff;
+    border-bottom: 2px solid #1B52D8;
+    color: #4B5981;
 }
 /* *********************** */
 /* Tutor Student Dashboard */
@@ -871,8 +878,8 @@ Lesson Single Page
     color: #666666;
     font-size: 14px;
 }
-.tutor-wrap .tutor-lesson-video-wrap{
-    margin-bottom: 20px;
+.tutor-wrap .tutor-price-box-thumbnail{
+    margin-bottom: 25px;
 }
 .tutor-wrap .tutor-attachments-wrap{
     margin: 50px 0;
@@ -1099,9 +1106,9 @@ ul.tutor-required-fields{
     margin-right: 50px;
 }
 .updating-icon:before{
-    font-family: 'fontello';
+    font-family: 'tutor';
     margin-right: 5px;
-    content: "\e809";
+    content: "\e91d";
     -moz-animation: spin 2s infinite linear;
     -o-animation: spin 2s infinite linear;
     -webkit-animation: spin 2s infinite linear;

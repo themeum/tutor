@@ -1,8 +1,9 @@
 @font-face {
     font-family: 'tutor';
     src:
-            url('../font/tutor.ttf?3amt2o') format('truetype'),
-            url('../font/tutor.woff?3amt2o') format('woff');
+            url('../font/tutor.ttf?vupq4v') format('truetype'),
+            url('../font/tutor.woff?vupq4v') format('woff'),
+            url('../font/tutor.svg?vupq4v#tutor') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -22,6 +23,9 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.tutor-icon-spinner:before {
+    content: "\e91d";
+}
 .tutor-icon-down:before {
     content: "\e900";
 }

@@ -15,9 +15,9 @@ do_action('tutor_course/single/enrolled/before/teachers');
 $teachers = tutor_utils()->get_teachers_by_course();
 if ($teachers){
 	?>
-	<h3><?php _e('About the teachers', 'tutor'); ?></h3>
+	<h4 class="tutor-segment-title"><?php _e('About the teachers', 'tutor'); ?></h4>
 
-	<div class="tutor-course-teachers-wrap">
+	<div class="tutor-course-teachers-wrap tutor-single-course-segment">
 		<?php
 		foreach ($teachers as $teacher){
 		    $profile_url = tutor_utils()->student_url($teacher->ID);
