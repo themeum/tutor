@@ -18,7 +18,6 @@ class Template extends Tutor_Base {
 
 		add_action( 'pre_get_posts', array($this, 'limit_course_query_archive'), 1 );
 
-
 		add_filter( 'template_include', array($this, 'load_course_archive_template'), 99 );
 		add_filter( 'template_include', array($this, 'load_single_course_template'), 99 );
 		add_filter( 'template_include', array($this, 'load_single_lesson_template'), 99 );
@@ -28,7 +27,7 @@ class Template extends Tutor_Base {
 		add_filter( 'template_include', array($this, 'student_public_profile'), 99 );
 		add_filter( 'pre_get_document_title', array($this, 'student_public_profile_title') );
 
-		add_filter('the_content', array($this, 'students_dashboard_page'));
+		add_filter('the_content', array($this, 'convert_static_page_to_template'));
 	}
 
 	/**
@@ -206,21 +205,46 @@ class Template extends Tutor_Base {
 		return $template;
 	}
 
-	public function students_dashboard_page($content){
+	/**
+	 * @param $content
+	 *
+	 * @return mixed
+	 *
+	 * Tutor Dashboard Page, Responsible to show student dashboard
+	 *
+	 * @since v.1.0.0
+	 */
+	public function convert_static_page_to_template($content){
+		//Student Registration Page
 		$student_dashboard_page_id = (int) tutor_utils()->get_option('student_dashboard');
-		if (! get_the_ID() || $student_dashboard_page_id !== get_the_ID()){
-			return $content;
+		if ($student_dashboard_page_id === get_the_ID()){
+			$shortcode = new Shortcode();
+			return $shortcode->tutor_student_dashboard();
 		}
 
-		ob_start();
-		if (is_user_logged_in()){
-			tutor_load_template( 'dashboard.student.index' );
-		}else{
-			tutor_load_template( 'global.login' );
+		//Teacher Registration Page
+		$teacher_register_page_page_id = (int) tutor_utils()->get_option('teacher_register_page');
+		if ($teacher_register_page_page_id === get_the_ID()){
+			$shortcode = new Shortcode();
+			return $shortcode->teacher_registration_form();
 		}
-		return apply_filters( 'tutor_dashboard/student/index', ob_get_clean() );
+
+		$student_register_page_id = (int) tutor_utils()->get_option('student_register_page');
+		if ($student_register_page_id === get_the_ID()){
+			$shortcode = new Shortcode();
+			return $shortcode->student_registration_form();
+		}
+
+		return $content;
 	}
-
+	
+	/**
+	 * @param $template
+	 *
+	 * @return bool|string
+	 *
+	 * @since v.1.0.0
+	 */
 	public function load_quiz_template($template){
 		global $wp_query;
 
@@ -235,6 +259,13 @@ class Template extends Tutor_Base {
 		return $template;
 	}
 
+	/**
+	 * @param $template
+	 *
+	 * @return bool|string
+	 *
+	 * @since v.1.0.0
+	 */
 	public function student_public_profile($template){
 		global $wp_query;
 
@@ -245,7 +276,12 @@ class Template extends Tutor_Base {
 		return $template;
 	}
 
-
+	/**
+	 * @return string
+	 * Show student Profile
+	 *
+	 * @since v.1.0.0
+	 */
 	public function student_public_profile_title(){
 		global $wp_query;
 

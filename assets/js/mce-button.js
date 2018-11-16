@@ -12,9 +12,15 @@ jQuery(document).ready(function($){
             type: 'menubutton',
             menu: [
                 {
+                    text: 'Student Registration Form',
+                    onclick: function() {
+                        editor.insertContent('[tutor_student_registration_form]');
+                    }
+                },
+                {
                     text: 'Student Dashboard',
                     onclick: function() {
-                        editor.insertContent('[tutor_dashboard]');
+                        editor.insertContent('[tutor_student_dashboard]');
                     }
                 },{
                     text: 'Teacher Registration Form',

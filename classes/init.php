@@ -24,6 +24,7 @@ class init{
 	private $rewrite_rules;
 	private $template;
 	private $teacher;
+	private $student;
 	private $q_and_a;
 	private $quiz;
 	private $question;
@@ -62,6 +63,7 @@ class init{
 		$this->rewrite_rules = new Rewrite_Rules();
 		$this->template = new Template();
 		$this->teacher = new  Teacher();
+		$this->student = new Student();
 		$this->q_and_a = new Q_and_A();
 		$this->quiz = new Quiz();
 		$this->question = new Question();
@@ -238,7 +240,17 @@ class init{
 			'post_status'   => 'publish',
 		);
 		$student_dashboard_page_id = wp_insert_post( $student_dashboard_args );
-		tutor_utils()->update_option('student_dashboard', $student_dashboard_page_id);
+		tutor_utils()->update_option('tutor_student_dashboard', $student_dashboard_page_id);
+
+
+		$student_registration_args = array(
+			'post_title'    => __('Student Registration', 'tutor'),
+			'post_content'  => '[tutor_student_registration_form]',
+			'post_type'     => 'page',
+			'post_status'   => 'publish',
+		);
+		$student_register_page_id = wp_insert_post( $student_registration_args );
+		tutor_utils()->update_option('student_register_page', $student_register_page_id);
 
 		$teacher_registration_args = array(
 			'post_title'    => __('Teacher Registration', 'tutor'),
@@ -247,6 +259,7 @@ class init{
 			'post_status'   => 'publish',
 		);
 		$teacher_registration_id = wp_insert_post( $teacher_registration_args );
+		tutor_utils()->update_option('teacher_register_page', $teacher_registration_id);
 	}
 
 	public static function default_options(){

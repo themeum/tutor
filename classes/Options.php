@@ -276,6 +276,13 @@ class Options {
 						'label' => __('Student Profile settings', 'tutor'),
 						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
 						'fields' => array(
+							'teacher_register_page' => array(
+								'type'      => 'select',
+								'label'     => __('Teacher Register Page', 'tutor'),
+								'default'   => '0',
+								'options'   => $pages,
+								'desc'      => __('This will be teacher register page', 'tutor'),
+							),
 							'teacher_can_publish_course' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Can publish course', 'tutor'),
@@ -287,7 +294,6 @@ class Options {
 				),
 			),
 
-
 			'students' => array(
 				'label'     => __('Students', 'tutor'),
 				'sections'    => array(
@@ -295,6 +301,13 @@ class Options {
 						'label' => __('Student Profile settings', 'tutor'),
 						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
 						'fields' => array(
+							'student_register_page' => array(
+								'type'      => 'select',
+								'label'     => __('Student Register Page', 'tutor'),
+								'default'   => '0',
+								'options'   => $pages,
+								'desc'      => __('This will be student register page', 'tutor'),
+							),
 							'student_dashboard' => array(
 								'type'      => 'select',
 								'label'     => __('Student Dashboard', 'tutor'),

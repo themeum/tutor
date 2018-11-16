@@ -10,28 +10,26 @@
 namespace TUTOR;
 
 
-class Teacher {
+class Student {
 
 	protected $error_msgs = '';
 	public function __construct() {
-		add_action('template_redirect', array($this, 'register_teacher'));
-		add_action('template_redirect', array($this, 'apply_teacher'));
+		add_action('template_redirect', array($this, 'register_student'));
 	}
 
-
 	/**
-	 * Register new user and mark him as teacher
+	 * Register new user and mark him as student
 	 *
 	 * @since v.1.0.0
 	 */
-	public function register_teacher(){
-		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_register_teacher' ){
+	public function register_student(){
+		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_register_student' ){
 			return;
 		}
 		//Checking nonce
 		tutor_utils()->checking_nonce();
 
-		$required_fields = apply_filters('tutor_teacher_registration_required_fields', array(
+		$required_fields = apply_filters('tutor_student_registration_required_fields', array(
 			'first_name'                => __('First name field is required', 'tutor'),
 			'last_name'                 =>  __('Last name field is required', 'tutor'),
 			'email'                     => __('E-Mail field is required', 'tutor'),
@@ -57,7 +55,7 @@ class Teacher {
 
 		if (count($validation_errors)){
 			$this->error_msgs = $validation_errors;
-			add_filter('tutor_teacher_register_validation_errors', array($this, 'tutor_teacher_form_validation_errors'));
+			add_filter('tutor_student_register_validation_errors', array($this, 'tutor_student_form_validation_errors'));
 			return;
 		}
 
@@ -74,7 +72,7 @@ class Teacher {
 			'user_email'    =>  $email,
 			'first_name'    =>  $first_name,
 			'last_name'     =>  $last_name,
-			//'role'          =>  tutor()->teacher_role,
+			//'role'          =>  tutor()->student_role,
 			'user_pass'     =>  $password,
 		);
 
@@ -84,9 +82,6 @@ class Teacher {
 			update_user_meta($user_id, 'description', $tutor_profile_bio);
 			update_user_meta($user_id, '_tutor_profile_bio', $tutor_profile_bio);
 
-			update_user_meta($user_id, '_is_tutor_teacher', time());
-			update_user_meta($user_id, '_tutor_teacher_status', apply_filters('tutor_initial_teacher_status', 'pending'));
-
 			$user = get_user_by( 'id', $user_id );
 			if( $user ) {
 				wp_set_current_user( $user_id, $user->user_login );
@@ -94,7 +89,7 @@ class Teacher {
 			}
 		}else{
 			$this->error_msgs = $user_id->get_error_messages();
-			add_filter('tutor_teacher_register_validation_errors', array($this, 'tutor_teacher_form_validation_errors'));
+			add_filter('tutor_student_register_validation_errors', array($this, 'tutor_student_form_validation_errors'));
 			return;
 		}
 
@@ -102,37 +97,9 @@ class Teacher {
 		die();
 	}
 
-	public function tutor_teacher_form_validation_errors(){
+	public function tutor_student_form_validation_errors(){
 		return $this->error_msgs;
 	}
-
-	/**
-	 *
-	 * Usage for teacher applying when a user already logged in
-	 *
-	 * @since v.1.0.0
-	 */
-	public function apply_teacher(){
-		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_apply_teacher' ){
-			return;
-		}
-		//Checking nonce
-		tutor_utils()->checking_nonce();
-
-		$user_id = get_current_user_id();
-		if ($user_id){
-			if (tutor_utils()->is_teacher()){
-				die(__('Already applied for teacher', 'tutor'));
-			}else{
-				update_user_meta($user_id, '_is_tutor_teacher', time());
-				update_user_meta($user_id, '_tutor_teacher_status', apply_filters('tutor_initial_teacher_status', 'pending'));
-			}
-		}else{
-			die(__('Permission denied', 'tutor'));
-		}
-
-		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
-		die();
-	}
+	
 
 }
