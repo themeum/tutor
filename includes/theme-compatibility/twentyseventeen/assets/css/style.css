@@ -10,6 +10,20 @@
     content: "";
     display: block;
 }
+
+.tutor-course-lesson h5{
+    letter-spacing: 0;
+    text-transform: none;
+}
+.site-content .tutor-wrap{
+    margin-top: 30px;
+}
+.tutor-full-width-student-profile .tutor-wrap{
+    margin: 0;
+}
+.tutor-dashboard-student.tutor-wrap{
+    margin-top: 30px;
+}
 @media screen and (min-width: 48em) {
 
     .tutor-wrap {
@@ -17,4 +31,9 @@
         padding-left: 3em;
         padding-right: 3em;
     }
+
+    .tutor-full-width-student-profile .tutor-wrap{
+        padding: 0;
+    }
+
 }

@@ -102,6 +102,7 @@ jQuery(document).ready(function($){
 
     $(document).on('click', '.tutor_submit_review_btn', function (e) {
         e.preventDefault();
+        var $that = $(this);
         var review = $(this).closest('form').find('textarea[name="review"]').val();
         review = review.trim();
 
@@ -114,13 +115,14 @@ jQuery(document).ready(function($){
                 type: 'POST',
                 data: data,
                 beforeSend: function () {
-                    //
+                    $that.addClass('updating-icon');
                 },
                 success: function (data) {
                     //
                 },
                 complete: function () {
-                    //
+                    $('.tutor-write-review-form').slideUp();
+                    $that.removeClass('updating-icon');
                 }
             });
         }
