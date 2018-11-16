@@ -779,7 +779,7 @@ if ( ! function_exists('tutor_course_enroll_box')) {
 			tutor_load_template( 'single.course.course-enrolled-box' );
 			$output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
 		} else {
-			tutor_load_template( 'single.course.course-enroll' );
+			tutor_load_template( 'single.course.course-enroll-box' );
 			$output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );
 		}
 
@@ -1061,11 +1061,15 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
 		if ( $duration ) {
 			$output = '';
 			if ( $durationHours > 0 ) {
-				$output .= $durationHours . " h ";
+				$output .= $durationHours . "h ";
 			}
 
 			if ( $durationMinutes > 0 ) {
-				$output .= $durationMinutes . " m ";
+				$output .= $durationMinutes . "m ";
+			}
+
+			if ( $durationSeconds > 0 ) {
+				$output .= $durationSeconds  ."s ";
 			}
 
 			return $output;

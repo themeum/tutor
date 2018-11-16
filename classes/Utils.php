@@ -1591,12 +1591,12 @@ class Utils {
 			$intRating = (int) $current_rating;
 
 			if ($intRating >= $i){
-				$output.= '<i class="icon-star" data-rating-value="'.$i.'"></i>';
+				$output.= '<i class="tutor-icon-star-full" data-rating-value="'.$i.'"></i>';
 			} else{
 				if ( ($current_rating - $i) == -0.5){
-					$output.= '<i class="icon-star-half-alt" data-rating-value="'.$i.'"></i>';
+					$output.= '<i class="tutor-icon-star-half" data-rating-value="'.$i.'"></i>';
 				}else{
-					$output.= '<i class="icon-star-empty" data-rating-value="'.$i.'"></i>';
+					$output.= '<i class="tutor-icon-star-line" data-rating-value="'.$i.'"></i>';
 				}
 			}
 		}

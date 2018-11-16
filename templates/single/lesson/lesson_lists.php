@@ -55,17 +55,17 @@ $currentPost = $post;
                                 <p class="<?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
                                     <a href="<?php the_permalink(); ?>">
 										<?php if ($play_time){ ?>
-                                            <i class="icon-play-circled2"></i>
+                                            <i class="tutor-youtube-youtube"></i>
 										<?php }else{
 										    ?>
-                                            <i class="icon-doc-text"></i>
+                                            <i class="tutor-icon-document"></i>
                                             <?php
                                         } ?>
 
                                         <span class="lesson_title"><?php the_title(); ?></span>
 
 	                                    <?php if ($is_completed_lesson){ ?>
-                                            <i class="icon-check"></i>
+                                            <i class="tutor-icon-mark"></i>
 	                                    <?php } ?>
 										<?php if ($play_time){ ?>
                                             <span class="play_duration"><?php echo $play_time; ?></span>
@@ -88,7 +88,7 @@ $currentPost = $post;
 									?>
                                     <p class="quiz-single-item quiz-single-item-<?php echo $quiz->ID; ?>">
                                         <span class="quiz-icon">
-                                            <i class="icon-clock"></i>
+                                            <i class="tutor-icon-clock"></i>
                                         </span>
 
                                         <span class="quiz-title">
