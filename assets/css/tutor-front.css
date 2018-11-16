@@ -1261,6 +1261,9 @@ p.attempt-reviewed-text{
     font-size: 35px;
     font-weight: 500;
     margin-bottom: 0;
+    overflow: hidden;
+    line-height: 1;
+    margin-bottom: 20px;
 }
 
 .tutor-price-preview-box .price del{
@@ -1270,6 +1273,7 @@ p.attempt-reviewed-text{
 
 .tutor-price-preview-box .price del + ins{
     margin-left: 0;
+    float: left;
 }
 
 /* ************************ */
