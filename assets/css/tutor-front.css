@@ -119,6 +119,13 @@
 .tutor-full-width-course-top h6{
     font-size: 14px;
 }
+.tutor-single-course-segment .tutor-segment-title,
+.tutor-segment-title{
+    font-size: 18px;
+    line-height: 23px;
+    font-weight: 500;
+    margin-bottom: 13px;
+}
 .tutor-leadinfo-top-meta{
     font-size: 14px;
     margin-bottom: 10px;
@@ -127,15 +134,12 @@
     display: inline-block;
     margin-right: 10px;
 }
-.tutor-leadinfo-top-meta .selling-badge{
-    text-transform: uppercase;
-    background-color: #F88F1C;
-    color: #fff;
-    line-height: 18px;
-    padding: 0 11px;
-    border-radius: 3px;
-    font-size: 10px;
+
+
+.tutor-leadinfo-top-meta i{
+    margin-right: 4px;
 }
+
 .tutor-single-course-rating{
     color: #F8C51C;
     font-size: 16px;
@@ -260,6 +264,10 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin-bottom: 8px;
+}
+.tutor-course-topics-header .tutor-course-topics-header-right span:not(:first-child){
+    margin-left: 45px;
 }
 .tutor-course-topics-contents h4{
     font-size: 14px;
@@ -273,6 +281,19 @@
 .tutor-course-topics-contents .tutor-course-title h4{
     color: #1B52D8;
     font-size: 16px;
+    line-height: 25px;
+    overflow: hidden;
+}
+
+.tutor-course-topic.tutor-active .tutor-course-title h4 > i::before{
+    content: "\e910";
+}
+
+.tutor-course-topics-contents .tutor-course-title h4 i{
+    font-size: 15px;
+    line-height: 25px;
+    float: left;
+    margin-right: 10px;
 }
 .tutor-course-topics-contents .tutor-course-topic{
     border: 1px solid #DCE4E6;
@@ -286,9 +307,24 @@
 .tutor-course-lesson{
     border-top: 1px solid #DCE4E6;
 }
-.tutor-course-topics-contents .tutor-course-topic:not(:first-child) .tutor-course-lessons{
+.tutor-course-topics-contents .tutor-course-topic .tutor-course-lessons{
     display: none;
 }
+
+.tutor-course-lesson h5{
+    line-height: 22px;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+.tutor-course-lesson h5 i{
+    line-height: 22px;
+    display: inline-block;
+    vertical-align: text-top;
+    margin-right: 10px;
+    color: #B1B8C9;
+}
+
 /********************/
 /*end single course*/
 /********************/
@@ -366,9 +402,10 @@ div[class*="tutor-course-col"] {
     color: #8C94A8;
     line-height: 25px;
     vertical-align: middle;
+    margin-right: 5px;
 }
 .tutor-loop-course-footer i:not(:first-child){
-    margin-left: 8px;
+    margin-left: 18px;
 }
 
 .tutor-loop-course-footer span{
@@ -378,7 +415,7 @@ div[class*="tutor-course-col"] {
 
 .tutor-course-loop-price{
     float: right;
-    color: #3A3E49;
+    color: #4B5981;
     font-size: 18px;
     font-weight: 600;
 }
@@ -387,8 +424,15 @@ div[class*="tutor-course-col"] {
     opacity: 1;
     font-weight: 400;
 }
-.tutor-course-loop-price ins{
+
+.tutor-course-loop-price .price del span{
+    text-decoration: line-through;
+    color: #8C94A8;
+}
+
+.tutor-course-loop-price .price del + ins{
     background: transparent;
+    margin-left: 0;
 }
 .tutor-loop-course-footer .tutor-loop-cart-btn-wrap{
     position: absolute;
@@ -892,7 +936,14 @@ Lesson Single Page
     width: 100%;
     background: #1B52D8;
     border-radius: 3px;
+    text-transform: uppercase;
+    font-size: 16px;
 }
+
+.tutor-price-preview-box .tutor-course-purchase-box button i{
+    margin-right: 8px;
+}
+
 .tutor-price-preview-box .tutor-course-enrolled-wrap,
 .tutor-price-preview-box .tutor-course-login-wrap,
 .tutor-price-preview-box .tutor-course-login-wrap form,

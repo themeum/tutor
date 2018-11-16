@@ -36,7 +36,7 @@ do_action('tutor_course/single/add-to-cart/before');
 
 					<?php do_action( 'tutor_before_add_to_cart_button' ); ?>
 
-					<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?>
+					<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button alt"> <i class="tutor-icon-shopping-cart"></i> <?php echo esc_html( $product->single_add_to_cart_text() ); ?>
 					</button>
 
 					<?php do_action( 'tutor_after_add_to_cart_button' ); ?>

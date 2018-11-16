@@ -1061,11 +1061,15 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
 		if ( $duration ) {
 			$output = '';
 			if ( $durationHours > 0 ) {
-				$output .= $durationHours . " h ";
+				$output .= $durationHours . "h ";
 			}
 
 			if ( $durationMinutes > 0 ) {
-				$output .= $durationMinutes . " m ";
+				$output .= $durationMinutes . "m ";
+			}
+
+			if ( $durationSeconds > 0 ) {
+				$output .= $durationSeconds  ."s ";
 			}
 
 			return $output;

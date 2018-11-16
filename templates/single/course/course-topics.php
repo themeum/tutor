@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) )
     exit;
 
 $topics = tutor_utils()->get_topics();
+$course_id = get_the_ID();
 
 ?>
 
@@ -24,18 +25,33 @@ $topics = tutor_utils()->get_topics();
             <div class="tutor-course-topics-header-left">
                 <h4 class="tutor-segment-title"><?php _e('Topics for this course', 'tutor'); ?></h4>
             </div>
-
             <div class="tutor-course-topics-header-right">
-                <span><?php echo tutor_utils()->get_lesson()->post_count; ?> <?php _e('Lessons', 'tutor'); ?></span>
+                <?php
+                    $tutor_lesson_count = tutor_utils()->get_lesson()->post_count;
+                    $tutor_course_duration = get_tutor_course_duration_context($course_id);
+
+                    if($tutor_lesson_count) {
+                        echo "<span> $tutor_lesson_count";
+                        _e(' Lessons', 'tutor');
+                        echo "</span>";
+                    }
+                    if($tutor_course_duration){
+                        echo "<span>$tutor_course_duration</span>";
+                    }
+                ?>
             </div>
         </div>
         <div class="tutor-course-topics-contents">
             <?php
+
+            $index = 0;
+
             if ($topics->have_posts()){
                 while ($topics->have_posts()){ $topics->the_post();
+                    $index++;
                     ?>
 
-                    <div class="tutor-course-topic">
+                    <div class="tutor-course-topic <?php if($index == 1) echo "tutor-active"; ?>">
                         <div class="tutor-course-title">
                             <h4> <i class="tutor-icon-plus"></i> <?php the_title(); ?></h4>
                         </div>
@@ -60,10 +76,12 @@ $topics = tutor_utils()->get_topics();
                                     ?>
 
                                     <div class="tutor-course-lesson">
-                                        <h4><?php
+                                        <h5>
+                                        <?php
                                             echo "<i class='$lesson_icon'></i>";
                                             the_title();
-                                            ?></h4>
+                                        ?>
+                                        </h5>
                                     </div>
 
                                     <?php

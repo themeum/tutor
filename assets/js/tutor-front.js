@@ -285,11 +285,13 @@ jQuery(document).ready(function($){
     }
 
     // tutor course content accordion
-    var $tutor_course_title = $('.tutor-course-title');
+    var tutor_course_title = $('.tutor-course-title');
 
-    $tutor_course_title.on('click', function () {
-        var $lesson = $(this).siblings('.tutor-course-lessons');
-        $lesson.slideToggle();
+    $('.tutor-course-topic.tutor-active').find('.tutor-course-lessons').slideDown();
+    tutor_course_title.on('click', function () {
+        var lesson = $(this).siblings('.tutor-course-lessons');
+        $(this).closest('.tutor-course-topic').toggleClass('tutor-active');
+        lesson.slideToggle();
     });
 
 });
