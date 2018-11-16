@@ -37,7 +37,7 @@ $topics = tutor_utils()->get_topics();
 
                     <div class="tutor-course-topic">
                         <div class="tutor-course-title">
-                            <h4><?php the_title(); ?></h4>
+                            <h4> <i class="tutor-icon-plus"></i> <?php the_title(); ?></h4>
                         </div>
 
 
@@ -54,8 +54,8 @@ $topics = tutor_utils()->get_topics();
                                     if ($video){
                                         $play_time = $video->playtime;
                                     }
-                                    # @TODO: Need An vidoe & Text Icon font
-                                    $lesson_icon = $play_time ? 'icon-star-empty' : 'icon-star';
+
+                                    $lesson_icon = $play_time ? 'tutor-icon-youtube' : 'tutor-icon-document';
 
                                     ?>
 

@@ -342,6 +342,7 @@ div[class*="tutor-course-col"] {
     line-height: 26px;
     font-weight: 600;
     margin-bottom: 17px;
+    color: #4B5981;
 }
 .tutor-loop-course-footer{
     padding: 10px 15px;
@@ -372,7 +373,6 @@ div[class*="tutor-course-col"] {
 
 .tutor-loop-course-footer span{
     display: inline-block;
-    vertical-align: middle;
     line-height: 25px;
 }
 
@@ -428,9 +428,14 @@ div[class*="tutor-course-col"] {
 }
 
 .tutor-loop-course-footer .tutor-loop-cart-btn-wrap a::before{
-    content: '\e801';
-    font-family: "fontello";
-    margin-right: 3px;
+    content: '\e915';
+    font-family: "tutor";
+    margin-right: 5px;
+}
+
+
+.tutor-loop-course-footer .tutor-loop-cart-btn-wrap a.added_to_cart::before{
+    display: none;
 }
 
 

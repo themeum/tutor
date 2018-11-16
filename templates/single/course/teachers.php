@@ -58,7 +58,7 @@ if ($teachers){
 
 					<div class="courses">
 						<p>
-							<i class='icon-graduation-cap-1'></i>
+							<i class='tutor-icon-mortarboard'></i>
 							<?php echo tutor_utils()->get_course_count_by_teacher($teacher->ID); ?> <span class="tutor-text-mute"> <?php _e('Courses', 'tutor'); ?></span>
 						</p>
 
@@ -70,7 +70,7 @@ if ($teachers){
 						?>
 
 						<p>
-							<i class='icon-users-outline'></i>
+							<i class='tutor-icon-user'></i>
 							<?php echo  $total_students; ?>
 							<span class="tutor-text-mute">  <?php _e('students', 'tutor'); ?></span>
 						</p>

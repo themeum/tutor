@@ -779,7 +779,7 @@ if ( ! function_exists('tutor_course_enroll_box')) {
 			tutor_load_template( 'single.course.course-enrolled-box' );
 			$output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
 		} else {
-			tutor_load_template( 'single.course.course-enroll' );
+			tutor_load_template( 'single.course.course-enroll-box' );
 			$output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );
 		}
 

@@ -84,10 +84,10 @@ jQuery(document).ready(function($){
      * Hover tutor rating and set value
      */
     $(document).on('hover', '.tutor-ratings-wrap i', function(){
-        $(this).closest('.tutor-ratings-wrap').find('i').removeClass('icon-star').addClass('icon-star-empty');
+        $(this).closest('.tutor-ratings-wrap').find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
         var currentRateValue = $(this).attr('data-rating-value');
         for (var i = 1; i<= currentRateValue; i++){
-            $(this).closest('.tutor-ratings-wrap').find('i[data-rating-value="'+i+'"]').removeClass('icon-star-empty').addClass('icon-star');
+            $(this).closest('.tutor-ratings-wrap').find('i[data-rating-value="'+i+'"]').removeClass('tutor-icon-star-line').addClass('tutor-icon-star-full');
         }
     });
 
