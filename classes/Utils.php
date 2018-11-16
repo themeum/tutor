@@ -2545,7 +2545,6 @@ class Utils {
 		return $levels;
 	}
 
-
 	public function user_profile_permalinks(){
 		$permalinks = array(
 			'enrolled_course'   => __('Enrolled Course', 'tutor'),
@@ -2554,6 +2553,15 @@ class Utils {
 		);
 		
 		return apply_filters('tutor_public_profile/permalinks', $permalinks);
+	}
+
+	public function student_register_url(){
+		$student_register_page = (int) $this->get_option('student_register_page');
+
+		if ($student_register_page){
+			return get_the_permalink($student_register_page);
+		}
+		return false;
 	}
 
 }
