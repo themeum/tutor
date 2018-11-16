@@ -20,7 +20,6 @@ add_action('tutor_course/loop/end_content_wrap', 'tutor_course_loop_end_content_
 
 add_action('tutor_course/loop/footer', 'tutor_course_loop_footer');
 
-
 add_action( 'tutor_course/single/before/inner-wrap', 'wc_print_notices', 10 );
 add_action( 'tutor_course/single/enrolled/before/inner-wrap', 'wc_print_notices', 10 );
 

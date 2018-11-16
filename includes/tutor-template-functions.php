@@ -310,12 +310,15 @@ if ( ! function_exists('tutor_course_loop_rating')) {
 }
 
 if ( ! function_exists('tutor_course_loop_add_to_cart')) {
-	function tutor_course_loop_add_to_cart() {
+	function tutor_course_loop_add_to_cart($echo = true) {
 		ob_start();
 		tutor_load_template( 'loop.add-to-cart' );
 		$output = apply_filters( 'tutor_course_loop_add_to_cart_link', ob_get_clean() );
 
-		echo $output;
+		if ($echo){
+			echo $output;
+		}
+		return $output;
 	}
 }
 
@@ -776,7 +779,7 @@ if ( ! function_exists('tutor_course_enroll_box')) {
 			tutor_load_template( 'single.course.course-enrolled-box' );
 			$output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
 		} else {
-			tutor_load_template( 'single.course.course-enroll-box' );
+			tutor_load_template( 'single.course.course-enroll' );
 			$output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );
 		}
 
