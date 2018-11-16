@@ -1043,7 +1043,7 @@ ul.tutor-required-fields{
     margin-right: 50px;
 }
 .updating-icon:before{
-    font-family: 'fontello';
+    font-family: 'tutor';
     margin-right: 5px;
     content: "\e809";
     -moz-animation: spin 2s infinite linear;

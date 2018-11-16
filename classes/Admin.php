@@ -33,8 +33,8 @@ class Admin{
 
 		add_menu_page(__('Tutor', 'tutor'), __('Tutor', 'tutor'), 'manage_tutor_teacher', 'tutor', null, 'dashicons-welcome-learn-more', 2);
 
-		add_submenu_page('tutor', __('Categories', 'tutor'), __('Categories', 'tutor'), 'manage_tutor_teacher', 'edit-tags.php?taxonomy=course-category&post_type='.$course_post_type, null );
-		add_submenu_page('tutor', __('Tags', 'tutor'), __('Tags', 'tutor'), 'manage_tutor_teacher', 'edit-tags.php?taxonomy=course-tag&post_type='.$course_post_type, null );
+		add_submenu_page('tutor', __('Categories', 'tutor'), __('Categories', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type='.$course_post_type, null );
+		add_submenu_page('tutor', __('Tags', 'tutor'), __('Tags', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type='.$course_post_type, null );
 
 		add_submenu_page('tutor', __('Students', 'tutor'), __('Students', 'tutor'), 'manage_tutor', 'tutor-students', array($this, 'tutor_students') );
 
@@ -44,7 +44,7 @@ class Admin{
 
 		add_submenu_page('tutor', __('Quiz Attempts', 'tutor'), __('Quiz Attempts', 'tutor'), 'manage_tutor_teacher', 'tutor_quiz_attempts', array($this, 'quiz_attempts') );
 
-		add_submenu_page('tutor', __('E-Mails', 'tutor'), __('E-Mails', 'tutor'), 'manage_tutor_teacher', 'tutor_emails', array($this, 'tutor_emails') );
+		add_submenu_page('tutor', __('E-Mails', 'tutor'), __('E-Mails', 'tutor'), 'manage_tutor', 'tutor_emails', array($this, 'tutor_emails') );
 
 		//add_submenu_page('tutor', __('Addons', 'tutor'), __('Addons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(), 'addons_page') );
 
@@ -95,18 +95,26 @@ class Admin{
 	public function filter_posts_for_teachers(){
 		if (current_user_can(tutor()->teacher_role)){
 			remove_menu_page( 'edit-comments.php' ); //Comments
-			add_action( 'pre_get_posts', array($this, 'filter_posts_query_for_current_user') );
+			add_action( 'posts_clauses_request', array($this, 'posts_clauses_request') );
 		}
 	}
 
-	/**
-	 * @param $query
-	 *
-	 * Prevent unauthorised posts query at teacher panel
-	 */
-	public function filter_posts_query_for_current_user($query){
+	public function posts_clauses_request($clauses){
+		global $wpdb;
+
 		$user_id = get_current_user_id();
-		$query->set('author', $user_id);
+
+		$get_assigned_courses_ids = $wpdb->get_col("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_teacher_course_id' AND user_id = {$user_id}  ");
+
+		$custom_author_query = "AND {$wpdb->posts}.post_author = {$user_id}";
+		if (is_array($get_assigned_courses_ids) && count($get_assigned_courses_ids)){
+			$in_query_pre = implode($get_assigned_courses_ids, ',');
+			$custom_author_query = "  AND ( {$wpdb->posts}.post_author = {$user_id} OR {$wpdb->posts}.ID IN({$in_query_pre}) ) ";
+		}
+
+		$clauses['where'] .= $custom_author_query;
+
+		return $clauses;
 	}
 
 	/**
@@ -125,20 +133,21 @@ class Admin{
 			$current_user = get_current_user_id();
 
 			if ($get_post->post_author != $current_user){
-				wp_die(__('Permission Denied', 'tutor'));
+				global $wpdb;
+
+				$get_assigned_courses_ids = (int) $wpdb->get_var("SELECT user_id from {$wpdb->usermeta} WHERE user_id = {$current_user} AND meta_key = '_tutor_teacher_course_id' AND meta_value = {$get_post_id} ");
+
+				if ( ! $get_assigned_courses_ids){
+					wp_die(__('Permission Denied', 'tutor'));
+				}
+
 			}
 		}
 	}
 
-
-
-
-
-
 	/**
 	 * Status
 	 */
-
 
 	public static function scan_template_files( $template_path = null ) {
 		if ( ! $template_path){
