@@ -19,10 +19,11 @@ global $post, $authordata;
 		?>
 		<strong><?php esc_html_e('In', 'tutor') ?></strong>
 		<?php
-		foreach ($course_categories as $course_category){
-			$category_name = $course_category->name;
-			echo "<span>$category_name</span>";
-		}
+        foreach ($course_categories as $course_category){
+            $category_name = $course_category->name;
+            $category_link = get_term_link($course_category->term_id);
+            echo "<a href='$category_link'>$category_name</a>";
+        }
 	}
 	?>
 </div>

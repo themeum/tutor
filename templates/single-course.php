@@ -37,6 +37,16 @@ get_header();
                 <div class="tutor-single-course-sidebar">
                     <?php tutor_course_enroll_box(); ?>
                     <?php tutor_course_requirements_html(); ?>
+
+                    <?php
+                        $course_tags = get_tutor_course_tags();
+                        if(is_array($course_tags) && count($course_tags)){
+                            foreach ($course_tags as $course_tag){
+                                $tag_link = get_term_link($course_tag->term_id);
+                                echo "<a href='$tag_link'> $course_tag->name </a>";
+                            }
+                        }
+                    ?>
                     <?php tutor_course_target_audience_html(); ?>
                 </div>
             </div>

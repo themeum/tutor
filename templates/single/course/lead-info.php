@@ -64,7 +64,8 @@ global $post, $authordata;
                     <?php
                     foreach ($course_categories as $course_category){
                         $category_name = $course_category->name;
-                        echo "<span>$category_name</span>";
+                        $category_link = get_term_link($course_category->term_id);
+                        echo "<a href='$category_link'>$category_name</a>";
                     }
 					?>
                 </li>
