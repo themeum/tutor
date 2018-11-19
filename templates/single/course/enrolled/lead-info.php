@@ -107,7 +107,7 @@ global $post, $authordata;
                 <?php }
             }
             ?>
-            <a href="<?php echo get_the_permalink(); ?>" class="tutor-button"><?php _e('Course Home', 'tutor'); ?></a>
+<!--            <a href="--><?php //echo get_the_permalink(); ?><!--" class="tutor-button">--><?php //_e('Course Home', 'tutor'); ?><!--</a>-->
             <?php tutor_course_mark_complete_html(); ?>
         </div>
     </div>
