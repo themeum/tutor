@@ -24,17 +24,18 @@ if ($teachers){
 			?>
 			<div class="single-teacher-wrap">
 				<div class="single-teacher-top">
-					<div class="teacher-avatar">
-                        <a href="<?php echo $profile_url; ?>">
-	                        <?php echo tutor_utils()->get_tutor_avatar($teacher->ID); ?>
-                        </a>
-					</div>
+                    <div class="tutor-teacher-left">
+                        <div class="teacher-avatar">
+                            <a href="<?php echo $profile_url; ?>">
+                                <?php echo tutor_utils()->get_tutor_avatar($teacher->ID); ?>
+                            </a>
+                        </div>
 
-					<div class="teacher-name">
-						<h3><a href="<?php echo $profile_url; ?>"><?php echo $teacher->display_name; ?></a> </h3>
-						<h4><?php echo $teacher->tutor_profile_job_title; ?></h4>
-					</div>
-
+                        <div class="teacher-name">
+                            <h3><a href="<?php echo $profile_url; ?>"><?php echo $teacher->display_name; ?></a> </h3>
+                            <h4><?php echo $teacher->tutor_profile_job_title; ?></h4>
+                        </div>
+                    </div>
 					<div class="teacher-bio">
 						<?php echo $teacher->tutor_profile_bio ?>
 					</div>

@@ -60,9 +60,6 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			if(is_array($course_categories) && count($course_categories)){
 				?>
                 <li>
-					<?php
-
-					?>
                     <strong><?php esc_html_e('Categories', 'tutor') ?></strong>
 					<?php
 					foreach ($course_categories as $course_category){

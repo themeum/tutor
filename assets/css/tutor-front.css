@@ -87,18 +87,10 @@
 }
 
 .tutor-custom-list-style li::before{
-    content: '';
-    height: 6px;
-    width: 13px;
-    border: 3px solid #00B0F5;
-    display: inline-block;
-    border-top: none;
-    border-right: none;
-    transform: rotate(-46deg) translateY(-2px) translateX(3px);
-    margin-right: 10px;;
+    content: '\e90f';
     position: absolute;
     left: 0;
-    top: 12px;
+    font-family: 'tutor';
 
 }
 
@@ -244,11 +236,11 @@
     margin-bottom: 5px;
     color: #B1B8C9;
 }
-.tutor-single-course-meta.tutor-lead-meta ul li span{
+.tutor-single-course-meta.tutor-lead-meta ul li a{
     color: #4B5981;
 }
 
-.tutor-single-course-meta.tutor-lead-meta ul li span:not(:last-child)::after{
+.tutor-single-course-meta.tutor-lead-meta ul li a:not(:last-child)::after{
     content: ', ';
 }
 /*benifit*/
@@ -598,7 +590,7 @@ div[class*="tutor-course-col"] {
     line-height: 25px;
 }
 
-.tutor-course-lising-category span:not(:last-child):after{
+.tutor-course-lising-category a:not(:last-child):after{
     content: ', ';
 }
 
@@ -781,18 +773,25 @@ Teacher
 .single-teacher-wrap{
     border: 1px solid #e8eff1;
     margin-bottom: 30px;
+    font-size: 14px;
+    border-radius: 4px;
 }
 .single-teacher-wrap .single-teacher-top{
-    display: flex;
-    padding: 25px 20px;
+    overflow: hidden;
+    padding: 20px;
+    border-bottom: 1px solid #e8eff1;
 }
-.single-teacher-wrap .single-teacher-top h3, .single-teacher-wrap .single-teacher-top h4 {
+.single-teacher-wrap .single-teacher-top h3,
+.single-teacher-wrap .single-teacher-top h4 {
     margin: 0;
     padding: 0;
 }
+.single-teacher-wrap .tutor-teacher-left{
+    float: left;
+    overflow: hidden;
+}
 .single-teacher-wrap .teacher-avatar{
-    flex: 0 0 70px;
-    text-align: center;
+    float: left;
 }
 .single-teacher-wrap .teacher-avatar img{
     max-width: 50px;
@@ -800,31 +799,55 @@ Teacher
     border-radius: 50%;
 }
 .single-teacher-wrap .teacher-name{
-    flex: 0 0 170px;
+    float: left;
+    padding-left: 20px;
 }
 .single-teacher-wrap .teacher-name h3{
-    font-size: 16px;
+    font-size: 18px;
+    color: #4B5981;
+    font-weight: 600;
+}
+.single-teacher-wrap .teacher-name h3 a{
+    font-weight: 500;
+    color: #4B5981;
 }
 .single-teacher-wrap .teacher-name h4{
-    font-weight: 300;
-    font-size: 12px;
-    color: #bac0cf;
+    font-weight: 400;
+    font-size: 14px;
+    color: #B1B8C9;
+}
+.single-teacher-wrap .teacher-bio{
+    padding-left: 220px;
+    font-size: 14px;
 }
 .single-teacher-wrap .single-teacher-bottom{
-    display: flex;
-    border-top: 1px solid #e8eff1;
-    min-height: 30px;
-    padding: 20px;
+    padding: 15px 20px;
+    text-align: right;
+    overflow: hidden;
 }
 .single-teacher-wrap .single-teacher-bottom p{
     margin: 0;
 }
 .single-teacher-wrap .single-teacher-bottom .ratings{
-    flex-basis: 0;
-    flex-grow: 1;
+    float: left;
 }
-.single-teacher-wrap .single-teacher-bottom .courses, .single-teacher-wrap .single-teacher-bottom .students{
-    margin: 0 10px;
+
+.single-teacher-wrap .single-teacher-bottom .ratings i{
+    margin-right: 4px;
+}
+.single-teacher-wrap .single-teacher-bottom .courses,
+.single-teacher-wrap .single-teacher-bottom .students{
+    display: inline-block;
+    margin-left: 20px;
+}
+
+
+.single-teacher-wrap .single-teacher-bottom .courses i,
+.single-teacher-wrap .single-teacher-bottom .students i{
+    font-size: 18px;
+    display: inline-block;
+    margin-right: 2px;
+    vertical-align: middle;
 }
 
 .single-teacher-wrap .single-teacher-bottom .ratings .rating-total-meta{
@@ -1432,4 +1455,26 @@ p.attempt-reviewed-text{
     padding: 3px 8px;
     border: 1px solid #dddddd;
     display: inline-block;
+}
+
+/* ********************* */
+/* Tutor Course Tags */
+/* ********************* */
+
+.tutor-course-tags{
+    margin: -5px;
+}
+.tutor-course-tags a{
+    padding: 10px 15px;
+    background: #E8EFF1;
+    display: inline-block;
+    margin: 5px;
+    color: #4B5981;
+    border-radius: 2px;
+    transition: 300ms;
+
+}
+
+.tutor-course-tags a:hover{
+    color: #000;
 }
