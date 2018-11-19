@@ -37,7 +37,7 @@ $user_id = $get_user->ID;
                     <div class="tutor-col">
                         <div class="tutor-dashboard-student-info">
                             <h3 class="tutor-student-name">
-                                <a href="<?php echo tutor_utils()->student_url($user_id); ?>"> <?php echo esc_html($user_data->display_name); ?> </a>
+                                <a href="<?php echo tutor_utils()->profile_url($user_id); ?>"> <?php echo esc_html($user_data->display_name); ?> </a>
 
                             </h3>
                             <ul class="tutor-dashboard-user-role">
@@ -88,10 +88,10 @@ $user_id = $get_user->ID;
                     <div class="tutor-col-3">
                         <?php
                         $permalinks = tutor_utils()->user_profile_permalinks();
-                        $student_profile_url = tutor_utils()->student_url($user_id);
+                        $student_profile_url = tutor_utils()->profile_url($user_id);
                         ?>
                         <ul class="tutor-dashboard-permalinks">
-                            <li><a href="<?php echo tutor_utils()->student_url($user_id); ?>"><?php _e('Bio', 'tutor'); ?></a></li>
+                            <li><a href="<?php echo tutor_utils()->profile_url($user_id); ?>"><?php _e('Bio', 'tutor'); ?></a></li>
                             <?php
                             if (is_array($permalinks) && count($permalinks)){
                                 foreach ($permalinks as $permalink_key => $permalink){

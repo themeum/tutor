@@ -8,11 +8,11 @@
  * @url https://themeum.com
  */
 
-
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 global $post, $authordata;
+$profile_url = tutor_utils()->profile_url($authordata->ID);
 ?>
 
 <div class="tutor-single-course-segment tutor-single-course-lead-info">
@@ -22,7 +22,6 @@ global $post, $authordata;
             $course_rating = tutor_utils()->get_course_rating();
             tutor_utils()->star_rating_generator($course_rating->rating_avg);
             ?>
-
             <span class="tutor-single-rating-count">
                 <?php
                 echo $course_rating->rating_avg;
@@ -38,11 +37,11 @@ global $post, $authordata;
         <ul>
             <li class="tutor-single-course-author-meta">
                 <div class="tutor-single-course-avatar">
-					<?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?>
+                    <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
                 </div>
                 <div class="tutor-single-course-author-name">
                     <strong><?php _e('by', 'tutor'); ?></strong>
-                    <a href="<?php echo tutor_utils()->student_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a>
+                    <a href="<?php echo tutor_utils()->profile_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a>
                 </div>
             </li>
             <li class="tutor-course-level">
@@ -50,25 +49,24 @@ global $post, $authordata;
 				<?php echo get_tutor_course_level(); ?>
             </li>
         </ul>
-
     </div>
 
     <div class="tutor-single-course-meta tutor-lead-meta">
         <ul>
 			<?php
 			$course_categories = get_tutor_course_categories();
-            if(is_array($course_categories) && count($course_categories)){
+			if(is_array($course_categories) && count($course_categories)){
 				?>
                 <li>
                     <strong><?php esc_html_e('Categories', 'tutor') ?></strong>
-                    <?php
-                    foreach ($course_categories as $course_category){
-                        $category_name = $course_category->name;
-                        echo "<span>$category_name</span>";
-                    }
+					<?php
+					foreach ($course_categories as $course_category){
+						$category_name = $course_category->name;
+						echo "<span>$category_name</span>";
+					}
 					?>
                 </li>
-            <?php } ?>
+			<?php } ?>
 
 			<?php
 			$course_duration = get_tutor_course_duration_context();

@@ -133,8 +133,8 @@ class Utils {
 	 * Get student URL
 	 */
 
-	public function student_url($student_id = 0){
-		$site_url = trailingslashit(home_url()).'student/';
+	public function profile_url($student_id = 0){
+		$site_url = trailingslashit(home_url()).'profile/';
 		$user_name = '';
 
 		$student_id = $this->get_user_id($student_id);

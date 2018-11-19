@@ -20,7 +20,7 @@ if ($teachers){
 	<div class="tutor-course-teachers-wrap tutor-single-course-segment">
 		<?php
 		foreach ($teachers as $teacher){
-		    $profile_url = tutor_utils()->student_url($teacher->ID);
+		    $profile_url = tutor_utils()->profile_url($teacher->ID);
 			?>
 			<div class="single-teacher-wrap">
 				<div class="single-teacher-top">

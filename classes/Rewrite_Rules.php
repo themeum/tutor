@@ -35,14 +35,13 @@ class Rewrite_Rules extends Tutor_Base {
 		$new_rules = array(
 			//Lesson Permalink
 			$this->course_post_type."/(.+?)/{$this->lesson_base_permalink}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=".$wp_rewrite->preg_index(2),
-
 			//Quiz Permalink
 			$this->course_post_type."/(.+?)/tutor_quiz/(.+?)/?$" => "index.php?post_type=tutor_quiz&name=".$wp_rewrite->preg_index(2),
 			//Private Video URL
 			"video-url/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=". $wp_rewrite->preg_index(1),
 			//Student Public Profile URL
-			"student/(.+?)/(.+?)/?$" => "index.php?tutor_student_username=". $wp_rewrite->preg_index(1)."&profile_sub_page=".$wp_rewrite->preg_index(2),
-			"student/(.+?)/?$" => "index.php?tutor_student_username=". $wp_rewrite->preg_index(1),
+			"profile/(.+?)/(.+?)/?$" => "index.php?tutor_student_username=". $wp_rewrite->preg_index(1)."&profile_sub_page=".$wp_rewrite->preg_index(2),
+			"profile/(.+?)/?$" => "index.php?tutor_student_username=". $wp_rewrite->preg_index(1),
 		);
 
 		//Nav Items
