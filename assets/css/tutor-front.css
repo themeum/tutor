@@ -863,81 +863,11 @@ Teacher
     color: #f8c51c;
 }
 
-/**
-Lesson Single Page
-*/
-.tutor-wrap .tutor-lesson-single-wrap{
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 10px;
-}
-.tutor-wrap .tutor-topics-wrap{
-    width: 30%;
-}
-.tutor-wrap .tutor-lesson-content-wrap{
-    width: 65%;
-    margin-left: 3%;
-}
-.tutor-wrap .tutor-topics-lesson-list .tutor-topics-in-single-lesson {
-    background-color: #FDFDFD;
-    border: 1px solid #dddddd;
-    margin-bottom: 20px;
-    padding: 10px;
-}
-.tutor-wrap .tutor-topics-lesson-list .tutor-topics-in-single-lesson .tutor-topics-title h2{
-    font-size: 18px;
-}
+/* ***********************      */
+/* Single Lesson  */
+/************************       */
 
-.tutor-wrap .tutor-topics-lesson-list .tutor-topics-in-single-lesson .tutor-lessons-under-topic p{
-    margin: 0 0 10px 0;
-}
-.tutor-wrap .tutor-topics-wrap .tutor-topics-in-single-lesson .tutor-lessons-under-topic .active a{
-    color: blue;
-}
-.tutor-wrap .tutor-topics-wrap .tutor-topics-in-single-lesson .tutor-lessons-under-topic a {
-    display: flex;
-    justify-content: space-between;
-    padding: 0;
-}
-.tutor-wrap .tutor-topics-wrap .tutor-topics-in-single-lesson .tutor-lessons-under-topic a span.lesson_title {
-    flex: 1;
-}
-.tutor-wrap .tutor-topics-wrap .tutor-topics-in-single-lesson .tutor-lessons-under-topic a span.play_duration {
-    color: #666666;
-    font-size: 14px;
-}
-.tutor-wrap .tutor-price-box-thumbnail{
-    margin-bottom: 25px;
-}
-.tutor-wrap .tutor-attachments-wrap{
-    margin: 50px 0;
-}
-.tutor-wrap .tutor-attachment-icon{
-    float: left;
-}
-.tutor-wrap .tutor-attachment-icon img{
-    max-width: 40px;
-    display: block;
-}
-.tutor-wrap .tutor-attachment-info {
-    padding-left: 60px;
-}
-.tutor-wrap .tutor-attachment-info p{
-    margin: 0;
-}
-.tutor-wrap .tutor-attachment-info span{
-    font-size: 12px;
-    color: #bbb3b9;
-}
-.tutor-wrap a.tutor-lesson-attachment{
-    border: 1px solid #dddddd;
-    display: inline-block;
-    padding: 10px;
-    margin: 5px;
-}
-.tutor-wrap a.tutor-lesson-attachment:hover {
-    border: 1px solid #cccccc;
-}
+
 
 /*course status*/
 .tutor-progress-bar-wrap{
@@ -1024,19 +954,6 @@ Lesson Single Page
     background-color: #fcf8e3;
     border-color: #faebcc;
 }
-.tutor-quizzes-list .quiz-single-item {
-    display: flex;
-}
-.tutor-quizzes-list .quiz-single-item .quiz-title{
-    flex-basis: 0;
-    flex-grow: 1;
-}
-.tutor-quizzes-list .quiz-single-item .quiz-time-limit {
-    font-size: 12px;
-    background: #ccc;
-    padding: 3px 5px;
-}
-
 .tutor-lead-info-btn-group{
     display: block;
     overflow: hidden;
