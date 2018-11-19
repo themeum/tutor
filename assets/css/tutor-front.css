@@ -1429,3 +1429,25 @@ p.attempt-reviewed-text{
     border: 1px solid #dddddd;
     display: inline-block;
 }
+
+/* ********************* */
+/* Tutor Course Tags */
+/* ********************* */
+
+.tutor-course-tags{
+    margin: -5px;
+}
+.tutor-course-tags a{
+    padding: 10px 15px;
+    background: #E8EFF1;
+    display: inline-block;
+    margin: 5px;
+    color: #4B5981;
+    border-radius: 2px;
+    transition: 300ms;
+
+}
+
+.tutor-course-tags a:hover{
+    color: #000;
+}

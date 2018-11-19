@@ -1098,3 +1098,19 @@ if ( ! function_exists('get_tutor_course_tags')){
 		return $terms;
 	}
 }
+
+
+
+if ( ! function_exists('tutor_course_tags_html')) {
+    function tutor_course_tags_html( $echo = true ) {
+        ob_start();
+        tutor_load_template( 'single.course.tags' );
+        $output = apply_filters( 'tutor_course/single/tags_html', ob_get_clean() );
+
+        if ( $echo ) {
+            echo $output;
+        }
+
+        return $output;
+    }
+}
