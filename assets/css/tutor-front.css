@@ -1469,45 +1469,42 @@ p.attempt-reviewed-text{
     padding: 20px;
     overflow: hidden;
 }
-
+.tutor-review-individual-item p{
+    margin: 0;
+    padding: 0;
+}
 .course-avg-rating-wrap{
     padding: 20px 20px 20px 40px;
 }
-
 .tutor-review-individual-item .review-left{
     width: 230px;
     float: left;
     overflow: hidden;
 }
-
 .tutor-review-individual-item .review-content{
     padding-left: 230px;
 }
-
 .tutor-review-individual-item .review-avatar{
     width: 50px;
     float: left;;
 }
-
 .tutor-review-individual-item .review-avatar img{
     border-radius: 50%;
     margin: 0;
     border: none;
+    max-width: 100%;
+    height: auto;
 }
-
 .tutor-review-individual-item .tutor-review-user-info{
     float: left;
     padding-left: 20px;
 }
-
 .tutor-review-individual-item .tutor-review-user-info p{
     margin-bottom: 0;
 }
-
 .review-avatar .tutor-text-avatar,
 .teacher-avatar .tutor-text-avatar{
     border-radius: 50%;
-    /*border: 1px solid #686f7a;*/
     width: 50px;
     height: 50px;
     text-align: center;
@@ -1516,8 +1513,6 @@ p.attempt-reviewed-text{
     color: #ffffff;
     font-size: 14px;
 }
-
-
 .course-avg-rating-wrap .course-avg-rating {
     font-size: 76px;
     line-height: 1;
@@ -1535,7 +1530,7 @@ p.attempt-reviewed-text{
     color: #B1B8C9;
 }
 
-.tutor-review-user-info .individual-review-rating-wrap{
+.individual-review-rating-wrap{
     color: #F8C51C;
 }
 .individual-review-rating-wrap i,

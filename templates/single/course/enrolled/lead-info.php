@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) )
 
 global $wp_query;
 global $post, $authordata;
+
+$profile_url = tutor_utils()->profile_url($authordata->ID);
 ?>
 <div class="tutor-single-course-segment tutor-single-course-lead-info">
     <div class="tutor-leadinfo-top-meta">
@@ -36,11 +38,11 @@ global $post, $authordata;
         <ul>
             <li class="tutor-single-course-author-meta">
                 <div class="tutor-single-course-avatar">
-					<?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?>
+                    <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
                 </div>
                 <div class="tutor-single-course-author-name">
                     <strong><?php _e('by', 'tutor'); ?></strong>
-                    <a href="<?php echo tutor_utils()->student_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a>
+                    <a href="<?php echo tutor_utils()->profile_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a>
                 </div>
             </li>
             <li class="tutor-course-level">
@@ -53,30 +55,30 @@ global $post, $authordata;
 
     <div class="tutor-single-course-meta tutor-lead-meta">
         <ul>
-            <?php
-            $course_categories = get_tutor_course_categories();
-            if(is_array($course_categories) && count($course_categories)){
-                ?>
+			<?php
+			$course_categories = get_tutor_course_categories();
+			if(is_array($course_categories) && count($course_categories)){
+				?>
                 <li>
                     <strong><?php esc_html_e('Categories', 'tutor') ?></strong>
-                    <?php
-                    foreach ($course_categories as $course_category){
-                        $category_name = $course_category->name;
-                        echo "<span>$category_name</span>";
-                    }
-                    ?>
+					<?php
+					foreach ($course_categories as $course_category){
+						$category_name = $course_category->name;
+						echo "<span>$category_name</span>";
+					}
+					?>
                 </li>
-            <?php } ?>
+			<?php } ?>
 
-            <?php
-            $course_duration = get_tutor_course_duration_context();
-            if(!empty($course_duration)){
-                ?>
+			<?php
+			$course_duration = get_tutor_course_duration_context();
+			if(!empty($course_duration)){
+				?>
                 <li>
                     <strong><?php esc_html_e('Total Hour', 'tutor') ?></strong>
                     <span><?php echo $course_duration; ?></span>
                 </li>
-            <?php } ?>
+			<?php } ?>
             <li>
                 <strong><?php esc_html_e('Total Enrolled', 'tutor') ?></strong>
                 <span>
@@ -89,30 +91,29 @@ global $post, $authordata;
             </li>
             <li>
                 <strong><?php esc_html_e('Last Update', 'tutor') ?></strong>
-                <?php echo esc_html(get_the_modified_date()); ?>
+				<?php echo esc_html(get_the_modified_date()); ?>
             </li>
         </ul>
     </div>
 
     <div class="tutor-course-enrolled-info">
-        <?php $count_completed_lesson = tutor_course_completing_progress_bar(); ?>
+		<?php $count_completed_lesson = tutor_course_completing_progress_bar(); ?>
 
         <div class="tutor-lead-info-btn-group">
-            <?php
-            if ( $wp_query->query['post_type'] !== 'lesson') {
-                $lesson_url = tutor_utils()->get_course_first_lesson();
-                if ( $lesson_url ) {
-                    ?>
+			<?php
+			if ( $wp_query->query['post_type'] !== 'lesson') {
+				$lesson_url = tutor_utils()->get_course_first_lesson();
+				if ( $lesson_url ) {
+					?>
                     <a href="<?php echo $lesson_url; ?>" class="tutor-button"><?php _e( 'Continue to lesson', 'tutor' ); ?></a>
                 <?php }
             }
             ?>
-<!--            <a href="--><?php //echo get_the_permalink(); ?><!--" class="tutor-button">--><?php //_e('Course Home', 'tutor'); ?><!--</a>-->
             <?php tutor_course_mark_complete_html(); ?>
         </div>
     </div>
 
-    <?php
+	<?php
 	$excerpt = tutor_get_the_excerpt();
 	if (! empty($excerpt)){
 		?>

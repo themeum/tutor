@@ -15,5 +15,5 @@ global $post;
 	<?php
 	global $authordata;
 	?>
-    <p> <a href="<?php echo tutor_utils()->student_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a> </p>
+    <p> <a href="<?php echo tutor_utils()->profile_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a> </p>
 </div>

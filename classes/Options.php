@@ -69,7 +69,7 @@ class Options {
 		//$course_base = tutor_utils()->course_archive_page_url();
 		$lesson_url = site_url().'/course/'.'sample-course/<code>lessons</code>/sample-lesson/';
 
-		$student_url = tutor_utils()->student_url();
+		$student_url = tutor_utils()->profile_url();
 
 		$attempts_allowed = array();
 		$attempts_allowed['unlimited'] = __('Unlimited' , 'tutor');
@@ -87,13 +87,13 @@ class Options {
 								'type'      => 'checkbox',
 								'label'     => __('Load Tutor default CSS', 'tutor'),
 								'default'   => '1',
-								'desc'      => __('If theme has own styling, then you can turn it off to load CSS from the plugin directory', 'tutor'),
+								'desc'      => __('If your theme has its own styling, then you can turn it off to load CSS from the plugin directory', 'tutor'),
 							),
 							'load_tutor_js' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Load Tutor default JavaScript', 'tutor'),
 								'default'   => '1',
-								'desc'      => __('If theme has own styling, then you can turn it off to load JavaScript from the plugin directory', 'tutor'),
+								'desc'      => __('If you have put required script in your theme javascript file, then you can turn it off to load JavaScript from the plugin directory', 'tutor'),
 							),
 							'student_must_login_to_view_course' => array(
 								'type'      => 'checkbox',
@@ -102,7 +102,7 @@ class Options {
 							),
 							'delete_on_uninstall' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Delete on Uninstall', 'tutor'),
+								'label'     => __('Erase upon uninstallation', 'tutor'),
 								'desc'      => __('Delete all data during uninstall', 'tutor'),
 							),
 						)

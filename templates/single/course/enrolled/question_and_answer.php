@@ -61,17 +61,17 @@ if ( ! $enable_q_and_a_on_course) {
 		if (is_array($questions) && count($questions)){
 			foreach ($questions as $question){
 				$answers = tutor_utils()->get_qa_answer_by_question($question->comment_ID);
+				$profile_url = tutor_utils()->profile_url($question->user_id);
 				?>
                 <div class="tutor_original_question">
                     <div class="question-left">
-						<?php
-                        echo tutor_utils()->get_tutor_avatar($question->user_id); ?>
+                        <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($question->user_id); ?></a>
                     </div>
 
                     <div class="question-right">
                         <div class="question-top-meta">
                             <p class="review-meta">
-								<?php echo $question->display_name; ?> -
+                                <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a> -
                                 <span class="tutor-text-mute"><?php _e(sprintf('%s ago', human_time_diff(strtotime($question->comment_date))), 'lms'); ?></span>
                             </p>
                         </div>
@@ -87,17 +87,20 @@ if ( ! $enable_q_and_a_on_course) {
 					<?php
 					if (is_array($answers) && count($answers)){
 						foreach ($answers as $answer){
+							$answer_profile = tutor_utils()->profile_url($answer->user_id);
 							?>
                             <div class="tutor_individual_answer <?php echo ($question->user_id == $answer->user_id) ? 'tutor-bg-white' : 'tutor-bg-light'
 							?> ">
                                 <div class="question-left">
-									<?php echo tutor_utils()->get_tutor_avatar($answer->user_id); ?>
+                                    <a href="<?php echo $answer_profile; ?>"> <?php echo tutor_utils()->get_tutor_avatar($answer->user_id); ?></a>
                                 </div>
 
                                 <div class="question-right">
                                     <div class="question-top-meta">
                                         <p class="review-meta">
-											<?php echo $answer->display_name; ?> -
+
+
+                                            <a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a> -
                                             <span class="tutor-text-mute">
 										<?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'lms'); ?>
 									</span>
@@ -116,11 +119,9 @@ if ( ! $enable_q_and_a_on_course) {
                 </div>
 
                 <div class="tutor_add_answer_row">
-
                     <div class="tutor_qa_avatar_left">
-						<?php echo tutor_utils()->get_tutor_avatar($question->user_id); ?>
+                        <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($question->user_id); ?></a>
                     </div>
-
 
                     <div class="tutor_add_answer_wrap " data-question-id="<?php echo $question->comment_ID; ?>">
                         <div class="tutor_wp_editor_show_btn_wrap">

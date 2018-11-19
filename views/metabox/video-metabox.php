@@ -1,4 +1,5 @@
 <?php
+global $post;
 $video = maybe_unserialize(get_post_meta(get_the_ID(), '_video', true));
 
 $videoSource = tutor_utils()->avalue_dot('source', $video);
@@ -11,10 +12,17 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
 
 <div class="tutor-option-field-row">
     <div class="tutor-option-field-label">
-        <label for=""><?php _e('Video Source', 'tutor'); ?></label>
+        <label for="">
+            <?php
+            if ($post->post_type === tutor()->course_post_type){
+	            _e('Course Intro Video', 'tutor');
+            }else{
+	            _e('Video Source', 'tutor');
+            }
+            ?>
+        </label>
     </div>
     <div class="tutor-option-field">
-
         <select name="video[source]" class="tutor_lesson_video_source tutor_select2">
             <option value=""><?php _e('Select Video Source', 'tutor'); ?></option>
             <option value="html5" <?php selected('html5', $videoSource); ?> ><?php _e('HTML5 (mp4)', 'tutor'); ?></option>
@@ -27,12 +35,10 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
         </p>
 
         <div class="tutor-lesson-video-input">
-
             <div class="video_source_wrap_html5"  style="display: <?php echo $videoSource === 'html5' ? 'block' : 'none'; ?>;">
                 <a href="javascript:;" class="video_upload_btn"><i class="dashicons dashicons-upload"></i> </a>
                 <input type="hidden" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
-                <p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e('Media ID', 'tutor'); ?>: <span class="video_media_id"><?php echo $sourceVideoID;
-						?></span></p>
+                <p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e('Media ID', 'tutor'); ?>: <span class="video_media_id"><?php echo $sourceVideoID; ?></span></p>
             </div>
 
             <div class="video_source_wrap_youtube" style="display: <?php echo $videoSource === 'youtube' ? 'block' :
@@ -52,14 +58,13 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
         <label for=""><?php _e('Video Run Time', 'tutor'); ?></label>
     </div>
     <div class="tutor-option-field">
-
         <div class="tutor-option-gorup-fields-wrap">
             <div class="tutor-lesson-video-runtime">
-
                 <div class="tutor-option-group-field">
                     <input type="text" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]">
                     <p><?php _e('HH', 'tutor'); ?></p>
                 </div>
+
                 <div class="tutor-option-group-field">
                     <input type="text" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]">
                     <p><?php _e('MM', 'tutor'); ?></p>
@@ -69,10 +74,8 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
                     <input type="text" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]">
                     <p><?php _e('SS', 'tutor'); ?></p>
                 </div>
-
             </div>
         </div>
-
     </div>
 </div>
 
