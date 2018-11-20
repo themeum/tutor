@@ -52,7 +52,7 @@ $currentPost = $post;
 
 								$is_completed_lesson = tutor_utils()->is_completed_lesson();
                                 ?>
-                                <p class="<?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
+                                <div class="<?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
                                     <a href="<?php the_permalink(); ?>">
 										<?php if ($play_time){ ?>
                                             <i class="tutor-icon-youtube"></i>
@@ -72,7 +72,7 @@ $currentPost = $post;
 										<?php } ?>
 
                                     </a>
-                                </p>
+                                </div>
 								<?php
 							}
 							$lessons->reset_postdata();
