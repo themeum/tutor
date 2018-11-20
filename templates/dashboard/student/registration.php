@@ -14,7 +14,7 @@
     ?>
 
     <div class="tutor-form-row">
-        <div class="tutor-form-col-6">
+        <div class="tutor-form-col-4">
             <div class="tutor-form-group">
                 <label>
 					<?php _e('First Name', 'tutor'); ?>
@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div class="tutor-form-col-6">
+        <div class="tutor-form-col-4">
             <div class="tutor-form-group">
                 <label>
 					<?php _e('Last Name', 'tutor'); ?>
@@ -33,10 +33,20 @@
                 <input type="text" name="last_name" value="<?php echo tutor_utils()->input_old('last_name'); ?>" placeholder="<?php _e('Last Name', 'tutor'); ?>">
             </div>
         </div>
+
+        <div class="tutor-form-col-4">
+            <div class="tutor-form-group">
+                <label>
+                    <?php _e('User Name', 'tutor'); ?>
+                </label>
+
+                <input type="text" name="user_login" class="tutor_user_name" value="<?php echo tutor_utils()->input_old('user_login'); ?>" placeholder="<?php _e('User Name', 'tutor'); ?>">
+            </div>
+        </div>
     </div>
 
     <div class="tutor-form-row">
-        <div class="tutor-form-col-4">
+        <div class="tutor-form-col6">
             <div class="tutor-form-group">
                 <label>
 					<?php _e('E-Mail', 'tutor'); ?>
@@ -46,18 +56,8 @@
             </div>
         </div>
 
-        <div class="tutor-form-col-4">
-            <div class="tutor-form-group">
-                <label>
-					<?php _e('User Name', 'tutor'); ?>
-                </label>
 
-                <input type="text" name="user_login" class="tutor_user_name" value="<?php echo tutor_utils()->input_old('user_login'); ?>" placeholder="<?php _e('User Name', 'tutor'); ?>">
-            </div>
-        </div>
-
-
-        <div class="tutor-form-col-4">
+        <div class="tutor-form-col-6">
             <div class="tutor-form-group">
                 <label>
 				    <?php _e('Phone Number', 'tutor'); ?>
@@ -105,8 +105,8 @@
 
     <div class="tutor-form-row">
         <div class="tutor-form-col-12">
-            <div class="tutor-form-group">
-                <button type="submit" name="tutor_register_student_btn" value="register"><?php _e('Register', 'tutor'); ?></button>
+            <div class="tutor-form-group tutor-reg-form-btn-wrap">
+                <button type="submit" name="tutor_register_student_btn" value="register" class="tutor-button"><?php _e('Register', 'tutor'); ?></button>
             </div>
         </div>
     </div>

@@ -806,6 +806,7 @@ Teacher
 .single-teacher-wrap .teacher-name{
     float: left;
     padding-left: 20px;
+    max-width: 130px;
 }
 .single-teacher-wrap .teacher-name h3{
     font-size: 18px;
@@ -1176,10 +1177,15 @@ Form CSS
  */
 .tutor-form-row{
     display: flex;
-    margin: 10px 0;
+    margin-left: -15px;
+    margin-right: -15px;
 }
-.tutor-form-row .tutor-form-group{
-    padding: 10px;
+
+.tutor-form-col-4,
+.tutor-form-col-6,
+.tutor-form-col-12{
+    padding-left: 15px;
+    padding-right: 15px;
 }
 .tutor-form-col-6{
     flex: 0 0 50%;
@@ -1395,8 +1401,9 @@ p.attempt-reviewed-text{
 /* ********************* */
 
 .tutor-login-form-wrap p{
-    margin: 0;
+    margin-bottom: 0;
 }
+
 .tutor-login-form-wrap label{
     display: block;
     font-size: 13px;
@@ -1407,26 +1414,102 @@ p.attempt-reviewed-text{
 .tutor-login-form-wrap input[type="text"]{
     width: 100%;
     display: block;
-    border: 1px solid #ddd;
+    border: 1px solid #E8EFF1;
     box-shadow: none;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     border-radius: 4px;
+    background: #ffffff;
+    line-height: 48px;
+    padding: 0;
+    text-indent: 15px;
+}
+.tutor-login-form-wrap input[type="password"]:focus,
+.tutor-login-form-wrap input[type="text"]:focus{
+    background: #ffffff;
+    border-color: #1B52D8;
 }
 
+.tutor-login-form-wrap input::-webkit-input-placeholder {
+    color: #b0b6c8;
+    opacity: 1;
+}
+.tutor-login-form-wrap input::-moz-placeholder {
+    color: #b0b6c8;
+    opacity: 1;
+}
+.tutor-login-form-wrap input:-ms-input-placeholder {
+    color: #b0b6c8;
+    opacity: 1;
+}
+.tutor-login-form-wrap input:-moz-placeholder {
+    color: #b0b6c8;
+    opacity: 1;
+}
+
+.tutor-login-rememeber-wrap{
+    overflow: hidden;
+    text-align: right;
+    margin-bottom: 30px;
+}
+
+.tutor-login-rememeber-wrap p{
+    display: inline-block;
+    float: left;
+}
+
+.tutor-login-rememeber-wrap p,
+.tutor-login-rememeber-wrap label{
+    margin: 0;
+}
+
+
+.tutor-form-register-wrap a,
+.tutor-login-rememeber-wrap a,
+.tutor-login-rememeber-wrap label{
+    color: #606C8F;
+    font-size: 14px;
+    vertical-align: middle;
+    opacity: .5;
+    transition: 300ms;
+}
+
+
+
+.tutor-form-register-wrap a:hover,
+.tutor-login-rememeber-wrap a:hover,
+.tutor-login-rememeber-wrap label:hover{
+    opacity: 1;
+}
+
+
 .tutor-login-form-wrap input[type="submit"]{
-    background: #1B52D8;
     color: #fff;
-    margin-bottom: 0;
-    margin-top: 15px;
+    background-color: #86B223;
+    border-color: #86B223;
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    line-height: 1;
+    font-size: 14px;
+    display: block;
+    width: 100%;
     transition: 300ms;
 }
 .tutor-login-form-wrap input[type="submit"]:hover{
-    filter: brightness(90%);
-    background: #1B52D8;
     color: #fff;
+    background-color: #759c1f;
+    border-color: #759c1f;
 }
+
+
 .tutor-login-form-wrap input[type="checkbox"]{
     margin-right: 4px;
+}
+
+.tutor-form-register-wrap{
+    text-align: center;
+    margin-top: 15px;
 }
 
 /*course login*/
@@ -1436,6 +1519,60 @@ p.attempt-reviewed-text{
     margin-bottom: 28px;
 }
 
+/* ********************* */
+/*start registration form*/
+/* ********************* */
+
+.tutor-form-group label{
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+.tutor-form-group textarea,
+.tutor-form-group input:not([type="submit"]){
+    width: 100%;
+    display: block;
+    border: 1px solid #E8EFF1;
+    box-shadow: none;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    background: #ffffff;
+    line-height: 48px;
+    padding: 0;
+    text-indent: 15px;
+    transition: 300ms;
+}
+
+.tutor-form-group textarea:focus,
+.tutor-form-group input:not([type="submit"]):focus{
+    background: #ffffff;
+    border-color: #1B52D8;
+}
+
+.tutor-form-group textarea::-webkit-input-placeholder ,
+.tutor-form-group input::-webkit-input-placeholder {
+    color: #b0b6c8;
+    opacity: 1;
+}
+.tutor-form-group textarea::-moz-placeholder ,
+.tutor-form-group input::-moz-placeholder {
+    color: #b0b6c8;
+    opacity: 1;
+}
+.tutor-form-group textarea:-ms-input-placeholder ,
+.tutor-form-group input:-ms-input-placeholder {
+    color: #b0b6c8;
+    opacity: 1;
+}
+.tutor-form-group textarea:-moz-placeholder ,
+.tutor-form-group input:-moz-placeholder {
+    color: #b0b6c8;
+    opacity: 1;
+}
+
+.tutor-form-group.tutor-reg-form-btn-wrap{
+    text-align: right;
+}
 
 /* ********************* */
 /* Tutor Price Preview Box */
