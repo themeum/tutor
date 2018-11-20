@@ -26,13 +26,11 @@ class Options {
 			return $option;
 		}
 		if (array_key_exists($key, $option)){
-			return $option[$key];
+			return apply_filters($key, $option[$key]);
 		}
-
 		//Access array value via dot notation, such as option->get('value.subvalue')
 		if (strpos($key, '.')){
 			$option_key_array = explode('.', $key);
-
 			$new_option = $option;
 			foreach ($option_key_array as $dotKey){
 				if (isset($new_option[$dotKey])){
@@ -41,8 +39,7 @@ class Options {
 					return $default;
 				}
 			}
-
-			return $new_option;
+			return apply_filters($key, $new_option);
 		}
 
 		return $default;

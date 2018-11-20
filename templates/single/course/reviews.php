@@ -46,14 +46,11 @@ if ( ! is_array($reviews) || ! count($reviews)){
 			<?php
 			foreach ($reviews as $review){
 				$profile_url = tutor_utils()->profile_url($review->user_id);
-
-
 				?>
                 <div class="tutor-review-individual-item tutor-review-<?php echo $review->comment_ID; ?>">
                     <div class="review-left">
                         <div class="review-avatar">
-							<?php
-							echo tutor_utils()->get_tutor_avatar($review->user_id); ?>
+                            <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($review->user_id); ?> </a>
                         </div>
                         <div class="tutor-review-user-info">
                             <div class="review-time-name">

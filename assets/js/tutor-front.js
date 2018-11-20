@@ -118,7 +118,9 @@ jQuery(document).ready(function($){
                     $that.addClass('updating-icon');
                 },
                 success: function (data) {
-                    //
+                    var review_id = data.data.review_id;
+                    var review = data.data.review;
+                    $('.tutor-review-'+review_id+' .review-content').html(review);
                 },
                 complete: function () {
                     $('.tutor-write-review-form').slideUp();

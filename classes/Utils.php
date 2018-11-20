@@ -6,7 +6,6 @@ if ( ! defined( 'ABSPATH' ) )
 
 
 class Utils {
-
 	/**
 	 * @param null $key
 	 * @param bool $default
@@ -27,9 +26,8 @@ class Utils {
 			return $option;
 		}
 		if (array_key_exists($key, $option)){
-			return $option[$key];
+			return apply_filters($key, $option[$key]);
 		}
-
 		//Access array value via dot notation, such as option->get('value.subvalue')
 		if (strpos($key, '.')){
 			$option_key_array = explode('.', $key);
@@ -42,8 +40,7 @@ class Utils {
 					return $default;
 				}
 			}
-
-			return $new_option;
+			return apply_filters($key, $new_option);
 		}
 
 		return $default;

@@ -74,6 +74,7 @@ class Ajax{
 
 		$previous_rating_id = $wpdb->get_var("select comment_ID from {$wpdb->comments} WHERE comment_post_ID={$course_id} AND user_id = {$user_id} AND comment_type = 'tutor_course_rating' LIMIT 1;");
 
+		$review_ID = $previous_rating_id;
 		if ( $previous_rating_id){
 			if ($review){
 				$wpdb->update( $wpdb->comments, array('comment_content' => $review),
@@ -103,6 +104,7 @@ class Ajax{
 
 			$wpdb->insert($wpdb->comments, $data);
 			$comment_id = (int) $wpdb->insert_id;
+			$review_ID = $comment_id;
 
 			if ($comment_id && $rating){
 				$result = $wpdb->insert( $wpdb->commentmeta, array(
@@ -115,7 +117,8 @@ class Ajax{
 			}
 		}
 
-		wp_send_json_success(__('Rating placed success', 'tutor'));
+		$data = array('msg' => __('Rating placed success', 'tutor'), 'review_id' => $review_ID, 'review' => $review);
+		wp_send_json_success($data);
 	}
 
 	public function tutor_ask_question(){
