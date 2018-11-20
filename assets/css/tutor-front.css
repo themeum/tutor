@@ -867,6 +867,9 @@ Teacher
 /* Single Lesson  */
 /************************       */
 
+/*lesson list*/
+
+
 .tutor-topics-lesson-list .tutor-topics-in-single-lesson{
     border: 1px solid #E8EFF1;
     border-radius: 4px;
@@ -875,15 +878,23 @@ Teacher
 
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a{
     border-top: 1px solid #DCE4E6;
-    padding: 14px 17px;
+    padding: 14px 75px 14px 17px;
     font-size: 14px;
-    display: block;
+    display: flex;
     color: #4B5981;
+    position: relative;
 }
-.tutor-topics-in-single-lesson .tutor-single-lesson-items a h4{
+
+
+.tutor-lessons-under-topic .tutor-single-lesson-items.active a{
+    background: rgba(236, 255, 236, 0.76);
+}
+
+.tutor-topics-in-single-lesson .tutor-single-lesson-items a span{
     font-size: 14px;
     margin: 0;
     display: inline;
+    color: #4B5981;
 }
 
 .tutor-topics-in-single-lesson .tutor-topics-title h3{
@@ -895,16 +906,86 @@ Teacher
 }
 
 
-.tutor-topics-in-single-lesson .tutor-single-lesson-items a i:first-child{
+.tutor-topics-in-single-lesson .tutor-topics-title h3 i{
+    font-size: 10px;
+    vertical-align: middle;
+    display: inline-block;
+    padding: 5px;
+    color: #C7C7C7;
+    transition: 300ms;
+    cursor: pointer;
+}
+
+
+.tutor-topics-in-single-lesson .tutor-topics-title h3 i:hover{
+    color: #1B52D8;
+}
+
+.tutor-topics-in-single-lesson .tutor-single-lesson-items a > i:first-child{
     color: #C7C7C7;
     line-height: 22px;
     display: inline-block;
     vertical-align: middle;
-    margin-right: 6px;
+    margin-right: 10px;
 }
 
+.tutor-topics-in-single-lesson .tutor-topics-summery{
+    padding: 14px;
+    font-size: 14px;
+    border-top: 1px solid #DCE4E6;
+    display: none;
+}
 
-    /*course status*/
+.tutor-topics-lesson-list .tutor-lesson-right-icons{
+    position: absolute;
+    right: 15px;
+    top: 14px;
+}
+
+.tutor-topics-lesson-list .tutor-lesson-right-icons .tutor-lesson-complete{
+    height: 16px;
+    width: 16px;
+    border: 1px solid #E8EFF1;
+    border-radius: 50%;
+    font-size: 9px;
+    display: inline-block;
+    line-height: 16px;
+    text-align: center;
+    margin: 0;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+.tutor-topics-lesson-list .tutor-single-lesson-items.active .tutor-lesson-right-icons .tutor-lesson-complete{
+    border-color: #b7d6b7;
+}
+
+.tutor-topics-lesson-list .tutor-single-lesson-items.active .tutor-lesson-right-icons .tutor-lesson-complete.tutor-done,
+.tutor-topics-lesson-list .tutor-lesson-right-icons .tutor-lesson-complete.tutor-done{
+    background: #86B223;
+    border-color: #86B223;
+    color: #fff;
+}
+
+.tutor-topics-lesson-list .tutor-lesson-right-icons i{
+    font-style: normal;
+}
+
+/*video*/
+
+.tutor-single-lesson-segment{
+    margin-bottom: 35px;
+}
+
+.tutor-single-lesson-wrap{
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.tutor-lesson-video-wrap .plyr--video{
+    border-radius: 4px;
+}
+
+/*course status*/
 .tutor-progress-bar-wrap{
     width: 100%;
     margin: 0;
