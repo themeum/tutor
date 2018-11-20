@@ -736,8 +736,16 @@ class Utils {
 
 				$icon = includes_url("images/media/default.png");
 				$type = wp_ext2type($ext);
+
+
 				if ($type){
-					$icon = includes_url("images/media/{$type}.png");
+					$icon_path = trailingslashit(ABSPATH.WPINC)."images/media/{$type}.png";
+
+					if (file_exists($icon_path)){
+						$icon = includes_url("images/media/{$type}.png");
+					}elseif($type === 'image'){
+						$icon = tutor()->url . 'assets/images/image.png';
+					}
 				}
 
 				$data = array(
@@ -755,6 +763,8 @@ class Utils {
 				$attachments_arr[] = (object) apply_filters('tutor/posts/attachments', $data);
 			}
 		}
+
+		$this->print_view($attachments_arr);
 
 		return $attachments_arr;
 	}
