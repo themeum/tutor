@@ -19,7 +19,7 @@
         </select>
 
         <p class="desc">
-            <?php _e('Select the course to access this lesson on that course', 'tutor'); ?>
+            <?php _e('Choose the course for this lesson', 'tutor'); ?>
         </p>
     </div>
 </div>

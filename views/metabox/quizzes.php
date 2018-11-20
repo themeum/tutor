@@ -26,7 +26,7 @@
 
 			</div>
 
-			<p class="desc"><?php _e('Time limit for quizzes in seconds. 0 mean no time limit.', 'tutor'); ?></p>
+			<p class="desc"><?php _e('Time limit for this quiz. 0 means no time limit.', 'tutor'); ?></p>
 		</div>
 	</div>
 
@@ -46,7 +46,7 @@
                 <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
             </div>
 
-            <p class="desc"><?php _e('Restriction on the number of attempts students are allowed at the quiz. 0 for no limit', 'tutor'); ?></p>
+            <p class="desc"><?php _e('Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit', 'tutor'); ?></p>
         </div>
     </div>
 
@@ -76,7 +76,7 @@
 				</div>
 			</div>
 
-			<p class="desc"><?php _e('Students must have to get equivalent this point to pass the quiz / Exam ', 'tutor'); ?></p>
+			<p class="desc"><?php _e('Set the passing percentage for this quiz', 'tutor'); ?></p>
 		</div>
 	</div>
 

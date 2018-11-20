@@ -9,7 +9,6 @@ if (! class_exists('Tutor_List_Table')){
 }
 
 class Teachers_List extends \Tutor_List_Table {
-
 	function __construct(){
 		global $status, $page;
 
@@ -32,9 +31,8 @@ class Teachers_List extends \Tutor_List_Table {
 	}
 
 	function column_total_course($item){
-		$course_post_type = tutor()->course_post_type;
-
 		global $wpdb;
+		$course_post_type = tutor()->course_post_type;
 
 		$total_course = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} WHERE post_author={$item->ID} AND post_type='{$course_post_type}' ");
 
@@ -66,7 +64,7 @@ class Teachers_List extends \Tutor_List_Table {
 				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Approve</a>',$_REQUEST['page'],'approve',$item->ID);
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Blocked</a>',$_REQUEST['page'],'blocked',$item->ID);
+				$actions['blocked'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Block</a>',$_REQUEST['page'],'blocked',$item->ID);
 				break;
 			case 'blocked':
 				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Un Block</a>',$_REQUEST['page'],'approve',$item->ID);

@@ -57,12 +57,10 @@ $is_multiple_questions_loop = ! (isset($is_question_edit_page)) || ! $is_questio
                         </p>
                         <input type="number" name="tutor_question[<?php echo $question->ID; ?>][question_mark]" value="1">
                         <p class="desc">
-							<?php _e('When students choose right answer, how mark should he get.'); ?>
+							<?php _e('Set the mark for this question how much will they get'); ?>
                         </p>
                     </div>
-
                 </div>
-
 
                 <div class="quiz-question-field">
                     <p>
@@ -71,7 +69,7 @@ $is_multiple_questions_loop = ! (isset($is_question_edit_page)) || ! $is_questio
                     <input type="text" class="question_field_title" name="tutor_question[<?php echo $question->ID; ?>][question_title]" value="<?php echo $question->post_title; ?>">
 
                     <p class="desc">
-						<?php _e('Title of the question.'); ?>
+						<?php _e('Title for the question.'); ?>
                     </p>
                 </div>
 
@@ -82,19 +80,22 @@ $is_multiple_questions_loop = ! (isset($is_question_edit_page)) || ! $is_questio
                     <textarea name="tutor_question[<?php echo $question->ID; ?>][question_description]"><?php echo $question->post_content;?></textarea>
 
                     <p class="desc">
-						<?php _e('Write about this question in details. '); ?>
+						<?php _e('Write the details about this question'); ?>
                     </p>
                 </div>
 
+                <!--
                 <div class="quiz-question-field">
                     <p>
-                        <label><?php _e('Question Hint', 'tutor'); ?></label>
+                        <label><?php /*_e('Question Hint', 'tutor'); */?></label>
                     </p>
-                    <textarea name="tutor_question[<?php echo $question->ID; ?>][question_hints]"><?php echo get_post_meta($question->ID, '_question_hints', true); ?></textarea>
+                    <textarea name="tutor_question[<?php /*echo $question->ID; */?>][question_hints]"><?php /*echo get_post_meta($question->ID, '_question_hints', true); */?></textarea>
                     <p class="desc">
-						<?php _e(sprintf('An instruction for the students to select the write answer. This will be show when students click to %s button', '<strong>hints</strong>'), 'tutor'); ?>
+						<?php /*_e(sprintf('An instruction for the students to select the write answer. This will be shown when students click on %s button', '<strong>hints</strong>'), 'tutor'); */?>
                     </p>
                 </div>
+                -->
+
             </div>
 
             <div class="answer-details">
