@@ -721,7 +721,6 @@ class Utils {
 	public function get_attachments($post_id = 0){
 		$post_id = $this->get_post_id($post_id);
 		$attachments_arr = array();
-
 		$attachments = maybe_unserialize(get_post_meta($post_id, '_tutor_attachments', true));
 
 		if ( is_array($attachments) && count($attachments)) {
@@ -736,7 +735,6 @@ class Utils {
 
 				$icon = includes_url("images/media/default.png");
 				$type = wp_ext2type($ext);
-
 
 				if ($type){
 					$icon_path = trailingslashit(ABSPATH.WPINC)."images/media/{$type}.png";
