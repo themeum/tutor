@@ -1429,6 +1429,14 @@ p.attempt-reviewed-text{
     margin-right: 4px;
 }
 
+/*course login*/
+
+.tutor-course-login-wrap h4{
+    font-size: 18px;
+    margin-bottom: 28px;
+}
+
+
 /* ********************* */
 /* Tutor Price Preview Box */
 /* ********************* */
