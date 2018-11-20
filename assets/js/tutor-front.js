@@ -287,13 +287,15 @@ jQuery(document).ready(function($){
     }
 
     // tutor course content accordion
-    var tutor_course_title = $('.tutor-course-title');
-
     $('.tutor-course-topic.tutor-active').find('.tutor-course-lessons').slideDown();
-    tutor_course_title.on('click', function () {
+    $('.tutor-course-title').on('click', function () {
         var lesson = $(this).siblings('.tutor-course-lessons');
         $(this).closest('.tutor-course-topic').toggleClass('tutor-active');
         lesson.slideToggle();
+    });
+
+    $('.tutor-topics-title i').on('click', function () {
+        $(this).closest('.tutor-topics-title').siblings('.tutor-topics-summery').slideToggle();
     });
 
 });
