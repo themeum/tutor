@@ -870,10 +870,41 @@ Teacher
 .tutor-topics-lesson-list .tutor-topics-in-single-lesson{
     border: 1px solid #E8EFF1;
     border-radius: 4px;
+    margin-bottom: 30px;
+}
+
+.tutor-topics-in-single-lesson .tutor-single-lesson-items a{
+    border-top: 1px solid #DCE4E6;
+    padding: 14px 17px;
+    font-size: 14px;
+    display: block;
+    color: #4B5981;
+}
+.tutor-topics-in-single-lesson .tutor-single-lesson-items a h4{
+    font-size: 14px;
+    margin: 0;
+    display: inline;
+}
+
+.tutor-topics-in-single-lesson .tutor-topics-title h3{
+    margin: 0;
+    padding: 14px 17px;
+    font-size: 16px;
+    color: #1B52D8;
+    font-weight: 500;
 }
 
 
-/*course status*/
+.tutor-topics-in-single-lesson .tutor-single-lesson-items a i:first-child{
+    color: #C7C7C7;
+    line-height: 22px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+
+    /*course status*/
 .tutor-progress-bar-wrap{
     width: 100%;
     margin: 0;

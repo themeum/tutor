@@ -31,7 +31,7 @@ $currentPost = $post;
 
                 <div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
                     <div class="tutor-topics-title">
-                        <h2><?php the_title(); ?></h2>
+                        <h3><?php the_title(); ?></h3>
                     </div>
 
                     <div class="tutor-lessons-under-topic">
@@ -52,25 +52,23 @@ $currentPost = $post;
 
 								$is_completed_lesson = tutor_utils()->is_completed_lesson();
                                 ?>
-                                <div class="<?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
+                                <div class="tutor-single-lesson-items <?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
                                     <a href="<?php the_permalink(); ?>">
-										<?php if ($play_time){ ?>
-                                            <i class="tutor-icon-youtube"></i>
-										<?php }else{
-										    ?>
-                                            <i class="tutor-icon-document"></i>
+
+                                        <?php
+                                            $tutor_lesson_type_icon = $play_time ? 'youtube' : 'document';
+                                            echo "<i class='tutor-icon-$tutor_lesson_type_icon'></i>";
+                                        ?>
+                                        <h4 class="lesson_title"><?php the_title(); ?></h4>
+                                        <span class="tutor-lesson-right-icons">
                                             <?php
-                                        } ?>
-
-                                        <span class="lesson_title"><?php the_title(); ?></span>
-
-	                                    <?php if ($is_completed_lesson){ ?>
-                                            <i class="tutor-icon-mark"></i>
-	                                    <?php } ?>
-										<?php if ($play_time){ ?>
-                                            <span class="play_duration"><?php echo $play_time; ?></span>
-										<?php } ?>
-
+                                                if ($play_time){
+                                                    echo "<i class='tutor-play-duration'>$play_time</i>";
+                                                }
+                                                $lesson_complete_icon = $is_completed_lesson ? 'tutor-icon-mark' : '';
+                                                echo "<i class='tutor-lesson-complete $lesson_complete_icon'></i>";
+                                            ?>
+                                        </span>
                                     </a>
                                 </div>
 								<?php
