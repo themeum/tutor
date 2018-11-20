@@ -20,7 +20,7 @@ get_header();
 
         <div class="tutor-template-segment tutor-login-wrap">
             <div class="tutor-login-title">
-                <h2><?php _e('Please Sign-In to view this section', 'tutor'); ?></h2>
+                <h4><?php _e('Please Sign-In to view this section', 'tutor'); ?></h4>
             </div>
 
             <div class="tutor-template-login-form">
