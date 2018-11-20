@@ -2,16 +2,9 @@
 
 	<?php
     $course_id = get_the_ID();
-
 	$query_lesson = tutor_utils()->get_lesson($course_id);
 	$query_topics = tutor_utils()->get_topics($course_id);
 	$attached_lesson_ids = array();
-
-	//tutor_utils()->print_view($lessons);
-    //print_r(get_post($course_id));
-
-
-	//$topics = range(1,10);
 
 	foreach ($query_topics->posts as $topic){
 		?>
@@ -52,7 +45,6 @@
                         </div>
                         <div class="tutor-option-field">
                             <textarea name="topic_summery"><?php echo $topic->post_content; ?></textarea>
-
                             <p class="desc">
 				                <?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
                             </p>
@@ -62,7 +54,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <div class="tutor-lessions">
@@ -88,10 +79,7 @@
 				?>
             </div>
 
-
-
             <div class="tutor_add_quiz_wrap" data-add-quiz-under="<?php echo $topic->ID; ?>">
-
                 <div class="tutor-available-quizzes">
                     <?php
                     $attached_quizzes = tutor_utils()->get_attached_quiz($topic->ID);
@@ -118,8 +106,6 @@
                 </div>
             </div>
 
-
-
         </div>
 		<?php
 	}
@@ -127,7 +113,6 @@
 
     <input type="hidden" id="tutor_topics_lessons_sorting" name="tutor_topics_lessons_sorting" value="" />
 </div>
-
 
 <div class="tutor-untopics-lessons">
     <h1><?php _e('Un Topics Lessons'); ?></h1>
@@ -156,7 +141,6 @@
 
 
 <div class="tutor-metabox-add-topics">
-
     <h3><?php _e('Add Topic', 'tutor'); ?></h3>
 
     <div class="tutor-option-field-row">
@@ -167,11 +151,10 @@
             <input type="text" name="topic_title" value="">
 
             <p class="desc">
-		        <?php _e('Topic title will be publicly show where required, you can call it as a section also in course', 'tutor'); ?>
+		        <?php _e('Topic titles will be publicly show where required, you can call it as a section also in course', 'tutor'); ?>
             </p>
         </div>
     </div>
-
 
     <div class="tutor-option-field-row">
         <div class="tutor-option-field-label">
@@ -179,17 +162,13 @@
         </div>
         <div class="tutor-option-field">
             <textarea name="topic_summery"></textarea>
-
             <p class="desc">
 				<?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
             </p>
-
 	        <?php
             submit_button(__('Add Topic', 'tutor')); ?>
         </div>
     </div>
-
-
 </div>
 
 

@@ -27,12 +27,24 @@ $currentPost = $post;
 
 			while ($topics->have_posts()){ $topics->the_post();
                 $topic_id = get_the_ID();
+                $topic_summery = get_the_content();
 				?>
 
                 <div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
                     <div class="tutor-topics-title">
                         <h2><?php the_title(); ?></h2>
                     </div>
+
+                    <?php
+                    if ($topic_summery){
+                        ?>
+                        <div class="tutor-topics-summery">
+                            <?php echo $topic_summery; ?>
+                        </div>
+                        <?php
+                    }
+
+                    ?>
 
                     <div class="tutor-lessons-under-topic">
 						<?php

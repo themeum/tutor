@@ -54,10 +54,7 @@ if ( ! $enable_q_and_a_on_course) {
     <div class="tutor_question_answer_wrap">
 		<?php
 		$questions = tutor_utils()->get_top_question();
-		?>
 
-
-		<?php
 		if (is_array($questions) && count($questions)){
 			foreach ($questions as $question){
 				$answers = tutor_utils()->get_qa_answer_by_question($question->comment_ID);

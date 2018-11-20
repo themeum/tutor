@@ -280,7 +280,7 @@ class init{
 			'quiz_when_time_expires'            => 'autosubmit',
 			'quiz_attempts_allowed'             => '10',
 			'quiz_grade_method'                 => 'highest_grade',
-			'student_public_url_enable'         => '1',
+			'enable_public_profile'         => '1',
 			'email_to_students'                 =>
 				array (
 					'quiz_completed' => '1',

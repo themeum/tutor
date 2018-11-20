@@ -6,7 +6,6 @@ $durationHours = tutor_utils()->avalue_dot('hours', $duration);
 $durationMinutes = tutor_utils()->avalue_dot('minutes', $duration);
 $durationSeconds = tutor_utils()->avalue_dot('seconds', $duration);
 
-
 $levels = tutor_utils()->course_levels();
 
 $course_level = get_post_meta($course_id, '_tutor_course_level', true);
@@ -16,10 +15,9 @@ $target_audience = get_post_meta($course_id, '_tutor_course_target_audience', tr
 $material_includes = get_post_meta($course_id, '_tutor_course_material_includes', true);
 ?>
 
-
 <div class="tutor-option-field-row">
     <div class="tutor-option-field-label">
-        <label for=""><?php _e('Video Run Time', 'tutor'); ?></label>
+        <label for=""><?php _e('Total Course Duration', 'tutor'); ?></label>
     </div>
     <div class="tutor-option-field">
 
@@ -88,14 +86,14 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 <div class="tutor-option-field-row">
     <div class="tutor-option-field-label">
         <label for="">
-			<?php _e('Requirements / instruction', 'tutor'); ?> <br />
+			<?php _e('Requirements/Instructions', 'tutor'); ?> <br />
         </label>
     </div>
     <div class="tutor-option-field">
         <textarea name="course_requirements" rows="10"><?php echo $requirements; ?></textarea>
 
         <p class="desc">
-			<?php _e('One per line, additional requirements or special instruction to students.', 'tutor'); ?>
+			<?php _e('One per line, additional requirements or special instructions for the students.', 'tutor'); ?>
         </p>
     </div>
 </div>
@@ -103,14 +101,14 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 <div class="tutor-option-field-row">
     <div class="tutor-option-field-label">
         <label for="">
-			<?php _e('Target audience', 'tutor'); ?> <br />
+			<?php _e('Targeted Audience', 'tutor'); ?> <br />
         </label>
     </div>
     <div class="tutor-option-field">
         <textarea name="course_target_audience" rows="10"><?php echo $target_audience; ?></textarea>
 
         <p class="desc">
-			<?php _e('One per line, target some specific persons who really need to take this course.', 'tutor'); ?>
+			<?php _e('Specify the targeted audience who will benefit most from the course, One line per target audience', 'tutor'); ?>
         </p>
     </div>
 </div>
@@ -126,7 +124,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         <textarea name="course_material_includes" rows="10"><?php echo $material_includes; ?></textarea>
 
         <p class="desc">
-			<?php _e('A list of assets which you providing to students.', 'tutor'); ?>
+			<?php _e('A list of assets you will be providing for the students in this course', 'tutor'); ?>
         </p>
     </div>
 </div>

@@ -2,10 +2,11 @@
 if (empty($field['options'])){
     $default = isset($field['default']) ? $field['default'] : '';
     $option_value = $this->get($field['field_key'], $default);
+    $label_title = isset($field['label_title']) ? $field['label_title'] : $field['label'];
 	?>
 	<label>
 		<input type="checkbox" name="tutor_option[<?php echo $field['field_key']; ?>]" value="1" <?php checked($option_value, '1') ?> />
-		<?php echo $field['label'] ?>
+		<?php echo $label_title; ?>
 	</label>
 	<?php
 }else{

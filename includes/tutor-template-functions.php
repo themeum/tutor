@@ -733,10 +733,7 @@ if ( ! function_exists('tutor_lesson_lead_info')) {
 		}
 
 		ob_start();
-
 		$course_id = tutor_utils()->get_course_id_by_lesson( $lesson_id );
-
-
 		$course_post_type = tutor()->course_post_type;
 		$queryCourse      = new WP_Query( array( 'p' => $course_id, 'post_type' => $course_post_type ) );
 
@@ -747,7 +744,6 @@ if ( ! function_exists('tutor_lesson_lead_info')) {
 			}
 			wp_reset_postdata();
 		}
-
 		$output = apply_filters( 'tutor_course/single/enrolled/lead_info', ob_get_clean() );
 
 		if ( $echo ) {

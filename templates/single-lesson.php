@@ -14,7 +14,6 @@ global $post;
 $currentPost = $post;
 ?>
 
-
 <?php do_action('tutor_lesson/single/before/wrap'); ?>
     <div <?php tutor_post_class('tutor-single-lesson-wrap'); ?>>
         <div class="tutor-container">
