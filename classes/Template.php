@@ -162,6 +162,9 @@ class Template extends Tutor_Base {
 		global $wp_query;
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $this->lesson_post_type){
+			$page_id = get_the_ID();
+
+			setup_postdata($page_id);
 			if (is_user_logged_in()){
 				$is_course_enrolled = tutor_utils()->is_course_enrolled_by_lesson();
 
@@ -174,6 +177,8 @@ class Template extends Tutor_Base {
 			}else{
 				$template = tutor_get_template('login');
 			}
+			wp_reset_postdata();
+
 			return $template;
 		}
 		return $template;

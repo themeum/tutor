@@ -22,8 +22,8 @@ class Rewrite_Rules extends Tutor_Base {
 		$vars[] = 'lesson_video';
 		$vars[] = 'tutor_dashboard_page';
 
-		$student_public_url_enable = tutor_utils()->get_option('student_public_url_enable');
-		if ($student_public_url_enable){
+		$enable_public_profile = tutor_utils()->get_option('enable_public_profile');
+		if ($enable_public_profile){
 			$vars[] = 'tutor_student_username';
 			$vars[] = 'profile_sub_page';
 		}

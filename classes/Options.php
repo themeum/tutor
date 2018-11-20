@@ -83,6 +83,13 @@ class Options {
 						'label' => __('General', 'tutor'),
 						'desc' => __('General Settings', 'tutor'),
 						'fields' => array(
+							'enable_public_profile' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable Public Profile', 'tutor'),
+								'default' => '0',
+								'desc'      => __('Enable this to make a profile publicly visible',	'tutor')."<br />"
+								               .$student_url,
+							),
 							'load_tutor_css' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Load Tutor default CSS', 'tutor'),
@@ -117,9 +124,10 @@ class Options {
 						'desc' => __('Course Settings', 'tutor'),
 						'fields' => array(
 							'course_allow_upload_private_files' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Allow Upload Private Files', 'tutor'),
-								'desc'      => __('This will allow upload files to course and only enrolled students can access these files',	'tutor'),
+								'type'          => 'checkbox',
+								'label'         => __('Private file uploading', 'tutor'),
+								'label_title'   => __('Allow uploading private files', 'tutor'),
+								'desc'          => __('This will allow uploading files to courses and only enrolled students can access these files',	'tutor'),
 							),
 							/*
 							'course_complete_terms' => array(
@@ -135,8 +143,8 @@ class Options {
 
 							'display_course_teachers' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Display course Teachers', 'tutor'),
-								'desc'      => __('Show the teachers at single course page',	'tutor'),
+								'label'     => __('Display teachers profile', 'tutor'),
+								'label_title'   => __('Show the teacher profile on course single page.', 'tutor'),
 							),
 							'enable_q_and_a_on_course' => array(
 								'type'      => 'checkbox',
@@ -155,21 +163,21 @@ class Options {
 								'label'     => __('Course Archive Page', 'tutor'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('Select page to show course archieve page, none will show default course post type',	'tutor'),
+								'desc'      => __('Choose the page from the dropdown list where you want to show all of the courses',	'tutor'),
 							),
 							'courses_col_per_row' => array(
 								'type'      => 'slider',
-								'label'     => __('Col per row', 'tutor'),
+								'label'     => __('Column per row', 'tutor'),
 								'default'   => '4',
 								'options'   => array('min'=> 1, 'max' => 6),
-								'desc'      => __('Show col per row at course listing', 'tutor'),
+								'desc'      => __('Define how many column you want to show on the course single page', 'tutor'),
 							),
 							'courses_per_page' => array(
 								'type'      => 'slider',
 								'label'     => __('Courses Per Page', 'tutor'),
 								'default'   => '10',
 								'options'   => array('min'=> 1, 'max' => 20),
-								'desc'      => __('Course show per page in pagination', 'tutor'),
+								'desc'      => __('Define how many courses you want to show per page', 'tutor'),
 							),
 						),
 					),
@@ -206,14 +214,12 @@ class Options {
 							'quiz_time_limit' => array(
 								'type'      => 'group_fields',
 								'label'     => __('Time Limit', 'tutor'),
-								'desc'      => __('Default time limit for quizzes in seconds. 0 mean no time limit.', 'tutor'),
-
+								'desc'      => __('Default time limit for quizzes. 0 means no time limit.', 'tutor'),
 								'group_fields'  => array(
 									'value' => array(
 										'type'      => 'text',
 										'default'   => '0',
 									),
-
 									'time' => array(
 										'type'      => 'select',
 										'default'   => 'minutes',
@@ -226,7 +232,6 @@ class Options {
 											'seconds'   =>  __('Seconds', 'tutor'),
 										),
 									),
-
 								),
 							),
 
@@ -236,9 +241,9 @@ class Options {
 								'default'   => 'minutes',
 								'select_options'   => false,
 								'options'   => array(
-									'autosubmit'    =>  __('Open attempts are submitted automatically', 'tutor'),
-									'graceperiod'   =>  __('There is a grace period when open attempts can be submitted, but no more questions answered', 'tutor'),
-									'autoabandon'   =>  __('Attempts must be submitted before time expires, or they are not counted', 'tutor'),
+									'autosubmit'    =>  __('Current attempts are submitted automatically', 'tutor'),
+									'graceperiod'   =>  __('There is a grace period when current attempts can be submitted, but no more questions answered', 'tutor'),
+									'autoabandon'   =>  __('Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor'),
 								),
 								'desc'  => __('What should happen by default if a student does not submit the quiz before time expires.', 'tutor'),
 							),
@@ -248,7 +253,7 @@ class Options {
 								'label'      => __('Attempts allowed', 'tutor'),
 								'default'   => '10',
 								'options'   => array('min'=> 0, 'max' => 20),
-								'desc'  => __('Restriction on the number of attempts students are allowed at the quiz. 0 for no limit', 'tutor'),
+								'desc'  => __('Restriction on the number of attempts students are allowed to take for a quiz. 0 for no limit', 'tutor'),
 							),
 
 							'quiz_grade_method' => array(
@@ -262,7 +267,7 @@ class Options {
 									'first_attempt' => __('First Attempt', 'tutor'),
 									'last_attempt' => __('Last Attempt', 'tutor'),
 								),
-								'desc'  => __('When multiple attempts are allowed, which method should be used to calculate the student\'s final grade for the quiz.', 'tutor'),
+								'desc'  => __('When multiple attempts are allowed, which method should be used to calculate a student\'s final grade for the quiz.', 'tutor'),
 							),
 						)
 					)
@@ -287,7 +292,7 @@ class Options {
 								'type'      => 'checkbox',
 								'label'     => __('Can publish course', 'tutor'),
 								'default' => '0',
-								'desc'      => __('Is teacher can publish a course directly or not, if uncheck, they can still add the course and it will goes to admin for review.',	'tutor'),
+								'desc'      => __('Define if a teacher can publish his courses directly or not, if unchecked, they can still add courses, but it will go to admin for review',	'tutor'),
 							),
 						),
 					),
@@ -306,7 +311,7 @@ class Options {
 								'label'     => __('Student Register Page', 'tutor'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('This will be student register page', 'tutor'),
+								'desc'      => __('Choose the page for student dashboard', 'tutor'),
 							),
 							'student_dashboard' => array(
 								'type'      => 'select',
@@ -316,24 +321,18 @@ class Options {
 								'desc'      => __('This page will show students related stuff, like my courses, order, etc', 'tutor'),
 							),
 
-							'student_public_url_enable' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Enable student pubic URL', 'tutor'),
-								'default' => '0',
-								'desc'      => __('Any students public profile can be accessible via URL.',	'tutor')."<br />".$student_url,
-							),
-
 							'students_own_review_show_at_profile' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Own review show at profile', 'tutor'),
+								'label'     => __('Show reviews on profile', 'tutor'),
+								'label_title'     => __('Enable students review on their profile', 'tutor'),
 								'default' => '0',
-								'desc'      => __('Show review at students public profile placed by them.',	'tutor')."<br />".$student_url,
+								'desc'      => __('Enabling this will allow the reviews written by each individual students on their profile',	'tutor')."<br />" .$student_url,
 							),
 							'show_courses_completed_by_student' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Show Completed Course', 'tutor'),
 								'default' => '0',
-								'desc'      => __('Completed courses will be show at student profile',	'tutor')."<br />".$student_url,
+								'desc'      => __('Completed courses will be show on student profile',	'tutor')."<br />".$student_url,
 							),
 
 						),
@@ -355,7 +354,7 @@ class Options {
 									'quiz_completed' => __('Quiz Completed', 'tutor'),
 									'completed_course' => __('Completed a course', 'tutor'),
 								),
-								'desc'      => __('Select notification that will be sent to students',	'tutor'),
+								'desc'      => __('Select when to sent notification to the students',	'tutor'),
 							),
 							'email_to_teachers' => array(
 								'type'      => 'checkbox',
@@ -366,7 +365,7 @@ class Options {
 									'a_student_completed_lesson'            => __('A Student Completed Lesson', 'tutor'),
 									'a_student_placed_question'             => __('A Student placed question to course', 'tutor'),
 								),
-								'desc'      => __('Select the notifications that will be sent to teachers.',	'tutor'),
+								'desc'      => __('Select when to sent notification to the teachers',	'tutor'),
 							),
 						),
 					),
@@ -378,7 +377,7 @@ class Options {
 								'type'      => 'text',
 								'label'     => __('E-Mail From Name', 'tutor'),
 								'default'   => get_option('blogname'),
-								'desc'      => __('The name from which all emails will be sent',	'tutor'),
+								'desc'      => __('The name under which all the emails will be sent',	'tutor'),
 							),
 							'email_from_address' => array(
 								'type'      => 'text',

@@ -11,7 +11,6 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 $attachments = tutor_utils()->get_attachments();
-
 do_action('tutor_global/before/attachments');
 
 if (is_array($attachments) && count($attachments)){
