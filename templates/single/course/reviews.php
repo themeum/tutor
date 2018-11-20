@@ -30,12 +30,13 @@ if ( ! is_array($reviews) || ! count($reviews)){
                 <p class="course-avg-rating">
 					<?php
 					$rating = tutor_utils()->get_course_rating();
-					echo $rating->rating_avg;
+					echo number_format($rating->rating_avg, 1);
 					?>
                 </p>
                 <p class="course-avg-rating-html">
-					<?php tutor_utils()->star_rating_generator($rating->rating_avg); ?>
+					<?php tutor_utils()->star_rating_generator($rating->rating_avg);?>
                 </p>
+                <p class="tutor-course-avg-rating-total">Total <span><?php echo $rating->rating_count;?></span> Ratings</p>
 
             </div>
         </div>

@@ -106,11 +106,10 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 				if ( $lesson_url ) {
 					?>
                     <a href="<?php echo $lesson_url; ?>" class="tutor-button"><?php _e( 'Continue to lesson', 'tutor' ); ?></a>
-				<?php }
-			}
-			?>
-            <a href="<?php echo get_the_permalink(); ?>" class="tutor-button"><?php _e('Course Home', 'tutor'); ?></a>
-			<?php tutor_course_mark_complete_html(); ?>
+                <?php }
+            }
+            ?>
+            <?php tutor_course_mark_complete_html(); ?>
         </div>
     </div>
 

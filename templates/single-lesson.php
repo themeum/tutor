@@ -19,21 +19,14 @@ $currentPost = $post;
     <div <?php tutor_post_class('tutor-single-lesson-wrap'); ?>>
         <div class="tutor-container">
             <div class="tutor-row">
-                <div class="tutor-col">
-                    <?php tutor_lesson_lead_info(); ?>
-                </div>
-            </div>
-        </div>
-        <div class="tutor-container">
-            <div class="tutor-row">
-                <div class="tutor-col-4">
-                    <?php tutor_lessons_as_list(); ?>
-                </div>
                 <div class="tutor-col-8">
                     <?php tutor_lesson_video(); ?>
                     <?php the_content(); ?>
                     <?php get_tutor_posts_attachments(); ?>
                     <?php tutor_lesson_mark_complete_html(); ?>
+                </div>
+                <div class="tutor-col-4">
+                    <?php tutor_lessons_as_list(); ?>
                 </div>
             </div>
         </div>
