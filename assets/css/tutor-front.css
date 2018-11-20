@@ -867,6 +867,10 @@ Teacher
 /* Single Lesson  */
 /************************       */
 
+.tutor-topics-lesson-list .tutor-topics-in-single-lesson{
+    border: 1px solid #E8EFF1;
+    border-radius: 4px;
+}
 
 
 /*course status*/
