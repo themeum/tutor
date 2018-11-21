@@ -759,8 +759,6 @@ class Utils {
 			}
 		}
 
-		$this->print_view($attachments_arr);
-
 		return $attachments_arr;
 	}
 
