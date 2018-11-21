@@ -346,6 +346,27 @@ div[class*="tutor-course-col"] {
     transition: 300ms;
     border: 1px solid #DCDFE5;
 }
+.tutor-course-header{
+    position: relative;
+}
+
+.tutor-course-loop-header-meta{
+    position: absolute;
+    left: 13px;
+    top: 13px;
+}
+
+.tutor-course-loop-level{
+    display: inline-block;
+    background: #9013FE;
+    padding: 0 10px;
+    color: #fff;
+    font-size: 12px;
+    line-height: 21px;
+    border-radius: 2px;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
 .tutor-course-loop:hover{
     box-shadow: 0 4px 23px rgba(0,0,0,.1);
 }
@@ -888,7 +909,7 @@ Teacher
 
 
 .tutor-lessons-under-topic .tutor-single-lesson-items.active a{
-    background: rgba(236, 255, 236, 0.76);
+    background: rgba(233, 235, 238, 0.35);
 }
 
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a span{
@@ -906,8 +927,12 @@ Teacher
     font-weight: 500;
 }
 
-
 .tutor-topics-in-single-lesson .tutor-topics-title h3 i{
+    font-size: 10px;
+    margin-left: 6px;
+}
+
+.tutor-topics-in-single-lesson .tutor-topics-tutor-loop-rating-wraptitle h3 i{
     font-size: 10px;
     vertical-align: middle;
     display: inline-block;
