@@ -77,7 +77,6 @@ class Rewrite_Rules extends Tutor_Base {
 		global $wpdb;
 		if( is_object($post) && $post->post_type == $this->lesson_post_type){
 			//Lesson Permalink
-
 			$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
 
 			if ($course_id){
@@ -88,7 +87,6 @@ class Rewrite_Rules extends Tutor_Base {
 			}
 		}elseif (is_object($post) && $post->post_type === 'tutor_quiz'){
 			//Quiz Permalink
-
 			$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} ");
 			if ($course){
 				//Checking if this topic
@@ -100,12 +98,10 @@ class Rewrite_Rules extends Tutor_Base {
 					$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
 				}
 
-
 				return home_url("/{$this->course_post_type}/".$course->post_name."/tutor_quiz/". $post->post_name.'/');
 			}else{
 				return home_url("/{$this->course_post_type}/sample-course/tutor_quiz/". $post->post_name.'/');
 			}
-
 		}
 		return $post_link;
 	}
