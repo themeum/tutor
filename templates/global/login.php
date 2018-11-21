@@ -46,18 +46,22 @@ if ( ! defined( 'ABSPATH' ) )
 			<p class="login-password">
 				<input type="password" placeholder="'.esc_html( $args['label_password'] ).'" name="pwd" id="' . esc_attr( $args['id_password'] ) . '" class="input" value="" size="20" />
 			</p>
-			
+			<div class="tutor-login-rememeber-wrap">
 			' . ( $args['remember'] ? '<p class="login-remember"><label><input name="rememberme" type="checkbox" id="' . esc_attr( $args['id_remember'] ) . '" value="forever"' . ( $args['value_remember'] ? ' checked="checked"' : '' ) . ' /> ' . esc_html( $args['label_remember'] ) . '</label></p>' : '' ) . '
 			
-			<a href="'.$args['wp_lostpassword_url'].'">'.$args['wp_lostpassword_label'].'</a>
-			
+			    <a href="'.$args['wp_lostpassword_url'].'">'.$args['wp_lostpassword_label'].'</a>
+			</div>
 			<p class="login-submit">
 				<input type="submit" name="wp-submit" id="' . esc_attr( $args['id_submit'] ) . '" class="button button-primary" value="' . esc_attr( $args['label_log_in'] ) . '" />
 				<input type="hidden" name="redirect_to" value="' . esc_url( $args['redirect'] ) . '" />
 			</p>
+			<p class="tutor-form-register-wrap">
+			    <a href="'. esc_url(tutor_utils()->student_register_url()). '">'.esc_html('Create a new account').'</a>
+            </p>
 		</form>';
     echo $form;
-    ?>
 
-    <a href="<?php echo tutor_utils()->student_register_url(); ?>">Register Now</a>
+    #@TODO: student_register_url() return false, it must be an valid url.
+
+    ?>
 </div>
