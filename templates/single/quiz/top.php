@@ -18,10 +18,10 @@ do_action('tutor_quiz/single/before/top');
 <div class="tutor-quiz-header">
     <span class="tutor-quiz-badge"><?php _e('Quiz', 'tutor'); ?></span>
     <h2><?php echo get_the_title(); ?></h2>
-    <h4>
+    <h5>
         <?php _e('Course', 'tutor'); ?> :
         <a href="<?php echo get_the_permalink($course->ID); ?>"><?php echo get_the_title($course->ID); ?></a>
-    </h4>
+    </h5>
     <ul class="tutor-quiz-meta">
 
         <?php
@@ -42,7 +42,7 @@ do_action('tutor_quiz/single/before/top');
                 ?>
                     <li>
                         <strong><?php _e('Time', 'tutor'); ?> :</strong>
-                        <?php echo $time_limit.$time_type; ?>
+                        <?php echo $time_limit.' '.$time_type; ?>
                     </li>
                 <?php
             }
