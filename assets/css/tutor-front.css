@@ -1574,6 +1574,11 @@ p.attempt-reviewed-text{
     text-align: right;
 }
 
+.tutor-form-group.tutor-reg-form-btn-wrap .tutor-button{
+    background: #86B223;
+    border-color: #86B223;
+}
+
 /* ********************* */
 /* Tutor Price Preview Box */
 /* ********************* */

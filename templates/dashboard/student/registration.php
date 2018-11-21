@@ -46,7 +46,7 @@
     </div>
 
     <div class="tutor-form-row">
-        <div class="tutor-form-col6">
+        <div class="tutor-form-col-6">
             <div class="tutor-form-group">
                 <label>
 					<?php _e('E-Mail', 'tutor'); ?>
