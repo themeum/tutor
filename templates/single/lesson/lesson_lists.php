@@ -97,35 +97,32 @@ $currentPost = $post;
 							$lessons->reset_postdata();
 						}
 
-
+						#quizzes
 						$quizzes = tutor_utils()->get_attached_quiz($topic_id);
 						if ($quizzes){
 							?>
-                            <div class="tutor-quizzes-list">
 								<?php
 								foreach ($quizzes as $quiz){
 									?>
-                                    <p class="quiz-single-item quiz-single-item-<?php echo $quiz->ID; ?>">
-                                        <span class="quiz-icon">
-                                            <i class="tutor-icon-clock"></i>
-                                        </span>
+                                    <div class="tutor-single-lesson-items quiz-single-item-<?php echo $quiz->ID; ?>">
+                                        <a href="<?php echo get_permalink($quiz->ID); ?>">
+                                            <i class="tutor-icon-doubt"></i>
+                                            <span class="lesson_title"><?php echo $quiz->post_title; ?></span>
+                                            <span class="tutor-lesson-right-icons">
 
-                                        <span class="quiz-title">
-                                            <a href="<?php echo get_permalink($quiz->ID); ?>"> <?php echo $quiz->post_title; ?></a>
-
-                                        </span>
-
-                                        <?php $time_limit = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_value');
-                                        if ($time_limit){
-                                            $time_type = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_type');
-                                            echo "<span class='quiz-time-limit'>{$time_limit} {$time_type}</span>";
-                                        }
-                                        ?>
-                                    </p>
+                                            <?php
+                                                $time_limit = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_value');
+                                                if ($time_limit){
+                                                    $time_type = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_type');
+                                                    echo "<span class='quiz-time-limit'>{$time_limit} {$time_type}</span>";
+                                                }
+                                            ?>
+                                            </span>
+                                        </a>
+                                    </div>
 									<?php
 								}
 								?>
-                            </div>
 							<?php
 						}
 						?>
