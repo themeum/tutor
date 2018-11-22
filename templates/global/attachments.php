@@ -22,7 +22,7 @@ if (is_array($attachments) && count($attachments)){
             ?>
             <a href="<?php echo $attachment->url; ?>" class="dozent-lesson-attachment clearfix">
                 <div class="dozent-attachment-icon">
-                    <img src="<?php echo $attachment->icon; ?>" />
+                    <i class="dozent-icon-<?php echo $attachment->icon; ?>"></i>
                 </div>
 
                 <div class="dozent-attachment-info">
