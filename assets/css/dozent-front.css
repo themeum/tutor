@@ -814,11 +814,12 @@ a.dozent-btn:hover,
     margin-bottom: 17px;
 }
 
-.dozent-dashboard-content-inner{
+.dozent-dashboard-content-inner:not(:empty){
     padding: 20px;
     border: 1px solid #DCDFE5;
     border-radius: 4px;
 }
+
 
 .dozent-mycourse-rating{
     color: #F8C51C;
@@ -829,6 +830,14 @@ a.dozent-btn:hover,
     margin-right: 4px;
 }
 
+.dozent-dashboard-content-inner{
+    font-size: 14px;
+}
+
+.dozent-dashboard-content-inner .dozent-mycourse-wrap p:last-child{
+    margin-bottom: 0;
+}
+
 .dozent-dashboard-content-inner h3 a{
     color: #4B5981;
     font-size: 22px;
@@ -837,10 +846,24 @@ a.dozent-btn:hover,
     display: block;
 }
 
-.dozent-dashboard-content-inner .dozent-course-metadata{
-
+.dozent-dashboard-content-inner .dozent-course-metadata ul{
+    display: block;
+    list-style: none;
+    margin: 0 0 30px;
+    padding: 0;
+    font-size: 14px;
 }
 
+
+.dozent-dashboard-content-inner .dozent-course-metadata li{
+    display: inline-block;
+    color: #8C94A8;
+}
+
+
+.dozent-dashboard-content-inner .dozent-course-metadata li span{
+    color: #4B5981;
+}
 
 /* ***********************      */
 /* End Dozent Student Dashboard  */
@@ -1012,6 +1035,9 @@ Teacher
     display: inline-block;
     vertical-align: middle;
     margin-right: 10px;
+}
+.dozent-topics-in-single-lesson .dozent-single-lesson-items a > i.dozent-icon-doubt{
+    color: #1B52D8;
 }
 
 .dozent-topics-in-single-lesson .dozent-topics-summery{
@@ -1292,19 +1318,12 @@ Teacher
     border: 1px solid #ddd;
     box-shadow: none;
     border-radius: 4px;
+    line-height: 1.5;
+    text-indent: 0;
+    padding: 15px;
 }
 
-.dozent-course-enrolled-review-wrap .dozent-form-group button{
-    color: #fff;
-    background-color: #1B52D8;
-    border-color: #1B52D8;
-    display: inline-block;
-    padding: 15px 30px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    line-height: 1;
-    font-size: 14px;
-}
+
 
 /*******************/
 /*end dozent review form*/

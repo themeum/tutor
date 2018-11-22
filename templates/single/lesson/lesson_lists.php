@@ -30,6 +30,7 @@ $course_id = get_post_meta($post->ID, '_dozent_course_id_for_lesson', true);
                 </a>
             </div>
             <div class="dozent-single-lesson-button ">
+                <!-- @TODO: Dashboard URL is Not working properly-->
                 <a href="<?php echo dozent_utils()->dozent_dashboard_url(); ?>">
                     <i class="dozent-icon-grid"></i>
                     <span class="lesson_title"><?php _e('Dashboard', 'dozent'); ?></span>
