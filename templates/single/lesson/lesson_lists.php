@@ -13,15 +13,34 @@ if ( ! defined( 'ABSPATH' ) )
 
 global $post;
 $currentPost = $post;
+
+$course_id = get_post_meta($post->ID, '_dozent_course_id_for_lesson', true);
 ?>
 
 <?php do_action('dozent_lesson/single/before/lesson_lists'); ?>
 
     <div class="dozent-topics-lesson-list">
-		<?php
 
-		$course_id = get_post_meta($post->ID, '_dozent_course_id_for_lesson', true);
-		$topics = dozent_utils()->get_topics($course_id);
+
+        <div class="dozent-topics-in-single-lesson">
+            <div class="dozent-single-lesson-items ">
+                <a href="<?php echo get_the_permalink($course_id); ?>">
+                    <i class="dozent-icon-mortarboard"></i>
+                    <span class="lesson_title"><?php _e('Course Home', 'dozent'); ?></span>
+                </a>
+            </div>
+
+            <div class="dozent-single-lesson-items ">
+                <a href="http://10.0.1.28/lms/dev/course/basic-php-development-course/lesson/course-overview/">
+                    <i class="dozent-icon-grid"></i>
+                    <span class="lesson_title">Dashboard</span>
+                </a>
+            </div>
+        </div>
+
+
+		<?php
+        $topics = dozent_utils()->get_topics($course_id);
 
 		if ($topics->have_posts()){
 
