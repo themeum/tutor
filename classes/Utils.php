@@ -2575,6 +2575,13 @@ class Utils {
 		return false;
 	}
 
+
+	public function dozent_dashboard_url(){
+		$page_id = (int) dozent_utils()->get_option('student_dashboard');
+		$page_id = apply_filters('dozent_dashboard_url', $page_id);
+		return get_the_permalink($page_id);
+	}
+
 }
 
 
