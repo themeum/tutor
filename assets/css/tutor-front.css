@@ -776,20 +776,56 @@ a.tutor-button:hover, .tutor-button:hover {
 .tutor-dashboard-permalinks{
     list-style: none;
     margin: 0 0 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #E8EFF1;
     border-radius: 4px;
-    padding: 10px 0;
+    font-size: 14px;
+    padding: 0;
+}
+.tutor-dashboard-permalinks li:not(:last-child){
+    border-bottom: 1px solid #E8EFF1;
 }
 .tutor-dashboard-permalinks li a{
     display: block;
-    color: #000;
-    padding: 5px 20px;
+    color: #4B5981;
+    padding: 10px 20px;
+    line-height: 28px;
 }
-.tutor-dashboard-content{
-    border: 1px solid #ddd;
+.tutor-dashboard-content h1{
+    color: #8C94A8;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 23px;
+    margin-bottom: 17px;
+}
+
+.tutor-dashboard-content-inner{
     padding: 20px;
+    border: 1px solid #DCDFE5;
     border-radius: 4px;
 }
+
+.tutor-mycourse-rating{
+    color: #F8C51C;
+    font-size: 12px;
+}
+
+.tutor-mycourse-rating i{
+    margin-right: 4px;
+}
+
+.tutor-dashboard-content-inner h3 a{
+    color: #4B5981;
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: 600;
+    display: block;
+}
+
+.tutor-dashboard-content-inner .tutor-course-metadata{
+
+}
+
+
 /* ***********************      */
 /* End Tutor Student Dashboard  */
 /************************       */
