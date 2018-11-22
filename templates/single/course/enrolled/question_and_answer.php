@@ -68,13 +68,13 @@ if ( ! $enable_q_and_a_on_course) {
                             </div>
                             <p class="review-meta">
                                 <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a> -
-                                <span class="dozent-text-mute"><?php _e(sprintf('%s ago', human_time_diff(strtotime($question->comment_date))), 'lms'); ?></span>
+                                <span class="dozent-text-mute"><?php _e(sprintf('%s ago', human_time_diff(strtotime($question->comment_date))), 'dozent'); ?></span>
                             </p>
                         </div>
 
                         <div class="dozent_question_area">
                             <p><strong><?php echo $question->question_title; ?> </strong></p>
-							<?php echo wpautop($question->comment_content); ?>
+							<?php echo wpautop(stripslashes($question->comment_content)); ?>
                         </div>
                     </div>
                 </div>
@@ -95,7 +95,7 @@ if ( ! $enable_q_and_a_on_course) {
                                         <p class="review-meta">
                                             <a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a> -
                                             <span class="dozent-text-mute">
-										        <?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'lms'); ?>
+										        <?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'dozent'); ?>
 									        </span>
                                         </p>
                                     </div>
