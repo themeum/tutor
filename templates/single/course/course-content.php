@@ -25,7 +25,7 @@ if ( empty($content)){
     </div>
 
     <div class="dozent-course-content-content">
-        <?php echo $content; ?>
+        <?php echo wpautop($content); ?>
     </div>
 </div>
 
