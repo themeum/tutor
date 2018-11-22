@@ -275,7 +275,7 @@ class Options {
 				'label'     => __('Teachers', 'tutor'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('Student Profile settings', 'tutor'),
+						'label' => __('Teacher Profile Settings', 'tutor'),
 						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
 						'fields' => array(
 							'teacher_register_page' => array(
@@ -308,7 +308,7 @@ class Options {
 								'label'     => __('Student Register Page', 'tutor'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('Choose the page for student dashboard', 'tutor'),
+								'desc'      => __('Choose the page for student registration page', 'tutor'),
 							),
 							'student_dashboard' => array(
 								'type'      => 'select',
