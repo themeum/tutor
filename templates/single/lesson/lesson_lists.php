@@ -31,9 +31,9 @@ $course_id = get_post_meta($post->ID, '_dozent_course_id_for_lesson', true);
             </div>
 
             <div class="dozent-single-lesson-items ">
-                <a href="http://10.0.1.28/lms/dev/course/basic-php-development-course/lesson/course-overview/">
+                <a href="<?php echo dozent_utils()->dozent_dashboard_url(); ?>">
                     <i class="dozent-icon-grid"></i>
-                    <span class="lesson_title">Dashboard</span>
+                    <span class="lesson_title"><?php _e('Dashboard', 'dozent'); ?></span>
                 </a>
             </div>
         </div>

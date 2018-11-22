@@ -719,6 +719,21 @@ class Utils {
 		$post_id = $this->get_post_id($post_id);
 		$attachments_arr = array();
 		$attachments = maybe_unserialize(get_post_meta($post_id, '_dozent_attachments', true));
+		
+		
+		$font_icons = apply_filters('dozent_file_types_icon', array(
+			'archive',
+			'audio',
+			'code',
+			'default',
+			'document',
+			'interactive',
+			'spreadsheet',
+			'text',
+			'video',
+			'image',
+		));
+		
 
 		if ( is_array($attachments) && count($attachments)) {
 			foreach ( $attachments as $attachment ) {
@@ -730,17 +745,11 @@ class Utils {
 				$size_bytes = filesize( get_attached_file( $attachment ));
 				$size = size_format( $size_bytes, 2 );
 
-				$icon = includes_url("images/media/default.png");
 				$type = wp_ext2type($ext);
 
-				if ($type){
-					$icon_path = trailingslashit(ABSPATH.WPINC)."images/media/{$type}.png";
-
-					if (file_exists($icon_path)){
-						$icon = includes_url("images/media/{$type}.png");
-					}elseif($type === 'image'){
-						$icon = dozent()->url . 'assets/images/image.png';
-					}
+				$icon = 'default';
+				if ($type && in_array($type, $font_icons)){
+					$icon = $type;
 				}
 
 				$data = array(
@@ -2564,6 +2573,13 @@ class Utils {
 			return get_the_permalink($student_register_page);
 		}
 		return false;
+	}
+
+
+	public function dozent_dashboard_url(){
+		$page_id = (int) dozent_utils()->get_option('student_dashboard');
+		$page_id = apply_filters('dozent_dashboard_url', $page_id);
+		return get_the_permalink($page_id);
 	}
 
 }
