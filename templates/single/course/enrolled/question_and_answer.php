@@ -45,8 +45,8 @@ if ( ! $enable_q_and_a_on_course) {
             </div>
 
             <div class="dozent-form-group">
-                <a href="javascript:;" class="dozent_question_cancel"><?php _e('Cancel', 'dozent'); ?></a>
-                <button type="submit" class="dozent-btn dozent_ask_question_btn" name="dozent_question_search_btn"><?php _e('Post Question', 'dozent'); ?> </button>
+                <a href="javascript:;" class="dozent_question_cancel dozent-button dozent-danger"><?php _e('Cancel', 'dozent'); ?></a>
+                <button type="submit" class="dozent-button dozent-success dozent_ask_question_btn" name="dozent_question_search_btn"><?php _e('Post Question', 'dozent'); ?> </button>
             </div>
         </form>
     </div>
@@ -61,12 +61,11 @@ if ( ! $enable_q_and_a_on_course) {
 				$profile_url = dozent_utils()->profile_url($question->user_id);
 				?>
                 <div class="dozent_original_question">
-                    <div class="question-left">
-                        <a href="<?php echo $profile_url; ?>"> <?php echo dozent_utils()->get_dozent_avatar($question->user_id); ?></a>
-                    </div>
-
-                    <div class="question-right">
+                    <div class="dozent-question-wrap">
                         <div class="question-top-meta">
+                            <div class="dozent-question-avater">
+                                <a href="<?php echo $profile_url; ?>"> <?php echo dozent_utils()->get_dozent_avatar($question->user_id); ?></a>
+                            </div>
                             <p class="review-meta">
                                 <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a> -
                                 <span class="dozent-text-mute"><?php _e(sprintf('%s ago', human_time_diff(strtotime($question->comment_date))), 'lms'); ?></span>
@@ -88,19 +87,16 @@ if ( ! $enable_q_and_a_on_course) {
 							?>
                             <div class="dozent_individual_answer <?php echo ($question->user_id == $answer->user_id) ? 'dozent-bg-white' : 'dozent-bg-light'
 							?> ">
-                                <div class="question-left">
-                                    <a href="<?php echo $answer_profile; ?>"> <?php echo dozent_utils()->get_dozent_avatar($answer->user_id); ?></a>
-                                </div>
-
-                                <div class="question-right">
+                                <div class="dozent-question-wrap">
                                     <div class="question-top-meta">
+                                        <div class="dozent-question-avater">
+                                            <a href="<?php echo $answer_profile; ?>"> <?php echo dozent_utils()->get_dozent_avatar($answer->user_id); ?></a>
+                                        </div>
                                         <p class="review-meta">
-
-
                                             <a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a> -
                                             <span class="dozent-text-mute">
-										<?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'lms'); ?>
-									</span>
+										        <?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'lms'); ?>
+									        </span>
                                         </p>
                                     </div>
 
@@ -116,15 +112,10 @@ if ( ! $enable_q_and_a_on_course) {
                 </div>
 
                 <div class="dozent_add_answer_row">
-                    <div class="dozent_qa_avatar_left">
-                        <a href="<?php echo $profile_url; ?>"> <?php echo dozent_utils()->get_dozent_avatar($question->user_id); ?></a>
-                    </div>
-
                     <div class="dozent_add_answer_wrap " data-question-id="<?php echo $question->comment_ID; ?>">
                         <div class="dozent_wp_editor_show_btn_wrap">
-                            <a href="javascript:;" class="dozent_wp_editor_show_btn dozent-btn"><?php _e('Add an answer', 'dozent'); ?></a>
+                            <a href="javascript:;" class="dozent_wp_editor_show_btn dozent-button dozent-success"><?php _e('Add an answer', 'dozent'); ?></a>
                         </div>
-
                         <div class="dozent_wp_editor_wrap" style="display: none;">
                             <form method="post" class="dozent-add-answer-form">
 								<?php wp_nonce_field( dozent()->nonce_action, dozent()->nonce ); ?>
@@ -136,8 +127,8 @@ if ( ! $enable_q_and_a_on_course) {
                                 </div>
 
                                 <div class="dozent-form-group">
-                                    <a href="javascript:;" class="dozent_cancel_wp_editor"><?php _e('Cancel', 'dozent'); ?></a>
-                                    <button type="submit" class="dozent-btn dozent_add_answer_btn" name="dozent_answer_search_btn">
+                                    <a href="javascript:;" class="dozent_cancel_wp_editor dozent-button dozent-danger"><?php _e('Cancel', 'dozent'); ?></a>
+                                    <button type="submit" class="dozent-button dozent_add_answer_btn dozent-success" name="dozent_answer_search_btn">
 										<?php _e('Add Answer', 'dozent'); ?>
                                     </button>
                                 </div>

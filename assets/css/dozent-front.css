@@ -652,8 +652,14 @@ a.dozent-button:hover,
 a.dozent-btn:hover,
 .dozent-btn:hover {
     color: #fff;
-    background-color: #1b4cad;
-    border-color: #1b4cad;
+    filter: brightness(.9);
+}
+
+.dozent-button.dozent-danger{
+    background: #E53935;
+}
+.dozent-button.dozent-success{
+    background: #86B223;
 }
 
 .course-enrolled-nav-wrap{
@@ -1319,7 +1325,7 @@ ul.dozent-required-fields{
     margin-bottom: 10px;
 }
 .dozent_question_cancel{
-    margin-right: 50px;
+    margin-right: 5px;
 }
 .updating-icon:before{
     font-family: 'dozent';
@@ -1334,70 +1340,29 @@ ul.dozent-required-fields{
 /**
 Course question and answer
  */
-.dozent_question_answer_wrap .dozent-text-avatar{
-    border-radius: 50%;
-    /*border: 1px solid #686f7a;*/
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    display: block;
-    line-height: 40px;
-    color: #ffffff;
-    font-size: 14px;
-}
-.dozent_original_question{
-    display: flex;
-    margin-bottom: 20px;
-}
-.dozent_original_question .question-left{
-    flex: 0 0 60px;
-}
-.dozent_original_question .question-left img, .dozent_individual_answer .question-left img, .dozent_qa_avatar_left img, .review-left .review-avatar img{
-    max-width: 60px;
-    height: auto;
-    margin-right: 10px;
-    border: 1px solid #eeee88;
-    padding: 3px;
-}
-.question-right {
-    width: 100%;
-}
+
+
+/* ********************* */
+/* Question and Answer */
+/* ********************* */
+
+/*.dozent-question-wrap{*/
+
+/*}*/
+
 .dozent_question_area {
-    border: 1px solid #f4f4f4;
-    padding: 20px;
+    padding: 25px 20px;
+    background: #F4F7F8;
+    border-radius: 4px;
 }
-.dozent-bg-white{
-    background-color: #ffffff;
+
+.dozent_question_area p:last-child{
+    margin-bottom: 0;
 }
-.dozent-bg-light{
-    background-color: #FDFDFD;
-}
-.dozent_admin_answers_list_wrap{
-    margin-left: 50px;
-}
-.dozent_individual_answer{
-    display: flex;
-    margin-bottom: 20px;
-    padding: 20px;
-}
-.dozent_individual_answer .question-left{
-    flex: 0 0 60px;
-}
-.dozent_add_answer_wrap .dozent-form-group{
-    margin-bottom: 20px;
-}
-.dozent_wp_editor_show_btn_wrap{
-    margin-bottom: 20px;
-}
-.dozent_add_answer_row{
-    display: flex;
-}
-.dozent_add_answer_row .dozent_qa_avatar_left{
-    flex: 0 0 60px;
-}
-.dozent_add_answer_row .dozent_add_answer_wrap {
-    width: 100%;
-}
+
+
+/*anouncement*/
+
 .dozent-announcements-wrap{
     margin-top: 20px;
 }
