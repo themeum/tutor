@@ -651,15 +651,19 @@ a.dozent-button:hover,
 .dozent-button:hover,
 a.dozent-btn:hover,
 .dozent-btn:hover {
+    background-color: #1B52D8;
+    border-color: #1B52D8;
     color: #fff;
     filter: brightness(.9);
 }
 
 .dozent-button.dozent-danger{
-    background: #E53935;
+    background-color: #E53935;
+    border-color: #E53935;
 }
 .dozent-button.dozent-success{
     background: #86B223;
+    border-color: #86B223;
 }
 
 .course-enrolled-nav-wrap{
@@ -938,23 +942,26 @@ Teacher
 /************************       */
 
 /*lesson list*/
-
-
+.dozent-single-lesson-button-group,
 .dozent-topics-lesson-list .dozent-topics-in-single-lesson{
-    border: 1px solid #E8EFF1;
     border-radius: 4px;
     margin-bottom: 30px;
+    border: 1px solid #E8EFF1;
 }
 
+.dozent-single-lesson-button-group .dozent-single-lesson-button a,
 .dozent-topics-in-single-lesson .dozent-single-lesson-items a{
-    border-top: 1px solid #DCE4E6;
     padding: 14px 75px 14px 17px;
     font-size: 14px;
     display: flex;
     color: #4B5981;
     position: relative;
+    border-top: 1px solid #E8EFF1;
 }
 
+.dozent-single-lesson-button-group .dozent-single-lesson-button:first-child a{
+    border-top: none;
+}
 
 .dozent-lessons-under-topic .dozent-single-lesson-items.active a{
     background: rgba(233, 235, 238, 0.35);
@@ -973,6 +980,9 @@ Teacher
     font-size: 16px;
     color: #1B52D8;
     font-weight: 500;
+}
+.dozent-topics-in-single-lesson .dozent-topics-title.has-summery h3{
+    cursor: pointer;
 }
 
 .dozent-topics-in-single-lesson .dozent-topics-title h3 i{
@@ -995,6 +1005,7 @@ Teacher
     color: #1B52D8;
 }
 
+.dozent-single-lesson-button-group .dozent-single-lesson-button a > i:first-child,
 .dozent-topics-in-single-lesson .dozent-single-lesson-items a > i:first-child{
     color: #C7C7C7;
     line-height: 22px;
@@ -1059,6 +1070,51 @@ Teacher
     border-radius: 4px;
 }
 
+/*attachment*/
+
+
+.dozent-attachments-wrap{
+    margin: -3px -3px 15px -3px;
+}
+
+.dozent-attachments-wrap .dozent-lesson-attachment{
+    display: inline-block;
+    border: 1px solid #E8EFF1;
+    border-radius: 4px;
+    padding: 10px 16px 10px 12px;
+    overflow: hidden;
+    background: #F4F7F8;
+    margin: 3px;
+    transition: 300ms;
+}
+
+.dozent-attachments-wrap .dozent-lesson-attachment:hover{
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.dozent-attachments-wrap .dozent-attachment-icon{
+    font-size: 30px;
+    float: left;
+    color: #4B5981;
+}
+.dozent-attachments-wrap .dozent-attachment-icon i{
+    display: block;
+}
+.dozent-attachment-info {
+    padding-left: 10px;
+    float: left;
+}
+.dozent-attachment-info span{
+    display: block;
+    font-size: 14px;
+    line-height: 16px;
+    color: #4B5981;
+}
+
+.dozent-attachment-info span + span{
+    font-size: 11px;
+    color: #B1B8C9;
+}
 /*course status*/
 .dozent-progress-bar-wrap{
     width: 100%;
@@ -1434,22 +1490,29 @@ Course question and answer
 
 /*anouncement*/
 
-.dozent-announcements-wrap{
-    margin-top: 20px;
-}
+
 .dozent-no-announcements {
     text-align: center;
 }
 .dozent-announcement-meta{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    font-size: 13px;
 }
 .dozent-announcement {
     border: 1px solid #eee;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 4px;
+
 }
 .announcement-delete-btn{
     float: right;
+}
+
+.dozent-announcement-title-wrap h3{
+    color: #4B5981;
+    font-weight: 500;
+    margin-bottom: 10px;
 }
 
 
@@ -1985,7 +2048,7 @@ Course question and answer
     margin: -5px;
 }
 .dozent-course-tags a{
-    padding: 10px 15px;
+    padding: 6px 15px;
     background: #E8EFF1;
     display: inline-block;
     margin: 5px;

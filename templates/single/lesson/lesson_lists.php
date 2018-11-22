@@ -22,15 +22,14 @@ $course_id = get_post_meta($post->ID, '_dozent_course_id_for_lesson', true);
     <div class="dozent-topics-lesson-list">
 
 
-        <div class="dozent-topics-in-single-lesson">
-            <div class="dozent-single-lesson-items ">
+        <div class="dozent-single-lesson-button-group">
+            <div class="dozent-single-lesson-button ">
                 <a href="<?php echo get_the_permalink($course_id); ?>">
                     <i class="dozent-icon-mortarboard"></i>
                     <span class="lesson_title"><?php _e('Course Home', 'dozent'); ?></span>
                 </a>
             </div>
-
-            <div class="dozent-single-lesson-items ">
+            <div class="dozent-single-lesson-button ">
                 <a href="<?php echo dozent_utils()->dozent_dashboard_url(); ?>">
                     <i class="dozent-icon-grid"></i>
                     <span class="lesson_title"><?php _e('Dashboard', 'dozent'); ?></span>
@@ -50,7 +49,7 @@ $course_id = get_post_meta($post->ID, '_dozent_course_id_for_lesson', true);
 				?>
 
                 <div class="dozent-topics-in-single-lesson dozent-topics-<?php echo $topic_id; ?>">
-                    <div class="dozent-topics-title">
+                    <div class="dozent-topics-title <?php echo $topic_summery ? 'has-summery' : ''; ?>">
                         <h3>
                             <?php
                                 the_title();
