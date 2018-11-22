@@ -1,4 +1,4 @@
-=== Tutor ===
+=== Dozent ===
 Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, education, wp-lms, education management system
@@ -13,7 +13,7 @@ A complete WordPress LMS plugin to create any e-learning website easily.
 
 == Description ==
 
-Tutor is an all-in-one, feature-rich, and robust WordPress LMS plugin to create and sell courses. With powerful features like quiz & question system, frontend student dashboard, Tutor can be the best free lms plugin for WordPress.
+Dozent is an all-in-one, feature-rich, and robust WordPress LMS plugin to create and sell courses. With powerful features like quiz & question system, frontend student dashboard, Dozent can be the best free lms plugin for WordPress.
 
 == Installation ==
 
@@ -24,21 +24,21 @@ Tutor is an all-in-one, feature-rich, and robust WordPress LMS plugin to create 
 
 = Automatic installation =
 
-The automatic installation is the easiest way to install any plugin in WordPress. You can perform an automatic installation of Tutor by logging in to your WordPress dashboard, navigating to the “Plugins” menu and click on the “Add New” button.
+The automatic installation is the easiest way to install any plugin in WordPress. You can perform an automatic installation of Dozent by logging in to your WordPress dashboard, navigating to the “Plugins” menu and click on the “Add New” button.
 
-This will open up a page showing all the available plugins in WordPress. In the search field, type Tutor. The search result will show you our Tutor plugin, you can then see the detailed info by clicking on “More Details” and to install just click on the “Install Now” button.
+This will open up a page showing all the available plugins in WordPress. In the search field, type Dozent. The search result will show you our Dozent plugin, you can then see the detailed info by clicking on “More Details” and to install just click on the “Install Now” button.
 
 = Manual installation =
 
-To install Tutor manually, you need to download the plugin and upload it to your webserver via any FTP application.
+To install Dozent manually, you need to download the plugin and upload it to your webserver via any FTP application.
 
 The WordPress codex contains [instructions on how to do this here](https://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
 
 == Frequently Asked Questions ==
 
-= Can I use Tutor with my existing WordPress theme? =
+= Can I use Dozent with my existing WordPress theme? =
 
-Sure, you can use your existing WordPress theme with Tutor.
+Sure, you can use your existing WordPress theme with Dozent.
 
 
 = Where can I get support? =

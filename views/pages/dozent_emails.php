@@ -1,14 +1,14 @@
-<div class="wrap tutor-emails-lists-wrap">
-    <h2><?php _e('E-Mails', 'tutor'); ?></h2>
+<div class="wrap dozent-emails-lists-wrap">
+    <h2><?php _e('E-Mails', 'dozent'); ?></h2>
 
     <table class="wp-list-table widefat striped">
         <thead>
 
         <tr>
-            <th><?php _e('Event', 'tutor'); ?></th>
-            <th><?php _e('Content type', 'tutor'); ?></th>
+            <th><?php _e('Event', 'dozent'); ?></th>
+            <th><?php _e('Content type', 'dozent'); ?></th>
             <th>#</th>
-            <th><?php _e('Variable, that can be use at template', 'tutor'); ?></th>
+            <th><?php _e('Variable, that can be use at template', 'dozent'); ?></th>
         </tr>
         </thead>
 
@@ -18,7 +18,7 @@
             <td>text/html</td>
             <td>
 				<?php
-				$is_on = tutor_utils()->get_option('email_to_students.quiz_completed');
+				$is_on = dozent_utils()->get_option('email_to_students.quiz_completed');
 				if($is_on){
 					echo '<span class="result-pass">On</span>';
 				}
@@ -37,7 +37,7 @@
 
             <td>
 				<?php
-				$is_on = tutor_utils()->get_option('email_to_students.completed_course');
+				$is_on = dozent_utils()->get_option('email_to_students.completed_course');
 				if($is_on){
 					echo '<span class="result-pass">On</span>';
 				}
@@ -55,7 +55,7 @@
             <td>text/html</td>
             <td>
 				<?php
-				$is_on = tutor_utils()->get_option('email_to_teachers.a_student_completed_course');
+				$is_on = dozent_utils()->get_option('email_to_teachers.a_student_completed_course');
 				if($is_on){
 					echo '<span class="result-pass">On</span>';
 				}
@@ -73,7 +73,7 @@
             <td>text/html</td>
             <td>
 				<?php
-				$is_on = tutor_utils()->get_option('email_to_teachers.a_student_enrolled_in_course');
+				$is_on = dozent_utils()->get_option('email_to_teachers.a_student_enrolled_in_course');
 				if($is_on){
 					echo '<span class="result-pass">On</span>';
 				}
@@ -91,7 +91,7 @@
             <td>text/html</td>
             <td>
 				<?php
-				$is_on = tutor_utils()->get_option('email_to_teachers.a_student_placed_question');
+				$is_on = dozent_utils()->get_option('email_to_teachers.a_student_placed_question');
 				if($is_on){
 					echo '<span class="result-pass">On</span>';
 				}
@@ -108,7 +108,7 @@
             <td>text/html</td>
             <td>
 				<?php
-				$is_on = tutor_utils()->get_option('email_to_teachers.a_student_completed_lesson');
+				$is_on = dozent_utils()->get_option('email_to_teachers.a_student_completed_lesson');
 				if($is_on){
 					echo '<span class="result-pass">On</span>';
 				}

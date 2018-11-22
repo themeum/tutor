@@ -1,5 +1,5 @@
 <?php
-namespace TUTOR;
+namespace DOZENT;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
@@ -17,7 +17,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_option($key = null, $default = false){
-		$option = (array) maybe_unserialize(get_option('tutor_option'));
+		$option = (array) maybe_unserialize(get_option('dozent_option'));
 
 		if (empty($option) || ! is_array($option)){
 			return $default;
@@ -54,9 +54,9 @@ class Utils {
 	 */
 
 	public function update_option($key = null, $value = false){
-		$option = (array) maybe_unserialize(get_option('tutor_option'));
+		$option = (array) maybe_unserialize(get_option('dozent_option'));
 		$option[$key] = $value;
-		update_option('tutor_option', $option);
+		update_option('dozent_option', $option);
 	}
 
 	/**
@@ -112,7 +112,7 @@ class Utils {
 	 * Get course archive URL
 	 */
 	public function course_archive_page_url(){
-		$course_post_type = tutor()->course_post_type;
+		$course_post_type = dozent()->course_post_type;
 		$course_page_url = trailingslashit(home_url()).$course_post_type;
 
 		$course_archive_page = $this->get_option('course_archive_page');
@@ -170,7 +170,7 @@ class Utils {
 
 	public function has_wc(){
 		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
-		$depends = array('woocommerce/woocommerce.php', 'tutor-woocommerce/tutor-woocommerce.php');
+		$depends = array('woocommerce/woocommerce.php', 'dozent-woocommerce/dozent-woocommerce.php');
 		$has = count(array_intersect($depends, $activated_plugins)) == count($depends);
 
 		return $has;
@@ -320,7 +320,7 @@ class Utils {
 			'zu' => 'Zulu' ,
 		);
 
-		return apply_filters('tutor/utils/languages', $language_codes);
+		return apply_filters('dozent/utils/languages', $language_codes);
 	}
 
 	public function print_view($value = ''){
@@ -332,7 +332,7 @@ class Utils {
 	public function get_courses(){
 		global $wpdb;
 
-		$course_post_type = tutor()->course_post_type;
+		$course_post_type = dozent()->course_post_type;
 		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order 
 				from {$wpdb->posts} WHERE post_status = 'publish'
 				AND post_type = '{$course_post_type}' ");
@@ -344,7 +344,7 @@ class Utils {
 
 		$teacher_id = $this->get_user_id($teacher_id);
 
-		$course_post_type = tutor()->course_post_type;
+		$course_post_type = dozent()->course_post_type;
 		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order 
 				from {$wpdb->posts} 
 				WHERE post_author = {$teacher_id}
@@ -356,9 +356,9 @@ class Utils {
 	public function get_course_count_by_teacher($teacher_id){
 		global $wpdb;
 
-		$course_post_type = tutor()->course_post_type;
+		$course_post_type = dozent()->course_post_type;
 		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} 
-			INNER JOIN {$wpdb->usermeta} ON user_id = {$teacher_id} AND meta_key = '_tutor_teacher_course_id' AND meta_value = ID 
+			INNER JOIN {$wpdb->usermeta} ON user_id = {$teacher_id} AND meta_key = '_dozent_teacher_course_id' AND meta_value = ID 
 			WHERE post_status = 'publish' 
 			AND post_type = '{$course_post_type}' ; ");
 
@@ -368,12 +368,12 @@ class Utils {
 	public function get_courses_by_teacher($teacher_id){
 		global $wpdb;
 
-		$course_post_type = tutor()->course_post_type;
+		$course_post_type = dozent()->course_post_type;
 
 		$querystr = "
 	    SELECT $wpdb->posts.* 
 	    FROM $wpdb->posts
-		INNER JOIN {$wpdb->usermeta} ON $wpdb->usermeta.user_id = {$teacher_id} AND $wpdb->usermeta.meta_key = '_tutor_teacher_course_id' AND $wpdb->usermeta.meta_value = $wpdb->posts.ID 
+		INNER JOIN {$wpdb->usermeta} ON $wpdb->usermeta.user_id = {$teacher_id} AND $wpdb->usermeta.meta_key = '_dozent_teacher_course_id' AND $wpdb->usermeta.meta_value = $wpdb->posts.ID 
 	
 	    
 	    WHERE $wpdb->posts.post_status = 'publish' 
@@ -393,7 +393,7 @@ class Utils {
 	public function get_course_count(){
 		global $wpdb;
 
-		$course_post_type = tutor()->course_post_type;
+		$course_post_type = dozent()->course_post_type;
 		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = '{$course_post_type}'; ");
 		return $count;
 	}
@@ -401,7 +401,7 @@ class Utils {
 	public function get_lesson_count(){
 		global $wpdb;
 
-		$lesson_post_type = tutor()->lesson_post_type;
+		$lesson_post_type = dozent()->lesson_post_type;
 		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = '{$lesson_post_type}'; ");
 		return $count;
 	}
@@ -409,13 +409,13 @@ class Utils {
 	public function get_lesson($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 
-		$lesson_post_type = tutor()->lesson_post_type;
+		$lesson_post_type = dozent()->lesson_post_type;
 		$args = array(
 			'post_status'  => 'publish',
 			'post_type'  => $lesson_post_type,
 			'meta_query' => array(
 				array(
-					'key'     => '_tutor_course_id_for_lesson',
+					'key'     => '_dozent_course_id_for_lesson',
 					'value'   => $course_id,
 					'compare' => '=',
 				),
@@ -430,7 +430,7 @@ class Utils {
 		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
 
-		$count_lesson = $wpdb->get_var("select count(meta_id) from {$wpdb->postmeta} where meta_key = '_tutor_course_id_for_lesson' AND meta_value = {$course_id} ");
+		$count_lesson = $wpdb->get_var("select count(meta_id) from {$wpdb->postmeta} where meta_key = '_dozent_course_id_for_lesson' AND meta_value = {$course_id} ");
 
 		return (int) $count_lesson;
 	}
@@ -440,13 +440,13 @@ class Utils {
 		$user_id = $this->get_user_id($user_id);
 		global $wpdb;
 
-		$completed_lesson_ids = $wpdb->get_col("select post_id from {$wpdb->postmeta} where meta_key = '_tutor_course_id_for_lesson' AND meta_value = {$course_id} ");
+		$completed_lesson_ids = $wpdb->get_col("select post_id from {$wpdb->postmeta} where meta_key = '_dozent_course_id_for_lesson' AND meta_value = {$course_id} ");
 
 		$count = 0;
 		if (is_array($completed_lesson_ids) && count($completed_lesson_ids)){
 			$completed_lesson_meta_ids = array();
 			foreach ($completed_lesson_ids as $lesson_id){
-				$completed_lesson_meta_ids[] = '_tutor_completed_lesson_id_'.$lesson_id;
+				$completed_lesson_meta_ids[] = '_dozent_completed_lesson_id_'.$lesson_id;
 			}
 			$in_ids = implode("','", $completed_lesson_meta_ids);
 
@@ -495,7 +495,7 @@ class Utils {
 	public function get_lessons_by_topic($topics_id = 0){
 		$topics_id = $this->get_post_id($topics_id);
 
-		$lesson_post_type = tutor()->lesson_post_type;
+		$lesson_post_type = dozent()->lesson_post_type;
 		$args = array(
 			'post_type'  => $lesson_post_type,
 			'post_parent'  => $topics_id,
@@ -510,11 +510,11 @@ class Utils {
 
 	public function checking_nonce($request_method = 'post'){
 		if ($request_method === 'post'){
-			if (!isset($_POST[tutor()->nonce]) || !wp_verify_nonce($_POST[tutor()->nonce], tutor()->nonce_action)) {
+			if (!isset($_POST[dozent()->nonce]) || !wp_verify_nonce($_POST[dozent()->nonce], dozent()->nonce_action)) {
 				exit();
 			}
 		}else{
-			if (!isset($_GET[tutor()->nonce]) || !wp_verify_nonce($_GET[tutor()->nonce], tutor()->nonce_action)) {
+			if (!isset($_GET[dozent()->nonce]) || !wp_verify_nonce($_GET[dozent()->nonce], dozent()->nonce_action)) {
 				exit();
 			}
 		}
@@ -537,7 +537,7 @@ class Utils {
 		}
 
 		$course_id = $this->get_post_id($course_id);
-		$has_product_id = get_post_meta($course_id, '_tutor_course_product_id', true);
+		$has_product_id = get_post_meta($course_id, '_dozent_course_product_id', true);
 		if ($has_product_id){
 			return true;
 		}
@@ -560,7 +560,7 @@ class Utils {
 
 		$price = null;
 		if ($this->is_course_purchasable() && $this->has_wc()) {
-			$product_id = tutor_utils()->get_course_product_id($course_id);
+			$product_id = dozent_utils()->get_course_product_id($course_id);
 			$product    = wc_get_product( $product_id );
 
 			if ( $product ) {
@@ -588,7 +588,7 @@ class Utils {
 		if (is_user_logged_in()) {
 			global $wpdb;
 
-			$getEnrolledInfo = $wpdb->get_row( "select ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} AND post_status = 'completed'; " );
+			$getEnrolledInfo = $wpdb->get_row( "select ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'dozent_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} AND post_status = 'completed'; " );
 
 			if ( $getEnrolledInfo ) {
 				return $getEnrolledInfo;
@@ -626,7 +626,7 @@ class Utils {
 	 */
 	public function get_course_id_by_lesson($lesson_id = 0){
 		$lesson_id = $this->get_post_id($lesson_id);
-		return get_post_meta($lesson_id, '_tutor_course_id_for_lesson', true);
+		return get_post_meta($lesson_id, '_dozent_course_id_for_lesson', true);
 	}
 
 	/**
@@ -664,16 +664,16 @@ class Utils {
 	 */
 	public function course_sub_pages(){
 		$nav_items = array(
-			'overview' => __('Overview', 'tutor'),
+			'overview' => __('Overview', 'dozent'),
 		);
 
-		$enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
+		$enable_q_and_a_on_course = dozent_utils()->get_option('enable_q_and_a_on_course');
 		if ($enable_q_and_a_on_course){
-			$nav_items['questions'] = __('Q&A', 'tutor');
+			$nav_items['questions'] = __('Q&A', 'dozent');
 		}
-		$nav_items['announcements'] = __('Announcements', 'tutor');
+		$nav_items['announcements'] = __('Announcements', 'dozent');
 
-		return apply_filters('tutor_course/single/enrolled/nav_items', $nav_items);
+		return apply_filters('dozent_course/single/enrolled/nav_items', $nav_items);
 	}
 
 	/**
@@ -718,7 +718,7 @@ class Utils {
 	public function get_attachments($post_id = 0){
 		$post_id = $this->get_post_id($post_id);
 		$attachments_arr = array();
-		$attachments = maybe_unserialize(get_post_meta($post_id, '_tutor_attachments', true));
+		$attachments = maybe_unserialize(get_post_meta($post_id, '_dozent_attachments', true));
 
 		if ( is_array($attachments) && count($attachments)) {
 			foreach ( $attachments as $attachment ) {
@@ -739,7 +739,7 @@ class Utils {
 					if (file_exists($icon_path)){
 						$icon = includes_url("images/media/{$type}.png");
 					}elseif($type === 'image'){
-						$icon = tutor()->url . 'assets/images/image.png';
+						$icon = dozent()->url . 'assets/images/image.png';
 					}
 				}
 
@@ -755,7 +755,7 @@ class Utils {
 					'icon'          => $icon,
 				);
 
-				$attachments_arr[] = (object) apply_filters('tutor/posts/attachments', $data);
+				$attachments_arr[] = (object) apply_filters('dozent/posts/attachments', $data);
 			}
 		}
 
@@ -845,7 +845,7 @@ class Utils {
 			'playtime' => '00:00',
 		);
 
-		$types = apply_filters('tutor_video_types', array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg"));
+		$types = apply_filters('dozent_video_types', array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg"));
 
 		$videoSource = $this->avalue_dot('source', $video);
 		if ($videoSource === 'html5'){
@@ -898,7 +898,7 @@ class Utils {
 		$lesson_id = $this->get_post_id($lesson_id);
 		$user_id = $this->get_user_id($user_id);
 
-		$is_completed = get_user_meta($user_id, '_tutor_completed_lesson_id_'.$lesson_id, true);
+		$is_completed = get_user_meta($user_id, '_dozent_completed_lesson_id_'.$lesson_id, true);
 
 		if ($is_completed){
 			return $is_completed;
@@ -911,7 +911,7 @@ class Utils {
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
 
-		$is_completed = get_user_meta($user_id, '_tutor_completed_course_id_'.$course_id, true);
+		$is_completed = get_user_meta($user_id, '_dozent_completed_course_id_'.$course_id, true);
 
 		if ($is_completed){
 			return $is_completed;
@@ -974,9 +974,9 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_students($start = 0, $limit = 10, $search_term = '', $course_id = 0){
-		$meta_key = '_is_tutor_student';
+		$meta_key = '_is_dozent_student';
 		if ($course_id){
-			$meta_key = '_tutor_completed_course_id_'.$meta_key;
+			$meta_key = '_dozent_completed_course_id_'.$meta_key;
 		}
 		global $wpdb;
 
@@ -1004,9 +1004,9 @@ class Utils {
 	 * pass course id to get course wise total students
 	 */
 	public function get_total_students($search_term = '', $course_id = 0){
-		$meta_key = '_is_tutor_student';
+		$meta_key = '_is_dozent_student';
 		if ($course_id){
-			$meta_key = '_tutor_completed_course_id_'.$meta_key;
+			$meta_key = '_dozent_completed_course_id_'.$meta_key;
 		}
 
 		global $wpdb;
@@ -1025,7 +1025,7 @@ class Utils {
 
 		$user_id = $this->get_user_id($user_id);
 
-		$meta_key = '_tutor_completed_course_id_';
+		$meta_key = '_dozent_completed_course_id_';
 		$course_id_query = $wpdb->get_col("select meta_key from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key LIKE '%{$meta_key}%' ");
 		$course_ids = array();
 
@@ -1050,7 +1050,7 @@ class Utils {
 		$course_ids = $this->get_completed_courses_ids_by_user($user_id);
 
 		if (count($course_ids)){
-			$course_post_type = tutor()->course_post_type;
+			$course_post_type = dozent()->course_post_type;
 			$course_args = array(
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
@@ -1079,7 +1079,7 @@ class Utils {
 		$active_courses = array_diff($enrolled_course_ids, $course_ids);
 
 		if (count($active_courses)){
-			$course_post_type = tutor()->course_post_type;
+			$course_post_type = dozent()->course_post_type;
 			$course_args = array(
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
@@ -1095,7 +1095,7 @@ class Utils {
 	public function get_enrolled_courses_ids_by_user($user_id = 0){
 		global $wpdb;
 		$user_id = $this->get_user_id($user_id);
-		$course_ids = $wpdb->get_col("select post_parent from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_author = {$user_id} AND post_status = 'completed'; ");
+		$course_ids = $wpdb->get_col("select post_parent from {$wpdb->posts} WHERE post_type = 'dozent_enrolled' AND post_author = {$user_id} AND post_status = 'completed'; ");
 
 		return $course_ids;
 	}
@@ -1111,7 +1111,7 @@ class Utils {
 		global $wpdb;
 		$course_id = $this->get_post_id($course_id);
 
-		$course_ids = $wpdb->get_var("select COUNT(ID) from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_status = 'completed'; ");
+		$course_ids = $wpdb->get_var("select COUNT(ID) from {$wpdb->posts} WHERE post_type = 'dozent_enrolled' AND post_parent = {$course_id} AND post_status = 'completed'; ");
 
 		return (int) $course_ids;
 	}
@@ -1130,7 +1130,7 @@ class Utils {
 		$course_ids = $this->get_enrolled_courses_ids_by_user($user_id);
 
 		if (count($course_ids)){
-			$course_post_type = tutor()->course_post_type;
+			$course_post_type = dozent()->course_post_type;
 			$course_args = array(
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
@@ -1153,10 +1153,10 @@ class Utils {
 		$post_id = $this->get_post_id($post_id);
 		$post = get_post($post_id);
 
-		if ($post->post_type === tutor()->lesson_post_type ){
+		if ($post->post_type === dozent()->lesson_post_type ){
 			$video_url = trailingslashit(home_url()).'video-url/'.$post->post_name;
 		}else{
-			$video_info = tutor_utils()->get_video_info($post_id);
+			$video_info = dozent_utils()->get_video_info($post_id);
 			$video_url =  $video_info->url;
 		}
 
@@ -1295,7 +1295,7 @@ class Utils {
 	public function mark_lesson_complete($post_id = 0, $user_id = 0){
 		$post_id = $this->get_post_id($post_id);
 		$user_id = $this->get_user_id($user_id);
-		update_user_meta($user_id, '_tutor_completed_lesson_id_'.$post_id, time());
+		update_user_meta($user_id, '_dozent_completed_lesson_id_'.$post_id, time());
 	}
 
 	/**
@@ -1311,9 +1311,9 @@ class Utils {
 			return false;
 		}
 
-		do_action('tutor_before_enroll', $course_id);
+		do_action('dozent_before_enroll', $course_id);
 		$user_id = get_current_user_id();
-		$title = __('Course Enrolled', 'tutor')." &ndash; ".date_i18n(get_option('date_format')) .' @ '.date_i18n(get_option('time_format') ) ;
+		$title = __('Course Enrolled', 'dozent')." &ndash; ".date_i18n(get_option('date_format')) .' @ '.date_i18n(get_option('time_format') ) ;
 
 		$enrolment_status = 'completed';
 
@@ -1324,9 +1324,9 @@ class Utils {
 			$enrolment_status = 'pending';
 		}
 
-		$enroll_data = apply_filters('tutor_enroll_data',
+		$enroll_data = apply_filters('dozent_enroll_data',
 			array(
-				'post_type'     => 'tutor_enrolled',
+				'post_type'     => 'dozent_enrolled',
 				'post_title'    => $title,
 				'post_status'   => $enrolment_status,
 				'post_author'   => $user_id,
@@ -1337,18 +1337,18 @@ class Utils {
 		// Insert the post into the database
 		$isEnrolled = wp_insert_post( $enroll_data );
 		if ($isEnrolled) {
-			do_action('tutor_after_enroll', $course_id, $isEnrolled);
+			do_action('dozent_after_enroll', $course_id, $isEnrolled);
 
 			//Mark Current User as Students with user meta data
-			update_user_meta( $user_id, '_is_tutor_student', time() );
+			update_user_meta( $user_id, '_is_dozent_student', time() );
 
 			if ($order_id) {
 				//Mark order for course and user
 				$product_id = $this->get_course_product_id($course_id);
-				update_post_meta( $isEnrolled, '_tutor_enrolled_by_order_id', $order_id );
-				update_post_meta( $isEnrolled, '_tutor_enrolled_by_product_id', $product_id );
-				update_post_meta( $order_id, '_is_tutor_order_for_course', time() );
-				update_post_meta( $order_id, '_tutor_order_for_course_id_'.$course_id, $isEnrolled );
+				update_post_meta( $isEnrolled, '_dozent_enrolled_by_order_id', $order_id );
+				update_post_meta( $isEnrolled, '_dozent_enrolled_by_product_id', $product_id );
+				update_post_meta( $order_id, '_is_dozent_order_for_course', time() );
+				update_post_meta( $order_id, '_dozent_order_for_course_id_'.$course_id, $isEnrolled );
 			}
 			return true;
 		}
@@ -1376,13 +1376,13 @@ class Utils {
 
 	public function get_course_product_id($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
-		return (int) get_post_meta($course_id, '_tutor_course_product_id', true);
+		return (int) get_post_meta($course_id, '_dozent_course_product_id', true);
 	}
 
 	public function product_belongs_with_course($product_id = 0){
 		global $wpdb;
 
-		$query = $wpdb->get_row("select * from {$wpdb->postmeta} WHERE meta_key='_tutor_course_product_id' AND meta_value = {$product_id} limit 1 ");
+		$query = $wpdb->get_row("select * from {$wpdb->postmeta} WHERE meta_key='_dozent_course_product_id' AND meta_value = {$product_id} limit 1 ");
 		return $query;
 	}
 
@@ -1402,29 +1402,29 @@ class Utils {
 		);
 	}
 
-	public function is_tutor_order($order_id){
-		return get_post_meta($order_id, '_is_tutor_order_for_course', true);
+	public function is_dozent_order($order_id){
+		return get_post_meta($order_id, '_is_dozent_order_for_course', true);
 	}
 
 	/**
 	 * @return mixed
 	 *
-	 * Tutor Dashboard Pages
+	 * Dozent Dashboard Pages
 	 */
 
-	public function tutor_student_dashboard_pages(){
+	public function dozent_student_dashboard_pages(){
 		$nav_items = array(
-			'index' => __('Home', 'tutor'),
-			'my-courses' => __('My Courses', 'tutor'),
-			'active-courses' => __('Active Courses', 'tutor'),
-			'completed-courses' => __('Completed Courses', 'tutor'),
+			'index' => __('Home', 'dozent'),
+			'my-courses' => __('My Courses', 'dozent'),
+			'active-courses' => __('Active Courses', 'dozent'),
+			'completed-courses' => __('Completed Courses', 'dozent'),
 		);
 
-		return apply_filters('tutor_dashboard/student/pages', $nav_items);
+		return apply_filters('dozent_dashboard/student/pages', $nav_items);
 	}
 
 
-	public function get_tutor_dashboard_page_permalink($page_key = '', $page_id = 0){
+	public function get_dozent_dashboard_page_permalink($page_key = '', $page_id = 0){
 		if ($page_key === 'index'){
 			$page_key = '';
 		}
@@ -1451,19 +1451,19 @@ class Utils {
 	 */
 	public function is_teacher($user_id = 0){
 		$user_id = $this->get_user_id($user_id);
-		return get_user_meta($user_id, '_is_tutor_teacher', true);
+		return get_user_meta($user_id, '_is_dozent_teacher', true);
 	}
 
 	public function teacher_status($user_id = 0, $status_name = true){
 		$user_id = $this->get_user_id($user_id);
 
-		$teacher_status = apply_filters('tutor_teacher_statuses', array(
-			'pending' => __('Pending', 'tutor'),
-			'approved' => __('Approved', 'tutor'),
-			'blocked' => __('Blocked', 'tutor'),
+		$teacher_status = apply_filters('dozent_teacher_statuses', array(
+			'pending' => __('Pending', 'dozent'),
+			'approved' => __('Approved', 'dozent'),
+			'blocked' => __('Blocked', 'dozent'),
 		));
 
-		$status = get_user_meta($user_id, '_tutor_teacher_status', true);
+		$status = get_user_meta($user_id, '_dozent_teacher_status', true);
 
 		if (isset($teacher_status[$status])){
 			if ( ! $status_name){
@@ -1476,7 +1476,7 @@ class Utils {
 
 
 	public function get_total_teachers($search_term = ''){
-		$meta_key = '_is_tutor_teacher';
+		$meta_key = '_is_dozent_teacher';
 
 		global $wpdb;
 
@@ -1490,7 +1490,7 @@ class Utils {
 	}
 
 	public function get_teachers($start = 0, $limit = 10, $search_term = ''){
-		$meta_key = '_is_tutor_teacher';
+		$meta_key = '_is_dozent_teacher';
 		global $wpdb;
 
 		if ($search_term){
@@ -1513,14 +1513,14 @@ class Utils {
 
 		$teachers = $wpdb->get_results("select ID, display_name, 
 			get_course.meta_value as taught_course_id,
-			tutor_job_title.meta_value as tutor_profile_job_title, 
-			tutor_bio.meta_value as tutor_profile_bio,
-			tutor_photo.meta_value as tutor_profile_photo
+			dozent_job_title.meta_value as dozent_profile_job_title, 
+			dozent_bio.meta_value as dozent_profile_bio,
+			dozent_photo.meta_value as dozent_profile_photo
 			from {$wpdb->users}
 			INNER JOIN {$wpdb->usermeta} get_course ON ID = get_course.user_id AND get_course.meta_value = {$course_id}
-			LEFT JOIN {$wpdb->usermeta} tutor_job_title ON ID = tutor_job_title.user_id AND tutor_job_title.meta_key = '_tutor_profile_job_title'
-			LEFT JOIN {$wpdb->usermeta} tutor_bio ON ID = tutor_bio.user_id AND tutor_bio.meta_key = '_tutor_profile_bio'
-			LEFT JOIN {$wpdb->usermeta} tutor_photo ON ID = tutor_photo.user_id AND tutor_photo.meta_key = '_tutor_profile_photo'
+			LEFT JOIN {$wpdb->usermeta} dozent_job_title ON ID = dozent_job_title.user_id AND dozent_job_title.meta_key = '_dozent_profile_job_title'
+			LEFT JOIN {$wpdb->usermeta} dozent_bio ON ID = dozent_bio.user_id AND dozent_bio.meta_key = '_dozent_profile_bio'
+			LEFT JOIN {$wpdb->usermeta} dozent_photo ON ID = dozent_photo.user_id AND dozent_photo.meta_key = '_dozent_profile_photo'
 			");
 
 		if (is_array($teachers) && count($teachers)){
@@ -1541,10 +1541,10 @@ class Utils {
 	public function get_total_students_by_teacher($teacher_id){
 		global $wpdb;
 
-		$course_post_type = tutor()->course_post_type;
+		$course_post_type = dozent()->course_post_type;
 		$count = $wpdb->get_var("SELECT COUNT(courses.ID) from {$wpdb->posts} courses
 
-			INNER JOIN {$wpdb->posts} enrolled ON courses.ID = enrolled.post_parent AND enrolled.post_type = 'tutor_enrolled'
+			INNER JOIN {$wpdb->posts} enrolled ON courses.ID = enrolled.post_parent AND enrolled.post_type = 'dozent_enrolled'
 			WHERE courses.post_status = 'publish' 
 			AND courses.post_type = '{$course_post_type}' 
 			AND courses.post_author = {$teacher_id}  ; ");
@@ -1593,12 +1593,12 @@ class Utils {
 			$intRating = (int) $current_rating;
 
 			if ($intRating >= $i){
-				$output.= '<i class="tutor-icon-star-full" data-rating-value="'.$i.'"></i>';
+				$output.= '<i class="dozent-icon-star-full" data-rating-value="'.$i.'"></i>';
 			} else{
 				if ( ($current_rating - $i) == -0.5){
-					$output.= '<i class="tutor-icon-star-half" data-rating-value="'.$i.'"></i>';
+					$output.= '<i class="dozent-icon-star-half" data-rating-value="'.$i.'"></i>';
 				}else{
-					$output.= '<i class="tutor-icon-star-line" data-rating-value="'.$i.'"></i>';
+					$output.= '<i class="dozent-icon-star-line" data-rating-value="'.$i.'"></i>';
 				}
 			}
 		}
@@ -1616,16 +1616,16 @@ class Utils {
 	 *
 	 * Generate text to avatar
 	 */
-	public function get_tutor_avatar($user_id = null, $size = 'thumbnail'){
+	public function get_dozent_avatar($user_id = null, $size = 'thumbnail'){
 		global $wpdb;
 
 		if ( ! $user_id){
 			return '';
 		}
 
-		$user = $this->get_tutor_user($user_id);
-		if ($user->tutor_profile_photo){
-			return '<img src="'.wp_get_attachment_image_url($user->tutor_profile_photo, $size).'" class="tutor-image-avatar" alt="" /> ';
+		$user = $this->get_dozent_user($user_id);
+		if ($user->dozent_profile_photo){
+			return '<img src="'.wp_get_attachment_image_url($user->dozent_profile_photo, $size).'" class="dozent-image-avatar" alt="" /> ';
 		}
 
 		$name = $user->display_name;
@@ -1642,23 +1642,23 @@ class Utils {
 		$initial_avatar = strtoupper($first_char.$second_char);
 
 		$bg_color = '#'.substr(md5($initial_avatar), 0, 6);
-		$initial_avatar = "<span class='tutor-text-avatar' style='background-color: {$bg_color};'>{$initial_avatar}</span>";
+		$initial_avatar = "<span class='dozent-text-avatar' style='background-color: {$bg_color};'>{$initial_avatar}</span>";
 
 		return $initial_avatar;
 	}
 
-	public function get_tutor_user($user_id){
+	public function get_dozent_user($user_id){
 		global $wpdb;
 
 		$user = $wpdb->get_row("select ID, display_name, 
-			tutor_job_title.meta_value as tutor_profile_job_title, 
-			tutor_bio.meta_value as tutor_profile_bio,
-			tutor_photo.meta_value as tutor_profile_photo
+			dozent_job_title.meta_value as dozent_profile_job_title, 
+			dozent_bio.meta_value as dozent_profile_bio,
+			dozent_photo.meta_value as dozent_profile_photo
 			
 			from {$wpdb->users}
-			LEFT JOIN {$wpdb->usermeta} tutor_job_title ON ID = tutor_job_title.user_id AND tutor_job_title.meta_key = '_tutor_profile_job_title'
-			LEFT JOIN {$wpdb->usermeta} tutor_bio ON ID = tutor_bio.user_id AND tutor_bio.meta_key = '_tutor_profile_bio'
-			LEFT JOIN {$wpdb->usermeta} tutor_photo ON ID = tutor_photo.user_id AND tutor_photo.meta_key = '_tutor_profile_photo'
+			LEFT JOIN {$wpdb->usermeta} dozent_job_title ON ID = dozent_job_title.user_id AND dozent_job_title.meta_key = '_dozent_profile_job_title'
+			LEFT JOIN {$wpdb->usermeta} dozent_bio ON ID = dozent_bio.user_id AND dozent_bio.meta_key = '_dozent_profile_bio'
+			LEFT JOIN {$wpdb->usermeta} dozent_photo ON ID = dozent_photo.user_id AND dozent_photo.meta_key = '_dozent_profile_photo'
 			
 			WHERE ID = {$user_id} ");
 		return $user;
@@ -1695,7 +1695,7 @@ class Utils {
 			INNER  JOIN {$wpdb->users}
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
-			AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
+			AND meta_key = 'dozent_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
 		);
 
 		return $reviews;
@@ -1723,7 +1723,7 @@ class Utils {
 			INNER JOIN {$wpdb->commentmeta} 
 			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
 			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
-			AND meta_key = 'tutor_rating' ;"
+			AND meta_key = 'dozent_rating' ;"
 		);
 
 		if ($rating->rating_count){
@@ -1760,7 +1760,7 @@ class Utils {
 			INNER  JOIN {$wpdb->users}
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 			WHERE {$wpdb->comments}.user_id = {$user_id} 
-			AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
+			AND meta_key = 'dozent_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
 		);
 
 		return $reviews;
@@ -1784,9 +1784,9 @@ class Utils {
 
 		$rating = $wpdb->get_row("SELECT COUNT(rating.meta_value) as rating_count, SUM(rating.meta_value) as rating_sum  
 		FROM {$wpdb->usermeta} courses
-		INNER JOIN {$wpdb->comments} reviews ON courses.meta_value = reviews.comment_post_ID AND reviews.comment_type = 'tutor_course_rating'
-		INNER JOIN {$wpdb->commentmeta} rating ON reviews.comment_ID = rating.comment_id AND rating.meta_key = 'tutor_rating'
-		WHERE courses.user_id = {$teacher_id} AND courses.meta_key = '_tutor_teacher_course_id'");
+		INNER JOIN {$wpdb->comments} reviews ON courses.meta_value = reviews.comment_post_ID AND reviews.comment_type = 'dozent_course_rating'
+		INNER JOIN {$wpdb->commentmeta} rating ON reviews.comment_ID = rating.comment_id AND rating.meta_key = 'dozent_rating'
+		WHERE courses.user_id = {$teacher_id} AND courses.meta_key = '_dozent_teacher_course_id'");
 
 		if ($rating->rating_count){
 			$avg_rating = number_format(($rating->rating_sum / $rating->rating_count), 2);
@@ -1824,7 +1824,7 @@ class Utils {
 				INNER JOIN {$wpdb->commentmeta} 
 				ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
 				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} AND user_id = {$user_id}
-				AND meta_key = 'tutor_rating' ;"
+				AND meta_key = 'dozent_rating' ;"
 		);
 
 		if ($rating){
@@ -1847,7 +1847,7 @@ class Utils {
 		global $wpdb;
 		$user_id = $this->get_user_id($user_id);
 
-		$count_reviews = $wpdb->get_var("SELECT COUNT(comment_ID) from {$wpdb->comments} WHERE user_id = {$user_id} AND comment_type = 'tutor_course_rating' ");
+		$count_reviews = $wpdb->get_var("SELECT COUNT(comment_ID) from {$wpdb->comments} WHERE user_id = {$user_id} AND comment_type = 'dozent_course_rating' ");
 		return $count_reviews;
 	}
 
@@ -1909,7 +1909,7 @@ class Utils {
 	}
 
 	public function help_tip($tip = ''){
-		return '<span class="tutor-help-tip" data-tip="' . $tip . '"></span>';
+		return '<span class="dozent-help-tip" data-tip="' . $tip . '"></span>';
 	}
 
 
@@ -1935,8 +1935,8 @@ class Utils {
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
 			AND {$wpdb->comments}.user_id = {$user_id}
-			AND {$wpdb->comments}.comment_type	 = 'tutor_q_and_a'
-			AND meta_key = 'tutor_question_title' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
+			AND {$wpdb->comments}.comment_type	 = 'dozent_q_and_a'
+			AND meta_key = 'dozent_question_title' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
 		);
 
 		return $questions;
@@ -1952,7 +1952,7 @@ class Utils {
 		$count = $wpdb->get_var("SELECT COUNT({$wpdb->comments}.comment_ID) FROM {$wpdb->comments} 
 			INNER JOIN {$wpdb->commentmeta} 
 			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-			WHERE comment_type	 = 'tutor_q_and_a' AND comment_parent = 0  {$search_term} ");
+			WHERE comment_type	 = 'dozent_q_and_a' AND comment_parent = 0  {$search_term} ");
 
 		return (int) $count;
 	}
@@ -2001,7 +2001,7 @@ class Utils {
 			INNER  JOIN {$wpdb->users}
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 		  
-			WHERE {$wpdb->comments}.comment_type = 'tutor_q_and_a' AND {$wpdb->comments}.comment_parent = 0  {$search_term} 
+			WHERE {$wpdb->comments}.comment_type = 'dozent_q_and_a' AND {$wpdb->comments}.comment_parent = 0  {$search_term} 
 			ORDER BY {$wpdb->comments}.comment_ID DESC 
 			LIMIT {$start},{$limit}; ");
 
@@ -2030,7 +2030,7 @@ class Utils {
 			
 			INNER  JOIN {$wpdb->users}
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE comment_type	 = 'tutor_q_and_a' AND {$wpdb->comments}.comment_ID = {$question_id}");
+			WHERE comment_type	 = 'dozent_q_and_a' AND {$wpdb->comments}.comment_ID = {$question_id}");
 
 		return $query;
 	}
@@ -2051,7 +2051,7 @@ class Utils {
 			
 			INNER  JOIN {$wpdb->users}
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE comment_type = 'tutor_q_and_a' 
+			WHERE comment_type = 'dozent_q_and_a' 
 			AND {$wpdb->comments}.comment_parent = {$question_id} ORDER BY {$wpdb->comments}.comment_ID ASC ");
 
 		return $query;
@@ -2062,7 +2062,7 @@ class Utils {
 
 		$count = $wpdb->get_var("select COUNT({$wpdb->comments}.comment_ID) 
 			from {$wpdb->comments} 
-			WHERE {$wpdb->comments}.comment_type = 'tutor_q_and_a' 
+			WHERE {$wpdb->comments}.comment_type = 'dozent_q_and_a' 
 			AND {$wpdb->comments}.comment_approved = 'waiting_for_answer'
 			AND {$wpdb->comments}.comment_parent = 0;");
 		return (int) $count;
@@ -2084,7 +2084,7 @@ class Utils {
 		$query = $wpdb->get_results("select {$wpdb->posts}.ID, post_author, post_date, post_content, post_title, display_name
 			from {$wpdb->posts}
 			INNER JOIN {$wpdb->users} ON post_author = {$wpdb->users}.ID
-			WHERE post_type = 'tutor_announcements' 
+			WHERE post_type = 'dozent_announcements' 
 			AND post_parent = {$course_id} ORDER BY {$wpdb->posts}.ID DESC;");
 		return $query;
 	}
@@ -2113,7 +2113,7 @@ class Utils {
 	 */
 	public function get_quiz_option($post_id = 0, $option_key = '', $default = false){
 		$post_id = $this->get_post_id($post_id);
-		$get_option_meta = maybe_unserialize(get_post_meta($post_id, 'tutor_quiz_option', true));
+		$get_option_meta = maybe_unserialize(get_post_meta($post_id, 'dozent_quiz_option', true));
 
 		$value = $this->avalue_dot($option_key, $get_option_meta);
 		if ($value){
@@ -2134,7 +2134,7 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question' AND post_parent = {$quiz_id} ORDER BY menu_order ASC ");
+		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'dozent_question' AND post_parent = {$quiz_id} ORDER BY menu_order ASC ");
 
 		if (is_array($questions) && count($questions)){
 			return $questions;
@@ -2144,9 +2144,9 @@ class Utils {
 
 	public function get_question_types($type = null){
 		$types = array(
-			'true_false'        => __('True/False', 'tutor'),
-			'multiple_choice'   => __('Multiple Choice', 'tutor'),
-			'single_choice'     => __('Single Choice', 'tutor'),
+			'true_false'        => __('True/False', 'dozent'),
+			'multiple_choice'   => __('Multiple Choice', 'dozent'),
+			'single_choice'     => __('Single Choice', 'dozent'),
 		);
 
 		if (isset($types[$type])){
@@ -2185,14 +2185,14 @@ class Utils {
 	public function quiz_next_question_order_id($quiz_id){
 		global $wpdb;
 
-		$last_order = (int) $wpdb->get_var("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = {$quiz_id} AND post_type = 'tutor_question';");
+		$last_order = (int) $wpdb->get_var("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = {$quiz_id} AND post_type = 'dozent_question';");
 		return $last_order + 1;
 	}
 
 	public function get_quiz_id_by_question($question_id){
 		global $wpdb;
 
-		$quiz_id = $wpdb->get_var("SELECT post_parent FROM {$wpdb->posts} WHERE ID = {$question_id} AND post_type = 'tutor_question' ;");
+		$quiz_id = $wpdb->get_var("SELECT post_parent FROM {$wpdb->posts} WHERE ID = {$question_id} AND post_type = 'dozent_question' ;");
 		return $quiz_id;
 	}
 
@@ -2214,7 +2214,7 @@ class Utils {
 			$search_query = "AND post_title LIKE '%{$search_term}%'";
 		}
 
-		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_quiz' AND post_status = 'publish' AND post_parent = 0 {$search_query} ORDER BY {$order_by} {$order}  LIMIT {$start},{$limit} ");
+		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'dozent_quiz' AND post_status = 'publish' AND post_parent = 0 {$search_query} ORDER BY {$order_by} {$order}  LIMIT {$start},{$limit} ");
 
 		if (is_array($questions) && count($questions)){
 			return $questions;
@@ -2232,7 +2232,7 @@ class Utils {
 
 		$post_id = $this->get_post_id($post_id);
 
-		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_quiz' AND post_status = 'publish' AND post_parent = {$post_id}");
+		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'dozent_quiz' AND post_status = 'publish' AND post_parent = {$post_id}");
 
 		if (is_array($questions) && count($questions)){
 			return $questions;
@@ -2248,7 +2248,7 @@ class Utils {
 		$post = get_post($quiz_id);
 
 		if ($post) {
-			$course_post_type = tutor()->course_post_type;
+			$course_post_type = dozent()->course_post_type;
 			$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
 
 			if ($course) {
@@ -2277,7 +2277,7 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		$total_question = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} where post_parent = {$quiz_id} AND post_type = 'tutor_question' ");
+		$total_question = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} where post_parent = {$quiz_id} AND post_type = 'dozent_question' ");
 
 		return $total_question;
 	}
@@ -2300,7 +2300,7 @@ class Utils {
  			
  			FROM {$wpdb->comments} 
 			WHERE user_id = {$user_id} 
-		  	AND comment_type = 'tutor_quiz_attempt' 
+		  	AND comment_type = 'dozent_quiz_attempt' 
 		  	AND comment_approved = 'quiz_started' 
 		  	AND comment_post_ID = {$quiz_id} ; ");
 
@@ -2321,7 +2321,7 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		$max_questions = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} where post_parent = {$quiz_id} AND post_type = 'tutor_question' ");
+		$max_questions = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} where post_parent = {$quiz_id} AND post_type = 'dozent_question' ");
 		$max_mentioned = (int) $this->get_quiz_option($quiz_id, 'max_questions_for_answer', 10);
 
 		if ($max_mentioned < $max_questions ){
@@ -2345,7 +2345,7 @@ class Utils {
  			user_id
  			
  			FROM {$wpdb->comments} 
-		  	WHERE comment_type = 'tutor_quiz_attempt' 
+		  	WHERE comment_type = 'dozent_quiz_attempt' 
 		  	AND comment_ID = {$attempt_id} ;");
 
 		return $attempt;
@@ -2357,9 +2357,9 @@ class Utils {
 	}
 
 	public function quiz_update_attempt_info($quiz_attempt_id, $attempt_info = array()){
-		$answers = tutor_utils()->avalue_dot('answers', $attempt_info);
+		$answers = dozent_utils()->avalue_dot('answers', $attempt_info);
 		$total_marks = array_sum(wp_list_pluck($answers, 'question_mark'));
-		$earned_marks = tutor_utils()->avalue_dot('marks_earned', $attempt_info);
+		$earned_marks = dozent_utils()->avalue_dot('marks_earned', $attempt_info);
 		$earned_mark_percent = $earned_marks > 0 ? ( number_format(($earned_marks * 100) / $total_marks)) : 0;
 		update_comment_meta($quiz_attempt_id, 'earned_mark_percent', $earned_mark_percent);
 
@@ -2385,7 +2385,7 @@ class Utils {
 		}
 
 		$question = $wpdb->get_row("SELECT ID, post_content, post_title, post_parent 
-			from {$wpdb->posts} WHERE post_type = 'tutor_question' AND post_parent = {$quiz_id} {$not_in_sql} ORDER BY RAND() ;");
+			from {$wpdb->posts} WHERE post_type = 'dozent_question' AND post_parent = {$quiz_id} {$not_in_sql} ORDER BY RAND() ;");
 
 		return $question;
 	}
@@ -2424,7 +2424,7 @@ class Utils {
  			LEFT JOIN {$wpdb->commentmeta} pass_mark ON {$wpdb->comments}.comment_ID = pass_mark.comment_id AND pass_mark.meta_key = 'pass_mark_percent'
  			
 			WHERE user_id = {$user_id} 
-		  	AND comment_type = 'tutor_quiz_attempt' 
+		  	AND comment_type = 'dozent_quiz_attempt' 
 		  	AND comment_approved != 'quiz_started' 
 		  	AND comment_post_ID = {$quiz_id} ; ");
 
@@ -2449,7 +2449,7 @@ class Utils {
 		INNER  JOIN {$wpdb->users}
 		ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 
-		WHERE comment_type = 'tutor_quiz_attempt' {$search_term} ");
+		WHERE comment_type = 'dozent_quiz_attempt' {$search_term} ");
 
 		return (int) $count;
 	}
@@ -2490,7 +2490,7 @@ class Utils {
  			LEFT JOIN {$wpdb->commentmeta} attempt_info ON {$wpdb->comments}.comment_ID = attempt_info.comment_id AND attempt_info.meta_key = 'quiz_attempt_info'
  			LEFT JOIN {$wpdb->commentmeta} pass_mark ON {$wpdb->comments}.comment_ID = pass_mark.comment_id AND pass_mark.meta_key = 'pass_mark_percent'
  			
-			WHERE {$wpdb->comments}.comment_type = 'tutor_quiz_attempt' {$search_term} 
+			WHERE {$wpdb->comments}.comment_type = 'dozent_quiz_attempt' {$search_term} 
 			ORDER BY {$wpdb->comments}.comment_ID DESC 
 			LIMIT {$start},{$limit}; ");
 
@@ -2529,11 +2529,11 @@ class Utils {
 	 */
 
 	public function course_levels($level = null){
-		$levels = apply_filters('tutor_course_level', array(
-			'all_levels'    => __('All Levels', 'tutor'),
-			'beginner'      => __('Beginner', 'tutor'),
-			'intermediate'  => __('Intermediate', 'tutor'),
-			'expert'        => __('Expert', 'tutor'),
+		$levels = apply_filters('dozent_course_level', array(
+			'all_levels'    => __('All Levels', 'dozent'),
+			'beginner'      => __('Beginner', 'dozent'),
+			'intermediate'  => __('Intermediate', 'dozent'),
+			'expert'        => __('Expert', 'dozent'),
 		));
 
 		if ($level){
@@ -2549,12 +2549,12 @@ class Utils {
 
 	public function user_profile_permalinks(){
 		$permalinks = array(
-			'enrolled_course'   => __('Enrolled Course', 'tutor'),
-			'courses_taken'     => __('Courses Taken', 'tutor'),
-			'reviews_wrote'     => __('Reviews Written', 'tutor'),
+			'enrolled_course'   => __('Enrolled Course', 'dozent'),
+			'courses_taken'     => __('Courses Taken', 'dozent'),
+			'reviews_wrote'     => __('Reviews Written', 'dozent'),
 		);
 		
-		return apply_filters('tutor_public_profile/permalinks', $permalinks);
+		return apply_filters('dozent_public_profile/permalinks', $permalinks);
 	}
 
 	public function student_register_url(){

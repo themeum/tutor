@@ -1,31 +1,31 @@
 <?php
-$user_name = sanitize_text_field(get_query_var('tutor_student_username'));
-$get_user = tutor_utils()->get_user_by_login($user_name);
+$user_name = sanitize_text_field(get_query_var('dozent_student_username'));
+$get_user = dozent_utils()->get_user_by_login($user_name);
 $user_id = $get_user->ID;
 
 
-$reviews = tutor_utils()->get_reviews_by_user($user_id);
+$reviews = dozent_utils()->get_reviews_by_user($user_id);
 
 if ( ! is_array($reviews) || ! count($reviews)){
 	return;
 }
 ?>
 
-<div class=" tutor-course-reviews-wrap">
+<div class=" dozent-course-reviews-wrap">
     <div class="course-target-reviews-title">
-        <h4><?php _e(sprintf('Reviews wrote by %s ', $get_user->display_name), 'tutor'); ?></h4>
+        <h4><?php _e(sprintf('Reviews wrote by %s ', $get_user->display_name), 'dozent'); ?></h4>
     </div>
 
-    <div class="tutor-reviews-list">
+    <div class="dozent-reviews-list">
 		<?php
 		foreach ($reviews as $review){
-			$profile_url = tutor_utils()->profile_url($review->user_id);
+			$profile_url = dozent_utils()->profile_url($review->user_id);
 			?>
-            <div class="tutor-review-individual-item tutor-review-<?php echo $review->comment_ID; ?>">
+            <div class="dozent-review-individual-item dozent-review-<?php echo $review->comment_ID; ?>">
                 <div class="review-left">
                     <div class="review-avatar">
                         <a href="<?php echo $profile_url; ?>">
-		                    <?php echo tutor_utils()->get_tutor_avatar($review->user_id); ?>
+		                    <?php echo dozent_utils()->get_dozent_avatar($review->user_id); ?>
                         </a>
                     </div>
 
@@ -41,14 +41,14 @@ if ( ! is_array($reviews) || ! count($reviews)){
                 <div class="review-content review-right">
 
                     <div class="individual-review-course-name">
-                        <?php _e('On', 'tutor'); ?>
+                        <?php _e('On', 'dozent'); ?>
                         <a href="<?php echo get_the_permalink($review->comment_post_ID); ?>"><?php echo get_the_title
                         ($review->comment_post_ID);
                         ?></a>
                     </div>
 
                     <div class="individual-review-rating-wrap">
-						<?php tutor_utils()->star_rating_generator($review->rating); ?>
+						<?php dozent_utils()->star_rating_generator($review->rating); ?>
                     </div>
 					<?php echo wpautop($review->comment_content); ?>
                 </div>

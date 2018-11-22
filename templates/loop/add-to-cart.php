@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$product_id = tutor_utils()->get_course_product_id();
+$product_id = dozent_utils()->get_course_product_id();
 $product = wc_get_product($product_id);
 
 if (! $product_id || ! $product){
@@ -43,7 +43,7 @@ if ( isset( $args['attributes']['aria-label'] ) ) {
 
 ?>
 
-<div class="tutor-loop-cart-btn-wrap">
+<div class="dozent-loop-cart-btn-wrap">
 	<?php
 	echo apply_filters( 'woocommerce_loop_add_to_cart_link', // WPCS: XSS ok.
 		sprintf( '<a href="%s" data-quantity="%s" class="%s" %s>%s</a>',

@@ -1,14 +1,14 @@
-<div class="tutor-option-field-row">
+<div class="dozent-option-field-row">
 	<?php
 	if (isset($field['label'])){
 		?>
-        <div class="tutor-option-field-label">
+        <div class="dozent-option-field-label">
             <label for=""><?php echo $field['label']; ?></label>
         </div>
 		<?php
 	}
 	?>
-    <div class="tutor-option-field">
+    <div class="dozent-option-field">
 		<?php
         echo $this->field_type($field);
 

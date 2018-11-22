@@ -1,3 +1,3 @@
 <h1>Dashboard</h1>
 
-<div class="tutor-dashboard-content-inner"></div>
+<div class="dozent-dashboard-content-inner"></div>

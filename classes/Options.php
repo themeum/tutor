@@ -1,5 +1,5 @@
 <?php
-namespace Tutor;
+namespace Dozent;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
@@ -10,11 +10,11 @@ class Options {
 	public $options_attr;
 
 	public function __construct() {
-		$this->option = (array) maybe_unserialize(get_option('tutor_option'));
+		$this->option = (array) maybe_unserialize(get_option('dozent_option'));
 		$this->options_attr = $this->options_attr();
 
 		//Saving option
-		add_action('wp_ajax_tutor_option_save', array($this, 'tutor_option_save'));
+		add_action('wp_ajax_dozent_option_save', array($this, 'dozent_option_save'));
 	}
 
 	private function get($key = null, $default = false){
@@ -45,151 +45,151 @@ class Options {
 		return $default;
 	}
 
-	public function tutor_option_save(){
-		if ( ! isset($_POST['_wpnonce']) || ! wp_verify_nonce( $_POST['_wpnonce'], 'tutor_option_save' ) ){
+	public function dozent_option_save(){
+		if ( ! isset($_POST['_wpnonce']) || ! wp_verify_nonce( $_POST['_wpnonce'], 'dozent_option_save' ) ){
 			exit();
 		}
 
-		$option = (array) isset($_POST['tutor_option']) ? $_POST['tutor_option'] : array();
-		$option = apply_filters('tutor_option_input', $option);
-		update_option('tutor_option', $option);
+		$option = (array) isset($_POST['dozent_option']) ? $_POST['dozent_option'] : array();
+		$option = apply_filters('dozent_option_input', $option);
+		update_option('dozent_option', $option);
 
 		//re-sync settings
-		init::tutor_activate();
+		init::dozent_activate();
 
-		wp_send_json_success( array('msg' => __('Option Updated', 'tutor') ) );
+		wp_send_json_success( array('msg' => __('Option Updated', 'dozent') ) );
 	}
 	
 	public function options_attr(){
-		$pages = tutor_utils()->get_pages();
+		$pages = dozent_utils()->get_pages();
 
-		//$course_base = tutor_utils()->course_archive_page_url();
+		//$course_base = dozent_utils()->course_archive_page_url();
 		$lesson_url = site_url().'/course/'.'sample-course/<code>lessons</code>/sample-lesson/';
 
-		$student_url = tutor_utils()->profile_url();
+		$student_url = dozent_utils()->profile_url();
 
 		$attempts_allowed = array();
-		$attempts_allowed['unlimited'] = __('Unlimited' , 'tutor');
+		$attempts_allowed['unlimited'] = __('Unlimited' , 'dozent');
 		$attempts_allowed = array_merge($attempts_allowed, array_combine(range(1,20), range(1,20)));
 
 		$attr = array(
 			'general' => array(
-				'label'     => __('General', 'tutor'),
+				'label'     => __('General', 'dozent'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('General', 'tutor'),
-						'desc' => __('General Settings', 'tutor'),
+						'label' => __('General', 'dozent'),
+						'desc' => __('General Settings', 'dozent'),
 						'fields' => array(
 							'enable_public_profile' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Enable Public Profile', 'tutor'),
+								'label'     => __('Enable Public Profile', 'dozent'),
 								'default' => '0',
-								'desc'      => __('Enable this to make a profile publicly visible',	'tutor')."<br />"
+								'desc'      => __('Enable this to make a profile publicly visible',	'dozent')."<br />"
 								               .$student_url,
 							),
-							'load_tutor_css' => array(
+							'load_dozent_css' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Load Tutor default CSS', 'tutor'),
+								'label'     => __('Load Dozent default CSS', 'dozent'),
 								'default'   => '1',
-								'desc'      => __('If your theme has its own styling, then you can turn it off to load CSS from the plugin directory', 'tutor'),
+								'desc'      => __('If your theme has its own styling, then you can turn it off to load CSS from the plugin directory', 'dozent'),
 							),
-							'load_tutor_js' => array(
+							'load_dozent_js' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Load Tutor default JavaScript', 'tutor'),
+								'label'     => __('Load Dozent default JavaScript', 'dozent'),
 								'default'   => '1',
-								'desc'      => __('If you have put required script in your theme javascript file, then you can turn it off to load JavaScript from the plugin directory', 'tutor'),
+								'desc'      => __('If you have put required script in your theme javascript file, then you can turn it off to load JavaScript from the plugin directory', 'dozent'),
 							),
 							'student_must_login_to_view_course' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Course Permission', 'tutor'),
-								'desc'      => __('Students must be logged in to view course', 'tutor'),
+								'label'     => __('Course Permission', 'dozent'),
+								'desc'      => __('Students must be logged in to view course', 'dozent'),
 							),
 							'delete_on_uninstall' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Erase upon uninstallation', 'tutor'),
-								'desc'      => __('Delete all data during uninstall', 'tutor'),
+								'label'     => __('Erase upon uninstallation', 'dozent'),
+								'desc'      => __('Delete all data during uninstall', 'dozent'),
 							),
 						)
 					)
 				),
 			),
 			'course' => array(
-				'label'     => __('Course', 'tutor'),
+				'label'     => __('Course', 'dozent'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('General', 'tutor'),
-						'desc' => __('Course Settings', 'tutor'),
+						'label' => __('General', 'dozent'),
+						'desc' => __('Course Settings', 'dozent'),
 						'fields' => array(
 							'course_allow_upload_private_files' => array(
 								'type'          => 'checkbox',
-								'label'         => __('Private file uploading', 'tutor'),
-								'label_title'   => __('Allow uploading private files', 'tutor'),
-								'desc'          => __('This will allow uploading files to courses and only enrolled students can access these files',	'tutor'),
+								'label'         => __('Private file uploading', 'dozent'),
+								'label_title'   => __('Allow uploading private files', 'dozent'),
+								'desc'          => __('This will allow uploading files to courses and only enrolled students can access these files',	'dozent'),
 							),
 							/*
 							'course_complete_terms' => array(
 								'type'      => 'select',
-								'label'     => __('When course will be complete', 'tutor'),
+								'label'     => __('When course will be complete', 'dozent'),
 								'default'   => '0',
 								'options'   => array(
-									'all_lesson_complete' =>  __('When all lesson completed', 'tutor'),
-									'complete_by_click' =>  __('Manually clicking the (complete course) button ', 'tutor'),
+									'all_lesson_complete' =>  __('When all lesson completed', 'dozent'),
+									'complete_by_click' =>  __('Manually clicking the (complete course) button ', 'dozent'),
 								),
-								'desc'      => __('Select page to show course archieve page, none will show default course post type',	'tutor'),
+								'desc'      => __('Select page to show course archieve page, none will show default course post type',	'dozent'),
 							),*/
 
 							'display_course_teachers' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Display teachers profile', 'tutor'),
-								'label_title'   => __('Show the teacher profile on course single page.', 'tutor'),
+								'label'     => __('Display teachers profile', 'dozent'),
+								'label_title'   => __('Show the teacher profile on course single page.', 'dozent'),
 							),
 							'enable_q_and_a_on_course' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Enable Q &amp; A on course', 'tutor'),
+								'label'     => __('Enable Q &amp; A on course', 'dozent'),
 								'default'   => '0',
-								'desc'      => __('Allow student to place their questions and answers on the course page, only enrolled student can do this',	'tutor'),
+								'desc'      => __('Allow student to place their questions and answers on the course page, only enrolled student can do this',	'dozent'),
 							),
 						),
 					),
 					'archive' => array(
-						'label' => __('Archive', 'tutor'),
-						'desc' => __('Course Archive Settings', 'tutor'),
+						'label' => __('Archive', 'dozent'),
+						'desc' => __('Course Archive Settings', 'dozent'),
 						'fields' => array(
 							'course_archive_page' => array(
 								'type'      => 'select',
-								'label'     => __('Course Archive Page', 'tutor'),
+								'label'     => __('Course Archive Page', 'dozent'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('Choose the page from the dropdown list where you want to show all of the courses',	'tutor'),
+								'desc'      => __('Choose the page from the dropdown list where you want to show all of the courses',	'dozent'),
 							),
 							'courses_col_per_row' => array(
 								'type'      => 'slider',
-								'label'     => __('Column per row', 'tutor'),
+								'label'     => __('Column per row', 'dozent'),
 								'default'   => '4',
 								'options'   => array('min'=> 1, 'max' => 6),
-								'desc'      => __('Define how many column you want to show on the course single page', 'tutor'),
+								'desc'      => __('Define how many column you want to show on the course single page', 'dozent'),
 							),
 							'courses_per_page' => array(
 								'type'      => 'slider',
-								'label'     => __('Courses Per Page', 'tutor'),
+								'label'     => __('Courses Per Page', 'dozent'),
 								'default'   => '10',
 								'options'   => array('min'=> 1, 'max' => 20),
-								'desc'      => __('Define how many courses you want to show per page', 'tutor'),
+								'desc'      => __('Define how many courses you want to show per page', 'dozent'),
 							),
 						),
 					),
 				),
 			),
 			'lesson' => array(
-				'label' => __('Lessons', 'tutor'),
+				'label' => __('Lessons', 'dozent'),
 				'sections'    => array(
 					'lesson_settings' => array(
-						'label' => __('Lesson Settings', 'tutor'),
-						'desc' => __('Lesson settings will be here', 'tutor'),
+						'label' => __('Lesson Settings', 'dozent'),
+						'desc' => __('Lesson settings will be here', 'dozent'),
 						'fields' => array(
 							'lesson_permalink_base' => array(
 								'type'      => 'text',
-								'label'     => __('Lesson Permalink Base', 'tutor'),
+								'label'     => __('Lesson Permalink Base', 'dozent'),
 								'default'   => 'lessons',
 								'desc'      => $lesson_url,
 							),
@@ -201,16 +201,16 @@ class Options {
 				),
 			),
 			'quiz' => array(
-				'label' => __('Quiz', 'tutor'),
+				'label' => __('Quiz', 'dozent'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('Quiz', 'tutor'),
-						'desc' => __('The values you set here define the default values that are used in the settings form when you create a new quiz.', 'tutor'),
+						'label' => __('Quiz', 'dozent'),
+						'desc' => __('The values you set here define the default values that are used in the settings form when you create a new quiz.', 'dozent'),
 						'fields' => array(
 							'quiz_time_limit' => array(
 								'type'      => 'group_fields',
-								'label'     => __('Time Limit', 'tutor'),
-								'desc'      => __('Default time limit for quizzes. 0 means no time limit.', 'tutor'),
+								'label'     => __('Time Limit', 'dozent'),
+								'desc'      => __('Default time limit for quizzes. 0 means no time limit.', 'dozent'),
 								'group_fields'  => array(
 									'value' => array(
 										'type'      => 'text',
@@ -221,11 +221,11 @@ class Options {
 										'default'   => 'minutes',
 										'select_options'   => false,
 										'options'   => array(
-											'weeks'     =>  __('Weeks', 'tutor'),
-											'days'      =>  __('Days', 'tutor'),
-											'hours'     =>  __('Hours', 'tutor'),
-											'minutes'   =>  __('Minutes', 'tutor'),
-											'seconds'   =>  __('Seconds', 'tutor'),
+											'weeks'     =>  __('Weeks', 'dozent'),
+											'days'      =>  __('Days', 'dozent'),
+											'hours'     =>  __('Hours', 'dozent'),
+											'minutes'   =>  __('Minutes', 'dozent'),
+											'seconds'   =>  __('Seconds', 'dozent'),
 										),
 									),
 								),
@@ -233,61 +233,61 @@ class Options {
 
 							'quiz_when_time_expires' => array(
 								'type'      => 'select',
-								'label'      => __('When time expires', 'tutor'),
+								'label'      => __('When time expires', 'dozent'),
 								'default'   => 'minutes',
 								'select_options'   => false,
 								'options'   => array(
-									'autosubmit'    =>  __('Current attempts are submitted automatically', 'tutor'),
-									'graceperiod'   =>  __('There is a grace period when current attempts can be submitted, but no more questions answered', 'tutor'),
-									'autoabandon'   =>  __('Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor'),
+									'autosubmit'    =>  __('Current attempts are submitted automatically', 'dozent'),
+									'graceperiod'   =>  __('There is a grace period when current attempts can be submitted, but no more questions answered', 'dozent'),
+									'autoabandon'   =>  __('Attempts must be submitted before time expires, otherwise they will not be counted', 'dozent'),
 								),
-								'desc'  => __('What should happen by default if a student does not submit the quiz before time expires.', 'tutor'),
+								'desc'  => __('What should happen by default if a student does not submit the quiz before time expires.', 'dozent'),
 							),
 
 							'quiz_attempts_allowed' => array(
 								'type'      => 'slider',
-								'label'      => __('Attempts allowed', 'tutor'),
+								'label'      => __('Attempts allowed', 'dozent'),
 								'default'   => '10',
 								'options'   => array('min'=> 0, 'max' => 20),
-								'desc'  => __('Restriction on the number of attempts students are allowed to take for a quiz. 0 for no limit', 'tutor'),
+								'desc'  => __('Restriction on the number of attempts students are allowed to take for a quiz. 0 for no limit', 'dozent'),
 							),
 
 							'quiz_grade_method' => array(
 								'type'      => 'select',
-								'label'      => __('Grading method', 'tutor'),
+								'label'      => __('Grading method', 'dozent'),
 								'default'   => 'minutes',
 								'select_options'   => false,
 								'options'   => array(
-									'highest_grade' => __('Highest Grade', 'tutor'),
-									'average_grade' => __('Average Grade', 'tutor'),
-									'first_attempt' => __('First Attempt', 'tutor'),
-									'last_attempt' => __('Last Attempt', 'tutor'),
+									'highest_grade' => __('Highest Grade', 'dozent'),
+									'average_grade' => __('Average Grade', 'dozent'),
+									'first_attempt' => __('First Attempt', 'dozent'),
+									'last_attempt' => __('Last Attempt', 'dozent'),
 								),
-								'desc'  => __('When multiple attempts are allowed, which method should be used to calculate a student\'s final grade for the quiz.', 'tutor'),
+								'desc'  => __('When multiple attempts are allowed, which method should be used to calculate a student\'s final grade for the quiz.', 'dozent'),
 							),
 						)
 					)
 				),
 			),
 			'teachers' => array(
-				'label'     => __('Teachers', 'tutor'),
+				'label'     => __('Teachers', 'dozent'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('Teacher Profile Settings', 'tutor'),
-						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
+						'label' => __('Teacher Profile Settings', 'dozent'),
+						'desc' => __('Enable Disable Option to on/off notification on various event', 'dozent'),
 						'fields' => array(
 							'teacher_register_page' => array(
 								'type'      => 'select',
-								'label'     => __('Teacher Register Page', 'tutor'),
+								'label'     => __('Teacher Register Page', 'dozent'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('This will be teacher register page', 'tutor'),
+								'desc'      => __('This will be teacher register page', 'dozent'),
 							),
 							'teacher_can_publish_course' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Can publish course', 'tutor'),
+								'label'     => __('Can publish course', 'dozent'),
 								'default' => '0',
-								'desc'      => __('Define if a teacher can publish his courses directly or not, if unchecked, they can still add courses, but it will go to admin for review',	'tutor'),
+								'desc'      => __('Define if a teacher can publish his courses directly or not, if unchecked, they can still add courses, but it will go to admin for review',	'dozent'),
 							),
 						),
 					),
@@ -295,39 +295,39 @@ class Options {
 			),
 
 			'students' => array(
-				'label'     => __('Students', 'tutor'),
+				'label'     => __('Students', 'dozent'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('Student Profile settings', 'tutor'),
-						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
+						'label' => __('Student Profile settings', 'dozent'),
+						'desc' => __('Enable Disable Option to on/off notification on various event', 'dozent'),
 						'fields' => array(
 							'student_register_page' => array(
 								'type'      => 'select',
-								'label'     => __('Student Register Page', 'tutor'),
+								'label'     => __('Student Register Page', 'dozent'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('Choose the page for student registration page', 'tutor'),
+								'desc'      => __('Choose the page for student registration page', 'dozent'),
 							),
 							'student_dashboard' => array(
 								'type'      => 'select',
-								'label'     => __('Student Dashboard', 'tutor'),
+								'label'     => __('Student Dashboard', 'dozent'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('This page will show students related stuff, like my courses, order, etc', 'tutor'),
+								'desc'      => __('This page will show students related stuff, like my courses, order, etc', 'dozent'),
 							),
 
 							'students_own_review_show_at_profile' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Show reviews on profile', 'tutor'),
-								'label_title'     => __('Enable students review on their profile', 'tutor'),
+								'label'     => __('Show reviews on profile', 'dozent'),
+								'label_title'     => __('Enable students review on their profile', 'dozent'),
 								'default' => '0',
-								'desc'      => __('Enabling this will allow the reviews written by each individual students on their profile',	'tutor')."<br />" .$student_url,
+								'desc'      => __('Enabling this will allow the reviews written by each individual students on their profile',	'dozent')."<br />" .$student_url,
 							),
 							'show_courses_completed_by_student' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Show Completed Course', 'tutor'),
+								'label'     => __('Show Completed Course', 'dozent'),
 								'default' => '0',
-								'desc'      => __('Completed courses will be show on student profile',	'tutor')."<br />".$student_url,
+								'desc'      => __('Completed courses will be show on student profile',	'dozent')."<br />".$student_url,
 							),
 
 						),
@@ -336,55 +336,55 @@ class Options {
 			),
 
 			'email_notification' => array(
-				'label'     => __('E-Mail Notification', 'tutor'),
+				'label'     => __('E-Mail Notification', 'dozent'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('Enable/Disable', 'tutor'),
-						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
+						'label' => __('Enable/Disable', 'dozent'),
+						'desc' => __('Enable Disable Option to on/off notification on various event', 'dozent'),
 						'fields' => array(
 							'email_to_students' => array(
 								'type'      => 'checkbox',
-								'label'     => __('E-Mail to Students', 'tutor'),
+								'label'     => __('E-Mail to Students', 'dozent'),
 								'options'   => array(
-									'quiz_completed' => __('Quiz Completed', 'tutor'),
-									'completed_course' => __('Completed a course', 'tutor'),
+									'quiz_completed' => __('Quiz Completed', 'dozent'),
+									'completed_course' => __('Completed a course', 'dozent'),
 								),
-								'desc'      => __('Select when to sent notification to the students',	'tutor'),
+								'desc'      => __('Select when to sent notification to the students',	'dozent'),
 							),
 							'email_to_teachers' => array(
 								'type'      => 'checkbox',
-								'label'     => __('E-Mail to Teachers', 'tutor'),
+								'label'     => __('E-Mail to Teachers', 'dozent'),
 								'options'   => array(
-									'a_student_enrolled_in_course'              => __('A Student enrolled in course ', 'tutor'),
-									'a_student_completed_course'            => __('A Student Completed Course', 'tutor'),
-									'a_student_completed_lesson'            => __('A Student Completed Lesson', 'tutor'),
-									'a_student_placed_question'             => __('A Student placed question to course', 'tutor'),
+									'a_student_enrolled_in_course'              => __('A Student enrolled in course ', 'dozent'),
+									'a_student_completed_course'            => __('A Student Completed Course', 'dozent'),
+									'a_student_completed_lesson'            => __('A Student Completed Lesson', 'dozent'),
+									'a_student_placed_question'             => __('A Student placed question to course', 'dozent'),
 								),
-								'desc'      => __('Select when to sent notification to the teachers',	'tutor'),
+								'desc'      => __('Select when to sent notification to the teachers',	'dozent'),
 							),
 						),
 					),
 					'email_settings' => array(
-						'label' => __('E-Mail Settings', 'tutor'),
-						'desc' => __('Check and place necessary information here.', 'tutor'),
+						'label' => __('E-Mail Settings', 'dozent'),
+						'desc' => __('Check and place necessary information here.', 'dozent'),
 						'fields' => array(
 							'email_from_name' => array(
 								'type'      => 'text',
-								'label'     => __('E-Mail From Name', 'tutor'),
+								'label'     => __('E-Mail From Name', 'dozent'),
 								'default'   => get_option('blogname'),
-								'desc'      => __('The name under which all the emails will be sent',	'tutor'),
+								'desc'      => __('The name under which all the emails will be sent',	'dozent'),
 							),
 							'email_from_address' => array(
 								'type'      => 'text',
-								'label'     => __('From E-Mail Address', 'tutor'),
+								'label'     => __('From E-Mail Address', 'dozent'),
 								'default'   => get_option('admin_email'),
-								'desc'      => __('The E-Mail address from which all emails will be sent', 'tutor'),
+								'desc'      => __('The E-Mail address from which all emails will be sent', 'dozent'),
 							),
 							'email_footer_text' => array(
 								'type'      => 'textarea',
-								'label'     => __('E-Mail Footer Text', 'tutor'),
+								'label'     => __('E-Mail Footer Text', 'dozent'),
 								'default'   => '',
-								'desc'      => __('The text to appear in E-Mail template footer', 'tutor'),
+								'desc'      => __('The text to appear in E-Mail template footer', 'dozent'),
 							),
 						),
 					),
@@ -393,7 +393,7 @@ class Options {
 			),
 		);
 
-		return apply_filters('tutor/options/attr', $attr);
+		return apply_filters('dozent/options/attr', $attr);
 	}
 
 
@@ -406,19 +406,19 @@ class Options {
 	 */
 	public function generate_field($field = array()){
 		ob_start();
-		include tutor()->path.'views/options/option_field.php';
+		include dozent()->path.'views/options/option_field.php';
 		return ob_get_clean();
 	}
 
 	public function field_type($field = array()){
 		ob_start();
-		include tutor()->path."views/options/field-types/{$field['type']}.php";
+		include dozent()->path."views/options/field-types/{$field['type']}.php";
 		return ob_get_clean();
 	}
 
 	public function generate(){
 		ob_start();
-		include tutor()->path.'views/options/options_generator.php';
+		include dozent()->path.'views/options/options_generator.php';
 		return ob_get_clean();
 	}
 

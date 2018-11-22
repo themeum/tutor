@@ -9,9 +9,9 @@
  */
 
 
-do_action('tutor_course/single/before/requirements');
+do_action('dozent_course/single/before/requirements');
 
-$course_requirements = tutor_course_requirements();
+$course_requirements = dozent_course_requirements();
 
 if ( empty($course_requirements)){
 	return;
@@ -20,14 +20,14 @@ if ( empty($course_requirements)){
 if (is_array($course_requirements) && count($course_requirements)){
 	?>
 
-	<div class="tutor-single-course-segment  tutor-course-requirements-wrap">
+	<div class="dozent-single-course-segment  dozent-course-requirements-wrap">
 
 		<div class="course-requirements-title">
-			<h4 class="tutor-segment-title"><?php _e('Requirements', 'tutor'); ?></h4>
+			<h4 class="dozent-segment-title"><?php _e('Requirements', 'dozent'); ?></h4>
 		</div>
 
-		<div class="tutor-course-requirements-content">
-			<ul class="tutor-course-requirements-items tutor-custom-list-style">
+		<div class="dozent-course-requirements-content">
+			<ul class="dozent-course-requirements-items dozent-custom-list-style">
 				<?php
 				foreach ($course_requirements as $requirement){
 					echo "<li>{$requirement}</li>";
@@ -39,4 +39,4 @@ if (is_array($course_requirements) && count($course_requirements)){
 
 <?php } ?>
 
-<?php do_action('tutor_course/single/after/requirements'); ?>
+<?php do_action('dozent_course/single/after/requirements'); ?>

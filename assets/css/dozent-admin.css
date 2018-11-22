@@ -37,32 +37,32 @@
 
 
 /**
-TUTOR CSS
+DOZENT CSS
  */
 
-.tutor-option-nav-tabs{
+.dozent-option-nav-tabs{
 
 }
-.tutor-option-nav-tabs li{
+.dozent-option-nav-tabs li{
     position: relative;
     display: inline-block;
     margin-right: 20px;
 }
-.tutor-option-nav-tabs li:after {
+.dozent-option-nav-tabs li:after {
     content: "|";
     position: absolute;
     top: 0;
     right: -10px;
 }
-.tutor-option-nav-tabs li:last-child:after {
+.dozent-option-nav-tabs li:last-child:after {
     content: "";
 }
-.tutor-option-nav-tabs li a{
+.dozent-option-nav-tabs li a{
     display: block;
     font-weight: bold;
     text-decoration: none;
 }
-.tutor-option-nav-tabs li.current a{
+.dozent-option-nav-tabs li.current a{
     color: #333333;
 }
 
@@ -70,13 +70,13 @@ TUTOR CSS
 Option Field
  */
 
-.tutor-option-field-row {
+.dozent-option-field-row {
     border-bottom: 1px solid #e4e4e4;
     padding: 30px 0;
     font-size: 14px;
     line-height: 1.3
 }
-.tutor-option-field-row input[type=text],.tutor-option-field-row input[type=email],.tutor-option-field-row input[type=number],.tutor-option-field-row input[type=password], .tutor-option-field-row textarea, .tutor-option-field-row .tutor-field-type-slider {
+.dozent-option-field-row input[type=text],.dozent-option-field-row input[type=email],.dozent-option-field-row input[type=number],.dozent-option-field-row input[type=password], .dozent-option-field-row textarea, .dozent-option-field-row .dozent-field-type-slider {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 3px;
@@ -89,27 +89,27 @@ Option Field
     width: 400px;
     min-height: 35px
 }
-.tutor-option-field {
+.dozent-option-field {
     display: block;
     margin: 0 0 0 200px;
     max-width: 800px
 }
-.tutor-option-field-label {
+.dozent-option-field-label {
     display: block;
     float: left;
     width: 200px;
 }
-.tutor-option-field-label label {
+.dozent-option-field-label label {
     display: block;
     font-weight: 600
 }
-.tutor-option-field p.desc {
+.dozent-option-field p.desc {
     font-style: italic;
     color: #666;
     font-size: 12px;
     line-height: 1.5;
 }
-.tutor-option-field-row h2{
+.dozent-option-field-row h2{
     color: #444;
     font-size: 18px;
     font-weight: 700;
@@ -119,11 +119,11 @@ Option Field
 /**
 Group Field Option
  */
-.tutor-option-group-field {
+.dozent-option-group-field {
     display: inline-block;
     vertical-align: top;
 }
-.tutor-option-group-field input[type=text],.tutor-option-group-field input[type=email],.tutor-option-group-field input[type=number],.tutor-option-group-field input[type=password], .tutor-option-group-field textarea, .tutor-option-group-field .tutor-field-type-slider, .tutor-option-group-field select {
+.dozent-option-group-field input[type=text],.dozent-option-group-field input[type=email],.dozent-option-group-field input[type=number],.dozent-option-group-field input[type=password], .dozent-option-group-field textarea, .dozent-option-group-field .dozent-field-type-slider, .dozent-option-group-field select {
     width: 100px;
     margin-right: 5px;
 }
@@ -131,49 +131,49 @@ Group Field Option
 /**
 Course adding page
  */
-#tutor-course-topics a{
+#dozent-course-topics a{
     text-decoration: none;
 }
-#tutor-course-topics .tutor-topics-wrap{
+#dozent-course-topics .dozent-topics-wrap{
     border-bottom: 1px solid #dddddd;
     padding-bottom: 20px;
 }
-#tutor-course-topics .tutor-lesson {
+#dozent-course-topics .dozent-lesson {
     padding: 10px;
 }
-#tutor-course-topics .drop-lessons{
+#dozent-course-topics .drop-lessons{
     border: 1px dashed #dddddd;
     padding: 10px 25px;
     background-color: #f4f4f4;
 }
-#tutor-course-topics .tutor-lesson:hover{
+#dozent-course-topics .dozent-lesson:hover{
     background-color: #EEEEEE;
 }
-#tutor-course-topics .tutor-lessions {
+#dozent-course-topics .dozent-lessions {
     padding-left: 30px;
     min-height: 100px;
 }
-#tutor-course-topics .tutor-lesson-top, #tutor-course-topics .tutor-lesson-top i {
+#dozent-course-topics .dozent-lesson-top, #dozent-course-topics .dozent-lesson-top i {
     font-size: 15px;
 }
-.tutor-topics-wrap, .tutor-lesson{
+.dozent-topics-wrap, .dozent-lesson{
     background-color: #ffffff;
 }
 .ui-sortable-placeholder{
     visibility: visible;
     background-color: #dddd;
 }
-.tutor-untopics-lessons{
+.dozent-untopics-lessons{
     margin-top: 50px;
 }
-.tutor-metabox-add-topics, .tutor-topics-edit-form {
+.dozent-metabox-add-topics, .dozent-topics-edit-form {
     background: #f1f1f1;
     padding: 20px;
 }
-.tutor-metabox-add-topics .tutor-option-field-row{
+.dozent-metabox-add-topics .dozent-option-field-row{
     padding: 15px 0;
 }
-.tutor-metabox-add-topics .tutor-option-field-row:last-child, .tutor-topics-edit-form .tutor-option-field-row:last-child{
+.dozent-metabox-add-topics .dozent-option-field-row:last-child, .dozent-topics-edit-form .dozent-option-field-row:last-child{
     border-bottom: none;
 }
 .topic-edit-icon{
@@ -215,13 +215,13 @@ Course adding page
     max-width: 200px;
     height: auto;
 }
-.tutor-added-attachments-wrap{
+.dozent-added-attachments-wrap{
     margin-bottom: 50px;
 }
-.tutor-added-attachments-wrap a{
+.dozent-added-attachments-wrap a{
     text-decoration: none;
 }
-a.tutor-delete-attachment {
+a.dozent-delete-attachment {
     border: 1px solid #ff0000;
     padding: 5px;
     border-radius: 50%;
@@ -230,68 +230,68 @@ a.tutor-delete-attachment {
     color: #ff0000;
 }
 
-a.tutor-delete-attachment:hover {
+a.dozent-delete-attachment:hover {
     background-color: #ff0000;
     color: #ffffff;
 }
 
-.tutor-status-context{
+.dozent-status-context{
     padding: 5px 10px;
     margin: 5px 0;
     display: inline-block;
 }
 
-.tutor-status-pending-context, .quiz_started{
+.dozent-status-pending-context, .quiz_started{
     background-color: #EEEEEE;
 }
 
-a.tutor-button{
+a.dozent-button{
     padding: 10px 20px;
     text-decoration: none;
     margin-right: 20px;
 }
-.tutor-status-approved-context, .quiz_finished, .tutor-button.button-success {
+.dozent-status-approved-context, .quiz_finished, .dozent-button.button-success {
     background-color: #008000;
     color: #ffffff;
 }
-.tutor-status-blocked-context, .quiz_timeout, .tutor-button.button-danger {
+.dozent-status-blocked-context, .quiz_timeout, .dozent-button.button-danger {
     background-color: #ff0000;
     color: #ffffff;
 }
 
-.tutor-button.button-warning {
+.dozent-button.button-warning {
     background-color: #ffb36d;
     color: #ffffff;
 }
-.tutor-button{
+.dozent-button{
     border: 0;
     box-shadow: none !important;
 }
-.tutor-button .dashicons{
+.dozent-button .dashicons{
     border: 0;
     box-shadow: none !important;
     line-height: inherit;
 }
-.tutor-status-approved-context, .tutor-status-blocked-context{
+.dozent-status-approved-context, .dozent-status-blocked-context{
     display: inline-block;
 }
-table.tutor_status_table td.help {
+table.dozent_status_table td.help {
     width: 1em;
 }
-table.tutor_status_table td:first-child {
+table.dozent_status_table td:first-child {
     width: 25%;
 }
-table.tutor_status_table h2{
+table.dozent_status_table h2{
     font-size: 16px;
     margin: 0;
 }
-table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
+table.dozent_status_table td mark.yes, table.dozent_status_table th mark.yes {
     color: #06d004;
     background-color: transparent;
 }
 /*
 
-.tutor-help-tip {
+.dozent-help-tip {
     color: #666;
     display: inline-block;
     font-size: 1.1em;
@@ -302,7 +302,7 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
     vertical-align: middle;
     width: 16px;
 }
-.tutor-help-tip::after {
+.dozent-help-tip::after {
     font-family: Dashicons;
     speak: none;
     font-weight: 400;
@@ -323,7 +323,7 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
 }*/
 
 
-.tutor-text-avatar{
+.dozent-text-avatar{
     border-radius: 50%;
     /*border: 1px solid #686f7a;*/
     width: 40px;
@@ -334,15 +334,15 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
     color: #ffffff;
     font-size: 14px;
 }
-.tutor_original_question{
+.dozent_original_question{
     display: flex;
     margin-bottom: 5px;
     padding: 20px;
 }
-.tutor_original_question .question-left{
+.dozent_original_question .question-left{
     flex: 0 0 60px;
 }
-.tutor_original_question .question-left img{
+.dozent_original_question .question-left img{
     max-width: 60px;
     height: auto;
     margin-right: 10px;
@@ -352,16 +352,16 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
 .question-right {
     width: 100%;
 }
-.tutor_admin_answers_list_wrap .tutor_original_question{
+.dozent_admin_answers_list_wrap .dozent_original_question{
     margin-left: 50px;
 }
-.tutor-bg-white{
+.dozent-bg-white{
     background-color: #ffffff;
 }
-.tutor-bg-light{
+.dozent-bg-light{
     background-color: #FDFDFD;
 }
-.tutor-announcement {
+.dozent-announcement {
     border: 1px solid #eee;
     padding: 10px;
     margin-bottom: 10px;
@@ -381,12 +381,12 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
     color: #ffffff;
     background-color: #ff0000;
 }
-.tutor-label-success{
+.dozent-label-success{
     background-color: #06d004;
     color: #ffffff;
     padding: 3px 7px;
 }
-.tutor-addons .plugin-card-bottom .plugin-version{
+.dozent-addons .plugin-card-bottom .plugin-version{
     display: inline-block;
 }
 
@@ -397,17 +397,17 @@ Quiz-question
     margin-top: 20px;
     margin-bottom: 20px;
 }
-.quiz-question-flex-wrap, .tutor-flex-row{
+.quiz-question-flex-wrap, .dozent-flex-row{
     display: flex;
     flex-direction: row;
 }
-.tutor-flex-col{
+.dozent-flex-col{
     margin: 0 20px;
 }
-.tutor-flex-col:first-child{
+.dozent-flex-col:first-child{
     margin-left: 0;
 }
-.tutor-flex-col:last-child{
+.dozent-flex-col:last-child{
     margin-right: 0;
 }
 .quiz-question-field{
@@ -479,12 +479,12 @@ table.multi-answers-options a{
     margin: 20px 0;
 }
 
-.tutor-add-question-wrap{
+.dozent-add-question-wrap{
     margin: 20px 0;
     background-color: #f4f4f4;
     padding: 10px;
 }
-.tutor-add-question-wrap input[type=text]{
+.dozent-add-question-wrap input[type=text]{
     border: 1px solid #ddd;
     border-radius: 0;
     box-shadow: none;
@@ -496,7 +496,7 @@ table.multi-answers-options a{
     width: 300px;
     min-height: 35px
 }
-.tutor-add-question-wrap select {
+.dozent-add-question-wrap select {
     margin: 0;
     padding: 0;
     border-radius: 0;
@@ -504,14 +504,14 @@ table.multi-answers-options a{
     box-shadow: none;
     height: 35px;
 }
-.tutor-add-question-wrap .button{
+.dozent-add-question-wrap .button{
     height: 35px;
     margin-left: 10px;
 }
 .single-question-item {
     margin: 1px 0;
 }
-.tutor-question-item-head{
+.dozent-question-item-head{
     display: flex;
     flex-direction: row;
     line-height: 50px;
@@ -519,24 +519,24 @@ table.multi-answers-options a{
     /*padding: 20px;*/
 }
 
-.tutor-question-item-head > div{
+.dozent-question-item-head > div{
     padding: 0 10px;
 }
-.tutor-question-item-head .question-title {
+.dozent-question-item-head .question-title {
     flex-basis: 0;
     flex-grow: 1;
 }
-.tutor-question-item-head i{
+.dozent-question-item-head i{
     line-height: 50px;
 
 }
-.single-question-item .tutor-question-item-head{
+.single-question-item .dozent-question-item-head{
     background-color: #fcfcfc;
 }
-.single-question-item:nth-child(2n+1) .tutor-question-item-head{
+.single-question-item:nth-child(2n+1) .dozent-question-item-head{
     background-color: #f4f4f4;
 }
-.tutor-question-item-head a{
+.dozent-question-item-head a{
     text-decoration: none;
 }
 
@@ -557,14 +557,14 @@ table.multi-answers-options a{
 .question-actions-wrap a{
     display: inline-block;
 }
-.tutor-loading-icon-wrap.button{
+.dozent-loading-icon-wrap.button{
     vertical-align: unset;
     border: none;
     background-color: transparent;
     box-shadow: none;
 }
 
-.tutor-input-text-error{
+.dozent-input-text-error{
     border: 1px solid #FF0000 !important;
 }
 
@@ -573,7 +573,7 @@ table.multi-answers-options a{
 Quiz Modal
  */
 
-.tutor-modal-wrap {
+.dozent-modal-wrap {
     opacity: 0;
     display: none;
     position: fixed;
@@ -584,12 +584,12 @@ Quiz Modal
     z-index: -1;
     background-color: rgba(0, 0, 0, 0.5);
 }
-.tutor-modal-wrap.show {
+.dozent-modal-wrap.show {
     display: block;
     opacity: 1;
     z-index: 99999;
 }
-.tutor-modal-wrap.loading .tutor-modal-content:before {
+.dozent-modal-wrap.loading .dozent-modal-content:before {
     position: absolute;
     top: 0;
     left: 0;
@@ -599,7 +599,7 @@ Quiz Modal
     content: '';
     z-index: 9;
     background: url("../images/spinner.gif") no-repeat center center; }
-.tutor-modal-wrap .tutor-modal-content {
+.dozent-modal-wrap .dozent-modal-content {
     background-color: #fff;
     max-width: 800px;
     margin: 50px auto;
@@ -607,34 +607,34 @@ Quiz Modal
     position: relative;
     transition: all 200ms ease-out;
 }
-.tutor-modal-wrap .modal-footer {
+.dozent-modal-wrap .modal-footer {
     padding: 20px;
     border-top: 1px solid #eee;
 }
-.tutor-modal-wrap .modal-container{
+.dozent-modal-wrap .modal-container{
     min-height: 200px;
     padding: 20px;
 }
-.tutor-modal-wrap .modal-container p{
+.dozent-modal-wrap .modal-container p{
     margin: 5px 0;
 }
-.tutor-modal-wrap .modal-header {
+.dozent-modal-wrap .modal-header {
     display: flex;
 }
-.tutor-modal-wrap .search-bar {
+.dozent-modal-wrap .search-bar {
     flex-basis: 0;
     flex-grow: 1;
     padding-top: 10px;
     padding-left: 20px;
     padding-right: 20px;
 }
-.tutor-modal-wrap .search-bar input[type="text"] {
+.dozent-modal-wrap .search-bar input[type="text"] {
     width: 100%;
     border: 1px solid #eee;
     box-shadow: none;
     padding: 10px;
 }
-.tutor-modal-wrap .modal-close-wrap a.modal-close-btn {
+.dozent-modal-wrap .modal-close-wrap a.modal-close-btn {
     width: 50px;
     height: 50px;
     background: #000;
@@ -648,20 +648,20 @@ Quiz Modal
 #End Quiz Modal
  */
 
-.tutor-available-quizzes .added-quiz-item {
+.dozent-available-quizzes .added-quiz-item {
     background-color: #f5f5f5;
     padding: 10px;
     margin-bottom: 2px;
     display: flex;
 }
-.tutor-available-quizzes .added-quiz-item .quiz-name {
+.dozent-available-quizzes .added-quiz-item .quiz-name {
     flex-basis: 0;
     flex-grow: 1;
 }
-.tutor-add-quiz-button-wrap {
+.dozent-add-quiz-button-wrap {
     margin: 20px 0;
 }
-.tutor-quiz-delete-btn{
+.dozent-quiz-delete-btn{
     color: #FF0000;
 }
 p.quiz-search-suggest-text{
@@ -680,59 +680,59 @@ span.result-fail{
     color: #ffffff;
 }
 
-.tutor-quiz-attempt-info-row{
+.dozent-quiz-attempt-info-row{
     margin: 30px 0;
     display: flex;
 }
-.tutor-quiz-attempt-info-row p{
+.dozent-quiz-attempt-info-row p{
     font-size: 14px;
 }
-.tutor-quiz-attempt-info-row  p.text-notified{
+.dozent-quiz-attempt-info-row  p.text-notified{
     font-size: 12px;
     color: #584dffe6;
 }
-.tutor-attempt-student-info, .quiz-attempt-student-info{
+.dozent-attempt-student-info, .quiz-attempt-student-info{
     background-color: #ffffff;
     width: 50%;
     padding: 20px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
-.tutor-attempt-student-info{
+.dozent-attempt-student-info{
     margin-right: 20px;
 }
 .quiz-attempt-student-info{
     margin-left: 20px;
 }
 
-.tutor-quiz-attempt-info-row .quiz-attempt-info-row{
+.dozent-quiz-attempt-info-row .quiz-attempt-info-row{
     display: flex;
 }
 
-.tutor-quiz-attempt-info-row .quiz-attempt-info-row .attempt-property-name{
+.dozent-quiz-attempt-info-row .quiz-attempt-info-row .attempt-property-name{
     width: 25%;
 }
 
-.tutor-emails-lists-wrap{
+.dozent-emails-lists-wrap{
     background-color: #ffffff;
     padding: 20px;
 }
-.tutor-emails-lists-wrap .wp-list-table td{
+.dozent-emails-lists-wrap .wp-list-table td{
     padding: 10px 20px;
 }
 
 
 
-.tutor-course-available-teachers .added-teacher-item {
+.dozent-course-available-teachers .added-teacher-item {
     background-color: #f5f5f5;
     padding: 10px;
     margin-bottom: 2px;
     display: flex;
 }
-.tutor-course-available-teachers .added-teacher-item .teacher-name {
+.dozent-course-available-teachers .added-teacher-item .teacher-name {
     flex-basis: 0;
     flex-grow: 1;
 }
-.tutor-teacher-delete-btn{
+.dozent-teacher-delete-btn{
     color: #FF0000;
     text-decoration: none;
 }
@@ -742,10 +742,10 @@ span.result-fail{
 Uninstall
  */
 
-.wrap.tutor-uninstall-wrap {
+.wrap.dozent-uninstall-wrap {
     background: #fff;
     padding: 20px;
 }
-.tutor-uninstall-btn-group{
+.dozent-uninstall-btn-group{
     margin: 50px 0;
 }

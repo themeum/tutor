@@ -9,15 +9,15 @@
  */
 ?>
 
-<div class="tutor-course-loop-price">
+<div class="dozent-course-loop-price">
     <?php
     $course_id = get_the_ID();
-    $enroll_btn = '<div  class="tutor-loop-cart-btn-wrap"><a href="'. get_the_permalink(). '">'.__('Get Enrolled', 'tutor'). '</a></div>';
-    $price_html = '<p class="price"> '.__('Free', 'tutor').$enroll_btn. '</p>';
-    if (tutor_utils()->is_course_purchasable()) {
-	    $enroll_btn = tutor_course_loop_add_to_cart(false);
+    $enroll_btn = '<div  class="dozent-loop-cart-btn-wrap"><a href="'. get_the_permalink(). '">'.__('Get Enrolled', 'dozent'). '</a></div>';
+    $price_html = '<p class="price"> '.__('Free', 'dozent').$enroll_btn. '</p>';
+    if (dozent_utils()->is_course_purchasable()) {
+	    $enroll_btn = dozent_course_loop_add_to_cart(false);
 
-	    $product_id = tutor_utils()->get_course_product_id($course_id);
+	    $product_id = dozent_utils()->get_course_product_id($course_id);
 	    $product    = wc_get_product( $product_id );
 
 	    if ( $product ) {

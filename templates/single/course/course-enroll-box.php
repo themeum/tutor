@@ -15,20 +15,20 @@ if ( ! defined( 'ABSPATH' ) )
 ?>
 
 
-<div class="tutor-price-preview-box">
-    <div class="tutor-price-box-thumbnail">
+<div class="dozent-price-preview-box">
+    <div class="dozent-price-box-thumbnail">
 		<?php
-		if(tutor_utils()->has_video_in_single()){
-			tutor_course_video();
+		if(dozent_utils()->has_video_in_single()){
+			dozent_course_video();
 		} else{
-			get_tutor_course_thumbnail();
+			get_dozent_course_thumbnail();
 		}
 
 		?>
     </div>
-	<?php tutor_course_price(); ?>
-	<?php tutor_course_material_includes_html(); ?>
-    <?php tutor_single_course_add_to_cart(); ?>
+	<?php dozent_course_price(); ?>
+	<?php dozent_course_material_includes_html(); ?>
+    <?php dozent_single_course_add_to_cart(); ?>
 
 
-</div> <!-- tutor-price-preview-box -->
+</div> <!-- dozent-price-preview-box -->

@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 ?>
 
-<div class="tutor-single-course-segment tutor-course-login-wrap">
+<div class="dozent-single-course-segment dozent-course-login-wrap">
     <div class="course-login-title">
-        <h4><?php _e('Please Sign-In to view this section', 'tutor'); ?></h4>
+        <h4><?php _e('Please Sign-In to view this section', 'dozent'); ?></h4>
     </div>
 
-    <div class="tutor-single-course-login-form">
-	    <?php tutor_load_template( 'global.login' ); ?>
+    <div class="dozent-single-course-login-form">
+	    <?php dozent_load_template( 'global.login' ); ?>
     </div>
 </div>

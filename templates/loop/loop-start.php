@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$courseCols = tutor_utils()->get_option( 'courses_col_per_row', 4 );
+$courseCols = dozent_utils()->get_option( 'courses_col_per_row', 4 );
 
 ?>
 
-<div class="tutor-courses tutor-courses-loop-wrap tutor-courses-layout-<?php echo $courseCols; ?>">
+<div class="dozent-courses dozent-courses-loop-wrap dozent-courses-layout-<?php echo $courseCols; ?>">

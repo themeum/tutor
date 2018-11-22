@@ -1,17 +1,17 @@
-<div class="tutor-option-field-row">
-    <div class="tutor-option-field-label">
-        <label for=""><?php _e('Select Course', 'tutor'); ?></label>
+<div class="dozent-option-field-row">
+    <div class="dozent-option-field-label">
+        <label for=""><?php _e('Select Course', 'dozent'); ?></label>
     </div>
-    <div class="tutor-option-field">
+    <div class="dozent-option-field">
         <?php
-        $courses = tutor_utils()->get_courses_for_teachers();
+        $courses = dozent_utils()->get_courses_for_teachers();
         ?>
 
-        <select name="selected_course" class="tutor_select2">
+        <select name="selected_course" class="dozent_select2">
             <option value=""><?php _e('Select a course'); ?></option>
 
 	        <?php
-            $course_id = get_post_meta(get_the_ID(), '_tutor_course_id_for_lesson', true);
+            $course_id = get_post_meta(get_the_ID(), '_dozent_course_id_for_lesson', true);
 	        foreach ($courses as $course){
 		        echo "<option value='{$course->ID}' ".selected($course->ID, $course_id)." >{$course->post_title}</option>";
 	        }
@@ -19,7 +19,7 @@
         </select>
 
         <p class="desc">
-            <?php _e('Choose the course for this lesson', 'tutor'); ?>
+            <?php _e('Choose the course for this lesson', 'dozent'); ?>
         </p>
     </div>
 </div>

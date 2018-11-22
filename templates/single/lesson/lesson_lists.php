@@ -15,13 +15,13 @@ global $post;
 $currentPost = $post;
 ?>
 
-<?php do_action('tutor_lesson/single/before/lesson_lists'); ?>
+<?php do_action('dozent_lesson/single/before/lesson_lists'); ?>
 
-    <div class="tutor-topics-lesson-list">
+    <div class="dozent-topics-lesson-list">
 		<?php
 
-		$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
-		$topics = tutor_utils()->get_topics($course_id);
+		$course_id = get_post_meta($post->ID, '_dozent_course_id_for_lesson', true);
+		$topics = dozent_utils()->get_topics($course_id);
 
 		if ($topics->have_posts()){
 
@@ -30,13 +30,13 @@ $currentPost = $post;
                 $topic_summery = get_the_content();
 				?>
 
-                <div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
-                    <div class="tutor-topics-title">
+                <div class="dozent-topics-in-single-lesson dozent-topics-<?php echo $topic_id; ?>">
+                    <div class="dozent-topics-title">
                         <h3>
                             <?php
                                 the_title();
                                 if($topic_summery) {
-                                    echo "<i class='tutor-icon-angle-down'></i>";
+                                    echo "<i class='dozent-icon-angle-down'></i>";
                                 }
                             ?>
                         </h3>
@@ -45,7 +45,7 @@ $currentPost = $post;
                     <?php
                     if ($topic_summery){
                         ?>
-                        <div class="tutor-topics-summery">
+                        <div class="dozent-topics-summery">
                             <?php echo $topic_summery; ?>
                         </div>
                         <?php
@@ -53,40 +53,40 @@ $currentPost = $post;
 
                     ?>
 
-                    <div class="tutor-lessons-under-topic">
+                    <div class="dozent-lessons-under-topic">
 						<?php
-						do_action('tutor/lesson_list/before/topic', $topic_id);
+						do_action('dozent/lesson_list/before/topic', $topic_id);
 
-						$lessons = tutor_utils()->get_lessons_by_topic(get_the_ID());
+						$lessons = dozent_utils()->get_lessons_by_topic(get_the_ID());
 						if ($lessons->have_posts()){
 							while ($lessons->have_posts()){
 								$lessons->the_post();
 
-								$video = tutor_utils()->get_video_info();
+								$video = dozent_utils()->get_video_info();
 
 								$play_time = false;
 								if ($video){
 									$play_time = $video->playtime;
 								}
 
-								$is_completed_lesson = tutor_utils()->is_completed_lesson();
+								$is_completed_lesson = dozent_utils()->is_completed_lesson();
                                 ?>
 
-                                <div class="tutor-single-lesson-items <?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
+                                <div class="dozent-single-lesson-items <?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
                                     <a href="<?php the_permalink(); ?>">
 
                                         <?php
-                                        $tutor_lesson_type_icon = $play_time ? 'youtube' : 'document';
-                                        echo "<i class='tutor-icon-$tutor_lesson_type_icon'></i>";
+                                        $dozent_lesson_type_icon = $play_time ? 'youtube' : 'document';
+                                        echo "<i class='dozent-icon-$dozent_lesson_type_icon'></i>";
                                         ?>
                                         <span class="lesson_title"><?php the_title(); ?></span>
-                                        <span class="tutor-lesson-right-icons">
+                                        <span class="dozent-lesson-right-icons">
                                         <?php
                                             if ($play_time){
-                                                echo "<i class='tutor-play-duration'>$play_time</i>";
+                                                echo "<i class='dozent-play-duration'>$play_time</i>";
                                             }
-                                            $lesson_complete_icon = $is_completed_lesson ? 'tutor-icon-mark tutor-done' : '';
-                                            echo "<i class='tutor-lesson-complete $lesson_complete_icon'></i>";
+                                            $lesson_complete_icon = $is_completed_lesson ? 'dozent-icon-mark dozent-done' : '';
+                                            echo "<i class='dozent-lesson-complete $lesson_complete_icon'></i>";
                                             ?>
                                         </span>
                                     </a>
@@ -98,22 +98,22 @@ $currentPost = $post;
 						}
 
 						#quizzes
-						$quizzes = tutor_utils()->get_attached_quiz($topic_id);
+						$quizzes = dozent_utils()->get_attached_quiz($topic_id);
 						if ($quizzes){
 							?>
 								<?php
 								foreach ($quizzes as $quiz){
 									?>
-                                    <div class="tutor-single-lesson-items quiz-single-item-<?php echo $quiz->ID; ?>">
+                                    <div class="dozent-single-lesson-items quiz-single-item-<?php echo $quiz->ID; ?>">
                                         <a href="<?php echo get_permalink($quiz->ID); ?>">
-                                            <i class="tutor-icon-doubt"></i>
+                                            <i class="dozent-icon-doubt"></i>
                                             <span class="lesson_title"><?php echo $quiz->post_title; ?></span>
-                                            <span class="tutor-lesson-right-icons">
+                                            <span class="dozent-lesson-right-icons">
 
                                             <?php
-                                                $time_limit = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_value');
+                                                $time_limit = dozent_utils()->get_quiz_option($quiz->ID, 'time_limit.time_value');
                                                 if ($time_limit){
-                                                    $time_type = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_type');
+                                                    $time_type = dozent_utils()->get_quiz_option($quiz->ID, 'time_limit.time_type');
                                                     echo "<span class='quiz-time-limit'>{$time_limit} {$time_type}</span>";
                                                 }
                                             ?>
@@ -127,7 +127,7 @@ $currentPost = $post;
 						}
 						?>
 
-                        <?php do_action('tutor/lesson_list/after/topic', $topic_id); ?>
+                        <?php do_action('dozent/lesson_list/after/topic', $topic_id); ?>
                     </div>
                 </div>
 
@@ -139,4 +139,4 @@ $currentPost = $post;
 		?>
     </div>
 
-<?php do_action('tutor_lesson/single/after/lesson_lists'); ?>
+<?php do_action('dozent_lesson/single/after/lesson_lists'); ?>

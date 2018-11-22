@@ -1,1 +1,1 @@
-<textarea name="tutor_option[<?php echo $field['field_key']; ?>]" rows="10"><?php echo $this->get($field['field_key']) ?></textarea>
+<textarea name="dozent_option[<?php echo $field['field_key']; ?>]" rows="10"><?php echo $this->get($field['field_key']) ?></textarea>

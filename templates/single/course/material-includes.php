@@ -9,9 +9,9 @@
  */
 
 
-do_action('tutor_course/single/before/material_includes');
+do_action('dozent_course/single/before/material_includes');
 
-$materials = tutor_course_material_includes();
+$materials = dozent_course_material_includes();
 
 if ( empty($materials)){
 	return;
@@ -20,10 +20,10 @@ if ( empty($materials)){
 if (is_array($materials) && count($materials)){
 	?>
 
-	<div class="tutor-single-course-segment  tutor-course-material-includes-wrap">
-        <h4 class="tutor-segment-title"><?php _e('Material Includes', 'tutor'); ?></h4>
-		<div class="tutor-course-target-audience-content">
-			<ul class="tutor-course-target-audience-items tutor-custom-list-style">
+	<div class="dozent-single-course-segment  dozent-course-material-includes-wrap">
+        <h4 class="dozent-segment-title"><?php _e('Material Includes', 'dozent'); ?></h4>
+		<div class="dozent-course-target-audience-content">
+			<ul class="dozent-course-target-audience-items dozent-custom-list-style">
 				<?php
 				foreach ($materials as $material){
 					echo "<li>{$material}</li>";
@@ -35,5 +35,5 @@ if (is_array($materials) && count($materials)){
 
 <?php } ?>
 
-<?php do_action('tutor_course/single/after/material_includes'); ?>
+<?php do_action('dozent_course/single/after/material_includes'); ?>
 

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TUTOR;
+namespace DOZENT;
 
 
 class Question {
@@ -9,10 +9,10 @@ class Question {
 	public function __construct() {
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
 		//save question type during first add question
-		add_action('save_post_tutor_question', array($this, 'save_question_type'), 10, 1);
+		add_action('save_post_dozent_question', array($this, 'save_question_type'), 10, 1);
 
 		add_action('wp_ajax_quiz_page_add_new_question', array($this, 'quiz_page_add_new_question'));
-		add_action('wp_ajax_update_tutor_question', array($this, 'update_tutor_question'));
+		add_action('wp_ajax_update_dozent_question', array($this, 'update_dozent_question'));
 		add_action('wp_ajax_quiz_add_answer_to_question', array($this, 'quiz_add_answer_to_question'));
 		add_action('wp_ajax_quiz_delete_answer_option', array($this, 'quiz_delete_answer_option'));
 		add_action('wp_ajax_quiz_question_type_changed', array($this, 'quiz_question_type_changed'));
@@ -20,13 +20,13 @@ class Question {
 		add_action('wp_ajax_sorting_quiz_questions', array($this, 'sorting_quiz_questions'));
 
 
-		add_filter( "manage_tutor_question_posts_columns", array($this, 'add_column'), 10,1 );
-		add_action( "manage_tutor_question_posts_custom_column" , array($this, 'custom_question_column'), 10, 2 );
+		add_filter( "manage_dozent_question_posts_columns", array($this, 'add_column'), 10,1 );
+		add_action( "manage_dozent_question_posts_custom_column" , array($this, 'custom_question_column'), 10, 2 );
 
 	}
 
 	public function register_meta_box(){
-		add_meta_box( 'tutor-question', __( 'Question', 'tutor' ), array($this, 'quiz_question'), 'tutor_question' );
+		add_meta_box( 'dozent-question', __( 'Question', 'dozent' ), array($this, 'quiz_question'), 'dozent_question' );
 	}
 
 	public function save_question_type($post_ID){
@@ -42,11 +42,11 @@ class Question {
 
 		$is_question_edit_page = true;
 
-		include tutor()->path."views/metabox/quiz/single-question-item.php";
+		include dozent()->path."views/metabox/quiz/single-question-item.php";
 	}
 
 	public function quiz_questions(){
-		include  tutor()->path.'views/metabox/quiz_questions.php';
+		include  dozent()->path.'views/metabox/quiz_questions.php';
 	}
 
 	public function quiz_page_add_new_question(){
@@ -58,10 +58,10 @@ class Question {
 
 		$question_html = '';
 
-		$next_question_order = tutor_utils()->quiz_next_question_order_id($quiz_id);
+		$next_question_order = dozent_utils()->quiz_next_question_order_id($quiz_id);
 
 		$post_arr = array(
-			'post_type'     => 'tutor_question',
+			'post_type'     => 'dozent_question',
 			'post_title'    => $question_title,
 			'post_status'   => 'publish',
 			'post_author'   => get_current_user_id(),
@@ -78,27 +78,27 @@ class Question {
 			 */
 			if ($question_type === 'true_false') {
 				$answer_option = array(
-					'answer_option_text' => __( 'True', 'tutor' ),
+					'answer_option_text' => __( 'True', 'dozent' ),
 					'is_correct'         => '1',
 				);
-				$data = apply_filters( 'tutor_quiz_adding_answer_option_to_question', array(
+				$data = apply_filters( 'dozent_quiz_adding_answer_option_to_question', array(
 					'comment_post_ID'  => $question_id,
 					'comment_content'  => json_encode( $answer_option ),
 					'comment_approved' => 'approved',
-					'comment_agent'    => 'TutorLMSPlugin',
+					'comment_agent'    => 'DozentLMSPlugin',
 					'comment_type'     => 'quiz_answer_option',
 				) );
 				$wpdb->insert( $wpdb->comments, $data );
 
 				$answer_option = array(
-					'answer_option_text' => __( 'False', 'tutor' ),
+					'answer_option_text' => __( 'False', 'dozent' ),
 					'is_correct'         => '0',
 				);
-				$data = apply_filters( 'tutor_quiz_adding_answer_option_to_question', array(
+				$data = apply_filters( 'dozent_quiz_adding_answer_option_to_question', array(
 					'comment_post_ID'  => $question_id,
 					'comment_content'  => json_encode( $answer_option ),
 					'comment_approved' => 'approved',
-					'comment_agent'    => 'TutorLMSPlugin',
+					'comment_agent'    => 'DozentLMSPlugin',
 					'comment_type'     => 'quiz_answer_option',
 				) );
 				$wpdb->insert( $wpdb->comments, $data );
@@ -106,7 +106,7 @@ class Question {
 
 			ob_start();
 			$question = get_post($question_id);
-			include tutor()->path."views/metabox/quiz/single-question-item.php";
+			include dozent()->path."views/metabox/quiz/single-question-item.php";
 			$question_html = ob_get_clean();
 		}
 
@@ -114,23 +114,23 @@ class Question {
 	}
 
 
-	public function update_tutor_question(){
+	public function update_dozent_question(){
 		global $wpdb;
-		$questions = $_POST['tutor_question'];
+		$questions = $_POST['dozent_question'];
 
 		if ( ! is_array($questions) || ! count($questions)){
 			wp_send_json_error();
 		}
 
-		//die(print_r($_POST['tutor_question']));
+		//die(print_r($_POST['dozent_question']));
 
 		foreach ($questions as $question_ID => $question_data){
-			$title = sanitize_text_field(tutor_utils()->avalue_dot('question_title', $question_data));
-			$description = wp_kses_post(tutor_utils()->avalue_dot('question_description', $question_data));
+			$title = sanitize_text_field(dozent_utils()->avalue_dot('question_title', $question_data));
+			$description = wp_kses_post(dozent_utils()->avalue_dot('question_description', $question_data));
 			
-			$type = sanitize_text_field(tutor_utils()->avalue_dot('question_type', $question_data));
-			$mark = sanitize_text_field(tutor_utils()->avalue_dot('question_mark', $question_data));
-			$hints = sanitize_text_field(tutor_utils()->avalue_dot('question_hints', $question_data));
+			$type = sanitize_text_field(dozent_utils()->avalue_dot('question_type', $question_data));
+			$mark = sanitize_text_field(dozent_utils()->avalue_dot('question_mark', $question_data));
+			$hints = sanitize_text_field(dozent_utils()->avalue_dot('question_hints', $question_data));
 
 			$post_arr = array(
 				'ID'            => $question_ID,
@@ -148,7 +148,7 @@ class Question {
 			 */
 			if ($type === 'true_false'){
 				//If true/false, reset answer
-				$previous_answers = tutor_utils()->get_quiz_answer_options_by_question($question_ID);
+				$previous_answers = dozent_utils()->get_quiz_answer_options_by_question($question_ID);
 
 				if ($previous_answers){
 					foreach ($previous_answers as $previous_answer){
@@ -159,8 +159,8 @@ class Question {
 				}
 			}
 
-			$answer_options = tutor_utils()->avalue_dot('answer_option', $question_data);
-			$answer_corrects = tutor_utils()->avalue_dot('answer_option_is_correct', $question_data);
+			$answer_options = dozent_utils()->avalue_dot('answer_option', $question_data);
+			$answer_corrects = dozent_utils()->avalue_dot('answer_option_is_correct', $question_data);
 
 			if (is_array($answer_options) && count($answer_options)){
 				foreach ($answer_options as $answer_option_ID => $answer_option){
@@ -169,7 +169,7 @@ class Question {
 					if ($type === 'multiple_choice'){
 						$is_correct = isset($answer_corrects[$answer_option_ID]) && $answer_corrects[$answer_option_ID] == '1' ? '1' : '0';
 					}elseif ($type === 'single_choice' || $type === 'true_false'){
-						$correct_answer_id = sanitize_text_field(tutor_utils()->avalue_dot('answer_option_is_correct', $question_data));
+						$correct_answer_id = sanitize_text_field(dozent_utils()->avalue_dot('answer_option_is_correct', $question_data));
 						$is_correct = $correct_answer_id == $answer_option_ID ? '1' : '0';
 					}
 
@@ -192,19 +192,19 @@ class Question {
 		$question_type = get_post_meta($question_id, '_question_type', true);
 
 		$answer_option = array(
-			'answer_option_text'    => __('New answer option', 'tutor'),
+			'answer_option_text'    => __('New answer option', 'dozent'),
 			'is_correct'               => '0',
 		);
 
 		if ($question_type === 'true_false'){
-			$answer_option['answer_option_text'] = __('True/False', 'tutor');
+			$answer_option['answer_option_text'] = __('True/False', 'dozent');
 		}
 
-		$data = apply_filters('tutor_quiz_adding_answer_option_to_question', array(
+		$data = apply_filters('dozent_quiz_adding_answer_option_to_question', array(
 			'comment_post_ID'   => $question_id,
 			'comment_content'   => json_encode($answer_option),
 			'comment_approved'  => 'approved',
-			'comment_agent'     => 'TutorLMSPlugin',
+			'comment_agent'     => 'DozentLMSPlugin',
 			'comment_type'      => 'quiz_answer_option',
 		));
 
@@ -214,7 +214,7 @@ class Question {
 		$quiz_answer_option = (object) array_merge(array('comment_ID' => $answer_option_id), $data );
 
 		ob_start();
-		include tutor()->path."views/metabox/quiz/individual-answer-option-{$question_type}-tr.php";
+		include dozent()->path."views/metabox/quiz/individual-answer-option-{$question_type}-tr.php";
 		$answer_option_tr = ob_get_clean();
 
 		wp_send_json_success(array('data_tr' => $answer_option_tr));
@@ -241,7 +241,7 @@ class Question {
 		 */
 
 		if ($question_type === 'true_false'){
-			$quiz_answer_options = tutor_utils()->get_quiz_answer_options_by_question($question->ID);
+			$quiz_answer_options = dozent_utils()->get_quiz_answer_options_by_question($question->ID);
 			$quiz_answer_options = array_slice($quiz_answer_options, 0, 2);
 
 			$keep_answer_ids = wp_list_pluck($quiz_answer_options, 'comment_ID');
@@ -250,7 +250,7 @@ class Question {
 		}
 
 		ob_start();
-		include tutor()->path."views/metabox/quiz/multi-answer-options.php";
+		include dozent()->path."views/metabox/quiz/multi-answer-options.php";
 		$answer_options = ob_get_clean();
 
 		wp_send_json_success(array('multi_answer_options' =>$answer_options ));
@@ -271,7 +271,7 @@ class Question {
 
 	public function sorting_quiz_questions(){
 		global $wpdb;
-		$questions = tutor_utils()->avalue_dot('questions', $_POST);
+		$questions = dozent_utils()->avalue_dot('questions', $_POST);
 		$question_ids = wp_list_pluck($questions, 'question_id');
 
 		$i = 1;
@@ -284,7 +284,7 @@ class Question {
 	public function add_column($columns){
 		$date_col = $columns['date'];
 		unset($columns['date']);
-		$columns['quiz'] = __('Quiz', 'tutor');
+		$columns['quiz'] = __('Quiz', 'dozent');
 		$columns['date'] = $date_col;
 
 		return $columns;
@@ -292,7 +292,7 @@ class Question {
 
 	public function custom_question_column($column, $post_id ){
 		if ($column === 'quiz'){
-			$quiz_id = tutor_utils()->get_quiz_id_by_question($post_id);
+			$quiz_id = dozent_utils()->get_quiz_id_by_question($post_id);
 
 			if ($quiz_id){
 				echo '<a href="'.admin_url('post.php?post='.$quiz_id.'&action=edit').'">'.get_the_title($quiz_id).'</a>';

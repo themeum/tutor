@@ -1,14 +1,14 @@
 <?php
-namespace TUTOR;
+namespace DOZENT;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-if (! class_exists('Tutor_List_Table')){
-	include_once tutor()->path.'classes/Tutor_List_Table.php';
+if (! class_exists('Dozent_List_Table')){
+	include_once dozent()->path.'classes/Dozent_List_Table.php';
 }
 
-class Teachers_List extends \Tutor_List_Table {
+class Teachers_List extends \Dozent_List_Table {
 	function __construct(){
 		global $status, $page;
 
@@ -32,7 +32,7 @@ class Teachers_List extends \Tutor_List_Table {
 
 	function column_total_course($item){
 		global $wpdb;
-		$course_post_type = tutor()->course_post_type;
+		$course_post_type = dozent()->course_post_type;
 
 		$total_course = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} WHERE post_author={$item->ID} AND post_type='{$course_post_type}' ");
 
@@ -45,9 +45,9 @@ class Teachers_List extends \Tutor_List_Table {
 	 * Completed Course by User
 	 */
 	function column_status($item){
-		$status = tutor_utils()->teacher_status($item->ID, false);
-		$status_name = tutor_utils()->teacher_status($item->ID);
-		echo "<span class='tutor-status-context tutor-status-{$status}-context'>{$status_name}</span>";
+		$status = dozent_utils()->teacher_status($item->ID, false);
+		$status_name = dozent_utils()->teacher_status($item->ID);
+		echo "<span class='dozent-status-context dozent-status-{$status}-context'>{$status_name}</span>";
 	}
 
 	function column_display_name($item){
@@ -57,7 +57,7 @@ class Teachers_List extends \Tutor_List_Table {
 			//'delete'    => sprintf('<a href="?page=%s&action=%s&teacher=%s">Delete</a>',$_REQUEST['page'],'delete',$item->ID),
 		);
 
-		$status = tutor_utils()->teacher_status($item->ID, false);
+		$status = dozent_utils()->teacher_status($item->ID, false);
 
 		switch ($status){
 			case 'pending':
@@ -89,10 +89,10 @@ class Teachers_List extends \Tutor_List_Table {
 	function get_columns(){
 		$columns = array(
 			'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
-			'display_name'      => __('Name', 'tutor'),
-			'user_email'        => __('E-Mail', 'tutor'),
-			'total_course'      => __('Total Course', 'tutor'),
-			'status'            => __('Status', 'tutor'),
+			'display_name'      => __('Name', 'dozent'),
+			'user_email'        => __('E-Mail', 'dozent'),
+			'total_course'      => __('Total Course', 'dozent'),
+			'status'            => __('Status', 'dozent'),
 		);
 		return $columns;
 	}
@@ -115,16 +115,16 @@ class Teachers_List extends \Tutor_List_Table {
 		if( 'approve' === $this->current_action() ) {
 			$teacher_id = (int) sanitize_text_field($_GET['teacher']);
 
-			do_action('tutor_before_approved_teacher', $teacher_id);
+			do_action('dozent_before_approved_teacher', $teacher_id);
 
-			update_user_meta($teacher_id, '_tutor_teacher_status', 'approved');
-			update_user_meta($teacher_id, '_tutor_teacher_approved', time());
+			update_user_meta($teacher_id, '_dozent_teacher_status', 'approved');
+			update_user_meta($teacher_id, '_dozent_teacher_approved', time());
 
 			$teacher = new \WP_User($teacher_id);
-			$teacher->add_role(tutor()->teacher_role);
+			$teacher->add_role(dozent()->teacher_role);
 
 			//TODO: send E-Mail to this user about teacher approval, should via hook
-			do_action('tutor_after_approved_teacher', $teacher_id);
+			do_action('dozent_after_approved_teacher', $teacher_id);
 
 			wp_redirect(wp_get_referer());
 		}
@@ -132,12 +132,12 @@ class Teachers_List extends \Tutor_List_Table {
 		if( 'blocked' === $this->current_action() ) {
 			$teacher_id = (int) sanitize_text_field($_GET['teacher']);
 
-			do_action('tutor_before_blocked_teacher', $teacher_id);
-			update_user_meta($teacher_id, '_tutor_teacher_status', 'blocked');
+			do_action('dozent_before_blocked_teacher', $teacher_id);
+			update_user_meta($teacher_id, '_dozent_teacher_status', 'blocked');
 
 			$teacher = new \WP_User($teacher_id);
-			$teacher->remove_role(tutor()->teacher_role);
-			do_action('tutor_after_blocked_teacher', $teacher_id);
+			$teacher->remove_role(dozent()->teacher_role);
+			do_action('dozent_after_blocked_teacher', $teacher_id);
 
 			//TODO: send E-Mail to this user about teacher blocked, should via hook
 			wp_redirect(wp_get_referer());
@@ -166,8 +166,8 @@ class Teachers_List extends \Tutor_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$total_items = tutor_utils()->get_total_teachers($search_term);
-		$this->items = tutor_utils()->get_teachers(($current_page-1)*$per_page, $per_page, $search_term);
+		$total_items = dozent_utils()->get_total_teachers($search_term);
+		$this->items = dozent_utils()->get_teachers(($current_page-1)*$per_page, $per_page, $search_term);
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,

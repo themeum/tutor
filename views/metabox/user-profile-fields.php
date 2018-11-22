@@ -1,4 +1,4 @@
-<h2><?php _e( 'Tutor Fields', 'tutor' ); ?></h2>
+<h2><?php _e( 'Dozent Fields', 'dozent' ); ?></h2>
 
 <?php
 /**
@@ -12,7 +12,7 @@ wp_enqueue_media();
 	<tr class="user-description-wrap">
 		<th><label for="description"><?php _e('Job Title'); ?></label></th>
 		<td>
-			<input type="text" name="_tutor_profile_job_title" id="_tutor_profile_job_title" value="<?php echo get_user_meta($user->ID, '_tutor_profile_job_title', true); ?>" class="regular-text" />
+			<input type="text" name="_dozent_profile_job_title" id="_dozent_profile_job_title" value="<?php echo get_user_meta($user->ID, '_dozent_profile_job_title', true); ?>" class="regular-text" />
 		</td>
 	</tr>
 
@@ -26,7 +26,7 @@ wp_enqueue_media();
 				'quicktags' => false,
 				'editor_height' => 200,
 			);
-			wp_editor(get_user_meta($user->ID, '_tutor_profile_bio', true), '_tutor_profile_bio', $settings);
+			wp_editor(get_user_meta($user->ID, '_dozent_profile_bio', true), '_dozent_profile_bio', $settings);
 			?>
 
 			<p class="description"><?php _e('Write a little bit more about you, it will show publicly.'); ?></p>
@@ -36,17 +36,17 @@ wp_enqueue_media();
 	<tr class="user-description-wrap">
 		<th><label for="description"><?php _e('Profile Photo'); ?></label></th>
 		<td>
-			<div class="tutor-video-poster-wrap">
+			<div class="dozent-video-poster-wrap">
 				<p class="video-poster-img">
 					<?php
-					$user_profile_photo = get_user_meta($user->ID, '_tutor_profile_photo', true);
+					$user_profile_photo = get_user_meta($user->ID, '_dozent_profile_photo', true);
 					if ($user_profile_photo){
 						echo '<img src="'.wp_get_attachment_image_url($user_profile_photo).'" alt="" /> ';
 					}
 					?>
 				</p>
-				<input type="hidden" name="_tutor_profile_photo" value="<?php echo $user_profile_photo; ?>">
-				<button type="button" class="tutor_video_poster_upload_btn button button-primary"><?php _e('Upload', 'tutor'); ?></button>
+				<input type="hidden" name="_dozent_profile_photo" value="<?php echo $user_profile_photo; ?>">
+				<button type="button" class="dozent_video_poster_upload_btn button button-primary"><?php _e('Upload', 'dozent'); ?></button>
 			</div>
 
 		</td>

@@ -1,7 +1,7 @@
-<select name="tutor_option[<?php echo $field['field_key']; ?>]" class="tutor_select2">
+<select name="dozent_option[<?php echo $field['field_key']; ?>]" class="dozent_select2">
     <?php
     if ( ! isset($field['select_options']) || $field['select_options'] !== false){
-        echo '<option value="-1">'.__('Select Option', 'tutor').'</option>';
+        echo '<option value="-1">'.__('Select Option', 'dozent').'</option>';
     }
 	if ( ! empty($field['options'])){
 		foreach ($field['options'] as $optionKey => $option){

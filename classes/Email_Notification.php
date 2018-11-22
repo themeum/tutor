@@ -1,12 +1,12 @@
 <?php
 /**
  * Class Email Notification
- * @package TUTOR
+ * @package DOZENT
  *
  * @since v.1.0.0
  */
 
-namespace TUTOR;
+namespace DOZENT;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
@@ -14,13 +14,13 @@ if ( ! defined( 'ABSPATH' ) )
 class Email_Notification{
 
 	public function __construct() {
-		add_action('tutor_quiz_finished_after', array($this, 'quiz_finished_send_email_to_student'), 10, 1);
+		add_action('dozent_quiz_finished_after', array($this, 'quiz_finished_send_email_to_student'), 10, 1);
 
-		add_action('tutor_course_complete_after', array($this, 'course_complete_email_to_student'), 10, 1);
-		add_action('tutor_course_complete_after', array($this, 'course_complete_email_to_teacher'), 10, 1);
-		add_action('tutor_after_enroll', array($this, 'course_enroll_email'), 10, 1);
-		add_action('tutor_after_add_question', array($this, 'tutor_after_add_question'), 10, 2);
-		add_action('tutor_lesson_completed_after', array($this, 'tutor_lesson_completed_after'), 10, 1);
+		add_action('dozent_course_complete_after', array($this, 'course_complete_email_to_student'), 10, 1);
+		add_action('dozent_course_complete_after', array($this, 'course_complete_email_to_teacher'), 10, 1);
+		add_action('dozent_after_enroll', array($this, 'course_enroll_email'), 10, 1);
+		add_action('dozent_after_add_question', array($this, 'dozent_after_add_question'), 10, 2);
+		add_action('dozent_lesson_completed_after', array($this, 'dozent_lesson_completed_after'), 10, 1);
 	}
 
 	/**
@@ -33,7 +33,7 @@ class Email_Notification{
 	 * @return bool
 	 *
 	 *
-	 * Send E-Mail Notification for Tutor Event
+	 * Send E-Mail Notification for Dozent Event
 	 */
 
 	public function send( $to, $subject, $message, $headers, $attachments = array() ) {
@@ -41,7 +41,7 @@ class Email_Notification{
 		add_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
 		add_filter( 'wp_mail_content_type', array( $this, 'get_content_type' ) );
 
-		$message = apply_filters( 'tutor_mail_content', $message );
+		$message = apply_filters( 'dozent_mail_content', $message );
 		$return  = wp_mail( $to, $subject, $message, $headers, $attachments );
 
 		remove_filter( 'wp_mail_from', array( $this, 'get_from_address' ) );
@@ -52,24 +52,24 @@ class Email_Notification{
 	}
 
 	/**
-	 * Get the from name for outgoing emails from tutor
+	 * Get the from name for outgoing emails from dozent
 	 *
 	 * @return string
 	 */
 	public function get_from_name() {
-		$email_from_name = tutor_utils()->get_option('email_from_name');
-		$from_name = apply_filters( 'tutor_email_from_name', $email_from_name );
+		$email_from_name = dozent_utils()->get_option('email_from_name');
+		$from_name = apply_filters( 'dozent_email_from_name', $email_from_name );
 		return wp_specialchars_decode( esc_html( $from_name ), ENT_QUOTES );
 	}
 
 	/**
-	 * Get the from name for outgoing emails from tutor
+	 * Get the from name for outgoing emails from dozent
 	 *
 	 * @return string
 	 */
 	public function get_from_address() {
-		$email_from_address = tutor_utils()->get_option('email_from_address');
-		$from_address = apply_filters( 'tutor_email_from_address', $email_from_address );
+		$email_from_address = dozent_utils()->get_option('email_from_address');
+		$from_address = apply_filters( 'dozent_email_from_address', $email_from_address );
 		return sanitize_email( $from_address );
 	}
 
@@ -79,13 +79,13 @@ class Email_Notification{
 	 * Get content type
 	 */
 	public function get_content_type() {
-		return apply_filters('tutor_email_content_type', 'text/html');
+		return apply_filters('dozent_email_content_type', 'text/html');
 	}
 
 
 	public function get_message($message = '', $search = array(), $replace = array()){
 
-		$email_footer_text = tutor_utils()->get_option('email_footer_text');
+		$email_footer_text = dozent_utils()->get_option('email_footer_text');
 
 		$message = str_replace($search, $replace, $message);
 		if ($email_footer_text){
@@ -102,7 +102,7 @@ class Email_Notification{
 	 * Send course completion E-Mail to Student
 	 */
 	public function course_complete_email_to_student($course_id){
-		$course_completed_to_student = tutor_utils()->get_option('email_to_students.completed_course');
+		$course_completed_to_student = dozent_utils()->get_option('email_to_students.completed_course');
 
 		if ( ! $course_completed_to_student){
 			return;
@@ -113,7 +113,7 @@ class Email_Notification{
 		$course = get_post($course_id);
 		$student = get_userdata($user_id);
 
-		$completion_time = tutor_utils()->is_completed_course($course_id);
+		$completion_time = dozent_utils()->is_completed_course($course_id);
 		$completion_time = $completion_time ? $completion_time : time();
 
 		$completion_time_format = date_i18n(get_option('date_format'), $completion_time).' '.date_i18n(get_option('time_format'), $completion_time);
@@ -132,11 +132,11 @@ class Email_Notification{
 			get_the_permalink($course_id),
 		);
 
-		$subject = __('You just completed '.$course->post_title, 'tutor');
+		$subject = __('You just completed '.$course->post_title, 'dozent');
 		
 		ob_start();
-		tutor_load_template( 'email.to_student_course_completed' );
-		$email_tpl = apply_filters( 'tutor_email_tpl/course_completed', ob_get_clean() );
+		dozent_load_template( 'email.to_student_course_completed' );
+		$email_tpl = apply_filters( 'dozent_email_tpl/course_completed', ob_get_clean() );
 		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
 		
 		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
@@ -147,7 +147,7 @@ class Email_Notification{
 
 
 	public function course_complete_email_to_teacher($course_id){
-		$course_completed_to_teacher = tutor_utils()->get_option('email_to_teachers.a_student_completed_course');
+		$course_completed_to_teacher = dozent_utils()->get_option('email_to_teachers.a_student_completed_course');
 
 		if ( ! $course_completed_to_teacher){
 			return;
@@ -159,7 +159,7 @@ class Email_Notification{
 		$course = get_post($course_id);
 		$teacher = get_userdata($course->post_author);
 
-		$completion_time = tutor_utils()->is_completed_course($course_id);
+		$completion_time = dozent_utils()->is_completed_course($course_id);
 		$completion_time = $completion_time ? $completion_time : time();
 
 		$completion_time_format = date_i18n(get_option('date_format'), $completion_time).' '.date_i18n(get_option('time_format'), $completion_time);
@@ -181,11 +181,11 @@ class Email_Notification{
 			get_the_permalink($course_id),
 		);
 
-		$subject = __($student->display_name.' just completed '.$course->post_title, 'tutor');
+		$subject = __($student->display_name.' just completed '.$course->post_title, 'dozent');
 
 		ob_start();
-		tutor_load_template( 'email.to_teacher_course_completed' );
-		$email_tpl = apply_filters( 'tutor_email_tpl/course_completed', ob_get_clean() );
+		dozent_load_template( 'email.to_teacher_course_completed' );
+		$email_tpl = apply_filters( 'dozent_email_tpl/course_completed', ob_get_clean() );
 		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
 
 		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
@@ -202,30 +202,30 @@ class Email_Notification{
 	 */
 
 	public function quiz_finished_send_email_to_student($attempt_id){
-		$quiz_completed = tutor_utils()->get_option('email_to_students.quiz_completed');
+		$quiz_completed = dozent_utils()->get_option('email_to_students.quiz_completed');
 		if ( ! $quiz_completed){
 			return;
 		}
 		
-		$attempt = tutor_utils()->get_attempt($attempt_id);
-		$attempt_info = tutor_utils()->quiz_attempt_info($attempt_id);
+		$attempt = dozent_utils()->get_attempt($attempt_id);
+		$attempt_info = dozent_utils()->quiz_attempt_info($attempt_id);
 
-		$submission_time = tutor_utils()->avalue_dot('submission_time', $attempt_info);
+		$submission_time = dozent_utils()->avalue_dot('submission_time', $attempt_info);
 		$submission_time = $submission_time ? $submission_time : time();
 
-		$quiz_id = tutor_utils()->avalue_dot('comment_post_ID', $attempt);
+		$quiz_id = dozent_utils()->avalue_dot('comment_post_ID', $attempt);
 		$quiz_name = get_the_title($quiz_id);
-		$course = tutor_utils()->get_course_by_quiz($quiz_id);
-		$course_id = tutor_utils()->avalue_dot('ID', $course);
+		$course = dozent_utils()->get_course_by_quiz($quiz_id);
+		$course_id = dozent_utils()->avalue_dot('ID', $course);
 		$course_title = get_the_title($course_id);
 		$submission_time_format = date_i18n(get_option('date_format'), $submission_time).' '.date_i18n(get_option('time_format'), $submission_time);
 
 		$quiz_url = get_the_permalink($quiz_id);
-		$user = get_userdata(tutor_utils()->avalue_dot('user_id', $attempt));
+		$user = get_userdata(dozent_utils()->avalue_dot('user_id', $attempt));
 
 		ob_start();
-		tutor_load_template( 'email.to_student_quiz_completed' );
-		$email_tpl = apply_filters( 'tutor_email_tpl/quiz_completed', ob_get_clean() );
+		dozent_load_template( 'email.to_student_quiz_completed' );
+		$email_tpl = apply_filters( 'dozent_email_tpl/quiz_completed', ob_get_clean() );
 
 		$file_tpl_variable = array(
 			'{username}',
@@ -245,7 +245,7 @@ class Email_Notification{
 		
 		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
 
-		$subject = apply_filters('student_quiz_completed_email_subject', __("Thank you for {$quiz_name}  answers, we have received", "tutor"));
+		$subject = apply_filters('student_quiz_completed_email_subject', __("Thank you for {$quiz_name}  answers, we have received", "dozent"));
 		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
 		$header = apply_filters('student_quiz_completed_email_header', $header, $attempt_id);
 
@@ -254,7 +254,7 @@ class Email_Notification{
 
 
 	public function course_enroll_email($course_id){
-		$enroll_notification = tutor_utils()->get_option('email_to_teachers.a_student_enrolled_in_course');
+		$enroll_notification = dozent_utils()->get_option('email_to_teachers.a_student_enrolled_in_course');
 
 		if ( ! $enroll_notification){
 			return;
@@ -285,11 +285,11 @@ class Email_Notification{
 			get_the_permalink($course_id),
 		);
 
-		$subject = __($student->display_name.' enrolled '.$course->post_title, 'tutor');
+		$subject = __($student->display_name.' enrolled '.$course->post_title, 'dozent');
 
 		ob_start();
-		tutor_load_template( 'email.to_teacher_course_enrolled' );
-		$email_tpl = apply_filters( 'tutor_email_tpl/to_teacher_course_enrolled', ob_get_clean() );
+		dozent_load_template( 'email.to_teacher_course_enrolled' );
+		$email_tpl = apply_filters( 'dozent_email_tpl/to_teacher_course_enrolled', ob_get_clean() );
 		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
 
 		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
@@ -299,8 +299,8 @@ class Email_Notification{
 	}
 
 
-	public function tutor_after_add_question($course_id, $comment_id){
-		$enroll_notification = tutor_utils()->get_option('email_to_teachers.a_student_placed_question');
+	public function dozent_after_add_question($course_id, $comment_id){
+		$enroll_notification = dozent_utils()->get_option('email_to_teachers.a_student_placed_question');
 		if ( ! $enroll_notification){
 			return;
 		}
@@ -311,7 +311,7 @@ class Email_Notification{
 		$course = get_post($course_id);
 		$teacher = get_userdata($course->post_author);
 
-		$get_comment = tutor_utils()->get_qa_question($comment_id);
+		$get_comment = dozent_utils()->get_qa_question($comment_id);
 		$question = $get_comment->comment_content;
 		$question_title = $get_comment->question_title;
 
@@ -333,11 +333,11 @@ class Email_Notification{
 			$question,
 		);
 
-		$subject = __(sprintf('%s Asked a question to %s', $student->display_name, $course->post_title), 'tutor');
+		$subject = __(sprintf('%s Asked a question to %s', $student->display_name, $course->post_title), 'dozent');
 
 		ob_start();
-		tutor_load_template( 'email.to_teacher_asked_question_by_student' );
-		$email_tpl = apply_filters( 'tutor_email_tpl/to_teacher_asked_question_by_student', ob_get_clean() );
+		dozent_load_template( 'email.to_teacher_asked_question_by_student' );
+		$email_tpl = apply_filters( 'dozent_email_tpl/to_teacher_asked_question_by_student', ob_get_clean() );
 		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
 
 		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";
@@ -347,8 +347,8 @@ class Email_Notification{
 	}
 
 
-	public function tutor_lesson_completed_after($lesson_id){
-		$course_completed_to_teacher = tutor_utils()->get_option('email_to_teachers.a_student_completed_lesson');
+	public function dozent_lesson_completed_after($lesson_id){
+		$course_completed_to_teacher = dozent_utils()->get_option('email_to_teachers.a_student_completed_lesson');
 
 		if ( ! $course_completed_to_teacher){
 			return;
@@ -358,7 +358,7 @@ class Email_Notification{
 		$student = get_userdata($user_id);
 		
 		
-		$course_id = tutor_utils()->get_course_id_by_lesson($lesson_id);
+		$course_id = dozent_utils()->get_course_id_by_lesson($lesson_id);
 
 		$lesson = get_post($lesson_id);
 		$course = get_post($course_id);
@@ -385,11 +385,11 @@ class Email_Notification{
 			get_the_permalink($lesson_id),
 		);
 
-		$subject = __($student->display_name.' just completed lesson '.$course->post_title, 'tutor');
+		$subject = __($student->display_name.' just completed lesson '.$course->post_title, 'dozent');
 
 		ob_start();
-		tutor_load_template( 'email.to_teacher_lesson_completed' );
-		$email_tpl = apply_filters( 'tutor_email_tpl/lesson_completed', ob_get_clean() );
+		dozent_load_template( 'email.to_teacher_lesson_completed' );
+		$email_tpl = apply_filters( 'dozent_email_tpl/lesson_completed', ob_get_clean() );
 		$message = $this->get_message($email_tpl, $file_tpl_variable, $replace_data );
 
 		$header = 'Content-Type: ' . $this->get_content_type() . "\r\n";

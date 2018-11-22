@@ -4,19 +4,19 @@
  *
  * @author: themeum
  * @author_uri: https://themeum.com
- * @package Tutor
+ * @package Dozent
  * @since v.1.0.0
  */
 
 
-namespace TUTOR;
+namespace DOZENT;
 
 
 class Addons {
 
 
 	public function addons_page(){
-		include tutor()->path.'views/pages/addons.php';
+		include dozent()->path.'views/pages/addons.php';
 	}
 
 }

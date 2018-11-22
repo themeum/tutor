@@ -11,15 +11,15 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-$video_info = tutor_utils()->get_video_info();
-$video_id = tutor_utils()->get_vimeo_video_id(tutor_utils()->avalue_dot('source_vimeo', $video_info));
+$video_info = dozent_utils()->get_video_info();
+$video_id = dozent_utils()->get_vimeo_video_id(dozent_utils()->avalue_dot('source_vimeo', $video_info));
 
-do_action('tutor_lesson/single/before/video/vimeo');
+do_action('dozent_lesson/single/before/video/vimeo');
 ?>
-    <div class="tutor-single-lesson-segment tutor-lesson-video-wrap">
-        <div class="plyr__video-embed" id="tutorPlayer">
+    <div class="dozent-single-lesson-segment dozent-lesson-video-wrap">
+        <div class="plyr__video-embed" id="dozentPlayer">
             <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media" allowfullscreen allowtransparency allow="autoplay"></iframe>
         </div>
     </div>
 <?php
-do_action('tutor_lesson/single/after/video/vimeo'); ?>
+do_action('dozent_lesson/single/after/video/vimeo'); ?>
