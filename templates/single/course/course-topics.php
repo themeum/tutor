@@ -71,7 +71,7 @@ $course_id = get_the_ID();
                                         $play_time = $video->playtime;
                                     }
 
-                                    $lesson_icon = $play_time ? 'dozent-icon-youtube' : 'dozent-icon-document';
+                                    $lesson_icon = $play_time ? 'dozent-icon-youtube' : 'dozent-icon-document-alt';
 
                                     ?>
 
