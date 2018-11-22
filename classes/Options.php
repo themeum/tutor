@@ -200,7 +200,6 @@ class Options {
 
 				),
 			),
-
 			'quiz' => array(
 				'label' => __('Quiz', 'tutor'),
 				'sections'    => array(
@@ -270,7 +269,6 @@ class Options {
 					)
 				),
 			),
-
 			'teachers' => array(
 				'label'     => __('Teachers', 'tutor'),
 				'sections'    => array(
