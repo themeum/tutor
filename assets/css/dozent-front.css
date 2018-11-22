@@ -1360,6 +1360,18 @@ Course question and answer
     margin-bottom: 0;
 }
 
+.dozent_add_answer_row{
+    text-align: right;
+    margin-top: 20px;
+}
+
+.dozent_add_answer_row .dozent-form-group:last-child{
+    margin-top: 20px;
+}
+
+.dozent_admin_answers_list_wrap{
+    margin-left: 100px;
+}
 
 /*anouncement*/
 
