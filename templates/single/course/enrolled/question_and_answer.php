@@ -67,7 +67,7 @@ if ( ! $enable_q_and_a_on_course) {
                                 <a href="<?php echo $profile_url; ?>"> <?php echo dozent_utils()->get_dozent_avatar($question->user_id); ?></a>
                             </div>
                             <p class="review-meta">
-                                <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a> -
+                                <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a>
                                 <span class="dozent-text-mute"><?php _e(sprintf('%s ago', human_time_diff(strtotime($question->comment_date))), 'dozent'); ?></span>
                             </p>
                         </div>
@@ -79,64 +79,65 @@ if ( ! $enable_q_and_a_on_course) {
                     </div>
                 </div>
 
-                <div class="dozent_admin_answers_list_wrap">
-					<?php
-					if (is_array($answers) && count($answers)){
-						foreach ($answers as $answer){
-							$answer_profile = dozent_utils()->profile_url($answer->user_id);
-							?>
-                            <div class="dozent_individual_answer <?php echo ($question->user_id == $answer->user_id) ? 'dozent-bg-white' : 'dozent-bg-light'
-							?> ">
-                                <div class="dozent-question-wrap">
-                                    <div class="question-top-meta">
-                                        <div class="dozent-question-avater">
-                                            <a href="<?php echo $answer_profile; ?>"> <?php echo dozent_utils()->get_dozent_avatar($answer->user_id); ?></a>
+
+				<?php
+					if (is_array($answers) && count($answers)){ ?>
+                        <div class="dozent_admin_answers_list_wrap">
+                            <?php
+                                foreach ($answers as $answer){
+                                    $answer_profile = dozent_utils()->profile_url($answer->user_id);
+                                    ?>
+                                    <div class="dozent_individual_answer <?php echo ($question->user_id == $answer->user_id) ? 'dozent-bg-white' : 'dozent-bg-light'
+                                    ?> ">
+                                        <div class="dozent-question-wrap">
+                                            <div class="question-top-meta">
+                                                <div class="dozent-question-avater">
+                                                    <a href="<?php echo $answer_profile; ?>"> <?php echo dozent_utils()->get_dozent_avatar($answer->user_id); ?></a>
+                                                </div>
+                                                <p class="review-meta">
+                                                    <a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a>
+                                                    <span class="dozent-text-mute">
+                                                        <?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'dozent'); ?>
+                                                    </span>
+                                                </p>
+                                            </div>
+
+                                            <div class="dozent_question_area">
+                                                <?php echo wpautop(stripslashes($answer->comment_content)); ?>
+                                            </div>
                                         </div>
-                                        <p class="review-meta">
-                                            <a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a> -
-                                            <span class="dozent-text-mute">
-										        <?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'dozent'); ?>
-									        </span>
-                                        </p>
                                     </div>
-
-                                    <div class="dozent_question_area">
-										<?php echo wpautop(stripslashes($answer->comment_content)); ?>
-                                    </div>
-                                </div>
-                            </div>
-							<?php
-						}
-					}
-					?>
-                </div>
-
-                <div class="dozent_add_answer_row">
-                    <div class="dozent_add_answer_wrap " data-question-id="<?php echo $question->comment_ID; ?>">
-                        <div class="dozent_wp_editor_show_btn_wrap">
-                            <a href="javascript:;" class="dozent_wp_editor_show_btn dozent-button dozent-success"><?php _e('Add an answer', 'dozent'); ?></a>
+                                    <?php
+                                }
+                            ?>
                         </div>
-                        <div class="dozent_wp_editor_wrap" style="display: none;">
-                            <form method="post" class="dozent-add-answer-form">
-								<?php wp_nonce_field( dozent()->nonce_action, dozent()->nonce ); ?>
-                                <input type="hidden" value="dozent_add_answer" name="dozent_action"/>
-                                <input type="hidden" value="<?php echo $question->comment_ID; ?>" name="question_id"/>
+                    <?php
+					} ?>
+                    <div class="dozent_add_answer_row">
+                        <div class="dozent_add_answer_wrap " data-question-id="<?php echo $question->comment_ID; ?>">
+                            <div class="dozent_wp_editor_show_btn_wrap">
+                                <a href="javascript:;" class="dozent_wp_editor_show_btn dozent-button dozent-success"><?php _e('Add an answer', 'dozent'); ?></a>
+                            </div>
+                            <div class="dozent_wp_editor_wrap" style="display: none;">
+                                <form method="post" class="dozent-add-answer-form">
+                                    <?php wp_nonce_field( dozent()->nonce_action, dozent()->nonce ); ?>
+                                    <input type="hidden" value="dozent_add_answer" name="dozent_action"/>
+                                    <input type="hidden" value="<?php echo $question->comment_ID; ?>" name="question_id"/>
 
-                                <div class="dozent-form-group">
-                                    <textarea id="dozent_answer_<?php echo $question->comment_ID; ?>" name="answer" class="dozent_add_answer_textarea" placeholder="<?php _e('Write your answer here...', 'dozent'); ?>"></textarea>
-                                </div>
+                                    <div class="dozent-form-group">
+                                        <textarea id="dozent_answer_<?php echo $question->comment_ID; ?>" name="answer" class="dozent_add_answer_textarea" placeholder="<?php _e('Write your answer here...', 'dozent'); ?>"></textarea>
+                                    </div>
 
-                                <div class="dozent-form-group">
-                                    <a href="javascript:;" class="dozent_cancel_wp_editor dozent-button dozent-danger"><?php _e('Cancel', 'dozent'); ?></a>
-                                    <button type="submit" class="dozent-button dozent_add_answer_btn dozent-success" name="dozent_answer_search_btn">
-										<?php _e('Add Answer', 'dozent'); ?>
-                                    </button>
-                                </div>
-                            </form>
+                                    <div class="dozent-form-group">
+                                        <a href="javascript:;" class="dozent_cancel_wp_editor dozent-button dozent-danger"><?php _e('Cancel', 'dozent'); ?></a>
+                                        <button type="submit" class="dozent-button dozent_add_answer_btn dozent-success" name="dozent_answer_search_btn">
+                                            <?php _e('Add Answer', 'dozent'); ?>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-
-                </div>
 
 				<?php
 			}
