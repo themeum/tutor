@@ -56,52 +56,55 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 						<input type="hidden" value="<?php echo $is_started_quiz->comment_ID; ?>" name="attempt_id"/>
 						<input type="hidden" value="<?php echo $question->ID; ?>" name="quiz_question_id"/>
 						<input type="hidden" value="tutor_answering_quiz_question" name="tutor_action"/>
-
 						<?php do_action('tutor_quiz/single/before/question/form_field'); ?>
 
-						<?php
-						if ( $answers ) {
-							if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
-								echo '<p>' . __( 'select one :', 'tutor' ) . '</p>';
-								foreach ( $answers as $answer ) {
-									$answer_content = json_decode( $answer->comment_content, true );
-									?>
-									<label>
-										<input name="attempt[<?php echo $is_started_quiz->comment_ID; ?>][quiz_question][<?php echo $question->ID; ?>]"
-										       type="radio" value="<?php echo $answer->comment_ID; ?>">
-										<?php
-										if ( isset( $answer_content['answer_option_text'] ) ) {
-											echo $answer_content['answer_option_text'];
-										}
-										?>
-									</label>
-									<?php
-								}
-							}elseif($question_type === 'multiple_choice' ){
-								foreach ( $answers as $answer ) {
-									$answer_content = json_decode( $answer->comment_content, true );
-									?>
-									<label>
-										<input name="attempt[<?php echo $is_started_quiz->comment_ID; ?>][quiz_question][<?php echo $question->ID; ?>][]" type="checkbox" value="<?php echo $answer->comment_ID; ?>">
-										<?php
-										if ( isset( $answer_content['answer_option_text'] ) ) {
-											echo $answer_content['answer_option_text'];
-										}
-										?>
-									</label>
-									<?php
-								}
-							}
-						}
-						?>
-
+                        <div class="tutor-quiz-answare-wrap">
+                            <?php
+                                if ( $answers ) {
+                                    if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
+                                        foreach ( $answers as $answer ) {
+                                            $answer_content = json_decode( $answer->comment_content, true );
+                                            ?>
+                                            <label>
+                                                <input name="attempt[<?php echo $is_started_quiz->comment_ID; ?>][quiz_question][<?php echo $question->ID; ?>]"
+                                                       type="radio" value="<?php echo $answer->comment_ID; ?>">
+                                                <span>
+                                                    <?php
+                                                        if ( isset( $answer_content['answer_option_text'] ) ) {
+                                                            echo $answer_content['answer_option_text'];
+                                                        }
+                                                    ?>
+                                                </span>
+                                            </label>
+                                            <?php
+                                        }
+                                    }elseif($question_type === 'multiple_choice' ){
+                                        foreach ( $answers as $answer ) {
+                                            $answer_content = json_decode( $answer->comment_content, true );
+                                            ?>
+                                            <label>
+                                                <input name="attempt[<?php echo $is_started_quiz->comment_ID; ?>][quiz_question][<?php echo $question->ID; ?>][]" type="checkbox" value="<?php echo $answer->comment_ID; ?>">
+                                                <span>
+                                                    <?php
+                                                        if ( isset( $answer_content['answer_option_text'] ) ) {
+                                                            echo $answer_content['answer_option_text'];
+                                                        }
+                                                    ?>
+                                                </span>
+                                            </label>
+                                            <?php
+                                        }
+                                    }
+                                }
+                            ?>
+                        </div>
 						<?php do_action('tutor_quiz/single/after/question/form_field'); ?>
 
 						<?php do_action('tutor_quiz/single/before/question/form_submit_btn'); ?>
 
 						<div class="quiz-answer-footer-bar">
 							<div class="quiz-footer-button">
-								<button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit"><?php _e( 'Answer and Next Question', 'tutor' ); ?></button>
+								<button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button"><?php _e( 'Answer and Next Question', 'tutor' ); ?></button>
 							</div>
 						</div>
 
@@ -160,9 +163,9 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 			do_action('tutor_quiz/single/before/quiz-attempted-table');
 			?>
 
-			<h3><?php _e('Previous attempts', 'tutor'); ?></h3>
+			<h4 class="tutor-quiz-attempt-history-title"><?php _e('Previous attempts', 'tutor'); ?></h4>
 
-			<div class="quiz-attempts-wrap">
+			<div class="tutor-quiz-attempt-history">
 				<table>
 					<tr>
 						<th><?php _e('Time', 'tutor'); ?></th>

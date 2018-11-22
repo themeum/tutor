@@ -36,7 +36,7 @@ $currentPost = $post;
                             <?php
                                 the_title();
                                 if($topic_summery) {
-                                    echo "<i class='tutor-icon-down'></i>";
+                                    echo "<i class='tutor-icon-angle-down'></i>";
                                 }
                             ?>
                         </h3>
