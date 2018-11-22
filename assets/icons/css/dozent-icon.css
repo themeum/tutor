@@ -1,9 +1,8 @@
 @font-face {
     font-family: 'dozent';
-    src:
-            url('../font/dozent.ttf?vupq4v') format('truetype'),
-            url('../font/dozent.woff?vupq4v') format('woff'),
-            url('../font/dozent.svg?vupq4v#dozent') format('svg');
+    src: url('../font/dozent.ttf?jchvze') format('truetype'),
+            url('../font/dozent.woff?jchvze') format('woff'),
+            url('../font/dozent.svg?jchvze#dozent') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -23,6 +22,67 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+
+.dozent-icon-acrobat:before {
+    content: "\e922";
+}
+.dozent-icon-artboard:before {
+    content: "\e923";
+}
+.dozent-icon-audio-file-1:before {
+    content: "\e924";
+}
+.dozent-icon-audio-file:before {
+    content: "\e925";
+}
+.dozent-icon-files-1:before {
+    content: "\e926";
+}
+.dozent-icon-files-2:before {
+    content: "\e927";
+}
+.dozent-icon-files-3:before {
+    content: "\e928";
+}
+.dozent-icon-files-4:before {
+    content: "\e929";
+}
+.dozent-icon-files-5:before {
+    content: "\e92a";
+}
+.dozent-icon-files-6:before {
+    content: "\e92b";
+}
+.dozent-icon-files-7:before {
+    content: "\e92c";
+}
+.dozent-icon-files-8:before {
+    content: "\e92d";
+}
+.dozent-icon-files-9:before {
+    content: "\e92e";
+}
+.dozent-icon-files-10:before {
+    content: "\e92f";
+}
+.dozent-icon-files-11:before {
+    content: "\e930";
+}
+.dozent-icon-files-12:before {
+    content: "\e931";
+}
+.dozent-icon-files:before {
+    content: "\e932";
+}
+.dozent-icon-video-file-1:before {
+    content: "\e933";
+}
+.dozent-icon-video-file:before {
+    content: "\e934";
+}
+.dozent-icon-zip:before {
+    content: "\e935";
+}
 .dozent-icon-file:before {
     content: "\e91e";
 }

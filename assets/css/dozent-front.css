@@ -633,7 +633,10 @@ Topicsdozent-course-title
     padding: 20px;
     margin-bottom: 10px;
 }
-a.dozent-button, .dozent-button{
+a.dozent-button,
+.dozent-button,
+a.dozent-btn,
+.dozent-btn{
     color: #fff;
     background-color: #1B52D8;
     border-color: #1B52D8;
@@ -644,7 +647,10 @@ a.dozent-button, .dozent-button{
     line-height: 1;
     font-size: 14px;
 }
-a.dozent-button:hover, .dozent-button:hover {
+a.dozent-button:hover,
+.dozent-button:hover,
+a.dozent-btn:hover,
+.dozent-btn:hover {
     color: #fff;
     background-color: #1b4cad;
     border-color: #1b4cad;
@@ -866,7 +872,7 @@ Teacher
     max-width: 130px;
 }
 .single-teacher-wrap .teacher-name h3{
-    font-size: 18px;
+    font-size: 16px;
     color: #4B5981;
     font-weight: 600;
 }
@@ -1186,6 +1192,19 @@ Teacher
     color: #ffffff;
 }
 
+.dozent-single-add-to-cart-box .dozent-enroll-form{
+    margin: 0;
+}
+
+.dozent-single-add-to-cart-box .dozent-enroll-form .dozent-course-enroll-wrap{
+    padding: 0;
+}
+.dozent-single-add-to-cart-box .dozent-enroll-form .dozent-course-enroll-wrap button{
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
 /*******************/
 /*dozent review form*/
 /*******************/
@@ -1292,16 +1311,6 @@ ul.dozent-required-fields{
 }
 .dozent-question-search-form input[type="text"] {
     max-width: 60%;
-}
-.dozent-btn{
-    background-color: #00B0F5;
-    color: #ffffff;
-    padding: 10px 20px;
-    display: inline-block;
-}
-.dozent-btn:hover{
-    background-color: #029CD9;
-    color: #ffffff;
 }
 .dozent-add-question-wrap{
     margin: 20px 0;
