@@ -306,10 +306,15 @@ jQuery(document).ready(function($){
         var $that = $(this);
         var course_id = $that.attr('data-course-id');
 
+
         $.ajax({
             url: _dozentobject.ajaxurl,
             type: 'POST',
             data: {course_id : course_id, 'action': 'dozent_course_add_to_wishlist'},
+            before: function() {
+                $that.addClass('tutor-fav-adding updating-icon');
+                console.log('before');
+            },
             success: function (data) {
                 if (data.success){
                     if (data.data.status === 'added'){
@@ -321,6 +326,9 @@ jQuery(document).ready(function($){
                     window.location = data.data.redirect_to;
 
                 }
+            },
+            complete: function () {
+                $that.removeClass('tutor-fav-adding updating-icon');
             }
         });
 

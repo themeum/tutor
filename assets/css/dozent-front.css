@@ -408,9 +408,18 @@ div[class*="dozent-course-col"] {
     display: block;
     color: #1B52D8;
 }
+.dozent-course-loop-header-meta .dozent-course-wishlist a:focus{
+    outline: none;
+}
 .dozent-course-loop-header-meta .dozent-course-wishlist a.has-wish-listed::before{
     content: "\e908";
 }
+
+
+.dozent-course-loop-header-meta .dozent-course-wishlist a.tutor-fav-adding::before{
+    content: '\e91d';
+}
+
 
 .dozent-course-loop-level{
     display: inline-block;
