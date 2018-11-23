@@ -414,13 +414,9 @@ div[class*="dozent-course-col"] {
 .dozent-course-loop-header-meta .dozent-course-wishlist a.has-wish-listed::before{
     content: "\e908";
 }
-
-
-.dozent-course-loop-header-meta .dozent-course-wishlist a.tutor-fav-adding::before{
+.dozent-course-loop-header-meta .dozent-course-wishlist a.updating-icon::before{
     content: '\e91d';
 }
-
-
 .dozent-course-loop-level{
     display: inline-block;
     background: #9013FE;

@@ -311,9 +311,8 @@ jQuery(document).ready(function($){
             url: _dozentobject.ajaxurl,
             type: 'POST',
             data: {course_id : course_id, 'action': 'dozent_course_add_to_wishlist'},
-            before: function() {
-                $that.addClass('tutor-fav-adding updating-icon');
-                console.log('before');
+            beforeSend: function () {
+                $that.addClass('updating-icon');
             },
             success: function (data) {
                 if (data.success){
@@ -328,7 +327,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.removeClass('tutor-fav-adding updating-icon');
+                $that.removeClass('updating-icon');
             }
         });
 
