@@ -392,6 +392,24 @@ div[class*="dozent-course-col"] {
     top: 13px;
     width: 100%;
     padding-left: 13px;
+    padding-right: 13px;
+    overflow: hidden;
+}
+
+.dozent-course-loop-header-meta .dozent-course-wishlist{
+    float: right;
+    background: #fff;
+    font-size: 19px;
+    padding: 5px 5px;
+    border-radius: 3px;
+}
+
+.dozent-course-loop-header-meta .dozent-course-wishlist a{
+    display: block;
+    color: #1B52D8;
+}
+.dozent-course-loop-header-meta .dozent-course-wishlist a.has-wish-listed::before{
+    content: "\e908";
 }
 
 .dozent-course-loop-level{
