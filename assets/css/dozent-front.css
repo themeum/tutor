@@ -388,8 +388,10 @@ div[class*="dozent-course-col"] {
 
 .dozent-course-loop-header-meta{
     position: absolute;
-    left: 13px;
+    left: 0;
     top: 13px;
+    width: 100%;
+    padding-left: 13px;
 }
 
 .dozent-course-loop-level{
