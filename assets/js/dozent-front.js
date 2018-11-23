@@ -311,8 +311,15 @@ jQuery(document).ready(function($){
             type: 'POST',
             data: {course_id : course_id, 'action': 'dozent_course_add_to_wishlist'},
             success: function (data) {
-                if ( ! data.success){
+                if (data.success){
+                    if (data.data.status === 'added'){
+                        $that.addClass('has-wish-listed');
+                    }else{
+                        $that.removeClass('has-wish-listed');
+                    }
+                }else{
                     window.location = data.data.redirect_to;
+
                 }
             }
         });
