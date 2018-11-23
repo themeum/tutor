@@ -1651,7 +1651,7 @@ class Utils {
 		$initial_avatar = strtoupper($first_char.$second_char);
 
 		$bg_color = '#'.substr(md5($initial_avatar), 0, 6);
-		$initial_avatar = "<span class='dozent-text-avatar' style='background-color: {$bg_color};'>{$initial_avatar}</span>";
+		$initial_avatar = "<span class='dozent-text-avatar' style='background-color: {$bg_color}; color: #fff8e5'>{$initial_avatar}</span>";
 
 		return $initial_avatar;
 	}
