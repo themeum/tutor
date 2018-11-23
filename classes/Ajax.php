@@ -213,14 +213,14 @@ class Ajax{
 		global $wpdb;
 
 		$user_id = get_current_user_id();
-		$if_added_to_list = $wpdb->get_row("select * from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key = 'dozent_course_wishlist' AND meta_value = {$course_id} ;");
+		$if_added_to_list = $wpdb->get_row("select * from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key = '_dozent_course_wishlist' AND meta_value = {$course_id} ;");
 
 		if ( $if_added_to_list){
-			$wpdb->delete($wpdb->usermeta, array('user_id' => $user_id, 'meta_key' => 'dozent_course_wishlist', 'meta_value' => $course_id ));
+			$wpdb->delete($wpdb->usermeta, array('user_id' => $user_id, 'meta_key' => '_dozent_course_wishlist', 'meta_value' => $course_id ));
 
 			wp_send_json_success(array('msg' => __('Course removed from wish list', 'dozent')));
 		}else{
-			update_user_meta($user_id, 'dozent_course_wishlist', $course_id);
+			update_user_meta($user_id, '_dozent_course_wishlist', $course_id);
 			wp_send_json_success(array('msg' => __('Course added to wish list', 'dozent')));
 		}
 	}
