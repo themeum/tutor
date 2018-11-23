@@ -300,5 +300,26 @@ jQuery(document).ready(function($){
         $(this).siblings('.dozent-topics-summery').slideToggle();
     });
 
+    $(document).on('click', '.dozent-course-wishlist-btn', function (e) {
+        e.preventDefault();
+
+        var $that = $(this);
+        var course_id = $that.attr('data-course-id');
+
+        $.ajax({
+            url: _dozentobject.ajaxurl,
+            type: 'POST',
+            data: {course_id : course_id, 'action': 'dozent_course_add_to_wishlist'},
+            success: function (data) {
+                if ( ! data.success){
+                    window.location = data.data.redirect_to;
+                }
+            }
+        });
+
+    });
+
+
+
 });
 

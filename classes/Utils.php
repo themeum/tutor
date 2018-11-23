@@ -1427,6 +1427,7 @@ class Utils {
 			'my-courses' => __('My Courses', 'dozent'),
 			'active-courses' => __('Active Courses', 'dozent'),
 			'completed-courses' => __('Completed Courses', 'dozent'),
+			'wishlist' => __('WishList', 'dozent'),
 		);
 
 		return apply_filters('dozent_dashboard/student/pages', $nav_items);
@@ -2580,6 +2581,48 @@ class Utils {
 		$page_id = (int) dozent_utils()->get_option('student_dashboard');
 		$page_id = apply_filters('dozent_dashboard_url', $page_id);
 		return get_the_permalink($page_id);
+	}
+
+	/**
+	 * @param int $course_id
+	 * @param int $user_id
+	 *
+	 * @return bool
+	 *
+	 * is_wishlisted();
+	 */
+	public function is_wishlisted($course_id = 0, $user_id = 0){
+		$course_id = $this->get_post_id($course_id);
+		$user_id = $this->get_user_id($user_id);
+		if ( ! $user_id){
+			return false;
+		}
+
+		global $wpdb;
+		$if_added_to_list = (bool) $wpdb->get_row("select * from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key = 'dozent_course_wishlist' AND meta_value = {$course_id} ;");
+
+		return $if_added_to_list;
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get the wish lists by an user
+	 */
+	public function get_wishlist($user_id = 0){
+		$user_id = $this->get_user_id($user_id);
+		global $wpdb;
+
+		$query = "SELECT $wpdb->posts.*
+	    FROM $wpdb->posts
+	    LEFT JOIN $wpdb->usermeta ON ($wpdb->posts.ID = $wpdb->usermeta.meta_value)
+	    WHERE $wpdb->usermeta.meta_key = 'dozent_course_wishlist'
+	    AND $wpdb->usermeta.user_id = {$user_id}
+	    ORDER BY $wpdb->usermeta.umeta_id DESC ";
+		$pageposts = $wpdb->get_results($query, OBJECT);
+		return $pageposts;
 	}
 
 }

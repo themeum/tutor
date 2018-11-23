@@ -11,6 +11,10 @@ class Ajax{
 
 		add_action('wp_ajax_dozent_ask_question', array($this, 'dozent_ask_question'));
 		add_action('wp_ajax_dozent_add_answer', array($this, 'dozent_add_answer'));
+
+
+		add_action('wp_ajax_dozent_course_add_to_wishlist', array($this, 'dozent_course_add_to_wishlist'));
+		add_action('wp_ajax_nopriv_dozent_course_add_to_wishlist', array($this, 'dozent_course_add_to_wishlist'));
 	}
 
 	/**
@@ -198,6 +202,27 @@ class Ajax{
 		do_action('dozent_after_answer_to_question', $comment_id);
 
 		wp_send_json_success(__('Answer has been added successfully', 'dozent'));
+	}
+
+
+	public function dozent_course_add_to_wishlist(){
+		$course_id = (int) sanitize_text_field($_POST['course_id']);
+		if ( ! is_user_logged_in()){
+			wp_send_json_error(array('redirect_to' => wp_login_url( wp_get_referer() ) ) );
+		}
+		global $wpdb;
+
+		$user_id = get_current_user_id();
+		$if_added_to_list = $wpdb->get_row("select * from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key = 'dozent_course_wishlist' AND meta_value = {$course_id} ;");
+
+		if ( $if_added_to_list){
+			$wpdb->delete($wpdb->usermeta, array('user_id' => $user_id, 'meta_key' => 'dozent_course_wishlist', 'meta_value' => $course_id ));
+
+			wp_send_json_success(array('msg' => __('Course removed from wish list', 'dozent')));
+		}else{
+			update_user_meta($user_id, 'dozent_course_wishlist', $course_id);
+			wp_send_json_success(array('msg' => __('Course added to wish list', 'dozent')));
+		}
 	}
 
 
