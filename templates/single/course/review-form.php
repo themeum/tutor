@@ -31,7 +31,7 @@
                     <textarea name="review" placeholder="<?php _e('write a review', 'dozent'); ?>"><?php echo stripslashes($rating->review); ?></textarea>
                 </div>
                 <div class="dozent-form-group">
-                    <button type="submit" class="dozent_submit_review_btn"><?php _e('Submit Review', 'dozent'); ?></button>
+                    <button type="submit" class="dozent_submit_review_btn dozent-button dozent-success"><?php _e('Submit Review', 'dozent'); ?></button>
                 </div>
             </div>
         </form>

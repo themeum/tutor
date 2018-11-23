@@ -24,9 +24,8 @@ if (is_array($attachments) && count($attachments)){
                 <div class="dozent-attachment-icon">
                     <i class="dozent-icon-<?php echo $attachment->icon; ?>"></i>
                 </div>
-
                 <div class="dozent-attachment-info">
-                    <p><?php echo $attachment->name; ?></p>
+                    <span><?php echo $attachment->name; ?></span>
                     <span><?php echo $attachment->size; ?></span>
                 </div>
             </a>

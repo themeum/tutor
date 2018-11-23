@@ -104,7 +104,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 						<div class="quiz-answer-footer-bar">
 							<div class="quiz-footer-button">
-								<button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="dozent-button"><?php _e( 'Answer and Next Question', 'dozent' ); ?></button>
+								<button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="dozent-button dozent-success"><?php _e( 'Answer and Next Question', 'dozent' ); ?></button>
 							</div>
 						</div>
 

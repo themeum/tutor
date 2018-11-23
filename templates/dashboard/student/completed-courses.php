@@ -3,11 +3,8 @@
 
 	<?php
 	$completed_courses = dozent_utils()->get_courses_by_user();
-	if ( ! $completed_courses){
-		return false;
-	}
-	if ($completed_courses->have_posts()):
 
+	if ($completed_courses && $completed_courses->have_posts()):
 		while ($completed_courses->have_posts()):
 			$completed_courses->the_post();
 			?>
@@ -18,13 +15,23 @@
 					$total_lessons = dozent_utils()->get_lesson_count_by_course();
 					$completed_lessons = dozent_utils()->get_completed_lesson_count_by_course();
 					?>
-                    <p>
-						<?php _e(sprintf("%d Lessons, %d of %d lessons completed", $total_lessons, $completed_lessons, $total_lessons), 'dozent');?>
-                    </p>
+                    <ul>
+                        <li>
+                            <?php
+                            _e('Total Lessons:', 'dozent');
+                            echo "<span>$total_lessons</span>";
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            _e('Completed Lessons:', 'dozent');
+                            echo "<span>$completed_lessons / $total_lessons</span>";
+                            ?>
+                        </li>
+                    </ul>
                 </div>
-
+                <?php dozent_course_completing_progress_bar(); ?>
 				<?php the_excerpt(); ?>
-				<?php dozent_course_completing_progress_bar(); ?>
 
             </div>
 
@@ -33,6 +40,8 @@
 
 		wp_reset_postdata();
 
+	else:
+        echo "There's no active course";
 	endif;
 
 	?>

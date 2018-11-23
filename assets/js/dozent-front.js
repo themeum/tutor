@@ -296,8 +296,8 @@ jQuery(document).ready(function($){
         lesson.slideToggle();
     });
 
-    $('.dozent-topics-title i').on('click', function () {
-        $(this).closest('.dozent-topics-title').siblings('.dozent-topics-summery').slideToggle();
+    $('.dozent-topics-title').on('click', function () {
+        $(this).siblings('.dozent-topics-summery').slideToggle();
     });
 
 });

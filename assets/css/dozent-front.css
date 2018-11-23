@@ -92,9 +92,20 @@
     left: 0;
     font-family: 'dozent';
     color: #1B52D8;
-
 }
 
+.dozent-mb-10{
+    margin-bottom: 10px;
+}
+.dozent-mb-20{
+    margin-bottom: 20px;
+}
+.dozent-mb-30{
+    margin-bottom: 30px;
+}
+.dozent-mb-40{
+    margin-bottom: 40px;
+}
 
 /********************/
 /*start single course*/
@@ -651,15 +662,19 @@ a.dozent-button:hover,
 .dozent-button:hover,
 a.dozent-btn:hover,
 .dozent-btn:hover {
+    background-color: #1B52D8;
+    border-color: #1B52D8;
     color: #fff;
     filter: brightness(.9);
 }
 
 .dozent-button.dozent-danger{
-    background: #E53935;
+    background-color: #E53935;
+    border-color: #E53935;
 }
 .dozent-button.dozent-success{
     background: #86B223;
+    border-color: #86B223;
 }
 
 .course-enrolled-nav-wrap{
@@ -810,11 +825,12 @@ a.dozent-btn:hover,
     margin-bottom: 17px;
 }
 
-.dozent-dashboard-content-inner{
+.dozent-dashboard-content-inner:not(:empty){
     padding: 20px;
     border: 1px solid #DCDFE5;
     border-radius: 4px;
 }
+
 
 .dozent-mycourse-rating{
     color: #F8C51C;
@@ -825,6 +841,14 @@ a.dozent-btn:hover,
     margin-right: 4px;
 }
 
+.dozent-dashboard-content-inner{
+    font-size: 14px;
+}
+
+.dozent-dashboard-content-inner .dozent-mycourse-wrap p:last-child{
+    margin-bottom: 0;
+}
+
 .dozent-dashboard-content-inner h3 a{
     color: #4B5981;
     font-size: 22px;
@@ -833,10 +857,31 @@ a.dozent-btn:hover,
     display: block;
 }
 
-.dozent-dashboard-content-inner .dozent-course-metadata{
-
+.dozent-dashboard-content-inner .dozent-course-metadata ul{
+    display: block;
+    list-style: none;
+    margin: 0 0 25px;
+    padding: 0;
+    font-size: 14px;
 }
 
+.dozent-dashboard-content-inner .dozent-progress-bar-wrap{
+    margin-bottom: 20px;
+}
+.dozent-dashboard-content-inner .dozent-course-metadata li{
+    display: inline-block;
+    color: #8C94A8;
+    margin-left: 20px;
+}
+
+.dozent-dashboard-content-inner .dozent-course-metadata li:first-child{
+    margin-left: 0;
+}
+
+.dozent-dashboard-content-inner .dozent-course-metadata li span{
+    color: #4B5981;
+    margin-left: 5px;
+}
 
 /* ***********************      */
 /* End Dozent Student Dashboard  */
@@ -938,23 +983,26 @@ Teacher
 /************************       */
 
 /*lesson list*/
-
-
+.dozent-single-lesson-button-group,
 .dozent-topics-lesson-list .dozent-topics-in-single-lesson{
-    border: 1px solid #E8EFF1;
     border-radius: 4px;
     margin-bottom: 30px;
+    border: 1px solid #E8EFF1;
 }
 
+.dozent-single-lesson-button-group .dozent-single-lesson-button a,
 .dozent-topics-in-single-lesson .dozent-single-lesson-items a{
-    border-top: 1px solid #DCE4E6;
     padding: 14px 75px 14px 17px;
     font-size: 14px;
     display: flex;
     color: #4B5981;
     position: relative;
+    border-top: 1px solid #E8EFF1;
 }
 
+.dozent-single-lesson-button-group .dozent-single-lesson-button:first-child a{
+    border-top: none;
+}
 
 .dozent-lessons-under-topic .dozent-single-lesson-items.active a{
     background: rgba(233, 235, 238, 0.35);
@@ -973,6 +1021,9 @@ Teacher
     font-size: 16px;
     color: #1B52D8;
     font-weight: 500;
+}
+.dozent-topics-in-single-lesson .dozent-topics-title.has-summery h3{
+    cursor: pointer;
 }
 
 .dozent-topics-in-single-lesson .dozent-topics-title h3 i{
@@ -995,12 +1046,16 @@ Teacher
     color: #1B52D8;
 }
 
+.dozent-single-lesson-button-group .dozent-single-lesson-button a > i:first-child,
 .dozent-topics-in-single-lesson .dozent-single-lesson-items a > i:first-child{
     color: #C7C7C7;
     line-height: 22px;
     display: inline-block;
     vertical-align: middle;
     margin-right: 10px;
+}
+.dozent-topics-in-single-lesson .dozent-single-lesson-items a > i.dozent-icon-doubt{
+    color: #1B52D8;
 }
 
 .dozent-topics-in-single-lesson .dozent-topics-summery{
@@ -1059,6 +1114,51 @@ Teacher
     border-radius: 4px;
 }
 
+/*attachment*/
+
+
+.dozent-attachments-wrap{
+    margin: -3px -3px 15px -3px;
+}
+
+.dozent-attachments-wrap .dozent-lesson-attachment{
+    display: inline-block;
+    border: 1px solid #E8EFF1;
+    border-radius: 4px;
+    padding: 10px 16px 10px 12px;
+    overflow: hidden;
+    background: #F4F7F8;
+    margin: 3px;
+    transition: 300ms;
+}
+
+.dozent-attachments-wrap .dozent-lesson-attachment:hover{
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.dozent-attachments-wrap .dozent-attachment-icon{
+    font-size: 30px;
+    float: left;
+    color: #4B5981;
+}
+.dozent-attachments-wrap .dozent-attachment-icon i{
+    display: block;
+}
+.dozent-attachment-info {
+    padding-left: 10px;
+    float: left;
+}
+.dozent-attachment-info span{
+    display: block;
+    font-size: 14px;
+    line-height: 16px;
+    color: #4B5981;
+}
+
+.dozent-attachment-info span + span{
+    font-size: 11px;
+    color: #B1B8C9;
+}
 /*course status*/
 .dozent-progress-bar-wrap{
     width: 100%;
@@ -1236,19 +1336,12 @@ Teacher
     border: 1px solid #ddd;
     box-shadow: none;
     border-radius: 4px;
+    line-height: 1.5;
+    text-indent: 0;
+    padding: 15px;
 }
 
-.dozent-course-enrolled-review-wrap .dozent-form-group button{
-    color: #fff;
-    background-color: #1B52D8;
-    border-color: #1B52D8;
-    display: inline-block;
-    padding: 15px 30px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    line-height: 1;
-    font-size: 14px;
-}
+
 
 /*******************/
 /*end dozent review form*/
@@ -1369,28 +1462,94 @@ Course question and answer
     margin-top: 20px;
 }
 
+.dozent_admin_answers_list_wrap + .dozent_add_answer_row,
 .dozent_admin_answers_list_wrap{
     margin-left: 100px;
 }
 
+.dozent_original_question{
+    margin-bottom: 30px;
+}
+.dozent_admin_answers_list_wrap .dozent_individual_answer{
+    margin-bottom: 40px;
+}
+
+.dozent_admin_answers_list_wrap .dozent_question_area{
+    background: #EDF9F1;
+}
+
+.question-top-meta .dozent-question-avater a{
+    display: inline-block;
+}
+.question-top-meta .dozent-question-avater a span{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: block;
+    line-height: 50px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.question-top-meta .dozent-question-avater a img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.question-top-meta{
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.question-top-meta .dozent-question-avater{
+    float: left;
+}
+.question-top-meta .review-meta{
+    float: left;
+    margin-bottom: 0;
+    margin-left: 10px;
+}
+.question-top-meta .review-meta a{
+    display: block;
+    font-size: 18px;
+    color: #4B5981;
+    line-height: 20px;
+}
+.question-top-meta .review-meta span{
+    color: #B1B8C9;
+    font-size: 14px;
+    vertical-align: text-top;
+    display: block;
+}
+.dozent_wp_editor_wrap .dozent-form-group a.dozent-button{
+    margin-right: 6px;
+}
+
 /*anouncement*/
 
-.dozent-announcements-wrap{
-    margin-top: 20px;
-}
+
 .dozent-no-announcements {
     text-align: center;
 }
 .dozent-announcement-meta{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    font-size: 13px;
 }
 .dozent-announcement {
     border: 1px solid #eee;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 4px;
+
 }
 .announcement-delete-btn{
     float: right;
+}
+
+.dozent-announcement-title-wrap h3{
+    color: #4B5981;
+    font-weight: 500;
+    margin-bottom: 10px;
 }
 
 
@@ -1576,6 +1735,11 @@ Course question and answer
 /* ********************* */
 /*start global login form*/
 /* ********************* */
+
+.dozent-login-wrap{
+    max-width: 560px;
+    margin: 0 auto;
+}
 
 .dozent-login-form-wrap p{
     margin-bottom: 0;
@@ -1926,7 +2090,7 @@ Course question and answer
     margin: -5px;
 }
 .dozent-course-tags a{
-    padding: 10px 15px;
+    padding: 6px 15px;
     background: #E8EFF1;
     display: inline-block;
     margin: 5px;

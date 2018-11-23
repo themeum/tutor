@@ -4,10 +4,7 @@
 	<?php
 	$my_courses = dozent_utils()->get_enrolled_courses_by_user();
 
-	if ( ! $my_courses){
-		return false;
-	}
-	if ($my_courses->have_posts()):
+	if ($my_courses && $my_courses->have_posts()):
 		while ($my_courses->have_posts()):
 			$my_courses->the_post();
 			$avg_rating = dozent_utils()->get_course_rating()->rating_avg;
@@ -25,22 +22,30 @@
 					$completed_lessons = dozent_utils()->get_completed_lesson_count_by_course();
 					?>
                     <ul>
-                        <li><?php ?></li>
+                        <li>
+                            <?php
+                                _e('Total Lessons:', 'dozent');
+                                echo "<span>$total_lessons</span>";
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                                _e('Completed Lessons:', 'dozent');
+                                echo "<span>$completed_lessons / $total_lessons</span>";
+                            ?>
+                        </li>
                     </ul>
-                    <p>
-						<?php _e(sprintf("Total Lessons: %d, Completed Lessons: %d of %d lessons", $total_lessons, $completed_lessons, $total_lessons), 'dozent');?>
-                    </p>
                 </div>
-
+                <?php dozent_course_completing_progress_bar(); ?>
 				<?php the_excerpt(); ?>
-				<?php dozent_course_completing_progress_bar(); ?>
             </div>
 
 			<?php
 		endwhile;
 
 		wp_reset_postdata();
-
+    else:
+        echo "You didn't purchased any course";
 	endif;
 
 	?>
