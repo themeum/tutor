@@ -1443,14 +1443,33 @@ Form CSS
     padding-right: 15px;
 }
 .dozent-form-col-6{
+    -ms-flex: 0 0 50%;
     flex: 0 0 50%;
+    max-width: 50%;
 }
 .dozent-form-col-12{
-    flex: 12;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
 }
 .dozent-form-col-4{
-    flex: 4;
+    -ms-flex: 0 0 33.3333%;
+    flex: 0 0 33.3333%;
+    max-width: 33.3333%;
 }
+
+@media (max-width: 768px) {
+    .dozent-form-row{
+        flex-wrap: wrap;
+    }
+    .dozent-form-col-4,
+    .dozent-form-col-6,
+    .dozent-form-col-12{
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
 ul.dozent-required-fields{
     list-style: none;
     padding: 10px;
@@ -2197,15 +2216,20 @@ Course question and answer
 .dozent-pagination-wrap{
     text-align: center;
     padding: 5px;
-
+    margin-top: 30px;
 }
-
 .dozent-pagination-wrap a,
 .dozent-pagination-wrap span{
-    padding: 3px 8px;
+    padding: 3px 10px;
     border: 1px solid #dddddd;
     display: inline-block;
+    color: #4B5981;
 }
+.dozent-pagination-wrap span{
+    color: #1B52D8;
+    border-color: #1B52D8;
+}
+
 
 /* ********************* */
 /* Dozent Course Tags */
