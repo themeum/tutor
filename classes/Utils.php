@@ -2599,7 +2599,7 @@ class Utils {
 		}
 
 		global $wpdb;
-		$if_added_to_list = (bool) $wpdb->get_row("select * from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key = 'dozent_course_wishlist' AND meta_value = {$course_id} ;");
+		$if_added_to_list = (bool) $wpdb->get_row("select * from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key = '_dozent_course_wishlist' AND meta_value = {$course_id} ;");
 
 		return $if_added_to_list;
 	}
@@ -2618,7 +2618,7 @@ class Utils {
 		$query = "SELECT $wpdb->posts.*
 	    FROM $wpdb->posts
 	    LEFT JOIN $wpdb->usermeta ON ($wpdb->posts.ID = $wpdb->usermeta.meta_value)
-	    WHERE $wpdb->usermeta.meta_key = 'dozent_course_wishlist'
+	    WHERE $wpdb->usermeta.meta_key = '_dozent_course_wishlist'
 	    AND $wpdb->usermeta.user_id = {$user_id}
 	    ORDER BY $wpdb->usermeta.umeta_id DESC ";
 		$pageposts = $wpdb->get_results($query, OBJECT);

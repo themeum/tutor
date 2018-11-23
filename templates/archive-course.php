@@ -47,11 +47,10 @@ get_header(); ?>
 			 */
 			dozent_load_template('course-none');
 
-		endif; ?>
+		endif;
 
-        <?php dozent_course_archive_pagination(); ?>
+		dozent_course_archive_pagination();
 
-		<?php
 		do_action('dozent_course/archive/after_loop');
 		?>
 
