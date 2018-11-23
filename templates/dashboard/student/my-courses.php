@@ -45,7 +45,7 @@
 
 		wp_reset_postdata();
     else:
-        echo "You didn't purchased any course";
+        echo "<div class='dozent-mycourse-wrap'>You didn't purchased any course</div>";
 	endif;
 
 	?>

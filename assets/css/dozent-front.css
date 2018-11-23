@@ -65,6 +65,13 @@
     flex: 0 0 75%;
     max-width: 75%;
 }
+@media (max-width: 991px) {
+    .dozent-col-auto, .dozent-col, .dozent-col-3, .dozent-col-4, .dozent-col-6, .dozent-col-8, .dozent-col-9{
+        -ms-flex: 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
 @media (max-width: 767px) {
     .dozent-col-auto, .dozent-col, .dozent-col-3, .dozent-col-4, .dozent-col-6, .dozent-col-8, .dozent-col-9{
         -ms-flex: 100%;
@@ -72,6 +79,8 @@
         max-width: 100%;
     }
 }
+
+
 .dozent-custom-list-style{
     list-style: none;
     margin: 0;
@@ -243,6 +252,22 @@
     border-top: 1px solid #DCDFE5;
     border-bottom: 1px solid #DCDFE5;
 }
+
+@media (max-width: 991px) {
+    .dozent-single-course-meta.dozent-lead-meta{
+        border-bottom: none;
+    }
+    .dozent-single-course-meta.dozent-lead-meta ul{
+        padding-bottom: 0;
+    }
+    .dozent-single-course-meta.dozent-lead-meta ul li{
+        margin: 5px;
+        padding: 5px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+}
+
 .dozent-single-course-meta.dozent-lead-meta ul li strong{
     display: block;
     margin-bottom: 5px;
@@ -546,6 +571,27 @@ div[class*="dozent-course-col"] {
 .dozent-course-col-6{
     width: 16.66%;
 }
+
+@media (max-width: 767px) {
+    .dozent-course-col-6,
+    .dozent-course-col-5,
+    .dozent-course-col-4,
+    .dozent-course-col-3,
+    .dozent-course-col-2{
+        width: 50%;
+    }
+}
+
+@media (max-width: 575px) {
+    .dozent-course-col-6,
+    .dozent-course-col-5,
+    .dozent-course-col-4,
+    .dozent-course-col-3,
+    .dozent-course-col-2{
+        width: 100%;
+    }
+}
+
 .dozent-course-loop-title h2{
     font-size: 1rem;
 }
@@ -724,6 +770,14 @@ a.dozent-btn:hover,
         padding-left: 0;
     }
 }
+@media (max-width: 991px) {
+    .dozent-dashboard-student .dozent-row > div{
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
 .dozent-student-dashboard-leadinfo .dozent-dashboard-avater img{
     border-radius: 50%;
 }
@@ -811,6 +865,18 @@ a.dozent-btn:hover,
 .dozent-dashboard-permalinks li:not(:last-child){
     border-bottom: 1px solid #E8EFF1;
 }
+
+@media (max-width: 991px) {
+    ul.dozent-dashboard-permalinks li{
+        display: inline-block;
+        border-bottom: none !important;
+        border-right: 1px solid #E8EFF1;
+    }
+    ul.dozent-dashboard-permalinks li:last-child{
+        border-right-color: transparent;
+    }
+}
+
 .dozent-dashboard-permalinks li a{
     display: block;
     color: #4B5981;
@@ -825,12 +891,15 @@ a.dozent-btn:hover,
     margin-bottom: 17px;
 }
 
-.dozent-dashboard-content-inner:not(:empty){
+/*.dozent-dashboard-content-inner:not(:empty){}*/
+
+
+.dozent-dashboard-content-inner .dozent-mycourse-wrap{
     padding: 20px;
     border: 1px solid #DCDFE5;
     border-radius: 4px;
+    margin-bottom: 30px;
 }
-
 
 .dozent-mycourse-rating{
     color: #F8C51C;
@@ -1281,6 +1350,13 @@ Teacher
     display: inline-block;
 }
 
+@media (max-width: 991px) {
+    .dozent-lead-info-btn-group a.dozent-button,
+    .dozent-lead-info-btn-group .dozent-course-compelte-form-wrap{
+        width: auto;
+    }
+}
+
 .dozent-lead-info-btn-group .dozent-course-compelte-form-wrap button{
     display: block;
     width: 100%;
@@ -1467,6 +1543,13 @@ Course question and answer
     margin-left: 100px;
 }
 
+@media (max-width: 991px) {
+    .dozent_admin_answers_list_wrap + .dozent_add_answer_row,
+    .dozent_admin_answers_list_wrap{
+        margin-left: 30px;
+    }
+}
+
 .dozent_original_question{
     margin-bottom: 30px;
 }
@@ -1586,7 +1669,6 @@ Course question and answer
     font-weight: 500;
 }
 .dozent-quiz-header .dozent-quiz-meta{
-    display: block;
     list-style: none;
     margin: 20px 0 40px;
     padding: 15px 0;
@@ -1596,14 +1678,38 @@ Course question and answer
     justify-content: space-between;
     font-size: 14px;
 }
+
+
 .dozent-quiz-header .dozent-quiz-meta li{
     display: inline-block;
     color: #4B5981;
 }
+
+
+@media (max-width: 767px) {
+    .dozent-quiz-header .dozent-quiz-meta{
+        display: block;
+        border: none;
+        padding: 0;
+    }
+    .dozent-quiz-header .dozent-quiz-meta li{
+        display: inline-block;
+        color: #4B5981;
+        margin: 5px;
+        border: 1px solid #dddddd;
+        padding: 5px 10px;
+        border-radius: 4px;
+    }
+}
+
 .dozent-quiz-header .dozent-quiz-meta li strong{
     display: block;
     color: #B1B8C9;
     font-weight: 400;
+}
+
+.dozent-quiz-attempt-history{
+    overflow-x: auto;
 }
 
 .dozent-quiz-attempt-history-title{
@@ -2005,9 +2111,28 @@ Course question and answer
     float: left;
     overflow: hidden;
 }
+
 .dozent-review-individual-item .review-content{
     padding-left: 230px;
 }
+
+@media (max-width: 991px) {
+    .dozent-review-individual-item .review-left{
+        width: 100%;
+        float: none;
+        margin-bottom: 25px;
+    }
+    .dozent-review-individual-item .review-content{
+        padding-left: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .dozent-single-course-sidebar{
+        margin-top: 30px;
+    }
+}
+
 .dozent-review-individual-item .review-avatar{
     width: 50px;
     float: left;;

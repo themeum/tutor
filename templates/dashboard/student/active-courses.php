@@ -39,7 +39,7 @@
 		endwhile;
 		wp_reset_postdata();
     else:
-        echo "There's no active course";
+        echo "<div class='dozent-mycourse-wrap'>There's no active course</div>";
 	endif;
 
 	?>
