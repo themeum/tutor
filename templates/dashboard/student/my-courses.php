@@ -4,10 +4,7 @@
 	<?php
 	$my_courses = dozent_utils()->get_enrolled_courses_by_user();
 
-	if ( ! $my_courses){
-		return false;
-	}
-	if ($my_courses->have_posts()):
+	if ($my_courses && $my_courses->have_posts()):
 		while ($my_courses->have_posts()):
 			$my_courses->the_post();
 			$avg_rating = dozent_utils()->get_course_rating()->rating_avg;

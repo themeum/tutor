@@ -92,9 +92,20 @@
     left: 0;
     font-family: 'dozent';
     color: #1B52D8;
-
 }
 
+.dozent-mb-10{
+    margin-bottom: 10px;
+}
+.dozent-mb-20{
+    margin-bottom: 20px;
+}
+.dozent-mb-30{
+    margin-bottom: 30px;
+}
+.dozent-mb-40{
+    margin-bottom: 40px;
+}
 
 /********************/
 /*start single course*/
@@ -849,20 +860,27 @@ a.dozent-btn:hover,
 .dozent-dashboard-content-inner .dozent-course-metadata ul{
     display: block;
     list-style: none;
-    margin: 0 0 30px;
+    margin: 0 0 25px;
     padding: 0;
     font-size: 14px;
 }
 
-
+.dozent-dashboard-content-inner .dozent-progress-bar-wrap{
+    margin-bottom: 20px;
+}
 .dozent-dashboard-content-inner .dozent-course-metadata li{
     display: inline-block;
     color: #8C94A8;
+    margin-left: 20px;
 }
 
+.dozent-dashboard-content-inner .dozent-course-metadata li:first-child{
+    margin-left: 0;
+}
 
 .dozent-dashboard-content-inner .dozent-course-metadata li span{
     color: #4B5981;
+    margin-left: 5px;
 }
 
 /* ***********************      */
@@ -1717,6 +1735,11 @@ Course question and answer
 /* ********************* */
 /*start global login form*/
 /* ********************* */
+
+.dozent-login-wrap{
+    max-width: 560px;
+    margin: 0 auto;
+}
 
 .dozent-login-form-wrap p{
     margin-bottom: 0;

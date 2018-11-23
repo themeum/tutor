@@ -2,11 +2,8 @@
 <div class="dozent-dashboard-content-inner">
 	<?php
 	$active_courses = dozent_utils()->get_active_courses_by_user();
-	if( ! $active_courses){
-		return;
-	}
 
-	if ($active_courses->have_posts()):
+	if ($active_courses && $active_courses->have_posts()):
 		while ($active_courses->have_posts()):
 			$active_courses->the_post();
 			?>

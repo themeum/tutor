@@ -5,7 +5,7 @@
     <?php
     $errors = apply_filters('dozent_student_register_validation_errors', array());
     if (is_array($errors) && count($errors)){
-        echo '<div class="dozent-alert-warning"><ul class="dozent-required-fields">';
+        echo '<div class="dozent-alert-warning dozent-mb-10"><ul class="dozent-required-fields">';
         foreach ($errors as $error_key => $error_value){
             echo "<li>{$error_value}</li>";
         }

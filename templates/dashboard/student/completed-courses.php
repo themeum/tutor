@@ -3,11 +3,8 @@
 
 	<?php
 	$completed_courses = dozent_utils()->get_courses_by_user();
-	if ( ! $completed_courses){
-		return false;
-	}
-	if ($completed_courses->have_posts()):
 
+	if ($completed_courses && $completed_courses->have_posts()):
 		while ($completed_courses->have_posts()):
 			$completed_courses->the_post();
 			?>
