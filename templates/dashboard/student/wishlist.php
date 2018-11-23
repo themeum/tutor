@@ -11,35 +11,23 @@
 	if (is_array($wishlists) && count($wishlists)):
         foreach ($wishlists as $post):
 	        setup_postdata($post);
-			?>
-            <div class="dozent-mycourse-wrap dozent-mycourse-<?php the_ID(); ?>">
-                <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a> </h3>
-                <div class="dozent-meta dozent-course-metadata">
-					<?php
-					$total_lessons = dozent_utils()->get_lesson_count_by_course();
-					$completed_lessons = dozent_utils()->get_completed_lesson_count_by_course();
-					?>
-                    <ul>
-                        <li>
-                            <?php
-                            _e('Total Lessons:', 'dozent');
-                            echo "<span>$total_lessons</span>";
-                            ?>
-                        </li>
-                        <li>
-                            <?php
-                            _e('Completed Lessons:', 'dozent');
-                            echo "<span>$completed_lessons / $total_lessons</span>";
-                            ?>
-                        </li>
-                    </ul>
-                </div>
-                <?php dozent_course_completing_progress_bar(); ?>
-				<?php the_excerpt(); ?>
 
-            </div>
+	        /**
+	         * @hook dozent_course/archive/before_loop_course
+	         * @type action
+	         * Usage Idea, you may keep a loop within a wrap, such as bootstrap col
+	         */
+	        do_action('dozent_course/archive/before_loop_course');
 
-			<?php
+	        dozent_load_template('loop.course');
+
+	        /**
+	         * @hook dozent_course/archive/after_loop_course
+	         * @type action
+	         * Usage Idea, If you start any div before course loop, you can end it here, such as </div>
+	         */
+	        do_action('dozent_course/archive/after_loop_course');
+
 		endforeach;
 
 		wp_reset_postdata();
