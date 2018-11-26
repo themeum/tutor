@@ -11,7 +11,6 @@
 get_header(); ?>
 
 	<div class="<?php dozent_container_classes() ?>">
-
 		<?php
 		do_action('dozent_course/archive/before_loop');
 
@@ -53,9 +52,6 @@ get_header(); ?>
 
 		do_action('dozent_course/archive/after_loop');
 		?>
-
-
-
 	</div><!-- .wrap -->
 
 <?php get_footer();
