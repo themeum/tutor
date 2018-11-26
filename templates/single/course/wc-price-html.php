@@ -11,10 +11,10 @@
 
 
 
-$is_purchasable = dozent_utils()->is_course_purchasable();
+$is_purchasable = tutor_utils()->is_course_purchasable();
 
 if ($is_purchasable){
-	$product_id = dozent_utils()->get_course_product_id();
+	$product_id = tutor_utils()->get_course_product_id();
 	$product = wc_get_product( $product_id );
 
 	if ($product) {
@@ -29,7 +29,7 @@ if ($is_purchasable){
 }else{
 	?>
 	<p class="price">
-		<?php _e('Free', 'dozent'); ?>
+		<?php _e('Free', 'tutor'); ?>
 	</p>
 	<?php
 }

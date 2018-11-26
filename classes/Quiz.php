@@ -5,11 +5,11 @@
  *
  * @author: themeum
  * @author_uri: https://themeum.com
- * @package Dozent
+ * @package Tutor
  * @since v.1.0.0
  */
 
-namespace DOZENT;
+namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
@@ -17,17 +17,17 @@ if ( ! defined( 'ABSPATH' ) )
 class Quiz {
 
 	public function __construct() {
-		add_filter( "manage_dozent_quiz_posts_columns", array($this, 'add_column'), 10,1 );
-		add_action( "manage_dozent_quiz_posts_custom_column" , array($this, 'custom_question_column'), 10, 2 );
+		add_filter( "manage_tutor_quiz_posts_columns", array($this, 'add_column'), 10,1 );
+		add_action( "manage_tutor_quiz_posts_custom_column" , array($this, 'custom_question_column'), 10, 2 );
 
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
-		add_action('save_post_dozent_quiz', array($this, 'save_quiz_meta'));
+		add_action('save_post_tutor_quiz', array($this, 'save_quiz_meta'));
 
-		add_action('wp_ajax_dozent_load_quiz_modal', array($this, 'dozent_load_quiz_modal'));
-		add_action('wp_ajax_dozent_add_quiz_to_post', array($this, 'dozent_add_quiz_to_post'));
+		add_action('wp_ajax_tutor_load_quiz_modal', array($this, 'tutor_load_quiz_modal'));
+		add_action('wp_ajax_tutor_add_quiz_to_post', array($this, 'tutor_add_quiz_to_post'));
 		add_action('wp_ajax_remove_quiz_from_post', array($this, 'remove_quiz_from_post'));
 
-		add_action('wp_ajax_dozent_quiz_timeout', array($this, 'dozent_quiz_timeout'));
+		add_action('wp_ajax_tutor_quiz_timeout', array($this, 'tutor_quiz_timeout'));
 
 		//User take the quiz
 		add_action('template_redirect', array($this, 'start_the_quiz'));
@@ -42,8 +42,8 @@ class Quiz {
 	public function add_column($columns){
 		$date_col = $columns['date'];
 		unset($columns['date']);
-		$columns['quiz'] = __('Course', 'dozent');
-		$columns['questions'] = __('Questions', 'dozent');
+		$columns['quiz'] = __('Course', 'tutor');
+		$columns['questions'] = __('Questions', 'tutor');
 		$columns['date'] = $date_col;
 
 		return $columns;
@@ -51,7 +51,7 @@ class Quiz {
 
 	public function custom_question_column($column, $post_id ){
 		if ($column === 'quiz'){
-			$quiz = dozent_utils()->get_course_by_quiz($post_id);
+			$quiz = tutor_utils()->get_course_by_quiz($post_id);
             
 			if ($quiz){
 			    echo '<a href="'.admin_url('post.php?post='.$quiz->ID.'&action=edit').'">'.get_the_title($quiz->ID).'</a>';
@@ -59,36 +59,36 @@ class Quiz {
 		}
 
 		if ($column === 'questions'){
-            echo dozent_utils()->total_questions_for_student_by_quiz($post_id);
+            echo tutor_utils()->total_questions_for_student_by_quiz($post_id);
 		}
 	}
 
 
 	public function register_meta_box(){
-		add_meta_box( 'dozent-quiz-questions', __( 'Questions', 'dozent' ), array($this, 'quiz_questions'), 'dozent_quiz' );
-		add_meta_box( 'dozent-quiz-settings', __( 'Settings', 'dozent' ), array($this, 'quiz_settings'), 'dozent_quiz' );
+		add_meta_box( 'tutor-quiz-questions', __( 'Questions', 'tutor' ), array($this, 'quiz_questions'), 'tutor_quiz' );
+		add_meta_box( 'tutor-quiz-settings', __( 'Settings', 'tutor' ), array($this, 'quiz_settings'), 'tutor_quiz' );
 	}
 
 	public function quiz_questions(){
-		include  dozent()->path.'views/metabox/quiz_questions.php';
+		include  tutor()->path.'views/metabox/quiz_questions.php';
 	}
 
 	public function quiz_settings(){
-		include  dozent()->path.'views/metabox/quizzes.php';
+		include  tutor()->path.'views/metabox/quizzes.php';
 	}
 
 	public function save_quiz_meta($post_ID){
 		if (isset($_POST['quiz_option'])){
-			$quiz_option = dozent_utils()->sanitize_array($_POST['quiz_option']);
-			update_post_meta($post_ID, 'dozent_quiz_option', $quiz_option);
+			$quiz_option = tutor_utils()->sanitize_array($_POST['quiz_option']);
+			update_post_meta($post_ID, 'tutor_quiz_option', $quiz_option);
 		}
 	}
 
-	public function dozent_load_quiz_modal(){
+	public function tutor_load_quiz_modal(){
 		$quiz_for_post_id = (int) sanitize_text_field($_POST['quiz_for_post_id']);
 
-		$search_terms = sanitize_text_field(dozent_utils()->avalue_dot('search_terms', $_POST));
-		$quizzes = dozent_utils()->get_unattached_quiz(array('search_term' => $search_terms));
+		$search_terms = sanitize_text_field(tutor_utils()->avalue_dot('search_terms', $_POST));
+		$quizzes = tutor_utils()->get_unattached_quiz(array('search_term' => $search_terms));
 
 		$output = '';
 		if ($quizzes){
@@ -97,24 +97,24 @@ class Quiz {
 			}
 			$output .= '<p class="quiz-search-suggest-text">Search the quiz to get specific quiz</p>';
 		}else{
-			$add_question_url = admin_url('post-new.php?post_type=dozent_quiz');
+			$add_question_url = admin_url('post-new.php?post_type=tutor_quiz');
 			$output .= sprintf('No quiz available right now, please %s add some quiz %s', '<a href="'.$add_question_url.'" target="_blank">', '</a>'  );
 		}
 
 		wp_send_json_success(array('output' => $output));
 	}
 
-	public function dozent_add_quiz_to_post(){
+	public function tutor_add_quiz_to_post(){
 		global $wpdb;
 
-		$quiz_data = dozent_utils()->avalue_dot('quiz_for', $_POST);
+		$quiz_data = tutor_utils()->avalue_dot('quiz_for', $_POST);
 
 		$output = '';
 		$post_id = 0;
 		if ($quiz_data){
 			foreach ($quiz_data as $post_id => $quiz_ids_a);
 
-			$quiz_ids = dozent_utils()->avalue_dot('quiz_id', $quiz_ids_a);
+			$quiz_ids = tutor_utils()->avalue_dot('quiz_id', $quiz_ids_a);
 			foreach ($quiz_ids as $quiz_id){
 				$wpdb->update($wpdb->posts, array('post_parent' => $post_id), array('ID' => $quiz_id) );
 			}
@@ -122,7 +122,7 @@ class Quiz {
 
 		if ($post_id) {
 			ob_start();
-			$attached_quizzes = dozent_utils()->get_attached_quiz( $post_id );
+			$attached_quizzes = tutor_utils()->get_attached_quiz( $post_id );
 			if ( $attached_quizzes ) {
 				foreach ( $attached_quizzes as $attached_quiz ) {
 					?>
@@ -132,7 +132,7 @@ class Quiz {
 							<?php edit_post_link( $attached_quiz->post_title, null, null, $attached_quiz->ID ); ?>
 						</span>
 						<span class="quiz-control">
-							<a href="javascript:;" class="dozent-quiz-delete-btn"><i class="dashicons dashicons-trash"></i></a>
+							<a href="javascript:;" class="tutor-quiz-delete-btn"><i class="dashicons dashicons-trash"></i></a>
 						</span>
 					</div>
 					<?php
@@ -146,17 +146,17 @@ class Quiz {
 
 	public function remove_quiz_from_post(){
 		global $wpdb;
-		$quiz_id = (int) dozent_utils()->avalue_dot('quiz_id', $_POST);
+		$quiz_id = (int) tutor_utils()->avalue_dot('quiz_id', $_POST);
 		$wpdb->update($wpdb->posts, array('post_parent' => 0), array('ID' => $quiz_id) );
 		wp_send_json_success();
 	}
 
 	public function start_the_quiz(){
-		if ( ! isset($_POST['dozent_action'])  ||  $_POST['dozent_action'] !== 'dozent_start_quiz' ){
+		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_start_quiz' ){
 			return;
 		}
 		//Checking nonce
-		dozent_utils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		if ( ! is_user_logged_in()){
 			//TODO: need to set a view in the next version
@@ -172,17 +172,17 @@ class Quiz {
 		$quiz = get_post($quiz_id);
 		$date = date("Y-m-d H:i:s");
 
-		$attempts_allowed = dozent_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
+		$attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
 
-		do_action('dozent_before_start_quiz', $quiz_id);
+		do_action('tutor_before_start_quiz', $quiz_id);
 		$data = array(
 			'comment_post_ID'   => $quiz_id, //QuizID
 			'comment_author'    => $user->user_login,
 			'comment_date'      => $date,
 			'comment_date_gmt'  => get_gmt_from_date($date),
 			'comment_approved'  => 'quiz_started', //quiz_timeup, quiz_complete
-			'comment_agent'     => 'DozentLMSPlugin',
-			'comment_type'      => 'dozent_quiz_attempt',
+			'comment_agent'     => 'TutorLMSPlugin',
+			'comment_type'      => 'tutor_quiz_attempt',
 			'comment_parent'    => $quiz->post_parent, //Quiz Parent Attached Course || Lesson || Topic
 			'user_id'           => $user_id,
 		);
@@ -190,11 +190,11 @@ class Quiz {
 		$wpdb->insert($wpdb->comments, $data);
 		$attempt_id = (int) $wpdb->insert_id;
 
-		$time_limit = dozent_utils()->get_quiz_option($quiz_id, 'time_limit.time_value');
+		$time_limit = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value');
 		$time_limit_seconds = 0;
 		$time_type = 'seconds';
 		if ($time_limit){
-			$time_type = dozent_utils()->get_quiz_option($quiz_id, 'time_limit.time_type');
+			$time_type = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_type');
 
 			switch ($time_type){
                 case 'seconds':
@@ -215,7 +215,7 @@ class Quiz {
 			}
 		}
 
-		$max_question_allowed = dozent_utils()->max_questions_for_take_quiz($quiz_id);
+		$max_question_allowed = tutor_utils()->max_questions_for_take_quiz($quiz_id);
 		$quiz_attempt_info = array(
             'time_limit'            => $time_limit,
             'time_type'             => $time_type,
@@ -247,19 +247,19 @@ class Quiz {
 		update_comment_meta($attempt_id, 'quiz_attempt_info', $quiz_attempt_info);
         update_comment_meta($attempt_id, 'earned_mark_percent', '0');
 
-		do_action('dozent_after_start_quiz', $quiz_id, $attempt_id);
+		do_action('tutor_after_start_quiz', $quiz_id, $attempt_id);
 
-		wp_redirect(dozent_utils()->input_old('_wp_http_referer'));
+		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 		die();
     }
 
 
     public function answering_quiz(){
-	    if ( ! isset($_POST['dozent_action'])  ||  $_POST['dozent_action'] !== 'dozent_answering_quiz_question' ){
+	    if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_answering_quiz_question' ){
 		    return;
 	    }
 	    //Checking nonce
-	    dozent_utils()->checking_nonce();
+	    tutor_utils()->checking_nonce();
 
 	    if ( ! is_user_logged_in()){
 		    die('Please sign in to do this operation');
@@ -268,16 +268,16 @@ class Quiz {
 	    global $wpdb;
 
         $user_id = get_current_user_id();
-	    $attempt_id = (int) sanitize_text_field(dozent_utils()->avalue_dot('attempt_id', $_POST));
-	    $post_question_id = (int) sanitize_text_field(dozent_utils()->avalue_dot('quiz_question_id', $_POST));
-	    $attempt = dozent_utils()->get_attempt($attempt_id);
+	    $attempt_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('attempt_id', $_POST));
+	    $post_question_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('quiz_question_id', $_POST));
+	    $attempt = tutor_utils()->get_attempt($attempt_id);
 
         if ( ! $attempt || $user_id != $attempt->user_id){
             die('Operation not allowed, attempt not found or permission denied');
         }
 
-        $attempt_info = dozent_utils()->quiz_attempt_info($attempt_id);
-	    $given_answers = dozent_utils()->avalue_dot("attempt.{$attempt_id}.quiz_question.{$post_question_id}", $_POST);
+        $attempt_info = tutor_utils()->quiz_attempt_info($attempt_id);
+	    $given_answers = tutor_utils()->avalue_dot("attempt.{$attempt_id}.quiz_question.{$post_question_id}", $_POST);
 
 	    $plus_mark = 0;
 	    $minus_mark = 0;
@@ -294,7 +294,7 @@ class Quiz {
 		    $answers['status'] = 'answered';  //or 0 for false, 'questionSiNo' => 2
 		    $answers['has_correct'] = 0;
 
-		    $saved_answers = dozent_utils()->get_quiz_answer_options_by_question($post_question_id);
+		    $saved_answers = tutor_utils()->get_quiz_answer_options_by_question($post_question_id);
 		    $corrects_answer_ids = array();
 		    if (is_array($saved_answers) && count($saved_answers)){
                 foreach ($saved_answers as $saved_answer){
@@ -362,9 +362,9 @@ class Quiz {
         }
 
 	    $attempt_info['answers'][] = $answers;
-	    dozent_utils()->quiz_update_attempt_info($attempt_id, $attempt_info);
+	    tutor_utils()->quiz_update_attempt_info($attempt_id, $attempt_info);
 
-	    wp_redirect(dozent_utils()->input_old('_wp_http_referer'));
+	    wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 	    die();
     }
 
@@ -374,11 +374,11 @@ class Quiz {
 	 */
 
     public function finishing_quiz_attempt(){
-	    if ( ! isset($_POST['dozent_action'])  ||  $_POST['dozent_action'] !== 'dozent_finish_quiz_attempt' ){
+	    if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_finish_quiz_attempt' ){
 		    return;
 	    }
 	    //Checking nonce
-	    dozent_utils()->checking_nonce();
+	    tutor_utils()->checking_nonce();
 
 	    if ( ! is_user_logged_in()){
 		    die('Please sign in to do this operation');
@@ -389,14 +389,14 @@ class Quiz {
 
 	    $quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
 
-	    $is_started_quiz = dozent_utils()->is_started_quiz($quiz_id);
+	    $is_started_quiz = tutor_utils()->is_started_quiz($quiz_id);
 	    $attempt_id = $is_started_quiz->comment_ID;
 
 	    if ($is_started_quiz) {
-		    do_action('dozent_quiz_finished_before', $attempt_id);
+		    do_action('tutor_quiz_finished_before', $attempt_id);
 
-		    $quiz_attempt_info = dozent_utils()->quiz_attempt_info( $attempt_id );
-		    $answers = dozent_utils()->avalue_dot('answers', $quiz_attempt_info);
+		    $quiz_attempt_info = tutor_utils()->quiz_attempt_info( $attempt_id );
+		    $answers = tutor_utils()->avalue_dot('answers', $quiz_attempt_info);
 
 		    $total_marks = 0;
 		    if (is_array($answers)){
@@ -404,36 +404,36 @@ class Quiz {
 		    }
 
 		    $quiz_attempt_info['total_marks'] = $total_marks;
-		    $pass_mark_percent = dozent_utils()->get_quiz_option($quiz_id,'passing_grade');
+		    $pass_mark_percent = tutor_utils()->get_quiz_option($quiz_id,'passing_grade');
 		    $quiz_attempt_info['pass_mark_percent'] = $pass_mark_percent;
 		    $quiz_attempt_info['submission_time'] = time();
 
 		    //Updating Attempt Info
-		    dozent_utils()->quiz_update_attempt_info($attempt_id, $quiz_attempt_info);
+		    tutor_utils()->quiz_update_attempt_info($attempt_id, $quiz_attempt_info);
 
 		    $wpdb->update($wpdb->comments, array('comment_approved' => 'quiz_finished'), array('comment_ID' => $attempt_id));
 
-		    do_action('dozent_quiz_finished_after', $attempt_id);
+		    do_action('tutor_quiz_finished_after', $attempt_id);
 	    }
 
-	    wp_redirect(dozent_utils()->input_old('_wp_http_referer'));
+	    wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 	    die();
     }
 
 	/**
 	 * Quiz timeout by ajax
 	 */
-    public function dozent_quiz_timeout(){
+    public function tutor_quiz_timeout(){
 	    global $wpdb;
 
 	    $quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
 
-	    $is_started_quiz = dozent_utils()->is_started_quiz($quiz_id);
+	    $is_started_quiz = tutor_utils()->is_started_quiz($quiz_id);
 	    $attempt_id = $is_started_quiz->comment_ID;
 
 	    if ($is_started_quiz) {
-		    $quiz_attempt_info = dozent_utils()->quiz_attempt_info( $attempt_id );
-		    $answers = dozent_utils()->avalue_dot('answers', $quiz_attempt_info);
+		    $quiz_attempt_info = tutor_utils()->quiz_attempt_info( $attempt_id );
+		    $answers = tutor_utils()->avalue_dot('answers', $quiz_attempt_info);
 
 		    $total_marks = 0;
 		    if (is_array($answers)){
@@ -441,17 +441,17 @@ class Quiz {
 		    }
 
 		    $quiz_attempt_info['total_marks'] = $total_marks;
-		    $pass_mark_percent = dozent_utils()->get_quiz_option($quiz_id,'passing_grade');
+		    $pass_mark_percent = tutor_utils()->get_quiz_option($quiz_id,'passing_grade');
 		    $quiz_attempt_info['pass_mark_percent'] = $pass_mark_percent;
 
 		    //Updating Attempt Info
-		    dozent_utils()->quiz_update_attempt_info($attempt_id, $quiz_attempt_info);
+		    tutor_utils()->quiz_update_attempt_info($attempt_id, $quiz_attempt_info);
 
 		    $wpdb->update($wpdb->comments, array('comment_approved' => 'quiz_timeout'), array('comment_ID' => $attempt_id));
 		    wp_send_json_success();
 	    }
 
-	    wp_send_json_error(__('Quiz has been timeout already', 'dozent'));
+	    wp_send_json_error(__('Quiz has been timeout already', 'tutor'));
     }
 
 	/**
@@ -463,10 +463,10 @@ class Quiz {
         $answer_index = (int) sanitize_text_field($_GET['answer_index']);
         $mark_as = sanitize_text_field($_GET['mark_as']);
 
-        $attempt_info = dozent_utils()->quiz_attempt_info($attempt_id);
+        $attempt_info = tutor_utils()->quiz_attempt_info($attempt_id);
 
 	    $previous_answer = $attempt_info['answers'][$answer_index];
-	    $previous_correct = dozent_utils()->avalue_dot('has_correct', $previous_answer);
+	    $previous_correct = tutor_utils()->avalue_dot('has_correct', $previous_answer);
 
 	    if ($mark_as === 'correct' && ! $previous_correct ){
 		    $previous_answer['has_correct'] = 1;
@@ -484,9 +484,9 @@ class Quiz {
 	    $attempt_info['answers'][$answer_index] = $previous_answer;
 	    $attempt_info['manual_reviewed'] = time();
 
-	    dozent_utils()->quiz_update_attempt_info($attempt_id, $attempt_info);
+	    tutor_utils()->quiz_update_attempt_info($attempt_id, $attempt_info);
 
-	    wp_redirect(admin_url("admin.php?page=dozent_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
+	    wp_redirect(admin_url("admin.php?page=tutor_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
 	    die();
     }
 

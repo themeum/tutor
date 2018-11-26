@@ -1,9 +1,9 @@
 <?php
-namespace DOZENT;
+namespace TUTOR;
 
 /**
  * Class Admin
- * @package DOZENT
+ * @package TUTOR
  *
  * @since v.1.0.0
  */
@@ -18,82 +18,82 @@ class Admin{
 
 		add_action('load-post.php', array($this, 'check_if_current_users_post') );
 
-		add_action('admin_action_uninstall_dozent_and_erase', array($this, 'erase_dozent_data'));
-		add_filter('plugin_action_links_' . plugin_basename(DOZENT_FILE), array( $this, 'plugin_action_links' ) );
+		add_action('admin_action_uninstall_tutor_and_erase', array($this, 'erase_tutor_data'));
+		add_filter('plugin_action_links_' . plugin_basename(TUTOR_FILE), array( $this, 'plugin_action_links' ) );
 	}
 
 	public function register_menu(){
-		$unanswered_questions = dozent_utils()->unanswered_question_count();
+		$unanswered_questions = tutor_utils()->unanswered_question_count();
 		$unanswered_bubble = '';
 		if ($unanswered_questions){
 			$unanswered_bubble = '<span class="update-plugins count-'.$unanswered_questions.'"><span class="plugin-count">'.$unanswered_questions.'</span></span>';
 		}
 
-		$course_post_type = dozent()->course_post_type;
+		$course_post_type = tutor()->course_post_type;
 
-		add_menu_page(__('Dozent', 'dozent'), __('Dozent', 'dozent'), 'manage_dozent_teacher', 'dozent', null, 'dashicons-welcome-learn-more', 2);
+		add_menu_page(__('Tutor', 'tutor'), __('Tutor', 'tutor'), 'manage_tutor_teacher', 'tutor', null, 'dashicons-welcome-learn-more', 2);
 
-		add_submenu_page('dozent', __('Categories', 'dozent'), __('Categories', 'dozent'), 'manage_dozent', 'edit-tags.php?taxonomy=course-category&post_type='.$course_post_type, null );
-		add_submenu_page('dozent', __('Tags', 'dozent'), __('Tags', 'dozent'), 'manage_dozent', 'edit-tags.php?taxonomy=course-tag&post_type='.$course_post_type, null );
+		add_submenu_page('tutor', __('Categories', 'tutor'), __('Categories', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type='.$course_post_type, null );
+		add_submenu_page('tutor', __('Tags', 'tutor'), __('Tags', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type='.$course_post_type, null );
 
-		add_submenu_page('dozent', __('Students', 'dozent'), __('Students', 'dozent'), 'manage_dozent', 'dozent-students', array($this, 'dozent_students') );
+		add_submenu_page('tutor', __('Students', 'tutor'), __('Students', 'tutor'), 'manage_tutor', 'tutor-students', array($this, 'tutor_students') );
 
-		add_submenu_page('dozent', __('Teachers', 'dozent'), __('Teachers', 'dozent'), 'manage_dozent', 'dozent-teachers', array($this, 'dozent_teachers') );
+		add_submenu_page('tutor', __('Teachers', 'tutor'), __('Teachers', 'tutor'), 'manage_tutor', 'tutor-teachers', array($this, 'tutor_teachers') );
 
-		add_submenu_page('dozent', __('Q & A', 'dozent'), __('Q & A '.$unanswered_bubble, 'dozent'), 'manage_dozent_teacher', 'question_answer', array($this, 'question_answer') );
+		add_submenu_page('tutor', __('Q & A', 'tutor'), __('Q & A '.$unanswered_bubble, 'tutor'), 'manage_tutor_teacher', 'question_answer', array($this, 'question_answer') );
 
-		add_submenu_page('dozent', __('Quiz Attempts', 'dozent'), __('Quiz Attempts', 'dozent'), 'manage_dozent_teacher', 'dozent_quiz_attempts', array($this, 'quiz_attempts') );
+		add_submenu_page('tutor', __('Quiz Attempts', 'tutor'), __('Quiz Attempts', 'tutor'), 'manage_tutor_teacher', 'tutor_quiz_attempts', array($this, 'quiz_attempts') );
 
-		add_submenu_page('dozent', __('E-Mails', 'dozent'), __('E-Mails', 'dozent'), 'manage_dozent', 'dozent_emails', array($this, 'dozent_emails') );
+		add_submenu_page('tutor', __('E-Mails', 'tutor'), __('E-Mails', 'tutor'), 'manage_tutor', 'tutor_emails', array($this, 'tutor_emails') );
 
-		//add_submenu_page('dozent', __('Addons', 'dozent'), __('Addons', 'dozent'), 'manage_dozent', 'dozent-addons', array(new Addons(), 'addons_page') );
+		//add_submenu_page('tutor', __('Addons', 'tutor'), __('Addons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(), 'addons_page') );
 
-		add_submenu_page('dozent', __('Status', 'dozent'), __('Status', 'dozent'), 'manage_dozent', 'dozent-status', array($this, 'dozent_status') );
+		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
 
-		add_submenu_page('dozent', __('Settings', 'dozent'), __('Settings', 'dozent'), 'manage_dozent', 'dozent', array($this, 'dozent_page') );
+		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor', array($this, 'tutor_page') );
 
-		add_submenu_page('dozent',__('Dozent Uninstall', 'dozent'), null, 'deactivate_plugin', 'dozent-uninstall', array($this, 'dozent_uninstall'));
+		add_submenu_page('tutor',__('Tutor Uninstall', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
 	}
 
-	public function dozent_page(){
-		$dozent_option = new Options();
-		echo apply_filters('dozent/options/generated-html', $dozent_option->generate());
+	public function tutor_page(){
+		$tutor_option = new Options();
+		echo apply_filters('tutor/options/generated-html', $tutor_option->generate());
 	}
 
-	public function dozent_students(){
-		include dozent()->path.'views/pages/students.php';
+	public function tutor_students(){
+		include tutor()->path.'views/pages/students.php';
 	}
 
-	public function dozent_teachers(){
-		include dozent()->path.'views/pages/teachers.php';
+	public function tutor_teachers(){
+		include tutor()->path.'views/pages/teachers.php';
 	}
 
 	public function question_answer(){
-		include dozent()->path.'views/pages/question_answer.php';
+		include tutor()->path.'views/pages/question_answer.php';
 	}
 
 	public function quiz_attempts(){
-		include dozent()->path.'views/pages/quiz_attempts.php';
+		include tutor()->path.'views/pages/quiz_attempts.php';
 	}
 
-	public function dozent_emails(){
-		include dozent()->path.'views/pages/dozent_emails.php';
+	public function tutor_emails(){
+		include tutor()->path.'views/pages/tutor_emails.php';
 	}
 
-	public function dozent_status(){
-		include dozent()->path.'views/pages/status.php';
+	public function tutor_status(){
+		include tutor()->path.'views/pages/status.php';
 	}
 
 
-	public function dozent_uninstall(){
-		include dozent()->path.'views/pages/uninstall.php';
+	public function tutor_uninstall(){
+		include tutor()->path.'views/pages/uninstall.php';
 	}
 
 	/**
 	 * Filter posts for teacher
 	 */
 	public function filter_posts_for_teachers(){
-		if (current_user_can(dozent()->teacher_role)){
+		if (current_user_can(tutor()->teacher_role)){
 			remove_menu_page( 'edit-comments.php' ); //Comments
 			add_action( 'posts_clauses_request', array($this, 'posts_clauses_request') );
 		}
@@ -104,7 +104,7 @@ class Admin{
 
 		$user_id = get_current_user_id();
 
-		$get_assigned_courses_ids = $wpdb->get_col("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_dozent_teacher_course_id' AND user_id = {$user_id}  ");
+		$get_assigned_courses_ids = $wpdb->get_col("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_teacher_course_id' AND user_id = {$user_id}  ");
 
 		$custom_author_query = "AND {$wpdb->posts}.post_author = {$user_id}";
 		if (is_array($get_assigned_courses_ids) && count($get_assigned_courses_ids)){
@@ -123,7 +123,7 @@ class Admin{
 	 * @since v.1.0.0
 	 */
 	public function check_if_current_users_post(){
-		if (! current_user_can(dozent()->teacher_role)) {
+		if (! current_user_can(tutor()->teacher_role)) {
 			return;
 		}
 
@@ -135,10 +135,10 @@ class Admin{
 			if ($get_post->post_author != $current_user){
 				global $wpdb;
 
-				$get_assigned_courses_ids = (int) $wpdb->get_var("SELECT user_id from {$wpdb->usermeta} WHERE user_id = {$current_user} AND meta_key = '_dozent_teacher_course_id' AND meta_value = {$get_post_id} ");
+				$get_assigned_courses_ids = (int) $wpdb->get_var("SELECT user_id from {$wpdb->usermeta} WHERE user_id = {$current_user} AND meta_key = '_tutor_teacher_course_id' AND meta_value = {$get_post_id} ");
 
 				if ( ! $get_assigned_courses_ids){
-					wp_die(__('Permission Denied', 'dozent'));
+					wp_die(__('Permission Denied', 'tutor'));
 				}
 
 			}
@@ -151,7 +151,7 @@ class Admin{
 
 	public static function scan_template_files( $template_path = null ) {
 		if ( ! $template_path){
-			$template_path = dozent()->path.'templates/';
+			$template_path = tutor()->path.'templates/';
 		}
 
 
@@ -186,9 +186,9 @@ class Admin{
 		$override_files = array();
 		foreach ($template_files as $file){
 			$file_path = null;
-			if (file_exists(trailingslashit(get_stylesheet_directory()).dozent()->template_path.$file)){
+			if (file_exists(trailingslashit(get_stylesheet_directory()).tutor()->template_path.$file)){
 				$file_path = $file;
-			}elseif (file_exists(trailingslashit(get_template_directory()).dozent()->template_path.$file)){
+			}elseif (file_exists(trailingslashit(get_template_directory()).tutor()->template_path.$file)){
 				$file_path = $file;
 			}
 
@@ -211,17 +211,17 @@ class Admin{
 
 
 		// WP memory limit.
-		$wp_memory_limit = dozent_utils()->let_to_num(WP_MEMORY_LIMIT);
+		$wp_memory_limit = tutor_utils()->let_to_num(WP_MEMORY_LIMIT);
 		if ( function_exists( 'memory_get_usage' ) ) {
-			$wp_memory_limit = max( $wp_memory_limit, dozent_utils()->let_to_num( @ini_get( 'memory_limit' ) ) );
+			$wp_memory_limit = max( $wp_memory_limit, tutor_utils()->let_to_num( @ini_get( 'memory_limit' ) ) );
 		}
 
-		$database_version = dozent_utils()->get_db_version();
+		$database_version = tutor_utils()->get_db_version();
 
 		return array(
 			'home_url'                  => get_option( 'home' ),
 			'site_url'                  => get_option( 'siteurl' ),
-			'version'                   => dozent()->version,
+			'version'                   => tutor()->version,
 			'wp_version'                => get_bloginfo( 'version' ),
 			'wp_multisite'              => is_multisite(),
 			'wp_memory_limit'           => $wp_memory_limit,
@@ -231,7 +231,7 @@ class Admin{
 			'external_object_cache'     => wp_using_ext_object_cache(),
 			'server_info'               => isset( $_SERVER['SERVER_SOFTWARE'] ) ? wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) : '',
 			'php_version'               => phpversion(),
-			'php_post_max_size'         => dozent_utils()->let_to_num( ini_get( 'post_max_size' ) ),
+			'php_post_max_size'         => tutor_utils()->let_to_num( ini_get( 'post_max_size' ) ),
 			'php_max_execution_time'    => ini_get( 'max_execution_time' ),
 			'php_max_input_vars'        => ini_get( 'max_input_vars' ),
 			'curl_version'              => $curl_version,
@@ -250,36 +250,36 @@ class Admin{
 	}
 
 
-	public function erase_dozent_data(){
+	public function erase_tutor_data(){
 		global $wpdb;
 
-		$is_erase_data = dozent_utils()->get_option('delete_on_uninstall');
+		$is_erase_data = tutor_utils()->get_option('delete_on_uninstall');
 		/**D*/ //=> Deleting Data
 
-		$plugin_file = dozent()->basename;
+		$plugin_file = tutor()->basename;
 		if ($is_erase_data && current_user_can( 'deactivate_plugin', $plugin_file )) {
 			/**
 			 * Deleting Post Type, Meta Data, taxonomy
 			 */
-			$course_post_type = dozent()->course_post_type;
-			$lesson_post_type = dozent()->lesson_post_type;
+			$course_post_type = tutor()->course_post_type;
+			$lesson_post_type = tutor()->lesson_post_type;
 
 			$post_types = array(
 				$course_post_type,
 				$lesson_post_type,
-				'dozent_quiz',
-				'dozent_question',
-				'dozent_enrolled',
+				'tutor_quiz',
+				'tutor_question',
+				'tutor_enrolled',
 				'topics',
-				'dozent_enrolled',
-				'dozent_announcements',
+				'tutor_enrolled',
+				'tutor_announcements',
 			);
 
 			$post_type_strings = "'".implode("','", $post_types)."'";
-			$dozent_posts = $wpdb->get_col("SELECT ID from {$wpdb->posts} WHERE post_type in({$post_type_strings}) ;");
+			$tutor_posts = $wpdb->get_col("SELECT ID from {$wpdb->posts} WHERE post_type in({$post_type_strings}) ;");
 
-			if (is_array($dozent_posts) && count($dozent_posts)){
-				foreach ($dozent_posts as $post_id){
+			if (is_array($tutor_posts) && count($tutor_posts)){
+				foreach ($tutor_posts as $post_id){
 					//Delete categories
 					$terms = wp_get_object_terms( $post_id, 'course-category' );
 					foreach( $terms as $term ){
@@ -301,9 +301,9 @@ class Admin{
 			/**
 			 * Deleting Comments (reviews, questions, quiz_answers, etc)
 			 */
-			$dozent_comments = $wpdb->get_col("SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;");
-			$comments_ids_strings = "'".implode("','", $dozent_comments)."'";
-			if (is_array($dozent_comments) && count($dozent_comments)){
+			$tutor_comments = $wpdb->get_col("SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;");
+			$comments_ids_strings = "'".implode("','", $tutor_comments)."'";
+			if (is_array($tutor_comments) && count($tutor_comments)){
 				/**D*/ $wpdb->query("DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$comments_ids_strings}) ");
 			}
 			/**D*/ $wpdb->delete($wpdb->comments, array('comment_agent' => 'comment_agent'));
@@ -312,12 +312,12 @@ class Admin{
 			 * Delete Options
 			 */
 
-			/**D*/ delete_option('dozent_option');
-			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_dozent_student'));
-			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_dozent_teacher_approved'));
-			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_dozent_teacher_status'));
-			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_dozent_teacher'));
-			/**D*/ $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE  '%_dozent_completed_lesson_id_%' ");
+			/**D*/ delete_option('tutor_option');
+			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_tutor_student'));
+			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_tutor_teacher_approved'));
+			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_tutor_teacher_status'));
+			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_tutor_teacher'));
+			/**D*/ $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE  '%_tutor_completed_lesson_id_%' ");
 
 			deactivate_plugins($plugin_file);
 		}
@@ -327,18 +327,18 @@ class Admin{
 	}
 
 	public function plugin_action_links($actions){
-		$is_erase_data = dozent_utils()->get_option('delete_on_uninstall');
+		$is_erase_data = tutor_utils()->get_option('delete_on_uninstall');
 
 		if ($is_erase_data) {
-			$plugin_file = dozent()->basename;
+			$plugin_file = tutor()->basename;
 			if ( current_user_can( 'deactivate_plugin', $plugin_file ) ) {
 				if ( isset( $actions['deactivate'] ) ) {
-					$actions['deactivate'] = '<a href="admin.php?page=dozent-uninstall">' . __('Uninstall', 'dozent') . '</a>';
+					$actions['deactivate'] = '<a href="admin.php?page=tutor-uninstall">' . __('Uninstall', 'tutor') . '</a>';
 				}
 			}
 		}
 
-		$actions['settings'] = '<a href="admin.php?page=dozent">' . __('Settings', 'dozent') . '</a>';
+		$actions['settings'] = '<a href="admin.php?page=tutor">' . __('Settings', 'tutor') . '</a>';
 		return $actions;
 	}
 

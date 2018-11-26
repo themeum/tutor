@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<?php do_action('dozent_course/archive/pagination/before');  ?>
+<?php do_action('tutor_course/archive/pagination/before');  ?>
 
-<div class="dozent-pagination-wrap">
+<div class="tutor-pagination-wrap">
 	<?php
 	global $wp_query;
 	$big = 999999999; // need an unlikely integer
@@ -29,4 +29,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 	?>
 </div>
 
-<?php do_action('dozent_course/archive/pagination/after');  ?>
+<?php do_action('tutor_course/archive/pagination/after');  ?>

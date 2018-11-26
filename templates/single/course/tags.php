@@ -9,17 +9,17 @@
  * @url https://themeum.com
  */
 
-do_action('dozent_course/single/before/tags');
+do_action('tutor_course/single/before/tags');
 
 ?>
 <?php
-$course_tags = get_dozent_course_tags();
+$course_tags = get_tutor_course_tags();
 if(is_array($course_tags) && count($course_tags)){ ?>
-    <div class="dozent-single-course-segment">
+    <div class="tutor-single-course-segment">
         <div class="course-benefits-title">
-            <h4 class="dozent-segment-title"><?php esc_html_e('Skills', 'dozent') ?></h4>
+            <h4 class="tutor-segment-title"><?php esc_html_e('Skills', 'tutor') ?></h4>
         </div>
-        <div class="dozent-course-tags">
+        <div class="tutor-course-tags">
             <?php
                 foreach ($course_tags as $course_tag){
                     $tag_link = get_term_link($course_tag->term_id);
@@ -31,4 +31,4 @@ if(is_array($course_tags) && count($course_tags)){ ?>
 <?php
 }
 ?>
-<?php do_action('dozent_course/single/after/tags'); ?>
+<?php do_action('tutor_course/single/after/tags'); ?>

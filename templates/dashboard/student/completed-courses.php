@@ -1,36 +1,36 @@
-<h1><?php _e('Completed Course', 'dozent'); ?></h1>
-<div class="dozent-dashboard-content-inner">
+<h1><?php _e('Completed Course', 'tutor'); ?></h1>
+<div class="tutor-dashboard-content-inner">
 
 	<?php
-	$completed_courses = dozent_utils()->get_courses_by_user();
+	$completed_courses = tutor_utils()->get_courses_by_user();
 
 	if ($completed_courses && $completed_courses->have_posts()):
 		while ($completed_courses->have_posts()):
 			$completed_courses->the_post();
 			?>
-            <div class="dozent-mycourse-wrap dozent-mycourse-<?php the_ID(); ?>">
+            <div class="tutor-mycourse-wrap tutor-mycourse-<?php the_ID(); ?>">
                 <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a> </h3>
-                <div class="dozent-meta dozent-course-metadata">
+                <div class="tutor-meta tutor-course-metadata">
 					<?php
-					$total_lessons = dozent_utils()->get_lesson_count_by_course();
-					$completed_lessons = dozent_utils()->get_completed_lesson_count_by_course();
+					$total_lessons = tutor_utils()->get_lesson_count_by_course();
+					$completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
 					?>
                     <ul>
                         <li>
                             <?php
-                            _e('Total Lessons:', 'dozent');
+                            _e('Total Lessons:', 'tutor');
                             echo "<span>$total_lessons</span>";
                             ?>
                         </li>
                         <li>
                             <?php
-                            _e('Completed Lessons:', 'dozent');
+                            _e('Completed Lessons:', 'tutor');
                             echo "<span>$completed_lessons / $total_lessons</span>";
                             ?>
                         </li>
                     </ul>
                 </div>
-                <?php dozent_course_completing_progress_bar(); ?>
+                <?php tutor_course_completing_progress_bar(); ?>
 				<?php the_excerpt(); ?>
 
             </div>
@@ -41,7 +41,7 @@
 		wp_reset_postdata();
 
 	else:
-        echo "<div class='dozent-mycourse-wrap'>". esc_html__('There\'s no active course', 'dozent') ."</div>";
+        echo "<div class='tutor-mycourse-wrap'>". esc_html__('There\'s no active course', 'tutor') ."</div>";
 	endif;
 
 	?>

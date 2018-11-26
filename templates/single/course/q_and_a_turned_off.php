@@ -12,4 +12,4 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 ?>
 
-<h1><?php _e('This feature has been disabled by the administrator', 'dozent'); ?></h1>
+<h1><?php _e('This feature has been disabled by the administrator', 'tutor'); ?></h1>

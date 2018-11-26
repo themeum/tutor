@@ -10,38 +10,38 @@
 
 get_header();
 
-$user_name = sanitize_text_field(get_query_var('dozent_student_username'));
+$user_name = sanitize_text_field(get_query_var('tutor_student_username'));
 $sub_page = sanitize_text_field(get_query_var('profile_sub_page'));
-$get_user = dozent_utils()->get_user_by_login($user_name);
+$get_user = tutor_utils()->get_user_by_login($user_name);
 $user_id = $get_user->ID;
 ?>
 
-<?php do_action('dozent_student/before/wrap'); ?>
+<?php do_action('tutor_student/before/wrap'); ?>
 
-    <div <?php dozent_post_class('dozent-full-width-student-profile'); ?>>
+    <div <?php tutor_post_class('tutor-full-width-student-profile'); ?>>
 
-        <div class="dozent-student-dashboard-leadinfo">
-            <div class="dozent-container">
+        <div class="tutor-student-dashboard-leadinfo">
+            <div class="tutor-container">
 				<?php
                     $user_data = get_userdata($user_id);
 				    $roles = wp_roles();
 				?>
 
-                <div class="dozent-row">
-                    <div class="dozent-col-auto">
-                        <div class="dozent-dashboard-avater">
+                <div class="tutor-row">
+                    <div class="tutor-col-auto">
+                        <div class="tutor-dashboard-avater">
 							<?php
-							echo dozent_utils()->get_dozent_avatar($user_id, 'thumbnail'); ?>
+							echo tutor_utils()->get_tutor_avatar($user_id, 'thumbnail'); ?>
                         </div>
                     </div>
-                    <div class="dozent-col">
-                        <div class="dozent-dashboard-student-info">
-                            <h4 class="dozent-student-name">
-                                <span><?php _e('Hello,', 'dozent'); ?></span>
-                                <a href="<?php echo dozent_utils()->profile_url($user_id); ?>"> <?php echo esc_html($user_data->display_name); ?> </a>
+                    <div class="tutor-col">
+                        <div class="tutor-dashboard-student-info">
+                            <h4 class="tutor-student-name">
+                                <span><?php _e('Hello,', 'tutor'); ?></span>
+                                <a href="<?php echo tutor_utils()->profile_url($user_id); ?>"> <?php echo esc_html($user_data->display_name); ?> </a>
                             </h4>
-                            <div class="dozent-dashboard-user-role">
-                                <span><?php _e('You are ', 'dozent'); ?></span>
+                            <div class="tutor-dashboard-user-role">
+                                <span><?php _e('You are ', 'tutor'); ?></span>
 								<?php
 								if (is_array($user_data->roles) && count($user_data->roles)){
 									foreach ($user_data->roles as $role){
@@ -54,11 +54,11 @@ $user_id = $get_user->ID;
                             </div>
                         </div>
                     </div>
-                    <div class="dozent-col-12">
-                        <div class="dozent-dashboard-student-meta">
+                    <div class="tutor-col-12">
+                        <div class="tutor-dashboard-student-meta">
 		                    <?php
-                                $completed_course = dozent_utils()->get_completed_courses_ids_by_user($user_id);
-                                $count_reviews = dozent_utils()->count_reviews_wrote_by_user($user_id);
+                                $completed_course = tutor_utils()->get_completed_courses_ids_by_user($user_id);
+                                $count_reviews = tutor_utils()->count_reviews_wrote_by_user($user_id);
 
                                 $user = wp_get_current_user();
                                 $udata = get_userdata( $user->ID );
@@ -68,15 +68,15 @@ $user_id = $get_user->ID;
 		                    ?>
                             <ul>
                                 <li>
-                                    <strong><?php _e('Registration Date', 'dozent'); ?></strong>
+                                    <strong><?php _e('Registration Date', 'tutor'); ?></strong>
 				                    <?php echo $registered; ?>
                                 </li>
                                 <li>
-                                    <strong><?php _e('Course completed', 'dozent'); ?></strong>
+                                    <strong><?php _e('Course completed', 'tutor'); ?></strong>
 				                    <?php echo count($completed_course); ?>
                                 </li>
                                 <li>
-                                    <strong><?php _e('Reviews Wrote', 'dozent'); ?></strong>
+                                    <strong><?php _e('Reviews Wrote', 'tutor'); ?></strong>
 				                    <?php echo $count_reviews; ?>
                                 </li>
                             </ul>
@@ -84,21 +84,21 @@ $user_id = $get_user->ID;
                     </div>
                 </div>
 
-                <div class="dozent-seperator"></div>
+                <div class="tutor-seperator"></div>
             </div>
         </div>
 
-        <div <?php dozent_post_class('dozent-dashboard-student'); ?>>
+        <div <?php tutor_post_class('tutor-dashboard-student'); ?>>
 
-            <div class="dozent-container">
-                <div class="dozent-row">
-                    <div class="dozent-col-3">
+            <div class="tutor-container">
+                <div class="tutor-row">
+                    <div class="tutor-col-3">
                         <?php
-                        $permalinks = dozent_utils()->user_profile_permalinks();
-                        $student_profile_url = dozent_utils()->profile_url($user_id);
+                        $permalinks = tutor_utils()->user_profile_permalinks();
+                        $student_profile_url = tutor_utils()->profile_url($user_id);
                         ?>
-                        <ul class="dozent-dashboard-permalinks">
-                            <li><a href="<?php echo dozent_utils()->profile_url($user_id); ?>"><?php _e('Bio', 'dozent'); ?></a></li>
+                        <ul class="tutor-dashboard-permalinks">
+                            <li><a href="<?php echo tutor_utils()->profile_url($user_id); ?>"><?php _e('Bio', 'tutor'); ?></a></li>
                             <?php
                             if (is_array($permalinks) && count($permalinks)){
                                 foreach ($permalinks as $permalink_key => $permalink){
@@ -108,25 +108,25 @@ $user_id = $get_user->ID;
                             ?>
                         </ul>
                     </div>
-                    <div class="dozent-col-9">
+                    <div class="tutor-col-9">
 
                         <?php
                         if ($sub_page){
-                            dozent_load_template('profile.'.$sub_page);
+                            tutor_load_template('profile.'.$sub_page);
                         }else{
-	                        dozent_load_template('profile.bio');
+	                        tutor_load_template('profile.bio');
                         }
 
                         ?>
 
-                    </div> <!-- .dozent-col-8 -->
+                    </div> <!-- .tutor-col-8 -->
                 </div>
 
-            </div> <!-- .dozent-row -->
-        </div> <!-- .dozent-container -->
+            </div> <!-- .tutor-row -->
+        </div> <!-- .tutor-container -->
     </div>
 
-<?php do_action('dozent_student/after/wrap'); ?>
+<?php do_action('tutor_student/after/wrap'); ?>
 
 <?php
 get_footer();

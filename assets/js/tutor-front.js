@@ -1,28 +1,28 @@
 jQuery(document).ready(function($){
     'use strict';
 
-    $(document).on('change', '.dozent-course-filter-form', function(e){
+    $(document).on('change', '.tutor-course-filter-form', function(e){
         e.preventDefault();
         $(this).closest('form').submit();
     });
 
     const videoPlayer = {
-        nonce_key : _dozentobject.nonce_key,
+        nonce_key : _tutorobject.nonce_key,
         track_player : function(){
             var that = this;
             if (typeof Plyr !== 'undefined') {
-                const player = new Plyr('#dozentPlayer');
+                const player = new Plyr('#tutorPlayer');
 
                 player.on('ready', function(event){
                     const instance = event.detail.plyr;
-                    if (_dozentobject.best_watch_time > 0) {
-                        instance.media.currentTime = _dozentobject.best_watch_time;
+                    if (_tutorobject.best_watch_time > 0) {
+                        instance.media.currentTime = _tutorobject.best_watch_time;
                     }
                     that.sync_time(instance);
                 });
 
                 var tempTimeNow = 0;
-                var intervalSeconds = 60; //Send to dozent backend about video playing time in this interval
+                var intervalSeconds = 60; //Send to tutor backend about video playing time in this interval
                 player.on('timeupdate', function(event){
                     const instance = event.detail.plyr;
 
@@ -44,17 +44,17 @@ jQuery(document).ready(function($){
         },
         sync_time: function(instance, options){
             /**
-             * DOZENT is sending about video playback information to server.
+             * TUTOR is sending about video playback information to server.
              */
-            var data = {action: 'sync_video_playback', currentTime : instance.currentTime, duration:instance.duration,  post_id : _dozentobject.post_id};
-            data[this.nonce_key] = _dozentobject[this.nonce_key];
+            var data = {action: 'sync_video_playback', currentTime : instance.currentTime, duration:instance.duration,  post_id : _tutorobject.post_id};
+            data[this.nonce_key] = _tutorobject[this.nonce_key];
 
             var data_send = data;
 
             if(options){
                 data_send = Object.assign(data, options);
             }
-            $.post(_dozentobject.ajaxurl, data_send);
+            $.post(_tutorobject.ajaxurl, data_send);
         },
         init: function(){
             this.track_player();
@@ -62,16 +62,16 @@ jQuery(document).ready(function($){
     };
 
     /**
-     * Fire DOZENT video
+     * Fire TUTOR video
      * @since v.1.0.0
      */
     videoPlayer.init();
 
-    $(document).on('change keyup paste', '.dozent_user_name', function(){
-        $(this).val(dozent_slugify($(this).val()));
+    $(document).on('change keyup paste', '.tutor_user_name', function(){
+        $(this).val(tutor_slugify($(this).val()));
     });
 
-    function dozent_slugify(text) {
+    function tutor_slugify(text) {
         return text.toString().toLowerCase()
             .replace(/\s+/g, '-')           // Replace spaces with -
             .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
@@ -81,37 +81,37 @@ jQuery(document).ready(function($){
     }
 
     /**
-     * Hover dozent rating and set value
+     * Hover tutor rating and set value
      */
-    $(document).on('hover', '.dozent-ratings-wrap i', function(){
-        $(this).closest('.dozent-ratings-wrap').find('i').removeClass('dozent-icon-star-full').addClass('dozent-icon-star-line');
+    $(document).on('hover', '.tutor-ratings-wrap i', function(){
+        $(this).closest('.tutor-ratings-wrap').find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
         var currentRateValue = $(this).attr('data-rating-value');
         for (var i = 1; i<= currentRateValue; i++){
-            $(this).closest('.dozent-ratings-wrap').find('i[data-rating-value="'+i+'"]').removeClass('dozent-icon-star-line').addClass('dozent-icon-star-full');
+            $(this).closest('.tutor-ratings-wrap').find('i[data-rating-value="'+i+'"]').removeClass('tutor-icon-star-line').addClass('tutor-icon-star-full');
         }
     });
 
-    $(document).on('click', '.dozent-ratings-wrap i', function(){
+    $(document).on('click', '.tutor-ratings-wrap i', function(){
         var rating = $(this).attr('data-rating-value');
-        var course_id = $('input[name="dozent_course_id"]').val();
-        var data = {course_id : course_id, rating:rating, action: 'dozent_place_rating' };
+        var course_id = $('input[name="tutor_course_id"]').val();
+        var data = {course_id : course_id, rating:rating, action: 'tutor_place_rating' };
 
-        $.post(_dozentobject.ajaxurl, data);
+        $.post(_tutorobject.ajaxurl, data);
     });
 
 
-    $(document).on('click', '.dozent_submit_review_btn', function (e) {
+    $(document).on('click', '.tutor_submit_review_btn', function (e) {
         e.preventDefault();
         var $that = $(this);
         var review = $(this).closest('form').find('textarea[name="review"]').val();
         review = review.trim();
 
-        var course_id = $('input[name="dozent_course_id"]').val();
-        var data = {course_id : course_id, review:review, action: 'dozent_place_rating' };
+        var course_id = $('input[name="tutor_course_id"]').val();
+        var data = {course_id : course_id, review:review, action: 'tutor_place_rating' };
 
         if (review) {
             $.ajax({
-                url: _dozentobject.ajaxurl,
+                url: _tutorobject.ajaxurl,
                 type: 'POST',
                 data: data,
                 beforeSend: function () {
@@ -120,10 +120,10 @@ jQuery(document).ready(function($){
                 success: function (data) {
                     var review_id = data.data.review_id;
                     var review = data.data.review;
-                    $('.dozent-review-'+review_id+' .review-content').html(review);
+                    $('.tutor-review-'+review_id+' .review-content').html(review);
                 },
                 complete: function () {
-                    $('.dozent-write-review-form').slideUp();
+                    $('.tutor-write-review-form').slideUp();
                     $that.removeClass('updating-icon');
                 }
             });
@@ -132,57 +132,57 @@ jQuery(document).ready(function($){
 
     $(document).on('click', '.write-course-review-link-btn', function(e){
         e.preventDefault();
-        $(this).siblings('.dozent-write-review-form').slideToggle();
+        $(this).siblings('.tutor-write-review-form').slideToggle();
     });
 
-    $(document).on('click', '.dozent-ask-question-btn', function(e){
+    $(document).on('click', '.tutor-ask-question-btn', function(e){
         e.preventDefault();
-        $('.dozent-add-question-wrap').slideToggle();
+        $('.tutor-add-question-wrap').slideToggle();
     });
-    $(document).on('click', '.dozent_question_cancel', function(e){
+    $(document).on('click', '.tutor_question_cancel', function(e){
         e.preventDefault();
-        $('.dozent-add-question-wrap').toggle();
+        $('.tutor-add-question-wrap').toggle();
     });
 
 
-    $(document).on('submit', '#dozent-ask-question-form', function(e){
+    $(document).on('submit', '#tutor-ask-question-form', function(e){
         e.preventDefault();
 
         var $form = $(this);
-        var data = $(this).serialize()+'&action=dozent_ask_question';
+        var data = $(this).serialize()+'&action=tutor_ask_question';
 
         $.ajax({
-            url: _dozentobject.ajaxurl,
+            url: _tutorobject.ajaxurl,
             type: 'POST',
             data: data,
             beforeSend: function () {
-                $form.find('.dozent_ask_question_btn').addClass('updating-icon');
+                $form.find('.tutor_ask_question_btn').addClass('updating-icon');
             },
             success: function (data) {
                 if (data.success){
-                    $('.dozent-add-question-wrap').hide();
+                    $('.tutor-add-question-wrap').hide();
                     window.location.reload();
                 }
             },
             complete: function () {
-                $form.find('.dozent_ask_question_btn').removeClass('updating-icon');
+                $form.find('.tutor_ask_question_btn').removeClass('updating-icon');
             }
         });
     });
 
 
-    $(document).on('submit', '.dozent-add-answer-form', function(e){
+    $(document).on('submit', '.tutor-add-answer-form', function(e){
         e.preventDefault();
 
         var $form = $(this);
-        var data = $(this).serialize()+'&action=dozent_add_answer';
+        var data = $(this).serialize()+'&action=tutor_add_answer';
 
         $.ajax({
-            url: _dozentobject.ajaxurl,
+            url: _tutorobject.ajaxurl,
             type: 'POST',
             data: data,
             beforeSend: function () {
-                $form.find('.dozent_add_answer_btn').addClass('updating-icon');
+                $form.find('.tutor_add_answer_btn').addClass('updating-icon');
             },
             success: function (data) {
                 if (data.success){
@@ -190,15 +190,15 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $form.find('.dozent_add_answer_btn').removeClass('updating-icon');
+                $form.find('.tutor_add_answer_btn').removeClass('updating-icon');
             }
         });
     });
 
-    $(document).on('focus', '.dozent_add_answer_textarea', function(e){
+    $(document).on('focus', '.tutor_add_answer_textarea', function(e){
         e.preventDefault();
 
-        var question_id = $(this).closest('.dozent_add_answer_wrap').attr('data-question-id');
+        var question_id = $(this).closest('.tutor_add_answer_wrap').attr('data-question-id');
         var conf = {
             tinymce: {
                 wpautop:true,
@@ -206,37 +206,37 @@ jQuery(document).ready(function($){
                 toolbar1: 'bold italic underline bullist strikethrough numlist  blockquote  alignleft aligncenter alignright undo redo link unlink spellchecker fullscreen'
             },
         };
-        wp.editor.initialize('dozent_answer_'+question_id, conf);
+        wp.editor.initialize('tutor_answer_'+question_id, conf);
     });
 
-    $(document).on('click', '.dozent_cancel_wp_editor', function(e){
+    $(document).on('click', '.tutor_cancel_wp_editor', function(e){
         e.preventDefault();
-        $(this).closest('.dozent_wp_editor_wrap').toggle();
-        $(this).closest('.dozent_add_answer_wrap').find('.dozent_wp_editor_show_btn_wrap').toggle();
-        var question_id = $(this).closest('.dozent_add_answer_wrap').attr('data-question-id');
-        wp.editor.remove('dozent_answer_'+question_id);
+        $(this).closest('.tutor_wp_editor_wrap').toggle();
+        $(this).closest('.tutor_add_answer_wrap').find('.tutor_wp_editor_show_btn_wrap').toggle();
+        var question_id = $(this).closest('.tutor_add_answer_wrap').attr('data-question-id');
+        wp.editor.remove('tutor_answer_'+question_id);
     });
 
-    $(document).on('click', '.dozent_wp_editor_show_btn', function(e){
+    $(document).on('click', '.tutor_wp_editor_show_btn', function(e){
         e.preventDefault();
-        $(this).closest('.dozent_add_answer_wrap').find('.dozent_wp_editor_wrap').toggle();
-        $(this).closest('.dozent_wp_editor_show_btn_wrap').toggle();
+        $(this).closest('.tutor_add_answer_wrap').find('.tutor_wp_editor_wrap').toggle();
+        $(this).closest('.tutor_wp_editor_show_btn_wrap').toggle();
     });
 
     /**
      * Quiz attempt
      */
 
-    var $dozent_quiz_time_update = $('#dozent-quiz-time-update');
+    var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
     var attempt_settings = null;
-    if ($dozent_quiz_time_update.length){
-        attempt_settings = JSON.parse($dozent_quiz_time_update.attr('data-attempt-settings'));
-        var attempt_meta = JSON.parse($dozent_quiz_time_update.attr('data-attempt-meta'));
+    if ($tutor_quiz_time_update.length){
+        attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
+        var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
 
         var countDownDate = new Date(attempt_settings.quiz_started_at).getTime() + (attempt_meta.time_limit_seconds * 1000);
         var time_now = new Date(attempt_meta.date_time_now).getTime();
 
-        var dozent_quiz_interval = setInterval(function() {
+        var tutor_quiz_interval = setInterval(function() {
             var distance = countDownDate - time_now;
 
             var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -260,16 +260,16 @@ jQuery(document).ready(function($){
             }
 
             if (distance < 0) {
-                clearInterval(dozent_quiz_interval);
+                clearInterval(tutor_quiz_interval);
                 countdown_human = "EXPIRED";
                 //Set the quiz attempt to timeout in ajax
 
-                var quiz_id = $('#dozent_quiz_id').val();
-                var dozent_quiz_remaining_time_secs = $('#dozent_quiz_remaining_time_secs').val();
-                var quiz_timeout_data = { quiz_id : quiz_id,  action : 'dozent_quiz_timeout' };
+                var quiz_id = $('#tutor_quiz_id').val();
+                var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
+                var quiz_timeout_data = { quiz_id : quiz_id,  action : 'tutor_quiz_timeout' };
 
                 $.ajax({
-                    url: _dozentobject.ajaxurl,
+                    url: _tutorobject.ajaxurl,
                     type: 'POST',
                     data: quiz_timeout_data,
                     success: function (data) {
@@ -278,29 +278,29 @@ jQuery(document).ready(function($){
                         }
                     },
                     complete: function () {
-                        $('#dozent-quiz-body').html('');
+                        $('#tutor-quiz-body').html('');
                         window.location.reload(true);
                     }
                 });
             }
             time_now = time_now + 1000;
-            $dozent_quiz_time_update.html(countdown_human);
+            $tutor_quiz_time_update.html(countdown_human);
         }, 1000);
     }
 
-    // dozent course content accordion
-    $('.dozent-course-topic.dozent-active').find('.dozent-course-lessons').slideDown();
-    $('.dozent-course-title').on('click', function () {
-        var lesson = $(this).siblings('.dozent-course-lessons');
-        $(this).closest('.dozent-course-topic').toggleClass('dozent-active');
+    // tutor course content accordion
+    $('.tutor-course-topic.tutor-active').find('.tutor-course-lessons').slideDown();
+    $('.tutor-course-title').on('click', function () {
+        var lesson = $(this).siblings('.tutor-course-lessons');
+        $(this).closest('.tutor-course-topic').toggleClass('tutor-active');
         lesson.slideToggle();
     });
 
-    $('.dozent-topics-title').on('click', function () {
-        $(this).siblings('.dozent-topics-summery').slideToggle();
+    $('.tutor-topics-title').on('click', function () {
+        $(this).siblings('.tutor-topics-summery').slideToggle();
     });
 
-    $(document).on('click', '.dozent-course-wishlist-btn', function (e) {
+    $(document).on('click', '.tutor-course-wishlist-btn', function (e) {
         e.preventDefault();
 
         var $that = $(this);
@@ -308,9 +308,9 @@ jQuery(document).ready(function($){
 
 
         $.ajax({
-            url: _dozentobject.ajaxurl,
+            url: _tutorobject.ajaxurl,
             type: 'POST',
-            data: {course_id : course_id, 'action': 'dozent_course_add_to_wishlist'},
+            data: {course_id : course_id, 'action': 'tutor_course_add_to_wishlist'},
             beforeSend: function () {
                 $that.addClass('updating-icon');
             },

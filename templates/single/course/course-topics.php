@@ -11,37 +11,37 @@
 if ( ! defined( 'ABSPATH' ) )
     exit;
 
-$topics = dozent_utils()->get_topics();
+$topics = tutor_utils()->get_topics();
 $course_id = get_the_ID();
 
 ?>
 
 
-<?php do_action('dozent_course/single/before/topics'); ?>
+<?php do_action('tutor_course/single/before/topics'); ?>
 
 <?php if($topics->have_posts()) { ?>
-    <div class="dozent-single-course-segment  dozent-course-topics-wrap">
-        <div class="dozent-course-topics-header">
-            <div class="dozent-course-topics-header-left">
-                <h4 class="dozent-segment-title"><?php _e('Topics for this course', 'dozent'); ?></h4>
+    <div class="tutor-single-course-segment  tutor-course-topics-wrap">
+        <div class="tutor-course-topics-header">
+            <div class="tutor-course-topics-header-left">
+                <h4 class="tutor-segment-title"><?php _e('Topics for this course', 'tutor'); ?></h4>
             </div>
-            <div class="dozent-course-topics-header-right">
+            <div class="tutor-course-topics-header-right">
                 <?php
-                    $dozent_lesson_count = dozent_utils()->get_lesson()->post_count;
-                    $dozent_course_duration = get_dozent_course_duration_context($course_id);
+                    $tutor_lesson_count = tutor_utils()->get_lesson()->post_count;
+                    $tutor_course_duration = get_tutor_course_duration_context($course_id);
 
-                    if($dozent_lesson_count) {
-                        echo "<span> $dozent_lesson_count";
-                        _e(' Lessons', 'dozent');
+                    if($tutor_lesson_count) {
+                        echo "<span> $tutor_lesson_count";
+                        _e(' Lessons', 'tutor');
                         echo "</span>";
                     }
-                    if($dozent_course_duration){
-                        echo "<span>$dozent_course_duration</span>";
+                    if($tutor_course_duration){
+                        echo "<span>$tutor_course_duration</span>";
                     }
                 ?>
             </div>
         </div>
-        <div class="dozent-course-topics-contents">
+        <div class="tutor-course-topics-contents">
             <?php
 
             $index = 0;
@@ -51,31 +51,31 @@ $course_id = get_the_ID();
                     $index++;
                     ?>
 
-                    <div class="dozent-course-topic <?php if($index == 1) echo "dozent-active"; ?>">
-                        <div class="dozent-course-title">
-                            <h4> <i class="dozent-icon-plus"></i> <?php the_title(); ?></h4>
+                    <div class="tutor-course-topic <?php if($index == 1) echo "tutor-active"; ?>">
+                        <div class="tutor-course-title">
+                            <h4> <i class="tutor-icon-plus"></i> <?php the_title(); ?></h4>
                         </div>
 
 
-                        <div class="dozent-course-lessons">
+                        <div class="tutor-course-lessons">
 
                             <?php
-                            $lessons = dozent_utils()->get_lessons_by_topic(get_the_ID());
+                            $lessons = tutor_utils()->get_lessons_by_topic(get_the_ID());
                             if ($lessons->have_posts()){
                                 while ($lessons->have_posts()){ $lessons->the_post();
 
-                                    $video = dozent_utils()->get_video_info();
+                                    $video = tutor_utils()->get_video_info();
 
                                     $play_time = false;
                                     if ($video){
                                         $play_time = $video->playtime;
                                     }
 
-                                    $lesson_icon = $play_time ? 'dozent-icon-youtube' : 'dozent-icon-document-alt';
+                                    $lesson_icon = $play_time ? 'tutor-icon-youtube' : 'tutor-icon-document-alt';
 
                                     ?>
 
-                                    <div class="dozent-course-lesson">
+                                    <div class="tutor-course-lesson">
                                         <h5>
                                         <?php
                                             echo "<i class='$lesson_icon'></i>";
@@ -101,4 +101,4 @@ $course_id = get_the_ID();
 <?php } ?>
 
 
-<?php do_action('dozent_course/single/after/topics'); ?>
+<?php do_action('tutor_course/single/after/topics'); ?>

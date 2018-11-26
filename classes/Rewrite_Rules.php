@@ -1,30 +1,30 @@
 <?php
-namespace DOZENT;
+namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-class Rewrite_Rules extends Dozent_Base {
+class Rewrite_Rules extends Tutor_Base {
 
 
 	public function __construct() {
 		parent::__construct();
 
-		add_filter( 'query_vars', array($this, 'dozent_register_query_vars') );
+		add_filter( 'query_vars', array($this, 'tutor_register_query_vars') );
 		add_action('generate_rewrite_rules', array($this, 'add_rewrite_rules'));
 
 		//Lesson Permalink
 		add_filter('post_type_link', array($this, 'change_lesson_single_url'), 1, 2);
 	}
 
-	public function dozent_register_query_vars( $vars ) {
+	public function tutor_register_query_vars( $vars ) {
 		$vars[] = 'course_subpage';
 		$vars[] = 'lesson_video';
-		$vars[] = 'dozent_dashboard_page';
+		$vars[] = 'tutor_dashboard_page';
 
-		$enable_public_profile = dozent_utils()->get_option('enable_public_profile');
+		$enable_public_profile = tutor_utils()->get_option('enable_public_profile');
 		if ($enable_public_profile){
-			$vars[] = 'dozent_student_username';
+			$vars[] = 'tutor_student_username';
 			$vars[] = 'profile_sub_page';
 		}
 
@@ -36,16 +36,16 @@ class Rewrite_Rules extends Dozent_Base {
 			//Lesson Permalink
 			$this->course_post_type."/(.+?)/{$this->lesson_base_permalink}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=".$wp_rewrite->preg_index(2),
 			//Quiz Permalink
-			$this->course_post_type."/(.+?)/dozent_quiz/(.+?)/?$" => "index.php?post_type=dozent_quiz&name=".$wp_rewrite->preg_index(2),
+			$this->course_post_type."/(.+?)/tutor_quiz/(.+?)/?$" => "index.php?post_type=tutor_quiz&name=".$wp_rewrite->preg_index(2),
 			//Private Video URL
 			"video-url/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=". $wp_rewrite->preg_index(1),
 			//Student Public Profile URL
-			"profile/(.+?)/(.+?)/?$" => "index.php?dozent_student_username=". $wp_rewrite->preg_index(1)."&profile_sub_page=".$wp_rewrite->preg_index(2),
-			"profile/(.+?)/?$" => "index.php?dozent_student_username=". $wp_rewrite->preg_index(1),
+			"profile/(.+?)/(.+?)/?$" => "index.php?tutor_student_username=". $wp_rewrite->preg_index(1)."&profile_sub_page=".$wp_rewrite->preg_index(2),
+			"profile/(.+?)/?$" => "index.php?tutor_student_username=". $wp_rewrite->preg_index(1),
 		);
 
 		//Nav Items
-		$course_nav_items = dozent_utils()->course_sub_pages();
+		$course_nav_items = tutor_utils()->course_sub_pages();
 		//$course_nav_items = array_keys($course_nav_items);
 
 		if (is_array($course_nav_items) && count($course_nav_items)){
@@ -55,9 +55,9 @@ class Rewrite_Rules extends Dozent_Base {
 		}
 
 		//Student Dashboard URL
-		$dashboard_pages = dozent_utils()->dozent_student_dashboard_pages();
+		$dashboard_pages = tutor_utils()->tutor_student_dashboard_pages();
 		foreach ($dashboard_pages as $dashboard_key => $dashboard_page){
-			$new_rules["(.+?)/{$dashboard_key}/?$"] ='index.php?pagename='.$wp_rewrite->preg_index(1).'&dozent_dashboard_page=' .$dashboard_key;
+			$new_rules["(.+?)/{$dashboard_key}/?$"] ='index.php?pagename='.$wp_rewrite->preg_index(1).'&tutor_dashboard_page=' .$dashboard_key;
 		}
 
 		$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
@@ -77,7 +77,7 @@ class Rewrite_Rules extends Dozent_Base {
 		global $wpdb;
 		if( is_object($post) && $post->post_type == $this->lesson_post_type){
 			//Lesson Permalink
-			$course_id = get_post_meta($post->ID, '_dozent_course_id_for_lesson', true);
+			$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
 
 			if ($course_id){
 				$course = $wpdb->get_row("select {$wpdb->posts}.post_name from {$wpdb->posts} where ID = {$course_id} ");
@@ -85,7 +85,7 @@ class Rewrite_Rules extends Dozent_Base {
 			}else{
 				return home_url("/{$this->course_post_type}/sample-course/{$this->lesson_base_permalink}/". $post->post_name.'/');
 			}
-		}elseif (is_object($post) && $post->post_type === 'dozent_quiz'){
+		}elseif (is_object($post) && $post->post_type === 'tutor_quiz'){
 			//Quiz Permalink
 			$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} ");
 			if ($course){
@@ -98,9 +98,9 @@ class Rewrite_Rules extends Dozent_Base {
 					$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
 				}
 
-				return home_url("/{$this->course_post_type}/".$course->post_name."/dozent_quiz/". $post->post_name.'/');
+				return home_url("/{$this->course_post_type}/".$course->post_name."/tutor_quiz/". $post->post_name.'/');
 			}else{
-				return home_url("/{$this->course_post_type}/sample-course/dozent_quiz/". $post->post_name.'/');
+				return home_url("/{$this->course_post_type}/sample-course/tutor_quiz/". $post->post_name.'/');
 			}
 		}
 		return $post_link;

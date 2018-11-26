@@ -1,11 +1,11 @@
 <?php global $post; ?>
 
 
-<h1><?php _e('WishList', 'dozent'); ?></h1>
-<div class="dozent-dashboard-content-inner">
+<h1><?php _e('WishList', 'tutor'); ?></h1>
+<div class="tutor-dashboard-content-inner">
 
 	<?php
-	$wishlists = dozent_utils()->get_wishlist();
+	$wishlists = tutor_utils()->get_wishlist();
 
 
 	if (is_array($wishlists) && count($wishlists)):
@@ -13,20 +13,20 @@
 	        setup_postdata($post);
 
 	        /**
-	         * @hook dozent_course/archive/before_loop_course
+	         * @hook tutor_course/archive/before_loop_course
 	         * @type action
 	         * Usage Idea, you may keep a loop within a wrap, such as bootstrap col
 	         */
-	        do_action('dozent_course/archive/before_loop_course');
+	        do_action('tutor_course/archive/before_loop_course');
 
-	        dozent_load_template('loop.course');
+	        tutor_load_template('loop.course');
 
 	        /**
-	         * @hook dozent_course/archive/after_loop_course
+	         * @hook tutor_course/archive/after_loop_course
 	         * @type action
 	         * Usage Idea, If you start any div before course loop, you can end it here, such as </div>
 	         */
-	        do_action('dozent_course/archive/after_loop_course');
+	        do_action('tutor_course/archive/after_loop_course');
 
 		endforeach;
 

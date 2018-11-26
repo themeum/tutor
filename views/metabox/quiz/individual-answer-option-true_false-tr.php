@@ -6,11 +6,11 @@ $answer_option = json_decode($quiz_answer_option->comment_content, true);
     <td></td>
 
     <td>
-        <input name="dozent_question[<?php echo $question_id; ?>][answer_option][<?php echo $quiz_answer_option->comment_ID; ?>]" type="text" value="<?php echo dozent_utils()->avalue_dot('answer_option_text', $answer_option); ?>">
+        <input name="tutor_question[<?php echo $question_id; ?>][answer_option][<?php echo $quiz_answer_option->comment_ID; ?>]" type="text" value="<?php echo tutor_utils()->avalue_dot('answer_option_text', $answer_option); ?>">
     </td>
 
     <td>
-        <input name="dozent_question[<?php echo $question_id; ?>][answer_option_is_correct]" type="radio" value="<?php echo $quiz_answer_option->comment_ID; ?>" <?php checked('1', dozent_utils()->avalue_dot('is_correct', $answer_option)); ?>>
+        <input name="tutor_question[<?php echo $question_id; ?>][answer_option_is_correct]" type="radio" value="<?php echo $quiz_answer_option->comment_ID; ?>" <?php checked('1', tutor_utils()->avalue_dot('is_correct', $answer_option)); ?>>
     </td>
 
     <td>

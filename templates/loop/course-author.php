@@ -11,9 +11,9 @@
 global $post;
 ?>
 
-<div class="dozent-loop-author">
+<div class="tutor-loop-author">
 	<?php
 	global $authordata;
 	?>
-    <p> <a href="<?php echo dozent_utils()->profile_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a> </p>
+    <p> <a href="<?php echo tutor_utils()->profile_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a> </p>
 </div>

@@ -1,4 +1,4 @@
-.dozent-wrap{
+.tutor-wrap{
     padding: 8% !important;
 }
 
@@ -6,6 +6,6 @@
     padding: 8% 0;
 }
 
-.dozent-wrap .dozent-topics-lesson-list .dozent-topics-in-single-lesson .dozent-lessons-under-topic p{
+.tutor-wrap .tutor-topics-lesson-list .tutor-topics-in-single-lesson .tutor-lessons-under-topic p{
     font-size: 1.4rem;
 }

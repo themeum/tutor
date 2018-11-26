@@ -12,36 +12,36 @@ if ( ! defined( 'ABSPATH' ) )
     exit;
 ?>
 
-<div class="dozent-price-preview-box">
-    <div class="dozent-price-box-thumbnail">
+<div class="tutor-price-preview-box">
+    <div class="tutor-price-box-thumbnail">
         <?php
-        if(dozent_utils()->has_video_in_single()){
-            dozent_course_video();
+        if(tutor_utils()->has_video_in_single()){
+            tutor_course_video();
         } else{
-            get_dozent_course_thumbnail();
+            get_tutor_course_thumbnail();
         }
         ?>
     </div>
 
-	<?php dozent_course_price(); ?>
-    <?php dozent_course_material_includes_html(); ?>
+	<?php tutor_course_price(); ?>
+    <?php tutor_course_material_includes_html(); ?>
 
-    <div class="dozent-single-course-segment  dozent-course-enrolled-wrap">
-        <h><?php _e('Enrolled', 'dozent'); ?></h>
+    <div class="tutor-single-course-segment  tutor-course-enrolled-wrap">
+        <h><?php _e('Enrolled', 'tutor'); ?></h>
         <p>
             <?php
-            $enrolled = dozent_utils()->is_enrolled();
-            _e(sprintf("Enrolled at : %s", date(get_option('date_format'), strtotime($enrolled->post_date)) ), 'dozent');
+            $enrolled = tutor_utils()->is_enrolled();
+            _e(sprintf("Enrolled at : %s", date(get_option('date_format'), strtotime($enrolled->post_date)) ), 'tutor');
             ?>
         </p>
         <?php
-        $lesson_url = dozent_utils()->get_course_first_lesson();
+        $lesson_url = tutor_utils()->get_course_first_lesson();
         if ($lesson_url){
             ?>
-            <a href="<?php echo $lesson_url; ?>" class="dozent-button"><?php _e('Start Course', 'dozent'); ?></a>
+            <a href="<?php echo $lesson_url; ?>" class="tutor-button"><?php _e('Start Course', 'tutor'); ?></a>
         <?php } ?>
 
     </div>
 
-</div> <!-- dozent-price-preview-box -->
+</div> <!-- tutor-price-preview-box -->
 

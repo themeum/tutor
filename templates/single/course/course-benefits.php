@@ -10,10 +10,10 @@
 
 
 
-do_action('dozent_course/single/before/benefits');
+do_action('tutor_course/single/before/benefits');
 
 
-$course_benefits = dozent_course_benefits();
+$course_benefits = tutor_course_benefits();
 if ( empty($course_benefits)){
 	return;
 }
@@ -21,14 +21,14 @@ if ( empty($course_benefits)){
 if (is_array($course_benefits) && count($course_benefits)){
 	?>
 
-	<div class="dozent-single-course-segment dozent-course-benefits-wrap">
+	<div class="tutor-single-course-segment tutor-course-benefits-wrap">
 
 		<div class="course-benefits-title">
-			<h4 class="dozent-segment-title"><?php _e('What Will I Learn?', 'dozent'); ?></h4>
+			<h4 class="tutor-segment-title"><?php _e('What Will I Learn?', 'tutor'); ?></h4>
 		</div>
 
-		<div class="dozent-course-benefits-content">
-			<ul class="dozent-course-benefits-items dozent-custom-list-style">
+		<div class="tutor-course-benefits-content">
+			<ul class="tutor-course-benefits-items tutor-custom-list-style">
 				<?php
 				foreach ($course_benefits as $benefit){
 					echo "<li>{$benefit}</li>";
@@ -40,5 +40,5 @@ if (is_array($course_benefits) && count($course_benefits)){
 
 <?php } ?>
 
-<?php do_action('dozent_course/single/after/benefits'); ?>
+<?php do_action('tutor_course/single/after/benefits'); ?>
 

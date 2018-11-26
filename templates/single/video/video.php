@@ -11,10 +11,10 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-$video_info = dozent_utils()->get_video_info();
+$video_info = tutor_utils()->get_video_info();
 
-do_action('dozent_lesson/single/before/video');
+do_action('tutor_lesson/single/before/video');
 if ($video_info){
-    dozent_load_template('single.video.'.$video_info->source);
+    tutor_load_template('single.video.'.$video_info->source);
 }
-do_action('dozent_lesson/single/after/video'); ?>
+do_action('tutor_lesson/single/after/video'); ?>

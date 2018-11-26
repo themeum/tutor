@@ -15,21 +15,21 @@ get_header();
 
 ?>
 
-<?php do_action('dozent/template/login/before/wrap'); ?>
-    <div <?php dozent_post_class(); ?>>
+<?php do_action('tutor/template/login/before/wrap'); ?>
+    <div <?php tutor_post_class(); ?>>
 
-        <div class="dozent-template-segment dozent-login-wrap">
-            <div class="dozent-login-title">
-                <h4><?php _e('Please Sign-In to view this section', 'dozent'); ?></h4>
+        <div class="tutor-template-segment tutor-login-wrap">
+            <div class="tutor-login-title">
+                <h4><?php _e('Please Sign-In to view this section', 'tutor'); ?></h4>
             </div>
 
-            <div class="dozent-template-login-form">
-				<?php dozent_load_template( 'global.login' ); ?>
+            <div class="tutor-template-login-form">
+				<?php tutor_load_template( 'global.login' ); ?>
             </div>
         </div>
     </div><!-- .wrap -->
 
-<?php do_action('dozent/template/login/after/wrap'); ?>
+<?php do_action('tutor/template/login/after/wrap'); ?>
 
 
 

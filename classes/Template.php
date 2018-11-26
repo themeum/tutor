@@ -4,14 +4,14 @@
  *
  * @since: v.1.0.0
  */
-namespace DOZENT;
+namespace TUTOR;
 
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 
-class Template extends Dozent_Base {
+class Template extends Tutor_Base {
 
 	public function __construct() {
 		parent::__construct();
@@ -47,7 +47,7 @@ class Template extends Dozent_Base {
 		$course_category = get_query_var('course-category');
 
 		if ( ($post_type === $this->course_post_type || ! empty($course_category) )  && $wp_query->is_archive){
-			$template = dozent_get_template('archive-course');
+			$template = tutor_get_template('archive-course');
 			return $template;
 		}
 
@@ -66,7 +66,7 @@ class Template extends Dozent_Base {
 			$queried_object = get_queried_object();
 			if ($queried_object instanceof \WP_Post){
 				$page_id = $queried_object->ID;
-				$selected_archive_page = (int) dozent_utils()->get_option('course_archive_page');
+				$selected_archive_page = (int) tutor_utils()->get_option('course_archive_page');
 
 				if ($page_id === $selected_archive_page){
 					$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
@@ -79,12 +79,12 @@ class Template extends Dozent_Base {
 			$post_type = get_query_var('post_type');
 			$course_category = get_query_var('course-category');
 			if ( ($post_type === $this->course_post_type || ! empty($course_category) )){
-				$courses_per_page = (int) dozent_utils()->get_option('courses_per_page', 10);
+				$courses_per_page = (int) tutor_utils()->get_option('courses_per_page', 10);
 				$query->set('posts_per_page', $courses_per_page);
 
 				$course_filter = 'newest_first';
-				if ( ! empty($_GET['dozent_course_filter'])){
-					$course_filter = sanitize_text_field($_GET['dozent_course_filter']);
+				if ( ! empty($_GET['tutor_course_filter'])){
+					$course_filter = sanitize_text_field($_GET['tutor_course_filter']);
 				}
 				switch ($course_filter){
 					case 'newest_first':
@@ -122,25 +122,25 @@ class Template extends Dozent_Base {
 		global $wp_query;
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $this->course_post_type){
-			$student_must_login_to_view_course = dozent_utils()->get_option('student_must_login_to_view_course');
+			$student_must_login_to_view_course = tutor_utils()->get_option('student_must_login_to_view_course');
 			if ($student_must_login_to_view_course){
-				return dozent_get_template('login');
+				return tutor_get_template('login');
 			}
 
 			if (empty( $wp_query->query_vars['course_subpage'])) {
-				$template = dozent_get_template( 'single-course' );
+				$template = tutor_get_template( 'single-course' );
 				if ( is_user_logged_in() ) {
-					if ( dozent_utils()->is_enrolled() ) {
-						$template = dozent_get_template( 'single-course-enrolled' );
+					if ( tutor_utils()->is_enrolled() ) {
+						$template = tutor_get_template( 'single-course-enrolled' );
 					}
 				}
 			}else{
 				//If Course Subpage Exists
 				if ( is_user_logged_in() ) {
 					$course_subpage = $wp_query->query_vars['course_subpage'];
-					$template = dozent_get_template( 'single-course-enrolled-'.$course_subpage);
+					$template = tutor_get_template( 'single-course-enrolled-'.$course_subpage);
 				}else{
-					$template = dozent_get_template('login');
+					$template = tutor_get_template('login');
 				}
 			}
 			return $template;
@@ -166,16 +166,16 @@ class Template extends Dozent_Base {
 
 			setup_postdata($page_id);
 			if (is_user_logged_in()){
-				$is_course_enrolled = dozent_utils()->is_course_enrolled_by_lesson();
+				$is_course_enrolled = tutor_utils()->is_course_enrolled_by_lesson();
 
 				if ($is_course_enrolled) {
-					$template = dozent_get_template( 'single-lesson' );
+					$template = tutor_get_template( 'single-lesson' );
 				}else{
 					//You need to enroll first
-					$template = dozent_get_template( 'single.lesson.required-enroll' );
+					$template = tutor_get_template( 'single.lesson.required-enroll' );
 				}
 			}else{
-				$template = dozent_get_template('login');
+				$template = tutor_get_template('login');
 			}
 			wp_reset_postdata();
 
@@ -195,14 +195,14 @@ class Template extends Dozent_Base {
 		global $wp_query;
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['lesson_video']) && $wp_query->query_vars['lesson_video'] === 'true') {
-			if (dozent_utils()->is_course_enrolled_by_lesson()) {
-				$video_info = dozent_utils()->get_video_info();
+			if (tutor_utils()->is_course_enrolled_by_lesson()) {
+				$video_info = tutor_utils()->get_video_info();
 				if ( $video_info ) {
 					$stream = new Video_Stream( $video_info->path );
 					$stream->start();
 				}
 			}else{
-				_e('Permission denied', 'dozent');
+				_e('Permission denied', 'tutor');
 			}
 			exit();
 		}
@@ -215,26 +215,26 @@ class Template extends Dozent_Base {
 	 *
 	 * @return mixed
 	 *
-	 * Dozent Dashboard Page, Responsible to show student dashboard
+	 * Tutor Dashboard Page, Responsible to show student dashboard
 	 *
 	 * @since v.1.0.0
 	 */
 	public function convert_static_page_to_template($content){
 		//Student Registration Page
-		$student_dashboard_page_id = (int) dozent_utils()->get_option('student_dashboard');
+		$student_dashboard_page_id = (int) tutor_utils()->get_option('student_dashboard');
 		if ($student_dashboard_page_id === get_the_ID()){
 			$shortcode = new Shortcode();
-			return $shortcode->dozent_student_dashboard();
+			return $shortcode->tutor_student_dashboard();
 		}
 
 		//Teacher Registration Page
-		$teacher_register_page_page_id = (int) dozent_utils()->get_option('teacher_register_page');
+		$teacher_register_page_page_id = (int) tutor_utils()->get_option('teacher_register_page');
 		if ($teacher_register_page_page_id === get_the_ID()){
 			$shortcode = new Shortcode();
 			return $shortcode->teacher_registration_form();
 		}
 
-		$student_register_page_id = (int) dozent_utils()->get_option('student_register_page');
+		$student_register_page_id = (int) tutor_utils()->get_option('student_register_page');
 		if ($student_register_page_id === get_the_ID()){
 			$shortcode = new Shortcode();
 			return $shortcode->student_registration_form();
@@ -253,11 +253,11 @@ class Template extends Dozent_Base {
 	public function load_quiz_template($template){
 		global $wp_query;
 
-		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === 'dozent_quiz'){
+		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === 'tutor_quiz'){
 			if (is_user_logged_in()){
-				$template = dozent_get_template( 'single-quiz' );
+				$template = tutor_get_template( 'single-quiz' );
 			}else{
-				$template = dozent_get_template('login');
+				$template = tutor_get_template('login');
 			}
 			return $template;
 		}
@@ -274,8 +274,8 @@ class Template extends Dozent_Base {
 	public function student_public_profile($template){
 		global $wp_query;
 
-		if ( ! empty($wp_query->query['dozent_student_username'])){
-			$template = dozent_get_template( 'student-public-profile' );
+		if ( ! empty($wp_query->query['tutor_student_username'])){
+			$template = tutor_get_template( 'student-public-profile' );
 		}
 
 		return $template;
@@ -290,10 +290,10 @@ class Template extends Dozent_Base {
 	public function student_public_profile_title(){
 		global $wp_query;
 
-		if ( ! empty($wp_query->query['dozent_student_username'])){
+		if ( ! empty($wp_query->query['tutor_student_username'])){
 			global $wpdb;
 
-			$user_name = sanitize_text_field($wp_query->query['dozent_student_username']);
+			$user_name = sanitize_text_field($wp_query->query['tutor_student_username']);
 			$user = $wpdb->get_row("select display_name from {$wpdb->users} WHERE user_login = '{$user_name}' limit 1; ");
 
 			if ( ! empty($user->display_name)){

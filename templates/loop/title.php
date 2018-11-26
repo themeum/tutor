@@ -9,6 +9,6 @@
  */
 ?>
 
-<div class="dozent-course-loop-title">
+<div class="tutor-course-loop-title">
 	<a href="<?php echo get_the_permalink(); ?>"><h2><?php the_title(); ?></h2></a>
 </div>

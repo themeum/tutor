@@ -1,6 +1,6 @@
 <?php
 
-namespace DOZENT;
+namespace TUTOR;
 
 
 class User {
@@ -13,17 +13,17 @@ class User {
 	}
 
 	public function edit_user_profile($user){
-		include  dozent()->path.'views/metabox/user-profile-fields.php';
+		include  tutor()->path.'views/metabox/user-profile-fields.php';
 	}
 
 	public function profile_update($user_id){
-		$_dozent_profile_job_title = sanitize_text_field(dozent_utils()->avalue_dot('_dozent_profile_job_title', $_POST));
-		$_dozent_profile_bio = wp_kses_post(dozent_utils()->avalue_dot('_dozent_profile_bio', $_POST));
-		$_dozent_profile_photo = sanitize_text_field(dozent_utils()->avalue_dot('_dozent_profile_photo', $_POST));
+		$_tutor_profile_job_title = sanitize_text_field(tutor_utils()->avalue_dot('_tutor_profile_job_title', $_POST));
+		$_tutor_profile_bio = wp_kses_post(tutor_utils()->avalue_dot('_tutor_profile_bio', $_POST));
+		$_tutor_profile_photo = sanitize_text_field(tutor_utils()->avalue_dot('_tutor_profile_photo', $_POST));
 
-		update_user_meta($user_id, '_dozent_profile_job_title', $_dozent_profile_job_title);
-		update_user_meta($user_id, '_dozent_profile_bio', $_dozent_profile_bio);
-		update_user_meta($user_id, '_dozent_profile_photo', $_dozent_profile_photo);
+		update_user_meta($user_id, '_tutor_profile_job_title', $_tutor_profile_job_title);
+		update_user_meta($user_id, '_tutor_profile_bio', $_tutor_profile_bio);
+		update_user_meta($user_id, '_tutor_profile_photo', $_tutor_profile_photo);
 	}
 
 }

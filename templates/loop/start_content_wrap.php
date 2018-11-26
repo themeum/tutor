@@ -1,1 +1,1 @@
-<div class="dozent-loop-course-container">
+<div class="tutor-loop-course-container">

@@ -10,20 +10,20 @@
 
 ?>
 
-<div class="dozent-option-field-row">
-    <div class="dozent-option-field-label">
+<div class="tutor-option-field-row">
+    <div class="tutor-option-field-label">
         <label for="">
-			<?php _e('Select product', 'dozent'); ?> <br />
-            <p class="text-muted">(<?php _e('Only for if you sell course', 'dozent'); ?>)</p>
+			<?php _e('Select product', 'tutor'); ?> <br />
+            <p class="text-muted">(<?php _e('Only for if you sell course', 'tutor'); ?>)</p>
         </label>
     </div>
-    <div class="dozent-option-field">
+    <div class="tutor-option-field">
 		<?php
-		$products = dozent_utils()->get_wc_products_db();
-		$product_id = dozent_utils()->get_course_product_id();
+		$products = tutor_utils()->get_wc_products_db();
+		$product_id = tutor_utils()->get_course_product_id();
 		?>
 
-        <select name="_dozent_course_product_id" class="dozent_select2" style="min-width: 300px;">
+        <select name="_tutor_course_product_id" class="tutor_select2" style="min-width: 300px;">
             <option value=""><?php _e('Select a Product'); ?></option>
 			<?php
 			foreach ($products as $product){
@@ -34,7 +34,7 @@
         </select>
 
         <p class="desc">
-			<?php _e('If you like to sell your course, then select a product, the purchase will be process by WooCommerce', 'dozent'); ?>
+			<?php _e('If you like to sell your course, then select a product, the purchase will be process by WooCommerce', 'tutor'); ?>
         </p>
     </div>
 </div>

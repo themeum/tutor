@@ -9,9 +9,9 @@
  */
 
 
-do_action('dozent_course/single/before/audience');
+do_action('tutor_course/single/before/audience');
 
-$target_audience = dozent_course_target_audience();
+$target_audience = tutor_course_target_audience();
 
 if ( empty($target_audience)){
 	return;
@@ -20,12 +20,12 @@ if ( empty($target_audience)){
 if (is_array($target_audience) && count($target_audience)){
 	?>
 
-	<div class="dozent-single-course-segment  dozent-course-target-audience-wrap">
+	<div class="tutor-single-course-segment  tutor-course-target-audience-wrap">
 
-        <h4 class="dozent-segment-title"><?php _e('Target Audience', 'dozent'); ?></h4>
+        <h4 class="tutor-segment-title"><?php _e('Target Audience', 'tutor'); ?></h4>
 
-		<div class="dozent-course-target-audience-content">
-			<ul class="dozent-course-target-audience-items dozent-custom-list-style">
+		<div class="tutor-course-target-audience-content">
+			<ul class="tutor-course-target-audience-items tutor-custom-list-style">
 				<?php
 				foreach ($target_audience as $audience){
 					echo "<li>{$audience}</li>";
@@ -37,5 +37,5 @@ if (is_array($target_audience) && count($target_audience)){
 
 <?php } ?>
 
-<?php do_action('dozent_course/single/after/audience'); ?>
+<?php do_action('tutor_course/single/after/audience'); ?>
 

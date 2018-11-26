@@ -12,15 +12,15 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-$course_nav_item = dozent_utils()->course_sub_pages();
+$course_nav_item = tutor_utils()->course_sub_pages();
 ?>
 
-<?php do_action('dozent_course/single/enrolled/nav/before'); ?>
+<?php do_action('tutor_course/single/enrolled/nav/before'); ?>
 
 <div id="course-enrolled-nav-wrap-<?php echo get_the_ID(); ?>" class="course-enrolled-nav-wrap course-enrolled-nav-wrap-<?php the_ID(); ?>">
 	<nav id="course-enrolled-nav-<?php echo get_the_ID(); ?>" class="course-enrolled-nav course-enrolled-nav-<?php the_ID(); ?>">
 		<ul>
-			<li class="<?php echo get_query_var('course_subpage') === '' ? 'active' : ''; ?>"><a href="<?php echo get_permalink(); ?>"><?php _e('Course Page', 'dozent'); ?></a> </li>
+			<li class="<?php echo get_query_var('course_subpage') === '' ? 'active' : ''; ?>"><a href="<?php echo get_permalink(); ?>"><?php _e('Course Page', 'tutor'); ?></a> </li>
 			<?php
 			foreach ($course_nav_item as $nav_key => $nav_item){
 				$active_class = get_query_var('course_subpage') === $nav_key? 'active' : '';
@@ -32,4 +32,4 @@ $course_nav_item = dozent_utils()->course_sub_pages();
 	</nav>
 </div>
 
-<?php do_action('dozent_course/single/enrolled/nav/after'); ?>
+<?php do_action('tutor_course/single/enrolled/nav/after'); ?>

@@ -1,14 +1,14 @@
 <?php
-namespace DOZENT;
+namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-if (! class_exists('Dozent_List_Table')){
-	include_once dozent()->path.'classes/Dozent_List_Table.php';
+if (! class_exists('Tutor_List_Table')){
+	include_once tutor()->path.'classes/Tutor_List_Table.php';
 }
 
-class Question_Answers_List extends \Dozent_List_Table {
+class Question_Answers_List extends \Tutor_List_Table {
 
 	function __construct(){
 		global $status, $page;
@@ -67,10 +67,10 @@ class Question_Answers_List extends \Dozent_List_Table {
 	function get_columns(){
 		$columns = array(
 			'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
-			'question'          => __('Question', 'dozent'),
-			'display_name'      => __('Student', 'dozent'),
-			'post_title'        => __('Course', 'dozent'),
-			'answer_count'            => __('Answer', 'dozent'),
+			'question'          => __('Question', 'tutor'),
+			'display_name'      => __('Student', 'tutor'),
+			'post_title'        => __('Course', 'tutor'),
+			'answer_count'            => __('Answer', 'tutor'),
 		);
 		return $columns;
 	}
@@ -125,8 +125,8 @@ class Question_Answers_List extends \Dozent_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$total_items = dozent_utils()->get_total_qa_question($search_term);
-		$this->items = dozent_utils()->get_qa_questions(($current_page-1)*$per_page, $per_page, $search_term);
+		$total_items = tutor_utils()->get_total_qa_question($search_term);
+		$this->items = tutor_utils()->get_qa_questions(($current_page-1)*$per_page, $per_page, $search_term);
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,

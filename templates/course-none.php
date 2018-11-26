@@ -1,6 +1,6 @@
 <?php
 /**
- * DOZENT Course None
+ * TUTOR Course None
  *
  * @since v.1.0.0
  *

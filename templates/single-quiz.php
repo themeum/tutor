@@ -10,27 +10,27 @@
 
 get_header();
 
-$course = dozent_utils()->get_course_by_quiz(get_the_ID());
+$course = tutor_utils()->get_course_by_quiz(get_the_ID());
 ?>
 
-<?php do_action('dozent_quiz/single/before/wrap'); ?>
+<?php do_action('tutor_quiz/single/before/wrap'); ?>
 
-    <div <?php dozent_post_class(); ?>>
-        <div class="dozent-quiz-single-wrap dozent-container">
-            <input type="hidden" name="dozent_quiz_id" id="dozent_quiz_id" value="<?php the_ID(); ?>">
+    <div <?php tutor_post_class(); ?>>
+        <div class="tutor-quiz-single-wrap tutor-container">
+            <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
 	        <?php
             if ($course){
-	            dozent_single_quiz_top();
-	            dozent_single_quiz_body();
+	            tutor_single_quiz_top();
+	            tutor_single_quiz_body();
             }else{
-	            dozent_single_quiz_no_course_belongs();
+	            tutor_single_quiz_no_course_belongs();
             }
 	        ?>
 
         </div>
     </div><!-- .wrap -->
 
-<?php do_action('dozent_quiz/single/after/wrap');
+<?php do_action('tutor_quiz/single/after/wrap');
 
 get_footer();

@@ -1,5 +1,5 @@
-<div class="wrap plugin-install-tab-featured dozent-addons">
-	<h1 class="wp-heading-inline"><?php _e('Dozent Add-ons'); ?></h1>
+<div class="wrap plugin-install-tab-featured tutor-addons">
+	<h1 class="wp-heading-inline"><?php _e('Tutor Add-ons'); ?></h1>
 
 	<hr class="wp-header-end">
 

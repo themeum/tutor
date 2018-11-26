@@ -2,26 +2,26 @@ jQuery(document).ready(function($){
     'use strict';
 
     if (jQuery().select2){
-        $('.dozent_select2').select2();
+        $('.tutor_select2').select2();
     }
 
     /**
      * Option Settings Nav Tab
      */
-    $('.dozent-option-nav-tabs li a').click(function(e){
+    $('.tutor-option-nav-tabs li a').click(function(e){
         e.preventDefault();
         var tab_page_id = $(this).attr('href');
         $('.option-nav-item').removeClass('current');
         $(this).closest('li').addClass('current');
-        $('.dozent-option-nav-page').hide();
+        $('.tutor-option-nav-page').hide();
         $(tab_page_id).addClass('current-page').show();
     });
 
-    $('#save_dozent_option').click(function (e) {
+    $('#save_tutor_option').click(function (e) {
         e.preventDefault();
         $(this).closest('form').submit();
     });
-    $('#dozent-option-form').submit(function(e){
+    $('#tutor-option-form').submit(function(e){
         e.preventDefault();
 
         var $form = $(this);
@@ -44,12 +44,12 @@ jQuery(document).ready(function($){
         });
     });
 
-    $('.dozent-field-slider').each(function(){
+    $('.tutor-field-slider').each(function(){
         var $slider = $(this);
-        var $input = $slider.closest('.dozent-field-type-slider').find('input[type="hidden"]');
-        var $showVal = $slider.closest('.dozent-field-type-slider').find('.dozent-field-type-slider-value');
-        var min = parseFloat($slider.closest('.dozent-field-type-slider').attr('data-min'));
-        var max = parseFloat($slider.closest('.dozent-field-type-slider').attr('data-max'));
+        var $input = $slider.closest('.tutor-field-type-slider').find('input[type="hidden"]');
+        var $showVal = $slider.closest('.tutor-field-type-slider').find('.tutor-field-type-slider-value');
+        var min = parseFloat($slider.closest('.tutor-field-type-slider').attr('data-min'));
+        var max = parseFloat($slider.closest('.tutor-field-type-slider').attr('data-max'));
 
         $slider.slider({
             range: "max",
@@ -75,28 +75,28 @@ jQuery(document).ready(function($){
                 ui.placeholder.css('visibility', 'visible');
             },
             stop: function (e, ui) {
-                dozent_sorting_topics_and_lesson();
+                tutor_sorting_topics_and_lesson();
             },
         });
-        $(".dozent-lessions:not(.drop-lessons)").sortable({
-            connectWith: ".dozent-lessions",
-            items: "div.dozent-lesson",
+        $(".tutor-lessions:not(.drop-lessons)").sortable({
+            connectWith: ".tutor-lessions",
+            items: "div.tutor-lesson",
             start: function (e, ui) {
                 ui.placeholder.css('visibility', 'visible');
             },
             stop: function (e, ui) {
-                dozent_sorting_topics_and_lesson();
+                tutor_sorting_topics_and_lesson();
             },
         });
     }
-    function dozent_sorting_topics_and_lesson(){
+    function tutor_sorting_topics_and_lesson(){
         var topics = {};
-        $('.dozent-topics-wrap').each(function(index, item){
+        $('.tutor-topics-wrap').each(function(index, item){
             var $topic = $(this);
             var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
             var lessons = {};
 
-            $topic.find('.dozent-lesson').each(function(lessonIndex, lessonItem){
+            $topic.find('.tutor-lesson').each(function(lessonIndex, lessonItem){
                 var $lesson = $(this);
                 var lesson_id = parseInt($lesson.attr('id').match(/\d+/)[0], 10);
 
@@ -105,31 +105,31 @@ jQuery(document).ready(function($){
             topics[index] = { 'topic_id' : topics_id, 'lesson_ids' : lessons };
 
             //Hide drop element
-            if ($topic.find('.dozent-lesson').length){
+            if ($topic.find('.tutor-lesson').length){
                 $topic.find('.drop-lessons').hide();
             }else{
                 $topic.find('.drop-lessons').show();
             }
 
         });
-        $('#dozent_topics_lessons_sorting').val(JSON.stringify(topics));
+        $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
         //console.log(topics);
     }
 
     $(document).on('click', '.topic-edit-icon', function (e) {
         e.preventDefault();
-        $(this).closest('.dozent-topics-top').find('.dozent-topics-edit-form').slideToggle();
+        $(this).closest('.tutor-topics-top').find('.tutor-topics-edit-form').slideToggle();
     });
 
-    $(document).on('click', '.dozent-topics-edit-button', function(e){
+    $(document).on('click', '.tutor-topics-edit-button', function(e){
         e.preventDefault();
         var $button = $(this);
-        var $topic = $button.closest('.dozent-topics-wrap');
+        var $topic = $button.closest('.tutor-topics-wrap');
         var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
-        var topic_title = $button.closest('.dozent-topics-wrap').find('[name="topic_title"]').val();
-        var topic_summery = $button.closest('.dozent-topics-wrap').find('[name="topic_summery"]').val();
+        var topic_title = $button.closest('.tutor-topics-wrap').find('[name="topic_title"]').val();
+        var topic_summery = $button.closest('.tutor-topics-wrap').find('[name="topic_summery"]').val();
 
-        var data = {topic_title: topic_title, topic_summery : topic_summery, topic_id : topics_id, action: 'dozent_update_topic'};
+        var data = {topic_title: topic_title, topic_summery : topic_summery, topic_id : topics_id, action: 'tutor_update_topic'};
         $.ajax({
             url : ajaxurl,
             type : 'POST',
@@ -139,8 +139,8 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 if (data.success){
-                    $button.closest('.dozent-topics-wrap').find('span.topic-inner-title').text(topic_title);
-                    $button.closest('.dozent-topics-wrap').find('.dozent-topics-edit-form').slideUp();
+                    $button.closest('.tutor-topics-wrap').find('span.topic-inner-title').text(topic_title);
+                    $button.closest('.tutor-topics-wrap').find('.tutor-topics-edit-form').slideUp();
                 }
             },
             complete: function () {
@@ -163,7 +163,7 @@ jQuery(document).ready(function($){
      * Lesson Video
      */
 
-    $(document).on('change', '.dozent_lesson_video_source', function(e){
+    $(document).on('change', '.tutor_lesson_video_source', function(e){
         var selector = $(this).val();
         $('[class^="video_source_wrap"]').hide();
         $('.video_source_wrap_'+selector).show();
@@ -204,8 +204,8 @@ jQuery(document).ready(function($){
     });
 
 
-    //dozent_video_poster_upload_btn
-    $(document).on( 'click', '.dozent_video_poster_upload_btn',  function( event ){
+    //tutor_video_poster_upload_btn
+    $(document).on( 'click', '.tutor_video_poster_upload_btn',  function( event ){
         event.preventDefault();
 
         var $that = $(this);
@@ -229,19 +229,19 @@ jQuery(document).ready(function($){
         frame.on( 'select', function() {
             // Get media attachment details from the frame state
             var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.dozent-video-poster-wrap').find('.video-poster-img').html('<img src="'+attachment.url+'" alt="" />');
-            $that.closest('.dozent-video-poster-wrap').find('input').val(attachment.id);
+            $that.closest('.tutor-video-poster-wrap').find('.video-poster-img').html('<img src="'+attachment.url+'" alt="" />');
+            $that.closest('.tutor-video-poster-wrap').find('input').val(attachment.id);
         });
         // Finally, open the modal on click
         frame.open();
     });
 
-    $(document).on('click', 'a.dozent-delete-attachment', function(e){
+    $(document).on('click', 'a.tutor-delete-attachment', function(e){
         e.preventDefault();
-        $(this).closest('.dozent-added-attachment').remove();
+        $(this).closest('.tutor-added-attachment').remove();
     });
 
-    $(document).on('click', '.dozentUploadAttachmentBtn', function(e){
+    $(document).on('click', '.tutorUploadAttachmentBtn', function(e){
         e.preventDefault();
 
         var $that = $(this);
@@ -268,8 +268,8 @@ jQuery(document).ready(function($){
                 for (var i=0; i < attachments.length; i++){
                     var attachment = attachments[i];
 
-                    var inputHtml = '<div class="dozent-added-attachment"><p> <a href="javascript:;" class="dozent-delete-attachment">×</a> <span> <a href="'+attachment.url+'">'+attachment.filename+'</a> </span> </p><input type="hidden" name="dozent_attachments[]" value="'+attachment.id+'"></div>';
-                    $that.closest('.dozent-lesson-attachments-metabox').find('.dozent-added-attachments-wrap').append(inputHtml);
+                    var inputHtml = '<div class="tutor-added-attachment"><p> <a href="javascript:;" class="tutor-delete-attachment">×</a> <span> <a href="'+attachment.url+'">'+attachment.filename+'</a> </span> </p><input type="hidden" name="tutor_attachments[]" value="'+attachment.id+'"></div>';
+                    $that.closest('.tutor-lesson-attachments-metabox').find('.tutor-added-attachments-wrap').append(inputHtml);
                 }
             }
         });
@@ -283,10 +283,10 @@ jQuery(document).ready(function($){
      */
 
 
-    if (dozent_data.open_dozent_admin_menu){
+    if (tutor_data.open_tutor_admin_menu){
         var $adminMenu = $('#adminmenu');
-        $adminMenu.find('[href="admin.php?page=dozent"]').closest('li.wp-has-submenu').addClass('wp-has-current-submenu');
-        $adminMenu.find('[href="admin.php?page=dozent"]').closest('li.wp-has-submenu').find('a.wp-has-submenu').removeClass('wp-has-current-submenu').addClass('wp-has-current-submenu');
+        $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').addClass('wp-has-current-submenu');
+        $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').find('a.wp-has-submenu').removeClass('wp-has-current-submenu').addClass('wp-has-current-submenu');
     }
 
 
@@ -296,7 +296,7 @@ jQuery(document).ready(function($){
 
     $(document).on('change keyup paste', '.question_field_title', function(){
         var $that = $(this);
-        $that.closest('.single-question-item').find('.dozent-question-item-head').find('.question-title').text($that.val());
+        $that.closest('.single-question-item').find('.tutor-question-item-head').find('.question-title').text($that.val());
     });
 
     $(document).on('change', '.question_type_field', function(){
@@ -304,7 +304,7 @@ jQuery(document).ready(function($){
         var question_type = $that.val();
 
         var option_text = $that.find('option[value="'+question_type+'"]').text();
-        $that.closest('.single-question-item').find('.dozent-question-item-head').find('.question-type').text(option_text);
+        $that.closest('.single-question-item').find('.tutor-question-item-head').find('.question-type').text(option_text);
 
         var question_id = $that.closest('.single-question-item').attr('data-question-id');
         var data = {question_id: question_id, question_type : question_type, action: 'quiz_question_type_changed'};
@@ -316,7 +316,7 @@ jQuery(document).ready(function($){
             data : data,
 
             beforeSend: function () {
-                $that.closest('.single-question-item').find('.dozent-loading-icon-wrap').addClass('updating-message');
+                $that.closest('.single-question-item').find('.tutor-loading-icon-wrap').addClass('updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -330,7 +330,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.closest('.single-question-item').find('.dozent-loading-icon-wrap').removeClass('updating-message');
+                $that.closest('.single-question-item').find('.tutor-loading-icon-wrap').removeClass('updating-message');
             }
         });
     });
@@ -385,10 +385,10 @@ jQuery(document).ready(function($){
 
         //If no question title, stop here
         if ( ! question_title.length){
-            $title.addClass('dozent-input-text-error');
+            $title.addClass('tutor-input-text-error');
             return;
         }else{
-            $title.removeClass('dozent-input-text-error');
+            $title.removeClass('tutor-input-text-error');
         }
 
         var  data = {question_title : question_title, question_type:question_type, quiz_id : quiz_id, action: 'quiz_page_add_new_question' };
@@ -402,7 +402,7 @@ jQuery(document).ready(function($){
             success: function (data) {
                 if (data.success){
                     $('.single-question-item .quiz-question-form-wrap').hide();
-                    $('.dozent-quiz-questions-wrap').append(data.data.question_html);
+                    $('.tutor-quiz-questions-wrap').append(data.data.question_html);
                     $('.single-question-item:last-child .quiz-question-form-wrap').show();
                     $title.val('');
                 }
@@ -425,13 +425,13 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         
-        var data = $(this).find("select, textarea, input").serialize()+'&action=update_dozent_question';
+        var data = $(this).find("select, textarea, input").serialize()+'&action=update_tutor_question';
         $.ajax({
             url : ajaxurl,
             type : 'POST',
             data : data,
             beforeSend: function () {
-                $that.find('.dozent-loading-icon-wrap').addClass('updating-message');
+                $that.find('.tutor-loading-icon-wrap').addClass('updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -439,7 +439,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.find('.dozent-loading-icon-wrap').removeClass('updating-message');
+                $that.find('.tutor-loading-icon-wrap').removeClass('updating-message');
             }
         });
     });
@@ -448,7 +448,7 @@ jQuery(document).ready(function($){
         e.preventDefault();
         var $that = $(this);
         var $closestTable = $that.closest('table');
-        var $loadingIcon = $that.closest('.single-question-item').find('.dozent-loading-icon-wrap');
+        var $loadingIcon = $that.closest('.single-question-item').find('.tutor-loading-icon-wrap');
 
         var question_type = $that.closest('.quiz-question-form-wrap').find('select.question_type_field').val();
         var answer_option_id = $that.closest('tr').attr('data-answer-option-id');
@@ -482,7 +482,7 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var question_id = $that.closest('.single-question-item').attr('data-question-id');
-        var $loadingIcon = $that.closest('.single-question-item').find('.dozent-loading-icon-wrap');
+        var $loadingIcon = $that.closest('.single-question-item').find('.tutor-loading-icon-wrap');
 
         $.ajax({
             url : ajaxurl,
@@ -507,7 +507,7 @@ jQuery(document).ready(function($){
      */
 
     if (jQuery().sortable) {
-        $(".dozent-quiz-questions-wrap").sortable({
+        $(".tutor-quiz-questions-wrap").sortable({
             handle: ".question-short",
             start: function (e, ui) {
                 ui.placeholder.css('visibility', 'visible');
@@ -532,29 +532,29 @@ jQuery(document).ready(function($){
 
     $(document).on('click', '.modal-close-btn', function(e){
         e.preventDefault();
-        $('.dozent-modal-wrap').removeClass('show');
+        $('.tutor-modal-wrap').removeClass('show');
     });
     $(document).on('keyup', function(e){
         if (e.keyCode === 27){
-            $('.dozent-modal-wrap').removeClass('show');
+            $('.tutor-modal-wrap').removeClass('show');
         }
     });
-    $(document).on('click', '.dozent-add-quiz-btn', function(e){
+    $(document).on('click', '.tutor-add-quiz-btn', function(e){
         e.preventDefault();
         
         var $that = $(this);
-        var quiz_for_post_id = $(this).closest('.dozent_add_quiz_wrap').attr('data-add-quiz-under');
+        var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').attr('data-add-quiz-under');
         
         $.ajax({
             url : ajaxurl,
             type : 'POST',
-            data : {quiz_for_post_id : quiz_for_post_id, action: 'dozent_load_quiz_modal'},
+            data : {quiz_for_post_id : quiz_for_post_id, action: 'tutor_load_quiz_modal'},
             beforeSend: function () {
                 $that.addClass('updating-message');
             },
             success: function (data) {
-                $('.dozent-quiz-modal-wrap .modal-container').html(data.data.output);
-                $('.dozent-quiz-modal-wrap').attr('quiz-for-post-id', quiz_for_post_id).addClass('show');
+                $('.tutor-quiz-modal-wrap .modal-container').html(data.data.output);
+                $('.tutor-quiz-modal-wrap').attr('quiz-for-post-id', quiz_for_post_id).addClass('show');
             },
             complete: function () {
                 $that.removeClass('updating-message');
@@ -566,10 +566,10 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-        var $modal = $('.dozent-modal-wrap');
+        var $modal = $('.tutor-modal-wrap');
 
         var quiz_for_post_id = $modal.attr('quiz-for-post-id');
-        var data = $modal.find('input').serialize()+'&action=dozent_add_quiz_to_post';
+        var data = $modal.find('input').serialize()+'&action=tutor_add_quiz_to_post';
 
         $.ajax({
             url : ajaxurl,
@@ -580,8 +580,8 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 if (data.success){
-                    $('[data-add-quiz-under="'+quiz_for_post_id+'"] .dozent-available-quizzes').html(data.data.output);
-                    $('.dozent-modal-wrap').removeClass('show');
+                    $('[data-add-quiz-under="'+quiz_for_post_id+'"] .tutor-available-quizzes').html(data.data.output);
+                    $('.tutor-modal-wrap').removeClass('show');
                 }
             },
             complete: function () {
@@ -591,26 +591,26 @@ jQuery(document).ready(function($){
     });
 
 
-    $(document).on('change keyup', '.dozent-quiz-modal-wrap .dozent-modal-search-input', function(e){
+    $(document).on('change keyup', '.tutor-quiz-modal-wrap .tutor-modal-search-input', function(e){
         e.preventDefault();
 
         var $that = $(this);
-        var $modal = $('.dozent-modal-wrap');
+        var $modal = $('.tutor-modal-wrap');
 
-        dozent_delay(function(){
+        tutor_delay(function(){
             var search_terms = $that.val();
             var quiz_for_post_id = $modal.attr('quiz-for-post-id');
 
             $.ajax({
                 url : ajaxurl,
                 type : 'POST',
-                data : {quiz_for_post_id : quiz_for_post_id, search_terms : search_terms, action: 'dozent_load_quiz_modal'},
+                data : {quiz_for_post_id : quiz_for_post_id, search_terms : search_terms, action: 'tutor_load_quiz_modal'},
                 beforeSend: function () {
                     $modal.addClass('loading');
                 },
                 success: function (data) {
                     if (data.success){
-                        $('.dozent-modal-wrap .modal-container').html(data.data.output);
+                        $('.tutor-modal-wrap .modal-container').html(data.data.output);
                     }
                 },
                 complete: function () {
@@ -621,7 +621,7 @@ jQuery(document).ready(function($){
         }, 1000)
     });
 
-    var dozent_delay = (function(){
+    var tutor_delay = (function(){
         var timer = 0;
         return function(callback, ms){
             clearTimeout (timer);
@@ -629,7 +629,7 @@ jQuery(document).ready(function($){
         };
     })();
 
-    $(document).on('click', '.dozent-quiz-delete-btn', function(e){
+    $(document).on('click', '.tutor-quiz-delete-btn', function(e){
         e.preventDefault();
 
         var $that = $(this);
@@ -650,7 +650,7 @@ jQuery(document).ready(function($){
     /**
      * Add teacher modal
      */
-    $(document).on('click', '.dozent-add-teacher-btn', function(e){
+    $(document).on('click', '.tutor-add-teacher-btn', function(e){
         e.preventDefault();
 
         var $that = $(this);
@@ -659,14 +659,14 @@ jQuery(document).ready(function($){
         $.ajax({
             url : ajaxurl,
             type : 'POST',
-            data : {course_id : course_id, action: 'dozent_load_teachers_modal'},
+            data : {course_id : course_id, action: 'tutor_load_teachers_modal'},
             beforeSend: function () {
                 $that.addClass('updating-message');
             },
             success: function (data) {
                 if (data.success){
-                    $('.dozent-teachers-modal-wrap .modal-container').html(data.data.output);
-                    $('.dozent-teachers-modal-wrap').addClass('show');
+                    $('.tutor-teachers-modal-wrap .modal-container').html(data.data.output);
+                    $('.tutor-teachers-modal-wrap').addClass('show');
                 }
             },
             complete: function () {
@@ -675,27 +675,27 @@ jQuery(document).ready(function($){
         });
     });
 
-    $(document).on('change keyup', '.dozent-teachers-modal-wrap .dozent-modal-search-input', function(e){
+    $(document).on('change keyup', '.tutor-teachers-modal-wrap .tutor-modal-search-input', function(e){
         e.preventDefault();
 
         var $that = $(this);
-        var $modal = $('.dozent-modal-wrap');
+        var $modal = $('.tutor-modal-wrap');
 
-        dozent_delay(function(){
+        tutor_delay(function(){
             var search_terms = $that.val();
             var course_id = $('#post_ID').val();
 
             $.ajax({
                 url : ajaxurl,
                 type : 'POST',
-                data : {course_id : course_id, search_terms : search_terms, action: 'dozent_load_teachers_modal'},
+                data : {course_id : course_id, search_terms : search_terms, action: 'tutor_load_teachers_modal'},
                 beforeSend: function () {
                     $modal.addClass('loading');
                 },
                 success: function (data) {
                     if (data.success){
-                        $('.dozent-teachers-modal-wrap .modal-container').html(data.data.output);
-                        $('.dozent-teachers-modal-wrap').addClass('show');
+                        $('.tutor-teachers-modal-wrap .modal-container').html(data.data.output);
+                        $('.tutor-teachers-modal-wrap').addClass('show');
                     }
                 },
                 complete: function () {
@@ -709,10 +709,10 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-        var $modal = $('.dozent-modal-wrap');
+        var $modal = $('.tutor-modal-wrap');
 
         var course_id = $('#post_ID').val();
-        var data = $modal.find('input').serialize()+'&course_id='+course_id+'&action=dozent_add_teachers_to_course';
+        var data = $modal.find('input').serialize()+'&course_id='+course_id+'&action=tutor_add_teachers_to_course';
 
         $.ajax({
             url : ajaxurl,
@@ -723,8 +723,8 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 if (data.success){
-                    $('.dozent-course-available-teachers').html(data.data.output);
-                    $('.dozent-modal-wrap').removeClass('show');
+                    $('.tutor-course-available-teachers').html(data.data.output);
+                    $('.tutor-modal-wrap').removeClass('show');
                 }
             },
             complete: function () {
@@ -733,7 +733,7 @@ jQuery(document).ready(function($){
         });
     });
 
-    $(document).on('click', '.dozent-teacher-delete-btn', function(e){
+    $(document).on('click', '.tutor-teacher-delete-btn', function(e){
         e.preventDefault();
 
         var $that = $(this);

@@ -4,21 +4,21 @@
  *
  * @author: themeum
  * @author_uri: https://themeum.com
- * @package Dozent
+ * @package Tutor
  * @since v.1.0.0
  */
 
 
-namespace DOZENT;
+namespace TUTOR;
 
 
 class Theme_Compatibility {
 
 	public function __construct() {
 		$template = trailingslashit(get_template());
-		$dozent_path = dozent()->path;
+		$tutor_path = tutor()->path;
 
-		$compatibility_theme_path = $dozent_path.'includes/theme-compatibility/'.$template.'functions.php';
+		$compatibility_theme_path = $tutor_path.'includes/theme-compatibility/'.$template.'functions.php';
 
 		if (file_exists($compatibility_theme_path)){
 			include $compatibility_theme_path;

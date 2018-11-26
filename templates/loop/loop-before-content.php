@@ -20,5 +20,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<div class="<?php dozent_course_loop_col_classes(); ?>">
-<div class="<?php dozent_course_loop_wrap_classes(); ?>">
+<div class="<?php tutor_course_loop_col_classes(); ?>">
+<div class="<?php tutor_course_loop_wrap_classes(); ?>">
