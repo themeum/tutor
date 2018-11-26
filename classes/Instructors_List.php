@@ -8,14 +8,14 @@ if (! class_exists('Tutor_List_Table')){
 	include_once tutor()->path.'classes/Tutor_List_Table.php';
 }
 
-class Teachers_List extends \Tutor_List_Table {
+class Instructors_List extends \Tutor_List_Table {
 	function __construct(){
 		global $status, $page;
 
 		//Set parent defaults
 		parent::__construct( array(
-			'singular'  => 'teacher',     //singular name of the listed records
-			'plural'    => 'teachers',    //plural name of the listed records
+			'singular'  => 'instructor',     //singular name of the listed records
+			'plural'    => 'instructors',    //plural name of the listed records
 			'ajax'      => false        //does this table support ajax?
 		) );
 	}
@@ -45,29 +45,29 @@ class Teachers_List extends \Tutor_List_Table {
 	 * Completed Course by User
 	 */
 	function column_status($item){
-		$status = tutor_utils()->teacher_status($item->ID, false);
-		$status_name = tutor_utils()->teacher_status($item->ID);
+		$status = tutor_utils()->instructor_status($item->ID, false);
+		$status_name = tutor_utils()->instructor_status($item->ID);
 		echo "<span class='tutor-status-context tutor-status-{$status}-context'>{$status_name}</span>";
 	}
 
 	function column_display_name($item){
 		//Build row actions
 		$actions = array(
-			//'edit'      => sprintf('<a href="?page=%s&action=%s&teacher=%s">Edit</a>',$_REQUEST['page'],'edit',$item->ID),
-			//'delete'    => sprintf('<a href="?page=%s&action=%s&teacher=%s">Delete</a>',$_REQUEST['page'],'delete',$item->ID),
+			//'edit'      => sprintf('<a href="?page=%s&action=%s&instructor=%s">Edit</a>',$_REQUEST['page'],'edit',$item->ID),
+			//'delete'    => sprintf('<a href="?page=%s&action=%s&instructor=%s">Delete</a>',$_REQUEST['page'],'delete',$item->ID),
 		);
 
-		$status = tutor_utils()->teacher_status($item->ID, false);
+		$status = tutor_utils()->instructor_status($item->ID, false);
 
 		switch ($status){
 			case 'pending':
-				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Approve</a>',$_REQUEST['page'],'approve',$item->ID);
+				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&instructor=%s">Approve</a>',$_REQUEST['page'],'approve',$item->ID);
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Block</a>',$_REQUEST['page'],'blocked',$item->ID);
+				$actions['blocked'] = sprintf('<a href="?page=%s&action=%s&instructor=%s">Block</a>',$_REQUEST['page'],'blocked',$item->ID);
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&teacher=%s">Un Block</a>',$_REQUEST['page'],'approve',$item->ID);
+				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&instructor=%s">Un Block</a>',$_REQUEST['page'],'approve',$item->ID);
 				break;
 		}
 		//Return the title contents
@@ -81,7 +81,7 @@ class Teachers_List extends \Tutor_List_Table {
 	function column_cb($item){
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("teacher")
+			/*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("instructor")
 			/*$2%s*/ $item->ID                //The value of the checkbox should be the record's id
 		);
 	}
@@ -113,33 +113,33 @@ class Teachers_List extends \Tutor_List_Table {
 
 	function process_bulk_action() {
 		if( 'approve' === $this->current_action() ) {
-			$teacher_id = (int) sanitize_text_field($_GET['teacher']);
+			$instructor_id = (int) sanitize_text_field($_GET['instructor']);
 
-			do_action('tutor_before_approved_teacher', $teacher_id);
+			do_action('tutor_before_approved_instructor', $instructor_id);
 
-			update_user_meta($teacher_id, '_tutor_teacher_status', 'approved');
-			update_user_meta($teacher_id, '_tutor_teacher_approved', time());
+			update_user_meta($instructor_id, '_tutor_instructor_status', 'approved');
+			update_user_meta($instructor_id, '_tutor_instructor_approved', time());
 
-			$teacher = new \WP_User($teacher_id);
-			$teacher->add_role(tutor()->teacher_role);
+			$instructor = new \WP_User($instructor_id);
+			$instructor->add_role(tutor()->instructor_role);
 
-			//TODO: send E-Mail to this user about teacher approval, should via hook
-			do_action('tutor_after_approved_teacher', $teacher_id);
+			//TODO: send E-Mail to this user about instructor approval, should via hook
+			do_action('tutor_after_approved_instructor', $instructor_id);
 
 			wp_redirect(wp_get_referer());
 		}
 
 		if( 'blocked' === $this->current_action() ) {
-			$teacher_id = (int) sanitize_text_field($_GET['teacher']);
+			$instructor_id = (int) sanitize_text_field($_GET['instructor']);
 
-			do_action('tutor_before_blocked_teacher', $teacher_id);
-			update_user_meta($teacher_id, '_tutor_teacher_status', 'blocked');
+			do_action('tutor_before_blocked_instructor', $instructor_id);
+			update_user_meta($instructor_id, '_tutor_instructor_status', 'blocked');
 
-			$teacher = new \WP_User($teacher_id);
-			$teacher->remove_role(tutor()->teacher_role);
-			do_action('tutor_after_blocked_teacher', $teacher_id);
+			$instructor = new \WP_User($instructor_id);
+			$instructor->remove_role(tutor()->instructor_role);
+			do_action('tutor_after_blocked_instructor', $instructor_id);
 
-			//TODO: send E-Mail to this user about teacher blocked, should via hook
+			//TODO: send E-Mail to this user about instructor blocked, should via hook
 			wp_redirect(wp_get_referer());
 		}
 
@@ -166,8 +166,8 @@ class Teachers_List extends \Tutor_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$total_items = tutor_utils()->get_total_teachers($search_term);
-		$this->items = tutor_utils()->get_teachers(($current_page-1)*$per_page, $per_page, $search_term);
+		$total_items = tutor_utils()->get_total_instructors($search_term);
+		$this->items = tutor_utils()->get_instructors(($current_page-1)*$per_page, $per_page, $search_term);
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,

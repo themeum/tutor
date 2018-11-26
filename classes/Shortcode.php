@@ -16,13 +16,13 @@ class Shortcode {
 	public function __construct() {
 		add_shortcode('tutor_student_registration_form', array($this, 'student_registration_form'));
 		add_shortcode('tutor_student_dashboard', array($this, 'tutor_student_dashboard'));
-		add_shortcode('tutor_teacher_registration_form', array($this, 'teacher_registration_form'));
+		add_shortcode('tutor_instructor_registration_form', array($this, 'instructor_registration_form'));
 	}
 
 	/**
 	 * @return mixed
 	 *
-	 * Teacher Registration Shortcode
+	 * Instructor Registration Shortcode
 	 *
 	 * @since v.1.0.0
 	 */
@@ -56,16 +56,16 @@ class Shortcode {
 	/**
 	 * @return mixed
 	 *
-	 * Teacher Registration Shortcode
+	 * Instructor Registration Shortcode
 	 *
 	 * @since v.1.0.0
 	 */
-	public function teacher_registration_form(){
+	public function instructor_registration_form(){
 		ob_start();
 		if (is_user_logged_in()){
-			tutor_load_template( 'dashboard.teacher.logged-in' );
+			tutor_load_template( 'dashboard.instructor.logged-in' );
 		}else{
-			tutor_load_template( 'dashboard.teacher.registration' );
+			tutor_load_template( 'dashboard.instructor.registration' );
 		}
 		return apply_filters( 'tutor_dashboard/student/index', ob_get_clean() );
 	}

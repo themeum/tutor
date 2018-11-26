@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class Teacher
+ * Class Instructor
  * @package TUTOR
  *
  * @since v.1.0.0

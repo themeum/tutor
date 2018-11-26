@@ -10,8 +10,8 @@ if (isset($_GET['sub_page'])){
     return;
 }
 
-$teacherList = new \TUTOR\Quiz_Attempts_List();
-$teacherList->prepare_items();
+$instructorList = new \TUTOR\Quiz_Attempts_List();
+$instructorList->prepare_items();
 ?>
 
 <div class="wrap">
@@ -20,7 +20,7 @@ $teacherList->prepare_items();
 	<form id="quiz_attempts-filter" method="get">
 		<input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
 		<?php
-		$teacherList->search_box(__('Search', 'tutor'), 'quiz_attempts');
-		$teacherList->display(); ?>
+		$instructorList->search_box(__('Search', 'tutor'), 'quiz_attempts');
+		$instructorList->display(); ?>
 	</form>
 </div>

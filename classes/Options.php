@@ -132,10 +132,10 @@ class Options {
 								'desc'      => __('Select page to show course archieve page, none will show default course post type',	'tutor'),
 							),*/
 
-							'display_course_teachers' => array(
+							'display_course_instructors' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Display teachers profile', 'tutor'),
-								'label_title'   => __('Show the teacher profile on course single page.', 'tutor'),
+								'label'     => __('Display instructors profile', 'tutor'),
+								'label_title'   => __('Show the instructor profile on course single page.', 'tutor'),
 							),
 							'enable_q_and_a_on_course' => array(
 								'type'      => 'checkbox',
@@ -263,25 +263,25 @@ class Options {
 					)
 				),
 			),
-			'teachers' => array(
-				'label'     => __('Teachers', 'tutor'),
+			'instructors' => array(
+				'label'     => __('Instructors', 'tutor'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('Teacher Profile Settings', 'tutor'),
+						'label' => __('Instructor Profile Settings', 'tutor'),
 						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
 						'fields' => array(
-							'teacher_register_page' => array(
+							'instructor_register_page' => array(
 								'type'      => 'select',
-								'label'     => __('Teacher Register Page', 'tutor'),
+								'label'     => __('Instructor Register Page', 'tutor'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('This will be teacher register page', 'tutor'),
+								'desc'      => __('This will be instructor register page', 'tutor'),
 							),
-							'teacher_can_publish_course' => array(
+							'instructor_can_publish_course' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Can publish course', 'tutor'),
 								'default' => '0',
-								'desc'      => __('Define if a teacher can publish his courses directly or not, if unchecked, they can still add courses, but it will go to admin for review',	'tutor'),
+								'desc'      => __('Define if a instructor can publish his courses directly or not, if unchecked, they can still add courses, but it will go to admin for review',	'tutor'),
 							),
 						),
 					),

@@ -22,7 +22,7 @@ do_action('tutor_course/single/enrolled/before/wrap');
                 <?php tutor_course_enrolled_lead_info(); ?>
                 <?php tutor_course_enrolled_nav(); ?>
                 <?php tutor_course_topics(); ?>
-                <?php tutor_course_teachers_html(); ?>
+                <?php tutor_course_instructors_html(); ?>
                 <?php tutor_course_target_reviews_html(); ?>
                 <?php tutor_course_target_review_form_html(); ?>
 		        <?php do_action('tutor_course/single/enrolled/after/inner-wrap'); ?>

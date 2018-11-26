@@ -51,7 +51,7 @@ If any bug is found, Please let us know by posting on the support section of thi
 
 == Screenshots ==
 
-1. Teachers Lists
+1. Instructors Lists
 2. Course Page
 3. Lesson Add to course
 

@@ -23,7 +23,7 @@ class init{
 	private $lesson;
 	private $rewrite_rules;
 	private $template;
-	private $teacher;
+	private $instructor;
 	private $student;
 	private $q_and_a;
 	private $quiz;
@@ -61,7 +61,7 @@ class init{
 		$this->lesson = new Lesson();
 		$this->rewrite_rules = new Rewrite_Rules();
 		$this->template = new Template();
-		$this->teacher = new  Teacher();
+		$this->instructor = new  Instructor();
 		$this->student = new Student();
 		$this->q_and_a = new Q_and_A();
 		$this->quiz = new Quiz();
@@ -141,16 +141,16 @@ class init{
 
 	public static function manage_tutor_roles_and_permissions(){
 		/**
-		 * Add role for teacher
+		 * Add role for instructor
 		 */
-		$teacher_role = tutor()->teacher_role;
+		$instructor_role = tutor()->instructor_role;
 
-		remove_role($teacher_role);
-		add_role( $teacher_role, __('Tutor Teacher', 'tutor'), array() );
+		remove_role($instructor_role);
+		add_role( $instructor_role, __('Tutor Instructor', 'tutor'), array() );
 
 		$custom_post_type_permission = array(
-			//Manage Teacher
-			'manage_tutor_teacher',
+			//Manage Instructor
+			'manage_tutor_instructor',
 
 			//Tutor Posts Type Permission
 			'edit_tutor_course',
@@ -193,23 +193,23 @@ class init{
 			'edit_tutor_questions',
 		);
 
-		$teacher = get_role( $teacher_role );
-		if ( $teacher ) {
-			$teacher_cap = array (
+		$instructor = get_role( $instructor_role );
+		if ( $instructor ) {
+			$instructor_cap = array (
 				'edit_posts',
 				'read',
 				'upload_files',
 			);
 
-			$teacher_cap = array_merge($teacher_cap, $custom_post_type_permission);
+			$instructor_cap = array_merge($instructor_cap, $custom_post_type_permission);
 
-			$can_publish_course = (bool) tutor_utils()->get_option('teacher_can_publish_course');
+			$can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course');
 			if ($can_publish_course){
-				$teacher_cap[] = 'publish_tutor_courses';
+				$instructor_cap[] = 'publish_tutor_courses';
 			}
 
-			foreach ($teacher_cap as $cap){
-				$teacher->add_cap( $cap );
+			foreach ($instructor_cap as $cap){
+				$instructor->add_cap( $cap );
 			}
 		}
 
@@ -249,14 +249,14 @@ class init{
 		$student_register_page_id = wp_insert_post( $student_registration_args );
 		tutor_utils()->update_option('student_register_page', $student_register_page_id);
 
-		$teacher_registration_args = array(
-			'post_title'    => __('Teacher Registration', 'tutor'),
-			'post_content'  => '[tutor_teacher_registration_form]',
+		$instructor_registration_args = array(
+			'post_title'    => __('Instructor Registration', 'tutor'),
+			'post_content'  => '[tutor_instructor_registration_form]',
 			'post_type'     => 'page',
 			'post_status'   => 'publish',
 		);
-		$teacher_registration_id = wp_insert_post( $teacher_registration_args );
-		tutor_utils()->update_option('teacher_register_page', $teacher_registration_id);
+		$instructor_registration_id = wp_insert_post( $instructor_registration_args );
+		tutor_utils()->update_option('instructor_register_page', $instructor_registration_id);
 	}
 
 	public static function default_options(){
@@ -264,7 +264,7 @@ class init{
 			'load_tutor_css'                    => '1',
 			'load_tutor_js'                     => '1',
 			'course_allow_upload_private_files' => '1',
-			'display_course_teachers'           => '1',
+			'display_course_instructors'           => '1',
 			'enable_q_and_a_on_course'          => '1',
 			'courses_col_per_row'               => '3',
 			'courses_per_page'                  => '3',
@@ -283,7 +283,7 @@ class init{
 					'quiz_completed' => '1',
 					'completed_course' => '1',
 				),
-			'email_to_teachers'                     =>
+			'email_to_instructors'                     =>
 				array (
 					'a_student_enrolled_in_course'  => '1',
 					'a_student_completed_course'    => '1',

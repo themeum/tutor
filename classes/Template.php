@@ -227,11 +227,11 @@ class Template extends Tutor_Base {
 			return $shortcode->tutor_student_dashboard();
 		}
 
-		//Teacher Registration Page
-		$teacher_register_page_page_id = (int) tutor_utils()->get_option('teacher_register_page');
-		if ($teacher_register_page_page_id === get_the_ID()){
+		//Instructor Registration Page
+		$instructor_register_page_page_id = (int) tutor_utils()->get_option('instructor_register_page');
+		if ($instructor_register_page_page_id === get_the_ID()){
 			$shortcode = new Shortcode();
-			return $shortcode->teacher_registration_form();
+			return $shortcode->instructor_registration_form();
 		}
 
 		$student_register_page_id = (int) tutor_utils()->get_option('student_register_page');

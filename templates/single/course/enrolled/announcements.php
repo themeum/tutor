@@ -41,7 +41,7 @@ $announcements = tutor_utils()->get_announcements(get_the_ID());
         <div class="tutor-no-announcements">
             <h2><?php _e('No announcements posted yet.', 'tutor'); ?></h2>
             <p>
-				<?php _e('The teacher hasn’t added any announcements to this course yet. Announcements are used to inform you of updates or additions to the course.', 'tutor'); ?>
+				<?php _e('The instructor hasn’t added any announcements to this course yet. Announcements are used to inform you of updates or additions to the course.', 'tutor'); ?>
             </p>
         </div>
 

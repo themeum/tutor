@@ -23,9 +23,9 @@ jQuery(document).ready(function($){
                         editor.insertContent('[tutor_student_dashboard]');
                     }
                 },{
-                    text: 'Teacher Registration Form',
+                    text: 'Instructor Registration Form',
                     onclick: function() {
-                        editor.insertContent('[tutor_teacher_registration_form]');
+                        editor.insertContent('[tutor_instructor_registration_form]');
                     }
                 },
             ]

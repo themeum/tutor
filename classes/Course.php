@@ -24,9 +24,9 @@ class Course extends Tutor_Base {
 		add_action('template_redirect', array($this, 'mark_course_complete'));
 
 		//Modal Perform
-		add_action('wp_ajax_tutor_load_teachers_modal', array($this, 'tutor_load_teachers_modal'));
-		add_action('wp_ajax_tutor_add_teachers_to_course', array($this, 'tutor_add_teachers_to_course'));
-		add_action('wp_ajax_detach_teacher_from_course', array($this, 'detach_teacher_from_course'));
+		add_action('wp_ajax_tutor_load_instructors_modal', array($this, 'tutor_load_instructors_modal'));
+		add_action('wp_ajax_tutor_add_instructors_to_course', array($this, 'tutor_add_instructors_to_course'));
+		add_action('wp_ajax_detach_instructor_from_course', array($this, 'detach_instructor_from_course'));
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Course extends Tutor_Base {
 		add_meta_box( 'tutor-course-topics', __( 'Topics', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
-		add_meta_box( 'tutor-teachers', __( 'Teachers', 'tutor' ), array($this, 'teachers_metabox'), $coursePostType );
+		add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array($this, 'instructors_metabox'), $coursePostType );
 		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
 	}
 
@@ -59,8 +59,8 @@ class Course extends Tutor_Base {
 		include  tutor()->path.'views/metabox/announcements-metabox.php';
 	}
 
-	public function teachers_metabox(){
-		include  tutor()->path.'views/metabox/teachers-metabox.php';
+	public function instructors_metabox(){
+		include  tutor()->path.'views/metabox/instructors-metabox.php';
 	}
 
 	/**
@@ -361,23 +361,23 @@ class Course extends Tutor_Base {
 	}
 
 	
-	public function tutor_load_teachers_modal(){
+	public function tutor_load_instructors_modal(){
 		global $wpdb;
 
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 		$search_terms = sanitize_text_field(tutor_utils()->avalue_dot('search_terms', $_POST));
 
-		$saved_teachers = tutor_utils()->get_teachers_by_course($course_id);
+		$saved_instructors = tutor_utils()->get_instructors_by_course($course_id);
 
-		$teachers = array();
+		$instructors = array();
 
 
 		$not_in_sql = '';
-		if ($saved_teachers){
-			$saved_teachers_ids = wp_list_pluck($saved_teachers, 'ID');
-			$teacher_not_in_ids = implode(',', $saved_teachers_ids);
-			$activated = apply_filters('tutor_teacher_query_when_exists', " AND ID <1 ");
-			$not_in_sql = $activated."AND ID NOT IN($teacher_not_in_ids) ";
+		if ($saved_instructors){
+			$saved_instructors_ids = wp_list_pluck($saved_instructors, 'ID');
+			$instructor_not_in_ids = implode(',', $saved_instructors_ids);
+			$activated = apply_filters('tutor_instructor_query_when_exists', " AND ID <1 ");
+			$not_in_sql = $activated."AND ID NOT IN($instructor_not_in_ids) ";
 		}
 
 		$search_sql = '';
@@ -385,48 +385,48 @@ class Course extends Tutor_Base {
 			$search_sql = "AND user_login like '%{$search_terms}%' or user_nicename like '%{$search_terms}%' or display_name like '%{$search_terms}%' ";
 		}
 
-		$teachers = $wpdb->get_results("select ID, display_name from {$wpdb->users} 
-			INNER JOIN {$wpdb->usermeta} ON ID = user_id AND meta_key = '_tutor_teacher_status' AND meta_value = 'approved'
+		$instructors = $wpdb->get_results("select ID, display_name from {$wpdb->users} 
+			INNER JOIN {$wpdb->usermeta} ON ID = user_id AND meta_key = '_tutor_instructor_status' AND meta_value = 'approved'
 			WHERE ID > 0 {$not_in_sql} {$search_sql} limit 10 ");
 
 		$output = '';
-		if (is_array($teachers) && count($teachers)){
-			$teacher_output = '';
-			foreach ($teachers as $teacher){
-				$teacher_output .= "<p><label><input type='radio' name='tutor_teacher_ids[]' value='{$teacher->ID}' > {$teacher->display_name} </label></p>";
+		if (is_array($instructors) && count($instructors)){
+			$instructor_output = '';
+			foreach ($instructors as $instructor){
+				$instructor_output .= "<p><label><input type='radio' name='tutor_instructor_ids[]' value='{$instructor->ID}' > {$instructor->display_name} </label></p>";
 			}
 
-			$output .= apply_filters('tutor_course_teachers_html', $teacher_output, $teachers);
-			$output .= '<p class="quiz-search-suggest-text">'.__('Search to get the specific teachers', 'tutor').'</p>';
+			$output .= apply_filters('tutor_course_instructors_html', $instructor_output, $instructors);
+			$output .= '<p class="quiz-search-suggest-text">'.__('Search to get the specific instructors', 'tutor').'</p>';
 
 		}else{
-			$output .= __('No teacher available or you have already added maximum teachers', 'tutor');
+			$output .= __('No instructor available or you have already added maximum instructors', 'tutor');
 		}
 
 		wp_send_json_success(array('output' => $output));
 	}
 
-	public function tutor_add_teachers_to_course(){
+	public function tutor_add_instructors_to_course(){
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
-		$teacher_ids = tutor_utils()->avalue_dot('tutor_teacher_ids', $_POST);
+		$instructor_ids = tutor_utils()->avalue_dot('tutor_instructor_ids', $_POST);
 
-		if (is_array($teacher_ids) && count($teacher_ids)){
-			foreach ($teacher_ids as $teacher_id){
-				add_user_meta($teacher_id, '_tutor_teacher_course_id', $course_id);
+		if (is_array($instructor_ids) && count($instructor_ids)){
+			foreach ($instructor_ids as $instructor_id){
+				add_user_meta($instructor_id, '_tutor_instructor_course_id', $course_id);
 			}
 		}
 		
-		$saved_teachers = tutor_utils()->get_teachers_by_course($course_id);
+		$saved_instructors = tutor_utils()->get_instructors_by_course($course_id);
 		$output = '';
 
-		if ($saved_teachers){
-			foreach ($saved_teachers as $t){
+		if ($saved_instructors){
+			foreach ($saved_instructors as $t){
 
-				$output .= '<div id="added-teacher-id-'.$t->ID.'" class="added-teacher-item added-teacher-item-'.$t->ID.'" data-teacher-id="'.$t->ID.'">
-                                <span class="teacher-icon"><i class="dashicons dashicons-admin-users"></i></span>
-                                <span class="teacher-name"> '.$t->display_name.' </span>
-                                <span class="teacher-control">
-                                    <a href="javascript:;" class="tutor-teacher-delete-btn"><i class="dashicons dashicons-trash"></i></a>
+				$output .= '<div id="added-instructor-id-'.$t->ID.'" class="added-instructor-item added-instructor-item-'.$t->ID.'" data-instructor-id="'.$t->ID.'">
+                                <span class="instructor-icon"><i class="dashicons dashicons-admin-users"></i></span>
+                                <span class="instructor-name"> '.$t->display_name.' </span>
+                                <span class="instructor-control">
+                                    <a href="javascript:;" class="tutor-instructor-delete-btn"><i class="dashicons dashicons-trash"></i></a>
                                 </span>
                             </div>';
 			}
@@ -436,13 +436,13 @@ class Course extends Tutor_Base {
 		wp_send_json_success(array('output' => $output));
 	}
 
-	public function detach_teacher_from_course(){
+	public function detach_instructor_from_course(){
 		global $wpdb;
 
-		$teacher_id = (int) sanitize_text_field($_POST['teacher_id']);
+		$instructor_id = (int) sanitize_text_field($_POST['instructor_id']);
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 
-		$wpdb->delete($wpdb->usermeta, array('user_id' => $teacher_id, 'meta_key' => '_tutor_teacher_course_id', 'meta_value' => $course_id) );
+		$wpdb->delete($wpdb->usermeta, array('user_id' => $instructor_id, 'meta_key' => '_tutor_instructor_course_id', 'meta_value' => $course_id) );
 		wp_send_json_success();
 	}
 

@@ -711,7 +711,6 @@ span.result-fail{
 .tutor-quiz-attempt-info-row .quiz-attempt-info-row .attempt-property-name{
     width: 25%;
 }
-
 .tutor-emails-lists-wrap{
     background-color: #ffffff;
     padding: 20px;
@@ -719,20 +718,17 @@ span.result-fail{
 .tutor-emails-lists-wrap .wp-list-table td{
     padding: 10px 20px;
 }
-
-
-
-.tutor-course-available-teachers .added-teacher-item {
+.tutor-course-available-instructors .added-instructor-item {
     background-color: #f5f5f5;
     padding: 10px;
     margin-bottom: 2px;
     display: flex;
 }
-.tutor-course-available-teachers .added-teacher-item .teacher-name {
+.tutor-course-available-instructors .added-instructor-item .instructor-name {
     flex-basis: 0;
     flex-grow: 1;
 }
-.tutor-teacher-delete-btn{
+.tutor-instructor-delete-btn{
     color: #FF0000;
     text-decoration: none;
 }

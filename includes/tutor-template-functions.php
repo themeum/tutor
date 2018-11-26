@@ -595,16 +595,16 @@ if ( ! function_exists('tutor_course_material_includes_html')) {
 //tutor_course_material_includes_html
 
 
-if ( ! function_exists('tutor_course_teachers_html')) {
-	function tutor_course_teachers_html($echo = true) {
-		$display_course_teachers = tutor_utils()->get_option('display_course_teachers');
-		if ( ! $display_course_teachers){
+if ( ! function_exists('tutor_course_instructors_html')) {
+	function tutor_course_instructors_html($echo = true) {
+		$display_course_instructors = tutor_utils()->get_option('display_course_instructors');
+		if ( ! $display_course_instructors){
 			return null;
 		}
 
 		ob_start();
-		tutor_load_template( 'single.course.teachers' );
-		$output = apply_filters( 'tutor_course/single/teachers_html', ob_get_clean() );
+		tutor_load_template( 'single.course.instructors' );
+		$output = apply_filters( 'tutor_course/single/instructors_html', ob_get_clean() );
 
 		if ($echo){
 			echo $output;

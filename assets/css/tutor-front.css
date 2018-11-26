@@ -954,94 +954,94 @@ a.tutor-btn:hover,
 /* End Tutor Student Dashboard  */
 /************************       */
 /**
-Teacher
+Instructor
  */
-.single-teacher-wrap{
+.single-instructor-wrap{
     border: 1px solid #e8eff1;
     margin-bottom: 30px;
     font-size: 14px;
     border-radius: 4px;
 }
-.single-teacher-wrap .single-teacher-top{
+.single-instructor-wrap .single-instructor-top{
     overflow: hidden;
     padding: 20px;
     border-bottom: 1px solid #e8eff1;
 }
-.single-teacher-wrap .single-teacher-top h3,
-.single-teacher-wrap .single-teacher-top h4 {
+.single-instructor-wrap .single-instructor-top h3,
+.single-instructor-wrap .single-instructor-top h4 {
     margin: 0;
     padding: 0;
 }
-.single-teacher-wrap .tutor-teacher-left{
+.single-instructor-wrap .tutor-instructor-left{
     float: left;
     overflow: hidden;
 }
-.single-teacher-wrap .teacher-avatar{
+.single-instructor-wrap .instructor-avatar{
     float: left;
 }
-.single-teacher-wrap .teacher-avatar img{
+.single-instructor-wrap .instructor-avatar img{
     max-width: 50px;
     height: auto;
     border-radius: 50%;
 }
-.single-teacher-wrap .teacher-name{
+.single-instructor-wrap .instructor-name{
     float: left;
     padding-left: 20px;
     max-width: 130px;
 }
-.single-teacher-wrap .teacher-name h3{
+.single-instructor-wrap .instructor-name h3{
     font-size: 16px;
     color: #4B5981;
     font-weight: 600;
 }
-.single-teacher-wrap .teacher-name h3 a{
+.single-instructor-wrap .instructor-name h3 a{
     font-weight: 500;
     color: #4B5981;
 }
-.single-teacher-wrap .teacher-name h4{
+.single-instructor-wrap .instructor-name h4{
     font-weight: 400;
     font-size: 14px;
     color: #B1B8C9;
 }
-.single-teacher-wrap .teacher-bio{
+.single-instructor-wrap .instructor-bio{
     padding-left: 220px;
     font-size: 14px;
 }
-.single-teacher-wrap .single-teacher-bottom{
+.single-instructor-wrap .single-instructor-bottom{
     padding: 15px 20px;
     text-align: right;
     overflow: hidden;
 }
-.single-teacher-wrap .single-teacher-bottom p{
+.single-instructor-wrap .single-instructor-bottom p{
     margin: 0;
 }
-.single-teacher-wrap .single-teacher-bottom .ratings{
+.single-instructor-wrap .single-instructor-bottom .ratings{
     float: left;
 }
 
-.single-teacher-wrap .single-teacher-bottom .ratings i{
+.single-instructor-wrap .single-instructor-bottom .ratings i{
     margin-right: 4px;
 }
-.single-teacher-wrap .single-teacher-bottom .courses,
-.single-teacher-wrap .single-teacher-bottom .students{
+.single-instructor-wrap .single-instructor-bottom .courses,
+.single-instructor-wrap .single-instructor-bottom .students{
     display: inline-block;
     margin-left: 20px;
 }
 
 
-.single-teacher-wrap .single-teacher-bottom .courses i,
-.single-teacher-wrap .single-teacher-bottom .students i{
+.single-instructor-wrap .single-instructor-bottom .courses i,
+.single-instructor-wrap .single-instructor-bottom .students i{
     font-size: 18px;
     display: inline-block;
     margin-right: 2px;
     vertical-align: middle;
 }
 
-.single-teacher-wrap .single-teacher-bottom .ratings .rating-total-meta{
+.single-instructor-wrap .single-instructor-bottom .ratings .rating-total-meta{
     color: #bac0cf;
 }
 
-.single-teacher-wrap .single-teacher-bottom .ratings .rating-generated{
+.single-instructor-wrap .single-instructor-bottom .ratings .rating-generated{
     color: #f8c51c;
 }
 
@@ -2170,7 +2170,7 @@ Course question and answer
 }
 .review-avatar .tutor-text-avatar,
 .tutor-dashboard-avater .tutor-text-avatar,
-.teacher-avatar .tutor-text-avatar{
+.instructor-avatar .tutor-text-avatar{
     border-radius: 50%;
     width: 50px;
     height: 50px;

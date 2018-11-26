@@ -5,7 +5,7 @@ $user_id = $get_user->ID;
 
 
 
-$pageposts = tutor_utils()->get_courses_by_teacher($user_id);
+$pageposts = tutor_utils()->get_courses_by_instructor($user_id);
 ?>
 
 

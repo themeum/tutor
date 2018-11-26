@@ -36,8 +36,8 @@ class Question_Answers_List extends \Tutor_List_Table {
 	function column_question($item){
 		//Build row actions
 		$actions = array(
-			//'edit'      => sprintf('<a href="?page=%s&action=%s&teacher=%s">Edit</a>',$_REQUEST['page'],'edit',$item->comment_ID),
-			//'delete'    => sprintf('<a href="?page=%s&action=%s&teacher=%s">Delete</a>',$_REQUEST['page'],'delete',$item->comment_ID),
+			//'edit'      => sprintf('<a href="?page=%s&action=%s&instructor=%s">Edit</a>',$_REQUEST['page'],'edit',$item->comment_ID),
+			//'delete'    => sprintf('<a href="?page=%s&action=%s&instructor=%s">Delete</a>',$_REQUEST['page'],'delete',$item->comment_ID),
 		);
 
 		$actions['answer'] = sprintf('<a href="?page=%s&sub_page=%s&question_id=%s">Answer</a>',$_REQUEST['page'],'answer',$item->comment_ID);
@@ -54,7 +54,7 @@ class Question_Answers_List extends \Tutor_List_Table {
 	function column_cb($item){
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("teacher")
+			/*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("instructor")
 			/*$2%s*/ $item->comment_ID                //The value of the checkbox should be the record's id
 		);
 	}

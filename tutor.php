@@ -32,8 +32,8 @@ if ( ! function_exists('tutor')) {
 			'nonce'             => '_wpnonce',
 			'course_post_type'  => apply_filters( 'tutor_course_post_type', 'course' ),
 			'lesson_post_type'  => apply_filters( 'tutor_lesson_post_type', 'lesson' ),
-			'teacher_role'      => apply_filters( 'tutor_teacher_role', 'tutor_teacher' ),
-			'teacher_role_name' => apply_filters( 'tutor_teacher_role_name', __( 'Tutor Teacher', 'tutor' ) ),
+			'instructor_role'      => apply_filters( 'tutor_instructor_role', 'tutor_instructor' ),
+			'instructor_role_name' => apply_filters( 'tutor_instructor_role_name', __( 'Tutor Instructor', 'tutor' ) ),
 			'template_path'     => apply_filters( 'tutor_template_path', 'tutor/' ),
 		);
 

@@ -648,9 +648,9 @@ jQuery(document).ready(function($){
     });
 
     /**
-     * Add teacher modal
+     * Add instructor modal
      */
-    $(document).on('click', '.tutor-add-teacher-btn', function(e){
+    $(document).on('click', '.tutor-add-instructor-btn', function(e){
         e.preventDefault();
 
         var $that = $(this);
@@ -659,14 +659,14 @@ jQuery(document).ready(function($){
         $.ajax({
             url : ajaxurl,
             type : 'POST',
-            data : {course_id : course_id, action: 'tutor_load_teachers_modal'},
+            data : {course_id : course_id, action: 'tutor_load_instructors_modal'},
             beforeSend: function () {
                 $that.addClass('updating-message');
             },
             success: function (data) {
                 if (data.success){
-                    $('.tutor-teachers-modal-wrap .modal-container').html(data.data.output);
-                    $('.tutor-teachers-modal-wrap').addClass('show');
+                    $('.tutor-instructors-modal-wrap .modal-container').html(data.data.output);
+                    $('.tutor-instructors-modal-wrap').addClass('show');
                 }
             },
             complete: function () {
@@ -675,7 +675,7 @@ jQuery(document).ready(function($){
         });
     });
 
-    $(document).on('change keyup', '.tutor-teachers-modal-wrap .tutor-modal-search-input', function(e){
+    $(document).on('change keyup', '.tutor-instructors-modal-wrap .tutor-modal-search-input', function(e){
         e.preventDefault();
 
         var $that = $(this);
@@ -688,14 +688,14 @@ jQuery(document).ready(function($){
             $.ajax({
                 url : ajaxurl,
                 type : 'POST',
-                data : {course_id : course_id, search_terms : search_terms, action: 'tutor_load_teachers_modal'},
+                data : {course_id : course_id, search_terms : search_terms, action: 'tutor_load_instructors_modal'},
                 beforeSend: function () {
                     $modal.addClass('loading');
                 },
                 success: function (data) {
                     if (data.success){
-                        $('.tutor-teachers-modal-wrap .modal-container').html(data.data.output);
-                        $('.tutor-teachers-modal-wrap').addClass('show');
+                        $('.tutor-instructors-modal-wrap .modal-container').html(data.data.output);
+                        $('.tutor-instructors-modal-wrap').addClass('show');
                     }
                 },
                 complete: function () {
@@ -705,14 +705,14 @@ jQuery(document).ready(function($){
 
         }, 1000)
     });
-    $(document).on('click', '.add_teacher_to_course_btn', function(e){
+    $(document).on('click', '.add_instructor_to_course_btn', function(e){
         e.preventDefault();
 
         var $that = $(this);
         var $modal = $('.tutor-modal-wrap');
 
         var course_id = $('#post_ID').val();
-        var data = $modal.find('input').serialize()+'&course_id='+course_id+'&action=tutor_add_teachers_to_course';
+        var data = $modal.find('input').serialize()+'&course_id='+course_id+'&action=tutor_add_instructors_to_course';
 
         $.ajax({
             url : ajaxurl,
@@ -723,7 +723,7 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 if (data.success){
-                    $('.tutor-course-available-teachers').html(data.data.output);
+                    $('.tutor-course-available-instructors').html(data.data.output);
                     $('.tutor-modal-wrap').removeClass('show');
                 }
             },
@@ -733,21 +733,21 @@ jQuery(document).ready(function($){
         });
     });
 
-    $(document).on('click', '.tutor-teacher-delete-btn', function(e){
+    $(document).on('click', '.tutor-instructor-delete-btn', function(e){
         e.preventDefault();
 
         var $that = $(this);
 
         var course_id = $('#post_ID').val();
-        var teacher_id = $that.closest('.added-teacher-item').attr('data-teacher-id');
+        var instructor_id = $that.closest('.added-instructor-item').attr('data-instructor-id');
 
         $.ajax({
             url : ajaxurl,
             type : 'POST',
-            data : {course_id:course_id, teacher_id:teacher_id, action : 'detach_teacher_from_course'},
+            data : {course_id:course_id, instructor_id:instructor_id, action : 'detach_instructor_from_course'},
             success: function (data) {
                 if (data.success){
-                    $that.closest('.added-teacher-item').remove();
+                    $that.closest('.added-instructor-item').remove();
                 }
             }
         });

@@ -54,7 +54,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	function column_cb($item){
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("teacher")
+			/*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("instructor")
 			/*$2%s*/ $item->comment_ID                //The value of the checkbox should be the record's id
 		);
 	}

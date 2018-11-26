@@ -339,33 +339,33 @@ class Utils {
 		return $query;
 	}
 
-	public function get_courses_for_teachers($teacher_id = 0){
+	public function get_courses_for_instructors($instructor_id = 0){
 		global $wpdb;
 
-		$teacher_id = $this->get_user_id($teacher_id);
+		$instructor_id = $this->get_user_id($instructor_id);
 
 		$course_post_type = tutor()->course_post_type;
 		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order 
 				from {$wpdb->posts} 
-				WHERE post_author = {$teacher_id}
+				WHERE post_author = {$instructor_id}
 				AND post_status IN ('publish', 'pending')
 				AND post_type = '{$course_post_type}' ");
 		return $query;
 	}
 
-	public function get_course_count_by_teacher($teacher_id){
+	public function get_course_count_by_instructor($instructor_id){
 		global $wpdb;
 
 		$course_post_type = tutor()->course_post_type;
 		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} 
-			INNER JOIN {$wpdb->usermeta} ON user_id = {$teacher_id} AND meta_key = '_tutor_teacher_course_id' AND meta_value = ID 
+			INNER JOIN {$wpdb->usermeta} ON user_id = {$instructor_id} AND meta_key = '_tutor_instructor_course_id' AND meta_value = ID 
 			WHERE post_status = 'publish' 
 			AND post_type = '{$course_post_type}' ; ");
 
 		return $count;
 	}
 
-	public function get_courses_by_teacher($teacher_id){
+	public function get_courses_by_instructor($instructor_id){
 		global $wpdb;
 
 		$course_post_type = tutor()->course_post_type;
@@ -373,7 +373,7 @@ class Utils {
 		$querystr = "
 	    SELECT $wpdb->posts.* 
 	    FROM $wpdb->posts
-		INNER JOIN {$wpdb->usermeta} ON $wpdb->usermeta.user_id = {$teacher_id} AND $wpdb->usermeta.meta_key = '_tutor_teacher_course_id' AND $wpdb->usermeta.meta_value = $wpdb->posts.ID 
+		INNER JOIN {$wpdb->usermeta} ON $wpdb->usermeta.user_id = {$instructor_id} AND $wpdb->usermeta.meta_key = '_tutor_instructor_course_id' AND $wpdb->usermeta.meta_value = $wpdb->posts.ID 
 	
 	    
 	    WHERE $wpdb->posts.post_status = 'publish' 
@@ -1455,38 +1455,38 @@ class Utils {
 	 *
 	 * @return mixed
 	 *
-	 * Determine if is teacher or not
+	 * Determine if is instructor or not
 	 *
 	 * @since v.1.0.0
 	 */
-	public function is_teacher($user_id = 0){
+	public function is_instructor($user_id = 0){
 		$user_id = $this->get_user_id($user_id);
-		return get_user_meta($user_id, '_is_tutor_teacher', true);
+		return get_user_meta($user_id, '_is_tutor_instructor', true);
 	}
 
-	public function teacher_status($user_id = 0, $status_name = true){
+	public function instructor_status($user_id = 0, $status_name = true){
 		$user_id = $this->get_user_id($user_id);
 
-		$teacher_status = apply_filters('tutor_teacher_statuses', array(
+		$instructor_status = apply_filters('tutor_instructor_statuses', array(
 			'pending' => __('Pending', 'tutor'),
 			'approved' => __('Approved', 'tutor'),
 			'blocked' => __('Blocked', 'tutor'),
 		));
 
-		$status = get_user_meta($user_id, '_tutor_teacher_status', true);
+		$status = get_user_meta($user_id, '_tutor_instructor_status', true);
 
-		if (isset($teacher_status[$status])){
+		if (isset($instructor_status[$status])){
 			if ( ! $status_name){
 				return $status;
 			}
-			return $teacher_status[$status];
+			return $instructor_status[$status];
 		}
 		return false;
 	}
 
 
-	public function get_total_teachers($search_term = ''){
-		$meta_key = '_is_tutor_teacher';
+	public function get_total_instructors($search_term = ''){
+		$meta_key = '_is_tutor_instructor';
 
 		global $wpdb;
 
@@ -1499,29 +1499,29 @@ class Utils {
 		return (int) $count;
 	}
 
-	public function get_teachers($start = 0, $limit = 10, $search_term = ''){
-		$meta_key = '_is_tutor_teacher';
+	public function get_instructors($start = 0, $limit = 10, $search_term = ''){
+		$meta_key = '_is_tutor_instructor';
 		global $wpdb;
 
 		if ($search_term){
 			$search_term = " AND ( {$wpdb->users}.display_name LIKE '%{$search_term}%' OR {$wpdb->users}.user_email LIKE '%{$search_term}%' ) ";
 		}
 
-		$teachers = $wpdb->get_results("SELECT SQL_CALC_FOUND_ROWS {$wpdb->users}.* FROM {$wpdb->users} 
+		$instructors = $wpdb->get_results("SELECT SQL_CALC_FOUND_ROWS {$wpdb->users}.* FROM {$wpdb->users} 
 			INNER JOIN {$wpdb->usermeta} 
 			ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id ) 
 			WHERE 1=1 AND ( {$wpdb->usermeta}.meta_key = '{$meta_key}' )  {$search_term}
 			ORDER BY {$wpdb->usermeta}.meta_value DESC 
 			LIMIT {$start}, {$limit} ");
 
-		return $teachers;
+		return $instructors;
 	}
 
-	public function get_teachers_by_course($course_id = 0){
+	public function get_instructors_by_course($course_id = 0){
 		global $wpdb;
 		$course_id = $this->get_post_id($course_id);
 
-		$teachers = $wpdb->get_results("select ID, display_name, 
+		$instructors = $wpdb->get_results("select ID, display_name, 
 			get_course.meta_value as taught_course_id,
 			tutor_job_title.meta_value as tutor_profile_job_title, 
 			tutor_bio.meta_value as tutor_profile_bio,
@@ -1533,22 +1533,22 @@ class Utils {
 			LEFT JOIN {$wpdb->usermeta} tutor_photo ON ID = tutor_photo.user_id AND tutor_photo.meta_key = '_tutor_profile_photo'
 			");
 
-		if (is_array($teachers) && count($teachers)){
-			return $teachers;
+		if (is_array($instructors) && count($instructors)){
+			return $instructors;
 		}
 
 		return false;
 	}
 
 	/**
-	 * @param $teacher_id
+	 * @param $instructor_id
 	 *
-	 * Get total Students by teacher
+	 * Get total Students by instructor
 	 * 1 enrollment = 1 student, so total enrolled for a equivalent total students (Tricks)
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_total_students_by_teacher($teacher_id){
+	public function get_total_students_by_instructor($instructor_id){
 		global $wpdb;
 
 		$course_post_type = tutor()->course_post_type;
@@ -1557,7 +1557,7 @@ class Utils {
 			INNER JOIN {$wpdb->posts} enrolled ON courses.ID = enrolled.post_parent AND enrolled.post_type = 'tutor_enrolled'
 			WHERE courses.post_status = 'publish' 
 			AND courses.post_type = '{$course_post_type}' 
-			AND courses.post_author = {$teacher_id}  ; ");
+			AND courses.post_author = {$instructor_id}  ; ");
 		return (int) $count;
 	}
 
@@ -1777,13 +1777,13 @@ class Utils {
 	}
 
 	/**
-	 * @param $teacher_id
+	 * @param $instructor_id
 	 *
 	 * @return object
 	 *
-	 * Get teachers rating
+	 * Get instructors rating
 	 */
-	public function get_teacher_ratings($teacher_id){
+	public function get_instructor_ratings($instructor_id){
 		global $wpdb;
 
 		$ratings = array(
@@ -1796,7 +1796,7 @@ class Utils {
 		FROM {$wpdb->usermeta} courses
 		INNER JOIN {$wpdb->comments} reviews ON courses.meta_value = reviews.comment_post_ID AND reviews.comment_type = 'tutor_course_rating'
 		INNER JOIN {$wpdb->commentmeta} rating ON reviews.comment_ID = rating.comment_id AND rating.meta_key = 'tutor_rating'
-		WHERE courses.user_id = {$teacher_id} AND courses.meta_key = '_tutor_teacher_course_id'");
+		WHERE courses.user_id = {$instructor_id} AND courses.meta_key = '_tutor_instructor_course_id'");
 
 		if ($rating->rating_count){
 			$avg_rating = number_format(($rating->rating_sum / $rating->rating_count), 2);

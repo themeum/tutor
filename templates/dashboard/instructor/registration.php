@@ -1,9 +1,9 @@
 <form method="post" enctype="multipart/form-data">
 	<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-    <input type="hidden" value="tutor_register_teacher" name="tutor_action"/>
+    <input type="hidden" value="tutor_register_instructor" name="tutor_action"/>
 
     <?php
-    $errors = apply_filters('tutor_teacher_register_validation_errors', array());
+    $errors = apply_filters('tutor_instructor_register_validation_errors', array());
     if (is_array($errors) && count($errors)){
         echo '<div class="tutor-alert-warning"><ul class="tutor-required-fields">';
         foreach ($errors as $error_key => $error_value){
@@ -106,7 +106,7 @@
     <div class="tutor-form-row">
         <div class="tutor-form-col-12">
             <div class="tutor-form-group tutor-reg-form-btn-wrap">
-                <button type="submit" name="tutor_register_teacher_btn" value="register" class="tutor-button"><?php _e('Become a teacher', 'tutor'); ?></button>
+                <button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-button"><?php _e('Become a instructor', 'tutor'); ?></button>
             </div>
         </div>
     </div>

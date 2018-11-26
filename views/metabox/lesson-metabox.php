@@ -4,7 +4,7 @@
     </div>
     <div class="tutor-option-field">
         <?php
-        $courses = tutor_utils()->get_courses_for_teachers();
+        $courses = tutor_utils()->get_courses_for_instructors();
         ?>
 
         <select name="selected_course" class="tutor_select2">
