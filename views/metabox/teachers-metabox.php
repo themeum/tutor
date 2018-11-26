@@ -23,8 +23,16 @@
 	</div>
 
 	<div class="tutor-add-teacher-button-wrap">
-		<button type="button" class="button button-default tutor-add-teacher-btn"> <?php _e('Add Teacher', 'tutor'); ?> </button>
+		<p>
+            <button type="button" class="button button-default tutor-add-teacher-btn"> <?php _e('Add Teacher', 'tutor'); ?> </button>
+        </p>
 	</div>
+
+    <?php
+    if ( ! defined('TUTOR_MT_VERSION')){
+        echo '<p>'. sprintf( __('To add unlimited multiple teachers at your course, install %sTutor Multi Teachers%s addon ', 'tutor'), '<a href="https://www.themeum.com/product/tutor-multi-teachers" target="_blank">', "</a>" ) .'</p>';
+    }
+    ?>
 
 </div>
 
