@@ -20,7 +20,7 @@
     margin-right: -15px;
     margin-left: -15px;
 }
-.dozent-col-auto, .dozent-col, .dozent-col-3, .dozent-col-4, .dozent-col-6, .dozent-col-8, .dozent-col-9{
+.dozent-col-auto, .dozent-col, .dozent-col-3, .dozent-col-4, .dozent-col-6, .dozent-col-8, .dozent-col-9, .dozent-col-12{
     position: relative;
     width: 100%;
     min-height: 1px;
@@ -64,6 +64,11 @@
     -ms-flex: 75%;
     flex: 0 0 75%;
     max-width: 75%;
+}
+.dozent-col-12{
+    -ms-flex: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
 }
 @media (max-width: 991px) {
     .dozent-col-auto, .dozent-col, .dozent-col-3, .dozent-col-4, .dozent-col-6, .dozent-col-8, .dozent-col-9{
@@ -775,111 +780,71 @@ a.dozent-btn:hover,
 /* *********************** */
 /* Dozent Student Dashboard */
 /* *********************** */
-.dozent-seperator{
-    background: #ddd;
-    height: 1px;
-    width: 100%;
-}
-.dozent-student-dashboard-leadinfo {
-    padding-top: 20px;
-}
-.dozent-dashboard-student-info{
-    padding-left: 40px;
-}
-.dozent-dashboard-student-info h4, .dozent-dashboard-student-info h5{
-    font-weight: 300;
-    margin: 0;
-    padding: 0;
-}
-@media (max-width: 767px) {
-    .dozent-dashboard-student-info{
-        padding-left: 0;
-    }
-}
-@media (max-width: 991px) {
-    .dozent-dashboard-student .dozent-row > div{
-        width: 100%;
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-}
 
-.dozent-student-dashboard-leadinfo .dozent-dashboard-avater img{
+.dozent-dashboard-avater img{
+    width: 70px;
+    height: 70px;
+    display: block;
     border-radius: 50%;
 }
-.dozent-student-dashboard-leadinfo .dozent-student-name{
-    font-size: 24px;
-    font-weight: 600;
+
+.dozent-dashboard-student-info h4{
+    font-size: 18px;
+    color: #8C94A8;
+    margin-bottom: 0;
 }
 
-@media (max-width: 767px) {
-    .dozent-student-dashboard-leadinfo .dozent-dashboard-avater img{
-        width: 100px;
-        height: auto;
-    }
-}
-.dozent-student-dashboard-leadinfo ul{
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-.dozent-student-dashboard-leadinfo .dozent-dashboard-user-role li{
-    display: inline-block;
-    margin-right: 10px;
-}
-.dozent-student-dashboard-leadinfo span.dozent-text-avatar {
-    padding: 30px;
-    font-size: 30px;
-    color: #fff;
-}
-.dozent-student-dashboard-leadinfo .dozent-designation{
-    display: inline-block;
-    margin: 0;
-    font-weight: 300;
-}
-.dozent-dashboard-student-meta {
-    text-align: right;
+
+.dozent-dashboard-student-info h4 a{
+    color: #4B5981;
 }
 
-@media (max-width: 991px) {
-    .dozent-dashboard-student-meta {
-        text-align: left;
-    }
+.dozent-dashboard-user-role{
+    font-size: 14px;
+    font-weight: 400;
 }
-.dozent-dashboard-student-meta ul {
-    margin: 0;
-    padding: 0;
+
+.dozent-dashboard-student-meta ul{
     list-style: none;
-    display: inline-block;
-    background: #f1f1f1;
-    border-top: 1px solid #ddd;
-    border-right: 1px solid #ddd;
+    margin: 20px 0 40px;
+    padding: 15px 0;
+    border-top: 1px solid #DCDFE5;
+    border-bottom: 1px solid #DCDFE5;
+    font-size: 14px;
 }
-@media (max-width: 991px) {
-    .dozent-dashboard-student-meta ul {
+
+.dozent-dashboard-student-meta ul li{
+    display: inline-block;
+    color: #4B5981;
+    margin-left: 60px;
+}
+
+.dozent-dashboard-student-meta ul li:first-child{
+    margin-left: 0;
+}
+@media (max-width: 767px){
+    .dozent-dashboard-student-meta ul{
         display: block;
-        margin-top: 15px;
+        border: none;
+        padding: 0;
+    }
+    .dozent-dashboard-student-meta ul li{
+        display: inline-block;
+        color: #4B5981;
+        margin: 5px;
+        border: 1px solid #dddddd;
+        padding: 5px 10px;
+        border-radius: 4px;
+        margin-left: 5px;
     }
 }
-.dozent-dashboard-student-meta li{
-    display: inline-block;
-    text-align: center;
-    padding: 5px 20px;
-    border-left: 1px solid #ddd;
+.dozent-dashboard-student-meta ul li strong{
+    display: block;
+    color: #B1B8C9;
+    font-weight: 400;
 }
-@media (max-width: 767px) {
-    .dozent-dashboard-student-meta li {
-        width: 100%;
-        text-align: left;
-        display: block;
-    }
-}
-.dozent-dashboard-student-meta li h4{
-    margin: 0;
-}
-.dozent-dashboard-student{
-    padding: 30px 0;
-}
+
+
 .dozent-dashboard-permalinks{
     list-style: none;
     margin: 0 0 20px;
@@ -901,7 +866,14 @@ a.dozent-btn:hover,
     ul.dozent-dashboard-permalinks li:last-child{
         border-right-color: transparent;
     }
+    .dozent-dashboard-student .dozent-col-3,
+    .dozent-dashboard-student .dozent-col-9{
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }
+
+
 
 .dozent-dashboard-permalinks li a{
     display: block;

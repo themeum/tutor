@@ -36,41 +36,48 @@ $user_id = $get_user->ID;
                     </div>
                     <div class="dozent-col">
                         <div class="dozent-dashboard-student-info">
-                            <h3 class="dozent-student-name">
+                            <h4 class="dozent-student-name">
+                                <span><?php _e('Hello,', 'dozent'); ?></span>
                                 <a href="<?php echo dozent_utils()->profile_url($user_id); ?>"> <?php echo esc_html($user_data->display_name); ?> </a>
-
-                            </h3>
-                            <ul class="dozent-dashboard-user-role">
+                            </h4>
+                            <div class="dozent-dashboard-user-role">
+                                <span><?php _e('You are ', 'dozent'); ?></span>
 								<?php
 								if (is_array($user_data->roles) && count($user_data->roles)){
 									foreach ($user_data->roles as $role){
 										if ( ! empty($roles->roles[$role]['name'])){
-											echo "<li>{$roles->roles[$role]['name']}</li>";
+											echo "<span>{$roles->roles[$role]['name']}</span>";
 										}
 									}
 								}
 								?>
-                            </ul>
-							<?php
-							$designation = get_user_meta($user_id, '_dozent_profile_job_title', true);
-							if ($designation){
-								echo '<h4 class="dozent-designation">'.$designation.'</h4>';
-							}
-							?>
+                            </div>
                         </div>
+                    </div>
+                    <div class="dozent-col-12">
                         <div class="dozent-dashboard-student-meta">
-                            <?php
-                            $completed_course = dozent_utils()->get_completed_courses_ids_by_user($user_id);
-                            $count_reviews = dozent_utils()->count_reviews_wrote_by_user($user_id);
-                            ?>
+		                    <?php
+                                $completed_course = dozent_utils()->get_completed_courses_ids_by_user($user_id);
+                                $count_reviews = dozent_utils()->count_reviews_wrote_by_user($user_id);
+
+                                $user = wp_get_current_user();
+                                $udata = get_userdata( $user->ID );
+                                $registered = $udata->user_registered;
+                                $registered = date( "d M Y", strtotime( $registered ) );
+
+		                    ?>
                             <ul>
                                 <li>
-                                    <h4><?php echo count($completed_course); ?></h4>
-                                    <span><?php _e('Course completed', 'dozent'); ?></span>
+                                    <strong><?php _e('Registration Date', 'dozent'); ?></strong>
+				                    <?php echo $registered; ?>
                                 </li>
                                 <li>
-                                    <h4><?php echo $count_reviews; ?></h4>
-                                    <span><?php _e('Reviews Wrote', 'dozent'); ?></span>
+                                    <strong><?php _e('Course completed', 'dozent'); ?></strong>
+				                    <?php echo count($completed_course); ?>
+                                </li>
+                                <li>
+                                    <strong><?php _e('Reviews Wrote', 'dozent'); ?></strong>
+				                    <?php echo $count_reviews; ?>
                                 </li>
                             </ul>
                         </div>
