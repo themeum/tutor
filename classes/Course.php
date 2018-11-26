@@ -34,17 +34,9 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
-		$allow_private_files = tutor_utils()->get_option('course_allow_upload_private_files');
 
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-topics', __( 'Topics', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
-
-		/**
-		 * Check is allow private file upload
-		 */
-		if ($allow_private_files){
-			add_meta_box( 'tutor-course-attachments', __( 'Attachments, private files', 'tutor' ), array($this, 'course_attachments_metabox'), $coursePostType );
-		}
 
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
 		add_meta_box( 'tutor-teachers', __( 'Teachers', 'tutor' ), array($this, 'teachers_metabox'), $coursePostType );
@@ -57,10 +49,6 @@ class Course extends Tutor_Base {
 
 	public function course_additional_data_meta_box(){
 		include  tutor()->path.'views/metabox/course-additional-data.php';
-	}
-
-	public function course_attachments_metabox(){
-		include  tutor()->path.'views/metabox/course-attachments-metabox.php';
 	}
 
 	public function video_metabox(){
@@ -175,29 +163,9 @@ class Course extends Tutor_Base {
 							);
 						}
 					}
-
-
 				}
-
 			}
-
 		}
-
-		//Attachments
-		$attachments = array();
-		if ( ! empty($_POST['tutor_attachments'])){
-			$attachments = tutor_utils()->sanitize_array($_POST['tutor_attachments']);
-			$attachments = array_unique($attachments);
-		}
-		update_post_meta($post_ID, '_tutor_attachments', $attachments);
-
-		//Video
-		if ( ! empty($_POST['video']['source'])){
-			$video = tutor_utils()->sanitize_array($_POST['video']);
-			update_post_meta($post_ID, '_video', $video);
-		}
-
-
 
 		//Announcements
 		$announcement_title = tutor_utils()->avalue_dot('announcements.title', $_POST );

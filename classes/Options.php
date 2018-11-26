@@ -120,12 +120,6 @@ class Options {
 						'label' => __('General', 'tutor'),
 						'desc' => __('Course Settings', 'tutor'),
 						'fields' => array(
-							'course_allow_upload_private_files' => array(
-								'type'          => 'checkbox',
-								'label'         => __('Private file uploading', 'tutor'),
-								'label_title'   => __('Allow uploading private files', 'tutor'),
-								'desc'          => __('This will allow uploading files to courses and only enrolled students can access these files',	'tutor'),
-							),
 							/*
 							'course_complete_terms' => array(
 								'type'      => 'select',
