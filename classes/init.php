@@ -29,7 +29,6 @@ class init{
 	private $quiz;
 	private $question;
 	private $tools;
-	private $email_notification;
 	private $user;
 	private $theme_compatibility;
 
@@ -68,7 +67,6 @@ class init{
 		$this->quiz = new Quiz();
 		$this->question = new Question();
 		$this->tools = new Tools();
-		$this->email_notification = new Email_Notification();
 		$this->user = new User();
 		$this->theme_compatibility = new Theme_Compatibility();
 

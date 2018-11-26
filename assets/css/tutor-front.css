@@ -2169,6 +2169,7 @@ Course question and answer
     margin-bottom: 0;
 }
 .review-avatar .tutor-text-avatar,
+.tutor-dashboard-avater .tutor-text-avatar,
 .teacher-avatar .tutor-text-avatar{
     border-radius: 50%;
     width: 50px;

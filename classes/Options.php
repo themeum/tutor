@@ -329,62 +329,7 @@ class Options {
 				),
 			),
 
-			'email_notification' => array(
-				'label'     => __('E-Mail Notification', 'tutor'),
-				'sections'    => array(
-					'general' => array(
-						'label' => __('Enable/Disable', 'tutor'),
-						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
-						'fields' => array(
-							'email_to_students' => array(
-								'type'      => 'checkbox',
-								'label'     => __('E-Mail to Students', 'tutor'),
-								'options'   => array(
-									'quiz_completed' => __('Quiz Completed', 'tutor'),
-									'completed_course' => __('Completed a course', 'tutor'),
-								),
-								'desc'      => __('Select when to sent notification to the students',	'tutor'),
-							),
-							'email_to_teachers' => array(
-								'type'      => 'checkbox',
-								'label'     => __('E-Mail to Teachers', 'tutor'),
-								'options'   => array(
-									'a_student_enrolled_in_course'              => __('A Student enrolled in course ', 'tutor'),
-									'a_student_completed_course'            => __('A Student Completed Course', 'tutor'),
-									'a_student_completed_lesson'            => __('A Student Completed Lesson', 'tutor'),
-									'a_student_placed_question'             => __('A Student placed question to course', 'tutor'),
-								),
-								'desc'      => __('Select when to sent notification to the teachers',	'tutor'),
-							),
-						),
-					),
-					'email_settings' => array(
-						'label' => __('E-Mail Settings', 'tutor'),
-						'desc' => __('Check and place necessary information here.', 'tutor'),
-						'fields' => array(
-							'email_from_name' => array(
-								'type'      => 'text',
-								'label'     => __('E-Mail From Name', 'tutor'),
-								'default'   => get_option('blogname'),
-								'desc'      => __('The name under which all the emails will be sent',	'tutor'),
-							),
-							'email_from_address' => array(
-								'type'      => 'text',
-								'label'     => __('From E-Mail Address', 'tutor'),
-								'default'   => get_option('admin_email'),
-								'desc'      => __('The E-Mail address from which all emails will be sent', 'tutor'),
-							),
-							'email_footer_text' => array(
-								'type'      => 'textarea',
-								'label'     => __('E-Mail Footer Text', 'tutor'),
-								'default'   => '',
-								'desc'      => __('The text to appear in E-Mail template footer', 'tutor'),
-							),
-						),
-					),
 
-				),
-			),
 		);
 
 		return apply_filters('tutor/options/attr', $attr);
