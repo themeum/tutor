@@ -416,6 +416,7 @@ div[class*="dozent-course-col"] {
 }
 .dozent-course-loop-header-meta .dozent-course-wishlist a.updating-icon::before{
     content: '\e91d';
+    margin-right: 0;
 }
 .dozent-course-loop-level{
     display: inline-block;

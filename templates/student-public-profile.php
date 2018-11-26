@@ -23,8 +23,8 @@ $user_id = $get_user->ID;
         <div class="dozent-student-dashboard-leadinfo">
             <div class="dozent-container">
 				<?php
-				$user_data = get_userdata($user_id);
-				$roles = wp_roles();
+                    $user_data = get_userdata($user_id);
+				    $roles = wp_roles();
 				?>
 
                 <div class="dozent-row">

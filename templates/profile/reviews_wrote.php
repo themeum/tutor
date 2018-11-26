@@ -6,7 +6,12 @@ $user_id = $get_user->ID;
 
 $reviews = dozent_utils()->get_reviews_by_user($user_id);
 
-if ( ! is_array($reviews) || ! count($reviews)){
+if ( ! is_array($reviews) || ! count($reviews)){ ?>
+    <div>
+		<h2><?php _e("Not Found" , 'dozent'); ?></h2>
+		<p><?php _e("Sorry, but you are looking for something that isn't here." , 'dozent'); ?></p>
+    </div>
+    <?php
 	return;
 }
 ?>

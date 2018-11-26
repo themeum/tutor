@@ -33,7 +33,9 @@ $pageposts = dozent_utils()->get_courses_by_teacher($user_id);
 
 		endforeach;
 	else : ?>
-		<h2 class="center">Not Found</h2>
-		<p class="center">Sorry, but you are looking for something that isn't here.</p>
+    <div>
+		<h2><?php _e("Not Found" , 'dozent'); ?></h2>
+		<p><?php _e("Sorry, but you are looking for something that isn't here." , 'dozent'); ?></p>
+    </div>
 	<?php endif; ?>
 </div>
