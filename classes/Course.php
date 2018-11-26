@@ -429,7 +429,7 @@ class Course extends Tutor_Base {
 			}
 
 			$output .= apply_filters('tutor_course_teachers_html', $teacher_output, $teachers);
-			$output .= '<p class="quiz-search-suggest-text">Search to get the specific teachers</p>';
+			$output .= '<p class="quiz-search-suggest-text">'.__('Search to get the specific teachers', 'tutor').'</p>';
 
 		}else{
 			$output .= __('No teacher available or you have already added maximum teachers', 'tutor');
