@@ -400,11 +400,16 @@ class Course extends Tutor_Base {
 		$search_terms = sanitize_text_field(tutor_utils()->avalue_dot('search_terms', $_POST));
 
 		$saved_teachers = tutor_utils()->get_teachers_by_course($course_id);
+
+		$teachers = array();
+
+
 		$not_in_sql = '';
 		if ($saved_teachers){
 			$saved_teachers_ids = wp_list_pluck($saved_teachers, 'ID');
 			$teacher_not_in_ids = implode(',', $saved_teachers_ids);
-			$not_in_sql = "AND ID NOT IN($teacher_not_in_ids) ";
+			$activated = apply_filters('tutor_teacher_query_when_exists', " AND ID <1 ");
+			$not_in_sql = $activated."AND ID NOT IN($teacher_not_in_ids) ";
 		}
 
 		$search_sql = '';
@@ -418,14 +423,16 @@ class Course extends Tutor_Base {
 
 		$output = '';
 		if (is_array($teachers) && count($teachers)){
+			$teacher_output = '';
 			foreach ($teachers as $teacher){
-				$output .= "<p><label><input type='checkbox' name='tutor_teacher_ids[]' value='{$teacher->ID}' > {$teacher->display_name} </label></p>";
+				$teacher_output .= "<p><label><input type='radio' name='tutor_teacher_ids[]' value='{$teacher->ID}' > {$teacher->display_name} </label></p>";
 			}
+
+			$output .= apply_filters('tutor_course_teachers_html', $teacher_output, $teachers);
 			$output .= '<p class="quiz-search-suggest-text">Search to get the specific teachers</p>';
 
 		}else{
-			$add_question_url = admin_url('post-new.php?post_type=tutor_quiz');
-			$output .= sprintf('No quiz available right now, please %s add some quiz %s', '<a href="'.$add_question_url.'" target="_blank">', '</a>'  );
+			$output .= __('No teacher available or you have already added maximum teachers', 'tutor');
 		}
 
 		wp_send_json_success(array('output' => $output));
