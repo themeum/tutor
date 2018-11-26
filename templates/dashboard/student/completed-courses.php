@@ -41,7 +41,7 @@
 		wp_reset_postdata();
 
 	else:
-        echo "<div class='dozent-mycourse-wrap'>There's no active course</div>";
+        echo "<div class='dozent-mycourse-wrap'>". esc_html__('There\'s no active course', 'dozent') ."</div>";
 	endif;
 
 	?>

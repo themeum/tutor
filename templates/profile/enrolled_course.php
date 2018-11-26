@@ -29,7 +29,11 @@ $my_courses = dozent_utils()->get_enrolled_courses_by_user($user_id);
 
 		endwhile;
 		wp_reset_postdata();
-	endif;
-	?>
+	else : ?>
+    <div>
+        <h2><?php _e("Not Found" , 'dozent'); ?></h2>
+        <p><?php _e("Sorry, but you are looking for something that isn't here." , 'dozent'); ?></p>
+    </div>
+	<?php endif; ?>
 </div>
 

@@ -9,4 +9,6 @@ if ($profile_bio){
 	?>
 	<h3><?php _e('About Me:', 'dozent'); ?></h3>
 	<?php echo wpautop($profile_bio) ?>
-<?php } ?>
+<?php } else{
+    _e('Bio data is empty', 'dozent');
+} ?>

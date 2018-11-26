@@ -11,9 +11,9 @@
         $active_course_count = ($my_courses_count - $completed_courses_count);
 
 
-        echo "My Course : {$my_courses_count} <br />";
-        echo "Active Course : {$active_course_count} <br />";
-        echo "Complete Course : {$completed_courses_count} <br />";
+        echo __('My Course : ', 'dozent') . $my_courses_count . "<br />";
+        echo __('Active Course : ', 'dozent') . $active_course_count . "<br />";
+        echo __('Complete Course : ', 'dozent') . $completed_courses_count . "<br />";
 
 
         ?>
