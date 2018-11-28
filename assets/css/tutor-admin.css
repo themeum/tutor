@@ -389,7 +389,21 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
 .tutor-addons .plugin-card-bottom .plugin-version{
     display: inline-block;
 }
-
+.tutor-addons .addon-regular-price{
+    color: #CCCCCC;
+    padding: 3px;
+}
+.tutor-addons .addon-current-price{
+    color: #25bd25;
+    font-size: 18px;
+    padding: 3px;
+}
+.tutor-addons-last-checked-time{
+    color: #6f5757 !important;
+}
+.tutor-addons .wp-filter{
+    margin: 10px 0 0;
+}
 /**
 Quiz-question
  */

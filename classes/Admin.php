@@ -14,8 +14,11 @@ if ( ! defined( 'ABSPATH' ) )
 class Admin{
 	public function __construct() {
 		add_action('admin_menu', array($this, 'register_menu'));
-		add_action('admin_init', array($this, 'filter_posts_for_instructors'));
+		//Force activate menu for necessary
+		add_filter('parent_file', array($this, 'parent_menu_active'));
+		add_filter('submenu_file', array($this, 'submenu_file_active'), 10, 2);
 
+		add_action('admin_init', array($this, 'filter_posts_for_instructors'));
 		add_action('load-post.php', array($this, 'check_if_current_users_post') );
 
 		add_action('admin_action_uninstall_tutor_and_erase', array($this, 'erase_tutor_data'));
@@ -34,6 +37,7 @@ class Admin{
 		add_menu_page(__('Tutor', 'tutor'), __('Tutor', 'tutor'), 'manage_tutor_instructor', 'tutor', null, 'dashicons-welcome-learn-more', 2);
 
 		add_submenu_page('tutor', __('Categories', 'tutor'), __('Categories', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type='.$course_post_type, null );
+
 		add_submenu_page('tutor', __('Tags', 'tutor'), __('Tags', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type='.$course_post_type, null );
 
 		add_submenu_page('tutor', __('Students', 'tutor'), __('Students', 'tutor'), 'manage_tutor', 'tutor-students', array($this, 'tutor_students') );
@@ -44,7 +48,7 @@ class Admin{
 
 		add_submenu_page('tutor', __('Quiz Attempts', 'tutor'), __('Quiz Attempts', 'tutor'), 'manage_tutor_instructor', 'tutor_quiz_attempts', array($this, 'quiz_attempts') );
 
-		//add_submenu_page('tutor', __('Addons', 'tutor'), __('Addons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(), 'addons_page') );
+		add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(), 'addons_page') );
 
 		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
 
@@ -82,6 +86,30 @@ class Admin{
 
 	public function tutor_uninstall(){
 		include tutor()->path.'views/pages/uninstall.php';
+	}
+
+	public function parent_menu_active(  $parent_file ){
+		$taxonomy = tutor_utils()->avalue_dot('taxonomy', $_GET);
+		if ($taxonomy === 'course-category' || $taxonomy === 'course-tag'){
+			return 'tutor';
+		}
+
+		return $parent_file;
+	}
+
+	public function submenu_file_active($submenu_file, $parent_file){
+		$taxonomy = tutor_utils()->avalue_dot('taxonomy', $_GET);
+		$course_post_type = tutor()->course_post_type;
+
+		if ($taxonomy === 'course-category'){
+			return 'edit-tags.php?taxonomy=course-category&post_type='.$course_post_type;
+		}
+		if ($taxonomy === 'course-tag'){
+			return 'edit-tags.php?taxonomy=course-tag&post_type='.$course_post_type;
+		}
+
+
+		return $submenu_file;
 	}
 
 	/**
