@@ -10,6 +10,7 @@ class Course extends Tutor_Base {
 
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
 		add_action('save_post_'.$this->course_post_type, array($this, 'save_course_meta'));
+		add_action('wp_ajax_tutor_add_course_topic', array($this, 'tutor_add_course_topic'));
 		add_action('wp_ajax_tutor_update_topic', array($this, 'tutor_update_topic'));
 
 		//Add Column
@@ -35,9 +36,8 @@ class Course extends Tutor_Base {
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
 
+		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
-		add_meta_box( 'tutor-course-topics', __( 'Topics', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
-
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
 		add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array($this, 'instructors_metabox'), $coursePostType );
 		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
@@ -186,6 +186,38 @@ class Course extends Tutor_Base {
 
 	}
 
+
+	/**
+	 * Tutor add course topic
+	 */
+	public function tutor_add_course_topic(){
+		if (empty($_POST['topic_title'])) {
+			wp_send_json_error();
+		}
+		$course_id = (int) tutor_utils()->avalue_dot('tutor_topic_course_ID', $_POST);
+		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id);
+
+		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
+		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
+
+		$post_arr = array(
+			'post_type'    => 'topics',
+			'post_title'   => $topic_title,
+			'post_content' => $topic_summery,
+			'post_status'  => 'publish',
+			'post_author'  => get_current_user_id(),
+			'post_parent'  => $course_id,
+			'menu_order'  => $next_topic_order_id,
+		);
+		wp_insert_post( $post_arr );
+
+
+		ob_start();
+		include  tutor()->path.'views/metabox/course-contents.php';
+		$course_contents = ob_get_clean();
+
+		wp_send_json_success(array('course_contents' => $course_contents));
+	}
 
 	/**
 	 * Update the topic

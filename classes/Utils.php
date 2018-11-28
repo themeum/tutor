@@ -492,6 +492,13 @@ class Utils {
 		return $query;
 	}
 
+	public function get_next_topic_order_id($course_ID){
+		global $wpdb;
+
+		$last_order = (int) $wpdb->get_var("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = {$course_ID} AND post_type = 'topics';");
+		return $last_order + 1;
+	}
+
 	public function get_lessons_by_topic($topics_id = 0){
 		$topics_id = $this->get_post_id($topics_id);
 

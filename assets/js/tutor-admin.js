@@ -68,27 +68,32 @@ jQuery(document).ready(function($){
      * Course and lesson sorting
      */
 
-    if (jQuery().sortable) {
-        $(".course-contents").sortable({
-            handle: ".course-move-handle",
-            start: function (e, ui) {
-                ui.placeholder.css('visibility', 'visible');
-            },
-            stop: function (e, ui) {
-                tutor_sorting_topics_and_lesson();
-            },
-        });
-        $(".tutor-lessions:not(.drop-lessons)").sortable({
-            connectWith: ".tutor-lessions",
-            items: "div.tutor-lesson",
-            start: function (e, ui) {
-                ui.placeholder.css('visibility', 'visible');
-            },
-            stop: function (e, ui) {
-                tutor_sorting_topics_and_lesson();
-            },
-        });
+    function enable_sorting_topic_lesson(){
+        if (jQuery().sortable) {
+            $(".course-contents").sortable({
+                handle: ".course-move-handle",
+                start: function (e, ui) {
+                    ui.placeholder.css('visibility', 'visible');
+                },
+                stop: function (e, ui) {
+                    tutor_sorting_topics_and_lesson();
+                },
+            });
+            $(".tutor-lessons:not(.drop-lessons)").sortable({
+                connectWith: ".tutor-lessons",
+                items: "div.tutor-lesson",
+                start: function (e, ui) {
+                    ui.placeholder.css('visibility', 'visible');
+                },
+                stop: function (e, ui) {
+                    tutor_sorting_topics_and_lesson();
+                },
+            });
+        }
     }
+    enable_sorting_topic_lesson();
+
+
     function tutor_sorting_topics_and_lesson(){
         var topics = {};
         $('.tutor-topics-wrap').each(function(index, item){
@@ -115,6 +120,38 @@ jQuery(document).ready(function($){
         $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
         //console.log(topics);
     }
+
+    $(document).on('click', '#tutor-add-topic-btn', function (e) {
+        e.preventDefault();
+        var $that = $(this);
+        var form_data = $that.closest('.tutor-metabox-add-topics').find('input, textarea').serialize()+'&action=tutor_add_course_topic';
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : form_data,
+            beforeSend: function () {
+                $that.addClass('updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+                    $('#tutor-course-content-wrap').html(data.data.course_contents);
+                    $that.closest('.tutor-metabox-add-topics').find('input, textarea').each(function () {
+                        $(this).val('');
+                    });
+                    enable_sorting_topic_lesson();
+                }
+            },
+            complete: function () {
+                $that.removeClass('updating-message');
+            }
+        });
+    });
+
+    $(document).on('change keyup', '.course-edit-topic-title-input', function (e) {
+        e.preventDefault();
+        $(this).closest('.tutor-topics-top').find('.topic-inner-title').html($(this).val());
+    });
 
     $(document).on('click', '.topic-edit-icon', function (e) {
         e.preventDefault();
@@ -156,6 +193,91 @@ jQuery(document).ready(function($){
         if ( ! confirm('Are you sure to delete?')){
             e.preventDefault();
         }
+    });
+
+    /**
+     * Create Lesson Under Topic
+     */
+    $(document).on('click', '.create-lesson-in-topic-btn', function(e){
+        e.preventDefault();
+        $(this).closest('.tutor-lessons').find('.tutor-create-new-lesson-form').toggle();
+    });
+
+    $(document).on('click', '.tutor-create-lesson-btn', function(e){
+        e.preventDefault();
+        var $that = $(this);
+
+        var course_id = $('#post_ID').val();
+        var topic_id = $that.closest('.tutor-create-new-lesson-form').attr('data-topic-id');
+
+        var form_data = $that.closest('.tutor-create-new-lesson-form').find('input, textarea').serialize()+'&course_id='+course_id+'&topic_id='+topic_id+'&action=tutor_create_lesson';
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : form_data,
+            beforeSend: function () {
+                $that.addClass('updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+                    $('#tutor-course-content-wrap').html(data.data.course_contents);
+                    $that.closest('.tutor-create-new-lesson-form').find('input, textarea').each(function () {
+                        $(this).val('');
+                    });
+                    enable_sorting_topic_lesson();
+                }
+            },
+            complete: function () {
+                $that.removeClass('updating-message');
+            }
+        });
+    });
+
+    $(document).on('click', '.open-inline-lesson-edit-btn', function(e){
+        e.preventDefault();
+        $(this).closest('.tutor-lesson').find('.tutor-edit-inline-lesson-form').toggle();
+    });
+    $(document).on('change keyup', '.inline-lesson-title-input', function (e) {
+        e.preventDefault();
+        $(this).closest('.tutor-lesson').find('.open-inline-lesson-edit-btn').html($(this).val());
+    });
+
+    $(document).on('click', '.edit-inline-lesson-btn', function(e){
+        e.preventDefault();
+        var $that = $(this);
+
+        var course_id = $('#post_ID').val();
+        var lesson_id = $that.closest('.tutor-edit-inline-lesson-form').attr('data-lesson-id');
+        var topic_id = $that.closest('.tutor-edit-inline-lesson-form').attr('data-topic-id');
+
+        var form_data = $that.closest('.tutor-edit-inline-lesson-form').find('input, textarea').serialize()+'&course_id='+course_id+'&lesson_id='+lesson_id+'&topic_id='+topic_id+'&action=tutor_update_inline_lesson';
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : form_data,
+            beforeSend: function () {
+                $that.addClass('updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+                    $that.closest('.tutor-edit-inline-lesson-form').hide();
+                }
+            },
+            complete: function () {
+                $that.removeClass('updating-message');
+            }
+        });
+    });
+
+    $(document).on('click', '.tutor-expand-all-topic', function (e) {
+        e.preventDefault();
+        $('.tutor-topics-body').slideDown();
+    });
+    $(document).on('click', '.tutor-collapse-all-topic', function (e) {
+        e.preventDefault();
+        $('.tutor-topics-body').slideUp();
     });
 
 
