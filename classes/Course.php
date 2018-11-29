@@ -183,9 +183,7 @@ class Course extends Tutor_Base {
 			);
 			wp_insert_post( $post_arr );
 		}
-
 	}
-
 
 	/**
 	 * Tutor add course topic

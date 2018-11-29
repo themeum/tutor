@@ -160,6 +160,12 @@ Course adding page
 #tutor-course-topics .tutor-lesson-top, #tutor-course-topics .tutor-lesson-top i {
     font-size: 15px;
 }
+#tutor-course-topics .tutor-lesson-top{
+    display: flex;
+}
+#tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal{
+    flex: 1;
+}
 .tutor-topics-wrap, .tutor-lesson{
     background-color: #ffffff;
 }
