@@ -209,8 +209,7 @@ class Course extends Tutor_Base {
 			'post_parent'  => $course_id,
 			'menu_order'  => $next_topic_order_id,
 		);
-		wp_insert_post( $post_arr );
-
+		$current_topic_id = wp_insert_post( $post_arr );
 
 		ob_start();
 		include  tutor()->path.'views/metabox/course-contents.php';

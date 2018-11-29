@@ -136,7 +136,7 @@ jQuery(document).ready(function($){
             success: function (data) {
                 if (data.success){
                     $('#tutor-course-content-wrap').html(data.data.course_contents);
-                    $that.closest('.tutor-metabox-add-topics').find('input, textarea').each(function () {
+                    $that.closest('.tutor-metabox-add-topics').find('input[type!="hidden"], textarea').each(function () {
                         $(this).val('');
                     });
                     enable_sorting_topic_lesson();
@@ -198,11 +198,11 @@ jQuery(document).ready(function($){
     /**
      * Create Lesson Under Topic
      */
+    /*
     $(document).on('click', '.create-lesson-in-topic-btn', function(e){
         e.preventDefault();
         $(this).closest('.tutor-lessons').find('.tutor-create-new-lesson-form').toggle();
     });
-
     $(document).on('click', '.tutor-create-lesson-btn', function(e){
         e.preventDefault();
         var $that = $(this);
@@ -270,7 +270,7 @@ jQuery(document).ready(function($){
             }
         });
     });
-
+*/
     $(document).on('click', '.tutor-expand-all-topic', function (e) {
         e.preventDefault();
         $('.tutor-topics-body').slideDown();
@@ -279,7 +279,111 @@ jQuery(document).ready(function($){
         e.preventDefault();
         $('.tutor-topics-body').slideUp();
     });
+    $(document).on('click', '.expand-collapse-wrap', function (e) {
+        e.preventDefault();
+        var $that = $(this);
+        $that.closest('.tutor-topics-wrap').find('.tutor-topics-body').slideToggle();
+        $that.closest('.tutor-topics-wrap').find('.expand-collapse-wrap .dashicons').toggleClass('dashicons-arrow-down-alt2 dashicons-arrow-up-alt2 ');
+    });
 
+    /**
+     * Update Lesson Modal
+     */
+    $(document).on('click', '.open-tutor-lesson-modal', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var lesson_id = $that.attr('data-lesson-id');
+        var topic_id = $that.attr('data-topic-id');
+        var course_id = $('#post_ID').val();
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {lesson_id : lesson_id, topic_id : topic_id, course_id : course_id, action: 'tutor_load_edit_lesson_modal'},
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
+                $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id}).addClass('show');
+
+                tinymce.init(tinyMCEPreInit.mceInit.content);
+                tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_lesson_modal_editor' );
+                tinyMCE.execCommand('mceAddEditor', false, "tutor_lesson_modal_editor");
+            },
+            complete: function () {
+                quicktags({id : "tutor_lesson_modal_editor"});
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+
+    $(document).on( 'click', '.lesson_thumbnail_upload_btn',  function( event ){
+        event.preventDefault();
+        var $that = $(this);
+        var frame;
+        if ( frame ) {
+            frame.open();
+            return;
+        }
+        frame = wp.media({
+            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            button: {
+                text: 'Use this media'
+            },
+            multiple: false
+        });
+        frame.on( 'select', function() {
+            var attachment = frame.state().get('selection').first().toJSON();
+            $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('<img src="'+attachment.url+'" alt="" />');
+            $that.closest('.tutor-thumbnail-wrap').find('input').val(attachment.id);
+        });
+        frame.open();
+    });
+
+    /**
+     * Lesson Update or Create Modal
+     */
+    $(document).on( 'click', '.update_lesson_modal_btn',  function( event ){
+        event.preventDefault();
+
+        var $that = $(this);
+
+        var content;
+        var editor = tinyMCE.get('tutor_lesson_modal_editor');
+        if (editor) {
+            content = editor.getContent();
+        } else {
+            content = $('#'+inputid).val();
+        }
+
+        var form_data = $(this).closest('form').serialize();
+        form_data += '&lesson_content='+content;
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : form_data,
+            beforeSend: function () {
+                $that.addClass('updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+                    $('#tutor-course-content-wrap').html(data.data.course_contents);
+                    enable_sorting_topic_lesson();
+
+                    //Close the modal
+                    $('.tutor-lesson-modal-wrap').removeClass('show');
+                }
+            },
+            complete: function () {
+                $that.removeClass('updating-message');
+            }
+        });
+
+    });
 
     /**
      * Lesson Video
@@ -290,9 +394,6 @@ jQuery(document).ready(function($){
         $('[class^="video_source_wrap"]').hide();
         $('.video_source_wrap_'+selector).show();
     });
-
-
-
 
     $(document).on( 'click', '.video_source_wrap_html5 .video_upload_btn',  function( event ){
         event.preventDefault();

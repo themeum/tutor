@@ -485,10 +485,10 @@ class Utils {
 			'post_parent'  => $course_id,
 			'orderby' => 'menu_order',
 			'order'   => 'ASC',
+			'posts_per_page'    => -1,
 		);
 
 		$query = new \WP_Query($args);
-
 		return $query;
 	}
 

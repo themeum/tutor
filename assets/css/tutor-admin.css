@@ -281,7 +281,6 @@ a.tutor-button{
     background-color: #ff0000;
     color: #ffffff;
 }
-
 .tutor-button.button-warning {
     background-color: #ffb36d;
     color: #ffffff;
@@ -312,6 +311,8 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
     color: #06d004;
     background-color: transparent;
 }
+
+
 /*
 
 .tutor-help-tip {
@@ -637,6 +638,9 @@ Quiz Modal
     z-index: 9;
     background: url("../images/spinner.gif") no-repeat center center; }
 .tutor-modal-wrap .tutor-modal-content {
+    max-height: 90%;
+    overflow-y: scroll;
+    overflow-x: hidden;
     background-color: #fff;
     max-width: 800px;
     margin: 50px auto;
@@ -774,11 +778,79 @@ span.result-fail{
 /**
 Uninstall
  */
-
 .wrap.tutor-uninstall-wrap {
     background: #fff;
     padding: 20px;
 }
 .tutor-uninstall-btn-group{
     margin: 50px 0;
+}
+
+/**
+Updating Messsage
+ */
+.tutor-updating-message:before{
+    display: inline-block;
+    font: normal 20px/1 'dashicons';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: top;
+    color: #f56e28;
+    content: "\f463";
+    -webkit-animation: rotation 2s infinite linear;
+    animation: rotation 2s infinite linear;
+    margin-right: 6px;
+}
+
+
+/**
+Lesson Edit Modal
+ */
+.lesson-modal-close-wrap a{
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #fff;
+    background: #000;
+    padding: 20px;
+    line-height: 8px;
+    font-size: 12px;
+}
+
+.lesson-modal-form-wrap .lesson-modal-field-row{
+    padding: 10px 0;
+}
+.lesson-modal-field.tutor-lesson-modal-title-wrap{
+    width: 95%;
+}
+.lesson-modal-field-row input[type=text]{
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    box-shadow: none;
+    color: #333;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 7px 12px;
+    margin: 0 10px 0 0;
+    min-width: 400px;
+    min-height: 35px
+}
+.tutor-lesson-modal-title-wrap input{
+    width: 100%;
+}
+.lesson-modal-form-wrap .tutor-option-field-row{
+    padding: 10px 0;
+}
+.lesson-modal-form-wrap .tutor-option-field-row:last-child {
+    border-bottom: none;
+}
+.tutor-lesson-modal-wrap .modal-footer{
+    padding: 20px 0 0 0;
+    margin-top: 20px;
+}
+
+.tutor-lesson-modal-wrap .tutor-thumbnail-wrap img{
+    max-width: 150px;
+    height: auto;
 }

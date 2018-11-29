@@ -1,6 +1,12 @@
 <?php
-global $post;
-$video = maybe_unserialize(get_post_meta(get_the_ID(), '_video', true));
+/**
+ * Don't change it, it's supporting modal in other place
+ * if get_the_ID() empty, then it's means we are passing $post variable from another place
+ */
+if (get_the_ID())
+    global $post;
+
+$video = maybe_unserialize(get_post_meta($post->ID, '_video', true));
 
 $videoSource = tutor_utils()->avalue_dot('source', $video);
 $runtimeHours = tutor_utils()->avalue_dot('runtime.hours', $video);

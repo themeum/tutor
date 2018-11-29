@@ -3,14 +3,11 @@
     <a href="javascript:;" class="tutor-collapse-all-topic"><?php _e('Collapse all'); ?></a>
 </div>
 
-
+<?php $course_id = get_the_ID(); ?>
 <div id="tutor-course-content-wrap">
-
 	<?php
-	$course_id = get_the_ID();
 	include  tutor()->path.'views/metabox/course-contents.php';
 	?>
-
 </div>
 
 
@@ -60,5 +57,22 @@
         <div class="modal-footer">
             <button type="button" class="button button-primary add_quiz_to_post_btn"><?php _e('Add Quiz', 'tutor'); ?></button>
         </div>
+    </div>
+</div>
+
+<div class="tutor-modal-wrap tutor-lesson-modal-wrap">
+    <div class="tutor-modal-content">
+
+        <div class="modal-header">
+            <div class="lesson-modal-close-wrap">
+                <a href="javascript:;" class="modal-close-btn">&times;</a>
+            </div>
+        </div>
+
+        <div class="modal-container">
+
+
+        </div>
+
     </div>
 </div>
