@@ -100,7 +100,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
 					?>
                 </p>
                 <input type="hidden" name="video[poster]" value="<?php echo $poster; ?>">
-                <button type="button" class="tutor_video_poster_upload_btn button button-primary"><?php _e('Upload', 'tutor'); ?></button>
+                <button type="button" class="tutor_video_poster_upload_btn button button-link"><?php _e('Upload', 'tutor'); ?></button>
             </div>
 
         </div>

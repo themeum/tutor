@@ -923,11 +923,30 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * @param int $course_id
+	 * @param int $user_id
+	 *
+	 * @return array|bool|null|object|void
+	 *
+	 * Determine if a course completed
+	 */
+
 	public function is_completed_course($course_id = 0, $user_id = 0){
+		global $wpdb;
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
 
-		$is_completed = get_user_meta($user_id, '_tutor_completed_course_id_'.$course_id, true);
+		$is_completed = $wpdb->get_row("SELECT comment_ID, 
+		comment_post_ID as course_id, 
+		comment_author as completed_user_id, 
+		comment_date as completion_date, 
+		comment_content as completed_hash 
+		from {$wpdb->comments} 
+		WHERE comment_agent = 'TutorLMSPlugin' 
+		AND comment_type = 'course_completed' 
+		AND comment_post_ID = {$course_id} 
+		AND user_id = {$user_id} ;");
 
 		if ($is_completed){
 			return $is_completed;
@@ -989,13 +1008,10 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_students($start = 0, $limit = 10, $search_term = '', $course_id = 0){
+	public function get_students($start = 0, $limit = 10, $search_term = ''){
 		$meta_key = '_is_tutor_student';
-		if ($course_id){
-			$meta_key = '_tutor_completed_course_id_'.$meta_key;
-		}
-		global $wpdb;
 
+		global $wpdb;
 
 		if ($search_term){
 			$search_term = " AND ( {$wpdb->users}.display_name LIKE '%{$search_term}%' OR {$wpdb->users}.user_email LIKE '%{$search_term}%' ) ";
@@ -1019,11 +1035,8 @@ class Utils {
 	 * get the total students
 	 * pass course id to get course wise total students
 	 */
-	public function get_total_students($search_term = '', $course_id = 0){
+	public function get_total_students($search_term = ''){
 		$meta_key = '_is_tutor_student';
-		if ($course_id){
-			$meta_key = '_tutor_completed_course_id_'.$meta_key;
-		}
 
 		global $wpdb;
 
@@ -1041,15 +1054,11 @@ class Utils {
 
 		$user_id = $this->get_user_id($user_id);
 
-		$meta_key = '_tutor_completed_course_id_';
-		$course_id_query = $wpdb->get_col("select meta_key from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key LIKE '%{$meta_key}%' ");
-		$course_ids = array();
-
-		if (is_array($course_id_query) && count($course_id_query)){
-			foreach ($course_id_query as $user_meta_col){
-				$course_ids[] = str_replace($meta_key, '', $user_meta_col);
-			}
-		}
+		$course_ids = (array) $wpdb->get_col("SELECT comment_post_ID as course_id
+		from {$wpdb->comments} 
+		WHERE comment_agent = 'TutorLMSPlugin' 
+		AND comment_type = 'course_completed' 
+		AND user_id = {$user_id} ;");
 
 		return $course_ids;
 	}

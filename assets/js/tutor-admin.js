@@ -110,11 +110,13 @@ jQuery(document).ready(function($){
             topics[index] = { 'topic_id' : topics_id, 'lesson_ids' : lessons };
 
             //Hide drop element
+            /*
             if ($topic.find('.tutor-lesson').length){
                 $topic.find('.drop-lessons').hide();
             }else{
                 $topic.find('.drop-lessons').show();
             }
+            */
 
         });
         $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));

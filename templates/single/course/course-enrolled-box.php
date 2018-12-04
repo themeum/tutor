@@ -41,6 +41,8 @@ if ( ! defined( 'ABSPATH' ) )
             <a href="<?php echo $lesson_url; ?>" class="tutor-button"><?php _e('Start Course', 'tutor'); ?></a>
         <?php } ?>
 
+        <?php do_action('tutor_enrolled_box_after') ?>
+
     </div>
 
 </div> <!-- tutor-price-preview-box -->

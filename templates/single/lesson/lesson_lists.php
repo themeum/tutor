@@ -30,12 +30,14 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
                 </a>
             </div>
             <div class="tutor-single-lesson-button ">
-                <!-- @TODO: Dashboard URL is Not working properly-->
                 <a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>">
                     <i class="tutor-icon-grid"></i>
                     <span class="lesson_title"><?php _e('Dashboard', 'tutor'); ?></span>
                 </a>
             </div>
+
+            <?php do_action('lesson_page_action_menu_after'); ?>
+
         </div>
 
 

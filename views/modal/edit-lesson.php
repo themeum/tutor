@@ -15,7 +15,7 @@
         <div class="lesson-modal-field-row">
             <div class="lesson-modal-field">
 				<?php
-				wp_editor($post->post_content, 'tutor_lesson_modal_editor', array( 'editor_height' => 150));
+                wp_editor($post->post_content, 'tutor_lesson_modal_editor', array( 'editor_height' => 150));
 				?>
             </div>
         </div>
@@ -39,7 +39,7 @@
 							?>
                         </p>
                         <input type="hidden" class="_lesson_thumbnail_id" name="_lesson_thumbnail_id" value="">
-                        <button type="button" class="lesson_thumbnail_upload_btn button button-primary"><?php echo $thumbnail_upload_text; ?></button>
+                        <button type="button" class="lesson_thumbnail_upload_btn button button-link"><?php echo $thumbnail_upload_text; ?></button>
                     </div>
                 </div>
             </div>

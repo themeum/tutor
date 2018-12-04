@@ -732,7 +732,7 @@ a.tutor-btn,
     padding: 15px 30px;
     border-radius: 4px;
     text-transform: uppercase;
-    line-height: 1;
+    line-height: 1.4;
     font-size: 14px;
 }
 a.tutor-button:hover,
@@ -2250,4 +2250,7 @@ Course question and answer
 
 .tutor-course-tags a:hover{
     color: #000;
+}
+.certificate-download-btn{
+    margin-top: 20px;
 }

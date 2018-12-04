@@ -238,7 +238,7 @@ class init{
 			'post_status'   => 'publish',
 		);
 		$student_dashboard_page_id = wp_insert_post( $student_dashboard_args );
-		tutor_utils()->update_option('tutor_student_dashboard', $student_dashboard_page_id);
+		tutor_utils()->update_option('student_dashboard', $student_dashboard_page_id);
 
 		$student_registration_args = array(
 			'post_title'    => __('Student Registration', 'tutor'),

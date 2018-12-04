@@ -380,9 +380,32 @@ class Course extends Tutor_Base {
 
 		do_action('tutor_course_complete_before', $course_id);
 		/**
-		 * Marking course at user meta, meta format, _tutor_completed_course_id_{id} and value = time();
+		 * Marking course completed at Comment
 		 */
-		update_user_meta($user_id, '_tutor_completed_course_id_'.$course_id, time());
+
+		global $wpdb;
+
+		$date = date("Y-m-d H:i:s");
+
+		//Making sure that, hash is unique
+		do{
+			$hash = substr(md5(wp_generate_password(32).$date.$course_id.$user_id), 0, 16);
+			$hasHash = (int) $wpdb->get_var("SELECT COUNT(comment_ID) from {$wpdb->comments} WHERE comment_agent = 'TutorLMSPlugin' AND comment_type = 'course_completed' AND comment_content = '{$hash}' ");
+		}while($hasHash > 0);
+
+		$data = array(
+			'comment_post_ID'   => $course_id,
+			'comment_author'    => $user_id,
+			'comment_date'      => $date,
+			'comment_date_gmt'  => get_gmt_from_date($date),
+			'comment_content'   => $hash, //Identification Hash
+			'comment_approved'  => 'approved',
+			'comment_agent'     => 'TutorLMSPlugin',
+			'comment_type'      => 'course_completed',
+			'user_id'           => $user_id,
+		);
+
+		$wpdb->insert($wpdb->comments, $data);
 
 		do_action('tutor_course_complete_after', $course_id);
 
