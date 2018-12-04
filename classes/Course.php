@@ -29,7 +29,6 @@ class Course extends Tutor_Base {
 		add_action('wp_ajax_tutor_add_instructors_to_course', array($this, 'tutor_add_instructors_to_course'));
 		add_action('wp_ajax_detach_instructor_from_course', array($this, 'detach_instructor_from_course'));
 	}
-
 	/**
 	 * Registering metabox
 	 */
@@ -42,15 +41,12 @@ class Course extends Tutor_Base {
 		add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array($this, 'instructors_metabox'), $coursePostType );
 		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
 	}
-
 	public function course_meta_box(){
 		include  tutor()->path.'views/metabox/course-topics.php';
 	}
-
 	public function course_additional_data_meta_box(){
 		include  tutor()->path.'views/metabox/course-additional-data.php';
 	}
-
 	public function video_metabox(){
 		include  tutor()->path.'views/metabox/video-metabox.php';
 	}
@@ -165,6 +161,13 @@ class Course extends Tutor_Base {
 					}
 				}
 			}
+		}
+
+
+		//Video
+		if ( ! empty($_POST['video']['source'])){
+			$video = tutor_utils()->sanitize_array($_POST['video']);
+			update_post_meta($post_ID, '_video', $video);
 		}
 
 		//Announcements
