@@ -115,7 +115,15 @@ Option Field
     font-weight: 700;
     margin: 0;
 }
-
+.tutor-option-field-row .option-media-wrap{
+    margin-bottom: 10px;
+}
+.tutor-option-field-row .option-media-wrap img{
+    max-height: 100px;
+    width: auto;
+    padding: 5px;
+    border: 1px solid #CCCCCC;
+}
 /**
 Group Field Option
  */

@@ -979,4 +979,31 @@ jQuery(document).ready(function($){
     });
 
 
+    $(document).on('click', '.tutor-option-media-upload-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+
+        var frame;
+        if ( frame ) {
+            frame.open();
+            return;
+        }
+        frame = wp.media({
+            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            button: {
+                text: 'Use this media'
+            },
+            multiple: false
+        });
+        frame.on( 'select', function() {
+            var attachment = frame.state().get('selection').first().toJSON();
+            $that.closest('.option-media-wrap').find('.option-media-preview').html('<img src="'+attachment.url+'" alt="" />');
+            $that.closest('.option-media-wrap').find('input').val(attachment.id);
+        });
+        frame.open();
+    });
+
+
+
 });

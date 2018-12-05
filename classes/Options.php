@@ -84,8 +84,7 @@ class Options {
 								'type'      => 'checkbox',
 								'label'     => __('Enable Public Profile', 'tutor'),
 								'default' => '0',
-								'desc'      => __('Enable this to make a profile publicly visible',	'tutor')."<br />"
-								               .$student_url,
+								'desc'      => __('Enable this to make a profile publicly visible',	'tutor')."<br />" .$student_url,
 							),
 							'load_tutor_css' => array(
 								'type'      => 'checkbox',
@@ -120,18 +119,6 @@ class Options {
 						'label' => __('General', 'tutor'),
 						'desc' => __('Course Settings', 'tutor'),
 						'fields' => array(
-							/*
-							'course_complete_terms' => array(
-								'type'      => 'select',
-								'label'     => __('When course will be complete', 'tutor'),
-								'default'   => '0',
-								'options'   => array(
-									'all_lesson_complete' =>  __('When all lesson completed', 'tutor'),
-									'complete_by_click' =>  __('Manually clicking the (complete course) button ', 'tutor'),
-								),
-								'desc'      => __('Select page to show course archieve page, none will show default course post type',	'tutor'),
-							),*/
-
 							'display_course_instructors' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Display instructors profile', 'tutor'),

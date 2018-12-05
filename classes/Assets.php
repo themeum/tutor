@@ -21,11 +21,10 @@ class Assets{
 		/**
 		 * Scripts
 		 */
+		wp_enqueue_media();
 		wp_enqueue_script('jquery-ui-slider');
 		wp_enqueue_script('tutor-select2', tutor()->url.'assets/packages/select2/select2.min.js', array('jquery'), tutor()->version, true );
 		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery'), tutor()->version, true );
-
-
 
 		$tutor_localize_data = array();
 		if ( ! empty($_GET['taxonomy']) && ( $_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag') ){
