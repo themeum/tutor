@@ -6,6 +6,9 @@
 
     <div class="lesson-modal-form-wrap">
 
+	    <?php do_action('tutor_lesson_edit_modal_form_before', $post); ?>
+
+
         <div class="lesson-modal-field-row">
             <div class="lesson-modal-field tutor-lesson-modal-title-wrap">
                 <input type="text" name="lesson_title" value="<?php echo $post->post_title; ?>" placeholder="<?php _e('Lesson title', 'tutor'); ?>">
@@ -49,6 +52,10 @@
 		include tutor()->path.'views/metabox/video-metabox.php';
 		include tutor()->path.'views/metabox/lesson-attachments-metabox.php';
 		?>
+
+
+        <?php do_action('tutor_lesson_edit_modal_form_after', $post); ?>
+
     </div>
 
     <div class="modal-footer">

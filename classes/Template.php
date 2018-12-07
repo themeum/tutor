@@ -164,7 +164,10 @@ class Template extends Tutor_Base {
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $this->lesson_post_type){
 			$page_id = get_the_ID();
 
+			$required_login_to_view_lesson = apply_filters('tutor_lesson/required_login_to_view_lesson', true, $page_id);
 			setup_postdata($page_id);
+
+
 			if (is_user_logged_in()){
 				$is_course_enrolled = tutor_utils()->is_course_enrolled_by_lesson();
 
@@ -175,7 +178,11 @@ class Template extends Tutor_Base {
 					$template = tutor_get_template( 'single.lesson.required-enroll' );
 				}
 			}else{
-				$template = tutor_get_template('login');
+				if ($required_login_to_view_lesson){
+					$template = tutor_get_template('login');
+				}else{
+					$template = tutor_get_template( 'single-preview-lesson' );
+				}
 			}
 			wp_reset_postdata();
 
@@ -195,6 +202,17 @@ class Template extends Tutor_Base {
 		global $wp_query;
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['lesson_video']) && $wp_query->query_vars['lesson_video'] === 'true') {
+
+			$isPublicVideo = apply_filters('tutor_video_stream_is_public', false,  get_the_ID());
+			if ($isPublicVideo){
+				$video_info = tutor_utils()->get_video_info();
+				if ( $video_info ) {
+					$stream = new Video_Stream( $video_info->path );
+					$stream->start();
+				}
+				exit();
+			}
+
 			if (tutor_utils()->is_course_enrolled_by_lesson()) {
 				$video_info = tutor_utils()->get_video_info();
 				if ( $video_info ) {

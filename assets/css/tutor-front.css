@@ -348,19 +348,21 @@
 .tutor-course-topics-contents .tutor-course-topic .tutor-course-lessons{
     display: none;
 }
-
 .tutor-course-lesson h5{
     line-height: 22px;
     font-size: 14px;
     margin-bottom: 0;
+    display: flex;
 }
-
 .tutor-course-lesson h5 i{
     line-height: 22px;
     display: inline-block;
     vertical-align: text-top;
     margin-right: 10px;
     color: #B1B8C9;
+}
+.tutor-course-lesson .lesson-preview-title {
+    flex: 1 0 0;
 }
 
 /********************/

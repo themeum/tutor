@@ -9,7 +9,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) )
-    exit;
+	exit;
 
 $topics = tutor_utils()->get_topics();
 $course_id = get_the_ID();
@@ -26,30 +26,30 @@ $course_id = get_the_ID();
                 <h4 class="tutor-segment-title"><?php _e('Topics for this course', 'tutor'); ?></h4>
             </div>
             <div class="tutor-course-topics-header-right">
-                <?php
-                    $tutor_lesson_count = tutor_utils()->get_lesson()->post_count;
-                    $tutor_course_duration = get_tutor_course_duration_context($course_id);
+				<?php
+				$tutor_lesson_count = tutor_utils()->get_lesson()->post_count;
+				$tutor_course_duration = get_tutor_course_duration_context($course_id);
 
-                    if($tutor_lesson_count) {
-                        echo "<span> $tutor_lesson_count";
-                        _e(' Lessons', 'tutor');
-                        echo "</span>";
-                    }
-                    if($tutor_course_duration){
-                        echo "<span>$tutor_course_duration</span>";
-                    }
-                ?>
+				if($tutor_lesson_count) {
+					echo "<span> $tutor_lesson_count";
+					_e(' Lessons', 'tutor');
+					echo "</span>";
+				}
+				if($tutor_course_duration){
+					echo "<span>$tutor_course_duration</span>";
+				}
+				?>
             </div>
         </div>
         <div class="tutor-course-topics-contents">
-            <?php
+			<?php
 
-            $index = 0;
+			$index = 0;
 
-            if ($topics->have_posts()){
-                while ($topics->have_posts()){ $topics->the_post();
-                    $index++;
-                    ?>
+			if ($topics->have_posts()){
+				while ($topics->have_posts()){ $topics->the_post();
+					$index++;
+					?>
 
                     <div class="tutor-course-topic <?php if($index == 1) echo "tutor-active"; ?>">
                         <div class="tutor-course-title">
@@ -59,43 +59,45 @@ $course_id = get_the_ID();
 
                         <div class="tutor-course-lessons">
 
-                            <?php
-                            $lessons = tutor_utils()->get_lessons_by_topic(get_the_ID());
-                            if ($lessons->have_posts()){
-                                while ($lessons->have_posts()){ $lessons->the_post();
+							<?php
+							$lessons = tutor_utils()->get_lessons_by_topic(get_the_ID());
+							if ($lessons->have_posts()){
+								while ($lessons->have_posts()){ $lessons->the_post();
 
-                                    $video = tutor_utils()->get_video_info();
+									$video = tutor_utils()->get_video_info();
 
-                                    $play_time = false;
-                                    if ($video){
-                                        $play_time = $video->playtime;
-                                    }
+									$play_time = false;
+									if ($video){
+										$play_time = $video->playtime;
+									}
 
-                                    $lesson_icon = $play_time ? 'tutor-icon-youtube' : 'tutor-icon-document-alt';
-
-                                    ?>
+									$lesson_icon = $play_time ? 'tutor-icon-youtube' : 'tutor-icon-document-alt';
+									?>
 
                                     <div class="tutor-course-lesson">
                                         <h5>
-                                        <?php
-                                            echo "<i class='$lesson_icon'></i>";
-                                            the_title();
-                                        ?>
+											<?php
+
+											$lesson_title = "<i class='$lesson_icon'></i>";
+											$lesson_title .= get_the_title();
+
+											echo apply_filters('tutor_course/contents/lesson/title', $lesson_title, get_the_ID());
+											?>
                                         </h5>
                                     </div>
 
-                                    <?php
-                                }
-                                $lessons->reset_postdata();
-                            }
-                            ?>
+									<?php
+								}
+								$lessons->reset_postdata();
+							}
+							?>
                         </div>
                     </div>
-                    <?php
-                }
-                $topics->reset_postdata();
-            }
-            ?>
+					<?php
+				}
+				$topics->reset_postdata();
+			}
+			?>
         </div>
     </div>
 <?php } ?>

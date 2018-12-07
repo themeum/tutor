@@ -15,6 +15,9 @@ $target_audience = get_post_meta($course_id, '_tutor_course_target_audience', tr
 $material_includes = get_post_meta($course_id, '_tutor_course_material_includes', true);
 ?>
 
+
+<?php do_action('tutor_course_metabox_before_additional_data'); ?>
+
 <div class="tutor-option-field-row">
     <div class="tutor-option-field-label">
         <label for=""><?php _e('Total Course Duration', 'tutor'); ?></label>
@@ -128,3 +131,5 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         </p>
     </div>
 </div>
+
+<?php do_action('tutor_course_metabox_after_additional_data'); ?>

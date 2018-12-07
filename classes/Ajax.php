@@ -7,11 +7,11 @@ if ( ! defined( 'ABSPATH' ) )
 class Ajax{
 	public function __construct() {
 		add_action('wp_ajax_sync_video_playback', array($this, 'sync_video_playback'));
+		add_action('wp_ajax_nopriv_sync_video_playback', array($this, 'sync_video_playback_noprev'));
 		add_action('wp_ajax_tutor_place_rating', array($this, 'tutor_place_rating'));
 
 		add_action('wp_ajax_tutor_ask_question', array($this, 'tutor_ask_question'));
 		add_action('wp_ajax_tutor_add_answer', array($this, 'tutor_add_answer'));
-
 
 		add_action('wp_ajax_tutor_course_add_to_wishlist', array($this, 'tutor_course_add_to_wishlist'));
 		add_action('wp_ajax_nopriv_tutor_course_add_to_wishlist', array($this, 'tutor_course_add_to_wishlist'));
@@ -56,6 +56,10 @@ class Ajax{
 			tutor_utils()->mark_lesson_complete($post_id);
 		}
 		exit();
+	}
+
+	public function sync_video_playback_noprev(){
+
 	}
 
 
