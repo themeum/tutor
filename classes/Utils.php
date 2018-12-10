@@ -176,6 +176,14 @@ class Utils {
 		return $has;
 	}
 
+	public function has_edd(){
+		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
+		$depends = array('easy-digital-downloads/easy-digital-downloads.php', 'tutor-edd/tutor-edd.php');
+		$has = count(array_intersect($depends, $activated_plugins)) == count($depends);
+
+		return $has;
+	}
+
 	/**
 	 * @return mixed
 	 *
@@ -535,21 +543,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function is_course_purchasable($course_id = 0){
-		if ( ! $this->has_wc()){
-			return false;
-		}
-		$course_sell = $this->get_option('enable_course_sell_by_woocommerce');
-		if ( ! $course_sell){
-			return false;
-		}
-
-		$course_id = $this->get_post_id($course_id);
-		$has_product_id = get_post_meta($course_id, '_tutor_course_product_id', true);
-		if ($has_product_id){
-			return true;
-		}
-
-		return false;
+		return apply_filters('is_course_purchasable', false, $course_id);
 	}
 
 	/**
@@ -566,13 +560,19 @@ class Utils {
 		$course_id = $this->get_post_id($course_id);
 
 		$price = null;
-		if ($this->is_course_purchasable() && $this->has_wc()) {
-			$product_id = tutor_utils()->get_course_product_id($course_id);
-			$product    = wc_get_product( $product_id );
 
-			if ( $product ) {
-				$price = $product->get_price();
+		if ($this->is_course_purchasable()) {
+			if ($this->has_wc()){
+				$product_id = tutor_utils()->get_course_product_id($course_id);
+				$product    = wc_get_product( $product_id );
+
+				if ( $product ) {
+					$price = $product->get_price();
+				}
+			}else{
+				$price = apply_filters('get_tutor_course_price', null, $course_id);
 			}
+
 		}
 
 		return $price;
@@ -596,6 +596,22 @@ class Utils {
 			global $wpdb;
 
 			$getEnrolledInfo = $wpdb->get_row( "select ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} AND post_status = 'completed'; " );
+
+			if ( $getEnrolledInfo ) {
+				return $getEnrolledInfo;
+			}
+		}
+		return false;
+	}
+
+	public function has_any_enrolled($course_id = 0, $user_id = 0){
+		$course_id = $this->get_post_id($course_id);
+		$user_id = $this->get_user_id($user_id);
+
+		if (is_user_logged_in()) {
+			global $wpdb;
+
+			$getEnrolledInfo = $wpdb->get_row( "select ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id}; " );
 
 			if ( $getEnrolledInfo ) {
 				return $getEnrolledInfo;
@@ -1378,6 +1394,48 @@ class Utils {
 			return true;
 		}
 
+		return false;
+	}
+
+	public function complete_course_enroll($order_id){
+		if ( ! tutor_utils()->is_tutor_order($order_id)){
+			return;
+		}
+
+		global $wpdb;
+
+		$enrolled_ids_with_course = $this->get_course_enrolled_ids_by_order_id($order_id);
+		if ($enrolled_ids_with_course){
+			$enrolled_ids = wp_list_pluck($enrolled_ids_with_course, 'enrolled_id');
+
+			if (is_array($enrolled_ids) && count($enrolled_ids)){
+				foreach ($enrolled_ids as $enrolled_id){
+					$wpdb->update( $wpdb->posts, array( 'post_status' => 'completed' ), array( 'ID' => $enrolled_id ) );
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param $order_id
+	 *
+	 * @return array|bool
+	 */
+	public function get_course_enrolled_ids_by_order_id($order_id){
+		global $wpdb;
+		//Getting all of courses ids within this order
+
+		$courses_ids = $wpdb->get_results("SELECT * FROM {$wpdb->postmeta} WHERE post_id = {$order_id} AND meta_key LIKE '_tutor_order_for_course_id_%' ");
+
+		if (is_array($courses_ids) && count($courses_ids)){
+			$course_enrolled_by_order = array();
+			foreach ($courses_ids as $courses_id){
+				$course_id = str_replace('_tutor_order_for_course_id_', '',$courses_id->meta_key);
+				//array(order_id =>  array('course_id' => $course_id, 'enrolled_id' => enrolled_id))
+				$course_enrolled_by_order[$courses_id->post_id] = array('course_id' => $course_id, 'enrolled_id' => $courses_id->meta_value);
+			}
+			return $course_enrolled_by_order;
+		}
 		return false;
 	}
 

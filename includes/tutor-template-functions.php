@@ -292,7 +292,11 @@ if ( ! function_exists('tutor_course_loop_author')) {
 if ( ! function_exists('tutor_course_loop_price')) {
 	function tutor_course_loop_price() {
 		ob_start();
-		tutor_load_template( 'loop.course-price' );
+
+		$tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
+		if ($tutor_course_sell_by){
+			tutor_load_template( 'loop.course-price-'.$tutor_course_sell_by );
+		}
 		$output = apply_filters( 'tutor_course_loop_price', ob_get_clean() );
 
 		echo $output;
@@ -312,7 +316,12 @@ if ( ! function_exists('tutor_course_loop_rating')) {
 if ( ! function_exists('tutor_course_loop_add_to_cart')) {
 	function tutor_course_loop_add_to_cart($echo = true) {
 		ob_start();
-		tutor_load_template( 'loop.add-to-cart' );
+		$tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
+
+		if ($tutor_course_sell_by){
+			tutor_load_template( 'loop.add-to-cart-'.$tutor_course_sell_by );
+		}
+
 		$output = apply_filters( 'tutor_course_loop_add_to_cart_link', ob_get_clean() );
 
 		if ($echo){

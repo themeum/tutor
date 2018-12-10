@@ -10,22 +10,11 @@
  */
 
 
-
 $is_purchasable = tutor_utils()->is_course_purchasable();
+$price = apply_filters('get_tutor_course_price', null, get_the_ID());
 
-if ($is_purchasable){
-	$product_id = tutor_utils()->get_course_product_id();
-	$product = wc_get_product( $product_id );
-
-	if ($product) {
-		?>
-
-		<p class="price">
-			<?php echo $product->get_price_html(); ?>
-		</p>
-
-		<?php
-	}
+if ($is_purchasable && $price){
+    echo '<p class="price">'.$price.'</p>';
 }else{
 	?>
 	<p class="price">
@@ -33,5 +22,4 @@ if ($is_purchasable){
 	</p>
 	<?php
 }
-
 ?>

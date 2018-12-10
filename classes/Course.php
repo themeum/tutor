@@ -274,8 +274,12 @@ class Course extends Tutor_Base {
 		if ($column === 'price'){
 			$price = tutor_utils()->get_course_price($post_id);
 
-			if ($price && function_exists('wc_price')){
-				echo '<span class="tutor-label-success">'.wc_price($price).'</span>';
+			if ($price){
+				if (function_exists('wc_price')){
+					echo '<span class="tutor-label-success">'.wc_price($price).'</span>';
+				}else{
+					echo '<span class="tutor-label-success">'.$price.'</span>';
+				}
 			}else{
 				echo 'free';
 			}
