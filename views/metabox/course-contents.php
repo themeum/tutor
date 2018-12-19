@@ -4,7 +4,7 @@
 	    $current_topic_id = (int) tutor_utils()->avalue_dot('current_topic_id', $_POST);
     }
 
-	$query_lesson = tutor_utils()->get_lesson($course_id);
+	$query_lesson = tutor_utils()->get_lesson($course_id, -1);
 	$query_topics = tutor_utils()->get_topics($course_id);
 	$attached_lesson_ids = array();
 
@@ -71,7 +71,7 @@
 
                 <div class="tutor-lessons">
 					<?php
-					$lessons = tutor_utils()->get_lessons_by_topic($topic->ID);
+					$lessons = tutor_utils()->get_lessons_by_topic($topic->ID, -1);
 					foreach ($lessons->posts as $lesson){
 						$attached_lesson_ids[] = $lesson->ID;
 						?>

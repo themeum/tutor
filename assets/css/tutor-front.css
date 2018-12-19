@@ -379,7 +379,6 @@ div[class*="tutor-course-col"] {
 .tutor-course-loop{
     background: #fff;
     color: #29303b;
-    display: inline-block;
     font-size: small;
     overflow: hidden;
     position: relative;

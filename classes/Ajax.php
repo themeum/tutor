@@ -138,6 +138,10 @@ class Ajax{
 		$question_title = sanitize_text_field($_POST['question_title']);
 		$question = wp_kses_post($_POST['question']);
 
+		if (empty($question) || empty($question_title)){
+			wp_send_json_error(__('Empty question title or body', 'tutor'));
+		}
+
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
 		$date = date("Y-m-d H:i:s");

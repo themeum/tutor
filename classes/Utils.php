@@ -414,13 +414,14 @@ class Utils {
 		return $count;
 	}
 
-	public function get_lesson($course_id = 0){
+	public function get_lesson($course_id = 0, $limit = 10){
 		$course_id = $this->get_post_id($course_id);
 
 		$lesson_post_type = tutor()->lesson_post_type;
 		$args = array(
 			'post_status'  => 'publish',
 			'post_type'  => $lesson_post_type,
+			'posts_per_page'    => $limit,
 			'meta_query' => array(
 				array(
 					'key'     => '_tutor_course_id_for_lesson',
@@ -507,13 +508,14 @@ class Utils {
 		return $last_order + 1;
 	}
 
-	public function get_lessons_by_topic($topics_id = 0){
+	public function get_lessons_by_topic($topics_id = 0, $limit = 10){
 		$topics_id = $this->get_post_id($topics_id);
 
 		$lesson_post_type = tutor()->lesson_post_type;
 		$args = array(
 			'post_type'  => $lesson_post_type,
 			'post_parent'  => $topics_id,
+			'posts_per_page'    => $limit,
 			'orderby' => 'menu_order',
 			'order'   => 'ASC',
 		);
