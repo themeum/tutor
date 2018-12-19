@@ -31,6 +31,7 @@ class init{
 	private $tools;
 	private $user;
 	private $theme_compatibility;
+	private $gutenberg;
 
 	function __construct() {
 
@@ -69,6 +70,7 @@ class init{
 		$this->tools = new Tools();
 		$this->user = new User();
 		$this->theme_compatibility = new Theme_Compatibility();
+		$this->gutenberg = new Gutenberg();
 
 		do_action('tutor_loaded');
 	}

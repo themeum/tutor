@@ -23,6 +23,33 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.tutor-icon-clipboard:before {
+    content: "\e924";
+}
+.tutor-icon-professor:before {
+    content: "\e926";
+}
+.tutor-icon-graduate:before {
+    content: "\e928";
+}
+.tutor-icon-student:before {
+    content: "\e929";
+}
+.tutor-icon-magnifying-glass-1:before {
+    content: "\e92a";
+}
+.tutor-icon-review:before {
+    content: "\e92c";
+}
+.tutor-icon-calendar:before {
+    content: "\e92d";
+}
+.tutor-icon-open-book-1:before {
+    content: "\e92e";
+}
+.tutor-icon-conversation-1:before {
+    content: "\e934";
+}
 .tutor-icon-default:before {
     content: "\e922";
 }

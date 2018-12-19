@@ -4,6 +4,8 @@
 * Copyright (c) 2012 AUTHORS.txt; Licensed MIT, GPL */
 
 /** Slider CSS */
+@import "../icons/css/tutor-icon.css";
+
 
 .ui-slider { position: relative; text-align: left; }
 .ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 1.2em; height: 1.2em; cursor: default; }
