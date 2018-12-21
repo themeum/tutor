@@ -123,6 +123,11 @@ jQuery(document).ready(function($){
         //console.log(topics);
     }
 
+    $(document).on('click', '.create_new_topic_btn', function (e) {
+        e.preventDefault();
+        $('.tutor-metabox-add-topics').slideToggle();
+    });
+
     $(document).on('click', '#tutor-add-topic-btn', function (e) {
         e.preventDefault();
         var $that = $(this);
@@ -141,6 +146,7 @@ jQuery(document).ready(function($){
                     $that.closest('.tutor-metabox-add-topics').find('input[type!="hidden"], textarea').each(function () {
                         $(this).val('');
                     });
+                    $that.closest('.tutor-metabox-add-topics').slideUp();
                     enable_sorting_topic_lesson();
                 }
             },

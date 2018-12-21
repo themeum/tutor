@@ -10,8 +10,12 @@
 	?>
 </div>
 
+<div class="new-topic-btn-wrap">
+    <a href="javascript:;" class="create_new_topic_btn tutor_btn_lg"> <i class="tutor-icon-add-line"></i> <?php _e('Add new topic', 'tutor'); ?></a>
+</div>
 
-<div class="tutor-metabox-add-topics">
+
+<div class="tutor-metabox-add-topics" style="display: none">
     <h3><?php _e('Add Topic', 'tutor'); ?></h3>
 
     <div class="tutor-option-field-row">
