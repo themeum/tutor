@@ -203,9 +203,18 @@ Group Field Option
     border-radius: 2px;
     font-size: 14px;
     font-weight: 300;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+}
+.tutor_btn_lg:focus{
+    box-shadow: none;
+    border: none;
+    outline: none;
 }
 .tutor_btn_lg:hover{
     background-color: #2149C9;
+    color: #ffffff;
 }
 
 .ui-sortable-placeholder{
@@ -295,24 +304,6 @@ Group Field Option
 #tutor-course-topics a:focus{
     box-shadow: none;
 }
-#tutor-course-topics h2{
-    padding: 15px;
-    line-height: 30px;
-}
-#tutor-course-topics h2:before{
-    content: '\e936';
-    font-family: 'tutor' !important;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    margin-right: 10px;
-}
-
 #tutor-course-topics .toggle-indicator:before{
     margin-top: 20px;
 }
@@ -350,6 +341,36 @@ Group Field Option
 }
 
 
+/**
+Meta Box Heading
+ */
+
+#tutor-course-topics h2, #tutor-instructors h2{
+    padding: 15px;
+    line-height: 30px;
+}
+#tutor-course-topics h2:before, #tutor-instructors h2:before {
+    color: #3057D5;
+    font-family: 'tutor' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-right: 10px;
+}
+#tutor-course-topics h2:before{
+    content: '\e936';
+}
+#tutor-instructors h2:before{
+    content: '\e93c';
+}
+/**
+End Metabox Heading
+ */
 
 
 
@@ -895,17 +916,28 @@ span.result-fail{
     padding: 10px 20px;
 }
 .tutor-course-available-instructors .added-instructor-item {
-    background-color: #f5f5f5;
-    padding: 10px;
+    background-color: #F8F8F8;
+    padding: 5px;
     margin-bottom: 2px;
-    display: flex;
+    display: inline-flex;
+    border: 1px solid #E8E8E8;
+    border-radius: 3px;
+    line-height: 30px;
+    width: 47%;
+    margin-right: 20px;
+    margin-top: 10px;
+
+}
+.tutor-course-available-instructors .added-instructor-item .instructor-icon {
+    line-height: initial;
+    margin-right: 12px;
 }
 .tutor-course-available-instructors .added-instructor-item .instructor-name {
     flex-basis: 0;
     flex-grow: 1;
 }
 .tutor-instructor-delete-btn{
-    color: #FF0000;
+    color: #393C40;
     text-decoration: none;
 }
 
@@ -926,12 +958,12 @@ Updating Messsage
  */
 .tutor-updating-message:before{
     display: inline-block;
-    font: normal 20px/1 'dashicons';
+    font-family: 'tutor';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     vertical-align: top;
-    color: #f56e28;
-    content: "\f463";
+    /*color: #f56e28;*/
+    content: "\e91d";
     -webkit-animation: rotation 2s infinite linear;
     animation: rotation 2s infinite linear;
     margin-right: 6px;
