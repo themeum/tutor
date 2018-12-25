@@ -474,7 +474,7 @@ class Course extends Tutor_Base {
 				add_user_meta($instructor_id, '_tutor_instructor_course_id', $course_id);
 			}
 		}
-		
+
 		$saved_instructors = tutor_utils()->get_instructors_by_course($course_id);
 		$output = '';
 
@@ -482,15 +482,15 @@ class Course extends Tutor_Base {
 			foreach ($saved_instructors as $t){
 
 				$output .= '<div id="added-instructor-id-'.$t->ID.'" class="added-instructor-item added-instructor-item-'.$t->ID.'" data-instructor-id="'.$t->ID.'">
-                                <span class="instructor-icon"><i class="dashicons dashicons-admin-users"></i></span>
-                                <span class="instructor-name"> '.$t->display_name.' </span>
-                                <span class="instructor-control">
-                                    <a href="javascript:;" class="tutor-instructor-delete-btn"><i class="dashicons dashicons-trash"></i></a>
-                                </span>
-                            </div>';
+                    <span class="instructor-icon">'.get_avatar($t->ID, 30).'</span>
+                    <span class="instructor-name"> '.$t->display_name.' </span>
+                    <span class="instructor-control">
+                        <a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-garbage"></i></a>
+                    </span>
+                </div>';
 			}
 		}
-		
+
 
 		wp_send_json_success(array('output' => $output));
 	}

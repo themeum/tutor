@@ -16,13 +16,51 @@
     font-weight: normal;
     font-variant: normal;
     text-transform: none;
-    line-height: 1;
 
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
+.tutor-icon-manual:before {
+    content: "\e936";
+}
+.tutor-icon-light-up:before {
+    content: "\e937";
+}
+.tutor-icon-light-down:before {
+    content: "\e938";
+}
+.tutor-icon-light-right:before {
+    content: "\e939";
+}
+.tutor-icon-light-left:before {
+    content: "\e93a";
+}
+.tutor-icon-pencil:before {
+    content: "\e93b";
+}
+.tutor-icon-man-user:before {
+    content: "\e93c";
+}
+.tutor-icon-move:before {
+    content: "\e93d";
+}
+.tutor-icon-list:before {
+    content: "\e93e";
+}
+.tutor-icon-speaker:before {
+    content: "\e93f";
+}
+.tutor-icon-video-camera:before {
+    content: "\e940";
+}
+.tutor-icon-garbage:before {
+    content: "\e941";
+}
+.tutor-icon-add-line:before {
+    content: "\e942";
+}
 .tutor-icon-clipboard:before {
     content: "\e924";
 }

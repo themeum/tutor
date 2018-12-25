@@ -32,13 +32,13 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : data,
             beforeSend: function () {
-                $form.find('.button').addClass('updating-message');
+                $form.find('.button').addClass('tutor-updating-message');
             },
             success: function (data) {
                 //
             },
             complete: function () {
-                $form.find('.button').removeClass('updating-message');
+                $form.find('.button').removeClass('tutor-updating-message');
                 window.location.reload();
             }
         });
@@ -123,6 +123,11 @@ jQuery(document).ready(function($){
         //console.log(topics);
     }
 
+    $(document).on('click', '.create_new_topic_btn', function (e) {
+        e.preventDefault();
+        $('.tutor-metabox-add-topics').slideToggle();
+    });
+
     $(document).on('click', '#tutor-add-topic-btn', function (e) {
         e.preventDefault();
         var $that = $(this);
@@ -133,7 +138,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : form_data,
             beforeSend: function () {
-                $that.addClass('updating-message');
+                $that.addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -141,11 +146,12 @@ jQuery(document).ready(function($){
                     $that.closest('.tutor-metabox-add-topics').find('input[type!="hidden"], textarea').each(function () {
                         $(this).val('');
                     });
+                    $that.closest('.tutor-metabox-add-topics').slideUp();
                     enable_sorting_topic_lesson();
                 }
             },
             complete: function () {
-                $that.removeClass('updating-message');
+                $that.removeClass('tutor-updating-message');
             }
         });
     });
@@ -174,7 +180,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : data,
             beforeSend: function () {
-                $button.addClass('updating-message');
+                $button.addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -183,7 +189,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $button.removeClass('updating-message');
+                $button.removeClass('tutor-updating-message');
             }
         });
     });
@@ -219,7 +225,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : form_data,
             beforeSend: function () {
-                $that.addClass('updating-message');
+                $that.addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -231,7 +237,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.removeClass('updating-message');
+                $that.removeClass('tutor-updating-message');
             }
         });
     });
@@ -260,7 +266,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : form_data,
             beforeSend: function () {
-                $that.addClass('updating-message');
+                $that.addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -268,7 +274,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.removeClass('updating-message');
+                $that.removeClass('tutor-updating-message');
             }
         });
     });
@@ -369,7 +375,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : form_data,
             beforeSend: function () {
-                $that.addClass('updating-message');
+                $that.addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -381,7 +387,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.removeClass('updating-message');
+                $that.removeClass('tutor-updating-message');
             }
         });
 
@@ -541,7 +547,7 @@ jQuery(document).ready(function($){
             data : data,
 
             beforeSend: function () {
-                $that.closest('.single-question-item').find('.tutor-loading-icon-wrap').addClass('updating-message');
+                $that.closest('.single-question-item').find('.tutor-loading-icon-wrap').addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -555,7 +561,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.closest('.single-question-item').find('.tutor-loading-icon-wrap').removeClass('updating-message');
+                $that.closest('.single-question-item').find('.tutor-loading-icon-wrap').removeClass('tutor-updating-message');
             }
         });
     });
@@ -574,7 +580,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : data,
             beforeSend: function () {
-                $that.removeClass('updated-message').addClass('updating-message');
+                $that.removeClass('updated-message').addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -594,7 +600,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.removeClass('updating-message').addClass('updated-message');
+                $that.removeClass('tutor-updating-message').addClass('updated-message');
             }
         });
     });
@@ -622,7 +628,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : data,
             beforeSend: function () {
-                $that.removeClass('updated-message').addClass('updating-message');
+                $that.removeClass('updated-message').addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -633,7 +639,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.removeClass('updating-message').addClass('updated-message');
+                $that.removeClass('tutor-updating-message').addClass('updated-message');
             }
         });
     });
@@ -656,7 +662,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : data,
             beforeSend: function () {
-                $that.find('.tutor-loading-icon-wrap').addClass('updating-message');
+                $that.find('.tutor-loading-icon-wrap').addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -664,7 +670,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.find('.tutor-loading-icon-wrap').removeClass('updating-message');
+                $that.find('.tutor-loading-icon-wrap').removeClass('tutor-updating-message');
             }
         });
     });
@@ -683,7 +689,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : {answer_option_id:answer_option_id, action: 'quiz_delete_answer_option'},
             beforeSend: function () {
-                $loadingIcon.addClass('updating-message');
+                $loadingIcon.addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -697,7 +703,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $loadingIcon.removeClass('updating-message');
+                $loadingIcon.removeClass('tutor-updating-message');
             }
         });
     });
@@ -714,7 +720,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : {question_id:question_id, action: 'quiz_question_delete'},
             beforeSend: function () {
-                $loadingIcon.addClass('updating-message');
+                $loadingIcon.addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -722,7 +728,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $loadingIcon.removeClass('updating-message');
+                $loadingIcon.removeClass('tutor-updating-message');
             }
         });
     });
@@ -775,14 +781,14 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : {quiz_for_post_id : quiz_for_post_id, action: 'tutor_load_quiz_modal'},
             beforeSend: function () {
-                $that.addClass('updating-message');
+                $that.addClass('tutor-updating-message');
             },
             success: function (data) {
                 $('.tutor-quiz-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-quiz-modal-wrap').attr('quiz-for-post-id', quiz_for_post_id).addClass('show');
             },
             complete: function () {
-                $that.removeClass('updating-message');
+                $that.removeClass('tutor-updating-message');
             }
         });
     });
@@ -801,7 +807,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : data,
             beforeSend: function () {
-                $that.addClass('updating-message');
+                $that.addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -810,7 +816,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.removeClass('updating-message');
+                $that.removeClass('tutor-updating-message');
             }
         });
     });
@@ -886,7 +892,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : {course_id : course_id, action: 'tutor_load_instructors_modal'},
             beforeSend: function () {
-                $that.addClass('updating-message');
+                $that.addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -895,7 +901,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.removeClass('updating-message');
+                $that.removeClass('tutor-updating-message');
             }
         });
     });
@@ -944,7 +950,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : data,
             beforeSend: function () {
-                $that.addClass('updating-message');
+                $that.addClass('tutor-updating-message');
             },
             success: function (data) {
                 if (data.success){
@@ -953,7 +959,7 @@ jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.removeClass('updating-message');
+                $that.removeClass('tutor-updating-message');
             }
         });
     });

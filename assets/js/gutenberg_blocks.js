@@ -1,5 +1,8 @@
 var el = wp.element.createElement,
-    registerBlockType = wp.blocks.registerBlockType;
+    registerBlockType = wp.blocks.registerBlockType,
+    withSelect = wp.data.withSelect;
+
+
 
 
 /**
@@ -10,35 +13,82 @@ registerBlockType( 'tutor-gutenberg/student-registration', {
     title: 'Tutor Student Registration',
     icon: 'welcome-learn-more',
     category: 'tutor',
-    edit: function() {
-        return el( 'div', {}, '[tutor_student_registration_form]' );
+    edit: function( props ) {
+        var dataHtml;
+        jQuery.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            async: false,
+            data : {shortcode: 'tutor_student_registration_form',  action : 'render_block_tutor'},
+            success: function (response) {
+                dataHtml = response.data;
+            },
+        });
+
+        return el('div', {
+            dangerouslySetInnerHTML: {
+                __html: dataHtml
+            }
+        })
     },
+
     save: function() {
-        return el( 'div', { }, '[tutor_student_registration_form]' );
+        return null;
+        //return el( 'div', { }, '[tutor_student_registration_form]' );
     },
 } );
-
 
 registerBlockType( 'tutor-gutenberg/student-dashboard', {
     title: 'Tutor Student Dashboard',
     icon: 'welcome-learn-more',
     category: 'tutor',
-    edit: function() {
-        return el( 'div', {}, '[tutor_student_dashboard]' );
+    edit: function( props ) {
+        var dataHtml;
+        jQuery.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            async: false,
+            data : {shortcode: 'tutor_student_dashboard',  action : 'render_block_tutor'},
+            success: function (response) {
+                dataHtml = response.data;
+            },
+        });
+        return el('div', {
+            dangerouslySetInnerHTML: {
+                __html: dataHtml
+            }
+        })
     },
     save: function() {
-        return el( 'div', { }, '[tutor_student_dashboard]' );
+        return null;
     },
 } );
+
+
+//tutor_instructor_registration_form
 
 registerBlockType( 'tutor-gutenberg/instructor-registration', {
     title: 'Instructor Registration Form',
     icon: 'welcome-learn-more',
     category: 'tutor',
-    edit: function() {
-        return el( 'div', {}, '[tutor_instructor_registration_form]' );
+    edit: function( props ) {
+        var dataHtml;
+        jQuery.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            async: false,
+            data : {shortcode: 'tutor_instructor_registration_form',  action : 'render_block_tutor'},
+            success: function (response) {
+                dataHtml = response.data;
+            },
+        });
+        return el('div', {
+            dangerouslySetInnerHTML: {
+                __html: dataHtml
+            }
+        })
     },
     save: function() {
-        return el( 'div', { }, '[tutor_instructor_registration_form]' );
+        return null;
     },
 } );

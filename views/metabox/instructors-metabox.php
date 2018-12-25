@@ -10,10 +10,12 @@
 			foreach ($instructors as $instructor){
 				?>
 				<div id="added-instructor-id-<?php echo $instructor->ID; ?>" class="added-instructor-item added-instructor-item-<?php echo $instructor->ID; ?>" data-instructor-id="<?php echo $instructor->ID; ?>">
-					<span class="instructor-icon"><i class="dashicons dashicons-admin-users"></i></span>
+					<span class="instructor-icon">
+                        <?php echo get_avatar($instructor->ID, 30); ?>
+                    </span>
 					<span class="instructor-name"> <?php echo $instructor->display_name; ?> </span>
 					<span class="instructor-control">
-						<a href="javascript:;" class="tutor-instructor-delete-btn"><i class="dashicons dashicons-trash"></i></a>
+						<a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-garbage"></i></a>
 					</span>
 				</div>
 				<?php
@@ -24,7 +26,7 @@
 
 	<div class="tutor-add-instructor-button-wrap">
 		<p>
-            <button type="button" class="button button-default tutor-add-instructor-btn"> <?php _e('Add Instructor', 'tutor'); ?> </button>
+            <button type="button" class="tutor_btn_lg tutor-add-instructor-btn"> <i class="tutor-icon-add-line"></i> <?php _e('Add Instructor', 'tutor'); ?> </button>
         </p>
 	</div>
 
@@ -33,7 +35,6 @@
         echo '<p>'. sprintf( __('To add unlimited multiple instructors at your course, install %sTutor Multi Instructors%s addon ', 'tutor'), '<a href="https://www.themeum.com/product/tutor-multi-instructors" target="_blank">', "</a>" ) .'</p>';
     }
     ?>
-
 </div>
 
 

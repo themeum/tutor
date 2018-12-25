@@ -6,7 +6,6 @@
 /** Slider CSS */
 @import "../icons/css/tutor-icon.css";
 
-
 .ui-slider { position: relative; text-align: left; }
 .ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 1.2em; height: 1.2em; cursor: default; }
 .ui-slider .ui-slider-range { position: absolute; z-index: 1; font-size: .7em; display: block; border: 0; background-position: 0 0; }
@@ -36,7 +35,6 @@
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight  {border: 1px solid #fcefa1/*{borderColorHighlight}*/; background: #fbf9ee; color: #363636; }
-
 
 /**
 TUTOR CSS
@@ -139,17 +137,21 @@ Group Field Option
 }
 
 /**
-Course adding page
- */
+* Course adding page
+* Course Builder
+*/
 #tutor-course-topics a{
     text-decoration: none;
 }
 #tutor-course-topics .tutor-topics-wrap{
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #E7E7E7;
     padding-bottom: 0;
+    margin: 0;
 }
 #tutor-course-topics .tutor-lesson {
     padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #D9D9D9;
 }
 #tutor-course-topics .drop-lessons{
     border: 1px dashed #adabab96;
@@ -166,7 +168,6 @@ Course adding page
 }
 #tutor-course-topics .tutor-lessons {
     padding-left: 0;
-    /*min-height: 100px;*/
 }
 #tutor-course-topics .tutor-lesson-top, #tutor-course-topics .tutor-lesson-top i {
     font-size: 15px;
@@ -178,19 +179,63 @@ Course adding page
 #tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal{
     flex: 1;
 }
+#tutor-course-topics .tutor-lesson-top i{
+    margin-right: 10px;
+}
+#tutor-course-topics .tutor-lesson-top a{
+    color: #393C40;
+}
 .tutor-topics-wrap, .tutor-lesson{
     background-color: #ffffff;
 }
+.tutor-topics-wrap, .course-move-handle{
+    margin-right: 5px;
+}
+.new-topic-btn-wrap {
+    padding: 20px;
+}
+.tutor_btn_lg{
+    line-height: 45px;
+    background-color: #3057D5;
+    color: #ffffff;
+    padding: 0 20px;
+    display: inline-block;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 300;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+}
+.tutor_btn_lg:focus{
+    box-shadow: none;
+    border: none;
+    outline: none;
+}
+.tutor_btn_lg:hover{
+    background-color: #2149C9;
+    color: #ffffff;
+}
+
 .ui-sortable-placeholder{
     visibility: visible;
     background-color: #dddd;
 }
 .tutor-untopics-lessons{
     margin-top: 50px;
+    border: 1px solid #eee;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fbfbfb;
 }
-
+.tutor-untopics-lessons h3{
+    font-weight: 300;
+}
 .tutor-untopics-lessons .tutor-lessons{
     padding-left: 0 !important;
+}
+.create-new-lesson-wrap {
+    text-align: center;
 }
 .tutor-metabox-add-topics, .tutor-topics-edit-form {
     background: #f1f1f1;
@@ -209,13 +254,26 @@ Course adding page
     display: flex;
     font-size: 16px;
     font-weight: 300;
-    margin: 10px 0;
+    margin: 0;
+    line-height: 40px;
+    padding-left: 15px;
 }
+.tutor-topic-title a{
+    color: #393C40;
+}
+
 .tutor-topic-title .topic-inner-title{
     flex: 1 0 auto;
 }
 .tutor-topic-title span{
     padding: 0 5px;
+}
+.tutor-topic-title span.expand-collapse-wrap {
+    border-left: 1px solid #E7E7E7;
+}
+.tutor-topic-title span.expand-collapse-wrap a{
+    display: block;
+    padding: 0 13px;
 }
 .topic-delete-btn{
     float: right;
@@ -224,12 +282,7 @@ Course adding page
     color: #cccccc;
 }
 .topic-delete-btn a{
-    display: block;
-    border: 1px solid #ff0000;
-    color: #ff0000;
-    padding: 3px;
-    border-radius: 50%;
-    line-height: 12px;
+    padding: 0 10px;
 }
 .topic-delete-btn a:hover {
     color: #ffffff;
@@ -240,6 +293,88 @@ Course adding page
     height: 12px;
     font-size: 12px;
 }
+
+#tutor-course-topics{
+    position: relative;
+}
+#tutor-course-topics .inside{
+    padding: 0;
+    margin: 0;
+}
+#tutor-course-topics a:focus{
+    box-shadow: none;
+}
+#tutor-course-topics .toggle-indicator:before{
+    margin-top: 20px;
+}
+.tutor-course-builder-header {
+    line-height: 50px;
+    position: absolute;
+    top: -56px;
+    right: 40px;
+}
+.tutor-topics-wrap:nth-child(2n) {
+    background: #F8F8F8;
+}
+#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body{
+    background: #E9E9E9;
+    padding: 15px 20px;
+}
+#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .create-lesson-in-topic-btn{
+    line-height: 38px;
+    background-color: #0285BA;
+    color: #ffffff;
+    display: inline-block;
+    padding: 0 20px;
+    border: 1px solid #016799;
+    border-radius: 2px;
+    margin-right: 20px;
+}
+#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .tutor-add-quiz-btn{
+    background-color: #FFFFFF;
+    border: 1px solid #C6C9CF;
+    line-height: 38px;
+    padding: 0 20px;
+    display: inline-block;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+
+/**
+Meta Box Heading
+ */
+
+#tutor-course-topics h2, #tutor-instructors h2{
+    padding: 15px;
+    line-height: 30px;
+}
+#tutor-course-topics h2:before, #tutor-instructors h2:before {
+    color: #3057D5;
+    font-family: 'tutor' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-right: 10px;
+}
+#tutor-course-topics h2:before{
+    content: '\e936';
+}
+#tutor-instructors h2:before{
+    content: '\e93c';
+}
+/**
+End Metabox Heading
+ */
+
+
+
+
 .video_source_wrap_html5{
     width: 100px;
     text-align: center;
@@ -781,17 +916,28 @@ span.result-fail{
     padding: 10px 20px;
 }
 .tutor-course-available-instructors .added-instructor-item {
-    background-color: #f5f5f5;
-    padding: 10px;
+    background-color: #F8F8F8;
+    padding: 5px;
     margin-bottom: 2px;
-    display: flex;
+    display: inline-flex;
+    border: 1px solid #E8E8E8;
+    border-radius: 3px;
+    line-height: 30px;
+    width: 47%;
+    margin-right: 20px;
+    margin-top: 10px;
+
+}
+.tutor-course-available-instructors .added-instructor-item .instructor-icon {
+    line-height: initial;
+    margin-right: 12px;
 }
 .tutor-course-available-instructors .added-instructor-item .instructor-name {
     flex-basis: 0;
     flex-grow: 1;
 }
 .tutor-instructor-delete-btn{
-    color: #FF0000;
+    color: #393C40;
     text-decoration: none;
 }
 
@@ -812,12 +958,12 @@ Updating Messsage
  */
 .tutor-updating-message:before{
     display: inline-block;
-    font: normal 20px/1 'dashicons';
+    font-family: 'tutor';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     vertical-align: top;
-    color: #f56e28;
-    content: "\f463";
+    /*color: #f56e28;*/
+    content: "\e91d";
     -webkit-animation: rotation 2s infinite linear;
     animation: rotation 2s infinite linear;
     margin-right: 6px;
