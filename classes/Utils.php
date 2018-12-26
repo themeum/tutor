@@ -2701,7 +2701,13 @@ class Utils {
 		return $pageposts;
 	}
 
-
+	/**
+	 * @param int $limit
+	 *
+	 * @return array|null|object
+	 *
+	 * Getting popular courses
+	 */
 	public function most_popular_courses($limit = 10){
 		global $wpdb;
 
