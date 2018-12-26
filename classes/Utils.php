@@ -2701,6 +2701,23 @@ class Utils {
 		return $pageposts;
 	}
 
+
+	public function most_popular_courses($limit = 10){
+		global $wpdb;
+
+		$courses = $wpdb->get_results("
+              SELECT COUNT(enrolled.ID) as total_enrolled,
+              enrolled.post_parent as course_id,
+              course.*
+              from {$wpdb->posts} enrolled
+              INNER JOIN {$wpdb->posts} course ON enrolled.post_parent = course.ID
+              WHERE enrolled.post_type = 'tutor_enrolled' AND enrolled.post_status = 'completed'
+              GROUP BY course_id
+              ORDER BY total_enrolled DESC LIMIT 0,{$limit} ;");
+
+		return $courses;
+	}
+
 }
 
 

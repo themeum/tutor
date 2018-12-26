@@ -63,11 +63,9 @@ jQuery(document).ready(function($){
         });
     });
 
-
     /**
      * Course and lesson sorting
      */
-
     function enable_sorting_topic_lesson(){
         if (jQuery().sortable) {
             $(".course-contents").sortable({
@@ -92,8 +90,6 @@ jQuery(document).ready(function($){
         }
     }
     enable_sorting_topic_lesson();
-
-
     function tutor_sorting_topics_and_lesson(){
         var topics = {};
         $('.tutor-topics-wrap').each(function(index, item){
@@ -120,7 +116,6 @@ jQuery(document).ready(function($){
 
         });
         $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
-        //console.log(topics);
     }
 
     $(document).on('click', '.create_new_topic_btn', function (e) {
@@ -327,7 +322,6 @@ jQuery(document).ready(function($){
         });
     });
 
-
     $(document).on( 'click', '.lesson_thumbnail_upload_btn',  function( event ){
         event.preventDefault();
         var $that = $(this);
@@ -358,7 +352,6 @@ jQuery(document).ready(function($){
         event.preventDefault();
 
         var $that = $(this);
-
         var content;
         var editor = tinyMCE.get('tutor_lesson_modal_editor');
         if (editor) {
@@ -390,13 +383,11 @@ jQuery(document).ready(function($){
                 $that.removeClass('tutor-updating-message');
             }
         });
-
     });
 
     /**
      * Lesson Video
      */
-
     $(document).on('change', '.tutor_lesson_video_source', function(e){
         var selector = $(this).val();
         $('[class^="video_source_wrap"]').hide();
@@ -433,7 +424,6 @@ jQuery(document).ready(function($){
         // Finally, open the modal on click
         frame.open();
     });
-
 
     //tutor_video_poster_upload_btn
     $(document).on( 'click', '.tutor_video_poster_upload_btn',  function( event ){
@@ -476,7 +466,6 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-
         var frame;
         // If the media frame already exists, reopen it.
         if ( frame ) {
@@ -508,18 +497,14 @@ jQuery(document).ready(function($){
         frame.open();
     });
 
-
     /**
      * Open Sidebar Menu
      */
-
-
     if (tutor_data.open_tutor_admin_menu){
         var $adminMenu = $('#adminmenu');
         $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').addClass('wp-has-current-submenu');
         $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').find('a.wp-has-submenu').removeClass('wp-has-current-submenu').addClass('wp-has-current-submenu');
     }
-
 
     /**
      * Add question answer for quiz
@@ -540,12 +525,10 @@ jQuery(document).ready(function($){
         var question_id = $that.closest('.single-question-item').attr('data-question-id');
         var data = {question_id: question_id, question_type : question_type, action: 'quiz_question_type_changed'};
 
-
         $.ajax({
             url : ajaxurl,
             type : 'POST',
             data : data,
-
             beforeSend: function () {
                 $that.closest('.single-question-item').find('.tutor-loading-icon-wrap').addClass('tutor-updating-message');
             },
@@ -572,7 +555,6 @@ jQuery(document).ready(function($){
         var $that = $(this);
         var question_id = $that.closest('.single-question-item').attr('data-question-id');
         var question_type = $that.closest('.quiz-question-form-wrap').find('select.question_type_field').val();
-
         var data = {question_id: question_id,  action: 'quiz_add_answer_to_question'};
 
         $.ajax({
@@ -588,15 +570,10 @@ jQuery(document).ready(function($){
 
                     //Hide add answer button if true false and 2 option exists
                     if (question_type === 'true_false' && $that.closest('.answer-entry-wrap').find('tr.answer-option-row').length >= 2){
-
-                        console.log(question_type, $that.closest('.answer-entry-wrap').find('tr.answer-option-row').length);
-
-
                         $that.closest('.add_answer_option_wrap').hide();
                     }else{
                         $that.closest('.add_answer_option_wrap').show();
                     }
-
                 }
             },
             complete: function () {
@@ -655,7 +632,6 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-        
         var data = $(this).find("select, textarea, input").serialize()+'&action=update_tutor_question';
         $.ajax({
             url : ajaxurl,
@@ -756,7 +732,6 @@ jQuery(document).ready(function($){
         });
     }
 
-
     /**
      * Quiz Modal
      */
@@ -820,7 +795,6 @@ jQuery(document).ready(function($){
             }
         });
     });
-
 
     $(document).on('change keyup', '.tutor-quiz-modal-wrap .tutor-modal-search-input', function(e){
         e.preventDefault();
@@ -941,7 +915,6 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var $modal = $('.tutor-modal-wrap');
-
         var course_id = $('#post_ID').val();
         var data = $modal.find('input').serialize()+'&course_id='+course_id+'&action=tutor_add_instructors_to_course';
 
@@ -968,7 +941,6 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-
         var course_id = $('#post_ID').val();
         var instructor_id = $that.closest('.added-instructor-item').attr('data-instructor-id');
 
@@ -984,12 +956,10 @@ jQuery(document).ready(function($){
         });
     });
 
-
     $(document).on('click', '.tutor-option-media-upload-btn', function(e){
         e.preventDefault();
 
         var $that = $(this);
-
         var frame;
         if ( frame ) {
             frame.open();
@@ -1009,7 +979,5 @@ jQuery(document).ready(function($){
         });
         frame.open();
     });
-
-
 
 });
