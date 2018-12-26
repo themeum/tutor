@@ -293,7 +293,7 @@ jQuery(document).ready(function($){
     $('.tutor-course-title').on('click', function () {
         var lesson = $(this).siblings('.tutor-course-lessons');
         $(this).closest('.tutor-course-topic').toggleClass('tutor-active');
-        lesson.slideToggle();
+        // lesson.slideToggle();
     });
 
     $('.tutor-topics-title').on('click', function () {
