@@ -2180,6 +2180,7 @@ Course question and answer
     line-height: 50px;
     color: #ffffff;
     font-size: 14px;
+    text-shadow: 0 0 5px #000;
 }
 .course-avg-rating-wrap .course-avg-rating {
     font-size: 76px;

@@ -11,6 +11,12 @@ class Assets{
 		add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
 
 		add_action( 'admin_head', array($this, 'tutor_add_mce_button'));
+
+
+
+		add_filter( 'get_the_generator_html', array($this, 'tutor_generator_tag'), 10, 2 );
+		add_filter( 'get_the_generator_xhtml', array($this, 'tutor_generator_tag'), 10, 2 );
+
 	}
 
 
@@ -98,6 +104,25 @@ class Assets{
 		array_push( $buttons, 'tutor_button' );
 		return $buttons;
 	}
-	
+
+
+	/**
+	 * Output generator tag to aid debugging.
+	 *
+	 * @param string $gen Generator.
+	 * @param string $type Type.
+	 * @return string
+	 */
+	function tutor_generator_tag( $gen, $type ) {
+		switch ( $type ) {
+			case 'html':
+				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . esc_attr( TUTOR_VERSION ) . '">';
+				break;
+			case 'xhtml':
+				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . esc_attr( TUTOR_VERSION ) . '" />';
+				break;
+		}
+		return $gen;
+	}
 	
 }
