@@ -61,7 +61,7 @@ $user_id = $get_user->ID;
                                 $count_reviews = tutor_utils()->count_reviews_wrote_by_user($user_id);
 
                                 $user = wp_get_current_user();
-                                $udata = get_userdata( $user->ID );
+                                $udata = get_userdata( $user_id );
                                 $registered = $udata->user_registered;
                                 $registered = date( "d M Y", strtotime( $registered ) );
 

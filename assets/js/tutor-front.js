@@ -99,7 +99,6 @@ jQuery(document).ready(function($){
         $.post(_tutorobject.ajaxurl, data);
     });
 
-
     $(document).on('click', '.tutor_submit_review_btn', function (e) {
         e.preventDefault();
         var $that = $(this);
@@ -144,7 +143,6 @@ jQuery(document).ready(function($){
         $('.tutor-add-question-wrap').toggle();
     });
 
-
     $(document).on('submit', '#tutor-ask-question-form', function(e){
         e.preventDefault();
 
@@ -169,7 +167,6 @@ jQuery(document).ready(function($){
             }
         });
     });
-
 
     $(document).on('submit', '.tutor-add-answer-form', function(e){
         e.preventDefault();
@@ -226,7 +223,6 @@ jQuery(document).ready(function($){
     /**
      * Quiz attempt
      */
-
     var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
     var attempt_settings = null;
     if ($tutor_quiz_time_update.length){
@@ -306,7 +302,6 @@ jQuery(document).ready(function($){
         var $that = $(this);
         var course_id = $that.attr('data-course-id');
 
-
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
@@ -330,10 +325,5 @@ jQuery(document).ready(function($){
                 $that.removeClass('updating-icon');
             }
         });
-
     });
-
-
-
 });
-

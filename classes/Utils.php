@@ -2652,7 +2652,6 @@ class Utils {
 		return false;
 	}
 
-
 	public function tutor_dashboard_url(){
 		$page_id = (int) tutor_utils()->get_option('student_dashboard');
 		$page_id = apply_filters('tutor_dashboard_url', $page_id);
@@ -2725,6 +2724,3 @@ class Utils {
 	}
 
 }
-
-
-
