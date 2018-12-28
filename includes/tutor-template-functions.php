@@ -262,6 +262,25 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
 		echo $html;
 	}
 }
+/**
+ * Get the course/post thumbnail src
+ */
+if ( ! function_exists('get_tutor_course_thumbnail_src')) {
+	function get_tutor_course_thumbnail_src() {
+		$post_id           = get_the_ID();
+		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
+
+		if ( $post_thumbnail_id ) {
+			$size = 'post-thumbnail';
+			$size = apply_filters( 'post_thumbnail_size', $size, $post_id );
+			$src = wp_get_attachment_image_url( $post_thumbnail_id, $size, false );
+		} else {
+			$src = tutor()->url . 'assets/images/placeholder.jpg';
+		}
+
+		return $src;
+	}
+}
 
 if ( ! function_exists('tutor_course_loop_meta')) {
 	function tutor_course_loop_meta() {
