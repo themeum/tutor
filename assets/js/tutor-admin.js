@@ -775,7 +775,7 @@ jQuery(document).ready(function($){
         var $modal = $('.tutor-modal-wrap');
 
         var quiz_for_post_id = $modal.attr('quiz-for-post-id');
-        var data = $modal.find('input').serialize()+'&action=tutor_add_quiz_to_post';
+        var data = $modal.find('input').serialize()+'&action=tutor_add_quiz_to_post&parent_post_id='+quiz_for_post_id;
 
         $.ajax({
             url : ajaxurl,
