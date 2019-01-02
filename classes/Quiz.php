@@ -101,6 +101,23 @@ class Quiz {
 			$output .= sprintf('No quiz available right now, please %s add some quiz %s', '<a href="'.$add_question_url.'" target="_blank">', '</a>'  );
 		}
 
+		ob_start();
+        ?>
+        <div class="tutor-option-field-row">
+            <div class="tutor-option-field-label">
+                <label for="">
+                    <?php _e('New quiz title', 'tutor'); ?>
+                </label>
+            </div>
+            <div class="tutor-option-field">
+                <input type="text" name="quiz_title" placeholder="<?php _e('Place quiz title to create new quiz', 'tutor'); ?>" >
+                <p class="desc"><?php _e('Provide a quiz title to create a quiz from here.'); ?></p>
+            </div>
+        </div>
+
+        <?php
+		$output .= ob_get_clean();
+
 		wp_send_json_success(array('output' => $output));
 	}
 
@@ -110,7 +127,7 @@ class Quiz {
 		$quiz_data = tutor_utils()->avalue_dot('quiz_for', $_POST);
 
 		$output = '';
-		$post_id = 0;
+		$post_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('parent_post_id', $_POST)) ;
 		if ($quiz_data){
 			foreach ($quiz_data as $post_id => $quiz_ids_a);
 
@@ -118,6 +135,16 @@ class Quiz {
 			foreach ($quiz_ids as $quiz_id){
 				$wpdb->update($wpdb->posts, array('post_parent' => $post_id), array('ID' => $quiz_id) );
 			}
+		}
+
+		$quiz_title = sanitize_text_field(tutor_utils()->avalue_dot('quiz_title', $_POST));
+		if ($quiz_title){
+			wp_insert_post(array(
+				'post_parent'   => $post_id,
+				'post_title'    => $quiz_title,
+                'post_type'     => 'tutor_quiz',
+                'post_status'   => 'publish',
+			));
 		}
 
 		if ($post_id) {

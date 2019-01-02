@@ -76,6 +76,9 @@ Option Field
     font-size: 14px;
     line-height: 1.3
 }
+.tutor-option-field-row:last-child {
+    border-bottom: none;
+}
 .tutor-option-field-row input[type=text],.tutor-option-field-row input[type=email],.tutor-option-field-row input[type=number],.tutor-option-field-row input[type=password], .tutor-option-field-row textarea, .tutor-option-field-row .tutor-field-type-slider {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -371,9 +374,6 @@ Meta Box Heading
 /**
 End Metabox Heading
  */
-
-
-
 
 .video_source_wrap_html5{
     width: 100px;

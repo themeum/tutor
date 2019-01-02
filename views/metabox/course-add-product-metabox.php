@@ -27,10 +27,16 @@
             <option value=""><?php _e('Select a Product'); ?></option>
 			<?php
 			foreach ($products as $product){
-				echo "<option value='{$product->ID}' ".selected($product->ID, $product_id)." >{$product->post_title}</option>";
+			    if ($product->ID == $product_id){
+				    echo "<option value='{$product->ID}' ".selected($product->ID, $product_id)." >{$product->post_title}</option>";
+			    }
+
+			    $usedProduct = tutor_utils()->product_belongs_with_course($product->ID);
+			    if ( ! $usedProduct){
+				    echo "<option value='{$product->ID}' ".selected($product->ID, $product_id)." >{$product->post_title}</option>";
+			    }
 			}
 			?>
-
         </select>
 
         <p class="desc">

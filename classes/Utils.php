@@ -2724,4 +2724,31 @@ class Utils {
 		return $courses;
 	}
 
+	/**
+	 * @param int $limit
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Get most rated courses lists
+	 */
+	public function most_rated_courses($limit = 10){
+		global $wpdb;
+
+		$result = $wpdb->get_results("
+		SELECT COUNT(comment_ID) AS total_rating, 
+		comment_ID, 
+		comment_post_ID,
+		course.*
+		FROM {$wpdb->comments}
+		INNER JOIN {$wpdb->posts} course ON comment_post_ID = course.ID 
+		WHERE {$wpdb->comments}.comment_type = 'tutor_course_rating' AND {$wpdb->comments}.comment_approved = 'approved'
+		GROUP BY comment_post_ID ORDER BY total_rating DESC  LIMIT 0,{$limit}
+		;");
+
+		if (is_array($result) && count($result)){
+			return $result;
+		}
+		return false;
+	}
+
 }
