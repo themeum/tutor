@@ -667,17 +667,27 @@ class Utils {
 		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
 
-		$lessons = $wpdb->get_var(" select main_posts.ID from {$wpdb->posts} main_posts 
+		$lesson_id = $wpdb->get_var("
+		SELECT post_id as lesson_id
+		FROM $wpdb->postmeta 
+		INNER JOIN {$wpdb->posts} ON post_id = {$wpdb->posts}.ID
+		WHERE meta_key = '_tutor_course_id_for_lesson' AND meta_value = {$course_id}
+		
+		 ORDER BY menu_order ASC LIMIT 1
+		");
+
+		/*
+		$lesson_id = $wpdb->get_var(" select main_posts.ID from {$wpdb->posts} main_posts 
 					WHERE  post_parent = 
 					(SELECT sub_posts.ID FROM {$wpdb->posts} sub_posts 
 					WHERE post_type = 'topics' AND 
 					sub_posts.post_parent = {$course_id} ORDER BY sub_posts.menu_order ASC LIMIT 1 )  
 					ORDER BY main_posts.menu_order ASC LIMIT 1 ;");
+		*/
 
-		if ($lessons){
-			return get_permalink($lessons);
+		if ($lesson_id){
+			return get_permalink($lesson_id);
 		}
-
 		return false;
 	}
 
