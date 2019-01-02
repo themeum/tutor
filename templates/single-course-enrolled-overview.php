@@ -13,7 +13,7 @@ get_header();
 do_action('tutor_course/single/enrolled/before/wrap');
 
 ?>
-    <div <?php tutor_post_class('tutor-single-overview-wrap'); ?>>
+    <div <?php tutor_post_class('tutor-single-overview-wrap tutor-page-wrap'); ?>>
         <div class="tutor-container">
             <div class="tutor-row">
                 <div class="tutor-col-8">

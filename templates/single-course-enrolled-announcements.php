@@ -14,7 +14,7 @@ do_action('tutor_course/single/enrolled/before/wrap');
 
 ?>
 
-<div <?php tutor_post_class('tutor-single-anouncement-wrap'); ?>>
+<div <?php tutor_post_class('tutor-single-anouncement-wrap tutor-page-wrap'); ?>>
     <div class="tutor-container">
         <div class="tutor-row">
             <div class="tutor-col-8">

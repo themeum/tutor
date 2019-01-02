@@ -15,7 +15,7 @@ $currentPost = $post;
 ?>
 
 <?php do_action('tutor_lesson/single/before/wrap'); ?>
-    <div <?php tutor_post_class('tutor-single-lesson-wrap'); ?>>
+    <div <?php tutor_post_class('tutor-single-lesson-wrap tutor-page-wrap'); ?>>
         <div class="tutor-container">
             <div class="tutor-row">
                 <div class="tutor-col-8">

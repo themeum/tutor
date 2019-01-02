@@ -2717,7 +2717,7 @@ class Utils {
               from {$wpdb->posts} enrolled
               INNER JOIN {$wpdb->posts} course ON enrolled.post_parent = course.ID 
               WHERE enrolled.post_type = 'tutor_enrolled' AND enrolled.post_status = 'completed'
-              AND course.post_status = 'publish'
+
               GROUP BY course_id
               ORDER BY total_enrolled DESC LIMIT 0,{$limit} ;");
 

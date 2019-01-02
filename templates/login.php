@@ -16,7 +16,7 @@ get_header();
 ?>
 
 <?php do_action('tutor/template/login/before/wrap'); ?>
-    <div <?php tutor_post_class(); ?>>
+    <div <?php tutor_post_class('tutor-page-wrap'); ?>>
 
         <div class="tutor-template-segment tutor-login-wrap">
             <div class="tutor-login-title">

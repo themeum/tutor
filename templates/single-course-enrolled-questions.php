@@ -14,7 +14,7 @@ get_header();
 
 <?php do_action( 'tutor_course/single/enrolled/before/wrap' ); ?>
 
-	<div <?php tutor_post_class('tutor-question-answare-wrap'); ?>>
+	<div <?php tutor_post_class('tutor-question-answare-wrap tutor-page-wrap'); ?>>
 		<div class="tutor-container">
 			<div class="tutor-row">
 				<div class="tutor-col-8">

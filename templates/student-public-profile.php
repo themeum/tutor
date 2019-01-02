@@ -18,9 +18,9 @@ $user_id = $get_user->ID;
 
 <?php do_action('tutor_student/before/wrap'); ?>
 
-    <div <?php tutor_post_class('tutor-full-width-student-profile'); ?>>
+    <div <?php tutor_post_class('tutor-full-width-student-profile tutor-page-wrap'); ?>>
 
-        <div class="tutor-student-dashboard-leadinfo">
+        <div class="tutor-student-dashboard-leadinfo container">
             <div class="tutor-container">
 				<?php
                     $user_data = get_userdata($user_id);
