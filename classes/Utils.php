@@ -2724,6 +2724,13 @@ class Utils {
 		return $courses;
 	}
 
+	/**
+	 * @param int $limit
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Get most rated courses lists
+	 */
 	public function most_rated_courses($limit = 10){
 		global $wpdb;
 
