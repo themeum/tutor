@@ -942,6 +942,28 @@ if ( ! function_exists('tutor_lessons_as_list')) {
 	}
 }
 
+/**
+ * @param bool $echo
+ *
+ * @return mixed
+ *
+ * Render Lesson Main Content
+ * @since v.1.0.0
+ */
+if ( ! function_exists('tutor_lesson_content')) {
+	function tutor_lesson_content( $echo = true ) {
+		ob_start();
+		tutor_load_template( 'single.lesson.content' );
+		$output = apply_filters( 'tutor_lesson/single/content', ob_get_clean() );
+
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+}
+
 if ( ! function_exists('tutor_lesson_mark_complete_html')) {
 	function tutor_lesson_mark_complete_html( $echo = true ) {
 		ob_start();
@@ -1122,8 +1144,6 @@ if ( ! function_exists('get_tutor_course_tags')){
 		return $terms;
 	}
 }
-
-
 
 if ( ! function_exists('tutor_course_tags_html')) {
     function tutor_course_tags_html( $echo = true ) {

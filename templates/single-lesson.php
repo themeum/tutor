@@ -22,11 +22,8 @@ $currentPost = $post;
 		            <?php tutor_lessons_as_list(); ?>
                 </div>
                 <div class="tutor-col-8">
-                    <div id="tutor-single-lesson-entry-content tutor-single-lesson-entry-content-<?php the_ID(); ?>">
-	                    <?php tutor_lesson_video(); ?>
-	                    <?php the_content(); ?>
-	                    <?php get_tutor_posts_attachments(); ?>
-	                    <?php tutor_lesson_mark_complete_html(); ?>
+                    <div id="tutor-single-lesson-entry-content" class="tutor-single-lesson-entry-content-<?php the_ID(); ?>">
+                        <?php tutor_lesson_content(); ?>
                     </div>
                 </div>
             </div>

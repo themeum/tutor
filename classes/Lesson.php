@@ -19,7 +19,6 @@ class Lesson extends Tutor_Base {
 		add_action('wp_ajax_tutor_modal_create_or_update_lesson', array($this, "tutor_modal_create_or_update_lesson"));
 
 		add_filter('get_sample_permalink', array($this, 'change_lesson_permalink'), 10, 2);
-
 		add_action('admin_init', array($this, 'flush_rewrite_rules'));
 
 		/**
@@ -31,6 +30,8 @@ class Lesson extends Tutor_Base {
 
 		//Frontend Action
 		add_action('template_redirect', array($this, 'mark_lesson_complete'));
+
+		add_action('wp_ajax_tutor_render_lesson_content', array($this, "tutor_render_lesson_content"));
 	}
 
 	/**
@@ -287,6 +288,24 @@ class Lesson extends Tutor_Base {
 
 
 		wp_redirect(get_the_permalink($lesson_id));
+	}
+
+	/**
+	 * Render the lesson content
+	 */
+	public function tutor_render_lesson_content(){
+		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
+
+		ob_start();
+		global $post;
+
+		$post = get_post($lesson_id);
+		setup_postdata($post);
+		tutor_lesson_content();
+		wp_reset_postdata();
+
+		$html = ob_get_clean();
+		wp_send_json_success(array('html' => $html));
 	}
 
 }

@@ -318,7 +318,6 @@ jQuery(document).ready(function($){
                     }
                 }else{
                     window.location = data.data.redirect_to;
-
                 }
             },
             complete: function () {
@@ -326,4 +325,37 @@ jQuery(document).ready(function($){
             }
         });
     });
+
+    $(document).on('click', '.tutor-single-lesson-a', function (e) {
+        e.preventDefault();
+
+        var $that = $(this);
+        var lesson_id = $that.attr('data-lesson-id');
+        var $wrap = $('#tutor-single-lesson-entry-content');
+
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: {lesson_id : lesson_id, 'action': 'tutor_render_lesson_content'},
+            beforeSend: function () {
+                var page_title = $that.find('.lesson_title').text();
+                $('head title').text(page_title);
+                window.history.pushState('obj', page_title, $that.attr('href'));
+                $wrap.addClass('loading-lesson');
+                $('.tutor-single-lesson-items').removeClass('active');
+                $that.closest('.tutor-single-lesson-items').addClass('active');
+            },
+            success: function (data) {
+                $wrap.html(data.data.html);
+
+                videoPlayer.init();
+            },
+            complete: function () {
+                $wrap.removeClass('loading-lesson');
+            }
+        });
+    });
+
+    //tutor-single-lesson-a
+
 });

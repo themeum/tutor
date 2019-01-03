@@ -94,7 +94,7 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
                                 ?>
 
                                 <div class="tutor-single-lesson-items <?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
-                                    <a href="<?php the_permalink(); ?>">
+                                    <a href="<?php the_permalink(); ?>" class="tutor-single-lesson-a" data-lesson-id="<?php the_ID(); ?>">
 
                                         <?php
                                         $tutor_lesson_type_icon = $play_time ? 'youtube' : 'document';
