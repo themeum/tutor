@@ -1262,14 +1262,15 @@ Instructor
 .tutor-progress-bar .tutor-progress-filled::after{
     content: '';
     position: absolute;
-    height: 10px;
-    width: 10px;
+    height: 20px;
+    width: 20px;
     border: 5px solid #1B52D8;
     border-radius: 50%;
     background: #fff;
     left: var(--tutor-progress-left);
     transform: translateY(-50%) translateX(-50%);
     top: 50%;
+    box-sizing: border-box;
 }
 
 .tutor-progress-percent{

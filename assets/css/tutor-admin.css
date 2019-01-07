@@ -781,7 +781,7 @@ Quiz Modal
 .tutor-modal-wrap.show {
     display: block;
     opacity: 1;
-    z-index: 99999;
+    z-index: 999999;
 }
 .tutor-modal-wrap.loading .tutor-modal-content:before {
     position: absolute;

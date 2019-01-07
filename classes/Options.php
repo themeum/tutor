@@ -153,7 +153,7 @@ class Options {
 							'courses_per_page' => array(
 								'type'      => 'slider',
 								'label'     => __('Courses Per Page', 'tutor'),
-								'default'   => '10',
+								'default'   => '12',
 								'options'   => array('min'=> 1, 'max' => 20),
 								'desc'      => __('Define how many courses you want to show per page', 'tutor'),
 							),
