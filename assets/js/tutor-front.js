@@ -8,17 +8,19 @@ jQuery(document).ready(function($){
 
     const videoPlayer = {
         nonce_key : _tutorobject.nonce_key,
-        video_track_data : JSON.parse($('#tutor_video_tracking_information').val()),
+        video_track_data : $('#tutor_video_tracking_information').val(),
         track_player : function(){
             var that = this;
+            
+            var video_data = this.video_track_data ? JSON.parse(this.video_track_data) : {};
 
             if (typeof Plyr !== 'undefined') {
                 const player = new Plyr('#tutorPlayer');
 
                 player.on('ready', function(event){
                     const instance = event.detail.plyr;
-                    if (that.video_track_data.best_watch_time > 0) {
-                        instance.media.currentTime = that.video_track_data.best_watch_time;
+                    if (video_data.best_watch_time > 0) {
+                        instance.media.currentTime = video_data.best_watch_time;
                     }
                     that.sync_time(instance);
                 });
@@ -48,7 +50,9 @@ jQuery(document).ready(function($){
             /**
              * TUTOR is sending about video playback information to server.
              */
-            var data = {action: 'sync_video_playback', currentTime : instance.currentTime, duration:instance.duration,  post_id : this.video_track_data.post_id};
+            var video_data = this.video_track_data ? JSON.parse(this.video_track_data) : {};
+
+            var data = {action: 'sync_video_playback', currentTime : instance.currentTime, duration:instance.duration,  post_id : video_data.post_id};
             data[this.nonce_key] = _tutorobject[this.nonce_key];
 
             var data_send = data;
@@ -59,6 +63,7 @@ jQuery(document).ready(function($){
             $.post(_tutorobject.ajaxurl, data_send);
         },
         init: function(){
+            console.log('VideoExists');
             this.track_player();
         }
     };
@@ -67,7 +72,9 @@ jQuery(document).ready(function($){
      * Fire TUTOR video
      * @since v.1.0.0
      */
-    videoPlayer.init();
+    if ($('#tutorPlayer').length){
+        videoPlayer.init();
+    }
 
     $(document).on('change keyup paste', '.tutor_user_name', function(){
         $(this).val(tutor_slugify($(this).val()));
