@@ -75,13 +75,19 @@ class Rewrite_Rules extends Tutor_Base {
 		$post = get_post($id);
 
 		global $wpdb;
+
+		$course_base_slug = 'sample-course';
+
 		if( is_object($post) && $post->post_type == $this->lesson_post_type){
 			//Lesson Permalink
 			$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
 
 			if ($course_id){
 				$course = $wpdb->get_row("select {$wpdb->posts}.post_name from {$wpdb->posts} where ID = {$course_id} ");
-				return home_url("/{$this->course_post_type}/".$course->post_name."/{$this->lesson_base_permalink}/". $post->post_name.'/');
+				if ($course){
+					$course_base_slug = $course->post_name;
+				}
+				return home_url("/{$this->course_post_type}/{$course_base_slug}/{$this->lesson_base_permalink}/". $post->post_name.'/');
 			}else{
 				return home_url("/{$this->course_post_type}/sample-course/{$this->lesson_base_permalink}/". $post->post_name.'/');
 			}
