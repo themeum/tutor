@@ -165,29 +165,29 @@
     <input type="hidden" id="tutor_topics_lessons_sorting" name="tutor_topics_lessons_sorting" value="" />
 </div>
 
-<!--
-<?php /*if (count($query_lesson->posts)){ */?>
+
+<?php if (count($query_lesson->posts)){ ?>
     <div class="tutor-untopics-lessons">
-        <h3><?php /*_e('Un-assigned lessons'); */?></h3>
+        <h3><?php _e('Un-assigned lessons'); ?></h3>
 
         <div class="tutor-lessons">
-            <div class="drop-lessons" >
+            <!--<div class="drop-lessons" >
                 <p><i class="dashicons dashicons-upload"></i> <?php /*_e('Drop any unassigned lesson here', 'tutor'); */?></p>
-            </div>
+            </div>-->
 			<?php
-/*			foreach ($query_lesson->posts as $lesson){
+			foreach ($query_lesson->posts as $lesson){
 				if ( ! in_array($lesson->ID, $attached_lesson_ids)) {
-					*/?>
-                    <div id="tutor-lesson-<?php /*echo $lesson->ID; */?>" class="tutor-lesson tutor-lesson-<?php /*echo $lesson->ID; */?>">
+					?>
+                    <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="tutor-lesson tutor-lesson-<?php echo $lesson->ID; ?>">
                         <div class="tutor-lesson-top">
                             <i class="tutor-icon-move"></i>
-							<?php /*edit_post_link( $lesson->post_title, null, null, $lesson->ID ); */?>
+							<?php edit_post_link( $lesson->post_title, null, null, $lesson->ID ); ?>
                         </div>
                     </div>
 					<?php
-/*				}
+				}
 			}
-			*/?>
+			?>
         </div>
     </div>
---><?php /*} */?>
+<?php } ?>

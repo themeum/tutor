@@ -65,7 +65,6 @@ class Assets{
 			$localize_data['best_watch_time'] = 0;
 
 			$best_watch_time = tutor_utils()->get_lesson_reading_info(get_the_ID(), 0, 'video_best_watched_time');
-
 			if ($best_watch_time > 0){
 				$localize_data['best_watch_time'] = $best_watch_time;
 			}

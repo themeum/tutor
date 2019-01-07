@@ -8,15 +8,17 @@ jQuery(document).ready(function($){
 
     const videoPlayer = {
         nonce_key : _tutorobject.nonce_key,
+        video_track_data : JSON.parse($('#tutor_video_tracking_information').val()),
         track_player : function(){
             var that = this;
+
             if (typeof Plyr !== 'undefined') {
                 const player = new Plyr('#tutorPlayer');
 
                 player.on('ready', function(event){
                     const instance = event.detail.plyr;
-                    if (_tutorobject.best_watch_time > 0) {
-                        instance.media.currentTime = _tutorobject.best_watch_time;
+                    if (that.video_track_data.best_watch_time > 0) {
+                        instance.media.currentTime = that.video_track_data.best_watch_time;
                     }
                     that.sync_time(instance);
                 });
@@ -46,7 +48,7 @@ jQuery(document).ready(function($){
             /**
              * TUTOR is sending about video playback information to server.
              */
-            var data = {action: 'sync_video_playback', currentTime : instance.currentTime, duration:instance.duration,  post_id : _tutorobject.post_id};
+            var data = {action: 'sync_video_playback', currentTime : instance.currentTime, duration:instance.duration,  post_id : this.video_track_data.post_id};
             data[this.nonce_key] = _tutorobject[this.nonce_key];
 
             var data_send = data;

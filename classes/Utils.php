@@ -754,8 +754,7 @@ class Utils {
 		$post_id = $this->get_post_id($post_id);
 		$attachments_arr = array();
 		$attachments = maybe_unserialize(get_post_meta($post_id, '_tutor_attachments', true));
-		
-		
+
 		$font_icons = apply_filters('tutor_file_types_icon', array(
 			'archive',
 			'audio',
@@ -768,7 +767,6 @@ class Utils {
 			'video',
 			'image',
 		));
-		
 
 		if ( is_array($attachments) && count($attachments)) {
 			foreach ( $attachments as $attachment ) {
