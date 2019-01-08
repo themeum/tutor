@@ -212,7 +212,9 @@ class Lesson extends Tutor_Base {
 			$is_course = get_post_meta(get_the_ID(), '_tutor_course_id_for_lesson', true);
 			if ($is_course){
 				$course = get_post($is_course);
-				$sample_course = $course->post_name;
+				if ($course){
+					$sample_course = $course->post_name;
+				}
 			}
 
 			$new_course_base = $uri_base."course/{$sample_course}/lesson/%pagename%/";

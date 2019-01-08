@@ -88,25 +88,25 @@
 					?>
 
 
-                    <?php
-                    /*
+					<?php
+					/*
 					if (count($query_lesson->posts) > count($attached_lesson_ids)){
 
 
 						?>
-                        <div class="drop-lessons">
-                            <p>
-                                <i class="dashicons dashicons-upload"></i>
+						<div class="drop-lessons">
+							<p>
+								<i class="dashicons dashicons-upload"></i>
 								<?php echo __('Drop lesson here or', 'tutor'); ?>
 
-                                <a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" ><?php _e('Create one'); ?></a>
-                            </p>
-                        </div>
+								<a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" ><?php _e('Create one'); ?></a>
+							</p>
+						</div>
 					<?php }else{
 						?>
-                        <div class="create-new-lesson-wrap">
-                            <a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" ><?php _e('Create new lesson', 'tutor'); ?></a>
-                        </div>
+						<div class="create-new-lesson-wrap">
+							<a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" ><?php _e('Create new lesson', 'tutor'); ?></a>
+						</div>
 						<?php
 					}
 					   */ ?>
@@ -166,28 +166,33 @@
 </div>
 
 
-<?php if (count($query_lesson->posts)){ ?>
-    <div class="tutor-untopics-lessons">
-        <h3><?php _e('Un-assigned lessons'); ?></h3>
+<?php if (count($query_lesson->posts)) {
+	if ( count( $query_lesson->posts ) > count( $attached_lesson_ids ) ) {
+		?>
+        <div class="tutor-untopics-lessons">
+            <h3><?php _e( 'Un-assigned lessons' ); ?></h3>
 
-        <div class="tutor-lessons">
-            <!--<div class="drop-lessons" >
-                <p><i class="dashicons dashicons-upload"></i> <?php /*_e('Drop any unassigned lesson here', 'tutor'); */?></p>
-            </div>-->
-			<?php
-			foreach ($query_lesson->posts as $lesson){
-				if ( ! in_array($lesson->ID, $attached_lesson_ids)) {
-					?>
-                    <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="tutor-lesson tutor-lesson-<?php echo $lesson->ID; ?>">
-                        <div class="tutor-lesson-top">
-                            <i class="tutor-icon-move"></i>
-							<?php edit_post_link( $lesson->post_title, null, null, $lesson->ID ); ?>
+            <div class="tutor-lessons">
+                <!--<div class="drop-lessons" >
+                <p><i class="dashicons dashicons-upload"></i> <?php /*_e('Drop any unassigned lesson here', 'tutor'); */
+				?></p>
+                </div>-->
+				<?php
+				foreach ( $query_lesson->posts as $lesson ) {
+					if ( ! in_array( $lesson->ID, $attached_lesson_ids ) ) {
+						?>
+                        <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="tutor-lesson tutor-lesson-<?php echo $lesson->ID; ?>">
+                            <div class="tutor-lesson-top">
+                                <i class="tutor-icon-move"></i>
+								<?php edit_post_link( $lesson->post_title, null, null, $lesson->ID ); ?>
+                            </div>
                         </div>
-                    </div>
-					<?php
+						<?php
+					}
 				}
-			}
-			?>
+				?>
+            </div>
         </div>
-    </div>
-<?php } ?>
+	<?php }
+}
+?>

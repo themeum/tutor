@@ -63,7 +63,6 @@ jQuery(document).ready(function($){
             $.post(_tutorobject.ajaxurl, data_send);
         },
         init: function(){
-            console.log('VideoExists');
             this.track_player();
         }
     };
