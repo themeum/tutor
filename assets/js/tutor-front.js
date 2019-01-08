@@ -51,12 +51,10 @@ jQuery(document).ready(function($){
              * TUTOR is sending about video playback information to server.
              */
             var video_data = this.video_track_data ? JSON.parse(this.video_track_data) : {};
-
             var data = {action: 'sync_video_playback', currentTime : instance.currentTime, duration:instance.duration,  post_id : video_data.post_id};
             data[this.nonce_key] = _tutorobject[this.nonce_key];
 
             var data_send = data;
-
             if(options){
                 data_send = Object.assign(data, options);
             }

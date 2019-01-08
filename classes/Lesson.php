@@ -17,6 +17,7 @@ class Lesson extends Tutor_Base {
 
 		add_action('wp_ajax_tutor_load_edit_lesson_modal', array($this, "tutor_load_edit_lesson_modal"));
 		add_action('wp_ajax_tutor_modal_create_or_update_lesson', array($this, "tutor_modal_create_or_update_lesson"));
+		add_action('wp_ajax_tutor_delete_lesson_by_id', array($this, "tutor_delete_lesson_by_id"));
 
 		add_filter('get_sample_permalink', array($this, 'change_lesson_permalink'), 10, 2);
 		add_action('admin_init', array($this, 'flush_rewrite_rules'));
@@ -167,8 +168,8 @@ class Lesson extends Tutor_Base {
 	}
 
 	public function tutor_modal_create_or_update_lesson(){
-		$lesson_id = (int) tutor_utils()->avalue_dot('lesson_id', $_POST);
-		$_lesson_thumbnail_id = (int) tutor_utils()->avalue_dot('_lesson_thumbnail_id', $_POST);
+		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
+		$_lesson_thumbnail_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('_lesson_thumbnail_id', $_POST));
 
 		$title = sanitize_text_field($_POST['lesson_title']);
 		$lesson_content = wp_kses_post($_POST['lesson_content']);
@@ -190,6 +191,16 @@ class Lesson extends Tutor_Base {
 		$course_contents = ob_get_clean();
 
 		wp_send_json_success(array('course_contents' => $course_contents));
+	}
+
+	/**
+	 * Delete Lesson from course builder
+	 */
+	public function tutor_delete_lesson_by_id(){
+		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
+		wp_delete_post($lesson_id, true);
+		delete_post_meta($lesson_id, '_tutor_course_id_for_lesson');
+		wp_send_json_success();
 	}
 
 

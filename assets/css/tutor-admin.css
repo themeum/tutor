@@ -163,6 +163,9 @@ Group Field Option
     color: #777777;
     text-align: center;
 }
+.tutor-lessons.ui-sortable {
+    min-height: 20px;
+}
 #tutor-course-topics .drop-lessons p{
     margin: 0;
 }
@@ -286,10 +289,6 @@ Group Field Option
 }
 .topic-delete-btn a{
     padding: 0 10px;
-}
-.topic-delete-btn a:hover {
-    color: #ffffff;
-    background-color: #ff0000;
 }
 .topic-delete-btn .dashicons{
     width: 12px;

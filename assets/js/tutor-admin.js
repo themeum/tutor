@@ -346,6 +346,33 @@ jQuery(document).ready(function($){
     });
 
     /**
+     * Delete Lesson from course builder
+     */
+    $(document).on('click', '.tutor-delete-lesson-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var lesson_id = $that.attr('data-lesson-id');
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {lesson_id : lesson_id, action: 'tutor_delete_lesson_by_id'},
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+                    $that.closest('.tutor-lesson').remove();
+                }
+            },
+            complete: function () {
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+    /**
      * Lesson Update or Create Modal
      */
     $(document).on( 'click', '.update_lesson_modal_btn',  function( event ){
