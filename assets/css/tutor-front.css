@@ -484,14 +484,14 @@ div[class*="tutor-course-col"] {
 }
 
 .tutor-loop-course-footer i{
-    font-size: 20px;
+    font-size: 15px;
     color: #8C94A8;
     line-height: 25px;
     vertical-align: middle;
-    margin-right: 5px;
+    margin-right: 3px;
 }
 .tutor-loop-course-footer i:not(:first-child){
-    margin-left: 18px;
+    margin-left: 12px;
 }
 
 .tutor-loop-course-footer span{
@@ -502,11 +502,11 @@ div[class*="tutor-course-col"] {
 .tutor-course-loop-price{
     float: right;
     color: #4B5981;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
 }
 .tutor-course-loop-price .price del{
-    font-size: 14px;
+    font-size: 12px;
     opacity: 1;
     font-weight: 400;
 }
