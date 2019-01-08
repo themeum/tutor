@@ -722,6 +722,7 @@ Topicstutor-course-title
     padding: 20px;
     margin-bottom: 10px;
 }
+.single_add_to_cart_button,
 a.tutor-button,
 .tutor-button,
 a.tutor-btn,
@@ -1290,7 +1291,7 @@ Instructor
     background: #1B52D8;
     border-radius: 3px;
     text-transform: uppercase;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .tutor-price-preview-box .tutor-course-purchase-box button i{
