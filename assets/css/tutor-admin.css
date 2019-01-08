@@ -197,6 +197,9 @@ Group Field Option
 .tutor-topics-wrap, .course-move-handle{
     margin-right: 5px;
 }
+.course-move-handle{
+    cursor: row-resize;
+}
 .new-topic-btn-wrap {
     padding: 20px;
 }
@@ -218,6 +221,7 @@ Group Field Option
     border: none;
     outline: none;
 }
+.tutor_btn_lg:focus,
 .tutor_btn_lg:hover{
     background-color: #2149C9;
     color: #ffffff;
@@ -289,6 +293,9 @@ Group Field Option
 }
 .topic-delete-btn a{
     padding: 0 10px;
+}
+.topic-delete-btn a:hover {
+    color: #ff0000;
 }
 .topic-delete-btn .dashicons{
     width: 12px;
