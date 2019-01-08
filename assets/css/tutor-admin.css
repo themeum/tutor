@@ -218,6 +218,7 @@ Group Field Option
     border: none;
     outline: none;
 }
+.tutor_btn_lg:focus,
 .tutor_btn_lg:hover{
     background-color: #2149C9;
     color: #ffffff;
