@@ -912,6 +912,20 @@ class Utils {
 			}
 		}
 
+		if ($videoSource !== 'html5'){
+			$video = maybe_unserialize(get_post_meta($lesson_id, '_video', true));
+
+			$runtimeHours = tutor_utils()->avalue_dot('runtime.hours', $video);
+			$runtimeMinutes = tutor_utils()->avalue_dot('runtime.minutes', $video);
+			$runtimeSeconds = tutor_utils()->avalue_dot('runtime.seconds', $video);
+
+			$runtimeHours = $runtimeHours ? $runtimeHours : '00';
+			$runtimeMinutes = $runtimeMinutes ? $runtimeMinutes : '00';
+			$runtimeSeconds = $runtimeSeconds ? $runtimeSeconds : '00';
+
+			$info['playtime'] = "$runtimeHours:$runtimeMinutes:$runtimeSeconds";
+		}
+
 		$info = array_merge($info, $video);
 
 		return (object) $info;
