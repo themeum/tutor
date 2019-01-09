@@ -351,6 +351,10 @@ jQuery(document).ready(function($){
     $(document).on('click', '.tutor-delete-lesson-btn', function(e){
         e.preventDefault();
 
+        if( ! confirm('Are you sure?')){
+            return;
+        }
+
         var $that = $(this);
         var lesson_id = $that.attr('data-lesson-id');
 
