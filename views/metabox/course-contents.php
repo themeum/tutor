@@ -186,10 +186,18 @@
 					if ( ! in_array( $lesson->ID, $attached_lesson_ids ) ) {
 						?>
                         <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="tutor-lesson tutor-lesson-<?php echo $lesson->ID; ?>">
+
+
                             <div class="tutor-lesson-top">
                                 <i class="tutor-icon-move"></i>
-								<?php edit_post_link( $lesson->post_title, null, null, $lesson->ID ); ?>
+                                <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>"><?php echo $lesson->post_title; ?> </a>
+
+                                <a href="<?php echo admin_url("post.php?post={$lesson->ID}&action=edit"); ?>"><i class="tutor-icon-pencil"></i> </a>
+
+                                <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+
                             </div>
+
                         </div>
 						<?php
 					}

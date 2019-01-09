@@ -31,7 +31,11 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
         </span>
     </div>
 
+	<?php do_action('tutor_course/single/title/before'); ?>
     <h1 class="tutor-course-header-h1"><?php the_title(); ?></h1>
+
+	<?php do_action('tutor_course/single/title/after'); ?>
+	<?php do_action('tutor_course/single/lead_meta/before'); ?>
 
     <div class="tutor-single-course-meta tutor-meta-top">
         <ul>
@@ -95,6 +99,9 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
         </ul>
     </div>
 
+	<?php do_action('tutor_course/single/lead_meta/after'); ?>
+	<?php do_action('tutor_course/single/excerpt/before'); ?>
+
 	<?php
 	$excerpt = tutor_get_the_excerpt();
 
@@ -107,4 +114,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 		<?php
 	}
 	?>
+
+	<?php do_action('tutor_course/single/excerpt/after'); ?>
+
 </div>
