@@ -2273,10 +2273,41 @@ Course question and answer
     transition: 300ms;
 
 }
-
 .tutor-course-tags a:hover{
     color: #000;
 }
 .certificate-download-btn{
     margin-top: 20px;
+}
+
+/**
+Addon Support
+Course Prerequisites
+ */
+.course-prerequisites-warning {
+    background: #fff3dc;
+    padding: 15px;
+    margin-bottom: 20px;
+    color: #5f5b49;
+}
+ul.prerequisites-course-lists{
+    list-style: none;
+}
+a.prerequisites-course-item {
+    background-color: #f0f0f0;
+    display: flex;
+    margin-bottom: 2px;
+    padding: 10px;
+    position: relative;
+}
+a.prerequisites-course-item span.prerequisites-course-feature-image{
+    max-width: 60px;
+    margin-right: 10px;
+}
+.is-complete-prerequisites-course {
+    position: absolute;
+    background: #51d849;
+    color: #fff;
+    padding: 0 5px;
+    font-size: 12px;
 }

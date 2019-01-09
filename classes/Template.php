@@ -164,9 +164,9 @@ class Template extends Tutor_Base {
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $this->lesson_post_type){
 			$page_id = get_the_ID();
 
-			$required_login_to_view_lesson = apply_filters('tutor_lesson/required_login_to_view_lesson', true, $page_id);
-			setup_postdata($page_id);
+			do_action('tutor_lesson_load_before', $template);
 
+			setup_postdata($page_id);
 
 			if (is_user_logged_in()){
 				$is_course_enrolled = tutor_utils()->is_course_enrolled_by_lesson();
@@ -178,15 +178,11 @@ class Template extends Tutor_Base {
 					$template = tutor_get_template( 'single.lesson.required-enroll' );
 				}
 			}else{
-				if ($required_login_to_view_lesson){
-					$template = tutor_get_template('login');
-				}else{
-					$template = tutor_get_template( 'single-preview-lesson' );
-				}
+				$template = tutor_get_template('login');
 			}
 			wp_reset_postdata();
 
-			return $template;
+			return apply_filters('tutor_lesson_template', $template);
 		}
 		return $template;
 	}

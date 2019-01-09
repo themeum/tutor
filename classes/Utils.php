@@ -685,11 +685,11 @@ class Utils {
 		");
 
 		/*
-		$lesson_id = $wpdb->get_var(" select main_posts.ID from {$wpdb->posts} main_posts 
-					WHERE  post_parent = 
-					(SELECT sub_posts.ID FROM {$wpdb->posts} sub_posts 
-					WHERE post_type = 'topics' AND 
-					sub_posts.post_parent = {$course_id} ORDER BY sub_posts.menu_order ASC LIMIT 1 )  
+		$lesson_id = $wpdb->get_var(" select main_posts.ID from {$wpdb->posts} main_posts
+					WHERE  post_parent =
+					(SELECT sub_posts.ID FROM {$wpdb->posts} sub_posts
+					WHERE post_type = 'topics' AND
+					sub_posts.post_parent = {$course_id} ORDER BY sub_posts.menu_order ASC LIMIT 1 )
 					ORDER BY main_posts.menu_order ASC LIMIT 1 ;");
 		*/
 
@@ -783,29 +783,29 @@ class Utils {
 				$ext       = $file_type['ext'];
 				$title = get_the_title($attachment);
 
-				$size_bytes = filesize( get_attached_file( $attachment ));
-				$size = size_format( $size_bytes, 2 );
-
-				$type = wp_ext2type($ext);
+				$file_path = get_attached_file( $attachment );
+				$size_bytes = file_exists($file_path) ? filesize( $file_path ) : 0;
+				$size       = size_format( $size_bytes, 2 );
+				$type = wp_ext2type( $ext );
 
 				$icon = 'default';
-				if ($type && in_array($type, $font_icons)){
+				if ( $type && in_array( $type, $font_icons ) ) {
 					$icon = $type;
 				}
 
 				$data = array(
-					'post_id'       => $post_id,
-					'id'            => $attachment,
-					'url'           => $url,
-					'name'          => $title.'.'.$ext,
-					'title'         => $title,
-					'ext'           => $ext,
-					'size'          => $size,
-					'size_bytes'    => $size_bytes,
-					'icon'          => $icon,
+					'post_id'    => $post_id,
+					'id'         => $attachment,
+					'url'        => $url,
+					'name'       => $title . '.' . $ext,
+					'title'      => $title,
+					'ext'        => $ext,
+					'size'       => $size,
+					'size_bytes' => $size_bytes,
+					'icon'       => $icon,
 				);
 
-				$attachments_arr[] = (object) apply_filters('tutor/posts/attachments', $data);
+				$attachments_arr[] = (object) apply_filters( 'tutor/posts/attachments', $data );
 			}
 		}
 
@@ -2435,7 +2435,7 @@ class Utils {
 
 	public function get_attempt($attempt_id = 0){
 		global $wpdb;
-		
+
 		$attempt = $wpdb->get_row("SELECT 
  			comment_ID,
  			comment_post_ID,
@@ -2655,7 +2655,7 @@ class Utils {
 			'courses_taken'     => __('Courses Taken', 'tutor'),
 			'reviews_wrote'     => __('Reviews Written', 'tutor'),
 		);
-		
+
 		return apply_filters('tutor_public_profile/permalinks', $permalinks);
 	}
 

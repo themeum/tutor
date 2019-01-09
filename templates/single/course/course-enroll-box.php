@@ -10,10 +10,7 @@
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
-
-
 ?>
-
 
 <div class="tutor-price-preview-box">
     <div class="tutor-price-box-thumbnail">
@@ -23,12 +20,13 @@ if ( ! defined( 'ABSPATH' ) )
 		} else{
 			get_tutor_course_thumbnail();
 		}
-
 		?>
     </div>
+
+    <?php do_action('tutor_course/single/enroll_box/after_thumbnail'); ?>
+
 	<?php tutor_course_price(); ?>
 	<?php tutor_course_material_includes_html(); ?>
     <?php tutor_single_course_add_to_cart(); ?>
-
 
 </div> <!-- tutor-price-preview-box -->
