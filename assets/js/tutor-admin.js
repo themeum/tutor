@@ -193,6 +193,9 @@ jQuery(document).ready(function($){
      * Confirmation for deleting Topic
      */
     $(document).on('click', '.topic-delete-btn a', function(e){
+        var topic_id = $(this).attr('data-topic-id');
+        console.log(topic_id);
+
         if ( ! confirm('Are you sure to delete?')){
             e.preventDefault();
         }

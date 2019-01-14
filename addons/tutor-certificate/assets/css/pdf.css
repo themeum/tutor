@@ -1,0 +1,113 @@
+/* Main Body */
+@page {
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+body {
+    color: #333333;
+    margin: 0;
+    font-family: 'Nunito';
+    font-weight: normal;
+    font-size: 9pt;
+    line-height: 100%;
+}
+h1, h2, h3, h4 {
+    font-weight: bold;
+    margin: 0;
+}
+h1 {
+    font-size: 16pt;
+    margin: 5mm 0;
+}
+h2 {
+    font-size: 14pt;
+}
+h3, h4 {
+    font-size: 9pt;
+}
+ol,
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+li,
+ul {
+    margin-bottom: 0.75em;
+}
+p {
+    margin: 0;
+    padding: 0;
+}
+p + p {
+    margin-top: 1.25em;
+}
+a {
+    border-bottom: 1px solid;
+    text-decoration: none;
+}
+#watermark {
+    position: fixed;
+    top: 0;
+    left:     0;
+    width:    29.7cm;
+    height:   21cm;
+    z-index:  -1000;
+}
+
+/**
+Certificate Content
+ */
+.certificate-topheading {
+    margin-top: 110px;
+    margin-left: 100px;
+}
+
+.certificate-content{
+    margin-top: 90px;
+    margin-left: 100px;
+    font-size: 14px;
+}
+.certificate-content h1{
+    font-size: 36px;
+    font-weight: normal;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.certificate-content h2 {
+    font-size: 20px;
+    font-weight: normal;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.certificate-content p{
+    line-height: 14px;
+}
+.certificate-footer{
+    margin-top: 50px;
+    margin-left: 100px;
+}
+.certificate-footer p{
+    font-size: 14px;
+}
+table td.first-col{
+    width: 700px;
+}
+.certificate-author-name{
+    border-top: 1px solid #333333;
+    padding-top: 10px;
+}
+.signature-wrap img{
+    max-width: 120px;
+    max-height: 50px;
+    height: auto;
+}
+/* page numbers */
+.pagenum:before {
+    content: counter(page);
+}
+.pagenum,.pagecount {
+    font-family: sans-serif;
+}

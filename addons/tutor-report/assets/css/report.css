@@ -1,0 +1,359 @@
+h2.tutor-page-heading{
+    background-color: #ffffff;
+    padding: 30px !important;
+    margin: 0 !important;
+    border-bottom: 1px solid #ECEDEF;
+}
+.tutor-report-left-menus{
+    background-color: #FCFCFC;
+    margin-bottom: 50px;
+}
+.tutor-report-left-menus ul{
+    margin: 0;
+}
+.report-main-wrap {
+    /*display: flex;*/
+}
+.report-main-wrap h3{
+    font-weight: 300;
+    font-size: 20px;
+}
+.tutor-report-left-menus ul li{
+    display: inline-block;
+    margin: 0;
+}
+.tutor-report-left-menus ul li a{
+    text-decoration: none;
+    line-height: 60px;
+    display: block;
+    padding: 0 15px;
+    color: #393C40;
+}
+.tutor-report-left-menus ul li a:focus {
+    outline: none !important;
+    border: 0;
+    box-shadow: none;
+}
+.tutor-report-left-menus ul li.active a{
+    color: #1E55DD;
+    border-bottom: 3px solid #3057D5;
+}
+.tutor-report-content{
+    flex: 1;
+}
+.report-top-sub-menu{
+   /* margin-top: 30px;
+    margin-bottom: 30px;*/
+    margin: 0;
+    flex: 1;
+}
+.report-top-sub-menu a{
+    text-decoration: none;
+    padding: 10px 15px;
+    border: 1px solid #D7DADF;
+    color: #AAAEB3;
+    border-radius: 3px;
+    display: inline-block;
+}
+.report-top-sub-menu a.active {
+    background-color: #3057D5;
+    color: #ffffff;
+    border: 1px solid #3057D5;
+}
+.top-course-enrolled{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.top-course-enrolled h1, .top-course-enrolled h2, .top-course-enrolled h3 {
+    margin: 30px 0;
+}
+.report-stats{
+    display: flex;
+    flex-flow: row wrap;
+}
+.report-stat-box{
+    padding: 0;
+    margin-bottom: 30px;
+    width: 25%;
+    display: inline-flex;
+    flex: 0 0 25%;
+}
+.report-stat-box-body{
+    background-color: #ffffff;
+    display: flex;
+    width: 100%;
+    margin-right: 30px;
+}
+.report-stat-box:nth-child(4n) .report-stat-box-body {
+    margin-right: 0;
+}
+.report-stat-box .box-icon{
+    font-size: 50px;
+    line-height: 46px;
+    padding: 13px;
+    color: #3057D5;
+}
+.report-stat-box h4, .report-stat-box p{
+    margin: 5px 0;
+}
+.report-stat-box .box-stats-text h3, .report-stat-box .box-stats-text p{
+    margin: 5px 0;
+}
+.report-stat-box .box-stats-text {
+    padding: 12px 0;
+}
+.report-stat-box .box-stats-text h3{
+    font-size: 20px;
+    font-weight: 300;
+}
+.report-stat-box .box-stats-text p {
+    color: #888B90;
+}
+.box-padding{
+    padding: 30px;
+}
+.box-padding h3{
+    margin-top: 0;
+}
+.box-bg-green{
+    background-color: #00D611;
+    color: #ffffff;
+}
+.box-bg-primary{
+    background-color: #3057D5;
+    color: #ffffff;
+}
+.box-bg-light{
+    background-color: #EEEEEE;
+    color: #555555;
+}
+.box-bg-warning{
+    background-color: #eea504;
+    color: #ffffff;
+}
+.box-bg-dark{
+    background-color: #333333;
+    color: #ffffff;
+}
+.box-bg-danger{
+    background-color: #ff000c;
+    color: #ffffff;
+}
+.box-bg-pink{
+    background-color: #ff00da;
+    color: #ffffff;
+}
+.box-bg-violate{
+    background-color: #9c25ea;
+    color: #ffffff;
+}
+.tutor-report-overview-section{
+    display: flex;
+    margin: 20px 0;
+}
+.overview-section-col6{
+    width: 50%;
+}
+.overview-section-col6 {
+    margin-right: 1%;
+    margin-left: 1%;
+}
+.overview-section-col6:first-child {
+    margin-left: 0;
+}
+.overview-section-col6:last-child {
+    margin-right: 0;
+}
+.last-revews-wrap{
+    width: 100%;
+}
+table.tutor-report-table {
+    border: none;
+    box-shadow: none;
+}
+.tutor-report-table th{
+    background-color: #FCFCFC;
+    border-top: 1px solid #EAEAEA;
+    border-bottom: 1px solid #EAEAEA;
+    padding: 20px;
+    color: #878A8F;
+}
+.tutor-report-table td{
+    border-bottom: 1px solid #EAEAEA;
+    padding: 20px;
+}
+.tutor-report-table td img.avatar{
+    float: left;
+    margin-right: 5px;
+}
+/**
+Icon
+ */
+.tutor-icon-star-full, .tutor-icon-star-line{
+    color: #FFD700;
+}
+.tutor-delete-link{
+    color: #ff282a !important;
+}
+/**
+Pagination
+ */
+.tutor-pagination{
+    margin: 50px 0;
+}
+.tutor-pagination .page-numbers {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 2px 0 0;
+    border: 1px solid #eee;
+    line-height: 1;
+    text-decoration: none;
+    font-weight: 600;
+}
+.tutor-pagination  .page-numbers.current,
+.tutor-pagination  a.page-numbers:hover {
+    background: #f9f9f9;
+}
+.report-date-range-form{
+    display: flex;
+}
+.date-range-input{
+    position: relative;
+    margin-right: 10px;
+}
+.date-range-input:last-child{
+    margin-right: 0;
+}
+.date-range-input input{
+    border: 1px solid #D7DADF;
+    box-shadow: none;
+    line-height: 32px;
+    margin: 0;
+    padding-right: 30px;
+}
+.date-range-input i.tutor-icon-calendar{
+    position: absolute;
+    right: 10px;
+    top: 13px;
+}
+.date-range-input button{
+    background-color: #3057D5;
+    color: #ffffff;
+    border: none;
+    line-height: 39px;
+    padding: 0 15px;
+}
+.tutor-date-range-filter-wrap{
+    display: flex;
+    margin: 30px 0;
+}
+.report-download-csv-icon{
+    float: right;
+}
+.report-download-csv-icon a{
+    text-decoration: none;
+}
+
+/**
+DatePicker
+ */
+.ui-datepicker {
+    background-color: #fff;
+    border: 1px solid #EEEEEE;
+    display: none;
+    margin-top: 4px;
+    padding: 5px;
+    width: 180px;
+}
+.ui-datepicker a,
+.ui-datepicker a:hover {
+    text-decoration: none;
+}
+.ui-datepicker a:hover,
+.ui-datepicker td:hover a {
+    color: #2A6496;
+    -webkit-transition: color 0.1s ease-in-out;
+    -moz-transition: color 0.1s ease-in-out;
+    -o-transition: color 0.1s ease-in-out;
+    transition: color 0.1s ease-in-out;
+}
+.ui-datepicker .ui-datepicker-header {
+    margin-bottom: 4px;
+    text-align: center;
+}
+.ui-datepicker .ui-datepicker-title {
+    font-weight: 700;
+}
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+    cursor: default;
+    font-family: 'tutor';
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-weight: normal;
+    height: 20px;
+    line-height: 1;
+    margin-top: 2px;
+    width: 30px;
+}
+.ui-datepicker .ui-datepicker-prev {
+    float: left;
+    text-align: left;
+}
+.ui-datepicker .ui-datepicker-next {
+    float: right;
+    text-align: right;
+}
+.ui-datepicker .ui-datepicker-prev:before {
+    content: "\e921";
+}
+.ui-datepicker .ui-datepicker-next:before {
+    content: "\e903";
+}
+.ui-datepicker .ui-icon {
+    display: none;
+}
+.ui-datepicker .ui-datepicker-calendar {
+    table-layout: fixed;
+    width: 100%;
+}
+.ui-datepicker .ui-datepicker-calendar th,
+.ui-datepicker .ui-datepicker-calendar td {
+    text-align: center;
+    padding: 0;
+}
+.ui-datepicker .ui-datepicker-calendar td {
+    border-radius: 4px;
+    -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+    -moz-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+    -o-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+    transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+}
+.ui-datepicker .ui-datepicker-calendar td:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+.ui-datepicker .ui-datepicker-calendar td a {
+    text-decoration: none;
+}
+.ui-datepicker .ui-datepicker-current-day {
+    background-color: #4289cc;
+}
+.ui-datepicker .ui-datepicker-current-day a {
+    color: #fff
+}
+.ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
+    background-color: #fff;
+    cursor: default;
+}
+
+.ui-datepicker-calendar .ui-state-default {
+    border: none;
+    background: none;
+}
+.ui-datepicker-calendar .ui-state-default.ui-state-highlight {
+    background: #EEEEEE;
+    padding: 3px;
+    display: block;
+}
+

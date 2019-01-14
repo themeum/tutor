@@ -25,8 +25,7 @@
                         <i class="tutor-icon-pencil topic-edit-icon"></i>
                     </span>
                     <span class="topic-delete-btn">
-                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?action=tutor_delete_topic&topic_id='.$topic->ID), tutor()->nonce_action, tutor()->nonce); ?>" title="<?php _e('Delete Topic', 'tutor');
-                        ?>">
+                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?action=tutor_delete_topic&topic_id='.$topic->ID), tutor()->nonce_action, tutor()->nonce); ?>" title="<?php _e('Delete Topic', 'tutor'); ?>" data-topic-id="<?php echo $topic->ID; ?>">
                             <i class="tutor-icon-garbage"></i>
                         </a>
                     </span>
@@ -34,7 +33,6 @@
                     <span class="expand-collapse-wrap">
                         <a href="javascript:;"><i class="tutor-icon-light-down"></i> </a>
                     </span>
-
                 </h4>
 
                 <div class="tutor-topics-edit-form" style="display: none;">
@@ -139,8 +137,8 @@
                                 <div id="added-quiz-id-<?php echo $attached_quiz->ID; ?>" class="added-quiz-item added-quiz-item-<?php echo $attached_quiz->ID; ?>" data-quiz-id="<?php echo $attached_quiz->ID; ?>">
                                     <span class="quiz-icon"><i class="dashicons dashicons-clock"></i></span>
                                     <span class="quiz-name">
-                                    <?php edit_post_link( $attached_quiz->post_title, null, null, $attached_quiz->ID ); ?>
-                                </span>
+                                        <?php edit_post_link( $attached_quiz->post_title, null, null, $attached_quiz->ID ); ?>
+                                    </span>
                                     <span class="quiz-control">
                                     <a href="javascript:;" class="tutor-quiz-delete-btn"><i class="tutor-icon-garbage"></i></a>
                                 </span>

@@ -21,7 +21,7 @@ class Addons {
 		
 		if ( false === ( $addons_themes_data = get_transient( 'tutor_addons_themes_data' ) ) ) {
 			//Request New
-			$api_endpoint = 'http://10.0.1.12/themeum/wp-json/addon-serve/v2/get-products';
+			$api_endpoint = 'https://www.themeum.com/wp-json/addon-serve/v2/get-products';
 			$response = wp_remote_post( $api_endpoint, array(
 					'method' => 'POST',
 					'timeout' => 45,

@@ -170,7 +170,8 @@ class Utils {
 
 	public function has_wc(){
 		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
-		$depends = array('woocommerce/woocommerce.php', 'tutor-woocommerce/tutor-woocommerce.php');
+		//$depends = array('woocommerce/woocommerce.php', 'tutor-woocommerce/tutor-woocommerce.php');
+		$depends = array('woocommerce/woocommerce.php');
 		$has = count(array_intersect($depends, $activated_plugins)) == count($depends);
 
 		return $has;
@@ -178,7 +179,8 @@ class Utils {
 
 	public function has_edd(){
 		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
-		$depends = array('easy-digital-downloads/easy-digital-downloads.php', 'tutor-edd/tutor-edd.php');
+		//$depends = array('easy-digital-downloads/easy-digital-downloads.php', 'tutor-edd/tutor-edd.php');
+		$depends = array('easy-digital-downloads/easy-digital-downloads.php');
 		$has = count(array_intersect($depends, $activated_plugins)) == count($depends);
 
 		return $has;
@@ -825,8 +827,8 @@ class Utils {
 	public function playtime_string($seconds) {
 		$sign = (($seconds < 0) ? '-' : '');
 		$seconds = round(abs($seconds));
-		$H = (int) floor( $seconds                            / 3600);
-		$M = (int) floor(($seconds - (3600 * $H)            ) /   60);
+		$H = (int) floor( $seconds / 3600);
+		$M = (int) floor(($seconds - (3600 * $H) ) / 60);
 		$S = (int) round( $seconds - (3600 * $H) - (60 * $M)        );
 		return $sign.($H ? $H.':' : '').($H ? str_pad($M, 2, '0', STR_PAD_LEFT) : intval($M)).':'.str_pad($S, 2, 0, STR_PAD_LEFT);
 	}
