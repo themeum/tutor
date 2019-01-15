@@ -1538,7 +1538,7 @@ ul.tutor-required-fields{
     z-index: 9;
     position: absolute;
     left: 50%;
-    top: 30%;
+    top: 150px;
     font-size: 50px;
 }
 .loading-lesson:after {

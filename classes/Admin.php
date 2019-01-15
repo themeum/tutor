@@ -48,7 +48,8 @@ class Admin{
 
 		add_submenu_page('tutor', __('Quiz Attempts', 'tutor'), __('Quiz Attempts', 'tutor'), 'manage_tutor_instructor', 'tutor_quiz_attempts', array($this, 'quiz_attempts') );
 
-		add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(), 'addons_page') );
+		//add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(),
+		// 'addons_page') );
 
 		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
 

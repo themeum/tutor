@@ -353,7 +353,6 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 $wrap.html(data.data.html);
-
                 videoPlayer.init();
             },
             complete: function () {

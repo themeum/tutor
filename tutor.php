@@ -56,6 +56,7 @@ $tutor->run(); //Boom
 /**
  * Addons supports
  */
+/*
 add_action('plugins_loaded', 'tutor_load_addons');
 if ( ! function_exists('tutor_load_addons')){
 	function tutor_load_addons(){
@@ -70,4 +71,4 @@ if ( ! function_exists('tutor_load_addons')){
 			}
 		}
 	}
-}
+}*/
