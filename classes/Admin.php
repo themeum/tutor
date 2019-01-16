@@ -26,6 +26,8 @@ class Admin{
 	}
 
 	public function register_menu(){
+		$hasPro = tutor()->has_pro;
+
 		$unanswered_questions = tutor_utils()->unanswered_question_count();
 		$unanswered_bubble = '';
 		if ($unanswered_questions){
@@ -59,8 +61,9 @@ class Admin{
 
 		add_submenu_page('tutor',__('Tutor Uninstall', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
 
-		add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor'
-		), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
+		if ( ! $hasPro){
+			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
+		}
 
 	}
 
@@ -377,7 +380,7 @@ class Admin{
 			}
 		}
 
-		$actions['settings'] = '<a href="admin.php?page=tutor">' . __('Settings', 'tutor') . '</a>';
+		$actions['settings'] = '<a href="admin.php?page=tutor_settings">' . __('Settings', 'tutor') . '</a>';
 		return $actions;
 	}
 
