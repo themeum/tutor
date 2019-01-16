@@ -58,6 +58,10 @@ class Admin{
 		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_page') );
 
 		add_submenu_page('tutor',__('Tutor Uninstall', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
+
+		add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor'
+		), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
+
 	}
 
 	public function tutor_page(){
@@ -81,14 +85,16 @@ class Admin{
 		include tutor()->path.'views/pages/quiz_attempts.php';
 	}
 
-
 	public function tutor_status(){
 		include tutor()->path.'views/pages/status.php';
 	}
 
-
 	public function tutor_uninstall(){
 		include tutor()->path.'views/pages/uninstall.php';
+	}
+
+	public function tutor_get_pro(){
+		include tutor()->path.'views/pages/get-pro.php';
 	}
 
 	public function parent_menu_active(  $parent_file ){
@@ -353,6 +359,13 @@ class Admin{
 	}
 
 	public function plugin_action_links($actions){
+		$hasPro = tutor()->has_pro;
+
+		if(!$hasPro){
+			$actions['tutor_pro_link'] = '<a href="https://www.themeum.com/product/tutor-lms/#pricing?utm_source=tutor_plugin_action_link&utm_medium=wordpress_dashboard&utm_campaign=go_premium" target="_blank"><span
+ style="color: #39a700eb; font-weight: bold;">'.__('Upgrade to Pro', 'wp-megamenu').'</span></a>';
+		}
+
 		$is_erase_data = tutor_utils()->get_option('delete_on_uninstall');
 
 		if ($is_erase_data) {
