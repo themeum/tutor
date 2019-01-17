@@ -187,6 +187,7 @@ Group Field Option
 }
 #tutor-course-topics .tutor-lesson-top i{
     margin-right: 10px;
+    cursor: ns-resize;
 }
 #tutor-course-topics .tutor-lesson-top a{
     color: #393C40;
@@ -202,6 +203,9 @@ Group Field Option
 }
 .new-topic-btn-wrap {
     padding: 20px;
+}
+p.course-empty-content {
+    padding-left: 20px;
 }
 .tutor_btn_lg{
     line-height: 45px;
