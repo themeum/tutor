@@ -594,6 +594,77 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
 .tutor-addons .wp-filter{
     margin: 10px 0 0;
 }
+
+/**
+Add-ons list
+ */
+.tutor-addons-list {
+    background-color: #fff;
+    min-height: 500px;
+    padding: 20px;
+}
+h3.addon-list-heading{
+    background-color: #eeeeee;
+    padding: 10px;
+}
+table.tutor-addons-list-table{
+    width: 100%;
+}
+table.tutor-addons-list-table tr{
+}
+table.tutor-addons-list-table td, table.tutor-addons-list-table th{
+    padding: 10px;
+    border-bottom: 1px solid #eeeeee;
+    text-align: left;
+
+}
+
+
+
+.btn-switch {
+    display: inline-block;
+    height: 22px;
+    position: relative;
+    width: 40px;
+}
+.btn-switch input {
+    display:none;
+}
+.btn-slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+}
+.btn-slider:before {
+    background-color: #fff;
+    bottom: 3px;
+    content: "";
+    height: 16px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 16px;
+}
+input:checked + .btn-slider {
+    background-color: #0073aa;
+}
+input:checked + .btn-slider:before {
+    transform: translateX(16px);
+}
+.btn-slider.btn-round {
+    border-radius: 34px;
+}
+.btn-slider.btn-round:before {
+    border-radius: 50%;
+}
+
+
+
 /**
 Quiz-question
  */

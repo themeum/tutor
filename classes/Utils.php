@@ -2783,4 +2783,21 @@ class Utils {
 		return false;
 	}
 
+
+	public function get_addon_config($addon_field = null){
+		if ( ! $addon_field){
+			return false;
+		}
+
+		$addonsConfig = maybe_unserialize(get_option('tutor_addons_config'));
+
+
+		if (isset($addonsConfig[$addon_field])){
+			return $addonsConfig[$addon_field];
+		}
+
+		return false;
+	}
+
+
 }

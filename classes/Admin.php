@@ -36,7 +36,7 @@ class Admin{
 
 		$course_post_type = tutor()->course_post_type;
 
-		add_menu_page(__('Tutor', 'tutor'), __('Tutor', 'tutor'), 'manage_tutor_instructor', 'tutor', null, 'dashicons-welcome-learn-more', 2);
+		add_menu_page(__('Tutor LMS', 'tutor'), __('Tutor LMS', 'tutor'), 'manage_tutor_instructor', 'tutor', null, 'dashicons-welcome-learn-more', 2);
 
 		add_submenu_page('tutor', __('Categories', 'tutor'), __('Categories', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type='.$course_post_type, null );
 
@@ -50,8 +50,10 @@ class Admin{
 
 		add_submenu_page('tutor', __('Quiz Attempts', 'tutor'), __('Quiz Attempts', 'tutor'), 'manage_tutor_instructor', 'tutor_quiz_attempts', array($this, 'quiz_attempts') );
 
-		//add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(),
-		// 'addons_page') );
+		//add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(),'addons_page') );
+
+
+		add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array($this, 'enable_disable_addons') );
 
 		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
 
@@ -59,7 +61,7 @@ class Admin{
 
 		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_page') );
 
-		add_submenu_page('tutor',__('Tutor Uninstall', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
+		add_submenu_page('tutor',__('Uninstall Tutor LMS', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
 
 		if ( ! $hasPro){
 			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
@@ -86,6 +88,10 @@ class Admin{
 
 	public function quiz_attempts(){
 		include tutor()->path.'views/pages/quiz_attempts.php';
+	}
+
+	public function enable_disable_addons(){
+		include tutor()->path.'views/pages/enable_disable_addons.php';
 	}
 
 	public function tutor_status(){

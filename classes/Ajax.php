@@ -15,6 +15,11 @@ class Ajax{
 
 		add_action('wp_ajax_tutor_course_add_to_wishlist', array($this, 'tutor_course_add_to_wishlist'));
 		add_action('wp_ajax_nopriv_tutor_course_add_to_wishlist', array($this, 'tutor_course_add_to_wishlist'));
+
+		/**
+		 * Addon Enable Disable Control
+		 */
+		add_action('wp_ajax_addon_enable_disable', array($this, 'addon_enable_disable'));
 	}
 
 	/**
@@ -232,5 +237,24 @@ class Ajax{
 		}
 	}
 
+	/**
+	 * Method for enable / disable addons
+	 */
+	public function addon_enable_disable(){
+		$addonsConfig = maybe_unserialize(get_option('tutor_addons_config'));
+
+		$isEnable = (bool) sanitize_text_field(tutor_utils()->avalue_dot('isEnable', $_POST));
+		$addonFieldName = sanitize_text_field(tutor_utils()->avalue_dot('addonFieldName', $_POST));
+
+		if ($isEnable){
+			$addonsConfig[$addonFieldName]['is_enable'] = 1;
+		}else{
+			$addonsConfig[$addonFieldName]['is_enable'] = 0;
+		}
+
+		update_option('tutor_addons_config', $addonsConfig);
+
+		wp_send_json_success();
+	}
 
 }
