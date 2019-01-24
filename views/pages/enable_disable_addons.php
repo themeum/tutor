@@ -51,14 +51,17 @@
 					foreach ( $addons as $basName => $addon ) {
 						$addonConfig = tutor_utils()->get_addon_config($basName);
 						$isEnable = (bool) tutor_utils()->avalue_dot('is_enable', $addonConfig);
+
+						$thumbanil_url = file_exists($addon['path'].'assets/images/thumbnail.png') ? $addon['url'].'assets/images/thumbnail.png':tutor()->url.'assets/images/tutor-plugin.png';
+
 						?>
                         <div class="plugin-card plugin-card-akismet">
                             <div class="plugin-card-top">
                                 <div class="name column-name">
                                     <h3>
 										<?php
-										echo "<a href='#' target='_blank'>{$addon['name']}</a>";
-										echo "<img src='https://ps.w.org/akismet/assets/icon-256x256.png' class='plugin-icon' alt=''>";
+										echo $addon['name'];
+										echo "<img src='{$thumbanil_url}' class='plugin-icon' alt=''>";
 										?>
                                     </h3>
                                 </div>
@@ -91,8 +94,6 @@
             </div>
 
             <br class="clear">
-
-
 
 			<?php
 		}
