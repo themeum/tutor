@@ -361,6 +361,27 @@ jQuery(document).ready(function($){
         });
     });
 
-    //tutor-single-lesson-a
+    /**
+     * @date 05 Feb, 2019
+     */
+
+    $(document).on('click', '.tutor-lesson-sidebar-hide-bar', function(e){
+        e.preventDefault();
+        $('.tutor-lesson-sidebar').toggle();
+    });
+
+    $(document).on('click', '.tutor-tabs-btn-group a', function (e) {
+        e.preventDefault();
+        var $that = $(this);
+
+
+        var tabSelector = $that.attr('href');
+        $('.tutor-lesson-sidebar-tab-item').hide();
+        $(tabSelector).show();
+
+        $('.tutor-tabs-btn-group a').removeClass('active');
+        $that.addClass('active');
+    });
+
 
 });

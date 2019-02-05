@@ -928,11 +928,11 @@ if ( ! function_exists('get_tutor_posts_attachments')){
  *
  * @since v.1.0.0
  */
-if ( ! function_exists('tutor_lessons_as_list')) {
-	function tutor_lessons_as_list( $echo = true ) {
+if ( ! function_exists('tutor_lessons_sidebar')) {
+	function tutor_lessons_sidebar( $echo = true ) {
 		ob_start();
-		tutor_load_template( 'single.lesson.lesson_lists' );
-		$output = apply_filters( 'tutor_lesson/single/lesson_lists', ob_get_clean() );
+		tutor_load_template( 'single.lesson.lesson_sidebar' );
+		$output = apply_filters( 'tutor_lesson/single/lesson_sidebar', ob_get_clean() );
 
 		if ( $echo ) {
 			echo $output;

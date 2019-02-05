@@ -15,19 +15,19 @@ $currentPost = $post;
 ?>
 
 <?php do_action('tutor_lesson/single/before/wrap'); ?>
-    <div <?php tutor_post_class('tutor-single-lesson-wrap tutor-page-wrap'); ?>>
-        <div class="tutor-container">
-            <div class="tutor-row">
-                <div class="tutor-col-4">
-		            <?php tutor_lessons_as_list(); ?>
-                </div>
-                <div class="tutor-col-8">
-                    <div id="tutor-single-lesson-entry-content" class="tutor-single-lesson-entry-content-<?php the_ID(); ?>">
-                        <?php tutor_lesson_content(); ?>
-                    </div>
-                </div>
-            </div>
+
+
+    <div class="tutor-single-lesson-wrap ">
+
+        <div class="tutor-lesson-sidebar">
+			<?php tutor_lessons_sidebar(); ?>
         </div>
+
+        <div id="tutor-single-lesson-entry-content" class="tutor-lesson-content tutor-single-lesson-entry-content-<?php the_ID(); ?>">
+		    <?php tutor_lesson_content(); ?>
+        </div>
+
+
     </div>
 <?php do_action('tutor_lesson/single/after/wrap');
 

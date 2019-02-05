@@ -952,6 +952,41 @@ class Utils {
 	}
 
 	/**
+	 *
+	 * return lesson type icon
+	 *
+	 * @param int $lesson_id
+	 * @param bool $html
+	 * @param bool $echo
+	 *
+	 * @return string
+	 *
+	 * @since v.1.0.0
+	 */
+
+	public function get_lesson_type_icon($lesson_id = 0, $html = false, $echo = false){
+		$post_id = $this->get_post_id($lesson_id);
+		$video = tutor_utils()->get_video_info($post_id);
+
+		$play_time = false;
+		if ($video){
+			$play_time = $video->playtime;
+		}
+
+		$tutor_lesson_type_icon = $play_time ? 'youtube' : 'document';
+
+		if ($html){
+			$tutor_lesson_type_icon = "<i class='tutor-icon-$tutor_lesson_type_icon'></i> ";
+		}
+
+		if ($tutor_lesson_type_icon){
+			echo $tutor_lesson_type_icon;
+		}
+
+		return $tutor_lesson_type_icon;
+	}
+
+	/**
 	 * @param int $lesson_id
 	 * @param int $user_id
 	 *

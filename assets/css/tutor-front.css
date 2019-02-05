@@ -1058,7 +1058,15 @@ Instructor
     margin-bottom: 30px;
     border: 1px solid #E8EFF1;
 }
-
+.tutor-single-lesson-wrap{
+    display: flex;
+}
+.tutor-lesson-sidebar{
+    flex: 0 0 400px;
+}
+.tutor-lesson-content  {
+    flex: 1;
+}
 .tutor-single-lesson-button-group .tutor-single-lesson-button a,
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a{
     padding: 14px 75px 14px 17px;
@@ -1068,22 +1076,23 @@ Instructor
     position: relative;
     border-top: 1px solid #E8EFF1;
 }
-
 .tutor-single-lesson-button-group .tutor-single-lesson-button:first-child a{
     border-top: none;
 }
-
 .tutor-lessons-under-topic .tutor-single-lesson-items.active a{
     background: rgba(233, 235, 238, 0.35);
 }
-
+.tutor-topics-in-single-lesson{
+    margin-bottom: 25px;
+    background-color: #ffffff;
+    padding: 10px 0;
+}
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a span{
     font-size: 14px;
     margin: 0;
     display: inline;
     color: #4B5981;
 }
-
 .tutor-topics-in-single-lesson .tutor-topics-title h3{
     margin: 0;
     padding: 14px 17px;
@@ -1099,7 +1108,6 @@ Instructor
     font-size: 10px;
     margin-left: 6px;
 }
-
 .tutor-topics-in-single-lesson .tutor-topics-tutor-loop-rating-wraptitle h3 i{
     font-size: 10px;
     vertical-align: middle;
@@ -1109,12 +1117,9 @@ Instructor
     transition: 300ms;
     cursor: pointer;
 }
-
-
 .tutor-topics-in-single-lesson .tutor-topics-title h3 i:hover{
     color: #1B52D8;
 }
-
 .tutor-single-lesson-button-group .tutor-single-lesson-button a > i:first-child,
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a > i:first-child{
     color: #C7C7C7;
@@ -1126,20 +1131,17 @@ Instructor
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a > i.tutor-icon-doubt{
     color: #1B52D8;
 }
-
 .tutor-topics-in-single-lesson .tutor-topics-summery{
     padding: 14px;
     font-size: 14px;
     border-top: 1px solid #DCE4E6;
     display: none;
 }
-
 .tutor-topics-lesson-list .tutor-lesson-right-icons{
     position: absolute;
     right: 15px;
     top: 14px;
 }
-
 .tutor-topics-lesson-list .tutor-lesson-right-icons .tutor-lesson-complete{
     height: 16px;
     width: 16px;
@@ -1156,18 +1158,71 @@ Instructor
 .tutor-topics-lesson-list .tutor-single-lesson-items.active .tutor-lesson-right-icons .tutor-lesson-complete{
     border-color: #b7d6b7;
 }
-
 .tutor-topics-lesson-list .tutor-single-lesson-items.active .tutor-lesson-right-icons .tutor-lesson-complete.tutor-done,
 .tutor-topics-lesson-list .tutor-lesson-right-icons .tutor-lesson-complete.tutor-done{
     background: #86B223;
     border-color: #86B223;
     color: #fff;
 }
-
 .tutor-topics-lesson-list .tutor-lesson-right-icons i{
     font-style: normal;
 }
 
+.tutor-single-page-top-bar{
+    background-color: #1B52D8;
+    height: 70px;
+    margin-bottom: 50px;
+    color: #ffffff;
+    display: flex;
+    line-height: 70px;
+}
+.tutor-single-page-top-bar a{
+    color: #ffffff;
+}
+.tutor-single-page-top-bar .tutor-topbar-item{
+    width: 100%;
+}
+.tutor-single-page-top-bar .tutor-topbar-content-title-wrap{
+    text-align: center;
+}
+.tutor-single-page-top-bar .tutor-topbar-back-to-curse-wrap{
+    text-align: right;
+    margin-right: 30px;
+}
+.tutor-lesson-content-area{
+    margin: 0 100px;
+}
+.tutor-lesson-sidebar-hide-bar{
+    background-color: #1645B7;
+    color: #ffffff;
+    padding: 0 18px;
+    display: inline-block;
+    line-height: 70px;
+}
+.tutor-sidebar-tabs-wrap{
+    border-top: 1px solid #E0E9EC;
+}
+.tutor-tabs-btn-group {
+    height: 70px;
+    display: flex;
+}
+.tutor-tabs-btn-group a{
+    background-color: #F1F6F8;
+    color: #4B5981;
+    display: block;
+    line-height: 70px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #E0E9EC;
+    border-top: none;
+}
+.tutor-tabs-btn-group a.active{
+    background-color: #ffffff;
+    border: none;
+}
+.tutor-tabs-btn-group a:focus{
+    outline: none;
+}
 /*video*/
 
 .tutor-single-lesson-segment{
@@ -1177,6 +1232,7 @@ Instructor
 .tutor-single-lesson-wrap{
     font-size: 14px;
     font-weight: 400;
+    background: #F4F8FA;
 }
 
 .tutor-lesson-video-wrap .plyr--video{
@@ -1223,7 +1279,6 @@ Instructor
     line-height: 16px;
     color: #4B5981;
 }
-
 .tutor-attachment-info span + span{
     font-size: 11px;
     color: #B1B8C9;
