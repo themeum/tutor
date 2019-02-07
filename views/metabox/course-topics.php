@@ -47,11 +47,11 @@
     </div>
 </div>
 
-<div class="tutor-modal-wrap tutor-quiz-modal-wrap">
+<!--<div class="tutor-modal-wrap tutor-quiz-modal-wrap">
     <div class="tutor-modal-content">
         <div class="modal-header">
             <div class="search-bar">
-                <input type="text" class="tutor-modal-search-input" placeholder="<?php _e('Search quiz...'); ?>">
+                <input type="text" class="tutor-modal-search-input" placeholder="<?php /*_e('Search quiz...'); */?>">
             </div>
             <div class="modal-close-wrap">
                 <a href="javascript:;" class="modal-close-btn">&times;</a>
@@ -59,24 +59,33 @@
         </div>
         <div class="modal-container"></div>
         <div class="modal-footer">
-            <button type="button" class="button button-primary add_quiz_to_post_btn"><?php _e('Add Quiz', 'tutor'); ?></button>
+            <button type="button" class="button button-primary add_quiz_to_post_btn"><?php /*_e('Add Quiz', 'tutor'); */?></button>
         </div>
+    </div>
+</div>-->
+
+
+<div class="tutor-modal-wrap tutor-quiz-builder-modal-wrap">
+    <div class="tutor-modal-content">
+        <div class="modal-header">
+            <div class="modal-title">
+                <h1><?php _e('Quiz'); ?></h1>
+            </div>
+            <div class="modal-close-wrap">
+                <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i> </a>
+            </div>
+        </div>
+        <div class="modal-container"></div>
     </div>
 </div>
 
 <div class="tutor-modal-wrap tutor-lesson-modal-wrap">
     <div class="tutor-modal-content">
-
         <div class="modal-header">
             <div class="lesson-modal-close-wrap">
                 <a href="javascript:;" class="modal-close-btn">&times;</a>
             </div>
         </div>
-
-        <div class="modal-container">
-
-
-        </div>
-
+        <div class="modal-container"></div>
     </div>
 </div>

@@ -23,7 +23,10 @@ class Quiz {
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
 		add_action('save_post_tutor_quiz', array($this, 'save_quiz_meta'));
 
+		//Depricated at alpha version
 		add_action('wp_ajax_tutor_load_quiz_modal', array($this, 'tutor_load_quiz_modal'));
+
+		add_action('wp_ajax_tutor_load_quiz_builder_modal', array($this, 'tutor_load_quiz_builder_modal'));
 		add_action('wp_ajax_tutor_add_quiz_to_post', array($this, 'tutor_add_quiz_to_post'));
 		add_action('wp_ajax_remove_quiz_from_post', array($this, 'remove_quiz_from_post'));
 
@@ -84,6 +87,10 @@ class Quiz {
 		}
 	}
 
+	/**
+	 * @depricated at alpha version
+     * Check tutor_load_quiz_builder_modal instead of this method
+	 */
 	public function tutor_load_quiz_modal(){
 		$quiz_for_post_id = (int) sanitize_text_field($_POST['quiz_for_post_id']);
 
@@ -119,6 +126,18 @@ class Quiz {
 		$output .= ob_get_clean();
 
 		wp_send_json_success(array('output' => $output));
+	}
+
+	/**
+	 * Tutor Quiz Builder Modal
+	 */
+	public function tutor_load_quiz_builder_modal(){
+	    ob_start();
+		include  tutor()->path.'views/modal/add_quiz.php';
+	    $output = ob_get_clean();
+
+		wp_send_json_success(array('output' => $output));
+
 	}
 
 	public function tutor_add_quiz_to_post(){

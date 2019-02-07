@@ -779,12 +779,13 @@ jQuery(document).ready(function($){
             $('.tutor-modal-wrap').removeClass('show');
         }
     });
+
+    /*
     $(document).on('click', '.tutor-add-quiz-btn', function(e){
         e.preventDefault();
         
         var $that = $(this);
         var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').attr('data-add-quiz-under');
-        
         $.ajax({
             url : ajaxurl,
             type : 'POST',
@@ -800,6 +801,58 @@ jQuery(document).ready(function($){
                 $that.removeClass('tutor-updating-message');
             }
         });
+    });
+    */
+
+
+
+    $(document).on('click', '.tutor-add-quiz-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').attr('data-add-quiz-under');
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {quiz_for_post_id : quiz_for_post_id, action: 'tutor_load_quiz_builder_modal'},
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
+                $('.tutor-quiz-builder-modal-wrap').attr('quiz-for-post-id', quiz_for_post_id).addClass('show');
+            },
+            complete: function () {
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+    /**
+     * Quiz Builder Modal Tabs
+     */
+    $(document).on('click', '.tutor-quiz-modal-tab-item', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var tabSelector = $that.attr('href');
+        $('.quiz-builder-tab-container').hide();
+        $(tabSelector).show();
+
+        $('a.tutor-quiz-modal-tab-item').removeClass('active');
+        $that.addClass('active');
+    });
+
+    //Next Prev Tab
+    $(document).on('click', '.quiz-modal-btn-next, .quiz-modal-btn-back', function(e){
+        e.preventDefault();
+        var tabSelector = $(this).attr('href');
+        $('#tutor-quiz-modal-tab-items-wrap a[href="'+tabSelector+'"]').trigger('click');
+    });
+
+    $(document).on('click', '.quiz-modal-tab-navigation-btn.quiz-modal-btn-cancel', function(e){
+        e.preventDefault();
+        $('.tutor-modal-wrap').removeClass('show');
     });
 
     $(document).on('click', '.add_quiz_to_post_btn', function(e){

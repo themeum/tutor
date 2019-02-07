@@ -922,9 +922,92 @@ Quiz Modal
     color: #fff;
     font-size: 25px;
 }
-/**
-#End Quiz Modal
- */
+.tutor-modal-wrap.tutor-quiz-builder-modal-wrap .modal-title {
+    flex-basis: 0;
+    flex-grow: 1;
+}
+.tutor-modal-wrap.tutor-quiz-builder-modal-wrap .modal-close-wrap a.modal-close-btn {
+    background: #ffffff;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    text-align: center;
+    line-height: 28px;
+    color: #3a3d42;
+    font-size: 22px;
+}
+.tutor-modal-wrap.tutor-quiz-builder-modal-wrap .modal-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eeeff1;
+}
+.tutor-modal-wrap.tutor-quiz-builder-modal-wrap .modal-header h1{
+    padding: 0;
+}
+.tutor-modal-wrap.tutor-quiz-builder-modal-wrap .modal-container{
+    background-color: #F1F1F1;
+    padding: 0;
+}
+#tutor-quiz-modal-tab-items-wrap {
+    background-color: #fff;
+    font-size: 0;
+}
+#tutor-quiz-builder-modal-tabs-container{
+    padding: 20px;
+}
+#tutor-quiz-builder-modal-tabs-container .quiz-builder-tab-body{
+    min-height: 300px;
+}
+
+#tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item{
+    padding: 15px 25px;
+    display: inline-block;
+    color: #393C40;
+    border-left: 1px solid #F1F1F1;
+    font-size: 13px;
+}
+
+#tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item.active{
+    background-color: #F1F1F1;
+}
+#tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item.active i{
+    color: #3057D5;
+}
+.quiz-modal-tab-navigation-btn{
+    padding: 15px 20px;
+    border-radius: 3px;
+}
+.quiz-modal-btn-next{
+    background-color: #1B52D8;
+    color: #ffffff;
+}
+.quiz-modal-btn-cancel, .quiz-modal-btn-back{
+    color: #4B5981;
+    border: 1px solid #D4DADB;
+}
+/** Tutor Quiz Modal Form */
+.tutor-quiz-builder-form-row{
+    margin: 5px 0;
+}
+.tutor-quiz-builder-form-row input[type="text"], .tutor-quiz-builder-form-row textarea{
+    border: 1px solid #DEDEDE;
+    margin: 0;
+    padding: 10px;
+    width: 100%;
+    box-shadow: none;
+}
+.tutor-quiz-builder-modal-control-btn-group{
+    display: flex;
+}
+.tutor-quiz-builder-modal-control-btn-group .quiz-builder-btn-group-left {
+    flex: 1;
+}
+.tutor-quiz-builder-modal-control-btn-group .quiz-modal-tab-navigation-btn{
+    display: inline-block;
+}
+
+    /**
+    #End Quiz Modal
+     */
 
 .tutor-available-quizzes .added-quiz-item {
     background-color: #f5f5f5;
