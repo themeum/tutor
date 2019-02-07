@@ -14,8 +14,8 @@ class Post_types{
 		
 		add_action( 'init', array($this, 'register_course_post_types') );
 		add_action( 'init', array($this, 'register_lesson_post_types') );
-		add_action( 'init', array($this, 'register_quiz_post_types') );
-		add_action( 'init', array($this, 'register_quiz_question_post_types') );
+		//add_action( 'init', array($this, 'register_quiz_post_types') );
+		//add_action( 'init', array($this, 'register_quiz_question_post_types') );
 	}
 	
 	public function register_course_post_types() {

@@ -5,7 +5,7 @@ Tags: lms, education, wp-lms, education management system
 Requires at least: 4.5
 Tested up to: 5.0
 Requires PHP: 5.4.0
-Stable tag: 1.0.0
+Stable tag: 1.0.0-alpha
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,8 +16,6 @@ A complete WordPress LMS plugin to create any e-learning website easily.
 Tutor is an all-in-one, feature-rich, and robust WordPress LMS plugin to create & sell courses online. With powerful features like quiz & question system, frontend student dashboard, Tutor can be the best free LMS plugin for WordPress.
 
 Want to create an e-learning platform like Udemy, Lynda, Coursera, and Edx? Get Tutor, the most advanced and powerful WordPress online course plugin. Any educational institution, training center, and individual can easily build their e-learning platform with this WordPress LMS plugin in the quickest possible time.
-
-[youtube-video]
 
 Create, customize, manage, and sell online courses by building a functional e-learning website with this free LMS plugin for WordPress.
 
@@ -104,19 +102,19 @@ You can get support by posting your issues on the support section of this plugin
 
 = Where can I report a bug? =
 
-If any bug is found, please let us know by posting on the support section of this plugin on WordPress plugin directory or directly on our support forums: https://www.themeum.com/support/ 🙂
+This is an alpha version of Tutor, as bugs and issues expected, if you found any bugs or issues, please let us know by posting on the support section of this plugin on WordPress plugin directory or directly on our support forums: https://www.themeum.com/support/ 🙂
 
 == Screenshots ==
 
-1. Instructors Lists
-2. Course Page
-3. Lesson Add to course
+1. Course Builder
+2. Multi Instructors
+3. Courses
 
 == Changelog ==
 
-= 1.0.0 - 2018-11-14 =
+= 1.0.0-alpha - 06 Feb, 2019 =
 
-* Initial Release :)
+* Alpha Release
 
 == Upgrade Notice ==
 

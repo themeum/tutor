@@ -1158,3 +1158,15 @@ if ( ! function_exists('tutor_course_tags_html')) {
         return $output;
     }
 }
+
+function tutor_lesson_sidebar_question_and_answer($echo = true){
+	ob_start();
+	tutor_load_template( 'single.lesson.sidebar_question_and_answer' );
+	$output = apply_filters( 'tutor_lesson/single/sidebar_question_and_answer', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
+
+	return $output;
+}

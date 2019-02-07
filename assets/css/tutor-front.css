@@ -1234,18 +1234,48 @@ Instructor
     font-weight: 400;
     background: #F4F8FA;
 }
-
 .tutor-lesson-video-wrap .plyr--video{
     border-radius: 4px;
 }
+#tutor-lesson-sidebar-qa-tab-content{
+    background-color: #ffffff;
+    padding: 20px;
+}
+#tutor-lesson-sidebar-qa-tab-content .tutor-add-question-wrap{
+    border-top: 1px solid #E8EFF1;
+    padding-top: 25px;
+}
+#tutor-lesson-sidebar-qa-tab-content .tutor-add-question-wrap h3{
+    color: #1B52D8;
+}
+#tutor-lesson-sidebar-qa-tab-content .tutor-add-question-wrap button.tutor_ask_question_btn {
+    display: block;
+    width: 100%;
+    background-color: #1B52D8;
+}
+#tutor-lesson-sidebar-qa-tab-content .tutor_question_answer_wrap .tutor_original_question{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.tutor-lesson-sidebar-emptyqa-wrap{
+    text-align: center;
+    padding: 50px 20px;
+    color: #4B5981;
+}
+.tutor-lesson-sidebar-emptyqa-wrap h3{
+    margin: 0;
+    padding: 0 0 25px;
+}
+.tutor-lesson-sidebar-emptyqa-wrap i{
+    font-size: 150px;
+    color: #E8EFF1;
+}
 
 /*attachment*/
-
-
 .tutor-attachments-wrap{
     margin: -3px -3px 15px -3px;
 }
-
 .tutor-attachments-wrap .tutor-lesson-attachment{
     display: inline-block;
     border: 1px solid #E8EFF1;
@@ -1256,11 +1286,9 @@ Instructor
     margin: 3px;
     transition: 300ms;
 }
-
 .tutor-attachments-wrap .tutor-lesson-attachment:hover{
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
-
 .tutor-attachments-wrap .tutor-attachment-icon{
     font-size: 30px;
     float: left;
@@ -1307,14 +1335,12 @@ Instructor
     border-radius: 30px;
     margin-top: 7.5px;
 }
-
 .tutor-progress-bar .tutor-progress-filled{
     background-color: #1B52D8;
     height: 8px;
     border-radius: 30px;
     width: var(--tutor-progress-left);
 }
-
 .tutor-progress-bar .tutor-progress-filled::after{
     content: '';
     position: absolute;
@@ -1328,7 +1354,6 @@ Instructor
     top: 50%;
     box-sizing: border-box;
 }
-
 .tutor-progress-percent{
     -ms-flex: 0 0 auto;
     flex: 0 0 auto;
@@ -1339,7 +1364,6 @@ Instructor
 .tutor-course-purchase-box{
     margin-bottom: 0;
 }
-
 .tutor-price-preview-box .tutor-course-purchase-box button{
     display: block;
     width: 100%;
@@ -1348,7 +1372,6 @@ Instructor
     text-transform: uppercase;
     font-size: 14px;
 }
-
 .tutor-price-preview-box .tutor-course-purchase-box button i{
     margin-right: 8px;
 }
@@ -1362,7 +1385,6 @@ Instructor
 .tutor-price-preview-box .tutor-course-material-includes-wrap{
     margin-bottom: 25px;
 }
-
 .tutor-alert-warning{
     padding: 10px;
     color: #8a6d3b;
@@ -1374,7 +1396,6 @@ Instructor
     overflow: hidden;
     margin: -10px -10px 35px;
 }
-
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap{
     display: inline-block;
 }
@@ -1382,7 +1403,6 @@ Instructor
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap form{
     margin: 0;
 }
-
 .tutor-lead-info-btn-group a.tutor-button,
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap button{
     display: block;
@@ -1671,13 +1691,11 @@ Course question and answer
     text-align: center;
     font-size: 17px;
 }
-
 .question-top-meta .tutor-question-avater a img{
     width: 50px;
     height: 50px;
     border-radius: 50%;
 }
-
 .question-top-meta{
     overflow: hidden;
     margin-bottom: 20px;
@@ -1726,14 +1744,11 @@ Course question and answer
 .announcement-delete-btn{
     float: right;
 }
-
 .tutor-announcement-title-wrap h3{
     color: #4B5981;
     font-weight: 500;
     margin-bottom: 10px;
 }
-
-
 /* ********************* */
 /* Single Quiz */
 /* ********************* */
@@ -1748,7 +1763,6 @@ Course question and answer
     text-transform: uppercase;
     font-size: 10px;
 }
-
 .tutor-quiz-header h2{
     color: #4B5981;
     font-size: 36px;
@@ -1756,7 +1770,6 @@ Course question and answer
     font-weight: 500;
     margin-bottom: 15px;
 }
-
 .tutor-quiz-header h5{
     font-size: 14px;
     color: #8C94A8;
@@ -1776,13 +1789,10 @@ Course question and answer
     justify-content: space-between;
     font-size: 14px;
 }
-
-
 .tutor-quiz-header .tutor-quiz-meta li{
     display: inline-block;
     color: #4B5981;
 }
-
 
 @media (max-width: 767px) {
     .tutor-quiz-header .tutor-quiz-meta{
@@ -1799,17 +1809,14 @@ Course question and answer
         border-radius: 4px;
     }
 }
-
 .tutor-quiz-header .tutor-quiz-meta li strong{
     display: block;
     color: #B1B8C9;
     font-weight: 400;
 }
-
 .tutor-quiz-attempt-history{
     overflow-x: auto;
 }
-
 .tutor-quiz-attempt-history-title{
     font-size: 18px;
     color: #8C94A8;
@@ -1818,7 +1825,6 @@ Course question and answer
     margin-bottom: 15px;
     margin-top: 70px;
 }
-
 .tutor-quiz-attempt-history table{
     border-collapse: collapse;
     border-radius: 4px;
@@ -1832,8 +1838,6 @@ Course question and answer
 .tutor-quiz-attempt-history td{
     border: 1px solid #E8EFF1;
 }
-
-
 .tutor-quiz-attempt-history table span.result-fail,
 .tutor-quiz-attempt-history table span.result-pass{
     display: inline-block;
@@ -1844,7 +1848,6 @@ Course question and answer
     line-height: 26px;
     text-align: center;
 }
-
 .tutor-quiz-attempt-history table span.result-fail{
     background: #DF3247;
 }
@@ -1852,17 +1855,14 @@ Course question and answer
 .tutor-quiz-attempt-history table span.result-pass{
     background: #99C335;
 }
-
 .quiz-head-meta-info{
     font-size: 14px;
     color: #8C94A8;
     margin-bottom: 40px;
 }
-
 .quiz-head-meta-info span{
     color: #4B5981;
 }
-
 .tutor-quiz-single-wrap .question-text{
     color: #4B5981;
     font-size: 20px;
@@ -1872,7 +1872,6 @@ Course question and answer
 .tutor-quiz-answare-wrap{
     margin-bottom: 40px;
 }
-
 .tutor-quiz-answare-wrap label{
     display: block;
     position: relative;
@@ -1884,11 +1883,9 @@ Course question and answer
 .tutor-quiz-answare-wrap label input{
     display: none;
 }
-
 .tutor-quiz-answare-wrap label input + span{
     line-height: 20px;
 }
-
 .tutor-quiz-answare-wrap label input + span::before{
     content: '';
     width: 20px;
@@ -1901,13 +1898,10 @@ Course question and answer
     top: 50%;
     transform: translateY(-50%);
 }
-
 .tutor-quiz-answare-wrap label input:checked + span::before{
     background: #1B52D8;
     border-color: #1B52D8;
 }
-
-
 .tutor-quiz-answare-wrap label input:checked + span::after{
     content: '\e90f';
     position: absolute;
@@ -1920,13 +1914,10 @@ Course question and answer
     left: 4px;
     font-size: 14px;
 }
-
-
 .tutor-quiz-answare-wrap label input[type="radio"] + span::before{
     content: '';
     border-radius: 50%;
 }
-
 .tutor-quiz-answare-wrap label input[type="radio"] + span::after{
     content: '';
     height: 10px;
@@ -1935,7 +1926,6 @@ Course question and answer
     border-radius: 50%;
     left: 6px;
 }
-
 /* ********************* */
 /*start global login form*/
 /* ********************* */
@@ -1944,17 +1934,14 @@ Course question and answer
     max-width: 560px;
     margin: 0 auto;
 }
-
 .tutor-login-form-wrap p{
     margin-bottom: 0;
 }
-
 .tutor-login-form-wrap label{
     display: block;
     font-size: 13px;
     margin-bottom: 4px;
 }
-
 .tutor-login-form-wrap input[type="password"],
 .tutor-login-form-wrap input[type="text"]{
     width: 100%;
@@ -1973,7 +1960,6 @@ Course question and answer
     background: #ffffff;
     border-color: #1B52D8;
 }
-
 .tutor-login-form-wrap input::-webkit-input-placeholder {
     color: #b0b6c8;
     opacity: 1;
@@ -1990,13 +1976,11 @@ Course question and answer
     color: #b0b6c8;
     opacity: 1;
 }
-
 .tutor-login-rememeber-wrap{
     overflow: hidden;
     text-align: right;
     margin-bottom: 30px;
 }
-
 .tutor-login-rememeber-wrap p{
     display: inline-block;
     float: left;
@@ -2006,8 +1990,6 @@ Course question and answer
 .tutor-login-rememeber-wrap label{
     margin: 0;
 }
-
-
 .tutor-form-register-wrap a,
 .tutor-login-rememeber-wrap a,
 .tutor-login-rememeber-wrap label{
@@ -2018,15 +2000,11 @@ Course question and answer
     transition: 300ms;
 }
 
-
-
 .tutor-form-register-wrap a:hover,
 .tutor-login-rememeber-wrap a:hover,
 .tutor-login-rememeber-wrap label:hover{
     opacity: 1;
 }
-
-
 .tutor-login-form-wrap input[type="submit"]{
     color: #fff;
     background-color: #86B223;
@@ -2046,8 +2024,6 @@ Course question and answer
     background-color: #759c1f;
     border-color: #759c1f;
 }
-
-
 .tutor-login-form-wrap input[type="checkbox"]{
     margin-right: 4px;
 }

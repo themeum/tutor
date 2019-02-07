@@ -21,25 +21,16 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
 
     <div class="tutor-sidebar-tabs-wrap">
         <div class="tutor-tabs-btn-group">
-            <a href="#tutor-lesson-sidebar-tab-content" class="active">Lesson List</a>
-            <a href="#tutor-lesson-sidebar-qa-tab-content">Browse Q&A</a>
+            <a href="#tutor-lesson-sidebar-tab-content" class="active"> <i class="tutor-icon-education"></i> Lesson List</a>
+            <a href="#tutor-lesson-sidebar-qa-tab-content"> <i class="tutor-icon-question-2"></i> Browse Q&A</a>
         </div>
 
-
-
         <div class="tutor-sidebar-tabs-content">
-
-            <div id="tutor-lesson-sidebar-qa-tab-content" class="tutor-lesson-sidebar-tab-item" style="display: none;">
-                <h3>No Question and answers founds</h3>
-                <p>Perhaps you can make a try by search</p>
-            </div>
 
             <div id="tutor-lesson-sidebar-tab-content" class="tutor-lesson-sidebar-tab-item">
 		        <?php
 		        $topics = tutor_utils()->get_topics($course_id);
-
 		        if ($topics->have_posts()){
-
 			        while ($topics->have_posts()){ $topics->the_post();
 				        $topic_id = get_the_ID();
 				        $topic_summery = get_the_content();
@@ -65,7 +56,6 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
                                 </div>
 						        <?php
 					        }
-
 					        ?>
 
                             <div class="tutor-lessons-under-topic">
@@ -76,14 +66,12 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
 						        if ($lessons->have_posts()){
 							        while ($lessons->have_posts()){
 								        $lessons->the_post();
-
 								        $video = tutor_utils()->get_video_info();
 
 								        $play_time = false;
 								        if ($video){
 									        $play_time = $video->playtime;
 								        }
-
 								        $is_completed_lesson = tutor_utils()->is_completed_lesson();
 								        ?>
 
@@ -155,15 +143,16 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
             </div>
 
 
+            <div id="tutor-lesson-sidebar-qa-tab-content" class="tutor-lesson-sidebar-tab-item" style="display: none;">
+		        <?php
+		        tutor_lesson_sidebar_question_and_answer();
+		        ?>
+            </div>
+
+
+
         </div>
 
-
     </div>
-
-
-
-
-
-
 
 <?php do_action('tutor_lesson/single/after/lesson_sidebar'); ?>

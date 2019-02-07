@@ -41,7 +41,9 @@ if ($best_watch_time > 0){
         <?php
         $course_id = get_post_meta(get_the_ID(), '_tutor_course_id_for_lesson', true);
         ?>
-        <a href="<?php echo get_the_permalink($course_id); ?>">&leftarrow; Go to <strong>Course Home</strong></a>
+        <a href="<?php echo get_the_permalink($course_id); ?>">
+            <i class="tutor-icon-next-2"></i> <?php echo sprintf(__('Go to %s Course Home %s', 'tutor'), '<strong>', '</strong>') ; ?>
+        </a>
     </div>
 
 </div>

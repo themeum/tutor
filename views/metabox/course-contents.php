@@ -150,8 +150,7 @@
                     </div>
 
                     <div class="tutor-add-quiz-button-wrap">
-                        <a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>"
-                           data-lesson-id="0" ><?php _e('Add new lesson', 'tutor'); ?></a>
+                        <a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" ><?php _e('Add new lesson', 'tutor'); ?></a>
 
                         <button type="button" class="tutor-add-quiz-btn"> <?php _e('Add Topic Quiz', 'tutor'); ?> </button>
                     </div>
