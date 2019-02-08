@@ -79,7 +79,7 @@ jQuery(document).ready(function($){
             });
             $(".tutor-lessons:not(.drop-lessons)").sortable({
                 connectWith: ".tutor-lessons",
-                items: "div.tutor-lesson",
+                items: "div.course-content-item",
                 start: function (e, ui) {
                     ui.placeholder.css('visibility', 'visible');
                 },
@@ -97,7 +97,7 @@ jQuery(document).ready(function($){
             var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
             var lessons = {};
 
-            $topic.find('.tutor-lesson').each(function(lessonIndex, lessonItem){
+            $topic.find('.course-content-item').each(function(lessonIndex, lessonItem){
                 var $lesson = $(this);
                 var lesson_id = parseInt($lesson.attr('id').match(/\d+/)[0], 10);
 
@@ -835,6 +835,17 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
+
+        var $quizTitle = $('[name="quiz_title"]');
+        var quiz_title = $quizTitle.val();
+        if ( ! quiz_title){
+            $quizTitle.closest('.tutor-quiz-builder-form-row').find('.quiz_form_msg').html('<p class="quiz-form-warning">Please save the quiz' +
+                ' first</p>');
+            return;
+        }else{
+            $quizTitle.closest('.tutor-quiz-builder-form-row').find('.quiz_form_msg').html('');
+        }
+
         var tabSelector = $that.attr('href');
         $('.quiz-builder-tab-container').hide();
         $(tabSelector).show();
@@ -846,6 +857,7 @@ jQuery(document).ready(function($){
     //Next Prev Tab
     $(document).on('click', '.quiz-modal-btn-next, .quiz-modal-btn-back', function(e){
         e.preventDefault();
+
         var tabSelector = $(this).attr('href');
         $('#tutor-quiz-modal-tab-items-wrap a[href="'+tabSelector+'"]').trigger('click');
     });
@@ -854,6 +866,120 @@ jQuery(document).ready(function($){
         e.preventDefault();
         $('.tutor-modal-wrap').removeClass('show');
     });
+
+    $(document).on('click', '.quiz-modal-btn-first-step', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var $quizTitle = $('[name="quiz_title"]');
+        var quiz_title = $quizTitle.val();
+        var quiz_description = $('[name="quiz_description"]').val();
+
+        if ( ! quiz_title){
+            $quizTitle.closest('.tutor-quiz-builder-form-row').find('.quiz_form_msg').html('<p class="quiz-form-warning">Please enter quiz title</p>');
+            return;
+        }else{
+            $quizTitle.closest('.tutor-quiz-builder-form-row').find('.quiz_form_msg').html('');
+        }
+
+        if ($('#tutor_quiz_builder_quiz_id').length) {
+            $('#tutor-quiz-modal-tab-items-wrap a[href="#quiz-builder-tab-questions"]').trigger('click');
+
+            return;
+        }
+
+        var course_id = $('#post_ID').val();
+        var topic_id = $that.closest('.tutor-modal-wrap').attr('quiz-for-post-id');
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {quiz_title:quiz_title, quiz_description: quiz_description, course_id : course_id, topic_id : topic_id, action: 'tutor_create_quiz_and_load_modal'},
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
+                $('#tutor-topics-'+topic_id+' .tutor-lessons').append(data.data.output_quiz_row);
+                $('#tutor-quiz-modal-tab-items-wrap a[href="#quiz-builder-tab-questions"]').trigger('click');
+            },
+            complete: function () {
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+
+    });
+
+    /**
+     * Ope modal for edit quiz
+     */
+    $(document).on('click', '.open-tutor-quiz-modal', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var quiz_id = $that.attr('data-quiz-id');
+        var topic_id = $that.attr('data-topic-id');
+        var course_id = $('#post_ID').val();
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {quiz_id : quiz_id, topic_id : topic_id, course_id : course_id, action: 'tutor_load_edit_quiz_modal'},
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
+                $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).addClass('show');
+
+                //Back to question Tab if exists
+                if ($that.attr('data-back-to-tab')){
+                    var tabSelector = $that.attr('data-back-to-tab');
+                    $('#tutor-quiz-modal-tab-items-wrap a[href="'+tabSelector+'"]').trigger('click');
+                }
+
+            },
+            complete: function () {
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+    /**
+     * Add Question to quiz modal
+     */
+    $(document).on('click', '.tutor-quiz-add-question-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+
+        var quiz_id = $('#tutor_quiz_builder_quiz_id').val();
+        var course_id = $('#post_ID').val();
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {quiz_id : quiz_id, course_id : course_id, action: 'tutor_quiz_builder_get_question_form'},
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                $('.tutor-quiz-builder-modal-contents').html(data.data.output);
+            },
+            complete: function () {
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+
+
+        //tutor-quiz-builder-modal-contents
+
+    });
+
+
+    /**
+     * Deprecated, should remove
+     */
 
     $(document).on('click', '.add_quiz_to_post_btn', function(e){
         e.preventDefault();

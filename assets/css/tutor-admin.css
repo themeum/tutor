@@ -155,6 +155,13 @@ Group Field Option
     padding: 10px;
     margin-bottom: 5px;
     border: 1px solid #D9D9D9;
+    background-color: #ffffff;
+}
+.course-contents .tutor-quiz{
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #D9D9D9;
+    background-color: #ffffff;
 }
 #tutor-course-topics .drop-lessons{
     border: 1px dashed #adabab96;
@@ -182,7 +189,7 @@ Group Field Option
     display: flex;
     font-size: 14px;
 }
-#tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal{
+#tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal, .tutor-quiz .open-tutor-quiz-modal{
     flex: 1;
 }
 #tutor-course-topics .tutor-lesson-top i{
@@ -191,9 +198,6 @@ Group Field Option
 }
 #tutor-course-topics .tutor-lesson-top a{
     color: #393C40;
-}
-.tutor-topics-wrap, .tutor-lesson{
-    background-color: #ffffff;
 }
 .tutor-topics-wrap, .course-move-handle{
     margin-right: 5px;
@@ -976,13 +980,16 @@ Quiz Modal
     padding: 15px 20px;
     border-radius: 3px;
 }
-.quiz-modal-btn-next{
+.quiz-modal-btn-next, .quiz-modal-btn-next:focus, .quiz-modal-btn-first-step, .quiz-modal-btn-first-step:focus{
     background-color: #1B52D8;
     color: #ffffff;
 }
 .quiz-modal-btn-cancel, .quiz-modal-btn-back{
     color: #4B5981;
     border: 1px solid #D4DADB;
+}
+.tutor-quiz-builder-form-row .quiz-form-warning {
+    color: #e88e06;
 }
 /** Tutor Quiz Modal Form */
 .tutor-quiz-builder-form-row{
@@ -1004,6 +1011,18 @@ Quiz Modal
 .tutor-quiz-builder-modal-control-btn-group .quiz-modal-tab-navigation-btn{
     display: inline-block;
 }
+
+.modal-container .tutor-quiz-add-question-btn{
+    border: 1px solid #C6C9CF;
+    padding: 10px 15px;
+    color: #393C40;
+    display: inline-block;
+    border-radius: 3px;
+}
+.modal-container .tutor-quiz-add-question-btn i{
+    color: #3057D5;
+}
+
 
     /**
     #End Quiz Modal
@@ -1194,4 +1213,14 @@ Lesson Edit Modal
 }
 .tutor-get-pro-text {
     color: #e02424;
+}
+.updating-icon:before{
+    font-family: 'tutor';
+    margin-right: 5px;
+    content: "\e91d";
+    -moz-animation: spin 2s infinite linear;
+    -o-animation: spin 2s infinite linear;
+    -webkit-animation: spin 2s infinite linear;
+    animation: spin 2s infinite linear;
+    display: inline-block;
 }

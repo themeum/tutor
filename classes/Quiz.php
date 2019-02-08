@@ -38,6 +38,18 @@ class Quiz {
 		add_action('template_redirect', array($this, 'finishing_quiz_attempt'));
 
 		add_action('admin_action_review_quiz_answer', array($this, 'review_quiz_answer'));
+
+
+
+		/**
+         * New Design Quiz
+         */
+
+		add_action('wp_ajax_tutor_create_quiz_and_load_modal', array($this, 'tutor_create_quiz_and_load_modal'));
+		add_action('wp_ajax_tutor_load_edit_quiz_modal', array($this, 'tutor_load_edit_quiz_modal'));
+		add_action('wp_ajax_tutor_quiz_builder_get_question_form', array($this, 'tutor_quiz_builder_get_question_form'));
+
+
 	}
 
 
@@ -534,6 +546,70 @@ class Quiz {
 
 	    wp_redirect(admin_url("admin.php?page=tutor_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
 	    die();
+    }
+
+
+    /**
+     * New Design Quiz
+     */
+    public function tutor_create_quiz_and_load_modal(){
+	    $topic_id           = sanitize_text_field($_POST['topic_id']);
+	    $quiz_title         = sanitize_text_field($_POST['quiz_title']);
+	    $quiz_description   = sanitize_text_field($_POST['quiz_description']);
+	    $next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id);
+
+	    $post_arr = array(
+		    'post_type'     => 'tutor_quiz',
+		    'post_title'    => $quiz_title,
+		    'post_content'  => $quiz_description,
+		    'post_status'   => 'publish',
+		    'post_author'   => get_current_user_id(),
+		    'post_parent'   => $topic_id,
+		    'menu_order'    => $next_order_id,
+	    );
+	    $quiz_id = wp_insert_post( $post_arr );
+
+	    ob_start();
+	    include  tutor()->path.'views/modal/edit_quiz.php';
+	    $output = ob_get_clean();
+
+	    ob_start();
+	    ?>
+        <div id="tutor-quiz-<?php echo $quiz_id; ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $quiz_id; ?>">
+            <div class="tutor-lesson-top">
+                <i class="tutor-icon-move"></i>
+                <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
+			    ?>"> <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz_title; ?> </a>
+                <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
+            </div>
+        </div>
+        <?php
+	    $output_quiz_row = ob_get_clean();
+
+        wp_send_json_success(array('output' => $output, 'output_quiz_row' => $output_quiz_row));
+    }
+
+
+
+
+    public function tutor_load_edit_quiz_modal(){
+	    $quiz_id           = sanitize_text_field($_POST['quiz_id']);
+
+	    ob_start();
+	    include  tutor()->path.'views/modal/edit_quiz.php';
+	    $output = ob_get_clean();
+
+	    wp_send_json_success(array('output' => $output));
+    }
+
+    public function tutor_quiz_builder_get_question_form(){
+	    $quiz_id           = sanitize_text_field($_POST['quiz_id']);
+
+	    ob_start();
+	    include  tutor()->path.'views/modal/question_form.php';
+	    $output = ob_get_clean();
+
+	    wp_send_json_success(array('output' => $output));
     }
 
 }

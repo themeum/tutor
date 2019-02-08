@@ -518,12 +518,36 @@ class Utils {
 		return $last_order + 1;
 	}
 
+	public function get_next_course_content_order_id($topic_ID){
+		global $wpdb;
+
+		$last_order = (int) $wpdb->get_var("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = {$topic_ID};");
+		return $last_order + 1;
+	}
+
 	public function get_lessons_by_topic($topics_id = 0, $limit = 10){
 		$topics_id = $this->get_post_id($topics_id);
 
 		$lesson_post_type = tutor()->lesson_post_type;
 		$args = array(
 			'post_type'  => $lesson_post_type,
+			'post_parent'  => $topics_id,
+			'posts_per_page'    => $limit,
+			'orderby' => 'menu_order',
+			'order'   => 'ASC',
+		);
+
+		$query = new \WP_Query($args);
+
+		return $query;
+	}
+
+	public function get_course_contents_by_topic($topics_id = 0, $limit = 10){
+		$topics_id = $this->get_post_id($topics_id);
+
+		$lesson_post_type = tutor()->lesson_post_type;
+		$args = array(
+			'post_type'  => array($lesson_post_type, 'tutor_quiz'),
 			'post_parent'  => $topics_id,
 			'posts_per_page'    => $limit,
 			'orderby' => 'menu_order',
