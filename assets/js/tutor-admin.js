@@ -939,7 +939,7 @@ jQuery(document).ready(function($){
                 }
 
                 //Initializing Tutor Select
-                tutor_select().reinit();
+                tutor_select().reInit();
 
             },
             complete: function () {
@@ -1239,9 +1239,9 @@ jQuery(document).ready(function($){
                     $that.closest('.tutor-select').find('.tutor-select-options').slideToggle();
                 });
 
-                this.setvalue();
+                this.setValue();
             },
-            setvalue : function(){
+            setValue : function(){
                 $('.tutor-select').each(function(){
                     var $that = $(this);
                     var $option = $that.find('.tutor-select-option');
@@ -1259,8 +1259,8 @@ jQuery(document).ready(function($){
                     }
                 });
             },
-            reinit : function(){
-                this.setvalue();
+            reInit : function(){
+                this.setValue();
             }
         };
 
