@@ -1220,7 +1220,6 @@ jQuery(document).ready(function($){
      */
 
     function tutor_select(){
-
         var obj = {
             init : function(){
                 $(document).on('click', '.tutor-select .tutor-select-option', function(e){

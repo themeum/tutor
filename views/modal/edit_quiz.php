@@ -271,7 +271,128 @@ if ( ! $quiz){
         </div>
 
         <div id="quiz-builder-tab-advanced-options" class="quiz-builder-tab-container" style="display: none;">
-            <h1>Advanced Options</h1>
+
+
+
+
+
+            <div class="tutor-quiz-builder-form-row">
+                <div class="tutor-quiz-builder-form-cols-row">
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label><?php _e('Quiz Auto Start', 'tutor'); ?></label>
+                    </div>
+
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label class="btn-switch">
+                            <input type="checkbox" value="1" name="tutor_quiz[<?php echo $quiz_id; ?>][quiz_auto_start]" />
+                            <div class="btn-slider btn-round"></div>
+                        </label>
+                        <p class="quiz-modal-form-help"><?php _e('If you enable this option, the quiz will start automatically after the page is loaded.', 'tutor'); ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutor-quiz-builder-form-row">
+                <div class="tutor-quiz-builder-form-cols-row">
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label><?php _e('Questions below each other', 'tutor'); ?></label>
+                    </div>
+
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label class="btn-switch">
+                            <input type="checkbox" value="1" name="tutor_quiz[<?php echo $quiz_id; ?>][question_below_each_other]" />
+                            <div class="btn-slider btn-round"></div>
+                        </label>
+                        <p class="quiz-modal-form-help"><?php _e('If this option is activated, all answers are displayed below each other, i.e. all questions are on a single page.', 'tutor'); ?></p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tutor-quiz-builder-form-row">
+                <div class="tutor-quiz-builder-form-cols-row">
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label><?php _e('Show correct questions - display', 'tutor'); ?></label>
+                    </div>
+
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label class="btn-switch">
+                            <input type="checkbox" value="1" name="tutor_quiz[<?php echo $quiz_id; ?>][show_correct_questions]" />
+                            <div class="btn-slider btn-round"></div>
+                        </label>
+                        <p class="quiz-modal-form-help"><?php _e('If this option is activated, all answers are displayed below each other, i.e. all questions are on a single page.', 'tutor'); ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutor-quiz-builder-form-row">
+                <div class="tutor-quiz-builder-form-cols-row">
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label><?php _e('Hide question number overview', 'tutor'); ?></label>
+                    </div>
+
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label class="btn-switch">
+                            <input type="checkbox" value="1" name="tutor_quiz[<?php echo $quiz_id; ?>][hide_question_number_overview]" />
+                            <div class="btn-slider btn-round"></div>
+                        </label>
+                        <p class="quiz-modal-form-help"><?php _e('Please note all questions will appear in your default Language. This language can be changed for a particular question later on.', 'tutor'); ?></p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tutor-quiz-builder-form-row">
+                <div class="tutor-quiz-builder-form-cols-row">
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label><?php _e('Question overview', 'tutor'); ?></label>
+                    </div>
+
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label class="btn-switch">
+                            <input type="checkbox" value="1" name="tutor_quiz[<?php echo $quiz_id; ?>][question_overview]" />
+                            <div class="btn-slider btn-round"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="tutor-quiz-builder-form-row">
+                <div class="tutor-quiz-builder-form-cols-row">
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label><?php _e('Hide "Skip Question"', 'tutor'); ?></label>
+                    </div>
+
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label class="btn-switch">
+                            <input type="checkbox" value="1" name="tutor_quiz[<?php echo $quiz_id; ?>][hide_question_number_overview]" />
+                            <div class="btn-slider btn-round"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="tutor-quiz-builder-form-row">
+                <div class="tutor-quiz-builder-form-cols-row">
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label><?php _e('Hide "Retry Quiz"', 'tutor'); ?></label>
+                    </div>
+
+                    <div class="tutor-quiz-builder-form-field-cols">
+                        <label class="btn-switch">
+                            <input type="checkbox" value="1" name="tutor_quiz[<?php echo $quiz_id; ?>][hide_question_number_overview]" />
+                            <div class="btn-slider btn-round"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
         </div>
 
 

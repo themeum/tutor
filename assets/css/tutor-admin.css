@@ -1041,10 +1041,9 @@ Quiz Modal
 .quiz-modal-switch-field label.btn-switch {
     margin-right: 20px;
 }
-.quiz-modal-switch-field label.btn-switch input:checked + .btn-slider {
+.tutor-quiz-builder-form-row label.btn-switch input:checked + .btn-slider {
     background-color: #4CD964;
 }
-
 .tutor-select {
     position: relative;
 }
@@ -1133,6 +1132,18 @@ a.back-to-quiz-questions-btn {
 }
 .modal-container .quiz-questions-form {
     padding: 20px;
+}
+
+.tutor-quiz-builder-form-row .quiz-modal-form-help {
+    color: #A4A4A4;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 12px;
+    margin-top: 10px !important;
+}
+
+#quiz-builder-tab-advanced-options .tutor-quiz-builder-form-cols-row .tutor-quiz-builder-form-field-cols:first-child{
+    flex: 0 0 150px;
 }
 
 /**
