@@ -783,7 +783,7 @@ jQuery(document).ready(function($){
     /*
     $(document).on('click', '.tutor-add-quiz-btn', function(e){
         e.preventDefault();
-        
+
         var $that = $(this);
         var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').attr('data-add-quiz-under');
         $.ajax({
@@ -937,6 +937,9 @@ jQuery(document).ready(function($){
                     var tabSelector = $that.attr('data-back-to-tab');
                     $('#tutor-quiz-modal-tab-items-wrap a[href="'+tabSelector+'"]').trigger('click');
                 }
+
+                //Initializing Tutor Select
+                tutor_select().reinit();
 
             },
             complete: function () {
@@ -1211,5 +1214,64 @@ jQuery(document).ready(function($){
         });
 
     });
+
+    /**
+     * Tutor Custom Select
+     */
+
+    function tutor_select(){
+
+        var obj = {
+            init : function(){
+                $(document).on('click', '.tutor-select .tutor-select-option', function(e){
+                    e.preventDefault();
+
+                    var $that = $(this);
+                    var $html = $that.html().trim();
+                    $that.closest('.tutor-select').find('.select-header .lead-option').html($html);
+                    $that.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($that.attr('data-value'));
+                    $that.closest('.tutor-select-options').hide();
+                });
+                $(document).on('click', '.tutor-select .select-header', function(e){
+                    e.preventDefault();
+
+                    var $that = $(this);
+                    $that.closest('.tutor-select').find('.tutor-select-options').slideToggle();
+                });
+
+                this.setvalue();
+            },
+            setvalue : function(){
+                $('.tutor-select').each(function(){
+                    var $that = $(this);
+                    var $option = $that.find('.tutor-select-option');
+
+                    if ($option.length){
+                        $option.each(function(){
+                            var $thisOption = $(this);
+
+                            if ($thisOption.attr('data-selected') === 'selected'){
+                                var $html = $thisOption.html().trim();
+                                $thisOption.closest('.tutor-select').find('.select-header .lead-option').html($html);
+                                $thisOption.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($thisOption.attr('data-value'));
+                            }
+                        });
+                    }
+                });
+            },
+            reinit : function(){
+                this.setvalue();
+            }
+        };
+
+        return obj;
+    }
+
+
+    tutor_select().init();
+
+
+
+
 
 });

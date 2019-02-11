@@ -39,8 +39,6 @@ class Quiz {
 
 		add_action('admin_action_review_quiz_answer', array($this, 'review_quiz_answer'));
 
-
-
 		/**
          * New Design Quiz
          */
@@ -48,11 +46,7 @@ class Quiz {
 		add_action('wp_ajax_tutor_create_quiz_and_load_modal', array($this, 'tutor_create_quiz_and_load_modal'));
 		add_action('wp_ajax_tutor_load_edit_quiz_modal', array($this, 'tutor_load_edit_quiz_modal'));
 		add_action('wp_ajax_tutor_quiz_builder_get_question_form', array($this, 'tutor_quiz_builder_get_question_form'));
-
-
 	}
-
-
 
 	public function add_column($columns){
 		$date_col = $columns['date'];
@@ -77,7 +71,6 @@ class Quiz {
             echo tutor_utils()->total_questions_for_student_by_quiz($post_id);
 		}
 	}
-
 
 	public function register_meta_box(){
 		add_meta_box( 'tutor-quiz-questions', __( 'Questions', 'tutor' ), array($this, 'quiz_questions'), 'tutor_quiz' );
@@ -589,9 +582,11 @@ class Quiz {
         wp_send_json_success(array('output' => $output, 'output_quiz_row' => $output_quiz_row));
     }
 
-
-
-
+	/**
+	 * Load quiz Modal for edit quiz
+     *
+     * @since v.1.0.0
+	 */
     public function tutor_load_edit_quiz_modal(){
 	    $quiz_id           = sanitize_text_field($_POST['quiz_id']);
 
@@ -602,6 +597,11 @@ class Quiz {
 	    wp_send_json_success(array('output' => $output));
     }
 
+	/**
+	 * Load quiz question form for quiz
+     *
+	 * @since v.1.0.0
+	 */
     public function tutor_quiz_builder_get_question_form(){
 	    $quiz_id           = sanitize_text_field($_POST['quiz_id']);
 
