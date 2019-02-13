@@ -2311,7 +2311,10 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question' AND post_parent = {$quiz_id} ORDER BY menu_order ASC ");
+		//$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question'
+		// AND post_parent = {$quiz_id} ORDER BY menu_order ASC ");
+
+		$questions = $wpdb->get_results("SELECT * from {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} ORDER BY question_order ASC ");
 
 		if (is_array($questions) && count($questions)){
 			return $questions;
@@ -2321,9 +2324,15 @@ class Utils {
 
 	public function get_question_types($type = null){
 		$types = array(
-			'true_false'        => __('True/False', 'tutor'),
-			'multiple_choice'   => __('Multiple Choice', 'tutor'),
-			'single_choice'     => __('Single Choice', 'tutor'),
+			'true_false'        => array('name' => __('True/False', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-yes-no"></i>'),
+			'single_choice'     => array('name' => __('Single Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-mark"></i>'),
+			'multiple_choice'   => array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-multiple-choice"></i>'),
+			'open_ended'        => array('name' => __('Open Ended', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-open-ended"></i>'),
+			'fill_in_the_blank'  => array('name' => __('Fill In The Blank', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-fill-gaps"></i>'),
+			'answer_sorting'    => array('name' => __('Answer Sorting', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-answer-shorting"></i>'),
+			'assessment'        => array('name' => __('Assessment', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-assesment"></i>'),
+			'matching'          => array('name' => __('Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-matching"></i>'),
+			'ordering'          => array('name' => __('Ordering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-ordering"></i>'),
 		);
 
 		if (isset($types[$type])){
@@ -2362,7 +2371,25 @@ class Utils {
 	public function quiz_next_question_order_id($quiz_id){
 		global $wpdb;
 
-		$last_order = (int) $wpdb->get_var("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = {$quiz_id} AND post_type = 'tutor_question';");
+		//$last_order = (int) $wpdb->get_var("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = {$quiz_id} AND post_type =
+		// 'tutor_question';");
+
+		$last_order = (int) $wpdb->get_var("SELECT MAX(question_order) FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} ;");
+		return $last_order + 1;
+	}
+
+	/**
+	 * @param $quiz_id
+	 *
+	 * @return int
+	 *
+	 * new design quiz question
+	 *
+	 */
+	public function quiz_next_question_id(){
+		global $wpdb;
+
+		$last_order = (int) $wpdb->get_var("SELECT MAX(question_id) FROM {$wpdb->prefix}tutor_quiz_questions;");
 		return $last_order + 1;
 	}
 

@@ -44,8 +44,13 @@ class Quiz {
          */
 
 		add_action('wp_ajax_tutor_create_quiz_and_load_modal', array($this, 'tutor_create_quiz_and_load_modal'));
+		add_action('wp_ajax_tutor_quiz_builder_quiz_update', array($this, 'tutor_quiz_builder_quiz_update'));
 		add_action('wp_ajax_tutor_load_edit_quiz_modal', array($this, 'tutor_load_edit_quiz_modal'));
 		add_action('wp_ajax_tutor_quiz_builder_get_question_form', array($this, 'tutor_quiz_builder_get_question_form'));
+		add_action('wp_ajax_tutor_quiz_modal_update_question', array($this, 'tutor_quiz_modal_update_question'));
+		add_action('wp_ajax_tutor_quiz_builder_question_delete', array($this, 'tutor_quiz_builder_question_delete'));
+		add_action('wp_ajax_tutor_quiz_add_question_answers', array($this, 'tutor_quiz_add_question_answers'));
+		add_action('wp_ajax_tutor_quiz_modal_update_settings', array($this, 'tutor_quiz_modal_update_settings'));
 	}
 
 	public function add_column($columns){
@@ -583,6 +588,39 @@ class Quiz {
     }
 
 	/**
+	 * Update Quiz from quiz builder modal
+     *
+     * @since v.1.0.0
+	 */
+    public function tutor_quiz_builder_quiz_update(){
+	    $quiz_id         = sanitize_text_field($_POST['quiz_id']);
+	    $topic_id         = sanitize_text_field($_POST['topic_id']);
+	    $quiz_title         = sanitize_text_field($_POST['quiz_title']);
+	    $quiz_description   = sanitize_text_field($_POST['quiz_description']);
+
+	    $post_arr = array(
+		    'ID'    => $quiz_id,
+		    'post_title'    => $quiz_title,
+		    'post_content'  => $quiz_description,
+
+	    );
+	    $quiz_id = wp_update_post( $post_arr );
+
+	    ob_start();
+	    ?>
+        <div class="tutor-lesson-top">
+            <i class="tutor-icon-move"></i>
+            <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
+		    ?>"> <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz_title; ?> </a>
+            <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
+        </div>
+	    <?php
+	    $output_quiz_row = ob_get_clean();
+
+	    wp_send_json_success(array('output_quiz_row' => $output_quiz_row));
+    }
+
+	/**
 	 * Load quiz Modal for edit quiz
      *
      * @since v.1.0.0
@@ -603,13 +641,105 @@ class Quiz {
 	 * @since v.1.0.0
 	 */
     public function tutor_quiz_builder_get_question_form(){
-	    $quiz_id           = sanitize_text_field($_POST['quiz_id']);
+        global $wpdb;
+	    $quiz_id = sanitize_text_field($_POST['quiz_id']);
+	    $question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
+
+	    if ( ! $question_id){
+	        $next_question_id = tutor_utils()->quiz_next_question_id();
+	        $next_question_order = tutor_utils()->quiz_next_question_order_id($quiz_id);
+
+		    $new_question_data = array(
+		            'quiz_id'               => $quiz_id,
+		            'question_title'        => __('Question ').$next_question_id,
+		            'question_description'  => '',
+		            'question_type'         => 'true_false',
+		            'question_mark'         => 1,
+		            'question_settings'     => maybe_serialize(array()),
+		            'question_order'        => $next_question_order,
+            );
+
+		    $wpdb->insert($wpdb->prefix.'tutor_quiz_questions', $new_question_data);
+		    $question_id = $wpdb->insert_id;
+        }
+
+	    $question = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions where question_id = {$question_id} ");
 
 	    ob_start();
 	    include  tutor()->path.'views/modal/question_form.php';
 	    $output = ob_get_clean();
 
 	    wp_send_json_success(array('output' => $output));
+    }
+
+    public function tutor_quiz_modal_update_question(){
+        global $wpdb;
+
+	    $question_data = $_POST['tutor_quiz_question'];
+
+        foreach ($question_data as $question_id => $question){
+            $question_title         = $question['question_title'];
+            $question_description   = $question['question_description'];
+            $question_type          = $question['question_type'];
+            $question_mark          = $question['question_mark'];
+
+            unset($question['question_title']);
+            unset($question['question_description']);
+
+            $data = array(
+                    'question_title'        => $question_title,
+                    'question_description'  => $question_description,
+                    'question_type'         => $question_type,
+                    'question_mark'         => $question_mark,
+                    'question_settings'     => maybe_serialize($question),
+            );
+
+	        $wpdb->update($wpdb->prefix.'tutor_quiz_questions', $data, array('question_id' => $question_id) );
+        }
+
+        wp_send_json_success();
+    }
+
+    public function tutor_quiz_builder_question_delete(){
+        global $wpdb;
+
+	    $question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
+	    if ($question_id){
+		    $wpdb->delete($wpdb->prefix.'tutor_quiz_questions', array('question_id' => $question_id));
+        }
+
+	    wp_send_json_success();
+    }
+
+	/**
+	 * Get answers options form for quiz question
+     *
+     * @since v.1.0.0
+	 */
+	public function tutor_quiz_add_question_answers(){
+        $question_id = sanitize_text_field($_POST['question_id']);
+        $question = tutor_utils()->avalue_dot($question_id, $_POST['tutor_quiz_question']);
+        $question_type = $question['question_type'];
+
+		ob_start();
+		include  tutor()->path.'views/modal/question_answer_form.php';
+		$output = ob_get_clean();
+
+		wp_send_json_success(array('output' => $output));
+	}
+
+	/**
+	 * Update quiz settings from modal
+     *
+     * @since : v.1.0.0
+	 */
+    public function tutor_quiz_modal_update_settings(){
+        $quiz_id = sanitize_text_field($_POST['quiz_id']);
+
+	    $quiz_option = tutor_utils()->sanitize_array($_POST['quiz_option']);
+	    update_post_meta($quiz_id, 'tutor_quiz_option', $quiz_option);
+
+	    wp_send_json_success();
     }
 
 }
