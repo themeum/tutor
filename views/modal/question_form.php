@@ -1,7 +1,6 @@
 <?php
-
+global $wpdb;
 $settings = maybe_unserialize($question->question_settings);
-
 ?>
 
 <div class="quiz-questions-form">
@@ -141,16 +140,57 @@ $settings = maybe_unserialize($question->question_settings);
             </div>
 
             <div class="tutor-quiz-builder-form-row">
-                <label><?php _e('Answer options &amp; mark correct', 'tutor'); ?> </label>
+
+
+
+
                 <div id="tuotr_question_options_for_quiz" class="quiz-modal-field-wrap">
-                    <div class="question_options_group_wrap">
+                    <div id="tutor_quiz_question_answers" data-question-id="<?php echo $question_id; ?>">
+	                    <?php
+	                    switch ($question->question_type){
+		                    case 'true_false':
+			                    echo '<label>'.__('Answer options &amp; mark correct', 'tutor').'</label>';
+			                    break;
+		                    case 'ordering':
+			                    echo '<label>'.__('Student should order below items exact this order, make sure your answer is in right order, you can re-order them', 'tutor').'</label>';
+			                    break;
+	                    }
 
+						$answers = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question->question_type}' order by answer_order asc ;");
+						if (is_array($answers) && count($answers)){
+							foreach ($answers as $answer){
+								?>
+                                <div class="tutor-quiz-answer-wrap" data-answer-id="<?php echo $answer->answer_id; ?>">
+                                    <div class="tutor-quiz-answer">
+                                        <span class="tutor-quiz-answer-title">
+                                            <?php
+                                            if ($answer->is_correct){
+                                                echo '<i class="tutor-icon-mark"></i>';
+                                            }
+                                            ?>
+                                            <?php echo $answer->answer_title;
+                                            if ($answer->belongs_question_type === 'fill_in_the_blank'){
+                                                echo __(' Answer', 'tutor');
+                                                echo "<strong> ({$answer->gape_answer}) </strong>";
+                                            }
+
+                                            ?>
+                                        </span>
+                                        <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
+                                    </div>
+
+                                    <div class="tutor-quiz-answer-trash-wrap">
+                                        <a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>"><i class="tutor-icon-garbage"></i> </a>
+                                    </div>
+                                </div>
+								<?php
+							}
+						}
+						?>
                     </div>
 
 
-                    <div id="tutor_quiz_question_answer_form">
-
-                    </div>
+                    <div id="tutor_quiz_question_answer_form"></div>
 
 
                     <a href="javascript:;" class="add_question_answers_option" data-question-id="<?php echo $question_id; ?>">
@@ -160,12 +200,7 @@ $settings = maybe_unserialize($question->question_settings);
                 </div>
             </div>
 
-
-
         </div>
-
-
-
 
     </div>
 
