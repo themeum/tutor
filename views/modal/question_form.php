@@ -142,8 +142,6 @@ $settings = maybe_unserialize($question->question_settings);
             <div class="tutor-quiz-builder-form-row">
 
 
-
-
                 <div id="tuotr_question_options_for_quiz" class="quiz-modal-field-wrap">
                     <div id="tutor_quiz_question_answers" data-question-id="<?php echo $question_id; ?>">
 	                    <?php
@@ -167,8 +165,7 @@ $settings = maybe_unserialize($question->question_settings);
                                             if ($answer->is_correct){
                                                 echo '<i class="tutor-icon-mark"></i>';
                                             }
-                                            ?>
-                                            <?php echo $answer->answer_title;
+                                            echo $answer->answer_title;
                                             if ($answer->belongs_question_type === 'fill_in_the_blank'){
                                                 echo __(' Answer', 'tutor');
                                                 echo "<strong> ({$answer->gape_answer}) </strong>";

@@ -825,8 +825,7 @@ class Quiz {
                             if ($answer->is_correct){
                                 echo '<i class="tutor-icon-mark"></i>';
                             }
-                            ?>
-                            <?php echo $answer->answer_title; ?>
+                            echo $answer->answer_title; ?>
                         </span>
                         <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
                     </div>
