@@ -740,22 +740,25 @@ class Quiz {
 
 		foreach ($answers as $question_id => $answer){
 			$question = tutor_utils()->avalue_dot($question_id, $questions);
+			$question_type = $question['question_type'];
+			
+			//TODO: need to get next sorting order by a query
 
 			if ($question){
-				if ($question['question_type'] === 'true_false'){
-					//$ifAnyPreviousData = $wpdb->get_var("SELECT COUNT(answer_id) FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id ={$question_id} AND belongs_question_type = '{$question['question_type']}' ");
+				if ($question_type === 'true_false'){
+					//$ifAnyPreviousData = $wpdb->get_var("SELECT COUNT(answer_id) FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id ={$question_id} AND belongs_question_type = '{$question_type}' ");
 
-					$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('belongs_question_id' => $question_id, 'belongs_question_type' => $question['question_type']));
+					$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('belongs_question_id' => $question_id, 'belongs_question_type' => $question_type));
 					$data_true_false = array(
 						array(
 							'belongs_question_id'   => $question_id,
-							'belongs_question_type' => $question['question_type'],
+							'belongs_question_type' => $question_type,
 							'answer_title'          => __('True', 'tutor'),
 							'is_correct'            => $answer['true_false'] == 'true' ? 1 : 0,
 						),
 						array(
 							'belongs_question_id'   => $question_id,
-							'belongs_question_type' => $question['question_type'],
+							'belongs_question_type' => $question_type,
 							'answer_title'          => __('False', 'tutor'),
 							'is_correct'            => $answer['true_false'] == 'false' ? 1 : 0,
 						),
@@ -765,13 +768,18 @@ class Quiz {
 						$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $true_false_data);
 					}
 
-				}elseif($question['question_type'] === 'multiple_choice' || $question['question_type'] === 'single_choice' || $question['question_type'] === 'ordering' ){
+				}elseif($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' ){
+
+				    $next_order_id = (int) $wpdb->get_var("SELECT MAX(answer_order) FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question_type}' ");
+					$next_order_id = $next_order_id + 1;
+
 					$answer_data = array(
 						'belongs_question_id'   => $question_id,
-						'belongs_question_type' => $question['question_type'],
+						'belongs_question_type' => $question_type,
 						'answer_title'          => $answer['answer_title'],
 						'image_id'              => isset($answer['image_id']) ? $answer['image_id'] : 0,
 						'answer_view_format'    => isset($answer['answer_view_format']) ? $answer['answer_view_format'] : 0,
+						'answer_order'          => $next_order_id,
 					);
 					if (isset($answer['is_correct_answer'])){
 						$answer_data['is_correct'] = $answer['is_correct_answer'];
@@ -779,11 +787,11 @@ class Quiz {
 
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
 
-				}elseif($question['question_type'] === 'fill_in_the_blank'){
-					$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('belongs_question_id' => $question_id, 'belongs_question_type' => $question['question_type']));
+				}elseif($question_type === 'fill_in_the_blank'){
+					$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('belongs_question_id' => $question_id, 'belongs_question_type' => $question_type));
 					$answer_data = array(
 						'belongs_question_id'   => $question_id,
-						'belongs_question_type' => $question['question_type'],
+						'belongs_question_type' => $question_type,
 						'answer_title'          => __('Fill In The Gap', 'tutor'),
 						'gape_answer'           => isset($answer['gape_answer']) ? strtolower(trim($answer['gape_answer'])) : null,
 					);
