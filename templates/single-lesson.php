@@ -21,7 +21,7 @@ $currentPost = $post;
 			<?php tutor_lessons_sidebar(); ?>
         </div>
 
-        <div id="tutor-single-lesson-entry-content" class="tutor-lesson-content tutor-single-lesson-entry-content-<?php the_ID(); ?>">
+        <div id="tutor-single-entry-content" class="tutor-lesson-content tutor-single-entry-content tutor-single-entry-content-<?php the_ID(); ?>">
 		    <?php tutor_lesson_content(); ?>
         </div>
         

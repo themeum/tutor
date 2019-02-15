@@ -1064,7 +1064,7 @@ Instructor
 .tutor-lesson-sidebar{
     flex: 0 0 400px;
 }
-.tutor-lesson-content  {
+.tutor-single-entry-content  {
     flex: 1;
 }
 .tutor-single-lesson-button-group .tutor-single-lesson-button a,
@@ -1137,12 +1137,12 @@ Instructor
     border-top: 1px solid #DCE4E6;
     display: none;
 }
-.tutor-topics-lesson-list .tutor-lesson-right-icons{
+.tutor-lessons-under-topic .tutor-lesson-right-icons{
     position: absolute;
     right: 15px;
     top: 14px;
 }
-.tutor-topics-lesson-list .tutor-lesson-right-icons .tutor-lesson-complete{
+.tutor-lessons-under-topic .tutor-lesson-right-icons .tutor-lesson-complete{
     height: 16px;
     width: 16px;
     border: 1px solid #E8EFF1;
@@ -1155,16 +1155,16 @@ Instructor
     vertical-align: middle;
     margin-left: 8px;
 }
-.tutor-topics-lesson-list .tutor-single-lesson-items.active .tutor-lesson-right-icons .tutor-lesson-complete{
+.tutor-lessons-under-topic .tutor-single-lesson-items.active .tutor-lesson-right-icons .tutor-lesson-complete{
     border-color: #b7d6b7;
 }
-.tutor-topics-lesson-list .tutor-single-lesson-items.active .tutor-lesson-right-icons .tutor-lesson-complete.tutor-done,
-.tutor-topics-lesson-list .tutor-lesson-right-icons .tutor-lesson-complete.tutor-done{
+.tutor-lessons-under-topic .tutor-single-lesson-items.active .tutor-lesson-right-icons .tutor-lesson-complete.tutor-done,
+.tutor-lessons-under-topic .tutor-lesson-right-icons .tutor-lesson-complete.tutor-done{
     background: #86B223;
     border-color: #86B223;
     color: #fff;
 }
-.tutor-topics-lesson-list .tutor-lesson-right-icons i{
+.tutor-lessons-under-topic .tutor-lesson-right-icons i{
     font-style: normal;
 }
 
@@ -1189,7 +1189,7 @@ Instructor
     text-align: right;
     margin-right: 30px;
 }
-.tutor-lesson-content-area{
+.tutor-lesson-content-area, .tutor-quiz-single-wrap {
     margin: 0 100px;
 }
 .tutor-lesson-sidebar-hide-bar{

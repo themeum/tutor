@@ -87,7 +87,7 @@ $settings = maybe_unserialize($question->question_settings);
                                         <i class="tutor-icon-block tutor-icon-multiple-choice"></i> <?php _e('Multiple Choice', 'tutor'); ?>
                                     </p>
                                     <p class="tutor-select-option" data-value="open_ended" <?php echo $question->question_type === 'open_ended' ? ' data-selected="selected"' : ''; ?>>
-                                        <i class="tutor-icon-block tutor-icon-open-ended"></i> <?php _e('Open Ended', 'tutor'); ?>
+                                        <i class="tutor-icon-block tutor-icon-open-ended"></i> <?php _e('Open Ended/Essay', 'tutor'); ?>
                                     </p>
                                     <p class="tutor-select-option" data-value="fill_in_the_blank" <?php echo $question->question_type === 'fill_in_the_blank' ? ' data-selected="selected"' : ''; ?>>
                                         <i class="tutor-icon-block tutor-icon-fill-gaps"></i> <?php _e('Fill In The Gaps'); ?>

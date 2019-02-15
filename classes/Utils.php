@@ -2327,7 +2327,7 @@ class Utils {
 			'true_false'        => array('name' => __('True/False', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-yes-no"></i>'),
 			'single_choice'     => array('name' => __('Single Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-mark"></i>'),
 			'multiple_choice'   => array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-multiple-choice"></i>'),
-			'open_ended'        => array('name' => __('Open Ended', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-open-ended"></i>'),
+			'open_ended'        => array('name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-open-ended"></i>'),
 			'fill_in_the_blank'  => array('name' => __('Fill In The Blank', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-fill-gaps"></i>'),
 			'answer_sorting'    => array('name' => __('Answer Sorting', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-answer-shorting"></i>'),
 			'assessment'        => array('name' => __('Assessment', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-assesment"></i>'),
@@ -2492,6 +2492,7 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		$user_id = get_current_user_id();
 
+		/*
 		$is_started = $wpdb->get_row("SELECT 
  			comment_ID,
  			comment_post_ID,
@@ -2506,7 +2507,9 @@ class Utils {
 			WHERE user_id = {$user_id} 
 		  	AND comment_type = 'tutor_quiz_attempt' 
 		  	AND comment_approved = 'quiz_started' 
-		  	AND comment_post_ID = {$quiz_id} ; ");
+		  	AND comment_post_ID = {$quiz_id} ; ");*/
+
+		$is_started = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id =  {$user_id} AND quiz_id = {$quiz_id} AND attempt_status = 'attempt_started' ");
 
 		return $is_started;
 	}
@@ -2555,9 +2558,8 @@ class Utils {
 		return $attempt;
 	}
 
-	public function quiz_attempt_info($quiz_attempt_id){
-		$attempt_info = get_comment_meta($quiz_attempt_id, 'quiz_attempt_info', true);
-		return $attempt_info;
+	public function quiz_attempt_info($attempt_info){
+		return maybe_unserialize($attempt_info);
 	}
 
 	public function quiz_update_attempt_info($quiz_attempt_id, $attempt_info = array()){
@@ -2570,28 +2572,16 @@ class Utils {
 		return update_comment_meta($quiz_attempt_id,'quiz_attempt_info', $attempt_info);
 	}
 
-	public function get_rand_single_question_by_quiz_for_student($quiz_id = 0){
+	public function get_random_question_by_quiz($quiz_id = 0){
 		global $wpdb;
 
 		$quiz_id = $this->get_post_id($quiz_id);
-
 		$is_attempt = $this->is_started_quiz($quiz_id);
-		$attempted_question_ids = array();
-		if ($is_attempt){
-			$attempt_info = $this->quiz_attempt_info($is_attempt->comment_ID);
-			$attempted_question_ids = wp_list_pluck($this->avalue_dot('answers', $attempt_info),'questionID');
-		}
-		$attempted_question_ids_string = implode(",", $attempted_question_ids);
 
-		$not_in_sql = "";
-		if (is_array($attempted_question_ids) && count($attempted_question_ids)){
-			$not_in_sql = " AND ID NOT IN({$attempted_question_ids_string}) ";
-		}
+		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} ORDER BY RAND() LIMIT 0,1 ");
 
-		$question = $wpdb->get_row("SELECT ID, post_content, post_title, post_parent 
-			from {$wpdb->posts} WHERE post_type = 'tutor_question' AND post_parent = {$quiz_id} {$not_in_sql} ORDER BY RAND() ;");
 
-		return $question;
+		return $questions;
 	}
 
 	/**
@@ -2885,5 +2875,23 @@ class Utils {
 		return false;
 	}
 
+	function get_ip() {
+		$ipaddress = '';
+		if (getenv('HTTP_CLIENT_IP'))
+			$ipaddress = getenv('HTTP_CLIENT_IP');
+		else if(getenv('HTTP_X_FORWARDED_FOR'))
+			$ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+		else if(getenv('HTTP_X_FORWARDED'))
+			$ipaddress = getenv('HTTP_X_FORWARDED');
+		else if(getenv('HTTP_FORWARDED_FOR'))
+			$ipaddress = getenv('HTTP_FORWARDED_FOR');
+		else if(getenv('HTTP_FORWARDED'))
+			$ipaddress = getenv('HTTP_FORWARDED');
+		else if(getenv('REMOTE_ADDR'))
+			$ipaddress = getenv('REMOTE_ADDR');
+		else
+			$ipaddress = 'UNKNOWN';
+		return $ipaddress;
+	}
 
 }

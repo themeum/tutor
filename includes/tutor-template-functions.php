@@ -1075,6 +1075,18 @@ function tutor_single_quiz_no_course_belongs($echo = true){
 	return $output;
 }
 
+function single_quiz_contents($echo = true){
+
+	ob_start();
+	tutor_load_template( 'single.quiz.single_quiz_contents' );
+	$output = apply_filters( 'tutor_single_quiz/single_quiz_contents', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
+	return $output;
+}
+
 function get_tutor_course_level($course_id = 0){
 	if ( ! $course_id){
 		$course_id = get_the_ID();

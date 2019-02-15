@@ -1,3 +1,8 @@
+<?php
+if ($question_type === 'open_ended'){
+    return '';
+}
+?>
 
 <div class="tutor-quiz-question-answers-form">
 
@@ -16,7 +21,6 @@
 
 		<?php
 	}elseif($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' ){
-
 
 	    if ($question_type === 'ordering'){
 	        echo '<p class="quiz-modal-form-help">Make sure you are saving answer in right sorting in answers lists, student should ordering should match with this answer order.</p>';

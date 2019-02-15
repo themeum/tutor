@@ -235,7 +235,7 @@ jQuery(document).ready(function($){
         attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
         var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
 
-        var countDownDate = new Date(attempt_settings.quiz_started_at).getTime() + (attempt_meta.time_limit_seconds * 1000);
+        var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + (attempt_meta.time_limit.time_limit_seconds * 1000);
         var time_now = new Date(attempt_meta.date_time_now).getTime();
 
         var tutor_quiz_interval = setInterval(function() {
@@ -337,7 +337,7 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var lesson_id = $that.attr('data-lesson-id');
-        var $wrap = $('#tutor-single-lesson-entry-content');
+        var $wrap = $('#tutor-single-entry-content');
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -359,6 +359,36 @@ jQuery(document).ready(function($){
                 $wrap.removeClass('loading-lesson');
             }
         });
+    });
+
+    $(document).on('click', '.sidebar-single-quiz-a', function (e) {
+        e.preventDefault();
+
+        var $that = $(this);
+        var quiz_id = $that.attr('data-quiz-id');
+        var page_title = $that.find('.lesson_title').text();
+        var $wrap = $('#tutor-single-entry-content');
+
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: {quiz_id : quiz_id, 'action': 'tutor_render_quiz_content'},
+            beforeSend: function () {
+                $('head title').text(page_title);
+                window.history.pushState('obj', page_title, $that.attr('href'));
+                $wrap.addClass('loading-lesson');
+                $('.tutor-single-lesson-items').removeClass('active');
+                $that.closest('.tutor-single-lesson-items').addClass('active');
+            },
+            success: function (data) {
+                $wrap.html(data.data.html);
+            },
+            complete: function () {
+                $wrap.removeClass('loading-lesson');
+            }
+        });
+
+
     });
 
     /**

@@ -1063,14 +1063,8 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : {question_id : question_id, action: 'tutor_quiz_builder_question_delete'},
             beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
                 $that.closest('.quiz-builder-question-wrap').remove();
             },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
         });
     });
 

@@ -29,11 +29,9 @@ if ($best_watch_time > 0){
     <div class="tutor-topbar-item tutor-hide-sidebar-bar">
         <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">=</a>
     </div>
-
     <div class="tutor-topbar-item tutor-topbar-content-title-wrap">
         <?php
         tutor_utils()->get_lesson_type_icon(get_the_ID(), true, true);
-
         the_title(); ?>
     </div>
 
@@ -45,7 +43,6 @@ if ($best_watch_time > 0){
             <i class="tutor-icon-next-2"></i> <?php echo sprintf(__('Go to %s Course Home %s', 'tutor'), '<strong>', '</strong>') ; ?>
         </a>
     </div>
-
 </div>
 
 

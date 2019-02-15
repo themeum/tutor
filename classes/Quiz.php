@@ -55,6 +55,15 @@ class Quiz {
 		add_action('wp_ajax_tutor_quiz_builder_delete_answer', array($this, 'tutor_quiz_builder_delete_answer'));
 		add_action('wp_ajax_tutor_quiz_answer_sorting', array($this, 'tutor_quiz_answer_sorting'));
 		add_action('wp_ajax_tutor_quiz_modal_update_settings', array($this, 'tutor_quiz_modal_update_settings'));
+
+
+
+		/**
+         * Frontend Stuff
+         */
+
+		add_action('wp_ajax_tutor_render_quiz_content', array($this, 'tutor_render_quiz_content'));
+
 	}
 
 	public function add_column($columns){
@@ -232,8 +241,17 @@ class Quiz {
 		$quiz = get_post($quiz_id);
 		$date = date("Y-m-d H:i:s");
 
+
+		$tutor_quiz_option = maybe_unserialize(get_post_meta($quiz_id, 'tutor_quiz_option', true));
+
+		echo '<pre>';
+		//die(print_r($tutor_quiz_option));
+
+
 		$attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
 
+
+		/*
 		do_action('tutor_before_start_quiz', $quiz_id);
 		$data = array(
 			'comment_post_ID'   => $quiz_id, //QuizID
@@ -248,7 +266,11 @@ class Quiz {
 		);
 
 		$wpdb->insert($wpdb->comments, $data);
+
 		$attempt_id = (int) $wpdb->insert_id;
+
+
+		*/
 
 		$time_limit = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value');
 		$time_limit_seconds = 0;
@@ -287,6 +309,29 @@ class Quiz {
 			'answers'               => array(),
 		);
 
+		$tutor_quiz_option['time_limit']['time_limit_seconds'] = $time_limit_seconds;
+
+
+		$attempt_data = array(
+		        'quiz_id'                   => $quiz_id,
+		        'user_id'                   => $user_id,
+		        'total_questions'           => $tutor_quiz_option['max_questions_for_answer'],
+		        'total_answered_questions'  => 0,
+		        'attempt_info'              => maybe_serialize($tutor_quiz_option),
+		        'attempt_status'            => 'attempt_started',
+		        'attempt_ip'                => tutor_utils()->get_ip(),
+		        'attempt_started_at'        => $date,
+        );
+
+		$wpdb->insert($wpdb->prefix.'tutor_quiz_attempts', $attempt_data);
+		$attempt_id = (int) $wpdb->insert_id;
+
+
+
+
+		die(print_r($tutor_quiz_option));
+
+
 		//answers format
 		/*
 		array(
@@ -302,12 +347,14 @@ class Quiz {
 					)
 				),
 		);
-		*/
 
 		update_comment_meta($attempt_id, 'quiz_attempt_info', $quiz_attempt_info);
 		update_comment_meta($attempt_id, 'earned_mark_percent', '0');
 
 		do_action('tutor_after_start_quiz', $quiz_id, $attempt_id);
+		*/
+
+
 
 		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 		die();
@@ -770,6 +817,7 @@ class Quiz {
 
 				}elseif($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' ){
 
+				    //Getting next sorting order
 				    $next_order_id = (int) $wpdb->get_var("SELECT MAX(answer_order) FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question_type}' ");
 					$next_order_id = $next_order_id + 1;
 
@@ -888,5 +936,36 @@ class Quiz {
 
 		wp_send_json_success();
 	}
+
+
+	//=========================//
+    // Front end stuffs
+    //=========================//
+
+	/**
+	 * Rendering quiz for frontend
+     *
+     * @since v.1.0.0
+	 */
+
+	public function tutor_render_quiz_content(){
+		$quiz_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('quiz_id', $_POST));
+
+		ob_start();
+		global $post;
+
+		$post = get_post($quiz_id);
+		setup_postdata($post);
+		//tutor_lesson_content();
+
+		single_quiz_contents();
+
+		wp_reset_postdata();
+
+
+		$html = ob_get_clean();
+		wp_send_json_success(array('html' => $html));
+	}
+
 
 }
