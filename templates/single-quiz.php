@@ -16,10 +16,6 @@ $course = tutor_utils()->get_course_by_quiz(get_the_ID());
 <?php do_action('tutor_quiz/single/before/wrap'); ?>
 
 
-
-
-
-
     <div class="tutor-single-lesson-wrap ">
 
         <div class="tutor-lesson-sidebar">

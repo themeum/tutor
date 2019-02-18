@@ -2332,6 +2332,7 @@ class Utils {
 			'answer_sorting'    => array('name' => __('Answer Sorting', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-answer-shorting"></i>'),
 			'assessment'        => array('name' => __('Assessment', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-assesment"></i>'),
 			'matching'          => array('name' => __('Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-matching"></i>'),
+			'image_matching'    => array('name' => __('Image Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-matching"></i>'),
 			'ordering'          => array('name' => __('Ordering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-ordering"></i>'),
 		);
 
@@ -2578,10 +2579,29 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		$is_attempt = $this->is_started_quiz($quiz_id);
 
-		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} ORDER BY RAND() LIMIT 0,1 ");
-
+		$tempSql = " AND question_type = 'multiple_choice' ";
+		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} {$tempSql}  ORDER BY RAND() LIMIT 0,1 ");
 
 		return $questions;
+	}
+
+	public function get_answers_by_quiz_question($question_id){
+		global $wpdb;
+
+
+		$question = $wpdb->get_row("SELECT * from {$wpdb->prefix}tutor_quiz_questions WHERE question_id = {$question_id} ;");
+		if ( ! $question){
+			return false;
+		}
+
+		$order = " answer_order ASC ";
+		if ($question->question_type === 'ordering'){
+			$order = " RAND() ";
+		}
+
+		$answers = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question_id} AND belongs_question_type = 
+'{$question->question_type}' order by {$order} ");
+		return $answers;
 	}
 
 	/**

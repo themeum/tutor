@@ -53,6 +53,10 @@ class Assets{
 			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
 		);
 
+		/**
+		 * Enabling Sorting...
+		 */
+		wp_enqueue_script('jquery-ui-sortable');
 
 		//Plyr
 		wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), tutor()->version );

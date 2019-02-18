@@ -22,6 +22,15 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.tutor-icon-image-matching:before {
+    content: "\e956";
+}
+.tutor-icon-menu:before {
+    content: "\e957";
+}
+.tutor-icon-image1:before {
+    content: "\e958";
+}
 .tutor-icon-answer-shorting:before {
     content: "\e94a";
 }

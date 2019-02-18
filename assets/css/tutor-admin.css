@@ -1016,10 +1016,12 @@ Quiz Modal
 }
 .tutor-quiz-builder-form-row input[type="text"], .tutor-quiz-builder-form-row input[type="number"]{
     height: 42px;
+    width: 100%;
 }
 #quiz-builder-tab-quiz-info input[type="text"], #quiz-builder-tab-quiz-info textarea{
     width: 100%;
 }
+
 
 .tutor-quiz-builder-modal-control-btn-group{
     display: flex;
@@ -1135,6 +1137,9 @@ i.tutor-icon-block.tutor-icon-assesment{
 i.tutor-icon-block.tutor-icon-matching{
     background-color: #8a4a1b;
 }
+i.tutor-icon-block.tutor-icon-image-matching{
+    background-color: #8a4a1b;
+}
 i.tutor-icon-block.tutor-icon-ordering{
     background-color: #1128d4;
 }
@@ -1149,6 +1154,11 @@ i.tutor-icon-block.tutor-icon-plus-square-button, i.tutor-icon-block.tutor-icon-
 }
 .quiz-modal-field-wrap .add_question_option {
     display: block;
+}
+.quiz-modal-field-wrap.label-inline label{
+    display: inline-block;
+    font-weight: 300;
+    margin-right: 20px;
 }
 a.back-to-quiz-questions-btn {
     font-size: 16px;
@@ -1256,6 +1266,60 @@ span.tutor-quiz-answer-title {
     max-width: 80px;
     height: auto;
 }
+.tutor-question-answer-image{
+    margin-right: 10px;
+}
+.tutor-question-answer-image img{
+    max-height: 25px;
+    width: auto;
+}
+button#quiz-answer-save-btn {
+    background-color: #7BBC30;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+}
+button#quiz-answer-save-btn:hover {
+    background-color: #5e981b;
+}
+/**
+Tutor Media Upload
+ */
+
+.tutor-media-upload-wrap {
+    border: 1px solid #DEDEDE;
+    display: flex;
+    width: 130px;
+}
+.tutor-media-upload-wrap img{
+    max-width: 100%;
+}
+.tutor-media-preview {
+    flex: 1;
+}
+.tutor-media-upload-btn {
+    display: block;
+    padding: 10px;
+    font-size: 50px;
+    line-height: 50px;
+    text-align: center;
+    color: #DEDEDE;
+}
+.tutor-media-upload-trash-wrap {
+    border-left: 1px solid #dedede;
+}
+.tutor-media-upload-trash {
+    color: #dedede;
+    display: block;
+    line-height: 50px;
+    padding: 12px;
+}
+.tutor-quiz-answers-form-footer.tutor-quiz-builder-form-row {
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+
 
 /**
 #End Quiz Modal

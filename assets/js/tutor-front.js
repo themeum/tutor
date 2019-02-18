@@ -276,12 +276,12 @@ jQuery(document).ready(function($){
                     data: quiz_timeout_data,
                     success: function (data) {
                         if (data.success){
-                            window.location.reload(true);
+                            //window.location.reload(true);
                         }
                     },
                     complete: function () {
-                        $('#tutor-quiz-body').html('');
-                        window.location.reload(true);
+                        //$('#tutor-quiz-body').html('');
+                        //window.location.reload(true);
                     }
                 });
             }
@@ -412,6 +412,23 @@ jQuery(document).ready(function($){
         $('.tutor-tabs-btn-group a').removeClass('active');
         $that.addClass('active');
     });
+    /**
+     * @date 18 Feb, 2019
+     * @since v.1.0.0
+     */
+
+    if (jQuery().sortable) {
+        $(".tutor-quiz-answers-wrap").sortable({
+            handle: ".answer-sorting-bar",
+            start: function (e, ui) {
+                ui.placeholder.css('visibility', 'visible');
+            },
+            stop: function (e, ui) {
+
+                //Sorting Stopped...
+            },
+        });
+    }
 
 
 });

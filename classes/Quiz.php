@@ -368,6 +368,9 @@ class Quiz {
 		//Checking nonce
 		tutor_utils()->checking_nonce();
 
+		echo '<pre>';
+		die(print_r($_POST['attempt']));
+
 		if ( ! is_user_logged_in()){
 			die('Please sign in to do this operation');
 		}
@@ -881,8 +884,36 @@ class Quiz {
                             if ($answer->is_correct){
                                 echo '<i class="tutor-icon-mark"></i>';
                             }
-                            echo $answer->answer_title; ?>
+                            echo $answer->answer_title;
+                            if ($answer->belongs_question_type === 'fill_in_the_blank'){
+                                echo __(' Answer', 'tutor');
+                                echo "<strong> ({$answer->gape_answer}) </strong>";
+                            }
+
+                            ?>
                         </span>
+
+
+		                <?php
+		                if ($answer->image_id){
+			                echo '<span class="tutor-question-answer-image"><img src="'.wp_get_attachment_image_url($answer->image_id).'" /> </span>';
+		                }
+		                if ($answer->belongs_question_type === 'true_false' || $answer->belongs_question_type === 'single_choice'){
+			                ?>
+                            <span class="tutor-quiz-answers-mark-correct-wrap">
+                                <input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>">
+                            </span>
+			                <?php
+		                }elseif ($answer->belongs_question_type === 'multiple_choice'){
+			                ?>
+                            <span class="tutor-quiz-answers-mark-correct-wrap">
+                                <input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>">
+                            </span>
+			                <?php
+		                }
+		                ?>
+
+
                         <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
                     </div>
 

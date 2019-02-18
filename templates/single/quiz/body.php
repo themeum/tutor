@@ -26,9 +26,11 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 		$remaining_time_secs = (strtotime($is_started_quiz->attempt_started_at) + $time_limit_seconds ) - strtotime($quiz_attempt_info['date_time_now']);
 
 		$remaining_time_context = tutor_utils()->seconds_to_time_context($remaining_time_secs);
-		$question = tutor_utils()->get_random_question_by_quiz();
+		$questions = tutor_utils()->get_random_question_by_quiz();
 
 
+		//echo '<pre>';
+		//die(print_r($questions));
 
 		?>
 
@@ -40,80 +42,120 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 		<?php do_action('tutor_quiz/single/after/meta');
 
-		if ($question) {
-			do_action('tutor_quiz/single/before/question'); ?>
+		if (is_array($questions) && count($questions)) {
+			foreach ($questions as $question) {
 
-            <div id="tutor-quiz-attempt-questions-wrap">
-                <form id="tutor-answering-quiz" method="post">
+				echo "<p>{$question->question_type}</p>";
 
+				?>
 
-                    <div class="quiz-attempt-single-question">
+                <div id="tutor-quiz-attempt-questions-wrap">
+                    <form id="tutor-answering-quiz" method="post">
 
-						<?php
-						$question_type = get_post_meta( $question->ID, '_question_type', true );
-						$answers       = tutor_utils()->get_quiz_answer_options_by_question( $question->ID );
-						?>
-                        <p class="question-text"><?php echo $question->post_title; ?></p>
+                        <div class="quiz-attempt-single-question">
 
-						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-
-                        <input type="hidden" value="<?php echo $is_started_quiz->comment_ID; ?>" name="attempt_id"/>
-                        <input type="hidden" value="<?php echo $question->ID; ?>" name="quiz_question_id"/>
-                        <input type="hidden" value="tutor_answering_quiz_question" name="tutor_action"/>
-						<?php do_action('tutor_quiz/single/before/question/form_field'); ?>
-
-                        <div class="tutor-quiz-answers-wrap">
 							<?php
-							if ( $answers ) {
-								if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
-									foreach ( $answers as $answer ) {
-										$answer_content = json_decode( $answer->comment_content, true );
-										?>
-                                        <label>
-                                            <input name="attempt[<?php echo $is_started_quiz->comment_ID; ?>][quiz_question][<?php echo $question->ID; ?>]" type="radio" value="<?php echo $answer->comment_ID; ?>">
-                                            <span>
-                                                <?php
-                                                if ( isset( $answer_content['answer_option_text'] ) ) {
-	                                                echo $answer_content['answer_option_text'];
-                                                }
-                                                ?>
-                                            </span>
-                                        </label>
-										<?php
-									}
-								}elseif($question_type === 'multiple_choice' ){
-									foreach ( $answers as $answer ) {
-										$answer_content = json_decode( $answer->comment_content, true );
-										?>
-                                        <label>
-                                            <input name="attempt[<?php echo $is_started_quiz->comment_ID; ?>][quiz_question][<?php echo $question->ID; ?>][]" type="checkbox" value="<?php echo $answer->comment_ID; ?>">
-                                            <span>
-                                                <?php
-                                                if ( isset( $answer_content['answer_option_text'] ) ) {
-                                                    echo $answer_content['answer_option_text'];
-                                                }
-                                                ?>
-                                            </span>
-                                        </label>
-										<?php
-									}
-								}
+							$question_type = $question->question_type;
+							$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id);
+
+							//echo '<pre>';
+							//die(print_r($answers));
+
+							if ($question_type === 'fill_in_the_blank'){
+							    echo '<h4 class="question-text">'.__('Fill In The Blank', 'tutor').'</h4>';
+							}else{
+								echo '<h4 class="question-text">'.$question->question_title.'</h4>';
 							}
 							?>
-                        </div>
-                        <div class="quiz-answer-footer-bar">
-                            <div class="quiz-footer-button">
-                                <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-success"><?php _e( 'Answer and Next Question', 'tutor' ); ?></button>
+
+                            <p class="question-description"><?php echo $question->question_description; ?></p>
+
+							<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+
+                            <input type="hidden" value="<?php echo $is_started_quiz->attempt_id; ?>" name="attempt_id"/>
+                            <input type="hidden" value="<?php echo $question->question_id; ?>" name="quiz_question_id"/>
+                            <input type="hidden" value="tutor_answering_quiz_question" name="tutor_action"/>
+							<?php do_action( 'tutor_quiz/single/before/question/form_field' ); ?>
+
+                            <div class="tutor-quiz-answers-wrap">
+								<?php
+								if ( is_array($answers) && count($answers) ) {
+									foreach ($answers as $answer){
+										if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
+											?>
+                                            <label>
+                                                <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo
+												$question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
+                                                <span><?php echo $answer->answer_title; ?></span>
+                                            </label>
+											<?php
+										}elseif ($question_type === 'multiple_choice'){
+											?>
+                                            <label>
+                                                <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo
+												$question->question_id; ?>]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
+                                                <span><?php echo $answer->answer_title; ?></span>
+                                            </label>
+											<?php
+										}elseif ($question_type === 'ordering'){
+											?>
+
+                                            <div class="question-type-ordering-item">
+                                                <span class="answer-title">
+	                                                <?php echo $answer->answer_title; ?>
+                                                </span>
+
+                                                <span class="answer-sorting-bar"><i class="tutor-icon-menu-2"></i> </span>
+
+                                                <input type="hidden" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo
+                                                $question->question_id; ?>][ordering][]" value="<?php echo $answer->answer_id; ?>" >
+                                            </div>
+
+
+											<?php
+										}
+									}
+								}
+
+								/**
+								 * For Open Ended Question Type
+								 */
+								if ($question_type === 'open_ended'){
+									?>
+                                    <textarea name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]"></textarea>
+									<?php
+								}
+								/**
+								 * For Fill in the blank question type
+								 */
+
+								if ($question_type === 'fill_in_the_blank'){
+									?>
+                                    <p class="fill-in-the-blank-field">
+                                        <input type="text" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" class="fill-in-the-blank-text-input" />
+                                        <span><?php echo $question->question_title; ?></span>
+                                    </p>
+
+									<?php
+								}
+								?>
                             </div>
+                            <div class="quiz-answer-footer-bar">
+                                <div class="quiz-footer-button">
+                                    <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit"
+                                            class="tutor-button tutor-success"><?php _e( 'Answer and Next Question', 'tutor' ); ?></button>
+                                </div>
+                            </div>
+
                         </div>
-
-                    </div>
-                </form>
+                    </form>
 
 
-            </div>
+                </div>
 
-			<?php
+				<?php
+			}
+
 		}else{
 			?>
             <div class="start-quiz-wrap">

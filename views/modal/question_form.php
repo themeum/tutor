@@ -101,6 +101,9 @@ $settings = maybe_unserialize($question->question_settings);
                                     <p class="tutor-select-option" data-value="matching" <?php echo $question->question_type === 'matching' ? ' data-selected="selected"' : ''; ?>>
                                         <i class="tutor-icon-block tutor-icon-matching"></i> <?php _e('Matching', 'tutor'); ?>
                                     </p>
+                                    <p class="tutor-select-option" data-value="image_matching" <?php echo $question->question_type === 'image_matching' ? ' data-selected="selected"' : ''; ?>>
+                                        <i class="tutor-icon-block tutor-icon-image-matching"></i> <?php _e('Image Matching', 'tutor'); ?>
+                                    </p>
                                     <p class="tutor-select-option" data-value="ordering" <?php echo $question->question_type === 'ordering' ? ' data-selected="selected"' : ''; ?>>
                                         <i class="tutor-icon-block tutor-icon-ordering"></i> <?php _e('Ordering', 'tutor'); ?>
                                     </p>
@@ -144,15 +147,15 @@ $settings = maybe_unserialize($question->question_settings);
 
                 <div id="tuotr_question_options_for_quiz" class="quiz-modal-field-wrap">
                     <div id="tutor_quiz_question_answers" data-question-id="<?php echo $question_id; ?>">
-	                    <?php
-	                    switch ($question->question_type){
-		                    case 'true_false':
-			                    echo '<label>'.__('Answer options &amp; mark correct', 'tutor').'</label>';
-			                    break;
-		                    case 'ordering':
-			                    echo '<label>'.__('Student should order below items exact this order, make sure your answer is in right order, you can re-order them', 'tutor').'</label>';
-			                    break;
-	                    }
+						<?php
+						switch ($question->question_type){
+							case 'true_false':
+								echo '<label>'.__('Answer options &amp; mark correct', 'tutor').'</label>';
+								break;
+							case 'ordering':
+								echo '<label>'.__('Student should order below items exact this order, make sure your answer is in right order, you can re-order them', 'tutor').'</label>';
+								break;
+						}
 
 						$answers = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question->question_type}' order by answer_order asc ;");
 						if (is_array($answers) && count($answers)){
@@ -163,16 +166,40 @@ $settings = maybe_unserialize($question->question_settings);
                                         <span class="tutor-quiz-answer-title">
                                             <?php
                                             if ($answer->is_correct){
-                                                echo '<i class="tutor-icon-mark"></i>';
+	                                            echo '<i class="tutor-icon-mark"></i>';
                                             }
                                             echo $answer->answer_title;
                                             if ($answer->belongs_question_type === 'fill_in_the_blank'){
-                                                echo __(' Answer', 'tutor');
-                                                echo "<strong> ({$answer->gape_answer}) </strong>";
+	                                            echo __(' Answer', 'tutor');
+	                                            echo "<strong> ({$answer->gape_answer}) </strong>";
                                             }
 
                                             ?>
                                         </span>
+
+
+										<?php
+										if ($answer->image_id){
+											echo '<span class="tutor-question-answer-image"><img src="'.wp_get_attachment_image_url($answer->image_id).'" /> </span>';
+										}
+										if ($question->question_type === 'true_false' || $question->question_type === 'single_choice'){
+											?>
+                                            <span class="tutor-quiz-answers-mark-correct-wrap">
+                                                <input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]"
+                                                       value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>">
+                                            </span>
+											<?php
+										}elseif ($question->question_type === 'multiple_choice'){
+											?>
+                                            <span class="tutor-quiz-answers-mark-correct-wrap">
+                                                <input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]"
+                                                       value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>">
+                                            </span>
+											<?php
+										}
+										?>
+
+
                                         <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
                                     </div>
 

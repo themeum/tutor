@@ -1868,11 +1868,33 @@ Course question and answer
     font-size: 20px;
     font-weight: 600;
 }
-
-.tutor-quiz-answare-wrap{
-    margin-bottom: 40px;
+.tutor-quiz-single-wrap .question-description{
+    color: #4B5981;
+    font-size: 14px;
+    font-weight: 300;
 }
-.tutor-quiz-answare-wrap label{
+
+.fill-in-the-blank-field {
+    display: flex;
+    vertical-align: bottom;
+    align-items: flex-end;
+}
+.fill-in-the-blank-field .fill-in-the-blank-text-input {
+    flex: 0 0 200px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px dashed;
+    background-color: transparent;
+    font-size: 14px;
+    padding: 2px;
+    border-radius: 0;
+}
+
+.tutor-quiz-answers-wrap {
+    margin-bottom: 50px;
+}
+.tutor-quiz-answers-wrap label{
     display: block;
     position: relative;
     padding-left: 30px;
@@ -1880,13 +1902,13 @@ Course question and answer
     font-size: 14px;
     cursor: pointer;
 }
-.tutor-quiz-answare-wrap label input{
+.tutor-quiz-answers-wrap label input{
     display: none;
 }
-.tutor-quiz-answare-wrap label input + span{
+.tutor-quiz-answers-wrap label input + span{
     line-height: 20px;
 }
-.tutor-quiz-answare-wrap label input + span::before{
+.tutor-quiz-answers-wrap label input + span::before{
     content: '';
     width: 20px;
     height: 20px;
@@ -1898,11 +1920,11 @@ Course question and answer
     top: 50%;
     transform: translateY(-50%);
 }
-.tutor-quiz-answare-wrap label input:checked + span::before{
+.tutor-quiz-answers-wrap label input:checked + span::before{
     background: #1B52D8;
     border-color: #1B52D8;
 }
-.tutor-quiz-answare-wrap label input:checked + span::after{
+.tutor-quiz-answers-wrap label input:checked + span::after{
     content: '\e90f';
     position: absolute;
     left: 0;
@@ -1914,11 +1936,11 @@ Course question and answer
     left: 4px;
     font-size: 14px;
 }
-.tutor-quiz-answare-wrap label input[type="radio"] + span::before{
+.tutor-quiz-answers-wrap label input[type="radio"] + span::before{
     content: '';
     border-radius: 50%;
 }
-.tutor-quiz-answare-wrap label input[type="radio"] + span::after{
+.tutor-quiz-answers-wrap label input[type="radio"] + span::after{
     content: '';
     height: 10px;
     width: 10px;
@@ -1926,6 +1948,21 @@ Course question and answer
     border-radius: 50%;
     left: 6px;
 }
+.question-type-ordering-item {
+    border: 1px solid #D4DADB;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 250px;
+    background-color: #fff;
+    display: flex;
+}
+.question-type-ordering-item .answer-title {
+    flex: 1;
+}
+.question-type-ordering-item .answer-sorting-bar {
+    cursor: pointer;
+}
+
 /* ********************* */
 /*start global login form*/
 /* ********************* */

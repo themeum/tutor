@@ -1507,6 +1507,39 @@ jQuery(document).ready(function($){
         $('#tutor_quiz_question_answers').trigger('refresh');
     });
 
+    $(document).on('click', '.tutor-media-upload-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var frame;
+        if ( frame ) {
+            frame.open();
+            return;
+        }
+        frame = wp.media({
+            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            button: {
+                text: 'Use this media'
+            },
+            multiple: false
+        });
+        frame.on( 'select', function() {
+            var attachment = frame.state().get('selection').first().toJSON();
+            $that.html('<img src="'+attachment.url+'" alt="" />');
+            $that.closest('.tutor-media-upload-wrap').find('input').val(attachment.id);
+        });
+        frame.open();
+    });
+    $(document).on('click', '.tutor-media-upload-trash', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        $that.closest('.tutor-media-upload-wrap').find('.tutor-media-upload-btn').html('<i class="tutor-icon-image1"></i>');
+        $that.closest('.tutor-media-upload-wrap').find('input').val('');
+    });
+
+
+
 
 
 });
