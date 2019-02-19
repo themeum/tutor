@@ -92,12 +92,15 @@ $settings = maybe_unserialize($question->question_settings);
                                     <p class="tutor-select-option" data-value="fill_in_the_blank" <?php echo $question->question_type === 'fill_in_the_blank' ? ' data-selected="selected"' : ''; ?>>
                                         <i class="tutor-icon-block tutor-icon-fill-gaps"></i> <?php _e('Fill In The Gaps'); ?>
                                     </p>
+
+                                    <!--
                                     <p class="tutor-select-option" data-value="answer_sorting" <?php echo $question->question_type === 'answer_sorting' ? ' data-selected="selected"' : ''; ?>>
                                         <i class="tutor-icon-block tutor-icon-answer-shorting"></i> <?php _e('Answer Sorting', 'tutor'); ?>
                                     </p>
-                                    <p class="tutor-select-option" data-value="assessment" <?php echo $question->question_type === 'assessment' ? ' data-selected="selected"' : ''; ?>>
-                                        <i class="tutor-icon-block tutor-icon-assesment"></i> <?php _e('Assessment', 'tutor'); ?>
-                                    </p>
+                                    <p class="tutor-select-option" data-value="assessment" <?php /*echo $question->question_type === 'assessment' ? ' data-selected="selected"' : ''; */?>>
+                                        <i class="tutor-icon-block tutor-icon-assesment"></i> <?php /*_e('Assessment', 'tutor'); */?>
+                                    </p>-->
+
                                     <p class="tutor-select-option" data-value="matching" <?php echo $question->question_type === 'matching' ? ' data-selected="selected"' : ''; ?>>
                                         <i class="tutor-icon-block tutor-icon-matching"></i> <?php _e('Matching', 'tutor'); ?>
                                     </p>
@@ -165,18 +168,16 @@ $settings = maybe_unserialize($question->question_settings);
                                     <div class="tutor-quiz-answer">
                                         <span class="tutor-quiz-answer-title">
                                             <?php
-                                            if ($answer->is_correct){
-	                                            echo '<i class="tutor-icon-mark"></i>';
-                                            }
                                             echo $answer->answer_title;
                                             if ($answer->belongs_question_type === 'fill_in_the_blank'){
-	                                            echo __(' Answer', 'tutor');
-	                                            echo "<strong> ({$answer->gape_answer}) </strong>";
+	                                            echo ' ('.__('Answer', 'tutor').' : ';
+	                                            echo "<strong>{$answer->answer_two_gap_match} </strong>)";
                                             }
-
+                                            if ($answer->belongs_question_type === 'matching'){
+	                                            echo " - {$answer->answer_two_gap_match}";
+                                            }
                                             ?>
                                         </span>
-
 
 										<?php
 										if ($answer->image_id){
@@ -186,20 +187,18 @@ $settings = maybe_unserialize($question->question_settings);
 											?>
                                             <span class="tutor-quiz-answers-mark-correct-wrap">
                                                 <input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]"
-                                                       value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>">
+                                                       value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                                             </span>
 											<?php
 										}elseif ($question->question_type === 'multiple_choice'){
 											?>
                                             <span class="tutor-quiz-answers-mark-correct-wrap">
                                                 <input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]"
-                                                       value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>">
+                                                       value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                                             </span>
 											<?php
 										}
 										?>
-
-
                                         <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
                                     </div>
 

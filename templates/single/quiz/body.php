@@ -61,11 +61,8 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 							//echo '<pre>';
 							//die(print_r($answers));
 
-							if ($question_type === 'fill_in_the_blank'){
-							    echo '<h4 class="question-text">'.__('Fill In The Blank', 'tutor').'</h4>';
-							}else{
-								echo '<h4 class="question-text">'.$question->question_title.'</h4>';
-							}
+							echo '<h4 class="question-text">'.$question->question_title.'</h4>';
+
 							?>
 
                             <p class="question-description"><?php echo $question->question_description; ?></p>
@@ -93,28 +90,99 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 											?>
                                             <label>
                                                 <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo
-												$question->question_id; ?>]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
+												$question->question_id; ?>][]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
                                                 <span><?php echo $answer->answer_title; ?></span>
                                             </label>
 											<?php
-										}elseif ($question_type === 'ordering'){
+										}
+                                        elseif ($question_type === 'fill_in_the_blank'){
 											?>
+                                            <p class="fill-in-the-blank-field">
+												<?php
+												$count_dash_fields = substr_count($answer->answer_title, '{dash}');
+												if ($count_dash_fields){
 
+													$dash_string = array();
+													$input_data = array();
+													for($i=1; $i <=$count_dash_fields; $i ++){
+														$dash_string[] = '{dash}';
+														$input_data[] = "<input type='text' name='attempt[{$is_started_quiz->attempt_id}][quiz_question][{$question->question_id}][]' class='fill-in-the-blank-text-input' />";
+													}
+													echo str_replace($dash_string, $input_data, $answer->answer_title);
+												}
+												?>
+                                            </p>
+
+											<?php
+										}
+                                        elseif ($question_type === 'ordering'){
+											?>
                                             <div class="question-type-ordering-item">
                                                 <span class="answer-title">
 	                                                <?php echo $answer->answer_title; ?>
                                                 </span>
-
                                                 <span class="answer-sorting-bar"><i class="tutor-icon-menu-2"></i> </span>
-
-                                                <input type="hidden" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo
-                                                $question->question_id; ?>][ordering][]" value="<?php echo $answer->answer_id; ?>" >
+                                                <input type="hidden" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][answers][]" value="<?php echo $answer->answer_id; ?>" >
                                             </div>
-
-
 											<?php
 										}
 									}
+
+									/**
+									 * Question type matchind and image matching
+									 */
+									if ($question_type === 'matching' || $question_type === 'image_matching'){
+										?>
+                                        <div class="quiz-answers-type-matching-wrap <?php echo 'answer-type-'.$question_type ?> ">
+                                            <div class="quiz-draggable-rand-answers">
+												<?php
+												$rand_answers = tutor_utils()->get_answers_by_quiz_question($question->question_id, true);
+												foreach ($rand_answers as $rand_answer){
+													?>
+                                                    <div class="quiz-draggable-answer-item">
+														<?php
+														if ($question_type === 'matching'){
+															echo "<span class='draggable-answer-title'>{$rand_answer->answer_two_gap_match}</span>";
+														}else{
+															echo "<span class='draggable-answer-title'>{$rand_answer->answer_title}</span>";
+														}
+														?>
+                                                        <span class="draggable-answer-icon"> <i class="tutor-icon-menu-2"></i> </span>
+                                                        <input type="hidden" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][answers][]" value="<?php echo $rand_answer->answer_id; ?>" >
+                                                    </div>
+													<?php
+												}
+												?>
+                                            </div>
+
+											<div class="quiz-answer-matching-items-wrap">
+
+												<?php
+												foreach ($answers as $answer){
+													?>
+                                                    <div class="quiz-answer-item-matching">
+                                                        <div class="quiz-answer-matching-title">
+															<?php
+															if ($question_type === 'matching') {
+																echo $answer->answer_title;
+															}elseif (intval($answer->image_id)){
+																echo '<img src="'.wp_get_attachment_image_url($answer->image_id, 'full').'" />';
+															}
+
+															?>
+                                                        </div>
+                                                        <div class="quiz-answer-matching-droppable"></div>
+                                                    </div>
+													<?php
+												}
+												?>
+
+                                            </div>
+                                        </div>
+										<?php
+									}
+
+
 								}
 
 								/**
@@ -125,19 +193,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                     <textarea name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]"></textarea>
 									<?php
 								}
-								/**
-								 * For Fill in the blank question type
-								 */
 
-								if ($question_type === 'fill_in_the_blank'){
-									?>
-                                    <p class="fill-in-the-blank-field">
-                                        <input type="text" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" class="fill-in-the-blank-text-input" />
-                                        <span><?php echo $question->question_title; ?></span>
-                                    </p>
-
-									<?php
-								}
 								?>
                             </div>
                             <div class="quiz-answer-footer-bar">

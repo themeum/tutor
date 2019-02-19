@@ -2322,6 +2322,24 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * @param int $question_id
+	 *
+	 * @return array|bool|object|void|null
+	 *
+	 * Get Quiz question by question id
+	 */
+	public function get_quiz_question_by_id($question_id = 0){
+		global $wpdb;
+
+		if ($question_id){
+			$question = $wpdb->get_row("SELECT * from {$wpdb->prefix}tutor_quiz_questions WHERE question_id = {$question_id} LIMIT 0,1 ;");
+			return $question;
+		}
+
+		return false;
+	}
+
 	public function get_question_types($type = null){
 		$types = array(
 			'true_false'        => array('name' => __('True/False', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-yes-no"></i>'),
@@ -2579,13 +2597,13 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		$is_attempt = $this->is_started_quiz($quiz_id);
 
-		$tempSql = " AND question_type = 'multiple_choice' ";
+		$tempSql = " AND question_type = 'matching' ";
 		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} {$tempSql}  ORDER BY RAND() LIMIT 0,1 ");
 
 		return $questions;
 	}
 
-	public function get_answers_by_quiz_question($question_id){
+	public function get_answers_by_quiz_question($question_id, $rand = false){
 		global $wpdb;
 
 
@@ -2596,6 +2614,10 @@ class Utils {
 
 		$order = " answer_order ASC ";
 		if ($question->question_type === 'ordering'){
+			$order = " RAND() ";
+		}
+
+		if ($rand){
 			$order = " RAND() ";
 		}
 

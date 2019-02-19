@@ -1124,8 +1124,26 @@ jQuery(document).ready(function($){
                 $that.removeClass('tutor-updating-message');
             }
         });
-
     });
+
+    $(document).on('change', '.tutor-quiz-answers-mark-correct-wrap input', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+
+        var answer_id = $that.val();
+        var inputValue = 1;
+        if ( ! $that.prop('checked')) {
+            inputValue = 0;
+        }
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {answer_id:answer_id, inputValue : inputValue, action : 'tutor_mark_answer_as_correct'},
+        });
+    });
+
 
     $(document).on('refresh', '#tutor_quiz_question_answers', function(e){
         e.preventDefault();

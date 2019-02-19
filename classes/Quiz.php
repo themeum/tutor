@@ -54,6 +54,7 @@ class Quiz {
 		add_action('wp_ajax_tutor_quiz_builder_get_answers_by_question', array($this, 'tutor_quiz_builder_get_answers_by_question'));
 		add_action('wp_ajax_tutor_quiz_builder_delete_answer', array($this, 'tutor_quiz_builder_delete_answer'));
 		add_action('wp_ajax_tutor_quiz_answer_sorting', array($this, 'tutor_quiz_answer_sorting'));
+		add_action('wp_ajax_tutor_mark_answer_as_correct', array($this, 'tutor_mark_answer_as_correct'));
 		add_action('wp_ajax_tutor_quiz_modal_update_settings', array($this, 'tutor_quiz_modal_update_settings'));
 
 
@@ -791,8 +792,11 @@ class Quiz {
 		foreach ($answers as $question_id => $answer){
 			$question = tutor_utils()->avalue_dot($question_id, $questions);
 			$question_type = $question['question_type'];
-			
-			//TODO: need to get next sorting order by a query
+
+			//Getting next sorting order
+			$next_order_id = (int) $wpdb->get_var("SELECT MAX(answer_order) FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question_type}' ");
+			$next_order_id = $next_order_id + 1;
+
 
 			if ($question){
 				if ($question_type === 'true_false'){
@@ -818,11 +822,8 @@ class Quiz {
 						$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $true_false_data);
 					}
 
-				}elseif($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' ){
-
-				    //Getting next sorting order
-				    $next_order_id = (int) $wpdb->get_var("SELECT MAX(answer_order) FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question_type}' ");
-					$next_order_id = $next_order_id + 1;
+				}elseif($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' ||
+                        $question_type === 'matching' || $question_type === 'image_matching'  ){
 
 					$answer_data = array(
 						'belongs_question_id'   => $question_id,
@@ -832,8 +833,8 @@ class Quiz {
 						'answer_view_format'    => isset($answer['answer_view_format']) ? $answer['answer_view_format'] : 0,
 						'answer_order'          => $next_order_id,
 					);
-					if (isset($answer['is_correct_answer'])){
-						$answer_data['is_correct'] = $answer['is_correct_answer'];
+					if (isset($answer['matched_answer_title'])){
+						$answer_data['answer_two_gap_match'] = $answer['matched_answer_title'];
                     }
 
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
@@ -843,8 +844,8 @@ class Quiz {
 					$answer_data = array(
 						'belongs_question_id'   => $question_id,
 						'belongs_question_type' => $question_type,
-						'answer_title'          => __('Fill In The Gap', 'tutor'),
-						'gape_answer'           => isset($answer['gape_answer']) ? strtolower(trim($answer['gape_answer'])) : null,
+						'answer_title'          => $answer['answer_title'],
+						'answer_two_gap_match'           => isset($answer['answer_two_gap_match']) ? strtolower(trim($answer['answer_two_gap_match'])) : null,
 					);
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
 				}
@@ -881,39 +882,35 @@ class Quiz {
                     <div class="tutor-quiz-answer">
                         <span class="tutor-quiz-answer-title">
                             <?php
-                            if ($answer->is_correct){
-                                echo '<i class="tutor-icon-mark"></i>';
-                            }
                             echo $answer->answer_title;
                             if ($answer->belongs_question_type === 'fill_in_the_blank'){
-                                echo __(' Answer', 'tutor');
-                                echo "<strong> ({$answer->gape_answer}) </strong>";
+                                echo ' ('.__('Answer', 'tutor').' : ';
+                                echo "<strong>{$answer->answer_two_gap_match} </strong>)";
                             }
-
+                            if ($answer->belongs_question_type === 'matching'){
+                                echo " - {$answer->answer_two_gap_match}";
+                            }
                             ?>
                         </span>
 
-
-		                <?php
-		                if ($answer->image_id){
-			                echo '<span class="tutor-question-answer-image"><img src="'.wp_get_attachment_image_url($answer->image_id).'" /> </span>';
-		                }
-		                if ($answer->belongs_question_type === 'true_false' || $answer->belongs_question_type === 'single_choice'){
-			                ?>
+						<?php
+						if ($answer->image_id){
+							echo '<span class="tutor-question-answer-image"><img src="'.wp_get_attachment_image_url($answer->image_id).'" /> </span>';
+						}
+						if ($question->question_type === 'true_false' || $question->question_type === 'single_choice'){
+							?>
                             <span class="tutor-quiz-answers-mark-correct-wrap">
-                                <input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>">
+                                <input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                             </span>
-			                <?php
-		                }elseif ($answer->belongs_question_type === 'multiple_choice'){
-			                ?>
+							<?php
+						}elseif ($question->question_type === 'multiple_choice'){
+							?>
                             <span class="tutor-quiz-answers-mark-correct-wrap">
-                                <input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>">
+                                <input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                             </span>
-			                <?php
-		                }
-		                ?>
-
-
+							<?php
+						}
+						?>
                         <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
                     </div>
 
@@ -952,6 +949,23 @@ class Quiz {
             }
         }
 
+    }
+
+	/**
+	 * Mark answer as correct
+	 */
+
+    public function tutor_mark_answer_as_correct(){
+	    global $wpdb;
+
+	    $answer_id = sanitize_text_field($_POST['answer_id']);
+	    $inputValue = sanitize_text_field($_POST['inputValue']);
+
+	    $answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = {$answer_id} LIMIT 0,1 ;");
+	    if ($answer->belongs_question_type === 'single_choice'){
+		    $wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('is_correct' => 0), array('belongs_question_id' => $answer->belongs_question_id));
+	    }
+	    $wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('is_correct' => $inputValue), array('answer_id' => $answer_id));
     }
 
 	/**

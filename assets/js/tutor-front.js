@@ -404,7 +404,6 @@ jQuery(document).ready(function($){
         e.preventDefault();
         var $that = $(this);
 
-
         var tabSelector = $that.attr('href');
         $('.tutor-lesson-sidebar-tab-item').hide();
         $(tabSelector).show();
@@ -428,6 +427,14 @@ jQuery(document).ready(function($){
                 //Sorting Stopped...
             },
         });
+
+
+        $( ".quiz-draggable-rand-answers, .quiz-answer-matching-droppable" ).sortable({
+            connectWith: ".quiz-answer-matching-droppable",
+            placeholder: "drop-hover"
+
+        }).disableSelection();
+
     }
 
 

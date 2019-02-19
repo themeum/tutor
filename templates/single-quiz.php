@@ -23,7 +23,7 @@ $course = tutor_utils()->get_course_by_quiz(get_the_ID());
         </div>
 
 
-        <div id="tutor-single-entry-content" class="tutor-quiz-single-wrap tutor-single-entry-content tutor-container">
+        <div id="tutor-single-entry-content" class="tutor-quiz-single-entry-wrap tutor-single-entry-content tutor-container">
             <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
 

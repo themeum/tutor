@@ -54,7 +54,7 @@ class Assets{
 		);
 
 		/**
-		 * Enabling Sorting...
+		 * Enabling Sorting, draggable, droppable...
 		 */
 		wp_enqueue_script('jquery-ui-sortable');
 

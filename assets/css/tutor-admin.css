@@ -1050,10 +1050,14 @@ Quiz Modal
 }
 .tutor-quiz-builder-form-cols-row {
     display: flex;
+    margin-bottom: 20px;
 }
 .quiz-form-field-col{
     padding-right: 20px;
     margin-right: 20px;
+}
+.quiz-form-field-col.full-width{
+    width: 100%;
 }
 .quiz-modal-switch-field {
     display: flex;
