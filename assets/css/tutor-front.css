@@ -1863,6 +1863,9 @@ Course question and answer
 .quiz-head-meta-info span{
     color: #4B5981;
 }
+#tutor-quiz-attempt-questions-wrap {
+    margin-bottom: 50px;
+}
 .tutor-quiz-single-wrap .question-text{
     color: #4B5981;
     font-size: 20px;
@@ -1873,7 +1876,9 @@ Course question and answer
     font-size: 14px;
     font-weight: 300;
 }
-
+.quiz-attempt-single-question {
+    margin-bottom: 80px;
+}
 .fill-in-the-blank-field {
     display: flex;
     vertical-align: bottom;

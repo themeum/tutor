@@ -253,15 +253,18 @@ if ( ! $quiz){
             <div class="tutor-quiz-builder-form-row">
                 <div class="tutor-quiz-builder-form-cols-row">
                     <div class="quiz-form-field-col">
-                        <label><?php _e('Questions below each other', 'tutor'); ?></label>
+                        <label><?php _e('Question Layout', 'tutor'); ?></label>
                     </div>
 
                     <div class="quiz-form-field-col">
-                        <label class="btn-switch">
-                            <input type="checkbox" value="1" name="quiz_option[question_below_each_other]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'question_below_each_other')); ?> />
-                            <div class="btn-slider btn-round"></div>
-                        </label>
-                        <p class="quiz-modal-form-help"><?php _e('If this option is activated, all answers are displayed below each other, i.e. all questions are on a single page.', 'tutor'); ?></p>
+
+                        <select name="quiz_option[question_layout_view]">
+                            <option value=""><?php _e('Set question layout view', 'tutor'); ?></option>
+                            <option value="single_question" <?php selected('single_question', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Single Question', 'tutor'); ?> </option>
+                            <option value="question_pagination" <?php selected('question_pagination', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view') ); ?>> <?php _e('Question Pagination', 'tutor'); ?> </option>
+                            <option value="question_below_each_other" <?php selected('question_below_each_other', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view') ); ?>> <?php _e('Question Pagination', 'tutor'); ?> </option>
+                        </select>
+
                     </div>
                 </div>
             </div>

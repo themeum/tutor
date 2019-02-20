@@ -21,17 +21,10 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 		$quiz_attempt_info['date_time_now'] = date("Y-m-d H:i:s");
 
 		$time_limit_seconds = tutor_utils()->avalue_dot('time_limit.time_limit_seconds', $quiz_attempt_info);
-
-
 		$remaining_time_secs = (strtotime($is_started_quiz->attempt_started_at) + $time_limit_seconds ) - strtotime($quiz_attempt_info['date_time_now']);
 
 		$remaining_time_context = tutor_utils()->seconds_to_time_context($remaining_time_secs);
-		$questions = tutor_utils()->get_random_question_by_quiz();
-
-
-		//echo '<pre>';
-		//die(print_r($questions));
-
+		$questions = tutor_utils()->get_random_questions_by_quiz();
 		?>
 
         <div class="quiz-head-meta-info">
@@ -40,39 +33,31 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
             </div>
         </div>
 
-		<?php do_action('tutor_quiz/single/after/meta');
 
+		<?php
 		if (is_array($questions) && count($questions)) {
-			foreach ($questions as $question) {
+			?>
+            <div id="tutor-quiz-attempt-questions-wrap">
+                <form id="tutor-answering-quiz" method="post">
 
-				echo "<p>{$question->question_type}</p>";
+					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+                    <input type="hidden" value="<?php echo $is_started_quiz->attempt_id; ?>" name="attempt_id"/>
+                    <input type="hidden" value="tutor_answering_quiz_question" name="tutor_action"/>
+					<?php
+                    $question_i = 0;
+					foreach ($questions as $question) {
+						$question_i++;
 
-				?>
-
-                <div id="tutor-quiz-attempt-questions-wrap">
-                    <form id="tutor-answering-quiz" method="post">
-
-                        <div class="quiz-attempt-single-question">
-
+						echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
+						?>
+                        <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question">
 							<?php
 							$question_type = $question->question_type;
 							$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id);
 
-							//echo '<pre>';
-							//die(print_r($answers));
-
-							echo '<h4 class="question-text">'.$question->question_title.'</h4>';
-
+							echo '<h4 class="question-text">'.$question_i.'. '.$question->question_title.'</h4>';
 							?>
-
                             <p class="question-description"><?php echo $question->question_description; ?></p>
-
-							<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-
-                            <input type="hidden" value="<?php echo $is_started_quiz->attempt_id; ?>" name="attempt_id"/>
-                            <input type="hidden" value="<?php echo $question->question_id; ?>" name="quiz_question_id"/>
-                            <input type="hidden" value="tutor_answering_quiz_question" name="tutor_action"/>
-							<?php do_action( 'tutor_quiz/single/before/question/form_field' ); ?>
 
                             <div class="tutor-quiz-answers-wrap">
 								<?php
@@ -81,8 +66,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 										if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 											?>
                                             <label>
-                                                <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo
-												$question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
+                                                <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
                                                 <span><?php echo $answer->answer_title; ?></span>
                                             </label>
 											<?php
@@ -155,7 +139,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 												?>
                                             </div>
 
-											<div class="quiz-answer-matching-items-wrap">
+                                            <div class="quiz-answer-matching-items-wrap">
 
 												<?php
 												foreach ($answers as $answer){
@@ -181,8 +165,6 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                         </div>
 										<?php
 									}
-
-
 								}
 
 								/**
@@ -193,24 +175,24 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                     <textarea name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]"></textarea>
 									<?php
 								}
-
 								?>
                             </div>
-                            <div class="quiz-answer-footer-bar">
-                                <div class="quiz-footer-button">
-                                    <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit"
-                                            class="tutor-button tutor-success"><?php _e( 'Answer and Next Question', 'tutor' ); ?></button>
-                                </div>
-                            </div>
-
                         </div>
-                    </form>
 
+						<?php
+					}
+					?>
 
-                </div>
+                    <div class="quiz-answer-footer-bar">
+                        <div class="quiz-footer-button">
+                            <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-success"><?php
+                                _e( 'Submit Quiz', 'tutor' ); ?></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
-				<?php
-			}
+			<?php
 
 		}else{
 			?>
@@ -265,48 +247,36 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                     </tr>
 					<?php
 					foreach ( $previous_attempts as $attempt){
-						$attempt_info = maybe_unserialize($attempt->quiz_attempt_info);
 						?>
 
                         <tr>
                             <td>
 								<?php
-								echo date_i18n(get_option('date_format'), strtotime($attempt->quiz_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->quiz_started_at));
+								echo date_i18n(get_option('date_format'), strtotime($attempt->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->attempt_started_at));
 
-								$manual_reviewed = tutor_utils()->avalue_dot('manual_reviewed', $attempt_info);
-								if ($manual_reviewed){
-									if ($manual_reviewed){
-										?>
-                                        <p class="attempt-reviewed-text">
-											<?php
-											echo __('Manually reviewed at', 'tutor').' <br /> '.date_i18n(get_option('date_format', strtotime($manual_reviewed))).' '.date_i18n(get_option('time_format', strtotime
-												($manual_reviewed)));
-											?>
-                                        </p>
-										<?php
-									}
+								if ($attempt->is_manually_reviewed){
+                                    ?>
+                                    <p class="attempt-reviewed-text">
+                                        <?php
+                                        echo __('Manually reviewed at', 'tutor').' <br /> '.date_i18n(get_option('date_format', strtotime($attempt->manually_reviewed_at))).' '.date_i18n(get_option('time_format', strtotime($attempt->manually_reviewed_at)));
+                                        ?>
+                                    </p>
+                                    <?php
 								}
 								?>
                             </td>
                             <td>
-								<?php
-								echo tutor_utils()->avalue_dot('total_question', $attempt_info)
-								?>
+								<?php echo $attempt->total_questions; ?>
+                            </td>
+
+                            <td>
+                                <?php echo $attempt->total_marks; ?>
                             </td>
 
                             <td>
 								<?php
-								$answers_mark = wp_list_pluck(tutor_utils()->avalue_dot('answers', $attempt_info), 'question_mark' );
-								$total_marks = array_sum($answers_mark);
-								echo $total_marks;
-								?>
-                            </td>
-
-                            <td>
-								<?php
-								$earned_marks = tutor_utils()->avalue_dot('marks_earned', $attempt_info);
-								$earned_percentage = $earned_marks > 0 ? ( number_format(($earned_marks * 100) / $total_marks)) : 0;
-								echo $earned_marks."({$earned_percentage}%)";
+								$earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
+								echo $attempt->earned_marks."({$earned_percentage}%)";
 								?>
                             </td>
 

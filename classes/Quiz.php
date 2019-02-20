@@ -361,8 +361,11 @@ class Quiz {
 		die();
 	}
 
+	/**
+	 * Deprecated Method, should remove
+	 */
 
-	public function answering_quiz(){
+	public function BAK_answering_quiz(){
 		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_answering_quiz_question' ){
 			return;
 		}
@@ -370,7 +373,7 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		echo '<pre>';
-		die(print_r($_POST['attempt']));
+		die(print_r($_POST));
 
 		if ( ! is_user_logged_in()){
 			die('Please sign in to do this operation');
@@ -379,6 +382,7 @@ class Quiz {
 		global $wpdb;
 
 		$user_id = get_current_user_id();
+
 		$attempt_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('attempt_id', $_POST));
 		$post_question_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('quiz_question_id', $_POST));
 		$attempt = tutor_utils()->get_attempt($attempt_id);
@@ -478,6 +482,127 @@ class Quiz {
 		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 		die();
 	}
+
+
+
+	public function answering_quiz(){
+		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_answering_quiz_question' ){
+			return;
+		}
+		//Checking nonce
+		tutor_utils()->checking_nonce();
+
+		$attempt_answers = isset($_POST['attempt']) ? $_POST['attempt'] : false;
+		if ( ! is_user_logged_in()){
+			die('Please sign in to do this operation');
+		}
+
+		global $wpdb;
+		$user_id = get_current_user_id();
+
+		if ($attempt_answers && is_array($attempt_answers) && count($attempt_answers)){
+		    foreach ($attempt_answers as $attempt_id => $attempt_answers){
+			    $attempt = tutor_utils()->get_attempt($attempt_id);
+
+			    /**
+			     * Get total marks of all question comes
+			     */
+			    $question_ids = tutor_utils()->avalue_dot('quiz_question_ids', $attempt_answers);
+			    if (is_array($question_ids) && count($question_ids)){
+			        $question_ids_string = "'".implode("','", $question_ids)."'";
+			        $total_question_marks = $wpdb->get_var("SELECT SUM(question_mark) FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id IN({$question_ids_string}) ;");
+			        $wpdb->update($wpdb->prefix.'tutor_quiz_attempts', array('total_marks' =>$total_question_marks ), array('attempt_id' => $attempt_id ));
+                }
+
+			    if ( ! $attempt || $user_id != $attempt->user_id){
+				    die('Operation not allowed, attempt not found or permission denied');
+			    }
+
+			    $quiz_answers = tutor_utils()->avalue_dot('quiz_question', $attempt_answers);
+			    $total_marks = 0;
+			    foreach ($quiz_answers as $question_id => $answers){
+			        $question = tutor_utils()->get_quiz_question_by_id($question_id);
+				    $question_type = $question->question_type;
+
+				    $is_answer_was_correct = false;
+				    $given_answer = '';
+
+			        if ($question_type === 'true_false' || $question_type === 'single_choice'){
+
+				        $given_answer = $answers;
+				        $is_answer_was_correct = (bool) $wpdb->get_var("SELECT is_correct FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = {$answers} ");
+
+			        }elseif ($question_type === 'multiple_choice'){
+
+				        $given_answer = maybe_serialize($answers);
+			            $get_original_answers = (array) $wpdb->get_col("SELECT answer_id FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question->question_id} AND belongs_question_type = '{$question_type}' AND is_correct = 1 ;");
+			            if (maybe_serialize($get_original_answers) == $given_answer){
+				            $is_answer_was_correct = true;
+				            $given_answer = maybe_serialize($given_answer);
+			            }
+
+                    }elseif ($question_type === 'fill_in_the_blank'){
+
+				        $given_answer = (array) array_map('sanitize_text_field', $answers);
+				        $given_answer = maybe_serialize($given_answer);
+
+			            $get_original_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question->question_id} AND belongs_question_type = '{$question_type}' ;");
+				        $gap_answer = (array) explode('|', $get_original_answer->answer_two_gap_match);
+
+				        $gap_answer = array_map('sanitize_text_field', $gap_answer);
+				        if ($given_answer == maybe_serialize($gap_answer)){
+					        $is_answer_was_correct = true;
+				        }
+
+                    }elseif ($question_type === 'open_ended'){
+
+			            $given_answer = wp_kses_post($answers);
+
+                    }elseif ($question_type === 'ordering' || $question_type === 'matching'|| $question_type === 'image_matching' ){
+
+				        $given_answer = (array) array_map('sanitize_text_field', tutor_utils()->avalue_dot('answers', $answers));
+				        $given_answer = maybe_serialize($given_answer);
+
+				        $get_original_answers = (array) $wpdb->get_col("SELECT answer_id FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question->question_id} AND belongs_question_type = '{$question_type}' ORDER BY answer_order ASC ;");
+				        $get_original_answers = array_map('sanitize_text_field', $get_original_answers);
+
+				        if ($given_answer == maybe_serialize($get_original_answers)){
+					        $is_answer_was_correct = true;
+				        }
+
+                    }
+
+			        $question_mark = $is_answer_was_correct ? $question->question_mark : 0;
+				    $total_marks += $question_mark;
+
+				    $answers_data = array(
+					    'user_id'           => $user_id,
+					    'quiz_id'           => $attempt->quiz_id,
+					    'question_id'       => $question_id,
+					    'quiz_attempt_id'   => $attempt_id,
+					    'given_answer'      => $given_answer,
+					    'question_mark'     => $question->question_mark,
+					    'achieved_mark'     => $question_mark,
+					    'minus_mark'        => 0,
+					    'is_correct'        => $is_answer_was_correct ? 1 : 0,
+				    );
+				    $wpdb->insert($wpdb->prefix.'tutor_quiz_attempt_answers', $answers_data);
+			    }
+
+			    $attempt_info = array(
+			            'total_answered_questions'  => count($quiz_answers),
+			            'earned_marks'              => $total_marks,
+			            'attempt_status'            => 'attempt_ended',
+			            'attempt_ended_at'          => date("Y-m-d H:i:s"),
+                );
+			    $wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_info, array('attempt_id' => $attempt_id));
+            }
+        }
+
+		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
+		die();
+	}
+
 
 	/**
 	 * Quiz attempt will be finish here

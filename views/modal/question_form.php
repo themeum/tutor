@@ -46,7 +46,7 @@ $settings = maybe_unserialize($question->question_settings);
                                     <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][show_question_mark]" <?php checked('1', tutor_utils()->avalue_dot('show_question_mark', $settings)); ?> />
                                     <div class="btn-slider btn-round"></div>
                                 </label>
-                                <label><?php _e('Show question mark', 'tutor'); ?></label>
+                                <label><?php _e('Show marks', 'tutor'); ?></label>
                             </div>
                         </div>
                     </div>

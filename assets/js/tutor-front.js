@@ -426,7 +426,7 @@ jQuery(document).ready(function($){
 
                 //Sorting Stopped...
             },
-        });
+        }).disableSelection();;
 
 
         $( ".quiz-draggable-rand-answers, .quiz-answer-matching-droppable" ).sortable({

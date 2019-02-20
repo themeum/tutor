@@ -2559,7 +2559,11 @@ class Utils {
 
 	public function get_attempt($attempt_id = 0){
 		global $wpdb;
+		if ( ! $attempt_id){
+			return false;
+		}
 
+/*
 		$attempt = $wpdb->get_row("SELECT 
  			comment_ID,
  			comment_post_ID,
@@ -2572,7 +2576,9 @@ class Utils {
  			
  			FROM {$wpdb->comments} 
 		  	WHERE comment_type = 'tutor_quiz_attempt' 
-		  	AND comment_ID = {$attempt_id} ;");
+		  	AND comment_ID = {$attempt_id} ;");*/
+
+		$attempt = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id = {$attempt_id} ");
 
 		return $attempt;
 	}
@@ -2599,6 +2605,17 @@ class Utils {
 
 		$tempSql = " AND question_type = 'matching' ";
 		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} {$tempSql}  ORDER BY RAND() LIMIT 0,1 ");
+
+		return $questions;
+	}
+
+	public function get_random_questions_by_quiz($quiz_id = 0){
+		global $wpdb;
+
+		$quiz_id = $this->get_post_id($quiz_id);
+		$is_attempt = $this->is_started_quiz($quiz_id);
+
+		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id}  ORDER BY RAND() LIMIT 10 ");
 
 		return $questions;
 	}
@@ -2641,28 +2658,7 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		$user_id = $this->get_user_id($user_id);
 
-		$attempts = $wpdb->get_results("SELECT 
- 			{$wpdb->comments}.comment_ID,
- 			comment_post_ID,
- 			comment_author,
- 			comment_date as quiz_started_at,
- 			comment_date_gmt,
- 			comment_approved as quiz_attempt_status,
- 			comment_parent,
- 			user_id,
- 			
- 			attempt_info.meta_value as quiz_attempt_info,
- 			pass_mark.meta_value as pass_mark_percent
- 			
- 			FROM {$wpdb->comments} 
- 			
- 			LEFT JOIN {$wpdb->commentmeta} attempt_info ON {$wpdb->comments}.comment_ID = attempt_info.comment_id AND attempt_info.meta_key = 'quiz_attempt_info'
- 			LEFT JOIN {$wpdb->commentmeta} pass_mark ON {$wpdb->comments}.comment_ID = pass_mark.comment_id AND pass_mark.meta_key = 'pass_mark_percent'
- 			
-			WHERE user_id = {$user_id} 
-		  	AND comment_type = 'tutor_quiz_attempt' 
-		  	AND comment_approved != 'quiz_started' 
-		  	AND comment_post_ID = {$quiz_id} ; ");
+		$attempts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE quiz_id = {$quiz_id} AND user_id = {$user_id} ");
 
 		if (is_array($attempts) && count($attempts)){
 			return $attempts;
