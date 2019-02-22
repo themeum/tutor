@@ -118,6 +118,9 @@ class init{
 		$version = get_option('tutor_version');
 		//Save Option
 		if ( ! $version){
+			//Create Database
+			$this->create_database();
+
 			$options = self::default_options();
 			update_option('tutor_option', $options);
 
@@ -140,6 +143,85 @@ class init{
 		wp_clear_scheduled_hook('tutor_once_in_day_run_schedule');
 	}
 
+	public function create_database(){
+		global $wpdb;
+
+		$charset_collate = $wpdb->get_charset_collate();
+
+		/**
+		 * Table SQL
+		 *
+		 * {$wpdb->prefix}tutor_quiz_attempts
+		 * {$wpdb->prefix}tutor_quiz_attempt_answers
+		 * {$wpdb->prefix}tutor_quiz_questions
+		 * {$wpdb->prefix}tutor_quiz_question_answers
+		 *
+		 * @since v.1.0.0
+		 */
+		$quiz_attempts_sql = "CREATE TABLE {$wpdb->prefix}tutor_quiz_attempts (
+				attempt_id int(11) NOT NULL AUTO_INCREMENT,
+				quiz_id int(11) DEFAULT NULL,
+				user_id int(11) DEFAULT NULL,
+				total_questions int(11) DEFAULT NULL,
+				total_answered_questions int(11) DEFAULT NULL,
+				total_marks decimal(9,2) DEFAULT NULL,
+				earned_marks decimal(9,2) DEFAULT NULL,
+				attempt_info text,
+				attempt_status varchar(50) DEFAULT NULL,
+				attempt_ip varchar(250) DEFAULT NULL,
+				attempt_started_at datetime DEFAULT NULL,
+				attempt_ended_at datetime DEFAULT NULL,
+				is_manually_reviewed int(1) DEFAULT NULL,
+				manually_reviewed_at datetime DEFAULT NULL,
+				PRIMARY KEY  (attempt_id)
+			) $charset_collate;";
+
+		$quiz_attempt_answers = "CREATE TABLE {$wpdb->prefix}tutor_quiz_attempt_answers (
+			  	attempt_answer_id int(11) NOT NULL AUTO_INCREMENT,
+				user_id int(11) DEFAULT NULL,
+			  	quiz_id int(11) DEFAULT NULL,
+			  	question_id int(11) DEFAULT NULL,
+			  	quiz_attempt_id int(11) DEFAULT NULL,
+			  	given_answer longtext,
+			  	question_mark decimal(8,2) DEFAULT NULL,
+			  	achieved_mark decimal(8,2) DEFAULT NULL,
+			  	minus_mark decimal(8,2) DEFAULT NULL,
+			  	is_correct tinyint(4) DEFAULT NULL,
+			  	PRIMARY KEY  (attempt_answer_id)
+			) $charset_collate;";
+
+		$tutor_quiz_questions = "CREATE TABLE {$wpdb->prefix}tutor_quiz_questions (
+				question_id int(11) NOT NULL AUTO_INCREMENT,
+				quiz_id int(11) DEFAULT NULL,
+				question_title text,
+				question_description longtext,
+				question_type varchar(50) DEFAULT NULL,
+				question_mark decimal(9,2) DEFAULT NULL,
+				question_settings longtext,
+				question_order int(11) DEFAULT NULL,
+				PRIMARY KEY (question_id)
+			) $charset_collate;";
+
+		$tutor_quiz_question_answers = "CREATE TABLE {$wpdb->prefix}tutor_quiz_question_answers (
+			 	answer_id int(11) NOT NULL AUTO_INCREMENT,
+			  	belongs_question_id int(11) DEFAULT NULL,
+			  	belongs_question_type varchar(250) DEFAULT NULL,
+			  	answer_title text,
+			  	is_correct tinyint(4) DEFAULT NULL,
+			  	image_id int(11) DEFAULT NULL,
+			  	answer_two_gap_match text,
+			  	answer_view_format varchar(250) DEFAULT NULL,
+			  	answer_settings text,
+			  	answer_order int(11) DEFAULT '0',
+				PRIMARY KEY (answer_id)
+			) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $quiz_attempts_sql );
+		dbDelta( $quiz_attempt_answers );
+		dbDelta( $tutor_quiz_questions );
+		dbDelta( $tutor_quiz_question_answers );
+	}
 
 	public static function manage_tutor_roles_and_permissions(){
 		/**
