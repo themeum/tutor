@@ -221,6 +221,13 @@ class Quiz {
 		wp_send_json_success();
 	}
 
+	/**
+	 *
+     * Start Quiz from here...
+     *
+     * @since v.1.0.0
+	 */
+
 	public function start_the_quiz(){
 		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_start_quiz' ){
 			return;
@@ -242,36 +249,8 @@ class Quiz {
 		$quiz = get_post($quiz_id);
 		$date = date("Y-m-d H:i:s");
 
-
 		$tutor_quiz_option = maybe_unserialize(get_post_meta($quiz_id, 'tutor_quiz_option', true));
-
-		echo '<pre>';
-		//die(print_r($tutor_quiz_option));
-
-
 		$attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
-
-
-		/*
-		do_action('tutor_before_start_quiz', $quiz_id);
-		$data = array(
-			'comment_post_ID'   => $quiz_id, //QuizID
-			'comment_author'    => $user->user_login,
-			'comment_date'      => $date,
-			'comment_date_gmt'  => get_gmt_from_date($date),
-			'comment_approved'  => 'quiz_started', //quiz_timeup, quiz_complete
-			'comment_agent'     => 'TutorLMSPlugin',
-			'comment_type'      => 'tutor_quiz_attempt',
-			'comment_parent'    => $quiz->post_parent, //Quiz Parent Attached Course || Lesson || Topic
-			'user_id'           => $user_id,
-		);
-
-		$wpdb->insert($wpdb->comments, $data);
-
-		$attempt_id = (int) $wpdb->insert_id;
-
-
-		*/
 
 		$time_limit = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value');
 		$time_limit_seconds = 0;
@@ -299,24 +278,12 @@ class Quiz {
 		}
 
 		$max_question_allowed = tutor_utils()->max_questions_for_take_quiz($quiz_id);
-		$quiz_attempt_info = array(
-			'time_limit'            => $time_limit,
-			'time_type'             => $time_type,
-			'time_limit_seconds'    => $time_limit_seconds,
-			'total_question'        => $max_question_allowed,
-			'answered_question'     => 0,
-			'current_question'      => 0,
-			'marks_earned'          => 0,
-			'answers'               => array(),
-		);
-
 		$tutor_quiz_option['time_limit']['time_limit_seconds'] = $time_limit_seconds;
-
 
 		$attempt_data = array(
 		        'quiz_id'                   => $quiz_id,
 		        'user_id'                   => $user_id,
-		        'total_questions'           => $tutor_quiz_option['max_questions_for_answer'],
+		        'total_questions'           => $max_question_allowed,
 		        'total_answered_questions'  => 0,
 		        'attempt_info'              => maybe_serialize($tutor_quiz_option),
 		        'attempt_status'            => 'attempt_started',
@@ -326,36 +293,6 @@ class Quiz {
 
 		$wpdb->insert($wpdb->prefix.'tutor_quiz_attempts', $attempt_data);
 		$attempt_id = (int) $wpdb->insert_id;
-
-
-
-
-		die(print_r($tutor_quiz_option));
-
-
-		//answers format
-		/*
-		array(
-				'0' => array( 'questionID' => 344, 'has_correct' => 1, //or 0 for false, 'questionSiNo' => 1
-					'answers_list' => array(
-							'answers_id' => array('selected_answerId_1', 'selected_answerId_2', 'or_line_answer_text')
-					)
-				),
-
-				 '1' => array( 'questionID' => 654, 'has_correct' => 0, //or 0 for false, 'questionSiNo' => 2
-					'answers_list' => array(
-							'answers_id' => array('selected_answerId_1', 'selected_answerId_2', 'or_line_answer_text')
-					)
-				),
-		);
-
-		update_comment_meta($attempt_id, 'quiz_attempt_info', $quiz_attempt_info);
-		update_comment_meta($attempt_id, 'earned_mark_percent', '0');
-
-		do_action('tutor_after_start_quiz', $quiz_id, $attempt_id);
-		*/
-
-
 
 		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 		die();

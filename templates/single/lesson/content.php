@@ -27,7 +27,7 @@ if ($best_watch_time > 0){
 
 <div class="tutor-single-page-top-bar">
     <div class="tutor-topbar-item tutor-hide-sidebar-bar">
-        <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">=</a>
+        <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-menu-2"></i> </a>
     </div>
     <div class="tutor-topbar-item tutor-topbar-content-title-wrap">
         <?php

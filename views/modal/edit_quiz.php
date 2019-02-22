@@ -262,13 +262,12 @@ if ( ! $quiz){
                             <option value=""><?php _e('Set question layout view', 'tutor'); ?></option>
                             <option value="single_question" <?php selected('single_question', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Single Question', 'tutor'); ?> </option>
                             <option value="question_pagination" <?php selected('question_pagination', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view') ); ?>> <?php _e('Question Pagination', 'tutor'); ?> </option>
-                            <option value="question_below_each_other" <?php selected('question_below_each_other', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view') ); ?>> <?php _e('Question Pagination', 'tutor'); ?> </option>
+                            <option value="question_below_each_other" <?php selected('question_below_each_other', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view') ); ?>> <?php _e('Question below each other', 'tutor'); ?> </option>
                         </select>
 
                     </div>
                 </div>
             </div>
-
 
             <div class="tutor-quiz-builder-form-row">
                 <div class="tutor-quiz-builder-form-cols-row">

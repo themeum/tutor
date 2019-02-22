@@ -21,10 +21,13 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 		$quiz_attempt_info['date_time_now'] = date("Y-m-d H:i:s");
 
 		$time_limit_seconds = tutor_utils()->avalue_dot('time_limit.time_limit_seconds', $quiz_attempt_info);
+		$question_layout_view = tutor_utils()->avalue_dot('question_layout_view', $quiz_attempt_info);
+
 		$remaining_time_secs = (strtotime($is_started_quiz->attempt_started_at) + $time_limit_seconds ) - strtotime($quiz_attempt_info['date_time_now']);
 
 		$remaining_time_context = tutor_utils()->seconds_to_time_context($remaining_time_secs);
 		$questions = tutor_utils()->get_random_questions_by_quiz();
+
 		?>
 
         <div class="quiz-head-meta-info">
@@ -37,21 +40,44 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 		<?php
 		if (is_array($questions) && count($questions)) {
 			?>
-            <div id="tutor-quiz-attempt-questions-wrap">
+            <div id="tutor-quiz-attempt-questions-wrap" data-question-layout-view="<?php echo $question_layout_view; ?>">
+
+	            <?php
+	            if ($question_layout_view === 'question_pagination'){
+		            $question_i = 0;
+		            ?>
+                    <div class="tutor-quiz-questions-pagination">
+                        <ul>
+				            <?php
+				            foreach ($questions as $question) {
+					            $question_i++;
+					            echo "<li><a href='#quiz-attempt-single-question-{$question->question_id}' class='tutor-quiz-question-paginate-item'>{$question_i}</a> </li>";
+				            }
+				            ?>
+                        </ul>
+                    </div>
+		            <?php
+	            }
+	            ?>
+
+
                 <form id="tutor-answering-quiz" method="post">
 
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                     <input type="hidden" value="<?php echo $is_started_quiz->attempt_id; ?>" name="attempt_id"/>
                     <input type="hidden" value="tutor_answering_quiz_question" name="tutor_action"/>
 					<?php
-                    $question_i = 0;
+					$question_i = 0;
 					foreach ($questions as $question) {
 						$question_i++;
-
-						echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
+						$style_display = ($question_layout_view !== 'question_below_each_other' && $question_i == 1) ? 'block' : 'none';
+						$next_question = isset($questions[$question_i]) ? $questions[$question_i] : false;
 						?>
-                        <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question">
-							<?php
+                        <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question
+                        quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> >
+							<?php echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
+
+
 							$question_type = $question->question_type;
 							$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id);
 
@@ -177,18 +203,46 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 								}
 								?>
                             </div>
+
+
+							<?php
+
+							if ($question_layout_view !== 'question_below_each_other' && $next_question){
+								?>
+
+                                <div class="quiz-answer-footer-bar">
+                                    <div class="quiz-footer-button">
+                                        <button type="button" value="quiz_answer_submit" class="tutor-button
+                                        tutor-success tutor-quiz-answer-next-btn"><?php _e( 'Answer &amp; Next Question', 'tutor' ); ?></button>
+                                    </div>
+                                </div>
+								<?php
+							}else{
+								?>
+                                <div class="quiz-answer-footer-bar">
+                                    <div class="quiz-footer-button">
+                                        <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-success"><?php
+											_e( 'Submit Quiz', 'tutor' ); ?></button>
+                                    </div>
+                                </div>
+								<?php
+							}
+							?>
                         </div>
 
 						<?php
 					}
-					?>
 
-                    <div class="quiz-answer-footer-bar">
-                        <div class="quiz-footer-button">
-                            <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-success"><?php
-                                _e( 'Submit Quiz', 'tutor' ); ?></button>
+					if ($question_layout_view === 'question_below_each_other'){
+						?>
+                        <div class="quiz-answer-footer-bar">
+                            <div class="quiz-footer-button">
+                                <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button
+                                tutor-success"><?php _e( 'Submit Quiz', 'tutor' ); ?></button>
+                            </div>
                         </div>
-                    </div>
+					<?php } ?>
+
                 </form>
             </div>
 
@@ -255,13 +309,13 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 								echo date_i18n(get_option('date_format'), strtotime($attempt->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->attempt_started_at));
 
 								if ($attempt->is_manually_reviewed){
-                                    ?>
+									?>
                                     <p class="attempt-reviewed-text">
-                                        <?php
-                                        echo __('Manually reviewed at', 'tutor').' <br /> '.date_i18n(get_option('date_format', strtotime($attempt->manually_reviewed_at))).' '.date_i18n(get_option('time_format', strtotime($attempt->manually_reviewed_at)));
-                                        ?>
+										<?php
+										echo __('Manually reviewed at', 'tutor').' <br /> '.date_i18n(get_option('date_format', strtotime($attempt->manually_reviewed_at))).' '.date_i18n(get_option('time_format', strtotime($attempt->manually_reviewed_at)));
+										?>
                                     </p>
-                                    <?php
+									<?php
 								}
 								?>
                             </td>
@@ -270,7 +324,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                             </td>
 
                             <td>
-                                <?php echo $attempt->total_marks; ?>
+								<?php echo $attempt->total_marks; ?>
                             </td>
 
                             <td>

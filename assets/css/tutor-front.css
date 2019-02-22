@@ -2028,6 +2028,29 @@ Course question and answer
     height: auto;
 }
 
+.tutor-quiz-questions-pagination ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.tutor-quiz-questions-pagination ul li{
+    display: inline-block;
+}
+.tutor-quiz-questions-pagination ul li a{
+    background-color: #1B52D8;
+    padding: 7px 13px;
+    display: block;
+    border-radius: 50%;
+    margin-right: 10px;
+    color: #ffffff;
+    font-size: 14px;
+}
+.tutor-quiz-questions-pagination ul li a:hover, .tutor-quiz-questions-pagination ul li a.active  {
+    background-color: #05329F;
+}
+
+
+
 /* ********************* */
 /*start global login form*/
 /* ********************* */

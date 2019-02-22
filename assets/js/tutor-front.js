@@ -434,8 +434,51 @@ jQuery(document).ready(function($){
             placeholder: "drop-hover"
 
         }).disableSelection();
-
     }
+
+    /**
+     * Quiz view
+     * @date 22 Feb, 2019
+     * @since v.1.0.0
+     */
+
+    $(document).on('click', '.tutor-quiz-answer-next-btn', function (e) {
+        e.preventDefault();
+        var $that = $(this);
+        var question_id = parseInt($that.closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
+
+        var next_question_id = $that.closest('.quiz-attempt-single-question').attr('data-next-question-id');
+
+        if (next_question_id) {
+            var $nextQuestion = $(next_question_id);
+            if ($nextQuestion && $nextQuestion.length) {
+                $('.quiz-attempt-single-question').hide();
+                $nextQuestion.show();
+
+                /**
+                 * If pagination exists, set active class
+                 */
+
+                if ($('.tutor-quiz-questions-pagination').length){
+                    $('.tutor-quiz-question-paginate-item').removeClass('active');
+                    $('.tutor-quiz-questions-pagination a[href="'+next_question_id+'"]').addClass('active');
+                }
+
+            }
+        }
+    });
+    $(document).on('click', '.tutor-quiz-question-paginate-item', function (e) {
+        e.preventDefault();
+        var $that = $(this);
+        var $question = $($that.attr('href'));
+        $('.quiz-attempt-single-question').hide();
+        $question.show();
+
+        //Active Class
+        $('.tutor-quiz-question-paginate-item').removeClass('active');
+        $that.addClass('active');
+    });
+
 
 
 });
