@@ -422,32 +422,28 @@ a.tutor-delete-attachment {
     line-height: 7px;
     color: #ff0000;
 }
-
 a.tutor-delete-attachment:hover {
     background-color: #ff0000;
     color: #ffffff;
 }
-
 .tutor-status-context{
     padding: 5px 10px;
     margin: 5px 0;
     display: inline-block;
 }
-
-.tutor-status-pending-context, .quiz_started{
+.tutor-status-pending-context, .attempt_started{
     background-color: #EEEEEE;
 }
-
 a.tutor-button{
     padding: 10px 20px;
     text-decoration: none;
     margin-right: 20px;
 }
-.tutor-status-approved-context, .quiz_finished, .tutor-button.button-success {
+.tutor-status-approved-context, .attempt_ended, .tutor-button.button-success {
     background-color: #008000;
     color: #ffffff;
 }
-.tutor-status-blocked-context, .quiz_timeout, .tutor-button.button-danger {
+.tutor-status-blocked-context, .attempt_timeout, .tutor-button.button-danger {
     background-color: #ff0000;
     color: #ffffff;
 }
@@ -1056,7 +1052,7 @@ Quiz Modal
     padding-right: 20px;
     margin-right: 20px;
 }
-.quiz-form-field-col.full-width{
+.quiz-form-field-col.result-fail{
     width: 100%;
 }
 .quiz-modal-switch-field {
@@ -1351,14 +1347,10 @@ p.quiz-search-suggest-text{
     font-size: 12px;
 }
 span.result-pass{
-    padding: 5px 10px;
-    background-color: #04a704;
-    color: #ffffff;
+    color: #04a704;
 }
 span.result-fail{
-    padding: 5px 10px;
-    background-color: #FF0000;
-    color: #ffffff;
+    color: #FF0000;
 }
 
 .tutor-quiz-attempt-info-row{
@@ -1424,7 +1416,18 @@ span.result-fail{
     color: #393C40;
     text-decoration: none;
 }
-
+.answer-image-matched-wrap {
+    display: flex;
+}
+.image-matching-item {
+    flex: 0 0 50px;
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #dddddd;
+}
+.image-matching-item img{
+    max-width: 80px;
+}
 
 /**
 Uninstall

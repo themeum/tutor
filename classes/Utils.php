@@ -2512,7 +2512,7 @@ class Utils {
 		$user_id = get_current_user_id();
 
 		/*
-		$is_started = $wpdb->get_row("SELECT 
+		$is_started = $wpdb->get_row("SELECT
  			comment_ID,
  			comment_post_ID,
  			comment_author,
@@ -2521,11 +2521,11 @@ class Utils {
  			comment_approved as quiz_attempt_status,
  			comment_parent,
  			user_id
- 			
- 			FROM {$wpdb->comments} 
-			WHERE user_id = {$user_id} 
-		  	AND comment_type = 'tutor_quiz_attempt' 
-		  	AND comment_approved = 'quiz_started' 
+
+ 			FROM {$wpdb->comments}
+			WHERE user_id = {$user_id}
+		  	AND comment_type = 'tutor_quiz_attempt'
+		  	AND comment_approved = 'quiz_started'
 		  	AND comment_post_ID = {$quiz_id} ; ");*/
 
 		$is_started = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id =  {$user_id} AND quiz_id = {$quiz_id} AND attempt_status = 'attempt_started' ");
@@ -2547,7 +2547,7 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		$max_questions = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} where post_parent = {$quiz_id} AND post_type = 'tutor_question' ");
+		$max_questions = (int) $wpdb->get_var("select count(question_id) from {$wpdb->prefix}tutor_quiz_questions where quiz_id = {$quiz_id}  ");
 		$max_mentioned = (int) $this->get_quiz_option($quiz_id, 'max_questions_for_answer', 10);
 
 		if ($max_mentioned < $max_questions ){
@@ -2562,24 +2562,7 @@ class Utils {
 		if ( ! $attempt_id){
 			return false;
 		}
-
-/*
-		$attempt = $wpdb->get_row("SELECT 
- 			comment_ID,
- 			comment_post_ID,
- 			comment_author,
- 			comment_date as quiz_started_at,
- 			comment_date_gmt,
- 			comment_approved as quiz_attempt_status,
- 			comment_parent,
- 			user_id
- 			
- 			FROM {$wpdb->comments} 
-		  	WHERE comment_type = 'tutor_quiz_attempt' 
-		  	AND comment_ID = {$attempt_id} ;");*/
-
 		$attempt = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id = {$attempt_id} ");
-
 		return $attempt;
 	}
 
@@ -2674,15 +2657,13 @@ class Utils {
 			$search_term = " AND ( user_email like '%{$search_term}%' OR display_name like '%{$search_term}%' OR post_title like '%{$search_term}%' ) ";
 		}
 
-		$count = $wpdb->get_var("SELECT COUNT({$wpdb->comments}.comment_ID) FROM {$wpdb->comments} 
-		INNER JOIN {$wpdb->posts} 
-		ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
-			
-		INNER  JOIN {$wpdb->users}
-		ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-
-		WHERE comment_type = 'tutor_quiz_attempt' {$search_term} ");
-
+		$count = $wpdb->get_var("SELECT COUNT(attempt_id)
+		 	FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+			INNER JOIN {$wpdb->posts} quiz
+			ON quiz_attempts.quiz_id = quiz.ID
+			INNER  JOIN {$wpdb->users}
+			ON quiz_attempts.user_id = {$wpdb->users}.ID
+			WHERE 1=1 {$search_term} ");
 		return (int) $count;
 	}
 
@@ -2693,40 +2674,52 @@ class Utils {
 			$search_term = " AND ( user_email like '%{$search_term}%' OR display_name like '%{$search_term}%' OR post_title like '%{$search_term}%' ) ";
 		}
 
-		$query = $wpdb->get_results("SELECT 
-			{$wpdb->comments}.comment_ID, 
-			{$wpdb->comments}.comment_post_ID, 
-			{$wpdb->comments}.comment_author, 
-			{$wpdb->comments}.comment_date, 
-			{$wpdb->comments}.comment_content, 
-			{$wpdb->comments}.comment_approved as attempt_status, 
-			{$wpdb->comments}.user_id, 
-			{$wpdb->users}.display_name,
-			{$wpdb->users}.user_email,
-			{$wpdb->posts}.post_title,
-			
-			attempt_info.meta_value as quiz_attempt_info,
- 			pass_mark.meta_value as pass_mark_percent,
-	
-			(SELECT COUNT(answers_t.comment_ID) FROM {$wpdb->comments} answers_t
-		  	WHERE answers_t.comment_parent = {$wpdb->comments}.comment_ID ) as answer_count
-		 
-		 	FROM {$wpdb->comments} 
-		
-			INNER JOIN {$wpdb->posts} 
-			ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
-			
+		$query = $wpdb->get_results("SELECT *
+		 	FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+			INNER JOIN {$wpdb->posts} quiz
+			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
-			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			
- 			LEFT JOIN {$wpdb->commentmeta} attempt_info ON {$wpdb->comments}.comment_ID = attempt_info.comment_id AND attempt_info.meta_key = 'quiz_attempt_info'
- 			LEFT JOIN {$wpdb->commentmeta} pass_mark ON {$wpdb->comments}.comment_ID = pass_mark.comment_id AND pass_mark.meta_key = 'pass_mark_percent'
- 			
-			WHERE {$wpdb->comments}.comment_type = 'tutor_quiz_attempt' {$search_term} 
-			ORDER BY {$wpdb->comments}.comment_ID DESC 
+			ON quiz_attempts.user_id = {$wpdb->users}.ID
+			WHERE 1=1 {$search_term} 
+			ORDER BY quiz_attempts.attempt_id DESC 
 			LIMIT {$start},{$limit}; ");
-
 		return $query;
+	}
+
+	/**
+	 * @param $attempt_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get quiz answers by attempt id
+	 */
+	public function get_quiz_answers_by_attempt_id($attempt_id){
+		global $wpdb;
+
+		$results = $wpdb->get_results("SELECT answers.*, question.question_title, question.question_type
+		FROM {$wpdb->prefix}tutor_quiz_attempt_answers answers
+ 		LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question ON answers.question_id = question.question_id
+ 		WHERE answers.quiz_attempt_id = {$attempt_id} ");
+
+		return $results;
+	}
+
+	public function get_answer_by_id($answer_id){
+		global $wpdb;
+
+		if (is_array($answer_id)){
+			$in_ids = implode(",", $answer_id);
+			$sql = "answer.answer_id IN({$in_ids})";
+		}else{
+			$sql = "answer.answer_id = {$answer_id}";
+		}
+
+		$answer = $wpdb->get_results("SELECT answer.*, question.question_title, question.question_type
+		FROM {$wpdb->prefix}tutor_quiz_question_answers answer
+ 		LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question ON answer.belongs_question_id = question.question_id
+ 		WHERE 1=1 AND {$sql} ");
+
+		return $answer;
 	}
 
 	public function get_quiz_answers_by_ids($ids){

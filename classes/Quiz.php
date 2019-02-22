@@ -475,7 +475,6 @@ class Quiz {
 			            $get_original_answers = (array) $wpdb->get_col("SELECT answer_id FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question->question_id} AND belongs_question_type = '{$question_type}' AND is_correct = 1 ;");
 			            if (maybe_serialize($get_original_answers) == $given_answer){
 				            $is_answer_was_correct = true;
-				            $given_answer = maybe_serialize($given_answer);
 			            }
 
                     }elseif ($question_type === 'fill_in_the_blank'){
@@ -632,32 +631,49 @@ class Quiz {
 	 */
 
 	public function review_quiz_answer(){
+	    global $wpdb;
+
 		$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
-		$answer_index = (int) sanitize_text_field($_GET['answer_index']);
+		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
 		$mark_as = sanitize_text_field($_GET['mark_as']);
 
-		$attempt_info = tutor_utils()->quiz_attempt_info($attempt_id);
+		$attempt_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = {$attempt_answer_id} ");
+		$attempt = tutor_utils()->get_attempt($attempt_id);
 
-		$previous_answer = $attempt_info['answers'][$answer_index];
-		$previous_correct = tutor_utils()->avalue_dot('has_correct', $previous_answer);
+		$is_correct = (int) $attempt_answer->is_correct;
 
-		if ($mark_as === 'correct' && ! $previous_correct ){
-			$previous_answer['has_correct'] = 1;
-			$previous_answer['plus_mark'] = $previous_answer['question_mark'];
-			$previous_answer['minus_mark'] = 0;
-			$attempt_info['marks_earned'] = $attempt_info['marks_earned'] + $previous_answer['question_mark'];
+		if ($mark_as === 'correct' && ! $is_correct){
 
-		}elseif($mark_as === 'incorrect' && $previous_correct){
-			$previous_answer['has_correct'] = 0;
-			$previous_answer['plus_mark'] = 0;
-			$previous_answer['minus_mark'] = 0;
-			$attempt_info['marks_earned'] = $attempt_info['marks_earned'] - $previous_answer['question_mark'];
+			$answer_update_data = array(
+				'achieved_mark' => $attempt_answer->question_mark,
+				'is_correct' => 1,
+			);
+			$wpdb->update($wpdb->prefix.'tutor_quiz_attempt_answers', $answer_update_data, array('attempt_answer_id' => $attempt_answer_id ));
+
+			$attempt_update_data = array(
+				'earned_marks' => $attempt->earned_marks + $attempt_answer->question_mark,
+				'is_manually_reviewed' => 1,
+				'manually_reviewed_at' => date("Y-m-d H:i:s"),
+			);
+
+			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
+
+		}elseif($mark_as === 'incorrect' && $is_correct){
+
+			$answer_update_data = array(
+				'achieved_mark' => '0.00',
+				'is_correct' => 0,
+			);
+			$wpdb->update($wpdb->prefix.'tutor_quiz_attempt_answers', $answer_update_data, array('attempt_answer_id' => $attempt_id ));
+
+			$attempt_update_data = array(
+				'earned_marks' => $attempt->earned_marks - $attempt_answer->question_mark,
+				'is_manually_reviewed' => 1,
+				'manually_reviewed_at' => date("Y-m-d H:i:s"),
+			);
+
+			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
 		}
-
-		$attempt_info['answers'][$answer_index] = $previous_answer;
-		$attempt_info['manual_reviewed'] = time();
-
-		tutor_utils()->quiz_update_attempt_info($attempt_id, $attempt_info);
 
 		wp_redirect(admin_url("admin.php?page=tutor_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
 		die();

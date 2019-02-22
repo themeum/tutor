@@ -70,12 +70,17 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 					$question_i = 0;
 					foreach ($questions as $question) {
 						$question_i++;
+
 						$style_display = ($question_layout_view !== 'question_below_each_other' && $question_i == 1) ? 'block' : 'none';
+						if ($question_layout_view === 'question_below_each_other'){
+							$style_display = 'block';
+                        }
+
 						$next_question = isset($questions[$question_i]) ? $questions[$question_i] : false;
 						?>
-                        <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question
-                        quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> >
-							<?php echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
+                        <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> >
+
+                            <?php echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
 
 
 							$question_type = $question->question_type;
@@ -207,25 +212,27 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 							<?php
 
-							if ($question_layout_view !== 'question_below_each_other' && $next_question){
-								?>
-
-                                <div class="quiz-answer-footer-bar">
-                                    <div class="quiz-footer-button">
-                                        <button type="button" value="quiz_answer_submit" class="tutor-button
+							if ($question_layout_view !== 'question_below_each_other'){
+							    if ($next_question){
+							        ?>
+                                    <div class="quiz-answer-footer-bar">
+                                        <div class="quiz-footer-button">
+                                            <button type="button" value="quiz_answer_submit" class="tutor-button
                                         tutor-success tutor-quiz-answer-next-btn"><?php _e( 'Answer &amp; Next Question', 'tutor' ); ?></button>
+                                        </div>
                                     </div>
-                                </div>
-								<?php
-							}else{
-								?>
-                                <div class="quiz-answer-footer-bar">
-                                    <div class="quiz-footer-button">
-                                        <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-success"><?php
-											_e( 'Submit Quiz', 'tutor' ); ?></button>
+                                    <?php
+                                }else{
+							        ?>
+                                    <div class="quiz-answer-footer-bar">
+                                        <div class="quiz-footer-button">
+                                            <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-success"><?php
+											    _e( 'Submit Quiz', 'tutor' ); ?></button>
+                                        </div>
                                     </div>
-                                </div>
-								<?php
+                                    <?php
+                                }
+
 							}
 							?>
                         </div>
@@ -297,6 +304,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                         <th><?php _e('Questions', 'tutor'); ?></th>
                         <th><?php _e('Total Marks', 'tutor'); ?></th>
                         <th><?php _e('Earned Marks', 'tutor'); ?></th>
+                        <th><?php _e('Pass Mark', 'tutor'); ?></th>
                         <th><?php _e('Result', 'tutor'); ?></th>
                     </tr>
 					<?php
@@ -332,6 +340,17 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 								$earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
 								echo $attempt->earned_marks."({$earned_percentage}%)";
 								?>
+                            </td>
+
+                            <td>
+                                <?php
+
+                                $pass_marks = ($attempt->total_marks * $passing_grade) / 100;
+                                if ($pass_marks > 0){
+                                    echo number_format_i18n($pass_marks, 2);
+                                }
+                                echo "({$passing_grade}%)";
+                                ?>
                             </td>
 
                             <td>
