@@ -1252,6 +1252,10 @@ a.back-to-quiz-questions-btn {
     border: 1px solid #DEDEDE;
     display: flex;
 }
+.tutor-quiz-answer .tutor-quiz-answer-edit a {
+    display: block;
+    padding: 0px 9px;
+}
 .tutor-quiz-answer-trash-wrap a.answer-trash-btn {
     padding: 10px;
     display: inline-block;

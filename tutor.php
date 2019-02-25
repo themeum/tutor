@@ -5,7 +5,7 @@ Plugin URI: http://https://themeum.com/tutor
 Description: Tutor is a complete solution for creating a Learning Management System in WordPress way. It can help you to create
  courses, lessons and quizzes.
 Author: Themeum
-Version: 1.0.0-alpha
+Version: 1.0.0-alpha-2
 Author URI: http://themeum.com
 Requires at least: 4.5
 Tested up to: 4.9
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) )
 /**
  * Defined the tutor main file
  */
-define('TUTOR_VERSION', '1.0.0-alpha');
+define('TUTOR_VERSION', '1.0.0-alpha-2');
 define('TUTOR_FILE', __FILE__);
 
 if ( ! function_exists('tutor')) {

@@ -199,6 +199,9 @@ $settings = maybe_unserialize($question->question_settings);
 											<?php
 										}
 										?>
+                                        <span class="tutor-quiz-answer-edit">
+                                            <a href="javascript:;"><i class="tutor-icon-pencil"></i> </a>
+                                        </span>
                                         <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
                                     </div>
 

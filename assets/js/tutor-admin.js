@@ -1098,6 +1098,34 @@ jQuery(document).ready(function($){
     });
 
     /**
+     * Get question answers option edit form
+     *
+     * @since v.1.0.0
+     */
+    $(document).on('click', '.tutor-quiz-answer-edit a', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var answer_id = $that.closest('.tutor-quiz-answer-wrap').attr('data-answer-id');
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {answer_id : answer_id, action : 'tutor_quiz_edit_question_answer'},
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                $('#tutor_quiz_question_answer_form').html(data.data.output);
+            },
+            complete: function () {
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+
+    /**
      * Saving question answers options
      * Student should select the right answer at quiz attempts
      *
@@ -1109,6 +1137,33 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var $formInput = $('.quiz_question_form :input').serialize()+'&action=tutor_save_quiz_answer_options';
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : $formInput,
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                $('#tutor_quiz_question_answers').trigger('refresh');
+            },
+            complete: function () {
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+    /**
+     * Updating Answer
+     *
+     * @since v.1.0.0
+     */
+    $(document).on('click', '#quiz-answer-edit-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var $formInput = $('.quiz_question_form :input').serialize()+'&action=tutor_update_quiz_answer_options';
 
         $.ajax({
             url : ajaxurl,

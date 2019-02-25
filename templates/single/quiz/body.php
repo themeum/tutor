@@ -97,18 +97,49 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 										if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 											?>
                                             <label>
-                                                <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
-                                                <span><?php echo $answer->answer_title; ?></span>
+                                                <div class="quiz-answer-input-field">
+                                                    <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
+                                                </div>
+
+                                                <div class="quiz-answer-input-body">
+	                                                <?php
+	                                                if ($answer->answer_view_format !== 'image'){
+		                                                echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
+	                                                }
+	                                                if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
+		                                                ?>
+                                                        <div class="quiz-answer-image-wrap">
+                                                            <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
+                                                        </div>
+		                                                <?php
+	                                                }
+	                                                ?>
+                                                </div>
                                             </label>
 											<?php
 										}elseif ($question_type === 'multiple_choice'){
 											?>
                                             <label>
-                                                <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo
-												$question->question_id; ?>][]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
-                                                <span><?php echo $answer->answer_title; ?></span>
+                                                <div class="quiz-answer-input-field">
+                                                    <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
+                                                </div>
+
+                                                <div class="quiz-answer-input-body">
+													<?php
+													if ($answer->answer_view_format !== 'image'){
+														echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
+													}
+													if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
+														?>
+                                                        <div class="quiz-answer-image-wrap">
+                                                            <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
+                                                        </div>
+														<?php
+													}
+													?>
+                                                </div>
                                             </label>
-											<?php
+                                            <?php
 										}
                                         elseif ($question_type === 'fill_in_the_blank'){
 											?>
@@ -133,9 +164,20 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                         elseif ($question_type === 'ordering'){
 											?>
                                             <div class="question-type-ordering-item">
-                                                <span class="answer-title">
-	                                                <?php echo $answer->answer_title; ?>
-                                                </span>
+                                                <div class="answer-title">
+	                                                <?php
+	                                                if ($answer->answer_view_format !== 'image'){
+		                                                echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
+	                                                }
+	                                                if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
+		                                                ?>
+                                                        <div class="quiz-answer-image-wrap">
+                                                            <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
+                                                        </div>
+		                                                <?php
+	                                                }
+	                                                ?>
+                                                </div>
                                                 <span class="answer-sorting-bar"><i class="tutor-icon-menu-2"></i> </span>
                                                 <input type="hidden" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][answers][]" value="<?php echo $answer->answer_id; ?>" >
                                             </div>
@@ -177,14 +219,23 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 													?>
                                                     <div class="quiz-answer-item-matching">
                                                         <div class="quiz-answer-matching-title">
-															<?php
-															if ($question_type === 'matching') {
-																echo $answer->answer_title;
-															}elseif (intval($answer->image_id)){
-																echo '<img src="'.wp_get_attachment_image_url($answer->image_id, 'full').'" />';
-															}
+	                                                        <?php
+	                                                        if ($question_type === 'matching') {
 
-															?>
+		                                                        if ($answer->answer_view_format !== 'image'){
+			                                                        echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
+		                                                        }
+		                                                        if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
+			                                                        ?>
+                                                                    <div class="quiz-answer-image-wrap">
+                                                                        <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
+                                                                    </div>
+			                                                        <?php
+		                                                        }
+	                                                        }elseif (intval($answer->image_id)){
+		                                                        echo '<img src="'.wp_get_attachment_image_url($answer->image_id, 'full').'" />';
+	                                                        }
+	                                                        ?>
                                                         </div>
                                                         <div class="quiz-answer-matching-droppable"></div>
                                                     </div>

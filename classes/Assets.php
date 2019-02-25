@@ -44,14 +44,22 @@ class Assets{
 	 * Load frontend scripts
 	 */
 	public function frontend_scripts(){
+		global $post;
 
 		wp_enqueue_editor();
 
+		$options = tutor_utils()->get_option();
 		$localize_data = array(
-			'ajaxurl'   => admin_url('admin-ajax.php'),
-			'nonce_key' => tutor()->nonce,
+			'ajaxurl'       => admin_url('admin-ajax.php'),
+			'nonce_key'     => tutor()->nonce,
 			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
+			'options'       => $options,
 		);
+
+		if ( ! empty($post->post_type) && $post->post_type === 'tutor_quiz'){
+			$quiz_options = tutor_utils()->get_quiz_option($post->ID);
+			$localize_data['quiz_options'] = $quiz_options;
+		}
 
 		/**
 		 * Enabling Sorting, draggable, droppable...
@@ -73,6 +81,8 @@ class Assets{
 				$localize_data['best_watch_time'] = $best_watch_time;
 			}
 		}
+
+		$localize_data = apply_filters('tutor_localize_data', $localize_data);
 
 		if (tutor_utils()->get_option('load_tutor_css')){
 			wp_enqueue_style('tutor-frontend', tutor()->url.'assets/css/tutor-front.css', array(), tutor()->version);

@@ -2292,8 +2292,12 @@ class Utils {
 		$post_id = $this->get_post_id($post_id);
 		$get_option_meta = maybe_unserialize(get_post_meta($post_id, 'tutor_quiz_option', true));
 
-		$value = $this->avalue_dot($option_key, $get_option_meta);
-		if ($value){
+		if ( ! $option_key && ! empty($get_option_meta)) {
+			return $get_option_meta;
+		}
+
+		$value = $this->avalue_dot( $option_key, $get_option_meta );
+		if ( $value ) {
 			return $value;
 		}
 		return $default;
@@ -2510,23 +2514,6 @@ class Utils {
 
 		$quiz_id = $this->get_post_id($quiz_id);
 		$user_id = get_current_user_id();
-
-		/*
-		$is_started = $wpdb->get_row("SELECT
- 			comment_ID,
- 			comment_post_ID,
- 			comment_author,
- 			comment_date as quiz_started_at,
- 			comment_date_gmt,
- 			comment_approved as quiz_attempt_status,
- 			comment_parent,
- 			user_id
-
- 			FROM {$wpdb->comments}
-			WHERE user_id = {$user_id}
-		  	AND comment_type = 'tutor_quiz_attempt'
-		  	AND comment_approved = 'quiz_started'
-		  	AND comment_post_ID = {$quiz_id} ; ");*/
 
 		$is_started = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id =  {$user_id} AND quiz_id = {$quiz_id} AND attempt_status = 'attempt_started' ");
 

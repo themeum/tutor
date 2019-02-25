@@ -1837,6 +1837,7 @@ Course question and answer
 .tutor-quiz-attempt-history th,
 .tutor-quiz-attempt-history td{
     border: 1px solid #E8EFF1;
+    padding: 10px !important;
 }
 .tutor-quiz-attempt-history table span.result-fail,
 .tutor-quiz-attempt-history table span.result-pass{
@@ -1854,6 +1855,11 @@ Course question and answer
 
 .tutor-quiz-attempt-history table span.result-pass{
     background: #99C335;
+}
+.attempt-reviewed-text {
+    color: #777;
+    font-size: 12px;
+    margin-top: 10px;
 }
 .quiz-head-meta-info{
     font-size: 14px;
@@ -1899,6 +1905,22 @@ Course question and answer
 .tutor-quiz-answers-wrap {
     margin-bottom: 50px;
 }
+.tutor-quiz-answers-wrap label{
+    display: flex;
+}
+.tutor-quiz-answers-wrap p{
+    margin: 0;
+}
+.quiz-answer-image-wrap {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    max-width: 200px;
+}
+.quiz-answer-image-wrap img{
+    max-width: 100%;
+    height: auto;
+}
+/*
 .tutor-quiz-answers-wrap label{
     display: block;
     position: relative;
@@ -1952,7 +1974,7 @@ Course question and answer
     background: #fff;
     border-radius: 50%;
     left: 6px;
-}
+}*/
 .question-type-ordering-item {
     border: 1px solid #D4DADB;
     padding: 10px;

@@ -50,7 +50,9 @@ class Quiz {
 		add_action('wp_ajax_tutor_quiz_modal_update_question', array($this, 'tutor_quiz_modal_update_question'));
 		add_action('wp_ajax_tutor_quiz_builder_question_delete', array($this, 'tutor_quiz_builder_question_delete'));
 		add_action('wp_ajax_tutor_quiz_add_question_answers', array($this, 'tutor_quiz_add_question_answers'));
+		add_action('wp_ajax_tutor_quiz_edit_question_answer', array($this, 'tutor_quiz_edit_question_answer'));
 		add_action('wp_ajax_tutor_save_quiz_answer_options', array($this, 'tutor_save_quiz_answer_options'));
+		add_action('wp_ajax_tutor_update_quiz_answer_options', array($this, 'tutor_update_quiz_answer_options'));
 		add_action('wp_ajax_tutor_quiz_builder_get_answers_by_question', array($this, 'tutor_quiz_builder_get_answers_by_question'));
 		add_action('wp_ajax_tutor_quiz_builder_delete_answer', array($this, 'tutor_quiz_builder_delete_answer'));
 		add_action('wp_ajax_tutor_quiz_answer_sorting', array($this, 'tutor_quiz_answer_sorting'));
@@ -246,6 +248,7 @@ class Quiz {
 		$user = get_userdata($user_id);
 
 		$quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
+
 		$quiz = get_post($quiz_id);
 		$date = date("Y-m-d H:i:s");
 
@@ -599,28 +602,15 @@ class Quiz {
 		global $wpdb;
 
 		$quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
+		$attempt = tutor_utils()->is_started_quiz($quiz_id);
 
-		$is_started_quiz = tutor_utils()->is_started_quiz($quiz_id);
-		$attempt_id = $is_started_quiz->comment_ID;
-
-		if ($is_started_quiz) {
-			$quiz_attempt_info = tutor_utils()->quiz_attempt_info( $attempt_id );
-			$answers = tutor_utils()->avalue_dot('answers', $quiz_attempt_info);
-
-			$total_marks = 0;
-			if (is_array($answers)){
-				$total_marks = array_sum(wp_list_pluck($answers, 'question_mark'));
-			}
-
-			$quiz_attempt_info['total_marks'] = $total_marks;
-			$pass_mark_percent = tutor_utils()->get_quiz_option($quiz_id,'passing_grade');
-			$quiz_attempt_info['pass_mark_percent'] = $pass_mark_percent;
-
-			//Updating Attempt Info
-			tutor_utils()->quiz_update_attempt_info($attempt_id, $quiz_attempt_info);
-
-			$wpdb->update($wpdb->comments, array('comment_approved' => 'quiz_timeout'), array('comment_ID' => $attempt_id));
-			wp_send_json_success();
+		if ($attempt) {
+		    $data = array(
+			    'attempt_status' => 'attempt_timeout',
+			    'attempt_ended_at'          => date("Y-m-d H:i:s"),
+		    );
+		    $wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $data, array('attempt_id' => $attempt->attempt_id));
+		    wp_send_json_success();
 		}
 
 		wp_send_json_error(__('Quiz has been timeout already', 'tutor'));
@@ -861,6 +851,25 @@ class Quiz {
 		wp_send_json_success(array('output' => $output));
 	}
 
+	/**
+	 * Edit Answer Form
+     *
+     * @since v.1.0.0
+	 */
+	public function tutor_quiz_edit_question_answer(){
+		$answer_id = (int) sanitize_text_field($_POST['answer_id']);
+		$old_answer = tutor_utils()->get_answer_by_id($answer_id);
+		foreach ($old_answer as $old_answer);
+		$question_id = $old_answer->belongs_question_id;
+		$question_type = $old_answer->belongs_question_type;
+
+		ob_start();
+		include  tutor()->path.'views/modal/question_answer_edit_form.php';
+		$output = ob_get_clean();
+
+		wp_send_json_success(array('output' => $output));
+    }
+
 	public function tutor_save_quiz_answer_options(){
 		global $wpdb;
 
@@ -875,11 +884,8 @@ class Quiz {
 			$next_order_id = (int) $wpdb->get_var("SELECT MAX(answer_order) FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question_type}' ");
 			$next_order_id = $next_order_id + 1;
 
-
 			if ($question){
 				if ($question_type === 'true_false'){
-					//$ifAnyPreviousData = $wpdb->get_var("SELECT COUNT(answer_id) FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id ={$question_id} AND belongs_question_type = '{$question_type}' ");
-
 					$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('belongs_question_id' => $question_id, 'belongs_question_type' => $question_type));
 					$data_true_false = array(
 						array(
@@ -887,12 +893,14 @@ class Quiz {
 							'belongs_question_type' => $question_type,
 							'answer_title'          => __('True', 'tutor'),
 							'is_correct'            => $answer['true_false'] == 'true' ? 1 : 0,
+							'answer_two_gap_match'  => 'true',
 						),
 						array(
 							'belongs_question_id'   => $question_id,
 							'belongs_question_type' => $question_type,
 							'answer_title'          => __('False', 'tutor'),
 							'is_correct'            => $answer['true_false'] == 'false' ? 1 : 0,
+							'answer_two_gap_match'  => 'false',
 						),
 					);
 
@@ -933,6 +941,50 @@ class Quiz {
 		//die(print_r($_POST));
 		wp_send_json_success();
 	}
+
+	/**
+	 * Tutor Update Answer
+     *
+     * @since v.1.0.0
+	 */
+	public function tutor_update_quiz_answer_options(){
+		global $wpdb;
+
+		$answer_id = (int) sanitize_text_field($_POST['tutor_quiz_answer_id']);
+		$questions = $_POST['tutor_quiz_question'];
+		$answers = $_POST['quiz_answer'];
+
+		foreach ($answers as $question_id => $answer){
+			$question = tutor_utils()->avalue_dot($question_id, $questions);
+			$question_type = $question['question_type'];
+
+			if ($question){
+				if($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' ||
+				        $question_type === 'matching' || $question_type === 'image_matching' || $question_type === 'fill_in_the_blank'  ){
+
+					$answer_data = array(
+						'belongs_question_id'   => $question_id,
+						'belongs_question_type' => $question_type,
+						'answer_title'          => $answer['answer_title'],
+						'image_id'              => isset($answer['image_id']) ? $answer['image_id'] : 0,
+						'answer_view_format'    => isset($answer['answer_view_format']) ? $answer['answer_view_format'] : '',
+					);
+					if (isset($answer['matched_answer_title'])){
+						$answer_data['answer_two_gap_match'] = $answer['matched_answer_title'];
+					}
+
+					if ($question_type === 'fill_in_the_blank'){
+						$answer_data['answer_two_gap_match'] = isset($answer['answer_two_gap_match']) ? strtolower(trim($answer['answer_two_gap_match'])) : null;
+					}
+
+					$wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', $answer_data, array('answer_id' => $answer_id));
+				}
+			}
+		}
+
+		//die(print_r($_POST));
+		wp_send_json_success();
+    }
 
 	public function tutor_quiz_builder_get_answers_by_question(){
 		global $wpdb;
@@ -989,6 +1041,9 @@ class Quiz {
 							<?php
 						}
 						?>
+                        <span class="tutor-quiz-answer-edit">
+                            <a href="javascript:;"><i class="tutor-icon-pencil"></i> </a>
+                        </span>
                         <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
                     </div>
 
