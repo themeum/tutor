@@ -68,7 +68,6 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		}
 	}
 
-
 	function column_total_questions($item) {
 		echo $item->total_questions;
 	}
@@ -93,7 +92,6 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		$status = ucwords(str_replace('quiz_', '', $item->attempt_status));
 		return  "<span class='tutor-status-context {$item->attempt_status}'>{$status}</span>";
 	}
-
 
 	function get_columns(){
 		$columns = array(

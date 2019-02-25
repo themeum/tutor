@@ -10,7 +10,6 @@ class Q_and_A{
 		add_action('admin_post_tutor_place_answer', array($this, 'place_answer'));
 	}
 
-
 	public function place_answer(){
 		tutor_utils()->checking_nonce();
 
@@ -38,7 +37,6 @@ class Q_and_A{
 			'comment_parent'    => $question_id,
 			'user_id'           => $user_id,
 		));
-
 
 		$wpdb->insert($wpdb->comments, $data);
 		$answer_id = (int) $wpdb->insert_id;

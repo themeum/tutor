@@ -18,7 +18,6 @@ class Instructor {
 		add_action('template_redirect', array($this, 'apply_instructor'));
 	}
 
-
 	/**
 	 * Register new user and mark him as instructor
 	 *

@@ -137,19 +137,14 @@ class init{
 			wp_schedule_event(time(), 'twicedaily', 'tutor_once_in_day_run_schedule');
 		}
 
-
 		/**
 		 * Older version compatibility
 		 */
-
 		if (version_compare(get_option('TUTOR_VERSION'), '1.0.0-alpha-2', '<')){
 			//Create Database
 			$this->create_database();
 			update_option('tutor_version', TUTOR_VERSION);
 		}
-
-
-
 	}
 
 	//Run task on deactivation
