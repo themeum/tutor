@@ -1563,7 +1563,7 @@ jQuery(document).ready(function($){
             hideOnOutSideClick : function(){
                 $(document).mouseup(function(e) {
                     var $option_wrap = $(".tutor-select-options");
-                    if (!$option_wrap.is(e.target) && $option_wrap.has(e.target).length === 0) {
+                    if ( ! $(e.target).closest('.select-header').length && !$option_wrap.is(e.target) && $option_wrap.has(e.target).length === 0) {
                         $option_wrap.hide();
                     }
                 });
@@ -1619,9 +1619,5 @@ jQuery(document).ready(function($){
         $that.closest('.tutor-media-upload-wrap').find('.tutor-media-upload-btn').html('<i class="tutor-icon-image1"></i>');
         $that.closest('.tutor-media-upload-wrap').find('input').val('');
     });
-
-
-
-
 
 });
