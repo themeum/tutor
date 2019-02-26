@@ -176,6 +176,36 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
         </div>
 
         <?php
+    }elseif($question_type === 'image_answering'){
+	    ?>
+
+        <div class="tutor-quiz-builder-form-cols-row">
+            <div class="quiz-form-field-col full-width">
+                <div class="quiz-form-field-col">
+                    <label><?php _e('Upload Image', 'tutor'); ?></label>
+                    <div class="tutor-media-upload-wrap">
+                        <input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="">
+                        <div class="tutor-media-preview">
+                            <a href="javascript:;" class="tutor-media-upload-btn"><i class="tutor-icon-image1"></i></a>
+                        </div>
+                        <div class="tutor-media-upload-trash-wrap">
+                            <a href="javascript:;" class="tutor-media-upload-trash">&times;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="quiz-form-field-col full-width">
+                <label><?php _e('Answer input value', 'tutor'); ?></label>
+                <div class="quiz-modal-field-wrap">
+                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="">
+                    <p class="quiz-modal-form-help"><?php _e('Student input text should be matched with this answer, write in <b>Small Caps</b>','tutor'); ?></p>
+                </div>
+            </div>
+
+        </div>
+    <?php
     }
 	?>
 

@@ -2071,6 +2071,20 @@ Course question and answer
     background-color: #05329F;
 }
 
+.quiz-image-answering-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+.quiz-image-answering-wrap img{
+    max-width: 100%;
+    height: auto;
+}
+.quiz-image-answering-answer {
+    width: 25%;
+}
+.quiz-image-answering-image-wrap {
+    margin-bottom: 20px;
+}
 
 
 /* ********************* */

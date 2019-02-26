@@ -107,6 +107,11 @@ $settings = maybe_unserialize($question->question_settings);
                                     <p class="tutor-select-option" data-value="image_matching" <?php echo $question->question_type === 'image_matching' ? ' data-selected="selected"' : ''; ?>>
                                         <i class="tutor-icon-block tutor-icon-image-matching"></i> <?php _e('Image Matching', 'tutor'); ?>
                                     </p>
+
+                                    <p class="tutor-select-option" data-value="image_answering" <?php echo $question->question_type === 'image_answering' ? ' data-selected="selected"' : ''; ?>>
+                                        <i class="tutor-icon-block tutor-icon-image-ans"></i> <?php _e('Image Answering', 'tutor'); ?>
+                                    </p>
+
                                     <p class="tutor-select-option" data-value="ordering" <?php echo $question->question_type === 'ordering' ? ' data-selected="selected"' : ''; ?>>
                                         <i class="tutor-icon-block tutor-icon-ordering"></i> <?php _e('Ordering', 'tutor'); ?>
                                     </p>

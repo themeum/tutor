@@ -2808,6 +2808,7 @@ class Utils {
 			'assessment'        => array('name' => __('Assessment', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-assesment"></i>'),
 			'matching'          => array('name' => __('Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-matching"></i>'),
 			'image_matching'    => array('name' => __('Image Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-matching"></i>'),
+			'image_answering'    => array('name' => __('Image Answering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-ans"></i>'),
 			'ordering'          => array('name' => __('Ordering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-ordering"></i>'),
 		);
 

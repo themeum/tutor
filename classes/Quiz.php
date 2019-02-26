@@ -909,7 +909,7 @@ class Quiz {
 					}
 
 				}elseif($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' ||
-                        $question_type === 'matching' || $question_type === 'image_matching'  ){
+                        $question_type === 'matching' || $question_type === 'image_matching' || $question_type === 'image_answering'  ){
 
 					$answer_data = array(
 						'belongs_question_id'   => $question_id,

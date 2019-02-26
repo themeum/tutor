@@ -273,14 +273,50 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 								if ($question_type === 'open_ended' || $question_type === 'short_answer'){
 									?>
                                     <textarea class="question_type_<?php echo $question_type; ?>" name="attempt[<?php echo
-                                    $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]"></textarea>
+									$is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]"></textarea>
 									<?php
 
-                                    if ($question_type === 'short_answer'){
-                                        $characters_limit = tutor_utils()->avalue_dot('short_answer_characters_limit', $quiz_attempt_info);
-                                        echo '<p class="answer_limit_desc">  characters remaining <span class="characters_remaining">'.$characters_limit.'</span> </p>';
-                                    }
+									if ($question_type === 'short_answer'){
+										$characters_limit = tutor_utils()->avalue_dot('short_answer_characters_limit', $quiz_attempt_info);
+										echo '<p class="answer_limit_desc">  characters remaining <span class="characters_remaining">'.$characters_limit.'</span> </p>';
+									}
 
+								}
+
+
+								if ($question_type === 'image_answering'){
+									?>
+
+                                    <div class="quiz-image-answering-wrap">
+
+										<?php
+										foreach ($answers as $answer){
+											?>
+                                            <div class="quiz-image-answering-answer">
+
+												<?php
+												if (intval($answer->image_id)){
+													?>
+                                                    <div class="quiz-image-answering-image-wrap">
+														<?php echo '<img src="'.wp_get_attachment_image_url($answer->image_id, 'full').'" />'; ?>
+                                                    </div>
+
+                                                    <div class="quiz-image-answering-input-field-wrap">
+                                                        <input type="text" placeholder="<?php _e('Write answer here.', 'tutor'); ?>">
+                                                    </div>
+
+													<?php
+												}
+												?>
+
+
+                                            </div>
+											<?php
+										}
+										?>
+                                    </div>
+
+									<?php
 								}
 								?>
                             </div>
