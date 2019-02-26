@@ -138,7 +138,7 @@ class init{
 		}
 
 		/**
-		 * Older version compatibility
+		 * backward compatibility
 		 */
 		if (version_compare(get_option('TUTOR_VERSION'), '1.0.0-alpha-2', '<')){
 			//Create Database

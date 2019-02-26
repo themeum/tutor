@@ -22,6 +22,12 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.tutor-icon-image-ans:before {
+    content: "\e959";
+}
+.tutor-icon-short-ans:before {
+    content: "\e95a";
+}
 .tutor-icon-image-matching:before {
     content: "\e956";
 }

@@ -302,6 +302,21 @@ if ( ! $quiz){
             </div>
 
 
+            <div class="tutor-quiz-builder-form-row">
+                <div class="tutor-quiz-builder-form-cols-row">
+                    <div class="quiz-form-field-col">
+                        <label><?php _e('Short answer characters limit', 'tutor'); ?></label>
+                    </div>
+
+                    <div class="quiz-form-field-col">
+                        <input type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option
+                        ($quiz_id, 'short_answer_characters_limit', 200); ?>" >
+                        <p class="quiz-modal-form-help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor');
+                        ?></p>
+                    </div>
+                </div>
+            </div>
+
             <!--<div class="tutor-quiz-builder-form-row">
                 <div class="tutor-quiz-builder-form-cols-row">
                     <div class="quiz-form-field-col">

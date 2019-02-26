@@ -493,7 +493,7 @@ class Quiz {
 					        $is_answer_was_correct = true;
 				        }
 
-                    }elseif ($question_type === 'open_ended'){
+                    }elseif ($question_type === 'open_ended' || $question_type === 'short_answer'){
 
 			            $given_answer = wp_kses_post($answers);
 

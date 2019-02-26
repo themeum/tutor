@@ -25,8 +25,6 @@ $settings = maybe_unserialize($question->question_settings);
                 </div>
             </div>
 
-
-
             <div class="tutor-quiz-builder-form-row">
 
                 <div class="tutor-quiz-builder-form-cols-row">
@@ -37,7 +35,6 @@ $settings = maybe_unserialize($question->question_settings);
 							echo $question->question_mark; ?>">
                         </div>
                     </div>
-
 
                     <div class="quiz-form-field-col">
                         <div class="quiz-modal-field-wrap">
@@ -88,6 +85,9 @@ $settings = maybe_unserialize($question->question_settings);
                                     </p>
                                     <p class="tutor-select-option" data-value="open_ended" <?php echo $question->question_type === 'open_ended' ? ' data-selected="selected"' : ''; ?>>
                                         <i class="tutor-icon-block tutor-icon-open-ended"></i> <?php _e('Open Ended/Essay', 'tutor'); ?>
+                                    </p>
+                                    <p class="tutor-select-option" data-value="short_answer" <?php echo $question->question_type === 'short_answer' ? ' data-selected="selected"' : ''; ?>>
+                                        <i class="tutor-icon-block tutor-icon-short-ans"></i> <?php _e('Short Answer', 'tutor'); ?>
                                     </p>
                                     <p class="tutor-select-option" data-value="fill_in_the_blank" <?php echo $question->question_type === 'fill_in_the_blank' ? ' data-selected="selected"' : ''; ?>>
                                         <i class="tutor-icon-block tutor-icon-fill-gaps"></i> <?php _e('Fill In The Gaps'); ?>

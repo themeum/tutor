@@ -503,6 +503,24 @@ jQuery(document).ready(function($){
         $that.addClass('active');
     });
 
+    /**
+     * Limit Short Answer Question Type
+     */
+    $(document).on('keyup', 'textarea.question_type_short_answer', function (e) {
+        var $that = $(this);
+        var value = $that.val();
+        var limit = _tutorobject.quiz_options.short_answer_characters_limit;
+        var remaining = limit - value.length;
+
+        if (remaining < 1){
+            $that.val(value.substr(0, limit));
+            remaining = 0;
+        }
+        $that.closest('.tutor-quiz-answers-wrap').find('.characters_remaining').html(remaining);
+    });
+
+
+
 
 
 });

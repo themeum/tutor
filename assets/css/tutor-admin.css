@@ -21,7 +21,8 @@
 .ui-slider-vertical .ui-slider-range { left: 0; width: 100%; }
 .ui-slider-vertical .ui-slider-range-min { bottom: 0; }
 .ui-slider-vertical .ui-slider-range-max { top: 0; }
-/* Component containers
+/*----------------------------------
+    Component containers
 ----------------------------------*/
 
 .ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff; color: #222222; }
@@ -1112,6 +1113,12 @@ i.tutor-icon-block {
     color: #fff;
     border-radius: 3px;
     margin-right: 2px;
+}
+i.tutor-icon-block.tutor-icon-short-ans{
+    background-color: #f37512;
+}
+i.tutor-icon-block.tutor-icon-image-ans{
+    background-color: #a322f9;
 }
 i.tutor-icon-block.tutor-icon-yes-no{
     background-color: #1a4bd8;

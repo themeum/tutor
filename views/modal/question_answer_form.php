@@ -1,8 +1,9 @@
 <?php
-if ($question_type === 'open_ended'){
+if ($question_type === 'open_ended' || $question_type === 'short_answer'){
 	echo '<p style="color: #ff0000;">No need any options</p>';
 	return '';
 }
+
 
 ?>
 
