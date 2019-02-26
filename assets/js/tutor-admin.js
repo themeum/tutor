@@ -1540,6 +1540,7 @@ jQuery(document).ready(function($){
                 });
 
                 this.setValue();
+                this.hideOnOutSideClick();
             },
             setValue : function(){
                 $('.tutor-select').each(function(){
@@ -1556,6 +1557,14 @@ jQuery(document).ready(function($){
                                 $thisOption.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($thisOption.attr('data-value'));
                             }
                         });
+                    }
+                });
+            },
+            hideOnOutSideClick : function(){
+                $(document).mouseup(function(e) {
+                    var $option_wrap = $(".tutor-select-options");
+                    if (!$option_wrap.is(e.target) && $option_wrap.has(e.target).length === 0) {
+                        $option_wrap.hide();
                     }
                 });
             },
