@@ -23,6 +23,9 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 		$time_limit_seconds = tutor_utils()->avalue_dot('time_limit.time_limit_seconds', $quiz_attempt_info);
 		$question_layout_view = tutor_utils()->avalue_dot('question_layout_view', $quiz_attempt_info);
 
+		$hide_quiz_time_display = (bool) tutor_utils()->avalue_dot('hide_quiz_time_display', $quiz_attempt_info);
+		$hide_question_number_overview = (bool) tutor_utils()->avalue_dot('hide_question_number_overview', $quiz_attempt_info);
+
 		$remaining_time_secs = (strtotime($is_started_quiz->attempt_started_at) + $time_limit_seconds ) - strtotime($quiz_attempt_info['date_time_now']);
 
 		$remaining_time_context = tutor_utils()->seconds_to_time_context($remaining_time_secs);
@@ -31,9 +34,13 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 		?>
 
         <div class="quiz-head-meta-info">
-            <div class="time-remaining">
-				<?php _e('Time remaining : '); ?> <span id="tutor-quiz-time-update" data-attempt-settings="<?php echo esc_attr(json_encode($is_started_quiz)) ?>" data-attempt-meta="<?php echo esc_attr(json_encode($quiz_attempt_info)) ?>"><?php echo $remaining_time_context; ?></span>
-            </div>
+			<?php
+			if ( ! $hide_quiz_time_display){
+				?>
+                <div class="time-remaining">
+					<?php _e('Time remaining : '); ?> <span id="tutor-quiz-time-update" data-attempt-settings="<?php echo esc_attr(json_encode($is_started_quiz)) ?>" data-attempt-meta="<?php echo esc_attr(json_encode($quiz_attempt_info)) ?>"><?php echo $remaining_time_context; ?></span>
+                </div>
+			<?php } ?>
         </div>
 
 
@@ -42,23 +49,23 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 			?>
             <div id="tutor-quiz-attempt-questions-wrap" data-question-layout-view="<?php echo $question_layout_view; ?>">
 
-	            <?php
-	            if ($question_layout_view === 'question_pagination'){
-		            $question_i = 0;
-		            ?>
+				<?php
+				if ($question_layout_view === 'question_pagination'){
+					$question_i = 0;
+					?>
                     <div class="tutor-quiz-questions-pagination">
                         <ul>
-				            <?php
-				            foreach ($questions as $question) {
-					            $question_i++;
-					            echo "<li><a href='#quiz-attempt-single-question-{$question->question_id}' class='tutor-quiz-question-paginate-item'>{$question_i}</a> </li>";
-				            }
-				            ?>
+							<?php
+							foreach ($questions as $question) {
+								$question_i++;
+								echo "<li><a href='#quiz-attempt-single-question-{$question->question_id}' class='tutor-quiz-question-paginate-item'>{$question_i}</a> </li>";
+							}
+							?>
                         </ul>
                     </div>
-		            <?php
-	            }
-	            ?>
+					<?php
+				}
+				?>
 
 
                 <form id="tutor-answering-quiz" method="post">
@@ -70,23 +77,34 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 					$question_i = 0;
 					foreach ($questions as $question) {
 						$question_i++;
+						$question_settings = maybe_unserialize($question->question_settings);
 
 						$style_display = ($question_layout_view !== 'question_below_each_other' && $question_i == 1) ? 'block' : 'none';
 						if ($question_layout_view === 'question_below_each_other'){
 							$style_display = 'block';
-                        }
+						}
 
 						$next_question = isset($questions[$question_i]) ? $questions[$question_i] : false;
 						?>
                         <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> >
 
-                            <?php echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
+							<?php echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
 
 
 							$question_type = $question->question_type;
 							$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id);
+							$show_question_mark = (bool) tutor_utils()->avalue_dot('show_question_mark', $question_settings);
 
-							echo '<h4 class="question-text">'.$question_i.'. '.$question->question_title.'</h4>';
+							echo '<h4 class="question-text">';
+							if ( ! $hide_question_number_overview){
+								echo $question_i;
+							}
+							echo $question->question_title;
+							echo '</h4>';
+
+							if ($show_question_mark){
+								echo '<p class="question-marks"> '.__('Marks : ', 'tutor').$question->question_mark.' </p>';
+							}
 							?>
                             <p class="question-description"><?php echo $question->question_description; ?></p>
 
@@ -102,18 +120,18 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                                 </div>
 
                                                 <div class="quiz-answer-input-body">
-	                                                <?php
-	                                                if ($answer->answer_view_format !== 'image'){
-		                                                echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
-	                                                }
-	                                                if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
-		                                                ?>
+													<?php
+													if ($answer->answer_view_format !== 'image'){
+														echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
+													}
+													if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
+														?>
                                                         <div class="quiz-answer-image-wrap">
                                                             <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
                                                         </div>
-		                                                <?php
-	                                                }
-	                                                ?>
+														<?php
+													}
+													?>
                                                 </div>
                                             </label>
 											<?php
@@ -139,7 +157,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 													?>
                                                 </div>
                                             </label>
-                                            <?php
+											<?php
 										}
                                         elseif ($question_type === 'fill_in_the_blank'){
 											?>
@@ -165,18 +183,18 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 											?>
                                             <div class="question-type-ordering-item">
                                                 <div class="answer-title">
-	                                                <?php
-	                                                if ($answer->answer_view_format !== 'image'){
-		                                                echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
-	                                                }
-	                                                if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
-		                                                ?>
+													<?php
+													if ($answer->answer_view_format !== 'image'){
+														echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
+													}
+													if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
+														?>
                                                         <div class="quiz-answer-image-wrap">
                                                             <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
                                                         </div>
-		                                                <?php
-	                                                }
-	                                                ?>
+														<?php
+													}
+													?>
                                                 </div>
                                                 <span class="answer-sorting-bar"><i class="tutor-icon-menu-2"></i> </span>
                                                 <input type="hidden" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][answers][]" value="<?php echo $answer->answer_id; ?>" >
@@ -219,23 +237,23 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 													?>
                                                     <div class="quiz-answer-item-matching">
                                                         <div class="quiz-answer-matching-title">
-	                                                        <?php
-	                                                        if ($question_type === 'matching') {
+															<?php
+															if ($question_type === 'matching') {
 
-		                                                        if ($answer->answer_view_format !== 'image'){
-			                                                        echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
-		                                                        }
-		                                                        if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
-			                                                        ?>
+																if ($answer->answer_view_format !== 'image'){
+																	echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
+																}
+																if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
+																	?>
                                                                     <div class="quiz-answer-image-wrap">
                                                                         <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
                                                                     </div>
-			                                                        <?php
-		                                                        }
-	                                                        }elseif (intval($answer->image_id)){
-		                                                        echo '<img src="'.wp_get_attachment_image_url($answer->image_id, 'full').'" />';
-	                                                        }
-	                                                        ?>
+																	<?php
+																}
+															}elseif (intval($answer->image_id)){
+																echo '<img src="'.wp_get_attachment_image_url($answer->image_id, 'full').'" />';
+															}
+															?>
                                                         </div>
                                                         <div class="quiz-answer-matching-droppable"></div>
                                                     </div>
@@ -264,25 +282,25 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 							<?php
 
 							if ($question_layout_view !== 'question_below_each_other'){
-							    if ($next_question){
-							        ?>
+								if ($next_question){
+									?>
                                     <div class="quiz-answer-footer-bar">
                                         <div class="quiz-footer-button">
                                             <button type="button" value="quiz_answer_submit" class="tutor-button
                                         tutor-success tutor-quiz-answer-next-btn"><?php _e( 'Answer &amp; Next Question', 'tutor' ); ?></button>
                                         </div>
                                     </div>
-                                    <?php
-                                }else{
-							        ?>
+									<?php
+								}else{
+									?>
                                     <div class="quiz-answer-footer-bar">
                                         <div class="quiz-footer-button">
                                             <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-success"><?php
-											    _e( 'Submit Quiz', 'tutor' ); ?></button>
+												_e( 'Submit Quiz', 'tutor' ); ?></button>
                                         </div>
                                     </div>
-                                    <?php
-                                }
+									<?php
+								}
 
 							}
 							?>
@@ -394,14 +412,14 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                             </td>
 
                             <td>
-                                <?php
+								<?php
 
-                                $pass_marks = ($attempt->total_marks * $passing_grade) / 100;
-                                if ($pass_marks > 0){
-                                    echo number_format_i18n($pass_marks, 2);
-                                }
-                                echo "({$passing_grade}%)";
-                                ?>
+								$pass_marks = ($attempt->total_marks * $passing_grade) / 100;
+								if ($pass_marks > 0){
+									echo number_format_i18n($pass_marks, 2);
+								}
+								echo "({$passing_grade}%)";
+								?>
                             </td>
 
                             <td>

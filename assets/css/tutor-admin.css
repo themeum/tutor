@@ -1277,14 +1277,14 @@ span.tutor-quiz-answer-title {
     max-height: 25px;
     width: auto;
 }
-button#quiz-answer-save-btn {
+button#quiz-answer-save-btn, button#quiz-answer-edit-btn {
     background-color: #7BBC30;
     color: #fff;
     padding: 10px 15px;
     border: none;
     cursor: pointer;
 }
-button#quiz-answer-save-btn:hover {
+button#quiz-answer-save-btn:hover, button#quiz-answer-edit-btn:hover {
     background-color: #5e981b;
 }
 /**

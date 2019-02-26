@@ -269,26 +269,26 @@ if ( ! $quiz){
                 </div>
             </div>
 
-            <div class="tutor-quiz-builder-form-row">
+           <!-- <div class="tutor-quiz-builder-form-row">
                 <div class="tutor-quiz-builder-form-cols-row">
                     <div class="quiz-form-field-col">
-                        <label><?php _e('Show correct questions - display', 'tutor'); ?></label>
+                        <label><?php /*_e('Show correct questions - display', 'tutor'); */?></label>
                     </div>
 
                     <div class="quiz-form-field-col">
                         <label class="btn-switch">
-                            <input type="checkbox" value="1" name="quiz_option[show_correct_questions]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'show_correct_questions')); ?> />
+                            <input type="checkbox" value="1" name="quiz_option[show_correct_questions]" <?php /*checked('1', tutor_utils()->get_quiz_option($quiz_id, 'show_correct_questions')); */?> />
                             <div class="btn-slider btn-round"></div>
                         </label>
-                        <p class="quiz-modal-form-help"><?php _e('If this option is activated, all answers are displayed below each other, i.e. all questions are on a single page.', 'tutor'); ?></p>
+                        <p class="quiz-modal-form-help"><?php /*_e('If this option is activated, all answers are displayed below each other, i.e. all questions are on a single page.', 'tutor'); */?></p>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
             <div class="tutor-quiz-builder-form-row">
                 <div class="tutor-quiz-builder-form-cols-row">
                     <div class="quiz-form-field-col">
-                        <label><?php _e('Hide question number overview', 'tutor'); ?></label>
+                        <label><?php _e('Hide question number', 'tutor'); ?></label>
                     </div>
 
                     <div class="quiz-form-field-col">
@@ -296,21 +296,21 @@ if ( ! $quiz){
                             <input type="checkbox" value="1" name="quiz_option[hide_question_number_overview]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_question_number_overview')); ?> />
                             <div class="btn-slider btn-round"></div>
                         </label>
-                        <p class="quiz-modal-form-help"><?php _e('Please note all questions will appear in your default Language. This language can be changed for a particular question later on.', 'tutor'); ?></p>
+                        <p class="quiz-modal-form-help"><?php _e('Show/hide question number during attempt.', 'tutor'); ?></p>
                     </div>
                 </div>
             </div>
 
 
-            <div class="tutor-quiz-builder-form-row">
+            <!--<div class="tutor-quiz-builder-form-row">
                 <div class="tutor-quiz-builder-form-cols-row">
                     <div class="quiz-form-field-col">
-                        <label><?php _e('Question overview', 'tutor'); ?></label>
+                        <label><?php /*_e('Question overview', 'tutor'); */?></label>
                     </div>
 
                     <div class="quiz-form-field-col">
                         <label class="btn-switch">
-                            <input type="checkbox" value="1" name="quiz_option[question_overview]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'question_overview')); ?> />
+                            <input type="checkbox" value="1" name="quiz_option[question_overview]" <?php /*checked('1', tutor_utils()->get_quiz_option($quiz_id, 'question_overview')); */?> />
                             <div class="btn-slider btn-round"></div>
                         </label>
                     </div>
@@ -345,7 +345,7 @@ if ( ! $quiz){
                         </label>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
 
             <div class="tutor-quiz-builder-modal-control-btn-group">
