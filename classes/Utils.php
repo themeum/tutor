@@ -51,6 +51,8 @@ class Utils {
 	 * @param bool $value
 	 *
 	 * Update Option
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function update_option($key = null, $value = false){
@@ -94,6 +96,8 @@ class Utils {
 	 * @return array
 	 *
 	 * Get all pages
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_pages(){
 		$pages = array();
@@ -110,6 +114,8 @@ class Utils {
 	 * @return string
 	 *
 	 * Get course archive URL
+	 *
+	 * @since v.1.0.0
 	 */
 	public function course_archive_page_url(){
 		$course_post_type = tutor()->course_post_type;
@@ -128,6 +134,8 @@ class Utils {
 	 * @return string
 	 *
 	 * Get student URL
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function profile_url($student_id = 0){
@@ -154,6 +162,8 @@ class Utils {
 	 * @return array|null|object
 	 *
 	 * Get user by user login
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_user_by_login($user_login = ''){
 		global $wpdb;
@@ -166,6 +176,8 @@ class Utils {
 	 * @return bool
 	 *
 	 * Check if WooCommerce Activated
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function has_wc(){
@@ -177,6 +189,13 @@ class Utils {
 		return $has;
 	}
 
+	/**
+	 * @return bool
+	 *
+	 * determine if EDD plugin activated
+	 *
+	 * @since v.1.0.0
+	 */
 	public function has_edd(){
 		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
 		//$depends = array('easy-digital-downloads/easy-digital-downloads.php', 'tutor-edd/tutor-edd.php');
@@ -189,7 +208,7 @@ class Utils {
 	/**
 	 * @return mixed
 	 *
-	 *
+	 * @since v.1.0.0
 	 */
 	public function languages(){
 		$language_codes = array(
@@ -333,11 +352,29 @@ class Utils {
 		return apply_filters('tutor/utils/languages', $language_codes);
 	}
 
+
+	/**
+	 * @param string $value
+	 *
+	 * Check raw data
+	 *
+	 * @since v.1.0.0
+	 */
 	public function print_view($value = ''){
 		echo '<pre>';
 		print_r($value);
 		echo '</pre>';
 	}
+
+	/**
+	 * @param array $excludes
+	 *
+	 * @return array|null|object
+	 *
+	 * Get courses
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function get_courses($excludes = array()){
 		global $wpdb;
@@ -357,6 +394,15 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * @param int $instructor_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get courses for instructors
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_courses_for_instructors($instructor_id = 0){
 		global $wpdb;
 
@@ -371,6 +417,16 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * @param $instructor_id
+	 *
+	 * @return null|string
+	 *
+	 * Get course count by instructor
+	 *
+	 * @since v.1.0.0
+	 */
+
 	public function get_course_count_by_instructor($instructor_id){
 		global $wpdb;
 
@@ -383,6 +439,15 @@ class Utils {
 		return $count;
 	}
 
+	/**
+	 * @param $instructor_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get courses by a instructor
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_courses_by_instructor($instructor_id){
 		global $wpdb;
 
@@ -403,11 +468,25 @@ class Utils {
 		return $pageposts;
 	}
 
+	/**
+	 * @return mixed
+	 *
+	 * Get archive page course count
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_archive_page_course_count(){
 		global $wp_query;
 		return $wp_query->post_count;
 	}
 
+	/**
+	 * @return null|string
+	 *
+	 * Get course count
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_course_count(){
 		global $wpdb;
 
@@ -416,6 +495,13 @@ class Utils {
 		return $count;
 	}
 
+	/**
+	 * @return null|string
+	 *
+	 * Get lesson count
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_lesson_count(){
 		global $wpdb;
 
@@ -424,6 +510,16 @@ class Utils {
 		return $count;
 	}
 
+	/**
+	 * @param int $course_id
+	 * @param int $limit
+	 *
+	 * @return \WP_Query
+	 *
+	 * Get lesson
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_lesson($course_id = 0, $limit = 10){
 		$course_id = $this->get_post_id($course_id);
 
@@ -445,6 +541,15 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * @param int $course_id
+	 *
+	 * @return int
+	 *
+	 * Get total lesson count by a course
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_lesson_count_by_course($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
@@ -454,6 +559,16 @@ class Utils {
 		return (int) $count_lesson;
 	}
 
+	/**
+	 * @param int $course_id
+	 * @param int $user_id
+	 *
+	 * @return int
+	 *
+	 * Get completed lesson total number by a course
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_completed_lesson_count_by_course($course_id = 0, $user_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
@@ -481,6 +596,7 @@ class Utils {
 	 *
 	 * @return float|int
 	 *
+	 * @since v.1.0.0
 	 */
 	public function get_course_completed_percent($course_id = 0, $user_id = 0){
 		$course_id = $this->get_post_id($course_id);
@@ -496,6 +612,15 @@ class Utils {
 		return 0;
 	}
 
+	/**
+	 * @param int $course_id
+	 *
+	 * @return \WP_Query
+	 *
+	 * Get all topics by given course ID
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_topics($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 
@@ -511,6 +636,15 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * @param $course_ID
+	 *
+	 * @return int
+	 *
+	 * Get next topic order id
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_next_topic_order_id($course_ID){
 		global $wpdb;
 
@@ -518,6 +652,15 @@ class Utils {
 		return $last_order + 1;
 	}
 
+	/**
+	 * @param $topic_ID
+	 *
+	 * @return int
+	 *
+	 * Get next course content order id
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_next_course_content_order_id($topic_ID){
 		global $wpdb;
 
@@ -525,6 +668,16 @@ class Utils {
 		return $last_order + 1;
 	}
 
+	/**
+	 * @param int $topics_id
+	 * @param int $limit
+	 *
+	 * @return \WP_Query
+	 *
+	 * Get lesson by topic
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_lessons_by_topic($topics_id = 0, $limit = 10){
 		$topics_id = $this->get_post_id($topics_id);
 
@@ -542,6 +695,16 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * @param int $topics_id
+	 * @param int $limit
+	 *
+	 * @return \WP_Query
+	 *
+	 * Get course content by topic
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_course_contents_by_topic($topics_id = 0, $limit = 10){
 		$topics_id = $this->get_post_id($topics_id);
 
@@ -559,6 +722,13 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * @param string $request_method
+	 *
+	 * Check actions nonce
+	 *
+	 * @since v.1.0.0
+	 */
 	public function checking_nonce($request_method = 'post'){
 		if ($request_method === 'post'){
 			if (!isset($_POST[tutor()->nonce]) || !wp_verify_nonce($_POST[tutor()->nonce], tutor()->nonce_action)) {
@@ -640,6 +810,16 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * @param int $course_id
+	 * @param int $user_id
+	 *
+	 * @return array|bool|null|object|void
+	 *
+	 * Has any enrolled for a user in a course
+	 *
+	 * @since v.1.0.0
+	 */
 	public function has_any_enrolled($course_id = 0, $user_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
@@ -725,7 +905,7 @@ class Utils {
 		return false;
 	}
 
-	/*
+	/**
 	 *
 	 * Get course sub pages in course dashboard
 	 *
@@ -863,6 +1043,8 @@ class Utils {
 	 * @return array
 	 *
 	 * Get the playtime in array
+	 *
+	 * @since v.1.0.0
 	 */
 	public function playtime_array($seconds){
 		$run_time_format = array(
@@ -891,6 +1073,15 @@ class Utils {
 		return $run_time_format;
 	}
 
+	/**
+	 * @param $seconds
+	 *
+	 * @return string
+	 *
+	 * Convert seconds to human readable time
+	 *
+	 * @since v.1.0.0
+	 */
 	public function seconds_to_time_context($seconds) {
 		$sign = (($seconds < 0) ? '-' : '');
 		$seconds = round(abs($seconds));
@@ -963,6 +1154,8 @@ class Utils {
 	 * @return bool
 	 *
 	 * Ensure if attached video is self hosted or not
+	 *
+	 * @since v.1.0.0
 	 */
 	public function is_html5_video($post_id = 0){
 		$post_id = $this->get_post_id($post_id);
@@ -1039,6 +1232,8 @@ class Utils {
 	 * @return array|bool|null|object|void
 	 *
 	 * Determine if a course completed
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function is_completed_course($course_id = 0, $user_id = 0){
@@ -1070,6 +1265,8 @@ class Utils {
 	 * @return array
 	 *
 	 * Sanitize input array
+	 *
+	 * @since v.1.0.0
 	 */
 	public function sanitize_array($input = array()){
 		$array = array();
@@ -1088,6 +1285,16 @@ class Utils {
 
 		return $array;
 	}
+
+	/**
+	 * @param int $post_id
+	 *
+	 * @return array|bool
+	 *
+	 * Determine if has any video in single
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function has_video_in_single($post_id = 0){
 		if (is_single()) {
@@ -1143,6 +1350,8 @@ class Utils {
 	 *
 	 * get the total students
 	 * pass course id to get course wise total students
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_total_students($search_term = ''){
 		$meta_key = '_is_tutor_student';
@@ -1158,6 +1367,15 @@ class Utils {
 		return (int) $count;
 	}
 
+	/**
+	 * @param int $user_id
+	 *
+	 * @return array
+	 *
+	 * Get complete courses ids by user
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_completed_courses_ids_by_user($user_id = 0){
 		global $wpdb;
 
@@ -1178,6 +1396,8 @@ class Utils {
 	 * @return bool|\WP_Query
 	 *
 	 * Return courses by user_id
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_courses_by_user($user_id = 0){
 		$user_id = $this->get_user_id($user_id);
@@ -1203,6 +1423,8 @@ class Utils {
 	 * @return bool|\WP_Query
 	 *
 	 * Get the active course by user
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function get_active_courses_by_user($user_id = 0){
@@ -1225,6 +1447,16 @@ class Utils {
 
 		return false;
 	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return array
+	 *
+	 * Get enrolled course ids by a user
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function get_enrolled_courses_ids_by_user($user_id = 0){
 		global $wpdb;
@@ -1315,6 +1547,15 @@ class Utils {
 		return $this->avalue_dot($lesson_id, $lesson_info);
 	}
 
+	/**
+	 * @param int $post_id
+	 *
+	 * @return bool|false|int
+	 *
+	 * Get current post id or given post id
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_post_id($post_id = 0){
 		if ( ! $post_id){
 			$post_id = get_the_ID();
@@ -1326,6 +1567,15 @@ class Utils {
 		return $post_id;
 	}
 
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool|int
+	 *
+	 * Get current user or given user ID
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_user_id($user_id = 0){
 		if ( ! $user_id){
 			$user_id = get_current_user_id();
@@ -1425,6 +1675,8 @@ class Utils {
 	 * @param int $post_id
 	 *
 	 * Mark lesson complete
+	 *
+	 * @since v.1.0.0
 	 */
 	public function mark_lesson_complete($post_id = 0, $user_id = 0){
 		$post_id = $this->get_post_id($post_id);
@@ -1439,6 +1691,8 @@ class Utils {
 	 *
 	 * @type: call when need
 	 * @return bool;
+	 *
+	 * @since v.1.0.0
 	 */
 	public function do_enroll($course_id = 0, $order_id = 0){
 		if ( ! $course_id){
@@ -1490,6 +1744,13 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * @param $order_id
+	 *
+	 * Complete course enrollment and do some task
+	 *
+	 * @since v.1.0.0
+	 */
 	public function complete_course_enroll($order_id){
 		if ( ! tutor_utils()->is_tutor_order($order_id)){
 			return;
@@ -1513,6 +1774,8 @@ class Utils {
 	 * @param $order_id
 	 *
 	 * @return array|bool
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_course_enrolled_ids_by_order_id($order_id){
 		global $wpdb;
@@ -1550,10 +1813,29 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * @param int $course_id
+	 *
+	 * @return int
+	 *
+	 * Get course productID
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_course_product_id($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		return (int) get_post_meta($course_id, '_tutor_course_product_id', true);
 	}
+
+	/**
+	 * @param int $product_id
+	 *
+	 * @return array|null|object|void
+	 *
+	 * Get Product belongs with course
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function product_belongs_with_course($product_id = 0){
 		global $wpdb;
@@ -1564,6 +1846,8 @@ class Utils {
 
 	/**
 	 * #End WooCommerce specific utils
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function get_enrolled_statuses(){
@@ -1578,6 +1862,15 @@ class Utils {
 		);
 	}
 
+	/**
+	 * @param $order_id
+	 *
+	 * @return mixed
+	 *
+	 * determine is this a tutor order
+	 *
+	 * @since v.1.0.0
+	 */
 	public function is_tutor_order($order_id){
 		return get_post_meta($order_id, '_is_tutor_order_for_course', true);
 	}
@@ -1586,6 +1879,8 @@ class Utils {
 	 * @return mixed
 	 *
 	 * Tutor Dashboard Pages
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function tutor_student_dashboard_pages(){
@@ -1600,7 +1895,16 @@ class Utils {
 		return apply_filters('tutor_dashboard/student/pages', $nav_items);
 	}
 
-
+	/**
+	 * @param string $page_key
+	 * @param int $page_id
+	 *
+	 * @return string
+	 *
+	 * Get tutor dashboard page single URL
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_tutor_dashboard_page_permalink($page_key = '', $page_id = 0){
 		if ($page_key === 'index'){
 			$page_key = '';
@@ -1609,6 +1913,15 @@ class Utils {
 		return trailingslashit(get_permalink($page_id)).$page_key;
 	}
 
+	/**
+	 * @param string $input
+	 *
+	 * @return array|bool|mixed|string
+	 *
+	 * Get old input
+	 *
+	 * @since v.1.0.0
+	 */
 	public function input_old($input = ''){
 		$value = $this->avalue_dot($input, $_REQUEST);
 		if ($value){
@@ -1631,6 +1944,16 @@ class Utils {
 		return get_user_meta($user_id, '_is_tutor_instructor', true);
 	}
 
+	/**
+	 * @param int $user_id
+	 * @param bool $status_name
+	 *
+	 * @return bool|mixed
+	 *
+	 * Instructor status
+	 *
+	 * @since v.1.0.0
+	 */
 	public function instructor_status($user_id = 0, $status_name = true){
 		$user_id = $this->get_user_id($user_id);
 
@@ -1651,6 +1974,15 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * @param string $search_term
+	 *
+	 * @return int
+	 *
+	 * Get total number of instructors
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function get_total_instructors($search_term = ''){
 		$meta_key = '_is_tutor_instructor';
@@ -1666,6 +1998,17 @@ class Utils {
 		return (int) $count;
 	}
 
+	/**
+	 * @param int $start
+	 * @param int $limit
+	 * @param string $search_term
+	 *
+	 * @return array|null|object
+	 *
+	 * Get all instructors
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_instructors($start = 0, $limit = 10, $search_term = ''){
 		$meta_key = '_is_tutor_instructor';
 		global $wpdb;
@@ -1684,6 +2027,15 @@ class Utils {
 		return $instructors;
 	}
 
+	/**
+	 * @param int $course_id
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Get all instructors by course
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_instructors_by_course($course_id = 0){
 		global $wpdb;
 		$course_id = $this->get_post_id($course_id);
@@ -1713,8 +2065,11 @@ class Utils {
 	 * Get total Students by instructor
 	 * 1 enrollment = 1 student, so total enrolled for a equivalent total students (Tricks)
 	 *
+	 * @return int
+	 *
 	 * @since v.1.0.0
 	 */
+
 	public function get_total_students_by_instructor($instructor_id){
 		global $wpdb;
 
@@ -1734,6 +2089,8 @@ class Utils {
 	 * @return float|string
 	 *
 	 * Get rating format from value
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_rating_value($input = 0.00){
 
@@ -1762,6 +2119,8 @@ class Utils {
 	 * @return string
 	 *
 	 * Generate star rating based in given rating value
+	 *
+	 * @since v.1.0.0
 	 */
 	public function star_rating_generator($current_rating = 0.00, $echo = true){
 		$output = '';
@@ -1792,6 +2151,8 @@ class Utils {
 	 * @return string
 	 *
 	 * Generate text to avatar
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_tutor_avatar($user_id = null, $size = 'thumbnail'){
 		global $wpdb;
@@ -1823,6 +2184,16 @@ class Utils {
 
 		return $initial_avatar;
 	}
+
+	/**
+	 * @param $user_id
+	 *
+	 * @return array|null|object|void
+	 *
+	 * Get tutor user
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function get_tutor_user($user_id){
 		global $wpdb;
@@ -1884,6 +2255,8 @@ class Utils {
 	 * @return object
 	 *
 	 * Get course rating
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_course_rating($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
@@ -1916,7 +2289,17 @@ class Utils {
 		return (object) $ratings;
 	}
 
-
+	/**
+	 * @param int $user_id
+	 * @param int $offset
+	 * @param int $limit
+	 *
+	 * @return array|null|object
+	 *
+	 * Get reviews by a user
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_reviews_by_user($user_id = 0, $offset = 0, $limit = 150){
 		$user_id = $this->get_user_id($user_id);
 		global $wpdb;
@@ -1949,6 +2332,8 @@ class Utils {
 	 * @return object
 	 *
 	 * Get instructors rating
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_instructor_ratings($instructor_id){
 		global $wpdb;
@@ -1985,6 +2370,8 @@ class Utils {
 	 * @return object
 	 *
 	 * Get course rating by user
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_course_rating_by_user($course_id = 0, $user_id = 0){
 		$course_id = $this->get_post_id($course_id);
@@ -2019,6 +2406,8 @@ class Utils {
 	 * @param int $user_id
 	 *
 	 * @return null|string
+	 *
+	 * @since v.1.0.0
 	 */
 	public function count_reviews_wrote_by_user($user_id = 0){
 		global $wpdb;
@@ -2034,6 +2423,8 @@ class Utils {
 	 * @return bool|int|string
 	 *
 	 * This function transforms the php.ini notation for numbers (like '2M') to an integer.
+	 *
+	 * @since v.1.0.0
 	 */
 
 	function let_to_num( $size ) {
@@ -2061,8 +2452,13 @@ class Utils {
 		return $ret;
 	}
 
-
-
+	/**
+	 * @return array
+	 *
+	 * Get Database version
+	 *
+	 * @since v.1.0.0
+	 */
 	function get_db_version() {
 		global $wpdb;
 
@@ -2089,7 +2485,18 @@ class Utils {
 		return '<span class="tutor-help-tip" data-tip="' . $tip . '"></span>';
 	}
 
-
+	/**
+	 * @param int $course_id
+	 * @param int $user_id
+	 * @param int $offset
+	 * @param int $limit
+	 *
+	 * @return array|null|object
+	 *
+	 * Get top question
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_top_question($course_id = 0, $user_id = 0, $offset = 0, $limit = 20){
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
@@ -2119,6 +2526,15 @@ class Utils {
 		return $questions;
 	}
 
+	/**
+	 * @param string $search_term
+	 *
+	 * @return int
+	 *
+	 * Get total number of Q&A questions
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_total_qa_question($search_term = ''){
 		global $wpdb;
 
@@ -2185,6 +2601,15 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * @param $question_id
+	 *
+	 * @return array|null|object|void
+	 *
+	 * Get question for Q&A
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_qa_question($question_id){
 		global $wpdb;
 		$query = $wpdb->get_row("SELECT 
@@ -2212,6 +2637,13 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * @param $question_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get question and asnwer by question
+	 */
 	public function get_qa_answer_by_question($question_id){
 		global $wpdb;
 		$query = $wpdb->get_results("SELECT 
@@ -2265,6 +2697,16 @@ class Utils {
 			AND post_parent = {$course_id} ORDER BY {$wpdb->posts}.ID DESC;");
 		return $query;
 	}
+
+	/**
+	 * @param string $content
+	 *
+	 * @return mixed
+	 *
+	 * Announcement content
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function announcement_content($content = ''){
 		$search = array('{user_display_name}');
@@ -2344,6 +2786,16 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * @param null $type
+	 *
+	 * @return array|mixed
+	 *
+	 * Get all question types
+	 *
+	 * @since v.1.0.0
+	 */
+
 	public function get_question_types($type = null){
 		$types = array(
 			'true_false'        => array('name' => __('True/False', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-yes-no"></i>'),
@@ -2389,6 +2841,8 @@ class Utils {
 	 * @return int
 	 *
 	 * Get the next question order ID
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function quiz_next_question_order_id($quiz_id){
@@ -2407,7 +2861,7 @@ class Utils {
 	 * @return int
 	 *
 	 * new design quiz question
-	 *
+	 * @since v.1.0.0
 	 */
 	public function quiz_next_question_id(){
 		global $wpdb;
@@ -2423,6 +2877,17 @@ class Utils {
 		return $quiz_id;
 	}
 
+	/**
+	 * @param array $config
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * It was used in previous quiz algorithm
+	 *
+	 * @deprecated
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_unattached_quiz($config = array()){
 		global $wpdb;
 
@@ -2453,6 +2918,8 @@ class Utils {
 	 * @param int $post_id
 	 *
 	 * @return array|bool|null|object
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_attached_quiz($post_id = 0){
 		global $wpdb;
@@ -2467,6 +2934,15 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * @param $quiz_id
+	 *
+	 * @return array|bool|null|object|void
+	 *
+	 * Get course by quiz
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function get_course_by_quiz($quiz_id){
 		global $wpdb;
@@ -2499,6 +2975,8 @@ class Utils {
 	 * @param $quiz_id
 	 *
 	 * @return int
+	 *
+	 * @since v.1.0.0
 	 */
 	public function total_questions_for_student_by_quiz($quiz_id){
 		$quiz_id = $this->get_post_id($quiz_id);
@@ -2508,6 +2986,16 @@ class Utils {
 
 		return $total_question;
 	}
+
+	/**
+	 * @param int $quiz_id
+	 *
+	 * @return array|null|object|void
+	 *
+	 * Determine if there is any started quiz exists
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function is_started_quiz($quiz_id = 0){
 		global $wpdb;
@@ -2528,6 +3016,8 @@ class Utils {
 	 * but student will answer a specific amount of questions
 	 *
 	 * @return int
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function max_questions_for_take_quiz($quiz_id){
@@ -2544,6 +3034,15 @@ class Utils {
 		return $max_questions;
 	}
 
+	/**
+	 * @param int $attempt_id
+	 *
+	 * @return array|bool|null|object|void
+	 *
+	 * Get single quiz attempt
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_attempt($attempt_id = 0){
 		global $wpdb;
 		if ( ! $attempt_id){
@@ -2553,10 +3052,30 @@ class Utils {
 		return $attempt;
 	}
 
+	/**
+	 * @param $attempt_info
+	 *
+	 * @return mixed
+	 *
+	 * Get unserialize attempt info
+	 *
+	 * @since v.1.0.0
+	 */
+
 	public function quiz_attempt_info($attempt_info){
 		return maybe_unserialize($attempt_info);
 	}
 
+	/**
+	 * @param $quiz_attempt_id
+	 * @param array $attempt_info
+	 *
+	 * @return bool|int
+	 *
+	 * Update attempt for various action
+	 *
+	 * @since v.1.0.0
+	 */
 	public function quiz_update_attempt_info($quiz_attempt_id, $attempt_info = array()){
 		$answers = tutor_utils()->avalue_dot('answers', $attempt_info);
 		$total_marks = array_sum(wp_list_pluck($answers, 'question_mark'));
@@ -2566,6 +3085,16 @@ class Utils {
 
 		return update_comment_meta($quiz_attempt_id,'quiz_attempt_info', $attempt_info);
 	}
+
+	/**
+	 * @param int $quiz_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get random question by quiz id
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function get_random_question_by_quiz($quiz_id = 0){
 		global $wpdb;
@@ -2579,6 +3108,13 @@ class Utils {
 		return $questions;
 	}
 
+	/**
+	 * @param int $quiz_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get random questions by quiz
+	 */
 	public function get_random_questions_by_quiz($quiz_id = 0){
 		global $wpdb;
 
@@ -2590,6 +3126,16 @@ class Utils {
 		return $questions;
 	}
 
+	/**
+	 * @param $question_id
+	 * @param bool $rand
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Get answers list by quiz question
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_answers_by_quiz_question($question_id, $rand = false){
 		global $wpdb;
 
@@ -2620,6 +3166,8 @@ class Utils {
 	 * @return array|bool|null|object
 	 *
 	 * Get all of the attempts by an user of a quiz
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function quiz_attempts($quiz_id = 0, $user_id = 0){
@@ -2636,6 +3184,16 @@ class Utils {
 
 		return false;
 	}
+
+	/**
+	 * @param string $search_term
+	 *
+	 * @return int
+	 *
+	 * Total number of quiz attempts
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function get_total_quiz_attempts($search_term = ''){
 		global $wpdb;
@@ -2654,6 +3212,18 @@ class Utils {
 		return (int) $count;
 	}
 
+	/**
+	 * @param int $start
+	 * @param int $limit
+	 * @param string $search_term
+	 *
+	 * @return array|null|object
+	 *
+	 *
+	 * Get the all quiz attempts
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_quiz_attempts($start = 0, $limit = 10, $search_term = '') {
 		global $wpdb;
 
@@ -2679,6 +3249,8 @@ class Utils {
 	 * @return array|null|object
 	 *
 	 * Get quiz answers by attempt id
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_quiz_answers_by_attempt_id($attempt_id){
 		global $wpdb;
@@ -2691,6 +3263,15 @@ class Utils {
 		return $results;
 	}
 
+	/**
+	 * @param $answer_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get single answer by answer_id
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_answer_by_id($answer_id){
 		global $wpdb;
 
@@ -2708,6 +3289,16 @@ class Utils {
 
 		return $answer;
 	}
+
+	/**
+	 * @param $ids
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Get quiz answers by ids
+	 *
+	 * @since v.1.0.0
+	 */
 
 	public function get_quiz_answers_by_ids($ids){
 		$ids = (array) $ids;
@@ -2738,6 +3329,8 @@ class Utils {
 	 * @return mixed
 	 *
 	 * Get the users / students / course levels
+	 *
+	 * @since v.1.0.0
 	 */
 
 	public function course_levels($level = null){
@@ -2759,6 +3352,13 @@ class Utils {
 		return $levels;
 	}
 
+	/**
+	 * @return mixed|void
+	 *
+	 * Get user permalink for dashboard
+	 *
+	 * @since v.1.0.0
+	 */
 	public function user_profile_permalinks(){
 		$permalinks = array(
 			'enrolled_course'   => __('Enrolled Course', 'tutor'),
@@ -2769,6 +3369,13 @@ class Utils {
 		return apply_filters('tutor_public_profile/permalinks', $permalinks);
 	}
 
+	/**
+	 * @return bool|false|string
+	 *
+	 * Student registration form
+	 *
+	 * @since v.1.0.0
+	 */
 	public function student_register_url(){
 		$student_register_page = (int) $this->get_option('student_register_page');
 
@@ -2778,6 +3385,11 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * @return false|string
+	 *
+	 * Get frontend dashboard URL
+	 */
 	public function tutor_dashboard_url(){
 		$page_id = (int) tutor_utils()->get_option('student_dashboard');
 		$page_id = apply_filters('tutor_dashboard_url', $page_id);
@@ -2791,6 +3403,8 @@ class Utils {
 	 * @return bool
 	 *
 	 * is_wishlisted();
+	 *
+	 * @since v.1.0.0
 	 */
 	public function is_wishlisted($course_id = 0, $user_id = 0){
 		$course_id = $this->get_post_id($course_id);
@@ -2811,6 +3425,8 @@ class Utils {
 	 * @return array|null|object
 	 *
 	 * Get the wish lists by an user
+	 *
+	 * @since v.1.0.0
 	 */
 	public function get_wishlist($user_id = 0){
 		$user_id = $this->get_user_id($user_id);
@@ -2832,6 +3448,8 @@ class Utils {
 	 * @return array|null|object
 	 *
 	 * Getting popular courses
+	 *
+	 * @since v.1.0.0
 	 */
 	public function most_popular_courses($limit = 10){
 		global $wpdb;
@@ -2856,6 +3474,8 @@ class Utils {
 	 * @return array|bool|null|object
 	 *
 	 * Get most rated courses lists
+	 *
+	 * @since v.1.0.0
 	 */
 	public function most_rated_courses($limit = 10){
 		global $wpdb;
@@ -2877,7 +3497,15 @@ class Utils {
 		return false;
 	}
 
-
+	/**
+	 * @param null $addon_field
+	 *
+	 * @return bool
+	 *
+	 * Get Addon config
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_addon_config($addon_field = null){
 		if ( ! $addon_field){
 			return false;
@@ -2893,6 +3521,13 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * @return array|false|string
+	 *
+	 * Get the IP from visitor
+	 *
+	 * @since v.1.0.0
+	 */
 	function get_ip() {
 		$ipaddress = '';
 		if (getenv('HTTP_CLIENT_IP'))

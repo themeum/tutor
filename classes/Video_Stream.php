@@ -93,7 +93,7 @@ class Video_Stream {
 	}
 
 	/**
-	 * close curretly opened stream
+	 * close currently opened stream
 	 */
 	private function end() {
 		fclose($this->stream);
