@@ -509,6 +509,20 @@ class Quiz {
 					        $is_answer_was_correct = true;
 				        }
 
+                    }elseif ($question_type === 'image_answering'){
+				        $image_inputs = tutor_utils()->avalue_dot('answer_id', $answers);
+				        $given_answer = maybe_serialize($image_inputs);
+
+				        $is_answer_was_correct = false;
+
+			            if (is_array($image_inputs) && count($image_inputs)){
+			                foreach ($image_inputs as $answer_id => $answer){
+				                $db_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = {$answer_id} ;");
+
+				                $is_answer_was_correct = sanitize_text_field($answer) == $db_answer->answer_title;
+			                }
+                        }
+
                     }
 
 			        $question_mark = $is_answer_was_correct ? $question->question_mark : 0;
@@ -959,8 +973,7 @@ class Quiz {
 			$question_type = $question['question_type'];
 
 			if ($question){
-				if($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' ||
-				        $question_type === 'matching' || $question_type === 'image_matching' || $question_type === 'fill_in_the_blank'  ){
+				if($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' || $question_type === 'matching' || $question_type === 'image_matching' || $question_type === 'fill_in_the_blank' || $question_type === 'image_answering'  ){
 
 					$answer_data = array(
 						'belongs_question_id'   => $question_id,

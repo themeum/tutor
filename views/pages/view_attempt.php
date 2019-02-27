@@ -2,6 +2,15 @@
 $attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
 $attempt = tutor_utils()->get_attempt($attempt_id);
 
+if ( ! $attempt){
+	?>
+
+    <h1><?php _e('Attempt not found', 'tutor'); ?></h1>
+
+	<?php
+	return;
+}
+
 $quiz_attempt_info = tutor_utils()->quiz_attempt_info($attempt->attempt_info);
 $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt->attempt_id);
 ?>
@@ -98,6 +107,18 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt->attempt_id);
 					?>
                 </span>
             </p>
+
+
+            <p class="quiz-attempt-info-row">
+                <span class="attempt-property-name"><?php _e('Attempt Time', 'tutor'); ?></span>
+                <span class="attempt-property-value"> :
+					<?php
+					$attempt_time_sec = strtotime($attempt->attempt_ended_at) - strtotime($attempt->attempt_started_at);
+					echo tutor_utils()->seconds_to_time_context($attempt_time_sec);
+					?>
+                </span>
+            </p>
+
         </div>
     </div>
 
@@ -144,9 +165,30 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt->attempt_id);
 						}elseif ($answer->question_type === 'fill_in_the_blank'){
 
 							$answer_titles = maybe_unserialize($answer->given_answer);
-							echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
 
-						}elseif ($answer->question_type === 'open_ended'){
+							$get_db_answers_by_question = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
+							foreach ($get_db_answers_by_question as $db_answer);
+							$count_dash_fields = substr_count($db_answer->answer_title, '{dash}');
+							if ($count_dash_fields){
+								$dash_string = array();
+								$input_data = array();
+
+								for($i=0; $i<$count_dash_fields; $i++){
+									//$dash_string[] = '{dash}';
+									$input_data[] =  isset($answer_titles[$i]) ? "<span class='filled_dash_unser'>{$answer_titles[$i]}</span>" : "______";
+								}
+
+								$answer_title = $db_answer->answer_title;
+								foreach($input_data as $replace){
+									$answer_title = preg_replace('/{dash}/i', $replace, $answer_title, 1);
+								}
+
+								echo str_replace('{dash}', '_____', $answer_title);
+							}
+
+
+
+						}elseif ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
 
 							if ($answer->given_answer){
 								echo wpautop(stripslashes($answer->given_answer));
@@ -170,11 +212,8 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt->attempt_id);
 								$provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
 								$provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
 								foreach ($provided_answer_order as $provided_answer_order);
-
 								echo $original_saved_answer->answer_title  ." - {$provided_answer_order->answer_two_gap_match} <br />";
 							}
-
-
 
 						}elseif ($answer->question_type === 'image_matching'){
 
@@ -190,6 +229,22 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt->attempt_id);
                                 <div class="image-matching-item">
                                     <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $original_saved_answer->image_id); ?>" /> </p>
                                     <p class="dragged-caption"><?php echo $provided_answer_order->answer_title; ?></p>
+                                </div>
+								<?php
+							}
+							echo '</div>';
+						}elseif ($answer->question_type === 'image_answering'){
+
+							$ordering_ids = maybe_unserialize($answer->given_answer);
+
+							echo '<div class="answer-image-matched-wrap">';
+							foreach ($ordering_ids as $answer_id => $answer){
+								$db_answers = tutor_utils()->get_answer_by_id($answer_id);
+								foreach ($db_answers as $db_answer);
+								?>
+                                <div class="image-matching-item">
+                                    <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $db_answer->image_id); ?>" /> </p>
+                                    <p class="dragged-caption"><?php echo $answer; ?></p>
                                 </div>
 								<?php
 							}

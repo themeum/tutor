@@ -2074,13 +2074,16 @@ Course question and answer
 .quiz-image-answering-wrap {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: row;
+    /*justify-content: space-between;*/
 }
 .quiz-image-answering-wrap img{
     max-width: 100%;
     height: auto;
 }
 .quiz-image-answering-answer {
-    width: 25%;
+    width: calc(1/4*100% - (1 - 1/4)*10px);
+    margin-right: 10px;
 }
 .quiz-image-answering-image-wrap {
     margin-bottom: 20px;

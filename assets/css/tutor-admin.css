@@ -1439,7 +1439,11 @@ span.result-fail{
 .image-matching-item img{
     max-width: 80px;
 }
-
+span.filled_dash_unser {
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 0 5px;
+}
 /**
 Uninstall
  */

@@ -286,14 +286,11 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 								if ($question_type === 'image_answering'){
 									?>
-
                                     <div class="quiz-image-answering-wrap">
-
 										<?php
 										foreach ($answers as $answer){
 											?>
                                             <div class="quiz-image-answering-answer">
-
 												<?php
 												if (intval($answer->image_id)){
 													?>
@@ -302,23 +299,20 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                                     </div>
 
                                                     <div class="quiz-image-answering-input-field-wrap">
-                                                        <input type="text" placeholder="<?php _e('Write answer here.', 'tutor'); ?>">
+                                                        <input type="text"  name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][answer_id][<?php echo $answer->answer_id; ?>]" >
                                                     </div>
-
 													<?php
 												}
 												?>
-
-
                                             </div>
 											<?php
 										}
 										?>
                                     </div>
-
 									<?php
 								}
 								?>
+
                             </div>
 
 

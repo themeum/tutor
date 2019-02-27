@@ -148,7 +148,7 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
 
 		<?php
 	}elseif ($question_type === 'image_matching'){
-	    ?>
+		?>
         <div class="tutor-quiz-builder-form-cols-row">
             <div class="quiz-form-field-col full-width">
                 <div class="quiz-form-field-col">
@@ -175,10 +175,9 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
 
         </div>
 
-        <?php
-    }elseif($question_type === 'image_answering'){
-	    ?>
-
+		<?php
+	}elseif($question_type === 'image_answering'){
+		?>
         <div class="tutor-quiz-builder-form-cols-row">
             <div class="quiz-form-field-col full-width">
                 <div class="quiz-form-field-col">
@@ -205,8 +204,8 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
             </div>
 
         </div>
-    <?php
-    }
+		<?php
+	}
 	?>
 
     <div class="tutor-quiz-answers-form-footer  tutor-quiz-builder-form-row">
