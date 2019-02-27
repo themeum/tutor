@@ -374,6 +374,29 @@ jQuery(document).ready(function($){
     });
 
     /**
+     * Delete quiz
+     */
+    $(document).on('click', '.tutor-delete-quiz-btn', function(e){
+        e.preventDefault();
+
+        if( ! confirm('Are you sure?')){
+            return;
+        }
+
+        var $that = $(this);
+        var quiz_id = $that.attr('data-quiz-id');
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {quiz_id : quiz_id, action: 'tutor_delete_quiz_by_id'},
+            beforeSend: function () {
+                $that.closest('.course-content-item').remove();
+            }
+        });
+    });
+
+    /**
      * Lesson Update or Create Modal
      */
     $(document).on( 'click', '.update_lesson_modal_btn',  function( event ){

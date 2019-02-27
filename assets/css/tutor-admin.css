@@ -1,7 +1,7 @@
-/*! jQuery UI - v1.8.24 - 2012-09-28
-* https://github.com/jquery/jquery-ui
-* Includes: jquery.ui.core.css, jquery.ui.accordion.css, jquery.ui.autocomplete.css, jquery.ui.button.css, jquery.ui.datepicker.css, jquery.ui.dialog.css, jquery.ui.progressbar.css, jquery.ui.resizable.css, jquery.ui.selectable.css, jquery.ui.slider.css, jquery.ui.tabs.css, jquery.ui.theme.css
-* Copyright (c) 2012 AUTHORS.txt; Licensed MIT, GPL */
+/**
+@package: Tutor LMS
+@author: themeum
+ */
 
 /** Slider CSS */
 @import "../icons/css/tutor-icon.css";
@@ -24,7 +24,6 @@
 /*----------------------------------
     Component containers
 ----------------------------------*/
-
 .ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff; color: #222222; }
 .ui-widget-content a { color: #222222; }
 .ui-widget-header { border: 1px solid #aaaaaa; background: #cccccc; color: #222222; font-weight: bold; }
@@ -193,9 +192,12 @@ Group Field Option
 #tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal, .tutor-quiz .open-tutor-quiz-modal{
     flex: 1;
 }
-#tutor-course-topics .tutor-lesson-top i{
+#tutor-course-topics .tutor-lesson-top i.tutor-icon-move{
     margin-right: 10px;
     cursor: ns-resize;
+}
+#tutor-course-topics .tutor-lesson-top i.tutor-icon-pencil{
+    margin: 0 10px;
 }
 #tutor-course-topics .tutor-lesson-top a{
     color: #393C40;
@@ -958,7 +960,6 @@ Quiz Modal
 #tutor-quiz-builder-modal-tabs-container .quiz-builder-tab-body{
     min-height: 300px;
 }
-
 #tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item{
     padding: 15px 25px;
     display: inline-block;
@@ -966,7 +967,6 @@ Quiz Modal
     border-left: 1px solid #F1F1F1;
     font-size: 13px;
 }
-
 #tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item.active{
     background-color: #F1F1F1;
 }
@@ -991,15 +991,12 @@ Quiz Modal
 #tutor_quiz_question_answer_form {
     margin: 20px 0;
 }
-
-
 .tutor-quiz-question-answers-form {
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
-
 
 /** Tutor Quiz Modal Form */
 .tutor-quiz-builder-form-row{
@@ -1185,7 +1182,6 @@ a.back-to-quiz-questions-btn {
     font-size: 12px;
     margin-top: 10px !important;
 }
-
 #quiz-builder-tab-advanced-options .tutor-quiz-builder-form-cols-row .quiz-form-field-col:first-child{
     flex: 0 0 150px;
 }
@@ -1226,7 +1222,6 @@ a.back-to-quiz-questions-btn {
     box-shadow: none;
     height: 37px !important;
 }
-
 .tutor-quiz-builder-modal-wrap .tutor-field-type-slider{
     border: 1px solid #DEDEDE;
     padding: 10px;
@@ -1331,7 +1326,6 @@ Tutor Media Upload
     margin-bottom: 10px;
 }
 
-
 /**
 #End Quiz Modal
 */
@@ -1363,7 +1357,6 @@ span.result-pass{
 span.result-fail{
     color: #FF0000;
 }
-
 .tutor-quiz-attempt-info-row{
     margin: 30px 0;
     display: flex;
@@ -1387,11 +1380,9 @@ span.result-fail{
 .quiz-attempt-student-info{
     margin-left: 20px;
 }
-
 .tutor-quiz-attempt-info-row .quiz-attempt-info-row{
     display: flex;
 }
-
 .tutor-quiz-attempt-info-row .quiz-attempt-info-row .attempt-property-name{
     width: 25%;
 }
@@ -1471,7 +1462,6 @@ Updating Messsage
     margin-right: 6px;
 }
 
-
 /**
 Lesson Edit Modal
  */
@@ -1485,7 +1475,6 @@ Lesson Edit Modal
     line-height: 8px;
     font-size: 12px;
 }
-
 .lesson-modal-form-wrap .lesson-modal-field-row{
     padding: 10px 0;
 }
@@ -1525,7 +1514,6 @@ Lesson Edit Modal
     bottom: 0;
     position: -webkit-sticky;
 }
-
 .tutor-lesson-modal-wrap .tutor-thumbnail-wrap img{
     max-width: 150px;
     height: auto;

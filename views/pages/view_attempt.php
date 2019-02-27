@@ -85,7 +85,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt->attempt_id);
 					$earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
 
 					$output = $attempt->earned_marks." out of {$attempt->total_marks} <br />";
-					$output .= "({$earned_percentage}%) out of ({$pass_mark_percent}%) <br />";
+					$output .= "Marks earned ({$earned_percentage}%)<br />";
 
 					if ($earned_percentage >= $pass_mark_percent){
 						$output .= '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
@@ -185,8 +185,6 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt->attempt_id);
 
 								echo str_replace('{dash}', '_____', $answer_title);
 							}
-
-
 
 						}elseif ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
 
