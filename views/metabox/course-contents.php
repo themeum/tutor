@@ -93,10 +93,11 @@
 							$lesson->ID; ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>"
-                                       data-topic-id="<?php echo $topic->ID; ?>"><?php echo $lesson->post_title; ?> </a>
-                                    <a href="<?php echo admin_url( "post.php?post={$lesson->ID}&action=edit" ); ?>"><i class="tutor-icon-pencil"></i>
-                                    </a>
+                                    <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>"><?php echo $lesson->post_title; ?> </a>
+                                    <!--
+                                    <a href="<?php /*echo admin_url( "post.php?post={$lesson->ID}&action=edit" ); */?>"><i class="tutor-icon-pencil"></i>
+                                    </a>-->
+
                                     <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
@@ -204,7 +205,6 @@
 						?>
                         <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="tutor-lesson tutor-lesson-<?php echo $lesson->ID; ?>">
 
-
                             <div class="tutor-lesson-top">
                                 <i class="tutor-icon-move"></i>
                                 <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>"><?php echo $lesson->post_title; ?> </a>
@@ -212,7 +212,6 @@
                                 <a href="<?php echo admin_url("post.php?post={$lesson->ID}&action=edit"); ?>"><i class="tutor-icon-pencil"></i> </a>
 
                                 <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
-
                             </div>
 
                         </div>

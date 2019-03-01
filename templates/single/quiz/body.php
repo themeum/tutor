@@ -30,7 +30,6 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 		$remaining_time_context = tutor_utils()->seconds_to_time_context($remaining_time_secs);
 		$questions = tutor_utils()->get_random_questions_by_quiz();
-
 		?>
 
         <div class="quiz-head-meta-info">
@@ -42,7 +41,6 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                 </div>
 			<?php } ?>
         </div>
-
 
 		<?php
 		if (is_array($questions) && count($questions)) {
@@ -67,9 +65,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 				}
 				?>
 
-
                 <form id="tutor-answering-quiz" method="post">
-
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                     <input type="hidden" value="<?php echo $is_started_quiz->attempt_id; ?>" name="attempt_id"/>
                     <input type="hidden" value="tutor_answering_quiz_question" name="tutor_action"/>
@@ -176,7 +172,6 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 												}
 												?>
                                             </p>
-
 											<?php
 										}
                                         elseif ($question_type === 'ordering'){
@@ -312,12 +307,9 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 									<?php
 								}
 								?>
-
                             </div>
 
-
 							<?php
-
 							if ($question_layout_view !== 'question_below_each_other'){
 								if ($next_question){
 									?>
@@ -338,7 +330,6 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                     </div>
 									<?php
 								}
-
 							}
 							?>
                         </div>

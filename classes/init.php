@@ -138,9 +138,9 @@ class init{
 		}
 
 		/**
-		 * backward compatibility
+		 * backward / Alpha version compatibility
 		 */
-		if (version_compare(get_option('TUTOR_VERSION'), '1.0.0-alpha-2', '<')){
+		if (version_compare(get_option('TUTOR_VERSION'), '1.0.0', '<')){
 			//Create Database
 			$this->create_database();
 			update_option('tutor_version', TUTOR_VERSION);

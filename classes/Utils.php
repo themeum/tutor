@@ -3515,7 +3515,6 @@ class Utils {
 
 		$addonsConfig = maybe_unserialize(get_option('tutor_addons_config'));
 
-
 		if (isset($addonsConfig[$addon_field])){
 			return $addonsConfig[$addon_field];
 		}

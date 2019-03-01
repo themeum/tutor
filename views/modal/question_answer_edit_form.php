@@ -4,7 +4,6 @@ if ($question_type === 'open_ended'){
 	return '';
 }
 
-
 $answer_title = ! empty($old_answer->answer_title) ? $old_answer->answer_title : '';
 $image_id = ! empty($old_answer->image_id) ? $old_answer->image_id : '';
 $answer_view_format = ! empty($old_answer->answer_view_format) ? $old_answer->answer_view_format : '';
@@ -24,8 +23,8 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? $old_answer
 			echo '<p class="quiz-modal-form-help">Make sure you are saving answer in right sorting in answers lists, student should ordering should match with this answer order.</p>';
 			echo '<p class="quiz-modal-form-help">You can re-order it from above answer list.</p>';
 		}
-
 		?>
+
         <div class="tutor-quiz-builder-form-row">
             <label><?php _e('Answer title', 'tutor'); ?></label>
             <div class="quiz-modal-field-wrap">
@@ -205,7 +204,6 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? $old_answer
                 </div>
             </div>
 
-
             <div class="quiz-form-field-col full-width">
                 <label><?php _e('Answer input value', 'tutor'); ?></label>
                 <div class="quiz-modal-field-wrap">
@@ -220,8 +218,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? $old_answer
 	?>
 
     <div class="tutor-quiz-answers-form-footer  tutor-quiz-builder-form-row">
-        <button type="button" id="quiz-answer-edit-btn" class="tutor-answer-edit-btn"><i class="tutor-icon-pencil"></i> <?php _e('Save Answer', 'tutor'); ?></button>
-
+        <button type="button" id="quiz-answer-edit-btn" class="tutor-answer-edit-btn"><i class="tutor-icon-pencil"></i> <?php _e('Update Answer', 'tutor'); ?></button>
     </div>
 
 </div>
