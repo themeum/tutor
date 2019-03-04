@@ -3245,6 +3245,51 @@ class Utils {
 		return $query;
 	}
 
+	public function get_quiz_attempts_by_course_ids($start = 0, $limit = 10, $course_ids = array(), $search_term = '') {
+		global $wpdb;
+
+
+		if ($search_term){
+			$search_term = " AND ( user_email like '%{$search_term}%' OR display_name like '%{$search_term}%' OR post_title like '%{$search_term}%' ) ";
+		}
+
+		$course_ids_in = implode($course_ids, ',');
+		$sql = " AND quiz_attempts.course_id IN({$course_ids_in}) ";
+		$search_term = $sql.$search_term;
+
+		$query = $wpdb->get_results("SELECT *
+		 	FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+			INNER JOIN {$wpdb->posts} quiz
+			ON quiz_attempts.quiz_id = quiz.ID
+			INNER  JOIN {$wpdb->users}
+			ON quiz_attempts.user_id = {$wpdb->users}.ID
+			WHERE 1=1 {$search_term} 
+			ORDER BY quiz_attempts.attempt_id DESC 
+			LIMIT {$start},{$limit}; ");
+		return $query;
+	}
+
+	public function get_total_quiz_attempts_by_course_ids($course_ids = array(), $search_term = ''){
+		global $wpdb;
+
+		if ($search_term){
+			$search_term = " AND ( user_email like '%{$search_term}%' OR display_name like '%{$search_term}%' OR post_title like '%{$search_term}%' ) ";
+		}
+
+		$course_ids_in = implode($course_ids, ',');
+		$sql = " AND quiz_attempts.course_id IN({$course_ids_in}) ";
+		$search_term = $sql.$search_term;
+
+		$count = $wpdb->get_var("SELECT COUNT(attempt_id)
+		 	FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+			INNER JOIN {$wpdb->posts} quiz
+			ON quiz_attempts.quiz_id = quiz.ID
+			INNER  JOIN {$wpdb->users}
+			ON quiz_attempts.user_id = {$wpdb->users}.ID
+			WHERE 1=1 {$search_term} ");
+		return (int) $count;
+	}
+
 	/**
 	 * @param $attempt_id
 	 *

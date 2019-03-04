@@ -60,9 +60,11 @@ $course_id = get_the_ID();
                         <div class="tutor-course-lessons">
 
 							<?php
-							$lessons = tutor_utils()->get_lessons_by_topic(get_the_ID());
+							$lessons = tutor_utils()->get_course_contents_by_topic(get_the_ID());
+
 							if ($lessons->have_posts()){
 								while ($lessons->have_posts()){ $lessons->the_post();
+								global $post;
 
 									$video = tutor_utils()->get_video_info();
 
@@ -72,6 +74,9 @@ $course_id = get_the_ID();
 									}
 
 									$lesson_icon = $play_time ? 'tutor-icon-youtube' : 'tutor-icon-document-alt';
+									if ($post->post_type === 'tutor_quiz'){
+										$lesson_icon = 'tutor-icon-doubt';
+                                    }
 									?>
 
                                     <div class="tutor-course-lesson">

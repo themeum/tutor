@@ -251,6 +251,11 @@ class Quiz {
 		$quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
 
 		$quiz = get_post($quiz_id);
+		$course = tutor_utils()->get_course_by_quiz($quiz_id);
+		if ( empty($course->ID)){
+		    die('There is something went wrong with course, please check if quiz attached with a course');
+        }
+
 		$date = date("Y-m-d H:i:s");
 
 		$tutor_quiz_option = maybe_unserialize(get_post_meta($quiz_id, 'tutor_quiz_option', true));
@@ -285,6 +290,7 @@ class Quiz {
 		$tutor_quiz_option['time_limit']['time_limit_seconds'] = $time_limit_seconds;
 
 		$attempt_data = array(
+		        'course_id'                 => $course->ID,
 		        'quiz_id'                   => $quiz_id,
 		        'user_id'                   => $user_id,
 		        'total_questions'           => $max_question_allowed,
@@ -298,7 +304,7 @@ class Quiz {
 		$wpdb->insert($wpdb->prefix.'tutor_quiz_attempts', $attempt_data);
 		$attempt_id = (int) $wpdb->insert_id;
 
-		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
+		wp_redirect(get_permalink($quiz_id));
 		die();
 	}
 
