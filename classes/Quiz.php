@@ -450,40 +450,20 @@ class Quiz {
 			die('Please sign in to do this operation');
 		}
 
-
 		global $wpdb;
 
 		$quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
+		$attempt = tutor_utils()->is_started_quiz($quiz_id);
 
-		$is_started_quiz = tutor_utils()->is_started_quiz($quiz_id);
-		$attempt_id = $is_started_quiz->comment_ID;
-
-		if ($is_started_quiz) {
-			do_action('tutor_quiz_finished_before', $attempt_id);
-
-			$quiz_attempt_info = tutor_utils()->quiz_attempt_info( $attempt_id );
-			$answers = tutor_utils()->avalue_dot('answers', $quiz_attempt_info);
-
-			$total_marks = 0;
-			if (is_array($answers)){
-				$total_marks = array_sum(wp_list_pluck($answers, 'question_mark'));
-			}
-
-			$quiz_attempt_info['total_marks'] = $total_marks;
-			$pass_mark_percent = tutor_utils()->get_quiz_option($quiz_id,'passing_grade');
-			$quiz_attempt_info['pass_mark_percent'] = $pass_mark_percent;
-			$quiz_attempt_info['submission_time'] = time();
-
-			//Updating Attempt Info
-			tutor_utils()->quiz_update_attempt_info($attempt_id, $quiz_attempt_info);
-
-			$wpdb->update($wpdb->comments, array('comment_approved' => 'quiz_finished'), array('comment_ID' => $attempt_id));
-
-			do_action('tutor_quiz_finished_after', $attempt_id);
-		}
+		$attempt_info = array(
+			'total_answered_questions'  => 0,
+			'earned_marks'              => 0,
+			'attempt_status'            => 'attempt_ended',
+			'attempt_ended_at'          => date("Y-m-d H:i:s"),
+		);
+		$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_info, array('attempt_id' => $attempt->attempt_id));
 
 		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
-		die();
 	}
 
 	/**
@@ -854,7 +834,6 @@ class Quiz {
 			}
 		}
 
-		//die(print_r($_POST));
 		wp_send_json_success();
 	}
 
