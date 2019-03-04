@@ -113,6 +113,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                             <label>
                                                 <div class="quiz-answer-input-field">
                                                     <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
+                                                    <span>&nbsp;</span>
                                                 </div>
 
                                                 <div class="quiz-answer-input-body">
@@ -136,6 +137,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                             <label>
                                                 <div class="quiz-answer-input-field">
                                                     <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
+                                                    <span>&nbsp;</span>
                                                 </div>
 
                                                 <div class="quiz-answer-input-body">
