@@ -1197,7 +1197,7 @@ Instructor
     color: #ffffff;
     padding: 0 18px;
     display: inline-block;
-    line-height: 70px;
+    line-height: 68px;
 }
 .tutor-sidebar-tabs-wrap{
     border-top: 1px solid #E0E9EC;
@@ -1900,16 +1900,92 @@ Course question and answer
     font-size: 14px;
     padding: 2px;
     border-radius: 0;
+    box-shadow: none;
+    margin: 0 20px;
 }
 
-.quiz-answer-image-wrap {
-    max-height: 40px;
+.fill-in-the-blank-field .fill-in-the-blank-text-input:focus{
+    background: none;
+}
+
+.tutor-quiz-answers-wrap {
+    margin-bottom: 50px;
+}
+.tutor-quiz-answers-wrap textarea{
+    background: transparent;
+    border: 1px solid #D4DADB;
+    height: 175px;
+    border-radius: 5px;
+    box-shadow: none;
+}
+.tutor-quiz-answers-wrap textarea:focus{
+    background: transparent;
+}
+.tutor-quiz-answers-wrap label{
+    display: flex;
+}
+.tutor-quiz-answers-wrap p{
+    margin: 0;
+    line-height: 20px;
+}
+.quiz-answer-input-body .quiz-answer-image-wrap {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    max-width: 200px;
 }
 .quiz-answer-image-wrap img{
-    max-height: 40px;
-    width: auto;
+    max-width: 100%;
+    height: auto;
 }
 
+.tutor-quiz-answers-wrap label{
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.tutor-quiz-answers-wrap label input{
+    display: none;
+}
+
+.tutor-quiz-answers-wrap label input + span{
+    width: 20px;
+    height: 20px;
+    border: 1px solid #DEDEDE;
+    display: inline-block;
+    border-radius: 2px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.tutor-quiz-answers-wrap label input:checked + span{
+    background: #1B52D8;
+    border-color: #1B52D8;
+}
+.tutor-quiz-answers-wrap label input:checked + span::after{
+    content: '\e90f';
+    position: absolute;
+    font-family: 'tutor';
+    color: #fff;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 11px;
+}
+.tutor-quiz-answers-wrap label input[type="radio"] + span{
+    content: '';
+    border-radius: 50%;
+}
+.tutor-quiz-answers-wrap label input[type="radio"] + span::after{
+    content: '';
+    height: 10px;
+    width: 10px;
+    background: #fff;
+    border-radius: 50%;
+    left: 50%;
+}
 .question-type-ordering-item {
     border: 1px solid #D4DADB;
     padding: 10px;
@@ -1918,6 +1994,9 @@ Course question and answer
     background-color: #fff;
     display: flex;
 }
+.question-type-ordering-item.ui-sortable-placeholder{
+    background-color: transparent;
+}
 .question-type-ordering-item .answer-title {
     flex: 1;
 }
@@ -1925,12 +2004,22 @@ Course question and answer
     cursor: pointer;
 }
 .quiz-answer-item-matching {
-    padding: 10px 0;
+    padding: 10px;
     display: flex;
+    max-width: 215px;
 }
-.quiz-answer-matching-title{
-    flex: 0 0 300px;
+.answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching .quiz-answer-image-wrap{
+    margin: 0 15px 0 0;
 }
+.answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching{
+    display: flex;
+    max-width: none;
+}
+.answer-type-matching .quiz-answer-item-matching .quiz-answer-matching-droppable,
+.answer-type-matching .quiz-answer-item-matching .quiz-answer-matching-title{
+    width: 50%;
+}
+
 .quiz-answer-matching-droppable {
     height: 48px;
     min-width: 200px;
@@ -1941,16 +2030,16 @@ Course question and answer
     border: 1px solid #D4DADB;
     margin-right: 10px;
     margin-bottom: 10px;
-    max-width: 150px;
+    max-width: 215px;
     background-color: #fff;
     display: inline-flex;
-    width: 150px;
 }
 .quiz-draggable-answer-item .draggable-answer-title {
     flex: 1;
 }
 .quiz-draggable-rand-answers{
-    min-height: 50px;
+    display: flex;
+    flex-wrap: wrap;
 }
 .drop-hover{
     display: none;
@@ -1966,6 +2055,9 @@ Course question and answer
     width: 100%;
     max-width: 100%;
 }
+.quiz-draggable-answer-item .draggable-answer-icon{
+    margin-left: 15px;
+}
 .answer-type-image_matching .quiz-answer-item-matching{
     /*display: inline-block;
     width: 190px;
@@ -1973,8 +2065,8 @@ Course question and answer
     display: block;
 }
 .answer-type-image_matching .quiz-answer-matching-items-wrap {
-    /*display: flex;*/
-    column-count: 4;
+    display: flex;
+    flex-wrap: wrap;
 }
 .answer-type-image_matching .quiz-answer-matching-droppable{
     width: 100%;
@@ -2010,40 +2102,32 @@ Course question and answer
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    /*justify-content: space-between;*/
+    margin-left: -10px;
+    margin-right: -10px;
 }
 .quiz-image-answering-wrap img{
     max-width: 100%;
     height: auto;
 }
 .quiz-image-answering-answer {
-    width: calc(1/4*100% - (1 - 1/4)*10px);
     margin-right: 10px;
+    margin-left: 10px;
+    width: 25%;
 }
 .quiz-image-answering-image-wrap {
     margin-bottom: 20px;
 }
-
-.tutor-quiz-answers-wrap > label{
-    display: flex;
-    align-items: center;
-}
-
-.tutor-quiz-answers-wrap > label:not(:last-child){
-    margin-bottom: 25px;
-}
-
-.quiz-answer-input-body{
-    display: inline-flex;
-    align-items: center;
-    padding: 11px 17px;
+.tutor-quiz-answers-wrap .quiz-image-answering-input-field-wrap input{
+    width: 100%;
+    display: block;
     border: 1px solid #D4DADB;
-    border-radius: 3px;
-    width: 250px;
+    box-shadow: none;
+    background: transparent;
+    border-radius: 2px;
 }
 
-.quiz-answer-input-body p{
-    margin: 0;
+.tutor-quiz-answers-wrap .quiz-image-answering-input-field-wrap input:focus{
+    background: transparent;
 }
 
 
