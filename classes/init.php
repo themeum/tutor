@@ -143,8 +143,17 @@ class init{
 		if (version_compare(get_option('TUTOR_VERSION'), '1.0.0', '<')){
 			//Create Database
 			$this->create_database();
-			update_option('tutor_version', TUTOR_VERSION);
+			update_option('tutor_version', '1.0.0');
 		}
+		/**
+		 * backward / v.1.0.0 compatibility
+		 */
+		if (get_option('TUTOR_VERSION') == '1.0.0' && version_compare(get_option('TUTOR_VERSION'), '1.0.1', '<')){
+			//Adding column course_id in prefix_tutor_quiz_attempts
+			$this->upgrading_db_1_0_1();
+			update_option('tutor_version', '1.0.1');
+		}
+
 	}
 
 	//Run task on deactivation
@@ -169,6 +178,7 @@ class init{
 		 */
 		$quiz_attempts_sql = "CREATE TABLE {$wpdb->prefix}tutor_quiz_attempts (
 				attempt_id int(11) NOT NULL AUTO_INCREMENT,
+				course_id int(11) DEFAULT NULL,
 				quiz_id int(11) DEFAULT NULL,
 				user_id int(11) DEFAULT NULL,
 				total_questions int(11) DEFAULT NULL,
@@ -230,6 +240,29 @@ class init{
 		dbDelta( $quiz_attempt_answers );
 		dbDelta( $tutor_quiz_questions );
 		dbDelta( $tutor_quiz_question_answers );
+	}
+
+	/**
+	 * upgrading quiz_attempts_database adding course_id
+	 * @since v.1.0.1
+	 */
+	public function upgrading_db_1_0_1(){
+		global $wpdb;
+		/**
+		 * Adding course_id column in tutor_quiz_attempts table
+		 */
+		$sql = "ALTER TABLE {$wpdb->prefix}tutor_quiz_attempts ADD course_id INT NULL DEFAULT NULL AFTER attempt_id;";
+		$wpdb->query($sql);
+		/**
+		 * Setting Course_id column data;
+		 */
+		$attempts = $wpdb->get_results("SELECT * from {$wpdb->prefix}tutor_quiz_attempts;");
+		if (is_array($attempts) && count($attempts)){
+			foreach ($attempts as $attempt){
+				$course = tutor_utils()->get_course_by_quiz($attempt->quiz_id);
+				$wpdb->update($wpdb->prefix."tutor_quiz_attempts", array('course_id' => $course->ID), array('attempt_id' => $attempt->attempt_id));
+			}
+		}
 	}
 
 	public static function manage_tutor_roles_and_permissions(){

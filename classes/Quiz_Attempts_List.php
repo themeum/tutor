@@ -139,8 +139,9 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	}
 
 	function prepare_items() {
-		$per_page = 20;
+		global $wpdb;
 
+		$per_page = 20;
 		$search_term = '';
 		if (isset($_REQUEST['s'])){
 			$search_term = sanitize_text_field($_REQUEST['s']);
@@ -155,8 +156,37 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$total_items = tutor_utils()->get_total_quiz_attempts($search_term);
-		$this->items = tutor_utils()->get_quiz_attempts(($current_page-1)*$per_page, $per_page, $search_term);
+		$total_items = 0;
+		$this->items = array();
+
+		if (current_user_can('administrator')) {
+			$total_items = tutor_utils()->get_total_quiz_attempts( $search_term );
+			$this->items = tutor_utils()->get_quiz_attempts( ( $current_page - 1 ) * $per_page, $per_page, $search_term );
+		}elseif (current_user_can('tutor_instructor')){
+			/**
+			 * Instructors course specific quiz attempts
+			 */
+			$user_id = get_current_user_id();
+			$get_assigned_courses_ids = $wpdb->get_col("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = {$user_id}  ");
+
+			$custom_author_query = "AND {$wpdb->posts}.post_author = {$user_id}";
+			if (is_array($get_assigned_courses_ids) && count($get_assigned_courses_ids)){
+				$in_query_pre = implode($get_assigned_courses_ids, ',');
+				$custom_author_query = "  AND ( {$wpdb->posts}.post_author = {$user_id} OR {$wpdb->posts}.ID IN({$in_query_pre}) ) ";
+			}
+			$course_post_type = tutor()->course_post_type;
+			$get_course_ids = $wpdb->get_col("SELECT ID from {$wpdb->posts} where post_type = '{$course_post_type}' $custom_author_query ; ");
+
+			if (is_array($get_course_ids) && count($get_course_ids)){
+				$total_items = tutor_utils()->get_total_quiz_attempts_by_course_ids($get_course_ids, $search_term );
+				$this->items = tutor_utils()->get_quiz_attempts_by_course_ids(( $current_page - 1 ) * $per_page, $per_page, $get_course_ids, $search_term );
+			}
+
+		}
+
+
+
+
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
