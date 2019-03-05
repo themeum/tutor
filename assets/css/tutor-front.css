@@ -2014,6 +2014,8 @@ Course question and answer
 .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching{
     display: flex;
     max-width: none;
+    padding-left: 0;
+    padding-right: 0;
 }
 .answer-type-matching .quiz-answer-item-matching .quiz-answer-matching-droppable,
 .answer-type-matching .quiz-answer-item-matching .quiz-answer-matching-title{
