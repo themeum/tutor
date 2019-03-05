@@ -3121,9 +3121,12 @@ class Utils {
 		global $wpdb;
 
 		$quiz_id = $this->get_post_id($quiz_id);
-		$quiz_limit = (int) $this->get_quiz_option($quiz_id, 'attempts_allowed');
+		$attempt = $this->is_started_quiz($quiz_id);
+		if ( ! $attempt){
+		    return false;
+        }
 
-		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id}  ORDER BY RAND() LIMIT {$quiz_limit} ");
+		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id}  ORDER BY RAND() LIMIT {$attempt->total_questions} ");
 
 		return $questions;
 	}
