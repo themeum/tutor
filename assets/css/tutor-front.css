@@ -1921,9 +1921,7 @@ Course question and answer
 .tutor-quiz-answers-wrap textarea:focus{
     background: transparent;
 }
-.tutor-quiz-answers-wrap label{
-    display: flex;
-}
+
 .tutor-quiz-answers-wrap p{
     margin: 0;
     line-height: 20px;
@@ -1940,12 +1938,23 @@ Course question and answer
 
 .tutor-quiz-answers-wrap label{
     display: block;
-    position: relative;
-    padding-left: 30px;
     margin-bottom: 15px;
     font-size: 14px;
     cursor: pointer;
 }
+
+.tutor-quiz-answers-wrap label.answer-view-image,
+.tutor-quiz-answers-wrap label.answer-view-text_image{
+    text-align: center;
+    margin: 0 10px;
+    display: inline-flex;
+}
+.quiz-answer-input-bottom{
+    position: relative;
+    display: inline-block;
+    line-height: 20px;
+}
+
 .tutor-quiz-answers-wrap label input{
     display: none;
 }
@@ -1956,7 +1965,7 @@ Course question and answer
     border: 1px solid #DEDEDE;
     display: inline-block;
     border-radius: 2px;
-    position: absolute;
+    position: relative;
     left: 0;
     top: 0;
 }
@@ -1977,6 +1986,9 @@ Course question and answer
 .tutor-quiz-answers-wrap label input[type="radio"] + span{
     content: '';
     border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: top;
+    font-size: 1em;
 }
 .tutor-quiz-answers-wrap label input[type="radio"] + span::after{
     content: '';
