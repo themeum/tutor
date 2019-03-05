@@ -26,7 +26,7 @@
 
 	<div class="tutor-add-instructor-button-wrap">
 		<p>
-            <button type="button" class="tutor_btn_lg tutor-add-instructor-btn"> <i class="tutor-icon-add-line"></i> <?php _e('Add Instructor', 'tutor'); ?> </button>
+            <button type="button" class="tutor_btn_lg tutor-add-instructor-btn"> <i class="tutor-icon-add-line"></i> <?php _e('Add More Instructor', 'tutor'); ?> </button>
         </p>
 	</div>
 
