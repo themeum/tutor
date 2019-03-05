@@ -104,13 +104,13 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 							?>
                             <p class="question-description"><?php echo $question->question_description; ?></p>
 
-                            <div class="tutor-quiz-answers-wrap">
+                            <div class="tutor-quiz-answers-wrap question-type-<?php echo $question_type; ?>">
 								<?php
 								if ( is_array($answers) && count($answers) ) {
 									foreach ($answers as $answer){
 										if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 											?>
-                                            <label>
+                                            <label class="answer-view-<?php echo $answer->answer_view_format; ?>">
                                                 <div class="quiz-answer-input-field">
                                                     <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
                                                     <span>&nbsp;</span>
@@ -134,7 +134,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 											<?php
 										}elseif ($question_type === 'multiple_choice'){
 											?>
-                                            <label>
+                                            <label class="answer-view-<?php echo $answer->answer_view_format; ?>">
                                                 <div class="quiz-answer-input-field">
                                                     <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
                                                     <span>&nbsp;</span>
