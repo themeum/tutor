@@ -2042,11 +2042,11 @@ class Utils {
 
 		$instructors = $wpdb->get_results("select ID, display_name, 
 			get_course.meta_value as taught_course_id,
-			tutor_job_title.meta_value as tutor_profile_job_title, 
+			tutor_job_title.meta_value as tutor_profile_job_title,
 			tutor_bio.meta_value as tutor_profile_bio,
 			tutor_photo.meta_value as tutor_profile_photo
 			from {$wpdb->users}
-			INNER JOIN {$wpdb->usermeta} get_course ON ID = get_course.user_id AND get_course.meta_value = {$course_id}
+			INNER JOIN {$wpdb->usermeta} get_course ON ID = get_course.user_id AND get_course.meta_key = '_tutor_instructor_course_id' AND get_course.meta_value = {$course_id}
 			LEFT JOIN {$wpdb->usermeta} tutor_job_title ON ID = tutor_job_title.user_id AND tutor_job_title.meta_key = '_tutor_profile_job_title'
 			LEFT JOIN {$wpdb->usermeta} tutor_bio ON ID = tutor_bio.user_id AND tutor_bio.meta_key = '_tutor_profile_bio'
 			LEFT JOIN {$wpdb->usermeta} tutor_photo ON ID = tutor_photo.user_id AND tutor_photo.meta_key = '_tutor_profile_photo'
