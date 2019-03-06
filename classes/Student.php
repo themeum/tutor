@@ -87,13 +87,18 @@ class Student {
 				wp_set_current_user( $user_id, $user->user_login );
 				wp_set_auth_cookie( $user_id );
 			}
+
+			$dashboard_url = tutor_utils()->tutor_dashboard_url();
+			wp_redirect($dashboard_url);
+			die();
 		}else{
 			$this->error_msgs = $user_id->get_error_messages();
 			add_filter('tutor_student_register_validation_errors', array($this, 'tutor_student_form_validation_errors'));
 			return;
 		}
 
-		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
+		$registration_page = tutor_utils()->student_register_url();
+		wp_redirect($registration_page);
 		die();
 	}
 
