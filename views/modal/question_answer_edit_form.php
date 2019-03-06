@@ -1,6 +1,6 @@
 <?php
 if ($question_type === 'open_ended'){
-	echo '<p style="color: #ff0000;">No need any options</p>';
+	echo '<p style="color: #ff0000;">No option is necessary for this answer type</p>';
 	return '';
 }
 

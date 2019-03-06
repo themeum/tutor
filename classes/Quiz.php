@@ -56,6 +56,7 @@ class Quiz {
 		add_action('wp_ajax_tutor_update_quiz_answer_options', array($this, 'tutor_update_quiz_answer_options'));
 		add_action('wp_ajax_tutor_quiz_builder_get_answers_by_question', array($this, 'tutor_quiz_builder_get_answers_by_question'));
 		add_action('wp_ajax_tutor_quiz_builder_delete_answer', array($this, 'tutor_quiz_builder_delete_answer'));
+		add_action('wp_ajax_tutor_quiz_question_sorting', array($this, 'tutor_quiz_question_sorting'));
 		add_action('wp_ajax_tutor_quiz_answer_sorting', array($this, 'tutor_quiz_answer_sorting'));
 		add_action('wp_ajax_tutor_mark_answer_as_correct', array($this, 'tutor_mark_answer_as_correct'));
 		add_action('wp_ajax_tutor_quiz_modal_update_settings', array($this, 'tutor_quiz_modal_update_settings'));
@@ -966,6 +967,22 @@ class Quiz {
 		$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('answer_id' => $answer_id));
 		wp_send_json_success();
 	}
+
+	/**
+	 * Save quiz questions sorting
+	 */
+	public function tutor_quiz_question_sorting(){
+		global $wpdb;
+
+		$question_ids = tutor_utils()->avalue_dot('sorted_question_ids', $_POST);
+		if (is_array($question_ids) && count($question_ids) ){
+			$i = 0;
+			foreach ($question_ids as $key => $question_id){
+				$i++;
+				$wpdb->update($wpdb->prefix.'tutor_quiz_questions', array('question_order' => $i), array('question_id' => $question_id));
+			}
+		}
+    }
 
 	/**
 	 * Save sorting data for quiz answers
