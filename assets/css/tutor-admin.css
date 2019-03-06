@@ -72,7 +72,7 @@ Option Field
 
 .tutor-option-field-row {
     border-bottom: 1px solid #e4e4e4;
-    padding: 30px 0;
+    padding: 20px 0;
     font-size: 14px;
     line-height: 1.3
 }
@@ -285,6 +285,7 @@ p.course-empty-content {
 
 .tutor-topic-title .topic-inner-title{
     flex: 1 0 auto;
+    cursor: pointer;
 }
 .tutor-topic-title span{
     padding: 0 5px;
@@ -341,9 +342,8 @@ p.course-empty-content {
     padding: 15px 20px;
 }
 #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .create-lesson-in-topic-btn{
-    line-height: 38px;
-    background-color: #0285BA;
-    color: #ffffff;
+    line-height: 35px;
+    color: #016799;
     display: inline-block;
     padding: 0 20px;
     border: 1px solid #016799;
@@ -353,7 +353,7 @@ p.course-empty-content {
 #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .tutor-add-quiz-btn{
     background-color: #FFFFFF;
     border: 1px solid #C6C9CF;
-    line-height: 38px;
+    line-height: 35px;
     padding: 0 20px;
     display: inline-block;
     border-radius: 2px;
@@ -437,10 +437,24 @@ a.tutor-delete-attachment:hover {
 .tutor-status-pending-context, .attempt_started{
     background-color: #EEEEEE;
 }
-a.tutor-button{
+a.tutor-button, button.tutor-button{
     padding: 10px 20px;
     text-decoration: none;
     margin-right: 20px;
+}
+.tutor-button-primary{
+    background-color: #3057D5;
+    color: #ffffff;
+    display: inline-block;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 300;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+}
+.tutor-button-primary:hover {
+    background-color: #2446A6;
 }
 .tutor-status-approved-context, .attempt_ended, .tutor-button.button-success {
     background-color: #008000;
@@ -974,11 +988,14 @@ Quiz Modal
     color: #3057D5;
 }
 .quiz-modal-tab-navigation-btn{
-    padding: 15px 20px;
+    padding: 10px 20px;
     border-radius: 3px;
 }
 .quiz-modal-btn-next, .quiz-modal-btn-next:focus, .quiz-modal-btn-first-step, .quiz-modal-btn-first-step:focus, .quiz-modal-question-save-btn, .quiz-modal-question-save-btn:focus, .quiz-modal-settings-save-btn, .quiz-modal-settings-save-btn:focus{
     background-color: #1B52D8;
+    color: #ffffff;
+}
+.quiz-modal-btn-next:hover, .quiz-modal-btn-first-step:hover, .quiz-modal-question-save-btn:hover, .quiz-modal-settings-save-btn:hover{
     color: #ffffff;
 }
 .quiz-modal-btn-cancel, .quiz-modal-btn-back{

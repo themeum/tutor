@@ -55,17 +55,14 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         </label>
     </div>
     <div class="tutor-option-field">
-        <select name="course_level" class="tutor_select2">
-            <?php
-            foreach ($levels as $level_key => $level){
-                echo '<option value="'.$level_key.'" '.selected($level_key, $course_level).' >'.$level.'</option>';
-            }
-            ?>
-        </select>
-
-        <p class="desc">
-			<?php _e('Set the course level', 'tutor'); ?>
-        </p>
+	    <?php
+	    foreach ($levels as $level_key => $level){
+	        ?>
+            <label> <input type="radio" name="course_level" value="<?php echo $level_key; ?>" <?php checked($level_key, $course_level) ?> > <?php echo
+                $level; ?> </label>
+		    <?php
+	    }
+	    ?>
     </div>
 </div>
 

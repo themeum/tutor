@@ -74,8 +74,8 @@
 						$attached_lesson_ids[] = $lesson->ID;
 
 						if ($lesson->post_type === 'tutor_quiz'){
-						    $quiz = $lesson;
-						    ?>
+							$quiz = $lesson;
+							?>
                             <div id="tutor-quiz-<?php echo $quiz->ID; ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $topic->ID; ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
@@ -86,18 +86,14 @@
                                 </div>
                             </div>
 
-						    <?php
-                        }else {
+							<?php
+						}else {
 							?>
                             <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo
 							$lesson->ID; ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
                                     <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>"><?php echo $lesson->post_title; ?> </a>
-                                    <!--
-                                    <a href="<?php /*echo admin_url( "post.php?post={$lesson->ID}&action=edit" ); */?>"><i class="tutor-icon-pencil"></i>
-                                    </a>-->
-
                                     <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
@@ -105,76 +101,15 @@
 						}
 					}
 					?>
-
-
-					<?php
-					/*
-					if (count($query_lesson->posts) > count($attached_lesson_ids)){
-
-
-						?>
-						<div class="drop-lessons">
-							<p>
-								<i class="dashicons dashicons-upload"></i>
-								<?php echo __('Drop lesson here or', 'tutor'); ?>
-
-								<a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" ><?php _e('Create one'); ?></a>
-							</p>
-						</div>
-					<?php }else{
-						?>
-						<div class="create-new-lesson-wrap">
-							<a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" ><?php _e('Create new lesson', 'tutor'); ?></a>
-						</div>
-						<?php
-					}
-					   */ ?>
-
-                    <!--
-                    <div class="tutor-create-new-lesson-form" style="display: none;" data-topic-id="<?php /*echo $topic->ID; */?>">
-                        <div class="tutor-option-field-row">
-                            <div class="tutor-option-field">
-                                <input type="text" name="lesson_title" value="" placeholder="<?php /*_e('Lesson title', 'tutor'); */?>">
-
-                                <button type="button" class="button button-primary tutor-create-lesson-btn"> <?php /*_e('Create Lesson', 'tutor'); */?></button>
-                            </div>
-                        </div>
-                    </div>
-                    -->
-
                 </div>
 
                 <div class="tutor_add_quiz_wrap" data-add-quiz-under="<?php echo $topic->ID; ?>">
-
-                    <!--
-                    <div class="tutor-available-quizzes">
-						<?php
-/*						$attached_quizzes = tutor_utils()->get_attached_quiz($topic->ID);
-						if ($attached_quizzes){
-							foreach ($attached_quizzes as $attached_quiz){
-								*/?>
-                                <div id="added-quiz-id-<?php /*echo $attached_quiz->ID; */?>" class="added-quiz-item added-quiz-item-<?php /*echo $attached_quiz->ID; */?>" data-quiz-id="<?php /*echo $attached_quiz->ID; */?>">
-                                    <span class="quiz-icon"><i class="dashicons dashicons-clock"></i></span>
-                                    <span class="quiz-name">
-                                        <?php /*edit_post_link( $attached_quiz->post_title, null, null, $attached_quiz->ID ); */?>
-                                    </span>
-                                    <span class="quiz-control">
-                                    <a href="javascript:;" class="tutor-quiz-delete-btn"><i class="tutor-icon-garbage"></i></a>
-                                </span>
-                                </div>
-								<?php
-/*							}
-						}
-						*/?>
-                    </div>
-                    -->
-
                     <div class="tutor-add-quiz-button-wrap">
-                        <a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" ><?php _e('Add new lesson', 'tutor'); ?></a>
+                        <a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" ><i class="tutor-icon-block tutor-icon-plus"></i> <?php _e('Add new lesson', 'tutor'); ?></a>
 
-                        <button type="button" class="tutor-add-quiz-btn"> <?php _e('Add Topic Quiz', 'tutor'); ?> </button>
+                        <button type="button" class="icon-bl tutor-add-quiz-btn"> <i class="tutor-icon-doubt"></i> <?php _e('Add Topic Quiz',
+                                'tutor'); ?></button>
                     </div>
-
                 </div>
 
             </div>
@@ -195,10 +130,6 @@
             <h3><?php _e( 'Un-assigned lessons' ); ?></h3>
 
             <div class="tutor-lessons">
-                <!--<div class="drop-lessons" >
-                <p><i class="dashicons dashicons-upload"></i> <?php /*_e('Drop any unassigned lesson here', 'tutor'); */
-				?></p>
-                </div>-->
 				<?php
 				foreach ( $query_lesson->posts as $lesson ) {
 					if ( ! in_array( $lesson->ID, $attached_lesson_ids ) ) {

@@ -8,7 +8,7 @@ Author: Themeum
 Version: 1.0.2
 Author URI: http://themeum.com
 Requires at least: 4.5
-Tested up to: 4.9
+Tested up to: 5.1
 Text Domain: tutor
 Domain Path: /languages/
 */

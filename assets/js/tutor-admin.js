@@ -195,95 +195,21 @@ jQuery(document).ready(function($){
         }
     });
 
-    /**
-     * Create Lesson Under Topic
-     */
-    /*
-    $(document).on('click', '.create-lesson-in-topic-btn', function(e){
-        e.preventDefault();
-        $(this).closest('.tutor-lessons').find('.tutor-create-new-lesson-form').toggle();
-    });
-    $(document).on('click', '.tutor-create-lesson-btn', function(e){
-        e.preventDefault();
-        var $that = $(this);
-
-        var course_id = $('#post_ID').val();
-        var topic_id = $that.closest('.tutor-create-new-lesson-form').attr('data-topic-id');
-
-        var form_data = $that.closest('.tutor-create-new-lesson-form').find('input, textarea').serialize()+'&course_id='+course_id+'&topic_id='+topic_id+'&action=tutor_create_lesson';
-
-        $.ajax({
-            url : ajaxurl,
-            type : 'POST',
-            data : form_data,
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success){
-                    $('#tutor-course-content-wrap').html(data.data.course_contents);
-                    $that.closest('.tutor-create-new-lesson-form').find('input, textarea').each(function () {
-                        $(this).val('');
-                    });
-                    enable_sorting_topic_lesson();
-                }
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
-    $(document).on('click', '.open-inline-lesson-edit-btn', function(e){
-        e.preventDefault();
-        $(this).closest('.tutor-lesson').find('.tutor-edit-inline-lesson-form').toggle();
-    });
-    $(document).on('change keyup', '.inline-lesson-title-input', function (e) {
-        e.preventDefault();
-        $(this).closest('.tutor-lesson').find('.open-inline-lesson-edit-btn').html($(this).val());
-    });
-
-    $(document).on('click', '.edit-inline-lesson-btn', function(e){
-        e.preventDefault();
-        var $that = $(this);
-
-        var course_id = $('#post_ID').val();
-        var lesson_id = $that.closest('.tutor-edit-inline-lesson-form').attr('data-lesson-id');
-        var topic_id = $that.closest('.tutor-edit-inline-lesson-form').attr('data-topic-id');
-
-        var form_data = $that.closest('.tutor-edit-inline-lesson-form').find('input, textarea').serialize()+'&course_id='+course_id+'&lesson_id='+lesson_id+'&topic_id='+topic_id+'&action=tutor_update_inline_lesson';
-
-        $.ajax({
-            url : ajaxurl,
-            type : 'POST',
-            data : form_data,
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success){
-                    $that.closest('.tutor-edit-inline-lesson-form').hide();
-                }
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-*/
     $(document).on('click', '.tutor-expand-all-topic', function (e) {
         e.preventDefault();
         $('.tutor-topics-body').slideDown();
+        $('.expand-collapse-wrap i').removeClass('tutor-icon-light-down').addClass('tutor-icon-light-up');
     });
     $(document).on('click', '.tutor-collapse-all-topic', function (e) {
         e.preventDefault();
         $('.tutor-topics-body').slideUp();
+        $('.expand-collapse-wrap i').removeClass('tutor-icon-light-up').addClass('tutor-icon-light-down');
     });
-    $(document).on('click', '.expand-collapse-wrap', function (e) {
+    $(document).on('click', '.topic-inner-title, .expand-collapse-wrap', function (e) {
         e.preventDefault();
         var $that = $(this);
         $that.closest('.tutor-topics-wrap').find('.tutor-topics-body').slideToggle();
-        $that.closest('.tutor-topics-wrap').find('.expand-collapse-wrap .dashicons').toggleClass('dashicons-arrow-down-alt2 dashicons-arrow-up-alt2 ');
+        $that.closest('.tutor-topics-wrap').find('.expand-collapse-wrap i').toggleClass('tutor-icon-light-down tutor-icon-light-up');
     });
 
     /**
