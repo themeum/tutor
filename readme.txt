@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, education, wp-lms, education management system
 Requires at least: 4.5
-Tested up to: 5.0
+Tested up to: 5.1
 Requires PHP: 5.4.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -127,6 +127,18 @@ This is an alpha version of Tutor, as bugs and issues expected, if you found any
 16. Course builder
 
 == Changelog ==
+
+= 1.0.2 - 06 March, 2019 =
+
+* Added: button save, save and closed in quiz modal
+* Added: Registering user and redirect to Dashboard URL
+* Added: questions sorting in quiz builder
+* Added: question specific class in quiz answer options
+* Update: Quiz attempt design with questions
+* Update: some text, typo
+* Fixed: instructor database query in instructor lists
+* Fixed: query randomized questions limit by quiz
+* Fixed: Starting quiz for first time return 0, it should redirect to the quiz page
 
 = 1.0.1 - 05 March, 2019 =
 
