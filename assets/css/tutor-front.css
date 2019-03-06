@@ -1898,14 +1898,15 @@ Course question and answer
     border-bottom: 1px dashed;
     background-color: transparent;
     font-size: 14px;
-    padding: 2px;
+    padding: 0px;
     border-radius: 0;
     box-shadow: none;
-    margin: 0 20px;
+    margin: 0 10px;
 }
 
 .fill-in-the-blank-field .fill-in-the-blank-text-input:focus{
     background: none;
+    outline: none;
 }
 
 .tutor-quiz-answers-wrap {
@@ -1917,9 +1918,13 @@ Course question and answer
     height: 175px;
     border-radius: 5px;
     box-shadow: none;
+    max-width: 740px;
+    margin-bottom: 5px;
 }
 .tutor-quiz-answers-wrap textarea:focus{
     background: transparent;
+    outline: none !important;
+
 }
 
 .tutor-quiz-answers-wrap p{
@@ -1948,6 +1953,7 @@ Course question and answer
     text-align: center;
     margin: 0 10px;
     display: inline-flex;
+    max-width: 25%;
 }
 .quiz-answer-input-bottom{
     position: relative;
@@ -1966,8 +1972,7 @@ Course question and answer
     display: inline-block;
     border-radius: 2px;
     position: relative;
-    left: 0;
-    top: 0;
+    margin-right: 5px;
 }
 .tutor-quiz-answers-wrap label input:checked + span{
     background: #1B52D8;
@@ -1982,6 +1987,7 @@ Course question and answer
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 11px;
+    line-height: 1;
 }
 .tutor-quiz-answers-wrap label input[type="radio"] + span{
     content: '';
@@ -1992,8 +1998,8 @@ Course question and answer
 }
 .tutor-quiz-answers-wrap label input[type="radio"] + span::after{
     content: '';
-    height: 10px;
-    width: 10px;
+    height: 8px;
+    width: 8px;
     background: #fff;
     border-radius: 50%;
     left: 50%;
@@ -2018,21 +2024,27 @@ Course question and answer
 .quiz-answer-item-matching {
     padding: 10px;
     display: flex;
-    max-width: 215px;
+    width: 25%;
 }
-.answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching .quiz-answer-image-wrap{
-    margin: 0 15px 0 0;
-}
+
 .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching{
-    display: flex;
+    display: inline-block;
     max-width: none;
     padding-left: 0;
     padding-right: 0;
+    width: 25%;
+    padding: 0 10px;
 }
-.answer-type-matching .quiz-answer-item-matching .quiz-answer-matching-droppable,
-.answer-type-matching .quiz-answer-item-matching .quiz-answer-matching-title{
-    width: 50%;
+
+
+.answer-type-matching .quiz-answer-matching-items-wrap{
+    margin:  0 -10px;
 }
+
+/*.answer-type-matching .quiz-answer-item-matching .quiz-answer-matching-droppable,*/
+/*.answer-type-matching .quiz-answer-item-matching .quiz-answer-matching-title{*/
+    /*width: 50%;*/
+/*}*/
 
 .quiz-answer-matching-droppable {
     height: 48px;
@@ -2040,7 +2052,7 @@ Course question and answer
     border: 1px dashed #D4DADB;
 }
 .quiz-draggable-answer-item {
-    padding: 10px;
+    padding: 10px 20px;
     border: 1px solid #D4DADB;
     margin-right: 10px;
     margin-bottom: 10px;
@@ -2081,6 +2093,8 @@ Course question and answer
 .answer-type-image_matching .quiz-answer-matching-items-wrap {
     display: flex;
     flex-wrap: wrap;
+    margin-left: -10px;
+    margin-right: -10px;
 }
 .answer-type-image_matching .quiz-answer-matching-droppable{
     width: 100%;
@@ -2142,6 +2156,7 @@ Course question and answer
 
 .tutor-quiz-answers-wrap .quiz-image-answering-input-field-wrap input:focus{
     background: transparent;
+    outline-offset: 0 !important;
 }
 
 
