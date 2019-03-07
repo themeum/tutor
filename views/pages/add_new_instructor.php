@@ -4,7 +4,21 @@
     <hr class="wp-header-end">
 
     <form action="" id="new-instructor-form" method="post">
+        <input type="hidden" name="action" value="add_new_instructor">
 
+
+        <div id="form-response"></div>
+
+	    <?php
+	    $errors = apply_filters('tutor_instructor_register_validation_errors', array());
+	    if (is_array($errors) && count($errors)){
+		    echo '<div class="tutor-alert-warning"><ul class="tutor-required-fields">';
+		    foreach ($errors as $error_key => $error_value){
+			    echo "<li>{$error_value}</li>";
+		    }
+		    echo '</ul></div>';
+	    }
+	    ?>
 
 
         <div class="tutor-option-field-row">

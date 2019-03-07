@@ -150,7 +150,7 @@ Group Field Option
     border-bottom: 1px solid #E7E7E7;
     padding-bottom: 0;
     margin: 0;
-}
+}/*
 #tutor-course-topics .tutor-lesson {
     padding: 10px;
     margin-bottom: 5px;
@@ -169,6 +169,11 @@ Group Field Option
     background-color: #f9f9f9;
     color: #777777;
     text-align: center;
+}*/
+.course-contents .course-content-item {
+    padding: 10px;
+    border-bottom: 1px solid #D9D9D9;
+    background-color: #E9E9E9;
 }
 .tutor-lessons.ui-sortable {
     min-height: 20px;
@@ -176,7 +181,7 @@ Group Field Option
 #tutor-course-topics .drop-lessons p{
     margin: 0;
 }
-#tutor-course-topics .tutor-lesson:hover{
+#tutor-course-topics .course-content-item:hover{
     background-color: #EEEEEE;
 }
 #tutor-course-topics .tutor-lessons {
@@ -341,30 +346,29 @@ p.course-empty-content {
     background: #E9E9E9;
     padding: 15px 20px;
 }
-#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .create-lesson-in-topic-btn{
+#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .create-lesson-in-topic-btn, #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .tutor-add-quiz-btn{
     line-height: 35px;
-    color: #016799;
+    color: #393c40;
     display: inline-block;
     padding: 0 20px;
-    border: 1px solid #016799;
     border-radius: 2px;
     margin-right: 20px;
-}
-#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .tutor-add-quiz-btn{
-    background-color: #FFFFFF;
-    border: 1px solid #C6C9CF;
-    line-height: 35px;
-    padding: 0 20px;
-    display: inline-block;
-    border-radius: 2px;
+    border: 1px solid #d3d4d5;
+    background-color: #f2f2f2;
     cursor: pointer;
 }
-
-
+.tutor-add-quiz-btn i{
+    color: #4aade2;
+}
+/**
+Instructor
+ */
+.tutor-required-fields{
+    color: #f13a3a;
+}
 /**
 Meta Box Heading
  */
-
 #tutor-course-topics h2, #tutor-instructors h2{
     padding: 15px;
     line-height: 30px;
@@ -1169,6 +1173,10 @@ i.tutor-icon-block.tutor-icon-ordering{
 }
 i.tutor-icon-block.tutor-icon-plus-square-button, i.tutor-icon-block.tutor-icon-plus{
     background-color: #7BBC30;
+}
+
+.create-lesson-in-topic-btn i.tutor-icon-block.tutor-icon-plus{
+    background-color: #3057d5;
 }
 
 .quiz-modal-field-wrap .question_options_group_wrap {

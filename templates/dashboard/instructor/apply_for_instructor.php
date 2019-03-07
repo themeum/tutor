@@ -5,7 +5,9 @@
 	<div class="tutor-form-row">
 		<div class="tutor-form-col-12">
 			<div class="tutor-form-group">
-				<button type="submit" name="tutor_register_instructor_btn" value="apply"><?php _e('Apply for become instructor', 'tutor'); ?></button>
+				<button type="submit" name="tutor_register_instructor_btn" value="apply">
+                    <?php _e('Apply to become an instructor', 'tutor'); ?>
+                </button>
 			</div>
 		</div>
 	</div>
