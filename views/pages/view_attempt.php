@@ -17,7 +17,7 @@ $user = get_userdata($user_id);
 ?>
 
 <div class="wrap">
-    <h2><?php _e('View Attempts', 'tutor'); ?></h2>
+    <h2 class="attempt-review-title"> <i class="tutor-icon-list"></i> <?php _e('View Attempts', 'tutor'); ?></h2>
 
     <div class="tutor-quiz-attempt-info-row">
         <div class="attempt-view-top">
@@ -102,25 +102,47 @@ $user = get_userdata($user_id);
 
         </div>
 
-
-
-
     </div>
 
 
-	<?php if ((bool) $attempt->is_manually_reviewed ){
-		?>
-        <p class="quiz-attempt-info-row text-notified">
-            <span class="attempt-property-name"><?php _e('Manually reviewed at', 'tutor'); ?></span>
-
-            <span class="attempt-property-value"> :
-				<?php echo date_i18n(get_option('date_format'), strtotime($attempt->manually_reviewed_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->manually_reviewed_at)); ?>
-                    </span>
-        </p>
+    <div class="attempt-review-notice-wrap">
 		<?php
-	} ?>
+		if (is_array($answers) && count($answers)) {
+			$question_no = 0;
+			$required_review = array();
+
+			foreach ($answers as $answer){
+				$question_no++;
+				if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+					$required_review[] = $question_no;
+				}
+			}
+
+			if (count($required_review)){
+				echo '<p class="attempt-review-notice"> <span class="notice-excl">&excl;</span>  <strong>Reminder:</strong> Please review answers for question no. 
+'.implode
+					(', ',
+						$required_review).' </p>';
+			}
+		}
 
 
+		?>
+
+
+	    <?php if ((bool) $attempt->is_manually_reviewed ){
+		    ?>
+            <p class="attempt-review-at">
+                <span class="circle-arrow"> &circlearrowright; </span>
+	            <?php _e('Manually reviewed at :', 'tutor'); ?>
+                <strong>
+		            <?php echo date_i18n(get_option('date_format'), strtotime($attempt->manually_reviewed_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->manually_reviewed_at)); ?>
+                </strong>
+            </p>
+		    <?php
+	    } ?>
+
+    </div>
 	<?php
 	if (is_array($answers) && count($answers)){
 
@@ -137,7 +159,7 @@ $user = get_userdata($user_id);
                     <th><?php _e('No.', 'tutor'); ?></th>
                     <th width="200"><?php _e('Question', 'tutor'); ?></th>
                     <th><?php _e('Given Answers', 'tutor'); ?></th>
-                    <th width="80"><?php _e('Correct', 'tutor'); ?></th>
+                    <th width="80"><?php _e('Correct/Incorrect', 'tutor'); ?></th>
                     <th width="100"><?php _e('Review', 'tutor'); ?></th>
                 </tr>
 				<?php
@@ -257,11 +279,19 @@ $user = get_userdata($user_id);
 
                         <td>
 							<?php
-							if ((bool) isset($answer->is_correct) ? $answer->is_correct : '') {
+
+							if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
 								echo '<span class="tutor-status-approved-context"><i class="tutor-icon-mark"></i> </span>';
-							}else{
-								echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> </span>';
+							} else {
+
+								if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+									echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
+								}else {
+									echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> </span>';
+								}
 							}
+
+
 							?>
                         </td>
 
