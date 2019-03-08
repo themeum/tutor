@@ -1484,6 +1484,7 @@ span.notice-excl {
 .circle-arrow{
     color: #3057D5;
     font-weight: bold;
+    font-size: 1rem;
 }
 h2.attempt-review-title{
     font-size: 18px !important;

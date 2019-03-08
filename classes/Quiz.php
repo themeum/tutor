@@ -505,6 +505,7 @@ class Quiz {
 		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
 		$mark_as = sanitize_text_field($_GET['mark_as']);
 
+
 		$attempt_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = {$attempt_answer_id} ");
 		$attempt = tutor_utils()->get_attempt($attempt_id);
 
@@ -532,12 +533,12 @@ class Quiz {
 				'achieved_mark' => '0.00',
 				'is_correct' => 0,
 			);
-			$wpdb->update($wpdb->prefix.'tutor_quiz_attempt_answers', $answer_update_data, array('attempt_answer_id' => $attempt_id ));
+			$wpdb->update($wpdb->prefix.'tutor_quiz_attempt_answers', $answer_update_data, array('attempt_answer_id' => $attempt_answer_id ));
 
 			$attempt_update_data = array(
-				'earned_marks' => $attempt->earned_marks - $attempt_answer->question_mark,
-				'is_manually_reviewed' => 1,
-				'manually_reviewed_at' => date("Y-m-d H:i:s"),
+				'earned_marks'          => $attempt->earned_marks - $attempt_answer->question_mark,
+				'is_manually_reviewed'  => 1,
+				'manually_reviewed_at'  => date("Y-m-d H:i:s"),
 			);
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
