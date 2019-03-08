@@ -24,7 +24,6 @@
 		    $price_html = '<p class="price"> '.$product->get_price_html().$enroll_btn.' </p>';
 	    }
     }
-
     echo $price_html;
     ?>
 </div>
