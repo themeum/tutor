@@ -82,11 +82,10 @@ $course_id = get_the_ID();
                                     <div class="tutor-course-lesson">
                                         <h5>
 											<?php
-
-											$lesson_title = "<i class='$lesson_icon'></i>";
-											$lesson_title .= get_the_title();
-
-											echo apply_filters('tutor_course/contents/lesson/title', $lesson_title, get_the_ID());
+                                                $lesson_title = "<i class='$lesson_icon'></i>";
+                                                $lesson_title .= get_the_title();
+                                                $lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>$play_time</span>" : '';
+                                                echo apply_filters('tutor_course/contents/lesson/title', $lesson_title, get_the_ID());
 											?>
                                         </h5>
                                     </div>
