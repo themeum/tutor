@@ -44,7 +44,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                     <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
                 </div>
                 <div class="tutor-single-course-author-name">
-                    <strong><?php _e('by', 'tutor'); ?></strong>
+                    <span><?php _e('by', 'tutor'); ?></span>
                     <a href="<?php echo tutor_utils()->profile_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a>
                 </div>
             </li>
