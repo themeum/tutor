@@ -52,6 +52,38 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                 <strong><?php _e('Course level:', 'tutor'); ?></strong>
 				<?php echo get_tutor_course_level(); ?>
             </li>
+            <li class="tutor-social-share">
+                <strong><?php _e('Share:', 'tutor'); ?></strong>
+                <button
+                        data-title="<?php echo get_the_title(); ?>"
+                        data-text="<?php echo get_the_excerpt(); ?>"
+                        data-image="<?php echo get_the_post_thumbnail_url(); ?>"
+                        class="share s_facebook"
+                > <i class="tutor-icon-facebook"></i> </button>
+
+                <button
+                        data-title="<?php echo get_the_title(); ?>"
+                        data-text="<?php echo get_the_excerpt(); ?>"
+                        data-image="<?php echo get_the_post_thumbnail_url(); ?>"
+                        class="share s_twitter"
+                > <i class="tutor-icon-twitter"></i> </button>
+
+                <button
+                        data-title="<?php echo get_the_title(); ?>"
+                        data-text="<?php echo get_the_excerpt(); ?>"
+                        data-image="<?php echo get_the_post_thumbnail_url(); ?>"
+                        class="share s_linkedin"
+                > <i class="tutor-icon-linkdin"></i> </button>
+
+                <button
+                        data-title="<?php echo get_the_title(); ?>"
+                        data-text="<?php echo get_the_excerpt(); ?>"
+                        data-image="<?php echo get_the_post_thumbnail_url(); ?>"
+                        class="share s_tumblr"
+                > <i class="tutor-icon-tumblr"></i> </button>
+
+
+            </li>
         </ul>
     </div>
 
@@ -62,12 +94,13 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			if(is_array($course_categories) && count($course_categories)){
 				?>
                 <li>
-                    <strong><?php esc_html_e('Categories', 'tutor') ?></strong>
+                    <span><?php esc_html_e('Categories', 'tutor') ?></span>
 					<?php
 					foreach ($course_categories as $course_category){
 						$category_name = $course_category->name;
 						$category_link = get_term_link($course_category->term_id);
-						echo "<a href='$category_link'>$category_name</a>";
+						echo "<a href='$category_link'>$category_name</a> ";
+						break;
 					}
 					?>
                 </li>
@@ -78,22 +111,20 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			if(!empty($course_duration)){
 				?>
                 <li>
-                    <strong><?php esc_html_e('Total Hour', 'tutor') ?></strong>
-                    <span><?php echo $course_duration; ?></span>
+                    <span><?php esc_html_e('Total Hour', 'tutor') ?></span>
+                    <?php echo $course_duration; ?>
                 </li>
 			<?php } ?>
             <li>
-                <strong><?php esc_html_e('Total Enrolled', 'tutor') ?></strong>
-                <span>
-                    <?php
+                <span><?php esc_html_e('Total Enrolled', 'tutor') ?></span>
+                <?php
                     $get_total_student = tutor_utils()->get_total_students();
                     $total_students = $get_total_student ? $get_total_student : 0;
                     echo $total_students;
-                    ?>
-                </span>
+                ?>
             </li>
             <li>
-                <strong><?php esc_html_e('Last Update', 'tutor') ?></strong>
+                <span><?php esc_html_e('Last Update', 'tutor') ?></span>
 				<?php echo esc_html(get_the_modified_date()); ?>
             </li>
         </ul>

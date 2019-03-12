@@ -152,6 +152,7 @@ Most Important CSS
     line-height: 23px;
     font-weight: 500;
     margin-bottom: 13px;
+    color: #000;
 }
 .tutor-leadinfo-top-meta{
     font-size: 14px;
@@ -252,15 +253,28 @@ Most Important CSS
     color: #8C94A8;
     font-size: 14px;
 }
-.tutor-single-course-meta ul li span,
+
 .tutor-single-course-meta ul li a{
     color: #4B5981;
+    font-weight: 500;
 }
+
+.tutor-single-course-meta ul li{
+    font-weight: 500;
+    color: #4B5981;
+}
+
+.tutor-single-course-meta ul li span{
+    color: #8C94A8;
+    font-weight: 400;
+}
+
 .tutor-single-course-meta.tutor-lead-meta{
     margin-bottom: 33px;
     border-top: 1px solid #DCDFE5;
     border-bottom: 1px solid #DCDFE5;
 }
+
 
 @media (max-width: 991px) {
     .tutor-single-course-meta.tutor-lead-meta{
@@ -277,7 +291,11 @@ Most Important CSS
     }
 }
 
-.tutor-single-course-meta.tutor-lead-meta ul li strong{
+.tutor-single-course-meta.tutor-lead-meta ul{
+    display: flex;
+    justify-content: space-between;
+}
+.tutor-single-course-meta.tutor-lead-meta ul li span{
     display: block;
     margin-bottom: 5px;
     color: #B1B8C9;
@@ -364,6 +382,10 @@ Most Important CSS
     vertical-align: text-top;
     margin-right: 10px;
     color: #B1B8C9;
+}
+
+.tutor-course-lesson h5 .tutor-lesson-duration{
+    margin-left: auto;
 }
 .tutor-course-lesson .lesson-preview-title {
     flex: 1 0 0;
@@ -2585,4 +2607,28 @@ a.prerequisites-course-item span.prerequisites-course-feature-image{
     color: #fff;
     padding: 0 5px;
     font-size: 12px;
+}
+
+
+/*
+social share
+*/
+
+.tutor-single-course-meta ul li.tutor-social-share{
+    float: right;
+    margin-right: 0;
+}
+
+.tutor-single-course-meta ul li.tutor-social-share button{
+    margin: 0;
+    border: none;
+    background: transparent;
+    color: #8C94A8;
+    transition: 300ms;
+    padding: 0 4px;
+    cursor: pointer;
+}
+
+.tutor-single-course-meta ul li.tutor-social-share button:hover{
+    color: #0e62ff;
 }

@@ -49,7 +49,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                 </div>
             </li>
             <li class="tutor-course-level">
-                <strong><?php _e('Course level:', 'tutor'); ?></strong>
+                <span><?php _e('Course level:', 'tutor'); ?></span>
 				<?php echo get_tutor_course_level(); ?>
             </li>
         </ul>
