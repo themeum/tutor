@@ -1646,3 +1646,9 @@ Lesson Edit Modal
     animation: spin 2s infinite linear;
     display: inline-block;
 }
+.tutor-notice-warning{
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    padding: 20px;
+    margin-bottom: 10px;
+}
