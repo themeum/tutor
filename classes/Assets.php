@@ -64,6 +64,9 @@ class Assets{
 		wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), tutor()->version );
 		wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array( 'jquery' ), tutor()->version, true );
 
+        //Social Share
+        wp_enqueue_script( 'tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array( 'jquery' ), tutor()->version, true );
+
 		//Including player assets if video exists
 		if (tutor_utils()->has_video_in_single()) {
 

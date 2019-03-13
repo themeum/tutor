@@ -536,6 +536,28 @@ jQuery(document).ready(function($){
 
 
 
+    /**
+     * Limit Short Answer Question Type
+     */
+
+    $('.share').on('click', function () {
+        var that = $(this),
+            title = that.data('title'),
+            text = that.data('text'),
+            image = that.data('image');
+        if($.fn.ShareLink){
+            that.ShareLink({
+                title,
+                text,
+                image,
+                width: 640, // optional popup initial width
+                height: 480 // optional popup initial height
+            })
+        }
+    });
+
+
+
 
 
 
