@@ -52,37 +52,10 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                 <strong><?php _e('Course level:', 'tutor'); ?></strong>
 				<?php echo get_tutor_course_level(); ?>
             </li>
-            <li class="tutor-social-share">
-                <strong><?php _e('Share:', 'tutor'); ?></strong>
-                <button
-                        data-title="<?php echo get_the_title(); ?>"
-                        data-text="<?php echo get_the_excerpt(); ?>"
-                        data-image="<?php echo get_the_post_thumbnail_url(); ?>"
-                        class="share s_facebook"
-                > <i class="tutor-icon-facebook"></i> </button>
-
-                <button
-                        data-title="<?php echo get_the_title(); ?>"
-                        data-text="<?php echo get_the_excerpt(); ?>"
-                        data-image="<?php echo get_the_post_thumbnail_url(); ?>"
-                        class="share s_twitter"
-                > <i class="tutor-icon-twitter"></i> </button>
-
-                <button
-                        data-title="<?php echo get_the_title(); ?>"
-                        data-text="<?php echo get_the_excerpt(); ?>"
-                        data-image="<?php echo get_the_post_thumbnail_url(); ?>"
-                        class="share s_linkedin"
-                > <i class="tutor-icon-linkdin"></i> </button>
-
-                <button
-                        data-title="<?php echo get_the_title(); ?>"
-                        data-text="<?php echo get_the_excerpt(); ?>"
-                        data-image="<?php echo get_the_post_thumbnail_url(); ?>"
-                        class="share s_tumblr"
-                > <i class="tutor-icon-tumblr"></i> </button>
-            </li>
         </ul>
+
+	    <?php tutor_social_share(); ?>
+
     </div>
 
     <div class="tutor-single-course-meta tutor-lead-meta">

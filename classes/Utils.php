@@ -3595,4 +3595,36 @@ class Utils {
 		return $ipaddress;
 	}
 
+	/**
+	 * @return mixed|void
+	 *
+	 * Get the social icons
+	 *
+	 * @since v.1.0.4
+	 */
+
+	public function tutor_social_share_icons(){
+		$icons = array(
+			'facebook' => array('share_class' => 's_facebook', 'icon_html' => '<i class="tutor-icon-facebook"></i>' ),
+			'twitter' => array('share_class' => 's_twitter', 'icon_html' => '<i class="tutor-icon-twitter"></i>' ),
+			'linkedin' => array('share_class' => 's_linkedin', 'icon_html' => '<i class="tutor-icon-linkdin"></i>' ),
+			'tumblr' => array('share_class' => 's_tumblr', 'icon_html' => '<i class="tutor-icon-tumblr"></i>' ),
+		);
+
+		return apply_filters('tutor_social_share_icons', $icons);
+	}
+
+	/**
+	 * @param array $array
+	 *
+	 * @return bool
+	 *
+	 * count method with check is_array
+	 *
+	 * @since v.1.0.4
+	 */
+	public function count($array = array()){
+		return is_array($array) && count($array);
+	}
+
 }

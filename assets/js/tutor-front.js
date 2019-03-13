@@ -11,7 +11,7 @@ jQuery(document).ready(function($){
         video_track_data : $('#tutor_video_tracking_information').val(),
         track_player : function(){
             var that = this;
-            
+
             var video_data = this.video_track_data ? JSON.parse(this.video_track_data) : {};
 
             if (typeof Plyr !== 'undefined') {
@@ -534,31 +534,25 @@ jQuery(document).ready(function($){
         $('.tutor-cart-box-login-form').show();
     });
 
-
-
     /**
-     * Limit Short Answer Question Type
+     * Share Link enable
+     *
+     * @since v.1.0.4
      */
+    if($.fn.ShareLink){
+        var $social_share_wrap = $('.tutor-social-share-wrap');
+        if ($social_share_wrap.length) {
+            var share_config = JSON.parse($social_share_wrap.attr('data-social-share-config'));
 
-    $('.share').on('click', function () {
-        var that = $(this),
-            title = that.data('title'),
-            text = that.data('text'),
-            image = that.data('image');
-        if($.fn.ShareLink){
-            that.ShareLink({
-                title,
-                text,
-                image,
-                width: 640, // optional popup initial width
-                height: 480 // optional popup initial height
-            })
+            $('.tutor_share').ShareLink({
+                title: share_config.title,
+                text: share_config.text,
+                image: share_config.image,
+                class_prefix: 's_',
+                width: 640,
+                height: 480,
+            });
         }
-    });
-
-
-
-
-
+    }
 
 });
