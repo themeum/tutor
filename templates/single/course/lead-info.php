@@ -81,8 +81,6 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                         data-image="<?php echo get_the_post_thumbnail_url(); ?>"
                         class="share s_tumblr"
                 > <i class="tutor-icon-tumblr"></i> </button>
-
-
             </li>
         </ul>
     </div>
