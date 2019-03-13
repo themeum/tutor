@@ -519,6 +519,22 @@ jQuery(document).ready(function($){
         $that.closest('.tutor-quiz-answers-wrap').find('.characters_remaining').html(remaining);
     });
 
+    /**
+     * Add to cart in guest mode, show login form
+     *
+     * @since v.1.0.4
+     */
+
+    $(document).on('submit', '.cart-required-login form', function (e) {
+        e.preventDefault();
+
+        var $that = $(this);
+
+        $that.hide();
+        $('.tutor-cart-box-login-form').show();
+    });
+
+
 
 
 

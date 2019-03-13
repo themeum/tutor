@@ -821,14 +821,17 @@ function tutor_single_course_add_to_cart($echo = true){
 	ob_start();
 
 	$isLoggedIn = is_user_logged_in();
+	$output = '';
 
-	if ($isLoggedIn) {
-		tutor_load_template( 'single.course.add-to-cart' );
-		$output = apply_filters( 'tutor_course/single/add-to-cart', ob_get_clean() );
+	tutor_load_template( 'single.course.add-to-cart' );
+	$output .= apply_filters( 'tutor_course/single/add-to-cart', ob_get_clean() );
 
-	}else{
+	if ( ! $isLoggedIn){
+		ob_start();
 		tutor_load_template( 'single.course.login' );
-		$output = apply_filters( 'tutor_course/global/login', ob_get_clean() );
+		$login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );
+
+		$output .= "<div class='tutor-cart-box-login-form' style='display: none;'>{$login_form}</div>";
 	}
 
 	if ( $echo ) {
