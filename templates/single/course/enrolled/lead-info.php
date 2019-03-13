@@ -53,9 +53,13 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 				<?php echo get_tutor_course_level(); ?>
             </li>
 
+            <li class="tutor-social-share">
+                <span><?php _e('Share:', 'tutor'); ?></span>
+                <?php tutor_social_share(); ?>
+            </li>
+
         </ul>
 
-        <?php tutor_social_share(); ?>
     </div>
 
 
