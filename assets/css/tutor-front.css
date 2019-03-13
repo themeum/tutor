@@ -809,6 +809,9 @@ a.tutor-btn:hover,
     color: #B1B8C9;
     border-bottom: 2px solid transparent;
 }
+.tutor-wrap nav.course-enrolled-nav ul li:not(:first-child) a{
+    margin-left: 20px;
+}
 .tutor-wrap nav.course-enrolled-nav ul li.active a{
     border-bottom: 2px solid #1B52D8;
     color: #4B5981;
