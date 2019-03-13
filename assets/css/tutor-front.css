@@ -1265,7 +1265,6 @@ Instructor
 
 .tutor-single-lesson-wrap{
     font-size: 14px;
-    font-weight: 400;
     background: #F4F8FA;
 }
 .tutor-lesson-video-wrap .plyr--video{
@@ -1419,41 +1418,6 @@ Instructor
     margin-bottom: 0;
 }
 
-.tutor-cart-box-login-form{
-    display: flex;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,.6);
-    z-index: 99;
-    top: 0;
-    left: 0;
-    justify-content: center;
-    align-items: center;
-}
-
-.tutor-cart-box-login-form .tutor-cart-box-login-form-inner{
-    background: #fff;
-    padding: 50px;
-    position: relative;
-}
-
-.tutor-cart-box-login-form-inner button.tutor-popup-form-close{
-    position: absolute;
-    padding: 0;
-    margin: 0;
-    border: none;
-    background-color: transparent;
-    top: 14px;
-    right: 20px;
-    opacity: .4;
-    cursor: pointer;
-    transition: 300ms;
-}
-
-.tutor-cart-box-login-form-inner button.tutor-popup-form-close:hover{
-    color: red;
-}
 
 .tutor-price-preview-box .tutor-course-material-includes-wrap{
     margin-bottom: 25px;
@@ -2262,7 +2226,7 @@ Course question and answer
     box-shadow: none;
     margin-bottom: 20px;
     border-radius: 4px;
-    background: #ffffff;
+    background: #ECEEF4;
     line-height: 48px;
     padding: 0;
     text-indent: 15px;
@@ -2348,8 +2312,52 @@ Course question and answer
 /*course login*/
 
 .tutor-course-login-wrap h4{
-    font-size: 18px;
-    margin-bottom: 28px;
+    font-size: 42px;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: #4B5981;
+}
+
+
+.tutor-cart-box-login-form{
+    display: flex;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.6);
+    z-index: 99;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+}
+.course-login-title{
+    margin-bottom: 50px;
+}
+.tutor-cart-box-login-form .tutor-cart-box-login-form-inner{
+    background: #fff;
+    padding: 50px 40px;
+    position: relative;
+    width: 400px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.tutor-cart-box-login-form-inner button.tutor-popup-form-close{
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background-color: transparent;
+    top: 14px;
+    right: 20px;
+    opacity: .4;
+    cursor: pointer;
+    transition: 300ms;
+}
+
+.tutor-cart-box-login-form-inner button.tutor-popup-form-close:hover{
+    color: red;
 }
 
 /* ********************* */
