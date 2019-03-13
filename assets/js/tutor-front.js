@@ -528,12 +528,18 @@ jQuery(document).ready(function($){
     $(document).on('submit', '.cart-required-login form', function (e) {
         e.preventDefault();
 
-        var $that = $(this);
-
-        $that.hide();
-        $('.tutor-cart-box-login-form').show();
+        $('.tutor-cart-box-login-form').fadeIn(100);
     });
 
+    $('.tutor-popup-form-close').on('click', function () {
+        $('.tutor-cart-box-login-form').fadeOut(100);
+    });
+
+    $(document).on('keyup', function (e) {
+        if (e.keyCode === 27) {
+            $('.tutor-cart-box-login-form').fadeOut(100);
+        }
+    });
     /**
      * Share Link enable
      *

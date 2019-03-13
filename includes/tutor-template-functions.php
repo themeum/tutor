@@ -839,7 +839,7 @@ function tutor_single_course_add_to_cart($echo = true){
 		tutor_load_template( 'single.course.login' );
 		$login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );
 
-		$output .= "<div class='tutor-cart-box-login-form' style='display: none;'>{$login_form}</div>";
+		$output .= "<div class='tutor-cart-box-login-form' style='display: none;'><div class='tutor-cart-box-login-form-inner'><button class='tutor-popup-form-close tutor-icon-cross'></button>{$login_form}</div></div>";
 	}
 
 	if ( $echo ) {
