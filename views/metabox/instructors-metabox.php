@@ -2,12 +2,25 @@
 <div class="tutor-course-instructors-metabox-wrap">
 	<?php
 	$instructors = tutor_utils()->get_instructors_by_course();
+
 	?>
 
 	<div class="tutor-course-available-instructors">
 		<?php
+		$t = wp_get_current_user();
+
+		$currentInstructorHtml = '<div id="added-instructor-id-'.$t->ID.'" class="added-instructor-item added-instructor-item-'.$t->ID.'" data-instructor-id="'.$t->ID
+              .'">
+                    <span class="instructor-icon">'.get_avatar($t->ID, 30).'</span>
+                    <span class="instructor-name"> '.$t->display_name.' </span>
+                </div>';
+        echo $currentInstructorHtml;
+
 		if ($instructors){
 			foreach ($instructors as $instructor){
+				if ($t->ID == $instructor->ID){
+				    break;
+                }
 				?>
 				<div id="added-instructor-id-<?php echo $instructor->ID; ?>" class="added-instructor-item added-instructor-item-<?php echo $instructor->ID; ?>" data-instructor-id="<?php echo $instructor->ID; ?>">
 					<span class="instructor-icon">
@@ -31,9 +44,9 @@
 	</div>
 
     <?php
-    if ( ! defined('TUTOR_MT_VERSION')){
-        echo '<p>'. sprintf( __('To add unlimited multiple instructors at your course, install %sTutor Multi Instructors%s addon ', 'tutor'), '<a href="https://www.themeum.com/product/tutor-multi-instructors" target="_blank">', "</a>" ) .'</p>';
-    }
+   /* if ( ! defined('TUTOR_MT_VERSION')){
+        echo '<p>'. sprintf( __('To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s addon ', 'tutor'), '<a href="https://www.themeum.com/product/tutor-lms" target="_blank">', "</a>" ) .'</p>';
+    }*/
     ?>
 </div>
 
