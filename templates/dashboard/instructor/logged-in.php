@@ -3,7 +3,7 @@ $is_instructor = tutor_utils()->is_instructor();
 if ($is_instructor){
 	?>
 
-    <div class="tutor-alert-warning">
+    <div class="tutor-alert-warning tutor-instructor-alert">
         <h2><?php _e("You are instructor", 'tutor'); ?></h2>
 
         <p>

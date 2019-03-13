@@ -141,7 +141,7 @@ Most Important CSS
 .tutor-full-width-course-top h5,
 .tutor-full-width-course-top h6{
     color: #8C94A8;
-    font-weight: 400;
+    font-weight: 500;
 }
 .tutor-full-width-course-top h6{
     font-size: 14px;
@@ -190,7 +190,7 @@ Most Important CSS
     line-height: 46px;
     color: #4B5981;
     font-weight: 500;
-    margin: 0 0 26px;
+    margin: 0 0 29px;
     padding: 0;
 }
 .tutor-course-summery{
@@ -212,7 +212,7 @@ Most Important CSS
     line-height: 21px;
 }
 .tutor-single-course-meta.tutor-meta-top ul{
-    padding-top: 5px;
+    padding-top: 0;
     padding-bottom: 15px;
 }
 .tutor-single-course-meta ul li{
@@ -331,7 +331,7 @@ Most Important CSS
 }
 .tutor-course-topics-contents h4{
     font-size: 14px;
-    font-weight: 400;
+    font-weight: 500;
     margin-bottom: 0;
     color: #4B5981;
 }
@@ -386,6 +386,7 @@ Most Important CSS
 
 .tutor-course-lesson h5 .tutor-lesson-duration{
     margin-left: auto;
+    padding-left: 5px;
 }
 .tutor-course-lesson .lesson-preview-title {
     flex: 1 0 0;
@@ -501,6 +502,7 @@ div[class*="tutor-course-col"] {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     position: relative;
+    font-weight: 400;
 }
 .tutor-loop-course-footer::after{
     content: '';
@@ -730,6 +732,7 @@ div[class*="tutor-course-col"] {
     font-size: 14px;
     color: #8C94A8;
     line-height: 25px;
+    font-weight: 400;
 }
 
 .tutor-course-lising-category a:not(:last-child):after{
@@ -1402,6 +1405,8 @@ Instructor
     border-radius: 3px;
     text-transform: uppercase;
     font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
 }
 .tutor-price-preview-box .tutor-course-purchase-box button i{
     margin-right: 8px;
@@ -1422,6 +1427,10 @@ Instructor
     background-color: #fcf8e3;
     border-color: #faebcc;
 }
+.tutor-alert-warning.tutor-instructor-alert{
+    padding: 25px 25px 15px;
+}
+
 .tutor-lead-info-btn-group{
     display: block;
     overflow: hidden;
@@ -1448,6 +1457,7 @@ Instructor
     background: #1B52D8;
     color: #fff;
     transition: 300ms;
+    font-weight: 700;
 }
 .tutor-lead-info-btn-group a.tutor-button,
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap{

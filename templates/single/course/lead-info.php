@@ -100,7 +100,6 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 						$category_name = $course_category->name;
 						$category_link = get_term_link($course_category->term_id);
 						echo "<a href='$category_link'>$category_name</a> ";
-						break;
 					}
 					?>
                 </li>
