@@ -27,16 +27,22 @@ if ( ! is_array($reviews) || ! count($reviews)){
     <div class="tutor-course-reviews-wrap">
         <div class="tutor-course-student-rating-wrap">
             <div class="course-avg-rating-wrap">
-                <p class="course-avg-rating">
-					<?php
-					$rating = tutor_utils()->get_course_rating();
-					echo number_format($rating->rating_avg, 1);
-					?>
-                </p>
-                <p class="course-avg-rating-html">
-					<?php tutor_utils()->star_rating_generator($rating->rating_avg);?>
-                </p>
-                <p class="tutor-course-avg-rating-total">Total <span><?php echo $rating->rating_count;?></span> Ratings</p>
+                <div class="tutor-row tutor-align-items-center">
+                    <div class="tutor-col-auto">
+                        <p class="course-avg-rating">
+                            <?php
+                            $rating = tutor_utils()->get_course_rating();
+                            echo number_format($rating->rating_avg, 1);
+                            ?>
+                        </p>
+                    </div>
+                    <div class="tutor-col">
+                        <p class="course-avg-rating-html">
+                            <?php tutor_utils()->star_rating_generator($rating->rating_avg);?>
+                        </p>
+                        <p class="tutor-course-avg-rating-total">Total <span><?php echo $rating->rating_count;?></span> Ratings</p>
+                    </div>
+                </div>
 
             </div>
         </div>
