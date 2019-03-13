@@ -529,11 +529,18 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-
-        $that.hide();
-        $('.tutor-cart-box-login-form').show();
+        $('.tutor-cart-box-login-form').fadeIn(100);
     });
 
+    $('.tutor-popup-form-close').on('click', function () {
+        $('.tutor-cart-box-login-form').fadeOut(100);
+    });
+
+    $(document).on('keyup', function (e) {
+        if (e.key === "Escape") {
+            $('.tutor-cart-box-login-form').fadeOut(100);
+        }
+    })
 
 
     /**
