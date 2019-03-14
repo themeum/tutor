@@ -1694,6 +1694,7 @@ ul.tutor-required-fields{
     color: #f4c150;
     /*margin-top: 20px;*/
     display: block;
+    text-align: left;
 }
 .tutor-star-rating-group i{
     cursor: pointer;
