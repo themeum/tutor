@@ -9,7 +9,7 @@ $pageposts = tutor_utils()->get_courses_by_instructor($user_id);
 ?>
 
 
-<div class="tutor-courses <?php tutor_container_classes() ?>">
+<div class="tutor-courses">
 	<?php if ($pageposts):
 		global $post;
 		foreach ($pageposts as $post):

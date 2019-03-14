@@ -1692,7 +1692,7 @@ ul.tutor-required-fields{
 
 .tutor-star-rating-group {
     color: #f4c150;
-    margin-top: 20px;
+    /*margin-top: 20px;*/
     display: block;
 }
 .tutor-star-rating-group i{
