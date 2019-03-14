@@ -1597,12 +1597,12 @@ ul.tutor-required-fields{
     margin: 0;
 }
 
-.tutor-ratings-wrap {
+.tutor-star-rating-group {
     color: #f4c150;
     margin-top: 20px;
     display: block;
 }
-.tutor-ratings-wrap i{
+.tutor-star-rating-group i{
     cursor: pointer;
     margin-right: 4px;
 }

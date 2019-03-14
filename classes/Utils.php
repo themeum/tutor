@@ -2123,7 +2123,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function star_rating_generator($current_rating = 0.00, $echo = true){
-		$output = '';
+		$output = '<div class="tutor-star-rating-group">';
 
 		for ($i = 1; $i <=5 ; $i++){
 			$intRating = (int) $current_rating;
@@ -2138,6 +2138,10 @@ class Utils {
 				}
 			}
 		}
+
+		$output .= "<div class='tutor-rating-gen-input'><input type='hidden' name='tutor_rating_gen_input' value='{$current_rating}' /> </div>";
+
+		$output .= "</div>";
 
 		if ($echo){
 			echo $output;
@@ -2243,7 +2247,7 @@ class Utils {
 			INNER  JOIN {$wpdb->users}
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
-			AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
+			AND comment_type = 'tutor_course_rating' AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
 		);
 
 		return $reviews;
@@ -2320,7 +2324,7 @@ class Utils {
 			INNER  JOIN {$wpdb->users}
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 			WHERE {$wpdb->comments}.user_id = {$user_id} 
-			AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
+			AND comment_type = 'tutor_course_rating' AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
 		);
 
 		return $reviews;
@@ -2542,10 +2546,28 @@ class Utils {
 			$search_term = " AND {$wpdb->commentmeta}.meta_value LIKE '%{$search_term}%' ";
 		}
 
+		$user_id = get_current_user_id();
+		$course_type = tutor()->course_post_type;
+
+		$in_question_id_query = '';
+		/**
+		 * Get only assinged  courses questions if current user is a
+		 */
+		if ( ! current_user_can('administrator') && current_user_can(tutor()->instructor_role)) {
+			$get_course_ids           = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_author = {$user_id} AND post_type = '{$course_type}' AND post_status = 'publish' " );
+			$get_assigned_courses_ids = $wpdb->get_col( "SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = {$user_id}  " );
+			$my_course_ids            = array_unique( array_merge( $get_course_ids, $get_assigned_courses_ids ) );
+
+			if ( $this->count( $my_course_ids ) ) {
+				$implode_ids = implode( ',', $my_course_ids );
+				$in_question_id_query = " AND {$wpdb->comments}.comment_post_ID IN($implode_ids) ";
+			}
+		}
+
 		$count = $wpdb->get_var("SELECT COUNT({$wpdb->comments}.comment_ID) FROM {$wpdb->comments} 
 			INNER JOIN {$wpdb->commentmeta} 
 			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-			WHERE comment_type	 = 'tutor_q_and_a' AND comment_parent = 0  {$search_term} ");
+			WHERE comment_type	 = 'tutor_q_and_a' AND comment_parent = 0 {$in_question_id_query} {$search_term} ");
 
 		return (int) $count;
 	}
@@ -2567,6 +2589,24 @@ class Utils {
 
 		if ($search_term){
 			$search_term = " AND {$wpdb->commentmeta}.meta_value LIKE '%{$search_term}%' ";
+		}
+
+		$user_id = get_current_user_id();
+		$course_type = tutor()->course_post_type;
+
+		$in_question_id_query = '';
+		/**
+		 * Get only assinged  courses questions if current user is a
+		 */
+		if ( ! current_user_can('administrator') && current_user_can(tutor()->instructor_role)) {
+			$get_course_ids           = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_author = {$user_id} AND post_type = '{$course_type}' AND post_status = 'publish' " );
+			$get_assigned_courses_ids = $wpdb->get_col( "SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = {$user_id}  " );
+			$my_course_ids            = array_unique( array_merge( $get_course_ids, $get_assigned_courses_ids ) );
+
+			if ( $this->count( $my_course_ids ) ) {
+				$implode_ids = implode( ',', $my_course_ids );
+				$in_question_id_query = " AND {$wpdb->comments}.comment_post_ID IN($implode_ids) ";
+			}
 		}
 
 		$query = $wpdb->get_results("SELECT 
@@ -2594,7 +2634,8 @@ class Utils {
 			INNER  JOIN {$wpdb->users}
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 		  
-			WHERE {$wpdb->comments}.comment_type = 'tutor_q_and_a' AND {$wpdb->comments}.comment_parent = 0  {$search_term} 
+			WHERE {$wpdb->comments}.comment_type = 'tutor_q_and_a' AND {$wpdb->comments}.comment_parent = 0  {$search_term}
+			{$in_question_id_query}
 			ORDER BY {$wpdb->comments}.comment_ID DESC 
 			LIMIT {$start},{$limit}; ");
 

@@ -134,9 +134,9 @@ class Admin{
 	 * Filter posts for instructor
 	 */
 	public function filter_posts_for_instructors(){
-		if (current_user_can(tutor()->instructor_role)){
+		if ( ! current_user_can('administrator') && current_user_can(tutor()->instructor_role)){
 			remove_menu_page( 'edit-comments.php' ); //Comments
-			add_action( 'posts_clauses_request', array($this, 'posts_clauses_request') );
+			add_filter( 'posts_clauses_request', array($this, 'posts_clauses_request') );
 		}
 	}
 
@@ -149,7 +149,7 @@ class Admin{
 
 		$custom_author_query = "AND {$wpdb->posts}.post_author = {$user_id}";
 		if (is_array($get_assigned_courses_ids) && count($get_assigned_courses_ids)){
-			$in_query_pre = implode($get_assigned_courses_ids, ',');
+			$in_query_pre = implode(',', $get_assigned_courses_ids);
 			$custom_author_query = "  AND ( {$wpdb->posts}.post_author = {$user_id} OR {$wpdb->posts}.ID IN({$in_query_pre}) ) ";
 		}
 

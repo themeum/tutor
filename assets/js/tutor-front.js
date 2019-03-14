@@ -89,30 +89,29 @@ jQuery(document).ready(function($){
     /**
      * Hover tutor rating and set value
      */
-    $(document).on('hover', '.tutor-ratings-wrap i', function(){
-        $(this).closest('.tutor-ratings-wrap').find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+    $(document).on('hover', '.tutor-star-rating-group i', function(){
+        $(this).closest('.tutor-star-rating-group').find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
         var currentRateValue = $(this).attr('data-rating-value');
         for (var i = 1; i<= currentRateValue; i++){
-            $(this).closest('.tutor-ratings-wrap').find('i[data-rating-value="'+i+'"]').removeClass('tutor-icon-star-line').addClass('tutor-icon-star-full');
+            $(this).closest('.tutor-star-rating-group').find('i[data-rating-value="'+i+'"]').removeClass('tutor-icon-star-line').addClass('tutor-icon-star-full');
         }
+        $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(currentRateValue);
     });
 
-    $(document).on('click', '.tutor-ratings-wrap i', function(){
+    $(document).on('click', '.tutor-star-rating-group i', function(){
         var rating = $(this).attr('data-rating-value');
-        var course_id = $('input[name="tutor_course_id"]').val();
-        var data = {course_id : course_id, rating:rating, action: 'tutor_place_rating' };
-
-        $.post(_tutorobject.ajaxurl, data);
+        $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
     });
 
     $(document).on('click', '.tutor_submit_review_btn', function (e) {
         e.preventDefault();
         var $that = $(this);
-        var review = $(this).closest('form').find('textarea[name="review"]').val();
+        var rating = $that.closest('form').find('input[name="tutor_rating_gen_input"]').val();
+        var review = $that.closest('form').find('textarea[name="review"]').val();
         review = review.trim();
 
         var course_id = $('input[name="tutor_course_id"]').val();
-        var data = {course_id : course_id, review:review, action: 'tutor_place_rating' };
+        var data = {course_id : course_id, rating : rating, review:review, action: 'tutor_place_rating' };
 
         if (review) {
             $.ajax({
