@@ -830,6 +830,7 @@ a.tutor-btn,
     text-transform: uppercase;
     line-height: 1.4;
     font-size: 14px;
+    font-weight: 500;
 }
 a.tutor-button:hover,
 .tutor-button:hover,
@@ -2346,6 +2347,10 @@ Course question and answer
 .tutor-login-wrap{
     max-width: 560px;
     margin: 0 auto;
+}
+.tutor-login-form-wrap{
+    max-width: 450px;
+    margin: auto;
 }
 .tutor-login-form-wrap p{
     margin-bottom: 0;
