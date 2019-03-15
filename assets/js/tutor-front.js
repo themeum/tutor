@@ -89,7 +89,7 @@ jQuery(document).ready(function($){
     /**
      * Hover tutor rating and set value
      */
-    $(document).on('hover', '.tutor-star-rating-group i', function(){
+    $(document).on('hover', '.tutor-write-review-box .tutor-star-rating-group i', function(){
         $(this).closest('.tutor-star-rating-group').find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
         var currentRateValue = $(this).attr('data-rating-value');
         for (var i = 1; i<= currentRateValue; i++){
