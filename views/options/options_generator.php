@@ -51,10 +51,12 @@
                             </div>
 
 							<?php
+                            do_action('tutor_options_before_'.$key);
 							foreach ($field_group['fields'] as $field_key => $field){
 								$field['field_key'] = $field_key;
 								echo $this->generate_field($field);
 							}
+							do_action('tutor_options_after_'.$key);
 						}
 					}
 					?>
