@@ -5,7 +5,7 @@ Tags: lms, education, wp-lms, education management system
 Requires at least: 4.5
 Tested up to: 5.1
 Requires PHP: 5.4.0
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -182,6 +182,17 @@ This is an alpha version of Tutor, as bugs and issues expected, if you found any
 16. Course builder
 
 == Changelog ==
+
+
+= 1.0.4 - 15 March, 2019 =
+
+* Added: Social share
+* Added: course author should be the auto instructor
+* Updated: Show login form in enrolment box when the user in guest mode and trying to purchase/enroll a course
+* Fixed: Question and answer query for instructor which course only belongs with him.
+* Fixed: rating and review placing issue, some time it was stuck
+* Fixed: Few known bugs
+
 
 = 1.0.3 - 08 March, 2019 =
 
