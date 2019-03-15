@@ -410,6 +410,7 @@ Most Important CSS
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    color: inherit;
 }
 .tutor-course-lesson h5 i{
     line-height: 22px;
@@ -1693,7 +1694,7 @@ ul.tutor-required-fields{
 .tutor-star-rating-group {
     color: #f4c150;
     /*margin-top: 20px;*/
-    display: block;
+    display: inline-block;
     text-align: left;
 }
 .tutor-star-rating-group i{
