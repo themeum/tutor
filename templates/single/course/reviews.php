@@ -30,18 +30,47 @@ if ( ! is_array($reviews) || ! count($reviews)){
                 <div class="tutor-row tutor-align-items-center">
                     <div class="tutor-col-auto">
                         <p class="course-avg-rating">
-                            <?php
-                            $rating = tutor_utils()->get_course_rating();
-                            echo number_format($rating->rating_avg, 1);
-                            ?>
+							<?php
+							$rating = tutor_utils()->get_course_rating();
+							echo number_format($rating->rating_avg, 1);
+							?>
                         </p>
-                    </div>
-                    <div class="tutor-col">
+
+
                         <p class="course-avg-rating-html">
-                            <?php tutor_utils()->star_rating_generator($rating->rating_avg);?>
+		                    <?php tutor_utils()->star_rating_generator($rating->rating_avg);?>
                         </p>
                         <p class="tutor-course-avg-rating-total">Total <span><?php echo $rating->rating_count;?></span> Ratings</p>
+
                     </div>
+
+
+
+
+                    <div class="tutor-col">
+                        <div class="course-ratings-count-meter-wrap">
+							<?php
+							foreach ($rating->count_by_value as $key => $value){
+							    $rating_count_percent = ($value > 0) ? ($value  * 100 ) / $rating->rating_count : 0;
+							    ?>
+                                <div class="course-rating-meter">
+                                    <div class="rating-meter-col"><i class="tutor-icon-star-full"></i></div>
+                                    <div class="rating-meter-col"><?php echo $key; ?></div>
+                                    <div class="rating-meter-col rating-meter-bar-wrap">
+                                        <div class="rating-meter-bar">
+                                            <div class="rating-meter-fill-bar" style="width: <?php echo $rating_count_percent; ?>%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="rating-meter-col rating-text-col">
+                                        <?php
+                                        echo $value.' ';
+                                        echo $value > 1 ? __('ratings', 'tutor') : __('rating', 'tutor'); ?>
+                                    </div>
+                                </div>
+							<?php } ?>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>

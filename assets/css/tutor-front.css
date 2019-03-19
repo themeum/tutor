@@ -2724,12 +2724,11 @@ Course question and answer
 .course-avg-rating-wrap .course-avg-rating {
     font-size: 76px;
     line-height: 1;
-    font-weight: 600;
+    font-weight: 400;
 }
 .course-avg-rating-wrap p{
     margin: 0;
 }
-
 .tutor-review-individual-item .tutor-review-name{
     font-size: 16px;
     font-weight: 600;
@@ -2737,7 +2736,6 @@ Course question and answer
 .tutor-review-individual-item .review-meta{
     color: #B1B8C9;
 }
-
 .individual-review-rating-wrap{
     color: #F8C51C;
 }
@@ -2746,8 +2744,34 @@ Course question and answer
     margin-right: 4px;
     color: #F8C51C;
 }
-
-
+.course-rating-meter {
+    display: flex;
+}
+.course-rating-meter i.tutor-icon-star-full{
+    color: #F8C51C;
+}
+.rating-meter-bar-wrap{
+    flex: 1;
+}
+.rating-meter-col{
+    margin: 0 3px;
+}
+.course-rating-meter {
+    margin-bottom: 8px;
+}
+.rating-meter-bar {
+    height: 5px;
+    width: 100%;
+    background: #E8EFF1;
+    margin-top: 6px;
+}
+.rating-meter-fill-bar {
+    background: #F8C51C;
+    height: 5px;
+}
+.rating-meter-col.rating-text-col{
+    flex: 0 0 100px;
+}
 
 /* ********************* */
 /* Tutor Pagination Wrap */

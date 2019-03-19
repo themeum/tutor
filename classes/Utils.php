@@ -2269,25 +2269,69 @@ class Utils {
 			'rating_count'  => 0,
 			'rating_sum'    => 0,
 			'rating_avg'    => 0.00,
+			'count_by_value'    => array(5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0)
 		);
 
 		global $wpdb;
 
-		$rating = $wpdb->get_row("select COUNT(meta_value) as rating_count, SUM(meta_value) as rating_sum from {$wpdb->comments}
+		$rating = $wpdb->get_row("select COUNT(meta_value) as rating_count, SUM(meta_value) as rating_sum 
+			from {$wpdb->comments}
 			INNER JOIN {$wpdb->commentmeta} 
 			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
 			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
+			AND {$wpdb->comments}.comment_type = 'tutor_course_rating'
 			AND meta_key = 'tutor_rating' ;"
 		);
 
 		if ($rating->rating_count){
 			$avg_rating = number_format(($rating->rating_sum / $rating->rating_count), 2);
 
+			/**
+			 * Get individual Rating by integer
+			 */
+			$five_stars_count = $wpdb->get_var("select COUNT(meta_value) as rating_count
+				from {$wpdb->comments}
+				INNER JOIN {$wpdb->commentmeta} ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
+				AND {$wpdb->comments}.comment_type = 'tutor_course_rating'
+				AND meta_key = 'tutor_rating' AND meta_value = 5 ;"
+			);
+			$four_stars_count = $wpdb->get_var("select COUNT(meta_value) as rating_count
+				from {$wpdb->comments}
+				INNER JOIN {$wpdb->commentmeta} ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
+				AND {$wpdb->comments}.comment_type = 'tutor_course_rating'
+				AND meta_key = 'tutor_rating' AND meta_value = 4 ;"
+			);
+			$three_stars_count = $wpdb->get_var("select COUNT(meta_value) as rating_count
+				from {$wpdb->comments}
+				INNER JOIN {$wpdb->commentmeta} ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
+				AND {$wpdb->comments}.comment_type = 'tutor_course_rating'
+				AND meta_key = 'tutor_rating' AND meta_value = 3 ;"
+			);
+			$two_stars_count = $wpdb->get_var("select COUNT(meta_value) as rating_count
+				from {$wpdb->comments}
+				INNER JOIN {$wpdb->commentmeta} ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
+				AND {$wpdb->comments}.comment_type = 'tutor_course_rating'
+				AND meta_key = 'tutor_rating' AND meta_value = 2 ;"
+			);
+			$one_stars_count = $wpdb->get_var("select COUNT(meta_value) as rating_count
+				from {$wpdb->comments}
+				INNER JOIN {$wpdb->commentmeta} ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
+				AND {$wpdb->comments}.comment_type = 'tutor_course_rating'
+				AND meta_key = 'tutor_rating' AND meta_value = 1 ;"
+			);
+
 			$ratings = array(
 				'rating_count'  => $rating->rating_count,
 				'rating_sum'    => $rating->rating_sum,
 				'rating_avg'    => $avg_rating,
+				'count_by_value'    => array(5 => $five_stars_count, 4 => $four_stars_count, 3 => $three_stars_count, 2 => $two_stars_count, 1 => $one_stars_count)
 			);
+
 		}
 
 		return (object) $ratings;
