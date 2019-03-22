@@ -279,6 +279,10 @@ Most Important CSS
     font-weight: 500;
 }
 
+.tutor-single-course-meta.tutor-meta-top ul li,
+.tutor-single-course-meta.tutor-meta-top ul li a{
+    font-weight: 700;
+}
 .tutor-single-course-meta ul li{
     font-weight: 500;
     color: #4B5981;
@@ -329,7 +333,8 @@ Most Important CSS
 }
 
 .tutor-single-course-meta.tutor-lead-meta ul li a:not(:last-child):after{
-    content: ', ';
+    content: ',';
+    margin-right: 4px;
 }
 /*benifit*/
 .tutor-course-benefits-content ul{
@@ -610,7 +615,7 @@ div[class*="tutor-course-col"] {
     transition: 100ms;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-    background: blue;
+    background: #1B52D8;
 }
 .tutor-loop-course-footer .tutor-loop-cart-btn-wrap a{
     color: #fff;
@@ -623,7 +628,7 @@ div[class*="tutor-course-col"] {
     display: block;
     width: 100%;
     line-height: 54px;
-    background: blue;
+    background: #1B52D8;
 }
 .tutor-loop-course-footer .tutor-loop-cart-btn-wrap a.added{
     display: none;
