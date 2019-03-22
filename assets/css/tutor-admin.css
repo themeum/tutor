@@ -46,7 +46,7 @@ TUTOR CSS
 .tutor-option-nav-tabs li{
     position: relative;
     display: inline-block;
-    margin-right: 20px;
+    margin-right: -1px;
 }
 .tutor-option-nav-tabs li:after {
     content: "|";
@@ -61,9 +61,15 @@ TUTOR CSS
     display: block;
     font-weight: bold;
     text-decoration: none;
+    background: #fff;
+    padding: 5px 10px;
+    border: 1px solid #dddddd;
 }
 .tutor-option-nav-tabs li.current a{
     color: #333333;
+}
+.tutor-option-nav-tabs li a:focus {
+    box-shadow: none;
 }
 
 /**

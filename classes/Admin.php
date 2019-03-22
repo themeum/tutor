@@ -23,6 +23,9 @@ class Admin{
 
 		add_action('admin_action_uninstall_tutor_and_erase', array($this, 'erase_tutor_data'));
 		add_filter('plugin_action_links_' . plugin_basename(TUTOR_FILE), array( $this, 'plugin_action_links' ) );
+
+		//Plugin Row Meta
+		add_filter('plugin_row_meta', array($this, 'plugin_row_meta'), 10, 2);
 	}
 
 	public function register_menu(){
@@ -361,6 +364,10 @@ class Admin{
 			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_tutor_instructor'));
 			/**D*/ $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE  '%_tutor_completed_lesson_id_%' ");
 
+			//Deleting Table
+			$prefix = $wpdb->prefix;
+			/**D*/ $wpdb->query("DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers ");
+
 			deactivate_plugins($plugin_file);
 		}
 		
@@ -389,6 +396,23 @@ class Admin{
 
 		$actions['settings'] = '<a href="admin.php?page=tutor_settings">' . __('Settings', 'tutor') . '</a>';
 		return $actions;
+	}
+
+	public function plugin_row_meta($plugin_meta, $plugin_file){
+
+
+		if ($plugin_file === tutor()->basename) {
+			$plugin_meta[] = sprintf( '<a href="%s">%s</a>',
+				esc_url( 'https://www.themeum.com/docs/tutor-introduction/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_docs_link' ),
+				__( '<strong style="color: #03bd24">Documentation</strong>', 'tutor' )
+			);
+			$plugin_meta[] = sprintf( '<a href="%s">%s</a>',
+				esc_url( 'https://www.themeum.com/support-forums/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_support_link' ),
+				__( '<strong style="color: #03bd24">Get Support</strong>', 'tutor' )
+			);
+		}
+
+		return $plugin_meta;
 	}
 
 
