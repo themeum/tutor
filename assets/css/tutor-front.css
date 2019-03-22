@@ -830,7 +830,7 @@ a.tutor-btn,
     border-radius: 4px;
     text-transform: uppercase;
     line-height: 1.4;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
 }
 a.tutor-button:hover,
@@ -1196,7 +1196,7 @@ Instructor
 .tutor-topics-in-single-lesson{
     margin-bottom: 25px;
     background-color: #ffffff;
-    padding: 10px 0;
+    padding: 10px 0 0;
 }
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a span{
     font-size: 14px;
@@ -1288,16 +1288,28 @@ Instructor
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    line-height: 70px;
+    align-items: center;
+    justify-content: space-between;
 }
 .tutor-single-page-top-bar a{
     color: #ffffff;
 }
-.tutor-single-page-top-bar .tutor-topbar-item{
-    width: 100%;
+
+.tutor-single-page-top-bar a:hover{
+    color: #ffffff;
 }
+
 .tutor-single-page-top-bar .tutor-topbar-content-title-wrap{
     text-align: center;
+    max-width: 600px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.tutor-single-page-top-bar .tutor-topbar-content-title-wrap i{
+    vertical-align: middle;
+    line-height: 1;
+    margin-right: 3px;
 }
 .tutor-single-page-top-bar .tutor-topbar-back-to-curse-wrap{
     text-align: right;
@@ -1624,6 +1636,9 @@ Instructor
     padding: 15px;
 }
 
+.tutor-write-review-form{
+    margin-top: 30px;
+}
 
 
 /*******************/
@@ -2721,7 +2736,7 @@ Course question and answer
     line-height: 50px;
     color: #ffffff;
     font-size: 14px;
-    text-shadow: 0 0 5px #000;
+    text-shadow: 0 1px 2px rgba(0,0,0, .4);
 }
 .course-avg-rating-wrap .course-avg-rating {
     font-size: 76px;
