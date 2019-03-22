@@ -234,6 +234,11 @@ jQuery(document).ready(function($){
         attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
         var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
 
+        if (attempt_meta.time_limit.time_limit_seconds === 0) {
+            //No time Zero limit for
+            return;
+        }
+
         var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + (attempt_meta.time_limit.time_limit_seconds * 1000);
         var time_now = new Date(attempt_meta.date_time_now).getTime();
 

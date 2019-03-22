@@ -213,7 +213,7 @@ class Options {
 							),
 
 							'quiz_when_time_expires' => array(
-								'type'      => 'select',
+								'type'      => 'radio',
 								'label'      => __('When time expires', 'tutor'),
 								'default'   => 'minutes',
 								'select_options'   => false,
@@ -226,10 +226,9 @@ class Options {
 							),
 
 							'quiz_attempts_allowed' => array(
-								'type'      => 'slider',
+								'type'      => 'number',
 								'label'      => __('Attempts allowed', 'tutor'),
 								'default'   => '10',
-								'options'   => array('min'=> 0, 'max' => 20),
 								'desc'  => __('Restriction on the number of attempts students are allowed to take for a quiz. 0 for no limit', 'tutor'),
 							),
 
