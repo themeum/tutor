@@ -529,7 +529,7 @@ jQuery(document).ready(function($){
      * @since v.1.0.4
      */
 
-    $(document).on('submit', '.cart-required-login form', function (e) {
+    $(document).on('submit click', '.cart-required-login, .cart-required-login a, .cart-required-login form', function (e) {
         e.preventDefault();
 
         $('.tutor-cart-box-login-form').fadeIn(100);

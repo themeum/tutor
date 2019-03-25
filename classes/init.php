@@ -33,6 +33,9 @@ class init{
 	private $theme_compatibility;
 	private $gutenberg;
 
+	private $woocommerce;
+	private $edd;
+
 	function __construct() {
 
 		$this->path = plugin_dir_path(TUTOR_FILE);
@@ -71,6 +74,8 @@ class init{
 		$this->user = new User();
 		$this->theme_compatibility = new Theme_Compatibility();
 		$this->gutenberg = new Gutenberg();
+		$this->woocommerce = new WooCommerce();
+		$this->edd = new TutorEDD();
 
 		do_action('tutor_loaded');
 	}
@@ -83,7 +88,7 @@ class init{
 		if ( ! class_exists($className)){
 			$className = preg_replace(
 				array('/([a-z])([A-Z])/', '/\\\/'),
-				array('$1-$2', DIRECTORY_SEPARATOR),
+				array('$1$2', DIRECTORY_SEPARATOR),
 				$className
 			);
 

@@ -5,7 +5,7 @@ Tags: lms, education, wp-lms, education management system
 Requires at least: 4.5
 Tested up to: 5.1
 Requires PHP: 5.4.0
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -183,7 +183,18 @@ This is an alpha version of Tutor, as bugs and issues expected, if you found any
 
 == Changelog ==
 
-= 1.0.6 - 18 March, 2020 =
+= 1.0.7 - 22 March, 2019 =
+
+* Added: Radio input type at options panel
+* Added: required indication for required fields in add new instructor page from admin panel
+* Updated: Moved some option select to radio
+* Updated: Attempts allowed field slider to number field
+* Updated: Removed zero decimal value from the course complete progress bar
+* Fixed: redirect back to the quiz after quiz attempt submit
+* Fixed: No time limit quiz attempt finishing instantly, it should be no time limit
+* Fixed: video poster field show hide based on video source at the course, lesson
+
+= 1.0.6 - 20 March, 2019 =
 
 * Added: Drop tutor LMS related database table while uninstalling
 * Updated: option tab design

@@ -606,7 +606,7 @@ class Utils {
 		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
 
 		if ($total_lesson > 0 && $completed_lesson > 0){
-			return number_format(($completed_lesson * 100) / $total_lesson, 1);
+			return number_format(($completed_lesson * 100) / $total_lesson);
 		}
 
 		return 0;
@@ -1809,6 +1809,18 @@ class Utils {
 	public function get_wc_products_db(){
 		global $wpdb;
 		$query = $wpdb->get_results("SELECT ID, post_title from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'product' ");
+
+		return $query;
+	}
+
+	/**
+	 * @return array|null|object
+	 *
+	 * Get EDD Products
+	 */
+	public function get_edd_products(){
+		global $wpdb;
+		$query = $wpdb->get_results("SELECT ID, post_title from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'download' ");
 
 		return $query;
 	}
