@@ -1,11 +1,19 @@
 @import "../icons/css/tutor-icon.css";
+
+:root{
+    --tutor-primary-color: #1B52D8;
+    --tutor-primary-hover-color: #1b52a9;
+    --tutor-text-color: #4B5981;
+    --tutor-light-color: #B1B8C9;
+}
+
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 /*common*/
 .tutor-wrap{
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 /**
 Most Important CSS
@@ -128,7 +136,7 @@ Most Important CSS
     position: absolute;
     left: 0;
     font-family: 'tutor';
-    color: #1B52D8;
+    color: var(--tutor-primary-color);
 }
 
 .tutor-mb-10{
@@ -193,11 +201,11 @@ Most Important CSS
     font-size: 16px;
 }
 .tutor-single-course-rating .tutor-single-rating-count{
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-weight: 500;
 }
 .tutor-single-course-rating .tutor-single-rating-count i{
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
     font-style: normal;
     display: inline-block;
     margin-left: 4px;
@@ -208,7 +216,7 @@ Most Important CSS
 .tutor-course-header-h1{
     font-size: 36px;
     line-height: 46px;
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-weight: 500;
     margin: 0 0 29px;
     padding: 0;
@@ -221,7 +229,7 @@ Most Important CSS
 /*tutor course meta*/
 
 .tutor-single-course-meta{
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-size: 14px;
 }
 .tutor-single-course-meta ul{
@@ -270,12 +278,12 @@ Most Important CSS
     display: inline-block;
     line-height: 21px;
     font-weight: 400;
-    color: #8C94A8;
+    color: var(--tutor-light-color);
     font-size: 14px;
 }
 
 .tutor-single-course-meta ul li a{
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-weight: 500;
 }
 
@@ -285,11 +293,11 @@ Most Important CSS
 }
 .tutor-single-course-meta ul li{
     font-weight: 500;
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 
 .tutor-single-course-meta ul li span{
-    color: #8C94A8;
+    color: var(--tutor-light-color);
     font-weight: 400;
 }
 
@@ -326,10 +334,10 @@ Most Important CSS
 .tutor-single-course-meta.tutor-lead-meta ul li span{
     display: block;
     margin-bottom: 5px;
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
 }
 .tutor-single-course-meta.tutor-lead-meta ul li a{
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 
 .tutor-single-course-meta.tutor-lead-meta ul li a:not(:last-child):after{
@@ -371,13 +379,13 @@ Most Important CSS
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 0;
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 .tutor-course-topics-contents .tutor-course-title{
     cursor: pointer;
 }
 .tutor-course-topics-contents .tutor-course-title h4{
-    color: #1B52D8;
+    color: var(--tutor-primary-color);
     font-size: 16px;
     line-height: 25px;
     overflow: hidden;
@@ -417,12 +425,18 @@ Most Important CSS
     display: flex;
     color: inherit;
 }
+.tutor-course-lesson h5 a{
+    color: var(--tutor-primary-color);
+}
+.tutor-course-lesson h5 a:hover{
+    color: var(--tutor-primary-hover-color);
+}
 .tutor-course-lesson h5 i{
     line-height: 22px;
     display: inline-block;
     vertical-align: text-top;
     margin-right: 10px;
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
 }
 
 .tutor-course-lesson h5 .tutor-lesson-duration{
@@ -483,7 +497,7 @@ div[class*="tutor-course-col"] {
 
 .tutor-course-loop-header-meta .tutor-course-wishlist a{
     display: block;
-    color: #1B52D8;
+    color: var(--tutor-primary-color);
 }
 .tutor-course-loop-header-meta .tutor-course-wishlist a:focus{
     outline: none;
@@ -535,7 +549,7 @@ div[class*="tutor-course-col"] {
     line-height: 28px;
     font-weight: 500;
     margin-bottom: 17px;
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 .tutor-loop-course-footer{
     padding: 15px;
@@ -556,7 +570,7 @@ div[class*="tutor-course-col"] {
 
 .tutor-loop-course-footer i{
     font-size: 15px;
-    color: #8C94A8;
+    color: var(--tutor-light-color);
     line-height: 25px;
     margin-right: 3px;
     float: left;
@@ -576,7 +590,7 @@ div[class*="tutor-course-col"] {
 
 .tutor-course-loop-price{
     float: right;
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-size: 17px;
     font-weight: 500;
 }
@@ -589,7 +603,7 @@ div[class*="tutor-course-col"] {
 
 .tutor-course-loop-price .price del span{
     text-decoration: line-through;
-    color: #8C94A8;
+    color: var(--tutor-light-color);
 }
 
 .tutor-course-loop-price .price del > span{
@@ -615,7 +629,7 @@ div[class*="tutor-course-col"] {
     transition: 100ms;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-    background: #1B52D8;
+    background: var(--tutor-primary-color);
 }
 .tutor-loop-course-footer .tutor-loop-cart-btn-wrap a{
     color: #fff;
@@ -628,7 +642,7 @@ div[class*="tutor-course-col"] {
     display: block;
     width: 100%;
     line-height: 54px;
-    background: #1B52D8;
+    background: var(--tutor-primary-color);
 }
 .tutor-loop-course-footer .tutor-loop-cart-btn-wrap a.added{
     display: none;
@@ -787,7 +801,7 @@ div[class*="tutor-course-col"] {
 }
 
 .tutor-loop-author > div a{
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-weight: 700;
 }
 
@@ -795,7 +809,7 @@ div[class*="tutor-course-col"] {
     display: inline-block;
     margin: 0 2px 0 2px;
     font-size: 14px;
-    color: #8C94A8;
+    color: var(--tutor-light-color);
     line-height: 25px;
     font-weight: 400;
 }
@@ -828,8 +842,8 @@ a.tutor-button,
 a.tutor-btn,
 .tutor-btn{
     color: #fff;
-    background-color: #1B52D8;
-    border-color: #1B52D8;
+    background-color: var(--tutor-primary-color);
+    border-color: var(--tutor-primary-color);
     display: inline-block;
     padding: 15px 30px;
     border-radius: 4px;
@@ -842,8 +856,8 @@ a.tutor-button:hover,
 .tutor-button:hover,
 a.tutor-btn:hover,
 .tutor-btn:hover {
-    background-color: #1B52D8;
-    border-color: #1B52D8;
+    background-color: var(--tutor-primary-color);
+    border-color: var(--tutor-primary-color);
     color: #fff;
     filter: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feComponentTransfer color-interpolation-filters="sRGB"><feFuncR type="linear" slope="0.9" /><feFuncG type="linear" slope="0.9" /><feFuncB type="linear" slope="0.9" /></feComponentTransfer></filter></svg>#filter');
     -webkit-filter: brightness(.9);
@@ -875,15 +889,15 @@ a.tutor-btn:hover,
     font-size: 16px;
     padding: 5px 0 20px;
     margin-right: 20px;
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
     border-bottom: 2px solid transparent;
 }
 .tutor-wrap nav.course-enrolled-nav ul li:not(:first-child) a{
     margin-left: 20px;
 }
 .tutor-wrap nav.course-enrolled-nav ul li.active a{
-    border-bottom: 2px solid #1B52D8;
-    color: #4B5981;
+    border-bottom: 2px solid var(--tutor-primary-color);
+    color: var(--tutor-text-color);
 }
 /* *********************** */
 /* Tutor Student Dashboard */
@@ -898,13 +912,13 @@ a.tutor-btn:hover,
 
 .tutor-dashboard-student-info h4{
     font-size: 18px;
-    color: #8C94A8;
+    color: var(--tutor-light-color);
     margin-bottom: 0;
 }
 
 
 .tutor-dashboard-student-info h4 a{
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 
 .tutor-dashboard-user-role{
@@ -923,7 +937,7 @@ a.tutor-btn:hover,
 
 .tutor-dashboard-student-meta ul li{
     display: inline-block;
-    color: #4B5981;
+    color: var(--tutor-text-color);
     margin-left: 60px;
 }
 
@@ -938,7 +952,7 @@ a.tutor-btn:hover,
     }
     .tutor-dashboard-student-meta ul li{
         display: inline-block;
-        color: #4B5981;
+        color: var(--tutor-text-color);
         margin: 5px;
         border: 1px solid #dddddd;
         padding: 5px 10px;
@@ -948,7 +962,7 @@ a.tutor-btn:hover,
 }
 .tutor-dashboard-student-meta ul li strong{
     display: block;
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
     font-weight: 400;
 }
 
@@ -987,12 +1001,12 @@ a.tutor-btn:hover,
 
 .tutor-dashboard-permalinks li a{
     display: block;
-    color: #4B5981;
+    color: var(--tutor-text-color);
     padding: 10px 20px;
     line-height: 28px;
 }
 .tutor-dashboard-content h1{
-    color: #8C94A8;
+    color: var(--tutor-light-color);
     font-size: 18px;
     font-weight: 500;
     line-height: 23px;
@@ -1027,7 +1041,7 @@ a.tutor-btn:hover,
 }
 
 .tutor-dashboard-content-inner h3 a{
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-size: 22px;
     line-height: 28px;
     font-weight: 600;
@@ -1047,7 +1061,7 @@ a.tutor-btn:hover,
 }
 .tutor-dashboard-content-inner .tutor-course-metadata li{
     display: inline-block;
-    color: #8C94A8;
+    color: var(--tutor-light-color);
     margin-left: 20px;
 }
 
@@ -1056,7 +1070,7 @@ a.tutor-btn:hover,
 }
 
 .tutor-dashboard-content-inner .tutor-course-metadata li span{
-    color: #4B5981;
+    color: var(--tutor-text-color);
     margin-left: 5px;
 }
 
@@ -1101,17 +1115,17 @@ Instructor
 }
 .single-instructor-wrap .instructor-name h3{
     font-size: 16px;
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-weight: 600;
 }
 .single-instructor-wrap .instructor-name h3 a{
     font-weight: 500;
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 .single-instructor-wrap .instructor-name h4{
     font-weight: 500;
     font-size: 14px;
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
 }
 .single-instructor-wrap .instructor-bio{
     padding-left: 260px;
@@ -1188,7 +1202,7 @@ Instructor
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    color: #4B5981;
+    color: var(--tutor-text-color);
     position: relative;
     border-top: 1px solid #E8EFF1;
 }
@@ -1207,13 +1221,13 @@ Instructor
     font-size: 14px;
     margin: 0;
     display: inline;
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 .tutor-topics-in-single-lesson .tutor-topics-title h3{
     margin: 0;
     padding: 14px 17px;
     font-size: 16px;
-    color: #1B52D8;
+    color: var(--tutor-primary-color);
     font-weight: 500;
 }
 .tutor-topics-in-single-lesson .tutor-topics-title.has-summery h3{
@@ -1235,7 +1249,7 @@ Instructor
     cursor: pointer;
 }
 .tutor-topics-in-single-lesson .tutor-topics-title h3 i:hover{
-    color: #1B52D8;
+    color: var(--tutor-primary-color);
 }
 .tutor-single-lesson-button-group .tutor-single-lesson-button a > i:first-child,
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a > i:first-child{
@@ -1246,7 +1260,7 @@ Instructor
     margin-right: 10px;
 }
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a > i.tutor-icon-doubt{
-    color: #1B52D8;
+    color: var(--tutor-primary-color);
 }
 .tutor-topics-in-single-lesson .tutor-topics-summery{
     padding: 14px;
@@ -1286,7 +1300,7 @@ Instructor
 }
 
 .tutor-single-page-top-bar{
-    background-color: #1B52D8;
+    background-color: var(--tutor-primary-color);
     height: 70px;
     margin-bottom: 50px;
     color: #ffffff;
@@ -1341,7 +1355,7 @@ Instructor
 }
 .tutor-tabs-btn-group a{
     background-color: #F1F6F8;
-    color: #4B5981;
+    color: var(--tutor-text-color);
     display: block;
     line-height: 70px;
     width: 100%;
@@ -1378,12 +1392,12 @@ Instructor
     padding-top: 25px;
 }
 #tutor-lesson-sidebar-qa-tab-content .tutor-add-question-wrap h3{
-    color: #1B52D8;
+    color: var(--tutor-primary-color);
 }
 #tutor-lesson-sidebar-qa-tab-content .tutor-add-question-wrap button.tutor_ask_question_btn {
     display: block;
     width: 100%;
-    background-color: #1B52D8;
+    background-color: var(--tutor-primary-color);
 }
 #tutor-lesson-sidebar-qa-tab-content .tutor_question_answer_wrap .tutor_original_question{
     margin-bottom: 20px;
@@ -1393,7 +1407,7 @@ Instructor
 .tutor-lesson-sidebar-emptyqa-wrap{
     text-align: center;
     padding: 50px 20px;
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 .tutor-lesson-sidebar-emptyqa-wrap h3{
     margin: 0;
@@ -1425,7 +1439,7 @@ Instructor
 .tutor-attachments-wrap .tutor-attachment-icon{
     font-size: 30px;
     float: left;
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 .tutor-attachments-wrap .tutor-attachment-icon i{
     display: block;
@@ -1438,11 +1452,11 @@ Instructor
     display: block;
     font-size: 14px;
     line-height: 16px;
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 .tutor-attachment-info span + span{
     font-size: 11px;
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
 }
 /*course status*/
 .tutor-progress-bar-wrap{
@@ -1472,7 +1486,7 @@ Instructor
     margin-top: 7.5px;
 }
 .tutor-progress-bar .tutor-progress-filled{
-    background-color: #1B52D8;
+    background-color: var(--tutor-primary-color);
     height: 8px;
     border-radius: 30px;
     width: var(--tutor-progress-left);
@@ -1482,7 +1496,7 @@ Instructor
     position: absolute;
     height: 20px;
     width: 20px;
-    border: 5px solid #1B52D8;
+    border: 5px solid var(--tutor-primary-color);
     border-radius: 50%;
     background: #fff;
     left: var(--tutor-progress-left);
@@ -1505,7 +1519,7 @@ Instructor
 .tutor-price-preview-box .tutor-course-purchase-box button{
     display: block;
     width: 100%;
-    background: #1B52D8;
+    background: var(--tutor-primary-color);
     border-radius: 3px;
     text-transform: uppercase;
     font-size: 14px;
@@ -1560,7 +1574,7 @@ Instructor
     border-radius: 4px;
     text-transform: uppercase;
     line-height: 1;
-    background: #1B52D8;
+    background: var(--tutor-primary-color);
     color: #fff;
     -webkit-transition: 300ms;
     transition: 300ms;
@@ -1585,16 +1599,16 @@ Instructor
     display: block;
     width: 100%;
     background: #E8EFF1;
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
 }
 
 .tutor-lead-info-btn-group a.tutor-button:hover{
-    background: #1b4cab;
+    background: var(--tutor-primary-hover-color);
     color: #ffffff;
 }
 
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap button:hover{
-    background: #1B52D8;
+    background: var(--tutor-primary-color);
     color: #ffffff;
 }
 
@@ -1629,8 +1643,8 @@ Instructor
 /*******************/
 .tutor-course-enrolled-review-wrap .write-course-review-link-btn{
     color: #fff;
-    background-color: #1B52D8;
-    border-color: #1B52D8;
+    background-color: var(--tutor-primary-color);
+    border-color: var(--tutor-primary-color);
     display: inline-block;
     padding: 15px 30px;
     border-radius: 4px;
@@ -1891,11 +1905,11 @@ Course question and answer
 .question-top-meta .review-meta a{
     display: block;
     font-size: 18px;
-    color: #4B5981;
+    color: var(--tutor-text-color);
     line-height: 20px;
 }
 .question-top-meta .review-meta span{
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
     font-size: 14px;
     vertical-align: text-top;
     display: block;
@@ -1925,7 +1939,7 @@ Course question and answer
     float: right;
 }
 .tutor-announcement-title-wrap h3{
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-weight: 500;
     margin-bottom: 10px;
 }
@@ -1944,7 +1958,7 @@ Course question and answer
     font-size: 10px;
 }
 .tutor-quiz-header h2{
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-size: 36px;
     line-height: 46px;
     font-weight: 500;
@@ -1952,10 +1966,10 @@ Course question and answer
 }
 .tutor-quiz-header h5{
     font-size: 14px;
-    color: #8C94A8;
+    color: var(--tutor-light-color);
 }
 .tutor-quiz-header h5 a{
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-size: 14px;
     font-weight: 500;
 }
@@ -1975,7 +1989,7 @@ Course question and answer
 }
 .tutor-quiz-header .tutor-quiz-meta li{
     display: inline-block;
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 
 @media (max-width: 767px) {
@@ -1986,7 +2000,7 @@ Course question and answer
     }
     .tutor-quiz-header .tutor-quiz-meta li{
         display: inline-block;
-        color: #4B5981;
+        color: var(--tutor-text-color);
         margin: 5px;
         border: 1px solid #dddddd;
         padding: 5px 10px;
@@ -1995,7 +2009,7 @@ Course question and answer
 }
 .tutor-quiz-header .tutor-quiz-meta li strong{
     display: block;
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
     font-weight: 400;
 }
 .tutor-quiz-attempt-history{
@@ -2003,7 +2017,7 @@ Course question and answer
 }
 .tutor-quiz-attempt-history-title{
     font-size: 18px;
-    color: #8C94A8;
+    color: var(--tutor-light-color);
     line-height: 23px;
     font-weight: 500;
     margin-bottom: 15px;
@@ -2047,22 +2061,22 @@ Course question and answer
 }
 .quiz-head-meta-info{
     font-size: 14px;
-    color: #8C94A8;
+    color: var(--tutor-light-color);
     margin-bottom: 40px;
 }
 .quiz-head-meta-info span{
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 #tutor-quiz-attempt-questions-wrap {
     margin-bottom: 50px;
 }
 .tutor-quiz-single-wrap .question-text{
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-size: 20px;
     font-weight: 600;
 }
 .tutor-quiz-single-wrap .question-description{
-    color: #4B5981;
+    color: var(--tutor-text-color);
     font-size: 14px;
     font-weight: 300;
 }
@@ -2167,8 +2181,8 @@ Course question and answer
     margin-right: 5px;
 }
 .tutor-quiz-answers-wrap label input:checked + span{
-    background: #1B52D8;
-    border-color: #1B52D8;
+    background: var(--tutor-primary-color);
+    border-color: var(--tutor-primary-color);
 }
 .tutor-quiz-answers-wrap label input:checked + span:after{
     content: '\e90f';
@@ -2323,7 +2337,7 @@ Course question and answer
     display: inline-block;
 }
 .tutor-quiz-questions-pagination ul li a{
-    background-color: #1B52D8;
+    background-color: var(--tutor-primary-color);
     padding: 7px 13px;
     display: block;
     border-radius: 50%;
@@ -2411,7 +2425,7 @@ Course question and answer
 .tutor-login-form-wrap input[type="password"]:focus,
 .tutor-login-form-wrap input[type="text"]:focus{
     background: #ffffff;
-    border-color: #1B52D8;
+    border-color: var(--tutor-primary-color);
 }
 .tutor-login-form-wrap input::-webkit-input-placeholder {
     color: #b0b6c8;
@@ -2500,7 +2514,7 @@ Course question and answer
     font-size: 42px;
     line-height: 1.2;
     margin-bottom: 20px;
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 
 
@@ -2581,7 +2595,7 @@ Course question and answer
 .tutor-form-group textarea:focus,
 .tutor-form-group input:not([type="submit"]):focus{
     background: #ffffff;
-    border-color: #1B52D8;
+    border-color: var(--tutor-primary-color);
 }
 
 .tutor-form-group textarea::-webkit-input-placeholder ,
@@ -2678,11 +2692,11 @@ Course question and answer
 }
 
 .tutor-course-avg-rating-total{
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
     font-size: 14px;
 }
 .tutor-course-avg-rating-total span{
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 
 .tutor-review-individual-item {
@@ -2742,7 +2756,13 @@ Course question and answer
 }
 .tutor-review-individual-item .tutor-review-user-info p{
     margin-bottom: 0;
+
 }
+
+.tutor-review-individual-item .tutor-review-user-info a{
+    color: var(--tutor-text-color);
+}
+
 .review-avatar .tutor-text-avatar,
 .tutor-dashboard-avater .tutor-text-avatar,
 .instructor-avatar .tutor-text-avatar{
@@ -2769,7 +2789,7 @@ Course question and answer
     font-weight: 600;
 }
 .tutor-review-individual-item .review-meta{
-    color: #B1B8C9;
+    color: var(--tutor-light-color);
 }
 .individual-review-rating-wrap{
     color: #F8C51C;
@@ -2822,11 +2842,11 @@ Course question and answer
     padding: 3px 10px;
     border: 1px solid #dddddd;
     display: inline-block;
-    color: #4B5981;
+    color: var(--tutor-text-color);
 }
 .tutor-pagination-wrap span{
-    color: #1B52D8;
-    border-color: #1B52D8;
+    color: var(--tutor-primary-color);
+    border-color: var(--tutor-primary-color);
 }
 
 
@@ -2842,7 +2862,7 @@ Course question and answer
     background: #E8EFF1;
     display: inline-block;
     margin: 5px;
-    color: #4B5981;
+    color: var(--tutor-text-color);
     border-radius: 2px;
     -webkit-transition: 300ms;
     transition: 300ms;
@@ -2903,7 +2923,7 @@ social share
     margin: 0;
     border: none;
     background: transparent;
-    color: #8C94A8;
+    color: var(--tutor-light-color);
     -webkit-transition: 300ms;
     transition: 300ms;
     padding: 0 4px;
