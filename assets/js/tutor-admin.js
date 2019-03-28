@@ -1515,10 +1515,14 @@ jQuery(document).ready(function($){
                     e.preventDefault();
 
                     var $that = $(this);
-                    var $html = $that.html().trim();
-                    $that.closest('.tutor-select').find('.select-header .lead-option').html($html);
-                    $that.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($that.attr('data-value')).trigger('change');
-                    $that.closest('.tutor-select-options').hide();
+                    if ($that.attr('data-is-pro') !== 'true') {
+                        var $html = $that.html().trim();
+                        $that.closest('.tutor-select').find('.select-header .lead-option').html($html);
+                        $that.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($that.attr('data-value')).trigger('change');
+                        $that.closest('.tutor-select-options').hide();
+                    }else{
+                        alert('Tutor Pro version required');
+                    }
                 });
                 $(document).on('click', '.tutor-select .select-header', function(e){
                     e.preventDefault();

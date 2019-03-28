@@ -10,6 +10,8 @@ class TutorEDD extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
+		add_action('tutor_options_before_tutor_edd', array($this, 'notice_before_option'));
+
 		//Add Tutor Option
 		add_filter('tutor/options/attr', array($this, 'add_options'));
 
@@ -31,6 +33,23 @@ class TutorEDD extends Tutor_Base {
 		add_action('edd_update_payment_status', array($this, 'edd_update_payment_status'), 10, 3);
 	}
 
+	public function notice_before_option(){
+		$has_edd = tutor_utils()->has_edd();
+		if ($has_edd){
+			return;
+		}
+
+		ob_start();
+		?>
+		<div class="tutor-notice-warning">
+			<p>
+				<?php _e(' Seems like you don’t have <strong>Easy Digital Downloads</strong> plugin installed on your site. In order to use this functionality, you need to have the  <strong>Easy Digital Downloads</strong> plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling courses with Tutor.', 'tutor'); ?>
+			</p>
+			<p><?php _e('This notice will disappear after activating <strong>EDD</strong>', 'tutor'); ?></p>
+		</div>
+		<?php
+		echo ob_get_clean();
+	}
 
 	/**
 	 * @param $attr

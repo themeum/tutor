@@ -14,7 +14,7 @@
     <div class="tutor-option-field-label">
         <label for="">
 			<?php _e('Select product', 'tutor-edd'); ?> <br />
-            <p class="text-muted">(<?php _e('Only for if you sell course', 'tutor-edd'); ?>)</p>
+            <p class="text-muted">(<?php _e('When selling the course', 'tutor-edd'); ?>)</p>
         </label>
     </div>
     <div class="tutor-option-field">

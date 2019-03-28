@@ -13,6 +13,8 @@ class WooCommerce extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
+		add_action('tutor_options_before_woocommerce', array($this, 'notice_before_option'));
+
 		//Add option settings
 		add_filter('tutor/options/attr', array($this, 'add_options'));
 
@@ -47,6 +49,26 @@ class WooCommerce extends Tutor_Base {
 		add_action( 'woocommerce_order_status_changed', array( $this, 'enrolled_courses_status_change' ), 10, 3 );
 
 	}
+
+	public function notice_before_option(){
+	    $has_wc = tutor_utils()->has_wc();
+	    if ($has_wc){
+	        return;
+        }
+
+	    ob_start();
+	    ?>
+        <div class="tutor-notice-warning">
+            <p>
+                <?php _e(' Seems like you don’t have WooCommerce plugin installed on your site. In order to use this functionality, you need to have the 
+                WooCommerce plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling 
+                courses with Tutor.', 'tutor'); ?>
+            </p>
+            <p><?php _e('This notice will disappear after activating <strong>WooCommerce</strong>', 'tutor'); ?></p>
+        </div>
+        <?php
+	    echo ob_get_clean();
+    }
 
 	public function is_course_purchasable($bool, $course_id){
 		if ( ! tutor_utils()->has_wc()){
@@ -124,8 +146,6 @@ class WooCommerce extends Tutor_Base {
 		}
 	}
 
-
-
 	public function save_wc_product_meta($post_ID){
 		$is_tutor_product = tutor_utils()->avalue_dot('_tutor_product', $_POST);
 		if ($is_tutor_product === 'on'){
@@ -140,7 +160,7 @@ class WooCommerce extends Tutor_Base {
 	 */
 
 	public function course_placing_order( $item_id, $item, $order_id){
-		//$item = new \WC_Order_Item_Product($item);
+		$item = new \WC_Order_Item_Product($item);
 
 		$product_id = $item->get_product_id();
 		$if_has_course = tutor_utils()->product_belongs_with_course($product_id);

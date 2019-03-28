@@ -14,7 +14,7 @@
     <div class="tutor-option-field-label">
         <label for="">
 			<?php _e('Select product', 'tutor'); ?> <br />
-            <p class="text-muted">(<?php _e('Only for if you sell course', 'tutor'); ?>)</p>
+            <p class="text-muted">(<?php _e('When selling the course', 'tutor'); ?>)</p>
         </label>
     </div>
     <div class="tutor-option-field">
@@ -40,7 +40,8 @@
         </select>
 
         <p class="desc">
-			<?php _e('If you like to sell your course, then select a product, the purchase will be process by WooCommerce', 'tutor'); ?>
+			<?php _e("If you'd like to sell this course, then select a product, the purchasing will completely be handled by WooCommerce",
+                'tutor'); ?>
         </p>
     </div>
 </div>

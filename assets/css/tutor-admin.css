@@ -1099,6 +1099,9 @@ Quiz Modal
 .tutor-select .select-header .lead-option {
     flex: 1;
 }
+.tutor-select .select-header .lead-option .question-type-pro{
+    display: none;
+}
 .tutor-select .tutor-select-options {
     border: 1px solid #DEDEDE;
     background-color: #fff;
@@ -1113,11 +1116,19 @@ Quiz Modal
     display: inline-block;
     padding: 2%;
     cursor: pointer;
+    position: relative;
 }
 .tutor-select .tutor-select-options .tutor-select-option:hover {
     background: #eee;
 }
-
+.question-type-pro {
+    background: #d64d4d;
+    color: #fff;
+    font-size: 9px;
+    padding: 3px 5px;
+    right: 0;
+    position: absolute;
+}
 i.tutor-icon-block {
     padding: 5px;
     color: #fff;
