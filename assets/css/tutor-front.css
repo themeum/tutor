@@ -285,6 +285,11 @@ Most Important CSS
 .tutor-single-course-meta ul li a{
     color: var(--tutor-text-color);
     font-weight: 500;
+    transition: 300ms;
+}
+
+.tutor-single-course-meta ul li a:hover{
+    color: var(--tutor-primary-color);
 }
 
 .tutor-single-course-meta.tutor-meta-top ul li,
@@ -338,6 +343,10 @@ Most Important CSS
 }
 .tutor-single-course-meta.tutor-lead-meta ul li a{
     color: var(--tutor-text-color);
+    transition: 300ms;
+}
+.tutor-single-course-meta.tutor-lead-meta ul li a:hover{
+    color: var(--tutor-primary-color);
 }
 
 .tutor-single-course-meta.tutor-lead-meta ul li a:not(:last-child):after{
@@ -427,6 +436,7 @@ Most Important CSS
 }
 .tutor-course-lesson h5 a{
     color: var(--tutor-primary-color);
+    transition: 300ms;
 }
 .tutor-course-lesson h5 a:hover{
     color: var(--tutor-primary-hover-color);
@@ -550,6 +560,9 @@ div[class*="tutor-course-col"] {
     font-weight: 500;
     margin-bottom: 17px;
     color: var(--tutor-text-color);
+}
+.tutor-course-loop-title a:hover h2{
+    color: var(--tutor-primary-color);
 }
 .tutor-loop-course-footer{
     padding: 15px;
@@ -803,8 +816,11 @@ div[class*="tutor-course-col"] {
 .tutor-loop-author > div a{
     color: var(--tutor-text-color);
     font-weight: 700;
+    transition: 300ms;
 }
-
+.tutor-loop-author > div a:hover{
+    color: var(--tutor-primary-color);
+}
 .tutor-loop-author > div span{
     display: inline-block;
     margin: 0 2px 0 2px;
@@ -1651,8 +1667,12 @@ Instructor
     text-transform: uppercase;
     line-height: 1;
     font-size: 14px;
+    transition: 300ms;
 }
-
+.tutor-course-enrolled-review-wrap .write-course-review-link-btn:hover{
+    background-color: var(--tutor-primary-hover-color);
+    border-color: var(--tutor-primary-hover-color);
+}
 .tutor-course-enrolled-review-wrap  .tutor-form-group{
     margin-bottom: 10px;
 }
