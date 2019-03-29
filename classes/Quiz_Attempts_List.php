@@ -139,8 +139,8 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			$attempt_ids = implode( ',', array_map( 'absint', $attempt_ids ) );
 
 			//Deleting attempt (comment), child attempt and attempt meta (comment meta)
-			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_ID IN($attempt_ids)" );
-			$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE {$wpdb->commentmeta}.comment_id IN($attempt_ids)" );
+			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
+			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
 		}
 	}
 
@@ -189,10 +189,6 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			}
 
 		}
-
-
-
-
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,

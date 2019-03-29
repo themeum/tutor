@@ -451,12 +451,12 @@ class Course extends Tutor_Base {
 
 		$search_sql = '';
 		if ($search_terms){
-			$search_sql = "AND user_login like '%{$search_terms}%' or user_nicename like '%{$search_terms}%' or display_name like '%{$search_terms}%' ";
+			$search_sql = "AND (user_login like '%{$search_terms}%' or user_nicename like '%{$search_terms}%' or display_name like '%{$search_terms}%') ";
 		}
 
 		$instructors = $wpdb->get_results("select ID, display_name from {$wpdb->users} 
 			INNER JOIN {$wpdb->usermeta} ON ID = user_id AND meta_key = '_tutor_instructor_status' AND meta_value = 'approved'
-			WHERE ID > 0 {$not_in_sql} {$search_sql} limit 10 ");
+			WHERE 1=1 {$not_in_sql} {$search_sql} limit 10 ");
 
 		$output = '';
 		if (is_array($instructors) && count($instructors)){
