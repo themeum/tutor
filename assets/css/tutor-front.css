@@ -447,16 +447,25 @@ Most Important CSS
     vertical-align: text-top;
     margin-right: 10px;
     color: var(--tutor-light-color);
+    display: block;
+}
+.tutor-course-lesson h5 .lesson-preview-icon i{
+    margin-right: 0;
+    margin-left: 10px;
 }
 
 .tutor-course-lesson h5 .tutor-lesson-duration{
     margin-left: auto;
     padding-left: 5px;
+    align-self: flex-start;
 }
 .tutor-course-lesson .lesson-preview-title {
     -webkit-box-flex: 1;
     -ms-flex: 1 0 0;
     flex: 1 0 0;
+    flex-direction: row;
+    display: flex;
+    align-items: flex-start;
 }
 
 /********************/
@@ -872,12 +881,9 @@ a.tutor-button:hover,
 .tutor-button:hover,
 a.tutor-btn:hover,
 .tutor-btn:hover {
-    background-color: var(--tutor-primary-color);
-    border-color: var(--tutor-primary-color);
+    background-color: var(--tutor-primary-hover-color);
+    border-color: var(--tutor-primary-hover-color);
     color: #fff;
-    filter: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feComponentTransfer color-interpolation-filters="sRGB"><feFuncR type="linear" slope="0.9" /><feFuncG type="linear" slope="0.9" /><feFuncB type="linear" slope="0.9" /></feComponentTransfer></filter></svg>#filter');
-    -webkit-filter: brightness(.9);
-    filter: brightness(.9);
 }
 
 .tutor-button.tutor-danger{
@@ -896,6 +902,7 @@ a.tutor-btn:hover,
 .tutor-wrap nav.course-enrolled-nav ul{
     list-style: none;
     margin: 0 0 -1px;
+    padding: 0;
 }
 .tutor-wrap nav.course-enrolled-nav ul li{
     display: inline-block;
@@ -1326,8 +1333,32 @@ Instructor
     align-items: center;
     justify-content: space-between;
 }
+
+.tutor-single-page-top-bar .tutor-single-lesson-segment{
+    margin-bottom: 0;
+}
+
 .tutor-single-page-top-bar a{
     color: #ffffff;
+}
+
+.tutor-topbar-home-btn{
+    margin-left: 20px;
+}
+
+.tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button{
+    background: #fff;
+    color: var(--tutor-primary-color);
+    margin-right: 15px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    cursor: pointer;
+}
+
+.tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button:hover{
+    color: #fff;
+    background: var(--tutor-primary-hover-color);
+    border-color: var(--tutor-primary-hover-color);
 }
 
 .tutor-single-page-top-bar a:hover{
@@ -1346,15 +1377,11 @@ Instructor
     line-height: 1;
     margin-right: 3px;
 }
-.tutor-single-page-top-bar .tutor-topbar-back-to-curse-wrap{
-    text-align: right;
-    margin-right: 30px;
-}
 .tutor-lesson-content-area, .tutor-quiz-single-wrap {
     margin: 0 100px;
 }
 .tutor-lesson-sidebar-hide-bar{
-    background-color: #1645B7;
+    background-color: var(--tutor-primary-hover-color);
     color: #ffffff;
     padding: 0 18px;
     display: inline-block;
@@ -2845,7 +2872,7 @@ Course question and answer
     height: 5px;
 }
 .rating-meter-col.rating-text-col{
-    flex: 0 0 100px;
+    flex: 0 0 auto;
 }
 
 /* ********************* */
@@ -2951,5 +2978,117 @@ social share
 }
 
 .tutor-single-course-meta ul li.tutor-social-share button:hover{
-    color: #0e62ff;
+    color: var(--tutor-primary-color);
+}
+
+
+/* ************************* */
+/* ******** RTL CSS ******** */
+/* ************************* */
+
+.rtl .tutor-single-course-meta ul li.tutor-social-share{
+    float: left;
+}
+
+.rtl .tutor-single-course-meta ul li,
+.rtl .tutor-loop-author > div{
+    float: right;
+}
+
+
+.rtl .tutor-single-course-meta ul li{
+    margin-right: 0;
+    margin-left: 40px;
+}
+
+.rtl .tutor-wrap nav.course-enrolled-nav ul li a{
+    margin-right: 0;
+    margin-left: 20px;
+}
+
+.rtl .tutor-progress-bar .tutor-progress-filled:after{
+    left: auto;
+    right: var(--tutor-progress-left);
+    transform: translateY(-50%) translateX(50%);
+}
+
+.rtl .tutor-progress-percent{
+    padding-left: 0;
+    padding-right: 20px;
+}
+
+.rtl .tutor-course-lesson h5 i{
+    margin-right: 0;
+    margin-left: 10px;
+}
+.rtl .tutor-course-lesson h5 .lesson-preview-icon i {
+    margin-right: 10px;
+    margin-left: 0;
+}
+
+.rtl .tutor-course-lesson h5 .tutor-lesson-duration{
+    flex-grow: 1;
+    text-align: left;
+}
+
+.rtl .tutor-custom-list-style li {
+    padding-right: 25px;
+    padding-left: 0px;
+}
+
+.rtl .tutor-custom-list-style li:before{
+    left: auto;
+    right: 0;
+}
+
+.rtl .single-instructor-wrap .instructor-name,
+.rtl .single-instructor-wrap .instructor-avatar,
+.rtl .single-instructor-wrap .tutor-instructor-left{
+    float: right;
+}
+
+.rtl .single-instructor-wrap .instructor-name{
+    padding-left: 0;
+    padding-right: 20px;
+}
+
+.rtl .single-instructor-wrap .instructor-bio{
+    padding-left: 0;
+    padding-right: 260px;
+}
+
+.rtl .tutor-single-page-top-bar .tutor-topbar-back-to-curse-wrap{
+    margin-left: 30px;
+    margin-right: 0;
+}
+
+.rtl .tutor-single-lesson-button-group .tutor-single-lesson-button a,
+.rtl .tutor-topics-in-single-lesson .tutor-single-lesson-items a{
+    padding: 14px 17px 14px 100px;
+}
+
+.rtl .tutor-lessons-under-topic .tutor-lesson-right-icons{
+    right: auto;
+    left: 15px;
+}
+
+.rtl .tutor-lessons-under-topic .tutor-lesson-right-icons .tutor-lesson-complete{
+    margin-left: 0;
+    margin-right: 8px;
+}
+
+.rtl .tutor-single-lesson-button-group .tutor-single-lesson-button a > i:first-child,
+.rtl .tutor-topics-in-single-lesson .tutor-single-lesson-items a > i:first-child{
+    margin-right: 0;
+    margin-left: 10px;
+}
+
+.rtl .tutor-topbar-home-btn{
+    margin-left: 0;
+    margin-right: 20px;
+}
+
+.rtl .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button{
+    margin-left: 15px;
+    margin-right: 0;
 }

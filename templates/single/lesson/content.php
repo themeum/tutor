@@ -28,6 +28,10 @@ if ($best_watch_time > 0){
 <div class="tutor-single-page-top-bar">
     <div class="tutor-topbar-item tutor-hide-sidebar-bar">
         <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-menu-2"></i> </a>
+        <?php $course_id = get_post_meta(get_the_ID(), '_tutor_course_id_for_lesson', true); ?>
+        <a href="<?php echo get_the_permalink($course_id); ?>" class="tutor-topbar-home-btn">
+            <i class="tutor-icon-next-2"></i> <?php echo __('Go to Course Home', 'tutor') ; ?>
+        </a>
     </div>
     <div class="tutor-topbar-item tutor-topbar-content-title-wrap">
         <?php
@@ -35,14 +39,11 @@ if ($best_watch_time > 0){
         the_title(); ?>
     </div>
 
-    <div class="tutor-topbar-item tutor-topbar-back-to-curse-wrap">
-        <?php
-        $course_id = get_post_meta(get_the_ID(), '_tutor_course_id_for_lesson', true);
-        ?>
-        <a href="<?php echo get_the_permalink($course_id); ?>">
-            <i class="tutor-icon-next-2"></i> <?php echo sprintf(__('Go to %s Course Home %s', 'tutor'), '<strong>', '</strong>') ; ?>
-        </a>
+    <div class="tutor-topbar-item tutor-topbar-mark-to-done">
+        <?php tutor_lesson_mark_complete_html(); ?>
     </div>
+
+
 </div>
 
 
@@ -52,8 +53,6 @@ if ($best_watch_time > 0){
 	<?php tutor_lesson_video(); ?>
 	<?php the_content(); ?>
 	<?php get_tutor_posts_attachments(); ?>
-	<?php tutor_lesson_mark_complete_html(); ?>
-
 </div>
 
 <?php
