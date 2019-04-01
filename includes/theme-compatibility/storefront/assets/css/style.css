@@ -1,0 +1,9 @@
+body.single-lesson #content .col-full{
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+}
+.tutor-container{
+    max-width: 100%;
+    padding: 0;
+}
