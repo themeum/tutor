@@ -457,7 +457,7 @@ Most Important CSS
 .tutor-course-lesson h5 .tutor-lesson-duration{
     margin-left: auto;
     padding-left: 5px;
-    align-self: flex-end;
+    align-self: flex-start;
 }
 .tutor-course-lesson .lesson-preview-title {
     -webkit-box-flex: 1;
@@ -465,7 +465,7 @@ Most Important CSS
     flex: 1 0 0;
     flex-direction: row;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
 }
 
 /********************/
@@ -3059,5 +3059,36 @@ social share
 
 .rtl .tutor-single-page-top-bar .tutor-topbar-back-to-curse-wrap{
     margin-left: 30px;
+    margin-right: 0;
+}
+
+.rtl .tutor-single-lesson-button-group .tutor-single-lesson-button a,
+.rtl .tutor-topics-in-single-lesson .tutor-single-lesson-items a{
+    padding: 14px 17px 14px 100px;
+}
+
+.rtl .tutor-lessons-under-topic .tutor-lesson-right-icons{
+    right: auto;
+    left: 15px;
+}
+
+.rtl .tutor-lessons-under-topic .tutor-lesson-right-icons .tutor-lesson-complete{
+    margin-left: 0;
+    margin-right: 8px;
+}
+
+.rtl .tutor-single-lesson-button-group .tutor-single-lesson-button a > i:first-child,
+.rtl .tutor-topics-in-single-lesson .tutor-single-lesson-items a > i:first-child{
+    margin-right: 0;
+    margin-left: 10px;
+}
+
+.rtl .tutor-topbar-home-btn{
+    margin-left: 0;
+    margin-right: 20px;
+}
+
+.rtl .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button{
+    margin-left: 15px;
     margin-right: 0;
 }
