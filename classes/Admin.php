@@ -26,6 +26,9 @@ class Admin{
 
 		//Plugin Row Meta
 		add_filter('plugin_row_meta', array($this, 'plugin_row_meta'), 10, 2);
+
+		//Admin Footer Text
+		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 	}
 
 	public function register_menu(){
@@ -400,7 +403,6 @@ class Admin{
 
 	public function plugin_row_meta($plugin_meta, $plugin_file){
 
-
 		if ($plugin_file === tutor()->basename) {
 			$plugin_meta[] = sprintf( '<a href="%s">%s</a>',
 				esc_url( 'https://www.themeum.com/docs/tutor-introduction/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_docs_link' ),
@@ -415,6 +417,30 @@ class Admin{
 		return $plugin_meta;
 	}
 
+	/**
+	 * @param $footer_text
+	 *
+	 * @return string
+	 *
+	 * Add footer text only on tutor pages
+	 */
+	public function admin_footer_text( $footer_text ) {
+		$current_screen = get_current_screen();
+		$tutor_pages       = tutor_utils()->tutor_get_screen_ids();
+
+		/**
+		 * We are making sure that this message will be only on Tutor Admin page
+		 */
+		if ( isset( $current_screen->id ) && apply_filters( 'tutor_display_admin_footer_text', in_array( $current_screen->id, $tutor_pages ) ) ) {
+			$footer_text = sprintf(
+				__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'tutor' ),
+				sprintf( '<strong>%s</strong>', esc_html__( 'Tutor LMS', 'tutor' ) ),
+				'<a href="https://wordpress.org/support/plugin/tutor/reviews?rate=5#new-post" target="_blank" class="tutor-rating-link" data-rated="' .	esc_attr__( 'Thanks :)', 'tutor' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
+			);
+		}
+
+		return $footer_text;
+	}
 
 
 }
