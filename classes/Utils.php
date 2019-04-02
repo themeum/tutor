@@ -1901,7 +1901,7 @@ class Utils {
 
 	public function tutor_student_dashboard_pages(){
 		$nav_items = array(
-			'index' => __('Home', 'tutor'),
+			'index' => __('Dashboard', 'tutor'),
 			'my-courses' => __('My Courses', 'tutor'),
 			'active-courses' => __('Active Courses', 'tutor'),
 			'completed-courses' => __('Completed Courses', 'tutor'),

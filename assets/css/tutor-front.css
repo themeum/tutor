@@ -25,6 +25,7 @@ Most Important CSS
     max-width: 1170px;
     margin-right: auto;
     margin-left: auto;
+    width: 100%;
 }
 .tutor-row{
     display: -ms-flexbox;
