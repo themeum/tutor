@@ -3726,4 +3726,29 @@ class Utils {
 		return is_array($array) && count($array);
 	}
 
+	/**
+	 * @return mixed|void
+	 *
+	 * get all screen ids
+	 */
+	public function tutor_get_screen_ids(){
+		$screen_ids = array(
+			"edit-course",
+			"course",
+			"edit-course-category",
+			"edit-course-tag",
+			"tutor-lms_page_tutor-students",
+			"tutor-lms_page_tutor-instructors",
+			"tutor-lms_page_question_answer",
+			"tutor-lms_page_tutor_quiz_attempts",
+			"tutor-lms_page_tutor-addons",
+			"tutor-lms_page_tutor-status",
+			"tutor-lms_page_tutor_report",
+			"tutor-lms_page_tutor_settings",
+			"tutor-lms_page_tutor_emails",
+		);
+
+		return apply_filters('tutor_get_screen_ids', $screen_ids);
+	}
+
 }
