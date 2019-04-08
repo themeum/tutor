@@ -5,6 +5,7 @@
     --tutor-primary-hover-color: #1b52a9;
     --tutor-text-color: #4B5981;
     --tutor-light-color: #B1B8C9;
+    --tutor-success-button-color: #86B223;
 }
 
 body {
@@ -892,8 +893,8 @@ a.tutor-btn:hover,
     border-color: #E53935;
 }
 .tutor-button.tutor-success{
-    background: #86B223;
-    border-color: #86B223;
+    background: var(--tutor-success-button-color);
+    border-color: var(--tutor-success-button-color);
 }
 
 .course-enrolled-nav-wrap{
@@ -1315,8 +1316,8 @@ Instructor
 }
 .tutor-lessons-under-topic .tutor-single-lesson-items.active .tutor-lesson-right-icons .tutor-lesson-complete.tutor-done,
 .tutor-lessons-under-topic .tutor-lesson-right-icons .tutor-lesson-complete.tutor-done{
-    background: #86B223;
-    border-color: #86B223;
+    background: var(--tutor-success-button-color);
+    border-color: var(--tutor-success-button-color);
     color: #fff;
 }
 .tutor-lessons-under-topic .tutor-lesson-right-icons i{
@@ -1845,9 +1846,8 @@ ul.tutor-required-fields{
     animation: spin 2s infinite linear;
     display: inline-block;
 }
-.loading-lesson:before{
+.loading-lesson .tutor-lesson-video-wrap:before{
     font-family: 'tutor';
-    margin-right: 5px;
     content: "\e91d";
     -webkit-animation: spin 2s infinite linear;
     animation: spin 2s infinite linear;
@@ -1855,17 +1855,25 @@ ul.tutor-required-fields{
     z-index: 9;
     position: absolute;
     left: 50%;
-    top: 150px;
+    top: 50%;
     font-size: 50px;
+    margin-left: -25px;
+    margin-top: -12px;
 }
-.loading-lesson:after {
+.loading-lesson .tutor-lesson-video-wrap:after {
     position: absolute;
     content: "";
     top: 0;
+    left: 0;
     background: rgba(255,255,255, 0.8);
     width: 100%;
-    height: 99%;
+    height: 100%;
 }
+
+.tutor-lesson-video-wrap{
+    position: relative;
+}
+
 /**
 Course question and answer
  */
@@ -2529,8 +2537,8 @@ Course question and answer
 }
 .tutor-login-form-wrap input[type="submit"]{
     color: #fff;
-    background-color: #86B223;
-    border-color: #86B223;
+    background-color: var(--tutor-success-button-color);
+    border-color: var(--tutor-success-button-color);
     display: inline-block;
     padding: 15px 30px;
     border-radius: 4px;
@@ -2676,8 +2684,8 @@ Course question and answer
 }
 
 .tutor-form-group.tutor-reg-form-btn-wrap .tutor-button{
-    background: #86B223;
-    border-color: #86B223;
+    background: var(--tutor-success-button-color);
+    border-color: var(--tutor-success-button-color);
 }
 
 /* ********************* */
