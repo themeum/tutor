@@ -436,9 +436,7 @@ Most Important CSS
 .tutor-course-lesson{
     border-top: 1px solid #DCE4E6;
 }
-.tutor-course-topics-contents .tutor-course-topic .tutor-course-lessons{
-    display: none;
-}
+
 .tutor-course-lesson h5{
     line-height: 22px;
     font-size: 14px;
