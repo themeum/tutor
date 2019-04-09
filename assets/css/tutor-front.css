@@ -251,8 +251,11 @@ Most Important CSS
     margin-right: 40px;
     margin-top: 5px;
     margin-bottom: 5px;
+    min-width: 95px;
 }
-
+.tutor-single-course-meta ul li:last-child{
+    margin-right: 0;
+}
 .tutor-single-course-meta .tutor-single-course-avatar img{
     height: 21px;
     width: 21px;
@@ -337,7 +340,16 @@ Most Important CSS
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between;
+
 }
+
+@media (max-width: 991px) {
+    .tutor-single-course-meta.tutor-lead-meta ul{
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+}
+
 .tutor-single-course-meta.tutor-lead-meta ul li span{
     display: block;
     margin-bottom: 5px;
@@ -480,6 +492,7 @@ Icon Css
 div[class*="tutor-course-col"] {
     padding-left: 15px;
     padding-right: 15px;
+    margin-bottom: 30px;
 }
 .tutor-course-loop{
     background: #fff;
@@ -488,11 +501,14 @@ div[class*="tutor-course-col"] {
     overflow: hidden;
     position: relative;
     vertical-align: top;
-    margin-bottom: 30px;
     border-radius: 4px;
     -webkit-transition: 300ms;
     transition: 300ms;
     border: 1px solid #DCDFE5;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .tutor-course-header{
     position: relative;
@@ -514,12 +530,21 @@ div[class*="tutor-course-col"] {
     font-size: 19px;
     padding: 5px 5px;
     border-radius: 3px;
+    transition: 300ms;
 }
 
 .tutor-course-loop-header-meta .tutor-course-wishlist a{
     display: block;
     color: var(--tutor-primary-color);
+    transition: 300ms;
 }
+
+.tutor-course-loop-header-meta .tutor-course-wishlist:hover,
+.tutor-course-loop-header-meta .tutor-course-wishlist:hover a{
+    color: #fff;
+    background: var(--tutor-primary-color);
+}
+
 .tutor-course-loop-header-meta .tutor-course-wishlist a:focus{
     outline: none;
 }
@@ -560,6 +585,14 @@ div[class*="tutor-course-col"] {
     color: #F8C51C;
     margin-bottom: 2px;
     font-size: 16px;
+}
+.tutor-rating-count{
+    color: var(--tutor-text-color);
+}
+.tutor-rating-count i{
+    font-style: normal;
+    display: inline-block;
+    margin-left: 5px;
 }
 .tutor-loop-rating-wrap i:before{
     margin-right: 4px;
@@ -764,6 +797,9 @@ div[class*="tutor-course-col"] {
     clear: both;
     margin-bottom: 20px;
 }
+.tutor-course-filter-form{
+    display: inline-block;
+}
 .tutor-course-archive-results-wrap{
     float: left;
     width: 45%;
@@ -783,6 +819,12 @@ div[class*="tutor-course-col"] {
     margin-left: -15px;
     margin-right: -15px;
     padding: 0;
+}
+.tutor-loop-course-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 .clearfix:before, .clearfix:after{
     display: block;
@@ -1539,9 +1581,9 @@ Instructor
 .tutor-progress-bar .tutor-progress-filled:after{
     content: '';
     position: absolute;
-    height: 20px;
-    width: 20px;
-    border: 5px solid var(--tutor-primary-color);
+    height: 15px;
+    width: 15px;
+    border: 7.5px solid var(--tutor-primary-color);
     border-radius: 50%;
     background: #fff;
     left: var(--tutor-progress-left);
@@ -1794,7 +1836,7 @@ ul.tutor-required-fields{
     text-align: left;
 }
 .tutor-star-rating-group i{
-    cursor: pointer;
+    /*cursor: pointer;*/
     margin-right: 4px;
 }
 .tutor-queston-and-answer-wrap{
