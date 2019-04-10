@@ -1906,7 +1906,8 @@ class Utils {
 
 	public function tutor_dashboard_pages(){
 		$nav_items = array(
-			'index'             => __('Home', 'tutor'),
+
+			'index'             => __('Dashboard', 'tutor'),
 			'my-profile'        => __('My Profile', 'tutor'),
 			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
 			'my-courses'        => __('My Courses', 'tutor'),
@@ -1919,6 +1920,8 @@ class Utils {
 			'messages'        => __('Messages', 'tutor'),
 			'settings'        => __('Settings', 'tutor'),
 			'logout'        => __('Logout', 'tutor'),
+			'active-courses' => __('Active Courses', 'tutor'),
+			'completed-courses' => __('Completed Courses', 'tutor'),
 		);
 
 		return apply_filters('tutor_dashboard/student/pages', $nav_items);
