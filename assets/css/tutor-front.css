@@ -2180,18 +2180,10 @@ Course question and answer
     margin-bottom: 80px;
 }
 .fill-in-the-blank-field {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    vertical-align: bottom;
-    -webkit-box-align: end;
-    -ms-flex-align: end;
-    align-items: flex-end;
+
 }
 .fill-in-the-blank-field .fill-in-the-blank-text-input {
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 200px;
-    flex: 0 0 200px;
+    display: inline;
     border-top: none;
     border-left: none;
     border-right: none;
@@ -2218,7 +2210,7 @@ Course question and answer
     height: 175px;
     border-radius: 5px;
     box-shadow: none;
-    max-width: 740px;
+    min-width: 740px;
     margin-bottom: 5px;
 }
 .tutor-quiz-answers-wrap textarea:focus{
@@ -2229,7 +2221,7 @@ Course question and answer
 
 .tutor-quiz-answers-wrap p{
     margin: 0;
-    line-height: 20px;
+    line-height: 26px;
 }
 .quiz-answer-input-body .quiz-answer-image-wrap {
     margin-top: 10px;
@@ -2365,7 +2357,7 @@ Course question and answer
     border: 1px solid #D4DADB;
     margin-right: 10px;
     margin-bottom: 10px;
-    max-width: 215px;
+    /*max-width: 215px;*/
     background-color: #fff;
     display: -webkit-inline-box;
     display: -ms-inline-flexbox;
@@ -2465,7 +2457,7 @@ Course question and answer
 .quiz-image-answering-answer {
     margin-right: 10px;
     margin-left: 10px;
-    width: 25%;
+    width: 15%;
 }
 .quiz-image-answering-image-wrap {
     margin-bottom: 20px;
@@ -2477,6 +2469,7 @@ Course question and answer
     box-shadow: none;
     background: transparent;
     border-radius: 2px;
+    height: 42px;
 }
 
 .tutor-quiz-answers-wrap .quiz-image-answering-input-field-wrap input:focus{
@@ -2971,40 +2964,89 @@ Course question and answer
     margin-top: 20px;
 }
 
-/**
-Addon Support
-Course Prerequisites
- */
-.course-prerequisites-warning {
-    background: #fff3dc;
-    padding: 15px;
-    margin-bottom: 20px;
-    color: #5f5b49;
-}
-ul.prerequisites-course-lists{
+
+/* ********************************** */
+/* Addon Support Course Prerequisites */
+/* ********************************** */
+
+.prerequisites-course-lists{
+    padding: 0;
     list-style: none;
 }
-a.prerequisites-course-item {
-    background-color: #f0f0f0;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    margin-bottom: 2px;
-    padding: 10px;
-    position: relative;
-}
-a.prerequisites-course-item span.prerequisites-course-feature-image{
-    max-width: 60px;
-    margin-right: 10px;
-}
-.is-complete-prerequisites-course {
-    position: absolute;
-    background: #51d849;
-    color: #fff;
-    padding: 0 5px;
-    font-size: 12px;
+
+
+.prerequisites-course-lists li a{
+    padding: 13px 15px;
+    border: 1px solid #DCDFE5;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    color: #4B5981;
+    font-size: 16px;
 }
 
+.prerequisites-course-lists li:first-child{
+    padding: 13px 40px 13px 60px;
+    border: 1px solid #f7e5b9;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 14px;
+    background: #fffff5;
+    color: #b39f70;
+    position: absolute;
+}
+
+.prerequisites-course-lists li:first-child > span{
+    position: absolute;
+    left: 20px;
+    top: 15px;
+}
+
+.prerequisites-course-lists li .prerequisites-course-item{
+    display: flex;
+    align-items: center;
+}
+
+.prerequisites-course-feature-image{
+    width: 70px;
+    overflow: hidden;
+    border-radius: 2px;
+}
+
+.prerequisites-course-lists li .prerequisites-course-title{
+    flex-grow: 1;
+    padding-left: 15px;
+    transition: 300ms;
+}
+
+.prerequisites-course-lists li a:hover .prerequisites-course-title{
+    color: var(--tutor-primary-color);
+}
+
+
+.prerequisites-course-checkmark{
+    line-height: 24px;
+    height: 24px;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 107px;
+}
+.prerequisites-course-checkmark i{
+    height: 24px;
+    width: 24px;
+    background: #DBDDDD;
+    color: #DBDDDD;
+    display: inline-block;
+    text-align: center;
+    border-radius: 2px;
+    margin-right: 3px;
+}
+.prerequisites-course-checkmark.is-complete i{
+    background: #86B223;
+    color: #fff;
+}
 
 /*
 social share
