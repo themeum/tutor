@@ -537,10 +537,11 @@ div[class*="tutor-course-col"] {
     transition: 300ms;
 }
 
-.tutor-course-loop-header-meta .tutor-course-wishlist:hover,
+.tutor-course-loop-header-meta .tutor-course-wishlist:hover{
+    background: var(--tutor-primary-color);
+}
 .tutor-course-loop-header-meta .tutor-course-wishlist:hover a{
     color: #fff;
-    background: var(--tutor-primary-color);
 }
 
 .tutor-course-loop-header-meta .tutor-course-wishlist a:focus{
