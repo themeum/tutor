@@ -1930,8 +1930,6 @@ class Utils {
 			'messages'        => __('Messages', 'tutor'),
 			'settings'        => __('Settings', 'tutor'),
 			'logout'        => __('Logout', 'tutor'),
-			'active-courses' => __('Active Courses', 'tutor'),
-			'completed-courses' => __('Completed Courses', 'tutor'),
 		);
 
 		return apply_filters('tutor_dashboard/student/pages', $nav_items);
