@@ -21,6 +21,7 @@ class Rewrite_Rules extends Tutor_Base {
 		$vars[] = 'course_subpage';
 		$vars[] = 'lesson_video';
 		$vars[] = 'tutor_dashboard_page';
+		$vars[] = 'tutor_dashboard_sub_page';
 
 		$enable_public_profile = tutor_utils()->get_option('enable_public_profile');
 		if ($enable_public_profile){
@@ -55,9 +56,13 @@ class Rewrite_Rules extends Tutor_Base {
 		}
 
 		//Student Dashboard URL
-		$dashboard_pages = tutor_utils()->tutor_student_dashboard_pages();
+		$dashboard_pages = tutor_utils()->tutor_dashboard_pages();
 		foreach ($dashboard_pages as $dashboard_key => $dashboard_page){
 			$new_rules["(.+?)/{$dashboard_key}/?$"] ='index.php?pagename='.$wp_rewrite->preg_index(1).'&tutor_dashboard_page=' .$dashboard_key;
+
+			//Sub Page of dashboard sub page
+			$new_rules["(.+?)/{$dashboard_key}/([^/]*)/?$"] ='index.php?pagename='.$wp_rewrite->preg_index(1).'&tutor_dashboard_page='
+			                                                 .$dashboard_key.'&tutor_dashboard_sub_page='.$wp_rewrite->preg_index(2);
 		}
 
 		$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;

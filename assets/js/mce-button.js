@@ -20,7 +20,7 @@ jQuery(document).ready(function($){
                 {
                     text: 'Student Dashboard',
                     onclick: function() {
-                        editor.insertContent('[tutor_student_dashboard]');
+                        editor.insertContent('[tutor_dashboard]');
                     }
                 },{
                     text: 'Instructor Registration Form',

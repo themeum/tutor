@@ -48,7 +48,7 @@ registerBlockType( 'tutor-gutenberg/student-dashboard', {
             url : ajaxurl,
             type : 'POST',
             async: false,
-            data : {shortcode: 'tutor_student_dashboard',  action : 'render_block_tutor'},
+            data : {shortcode: 'tutor_dashboard',  action : 'render_block_tutor'},
             success: function (response) {
                 dataHtml = response.data;
             },

@@ -16,10 +16,10 @@
                 </div>';
         echo $currentInstructorHtml;
 
-		if ($instructors){
+		if (is_array($instructors) && count($instructors)){
 			foreach ($instructors as $instructor){
 				if ($t->ID == $instructor->ID){
-				    break;
+				    continue;
                 }
 				?>
 				<div id="added-instructor-id-<?php echo $instructor->ID; ?>" class="added-instructor-item added-instructor-item-<?php echo $instructor->ID; ?>" data-instructor-id="<?php echo $instructor->ID; ?>">

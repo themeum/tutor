@@ -7,7 +7,6 @@
  * @url https://themeum.com
  */
 
-
 $announcements = tutor_utils()->get_announcements(get_the_ID());
 ?>
 

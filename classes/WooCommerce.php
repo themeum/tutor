@@ -37,9 +37,7 @@ class WooCommerce extends Tutor_Base {
 		add_action('save_post_product', array($this, 'save_wc_product_meta'));
 
 		add_action('tutor_course/single/before/enroll', 'wc_print_notices');
-
 		add_action('woocommerce_new_order_item', array($this, 'course_placing_order'), 10, 3);
-
 
 		/**
 		 * Order Status Hook
@@ -211,8 +209,8 @@ class WooCommerce extends Tutor_Base {
 			$course_enrolled_by_order = array();
 			foreach ($courses_ids as $courses_id){
 				$course_id = str_replace('_tutor_order_for_course_id_', '',$courses_id->meta_key);
-				//array(order_id =>  array('course_id' => $course_id, 'enrolled_id' => enrolled_id))
-				$course_enrolled_by_order[$courses_id->post_id] = array('course_id' => $course_id, 'enrolled_id' => $courses_id->meta_value);
+				//array(order_id =>  array('course_id' => $course_id, 'enrolled_id' => enrolled_id, 'order_id' => $courses_id->post_id))
+				$course_enrolled_by_order[] = array('course_id' => $course_id, 'enrolled_id' => $courses_id->meta_value, 'order_id' => $courses_id->post_id );
 			}
 			return $course_enrolled_by_order;
 		}

@@ -1,5 +1,15 @@
-<h1><?php _e('Completed Course', 'tutor'); ?></h1>
+<h3><?php _e('Completed Course', 'tutor'); ?></h3>
+
 <div class="tutor-dashboard-content-inner">
+
+    <div class="tutor-dashboard-inline-links">
+        <ul>
+            <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('enrolled-courses'); ?>"> <?php _e('All Courses'); ?></a> </li>
+            <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('enrolled-courses/active-courses'); ?>"> <?php _e('Active Courses'); ?> </a> </li>
+            <li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('enrolled-courses/completed-courses'); ?>">
+                    <?php _e('Completed Courses'); ?> </a> </li>
+        </ul>
+    </div>
 
 	<?php
 	$completed_courses = tutor_utils()->get_courses_by_user();
