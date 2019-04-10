@@ -2969,6 +2969,10 @@ Course question and answer
 /* Addon Support Course Prerequisites */
 /* ********************************** */
 
+#tutor-single-entry-content .tutor-course-prerequisites{
+    padding: 60px;
+}
+
 .prerequisites-course-lists{
     padding: 0;
     list-style: none;
@@ -2994,13 +2998,13 @@ Course question and answer
     font-size: 14px;
     background: #fffff5;
     color: #b39f70;
-    position: absolute;
+    position: relative;
 }
 
 .prerequisites-course-lists li:first-child > span{
     position: absolute;
     left: 20px;
-    top: 15px;
+    top: 13px;
 }
 
 .prerequisites-course-lists li .prerequisites-course-item{
