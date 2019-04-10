@@ -426,7 +426,7 @@ class Admin{
 	 */
 	public function admin_footer_text( $footer_text ) {
 		$current_screen = get_current_screen();
-		$tutor_pages       = tutor_utils()->tutor_get_screen_ids();
+		$tutor_pages = tutor_utils()->tutor_get_screen_ids();
 
 		/**
 		 * We are making sure that this message will be only on Tutor Admin page
@@ -435,7 +435,7 @@ class Admin{
 			$footer_text = sprintf(
 				__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'tutor' ),
 				sprintf( '<strong>%s</strong>', esc_html__( 'Tutor LMS', 'tutor' ) ),
-				'<a href="https://wordpress.org/support/plugin/tutor/reviews?rate=5#new-post" target="_blank" class="tutor-rating-link" data-rated="' .	esc_attr__( 'Thanks :)', 'tutor' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
+				'<a href="https://wordpress.org/support/plugin/tutor/reviews?rate=5#new-post" target="_blank" class="tutor-rating-link">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
 			);
 		}
 

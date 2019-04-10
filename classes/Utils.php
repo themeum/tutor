@@ -448,18 +448,23 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_courses_by_instructor($instructor_id){
+	public function get_courses_by_instructor($instructor_id = 0, $post_status = 'publish'){
 		global $wpdb;
 
+		$instructor_id = $this->get_user_id($instructor_id);
 		$course_post_type = tutor()->course_post_type;
+
+		$where_post_status = "AND $wpdb->posts.post_status = 'publish' ";
+		if ($post_status === 'any'){
+			$where_post_status = "";
+		}
 
 		$querystr = "
 	    SELECT $wpdb->posts.* 
 	    FROM $wpdb->posts
 		INNER JOIN {$wpdb->usermeta} ON $wpdb->usermeta.user_id = {$instructor_id} AND $wpdb->usermeta.meta_key = '_tutor_instructor_course_id' AND $wpdb->usermeta.meta_value = $wpdb->posts.ID 
 	
-	    
-	    WHERE $wpdb->posts.post_status = 'publish' 
+	    WHERE 1 = 1 {$where_post_status}
 	    AND $wpdb->posts.post_type = '{$course_post_type}'
 	    AND $wpdb->posts.post_date < NOW()
 	    ORDER BY $wpdb->posts.post_date DESC";
@@ -1792,7 +1797,7 @@ class Utils {
 			foreach ($courses_ids as $courses_id){
 				$course_id = str_replace('_tutor_order_for_course_id_', '',$courses_id->meta_key);
 				//array(order_id =>  array('course_id' => $course_id, 'enrolled_id' => enrolled_id))
-				$course_enrolled_by_order[$courses_id->post_id] = array('course_id' => $course_id, 'enrolled_id' => $courses_id->meta_value);
+				$course_enrolled_by_order[] = array('course_id' => $course_id, 'enrolled_id' => $courses_id->meta_value, 'order_id' => $courses_id->post_id );
 			}
 			return $course_enrolled_by_order;
 		}
@@ -1899,13 +1904,21 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 
-	public function tutor_student_dashboard_pages(){
+	public function tutor_dashboard_pages(){
 		$nav_items = array(
-			'index' => __('Home', 'tutor'),
-			'my-courses' => __('My Courses', 'tutor'),
-			'active-courses' => __('Active Courses', 'tutor'),
-			'completed-courses' => __('Completed Courses', 'tutor'),
-			'wishlist' => __('WishList', 'tutor'),
+			'index'             => __('Home', 'tutor'),
+			'my-profile'        => __('My Profile', 'tutor'),
+			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
+			'my-courses'        => __('My Courses', 'tutor'),
+			'wishlist'          => __('WishList', 'tutor'),
+			'my-reviews'        => __('My Reviews', 'tutor'),
+			'quiz-attempts'        => __('Quiz Attempts', 'tutor'),
+			'earning'        => __('Earning', 'tutor'),
+			'withdraw'        => __('Withdraw', 'tutor'),
+			'purchase-history'        => __('Purchase History', 'tutor'),
+			'messages'        => __('Messages', 'tutor'),
+			'settings'        => __('Settings', 'tutor'),
+			'logout'        => __('Logout', 'tutor'),
 		);
 
 		return apply_filters('tutor_dashboard/student/pages', $nav_items);
@@ -3289,6 +3302,21 @@ class Utils {
 		return false;
 	}
 
+
+	public function get_all_quiz_attempts_by_user($user_id = 0){
+		global $wpdb;
+
+		$user_id = $this->get_user_id($user_id);
+
+		$attempts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id = {$user_id} ");
+
+		if (is_array($attempts) && count($attempts)){
+			return $attempts;
+		}
+
+		return false;
+	}
+
 	/**
 	 * @param string $search_term
 	 *
@@ -3539,7 +3567,7 @@ class Utils {
 	 * Get frontend dashboard URL
 	 */
 	public function tutor_dashboard_url(){
-		$page_id = (int) tutor_utils()->get_option('student_dashboard');
+		$page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
 		$page_id = apply_filters('tutor_dashboard_url', $page_id);
 		return get_the_permalink($page_id);
 	}
@@ -3727,9 +3755,11 @@ class Utils {
 	}
 
 	/**
-	 * @return mixed|void
+	 * @return array
 	 *
 	 * get all screen ids
+	 *
+	 * @since v.1.1.2
 	 */
 	public function tutor_get_screen_ids(){
 		$screen_ids = array(

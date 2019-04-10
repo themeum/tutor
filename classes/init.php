@@ -161,6 +161,21 @@ class init{
 			update_option('tutor_version', '1.0.1');
 		}
 
+		/**
+		 * Backward Compatibility for version < 1.1.2
+		 */
+		if (version_compare(get_option('TUTOR_VERSION'), '1.1.2', '<')){
+			/**
+			 * Adding Student Dashboard in active mode
+			 */
+
+			$this->create_dashboard_page();
+			//Update the tutor version
+			update_option('tutor_version', '1.1.2');
+			//Rewrite Flush
+			update_option('required_rewrite_flush', time());
+		}
+
 	}
 
 	//Run task on deactivation
@@ -365,13 +380,13 @@ class init{
 	 */
 	public static function save_data(){
 		$student_dashboard_args = array(
-			'post_title'    => __('Student Dashboard', 'tutor'),
-			'post_content'  => '[tutor_student_dashboard]',
+			'post_title'    => __('Dashboard', 'tutor'),
+			'post_content'  => '',
 			'post_type'     => 'page',
 			'post_status'   => 'publish',
 		);
 		$student_dashboard_page_id = wp_insert_post( $student_dashboard_args );
-		tutor_utils()->update_option('student_dashboard', $student_dashboard_page_id);
+		tutor_utils()->update_option('tutor_dashboard_page_id', $student_dashboard_page_id);
 
 		$student_registration_args = array(
 			'post_title'    => __('Student Registration', 'tutor'),
@@ -429,6 +444,21 @@ class init{
 			'enable_course_sell_by_woocommerce' => '1',
 		);
 		return $options;
+	}
+
+
+	/**
+	 * Create dasboard page for tutor version 1.1.2
+	 */
+	public function create_dashboard_page(){
+		$student_dashboard_args = array(
+			'post_title'    => __('Dashboard', 'tutor'),
+			'post_content'  => '',
+			'post_type'     => 'page',
+			'post_status'   => 'publish',
+		);
+		$student_dashboard_page_id = wp_insert_post( $student_dashboard_args );
+		tutor_utils()->update_option('tutor_dashboard_page_id', $student_dashboard_page_id);
 	}
 
 

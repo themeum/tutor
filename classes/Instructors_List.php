@@ -18,6 +18,8 @@ class Instructors_List extends \Tutor_List_Table {
 			'plural'    => 'instructors',    //plural name of the listed records
 			'ajax'      => false        //does this table support ajax?
 		) );
+
+		$this->process_bulk_action();
 	}
 
 	function column_default($item, $column_name){
@@ -125,8 +127,6 @@ class Instructors_List extends \Tutor_List_Table {
 
 			//TODO: send E-Mail to this user about instructor approval, should via hook
 			do_action('tutor_after_approved_instructor', $instructor_id);
-
-			wp_redirect(wp_get_referer());
 		}
 
 		if( 'blocked' === $this->current_action() ) {
@@ -140,7 +140,6 @@ class Instructors_List extends \Tutor_List_Table {
 			do_action('tutor_after_blocked_instructor', $instructor_id);
 
 			//TODO: send E-Mail to this user about instructor blocked, should via hook
-			wp_redirect(wp_get_referer());
 		}
 
 		//Detect when a bulk action is being triggered...
@@ -162,7 +161,6 @@ class Instructors_List extends \Tutor_List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array($columns, $hidden, $sortable);
-		$this->process_bulk_action();
 
 		$current_page = $this->get_pagenum();
 

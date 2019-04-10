@@ -101,7 +101,7 @@ Option Field
 .tutor-option-field {
     display: block;
     margin: 0 0 0 200px;
-    max-width: 800px
+    max-width: 800px;
 }
 .tutor-option-field-label {
     display: block;
@@ -132,6 +132,9 @@ Option Field
     width: auto;
     padding: 5px;
     border: 1px solid #CCCCCC;
+}
+.select2-container {
+    min-width: 250px !important;
 }
 /**
 Group Field Option

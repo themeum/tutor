@@ -25,6 +25,7 @@ class Template extends Tutor_Base {
 		add_filter( 'template_include', array($this, 'load_quiz_template'), 99 );
 
 		add_filter( 'template_include', array($this, 'student_public_profile'), 99 );
+		add_filter( 'template_include', array($this, 'tutor_dashboard'), 99 );
 		add_filter( 'pre_get_document_title', array($this, 'student_public_profile_title') );
 
 		add_filter('the_content', array($this, 'convert_static_page_to_template'));
@@ -229,16 +230,16 @@ class Template extends Tutor_Base {
 	 *
 	 * @return mixed
 	 *
-	 * Tutor Dashboard Page, Responsible to show student dashboard
+	 * Tutor Dashboard Page, Responsible to show dashboard stuffs
 	 *
 	 * @since v.1.0.0
 	 */
 	public function convert_static_page_to_template($content){
 		//Student Registration Page
-		$student_dashboard_page_id = (int) tutor_utils()->get_option('student_dashboard');
+		$student_dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
 		if ($student_dashboard_page_id === get_the_ID()){
 			$shortcode = new Shortcode();
-			return $shortcode->tutor_student_dashboard();
+			return $shortcode->tutor_dashboard();
 		}
 
 		//Instructor Registration Page
@@ -255,6 +256,40 @@ class Template extends Tutor_Base {
 		}
 
 		return $content;
+	}
+
+	public function tutor_dashboard($template){
+		global $wp_query;
+
+		if ($wp_query->is_page) {
+			$student_dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
+			if ($student_dashboard_page_id === get_the_ID()) {
+				/**
+				 * Handle if logout URL
+				 * @since v.1.1.2
+				 */
+				if ( ! empty($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_vars['tutor_dashboard_page'] === 'logout'){
+					$redirect = get_permalink($student_dashboard_page_id);
+					wp_logout();
+					wp_redirect($redirect);
+					die();
+				}
+
+				/**
+				 * Load view page based on dashboard Endpoint
+				 */
+				if (is_user_logged_in()) {
+					$template = tutor_get_template( 'dashboard' );
+				}else{
+					$template = tutor_get_template( 'login' );
+				}
+
+
+
+			}
+		}
+
+		return $template;
 	}
 	
 	/**

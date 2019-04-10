@@ -22,7 +22,7 @@ if (isset($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_var
             <div class="tutor-col-3">
                 <ul class="tutor-dashboard-permalinks">
                     <?php
-                    $dashboard_pages = tutor_utils()->tutor_student_dashboard_pages();
+                    $dashboard_pages = tutor_utils()->tutor_dashboard_pages();
                     foreach ($dashboard_pages as $dashboard_key => $dashboard_page){
                         if ($dashboard_key === 'index')
                             $dashboard_key = '';
@@ -36,9 +36,9 @@ if (isset($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_var
                 <div class="tutor-dashboard-content">
                     <?php
                     if ($dashboard_page_slug){
-                        tutor_load_template("dashboard.student.".$wp_query->query_vars['tutor_dashboard_page']);
+                        tutor_load_template("dashboard.".$wp_query->query_vars['tutor_dashboard_page']);
                     }else{
-                        tutor_load_template("dashboard.student.dashboard");
+                        tutor_load_template("dashboard.dashboard");
                     }
                     ?>
                 </div>

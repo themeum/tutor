@@ -288,7 +288,7 @@ class Options {
 								'options'       => $pages,
 								'desc'          => __('Choose the page for student registration page', 'tutor'),
 							),
-							'student_dashboard' => array(
+							'tutor_dashboard_page_id' => array(
 								'type'          => 'select',
 								'label'         => __('Student Dashboard', 'tutor'),
 								'default'       => '0',
@@ -315,6 +315,75 @@ class Options {
 				),
 			),
 
+			'tutor_earning' => array(
+				'label'     => __('Tutor Earning', 'tutor'),
+				'sections'    => array(
+					'general' => array(
+						'label' => __('Earning and commission allocation', 'tutor'),
+						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
+						'fields' => array(
+
+							'enable_tutor_earning' => array(
+								'type'          => 'checkbox',
+								'label'         => __('Enable/Disable', 'tutor'),
+								'label_title'   => __('Enable Instructor Earning and commission allocation', 'tutor'),
+								'default'       => '0',
+								'desc'          => __('You can set commission and generate earning for instructor who interested sell their course with this platform by enabling this feature',	'tutor'),
+							),
+
+							'earning_admin_commission' => array(
+								'type'      => 'number',
+								'label'      => __('Admin / Platform Owner Commission', 'tutor'),
+								'default'   => '20',
+								'desc'  => __('Define the sales commission for admin from every course sell.', 'tutor'),
+							),
+							'earning_instructor_commission' => array(
+								'type'      => 'number',
+								'label'      => __('Instructor Commission', 'tutor'),
+								'default'   => '80',
+								'desc'  => __('Define the sales commission for instructor from every course sell.', 'tutor'),
+							),
+
+
+							'tutor_earning_fees' => array(
+								'type'      => 'group_fields',
+								'label'     => __('Others Fees', 'tutor'),
+								'desc'      => __('Deduct the more fees from the instructor, the deducting process will be, first deduct this fees from total course payment, then commission will be allocation on rest amount.',	'tutor'),
+								'group_fields'  => array(
+
+									'enable_fees_deducting' => array(
+										'type'          => 'checkbox',
+										'label'         => __('Enable Deduct Fees', 'tutor'),
+										'default'       => '0',
+									),
+									'fees_name' => array(
+										'type'      => 'text',
+										'label'         => __('Fees Name', 'tutor'),
+										'default'   => '',
+									),
+									'fees_amount' => array(
+										'type'      => 'number',
+										'label'         => __('Fees Amount', 'tutor'),
+										'default'   => '',
+									),
+									'fees_type' => array(
+										'type'      => 'select',
+										'default'   => 'minutes',
+										'select_options'   => false,
+										'options'   => array(
+											''     =>  __('Select Fees Type', 'tutor'),
+											'percent'     =>  __('Percent', 'tutor'),
+											'fixed'      =>  __('Fixed', 'tutor'),
+										),
+									),
+								),
+							),
+
+
+						),
+					),
+				),
+			),
 
 		);
 
