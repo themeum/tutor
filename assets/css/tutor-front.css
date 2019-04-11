@@ -1144,8 +1144,6 @@ a.tutor-btn:hover,
     }
 }
 
-
-
 .tutor-dashboard-permalinks li a{
     display: block;
     color: var(--tutor-text-color);
@@ -1159,6 +1157,202 @@ a.tutor-btn:hover,
     line-height: 23px;
     margin-bottom: 17px;
 }
+
+/** Earning */
+.tutor-dashboard-earning-info-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+.tutor-dashboard-earning-sum{
+    flex: 0 0 150px;
+    background-color: #f4f4f4;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #dddddd;
+}
+.tutor-dashboard-earning-sum p{
+    margin: 0;
+}
+.tutor-dashboard-earning-sum p.text-small{
+    font-size: 12px;
+    color: #666666;
+}
+
+/** Earning Report */
+.tutor-date-range-filter-wrap{
+    display: flex;
+    margin: 15px 0;
+    font-size: 12px;
+}
+.report-top-sub-menu{
+    margin: 0;
+    flex: 1;
+}
+.report-top-sub-menu a{
+    text-decoration: none;
+    padding: 5px 8px;
+    border: 1px solid #D7DADF;
+    color: #AAAEB3;
+    display: inline-block;
+}
+.report-top-sub-menu a.active {
+    background-color: #3057D5;
+    color: #ffffff;
+    border: 1px solid #3057D5;
+}
+
+.report-date-range-form{
+    display: flex;
+}
+.date-range-input{
+    position: relative;
+    margin-right: 0;
+}
+.date-range-input:last-child{
+    margin-right: 0;
+}
+.date-range-input input, .date-range-input input[type=text]{
+    border: 1px solid #D7DADF;
+    box-shadow: none;
+    line-height: 29px;
+    margin: 0;
+    padding-right: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.date-range-input i.tutor-icon-calendar{
+    position: absolute;
+    right: 10px;
+    top: 7px;
+}
+.date-range-input button{
+    background-color: #3057D5;
+    color: #ffffff;
+    border: none;
+    line-height: 30px;
+    padding: 0 15px;
+}
+.report-download-csv-icon{
+    float: right;
+}
+.report-download-csv-icon a{
+    text-decoration: none;
+}
+table.tutor-dashboard-statement-table p{
+    margin: 0;
+    padding: 0;
+}
+table.tutor-dashboard-statement-table p.small-text {
+    font-size: 12px;
+    color: #666666;
+}
+/** ENd earning report **/
+
+
+/**
+DatePicker
+ */
+.ui-datepicker {
+    background-color: #fff;
+    border: 1px solid #EEEEEE;
+    display: none;
+    margin-top: 4px;
+    padding: 5px;
+    width: 180px;
+}
+.ui-datepicker a,
+.ui-datepicker a:hover {
+    text-decoration: none;
+}
+.ui-datepicker a:hover,
+.ui-datepicker td:hover a {
+    color: #2A6496;
+    -webkit-transition: color 0.1s ease-in-out;
+    -moz-transition: color 0.1s ease-in-out;
+    -o-transition: color 0.1s ease-in-out;
+    transition: color 0.1s ease-in-out;
+}
+.ui-datepicker .ui-datepicker-header {
+    margin-bottom: 4px;
+    text-align: center;
+}
+.ui-datepicker .ui-datepicker-title {
+    font-weight: 700;
+}
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+    cursor: default;
+    font-family: 'tutor';
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-weight: normal;
+    height: 20px;
+    line-height: 1;
+    margin-top: 2px;
+    width: 30px;
+}
+.ui-datepicker .ui-datepicker-prev {
+    float: left;
+    text-align: left;
+}
+.ui-datepicker .ui-datepicker-next {
+    float: right;
+    text-align: right;
+}
+.ui-datepicker .ui-datepicker-prev:before {
+    content: "\e921";
+}
+.ui-datepicker .ui-datepicker-next:before {
+    content: "\e903";
+}
+.ui-datepicker .ui-icon {
+    display: none;
+}
+.ui-datepicker .ui-datepicker-calendar {
+    table-layout: fixed;
+    width: 100%;
+}
+.ui-datepicker .ui-datepicker-calendar th,
+.ui-datepicker .ui-datepicker-calendar td {
+    text-align: center;
+    padding: 0;
+}
+.ui-datepicker .ui-datepicker-calendar td {
+    border-radius: 4px;
+    -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+    -moz-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+    -o-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+    transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+}
+.ui-datepicker .ui-datepicker-calendar td:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+.ui-datepicker .ui-datepicker-calendar td a {
+    text-decoration: none;
+}
+.ui-datepicker .ui-datepicker-current-day {
+    background-color: #4289cc;
+}
+.ui-datepicker .ui-datepicker-current-day a {
+    color: #fff
+}
+.ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
+    background-color: #fff;
+    cursor: default;
+}
+
+.ui-datepicker-calendar .ui-state-default {
+    border: none;
+    background: none;
+}
+.ui-datepicker-calendar .ui-state-default.ui-state-highlight {
+    background: #EEEEEE;
+    padding: 3px;
+    display: block;
+}
+
+/** End DatePicker **/
 
 /*.tutor-dashboard-content-inner:not(:empty){}*/
 

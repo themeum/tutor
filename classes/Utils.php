@@ -1872,14 +1872,17 @@ class Utils {
 	 */
 
 	public function get_enrolled_statuses(){
-		return array (
-			'pending',
-			'processing',
-			'on-hold',
-			'completed',
-			'cancelled',
-			'refunded',
-			'failed',
+		return apply_filters(
+			'tutor_get_enrolled_statuses',
+			array (
+				'pending',
+				'processing',
+				'on-hold',
+				'completed',
+				'cancelled',
+				'refunded',
+				'failed',
+			)
 		);
 	}
 
@@ -3790,6 +3793,166 @@ class Utils {
 		);
 
 		return apply_filters('tutor_get_screen_ids', $screen_ids);
+	}
+
+
+	/**
+	 * @return mixed
+	 *
+	 * get earning transaction completed status
+	 *
+	 * @since v.1.1.2
+	 */
+	public function get_earnings_completed_statuses(){
+		return apply_filters(
+			'tutor_get_earnings_completed_statuses',
+			array (
+				'wc-completed',
+				'completed',
+				'complete',
+			)
+		);
+	}
+
+	/**
+	 * @param int $user_id
+	 * @param array $date_filter
+	 *
+	 * @return array|null|object
+	 *
+	 * Get all time earning sum for an instructor with all commission
+	 *
+	 * @since v.1.1.2
+	 */
+
+	public function get_earning_sum($user_id = 0, $date_filter = array()){
+		global $wpdb;
+
+		$user_id = $this->get_user_id($user_id);
+		$date_query = '';
+		if ($this->count($date_filter)){
+			extract($date_filter);
+
+			if ( ! empty($dataFor)){
+				if ($dataFor === 'yearly'){
+					if (empty($year)){
+						$year = date('Y');
+					}
+					$date_query = "AND YEAR(created_at) = {$year} ";
+				}
+			}else{
+				$date_query = " AND (created_at BETWEEN '{$start_date}' AND '{$end_date}') ";
+			}
+
+		}
+
+		$complete_status = tutor_utils()->get_earnings_completed_statuses();
+		$complete_status = "'".implode("','", $complete_status)."'";
+
+		$earning_sum = $wpdb->get_row("SELECT SUM(course_price_total) as course_price_total, 
+                    SUM(course_price_grand_total) as course_price_grand_total, 
+                    SUM(instructor_amount) as instructor_amount, 
+                    SUM(admin_amount) as admin_amount, 
+                    SUM(deduct_fees_amount)  as deduct_fees_amount
+                    FROM {$wpdb->prefix}tutor_earnings 
+                    WHERE user_id = {$user_id} AND order_status IN({$complete_status}) {$date_query} ");
+
+		if ( ! $earning_sum->course_price_total){
+			$earning_sum = (object) array(
+				'course_price_total'        => 0,
+				'course_price_grand_total'  => 0,
+				'instructor_amount'         => 0,
+				'admin_amount'              => 0,
+				'deduct_fees_amount'        => 0,
+			);
+		}
+
+		return $earning_sum;
+	}
+
+	/**
+	 * @param int $user_id
+	 * @param array $date_filter
+	 *
+	 * @return array|null|object
+	 *
+	 * Get earning statements
+	 *
+	 * @since v.1.1.2
+	 */
+	public function get_earning_statements($user_id = 0, $filter_data = array()){
+		global $wpdb;
+
+		$user_id = $this->get_user_id($user_id);
+		$date_query = '';
+		$query_by_status = '';
+
+		/**
+		 * Query by Date Filter
+		 */
+		if ($this->count($filter_data)){
+			extract($filter_data);
+
+			if ( ! empty($dataFor)){
+				if ($dataFor === 'yearly'){
+					if (empty($year)){
+						$year = date('Y');
+					}
+					$date_query = "AND YEAR(created_at) = {$year} ";
+				}
+			}else{
+				$date_query = " AND (created_at BETWEEN '{$start_date}' AND '{$end_date}') ";
+			}
+
+			/**
+			 * Query by order status related to this earning transaction
+			 */
+			if ($this->count($statuses)){
+				$status = "'".implode("','", $statuses)."'";
+				$query_by_status = "AND order_status IN({$status})";
+			}elseif ($statuses === 'completed'){
+
+				$get_earnings_completed_statuses = $this->get_earnings_completed_statuses();
+				if ($this->count($get_earnings_completed_statuses)) {
+					$status          = "'" . implode( "','", $get_earnings_completed_statuses) . "'";
+					$query_by_status = "AND order_status IN({$status})";
+				}
+			}
+
+		}
+
+
+
+		$query = $wpdb->get_results("SELECT earning_tbl.*, course.post_title as course_title
+					FROM {$wpdb->prefix}tutor_earnings earning_tbl
+					LEFT JOIN {$wpdb->posts} course ON earning_tbl.course_id = course.ID
+
+                    WHERE user_id = {$user_id} {$date_query} {$query_by_status} ORDER BY created_at DESC ");
+
+		return $query;
+	}
+
+	/**
+	 * @param int $price
+	 *
+	 * @return int|string
+	 *
+	 * Get the price format
+	 *
+	 * @since v.1.1.2
+	 */
+
+	public function tutor_price($price = 0){
+		if ( $price > 0){
+
+			if (function_exists('wc_price')){
+				return wc_price($price);
+			}else{
+				return number_format_i18n($price);
+			}
+
+		}
+		return $price;
 	}
 
 }

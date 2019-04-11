@@ -566,4 +566,13 @@ jQuery(document).ready(function($){
         }
     }
 
+    /**
+     * Datepicker initiate
+     *
+     * @since v.1.1.2
+     */
+    if (jQuery.datepicker){
+        $( ".tutor_report_datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
+    }
+
 });

@@ -38,7 +38,7 @@ class Assets{
 	 * Load frontend scripts
 	 */
 	public function frontend_scripts(){
-		global $post;
+		global $post, $wp_query;
 
 		wp_enqueue_editor();
 
@@ -78,6 +78,15 @@ class Assets{
 				$localize_data['best_watch_time'] = $best_watch_time;
 			}
 		}
+
+		/**
+		 * Chart Data
+		 */
+		if ( ! empty($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_vars['tutor_dashboard_page'] === 'earning') {
+			wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/js/Chart.bundle.min.js', array(), tutor()->version );
+			wp_enqueue_script( 'jquery-ui-datepicker' );
+		}
+		//End: chart data
 
 		$localize_data = apply_filters('tutor_localize_data', $localize_data);
 

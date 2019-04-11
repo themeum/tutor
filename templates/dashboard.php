@@ -24,13 +24,15 @@ if (isset($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_var
  */
 if (isset($wp_query->query_vars['tutor_dashboard_sub_page']) && $wp_query->query_vars['tutor_dashboard_sub_page']) {
 	$dashboard_page_name = $wp_query->query_vars['tutor_dashboard_sub_page'];
+	if ($dashboard_page_slug){
+		$dashboard_page_name = $dashboard_page_slug.'/'.$dashboard_page_name;
+    }
 }
 
 $user_id = get_current_user_id();
 $user = get_user_by('ID', $user_id);
 
 do_action('tutor_dashboard/before/wrap'); ?>
-
 
     <div class="tutor-wrap tutor-dashboard tutor-dashboard-student">
         <div class="tutor-container">
