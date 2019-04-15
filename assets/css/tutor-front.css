@@ -1522,7 +1522,38 @@ Instructor
 .single-instructor-wrap .single-instructor-bottom .ratings .rating-generated{
     color: #f8c51c;
 }
-
+.tutor-pagination{
+    margin: 20px 0;
+}
+.tutor-pagination .page-numbers {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 2px 0 0;
+    border: 1px solid #eee;
+    line-height: 1;
+    text-decoration: none;
+    border-radius: 2px;
+}
+.tutor-pagination  .page-numbers.current,
+a.page-numbers:hover {
+    background: #3057D5;
+    border: 1px solid #2544D5;
+    color: #ffffff;
+}
+.tutor-dashboard-pagination-results-stats{
+    margin: 10px 0 30px;
+}
+.statement-address {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #555;
+}
+.statement-order-completed {
+    background: #0eb91b;
+    color: #fff;
+    padding: 2px 5px;
+    border: none;
+}
 /* ***********************      */
 /* Single Lesson  */
 /************************       */

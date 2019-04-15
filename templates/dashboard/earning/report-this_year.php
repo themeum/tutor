@@ -57,7 +57,7 @@ for ($m=1; $m<=12; $m++) {
 }
 $chartData = array_merge($emptyMonths, $monthWiseSales);
 
-$statements = tutor_utils()->get_earning_statements(null, compact('year', 'dataFor', 'statuses'));
+$statements = tutor_utils()->get_earning_statements($user_id, compact('year', 'dataFor', 'statuses'));
 
 
 ?>

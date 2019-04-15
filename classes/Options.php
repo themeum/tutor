@@ -80,6 +80,13 @@ class Options {
 						'label' => __('General', 'tutor'),
 						'desc' => __('General Settings', 'tutor'),
 						'fields' => array(
+							'tutor_dashboard_page_id' => array(
+								'type'          => 'select',
+								'label'         => __('Tutor Dashboard', 'tutor'),
+								'default'       => '0',
+								'options'       => $pages,
+								'desc'          => __('This page will show dashboard related stuff, like my courses, order, earnings, logout etc', 'tutor'),
+							),
 							'enable_public_profile' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Enable Public Profile', 'tutor'),
@@ -288,14 +295,6 @@ class Options {
 								'options'       => $pages,
 								'desc'          => __('Choose the page for student registration page', 'tutor'),
 							),
-							'tutor_dashboard_page_id' => array(
-								'type'          => 'select',
-								'label'         => __('Student Dashboard', 'tutor'),
-								'default'       => '0',
-								'options'       => $pages,
-								'desc'          => __('This page will show students related stuff, like my courses, order, etc', 'tutor'),
-							),
-
 							'students_own_review_show_at_profile' => array(
 								'type'          => 'checkbox',
 								'label'         => __('Show reviews on profile', 'tutor'),
@@ -316,7 +315,7 @@ class Options {
 			),
 
 			'tutor_earning' => array(
-				'label'     => __('Tutor Earning', 'tutor'),
+				'label'     => __('Earning', 'tutor'),
 				'sections'    => array(
 					'general' => array(
 						'label' => __('Earning and commission allocation', 'tutor'),
@@ -343,7 +342,6 @@ class Options {
 								'default'   => '80',
 								'desc'  => __('Define the sales commission for instructor from every course sell.', 'tutor'),
 							),
-
 
 							'tutor_earning_fees' => array(
 								'type'      => 'group_fields',
@@ -378,10 +376,31 @@ class Options {
 									),
 								),
 							),
-
+							'statement_show_per_page' => array(
+								'type'      => 'number',
+								'label'      => __('Show Statement Per Page', 'tutor'),
+								'default'   => '20',
+								'desc'  => __('Define the number of statement should show.', 'tutor'),
+							),
 
 						),
 					),
+
+					'withdraw' => array(
+						'label' => __('Withdraw', 'tutor'),
+						'desc' => __('Set withdraw settings', 'tutor'),
+						'fields' => array(
+
+							'min_withdraw_amount' => array(
+								'type'      => 'number',
+								'label'     => __('Minimum Withdraw Amount', 'tutor'),
+								'default'   => '80',
+								'desc'      => __('Define the withdraw amount, anyone can make withdraw request if their earning above or equal this amount.',	'tutor'),
+							),
+
+						),
+					),
+
 				),
 			),
 

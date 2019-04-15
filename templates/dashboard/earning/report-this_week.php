@@ -67,7 +67,7 @@ foreach ($chartData as $key => $salesCount){
 	$chartData[$formatDate] = $salesCount;
 }
 
-$statements = tutor_utils()->get_earning_statements(null, compact('start_date', 'end_date', 'statuses'));
+$statements = tutor_utils()->get_earning_statements($user_id, compact('start_date', 'end_date', 'statuses'));
 ?>
 
     <div class="tutor-dashboard-earning-info-row">

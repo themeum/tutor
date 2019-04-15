@@ -3883,9 +3883,14 @@ class Utils {
 	public function get_earning_statements($user_id = 0, $filter_data = array()){
 		global $wpdb;
 
-		$user_id = $this->get_user_id($user_id);
+		$user_sql = "";
+		if ($user_id){
+			$user_sql = " AND user_id='{$user_id}' ";
+		}
+
 		$date_query = '';
 		$query_by_status = '';
+		$pagination_query = '';
 
 		/**
 		 * Query by Date Filter
@@ -3907,29 +3912,44 @@ class Utils {
 			/**
 			 * Query by order status related to this earning transaction
 			 */
-			if ($this->count($statuses)){
-				$status = "'".implode("','", $statuses)."'";
-				$query_by_status = "AND order_status IN({$status})";
-			}elseif ($statuses === 'completed'){
-
-				$get_earnings_completed_statuses = $this->get_earnings_completed_statuses();
-				if ($this->count($get_earnings_completed_statuses)) {
-					$status          = "'" . implode( "','", $get_earnings_completed_statuses) . "'";
+			if ( ! empty($statuses)) {
+				if ( $this->count( $statuses ) ) {
+					$status          = "'" . implode( "','", $statuses ) . "'";
 					$query_by_status = "AND order_status IN({$status})";
+				} elseif ( $statuses === 'completed' ) {
+
+					$get_earnings_completed_statuses = $this->get_earnings_completed_statuses();
+					if ( $this->count( $get_earnings_completed_statuses ) ) {
+						$status          = "'" . implode( "','", $get_earnings_completed_statuses ) . "'";
+						$query_by_status = "AND order_status IN({$status})";
+					}
 				}
 			}
 
+			if ( ! empty($per_page)){
+				$offset = (int) ! empty($offset) ? $offset : 0;
+
+				$pagination_query = " LIMIT {$offset}, {$per_page}  ";
+
+			}
+
+
 		}
-
-
 
 		$query = $wpdb->get_results("SELECT earning_tbl.*, course.post_title as course_title
 					FROM {$wpdb->prefix}tutor_earnings earning_tbl
 					LEFT JOIN {$wpdb->posts} course ON earning_tbl.course_id = course.ID
+                    WHERE 1=1 {$user_sql} {$date_query} {$query_by_status} ORDER BY created_at DESC {$pagination_query} ");
 
-                    WHERE user_id = {$user_id} {$date_query} {$query_by_status} ORDER BY created_at DESC ");
 
-		return $query;
+		$query_count = (int) $wpdb->get_var("SELECT COUNT(earning_tbl.earning_id)
+					FROM {$wpdb->prefix}tutor_earnings earning_tbl
+                    WHERE 1=1 {$user_sql} {$date_query} {$query_by_status} ORDER BY created_at DESC ");
+
+		return (object) array(
+			'count' => $query_count,
+			'results' => $query,
+		);
 	}
 
 	/**
