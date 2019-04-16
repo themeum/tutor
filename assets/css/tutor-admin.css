@@ -963,22 +963,29 @@ Quiz Modal
 #tutor-quiz-modal-tab-items-wrap {
     background-color: #fff;
     font-size: 0;
+    overflow: hidden;
 }
 #tutor-quiz-builder-modal-tabs-container{
     padding: 20px;
-}
-#tutor-quiz-builder-modal-tabs-container .quiz-builder-tab-body{
-    min-height: 300px;
 }
 #tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item{
     padding: 15px 25px;
     display: inline-block;
     color: #393C40;
     border-left: 1px solid #F1F1F1;
-    font-size: 13px;
+    font-size: 14px;
+    overflow: hidden;
+    line-height: 17px;
+    vertical-align: middle;
 }
 #tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item.active{
     background-color: #F1F1F1;
+}
+#tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item i{
+    float: left;
+    font-size: 17px;
+    line-height: 1;
+    margin-right: 5px;
 }
 #tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item.active i{
     color: #3057D5;
@@ -1023,6 +1030,7 @@ Quiz Modal
     margin: 0;
     padding: 10px;
     box-shadow: none;
+    border-radius: 3px;
 }
 .tutor-quiz-builder-form-row input[type="text"], .tutor-quiz-builder-form-row input[type="number"]{
     height: 42px;
@@ -1224,7 +1232,7 @@ a.back-to-quiz-questions-btn {
 }
 .quiz-builder-question-wrap {
     display: flex;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 .quiz-builder-question {
     flex: 1;
