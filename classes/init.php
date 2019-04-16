@@ -35,6 +35,7 @@ class init{
 
 	private $woocommerce;
 	private $edd;
+	private $withdraw;
 
 	function __construct() {
 
@@ -76,6 +77,7 @@ class init{
 		$this->gutenberg = new Gutenberg();
 		$this->woocommerce = new WooCommerce();
 		$this->edd = new TutorEDD();
+		$this->withdraw = new Withdraw();
 
 		do_action('tutor_loaded');
 	}
@@ -102,6 +104,7 @@ class init{
 	}
 
 	public function include_template_functions(){
+		include tutor()->path.'includes/tutor-general-functions.php';
 		include tutor()->path.'includes/tutor-template-functions.php';
 		include tutor()->path.'includes/tutor-template-hook.php';
 	}

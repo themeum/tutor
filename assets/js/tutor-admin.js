@@ -35,14 +35,30 @@ jQuery(document).ready(function($){
                 $form.find('.button').addClass('tutor-updating-message');
             },
             success: function (data) {
-                //
+                if (data.success) {
+                    window.location.reload();
+                }
             },
             complete: function () {
                 $form.find('.button').removeClass('tutor-updating-message');
-                window.location.reload();
             }
         });
     });
+
+    /**
+     * Withdraw nav tabs
+     * @since v.1.1.2
+     */
+    $(document).on('click', '.withdraw-method-nav li a', function(e){
+        e.preventDefault();
+        var tab_page_id = $(this).attr('data-target-id');
+        $('.withdraw-method-form-wrap').hide();
+        $('#'+tab_page_id).show();
+    });
+
+    /**
+     * End Withdraw nav tabs
+     */
 
     function tutor_slider_init(){
         $('.tutor-field-slider').each(function(){

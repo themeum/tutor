@@ -18,9 +18,6 @@ if ( ! $earning_sum){
 	return;
 }
 
-$withdraw_total = 40;
-$balance = $earning_sum->instructor_amount - $withdraw_total;
-
 $user_id = get_current_user_id();
 $complete_status = tutor_utils()->get_earnings_completed_statuses();
 $complete_status = "'".implode("','", $complete_status)."'";
@@ -88,11 +85,13 @@ foreach ($chartData as $key => $salesCount){
 	<div class="tutor-dashboard-earning-info-row">
 
 		<div class="tutor-dashboard-earning-sum">
-			<h3><?php echo tutor_utils()->tutor_price($balance); ?></h3>
+			<h3><?php echo tutor_utils()->tutor_price($earning_sum->balance); ?></h3>
 			<p><?php _e('My Balance', 'tutor'); ?></p>
 		</div>
 
 		<div class="tutor-dashboard-earning-sum">
+
+
 			<h3><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></h3>
 			<p><?php _e('My Earning', 'tutor'); ?></p>
 			<p class="text-small"><?php _e('All time', 'tutor'); ?></p>
@@ -103,6 +102,12 @@ foreach ($chartData as $key => $salesCount){
 			<p><?php _e('All time sales.', 'tutor'); ?></p>
 			<p class="text-small"><?php _e('Based on course price.', 'tutor'); ?></p>
 		</div>
+
+        <div class="tutor-dashboard-earning-sum">
+            <h3><?php echo tutor_utils()->tutor_price($earning_sum->withdraws_amount); ?></h3>
+            <p><?php _e('All time withdraws.', 'tutor'); ?></p>
+            <p class="text-small"><?php _e('All of withdraw type excluding rejected.', 'tutor'); ?></p>
+        </div>
 
 		<div class="tutor-dashboard-earning-sum">
 			<h3><?php echo tutor_utils()->tutor_price($earning_sum->admin_amount); ?></h3>

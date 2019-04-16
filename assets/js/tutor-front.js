@@ -575,4 +575,15 @@ jQuery(document).ready(function($){
         $( ".tutor_report_datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
     }
 
+    $(document).on('click', '.withdraw-method-select-input', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var method_id = $that.closest('.withdraw-method-select').attr('data-withdraw-method');
+
+        $('.withdraw-method-form').hide();
+        $('#withdraw-method-form-'+method_id).show();
+
+    });
+
 });

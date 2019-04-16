@@ -50,12 +50,16 @@ class Options {
 			exit();
 		}
 
+		do_action('tutor_option_save_before');
+
 		$option = (array) isset($_POST['tutor_option']) ? $_POST['tutor_option'] : array();
 		$option = apply_filters('tutor_option_input', $option);
 		update_option('tutor_option', $option);
 
+		do_action('tutor_option_save_after');
+
 		//re-sync settings
-		init::tutor_activate();
+		//init::tutor_activate();
 
 		wp_send_json_success( array('msg' => __('Option Updated', 'tutor') ) );
 	}
@@ -386,9 +390,22 @@ class Options {
 						),
 					),
 
-					'withdraw' => array(
-						'label' => __('Withdraw', 'tutor'),
-						'desc' => __('Set withdraw settings', 'tutor'),
+
+				),
+			),
+
+
+
+
+
+
+
+
+			'tutor_withdraw' => array(
+				'label'     => __('Withdraw', 'tutor'),
+				'sections'    => array(
+					'general' => array(
+						'label' => __('Earning and commission allocation', 'tutor'),
 						'fields' => array(
 
 							'min_withdraw_amount' => array(
@@ -401,8 +418,22 @@ class Options {
 						),
 					),
 
+					'withdraw_methods' => array(
+						'label' => __('Withdraw Methods', 'tutor'),
+						'desc' => __('Set withdraw settings', 'tutor'),
+					),
+
 				),
 			),
+
+
+
+
+
+
+
+
+
 
 		);
 

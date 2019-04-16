@@ -3843,7 +3843,6 @@ class Utils {
 			}else{
 				$date_query = " AND (created_at BETWEEN '{$start_date}' AND '{$end_date}') ";
 			}
-
 		}
 
 		$complete_status = tutor_utils()->get_earnings_completed_statuses();
@@ -3852,6 +3851,9 @@ class Utils {
 		$earning_sum = $wpdb->get_row("SELECT SUM(course_price_total) as course_price_total, 
                     SUM(course_price_grand_total) as course_price_grand_total, 
                     SUM(instructor_amount) as instructor_amount, 
+                    (SELECT SUM(amount) FROM {$wpdb->prefix}tutor_withdraws WHERE user_id = {$user_id} AND status != 'rejected' ) as 
+                    withdraws_amount,
+                    (SUM(instructor_amount) - (SELECT withdraws_amount) ) as balance,
                     SUM(admin_amount) as admin_amount, 
                     SUM(deduct_fees_amount)  as deduct_fees_amount
                     FROM {$wpdb->prefix}tutor_earnings 
@@ -3862,6 +3864,8 @@ class Utils {
 				'course_price_total'        => 0,
 				'course_price_grand_total'  => 0,
 				'instructor_amount'         => 0,
+				'withdraws_amount'          => 0,
+				'balance'                   => 0,
 				'admin_amount'              => 0,
 				'deduct_fees_amount'        => 0,
 			);
@@ -3963,16 +3967,13 @@ class Utils {
 	 */
 
 	public function tutor_price($price = 0){
-		if ( $price > 0){
-
-			if (function_exists('wc_price')){
-				return wc_price($price);
-			}else{
-				return number_format_i18n($price);
-			}
-
+		if (function_exists('wc_price')){
+			return wc_price($price);
+		}elseif (function_exists('edd_currency_filter')){
+			return edd_currency_filter(edd_format_amount($price));
+		}else{
+			return number_format_i18n($price);
 		}
-		return $price;
 	}
 
 }
