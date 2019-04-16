@@ -271,7 +271,7 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
 			if ($url){
 				return $placeHolderUrl;
 			}
-			$html = '<img src="' . $placeHolderUrl . '" />';
+			$html = sprintf('<img alt="%s" src="' . $placeHolderUrl . '" />', __('Placeholder', 'tutor'));
 		}
 
 		echo $html;

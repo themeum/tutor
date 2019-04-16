@@ -100,9 +100,9 @@ class WooCommerce extends Tutor_Base {
 		if ($product) {
 			ob_start();
 			?>
-			<p class="price">
+			<div class="price">
 				<?php echo $product->get_price_html(); ?>
-			</p>
+			</div>
 			<?php
 			return ob_get_clean();
 		}
