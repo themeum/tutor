@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) )
+	exit;
+
 /**
  * Tutor general Functions
  */
