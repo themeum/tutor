@@ -1161,10 +1161,15 @@ Quiz Modal
     position: absolute;
 }
 i.tutor-icon-block {
-    padding: 5px;
+    padding: 0;
     color: #fff;
     border-radius: 3px;
     margin-right: 2px;
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    text-align: center;
+    line-height: 22px;
 }
 i.tutor-icon-block.tutor-icon-short-ans{
     background-color: #f37512;
@@ -1260,12 +1265,14 @@ a.back-to-quiz-questions-btn {
     background: #fff;
     padding: 10px;
     border: 1px solid #E2E2E2;
+    border-radius: 3px;
 }
 .quiz-builder-question .question-sorting {
     margin-right: 10px;
 }
 .quiz-builder-question .question-title {
     flex: 1;
+    line-height: 22px;
 }
 .quiz-builder-question .question-icon {
     flex: 0 0 170px;
