@@ -28,6 +28,12 @@ class Withdraw {
 
 		add_action('tutor_options_tutor_withdraw_withdraw_methods_before', array($this, 'withdraw_admin_options'));
 		add_action('tutor_option_save_after', array($this, 'withdraw_option_save'));
+
+
+		add_action('wp_ajax_tutor_save_withdraw_account', array($this, 'tutor_save_withdraw_account'));
+		add_action('wp_ajax_tutor_make_an_withdraw', array($this, 'tutor_make_an_withdraw'));
+
+
 	}
 
 
@@ -54,7 +60,7 @@ class Withdraw {
 					),
 
 					'account_number' => array(
-						'type'      => 'number',
+						'type'      => 'text',
 						'label'      => __('Account Number', 'tutor'),
 					),
 
@@ -136,6 +142,11 @@ class Withdraw {
 	}
 
 
+	/**
+	 * Save Withdraw method
+	 *
+	 * @since v.1.2.0
+	 */
 	public function withdraw_option_save(){
 		
 		do_action('tutor_withdraw_options_save_before');
@@ -147,6 +158,114 @@ class Withdraw {
 		do_action('tutor_withdraw_options_save_after');
 
 		
+	}
+
+	/**
+	 * Save Withdraw Method Data
+	 *
+	 * @since v.1.2.0
+	 */
+
+	public function tutor_save_withdraw_account(){
+		//Checking nonce
+		tutor_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
+		$post = $_POST;
+
+		$method = tutor_utils()->avalue_dot('tutor_selected_withdraw_method', $post);
+		if ( ! $method){
+			wp_send_json_error();
+		}
+
+		$method_data = tutor_utils()->avalue_dot("withdraw_method_field.".$method, $post);
+		$available_withdraw_method = tutor_withdrawal_methods();
+
+		if (tutor_utils()->count($method_data)){
+			$saved_data = array();
+			$saved_data['withdraw_method_key'] = $method;
+			$saved_data['withdraw_method_name'] = tutor_utils()->avalue_dot($method.".method_name",  $available_withdraw_method);
+
+			foreach ($method_data as $input_name => $value){
+				$saved_data[$input_name]['value'] = sanitize_text_field($value);
+				$saved_data[$input_name]['label'] = tutor_utils()->avalue_dot($method.".form_fields.{$input_name}.label",  $available_withdraw_method);
+			}
+
+			update_user_meta($user_id, '_tutor_withdraw_method_data', $saved_data);
+		}
+
+		$msg = apply_filters('tutor_withdraw_method_set_success_msg', __('Withdraw account has been set successfully', 'tutor'));
+		wp_send_json_success(array('msg' => $msg ));
+	}
+
+	public function tutor_make_an_withdraw(){
+		global $wpdb;
+
+		//Checking nonce
+		tutor_utils()->checking_nonce();
+
+		do_action('tutor_withdraw_before');
+
+
+		$user_id = get_current_user_id();
+		$post = $_POST;
+
+		$withdraw_amount = sanitize_text_field(tutor_utils()->avalue_dot('tutor_withdraw_amount', $post));
+
+		$earning_sum = tutor_utils()->get_earning_sum();
+		$min_withdraw = tutor_utils()->get_option('min_withdraw_amount');
+
+		$saved_withdraw_account = tutor_utils()->get_user_withdraw_method();
+		$formatted_balance = tutor_utils()->tutor_price($earning_sum->balance);
+		$formatted_min_withdraw_amount = tutor_utils()->tutor_price($min_withdraw);
+
+
+		if ( ! tutor_utils()->count($saved_withdraw_account)){
+			$no_withdraw_method = apply_filters('tutor_no_withdraw_method_msg', __('Please save withdraw method ', 'tutor')  );
+			wp_send_json_error(array('msg' => $no_withdraw_method ));
+		}
+
+		if ($withdraw_amount < $min_withdraw){
+			$required_min_withdraw = apply_filters('tutor_required_min_amount_msg', sprintf(__('Minimum withdraw amount is %s %s %s ', 'tutor') , '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
+			wp_send_json_error(array('msg' => $required_min_withdraw ));
+		}
+
+		if ($earning_sum->balance < $withdraw_amount){
+			$insufficient_balence = apply_filters('tutor_withdraw_insufficient_balance_msg', sprintf(__('Insufficient balance to withdraw, your balance is %s %s %s ', 'tutor'),'<strong>', $formatted_balance, '</strong>' ) );
+
+			wp_send_json_error(array('msg' => $insufficient_balence ));
+		}
+
+
+		$date = date("Y-m-d H:i:s");
+
+		$withdraw_data = apply_filters('tutor_pre_withdraw_data', array(
+			'user_id'       => $user_id,
+			'amount'        => $withdraw_amount,
+			'method_data'   => maybe_serialize($saved_withdraw_account),
+			'status'        => 'pending',
+			'created_at'    => $date,
+		));
+
+		do_action('tutor_insert_withdraw_before', $withdraw_data);
+
+		$wpdb->insert($wpdb->prefix."tutor_withdraws", $withdraw_data);
+		$withdraw_id = $wpdb->insert_id;
+
+		do_action('tutor_insert_withdraw_after', $withdraw_id, $withdraw_data);
+
+
+		/**
+		 * Getting earning and balance data again
+		 */
+		$earning = tutor_utils()->get_earning_sum();
+		$new_available_balance = tutor_utils()->tutor_price($earning->balance);
+
+
+		do_action('tutor_withdraw_after');
+
+		$withdraw_successfull_msg = apply_filters('tutor_withdraw_successful_msg', __('Withdraw has been successful', 'tutor'));
+		wp_send_json_success(array('msg' => $withdraw_successfull_msg, 'available_balance' => $new_available_balance ));
 	}
 
 

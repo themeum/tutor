@@ -3976,4 +3976,46 @@ class Utils {
 		}
 	}
 
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool|mixed
+	 *
+	 * Get withdraw method for a specific
+	 */
+	public function get_user_withdraw_method($user_id = 0){
+		$user_id = $this->get_user_id($user_id);
+
+		$account = get_user_meta($user_id, '_tutor_withdraw_method_data', true);
+		if ($account){
+			return maybe_unserialize($account);
+		}
+
+		return false;
+	}
+
+
+	public function get_withdrawals_history($user_id = 0, $filter = array()){
+		global $wpdb;
+
+		$user_id = $this->get_user_id($user_id);
+
+		$filter = (array) $filter;
+		extract($filter);
+
+		$query_by_status_sql = "";
+		if ( ! empty($status)){
+
+			$status = (array) $status;
+			$status = "'".implode("','", $status)."'";
+
+			$query_by_status_sql = " AND status IN({$status}) ";
+		}
+
+		$results = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE user_id = {$user_id} {$query_by_status_sql} ORDER BY created_at DESC ");
+
+		return $results;
+
+	}
+
 }
