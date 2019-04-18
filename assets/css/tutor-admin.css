@@ -1269,6 +1269,10 @@ a.back-to-quiz-questions-btn {
 }
 .quiz-builder-question .question-sorting {
     margin-right: 10px;
+    line-height: 22px;
+}
+.quiz-builder-question .question-edit-icon{
+    line-height: 22px;
 }
 .quiz-builder-question .question-title {
     flex: 1;
@@ -1279,9 +1283,10 @@ a.back-to-quiz-questions-btn {
 }
 .quiz-builder-qustion-trash a{
     display: block;
-    padding: 10px;
+    padding: 0 10px;
     font-size: 20px;
-    color: #393C40;
+    color: rgba(57, 60, 64, 0.4);
+    line-height: 44px;
 }
 .tutor-quiz-builder-modal-wrap select {
     border: 1px solid #ccc;
