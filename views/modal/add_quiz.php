@@ -113,5 +113,13 @@ if ( ! empty($_POST['tutor_quiz_builder_quiz_id'])){
 
 
     </div>
+    <div class="tutor-quiz-builder-modal-tabs-notice">
+        <?php
+            // TODO: These links are must be updated
+            $knowledge_base_link = sprintf("<a href='%s' target='_blank'>%s</a>", "https://www.themeum.com/docs/tutor-introduction/", __("Knowledge Base", "tutor"));
+            $documentation_link = sprintf("<a href='%s' target='_blank'>%s</a>", "https://www.themeum.com/docs/tutor-introduction/", __("Documentation", "tutor"));
+            printf(__("Need any Help? Please visit our %s and %s.", "tutor"), $knowledge_base_link, $documentation_link);
+        ?>
+    </div>
 
 </div>

@@ -893,9 +893,11 @@ Quiz Modal
     background-color: rgba(0, 0, 0, 0.5);
 }
 .tutor-modal-wrap.show {
-    display: block;
+    display: flex;
     opacity: 1;
     z-index: 99999;
+    align-items: center;
+    justify-content: center;
 }
 .tutor-modal-wrap.loading .tutor-modal-content:before {
     position: absolute;
@@ -909,14 +911,15 @@ Quiz Modal
     background: url("../images/spinner.gif") no-repeat center center; }
 .tutor-modal-wrap .tutor-modal-content {
     max-height: 90%;
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
     background-color: #fff;
-    max-width: 800px;
-    margin: 50px auto;
+    max-width: 730px;
+    margin: 0;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     position: relative;
     transition: all 200ms ease-out;
+    width: 90%;
 }
 .tutor-modal-wrap .modal-footer {
     padding: 20px;
@@ -1059,7 +1062,16 @@ Quiz Modal
 #quiz-builder-tab-quiz-info input[type="text"], #quiz-builder-tab-quiz-info textarea{
     width: 100%;
 }
-
+.tutor-quiz-builder-modal-tabs-notice{
+    background: #D8D8D8;
+    line-height: 20px;
+    padding: 10px 30px;
+    color: #A4A4A4;
+}
+#tutor-course-topics .tutor-quiz-builder-modal-tabs-notice a{
+    color: #A4A4A4;
+    text-decoration: underline;
+}
 
 .tutor-quiz-builder-modal-control-btn-group{
     display: flex;
@@ -1069,6 +1081,9 @@ Quiz Modal
 }
 .tutor-quiz-builder-modal-control-btn-group .quiz-modal-tab-navigation-btn{
     display: inline-block;
+}
+.tutor-quiz-builder-modal-control-btn-group .quiz-modal-tab-navigation-btn:not(:last-child){
+    margin-right: 6px;
 }
 .modal-container .tutor-quiz-add-question-btn{
     border: 1px solid #C6C9CF;
@@ -1091,7 +1106,6 @@ Quiz Modal
     margin-bottom: 20px;
 }
 .quiz-form-field-col{
-    padding-right: 20px;
     margin-right: 20px;
 }
 .quiz-form-field-col.result-fail{
@@ -1277,9 +1291,13 @@ a.back-to-quiz-questions-btn {
 .quiz-builder-question .question-title {
     flex: 1;
     line-height: 22px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-right: 10px;
 }
 .quiz-builder-question .question-icon {
-    flex: 0 0 170px;
+    flex: 0 0 155px;
 }
 .quiz-builder-qustion-trash a{
     display: block;

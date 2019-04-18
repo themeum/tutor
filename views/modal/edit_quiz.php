@@ -138,14 +138,14 @@ if ( ! $quiz){
 
                     <div class="tutor-quiz-builder-form-row">
                         <div class="tutor-quiz-builder-form-cols-row">
+                            <label><?php _e('Time Limit', 'tutor'); ?></label>
+                        </div>
+                        <div class="tutor-quiz-builder-form-cols-row">
                             <div class="quiz-form-field-col">
-                                <label><?php _e('Time Limit', 'tutor'); ?></label>
                                 <input type="text" name="quiz_option[time_limit][time_value]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ?>">
                             </div>
 
                             <div class="quiz-form-field-col">
-                                <label>&nbsp;</label>
-
 				                <?php $limit_time_type = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_type', 'minutes') ?>
 
                                 <select name="quiz_option[time_limit][time_type]">
@@ -158,8 +158,6 @@ if ( ! $quiz){
                             </div>
 
                             <div class="quiz-form-field-col">
-                                <label>&nbsp;</label>
-
                                 <div class="quiz-form-field-col">
                                     <label class="btn-switch">
                                         <input type="checkbox" value="1" name="quiz_option[hide_quiz_time_display]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_quiz_time_display')); ?> />
@@ -316,6 +314,14 @@ if ( ! $quiz){
 
 
 
+    </div>
+    <div class="tutor-quiz-builder-modal-tabs-notice">
+        <?php
+            // TODO: These links are must be updated
+            $knowledge_base_link = sprintf("<a href='%s' target='_blank'>%s</a>", "#", __("Knowledge Base", "tutor"));
+            $documentation_link = sprintf("<a href='%s' target='_blank'>%s</a>", "#", __("Documentation", "tutor"));
+            printf(__("Need any Help? Please visit our %s and %s.", "tutor"), $knowledge_base_link, $documentation_link);
+        ?>
     </div>
 
 </div>
