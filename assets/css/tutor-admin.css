@@ -1160,10 +1160,15 @@ Quiz Modal
     position: absolute;
 }
 i.tutor-icon-block {
-    padding: 5px;
+    padding: 0;
     color: #fff;
     border-radius: 3px;
     margin-right: 2px;
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    text-align: center;
+    line-height: 22px;
 }
 i.tutor-icon-block.tutor-icon-short-ans{
     background-color: #f37512;
@@ -1259,21 +1264,28 @@ a.back-to-quiz-questions-btn {
     background: #fff;
     padding: 10px;
     border: 1px solid #E2E2E2;
+    border-radius: 3px;
 }
 .quiz-builder-question .question-sorting {
     margin-right: 10px;
+    line-height: 22px;
+}
+.quiz-builder-question .question-edit-icon{
+    line-height: 22px;
 }
 .quiz-builder-question .question-title {
     flex: 1;
+    line-height: 22px;
 }
 .quiz-builder-question .question-icon {
     flex: 0 0 170px;
 }
 .quiz-builder-qustion-trash a{
     display: block;
-    padding: 10px;
+    padding: 0 10px;
     font-size: 20px;
-    color: #393C40;
+    color: rgba(57, 60, 64, 0.4);
+    line-height: 44px;
 }
 .tutor-quiz-builder-modal-wrap select {
     border: 1px solid #ccc;
