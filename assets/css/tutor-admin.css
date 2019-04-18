@@ -511,7 +511,6 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
     background-color: transparent;
 }
 
-
 /*
 
 .tutor-help-tip {
@@ -1729,4 +1728,41 @@ Lesson Edit Modal
     border-color: #faebcc;
     padding: 20px;
     margin-bottom: 10px;
+}
+
+/**
+Withdraw table
+ */
+.withdraw-method-data-row {
+    display: flex;
+}
+span.withdraw-method-label {
+    width: 140px;
+}
+.withdraw-method-value{
+    margin-left: 3px;
+}
+.withdraw-status.withdraw-status-approved {
+    background: #00d63d;
+    color: #fff;
+    padding: 5px 10px;
+}
+.withdraw-status.withdraw-status-pending {
+    background: #f0efef;
+    color: #666666;
+    padding: 5px 10px;
+}
+.withdraw-status.withdraw-status-rejected {
+    background: #ff3842;
+    color: #fff;
+    padding: 5px 10px;
+}
+.withdraw-list-row-actions{
+    font-weight: bold;
+}
+.withdraw-list-row-actions .approved a{
+    color: #00d63d;
+}
+.withdraw-list-row-actions .rejected a{
+    color: #ff3842;
 }

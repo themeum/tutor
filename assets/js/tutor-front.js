@@ -626,6 +626,12 @@ jQuery(document).ready(function($){
      *
      * @since v.1.2.0
      */
+
+    $(document).on('click', 'a.open-withdraw-form-btn', function(e){
+        e.preventDefault();
+        $('.tutor-earning-withdraw-form-wrap').slideToggle();
+    });
+
     $(document).on('submit', '#tutor-earning-withdraw-form', function(e){
         e.preventDefault();
 
