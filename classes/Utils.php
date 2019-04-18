@@ -1924,7 +1924,7 @@ class Utils {
 			'my-profile'        => __('My Profile', 'tutor'),
 			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
 			'my-courses'        => __('My Courses', 'tutor'),
-			'wishlist'          => __('WishList', 'tutor'),
+			'wishlist'          => __('Wishlist', 'tutor'),
 			'my-reviews'        => __('My Reviews', 'tutor'),
 			'quiz-attempts'        => __('Quiz Attempts', 'tutor'),
 			'earning'        => __('Earning', 'tutor'),
@@ -3998,23 +3998,57 @@ class Utils {
 	public function get_withdrawals_history($user_id = 0, $filter = array()){
 		global $wpdb;
 
-		$user_id = $this->get_user_id($user_id);
-
 		$filter = (array) $filter;
 		extract($filter);
 
 		$query_by_status_sql = "";
-		if ( ! empty($status)){
+		$query_by_user_sql = "";
+		$query_by_pagination = "";
 
+		if ( ! empty($status)){
 			$status = (array) $status;
 			$status = "'".implode("','", $status)."'";
 
 			$query_by_status_sql = " AND status IN({$status}) ";
 		}
 
-		$results = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE user_id = {$user_id} {$query_by_status_sql} ORDER BY created_at DESC ");
+		if ( ! empty($per_page)){
+			if ( empty($start))
+				$start = 0;
 
-		return $results;
+			$query_by_pagination = " LIMIT {$start}, {$per_page} ";
+		}
+
+		if ($user_id){
+			$query_by_user_sql = " AND user_id = {$user_id} ";
+		}
+
+
+		$count = (int) $wpdb->get_var("SELECT COUNT(withdraw_id) FROM {$wpdb->prefix}tutor_withdraws WHERE 1=1 {$query_by_user_sql} {$query_by_status_sql} ");
+
+		$results = $wpdb->get_results("SELECT withdraw_tbl.*, 
+		user_tbl.display_name as user_name, 
+		user_tbl.user_email 
+		FROM {$wpdb->prefix}tutor_withdraws withdraw_tbl 
+		INNER JOIN {$wpdb->users} user_tbl ON withdraw_tbl.user_id = user_tbl.ID
+		WHERE 1=1 
+		{$query_by_user_sql} 
+		{$query_by_status_sql} ORDER BY 
+		created_at DESC  {$query_by_pagination} ");
+
+		$withdraw_history = array(
+			'count' => 0,
+			'results' => null,
+		);
+
+		if ($count){
+			$withdraw_history['count'] = $count;
+		}
+
+		if (tutor_utils()->count($results)){
+			$withdraw_history['results'] = $results;
+		}
+		return (object) $withdraw_history;
 
 	}
 

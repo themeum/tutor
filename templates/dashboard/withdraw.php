@@ -4,6 +4,8 @@ $min_withdraw = tutor_utils()->get_option('min_withdraw_amount');
 
 $saved_account = tutor_utils()->get_user_withdraw_method();
 $withdraw_method_name = tutor_utils()->avalue_dot('withdraw_method_name', $saved_account);
+
+$user_id = get_current_user_id();
 ?>
 
 <div class="tutor-dashboard-content-inner">
@@ -71,7 +73,7 @@ $withdraw_method_name = tutor_utils()->avalue_dot('withdraw_method_name', $saved
 	if ($earning_sum->balance >= $min_withdraw && $withdraw_method_name){
 		?>
 
-        <div class="tutor-earning-withdraw-form-wrap">
+        <div class="tutor-earning-withdraw-form-wrap" style="display: none;">
 
             <form id="tutor-earning-withdraw-form" action="" method="post">
 				<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
@@ -104,7 +106,8 @@ $withdraw_method_name = tutor_utils()->avalue_dot('withdraw_method_name', $saved
 
 	<?php
 	$withdraw_pending_histories = tutor_utils()->get_withdrawals_history(null, array('status' => array('pending')));
-	$withdraw_completed_histories = tutor_utils()->get_withdrawals_history(null, array('status' => array('completed')));
+	$withdraw_completed_histories = tutor_utils()->get_withdrawals_history(null, array('status' => array('approved')));
+	$withdraw_rejected_histories = tutor_utils()->get_withdrawals_history(null, array('status' => array('rejected')));
 	?>
 
     <div class="withdraw-history-table-wrap">
@@ -113,7 +116,7 @@ $withdraw_method_name = tutor_utils()->avalue_dot('withdraw_method_name', $saved
         </div>
 
 		<?php
-		if (tutor_utils()->count($withdraw_pending_histories)){
+		if (tutor_utils()->count($withdraw_pending_histories->results)){
 			?>
             <table class="withdrawals-history">
                 <thead>
@@ -124,7 +127,7 @@ $withdraw_method_name = tutor_utils()->avalue_dot('withdraw_method_name', $saved
                 </tr>
                 </thead>
 				<?php
-				foreach ($withdraw_pending_histories as $withdraw_history){
+				foreach ($withdraw_pending_histories->results as $withdraw_history){
 					?>
                     <tr>
                         <td><?php echo tutor_utils()->tutor_price($withdraw_history->amount); ?></td>
@@ -152,8 +155,6 @@ $withdraw_method_name = tutor_utils()->avalue_dot('withdraw_method_name', $saved
 		}
 		?>
     </div>
-
-
 
     <div class="withdraw-history-table-wrap">
         <div class="withdraw-history-table-title">
@@ -161,18 +162,19 @@ $withdraw_method_name = tutor_utils()->avalue_dot('withdraw_method_name', $saved
         </div>
 
 		<?php
-		if (tutor_utils()->count($withdraw_completed_histories)){
+		if (tutor_utils()->count($withdraw_completed_histories->results)){
 			?>
             <table class="withdrawals-history">
                 <thead>
                 <tr>
                     <th><?php _e('Amount', 'tutor') ?></th>
                     <th><?php _e('Withdraw Method', 'tutor') ?></th>
-                    <th><?php _e('Date', 'tutor') ?></th>
+                    <th><?php _e('Requested At', 'tutor') ?></th>
+                    <th><?php _e('Approved At', 'tutor') ?></th>
                 </tr>
                 </thead>
 				<?php
-				foreach ($withdraw_completed_histories as $withdraw_history){
+				foreach ($withdraw_completed_histories->results as $withdraw_history){
 					?>
                     <tr>
                         <td><?php echo tutor_utils()->tutor_price($withdraw_history->amount); ?></td>
@@ -187,6 +189,14 @@ $withdraw_method_name = tutor_utils()->avalue_dot('withdraw_method_name', $saved
 							echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($withdraw_history->created_at));
 							?>
                         </td>
+
+                        <td>
+                            <?php
+                            if ($withdraw_history->updated_at){
+	                            echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($withdraw_history->updated_at));
+                            }
+                            ?>
+                        </td>
                     </tr>
 					<?php
 				}
@@ -195,12 +205,67 @@ $withdraw_method_name = tutor_utils()->avalue_dot('withdraw_method_name', $saved
 			<?php
 		}else{
 			?>
-            <p><?php _e('No withdrawals pending yet', 'tutor'); ?></p>
+            <p><?php _e('No withdrawals completed yet', 'tutor'); ?></p>
 			<?php
 		}
 		?>
     </div>
 
+
+    <div class="withdraw-history-table-wrap">
+        <div class="withdraw-history-table-title">
+            <h4> <?php _e('Rejected Withdrawals', 'tutor'); ?></h4>
+        </div>
+
+		<?php
+		if (tutor_utils()->count($withdraw_rejected_histories->results)){
+			?>
+            <table class="withdrawals-history">
+                <thead>
+                <tr>
+                    <th><?php _e('Amount', 'tutor') ?></th>
+                    <th><?php _e('Withdraw Method', 'tutor') ?></th>
+                    <th><?php _e('Requested At', 'tutor') ?></th>
+                    <th><?php _e('Rejected At', 'tutor') ?></th>
+                </tr>
+                </thead>
+				<?php
+				foreach ($withdraw_rejected_histories->results as $withdraw_history){
+					?>
+                    <tr>
+                        <td><?php echo tutor_utils()->tutor_price($withdraw_history->amount); ?></td>
+                        <td>
+							<?php
+							$method_data = maybe_unserialize($withdraw_history->method_data);
+							echo tutor_utils()->avalue_dot('withdraw_method_name', $method_data)
+							?>
+                        </td>
+                        <td>
+							<?php
+							echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($withdraw_history->created_at));
+							?>
+                        </td>
+
+                        <td>
+							<?php
+							if ($withdraw_history->updated_at){
+								echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($withdraw_history->updated_at));
+							}
+							?>
+                        </td>
+                    </tr>
+					<?php
+				}
+				?>
+            </table>
+			<?php
+		}else{
+			?>
+            <p><?php _e('No withdrawals rejected yet', 'tutor'); ?></p>
+			<?php
+		}
+		?>
+    </div>
 
 
 </div>

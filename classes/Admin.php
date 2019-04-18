@@ -55,6 +55,7 @@ class Admin{
 		add_submenu_page('tutor', __('Q & A', 'tutor'), __('Q & A '.$unanswered_bubble, 'tutor'), 'manage_tutor_instructor', 'question_answer', array($this, 'question_answer') );
 
 		add_submenu_page('tutor', __('Quiz Attempts', 'tutor'), __('Quiz Attempts', 'tutor'), 'manage_tutor_instructor', 'tutor_quiz_attempts',array($this, 'quiz_attempts') );
+		add_submenu_page('tutor', __('Withdraw Requests', 'tutor'), __('Withdraw Requests', 'tutor'), 'manage_tutor_instructor', 'tutor_withdraw_requests', array($this, 'withdraw_requests') );
 
 		//add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(),'addons_page') );
 
@@ -95,6 +96,15 @@ class Admin{
 
 	public function quiz_attempts(){
 		include tutor()->path.'views/pages/quiz_attempts.php';
+	}
+
+	/**
+	 * Show the withdraw requests table
+	 *
+	 * @since v.1.2.0
+	 */
+	public function withdraw_requests(){
+		include tutor()->path.'views/pages/withdraw_requests.php';
 	}
 
 	public function enable_disable_addons(){
