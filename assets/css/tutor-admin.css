@@ -909,7 +909,7 @@ Quiz Modal
     background: url("../images/spinner.gif") no-repeat center center; }
 .tutor-modal-wrap .tutor-modal-content {
     max-height: 90%;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     background-color: #fff;
     max-width: 800px;
