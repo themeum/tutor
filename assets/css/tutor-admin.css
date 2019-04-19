@@ -1093,6 +1093,8 @@ Quiz Modal
 }
 .modal-container .tutor-quiz-add-question-btn i{
     color: #3057D5;
+    line-height: 16px;
+    margin-right: 3px;
 }
 .tutor-quiz-builder-modal-wrap label {
     font-size: 14px;
@@ -1284,6 +1286,10 @@ a.back-to-quiz-questions-btn {
     margin-right: 10px;
     line-height: 22px;
 }
+.quiz-builder-question .question-sorting i{
+    display: block;
+    line-height: 24px;
+}
 .quiz-builder-question .question-edit-icon{
     line-height: 22px;
 }
@@ -1300,7 +1306,7 @@ a.back-to-quiz-questions-btn {
 }
 .quiz-builder-qustion-trash a{
     display: block;
-    padding: 0 10px;
+    padding: 0 0 0 10px;
     font-size: 20px;
     color: rgba(57, 60, 64, 0.4);
     line-height: 44px;
