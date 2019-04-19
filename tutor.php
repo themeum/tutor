@@ -67,16 +67,16 @@ function tutor_utils(){
 	return new \TUTOR\Utils();
 }
 
-
 //$tutor = new \TUTOR\init();
 //$tutor->run(); //Boom
 
 /**
- * @return null|Tutor
+ * @return null|\TUTOR\Tutor
  *
  * @since v.1.2.0
  */
-function TUTOR_RUN(){
-	return Tutor::instance();
+
+function tutor_lms(){
+	return \TUTOR\Tutor::instance();
 }
-$GLOBALS['tutor'] = TUTOR_RUN();
+$GLOBALS['tutor'] = tutor_lms();
