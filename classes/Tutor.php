@@ -1,5 +1,5 @@
 <?php
-//namespace TUTOR;
+namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
@@ -81,28 +81,28 @@ final class Tutor{
 
 		do_action('tutor_before_load');
 
-		$this->post_types = new \TUTOR\Post_types();
-		$this->assets = new \TUTOR\Assets();
-		$this->admin = new \TUTOR\Admin();
-		$this->ajax = new \TUTOR\Ajax();
-		$this->options = new \TUTOR\Options();
-		$this->shortcode = new \TUTOR\Shortcode();
-		$this->course = new \TUTOR\Course();
-		$this->lesson = new \TUTOR\Lesson();
-		$this->rewrite_rules = new \TUTOR\Rewrite_Rules();
-		$this->template = new \TUTOR\Template();
-		$this->instructor = new  \TUTOR\Instructor();
-		$this->student = new \TUTOR\Student();
-		$this->q_and_a = new \TUTOR\Q_and_A();
-		$this->quiz = new \TUTOR\Quiz();
-		$this->question = new \TUTOR\Question();
-		$this->tools = new \TUTOR\Tools();
-		$this->user = new \TUTOR\User();
-		$this->theme_compatibility = new \TUTOR\Theme_Compatibility();
-		$this->gutenberg = new \TUTOR\Gutenberg();
-		$this->woocommerce = new \TUTOR\WooCommerce();
-		$this->edd = new \TUTOR\TutorEDD();
-		$this->withdraw = new \TUTOR\Withdraw();
+		$this->post_types = new Post_types();
+		$this->assets = new Assets();
+		$this->admin = new Admin();
+		$this->ajax = new Ajax();
+		$this->options = new Options();
+		$this->shortcode = new Shortcode();
+		$this->course = new Course();
+		$this->lesson = new Lesson();
+		$this->rewrite_rules = new Rewrite_Rules();
+		$this->template = new Template();
+		$this->instructor = new  Instructor();
+		$this->student = new Student();
+		$this->q_and_a = new Q_and_A();
+		$this->quiz = new Quiz();
+		$this->question = new Question();
+		$this->tools = new Tools();
+		$this->user = new User();
+		$this->theme_compatibility = new Theme_Compatibility();
+		$this->gutenberg = new Gutenberg();
+		$this->woocommerce = new WooCommerce();
+		$this->edd = new TutorEDD();
+		$this->withdraw = new Withdraw();
 
 		/**
 		 * Run Method
