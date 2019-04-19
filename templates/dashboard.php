@@ -55,29 +55,24 @@ do_action('tutor_dashboard/before/wrap'); ?>
                                     <h4><?php _e('Howdy,', 'tutor'); ?> <strong><?php echo $user->display_name; ?></strong> </h4>
                                 </div>
 
+                                <!--
                                 <div class="tutor-dashboard-header-stats">
-
                                     <div class="tutor-dashboard-header-social-wrap">
                                         <a href=""><i class="tutor-icon-facebook"></i> </a>
                                         <a href=""><i class="tutor-icon-twitter"></i> </a>
                                         <a href=""><i class="tutor-icon-youtube"></i> </a>
                                     </div>
-
                                     <div class="tutor-dashboard-header-ratings">
-
 						                <?php
-						                tutor_utils()->star_rating_generator('4.6');
-						                ?>
+/*						                tutor_utils()->star_rating_generator('4.6');
+						                */?>
                                         <span>4.6</span>
-
-                                        <span> (<?php _e(sprintf('%d Ratings', 172), 'tutor') ?>) </span>
+                                        <span> (<?php /*_e(sprintf('%d Ratings', 172), 'tutor') */?>) </span>
                                     </div>
-
                                     <div class="tutor-dashboard-header-notifications">
-                                        <p class="tutor-notification-text"><?php _e('Notification'); ?> <span>9</span> </p>
+                                        <p class="tutor-notification-text"><?php /*_e('Notification'); */?> <span>9</span> </p>
                                     </div>
-
-                                </div>
+                                </div>-->
 
                             </div>
 

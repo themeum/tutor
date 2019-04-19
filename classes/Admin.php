@@ -176,7 +176,7 @@ class Admin{
 	}
 
 	/**
-	 * Prevent unauthorised post edit page by direct URL
+	 * Prevent unauthorised course/lesson edit page by direct URL
 	 *
 	 * @since v.1.0.0
 	 */
@@ -188,9 +188,11 @@ class Admin{
 		if (! empty($_GET['post']) ) {
 			$get_post_id = (int) sanitize_text_field($_GET['post']);
 			$get_post = get_post($get_post_id);
+			$tutor_post_types = array(tutor()->course_post_type, tutor()->lesson_post_type);
+
 			$current_user = get_current_user_id();
 
-			if ($get_post->post_author != $current_user){
+			if (in_array($get_post->post_type, $tutor_post_types) &&  $get_post->post_author != $current_user){
 				global $wpdb;
 
 				$get_assigned_courses_ids = (int) $wpdb->get_var("SELECT user_id from {$wpdb->usermeta} WHERE user_id = {$current_user} AND meta_key = '_tutor_instructor_course_id' AND meta_value = {$get_post_id} ");
@@ -379,7 +381,7 @@ class Admin{
 
 			//Deleting Table
 			$prefix = $wpdb->prefix;
-			/**D*/ $wpdb->query("DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers ");
+			/**D*/ $wpdb->query("DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers, {$prefix}tutor_earnings, {$prefix}tutor_withdraws ");
 
 			deactivate_plugins($plugin_file);
 		}
