@@ -58,11 +58,25 @@ if ( ! function_exists('tutor')) {
 		return (object) $info;
 	}
 }
-include 'classes/init.php';
+
+if ( ! class_exists('Tutor')){
+	include_once 'classes/Tutor.php';
+}
 
 function tutor_utils(){
 	return new \TUTOR\Utils();
 }
 
-$tutor = new \TUTOR\init();
-$tutor->run(); //Boom
+
+//$tutor = new \TUTOR\init();
+//$tutor->run(); //Boom
+
+/**
+ * @return null|Tutor
+ *
+ * @since v.1.2.0
+ */
+function TUTOR_RUN(){
+	return Tutor::instance();
+}
+$GLOBALS['tutor'] = TUTOR_RUN();
