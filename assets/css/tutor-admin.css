@@ -1176,7 +1176,14 @@ Quiz Modal
 
 .tutor-quiz-builder-modal-control-btn-group{
     display: flex;
+    margin-top: 20px;
 }
+
+.question_form_inner{
+    padding: 0 20px 20px;
+    margin-top: 0;
+}
+
 .tutor-quiz-builder-modal-control-btn-group .quiz-builder-btn-group-left {
     flex: 1;
 }
@@ -1252,6 +1259,8 @@ label.btn-switch input:checked + .btn-slider {
     background-color: #fff;
     display: flex;
     cursor: pointer;
+    box-sizing: border-box;
+    border-radius: 3px;
 }
 .tutor-select .select-header .lead-option {
     flex: 1;
