@@ -840,10 +840,10 @@ jQuery(document).ready(function($){
         var quiz_description = $('[name="quiz_description"]').val();
 
         if ( ! quiz_title){
-            $quizTitle.closest('.tutor-quiz-builder-form-row').find('.quiz_form_msg').html('<p class="quiz-form-warning">Please enter quiz title</p>');
+            $quizTitle.closest('.tutor-quiz-builder-group').find('.quiz_form_msg').html('Please enter quiz title');
             return;
         }else{
-            $quizTitle.closest('.tutor-quiz-builder-form-row').find('.quiz_form_msg').html('');
+            $quizTitle.closest('.tutor-quiz-builder-group').find('.quiz_form_msg').html('');
         }
 
 
