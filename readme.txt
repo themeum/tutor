@@ -1,7 +1,7 @@
-=== Tutor - Ultimate WordPress LMS plugin ===
+=== Tutor LMS - eLearning and online course solution ===
 Contributors: themeum
 Donate link: https://www.themeum.com
-Tags: lms, education, wp-lms, education management system
+Tags: lms, course, elearning, education, quiz, training, sell courses, courses, e-Learning, learning, learning management system, WordPress LMS
 Requires at least: 4.5
 Tested up to: 5.1
 Requires PHP: 5.4.0
@@ -19,13 +19,11 @@ Tutor LMS is a completely free plugin with premium high quality addons that you 
 
 Get Tutor, the most advanced and powerful WordPress online course plugin.
 
-[youtube https://www.youtube.com/watch?v=yo47fDYIGQo]
+[youtube https://www.youtube.com/watch?v=yGDwk4z9EEg]
 
 Create, customize, manage, and sell online courses by building a functional e-learning website with this free LMS plugin for WordPress.
 
-
-[Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/) || [Tutor LMS Pro]
-(https://www.themeum.com/product/tutor-lms/)
+[Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/) || [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/)
 
 = Features =
 

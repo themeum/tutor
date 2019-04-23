@@ -626,7 +626,12 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
 .tutor-addons .wp-filter{
     margin: 10px 0 0;
 }
-
+a.addon-buynow-link {
+    background: #0073aa;
+    color: #fff;
+    padding: 5px 10px;
+    display: inline-block;
+}
 /**
 Add-ons list
  */
@@ -648,11 +653,10 @@ table.tutor-addons-list-table td, table.tutor-addons-list-table th{
     padding: 10px;
     border-bottom: 1px solid #eeeeee;
     text-align: left;
-
 }
-
-
-
+.tutor-addons-list .plugin-icon{
+    height: 120px;
+}
 .btn-switch {
     display: inline-block;
     height: 22px;
