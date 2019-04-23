@@ -1122,6 +1122,13 @@ Quiz Modal
     color: #393C40;
     font-size: 14px;
 }
+.tutor-quiz-builder-group textarea:focus,
+.tutor-quiz-builder-group input[type="text"]:focus,
+.tutor-quiz-builder-group input[type="email"]:focus,
+.tutor-quiz-builder-group input[type="number"]:focus,
+.tutor-quiz-builder-group input[type="password"]:focus{
+    border-color: #3057D5;
+}
 
 .tutor-quiz-builder-group textarea{
     height: 80px;
