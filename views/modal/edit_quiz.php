@@ -39,11 +39,8 @@ if ( ! $quiz){
 
 
     <div id="tutor-quiz-builder-modal-tabs-container" class="tutor-quiz-builder-modal-tabs-container">
-
         <div id="quiz-builder-tab-quiz-info" class="quiz-builder-tab-container">
-
             <div class="quiz-builder-tab-body">
-
                 <div class="tutor-quiz-builder-group">
                     <div class="tutor-quiz-builder-row">
                         <div class="tutor-quiz-builder-col">

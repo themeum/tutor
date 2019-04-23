@@ -17,14 +17,14 @@ $settings = maybe_unserialize($question->question_settings);
 
         <div class="quiz_question_form">
 
-            <div class="tutor-quiz-builder-form-row">
-                <label><?php _e('Write your question here', 'tutor'); ?></label>
-                <div class="quiz-modal-field-wrap">
-                    <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" placeholder="<?php _e('Type your quiz title here',
-						'tutor'); ?>" value="<?php echo $question->question_title; ?>">
+            <div class="tutor-quiz-builder-group">
+                <h4><?php _e('Write your question here', 'tutor'); ?></h4>
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col">
+                        <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo $question->question_title; ?>">
+                    </div>
                 </div>
             </div>
-
 
             <div class="tutor-quiz-builder-form-row">
                 <div class="tutor-quiz-builder-form-cols-row">
