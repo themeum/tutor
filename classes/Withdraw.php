@@ -84,12 +84,11 @@ class Withdraw {
 				'method_name'  => __('ECHECK', 'tutor'),
 
 				'form_fields'           => array(
-					'bank_name' => array(
+					'physical_address' => array(
 						'type'      => 'textarea',
 						'label'     => __('Your Physical Address', 'tutor'),
 						'desc'      => __('We will send you an ECHECK to this address directly.', 'tutor'),
 					),
-
 				),
 			),
 
@@ -97,7 +96,7 @@ class Withdraw {
 				'method_name'  => __('PayPal Payment', 'tutor'),
 
 				'form_fields'           => array(
-					'bank_name' => array(
+					'paypal_email' => array(
 						'type'      => 'email',
 						'label'     => __('PayPal E-Mail Address', 'tutor'),
 						'desc'      => __('Write your paypal email address to get payout directly to your paypal account', 'tutor'),

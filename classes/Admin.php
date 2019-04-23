@@ -58,10 +58,8 @@ class Admin{
 		add_submenu_page('tutor', __('Withdraw Requests', 'tutor'), __('Withdraw Requests', 'tutor'), 'manage_tutor_instructor', 'tutor_withdraw_requests', array($this, 'withdraw_requests') );
 
 		//add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(),'addons_page') );
+		add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), __( 'Add-ons', 'tutor' ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
 
-		if (defined('TUTOR_PRO_VERSION')) {
-			add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), __( 'Add-ons', 'tutor' ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
-		}
 
 		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
 
@@ -108,7 +106,12 @@ class Admin{
 	}
 
 	public function enable_disable_addons(){
-		include tutor()->path.'views/pages/enable_disable_addons.php';
+
+		if (defined('TUTOR_PRO_VERSION')) {
+			include tutor()->path.'views/pages/enable_disable_addons.php';
+		}else{
+			include tutor()->path.'views/pages/tutor-pro-addons.php';
+		}
 	}
 
 	public function tutor_status(){

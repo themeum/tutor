@@ -17,6 +17,52 @@ if ( ! defined( 'ABSPATH' ) )
 
 class Addons {
 
+	public function __construct() {
+		add_filter('tutor_pro_addons_lists_for_display', array($this, 'tutor_addons_lists_to_show'));
+	}
+
+	public function tutor_addons_lists_to_show(){
+
+		$addons = array(
+			'tutor-certificate' => array(
+				'name'          => __('Tutor Certificate', 'tutor-certificate'),
+				'description'   => 'Student will able to download certificate of completed course',
+			),
+			'tutor-course-attachments' => array(
+				'name'          => __('Tutor Course Attachments', 'tutor-certificate'),
+				'description'   => 'Add unlimited attachments/ private files to any Tutor course',
+			),
+			'tutor-course-preview' => array(
+				'name'          => __('Tutor Course Preview', 'tutor-certificate'),
+				'description'   => 'Open some lesson to check course overview for guest',
+			),
+			'tutor-email' => array(
+				'name'          => __('Tutor E-Mail', 'tutor-certificate'),
+				'description'   => 'Send email on various tutor events',
+			),
+			'tutor-multi-instructors' => array(
+				'name'          => __('Tutor Multi Instructors', 'tutor-certificate'),
+				'description'   => 'Start a course with multiple instructors by Tutor Multi Instructors',
+			),
+			'tutor-prerequisites' => array(
+				'name'          => __('Tutor Prerequisites', 'tutor-certificate'),
+				'description'   => 'Specific course you must complete before you can enroll new course by Tutor Prerequisites',
+			),
+			'tutor-report' => array(
+				'name'          => __('Tutor Report', 'tutor-certificate'),
+				'description'   => 'Check your tutor assets performance through tutor report',
+			),
+		);
+
+
+		return $addons;
+	}
+
+
+	/**
+	 * @deprecated from alpha version
+	 */
+
 	public function addons_page(){
 		
 		if ( false === ( $addons_themes_data = get_transient( 'tutor_addons_themes_data' ) ) ) {
