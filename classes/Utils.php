@@ -1690,7 +1690,11 @@ class Utils {
 	public function mark_lesson_complete($post_id = 0, $user_id = 0){
 		$post_id = $this->get_post_id($post_id);
 		$user_id = $this->get_user_id($user_id);
+
+		do_action('tutor_mark_lesson_complete_before', $post_id, $user_id);
 		update_user_meta($user_id, '_tutor_completed_lesson_id_'.$post_id, time());
+		do_action('tutor_mark_lesson_complete_after', $post_id, $user_id);
+
 	}
 
 	/**
