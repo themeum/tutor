@@ -60,38 +60,7 @@ $settings = maybe_unserialize($question->question_settings);
                                     <?php
                                 }
                                 ?>
-                                <!--<p class="tutor-select-option" data-value="true_false" <?php /*echo $question->question_type === 'true_false' ? ' data-selected="selected"' : ''; */?> >
-                                        <i class="tutor-icon-block tutor-icon-yes-no"></i> <?php /*_e('True False'); */?>
-                                    </p>-->
 
-
-                                <!--<p class="tutor-select-option" data-value="single_choice" <?php /*echo $question->question_type === 'single_choice' ? ' data-selected="selected"' : ''; */?>>
-                                        <i class="tutor-icon-block tutor-icon-mark"></i> <?php /*_e('Single Choice'); */?>
-                                    </p>
-                                    <p class="tutor-select-option" data-value="multiple_choice" <?php /*echo $question->question_type === 'multiple_choice' ? ' data-selected="selected"' : ''; */?>>
-                                        <i class="tutor-icon-block tutor-icon-multiple-choice"></i> <?php /*_e('Multiple Choice', 'tutor'); */?>
-                                    </p>
-                                    <p class="tutor-select-option" data-value="open_ended" <?php /*echo $question->question_type === 'open_ended' ? ' data-selected="selected"' : ''; */?>>
-                                        <i class="tutor-icon-block tutor-icon-open-ended"></i> <?php /*_e('Open Ended/Essay', 'tutor'); */?>
-                                    </p>
-                                    <p class="tutor-select-option" data-value="short_answer" <?php /*echo $question->question_type === 'short_answer' ? ' data-selected="selected"' : ''; */?>>
-                                        <i class="tutor-icon-block tutor-icon-short-ans"></i> <?php /*_e('Short Answer', 'tutor'); */?>
-                                    </p>
-                                    <p class="tutor-select-option" data-value="fill_in_the_blank" <?php /*echo $question->question_type === 'fill_in_the_blank' ? ' data-selected="selected"' : ''; */?>>
-                                        <i class="tutor-icon-block tutor-icon-fill-gaps"></i> <?php /*_e('Fill In The Gaps'); */?>
-                                    </p>
-                                    <p class="tutor-select-option" data-value="matching" <?php /*echo $question->question_type === 'matching' ? ' data-selected="selected"' : ''; */?>>
-                                        <i class="tutor-icon-block tutor-icon-matching"></i> <?php /*_e('Matching', 'tutor'); */?>
-                                    </p>
-                                    <p class="tutor-select-option" data-value="image_matching" <?php /*echo $question->question_type === 'image_matching' ? ' data-selected="selected"' : ''; */?>>
-                                        <i class="tutor-icon-block tutor-icon-image-matching"></i> <?php /*_e('Image Matching', 'tutor'); */?>
-                                    </p>
-                                    <p class="tutor-select-option" data-value="image_answering" <?php /*echo $question->question_type === 'image_answering' ? ' data-selected="selected"' : ''; */?>>
-                                        <i class="tutor-icon-block tutor-icon-image-ans"></i> <?php /*_e('Image Answering', 'tutor'); */?>
-                                    </p>
-                                    <p class="tutor-select-option" data-value="ordering" <?php /*echo $question->question_type === 'ordering' ? ' data-selected="selected"' : ''; */?>>
-                                        <i class="tutor-icon-block tutor-icon-ordering"></i> <?php /*_e('Ordering', 'tutor'); */?>
-                                    </p>-->
                             </div>
                         </div>
                     </div>
