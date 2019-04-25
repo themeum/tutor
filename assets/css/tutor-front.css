@@ -3431,6 +3431,7 @@ Course question and answer
 .prerequisites-course-lists{
     padding: 0;
     list-style: none;
+    margin: 0;
 }
 
 
@@ -3467,10 +3468,12 @@ Course question and answer
     align-items: center;
 }
 
-.prerequisites-course-feature-image{
+.prerequisites-course-feature-image img{
     width: 70px;
-    overflow: hidden;
     border-radius: 2px;
+    height: auto;
+    margin: 0 !important;
+    box-shadow: 0 0 1px rgba(0,0,0.08);
 }
 
 .prerequisites-course-lists li .prerequisites-course-title{
