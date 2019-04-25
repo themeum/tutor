@@ -3998,7 +3998,14 @@ class Utils {
 		return false;
 	}
 
-
+	/**
+	 * @param int $user_id
+	 * @param array $filter
+	 *
+	 * get withdrawal history
+	 *
+	 * @return object
+	 */
 	public function get_withdrawals_history($user_id = 0, $filter = array()){
 		global $wpdb;
 
@@ -4054,6 +4061,34 @@ class Utils {
 		}
 		return (object) $withdraw_history;
 
+	}
+
+	public function add_instructor_role($instructor_id = 0){
+		if ( ! $instructor_id){
+			return;
+		}
+		do_action('tutor_before_approved_instructor', $instructor_id);
+
+		update_user_meta($instructor_id, '_tutor_instructor_status', 'approved');
+		update_user_meta($instructor_id, '_tutor_instructor_approved', time());
+
+		$instructor = new \WP_User($instructor_id);
+		$instructor->add_role(tutor()->instructor_role);
+
+		do_action('tutor_after_approved_instructor', $instructor_id);
+	}
+
+	public function remove_instructor_role($instructor_id = 0){
+		if ( ! $instructor_id){
+			return;
+		}
+
+		do_action('tutor_before_blocked_instructor', $instructor_id);
+		update_user_meta($instructor_id, '_tutor_instructor_status', 'blocked');
+
+		$instructor = new \WP_User($instructor_id);
+		$instructor->remove_role(tutor()->instructor_role);
+		do_action('tutor_after_blocked_instructor', $instructor_id);
 	}
 
 }

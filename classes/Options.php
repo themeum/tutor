@@ -57,7 +57,6 @@ class Options {
 		update_option('tutor_option', $option);
 
 		do_action('tutor_option_save_after');
-
 		//re-sync settings
 		//init::tutor_activate();
 
@@ -69,9 +68,7 @@ class Options {
 
 		//$course_base = tutor_utils()->course_archive_page_url();
 		$lesson_url = site_url().'/course/'.'sample-course/<code>lessons</code>/sample-lesson/';
-
 		$student_url = tutor_utils()->profile_url();
-
 		$attempts_allowed = array();
 		$attempts_allowed['unlimited'] = __('Unlimited' , 'tutor');
 		$attempts_allowed = array_merge($attempts_allowed, array_combine(range(1,20), range(1,20)));
@@ -185,11 +182,8 @@ class Options {
 								'default'   => 'lessons',
 								'desc'      => $lesson_url,
 							),
-
 						),
-
 					),
-
 				),
 			),
 			'quiz' => array(
@@ -222,7 +216,6 @@ class Options {
 									),
 								),
 							),
-
 							'quiz_when_time_expires' => array(
 								'type'      => 'radio',
 								'label'      => __('When time expires', 'tutor'),
@@ -235,14 +228,12 @@ class Options {
 								),
 								'desc'  => __('What should happen by default if a student does not submit the quiz before time expires.', 'tutor'),
 							),
-
 							'quiz_attempts_allowed' => array(
 								'type'      => 'number',
 								'label'      => __('Attempts allowed', 'tutor'),
 								'default'   => '10',
 								'desc'  => __('Restriction on the number of attempts students are allowed to take for a quiz. 0 for no limit', 'tutor'),
 							),
-
 							'quiz_grade_method' => array(
 								'type'      => 'select',
 								'label'      => __('Grading method', 'tutor'),
@@ -284,7 +275,6 @@ class Options {
 					),
 				),
 			),
-
 			'students' => array(
 				'label'     => __('Students', 'tutor'),
 				'sections'    => array(
@@ -312,12 +302,10 @@ class Options {
 								'default'       => '0',
 								'desc'          => __('Completed courses will be show on student profile',	'tutor')."<br />".$student_url,
 							),
-
 						),
 					),
 				),
 			),
-
 			'tutor_earning' => array(
 				'label'     => __('Earning', 'tutor'),
 				'sections'    => array(
@@ -325,7 +313,6 @@ class Options {
 						'label' => __('Earning and commission allocation', 'tutor'),
 						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
 						'fields' => array(
-
 							'enable_tutor_earning' => array(
 								'type'          => 'checkbox',
 								'label'         => __('Enable/Disable', 'tutor'),
@@ -333,7 +320,6 @@ class Options {
 								'default'       => '0',
 								'desc'          => __('You can set commission and generate earning for instructor who interested sell their course with this platform by enabling this feature',	'tutor'),
 							),
-
 							'earning_admin_commission' => array(
 								'type'      => 'number',
 								'label'      => __('Admin / Platform Owner Commission', 'tutor'),
@@ -346,7 +332,6 @@ class Options {
 								'default'   => '80',
 								'desc'  => __('Define the sales commission for instructor from every course sell.', 'tutor'),
 							),
-
 							'tutor_earning_fees' => array(
 								'type'      => 'group_fields',
 								'label'     => __('Others Fees', 'tutor'),
@@ -386,35 +371,22 @@ class Options {
 								'default'   => '20',
 								'desc'  => __('Define the number of statement should show.', 'tutor'),
 							),
-
 						),
 					),
-
-
 				),
 			),
-
-
-
-
-
-
-
-
 			'tutor_withdraw' => array(
 				'label'     => __('Withdraw', 'tutor'),
 				'sections'    => array(
 					'general' => array(
 						'label' => __('Earning and commission allocation', 'tutor'),
 						'fields' => array(
-
 							'min_withdraw_amount' => array(
 								'type'      => 'number',
 								'label'     => __('Minimum Withdraw Amount', 'tutor'),
 								'default'   => '80',
 								'desc'      => __('Define the withdraw amount, anyone can make withdraw request if their earning above or equal this amount.',	'tutor'),
 							),
-
 						),
 					),
 
@@ -422,24 +394,12 @@ class Options {
 						'label' => __('Withdraw Methods', 'tutor'),
 						'desc' => __('Set withdraw settings', 'tutor'),
 					),
-
 				),
 			),
-
-
-
-
-
-
-
-
-
-
 		);
 
 		return apply_filters('tutor/options/attr', $attr);
 	}
-
 
 	/**
 	 * @param array $field
@@ -465,7 +425,5 @@ class Options {
 		include tutor()->path.'views/options/options_generator.php';
 		return ob_get_clean();
 	}
-
-
 
 }
