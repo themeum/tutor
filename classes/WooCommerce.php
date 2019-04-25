@@ -93,20 +93,26 @@ class WooCommerce extends Tutor_Base {
 	}
 
 	public function get_tutor_course_price($price, $course_id){
+		$price = null;
 
-		$product_id = tutor_utils()->get_course_product_id($course_id);
-		$product = wc_get_product( $product_id );
+		if (tutor_utils()->is_course_purchasable($course_id)) {
+			if (tutor_utils()->has_wc()){
+				$product_id = tutor_utils()->get_course_product_id($course_id);
+				$product    = wc_get_product( $product_id );
 
-		if ($product) {
-			ob_start();
-			?>
-			<div class="price">
-				<?php echo $product->get_price_html(); ?>
-			</div>
-			<?php
-			return ob_get_clean();
+				if ($product) {
+					ob_start();
+					?>
+                    <div class="price">
+						<?php echo $product->get_price_html(); ?>
+                    </div>
+					<?php
+					return ob_get_clean();
+				}
+			}
 		}
-		return false;
+
+		return $price;
 	}
 
 	public function tutor_course_sell_by(){
