@@ -920,6 +920,12 @@ class Quiz {
 
 		ob_start();
 
+		/*
+		 * @TODO: Should We remove this text?
+		 * Screenshot: http://prntscr.com/ngl2mb
+		 * Screenshot: http://prntscr.com/ngl2ak
+		 */
+
 		switch ($question_type){
 			case 'true_false':
 				echo '<label>'.__('Answer options &amp; mark correct', 'tutor').'</label>';

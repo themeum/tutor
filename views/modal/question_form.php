@@ -53,7 +53,8 @@ $settings = maybe_unserialize($question->question_settings);
 
                                         <?php
                                         if (! $has_tutor_pro && $question_type['is_pro']){
-                                            echo '<span class="question-type-pro">PRO</span>';
+                                            $svg_lock = '<svg width="12" height="16" xmlns="http://www.w3.org/2000/svg"><path d="M11.667 6h-1V4.667A4.672 4.672 0 0 0 6 0a4.672 4.672 0 0 0-4.667 4.667V6h-1A.333.333 0 0 0 0 6.333v8.334C0 15.402.598 16 1.333 16h9.334c.735 0 1.333-.598 1.333-1.333V6.333A.333.333 0 0 0 11.667 6zm-4.669 6.963a.334.334 0 0 1-.331.37H5.333a.333.333 0 0 1-.331-.37l.21-1.89A1.319 1.319 0 0 1 4.667 10c0-.735.598-1.333 1.333-1.333S7.333 9.265 7.333 10c0 .431-.204.824-.545 1.072l.21 1.891zM8.667 6H3.333V4.667A2.67 2.67 0 0 1 6 2a2.67 2.67 0 0 1 2.667 2.667V6z" fill="#E2E2E2" fill-rule="nonzero"/></svg>';
+                                            printf("<span class='question-type-pro' title='%s'>%s</span>",__('Pro version required', 'tutor'), $svg_lock );
                                         }
                                         ?>
                                     </p>
