@@ -1,4 +1,10 @@
 <?php
+
+$enable_show_reviews_wrote = tutor_utils()->get_option('students_own_review_show_at_profile');
+if ( ! $enable_show_reviews_wrote){
+    return;
+}
+
 $user_name = sanitize_text_field(get_query_var('tutor_student_username'));
 $get_user = tutor_utils()->get_user_by_login($user_name);
 $user_id = $get_user->ID;
