@@ -392,6 +392,7 @@ final class Tutor{
 
 		$administrator = get_role( 'administrator' );
 		if ( $administrator ) {
+
 			$administrator_cap = array (
 				'manage_tutor',
 			);
@@ -402,6 +403,14 @@ final class Tutor{
 				$administrator->add_cap( $cap );
 			}
 		}
+
+		/**
+		 * Add Instructor role to administrator
+		 */
+		if (current_user_can('administrator')){
+			tutor_utils()->add_instructor_role(get_current_user_id());
+		}
+
 	}
 
 	/**

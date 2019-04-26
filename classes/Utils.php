@@ -3555,10 +3555,19 @@ class Utils {
 	 */
 	public function user_profile_permalinks(){
 		$permalinks = array(
-			'enrolled_course'   => __('Enrolled Course', 'tutor'),
 			'courses_taken'     => __('Courses Taken', 'tutor'),
-			'reviews_wrote'     => __('Reviews Written', 'tutor'),
 		);
+
+		$show_enrolled_course = tutor_utils()->get_option('show_courses_completed_by_student');
+		$enable_show_reviews_wrote = tutor_utils()->get_option('students_own_review_show_at_profile');
+
+		if ($show_enrolled_course){
+			$permalinks['enrolled_course'] = __('Enrolled Course', 'tutor');
+		}
+		if ($enable_show_reviews_wrote){
+			$permalinks['reviews_wrote'] = __('Reviews Written', 'tutor');
+		}
+
 
 		return apply_filters('tutor_public_profile/permalinks', $permalinks);
 	}
