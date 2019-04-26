@@ -1002,8 +1002,73 @@ a.tutor-btn:hover,
 /* Tutor Dashboard */
 /* *********************** */
 
+.tutor-dashboard-header{
+    display: flex;
+    align-items: center;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #DCDFE5;
+}
+
+.tutor-dashboard-header-avatar img{
+    display: block;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.tutor-dashboard-header-info{
+    flex-grow: 1;
+    padding-left: 20px;
+}
+
+.tutor-dashboard-header-display-name h4{
+    font-size: 30px;
+    margin-bottom: 0;
+}
+
+.tutor-dashboard-header-stats{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tutor-dashboard-header-stats > div:not(:first-child){
+    margin-left: 30px;
+}
 
 
+/* end dashboard header */
+
+/*dashboard content*/
+
+.tutor-dashboard-info-cards{
+    margin: 0 -15px;
+    padding: 0;
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+}
+.tutor-dashboard-info-cards li{
+    padding: 15px;
+    min-width: 33.333%;
+}
+
+.tutor-dashboard-info-cards li p{
+    margin: 0;
+    padding: 15px 25px;
+    background: #282C36;
+    color: #ffffff;
+    border-radius: 4px;
+}
+.tutor-dashboard-info-cards li p span{
+    display: block;
+    font-weight: 700;
+    font-size: 30px;
+}
+.tutor-dashboard-info-cards li p span span{
+    display: inline-block;
+}
+
+/* end dashboard content*/
 
 .tutor-dashboard-avater img{
     width: 70px;
@@ -1085,9 +1150,12 @@ a.tutor-btn:hover,
 }
 .tutor-dashboard-permalinks{
     list-style: none;
-    margin: 30px 0 20px;
+    margin: 0px 0 20px;
     font-size: 14px;
-    padding: 0;
+    padding: 20px 0;
+    border-left: 1px solid #DCDFE5;
+    border-right: 1px solid #DCDFE5;
+    border-bottom: 1px solid #DCDFE5;
 }
 .tutor-dashboard-permalinks li:not(:last-child){
 
@@ -1427,16 +1495,7 @@ DatePicker
 
 /** End DatePicker **/
 
-/*.tutor-dashboard-content-inner:not(:empty){}*/
-.tutor-dashboard-content{
-    margin-top: 20px;
-}
-.tutor-dashboard-content-inner .tutor-mycourse-wrap{
-    border: 1px solid #DCDFE5;
-    border-radius: 4px;
-    margin-bottom: 30px;
-    display: flex;
-}
+
 .tutor-mycourse-thumbnail {
     flex: 0 0 250px;
 }
