@@ -41,7 +41,7 @@ do_action('tutor_dashboard/before/wrap'); ?>
             <div class="tutor-row">
                 <div class="tutor-col-12">
                     <div class="tutor-dashboard-header-wrap">
-                        <div class="tutor-wrap tutor-dashboard-header">
+                        <div class="tutor-dashboard-header">
 
                             <div class="tutor-dashboard-header-avatar">
                                 <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink(); ?>">

@@ -1001,69 +1001,10 @@ a.tutor-btn:hover,
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */
-.tutor-dashboard-header-wrap{
-    background-color: #272F3C;
-    min-height: 200px;
-}
-.tutor-dashboard-header {
-    padding: 50px 20px;
-    display: flex;
-    color: #ffffff;
-}
-.tutor-dashboard-header h4{
-    color: #ffffff;
-    margin: 0;
-}
-.tutor-dashboard-header-avatar{
-    margin-right: 20px;
-}
-.tutor-dashboard-header-info {
-    flex: 1;
-    padding-top: 15px;
-}
-.tutor-dashboard-header-display-name {
-    margin-bottom: 10px;
-}
-.tutor-dashboard-header-stats {
-    display: flex;
-}
-.tutor-dashboard-header-social-wrap {
-    flex: 1;
-}
-.tutor-dashboard-header-ratings, .tutor-dashboard-header-notifications {
-    margin-left: 20px;
-}
-.tutor-dashboard-header-social-wrap a{
-    color: #90949E;
-}
-.tutor-dashboard-header-social-wrap a:hover {
-    color: #ffffff;
-}
-.tutor-notification-text {
-    position: relative;
-    padding-right: 15px;
-    margin: 0;
-}
-.tutor-dashboard-left-menu{
-    border-right: 1px solid #DCDFE5;
-    padding-right: 0;
-}
-.tutor-notification-text span{
-    position: absolute;
-    background-color: #ff0000;
-    color: #ffffff;
-    border-radius: 50%;
-    padding: 0 5px;
-    font-size: 12px;
-    top: -5px;
-    right: 0;
-}
-.tutor-dashboard-header-avatar img{
-    height: 100px;
-    width: 100px;
-    border-radius: 50%;
-    border: 3px solid #ffffff;
-}
+
+
+
+
 .tutor-dashboard-avater img{
     width: 70px;
     height: 70px;
