@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) )
+	exit;
+
 $show_enrolled_course = tutor_utils()->get_option('show_courses_completed_by_student');
 if ( ! $show_enrolled_course){
     return;

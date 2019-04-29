@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) )
+	exit;
 
 $enable_show_reviews_wrote = tutor_utils()->get_option('students_own_review_show_at_profile');
 if ( ! $enable_show_reviews_wrote){
