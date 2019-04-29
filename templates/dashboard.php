@@ -40,46 +40,42 @@ do_action('tutor_dashboard/before/wrap'); ?>
 
             <div class="tutor-row">
                 <div class="tutor-col-12">
-                    <div class="tutor-dashboard-header-wrap">
-                        <div class="tutor-wrap tutor-dashboard-header">
+                    <div class="tutor-dashboard-header">
 
-                            <div class="tutor-dashboard-header-avatar">
-                                <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink(); ?>">
-                                    <img src="<?php echo get_avatar_url($user_id); ?>" />
-                                </a>
+                        <div class="tutor-dashboard-header-avatar">
+                            <img src="<?php echo get_avatar_url($user_id, array('size' => 150)); ?>" />
+                        </div>
+
+                        <div class="tutor-dashboard-header-info">
+
+                            <div class="tutor-dashboard-header-display-name">
+                                <h4><?php _e('Howdy,', 'tutor'); ?> <strong><?php echo $user->display_name; ?></strong> </h4>
                             </div>
 
-                            <div class="tutor-dashboard-header-info">
+                                <?php
+                                    $instructor_rating = tutor_utils()->get_instructor_ratings($user->ID);
+                                ?>
 
-                                <div class="tutor-dashboard-header-display-name">
-                                    <h4><?php _e('Howdy,', 'tutor'); ?> <strong><?php echo $user->display_name; ?></strong> </h4>
+                                <div class="tutor-dashboard-header-stats">
+                                    <div class="tutor-dashboard-header-ratings">
+						                <?php tutor_utils()->star_rating_generator($instructor_rating->rating_avg); ?>
+                                        <span><?php echo esc_html($instructor_rating->rating_avg);  ?></span>
+                                        <span> (<?php _e(sprintf('%d Ratings', $instructor_rating->rating_count), 'tutor') ?>) </span>
+                                    </div>
+
+                                    <!--<div class="tutor-dashboard-header-notifications">
+                                        <?php /*_e('Notification'); */?> <span>9</span>
+                                    </div>-->
+
                                 </div>
 
-                                <!--
-                                <div class="tutor-dashboard-header-stats">
-                                    <div class="tutor-dashboard-header-social-wrap">
-                                        <a href=""><i class="tutor-icon-facebook"></i> </a>
-                                        <a href=""><i class="tutor-icon-twitter"></i> </a>
-                                        <a href=""><i class="tutor-icon-youtube"></i> </a>
-                                    </div>
-                                    <div class="tutor-dashboard-header-ratings">
-						                <?php
-/*						                tutor_utils()->star_rating_generator('4.6');
-						                */?>
-                                        <span>4.6</span>
-                                        <span> (<?php /*_e(sprintf('%d Ratings', 172), 'tutor') */?>) </span>
-                                    </div>
-                                    <div class="tutor-dashboard-header-notifications">
-                                        <p class="tutor-notification-text"><?php /*_e('Notification'); */?> <span>9</span> </p>
-                                    </div>
-                                </div>-->
+                        </div>
+                        <div class="tutor-dashboard-header-button">
 
-                            </div>
-
+                            <a class="tutor-btn" href="<?php echo esc_url(add_query_arg(array('post_type'=>'course'),admin_url('post-new.php'))); ?>"><?php _e('Create A Course', 'tutor') ?></a>
                         </div>
 
                     </div>
-
                 </div>
             </div>
 
