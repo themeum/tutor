@@ -13,7 +13,7 @@ $previous_attempts = tutor_utils()->get_all_quiz_attempts_by_user();
 $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 ?>
     <div class="tutor-dashboard-page-title">
-        <h2><?php _e('My Quiz Attempts', 'tutor'); ?></h2>
+        <h3><?php _e('My Quiz Attempts', 'tutor'); ?></h3>
     </div>
 <?php
 if ($attempted_count){

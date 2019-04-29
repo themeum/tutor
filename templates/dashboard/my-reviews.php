@@ -13,7 +13,7 @@ $reviews = tutor_utils()->get_reviews_by_user();
 
 if ( ! is_array($reviews) || ! count($reviews)){ ?>
     <div>
-		<h2><?php _e("Not Found" , 'tutor'); ?></h2>
+		<h3><?php _e("Not Found" , 'tutor'); ?></h3>
 		<p><?php _e("Sorry, but you are looking for something that isn't here." , 'tutor'); ?></p>
     </div>
     <?php
@@ -23,7 +23,7 @@ if ( ! is_array($reviews) || ! count($reviews)){ ?>
 
 <div class=" tutor-course-reviews-wrap">
     <div class="course-target-reviews-title">
-        <h4><?php _e(sprintf("My Reviews"), 'tutor'); ?></h4>
+        <h3><?php _e(sprintf("My Reviews"), 'tutor'); ?></h3>
     </div>
 
     <div class="tutor-reviews-list">

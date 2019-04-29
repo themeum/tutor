@@ -1,4 +1,4 @@
-<h1><?php _e('Dashboard', 'tutor') ?></h1>
+<h3><?php _e('Dashboard', 'tutor') ?></h3>
 
 <div class="tutor-dashboard-content-inner">
 
@@ -15,50 +15,81 @@
 
     ?>
 
-    <ul class="tutor-dashboard-info-cards">
-        <li>
+    <div class="tutor-dashboard-info-cards">
+        <div class="tutor-dashboard-info-card">
             <p>
                 <?php _e('Enrolled Course', 'tutor'); ?>
                 <span><?php echo esc_html($enrolled_course_count); ?></span>
             </p>
-        </li>
-        <li>
+        </div>
+        <div class="tutor-dashboard-info-card">
             <p>
                 <?php _e('Active Course', 'tutor'); ?>
                 <span><?php echo esc_html($active_course_count); ?></span>
             </p>
-        </li>
-        <li>
+        </div>
+        <div class="tutor-dashboard-info-card">
             <p>
                 <?php _e('Completed Course', 'tutor'); ?>
                 <span><?php echo esc_html($completed_course_count); ?></span>
             </p>
-        </li>
+        </div>
 
         <?php
             if(current_user_can(tutor()->instructor_role)) :
         ?>
 
-        <li>
+        <div class="tutor-dashboard-info-card">
             <p>
                 <?php _e('Total Students', 'tutor'); ?>
                 <span><?php echo esc_html($total_students); ?></span>
             </p>
-        </li>
-        <li>
+        </div>
+        <div class="tutor-dashboard-info-card">
             <p>
                 <?php _e('Total Courses', 'tutor'); ?>
                 <span><?php echo esc_html(count($my_courses)); ?></span>
             </p>
-        </li>
-        <li>
+        </div>
+        <div class="tutor-dashboard-info-card">
             <p>
                 <?php _e('Total Earning', 'tutor'); ?>
                 <span><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></span>
             </p>
-        </li>
+        </div>
         <?php
             endif;
         ?>
-    </ul>
+    </div>
+
+    <div class="tutor-dashboard-info-table-wrap">
+        <h3><?php _e('Most Popular Courses', 'tutor'); ?></h3>
+        <table class="tutor-dashboard-info-table">
+            <thead>
+            <tr>
+                <td><?php _e('Course Name', 'tutor'); ?></td>
+                <td><?php _e('Enrolled', 'tutor'); ?></td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Unlock VS Code: Ultimate Guide To Optimizing Your Workflow</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>Unlock VS Code: Ultimate Guide To Optimizing Your Workflow</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>Unlock VS Code: Ultimate Guide To Optimizing Your Workflow</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>Unlock VS Code: Ultimate Guide To Optimizing Your Workflow</td>
+                <td>9</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>

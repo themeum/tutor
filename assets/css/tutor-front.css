@@ -1038,33 +1038,74 @@ a.tutor-btn:hover,
 
 /* end dashboard header */
 
+/**
+ * Dashboard Table
+ */
+
+.tutor-dashboard-info-table-wrap{
+    margin-bottom: 30px;
+}
+.tutor-dashboard-info-table-wrap table{
+    margin-bottom: 0;
+    border-collapse: collapse;
+    border: 1px solid #DCDFE5;
+    border-radius: 4px;
+}
+.tutor-dashboard-info-table thead{
+    background: #FAFBFC;
+}
+.tutor-dashboard-info-table tr{
+    border: 1px solid #DCDFE5;
+}
+
+.tutor-dashboard-info-table tbody tr td{
+    background: transparent !important;
+    padding: 20px 30px;
+}
+.tutor-dashboard-info-table thead tr td{
+    padding: 15px 30px;
+}
+.tutor-dashboard-info-table-wrap > h3{
+    font-size: 20px;
+    font-weight: 700;
+    border:  1px solid #DCDFE5;
+    border-bottom: none;
+    margin: 0;
+    padding: 30px;
+    border-radius: 4px 4px 0 0 ;
+}
+
+.tutor-dashboard-info-table-wrap > h3 + table{
+    border-radius: 0 0 4px 4px ;
+}
+
 /*dashboard content*/
 
 .tutor-dashboard-info-cards{
-    margin: 0 -15px;
+    margin: 0 -15px 15px;
     padding: 0;
     display: flex;
     list-style: none;
     flex-wrap: wrap;
 }
-.tutor-dashboard-info-cards li{
+.tutor-dashboard-info-cards .tutor-dashboard-info-card{
     padding: 15px;
     min-width: 33.333%;
 }
 
-.tutor-dashboard-info-cards li p{
+.tutor-dashboard-info-cards .tutor-dashboard-info-card p{
     margin: 0;
     padding: 15px 25px;
     background: #282C36;
     color: #ffffff;
     border-radius: 4px;
 }
-.tutor-dashboard-info-cards li p span{
+.tutor-dashboard-info-cards .tutor-dashboard-info-card p span{
     display: block;
     font-weight: 700;
     font-size: 30px;
 }
-.tutor-dashboard-info-cards li p span span{
+.tutor-dashboard-info-cards .tutor-dashboard-info-card p span span{
     display: inline-block;
 }
 
@@ -1192,12 +1233,17 @@ a.tutor-btn:hover,
     padding: 10px 20px;
     line-height: 28px;
 }
-.tutor-dashboard-content h1{
-    color: var(--tutor-light-color);
-    font-size: 18px;
+
+.tutor-dashboard-content{
+    padding-top: 40px;
+}
+
+.tutor-dashboard-content h3{
+    color: var(--tutor-text-color);
+    font-size: 22px;
     font-weight: 500;
     line-height: 23px;
-    margin-bottom: 17px;
+    margin-bottom: 0px;
 }
 
 /** Earning */
@@ -1516,15 +1562,38 @@ DatePicker
 .tutor-dashboard-content-inner{
     font-size: 14px;
 }
+
+.tutor-mycourse-edit{
+    color: var(--tutor-primary-color);
+}
+.tutor-mycourse-delete{
+    color: #f05120;
+}
+
+.tutor-dashboard-content-inner .tutor-mycourse-wrap{
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+.tutor-dashboard-content-inner .tutor-mycourse-wrap .tutor-course-status h4{
+    display: none;
+}
 .tutor-dashboard-content-inner .tutor-mycourse-wrap p:last-child{
     margin-bottom: 0;
 }
 .tutor-mycourse-content .mycourse-footer {
     display: flex;
 }
+
 .tutor-mycourse-content .mycourse-footer .tutor-mycourses-stats{
     flex: 1;
 }
+
+.tutor-dashboard-content-inner .tutor-mycourses-stats > *{
+    margin-right: 8px;
+}
+
+
 .tutor-mycourse-status{
     margin-right: 15px;
 }
