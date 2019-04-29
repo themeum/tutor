@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.1
 Requires PHP: 5.4.0
-Stable tag: 1.2.12
+Stable tag: 1.2.13
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -205,6 +205,13 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 16. Course builder
 
 == Changelog ==
+
+= 1.2.13 - 26 April, 2019 =
+
+* Added: Instructor role to the administrator during plugin activation
+* Fixed: Course Permission options settings, it was shown always log-in page
+* Fixed: Enable students to show reviews wrote on their profile from settings
+* Fixed: Show completed course settings
 
 = 1.2.12 - 25 April, 2019 =
 
