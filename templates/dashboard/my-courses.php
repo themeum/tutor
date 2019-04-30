@@ -64,7 +64,7 @@
                         <div class="tutor-mycourses-stats">
 	                        <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
                             <a href="<?php echo get_edit_post_link(get_the_ID()); ?>" class="tutor-mycourse-edit"> <i class="tutor-icon-pencil"></i> Edit</a>
-                            <a href="#<?php // TODO: Get Delete Post Link ?>" class="tutor-mycourse-delete"> <i class="tutor-icon-garbage"></i> Delete</a>
+                            <a href="#course-delete" class="tutor-mycourse-delete"> <i class="tutor-icon-garbage"></i> Delete</a>
                         </div>
 
                     </div>
@@ -81,5 +81,22 @@
 	<?php endif; ?>
 
 
+    <div class="tutor-frontend-modal" data-popup-rel="#course-delete" style="display: none">
+        <div class="tutor-frontend-modal-overlay"></div>
+        <div class="tutor-frontend-modal-content">
+            <button class="tm-close tutor-icon-line-cross"></button>
+
+            <div class="tutor-modal-body tutor-course-delete-popup">
+                <img src="<?php echo tutor()->url . 'assets/images/delete-icon.png' ?>" alt="">
+                <h3><?php _e('Delete This Course?', 'tutor'); ?></h3>
+                <p><?php _e('You have selected to this course Creative Nonfiction: Write Truth with Style If this was the action that you wanted to do . Please confirm your choice', 'tutor'); ?></p>
+                <div class="tutor-modal-button-group">
+                    <button><?php _e('Cancel', 'tutor') ?></button>
+                    <button class="tutor-danger"><?php _e('Yes, Delete Course', 'tutor') ?></button>
+                </div>
+            </div>
+            
+        </div> <!-- tutor-frontend-modal-content -->
+    </div> <!-- tutor-frontend-modal -->
 
 </div>

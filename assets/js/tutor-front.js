@@ -125,10 +125,7 @@ jQuery(document).ready(function($){
                     var review_id = data.data.review_id;
                     var review = data.data.review;
                     $('.tutor-review-'+review_id+' .review-content').html(review);
-                },
-                complete: function () {
-                    $('.tutor-write-review-form').slideUp();
-                    $that.removeClass('updating-icon');
+                    location.reload();
                 }
             });
         }
@@ -670,6 +667,19 @@ jQuery(document).ready(function($){
                 $btn.removeClass('updating-icon');
             }
         });
+    });
+
+    var frontEndModal = $('.tutor-frontend-modal');
+    frontEndModal.each(function () {
+        var modal = $(this),
+            action = $(this).data('popup-rel');
+        $('[href="'+action+'"]').on('click', function (e) {
+            modal.fadeIn();
+            e.preventDefault();
+        });
+    });
+    $('.tm-close').add('.tutor-frontend-modal-overlay').on('click', function () {
+        frontEndModal.fadeOut();
     });
 
 

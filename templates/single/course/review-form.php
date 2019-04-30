@@ -3,7 +3,7 @@
     $rating = $isLoggedIn ? tutor_utils()->get_course_rating_by_user() : '';
 ?>
 
-<div class="tutor-course-enrolled-review-wrap">
+<div class="tutor-course-enrolled-review-wrap" id>
     <a href="javascript:;" class="write-course-review-link-btn">
         <?php
             if($isLoggedIn && (!empty($rating->rating) || !empty($rating->review))){

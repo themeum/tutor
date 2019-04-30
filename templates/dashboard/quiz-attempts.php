@@ -12,9 +12,7 @@
 $previous_attempts = tutor_utils()->get_all_quiz_attempts_by_user();
 $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 ?>
-    <div class="tutor-dashboard-page-title">
-        <h3><?php _e('My Quiz Attempts', 'tutor'); ?></h3>
-    </div>
+    <h3><?php _e('My Quiz Attempts', 'tutor'); ?></h3>
 <?php
 if ($attempted_count){
 	?>
@@ -31,7 +29,7 @@ if ($attempted_count){
             </tr>
 			<?php
 			foreach ( $previous_attempts as $attempt){
-				$passing_grade = tutor_utils()->get_quiz_option($attempt->course_id, 'passing_grade', 0);
+				$passing_grade = tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
 				?>
                 <tr>
                     <td><a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank"><?php echo get_the_title($attempt->course_id); ?></a>
@@ -63,6 +61,7 @@ if ($attempted_count){
 
                     <td>
 						<?php
+
 						$pass_marks = ($attempt->total_marks * $passing_grade) / 100;
 						if ($pass_marks > 0){
 							echo number_format_i18n($pass_marks, 2);
@@ -73,11 +72,8 @@ if ($attempted_count){
 
                     <td>
 						<?php
-						if ($earned_percentage >= $passing_grade){
-							echo '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
-						}else{
-							echo '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
-						}
+
+                            echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
 						?>
                     </td>
                 </tr>

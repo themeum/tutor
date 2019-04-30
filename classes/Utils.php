@@ -1929,7 +1929,7 @@ class Utils {
 			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
 			'my-courses'        => __('My Courses', 'tutor'),
 			'wishlist'          => __('Wishlist', 'tutor'),
-			'my-reviews'        => __('My Reviews', 'tutor'),
+			'reviews'           => __('Reviews', 'tutor'),
 			'quiz-attempts'        => __('Quiz Attempts', 'tutor'),
 			'earning'        => __('Earning', 'tutor'),
 			'withdraw'        => __('Withdraw', 'tutor'),

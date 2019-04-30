@@ -36,6 +36,7 @@
                         <?php
                         tutor_utils()->star_rating_generator($avg_rating);
                         ?>
+                        <a href="<?php echo get_the_permalink().'#single-course-ratings'; ?>"><?php _e('Leave a rating', 'tutor') ?></a>
                     </div>
                     <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a> </h3>
                     <div class="tutor-meta tutor-course-metadata">
