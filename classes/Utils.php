@@ -3587,6 +3587,21 @@ class Utils {
 		}
 		return false;
 	}
+	/**
+	 * @return bool|false|string
+	 *
+	 * Instructor registration form
+	 *
+	 * @since v.1.2.13
+	 */
+	public function instructor_register_url(){
+		$instructor_register_page = (int) $this->get_option('instructor_register_page');
+
+		if ($instructor_register_page){
+			return get_the_permalink($instructor_register_page);
+		}
+		return false;
+	}
 
 	/**
 	 * @return false|string

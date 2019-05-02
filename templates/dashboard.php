@@ -71,8 +71,19 @@ do_action('tutor_dashboard/before/wrap'); ?>
 
                         </div>
                         <div class="tutor-dashboard-header-button">
+                            <?php
 
-                            <a class="tutor-btn" href="<?php echo esc_url(add_query_arg(array('post_type'=>'course'),admin_url('post-new.php'))); ?>"><?php _e('Create A Course', 'tutor') ?></a>
+                                if(current_user_can(tutor()->instructor_role)){
+                                    $button_page_url = add_query_arg(array('post_type'=>'course'),admin_url('post-new.php'));
+                                    $buton_text = __('<i class="tutor-icon-video-camera"></i> &nbsp; Upload A Course', 'tutor');
+                                }else{
+                                    $button_page_url = tutor_utils()->instructor_register_url();
+                                    $buton_text = __('<i class="tutor-icon-man-user"></i> &nbsp; Become an instructor', 'tutor');
+                                }
+                            ?>
+                            <a class="tutor-btn" href="<?php echo esc_url($button_page_url); ?>">
+                                <?php echo $buton_text; ?>
+                            </a>
                         </div>
 
                     </div>

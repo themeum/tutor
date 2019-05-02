@@ -122,11 +122,17 @@ foreach ($chartData as $key => $salesCount){
             </div>
         <?php } ?>
     </div>
+
+    <div class="tutor-dashboard-item-group">
+        <h4><?php _e('Earning Chart for this month', 'tutor') ?> (<?php echo date("F") ?>)</h4>
+        <canvas id="tutorChart" style="width: 100%; height: 400px;"></canvas>
+    </div>
+
 </div>
 
-<h4>Earning Chart for this month (<?php echo date("F") ?>)</h4>
 
-<canvas id="tutorChart" style="width: 100%; height: 400px;"></canvas>
+
+
 <script>
     var ctx = document.getElementById("tutorChart").getContext('2d');
     var tutorChart = new Chart(ctx, {
