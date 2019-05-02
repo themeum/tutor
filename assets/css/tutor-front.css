@@ -1358,29 +1358,29 @@ a.tutor-btn:hover,
 }
 
 /** Earning */
-.tutor-dashboard-earning-info-row {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-}
-.tutor-dashboard-earning-sum{
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 150px;
-    flex: 0 0 150px;
-    background-color: #f4f4f4;
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #dddddd;
-}
-.tutor-dashboard-earning-sum p{
-    margin: 0;
-}
-.tutor-dashboard-earning-sum p.text-small{
-    font-size: 12px;
-    color: #666666;
-}
+/*.tutor-dashboard-earning-info-row {*/
+    /*display: -webkit-box;*/
+    /*display: -ms-flexbox;*/
+    /*display: flex;*/
+    /*-ms-flex-wrap: wrap;*/
+    /*flex-wrap: wrap;*/
+/*}*/
+/*.tutor-dashboard-earning-sum{*/
+    /*-webkit-box-flex: 0;*/
+    /*-ms-flex: 0 0 150px;*/
+    /*flex: 0 0 150px;*/
+    /*background-color: #f4f4f4;*/
+    /*margin: 10px;*/
+    /*padding: 10px;*/
+    /*border: 1px solid #dddddd;*/
+/*}*/
+/*.tutor-dashboard-earning-sum p{*/
+    /*margin: 0;*/
+/*}*/
+/*.tutor-dashboard-earning-sum p.text-small{*/
+    /*font-size: 12px;*/
+    /*color: #666666;*/
+/*}*/
 
 /** Earning Report */
 .tutor-date-range-filter-wrap{
