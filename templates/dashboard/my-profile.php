@@ -4,6 +4,8 @@
     $uid = get_current_user_id();
     $user = get_userdata( $uid );
 
+    // @TODO: translate static text & check empty value
+
 ?>
 
 <h3>My Profile</h3>
