@@ -572,13 +572,28 @@ jQuery(document).ready(function($){
         $( ".tutor_report_datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
     }
 
-    $(document).on('click', '.withdraw-method-select-input', function(e){
-        var $that = $(this);
-        var method_id = $that.closest('.withdraw-method-select').attr('data-withdraw-method');
 
+    /**
+     * Withdraw Form Tab/Toggle
+     *
+     * @since v.1.1.2
+     */
+
+    $(".withdraw-method-select-input").on('change', function(e){
+        var $that = $(this);
         $('.withdraw-method-form').hide();
-        $('#withdraw-method-form-'+method_id).show();
+        $('#withdraw-method-form-'+$that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
     });
+
+    $('.withdraw-method-select-input').each(function () {
+        var $that = $(this);
+        if($that.is(":checked")){
+            $('.withdraw-method-form').hide();
+            $('#withdraw-method-form-'+$that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
+        }
+    });
+
+
 
     /**
      * Setting account for withdraw earning

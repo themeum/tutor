@@ -68,6 +68,8 @@ foreach ($chartData as $key => $salesCount){
 ?>
 
 
+<h3><?php _e('Earnings', 'tutor') ?></h3>
+
 <div class="tutor-dashboard-content-inner">
 
 	<div class="tutor-dashboard-inline-links">

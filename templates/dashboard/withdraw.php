@@ -49,7 +49,7 @@ $user_id = get_current_user_id();
                 </p>
                 <p>
 					<?php
-					$my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('my-profile');
+					$my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings/withdraw-settings');
 					echo sprintf(__( 'You can change your %s withdraw preference %s ' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
 					?>
                 </p>

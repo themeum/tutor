@@ -1935,7 +1935,7 @@ class Utils {
 			'withdraw'        => __('Withdraw', 'tutor'),
 			//'purchase-history'        => __('Purchase History', 'tutor'),
 			//'messages'        => __('Messages', 'tutor'),
-			//'settings'        => __('Settings', 'tutor'),
+			'settings'        => __('Settings', 'tutor'),
 			'logout'        => __('Logout', 'tutor'),
 		);
 

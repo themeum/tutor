@@ -5,7 +5,7 @@
     --tutor-primary-hover-color: #1b52a9;
     --tutor-text-color: #4B5981;
     --tutor-light-color: #B1B8C9;
-    --tutor-success-button-color: #86B223;
+    --tutor-success-button-color: #4BD863;
 }
 
 body {
@@ -1289,6 +1289,21 @@ a.tutor-btn.bordered-btn:hover,
 
 /* end dashboard content*/
 
+/*  dashboard profile*/
+
+.tutor-dashboard-profile .tutor-dashboard-profile-item{
+    display: flex;
+}
+.tutor-dashboard-profile .tutor-dashboard-profile-item .heading{
+    min-width: 190px;
+}
+
+.tutor-dashboard-profile .tutor-dashboard-profile-item .content{
+    flex-grow: 1;
+}
+
+/* end dashboard profile*/
+
 .tutor-dashboard-avater img{
     width: 70px;
     height: 70px;
@@ -1321,7 +1336,7 @@ a.tutor-btn.bordered-btn:hover,
     margin-left: 60px;
 }
 .tutor-dashboard-inline-links{
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 .tutor-dashboard-inline-links ul{
     margin: 0;
@@ -1469,12 +1484,12 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-dashboard-menu-withdraw a::before{
     content: "\e960";
 }
-
+.tutor-dashboard-menu-settings a::before{
+    content: "\e961";
+}
 .tutor-dashboard-menu-logout a::before{
     content: "\e962";
 }
-
-
 
 .tutor-dashboard-content{
     padding-top: 30px;
@@ -1577,113 +1592,126 @@ table.tutor-dashboard-statement-table p.small-text {
 /**
 Withdraw Method
  */
+
+
 .withdraw-method-select-wrap{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
+    margin: 0 -15px 50px;
 }
-.withdraw-method-select{
-    margin-right: 10px;
+
+.withdraw-method-select-wrap .withdraw-method-select{
+    flex-grow: 1;
+    padding: 0 15px;
 }
-.withdraw-method-select-wrap label {
-    background: #f4f4f4;
-    padding: 30px 50px;
+.withdraw-method-select-wrap .withdraw-method-select label{
     display: block;
-    border: 1px solid #dddddd;
+    padding: 20px;
+    margin: 0;
     cursor: pointer;
-    font-size: 20px;
+    overflow: hidden;
+    border: 1px solid #DCDFE5;
+    border-radius: 4px;
+    position: relative;
+}
+.withdraw-method-select-wrap .withdraw-method-select input:checked + label{
+    border-color: var(--tutor-success-button-color);
+    box-shadow: 0 0 0 1px var(--tutor-success-button-color);
+}
+.withdraw-method-select-wrap .withdraw-method-select label::after{
+    content: '\e90f';
+    position: absolute;
+    right: -1px;
+    top: -1px;
+    border: 1px solid #DCDFE5;
+    height: 22px;
+    width: 22px;
     text-align: center;
+    line-height: 22px;
+    color: transparent;
 }
-.withdraw-method-select-wrap label p{
-    margin-bottom: 10px;
+.withdraw-method-select-wrap .withdraw-method-select input:checked + label::after{
+    color: #fff;
+    background: var(--tutor-success-button-color);
+    border-color: var(--tutor-success-button-color);
+    font-family: 'tutor' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    font-size: 13px;
 }
-.withdraw-method-select-wrap input:checked + label{
-    background-color: #03b423;
-    border: 1px solid #039623;
-    color: #ffffff;
+
+.withdraw-method-select-wrap .withdraw-method-select p{
+    margin: 0;
 }
-.withdraw-method-forms-wrap{
-    margin: 20px 0;
+.withdraw-method-select-wrap .withdraw-method-select label > p{
+    font-size: 20px;
+    font-weight: 600;
+    color: #4B5981;
 }
-.withdraw-method-forms-wrap label{
-    display: block;
-    margin: 5px 0;
+.withdraw-method-select-wrap .withdraw-method-select label span{
+    color: #B0B6C8;
+    font-size: 14px;
+    font-weight: 400;
 }
+
 .withdraw-method-form{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
+    margin: 0 -15px;
 }
-.withdraw-method-field-wrap{
-    width: 50%;
+
+
+.withdraw-method-form > div{
+    flex-grow: 1;
+    min-width: 50%;
+    padding: 0 15px 20px;
 }
-.withdraw-method-field-wrap input{
-    width: 90%;
-}
-.withdraw-account-save-btn-wrap{
+
+.withdraw-method-form > div.withdraw-account-save-btn-wrap{
     width: 100%;
-    margin: 20px 0;
 }
-.withdraw-account-save-btn-wrap button:focus{
+
+
+.withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]),
+.withdraw-method-forms-wrap .withdraw-method-form textarea{
+    border: 1px solid #DCDFE5;
+    display: block;
+    width: 100%;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 4px;
+}
+
+
+.withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]):focus,
+.withdraw-method-forms-wrap .withdraw-method-form textarea:focus{
+    border-color: var(--tutor-primary-color);
     outline: none;
 }
 
-.withdraw-page-current-balance {
-    padding: 10px 20px;
-    border: 1px solid #eee;
-    margin-bottom: 20px;
+.withdraw-method-forms-wrap .withdraw-method-form textarea{
+    min-height: 80px;
 }
-.withdraw-balance-row{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 15px;
-}
-.withdraw-balance-col{
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-}
-.open-withdraw-form-btn{
+
+
+.withdraw-method-forms-wrap .withdraw-method-form label{
+    color: #989EAF;
+    font-size: 14px;
+    margin-bottom: 8px;
     display: block;
-    background-color: #3057D5;
-    color: #ffffff;
-    padding: 5px 10px;
 }
-.open-withdraw-form-btn:hover {
-    background-color: #2b4eac;
+
+
+.withdraw-method-forms-wrap .withdraw-method-form .withdraw-field-desc{
+    font-size: 12px;
+    margin: 5px 0 0;
+    font-style: italic;
 }
-.tutor-earning-withdraw-form-wrap{
-    padding: 10px 20px;
-    border: 1px solid #eee;
-    margin-bottom: 20px;
-}
-.withdraw-form-field-row {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-}
-.withdraw-form-field-amount {
-    width: 200px;
-    margin-right: 10px;
-}
-.withdraw-form-field-amount input{
-    width: 100%;
-}
-.withdraw-history-table-wrap{
-    padding: 10px 20px;
-    border: 1px solid #eee;
-    margin-bottom: 20px;
-}
-.withdraw-history-table-title{
-    border-bottom: 1px solid #eee;
-    margin-bottom: 20px;
-}
+
+
 /** END Withdraw */
 
 /**
