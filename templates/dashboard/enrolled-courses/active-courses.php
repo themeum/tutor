@@ -70,7 +70,7 @@
 		endwhile;
 		wp_reset_postdata();
     else:
-        echo "<div class='tutor-mycourse-wrap'>". esc_html__('There\'s no active course', 'tutor') ."</div>";
+        echo "<div class='tutor-mycourse-wrap'><div class='tutor-mycourse-content'>".__('There\'s no active course', 'tutor')."</div></div>";
 	endif;
 
 	?>

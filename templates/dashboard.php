@@ -81,7 +81,7 @@ do_action('tutor_dashboard/before/wrap'); ?>
                                     $buton_text = __('<i class="tutor-icon-man-user"></i> &nbsp; Become an instructor', 'tutor');
                                 }
                             ?>
-                            <a class="tutor-btn" href="<?php echo esc_url($button_page_url); ?>">
+                            <a class="tutor-btn bordered-btn" href="<?php echo esc_url($button_page_url); ?>">
                                 <?php echo $buton_text; ?>
                             </a>
                         </div>

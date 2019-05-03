@@ -9,9 +9,10 @@
         $my_courses = tutor_utils()->get_courses_by_instructor(get_current_user_id(), 'any');
         $earning_sum = tutor_utils()->get_earning_sum();
 
-        $enrolled_course_count = $enrolled_course->post_count;
+        $enrolled_course_count = $enrolled_course ? $enrolled_course->post_count : 0;
         $completed_course_count = count($completed_courses);
         $active_course_count = $enrolled_course_count - $completed_course_count;
+
 
     ?>
 
@@ -62,6 +63,11 @@
         ?>
     </div>
 
+    <?php
+        $instructor_course = tutor_utils()->get_courses_for_instructors(get_current_user_id());
+        if(count($instructor_course)) {
+    ?>
+
     <div class="tutor-dashboard-info-table-wrap">
         <h3><?php _e('Most Popular Courses', 'tutor'); ?></h3>
         <table class="tutor-dashboard-info-table">
@@ -82,5 +88,6 @@
             </tbody>
         </table>
     </div>
+    <?php } ?>
 
 </div>

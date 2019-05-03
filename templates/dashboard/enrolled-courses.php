@@ -64,7 +64,7 @@
 
 		wp_reset_postdata();
     else:
-        echo "<div class='tutor-mycourse-wrap'>You didn't purchased any course</div>";
+        echo "<div class='tutor-mycourse-wrap'><div class='tutor-mycourse-content'>".__('You didn\'t purchased any course', 'tutor')."</div></div>";
 	endif;
 
 	?>

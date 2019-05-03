@@ -80,4 +80,6 @@ if ($attempted_count){
         </table>
     </div>
 
-<?php } ?>
+<?php } else{
+    echo __('Quiz data is empty', 'tutor');
+} ?>
