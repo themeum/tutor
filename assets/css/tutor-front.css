@@ -1302,6 +1302,16 @@ a.tutor-btn.bordered-btn:hover,
     flex-grow: 1;
 }
 
+.tutor-dashboard-profile .tutor-dashboard-profile-item .content small{
+    font-size: inherit;
+    font-style: italic;
+    /*color: #999;*/
+}
+
+.tutor-dashboard-profile .tutor-dashboard-profile-item .content small a{
+    color: var(--tutor-primary-color);
+}
+
 /* end dashboard profile*/
 
 .tutor-dashboard-avater img{
