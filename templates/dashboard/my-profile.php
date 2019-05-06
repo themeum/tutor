@@ -18,23 +18,16 @@
     if(empty($fname)){
         $fname = sprintf(__('%s First name is empty, %s click here to set %s %s', 'tutor'), "<small>", "<a href='$profile_settings_link'>", "</a>", "</small>");
     }
-
     if(empty($lname)){
         $lname = sprintf(__('%s Last name is empty, %s click here to set %s %s', 'tutor'), "<small>", "<a href='$profile_settings_link'>", "</a>", "</small>");
     }
-
     if(empty($phone)){
         $phone = sprintf(__('%s Phone number is empty, %s click here to set %s %s', 'tutor'), "<small>", "<a href='$profile_settings_link'>", "</a>", "</small>");
     }
-
     if(empty($bio)){
         $bio = sprintf(__('%s Bio data is empty, %s click here to set %s %s', 'tutor'), "<small>", "<a href='$profile_settings_link'>", "</a>", "</small>");
-    }*/
-
-
-
-
-// @TODO: translate static text & check empty value
+    }
+*/
 
 
 
@@ -45,7 +38,7 @@
     <div class="tutor-dashboard-profile">
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span>Registration Date</span>
+                <span><?php esc_html_e('Registration Date', 'tutor'); ?></span>
             </div>
             <div class="content">
                 <p><?php echo esc_html($rdate) ?>&nbsp;</p>
@@ -53,34 +46,34 @@
         </div>
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span>First Name</span>
+                <span><?php esc_html_e('First Name', 'tutor'); ?></span>
             </div>
             <div class="content">
-                <p><?php echo $fname ? $fname : '________'; ?>&nbsp;</p>
+                <p><?php echo $fname ? esc_html($fname) : esc_html('________'); ?>&nbsp;</p>
             </div>
         </div>
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span>Last Name</span>
+                <span><?php esc_html_e('Last Name', 'tutor'); ?></span>
             </div>
             <div class="content">
-                <p><?php echo $lname ? $lname : '________'; ?>&nbsp;</p>
+                <p><?php echo $lname ? esc_html_e($lname) : esc_html('________'); ?>&nbsp;</p>
             </div>
         </div>
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span>Username</span>
+                <span><?php esc_html_e('Username', 'tutor'); ?></span>
             </div>
             <div class="content">
-                <p><?php echo $uname; ?>&nbsp;</p>
+                <p><?php echo esc_html($uname); ?>&nbsp;</p>
             </div>
         </div>
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span>Email</span>
+                <span><?php esc_html_e('Email', 'tutor'); ?></span>
             </div>
             <div class="content">
-                <p><?php echo $email; ?>&nbsp;</p>
+                <p><?php echo esc_html($email); ?>&nbsp;</p>
             </div>
         </div>
         <div class="tutor-dashboard-profile-item">
@@ -88,16 +81,16 @@
                 <span>Phone Number</span>
             </div>
             <div class="content">
-                <p><?php echo $phone ? $phone : '________'; ?>&nbsp;</p>
+                <p><?php echo $phone ? esc_html($phone) : esc_html('________'); ?>&nbsp;</p>
             </div>
         </div>
 
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span>Bio</span>
+                <span><?php esc_html_e('Bio', 'tutor'); ?></span>
             </div>
             <div class="content">
-                <p><?php echo $bio ? $bio : '________'; ?>&nbsp;</p>
+                <p><?php echo $bio ? esc_html($bio) : esc_html('________'); ?>&nbsp;</p>
             </div>
         </div>
     </div>

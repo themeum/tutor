@@ -12,16 +12,16 @@
         ?>
         <ul>
             <li>
-                <a href="<?php echo esc_url($settings_url);  ?>"> <?php _e('Profile'); ?></a>
+                <a href="<?php echo esc_url($settings_url);  ?>"> <?php _e('Profile', 'tutor'); ?></a>
             </li>
-            <li>
-                <a href="<?php echo esc_url($education);  ?>"> <?php _e('Education'); ?></a>
+            <!--<li>
+                <a href="<?php /*echo esc_url($education);  */?>"> <?php /*_e('Education'); */?></a>
             </li>
             <li class="active">
-                <a href="<?php echo esc_url($skill);  ?>"> <?php _e('Expertise & Skill'); ?></a>
-            </li>
+                <a href="<?php /*echo esc_url($skill);  */?>"> <?php /*_e('Expertise & Skill'); */?></a>
+            </li>-->
             <li>
-                <a href="<?php echo esc_url($withdraw);  ?>"> <?php _e('Withdraw'); ?></a>
+                <a href="<?php echo esc_url($withdraw);  ?>"> <?php _e('Withdraw', 'tutor'); ?></a>
             </li>
 
         </ul>
