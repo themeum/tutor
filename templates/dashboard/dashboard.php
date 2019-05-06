@@ -1,4 +1,4 @@
-<h1><?php _e('Dashboard', 'tutor') ?></h1>
+<h3><?php _e('Dashboard', 'tutor') ?></h3>
 
 <div class="tutor-dashboard-content-inner">
 
@@ -9,56 +9,85 @@
         $my_courses = tutor_utils()->get_courses_by_instructor(get_current_user_id(), 'any');
         $earning_sum = tutor_utils()->get_earning_sum();
 
-        $enrolled_course_count = $enrolled_course->post_count;
+        $enrolled_course_count = $enrolled_course ? $enrolled_course->post_count : 0;
         $completed_course_count = count($completed_courses);
         $active_course_count = $enrolled_course_count - $completed_course_count;
 
+
     ?>
 
-    <ul class="tutor-dashboard-info-cards">
-        <li>
+    <div class="tutor-dashboard-info-cards">
+        <div class="tutor-dashboard-info-card">
             <p>
-                <?php _e('Enrolled Course', 'tutor'); ?>
-                <span><?php echo esc_html($enrolled_course_count); ?></span>
+                <span><?php _e('Enrolled Course', 'tutor'); ?></span>
+                <span class="tutor-dashboard-info-val"><?php echo esc_html($enrolled_course_count); ?></span>
             </p>
-        </li>
-        <li>
+        </div>
+        <div class="tutor-dashboard-info-card">
             <p>
-                <?php _e('Active Course', 'tutor'); ?>
-                <span><?php echo esc_html($active_course_count); ?></span>
+                <span><?php _e('Active Course', 'tutor'); ?></span>
+                <span class="tutor-dashboard-info-val"><?php echo esc_html($active_course_count); ?></span>
             </p>
-        </li>
-        <li>
+        </div>
+        <div class="tutor-dashboard-info-card">
             <p>
-                <?php _e('Completed Course', 'tutor'); ?>
-                <span><?php echo esc_html($completed_course_count); ?></span>
+                <span><?php _e('Completed Course', 'tutor'); ?></span>
+                <span class="tutor-dashboard-info-val"><?php echo esc_html($completed_course_count); ?></span>
             </p>
-        </li>
+        </div>
 
         <?php
             if(current_user_can(tutor()->instructor_role)) :
         ?>
 
-        <li>
+        <div class="tutor-dashboard-info-card">
             <p>
-                <?php _e('Total Students', 'tutor'); ?>
-                <span><?php echo esc_html($total_students); ?></span>
+                <span><?php _e('Total Students', 'tutor'); ?></span>
+                <span class="tutor-dashboard-info-val"><?php echo esc_html($total_students); ?></span>
             </p>
-        </li>
-        <li>
+        </div>
+        <div class="tutor-dashboard-info-card">
             <p>
-                <?php _e('Total Courses', 'tutor'); ?>
-                <span><?php echo esc_html(count($my_courses)); ?></span>
+                <span><?php _e('Total Courses', 'tutor'); ?></span>
+                <span class="tutor-dashboard-info-val"><?php echo esc_html(count($my_courses)); ?></span>
             </p>
-        </li>
-        <li>
+        </div>
+        <div class="tutor-dashboard-info-card">
             <p>
-                <?php _e('Total Earning', 'tutor'); ?>
-                <span><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></span>
+                <span><?php _e('Total Earning', 'tutor'); ?></span>
+                <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></span>
             </p>
-        </li>
+        </div>
         <?php
             endif;
         ?>
-    </ul>
+    </div>
+
+    <?php
+        $instructor_course = tutor_utils()->get_courses_for_instructors(get_current_user_id());
+        if(count($instructor_course)) {
+    ?>
+
+    <div class="tutor-dashboard-info-table-wrap">
+        <h3><?php _e('Most Popular Courses', 'tutor'); ?></h3>
+        <table class="tutor-dashboard-info-table">
+            <thead>
+            <tr>
+                <td><?php _e('Course Name', 'tutor'); ?></td>
+                <td><?php _e('Enrolled', 'tutor'); ?></td>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+                $instructor_course = tutor_utils()->get_courses_for_instructors(get_current_user_id());
+                foreach ($instructor_course as $course){
+                    $enrolled = tutor_utils()->count_enrolled_users_by_course($course->ID);
+                    echo "<tr><td>$course->post_title</td><td>$enrolled</td></tr>";
+                }
+            ?>
+            </tbody>
+        </table>
+    </div>
+    <?php } ?>
+
 </div>

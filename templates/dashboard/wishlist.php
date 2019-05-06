@@ -1,8 +1,9 @@
 <?php global $post; ?>
 
 
-<h1><?php _e('Wishlist', 'tutor'); ?></h1>
+<h3><?php _e('Wishlist', 'tutor'); ?></h3>
 <div class="tutor-dashboard-content-inner">
+    <div class="tutor-row">
 
 	<?php
 	$wishlists = tutor_utils()->get_wishlist();
@@ -33,8 +34,9 @@
 		wp_reset_postdata();
 
 	else:
-        echo "There's no active course";
+        echo "<div class=\"tutor-col\">".esc_html('There\'s no active course')."</div>";
 	endif;
 
 	?>
+    </div>
 </div>

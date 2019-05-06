@@ -125,10 +125,7 @@ jQuery(document).ready(function($){
                     var review_id = data.data.review_id;
                     var review = data.data.review;
                     $('.tutor-review-'+review_id+' .review-content').html(review);
-                },
-                complete: function () {
-                    $('.tutor-write-review-form').slideUp();
-                    $that.removeClass('updating-icon');
+                    location.reload();
                 }
             });
         }
@@ -575,13 +572,28 @@ jQuery(document).ready(function($){
         $( ".tutor_report_datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
     }
 
-    $(document).on('click', '.withdraw-method-select-input', function(e){
-        var $that = $(this);
-        var method_id = $that.closest('.withdraw-method-select').attr('data-withdraw-method');
 
+    /**
+     * Withdraw Form Tab/Toggle
+     *
+     * @since v.1.1.2
+     */
+
+    $(".withdraw-method-select-input").on('change', function(e){
+        var $that = $(this);
         $('.withdraw-method-form').hide();
-        $('#withdraw-method-form-'+method_id).show();
+        $('#withdraw-method-form-'+$that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
     });
+
+    $('.withdraw-method-select-input').each(function () {
+        var $that = $(this);
+        if($that.is(":checked")){
+            $('.withdraw-method-form').hide();
+            $('#withdraw-method-form-'+$that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
+        }
+    });
+
+
 
     /**
      * Setting account for withdraw earning
@@ -670,6 +682,19 @@ jQuery(document).ready(function($){
                 $btn.removeClass('updating-icon');
             }
         });
+    });
+
+    var frontEndModal = $('.tutor-frontend-modal');
+    frontEndModal.each(function () {
+        var modal = $(this),
+            action = $(this).data('popup-rel');
+        $('[href="'+action+'"]').on('click', function (e) {
+            modal.fadeIn();
+            e.preventDefault();
+        });
+    });
+    $('.tm-close').add('.tutor-frontend-modal-overlay').on('click', function () {
+        frontEndModal.fadeOut();
     });
 
 

@@ -1929,13 +1929,13 @@ class Utils {
 			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
 			'my-courses'        => __('My Courses', 'tutor'),
 			'wishlist'          => __('Wishlist', 'tutor'),
-			'my-reviews'        => __('My Reviews', 'tutor'),
+			'reviews'           => __('Reviews', 'tutor'),
 			'quiz-attempts'        => __('Quiz Attempts', 'tutor'),
 			'earning'        => __('Earning', 'tutor'),
 			'withdraw'        => __('Withdraw', 'tutor'),
 			//'purchase-history'        => __('Purchase History', 'tutor'),
 			//'messages'        => __('Messages', 'tutor'),
-			//'settings'        => __('Settings', 'tutor'),
+			'settings'        => __('Settings', 'tutor'),
 			'logout'        => __('Logout', 'tutor'),
 		);
 
@@ -3584,6 +3584,21 @@ class Utils {
 
 		if ($student_register_page){
 			return get_the_permalink($student_register_page);
+		}
+		return false;
+	}
+	/**
+	 * @return bool|false|string
+	 *
+	 * Instructor registration form
+	 *
+	 * @since v.1.2.13
+	 */
+	public function instructor_register_url(){
+		$instructor_register_page = (int) $this->get_option('instructor_register_page');
+
+		if ($instructor_register_page){
+			return get_the_permalink($instructor_register_page);
 		}
 		return false;
 	}

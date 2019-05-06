@@ -17,7 +17,7 @@ if ($instructors){
 	?>
 	<h4 class="tutor-segment-title"><?php _e('About the instructors', 'tutor'); ?></h4>
 
-	<div class="tutor-course-instructors-wrap tutor-single-course-segment">
+	<div class="tutor-course-instructors-wrap tutor-single-course-segment" id="single-course-ratings">
 		<?php
 		foreach ($instructors as $instructor){
 		    $profile_url = tutor_utils()->profile_url($instructor->ID);

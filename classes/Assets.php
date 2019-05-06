@@ -17,6 +17,7 @@ class Assets{
 	public function admin_scripts(){
 		wp_enqueue_style('tutor-select2', tutor()->url.'assets/packages/select2/select2.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-admin', tutor()->url.'assets/css/tutor-admin.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-icon', tutor()->url.'assets/icons/css/tutor-icon.css', array(), tutor()->version);
 
 		/**
 		 * Scripts

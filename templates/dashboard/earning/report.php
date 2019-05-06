@@ -20,6 +20,8 @@ if ( ! empty($_GET['date_range_from']) && ! empty($_GET['date_range_to'])){
 	$sub_page = 'date_range';
 }
 ?>
+
+    <h3><?php _e('Earning Report', 'tutor'); ?></h3>
     <div class="tutor-dashboard-inline-links">
         <ul>
             <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning'); ?>"> <?php _e('Earning'); ?></a>
@@ -33,7 +35,6 @@ if ( ! empty($_GET['date_range_from']) && ! empty($_GET['date_range_to'])){
         </ul>
     </div>
 
-    <h3><?php _e('Earning Report', 'tutor'); ?></h3>
 
 <?php
 tutor_load_template('dashboard.earning.earning-report-top-menu', compact('sub_page'));

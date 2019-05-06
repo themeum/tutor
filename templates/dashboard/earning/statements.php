@@ -30,9 +30,6 @@ if ( ! empty($_GET['date_range_from']) && ! empty($_GET['date_range_to'])){
             </li>
         </ul>
     </div>
-
-    <h3><?php _e('Statements', 'tutor'); ?></h3>
-
 <?php
 tutor_load_template('dashboard.earning.earning-report-top-menu', compact('sub_page'));
 
@@ -110,6 +107,14 @@ switch ($sub_page){
 		break;
 }
 
+?>
+
+<div class="tutor-dashboard-item-group">
+    <h4><?php _e('Statements', 'tutor'); ?></h4>
+
+
+<?php
+
 if ($statements->count) {
 	?>
 
@@ -176,18 +181,27 @@ if ($statements->count) {
 		}
 		?>
     </table>
+<?php } else{
+    printf("<span>%s</span>", __('Statement data is empty', 'tutor'));
+} ?>
 
-    <div class="tutor-pagination">
+</div>
 
-		<?php
-		echo paginate_links( array(
-			'format' => '?current_page=%#%',
-			'current' => $current_page,
-			'total' => ceil($statements->count/$per_page)
-		) );
-		?>
+<?php
 
-    </div>
+if ($statements->count){
+    ?>
+        <div class="tutor-pagination">
+            <?php
+                echo paginate_links( array(
+                    'format' => '?current_page=%#%',
+                    'current' => $current_page,
+                    'total' => ceil($statements->count/$per_page)
+                ) );
+            ?>
 
-	<?php
+        </div>
+
+    <?php
 }
+
