@@ -26,6 +26,7 @@ final class Tutor{
 
 	private $addons;
 	private $post_types;
+	private $taxonomies;
 	private $assets;
 	private $course;
 	private $lesson;
@@ -84,6 +85,7 @@ final class Tutor{
 
 		$this->addons = new Addons();
 		$this->post_types = new Post_types();
+		$this->taxonomies = new Taxonomies();
 		$this->assets = new Assets();
 		$this->admin = new Admin();
 		$this->ajax = new Ajax();
