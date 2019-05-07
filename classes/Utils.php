@@ -448,15 +448,19 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_courses_by_instructor($instructor_id = 0, $post_status = 'publish'){
+	public function get_courses_by_instructor($instructor_id = 0, $post_status = array('publish')){
 		global $wpdb;
 
 		$instructor_id = $this->get_user_id($instructor_id);
 		$course_post_type = tutor()->course_post_type;
 
-		$where_post_status = "AND $wpdb->posts.post_status = 'publish' ";
+
 		if ($post_status === 'any'){
 			$where_post_status = "";
+		}else{
+			$post_status = (array) $post_status;
+			$statuses = "'".implode("','", $post_status)."'";
+			$where_post_status = "AND $wpdb->posts.post_status IN({$statuses}) ";
 		}
 
 		$querystr = "
@@ -1923,23 +1927,31 @@ class Utils {
 
 	public function tutor_dashboard_pages(){
 		$nav_items = array(
-
 			'index'             => __('Dashboard', 'tutor'),
 			'my-profile'        => __('My Profile', 'tutor'),
 			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
-			'my-courses'        => __('My Courses', 'tutor'),
 			'wishlist'          => __('Wishlist', 'tutor'),
 			'reviews'           => __('Reviews', 'tutor'),
-			'quiz-attempts'        => __('Quiz Attempts', 'tutor'),
-			'earning'        => __('Earning', 'tutor'),
-			'withdraw'        => __('Withdraw', 'tutor'),
+
 			//'purchase-history'        => __('Purchase History', 'tutor'),
 			//'messages'        => __('Messages', 'tutor'),
-			'settings'        => __('Settings', 'tutor'),
-			'logout'        => __('Logout', 'tutor'),
 		);
 
-		return apply_filters('tutor_dashboard/student/pages', $nav_items);
+		if (current_user_can(tutor()->instructor_role)) {
+			$instructor_items = array(
+				'my-courses'        => __('My Courses', 'tutor'),
+				'quiz-attempts'        => __('Quiz Attempts', 'tutor'),
+				'earning'        => __('Earning', 'tutor'),
+				'withdraw'        => __('Withdraw', 'tutor'),
+			);
+
+			$nav_items = array_merge($nav_items, $instructor_items);
+		}
+
+		$nav_items['settings'] = __('Settings', 'tutor');
+		$nav_items['logout'] = __('Logout', 'tutor');
+
+		return apply_filters('tutor_dashboard/nav_items', $nav_items);
 	}
 
 	/**

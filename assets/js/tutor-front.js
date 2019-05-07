@@ -539,6 +539,7 @@ jQuery(document).ready(function($){
 
     $(document).on('keyup', function (e) {
         if (e.keyCode === 27) {
+            $('.tutor-frontend-modal').hide();
             $('.tutor-cart-box-login-form').fadeOut(100);
         }
     });
@@ -693,10 +694,42 @@ jQuery(document).ready(function($){
             e.preventDefault();
         });
     });
-    $('.tm-close').add('.tutor-frontend-modal-overlay').on('click', function () {
+    $(document).on('click', '.tm-close, .tutor-frontend-modal-overlay, .tutor-modal-btn-cancel', function () {
         frontEndModal.fadeOut();
     });
 
+    /**
+     * Delete Course
+     */
+    $(document).on('click', '.tutor-mycourse-delete-btn', function (e) {
+        e.preventDefault();
+        var course_id = $(this).attr('data-course-id');
+        $('#tutor-course-delete-id').val(course_id);
+    });
+    $(document).on('submit', '#tutor-delete-course-form', function (e) {
+        e.preventDefault();
 
+        var course_id = $('#tutor-course-delete-id').val();
+        var $btn = $('.tutor-modal-course-delete-btn');
+        var data = $(this).serialize();
+
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: data,
+            beforeSend: function () {
+                $btn.addClass('updating-icon');
+            },
+            success: function (data) {
+                if (data.success){
+                    $('#tutor-dashboard-course-'+course_id).remove();
+                }
+            },
+            complete: function () {
+                $btn.removeClass('updating-icon');
+                $('.tutor-frontend-modal').hide();
+            }
+        });
+    });
 
 });

@@ -3,7 +3,7 @@
 <div class="tutor-dashboard-content-inner">
 
 	<?php
-	$my_courses = tutor_utils()->get_courses_by_instructor(null, 'any');
+	$my_courses = tutor_utils()->get_courses_by_instructor(null, array('publish', 'draft', 'pending'));
 
 	if (is_array($my_courses) && count($my_courses)):
 		global $post;
@@ -13,16 +13,15 @@
 			$avg_rating = tutor_utils()->get_course_rating()->rating_avg;
 			?>
         
-            <div class="tutor-mycourse-wrap tutor-mycourse-<?php the_ID(); ?>">
+            <div id="tutor-dashboard-course-<?php the_ID(); ?>" class="tutor-mycourse-wrap tutor-mycourse-<?php the_ID(); ?>">
 
                 <div class="tutor-mycourse-thumbnail">
 					<?php
-					tutor_course_loop_thumbnail();
+                    tutor_course_loop_thumbnail();
 					?>
                 </div>
 
                 <div class="tutor-mycourse-content">
-
                     <div class="tutor-mycourse-rating">
 						<?php
 						tutor_utils()->star_rating_generator($avg_rating);
@@ -64,9 +63,10 @@
                         <div class="tutor-mycourses-stats">
 	                        <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
                             <a href="<?php echo get_edit_post_link(get_the_ID()); ?>" class="tutor-mycourse-edit"> <i class="tutor-icon-pencil"></i> Edit</a>
-                            <a href="#course-delete" class="tutor-mycourse-delete"> <i class="tutor-icon-garbage"></i> Delete</a>
+                            <a href="#tutor-course-delete" class="tutor-mycourse-delete-btn" data-course-id="<?php echo $post->ID; ?>"> <i
+                                        class="tutor-icon-garbage"></i>
+                                Delete</a>
                         </div>
-
                     </div>
                 </div>
 
@@ -81,7 +81,7 @@
 	<?php endif; ?>
 
 
-    <div class="tutor-frontend-modal" data-popup-rel="#course-delete" style="display: none">
+    <div class="tutor-frontend-modal" data-popup-rel="#tutor-course-delete" style="display: none">
         <div class="tutor-frontend-modal-overlay"></div>
         <div class="tutor-frontend-modal-content">
             <button class="tm-close tutor-icon-line-cross"></button>
@@ -89,10 +89,14 @@
             <div class="tutor-modal-body tutor-course-delete-popup">
                 <img src="<?php echo tutor()->url . 'assets/images/delete-icon.png' ?>" alt="">
                 <h3><?php _e('Delete This Course?', 'tutor'); ?></h3>
-                <p><?php _e('You have selected to this course Creative Nonfiction: Write Truth with Style If this was the action that you wanted to do . Please confirm your choice', 'tutor'); ?></p>
+                <p><?php _e("You are going to delete this course, it can't be undone", 'tutor'); ?></p>
                 <div class="tutor-modal-button-group">
-                    <button><?php _e('Cancel', 'tutor') ?></button>
-                    <button class="tutor-danger"><?php _e('Yes, Delete Course', 'tutor') ?></button>
+                    <form action="" id="tutor-delete-course-form">
+                        <input type="hidden" name="action" value="tutor_delete_dashboard_course">
+                        <input type="hidden" name="course_id" id="tutor-course-delete-id" value="">
+                        <button type="button" class="tutor-modal-btn-cancel"><?php _e('Cancel', 'tutor') ?></button>
+                        <button type="submit" class="tutor-danger tutor-modal-course-delete-btn"><?php _e('Yes, Delete Course', 'tutor') ?></button>
+                    </form>
                 </div>
             </div>
             
