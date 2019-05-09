@@ -217,7 +217,6 @@ class Admin{
 			$template_path = tutor()->path.'templates/';
 		}
 
-
 		$files  = @scandir( $template_path ); // @codingStandardsIgnoreLine.
 		$result = array();
 

@@ -11,26 +11,7 @@
     $uname = $user->user_login;
     $email = $user->user_email;
     $phone = get_user_meta($uid,'phone_number',true);
-    $bio = strip_tags(get_user_meta($uid,'_tutor_profile_bio',true));
-
-
-/*
-    if(empty($fname)){
-        $fname = sprintf(__('%s First name is empty, %s click here to set %s %s', 'tutor'), "<small>", "<a href='$profile_settings_link'>", "</a>", "</small>");
-    }
-    if(empty($lname)){
-        $lname = sprintf(__('%s Last name is empty, %s click here to set %s %s', 'tutor'), "<small>", "<a href='$profile_settings_link'>", "</a>", "</small>");
-    }
-    if(empty($phone)){
-        $phone = sprintf(__('%s Phone number is empty, %s click here to set %s %s', 'tutor'), "<small>", "<a href='$profile_settings_link'>", "</a>", "</small>");
-    }
-    if(empty($bio)){
-        $bio = sprintf(__('%s Bio data is empty, %s click here to set %s %s', 'tutor'), "<small>", "<a href='$profile_settings_link'>", "</a>", "</small>");
-    }
-*/
-
-
-
+    $bio = nl2br(strip_tags(get_user_meta($uid,'_tutor_profile_bio',true)));
 ?>
 
 <h3>My Profile</h3>
@@ -90,9 +71,12 @@
                 <span><?php esc_html_e('Bio', 'tutor'); ?></span>
             </div>
             <div class="content">
-                <p><?php echo $bio ? esc_html($bio) : esc_html('________'); ?>&nbsp;</p>
+                <p><?php echo $bio ? $bio : '________'; ?>&nbsp;</p>
             </div>
         </div>
+
+
+
     </div>
 
 </div>

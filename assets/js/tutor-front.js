@@ -732,4 +732,48 @@ jQuery(document).ready(function($){
         });
     });
 
+    /**
+     * Frontend Profile
+     */
+
+    if (! $('#tutor_profile_photo_id').val()) {
+        $('.tutor-profile-photo-delete-btn').hide();
+    }
+    // Uploading files
+    var file_frame;
+    $( document ).on( 'click', '.tutor-profile-photo-upload-btn', function( event ) {
+        event.preventDefault();
+
+        if ( file_frame ) {
+            file_frame.open();
+            return;
+        }
+        file_frame = wp.media.frames.downloadable_file = wp.media({
+            title: 'Choose an image',
+            button: {
+                text: 'Use image'
+            },
+            multiple: false
+        });
+        file_frame.on( 'select', function() {
+            var attachment           = file_frame.state().get( 'selection' ).first().toJSON();
+            var attachment_thumbnail = attachment.sizes.thumbnail || attachment.sizes.full;
+
+            $( '#tutor_profile_photo_id' ).val( attachment.id );
+            $( '.tutor-profile-photo-upload-wrap' ).find( 'img' ).attr( 'src', attachment_thumbnail.url );
+            $( '.tutor-profile-photo-delete-btn' ).show();
+        });
+        file_frame.open();
+    });
+
+    $( document ).on( 'click', '.tutor-profile-photo-delete-btn', function() {
+        $( '.tutor-profile-photo-upload-wrap' ).find( 'img' ).attr( 'src', _tutorobject.placeholder_img_src );
+        $( '#tutor_profile_photo_id' ).val( '' );
+        $( '.tutor-profile-photo-delete-btn' ).hide();
+        return false;
+    });
+
+
+
+
 });

@@ -3,7 +3,7 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, quiz, training, sell courses, courses, e-Learning, learning, learning management system, WordPress LMS
 Requires at least: 4.5
-Tested up to: 5.1
+Tested up to: 5.2
 Requires PHP: 5.4.0
 Stable tag: 1.2.13
 License: GPLv3
