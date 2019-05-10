@@ -42,28 +42,26 @@ $user_id = get_current_user_id();
 
         <div class="current-withdraw-account-wrap">
 			<?php
-			if ($withdraw_method_name){
-				?>
-                <p>
-					<?php _e('You will get paid by', 'tutor'); ?> <strong><?php echo $withdraw_method_name; ?></strong>
-                </p>
-                <p>
-					<?php
-					$my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings/withdraw-settings');
-					echo sprintf(__( 'You can change your %s withdraw preference %s ' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
-					?>
-                </p>
-				<?php
-			}else{
-				?>
-                <p>
-					<?php
-					$my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('my-profile');
-					echo sprintf(__( 'Please add your %s withdraw preference %s to make withdraw' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
-					?>
-                </p>
-				<?php
-			}
+                if ($withdraw_method_name){
+                    ?>
+                    <p>
+                        <?php _e('You will get paid by', 'tutor'); ?> <strong><?php echo $withdraw_method_name; ?></strong>
+                        <?php
+                            $my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings/withdraw-settings');
+                            echo sprintf(__( ', You can change your %s withdraw preference %s ' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
+                        ?>
+                    </p>
+                    <?php
+                }else{
+                    ?>
+                    <p>
+                        <?php
+                        $my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('my-profile');
+                        echo sprintf(__( 'Please add your %s withdraw preference %s to make withdraw' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
+                        ?>
+                    </p>
+                    <?php
+                }
 			?>
         </div>
 
@@ -78,18 +76,22 @@ $user_id = get_current_user_id();
             <form id="tutor-earning-withdraw-form" action="" method="post">
 				<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                 <input type="hidden" value="tutor_make_an_withdraw" name="action"/>
-
-                <p><?php _e('Enter withdraw amount and click withdraw button', 'tutor'); ?></p>
-
 				<?php do_action('tutor_withdraw_form_before'); ?>
-
                 <div class="withdraw-form-field-row">
-                    <div class="withdraw-form-field-amount">
-                        <input type="text" name="tutor_withdraw_amount">
+                    <label for="tutor_withdraw_amount"><?php _e('Amount:', 'tutor') ?></label>
+                    <div class="tutor-row">
+                        <div class="tutor-col-4">
+                            <div class="withdraw-form-field-amount">
+                                <input type="text" name="tutor_withdraw_amount">
+                            </div>
+                        </div>
+                        <div class="tutor-col">
+                            <div class="withdraw-form-field-button">
+                                <button class="tutor-btn" type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php _e('Withdraw', 'tutor'); ?></button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="withdraw-form-field-button">
-                        <button type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php _e('Withdraw', 'tutor'); ?></button>
-                    </div>
+                    <i><?php _e('Enter withdraw amount and click withdraw button', 'tutor') ?></i>
                 </div>
 
                 <div id="tutor-withdraw-form-response"></div>
