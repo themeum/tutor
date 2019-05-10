@@ -3650,7 +3650,12 @@ Course question and answer
     -webkit-transition: 300ms;
     transition: 300ms;
 }
-
+.tutor-form-group textarea {
+    line-height: 26px;
+    text-indent: 0;
+    padding: 15px;
+    height: 180px;
+}
 .tutor-form-group textarea:focus,
 .tutor-form-group input:not([type="submit"]):focus{
     background: #ffffff;
