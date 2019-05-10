@@ -155,7 +155,27 @@ class Student {
 	public function filter_avatar( $url, $id_or_email, $args){
 		global $wpdb;
 
-		$user_id = (int) $wpdb->get_var("SELECT ID FROM {$wpdb->users} WHERE ID = '{$id_or_email}' OR user_email = '{$id_or_email}' ");
+		$finder = false;
+
+        if ( is_numeric( $id_or_email ) ) {
+            $finder = absint( $id_or_email ) ;
+        } elseif ( is_string( $id_or_email ) ) {
+            $finder = $id_or_email;
+        } elseif ( $id_or_email instanceof WP_User ) {
+            // User Object
+            $finder = $id_or_email->ID;
+        } elseif ( $id_or_email instanceof WP_Post ) {
+            // Post Object
+            $finder = (int) $id_or_email->post_author;
+        } elseif ( $id_or_email instanceof WP_Comment ) {
+            return $url;
+        }
+
+        if ( ! $finder){
+            return $url;
+        }
+
+		$user_id = (int) $wpdb->get_var("SELECT ID FROM {$wpdb->users} WHERE ID = '{$finder}' OR user_email = '{$finder}' ");
 		if ($user_id){
 			$profile_photo = get_user_meta($user_id, '_tutor_profile_photo', true);
 			if ($profile_photo){
