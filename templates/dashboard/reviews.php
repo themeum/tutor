@@ -15,12 +15,13 @@ $reviews = tutor_utils()->get_reviews_by_user();
 <h3><?php _e(sprintf("My Reviews"), 'tutor'); ?></h3>
 
 <div class="tutor-dashboard-content-inner">
-    <div class="tutor-dashboard-inline-links">
+    <!--<div class="tutor-dashboard-inline-links">
         <ul>
-            <li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); ?>"> <?php _e(sprintf('Given (%s)', count($reviews)), 'tutor');  ; ?></a> </li>
-            <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/received-reviews'); ?>"> <?php _e('Received (27)'); ?></a> </li>
+            <li class="active"><a href="<?php /*echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); */?>"> <?php /*_e(sprintf('Given (%s)', count($reviews)), 'tutor');  ; */?></a> </li>
+            <li><a href="<?php /*echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/received-reviews'); */?>"> <?php /*_e('Received (27)'); */?></a> </li>
         </ul>
-    </div>
+        @TODO: CHeck received review
+    </div>-->
     <div class="tutor-dashboard-reviews-wrap">
 
         <?php
