@@ -18,6 +18,8 @@ class Student {
 		add_action('template_redirect', array($this, 'update_profile'));
 
 		add_filter('get_avatar_url', array($this, 'filter_avatar'), 10, 3);
+
+		add_action('tutor_action_tutor_reset_password', array($this, 'tutor_reset_password'));
 	}
 
 	/**
@@ -163,6 +165,45 @@ class Student {
 			}
 		}
 		return $url;
+	}
+
+	public function tutor_reset_password(){
+		//Checking nonce
+		tutor_utils()->checking_nonce();
+
+		$user = wp_get_current_user();
+
+		$previous_password = sanitize_text_field($_POST['previous_password']);
+		$new_password = sanitize_text_field($_POST['new_password']);
+		$confirm_new_password = sanitize_text_field($_POST['confirm_new_password']);
+
+		$previous_password_checked = wp_check_password( $previous_password, $user->user_pass, $user->ID);
+
+		$validation_errors = array();
+		if ( ! $previous_password_checked){
+			$validation_errors['incorrect_previous_password'] = __('Incorrect Previous Password', 'tutor');
+		}
+		if (empty($new_password)){
+			$validation_errors['new_password_required'] = __('New Password Required', 'tutor');
+		}
+		if (empty($confirm_new_password)){
+			$validation_errors['confirm_password_required'] = __('Confirm Password Required', 'tutor');
+		}
+		if ( $new_password !== $confirm_new_password){
+			$validation_errors['password_not_matched'] = __('New password and confirm password does not matched', 'tutor');
+		}
+		if (count($validation_errors)){
+			$this->error_msgs = $validation_errors;
+			add_filter('tutor_reset_password_validation_errors', array($this, 'tutor_student_form_validation_errors'));
+			return;
+		}
+
+		if ($previous_password_checked && ! empty($new_password) && $new_password === $confirm_new_password){
+			wp_set_password($new_password, $user->ID);
+		}
+
+		wp_redirect(wp_get_raw_referer());
+		die();
 	}
 
 }

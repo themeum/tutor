@@ -115,6 +115,9 @@ final class Tutor{
 		$this->run();
 
 		do_action('tutor_loaded');
+
+
+		add_action( 'init', array( $this, 'init_action' ) );
 	}
 	/**
 	 * @param $className
@@ -152,6 +155,16 @@ final class Tutor{
 		register_deactivation_hook(TUTOR_FILE, array($this, 'tutor_deactivation'));
 
 		do_action('tutor_after_run');
+	}
+
+	/**
+	 * Tutor Action Via do_action
+	 * @since 1.2.14
+	 */
+	public function init_action(){
+		if (isset($_REQUEST['tutor_action'])){
+			do_action('tutor_action_'.$_REQUEST['tutor_action']);
+		}
 	}
 
 	/**

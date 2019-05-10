@@ -2047,7 +2047,14 @@ a.tutor-profile-photo-upload-btn {
     right: 10px;
     top: 10px;
 }
+.tutor-reset-password-form-wrap .tutor-form-group{
+    display: flex;
+    max-width: 500px;
+}
 
+.tutor-reset-password-form-wrap .tutor-form-group label{
+    flex: 0 0 200px;
+}
 /**
 Instructor
  */
