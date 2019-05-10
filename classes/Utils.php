@@ -3893,23 +3893,29 @@ class Utils {
                     SUM(instructor_amount) as instructor_amount, 
                     (SELECT SUM(amount) FROM {$wpdb->prefix}tutor_withdraws WHERE user_id = {$user_id} AND status != 'rejected' ) as 
                     withdraws_amount,
-                    (SUM(instructor_amount) - (SELECT withdraws_amount) ) as balance,
                     SUM(admin_amount) as admin_amount, 
                     SUM(deduct_fees_amount)  as deduct_fees_amount
                     FROM {$wpdb->prefix}tutor_earnings 
                     WHERE user_id = {$user_id} AND order_status IN({$complete_status}) {$date_query} ");
 
-		if ( ! $earning_sum->course_price_total){
-			$earning_sum = (object) array(
-				'course_price_total'        => 0,
-				'course_price_grand_total'  => 0,
-				'instructor_amount'         => 0,
-				'withdraws_amount'          => 0,
-				'balance'                   => 0,
-				'admin_amount'              => 0,
-				'deduct_fees_amount'        => 0,
-			);
-		}
+		//TODO: need to check
+		// (SUM(instructor_amount) - (SELECT withdraws_amount) ) as balance,
+
+
+		if ( $earning_sum->course_price_total){
+            $earning_sum->balance = $earning_sum->instructor_amount - $earning_sum->withdraws_amount;
+        }else{
+
+            $earning_sum = (object) array(
+                'course_price_total'        => 0,
+                'course_price_grand_total'  => 0,
+                'instructor_amount'         => 0,
+                'withdraws_amount'          => 0,
+                'balance'                   => 0,
+                'admin_amount'              => 0,
+                'deduct_fees_amount'        => 0,
+            );
+        }
 
 		return $earning_sum;
 	}

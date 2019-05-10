@@ -1684,7 +1684,7 @@ Withdraw Method
     width: 100%;
 }
 
-
+.withdraw-form-field-amount input[type='text'],
 .withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]),
 .withdraw-method-forms-wrap .withdraw-method-form textarea{
     border: 1px solid #DCDFE5;
@@ -1693,6 +1693,16 @@ Withdraw Method
     background: transparent;
     box-shadow: none;
     border-radius: 4px;
+}
+
+
+label[for="tutor_withdraw_amount"]{
+    margin-bottom: 7px;
+    display: block;
+}
+.withdraw-form-field-amount input[type='text']{
+    margin-bottom: 10px;
+    height: 45px;
 }
 
 
