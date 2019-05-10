@@ -97,7 +97,7 @@ $user = wp_get_current_user();
                 </div>
             </div>
         </div>
-
+ins
 
         <div class="tutor-form-row">
             <div class="tutor-form-col-12">
