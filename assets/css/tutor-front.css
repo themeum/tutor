@@ -2021,6 +2021,33 @@ DatePicker
 /* ***********************      */
 /* End Tutor Student Dashboard  */
 /************************       */
+.tutor-profile-photo-upload-wrap{
+    width: 200px;
+    height: 200px;
+    margin-bottom: 50px;
+    position: relative;
+}
+.tutor-profile-photo-upload-wrap img{
+    width: 100%;
+    height: 100%;
+}
+a.tutor-profile-photo-upload-btn {
+    position: absolute;
+    bottom: 0;
+    background-color: var(--tutor-primary-color);
+    color: #fff;
+    display: block;
+    width: 100%;
+    text-align: CENTER;
+    padding: 7px 0;
+}
+.tutor-profile-photo-delete-btn{
+    position: absolute;
+    color: #ff000c;
+    right: 10px;
+    top: 10px;
+}
+
 /**
 Instructor
  */

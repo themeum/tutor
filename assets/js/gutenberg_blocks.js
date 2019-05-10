@@ -9,8 +9,10 @@ var el = wp.element.createElement,
  * Block for student registration
  *
  */
+
+
 registerBlockType( 'tutor-gutenberg/student-registration', {
-    title: 'Tutor Student Registration',
+    title: 'Student Registration',
     icon: 'welcome-learn-more',
     category: 'tutor',
     edit: function( props ) {
@@ -38,6 +40,7 @@ registerBlockType( 'tutor-gutenberg/student-registration', {
     },
 } );
 
+/*
 registerBlockType( 'tutor-gutenberg/student-dashboard', {
     title: 'Tutor Student Dashboard',
     icon: 'welcome-learn-more',
@@ -63,12 +66,13 @@ registerBlockType( 'tutor-gutenberg/student-dashboard', {
         return null;
     },
 } );
+*/
 
 
 //tutor_instructor_registration_form
 
 registerBlockType( 'tutor-gutenberg/instructor-registration', {
-    title: 'Instructor Registration Form',
+    title: 'Instructor Registration',
     icon: 'welcome-learn-more',
     category: 'tutor',
     edit: function( props ) {

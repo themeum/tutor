@@ -51,7 +51,7 @@ class Rewrite_Rules extends Tutor_Base {
 
 		if (is_array($course_nav_items) && count($course_nav_items)){
 			foreach ($course_nav_items as $nav_key => $nav_item){
-				$new_rules[$this->course_post_type."/(.+?)/{$nav_key}/?$"] ='index.php?post_type=course&name='.$wp_rewrite->preg_index(1).'&course_subpage='.$nav_key;
+				$new_rules[$this->course_post_type."/(.+?)/{$nav_key}/?$"] ="index.php?post_type={$this->course_post_type}&name=".$wp_rewrite->preg_index(1).'&course_subpage='.$nav_key;
 			}
 		}
 

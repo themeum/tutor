@@ -66,7 +66,6 @@
                 <input type="text" name="phone_number" value="<?php echo tutor_utils()->input_old('phone_number'); ?>" placeholder="<?php _e('Phone Number', 'tutor'); ?>">
             </div>
         </div>
-
     </div>
 
     <div class="tutor-form-row">

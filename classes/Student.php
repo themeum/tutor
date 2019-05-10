@@ -15,6 +15,9 @@ class Student {
 	protected $error_msgs = '';
 	public function __construct() {
 		add_action('template_redirect', array($this, 'register_student'));
+		add_action('template_redirect', array($this, 'update_profile'));
+
+		add_filter('get_avatar_url', array($this, 'filter_avatar'), 10, 3);
 	}
 
 	/**
@@ -105,6 +108,61 @@ class Student {
 	public function tutor_student_form_validation_errors(){
 		return $this->error_msgs;
 	}
-	
+
+	public function update_profile(){
+		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_profile_edit' ){
+			return;
+		}
+
+		//Checking nonce
+		tutor_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
+		$first_name     = sanitize_text_field(tutor_utils()->input_old('first_name'));
+		$last_name      = sanitize_text_field(tutor_utils()->input_old('last_name'));
+		$phone_number   = sanitize_text_field(tutor_utils()->input_old('phone_number'));
+		$tutor_profile_bio = wp_kses_post(tutor_utils()->input_old('tutor_profile_bio'));
+
+		$userdata = array(
+			'ID'            =>  $user_id,
+			'first_name'    =>  $first_name,
+			'last_name'     =>  $last_name,
+		);
+		$user_id  = wp_update_user( $userdata );
+
+		if ( ! is_wp_error( $user_id ) ) {
+			$_tutor_profile_photo = sanitize_text_field(tutor_utils()->avalue_dot('tutor_profile_photo_id', $_POST));
+
+			update_user_meta($user_id, 'phone_number', $phone_number);
+			update_user_meta($user_id, '_tutor_profile_bio', $tutor_profile_bio);
+			update_user_meta($user_id, '_tutor_profile_photo', $_tutor_profile_photo);
+		}
+
+		wp_redirect(wp_get_raw_referer());
+		die();
+	}
+
+	/**
+	 * @param $url
+	 * @param $id_or_email
+	 * @param $args
+	 *
+	 * @return false|string
+	 *
+	 * Change avatar URL with Tutor User Photo
+	 */
+
+	public function filter_avatar( $url, $id_or_email, $args){
+		global $wpdb;
+
+		$user_id = (int) $wpdb->get_var("SELECT ID FROM {$wpdb->users} WHERE ID = '{$id_or_email}' OR user_email = '{$id_or_email}' ");
+		if ($user_id){
+			$profile_photo = get_user_meta($user_id, '_tutor_profile_photo', true);
+			if ($profile_photo){
+				$url = wp_get_attachment_image_url($profile_photo, 'thumbnail');
+			}
+		}
+		return $url;
+	}
 
 }
