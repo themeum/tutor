@@ -30,7 +30,7 @@ $reviews = tutor_utils()->get_reviews_by_user();
                 <div class="tutor-dashboard-content-inner">
                     <p><?php _e("Sorry, but you are looking for something that isn't here." , 'tutor'); ?></p>
                 </div>
-                <?php return;
+                <?php
             }
         ?>
 
