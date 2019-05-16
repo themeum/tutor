@@ -4133,4 +4133,42 @@ class Utils {
 		do_action('tutor_after_blocked_instructor', $instructor_id);
 	}
 
+
+	public function set_flash_msg($msg = '', $name = 'success'){
+		global $wp_filesystem;
+		if ( ! $wp_filesystem ) {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		}
+
+		$filename = "tutor_flash_msg_{$name}.txt";
+		$upload_dir = wp_upload_dir();
+		$dir = trailingslashit($upload_dir['basedir']) . 'tutor/';
+
+		WP_Filesystem( false, $upload_dir['basedir'], true );
+
+		if( ! $wp_filesystem->is_dir( $dir ) ) {
+			$wp_filesystem->mkdir( $dir );
+		}
+		$wp_filesystem->put_contents( $dir . $filename, $msg );
+	}
+
+	public function get_flash_msg($name = null){
+		if ( ! $name){
+			return '';
+		}
+
+		$upload_dir = wp_get_upload_dir();
+		$upload_dir = trailingslashit($upload_dir['basedir']);
+		$msg_name = 'tutor_flash_msg_'.$name;
+
+		$msg = '';
+		$flash_msg_file_name = $upload_dir."tutor/{$msg_name}.txt";
+		if (file_exists($flash_msg_file_name)){
+			$msg = file_get_contents($flash_msg_file_name);
+			unlink($flash_msg_file_name);
+		}
+
+		return apply_filters('tutor_get_flash_msg', $msg, $name);
+	}
+
 }

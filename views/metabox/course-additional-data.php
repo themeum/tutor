@@ -58,7 +58,9 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 	    <?php
 	    foreach ($levels as $level_key => $level){
 	        ?>
-            <label> <input type="radio" name="course_level" value="<?php echo $level_key; ?>" <?php checked($level_key, $course_level) ?> > <?php echo
+            <label> <input type="radio" name="course_level" value="<?php echo $level_key; ?>" <?php $course_level ? checked($level_key,
+                    $course_level) : $level_key === 'intermediate' ? checked(1, 1): ''; ?> > <?php
+                echo
                 $level; ?> </label>
 		    <?php
 	    }
