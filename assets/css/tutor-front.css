@@ -816,6 +816,7 @@ div[class*="tutor-course-col"] {
 .tutor-course-loop-title h2{
     font-size: 16px;
     font-size: 16px;
+    font-size: 16px;
     font-size: 1rem;
 }
 .tutor-course-filter-wrap{
@@ -1296,6 +1297,8 @@ a.tutor-btn.bordered-btn:hover,
 /*  dashboard profile*/
 
 .tutor-dashboard-profile .tutor-dashboard-profile-item{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
 }
 .tutor-dashboard-profile .tutor-dashboard-profile-item .heading{
@@ -1303,6 +1306,8 @@ a.tutor-btn.bordered-btn:hover,
 }
 
 .tutor-dashboard-profile .tutor-dashboard-profile-item .content{
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
     flex-grow: 1;
 }
 
@@ -1441,7 +1446,7 @@ a.tutor-btn.bordered-btn:hover,
     line-height: 28px;
 }
 
-.tutor-dashboard-permalinks a::before{
+.tutor-dashboard-permalinks a:before{
     content: "\e968";
     font-family: 'tutor' !important;
     speak: none;
@@ -1456,61 +1461,61 @@ a.tutor-btn.bordered-btn:hover,
     vertical-align: middle;
     color: var(--tutor-primary-color);
     opacity: .6;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
     font-size: 17px;
 }
-.tutor-dashboard-permalinks a:hover::before{
+.tutor-dashboard-permalinks a:hover:before{
     opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 }
 
-.tutor-dashboard-permalinks li.active a::before{
+.tutor-dashboard-permalinks li.active a:before{
     opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     color: #fff;
 }
 
-.tutor-dashboard-menu-my-profile a::before{
+.tutor-dashboard-menu-my-profile a:before{
     content: "\e963";
 }
 
-.tutor-dashboard-menu-enrolled-courses a::before{
+.tutor-dashboard-menu-enrolled-courses a:before{
     content: "\e969";
 }
 
-.tutor-dashboard-menu-my-courses a::before{
+.tutor-dashboard-menu-my-courses a:before{
     content: "\e965";
 }
 
-.tutor-dashboard-menu-wishlist a::before{
+.tutor-dashboard-menu-wishlist a:before{
     content: "\e908";
 }
 
-.tutor-dashboard-menu-reviews a::before{
+.tutor-dashboard-menu-reviews a:before{
     content: "\e917";
 }
 
-.tutor-dashboard-menu-quiz-attempts a::before{
+.tutor-dashboard-menu-quiz-attempts a:before{
     content: "\e948";
 }
 
-.tutor-dashboard-menu-earning a::before{
+.tutor-dashboard-menu-earning a:before{
     content: "\e96b";
 }
 
-.tutor-dashboard-menu-withdraw a::before{
+.tutor-dashboard-menu-withdraw a:before{
     content: "\e960";
 }
-.tutor-dashboard-menu-settings a::before{
+.tutor-dashboard-menu-settings a:before{
     content: "\e961";
 }
-.tutor-dashboard-menu-logout a::before{
+.tutor-dashboard-menu-logout a:before{
     content: "\e962";
 }
 
-.tutor-dashboard-menu-purchase_history a::before{
+.tutor-dashboard-menu-purchase_history a:before{
     content: "\e964";
 }
-
-
-
 .tutor-dashboard-content{
     padding-top: 30px;
 }
@@ -1537,6 +1542,8 @@ a.tutor-btn.bordered-btn:hover,
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
 }
 .report-top-sub-menu a{
@@ -1615,12 +1622,17 @@ Withdraw Method
 
 
 .withdraw-method-select-wrap{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin: 0 -15px 50px;
 }
 
 .withdraw-method-select-wrap .withdraw-method-select{
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
     flex-grow: 1;
     padding: 0 15px;
 }
@@ -1638,7 +1650,7 @@ Withdraw Method
     border-color: var(--tutor-success-button-color);
     box-shadow: 0 0 0 1px var(--tutor-success-button-color);
 }
-.withdraw-method-select-wrap .withdraw-method-select label::after{
+.withdraw-method-select-wrap .withdraw-method-select label:after{
     content: '\e90f';
     position: absolute;
     right: -1px;
@@ -1650,7 +1662,7 @@ Withdraw Method
     line-height: 22px;
     color: transparent;
 }
-.withdraw-method-select-wrap .withdraw-method-select input:checked + label::after{
+.withdraw-method-select-wrap .withdraw-method-select input:checked + label:after{
     color: #fff;
     background: var(--tutor-success-button-color);
     border-color: var(--tutor-success-button-color);
@@ -1678,13 +1690,18 @@ Withdraw Method
 }
 
 .withdraw-method-form{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin: 0 -15px;
 }
 
 
 .withdraw-method-form > div{
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
     flex-grow: 1;
     min-width: 50%;
     padding: 0 15px 20px;
@@ -2015,6 +2032,7 @@ DatePicker
     min-width: 220px;
     text-align: center;
     text-transform: uppercase;
+    -webkit-transition: 300ms;
     transition: 300ms;
 }
 
@@ -2068,11 +2086,15 @@ a.tutor-profile-photo-upload-btn {
     top: 10px;
 }
 .tutor-reset-password-form-wrap .tutor-form-group{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     max-width: 500px;
 }
 
 .tutor-reset-password-form-wrap .tutor-form-group label{
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 200px;
     flex: 0 0 200px;
 }
 /**
@@ -2087,11 +2109,14 @@ Instructor
 .single-instructor-wrap .single-instructor-top{
     padding: 20px;
     border-bottom: 1px solid #e8eff1;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
 }
 
 @media (max-width: 767px) {
     .single-instructor-wrap .single-instructor-top{
+        -ms-flex-wrap: wrap;
         flex-wrap: wrap;
     }
 }
@@ -2102,6 +2127,8 @@ Instructor
     padding: 0;
 }
 .single-instructor-wrap .tutor-instructor-left{
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
     flex: 0 0 auto;
     padding-right: 30px;
 }
@@ -2243,6 +2270,8 @@ a.page-numbers:hover {
 }
 
 .tutor-single-entry-content  {
+    -webkit-box-flex: 999;
+    -ms-flex-positive: 999;
     flex-grow: 999;
 }
 .tutor-single-lesson-button-group .tutor-single-lesson-button a,
@@ -2402,13 +2431,19 @@ a.page-numbers:hover {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    -webkit-box-flex: 999999;
+    -ms-flex-positive: 999999;
     flex-grow: 999999;
 }
 
 .tutor-single-page-top-bar .tutor-hide-sidebar-bar{
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
     flex: 0 0 auto;
 }
 .tutor-single-page-top-bar .tutor-topbar-mark-to-done{
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
     flex: 0 0 auto;
 }
 
@@ -3176,9 +3211,9 @@ Course question and answer
     background: var(--tutor-success-button-color);
 }
 /*.attempt-reviewed-text {*/
-    /*color: #777;*/
-    /*font-size: 12px;*/
-    /*margin-top: 10px;*/
+/*color: #777;*/
+/*font-size: 12px;*/
+/*margin-top: 10px;*/
 /*}*/
 .quiz-head-meta-info{
     font-size: 14px;
@@ -4245,8 +4280,14 @@ social share
     height: 100%;
     left: 0;
     top: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
     z-index: 999999;
 }
