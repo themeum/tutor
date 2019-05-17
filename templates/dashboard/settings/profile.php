@@ -25,7 +25,7 @@ $user = wp_get_current_user();
         <?php do_action('tutor_profile_edit_input_before'); ?>
 
         <div class="tutor-form-row">
-            <div class="tutor-form-col-6">
+            <div class="tutor-form-col-4">
                 <div class="tutor-form-group">
                     <label>
 						<?php _e('First Name', 'tutor'); ?>
@@ -35,7 +35,7 @@ $user = wp_get_current_user();
                 </div>
             </div>
 
-            <div class="tutor-form-col-6">
+            <div class="tutor-form-col-4">
                 <div class="tutor-form-group">
                     <label>
 						<?php _e('Last Name', 'tutor'); ?>
@@ -45,14 +45,10 @@ $user = wp_get_current_user();
                 </div>
             </div>
 
-        </div>
-
-        <div class="tutor-form-row">
-
-            <div class="tutor-form-col-6">
+            <div class="tutor-form-col-4">
                 <div class="tutor-form-group">
                     <label>
-						<?php _e('Phone Number', 'tutor'); ?>
+				        <?php _e('Phone Number', 'tutor'); ?>
                     </label>
 
                     <input type="text" name="phone_number" value="<?php echo get_user_meta($user->ID,'phone_number',true); ?>" placeholder="<?php _e('Phone Number', 'tutor'); ?>">
