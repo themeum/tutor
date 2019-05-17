@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.2.3.0
+Stable tag: 1.3.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -206,7 +206,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.2.3.0 - 17 May, 2019 =
+= 1.3.0 - 17 May, 2019 =
 
 * Added: Flash Msg ability to show flash msg in a different view or different action
 * Added: Styling, change default color scheme

@@ -327,6 +327,10 @@ if ( ! function_exists('tutor_course_loop_author')) {
 	}
 }
 
+/**
+ * Get formatted price with cart form
+ */
+
 if ( ! function_exists('tutor_course_loop_price')) {
 	function tutor_course_loop_price() {
 		ob_start();
@@ -343,6 +347,9 @@ if ( ! function_exists('tutor_course_loop_price')) {
 	}
 }
 
+/**
+ * Get Course rating
+ */
 if ( ! function_exists('tutor_course_loop_rating')) {
 	function tutor_course_loop_rating() {
 		ob_start();
@@ -352,6 +359,14 @@ if ( ! function_exists('tutor_course_loop_rating')) {
 		echo $output;
 	}
 }
+
+/**
+ * @param bool $echo
+ *
+ * @return mixed|void
+ *
+ * Get add to cart form
+ */
 
 if ( ! function_exists('tutor_course_loop_add_to_cart')) {
 	function tutor_course_loop_add_to_cart($echo = true) {
@@ -833,6 +848,14 @@ if ( ! function_exists('tutor_course_enroll_box')) {
 	}
 }
 
+/**
+ * @param bool $echo
+ *
+ * @return string
+ *
+ * Get Only add to cart form
+ */
+
 function tutor_single_course_add_to_cart($echo = true){
 	ob_start();
 
@@ -1167,6 +1190,15 @@ if ( ! function_exists('get_tutor_course_categories')){
 		return $terms;
 	}
 }
+
+/**
+ * @param int $course_id
+ *
+ * @return array|false|WP_Error
+ *
+ * Get course tags
+ */
+
 if ( ! function_exists('get_tutor_course_tags')){
 	function get_tutor_course_tags($course_id = 0){
 		if ( ! $course_id ) {
@@ -1177,6 +1209,14 @@ if ( ! function_exists('get_tutor_course_tags')){
 		return $terms;
 	}
 }
+
+/**
+ * @param bool $echo
+ *
+ * @return mixed|void
+ *
+ * Template for course tags html
+ */
 
 if ( ! function_exists('tutor_course_tags_html')) {
     function tutor_course_tags_html( $echo = true ) {
@@ -1192,6 +1232,14 @@ if ( ! function_exists('tutor_course_tags_html')) {
     }
 }
 
+/**
+ * @param bool $echo
+ *
+ * @return mixed
+ *
+ * Get Q&A in lesson sidebar
+ */
+
 if ( ! function_exists('tutor_lesson_sidebar_question_and_answer')) {
 	function tutor_lesson_sidebar_question_and_answer( $echo = true ) {
 		ob_start();
@@ -1205,6 +1253,14 @@ if ( ! function_exists('tutor_lesson_sidebar_question_and_answer')) {
 		return $output;
 	}
 }
+
+/**
+ * @param bool $echo
+ *
+ * @return mixed|void
+ *
+ * Get Social Share button to share on social media
+ */
 
 if ( ! function_exists('tutor_social_share')) {
 	function tutor_social_share( $echo = true ) {

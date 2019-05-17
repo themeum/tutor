@@ -1,6 +1,5 @@
 <?php
 $user = wp_get_current_user();
-
 ?>
 
 <div class="tutor-dashboard-content-inner">
