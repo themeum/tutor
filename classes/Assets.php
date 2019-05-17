@@ -70,6 +70,11 @@ class Assets{
 		 * Enabling Sorting, draggable, droppable...
 		 */
 		wp_enqueue_script('jquery-ui-sortable');
+		/**
+		 * Tutor Icon
+		 */
+		wp_enqueue_style('tutor-icon', tutor()->url.'assets/icons/css/tutor-icon.css', array(), tutor()->version);
+
 
 		//Plyr
 		wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), tutor()->version );
@@ -100,7 +105,6 @@ class Assets{
 		//End: chart data
 
 		$localize_data = apply_filters('tutor_localize_data', $localize_data);
-
 		if (tutor_utils()->get_option('load_tutor_css')){
 			wp_enqueue_style('tutor-frontend', tutor()->url.'assets/css/tutor-front.css', array(), tutor()->version);
 		}

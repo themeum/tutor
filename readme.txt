@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.2.20
+Stable tag: 1.2.3.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -205,6 +205,19 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 16. Course builder
 
 == Changelog ==
+
+= 1.2.3.0 - 17 May, 2019 =
+
+* Added: Flash Msg ability to show flash msg in a different view or different action
+* Added: Styling, change default color scheme
+* Added: return at tutor_course_loop_thumbnail() based on $echo condition
+* Added: Purchase history from the dashboard
+* Added: Become Instructor Button on student dashboard based on settings
+* Added: Enable Disable Course Market place, default TutirLMS will be single instructor format.
+* Fixed: a template div closing/return issue in dashboard > reviews menu
+* Fixed: Tutor course content export-import in WordPress way
+* Reduced: Instructor and Student Registration form field. removed phone number and profile bio filed from the registration page.
+* Moved: tutor icon CSS file from tutor-front.css file to individually
 
 = 1.2.20 - 10 May, 2019 =
 
