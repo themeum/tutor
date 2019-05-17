@@ -1111,6 +1111,7 @@ a.tutor-btn.bordered-btn:hover,
     border-collapse: collapse;
     border: 1px solid #DCDFE5;
     border-radius: 4px;
+    width: 100%;
 }
 .tutor-dashboard-info-table thead{
     background: #FAFBFC;
@@ -1232,6 +1233,7 @@ a.tutor-btn.bordered-btn:hover,
     display: block;
     font-weight: 700;
     font-size: 30px;
+    line-height: 1.618;
 }
 .tutor-dashboard-info-cards .tutor-dashboard-info-card p span span{
     display: inline-block;
@@ -1501,6 +1503,10 @@ a.tutor-btn.bordered-btn:hover,
 }
 .tutor-dashboard-menu-logout a::before{
     content: "\e962";
+}
+
+.tutor-dashboard-menu-purchase_history a::before{
+    content: "\e964";
 }
 
 
