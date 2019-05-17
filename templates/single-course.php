@@ -18,7 +18,7 @@ get_header();
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
     <div class="tutor-container">
         <div class="tutor-row">
-            <div class="tutor-col-8">
+            <div class="tutor-col-8 tutor-col-md-100">
 
 	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
 
