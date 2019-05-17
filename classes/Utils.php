@@ -4106,6 +4106,11 @@ class Utils {
 
 	}
 
+	/**
+	 * @param int $instructor_id
+	 *
+	 * Add Instructor role to any user by user iD
+	 */
 	public function add_instructor_role($instructor_id = 0){
 		if ( ! $instructor_id){
 			return;
@@ -4121,6 +4126,11 @@ class Utils {
 		do_action('tutor_after_approved_instructor', $instructor_id);
 	}
 
+	/**
+	 * @param int $instructor_id
+	 *
+	 * Remove instructor role by instructor id
+	 */
 	public function remove_instructor_role($instructor_id = 0){
 		if ( ! $instructor_id){
 			return;
@@ -4134,7 +4144,12 @@ class Utils {
 		do_action('tutor_after_blocked_instructor', $instructor_id);
 	}
 
-
+	/**
+	 * @param string $msg
+	 * @param string $name
+	 *
+	 * Set Flash Message to view in next action / route
+	 */
 	public function set_flash_msg($msg = '', $name = 'success'){
 		global $wp_filesystem;
 		if ( ! $wp_filesystem ) {
@@ -4153,6 +4168,13 @@ class Utils {
 		$wp_filesystem->put_contents( $dir . $filename, $msg );
 	}
 
+	/**
+	 * @param null $name
+	 *
+	 * @return mixed|string|void
+	 *
+	 * Get Flash Message
+	 */
 	public function get_flash_msg($name = null){
 		if ( ! $name){
 			return '';
@@ -4172,6 +4194,13 @@ class Utils {
 		return apply_filters('tutor_get_flash_msg', $msg, $name);
 	}
 
+	/**
+	 * @param int $user_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get purchase history by customer id
+	 */
 
 	public function get_orders_by_user_id($user_id = 0){
 		global $wpdb;
