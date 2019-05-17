@@ -23,9 +23,13 @@ class Assets{
 		 * Scripts
 		 */
 		wp_enqueue_media();
+
+		wp_enqueue_script( 'wp-color-picker' );
+		wp_enqueue_style( 'wp-color-picker' );
+
 		wp_enqueue_script('jquery-ui-slider');
 		wp_enqueue_script('tutor-select2', tutor()->url.'assets/packages/select2/select2.min.js', array('jquery'), tutor()->version, true );
-		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery'), tutor()->version, true );
+		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker'), tutor()->version, true );
 
 		$tutor_localize_data = array();
 		if ( ! empty($_GET['taxonomy']) && ( $_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag') ){
@@ -104,6 +108,34 @@ class Assets{
 			wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery' ), tutor()->version, true );
 			wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
 		}
+
+
+		/**
+		 * Default Color
+		 */
+		$tutor_css = ":root{";
+		$tutor_primary_color = tutor_utils()->get_option('tutor_primary_color');
+		$tutor_primary_hover_color = tutor_utils()->get_option('tutor_primary_hover_color');
+		$tutor_text_color = tutor_utils()->get_option('tutor_text_color');
+		$tutor_light_color = tutor_utils()->get_option('tutor_light_color');
+
+		if ($tutor_primary_color){
+			$tutor_css .= " --tutor-primary-color: {$tutor_primary_color};";
+		}
+		if ($tutor_primary_hover_color){
+			$tutor_css .= " --tutor-primary-hover-color: {$tutor_primary_hover_color};";
+		}
+		if ($tutor_text_color){
+			$tutor_css .= " --tutor-text-color: {$tutor_text_color};";
+		}
+		if ($tutor_light_color){
+			$tutor_css .= " --tutor-light-color: {$tutor_light_color};";
+		}
+
+		$tutor_css .= "}";
+		wp_add_inline_style( 'tutor-frontend', $tutor_css );
+		//END: Default Color
+
 	}
 
 	/**

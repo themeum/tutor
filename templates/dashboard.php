@@ -77,19 +77,22 @@ do_action('tutor_dashboard/before/wrap'); ?>
 							<?php
 
 							if(current_user_can(tutor()->instructor_role)){
-								$button_page_url = add_query_arg(array('post_type'=>'course'),admin_url('post-new.php'));
-								$buton_text = __('<i class="tutor-icon-video-camera"></i> &nbsp; Upload A Course', 'tutor');
+								?>
+                                <a class="tutor-btn bordered-btn" href="<?php echo esc_url(add_query_arg(array('post_type'=>'course'),admin_url('post-new.php'))); ?>">
+									<?php _e('<i class="tutor-icon-video-camera"></i> &nbsp; Upload A Course', 'tutor'); ?>
+                                </a>
+								<?php
+
 							}else{
-								$button_page_url = tutor_utils()->instructor_register_url();
-								$buton_text = __('<i class="tutor-icon-man-user"></i> &nbsp; Become an instructor', 'tutor');
+								if (tutor_utils()->get_option('enable_become_instructor_btn')) {
+									?>
+                                    <a class="tutor-btn bordered-btn" href="<?php echo esc_url(tutor_utils()->instructor_register_url()); ?>">
+										<?php _e( '<i class="tutor-icon-man-user"></i> &nbsp; Become an instructor', 'tutor' ); ?>
+                                    </a>
+									<?php
+								}
 							}
 							?>
-
-	                        <?php if (! current_user_can(tutor()->instructor_role)){ ?>
-                                <a class="tutor-btn bordered-btn" href="<?php echo esc_url($button_page_url); ?>">
-			                        <?php echo $buton_text; ?>
-                                </a>
-	                        <?php } ?>
 
                         </div>
 
@@ -107,6 +110,7 @@ do_action('tutor_dashboard/before/wrap'); ?>
 							if ($dashboard_key === 'index')
 								$dashboard_key = '';
 							$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
+
 							echo "<li class='{$li_class}  {$active_class}'><a href='".tutor_utils()->get_tutor_dashboard_page_permalink($dashboard_key)."'> {$dashboard_page} </a> </li>";
 						}
 						?>
@@ -128,9 +132,6 @@ do_action('tutor_dashboard/before/wrap'); ?>
         </div>
 
     </div>
-
-
-
 
 
 <?php do_action('tutor_dashboard/after/wrap'); ?>

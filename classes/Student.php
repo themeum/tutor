@@ -39,7 +39,6 @@ class Student {
 			'last_name'                 =>  __('Last name field is required', 'tutor'),
 			'email'                     => __('E-Mail field is required', 'tutor'),
 			'user_login'                => __('User Name field is required', 'tutor'),
-			'phone_number'              => __('Phone Number field is required', 'tutor'),
 			'password'                  => __('Password field is required', 'tutor'),
 			'password_confirmation'     => __('Password Confirmation field is required', 'tutor'),
 		));
@@ -68,9 +67,7 @@ class Student {
 		$last_name      = sanitize_text_field(tutor_utils()->input_old('last_name'));
 		$email          = sanitize_text_field(tutor_utils()->input_old('email'));
 		$user_login     = sanitize_text_field(tutor_utils()->input_old('user_login'));
-		$phone_number   = sanitize_text_field(tutor_utils()->input_old('phone_number'));
 		$password       = sanitize_text_field(tutor_utils()->input_old('password'));
-		$tutor_profile_bio = wp_kses_post(tutor_utils()->input_old('tutor_profile_bio'));
 
 		$userdata = array(
 			'user_login'    =>  $user_login,
@@ -83,10 +80,6 @@ class Student {
 
 		$user_id = wp_insert_user( $userdata ) ;
 		if ( ! is_wp_error($user_id)){
-			update_user_meta($user_id, 'phone_number', $phone_number);
-			update_user_meta($user_id, 'description', $tutor_profile_bio);
-			update_user_meta($user_id, '_tutor_profile_bio', $tutor_profile_bio);
-
 			$user = get_user_by( 'id', $user_id );
 			if( $user ) {
 				wp_set_current_user( $user_id, $user->user_login );

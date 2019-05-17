@@ -14,7 +14,7 @@
     ?>
 
     <div class="tutor-form-row">
-        <div class="tutor-form-col-4">
+        <div class="tutor-form-col-6">
             <div class="tutor-form-group">
                 <label>
 					<?php _e('First Name', 'tutor'); ?>
@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div class="tutor-form-col-4">
+        <div class="tutor-form-col-6">
             <div class="tutor-form-group">
                 <label>
 					<?php _e('Last Name', 'tutor'); ?>
@@ -34,18 +34,19 @@
             </div>
         </div>
 
-        <div class="tutor-form-col-4">
+    </div>
+
+    <div class="tutor-form-row">
+        <div class="tutor-form-col-6">
             <div class="tutor-form-group">
                 <label>
-                    <?php _e('User Name', 'tutor'); ?>
+				    <?php _e('User Name', 'tutor'); ?>
                 </label>
 
                 <input type="text" name="user_login" class="tutor_user_name" value="<?php echo tutor_utils()->input_old('user_login'); ?>" placeholder="<?php _e('User Name', 'tutor'); ?>">
             </div>
         </div>
-    </div>
 
-    <div class="tutor-form-row">
         <div class="tutor-form-col-6">
             <div class="tutor-form-group">
                 <label>
@@ -56,16 +57,6 @@
             </div>
         </div>
 
-
-        <div class="tutor-form-col-6">
-            <div class="tutor-form-group">
-                <label>
-				    <?php _e('Phone Number', 'tutor'); ?>
-                </label>
-
-                <input type="text" name="phone_number" value="<?php echo tutor_utils()->input_old('phone_number'); ?>" placeholder="<?php _e('Phone Number', 'tutor'); ?>">
-            </div>
-        </div>
     </div>
 
     <div class="tutor-form-row">
@@ -90,17 +81,6 @@
         </div>
     </div>
 
-    <div class="tutor-form-row">
-        <div class="tutor-form-col-12">
-            <div class="tutor-form-group">
-                <label>
-					<?php _e('Bio', 'tutor'); ?>
-                </label>
-
-                <textarea name="tutor_profile_bio"><?php echo tutor_utils()->input_old('tutor_profile_bio'); ?></textarea>
-            </div>
-        </div>
-    </div>
 
     <div class="tutor-form-row">
         <div class="tutor-form-col-12">

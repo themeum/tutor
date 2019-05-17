@@ -737,11 +737,9 @@ div[class*="tutor-course-col"] {
     margin-right: 5px;
 }
 
-
 .tutor-loop-course-footer .tutor-loop-cart-btn-wrap a.added_to_cart:before{
     display: none;
 }
-
 
 /* Standard syntax */
 @-webkit-keyframes mymove {
@@ -950,11 +948,11 @@ Alert Box Css
     border-radius: 3px 3px 3px 3px;
 }
 .tutor-info-msg {
-    color: #059;
+    color: var(--tutor-primary-color);
     background-color: #BEF;
 }
 .tutor-success-msg {
-    color: #270;
+    color: var(--tutor-success-button-color);
     background-color: #DFF2BF;
 }
 .tutor-warning-msg {
@@ -1540,9 +1538,9 @@ a.tutor-btn.bordered-btn:hover,
     color: #333;
 }
 .report-top-sub-menu a.active {
-    background-color: #3057D5;
+    background-color: var(--tutor-primary-color);
     color: #ffffff;
-    border: 1px solid #3057D5;
+    border: 1px solid var(--tutor-primary-hover-color);
 }
 
 .report-top-sub-menu a:not(:last-child){
@@ -1577,7 +1575,7 @@ a.tutor-btn.bordered-btn:hover,
     top: 7px;
 }
 .date-range-input button{
-    background-color: #3057D5;
+    background-color: var(--tutor-primary-color);
     color: #ffffff;
     border: none;
     line-height: 30px;
@@ -1813,7 +1811,7 @@ DatePicker
     text-decoration: none;
 }
 .ui-datepicker .ui-datepicker-current-day {
-    background-color: #4289cc;
+    background-color: var( --tutor-primary-hover-color);
 }
 .ui-datepicker .ui-datepicker-current-day a {
     color: #fff
@@ -2170,8 +2168,8 @@ Instructor
 }
 .tutor-pagination  .page-numbers.current,
 a.page-numbers:hover {
-    background: #3057D5;
-    border: 1px solid #2544D5;
+    background: var( --tutor-primary-hover-color);
+    border: 1px solid var(--tutor-primary-color);
     color: #ffffff;
 }
 .tutor-dashboard-pagination-results-stats{
@@ -2183,7 +2181,7 @@ a.page-numbers:hover {
     color: #555;
 }
 .statement-order-completed {
-    background: #0eb91b;
+    background: var(--tutor-success-button-color);
     color: #fff;
     padding: 2px 5px;
     border: none;
@@ -3117,7 +3115,7 @@ Course question and answer
 }
 
 .tutor-quiz-attempt-history table span.result-pass{
-    background: #4BD863;
+    background: var(--tutor-success-button-color);
 }
 /*.attempt-reviewed-text {*/
     /*color: #777;*/
@@ -3404,7 +3402,7 @@ Course question and answer
     font-size: 14px;
 }
 .tutor-quiz-questions-pagination ul li a:hover, .tutor-quiz-questions-pagination ul li a.active  {
-    background-color: #05329F;
+    background-color: var(--tutor-primary-color);
 }
 
 .quiz-image-answering-wrap {

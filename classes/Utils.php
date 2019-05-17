@@ -1939,17 +1939,18 @@ class Utils {
 
 		if (current_user_can(tutor()->instructor_role)) {
 			$instructor_items = array(
-				'my-courses'        => __('My Courses', 'tutor'),
-				'quiz-attempts'        => __('Quiz Attempts', 'tutor'),
-				'earning'        => __('Earning', 'tutor'),
-				'withdraw'        => __('Withdraw', 'tutor'),
+				'my-courses'    => __('My Courses', 'tutor'),
+				'quiz-attempts' => __('Quiz Attempts', 'tutor'),
+				'earning'       => __('Earning', 'tutor'),
+				'withdraw'      => __('Withdraw', 'tutor'),
 			);
 
 			$nav_items = array_merge($nav_items, $instructor_items);
 		}
 
-		$nav_items['settings'] = __('Settings', 'tutor');
-		$nav_items['logout'] = __('Logout', 'tutor');
+		$nav_items['purchase_history']  = __('Purchase History', 'tutor');
+		$nav_items['settings']          = __('Settings', 'tutor');
+		$nav_items['logout']            = __('Logout', 'tutor');
 
 		return apply_filters('tutor_dashboard/nav_items', $nav_items);
 	}
@@ -4169,6 +4170,19 @@ class Utils {
 		}
 
 		return apply_filters('tutor_get_flash_msg', $msg, $name);
+	}
+
+
+	public function get_orders_by_user_id($user_id = 0){
+		global $wpdb;
+
+		$user_id = $this->get_user_id();
+
+		$query = $wpdb->get_results("SELECT {$wpdb->posts}.* FROM {$wpdb->posts}
+ 			INNER JOIN {$wpdb->postmeta} customer ON ID = customer.post_id AND customer.meta_key = '_customer_user'
+ 			INNER JOIN {$wpdb->postmeta} tutor_order ON ID = tutor_order.post_id AND tutor_order.meta_key = '_is_tutor_order_for_course'
+ 			where post_type = 'shop_order' AND customer.meta_value = {$user_id}  ");
+		return $query;
 	}
 
 }

@@ -167,12 +167,16 @@ if ( ! function_exists('tutor_course_loop_end_content_wrap')) {
 }
 
 if ( ! function_exists('tutor_course_loop_thumbnail')) {
-	function tutor_course_loop_thumbnail() {
+	function tutor_course_loop_thumbnail($echo = true) {
 		ob_start();
 		tutor_load_template( 'loop.thumbnail' );
 		$output = apply_filters( 'tutor_course_loop_thumbnail', ob_get_clean() );
 
-		echo $output;
+		if ($echo){
+			echo $output;
+		}else{
+			return $output;
+		}
 	}
 }
 
@@ -367,8 +371,6 @@ if ( ! function_exists('tutor_course_loop_add_to_cart')) {
 	}
 }
 
-
-
 if ( ! function_exists('tutor_course_price')) {
 	function tutor_course_price() {
 		ob_start();
@@ -378,7 +380,6 @@ if ( ! function_exists('tutor_course_price')) {
 		echo $output;
 	}
 }
-
 
 /**
  * @param int $post_id

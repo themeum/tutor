@@ -40,11 +40,15 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
+		$course_marketplace = tutor_utils()->get_option('enable_course_marketplace');
 
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
-		add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array($this, 'instructors_metabox'), $coursePostType );
+
+		if ($course_marketplace) {
+			add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array( $this, 'instructors_metabox' ), $coursePostType );
+		}
 		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
 	}
 	public function course_meta_box(){
@@ -62,7 +66,7 @@ class Course extends Tutor_Base {
 	}
 
 	public function instructors_metabox(){
-		include  tutor()->path.'views/metabox/instructors-metabox.php';
+		include tutor()->path . 'views/metabox/instructors-metabox.php';
 	}
 
 	/**
