@@ -213,9 +213,10 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 * Added: return at tutor_course_loop_thumbnail() based on $echo condition
 * Added: Purchase history from the dashboard
 * Added: Become Instructor Button on student dashboard based on settings
-* Added: Enable Disable Course Market place, default TutirLMS will be single instructor format.
+* Added: Enable Disable Course Market place, default Tutor LMS will be single instructor format.
 * Fixed: a template div closing/return issue in dashboard > reviews menu
 * Fixed: Tutor course content export-import in WordPress way
+* Fixed: Some responsive issue in course details and lesson page
 * Reduced: Instructor and Student Registration form field. removed phone number and profile bio filed from the registration page.
 * Moved: tutor icon CSS file from tutor-front.css file to individually
 
