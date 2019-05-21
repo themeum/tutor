@@ -4214,4 +4214,20 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * @param null $status
+	 *
+	 * @return string
+	 *
+	 * Get status contact formatted for order
+	 *
+	 * @since v.1.4.0
+	 */
+	public function order_status_context($status = null){
+		$status = str_replace('wc-', '', $status);
+		$status_name = ucwords(str_replace('-', ' ', $status));
+
+		return "<span class='label-order-status label-status-{$status}'>$status_name</span>";
+	}
+
 }

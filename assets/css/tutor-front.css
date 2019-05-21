@@ -533,6 +533,9 @@ div[class*="tutor-course-col"] {
     -ms-flex-pack: justify;
     justify-content: space-between;
 }
+.tutor-course-loop a, .tutor-widget-course a{
+    text-decoration: none !important;
+}
 .tutor-course-header{
     position: relative;
 }
@@ -4322,3 +4325,19 @@ button.tm-close.tutor-icon-line-cross {
     font-size: 24px;
 }
 
+.label-order-status{
+    padding: 3px 5px;
+    border-radius: 3px;
+}
+.label-status-completed{
+    background-color: #4BD863;
+    color: #ffffff;
+}
+.label-status-cancelled{
+    background-color: #FD6A03;
+    color: #ffffff;
+}
+.label-status-on-hold{
+    background-color: #DB5382;
+    color: #ffffff;
+}

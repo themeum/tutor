@@ -7,10 +7,11 @@ if (tutor_utils()->count($orders)){
 	?>
 	<table>
 		<tr>
-			<th>ID</th>
-			<th>Courses</th>
-			<th>Amount</th>
-			<th>Date</th>
+			<th><?php _e('ID', 'tutor'); ?></th>
+			<th><?php _e('Courses', 'tutor'); ?></th>
+			<th><?php _e('Amount', 'tutor'); ?></th>
+			<th><?php _e('Status', 'tutor'); ?></th>
+			<th><?php _e('Date', 'tutor'); ?></th>
 		</tr>
 		<?php
 		foreach ($orders as $order){
@@ -29,7 +30,9 @@ if (tutor_utils()->count($orders)){
 					?>
 				</td>
 				<td><?php echo tutor_utils()->tutor_price($wc_order->get_total()); ?></td>
-				<td>
+                <td><?php echo tutor_utils()->order_status_context($order->post_status); ?></td>
+
+                <td>
 					<?php echo date_i18n(get_option('date_format'), strtotime($order->post_date)) ?>
 				</td>
 			</tr>

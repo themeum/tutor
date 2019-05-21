@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -203,6 +203,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 14. Quiz builder, questions
 15. Quiz builder, question edit and settings
 16. Course builder
+17. Tutor LMS Working Lifecycle
 
 == Changelog ==
 

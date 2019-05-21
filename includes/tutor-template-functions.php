@@ -254,6 +254,34 @@ if ( ! function_exists('tutor_course_archive_filter_bar')) {
 }
 
 /**
+ *
+ * Get classes for widget loop single course wrap
+ *
+ * @param bool $echo
+ *
+ * @return string
+ *
+ * @since v.1.4.0
+ */
+if( ! function_exists('tutor_widget_course_loop_classes')) {
+	function tutor_widget_course_loop_classes( $echo = true ) {
+
+		$classes    = apply_filters( 'tutor_widget_course_loop_classes', array(
+			'tutor-widget-course-loop',
+			'tutor-widget-course',
+			'tutor-widget-course-'.get_the_ID(),
+		) );
+
+		$class = implode( ' ', $classes );
+		if ( $echo ) {
+			echo $class;
+		}
+
+		return $class;
+	}
+}
+
+/**
  * Get the post thumbnail
  */
 if ( ! function_exists('get_tutor_course_thumbnail')) {
