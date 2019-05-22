@@ -68,6 +68,8 @@ final class Tutor{
 		$this->url = plugin_dir_url(TUTOR_FILE);
 		$this->basename = plugin_basename(TUTOR_FILE);
 
+		add_action('upgrader_process_complete', array($this, 'init_tutor_update'),10, 2);
+
 		/**
 		 * Include Files
 		 */
@@ -123,6 +125,23 @@ final class Tutor{
 
 		add_action( 'init', array( $this, 'init_action' ) );
 	}
+
+	/**
+	 * @param $upgrader_object
+	 * @param $options
+	 *
+	 * Init tutor update complete hook
+	 */
+	function init_tutor_update( $upgrader_object, $options ) {
+		if ($options['action'] == 'update' && $options['type'] == 'plugin' ){
+			foreach($options['plugins'] as $each_plugin){
+				if ($each_plugin == tutor()->basename){
+					do_action('tutor_update_complete');
+				}
+			}
+		}
+	}
+
 	/**
 	 * @param $className
 	 *
@@ -157,6 +176,8 @@ final class Tutor{
 
 		register_activation_hook( TUTOR_FILE, array($this, 'tutor_activate' ) );
 		register_deactivation_hook(TUTOR_FILE, array($this, 'tutor_deactivation'));
+
+		add_action('tutor_update_complete', array($this, 'tutor_upgrade'));
 
 		do_action('tutor_after_run');
 	}
@@ -230,6 +251,22 @@ final class Tutor{
 	//Run task on deactivation
 	public function tutor_deactivation() {
 		wp_clear_scheduled_hook('tutor_once_in_day_run_schedule');
+	}
+
+	public function tutor_upgrade(){
+		/**
+		 * Backward Compatibility to < 1.3.1 for make course plural
+		 */
+		if (version_compare(get_option('TUTOR_VERSION'), '1.3.1', '<')){
+			global $wpdb;
+
+			if ( ! get_option('is_course_post_type_updated')){
+				$wpdb->update($wpdb->posts, array('post_type' => 'courses'), array('post_type' => 'course'));
+				update_option('is_course_post_type_updated', true);
+				update_option('tutor_version', '1.3.1');
+				flush_rewrite_rules();
+			}
+		}
 	}
 
 	public function create_database(){
