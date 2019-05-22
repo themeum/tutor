@@ -23,7 +23,8 @@ Get Tutor, the most advanced and powerful WordPress online course plugin.
 
 Create, customize, manage, and sell online courses by building a functional e-learning website with this free LMS plugin for WordPress.
 
-[Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/) || [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/)
+[Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/) || [Tutor LMS Pro]
+(https://www.themeum.com/product/tutor-lms/) || [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/)
 
 = Features =
 
@@ -206,6 +207,18 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.3.1 - 21 May, 2019 =
+
+* Added: status in the purchase history list
+* Added: Shortcode for the coruse query, full shortcode `[tutor_course id="20,64" exclude_ids="567,332" category="18,19" order="desc" count="3"]`
+* Added: a simple shortcode builder to build [tutor_course] Shortcode from classic editor
+* Added: Tutor course widget to display course to sidebar
+* Fixed: Hide zero rating count in the course loop grid
+* Fixed: some translation issue
+* Added: Course page edit by Pagebuilder integration which supports frontend editing
+* Changed: a template the_cotnent, reordered position in course single page
+* Upgraded: course url upgrade to plural format, courses
 
 = 1.3.0 - 17 May, 2019 =
 
