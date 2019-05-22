@@ -12,7 +12,7 @@
 $share_config = array(
 	'title' => get_the_title(),
 	'text'  => get_the_excerpt(),
-	'image' => get_tutor_course_thumbnail(true),
+	'image' => get_tutor_course_thumbnail('post-thumbnail', true),
 );
 ?>
 

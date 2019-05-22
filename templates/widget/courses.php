@@ -3,7 +3,7 @@
  * The template for displaying Tutor Course Widget
  *
  * @package Tutor/Tempaltes
- * @version 1.4.0
+ * @version 1.3.1
  *
  */
 

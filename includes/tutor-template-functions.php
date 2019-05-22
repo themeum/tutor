@@ -261,7 +261,7 @@ if ( ! function_exists('tutor_course_archive_filter_bar')) {
  *
  * @return string
  *
- * @since v.1.4.0
+ * @since v.1.3.1
  */
 if( ! function_exists('tutor_widget_course_loop_classes')) {
 	function tutor_widget_course_loop_classes( $echo = true ) {
@@ -285,13 +285,11 @@ if( ! function_exists('tutor_widget_course_loop_classes')) {
  * Get the post thumbnail
  */
 if ( ! function_exists('get_tutor_course_thumbnail')) {
-	function get_tutor_course_thumbnail($url = false) {
+	function get_tutor_course_thumbnail($size = 'post-thumbnail', $url = false) {
 		$post_id           = get_the_ID();
 		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
 
 		if ( $post_thumbnail_id ) {
-
-			$size = 'post-thumbnail';
 			$size = apply_filters( 'post_thumbnail_size', $size, $post_id );
 			if ($url){
 				return wp_get_attachment_image_url($post_thumbnail_id, $size);
@@ -313,12 +311,11 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
  * Get the course/post thumbnail src
  */
 if ( ! function_exists('get_tutor_course_thumbnail_src')) {
-	function get_tutor_course_thumbnail_src() {
+	function get_tutor_course_thumbnail_src($size = 'post-thumbnail') {
 		$post_id           = get_the_ID();
 		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
 
 		if ( $post_thumbnail_id ) {
-			$size = 'post-thumbnail';
 			$size = apply_filters( 'post_thumbnail_size', $size, $post_id );
 			$src = wp_get_attachment_image_url( $post_thumbnail_id, $size, false );
 		} else {

@@ -6,7 +6,7 @@
  * @author: themeum
  * @author_uri: https://themeum.com
  * @package Tutor
- * @since v.1.4.0
+ * @since v.1.3.1
  */
 
 namespace TUTOR;

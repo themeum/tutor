@@ -214,10 +214,12 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 * Added: Shortcode for the coruse query, full shortcode `[tutor_course id="20,64" exclude_ids="567,332" category="18,19" order="desc" count="3"]`
 * Added: a simple shortcode builder to build [tutor_course] Shortcode from classic editor
 * Added: Tutor course widget to display course to sidebar
+* Added: `utils()->get_raw_course_price($course_id)`, it will be return to your regular price and sale price as object
+* Added: Course page edit by Pagebuilder integration which supports frontend editing
+* Added: `$size = 'post-thumbnail',` Arguments at function `get_tutor_course_thumbnail()` And `get_tutor_course_thumbnail_src();`
 * Fixed: Hide zero rating count in the course loop grid
 * Fixed: some translation issue
-* Added: Course page edit by Pagebuilder integration which supports frontend editing
-* Changed: a template the_cotnent, reordered position in course single page
+* Changed: a template the_content(), reordered position in course single page
 * Upgraded: course url upgrade to plural format, courses
 
 = 1.3.0 - 17 May, 2019 =

@@ -4253,7 +4253,7 @@ class Utils {
 	 *
 	 * Get status contact formatted for order
 	 *
-	 * @since v.1.4.0
+	 * @since v.1.3.1
 	 */
 	public function order_status_context($status = null){
 		$status = str_replace('wc-', '', $status);
