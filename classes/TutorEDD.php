@@ -5,6 +5,9 @@
 
 namespace TUTOR;
 
+if ( ! defined( 'ABSPATH' ) )
+	exit;
+
 class TutorEDD extends Tutor_Base {
 
 	public function __construct() {

@@ -8,6 +8,9 @@
 
 namespace TUTOR;
 
+if ( ! defined( 'ABSPATH' ) )
+	exit;
+
 class WooCommerce extends Tutor_Base {
 
 	public function __construct() {

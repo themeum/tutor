@@ -10,7 +10,6 @@
 
 namespace TUTOR;
 
-
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
