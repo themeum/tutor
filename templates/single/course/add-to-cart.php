@@ -32,8 +32,6 @@ $tutor_form_class = apply_filters( 'tutor_enroll_form_classes', array(
 $tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
 
 do_action('tutor_course/single/add-to-cart/before');
-
-var_dump($required_loggedin_class);
 ?>
 
 <div class="tutor-single-add-to-cart-box <?php echo $required_loggedin_class; ?> ">
