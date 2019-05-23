@@ -19,7 +19,7 @@ $is_purchasable = tutor_utils()->is_course_purchasable();
 
 $required_loggedin_class = '';
 if ( ! $isLoggedIn){
-	$required_loggedin_class = 'cart-required-login';
+	$required_loggedin_class = apply_filters('tutor_enroll_required_login_class', 'cart-required-login');
 }
 if ($is_purchasable && $enable_course_sell_by_woocommerce && $enable_guest_course_cart){
 	$required_loggedin_class = '';
