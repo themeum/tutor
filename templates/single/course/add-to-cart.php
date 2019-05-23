@@ -12,6 +12,17 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 $isLoggedIn = is_user_logged_in();
 
+$enable_course_sell_by_woocommerce = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
+$enable_guest_course_cart = tutor_utils()->get_option('enable_guest_course_cart');
+
+$required_loggedin_class = '';
+if ( ! $isLoggedIn){
+	$required_loggedin_class = 'cart-required-login';
+}
+if ($enable_course_sell_by_woocommerce & $enable_guest_course_cart){
+	$required_loggedin_class = '';
+}
+
 $tutor_form_class = apply_filters( 'tutor_enroll_form_classes', array(
 	'tutor-enroll-form',
 ) );
@@ -22,7 +33,7 @@ $tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
 do_action('tutor_course/single/add-to-cart/before');
 ?>
 
-<div class="tutor-single-add-to-cart-box <?php echo ! $isLoggedIn ? 'cart-required-login' : ''; ?> ">
+<div class="tutor-single-add-to-cart-box <?php echo $required_loggedin_class; ?> ">
 	<?php
 	if ($is_purchasable && $tutor_course_sell_by){
 	    tutor_load_template('single.course.add-to-cart-'.$tutor_course_sell_by);

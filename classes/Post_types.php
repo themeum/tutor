@@ -25,6 +25,8 @@ class Post_types{
 	}
 	
 	public function register_course_post_types() {
+		$enable_gutenberg = (bool) tutor_utils()->get_option('enable_gutenberg_course_edit');
+
 		$labels = array(
 			'name'               => _x( 'Courses', 'post type general name', 'tutor' ),
 			'singular_name'      => _x( 'Course', 'post type singular name', 'tutor' ),
@@ -58,6 +60,7 @@ class Post_types{
 			'menu_position'      => null,
 			'taxonomies'         => array( 'course-category', 'course-tag' ),
 			'supports'           => array( 'title', 'editor', 'thumbnail', 'excerpt'),
+			'show_in_rest'       => $enable_gutenberg,
 
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_course',
