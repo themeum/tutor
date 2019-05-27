@@ -133,6 +133,13 @@ foreach ($chartData as $key => $salesCount){
 </div>
 
 
+<?php
+$tutor_primary_color = tutor_utils()->get_option('tutor_primary_color');
+if ( ! $tutor_primary_color){
+    $tutor_primary_color = '#3057D5';
+}
+?>
+
 
 
 <script>
@@ -143,8 +150,8 @@ foreach ($chartData as $key => $salesCount){
             labels: <?php echo json_encode(array_keys($chartData)); ?>,
             datasets: [{
                 label: 'Earning',
-                backgroundColor: '#3057D5',
-                borderColor: '#3057D5',
+                backgroundColor: '<?php echo $tutor_primary_color; ?>',
+                borderColor: '<?php echo $tutor_primary_color; ?>',
                 data: <?php echo json_encode(array_values($chartData)); ?>,
                 borderWidth: 2,
                 fill: false,

@@ -17,7 +17,7 @@ $course_tags = get_tutor_course_tags();
 if(is_array($course_tags) && count($course_tags)){ ?>
     <div class="tutor-single-course-segment">
         <div class="course-benefits-title">
-            <h4 class="tutor-segment-title"><?php esc_html_e('Skills', 'tutor') ?></h4>
+            <h4 class="tutor-segment-title"><?php esc_html_e('Tags', 'tutor') ?></h4>
         </div>
         <div class="tutor-course-tags">
             <?php
