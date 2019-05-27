@@ -10,5 +10,6 @@
 ?>
 
 <div class="tutor-course-loop-title">
-	<a href="<?php echo get_the_permalink(); ?>"><h2><?php the_title(); ?></h2></a>
+    <h2><a href="<?php echo get_the_permalink(); ?>"><?php the_title(); ?></a></h2>
 </div>
+
