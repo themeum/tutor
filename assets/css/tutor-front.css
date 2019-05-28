@@ -163,6 +163,10 @@ Most Important CSS
     margin-bottom: 40px;
 }
 
+.responsive-table-wrap{
+    overflow-x: auto;
+}
+
 /********************/
 /*start single course*/
 /********************/
@@ -1677,6 +1681,11 @@ a.tutor-btn.bordered-btn:hover,
 .report-download-csv-icon a{
     text-decoration: none;
 }
+
+.tutor-dashboard-statement-table-wrap{
+    overflow-x: auto;
+}
+
 table.tutor-dashboard-statement-table p{
     margin: 0;
     padding: 0;
@@ -1698,7 +1707,7 @@ Withdraw Method
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    margin: 0 -15px 50px;
+    margin: 0 -15px 40px;
 }
 
 .withdraw-method-select-wrap .withdraw-method-select{
@@ -1706,6 +1715,7 @@ Withdraw Method
     -ms-flex-positive: 1;
     flex-grow: 1;
     padding: 0 15px;
+    margin-bottom: 30px;
 }
 .withdraw-method-select-wrap .withdraw-method-select label{
     display: block;
@@ -1776,6 +1786,12 @@ Withdraw Method
     flex-grow: 1;
     min-width: 50%;
     padding: 0 15px 20px;
+}
+
+@media (max-width: 480px) {
+    .withdraw-method-form > div{
+        width: 100%;
+    }
 }
 
 .withdraw-method-form > div.withdraw-account-save-btn-wrap{
@@ -2095,18 +2111,6 @@ a.tutor-profile-photo-upload-btn:hover{
     color: #ff000c;
     right: 10px;
     top: 10px;
-}
-.tutor-reset-password-form-wrap .tutor-form-group{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    max-width: 500px;
-}
-
-.tutor-reset-password-form-wrap .tutor-form-group label{
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 200px;
-    flex: 0 0 200px;
 }
 /**
 Instructor

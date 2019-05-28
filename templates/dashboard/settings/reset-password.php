@@ -59,20 +59,30 @@
 
 			<?php do_action('tutor_reset_password_input_before') ?>
 
-            <div class="tutor-form-group">
-                <label class="tutor-form-col-3"> <?php _e('Previous Password', 'tutor'); ?> </label>
-                <input type="password" name="previous_password">
+            <div class="tutor-form-row">
+                <div class="tutor-form-col-12">
+                    <div class="tutor-form-group">
+                        <label> <?php _e('Previous Password', 'tutor'); ?> </label>
+                        <input type="password" name="previous_password">
+                    </div>
+                </div>
+            </div>
+            <div class="tutor-form-row">
+                <div class="tutor-form-col-6">
+                    <div class="tutor-form-group">
+                        <label><?php _e('New Password', 'tutor'); ?></label>
+                        <input type="password" name="new_password">
+                    </div>
+                </div>
+                <div class="tutor-form-col-6">
+                    <div class="tutor-form-group">
+                        <label><?php _e('Confirm New Password', 'tutor'); ?></label>
+                        <input type="password" name="confirm_new_password">
+                    </div>
+                </div>
             </div>
 
-            <div class="tutor-form-group">
-                <label><?php _e('New Password', 'tutor'); ?></label>
-                <input type="password" name="new_password">
-            </div>
 
-            <div class="tutor-form-group">
-                <label><?php _e('Confirm New Password', 'tutor'); ?></label>
-                <input type="password" name="confirm_new_password">
-            </div>
 
             <div class="tutor-form-group">
                 <label>&nbsp;</label>
