@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
+
+
 <div class="tutor-loop-rating-wrap">
 	<?php
 	$course_rating = tutor_utils()->get_course_rating();

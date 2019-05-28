@@ -1905,8 +1905,8 @@ Lesson Edit Modal
     font-family: 'tutor';
     margin-right: 5px;
     content: "\e91d";
-    -webkit-animation: spin 2s infinite linear;
-    animation: spin 2s infinite linear;
+    -webkit-animation: spin 1s steps(8) infinite;
+    animation: spin 1s steps(8) infinite;
     display: inline-block;
 }
 .tutor-notice-warning{
