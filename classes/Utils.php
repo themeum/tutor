@@ -3838,7 +3838,10 @@ class Utils {
 	 * @since v.1.0.4
 	 */
 	public function count($array = array()){
-		return is_array($array) && count($array);
+		if (is_array($array) && count($array)){
+			return count($array);
+		}
+		return false;
 	}
 
 	/**
