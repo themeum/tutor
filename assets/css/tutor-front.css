@@ -525,7 +525,7 @@ div[class*="tutor-course-col"] {
     border-radius: 4px;
     -webkit-transition: 300ms;
     transition: 300ms;
-    border: 1px solid #DCDFE5;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     height: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -633,9 +633,9 @@ div[class*="tutor-course-col"] {
     margin-left: 0;
 }
 .tutor-course-loop-title h2{
-    font-size: 22px;
+    font-size: 20px;
     line-height: 28px;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 17px;
 }
 .tutor-course-loop-title h2 a{
@@ -669,7 +669,7 @@ div[class*="tutor-course-col"] {
 
 .tutor-loop-course-footer{
     padding: 15px;
-    border-top: 1px solid #DCDFE5;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
     color: #838791;
     font-size: 12px;
     line-height: 25px;
@@ -688,8 +688,7 @@ div[class*="tutor-course-col"] {
 
 .tutor-course-loop-price{
     color: var(--tutor-text-color);
-    font-size: 17px;
-    font-weight: 500;
+    font-size: 16px;
 }
 .tutor-course-loop-price .price del{
     font-weight: 400;
@@ -710,21 +709,33 @@ div[class*="tutor-course-col"] {
     text-decoration: none;
 }
 .tutor-course-loop-price > .price{
-    overflow: hidden;
-}
-
-.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap{
-    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 600;
 }
 
 .tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a{
-    color: var(--tutor-primary-color);
+    color: var(--tutor-text-color);
     position: relative;
     line-height: 20px;
     vertical-align: top;
+    display: block;
+    font-weight: 400;
+    font-size: 14px;
+    background: transparent;
+    padding: 0;
 }
 
 
+.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a:hover{
+    color: var(--tutor-primary-color);
+}
+
+
+.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap{
+    margin-left: auto;
+}
 .tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a.added{
     display: none;
 }
@@ -817,7 +828,7 @@ div[class*="tutor-course-col"] {
 
 .tutor-course-filter-wrap{
     clear: both;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 }
 .tutor-course-filter-form{
     display: inline-block;
@@ -897,7 +908,7 @@ div[class*="tutor-course-col"] {
 
 .tutor-loop-author > div a{
     color: var(--tutor-text-color);
-    font-weight: 700;
+    font-weight: 500;
     -webkit-transition: 300ms;
     transition: 300ms;
 }
@@ -1060,6 +1071,7 @@ a.tutor-btn.bordered-btn:hover,
     align-items: center;
     padding-bottom: 30px;
     border-bottom: 1px solid #DCDFE5;
+    flex-wrap: wrap;
 }
 
 .tutor-dashboard-header-avatar img{
@@ -1074,11 +1086,19 @@ a.tutor-btn.bordered-btn:hover,
     -ms-flex-positive: 1;
     flex-grow: 1;
     padding-left: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.tutor-dashboard-header-button{
+    padding-top: 15px;
 }
 
 .tutor-dashboard-header-display-name h4{
     font-size: 30px;
-    margin-bottom: 0;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    line-height: 34px;
 }
 
 .tutor-dashboard-header-stats{
@@ -1087,11 +1107,14 @@ a.tutor-btn.bordered-btn:hover,
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
+    line-height: 25px;
 }
 
 .tutor-dashboard-header-stats > div:not(:first-child){
     margin-left: 30px;
 }
+
+
 
 
 /* end dashboard header */
@@ -1240,7 +1263,9 @@ a.tutor-btn.bordered-btn:hover,
 }
 
 /*dashboard quiz attempts*/
-
+.tutor-dashboard-content{
+    margin-bottom: 60px;
+}
 .tutor-dashboard-content  .tutor-quiz-attempt-history tr th,
 .tutor-dashboard-content  .tutor-quiz-attempt-history tr td{
     vertical-align: middle;
@@ -1261,6 +1286,32 @@ a.tutor-btn.bordered-btn:hover,
     line-height: 19px;
     padding: 0 5px;
     margin-right: 4px;
+}
+
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr th{
+    background: #FAFBFC;
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr td{
+    background: #fff;
+}
+
+@media (max-width: 768px) {
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr{
+        display: flex;
+        flex-wrap: wrap;
+        box-sizing: border-box;
+    }
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr th:first-child,
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:first-child{
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr th,
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr td{
+        flex-grow: 1;
+    }
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history table a{
@@ -1297,8 +1348,21 @@ a.tutor-btn.bordered-btn:hover,
     display: -ms-flexbox;
     display: flex;
 }
+
 .tutor-dashboard-profile .tutor-dashboard-profile-item .heading{
     min-width: 190px;
+}
+
+@media (max-width: 480px) {
+    .tutor-dashboard-profile .tutor-dashboard-profile-item{
+        flex-wrap: wrap;
+    }
+    .tutor-dashboard-profile .tutor-dashboard-profile-item .heading{
+        min-width: 100%;
+        width: 100%;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
 }
 
 .tutor-dashboard-profile .tutor-dashboard-profile-item .content{
@@ -1418,14 +1482,6 @@ a.tutor-btn.bordered-btn:hover,
 }
 
 @media (max-width: 991px) {
-    ul.tutor-dashboard-permalinks li{
-        display: inline-block;
-        border-bottom: none !important;
-        border-right: 1px solid #E8EFF1;
-    }
-    ul.tutor-dashboard-permalinks li:last-child{
-        border-right-color: transparent;
-    }
     .tutor-dashboard-student .tutor-col-3,
     .tutor-dashboard-student .tutor-col-9{
         -webkit-box-flex: 0;
@@ -1547,6 +1603,7 @@ a.tutor-btn.bordered-btn:hover,
     padding: 5px 8px;
     border: 1px solid #D7DADF;
     color: #AAAEB3;
+    white-space: nowrap;
 }
 .report-top-sub-menu a:hover{
     background: #EDF0F9;
@@ -1567,14 +1624,29 @@ a.tutor-btn.bordered-btn:hover,
     display: -ms-flexbox;
     display: flex;
     margin-bottom: 0;
+    padding-left: 10px;
 }
 .date-range-input{
     position: relative;
-    margin-right: 5px;
 }
+
+
+.date-range-input input{
+    border-radius: 0 !important;
+    margin: 0 !important;
+    border-right: none !important;
+    font-size: 14px;
+}
+
 .date-range-input:last-child{
     margin-right: 0;
 }
+
+
+.date-range-input:last-child button{
+    border-radius: 0;
+}
+
 .date-range-input input, .date-range-input input[type=text]{
     border: 1px solid #D7DADF;
     box-shadow: none;
@@ -1757,114 +1829,14 @@ label[for="tutor_withdraw_amount"]{
 
 /** END Withdraw */
 
-/**
-DatePicker
- */
-.ui-datepicker {
-    background-color: #fff;
-    border: 1px solid #EEEEEE;
-    display: none;
-    margin-top: 4px;
-    padding: 5px;
-    width: 180px;
-}
-.ui-datepicker a,
-.ui-datepicker a:hover {
-    text-decoration: none;
-}
-.ui-datepicker a:hover,
-.ui-datepicker td:hover a {
-    color: var(--tutor-primary-hover-color);
-    -webkit-transition: color 0.1s ease-in-out;
-    transition: color 0.1s ease-in-out;
-}
-.ui-datepicker .ui-datepicker-header {
-    margin-bottom: 4px;
-    text-align: center;
-}
-.ui-datepicker .ui-datepicker-title {
-    font-weight: 700;
-}
-.ui-datepicker .ui-datepicker-prev,
-.ui-datepicker .ui-datepicker-next {
-    cursor: default;
-    font-family: 'tutor';
-    -webkit-font-smoothing: antialiased;
-    font-style: normal;
-    font-weight: normal;
-    height: 20px;
-    line-height: 1;
-    margin-top: 2px;
-    width: 30px;
-}
-.ui-datepicker .ui-datepicker-prev {
-    float: left;
-    text-align: left;
-}
-.ui-datepicker .ui-datepicker-next {
-    float: right;
-    text-align: right;
-}
-.ui-datepicker .ui-datepicker-prev:before {
-    content: "\e921";
-}
-.ui-datepicker .ui-datepicker-next:before {
-    content: "\e903";
-}
-.ui-datepicker .ui-icon {
-    display: none;
-}
-.ui-datepicker .ui-datepicker-calendar {
-    table-layout: fixed;
-    width: 100%;
-}
-.ui-datepicker .ui-datepicker-calendar th,
-.ui-datepicker .ui-datepicker-calendar td {
-    text-align: center;
-    padding: 0;
-}
-.ui-datepicker .ui-datepicker-calendar td {
-    border-radius: 4px;
-    -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
-    transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
-}
-.ui-datepicker .ui-datepicker-calendar td:hover {
-    background-color: #eee;
-    cursor: pointer;
-}
-.ui-datepicker .ui-datepicker-calendar td a {
-    text-decoration: none;
-}
-.ui-datepicker .ui-datepicker-current-day {
-    background-color: var( --tutor-primary-hover-color);
-}
-.ui-datepicker .ui-datepicker-current-day a {
-    color: #fff
-}
-.ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
-    background-color: #fff;
-    cursor: default;
-}
-
-.ui-datepicker-calendar .ui-state-default {
-    border: none;
-    background: none;
-}
-.ui-datepicker-calendar .ui-state-default.ui-state-highlight {
-    background: #EEEEEE;
-    padding: 3px;
-    display: block;
-}
-
-/** End DatePicker **/
-
-
 .tutor-mycourse-thumbnail {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 250px;
     flex: 0 0 250px;
     -ms-flex-item-align: center;
-    align-self: center;
+    -webkit-background-size: cover;
+    background-size: cover;
+    background-position: center;
 }
 .tutor-mycourse-content {
     padding: 20px;
@@ -1872,6 +1844,19 @@ DatePicker
     -ms-flex: 1;
     flex: 1;
 }
+
+
+@media (max-width: 580px) {
+    .tutor-mycourse-thumbnail{
+        height: 200px;
+    }
+    .tutor-mycourse-thumbnail,
+    .tutor-mycourse-content{
+        min-width: 100%;
+        width: 100%;
+    }
+}
+
 .tutor-mycourse-content h3{
     margin: 0 0 9px;
 }
@@ -1918,7 +1903,16 @@ DatePicker
     margin-bottom: 30px;
     border: 1px solid #DCDFE5;
     border-radius: 4px;
+    flex-direction: row;
+    overflow: hidden;
 }
+
+@media (max-width: 580px) {
+    .tutor-dashboard-content-inner .tutor-mycourse-wrap{
+        flex-wrap: wrap;
+    }
+}
+
 .tutor-dashboard-content-inner .tutor-mycourse-wrap .tutor-course-status h4{
     display: none;
 }
@@ -1997,7 +1991,6 @@ DatePicker
 
 .tutor-course-delete-popup{
     text-align: center;
-    padding: 40px 35px;
     font-size: 16px;
     line-height: 25px;
     font-weight: 400;
@@ -2052,29 +2045,48 @@ DatePicker
     color: #ffffff;
 }
 
+@media (max-width: 768px) {
+    .tutor-modal-button-group button{
+        padding: 5px 20px;
+        min-width: auto;
+        margin-bottom: 6px;
+    }
+    .tutor-modal-button-group{
+        margin-top: 20px;
+    }
+}
+
 /* ***********************      */
 /* End Tutor Student Dashboard  */
 /************************       */
 .tutor-profile-photo-upload-wrap{
     width: 200px;
-    height: 200px;
-    margin-bottom: 50px;
+    height: auto;
+    margin-bottom: 70px;
     position: relative;
 }
 .tutor-profile-photo-upload-wrap img{
     width: 100%;
-    height: 100%;
+    height: auto;
+    display: block;
 }
 a.tutor-profile-photo-upload-btn {
     position: absolute;
-    bottom: 0;
+    top: 100%;
     background-color: var(--tutor-primary-color);
     color: #fff;
     display: block;
     width: 100%;
     text-align: CENTER;
-    padding: 7px 0;
+    padding: 9px 0;
 }
+
+
+a.tutor-profile-photo-upload-btn:hover{
+    background-color: var(--tutor-primary-hover-color);
+    color: #fff;
+}
+
 .tutor-profile-photo-delete-btn{
     position: absolute;
     color: #ff000c;
@@ -4304,9 +4316,21 @@ social share
     background: #fff;
     padding: 60px;
     width: 90%;
-    max-width: 850px;
+    max-width: 750px;
     max-height: 90%;
     overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+    .tutor-frontend-modal .tutor-frontend-modal-content{
+        padding: 40px;
+    }
+}
+
+@media (max-width: 540px) {
+    .tutor-frontend-modal .tutor-frontend-modal-content{
+        padding: 20px;
+    }
 }
 
 button.tm-close.tutor-icon-line-cross {
@@ -4316,6 +4340,11 @@ button.tm-close.tutor-icon-line-cross {
     background: transparent;
     padding: 0;
     font-size: 24px;
+    border: none;
+    color: var(--tutor-light-color);
+}
+button.tm-close.tutor-icon-line-cross:hover{
+    color: red;
 }
 
 .label-order-status{

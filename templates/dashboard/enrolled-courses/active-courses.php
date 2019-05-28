@@ -19,16 +19,12 @@
 		while ($active_courses->have_posts()):
 			$active_courses->the_post();
             $avg_rating = tutor_utils()->get_course_rating()->rating_avg;
+            $tutor_course_img = get_tutor_course_thumbnail_src();
             ?>
             <div class="tutor-mycourse-wrap tutor-mycourse-<?php the_ID(); ?>">
 
-                <div class="tutor-mycourse-thumbnail">
-                    <?php
 
-                    tutor_course_loop_thumbnail();
-
-                    ?>
-                </div>
+                <div class="tutor-mycourse-thumbnail" style="background-image: url(<?php echo esc_url($tutor_course_img); ?>)"></div>
 
                 <div class="tutor-mycourse-content">
 
