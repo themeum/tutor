@@ -1583,28 +1583,32 @@ a.tutor-btn.bordered-btn:hover,
 
 /** Earning Report */
 .tutor-date-range-filter-wrap{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
     margin: 15px 0 20px;
     font-size: 12px;
 }
+
+
 .report-top-sub-menu{
-    margin: 0;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
+    margin: 0 10px 5px 0;
+    display: inline-block;
+    font-size: 0;
 }
+
 .report-top-sub-menu a{
     text-decoration: none;
     padding: 5px 8px;
     border: 1px solid #D7DADF;
     color: #AAAEB3;
     white-space: nowrap;
+    display: inline-block;
+    font-size: 12px;
 }
+
+
+.report-top-sub-menu a:not(:first-child){
+    margin-left: -1px;
+}
+
 .report-top-sub-menu a:hover{
     background: #EDF0F9;
     color: #333;
@@ -1614,17 +1618,15 @@ a.tutor-btn.bordered-btn:hover,
     color: #ffffff;
     border: 1px solid var(--tutor-primary-hover-color);
 }
-
-.report-top-sub-menu a:not(:last-child){
-    border-right: none;
+.tutor-date-range-wrap{
+    display: inline-block;
 }
-
 .report-date-range-form{
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     margin-bottom: 0;
-    padding-left: 10px;
+    max-width: 370px;
 }
 .date-range-input{
     position: relative;
@@ -1655,6 +1657,7 @@ a.tutor-btn.bordered-btn:hover,
     padding-right: 30px;
     padding-top: 0;
     padding-bottom: 0;
+    width: 100%;
 }
 .date-range-input i.tutor-icon-calendar{
     position: absolute;
