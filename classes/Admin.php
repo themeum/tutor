@@ -29,7 +29,6 @@ class Admin{
 
 		//Admin Footer Text
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
-
 		//Register Course Widget
 		add_action( 'widgets_init', array($this, 'register_course_widget') );
 	}
@@ -45,8 +44,13 @@ class Admin{
 
 		$course_post_type = tutor()->course_post_type;
 
-		add_menu_page(__('Tutor LMS', 'tutor'), __('Tutor LMS', 'tutor'), 'manage_tutor_instructor', 'tutor', null, 'dashicons-welcome-learn-more', 2);
+		$pro_text = '';
+		if ($hasPro){
+			$pro_text = ' '.__('Pro', 'tutor');
+		}
 
+		add_menu_page(__('Tutor LMS', 'tutor').$pro_text, __('Tutor LMS', 'tutor').$pro_text, 'manage_tutor_instructor', 'tutor', null,
+			'dashicons-welcome-learn-more', 2);
 		add_submenu_page('tutor', __('Categories', 'tutor'), __('Categories', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type='.$course_post_type, null );
 
 		add_submenu_page('tutor', __('Tags', 'tutor'), __('Tags', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type='.$course_post_type, null );
@@ -71,10 +75,10 @@ class Admin{
 		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_page') );
 
 		add_submenu_page('tutor',__('Uninstall Tutor LMS', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
-/*
-		if ( ! $hasPro){
-			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
-		}*/
+		/*
+				if ( ! $hasPro){
+					add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
+				}*/
 
 	}
 
@@ -311,7 +315,7 @@ class Admin{
 			'gzip_enabled'              => is_callable( 'gzopen' ),
 			'mbstring_enabled'          => extension_loaded( 'mbstring' ),
 		);
-		
+
 	}
 
 
@@ -350,7 +354,7 @@ class Admin{
 					foreach( $terms as $term ){
 						/**D*/ wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-category' );
 					}
-					
+
 					//Delete tags if available
 					$terms = wp_get_object_terms( $post_id, 'course-tag' );
 					foreach( $terms as $term ){
@@ -390,7 +394,7 @@ class Admin{
 
 			deactivate_plugins($plugin_file);
 		}
-		
+
 		wp_redirect('plugins.php');
 		die();
 	}
