@@ -266,6 +266,12 @@ Most Important CSS
     margin-bottom: 5px;
     min-width: 95px;
 }
+@media (max-width: 575px) {
+    .tutor-single-course-meta ul li{
+        margin-right: 10px;
+    }
+}
+
 .tutor-single-course-meta ul li:last-child{
     margin-right: 0;
 }
@@ -345,6 +351,7 @@ Most Important CSS
         border: 1px solid #ddd;
         border-radius: 4px;
     }
+
 }
 
 .tutor-single-course-meta.tutor-lead-meta ul{
@@ -385,6 +392,30 @@ Most Important CSS
     content: ',';
     margin-right: 4px;
 }
+
+@media (max-width: 575px){
+    .tutor-single-course-meta.tutor-lead-meta ul{
+        display: block;
+    }
+    .tutor-single-course-meta.tutor-lead-meta ul li{
+        display: block;
+        border: none;
+        margin: 0;
+        width: 100%;
+        padding: 0 0 10px;
+    }
+    .tutor-single-course-meta.tutor-lead-meta ul li span{
+        display: inline-block;
+        color: var(--tutor-text-color);
+        font-weight: 700;
+    }
+
+    .tutor-single-course-meta.tutor-lead-meta ul li span::after{
+        content: ':';
+        color: var(--tutor-text-color);
+    }
+}
+
 /*benifit*/
 .tutor-course-benefits-content ul{
     list-style: none;
@@ -1047,6 +1078,8 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-wrap nav.course-enrolled-nav ul li{
     display: inline-block;
 }
+
+
 .tutor-wrap nav.course-enrolled-nav ul li a{
     display: block;
     font-size: 16px;
@@ -1062,6 +1095,23 @@ a.tutor-btn.bordered-btn:hover,
     border-bottom: 2px solid var(--tutor-primary-color);
     color: var(--tutor-text-color);
 }
+
+
+@media (max-width: 575px) {
+    .tutor-wrap nav.course-enrolled-nav ul li{
+        display: inline-block;
+    }
+    .tutor-wrap nav.course-enrolled-nav ul li:not(:first-child) a,
+    .tutor-wrap nav.course-enrolled-nav ul li a{
+        padding: 8px;
+        margin: 0;
+    }
+    .tutor-wrap nav.course-enrolled-nav ul li.active a{
+        border: none;
+        color: var(--tutor-primary-color);
+    }
+}
+
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */
@@ -3178,6 +3228,12 @@ Course question and answer
     color: var(--tutor-text-color);
 }
 
+.tutor-quiz-header .tutor-quiz-meta li strong{
+    display: block;
+    color: var(--tutor-light-color);
+    font-weight: 400;
+}
+
 @media (max-width: 767px) {
     .tutor-quiz-header .tutor-quiz-meta{
         display: block;
@@ -3185,18 +3241,17 @@ Course question and answer
         padding: 0;
     }
     .tutor-quiz-header .tutor-quiz-meta li{
-        display: inline-block;
+        display: block;
         color: var(--tutor-text-color);
         margin: 5px;
-        border: 1px solid #dddddd;
-        padding: 5px 10px;
-        border-radius: 4px;
+        border: none;
+        padding: 0;
+        border-radius: 0;
     }
-}
-.tutor-quiz-header .tutor-quiz-meta li strong{
-    display: block;
-    color: var(--tutor-light-color);
-    font-weight: 400;
+    .tutor-quiz-header .tutor-quiz-meta li strong{
+        display: inline-block;
+        margin-right: 5px;
+    }
 }
 .tutor-quiz-attempt-history{
     overflow-x: auto;
@@ -3328,9 +3383,10 @@ Course question and answer
     height: 175px;
     border-radius: 5px;
     box-shadow: none;
-    min-width: 740px;
+    min-width: 100%;
     margin-bottom: 5px;
 }
+
 .tutor-quiz-answers-wrap textarea:focus{
     background: transparent;
     outline: none !important;
@@ -3456,6 +3512,17 @@ Course question and answer
     vertical-align: top;
 }
 
+@media (max-width: 767px) {
+    .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching{
+        width: 50%;
+    }
+}
+
+@media (max-width: 575px) {
+    .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching{
+        width: 100%;
+    }
+}
 
 .answer-type-matching .quiz-answer-matching-items-wrap{
     margin:  0 -10px;
@@ -4200,6 +4267,12 @@ social share
 .tutor-single-course-meta ul li.tutor-social-share{
     float: right;
     margin-right: 0;
+}
+
+@media (max-width: 575px) {
+    .tutor-single-course-meta ul li.tutor-social-share{
+        display: none;
+    }
 }
 
 .tutor-single-course-meta ul li.tutor-social-share button{
