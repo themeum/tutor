@@ -1,5 +1,4 @@
 
-
 <div class="tutor-dashboard-content-inner">
     <div class="tutor-dashboard-inline-links">
         <?php
