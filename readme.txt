@@ -209,18 +209,19 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.3.2 - 29 May, 2019 =
 
-* Added centralized tutor version upgrading system by a dedicated class called `Upgrader`
+* Added: centralized tutor version upgrading system by a dedicated class called `Upgrader`
 * Added: add to cart guest mode in WooCommerce integration based on Tutor LMS > settings > woocommerce
 * Added: Gutenberg support on course edit page based on settings
 * Added: Automatic free plugin install from pro when the pro version is activated but the free plugin does not exist (pro)
 * Added: nice notice bar for install or activate free version from pro (pro)
 * Added: Pro text in the tutor LMS dashboard menu when Tutor Pro plugin installed and activated
+* Updated: a design for course listing, removed hover and moved it to straight course gird footer
 * Fixed: a Gutenberg bug related post author on course post type, usually post_author column saved 0 if course edit with Gutenberg, we fixed this issue.
 * Fixed: a template condition in the course description
-* Fixed: Response design all issue fixed
-* Fixed:  array count check and return issue in utils
-* Fixed: a bug in dashboard/settings, withdraw menu removed from subscriber/users dashboard, and only shown in the instructor's dashboard.
 * Removed: license restriction for features, it required now for auto-update (pro)
+* Fixed: Response design all issue fixed
+* Fixed: array count check and return issue in utils
+* Fixed: a bug in dashboard/settings, withdraw menu removed from subscriber/users dashboard, and only shown in the instructor's dashboard.
 
 = 1.3.1 - 22 May, 2019 =
 
