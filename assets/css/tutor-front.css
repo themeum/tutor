@@ -2269,6 +2269,7 @@ a.page-numbers:hover {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    position: relative;
 }
 .tutor-lesson-sidebar{
     -webkit-box-flex: 0;
@@ -2278,9 +2279,15 @@ a.page-numbers:hover {
 
 @media (max-width: 991px) {
     .tutor-lesson-sidebar{
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 300px;
-        flex: 0 0 300px;
+        position: absolute;
+        left: 0;
+        top: 70px;
+        width: 400px;
+        max-width: 95%;
+        height: calc(100% - 70px);
+        z-index: 9;
+        background: #fff;
+        overflow-y: auto;
     }
 }
 
