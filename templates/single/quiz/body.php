@@ -93,7 +93,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 							echo '<h4 class="question-text">';
 							if ( ! $hide_question_number_overview){
-								echo $question_i;
+								echo $question_i. ". ";
 							}
 							echo $question->question_title;
 							echo '</h4>';
