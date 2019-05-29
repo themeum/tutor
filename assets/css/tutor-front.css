@@ -1307,15 +1307,22 @@ a.tutor-btn.bordered-btn:hover,
         flex-wrap: wrap;
         box-sizing: border-box;
     }
-    .tutor-dashboard-content .tutor-quiz-attempt-history table tr th:first-child,
-    .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:first-child{
-        width: 100%;
-        box-sizing: border-box;
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr th{
+        display: none;
     }
-    .tutor-dashboard-content .tutor-quiz-attempt-history table tr th,
     .tutor-dashboard-content .tutor-quiz-attempt-history table tr td{
-        flex-grow: 1;
+        width: 100%;
     }
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:not(:first-child){
+        text-align: right;
+    }
+
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:not(:first-child)::before{
+        content: attr(title) ": ";
+        float: left;
+        font-weight: 700;
+    }
+
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history table a{
@@ -2288,6 +2295,7 @@ a.page-numbers:hover {
         z-index: 9;
         background: #fff;
         overflow-y: auto;
+        display: none;
     }
 }
 
@@ -3232,6 +3240,34 @@ Course question and answer
 .tutor-quiz-attempt-history table span.result-pass{
     background: var(--tutor-success-button-color);
 }
+
+@media (max-width: 767px) {
+    .single-quiz-page.tutor-quiz-attempt-history table tr{
+        display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
+    }
+    .single-quiz-page.tutor-quiz-attempt-history table tr th{
+        display: none;
+    }
+    .single-quiz-page.tutor-quiz-attempt-history table tr td{
+        width: 100%;
+    }
+
+    .single-quiz-page.tutor-quiz-attempt-history table tr td:first-child{
+        font-weight: 600;
+        background: #f1f1f1;
+    }
+    .single-quiz-page.tutor-quiz-attempt-history table tr td:not(:first-child){
+        text-align: right;
+    }
+    .single-quiz-page.tutor-quiz-attempt-history table tr td:not(:first-child)::before{
+        content: attr(title) ": ";
+        float: left;
+        font-weight: 700;
+    }
+}
+
 /*.attempt-reviewed-text {*/
 /*color: #777;*/
 /*font-size: 12px;*/
