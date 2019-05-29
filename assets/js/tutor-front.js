@@ -378,6 +378,7 @@ jQuery(document).ready(function($){
             success: function (data) {
                 $wrap.html(data.data.html);
                 videoPlayer.init();
+                $('.tutor-lesson-sidebar').css('display', '');
             },
             complete: function () {
                 $wrap.removeClass('loading-lesson');
@@ -407,6 +408,7 @@ jQuery(document).ready(function($){
             success: function (data) {
                 $wrap.html(data.data.html);
                 init_quiz_builder();
+                $('.tutor-lesson-sidebar').css('display', '');
             },
             complete: function () {
                 $wrap.removeClass('loading-lesson');
