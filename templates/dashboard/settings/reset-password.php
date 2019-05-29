@@ -1,5 +1,3 @@
-
-
 <div class="tutor-dashboard-content-inner">
 
     <div class="tutor-dashboard-inline-links">
@@ -24,11 +22,7 @@
         </ul>
     </div>
 
-
     <h3><?php _e('Reset Password', 'tutor') ?></h3>
-
-
-
 
     <div class="tutor-reset-password-form-wrap">
 
@@ -83,8 +77,6 @@
                     </div>
                 </div>
             </div>
-
-
 
             <div class="tutor-form-group">
                 <label>&nbsp;</label>
