@@ -33,29 +33,19 @@ $user_id = get_current_user_id();
 $user = get_user_by('ID', $user_id);
 
 do_action('tutor_dashboard/before/wrap'); ?>
-
     <div class="tutor-wrap tutor-dashboard tutor-dashboard-student">
         <div class="tutor-container">
-
-
             <div class="tutor-row">
                 <div class="tutor-col-12">
                     <div class="tutor-dashboard-header">
-
                         <div class="tutor-dashboard-header-avatar">
                             <img src="<?php echo get_avatar_url($user_id, array('size' => 150)); ?>" />
                         </div>
-
                         <div class="tutor-dashboard-header-info">
-
                             <div class="tutor-dashboard-header-display-name">
                                 <h4><?php _e('Howdy,', 'tutor'); ?> <strong><?php echo $user->display_name; ?></strong> </h4>
                             </div>
-
-							<?php
-							$instructor_rating = tutor_utils()->get_instructor_ratings($user->ID);
-							?>
-
+							<?php $instructor_rating = tutor_utils()->get_instructor_ratings($user->ID); ?>
 							<?php
 							if (current_user_can(tutor()->instructor_role)){
 								?>
@@ -70,12 +60,10 @@ do_action('tutor_dashboard/before/wrap'); ?>
                                     </div>-->
                                 </div>
 							<?php } ?>
-
                         </div>
 
                         <div class="tutor-dashboard-header-button">
 							<?php
-
 							if(current_user_can(tutor()->instructor_role)){
 							    $course_type = tutor()->course_post_type;
 								?>
@@ -83,7 +71,6 @@ do_action('tutor_dashboard/before/wrap'); ?>
 									<?php _e('<i class="tutor-icon-video-camera"></i> &nbsp; Upload A Course', 'tutor'); ?>
                                 </a>
 								<?php
-
 							}else{
 								if (tutor_utils()->get_option('enable_become_instructor_btn')) {
 									?>
@@ -94,9 +81,7 @@ do_action('tutor_dashboard/before/wrap'); ?>
 								}
 							}
 							?>
-
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -111,7 +96,6 @@ do_action('tutor_dashboard/before/wrap'); ?>
 							if ($dashboard_key === 'index')
 								$dashboard_key = '';
 							$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-
 							echo "<li class='{$li_class}  {$active_class}'><a href='".tutor_utils()->get_tutor_dashboard_page_permalink($dashboard_key)."'> {$dashboard_page} </a> </li>";
 						}
 						?>
@@ -131,10 +115,7 @@ do_action('tutor_dashboard/before/wrap'); ?>
                 </div>
             </div>
         </div>
-
     </div>
-
-
 <?php do_action('tutor_dashboard/after/wrap'); ?>
 
 <?php
