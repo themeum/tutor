@@ -776,6 +776,37 @@ jQuery(document).ready(function($){
     });
 
 
+    /**
+     * Assignment
+     *
+     * @since v.1.3.3
+     */
+
+    $( document ).on( 'submit', '#tutor_assignment_start_form', function(e) {
+        e.preventDefault();
+
+        var $that = $(this);
+        var form_data = $that.serialize()+'&action=tutor_start_assignment';
+
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: form_data,
+            beforeSend: function () {
+                $('#tutor_assignment_start_btn').addClass('updating-icon');
+            },
+            success: function (data) {
+                if (data.success){
+                    location.reload();
+                }
+            },
+            complete : function () {
+                $('#tutor_assignment_start_btn').removeClass('updating-icon');
+            }
+        });
+
+    });
+
 
 
 });

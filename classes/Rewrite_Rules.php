@@ -38,6 +38,9 @@ class Rewrite_Rules extends Tutor_Base {
 			$this->course_post_type."/(.+?)/{$this->lesson_base_permalink}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=".$wp_rewrite->preg_index(2),
 			//Quiz Permalink
 			$this->course_post_type."/(.+?)/tutor_quiz/(.+?)/?$" => "index.php?post_type=tutor_quiz&name=".$wp_rewrite->preg_index(2),
+			//Assignments URL
+			$this->course_post_type."/(.+?)/assignments/(.+?)/?$" => "index.php?post_type=tutor_assignments&name=".$wp_rewrite->preg_index(2),
+
 			//Private Video URL
 			"video-url/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=". $wp_rewrite->preg_index(1),
 			//Student Public Profile URL

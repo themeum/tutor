@@ -212,7 +212,7 @@ Group Field Option
     display: flex;
     font-size: 14px;
 }
-#tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal, .tutor-quiz .open-tutor-quiz-modal{
+#tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal, .tutor-quiz .open-tutor-quiz-modal, .course-content-item .open-tutor-assignment-modal{
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
@@ -370,7 +370,7 @@ p.course-empty-content {
     background: #E9E9E9;
     padding: 15px 20px;
 }
-#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .create-lesson-in-topic-btn, #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .tutor-add-quiz-btn{
+#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .create-lesson-in-topic-btn, #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .tutor-add-quiz-btn, #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .tutor-create-assignments-btn{
     line-height: 35px;
     color: #393c40;
     display: inline-block;
@@ -969,6 +969,8 @@ Quiz Modal
     line-height: 47px;
     color: #fff;
     font-size: 25px;
+    position: absolute;
+    right: 0;
 }
 .tutor-modal-wrap.tutor-quiz-builder-modal-wrap .modal-title {
     -ms-flex-preferred-size: 0;
@@ -986,6 +988,7 @@ Quiz Modal
     line-height: 28px;
     color: #3a3d42;
     font-size: 22px;
+    position: relative;
 }
 .tutor-modal-wrap.tutor-quiz-builder-modal-wrap .modal-header {
     padding: 15px 20px;
@@ -1046,7 +1049,12 @@ Quiz Modal
 .tutor-quiz-builder-form-row .quiz-form-warning {
     color: #e88e06;
 }
-
+.tutor-assignment-builder-modal-wrap .modal-container{
+    padding: 10px;
+}
+.assignment-modal-form-wrap .tutor-option-field.tutor-assignment-modal-title-wrap{
+    margin: 0;
+}
 .tutor-quiz-question-answers-form {
     background-color: #fff;
     padding: 20px;
@@ -1953,4 +1961,14 @@ span.withdraw-method-label {
 }
 .withdraw-list-row-actions .rejected a{
     color: #ff3842;
+}
+
+/**
+Assignments
+ */
+
+.submitted-assignment-wrap{
+    background-color: #ffffff;
+    padding: 20px;
+    margin-top: 20px;
 }

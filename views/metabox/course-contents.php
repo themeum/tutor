@@ -87,7 +87,20 @@
                             </div>
 
 							<?php
-						}else {
+						}elseif($lesson->post_type === 'tutor_assignments'){
+							?>
+                            <div id="tutor-assignment-<?php echo $lesson->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo
+							$lesson->ID; ?>">
+                                <div class="tutor-lesson-top">
+                                    <i class="tutor-icon-move"></i>
+                                    <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $lesson->ID; ?>"
+                                       data-topic-id="<?php echo $topic->ID; ?>"><i class="tutor-icon-clipboard"></i> <?php echo
+                                        $lesson->post_title; ?> </a>
+                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                </div>
+                            </div>
+							<?php
+                        } else{
 							?>
                             <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo
 							$lesson->ID; ?>">
@@ -105,10 +118,16 @@
 
                 <div class="tutor_add_quiz_wrap" data-add-quiz-under="<?php echo $topic->ID; ?>">
                     <div class="tutor-add-quiz-button-wrap">
+
+	                    <?php do_action('tutor_course_builder_before_btn_group', $topic->ID); ?>
+
                         <a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" ><i class="tutor-icon-block tutor-icon-plus"></i> <?php _e('Add new lesson', 'tutor'); ?></a>
 
-                        <button type="button" class="icon-bl tutor-add-quiz-btn"> <i class="tutor-icon-doubt"></i> <?php _e('Add Topic Quiz',
-                                'tutor'); ?></button>
+                        <button type="button" class="icon-bl tutor-add-quiz-btn"> <i class="tutor-icon-doubt"></i> <?php _e('Add Topic Quiz', 'tutor'); ?>
+                        </button>
+
+                        <?php do_action('tutor_course_builder_after_btn_group', $topic->ID); ?>
+
                     </div>
                 </div>
 

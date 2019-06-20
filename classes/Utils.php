@@ -93,6 +93,24 @@ class Utils {
 	}
 
 	/**
+	 * @param null $key
+	 * @param array $array
+	 *
+	 * @return array|bool|mixed
+	 *
+	 * alias of avalue_dot method of utils
+	 *
+	 * Get array value by key and recursive array value by dot notation key
+	 *
+	 * ex: tutor_utils()->array_get('key.child_key', $array);
+	 *
+	 * @since v.1.3.3
+	 */
+	public function array_get($key = null, $array = array()){
+		return $this->avalue_dot($key, $array);
+	}
+
+	/**
 	 * @return array
 	 *
 	 * Get all pages
@@ -719,7 +737,7 @@ class Utils {
 
 		$lesson_post_type = tutor()->lesson_post_type;
 		$args = array(
-			'post_type'  => array($lesson_post_type, 'tutor_quiz'),
+			'post_type'  => apply_filters('tutor_course_contents_post_types', array($lesson_post_type, 'tutor_quiz')),
 			'post_parent'  => $topics_id,
 			'posts_per_page'    => $limit,
 			'orderby' => 'menu_order',
@@ -741,11 +759,11 @@ class Utils {
 	public function checking_nonce($request_method = 'post'){
 		if ($request_method === 'post'){
 			if (!isset($_POST[tutor()->nonce]) || !wp_verify_nonce($_POST[tutor()->nonce], tutor()->nonce_action)) {
-				exit();
+				exit('Nonce does not matched');
 			}
 		}else{
 			if (!isset($_GET[tutor()->nonce]) || !wp_verify_nonce($_GET[tutor()->nonce], tutor()->nonce_action)) {
-				exit();
+				exit('Nonce does not matched');
 			}
 		}
 	}
@@ -4264,5 +4282,107 @@ class Utils {
 
 		return "<span class='label-order-status label-status-{$status}'>$status_name</span>";
 	}
+
+	public function get_course_id_by_assignment($assignment_id = 0){
+		$assignment_id = $this->get_post_id($assignment_id);
+		return get_post_meta($assignment_id, '_tutor_course_id_for_assignments', true);
+	}
+
+	/**
+	 * @param int $assignment_id
+	 * @param string $option_key
+	 * @param bool $default
+	 *
+	 * @return array|bool|mixed
+	 *
+	 * Get assignment options
+	 *
+	 * @since v.1.3.3
+	 */
+	public function get_assignment_option($assignment_id = 0, $option_key = '', $default = false){
+		$assignment_id = $this->get_post_id($assignment_id);
+		$get_option_meta = maybe_unserialize(get_post_meta($assignment_id, 'assignment_option', true));
+
+		if ( ! $option_key && ! empty($get_option_meta)) {
+			return $get_option_meta;
+		}
+
+		$value = $this->avalue_dot( $option_key, $get_option_meta );
+		if ( $value ) {
+			return $value;
+		}
+		return $default;
+	}
+
+	/**
+	 * @param int $assignment_id
+	 * @param int $user_id
+	 *
+	 * @return int
+	 *
+	 * Is running any assignment submitting
+	 *
+	 * @since v.1.3.3
+	 */
+	public function is_assignment_submitting($assignment_id = 0, $user_id = 0){
+		global $wpdb;
+
+		$assignment_id = $this->get_post_id($assignment_id);
+		$user_id = $this->get_user_id($user_id);
+
+		$is_running_submit = (int) $wpdb->get_var("SELECT comment_ID FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_approved = 'submitting' AND user_id = {$user_id} AND comment_post_ID = 
+{$assignment_id} ");
+
+		return $is_running_submit;
+	}
+
+	/**
+	 * @param int $assignment_id
+	 * @param int $user_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Determine if any assignment submitted by user to a assignment
+	 *
+	 * @since v.1.3.3
+	 */
+
+	public function is_assignment_submitted($assignment_id = 0, $user_id = 0){
+		global $wpdb;
+
+		$assignment_id = $this->get_post_id($assignment_id);
+		$user_id = $this->get_user_id($user_id);
+
+		$has_submitted = $wpdb->get_row("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_approved = 'submitted' AND user_id = {$user_id} AND comment_post_ID = {$assignment_id} ");
+
+		return $has_submitted;
+	}
+
+	public function get_assignment_submit_info($assignment_submitted_id = 0){
+		global $wpdb;
+
+		$assignment_submitted_id = $this->get_post_id($assignment_submitted_id);
+
+		$submitted_info = $wpdb->get_row("SELECT * FROM {$wpdb->comments} WHERE comment_ID = {$assignment_submitted_id} AND comment_type = 'tutor_assignment' AND comment_approved = 'submitted' ");
+
+		return $submitted_info;
+	}
+
+	public function get_total_assignments(){
+		global $wpdb;
+
+		$count = $wpdb->get_var("SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_approved = 'submitted'    ");
+
+		return (int) $count;
+	}
+
+	public function get_assignments(){
+		global $wpdb;
+
+		$results = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_approved = 'submitted'    ");
+
+		return $results;
+	}
+
 
 }
