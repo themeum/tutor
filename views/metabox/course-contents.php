@@ -51,7 +51,7 @@
 
                     <div class="tutor-option-field-row">
                         <div class="tutor-option-field-label">
-                            <label for=""><?php _e('Topic Summery', 'tutor'); ?></label>
+                            <label for=""><?php _e('Topic Summary', 'tutor'); ?></label>
                         </div>
                         <div class="tutor-option-field">
                             <textarea name="topic_summery"><?php echo $topic->post_content; ?></textarea>

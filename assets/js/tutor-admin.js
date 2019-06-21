@@ -1786,7 +1786,48 @@ jQuery(document).ready(function($){
         });
     });
 
+    /**
+     * Add Assignment
+     */
+    $(document).on( 'click', '.add-assignment-attachments',  function( event ){
+        event.preventDefault();
 
-    
+        var $that = $(this);
+        var frame;
+        // If the media frame already exists, reopen it.
+        if ( frame ) {
+            frame.open();
+            return;
+        }
+
+        // Create a new media frame
+        frame = wp.media({
+            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            button: {
+                text: 'Use this media'
+            },
+            multiple: false  // Set to true to allow multiple files to be selected
+        });
+
+        // When an image is selected in the media frame...
+        frame.on( 'select', function() {
+            // Get media attachment details from the frame state
+            var attachment = frame.state().get('selection').first().toJSON();
+
+            var  field_markup = '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">'+attachment.filename+'</p><input type="hidden" name="tutor_assignment_attachments[]" value="'+attachment.id+'"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
+
+            $('#assignment-attached-file').append(field_markup);
+            $that.closest('.video_source_wrap_html5').find('input').val(attachment.id);
+        });
+        // Finally, open the modal on click
+        frame.open();
+    });
+
+    $(document).on( 'click', '.remove-assignment-attachment-a',  function( event ){
+        event.preventDefault();
+        $(this).closest('.tutor-individual-attachment-file').remove();
+    });
+
+
 
 });

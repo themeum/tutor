@@ -33,7 +33,6 @@ if ( ! defined( 'ABSPATH' ) )
 
     <div class="tutor-lesson-content-area">
 
-
         <div class="tutor-assignment-title">
             <h2><?php the_title(); ?></h2>
         </div>
@@ -46,10 +45,43 @@ if ( ! defined( 'ABSPATH' ) )
         <hr />
 
         <div class="tutor-assignment-content">
-			<?php the_content(); ?>
+            <h2><?php _e('Description', 'tutor'); ?></h2>
+
+            <?php the_content(); ?>
         </div>
 
-		<?php
+
+	    <?php
+        $assignment_attachments = maybe_unserialize(get_post_meta(get_the_ID(),'_tutor_assignment_attachments', true));
+	    if (tutor_utils()->count($assignment_attachments)){
+		    ?>
+            <div class="tutor-assignment-attachments">
+                <h2><?php _e('Attachments', 'tutor'); ?></h2>
+			    <?php
+			    foreach ($assignment_attachments as $attachment_id){
+				    if ($attachment_id) {
+
+					    $attachment_name =  get_post_meta( $attachment_id, '_wp_attached_file', true );
+					    $attachment_name = substr($attachment_name, strrpos($attachment_name, '/')+1);
+					    ?>
+                        <p class="attachment-file-name">
+                            <a href="<?php echo wp_get_attachment_url($attachment_id); ?>" target="_blank">
+                                <i class="tutor-icon-attach"></i> <?php echo $attachment_name; ?>
+                            </a>
+                        </p>
+					    <?php
+				    }
+			    }
+			    ?>
+            </div>
+		    <?php
+	    }
+	    ?>
+
+
+
+
+        <?php
 		$is_submitting = tutor_utils()->is_assignment_submitting(get_the_ID());
 		if ($is_submitting){
 			?>
@@ -60,13 +92,13 @@ if ( ! defined( 'ABSPATH' ) )
 
 
                 <form action="" method="post" id="tutor_assignment_submit_form" enctype="multipart/form-data">
-	                <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                     <input type="hidden" value="tutor_assignment_submit" name="tutor_action"/>
                     <input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 
-                    <?php
-                    $allowd_upload_files = (int) tutor_utils()->get_assignment_option(get_the_ID(), 'upload_files_limit');
-                    ?>
+					<?php
+					$allowd_upload_files = (int) tutor_utils()->get_assignment_option(get_the_ID(), 'upload_files_limit');
+					?>
 
 
                     <div class="tutor-form-group">
@@ -75,24 +107,24 @@ if ( ! defined( 'ABSPATH' ) )
                     </div>
 
 
-                    <?php
-                    if ($allowd_upload_files){
-                        ?>
+					<?php
+					if ($allowd_upload_files){
+						?>
                         <p>Attach assignment files</p>
-                        <?php
-                        for ($item = 1; $item <= $allowd_upload_files; $item++){
-                            ?>
+						<?php
+						for ($item = 1; $item <= $allowd_upload_files; $item++){
+							?>
                             <div class="tutor-form-group">
                                 <input type="file" name="attached_assignment_files[]">
                             </div>
-                            <?php
-                        }
-                    }
-                    ?>
+							<?php
+						}
+					}
+					?>
 
                     <div class="tutor-assignment-submit-btn-wrap">
                         <button type="submit" class="tutor-btn" id="tutor_assignment_submit_btn"> <?php _e('Submit Assignment', 'tutor');
-		                    ?> </button>
+							?> </button>
                     </div>
 
                 </form>
@@ -104,56 +136,93 @@ if ( ! defined( 'ABSPATH' ) )
 
 			$submitted_assignment = tutor_utils()->is_assignment_submitted(get_the_ID());
 			if ($submitted_assignment){
-			    ?>
+				$is_reviewed_by_instructor = get_comment_meta($submitted_assignment->comment_ID, 'evaluate_time', true);
+
+				if ($is_reviewed_by_instructor){
+					$max_mark = tutor_utils()->get_assignment_option($submitted_assignment->comment_post_ID, 'total_mark');
+					$pass_mark = tutor_utils()->get_assignment_option($submitted_assignment->comment_post_ID, 'pass_mark');
+					$given_mark = get_comment_meta($submitted_assignment->comment_ID, 'assignment_mark', true);
+					?>
+
+                    <div class="assignment-result-wrap">
+                        <h4><?php echo sprintf(__('You received %s marks out of %s', 'tutor'), "<span class='received-marks'>{$given_mark}</span>", "<span class='out-of-marks'>{$max_mark}</span>") ?></h4>
+                        <h4 class="submitted-assignment-grade">
+							<?php _e('Your Grade is '); ?>
+
+
+							<?php if ($given_mark >= $pass_mark){
+								?>
+                                <span class="submitted-assignment-grade-pass">
+                                    <?php _e('Passed', 'tutor'); ?>
+                                </span>
+								<?php
+							}else{
+								?>
+                                <span class="submitted-assignment-grade-failed">
+                                    <?php _e('Failed', 'tutor'); ?>
+                                </span>
+								<?php
+							} ?>
+                        </h4>
+                    </div>
+				<?php } ?>
+
 
                 <div class="tutor-assignments-submitted-answers-wrap">
 
                     <h2><?php _e('Your Answers', 'tutor'); ?></h2>
 
-                    <?php echo nl2br(stripslashes($submitted_assignment->comment_content)); ?>
+					<?php echo nl2br(stripslashes($submitted_assignment->comment_content)); ?>
 
-                    <?php
+					<?php
 
-                    $attached_files = get_comment_meta($submitted_assignment->comment_ID, 'uploaded_attachments', true);
+					$attached_files = get_comment_meta($submitted_assignment->comment_ID, 'uploaded_attachments', true);
 
-                    if ($attached_files){
-	                    $attached_files = json_decode($attached_files, true);
+					if ($attached_files){
+						$attached_files = json_decode($attached_files, true);
 
-	                    if (tutor_utils()->count($attached_files)){
+						if (tutor_utils()->count($attached_files)){
 
-	                        ?>
+							?>
                             <h2><?php _e('Your uploaded file(s)', 'tutor'); ?></h2>
 
-		                    <?php
+							<?php
 
-		                    $upload_dir = wp_get_upload_dir();
-		                    $upload_baseurl = trailingslashit(tutor_utils()->array_get('baseurl', $upload_dir));
+							$upload_dir = wp_get_upload_dir();
+							$upload_baseurl = trailingslashit(tutor_utils()->array_get('baseurl', $upload_dir));
 
-	                        foreach ($attached_files as $attached_file){
-	                            ?>
-
+							foreach ($attached_files as $attached_file){
+								?>
                                 <div class="uploaded-files">
-
-                                    <a href="<?php echo $upload_baseurl.tutor_utils()->array_get('uploaded_path', $attached_file) ?>" target="_blank"><?php echo tutor_utils()->array_get('name', $attached_file); ?></a>
-
-
+                                    <a href="<?php echo $upload_baseurl.tutor_utils()->array_get('uploaded_path', $attached_file) ?>" target="_blank"><?php echo tutor_utils()->array_get('name', $attached_file); ?>
+                                    </a>
                                 </div>
+								<?php
+							}
+						}
 
-                                <?php
-                            }
-                        }
-
-                    }
+					}
 
 
-                    ?>
+					if ($is_reviewed_by_instructor){
+						?>
+
+                        <div class="instructor-note-wrap">
+                            <h2><?php _e('Instructor Note', 'tutor'); ?></h2>
+
+                            <p><?php echo nl2br(get_comment_meta($submitted_assignment->comment_ID,'instructor_note', true)) ?></p>
+                        </div>
+						<?php
+					}
+
+					?>
 
                 </div>
 
 
 
-                <?php
-            }else {
+				<?php
+			}else {
 
 
 				?>
@@ -171,7 +240,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 				<?php
 			}
-        }
+		}
 		?>
 
 

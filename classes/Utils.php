@@ -4384,5 +4384,22 @@ class Utils {
 		return $results;
 	}
 
+	/**
+	 * @param int $user_id
+	 *
+	 * @return array
+	 *
+	 * Get all courses id assigned or owned by an instructors
+	 *
+	 * @since v.1.3.3
+	 */
+	public function get_assigned_courses_ids_by_instructors($user_id = 0){
+		global $wpdb;
+		$user_id = $this->get_user_id($user_id);
+
+		$get_assigned_courses_ids = $wpdb->get_col("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = {$user_id} GROUP BY meta_value ; ");
+
+		return $get_assigned_courses_ids;
+	}
 
 }

@@ -1972,3 +1972,9 @@ Assignments
     padding: 20px;
     margin-top: 20px;
 }
+.tutor-individual-attachment-file{
+    margin-bottom: 20px;
+}
+.tutor-individual-attachment-file p {
+    margin: 0 !important;
+}
