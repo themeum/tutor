@@ -333,30 +333,30 @@ class Options {
 				),
 			),
 			'tutor_earning' => array(
-				'label'     => __('Revenue Sharing', 'tutor'),
+				'label'     => __('Earning', 'tutor'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('Revenue Sharing', 'tutor'),
+						'label' => __('Earning', 'tutor'),
 						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
 						'fields' => array(
 							'enable_tutor_earning' => array(
 								'type'          => 'checkbox',
-								'label'         => __('Revenue Sharing', 'tutor'),
+								'label'         => __('Earning', 'tutor'),
 								'label_title'   => __('Enable', 'tutor'),
 								'default'       => '0',
-								'desc'          => __('If disabled, the Admin will receive 100% of the revenue',	'tutor'),
+								'desc'          => __('If disabled, the Admin will receive 100% of the earning',	'tutor'),
 							),
 							'earning_admin_commission' => array(
 								'type'      => 'number',
-								'label'      => __('Admin Share Percentage', 'tutor'),
+								'label'      => __('Admin Commission Percentage', 'tutor'),
 								'default'   => '20',
-								'desc'  => __('Define the share of the Admin from each sale.(after deducting fees)', 'tutor'),
+								'desc'  => __('Define the commission of the Admin from each sale.(after deducting fees)', 'tutor'),
 							),
 							'earning_instructor_commission' => array(
 								'type'      => 'number',
-								'label'      => __('Instructor Share Percentage', 'tutor'),
+								'label'      => __('Instructor Commission Percentage', 'tutor'),
 								'default'   => '80',
-								'desc'  => __('Define the share for instructors from each sale.(after deducting fees)', 'tutor'),
+								'desc'  => __('Define the commission for instructors from each sale.(after deducting fees)', 'tutor'),
 							),
 							'tutor_earning_fees' => array(
 								'type'      => 'group_fields',
@@ -389,6 +389,7 @@ class Options {
 											'fixed'      =>  __('Fixed', 'tutor'),
 										),
 									),
+
 								),
 							),
 							'statement_show_per_page' => array(
