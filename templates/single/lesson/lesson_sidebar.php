@@ -33,8 +33,8 @@ if ($post->post_type === 'tutor_quiz'){
 
     <div class="tutor-sidebar-tabs-wrap">
         <div class="tutor-tabs-btn-group">
-            <a href="#tutor-lesson-sidebar-tab-content" class="active"> <i class="tutor-icon-education"></i> Lesson List</a>
-            <a href="#tutor-lesson-sidebar-qa-tab-content"> <i class="tutor-icon-question-2"></i> Browse Q&A</a>
+            <a href="#tutor-lesson-sidebar-tab-content" class="active"> <i class="tutor-icon-education"></i> <?php esc_html_e('Lesson List', 'tutor'); ?></a>
+            <a href="#tutor-lesson-sidebar-qa-tab-content"> <i class="tutor-icon-question-2"></i><?php esc_html_e('Browse Q&A', 'tutor'); ?></a>
         </div>
 
         <div class="tutor-sidebar-tabs-content">
