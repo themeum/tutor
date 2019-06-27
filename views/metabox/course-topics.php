@@ -32,7 +32,7 @@
 
     <div class="tutor-option-field-row">
         <div class="tutor-option-field-label">
-            <label for=""><?php _e('Topic Summery', 'tutor'); ?></label>
+            <label for=""><?php _e('Topic Summary', 'tutor'); ?></label>
         </div>
         <div class="tutor-option-field">
             <textarea name="topic_summery"></textarea>
@@ -84,6 +84,21 @@
         <div class="modal-header">
             <div class="lesson-modal-close-wrap">
                 <a href="javascript:;" class="modal-close-btn">&times;</a>
+            </div>
+        </div>
+        <div class="modal-container"></div>
+    </div>
+</div>
+
+
+<div class="tutor-modal-wrap tutor-assignment-builder-modal-wrap">
+    <div class="tutor-modal-content">
+        <div class="modal-header">
+            <div class="modal-title">
+                <h1><?php _e('Assignments', 'tutor'); ?></h1>
+            </div>
+            <div class="modal-close-wrap">
+                <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i> </a>
             </div>
         </div>
         <div class="modal-container"></div>

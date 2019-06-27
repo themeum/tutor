@@ -4505,3 +4505,20 @@ button.tm-close.tutor-icon-line-cross:hover{
     background-color: #DB5382;
     color: #ffffff;
 }
+.tutor-lesson-content-area h2 {
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.assignment-result-wrap {
+    text-align: center;
+    padding: 10px 0;
+}
+.submitted-assignment-grade-pass{
+    color: var(--tutor-success-button-color);
+}
+submitted-assignment-grade-failed{
+    color: red;
+}
+.received-marks{
+    color: var(--tutor-primary-color);
+}

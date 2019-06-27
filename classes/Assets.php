@@ -45,7 +45,14 @@ class Assets{
 	public function frontend_scripts(){
 		global $post, $wp_query;
 
-		wp_enqueue_editor();
+		/**
+		 * We checked wp_enqueue_editor() in condition because it conflicting with Divi Builder
+		 * condition @since v.1.3.3
+		 */
+
+		if (is_single()){
+			wp_enqueue_editor();
+		}
 
 		$tutor_dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
 		if ($tutor_dashboard_page_id === get_the_ID()){

@@ -1681,4 +1681,153 @@ jQuery(document).ready(function($){
         return value && typeof value === 'object' && value.constructor === Object;
     }
 
+
+    /**
+     * Tutor Assignments JS
+     * @since v.1.3.3
+     */
+    $(document).on('click', '.tutor-create-assignments-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var topic_id = $(this).attr('data-topic-id');
+        var course_id = $('#post_ID').val();
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {topic_id : topic_id, course_id : course_id, action: 'tutor_load_assignments_builder_modal'},
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
+                $('.tutor-lesson-modal-wrap').attr('data-topic-id', topic_id).addClass('show');
+
+                tinymce.init(tinyMCEPreInit.mceInit.content);
+                tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_assignments_modal_editor' );
+                tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
+            },
+            complete: function () {
+                quicktags({id : "tutor_assignments_modal_editor"});
+
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+    $(document).on('click', '.open-tutor-assignment-modal', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var assignment_id = $that.attr('data-assignment-id');
+        var topic_id = $that.attr('data-topic-id');
+        var course_id = $('#post_ID').val();
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {assignment_id : assignment_id, topic_id : topic_id, course_id : course_id, action: 'tutor_load_assignments_builder_modal'},
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
+                $('.tutor-lesson-modal-wrap').attr({'data-assignment-id' : assignment_id, 'data-topic-id':topic_id}).addClass('show');
+
+                tinymce.init(tinyMCEPreInit.mceInit.content);
+                tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_assignments_modal_editor' );
+                tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
+            },
+            complete: function () {
+                quicktags({id : "tutor_assignments_modal_editor"});
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+    /**
+     * Update Assignment Data
+     */
+    $(document).on( 'click', '.update_assignment_modal_btn',  function( event ){
+        event.preventDefault();
+
+        var $that = $(this);
+        var content;
+        var editor = tinyMCE.get('tutor_assignments_modal_editor');
+        if (editor) {
+            content = editor.getContent();
+        } else {
+            content = $('#'+inputid).val();
+        }
+
+        var form_data = $(this).closest('form').serialize();
+        form_data += '&assignment_content='+content;
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : form_data,
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+                    $('#tutor-course-content-wrap').html(data.data.course_contents);
+                    enable_sorting_topic_lesson();
+
+                    //Close the modal
+                    $('.tutor-lesson-modal-wrap').removeClass('show');
+                }
+            },
+            complete: function () {
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+    /**
+     * Add Assignment
+     */
+    $(document).on( 'click', '.add-assignment-attachments',  function( event ){
+        event.preventDefault();
+
+        var $that = $(this);
+        var frame;
+        // If the media frame already exists, reopen it.
+        if ( frame ) {
+            frame.open();
+            return;
+        }
+
+        // Create a new media frame
+        frame = wp.media({
+            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            button: {
+                text: 'Use this media'
+            },
+            multiple: false  // Set to true to allow multiple files to be selected
+        });
+
+        // When an image is selected in the media frame...
+        frame.on( 'select', function() {
+            // Get media attachment details from the frame state
+            var attachment = frame.state().get('selection').first().toJSON();
+
+            var  field_markup = '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">'+attachment.filename+'</p><input type="hidden" name="tutor_assignment_attachments[]" value="'+attachment.id+'"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
+
+            $('#assignment-attached-file').append(field_markup);
+            $that.closest('.video_source_wrap_html5').find('input').val(attachment.id);
+        });
+        // Finally, open the modal on click
+        frame.open();
+    });
+
+    $(document).on( 'click', '.remove-assignment-attachment-a',  function( event ){
+        event.preventDefault();
+        $(this).closest('.tutor-individual-attachment-file').remove();
+    });
+
+
+
 });

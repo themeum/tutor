@@ -23,6 +23,7 @@ class Template extends Tutor_Base {
 		add_filter( 'template_include', array($this, 'load_single_lesson_template'), 99 );
 		add_filter( 'template_include', array($this, 'play_private_video'), 99 );
 		add_filter( 'template_include', array($this, 'load_quiz_template'), 99 );
+		add_filter( 'template_include', array($this, 'load_assignment_template'), 99 );
 
 		add_filter( 'template_include', array($this, 'student_public_profile'), 99 );
 		add_filter( 'template_include', array($this, 'tutor_dashboard'), 99 );
@@ -312,6 +313,21 @@ class Template extends Tutor_Base {
 			}
 			return $template;
 		}
+		return $template;
+	}
+
+	public function load_assignment_template($template){
+		global $wp_query;
+
+		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === 'tutor_assignments'){
+			if (is_user_logged_in()){
+				$template = tutor_get_template( 'single-assignment' );
+			}else{
+				$template = tutor_get_template('login');
+			}
+			return $template;
+		}
+
 		return $template;
 	}
 

@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -206,6 +206,17 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.3.3 - 21 June, 2019 =
+
+* Added: Tutor Assignment Addon in the pro version
+* Added: Upgrade to pro text in plugin action links if Tutor Pro LMS does not exist or not installed
+* Added: tutor_assignments course post type
+* Added: `tutor_course_contents_post_types` course content filter
+* Rename: categories to course categories
+* Updated: some template hook modified
+* Fixed: tutor pro function checking `function_exists('tutor_pro');`
+* Fixed: `wp_enqueue_editor()` in Assets class frontend frontend_scripts method conflict issue with divi builder
 
 = 1.3.2 - 29 May, 2019 =
 
