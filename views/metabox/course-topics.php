@@ -11,7 +11,7 @@
 </div>
 
 <div class="new-topic-btn-wrap">
-    <a href="javascript:;" class="create_new_topic_btn tutor_btn_lg"> <i class="tutor-icon-add-line"></i> <?php _e('Add new topic', 'tutor'); ?></a>
+    <a href="javascript:;" class="create_new_topic_btn tutor-course-builder-button tutor-btn-lg active"> <i class="tutor-icon-text-document-add-button-with-plus-sign"></i> <?php _e('Add new topic', 'tutor'); ?></a>
 </div>
 
 
@@ -42,7 +42,7 @@
 			<?php
 			//submit_button(__('Add Topic', 'tutor'), 'primary', 'submit', true, array('id' => 'tutor-add-topic-btn')); ?>
             <input type="hidden" name="tutor_topic_course_ID" value="<?php echo $course_id; ?>">
-            <button type="button" class="button button-primary" id="tutor-add-topic-btn"><?php _e('Add Topic', 'tutor'); ?></button>
+            <button type="button" class="tutor-course-builder-button active" id="tutor-add-topic-btn"><?php _e('Add Topic', 'tutor'); ?></button>
         </div>
     </div>
 </div>

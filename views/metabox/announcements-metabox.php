@@ -48,7 +48,7 @@ if (is_array($announcements) && count($announcements)){
 
                         <span class="announcement-delete-btn">
                             <a href="<?php echo wp_nonce_url(admin_url('admin.php?action=tutor_delete_announcement&topic_id='.$announcement->ID), tutor()->nonce_action, tutor()->nonce); ?>" title="<?php _e('Delete Announcement'); ?>">
-                                <i class="dashicons dashicons-trash"></i>
+                                <i class="tutor-icon-garbage"></i>
                             </a>
                         </span>
                     </h3>

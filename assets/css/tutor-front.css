@@ -1029,6 +1029,7 @@ a.tutor-btn,
     line-height: 1.4;
     font-size: 14px;
     font-weight: 500;
+    cursor: pointer;
 }
 
 a.tutor-button.bordered-button,
@@ -2509,9 +2510,11 @@ Instructor
 
 @media (max-width: 767px) {
 
-    .tutor-single-page-top-bar .tutor-topbar-content-title-wrap,
-    .tutor-single-page-top-bar .tutor-topbar-mark-to-done{
+    .tutor-single-page-top-bar .tutor-topbar-content-title-wrap{
         display: none;
+    }
+    .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button{
+        padding: 9px 14px;
     }
 }
 

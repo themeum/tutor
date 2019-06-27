@@ -206,6 +206,11 @@ Group Field Option
 #tutor-course-topics .tutor-lesson-top, #tutor-course-topics .tutor-lesson-top i {
     font-size: 15px;
 }
+#tutor-course-topics .tutor-lesson-top .open-tutor-quiz-modal i{
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}
 #tutor-course-topics .tutor-lesson-top{
     display: -webkit-box;
     display: -ms-flexbox;
@@ -227,6 +232,11 @@ Group Field Option
 #tutor-course-topics .tutor-lesson-top a{
     color: #393C40;
 }
+
+#tutor-course-topics .tutor-lesson-top a.tutor-updating-message i{
+    display: none;
+}
+
 .tutor-topics-wrap, .course-move-handle{
     margin-right: 5px;
 }
@@ -370,20 +380,60 @@ p.course-empty-content {
     background: #E9E9E9;
     padding: 15px 20px;
 }
-#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .create-lesson-in-topic-btn, #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .tutor-add-quiz-btn, #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .tutor-create-assignments-btn{
+/*#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .create-lesson-in-topic-btn,*/
+/*#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .tutor-add-quiz-btn,*/
+/*#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .tutor-create-assignments-btn*/
+.tutor-course-builder-button{
     line-height: 35px;
     color: #393c40;
     display: inline-block;
     padding: 0 20px;
     border-radius: 2px;
-    margin-right: 20px;
+    margin-right: 10px;
     border: 1px solid #d3d4d5;
     background-color: #f2f2f2;
     cursor: pointer;
+    vertical-align: top;
+    transition: 200ms;
 }
-.tutor-add-quiz-btn i{
+
+.tutor-course-builder-button.tutor-updating-message i{
+    display: none;
+}
+
+.tutor-course-builder-button.tutor-btn-lg{
+    line-height: 40px;
+}
+
+.tutor-course-builder-button.active,
+.tutor-course-builder-button:hover{
+    color: #fff;
+    background: var(--tutor-primary-color);
+    border-color: var(--tutor-primary-color);
+}
+
+
+.tutor-course-builder-button.active:hover{
+    background: #393C40;
+    border-color: #393c40;
+}
+
+.tutor-course-builder-button i{
     color: var(--tutor-primary-color);
+    vertical-align: middle;
+    margin-right: 5px;
+    font-size: 16px;
 }
+
+.tutor-course-builder-button.active i,
+.tutor-course-builder-button:hover i{
+    color: #fff;
+}
+
+
+
+
+
 /**
 Instructor
  */
@@ -576,16 +626,15 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
 }
 .announcement-delete-btn a{
     display: block;
-    border: 1px solid #ff0000;
-    color: #ff0000;
-    padding: 6px;
-    border-radius: 50%;
+    color: #393C40;
+    padding: 0 6px;
     text-decoration: none;
+    cursor: pointer;
 }
-.announcement-delete-btn a:hover {
-    color: #ffffff;
-    background-color: #ff0000;
+.announcement-delete-btn a:hover{
+    color: #ff0000;
 }
+
 .tutor-label-success{
     background-color: var(--tutor-success-button-color);
     color: #ffffff;
@@ -1374,6 +1423,11 @@ a.back-to-quiz-questions-btn {
     margin-bottom: 10px;
     display: block;
 }
+
+a.back-to-quiz-questions-btn.tutor-updating-message i{
+    display: none;
+}
+
 .modal-container .quiz-questions-form {
     padding: 20px;
 }
@@ -1417,6 +1471,9 @@ a.back-to-quiz-questions-btn {
 }
 .quiz-builder-question .question-edit-icon{
     line-height: 22px;
+}
+.quiz-builder-question .question-edit-icon .tutor-quiz-open-question-form.tutor-updating-message i{
+    display: none;
 }
 .quiz-builder-question .question-title {
     -webkit-box-flex: 1;

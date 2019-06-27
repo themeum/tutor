@@ -121,9 +121,13 @@
 
 	                    <?php do_action('tutor_course_builder_before_btn_group', $topic->ID); ?>
 
-                        <a href="javascript:;" class="create-lesson-in-topic-btn open-tutor-lesson-modal" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" ><i class="tutor-icon-block tutor-icon-plus"></i> <?php _e('Add new lesson', 'tutor'); ?></a>
-
-                        <button type="button" class="icon-bl tutor-add-quiz-btn"> <i class="tutor-icon-doubt"></i> <?php _e('Add Topic Quiz', 'tutor'); ?>
+                        <a href="javascript:;" class="tutor-course-builder-button active open-tutor-lesson-modal create-lesson-in-topic-btn" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" >
+                            <i class="tutor-icon-plus-square-button"></i>
+                            <?php _e('Add new lesson', 'tutor'); ?>
+                        </a>
+                        <button type="button" class="icon-bl tutor-add-quiz-btn tutor-course-builder-button">
+                            <i class="tutor-icon-doubt"></i>
+                            <?php _e('Add Topic Quiz', 'tutor'); ?>
                         </button>
 
                         <?php do_action('tutor_course_builder_after_btn_group', $topic->ID); ?>

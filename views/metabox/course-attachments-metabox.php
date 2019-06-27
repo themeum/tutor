@@ -19,5 +19,5 @@
 		?>
 	</div>
 
-	<button type="button" class="button button-primary tutorUploadAttachmentBtn"><?php _e('Upload Attachment', 'tutor'); ?></button>
+	<button type="button" class="tutor-course-builder-button active tutorUploadAttachmentBtn"><?php _e('Upload Attachment', 'tutor'); ?></button>
 </div>

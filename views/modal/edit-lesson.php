@@ -59,6 +59,6 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="button button-primary update_lesson_modal_btn"><?php _e('Update Lesson', 'tutor'); ?></button>
+        <button type="button" class="tutor-course-builder-button active update_lesson_modal_btn"><?php _e('Update Lesson', 'tutor'); ?></button>
     </div>
 </form>
