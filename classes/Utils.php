@@ -1979,6 +1979,7 @@ class Utils {
 		$nav_items = array(
 			'index'             => __('Dashboard', 'tutor'),
 			'my-profile'        => __('My Profile', 'tutor'),
+			'create-course'     => array('title' => __('Create Course', 'tutor'), 'show_ui' => false),
 			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
 			'wishlist'          => __('Wishlist', 'tutor'),
 			'reviews'           => __('Reviews', 'tutor'),

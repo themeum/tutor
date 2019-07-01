@@ -336,7 +336,7 @@ class Options {
 				'label'     => __('Earning', 'tutor'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('Earning', 'tutor'),
+						'label' => __('Earning and commission allocation', 'tutor'),
 						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
 						'fields' => array(
 							'enable_tutor_earning' => array(
@@ -406,7 +406,7 @@ class Options {
 				'label'     => __('Withdraw', 'tutor'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('Earning and commission allocation', 'tutor'),
+						'label' => __('Withdrawal Settings', 'tutor'),
 						'fields' => array(
 							'min_withdraw_amount' => array(
 								'type'      => 'number',
