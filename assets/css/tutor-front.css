@@ -2594,6 +2594,7 @@ Instructor
     display: block;
     width: 100%;
     background-color: var(--tutor-primary-color);
+    border-color: var(--tutor-primary-color);
 }
 #tutor-lesson-sidebar-qa-tab-content .tutor_question_answer_wrap .tutor_original_question{
     margin-bottom: 20px;
@@ -3652,8 +3653,20 @@ Course question and answer
 /* ********************* */
 
 .tutor-login-wrap{
-    max-width: 560px;
+    max-width: 520px;
     margin: 0 auto;
+    padding: 40px 55px;
+    box-shadow: 0 0 15px rgba(0,0,0,.1);
+    border-radius: 5px;
+}
+
+.tutor-login-wrap form{
+    margin: 0;
+}
+.tutor-login-wrap .tutor-login-title{
+    margin-bottom: 25px;
+    padding: 0 40px;
+    text-align: center;
 }
 .tutor-login-form-wrap{
     max-width: 450px;
