@@ -21,6 +21,7 @@
     max-width: none;
 }
 
+.ast-container .tutor-courses-wrap,
 .ast-container .tutor-dashboard-student{
     margin: 80px 0;
 }

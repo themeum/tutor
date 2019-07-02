@@ -1340,6 +1340,11 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-dashboard-content{
     margin-bottom: 60px;
 }
+
+.tutor-dashboard-content > h2{
+    margin-bottom: 20px;
+}
+
 .tutor-dashboard-content  .tutor-quiz-attempt-history tr th,
 .tutor-dashboard-content  .tutor-quiz-attempt-history tr td{
     vertical-align: middle;
