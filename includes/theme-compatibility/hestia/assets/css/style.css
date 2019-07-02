@@ -2,8 +2,13 @@
 .wrapper > .tutor-wrap{
     padding-top: 150px;
     padding-bottom: 80px;
-    background-color: #fff;
 }
+
+
+.wrapper > .tutor-wrap:not(.tutor-container){
+    background: #fff;
+}
+
 .tutor-single-lesson-wrap{
     padding-top: 71px;
     padding-bottom: 80px;
