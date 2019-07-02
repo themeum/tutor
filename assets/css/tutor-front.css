@@ -967,14 +967,30 @@ div[class*="tutor-course-col"] {
 /**
 Topicstutor-course-title
  */
-.tutor-course-enroll-wrap{
-    padding: 20px 0;
+
+.tutor-course-enrolled-wrap{
+    margin: 0 -20px -20px !important;
+    padding: 12px 20px;
+    overflow: hidden;
+    border-top: 1px solid #DCDFE5;
 }
-.tutor-wrap .tutor-course-enrolled-wrap{
-    background: #ecffec;
-    padding: 20px;
-    border: 1px solid #b7d6b7;
+
+.tutor-course-enrolled-wrap p{
+    font-weight: 600;
+    margin-bottom: 0;
 }
+
+
+.tutor-course-enrolled-wrap p i{
+    padding-right: 9px;
+    float: left;
+}
+
+.tutor-course-enrolled-wrap p i,
+.tutor-course-enrolled-wrap p span{
+    color: var(--tutor-success-button-color);
+}
+
 
 /**
 Notice and others message
@@ -1026,7 +1042,7 @@ a.tutor-btn,
     padding: 12px 30px;
     border-radius: 4px;
     text-transform: uppercase;
-    line-height: 1.4;
+    line-height: 20px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -1067,6 +1083,11 @@ a.tutor-btn.bordered-btn:hover,
     border-color: var(--tutor-success-button-color);
 }
 
+.tutor-button.tutor-success:hover{
+    background: var(--tutor-success-button-color);
+    border-color: var(--tutor-success-button-color);
+    filter: brightness(.9);
+}
 .course-enrolled-nav-wrap{
     border-bottom: 1px solid #dedfe0;
     margin-bottom: 45px;
@@ -2667,12 +2688,10 @@ Instructor
     display: flex;
 }
 .tutor-progress-bar{
-    background-color: #ffffff;
     height: 8px;
     color: #000000;
     line-height: 25px;
     position: relative;
-    border-radius: 0px;
     background: #f1f1f1;
     -ms-flex-preferred-size: 0;
     flex-basis: 0;
@@ -2762,10 +2781,13 @@ Instructor
 .tutor-lead-info-btn-group{
     display: block;
     overflow: hidden;
-    margin: -10px -10px 35px;
+    margin: 0 -20px 25px;
+    border-bottom: 1px solid rgba(220, 223, 229, 0.4);
+    padding: 0 20px 30px;
 }
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap{
-    display: inline-block;
+    display: block;
+    margin-top: 15px;
 }
 
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap form{
@@ -2774,26 +2796,22 @@ Instructor
 .tutor-lead-info-btn-group a.tutor-button,
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap button{
     display: block;
-    padding: 14px 20px;
+    padding: 18px 20px;
     border: none;
-    font-weight: normal;
     font-size: 14px;
     text-align: center;
     border-radius: 4px;
     text-transform: uppercase;
     line-height: 1;
-    background: var(--tutor-primary-color);
-    color: #fff;
     -webkit-transition: 300ms;
     transition: 300ms;
     font-weight: 700;
 }
 .tutor-lead-info-btn-group a.tutor-button,
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap{
-    width: calc(50% - 22px);
+    width: 100%;
     text-align: center;
-    margin: 9px;
-    display: inline-block;
+    display: block;
 }
 
 @media (max-width: 991px) {
@@ -2810,10 +2828,6 @@ Instructor
     color: var(--tutor-light-color);
 }
 
-.tutor-lead-info-btn-group a.tutor-button:hover{
-    background: var(--tutor-primary-hover-color);
-    color: #ffffff;
-}
 
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap button:hover{
     background: var(--tutor-primary-color);
@@ -3921,7 +3935,11 @@ Course question and answer
 }
 
 .tutor-price-box-thumbnail{
-    margin: -20px -20px 25px;
+    margin: -20px -20px 20px;
+}
+
+.tutor-price-box-thumbnail .tutor-single-lesson-segment{
+    margin-bottom: 0;
 }
 
 .tutor-price-box-description h6{
