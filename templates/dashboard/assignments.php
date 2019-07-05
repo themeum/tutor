@@ -10,58 +10,53 @@
 
 global $wpdb;
 
-$assignments = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment'");
 
+
+    $current_user = get_current_user_id();
+    $assignments = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}posts WHERE post_type = '{$wpdb->prefix}assignments' AND post_author = '{$current_user}' AND post_status = 'publish'");
+
+    // @TODO: function should be moved to utils
+    function get_course_id_by_assignment_id($assignment_id = 0){
+        global $wpdb;
+        $assignment_id = tutor_utils()->get_post_id($assignment_id);
+        $topic_id = $wpdb->get_col("SELECT post_parent FROM {$wpdb->prefix}posts WHERE ID = $assignment_id")[0];
+        $course_id = $wpdb->get_col("SELECT post_parent FROM {$wpdb->prefix}posts WHERE ID = $topic_id")[0];
+        return $course_id;
+    }
 ?>
 
-<h3><?php esc_html_e('Assignment', 'tutor') ?></h3>
-<div class="tutor-dashboard-info-table-wrap">
-    <table class="tutor-dashboard-info-table tutor-dashboard-assignment-table">
-        <thead>
-            <tr>
-                <td><?php _e('Student', 'tutor'); ?></td>
-                <td><?php _e('Date & Time', 'tutor'); ?></td>
-                <td><?php _e('Pass Mark', 'tutor'); ?></td>
-                <td><?php _e('Total Mark', 'tutor'); ?></td>
-                <td><?php _e('Result', 'tutor'); ?></td>
-                <td>&nbsp;</td>
-            </tr>
-        </thead>
-        <tbody>
-
+<table>
+    <thead>
+        <tr>
+            <th>Course Name</th>
+            <th>Total Mark</th>
+            <th>Total Submit</th>
+            <th>#</th>
+        </tr>
+    </thead>
+    <tbody>
         <?php
+            foreach ($assignments as $item){
+                $max_mark = tutor_utils()->get_assignment_option($item->ID, 'total_mark');
+                $course_id = get_course_id_by_assignment_id($item->ID);
+                if(get_post_status($course_id) !== 'publish') continue;
+                $course_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/course');
+                $submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/submitted');
+                $comment_count = $wpdb->get_var("SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = $item->ID");
 
-            foreach ($assignments as $assignment){
-
-                $comment_author = get_user_by('login', $assignment->comment_author);
-
-                $is_reviewed_by_instructor = get_comment_meta($assignment->comment_ID, 'evaluate_time', true);
-                $max_mark = tutor_utils()->get_assignment_option($assignment->comment_post_ID, 'total_mark');
-                $pass_mark = tutor_utils()->get_assignment_option($assignment->comment_post_ID, 'pass_mark');
-                $given_mark = get_comment_meta($assignment->comment_ID, 'assignment_mark', true);
-                $status = sprintf(__('%s Pending %s', 'tutor'), '<span class="pending">', '</span>');
-                if(!empty($given_mark)){
-                    $status = (int) $given_mark >= (int) $pass_mark ? sprintf(__('%s Pass %s', 'tutor'), '<span class="pass">', '</span>') : sprintf(__('%s Fail %s', 'tutor'), '<span class="fail">', '</span>');
-                }
-
-                $review_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/review');
-
+                // @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish
                 ?>
                     <tr>
-                        <td><?php echo $comment_author->display_name; ?></td>
-                        <td><?php echo date('j M, Y. h:i a', strtotime($assignment->comment_date)); ?></td>
-                        <td><?php echo $pass_mark; ?></td>
-                        <td><?php echo !empty($given_mark) ? $given_mark . '/' . $max_mark : $max_mark; ?></td>
-                        <td><?php echo $status; ?></td>
-                        <td> <?php echo "<a title='". __('Review this assignment', 'tutor') ."' href='".esc_url($review_url.'?view_assignment='.$assignment->comment_ID)."'><i class='tutor-icon-angle-right'></i> </a>"; ?> </td>
+                        <td>
+                            <h5><?php echo $item->post_title ?></h5>
+                            <h5><a href='<?php echo esc_url($course_url.'?course_id='.$course_id) ?>'><?php echo __('Course: ', 'tutor'). get_the_title($course_id); ?> </a></h5>
+                        </td>
+                        <td><?php echo $max_mark ?></td>
+                        <td><?php echo $comment_count ?></td>
+                        <td> <?php echo "<a title='". __('View Coures', 'tutor') ."' href='".esc_url($submitted_url.'?assignment='.$item->ID)."'><i class='tutor-icon-angle-right'></i> </a>"; ?> </td>
                     </tr>
                 <?php
             }
-
         ?>
-
-        </tbody>
-    </table>
-</div>
-
-
+    </tbody>
+</table>
