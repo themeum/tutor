@@ -48,6 +48,7 @@ final class Tutor{
 
 	private $course_widget;
 	private $upgrader;
+	private $dashboard;
 
 	/**
 	 * @return null|Tutor
@@ -113,6 +114,7 @@ final class Tutor{
 
 		$this->course_widget = new Course_Widget();
 		$this->upgrader = new Upgrader();
+		$this->dashboard = new Dashboard();
 
 		/**
 		 * Run Method
