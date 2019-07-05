@@ -967,14 +967,33 @@ div[class*="tutor-course-col"] {
 /**
 Topicstutor-course-title
  */
-.tutor-course-enroll-wrap{
-    padding: 20px 0;
+
+.tutor-course-enrolled-wrap{
+    margin: 0 -20px -20px !important;
+    padding: 12px 20px;
+    overflow: hidden;
+    border-top: 1px solid #DCDFE5;
+    font-size: 14px;
 }
-.tutor-wrap .tutor-course-enrolled-wrap{
-    background: #ecffec;
-    padding: 20px;
-    border: 1px solid #b7d6b7;
+
+.tutor-course-enrolled-wrap p{
+    font-weight: 600;
+    margin-bottom: 0;
 }
+
+
+.tutor-course-enrolled-wrap p i{
+    padding-right: 9px;
+    float: left;
+    font-size: 20px;
+    line-height: 20px;
+}
+
+.tutor-course-enrolled-wrap p i,
+.tutor-course-enrolled-wrap p span{
+    color: var(--tutor-success-button-color);
+}
+
 
 /**
 Notice and others message
@@ -1026,7 +1045,7 @@ a.tutor-btn,
     padding: 12px 30px;
     border-radius: 4px;
     text-transform: uppercase;
-    line-height: 1.4;
+    line-height: 20px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -1067,6 +1086,11 @@ a.tutor-btn.bordered-btn:hover,
     border-color: var(--tutor-success-button-color);
 }
 
+.tutor-button.tutor-success:hover{
+    background: var(--tutor-success-button-color);
+    border-color: var(--tutor-success-button-color);
+    filter: brightness(.9);
+}
 .course-enrolled-nav-wrap{
     border-bottom: 1px solid #dedfe0;
     margin-bottom: 45px;
@@ -1195,11 +1219,37 @@ a.tutor-btn.bordered-btn:hover,
 
 .tutor-dashboard-info-table tbody tr td{
     background: transparent !important;
-    padding: 20px 30px;
+    padding: 20px 15px;
 }
 .tutor-dashboard-info-table thead tr td{
-    padding: 15px 30px;
+    padding: 15px;
 }
+
+.tutor-dashboard-info-table span.pending,
+.tutor-dashboard-info-table span.pass,
+.tutor-dashboard-info-table span.fail{
+    color: #fff;
+    font-size: 14px;
+    line-height: 18px;
+    padding: 1px 6px;
+    border-radius: 2px;
+}
+
+.tutor-dashboard-info-table span.pending{
+    background-color: #F5A623;
+}
+.tutor-dashboard-info-table span.fail{
+    background-color: #D71830;
+}
+.tutor-dashboard-info-table span.pass{
+    background-color: var(--tutor-success-button-color);
+}
+
+.tutor-dashboard-info-table tbody tr td:first-child,
+.tutor-dashboard-info-table thead tr td:first-child{
+    padding-left: 25px;
+}
+
 .tutor-dashboard-info-table-wrap > h3{
     font-size: 20px;
     font-weight: 500;
@@ -1213,6 +1263,7 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-dashboard-info-table-wrap > h3 + table{
     border-radius: 0 0 4px 4px ;
 }
+
 
 /**
  * Tutor Dashboard Review
@@ -1319,6 +1370,11 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-dashboard-content{
     margin-bottom: 60px;
 }
+
+.tutor-dashboard-content > h2{
+    margin-bottom: 20px;
+}
+
 .tutor-dashboard-content  .tutor-quiz-attempt-history tr th,
 .tutor-dashboard-content  .tutor-quiz-attempt-history tr td{
     vertical-align: middle;
@@ -1399,7 +1455,158 @@ a.tutor-btn.bordered-btn:hover,
     font-weight: 500;
 }
 
-/* end dashboard content*/
+/* Dashboard Assignment */
+.tutor-dashboard-assignment-table tr td{
+    text-align: center;
+}
+
+.tutor-dashboard-assignment-table tr td a{
+    color: #8C94A8;
+    transition: 300ms;
+}
+
+.tutor-dashboard-assignment-table tr td a:hover{
+    color: var(--tutor-primary-color);
+}
+
+/* Dashboard Assignment Review */
+
+.tutor-assignment-review-header{
+    margin-bottom: 30px;
+}
+.tutor-assignment-review-header h3{
+    margin-bottom: 10px;
+    line-height: 28px;
+}
+
+.tutor-assignment-evaluate-wraps h3,
+.tutor-assignment-review-header h3 a{
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--tutor-text-color);
+    display: block;
+}
+
+.tutor-assignment-review-header p{
+    margin: 0;
+    color: var(--tutor-text-color);
+    font-weight: 700;
+}
+
+.tutor-assignment-review-header p a{
+    font-weight: 400;
+    color: var(--tutor-text-color);
+}
+
+.tutor-assignment-review-header a{
+    transition: 300ms;
+}
+
+.tutor-assignment-review-header a:hover{
+    color: var(--tutor-primary-color);
+}
+
+.tutor-dashboard-assignment-review{
+    background: rgba(220, 223, 229, 0.14);
+    border: 1px solid #DCDFE5;
+    padding: 25px;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 4px;
+    margin-bottom: 40px;
+}
+
+.tutor-dashboard-assignment-review h5,
+.tutor-dashboard-assignment-review h4{
+    font-size: 16px;
+    line-height: 23px;
+    font-weight: 700;
+    color: var(--tutor-text-color);
+}
+.tutor-dashboard-assignment-review h5{
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.tutor-dashboard-assignment-files {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -9px;
+}
+
+.tutor-dashboard-assignment-files .uploaded-files{
+    background-color: #fff;
+    border: 1px solid #DCDFE5;
+    border-radius: 4px;
+    margin: 9px;
+    transition: 300ms;
+}
+
+.tutor-dashboard-assignment-files .uploaded-files:hover{
+    box-shadow: 0 5px 10px rgba(0,0,0,.1);
+}
+
+.tutor-dashboard-assignment-files .uploaded-files a i{
+    margin-right: 12px;
+    color: #606C8F;
+    float: left;
+    font-size: 28px;
+    line-height: 28px;
+}
+
+.tutor-dashboard-assignment-files .uploaded-files a{
+    color: var(--tutor-primary-color);
+    display: block;
+    overflow: hidden;
+    line-height: 28px;
+    padding: 15px 17px;
+}
+
+.tutor-assignment-evaluate-row{
+    display: flex;
+}
+
+.tutor-assignment-evaluate-row .tutor-option-field-label{
+    flex: 0 0 135px;
+}
+
+.tutor-assignment-evaluate-row .tutor-option-field{
+    flex-grow: 1;
+}
+
+.tutor-assignment-evaluate-row .tutor-option-field-label label{
+    display: block;
+    padding-top: 12px;
+}
+
+.tutor-assignment-evaluate-row textarea,
+.tutor-assignment-evaluate-row .tutor-option-field input{
+    border: 1px solid #DCDFE5;
+    height: 50px;
+    padding: 0 15px;
+    border-radius: 4px;
+    width: 100px;
+    background-color: #fff;
+}
+
+
+.tutor-assignment-evaluate-row textarea{
+    height: 165px;
+    width: 100%;
+}
+
+.tutor-assignment-evaluate-row{
+    margin-bottom: 60px;
+}
+
+.tutor-assignment-evaluate-row p.desc{
+    margin-bottom: 0;
+    margin-top: 6px;
+    font-size: 14px;
+    font-style: italic;
+}
+
+    /* end dashboard content*/
 
 /*  dashboard profile*/
 
@@ -2606,6 +2813,7 @@ Instructor
     display: block;
     width: 100%;
     background-color: var(--tutor-primary-color);
+    border-color: var(--tutor-primary-color);
 }
 #tutor-lesson-sidebar-qa-tab-content .tutor_question_answer_wrap .tutor_original_question{
     margin-bottom: 20px;
@@ -2678,12 +2886,10 @@ Instructor
     display: flex;
 }
 .tutor-progress-bar{
-    background-color: #ffffff;
     height: 8px;
     color: #000000;
     line-height: 25px;
     position: relative;
-    border-radius: 0px;
     background: #f1f1f1;
     -ms-flex-preferred-size: 0;
     flex-basis: 0;
@@ -2773,10 +2979,13 @@ Instructor
 .tutor-lead-info-btn-group{
     display: block;
     overflow: hidden;
-    margin: -10px -10px 35px;
+    margin: 0 -20px 25px;
+    border-bottom: 1px solid rgba(220, 223, 229, 0.4);
+    padding: 0 20px 30px;
 }
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap{
-    display: inline-block;
+    display: block;
+    margin-top: 15px;
 }
 
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap form{
@@ -2785,26 +2994,22 @@ Instructor
 .tutor-lead-info-btn-group a.tutor-button,
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap button{
     display: block;
-    padding: 14px 20px;
+    padding: 18px 20px;
     border: none;
-    font-weight: normal;
     font-size: 14px;
     text-align: center;
     border-radius: 4px;
     text-transform: uppercase;
     line-height: 1;
-    background: var(--tutor-primary-color);
-    color: #fff;
     -webkit-transition: 300ms;
     transition: 300ms;
     font-weight: 700;
 }
 .tutor-lead-info-btn-group a.tutor-button,
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap{
-    width: calc(50% - 22px);
+    width: 100%;
     text-align: center;
-    margin: 9px;
-    display: inline-block;
+    display: block;
 }
 
 @media (max-width: 991px) {
@@ -2821,10 +3026,6 @@ Instructor
     color: var(--tutor-light-color);
 }
 
-.tutor-lead-info-btn-group a.tutor-button:hover{
-    background: var(--tutor-primary-hover-color);
-    color: #ffffff;
-}
 
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap button:hover{
     background: var(--tutor-primary-color);
@@ -3664,8 +3865,20 @@ Course question and answer
 /* ********************* */
 
 .tutor-login-wrap{
-    max-width: 560px;
+    max-width: 520px;
     margin: 0 auto;
+    padding: 40px 55px;
+    box-shadow: 0 0 15px rgba(0,0,0,.1);
+    border-radius: 5px;
+}
+
+.tutor-login-wrap form{
+    margin: 0;
+}
+.tutor-login-wrap .tutor-login-title{
+    margin-bottom: 25px;
+    padding: 0 40px;
+    text-align: center;
 }
 .tutor-login-form-wrap{
     max-width: 450px;
@@ -3928,7 +4141,11 @@ Course question and answer
 }
 
 .tutor-price-box-thumbnail{
-    margin: -20px -20px 25px;
+    margin: -20px -20px 20px;
+}
+
+.tutor-price-box-thumbnail .tutor-single-lesson-segment{
+    margin-bottom: 0;
 }
 
 .tutor-price-box-description h6{
