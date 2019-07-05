@@ -53,7 +53,7 @@ global $wp_query;
 
     <div class="tutor-single-course-segment  tutor-course-enrolled-wrap">
         <p>
-            <i class="tutor-icon-shopping-cart-2"></i>
+            <i class="tutor-icon-purchase"></i>
             <?php
                 $enrolled = tutor_utils()->is_enrolled();
                 _e(sprintf("You have been enrolled on %s.", "<span>". date(get_option('date_format'), strtotime($enrolled->post_date) )."</span>" ), 'tutor');
