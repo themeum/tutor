@@ -67,7 +67,7 @@ do_action('tutor_dashboard/before/wrap'); ?>
 							if(current_user_can(tutor()->instructor_role)){
 							    $course_type = tutor()->course_post_type;
 								?>
-                                <a class="tutor-btn bordered-btn" href="<?php echo esc_url(add_query_arg(array('post_type'=>$course_type),admin_url('post-new.php'))); ?>">
+                                <a class="tutor-btn bordered-btn" href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('create-course'); ?>">
 									<?php _e('<i class="tutor-icon-video-camera"></i> &nbsp; Upload A Course', 'tutor'); ?>
                                 </a>
 								<?php
@@ -117,7 +117,9 @@ do_action('tutor_dashboard/before/wrap'); ?>
                     <div class="tutor-dashboard-content">
 						<?php
 						if ($dashboard_page_name){
+						    do_action('tutor_load_dashboard_template_before', $dashboard_page_name);
 							tutor_load_template("dashboard.".$dashboard_page_name);
+							do_action('tutor_load_dashboard_template_before', $dashboard_page_name);
 						}else{
 							tutor_load_template("dashboard.dashboard");
 						}

@@ -49,9 +49,12 @@ if ( ! function_exists('tutor_get_template')) {
 if ( ! function_exists('tutor_load_template')) {
 	function tutor_load_template( $template = null, $variables = array() ) {
 		$variables = (array) $variables;
+		$variables = apply_filters('get_tutor_load_template_variables', $variables);
 		extract($variables);
 
+		do_action('tutor_load_template_before', $template, $variables);
 		include tutor_get_template( $template );
+		do_action('tutor_load_template_after', $template, $variables);
 	}
 }
 

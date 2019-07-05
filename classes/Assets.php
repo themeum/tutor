@@ -54,6 +54,11 @@ class Assets{
 			wp_enqueue_editor();
 		}
 
+		/**
+		 * Initializing quicktags script to use in wp_editor();
+		 */
+		wp_enqueue_script( 'quicktags');
+
 		$tutor_dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
 		if ($tutor_dashboard_page_id === get_the_ID()){
 			wp_enqueue_media();

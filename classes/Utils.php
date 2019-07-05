@@ -4403,4 +4403,35 @@ class Utils {
 		return $get_assigned_courses_ids;
 	}
 
+	/**
+	 * @param int $parent
+	 *
+	 * @return array
+	 *
+	 * Get course categories in array with child
+	 *
+	 * @since v.1.3.4
+	 */
+
+	public function get_course_categories($parent = 0 ){
+		$args = apply_filters('tutor_get_course_categories_args', array(
+			'taxonomy' => 'course-category',
+			'hide_empty'    => false,
+			'parent' => $parent,
+		));
+
+		$terms = get_terms($args);
+
+		$children = array();
+		foreach ( $terms as $term ){
+			$term->children = $this->get_course_categories( $term->term_id );
+			$children[ $term->term_id ] = $term;
+		}
+
+		return $children;
+	}
+
+
+
+
 }
