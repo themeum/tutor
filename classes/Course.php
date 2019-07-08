@@ -39,6 +39,15 @@ class Course extends Tutor_Base {
 		 */
 
 		add_filter('wp_insert_post_data', array($this, 'tutor_add_gutenberg_author'), '99', 2);
+
+		/**
+		 * Frontend metabox supports for course builder
+		 * @since  v.1.3.4
+		 */
+
+		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'register_meta_box_in_frontend'));
+
+
 	}
 	/**
 	 * Registering metabox
@@ -72,6 +81,22 @@ class Course extends Tutor_Base {
 
 	public function instructors_metabox(){
 		include tutor()->path . 'views/metabox/instructors-metabox.php';
+	}
+
+	/**
+	 * Register metabox in course builder tutor
+	 * @since v.1.3.4
+	 */
+	public function register_meta_box_in_frontend(){
+		do_action('tutor_course_builder_metabox_before', get_the_ID());
+
+		$this->course_meta_box();
+		$this->course_additional_data_meta_box();
+		$this->video_metabox();
+		$this->announcements_metabox();
+		$this->instructors_metabox();
+
+		do_action('tutor_course_builder_metabox_after', get_the_ID());
 	}
 
 	/**

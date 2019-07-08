@@ -32,6 +32,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
         <select name="video[source]" class="tutor_lesson_video_source tutor_select2">
             <option value=""><?php _e('Select Video Source', 'tutor'); ?></option>
             <option value="html5" <?php selected('html5', $videoSource); ?> ><?php _e('HTML5 (mp4)', 'tutor'); ?></option>
+            <option value="external_url" <?php selected('external_url', $videoSource); ?>><?php _e('External URL', 'tutor'); ?></option>
             <option value="youtube" <?php selected('youtube', $videoSource); ?>><?php _e('YouTube', 'tutor'); ?></option>
             <option value="vimeo" <?php selected('vimeo', $videoSource); ?>><?php _e('Vimeo', 'tutor'); ?></option>
         </select>
@@ -47,10 +48,18 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
                 <p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e('Media ID', 'tutor'); ?>: <span class="video_media_id"><?php echo $sourceVideoID; ?></span></p>
             </div>
 
+            <div class="video_source_wrap_external_url" style="display: <?php echo $videoSource === 'external_url' ? 'block' :
+		        'none'; ?>;">
+                <input type="text" name="video[source_external_url]" value="<?php echo tutor_utils()->avalue_dot('source_external_url', $video);
+                ?>" placeholder="<?php _e('External Video URL', 'tutor'); ?>">
+            </div>
+
             <div class="video_source_wrap_youtube" style="display: <?php echo $videoSource === 'youtube' ? 'block' :
 				'none'; ?>;">
                 <input type="text" name="video[source_youtube]" value="<?php echo tutor_utils()->avalue_dot('source_youtube', $video); ?>" placeholder="<?php _e('YouTube Video URL', 'tutor'); ?>">
             </div>
+            
+            
             <div class="video_source_wrap_vimeo" style="display: <?php echo $videoSource === 'vimeo' ? 'block' : 'none'; ?>;">
                 <input type="text" name="video[source_vimeo]" value="<?php echo tutor_utils()->avalue_dot('source_vimeo', $video); ?>" placeholder="<?php _e('Vimeo Video URL', 'tutor'); ?>">
             </div>

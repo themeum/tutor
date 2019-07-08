@@ -4431,6 +4431,17 @@ class Utils {
 		return $children;
 	}
 
+	/**
+	 * @return mixed
+	 *
+	 * Get back url from the request
+	 * @since v.1.3.4
+	 */
+	public function referer(){
+		$url = $this->array_get('_wp_http_referer', $_REQUEST);
+		return apply_filters('tutor_referer_url', $url);
+	}
+
 
 
 

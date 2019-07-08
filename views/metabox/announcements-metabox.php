@@ -26,12 +26,12 @@
 
         <p class="desc"><?php _e('available variable', 'tutor'); ?>, {user_display_name}</p>
 
-		<?php
-		submit_button(__('Add Announcement', 'tutor')); ?>
+
+        <p class="submit">
+            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e('Add Announcement', 'tutor'); ?>">
+        </p>
     </div>
 </div>
-
-
 
 
 <?php
