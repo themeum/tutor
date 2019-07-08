@@ -32,7 +32,6 @@ if ( ! defined( 'ABSPATH' ) )
 
 
     <div class="tutor-lesson-content-area">
-
         <div class="tutor-assignment-title">
             <h2><?php the_title(); ?></h2>
         </div>

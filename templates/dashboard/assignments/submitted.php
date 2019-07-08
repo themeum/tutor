@@ -10,17 +10,17 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
 <div class="tutor-dashboard-info-table-wrap">
     <table class="tutor-dashboard-info-table tutor-dashboard-assignment-table">
         <thead>
-        <tr>
-            <td><?php _e('Student', 'tutor'); ?></td>
-            <td><?php _e('Date & Time', 'tutor'); ?></td>
-            <td><?php _e('Pass Mark', 'tutor'); ?></td>
-            <td><?php _e('Total Mark', 'tutor'); ?></td>
-            <td><?php _e('Result', 'tutor'); ?></td>
-            <td>&nbsp;</td>
-        </tr>
+            <tr>
+                <td><?php esc_attr_e('Student', 'tutor'); ?></td>
+                <td><?php esc_attr_e('Date & Time', 'tutor'); ?></td>
+                <td><?php esc_attr_e('Pass Mark', 'tutor'); ?></td>
+                <td><?php esc_attr_e('Total Mark', 'tutor'); ?></td>
+                <td><?php esc_attr_e('Result', 'tutor'); ?></td>
+                <td>&nbsp;</td>
+            </tr>
         </thead>
-        <tbody>
 
+        <tbody>
         <?php
 
         foreach ($assignments_submitted as $assignment){

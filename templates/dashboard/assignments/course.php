@@ -1,6 +1,6 @@
 <?php
 global $wpdb;
-$course_id = $_GET['course_id'];
+$course_id = sanitize_text_field($_GET['course_id']);
 
 // @TODO: function should be moved to utils
 function get_assignment_by_course_id($course_id = 0){
@@ -21,9 +21,9 @@ function get_assignment_by_course_id($course_id = 0){
 <table>
     <thead>
     <tr>
-        <th>Assignment Name</th>
-        <th>Total Mark</th>
-        <th>Total Submit</th>
+        <th><?php esc_attr_e('Assignment Name', 'tutor'); ?></th>
+        <th><?php esc_attr_e('Total Mark', 'tutor'); ?></th>
+        <th><?php esc_attr_e('Total Submit', 'tutor'); ?></th>
     </tr>
     </thead>
     <tbody>
