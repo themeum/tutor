@@ -2785,6 +2785,9 @@ Instructor
 .tutor-tabs-btn-group a:focus{
     outline: none;
 }
+
+
+
 /*video*/
 
 .tutor-single-lesson-segment{
@@ -4746,8 +4749,9 @@ button.tm-close.tutor-icon-line-cross:hover{
     color: #ffffff;
 }
 .tutor-lesson-content-area h2 {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     margin-top: 20px;
+    font-weight: 500;
 }
 .assignment-result-wrap {
     text-align: center;
@@ -4785,6 +4789,58 @@ submitted-assignment-grade-failed{
 .video-poster-img img{
     max-width: 200px;
     height: auto;
+}
+
+/*Assignment Information*/
+
+.tutor-assignment-information{
+    font-size: 16px;
+}
+.tutor-assignment-information ul{
+    padding: 0;
+    margin: 0 0 22px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.tutor-assignment-information ul li strong{
+    font-weight: 700;
+}
+
+.tutor-assignment-attachment-upload-wrap .tutor-form-group{
+    display: inline-block;
+}
+
+
+.tutor-assignment-attachment-upload-wrap .tutor-form-group label + input{
+    display: none;
+}
+
+
+.tutor-assignment-attachment-upload-wrap .tutor-form-group label{
+    padding: 15px 17px;
+    border: 1px solid #DCDFE5;
+    overflow: hidden;
+    margin-right: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.tutor-assignment-attachment-upload-wrap .tutor-form-group label i {
+    font-size: 30px;
+    line-height: 30px;
+    float: left;
+    margin-right: 12px;
+}
+
+.tutor-assignment-attachment-upload-wrap .tutor-form-group label span{
+    line-height: 30px;
+}
+
+.tutor-assignment-attachment-upload-wrap{
+    margin-bottom: 40px;
 }
 
 /**

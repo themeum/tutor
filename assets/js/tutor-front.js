@@ -1237,7 +1237,9 @@ jQuery(document).ready(function($){
 
 
 
-
+    $('form').on('change', '.tutor-assignment-file-upload', function () {
+        $(this).siblings("label").find('span').html($(this).val().replace(/.*(\/|\\)/, ''));
+    });
 
 
 });
