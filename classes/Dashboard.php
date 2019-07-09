@@ -20,6 +20,8 @@ class Dashboard {
 	public function __construct() {
 		add_action('tutor_load_template_before', array($this, 'tutor_load_template_before'), 10, 2);
 		add_action('tutor_load_template_after', array($this, 'tutor_load_template_after'), 10, 2);
+
+		add_action('tutor_action_tutor_add_course_builder', array($this, 'tutor_add_course_builder'));
 	}
 
 	/**
@@ -61,6 +63,30 @@ class Dashboard {
 			wp_reset_query();
 		}
 
+	}
+
+	/**
+	 * Process course submission from frontend course builder
+	 *
+	 * @since v.1.3.4
+	 */
+	public function tutor_add_course_builder(){
+		//Checking nonce
+		tutor_utils()->checking_nonce();
+
+		$course_post_type = tutor()->course_post_type;
+
+		$course_ID = (int) sanitize_text_field(tutor_utils()->array_get('course_ID', $_POST));
+		$post_ID = (int) sanitize_text_field(tutor_utils()->array_get('post_ID', $_POST));
+
+		$post = get_post($post_ID);
+		$update = true;
+
+		do_action( "save_post_{$course_post_type}", $post_ID, $post, $update );
+		do_action( 'save_post', $post_ID, $post, $update );
+
+		wp_redirect(tutor_utils()->referer());
+		die();
 	}
 
 }
