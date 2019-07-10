@@ -1976,6 +1976,9 @@ class Utils {
 	 */
 
 	public function tutor_dashboard_pages(){
+		$current_user_id = get_current_user_id();
+		$capabilities = maybe_unserialize(get_user_meta($current_user_id, 'wp_capabilities', true));
+
 		$nav_items = array(
 			'index'             => __('Dashboard', 'tutor'),
 			'my-profile'        => __('My Profile', 'tutor'),
@@ -1988,16 +1991,18 @@ class Utils {
 			//'messages'        => __('Messages', 'tutor'),
 		);
 
-		if (current_user_can(tutor()->instructor_role)) {
-			$instructor_items = array(
-				'my-courses'    => __('My Courses', 'tutor'),
-				'quiz-attempts' => __('Quiz Attempts', 'tutor'),
-				'earning'       => __('Earning', 'tutor'),
-				'withdraw'      => __('Withdraw', 'tutor'),
-			);
 
-			$nav_items = array_merge($nav_items, $instructor_items);
+		if (tutor_utils()->array_get('tutor_instructor', $capabilities) ) {
+			//TODO: need to check it, sometime it not working via permalinks within this role
+
+
 		}
+
+		$nav_items['my-courses']        = __('My Courses', 'tutor');
+		$nav_items['quiz-attempts']     = __('Quiz Attempts', 'tutor');
+		$nav_items['earning']           = __('Earning', 'tutor');
+		$nav_items['withdraw']          = __('Withdraw', 'tutor');
+
 
 		$nav_items['purchase_history']  = __('Purchase History', 'tutor');
 		$nav_items['settings']          = __('Settings', 'tutor');
@@ -3672,10 +3677,22 @@ class Utils {
 	 *
 	 * Get frontend dashboard URL
 	 */
-	public function tutor_dashboard_url(){
+	public function tutor_dashboard_url($sub_url = ''){
 		$page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
-		$page_id = apply_filters('tutor_dashboard_url', $page_id);
-		return get_the_permalink($page_id);
+		$page_id = apply_filters('tutor_dashboard_page_id', $page_id);
+		return trailingslashit(get_the_permalink($page_id)).$sub_url;
+	}
+
+	/**
+	 * Get the tutor dashboard page ID
+	 *
+	 * @return int
+	 *
+	 */
+	public function dashboard_page_id(){
+		$page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
+		$page_id = apply_filters('tutor_dashboard_page_id', $page_id);
+		return $page_id;
 	}
 
 	/**
@@ -4442,6 +4459,19 @@ class Utils {
 		return apply_filters('tutor_referer_url', $url);
 	}
 
+	/**
+	 * @param int $course_id
+	 *
+	 * @return false|string
+	 *
+	 * Get the frontend dashboard course edit page
+	 *
+	 * @since v.1.3.4
+	 */
+	public function course_edit_link($course_id = 0){
+		$course_id = $this->get_post_id($course_id);
+		return $this->tutor_dashboard_url("create-course/?course_ID=".$course_id);
+	}
 
 
 

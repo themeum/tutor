@@ -64,7 +64,8 @@ class Rewrite_Rules extends Tutor_Base {
 			$new_rules["(.+?)/{$dashboard_key}/?$"] ='index.php?pagename='.$wp_rewrite->preg_index(1).'&tutor_dashboard_page=' .$dashboard_key;
 
 			//Sub Page of dashboard sub page
-			$new_rules["(.+?)/{$dashboard_key}/([^/]*)/?$"] ='index.php?pagename='.$wp_rewrite->preg_index(1).'&tutor_dashboard_page=' .$dashboard_key.'&tutor_dashboard_sub_page='.$wp_rewrite->preg_index(2);
+			//regext = ([^/]*)
+			$new_rules["(.+?)/{$dashboard_key}/(.+?)/?$"] ='index.php?pagename='.$wp_rewrite->preg_index(1).'&tutor_dashboard_page=' .$dashboard_key.'&tutor_dashboard_sub_page='.$wp_rewrite->preg_index(2);
 		}
 
 		$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
