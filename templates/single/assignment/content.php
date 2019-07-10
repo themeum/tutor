@@ -8,7 +8,7 @@
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
-
+global $wpdb;
 ?>
 
 <?php do_action('tutor_assignment/single/before/content'); ?>
@@ -32,14 +32,35 @@ if ( ! defined( 'ABSPATH' ) )
 
 
     <div class="tutor-lesson-content-area">
-
         <div class="tutor-assignment-title">
             <h2><?php the_title(); ?></h2>
         </div>
 
         <div class="tutor-assignment-information">
-            <p><?php _e('Total Marks', 'tutor'); ?> : <?php echo tutor_utils()->get_assignment_option(get_the_ID(), 'total_mark'); ?> </p>
-            <p><?php _e('Passing Marks', 'tutor'); ?> : <?php echo tutor_utils()->get_assignment_option(get_the_ID(),'pass_mark'); ?> </p>
+            <?php
+                $time_duration = tutor_utils()->get_assignment_option(get_the_ID(), 'time_duration');
+                $total_mark = tutor_utils()->get_assignment_option(get_the_ID(), 'total_mark');
+                $pass_mark = tutor_utils()->get_assignment_option(get_the_ID(), 'pass_mark');
+            ?>
+
+            <ul>
+                <li>
+                    <?php _e('Time Duration : ') ?>
+                    <strong><?php echo $time_duration["value"] ? $time_duration["value"] . ' ' .$time_duration["time"] : __('No limit', 'tutor'); ?></strong>
+                </li>
+                <!--<li>
+                    <?php /*_e('Time Remaining : ') */?>
+                    <strong><?php /*echo "7 Days, 12 Hour"; */?></strong>
+                </li>-->
+                <li>
+                    <?php _e('Total Marks : ') ?>
+                    <strong><?php echo $total_mark; ?></strong>
+                </li>
+                <li>
+                    <?php _e('Passing Marks : ') ?>
+                    <strong><?php echo $pass_mark; ?></strong>
+                </li>
+            </ul>
         </div>
 
         <hr />
@@ -96,9 +117,7 @@ if ( ! defined( 'ABSPATH' ) )
                     <input type="hidden" value="tutor_assignment_submit" name="tutor_action"/>
                     <input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 
-					<?php
-					$allowd_upload_files = (int) tutor_utils()->get_assignment_option(get_the_ID(), 'upload_files_limit');
-					?>
+					<?php $allowd_upload_files = (int) tutor_utils()->get_assignment_option(get_the_ID(), 'upload_files_limit'); ?>
 
 
                     <div class="tutor-form-group">
@@ -106,24 +125,28 @@ if ( ! defined( 'ABSPATH' ) )
                         <textarea name="assignment_answer"></textarea>
                     </div>
 
-
-					<?php
-					if ($allowd_upload_files){
-						?>
+					<?php if ($allowd_upload_files){ ?>
                         <p>Attach assignment files</p>
-						<?php
-						for ($item = 1; $item <= $allowd_upload_files; $item++){
-							?>
-                            <div class="tutor-form-group">
-                                <input type="file" name="attached_assignment_files[]">
-                            </div>
-							<?php
-						}
+                        <div class="tutor-assignment-attachment-upload-wrap">
+
+                            <?php
+                            for ($item = 1; $item <= $allowd_upload_files; $item++){
+                                ?>
+                                    <div class="tutor-form-group">
+                                        <label for="tutor-assignment-input-<?php echo $item; ?>"><i class="tutor-icon-upload-file"></i><span><?php _e('Upload file', 'tutor'); ?></span></label>
+                                        <input class="tutor-assignment-file-upload"  id="tutor-assignment-input-<?php echo $item; ?>" type="file" name="attached_assignment_files[]">
+                                    </div>
+                                <?php
+                            }
+                            ?>
+
+                        </div>
+                        <?php
 					}
 					?>
 
                     <div class="tutor-assignment-submit-btn-wrap">
-                        <button type="submit" class="tutor-btn" id="tutor_assignment_submit_btn"> <?php _e('Submit Assignment', 'tutor');
+                        <button type="submit" class="tutor-button tutor-success" id="tutor_assignment_submit_btn"> <?php _e('Submit Assignment', 'tutor');
 							?> </button>
                     </div>
 
@@ -233,8 +256,7 @@ if ( ! defined( 'ABSPATH' ) )
                         <input type="hidden" value="tutor_assignment_start_submit" name="tutor_action"/>
                         <input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 
-                        <button type="submit" class="tutor-btn"
-                                id="tutor_assignment_start_btn"> <?php _e( 'Start assignment submit', 'tutor' ); ?> </button>
+                        <button type="submit" class="tutor-button" id="tutor_assignment_start_btn"> <?php _e( 'Start assignment submit', 'tutor' ); ?> </button>
                     </form>
                 </div>
 

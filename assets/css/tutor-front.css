@@ -2574,13 +2574,29 @@ Instructor
 .tutor-topics-in-single-lesson{
     margin-bottom: 25px;
     background-color: #ffffff;
-    padding: 10px 0 0;
+    padding: 10px 0 10px;
 }
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a span{
     font-size: 14px;
     margin: 0;
     display: inline;
     color: var(--tutor-text-color);
+}
+
+.tutor-topics-in-single-lesson .tutor-topics-title{
+    position: relative;
+}
+.tutor-topics-in-single-lesson .tutor-topics-title button{
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0 5px;
+    font-size: 20px;
+    background: transparent;
+}
+.tutor-topics-in-single-lesson.tutor-topic-active .tutor-topics-title button i::before{
+    content: '\e910';
 }
 .tutor-topics-in-single-lesson .tutor-topics-title h3{
     margin: 0;
@@ -2683,8 +2699,12 @@ Instructor
 
 .tutor-single-page-top-bar a{
     color: #ffffff;
+    vertical-align: middle;
 }
-
+.tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i{
+    font-size: 29px;
+    display: block;
+}
 .tutor-topbar-home-btn{
     margin-left: 20px;
 }
@@ -2778,6 +2798,21 @@ Instructor
     border: 1px solid #E0E9EC;
     border-top: none;
 }
+
+
+.tutor-tabs-btn-group a span,
+.tutor-tabs-btn-group a i{
+    font-size: 24px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+.tutor-tabs-btn-group a span{
+    font-size: 15px;
+    padding-left: 3px;
+}
+
 .tutor-tabs-btn-group a.active{
     background-color: #ffffff;
     border: none;
@@ -2785,6 +2820,7 @@ Instructor
 .tutor-tabs-btn-group a:focus{
     outline: none;
 }
+
 /*video*/
 
 .tutor-single-lesson-segment{
@@ -4746,8 +4782,9 @@ button.tm-close.tutor-icon-line-cross:hover{
     color: #ffffff;
 }
 .tutor-lesson-content-area h2 {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     margin-top: 20px;
+    font-weight: 500;
 }
 .assignment-result-wrap {
     text-align: center;
@@ -4785,6 +4822,58 @@ submitted-assignment-grade-failed{
 .video-poster-img img{
     max-width: 200px;
     height: auto;
+}
+
+/*Assignment Information*/
+
+.tutor-assignment-information{
+    font-size: 16px;
+}
+.tutor-assignment-information ul{
+    padding: 0;
+    margin: 0 0 22px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.tutor-assignment-information ul li strong{
+    font-weight: 700;
+}
+
+.tutor-assignment-attachment-upload-wrap .tutor-form-group{
+    display: inline-block;
+}
+
+
+.tutor-assignment-attachment-upload-wrap .tutor-form-group label + input{
+    display: none;
+}
+
+
+.tutor-assignment-attachment-upload-wrap .tutor-form-group label{
+    padding: 15px 17px;
+    border: 1px solid #DCDFE5;
+    overflow: hidden;
+    margin-right: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.tutor-assignment-attachment-upload-wrap .tutor-form-group label i {
+    font-size: 30px;
+    line-height: 30px;
+    float: left;
+    margin-right: 12px;
+}
+
+.tutor-assignment-attachment-upload-wrap .tutor-form-group label span{
+    line-height: 30px;
+}
+
+.tutor-assignment-attachment-upload-wrap{
+    margin-bottom: 40px;
 }
 
 /**
