@@ -121,7 +121,7 @@ if ( ! function_exists('tutor_course_categories_checkbox')){
 		$categories = tutor_utils()->get_course_categories();
 
 		$output = '';
-		$output .= __tutor_generate_categories_checkbox($post_ID, $categories, '', $args);
+		$output .= __tutor_generate_categories_checkbox($post_ID, $categories, $args);
 
 		return $output;
 	}
@@ -139,22 +139,26 @@ if ( ! function_exists('tutor_course_categories_checkbox')){
  * @since v.1.3.4
  */
 if ( ! function_exists('__tutor_generate_categories_checkbox')){
-	function __tutor_generate_categories_checkbox($post_ID = 0, $categories, $parent_name = '', $args = array()){
+	function __tutor_generate_categories_checkbox($post_ID = 0, $categories, $args = array()){
 		$output = '';
 		$input_name = tutor_utils()->array_get('name', $args);
 
 		if (tutor_utils()->count($categories)) {
+			$output .= "<ul class='tax-input-course-category'>";
 			foreach ( $categories as $category_id => $category ) {
 				$childrens = tutor_utils()->array_get( 'children', $category );
 				$has_in_term = has_term( $category->term_id, 'course-category', $post_ID );
 
-				$output .= "<p class='course-category-checkbox'><label> {$parent_name} <input type='checkbox' name='{$input_name}' value='{$category->term_id}' ".checked($has_in_term, true, false)." /> {$category->name} </label> </p>";
+				$output .= "<li class='tax-input-course-category-item tax-input-course-category-item-{$category->term_id} '><p class='course-category-checkbox'><label> <input type='checkbox' name='{$input_name}' 
+value='{$category->term_id}' 
+".checked($has_in_term, true, false)." /> {$category->name} </label> </p>";
 
 				if ( tutor_utils()->count( $childrens ) ) {
-					$parent_name.= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-					$output .= __tutor_generate_categories_checkbox($post_ID,$childrens, $parent_name, $args );
+					$output .= __tutor_generate_categories_checkbox($post_ID,$childrens, $args);
 				}
+				$output .= " </li>";
 			}
+			$output .= "</ul>";
 		}
 		return $output;
 	}
