@@ -30,7 +30,7 @@ if (isset($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_var
 	                    $menu_title = $dashboard_page;
 	                    if (is_array($dashboard_page)){
 		                    $menu_title = tutor_utils()->array_get('title', $dashboard_page);
-		                    if ( ! tutor_utils()->array_get('show_ui', $dashboard_page)){
+		                    if ( isset($dashboard_page['show_ui']) && ! tutor_utils()->array_get('show_ui', $dashboard_page)){
 			                    continue;
 		                    }
 	                    }

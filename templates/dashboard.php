@@ -90,22 +90,17 @@ do_action('tutor_dashboard/before/wrap'); ?>
                 <div class="tutor-col-3 tutor-dashboard-left-menu">
                     <ul class="tutor-dashboard-permalinks">
 						<?php
-						$dashboard_pages = tutor_utils()->tutor_dashboard_pages();
+						$dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
 						foreach ($dashboard_pages as $dashboard_key => $dashboard_page){
 							$menu_title = $dashboard_page;
 							if (is_array($dashboard_page)){
 								$menu_title = tutor_utils()->array_get('title', $dashboard_page);
-								if ( ! tutor_utils()->array_get('show_ui', $dashboard_page)){
-								    continue;
-                                }
 							}
 
 							$li_class = "tutor-dashboard-menu-{$dashboard_key}";
 							if ($dashboard_key === 'index')
 								$dashboard_key = '';
 							$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-
-
 
 							echo "<li class='{$li_class}  {$active_class}'><a href='".tutor_utils()->get_tutor_dashboard_page_permalink($dashboard_key)."'> {$menu_title} </a> </li>";
 						}
