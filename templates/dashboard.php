@@ -68,15 +68,15 @@ do_action('tutor_dashboard/before/wrap'); ?>
 							    $course_type = tutor()->course_post_type;
 								?>
                                 <a class="tutor-btn bordered-btn" href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('create-course'); ?>">
-									<?php _e('<i class="tutor-icon-video-camera"></i> &nbsp; Upload A Course', 'tutor'); ?>
+									<?php echo sprintf(__('%s Add New Course ', 'tutor'), '<i class="tutor-icon-video-camera"></i> &nbsp;'); ?>
                                 </a>
 								<?php
 							}else{
 								if (tutor_utils()->get_option('enable_become_instructor_btn')) {
 									?>
-                                    <a class="tutor-btn bordered-btn" href="<?php echo esc_url(tutor_utils()->instructor_register_url()); ?>">
-										<?php _e( '<i class="tutor-icon-man-user"></i> &nbsp; Become an instructor', 'tutor' ); ?>
-                                    </a>
+                                        <a class="tutor-btn bordered-btn" href="<?php echo esc_url(tutor_utils()->instructor_register_url()); ?>">
+                                            <?php echo sprintf(__("%s Become an instructor", 'tutor'), '<i class="tutor-icon-man-user"></i> &nbsp;'); ?>
+                                        </a>
 									<?php
 								}
 							}
