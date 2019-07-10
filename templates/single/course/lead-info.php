@@ -90,11 +90,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			<?php } ?>
             <li>
                 <span><?php esc_html_e('Total Enrolled', 'tutor') ?></span>
-                <?php
-                    $get_total_student = tutor_utils()->get_total_students();
-                    $total_students = $get_total_student ? $get_total_student : 0;
-                    echo $total_students;
-                ?>
+                <?php echo (int) tutor_utils()->count_enrolled_users_by_course(); ?>
             </li>
             <li>
                 <span><?php esc_html_e('Last Update', 'tutor') ?></span>

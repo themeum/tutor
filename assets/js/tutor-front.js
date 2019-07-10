@@ -844,6 +844,7 @@ jQuery(document).ready(function($){
         frame.open();
     });
 
+    //Delete Thumbnail
     $(document).on( 'click', '.tutor-course-thumbnail-delete-btn',  function( event ){
         event.preventDefault();
         var $that = $(this);

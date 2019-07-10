@@ -203,7 +203,6 @@ class Course extends Tutor_Base {
 			}
 		}
 
-
 		//Video
 		if ( ! empty($_POST['video']['source'])){
 			$video = tutor_utils()->sanitize_array($_POST['video']);

@@ -105,9 +105,9 @@ if ( ! function_exists('_generate_categories_dropdown_option')){
  */
 
 if ( ! function_exists('tutor_course_categories_checkbox')){
-	function tutor_course_categories_checkbox($args = array()){
+	function tutor_course_categories_checkbox($post_ID = 0, $args = array()){
 		$default = array(
-			'name'  => 'tutor_course_category',
+			'name'  => 'tax_input[course-category]',
 		);
 
 		$args = apply_filters('tutor_course_categories_checkbox_args', array_merge($default, $args));
@@ -121,7 +121,7 @@ if ( ! function_exists('tutor_course_categories_checkbox')){
 		$categories = tutor_utils()->get_course_categories();
 
 		$output = '';
-		$output .= __tutor_generate_categories_checkbox($categories, '', $args);
+		$output .= __tutor_generate_categories_checkbox($post_ID, $categories, '', $args);
 
 		return $output;
 	}
@@ -139,18 +139,20 @@ if ( ! function_exists('tutor_course_categories_checkbox')){
  * @since v.1.3.4
  */
 if ( ! function_exists('__tutor_generate_categories_checkbox')){
-	function __tutor_generate_categories_checkbox($categories, $parent_name = '', $args = array()){
+	function __tutor_generate_categories_checkbox($post_ID = 0, $categories, $parent_name = '', $args = array()){
 		$output = '';
 		$input_name = tutor_utils()->array_get('name', $args);
 
 		if (tutor_utils()->count($categories)) {
 			foreach ( $categories as $category_id => $category ) {
 				$childrens = tutor_utils()->array_get( 'children', $category );
-				$output .= "<p class='course-category-checkbox'><label> {$parent_name} <input type='checkbox' name='{$input_name}' value='{$category->term_id}' /> {$category->name} </label> </p>";
+				$has_in_term = has_term( $category->term_id, 'course-category', $post_ID );
+
+				$output .= "<p class='course-category-checkbox'><label> {$parent_name} <input type='checkbox' name='{$input_name}' value='{$category->term_id}' ".checked($has_in_term, true, false)." /> {$category->name} </label> </p>";
 
 				if ( tutor_utils()->count( $childrens ) ) {
 					$parent_name.= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-					$output .= __tutor_generate_categories_checkbox( $childrens, $parent_name, $args );
+					$output .= __tutor_generate_categories_checkbox($post_ID,$childrens, $parent_name, $args );
 				}
 			}
 		}
