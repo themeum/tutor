@@ -33,8 +33,8 @@ if ($post->post_type === 'tutor_quiz'){
 
     <div class="tutor-sidebar-tabs-wrap">
         <div class="tutor-tabs-btn-group">
-            <a href="#tutor-lesson-sidebar-tab-content" class="active"> <i class="tutor-icon-education"></i> <?php esc_html_e('Lesson List', 'tutor'); ?></a>
-            <a href="#tutor-lesson-sidebar-qa-tab-content"> <i class="tutor-icon-question-2"></i><?php esc_html_e('Browse Q&A', 'tutor'); ?></a>
+            <a href="#tutor-lesson-sidebar-tab-content" class="active"> <i class="tutor-icon-education"></i> <span> <?php esc_html_e('Lesson List', 'tutor'); ?></span></a>
+            <a href="#tutor-lesson-sidebar-qa-tab-content"> <i class="tutor-icon-question-1"></i> <span><?php esc_html_e('Browse Q&A', 'tutor'); ?></span></a>
         </div>
 
         <div class="tutor-sidebar-tabs-content">
@@ -58,6 +58,7 @@ if ($post->post_type === 'tutor_quiz'){
 									}
 									?>
                                 </h3>
+                                <button class="tutor-single-lesson-topic-toggle"><i class="tutor-icon-plus"></i></button>
                             </div>
 
 							<?php
@@ -70,7 +71,7 @@ if ($post->post_type === 'tutor_quiz'){
 							}
 							?>
 
-                            <div class="tutor-lessons-under-topic">
+                            <div class="tutor-lessons-under-topic" style="display: none">
 								<?php
 								do_action('tutor/lesson_list/before/topic', $topic_id);
 

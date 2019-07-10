@@ -331,8 +331,8 @@ jQuery(document).ready(function($){
         lesson.slideToggle();
     });
 
-    $('.tutor-topics-title').on('click', function () {
-        $(this).siblings('.tutor-topics-summery').slideToggle();
+    $('.tutor-topics-title h3').on('click', function () {
+        $(this).closest('.tutor-topics-title').siblings('.tutor-topics-summery').slideToggle();
     });
 
     $(document).on('click', '.tutor-course-wishlist-btn', function (e) {
@@ -1394,9 +1394,31 @@ jQuery(document).ready(function($){
         frame.open();
     });
 
+
+    /**
+     * Single Assignment Upload Button
+     * @since v.1.3.4
+     */
     $('form').on('change', '.tutor-assignment-file-upload', function () {
         $(this).siblings("label").find('span').html($(this).val().replace(/.*(\/|\\)/, ''));
     });
+
+
+
+    /**
+     * Lesson Sidebar Topic Toggle
+     * @since v.1.3.4
+     */
+
+    $('.tutor-single-lesson-topic-toggle').on('click', function () {
+        var $that = $(this);
+        var $parent = $that.closest('.tutor-topics-in-single-lesson');
+        $parent.toggleClass('tutor-topic-active');
+        $parent.find('.tutor-lessons-under-topic').slideToggle();
+    });
+
+    $('.tutor-single-lesson-items.active').closest('.tutor-lessons-under-topic').show();
+    $('.tutor-single-lesson-items.active').closest('.tutor-topics-in-single-lesson').addClass('tutor-topic-active');
 
 
 });
