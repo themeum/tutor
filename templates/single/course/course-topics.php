@@ -28,7 +28,7 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
             </div>
             <div class="tutor-course-topics-header-right">
 				<?php
-				$tutor_lesson_count = tutor_utils()->get_lesson_count_by_course($course_id, 'publish');
+				$tutor_lesson_count = tutor_utils()->get_lesson_count_by_course($course_id);
 				$tutor_course_duration = get_tutor_course_duration_context($course_id);
 
 				if($tutor_lesson_count) {

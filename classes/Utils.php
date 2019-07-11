@@ -581,17 +581,16 @@ class Utils {
 		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
 
-		$post_status_query = '';
-
 		$lesson_post_type = tutor()->lesson_post_type;
-
 
 		$course_id = $this->get_post_id($course_id);
 		$topicIDS = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'topics' AND post_parent = {$course_id} ");
 
-		$inIDS = implode(",", $topicIDS);
-
-		$lesson_count = $wpdb->get_var("SELECT COUNT(ID)  FROM {$wpdb->posts} WHERE post_parent IN({$inIDS}) AND post_type = '{$lesson_post_type}' ");
+		$lesson_count = 0;
+		if ($this->count($topicIDS)){
+			$inIDS = implode(",", $topicIDS);
+			$lesson_count = $wpdb->get_var("SELECT COUNT(ID)  FROM {$wpdb->posts} WHERE post_parent IN({$inIDS}) AND post_type = '{$lesson_post_type}' ");
+		}
 
 		return (int) $lesson_count;
 	}

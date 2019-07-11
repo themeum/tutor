@@ -32,7 +32,7 @@
                     <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a> </h3>
                     <div class="tutor-meta tutor-course-metadata">
 		                <?php
-                            $total_lessons = tutor_utils()->get_lesson_count_by_course(get_the_ID(), 'publish');
+                            $total_lessons = tutor_utils()->get_lesson_count_by_course();
                             $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
 		                ?>
                         <ul>
