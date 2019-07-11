@@ -176,7 +176,7 @@ value='{$category->term_id}'
  */
 
 if ( ! function_exists('course_builder_section_wrap')) {
-	function course_builder_section_wrap( $content = '', $title = '' ) {
+	function course_builder_section_wrap( $content = '', $title = '', $echo = true ) {
 		ob_start();
 		?>
 		<div class="tutor-course-builder-section">
@@ -186,6 +186,12 @@ if ( ! function_exists('course_builder_section_wrap')) {
 			<?php echo $content; ?>
 		</div>
 		<?php
-		return ob_get_clean();
+		$html = ob_get_clean();
+
+		if ($echo){
+			echo $html;
+		}else{
+			return $html;
+		}
 	}
 }

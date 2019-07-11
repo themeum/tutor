@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 $topics = tutor_utils()->get_topics();
 $course_id = get_the_ID();
+$is_enrolled = tutor_utils()->is_enrolled($course_id);
 
 ?>
 
@@ -83,9 +84,20 @@ $course_id = get_the_ID();
                                         <h5>
 											<?php
                                                 $lesson_title = "<i class='$lesson_icon'></i>";
-                                                $lesson_title .= get_the_title();
-                                                $lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>$play_time</span>" : '';
-                                                echo apply_filters('tutor_course/contents/lesson/title', $lesson_title, get_the_ID());
+
+                                                if ($is_enrolled){
+	                                                $lesson_title .= "<a href='".get_the_permalink()."'> ".get_the_title()." </a>";
+
+
+	                                                $lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>$play_time</span>" : '';
+
+	                                                echo $lesson_title;
+                                                }else{
+	                                                $lesson_title .= get_the_title();
+	                                                $lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>$play_time</span>" : '';
+	                                                echo apply_filters('tutor_course/contents/lesson/title', $lesson_title, get_the_ID());
+                                                }
+
 											?>
                                         </h5>
                                     </div>

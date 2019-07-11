@@ -131,33 +131,13 @@ class Course extends Tutor_Base {
 	public function register_meta_box_in_frontend(){
 		do_action('tutor_course_builder_metabox_before', get_the_ID());
 
-
-		echo course_builder_section_wrap($this->course_meta_box($echo = false), 'Course Builder');
-		echo course_builder_section_wrap($this->instructors_metabox($echo = false), 'Instructors');
-		echo course_builder_section_wrap($this->video_metabox($echo = false), 'Video');
-		echo course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), 'Additional Data');
-		echo course_builder_section_wrap($this->announcements_metabox($echo = false), 'Announcements');
+		course_builder_section_wrap($this->course_meta_box($echo = false), 'Course Builder');
+		course_builder_section_wrap($this->instructors_metabox($echo = false), 'Instructors');
+		course_builder_section_wrap($this->video_metabox($echo = false), 'Video');
+		course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), 'Additional Data');
+		course_builder_section_wrap($this->announcements_metabox($echo = false), 'Announcements');
 
 		do_action('tutor_course_builder_metabox_after', get_the_ID());
-	}
-
-	/**
-	 * @param string $method_name
-	 * @param string $title
-	 *
-	 * Wrap course builder sections within div for frontend
-	 *
-	 * @since v.1.3.4
-	 */
-	public function course_builder_section_wrap($method_name = '', $title = ''){
-		?>
-		<div class="tutor-course-builder-section">
-			<div class="tutor-course-builder-section-title">
-				<h3><i class="tutor-icon-move"></i> <span><?php echo $title; ?></span></h3>
-			</div>
-			<?php $this->$method_name(); ?>
-		</div>
-		<?php
 	}
 
 	/**

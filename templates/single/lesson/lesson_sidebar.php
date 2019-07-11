@@ -54,7 +54,7 @@ if ($post->post_type === 'tutor_quiz'){
 									<?php
 									the_title();
 									if($topic_summery) {
-										echo "<i class='tutor-icon-angle-down'></i>";
+										echo "<span class='toogle-informaiton-icon'>&quest;</span>";
 									}
 									?>
                                 </h3>

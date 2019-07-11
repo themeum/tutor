@@ -2580,9 +2580,9 @@ Instructor
     background: rgba(233, 235, 238, 0.35);
 }
 .tutor-topics-in-single-lesson{
-    margin-bottom: 25px;
+    margin-bottom: 5px;
     background-color: #ffffff;
-    padding: 10px 0 10px;
+    padding: 0;
 }
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a span{
     font-size: 14px;
@@ -2608,13 +2608,26 @@ Instructor
 }
 .tutor-topics-in-single-lesson .tutor-topics-title h3{
     margin: 0;
-    padding: 14px 17px;
+    padding: 10px 17px;
     font-size: 16px;
     color: var(--tutor-primary-color);
     font-weight: 500;
 }
-.tutor-topics-in-single-lesson .tutor-topics-title.has-summery h3{
+.tutor-topics-in-single-lesson .tutor-topics-title h3{
     cursor: pointer;
+}
+span.toogle-informaiton-icon {
+    /* padding: 3px; */
+    background: #ccc;
+    color: #fff;
+    height: 15px;
+    width: 15px;
+    text-align: center;
+    display: inline-block;
+    line-height: 15px;
+    font-size: 15px;
+    border-radius: 50%;
+    margin-left: 10px;
 }
 
 .tutor-topics-in-single-lesson .tutor-topics-title h3 i{
