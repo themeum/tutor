@@ -40,7 +40,10 @@ Most Important CSS
     margin-right: -15px;
     margin-left: -15px;
 }
-.tutor-col-auto, .tutor-col, .tutor-col-3, .tutor-col-4, .tutor-col-6, .tutor-col-8, .tutor-col-9, .tutor-col-12{
+
+
+
+.tutor-col-auto, .tutor-col, .tutor-col-3, .tutor-col-4, .tutor-col-5, .tutor-col-6, .tutor-col-7, .tutor-col-8, .tutor-col-9, .tutor-col-12{
     position: relative;
     width: 100%;
     min-height: 1px;
@@ -74,11 +77,23 @@ Most Important CSS
     flex: 0 0 33.333333%;
     max-width: 33.333333%;
 }
+.tutor-col-5{
+    -ms-flex: 0 0 41.666667%;
+    -webkit-box-flex: 0;
+    flex: 0 0 41.666667%;
+    max-width: 41.666667%;
+}
 .tutor-col-6{
     -ms-flex: 0 0 50%;
     -webkit-box-flex: 0;
     flex: 0 0 50%;
     max-width: 50%;
+}
+.tutor-col-7{
+    -ms-flex: 0 0 58.333333%;
+    -webkit-box-flex: 0;
+    flex: 0 0 58.333333%;
+    max-width: 58.333333%;
 }
 .tutor-col-8{
     -ms-flex: 0 0 66.666666%;
@@ -1080,6 +1095,11 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-button.tutor-danger{
     background-color: #E53935;
     border-color: #E53935;
+}
+.tutor-button.tutor-danger:hover{
+    background-color: #E53935;
+    border-color: #E53935;
+    filter: brightness(.9);
 }
 .tutor-button.tutor-success{
     background: var(--tutor-success-button-color);
@@ -2337,18 +2357,6 @@ label[for="tutor_withdraw_amount"]{
         margin-top: 20px;
     }
 }
-/** Course Builder */
-.tutor-form-field-course-categories {
-    max-height: 200px;
-    overflow-y: scroll;
-}
-p.course-category-checkbox {
-    margin-bottom: 5px;
-}
-p.course-category-checkbox label {
-    margin-bottom: 0;
-}
-
 
 /* ***********************      */
 /* End Tutor Student Dashboard  */
@@ -2592,7 +2600,7 @@ Instructor
     top: 50%;
     transform: translateY(-50%);
     padding: 0 5px;
-    font-size: 20px;
+    font-size: 16px;
     background: transparent;
 }
 .tutor-topics-in-single-lesson.tutor-topic-active .tutor-topics-title button i::before{
@@ -2806,7 +2814,9 @@ Instructor
     display: inline-block;
     vertical-align: top;
 }
-
+.tutor-tabs-btn-group a i{
+    color: var(--tutor-primary-color);
+}
 
 .tutor-tabs-btn-group a span{
     font-size: 15px;
@@ -5425,3 +5435,101 @@ Quiz Modal
 }
 
 /** Tutor Quiz Modal Form */
+
+/* Start Tutor FrontEnd Course Builder*/
+
+.tutor-course-builder-section{
+    border: 1px dashed #DCDFE5;
+    padding: 20px;
+    margin-bottom: 35px;
+}
+
+.tutor-course-builder-section-title h3{
+    font-size: 20px;
+    font-weight: 700;
+    color: #1D1F37;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    margin: 0 0 25px;
+}
+.tutor-course-builder-section-title h3::after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--tutor-primary-color);
+    z-index: -1;
+}
+
+.tutor-course-builder-section-title h3 span,
+.tutor-course-builder-section-title h3 i{
+    float: left;
+    background-color: #fff;
+    font-size: 20px;
+    line-height: 20px;
+}
+.tutor-course-builder-section-title h3 i{
+    color: var(--tutor-primary-color);
+}
+
+.tutor-course-builder-section-title h3 span{
+    padding: 0 15px 0 9px;
+}
+
+
+.tutor-form-field-course-categories {
+    max-height: 200px;
+    overflow-y: scroll;
+    border: 1px solid #DCDFE5;
+}
+.tutor-form-field-course-categories ul{
+    list-style: none;
+    margin: 0;
+    padding-left: 15px;
+}
+
+.tutor-form-field-course-categories label{
+    margin-bottom: 0;
+    cursor: pointer;
+}
+.tutor-form-field-course-categories label:hover{
+    color: var(--tutor-primary-color);
+}
+
+.tutor-frontend-builder-item-scope{
+    margin-bottom: 30px;
+}
+
+.tutor-frontend-builder-item-scope:last-child{
+    margin-bottom: 0;
+}
+
+.tutor-builder-item-heading{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 21px;
+    margin-bottom: 10px;
+}
+
+.builder-course-thumbnail-upload-wrap h4{
+    font-size: 14px;
+    line-height: 25px;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.builder-course-thumbnail-img-src{
+    position: relative;
+}
+
+.builder-course-thumbnail-img-src .tutor-course-thumbnail-delete-btn{
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    color: #E53935;
+}
+
+/* End Tutor FrontEnd Course Builder*/

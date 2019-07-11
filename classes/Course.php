@@ -89,13 +89,18 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box_in_frontend(){
 		do_action('tutor_course_builder_metabox_before', get_the_ID());
-
-		$this->course_meta_box();
+		?>
+            <div class="tutor-course-builder-section">
+                <div class="tutor-course-builder-section-title">
+                    <h3><i class="tutor-icon-move"></i> <span>Course Builder</span></h3>
+                </div>
+                <?php $this->course_meta_box(); ?>
+            </div>
+        <?php
+        $this->instructors_metabox();
+        $this->video_metabox();
 		$this->course_additional_data_meta_box();
-		$this->video_metabox();
 		$this->announcements_metabox();
-		$this->instructors_metabox();
-
 		do_action('tutor_course_builder_metabox_after', get_the_ID());
 	}
 
