@@ -163,3 +163,29 @@ value='{$category->term_id}'
 		return $output;
 	}
 }
+
+/**
+ * @param string $content
+ * @param string $title
+ *
+ * @return string
+ *
+ * Wrap course builder sections within div for frontend
+ *
+ * @since v.1.3.4
+ */
+
+if ( ! function_exists('course_builder_section_wrap')) {
+	function course_builder_section_wrap( $content = '', $title = '' ) {
+		ob_start();
+		?>
+		<div class="tutor-course-builder-section">
+			<div class="tutor-course-builder-section-title">
+				<h3><i class="tutor-icon-move"></i> <span><?php echo $title; ?></span></h3>
+			</div>
+			<?php echo $content; ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+}

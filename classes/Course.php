@@ -65,22 +65,63 @@ class Course extends Tutor_Base {
 		}
 		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
 	}
-	public function course_meta_box(){
+	public function course_meta_box($echo = true){
+		ob_start();
 		include  tutor()->path.'views/metabox/course-topics.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
 	}
-	public function course_additional_data_meta_box(){
+	public function course_additional_data_meta_box($echo = true){
+
+		ob_start();
 		include  tutor()->path.'views/metabox/course-additional-data.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
 	}
-	public function video_metabox(){
+	public function video_metabox($echo = true){
+		ob_start();
 		include  tutor()->path.'views/metabox/video-metabox.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
 	}
 
-	public function announcements_metabox(){
+	public function announcements_metabox($echo = true){
+		ob_start();
 		include  tutor()->path.'views/metabox/announcements-metabox.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
 	}
 
-	public function instructors_metabox(){
+	public function instructors_metabox($echo = true){
+		ob_start();
 		include tutor()->path . 'views/metabox/instructors-metabox.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
 	}
 
 	/**
@@ -90,11 +131,12 @@ class Course extends Tutor_Base {
 	public function register_meta_box_in_frontend(){
 		do_action('tutor_course_builder_metabox_before', get_the_ID());
 
-		$this->course_builder_section_wrap('course_meta_box', __('Course Builder', 'tutor'));
-		$this->course_builder_section_wrap('instructors_metabox', __('Instructors', 'tutor'));
-		$this->course_builder_section_wrap('video_metabox', __('Video', 'tutor'));
-		$this->course_builder_section_wrap('course_additional_data_meta_box', __('Additional Data', 'tutor'));
-		$this->course_builder_section_wrap('announcements_metabox', __('Announcements', 'tutor'));
+
+		echo course_builder_section_wrap($this->course_meta_box($echo = false), 'Course Builder');
+		echo course_builder_section_wrap($this->instructors_metabox($echo = false), 'Instructors');
+		echo course_builder_section_wrap($this->video_metabox($echo = false), 'Video');
+		echo course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), 'Additional Data');
+		echo course_builder_section_wrap($this->announcements_metabox($echo = false), 'Announcements');
 
 		do_action('tutor_course_builder_metabox_after', get_the_ID());
 	}
