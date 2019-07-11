@@ -28,7 +28,7 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
             </div>
             <div class="tutor-course-topics-header-right">
 				<?php
-				$tutor_lesson_count = tutor_utils()->get_lesson()->post_count;
+				$tutor_lesson_count = tutor_utils()->get_lesson_count_by_course($course_id, 'publish');
 				$tutor_course_duration = get_tutor_course_duration_context($course_id);
 
 				if($tutor_lesson_count) {
@@ -61,7 +61,7 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
                         <div class="tutor-course-lessons" style="<?php echo $index > 1 ? 'display: none' : ''; ?>">
 
 							<?php
-							$lessons = tutor_utils()->get_course_contents_by_topic(get_the_ID());
+							$lessons = tutor_utils()->get_course_contents_by_topic(get_the_ID(), -1);
 
 							if ($lessons->have_posts()){
 								while ($lessons->have_posts()){ $lessons->the_post();
@@ -75,9 +75,13 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 									}
 
 									$lesson_icon = $play_time ? 'tutor-icon-youtube' : 'tutor-icon-document-alt';
+
 									if ($post->post_type === 'tutor_quiz'){
 										$lesson_icon = 'tutor-icon-doubt';
                                     }
+									if ($post->post_type === 'tutor_assignments'){
+										$lesson_icon = 'tutor-icon-clipboard';
+									}
 									?>
 
                                     <div class="tutor-course-lesson">
