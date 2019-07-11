@@ -1970,15 +1970,12 @@ class Utils {
 	/**
 	 * @return mixed
 	 *
-	 * Tutor Dashboard Pages
+	 * Tutor Dashboard Pages, supporting for the URL rewriting
 	 *
 	 * @since v.1.0.0
 	 */
 
 	public function tutor_dashboard_pages(){
-		$current_user_id = get_current_user_id();
-		$capabilities = maybe_unserialize(get_user_meta($current_user_id, 'wp_capabilities', true));
-
 		$nav_items = array(
 			'index'             => __('Dashboard', 'tutor'),
 			'my-profile'        => __('My Profile', 'tutor'),
@@ -1987,28 +1984,43 @@ class Utils {
 			'wishlist'          => __('Wishlist', 'tutor'),
 			'reviews'           => __('Reviews', 'tutor'),
 
-			//'purchase-history'        => __('Purchase History', 'tutor'),
-			//'messages'        => __('Messages', 'tutor'),
+			'my-courses'        => array('title' => __('My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+			'earning'           => array('title' => __('Earning', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+			'withdraw'          => array('title' => __('Withdraw', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+
+			'purchase_history'  => __('Purchase History', 'tutor'),
+			'settings'          => __('Settings', 'tutor'),
+			'logout'            => __('Logout', 'tutor'),
 		);
 
+		return apply_filters('tutor_dashboard/nav_items', $nav_items);
+	}
 
-		if (tutor_utils()->array_get('tutor_instructor', $capabilities) ) {
-			//TODO: need to check it, sometime it not working via permalinks within this role
+	/**
+	 * @return mixed
+	 *
+	 * Tutor Dashboard UI nav, only for using in the nav, it's handling user permission based
+	 *  Dashboard nav items
+	 *
+	 * @since v.1.3.4
+	 */
+	public function tutor_dashboard_nav_ui_items(){
+		$nav_items = $this->tutor_dashboard_pages();
 
+		foreach ($nav_items as $key => $nav_item){
+			if (is_array($nav_item)){
 
+				if ( isset($nav_item['show_ui']) && ! tutor_utils()->array_get('show_ui', $nav_item)){
+					unset($nav_items[$key]);
+				}
+				if (  isset($nav_item['auth_cap'] ) && ! current_user_can($nav_item['auth_cap']) ){
+					unset($nav_items[$key]);
+				}
+			}
 		}
 
-		$nav_items['my-courses']        = __('My Courses', 'tutor');
-		$nav_items['quiz-attempts']     = __('Quiz Attempts', 'tutor');
-		$nav_items['earning']           = __('Earning', 'tutor');
-		$nav_items['withdraw']          = __('Withdraw', 'tutor');
-
-
-		$nav_items['purchase_history']  = __('Purchase History', 'tutor');
-		$nav_items['settings']          = __('Settings', 'tutor');
-		$nav_items['logout']            = __('Logout', 'tutor');
-
-		return apply_filters('tutor_dashboard/nav_items', $nav_items);
+		return apply_filters('tutor_dashboard/nav_ui_items', $nav_items);
 	}
 
 	/**
