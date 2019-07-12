@@ -1460,6 +1460,7 @@ a.back-to-quiz-questions-btn.tutor-updating-message i{
     padding: 10px;
     border: 1px solid #E2E2E2;
     border-radius: 3px;
+    max-width: calc(100% - 52px);
 }
 .quiz-builder-question .question-sorting {
     margin-right: 10px;
