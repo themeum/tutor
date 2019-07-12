@@ -867,9 +867,15 @@ jQuery(document).ready(function($){
         $that.closest('.tutor-option-field').find('.video_source_wrap_'+selector).show();
 
         if (selector === 'html5'){
-            $that.closest('.tutor-option-field').find('.tutor-video-poster-field').show();
+            $that.closest('.tutor-course-builder-section').find('.tutor-video-poster-field').show();
         } else{
-            $that.closest('.tutor-option-field').find('.tutor-video-poster-field').hide();
+            $that.closest('.tutor-course-builder-section').find('.tutor-video-poster-field').hide();
+        }
+
+        if (selector){
+            $that.closest('.tutor-course-builder-section').find('.tutor-lesson-video-runtime').closest('.tutor-option-field-row').show();
+        } else{
+            $that.closest('.tutor-course-builder-section').find('.tutor-lesson-video-runtime').closest('.tutor-option-field-row').hide();
         }
     });
 
