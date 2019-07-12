@@ -1064,6 +1064,7 @@ a.tutor-btn,
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
+    transition: 300ms;
 }
 
 a.tutor-button.bordered-button,
@@ -5194,19 +5195,30 @@ p.course-empty-content {
     padding: 0px;
 }
 
+.tutor-course-builder-btn-group button + button{
+    margin-left: 10px;
+}
+
 .tutor-course-builder-button{
     line-height: 35px;
     color: #393c40;
     display: inline-block;
     padding: 0 20px;
-    border-radius: 2px;
+    border-radius: 4px;
     margin-right: 10px;
     border: 1px solid #d3d4d5;
     background-color: #f2f2f2;
     cursor: pointer;
     vertical-align: top;
-    transition: 200ms;
+    transition: 300ms;
     font-weight: 400;
+}
+
+.tutor-course-builder-button i{
+    line-height: 35px;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 6px;
 }
 
 .tutor-course-builder-button.tutor-updating-message i{
@@ -5221,17 +5233,15 @@ p.course-empty-content {
     padding: 15px 20px;
 }
 
-.tutor-course-builder-button.active,
-.tutor-course-builder-button:hover{
+.tutor-course-builder-button.active{
     color: #fff;
     background: var(--tutor-primary-color);
     border-color: var(--tutor-primary-color);
 }
 
 
-.tutor-course-builder-button.active:hover{
-    background: #393C40;
-    border-color: #393c40;
+.tutor-course-builder-button:hover{
+    filter: brightness(.9);
 }
 
 .tutor-btn-lg i{
@@ -5247,6 +5257,14 @@ p.course-empty-content {
 .tutor-course-builder-button:hover i{
     color: #fff;
 }
+
+
+.tutor-course-builder-button.tutor-success{
+    background: var(--tutor-success-button-color);
+    border-color: var(--tutor-success-button-color);
+    color: #fff;
+}
+
 /**
 End Course Builder
  */
@@ -5747,6 +5765,34 @@ Quiz Modal
 
 .tutor-course-level-meta input{
     margin-right: 5px;
+}
+
+/*attachments*/
+
+.tutor-course-builder-attachements{
+    display: flex;
+}
+.tutor-course-builder-attachements .tutor-added-attachment{
+    flex: 0 0 25%;
+    max-width: 25%;
+    border: 1px solid #DCDFE5;
+    padding: 35px 20px 20px;
+    position: relative;
+    text-align: center;
+}
+.tutor-course-builder-attachements .tutor-added-attachment i{
+    font-size: 58px;
+    line-height: 58px;
+    margin-bottom: 25px;
+    display: block;
+}
+.tutor-course-builder-attachements .tutor-added-attachment .tutor-delete-attachment{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.tutor-course-builder-attachements .tutor-added-attachment span{
+    display: block;
 }
 
 /* End Tutor FrontEnd Course Builder*/
