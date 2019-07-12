@@ -24,10 +24,7 @@ jQuery(document).ready(function($){
             var video_data = this.video_track_data ? JSON.parse(this.video_track_data) : {};
 
             if (typeof Plyr !== 'undefined') {
-                const player = new Plyr('#tutorPlayer',{
-                    settings: ['quality', 'speed'],
-                    quality : { options: [4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240] }
-                });
+                const player = new Plyr('#tutorPlayer');
 
                 player.on('ready', function(event){
                     const instance = event.detail.plyr;
