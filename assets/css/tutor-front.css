@@ -4144,6 +4144,10 @@ Course question and answer
     transition: 300ms;
 }
 
+.tutor-course-builder-form-elem{
+    margin-bottom: 20px;
+}
+
 .tutor-option-field-row .select2-container,
 .tutor-form-group .select2-container{
     margin-bottom: 20px;
@@ -4156,6 +4160,20 @@ Course question and answer
     padding: 15px;
     height: 180px;
 }
+
+
+.tutor-option-field-row textarea:focus,
+.tutor-form-group textarea:focus,
+.tutor-option-field-row input:focus,
+.tutor-form-group input:focus{
+    outline: none;
+}
+
+.tutor-dashboard-course-builder-wrap .tutor-option-field-row textarea,
+.tutor-dashboard-course-builder-wrap .tutor-form-group textarea{
+    height: 100px;
+}
+
 .tutor-option-field-row textarea:focus,
 .tutor-option-field-row input:not([type="submit"]):focus,
 .tutor-form-group textarea:focus,
@@ -5624,6 +5642,11 @@ Quiz Modal
     top: 12px;
     left: 15px;
     color: #E53935;
+    opacity: 0;
+    transition: 300ms;
+}
+.builder-course-thumbnail-img-src:hover .tutor-course-thumbnail-delete-btn{
+    opacity: 1;
 }
 
 .tutor-course-builder-header{
@@ -5708,6 +5731,22 @@ Quiz Modal
 
 .tutor-course-available-instructors .added-instructor-item:nth-child(2n){
     margin-left: 30px;
+}
+
+.tutor-course-level-meta{
+    display: flex;
+    margin-bottom: 15px;
+}
+
+
+.tutor-course-level-meta label{
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+
+.tutor-course-level-meta input{
+    margin-right: 5px;
 }
 
 /* End Tutor FrontEnd Course Builder*/

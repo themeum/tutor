@@ -13,23 +13,24 @@
         <label for=""><?php _e('Announcements', 'tutor'); ?></label>
     </div>
     <div class="tutor-option-field">
-		<?php
-		$editor_settings = array(
-			'teeny'         => true,
-			'media_buttons' => false,
-			'quicktags'     => false,
-			'editor_height' => 150,
-			'textarea_name' => 'announcements[content]'
-		);
-		wp_editor(null, 'announcements_content', $editor_settings);
-		?>
-
+        <div class="tutor-announcement-editor tutor-course-builder-form-elem">
+            <?php
+                $editor_settings = array(
+                    'teeny'         => true,
+                    'media_buttons' => false,
+                    'quicktags'     => false,
+                    'editor_height' => 150,
+                    'textarea_name' => 'announcements[content]'
+                );
+                wp_editor(null, 'announcements_content', $editor_settings);
+            ?>
+        </div>
         <p class="desc"><?php _e('available variable', 'tutor'); ?>, {user_display_name}</p>
-
-
-        <p class="submit">
-            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e('Add Announcement', 'tutor'); ?>">
-        </p>
+    </div>
+</div>
+<div class="tutor-option-field-row">
+    <div class="submit">
+        <button type="submit" name="submit" id="submit" class="tutor-btn-lg active tutor-course-builder-button"><i class="tutor-icon-speaker"></i><?php _e('Add Announcement', 'tutor'); ?></button>
     </div>
 </div>
 

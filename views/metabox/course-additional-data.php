@@ -54,7 +54,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 			<?php _e('Level', 'tutor'); ?> <br />
         </label>
     </div>
-    <div class="tutor-option-field">
+    <div class="tutor-option-field tutor-course-level-meta">
 	    <?php
 	    foreach ($levels as $level_key => $level){
 	        ?>
