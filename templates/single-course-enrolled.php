@@ -41,7 +41,6 @@ do_action('tutor_course/single/enrolled/before/wrap');
     </div>
 </div>
 
-
 <?php do_action('tutor_course/single/enrolled/after/wrap'); ?>
 
 <?php

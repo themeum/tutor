@@ -331,8 +331,9 @@ jQuery(document).ready(function($){
         lesson.slideToggle();
     });
 
-    $('.tutor-topics-title h3').on('click', function () {
-        $(this).closest('.tutor-topics-title').siblings('.tutor-topics-summery').slideToggle();
+    $(document).on('click', '.tutor-topics-title h3 .toogle-informaiton-icon', function (e) {
+        $(this).closest('.tutor-topics-in-single-lesson').find('.tutor-topics-summery').slideToggle();
+        e.stopPropagation();
     });
 
     $(document).on('click', '.tutor-course-wishlist-btn', function (e) {
@@ -1404,14 +1405,12 @@ jQuery(document).ready(function($){
         $(this).siblings("label").find('span').html($(this).val().replace(/.*(\/|\\)/, ''));
     });
 
-
-
     /**
      * Lesson Sidebar Topic Toggle
      * @since v.1.3.4
      */
 
-    $('.tutor-single-lesson-topic-toggle').on('click', function () {
+    $(document).on('click', '.tutor-topics-in-single-lesson .tutor-topics-title h3, .tutor-single-lesson-topic-toggle', function (e) {
         var $that = $(this);
         var $parent = $that.closest('.tutor-topics-in-single-lesson');
         $parent.toggleClass('tutor-topic-active');
@@ -1420,6 +1419,4 @@ jQuery(document).ready(function($){
 
     $('.tutor-single-lesson-items.active').closest('.tutor-lessons-under-topic').show();
     $('.tutor-single-lesson-items.active').closest('.tutor-topics-in-single-lesson').addClass('tutor-topic-active');
-
-
 });
