@@ -1292,40 +1292,6 @@ jQuery(document).ready(function($){
     }
 
 
-
-    /**
-     * Deprecated, should remove
-     * @todo: should remove this
-     */
-
-    $(document).on('click', '.add_quiz_to_post_btn', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var $modal = $('.tutor-modal-wrap');
-
-        var quiz_for_post_id = $modal.attr('quiz-for-post-id');
-        var data = $modal.find('input').serialize()+'&action=tutor_add_quiz_to_post&parent_post_id='+quiz_for_post_id;
-
-        $.ajax({
-            url : ajaxurl,
-            type : 'POST',
-            data : data,
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success){
-                    $('[data-add-quiz-under="'+quiz_for_post_id+'"] .tutor-available-quizzes').html(data.data.output);
-                    $('.tutor-modal-wrap').removeClass('show');
-                }
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
     $(document).on('change keyup', '.tutor-quiz-modal-wrap .tutor-modal-search-input', function(e){
         e.preventDefault();
 
