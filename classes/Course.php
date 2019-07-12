@@ -580,7 +580,7 @@ class Course extends Tutor_Base {
                     <span class="instructor-icon">'.get_avatar($t->ID, 30).'</span>
                     <span class="instructor-name"> '.$t->display_name.' </span>
                     <span class="instructor-control">
-                        <a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-garbage"></i></a>
+                        <a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-line-cross"></i></a>
                     </span>
                 </div>';
 			}

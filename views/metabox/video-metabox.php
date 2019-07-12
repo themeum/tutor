@@ -77,17 +77,17 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
             <div class="tutor-lesson-video-runtime">
                 <div class="tutor-option-group-field">
                     <input type="text" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]">
-                    <p><?php _e('HH', 'tutor'); ?></p>
+                    <p class="desc"><?php _e('HH', 'tutor'); ?></p>
                 </div>
 
                 <div class="tutor-option-group-field">
                     <input type="text" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]">
-                    <p><?php _e('MM', 'tutor'); ?></p>
+                    <p class="desc"><?php _e('MM', 'tutor'); ?></p>
                 </div>
 
                 <div class="tutor-option-group-field">
                     <input type="text" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]">
-                    <p><?php _e('SS', 'tutor'); ?></p>
+                    <p class="desc"><?php _e('SS', 'tutor'); ?></p>
                 </div>
             </div>
         </div>

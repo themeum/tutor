@@ -4206,7 +4206,7 @@ Course question and answer
 .tutor-form-group.tutor-reg-form-btn-wrap{
     text-align: right;
 }
-
+/*option field*/
 .tutor-form-group.tutor-reg-form-btn-wrap .tutor-button{
     background: var(--tutor-success-button-color);
     border-color: var(--tutor-success-button-color);
@@ -4218,6 +4218,19 @@ Course question and answer
     font-style: italic;
     opacity: .7;
 }
+
+.tutor-option-field-row:last-child .tutor-option-field p.desc{
+    margin-bottom: 0;
+}
+
+.tutor-option-gorup-fields-wrap .tutor-lesson-video-runtime{
+    display: flex;
+}
+
+.tutor-option-gorup-fields-wrap .tutor-lesson-video-runtime .tutor-option-group-field{
+    padding-right: 30px;
+}
+
 
 /* ********************* */
 /* Tutor Price Preview Box */
@@ -4944,16 +4957,31 @@ submitted-assignment-grade-failed{
     margin: 0;
 }
 .course-contents .course-content-item {
-    padding: 10px 25px;
+    padding: 10px 12px 10px 25px;
     border-bottom: 1px solid #D9D9D9;
     background-color: #EBEEF0;
 }
 .course-contents .course-content-item .tutor-lesson-top{
-    overflow: hidden;
+    display: flex;
+    align-items: center;
 }
-.course-contents .course-content-item .tutor-lesson-top > i{
-    float: left;
-    padding-right: 6px;
+.course-contents .course-content-item .tutor-lesson-top a:last-child{
+    margin-left: auto;
+}
+.course-contents .course-content-item .tutor-lesson-top a.open-tutor-lesson-modal{
+    flex-grow: 1;
+}
+.course-contents .course-content-item .tutor-lesson-top a{
+    color: #393C40;
+    font-weight: 400;
+}
+
+.course-contents .course-content-item .tutor-lesson-top i{
+    padding-right: 7px;
+    color: #393C40;
+}
+.course-contents .course-content-item .tutor-lesson-top i:hover{
+    color: red;
 }
 .tutor-lessons.ui-sortable {
     min-height: 20px;
@@ -5160,6 +5188,7 @@ p.course-empty-content {
     cursor: pointer;
     vertical-align: top;
     transition: 200ms;
+    font-weight: 400;
 }
 
 .tutor-course-builder-button.tutor-updating-message i{
@@ -5187,11 +5216,13 @@ p.course-empty-content {
     border-color: #393c40;
 }
 
-.tutor-course-builder-button i{
+.tutor-btn-lg i{
     color: var(--tutor-primary-color);
-    vertical-align: middle;
+    vertical-align: top;
     margin-right: 5px;
     font-size: 16px;
+    display: inline-block;
+    line-height: 40px;
 }
 
 .tutor-course-builder-button.active i,
@@ -5624,6 +5655,59 @@ Quiz Modal
 .tutor-course-builder-section .new-topic-btn-wrap{
     padding: 0;
     margin-top: 20px;
+}
+
+/*
+    Tutor Instructor
+*/
+
+.tutor-course-available-instructors{
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.tutor-course-available-instructors .added-instructor-item{
+    flex: 0 0 calc(50% - 15px);
+    max-width: calc(50% - 15px);
+    border: 1px solid #DCDFE5;
+    padding: 13px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 4px;
+    position: relative;
+}
+
+.tutor-course-available-instructors .added-instructor-item .instructor-control{
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    font-size: 12px;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: 300ms;
+}
+
+.tutor-course-available-instructors .added-instructor-item .instructor-control a{
+    color: red;
+}
+
+.tutor-course-available-instructors .added-instructor-item:hover .instructor-control{
+    opacity: 1;
+}
+.tutor-course-available-instructors .added-instructor-item .instructor-icon{
+    height: 45px;
+    width: 45px;
+    overflow: hidden;
+    border-radius: 50px;
+    margin-right: 15px;
+}
+.tutor-course-available-instructors .added-instructor-item .instructor-icon img{
+    width: 100%;
+}
+
+.tutor-course-available-instructors .added-instructor-item:nth-child(2n){
+    margin-left: 30px;
 }
 
 /* End Tutor FrontEnd Course Builder*/

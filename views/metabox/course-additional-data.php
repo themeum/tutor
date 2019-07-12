@@ -29,16 +29,16 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 
                 <div class="tutor-option-group-field">
                     <input type="text" value="<?php echo $durationHours ? $durationHours : '00'; ?>" name="course_duration[hours]">
-                    <p><?php _e('HH', 'tutor'); ?></p>
+                    <p class="desc"><?php _e('HH', 'tutor'); ?></p>
                 </div>
                 <div class="tutor-option-group-field">
                     <input type="text" value="<?php echo $durationMinutes ? $durationMinutes : '00'; ?>" name="course_duration[minutes]">
-                    <p><?php _e('MM', 'tutor'); ?></p>
+                    <p class="desc"><?php _e('MM', 'tutor'); ?></p>
                 </div>
 
                 <div class="tutor-option-group-field">
                     <input type="text" value="<?php echo $durationSeconds ? $durationSeconds : '00'; ?>" name="course_duration[seconds]">
-                    <p><?php _e('SS', 'tutor'); ?></p>
+                    <p class="desc"><?php _e('SS', 'tutor'); ?></p>
                 </div>
 
             </div>
