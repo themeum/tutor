@@ -1,13 +1,21 @@
 <?php
 global $wpdb;
+
 $assignment = sanitize_text_field($_GET['assignment']);
-$assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = $assignment");
+$assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = {$assignment}");
 
 ?>
 
 
 <h3><?php esc_html_e('Assignment', 'tutor') ?></h3>
 <div class="tutor-dashboard-info-table-wrap">
+
+    <?php
+
+    if (tutor_utils()->count($assignments_submitted)){
+
+    ?>
+
     <table class="tutor-dashboard-info-table tutor-dashboard-assignment-table">
         <thead>
             <tr>
@@ -52,4 +60,19 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
 
         </tbody>
     </table>
+
+
+    <?php
+
+    }else{
+
+        ?>
+
+        <p><?php _e('No data available', 'tutor'); ?></p>
+    <?php
+
+    }
+    ?>
+
+
 </div>

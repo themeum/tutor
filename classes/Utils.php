@@ -840,12 +840,13 @@ class Utils {
 		);
 
 		if ($this->is_course_purchasable($course_id)){
+			$product_id = $this->get_course_product_id($course_id);
 			if ($this->get_option('enable_course_sell_by_woocommerce') && $this->has_wc()){
-				$prices['regular_price']= get_post_meta($course_id, '_regular_price', true);
-				$prices['sale_price']= get_post_meta($course_id, '_sale_price', true);
+				$prices['regular_price']= get_post_meta($product_id, '_regular_price', true);
+				$prices['sale_price']= get_post_meta($product_id, '_sale_price', true);
 			}elseif ($this->get_option('enable_tutor_edd') && $this->has_edd() ){
-				$prices['regular_price']= get_post_meta($course_id, 'edd_price', true);
-				$prices['sale_price']= get_post_meta($course_id, 'edd_price', true);
+				$prices['regular_price']= get_post_meta($product_id, 'edd_price', true);
+				$prices['sale_price']= get_post_meta($product_id, 'edd_price', true);
 			}
 		}
 
@@ -1912,7 +1913,9 @@ class Utils {
 	 */
 	public function get_course_product_id($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
-		return (int) get_post_meta($course_id, '_tutor_course_product_id', true);
+		$product_id =  (int) get_post_meta($course_id, '_tutor_course_product_id', true);
+
+		return $product_id;
 	}
 
 	/**
@@ -4492,6 +4495,34 @@ class Utils {
 	public function course_edit_link($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		return $this->tutor_dashboard_url("create-course/?course_ID=".$course_id);
+	}
+
+	public function get_assignments_by_instructor($instructor_id = 0, $filter_data = array()){
+		global $wpdb;
+
+		$instructor_id = $this->get_user_id($instructor_id);
+		$course_ids = tutor_utils()->get_assigned_courses_ids_by_instructors($instructor_id);
+		$in_course_ids = implode("','", $course_ids);
+
+		$count = (int) $wpdb->get_var("SELECT COUNT(ID) FROM {$wpdb->postmeta} post_meta
+ 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
+ 			where post_type = 'tutor_assignments' AND post_meta.meta_value IN('$in_course_ids') ORDER BY ID DESC ");
+
+		$pagination_query = '';
+		if ($this->count($filter_data)) {
+			extract( $filter_data );
+
+			if ( ! empty( $per_page ) ) {
+				$offset           = (int) ! empty( $offset ) ? $offset : 0;
+				$pagination_query = " LIMIT {$offset}, {$per_page}  ";
+			}
+		}
+
+		$query = $wpdb->get_results("SELECT * FROM {$wpdb->postmeta} post_meta
+ 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
+ 			where post_type = 'tutor_assignments' AND post_meta.meta_value IN('$in_course_ids')  ORDER BY ID DESC {$pagination_query} ");
+
+		return (object) array('count' => $count, 'results' => $query);
 	}
 
 

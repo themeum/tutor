@@ -1,4 +1,9 @@
 <div class="course-contents">
+
+    <div class="wp_editor_config_example" style="display: none;">
+        <?php wp_editor('', 'tutor_editor_config'); ?>
+    </div>
+
 	<?php
 	if (empty($current_topic_id)){
 		$current_topic_id = (int) tutor_utils()->avalue_dot('current_topic_id', $_POST);

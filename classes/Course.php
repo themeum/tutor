@@ -48,6 +48,10 @@ class Course extends Tutor_Base {
 		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'register_meta_box_in_frontend'));
 
 
+		/**
+		 * Do Stuff for the course save from frontend
+		 */
+		add_action('save_tutor_course', array($this, 'attach_product_with_course'), 10, 2);
 	}
 	/**
 	 * Registering metabox
@@ -248,6 +252,8 @@ class Course extends Tutor_Base {
 		if ( ! empty($_POST['video']['source'])){
 			$video = tutor_utils()->sanitize_array($_POST['video']);
 			update_post_meta($post_ID, '_video', $video);
+		}else{
+			delete_post_meta($post_ID, '_video');
 		}
 
 		/**
@@ -627,5 +633,83 @@ class Course extends Tutor_Base {
 
 		return $data;
 	}
+
+
+	/**
+	 * @param $post_ID
+	 * @param $postData
+	 *
+	 * Attach product during save course from the frontend course dashboard.
+	 * 
+	 * @return string
+	 */
+	
+	public function attach_product_with_course($post_ID, $postData){
+		$attached_product_id = tutor_utils()->get_course_product_id($post_ID);
+		$course_price = sanitize_text_field(tutor_utils()->array_get('course_price', $_POST));
+		if ( ! $course_price){
+			return $course_price;
+		}
+
+		$sell_by_wc = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
+		$sell_by_edd = tutor_utils()->get_option('enable_tutor_edd');
+
+		$course = get_post($post_ID);
+
+
+		if ($attached_product_id){
+			//Update the product
+
+			if ($sell_by_wc){
+
+				$productObj = new \WC_Product($attached_product_id);
+				$productObj->set_price($course_price); // set product price
+				$productObj->set_regular_price($course_price); // set product regular price
+				$product_id = $productObj->save();
+
+				//die('Updating...');
+
+			}elseif ($sell_by_edd){
+
+			}
+
+		}else{
+			//Insert the product
+
+
+			if ($sell_by_wc){
+
+				$productObj = new \WC_Product();
+				$productObj->set_name($course->post_title);
+				$productObj->set_status('publish');
+				$productObj->set_price($course_price); // set product price
+				$productObj->set_regular_price($course_price); // set product regular price
+
+				$product_id = $productObj->save();
+
+				if ($product_id) {
+
+					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
+					//Mark product for woocommerce
+					update_post_meta( $product_id, '_virtual', 'yes' );
+					update_post_meta( $product_id, '_tutor_product', 'yes' );
+
+
+					$coursePostThumbnail = get_post_meta( $post_ID, '_thumbnail_id', true );
+					if ( $coursePostThumbnail ) {
+						set_post_thumbnail( $product_id, $coursePostThumbnail );
+					}
+				}
+
+			}elseif ($sell_by_edd){
+
+			}
+
+		}
+
+
+	}
+
+
 
 }

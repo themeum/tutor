@@ -60,6 +60,26 @@ $course_id = get_the_ID();
                         </div>
                     </div>
                 </div>
+
+	            <?php
+	            $enable_course_sell_by_woocommerce = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
+	            $enable_tutor_edd = tutor_utils()->get_option('enable_tutor_edd');
+	            if ($enable_course_sell_by_woocommerce || $enable_tutor_edd){
+
+	                $course_price = tutor_utils()->get_raw_course_price(get_the_ID());
+	                ?>
+                    <div class="tutor-frontend-builder-item-scope">
+                        <div class="tutor-form-group">
+                            <label class="tutor-builder-item-heading">
+					            <?php _e('Course Price', 'tutor'); ?>
+                            </label>
+                            <input type="text" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>">
+                        </div>
+                    </div>
+		            <?php
+	            }
+	            ?>
+
                 <div class="tutor-frontend-builder-item-scope">
                     <div class="tutor-form-group">
                         <label>
@@ -95,6 +115,7 @@ $course_id = get_the_ID();
                         </div>
                     </div>
                 </div>
+
             </div>
 			<?php do_action('tutor/dashboard_course_builder_form_field_after'); ?>
             <div class="tutor-form-row">
