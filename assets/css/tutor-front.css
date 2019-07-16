@@ -445,17 +445,11 @@ Most Important CSS
     margin: 0;
     font-size: 14px;
 }
-
-/*.tutor-course-topics-wrap*/
-
+/* tutor-course-topics-wrap */
 .tutor-course-topics-header{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
     justify-content: space-between;
     margin-bottom: 8px;
 }
@@ -478,11 +472,9 @@ Most Important CSS
     overflow: hidden;
     margin-top: 0;
 }
-
 .tutor-course-topic.tutor-active .tutor-course-title h4 > i:before{
     content: "\e910";
 }
-
 .tutor-course-topics-contents .tutor-course-title h4 i{
     font-size: 15px;
     line-height: 25px;
@@ -506,8 +498,6 @@ Most Important CSS
     line-height: 22px;
     font-size: 14px;
     margin-bottom: 0;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     color: inherit;
     margin-top: 0;
@@ -540,18 +530,8 @@ Most Important CSS
     align-self: flex-start;
 }
 .tutor-course-lesson .lesson-preview-title {
-    -webkit-box-flex: 1;
-    -ms-flex: 1 0 0;
     flex: 1 0 0;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: start;
-    -ms-flex-align: start;
     align-items: flex-start;
 }
 
@@ -579,15 +559,8 @@ div[class*="tutor-course-col"] {
     transition: 300ms;
     border: 1px solid rgba(0, 0, 0, 0.05);
     height: 100%;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
     justify-content: space-between;
 }
 .tutor-course-loop a, .tutor-widget-course a{
@@ -896,25 +869,15 @@ div[class*="tutor-course-col"] {
 }
 .tutor-courses{
     clear: both;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-left: -15px;
     margin-right: -15px;
     padding: 0;
 }
 .tutor-loop-course-bottom {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
     justify-content: space-between;
     height: 100%;
 }
@@ -1182,11 +1145,7 @@ a.tutor-btn.bordered-btn:hover,
 /* *********************** */
 
 .tutor-dashboard-header{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
     padding-bottom: 30px;
     border-bottom: 1px solid #DCDFE5;
@@ -1201,8 +1160,6 @@ a.tutor-btn.bordered-btn:hover,
 }
 
 .tutor-dashboard-header-info{
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
     flex-grow: 1;
     padding-left: 20px;
     padding-top: 15px;
@@ -1221,11 +1178,7 @@ a.tutor-btn.bordered-btn:hover,
 }
 
 .tutor-dashboard-header-stats{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
     line-height: 25px;
 }
 
@@ -1317,11 +1270,7 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-dashboard-review-heading{
     padding: 18px 24px;
     border-bottom: 1px solid #DCDFE5;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
 }
 .individual-dashboard-review-body{
@@ -1330,8 +1279,6 @@ a.tutor-btn.bordered-btn:hover,
 
 .tutor-dashboard-review-title{
     font-size: 18px;
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
     flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
@@ -1351,11 +1298,7 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-dashboard-review-links a{
     color: #8C94A8;
     margin-left: 30px;
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
     display: inline-flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
 }
 
@@ -1374,11 +1317,8 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-dashboard-info-cards{
     margin: 0 -15px 15px;
     padding: 0;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     list-style: none;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
 }
 .tutor-dashboard-info-cards .tutor-dashboard-info-card{
@@ -1651,8 +1591,6 @@ a.tutor-btn.bordered-btn:hover,
 /*  dashboard profile*/
 
 .tutor-dashboard-profile .tutor-dashboard-profile-item{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
 }
 
@@ -1673,8 +1611,6 @@ a.tutor-btn.bordered-btn:hover,
 }
 
 .tutor-dashboard-profile .tutor-dashboard-profile-item .content{
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
     flex-grow: 1;
 }
 
@@ -1791,8 +1727,6 @@ a.tutor-btn.bordered-btn:hover,
 @media (max-width: 991px) {
     .tutor-dashboard-student .tutor-col-3,
     .tutor-dashboard-student .tutor-col-9{
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 100%;
         flex: 0 0 100%;
         max-width: 100%;
     }
@@ -1932,8 +1866,6 @@ a.tutor-btn.bordered-btn:hover,
     display: inline-block;
 }
 .report-date-range-form{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     margin-bottom: 0;
     max-width: 370px;
@@ -2008,8 +1940,6 @@ Withdraw Method
 
 
 .withdraw-method-select-wrap{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
@@ -2017,8 +1947,6 @@ Withdraw Method
 }
 
 .withdraw-method-select-wrap .withdraw-method-select{
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
     flex-grow: 1;
     padding: 0 15px;
     margin-bottom: 30px;
@@ -2077,8 +2005,6 @@ Withdraw Method
 }
 
 .withdraw-method-form{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
@@ -2087,8 +2013,6 @@ Withdraw Method
 
 
 .withdraw-method-form > div{
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
     flex-grow: 1;
     min-width: 50%;
     padding: 0 15px 20px;
@@ -2155,18 +2079,12 @@ label[for="tutor_withdraw_amount"]{
 /** END Withdraw */
 
 .tutor-mycourse-thumbnail {
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 250px;
     flex: 0 0 250px;
-    -ms-flex-item-align: center;
-    -webkit-background-size: cover;
     background-size: cover;
     background-position: center;
 }
 .tutor-mycourse-content {
     padding: 20px;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
     flex: 1;
 }
 
@@ -2222,8 +2140,6 @@ label[for="tutor_withdraw_amount"]{
     color: #f05120;
 }
 .tutor-dashboard-content-inner .tutor-mycourse-wrap{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     margin-bottom: 30px;
     border: 1px solid #DCDFE5;
@@ -2260,14 +2176,10 @@ label[for="tutor_withdraw_amount"]{
     margin-bottom: 0;
 }
 .tutor-mycourse-content .mycourse-footer {
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
 }
 
 .tutor-mycourse-content .mycourse-footer .tutor-mycourses-stats{
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
     flex: 1;
 }
 .tutor-dashboard-content-inner .tutor-mycourses-stats > *{
@@ -2430,8 +2342,6 @@ Instructor
 .single-instructor-wrap .single-instructor-top{
     padding: 20px;
     border-bottom: 1px solid #e8eff1;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
 }
 
@@ -2448,8 +2358,6 @@ Instructor
     padding: 0;
 }
 .single-instructor-wrap .tutor-instructor-left{
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 auto;
     flex: 0 0 auto;
     padding-right: 30px;
 }
@@ -2554,14 +2462,10 @@ Instructor
     border: 1px solid #E8EFF1;
 }
 .tutor-single-lesson-wrap{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     position: relative;
 }
 .tutor-lesson-sidebar{
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 400px;
     flex: 0 0 400px;
 }
 
@@ -2581,16 +2485,12 @@ Instructor
 }
 
 .tutor-single-entry-content  {
-    -webkit-box-flex: 999;
-    -ms-flex-positive: 999;
     flex-grow: 999;
 }
 .tutor-single-lesson-button-group .tutor-single-lesson-button a,
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a{
     padding: 14px 100px 14px 17px;
     font-size: 14px;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     color: var(--tutor-text-color);
     position: relative;
@@ -2723,14 +2623,8 @@ span.toogle-informaiton-icon {
     height: 70px;
     margin-bottom: 50px;
     color: #ffffff;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
     justify-content: space-between;
     padding-right: 15px;
 }
@@ -2775,19 +2669,13 @@ span.toogle-informaiton-icon {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    -webkit-box-flex: 999999;
-    -ms-flex-positive: 999999;
     flex-grow: 999999;
 }
 
 .tutor-single-page-top-bar .tutor-hide-sidebar-bar{
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 auto;
     flex: 0 0 auto;
 }
 .tutor-single-page-top-bar .tutor-topbar-mark-to-done{
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 auto;
     flex: 0 0 auto;
 }
 
@@ -2828,8 +2716,6 @@ span.toogle-informaiton-icon {
 }
 .tutor-tabs-btn-group {
     height: 70px;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
 }
 .tutor-tabs-btn-group a{
@@ -2963,8 +2849,6 @@ span.toogle-informaiton-icon {
     margin: 0;
     font-size: 14px;
     margin-bottom: 30px;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
 }
 .tutor-progress-bar{
@@ -2973,10 +2857,7 @@ span.toogle-informaiton-icon {
     line-height: 25px;
     position: relative;
     background: #f1f1f1;
-    -ms-flex-preferred-size: 0;
     flex-basis: 0;
-    -ms-flex-positive: 1;
-    -webkit-box-flex: 1;
     flex-grow: 1;
     max-width: 100%;
     border-radius: 30px;
@@ -3013,8 +2894,6 @@ span.toogle-informaiton-icon {
     box-sizing: border-box;
 }
 .tutor-progress-percent{
-    -ms-flex: 0 0 auto;
-    -webkit-box-flex: 0;
     flex: 0 0 auto;
     width: auto;
     max-width: none;
@@ -3192,8 +3071,6 @@ Tutor Dashboard Content
 Form CSS
  */
 .tutor-form-row{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     margin-left: -15px;
     margin-right: -15px;

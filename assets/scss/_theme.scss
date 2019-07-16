@@ -1,0 +1,43 @@
+:root{
+  --tutor-primary-color: #1B52D8;
+  --tutor-primary-hover-color: #1b52a9;
+  --tutor-text-color: #4B5981;
+  --tutor-light-color: #B1B8C9;
+  --tutor-success-button-color: #4BD863;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+//common and reset css
+
+.tutor-wrap{
+  color: var(--tutor-text-color);
+}
+
+.tutor-wrap img{
+  max-width: 100%;
+  height: auto;
+}
+
+.tutor-custom-list-style{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+}
+.tutor-custom-list-style li{
+  position: relative;
+  margin-bottom: 5px;
+  line-height: 30px;
+  padding-left: 25px;
+}
+.tutor-custom-list-style li:before{
+  content: '\e90f';
+  position: absolute;
+  left: 0;
+  font-family: 'tutor';
+  color: var(--tutor-primary-color);
+}
