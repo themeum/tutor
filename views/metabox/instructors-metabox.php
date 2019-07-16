@@ -51,16 +51,22 @@
 <div class="tutor-modal-wrap tutor-instructors-modal-wrap">
 	<div class="tutor-modal-content">
 		<div class="modal-header">
-			<div class="search-bar">
-				<input type="text" class="tutor-modal-search-input" placeholder="<?php _e('Search instructor...'); ?>">
-			</div>
-			<div class="modal-close-wrap">
-				<a href="javascript:;" class="modal-close-btn">&times;</a>
-			</div>
+            <div class="modal-title">
+                <h1><?php _e("Add instructor", "tutor") ?></h1>
+            </div>
+            <div class="lesson-modal-close-wrap">
+                <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i></a>
+            </div>
 		</div>
+        <div class="modal-content-body">
+
+            <div class="search-bar">
+                <input type="text" class="tutor-modal-search-input" placeholder="<?php _e('Search instructor...'); ?>">
+            </div>
+        </div>
 		<div class="modal-container"></div>
-		<div class="modal-footer">
-			<button type="button" class="button button-primary add_instructor_to_course_btn"><?php _e('Add Instructors', 'tutor'); ?></button>
+		<div class="modal-footer has-padding">
+			<button type="button" class="tutor-btn add_instructor_to_course_btn"><?php _e('Add Instructors', 'tutor'); ?></button>
 		</div>
 	</div>
 </div>
