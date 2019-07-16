@@ -18,7 +18,6 @@ class Dashboard {
 	public function __construct() {
 		add_action('tutor_load_template_before', array($this, 'tutor_load_template_before'), 10, 2);
 		add_action('tutor_load_template_after', array($this, 'tutor_load_template_after'), 10, 2);
-
 		add_action('tutor_action_tutor_add_course_builder', array($this, 'tutor_add_course_builder'));
 	}
 
