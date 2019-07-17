@@ -4419,10 +4419,9 @@ p.course-empty-content {
   background-color: #dddd;
 }
 .tutor-untopics-lessons{
-  margin-top: 50px;
   border: 1px solid #eee;
   padding: 20px;
-  margin-bottom: 20px;
+  margin: 0 -1px -1px;
   background-color: #fbfbfb;
 }
 .tutor-untopics-lessons h3{
@@ -5076,6 +5075,7 @@ Quiz Modal
 .quiz-modal-switch-field label.btn-switch {
   margin-right: 20px;
   position: relative;
+  vertical-align: top;
 }
 
 label.btn-switch input:checked + .btn-slider {
@@ -5088,6 +5088,7 @@ label.btn-switch input:checked + .btn-slider {
   margin-left: 8px;
   font-weight: 700;
   font-size: 14px;
+  vertical-align: top;
 }
 
 .tutor-select {
@@ -5293,7 +5294,7 @@ a.back-to-quiz-questions-btn.tutor-updating-message i{
   border-radius: 4px;
 }
 .tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-content {
-  background-color: var(--tutor-primary-color);
+  background: var(--tutor-primary-color);
   border: none;
   height: 4px;
   border-radius: 4px;
@@ -5303,9 +5304,10 @@ a.back-to-quiz-questions-btn.tutor-updating-message i{
   border-radius: 4px;
 }
 .tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-content .ui-state-default{
-  background-color: var(--tutor-primary-color);
+  background: var(--tutor-primary-color);
   border: 1px solid var(--tutor-primary-color);
   border-radius: 50%;
+  margin-top: -2px;
 }
 .tutor-quiz-builder-modal-wrap .tutor-field-type-slider .tutor-field-type-slider-value {
   font-size: 16px;
@@ -5545,10 +5547,7 @@ Tutor Media Upload
 }
 
 .tutor-course-builder-section .course-empty-content{
-  margin: 0;
-  padding: 10px 15px;
-  border: 1px dashed #dddddd;
-  margin-top: 15px;
+  margin: 15px 0;
 }
 
 .tutor-course-builder-section .tutor-course-builder-header a{
@@ -5708,3 +5707,51 @@ Tutor Media Upload
 
 /* End Tutor FrontEnd Course Builder*/
 
+
+.tutor-addons-list .plugin-icon{
+  height: 120px;
+}
+.btn-switch {
+  display: inline-block;
+  height: 22px;
+  position: relative;
+  width: 40px;
+}
+.btn-switch input {
+  display:none;
+}
+.btn-slider {
+  background-color: #ccc;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.btn-slider:before {
+  background-color: #fff;
+  bottom: 3px;
+  content: "";
+  height: 16px;
+  left: 4px;
+  position: absolute;
+  -webkit-transition: .4s;
+  transition: .4s;
+  width: 16px;
+}
+input:checked + .btn-slider {
+  background-color: var(--tutor-primary-color);
+}
+input:checked + .btn-slider:before {
+  -webkit-transform: translateX(16px);
+  transform: translateX(16px);
+}
+.btn-slider.btn-round {
+  border-radius: 34px;
+}
+.btn-slider.btn-round:before {
+  border-radius: 50%;
+}
