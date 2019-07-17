@@ -1975,6 +1975,115 @@ jQuery(document).ready(function($){
 
 
     /**
+     * Tutor Custom Select
+     */
+
+    function tutor_select(){
+        var obj = {
+            init : function(){
+                $(document).on('click', '.tutor-select .tutor-select-option', function(e){
+                    e.preventDefault();
+
+                    var $that = $(this);
+                    if ($that.attr('data-is-pro') !== 'true') {
+                        var $html = $that.html().trim();
+                        $that.closest('.tutor-select').find('.select-header .lead-option').html($html);
+                        $that.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($that.attr('data-value')).trigger('change');
+                        $that.closest('.tutor-select-options').hide();
+                    }else{
+                        alert('Tutor Pro version required');
+                    }
+                });
+                $(document).on('click', '.tutor-select .select-header', function(e){
+                    e.preventDefault();
+
+                    var $that = $(this);
+                    $that.closest('.tutor-select').find('.tutor-select-options').slideToggle();
+                });
+
+                this.setValue();
+                this.hideOnOutSideClick();
+            },
+            setValue : function(){
+                $('.tutor-select').each(function(){
+                    var $that = $(this);
+                    var $option = $that.find('.tutor-select-option');
+
+                    if ($option.length){
+                        $option.each(function(){
+                            var $thisOption = $(this);
+
+                            if ($thisOption.attr('data-selected') === 'selected'){
+                                var $html = $thisOption.html().trim();
+                                $thisOption.closest('.tutor-select').find('.select-header .lead-option').html($html);
+                                $thisOption.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($thisOption.attr('data-value'));
+                            }
+                        });
+                    }
+                });
+            },
+            hideOnOutSideClick : function(){
+                $(document).mouseup(function(e) {
+                    var $option_wrap = $(".tutor-select-options");
+                    if ( ! $(e.target).closest('.select-header').length && !$option_wrap.is(e.target) && $option_wrap.has(e.target).length === 0) {
+                        $option_wrap.hide();
+                    }
+                });
+            },
+            reInit : function(){
+                this.setValue();
+            }
+        };
+
+        return obj;
+    }
+    tutor_select().init();
+
+    /**
+     * If change question type from quiz builder question
+     *
+     * @since v.1.0.0
+     */
+    $(document).on('change', 'input.tutor_select_value_holder', function(e) {
+        var $that = $(this);
+        //$('#tutor_quiz_question_answer_form').html('');
+        $('.add_question_answers_option').trigger('click');
+        $('#tutor_quiz_question_answers').trigger('refresh');
+    });
+
+    $(document).on('click', '.tutor-media-upload-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var frame;
+        if ( frame ) {
+            frame.open();
+            return;
+        }
+        frame = wp.media({
+            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            button: {
+                text: 'Use this media'
+            },
+            multiple: false
+        });
+        frame.on( 'select', function() {
+            var attachment = frame.state().get('selection').first().toJSON();
+            $that.html('<img src="'+attachment.url+'" alt="" />');
+            $that.closest('.tutor-media-upload-wrap').find('input').val(attachment.id);
+        });
+        frame.open();
+    });
+    $(document).on('click', '.tutor-media-upload-trash', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        $that.closest('.tutor-media-upload-wrap').find('.tutor-media-upload-btn').html('<i class="tutor-icon-image1"></i>');
+        $that.closest('.tutor-media-upload-wrap').find('input').val('');
+    });
+
+
+    /**
      * Tutor Assignments JS
      * @since v.1.3.3
      */
