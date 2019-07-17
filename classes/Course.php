@@ -642,6 +642,8 @@ class Course extends Tutor_Base {
 	 * Attach product during save course from the frontend course dashboard.
 	 * 
 	 * @return string
+	 *
+	 * @since v.1.3.4
 	 */
 	
 	public function attach_product_with_course($post_ID, $postData){
@@ -676,7 +678,6 @@ class Course extends Tutor_Base {
 		}else{
 			//Insert the product
 
-
 			if ($sell_by_wc){
 
 				$productObj = new \WC_Product();
@@ -694,7 +695,6 @@ class Course extends Tutor_Base {
 					update_post_meta( $product_id, '_virtual', 'yes' );
 					update_post_meta( $product_id, '_tutor_product', 'yes' );
 
-
 					$coursePostThumbnail = get_post_meta( $post_ID, '_thumbnail_id', true );
 					if ( $coursePostThumbnail ) {
 						set_post_thumbnail( $product_id, $coursePostThumbnail );
@@ -706,7 +706,6 @@ class Course extends Tutor_Base {
 			}
 
 		}
-
 
 	}
 
