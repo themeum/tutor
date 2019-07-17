@@ -353,7 +353,8 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var content;
-        var editor = tinyMCE.get('tutor_lesson_modal_editor');
+        var inputid = 'tutor_lesson_modal_editor';
+        var editor = tinyMCE.get(inputid);
         if (editor) {
             content = editor.getContent();
         } else {
@@ -1720,7 +1721,8 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var content;
-        var editor = tinyMCE.get('tutor_assignments_modal_editor');
+        var inputid = 'tutor_assignments_modal_editor';
+        var editor = tinyMCE.get(inputid);
         if (editor) {
             content = editor.getContent();
         } else {
