@@ -1965,9 +1965,7 @@ a.tutor-btn.bordered-btn:hover,
   margin: 0px 0 20px;
   font-size: 14px;
   padding: 20px 0;
-  border-left: 1px solid #DCDFE5;
   border-right: 1px solid #DCDFE5;
-  border-bottom: 1px solid #DCDFE5;
 }
 
 .tutor-dashboard-permalinks li a:hover {
@@ -4523,7 +4521,7 @@ Course question and answer
 .tutor-form-group input[type="password"] {
   width: 100%;
   display: block;
-  border: 1px solid #E8EFF1;
+  border: 1px solid #DCDFE5;
   -webkit-box-shadow: none;
   box-shadow: none;
   margin-bottom: 20px;
@@ -4649,15 +4647,19 @@ Course question and answer
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-  line-height: 38px;
+  line-height: 48px;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
-  height: 36px;
+  height: 46px;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+  padding-left: 13px;
 }
 
 .select2-container .select2-selection--single {
-  height: 38px;
+  height: 48px;
 }
 
 /* ********************* */
@@ -5378,12 +5380,14 @@ button.tm-close.tutor-icon-line-cross:hover {
   margin: 0;
 }
 
+.tutor-untopics-lessons .course-content-item,
 .course-contents .course-content-item {
   padding: 10px 12px 10px 25px;
   border-bottom: 1px solid #D9D9D9;
   background-color: #EBEEF0;
 }
 
+.tutor-untopics-lessons .course-content-item .tutor-lesson-top,
 .course-contents .course-content-item .tutor-lesson-top {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -5394,32 +5398,38 @@ button.tm-close.tutor-icon-line-cross:hover {
   font-size: 14px;
 }
 
+.tutor-untopics-lessons .course-content-item .tutor-lesson-top a:last-child,
 .course-contents .course-content-item .tutor-lesson-top a:last-child {
   margin-left: auto;
 }
 
+.tutor-untopics-lessons .course-content-item .tutor-lesson-top a.open-tutor-lesson-modal,
 .course-contents .course-content-item .tutor-lesson-top a.open-tutor-lesson-modal {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
+.tutor-untopics-lessons .course-content-item .tutor-lesson-top a,
 .course-contents .course-content-item .tutor-lesson-top a {
   color: #393C40;
   font-weight: 400;
   font-size: 16px;
 }
 
+.tutor-untopics-lessons .course-content-item .tutor-lesson-top i,
 .course-contents .course-content-item .tutor-lesson-top i {
   padding-right: 7px;
   color: #393C40;
 }
 
+.tutor-untopics-lessons .course-content-item .tutor-lesson-top .tutor-updating-message i,
 .course-contents .course-content-item .tutor-lesson-top .tutor-updating-message i {
   display: none;
 }
 
-.course-contents .course-content-item .tutor-lesson-top i:hover {
+.tutor-untopics-lessons .course-content-item .tutor-lesson-top i.tutor-icon-garbage:hover,
+.course-contents .course-content-item .tutor-lesson-top i.tutor-icon-garbage:hover {
   color: red;
 }
 
@@ -5491,6 +5501,7 @@ button.tm-close.tutor-icon-line-cross:hover {
 
 p.course-empty-content {
   padding-left: 20px;
+  padding-right: 20px;
 }
 
 .tutor_btn_lg {

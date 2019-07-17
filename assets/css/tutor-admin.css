@@ -117,39 +117,47 @@ Option Field
 .tutor-option-field-row input[type=password],
 .tutor-option-field-row textarea,
 .tutor-option-field-row .tutor-field-type-slider {
-    line-height: 40px;
-    padding: 5px 0;
-    text-indent: 15px;
-    background: #fff;
-    display: inline-block;
-    border: 1px solid #DEDEDE;
+    background-color: #fff;
+    border: 1px solid #ddd;
     border-radius: 3px;
     box-shadow: none;
-    height: 40px;
-    margin: 0;
-    width: 100%;
-    color: #393C40;
-    font-size: 14px;
+    color: #333;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 7px 12px;
+    margin: 0 10px 0 0;
+    width: 400px;
+    min-height: 35px
 }
 .tutor-option-field {
     display: block;
-    /*margin: 0 0 0 200px;*/
-    /*max-width: 800px;*/
+    margin: 0 0 0 200px;
+    max-width: 800px;
+}
+.tutor_lesson_modal_form .tutor-option-field {
+    display: block;
+    margin: 0;
+    max-width: none;
 }
 .tutor-option-field-label {
     display: block;
+    float: left;
+    width: 200px;
+}
+.tutor_lesson_modal_form .tutor-option-field-label {
+    display: block;
+    float: left;
+    width: 200px;
 }
 .tutor-option-field-label label {
-    font-size: 14px;
-    color: #393C40;
-    font-weight: 600;
-    margin: 0 0 15px;
+    display: block;
+    font-weight: 600
 }
-.tutor-option-field p.help,
 .tutor-option-field p.desc {
-    color: #A4A4A4;
+    font-style: italic;
+    color: #666;
     font-size: 12px;
-    margin-top: 7px;
+    line-height: 1.5;
 }
 .tutor-option-field-row h2{
     color: #444;
@@ -1092,7 +1100,7 @@ Quiz Modal
     padding: 20px;
 }
 .tutor-modal-wrap .modal-container p{
-    margin: 0 0 15px;
+    margin: 5px 0 15px;
 }
 .tutor-modal-wrap .modal-header {
     display: -webkit-box;
@@ -1245,9 +1253,8 @@ Quiz Modal
 }
 .tutor-quiz-builder-group > p.help{
     color: #A4A4A4;
-    font-size: 13px;
+    font-size: 12px;
     margin-top: 7px;
-    font-style: italic;
 }
 
 .tutor-quiz-builder-group > h4{
