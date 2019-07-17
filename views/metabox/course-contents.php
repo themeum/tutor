@@ -157,7 +157,7 @@
         <div class="tutor-untopics-lessons">
             <h3><?php _e( 'Un-assigned lessons' ); ?></h3>
 
-            <div class="tutor-lessons">
+            <div class="tutor-lessons ">
 				<?php
 				foreach ( $query_lesson->posts as $lesson ) {
 					if ( ! in_array( $lesson->ID, $attached_lesson_ids ) ) {
