@@ -1,18 +1,7 @@
 <?php
 global $wpdb;
-$course_id = sanitize_text_field($_GET['course_id']);
-
-// @TODO: function should be moved to utils
-function get_assignment_by_course_id($course_id = 0){
-    global $wpdb;
-    $course_id = tutor_utils()->get_post_id($course_id);
-    $topics = $wpdb->get_col("SELECT ID FROM {$wpdb->prefix}posts WHERE post_type = 'topics' AND post_parent = {$course_id}");
-    $topics = join("','",$topics);
-    $assignments = $wpdb->get_col("SELECT ID FROM {$wpdb->prefix}posts WHERE post_type = '{$wpdb->prefix}assignments' AND post_parent IN ('$topics')");
-    return $assignments;
-}
-
-
+$course_id = (int) sanitize_text_field(tutor_utils()->array_get('course_id', $_GET));
+$assignments = tutor_utils()->get_assignments_by_course($course_id);
 ?>
 
 <h3><?php echo get_the_title($course_id) ?></h3>
@@ -21,26 +10,35 @@ function get_assignment_by_course_id($course_id = 0){
 <table>
     <thead>
     <tr>
-        <th><?php esc_attr_e('Assignment Name', 'tutor'); ?></th>
-        <th><?php esc_attr_e('Total Mark', 'tutor'); ?></th>
-        <th><?php esc_attr_e('Total Submit', 'tutor'); ?></th>
+        <th>Course Name</th>
+        <th>Total Mark</th>
+        <th>Total Submit</th>
+        <th>#</th>
     </tr>
     </thead>
     <tbody>
-    <?php
-    $assignments = get_assignment_by_course_id($course_id);
-    foreach ($assignments as $item){
-        $max_mark = tutor_utils()->get_assignment_option($item, 'total_mark');
-        $comment_count = $wpdb->get_var("SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = {$item}");
-        ?>
-        <tr>
-            <td><?php echo get_the_title($item); ?></td>
-            <td><?php echo $max_mark; ?></td>
-            <td><?php echo $comment_count ?></td>
-        </tr>
-        <?php
-    }
+	<?php
+	foreach ($assignments->results as $item){
+		$max_mark = tutor_utils()->get_assignment_option($item->ID, 'total_mark');
+		$course_id = tutor_utils()->get_course_id_by_assignment($item->ID);
+		if(get_post_status($course_id) !== 'publish') continue;
+		$course_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/course');
+		$submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/submitted');
+		$comment_count = $wpdb->get_var("SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = $item->ID");
 
-    ?>
+		// @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish
+		?>
+        <tr>
+            <td>
+                <h5><?php echo $item->post_title ?></h5>
+                <h5><a href='<?php echo esc_url($course_url.'?course_id='.$course_id) ?>'><?php echo __('Course: ', 'tutor'). get_the_title($course_id); ?> </a></h5>
+            </td>
+            <td><?php echo $max_mark ?></td>
+            <td><?php echo $comment_count ?></td>
+            <td> <?php echo "<a title='". __('View Coures', 'tutor') ."' href='".esc_url($submitted_url.'?assignment='.$item->ID)."'><i class='tutor-icon-angle-right'></i> </a>"; ?> </td>
+        </tr>
+		<?php
+	}
+	?>
     </tbody>
 </table>

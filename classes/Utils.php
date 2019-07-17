@@ -814,7 +814,6 @@ class Utils {
 			}else{
 				$price = apply_filters('get_tutor_course_price', null, $course_id);
 			}
-
 		}
 
 		return $price;
@@ -4525,6 +4524,29 @@ class Utils {
 		return (object) array('count' => $count, 'results' => $query);
 	}
 
+	/**
+	 * @param int $course_id
+	 *
+	 * @return bool|object
+	 *
+	 * Get assignments by course id
+	 */
+	public function get_assignments_by_course($course_id = 0){
+		if ( ! $course_id){
+			return false;
+		}
+		global $wpdb;
+
+		$count = (int) $wpdb->get_var("SELECT COUNT(ID) FROM {$wpdb->postmeta} post_meta
+ 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
+ 			where post_type = 'tutor_assignments' AND post_meta.meta_value = {$course_id} ORDER BY ID DESC ");
+
+		$query = $wpdb->get_results("SELECT * FROM {$wpdb->postmeta} post_meta
+ 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
+ 			where post_type = 'tutor_assignments' AND post_meta.meta_value = {$course_id} ORDER BY ID DESC");
+
+		return (object) array('count' => $count, 'results' => $query);
+	}
 
 
 }
