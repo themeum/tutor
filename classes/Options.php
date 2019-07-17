@@ -119,6 +119,15 @@ class Options {
 								'label_title' => __('Enable', 'tutor'),
 								'desc'      => __('Delete all data during uninstall', 'tutor'),
 							),
+
+							'enable_fullscreen_mode' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable Full-Screen mode', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
+								'default' => '0',
+								'desc'      => __('This will hide the header & footer and enable fullscreen mode for the course learning interface.',	'tutor'),
+							),
+
 						)
 					)
 				),
@@ -194,17 +203,6 @@ class Options {
 								'desc'      => $lesson_url,
 							),
 
-                            /*
-                             // @TODO: Fullscreen Lesson
-                            'enable_fullscreen_mode' => array(
-                                'type'      => 'checkbox',
-                                'label'     => __('Enable Fullscreen mode', 'tutor'),
-                                'label_title' => __('Enable', 'tutor'),
-                                'default' => '0',
-                                'desc'      => __('This will hide the header & footer and enable fullscreen mode for the course learning interface.',	'tutor'),
-                            ),
-
-                            */
 						),
 					),
 

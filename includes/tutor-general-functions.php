@@ -179,12 +179,12 @@ if ( ! function_exists('course_builder_section_wrap')) {
 	function course_builder_section_wrap( $content = '', $title = '', $echo = true ) {
 		ob_start();
 		?>
-		<div class="tutor-course-builder-section">
-			<div class="tutor-course-builder-section-title">
-				<h3><i class="tutor-icon-move"></i> <span><?php echo $title; ?></span></h3>
-			</div>
+        <div class="tutor-course-builder-section">
+            <div class="tutor-course-builder-section-title">
+                <h3><i class="tutor-icon-move"></i> <span><?php echo $title; ?></span></h3>
+            </div>
 			<?php echo $content; ?>
-		</div>
+        </div>
 		<?php
 		$html = ob_get_clean();
 
@@ -192,6 +192,53 @@ if ( ! function_exists('course_builder_section_wrap')) {
 			echo $html;
 		}else{
 			return $html;
+		}
+	}
+}
+
+
+if ( ! function_exists('get_tutor_header')){
+	function get_tutor_header(){
+		$enable_fullscreen_mode = tutor_utils()->get_option('enable_fullscreen_mode');
+
+		if ($enable_fullscreen_mode){
+
+			?>
+            <!doctype html>
+            <html <?php language_attributes(); ?>>
+            <head>
+                <meta charset="<?php bloginfo( 'charset' ); ?>" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <link rel="profile" href="https://gmpg.org/xfn/11" />
+				<?php wp_head(); ?>
+            </head>
+
+            <body <?php body_class(); ?>>
+
+            <div id="tutor-page-wrap" class="tutor-site-wrap site">
+
+			<?php
+
+		}else{
+			get_header();
+		}
+
+	}
+}
+
+if (! function_exists('get_tutor_footer')){
+	function get_tutor_footer(){
+		$enable_fullscreen_mode = tutor_utils()->get_option('enable_fullscreen_mode');
+		if ($enable_fullscreen_mode){
+			?>
+            </div>
+			<?php wp_footer(); ?>
+
+            </body>
+            </html>
+			<?php
+		}else{
+			get_footer();
 		}
 	}
 }
