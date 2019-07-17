@@ -45,6 +45,9 @@ class Assets{
 	public function frontend_scripts(){
 		global $post, $wp_query;
 
+		$is_script_debug = tutor_utils()->is_script_debug();
+		$suffix = $is_script_debug ? '' : '.min';
+
 		/**
 		 * We checked wp_enqueue_editor() in condition because it conflicting with Divi Builder
 		 * condition @since v.1.3.3
@@ -97,7 +100,6 @@ class Assets{
 
 		//Including player assets if video exists
 		if (tutor_utils()->has_video_in_single()) {
-
 			$localize_data['post_id'] = get_the_ID();
 			$localize_data['best_watch_time'] = 0;
 
@@ -120,19 +122,17 @@ class Assets{
 				wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/js/Chart.bundle.min.js', array(), tutor()->version );
 				wp_enqueue_script( 'jquery-ui-datepicker' );
 			}
-
 		}
 		//End: chart data
 
 		$localize_data = apply_filters('tutor_localize_data', $localize_data);
 		if (tutor_utils()->get_option('load_tutor_css')){
-			wp_enqueue_style('tutor-frontend', tutor()->url.'assets/css/tutor-front.min.css', array(), tutor()->version);
+			wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front{$suffix}.css", array(), tutor()->version);
 		}
 		if (tutor_utils()->get_option('load_tutor_js')) {
 			wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery' ), tutor()->version, true );
 			wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
 		}
-
 
 		/**
 		 * Default Color

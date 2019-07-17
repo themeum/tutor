@@ -650,35 +650,31 @@ class Course extends Tutor_Base {
 		$attached_product_id = tutor_utils()->get_course_product_id($post_ID);
 		$course_price = sanitize_text_field(tutor_utils()->array_get('course_price', $_POST));
 		if ( ! $course_price){
-			return $course_price;
+			return;
 		}
 
 		$sell_by_wc = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
 		$sell_by_edd = tutor_utils()->get_option('enable_tutor_edd');
-
 		$course = get_post($post_ID);
 
+		if ($sell_by_wc){
 
-		if ($attached_product_id){
-			//Update the product
+			$is_update = false;
+			if ($attached_product_id){
+				$wc_product = get_post_meta($attached_product_id, '_product_version', true);
+				if ($wc_product){
+					$is_update = true;
+				}
+			}
 
-			if ($sell_by_wc){
+			if ($is_update){
 
 				$productObj = new \WC_Product($attached_product_id);
 				$productObj->set_price($course_price); // set product price
 				$productObj->set_regular_price($course_price); // set product regular price
 				$product_id = $productObj->save();
 
-				//die('Updating...');
-
-			}elseif ($sell_by_edd){
-
-			}
-
-		}else{
-			//Insert the product
-
-			if ($sell_by_wc){
+			}else{
 
 				$productObj = new \WC_Product();
 				$productObj->set_name($course->post_title);
@@ -687,9 +683,7 @@ class Course extends Tutor_Base {
 				$productObj->set_regular_price($course_price); // set product regular price
 
 				$product_id = $productObj->save();
-
 				if ($product_id) {
-
 					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 					//Mark product for woocommerce
 					update_post_meta( $product_id, '_virtual', 'yes' );
@@ -700,10 +694,48 @@ class Course extends Tutor_Base {
 						set_post_thumbnail( $product_id, $coursePostThumbnail );
 					}
 				}
+			}
 
-			}elseif ($sell_by_edd){
+		}elseif ($sell_by_edd){
+			$is_update = false;
+			
+			if ($attached_product_id){
+				$edd_price = get_post_meta($attached_product_id, 'edd_price', true);
+				if ($edd_price){
+					$is_update = true;
+				}
+			}
+
+			if ($is_update){
+				//Update the product
+				update_post_meta( $attached_product_id, 'edd_price', $course_price );
+			}else{
+				//Create new product
+
+				$post_arr = array(
+					'post_type'    => 'download',
+					'post_title'   => $course->post_title,
+					'post_status'  => 'publish',
+					'post_author'  => get_current_user_id(),
+				);
+				$download_id = wp_insert_post( $post_arr );
+				if ($download_id ) {
+					//edd_price
+					update_post_meta( $download_id, 'edd_price', $course_price );
+
+					update_post_meta( $post_ID, '_tutor_course_product_id', $download_id );
+					//Mark product for EDD
+					update_post_meta( $download_id, '_tutor_product', 'yes' );
+
+					$coursePostThumbnail = get_post_meta( $post_ID, '_thumbnail_id', true );
+					if ( $coursePostThumbnail ) {
+						set_post_thumbnail( $download_id, $coursePostThumbnail );
+					}
+					
+				}
 
 			}
+
 
 		}
 

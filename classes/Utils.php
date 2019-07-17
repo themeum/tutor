@@ -4548,5 +4548,15 @@ class Utils {
 		return (object) array('count' => $count, 'results' => $query);
 	}
 
+	/**
+	 * @return bool
+	 *
+	 * Determine if script debug
+	 *
+	 * @since v.1.3.4
+	 */
+	public function is_script_debug(){
+		return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
+	}
 
 }
