@@ -151,7 +151,7 @@ if ( ! function_exists('__tutor_generate_categories_checkbox')){
 
 				$output .= "<li class='tax-input-course-category-item tax-input-course-category-item-{$category->term_id} '><label class='course-category-checkbox'> <input type='checkbox' name='{$input_name}' 
 value='{$category->term_id}' 
-".checked($has_in_term, true, false)." /> {$category->name} </label>";
+".checked($has_in_term, true, false)." /> <span>{$category->name}</span> </label>";
 
 				if ( tutor_utils()->count( $childrens ) ) {
 					$output .= __tutor_generate_categories_checkbox($post_ID,$childrens, $args);

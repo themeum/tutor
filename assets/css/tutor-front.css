@@ -1222,6 +1222,15 @@ a.tutor-btn i,
   font-size: 16px;
 }
 
+.single_add_to_cart_button.btn-sm,
+a.tutor-button.btn-sm,
+.tutor-button.btn-sm,
+a.tutor-btn.btn-sm,
+.tutor-btn.btn-sm {
+  padding: 9px 14px;
+  line-height: 19px;
+}
+
 a.tutor-button.bordered-button,
 .tutor-button.bordered-button,
 a.tutor-btn.bordered-btn,
@@ -1229,6 +1238,38 @@ a.tutor-btn.bordered-btn,
   color: var(--tutor-primary-color);
   border: 1px solid var(--tutor-primary-color);
   background-color: #fff;
+}
+
+a.tutor-button.default-btn,
+.tutor-button.default-btn,
+a.tutor-btn.default-btn,
+.tutor-btn.default-btn {
+  color: #393C40;
+  border: 1px solid #B8BABE;
+  background: #fff;
+}
+
+a.tutor-button.default-btn i,
+.tutor-button.default-btn i,
+a.tutor-btn.default-btn i,
+.tutor-btn.default-btn i {
+  color: var(--tutor-primary-color);
+}
+
+a.tutor-button.default-btn:hover,
+.tutor-button.default-btn:hover,
+a.tutor-btn.default-btn:hover,
+.tutor-btn.default-btn:hover {
+  background-color: var(--tutor-primary-color);
+  border-color: var(--tutor-primary-color);
+  color: #fff;
+}
+
+a.tutor-button.default-btn:hover i,
+.tutor-button.default-btn:hover i,
+a.tutor-btn.default-btn:hover i,
+.tutor-btn.default-btn:hover i {
+  color: #fff;
 }
 
 a.tutor-button:hover,
@@ -3753,12 +3794,22 @@ Course question and answer
 .tutor-announcement {
   border: 1px solid #eee;
   padding: 20px;
-  margin-bottom: 30px;
+  margin-top: 30px;
   border-radius: 4px;
 }
 
 .announcement-delete-btn {
   float: right;
+}
+
+.announcement-delete-btn a {
+  color: var(--tutor-light-color);
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
+.announcement-delete-btn a:hover {
+  color: red;
 }
 
 .tutor-announcement-title-wrap h3 {
@@ -4660,6 +4711,10 @@ Course question and answer
 
 .select2-container .select2-selection--single {
   height: 48px;
+}
+
+.select2-container .select2-selection--multiple {
+  min-height: 50px;
 }
 
 /* ********************* */
@@ -5711,10 +5766,6 @@ p.course-empty-content {
 
 .tutor-add-quiz-button-wrap > * + * {
   margin-left: 15px;
-}
-
-.tutor-add-quiz-button-wrap > .bordered-btn {
-  background-color: transparent;
 }
 
 .tutor-course-builder-button.active {
@@ -6790,6 +6841,31 @@ Tutor Media Upload
 .tutor-form-field-course-categories label {
   margin-bottom: 0;
   cursor: pointer;
+  position: relative;
+}
+
+.tutor-form-field-course-categories label input {
+  display: none;
+}
+
+.tutor-form-field-course-categories label input + span {
+  padding-left: 30px;
+  position: relative;
+  display: block;
+  line-height: 30px;
+}
+
+.tutor-form-field-course-categories label input + span::before {
+  content: '';
+  height: 18px;
+  width: 18px;
+  background: #f7f7f7;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  border: 1px solid #DCDFE5;
 }
 
 .tutor-form-field-course-categories label:hover {
