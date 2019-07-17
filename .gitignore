@@ -8,3 +8,4 @@ Thumbs.db
 .vscode/
 package-lock.json
 yarn.lock
+.sass-cache
