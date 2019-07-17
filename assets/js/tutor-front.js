@@ -936,6 +936,30 @@ jQuery(document).ready(function($){
      * Tutor Course builder JS
      */
 
+
+    function tutor_slider_init(){
+        $('.tutor-field-slider').each(function(){
+            var $slider = $(this);
+            var $input = $slider.closest('.tutor-field-type-slider').find('input[type="hidden"]');
+            var $showVal = $slider.closest('.tutor-field-type-slider').find('.tutor-field-type-slider-value');
+            var min = parseFloat($slider.closest('.tutor-field-type-slider').attr('data-min'));
+            var max = parseFloat($slider.closest('.tutor-field-type-slider').attr('data-max'));
+
+            $slider.slider({
+                range: "max",
+                min: min,
+                max: max,
+                value: $input.val(),
+                slide: function( event, ui ) {
+                    $showVal.text(ui.value);
+                    $input.val(ui.value);
+                }
+            });
+        });
+    }
+
+    tutor_slider_init();
+
     /**
      * Course and lesson sorting
      */
