@@ -483,6 +483,14 @@ a.tutor-btn i,
     font-size: 16px;
 }
 
+a.tutor-button.default-btn i,
+.tutor-button.default-btn i,
+a.tutor-btn.default-btn i,
+.tutor-btn.default-btn i {
+    color: var(--tutor-primary-color);
+}
+
+
 a.tutor-button.bordered-button,
 .tutor-button.bordered-button,
 a.tutor-btn.bordered-btn,
@@ -500,6 +508,34 @@ a.tutor-btn:hover,
     border-color: var(--tutor-primary-hover-color);
     color: #fff;
 }
+
+
+a.tutor-button:hover i,
+.tutor-button:hover i,
+a.tutor-btn:hover i,
+.tutor-btn:hover i{
+    color: #fff;
+}
+
+
+a.tutor-button.default-btn,
+.tutor-button.default-btn,
+a.tutor-btn.default-btn,
+.tutor-btn.default-btn {
+    color: #393C40;
+    border: 1px solid #B8BABE;
+    background: #fff;
+}
+
+a.tutor-button.default-btn:hover,
+.tutor-button.default-btn:hover,
+a.tutor-btn.default-btn:hover,
+.tutor-btn.default-btn:hover {
+    background-color: var(--tutor-primary-color);
+    border-color: var(--tutor-primary-color);
+    color: #fff;
+}
+
 
 .tutor-add-quiz-button-wrap > * + *{
     margin-left: 15px;

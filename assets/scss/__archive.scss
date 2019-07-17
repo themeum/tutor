@@ -495,17 +495,16 @@ a.tutor-btn,
   transition: 300ms;
   overflow: hidden;
   vertical-align: top;
-}
-
-.single_add_to_cart_button i,
-a.tutor-button i,
-.tutor-button i,
-a.tutor-btn i,
-.tutor-btn i{
-  float: left;
-  line-height: 19px;
-  margin-right: 7px;
-  font-size: 16px;
+  i{
+    float: left;
+    line-height: 19px;
+    margin-right: 7px;
+    font-size: 16px;
+  }
+  &.btn-sm{
+    padding: 9px 14px;
+    line-height: 19px;
+  }
 }
 
 a.tutor-button.bordered-button,
@@ -515,6 +514,31 @@ a.tutor-btn.bordered-btn,
   color: var(--tutor-primary-color);
   border: 1px solid var(--tutor-primary-color);
   background-color: #fff;
+}
+
+a.tutor-button.default-btn,
+.tutor-button.default-btn,
+a.tutor-btn.default-btn,
+.tutor-btn.default-btn{
+  color: #393C40;
+  border: 1px solid #B8BABE;
+  background: #fff;
+  i{
+    color: var(--tutor-primary-color)
+  }
+}
+
+
+a.tutor-button.default-btn:hover,
+.tutor-button.default-btn:hover,
+a.tutor-btn.default-btn:hover,
+.tutor-btn.default-btn:hover{
+  background-color: var(--tutor-primary-color);
+  border-color: var(--tutor-primary-color);
+  color: #fff;
+  i{
+    color: #fff;
+  }
 }
 
 a.tutor-button:hover,
@@ -2822,12 +2846,20 @@ Course question and answer
 .tutor-announcement {
   border: 1px solid #eee;
   padding: 20px;
-  margin-bottom: 30px;
+  margin-top: 30px;
   border-radius: 4px;
 
 }
 .announcement-delete-btn{
   float: right;
+}
+
+.announcement-delete-btn a{
+  color: var(--tutor-light-color);
+  transition: 300ms;
+  &:hover{
+    color: red;
+  }
 }
 .tutor-announcement-title-wrap h3{
   color: var(--tutor-text-color);
@@ -3632,6 +3664,15 @@ Course question and answer
 .select2-container .select2-selection--single{
   height: 48px;
 }
+
+.select2-container .select2-selection--multiple{
+  min-height: 50px;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple{
+
+}
+
 
 /* ********************* */
 /* Tutor Price Preview Box */
@@ -4573,10 +4614,12 @@ p.course-empty-content {
   margin-left: 15px;
 }
 
-
-.tutor-add-quiz-button-wrap > .bordered-btn{
-  background-color: transparent;
-}
+//
+//.tutor-add-quiz-button-wrap > .bordered-btn{
+//  background-color: #fff;
+//  border-color: #B8BABE;
+//  color: #393C40;
+//}
 
 .tutor-course-builder-button.active{
   color: #fff;
@@ -5501,7 +5544,36 @@ Tutor Media Upload
 .tutor-form-field-course-categories label{
   margin-bottom: 0;
   cursor: pointer;
+  position: relative;
 }
+.tutor-form-field-course-categories label input{
+  display: none;
+}
+
+
+.tutor-form-field-course-categories label input + span{
+  //background: red;
+  padding-left: 30px;
+  position: relative;
+  display: block;
+  line-height: 30px;
+}
+
+.tutor-form-field-course-categories label input + span::before{
+  content: '';
+  height: 18px;
+  width: 18px;
+  background: #f7f7f7;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid #DCDFE5;
+}
+.tutor-form-field-course-categories label input:checked + span::before{
+
+}
+
 .tutor-form-field-course-categories label:hover{
   color: var(--tutor-primary-color);
 }
