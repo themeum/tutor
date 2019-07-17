@@ -161,20 +161,47 @@
 				<?php
 				foreach ( $query_lesson->posts as $lesson ) {
 					if ( ! in_array( $lesson->ID, $attached_lesson_ids ) ) {
-						?>
-                        <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="tutor-lesson tutor-lesson-<?php echo $lesson->ID; ?>">
 
-                            <div class="tutor-lesson-top">
-                                <i class="tutor-icon-move"></i>
-                                <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>"><?php echo $lesson->post_title; ?> </a>
-
-                                <a href="<?php echo admin_url("post.php?post={$lesson->ID}&action=edit"); ?>"><i class="tutor-icon-pencil"></i> </a>
-
-                                <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+						if ($lesson->post_type === 'tutor_quiz'){
+							$quiz = $lesson;
+							?>
+                            <div id="tutor-quiz-<?php echo $quiz->ID; ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $topic->ID; ?>">
+                                <div class="tutor-lesson-top">
+                                    <i class="tutor-icon-move"></i>
+                                    <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
+                                        <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz->post_title; ?>
+                                    </a>
+                                    <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                </div>
                             </div>
 
-                        </div>
-						<?php
+							<?php
+						}elseif($lesson->post_type === 'tutor_assignments'){
+							?>
+                            <div id="tutor-assignment-<?php echo $lesson->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo
+							$lesson->ID; ?>">
+                                <div class="tutor-lesson-top">
+                                    <i class="tutor-icon-move"></i>
+                                    <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $lesson->ID; ?>"
+                                       data-topic-id="<?php echo $topic->ID; ?>"><i class="tutor-icon-clipboard"></i> <?php echo
+										$lesson->post_title; ?> </a>
+                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                </div>
+                            </div>
+							<?php
+						} else{
+							?>
+                            <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo
+							$lesson->ID; ?>">
+                                <div class="tutor-lesson-top">
+                                    <i class="tutor-icon-move"></i>
+                                    <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>"><?php echo $lesson->post_title; ?> </a>
+                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                </div>
+                            </div>
+							<?php
+						}
+
 					}
 				}
 				?>
