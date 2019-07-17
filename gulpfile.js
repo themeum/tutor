@@ -8,7 +8,7 @@ gulp.task('default', function() {
     return gulp.src('assets/scss/main.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
-        .pipe(rename('main.css'))
+        .pipe(rename('tutor-front.css'))
         .pipe(autoprefixer({
             browsers: ['last 2 versions'],
             cascade: false
@@ -21,7 +21,7 @@ gulp.task('default.min', function() {
     return gulp.src('assets/scss/main.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-        .pipe(rename('main.min.css'))
+        .pipe(rename('tutor-front.min.css'))
         .pipe(autoprefixer({
             browsers: ['last 2 versions'],
             cascade: false
