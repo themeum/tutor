@@ -774,6 +774,11 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
     color: #ff0000;
 }
 
+#tutor-announcements .submit{
+    margin: 0;
+    padding: 0;
+}
+
 .tutor-label-success{
     background-color: var(--tutor-success-button-color);
     color: #ffffff;
@@ -1985,11 +1990,17 @@ End Attempt
     width: 47%;
     margin-right: 20px;
     margin-top: 10px;
+    margin-bottom: 20px;
 
 }
 .tutor-course-available-instructors .added-instructor-item .instructor-icon {
     line-height: initial;
     margin-right: 12px;
+}
+.tutor-course-available-instructors .added-instructor-item .instructor-icon img{
+    height: 30px;
+    width: 30px;
+    display: block;
 }
 .tutor-course-available-instructors .added-instructor-item .instructor-name {
     -ms-flex-preferred-size: 0;
