@@ -311,8 +311,6 @@ class Template extends Tutor_Base {
 	public function fs_course_builder($template){
 		global $wp_query;
 
-
-
 		if ($wp_query->is_page) {
 			$student_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
 			if ( $student_dashboard_page_id === get_the_ID() ) {
@@ -323,8 +321,6 @@ class Template extends Tutor_Base {
 
 			}
 		}
-
-
 
 		return $template;
 	}

@@ -34,6 +34,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
             <option value="external_url" <?php selected('external_url', $videoSource); ?>><?php _e('External URL', 'tutor'); ?></option>
             <option value="youtube" <?php selected('youtube', $videoSource); ?>><?php _e('YouTube', 'tutor'); ?></option>
             <option value="vimeo" <?php selected('vimeo', $videoSource); ?>><?php _e('Vimeo', 'tutor'); ?></option>
+            <option value="embedded" <?php selected('embedded', $videoSource); ?>><?php _e('Embedded', 'tutor'); ?></option>
         </select>
 
         <p class="desc">
@@ -57,10 +58,11 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
 				'none'; ?>;">
                 <input type="text" name="video[source_youtube]" value="<?php echo tutor_utils()->avalue_dot('source_youtube', $video); ?>" placeholder="<?php _e('YouTube Video URL', 'tutor'); ?>">
             </div>
-            
-            
             <div class="video_source_wrap_vimeo" style="display: <?php echo $videoSource === 'vimeo' ? 'block' : 'none'; ?>;">
                 <input type="text" name="video[source_vimeo]" value="<?php echo tutor_utils()->avalue_dot('source_vimeo', $video); ?>" placeholder="<?php _e('Vimeo Video URL', 'tutor'); ?>">
+            </div>
+            <div class="video_source_wrap_embedded" style="display: <?php echo $videoSource === 'embedded' ? 'block' : 'none'; ?>;">
+                <textarea name="video[source_embedded]"><?php echo tutor_utils()->avalue_dot('source_embedded', $video); ?></textarea>
             </div>
         </div>
 

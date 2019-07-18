@@ -3,10 +3,12 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 
-
 get_tutor_header(true);
+do_action('tutor_load_template_before', 'dashboard.create-course', null);
 
 global $post;
+
+
 
 $course_id = get_the_ID();
 ?>
@@ -151,4 +153,6 @@ $course_id = get_the_ID();
 <?php do_action('tutor/dashboard_course_builder_after'); ?>
 
 
-<?php get_tutor_footer(true); ?>
+<?php
+do_action('tutor_load_template_after', 'dashboard.create-course', null);
+get_tutor_footer(true); ?>

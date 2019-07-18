@@ -199,9 +199,9 @@ if ( ! function_exists('course_builder_section_wrap')) {
 
 if ( ! function_exists('get_tutor_header')){
 	function get_tutor_header($fullScreen = false){
-		$enable_fullscreen_mode = tutor_utils()->get_option('enable_fullscreen_mode');
+		$enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
 
-		if ($enable_fullscreen_mode || $fullScreen){
+		if ($enable_spotlight_mode || $fullScreen){
 			?>
             <!doctype html>
             <html <?php language_attributes(); ?>>
@@ -223,8 +223,8 @@ if ( ! function_exists('get_tutor_header')){
 
 if (! function_exists('get_tutor_footer')){
 	function get_tutor_footer($fullScreen = false){
-		$enable_fullscreen_mode = tutor_utils()->get_option('enable_fullscreen_mode');
-		if ($enable_fullscreen_mode || $fullScreen){
+		$enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
+		if ($enable_spotlight_mode || $fullScreen){
 			?>
             </div>
 			<?php wp_footer(); ?>
