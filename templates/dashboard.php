@@ -67,7 +67,7 @@ do_action('tutor_dashboard/before/wrap'); ?>
 							if(current_user_can(tutor()->instructor_role)){
 							    $course_type = tutor()->course_post_type;
 								?>
-                                <a class="tutor-btn bordered-btn" href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('create-course'); ?>">
+                                <a class="tutor-btn bordered-btn" href="<?php echo apply_filters('frontend_course_create_url', admin_url("post-new.php?post_type=".tutor()->course_post_type)); ?>">
 									<?php echo sprintf(__('%s Add A New Course ', 'tutor'), '<i class="tutor-icon-video-camera"></i> &nbsp;'); ?>
                                 </a>
 								<?php

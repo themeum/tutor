@@ -4493,7 +4493,13 @@ class Utils {
 	 */
 	public function course_edit_link($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
-		return $this->tutor_dashboard_url("create-course/?course_ID=".$course_id);
+
+		$url = admin_url("post.php?post={$course_id}&action=edit");
+		if (tutor()->has_pro){
+			$url = $this->tutor_dashboard_url("create-course/?course_ID=".$course_id);
+		}
+
+		return $url;
 	}
 
 	public function get_assignments_by_instructor($instructor_id = 0, $filter_data = array()){

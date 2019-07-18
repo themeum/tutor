@@ -19,6 +19,8 @@ class Dashboard {
 		add_action('tutor_load_template_before', array($this, 'tutor_load_template_before'), 10, 2);
 		add_action('tutor_load_template_after', array($this, 'tutor_load_template_after'), 10, 2);
 		add_action('tutor_action_tutor_add_course_builder', array($this, 'tutor_add_course_builder'));
+		add_filter('should_tutor_load_template', array($this, 'should_tutor_load_template'), 10, 2);
+
 	}
 
 	/**
@@ -158,6 +160,13 @@ class Dashboard {
 		 */
 		wp_redirect(tutor_utils()->referer());
 		die();
+	}
+
+	public function should_tutor_load_template($bool, $template){
+		if ($template === 'dashboard.create-course' && ! tutor()->has_pro){
+			return false;
+		}
+		return $bool;
 	}
 
 }
