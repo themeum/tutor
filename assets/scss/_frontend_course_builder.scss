@@ -1,6 +1,11 @@
 .tutor-dashboard-builder-header{
 	padding: 10px 0px;
 	border-bottom: 2px solid #DCDFE5;
+	position: fixed;
+	top: 0px;
+	background: #fff;
+	width: 100%;
+	z-index: 99;
 	.tutor-dashboard-builder-header-left{
 		display: flex;
 		align-items: center;
@@ -18,12 +23,17 @@
 			display: inline-flex;
 			font-size: 14px;
 			color: var(--tutor-text-color);
+			transition: 300ms;
 			font-weight: 500;
 			i{
 				font-size: 24px;
 				line-height: 30px;
 				margin-right: 9px;
 			}
+			&:hover{
+				color: var(--tutor-primary-color)
+			}
+			
 		}
 	}
 	.tutor-dashboard-builder-header-right{
@@ -35,6 +45,7 @@
 			font-weight: 500;
 			line-height: 36px;
 			padding: 0 25px;
+			transition: 300ms;
 			i{
 				font-size: 36px;
 				line-height: 36px;
@@ -42,16 +53,28 @@
 				vertical-align: top;
 				padding-right: 9px;
 			}
+			&:hover{
+				color: var(--tutor-primary-color)
+			}
 		}
 	}
 }
 
 
 .tutor-frontend-course-builder-section{
-	padding: 45px 0;
+	padding: 113px 0 45px;
+}
+
+.admin-bar{
+	.tutor-dashboard-builder-header{
+		top: 32px;
+	}
 }
 
 .tutor-course-builder-upload-tips{
+	position: fixed;
+	width: 100%;
+	max-width: 370px;
 	.tutor-course-builder-tips-title{
 		font-size: 16px;
 		color: #8C94A8;

@@ -12,7 +12,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
 ?>
 
 <?php do_action('tutor/dashboard_course_builder_before'); ?>
-<form action="" method="post" enctype="multipart/form-data">
+<form action="" id="tutor-frontend-course-builder" method="post" enctype="multipart/form-data">
     <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
     <header class="tutor-dashboard-builder-header">
         <div class="tutor-container tutor-fluid">
@@ -178,7 +178,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                             <li><?php _e("NO Node.js knowledge is required at all!", 'tutor');?></li>
                             <li><?php _e("NO other programming language knowledge (besides JavaScript, see next point) is required", 'tutor');?></li>
                             <li><?php _e("Basic JavaScript knowledge is assumed though - you should at least be willing to pick it up whilst going through the course. A JS refresher module exists to bring you up to the latest syntax quickly", 'tutor');?></li>
-                            <li><?php _e("Basic HTML + CSS knowledge helps but is NOT required", 'tutor');?></li>
+                            <li><?php _e("Basic HTML + CSS knowledge helps but is NOT required", 'tutor'); ?></li>
                         </ul>
                     </div>
                 </div> <!--.tutor-col-4-->
