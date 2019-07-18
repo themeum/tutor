@@ -135,9 +135,9 @@ class Course extends Tutor_Base {
 	public function register_meta_box_in_frontend(){
 		do_action('tutor_course_builder_metabox_before', get_the_ID());
 
+		course_builder_section_wrap($this->video_metabox($echo = false), 'Video');
         course_builder_section_wrap($this->course_meta_box($echo = false), 'Course Builder');
         course_builder_section_wrap($this->instructors_metabox($echo = false), 'Instructors');
-        course_builder_section_wrap($this->video_metabox($echo = false), 'Video');
         course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), 'Additional Data');
         course_builder_section_wrap($this->announcements_metabox($echo = false), 'Announcements');
 

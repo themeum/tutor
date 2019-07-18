@@ -15,7 +15,6 @@ $runtimeSeconds = tutor_utils()->avalue_dot('runtime.seconds', $video);
 $sourceVideoID = tutor_utils()->avalue_dot('source_video_id', $video);
 $poster = tutor_utils()->avalue_dot('poster', $video);
 ?>
-
 <div class="tutor-option-field-row">
     <div class="tutor-option-field-label">
         <label for="">
