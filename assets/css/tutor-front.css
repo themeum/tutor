@@ -119,6 +119,10 @@ body {
   width: 100%;
 }
 
+.tutor-container.tutor-fluid {
+  max-width: 100%;
+}
+
 .tutor-row {
   display: -webkit-box;
   display: -ms-flexbox;
