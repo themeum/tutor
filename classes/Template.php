@@ -27,6 +27,7 @@ class Template extends Tutor_Base {
 
 		add_filter( 'template_include', array($this, 'student_public_profile'), 99 );
 		add_filter( 'template_include', array($this, 'tutor_dashboard'), 99 );
+		add_filter( 'template_include', array($this, 'fs_course_builder'), 99 );
 		add_filter( 'pre_get_document_title', array($this, 'student_public_profile_title') );
 
 		add_filter('the_content', array($this, 'convert_static_page_to_template'));
@@ -293,7 +294,7 @@ class Template extends Tutor_Base {
 					$dashboard_pages = tutor_utils()->tutor_dashboard_pages();
 					$dashboard_page_item = tutor_utils()->array_get($query_var, $dashboard_pages);
 					$auth_cap = tutor_utils()->array_get('auth_cap', $dashboard_page_item);
-					if ($auth_cap && ! current_user_can($auth_cap)  ){
+					if ($auth_cap && ! current_user_can($auth_cap) ){
 						wp_die(__('Permission Denied', 'tutor'));
 					}
 
@@ -303,6 +304,27 @@ class Template extends Tutor_Base {
 
 			}
 		}
+
+		return $template;
+	}
+
+	public function fs_course_builder($template){
+		global $wp_query;
+
+
+
+		if ($wp_query->is_page) {
+			$student_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
+			if ( $student_dashboard_page_id === get_the_ID() ) {
+
+				if (tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars) === 'create-course') {
+					$template = tutor_get_template('dashboard.create-course');
+				}
+
+			}
+		}
+
+
 
 		return $template;
 	}

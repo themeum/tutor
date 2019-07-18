@@ -20,7 +20,7 @@ if (isset($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_var
 	$dashboard_page_name = $wp_query->query_vars['tutor_dashboard_page'];
 }
 /**
- * Getting dashboard sum pages
+ * Getting dashboard sub pages
  */
 if (isset($wp_query->query_vars['tutor_dashboard_sub_page']) && $wp_query->query_vars['tutor_dashboard_sub_page']) {
 	$dashboard_page_name = $wp_query->query_vars['tutor_dashboard_sub_page'];

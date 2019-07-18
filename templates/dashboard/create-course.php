@@ -2,6 +2,10 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
+
+
+get_tutor_header(true);
+
 global $post;
 
 $course_id = get_the_ID();
@@ -145,3 +149,6 @@ $course_id = get_the_ID();
     </form>
 
 <?php do_action('tutor/dashboard_course_builder_after'); ?>
+
+
+<?php get_tutor_footer(true); ?>
