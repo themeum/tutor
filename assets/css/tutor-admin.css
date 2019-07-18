@@ -204,7 +204,7 @@ Group Field Option
 .course-contents .course-content-item {
     padding: 10px;
     border-bottom: 1px solid #D9D9D9;
-    background-color: #E9E9E9;
+    background-color: #EBEEF0;
 }
 .tutor-lessons.ui-sortable {
     min-height: 20px;
@@ -213,7 +213,7 @@ Group Field Option
     margin: 0;
 }
 #tutor-course-topics .course-content-item:hover{
-    background-color: #EEEEEE;
+    background-color: #EBEEF0;
 }
 #tutor-course-topics .tutor-lessons {
     padding-left: 0;
@@ -393,7 +393,7 @@ p.course-empty-content {
     background: #F8F8F8;
 }
 #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body{
-    background: #E9E9E9;
+    background: #EBEEF0;
     padding: 15px 20px;
 }
 /*#tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .create-lesson-in-topic-btn,*/

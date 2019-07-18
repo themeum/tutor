@@ -657,6 +657,11 @@ body {
 .tutor-dashboard-builder-header {
   padding: 10px 0px;
   border-bottom: 2px solid #DCDFE5;
+  position: fixed;
+  top: 0px;
+  background: #fff;
+  width: 100%;
+  z-index: 99;
 }
 
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left {
@@ -732,13 +737,17 @@ body {
 }
 
 .tutor-frontend-course-builder-section {
-  padding: 45px 0;
+  padding: 113px 0 45px;
+}
+
+.admin-bar .tutor-dashboard-builder-header {
+  top: 32px;
 }
 
 .tutor-course-builder-upload-tips {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
+  position: fixed;
+  width: 100%;
+  max-width: 370px;
 }
 
 .tutor-course-builder-upload-tips .tutor-course-builder-tips-title {
@@ -5563,7 +5572,7 @@ button.tm-close.tutor-icon-line-cross:hover {
 }
 
 #tutor-course-topics .tutor-topics-wrap {
-  border-bottom: 1px solid #E7E7E7;
+  border-bottom: 1px solid #F6F8FA;
   padding-bottom: 0;
   margin: 0;
 }
@@ -5630,7 +5639,7 @@ button.tm-close.tutor-icon-line-cross:hover {
 }
 
 #tutor-course-topics .course-content-item:hover {
-  background-color: #EEEEEE;
+  background-color: #EBEEF0;
 }
 
 #tutor-course-topics .tutor-lessons {
