@@ -18,12 +18,17 @@
 			display: inline-flex;
 			font-size: 14px;
 			color: var(--tutor-text-color);
+			transition: 300ms;
 			font-weight: 500;
 			i{
 				font-size: 24px;
 				line-height: 30px;
 				margin-right: 9px;
 			}
+			&:hover{
+				color: var(--tutor-primary-color)
+			}
+			
 		}
 	}
 	.tutor-dashboard-builder-header-right{
@@ -35,12 +40,16 @@
 			font-weight: 500;
 			line-height: 36px;
 			padding: 0 25px;
+			transition: 300ms;
 			i{
 				font-size: 36px;
 				line-height: 36px;
 				display: inline-block;
 				vertical-align: top;
 				padding-right: 9px;
+			}
+			&:hover{
+				color: var(--tutor-primary-color)
 			}
 		}
 	}
@@ -52,6 +61,8 @@
 }
 
 .tutor-course-builder-upload-tips{
+	position: sticky;
+	top: 0;
 	.tutor-course-builder-tips-title{
 		font-size: 16px;
 		color: #8C94A8;

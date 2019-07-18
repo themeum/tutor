@@ -685,6 +685,8 @@ body {
   display: inline-flex;
   font-size: 14px;
   color: var(--tutor-text-color);
+  -webkit-transition: 300ms;
+  transition: 300ms;
   font-weight: 500;
 }
 
@@ -692,6 +694,10 @@ body {
   font-size: 24px;
   line-height: 30px;
   margin-right: 9px;
+}
+
+.tutor-dashboard-builder-header .tutor-dashboard-builder-header-left button:hover {
+  color: var(--tutor-primary-color);
 }
 
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-right {
@@ -709,6 +715,8 @@ body {
   font-weight: 500;
   line-height: 36px;
   padding: 0 25px;
+  -webkit-transition: 300ms;
+  transition: 300ms;
 }
 
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-right a i {
@@ -719,8 +727,18 @@ body {
   padding-right: 9px;
 }
 
+.tutor-dashboard-builder-header .tutor-dashboard-builder-header-right a:hover {
+  color: var(--tutor-primary-color);
+}
+
 .tutor-frontend-course-builder-section {
   padding: 45px 0;
+}
+
+.tutor-course-builder-upload-tips {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
 }
 
 .tutor-course-builder-upload-tips .tutor-course-builder-tips-title {
