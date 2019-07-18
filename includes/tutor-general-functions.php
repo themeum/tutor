@@ -198,11 +198,10 @@ if ( ! function_exists('course_builder_section_wrap')) {
 
 
 if ( ! function_exists('get_tutor_header')){
-	function get_tutor_header(){
+	function get_tutor_header($fullScreen = false){
 		$enable_fullscreen_mode = tutor_utils()->get_option('enable_fullscreen_mode');
 
-		if ($enable_fullscreen_mode){
-
+		if ($enable_fullscreen_mode || $fullScreen){
 			?>
             <!doctype html>
             <html <?php language_attributes(); ?>>
@@ -212,13 +211,9 @@ if ( ! function_exists('get_tutor_header')){
                 <link rel="profile" href="https://gmpg.org/xfn/11" />
 				<?php wp_head(); ?>
             </head>
-
             <body <?php body_class(); ?>>
-
             <div id="tutor-page-wrap" class="tutor-site-wrap site">
-
 			<?php
-
 		}else{
 			get_header();
 		}
@@ -227,9 +222,9 @@ if ( ! function_exists('get_tutor_header')){
 }
 
 if (! function_exists('get_tutor_footer')){
-	function get_tutor_footer(){
+	function get_tutor_footer($fullScreen = false){
 		$enable_fullscreen_mode = tutor_utils()->get_option('enable_fullscreen_mode');
-		if ($enable_fullscreen_mode){
+		if ($enable_fullscreen_mode || $fullScreen){
 			?>
             </div>
 			<?php wp_footer(); ?>
