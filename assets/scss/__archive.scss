@@ -5552,26 +5552,37 @@ Tutor Media Upload
 
 
 .tutor-form-field-course-categories label input + span{
-  //background: red;
   padding-left: 30px;
   position: relative;
   display: block;
-  line-height: 30px;
+  line-height: 26px;
 }
 
 .tutor-form-field-course-categories label input + span::before{
-  content: '';
-  height: 18px;
-  width: 18px;
+  content: '\e90f';
+  height: 16px;
+  width: 16px;
   background: #f7f7f7;
   position: absolute;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
   border: 1px solid #DCDFE5;
+  font-family: 'tutor';
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  color: #f7f7f7;
+  transition: 300ms;
+  border-radius: 3px;
 }
-.tutor-form-field-course-categories label input:checked + span::before{
 
+.tutor-form-field-course-categories label input:checked + span::before{
+  color: var(--tutor-primary-color);
+  border-color: var(--tutor-primary-color);
+}
+.tutor-form-field-course-categories label:hover input + span::before{
+  border-color: var(--tutor-primary-color);
 }
 
 .tutor-form-field-course-categories label:hover{
