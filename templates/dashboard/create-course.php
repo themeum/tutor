@@ -1,15 +1,13 @@
 <?php
-    if ( ! defined( 'ABSPATH' ) )
-        exit;
+if ( ! defined( 'ABSPATH' ) )
+    exit;
 
+get_tutor_header(true);
+do_action('tutor_load_template_before', 'dashboard.create-course', null);
+global $post;
 
-
-    get_tutor_header(true);
-
-    global $post;
-
-    $course_id = get_the_ID();
-    $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course');
+$course_id = get_the_ID();
+$can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course');
 
 ?>
 
@@ -34,15 +32,15 @@
                     <div class="tutor-dashboard-builder-header-right">
                         <a href="<?php the_permalink($course_id); ?>" target="_blank"><i class="tutor-icon-glasses"></i><?php _e('Preview', 'tutor'); ?></a>
                         <?php
-                            if ($can_publish_course){
-                                ?>
-                                    <button class="tutor-button tutor-success" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
-                                <?php
-                            }else{
-                                ?>
-                                    <button class="tutor-button tutor-success" type="submit" name="course_submit_btn" value="submit_for_review"><?php _e('Submit for Review', 'tutor'); ?></button>
-                                <?php
-                            }
+                        if ($can_publish_course){
+                            ?>
+                            <button class="tutor-button tutor-success" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
+                            <?php
+                        }else{
+                            ?>
+                            <button class="tutor-button tutor-success" type="submit" name="course_submit_btn" value="submit_for_review"><?php _e('Submit for Review', 'tutor'); ?></button>
+                            <?php
+                        }
                         ?>
                         <a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>"> <?php _e('Exit', "tutor") ?></a>
                     </div>
@@ -157,15 +155,15 @@
                                 <div class="tutor-form-field tutor-course-builder-btn-group">
                                     <button type="submit" class="tutor-button" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save course as draft', 'tutor'); ?></button>
                                     <?php
-                                        if ($can_publish_course){
-                                            ?>
-                                            <button class="tutor-button tutor-success" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
-                                            <?php
-                                        }else{
-                                            ?>
-                                            <button class="tutor-button tutor-success" type="submit" name="course_submit_btn" value="submit_for_review"><?php _e('Submit for Review', 'tutor'); ?></button>
-                                            <?php
-                                        }
+                                    if ($can_publish_course){
+                                        ?>
+                                        <button class="tutor-button tutor-success" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
+                                        <?php
+                                    }else{
+                                        ?>
+                                        <button class="tutor-button tutor-success" type="submit" name="course_submit_btn" value="submit_for_review"><?php _e('Submit for Review', 'tutor'); ?></button>
+                                        <?php
+                                    }
                                     ?>
                                 </div>
                             </div>
@@ -191,4 +189,6 @@
 <?php do_action('tutor/dashboard_course_builder_after'); ?>
 
 
-<?php get_tutor_footer(true); ?>
+<?php
+do_action('tutor_load_template_after', 'dashboard.create-course', null);
+get_tutor_footer(true); ?>

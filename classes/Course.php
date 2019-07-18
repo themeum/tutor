@@ -250,7 +250,8 @@ class Course extends Tutor_Base {
 
 		//Video
 		if ( ! empty($_POST['video']['source'])){
-			$video = tutor_utils()->sanitize_array($_POST['video']);
+			//$video = tutor_utils()->sanitize_array($_POST['video']);
+			$video = tutor_utils()->array_get('video', $_POST);
 			update_post_meta($post_ID, '_video', $video);
 		}else{
 			delete_post_meta($post_ID, '_video');

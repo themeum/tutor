@@ -120,12 +120,12 @@ class Options {
 								'desc'      => __('Delete all data during uninstall', 'tutor'),
 							),
 
-							'enable_fullscreen_mode' => array(
+							'enable_spotlight_mode' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Full-Screen mode', 'tutor'),
+								'label'     => __('Spotlight mode', 'tutor'),
 								'label_title' => __('Enable', 'tutor'),
 								'default' => '0',
-								'desc'      => __('This will hide the header & footer and enable fullscreen mode for the course learning interface.',	'tutor'),
+								'desc'      => __('This will hide the header & footer and enable Spotlight (full-screen) mode for the course learning interface.',	'tutor'),
 							),
 
 						)

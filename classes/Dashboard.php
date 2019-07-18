@@ -33,6 +33,7 @@ class Dashboard {
 			global $post;
 			wp_reset_query();
 
+
 			/**
 			 * Get course which currently in edit, or insert new course
 			 */
