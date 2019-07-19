@@ -59,11 +59,10 @@ class Course extends Tutor_Base {
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
 		$course_marketplace = tutor_utils()->get_option('enable_course_marketplace');
-
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
+        add_meta_box( 'tutor-course-videos', __( 'Course Level', 'tutor' ), array($this, 'course_level_metabox'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
-
 		if ($course_marketplace) {
 			add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array( $this, 'instructors_metabox' ), $coursePostType );
 		}
@@ -104,6 +103,18 @@ class Course extends Tutor_Base {
 		}
 	}
 
+	public function course_level_metabox($echo = true){
+		ob_start();
+		include  tutor()->path.'views/metabox/course-level-metabox.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
+	}
+
 	public function announcements_metabox($echo = true){
 		ob_start();
 		include  tutor()->path.'views/metabox/announcements-metabox.php';
@@ -134,13 +145,10 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box_in_frontend(){
 		do_action('tutor_course_builder_metabox_before', get_the_ID());
-
-		course_builder_section_wrap($this->video_metabox($echo = false), 'Video');
         course_builder_section_wrap($this->course_meta_box($echo = false), 'Course Builder');
         course_builder_section_wrap($this->instructors_metabox($echo = false), 'Instructors');
         course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), 'Additional Data');
         course_builder_section_wrap($this->announcements_metabox($echo = false), 'Announcements');
-
 		do_action('tutor_course_builder_metabox_after', get_the_ID());
 	}
 
@@ -556,7 +564,7 @@ class Course extends Tutor_Base {
 			$output .= '<p class="quiz-search-suggest-text">'.__('Search to get the specific instructors', 'tutor').'</p>';
 
 		}else{
-			$output .= __('No instructor available or you have already added maximum instructors', 'tutor');
+			$output .= __('<p>No instructor available or you have already added maximum instructors</p>', 'tutor');
 		}
 
 
