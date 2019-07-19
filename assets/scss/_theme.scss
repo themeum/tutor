@@ -98,7 +98,7 @@ body {
 //styled radio button
 
 .tutor-styled-radio{
-	span{
+	> span{
 		position: relative;
 		padding-left: 30px;
 		cursor: pointer;
@@ -117,7 +117,7 @@ body {
 			transition: 200ms;
 		}
 	}
-	input{
+	> input{
 		display: none;
 		&:checked + span::before{
 			border: 5px solid var(--tutor-primary-color);

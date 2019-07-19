@@ -3514,6 +3514,7 @@ Course question and answer
 /*start registration form*/
 /* ********************* */
 
+
 .tutor-option-field-row label,
 .tutor-form-group label{
   display: block;
@@ -3544,6 +3545,23 @@ Course question and answer
   -webkit-transition: 300ms;
   transition: 300ms;
 }
+
+.tutor-form-group{
+  position: relative;
+  span.tutor-input-prepand {
+    position: absolute;
+    height: 100%;
+    font-size: 21px;
+    line-height: 50px;
+    padding: 0 12px;
+    background: transparent;
+    border-right: 1px solid #DCDFE5;
+    + input{
+      padding-left: 35px;
+    }
+  }
+}
+
 
 .tutor-course-builder-form-elem{
   margin-bottom: 20px;
@@ -4362,7 +4380,9 @@ button.tm-close.tutor-icon-line-cross:hover{
     a{
       color: #393C40;
       font-weight: 400;
-      font-size: 16px;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
     }
     i{
       padding-right: 7px;
@@ -4506,6 +4526,8 @@ p.course-empty-content {
   flex: 1 0 auto;
   cursor: pointer;
   max-width: calc(100% - 137px);
+  font-weight: 400;
+  font-size: 16px;
 }
 .tutor-topic-title span{
   padding: 0 5px;
@@ -5190,6 +5212,7 @@ label.btn-switch input:checked + .btn-slider {
   margin: 0 11px 15px;
   border: 1px solid #E2E2E2;
   border-radius: 3px;
+  font-size: 13px;
 }
 .tutor-select .tutor-select-options .tutor-select-option:hover {
   border-color: var(--tutor-primary-color);
@@ -5602,6 +5625,7 @@ Tutor Media Upload
   font-weight: 500;
   line-height: 21px;
   margin-bottom: 10px;
+  display: block;
 }
 
 .builder-course-thumbnail-upload-wrap h4{
