@@ -11,21 +11,15 @@ jQuery(document).ready(function($){
      */
     var tutor_course_builder = $('input[name="tutor_action"]').val();
     if (tutor_course_builder === 'tutor_add_course_builder'){
-        //setInterval(auto_draft_save_course_builder, 5000);
+        setInterval(auto_draft_save_course_builder, 30000);
     }
 
     function auto_draft_save_course_builder(){
-
         var form_data = $('form#tutor-frontend-course-builder').serialize();
-
-        //frontend_course_builder_auto_draft_save
-        //form_data = JSON.parse(JSON.stringify(form_data));
-
         $.ajax({
             //url : _tutorobject.ajaxurl,
-            url : 'http://10.0.1.28/lms/dev/dashboard/create-course/?course_ID=1341',
             type : 'POST',
-            data : form_data+'&tutor_ajax_action=course_builder_save',
+            data : form_data+'&tutor_ajax_action=tutor_course_builder_draft_save',
             beforeSend: function () {
                 $('.tutor-dashboard-builder-draft-btn span').text('Saving...');
             },
@@ -36,12 +30,6 @@ jQuery(document).ready(function($){
                 $('.tutor-dashboard-builder-draft-btn span').text('Save');
             }
         });
-
     }
-
-
-
-
-
 
 });

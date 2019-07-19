@@ -4118,12 +4118,13 @@ class Utils {
 	}
 
 	/**
-	 * @return mixed|void
+	 * @return mixed
 	 *
 	 * Get currency symbol from activated plugin, WC,EDD
 	 *
 	 * @since  v.1.3.4
 	 */
+
 	public function currency_symbol(){
 		$enable_tutor_edd = tutor_utils()->get_option('enable_tutor_edd');
 		$enable_wc = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
@@ -4138,7 +4139,6 @@ class Utils {
 		}
 
 		return apply_filters('get_tutor_currency_symbol', $symbol);
-
 	}
 
 	/**
