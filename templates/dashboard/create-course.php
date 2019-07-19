@@ -24,7 +24,11 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                             <?php $tutor_course_builder_logo_src = apply_filters('tutor_course_builder_logo_src', tutor()->url . 'assets/images/tutor-logo.png'); ?>
                             <img src="<?php echo esc_url($tutor_course_builder_logo_src); ?>" alt="">
                         </div>
-                        <button type="submit" class="tutor-dashboard-builder-draft-btn" name="course_submit_btn" value="save_course_as_draft"><i class="tutor-icon-default"></i><span><?php _e('Save', 'tutor'); ?></span></button>
+                        <button type="submit" class="tutor-dashboard-builder-draft-btn" name="course_submit_btn" value="save_course_as_draft">
+                            <!-- @TODO: Icon must be chenged -->
+                            <i class="tutor-icon-default"></i>
+                            <span><?php _e('Save', 'tutor'); ?></span>
+                        </button>
                     </div>
                 </div>
                 <div class="tutor-col-auto">
@@ -56,10 +60,12 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                     <input type="hidden" name="post_ID" id="post_ID" value="<?php echo get_the_ID(); ?>">
                     <div class="tutor-dashboard-course-builder-wrap">
                         <?php do_action('tutor/dashboard_course_builder_form_field_before'); ?>
+
                         <div class="tutor-course-builder-section tutor-course-builder-info">
                             <div class="tutor-course-builder-section-title">
                                 <h3><i class="tutor-icon-move"></i><span><?php esc_html_e('Course Info', 'tutor'); ?></span></h3>
-                            </div>
+                            </div> <!--.tutor-course-builder-section-title-->
+
                             <div class="tutor-frontend-builder-item-scope">
                                 <div class="tutor-form-group">
                                     <label class="tutor-builder-item-heading">
@@ -67,7 +73,8 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                     </label>
                                     <input type="text" name="title" value="<?php echo get_the_title(); ?>" placeholder="<?php _e('ex. Learn photoshop CS6 from scratch', 'tutor'); ?>">
                                 </div>
-                            </div>
+                            </div> <!--.tutor-frontend-builder-item-scope-->
+
                             <div class="tutor-frontend-builder-item-scope">
                                 <div class="tutor-form-group">
                                     <label> <?php _e('Description', 'tutor'); ?></label>
@@ -81,7 +88,8 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                     wp_editor($post->post_content, 'course_description', $editor_settings);
                                     ?>
                                 </div>
-                            </div>
+                            </div>  <!--.tutor-frontend-builder-item-scope-->
+
                             <div class="tutor-frontend-builder-item-scope">
                                 <div class="tutor-form-group">
                                     <label>
@@ -91,25 +99,51 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                         <?php echo tutor_course_categories_checkbox($course_id); has_category(); ?>
                                     </div>
                                 </div>
-                            </div>
+                            </div> <!--.tutor-frontend-builder-item-scope-->
 
                             <?php
-                            $enable_course_sell_by_woocommerce = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
-                            $enable_tutor_edd = tutor_utils()->get_option('enable_tutor_edd');
-                            if ($enable_course_sell_by_woocommerce || $enable_tutor_edd){
-                                $course_price = tutor_utils()->get_raw_course_price(get_the_ID());
-                                ?>
-                                <div class="tutor-frontend-builder-item-scope">
-                                    <div class="tutor-form-group">
+                                $enable_course_sell_by_woocommerce = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
+                                $enable_tutor_edd = tutor_utils()->get_option('enable_tutor_edd');
+                                if ($enable_course_sell_by_woocommerce || $enable_tutor_edd){
+                                    $course_price = tutor_utils()->get_raw_course_price(get_the_ID());
+                                    ?>
+                                    <div class="tutor-frontend-builder-item-scope">
+                                        <div class="tutor-form-group">
+                                            <label class="tutor-builder-item-heading">
+                                                <?php _e('Course Price', 'tutor'); ?>
+                                            </label>
+                                            <input type="text" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>">
+                                        </div>
+                                    </div>  <!--.tutor-frontend-builder-item-scope-->
+                                    <?php
+                                }
+                            ?>
+
+                            <div class="tutor-frontend-builder-item-scope">
+                                <div class="tutor-form-group">
+                                    <div class="tutor-option-field-label">
                                         <label class="tutor-builder-item-heading">
-                                            <?php _e('Course Price', 'tutor'); ?>
+                                            <?php _e('Level', 'tutor'); ?>
                                         </label>
-                                        <input type="text" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>">
+                                    </div>
+                                    <div class="tutor-course-level-meta">
+                                        <?php
+                                            $levels = tutor_utils()->course_levels();
+                                            $course_level = get_post_meta($course_id, '_tutor_course_level', true);
+                                            foreach ($levels as $level_key => $level){
+                                                ?>
+                                                <label class="tutor-styled-radio">
+                                                    <input type="radio" name="course_level" value="<?php echo $level_key; ?>" <?php $course_level ? checked($level_key, $course_level) : $level_key === 'intermediate' ? checked(1, 1): ''; ?> >
+                                                    <span>
+                                                        <?php echo $level; ?>
+                                                    </span>
+                                                </label>
+                                                <?php
+                                            }
+                                        ?>
                                     </div>
                                 </div>
-                                <?php
-                            }
-                            ?>
+                            </div>  <!--.tutor-frontend-builder-item-scope-->
 
                             <div class="tutor-frontend-builder-item-scope">
                                 <div class="tutor-form-group">
@@ -145,26 +179,25 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
 
                                     </div>
                                 </div>
-                            </div>
+                            </div> <!--.tutor-frontend-builder-item-scope-->
 
+                            <div class="tutor-frontend-builder-item-scope">
+                                <h1 style="color: red;">video metabox here</h1>
+                            </div>
                         </div>
+
+
                         <?php do_action('tutor/dashboard_course_builder_form_field_after'); ?>
                         <div class="tutor-form-row">
                             <div class="tutor-form-col-12">
                                 <div class="tutor-form-group">
                                     <div class="tutor-form-field tutor-course-builder-btn-group">
                                         <button type="submit" class="tutor-button" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save course as draft', 'tutor'); ?></button>
-                                        <?php
-                                        if ($can_publish_course){
-                                            ?>
+                                        <?php if ($can_publish_course){ ?>
                                             <button class="tutor-button tutor-success" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
-                                            <?php
-                                        }else{
-                                            ?>
+                                        <?php }else{ ?>
                                             <button class="tutor-button tutor-success" type="submit" name="course_submit_btn" value="submit_for_review"><?php _e('Submit for Review', 'tutor'); ?></button>
-                                            <?php
-                                        }
-                                        ?>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>

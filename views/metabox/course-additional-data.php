@@ -6,9 +6,6 @@ $durationHours = tutor_utils()->avalue_dot('hours', $duration);
 $durationMinutes = tutor_utils()->avalue_dot('minutes', $duration);
 $durationSeconds = tutor_utils()->avalue_dot('seconds', $duration);
 
-$levels = tutor_utils()->course_levels();
-
-$course_level = get_post_meta($course_id, '_tutor_course_level', true);
 $benefits = get_post_meta($course_id, '_tutor_course_benefits', true);
 $requirements = get_post_meta($course_id, '_tutor_course_requirements', true);
 $target_audience = get_post_meta($course_id, '_tutor_course_target_audience', true);
@@ -47,26 +44,6 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
     </div>
 </div>
 
-
-<div class="tutor-option-field-row">
-    <div class="tutor-option-field-label">
-        <label for="">
-			<?php _e('Level', 'tutor'); ?> <br />
-        </label>
-    </div>
-    <div class="tutor-option-field tutor-course-level-meta">
-	    <?php
-	    foreach ($levels as $level_key => $level){
-	        ?>
-            <label> <input type="radio" name="course_level" value="<?php echo $level_key; ?>" <?php $course_level ? checked($level_key,
-                    $course_level) : $level_key === 'intermediate' ? checked(1, 1): ''; ?> > <?php
-                echo
-                $level; ?> </label>
-		    <?php
-	    }
-	    ?>
-    </div>
-</div>
 
 
 <div class="tutor-option-field-row">
