@@ -4118,6 +4118,30 @@ class Utils {
 	}
 
 	/**
+	 * @return mixed|void
+	 *
+	 * Get currency symbol from activated plugin, WC,EDD
+	 *
+	 * @since  v.1.3.4
+	 */
+	public function currency_symbol(){
+		$enable_tutor_edd = tutor_utils()->get_option('enable_tutor_edd');
+		$enable_wc = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
+
+		$symbol = '&#36;';
+		if ($enable_tutor_edd && function_exists('edd_currency_symbol')){
+			$symbol = edd_currency_symbol();
+		}
+
+		if ($enable_wc && function_exists('get_woocommerce_currency_symbol') ){
+			$symbol = get_woocommerce_currency_symbol();
+		}
+
+		return apply_filters('get_tutor_currency_symbol', $symbol);
+
+	}
+
+	/**
 	 * @param int $user_id
 	 *
 	 * @return bool|mixed

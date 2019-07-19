@@ -117,6 +117,16 @@ final class Tutor{
 		$this->dashboard = new Dashboard();
 
 		/**
+		 * Initialize Tutor AJAX
+		 * @since v.1.3.4
+		 */
+		if (isset($_POST['tutor_ajax_action'])){
+			$action = 'tutor_ajax_action_'.sanitize_text_field($_POST['tutor_ajax_action']);
+			//die($action);
+			do_action($action);
+		}
+
+		/**
 		 * Run Method
 		 * @since v.1.2.0
 		 */
