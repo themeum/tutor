@@ -237,3 +237,12 @@ if (! function_exists('get_tutor_footer')){
 		}
 	}
 }
+
+function unserializeForm($str) {
+	$strArray = explode("&", $str);
+	foreach($strArray as $item) {
+		$array = explode("=", $item);
+		$returndata[] = $array;
+	}
+	return $returndata;
+}
