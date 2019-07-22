@@ -127,7 +127,20 @@ class Options {
 								'default' => '0',
 								'desc'      => __('This will hide the header & footer and enable Spotlight (full-screen) mode for the course learning interface.',	'tutor'),
 							),
-
+							'disable_default_player_youtube' => array(
+								'type'      => 'checkbox',
+								'label'     => __('YouTube Player', 'tutor'),
+								'label_title' => __('Disable default video player on the youtube video', 'tutor'),
+								'default' => '0',
+								'desc'      => __('',	'tutor'),
+							),
+							'disable_default_player_vimeo' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Vimeo Player', 'tutor'),
+								'label_title' => __('Disable default video player on the vimeo video', 'tutor'),
+								'default' => '0',
+								'desc'      => __('',	'tutor'),
+							),
 						)
 					)
 				),

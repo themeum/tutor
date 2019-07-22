@@ -428,8 +428,9 @@ class Course extends Tutor_Base {
 	}
 
 	public function enroll_now(){
+
 		//Checking if action comes from Enroll form
-		if ( ! isset($_POST['tutor_course_action']) || $_POST['tutor_course_action'] !== '_tutor_course_enroll_now' || ! isset($_POST['tutor_course_id']) ){
+		if (tutor_utils()->array_get('tutor_course_action', $_POST) !== '_tutor_course_enroll_now' || ! isset($_POST['tutor_course_id']) ){
 			return;
 		}
 		//Checking Nonce
