@@ -421,7 +421,7 @@ Topicstutor-course-title
 
 .tutor-course-enrolled-wrap p{
   font-weight: 600;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 
@@ -475,6 +475,10 @@ Alert Box Css
 /**
 End Alert box css
  */
+
+.cart-required-login, .cart-required-login a, .cart-required-login form{
+  cursor: pointer;
+}
 
 .single_add_to_cart_button,
 a.tutor-button,
@@ -3550,12 +3554,13 @@ Course question and answer
   position: relative;
   span.tutor-input-prepand {
     position: absolute;
-    height: 100%;
+    height: calc(100% - 2px);
     font-size: 21px;
     line-height: 50px;
     padding: 0 12px;
     background: transparent;
     border-right: 1px solid #DCDFE5;
+    top: 1px;
     + input{
       padding-left: 35px;
     }

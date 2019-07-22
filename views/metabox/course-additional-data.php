@@ -20,7 +20,6 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         <label for=""><?php _e('Total Course Duration', 'tutor'); ?></label>
     </div>
     <div class="tutor-option-field">
-
         <div class="tutor-option-gorup-fields-wrap">
             <div class="tutor-lesson-video-runtime">
 
@@ -49,13 +48,11 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 <div class="tutor-option-field-row">
 	<div class="tutor-option-field-label">
 		<label for="">
-            <?php _e('Benefits of this course', 'tutor'); ?> <br />
-            <p class="text-muted">(<?php _e('What I will learn', 'tutor'); ?>)</p>
+            <?php _e('Benefits of this course (What I will learn)', 'tutor'); ?>
         </label>
 	</div>
-	<div class="tutor-option-field">
+	<div class="tutor-option-field tutor-option-tooltip">
 		<textarea name="course_benefits" rows="2"><?php echo $benefits; ?></textarea>
-
 		<p class="desc">
 			<?php _e('The students will know what they will learn after completing this course, One line per answer', 'tutor'); ?>
 		</p>
@@ -68,7 +65,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 			<?php _e('Requirements/Instructions', 'tutor'); ?> <br />
         </label>
     </div>
-    <div class="tutor-option-field">
+    <div class="tutor-option-field tutor-option-tooltip">
         <textarea name="course_requirements" rows="2"><?php echo $requirements; ?></textarea>
 
         <p class="desc">
@@ -83,7 +80,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 			<?php _e('Targeted Audience', 'tutor'); ?> <br />
         </label>
     </div>
-    <div class="tutor-option-field">
+    <div class="tutor-option-field tutor-option-tooltip">
         <textarea name="course_target_audience" rows="2"><?php echo $target_audience; ?></textarea>
 
         <p class="desc">
@@ -99,7 +96,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 			<?php _e('Material Includes', 'tutor'); ?> <br />
         </label>
     </div>
-    <div class="tutor-option-field">
+    <div class="tutor-option-field tutor-option-tooltip">
         <textarea name="course_material_includes" rows="2"><?php echo $material_includes; ?></textarea>
 
         <p class="desc">
