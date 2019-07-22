@@ -63,12 +63,28 @@ if ( ! class_exists('Tutor')){
 	include_once 'classes/Tutor.php';
 }
 
+/**
+ * @return \TUTOR\Utils
+ * 
+ * Run main instance of the Tutor
+ */
 function tutor_utils(){
 	return new \TUTOR\Utils();
 }
 
-//$tutor = new \TUTOR\init();
-//$tutor->run(); //Boom
+/**
+ * @return \TUTOR\Utils
+ *
+ * alis of tutor_utils()
+ *
+ * @since v.1.3.4
+ */
+
+if ( ! function_exists('tutils')){
+	function tutils(){
+		return tutor_utils();
+	}
+}
 
 /**
  * @return null|\TUTOR\Tutor
