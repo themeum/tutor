@@ -7241,6 +7241,41 @@ input:checked + .btn-slider:before {
   z-index: 99;
 }
 
+@media (max-width: 991px) {
+  .tutor-dashboard-builder-header {
+    position: static;
+  }
+}
+
+.tutor-dashboard-builder-header .tutor-row {
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+@media (max-width: 991px) {
+  .tutor-dashboard-builder-header .tutor-row .tutor-col-auto {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .tutor-dashboard-builder-header .tutor-row .tutor-col-auto:first-child {
+    margin-bottom: 15px;
+  }
+}
+
+.tutor-dashboard-builder-header .tutor-button {
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+@media (max-width: 991px) {
+  .tutor-dashboard-builder-header .tutor-button {
+    padding: 6px 10px;
+  }
+}
+
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7248,6 +7283,9 @@ input:checked + .btn-slider:before {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left .tutor-dashboard-builder-logo {
@@ -7270,6 +7308,13 @@ input:checked + .btn-slider:before {
   -webkit-transition: 300ms;
   transition: 300ms;
   font-weight: 500;
+  white-space: nowrap;
+}
+
+@media (max-width: 991px) {
+  .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left button {
+    border-left: none;
+  }
 }
 
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left button i {
@@ -7289,6 +7334,9 @@ input:checked + .btn-slider:before {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-right a {
@@ -7299,6 +7347,7 @@ input:checked + .btn-slider:before {
   padding: 0 25px;
   -webkit-transition: 300ms;
   transition: 300ms;
+  white-space: nowrap;
 }
 
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-right a i {
@@ -7317,14 +7366,39 @@ input:checked + .btn-slider:before {
   padding: 113px 0 45px;
 }
 
+@media (max-width: 991px) {
+  .tutor-frontend-course-builder-section {
+    padding-top: 60px;
+  }
+  .tutor-frontend-course-builder-section .tutor-col-8,
+  .tutor-frontend-course-builder-section .tutor-col-4 {
+    width: 100%;
+    max-width: 100%;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+  }
+}
+
 .admin-bar .tutor-dashboard-builder-header {
   top: 32px;
 }
 
+@media (max-width: 783px) {
+  .admin-bar .tutor-dashboard-builder-header {
+    top: 46px;
+  }
+}
+
 .tutor-course-builder-upload-tips {
   position: fixed;
-  width: 100%;
   max-width: 370px;
+}
+
+@media (max-width: 991px) {
+  .tutor-course-builder-upload-tips {
+    position: static;
+  }
 }
 
 .tutor-course-builder-upload-tips .tutor-course-builder-tips-title {

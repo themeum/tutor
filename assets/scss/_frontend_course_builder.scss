@@ -6,9 +6,32 @@
 	background: #fff;
 	width: 100%;
 	z-index: 99;
+	@media (max-width: 991px){
+		position: static;
+	}
+	.tutor-row{
+		justify-content: space-between;
+		.tutor-col-auto{
+			@media (max-width: 991px) {
+				flex: 0 0 100%;
+				max-width: 100%;
+				&:first-child{
+					margin-bottom: 15px;
+				}
+			}
+		}
+	}
+	.tutor-button{
+		white-space: nowrap;
+		margin-left: auto;
+		@media (max-width: 991px){
+			padding: 6px 10px;
+		}
+	}
 	.tutor-dashboard-builder-header-left{
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		.tutor-dashboard-builder-logo{
 			padding:0 25px;
 			position: relative;
@@ -25,6 +48,10 @@
 			color: var(--tutor-text-color);
 			transition: 300ms;
 			font-weight: 500;
+			white-space: nowrap;
+			@media (max-width: 991px){
+				border-left: none;
+			}
 			i{
 				font-size: 24px;
 				line-height: 30px;
@@ -39,6 +66,7 @@
 	.tutor-dashboard-builder-header-right{
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		a{
 			font-size: 14px;
 			color: var(--tutor-text-color);
@@ -46,6 +74,7 @@
 			line-height: 36px;
 			padding: 0 25px;
 			transition: 300ms;
+			white-space: nowrap;
 			i{
 				font-size: 36px;
 				line-height: 36px;
@@ -60,21 +89,35 @@
 	}
 }
 
-
 .tutor-frontend-course-builder-section{
 	padding: 113px 0 45px;
+	@media (max-width: 991px) {
+		padding-top: 60px;
+		.tutor-col-8,
+		.tutor-col-4{
+			width: 100%;
+			max-width: 100%;
+			flex: 0 0 100%;
+		}
+	}
 }
 
 .admin-bar{
 	.tutor-dashboard-builder-header{
 		top: 32px;
+		@media (max-width: 783px) {
+			top: 46px;
+		}
 	}
 }
 
 .tutor-course-builder-upload-tips{
 	position: fixed;
-	width: 100%;
+	//width: 100%;
 	max-width: 370px;
+	@media (max-width: 991px) {
+		position: static;
+	}
 	.tutor-course-builder-tips-title{
 		font-size: 16px;
 		color: #8C94A8;
