@@ -20,7 +20,6 @@ if ( ! defined( 'ABSPATH' ) )
 define('TUTOR_VERSION', '1.3.3');
 define('TUTOR_FILE', __FILE__);
 
-
 /**
  * Load tutor text domain for translation
  */
@@ -91,8 +90,9 @@ if ( ! function_exists('tutils')){
  *
  * @since v.1.2.0
  */
-
-function tutor_lms(){
-	return \TUTOR\Tutor::instance();
+if ( ! function_exists('tutor_lms')){
+	function tutor_lms(){
+		return \TUTOR\Tutor::instance();
+	}
 }
 $GLOBALS['tutor'] = tutor_lms();

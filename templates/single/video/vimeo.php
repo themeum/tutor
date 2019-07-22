@@ -21,8 +21,10 @@ do_action('tutor_lesson/single/before/video/vimeo');
 
 		<?php
 		if ($disable_default_player_vimeo){
-		    ?>
-            <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+			?>
+            <div class="tutor-video-embeded-wrap">
+                <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            </div>
 			<?php
 		}else{
 			?>
