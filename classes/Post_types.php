@@ -18,6 +18,9 @@ class Post_types{
 		add_action( 'init', array($this, 'register_topic_post_types') );
 		add_action( 'init', array($this, 'register_assignments_post_types') );
 
+		add_filter( 'gutenberg_can_edit_post_type', array( $this, 'gutenberg_can_edit_post_type' ), 10, 2 );
+		add_filter( 'use_block_editor_for_post_type', array( $this, 'gutenberg_can_edit_post_type' ), 10, 2 );
+
 		/**
 		 * Customize the message of course
 		 */
@@ -25,7 +28,6 @@ class Post_types{
 	}
 	
 	public function register_course_post_types() {
-		$enable_gutenberg = (bool) tutor_utils()->get_option('enable_gutenberg_course_edit');
 
 		$labels = array(
 			'name'               => _x( 'Courses', 'post type general name', 'tutor' ),
@@ -60,7 +62,7 @@ class Post_types{
 			'menu_position'      => null,
 			'taxonomies'         => array( 'course-category', 'course-tag' ),
 			'supports'           => array( 'title', 'editor', 'thumbnail', 'excerpt'),
-			'show_in_rest'       => $enable_gutenberg,
+			'show_in_rest'       => true,
 
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_course',
@@ -106,6 +108,7 @@ class Post_types{
 			'show_admin_column'     => true,
 			'update_count_callback' => '_update_post_term_count',
 			'query_var'             => true,
+			'show_in_rest'          => true,
 			'rewrite'               => array( 'slug' => 'course-category' ),
 		);
 
@@ -137,6 +140,7 @@ class Post_types{
 			'show_admin_column'     => true,
 			'update_count_callback' => '_update_post_term_count',
 			'query_var'             => true,
+			'show_in_rest'          => true,
 			'rewrite'               => array( 'slug' => 'course-tag' ),
 		);
 
@@ -346,6 +350,20 @@ class Post_types{
 		}
 
 		return $messages;
+	}
+
+	/**
+	 * @param $can_edit
+	 * @param $post_type
+	 *
+	 * @return bool
+	 *
+	 * Enable / Disable Gutenberg Editor
+	 * @since v.1.3.4
+	 */
+	public function gutenberg_can_edit_post_type( $can_edit, $post_type ) {
+		$enable_gutenberg = (bool) tutor_utils()->get_option('enable_gutenberg_course_edit');
+		return $this->course_post_type === $post_type ? $enable_gutenberg : $can_edit;
 	}
 
 }
