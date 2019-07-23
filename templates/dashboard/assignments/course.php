@@ -10,9 +10,9 @@ $assignments = tutor_utils()->get_assignments_by_course($course_id);
 <table>
     <thead>
     <tr>
-        <th>Course Name</th>
-        <th>Total Mark</th>
-        <th>Total Submit</th>
+        <th><?php _e('Course Name', 'tutor'); ?></th>
+        <th><?php _e('Total Mark', 'tutor'); ?></th>
+        <th><?php _e('Total Submit', 'tutor'); ?></th>
         <th>#</th>
     </tr>
     </thead>

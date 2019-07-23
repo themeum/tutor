@@ -16,7 +16,6 @@ $offset = ($current_page-1)*$per_page;
 
 $current_user = get_current_user_id();
 $assignments = tutor_utils()->get_assignments_by_instructor(null,  compact('per_page', 'offset'));
-
 ?>
 
 <table>
@@ -33,7 +32,7 @@ $assignments = tutor_utils()->get_assignments_by_instructor(null,  compact('per_
 	foreach ($assignments->results as $item){
 		$max_mark = tutor_utils()->get_assignment_option($item->ID, 'total_mark');
 		$course_id = tutor_utils()->get_course_id_by_assignment($item->ID);
-		if(get_post_status($course_id) !== 'publish') continue;
+		//if(get_post_status($course_id) !== 'publish') continue;
 		$course_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/course');
 		$submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/submitted');
 		$comment_count = $wpdb->get_var("SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = $item->ID");
