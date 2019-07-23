@@ -150,7 +150,6 @@ class Course extends Tutor_Base {
         course_builder_section_wrap($this->instructors_metabox($echo = false), 'Instructors');
         course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), 'Additional Data');
         course_builder_section_wrap($this->announcements_metabox($echo = false), 'Announcements');
-        course_builder_section_wrap($this->announcements_metabox($echo = false), 'Announcements');
 		do_action('tutor_course_builder_metabox_after', get_the_ID());
 	}
 
