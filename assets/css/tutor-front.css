@@ -4675,7 +4675,10 @@ Course question and answer
 
 .tutor-option-field .select2-container .select2-search__field,
 .tutor-form-group .select2-container .select2-search__field {
-  margin: 8px 3px;
+  padding: 8px 3px 8px 6px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .tutor-option-field .select2-container .select2-search__field::-webkit-input-placeholder,
@@ -7600,6 +7603,7 @@ input:checked + .btn-slider:before {
 .tutor-dashboard-assignment-table tr th, .tutor-dashboard-assignment-table tr td {
   border: 1px solid #DCDFE5;
   vertical-align: middle;
+  padding: 20px;
 }
 
 .tutor-dashboard-assignment-table tr th:not(:first-child), .tutor-dashboard-assignment-table tr td:not(:first-child) {

@@ -195,7 +195,7 @@ if ( ! function_exists('course_builder_section_wrap')) {
 		?>
         <div class="tutor-course-builder-section">
             <div class="tutor-course-builder-section-title">
-                <h3><i class="tutor-icon-move"></i> <span><?php echo $title; ?></span></h3>
+                <h3><i class="tutor-icon-down"></i> <span><?php echo $title; ?></span></h3>
             </div>
 			<?php echo $content; ?>
         </div>

@@ -63,7 +63,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
 
                         <div class="tutor-course-builder-section tutor-course-builder-info">
                             <div class="tutor-course-builder-section-title">
-                                <h3><i class="tutor-icon-move"></i><span><?php esc_html_e('Course Info', 'tutor'); ?></span></h3>
+                                <h3><i class="tutor-icon-down"></i><span><?php esc_html_e('Course Info', 'tutor'); ?></span></h3>
                             </div> <!--.tutor-course-builder-section-title-->
 
                             <div class="tutor-frontend-builder-item-scope">
@@ -192,9 +192,9 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
 
                                             <div class="tutor-col-7">
                                                 <div class="builder-course-thumbnail-upload-wrap">
-                                                    <h4><?php echo sprintf(__("Important Guidelines: %1\$s 700x430 pixels %2\$s %3\$s File Support: %1\$s jpg, .jpeg,. gif, or .png %2\$s no text on the image.", "tutor"), "<strong>", "</strong>", "<br>") ?></h4>
+                                                    <h4><?php echo sprintf(__("Important Guideline: %1\$s 700x430 pixels %2\$s %3\$s File Support: %1\$s jpg, .jpeg,. gif, or .png %2\$s no text on the image.", "tutor"), "<strong>", "</strong>", "<br>") ?></h4>
                                                     <input type="hidden" id="tutor_course_thumbnail_id" name="tutor_course_thumbnail_id" value="<?php echo $post_thumbnail_id; ?>">
-                                                    <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button"><?php _e('Upload Image', 'tutor'); ?></a>
+                                                    <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button"><?php _e('Upload Image', 'tutor'); ?></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -230,11 +230,14 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                     <div class="tutor-course-builder-upload-tips">
                         <h3 class="tutor-course-builder-tips-title"><i class="tutor-icon-light-bulb"></i><?php _e('Course Upload Tips', 'tutor') ?></h3>
                         <ul>
-                            <li><?php _e("Prerequisites", 'tutor');?></li>
-                            <li><?php _e("NO Node.js knowledge is required at all!", 'tutor');?></li>
-                            <li><?php _e("NO other programming language knowledge (besides JavaScript, see next point) is required", 'tutor');?></li>
-                            <li><?php _e("Basic JavaScript knowledge is assumed though - you should at least be willing to pick it up whilst going through the course. A JS refresher module exists to bring you up to the latest syntax quickly", 'tutor');?></li>
-                            <li><?php _e("Basic HTML + CSS knowledge helps but is NOT required", 'tutor'); ?></li>
+                            <li><?php _e("Set the Course Price option or make it free.", 'tutor');?></li>
+                            <li><?php _e("Standard size for course thumbnail is 700x430.", 'tutor');?></li>
+                            <li><?php _e("Video section controls the course overview video.", 'tutor');?></li>
+                            <li><?php _e("Course Builder is where you create & organize a course.", 'tutor');?></li>
+                            <li><?php _e("Add Topics in the Course Builder section to create lessons, quizzes, and assignments.", 'tutor'); ?></li>
+                            <li><?php _e("Prerequisites refers to the fundamental courses to complete before taking this particular course.", 'tutor'); ?></li>
+                            <li><?php _e("Information from the Additional Data section shows up on the course single page.", 'tutor'); ?></li>
+                            <li><?php _e("Make Announcements to notify any important notes to all enrolled students at once.", 'tutor'); ?></li>
                         </ul>
                     </div>
                 </div> <!--.tutor-col-4-->

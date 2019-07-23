@@ -54,7 +54,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 	<div class="tutor-option-field tutor-option-tooltip">
 		<textarea name="course_benefits" rows="2"><?php echo $benefits; ?></textarea>
 		<p class="desc">
-			<?php _e('The students will know what they will learn after completing this course, One line per answer', 'tutor'); ?>
+			<?php _e('The students will know what they will learn after completing this course (One per line)', 'tutor'); ?>
 		</p>
 	</div>
 </div>
@@ -69,7 +69,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         <textarea name="course_requirements" rows="2"><?php echo $requirements; ?></textarea>
 
         <p class="desc">
-			<?php _e('One per line, additional requirements or special instructions for the students.', 'tutor'); ?>
+			<?php _e('Additional requirements or special instructions for the students (One per line)', 'tutor'); ?>
         </p>
     </div>
 </div>
@@ -84,7 +84,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         <textarea name="course_target_audience" rows="2"><?php echo $target_audience; ?></textarea>
 
         <p class="desc">
-			<?php _e('Specify the targeted audience who will benefit most from the course, One line per target audience', 'tutor'); ?>
+			<?php _e('Specify the targeted audience who will benefit most from the course, One line per target audience (One per line)', 'tutor'); ?>
         </p>
     </div>
 </div>
@@ -100,7 +100,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         <textarea name="course_material_includes" rows="2"><?php echo $material_includes; ?></textarea>
 
         <p class="desc">
-			<?php _e('A list of assets you will be providing for the students in this course', 'tutor'); ?>
+			<?php _e('A list of assets you will be providing for the students in this course (One per line)', 'tutor'); ?>
         </p>
     </div>
 </div>

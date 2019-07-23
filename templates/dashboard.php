@@ -68,7 +68,7 @@ do_action('tutor_dashboard/before/wrap'); ?>
 							    $course_type = tutor()->course_post_type;
 								?>
                                 <a class="tutor-btn bordered-btn" href="<?php echo apply_filters('frontend_course_create_url', admin_url("post-new.php?post_type=".tutor()->course_post_type)); ?>">
-									<?php echo sprintf(__('%s Add A New Course ', 'tutor'), '<i class="tutor-icon-video-camera"></i> &nbsp;'); ?>
+									<?php echo sprintf(__('%s Add A New Course ', 'tutor'), '<i class="tutor-icon-checkbox-pen-outline"></i> &nbsp;'); ?>
                                 </a>
 								<?php
 							}else{
