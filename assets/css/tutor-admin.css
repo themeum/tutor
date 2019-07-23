@@ -129,6 +129,17 @@ Option Field
     width: 400px;
     min-height: 35px
 }
+
+.tutor_lesson_modal_form .tutor-option-field-row input[type=text],
+.tutor_lesson_modal_form .tutor-option-field-row input[type=email],
+.tutor_lesson_modal_form .tutor-option-field-row input[type=number],
+.tutor_lesson_modal_form .tutor-option-field-row input[type=password],
+.tutor_lesson_modal_form .tutor-option-field-row textarea,
+.tutor_lesson_modal_form .tutor-option-field-row .tutor-field-type-slider{
+    width: 100%;
+    display: block;
+}
+
 .tutor-option-field {
     display: block;
     margin: 0 0 0 200px;
@@ -146,9 +157,15 @@ Option Field
 }
 .tutor_lesson_modal_form .tutor-option-field-label {
     display: block;
-    float: left;
-    width: 200px;
+    float: none;
+    width: 100%;
+    margin-bottom: 25px;
 }
+
+.tutor-lesson-attachments-metabox{
+    margin-top: 30px;
+}
+
 .tutor-option-field-label label {
     display: block;
     font-weight: 600

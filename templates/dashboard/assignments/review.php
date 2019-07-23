@@ -17,6 +17,9 @@ if(!$assignment_submitted_id){
 
 $submitted_assignment = tutor_utils()->get_assignment_submit_info($assignment_submitted_id);
 
+echo '<pre>';
+var_dump($assignment_submitted_id);
+die(print_r($submitted_assignment));
 
 $max_mark = tutor_utils()->get_assignment_option($submitted_assignment->comment_post_ID, 'total_mark');
 

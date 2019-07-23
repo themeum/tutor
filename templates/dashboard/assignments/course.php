@@ -2,18 +2,18 @@
 global $wpdb;
 $course_id = (int) sanitize_text_field(tutor_utils()->array_get('course_id', $_GET));
 $assignments = tutor_utils()->get_assignments_by_course($course_id);
+
+if($assignments->count){
 ?>
 
 <h3><?php echo get_the_title($course_id) ?></h3>
-
-
 <table>
     <thead>
     <tr>
         <th><?php _e('Course Name', 'tutor'); ?></th>
         <th><?php _e('Total Mark', 'tutor'); ?></th>
         <th><?php _e('Total Submit', 'tutor'); ?></th>
-        <th>#</th>
+        <th>&nbsp;</th>
     </tr>
     </thead>
     <tbody>
@@ -21,11 +21,9 @@ $assignments = tutor_utils()->get_assignments_by_course($course_id);
 	foreach ($assignments->results as $item){
 		$max_mark = tutor_utils()->get_assignment_option($item->ID, 'total_mark');
 		$course_id = tutor_utils()->get_course_id_by_assignment($item->ID);
-		if(get_post_status($course_id) !== 'publish') continue;
 		$course_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/course');
 		$submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/submitted');
 		$comment_count = $wpdb->get_var("SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = $item->ID");
-
 		// @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish
 		?>
         <tr>
@@ -42,3 +40,6 @@ $assignments = tutor_utils()->get_assignments_by_course($course_id);
 	?>
     </tbody>
 </table>
+<?php }else{
+    echo '<p>'.__('No assignment available', 'tutor' ).'</p>';
+}

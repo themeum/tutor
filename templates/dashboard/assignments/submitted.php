@@ -68,7 +68,7 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
 
         ?>
 
-        <p><?php _e('No data available', 'tutor'); ?></p>
+        <p><?php _e('No assignment has been submitted yet', 'tutor'); ?></p>
     <?php
 
     }
