@@ -481,7 +481,7 @@ if ( ! function_exists('get_tutor_course_author')) {
 
 function get_tutor_course_author_id(){
 	global $post;
-	return $post->post_author;
+	return (int) $post->post_author;
 }
 
 /**
