@@ -35,7 +35,7 @@
 	</div>
 
 	<div class="tutor-add-instructor-button-wrap">
-        <button type="button" class="tutor-btn tutor-add-instructor-btn"> <i class="tutor-icon-add-friend"></i> <?php _e('Add More Instructor', 'tutor'); ?> </button>
+        <button type="button" class="tutor-btn tutor-add-instructor-btn bordered-btn"> <i class="tutor-icon-add-friend"></i> <?php _e('Add More Instructor', 'tutor'); ?> </button>
 	</div>
 
     <?php

@@ -30,7 +30,7 @@
 </div>
 <div class="tutor-option-field-row">
     <div class="submit">
-        <button type="submit" name="submit" id="submit" class="tutor-btn"><i class="tutor-icon-speaker"></i><?php _e('Add Announcement', 'tutor'); ?></button>
+        <button type="submit" name="submit" id="submit" class="tutor-btn bordered-btn"><i class="tutor-icon-speaker"></i><?php _e('Add Announcement', 'tutor'); ?></button>
     </div>
 </div>
 
