@@ -105,8 +105,25 @@ Animation Spinner
 /**
  * Icon Contents
  */
-
-
+.tutor-icon-coding:before {
+    content: "\e98f";
+}
+.tutor-icon-vimeo:before {
+    content: "\e990";
+}
+.tutor-icon-link:before {
+    content: "\e991";
+}
+.tutor-icon-html5:before {
+    content: "\e992";
+}
+.tutor-icon-upload:before {
+    content: "\e993";
+}
+.tutor-icon-save:before {
+    content: "\e994";
+    color: #4b5981;
+}
 .tutor-icon-search-file:before {
     content: "\e989";
 }

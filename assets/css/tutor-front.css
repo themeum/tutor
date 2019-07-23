@@ -4656,6 +4656,42 @@ Course question and answer
   margin-bottom: 20px;
 }
 
+.tutor-option-field .select2-container ul.select2-selection__rendered,
+.tutor-form-group .select2-container ul.select2-selection__rendered {
+  padding: 4px 9px;
+  display: block;
+}
+
+.tutor-option-field .select2-container li.select2-selection__choice,
+.tutor-form-group .select2-container li.select2-selection__choice {
+  background: #EBEEF0;
+  color: #606C8F;
+  line-height: 29px;
+  border-radius: 3px;
+  padding: 0 9px;
+  margin: 5px;
+  border: none;
+}
+
+.tutor-option-field .select2-container .select2-search__field,
+.tutor-form-group .select2-container .select2-search__field {
+  margin: 8px 3px;
+}
+
+.tutor-option-field .select2-container .select2-selection--single,
+.tutor-option-field .select2-container .select2-selection--multiple,
+.tutor-form-group .select2-container .select2-selection--single,
+.tutor-form-group .select2-container .select2-selection--multiple {
+  border-color: #DCDFE5;
+}
+
+.tutor-option-field .select2-container.select2-container--focus .select2-selection--single,
+.tutor-option-field .select2-container.select2-container--focus .select2-selection--multiple,
+.tutor-form-group .select2-container.select2-container--focus .select2-selection--single,
+.tutor-form-group .select2-container.select2-container--focus .select2-selection--multiple {
+  border-color: var(--tutor-primary-color);
+}
+
 .tutor-option-field textarea,
 .tutor-form-group textarea {
   line-height: 26px;
