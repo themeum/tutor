@@ -1987,7 +1987,7 @@ class Utils {
 	 */
 
 	public function tutor_dashboard_pages(){
-		$nav_items = array(
+		$nav_items = apply_filters('tutor_dashboard/nav_items', array(
 			'index'             => __('Dashboard', 'tutor'),
 			'my-profile'        => __('My Profile', 'tutor'),
 			'create-course'     => array('title' => __('Create Course', 'tutor'), 'show_ui' => false, 'auth_cap' => tutor()->instructor_role),
@@ -2001,11 +2001,16 @@ class Utils {
 			'withdraw'          => array('title' => __('Withdraw', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 
 			'purchase_history'  => __('Purchase History', 'tutor'),
+		));
+
+		$new_navs = array(
 			'settings'          => __('Settings', 'tutor'),
 			'logout'            => __('Logout', 'tutor'),
 		);
 
-		return apply_filters('tutor_dashboard/nav_items', $nav_items);
+		$all_nav_items = array_merge($nav_items, $new_navs);
+
+		return apply_filters('tutor_dashboard/nav_items_all', $all_nav_items);
 	}
 
 	/**
