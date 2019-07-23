@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -206,6 +206,28 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.3.4 - 23 July, 2019 =
+
+* Added: Frontend Drag and Drop Course Builder with quiz builder and assignment creation options
+* Added: Lifetime deal license checking and validation to get regular update and pro features in the pro version.
+* Added: add new instructor action hook and filter hook,
+`do_action('tutor_add_new_instructor_form_fields_before'); `, `do_action('tutor_add_new_instructor_form_fields_after');`, `do_action('tutor_add_new_instructor_before');`, `do_action('tutor_add_new_instructor_after', $user_id);`, `apply_filters('add_new_instructor_data', $userdata)`
+* Added: Dashboard subpage and dashboard menu item load permission basis
+* Added: Topic toggle in lesson single page and information about toggle icon added
+* Added: Course content is now linkable on the enrolled course page
+* Added: Filter `apply_filters('get_tutor_load_template_variables', $variables);` at `tutor_load_template()` function
+Added: action hook `do_action('tutor_load_template_before', $template, $variables);`, `do_action('tutor_load_template_before_after', $template, $variables);` at `tutor_load_template()` function
+* Added: create and attached product with course while creating a course from frontend
+* Added: Full-Screen Mode, students now can learn the lesson in full-screen mode without any inturruption.
+* Added: Enable disable settings for YouTube and Vimeo Video default player
+* Added: a new helper functions called `tutils()`, it's alies of `tutor_utils()`
+* Fixed: complete lesson button from mobile view.
+* Updated: Tutor frontend dashboard menu title now could be string or array with the `show_ui` key in the`array()`, show_ui key will be true or false to show it in the menu item visible or not.
+* Fixed: Total Enrolled count in course details page
+* Fixed: Course content looping count, lesson exact count by course content in the lesson.
+* Fixed: some addon loading issue, tutor pro classes autoloading issue"
+* Fixed: Delete video meta when select none from the video source in the course and lesson option.
 
 = 1.3.3 - 21 June, 2019 =
 

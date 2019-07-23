@@ -96,7 +96,9 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                         <?php _e('Choose a category', 'tutor'); ?>
                                     </label>
                                     <div class="tutor-form-field-course-categories">
-                                        <?php echo tutor_course_categories_checkbox($course_id); has_category(); ?>
+                                        <?php //echo tutor_course_categories_checkbox($course_id);
+                                        echo tutor_course_categories_dropdown($course_id, array('classes' => 'tutor_select2'));
+                                        ?>
                                     </div>
                                 </div>
                             </div> <!--.tutor-frontend-builder-item-scope-->

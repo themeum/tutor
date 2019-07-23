@@ -33,10 +33,11 @@ if ( ! function_exists('tutor_placeholder_img_src')) {
  */
 
 if ( ! function_exists('tutor_course_categories_dropdown')){
-	function tutor_course_categories_dropdown($args = array()){
+	function tutor_course_categories_dropdown($post_ID = 0, $args = array()){
 
 		$default = array(
-			'name'  => 'tutor_course_category',
+			'classes'  => '',
+			'name'  => 'tax_input[course-category]',
 			'multiple' => true,
 		);
 
@@ -53,12 +54,15 @@ if ( ! function_exists('tutor_course_categories_dropdown')){
 
 		extract($args);
 
+		$classes = (array) $classes;
+		$classes = implode(' ', $classes);
+
 		$categories = tutor_utils()->get_course_categories();
 
 		$output = '';
-		$output .= "<select name='{$name}' {$multiple_select}>";
+		$output .= "<select name='{$name}' {$multiple_select} class='{$classes}' '>";
 		$output .= "<option value=''>Select a category</option>";
-		$output .= _generate_categories_dropdown_option($categories);
+		$output .= _generate_categories_dropdown_option($post_ID, $categories, $args);
 		$output .= "</select>";
 
 		return $output;
@@ -77,17 +81,30 @@ if ( ! function_exists('tutor_course_categories_dropdown')){
  */
 
 if ( ! function_exists('_generate_categories_dropdown_option')){
-	function _generate_categories_dropdown_option($categories, $parent_name = ''){
+	function _generate_categories_dropdown_option($post_ID = 0, $categories, $args = array(), $depth = 0){
 		$output = '';
 
 		if (tutor_utils()->count($categories)) {
 			foreach ( $categories as $category_id => $category ) {
+			    if ( ! $category->parent){
+				    $depth = 0;
+			    }
+
 				$childrens = tutor_utils()->array_get( 'children', $category );
-				$output .= "<option value='{$category->term_id}'>{$parent_name}{$category->name} </option>";
+				$has_in_term = has_term( $category->term_id, 'course-category', $post_ID );
+
+				$depth_seperator = '';
+				if ($depth){
+				    for ($depth_i = 0; $depth_i < $depth; $depth_i++){
+					    $depth_seperator.='-';
+                    }
+                }
+
+				$output .= "<option ".selected($has_in_term, true, false)." > {$depth_seperator} {$category->name}</option> ";
 
 				if ( tutor_utils()->count( $childrens ) ) {
-					$parent_name.= "&nbsp;&nbsp;&nbsp;&nbsp;";
-					$output .= _generate_categories_dropdown_option( $childrens, $parent_name );
+					$depth++;
+					$output .= _generate_categories_dropdown_option($post_ID,$childrens, $args, $depth);
 				}
 			}
 		}
@@ -119,7 +136,6 @@ if ( ! function_exists('tutor_course_categories_checkbox')){
 		extract($args);
 
 		$categories = tutor_utils()->get_course_categories();
-
 		$output = '';
 		$output .= __tutor_generate_categories_checkbox($post_ID, $categories, $args);
 
