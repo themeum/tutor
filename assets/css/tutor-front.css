@@ -2952,7 +2952,7 @@ Instructor
 
 .tutor-topics-in-single-lesson .tutor-topics-title h3 {
   margin: 0;
-  padding: 10px 17px;
+  padding: 10px 37px 10px 17px;
   font-size: 16px;
   color: var(--tutor-primary-color);
   font-weight: 500;
@@ -3142,7 +3142,7 @@ span.toogle-informaiton-icon {
 }
 
 .tutor-lesson-content-area, .tutor-quiz-single-wrap {
-  margin: 0 100px;
+  margin: 0 100px 80px;
 }
 
 @media (max-width: 991px) {
@@ -7092,88 +7092,6 @@ Tutor Media Upload
   margin-left: 30px;
 }
 
-/*attachments*/
-.tutor-course-builder-attachements {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  margin-left: -30px;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-}
-
-.tutor-course-builder-attachements .tutor-added-attachment {
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 calc(25% - 30px);
-  flex: 0 0 calc(25% - 30px);
-  max-width: calc(25% - 30px);
-  border: 1px solid #DCDFE5;
-  padding: 35px 20px 20px;
-  position: relative;
-  text-align: center;
-  margin-left: 30px;
-  margin-bottom: 30px;
-  border-radius: 4px;
-  -webkit-transition: 300ms;
-  transition: 300ms;
-}
-
-.tutor-course-builder-attachements .tutor-added-attachment i {
-  font-size: 58px;
-  line-height: 58px;
-  margin-bottom: 25px;
-  display: block;
-}
-
-.tutor-course-builder-attachements .tutor-added-attachment .tutor-delete-attachment {
-  position: absolute;
-  height: 22px;
-  width: 22px;
-  border: 1px solid #DCDFE5;
-  text-align: center;
-  line-height: 22px;
-  top: -1px;
-  right: -1px;
-  font-size: 10px;
-  border-top-right-radius: 4px;
-  color: #D71830;
-  opacity: 0;
-  -webkit-transition: 300ms;
-  transition: 300ms;
-}
-
-.tutor-course-builder-attachements .tutor-added-attachment:hover,
-.tutor-course-builder-attachements .tutor-added-attachment:hover .tutor-delete-attachment {
-  border-color: #D71830;
-  opacity: 1;
-}
-
-.tutor-course-builder-attachements .tutor-added-attachment span {
-  display: block;
-}
-
-.tutor-course-builder-attachements .tutor-added-attachment span a {
-  font-size: 14px;
-  display: block;
-  line-height: 20px;
-  color: #606C8F;
-}
-
-.tutor-course-builder-btn-group {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: reverse;
-  -ms-flex-direction: row-reverse;
-  flex-direction: row-reverse;
-}
-
 /* End Tutor FrontEnd Course Builder*/
 .tutor-addons-list .plugin-icon {
   height: 120px;
@@ -7488,44 +7406,136 @@ input:checked + .btn-slider:before {
   align-items: center;
 }
 
-.tutor-option-tooltip.tutor-option-field {
-  position: relative;
+/*
+ * Course Builder Attachments
+ */
+.tutor-course-builder-attachements {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: -30px;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
-.tutor-option-tooltip.tutor-option-field p.desc {
-  position: absolute;
-  left: calc(100% + 16px);
-  background: #2A344F;
-  width: 160px;
-  padding: 10px 13px;
-  opacity: 0;
-  visibility: hidden;
+.tutor-course-builder-attachements .tutor-added-attachment {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 calc(25% - 30px);
+  flex: 0 0 calc(25% - 30px);
+  max-width: calc(25% - 30px);
+  border: 1px solid #DCDFE5;
+  padding: 35px 20px 20px;
+  position: relative;
+  text-align: center;
+  margin-left: 30px;
+  margin-bottom: 30px;
+  border-radius: 4px;
   -webkit-transition: 300ms;
   transition: 300ms;
-  z-index: 98;
-  top: 10px;
-  color: #fff;
-  border-radius: 12px;
-  font-size: 12px;
-  font-style: normal;
+  min-width: 120px;
 }
 
-.tutor-option-tooltip.tutor-option-field p.desc::before {
-  content: url("data:image/svg+xml,%3Csvg width='14' height='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 8.139C5.339 5.482 8.671 2.903 9.998.403c1.99-3.75 5.481 21.94 1.567 16.037C8.955 12.505 5.1 9.738 0 8.139z' fill='%232A344F' fill-rule='evenodd'/%3E%3C/svg%3E");
+@media (max-width: 480px) {
+  .tutor-course-builder-attachements .tutor-added-attachment {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 calc(50% - 30px);
+    flex: 0 0 calc(50% - 30px);
+    max-width: calc(50% - 30px);
+  }
+}
+
+.tutor-course-builder-attachements .tutor-added-attachment i {
+  font-size: 58px;
+  line-height: 58px;
+  margin-bottom: 25px;
+  display: block;
+}
+
+.tutor-course-builder-attachements .tutor-added-attachment .tutor-delete-attachment {
   position: absolute;
-  left: -10px;
-  top: 16px;
+  height: 22px;
+  width: 22px;
+  border: 1px solid #DCDFE5;
+  text-align: center;
+  line-height: 22px;
+  top: -1px;
+  right: -1px;
+  font-size: 10px;
+  border-top-right-radius: 4px;
+  color: #D71830;
+  opacity: 0;
+  -webkit-transition: 300ms;
+  transition: 300ms;
 }
 
-.tutor-option-tooltip.tutor-option-field:hover p.desc {
+.tutor-course-builder-attachements .tutor-added-attachment:hover,
+.tutor-course-builder-attachements .tutor-added-attachment:hover .tutor-delete-attachment {
+  border-color: #D71830;
   opacity: 1;
-  visibility: visible;
 }
 
-.tutor-option-tooltip.tutor-option-field input:focus + p.desc,
-.tutor-option-tooltip.tutor-option-field textarea:focus + p.desc {
-  opacity: 1;
-  visibility: visible;
+.tutor-course-builder-attachements .tutor-added-attachment span {
+  display: block;
+}
+
+.tutor-course-builder-attachements .tutor-added-attachment span a {
+  font-size: 14px;
+  display: block;
+  line-height: 20px;
+  color: #606C8F;
+}
+
+.tutor-course-builder-btn-group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+
+@media (min-width: 992px) {
+  .tutor-option-tooltip.tutor-option-field {
+    position: relative;
+  }
+  .tutor-option-tooltip.tutor-option-field p.desc {
+    position: absolute;
+    left: calc(100% + 16px);
+    background: #2A344F;
+    width: 160px;
+    padding: 10px 13px;
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: 300ms;
+    transition: 300ms;
+    z-index: 98;
+    top: 10px;
+    color: #fff;
+    border-radius: 12px;
+    font-size: 12px;
+    font-style: normal;
+  }
+  .tutor-option-tooltip.tutor-option-field p.desc::before {
+    content: url("data:image/svg+xml,%3Csvg width='14' height='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 8.139C5.339 5.482 8.671 2.903 9.998.403c1.99-3.75 5.481 21.94 1.567 16.037C8.955 12.505 5.1 9.738 0 8.139z' fill='%232A344F' fill-rule='evenodd'/%3E%3C/svg%3E");
+    position: absolute;
+    left: -10px;
+    top: 16px;
+  }
+  .tutor-option-tooltip.tutor-option-field:hover p.desc {
+    opacity: 1;
+    visibility: visible;
+  }
+  .tutor-option-tooltip.tutor-option-field input:focus + p.desc,
+  .tutor-option-tooltip.tutor-option-field textarea:focus + p.desc {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 /*# sourceMappingURL=tutor-front.css.map */

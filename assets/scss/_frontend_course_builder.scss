@@ -176,3 +176,77 @@
 		align-items: center;
 	}
 }
+
+/*
+ * Course Builder Attachments
+ */
+
+
+.tutor-course-builder-attachements{
+	display: flex;
+	margin-left: -30px;
+	flex-wrap: wrap;
+}
+.tutor-course-builder-attachements .tutor-added-attachment{
+	flex: 0 0 calc(25% - 30px);
+	max-width: calc(25% - 30px);
+	border: 1px solid #DCDFE5;
+	padding: 35px 20px 20px;
+	position: relative;
+	text-align: center;
+	margin-left: 30px;
+	margin-bottom: 30px;
+	border-radius: 4px;
+	transition: 300ms;
+	min-width: 120px;
+	@media (max-width: 480px) {
+		flex: 0 0 calc(50% - 30px);
+		max-width: calc(50% - 30px);
+	}
+}
+.tutor-course-builder-attachements .tutor-added-attachment i{
+	font-size: 58px;
+	line-height: 58px;
+	margin-bottom: 25px;
+	display: block;
+}
+.tutor-course-builder-attachements .tutor-added-attachment .tutor-delete-attachment{
+	position: absolute;
+	height: 22px;
+	width: 22px;
+	border: 1px solid #DCDFE5;
+	text-align: center;
+	line-height: 22px;
+	top: -1px;
+	right: -1px;
+	font-size: 10px;
+	border-top-right-radius: 4px;
+	color: #D71830;
+	opacity: 0;
+	transition: 300ms;
+}
+
+
+.tutor-course-builder-attachements .tutor-added-attachment:hover,
+.tutor-course-builder-attachements .tutor-added-attachment:hover .tutor-delete-attachment{
+	border-color: #D71830;
+	opacity: 1;
+}
+
+
+.tutor-course-builder-attachements .tutor-added-attachment span{
+	display: block;
+}
+.tutor-course-builder-attachements .tutor-added-attachment span a{
+	font-size: 14px;
+	display: block;
+	line-height: 20px;
+	color: #606C8F;
+}
+
+.tutor-course-builder-btn-group{
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	flex-direction: row-reverse;
+}
