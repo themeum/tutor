@@ -58,7 +58,10 @@
 				margin-right: 9px;
 			}
 			&:hover{
-				color: var(--tutor-primary-color)
+				color: var(--tutor-primary-color);
+				i{
+					color: var(--tutor-primary-color)
+				}
 			}
 			
 		}

@@ -3596,6 +3596,18 @@ Course question and answer
   }
   .select2-search__field{
     margin: 8px 3px;
+    &::-webkit-input-placeholder {
+      color: #ABAFB6;
+    }
+    &::-moz-placeholder {
+      color: #ABAFB6;
+    }
+    &:-ms-input-placeholder {
+      color: #ABAFB6;
+    }
+    &:-moz-placeholder {
+      color: #ABAFB6;
+    }
   }
   .select2-selection--single,
   .select2-selection--multiple{
@@ -4626,10 +4638,10 @@ p.course-empty-content {
   background: #EBEEF0;
   padding: 0px;
 }
-
+/*
 .tutor-course-builder-btn-group button + button{
   margin-left: 10px;
-}
+}*/
 
 .tutor-course-builder-button{
   line-height: 35px;
@@ -5548,9 +5560,9 @@ Tutor Media Upload
 }
 
 .tutor-course-builder-section{
-  border: 1px dashed #DCDFE5;
-  padding: 20px;
-  margin-bottom: 35px;
+  //border: 1px dashed #DCDFE5;
+  //padding: 20px;
+  margin-bottom: 60px;
   font-size: 14px;
 }
 .tutor-course-builder-section-title h3{

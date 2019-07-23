@@ -4678,6 +4678,26 @@ Course question and answer
   margin: 8px 3px;
 }
 
+.tutor-option-field .select2-container .select2-search__field::-webkit-input-placeholder,
+.tutor-form-group .select2-container .select2-search__field::-webkit-input-placeholder {
+  color: #ABAFB6;
+}
+
+.tutor-option-field .select2-container .select2-search__field::-moz-placeholder,
+.tutor-form-group .select2-container .select2-search__field::-moz-placeholder {
+  color: #ABAFB6;
+}
+
+.tutor-option-field .select2-container .select2-search__field:-ms-input-placeholder,
+.tutor-form-group .select2-container .select2-search__field:-ms-input-placeholder {
+  color: #ABAFB6;
+}
+
+.tutor-option-field .select2-container .select2-search__field:-moz-placeholder,
+.tutor-form-group .select2-container .select2-search__field:-moz-placeholder {
+  color: #ABAFB6;
+}
+
 .tutor-option-field .select2-container .select2-selection--single,
 .tutor-option-field .select2-container .select2-selection--multiple,
 .tutor-form-group .select2-container .select2-selection--single,
@@ -5827,10 +5847,10 @@ p.course-empty-content {
   padding: 0px;
 }
 
-.tutor-course-builder-btn-group button + button {
+/*
+.tutor-course-builder-btn-group button + button{
   margin-left: 10px;
-}
-
+}*/
 .tutor-course-builder-button {
   line-height: 35px;
   color: #393c40;
@@ -6891,9 +6911,7 @@ Tutor Media Upload
 }
 
 .tutor-course-builder-section {
-  border: 1px dashed #DCDFE5;
-  padding: 20px;
-  margin-bottom: 35px;
+  margin-bottom: 60px;
   font-size: 14px;
 }
 
@@ -7297,6 +7315,10 @@ input:checked + .btn-slider:before {
 }
 
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left button:hover {
+  color: var(--tutor-primary-color);
+}
+
+.tutor-dashboard-builder-header .tutor-dashboard-builder-header-left button:hover i {
   color: var(--tutor-primary-color);
 }
 

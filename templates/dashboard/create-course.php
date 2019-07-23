@@ -26,7 +26,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                         </div>
                         <button type="submit" class="tutor-dashboard-builder-draft-btn" name="course_submit_btn" value="save_course_as_draft">
                             <!-- @TODO: Icon must be chenged -->
-                            <i class="tutor-icon-default"></i>
+                            <i class="tutor-icon-save"></i>
                             <span><?php _e('Save', 'tutor'); ?></span>
                         </button>
                     </div>

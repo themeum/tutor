@@ -11,7 +11,7 @@
 </div>
 
 <div class="new-topic-btn-wrap">
-    <a href="javascript:;" class="create_new_topic_btn tutor-btn"> <i class="tutor-icon-text-document-add-button-with-plus-sign"></i> <?php _e('Add new topic', 'tutor'); ?></a>
+    <a href="javascript:;" class="create_new_topic_btn tutor-btn bordered-btn"> <i class="tutor-icon-text-document-add-button-with-plus-sign"></i> <?php _e('Add new topic', 'tutor'); ?></a>
 </div>
 
 

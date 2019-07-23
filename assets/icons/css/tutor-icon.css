@@ -122,7 +122,6 @@ Animation Spinner
 }
 .tutor-icon-save:before {
     content: "\e994";
-    color: #4b5981;
 }
 .tutor-icon-search-file:before {
     content: "\e989";
