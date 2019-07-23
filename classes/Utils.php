@@ -4427,7 +4427,6 @@ class Utils {
 		global $wpdb;
 
 		$assignment_submitted_id = $this->get_post_id($assignment_submitted_id);
-
 		$submitted_info = $wpdb->get_row("SELECT * FROM {$wpdb->comments} WHERE comment_ID = {$assignment_submitted_id} AND comment_type = 'tutor_assignment' AND comment_approved = 'submitted' ");
 
 		return $submitted_info;
