@@ -4675,7 +4675,10 @@ Course question and answer
 
 .tutor-option-field .select2-container .select2-search__field,
 .tutor-form-group .select2-container .select2-search__field {
-  margin: 8px 3px;
+  padding: 8px 3px 8px 6px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .tutor-option-field .select2-container .select2-search__field::-webkit-input-placeholder,

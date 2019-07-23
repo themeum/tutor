@@ -3595,7 +3595,9 @@ Course question and answer
     border: none;
   }
   .select2-search__field{
-    margin: 8px 3px;
+    padding: 8px 3px 8px 6px;
+    box-sizing: border-box;
+    margin: 0;
     &::-webkit-input-placeholder {
       color: #ABAFB6;
     }

@@ -63,7 +63,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
 
                         <div class="tutor-course-builder-section tutor-course-builder-info">
                             <div class="tutor-course-builder-section-title">
-                                <h3><i class="tutor-icon-move"></i><span><?php esc_html_e('Course Info', 'tutor'); ?></span></h3>
+                                <h3><i class="tutor-icon-down"></i><span><?php esc_html_e('Course Info', 'tutor'); ?></span></h3>
                             </div> <!--.tutor-course-builder-section-title-->
 
                             <div class="tutor-frontend-builder-item-scope">
