@@ -4462,7 +4462,14 @@ class Utils {
 		global $wpdb;
 		$user_id = $this->get_user_id($user_id);
 
+		$course_post_type = tutor()->course_post_type;
 		$get_assigned_courses_ids = $wpdb->get_col("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = {$user_id} GROUP BY meta_value ; ");
+
+		/*
+		$author_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} where post_type = '{$course_post_type}' AND post_author = {$user_id}");
+		$final_course_ids = array_merge($get_assigned_courses_ids, $author_ids);
+        $final_course_ids = array_unique($final_course_ids);
+		*/
 
 		return $get_assigned_courses_ids;
 	}
@@ -4531,6 +4538,11 @@ class Utils {
 
 		$instructor_id = $this->get_user_id($instructor_id);
 		$course_ids = tutor_utils()->get_assigned_courses_ids_by_instructors($instructor_id);
+
+		//$new_course_ids = tutils()->get_courses_by_instructor();
+
+		//die($this->print_view($course_ids));
+
 		$in_course_ids = implode("','", $course_ids);
 
 		$count = (int) $wpdb->get_var("SELECT COUNT(ID) FROM {$wpdb->postmeta} post_meta

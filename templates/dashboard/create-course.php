@@ -200,10 +200,10 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                     </div>
                                 </div>
                             </div> <!--.tutor-frontend-builder-item-scope-->
-
+<!--
                             <div class="tutor-frontend-builder-item-scope">
                                 <h1 style="color: red;">video metabox here</h1>
-                            </div>
+                            </div>-->
                         </div>
 
 
