@@ -7,7 +7,7 @@ if($assignments->count){
 ?>
 
 <h3><?php echo get_the_title($course_id) ?></h3>
-<table>
+<table class="tutor-assignment-data-table">
     <thead>
     <tr>
         <th><?php _e('Course Name', 'tutor'); ?></th>

@@ -17,9 +17,7 @@ $offset = ($current_page-1)*$per_page;
 $current_user = get_current_user_id();
 $assignments = tutor_utils()->get_assignments_by_instructor(null,  compact('per_page', 'offset'));
 
-
 if($assignments->count){ ?>
-
     <table>
         <thead>
         <tr>
