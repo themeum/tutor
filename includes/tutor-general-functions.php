@@ -100,7 +100,7 @@ if ( ! function_exists('_generate_categories_dropdown_option')){
                     }
                 }
 
-				$output .= "<option ".selected($has_in_term, true, false)." > {$depth_seperator} {$category->name}</option> ";
+				$output .= "<option value='{$category->term_id}' ".selected($has_in_term, true, false)." >   {$depth_seperator} {$category->name}</option> ";
 
 				if ( tutor_utils()->count( $childrens ) ) {
 					$depth++;
@@ -165,9 +165,7 @@ if ( ! function_exists('__tutor_generate_categories_checkbox')){
 				$childrens = tutor_utils()->array_get( 'children', $category );
 				$has_in_term = has_term( $category->term_id, 'course-category', $post_ID );
 
-				$output .= "<li class='tax-input-course-category-item tax-input-course-category-item-{$category->term_id} '><label class='course-category-checkbox'> <input type='checkbox' name='{$input_name}' 
-value='{$category->term_id}' 
-".checked($has_in_term, true, false)." /> <span>{$category->name}</span> </label>";
+				$output .= "<li class='tax-input-course-category-item tax-input-course-category-item-{$category->term_id} '><label class='course-category-checkbox'> <input type='checkbox' name='{$input_name}' value='{$category->term_id}' ".checked($has_in_term, true, false)." /> <span>{$category->name}</span> </label>";
 
 				if ( tutor_utils()->count( $childrens ) ) {
 					$output .= __tutor_generate_categories_checkbox($post_ID,$childrens, $args);

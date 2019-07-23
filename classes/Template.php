@@ -283,7 +283,6 @@ class Template extends Tutor_Base {
 				 */
 				if (is_user_logged_in()) {
 					$template = tutor_get_template( 'dashboard' );
-
 					/**
 					 * Check page page permission
 					 *
@@ -300,7 +299,6 @@ class Template extends Tutor_Base {
 				}else{
 					$template = tutor_get_template( 'login' );
 				}
-
 			}
 		}
 
