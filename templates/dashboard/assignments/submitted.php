@@ -9,14 +9,13 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
 
 <h3><?php esc_html_e('Assignment', 'tutor') ?></h3>
 <div class="tutor-dashboard-info-table-wrap">
-
     <?php
 
     if (tutor_utils()->count($assignments_submitted)){
 
     ?>
 
-    <table class="tutor-dashboard-info-table tutor-dashboard-assignment-table">
+    <table class="tutor-dashboard-info-table tutor-dashboard-assignment-submitted-table">
         <thead>
             <tr>
                 <td><?php esc_attr_e('Student', 'tutor'); ?></td>

@@ -18,8 +18,8 @@ $current_user = get_current_user_id();
 $assignments = tutor_utils()->get_assignments_by_instructor(null,  compact('per_page', 'offset'));
 
 if($assignments->count){ ?>
-    <div class="tutor-dashboard-info-table">
-        <table>
+    <div class="tutor-dashboard-info-table-wrap">
+        <table class="tutor-dashboard-info-table tutor-dashboard-assignment-table">
             <thead>
             <tr>
                 <th><?php _e('Course Name', 'tutor') ?></th>

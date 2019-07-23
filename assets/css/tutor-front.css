@@ -1733,18 +1733,23 @@ a.tutor-btn.bordered-btn:hover,
 }
 
 /* Dashboard Assignment */
-.tutor-dashboard-assignment-table tr td {
+.tutor-dashboard-assignment-submitted-table tr td {
   text-align: center;
 }
 
-.tutor-dashboard-assignment-table tr td a {
+.tutor-dashboard-assignment-submitted-table tr td a {
   color: #8C94A8;
   -webkit-transition: 300ms;
   transition: 300ms;
 }
 
-.tutor-dashboard-assignment-table tr td a:hover {
+.tutor-dashboard-assignment-submitted-table tr td a:hover {
   color: var(--tutor-primary-color);
+}
+
+.tutor-dashboard-assignment-submitted-table tr td,
+.tutor-dashboard-assignment-submitted-table tr th {
+  border: 1px solid #DCDFE5;
 }
 
 /* Dashboard Assignment Review */
@@ -7532,6 +7537,38 @@ input:checked + .btn-slider:before {
     opacity: 1;
     visibility: visible;
   }
+}
+
+.tutor-dashboard-assignment-table tr th, .tutor-dashboard-assignment-table tr td {
+  border: 1px solid #DCDFE5;
+  vertical-align: middle;
+}
+
+.tutor-dashboard-assignment-table tr th:not(:first-child), .tutor-dashboard-assignment-table tr td:not(:first-child) {
+  text-align: center;
+}
+
+.tutor-dashboard-assignment-table tr h5 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
+  color: var(--tutor-text-color);
+}
+
+.tutor-dashboard-assignment-table tr h5:not(:last-child) {
+  margin-bottom: 7px;
+}
+
+.tutor-dashboard-assignment-table tr a {
+  font-weight: 400;
+  color: var(--tutor-text-color);
+}
+
+.tutor-dashboard-assignment-table tr a:hover {
+  color: var(--tutor-primary-color);
+  -webkit-transition: 300ms;
+  transition: 300ms;
 }
 
 /*# sourceMappingURL=tutor-front.css.map */

@@ -940,17 +940,22 @@ a.tutor-btn.bordered-btn:hover,
 }
 
 /* Dashboard Assignment */
-.tutor-dashboard-assignment-table tr td{
+.tutor-dashboard-assignment-submitted-table tr td{
   text-align: center;
 }
 
-.tutor-dashboard-assignment-table tr td a{
+.tutor-dashboard-assignment-submitted-table tr td a{
   color: #8C94A8;
   transition: 300ms;
 }
 
-.tutor-dashboard-assignment-table tr td a:hover{
+.tutor-dashboard-assignment-submitted-table tr td a:hover{
   color: var(--tutor-primary-color);
+}
+
+.tutor-dashboard-assignment-submitted-table tr td,
+.tutor-dashboard-assignment-submitted-table tr th{
+  border: 1px solid #DCDFE5;
 }
 
 /* Dashboard Assignment Review */
