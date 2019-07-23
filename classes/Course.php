@@ -277,20 +277,22 @@ class Course extends Tutor_Base {
 		}
 
 		//Announcements
-		$announcement_title = tutor_utils()->avalue_dot('announcements.title', $_POST );
-		if ( ! empty($announcement_title)){
-			$title = sanitize_text_field(tutor_utils()->avalue_dot('announcements.title', $_POST ));
-			$content = wp_kses_post(tutor_utils()->avalue_dot('announcements.content', $_POST ));
+		if ( ! wp_doing_ajax()) {
+			$announcement_title = tutor_utils()->avalue_dot( 'announcements.title', $_POST );
+			if ( ! empty( $announcement_title ) ) {
+				$title   = sanitize_text_field( tutor_utils()->avalue_dot( 'announcements.title', $_POST ) );
+				$content = wp_kses_post( tutor_utils()->avalue_dot( 'announcements.content', $_POST ) );
 
-			$post_arr = array(
-				'post_type'    => 'tutor_announcements',
-				'post_title'   => $title,
-				'post_content' => $content,
-				'post_status'  => 'publish',
-				'post_author'  => get_current_user_id(),
-				'post_parent'  => $post_ID,
-			);
-			wp_insert_post( $post_arr );
+				$post_arr = array(
+					'post_type'    => 'tutor_announcements',
+					'post_title'   => $title,
+					'post_content' => $content,
+					'post_status'  => 'publish',
+					'post_author'  => get_current_user_id(),
+					'post_parent'  => $post_ID,
+				);
+				wp_insert_post( $post_arr );
+			}
 		}
 	}
 
