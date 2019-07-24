@@ -140,8 +140,6 @@ if ( ! $tutor_primary_color){
 }
 ?>
 
-
-
 <script>
     var ctx = document.getElementById("tutorChart").getContext('2d');
     var tutorChart = new Chart(ctx, {

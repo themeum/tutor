@@ -225,7 +225,7 @@ class Ajax{
 			$wpdb->delete($wpdb->usermeta, array('user_id' => $user_id, 'meta_key' => '_tutor_course_wishlist', 'meta_value' => $course_id ));
 			wp_send_json_success(array('status' => 'removed', 'msg' => __('Course removed from wish list', 'tutor')));
 		}else{
-			update_user_meta($user_id, '_tutor_course_wishlist', $course_id);
+			add_user_meta($user_id, '_tutor_course_wishlist', $course_id);
 			wp_send_json_success(array('status' => 'added', 'msg' => __('Course added to wish list', 'tutor')));
 		}
 	}
