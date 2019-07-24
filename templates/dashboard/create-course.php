@@ -184,7 +184,9 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                                     }
                                                     ?>
                                                     <img src="<?php echo $_thumbnail_url; ?>" class="thumbnail-img" data-placeholder-src="<?php echo $builder_course_img_src; ?>">
-                                                    <a href="javascript:;" class="tutor-course-thumbnail-delete-btn"><i class="tutor-icon-line-cross"></i></a>
+                                                    <a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display: <?php echo
+                                                    $post_thumbnail_id ? 'block':'none'; ?>;"><i
+                                                                class="tutor-icon-line-cross"></i></a>
                                                 </div>
                                             </div>
 

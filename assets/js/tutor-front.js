@@ -841,6 +841,7 @@ jQuery(document).ready(function($){
             var attachment = frame.state().get('selection').first().toJSON();
             $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('src', attachment.url);
             $that.closest('.tutor-thumbnail-wrap').find('input').val(attachment.id);
+            $('.tutor-course-thumbnail-delete-btn').show();
         });
         frame.open();
     });
@@ -853,6 +854,8 @@ jQuery(document).ready(function($){
         var placeholder_src = $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('data-placeholder-src');
         $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('src', placeholder_src);
         $that.closest('.tutor-thumbnail-wrap').find('input').val('');
+        $('.tutor-course-thumbnail-delete-btn').hide();
+
     });
 
     /**
