@@ -112,6 +112,7 @@ if ( ! $can_publish_course){
                                     $course_price = tutor_utils()->get_raw_course_price(get_the_ID());
                                     $currency_symbol = tutor_utils()->currency_symbol();
 
+                                    $_tutor_course_price_type = tutils()->price_type(get_the_ID());
                                     ?>
                                     <div class="tutor-frontend-builder-item-scope tutor-frontend-builder-course-price">
                                         <label class="tutor-builder-item-heading">
@@ -120,7 +121,7 @@ if ( ! $can_publish_course){
                                         <div class="tutor-row tutor-align-items-center">
                                             <div class="tutor-col-auto">
                                                 <label for="tutor_course_price_type_pro" class="tutor-styled-radio">
-                                                    <input id="tutor_course_price_type_pro" type="radio" checked name="tutor_course_price_type">
+                                                    <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'paid') : checked('true', 'true'); ?> >
                                                     <span></span>
                                                     <div class="tutor-form-group">
                                                         <span class="tutor-input-prepand"><?php echo $currency_symbol; ?></span>
@@ -130,7 +131,7 @@ if ( ! $can_publish_course){
                                             </div>
                                             <div class="tutor-col-auto">
                                                 <label class="tutor-styled-radio">
-                                                    <input type="radio" name="tutor_course_price_type" value="free">
+                                                    <input type="radio" name="tutor_course_price_type" value="free"  <?php checked($_tutor_course_price_type, 'free'); ?> >
                                                     <span><?php _e('Free', "tutor") ?></span>
                                                 </label>
                                             </div>
