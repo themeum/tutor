@@ -4626,6 +4626,7 @@ Course question and answer
   padding: 0 9px;
   margin: 5px;
   border: none;
+  font-weight: 600;
 }
 
 .tutor-option-field .select2-container .select2-search__field,
@@ -6888,6 +6889,7 @@ Tutor Media Upload
 
 .tutor-course-builder-section-title h3 i {
   color: var(--tutor-primary-color);
+  font-size: 14px;
 }
 
 .tutor-course-builder-section-title h3 span {
@@ -7298,6 +7300,7 @@ input:checked + .btn-slider:before {
 
 .tutor-frontend-course-builder-section {
   padding: 113px 0 45px;
+  background-color: #ffffff;
 }
 
 @media (max-width: 991px) {
@@ -7491,10 +7494,6 @@ input:checked + .btn-slider:before {
   justify-content: space-between;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: reverse;
-  -ms-flex-direction: row-reverse;
-  flex-direction: row-reverse;
 }
 
 @media (min-width: 992px) {

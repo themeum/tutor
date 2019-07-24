@@ -94,6 +94,7 @@
 
 .tutor-frontend-course-builder-section{
 	padding: 113px 0 45px;
+	background-color: #ffffff;
 	@media (max-width: 991px) {
 		padding-top: 60px;
 		.tutor-col-8,
@@ -251,5 +252,5 @@
 	display: flex;
 	justify-content: space-between;
 	flex-wrap: wrap;
-	flex-direction: row-reverse;
+	//flex-direction: row-reverse;
 }
