@@ -1,5 +1,6 @@
 
 <?php
+    $course_id = get_the_ID();
     $levels = tutor_utils()->course_levels();
     $course_level = get_post_meta($course_id, '_tutor_course_level', true);
 
