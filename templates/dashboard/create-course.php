@@ -112,7 +112,7 @@ if ( ! $can_publish_course){
                                     $course_price = tutor_utils()->get_raw_course_price(get_the_ID());
                                     $currency_symbol = tutor_utils()->currency_symbol();
 
-                                    $_tutor_course_price_type = tutils()->price_type(get_the_ID());
+                                    $_tutor_course_price_type = tutils()->price_type();
                                     ?>
                                     <div class="tutor-frontend-builder-item-scope tutor-frontend-builder-course-price">
                                         <label class="tutor-builder-item-heading">
