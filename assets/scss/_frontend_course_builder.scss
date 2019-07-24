@@ -44,7 +44,7 @@
 			border-left: 1px solid #DCDFE5;
 			background: transparent;
 			display: inline-flex;
-			font-size: 14px;
+			//font-size: 14px;
 			color: var(--tutor-text-color);
 			transition: 300ms;
 			font-weight: 500;
@@ -71,7 +71,7 @@
 		align-items: center;
 		justify-content: space-between;
 		a{
-			font-size: 14px;
+			//font-size: 14px;
 			color: var(--tutor-text-color);
 			font-weight: 500;
 			line-height: 36px;
@@ -94,6 +94,7 @@
 
 .tutor-frontend-course-builder-section{
 	padding: 113px 0 45px;
+	background-color: #ffffff;
 	@media (max-width: 991px) {
 		padding-top: 60px;
 		.tutor-col-8,
@@ -140,7 +141,7 @@
 		li{
 			position: relative;
 			margin-bottom: 8px;
-			font-size: 14px;
+			//font-size: 14px;
 			line-height: 24px;
 			&::after{
 				content: '';
@@ -166,7 +167,7 @@
 	display: flex;
 	label{
 		margin: 0 40px 0 0;
-		font-weight: 700;
+		font-weight: 600;
 	}
 }
 
@@ -251,5 +252,5 @@
 	display: flex;
 	justify-content: space-between;
 	flex-wrap: wrap;
-	flex-direction: row-reverse;
+	//flex-direction: row-reverse;
 }
