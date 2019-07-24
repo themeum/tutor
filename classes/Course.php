@@ -163,6 +163,7 @@ class Course extends Tutor_Base {
 		/**
 		 * Insert Topic
 		 */
+		/*
 		if ( ! empty($_POST['topic_title'])) {
 			$topic_title   = sanitize_text_field( $_POST['topic_title'] );
 			$topic_summery = wp_kses_post( $_POST['topic_summery'] );
@@ -176,7 +177,7 @@ class Course extends Tutor_Base {
 				'post_parent'  => $post_ID,
 			);
 			wp_insert_post( $post_arr );
-		}
+		}*/
 
 		//Course Duration
 		if ( ! empty($_POST['course_duration'])){
@@ -300,7 +301,7 @@ class Course extends Tutor_Base {
 	 * Tutor add course topic
 	 */
 	public function tutor_add_course_topic(){
-		if (empty($_POST['topic_title'])) {
+		if (empty($_POST['topic_title']) ) {
 			wp_send_json_error();
 		}
 		$course_id = (int) tutor_utils()->avalue_dot('tutor_topic_course_ID', $_POST);
