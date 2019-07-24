@@ -4,6 +4,7 @@
 	--tutor-text-color: #4B5981;
 	--tutor-light-color: #B1B8C9;
 	--tutor-success-button-color: #4BD863;
+	--tutor-text-size: 16px;
 }
 
 body {
@@ -24,7 +25,7 @@ body {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	font-size: 14px;
+	//font-size: 14px;
 	li{
 		position: relative;
 		margin-bottom: 5px;

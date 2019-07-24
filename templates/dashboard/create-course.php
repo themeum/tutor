@@ -175,7 +175,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                             <div class="tutor-col-5">
                                                 <div class="builder-course-thumbnail-img-src">
                                                     <?php
-                                                    $builder_course_img_src = tutor_placeholder_img_src();
+                                                    $builder_course_img_src = tutor()->url . 'assets/images/placeholder-course.jpg';
                                                     $_thumbnail_url = get_the_post_thumbnail_url($course_id);
                                                     $post_thumbnail_id = get_post_thumbnail_id( $course_id );
 

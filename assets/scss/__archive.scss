@@ -11,7 +11,7 @@ div[class*="tutor-course-col"] {
 .tutor-course-loop{
   background: #fff;
   color: #29303b;
-  font-size: small;
+  //font-size: var(--tutor-text-size);
   overflow: hidden;
   position: relative;
   vertical-align: top;
@@ -207,7 +207,7 @@ div[class*="tutor-course-col"] {
   vertical-align: top;
   display: block;
   font-weight: 400;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   background: transparent;
   padding: 0;
 }
@@ -396,7 +396,7 @@ div[class*="tutor-course-col"] {
 .tutor-loop-author > div span{
   display: inline-block;
   margin: 0 2px 0 2px;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   color: var(--tutor-light-color);
   line-height: 25px;
   font-weight: 400;
@@ -416,7 +416,7 @@ Topicstutor-course-title
   padding: 12px 20px;
   overflow: hidden;
   border-top: 1px solid #DCDFE5;
-  font-size: 14px;
+  font-size: 14px; //dont change with var
 }
 
 .tutor-course-enrolled-wrap p{
@@ -488,19 +488,19 @@ a.tutor-btn,
   color: #fff;
   border: 1px solid var(--tutor-primary-color);
   background-color: var(--tutor-primary-color);
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   padding: 12px 30px;
   border-radius: 4px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   line-height: 20px;
-  font-size: 14px;
-  font-weight: 500;
+  //font-size: var(--tutor-text-size);
+  font-weight: 600;
   cursor: pointer;
   transition: 300ms;
   overflow: hidden;
   vertical-align: top;
   i{
-    float: left;
     line-height: 19px;
     margin-right: 7px;
     font-size: 16px;
@@ -917,7 +917,7 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-dashboard-content .tutor-quiz-attempt-history table a{
   color: var(--tutor-primary-color);
   font-weight: 700;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   line-height: 24px;
 }
 
@@ -999,7 +999,7 @@ a.tutor-btn.bordered-btn:hover,
   background: rgba(220, 223, 229, 0.14);
   border: 1px solid #DCDFE5;
   padding: 25px;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   font-weight: 400;
   border-radius: 4px;
   margin-bottom: 40px;
@@ -1013,7 +1013,7 @@ a.tutor-btn.bordered-btn:hover,
   color: var(--tutor-text-color);
 }
 .tutor-dashboard-assignment-review h5{
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   margin-bottom: 15px;
 }
 
@@ -1100,7 +1100,7 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-assignment-evaluate-row p.desc{
   margin-bottom: 0;
   margin-top: 6px;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   font-style: italic;
 }
 
@@ -1163,7 +1163,7 @@ a.tutor-btn.bordered-btn:hover,
   color: var(--tutor-text-color);
 }
 .tutor-dashboard-user-role{
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   font-weight: 400;
 }
 .tutor-dashboard-student-meta ul{
@@ -1172,7 +1172,7 @@ a.tutor-btn.bordered-btn:hover,
   padding: 15px 0;
   border-top: 1px solid #DCDFE5;
   border-bottom: 1px solid #DCDFE5;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
 }
 .tutor-dashboard-student-meta ul li{
   display: inline-block;
@@ -1229,7 +1229,7 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-dashboard-permalinks{
   list-style: none;
   margin: 0px 0 20px;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   padding: 20px 0;
   border-right: 1px solid #DCDFE5;
 }
@@ -1526,7 +1526,7 @@ Withdraw Method
 }
 .withdraw-method-select-wrap .withdraw-method-select label span{
   color: #B0B6C8;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   font-weight: 400;
 }
 
@@ -1593,7 +1593,7 @@ label[for="tutor_withdraw_amount"]{
 
 .withdraw-method-forms-wrap .withdraw-method-form label{
   color: #989EAF;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   margin-bottom: 8px;
   display: block;
 }
@@ -1642,13 +1642,13 @@ label[for="tutor_withdraw_amount"]{
 }
 .tutor-mycourse-rating{
   color: #F8C51C;
-  font-size: 12px;
+  font-size: 14px;
 }
 .tutor-mycourse-rating i{
   margin-right: 4px;
 }
 .tutor-dashboard-content-inner{
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
 }
 
 .tutor-mycourse-edit,
@@ -1698,7 +1698,7 @@ label[for="tutor_withdraw_amount"]{
   margin-bottom: 3px;
 }
 .tutor-dashboard-content-inner .tutor-mycourse-wrap .tutor-mycourse-rating a{
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   font-weight: 400;
   margin-left: 5px;
   color: #8C94A8;
@@ -1739,7 +1739,7 @@ label[for="tutor_withdraw_amount"]{
   list-style: none;
   margin: 0 0 10px;
   padding: 0;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
 }
 
 .tutor-dashboard-content-inner .tutor-progress-bar-wrap{
@@ -1874,7 +1874,7 @@ Instructor
 .single-instructor-wrap{
   border: 1px solid #e8eff1;
   margin-bottom: 30px;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   border-radius: 4px;
 }
 .single-instructor-wrap .single-instructor-top{
@@ -1931,12 +1931,12 @@ Instructor
 }
 .single-instructor-wrap .instructor-name h4{
   font-weight: 500;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   color: var(--tutor-light-color);
 }
-.single-instructor-wrap .instructor-bio{
-  font-size: 14px;
-}
+//.single-instructor-wrap .instructor-bio{
+//  font-size: var(--tutor-text-size);
+//}
 
 
 .single-instructor-wrap .single-instructor-bottom{
@@ -1981,7 +1981,7 @@ Instructor
 }
 .statement-address {
   margin: 10px 0;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   color: #555;
 }
 .statement-order-completed {
@@ -2032,9 +2032,7 @@ Instructor
 .tutor-single-lesson-button-group .tutor-single-lesson-button a,
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a{
   padding: 14px 100px 14px 17px;
-  font-size: 14px;
-  
-  
+  //font-size: var(--tutor-text-size);
   display: flex;
   color: var(--tutor-text-color);
   position: relative;
@@ -2052,7 +2050,7 @@ Instructor
   padding: 0;
 }
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a span{
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   margin: 0;
   display: inline;
   color: var(--tutor-text-color);
@@ -2127,7 +2125,7 @@ span.toogle-informaiton-icon {
 }
 .tutor-topics-in-single-lesson .tutor-topics-summery{
   padding: 14px;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   border-top: 1px solid #DCE4E6;
   display: none;
 }
@@ -2308,7 +2306,7 @@ span.toogle-informaiton-icon {
 }
 
 .tutor-single-lesson-wrap{
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   background: #F4F8FA;
 }
 .tutor-lesson-video-wrap .plyr--video{
@@ -2396,9 +2394,7 @@ span.toogle-informaiton-icon {
 .tutor-progress-bar-wrap{
   width: 100%;
   margin: 0 0 30px;
-  font-size: 14px;
-  
-  
+  //font-size: var(--tutor-text-size);
   display: flex;
 }
 .tutor-progress-bar{
@@ -2458,7 +2454,7 @@ span.toogle-informaiton-icon {
   background: var(--tutor-primary-color);
   border-radius: 3px;
   text-transform: uppercase;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   font-weight: 500;
   cursor: pointer;
 }
@@ -2507,7 +2503,7 @@ span.toogle-informaiton-icon {
   display: block;
   padding: 18px 20px;
   border: none;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   text-align: center;
   border-radius: 4px;
   text-transform: uppercase;
@@ -2579,9 +2575,9 @@ span.toogle-informaiton-icon {
   display: inline-block;
   padding: 15px 30px;
   border-radius: 4px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   line-height: 1;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   -webkit-transition: 300ms;
   transition: 300ms;
 }
@@ -2835,7 +2831,7 @@ Course question and answer
 }
 .question-top-meta .review-meta span{
   color: var(--tutor-light-color);
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   vertical-align: text-top;
   display: block;
 }
@@ -2898,12 +2894,12 @@ Course question and answer
   margin-bottom: 15px;
 }
 .tutor-quiz-header h5{
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   color: var(--tutor-light-color);
 }
 .tutor-quiz-header h5 a{
   color: var(--tutor-text-color);
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   font-weight: 500;
 }
 .tutor-quiz-header .tutor-quiz-meta{
@@ -2914,7 +2910,7 @@ Course question and answer
   border-bottom: 1px solid #DCDFE5;
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
 }
 .tutor-quiz-header .tutor-quiz-meta li{
   display: inline-block;
@@ -2960,7 +2956,7 @@ Course question and answer
 .tutor-quiz-attempt-history table{
   border-collapse: collapse;
   border-radius: 4px;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
 }
 .tutor-quiz-attempt-history th{
   font-weight: 400;
@@ -3022,7 +3018,7 @@ Course question and answer
 /*margin-top: 10px;*/
 /*}*/
 .quiz-head-meta-info{
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   color: var(--tutor-light-color);
   margin-bottom: 40px;
 }
@@ -3039,8 +3035,8 @@ Course question and answer
 }
 .tutor-quiz-single-wrap .question-description{
   color: var(--tutor-text-color);
-  font-size: 14px;
-  font-weight: 300;
+  //font-size: var(--tutor-text-size);
+  //font-weight: 300;
 }
 .quiz-attempt-single-question {
   margin-bottom: 80px;
@@ -3055,7 +3051,7 @@ Course question and answer
   border-right: none;
   border-bottom: 1px dashed;
   background-color: transparent;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   padding: 0px;
   border-radius: 0;
   box-shadow: none;
@@ -3103,7 +3099,7 @@ Course question and answer
 .tutor-quiz-answers-wrap label{
   display: block;
   margin-bottom: 15px;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   cursor: pointer;
 }
 
@@ -3293,7 +3289,7 @@ Course question and answer
   border-radius: 50%;
   margin-right: 10px;
   color: #ffffff;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
 }
 .tutor-quiz-questions-pagination ul li a:hover, .tutor-quiz-questions-pagination ul li a.active  {
   background-color: var(--tutor-primary-color);
@@ -3422,7 +3418,7 @@ Course question and answer
 .tutor-login-rememeber-wrap a,
 .tutor-login-rememeber-wrap label{
   color: #606C8F;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   vertical-align: middle;
   opacity: .5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
@@ -3440,12 +3436,11 @@ Course question and answer
   color: #fff;
   background-color: var(--tutor-success-button-color);
   border-color: var(--tutor-success-button-color);
-  display: inline-block;
   padding: 15px 30px;
   border-radius: 4px;
   text-transform: uppercase;
   line-height: 1;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   display: block;
   width: 100%;
   -webkit-transition: 300ms;
@@ -3529,13 +3524,13 @@ Course question and answer
 .tutor-form-group label{
   display: block;
   margin-bottom: 10px;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
 }
 .tutor-option-field textarea,
 .tutor-option-field select,
 .tutor-option-field input[type="text"],
 .tutor-option-field input[type="number"],
-.tutor-option-field input[type="password"],
+.tutor-option-field input[type="pas.tutor-dashboard-content-innersword"],
 
 .tutor-form-group textarea,
 .tutor-form-group select,
@@ -3554,6 +3549,7 @@ Course question and answer
   text-indent: 15px;
   -webkit-transition: 300ms;
   transition: 300ms;
+  font-size: 16px;
 }
 
 .tutor-form-group{
@@ -3728,6 +3724,7 @@ Course question and answer
 
 .select2-container .select2-selection--single .select2-selection__rendered{
   padding-left: 13px;
+  font-size: 16px;
 }
 .select2-container .select2-selection--single{
   height: 48px;
@@ -3785,10 +3782,10 @@ Course question and answer
   line-height: 1;
   margin-bottom: 20px;
 }
-
-.tutor-price-preview-box .price del{
-  font-size: 14px;
-}
+//
+//.tutor-price-preview-box .price del{
+//  font-size: var(--tutor-text-size);
+//}
 
 
 .tutor-price-preview-box .price del + ins{
@@ -3807,14 +3804,14 @@ Course question and answer
 
 .tutor-course-avg-rating-total{
   color: var(--tutor-light-color);
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
 }
 .tutor-course-avg-rating-total span{
   color: var(--tutor-text-color);
 }
 
 .tutor-review-individual-item {
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   border-top: 1px solid #E8EFF1;
   padding: 30px;
   overflow: hidden;
@@ -3887,7 +3884,7 @@ Course question and answer
   display: block;
   line-height: 50px;
   color: #ffffff;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   text-shadow: 0 1px 2px rgba(0,0,0, .4);
 }
 .course-avg-rating-wrap .course-avg-rating {
@@ -4022,7 +4019,7 @@ Course question and answer
   margin-bottom: 20px;
   border-radius: 4px;
   font-weight: 500;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   background: #fffff5;
   color: #b39f70;
   position: relative;
@@ -4420,7 +4417,7 @@ button.tm-close.tutor-icon-line-cross:hover{
   .tutor-lesson-top{
     display: flex;
     align-items: center;
-    font-size: 14px;
+    //font-size: var(--tutor-text-size);
     a:last-child{
       margin-left: auto;
     }
@@ -4430,7 +4427,7 @@ button.tm-close.tutor-icon-line-cross:hover{
     a{
       color: #393C40;
       font-weight: 400;
-      font-size: 14px;
+      //font-size: var(--tutor-text-size);
       display: inline-flex;
       align-items: center;
     }
@@ -4469,10 +4466,8 @@ button.tm-close.tutor-icon-line-cross:hover{
   margin-right: 5px;
 }
 #tutor-course-topics .tutor-lesson-top{
-  
-  
   display: flex;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
 }
 #tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal,
 .tutor-quiz .open-tutor-quiz-modal,
@@ -4511,7 +4506,7 @@ p.course-empty-content {
   padding: 0 20px;
   display: inline-block;
   border-radius: 2px;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   font-weight: 300;
   border: none;
   box-shadow: none;
@@ -4985,7 +4980,7 @@ Quiz Modal
   display: inline-block;
   color: #393C40;
   border-left: 1px solid #F1F1F1;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   overflow: hidden;
   line-height: 17px;
   vertical-align: middle;
@@ -5072,7 +5067,7 @@ Quiz Modal
 }
 
 .tutor-quiz-builder-group > h4{
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   color: #393C40;
   font-weight: 600;
   margin: 0 0 15px;
@@ -5113,7 +5108,7 @@ Quiz Modal
   margin: 0;
   width: 100%;
   color: #393C40;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
 }
 .tutor-quiz-builder-group textarea:focus,
 .tutor-quiz-builder-group input[type="text"]:focus,
@@ -5205,7 +5200,7 @@ label.btn-switch input:checked + .btn-slider {
   display: inline-block;
   margin-left: 8px;
   font-weight: 700;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   vertical-align: top;
 }
 
@@ -5565,7 +5560,7 @@ Tutor Media Upload
   //border: 1px dashed #DCDFE5;
   //padding: 20px;
   margin-bottom: 60px;
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
 }
 .tutor-course-builder-section-title h3{
   font-size: 20px;
@@ -5671,7 +5666,7 @@ Tutor Media Upload
 }
 
 .tutor-builder-item-heading{
-  font-size: 14px;
+  //font-size: var(--tutor-text-size);
   font-weight: 500;
   line-height: 21px;
   margin-bottom: 10px;
@@ -5679,7 +5674,7 @@ Tutor Media Upload
 }
 
 .builder-course-thumbnail-upload-wrap h4{
-  font-size: 14px;
+  font-size: var(--tutor-text-size);
   line-height: 25px;
   margin-bottom: 20px;
   font-weight: 400;
