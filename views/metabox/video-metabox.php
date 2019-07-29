@@ -31,13 +31,13 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
         </label>
     </div>
 
-    <div class="tutor-option-field">
+    <div class="tutor-option-field tutor-video-upload-wrap">
 
         <select name="video[source]" class="tutor_lesson_video_source videosource_select2">
             <option value=""><?php _e('Select Video Source', 'tutor'); ?></option>
             <option value="html5" <?php selected('html5', $videoSource); ?>  data-icon="html5" ><?php _e('HTML5 (mp4)', 'tutor'); ?></option>
             <option value="external_url" <?php selected('external_url', $videoSource); ?>  data-icon="link" ><?php _e('External URL', 'tutor');
-            ?></option>
+				?></option>
             <option value="youtube" <?php selected('youtube', $videoSource); ?>  data-icon="youtube" ><?php _e('YouTube', 'tutor'); ?></option>
             <option value="vimeo" <?php selected('vimeo', $videoSource); ?>  data-icon="vimeo" ><?php _e('Vimeo', 'tutor'); ?></option>
             <option value="embedded" <?php selected('embedded', $videoSource); ?>  data-icon="code" ><?php _e('Embedded', 'tutor'); ?></option>
@@ -69,15 +69,16 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
                         <div class="tutor-row tutor-align-items-center">
                             <div class="tutor-col-5">
                                 <div class="builder-course-thumbnail-img-src html5-video-poster">
-								    <?php
-								    $builder_course_img_src = tutor()->url . 'assets/images/placeholder-course.jpg';
-								    if ( $poster){
-									    $poster_url = wp_get_attachment_image_url($poster);
-								    }
-								    ?>
+									<?php
+									$builder_course_img_src = tutor()->url . 'assets/images/placeholder-course.jpg';
+									$poster_url = $builder_course_img_src;
+									if ( $poster){
+										$poster_url = wp_get_attachment_image_url($poster);
+									}
+									?>
                                     <img src="<?php echo $poster_url; ?>" class="thumbnail-img" data-placeholder-src="<?php echo $builder_course_img_src; ?>">
                                     <a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display: <?php echo
-								    $post_thumbnail_id ? 'block':'none'; ?>;"><i class="tutor-icon-line-cross"></i></a>
+                                    $poster ? 'block':'none'; ?>;"><i class="tutor-icon-line-cross"></i></a>
                                 </div>
                             </div>
 
@@ -96,13 +97,13 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
 
 
             <div class="video-metabox-source-item video_source_wrap_external_url" style="display: <?php echo $videoSource === 'external_url' ? 'block' :
-			    'none'; ?>;">
+				'none'; ?>;">
                 <input type="text" name="video[source_external_url]" value="<?php echo tutor_utils()->avalue_dot('source_external_url', $video);
-			    ?>" placeholder="<?php _e('External Video URL', 'tutor'); ?>">
+				?>" placeholder="<?php _e('External Video URL', 'tutor'); ?>">
             </div>
 
             <div class="video-metabox-source-item video_source_wrap_youtube" style="display: <?php echo $videoSource === 'youtube' ? 'block' :
-			    'none'; ?>;">
+				'none'; ?>;">
                 <input type="text" name="video[source_youtube]" value="<?php echo tutor_utils()->avalue_dot('source_youtube', $video); ?>" placeholder="<?php _e('YouTube Video URL', 'tutor'); ?>">
             </div>
             <div class="video-metabox-source-item video_source_wrap_vimeo" style="display: <?php echo $videoSource === 'vimeo' ? 'block' : 'none'; ?>;">
@@ -110,9 +111,9 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
             </div>
             <div class="video-metabox-source-item video_source_wrap_embedded" style="display: <?php echo $videoSource === 'embedded' ? 'block' : 'none'; ?>;">
                 <textarea name="video[source_embedded]" placeholder="<?php _e('Place your embedded code here', 'tutor'); ?>"><?php echo tutor_utils()
-                        ->avalue_dot
-                    ('source_embedded', $video);
-                ?></textarea>
+		                ->avalue_dot
+		                ('source_embedded', $video);
+	                ?></textarea>
             </div>
 
         </div>
@@ -120,28 +121,33 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
     </div>
 </div>
 
-<div class="tutor-option-field-row">
-    <div class="tutor-option-field-label">
-        <label for=""><?php _e('Video Run Time', 'tutor'); ?></label>
-    </div>
-    <div class="tutor-option-field">
-        <div class="tutor-option-gorup-fields-wrap">
-            <div class="tutor-lesson-video-runtime">
-                <div class="tutor-option-group-field">
-                    <input type="text" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]">
-                    <p class="desc"><?php _e('HH', 'tutor'); ?></p>
-                </div>
+<?php
+if ( $post->post_type !== tutor()->course_post_type){
+	?>
+    <div class="tutor-option-field-row">
+        <div class="tutor-option-field-label">
+            <label for=""><?php _e('Video Run Time', 'tutor'); ?></label>
+        </div>
+        <div class="tutor-option-field">
+            <div class="tutor-option-gorup-fields-wrap">
+                <div class="tutor-lesson-video-runtime">
+                    <div class="tutor-option-group-field">
+                        <input type="text" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]">
+                        <p class="desc"><?php _e('HH', 'tutor'); ?></p>
+                    </div>
 
-                <div class="tutor-option-group-field">
-                    <input type="text" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]">
-                    <p class="desc"><?php _e('MM', 'tutor'); ?></p>
-                </div>
+                    <div class="tutor-option-group-field">
+                        <input type="text" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]">
+                        <p class="desc"><?php _e('MM', 'tutor'); ?></p>
+                    </div>
 
-                <div class="tutor-option-group-field">
-                    <input type="text" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]">
-                    <p class="desc"><?php _e('SS', 'tutor'); ?></p>
+                    <div class="tutor-option-group-field">
+                        <input type="text" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]">
+                        <p class="desc"><?php _e('SS', 'tutor'); ?></p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+<?php } ?>

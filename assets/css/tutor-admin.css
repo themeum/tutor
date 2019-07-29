@@ -656,6 +656,7 @@ Video MetaBox
 .video-metabox-source-html5-upload .video-upload-icon i{
     font-size: 50px;
     color: #1B52D8;
+    line-height: 45px;
 }
 .video_source_upload_wrap_html5{
     margin-top: 10px;
@@ -702,6 +703,9 @@ Video MetaBox
 }
 .video-metabox-source-html5-poster .tutor-row .tutor-col-5{
     width: 38%;
+}
+.video-metabox-source-html5-poster .tutor-col-7{
+    width: 62%;
 }
 .tutor-course-builder-attachements *{
     box-sizing: border-box;

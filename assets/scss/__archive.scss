@@ -4788,10 +4788,6 @@ Lesson Edit Modal
   bottom: 0;
   position: -webkit-sticky;
 }
-.tutor-lesson-modal-wrap .tutor-thumbnail-wrap img{
-  max-width: 150px;
-  height: auto;
-}
 .tutor-get-pro-text {
   color: #e02424;
 }
@@ -5675,18 +5671,22 @@ Tutor Media Upload
   position: relative;
 }
 
-.builder-course-thumbnail-img-src .tutor-course-thumbnail-delete-btn{
+.builder-course-thumbnail-img-src .tutor-course-thumbnail-delete-btn {
   position: absolute;
-  top: 12px;
-  left: 15px;
+  top: -4px;
+  left: -4px;
   color: #E53935;
-  opacity: 0;
+  -webkit-transition: 300ms;
   transition: 300ms;
+  background: #fff;
+  font-size: 9px;
+  /* padding: 6px; */
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border: 1px solid #666;
 }
-.builder-course-thumbnail-img-src:hover .tutor-course-thumbnail-delete-btn{
-  opacity: 1;
-}
-
 .tutor-course-builder-header{
   text-align: right;
   font-size: 12px;
@@ -5849,6 +5849,7 @@ Video MetaBox
 .tutor-video-metabox-wrap{
   margin-bottom: 50px;
 }
+
 .video-metabox-source-input-wrap{
   padding: 30px;
   background-color: #F4F7F8;
