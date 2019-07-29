@@ -432,38 +432,6 @@ jQuery(document).ready(function($){
         frame.open();
     });
 
-    //tutor_video_poster_upload_btn
-    $(document).on( 'click', '.tutor_video_poster_upload_btn',  function( event ){
-        event.preventDefault();
-
-        var $that = $(this);
-        var frame;
-        // If the media frame already exists, reopen it.
-        if ( frame ) {
-            frame.open();
-            return;
-        }
-
-        // Create a new media frame
-        frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
-            button: {
-                text: 'Use this media'
-            },
-            multiple: false  // Set to true to allow multiple files to be selected
-        });
-
-        // When an image is selected in the media frame...
-        frame.on( 'select', function() {
-            // Get media attachment details from the frame state
-            var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.tutor-video-poster-wrap').find('.video-poster-img').html('<img src="'+attachment.url+'" alt="" />');
-            $that.closest('.tutor-video-poster-wrap').find('input').val(attachment.id);
-        });
-        // Finally, open the modal on click
-        frame.open();
-    });
-
     $(document).on('click', 'a.tutor-delete-attachment', function(e){
         e.preventDefault();
         $(this).closest('.tutor-added-attachment').remove();
@@ -752,32 +720,6 @@ jQuery(document).ready(function($){
             $('.tutor-modal-wrap').removeClass('show');
         }
     });
-
-    /*
-    $(document).on('click', '.tutor-add-quiz-btn', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').attr('data-add-quiz-under');
-        $.ajax({
-            url : ajaxurl,
-            type : 'POST',
-            data : {quiz_for_post_id : quiz_for_post_id, action: 'tutor_load_quiz_modal'},
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                $('.tutor-quiz-modal-wrap .modal-container').html(data.data.output);
-                $('.tutor-quiz-modal-wrap').attr('quiz-for-post-id', quiz_for_post_id).addClass('show');
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-    */
-
-
 
     $(document).on('click', '.tutor-add-quiz-btn', function(e){
         e.preventDefault();

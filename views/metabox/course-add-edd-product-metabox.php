@@ -32,15 +32,12 @@ $_tutor_course_price_type = tutils()->price_type();
 				echo "<option value='{$product->ID}' ".selected($product->ID, $product_id)." >{$product->post_title}</option>";
 			}
 			?>
-
         </select>
 
         <p class="desc">
 			<?php _e('Sell your product, process by EDD', 'tutor'); ?>
         </p>
-        
-        
-        
+
     </div>
 </div>
 
