@@ -2231,7 +2231,15 @@ jQuery(document).ready(function($){
         $(this).closest('.tutor-individual-attachment-file').remove();
     });
 
+    $('.tutor-course-builder-section-title').on('click', function () {
 
+        if($(this).find('i').hasClass("tutor-icon-up")){
+            $(this).find('i').removeClass('tutor-icon-up').addClass('tutor-icon-down');
+        }else{
+            $(this).find('i').removeClass('tutor-icon-down').addClass('tutor-icon-up');
+        }
+        $(this).next('div').slideToggle();
+    })
 
 
 });
