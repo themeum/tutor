@@ -66,7 +66,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
                 <div class="video-metabox-source-html5-poster">
                     <div class="tutor-form-field tutor-form-field-course-thumbnail tutor-thumbnail-wrap">
                         <div class="tutor-row tutor-align-items-center">
-                            <div class="tutor-col-5">
+                            <div class="tutor-col">
                                 <div class="builder-course-thumbnail-img-src html5-video-poster">
 									<?php
 									$builder_course_img_src = tutor()->url . 'assets/images/placeholder-course.jpg';
@@ -78,10 +78,13 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
                                     <img src="<?php echo $poster_url; ?>" class="thumbnail-img" data-placeholder-src="<?php echo $builder_course_img_src; ?>">
                                     <a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display: <?php echo
                                     $poster ? 'block':'none'; ?>;"><i class="tutor-icon-line-cross"></i></a>
+                                    <div class="tutor-builder-course-video-poster-text">
+                                        <h5><?php esc_html_e("Video Poster", 'tutor'); ?></h5>
+                                        <span><?php esc_html_e("Thumb Size: 700x430 pixels. File Support: jpg, jpeg, or png", 'tutor'); ?></span>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="tutor-col-7">
+                            <div class="tutor-col-auto">
                                 <div class="builder-course-thumbnail-upload-wrap">
                                     <input type="hidden" id="tutor_course_thumbnail_id" name="video[poster]" value="<?php echo $poster; ?>">
                                     <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button

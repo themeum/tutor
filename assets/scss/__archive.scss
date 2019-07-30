@@ -2068,9 +2068,9 @@ Instructor
 }
 .tutor-topics-in-single-lesson .tutor-topics-title h3{
   cursor: pointer;
+  line-height: 30px;
 }
 span.toogle-informaiton-icon {
-  /* padding: 3px; */
   background: #ccc;
   color: #fff;
   height: 15px;
@@ -3702,7 +3702,7 @@ Course question and answer
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered{
-  line-height: 48px;
+  line-height: 46px;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow{
@@ -5535,6 +5535,7 @@ Tutor Media Upload
   overflow: hidden;
   z-index: 1;
   margin: 0 0 25px;
+  cursor: pointer;
 }
 .tutor-course-builder-section-title h3::after{
   content: '';
@@ -5562,66 +5563,6 @@ Tutor Media Upload
 .tutor-course-builder-section-title h3 span{
   padding: 0 15px 0 9px;
 }
-
-/*
-.tutor-form-field-course-categories {
-  max-height: 200px;
-  overflow-y: scroll;
-  border: 1px solid #DCDFE5;
-}
-.tutor-form-field-course-categories ul{
-  list-style: none;
-  margin: 0;
-  padding-left: 15px;
-}
-
-.tutor-form-field-course-categories label{
-  margin-bottom: 0;
-  cursor: pointer;
-  position: relative;
-}
-.tutor-form-field-course-categories label input{
-  display: none;
-}
-
-
-.tutor-form-field-course-categories label input + span{
-  padding-left: 30px;
-  position: relative;
-  display: block;
-  line-height: 26px;
-}
-
-.tutor-form-field-course-categories label input + span::before{
-  content: '\e90f';
-  height: 16px;
-  width: 16px;
-  background: #f7f7f7;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 1px solid #DCDFE5;
-  font-family: 'tutor';
-  font-size: 11px;
-  line-height: 18px;
-  text-align: center;
-  color: #f7f7f7;
-  transition: 300ms;
-  border-radius: 3px;
-}
-
-.tutor-form-field-course-categories label input:checked + span::before{
-  color: var(--tutor-primary-color);
-  border-color: var(--tutor-primary-color);
-}
-.tutor-form-field-course-categories label:hover input + span::before{
-  border-color: var(--tutor-primary-color);
-}
-
-.tutor-form-field-course-categories label:hover{
-  color: var(--tutor-primary-color);
-}*/
 
 .tutor-frontend-builder-item-scope{
   margin-bottom: 30px;
@@ -5651,20 +5592,21 @@ Tutor Media Upload
 }
 
 .builder-course-thumbnail-img-src .tutor-course-thumbnail-delete-btn {
+  font-size: 10px;
   position: absolute;
   top: -4px;
   left: -4px;
   color: #E53935;
   -webkit-transition: 300ms;
   transition: 300ms;
-  background: #fff;
-  font-size: 9px;
-  /* padding: 6px; */
   border-radius: 50%;
   width: 20px;
   height: 20px;
   line-height: 20px;
-  border: 1px solid #666;
+  background: #fff;
+  i{
+    line-height: 20px;
+  }
 }
 .tutor-course-builder-header{
   text-align: right;
@@ -5825,9 +5767,22 @@ Frontend Course Builder
 Video MetaBox
  */
 
-.select2-results__options [class^="tutor-icon-"]{
-  color: #1B52D8;
+.select2-selection__rendered [class^="tutor-icon-"]{
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 6px;
 }
+.select2-results__options [class^="tutor-icon-"]{
+  color: var(--tutor-primary-color);
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 6px;
+}
+
+.select2-results__option--highlighted [class^="tutor-icon-"]{
+  color: #fff;
+}
+
 .tutor-video-metabox-wrap{
   margin-bottom: 50px;
 }
@@ -5853,28 +5808,43 @@ Video MetaBox
 }
 .video-metabox-source-html5-upload .video-upload-icon i{
   font-size: 50px;
-  color: #1B52D8;
+  color: var(--tutor-primary-color);
 }
 .video_source_upload_wrap_html5{
   margin-top: 10px;
 }
 .video-metabox-source-html5-poster {
-  padding-top: 20px;
+  padding-top: 30px;
 }
 .video_source_wrap_html5{
   width: 100%;
 }
-.button-transparent{
-  background: transparent !important;
-}
-.button-transparent:hover{
-  color: var(--tutor-primary-color) !important;
-}
+
 .builder-course-thumbnail-upload-wrap .button-transparent{
   float: right;
+  background: transparent !important;
+  &:hover{
+    background: var(--tutor-primary-color) !important;
+  }
 }
 .html5-video-poster{
   height: 100px;
+  display: flex;
+  align-items: center;
+  .tutor-builder-course-video-poster-text{
+    text-align: left;
+    padding-left: 20px;
+    h5{
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 0 6px;
+      line-height: 1;
+    }
+    span{
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
 }
 .html5-video-poster img{
   height: 100%;

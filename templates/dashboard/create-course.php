@@ -200,14 +200,9 @@ if ( ! $can_publish_course){
 
                                             </div>
                                         </div>
-                                    </div> <!--.tutor-frontend-builder-item-scope-->
-                                    <!--
-																<div class="tutor-frontend-builder-item-scope">
-																	<h1 style="color: red;">video metabox here</h1>
-																</div>-->
+                                    </div>
                                 </div>
                             </div>
-
 
 							<?php do_action('tutor/dashboard_course_builder_form_field_after'); ?>
                             <div class="tutor-form-row">
