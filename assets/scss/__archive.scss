@@ -5825,6 +5825,9 @@ Frontend Course Builder
 Video MetaBox
  */
 
+.select2-results__options [class^="tutor-icon-"]{
+  color: #1B52D8;
+}
 .tutor-video-metabox-wrap{
   margin-bottom: 50px;
 }
@@ -5876,7 +5879,4 @@ Video MetaBox
 .html5-video-poster img{
   height: 100%;
   width: auto;
-}
-.select2-results__options [class^="tutor-icon-"]{
-  color: #1B52D8;
 }

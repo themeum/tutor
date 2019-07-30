@@ -2148,6 +2148,7 @@ jQuery(document).ready(function($){
         $(this).closest('.tutor-individual-attachment-file').remove();
     });
 
+
     /**
      *
      * @type {jQuery}
@@ -2178,6 +2179,24 @@ jQuery(document).ready(function($){
             }
         });
     }
+
+    /**
+     *
+     * @type {jQuery}
+     *
+     * Course builder section toggle
+     *
+     * @since v.1.3.5
+     */
+
+    $('.tutor-course-builder-section-title').on('click', function () {
+        if($(this).find('i').hasClass("tutor-icon-up")){
+            $(this).find('i').removeClass('tutor-icon-up').addClass('tutor-icon-down');
+        }else{
+            $(this).find('i').removeClass('tutor-icon-down').addClass('tutor-icon-up');
+        }
+        $(this).next('div').slideToggle();
+    })
 
 
 });

@@ -67,43 +67,43 @@ if ( ! $can_publish_course){
                             <div class="tutor-course-builder-section-title">
                                 <h3><i class="tutor-icon-down"></i><span><?php esc_html_e('Course Info', 'tutor'); ?></span></h3>
                             </div> <!--.tutor-course-builder-section-title-->
+                            <div class="tutor-course-builder-section-content">
+                                <div class="tutor-frontend-builder-item-scope">
+                                    <div class="tutor-form-group">
+                                        <label class="tutor-builder-item-heading">
+                                            <?php _e('Course Title', 'tutor'); ?>
+                                        </label>
+                                        <input type="text" name="title" value="<?php echo get_the_title(); ?>" placeholder="<?php _e('ex. Learn photoshop CS6 from scratch', 'tutor'); ?>">
+                                    </div>
+                                </div> <!--.tutor-frontend-builder-item-scope-->
 
-                            <div class="tutor-frontend-builder-item-scope">
-                                <div class="tutor-form-group">
-                                    <label class="tutor-builder-item-heading">
-                                        <?php _e('Course Title', 'tutor'); ?>
-                                    </label>
-                                    <input type="text" name="title" value="<?php echo get_the_title(); ?>" placeholder="<?php _e('ex. Learn photoshop CS6 from scratch', 'tutor'); ?>">
-                                </div>
-                            </div> <!--.tutor-frontend-builder-item-scope-->
-
-                            <div class="tutor-frontend-builder-item-scope">
-                                <div class="tutor-form-group">
-                                    <label> <?php _e('Description', 'tutor'); ?></label>
-                                    <?php
-                                    $editor_settings = array(
-                                        'media_buttons' => false,
-                                        'quicktags'     => false,
-                                        'editor_height' => 150,
-                                        'textarea_name' => 'content'
-                                    );
-                                    wp_editor($post->post_content, 'course_description', $editor_settings);
-                                    ?>
-                                </div>
-                            </div>  <!--.tutor-frontend-builder-item-scope-->
-
-                            <div class="tutor-frontend-builder-item-scope">
-                                <div class="tutor-form-group">
-                                    <label>
-                                        <?php _e('Choose a category', 'tutor'); ?>
-                                    </label>
-                                    <div class="tutor-form-field-course-categories">
-                                        <?php //echo tutor_course_categories_checkbox($course_id);
-                                        echo tutor_course_categories_dropdown($course_id, array('classes' => 'tutor_select2'));
+                                <div class="tutor-frontend-builder-item-scope">
+                                    <div class="tutor-form-group">
+                                        <label> <?php _e('Description', 'tutor'); ?></label>
+                                        <?php
+                                        $editor_settings = array(
+                                            'media_buttons' => false,
+                                            'quicktags'     => false,
+                                            'editor_height' => 150,
+                                            'textarea_name' => 'content'
+                                        );
+                                        wp_editor($post->post_content, 'course_description', $editor_settings);
                                         ?>
                                     </div>
+                                </div>  <!--.tutor-frontend-builder-item-scope-->
+
+                                <div class="tutor-frontend-builder-item-scope">
+                                    <div class="tutor-form-group">
+                                        <label>
+                                            <?php _e('Choose a category', 'tutor'); ?>
+                                        </label>
+                                        <div class="tutor-form-field-course-categories">
+                                            <?php //echo tutor_course_categories_checkbox($course_id);
+                                            echo tutor_course_categories_dropdown($course_id, array('classes' => 'tutor_select2'));
+                                            ?>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div> <!--.tutor-frontend-builder-item-scope-->
 
                             <?php
                                 $enable_course_sell_by_woocommerce = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
@@ -136,79 +136,77 @@ if ( ! $can_publish_course){
                                                 </label>
                                             </div>
                                         </div>
+                                    </div> <!--.tutor-frontend-builder-item-scope-->
+                                <?php } ?>
 
-                                    </div>  <!--.tutor-frontend-builder-item-scope-->
-                                    <?php
-                                }
-                            ?>
-
-                            <div class="tutor-frontend-builder-item-scope">
-                                <div class="tutor-form-group">
-                                    <div class="tutor-option-field-label">
-                                        <label class="tutor-builder-item-heading">
-                                            <?php _e('Level', 'tutor'); ?>
-                                        </label>
-                                    </div>
-                                    <div class="tutor-course-level-meta">
-                                        <?php
-                                            $levels = tutor_utils()->course_levels();
-                                            $course_level = get_post_meta($course_id, '_tutor_course_level', true);
-                                            foreach ($levels as $level_key => $level){
-                                                ?>
-                                                <label class="tutor-styled-radio">
-                                                    <input type="radio" name="course_level" value="<?php echo $level_key; ?>" <?php $course_level ? checked($level_key, $course_level) : $level_key === 'intermediate' ? checked(1, 1): ''; ?> >
-                                                    <span>
-                                                        <?php echo $level; ?>
-                                                    </span>
-                                                </label>
-                                                <?php
-                                            }
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>  <!--.tutor-frontend-builder-item-scope-->
-
-                            <div class="tutor-frontend-builder-item-scope">
-                                <div class="tutor-form-group">
-                                    <label>
-                                        <?php _e('Course Thumbnail', 'tutor'); ?>
-                                    </label>
-                                    <div class="tutor-form-field tutor-form-field-course-thumbnail tutor-thumbnail-wrap">
-                                        <div class="tutor-row tutor-align-items-center">
-                                            <div class="tutor-col-5">
-                                                <div class="builder-course-thumbnail-img-src">
-                                                    <?php
-                                                    $builder_course_img_src = tutor()->url . 'assets/images/placeholder-course.jpg';
-                                                    $_thumbnail_url = get_the_post_thumbnail_url($course_id);
-                                                    $post_thumbnail_id = get_post_thumbnail_id( $course_id );
-
-                                                    if ( ! $_thumbnail_url){
-                                                        $_thumbnail_url = $builder_course_img_src;
-                                                    }
-                                                    ?>
-                                                    <img src="<?php echo $_thumbnail_url; ?>" class="thumbnail-img" data-placeholder-src="<?php echo $builder_course_img_src; ?>">
-                                                    <a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display: <?php echo
-                                                    $post_thumbnail_id ? 'block':'none'; ?>;"><i
-                                                                class="tutor-icon-line-cross"></i></a>
-                                                </div>
-                                            </div>
-
-                                            <div class="tutor-col-7">
-                                                <div class="builder-course-thumbnail-upload-wrap">
-                                                    <h4><?php echo sprintf(__("Important Guideline: %1\$s 700x430 pixels %2\$s %3\$s File Support: %1\$s jpg, .jpeg,. gif, or .png %2\$s no text on the image.", "tutor"), "<strong>", "</strong>", "<br>") ?></h4>
-                                                    <input type="hidden" id="tutor_course_thumbnail_id" name="tutor_course_thumbnail_id" value="<?php echo $post_thumbnail_id; ?>">
-                                                    <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button"><?php _e('Upload Image', 'tutor'); ?></a>
-                                                </div>
-                                            </div>
+                                <div class="tutor-frontend-builder-item-scope">
+                                    <div class="tutor-form-group">
+                                        <div class="tutor-option-field-label">
+                                            <label class="tutor-builder-item-heading">
+                                                <?php _e('Level', 'tutor'); ?>
+                                            </label>
                                         </div>
-
+                                        <div class="tutor-course-level-meta">
+                                            <?php
+                                                $levels = tutor_utils()->course_levels();
+                                                $course_level = get_post_meta($course_id, '_tutor_course_level', true);
+                                                foreach ($levels as $level_key => $level){
+                                                    ?>
+                                                    <label class="tutor-styled-radio">
+                                                        <input type="radio" name="course_level" value="<?php echo $level_key; ?>" <?php $course_level ? checked($level_key, $course_level) : $level_key === 'intermediate' ? checked(1, 1): ''; ?> >
+                                                        <span>
+                                                            <?php echo $level; ?>
+                                                        </span>
+                                                    </label>
+                                                    <?php
+                                                }
+                                            ?>
+                                        </div>
                                     </div>
-                                </div>
-                            </div> <!--.tutor-frontend-builder-item-scope-->
-<!--
-                            <div class="tutor-frontend-builder-item-scope">
-                                <h1 style="color: red;">video metabox here</h1>
-                            </div>-->
+                                </div>  <!--.tutor-frontend-builder-item-scope-->
+
+                                <div class="tutor-frontend-builder-item-scope">
+                                    <div class="tutor-form-group">
+                                        <label>
+                                            <?php _e('Course Thumbnail', 'tutor'); ?>
+                                        </label>
+                                        <div class="tutor-form-field tutor-form-field-course-thumbnail tutor-thumbnail-wrap">
+                                            <div class="tutor-row tutor-align-items-center">
+                                                <div class="tutor-col-5">
+                                                    <div class="builder-course-thumbnail-img-src">
+                                                        <?php
+                                                        $builder_course_img_src = tutor()->url . 'assets/images/placeholder-course.jpg';
+                                                        $_thumbnail_url = get_the_post_thumbnail_url($course_id);
+                                                        $post_thumbnail_id = get_post_thumbnail_id( $course_id );
+
+                                                        if ( ! $_thumbnail_url){
+                                                            $_thumbnail_url = $builder_course_img_src;
+                                                        }
+                                                        ?>
+                                                        <img src="<?php echo $_thumbnail_url; ?>" class="thumbnail-img" data-placeholder-src="<?php echo $builder_course_img_src; ?>">
+                                                        <a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display: <?php echo
+                                                        $post_thumbnail_id ? 'block':'none'; ?>;"><i
+                                                                    class="tutor-icon-line-cross"></i></a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tutor-col-7">
+                                                    <div class="builder-course-thumbnail-upload-wrap">
+                                                        <h4><?php echo sprintf(__("Important Guideline: %1\$s 700x430 pixels %2\$s %3\$s File Support: %1\$s jpg, .jpeg,. gif, or .png %2\$s no text on the image.", "tutor"), "<strong>", "</strong>", "<br>") ?></h4>
+                                                        <input type="hidden" id="tutor_course_thumbnail_id" name="tutor_course_thumbnail_id" value="<?php echo $post_thumbnail_id; ?>">
+                                                        <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button"><?php _e('Upload Image', 'tutor'); ?></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div> <!--.tutor-frontend-builder-item-scope-->
+    <!--
+                                <div class="tutor-frontend-builder-item-scope">
+                                    <h1 style="color: red;">video metabox here</h1>
+                                </div>-->
+                            </div>
                         </div>
 
 
