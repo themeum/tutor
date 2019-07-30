@@ -6879,65 +6879,6 @@ Tutor Media Upload
   padding: 0 15px 0 9px;
 }
 
-/*
-.tutor-form-field-course-categories {
-  max-height: 200px;
-  overflow-y: scroll;
-  border: 1px solid #DCDFE5;
-}
-.tutor-form-field-course-categories ul{
-  list-style: none;
-  margin: 0;
-  padding-left: 15px;
-}
-
-.tutor-form-field-course-categories label{
-  margin-bottom: 0;
-  cursor: pointer;
-  position: relative;
-}
-.tutor-form-field-course-categories label input{
-  display: none;
-}
-
-
-.tutor-form-field-course-categories label input + span{
-  padding-left: 30px;
-  position: relative;
-  display: block;
-  line-height: 26px;
-}
-
-.tutor-form-field-course-categories label input + span::before{
-  content: '\e90f';
-  height: 16px;
-  width: 16px;
-  background: #f7f7f7;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 1px solid #DCDFE5;
-  font-family: 'tutor';
-  font-size: 11px;
-  line-height: 18px;
-  text-align: center;
-  color: #f7f7f7;
-  transition: 300ms;
-  border-radius: 3px;
-}
-
-.tutor-form-field-course-categories label input:checked + span::before{
-  color: var(--tutor-primary-color);
-  border-color: var(--tutor-primary-color);
-}
-.tutor-form-field-course-categories label:hover input + span::before{
-  border-color: var(--tutor-primary-color);
-}
-
-.tutor-form-field-course-categories label:hover{
-  color: var(--tutor-primary-color);
-}*/
 .tutor-frontend-builder-item-scope {
   margin-bottom: 30px;
 }
@@ -7157,6 +7098,10 @@ Frontend Course Builder
 /**
 Video MetaBox
  */
+.select2-results__options [class^="tutor-icon-"] {
+  color: #1B52D8;
+}
+
 .tutor-video-metabox-wrap {
   margin-bottom: 50px;
 }
