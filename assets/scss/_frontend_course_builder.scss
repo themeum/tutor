@@ -225,8 +225,8 @@
 	right: -1px;
 	font-size: 10px;
 	border-top-right-radius: 4px;
-	color: #D71830;
-	opacity: 0;
+	color: transparent;
+	//opacity: 0;
 	transition: 300ms;
 }
 
@@ -234,7 +234,8 @@
 .tutor-course-builder-attachements .tutor-added-attachment:hover,
 .tutor-course-builder-attachements .tutor-added-attachment:hover .tutor-delete-attachment{
 	border-color: #D71830;
-	opacity: 1;
+	//opacity: 1;
+	color: #D71830;
 }
 
 

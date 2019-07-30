@@ -201,9 +201,8 @@ if ( ! $can_publish_course){
 
                                         </div>
                                     </div>
-                                </div> <!--.tutor-frontend-builder-item-scope-->
-    <!--
-                                <div class="tutor-frontend-builder-item-scope">
+                                </div> <!-- .tutor-frontend-builder-item-scope -->
+                            <!--<div class="tutor-frontend-builder-item-scope">
                                     <h1 style="color: red;">video metabox here</h1>
                                 </div>-->
                             </div>
