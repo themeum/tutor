@@ -105,6 +105,13 @@ Animation Spinner
 /**
  * Icon Contents
  */
+
+.tutor-icon-photo-1:before {
+    content: "\e995";
+}
+.tutor-icon-add-group:before {
+    content: "\e996";
+}
 .tutor-icon-coding:before {
     content: "\e98f";
 }

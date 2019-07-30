@@ -6848,6 +6848,7 @@ Tutor Media Upload
   overflow: hidden;
   z-index: 1;
   margin: 0 0 25px;
+  cursor: pointer;
 }
 
 .tutor-course-builder-section-title h3::after {
