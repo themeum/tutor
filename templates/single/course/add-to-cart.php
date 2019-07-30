@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 $isLoggedIn = is_user_logged_in();
 
-$enable_course_sell_by_woocommerce = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
+$monetize_by = tutils()->get_option('monetize_by');
 $enable_guest_course_cart = tutor_utils()->get_option('enable_guest_course_cart');
 
 $is_purchasable = tutor_utils()->is_course_purchasable();
@@ -21,7 +21,7 @@ $required_loggedin_class = '';
 if ( ! $isLoggedIn){
 	$required_loggedin_class = apply_filters('tutor_enroll_required_login_class', 'cart-required-login');
 }
-if ($is_purchasable && $enable_course_sell_by_woocommerce && $enable_guest_course_cart){
+if ($is_purchasable && $monetize_by === 'wc' && $enable_guest_course_cart){
 	$required_loggedin_class = '';
 }
 
