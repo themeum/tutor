@@ -329,10 +329,7 @@ div[class*="tutor-course-col"] {
 }
 .tutor-courses{
   clear: both;
-  
-  
   display: flex;
-  
   flex-wrap: wrap;
   margin-left: -15px;
   margin-right: -15px;
@@ -652,7 +649,6 @@ a.tutor-btn.bordered-btn:hover,
 
 .tutor-dashboard-header-info{
   -webkit-box-flex: 1;
-  
   flex-grow: 1;
   padding-left: 20px;
   padding-top: 15px;
@@ -1462,17 +1458,13 @@ Withdraw Method
 
 
 .withdraw-method-select-wrap{
-  
-  
   display: flex;
-  
   flex-wrap: wrap;
   margin: 0 -15px 40px;
 }
 
 .withdraw-method-select-wrap .withdraw-method-select{
   -webkit-box-flex: 1;
-  
   flex-grow: 1;
   padding: 0 15px;
   margin-bottom: 30px;
@@ -1531,10 +1523,7 @@ Withdraw Method
 }
 
 .withdraw-method-form{
-  
-  
   display: flex;
-  
   flex-wrap: wrap;
   margin: 0 -15px;
 }
@@ -1542,7 +1531,6 @@ Withdraw Method
 
 .withdraw-method-form > div{
   -webkit-box-flex: 1;
-  
   flex-grow: 1;
   min-width: 50%;
   padding: 0 15px 20px;
@@ -2617,8 +2605,6 @@ Tutor Dashboard Content
 Form CSS
  */
 .tutor-form-row{
-  
-  
   display: flex;
   margin-left: -15px;
   margin-right: -15px;
@@ -4044,21 +4030,16 @@ Course question and answer
   margin: 0 !important;
   box-shadow: 0 0 1px rgba(0,0,0,0.08);
 }
-
 .prerequisites-course-lists li .prerequisites-course-title{
   -webkit-box-flex: 1;
-  
   flex-grow: 1;
   padding-left: 15px;
   -webkit-transition: 300ms;
   transition: 300ms;
 }
-
 .prerequisites-course-lists li a:hover .prerequisites-course-title{
   color: var(--tutor-primary-color);
 }
-
-
 .prerequisites-course-checkmark{
   line-height: 24px;
   height: 24px;
@@ -4544,8 +4525,6 @@ p.course-empty-content {
   cursor: pointer;
 }
 .tutor-topic-title{
-  
-  
   display: flex;
   font-size: 16px;
   font-weight: 300;
@@ -5849,7 +5828,6 @@ Video MetaBox
 .tutor-video-metabox-wrap{
   margin-bottom: 50px;
 }
-
 .video-metabox-source-input-wrap{
   padding: 30px;
   background-color: #F4F7F8;
@@ -5898,4 +5876,7 @@ Video MetaBox
 .html5-video-poster img{
   height: 100%;
   width: auto;
+}
+.select2-results__options [class^="tutor-icon-"]{
+  color: #1B52D8;
 }

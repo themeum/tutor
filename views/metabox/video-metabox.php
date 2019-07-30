@@ -36,8 +36,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
         <select name="video[source]" class="tutor_lesson_video_source videosource_select2">
             <option value=""><?php _e('Select Video Source', 'tutor'); ?></option>
             <option value="html5" <?php selected('html5', $videoSource); ?>  data-icon="html5" ><?php _e('HTML5 (mp4)', 'tutor'); ?></option>
-            <option value="external_url" <?php selected('external_url', $videoSource); ?>  data-icon="link" ><?php _e('External URL', 'tutor');
-				?></option>
+            <option value="external_url" <?php selected('external_url', $videoSource); ?>  data-icon="link" ><?php _e('External URL', 'tutor'); ?></option>
             <option value="youtube" <?php selected('youtube', $videoSource); ?>  data-icon="youtube" ><?php _e('YouTube', 'tutor'); ?></option>
             <option value="vimeo" <?php selected('vimeo', $videoSource); ?>  data-icon="vimeo" ><?php _e('Vimeo', 'tutor'); ?></option>
             <option value="embedded" <?php selected('embedded', $videoSource); ?>  data-icon="code" ><?php _e('Embedded', 'tutor'); ?></option>
