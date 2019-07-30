@@ -785,6 +785,15 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function is_course_purchasable($course_id = 0){
+		$course_id = $this->get_post_id($course_id);
+
+		$price_type = $this->price_type($course_id);
+		if ($price_type === 'free'){
+			$is_paid = apply_filters('is_course_paid', false, $course_id);
+			if ( ! $is_paid){
+				return false;
+			}
+		}
 		return apply_filters('is_course_purchasable', false, $course_id);
 	}
 
@@ -838,18 +847,37 @@ class Utils {
 			'sale_price'    => 0,
 		);
 
-		if ($this->is_course_purchasable($course_id)){
+		//if ($this->is_course_purchasable($course_id)){
 			$product_id = $this->get_course_product_id($course_id);
-			if ($this->get_option('enable_course_sell_by_woocommerce') && $this->has_wc()){
-				$prices['regular_price']= get_post_meta($product_id, '_regular_price', true);
-				$prices['sale_price']= get_post_meta($product_id, '_sale_price', true);
-			}elseif ($this->get_option('enable_tutor_edd') && $this->has_edd() ){
-				$prices['regular_price']= get_post_meta($product_id, 'edd_price', true);
-				$prices['sale_price']= get_post_meta($product_id, 'edd_price', true);
+			if ($product_id) {
+				if ( $this->get_option( 'enable_course_sell_by_woocommerce' ) && $this->has_wc() ) {
+					$prices['regular_price'] = get_post_meta( $product_id, '_regular_price', true );
+					$prices['sale_price']    = get_post_meta( $product_id, '_sale_price', true );
+				} elseif ( $this->get_option( 'enable_tutor_edd' ) && $this->has_edd() ) {
+					$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
+					$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
+				}
 			}
-		}
+		//}
 
 		return (object) $prices;
+	}
+
+	/**
+	 * @param int $course_id
+	 *
+	 * @return mixed
+	 *
+	 * Get the course price type
+	 *
+	 * @since  v.1.3.5
+	 */
+
+	public function price_type($course_id = 0){
+		$course_id = $this->get_post_id($course_id);
+
+		$price_type = get_post_meta($course_id, '_tutor_course_price_type', true);
+		return $price_type;
 	}
 
 	/**

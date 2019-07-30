@@ -136,13 +136,9 @@
                         </button>
 
                         <?php do_action('tutor_course_builder_after_btn_group', $topic->ID); ?>
-
                     </div>
                 </div>
-
             </div>
-
-
         </div>
 		<?php
 	}

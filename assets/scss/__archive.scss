@@ -4328,17 +4328,6 @@ button.tm-close.tutor-icon-line-cross:hover{
   width: 100px;
   text-align: center;
 }
-.video_source_wrap_html5 a{
-  border: 1px solid #e4e4e4;
-  text-align: center;
-  display: block;
-  padding: 30px;
-}
-.video_source_wrap_html5 a i{
-  font-size: 30px;
-  width: 40px;
-  height: 40px;
-}
 .video-poster-img img{
   max-width: 200px;
   height: auto;
@@ -4798,10 +4787,6 @@ Lesson Edit Modal
   position: sticky;
   bottom: 0;
   position: -webkit-sticky;
-}
-.tutor-lesson-modal-wrap .tutor-thumbnail-wrap img{
-  max-width: 150px;
-  height: auto;
 }
 .tutor-get-pro-text {
   color: #e02424;
@@ -5686,18 +5671,22 @@ Tutor Media Upload
   position: relative;
 }
 
-.builder-course-thumbnail-img-src .tutor-course-thumbnail-delete-btn{
+.builder-course-thumbnail-img-src .tutor-course-thumbnail-delete-btn {
   position: absolute;
-  top: 12px;
-  left: 15px;
+  top: -4px;
+  left: -4px;
   color: #E53935;
-  opacity: 0;
+  -webkit-transition: 300ms;
   transition: 300ms;
+  background: #fff;
+  font-size: 9px;
+  /* padding: 6px; */
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border: 1px solid #666;
 }
-.builder-course-thumbnail-img-src:hover .tutor-course-thumbnail-delete-btn{
-  opacity: 1;
-}
-
 .tutor-course-builder-header{
   text-align: right;
   font-size: 12px;
@@ -5848,4 +5837,65 @@ input:checked + .btn-slider:before {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+/**
+Frontend Course Builder
+ */
+/**
+Video MetaBox
+ */
+
+.tutor-video-metabox-wrap{
+  margin-bottom: 50px;
+}
+
+.video-metabox-source-input-wrap{
+  padding: 30px;
+  background-color: #F4F7F8;
+  border: 1px solid #DCDFE5;
+  border-radius: 3px;
+}
+.video-metabox-source-html5-upload {
+  background-color: #fff;
+  text-align: center;
+  padding: 40px 20px;
+  border: 1px solid #DCDFE5;
+  border-radius: 3px;
+}
+.video-metabox-source-html5-upload p{
+  margin-bottom: 5px;
+}
+.tutor-video-metabox-wrap p{
+  margin: 0;
+  padding: 0;
+}
+.video-metabox-source-html5-upload .video-upload-icon i{
+  font-size: 50px;
+  color: #1B52D8;
+}
+.video_source_upload_wrap_html5{
+  margin-top: 10px;
+}
+.video-metabox-source-html5-poster {
+  padding-top: 20px;
+}
+.video_source_wrap_html5{
+  width: 100%;
+}
+.button-transparent{
+  background: transparent !important;
+}
+.button-transparent:hover{
+  color: var(--tutor-primary-color) !important;
+}
+.builder-course-thumbnail-upload-wrap .button-transparent{
+  float: right;
+}
+.html5-video-poster{
+  height: 100px;
+}
+.html5-video-poster img{
+  height: 100%;
+  width: auto;
 }

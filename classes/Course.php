@@ -179,6 +179,14 @@ class Course extends Tutor_Base {
 			wp_insert_post( $post_arr );
 		}*/
 
+		/**
+		 * Save course price type
+		 */
+		$price_type = tutils()->array_get('tutor_course_price_type', $_POST);
+		if ($price_type){
+			update_post_meta($post_ID, '_tutor_course_price_type', $price_type);
+		}
+
 		//Course Duration
 		if ( ! empty($_POST['course_duration'])){
 			$video = tutor_utils()->sanitize_array($_POST['course_duration']);
@@ -663,9 +671,11 @@ class Course extends Tutor_Base {
 	public function attach_product_with_course($post_ID, $postData){
 		$attached_product_id = tutor_utils()->get_course_product_id($post_ID);
 		$course_price = sanitize_text_field(tutor_utils()->array_get('course_price', $_POST));
+
 		if ( ! $course_price){
 			return;
 		}
+
 
 		$sell_by_wc = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
 		$sell_by_edd = tutor_utils()->get_option('enable_tutor_edd');
@@ -711,6 +721,7 @@ class Course extends Tutor_Base {
 			}
 
 		}elseif ($sell_by_edd){
+
 			$is_update = false;
 			
 			if ($attached_product_id){

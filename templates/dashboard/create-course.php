@@ -103,43 +103,41 @@ if ( ! $can_publish_course){
                                             ?>
                                         </div>
                                     </div>
-                                </div> <!--.tutor-frontend-builder-item-scope-->
+                                </div>
 
-                                <?php
-                                    $enable_course_sell_by_woocommerce = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
-                                    $enable_tutor_edd = tutor_utils()->get_option('enable_tutor_edd');
-                                    if ($enable_course_sell_by_woocommerce || $enable_tutor_edd){
-                                        $course_price = tutor_utils()->get_raw_course_price(get_the_ID());
-                                        $currency_symbol = tutor_utils()->currency_symbol();
+                            <?php
+                                $enable_course_sell_by_woocommerce = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
+                                $enable_tutor_edd = tutor_utils()->get_option('enable_tutor_edd');
+                                if ($enable_course_sell_by_woocommerce || $enable_tutor_edd){
+                                    $course_price = tutor_utils()->get_raw_course_price(get_the_ID());
+                                    $currency_symbol = tutor_utils()->currency_symbol();
 
-                                        ?>
-                                        <div class="tutor-frontend-builder-item-scope tutor-frontend-builder-course-price">
-                                            <label class="tutor-builder-item-heading">
-                                                <?php _e('Course Price', 'tutor'); ?>
-                                            </label>
-                                            <div class="tutor-row tutor-align-items-center">
-                                                <div class="tutor-col-auto">
-                                                    <label for="tutor_course_price_type_pro" class="tutor-styled-radio">
-                                                        <input id="tutor_course_price_type_pro" type="radio" checked name="tutor_course_price_type">
-                                                        <span></span>
-                                                        <div class="tutor-form-group">
-                                                            <span class="tutor-input-prepand"><?php echo $currency_symbol; ?></span>
-                                                            <input type="text" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>">
-                                                        </div>
-                                                    </label>
-                                                </div>
-                                                <div class="tutor-col-auto">
-                                                    <label class="tutor-styled-radio">
-                                                        <input type="radio" name="tutor_course_price_type" value="free">
-                                                        <span><?php _e('Free', "tutor") ?></span>
-                                                    </label>
-                                                </div>
+                                    $_tutor_course_price_type = tutils()->price_type();
+                                    ?>
+                                    <div class="tutor-frontend-builder-item-scope tutor-frontend-builder-course-price">
+                                        <label class="tutor-builder-item-heading">
+                                            <?php _e('Course Price', 'tutor'); ?>
+                                        </label>
+                                        <div class="tutor-row tutor-align-items-center">
+                                            <div class="tutor-col-auto">
+                                                <label for="tutor_course_price_type_pro" class="tutor-styled-radio">
+                                                    <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'paid') : checked('true', 'true'); ?> >
+                                                    <span></span>
+                                                    <div class="tutor-form-group">
+                                                        <span class="tutor-input-prepand"><?php echo $currency_symbol; ?></span>
+                                                        <input type="text" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>">
+                                                    </div>
+                                                </label>
                                             </div>
-
-                                        </div>  <!--.tutor-frontend-builder-item-scope-->
-                                        <?php
-                                    }
-                                ?>
+                                            <div class="tutor-col-auto">
+                                                <label class="tutor-styled-radio">
+                                                    <input type="radio" name="tutor_course_price_type" value="free"  <?php checked($_tutor_course_price_type, 'free'); ?> >
+                                                    <span><?php _e('Free', "tutor") ?></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div> <!--.tutor-frontend-builder-item-scope-->
+                                <?php } ?>
 
                                 <div class="tutor-frontend-builder-item-scope">
                                     <div class="tutor-form-group">

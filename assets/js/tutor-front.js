@@ -6,7 +6,11 @@ jQuery(document).ready(function($){
      * @since v.1.3.4
      */
     if (jQuery().select2){
-        $('.tutor_select2').select2();
+        $('.tutor_select2').select2({
+            escapeMarkup : function(markup) {
+                return markup;
+            }
+        });
     }
     //END: select2
 
@@ -817,72 +821,12 @@ jQuery(document).ready(function($){
     });
 
     /**
-     * Course Builder
-     *
-     * @since v.1.3.4
-     */
-
-    $(document).on( 'click', '.tutor-course-thumbnail-upload-btn',  function( event ){
-        event.preventDefault();
-        var $that = $(this);
-        var frame;
-        if ( frame ) {
-            frame.open();
-            return;
-        }
-        frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
-            button: {
-                text: 'Use this media'
-            },
-            multiple: false
-        });
-        frame.on( 'select', function() {
-            var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('src', attachment.url);
-            $that.closest('.tutor-thumbnail-wrap').find('input').val(attachment.id);
-            $('.tutor-course-thumbnail-delete-btn').show();
-        });
-        frame.open();
-    });
-
-    //Delete Thumbnail
-    $(document).on( 'click', '.tutor-course-thumbnail-delete-btn',  function( event ){
-        event.preventDefault();
-        var $that = $(this);
-
-        var placeholder_src = $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('data-placeholder-src');
-        $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('src', placeholder_src);
-        $that.closest('.tutor-thumbnail-wrap').find('input').val('');
-        $('.tutor-course-thumbnail-delete-btn').hide();
-
-    });
-
-    /**
      * Course builder video
      * @since v.1.3.4
      */
-    $(document).on('change', '.tutor_lesson_video_source', function(e){
-        var $that = $(this);
-        var selector = $(this).val();
 
-        $that.closest('.tutor-option-field').find('[class^="video_source_wrap"]').hide();
-        $that.closest('.tutor-option-field').find('.video_source_wrap_'+selector).show();
 
-        if (selector === 'html5'){
-            $that.closest('.tutor-course-builder-section').find('.tutor-video-poster-field').show();
-        } else{
-            $that.closest('.tutor-course-builder-section').find('.tutor-video-poster-field').hide();
-        }
-
-        if (selector){
-            $that.closest('.tutor-course-builder-section').find('.tutor-lesson-video-runtime').closest('.tutor-option-field-row').show();
-        } else{
-            $that.closest('.tutor-course-builder-section').find('.tutor-lesson-video-runtime').closest('.tutor-option-field-row').hide();
-        }
-    });
-
-    $(document).on( 'click', '.video_source_wrap_html5 .video_upload_btn',  function( event ){
+    $(document).on( 'click', '.video_source_upload_wrap_html5 .video_upload_btn',  function( event ){
         event.preventDefault();
 
         var $that = $(this);
@@ -902,38 +846,11 @@ jQuery(document).ready(function($){
         frame.on( 'select', function() {
             // Get media attachment details from the frame state
             var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.video_source_wrap_html5').find('span.video_media_id').text(attachment.id).closest('p').show();
-            $that.closest('.video_source_wrap_html5').find('input').val(attachment.id);
+            $that.closest('.video_source_upload_wrap_html5').find('span.video_media_id').text(attachment.id).closest('p').show();
+            $that.closest('.video_source_upload_wrap_html5').find('input').val(attachment.id);
         });
         frame.open();
     });
-
-    //tutor_video_poster_upload_btn
-    $(document).on( 'click', '.tutor_video_poster_upload_btn',  function( event ){
-        event.preventDefault();
-
-        var $that = $(this);
-        var frame;
-        if ( frame ) {
-            frame.open();
-            return;
-        }
-        frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
-            button: {
-                text: 'Use this media'
-            },
-            multiple: false  // Set to true to allow multiple files to be selected
-        });
-        frame.on( 'select', function() {
-            // Get media attachment details from the frame state
-            var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.tutor-video-poster-wrap').find('.video-poster-img').html('<img src="'+attachment.url+'" alt="" />');
-            $that.closest('.tutor-video-poster-wrap').find('input').val(attachment.id);
-        });
-        frame.open();
-    });
-
 
     /**
      * Tutor Course builder JS
@@ -2220,7 +2137,7 @@ jQuery(document).ready(function($){
             var  field_markup = '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">'+attachment.filename+'</p><input type="hidden" name="tutor_assignment_attachments[]" value="'+attachment.id+'"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
 
             $('#assignment-attached-file').append(field_markup);
-            $that.closest('.video_source_wrap_html5').find('input').val(attachment.id);
+            $that.closest('.video_source_upload_wrap_html5').find('input').val(attachment.id);
         });
         // Finally, open the modal on click
         frame.open();
@@ -2231,8 +2148,48 @@ jQuery(document).ready(function($){
         $(this).closest('.tutor-individual-attachment-file').remove();
     });
 
-    $('.tutor-course-builder-section-title').on('click', function () {
 
+    /**
+     *
+     * @type {jQuery}
+     *
+     * Course builder auto draft save
+     *
+     * @since v.1.3.4
+     */
+    var tutor_course_builder = $('input[name="tutor_action"]').val();
+    if (tutor_course_builder === 'tutor_add_course_builder'){
+        setInterval(auto_draft_save_course_builder, 30000);
+    }
+
+    function auto_draft_save_course_builder(){
+        var form_data = $('form#tutor-frontend-course-builder').serialize();
+        $.ajax({
+            //url : _tutorobject.ajaxurl,
+            type : 'POST',
+            data : form_data+'&tutor_ajax_action=tutor_course_builder_draft_save',
+            beforeSend: function () {
+                $('.tutor-dashboard-builder-draft-btn span').text('Saving...');
+            },
+            success: function (data) {
+
+            },
+            complete: function () {
+                $('.tutor-dashboard-builder-draft-btn span').text('Save');
+            }
+        });
+    }
+
+    /**
+     *
+     * @type {jQuery}
+     *
+     * Course builder section toggle
+     *
+     * @since v.1.3.5
+     */
+
+    $('.tutor-course-builder-section-title').on('click', function () {
         if($(this).find('i').hasClass("tutor-icon-up")){
             $(this).find('i').removeClass('tutor-icon-up').addClass('tutor-icon-down');
         }else{
