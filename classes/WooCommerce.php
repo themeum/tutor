@@ -19,10 +19,11 @@ class WooCommerce extends Tutor_Base {
 		add_action('tutor_options_before_woocommerce', array($this, 'notice_before_option'));
 
 		//Add option settings
+		add_filter('tutor_monetization_options', array($this, 'tutor_monetization_options'));
 		add_filter('tutor/options/attr', array($this, 'add_options'));
 
-		$course_sell = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
-		if ( ! $course_sell){
+		$monetize_by = tutils()->get_option('monetize_by');
+		if ( $monetize_by !== 'wc'){
 			return;
 		}
 
@@ -55,6 +56,14 @@ class WooCommerce extends Tutor_Base {
 		add_action('woocommerce_new_order_item', array($this, 'add_earning_data'), 10, 3);
 		add_action( 'woocommerce_order_status_changed', array( $this, 'add_earning_data_status_change' ), 10, 3 );
 
+		/**
+		 * WC Print Notices After Enroll
+         * @since v.1.3.5
+		 */
+		if ( tutils()->has_wc()){
+			add_action( 'tutor_course/single/before/inner-wrap', 'wc_print_notices', 10 );
+			add_action( 'tutor_course/single/enrolled/before/inner-wrap', 'wc_print_notices', 10 );
+        }
 	}
 
 	public function notice_before_option(){
@@ -81,11 +90,6 @@ class WooCommerce extends Tutor_Base {
 		if ( ! tutor_utils()->has_wc()){
 			return false;
 		}
-		/*
-		$course_sell = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
-		if ( ! $course_sell){
-			return false;
-		}*/
 
 		$course_id = tutor_utils()->get_post_id($course_id);
 		$has_product_id = get_post_meta($course_id, '_tutor_course_product_id', true);
@@ -265,12 +269,12 @@ class WooCommerce extends Tutor_Base {
 					'label' => __('General', 'tutor'),
 					'desc' => __('WooCommerce Settings', 'tutor'),
 					'fields' => array(
-						'enable_course_sell_by_woocommerce' => array(
+						/*'enable_course_sell_by_woocommerce' => array(
 							'type'      => 'checkbox',
 							'label'     => __('Enable / Disable', 'tutor'),
 							'label_title'   => __('Enable WooComerce to sell course', 'tutor'),
 							'desc'      => __('By integrating WooCommerce, you can sell your course',	'tutor'),
-						),
+						),*/
 						'enable_guest_course_cart' => array(
 							'type'      => 'checkbox',
 							'label'     => __('Enable / Disable', 'tutor'),
@@ -284,6 +288,23 @@ class WooCommerce extends Tutor_Base {
 
 		return $attr;
 	}
+
+	/**
+	 * @param $arr
+	 *
+	 * @return mixed
+     *
+     * Returning monetization options
+     *
+     * @since v.1.3.5
+	 */
+	public function tutor_monetization_options($arr){
+		$has_wc = tutils()->has_wc();
+		if ($has_wc){
+			$arr['wc'] = __('WooCommerce', 'tutor');
+		}
+		return $arr;
+    }
 
 	/**
 	 * @param $item_id

@@ -390,9 +390,9 @@ class Course extends Tutor_Base {
 
 		if ($column === 'price'){
 			$price = tutor_utils()->get_course_price($post_id);
-
 			if ($price){
-				if (function_exists('wc_price')){
+				$monetize_by = tutils()->get_option('monetize_by');
+				if (function_exists('wc_price') && $monetize_by === 'wc'){
 					echo '<span class="tutor-label-success">'.wc_price($price).'</span>';
 				}else{
 					echo '<span class="tutor-label-success">'.$price.'</span>';
@@ -676,12 +676,10 @@ class Course extends Tutor_Base {
 			return;
 		}
 
-
-		$sell_by_wc = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
-		$sell_by_edd = tutor_utils()->get_option('enable_tutor_edd');
+		$monetize_by = tutor_utils()->get_option('monetize_by');
 		$course = get_post($post_ID);
 
-		if ($sell_by_wc){
+		if ($monetize_by === 'wc'){
 
 			$is_update = false;
 			if ($attached_product_id){
@@ -720,7 +718,7 @@ class Course extends Tutor_Base {
 				}
 			}
 
-		}elseif ($sell_by_edd){
+		}elseif ($monetize_by === 'edd'){
 
 			$is_update = false;
 			
