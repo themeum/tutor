@@ -291,7 +291,7 @@ div[class*="tutor-course-col"] {
   width: 16.66%;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .tutor-course-col-6,
   .tutor-course-col-5,
   .tutor-course-col-4,
@@ -5604,6 +5604,7 @@ Tutor Media Upload
   height: 20px;
   line-height: 20px;
   background: #fff;
+  text-align: center;
   i{
     line-height: 20px;
   }
