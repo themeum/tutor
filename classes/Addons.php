@@ -24,6 +24,11 @@ class Addons {
 	public function tutor_addons_lists_to_show(){
 
 		$addons = array(
+			'tutor-assignments' => array(
+				'name'          => __('Tutor Assignments', 'tutor-certificate'),
+				'description'   => 'Tutor assignments is a great way to assign tasks to students.',
+			),
+
 			'tutor-certificate' => array(
 				'name'          => __('Tutor Certificate', 'tutor-certificate'),
 				'description'   => 'Student will able to download certificate of completed course',

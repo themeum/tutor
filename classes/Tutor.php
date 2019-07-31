@@ -113,7 +113,6 @@ final class Tutor{
 		$this->woocommerce = new WooCommerce();
 		$this->edd = new TutorEDD();
 		$this->withdraw = new Withdraw();
-
 		$this->course_widget = new Course_Widget();
 		$this->upgrader = new Upgrader();
 		$this->dashboard = new Dashboard();

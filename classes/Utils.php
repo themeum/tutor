@@ -4539,6 +4539,27 @@ class Utils {
 	}
 
 	/**
+	 * @param int $parent_id
+	 *
+	 * @return array|int|\WP_Error
+	 *
+	 * Get course categories terms in raw array
+	 *
+	 * @since v.1.3.5
+	 */
+	public function get_course_categories_term($parent_id = 0){
+		$args = apply_filters('tutor_get_course_categories_terms_args', array(
+			'taxonomy' => 'course-category',
+			'parent' => $parent_id,
+			'hide_empty' => false,
+		));
+
+		$terms = get_terms($args);
+
+		return $terms;
+	}
+
+	/**
 	 * @return mixed
 	 *
 	 * Get back url from the request
