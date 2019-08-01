@@ -1775,6 +1775,22 @@ jQuery(document).ready(function($){
     });
 
 
+    /**
+     * Tutor Memberships toggle in Paid Membership Pro panel
+     * @since v.1.3.6
+     */
+
+    $(document).on( 'change', '#tutor_pmpro_membership_model_select',  function( e ){
+        e.preventDefault();
+
+        var $that = $(this);
+
+        if ($that.val() === 'category_wise_membership'){
+            $('.membership_course_categories').show();
+        } else{
+            $('.membership_course_categories').hide();
+        }
+    });
 
 
 });
