@@ -28,6 +28,7 @@ global $wp_query;
 
     <div class="tutor-lead-info-btn-group">
         <?php
+
         if ( $wp_query->query['post_type'] !== 'lesson') {
             $lesson_url = tutor_utils()->get_course_first_lesson();
             $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
