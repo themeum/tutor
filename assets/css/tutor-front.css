@@ -6003,9 +6003,9 @@ Quiz Modal
 }
 
 .tutor-modal-wrap.show {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
   opacity: 1;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   z-index: 99999;
@@ -6909,7 +6909,7 @@ Tutor Media Upload
   display: block;
 }
 
-.builder-course-thumbnail-upload-wrap h4 {
+.builder-course-thumbnail-upload-wrap > div {
   font-size: var(--tutor-text-size);
   line-height: 25px;
   margin-bottom: 20px;
