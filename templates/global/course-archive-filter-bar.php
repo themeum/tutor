@@ -17,6 +17,4 @@
             </select>
         </form>
     </div>
-
-    <div style="clear: both;"></div>
 </div>

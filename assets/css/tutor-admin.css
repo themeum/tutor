@@ -743,13 +743,17 @@ Video MetaBox
 .tutor-course-builder-attachements *{
     box-sizing: border-box;
 }
+
 .tutor-course-builder-attachements{
     display: flex;
     margin-left: -20px;
     flex-wrap: wrap;
     box-sizing: border-box;
-    padding: 30px 20px;
+    padding: 0 0 10px;
 }
+.tutor-course-builder-attachements:empty {
+     display: none;
+ }
 .tutor-course-builder-attachements .tutor-added-attachment{
     flex: 0 0 calc(16.6666% - 20px);
     max-width: calc(16.6666% - 20px);

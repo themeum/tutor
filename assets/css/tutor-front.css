@@ -130,7 +130,7 @@ body {
 }
 
 .tutor-styled-radio > input {
-  display: none;
+  display: none !important;
 }
 
 .tutor-styled-radio > input:checked + span::before {
@@ -364,6 +364,13 @@ body {
   font-weight: 500;
   margin: 0 0 29px;
   padding: 0;
+}
+
+@media (max-width: 767px) {
+  .tutor-course-header-h1 {
+    font-size: 26px;
+    line-height: 36px;
+  }
 }
 
 .tutor-course-summery {
@@ -1035,23 +1042,23 @@ div[class*="tutor-course-col"] {
 }
 
 .tutor-course-filter-wrap {
-  clear: both;
   margin-bottom: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .tutor-course-filter-form {
   display: inline-block;
-}
-
-.tutor-course-archive-results-wrap {
-  float: left;
-  width: 45%;
-}
-
-.tutor-course-archive-filters-wrap {
-  float: right;
-  width: 45%;
-  text-align: right;
+  margin: 0;
 }
 
 .tutor-courses {
@@ -2784,6 +2791,12 @@ Instructor
   overflow: hidden;
 }
 
+@media (max-width: 767px) {
+  .single-instructor-wrap .single-instructor-bottom {
+    text-align: left;
+  }
+}
+
 .single-instructor-wrap .single-instructor-bottom p {
   margin: 0;
 }
@@ -2923,6 +2936,7 @@ Instructor
   padding: 0 5px;
   font-size: 16px;
   background: transparent;
+  border: none;
 }
 
 .tutor-topics-in-single-lesson.tutor-topic-active .tutor-topics-title button i::before {
@@ -4376,7 +4390,6 @@ Course question and answer
 
 .tutor-login-form-wrap label {
   display: block;
-  font-size: 13px;
   margin-bottom: 4px;
 }
 
@@ -4526,6 +4539,8 @@ Course question and answer
   width: 400px;
   font-size: 16px;
   font-weight: 400;
+  max-height: 90%;
+  overflow: auto;
 }
 
 .tutor-cart-box-login-form-inner button.tutor-popup-form-close {
@@ -4541,6 +4556,7 @@ Course question and answer
   cursor: pointer;
   -webkit-transition: 300ms;
   transition: 300ms;
+  color: var(--tutor-text-color);
 }
 
 .tutor-cart-box-login-form-inner button.tutor-popup-form-close:hover {
@@ -7296,6 +7312,7 @@ Video MetaBox
 
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left button:hover {
   color: var(--tutor-primary-color);
+  background: transparent;
 }
 
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left button:hover i {

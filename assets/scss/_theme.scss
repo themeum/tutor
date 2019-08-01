@@ -119,7 +119,7 @@ body {
 		}
 	}
 	> input{
-		display: none;
+		display: none !important;
 		&:checked + span::before{
 			border: 5px solid var(--tutor-primary-color);
 		}
