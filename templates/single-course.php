@@ -11,9 +11,7 @@
 get_header();
 ?>
 
-
 <?php do_action('tutor_course/single/before/wrap'); ?>
-
 
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
     <div class="tutor-container">
