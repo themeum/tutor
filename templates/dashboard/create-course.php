@@ -191,7 +191,7 @@ if ( ! $can_publish_course){
 
                                                     <div class="tutor-col-7">
                                                         <div class="builder-course-thumbnail-upload-wrap">
-                                                            <h4><?php echo sprintf(__("Important Guideline: %1\$s 700x430 pixels %2\$s %3\$s File Support: %1\$s jpg, .jpeg,. gif, or .png %2\$s no text on the image.", "tutor"), "<strong>", "</strong>", "<br>") ?></h4>
+                                                            <div><?php echo sprintf(__("Important Guideline: %1\$s 700x430 pixels %2\$s %3\$s File Support: %1\$s jpg, .jpeg,. gif, or .png %2\$s no text on the image.", "tutor"), "<strong>", "</strong>", "<br>") ?></div>
                                                             <input type="hidden" id="tutor_course_thumbnail_id" name="tutor_course_thumbnail_id" value="<?php echo $post_thumbnail_id; ?>">
                                                             <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button"><?php _e('Upload Image', 'tutor'); ?></a>
                                                         </div>

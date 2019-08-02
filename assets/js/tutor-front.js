@@ -549,7 +549,7 @@ jQuery(document).ready(function($){
         $('.tutor-cart-box-login-form').fadeIn(100);
     });
 
-    $('.tutor-popup-form-close').on('click', function () {
+    $('.tutor-popup-form-close, .login-overlay-close').on('click', function () {
         $('.tutor-cart-box-login-form').fadeOut(100);
     });
 
