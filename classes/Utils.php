@@ -224,6 +224,19 @@ class Utils {
 	}
 
 	/**
+	 * @return bool
+	 *
+	 * Determine if PMPro is activated
+	 *
+	 * @since v.1.3.6
+	 */
+	public function has_pmpro(){
+		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
+		$depends = array('paid-memberships-pro/paid-memberships-pro.php');
+		return count(array_intersect($depends, $activated_plugins)) == count($depends);
+	}
+	
+	/**
 	 * @return mixed
 	 *
 	 * @since v.1.0.0
