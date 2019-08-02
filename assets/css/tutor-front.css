@@ -7228,6 +7228,10 @@ Video MetaBox
   width: auto;
 }
 
+.no-memberhsip-msg-wrap p {
+  margin: 0;
+}
+
 .tutor-dashboard-builder-header {
   padding: 10px 0px;
   border-bottom: 2px solid #DCDFE5;

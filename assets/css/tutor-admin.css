@@ -194,6 +194,9 @@ Option Field
 .select2-container {
     min-width: 250px !important;
 }
+.membership_course_categories .select2-container{
+    min-width: 50% !important;
+}
 /**
 Group Field Option
  */
