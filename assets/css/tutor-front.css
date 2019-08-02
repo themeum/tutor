@@ -2937,6 +2937,7 @@ Instructor
   font-size: 16px;
   background: transparent;
   border: none;
+  color: var(--tutor-text-color);
 }
 
 .tutor-topics-in-single-lesson.tutor-topic-active .tutor-topics-title button i::before {
