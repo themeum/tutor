@@ -19,11 +19,9 @@ if ( ! is_array($reviews) || ! count($reviews)){
 ?>
 
 <div class="tutor-single-course-segment">
-
     <div class="course-student-rating-title">
         <h4 class="tutor-segment-title"><?php _e('Student Feedback', 'tutor'); ?></h4>
     </div>
-
     <div class="tutor-course-reviews-wrap">
         <div class="tutor-course-student-rating-wrap">
             <div class="course-avg-rating-wrap">
@@ -35,18 +33,12 @@ if ( ! is_array($reviews) || ! count($reviews)){
 							echo number_format($rating->rating_avg, 1);
 							?>
                         </p>
-
-
                         <p class="course-avg-rating-html">
 		                    <?php tutor_utils()->star_rating_generator($rating->rating_avg);?>
                         </p>
                         <p class="tutor-course-avg-rating-total">Total <span><?php echo $rating->rating_count;?></span> Ratings</p>
 
                     </div>
-
-
-
-
                     <div class="tutor-col">
                         <div class="course-ratings-count-meter-wrap">
 							<?php

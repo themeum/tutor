@@ -3476,6 +3476,15 @@ Course question and answer
   justify-content: center;
   align-items: center;
 }
+
+.login-overlay-close{
+  position: absolute;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
 .course-login-title{
   margin-bottom: 50px;
 }
