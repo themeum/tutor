@@ -634,10 +634,10 @@ Video MetaBox
     margin-bottom: 50px;
 }
 .video-metabox-source-input-wrap{
-    padding: 30px;
-    background-color: #F4F7F8;
-    border: 1px solid #DCDFE5;
-    border-radius: 3px;
+    /*padding: 30px;*/
+    /*background-color: #F4F7F8;*/
+    /*border: 1px solid #DCDFE5;*/
+    /*border-radius: 3px;*/
 }
 .video-metabox-source-html5-upload {
     background-color: #fff;
@@ -728,6 +728,8 @@ Video MetaBox
 .video-metabox-source-html5-poster .tutor-row{
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
 }
 .video-metabox-source-html5-poster .tutor-row .tutor-col-5{
     width: 38%;

@@ -439,10 +439,9 @@ jQuery(document).ready(function($){
         $('.tutor-lesson-sidebar').toggle();
     });
 
-    $(document).on('click', '.tutor-tabs-btn-group a', function (e) {
+    $(".tutor-tabs-btn-group a").click( function (e) {
         e.preventDefault();
         var $that = $(this);
-
         var tabSelector = $that.attr('href');
         $('.tutor-lesson-sidebar-tab-item').hide();
         $(tabSelector).show();
