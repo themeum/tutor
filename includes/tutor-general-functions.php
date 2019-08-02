@@ -284,6 +284,73 @@ if ( ! function_exists('generate_categories_for_pmpro')) {
 	}
 }
 
+/*
+function generate_categories_select_for_pmpro($level_categories = array(), $args = array()){
+
+	$default = array(
+		'classes'  => '',
+		'name'  => 'tax_input[course-category]',
+		'multiple' => true,
+	);
+	
+	$args = apply_filters('tutor_course_categories_dropdown_args', array_merge($default, $args));
+
+	$multiple_select = '';
+
+	if (tutor_utils()->array_get('multiple', $args)){
+		if (isset($args['name'])){
+			$args['name'] = $args['name'].'[]';
+		}
+		$multiple_select = "multiple='multiple'";
+	}
+
+	extract($args);
+
+	$classes = (array) $classes;
+	$classes = implode(' ', $classes);
+
+	$categories = tutor_utils()->get_course_categories();
+
+	$output = '';
+	$output .= "<select name='{$name}' {$multiple_select} class='{$classes}'>";
+	$output .= "<option value=''>". __('Select categories', 'tutor') ."</option>";
+	$output .= _generate_categories_select_option_for_pmpro($level_categories, $categories, $args);
+	$output .= "</select>";
+
+	return $output;
+}
+
+function _generate_categories_select_option_for_pmpro($level_categories = array(), $categories, $args = array(), $depth = 0){
+	$output = '';
+
+	if (tutor_utils()->count($categories)) {
+		foreach ( $categories as $category_id => $category ) {
+			if ( ! $category->parent){
+				$depth = 0;
+			}
+
+			$childrens = tutor_utils()->array_get( 'children', $category );
+			$has_in_term = in_array($category->term_id, $level_categories);
+
+			$depth_seperator = '';
+			if ($depth){
+				for ($depth_i = 0; $depth_i < $depth; $depth_i++){
+					$depth_seperator.='-';
+				}
+			}
+
+			$output .= "<option value='{$category->term_id}' ".selected($has_in_term, true, false)." >{$depth_seperator} {$category->name}</option> ";
+
+			if ( tutor_utils()->count( $childrens ) ) {
+				$depth++;
+				$output .= _generate_categories_select_option_for_pmpro($level_categories,$childrens, $args, $depth);
+			}
+		}
+	}
+	return $output;
+}*/
+
+
 /**
  * @param null $key
  * @param bool $default
