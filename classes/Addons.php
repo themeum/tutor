@@ -11,7 +11,6 @@
 
 namespace TUTOR;
 
-
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
@@ -22,7 +21,6 @@ class Addons {
 	}
 
 	public function tutor_addons_lists_to_show(){
-
 		$addons = array(
 			'pmpro'             => array(
 				'name'          => __('Paid Memberships Pro', 'tutor-pmpro'),
@@ -61,7 +59,6 @@ class Addons {
 				'description'   => 'Check your tutor assets performance through tutor report',
 			),
 		);
-
 
 		return $addons;
 	}
