@@ -498,7 +498,7 @@ class Options {
 								'options'   => apply_filters('tutor_monetization_options', array(
 									'free'          =>  __('Disable Monetization', 'tutor'),
 								)),
-								'desc'  => __('Select a monetization option to generate revenue by selling courses.', 'tutor'),
+								'desc'  => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro',	'tutor'),
 							),
 
 						)
