@@ -5079,6 +5079,17 @@ Course question and answer
 
 .certificate-download-btn {
   margin-top: 20px;
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  text-align: center;
+  text-transform: uppercase !important;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 /* ********************************** */
