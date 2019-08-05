@@ -2937,6 +2937,7 @@ Instructor
   font-size: 16px;
   background: transparent;
   border: none;
+  color: var(--tutor-text-color);
 }
 
 .tutor-topics-in-single-lesson.tutor-topic-active .tutor-topics-title button i::before {
@@ -5182,6 +5183,12 @@ social share
 .tutor-single-course-meta ul li.tutor-social-share {
   float: right;
   margin-right: 0;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 
 @media (max-width: 575px) {
