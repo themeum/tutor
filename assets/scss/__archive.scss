@@ -4089,6 +4089,8 @@ social share
 .tutor-single-course-meta ul li.tutor-social-share{
   float: right;
   margin-right: 0;
+  display: inline-flex;
+  align-items: center;
 }
 
 @media (max-width: 575px) {
