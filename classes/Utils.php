@@ -3919,7 +3919,7 @@ class Utils {
 	}
 
 	/**
-	 * @return mixed|void
+	 * @return array $array
 	 *
 	 * Get the social icons
 	 *
@@ -3936,6 +3936,41 @@ class Utils {
 
 		return apply_filters('tutor_social_share_icons', $icons);
 	}
+
+    /**
+     * @return array $array
+     *
+     * Get the user social icons
+     *
+     * @since v.1.3.7
+     */
+
+	public function tutor_user_social_icons(){
+	    $icons = array(
+            '_tutor_profile_website'  => array(
+                'label'         => __('Website URL', 'tutor'),
+                'placeholder'   => 'https://example.com/',
+                'icon_classes'   => 'tutor-icon-facebook'
+            ),
+	        '_tutor_profile_facebook'  => array(
+	            'label'         => __('Facebook URL', 'tutor'),
+	            'placeholder'   => 'https://facebook.com/username',
+	            'icon_classes'   => 'tutor-icon-facebook'
+            ),
+            '_tutor_profile_twitter'  => array(
+                'label'         => __('Twitter URL', 'tutor'),
+                'placeholder'   => 'https://twitter.com/username',
+                'icon_classes'   => 'tutor-icon-facebook'
+            ),
+            '_tutor_profile_linkedin'  => array(
+                'label'         => __('Linkedin URL', 'tutor'),
+                'placeholder'   => 'https://linkedin.com/username',
+                'icon_classes'   => 'tutor-icon-facebook'
+            ),
+        );
+
+	    return apply_filters('tutor_user_social_icons', $icons);
+    }
 
 	/**
 	 * @param array $array
