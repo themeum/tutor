@@ -1052,7 +1052,13 @@ input:checked + .btn-slider:before {
 .btn-slider.btn-round:before {
     border-radius: 50%;
 }
-
+.required-plugin-cards {
+    background: #fff8e5;
+    padding: 12px 20px;
+}
+.required-plugin-cards p{
+    margin: 0;
+}
 /**
 Quiz-question
  */

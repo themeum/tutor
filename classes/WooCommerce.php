@@ -278,8 +278,8 @@ class WooCommerce extends Tutor_Base {
 						'enable_guest_course_cart' => array(
 							'type'      => 'checkbox',
 							'label'     => __('Enable / Disable', 'tutor'),
-							'label_title'   => __('Enable Add to cart by guest', 'tutor'),
-							'desc'      => __('From the course details page, any user without login can add to cart course',	'tutor'),
+							'label_title'   => __('Enable add to cart feature for guest users', 'tutor'),
+							'desc'      => __('Enabling this will let an unregistered user purchase any course from the Course Details page. Head over to Documentation to know how to configure this setting.',	'tutor'),
 						),
 					),
 				),

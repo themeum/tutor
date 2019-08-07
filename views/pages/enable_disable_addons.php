@@ -21,6 +21,18 @@
 							$thumbnailURL = $addon['url'].'assets/images/thumbnail.svg';
 						}
 
+						/**
+						 * Checking if there any depend plugin exists
+						 */
+						$depends = tutils()->array_get('depend_plugins', $addon);
+						$plugins_required = array();
+						if (tutils()->count($depends)){
+							foreach ($depends as $plugin_base => $plugin_name){
+								if ( ! is_plugin_active($plugin_base)){
+									$plugins_required[$plugin_base] = $plugin_name;
+								}
+							}
+						}
 						?>
                         <div class="plugin-card plugin-card-akismet">
                             <div class="plugin-card-top">
@@ -32,6 +44,8 @@
 										?>
                                     </h3>
                                 </div>
+
+	                            <?php if ( ! tutils()->count($plugins_required)) { ?>
                                 <div class="action-links">
                                     <ul class="plugin-action-buttons">
                                         <li>
@@ -42,12 +56,27 @@
                                         </li>
                                     </ul>
                                 </div>
+                                <?php } ?>
+
                                 <div class="desc column-description">
                                     <p><?php echo $addon['description']; ?></p>
-
                                     <p class="authors"><cite>By <a href="https://www.themeum.com" target="_blank">Themeum</a></cite></p>
                                 </div>
                             </div>
+
+	                        <?php
+	                        if (tutils()->count($plugins_required)) {
+		                        ?>
+                                <div class="required-plugin-cards">
+                                    <p>
+                                        <?php _e('Required installed and activated Plugins', 'tutor'); ?><br/>
+                                        <strong><?php echo implode( ",", $plugins_required ) ?></strong>
+                                    </p>
+                                </div>
+		                        <?php
+	                        }
+	                        ?>
+
                             <div class="plugin-card-bottom">
 								<?php
 								echo "<div class='plugin-version'> " . __( 'Version', 'tutor' ) . " : ".TUTOR_VERSION." </div>";
