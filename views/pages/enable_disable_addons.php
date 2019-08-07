@@ -69,8 +69,8 @@
 		                        ?>
                                 <div class="required-plugin-cards">
                                     <p>
-                                        <?php _e('Required installed and activated Plugins', 'tutor'); ?><br/>
-                                        <strong><?php echo implode( ",", $plugins_required ) ?></strong>
+                                        <strong><?php _e('Required Plugin(s)', 'tutor'); ?></strong><br/>
+	                                    <?php echo implode( ",", $plugins_required ) ?>
                                     </p>
                                 </div>
 		                        <?php
