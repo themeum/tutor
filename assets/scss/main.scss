@@ -2,7 +2,13 @@
 @import "layout";
 @import "single_course";
 @import "_archive";
-@import "_dashboard";
+
+//dashboard
+@import "dashboard";
+@import "_dashboard_delete_popup";
+@import "_dashboard_withdraw_method";
+@import "_dashboard_assignment";
+
+//frontend-builder
 @import "frontend_course_builder";
 @import "option_input";
-@import "_dashboard_assignment";

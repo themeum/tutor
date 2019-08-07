@@ -6040,6 +6040,35 @@ Video MetaBox
   margin-left: 30px;
 }
 
+.tutor-dashboard-social-icons {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tutor-dashboard-social-icons h4 {
+  margin: 0 10px 0 0;
+  font-size: var(--tutor-text-size);
+  line-height: 25px;
+}
+
+.tutor-dashboard-social-icons a {
+  display: inline-block;
+  font-size: 12px;
+  padding: 0 5px;
+  line-height: 25px;
+  color: #393C40;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
+.tutor-dashboard-social-icons a:hover {
+  color: var(--tutor-primary-color);
+}
+
 /* end dashboard header */
 /**
  * Dashboard Table
@@ -6056,12 +6085,26 @@ Video MetaBox
   width: 100%;
 }
 
+.tutor-dashboard-info-table-wrap > h3 {
+  font-size: 20px;
+  font-weight: 500;
+  border: 1px solid #DCDFE5;
+  border-bottom: none;
+  margin: 0;
+  padding: 30px;
+  border-radius: 4px 4px 0 0;
+}
+
+.tutor-dashboard-info-table-wrap > h3 + table {
+  border-radius: 0 0 4px 4px;
+}
+
 .tutor-dashboard-info-table thead {
   background: #FAFBFC;
 }
 
-.tutor-dashboard-info-table tr {
-  border: 1px solid #DCDFE5;
+.tutor-dashboard-info-table thead tr td {
+  padding: 15px;
 }
 
 .tutor-dashboard-info-table tbody tr td {
@@ -6069,13 +6112,17 @@ Video MetaBox
   padding: 20px 15px;
 }
 
-.tutor-dashboard-info-table thead tr td {
-  padding: 15px;
+.tutor-dashboard-info-table thead tr,
+.tutor-dashboard-info-table tbody tr {
+  border: 1px solid #DCDFE5;
 }
 
-.tutor-dashboard-info-table span.pending,
-.tutor-dashboard-info-table span.pass,
-.tutor-dashboard-info-table span.fail {
+.tutor-dashboard-info-table thead tr td:first-child,
+.tutor-dashboard-info-table tbody tr td:first-child {
+  padding-left: 25px;
+}
+
+.tutor-dashboard-info-table span.pending, .tutor-dashboard-info-table span.pass, .tutor-dashboard-info-table span.fail {
   color: #fff;
   font-size: 14px;
   line-height: 18px;
@@ -6093,25 +6140,6 @@ Video MetaBox
 
 .tutor-dashboard-info-table span.pass {
   background-color: var(--tutor-success-button-color);
-}
-
-.tutor-dashboard-info-table tbody tr td:first-child,
-.tutor-dashboard-info-table thead tr td:first-child {
-  padding-left: 25px;
-}
-
-.tutor-dashboard-info-table-wrap > h3 {
-  font-size: 20px;
-  font-weight: 500;
-  border: 1px solid #DCDFE5;
-  border-bottom: none;
-  margin: 0;
-  padding: 30px;
-  border-radius: 4px 4px 0 0;
-}
-
-.tutor-dashboard-info-table-wrap > h3 + table {
-  border-radius: 0 0 4px 4px;
 }
 
 /**
@@ -6857,156 +6885,6 @@ table.tutor-dashboard-statement-table p.small-text {
 }
 
 /** ENd earning report **/
-/**
-Withdraw Method
- */
-.withdraw-method-select-wrap {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin: 0 -15px 40px;
-}
-
-.withdraw-method-select-wrap .withdraw-method-select {
-  -webkit-box-flex: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  padding: 0 15px;
-  margin-bottom: 30px;
-}
-
-.withdraw-method-select-wrap .withdraw-method-select label {
-  display: block;
-  padding: 20px;
-  margin: 0;
-  cursor: pointer;
-  overflow: hidden;
-  border: 1px solid #DCDFE5;
-  border-radius: 4px;
-  position: relative;
-}
-
-.withdraw-method-select-wrap .withdraw-method-select input:checked + label {
-  border-color: var(--tutor-success-button-color);
-  -webkit-box-shadow: 0 0 0 1px var(--tutor-success-button-color);
-  box-shadow: 0 0 0 1px var(--tutor-success-button-color);
-}
-
-.withdraw-method-select-wrap .withdraw-method-select label:after {
-  content: '\e90f';
-  position: absolute;
-  right: -1px;
-  top: -1px;
-  border: 1px solid #DCDFE5;
-  height: 22px;
-  width: 22px;
-  text-align: center;
-  line-height: 22px;
-  color: transparent;
-}
-
-.withdraw-method-select-wrap .withdraw-method-select input:checked + label:after {
-  color: #fff;
-  background: var(--tutor-success-button-color);
-  border-color: var(--tutor-success-button-color);
-  font-family: 'tutor' !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  font-size: 13px;
-}
-
-.withdraw-method-select-wrap .withdraw-method-select p {
-  margin: 0;
-}
-
-.withdraw-method-select-wrap .withdraw-method-select label > p {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--tutor-primary-color);
-}
-
-.withdraw-method-select-wrap .withdraw-method-select label span {
-  color: #B0B6C8;
-  font-weight: 400;
-}
-
-.withdraw-method-form {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin: 0 -15px;
-}
-
-.withdraw-method-form > div {
-  -webkit-box-flex: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  min-width: 50%;
-  padding: 0 15px 20px;
-}
-
-@media (max-width: 480px) {
-  .withdraw-method-form > div {
-    width: 100%;
-  }
-}
-
-.withdraw-method-form > div.withdraw-account-save-btn-wrap {
-  width: 100%;
-}
-
-.withdraw-form-field-amount input[type='text'],
-.withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]),
-.withdraw-method-forms-wrap .withdraw-method-form textarea {
-  border: 1px solid #DCDFE5;
-  display: block;
-  width: 100%;
-  background: transparent;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  border-radius: 4px;
-}
-
-label[for="tutor_withdraw_amount"] {
-  margin-bottom: 7px;
-  display: block;
-}
-
-.withdraw-form-field-amount input[type='text'] {
-  margin-bottom: 10px;
-  height: 45px;
-}
-
-.withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]):focus,
-.withdraw-method-forms-wrap .withdraw-method-form textarea:focus {
-  border-color: var(--tutor-primary-color);
-  outline: none;
-}
-
-.withdraw-method-forms-wrap .withdraw-method-form textarea {
-  min-height: 80px;
-}
-
-.withdraw-method-forms-wrap .withdraw-method-form label {
-  color: #989EAF;
-  margin-bottom: 8px;
-  display: block;
-}
-
-.withdraw-method-forms-wrap .withdraw-method-form .withdraw-field-desc {
-  font-size: 12px;
-  margin: 5px 0 0;
-  font-style: italic;
-}
-
-/** END Withdraw */
 .tutor-mycourse-thumbnail {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 250px;
@@ -7242,6 +7120,188 @@ label[for="tutor_withdraw_amount"] {
   .tutor-modal-button-group {
     margin-top: 20px;
   }
+}
+
+/**
+Withdraw Method
+ */
+.withdraw-method-select-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: 0 -15px 40px;
+}
+
+.withdraw-method-select-wrap .withdraw-method-select {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  padding: 0 15px;
+  margin-bottom: 30px;
+}
+
+.withdraw-method-select-wrap .withdraw-method-select label {
+  display: block;
+  padding: 20px;
+  margin: 0;
+  cursor: pointer;
+  overflow: hidden;
+  border: 1px solid #DCDFE5;
+  border-radius: 4px;
+  position: relative;
+}
+
+.withdraw-method-select-wrap .withdraw-method-select input:checked + label {
+  border-color: var(--tutor-success-button-color);
+  -webkit-box-shadow: 0 0 0 1px var(--tutor-success-button-color);
+  box-shadow: 0 0 0 1px var(--tutor-success-button-color);
+}
+
+.withdraw-method-select-wrap .withdraw-method-select label:after {
+  content: '\e90f';
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  border: 1px solid #DCDFE5;
+  height: 22px;
+  width: 22px;
+  text-align: center;
+  line-height: 22px;
+  color: transparent;
+}
+
+.withdraw-method-select-wrap .withdraw-method-select input:checked + label:after {
+  color: #fff;
+  background: var(--tutor-success-button-color);
+  border-color: var(--tutor-success-button-color);
+  font-family: 'tutor' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  font-size: 13px;
+}
+
+.withdraw-method-select-wrap .withdraw-method-select p {
+  margin: 0;
+}
+
+.withdraw-method-select-wrap .withdraw-method-select label > p {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--tutor-primary-color);
+}
+
+.withdraw-method-select-wrap .withdraw-method-select label span {
+  color: #B0B6C8;
+  font-weight: 400;
+}
+
+.withdraw-method-form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+.withdraw-method-form > div {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  min-width: 50%;
+  padding: 0 15px 20px;
+}
+
+@media (max-width: 480px) {
+  .withdraw-method-form > div {
+    width: 100%;
+  }
+}
+
+.withdraw-method-form > div.withdraw-account-save-btn-wrap {
+  width: 100%;
+}
+
+.withdraw-form-field-amount input[type='text'],
+.withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]),
+.withdraw-method-forms-wrap .withdraw-method-form textarea {
+  border: 1px solid #DCDFE5;
+  display: block;
+  width: 100%;
+  background: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 4px;
+}
+
+label[for="tutor_withdraw_amount"] {
+  margin-bottom: 7px;
+  display: block;
+}
+
+.withdraw-form-field-amount input[type='text'] {
+  margin-bottom: 10px;
+  height: 45px;
+}
+
+.withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]):focus,
+.withdraw-method-forms-wrap .withdraw-method-form textarea:focus {
+  border-color: var(--tutor-primary-color);
+  outline: none;
+}
+
+.withdraw-method-forms-wrap .withdraw-method-form textarea {
+  min-height: 80px;
+}
+
+.withdraw-method-forms-wrap .withdraw-method-form label {
+  color: #989EAF;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.withdraw-method-forms-wrap .withdraw-method-form .withdraw-field-desc {
+  font-size: 12px;
+  margin: 5px 0 0;
+  font-style: italic;
+}
+
+.tutor-dashboard-assignment-table tr th, .tutor-dashboard-assignment-table tr td {
+  border: 1px solid #DCDFE5;
+  vertical-align: middle;
+  padding: 20px;
+}
+
+.tutor-dashboard-assignment-table tr th:not(:first-child), .tutor-dashboard-assignment-table tr td:not(:first-child) {
+  text-align: center;
+}
+
+.tutor-dashboard-assignment-table tr h5 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 700;
+  color: var(--tutor-text-color);
+}
+
+.tutor-dashboard-assignment-table tr h5:not(:last-child) {
+  margin-bottom: 7px;
+}
+
+.tutor-dashboard-assignment-table tr a {
+  font-weight: 400;
+  color: var(--tutor-text-color);
+}
+
+.tutor-dashboard-assignment-table tr a:hover {
+  color: var(--tutor-primary-color);
+  -webkit-transition: 300ms;
+  transition: 300ms;
 }
 
 .tutor-dashboard-builder-header {
@@ -7611,39 +7671,6 @@ label[for="tutor_withdraw_amount"] {
     opacity: 1;
     visibility: visible;
   }
-}
-
-.tutor-dashboard-assignment-table tr th, .tutor-dashboard-assignment-table tr td {
-  border: 1px solid #DCDFE5;
-  vertical-align: middle;
-  padding: 20px;
-}
-
-.tutor-dashboard-assignment-table tr th:not(:first-child), .tutor-dashboard-assignment-table tr td:not(:first-child) {
-  text-align: center;
-}
-
-.tutor-dashboard-assignment-table tr h5 {
-  margin: 0;
-  font-size: 16px;
-  line-height: 18px;
-  font-weight: 700;
-  color: var(--tutor-text-color);
-}
-
-.tutor-dashboard-assignment-table tr h5:not(:last-child) {
-  margin-bottom: 7px;
-}
-
-.tutor-dashboard-assignment-table tr a {
-  font-weight: 400;
-  color: var(--tutor-text-color);
-}
-
-.tutor-dashboard-assignment-table tr a:hover {
-  color: var(--tutor-primary-color);
-  -webkit-transition: 300ms;
-  transition: 300ms;
 }
 
 /*# sourceMappingURL=tutor-front.css.map */

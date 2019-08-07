@@ -14,12 +14,21 @@ $user_name = sanitize_text_field(get_query_var('tutor_student_username'));
 $sub_page = sanitize_text_field(get_query_var('profile_sub_page'));
 $get_user = tutor_utils()->get_user_by_login($user_name);
 $user_id = $get_user->ID;
+
+
+global $wp_query;
+
+$profile_sub_page = '';
+if (isset($wp_query->query_vars['profile_sub_page']) && $wp_query->query_vars['profile_sub_page']) {
+    $profile_sub_page = $wp_query->query_vars['profile_sub_page'];
+}
+
+
 ?>
 
 <?php do_action('tutor_student/before/wrap'); ?>
 
     <div <?php tutor_post_class('tutor-full-width-student-profile tutor-page-wrap'); ?>>
-<!--        xd new-->
         <div class="tutor-container">
             <div class="tutor-row">
                 <div class="tutor-col-12">
@@ -52,13 +61,19 @@ $user_id = $get_user->ID;
                             if(count($tutor_user_social_icons)){
                                 ?>
                                     <div class="tutor-dashboard-social-icons">
-                                        <h4><?php esc_html_e("Follow me", "tutor"); ?></h4>
                                         <?php
+                                            $i=0;
                                             foreach ($tutor_user_social_icons as $key => $social_icon){
                                                 $icon_url = get_user_meta($user_id,$key,true);
                                                 if($icon_url){
+                                                    if($i==0){
+                                                        ?>
+                                                            <h4><?php esc_html_e("Follow me", "tutor"); ?></h4>
+                                                        <?php
+                                                    }
                                                     echo "<a href='".esc_url($icon_url)."' target='_blank' class='".$social_icon['icon_classes']."'></a>";
                                                 }
+                                                $i++;
                                             }
                                         ?>
                                     </div>
@@ -69,8 +84,6 @@ $user_id = $get_user->ID;
                 </div>
             </div>
         </div>
-<!--        xd new end-->
-
         <div <?php tutor_post_class('tutor-dashboard-student'); ?>>
 
             <div class="tutor-container">
@@ -81,27 +94,27 @@ $user_id = $get_user->ID;
                         $student_profile_url = tutor_utils()->profile_url($user_id);
                         ?>
                         <ul class="tutor-dashboard-permalinks">
-                            <li><a href="<?php echo tutor_utils()->profile_url($user_id); ?>"><?php _e('Bio', 'tutor'); ?></a></li>
+                            <li class="<?php echo $profile_sub_page == '' ? 'active' : ''; ?>"><a href="<?php echo tutor_utils()->profile_url($user_id); ?>"><?php _e('Bio', 'tutor'); ?></a></li>
                             <?php
                             if (is_array($permalinks) && count($permalinks)){
                                 foreach ($permalinks as $permalink_key => $permalink){
-                                    echo '<li><a href="'.trailingslashit($student_profile_url).$permalink_key.'"> '.$permalink.' </a> </li>';
+                                    $active_class = $profile_sub_page == $permalink_key ? "active" : "";
+                                    echo '<li class="'. $active_class .'"><a href="'.trailingslashit($student_profile_url).$permalink_key.'"> '.$permalink.' </a> </li>';
                                 }
                             }
                             ?>
                         </ul>
                     </div>
                     <div class="tutor-col-9">
-
-                        <?php
-                        if ($sub_page){
-                            tutor_load_template('profile.'.$sub_page);
-                        }else{
-	                        tutor_load_template('profile.bio');
-                        }
-
-                        ?>
-
+                        <div class="tutor-dashboard-content">
+                            <?php
+                                if ($sub_page){
+                                    tutor_load_template('profile.'.$sub_page);
+                                }else{
+                                    tutor_load_template('profile.bio');
+                                }
+                            ?>
+                        </div>
                     </div> <!-- .tutor-col-8 -->
                 </div>
 
