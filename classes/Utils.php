@@ -163,9 +163,9 @@ class Utils {
 		$student_id = $this->get_user_id($student_id);
 		if ($student_id){
 			global $wpdb;
-			$user = $wpdb->get_row("SELECT user_login from {$wpdb->users} WHERE ID = {$student_id} ");
+			$user = $wpdb->get_row("SELECT user_nicename from {$wpdb->users} WHERE ID = {$student_id} ");
 			if ($user){
-				$user_name = $user->user_login;
+				$user_name = $user->user_nicename;
 			}
 		}else{
 			$user_name = 'user_name';
@@ -175,7 +175,7 @@ class Utils {
 	}
 
 	/**
-	 * @param string $user_login
+	 * @param string $user_nicename
 	 *
 	 * @return array|null|object
 	 *
@@ -183,10 +183,10 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_user_by_login($user_login = ''){
+	public function get_user_by_login($user_nicename = ''){
 		global $wpdb;
-		$user_login = sanitize_text_field($user_login);
-		$user = $wpdb->get_row("SELECT * from {$wpdb->users} WHERE user_login = '{$user_login}'");
+		$user_nicename = sanitize_text_field($user_nicename);
+		$user = $wpdb->get_row("SELECT * from {$wpdb->users} WHERE user_nicename = '{$user_nicename}'");
 		return $user;
 	}
 
