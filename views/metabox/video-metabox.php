@@ -88,7 +88,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
                                 <div class="builder-course-thumbnail-upload-wrap">
                                     <input type="hidden" id="tutor_course_thumbnail_id" name="video[poster]" value="<?php echo $poster; ?>">
                                     <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button
-                                    button-transparent"><i class="tutor-icon-image1"></i> <?php _e('Upload Image', 'tutor'); ?></a>
+                                    button-transparent"><i class="tutor-icon-photo-add"></i> <?php _e('Upload Image', 'tutor'); ?></a>
                                 </div>
                             </div>
                         </div>

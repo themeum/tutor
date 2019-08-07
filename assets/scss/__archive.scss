@@ -133,6 +133,7 @@ div[class*="tutor-course-col"] {
 .tutor-course-loop-meta{
   margin-bottom: 15px;
   color: var(--tutor-text-color);
+  font-size: var(--tutor-text-size);
 }
 .tutor-course-loop-meta > div{
   display: inline-block;
@@ -198,6 +199,17 @@ div[class*="tutor-course-col"] {
   align-items: center;
   justify-content: flex-start;
   font-weight: 600;
+  flex-wrap: wrap;
+}
+.tutor-course-loop-price > .price .subscription-details{
+  font-size: 15px;
+  margin-left: 4px;
+  font-weight: 400;
+}
+
+.tutor-course-loop-price > .price .subscription-details+ .tutor-loop-cart-btn-wrap{
+  margin-left: 0;
+  margin-top: 4px;
 }
 
 .tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a{
@@ -238,10 +250,8 @@ div[class*="tutor-course-col"] {
   -moz-osx-font-smoothing: grayscale;
   margin-right: 5px;
   vertical-align: top;
+  color: var(--tutor-primary-color);
 }
-
-
-
 
 /* Standard syntax */
 @-webkit-keyframes mymove {
@@ -360,6 +370,7 @@ div[class*="tutor-course-col"] {
 
 .tutor-loop-author{
   overflow: hidden;
+  font-size: var(--tutor-text-size);
 }
 
 .tutor-loop-author .tutor-single-course-avatar img{
