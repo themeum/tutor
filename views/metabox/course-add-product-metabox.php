@@ -42,8 +42,8 @@ $_tutor_course_price_type = tutils()->price_type();
         </select>
 
         <p class="desc">
-			<?php _e("If you'd like to sell this course, then select a product, the purchasing will completely be handled by WooCommerce",
-                'tutor'); ?>
+            <a href="<?php echo get_edit_post_link($product_id); ?>" target="_blank"><?php _e('Edit attached Product', 'tutor'); ?></a> <br />
+			<?php _e("If you'd like to sell this course, then select a product, the purchasing will completely be handled by WooCommerce", 'tutor'); ?>
         </p>
     </div>
 </div>

@@ -235,6 +235,12 @@ class Utils {
 		$depends = array('paid-memberships-pro/paid-memberships-pro.php');
 		return count(array_intersect($depends, $activated_plugins)) == count($depends);
 	}
+
+	public function has_wcs(){
+		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
+		$depends = array('woocommerce-subscriptions/woocommerce-subscriptions.php');
+		return count(array_intersect($depends, $activated_plugins)) == count($depends);
+	}
 	
 	/**
 	 * @return mixed
@@ -914,10 +920,12 @@ class Utils {
 		if (is_user_logged_in()) {
 			global $wpdb;
 
+			do_action('tutor_is_enrolled_before', $course_id, $user_id);
+
 			$getEnrolledInfo = $wpdb->get_row( "select ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} AND post_status = 'completed'; " );
 
 			if ( $getEnrolledInfo ) {
-				return $getEnrolledInfo;
+				return apply_filters('tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id);
 			}
 		}
 		return false;

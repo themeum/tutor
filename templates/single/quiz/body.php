@@ -373,7 +373,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 			<?php
 		}
 	}else{
-		if ($attempt_remaining > 0) {
+		if ($attempt_remaining > 0 || $attempts_allowed == 0) {
 			?>
             <div class="start-quiz-wrap">
                 <form id="tutor-start-quiz" method="post">

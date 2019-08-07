@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.3.6
+Stable tag: 1.3.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -23,7 +23,9 @@ Get Tutor, the most advanced and powerful WordPress online course plugin.
 
 Create, customize, manage, and sell online courses by building a functional e-learning website with this free LMS plugin for WordPress.
 
-[Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/) || [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) || [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/)
+⭐ [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) ⭐ || ⭐ [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/) ⭐ || [Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/)
+
+Want to know all the latest news and be part of the Tutor LMS community? Join our [Facebook Tutor LMS Community group!](https://www.facebook.com/groups/tutorlms)
 
 = Features =
 
@@ -206,6 +208,15 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.3.7 - 07 August, 2019 =
+
+* Added: WooCommerce Subscriptions Addon in the pro version
+* Added action hook `do_action('tutor_is_enrolled_before', $course_id, $user_id);` and filter hook `apply_filters('tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id);`
+* Added: user social links ability from frontend dashboard
+* Fixed: Quiz attempt allowed 0 issue has been fixed. Strictly checking if it's zero, then it will be no limit
+* Fixed: Tutor LMS Pro addon loading issue on the windows machine
+* Updated: student public profile design updated
 
 = 1.3.6 - 05 August, 2019 =
 

@@ -125,7 +125,7 @@ class Course_Widget extends \WP_Widget {
 			<label for="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>"><?php esc_attr_e( 'Exclude IDS:', 'tutor' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>" name="<?php echo esc_attr(
 				$this->get_field_name( 'exclude_ids' ) ); ?>" type="text" value="<?php echo esc_attr( $exclude_ids ); ?>"> <br />
-			<span style="color: #AAAAAA"><?php _e('Place comma (,) separated coruses ids which you like to exclude from the query', 'tutor');
+			<span style="color: #AAAAAA"><?php _e('Place comma (,) separated courses ids which you like to exclude from the query', 'tutor');
 			?></span>
 		</p>
 
