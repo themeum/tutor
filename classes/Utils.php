@@ -3021,7 +3021,7 @@ class Utils {
 		}
 
 		$value = $this->avalue_dot( $option_key, $get_option_meta );
-		if ( $value ) {
+		if ( $value > 0 || $value == 0 ) {
 			return $value;
 		}
 		return $default;
