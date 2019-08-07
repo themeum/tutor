@@ -3958,7 +3958,12 @@ class Utils {
             '_tutor_profile_website'  => array(
                 'label'         => __('Website URL', 'tutor'),
                 'placeholder'   => 'https://example.com/',
-                'icon_classes'   => 'tutor-icon-facebook'
+                'icon_classes'   => 'tutor-icon-earth'
+            ),
+            '_tutor_profile_github'  => array(
+                'label'         => __('Github URL', 'tutor'),
+                'placeholder'   => 'https://github.com/username',
+                'icon_classes'   => 'tutor-icon-github-logo'
             ),
 	        '_tutor_profile_facebook'  => array(
 	            'label'         => __('Facebook URL', 'tutor'),
@@ -3968,12 +3973,12 @@ class Utils {
             '_tutor_profile_twitter'  => array(
                 'label'         => __('Twitter URL', 'tutor'),
                 'placeholder'   => 'https://twitter.com/username',
-                'icon_classes'   => 'tutor-icon-facebook'
+                'icon_classes'   => 'tutor-icon-twitter'
             ),
             '_tutor_profile_linkedin'  => array(
                 'label'         => __('Linkedin URL', 'tutor'),
                 'placeholder'   => 'https://linkedin.com/username',
-                'icon_classes'   => 'tutor-icon-facebook'
+                'icon_classes'   => 'tutor-icon-linkedin'
             ),
         );
 
