@@ -2600,11 +2600,22 @@ Course question and answer
 .tutor-price-preview-box .price{
   font-size: 35px;
   font-weight: 500;
-  margin-bottom: 0;
+  margin: 0 0 20px;
   overflow: hidden;
   line-height: 1;
-  margin-bottom: 20px;
+  .subscription-details{
+    font-size: var(--tutor-text-size);
+    display: block;
+    margin-top: 12px;
+    line-height: 1.2em;
+  }
 }
+
+
+.tutor-price-preview-box .price > .price{
+  margin-bottom: 0;
+}
+
 //
 //.tutor-price-preview-box .price del{
 //  font-size: var(--tutor-text-size);
