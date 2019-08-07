@@ -94,12 +94,13 @@ if (isset($wp_query->query_vars['profile_sub_page']) && $wp_query->query_vars['p
                         $student_profile_url = tutor_utils()->profile_url($user_id);
                         ?>
                         <ul class="tutor-dashboard-permalinks">
-                            <li class="<?php echo $profile_sub_page == '' ? 'active' : ''; ?>"><a href="<?php echo tutor_utils()->profile_url($user_id); ?>"><?php _e('Bio', 'tutor'); ?></a></li>
+                            <li class="tutor-dashboard-menu-bio <?php echo $profile_sub_page == '' ? 'active' : ''; ?>"><a href="<?php echo tutor_utils()->profile_url($user_id); ?>"><?php _e('Bio', 'tutor'); ?></a></li>
                             <?php
                             if (is_array($permalinks) && count($permalinks)){
                                 foreach ($permalinks as $permalink_key => $permalink){
+                                    $li_class = "tutor-dashboard-menu-{$permalink_key}";
                                     $active_class = $profile_sub_page == $permalink_key ? "active" : "";
-                                    echo '<li class="'. $active_class .'"><a href="'.trailingslashit($student_profile_url).$permalink_key.'"> '.$permalink.' </a> </li>';
+                                    echo '<li class="'. $active_class . ' ' . $li_class .'"><a href="'.trailingslashit($student_profile_url).$permalink_key.'"> '.$permalink.' </a> </li>';
                                 }
                             }
                             ?>

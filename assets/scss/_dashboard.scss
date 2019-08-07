@@ -675,7 +675,7 @@
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 	color: #fff;
 }
-
+.tutor-dashboard-menu-bio a:before,
 .tutor-dashboard-menu-my-profile a:before{
 	content: "\e963";
 }
@@ -684,6 +684,7 @@
 	content: "\e969";
 }
 
+.tutor-dashboard-menu-courses_taken a:before,
 .tutor-dashboard-menu-my-courses a:before{
 	content: "\e965";
 }

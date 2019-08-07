@@ -106,7 +106,56 @@ Animation Spinner
  * Icon Contents
  */
 
-.tutor-icon-photo-1:before {
+
+.tutor-icon-save:before {
+    content: "\e994";
+}
+.tutor-icon-myspace:before {
+    content: "\e997";
+}
+.tutor-icon-soundcloud:before {
+    content: "\e998";
+}
+.tutor-icon-blogger:before {
+    content: "\e999";
+}
+.tutor-icon-google-drive:before {
+    content: "\e99a";
+}
+.tutor-icon-skype:before {
+    content: "\e99b";
+}
+.tutor-icon-yelp:before {
+    content: "\e99c";
+}
+.tutor-icon-dribbble:before {
+    content: "\e99d";
+}
+.tutor-icon-flickr:before {
+    content: "\e99e";
+}
+.tutor-icon-snapchat:before {
+    content: "\e99f";
+}
+.tutor-icon-html:before {
+    content: "\e9a1";
+}
+.tutor-icon-reddit:before {
+    content: "\e9a2";
+}
+.tutor-icon-spotify:before {
+    content: "\e9a3";
+}
+.tutor-icon-earth:before {
+    content: "\e9a4";
+}
+.tutor-icon-github-logo:before {
+    content: "\e9a5";
+}
+.tutor-icon-instagram:before {
+    content: "\e9a6";
+}
+.tutor-icon-photo-add:before {
     content: "\e995";
 }
 .tutor-icon-add-group:before {
@@ -126,9 +175,6 @@ Animation Spinner
 }
 .tutor-icon-upload:before {
     content: "\e993";
-}
-.tutor-icon-save:before {
-    content: "\e994";
 }
 .tutor-icon-search-file:before {
     content: "\e989";
@@ -514,7 +560,7 @@ Animation Spinner
 .tutor-icon-group:before {
     content: "\e90c";
 }
-.tutor-icon-linkdin:before {
+.tutor-icon-linkedin:before {
     content: "\e90d";
 }
 .tutor-icon-lock:before {
@@ -559,3 +605,4 @@ Animation Spinner
 .tutor-icon-youtube:before {
     content: "\e91c";
 }
+
