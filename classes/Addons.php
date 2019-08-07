@@ -22,6 +22,10 @@ class Addons {
 
 	public function tutor_addons_lists_to_show(){
 		$addons = array(
+			'wc-subscriptions' => array(
+				'name'          => __('WooCommerce Subscriptions', 'tutor-pmpro'),
+				'description'   => 'Capture Residual Revenue with Recurring Payments.',
+			),
 			'pmpro'             => array(
 				'name'          => __('Paid Memberships Pro', 'tutor-pmpro'),
 				'description'   => 'Maximize revenue by selling membership access to all of your courses.',
