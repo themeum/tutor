@@ -114,6 +114,7 @@ class Student {
 
 		//Checking nonce
 		tutor_utils()->checking_nonce();
+        do_action('tutor_profile_update_before');
 
 		$user_id = get_current_user_id();
 		$first_name     = sanitize_text_field(tutor_utils()->input_old('first_name'));
@@ -129,13 +130,23 @@ class Student {
 		$user_id  = wp_update_user( $userdata );
 
 		if ( ! is_wp_error( $user_id ) ) {
-			$_tutor_profile_photo = sanitize_text_field(tutor_utils()->avalue_dot('tutor_profile_photo_id', $_POST));
+			$_tutor_profile_photo = sanitize_text_field(tutils()->array_get('tutor_profile_photo_id', $_POST));
 
 			update_user_meta($user_id, 'phone_number', $phone_number);
 			update_user_meta($user_id, '_tutor_profile_bio', $tutor_profile_bio);
 			update_user_meta($user_id, '_tutor_profile_photo', $_tutor_profile_photo);
-		}
 
+            $tutor_user_social = tutils()->tutor_user_social_icons();
+            foreach ($tutor_user_social as $key => $social){
+                $user_social_value = sanitize_text_field(tutor_utils()->input_old($key));
+                if($user_social_value){
+                    update_user_meta($user_id, $key, $user_social_value);
+                }else{
+                    delete_user_meta($user_id, $key);
+                }
+            }
+		}
+        do_action('tutor_profile_update_after', $user_id);
 		wp_redirect(wp_get_raw_referer());
 		die();
 	}
