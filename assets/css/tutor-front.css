@@ -2366,6 +2366,19 @@ ul.tutor-required-fields {
   margin-right: 4px;
 }
 
+@media (max-width: 546px) {
+  .tutor-write-review-box .tutor-star-rating-group {
+    font-size: 26px;
+    display: block;
+    text-align: center;
+  }
+}
+
+.tutor-write-review-box .tutor-star-rating-group i {
+  margin-right: 4px;
+  cursor: pointer;
+}
+
 .tutor-queston-and-answer-wrap {
   margin: 20px 0;
 }

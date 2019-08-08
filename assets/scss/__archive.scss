@@ -1483,6 +1483,17 @@ ul.tutor-required-fields{
   /*cursor: pointer;*/
   margin-right: 4px;
 }
+.tutor-write-review-box .tutor-star-rating-group{
+  @media (max-width: 546px) {
+    font-size: 26px;
+    display: block;
+    text-align: center;
+  }
+  i{
+    margin-right: 4px;
+    cursor: pointer;
+  }
+}
 .tutor-queston-and-answer-wrap{
   margin: 20px 0;
 }
