@@ -439,7 +439,7 @@ jQuery(document).ready(function($){
         $('.tutor-lesson-sidebar').toggle();
     });
 
-    $(".tutor-tabs-btn-group a").click( function (e) {
+    $(".tutor-tabs-btn-group a").on('click touchstart', function (e) {
         e.preventDefault();
         var $that = $(this);
         var tabSelector = $that.attr('href');
