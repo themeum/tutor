@@ -209,13 +209,15 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.3.7 - 07 August, 2019 =
+= 1.3.7 - 08 August, 2019 =
 
 * Added: WooCommerce Subscriptions Addon in the pro version
 * Added action hook `do_action('tutor_is_enrolled_before', $course_id, $user_id);` and filter hook `apply_filters('tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id);`
 * Added: user social links ability from frontend dashboard
 * Fixed: Quiz attempt allowed 0 issue has been fixed. Strictly checking if it's zero, then it will be no limit
 * Fixed: Tutor LMS Pro addon loading issue on the windows machine
+* Fixed: query public profile user by user_nicename instead of user_login
+* Fixed: touch event on click Lessn and Q&A navigation in mobile
 * Updated: student public profile design updated
 
 = 1.3.6 - 05 August, 2019 =

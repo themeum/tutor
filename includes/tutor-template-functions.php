@@ -20,7 +20,14 @@ if ( ! function_exists('tutor_get_template')) {
 		}
 		$template = str_replace( '.', DIRECTORY_SEPARATOR, $template );
 
-		$template_location = trailingslashit( get_template_directory() ) . "tutor/{$template}.php";
+		/**
+		 * Get template first from child-theme if exists
+		 * If child theme not exists, then get template from parent theme
+		 */
+		$template_location = trailingslashit( get_stylesheet_directory() ) . "tutor/{$template}.php";
+		if ( ! file_exists($template_location)){
+			$template_location = trailingslashit( get_template_directory() ) . "tutor/{$template}.php";
+		}
 		$file_in_theme = $template_location;
 		if ( ! file_exists( $template_location ) ) {
 			$template_location = trailingslashit( tutor()->path ) . "templates/{$template}.php";
