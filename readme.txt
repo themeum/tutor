@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.3.7
+Stable tag: 1.3.8
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -208,6 +208,12 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.3.8 - 09 August, 2019 =
+
+* Fixed: `tutor_get_template()` function, it's now checking template from child-theme also, if template not found in the child theme, then it will look from the parent theme.
+* Fixed: Show/Hide browse Q&A based on settings.
+* Fixed: create_certificate under init hook from Tutor Certificate Addon (Pro)
 
 = 1.3.7 - 08 August, 2019 =
 
