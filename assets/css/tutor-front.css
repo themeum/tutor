@@ -1377,6 +1377,10 @@ a.tutor-btn.bordered-btn:hover,
   margin-bottom: 45px;
 }
 
+.tutor-wrap {
+  width: 100%;
+}
+
 .tutor-wrap nav.course-enrolled-nav ul {
   list-style: none;
   margin: 0 0 -1px;
