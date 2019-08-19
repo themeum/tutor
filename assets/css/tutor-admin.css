@@ -2255,16 +2255,7 @@ Updating Messsage
 /**
 Lesson Edit Modal
  */
-/*.lesson-modal-close-wrap a{*/
-    /*position: absolute;*/
-    /*right: 0;*/
-    /*top: 0;*/
-    /*color: #fff;*/
-    /*background: #000;*/
-    /*padding: 20px;*/
-    /*line-height: 8px;*/
-    /*font-size: 12px;*/
-/*}*/
+
 .lesson-modal-form-wrap .lesson-modal-field-row{
     padding: 10px 0;
 }

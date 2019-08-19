@@ -973,14 +973,11 @@ span.toogle-informaiton-icon {
 .tutor-lessons-under-topic .tutor-lesson-right-icons i{
   font-style: normal;
 }
-
 .tutor-single-page-top-bar{
   background-color: var(--tutor-primary-color);
   height: 70px;
   margin-bottom: 50px;
   color: #ffffff;
-  
-  
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -991,20 +988,25 @@ span.toogle-informaiton-icon {
 .tutor-single-page-top-bar .tutor-single-lesson-segment{
   margin-bottom: 0;
 }
-
-
 .tutor-single-page-top-bar a{
   color: #ffffff;
   vertical-align: middle;
-}
-.tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i{
-  font-size: 29px;
-  display: block;
+  display: inline-block;
+  overflow: hidden;
+  i{
+    float: left;
+    margin-right: 7px;
+  }
+  @media (max-width: 546px) {
+    font-size: 14px;
+  }
 }
 .tutor-topbar-home-btn{
   margin-left: 20px;
+  @media screen and (max-width: 546px) {
+    margin-left: 10px;
+  }
 }
-
 .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button{
   background: #fff;
   color: var(--tutor-primary-color);
@@ -1038,12 +1040,18 @@ span.toogle-informaiton-icon {
 }
 
 @media (max-width: 767px) {
-
   .tutor-single-page-top-bar .tutor-topbar-content-title-wrap{
     display: none;
   }
   .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button{
     padding: 9px 14px;
+  }
+}
+
+@media (max-width: 767px){
+  .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button{
+    padding: 7px 12px;
+    font-size: 14px;
   }
 }
 
@@ -1068,14 +1076,25 @@ span.toogle-informaiton-icon {
   padding: 0 18px;
   display: inline-block;
   line-height: 68px;
+  @media only screen and (max-width: 546px){
+    padding: 0 10px;
+  }
 }
+
+
+.tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i{
+  font-size: 29px;
+  display: block;
+  @media only screen and (max-width: 546px){
+    font-size: 19px;
+  }
+}
+
 .tutor-sidebar-tabs-wrap{
   border-top: 1px solid #E0E9EC;
 }
 .tutor-tabs-btn-group {
   height: 70px;
-  
-  
   display: flex;
 }
 .tutor-tabs-btn-group a{
@@ -3063,6 +3082,9 @@ social share
 .rtl .tutor-topbar-home-btn{
   margin-left: 0;
   margin-right: 20px;
+  @media screen and (max-width: 546px) {
+    margin-right: 10px;
+  }
 }
 .rtl .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button{
   margin-left: 15px;
