@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.3.8
+Stable tag: 1.3.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -209,6 +209,12 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.3.9 - 19 August, 2019 =
+
+* Fixed: Resetting Paid Membership Pro plugins settings when saving tutor settings.
+* Fixed: quiz question issue when no settings saved.
+* Fixed: Complete lesson button responsive issue
 
 = 1.3.8 - 09 August, 2019 =
 
