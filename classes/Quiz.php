@@ -259,7 +259,7 @@ class Quiz {
 
 		$date = date("Y-m-d H:i:s");
 
-		$tutor_quiz_option = maybe_unserialize(get_post_meta($quiz_id, 'tutor_quiz_option', true));
+		$tutor_quiz_option = (array) maybe_unserialize(get_post_meta($quiz_id, 'tutor_quiz_option', true));
 		$attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
 
 		$time_limit = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value');

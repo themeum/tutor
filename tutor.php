@@ -64,8 +64,9 @@ if ( ! class_exists('Tutor')){
 
 /**
  * @return \TUTOR\Utils
- * 
- * Run main instance of the Tutor
+ *
+ * Get all helper functions/methods
+ *
  */
 function tutor_utils(){
 	return new \TUTOR\Utils();
@@ -87,6 +88,7 @@ if ( ! function_exists('tutils')){
 
 /**
  * @return null|\TUTOR\Tutor
+ * Run main instance of the Tutor
  *
  * @since v.1.2.0
  */

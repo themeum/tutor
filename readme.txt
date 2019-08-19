@@ -169,7 +169,8 @@ For a detailed guideline on how to build a Learning Management system, refer to 
 
 = Where can I report a bug? =
 
-This is an alpha version of Tutor, as bugs and issues expected, if you found any bugs or issues, please let us know by posting on the support section of this plugin on WordPress plugin directory or directly on our support forums: https://www.themeum.com/support/ 🙂
+If you found any bugs or issues, please let us know by posting on the support section of this plugin on WordPress plugin directory or directly on our
+support forums: https://www.themeum.com/support/ 🙂
 
 = Is this plugin free? =
 

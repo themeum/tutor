@@ -3402,11 +3402,17 @@ class Utils {
 
 		$quiz_id = $this->get_post_id($quiz_id);
 		$attempt = $this->is_started_quiz($quiz_id);
+		$total_questions = (int) $attempt->total_questions;
 		if ( ! $attempt){
 		    return false;
         }
 
-		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id}  ORDER BY RAND() LIMIT {$attempt->total_questions} ");
+        $limit = '';
+        if ($total_questions){
+	        $limit = "LIMIT {$total_questions} ";
+        }
+
+		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id}  ORDER BY RAND() {$limit} ");
 
 		return $questions;
 	}
@@ -3424,7 +3430,6 @@ class Utils {
 	public function get_answers_by_quiz_question($question_id, $rand = false){
 		global $wpdb;
 
-
 		$question = $wpdb->get_row("SELECT * from {$wpdb->prefix}tutor_quiz_questions WHERE question_id = {$question_id} ;");
 		if ( ! $question){
 			return false;
@@ -3439,8 +3444,7 @@ class Utils {
 			$order = " RAND() ";
 		}
 
-		$answers = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question_id} AND belongs_question_type = 
-'{$question->question_type}' order by {$order} ");
+		$answers = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question_id} AND belongs_question_type = '{$question->question_type}' order by {$order} ");
 		return $answers;
 	}
 
