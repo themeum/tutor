@@ -88,7 +88,7 @@ if ( ! $quiz){
                                         <i class="tutor-icon-move"></i>
                                     </span>
 
-                                    <span class="question-title"><?php echo $question->question_title; ?></span>
+                                    <span class="question-title"><?php echo stripslashes($question->question_title); ?></span>
 
                                     <span class="question-icon">
                                         <?php
