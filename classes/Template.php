@@ -181,7 +181,11 @@ class Template extends Tutor_Base {
 					$template = tutor_get_template( 'single-lesson' );
 				}else{
 					//You need to enroll first
-					$template = tutor_get_template( 'single.lesson.required-enroll' );
+					if(current_user_can(tutor()->instructor_role)){
+						$template = tutor_get_template( 'single-lesson' );
+					}else{
+						$template = tutor_get_template( 'single.lesson.required-enroll' );
+					}
 				}
 			}else{
 				$template = tutor_get_template('login');
