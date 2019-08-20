@@ -181,10 +181,11 @@ class Template extends Tutor_Base {
 					$template = tutor_get_template( 'single-lesson' );
 				}else{
 					//You need to enroll first
-					if(current_user_can(tutor()->instructor_role)){
+					$template = tutor_get_template( 'single.lesson.required-enroll' );
+
+					//Check Lesson edit access to support page builders
+					if(current_user_can(tutor()->instructor_role) && tutils()->has_lesson_edit_access()){
 						$template = tutor_get_template( 'single-lesson' );
-					}else{
-						$template = tutor_get_template( 'single.lesson.required-enroll' );
 					}
 				}
 			}else{
