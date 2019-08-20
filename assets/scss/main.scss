@@ -1,6 +1,7 @@
 @import "theme";
 @import "layout";
 @import "single_course";
+@import "single_lesson";
 @import "_archive";
 
 //dashboard
@@ -12,7 +13,3 @@
 //frontend-builder
 @import "frontend_course_builder";
 @import "option_input";
-
-// common builder modal & form
-
-@import "builder_modal";
