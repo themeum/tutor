@@ -113,6 +113,9 @@
                                     <i class="tutor-icon-move"></i>
                                     <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>"><?php echo $lesson->post_title; ?> </a>
                                     <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                    
+                                    <a target="_blank" href="http://10.0.1.8/lms/wp-admin/post.php?post=<?php echo $lesson->ID; ?>&action=edit">Edit Builder</a>
+
                                 </div>
                             </div>
 							<?php
