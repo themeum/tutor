@@ -64,7 +64,7 @@
 								<?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
                             </p>
 
-                            <button type="button" class="button button-primary tutor-topics-edit-button"><i class="tutor-icon-pencil"></i> <?php _e('Edit Topic', 'tutor'); ?></button>
+                            <button type="button" class="button button-primary tutor-topics-edit-button"><i class="tutor-icon-pencil"></i> <?php _e('Update Topic', 'tutor'); ?></button>
                         </div>
                     </div>
                 </div>
