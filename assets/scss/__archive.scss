@@ -610,8 +610,6 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-wrap nav.course-enrolled-nav ul li{
   display: inline-block;
 }
-
-
 .tutor-wrap nav.course-enrolled-nav ul li a{
   display: block;
   font-size: 16px;
@@ -627,7 +625,6 @@ a.tutor-btn.bordered-btn:hover,
   border-bottom: 2px solid var(--tutor-primary-color);
   color: var(--tutor-text-color);
 }
-
 
 @media (max-width: 575px) {
   .tutor-wrap nav.course-enrolled-nav ul li{
@@ -819,8 +816,6 @@ Instructor
   border: 1px solid #E8EFF1;
 }
 .tutor-single-lesson-wrap{
-  
-  
   display: flex;
   position: relative;
 }
@@ -849,7 +844,6 @@ Instructor
 .tutor-single-lesson-button-group .tutor-single-lesson-button a,
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a{
   padding: 14px 100px 14px 17px;
-  //font-size: var(--tutor-text-size);
   display: flex;
   color: var(--tutor-text-color);
   position: relative;
@@ -867,7 +861,6 @@ Instructor
   padding: 0;
 }
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a span{
-  //font-size: var(--tutor-text-size);
   margin: 0;
   display: inline;
   color: var(--tutor-text-color);
@@ -944,7 +937,6 @@ span.toogle-informaiton-icon {
 }
 .tutor-topics-in-single-lesson .tutor-topics-summery{
   padding: 14px;
-  //font-size: var(--tutor-text-size);
   border-top: 1px solid #DCE4E6;
   display: none;
 }
@@ -1144,7 +1136,6 @@ span.toogle-informaiton-icon {
 }
 
 .tutor-single-lesson-wrap{
-  //font-size: var(--tutor-text-size);
   background: #F4F8FA;
 }
 .tutor-lesson-video-wrap .plyr--video{
@@ -1232,7 +1223,6 @@ span.toogle-informaiton-icon {
 .tutor-progress-bar-wrap{
   width: 100%;
   margin: 0 0 30px;
-  //font-size: var(--tutor-text-size);
   display: flex;
 }
 .tutor-progress-bar{
@@ -4414,10 +4404,7 @@ Tutor Media Upload
 }
 
 .tutor-course-builder-section{
-  //border: 1px dashed #DCDFE5;
-  //padding: 20px;
   margin-bottom: 60px;
-  //font-size: var(--tutor-text-size);
 }
 .tutor-course-builder-section-title h3{
   font-size: 20px;
@@ -4548,6 +4535,43 @@ Tutor Media Upload
   border-radius: 4px;
   position: relative;
   margin-bottom: 30px;
+  .instructor-name{
+    position: relative;
+    img{
+      display: inline-block;
+      margin-left: 10px;
+      width: 18px;
+      &:hover + i.instructor-name-tooltip{
+        opacity: 1;
+      }
+    }
+  }
+  i.instructor-name-tooltip {
+    transition: 300ms;
+    opacity: 0;
+    position: absolute;
+    bottom: 34px;
+    right: 9px;
+    background: #2A344F;
+    transform: translateX(50%);
+    color: #fff;
+    font-size: 12px;
+    font-style: normal;
+    padding: 0 8px;
+    border-radius: 15px;
+    line-height: 20px;
+    z-index: 1;
+    &::before {
+      content: '';
+      position: absolute;
+      border: 5px solid #2A344F;
+      bottom: -3px;
+      left: 50%;
+      margin-left: -5px;
+      transform: rotate(45deg);
+      z-index: -1;
+    }
+  }
 }
 
 .tutor-course-available-instructors .added-instructor-item .instructor-control{

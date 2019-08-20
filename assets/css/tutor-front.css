@@ -5847,6 +5847,51 @@ Tutor Media Upload
   margin-bottom: 30px;
 }
 
+.tutor-course-available-instructors .added-instructor-item .instructor-name {
+  position: relative;
+}
+
+.tutor-course-available-instructors .added-instructor-item .instructor-name img {
+  display: inline-block;
+  margin-left: 10px;
+  width: 18px;
+}
+
+.tutor-course-available-instructors .added-instructor-item .instructor-name img:hover + i.instructor-name-tooltip {
+  opacity: 1;
+}
+
+.tutor-course-available-instructors .added-instructor-item i.instructor-name-tooltip {
+  -webkit-transition: 300ms;
+  transition: 300ms;
+  opacity: 0;
+  position: absolute;
+  bottom: 34px;
+  right: 9px;
+  background: #2A344F;
+  -webkit-transform: translateX(50%);
+  transform: translateX(50%);
+  color: #fff;
+  font-size: 12px;
+  font-style: normal;
+  padding: 0 8px;
+  border-radius: 15px;
+  line-height: 20px;
+  z-index: 1;
+}
+
+.tutor-course-available-instructors .added-instructor-item i.instructor-name-tooltip::before {
+  content: '';
+  position: absolute;
+  border: 5px solid #2A344F;
+  bottom: -3px;
+  left: 50%;
+  margin-left: -5px;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  z-index: -1;
+}
+
 .tutor-course-available-instructors .added-instructor-item .instructor-control {
   position: absolute;
   right: 14px;
