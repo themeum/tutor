@@ -95,19 +95,21 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 							if ( ! $hide_question_number_overview){
 								echo $question_i. ". ";
 							}
-							echo $question->question_title;
+							echo stripslashes($question->question_title);
 							echo '</h4>';
 
 							if ($show_question_mark){
 								echo '<p class="question-marks"> '.__('Marks : ', 'tutor').$question->question_mark.' </p>';
 							}
 							?>
-                            <p class="question-description"><?php echo $question->question_description; ?></p>
+                            <p class="question-description"><?php echo stripslashes($question->question_description); ?></p>
 
                             <div class="tutor-quiz-answers-wrap question-type-<?php echo $question_type; ?>">
 								<?php
 								if ( is_array($answers) && count($answers) ) {
 									foreach ($answers as $answer){
+									    $answer_title = stripslashes($answer->answer_title);
+									    
 										if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 											?>
                                             <label class="answer-view-<?php echo $answer->answer_view_format; ?>">
@@ -126,7 +128,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                                             <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
                                                             <span>&nbsp;</span>
                                                             <?php
-                                                                if ($answer->answer_view_format !== 'image'){ echo $answer->answer_title;}
+                                                                if ($answer->answer_view_format !== 'image'){ echo $answer_title;}
                                                             ?>
                                                         </div>
                                                     </div>
@@ -150,7 +152,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                                             <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
                                                             <span>&nbsp;</span>
                                                             <?php if ($answer->answer_view_format !== 'image'){
-                                                                echo $answer->answer_title;
+                                                                echo $answer_title;
                                                             } ?>
                                                         </div>
                                                     </div>
@@ -162,7 +164,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 											?>
                                             <p class="fill-in-the-blank-field">
 												<?php
-												$count_dash_fields = substr_count($answer->answer_title, '{dash}');
+												$count_dash_fields = substr_count($answer_title, '{dash}');
 												if ($count_dash_fields){
 
 													$dash_string = array();
@@ -171,7 +173,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 														$dash_string[] = '{dash}';
 														$input_data[] = "<input type='text' name='attempt[{$is_started_quiz->attempt_id}][quiz_question][{$question->question_id}][]' class='fill-in-the-blank-text-input' />";
 													}
-													echo str_replace($dash_string, $input_data, $answer->answer_title);
+													echo str_replace($dash_string, $input_data, $answer_title);
 												}
 												?>
                                             </p>
@@ -183,7 +185,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                                 <div class="answer-title">
 													<?php
 													if ($answer->answer_view_format !== 'image'){
-														echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
+														echo "<p class='tutor-quiz-answer-title'>{$answer_title}</p>";
 													}
 													if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
 														?>
@@ -239,7 +241,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 															if ($question_type === 'matching') {
 
 																if ($answer->answer_view_format !== 'image'){
-																	echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
+																	echo "<p class='tutor-quiz-answer-title'>{$answer_title}</p>";
 																}
 																if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
 																	?>

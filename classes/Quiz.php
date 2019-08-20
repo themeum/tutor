@@ -727,7 +727,7 @@ class Quiz {
 		$question_data = $_POST['tutor_quiz_question'];
 
 		foreach ($question_data as $question_id => $question){
-			$question_title         = $question['question_title'];
+			$question_title         = sanitize_text_field($question['question_title']);
 			$question_description   = $question['question_description'];
 			$question_type          = $question['question_type'];
 			$question_mark          = $question['question_mark'];
@@ -942,7 +942,7 @@ class Quiz {
                     <div class="tutor-quiz-answer">
                         <span class="tutor-quiz-answer-title">
                             <?php
-                            echo $answer->answer_title;
+                            echo stripslashes($answer->answer_title);
                             if ($answer->belongs_question_type === 'fill_in_the_blank'){
                                 echo ' ('.__('Answer', 'tutor').' : ';
                                 echo "<strong>{$answer->answer_two_gap_match} </strong>)";

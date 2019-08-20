@@ -21,7 +21,7 @@ $settings = maybe_unserialize($question->question_settings);
                 <h4><?php _e('Write your question here', 'tutor'); ?></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
-                        <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo $question->question_title; ?>">
+                        <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo stripslashes($question->question_title); ?>">
                     </div>
                 </div>
             </div>
@@ -88,7 +88,7 @@ $settings = maybe_unserialize($question->question_settings);
             </div>
 
             <div class="tutor-quiz-builder-group">
-                <h4><?php _e('Mark for this question', 'tutor'); ?></h4>
+                <h4><?php _e('Point for this question', 'tutor'); ?></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
                         <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_mark]" placeholder="<?php _e('set the mark ex. 10', 'tutor'); ?>" value="<?php
@@ -104,7 +104,7 @@ $settings = maybe_unserialize($question->question_settings);
                             <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][show_question_mark]" <?php checked('1', tutor_utils()->avalue_dot('show_question_mark', $settings)); ?> />
                             <div class="btn-slider btn-round"></div>
                         </label>
-                        <span><?php _e('Show marks', 'tutor'); ?></span>
+                        <span><?php _e('Show points', 'tutor'); ?></span>
                     </div>
                 </div>
             </div>
@@ -113,7 +113,7 @@ $settings = maybe_unserialize($question->question_settings);
                 <h4><?php _e('Description', 'tutor'); ?> <span>(<?php _e('Optional', 'tutor'); ?>)</span></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
-                        <textarea name="tutor_quiz_question[<?php echo $question_id; ?>][question_description]"><?php echo $question->question_description;?></textarea>
+                        <textarea name="tutor_quiz_question[<?php echo $question_id; ?>][question_description]"><?php echo stripslashes($question->question_description);?></textarea>
                     </div>
                 </div>
             </div>
@@ -145,7 +145,7 @@ $settings = maybe_unserialize($question->question_settings);
                                             <div class="tutor-quiz-answer">
                                         <span class="tutor-quiz-answer-title">
                                             <?php
-                                            echo $answer->answer_title;
+                                            echo stripslashes($answer->answer_title);
                                             if ($answer->belongs_question_type === 'fill_in_the_blank'){
 	                                            echo ' ('.__('Answer', 'tutor').' : ';
 	                                            echo "<strong>{$answer->answer_two_gap_match} </strong>)";
@@ -220,8 +220,7 @@ $settings = maybe_unserialize($question->question_settings);
 
 <div class="tutor-quiz-builder-modal-control-btn-group question_form_inner">
     <div class="quiz-builder-btn-group-left">
-        <a href="javascript:;" class="quiz-modal-tab-navigation-btn quiz-modal-question-save-btn"><?php _e('Save &amp; Continue', 'tutor');
-			?></a>
+        <a href="javascript:;" class="quiz-modal-tab-navigation-btn quiz-modal-question-save-btn"><?php _e('Save &amp; Continue', 'tutor'); ?></a>
     </div>
     <div class="quiz-builder-btn-group-right">
         <a href="javascript:;" class="quiz-modal-tab-navigation-btn quiz-modal-btn-cancel"><?php _e('Cancel', 'tutor'); ?></a>
