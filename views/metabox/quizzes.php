@@ -37,7 +37,7 @@
         <div class="tutor-option-field">
             <?php
             $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
-            $attempts_allowed = tutor_utils()->get_quiz_option(get_the_ID(), 'attempts_allowed', $default_attempts_allowed);
+            $attempts_allowed = (int) tutor_utils()->get_quiz_option(get_the_ID(), 'attempts_allowed', $default_attempts_allowed);
             ?>
 
             <div class="tutor-field-type-slider" data-min="0" data-max="20">
