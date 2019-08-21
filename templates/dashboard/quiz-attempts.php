@@ -62,12 +62,17 @@ if ($attempted_count){
                     </td>
                     <td  title="<?php _e('Pass Marks', 'tutor'); ?>" class="td-pass-marks">
 						<?php
+						$pass_marks = 0;
+                        if ($passing_grade > 0){
+	                        $pass_marks = ($attempt->total_marks * $passing_grade) / 100;
+                        }
 
-						$pass_marks = ($attempt->total_marks * $passing_grade) / 100;
 						if ($pass_marks > 0){
 							echo number_format_i18n($pass_marks, 2);
 						}
-						echo "({$passing_grade}%)";
+						if ($passing_grade){
+							echo "({$passing_grade}%)";
+						}
 						?>
                     </td>
 
