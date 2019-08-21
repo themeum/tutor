@@ -4724,7 +4724,9 @@ class Utils {
 	}
 
 	/**
+	 * Check lesson edit access by instructor
 	 *
+	 * @since  v.1.4.0
 	 */
 
 	public function has_lesson_edit_access($lesson_id = 0, $instructor_id = 0){
