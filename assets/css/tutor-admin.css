@@ -1377,7 +1377,14 @@ Quiz Modal
 .tutor-modal-wrap .modal-header {
     padding: 15px 20px;
     border-bottom: 1px solid #eeeff1;
+    padding-right: 50px;
+    align-items: center;
 }
+
+.tutor-modal-wrap .modal-header .tutor-classic-editor-btn{
+    color: var(--tutor-primary-color);
+}
+
 .tutor-modal-wrap .modal-header h1{
     padding: 0;
     margin: 0;

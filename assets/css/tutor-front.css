@@ -4920,6 +4920,10 @@ Quiz Modal
   display: flex;
   padding: 15px 20px;
   border-bottom: 1px solid #eeeff1;
+  padding-right: 50px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 
 .tutor-modal-wrap .modal-title {

@@ -1,5 +1,3 @@
-
-<a class="tutor-btn btn-sm" target="_blank" href="<?php echo esc_url(get_admin_url('/')); ?>post.php?post=<?php echo $lesson_id; ?>&action=edit"><i class="tutor-icon-pencil topic-edit-icon"></i> <?php echo __('Classic Editor', 'tutor'); ?></a>
 <form class="tutor_lesson_modal_form">
     <input type="hidden" name="action" value="tutor_modal_create_or_update_lesson">
     <input type="hidden" name="lesson_id" value="<?php echo $post->ID; ?>">
@@ -8,7 +6,6 @@
     <div class="lesson-modal-form-wrap">
 
 	    <?php do_action('tutor_lesson_edit_modal_form_before', $post); ?>
-
 
         <div class="tutor-option-field-row">
             <div class="tutor-option-field tutor-lesson-modal-title-wrap">

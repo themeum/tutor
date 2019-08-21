@@ -211,13 +211,18 @@ class Options {
 						'label' => __('Lesson Settings', 'tutor'),
 						'desc' => __('Lesson settings will be here', 'tutor'),
 						'fields' => array(
+							'enable_lesson_classic_editor' => array(
+								'type'          => 'checkbox',
+								'label'         => __('Classic Editor', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
+								'desc'          => __('Enable classic editor to get full support of any editor/page builder.', 'tutor'),
+							),
 							'lesson_permalink_base' => array(
 								'type'      => 'text',
 								'label'     => __('Lesson Permalink Base', 'tutor'),
 								'default'   => 'lessons',
 								'desc'      => $lesson_url,
 							),
-
 						),
 					),
 
