@@ -28,8 +28,8 @@ $course = tutor_utils()->get_course_by_quiz(get_the_ID());
 <div class="tutor-single-page-top-bar">
     <div class="tutor-topbar-item tutor-hide-sidebar-bar">
         <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-menu-2"></i> </a>
-        <a href="<?php echo get_the_permalink($course->ID); ?>">
-            <i class="tutor-icon-next-2"></i> <?php echo sprintf(__('Go to %s Course Home %s', 'tutor'), '<strong>', '</strong>') ; ?>
+        <a href="<?php echo get_the_permalink($course->ID); ?>"  class="tutor-topbar-home-btn">
+            <i class="tutor-icon-next-2"></i> <?php echo __('Go to Course Home', 'tutor') ; ?>
         </a>
     </div>
     <div class="tutor-topbar-item tutor-topbar-content-title-wrap">
