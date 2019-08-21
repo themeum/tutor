@@ -1,4 +1,3 @@
-
 <form class="tutor_lesson_modal_form">
     <input type="hidden" name="action" value="tutor_modal_create_or_update_lesson">
     <input type="hidden" name="lesson_id" value="<?php echo $post->ID; ?>">
@@ -7,7 +6,6 @@
     <div class="lesson-modal-form-wrap">
 
 	    <?php do_action('tutor_lesson_edit_modal_form_before', $post); ?>
-
 
         <div class="tutor-option-field-row">
             <div class="tutor-option-field tutor-lesson-modal-title-wrap">

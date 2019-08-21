@@ -234,6 +234,12 @@ jQuery(document).ready(function($){
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id}).addClass('show');
 
+                //Find lesson id variable and replace with actual id
+                var $classic_editor_btn = $('.tutor-classic-editor-btn');
+                if ($classic_editor_btn.length){
+                    $classic_editor_btn.attr('href', $classic_editor_btn.attr('href').replace('{lesson_id}', lesson_id) );
+                }
+
                 tinymce.init(tinyMCEPreInit.mceInit.tutor_editor_config);
                 tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_lesson_modal_editor' );
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_lesson_modal_editor");

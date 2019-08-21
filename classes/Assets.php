@@ -74,7 +74,8 @@ class Assets{
 			'nonce_key'     => tutor()->nonce,
 			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
 			'options'       => $options,
-			'placeholder_img_src'              => tutor_placeholder_img_src(),
+			'placeholder_img_src' => tutor_placeholder_img_src(),
+			'enable_lesson_classic_editor' => get_tutor_option('enable_lesson_classic_editor'),
 		);
 
 		if ( ! empty($post->post_type) && $post->post_type === 'tutor_quiz'){

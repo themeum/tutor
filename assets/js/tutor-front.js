@@ -370,65 +370,76 @@ jQuery(document).ready(function($){
         });
     });
 
-    $(document).on('click', '.tutor-single-lesson-a', function (e) {
-        e.preventDefault();
+    /**
+     * Check if lesson has classic editor support
+     * If classic editor support, stop ajax load on the lesson page.
+     *
+     * @since v.1.0.0
+     *
+     * @updated v.1.4.0
+     */
+    if ( ! _tutorobject.enable_lesson_classic_editor) {
 
-        var $that = $(this);
-        var lesson_id = $that.attr('data-lesson-id');
-        var $wrap = $('#tutor-single-entry-content');
+        $(document).on('click', '.tutor-single-lesson-a', function (e) {
+            e.preventDefault();
 
-        $.ajax({
-            url: _tutorobject.ajaxurl,
-            type: 'POST',
-            data: {lesson_id : lesson_id, 'action': 'tutor_render_lesson_content'},
-            beforeSend: function () {
-                var page_title = $that.find('.lesson_title').text();
-                $('head title').text(page_title);
-                window.history.pushState('obj', page_title, $that.attr('href'));
-                $wrap.addClass('loading-lesson');
-                $('.tutor-single-lesson-items').removeClass('active');
-                $that.closest('.tutor-single-lesson-items').addClass('active');
-            },
-            success: function (data) {
-                $wrap.html(data.data.html);
-                videoPlayer.init();
-                $('.tutor-lesson-sidebar').css('display', '');
-            },
-            complete: function () {
-                $wrap.removeClass('loading-lesson');
-            }
+            var $that = $(this);
+            var lesson_id = $that.attr('data-lesson-id');
+            var $wrap = $('#tutor-single-entry-content');
+
+            $.ajax({
+                url: _tutorobject.ajaxurl,
+                type: 'POST',
+                data: {lesson_id : lesson_id, 'action': 'tutor_render_lesson_content'},
+                beforeSend: function () {
+                    var page_title = $that.find('.lesson_title').text();
+                    $('head title').text(page_title);
+                    window.history.pushState('obj', page_title, $that.attr('href'));
+                    $wrap.addClass('loading-lesson');
+                    $('.tutor-single-lesson-items').removeClass('active');
+                    $that.closest('.tutor-single-lesson-items').addClass('active');
+                },
+                success: function (data) {
+                    $wrap.html(data.data.html);
+                    videoPlayer.init();
+                    $('.tutor-lesson-sidebar').css('display', '');
+                },
+                complete: function () {
+                    $wrap.removeClass('loading-lesson');
+                }
+            });
         });
-    });
 
-    $(document).on('click', '.sidebar-single-quiz-a', function (e) {
-        e.preventDefault();
+        $(document).on('click', '.sidebar-single-quiz-a', function (e) {
+            e.preventDefault();
 
-        var $that = $(this);
-        var quiz_id = $that.attr('data-quiz-id');
-        var page_title = $that.find('.lesson_title').text();
-        var $wrap = $('#tutor-single-entry-content');
+            var $that = $(this);
+            var quiz_id = $that.attr('data-quiz-id');
+            var page_title = $that.find('.lesson_title').text();
+            var $wrap = $('#tutor-single-entry-content');
 
-        $.ajax({
-            url: _tutorobject.ajaxurl,
-            type: 'POST',
-            data: {quiz_id : quiz_id, 'action': 'tutor_render_quiz_content'},
-            beforeSend: function () {
-                $('head title').text(page_title);
-                window.history.pushState('obj', page_title, $that.attr('href'));
-                $wrap.addClass('loading-lesson');
-                $('.tutor-single-lesson-items').removeClass('active');
-                $that.closest('.tutor-single-lesson-items').addClass('active');
-            },
-            success: function (data) {
-                $wrap.html(data.data.html);
-                init_quiz_builder();
-                $('.tutor-lesson-sidebar').css('display', '');
-            },
-            complete: function () {
-                $wrap.removeClass('loading-lesson');
-            }
+            $.ajax({
+                url: _tutorobject.ajaxurl,
+                type: 'POST',
+                data: {quiz_id : quiz_id, 'action': 'tutor_render_quiz_content'},
+                beforeSend: function () {
+                    $('head title').text(page_title);
+                    window.history.pushState('obj', page_title, $that.attr('href'));
+                    $wrap.addClass('loading-lesson');
+                    $('.tutor-single-lesson-items').removeClass('active');
+                    $that.closest('.tutor-single-lesson-items').addClass('active');
+                },
+                success: function (data) {
+                    $wrap.html(data.data.html);
+                    init_quiz_builder();
+                    $('.tutor-lesson-sidebar').css('display', '');
+                },
+                complete: function () {
+                    $wrap.removeClass('loading-lesson');
+                }
+            });
         });
-    });
+    }
 
     /**
      * @date 05 Feb, 2019
@@ -1017,10 +1028,15 @@ jQuery(document).ready(function($){
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id}).addClass('show');
 
+                //Find lesson id variable and replace with actual id
+                var $classic_editor_btn = $('.tutor-classic-editor-btn');
+                if ($classic_editor_btn.length){
+                    $classic_editor_btn.attr('href', $classic_editor_btn.attr('href').replace('{lesson_id}', lesson_id) );
+                }
+
                 tinymce.init(tinyMCEPreInit.mceInit.course_description);
                 tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_lesson_modal_editor' );
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_lesson_modal_editor");
-
             },
             complete: function () {
                 quicktags({id : "tutor_lesson_modal_editor"});

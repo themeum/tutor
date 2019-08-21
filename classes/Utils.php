@@ -4723,4 +4723,24 @@ class Utils {
 		return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
 	}
 
+	/**
+	 *
+	 */
+
+	public function has_lesson_edit_access($lesson_id = 0, $instructor_id = 0){
+		$lesson_id = $this->get_post_id($lesson_id);
+		$instructor_id = $this->get_user_id($instructor_id);
+
+		if (user_can($instructor_id, tutor()->instructor_role)){
+			$permitted_course_ids = tutils()->get_assigned_courses_ids_by_instructors();
+			$course_id = tutils()->get_course_id_by_lesson($lesson_id);
+
+			if (in_array($course_id, $permitted_course_ids)){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 }
