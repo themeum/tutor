@@ -6715,19 +6715,6 @@ Video MetaBox
   font-weight: 400;
 }
 
-/*.tutor-dashboard-student-meta ul{
-  list-style: none;
-  margin: 20px 0 40px;
-  padding: 15px 0;
-  border-top: 1px solid #DCDFE5;
-  border-bottom: 1px solid #DCDFE5;
-  //font-size: var(--tutor-text-size);
-}
-.tutor-dashboard-student-meta ul li{
-  display: inline-block;
-  color: var(--tutor-text-color);
-  margin-left: 60px;
-}*/
 .tutor-dashboard-inline-links {
   margin-bottom: 30px;
 }
