@@ -2198,4 +2198,31 @@ jQuery(document).ready(function($){
     })
 
 
+    // --------
+    $(document).on('click', '.quiz-manual-review-action', function(e){
+        e.preventDefault();
+
+        console.log('Yes');
+
+        const $that = $(this);
+        const url = $that.attr('href');
+        const action = url.match(/action=([^&]+)/)[1]
+        const attempt_id = url.match(/attempt_id=([^&]+)/)[1]
+        const attempt_answer_id = url.match(/attempt_answer_id=([^&]+)/)[1]
+        const mark_as = url.match(/mark_as=([^&]+)/)[1]
+
+        $.ajax({
+            url : _tutorobject.ajaxurl,
+            type : 'POST',
+            data : {action},
+            success: function (data) {
+                if (data.success){
+                    console.log('location.reload();');
+                }
+            }
+        });
+    });
+    // --------
+
+
 });

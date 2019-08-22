@@ -62,7 +62,6 @@ if ($attempted_count){
                     </td>
                     <td  title="<?php _e('Pass Marks', 'tutor'); ?>" class="td-pass-marks">
 						<?php
-
 						$pass_marks = ($attempt->total_marks * $passing_grade) / 100;
 						if ($pass_marks > 0){
 							echo number_format_i18n($pass_marks, 2);
@@ -79,6 +78,6 @@ if ($attempted_count){
         </table>
     </div>
 
-<?php } else{
+<?php } else {
     echo __('Quiz data is empty', 'tutor');
 } ?>
