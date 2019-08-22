@@ -308,9 +308,8 @@ $user = get_userdata($user_id);
                         </td>
 
                         <td>
-                            <a href="<?php echo admin_url("admin.php?action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=correct"); ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>
-
-                            <a href="<?php echo admin_url("admin.php?action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=incorrect"); ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-line-cross"></i></a>
+							<a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>
+                            <a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-line-cross"></i></a>
                         </td>
                     </tr>
 					<?php

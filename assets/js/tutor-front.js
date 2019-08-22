@@ -327,6 +327,24 @@ jQuery(document).ready(function($){
         }
     }
 
+    /**
+     * Quiz Frontend Review Action
+     * @since 1.3.10
+     */
+    $(document).on('click', '.quiz-manual-review-action', function(e){
+        e.preventDefault();
+        const $that = $(this);
+        $.ajax({
+            url : _tutorobject.ajaxurl,
+            type : 'GET',
+            data : {action:'review_quiz_answer',attempt_id: $that.data('attempt-id'), attempt_answer_id:$that.data('attempt-answer-id'),mark_as:$that.data('mark-as')},
+            success: function (data) {
+                console.log('location.reload();');
+                location.reload();
+            }
+        });
+    });
+
     // tutor course content accordion
     $('.tutor-course-topic.tutor-active').find('.tutor-course-lessons').slideDown();
     $('.tutor-course-title').on('click', function () {
@@ -2195,34 +2213,6 @@ jQuery(document).ready(function($){
             $(this).find('i').removeClass('tutor-icon-down').addClass('tutor-icon-up');
         }
         $(this).next('div').slideToggle();
-    })
-
-
-    // --------
-    $(document).on('click', '.quiz-manual-review-action', function(e){
-        e.preventDefault();
-
-        console.log('Yes');
-
-        const $that = $(this);
-        const url = $that.attr('href');
-        const action = url.match(/action=([^&]+)/)[1]
-        const attempt_id = url.match(/attempt_id=([^&]+)/)[1]
-        const attempt_answer_id = url.match(/attempt_answer_id=([^&]+)/)[1]
-        const mark_as = url.match(/mark_as=([^&]+)/)[1]
-
-        $.ajax({
-            url : _tutorobject.ajaxurl,
-            type : 'POST',
-            data : {action},
-            success: function (data) {
-                if (data.success){
-                    console.log('location.reload();');
-                }
-            }
-        });
     });
-    // --------
-
 
 });

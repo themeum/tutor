@@ -38,6 +38,7 @@ class Quiz {
 		add_action('template_redirect', array($this, 'finishing_quiz_attempt'));
 
 		add_action('admin_action_review_quiz_answer', array($this, 'review_quiz_answer'));
+		add_action('wp_ajax_review_quiz_answer', array($this, 'review_quiz_answer'));
 
 		/**
 		 * New Design Quiz
@@ -510,7 +511,9 @@ class Quiz {
 	 */
 
 	public function review_quiz_answer(){
-	    global $wpdb;
+		global $wpdb;
+		
+		update_option( 'anik', 'working'.$_GET['attempt_id'].$_GET['attempt_answer_id'].$_GET['mark_as'] );
 
 		$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
 		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
