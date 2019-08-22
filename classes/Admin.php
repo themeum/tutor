@@ -55,6 +55,8 @@ class Admin{
 
 		add_submenu_page('tutor', __('Tags', 'tutor'), __('Tags', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type='.$course_post_type, null );
 
+		add_submenu_page('tutor', __('Enrolments', 'tutor'), __('Enrolments', 'tutor'), 'manage_tutor', 'enrolments', array($this, 'enrolments') );
+
 		add_submenu_page('tutor', __('Students', 'tutor'), __('Students', 'tutor'), 'manage_tutor', 'tutor-students', array($this, 'tutor_students') );
 
 		add_submenu_page('tutor', __('Instructors', 'tutor'), __('Instructors', 'tutor'), 'manage_tutor', 'tutor-instructors', array($this, 'tutor_instructors') );
@@ -88,6 +90,15 @@ class Admin{
 
 	public function tutor_students(){
 		include tutor()->path.'views/pages/students.php';
+	}
+
+	public function enrolments(){
+		$sub_page = tutils()->array_get('sub_page', $_GET);
+		if ($sub_page){
+			include tutor()->path."views/pages/{$sub_page}.php";
+		}else{
+			include tutor()->path."views/pages/enrolments.php";
+		}
 	}
 
 	public function tutor_instructors(){

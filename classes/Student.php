@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) )
 class Student {
 
 	protected $error_msgs = '';
+	protected $success_msgs = '';
 	public function __construct() {
 		add_action('template_redirect', array($this, 'register_student'));
 		add_action('template_redirect', array($this, 'update_profile'));
@@ -23,6 +24,9 @@ class Student {
 		add_filter('get_avatar_url', array($this, 'filter_avatar'), 10, 3);
 
 		add_action('tutor_action_tutor_reset_password', array($this, 'tutor_reset_password'));
+
+		add_action('wp_ajax_tutor_json_search_students', array($this, 'tutor_json_search_students'));
+		add_action('tutor_action_enrol_student', array($this, 'enrol_student'));
 	}
 
 	/**
@@ -234,5 +238,75 @@ class Student {
 		die();
 	}
 
+
+	public function tutor_json_search_students(){
+		global $wpdb;
+
+		$term = sanitize_text_field(tutils()->array_get('term', $_POST));
+
+		$student_res = $wpdb->get_results("SELECT * FROM {$wpdb->users} WHERE  display_name LIKE '%{$term}%' OR user_email LIKE '%{$term}%' ");
+		$students = array();
+
+		if (tutils()->count($student_res)){
+			foreach ($student_res as $student){
+				$students[$student->ID] = sprintf(
+					esc_html__( '%1$s (#%2$s - %3$s)', 'tutor' ),
+					$student->display_name,
+					$student->ID,
+					$student->user_email
+				);
+			}
+		}
+
+		wp_send_json($students);
+	}
+
+	/**
+	 * Manually enrol a student this this course
+	 * By Course ID, Student ID
+	 *
+	 * @since v.1.4.0
+	 */
+	public function enrol_student(){
+		$user_id = (int) sanitize_text_field(tutils()->array_get('student_id', $_POST));
+		$course_id = (int) sanitize_text_field(tutils()->array_get('course_id', $_POST));
+
+		$isEnrolled = tutils()->is_enrolled($course_id, $user_id);
+		if ($isEnrolled){
+			$this->success_msgs = get_tnotice(__('This user has been already enrolled on this course', 'tutor'), 'Error', 'danger');
+		}else{
+			/**
+			 * Enroll Now
+			 */
+
+			do_action('tutor_before_enroll', $course_id);
+			$title = __('Course Enrolled', 'tutor')." &ndash; ".date_i18n(get_option('date_format')) .' @ '.date_i18n(get_option('time_format') ) ;
+			$enroll_data = apply_filters('tutor_enroll_data',
+				array(
+					'post_type'     => 'tutor_enrolled',
+					'post_title'    => $title,
+					'post_status'   => 'completed',
+					'post_author'   => $user_id,
+					'post_parent'   => $course_id,
+				)
+			);
+
+			// Insert the post into the database
+			$isEnrolled = wp_insert_post( $enroll_data );
+			if ($isEnrolled) {
+				do_action('tutor_after_enroll', $course_id, $isEnrolled);
+				//Mark Current User as Students with user meta data
+				update_user_meta( $user_id, '_is_tutor_student', time() );
+			}
+
+			$this->success_msgs = get_tnotice(__('Enrolment has been done', 'tutor'), 'Success', 'success');
+		}
+
+		add_filter('student_enrolled_to_course_msg', array($this, 'return_message'));
+	}
+
+	public function return_message(){
+		return $this->success_msgs;
+	}
 
 }
