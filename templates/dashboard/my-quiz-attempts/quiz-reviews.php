@@ -2,7 +2,7 @@
 /**
  * Quiz Review Frontend
  *
- * @since v.1.3.10
+ * @since v.1.4.0
  *
  * @author Themeum
  * @url https://themeum.com

@@ -512,9 +512,6 @@ class Quiz {
 
 	public function review_quiz_answer(){
 		global $wpdb;
-		
-		update_option( 'anik', 'working'.$_GET['attempt_id'].$_GET['attempt_answer_id'].$_GET['mark_as'] );
-
 		$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
 		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
 		$mark_as = sanitize_text_field($_GET['mark_as']);

@@ -329,7 +329,7 @@ jQuery(document).ready(function($){
 
     /**
      * Quiz Frontend Review Action
-     * @since 1.3.10
+     * @since 1.4.0
      */
     $(document).on('click', '.quiz-manual-review-action', function(e){
         e.preventDefault();
