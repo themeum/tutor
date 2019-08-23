@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.3.9
+Stable tag: 1.4.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -209,6 +209,17 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.4.0 - 26 August, 2019 =
+
+* Added: Page builder support on the lesson.
+* Added: Enrollments list on in admin area, admin can now cancel, approve enrolment or delete.
+* Added: Manually enrollment student to a course
+* Added: students quiz attempts on the frontend
+* Fixed: save and continue to click on question edit modal, open question lists immediately under a quiz.
+* Fixed: text formatting issue in the quiz, some of the single or double quote comes with a slash. used stripslashes();
+* Fixed: some default value issue on the quiz.
+* Fixed: quiz page spotlight mode.
 
 = 1.3.9 - 19 August, 2019 =
 
