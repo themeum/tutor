@@ -557,7 +557,12 @@ class Quiz {
 		}
 		do_action('tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as);
 
-		wp_redirect(admin_url("admin.php?page=tutor_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
+		if (wp_doing_ajax()){
+		    wp_send_json_success();
+        }else{
+			wp_redirect(admin_url("admin.php?page=tutor_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
+		}
+
 		die();
 	}
 

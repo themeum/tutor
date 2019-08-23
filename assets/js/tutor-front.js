@@ -333,14 +333,23 @@ jQuery(document).ready(function($){
      */
     $(document).on('click', '.quiz-manual-review-action', function(e){
         e.preventDefault();
-        const $that = $(this);
+        var $that = $(this),
+            attempt_id = $that.attr('data-attempt-id'),
+            attempt_answer_id = $that.attr('data-attempt-answer-id'),
+            mark_as = $that.attr('data-mark-as');
+
         $.ajax({
             url : _tutorobject.ajaxurl,
             type : 'GET',
-            data : {action:'review_quiz_answer',attempt_id: $that.data('attempt-id'), attempt_answer_id:$that.data('attempt-answer-id'),mark_as:$that.data('mark-as')},
+            data : {action:'review_quiz_answer', attempt_id: attempt_id, attempt_answer_id : attempt_answer_id, mark_as : mark_as },
+            beforeSend: function () {
+                $that.addClass('updating-icon');
+            },
             success: function (data) {
-                console.log('location.reload();');
                 location.reload();
+            },
+            complete: function () {
+                $that.removeClass('updating-icon');
             }
         });
     });
