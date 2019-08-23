@@ -131,10 +131,7 @@ $user = get_userdata($user_id);
 			}
 
 			if (count($required_review)){
-				echo '<p class="attempt-review-notice"> <span class="notice-excl">&excl;</span>  <strong>Reminder:</strong> Please review answers for question no. 
-'.implode
-					(', ',
-						$required_review).' </p>';
+				echo '<p class="attempt-review-notice"> <span class="notice-excl">&excl;</span>  <strong>Reminder:</strong> Please review answers for question no. '.implode(', ', $required_review).' </p>';
 			}
 		}
 
@@ -246,8 +243,10 @@ $user = get_userdata($user_id);
 								foreach ($original_saved_answers as $key => $original_saved_answer){
 									$provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
 									$provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
-									foreach ($provided_answer_order as $provided_answer_order);
-									echo $original_saved_answer->answer_title  ." - {$provided_answer_order->answer_two_gap_match} <br />";
+									if(tutils()->count($provided_answer_order)){
+                                        foreach ($provided_answer_order as $provided_answer_order);
+                                        echo $original_saved_answer->answer_title  ." - {$provided_answer_order->answer_two_gap_match} <br />";
+                                    }
 								}
 
 							}elseif ($answer->question_type === 'image_matching'){
