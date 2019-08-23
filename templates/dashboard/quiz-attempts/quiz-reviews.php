@@ -192,10 +192,10 @@ $user = get_userdata($user_id);
                 <tr>
                     <th><?php _e('Type', 'tutor'); ?></th>
                     <th><?php _e('No.', 'tutor'); ?></th>
-                    <th width="200"><?php _e('Question', 'tutor'); ?></th>
+                    <th><?php _e('Question', 'tutor'); ?></th>
                     <th><?php _e('Given Answers', 'tutor'); ?></th>
-                    <th width="80"><?php _e('Correct/Incorrect', 'tutor'); ?></th>
-                    <th width="100"><?php _e('Review', 'tutor'); ?></th>
+                    <th><?php _e('Correct/Incorrect', 'tutor'); ?></th>
+                    <th><?php _e('Review', 'tutor'); ?></th>
                 </tr>
 				<?php
 				$answer_i = 0;
