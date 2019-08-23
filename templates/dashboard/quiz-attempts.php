@@ -9,8 +9,8 @@
  * @package Tutor
  */
 
-$per_page = 4;
-$current_page = max( 1, tutor_utils()->avalue_dot('current_page', $_GET) );
+$per_page = 20;
+$current_page = max( 1, tutils()->array_get('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
 ?>
     <h3><?php _e('My Quiz Attempts', 'tutor'); ?></h3>
@@ -33,38 +33,38 @@ if ( $quiz_attempts_count ){
             </tr>
 			<?php
 			foreach ( $quiz_attempts as $attempt){
-                $attempt_action = tutor_utils()->get_tutor_dashboard_page_permalink('quiz-attempts/quiz-reviews/?attempt_id='.$attempt->attempt_id);
-                $earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
+				$attempt_action = tutor_utils()->get_tutor_dashboard_page_permalink('quiz-attempts/quiz-reviews/?attempt_id='.$attempt->attempt_id);
+				$earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
 				$passing_grade = tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
 				?>
                 <tr class="<?php echo esc_attr($earned_percentage >= $passing_grade ? 'pass' : 'fail') ?>">
                     <td title="<?php echo __('Quiz', 'tutor'); ?>">
-                        <?php
-                            echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
-                            if ($attempt->attempt_ended_at){
-                                $ended_ago_time = human_time_diff(strtotime($attempt->attempt_ended_at)).__(' ago', 'tutor');
-                                echo " <small>{$ended_ago_time}</small>";
-                            }
-                        ?>
+						<?php
+						echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+						if ($attempt->attempt_ended_at){
+							$ended_ago_time = human_time_diff(strtotime($attempt->attempt_ended_at)).__(' ago', 'tutor');
+							echo " <small>{$ended_ago_time}</small>";
+						}
+						?>
                         <div>
-                            <?php echo "#".$attempt->attempt_id; ?>: <a href="<?php echo esc_url($attempt_action); ?>"><?php echo $attempt->post_title; ?></a>
+							<?php echo "#".$attempt->attempt_id; ?>: <a href="<?php echo esc_url($attempt_action); ?>"><?php echo $attempt->post_title; ?></a>
                         </div>
                         <div>
-                            <?php echo __('Course:', 'tutor'); ?> <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank"><?php echo get_the_title($attempt->course_id); ?></a>
+							<?php echo __('Course:', 'tutor'); ?> <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank"><?php echo get_the_title($attempt->course_id); ?></a>
                         </div>
                     </td>
                     <td class="td-course-title" title="<?php _e('Course Title', 'tutor'); ?>">
-                        <?php
-                        	$quiz_title = "<div><strong>{$attempt->display_name}</strong></div>";
-                            $quiz_title .= "<div>{$attempt->user_email}</div>";
-                            echo $quiz_title;
-                        ?>
+						<?php
+						$quiz_title = "<div><strong>{$attempt->display_name}</strong></div>";
+						$quiz_title .= "<div>{$attempt->user_email}</div>";
+						echo $quiz_title;
+						?>
                     </td>
                     <td title="<?php echo __('Total Questions', 'tutor'); ?>"><?php echo $attempt->total_questions; ?></td>
                     <td title="<?php echo __('Earned Mark', 'tutor'); ?>" style="white-space: nowrap">
-                        <?php
-                            echo sprintf(__('%1$s out of %2$s <br> Earned: %3$s%% <br> Passing Grade: %4$s%%','tutor'), $attempt->earned_marks, $attempt->total_marks, $earned_percentage ,$passing_grade );
-                        ?>
+						<?php
+						echo sprintf(__('%1$s out of %2$s <br> Earned: %3$s%% <br> Passing Grade: %4$s%%','tutor'), $attempt->earned_marks, $attempt->total_marks, $earned_percentage ,$passing_grade );
+						?>
                     </td>
                     <td title="<?php echo __('Attempt Status', 'tutor'); ?>"><?php echo str_replace('attempt_', '', $attempt->attempt_status); ?></td>
                     <td><a href="<?php echo $attempt_action; ?>"><i class="tutor-icon-angle-right"></i></a></td>
@@ -82,7 +82,7 @@ if ( $quiz_attempts_count ){
 			'total' => ceil($quiz_attempts_count/$per_page)
 		) );
 		?>
-	</div>
+    </div>
 <?php } else {
-    echo __('My Quiz data is empty', 'tutor');
+	_e('There is no quiz attempts', 'tutor');
 } ?>
