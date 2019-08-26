@@ -1598,5 +1598,58 @@ jQuery(document).ready(function($){
         }
     });
 
+    $(document).on( 'change', '#tutor_pmpro_membership_model_select',  function( e ){
+        e.preventDefault();
+
+        var $that = $(this);
+
+        if ($that.val() === 'category_wise_membership'){
+            $('.membership_course_categories').show();
+        } else{
+            $('.membership_course_categories').hide();
+        }
+    });
+
+    /**
+     * Find user/student from select2
+     * @since v.1.4.0
+     */
+
+    $('#select2_search_user_ajax').select2({
+        allowClear: true,
+        placeholder: "Search students",
+        minimumInputLength: '1',
+        escapeMarkup: function( m ) {
+            return m;
+        },
+        ajax: {
+            url : ajaxurl,
+            type : 'POST',
+            dataType: 'json',
+            delay:       1000,
+            data: function( params ) {
+                return {
+                    term:     params.term,
+                    action:   'tutor_json_search_students'
+                };
+            },
+            processResults: function( data ) {
+                var terms = [];
+                if ( data ) {
+                    $.each( data, function( id, text ) {
+                        terms.push({
+                            id: id,
+                            text: text
+                        });
+                    });
+                }
+                return {
+                    results: terms
+                };
+
+            },
+            cache: true
+        }
+    });
 
 });

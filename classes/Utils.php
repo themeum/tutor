@@ -4745,4 +4745,61 @@ class Utils {
 		return false;
 	}
 
+
+	/**
+	 * Get total Enrolments
+	 * @since v.1.4.0
+	 */
+
+	public function get_total_enrolments($search_term = ''){
+		global $wpdb;
+
+		$search_sql = '';
+		if ($search_term){
+			$search_sql = " AND ( enrol.ID = '{$search_term}' OR student.display_name LIKE '%{$search_term}%' OR student.user_email LIKE '%{$search_term}%' OR course.post_title LIKE '%{$search_term}%' ) ";
+		}
+
+		$count = $wpdb->get_var("SELECT COUNT(enrol.ID)
+			FROM {$wpdb->posts} enrol
+			INNER JOIN {$wpdb->posts} course ON enrol.post_parent = course.ID
+			INNER JOIN {$wpdb->users} student ON enrol.post_author = student.ID
+			WHERE enrol.post_type = 'tutor_enrolled' {$search_sql}  ");
+		return (int) $count;
+	}
+
+	public function get_enrolments($start = 0, $limit = 10, $search_term = ''){
+		global $wpdb;
+
+		$search_sql = '';
+		if ($search_term){
+			$search_sql = " AND ( enrol.ID = '{$search_term}' OR student.display_name LIKE '%{$search_term}%' OR student.user_email LIKE '%{$search_term}%' OR course.post_title LIKE '%{$search_term}%' ) ";
+		}
+
+		$enrolments = $wpdb->get_results("SELECT 
+			enrol.ID as enrol_id,
+			enrol.post_author as student_id,
+			enrol.post_date as enrol_date,
+			enrol.post_title as enrol_title,
+			enrol.post_status as status,
+			enrol.post_parent as course_id,
+			
+			course.post_title as course_title,
+			
+			student.user_nicename,
+			student.user_email,
+			student.display_name
+			
+			FROM {$wpdb->posts} enrol
+			
+			INNER JOIN {$wpdb->posts} course ON enrol.post_parent = course.ID
+			INNER JOIN {$wpdb->users} student ON enrol.post_author = student.ID
+			
+			WHERE enrol.post_type = 'tutor_enrolled' {$search_sql}
+			ORDER BY enrol_id DESC 
+			LIMIT {$start}, {$limit} ");
+
+		return $enrolments;
+	}
+
+
 }
