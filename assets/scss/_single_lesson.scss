@@ -220,12 +220,16 @@ span.toogle-informaiton-icon {
 	overflow: hidden;
 	i{
 		float: left;
-		margin-right: 7px;
 	}
 	@media (max-width: 546px) {
 		font-size: 14px;
 	}
 }
+
+.tutor-topbar-home-btn i{
+	margin-right: 7px;
+}
+
 .tutor-topbar-home-btn{
 	margin-left: 20px;
 	@media screen and (max-width: 546px) {
@@ -309,9 +313,9 @@ span.toogle-informaiton-icon {
 .tutor-lesson-sidebar-hide-bar{
 	background-color: var(--tutor-primary-hover-color);
 	color: #ffffff;
-	padding: 0 18px;
+	padding: 0 12px;
 	display: inline-block;
-	line-height: 68px;
+	line-height: 70px;
 	@media only screen and (max-width: 546px){
 		padding: 0 10px;
 	}
@@ -319,7 +323,7 @@ span.toogle-informaiton-icon {
 
 
 .tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i{
-	font-size: 29px;
+	font-size: 20px;
 	display: block;
 	@media only screen and (max-width: 546px){
 		font-size: 19px;
