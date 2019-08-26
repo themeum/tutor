@@ -718,7 +718,7 @@ body {
     position: absolute;
     left: 0;
     top: 70px;
-    width: 350px;
+    width: 400px;
     max-width: 95%;
     height: calc(100% - 70px);
     z-index: 9;
@@ -731,7 +731,7 @@ body {
 .tutor-spotlight-mode .tutor-lesson-sidebar {
   position: fixed;
   left: 0;
-  width: 350px;
+  width: 400px;
   height: 100vh;
   overflow-y: scroll;
   background: #F4F8FA;
@@ -739,6 +739,7 @@ body {
 
 .tutor-spotlight-mode #tutor-single-entry-content {
   padding-left: 400px;
+  min-height: calc(100vh - 46px);
 }
 
 .tutor-spotlight-mode #tutor-single-entry-content.sidebar-hidden {
@@ -748,6 +749,8 @@ body {
 @media (max-width: 991px) {
   .tutor-spotlight-mode .tutor-lesson-sidebar {
     position: absolute;
+    width: 350px;
+    height: auto;
   }
   .tutor-spotlight-mode #tutor-single-entry-content {
     padding-left: 0;
@@ -967,10 +970,20 @@ span.toogle-informaiton-icon {
 }
 
 .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button {
-  background: #fff;
-  color: var(--tutor-primary-color);
+  background: transparent;
+  color: #fff;
   padding-bottom: 13px;
   cursor: pointer;
+  border: 1px solid #fff;
+}
+
+.tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button i {
+  font-size: 14px;
+}
+
+.tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button i::before {
+  display: block;
+  padding-top: 2px;
 }
 
 .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button:hover {
@@ -1029,6 +1042,12 @@ span.toogle-informaiton-icon {
 
 .tutor-lesson-content-area, .tutor-quiz-single-wrap {
   margin: 0 100px 80px;
+}
+
+@media (max-width: 1366px) {
+  .tutor-lesson-content-area, .tutor-quiz-single-wrap {
+    margin: 0 60px 80px;
+  }
 }
 
 @media (max-width: 991px) {

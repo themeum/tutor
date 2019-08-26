@@ -329,7 +329,7 @@ $user = get_userdata($user_id);
 							?>
                         </td>
 
-                        <td>
+                        <td style="white-space: nowrap">
 							<a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>
                             <a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-line-cross"></i></a>
                         </td>
