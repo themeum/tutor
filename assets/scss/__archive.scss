@@ -2399,6 +2399,16 @@ Quiz Modal
   font-size: 23px;
   line-height: 30px;
 }
+
+.modal-container .modal-classic-btn-wrap{
+  position: absolute;
+  right: 45px;
+  top: 14px;
+  a{
+    color: var(--tutor-primary-color);
+  }
+}
+
 .tutor-modal-wrap .modal-header h1::before,
 .tutor-modal-wrap .modal-header h1::after{
   display: none;
@@ -3203,6 +3213,9 @@ Tutor Media Upload
   overflow: hidden;
   border-radius: 50px;
   margin-right: 15px;
+  img{
+    width: 100%;
+  }
 }
 
 .tutor-course-available-instructors .added-instructor-item .instructor-name{
