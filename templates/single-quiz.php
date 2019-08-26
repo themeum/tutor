@@ -11,12 +11,14 @@
 get_tutor_header();
 
 $course = tutor_utils()->get_course_by_quiz(get_the_ID());
+
+$enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
 ?>
 
 <?php do_action('tutor_quiz/single/before/wrap'); ?>
 
 
-    <div class="tutor-single-lesson-wrap ">
+    <div class="tutor-single-lesson-wrap <?php echo $enable_spotlight_mode ? "tutor-spotlight-mode" : ""; ?>">
 
         <div class="tutor-lesson-sidebar">
 		    <?php tutor_lessons_sidebar(); ?>
