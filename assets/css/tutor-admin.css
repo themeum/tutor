@@ -1465,6 +1465,12 @@ Quiz Modal
     float: right;
 }
 
+.modal-container .modal-classic-btn-wrap{
+    position: absolute;
+    right: 45px;
+    top: 20px;
+}
+
 /** Tutor Quiz Modal Form */
 
 /*notice*/
