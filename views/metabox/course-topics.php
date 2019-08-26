@@ -68,18 +68,6 @@
                 <h1><?php esc_html_e('Lesson', 'tutor') ?></h1>
             </div>
 
-	        <?php
-	        if (get_tutor_option('enable_lesson_classic_editor')){
-		        ?>
-                <div class="modal-classic-btn-wrap">
-                    <a class="tutor-classic-editor-btn btn-sm" target="_blank" href="<?php echo esc_url(get_admin_url("/")); ?>post.php?post={lesson_id}&action=edit" >
-                        <i class="tutor-icon-pencil topic-edit-icon"></i> <?php echo __('Classic Editor', 'tutor'); ?>
-                    </a>
-                </div>
-		        <?php
-	        }
-	        ?>
-
             <div class="lesson-modal-close-wrap">
                 <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i></a>
             </div>
