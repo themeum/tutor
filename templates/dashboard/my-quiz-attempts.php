@@ -29,7 +29,7 @@ if ($attempted_count){
 			<?php
 			foreach ( $previous_attempts as $attempt){
                 $earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
-				$passing_grade = tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
+				$passing_grade = (int) tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
 				?>
                 <tr class="<?php echo esc_attr($earned_percentage >= $passing_grade ? 'pass' : 'fail') ?>">
                     <td class="td-course-title" title="<?php _e('Course Title', 'tutor'); ?>">
@@ -62,10 +62,12 @@ if ($attempted_count){
                     </td>
                     <td  title="<?php _e('Pass Marks', 'tutor'); ?>" class="td-pass-marks">
 						<?php
-						$pass_marks = ($attempt->total_marks * $passing_grade) / 100;
-						if ($pass_marks > 0){
-							echo number_format_i18n($pass_marks, 2);
-						}
+                        if ($passing_grade > 0){
+	                        $pass_marks = ($attempt->total_marks * $passing_grade) / 100;
+	                        if ($pass_marks > 0){
+		                        echo number_format_i18n($pass_marks, 2);
+	                        }
+                        }
 						echo "({$passing_grade}%)";
 						?>
                     </td>
