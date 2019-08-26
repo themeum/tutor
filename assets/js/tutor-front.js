@@ -475,6 +475,8 @@ jQuery(document).ready(function($){
     $(document).on('click', '.tutor-lesson-sidebar-hide-bar', function(e){
         e.preventDefault();
         $('.tutor-lesson-sidebar').toggle();
+        $('#tutor-single-entry-content').toggleClass("sidebar-hidden");
+
     });
 
     $(".tutor-tabs-btn-group a").on('click touchstart', function (e) {

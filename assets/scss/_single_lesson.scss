@@ -18,12 +18,13 @@
 	flex: 0 0 400px;
 }
 
+
 @media (max-width: 991px) {
 	.tutor-lesson-sidebar{
 		position: absolute;
 		left: 0;
 		top: 70px;
-		width: 400px;
+		width: 350px;
 		max-width: 95%;
 		height: calc(100% - 70px);
 		z-index: 9;
@@ -31,6 +32,36 @@
 		overflow-y: auto;
 		display: none;
 	}
+}
+
+
+.tutor-spotlight-mode{
+	.tutor-lesson-sidebar{
+		position: fixed;
+		left: 0;
+		width: 350px;
+		height: 100vh;
+		overflow-y: scroll;
+		background: #F4F8FA;
+	}
+	#tutor-single-entry-content{
+		padding-left: 400px;
+		&.sidebar-hidden{
+			padding-left: 0;
+		}
+	}
+	@media (max-width: 991px){
+		.tutor-lesson-sidebar{
+			position: absolute;
+		}
+		#tutor-single-entry-content{
+			padding-left: 0;
+		}
+	}
+}
+
+.admin-bar .tutor-spotlight-mode .tutor-lesson-sidebar{
+	height: calc(100vh - 32px);
 }
 
 .tutor-single-entry-content  {

@@ -141,9 +141,6 @@
 		}
 	}
 }
-
-
-
 /**
  * Tutor Dashboard Review
  */
@@ -156,8 +153,6 @@
 .tutor-dashboard-review-heading{
 	padding: 18px 24px;
 	border-bottom: 1px solid #DCDFE5;
-	
-	
 	display: flex;
 	align-items: center;
 }
@@ -207,36 +202,32 @@
 .tutor-dashboard-info-cards{
 	margin: 0 -15px 15px;
 	padding: 0;
-	
-	
 	display: flex;
 	list-style: none;
-	
 	flex-wrap: wrap;
-}
-.tutor-dashboard-info-cards .tutor-dashboard-info-card{
-	padding: 15px;
-	min-width: 33.333%;
-}
-
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p{
-	margin: 0;
-	padding: 15px 25px;
-	background: #282C36;
-	color: #ffffff;
-	border-radius: 4px;
-}
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p span.tutor-dashboard-info-val{
-	display: block;
-	font-weight: 700;
-	font-size: 30px;
-	line-height: 1.618;
-}
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p span span{
-	display: inline-block;
-}
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p > *{
-	vertical-align: middle;
+	.tutor-dashboard-info-card{
+		padding: 15px;
+		min-width: 33.333%;
+		p{
+			margin: 0;
+			padding: 15px 25px;
+			background: #282C36;
+			color: #ffffff;
+			border-radius: 4px;
+			span.tutor-dashboard-info-val{
+				display: block;
+				font-weight: 700;
+				font-size: 30px;
+				line-height: 1.618;
+			}
+			span span{
+				display: inline-block;
+			}
+			> *{
+				vertical-align: middle;
+			}
+		}
+	}
 }
 
 /*dashboard quiz attempts*/
@@ -552,22 +543,8 @@
 	color: var(--tutor-text-color);
 }
 .tutor-dashboard-user-role{
-	//font-size: var(--tutor-text-size);
 	font-weight: 400;
 }
-/*.tutor-dashboard-student-meta ul{
-  list-style: none;
-  margin: 20px 0 40px;
-  padding: 15px 0;
-  border-top: 1px solid #DCDFE5;
-  border-bottom: 1px solid #DCDFE5;
-  //font-size: var(--tutor-text-size);
-}
-.tutor-dashboard-student-meta ul li{
-  display: inline-block;
-  color: var(--tutor-text-color);
-  margin-left: 60px;
-}*/
 .tutor-dashboard-inline-links{
 	margin-bottom: 30px;
 }
@@ -617,7 +594,6 @@
 .tutor-dashboard-permalinks{
 	list-style: none;
 	margin: 0px 0 20px;
-	//font-size: var(--tutor-text-size);
 	padding: 20px 0;
 	border-right: 1px solid #DCDFE5;
 }
