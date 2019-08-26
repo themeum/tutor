@@ -203,7 +203,6 @@ $user = get_userdata($user_id);
 					$answer_i++;
 					$question_type = tutor_utils()->get_question_types($answer->question_type);
 					?>
-
                     <tr>
                         <td><?php echo $question_type['icon']; ?></td>
                         <td><?php echo $answer_i; ?></td>
@@ -211,15 +210,15 @@ $user = get_userdata($user_id);
                         <td>
 							<?php
 							if ($answer->question_type === 'true_false' || $answer->question_type === 'single_choice' ){
-
-								$get_answers = tutor_utils()->get_answer_by_id($answer->given_answer);
+							    $get_answers = tutor_utils()->get_answer_by_id($answer->given_answer);
 								$answer_titles = wp_list_pluck($get_answers, 'answer_title');
+								$answer_titles = array_map('stripslashes', $answer_titles);
 								echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
 
 							}elseif ($answer->question_type === 'multiple_choice'){
-
 								$get_answers = tutor_utils()->get_answer_by_id(maybe_unserialize($answer->given_answer));
 								$answer_titles = wp_list_pluck($get_answers, 'answer_title');
+								$answer_titles = array_map('stripslashes', $answer_titles);
 								echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
 
 							}elseif ($answer->question_type === 'fill_in_the_blank'){
@@ -258,6 +257,7 @@ $user = get_userdata($user_id);
 								foreach ($ordering_ids as $ordering_id){
 									$get_answers = tutor_utils()->get_answer_by_id($ordering_id);
 									$answer_titles = wp_list_pluck($get_answers, 'answer_title');
+									$answer_titles = array_map('stripslashes', $answer_titles);
 									echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
 								}
 
