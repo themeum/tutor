@@ -1,6 +1,6 @@
 
 <div class="wrap">
-	<h1 class="wp-heading-inline"><?php _e('Enrol Student', 'tutor'); ?></h1>
+	<h1 class="wp-heading-inline"><?php _e('Enroll Student', 'tutor'); ?></h1>
     <hr class="wp-header-end">
 
     <form action="" id="new-enroll_student-form" method="post">
@@ -61,7 +61,7 @@
                 <div class="tutor-form-group tutor-reg-form-btn-wrap">
                     <button type="submit" name="tutor_enroll_student_btn" value="enroll" class="tutor-button tutor-button-primary">
                         <i class="tutor-icon-plus-square-button"></i>
-						<?php _e('Enrol Student', 'tutor'); ?></button>
+						<?php _e('Enroll Student', 'tutor'); ?></button>
                 </div>
             </div>
         </div>

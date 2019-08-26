@@ -2047,9 +2047,9 @@ class Utils {
 			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
 			'wishlist'          => __('Wishlist', 'tutor'),
 			'reviews'           => __('Reviews', 'tutor'),
+			'my-quiz-attempts'  => __('My Quiz Attempts', 'tutor'),
 
 			'my-courses'        => array('title' => __('My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role),
-			'my-quiz-attempts'  => array('title' => __('My Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'earning'           => array('title' => __('Earning', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'withdraw'          => array('title' => __('Withdraw', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
@@ -3472,8 +3472,7 @@ class Utils {
 		global $wpdb;
 
 		$user_id = $this->get_user_id($user_id);
-
-		$attempts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id = {$user_id} ");
+		$attempts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id = {$user_id} ORDER BY attempt_id DESC ");
 
 		if (is_array($attempts) && count($attempts)){
 			return $attempts;

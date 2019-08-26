@@ -70,12 +70,12 @@ class Lesson extends Tutor_Base {
 		}
 
 		//Video
-		if ( ! empty($_POST['video']['source'])){
-			//$video = tutor_utils()->sanitize_array($_POST['video']);
+		$video_source = tutils()->array_get('video.source', $_POST);
+		if ( $video_source === '-1'){
+			delete_post_meta($post_ID, '_video');
+		}elseif($video_source) {
 			$video = tutor_utils()->array_get('video', $_POST);
 			update_post_meta($post_ID, '_video', $video);
-		}else{
-			delete_post_meta($post_ID, '_video');
 		}
 
 		//Attachments
