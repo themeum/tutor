@@ -89,7 +89,7 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 
 											$quiz = $post;
 											?>
-                                            <div class="tutor-single-lesson-items quiz-single-item quiz-single-item-<?php echo $quiz->ID; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
+                                            <div class="tutor-single-lesson-items quiz-single-item quiz-single-item-<?php echo $quiz->ID; ?> <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
                                                 <a href="<?php echo get_permalink($quiz->ID); ?>" class="sidebar-single-quiz-a" data-quiz-id="<?php echo $quiz->ID; ?>">
                                                     <i class="tutor-icon-doubt"></i>
                                                     <span class="lesson_title"><?php echo $quiz->post_title; ?></span>
@@ -113,7 +113,7 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
                                              */
 
 											?>
-                                            <div class="tutor-single-lesson-items assignments-single-item assignment-single-item-<?php echo $post->ID; ?>"
+                                            <div class="tutor-single-lesson-items assignments-single-item assignment-single-item-<?php echo $post->ID; ?> <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>"
                                                  data-assignment-id="<?php echo $post->ID; ?>">
                                                 <a href="<?php echo get_permalink($post->ID); ?>" class="sidebar-single-assignment-a" data-assignment-id="<?php echo $post->ID; ?>">
                                                     <i class="tutor-icon-clipboard"></i>
