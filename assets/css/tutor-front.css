@@ -7706,6 +7706,22 @@ label[for="tutor_withdraw_amount"] {
   font-size: 10px;
 }
 
+.answer-image-matched-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.answer-image-matched-wrap .image-matching-item {
+  margin: 0 5px;
+  max-width: 70px;
+}
+
+.answer-image-matched-wrap .image-matching-item .dragged-caption {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
 .tutor-dashboard-builder-header {
   padding: 10px 0px;
   border-bottom: 2px solid #DCDFE5;
