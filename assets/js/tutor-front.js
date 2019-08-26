@@ -343,13 +343,13 @@ jQuery(document).ready(function($){
             type : 'GET',
             data : {action:'review_quiz_answer', attempt_id: attempt_id, attempt_answer_id : attempt_answer_id, mark_as : mark_as },
             beforeSend: function () {
-                $that.addClass('updating-icon');
+                $that.find('i').addClass('updating-icon');
             },
             success: function (data) {
                 location.reload();
             },
             complete: function () {
-                $that.removeClass('updating-icon');
+                $that.find('i').removeClass('updating-icon');
             }
         });
     });

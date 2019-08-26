@@ -29,7 +29,7 @@ if ( $quiz_attempts_count ){
                 <th><?php _e('Count', 'tutor'); ?></th>
                 <th><?php _e('Earned Mark', 'tutor'); ?></th>
                 <th><?php _e('Status', 'tutor'); ?></th>
-                <th>#</th>
+                <th><?php _e('Review', 'tutor'); ?></th>
             </tr>
 			<?php
 			foreach ( $quiz_attempts as $attempt){
@@ -50,7 +50,8 @@ if ( $quiz_attempts_count ){
 							<?php echo "#".$attempt->attempt_id; ?>: <a href="<?php echo esc_url($attempt_action); ?>"><?php echo $attempt->post_title; ?></a>
                         </div>
                         <div>
-							<?php echo __('Course:', 'tutor'); ?> <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank"><?php echo get_the_title($attempt->course_id); ?></a>
+                            <?php //echo __('Course:', 'tutor'); ?><!-- <a href="--><?php //echo get_the_permalink($attempt->course_id); ?><!--" target="_blank">--><?php //echo get_the_title($attempt->course_id); ?><!--</a>-->
+							<?php echo __('Course:', 'tutor'); ?> <?php echo get_the_title($attempt->course_id); ?>
                         </div>
                     </td>
                     <td class="td-course-title" title="<?php _e('Course Title', 'tutor'); ?>">

@@ -1552,10 +1552,10 @@ ul.tutor-required-fields{
 }
 .updating-icon:before{
   font-family: 'tutor';
-  margin-right: 5px;
+  //margin-right: 5px;
   content: "\e91d";
-  -webkit-animation: spin 1s steps(8) infinite;
-  animation: spin 1s steps(8) infinite;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
   display: inline-block;
 }
 .loading-lesson .tutor-lesson-video-wrap:before{
@@ -3664,10 +3664,10 @@ Lesson Edit Modal
 }
 .updating-icon:before{
   font-family: 'tutor';
-  margin-right: 5px;
+  //margin-right: 5px;
   content: "\e91d";
-  -webkit-animation: spin 1s steps(8) infinite;
-  animation: spin 1s steps(8) infinite;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
   display: inline-block;
 }
 .tutor-notice-warning{

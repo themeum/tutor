@@ -195,7 +195,7 @@ $user = get_userdata($user_id);
                     <th><?php _e('Question', 'tutor'); ?></th>
                     <th><?php _e('Given Answers', 'tutor'); ?></th>
                     <th><?php _e('Correct/Incorrect', 'tutor'); ?></th>
-                    <th><?php _e('Review', 'tutor'); ?></th>
+                    <th><?php _e('Manual Review', 'tutor'); ?></th>
                 </tr>
 				<?php
 				$answer_i = 0;
@@ -320,13 +320,12 @@ $user = get_userdata($user_id);
 							<?php
 
 							if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-								echo '<span class="tutor-status-approved-context"><i class="tutor-icon-mark"></i> </span>';
+								echo '<span class="tutor-status-approved-context"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
 							} else {
-
 								if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
 									echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
 								}else {
-									echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> </span>';
+									echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
 								}
 							}
 							?>

@@ -2473,10 +2473,9 @@ ul.tutor-required-fields {
 
 .updating-icon:before {
   font-family: 'tutor';
-  margin-right: 5px;
   content: "\e91d";
-  -webkit-animation: spin 1s steps(8) infinite;
-  animation: spin 1s steps(8) infinite;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
   display: inline-block;
 }
 
@@ -4817,10 +4816,9 @@ Lesson Edit Modal
 
 .updating-icon:before {
   font-family: 'tutor';
-  margin-right: 5px;
   content: "\e91d";
-  -webkit-animation: spin 1s steps(8) infinite;
-  animation: spin 1s steps(8) infinite;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
   display: inline-block;
 }
 
@@ -7393,6 +7391,15 @@ label[for="tutor_withdraw_amount"] {
   transition: 300ms;
 }
 
+.tutor-quiz-attempt-history td:last-child {
+  text-align: center;
+}
+
+.tutor-quiz-attempt-history td:last-child a {
+  display: block;
+  padding: 10px;
+}
+
 .attempt-review-title {
   font-size: 18px;
   color: var(--tutor-text-size);
@@ -7538,6 +7545,70 @@ label[for="tutor_withdraw_amount"] {
 .attempt-review-notice-wrap p > strong {
   font-weight: 400;
   margin-right: 5px;
+}
+
+.quiz-attempt-answers-wrap table th {
+  background: #FCFCFC;
+  font-size: 12px;
+  text-transform: inherit;
+}
+
+.quiz-attempt-answers-wrap table th, .quiz-attempt-answers-wrap table td {
+  padding: 17px 20px !important;
+  border-top: 1px solid #EAEAEA;
+  border-bottom: 1px solid #EAEAEA;
+  vertical-align: middle;
+}
+
+.quiz-attempt-answers-wrap table th p, .quiz-attempt-answers-wrap table td p {
+  margin: 0;
+}
+
+.quiz-attempt-answers-wrap table .quiz-manual-review-action {
+  border: 1px solid #D4DADB;
+  color: #D4DADB;
+  height: 30px;
+  width: 30px;
+  border-radius: 2px;
+  font-size: 13px;
+  display: inline-block;
+  text-align: center;
+  line-height: 30px;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
+.quiz-attempt-answers-wrap table .quiz-manual-review-action:first-child:hover {
+  border: 1px solid var(--tutor-success-button-color);
+  color: var(--tutor-success-button-color);
+}
+
+.quiz-attempt-answers-wrap table .quiz-manual-review-action:last-child:hover {
+  border: 1px solid #DF3247;
+  color: #DF3247;
+}
+
+.quiz-attempt-answers-wrap table .quiz-manual-review-action:not(:last-child) {
+  margin-right: 17px;
+}
+
+.quiz-attempt-answers-wrap table .tutor-status-blocked-context i,
+.quiz-attempt-answers-wrap table .tutor-status-approved-context i {
+  font-size: 12px;
+  height: 20px;
+  width: 20px;
+  text-align: center;
+  line-height: 20px;
+  background: var(--tutor-success-button-color);
+  color: #fff;
+  display: inline-block;
+  border-radius: 2px;
+  margin-right: 6px;
+}
+
+.quiz-attempt-answers-wrap table .tutor-status-blocked-context i {
+  background: #DF3247;
+  font-size: 10px;
 }
 
 .tutor-dashboard-builder-header {
