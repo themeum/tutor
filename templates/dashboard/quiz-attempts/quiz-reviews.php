@@ -214,14 +214,12 @@ $user = get_userdata($user_id);
 
 								$get_answers = tutor_utils()->get_answer_by_id($answer->given_answer);
 								$answer_titles = wp_list_pluck($get_answers, 'answer_title');
-								$answer_titles = array_map('stripslashes', $answer_titles);
 								echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
 
 							}elseif ($answer->question_type === 'multiple_choice'){
 
 								$get_answers = tutor_utils()->get_answer_by_id(maybe_unserialize($answer->given_answer));
 								$answer_titles = wp_list_pluck($get_answers, 'answer_title');
-								$answer_titles = array_map('stripslashes', $answer_titles);
 								echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
 
 							}elseif ($answer->question_type === 'fill_in_the_blank'){
