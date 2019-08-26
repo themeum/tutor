@@ -2047,9 +2047,9 @@ class Utils {
 			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
 			'wishlist'          => __('Wishlist', 'tutor'),
 			'reviews'           => __('Reviews', 'tutor'),
+			'my-quiz-attempts'  => __('My Quiz Attempts', 'tutor'),
 
 			'my-courses'        => array('title' => __('My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role),
-			'my-quiz-attempts'  => array('title' => __('My Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'earning'           => array('title' => __('Earning', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'withdraw'          => array('title' => __('Withdraw', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),

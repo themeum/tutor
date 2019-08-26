@@ -5,7 +5,7 @@ $enrolmentList->prepare_items();
 
 <div class="wrap">
 	<h1 class="wp-heading-inline"><?php _e('Enrolments', 'tutor'); ?></h1>
-    <a href="?page=enrolments&sub_page=enroll_student" class="page-title-action"><?php _e('Enrol a Student', 'tutor'); ?></a>
+    <a href="?page=enrolments&sub_page=enroll_student" class="page-title-action"><?php _e('Enroll a student', 'tutor'); ?></a>
     <hr class="wp-header-end">
 
     <div class="tnotice tnotice--blue">
