@@ -327,6 +327,33 @@ jQuery(document).ready(function($){
         }
     }
 
+    /**
+     * Quiz Frontend Review Action
+     * @since 1.4.0
+     */
+    $(document).on('click', '.quiz-manual-review-action', function(e){
+        e.preventDefault();
+        var $that = $(this),
+            attempt_id = $that.attr('data-attempt-id'),
+            attempt_answer_id = $that.attr('data-attempt-answer-id'),
+            mark_as = $that.attr('data-mark-as');
+
+        $.ajax({
+            url : _tutorobject.ajaxurl,
+            type : 'GET',
+            data : {action:'review_quiz_answer', attempt_id: attempt_id, attempt_answer_id : attempt_answer_id, mark_as : mark_as },
+            beforeSend: function () {
+                $that.addClass('updating-icon');
+            },
+            success: function (data) {
+                location.reload();
+            },
+            complete: function () {
+                $that.removeClass('updating-icon');
+            }
+        });
+    });
+
     // tutor course content accordion
     $('.tutor-course-topic.tutor-active').find('.tutor-course-lessons').slideDown();
     $('.tutor-course-title').on('click', function () {
@@ -2005,7 +2032,6 @@ jQuery(document).ready(function($){
             $(this).find('i').removeClass('tutor-icon-down').addClass('tutor-icon-up');
         }
         $(this).next('div').slideToggle();
-    })
-
+    });
 
 });
