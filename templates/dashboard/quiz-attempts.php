@@ -70,14 +70,15 @@ if ( $quiz_attempts_count ){
 	                        $pass_marks = ($attempt->total_marks * $passing_grade) / 100;
                         }
 
-						if ($pass_marks > 0){
-							echo number_format_i18n($pass_marks, 2);
-						}
-						if ($passing_grade){
-							echo "({$passing_grade}%)";
-						}
+//						if ($pass_marks > 0){
+//							echo number_format_i18n($pass_marks, 2);
+//						}
 
-						echo sprintf(__('%1$s out of %2$s <br> Earned: %3$s%% <br> Passing Grade: %4$s%%','tutor'), $attempt->earned_marks, $attempt->total_marks, $earned_percentage ,$passing_grade );
+//						if ($passing_grade){
+//							echo "({$passing_grade}%)";
+//						}
+
+						echo sprintf(__('%1$s out of %2$s <br> Pass Mark: %3$s <br> Earned total: %4$s%%','tutor'), $attempt->earned_marks, $attempt->total_marks, $pass_marks ,$passing_grade );
 						?>
                     </td>
                     <td title="<?php echo __('Attempt Status', 'tutor'); ?>"><?php echo str_replace('attempt_', '', $attempt->attempt_status); ?></td>
