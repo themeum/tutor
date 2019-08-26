@@ -3472,8 +3472,7 @@ class Utils {
 		global $wpdb;
 
 		$user_id = $this->get_user_id($user_id);
-
-		$attempts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id = {$user_id} ");
+		$attempts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id = {$user_id} ORDER BY attempt_id DESC ");
 
 		if (is_array($attempts) && count($attempts)){
 			return $attempts;
