@@ -1,4 +1,16 @@
 <?php
+/**
+ * Quiz Review Frontend
+ *
+ * @since v.1.4.0
+ *
+ * @author Themeum
+ * @url https://themeum.com
+ * @package Tutor
+ */
+?>
+
+<?php
 $attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
 $attempt = tutor_utils()->get_attempt($attempt_id);
 
@@ -16,88 +28,115 @@ $user_id = tutor_utils()->avalue_dot('user_id', $attempt);
 $user = get_userdata($user_id);
 ?>
 
-<div class="wrap">
+<div class="tutor-quiz-attempt-review-wrap">
     <h2 class="attempt-review-title"> <i class="tutor-icon-list"></i> <?php _e('View Attempts', 'tutor'); ?></h2>
-
     <div class="tutor-quiz-attempt-info-row">
         <div class="attempt-view-top">
             <div class="attempt-info-col">
-				<?php echo '<p class="attempt-property-name">'.__('Attempt By', 'tutor').' </p><h4>'. $user->display_name.'</h4>'; ?>
+                <div class="attempt-user-details">
+                    <div class="attempt-user-avatar">
+                        <img src="<?php echo esc_url(get_avatar_url($user_id)) ?>" alt="<?php echo esc_attr($user->display_name); ?>">
+                    </div>
+                    <div class="attempt-info-content">
+                        <h5><?php echo __('Attempt By', 'tutor'); ?></h5>
+                        <h4><?php echo $user->display_name; ?></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="attempt-info-col">
+                <div class="attempt-info-content">
+                    <h5><?php echo __('Quiz', 'tutor'); ?></h5>
+                    <h4>
+                        <?php
+                            echo "<a href='" .admin_url("post.php?post={$attempt->quiz_id}&action=edit")."'>".get_the_title($attempt->quiz_id)."</a>";
+                        ?>
+                    </h4>
+                </div>
             </div>
 
             <div class="attempt-info-col">
-				<?php
-				echo '<p class="attempt-property-name">'. __('Quiz', 'tutor')." </p> <p class='attempt-property-value'><a href='" .admin_url("post.php?post={$attempt->quiz_id}&action=edit")."'>".get_the_title($attempt->quiz_id)."</a> </p> ";
-				?>
+                <div class="attempt-info-content">
+                    <h5><?php echo __('Attempt At', 'tutor'); ?></h5>
+                    <h4>
+                        <?php echo date_i18n(get_option('date_format'), strtotime($attempt->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->attempt_started_at)); ?>
+                    </h4>
+                </div>
             </div>
 
             <div class="attempt-info-col">
-				<?php echo '<p class="attempt-property-name">'.__('Attempt At', 'tutor').'</p><p class="attempt-property-value">'. date_i18n(get_option('date_format'), strtotime($attempt->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->attempt_started_at)).'</p>'; ?>
-            </div>
-
-            <div class="attempt-info-col">
-                <p class="attempt-property-name">
-					<?php echo __('Status', 'tutor'); ?>
-                </p>
-                <p class="attempt-property-value">
-					<?php
-					$status = ucwords(str_replace('quiz_', '', $attempt->attempt_status));
-					echo "<span class='attempt-status-{$attempt->attempt_status}'>{$status}</span>";
-					?>
-                </p>
+                <div class="attempt-info-content">
+                    <h5><?php echo __('Status', 'tutor'); ?></h5>
+                    <h4>
+                        <?php
+                        $status = ucwords(str_replace('quiz_', '', $attempt->attempt_status));
+                        echo $status;
+                        ?>
+                    </h4>
+                </div>
             </div>
         </div>
 
         <div class="attempt-view-bottom">
 
             <div class="attempt-info-col">
-				<?php
-				$quiz = tutor_utils()->get_course_by_quiz($attempt->quiz_id);
-				if ($quiz) {
-					echo '<p class="attempt-property-name">' . __( 'Course', 'tutor' ) . '</p> <p class="attempt-property-value"> ' . "<a href='".admin_url( "post.php?post={$quiz->ID}&action=edit" ) . "'><strong>". get_the_title( $quiz->ID )."</strong></a> </p>";
-				}
-				?>
-            </div>
-
-            <div class="attempt-info-col">
-                <div class="attempt-property-name"><?php _e('Result', 'tutor'); ?></div>
-                <div class="attempt-property-value value-display-flex">
-					<?php
-					$pass_mark_percent = tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
-					$earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
-
-					$output = '';
-					if ($earned_percentage >= $pass_mark_percent){
-						$output .= '<p><span class="result-pass">'.__('Pass', 'tutor').'</span></p>';
-					}else{
-						$output .= '<p> <span class="result-fail">'.__('Fail', 'tutor').'</span></p>';
-					}
-
-					$output .= "<p class='result-in-write'>".$attempt->earned_marks." out of {$attempt->total_marks} <br />";
-					$output .= "Marks earned ({$earned_percentage}%)</p>";
-					echo $output;
-					?>
+                <div class="attempt-info-content">
+                    <h5><?php echo __('Course', 'tutor'); ?></h5>
+                    <h4>
+                        <?php
+                        $quiz = tutor_utils()->get_course_by_quiz($attempt->quiz_id);
+                        if ($quiz) {
+                            echo "<a href='".admin_url( "post.php?post={$quiz->ID}&action=edit" ) . "'>". get_the_title( $quiz->ID )."</a>";
+                        }
+                        ?>
+                    </h4>
                 </div>
             </div>
 
             <div class="attempt-info-col">
-                <p class="attempt-property-name"><?php _e('Quiz Time', 'tutor'); ?></p>
-                <p class="attempt-property-value">
-					<?php
-					$time_limit_seconds = tutor_utils()->avalue_dot('time_limit.time_limit_seconds', $quiz_attempt_info);
-					echo tutor_utils()->seconds_to_time_context($time_limit_seconds);
-					?>
-                </p>
+                <div class="attempt-info-content">
+                    <h5><?php echo __('Result', 'tutor'); ?></h5>
+                    <h4>
+                        <?php
+                            $pass_mark_percent = tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
+                            $earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
+                            $output = '';
+                            if ($earned_percentage >= $pass_mark_percent){
+                                $output .= '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
+                            }else{
+                                $output .= '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+                            }
+
+                            $output .= "".$attempt->earned_marks." out of {$attempt->total_marks}";
+                            $output .= "<div>Marks earned ({$earned_percentage}%)</div>";
+                            echo $output;
+                        ?>
+                    </h4>
+                </div>
             </div>
 
             <div class="attempt-info-col">
-                <p class="attempt-property-name"><?php _e('Attempt Time', 'tutor'); ?></p>
-                <p class="attempt-property-value">
-					<?php
-					$attempt_time_sec = strtotime($attempt->attempt_ended_at) - strtotime($attempt->attempt_started_at);
-					echo tutor_utils()->seconds_to_time_context($attempt_time_sec);
-					?>
-                </p>
+                <div class="attempt-info-content">
+                    <h5><?php echo __('Quiz Time', 'tutor'); ?></h5>
+                    <h4>
+                        <?php
+                            $time_limit_seconds = tutor_utils()->avalue_dot('time_limit.time_limit_seconds', $quiz_attempt_info);
+                            echo tutor_utils()->seconds_to_time_context($time_limit_seconds);
+                        ?>
+                    </h4>
+                </div>
+            </div>
+
+            <div class="attempt-info-col">
+                <div class="attempt-info-content">
+                    <h5><?php echo __('Attempt Time', 'tutor'); ?></h5>
+                    <h4>
+                        <?php
+                            $attempt_time_sec = strtotime($attempt->attempt_ended_at) - strtotime($attempt->attempt_started_at);
+                            echo tutor_utils()->seconds_to_time_context($attempt_time_sec);
+                        ?>
+                    </h4>
+                </div>
+
             </div>
 
         </div>
@@ -119,25 +158,21 @@ $user = get_userdata($user_id);
 			}
 
 			if (count($required_review)){
-				echo '<p class="attempt-review-notice"> <span class="notice-excl">&excl;</span>  <strong>Reminder:</strong> Please review answers for question no. 
-'.implode
-					(', ',
-						$required_review).' </p>';
+				echo '<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>Reminder: </strong> Please review answers for question no. '.implode(', ', $required_review).' </p>';
 			}
 		}
 
 
 		?>
 
-
 	    <?php if ((bool) $attempt->is_manually_reviewed ){
 		    ?>
             <p class="attempt-review-at">
-                <span class="circle-arrow"> &circlearrowright; </span>
-	            <?php _e('Manually reviewed at :', 'tutor'); ?>
+                <span class="circle-arrow">&circlearrowright; </span>
                 <strong>
-		            <?php echo date_i18n(get_option('date_format'), strtotime($attempt->manually_reviewed_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->manually_reviewed_at)); ?>
+	                <?php _e('Manually reviewed at: ', 'tutor'); ?>
                 </strong>
+		        <?php echo date_i18n(get_option('date_format'), strtotime($attempt->manually_reviewed_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->manually_reviewed_at)); ?>
             </p>
 		    <?php
 	    } ?>
@@ -157,10 +192,10 @@ $user = get_userdata($user_id);
                 <tr>
                     <th><?php _e('Type', 'tutor'); ?></th>
                     <th><?php _e('No.', 'tutor'); ?></th>
-                    <th width="200"><?php _e('Question', 'tutor'); ?></th>
+                    <th><?php _e('Question', 'tutor'); ?></th>
                     <th><?php _e('Given Answers', 'tutor'); ?></th>
-                    <th width="80"><?php _e('Correct/Incorrect', 'tutor'); ?></th>
-                    <th width="100"><?php _e('Review', 'tutor'); ?></th>
+                    <th><?php _e('Correct/Incorrect', 'tutor'); ?></th>
+                    <th><?php _e('Review', 'tutor'); ?></th>
                 </tr>
 				<?php
 				$answer_i = 0;
@@ -179,8 +214,6 @@ $user = get_userdata($user_id);
 
 								$get_answers = tutor_utils()->get_answer_by_id($answer->given_answer);
 								$answer_titles = wp_list_pluck($get_answers, 'answer_title');
-								$answer_titles = array_map('stripslashes', $answer_titles);
-
 								echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
 
 							}elseif ($answer->question_type === 'multiple_choice'){
@@ -294,15 +327,12 @@ $user = get_userdata($user_id);
 									echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> </span>';
 								}
 							}
-
-
 							?>
                         </td>
 
                         <td>
-                            <a href="<?php echo admin_url("admin.php?action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=correct"); ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="attempt-mark-correct-btn"><i class="tutor-icon-mark"></i> </a>
-
-                            <a href="<?php echo admin_url("admin.php?action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=incorrect"); ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="attempt-mark-incorrect-btn"><i class="tutor-icon-line-cross"></i></a>
+							<a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>
+                            <a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-line-cross"></i></a>
                         </td>
                     </tr>
 					<?php

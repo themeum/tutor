@@ -7443,6 +7443,153 @@ label[for="tutor_withdraw_amount"] {
   transition: 300ms;
 }
 
+.attempt-review-title {
+  font-size: 18px;
+  color: var(--tutor-text-size);
+  font-weight: 600;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 60px;
+}
+
+.attempt-review-title i {
+  margin-right: 12px;
+  color: var(--tutor-primary-color);
+}
+
+.tutor-quiz-attempt-info-row .attempt-view-bottom,
+.tutor-quiz-attempt-info-row .attempt-view-top {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.tutor-quiz-attempt-info-row .attempt-view-bottom .attempt-info-col,
+.tutor-quiz-attempt-info-row .attempt-view-top .attempt-info-col {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  max-width: 30%;
+}
+
+.tutor-quiz-attempt-info-row .attempt-view-bottom .attempt-info-col {
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
+
+.tutor-quiz-attempt-info-row .attempt-info-content span.result-pass,
+.tutor-quiz-attempt-info-row .attempt-info-content span.result-fail {
+  background: #DF3247;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  padding: 1px 4px;
+  margin-right: 13px;
+  border-radius: 2px;
+}
+
+.tutor-quiz-attempt-info-row .attempt-info-content span.result-pass {
+  background: var(--tutor-success-button-color);
+}
+
+.tutor-quiz-attempt-info-row .attempt-info-content h4,
+.tutor-quiz-attempt-info-row .attempt-info-content h5 {
+  font-size: 14px;
+  line-height: 25px;
+  margin: 0;
+  color: #7A7F85;
+  font-weight: 400;
+}
+
+.tutor-quiz-attempt-info-row .attempt-info-content h4 a,
+.tutor-quiz-attempt-info-row .attempt-info-content h4 {
+  font-weight: 700;
+  color: var(--tutor-text-color);
+  margin-top: 7px;
+}
+
+.tutor-quiz-attempt-info-row .attempt-view-top {
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #DCDFE5;
+}
+
+.tutor-quiz-attempt-info-row .attempt-view-bottom {
+  margin-bottom: 60px;
+}
+
+.attempt-user-details {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.attempt-user-details .attempt-user-avatar {
+  padding-right: 20px;
+}
+
+.attempt-user-details .attempt-user-avatar img {
+  display: block;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+
+.attempt-user-details .attempt-info-content h4 {
+  font-size: 18px;
+}
+
+.attempt-review-notice-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 60px;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.attempt-review-notice-wrap p {
+  margin: 0;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.attempt-review-notice-wrap p.attempt-review-notice i {
+  font-size: 16px;
+  color: #F5C813;
+  margin-right: 9px;
+}
+
+.attempt-review-notice-wrap p.attempt-review-at > span {
+  color: var(--tutor-primary-color);
+  margin-right: 7px;
+  font-size: 16px;
+}
+
+.attempt-review-notice-wrap p > strong {
+  font-weight: 400;
+  margin-right: 5px;
+}
+
 .tutor-dashboard-builder-header {
   padding: 10px 0px;
   border-bottom: 2px solid #DCDFE5;

@@ -2049,9 +2049,10 @@ class Utils {
 			'reviews'           => __('Reviews', 'tutor'),
 
 			'my-courses'        => array('title' => __('My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role),
-			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+			'my-quiz-attempts'  => array('title' => __('My Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'earning'           => array('title' => __('Earning', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'withdraw'          => array('title' => __('Withdraw', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 
 			'purchase_history'  => __('Purchase History', 'tutor'),
 		));
@@ -2060,7 +2061,6 @@ class Utils {
 			'settings'          => __('Settings', 'tutor'),
 			'logout'            => __('Logout', 'tutor'),
 		);
-
 		$all_nav_items = array_merge($nav_items, $new_navs);
 
 		return apply_filters('tutor_dashboard/nav_items_all', $all_nav_items);
@@ -3235,17 +3235,10 @@ class Utils {
 		if ($post) {
 			$course_post_type = tutor()->course_post_type;
 			$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
-
 			if ($course) {
-				//Checking if this topic
 				if ( $course->post_type !== $course_post_type ) {
 					$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
 				}
-				//Checking if this lesson
-				if ( $course->post_type !== $course_post_type ) {
-					$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
-				}
-
 				return $course;
 			}
 		}
