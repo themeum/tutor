@@ -178,3 +178,17 @@
 		
 	}
 }
+
+// css must be changed
+
+.answer-image-matched-wrap{
+	display: flex;
+	.image-matching-item{
+		margin: 0 5px;
+		max-width: 70px;
+		.dragged-caption{
+			font-size: 14px;
+			margin-top: 4px;
+		}
+	}
+}
