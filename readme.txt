@@ -15,7 +15,9 @@ A complete WordPress LMS plugin to create any e-learning website easily.
 
 Tutor is a complete, feature-packed and robust WordPress LMS plugin to create & sell courses online easily. All the features of this learning management system hits all the checkpoints for a full-fledged online course marketplace. You can create challenging and fun quizzes, interactive lessons, powerful reports and stats making Tutor potentially the best free WordPress LMS plugin. Manage, administer and monetize your education, online school, and online courses without having to write a single line of code.
 
-Tutor LMS is a completely free plugin with premium high quality addons that you can add to empower the core plugin more! This WordPress LMS plugin is lightweight with addons to enable certificates, e-mail notifications, shopping carts and so much more!
+⭐ [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) ⭐ || ⭐ [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/) ⭐ || [Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/)
+
+Tutor LMS is a completely free Wordpress LMS plugin with premium high-quality addons that you can add to empower the core plugin more! This WordPress LMS plugin is lightweight with addons to enable certificates, e-mail notifications, shopping carts and so much more!
 
 Get Tutor, the most advanced and powerful WordPress online course plugin.
 
@@ -23,7 +25,6 @@ Get Tutor, the most advanced and powerful WordPress online course plugin.
 
 Create, customize, manage, and sell online courses by building a functional e-learning website with this free LMS plugin for WordPress.
 
-⭐ [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) ⭐ || ⭐ [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/) ⭐ || [Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/)
 
 Want to know all the latest news and be part of the Tutor LMS community? Join our [Facebook Tutor LMS Community group!](https://www.facebook.com/groups/tutorlms)
 
@@ -35,11 +36,16 @@ Here are the most notable features of Tutor LMS plugin. If you need any further 
   * Unlimited courses and lessons
   * Frontend student dashboard
   * Video lessons
-  * Multiple video sources (self-hosted, YouTube, Vimeo)
+  * Multiple video sources (self-hosted, YouTube, Vimeo, Embedded Video)
   * Teacher profiles and panels
   * Lesson management
   * Course requirement & instruction
   * Quizzes
+  * Earning & Commission Allocation
+  * Withdrawal Options
+  * Purchase History
+  * Styling Options
+  * Course Widget
   * Teacher registration form
   * Course review and rating system
   * Q&A for students with course teacher
@@ -47,9 +53,14 @@ Here are the most notable features of Tutor LMS plugin. If you need any further 
   * Tracking course progress
   * Course Difficulty Level
   * Define Course Duration
+  * Course Marketplace
   * Add course requirement and instruction
   * Quiz Timer
   * Quiz Attempts
+  * Centralized Monetization Settings
+  * Spotlight Mode
+  * RTL Ready
+  * Page Builder Support
   * Gutenberg compatible
   * Content Security
 
@@ -63,10 +74,10 @@ Tutor LMS can be used by anyone looking to create a full-fledged learning manage
   * Training courses
   * Professional continuing education
 
-These are just a few possibilities that Tutor LMS opens up for its users. There’s a whole new world of intuitive learning that’s yet to discover using this online course plugin.
+These are just a few possibilities that Tutor LMS opens up for its users. There’s a whole new world of intuitive learning that’s yet to discover using this WordPress LMS plugin.
 
 = Intuitive Course Builder =
-Create courses with their details like videos, attachments, excerpt, additional data, benefit of the course, requirement, topic, summary, announcement, and video banners. Have lessons under course and attach video and other attachments to each lesson. Tutor, the advanced WordPress LMS plugin lets you present courses on an intuitive user interface with all required options to offer a top-notch learning system.
+Create courses with their details like videos, attachments, excerpt, additional data, the benefit of the course, requirement, topic, summary, announcement, and video banners in this WordPress LMS plugin. Have lessons under course and attach video and other attachments to each lesson. Tutor, the advanced WordPress LMS plugin lets you present courses on an intuitive user interface with all required options to offer a top-notch learning system.
 
 = Smart Course and Lesson Manager =
 With tons of awesome features inside this WordPress course plugin, it is easy to setup, control, and manage teachers, students, courses & lessons.
@@ -87,10 +98,9 @@ Create quizzes with this WordPress course plugin. Add questions while setting up
 Engage your students by uploading multimedia lessons in versatile video sources such as Vimeo, YouTube videos, etc. Set an introductory video at the start of your course easily and define video poster and duration with this  WordPress course plugin.
 
 = Question Patterns =
-With this free LMS plugin for WordPress, you create questions that are supposed to be added to the Quizzes. Create questions by defining question type (True/False, Multiple Choice, Single Choice), marks for each question (if answered right), answer type, descriptions and answer hints for the students to attempt the right answer.
+With this free LMS plugin for WordPress, you create questions that are supposed to be added to the Quizzes. There are over 10 question types that you can choose from to fulfill all your quizzing needs. Using the WordPress LMS plugin, create questions by defining question type (True/False, Multiple Choice, Single Choice), marks for each question (if answered right), answer type, descriptions and answer hints for the students to attempt the right answer.) and more!
 
 = Student Question and Answers =
-
 Students can submit questions about courses before enrolling from their respective profiles. This useful feature in the WordPress LMS plugin encourages student interactions and helps boost conversion rates.
 
 = Email Notifications =
@@ -98,19 +108,32 @@ Sending emails to students and teachers has been made automated in Tutor. You ca
 
 
 = POWER OF WOOCOMMERCE =
-Being integrated with WooCommerce, Tutor, the WordPress LMS plugin offers eCommerce functionalities and enables you to sell courses on your website. You can see sales data, completed and pending orders for your courses from WooCommerce reports. If you want to issue discount coupons or PDF invoice, that too is possible. You can use any WooCommerce addon to monitor and improve your sales and marketing.
+Being integrated with WooCommerce, Tutor, the WordPress LMS plugin offers eCommerce functionalities and enables you to sell courses on your website.
+You can see sales data, completed and pending orders for your courses from WooCommerce reports. If you want to issue discount coupons or PDF invoice, that too is possible. You can use any WooCommerce addon to monitor and improve your sales and marketing along with this WordPress LMS plugin.
 
 = Easy Digital Downloads Integration to monetize courses =
 
 Integrate your learning management system with the renowned EDD plugin. Sell your courses seamlessly with multiple payment gateways supported by EDD.
 
+= Earning and Commission Allocation =
+The earning and commission allocation feature in Tutor allows easy distribution of course earnings between the admin and other instructors using the WordPress LMS plugin. You can easily set the percentage of earning distribution with this option, any other fees that need to be deducted, and statements to show per page. You’ll get a detailed report on all your earning stats, deducted fees, deducted commissions, and every other useful information on your dashboard inside this WordPress LMS plugin as well. There’s a detailed graphical representation of your earning along with advanced filters to know how much you earned over a specific period of time.
+
+= Easy Withdrawal Method =
+The withdraw option in Tutor LMS helps manage withdrawals easily. You can predefine the minimum amount in this WordPress LMS plugin that needs to be earned before instructors can send a withdrawal request. It also comes with the option to select the withdrawal method such as bank transfer, PayPal and ECHECK. If you want to add additional information on withdrawal you can do so too with this WordPress LMS plugin. Easily view all the withdrawal information from your dashboard displaying current balance, pending, completed, and rejected withdrawal stats.
+
+= Purchase History =
+Keep track of all the purchase options using the purchase history in the dashboard in the WordPress LMS plugin. Check the purchase status, amount and when the purchase was made inside Tutor LMS.
+
+= Spotlight Mode =
+Tutor LMS comes with the setting to hide the header & footer for the course learning interface. Offer students a distraction free lesson with the spotlight mode option.
+
 = Gutenberg Compatible =
 
-Create online courses with the new Gutenberg editor without facing any issues whatsoever. Tutor is completely compatible with the Gutenberg editor in case you want to display your courses in the block interface.
+Create online courses with the new Gutenberg editor without facing any issues whatsoever in the innovative WordPress LMS plugin. Tutor LMS is completely compatible with the Gutenberg editor in case you want to display your courses in the block interface. Moreover, Tutor LMS comes with three custom Gutenberg blocks. The blocks are- Tutor Student Dashboard, Student Registration, and Instructor Registration Form.
 
 = Content Security =
 
-Have the most secured learning management system when creating your online courses. Third parties cannot view the videos with the URL. It ensures that only enrolled students can have access to course videos.
+Have the most secure learning management system when creating your online courses. Third parties cannot view the videos with the URL when you use our WordPress LMS plugin. It ensures that only enrolled students can have access to course videos.
 
 == PREMIUM FEATURE FOR TUTOR ==
 
@@ -127,6 +150,14 @@ Have the most secured learning management system when creating your online cours
 - **Tutor Multi Instructors:** Add as many instructors as you want to individual courses. Enhance course experience of students by having the option to have a great lineup of teachers.
 
 - **Tutor Prerequisites:** Define a certain set of courses that students need to complete before enrolling for a new course.
+
+- **Tutor Assignments:** Create assignments that students can submit easily with a number of useful settings to assess students smartly.
+
+- **Tutor Paid Memberships Pro:** Subscriptions are made easy with the Tutor Paid Membership pro addon. Using the Tutor Paid Memberships Pro plugin integration with Tutor LMS, include site wise and category wise subscription for your eLearning platform.
+
+- **WooCommerce Subscriptions:** Have all the subscription options supported by WooCommerce using the WooCommerce Subscriptions addon. Earn higher revenue with the versatile subscription options in WooCommerce.
+
+- **Frontend Course Builder:** Build your course on the go using the frontend course builder in Tutor LMS plugin. Instructors can see how their course looks live without even having to go backend. The industry-first frontend course builder in any WordPress LMS plugin ever.
 
 - **5 Pro Question Patterns:**
 
@@ -161,11 +192,11 @@ The WordPress codex contains [instructions on how to do this here](https://codex
 
 = Can I use Tutor with my existing theme? =
 
-Yes. Tutor can be used with your existing theme or any theme you wish to use it with.
+Tutor LMS is a WordPress LMS plugin that works with any modern theme without any issues of site breakage.
 
 = Where can I find Tutor LMS user guides and documentation? =
 
-For a detailed guideline on how to build a Learning Management system, refer to our user documentation on the Themeum site.
+For a detailed guideline on how to build a Learning Management system using our WordPress LMS plugin, refer to our user documentation on the Themeum site.
 
 = Where can I report a bug? =
 
@@ -174,19 +205,19 @@ support forums: https://www.themeum.com/support/ 🙂
 
 = Is this plugin free? =
 
-This WordPress course plugin has two versions. One is free and another is paid. The paid version has more advanced features which are not accessible in this free version. Click here to get the paid version.
+This WordPress course plugin has two versions. One is free and another is paid. The paid version of the WordPress LMS plugin has more advanced features which are not accessible in this free version. Click here to get the paid version.
 
 = Where can I get support? =
 
 You can get support by posting your issues on the support section of this plugin on WordPress plugins directory or directly place your question to Themeum Forums.
 
-= Is Tutor LMS device friendly? =
+= Is Tutor LMS device friendly WordPress LMS plugin? =
 
 If you’re using a responsive theme, then Tutor LMS will look great across all devices.
 
 = Can I use any plugins with Tutor? =
 
-Tutor enables you to use any third party plugins without facing any compatibility issues. You can integrate Tutor easily in your existing site without any trouble.
+Tutor enables you to use any third party plugins without facing any compatibility issues. You can integrate and use the WordPress LMS plugin easily in your existing site without any trouble.
 
 == Screenshots ==
 
