@@ -27,9 +27,9 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
             <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
             <div class="tutor-single-page-top-bar">
                 <div class="tutor-topbar-item tutor-hide-sidebar-bar">
-                    <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-menu-2"></i> </a>
+                    <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-angle-left"></i> </a>
                     <a href="<?php echo get_the_permalink($course->ID); ?>"  class="tutor-topbar-home-btn">
-                        <i class="tutor-icon-next-2"></i> <?php echo __('Go to Course Home', 'tutor') ; ?>
+                        <i class="tutor-icon-home"></i> <?php echo __('Go to Course Home', 'tutor') ; ?>
                     </a>
                 </div>
                 <div class="tutor-topbar-item tutor-topbar-content-title-wrap">

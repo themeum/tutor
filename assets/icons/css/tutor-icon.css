@@ -106,7 +106,12 @@ Animation Spinner
  * Icon Contents
  */
 
-
+.tutor-icon-classic-editor:before {
+    content: "\e9a0";
+}
+.tutor-icon-home:before {
+    content: "\e9a7";
+}
 .tutor-icon-save:before {
     content: "\e994";
 }
@@ -605,4 +610,3 @@ Animation Spinner
 .tutor-icon-youtube:before {
     content: "\e91c";
 }
-
