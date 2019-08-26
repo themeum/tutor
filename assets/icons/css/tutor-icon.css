@@ -35,10 +35,10 @@ Animation Spinner
     }
 
     100% {
-        -moz-transform: rotate(359deg);
-        -o-transform: rotate(359deg);
-        -webkit-transform: rotate(359deg);
-        transform: rotate(359deg);
+        -moz-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
 }
 @-webkit-keyframes spin {
@@ -50,10 +50,10 @@ Animation Spinner
     }
 
     100% {
-        -moz-transform: rotate(359deg);
-        -o-transform: rotate(359deg);
-        -webkit-transform: rotate(359deg);
-        transform: rotate(359deg);
+        -moz-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
 }
 @-o-keyframes spin {
@@ -65,10 +65,10 @@ Animation Spinner
     }
 
     100% {
-        -moz-transform: rotate(359deg);
-        -o-transform: rotate(359deg);
-        -webkit-transform: rotate(359deg);
-        transform: rotate(359deg);
+        -moz-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
 }
 @-ms-keyframes spin {
@@ -80,10 +80,10 @@ Animation Spinner
     }
 
     100% {
-        -moz-transform: rotate(359deg);
-        -o-transform: rotate(359deg);
-        -webkit-transform: rotate(359deg);
-        transform: rotate(359deg);
+        -moz-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
 }
 @keyframes spin {
@@ -95,10 +95,10 @@ Animation Spinner
     }
 
     100% {
-        -moz-transform: rotate(359deg);
-        -o-transform: rotate(359deg);
-        -webkit-transform: rotate(359deg);
-        transform: rotate(359deg);
+        -moz-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
 }
 
