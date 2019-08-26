@@ -34,7 +34,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
     <div class="tutor-option-field tutor-video-upload-wrap">
 
         <select name="video[source]" class="tutor_lesson_video_source videosource_select2">
-            <option value=""><?php _e('Select Video Source', 'tutor'); ?></option>
+            <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
             <option value="html5" <?php selected('html5', $videoSource); ?>  data-icon="html5" ><?php _e('HTML5 (mp4)', 'tutor'); ?></option>
             <option value="external_url" <?php selected('external_url', $videoSource); ?>  data-icon="link" ><?php _e('External URL', 'tutor'); ?></option>
             <option value="youtube" <?php selected('youtube', $videoSource); ?>  data-icon="youtube" ><?php _e('YouTube', 'tutor'); ?></option>
