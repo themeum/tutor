@@ -4806,5 +4806,25 @@ class Utils {
 		return $enrolments;
 	}
 
+	/**
+	 * @param int $post_id
+	 *
+	 * @return false|string
+	 *
+	 * @since v.1.4.0
+	 */
+
+	public function get_current_url($post_id = 0){
+		$page_id = $this->get_post_id($post_id);
+
+		if ($page_id){
+			return get_the_permalink($page_id);
+		}else{
+			global $wp;
+			$current_url = home_url( $wp->request );
+
+			return $current_url;
+		}
+	}
 
 }

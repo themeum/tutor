@@ -35,7 +35,7 @@ class Student {
 	 * @since v.1.0.0
 	 */
 	public function register_student(){
-		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_register_student' ){
+		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_register_student' ){
 			return;
 		}
 		//Checking nonce
@@ -93,8 +93,12 @@ class Student {
 				wp_set_auth_cookie( $user_id );
 			}
 
-			$dashboard_url = tutor_utils()->tutor_dashboard_url();
-			wp_redirect($dashboard_url);
+			//Redirect page
+			$redirect_page = tutils()->array_get('redirect_to', $_REQUEST);
+			if ( ! $redirect_page){
+				$redirect_page = tutor_utils()->tutor_dashboard_url();
+			}
+			wp_redirect($redirect_page);
 			die();
 		}else{
 			$this->error_msgs = $user_id->get_error_messages();
