@@ -221,6 +221,7 @@ Group Field Option
     padding-bottom: 0;
     margin: 0;
 }
+.tutor-untopics-lessons .course-content-item,
 .course-contents .course-content-item {
     padding: 10px;
     border-bottom: 1px solid #D9D9D9;
@@ -313,7 +314,7 @@ p.course-empty-content {
     background-color: #dddd;
 }
 .tutor-untopics-lessons{
-    margin-top: 50px;
+    margin-top: 0;
     border: 1px solid #eee;
     padding: 20px;
     margin-bottom: 20px;
@@ -321,6 +322,7 @@ p.course-empty-content {
 }
 .tutor-untopics-lessons h3{
     font-weight: 300;
+    margin-top: 0px;
 }
 .tutor-untopics-lessons .tutor-lessons{
     padding-left: 0 !important;
