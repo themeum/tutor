@@ -1013,6 +1013,12 @@ table.tutor-addons-list-table td, table.tutor-addons-list-table th{
 .tutor-addons-list .plugin-icon{
     height: 120px;
 }
+.tutor-addons-list .plugin-card .desc{
+    margin-right: 0;
+}
+.tutor-addons-list .plugin-card .name{
+    margin-right: 50px;
+}
 .btn-switch {
     display: inline-block;
     height: 22px;
