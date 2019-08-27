@@ -28,6 +28,7 @@ $user_id = tutor_utils()->avalue_dot('user_id', $attempt);
 $user = get_userdata($user_id);
 ?>
 
+
 <div class="tutor-quiz-attempt-review-wrap">
     <h2 class="attempt-review-title"> <i class="tutor-icon-list"></i> <?php _e('View Attempts', 'tutor'); ?></h2>
     <div class="tutor-quiz-attempt-info-row">
@@ -77,7 +78,6 @@ $user = get_userdata($user_id);
         </div>
 
         <div class="attempt-view-bottom">
-
             <div class="attempt-info-col">
                 <div class="attempt-info-content">
                     <h5><?php echo __('Course', 'tutor'); ?></h5>
@@ -214,34 +214,27 @@ $user = get_userdata($user_id);
 								$answer_titles = wp_list_pluck($get_answers, 'answer_title');
 								$answer_titles = array_map('stripslashes', $answer_titles);
 								echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
-
 							}elseif ($answer->question_type === 'multiple_choice'){
 								$get_answers = tutor_utils()->get_answer_by_id(maybe_unserialize($answer->given_answer));
 								$answer_titles = wp_list_pluck($get_answers, 'answer_title');
 								$answer_titles = array_map('stripslashes', $answer_titles);
 								echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
-
 							}elseif ($answer->question_type === 'fill_in_the_blank'){
-
 								$answer_titles = maybe_unserialize($answer->given_answer);
-
 								$get_db_answers_by_question = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
 								foreach ($get_db_answers_by_question as $db_answer);
 								$count_dash_fields = substr_count($db_answer->answer_title, '{dash}');
 								if ($count_dash_fields){
 									$dash_string = array();
 									$input_data = array();
-
 									for($i=0; $i<$count_dash_fields; $i++){
 										//$dash_string[] = '{dash}';
 										$input_data[] =  isset($answer_titles[$i]) ? "<span class='filled_dash_unser'>{$answer_titles[$i]}</span>" : "______";
 									}
-
 									$answer_title = $db_answer->answer_title;
 									foreach($input_data as $replace){
 										$answer_title = preg_replace('/{dash}/i', $replace, $answer_title, 1);
 									}
-
 									echo str_replace('{dash}', '_____', $answer_title);
 								}
 
