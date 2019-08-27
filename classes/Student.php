@@ -116,7 +116,7 @@ class Student {
 	}
 
 	public function update_profile(){
-		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_profile_edit' ){
+		if (tutils()->array_get('tutor_action', $_POST) !== 'tutor_profile_edit' ){
 			return;
 		}
 
