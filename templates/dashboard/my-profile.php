@@ -1,6 +1,4 @@
-
 <?php
-
     $uid = get_current_user_id();
     $user = get_userdata( $uid );
 
@@ -14,12 +12,12 @@
     $bio = nl2br(strip_tags(get_user_meta($uid,'_tutor_profile_bio',true)));
 ?>
 
-<h3>My Profile</h3>
+<h3><?php _e('My Profile', 'tutor'); ?></h3>
 <div class="tutor-dashboard-content-inner">
     <div class="tutor-dashboard-profile">
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span><?php esc_html_e('Registration Date', 'tutor'); ?></span>
+                <span><?php _e('Registration Date', 'tutor'); ?></span>
             </div>
             <div class="content">
                 <p><?php echo esc_html($rdate) ?>&nbsp;</p>
@@ -27,54 +25,53 @@
         </div>
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span><?php esc_html_e('First Name', 'tutor'); ?></span>
+                <span><?php _e('First Name', 'tutor'); ?></span>
             </div>
             <div class="content">
-                <p><?php echo $fname ? esc_html($fname) : esc_html('________'); ?>&nbsp;</p>
+                <p><?php echo $fname ? $fname : esc_html('________'); ?>&nbsp;</p>
             </div>
         </div>
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span><?php esc_html_e('Last Name', 'tutor'); ?></span>
+                <span><?php _e('Last Name', 'tutor'); ?></span>
             </div>
             <div class="content">
-                <p><?php echo $lname ? esc_html_e($lname) : esc_html('________'); ?>&nbsp;</p>
+                <p><?php echo $lname ? $lname : __('________'); ?>&nbsp;</p>
             </div>
         </div>
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span><?php esc_html_e('Username', 'tutor'); ?></span>
+                <span><?php _e('Username', 'tutor'); ?></span>
             </div>
             <div class="content">
-                <p><?php echo esc_html($uname); ?>&nbsp;</p>
+                <p><?php echo $uname; ?>&nbsp;</p>
             </div>
         </div>
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span><?php esc_html_e('Email', 'tutor'); ?></span>
+                <span><?php _e('Email', 'tutor'); ?></span>
             </div>
             <div class="content">
-                <p><?php echo esc_html($email); ?>&nbsp;</p>
+                <p><?php echo $email; ?>&nbsp;</p>
             </div>
         </div>
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span>Phone Number</span>
+                <span><?php _e('Phone Number', 'tutor'); ?></span>
             </div>
             <div class="content">
-                <p><?php echo $phone ? esc_html($phone) : esc_html('________'); ?>&nbsp;</p>
+                <p><?php echo $phone ? $phone : "________"; ?>&nbsp;</p>
             </div>
         </div>
 
         <div class="tutor-dashboard-profile-item">
             <div class="heading">
-                <span><?php esc_html_e('Bio', 'tutor'); ?></span>
+                <span><?php _e('Bio', 'tutor'); ?></span>
             </div>
             <div class="content">
                 <p><?php echo $bio ? $bio : '________'; ?>&nbsp;</p>
             </div>
         </div>
-
 
 
     </div>

@@ -41,7 +41,7 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
                             </div>
                             <p class="review-meta">
                                 <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a>
-                                <span class="tutor-text-mute"><?php _e(sprintf('%s ago', human_time_diff(strtotime($question->comment_date))), 'tutor'); ?></span>
+                                <span class="tutor-text-mute"><?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($question->comment_date))); ?></span>
                             </p>
                         </div>
 
@@ -70,7 +70,7 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
                                                 <p class="review-meta">
                                                     <a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a>
                                                     <span class="tutor-text-mute">
-                                                        <?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'tutor'); ?>
+                                                        <?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($answer->comment_date))); ?>
                                                     </span>
                                                 </p>
                                             </div>

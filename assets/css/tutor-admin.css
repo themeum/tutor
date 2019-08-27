@@ -1503,7 +1503,7 @@ Quiz Modal
     margin-top: 7px;
 }
 
-.tutor-quiz-builder-group > h4{
+.tutor-quiz-builder-group h4{
     font-size: 14px;
     color: #393C40;
     font-weight: 600;

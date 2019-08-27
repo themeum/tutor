@@ -91,7 +91,8 @@ $is_multiple_questions_loop = ! (isset($is_question_edit_page)) || ! $is_questio
                     </p>
                     <textarea name="tutor_question[<?php /*echo $question->ID; */?>][question_hints]"><?php /*echo get_post_meta($question->ID, '_question_hints', true); */?></textarea>
                     <p class="desc">
-						<?php /*_e(sprintf('An instruction for the students to select the write answer. This will be shown when students click on %s button', '<strong>hints</strong>'), 'tutor'); */?>
+						<?php /* echo sprintf(__('An instruction for the students to select the write answer. This will be shown when students click on
+ %s button', 'tutor'), '<strong>hints</strong>'); */?>
                     </p>
                 </div>
                 -->

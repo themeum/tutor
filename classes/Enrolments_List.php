@@ -59,7 +59,7 @@ class Enrolments_List extends \Tutor_List_Table {
 
 	function column_course($item){
 		$student = "<strong><a href='".get_permalink($item->course_id)."' target='_blank'>{$item->course_title}</a> </strong> <br />";
-		$student .= sprintf(__('Date : %s', 'tutor'), date(get_option('date_format').' '.get_option('time_format')), strtotime($item->enrol_date));
+		$student .= sprintf(__('Date : %s', 'tutor'), date_i18n(get_option('date_format').' '.get_option('time_format')), strtotime($item->enrol_date));
 
 		return $student;
 	}

@@ -12,12 +12,12 @@
 $reviews = tutor_utils()->get_reviews_by_user();
 
 ?>
-<h3><?php _e(sprintf("My Reviews"), 'tutor'); ?></h3>
+<h3><?php echo sprintf(__("My Reviews", 'tutor')); ?></h3>
 
 <div class="tutor-dashboard-content-inner">
     <!--<div class="tutor-dashboard-inline-links">
         <ul>
-            <li class="active"><a href="<?php /*echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); */?>"> <?php /*_e(sprintf('Given (%s)', count($reviews)), 'tutor');  ; */?></a> </li>
+            <li class="active"><a href="<?php /*echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); */?>"> <?php /* echo sprintf(__('Given (%s)', 'tutor'), count($reviews));  ; */?></a> </li>
             <li><a href="<?php /*echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/received-reviews'); */?>"> <?php /*_e('Received (27)'); */?></a> </li>
         </ul>
         @TODO: CHeck received review
@@ -47,7 +47,7 @@ $reviews = tutor_utils()->get_reviews_by_user();
                                 <?php _e('Course: ', 'tutor'); ?>
                                 <a href="<?php echo get_the_permalink($review->comment_post_ID); ?>"><?php echo get_the_title($review->comment_post_ID); ?></a>
                             </div>
-                            <!--<p class="review-meta"><?php /*_e(sprintf('%s ago', human_time_diff(strtotime($review->comment_date))), 'tutor'); */?></p>-->
+                            <!--<p class="review-meta"><?php /* echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($review->comment_date)));  */?></p>-->
 <!--                            <div class="tutor-dashboard-review-links">-->
 <!--                                <a href="#course-rating-form"><i class="tutor-icon-pencil"></i> <span>--><?php //esc_html_e('Edit Feedback', 'tutor'); ?><!--</span></a>-->
 <!--                                <a href="#"><i class="tutor-icon-garbage"></i> --><?php //esc_html_e('Delete', 'tutor'); ?><!--</a>-->

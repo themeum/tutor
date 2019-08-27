@@ -48,7 +48,7 @@ if (isset($wp_query->query_vars['profile_sub_page']) && $wp_query->query_vars['p
                                     <div class="tutor-dashboard-header-ratings">
                                         <?php tutor_utils()->star_rating_generator($instructor_rating->rating_avg); ?>
                                         <span><?php echo esc_html($instructor_rating->rating_avg);  ?></span>
-                                        <span> (<?php _e(sprintf('%d Ratings', $instructor_rating->rating_count), 'tutor') ?>) </span>
+                                        <span> (<?php echo sprintf(__('%d Ratings', 'tutor'), $instructor_rating->rating_count); ?>) </span>
                                     </div>
                                     <!--<div class="tutor-dashboard-header-notifications">
                                         <?php /*_e('Notification'); */?> <span>9</span>

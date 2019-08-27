@@ -12,7 +12,7 @@
 ?>
 
 <div class="tutor-dashboard-content-inner">
-    <h3><?php _e(sprintf("My Reviews"), 'tutor'); ?></h3>
+    <h3><?php echo sprintf(__("My Reviews"), 'tutor');?></h3>
     <div class="tutor-dashboard-inline-links">
         <ul>
             <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); ?>"> <?php _e('Given (15)'); ?></a> </li>
