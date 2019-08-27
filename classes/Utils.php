@@ -3021,7 +3021,7 @@ class Utils {
 		}
 
 		$value = $this->avalue_dot( $option_key, $get_option_meta );
-		if ( $value > 0 || $value == 0 ) {
+		if ( $value > 0 || $value !== false ) {
 			return $value;
 		}
 		return $default;
@@ -3400,12 +3400,25 @@ class Utils {
 		    return false;
         }
 
-        $limit = '';
+		$questions_order = tutor_utils()->get_quiz_option(get_the_ID(), 'questions_order', 'rand');
+
+		$order_by = "";
+		if ($questions_order === 'rand'){
+			$order_by = "ORDER BY RAND()";
+		}elseif ($questions_order === 'asc'){
+			$order_by = "ORDER BY question_id ASC";
+		}elseif ($questions_order === 'desc'){
+			$order_by = "ORDER BY question_id DESC";
+		}elseif ($questions_order === 'sorting'){
+			$order_by = "ORDER BY question_order ASC";
+		}
+
+		$limit = '';
         if ($total_questions){
 	        $limit = "LIMIT {$total_questions} ";
         }
 
-		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id}  ORDER BY RAND() {$limit} ");
+		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id}  {$order_by} {$limit} ");
 
 		return $questions;
 	}

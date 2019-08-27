@@ -7,7 +7,7 @@ $is_started_quiz = tutor_utils()->is_started_quiz();
 
 $previous_attempts = tutor_utils()->quiz_attempts();
 $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
-
+$questions_order = tutor_utils()->get_quiz_option(get_the_ID(), 'questions_order', 'rand');
 $attempts_allowed = tutor_utils()->get_quiz_option(get_the_ID(), 'attempts_allowed', 0);
 $passing_grade = tutor_utils()->get_quiz_option(get_the_ID(), 'passing_grade', 0);
 

@@ -252,10 +252,10 @@ if ( ! $quiz){
                         <h4><?php _e('Questions Order', 'tutor'); ?></h4>
 
                         <select name="quiz_option[questions_order]">
-                            <option value="rand" <?php selected('rand', tutils()->get_quiz_option($quiz_id, 'questions_order'));
-                            ?>> <?php _e('Random', 'tutor'); ?> </option>
-                            <option value="asc" <?php selected('asc', tutils()->get_quiz_option($quiz_id, 'questions_order') );
-                            ?>> <?php _e('Ascending', 'tutor'); ?> </option>
+                            <option value="rand" <?php selected('rand', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Random', 'tutor'); ?> </option>
+                            <option value="sorting" <?php selected('sorting', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Sorting', 'tutor'); ?> </option>
+
+                            <option value="asc" <?php selected('asc', tutils()->get_quiz_option($quiz_id, 'questions_order') ); ?>> <?php _e('Ascending', 'tutor'); ?> </option>
                             <option value="desc" <?php selected('desc', tutils()->get_quiz_option($quiz_id, 'questions_order') ); ?>> <?php _e('Descending', 'tutor'); ?> </option>
                         </select>
                     </div>
