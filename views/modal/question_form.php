@@ -88,7 +88,7 @@ $settings = maybe_unserialize($question->question_settings);
             </div>
 
             <div class="tutor-quiz-builder-group">
-                <h4><?php _e('Point for this question', 'tutor'); ?></h4>
+                <h4><?php _e('Point(s) for this answer', 'tutor'); ?></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
                         <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_mark]" placeholder="<?php _e('set the mark ex. 10', 'tutor'); ?>" value="<?php
@@ -104,7 +104,7 @@ $settings = maybe_unserialize($question->question_settings);
                             <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][show_question_mark]" <?php checked('1', tutor_utils()->avalue_dot('show_question_mark', $settings)); ?> />
                             <div class="btn-slider btn-round"></div>
                         </label>
-                        <span><?php _e('Show points', 'tutor'); ?></span>
+                        <span><?php _e('Display Points', 'tutor'); ?></span>
                     </div>
                 </div>
             </div>
@@ -123,10 +123,10 @@ $settings = maybe_unserialize($question->question_settings);
 					<?php
 					switch ($question->question_type){
 						case 'true_false':
-							echo __('Answer options &amp; mark correct', 'tutor');
+							echo __('Input options for the question and select the correct answer.', 'tutor');
 							break;
 						case 'ordering':
-							echo __('Student should order below items exact this order, make sure your answer is in right order, you can re-order them', 'tutor');
+							echo __('Make sure you’re saving the answers in the right order. Students will have to match this order.', 'tutor');
 							break;
 					}
 					?>

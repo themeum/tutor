@@ -3084,7 +3084,7 @@ class Utils {
 			'single_choice'     => array('name' => __('Single Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-mark"></i>', 'is_pro' => false),
 			'multiple_choice'   => array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-multiple-choice"></i>', 'is_pro' => false),
 			'open_ended'        => array('name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-open-ended"></i>', 'is_pro' => false),
-			'fill_in_the_blank'  => array('name' => __('Fill In The Blank', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-fill-gaps"></i>', 'is_pro' => false),
+			'fill_in_the_blank'  => array('name' => __('Fill In The Blanks', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-fill-gaps"></i>', 'is_pro' => false),
 			'short_answer'          => array('name' => __('Short Answer', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-short-ans"></i>', 'is_pro' => true),
 			'matching'              => array('name' => __('Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-matching"></i>', 'is_pro' => true),
 			'image_matching'        => array('name' => __('Image Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-matching"></i>', 'is_pro' => true),

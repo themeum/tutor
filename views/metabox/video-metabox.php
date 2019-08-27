@@ -43,7 +43,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
         </select>
 
         <p class="desc">
-			<?php _e('Select the video type and place video value below.', 'tutor'); ?>
+			<?php _e('Select your preferred video type. (.mp4, YouTube, VooPlayer etc.)', 'tutor'); ?>
         </p>
 
         <div class="video-metabox-source-input-wrap" style="display: <?php echo ! $videoSource ? 'none' : 'block'; ?>;">
@@ -128,7 +128,7 @@ if ( $post->post_type !== tutor()->course_post_type){
 	?>
     <div class="tutor-option-field-row">
         <div class="tutor-option-field-label">
-            <label for=""><?php _e('Video Run Time', 'tutor'); ?></label>
+            <label for=""><?php _e('Video playback time', 'tutor'); ?></label>
         </div>
         <div class="tutor-option-field">
             <div class="tutor-option-gorup-fields-wrap">

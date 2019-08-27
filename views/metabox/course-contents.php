@@ -14,7 +14,7 @@
 	$attached_lesson_ids = array();
 
 	if ( ! count($query_topics->posts)){
-		echo '<p class="course-empty-content">'.__('Add a topics to build this course', 'tutor').'</p>';
+		echo '<p class="course-empty-content">'.__('Add a topic to build your course', 'tutor').'</p>';
 	}
 
 	foreach ($query_topics->posts as $topic){

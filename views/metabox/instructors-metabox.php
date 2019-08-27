@@ -37,7 +37,7 @@
 	</div>
 
 	<div class="tutor-add-instructor-button-wrap">
-        <button type="button" class="tutor-btn tutor-add-instructor-btn bordered-btn"> <i class="tutor-icon-add-friend"></i> <?php _e('Add More Instructor', 'tutor'); ?> </button>
+        <button type="button" class="tutor-btn tutor-add-instructor-btn bordered-btn"> <i class="tutor-icon-add-friend"></i> <?php _e('Add More Instructors', 'tutor'); ?> </button>
 	</div>
 
     <?php
@@ -52,7 +52,7 @@
 	<div class="tutor-modal-content">
 		<div class="modal-header">
             <div class="modal-title">
-                <h1><?php _e("Add instructor", "tutor") ?></h1>
+                <h1><?php _e("Add instructors", "tutor") ?></h1>
             </div>
             <div class="lesson-modal-close-wrap">
                 <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i></a>
@@ -61,7 +61,7 @@
         <div class="modal-content-body">
 
             <div class="search-bar">
-                <input type="text" class="tutor-modal-search-input" placeholder="<?php _e('Search instructor...'); ?>">
+                <input type="text" class="tutor-modal-search-input" placeholder="<?php _e('Search instructors...'); ?>">
             </div>
         </div>
 		<div class="modal-container"></div>
