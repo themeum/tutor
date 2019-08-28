@@ -1971,6 +1971,10 @@ button.tm-close.tutor-icon-line-cross:hover{
   margin-right: 10px;
   cursor: ns-resize;
 }
+.rtl #tutor-course-topics .tutor-lesson-top i.tutor-icon-move{
+  margin-right: 0;
+  margin-left: 10px;
+}
 #tutor-course-topics .tutor-lesson-top i.tutor-icon-pencil{
   margin: 0 10px;
 }
@@ -2053,6 +2057,10 @@ p.course-empty-content {
   margin: 0;
   line-height: 45px;
   padding-left: 15px;
+}
+.rtl .tutor-topic-title{
+  padding-left: 0;
+  padding-right: 15px;
 }
 .tutor-topic-title a{
   color: #393C40;
@@ -2228,6 +2236,10 @@ Updating Messsage
   -webkit-animation: spin 2s infinite linear;
   animation: spin 2s infinite linear;
   margin-right: 6px;
+}
+.rtl .tutor-updating-message:before{
+  margin-right: 0;
+  margin-left: 6px;
 }
 
 /**

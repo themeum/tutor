@@ -54,12 +54,12 @@
     display: inline-block;
     margin-right: -1px;
 }
-.tutor-option-nav-tabs li:after {
-    content: "|";
-    position: absolute;
-    top: 0;
-    right: -10px;
-}
+/*.tutor-option-nav-tabs li:after {*/
+    /*content: "|";*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*right: -10px;*/
+/*}*/
 .tutor-option-nav-tabs li:last-child:after {
     content: "";
 }
@@ -145,6 +145,9 @@ Option Field
     margin: 0 0 0 200px;
     max-width: 800px;
 }
+.rtl .tutor-option-field{
+    margin: 0 200px 0 0;
+}
 .tutor_lesson_modal_form .tutor-option-field {
     display: block;
     margin: 0;
@@ -154,6 +157,9 @@ Option Field
     display: block;
     float: left;
     width: 200px;
+}
+.rtl .tutor-option-field-label{
+    float: right;
 }
 .tutor_lesson_modal_form .tutor-option-field-label {
     display: block;
@@ -247,6 +253,10 @@ Group Field Option
     vertical-align: middle;
     margin-right: 5px;
 }
+.rtl #tutor-course-topics .tutor-lesson-top .open-tutor-quiz-modal i{
+    margin-right: 0;
+    margin-left: 5px;
+}
 #tutor-course-topics .tutor-lesson-top{
     display: -webkit-box;
     display: -ms-flexbox;
@@ -261,6 +271,10 @@ Group Field Option
 #tutor-course-topics .tutor-lesson-top i.tutor-icon-move{
     margin-right: 10px;
     cursor: ns-resize;
+}
+.rtl #tutor-course-topics .tutor-lesson-top i.tutor-icon-move{
+    margin-right: 0;
+    margin-left: 10px;
 }
 #tutor-course-topics .tutor-lesson-top i.tutor-icon-pencil{
     margin: 0 10px;
@@ -353,6 +367,10 @@ p.course-empty-content {
     line-height: 40px;
     padding-left: 15px;
 }
+.rtl .tutor-topic-title{
+    padding-left: 0;
+    padding-right: 15px;
+}
 .tutor-topic-title a{
     color: #393C40;
 }
@@ -369,6 +387,10 @@ p.course-empty-content {
 }
 .tutor-topic-title span.expand-collapse-wrap {
     border-left: 1px solid #E7E7E7;
+}
+.rtl .tutor-topic-title span.expand-collapse-wrap{
+    border-left: none;
+    border-right: 1px solid #E7E7E7;
 }
 .tutor-topic-title span.expand-collapse-wrap a{
     display: block;
@@ -410,6 +432,10 @@ p.course-empty-content {
     position: absolute;
     top: -56px;
     right: 40px;
+}
+.rtl .tutor-course-builder-header{
+    right: auto;
+    left: 40px;
 }
 .tutor-topics-wrap:nth-child(2n) {
     background: #F8F8F8;
@@ -700,7 +726,10 @@ Video MetaBox
     text-align: left;
     padding-left: 20px;
 }
-
+.rtl .html5-video-poster .tutor-builder-course-video-poster-text{
+    padding-left: 0;
+    padding-right: 20px;
+}
 .html5-video-poster .tutor-builder-course-video-poster-text h5 {
     font-size: 14px;
     font-weight: 700;
@@ -1478,6 +1507,10 @@ Quiz Modal
     right: 45px;
     top: 20px;
 }
+.rtl .modal-container .modal-classic-btn-wrap{
+    left: 20px;
+    right: auto;
+}
 .modal-container .modal-classic-btn-wrap .tutor-classic-editor-btn{
     color: var(--tutor-primary-color);
 }
@@ -2245,6 +2278,10 @@ Updating Messsage
     -webkit-animation: rotation 2s infinite linear;
     animation: rotation 2s infinite linear;
     margin-right: 6px;
+}
+.rtl .tutor-updating-message:before{
+    margin-right: 0;
+    margin-left: 6px;
 }
 
 /**

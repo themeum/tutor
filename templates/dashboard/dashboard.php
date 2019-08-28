@@ -71,6 +71,7 @@
                 <tr>
                     <td><?php _e('Course Name', 'tutor'); ?></td>
                     <td><?php _e('Enrolled', 'tutor'); ?></td>
+                    <td><?php _e('Status', 'tutor'); ?></td>
                 </tr>
                 </thead>
                 <tbody>
@@ -80,10 +81,11 @@
 					$enrolled = tutor_utils()->count_enrolled_users_by_course($course->ID);?>
                     <tr>
                         <td>
-                            <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank"><?php echo $course->post_title; ?></a> <br />
-                            <small class="label-course-status label-course-<?php echo $course->post_status; ?>"> <?php echo $course->post_status; ?></small>
+                            <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank"><?php echo $course->post_title; ?></a>
+<!--                            <small class="label-course-status label-course---><?php //echo $course->post_status; ?><!--"> </small>-->
                         </td>
                         <td><?php echo $enrolled; ?></td>
+                        <td><?php echo $course->post_status; ?></td>
                     </tr>
 					<?php
 				}
