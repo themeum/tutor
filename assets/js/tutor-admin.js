@@ -1646,4 +1646,15 @@ jQuery(document).ready(function($){
         }
     });
 
+    /**
+     * Confirm Alert for deleting enrollments data
+     *
+     * @since v.1.4.0
+     */
+    $(document).on( 'click', 'table.enrolments .delete a',  function( e ){
+        if (! confirm(tutor_data.delete_confirm_text)) {
+            e.preventDefault();
+        }
+    });
+
 });

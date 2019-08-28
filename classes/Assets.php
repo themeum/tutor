@@ -32,7 +32,9 @@ class Assets{
 		wp_enqueue_script( 'tutor-main', tutor()->url . 'assets/js/tutor.js', array( 'jquery' ), tutor()->version, true );
 		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker'), tutor()->version, true );
 
-		$tutor_localize_data = array();
+		$tutor_localize_data = array(
+			'delete_confirm_text' => __('Are you sure? it can not be undone.', 'tutor'),
+		);
 		if ( ! empty($_GET['taxonomy']) && ( $_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag') ){
 			$tutor_localize_data['open_tutor_admin_menu'] = true;
 		}
