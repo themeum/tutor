@@ -12,7 +12,7 @@ $enrolmentList->prepare_items();
         <div class="tnotice__icon">&iexcl;</div>
         <div class="tnotice__content">
             <p class="tnotice__type"><?php _e('Info', 'tutor'); ?></p>
-            <p class="tnotice__message"><?php _e('You can search enrolments with enrol id, enrolment name, enrolment email, course title'); ?>.</p>
+            <p class="tnotice__message"><?php _e('You can search enrolments with enrollment ID, enrollment name, enrollment email, and course title.'); ?>.</p>
         </div>
         <!--<div class="tnotice__close">
             &times;

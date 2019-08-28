@@ -28,7 +28,7 @@ $user = get_userdata($user_id);
                         <img src="<?php echo esc_url(get_avatar_url($user_id)) ?>" alt="<?php echo esc_attr($user->display_name); ?>">
                     </div>
                     <div class="attempt-info-content">
-                        <h5><?php echo __('Attempt By', 'tutor'); ?></h5>
+                        <h5><?php echo __('Student Name', 'tutor'); ?></h5>
                         <h4><?php echo $user->display_name; ?></h4>
                     </div>
                 </div>
@@ -47,7 +47,7 @@ $user = get_userdata($user_id);
 
             <div class="attempt-info-col">
                 <div class="attempt-info-content">
-                    <h5><?php echo __('Attempt At', 'tutor'); ?></h5>
+                    <h5><?php echo __('Attempt Time', 'tutor'); ?></h5>
                     <h4>
                         <?php echo date_i18n(get_option('date_format'), strtotime($attempt->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->attempt_started_at)); ?>
                     </h4>
