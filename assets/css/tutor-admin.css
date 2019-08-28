@@ -853,16 +853,16 @@ a.tutor-button, button.tutor-button{
 .tutor-button-primary:hover {
     background-color: #2446A6;
 }
-/*.tutor-status-approved-context, .tutor-button.button-success, .tutor-status-completed {*/
-    /*background-color: var(--tutor-success-button-color);*/
-    /*color: #ffffff;*/
-    /*border-radius: 2px;*/
-/*}*/
-/*.tutor-status-blocked-context, .attempt_timeout, .tutor-button.button-danger {*/
-    /*background-color: #ff0000;*/
-    /*color: #ffffff;*/
-    /*border-radius: 2px;*/
-/*}*/
+.tutor-status-approved-context, .tutor-button.button-success, .tutor-status-completed {
+    background-color: var(--tutor-success-button-color);
+    color: #ffffff;
+    border-radius: 2px;
+}
+.tutor-status-blocked-context, .attempt_timeout, .tutor-button.button-danger {
+    background-color: #ff0000;
+    color: #ffffff;
+    border-radius: 2px;
+}
 .tutor-button.button-warning {
     background-color: #ffb36d;
     color: #ffffff;
@@ -2596,7 +2596,7 @@ Tutor Notice
 .quiz-attempt-answers-wrap table .quiz-manual-review-action:not(:last-child) {
     margin-right: 17px;
 }
-.quiz-attempt-answers-wrap table .tutor-status-blocked-context i, .quiz-attempt-answers-wrap table .tutor-status-approved-context i {
+.quiz-attempt-answers-wrap table .quiz-incorrect-answer-text i, .quiz-attempt-answers-wrap table .quiz-correct-answer-text i {
     font-size: 12px;
     height: 20px;
     width: 20px;
@@ -2608,7 +2608,7 @@ Tutor Notice
     border-radius: 2px;
     margin-right: 6px;
 }
-.quiz-attempt-answers-wrap table .tutor-status-blocked-context i {
+.quiz-attempt-answers-wrap table .quiz-incorrect-answer-text i {
     background: #df3247;
     font-size: 10px;
 }
