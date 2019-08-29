@@ -25,5 +25,5 @@ if (get_the_ID())
 		?>
 	</div>
 
-	<button type="button" class="tutor-btn tutorUploadAttachmentBtn"><?php _e('Upload Attachment', 'tutor'); ?></button>
+	<button type="button" class="tutor-btn tutorUploadAttachmentBtn bordered-btn"><?php _e('Upload Attachment', 'tutor'); ?></button>
 </div>

@@ -54,12 +54,12 @@
     display: inline-block;
     margin-right: -1px;
 }
-.tutor-option-nav-tabs li:after {
-    content: "|";
-    position: absolute;
-    top: 0;
-    right: -10px;
-}
+/*.tutor-option-nav-tabs li:after {*/
+    /*content: "|";*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*right: -10px;*/
+/*}*/
 .tutor-option-nav-tabs li:last-child:after {
     content: "";
 }
@@ -145,6 +145,9 @@ Option Field
     margin: 0 0 0 200px;
     max-width: 800px;
 }
+.rtl .tutor-option-field{
+    margin: 0 200px 0 0;
+}
 .tutor_lesson_modal_form .tutor-option-field {
     display: block;
     margin: 0;
@@ -155,11 +158,14 @@ Option Field
     float: left;
     width: 200px;
 }
+.rtl .tutor-option-field-label{
+    float: right;
+}
 .tutor_lesson_modal_form .tutor-option-field-label {
     display: block;
     float: none;
     width: 100%;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
 .tutor-lesson-attachments-metabox{
@@ -247,6 +253,10 @@ Group Field Option
     vertical-align: middle;
     margin-right: 5px;
 }
+.rtl #tutor-course-topics .tutor-lesson-top .open-tutor-quiz-modal i{
+    margin-right: 0;
+    margin-left: 5px;
+}
 #tutor-course-topics .tutor-lesson-top{
     display: -webkit-box;
     display: -ms-flexbox;
@@ -261,6 +271,10 @@ Group Field Option
 #tutor-course-topics .tutor-lesson-top i.tutor-icon-move{
     margin-right: 10px;
     cursor: ns-resize;
+}
+.rtl #tutor-course-topics .tutor-lesson-top i.tutor-icon-move{
+    margin-right: 0;
+    margin-left: 10px;
 }
 #tutor-course-topics .tutor-lesson-top i.tutor-icon-pencil{
     margin: 0 10px;
@@ -353,6 +367,10 @@ p.course-empty-content {
     line-height: 40px;
     padding-left: 15px;
 }
+.rtl .tutor-topic-title{
+    padding-left: 0;
+    padding-right: 15px;
+}
 .tutor-topic-title a{
     color: #393C40;
 }
@@ -369,6 +387,10 @@ p.course-empty-content {
 }
 .tutor-topic-title span.expand-collapse-wrap {
     border-left: 1px solid #E7E7E7;
+}
+.rtl .tutor-topic-title span.expand-collapse-wrap{
+    border-left: none;
+    border-right: 1px solid #E7E7E7;
 }
 .tutor-topic-title span.expand-collapse-wrap a{
     display: block;
@@ -410,6 +432,10 @@ p.course-empty-content {
     position: absolute;
     top: -56px;
     right: 40px;
+}
+.rtl .tutor-course-builder-header{
+    right: auto;
+    left: 40px;
 }
 .tutor-topics-wrap:nth-child(2n) {
     background: #F8F8F8;
@@ -484,7 +510,7 @@ a.tutor-btn,
     display: inline-block;
     padding: 12px 18px;
     border-radius: 4px;
-    text-transform: uppercase;
+    text-transform: capitalize;
     line-height: 20px;
     font-size: 14px;
     font-weight: 500;
@@ -700,7 +726,10 @@ Video MetaBox
     text-align: left;
     padding-left: 20px;
 }
-
+.rtl .html5-video-poster .tutor-builder-course-video-poster-text{
+    padding-left: 0;
+    padding-right: 20px;
+}
 .html5-video-poster .tutor-builder-course-video-poster-text h5 {
     font-size: 14px;
     font-weight: 700;
@@ -1478,6 +1507,13 @@ Quiz Modal
     right: 45px;
     top: 20px;
 }
+.rtl .modal-container .modal-classic-btn-wrap{
+    left: 20px;
+    right: auto;
+}
+.modal-container .modal-classic-btn-wrap .tutor-classic-editor-btn{
+    color: var(--tutor-primary-color);
+}
 
 /** Tutor Quiz Modal Form */
 
@@ -2243,6 +2279,10 @@ Updating Messsage
     animation: rotation 2s infinite linear;
     margin-right: 6px;
 }
+.rtl .tutor-updating-message:before{
+    margin-right: 0;
+    margin-left: 6px;
+}
 
 /**
 Lesson Edit Modal
@@ -2254,27 +2294,60 @@ Lesson Edit Modal
 .lesson-modal-field.tutor-lesson-modal-title-wrap{
     width: 95%;
 }
-.lesson-modal-field-row input[type=text]{
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    box-shadow: none;
-    color: #333;
-    display: inline-block;
-    vertical-align: middle;
-    padding: 7px 12px;
-    margin: 0 10px 0 0;
-    min-width: 400px;
-    min-height: 35px
-}
 .tutor-lesson-modal-title-wrap input{
     width: 100%;
 }
+.lesson-modal-form-wrap .assignment-modal-field-row,
+.lesson-modal-form-wrap .tutor-lesson-attachments-metabox,
 .lesson-modal-form-wrap .tutor-option-field-row{
-    padding: 10px 0;
+    padding: 0;
+    margin-bottom: 20px;
+    border-bottom: none;
 }
 .lesson-modal-form-wrap .tutor-option-field-row:last-child {
     border-bottom: none;
+}
+
+.lesson-modal-form-wrap .tutor-option-field-row textarea,
+.lesson-modal-form-wrap .tutor-option-field-row input[type="text"],
+.lesson-modal-form-wrap .tutor-option-field-row input[type="email"],
+.lesson-modal-form-wrap .tutor-option-field-row input[type="number"],
+.lesson-modal-form-wrap .tutor-option-field-row input[type="password"]{
+    line-height: 40px;
+    padding: 5px 0;
+    text-indent: 15px;
+    background: #fff;
+    display: inline-block;
+    border: 1px solid #DEDEDE;
+    border-radius: 3px;
+    box-shadow: none;
+    height: 40px;
+    margin: 0;
+    width: 100%;
+    color: #393C40;
+    font-size: 14px;
+    transition: 300ms;
+}
+.lesson-modal-form-wrap .tutor-option-field-row textarea{
+    line-height: 26px;
+    min-height: 150px;
+    text-indent: 0;
+    padding: 15px;
+}
+.lesson-modal-form-wrap .tutor-option-field-row textarea:focus,
+.lesson-modal-form-wrap .tutor-option-field-row input[type="text"]:focus,
+.lesson-modal-form-wrap .tutor-option-field-row input[type="email"]:focus,
+.lesson-modal-form-wrap .tutor-option-field-row input[type="number"]:focus,
+.lesson-modal-form-wrap .tutor-option-field-row input[type="password"]:focus{
+    border-color: var(--tutor-primary-color);
+}
+
+.lesson-modal-form-wrap .tutor-option-field-row select{
+    height: 40px;
+}
+
+.lesson-modal-form-wrap .tutor-lesson-attachments-metabox{
+    margin-top: 0;
 }
 
 .assignment-modal-form-wrap,

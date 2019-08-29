@@ -52,7 +52,7 @@
 							?>
                         </p>
                         <input type="hidden" class="_lesson_thumbnail_id" name="_lesson_thumbnail_id" value="">
-                        <button type="button" class="lesson_thumbnail_upload_btn tutor-btn"><?php echo $thumbnail_upload_text; ?></button>
+                        <button type="button" class="lesson_thumbnail_upload_btn tutor-btn bordered-btn"><?php echo $thumbnail_upload_text; ?></button>
                     </div>
                 </div>
             </div>
