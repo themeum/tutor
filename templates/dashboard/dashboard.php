@@ -84,7 +84,9 @@
                             <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank"><?php echo $course->post_title; ?></a>
                         </td>
                         <td><?php echo $enrolled; ?></td>
-                        <td><?php echo $course->post_status; ?></td>
+                        <td>
+                            <small class="label-course-status label-course-<?php echo $course->post_status; ?>"> <?php echo $course->post_status; ?></small>
+                        </td>
                     </tr>
 					<?php
 				}
