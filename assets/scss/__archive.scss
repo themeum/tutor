@@ -1445,20 +1445,26 @@ Instructor
 /* Tutor Pagination Wrap */
 /* ********************* */
 
+.tutor-pagination,
 .tutor-pagination-wrap{
   text-align: center;
   margin: 20px 0;
 }
 
-
-.tutor-pagination-wrap a,
-.tutor-pagination-wrap span{
-  padding: 5px;
+.tutor-pagination,
+.tutor-pagination-wrap{
+  a, span{
+      padding: 3px;
+      display: inline-block;
+  }
 }
 
 
-.tutor-pagination-wrap a:hover{
-  color: var(--tutor-primary-color);
+.tutor-pagination-wrap,
+.tutor-pagination{
+  a:hover{
+    color: var(--tutor-primary-color);
+  }
 }
 
 /* ********************* */

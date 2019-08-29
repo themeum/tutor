@@ -3909,17 +3909,21 @@ Instructor
 /* ********************* */
 /* Tutor Pagination Wrap */
 /* ********************* */
+.tutor-pagination,
 .tutor-pagination-wrap {
   text-align: center;
   margin: 20px 0;
 }
 
+.tutor-pagination a, .tutor-pagination span,
 .tutor-pagination-wrap a,
 .tutor-pagination-wrap span {
-  padding: 5px;
+  padding: 3px;
+  display: inline-block;
 }
 
-.tutor-pagination-wrap a:hover {
+.tutor-pagination-wrap a:hover,
+.tutor-pagination a:hover {
   color: var(--tutor-primary-color);
 }
 
@@ -6514,6 +6518,8 @@ Video MetaBox
   background-color: #CCCCCC;
   padding: 3px 5px;
   color: #ffffff;
+  font-size: 12px;
+  text-transform: capitalize;
 }
 
 .label-course-publish {
