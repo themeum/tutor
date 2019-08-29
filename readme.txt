@@ -241,16 +241,27 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.4.0 - 26 August, 2019 =
+= 1.4.0 - 29 August, 2019 =
 
 * Added: Page builder support on the lesson.
-* Added: Enrollments list on in admin area, admin can now cancel, approve enrolment or delete.
-* Added: Manually enrollment student to a course
+* Added: Enrollments list on in admin area, admin can now cancel, approve enrolment or delete. (Pro)
+* Added: Manually enrollment student to a course  (Pro)
 * Added: students quiz attempts on the frontend
+* Added: Sticky lesson sidebar on the spotlight mode
+* Added: Course permalink on the dashboard Most Popular Courses
+* Added: Quiz Questions Order settings, Student answer to quiz questions as per order. 4 types of order, (random, sorting, asc, desc)
+* Added: Redirect to the current course page after register.
+* Added: Review update from dashboard > review > Given
+* Added: Received reviews on all courses in dashboard
 * Fixed: save and continue to click on question edit modal, open question lists immediately under a quiz.
-* Fixed: text formatting issue in the quiz, some of the single or double quote comes with a slash. used stripslashes();
+* Fixed: text formatting issue in the quiz, some of the single or double quote comes with a slash. used `stripslashes();`
 * Fixed: some default value issue on the quiz.
 * Fixed: quiz page spotlight mode.
+* Fixed: Multiples text translation issues
+* Fixed: Chart-js Initiate in the pro version
+* Fixed: Report Datepicker css/js in the frontend dashboard
+* Fixed: Rating delete issues, it was actually report.js loading issues
+* Updated: Turned off reload the page while tutor settings save.
 
 = 1.3.9 - 19 August, 2019 =
 
@@ -537,4 +548,6 @@ Added: action hook `do_action('tutor_load_template_before', $template, $variable
 
 == Upgrade Notice ==
 
-Nothing here
+= 1.4.0 =
+
+It’s recommended to have a backup of your website before hitting the update button.
