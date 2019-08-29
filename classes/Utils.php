@@ -2595,7 +2595,6 @@ class Utils {
 		$cours_ids = (array) $this->get_assigned_courses_ids_by_instructors($instructor_id);
 
 		if ($this->count($cours_ids)){
-
 			$implode_ids = implode( ',', $cours_ids );
 
 			//Count
@@ -2626,7 +2625,6 @@ class Utils {
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 			WHERE {$wpdb->comments}.comment_post_ID IN({$implode_ids}) 
 			AND comment_type = 'tutor_course_rating' AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;" );
-
 		}
 
 		return (object) $results;
