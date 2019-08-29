@@ -1427,12 +1427,11 @@ class Utils {
 			$post_id = $this->get_post_id($post_id);
 
 			$video = $this->get_video( $post_id );
-			if ( $video ) {
+			if ( $video && $this->array_get('source', $video) !== '-1' ) {
 				return $video;
 			}
 		}
 		return false;
-
 	}
 
 	/**
