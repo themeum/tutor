@@ -486,10 +486,11 @@ final class Tutor{
 
 	public static function default_options(){
 		$options = array (
+			'pagination_per_page'               => '20',
 			'load_tutor_css'                    => '1',
 			'load_tutor_js'                     => '1',
 			'course_allow_upload_private_files' => '1',
-			'display_course_instructors'           => '1',
+			'display_course_instructors'        => '1',
 			'enable_q_and_a_on_course'          => '1',
 			'courses_col_per_row'               => '3',
 			'courses_per_page'                  => '3',

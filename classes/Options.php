@@ -143,6 +143,12 @@ class Options {
 								'default' => '0',
 								'desc'      => __('',	'tutor'),
 							),
+							'pagination_per_page' => array(
+								'type'      => 'number',
+								'label'      => __('Pagination', 'tutor'),
+								'default'   => '20',
+								'desc'  => __('Number of items you would like displayed "per page" in the pagination', 'tutor'),
+							),
 						)
 					)
 				),

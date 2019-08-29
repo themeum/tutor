@@ -9,10 +9,8 @@
  * @package Tutor
  */
 
-
-
 //Pagination Variable
-$per_page = 1;
+$per_page = tutils()->get_option('pagination_per_page', 20);
 $current_page = max( 1, tutor_utils()->avalue_dot('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
 
@@ -20,15 +18,18 @@ $reviews = tutor_utils()->get_reviews_by_instructor(get_current_user_id(), $offs
 ?>
 
 <div class="tutor-dashboard-content-inner">
-    <div class="tutor-dashboard-inline-links">
-        <ul>
-            <li> <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); ?>"> <?php _e('Given', 'tutor'); ?></a> </li>
-            <li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/received-reviews'); ?>"> <?php _e('Received', 'tutor');
-            ?></a> </li>
-        </ul>
-    </div>
-    <div class="tutor-dashboard-reviews-wrap">
+	<?php
+	if (current_user_can(tutor()->instructor_role)){
+		?>
+        <div class="tutor-dashboard-inline-links">
+            <ul>
+                <li> <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); ?>"> <?php _e('Given', 'tutor'); ?></a> </li>
+                <li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/received-reviews'); ?>"> <?php _e('Received', 'tutor'); ?></a> </li>
+            </ul>
+        </div>
+	<?php } ?>
 
+    <div class="tutor-dashboard-reviews-wrap">
 		<?php
 		if ( ! is_array($reviews->results) || ! count($reviews->results)){ ?>
             <div class="tutor-dashboard-content-inner">
@@ -69,8 +70,6 @@ $reviews = tutor_utils()->get_reviews_by_instructor(get_current_user_id(), $offs
 
     </div>
 </div>
-
-
 
 <?php
 if ($reviews->count){
