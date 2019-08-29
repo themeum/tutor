@@ -6439,6 +6439,10 @@ Video MetaBox
   top: 8px;
 }
 
+.tutor-modal-wrap form {
+  margin-bottom: 20px;
+}
+
 /*dashboard content*/
 .tutor-dashboard-info-cards {
   margin: 0 -15px 15px;
