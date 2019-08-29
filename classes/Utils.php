@@ -1236,17 +1236,18 @@ class Utils {
 		$types = apply_filters('tutor_video_types', array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg"));
 
 		$videoSource = $this->avalue_dot('source', $video);
+
 		if ($videoSource === 'html5'){
 			$sourceVideoID = $this->avalue_dot('source_video_id', $video);
 			$video_info = get_post_meta($sourceVideoID, '_wp_attachment_metadata', true);
 
-			if ($video_info){
-				$path               = get_attached_file($sourceVideoID);
-				$info['playtime']   = $video_info['length_formatted'];
-				$info['path']       = $path;
-				$info['url']        = wp_get_attachment_url($sourceVideoID);
-				$info['ext']        = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-				$info['type']       = $types[$info['ext']];
+			if ( $video_info && in_array($this->array_get('mime_type', $video_info), $types) ) {
+				$path             = get_attached_file( $sourceVideoID );
+				$info['playtime'] = $video_info['length_formatted'];
+				$info['path']     = $path;
+				$info['url']      = wp_get_attachment_url( $sourceVideoID );
+				$info['ext']      = strtolower( pathinfo( $path, PATHINFO_EXTENSION ) );
+				$info['type']     = $types[ $info['ext'] ];
 			}
 		}
 

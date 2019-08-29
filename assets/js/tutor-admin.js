@@ -403,7 +403,7 @@ jQuery(document).ready(function($){
             // Get media attachment details from the frame state
             var attachment = frame.state().get('selection').first().toJSON();
             $that.closest('.video_source_wrap_html5').find('span.video_media_id').text(attachment.id).closest('p').show();
-            $that.closest('.video_source_wrap_html5').find('input').val(attachment.id);
+            $that.closest('.video_source_wrap_html5').find('input.input_source_video_id').val(attachment.id);
         });
         // Finally, open the modal on click
         frame.open();

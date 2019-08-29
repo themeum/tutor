@@ -57,7 +57,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
 
                     <div class="video_source_upload_wrap_html5">
                         <a href="javascript:;" class="video_upload_btn tutor-button bordered-button"><?php _e('Upload Video', 'tutor'); ?></a>
-                        <input type="hidden" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
+                        <input type="hidden" class="input_source_video_id" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
                         <p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e('Media ID', 'tutor'); ?>: <span class="video_media_id"><?php echo $sourceVideoID; ?></span></p>
                     </div>
 
