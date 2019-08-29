@@ -25,7 +25,7 @@
         <div class="tutor-option-field">
             <input type="text" name="topic_title" value="">
             <p class="desc">
-				<?php _e('Topic titles will be publicly show where required, you can call it as a section also in course', 'tutor'); ?>
+				<?php _e('Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.', 'tutor'); ?>
             </p>
         </div>
     </div>

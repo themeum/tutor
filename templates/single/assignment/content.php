@@ -53,11 +53,11 @@ global $wpdb;
                     <strong><?php /*echo "7 Days, 12 Hour"; */?></strong>
                 </li>-->
                 <li>
-                    <?php _e('Total Marks : ') ?>
+                    <?php _e('Total Points : ') ?>
                     <strong><?php echo $total_mark; ?></strong>
                 </li>
                 <li>
-                    <?php _e('Passing Marks : ') ?>
+                    <?php _e('Minimum Pass Points : ') ?>
                     <strong><?php echo $pass_mark; ?></strong>
                 </li>
             </ul>
@@ -168,7 +168,7 @@ global $wpdb;
 					?>
 
                     <div class="assignment-result-wrap">
-                        <h4><?php echo sprintf(__('You received %s marks out of %s', 'tutor'), "<span class='received-marks'>{$given_mark}</span>", "<span class='out-of-marks'>{$max_mark}</span>") ?></h4>
+                        <h4><?php echo sprintf(__('You received %s points out of %s', 'tutor'), "<span class='received-marks'>{$given_mark}</span>", "<span class='out-of-marks'>{$max_mark}</span>") ?></h4>
                         <h4 class="submitted-assignment-grade">
 							<?php _e('Your Grade is '); ?>
 

@@ -936,7 +936,7 @@ class Quiz {
 				echo '<label>'.__('Answer options &amp; mark correct', 'tutor').'</label>';
 				break;
 			case 'ordering':
-				echo '<label>'.__('Student should order below items exact this order, make sure your answer is in right order, you can re-order them', 'tutor').'</label>';
+				echo '<label>'.__('Make sure you’re saving the answers in the right order. Students will have to match this order exactly.', 'tutor').'</label>';
 				break;
 		}
 

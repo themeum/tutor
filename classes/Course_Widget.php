@@ -20,7 +20,7 @@ class Course_Widget extends \WP_Widget {
 		parent::__construct(
 			'tutor_course_widget', // Base ID
 			esc_html__( 'Tutor Course', 'tutor' ), // Name
-			array( 'description' => esc_html__( 'Get the courses and show it anywhere widget support available', 'tutor' ), ) // Args
+			array( 'description' => esc_html__( 'Display courses wherever widget support is available.', 'tutor' ), ) // Args
 		);
 	}
 
