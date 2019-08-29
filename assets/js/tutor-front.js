@@ -2028,4 +2028,80 @@ jQuery(document).ready(function($){
         $(this).next('div').slideToggle();
     });
 
+    /**
+     * Open Tutor Modal to edit review
+     * @since v.1.4.0
+     */
+    $(document).on('click', '.open-tutor-edit-review-modal', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var review_id = $that.attr('data-review-id');
+
+        var nonce_key = _tutorobject.nonce_key;
+
+        var json_data = {review_id : review_id, action: 'tutor_load_edit_review_modal'};
+        json_data[nonce_key] = _tutorobject[nonce_key];
+
+        $.ajax({
+            url : _tutorobject.ajaxurl,
+            type : 'POST',
+            data : json_data,
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                if (typeof data.data !== 'undefined') {
+                    $('.tutor-edit-review-modal-wrap .modal-container').html(data.data.output);
+                    $('.tutor-edit-review-modal-wrap').attr('data-review-id', review_id).addClass('show');
+                }
+            },
+            complete: function () {
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+    /**
+     * Update the rating
+     * @since v.1.4.0
+     */
+    $(document).on('submit', '#tutor_update_review_form', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var review_id = $that.closest('.tutor-edit-review-modal-wrap ').attr('data-review-id');
+
+        var nonce_key = _tutorobject.nonce_key;
+        
+        var rating = $that.find('input[name="tutor_rating_gen_input"]').val();
+        var review = $that.find('textarea[name="review"]').val();
+        review = review.trim();
+
+        var json_data = {review_id : review_id, rating : rating, review : review, action: 'tutor_update_review_modal'};
+        json_data[nonce_key] = _tutorobject[nonce_key];
+
+        $.ajax({
+            url : _tutorobject.ajaxurl,
+            type : 'POST',
+            data : json_data,
+            beforeSend: function () {
+                $that.find('button[type="submit"]').addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                if (data.success){
+                    //Close the modal
+                    $('.tutor-edit-review-modal-wrap').removeClass('show');
+                    location.reload(true);
+                }
+            },
+            complete: function () {
+                $that.find('button[type="submit"]').removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+
+
+
 });

@@ -12,20 +12,19 @@
 $reviews = tutor_utils()->get_reviews_by_user();
 
 ?>
-<h3><?php echo sprintf(__("My Reviews", 'tutor')); ?></h3>
 
 <div class="tutor-dashboard-content-inner">
-    <!--<div class="tutor-dashboard-inline-links">
+    <div class="tutor-dashboard-inline-links">
         <ul>
-            <li class="active"><a href="<?php /*echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); */?>"> <?php /* echo sprintf(__('Given (%s)', 'tutor'), count($reviews));  ; */?></a> </li>
-            <li><a href="<?php /*echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/received-reviews'); */?>"> <?php /*_e('Received (27)'); */?></a> </li>
+            <ul>
+                <li class="active"> <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); ?>"> <?php _e('Given', 'tutor'); ?></a> </li>
+                <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/received-reviews'); ?>"> <?php _e('Received'); ?></a> </li>
+            </ul>
         </ul>
-        @TODO: CHeck received review
-    </div>-->
+    </div>
     <div class="tutor-dashboard-reviews-wrap">
 
         <?php
-
             if ( ! is_array($reviews) || ! count($reviews)){ ?>
                 <div class="tutor-dashboard-content-inner">
                     <p><?php _e("Sorry, but you are looking for something that isn't here." , 'tutor'); ?></p>
@@ -47,15 +46,20 @@ $reviews = tutor_utils()->get_reviews_by_user();
                                 <?php _e('Course: ', 'tutor'); ?>
                                 <a href="<?php echo get_the_permalink($review->comment_post_ID); ?>"><?php echo get_the_title($review->comment_post_ID); ?></a>
                             </div>
-                            <!--<p class="review-meta"><?php /* echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($review->comment_date)));  */?></p>-->
-<!--                            <div class="tutor-dashboard-review-links">-->
-<!--                                <a href="#course-rating-form"><i class="tutor-icon-pencil"></i> <span>--><?php //esc_html_e('Edit Feedback', 'tutor'); ?><!--</span></a>-->
-<!--                                <a href="#"><i class="tutor-icon-garbage"></i> --><?php //esc_html_e('Delete', 'tutor'); ?><!--</a>-->
-<!--                            </div>-->
+
+                            <div class="tutor-dashboard-review-links">
+                                <a href="javascript:;" class="open-tutor-edit-review-modal" data-review-id="<?php echo $review->comment_ID; ?>">
+                                    <i class="tutor-icon-pencil"></i> <span><?php _e('Edit Feedback', 'tutor'); ?></span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="individual-dashboard-review-body">
-                        <?php tutor_utils()->star_rating_generator($review->rating); ?>
+                        <div class="individual-star-rating-wrap">
+	                        <?php tutor_utils()->star_rating_generator($review->rating); ?>
+                            <p class="review-meta"><?php  echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($review->comment_date)));  ?></p>
+                        </div>
+
                         <?php echo wpautop(stripslashes($review->comment_content)); ?>
                     </div>
 
@@ -67,4 +71,16 @@ $reviews = tutor_utils()->get_reviews_by_user();
     </div>
 </div>
 
-
+<div class="tutor-modal-wrap tutor-edit-review-modal-wrap">
+    <div class="tutor-modal-content">
+        <div class="modal-header">
+            <div class="modal-title">
+                <h1><?php _e('Edit Review', 'tutor'); ?></h1>
+            </div>
+            <div class="modal-close-wrap">
+                <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i> </a>
+            </div>
+        </div>
+        <div class="modal-container"></div>
+    </div>
+</div>

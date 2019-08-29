@@ -2572,6 +2572,67 @@ class Utils {
 	}
 
 	/**
+	 * @param int $user_id
+	 * @param int $offset
+	 * @param int $limit
+	 *
+	 * @return array|null|object
+	 *
+	 * Get reviews by instructor
+	 *
+	 * @since v.1.4.0
+	 */
+
+	public function get_reviews_by_instructor($instructor_id = 0, $offset = 0, $limit = 150){
+		$instructor_id = $this->get_user_id($instructor_id);
+		global $wpdb;
+
+		$results = array(
+			'count'     => 0,
+			'results'   => false,
+		);
+
+		$cours_ids = (array) $this->get_assigned_courses_ids_by_instructors($instructor_id);
+
+		if ($this->count($cours_ids)){
+
+			$implode_ids = implode( ',', $cours_ids );
+
+			//Count
+			$results['count'] = $wpdb->get_var("select COUNT({$wpdb->comments}.comment_ID)
+			from {$wpdb->comments}
+			INNER JOIN {$wpdb->commentmeta} 
+			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+			INNER  JOIN {$wpdb->users}
+			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+			WHERE {$wpdb->comments}.comment_post_ID IN({$implode_ids}) 
+			AND comment_type = 'tutor_course_rating' AND meta_key = 'tutor_rating';" );
+
+			//Results
+			$results['results'] = $wpdb->get_results("select {$wpdb->comments}.comment_ID, 
+			{$wpdb->comments}.comment_post_ID, 
+			{$wpdb->comments}.comment_author, 
+			{$wpdb->comments}.comment_author_email, 
+			{$wpdb->comments}.comment_date, 
+			{$wpdb->comments}.comment_content, 
+			{$wpdb->comments}.user_id, 
+			{$wpdb->commentmeta}.meta_value as rating,
+			{$wpdb->users}.display_name 
+			
+			from {$wpdb->comments}
+			INNER JOIN {$wpdb->commentmeta} 
+			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+			INNER  JOIN {$wpdb->users}
+			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+			WHERE {$wpdb->comments}.comment_post_ID IN({$implode_ids}) 
+			AND comment_type = 'tutor_course_rating' AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;" );
+
+		}
+
+		return (object) $results;
+	}
+
+	/**
 	 * @param $instructor_id
 	 *
 	 * @return object
@@ -4825,6 +4886,42 @@ class Utils {
 
 			return $current_url;
 		}
+	}
+
+
+	/**
+	 * @param int $rating_id
+	 *
+	 * @return object
+	 *
+	 * Get rating by rating id|comment_ID
+	 *
+	 * @since v.1.4.0
+	 */
+
+	public function get_rating_by_id($rating_id = 0){
+		$ratings = array(
+			'rating'  => 0,
+			'review'    => '',
+		);
+
+		global $wpdb;
+
+		$rating = $wpdb->get_row("select meta_value as rating, comment_content as review from {$wpdb->comments}
+				INNER JOIN {$wpdb->commentmeta} 
+				ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+				WHERE {$wpdb->comments}.comment_ID = {$rating_id} ;"
+		);
+
+		if ($rating){
+			$rating_format = number_format($rating->rating, 2);
+
+			$ratings = array(
+				'rating'    => $rating_format,
+				'review'    => $rating->review,
+			);
+		}
+		return (object) $ratings;
 	}
 
 }

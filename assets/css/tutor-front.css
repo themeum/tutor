@@ -6345,7 +6345,7 @@ Video MetaBox
 }
 
 .tutor-dashboard-review-heading {
-  padding: 18px 24px;
+  padding: 10px 20px;
   border-bottom: 1px solid #DCDFE5;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -6356,7 +6356,7 @@ Video MetaBox
 }
 
 .individual-dashboard-review-body {
-  padding: 18px 24px;
+  padding: 10px 20px;
 }
 
 .tutor-dashboard-review-title {
@@ -6382,23 +6382,42 @@ Video MetaBox
 
 .tutor-dashboard-review-links a {
   color: #8C94A8;
-  margin-left: 30px;
+  margin-left: 10px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  font-size: 14px;
 }
 
 .tutor-dashboard-review-links a i {
   line-height: inherit;
-  font-size: 24px;
-  margin-right: 10px;
+  font-size: 14px;
+  margin-right: 5px;
 }
 
-.tutor-dashboard-review-links a:last-child i {
-  color: #F0576A;
+.individual-dashboard-review-body .review-meta {
+  font-size: 85%;
+  margin: 0;
+  color: #8C94A8;
+}
+
+.individual-star-rating-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tutor-edit-review-modal-wrap .modal-close-wrap a.modal-close-btn {
+  color: #222222;
+  background: none;
+  font-size: 20px;
+  top: 8px;
 }
 
 /*dashboard content*/
