@@ -43,7 +43,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
         </select>
 
         <p class="desc">
-			<?php _e('Select the video type and place video value below.', 'tutor'); ?>
+			<?php _e('Select your preferred video type. (.mp4, YouTube, VooPlayer etc.)', 'tutor'); ?>
         </p>
 
         <div class="video-metabox-source-input-wrap" style="display: <?php echo ! $videoSource ? 'none' : 'block'; ?>;">
@@ -57,7 +57,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
 
                     <div class="video_source_upload_wrap_html5">
                         <a href="javascript:;" class="video_upload_btn tutor-button bordered-button"><?php _e('Upload Video', 'tutor'); ?></a>
-                        <input type="hidden" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
+                        <input type="hidden" class="input_source_video_id" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
                         <p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e('Media ID', 'tutor'); ?>: <span class="video_media_id"><?php echo $sourceVideoID; ?></span></p>
                     </div>
 
@@ -128,7 +128,7 @@ if ( $post->post_type !== tutor()->course_post_type){
 	?>
     <div class="tutor-option-field-row">
         <div class="tutor-option-field-label">
-            <label for=""><?php _e('Video Run Time', 'tutor'); ?></label>
+            <label for=""><?php _e('Video playback time', 'tutor'); ?></label>
         </div>
         <div class="tutor-option-field">
             <div class="tutor-option-gorup-fields-wrap">

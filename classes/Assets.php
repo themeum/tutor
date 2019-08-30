@@ -78,6 +78,10 @@ class Assets{
 			'options'       => $options,
 			'placeholder_img_src' => tutor_placeholder_img_src(),
 			'enable_lesson_classic_editor' => get_tutor_option('enable_lesson_classic_editor'),
+
+			'text' => array(
+				'assignment_text_validation_msg' => __('Assignment answer can not be empty', 'tutor'),
+			),
 		);
 
 		if ( ! empty($post->post_type) && $post->post_type === 'tutor_quiz'){

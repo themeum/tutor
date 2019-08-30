@@ -1236,17 +1236,18 @@ class Utils {
 		$types = apply_filters('tutor_video_types', array("mp4"=>"video/mp4", "webm"=>"video/webm", "ogg"=>"video/ogg"));
 
 		$videoSource = $this->avalue_dot('source', $video);
+
 		if ($videoSource === 'html5'){
 			$sourceVideoID = $this->avalue_dot('source_video_id', $video);
 			$video_info = get_post_meta($sourceVideoID, '_wp_attachment_metadata', true);
 
-			if ($video_info){
-				$path               = get_attached_file($sourceVideoID);
-				$info['playtime']   = $video_info['length_formatted'];
-				$info['path']       = $path;
-				$info['url']        = wp_get_attachment_url($sourceVideoID);
-				$info['ext']        = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-				$info['type']       = $types[$info['ext']];
+			if ( $video_info && in_array($this->array_get('mime_type', $video_info), $types) ) {
+				$path             = get_attached_file( $sourceVideoID );
+				$info['playtime'] = $video_info['length_formatted'];
+				$info['path']     = $path;
+				$info['url']      = wp_get_attachment_url( $sourceVideoID );
+				$info['ext']      = strtolower( pathinfo( $path, PATHINFO_EXTENSION ) );
+				$info['type']     = $types[ $info['ext'] ];
 			}
 		}
 
@@ -1426,12 +1427,11 @@ class Utils {
 			$post_id = $this->get_post_id($post_id);
 
 			$video = $this->get_video( $post_id );
-			if ( $video ) {
+			if ( $video && $this->array_get('source', $video) !== '-1' ) {
 				return $video;
 			}
 		}
 		return false;
-
 	}
 
 	/**
@@ -3143,7 +3143,7 @@ class Utils {
 			'single_choice'     => array('name' => __('Single Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-mark"></i>', 'is_pro' => false),
 			'multiple_choice'   => array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-multiple-choice"></i>', 'is_pro' => false),
 			'open_ended'        => array('name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-open-ended"></i>', 'is_pro' => false),
-			'fill_in_the_blank'  => array('name' => __('Fill In The Blank', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-fill-gaps"></i>', 'is_pro' => false),
+			'fill_in_the_blank'  => array('name' => __('Fill In The Blanks', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-fill-gaps"></i>', 'is_pro' => false),
 			'short_answer'          => array('name' => __('Short Answer', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-short-ans"></i>', 'is_pro' => true),
 			'matching'              => array('name' => __('Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-matching"></i>', 'is_pro' => true),
 			'image_matching'        => array('name' => __('Image Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-matching"></i>', 'is_pro' => true),

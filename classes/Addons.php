@@ -22,49 +22,45 @@ class Addons {
 
 	public function tutor_addons_lists_to_show(){
 		$addons = array(
-			'enrollments'       => array(
-				'name'          => __('Enrollments', 'tutor'),
-				'description'   => 'Take advanced control on enrollments. Enroll the student manually.',
-			),
 			'wc-subscriptions' => array(
-				'name'          => __('WooCommerce Subscriptions', 'tutor'),
+				'name'          => __('WooCommerce Subscriptions', 'tutor-pmpro'),
 				'description'   => 'Capture Residual Revenue with Recurring Payments.',
 			),
 			'pmpro'             => array(
-				'name'          => __('Paid Memberships Pro', 'tutor'),
+				'name'          => __('Paid Memberships Pro', 'tutor-pmpro'),
 				'description'   => 'Maximize revenue by selling membership access to all of your courses.',
 			),
 			'tutor-assignments' => array(
-				'name'          => __('Assignments', 'tutor-certificate'),
+				'name'          => __('Tutor Assignments', 'tutor-certificate'),
 				'description'   => 'Tutor assignments is a great way to assign tasks to students.',
 			),
 			'tutor-certificate' => array(
-				'name'          => __('Certificate', 'tutor-certificate'),
-				'description'   => 'Student will able to download certificate of completed course',
+				'name'          => __('Tutor Certificate', 'tutor-certificate'),
+				'description'   => 'Students will be able to download a certificate after course completion.',
 			),
 			'tutor-course-attachments' => array(
-				'name'          => __('Course Attachments', 'tutor-certificate'),
+				'name'          => __('Tutor Course Attachments', 'tutor-certificate'),
 				'description'   => 'Add unlimited attachments/ private files to any Tutor course',
 			),
 			'tutor-course-preview' => array(
-				'name'          => __('Course Preview', 'tutor-certificate'),
-				'description'   => 'Open some lesson to check course overview for guest',
+				'name'          => __('Tutor Course Preview', 'tutor-certificate'),
+				'description'   => 'Unlock some lessons for students before enrollment.',
 			),
 			'tutor-email' => array(
-				'name'          => __('E-Mail', 'tutor-certificate'),
+				'name'          => __('Tutor E-Mail', 'tutor-certificate'),
 				'description'   => 'Send email on various tutor events',
 			),
 			'tutor-multi-instructors' => array(
-				'name'          => __('Multi Instructors', 'tutor-certificate'),
+				'name'          => __('Tutor Multi Instructors', 'tutor-certificate'),
 				'description'   => 'Start a course with multiple instructors by Tutor Multi Instructors',
 			),
 			'tutor-prerequisites' => array(
-				'name'          => __('Prerequisites', 'tutor-certificate'),
+				'name'          => __('Tutor Prerequisites', 'tutor-certificate'),
 				'description'   => 'Specific course you must complete before you can enroll new course by Tutor Prerequisites',
 			),
 			'tutor-report' => array(
-				'name'          => __('Report', 'tutor-certificate'),
-				'description'   => 'Check your tutor assets performance through tutor report',
+				'name'          => __('Tutor Report', 'tutor-certificate'),
+				'description'   => 'Check your course performance through Tutor Report stats.',
 			),
 		);
 

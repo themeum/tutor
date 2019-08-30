@@ -231,6 +231,14 @@ final class Tutor{
 			}
 		}
 
+		/**
+		 * Save First activation Time
+		 */
+		$first_activation_date = get_option('tutor_first_activation_time');
+		if ( ! $first_activation_date){
+			update_option('tutor_first_activation_time', time());
+		}
+
 	}
 
 	//Run task on deactivation

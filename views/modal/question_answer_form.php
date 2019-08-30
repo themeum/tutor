@@ -13,7 +13,7 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
 	if ($question_type === 'true_false'){
 		?>
         <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Select option which is correct', 'tutor'); ?></h4>
+            <h4><?php _e('Select the correct option', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>
@@ -41,15 +41,6 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
                     </div>
                 </div>
             </div>
-            <?php
-            if ($question_type === 'ordering'){
-                printf(
-                        '<p class="help">%s <b>%s</b></p>',
-                        __('Make sure you are saving answer in right sorting in answers lists, student should ordering should match with this answer order.', 'tutor'),
-                        __('You can re-order it from above answer list.', 'tutor')
-                );
-            }
-            ?>
         </div>
 
 
@@ -71,7 +62,7 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
         </div>
 
         <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Answer option view format', 'tutor'); ?></h4>
+            <h4><?php _e('Display format for options', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>
@@ -103,17 +94,17 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
                     <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="">
                 </div>
             </div>
-            <p class="help"><?php _e( 'Please make sure that <b>{dash}</b> variable contains in your question title to show dash, You can use multiple variable', 'tutor' ); ?></p>
+            <p class="help"><?php _e( 'Please make sure to use the <strong>{dash}</strong> variable in your question title to show the blanks in your question. You can use multiple <strong>{dash}</strong> variables in one question.', 'tutor' ); ?></p>
         </div> <!-- /.tutor-quiz-builder-group -->
 
         <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Gap Answer', 'tutor'); ?></h4>
+            <h4><?php _e('Correct Answer(s)', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
                     <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_two_gap_match]" value="">
                 </div>
             </div>
-            <p class="help"><?php _e( 'Separate multiple answer by pipe <b>( | )</b> , 1 answer per variable assigned in question', 'tutor' ); ?></p>
+            <p class="help"><?php _e( 'Separate multiple answers by a vertical bar <strong>|</strong>. 1 answer per <strong>{dash}</strong> variable is defined in the question. Example: Apple | Banana | Orange', 'tutor' ); ?></p>
         </div> <!-- /.tutor-quiz-builder-group -->
 
 
@@ -179,7 +170,7 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
             </div>
         </div> <!-- /.tutor-quiz-builder-group -->
         <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Answer option view format', 'tutor'); ?></h4>
+            <h4><?php _e('Display format for options', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>
@@ -259,7 +250,7 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
                     <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="">
                 </div>
             </div>
-            <p class="help"><?php _e('Student input text should be matched with this answer, write in <b>Small Caps</b>','tutor'); ?></p>
+            <p class="help"><?php _e('The answers that students enter should match with this text. Write in <strong>small caps</strong>','tutor'); ?></p>
         </div> <!-- /.tutor-quiz-builder-group -->
 
 		<?php
