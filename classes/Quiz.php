@@ -749,6 +749,33 @@ class Quiz {
 			);
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_questions', $data, array('question_id' => $question_id) );
+
+
+			/**
+			 * Validation
+			 */
+			if ($question_type === 'true_false' || $question_type === 'single_choice'){
+			    $question_options = tutils()->get_answers_by_quiz_question($question_id);
+			    if (tutils()->count($question_options)){
+			        $required_validate = true;
+			        foreach ($question_options as $question_option){
+			            if ($question_option->is_correct){
+				            $required_validate = false;
+                        }
+                    }
+                    if ($required_validate){
+	                    $validation_msg = "<p class='tutor-required-fields'>".__('Please select which answer is correct', 'tutor')."</p>";
+	                    wp_send_json_error(array('validation_msg' => $validation_msg ));
+                    }
+
+                }else{
+			        $validation_msg = "<p class='tutor-required-fields'>".__('Please add options', 'tutor')."</p>";
+				    wp_send_json_error(array('validation_msg' => $validation_msg ));
+			    }
+
+            }
+
+
 		}
 
 		wp_send_json_success();

@@ -203,6 +203,9 @@ $settings = maybe_unserialize($question->question_settings);
 								<?php _e('Add An Option', 'tutor'); ?>
                             </a>
                         </div>
+
+                        <div id="quiz_validation_msg_wrap"></div>
+
                     </div>
                 </div>
             </div>
