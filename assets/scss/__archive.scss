@@ -491,7 +491,6 @@ End Alert box css
 .cart-required-login, .cart-required-login a, .cart-required-login form{
   cursor: pointer;
 }
-
 .single_add_to_cart_button,
 a.tutor-button,
 .tutor-button,
@@ -506,7 +505,7 @@ a.tutor-btn,
   border-radius: 4px;
   text-transform: capitalize;
   line-height: 20px;
-  //font-size: var(--tutor-text-size);
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: 300ms;
