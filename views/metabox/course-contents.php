@@ -85,7 +85,7 @@
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
                                     <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                        <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz->post_title; ?>
+                                        <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
                                     <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
@@ -165,7 +165,7 @@
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
                                     <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                        <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz->post_title; ?>
+                                        <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
                                     <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>

@@ -8,7 +8,7 @@
 		?>
         <div class="modal-classic-btn-wrap">
             <a class="tutor-classic-editor-btn btn-sm" target="_blank" href="<?php echo esc_url(get_admin_url("/")); ?>post.php?post=<?php echo $post->ID; ?>&action=edit" >
-                <i class="tutor-icon-pencil topic-edit-icon"></i> <?php echo __('Classic Editor', 'tutor'); ?>
+                <i class="tutor-icon-classic-editor topic-edit-icon"></i> <?php echo __('Classic Editor', 'tutor'); ?>
             </a>
         </div>
 		<?php

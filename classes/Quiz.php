@@ -764,18 +764,14 @@ class Quiz {
                         }
                     }
                     if ($required_validate){
-	                    $validation_msg = "<p class='tutor-error-msg'>".__('Please select which answer is correct', 'tutor')."</p>";
+	                    $validation_msg = "<p class='tutor-error-msg'>".__('Please select the correct answer', 'tutor')."</p>";
 	                    wp_send_json_error(array('validation_msg' => $validation_msg ));
                     }
-
                 }else{
-			        $validation_msg = "<p class='tutor-error-msg'>".__('Please add options', 'tutor')."</p>";
+			        $validation_msg = "<p class='tutor-error-msg'>".__('Please make sure you have added more than one option and saved them', 'tutor')."</p>";
 				    wp_send_json_error(array('validation_msg' => $validation_msg ));
 			    }
-
             }
-
-
 		}
 
 		wp_send_json_success();
