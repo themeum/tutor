@@ -104,53 +104,6 @@ jQuery(document).ready(function($){
      * Quiz Builder
      */
 
-
-    /**
-     * Course and lesson sorting
-     */
-
-    function enable_sorting_topic_lesson(){
-        if (jQuery().sortable) {
-            $(".course-contents").sortable({
-                handle: ".course-move-handle",
-                start: function (e, ui) {
-                    ui.placeholder.css('visibility', 'visible');
-                },
-                stop: function (e, ui) {
-                    tutor_sorting_topics_and_lesson();
-                },
-            });
-            $(".tutor-lessons:not(.drop-lessons)").sortable({
-                connectWith: ".tutor-lessons",
-                items: "div.course-content-item",
-                start: function (e, ui) {
-                    ui.placeholder.css('visibility', 'visible');
-                },
-                stop: function (e, ui) {
-                    tutor_sorting_topics_and_lesson();
-                },
-            });
-        }
-    }
-    enable_sorting_topic_lesson();
-    function tutor_sorting_topics_and_lesson(){
-        var topics = {};
-        $('.tutor-topics-wrap').each(function(index, item){
-            var $topic = $(this);
-            var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
-            var lessons = {};
-
-            $topic.find('.course-content-item').each(function(lessonIndex, lessonItem){
-                var $lesson = $(this);
-                var lesson_id = parseInt($lesson.attr('id').match(/\d+/)[0], 10);
-
-                lessons[lessonIndex] = lesson_id;
-            });
-            topics[index] = { 'topic_id' : topics_id, 'lesson_ids' : lessons };
-        });
-        $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
-    }
-
     $(document).on('click', '.create_new_topic_btn', function (e) {
         e.preventDefault();
         $('.tutor-metabox-add-topics').slideToggle();
