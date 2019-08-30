@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.4.0 - 29 August, 2019 =
+= 1.4.0 - 30 August, 2019 =
 
 * Added: Page builder support on the lesson.
 * Added: Enrollments list on in admin area, admin can now cancel, approve enrolment or delete. (Pro)
@@ -253,6 +253,8 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 * Added: Redirect to the current course page after register.
 * Added: Review update from dashboard > review > Given
 * Added: Received reviews on all courses in dashboard
+* Added: Assignment submission validation for the answer.
+* Added: Quiz question options validation and correct answer validation
 * Fixed: save and continue to click on question edit modal, open question lists immediately under a quiz.
 * Fixed: text formatting issue in the quiz, some of the single or double quote comes with a slash. used `stripslashes();`
 * Fixed: some default value issue on the quiz.
@@ -261,6 +263,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 * Fixed: Chart-js Initiate in the pro version
 * Fixed: Report Datepicker css/js in the frontend dashboard
 * Fixed: Rating delete issues, it was actually report.js loading issues
+* Fixed: Multiple E-Mail template loading issue
 * Updated: Turned off reload the page while tutor settings save.
 
 = 1.3.9 - 19 August, 2019 =
