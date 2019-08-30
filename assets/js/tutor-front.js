@@ -860,6 +860,17 @@ jQuery(document).ready(function($){
     });
 
     /**
+     * Assignment answer validation
+     */
+    $( document ).on( 'submit', '#tutor_assignment_submit_form', function(e) {
+        var assignment_answer = $('textarea[name="assignment_answer"]').val();
+        if (assignment_answer.trim().length < 1) {
+            $('#form_validation_response').html('<div class="tutor-error-msg">'+_tutorobject.text.assignment_text_validation_msg+'</div>');
+            e.preventDefault();
+        }
+    });
+
+    /**
      * Course builder video
      * @since v.1.3.4
      */
@@ -1274,7 +1285,6 @@ jQuery(document).ready(function($){
             }
         });
     });
-
 
 
 
