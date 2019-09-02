@@ -41,6 +41,7 @@ final class Tutor{
 	private $user;
 	private $theme_compatibility;
 	private $gutenberg;
+	private $course_settings_tabs;
 
 	private $woocommerce;
 	private $edd;
@@ -110,6 +111,7 @@ final class Tutor{
 		$this->user = new User();
 		$this->theme_compatibility = new Theme_Compatibility();
 		$this->gutenberg = new Gutenberg();
+		$this->course_settings_tabs = new Course_Settings_Tabs();
 		$this->woocommerce = new WooCommerce();
 		$this->edd = new TutorEDD();
 		$this->withdraw = new Withdraw();
