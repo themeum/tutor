@@ -9,13 +9,10 @@ $current_tab = tutils()->array_get('settings_tab', $_GET);
 		<h3><?php _e('Course Settings', 'tutor'); ?></h3>
 	</div>
 
-
 	<div class="course-settings-tabs-container">
 
 		<div class="settings-tabs-navs-wrap">
-
 			<ul class="settings-tabs-navs">
-
 				<?php
 				$i = 0;
 				foreach ($args as $key => $arg){
@@ -32,13 +29,10 @@ $current_tab = tutils()->array_get('settings_tab', $_GET);
 
 					echo "<li class='{$active}'><a href='{$url}' data-target='#settings-tab-{$key}'>{$label}</a> </li>";
 				} ?>
-
 			</ul>
-
 		</div>
 
 		<div class="settings-tabs-container">
-
             <?php
             $i = 0;
             foreach ($args as $key => $tab){
@@ -68,15 +62,8 @@ $current_tab = tutils()->array_get('settings_tab', $_GET);
 	            /**
 	             * Handling Callback
 	             */
-	            if ( $callback ) {
-	                if (is_callable( $callback )){
-		                call_user_func( $callback, $key, $tab );
-	                }else{
-	                    ob_start();
-		                call_user_func( $callback, $key, $tab );
-		                $error_msg = ob_get_clean();
-		                echo get_tnotice($error_msg,'', 'danger' );
-                    }
+	            if ( $callback && is_callable( $callback ) ) {
+		            call_user_func( $callback, $key, $tab );
 	            }
 
 	            do_action("tutor_course/settings_tab_content/after", $key, $tab);
@@ -84,13 +71,7 @@ $current_tab = tutils()->array_get('settings_tab', $_GET);
 
 	            echo "</div>";
             }
-
-            /*
-            echo '<pre>';
-            print_r($args);
-            echo '</pre>';*/
             ?>
-
 		</div>
 
 	</div>

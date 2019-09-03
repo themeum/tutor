@@ -22,7 +22,7 @@ class Gutenberg {
 			return;
 		}
 
-		add_action( 'init', array($this, 'register_blocks') );
+		//add_action( 'init', array($this, 'register_blocks') );
 		add_filter('block_categories', array($this, 'registering_new_block_category'), 10, 2);
 
 		add_action('wp_ajax_render_block_tutor', array($this, 'render_block_tutor'));
@@ -30,17 +30,18 @@ class Gutenberg {
 	
 	function register_blocks() {
 		wp_register_script(
-			'tutor-student-registration-block', tutor()->url . 'assets/js/gutenberg_blocks.js', array( 'wp-blocks', 'wp-element' )
+			'tutor-student-registration-block', tutor()->url . 'assets/js/gutenberg_blocks.js', array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-components', 'wp-editor' )
 		);
 
 		register_block_type( 'tutor-gutenberg/student-registration', array(
 			'editor_script'     => 'tutor-student-registration-block',
 			'render_callback'   => array($this, 'render_block_student_registration'),
 		) );
+		/*
 		register_block_type( 'tutor-gutenberg/student-dashboard', array(
 			'editor_script' => 'tutor-student-registration-block',
 			'render_callback'   => array($this, 'render_block_tutor_dashboard'),
-		) );
+		) );*/
 		register_block_type( 'tutor-gutenberg/instructor-registration', array(
 			'editor_script' => 'tutor-student-registration-block',
 			'render_callback'   => array($this, 'render_block_tutor_instructor_registration_form'),
