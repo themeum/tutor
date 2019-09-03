@@ -160,6 +160,9 @@ class Course extends Tutor_Base {
 	 */
 	public function save_course_meta($post_ID, $post){
 		global $wpdb;
+
+		do_action( "tutor_save_course", $post_ID, $post);
+
 		/**
 		 * Insert Topic
 		 */

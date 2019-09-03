@@ -1,9 +1,6 @@
 <?php
 $args = $this->args;
-
-echo '<pre>';
-print_r($args);
-echo '</pre>';
+$current_tab = tutils()->array_get('settings_tab', $_GET);
 
 ?>
 
@@ -19,9 +16,21 @@ echo '</pre>';
 
 			<ul class="settings-tabs-navs">
 
-				<?php foreach ($args as $arg){
+				<?php
+				$i = 0;
+				foreach ($args as $key => $arg){
+					$i++;
+
+					if ($current_tab){
+						$active = $current_tab === $key ? 'active' : '' ;
+                    }else{
+						$active = $i ===1 ? 'active' : '';
+					}
+
 					$label = tutils()->array_get('label', $arg);
-					echo "<li><a href=''>{$label}</a> </li>";
+					$url = add_query_arg(array('settings_tab' => $key));
+
+					echo "<li class='{$active}'><a href='{$url}' data-target='#settings-tab-{$key}'>{$label}</a> </li>";
 				} ?>
 
 			</ul>
@@ -29,6 +38,58 @@ echo '</pre>';
 		</div>
 
 		<div class="settings-tabs-container">
+
+            <?php
+            $i = 0;
+            foreach ($args as $key => $tab){
+	            $i++;
+
+	            $label = tutils()->array_get('label', $tab);
+	            $callback = tutils()->array_get('callback', $tab);
+	            $fields = tutils()->array_get('fields', $tab);
+
+	            if ($current_tab){
+		            $active = $current_tab === $key ? 'active' : '' ;
+		            $display = $current_tab === $key ? 'block' : 'none' ;
+	            }else{
+		            $active = $i ===1 ? 'active' : '';
+		            $display = $i ===1 ? 'block' : 'none' ;
+	            }
+
+	            echo "<div id='settings-tab-{$key}' class='settings-tab-wrap {$active}' style='display: {$display};'>";
+
+	            do_action("tutor_course/settings_tab_content/before", $key, $tab);
+	            do_action("tutor_course/settings_tab_content/before/{$key}", $tab);
+
+	            if (tutils()->count($fields)){
+		            $this->generate_field($fields);
+	            }
+
+	            /**
+	             * Handling Callback
+	             */
+	            if ( $callback ) {
+	                if (is_callable( $callback )){
+		                call_user_func( $callback, $key, $tab );
+	                }else{
+	                    ob_start();
+		                call_user_func( $callback, $key, $tab );
+		                $error_msg = ob_get_clean();
+		                echo get_tnotice($error_msg,'', 'danger' );
+                    }
+	            }
+
+	            do_action("tutor_course/settings_tab_content/after", $key, $tab);
+	            do_action("tutor_course/settings_tab_content/after/{$key}", $tab);
+
+	            echo "</div>";
+            }
+
+            /*
+            echo '<pre>';
+            print_r($args);
+            echo '</pre>';*/
+            ?>
 
 		</div>
 

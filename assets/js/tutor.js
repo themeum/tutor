@@ -1082,5 +1082,18 @@ jQuery(document).ready(function($){
         });
     });
 
+    $(document).on('click', '.settings-tabs-navs li', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var data_target = $that.find('a').attr('data-target');
+        var url = $that.find('a').attr('href');
+
+        $that.addClass('active').siblings('li.active').removeClass('active');
+        $('.settings-tab-wrap').removeClass('active').hide().siblings(data_target).addClass('active').show();
+
+        window.history.pushState({}, '', url);
+
+    });
 
 });

@@ -1356,9 +1356,12 @@ if ( ! function_exists('get_tnotice')) {
 
 		$output = '<div class="tnotice tnotice--' . $type . '">
         <div class="tnotice__icon">&iexcl;</div>
-        <div class="tnotice__content">
-            <p class="tnotice__type">' . $title . '</p>
-            <p class="tnotice__message">' . $msg . '</p>
+        <div class="tnotice__content">';
+
+		if ($title){
+			$output .='<p class="tnotice__type">' . $title . '</p>';
+		}
+		$output .='<p class="tnotice__message">' . $msg . '</p>
         </div>
     	</div>';
 
