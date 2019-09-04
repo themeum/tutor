@@ -2327,9 +2327,9 @@ Lesson Edit Modal
 .lesson-modal-form-wrap .assignment-modal-field-row,
 .lesson-modal-form-wrap .tutor-lesson-attachments-metabox,
 .lesson-modal-form-wrap .tutor-option-field-row{
-    padding: 0;
-    margin-bottom: 20px;
-    border-bottom: none;
+    padding: 10px 0;
+    /*margin-bottom: 20px;
+    border-bottom: none;*/
 }
 .lesson-modal-form-wrap .tutor-option-field-row:last-child {
     border-bottom: none;
@@ -2826,4 +2826,7 @@ Course Settings Tabs
 .course-settings-tabs-container .settings-tabs-container{
     padding: 1em;
     flex: 1;
+}
+.tutor-field-radio p{
+    margin-top: 0;
 }

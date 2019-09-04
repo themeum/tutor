@@ -22,9 +22,8 @@ class Gutenberg {
 			return;
 		}
 
-		//add_action( 'init', array($this, 'register_blocks') );
+		add_action( 'init', array($this, 'register_blocks') );
 		add_filter('block_categories', array($this, 'registering_new_block_category'), 10, 2);
-
 		add_action('wp_ajax_render_block_tutor', array($this, 'render_block_tutor'));
 	}
 	

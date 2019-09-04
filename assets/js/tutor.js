@@ -1093,7 +1093,6 @@ jQuery(document).ready(function($){
         $('.settings-tab-wrap').removeClass('active').hide().siblings(data_target).addClass('active').show();
 
         window.history.pushState({}, '', url);
-
     });
 
 });

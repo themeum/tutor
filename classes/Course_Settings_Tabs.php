@@ -6,21 +6,20 @@ if ( ! defined( 'ABSPATH' ) )
 
 class Course_Settings_Tabs{
 
-	private $args = array();
-	private $settings_meta = null;
+	public $args = array();
+	public $settings_meta = null;
 
 	public function __construct() {
-		$this->args = $this->get_default_args();
-
 		add_action( 'edit_form_after_editor', array($this, 'display') );
 		add_action('tutor_save_course', array($this, 'save_course'), 10, 2);
 	}
 
-	private function get_default_args(){
+	public function get_default_args(){
 		$args = array(
 			'general' => array(
 				'label' => __('General', 'tutor'),
 				'desc' => __('General Settings', 'tutor'),
+				'icon_class'  => ' tutor-icon-settings-1',
 				'callback'  => '',
 				'fields'    => array(
 					'maximum_students' => array(
@@ -34,28 +33,14 @@ class Course_Settings_Tabs{
 
 			),
 
-			'contentdrip' => array(
-				'label' => __('Content Drip', 'tutor'),
-				'desc' => __('Tutor Content Drip allow you to schedule publish topics / lesson', 'tutor'),
-				'callback'  => '',
-				'fields'    => array(
-					'enable_content_drip' => array(
-						'type'      => 'checkbox',
-						'label'     => __('Enable', 'tutor'),
-						'label_title' => __('Enable', 'tutor'),
-						'default' => '0',
-						'desc'      => __('Enable / Disable content drip', 'tutor'),
-					),
-				),
-
-			),
-
 		);
 
 		return apply_filters('tutor_course_settings_tabs', $args);
 	}
 
 	public function display( $post){
+		$this->args = $this->get_default_args();
+
 		$settings_meta = get_post_meta(get_the_ID(), '_tutor_course_settings', true);
 		$this->settings_meta = (array) maybe_unserialize($settings_meta);
 
@@ -68,8 +53,9 @@ class Course_Settings_Tabs{
 	public function generate_field($fields = array()){
 		if (tutils()->count($fields)){
 			foreach ($fields as $field_key => $field){
+			    $type = tutils()->array_get('type', $field);
 				?>
-				<div class="tutor-option-field-row">
+				<div class="tutor-option-field-row tutor-field-row-<?php echo $type; ?>">
 					<?php
 					if (isset($field['label'])){
 						?>
@@ -79,7 +65,7 @@ class Course_Settings_Tabs{
 						<?php
 					}
 					?>
-					<div class="tutor-option-field">
+					<div class="tutor-option-field tutor-field-<?php echo $type; ?>"">
 						<?php
 						$field['field_key'] = $field_key;
 
@@ -100,7 +86,7 @@ class Course_Settings_Tabs{
 		include tutor()->path."views/metabox/course/field-types/{$field['type']}.php";
 	}
 
-	private function get($key = null, $default = false){
+	public function get($key = null, $default = false){
 		return tutils()->array_get($key, $this->settings_meta, $default);
 	}
 

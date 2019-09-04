@@ -24,10 +24,16 @@ $current_tab = tutils()->array_get('settings_tab', $_GET);
 						$active = $i ===1 ? 'active' : '';
 					}
 
-					$label = tutils()->array_get('label', $arg);
-					$url = add_query_arg(array('settings_tab' => $key));
+					$label      = tutils()->array_get('label', $arg);
+					$icon_class = tutils()->array_get('icon_class', $arg);
+					$url        = add_query_arg(array('settings_tab' => $key));
 
-					echo "<li class='{$active}'><a href='{$url}' data-target='#settings-tab-{$key}'>{$label}</a> </li>";
+					$icon = '';
+					if ($icon_class){
+						$icon = "<i class='{$icon_class}'></i>";
+                    }
+
+					echo "<li class='{$active}'><a href='{$url}' data-target='#settings-tab-{$key}'>{$icon} {$label}</a> </li>";
 				} ?>
 			</ul>
 		</div>
