@@ -380,3 +380,35 @@ if ( ! function_exists('update_tutor_option')){
 		tutils()->update_option($key, $value);
 	}
 }
+/**
+ * @param int $course_id
+ * @param null $key
+ * @param bool $default
+ *
+ * @return array|bool|mixed
+ *
+ * Get tutor course settings by course ID
+ *
+ * @since v.1.4.1
+ */
+if ( ! function_exists('get_tutor_course_settings')) {
+	function get_tutor_course_settings( $course_id = 0, $key = null, $default = false ) {
+		return tutils()->get_course_settings( $course_id, $key, $default );
+	}
+}
+
+/**
+ * @param int $lesson_id
+ * @param null $key
+ * @param bool $default
+ *
+ * @return array|bool|mixed
+ *
+ * Get lesson content drip settings
+ */
+
+if ( ! function_exists('get_lesson_content_drip_settings')){
+	function get_lesson_content_drip_settings($lesson_id = 0, $key = null, $default = false){
+		return tutils()->get_lesson_content_drip_settings( $lesson_id, $key, $default );
+	}
+}

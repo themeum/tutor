@@ -204,6 +204,8 @@ jQuery(document).ready(function($){
                 tinymce.init(tinymceConfig);
                 tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_lesson_modal_editor' );
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_lesson_modal_editor");
+
+                $(document).trigger('lesson_modal_loaded', {lesson_id : lesson_id, topic_id : topic_id, course_id : course_id});
             },
             complete: function () {
                 quicktags({id : "tutor_lesson_modal_editor"});
@@ -1094,5 +1096,14 @@ jQuery(document).ready(function($){
 
         window.history.pushState({}, '', url);
     });
+
+
+
+    $(document).on('lesson_modal_loaded', function(e, obj){
+        if (jQuery.datepicker){
+            $( ".tutor_date_picker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
+        }
+    });
+
 
 });

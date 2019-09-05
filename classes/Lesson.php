@@ -135,7 +135,10 @@ class Lesson extends Tutor_Base {
 		if ($_lesson_thumbnail_id){
 			$lesson_data['_thumbnail_id'] = $_lesson_thumbnail_id;
 		}
+
+		do_action('tutor/lesson_update/before', $lesson_id);
 		wp_update_post($lesson_data);
+		do_action('tutor/lesson_update/after', $lesson_id);
 
 		$course_id = tutor_utils()->get_course_id_by_lesson($lesson_id);
 

@@ -4923,4 +4923,40 @@ class Utils {
 		return (object) $ratings;
 	}
 
+	/**
+	 * @param int $course_id
+	 * @param null $key
+	 * @param bool $default
+	 *
+	 * @return array|bool|mixed
+	 *
+	 * Get course settings by course ID
+	 */
+	public function get_course_settings($course_id = 0, $key = null, $default = false){
+		$course_id = $this->get_post_id($course_id);
+		$settings_meta = get_post_meta($course_id, '_tutor_course_settings', true);
+		$settings = (array) maybe_unserialize($settings_meta);
+
+		return $this->array_get($key, $settings, $default);
+	}
+
+	/**
+	 * @param int $lesson_id
+	 * @param null $key
+	 * @param bool $default
+	 *
+	 * @return array|bool|mixed
+	 *
+	 * Get Lesson content drip settings
+	 *
+	 * @since v.1.4.0
+	 */
+	public function get_lesson_content_drip_settings($lesson_id = 0, $key = null, $default = false){
+		$lesson_id = $this->get_post_id($lesson_id);
+		$settings_meta = get_post_meta($lesson_id, '_content_drip_settings', true);
+		$settings = (array) maybe_unserialize($settings_meta);
+
+		return $this->array_get($key, $settings, $default);
+	}
+
 }

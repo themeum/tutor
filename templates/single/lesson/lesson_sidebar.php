@@ -85,8 +85,6 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 										$lessons->the_post();
 
 										if ($post->post_type === 'tutor_quiz') {
-
-
 											$quiz = $post;
 											?>
                                             <div class="tutor-single-lesson-items quiz-single-item quiz-single-item-<?php echo $quiz->ID; ?> <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
@@ -94,8 +92,9 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
                                                     <i class="tutor-icon-doubt"></i>
                                                     <span class="lesson_title"><?php echo $quiz->post_title; ?></span>
                                                     <span class="tutor-lesson-right-icons">
-
                                                     <?php
+                                                    do_action('tutor/lesson_list/right_icon_area', $post);
+
                                                     $time_limit = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_value');
                                                     if ($time_limit){
 	                                                    $time_type = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_type');
@@ -147,6 +146,7 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
                                                     <span class="lesson_title"><?php the_title(); ?></span>
                                                     <span class="tutor-lesson-right-icons">
                                                         <?php
+                                                        do_action('tutor/lesson_list/right_icon_area', $post);
                                                         if ( $play_time ) {
                                                             echo "<i class='tutor-play-duration'>$play_time</i>";
                                                         }
@@ -158,14 +158,10 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
                                             </div>
 
 											<?php
-
-
 										}
-
 									}
 									$lessons->reset_postdata();
 								}
-
 								?>
 
 								<?php do_action('tutor/lesson_list/after/topic', $topic_id); ?>
@@ -180,14 +176,11 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 				?>
             </div>
 
-
             <div id="tutor-lesson-sidebar-qa-tab-content" class="tutor-lesson-sidebar-tab-item" style="display: none;">
 				<?php
 				tutor_lesson_sidebar_question_and_answer();
 				?>
             </div>
-
-
 
         </div>
 
