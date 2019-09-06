@@ -242,7 +242,7 @@ class Utils {
 		$depends = array('woocommerce-subscriptions/woocommerce-subscriptions.php');
 		return count(array_intersect($depends, $activated_plugins)) == count($depends);
 	}
-	
+
 	/**
 	 * @return mixed
 	 *
@@ -872,16 +872,16 @@ class Utils {
 		$monetize_by = $this->get_option('monetize_by');
 
 		//if ($this->is_course_purchasable($course_id)){
-			$product_id = $this->get_course_product_id($course_id);
-			if ($product_id) {
-				if ( $monetize_by === 'wc' && $this->has_wc() ) {
-					$prices['regular_price'] = get_post_meta( $product_id, '_regular_price', true );
-					$prices['sale_price']    = get_post_meta( $product_id, '_sale_price', true );
-				} elseif ( $monetize_by === 'edd' && $this->has_edd() ) {
-					$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
-					$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
-				}
+		$product_id = $this->get_course_product_id($course_id);
+		if ($product_id) {
+			if ( $monetize_by === 'wc' && $this->has_wc() ) {
+				$prices['regular_price'] = get_post_meta( $product_id, '_regular_price', true );
+				$prices['sale_price']    = get_post_meta( $product_id, '_sale_price', true );
+			} elseif ( $monetize_by === 'edd' && $this->has_edd() ) {
+				$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
+				$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
 			}
+		}
 		//}
 
 		return (object) $prices;
@@ -3457,8 +3457,8 @@ class Utils {
 		$attempt = $this->is_started_quiz($quiz_id);
 		$total_questions = (int) $attempt->total_questions;
 		if ( ! $attempt){
-		    return false;
-        }
+			return false;
+		}
 
 		$questions_order = tutor_utils()->get_quiz_option(get_the_ID(), 'questions_order', 'rand');
 
@@ -3474,9 +3474,9 @@ class Utils {
 		}
 
 		$limit = '';
-        if ($total_questions){
-	        $limit = "LIMIT {$total_questions} ";
-        }
+		if ($total_questions){
+			$limit = "LIMIT {$total_questions} ";
+		}
 
 		$questions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id}  {$order_by} {$limit} ");
 
@@ -3540,7 +3540,41 @@ class Utils {
 		return false;
 	}
 
+	/**
+	 * @param int $quiz_id
+	 * @param int $user_id
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Get all ended attempts by an user of a quiz
+	 *
+	 * @since v.1.4.1
+	 */
+	public function quiz_ended_attempts($quiz_id = 0, $user_id = 0){
+		global $wpdb;
 
+		$quiz_id = $this->get_post_id($quiz_id);
+		$user_id = $this->get_user_id($user_id);
+
+		$attempts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE quiz_id = {$quiz_id} AND user_id = {$user_id} AND attempt_status != 'attempt_started' ");
+
+		if (is_array($attempts) && count($attempts)){
+			return $attempts;
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Get attempts by an user
+	 *
+	 * @since v.1.0.0
+	 */
 	public function get_all_quiz_attempts_by_user($user_id = 0){
 		global $wpdb;
 
@@ -4014,45 +4048,45 @@ class Utils {
 		return apply_filters('tutor_social_share_icons', $icons);
 	}
 
-    /**
-     * @return array $array
-     *
-     * Get the user social icons
-     *
-     * @since v.1.3.7
-     */
+	/**
+	 * @return array $array
+	 *
+	 * Get the user social icons
+	 *
+	 * @since v.1.3.7
+	 */
 
 	public function tutor_user_social_icons(){
-	    $icons = array(
-            '_tutor_profile_website'  => array(
-                'label'         => __('Website URL', 'tutor'),
-                'placeholder'   => 'https://example.com/',
-                'icon_classes'   => 'tutor-icon-earth'
-            ),
-            '_tutor_profile_github'  => array(
-                'label'         => __('Github URL', 'tutor'),
-                'placeholder'   => 'https://github.com/username',
-                'icon_classes'   => 'tutor-icon-github-logo'
-            ),
-	        '_tutor_profile_facebook'  => array(
-	            'label'         => __('Facebook URL', 'tutor'),
-	            'placeholder'   => 'https://facebook.com/username',
-	            'icon_classes'   => 'tutor-icon-facebook'
-            ),
-            '_tutor_profile_twitter'  => array(
-                'label'         => __('Twitter URL', 'tutor'),
-                'placeholder'   => 'https://twitter.com/username',
-                'icon_classes'   => 'tutor-icon-twitter'
-            ),
-            '_tutor_profile_linkedin'  => array(
-                'label'         => __('Linkedin URL', 'tutor'),
-                'placeholder'   => 'https://linkedin.com/username',
-                'icon_classes'   => 'tutor-icon-linkedin'
-            ),
-        );
+		$icons = array(
+			'_tutor_profile_website'  => array(
+				'label'         => __('Website URL', 'tutor'),
+				'placeholder'   => 'https://example.com/',
+				'icon_classes'   => 'tutor-icon-earth'
+			),
+			'_tutor_profile_github'  => array(
+				'label'         => __('Github URL', 'tutor'),
+				'placeholder'   => 'https://github.com/username',
+				'icon_classes'   => 'tutor-icon-github-logo'
+			),
+			'_tutor_profile_facebook'  => array(
+				'label'         => __('Facebook URL', 'tutor'),
+				'placeholder'   => 'https://facebook.com/username',
+				'icon_classes'   => 'tutor-icon-facebook'
+			),
+			'_tutor_profile_twitter'  => array(
+				'label'         => __('Twitter URL', 'tutor'),
+				'placeholder'   => 'https://twitter.com/username',
+				'icon_classes'   => 'tutor-icon-twitter'
+			),
+			'_tutor_profile_linkedin'  => array(
+				'label'         => __('Linkedin URL', 'tutor'),
+				'placeholder'   => 'https://linkedin.com/username',
+				'icon_classes'   => 'tutor-icon-linkedin'
+			),
+		);
 
-	    return apply_filters('tutor_user_social_icons', $icons);
-    }
+		return apply_filters('tutor_user_social_icons', $icons);
+	}
 
 	/**
 	 * @param array $array
@@ -4165,19 +4199,19 @@ class Utils {
 
 
 		if ( $earning_sum->course_price_total){
-            $earning_sum->balance = $earning_sum->instructor_amount - $earning_sum->withdraws_amount;
-        }else{
+			$earning_sum->balance = $earning_sum->instructor_amount - $earning_sum->withdraws_amount;
+		}else{
 
-            $earning_sum = (object) array(
-                'course_price_total'        => 0,
-                'course_price_grand_total'  => 0,
-                'instructor_amount'         => 0,
-                'withdraws_amount'          => 0,
-                'balance'                   => 0,
-                'admin_amount'              => 0,
-                'deduct_fees_amount'        => 0,
-            );
-        }
+			$earning_sum = (object) array(
+				'course_price_total'        => 0,
+				'course_price_grand_total'  => 0,
+				'instructor_amount'         => 0,
+				'withdraws_amount'          => 0,
+				'balance'                   => 0,
+				'admin_amount'              => 0,
+				'deduct_fees_amount'        => 0,
+			);
+		}
 
 		return $earning_sum;
 	}
@@ -4958,5 +4992,99 @@ class Utils {
 
 		return $this->array_get($key, $settings, $default);
 	}
+
+
+	/**
+	 * @param null $post
+	 *
+	 * @return bool
+	 *
+	 * Get previous ID
+	 */
+	public function get_course_previous_content_id($post = null){
+		$current_item = get_post($post);
+		$course_id = $this->get_course_id_by_content($current_item);
+
+		$topics = tutor_utils()->get_topics($course_id);
+
+		$contents = array();
+		if ($topics->have_posts()) {
+			while ( $topics->have_posts() ) {
+				$topics->the_post();
+				$topic_id = get_the_ID();
+				$lessons = tutor_utils()->get_course_contents_by_topic($topic_id, -1);
+				if ($lessons->have_posts()) {
+					while ( $lessons->have_posts() ) {
+						$lessons->the_post();
+						global $post;
+						$contents[] = $post;
+					}
+				}
+
+			}
+		}
+
+		if (tutils()->count($contents)){
+			foreach ($contents as $key => $content){
+				if ($current_item->ID == $content->ID){
+					if ( ! empty($contents[$key-1]->ID)){
+						return $contents[$key-1]->ID;
+					}
+				}
+			}
+		}
+
+/*
+
+		if ($post->menu_order > 0){
+
+			$contents = $wpdb->get_results("SELECT items.* FROM {$wpdb->posts} topic
+				INNER JOIN {$wpdb->posts} items ON topic.ID = items.post_parent 
+				WHERE topic.post_parent = {$course_id} AND items.post_status = 'publish' order by topic.menu_order ASC, items.menu_order ASC;");
+
+
+
+			if (tutils()->count($contents)){
+				foreach ($contents as $key => $content){
+					if ($post->ID == $content->ID){
+						if ( ! empty($contents[$key-1]->ID)){
+							//return $contents[$key-1]->ID;
+						}
+					}
+				}
+			}
+
+			die(print_r($contents));
+
+		}else{
+			$previous = $wpdb->get_row("SELECT items.* FROM {$wpdb->posts} topic 
+              		INNER JOIN {$wpdb->posts} items ON topic.ID = items.post_parent 
+					WHERE topic.post_parent = {$course_id} 
+					AND items.post_status = 'publish' 
+					AND items.ID < {$post->ID} ORDER BY ID DESC  LIMIT 1; ");
+
+			if ( ! empty($previous->ID)){
+				return $previous->ID;
+			}
+		}*/
+
+		return false;
+	}
+
+	/**
+	 * @param null $post
+	 *
+	 * @return int
+	 *
+	 * Get Course iD by any course content
+	 */
+	public function get_course_id_by_content($post = null){
+		global $wpdb;
+		$post = get_post($post);
+		$course_id = $wpdb->get_var("SELECT post_parent FROM {$wpdb->posts} WHERE ID = {$post->post_parent} AND post_type = 'topics'");
+
+		return (int) $course_id;
+	}
+
 
 }
