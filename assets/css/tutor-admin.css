@@ -2776,6 +2776,10 @@ Course Settings Tabs
     border: 1px solid #e5e5e5;
     margin: 1em 0;
 }
+.inside #tutor-metabox-course-settings-tabs{
+    border: 0;
+    margin: 0;
+}
 .settings-tabs-heading{
     padding: 1em;
     border-bottom: 1px solid #e5e5e5;

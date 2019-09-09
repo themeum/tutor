@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,13 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.4.1 - 10 September, 2019 =
+
+* Added: utils method `get_course_settings($course_id = 0, $key = null, $default = false)`
+* Added: `get_tutor_course_settings($course_id = 0, $key = null, $default = false);`
+* Added: Content Drip Addon (Pro)
+* Added: Course settings with developer support
 
 = 1.4.0 - 30 August, 2019 =
 

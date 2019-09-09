@@ -52,6 +52,13 @@ class Course extends Tutor_Base {
 		 * Do Stuff for the course save from frontend
 		 */
 		add_action('save_tutor_course', array($this, 'attach_product_with_course'), 10, 2);
+
+		/**
+		 * Add course level to course settings
+		 * @since v.1.4.1
+		 */
+
+		add_action('tutor_course/settings_tab_content/after/general', array($this, 'add_course_level_to_settings'));
 	}
 	/**
 	 * Registering metabox
@@ -59,7 +66,7 @@ class Course extends Tutor_Base {
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
 		$course_marketplace = tutor_utils()->get_option('enable_course_marketplace');
-        add_meta_box( 'tutor-course-levels', __( 'Course Level', 'tutor' ), array($this, 'course_level_metabox'), $coursePostType );
+        //add_meta_box( 'tutor-course-levels', __( 'Course Level', 'tutor' ), array($this, 'course_level_metabox'), $coursePostType );
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
@@ -764,6 +771,15 @@ class Course extends Tutor_Base {
 
 		}
 
+	}
+
+
+	/**
+	 * Add Course level to course settings
+	 * @since v.1.4.1
+	 */
+	public function add_course_level_to_settings(){
+		include  tutor()->path.'views/metabox/course-level-metabox.php';
 	}
 
 
