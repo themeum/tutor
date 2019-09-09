@@ -4985,7 +4985,7 @@ class Utils {
 	 *
 	 * @since v.1.4.0
 	 */
-	public function get_lesson_content_drip_settings($lesson_id = 0, $key = null, $default = false){
+	public function get_item_content_drip_settings($lesson_id = 0, $key = null, $default = false){
 		$lesson_id = $this->get_post_id($lesson_id);
 		$settings_meta = get_post_meta($lesson_id, '_content_drip_settings', true);
 		$settings = (array) maybe_unserialize($settings_meta);

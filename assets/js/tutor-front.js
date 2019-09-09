@@ -1115,6 +1115,8 @@ jQuery(document).ready(function($){
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-lesson-modal-wrap').attr({'data-assignment-id' : assignment_id, 'data-topic-id':topic_id}).addClass('show');
 
+                $(document).trigger('assignment_modal_loaded', {assignment_id : assignment_id, topic_id : topic_id, course_id : course_id});
+
                 tinymce.init(tinyMCEPreInit.mceInit.course_description);
                 tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_assignments_modal_editor' );
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");

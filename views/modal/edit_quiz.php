@@ -57,6 +57,9 @@ if ( ! $quiz){
                         </div>
                     </div>
                 </div>
+
+                <?php do_action('tutor_quiz_edit_modal_info_tab_after', $quiz) ?>
+
             </div>
 
 
@@ -204,6 +207,9 @@ if ( ! $quiz){
                         </div>
                         <p class="help"><?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater then available question, then all questions will be available for a student to answer.', 'tutor'); ?></p>
                     </div> <!-- .tutor-quiz-builder-group -->
+
+	                <?php do_action('tutor_quiz_edit_modal_settings_tab_after', $quiz) ?>
+
 
                 </div>
             </div>

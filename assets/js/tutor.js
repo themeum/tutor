@@ -400,6 +400,9 @@ jQuery(document).ready(function($){
                     var tabSelector = $that.attr('data-back-to-tab');
                     $('#tutor-quiz-modal-tab-items-wrap a[href="'+tabSelector+'"]').trigger('click');
                 }
+
+                $(document).trigger('quiz_modal_loaded', {quiz_id : quiz_id, topic_id : topic_id, course_id : course_id});
+
                 tutor_slider_init();
                 enable_quiz_questions_sorting();
             },
@@ -1097,13 +1100,22 @@ jQuery(document).ready(function($){
         window.history.pushState({}, '', url);
     });
 
+    /**
+     * Re init required
+     * Modal Loaded...
+     */
 
-
-    $(document).on('lesson_modal_loaded', function(e, obj){
+    $(document).on('lesson_modal_loaded quiz_modal_loaded assignment_modal_loaded', function(e, obj){
+        if (jQuery().select2){
+            $('.select2_multiselect').select2({
+                dropdownCssClass:'increasezindex'
+            });
+        }
         if (jQuery.datepicker){
             $( ".tutor_date_picker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
         }
     });
+
 
 
 });

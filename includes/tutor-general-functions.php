@@ -407,8 +407,8 @@ if ( ! function_exists('get_tutor_course_settings')) {
  * Get lesson content drip settings
  */
 
-if ( ! function_exists('get_lesson_content_drip_settings')){
-	function get_lesson_content_drip_settings($lesson_id = 0, $key = null, $default = false){
-		return tutils()->get_lesson_content_drip_settings( $lesson_id, $key, $default );
+if ( ! function_exists('get_item_content_drip_settings')){
+	function get_item_content_drip_settings($lesson_id = 0, $key = null, $default = false){
+		return tutils()->get_item_content_drip_settings( $lesson_id, $key, $default );
 	}
 }

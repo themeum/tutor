@@ -6198,6 +6198,10 @@ Video MetaBox
   margin: 0;
 }
 
+.content-drip-message-wrap.tutor-error-msg {
+  margin: 40px 50px;
+}
+
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */

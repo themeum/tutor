@@ -2841,3 +2841,6 @@ Content Drip (Pro)
 .lesson-modal-form-wrap .lesson-content-drip-wrap h3{
     margin: 0 0 10px 0;
 }
+.select2-dropdown.increasezindex {
+    z-index:9999999999999;
+}
