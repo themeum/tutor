@@ -22,6 +22,14 @@ class Addons {
 
 	public function tutor_addons_lists_to_show(){
 		$addons = array(
+			'content-drip'  => array(
+				'name'          => __('Content Drip', 'tutor-pmpro'),
+				'description'   => 'Unlock lessons by schedule or when the student meets specific condition.',
+			),
+			'enrollments'       => array(
+				'name'          => __('Enrollments', 'tutor-pmpro'),
+				'description'   => 'Take advanced control on enrollments. Enroll the student manually.',
+			),
 			'wc-subscriptions' => array(
 				'name'          => __('WooCommerce Subscriptions', 'tutor-pmpro'),
 				'description'   => 'Capture Residual Revenue with Recurring Payments.',
