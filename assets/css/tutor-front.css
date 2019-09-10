@@ -1331,13 +1331,6 @@ span.toogle-informaiton-icon {
   margin-bottom: 25px;
 }
 
-.tutor-alert-warning {
-  padding: 10px;
-  color: #8a6d3b;
-  background-color: #fcf8e3;
-  border-color: #faebcc;
-}
-
 .tutor-alert-warning.tutor-instructor-alert {
   padding: 25px 25px 15px;
 }
@@ -6203,6 +6196,108 @@ Video MetaBox
   margin: 40px 50px;
 }
 
+/**
+Content Drip (Pro)
+ */
+.content-drip-message-wrap {
+  margin: 120px;
+}
+
+.content-drip-wrap-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.content-drip-wrap-flex .content-drip-left {
+  margin-right: 50px;
+}
+
+.content-drip-wrap-flex ul {
+  margin: 0;
+  list-style-position: inside;
+}
+
+.content-drip-wrap-flex ul li a {
+  color: var(--tutor-primary-color);
+}
+
+/**
+END Content Drip
+ */
+/**
+* Alert CSS
+* since v.1.4.1
+ */
+.tutor-alert {
+  border: 1px solid #F8A201;
+  background: #FFFFF2;
+  position: relative;
+  border-radius: 3px;
+  padding: 20px 25px 20px 95px;
+  color: #A86D00;
+}
+
+.tutor-alert.tutor-alert-danger {
+  border: 1px solid #FE1A1A;
+  background: #FFF2F2;
+  color: #A50000;
+}
+
+.tutor-alert.tutor-alert-success {
+  border: 1px solid #69BC0D;
+  background: #F6FFF2;
+  color: #3D7400;
+}
+
+.tutor-alert::before {
+  content: '\e95f';
+  position: absolute;
+  font-size: 30px;
+  font-family: 'tutor' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 70px;
+  top: 0;
+  left: 0;
+  text-align: center;
+  background: #F8A201;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #ffffff;
+}
+
+.tutor-alert.tutor-alert-danger::before {
+  content: "\e913";
+  background: #FE1A1A;
+}
+
+.tutor-alert.tutor-alert-success::before {
+  content: "\e90f";
+  background: #69BC0D;
+}
+
+.tutor-alert-content p {
+  margin: 0;
+}
+
+/**
+END Alert CSS
+ */
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */

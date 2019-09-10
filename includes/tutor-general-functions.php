@@ -84,19 +84,19 @@ if ( ! function_exists('_generate_categories_dropdown_option')){
 
 		if (tutor_utils()->count($categories)) {
 			foreach ( $categories as $category_id => $category ) {
-			    if ( ! $category->parent){
-				    $depth = 0;
-			    }
+				if ( ! $category->parent){
+					$depth = 0;
+				}
 
 				$childrens = tutor_utils()->array_get( 'children', $category );
 				$has_in_term = has_term( $category->term_id, 'course-category', $post_ID );
 
 				$depth_seperator = '';
 				if ($depth){
-				    for ($depth_i = 0; $depth_i < $depth; $depth_i++){
-					    $depth_seperator.='-';
-                    }
-                }
+					for ($depth_i = 0; $depth_i < $depth; $depth_i++){
+						$depth_seperator.='-';
+					}
+				}
 
 				$output .= "<option value='{$category->term_id}' ".selected($has_in_term, true, false)." >   {$depth_seperator} {$category->name}</option> ";
 
@@ -196,7 +196,7 @@ if ( ! function_exists('course_builder_section_wrap')) {
                 <h3><i class="tutor-icon-down"></i> <span><?php echo $title; ?></span></h3>
             </div>
             <div class="tutor-course-builder-section-content">
-                <?php echo $content; ?>
+				<?php echo $content; ?>
             </div>
         </div>
 		<?php
@@ -292,7 +292,7 @@ function generate_categories_select_for_pmpro($level_categories = array(), $args
 		'name'  => 'tax_input[course-category]',
 		'multiple' => true,
 	);
-	
+
 	$args = apply_filters('tutor_course_categories_dropdown_args', array_merge($default, $args));
 
 	$multiple_select = '';
@@ -410,5 +410,26 @@ if ( ! function_exists('get_tutor_course_settings')) {
 if ( ! function_exists('get_item_content_drip_settings')){
 	function get_item_content_drip_settings($lesson_id = 0, $key = null, $default = false){
 		return tutils()->get_item_content_drip_settings( $lesson_id, $key, $default );
+	}
+}
+
+/**
+ * @param null $msg
+ * @param string $type
+ * @param bool $echo
+ *
+ * @return string
+ *
+ * Print Alert by tutor_alert()
+ *
+ * @since v.1.4.1
+ */
+if ( ! function_exists('tutor_alert')){
+	function tutor_alert($msg = null, $type = 'warning', $echo = true){
+		$html = "<div class='tutor-alert tutor-alert-{$type}'>{$msg}</div>";
+		if ($echo){
+			echo $html;
+		}
+		return $html;
 	}
 }
