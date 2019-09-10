@@ -364,6 +364,8 @@ jQuery(document).ready(function($){
                 $('#tutor-quiz-modal-tab-items-wrap a[href="#quiz-builder-tab-questions"]').trigger('click');
 
                 tutor_slider_init();
+
+                $(document).trigger('quiz_modal_loaded', {topic_id : topic_id, course_id : course_id});
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1115,7 +1117,11 @@ jQuery(document).ready(function($){
             $( ".tutor_date_picker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
         }
     });
-
-
+    $(document).on('lesson_modal_loaded', function(e, obj){
+        $('.tutor-lesson-modal-wrap .modal-title h1').html('Lesson');
+    });
+    $(document).on('assignment_modal_loaded', function(e, obj){
+        $('.tutor-lesson-modal-wrap .modal-title h1').html('Assignment');
+    });
 
 });

@@ -21,7 +21,9 @@
 
 						if (file_exists($addons_path.'thumbnail.png') ){
 							$thumbnailURL = $addons_url.'thumbnail.png';
-                        }elseif (file_exists($addons_path.'thumbnail.svg')){
+                        }elseif (file_exists($addons_path.'thumbnail.jpg') ){
+							$thumbnailURL = $addons_url.'thumbnail.jpg';
+						}elseif (file_exists($addons_path.'thumbnail.svg')){
 							$thumbnailURL = $addons_url.'thumbnail.svg';
 						}
 

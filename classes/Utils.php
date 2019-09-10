@@ -5086,5 +5086,26 @@ class Utils {
 		return (int) $course_id;
 	}
 
+	/**
+	 * @param int $course_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get Course contents by Course ID
+	 *
+	 * @since v.1.4.1
+	 */
+	public function get_course_contents_by_id($course_id = 0){
+		global $wpdb;
+
+		$course_id = $this->get_post_id($course_id);
+
+		$contents = $wpdb->get_results("SELECT items.* FROM {$wpdb->posts} topic
+				INNER JOIN {$wpdb->posts} items ON topic.ID = items.post_parent 
+				WHERE topic.post_parent = {$course_id} AND items.post_status = 'publish' order by topic.menu_order ASC, items.menu_order ASC;");
+
+		return $contents;
+	}
+
 
 }
