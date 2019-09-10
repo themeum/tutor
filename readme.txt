@@ -247,6 +247,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 * Added: `get_tutor_course_settings($course_id = 0, $key = null, $default = false);`
 * Added: Content Drip Addon (Pro)
 * Added: Course settings with developer support
+* Added: tutor_alert() function to print various type of alert, warning, success, danger
 
 = 1.4.0 - 30 August, 2019 =
 
