@@ -18,11 +18,12 @@ jQuery(document).ready(function($){
      */
     $('.tutor-option-nav-tabs li a').click(function(e){
         e.preventDefault();
-        var tab_page_id = $(this).attr('href');
+        var tab_page_id = $(this).attr('data-tab');
         $('.option-nav-item').removeClass('current');
         $(this).closest('li').addClass('current');
         $('.tutor-option-nav-page').hide();
         $(tab_page_id).addClass('current-page').show();
+        window.history.pushState('obj', '', $(this).attr('href'));
     });
 
     $('#save_tutor_option').click(function (e) {

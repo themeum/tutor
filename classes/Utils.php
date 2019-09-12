@@ -4596,8 +4596,11 @@ class Utils {
 		$assignment_id = $this->get_post_id($assignment_id);
 		$user_id = $this->get_user_id($user_id);
 
-		$is_running_submit = (int) $wpdb->get_var("SELECT comment_ID FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_approved = 'submitting' AND user_id = {$user_id} AND comment_post_ID = 
-{$assignment_id} ");
+		$is_running_submit = (int) $wpdb->get_var("SELECT comment_ID FROM {$wpdb->comments} 
+		WHERE comment_type = 'tutor_assignment' 
+		AND comment_approved = 'submitting' 
+		AND user_id = {$user_id} 
+		AND comment_post_ID = {$assignment_id} ");
 
 		return $is_running_submit;
 	}
@@ -5105,6 +5108,21 @@ class Utils {
 				WHERE topic.post_parent = {$course_id} AND items.post_status = 'publish' order by topic.menu_order ASC, items.menu_order ASC;");
 
 		return $contents;
+	}
+
+	/**
+	 * @param string $grade_for
+	 *
+	 * @return array|null|object
+	 *
+	 * Get Gradebooks lists by type
+	 *
+	 * @since v.1.4.2
+	 */
+	public function get_gradebooks(){
+		global $wpdb;
+		$results = $wpdb->get_results("SELECT * FROM {$wpdb->tutor_gradebooks}");
+		return $results;
 	}
 
 

@@ -97,9 +97,13 @@ class Ajax{
 			$wpdb->update( $wpdb->comments, array('comment_content' => $review),
 				array('comment_ID' => $previous_rating_id)
 			);
-			$wpdb->update( $wpdb->commentmeta, array('meta_value' => $rating),
-				array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating')
-			);
+
+			$rating_info = $wpdb->get_row("SELECT * FROM {$wpdb->commentmeta} WHERE comment_id = {$previous_rating_id} AND meta_key = 'tutor_rating'; ");
+			if ($rating_info){
+				$wpdb->update( $wpdb->commentmeta, array('meta_value' => $rating), array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating') );
+			}else{
+				$wpdb->insert( $wpdb->commentmeta, array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating', 'meta_value' => $rating) );
+			}
 		}else{
 			$data = array(
 				'comment_post_ID'   => $course_id,

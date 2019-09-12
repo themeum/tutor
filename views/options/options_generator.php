@@ -14,6 +14,7 @@
 			?>
             <ul class="tutor-option-nav-tabs">
 				<?php
+                $tab_page = sanitize_text_field(tutils()->array_get('tab_page', $_GET));
 				foreach ($options_attr as $key => $option_group){
 					if (empty($option_group)){
 						continue;
@@ -21,10 +22,14 @@
 					if ( ! $first_item){
 						$first_item = $key;
 					}
-					$is_first_item = ($first_item === $key);
-					$current_class = $is_first_item ? 'current' : '';
-
-					echo "<li class='option-nav-item {$current_class}'><a href='#{$key}' class='tutor-option-nav-item'>{$option_group['label']}</a> </li>";
+					$current_page = ($first_item === $key);
+					$current_class = $current_page ? 'current' : '';
+					if ($tab_page){
+						$current_class = $tab_page === $key? 'current' : '';
+					}
+					
+					$nav_url = add_query_arg(array('tab_page' => $key));
+					echo "<li class='option-nav-item {$current_class}'><a href='{$nav_url}' data-tab='#{$key}' class='tutor-option-nav-item'>{$option_group['label']}</a> </li>";
 				}
 				?>
             </ul>
@@ -35,10 +40,14 @@
 				if (empty($option_group)){
 					continue;
 				}
-				$is_first_item = ($first_item === $key);
+				$current_page = ($first_item === $key);
+				if ($tab_page){
+					$current_page = $tab_page === $key? 'current' : '';
+				}
+
 				?>
 
-                <div id="<?php echo $key; ?>" class="tutor-option-nav-page <?php echo $is_first_item ? 'current-page' : ''; ?> " style="display: <?php echo $is_first_item ? 'block' : 'none' ?>;" >
+                <div id="<?php echo $key; ?>" class="tutor-option-nav-page <?php echo $current_page ? 'current-page' : ''; ?> " style="display: <?php echo $current_page ? 'block' : 'none' ?>;" >
                     <!--<h3><?php /*echo $option_group['label']; */?></h3>-->
 
 					<?php
