@@ -3,13 +3,14 @@
 global $post;
 $currentPost = $post;
 
+$quiz_id = get_the_ID();
 $is_started_quiz = tutor_utils()->is_started_quiz();
 
 $previous_attempts = tutor_utils()->quiz_attempts();
 $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
-$questions_order = tutor_utils()->get_quiz_option(get_the_ID(), 'questions_order', 'rand');
-$attempts_allowed = tutor_utils()->get_quiz_option(get_the_ID(), 'attempts_allowed', 0);
-$passing_grade = tutor_utils()->get_quiz_option(get_the_ID(), 'passing_grade', 0);
+$questions_order = tutor_utils()->get_quiz_option($quiz_id, 'questions_order', 'rand');
+$attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
+$passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
 
 $attempt_remaining = $attempts_allowed - $attempted_count;
 ?>
@@ -363,7 +364,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                 <form id="tutor-finish-quiz" method="post">
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
-                    <input type="hidden" value="<?php echo get_the_ID(); ?>" name="quiz_id"/>
+                    <input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
                     <input type="hidden" value="tutor_finish_quiz_attempt" name="tutor_action"/>
 
                     <button type="submit" class="tutor-button" name="finish_quiz_btn" value="finish_quiz">
@@ -381,7 +382,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                 <form id="tutor-start-quiz" method="post">
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
-                    <input type="hidden" value="<?php echo get_the_ID(); ?>" name="quiz_id"/>
+                    <input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
                     <input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
                     <button type="submit" class="tutor-button" name="start_quiz_btn" value="start_quiz">
@@ -394,9 +395,11 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 		}
 
 		if ($previous_attempts){
+		    ob_start();
+
+			do_action('tutor_quiz/previous_attempts_html/before', $previous_attempts, $quiz_id);
 			?>
             <h4 class="tutor-quiz-attempt-history-title"><?php _e('Previous attempts', 'tutor'); ?></h4>
-
             <div class="tutor-quiz-attempt-history single-quiz-page">
                 <table>
                     <tr>
@@ -444,7 +447,6 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
                             <td title="<?php _e('Pass Mark', 'tutor'); ?>">
 								<?php
-
 								$pass_marks = ($attempt->total_marks * $passing_grade) / 100;
 								if ($pass_marks > 0){
 									echo number_format_i18n($pass_marks, 2);
@@ -471,6 +473,10 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                 </table>
             </div>
 			<?php
+			do_action('tutor_quiz/previous_attempts/after', $previous_attempts, $quiz_id);
+
+			$previous_attempts_html = ob_get_clean();
+            echo apply_filters('tutor_quiz/previous_attempts_html', $previous_attempts_html, $previous_attempts, $quiz_id);
 		}
 	}
 	?>

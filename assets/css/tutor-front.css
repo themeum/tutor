@@ -1084,6 +1084,10 @@ span.toogle-informaiton-icon {
   }
 }
 
+.sidebar-hidden a.tutor-lesson-sidebar-hide-bar .tutor-icon-angle-left:before {
+  content: "\e903";
+}
+
 .tutor-sidebar-tabs-wrap {
   border-top: 1px solid #E0E9EC;
 }
@@ -6297,6 +6301,24 @@ END Content Drip
 
 /**
 END Alert CSS
+ */
+/**
+GradeBook
+ */
+.gradename-bg {
+  text-align: center;
+  color: #ffffff;
+  height: 32px;
+  font-size: 16px;
+  line-height: 32px;
+  padding: 0 8px;
+  display: inline-block;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+/**
+* END Gradebook
  */
 /* *********************** */
 /* Tutor Dashboard */

@@ -329,6 +329,9 @@ span.toogle-informaiton-icon {
 		font-size: 19px;
 	}
 }
+.sidebar-hidden a.tutor-lesson-sidebar-hide-bar .tutor-icon-angle-left:before{
+	content: "\e903";
+}
 
 .tutor-sidebar-tabs-wrap{
 	border-top: 1px solid #E0E9EC;
