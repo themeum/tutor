@@ -5,16 +5,19 @@ if ( ! defined( 'ABSPATH' ) )
 
 /**
  * @param null $template
+ * @param bool $tutor_pro
  *
  * @return bool|string
  *
  * Load template with override file system
  *
  * @since v.1.0.0
+ * @updated v.1.4.2
+ *
  */
 
 if ( ! function_exists('tutor_get_template')) {
-	function tutor_get_template( $template = null ) {
+	function tutor_get_template( $template = null, $tutor_pro = false ) {
 		if ( ! $template ) {
 			return false;
 		}
@@ -31,6 +34,9 @@ if ( ! function_exists('tutor_get_template')) {
 		$file_in_theme = $template_location;
 		if ( ! file_exists( $template_location ) ) {
 			$template_location = trailingslashit( tutor()->path ) . "templates/{$template}.php";
+			if ( ! file_exists($template_location) && $tutor_pro && function_exists('tutor_pro')){
+				$template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+			}
 
 			if ( ! file_exists($template_location)){
 				echo '<div class="tutor-notice-warning"> '.__(sprintf('The file you are trying to load is not exists in your theme or tutor plugins location, if you are a developer and extending tutor plugin, please create a php file at location %s ', "<code>{$file_in_theme}</code>"), 'tutor').' </div>';
@@ -38,6 +44,42 @@ if ( ! function_exists('tutor_get_template')) {
 		}
 
 		return apply_filters('tutor_get_template_path', $template_location, $template);
+	}
+}
+
+/**
+ * @param null $template
+ * @param bool $tutor_pro
+ *
+ * @return bool|mixed|void
+ *
+ * Get only template path without any warning...
+ *
+ * @since v.1.4.2
+ */
+if ( ! function_exists('tutor_get_template_path')) {
+	function tutor_get_template_path( $template = null, $tutor_pro = false ) {
+		if ( ! $template ) {
+			return false;
+		}
+		$template = str_replace( '.', DIRECTORY_SEPARATOR, $template );
+
+		/**
+		 * Get template first from child-theme if exists
+		 * If child theme not exists, then get template from parent theme
+		 */
+		$template_location = trailingslashit( get_stylesheet_directory() ) . "tutor/{$template}.php";
+		if ( ! file_exists( $template_location ) ) {
+			$template_location = trailingslashit( get_template_directory() ) . "tutor/{$template}.php";
+		}
+		if ( ! file_exists( $template_location ) ) {
+			$template_location = trailingslashit( tutor()->path ) . "templates/{$template}.php";
+		}
+		if ( ! file_exists($template_location) && $tutor_pro && function_exists('tutor_pro')){
+			$template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+		}
+
+		return apply_filters( 'tutor_get_template_path', $template_location, $template );
 	}
 }
 
@@ -54,7 +96,7 @@ if ( ! function_exists('tutor_get_template')) {
  */
 
 if ( ! function_exists('tutor_load_template')) {
-	function tutor_load_template( $template = null, $variables = array() ) {
+	function tutor_load_template( $template = null, $variables = array(), $tutor_pro = false ) {
 		$variables = (array) $variables;
 		$variables = apply_filters('get_tutor_load_template_variables', $variables);
 		extract($variables);
@@ -65,7 +107,7 @@ if ( ! function_exists('tutor_load_template')) {
 		}
 
 		do_action('tutor_load_template_before', $template, $variables);
-		include tutor_get_template( $template );
+		include tutor_get_template( $template, $tutor_pro );
 		do_action('tutor_load_template_after', $template, $variables);
 	}
 }

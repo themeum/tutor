@@ -689,6 +689,11 @@ body {
   align-items: flex-start;
 }
 
+table.course-single-gradebooks .datetime {
+  margin: 0;
+  font-size: 80%;
+}
+
 /* ***********************      */
 /* Single Lesson  */
 /************************       */

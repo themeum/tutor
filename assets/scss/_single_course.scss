@@ -53,10 +53,10 @@
     font-weight: 500;
   }
   .tutor-single-rating-count i{
-     color: var(--tutor-light-color);
-     font-style: normal;
-     display: inline-block;
-     margin-left: 4px;
+    color: var(--tutor-light-color);
+    font-style: normal;
+    display: inline-block;
+    margin-left: 4px;
   }
 }
 
@@ -187,7 +187,7 @@
     border: 1px solid #ddd;
     border-radius: 4px;
   }
-  
+
 }
 
 .tutor-single-course-meta.tutor-lead-meta ul{
@@ -237,7 +237,7 @@
     color: var(--tutor-text-color);
     font-weight: 700;
   }
-  
+
   .tutor-single-course-meta.tutor-lead-meta ul li span::after{
     content: ':';
     color: var(--tutor-text-color);
@@ -348,4 +348,8 @@
   flex-direction: row;
   display: flex;
   align-items: flex-start;
+}
+table.course-single-gradebooks .datetime{
+  margin: 0;
+  font-size: 80%;
 }
