@@ -596,7 +596,11 @@ a.tutor-btn.bordered-btn:hover,
   border-bottom: 1px solid #dedfe0;
   margin-bottom: 45px;
 }
-
+.tutor-button-block{
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+}
 .tutor-wrap{
   width: 100%;
 }
@@ -3538,7 +3542,6 @@ END Alert CSS
 /**
 GradeBook
  */
-
 .gradename-bg{
   text-align: center;
   color: #ffffff;
@@ -3549,6 +3552,9 @@ GradeBook
   display: inline-block;
   border-radius: 20px;
   font-weight: bold;
+}
+.generate-course-gradebook-btn-wrap{
+  margin: 10px 0;
 }
 /**
 * END Gradebook

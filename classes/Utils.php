@@ -2119,9 +2119,13 @@ class Utils {
 	 * Get old input
 	 *
 	 * @since v.1.0.0
+	 * @updated v.1.4.2
 	 */
-	public function input_old($input = ''){
-		$value = $this->avalue_dot($input, $_REQUEST);
+	public function input_old($input = '', $old_data = null){
+		if ( ! $old_data){
+			$old_data = $_REQUEST;
+		}
+		$value = $this->avalue_dot($input, $old_data);
 		if ($value){
 			return $value;
 		}
@@ -5121,7 +5125,7 @@ class Utils {
 	 */
 	public function get_gradebooks(){
 		global $wpdb;
-		$results = $wpdb->get_results("SELECT * FROM {$wpdb->tutor_gradebooks}");
+		$results = $wpdb->get_results("SELECT * FROM {$wpdb->tutor_gradebooks} ORDER BY grade_point DESC ");
 		return $results;
 	}
 
@@ -5175,6 +5179,35 @@ class Utils {
 		}
 
 		return $attempt;
+	}
+
+	/**
+	 * @param int $course_id
+	 * @param int $user_id
+	 *
+	 * @return string
+	 *
+	 * Print Course Status Context
+	 *
+	 * @since v.1.4.2
+	 */
+	public function course_progress_status_context($course_id = 0, $user_id = 0){
+		$course_id = $this->get_post_id($course_id);
+		$user_id = $this->get_user_id($user_id);
+
+		$is_completed = tutils()->is_completed_course($course_id, $user_id);
+		$html = '';
+		if ($is_completed){
+			$html = '<span class="course-completion-status course-completed"><i class="tutor-icon-mark"></i> '.__('Completed', 'tutor-pro').' </span>';
+		}else{
+			$is_in_progress = tutor_utils()->get_completed_lesson_count_by_course($course_id, $user_id);
+			if($is_in_progress){
+				$html = '<span class="course-completion-status course-inprogress"><i class="tutor-icon-refresh-button-1"></i> '.__('In Progress', 'tutor-pro').' </span>';
+			}else{
+				$html = '<span class="course-completion-status course-not-taken"><i class="tutor-icon-spinner"></i> '.__('Not Taken', 'tutor-pro').' </span>';
+			}
+		}
+		return $html;
 	}
 
 

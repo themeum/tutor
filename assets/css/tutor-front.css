@@ -2995,6 +2995,14 @@ a.tutor-btn.bordered-btn:hover,
   margin-bottom: 45px;
 }
 
+.tutor-button-block {
+  width: 100%;
+  text-align: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
 .tutor-wrap {
   width: 100%;
 }
@@ -6320,6 +6328,10 @@ GradeBook
   display: inline-block;
   border-radius: 20px;
   font-weight: bold;
+}
+
+.generate-course-gradebook-btn-wrap {
+  margin: 10px 0;
 }
 
 /**
