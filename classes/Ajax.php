@@ -252,17 +252,21 @@ class Ajax{
 
 		do_action('tutor_addon_before_enable_disable');
 		if ($isEnable){
+			do_action("tutor_addon_before_enable_{$addonFieldName}");
 			do_action('tutor_addon_before_enable', $addonFieldName);
 			$addonsConfig[$addonFieldName]['is_enable'] = 1;
 			update_option('tutor_addons_config', $addonsConfig);
 
 			do_action('tutor_addon_after_enable', $addonFieldName);
+			do_action("tutor_addon_after_enable_{$addonFieldName}");
 		}else{
+			do_action("tutor_addon_before_disable_{$addonFieldName}");
 			do_action('tutor_addon_before_disable', $addonFieldName);
 			$addonsConfig[$addonFieldName]['is_enable'] = 0;
 			update_option('tutor_addons_config', $addonsConfig);
 
 			do_action('tutor_addon_after_disable', $addonFieldName);
+			do_action("tutor_addon_after_disable_{$addonFieldName}");
 		}
 
 		do_action('tutor_addon_after_enable_disable');

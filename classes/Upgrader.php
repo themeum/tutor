@@ -12,6 +12,12 @@ class Upgrader {
 		add_action('admin_init', array($this, 'init_upgrader'));
 
 		add_action( 'in_plugin_update_message-tutor/tutor.php', array( $this, 'in_plugin_update_message' ), 10, 2 );
+
+		/**
+		 * Installing Gradebook Addon from TutorPro
+		 *
+		 */
+		add_action('tutor_addon_before_enable_tutor-pro/addons/gradebook/gradebook.php', array($this, 'install_gradebook'));
 	}
 
 	public function init_upgrader(){
@@ -48,7 +54,6 @@ class Upgrader {
 				update_option('tutor_version', '1.3.1');
 				flush_rewrite_rules();
 			}
-
 		}
 	}
 
@@ -56,14 +61,61 @@ class Upgrader {
 	public function in_plugin_update_message( $args, $response ){
 		$upgrade_notice = strip_tags(tutils()->array_get('upgrade_notice', $response));
 		if ($upgrade_notice){
-
 			$upgrade_notice = "<span class='version'><code>v.{$response->new_version}</code></span> <br />".$upgrade_notice;
 
 			echo apply_filters( 'tutor_in_plugin_update_message', $upgrade_notice ? '</p> <div class="tutor_plugin_update_notice">' .$upgrade_notice. '</div> <p class="dummy">' : '' );
 		}
-
 	}
 
+
+	/**
+	 * Installing Gradebook if Tutor Pro exists
+	 *
+	 * @since v.1.4.2
+	 */
+	public function install_gradebook(){
+		global $wpdb;
+
+		$exists_gradebook_table = $wpdb->query("SHOW TABLES LIKE '{$wpdb->tutor_gradebooks}';");
+		$exists_gradebook_results_table = $wpdb->query("SHOW TABLES LIKE '{$wpdb->tutor_gradebooks_results}';");
+		$charset_collate = $wpdb->get_charset_collate();
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+		if ( ! $exists_gradebook_table){
+			$gradebook_table = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_gradebooks} (
+				gradebook_id int(11) NOT NULL AUTO_INCREMENT,
+				grade_name varchar(50) DEFAULT NULL,
+				grade_point varchar(20) DEFAULT NULL,
+				grade_point_to varchar(20) DEFAULT NULL,
+				percent_from int(3) DEFAULT NULL,
+				percent_to int(3) DEFAULT NULL,
+				grade_config longtext,
+				PRIMARY KEY (gradebook_id)
+			) $charset_collate;";
+			dbDelta( $gradebook_table );
+		}
+		if ( ! $exists_gradebook_results_table){
+			$gradebook_results = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_gradebooks_results} (
+				gradebook_result_id int(11) NOT NULL AUTO_INCREMENT,
+				user_id int(11) DEFAULT NULL,
+				course_id int(11) DEFAULT NULL,
+				quiz_id int(11) DEFAULT NULL,
+				assignment_id int(11) DEFAULT NULL,
+				gradebook_id int(11) DEFAULT NULL,
+				result_for varchar(50) DEFAULT NULL,
+				grade_name varchar(50) DEFAULT NULL,
+				grade_point varchar(20) DEFAULT NULL,
+				earned_grade_point varchar(20) DEFAULT NULL,
+				earned_percent int(3) DEFAULT NULL,
+				generate_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+				update_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+				PRIMARY KEY (gradebook_result_id)
+			) {$charset_collate};";
+			dbDelta( $gradebook_results );
+		}
+
+	}
 
 
 
