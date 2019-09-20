@@ -22,6 +22,10 @@ class Addons {
 
 	public function tutor_addons_lists_to_show(){
 		$addons = array(
+			'gradebook'     => array(
+				'name'          => __('Gradebook', 'tutor-multi-instructors'),
+				'description'   => 'Shows student progress from assignment and quiz',
+			),
 			'content-drip'  => array(
 				'name'          => __('Content Drip', 'tutor-pmpro'),
 				'description'   => 'Unlock lessons by schedule or when the student meets specific condition.',

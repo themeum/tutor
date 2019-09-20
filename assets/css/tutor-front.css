@@ -6322,12 +6322,25 @@ GradeBook
   text-align: center;
   color: #ffffff;
   height: 32px;
+  min-width: 32px;
   font-size: 16px;
   line-height: 32px;
   padding: 0 8px;
   display: inline-block;
   border-radius: 20px;
   font-weight: bold;
+}
+
+.gradename-outline {
+  text-align: center;
+  height: 32px;
+  min-width: 32px;
+  font-size: 16px;
+  line-height: 32px;
+  padding: 0 8px;
+  display: inline-block;
+  border-radius: 20px;
+  border: 2px solid;
 }
 
 .generate-course-gradebook-btn-wrap {
