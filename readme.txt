@@ -248,14 +248,12 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 * Added: Assignment submmiting / submitted flag to lesson sidebar in lesson single page
 * Added: Template support from Tutor Pro
 * Added: action hook after addon enable disable,
-```
 do_action('tutor_addon_before_enable_disable');
 do_action('tutor_addon_before_enable', $addonFieldName);
 do_action('tutor_addon_after_enable', $addonFieldName);
 do_action('tutor_addon_before_disable', $addonFieldName);
 do_action('tutor_addon_after_disable', $addonFieldName);
 do_action('tutor_addon_after_enable_disable');
-```
 * Updated: Tutor Settings page URL is now updating when change settings page
 * Fixed: Rating placing issue, sometime it missed rating value, but it will never hapen again.
 * Fixed: `.tutor-icon-angle-left` `.tutor-icon-angle-right` toggle during lesson single sidebar show hide
