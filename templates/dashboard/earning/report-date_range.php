@@ -103,7 +103,7 @@ $statements = tutor_utils()->get_earning_statements($user_id, compact('start_dat
 
 
 <div class="tutor-dashboard-item-group">
-    <h4><?php echo sprintf(__("Showing Result from %s to %s", 'tutor-report'), $begin->format('d F, Y'), $end->format('d F, Y')); ?></h4>
+    <h4><?php echo sprintf(__("Showing Result from %s to %s", 'tutor'), $begin->format('d F, Y'), $end->format('d F, Y')); ?></h4>
     <?php
         tutor_load_template('dashboard.earning.chart-body', compact('chartData', 'statements'));
     ?>

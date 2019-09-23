@@ -98,7 +98,7 @@ $statements = tutor_utils()->get_earning_statements($user_id, compact('year', 'd
 
 
 <div class="tutor-dashboard-item-group">
-    <h4><?php echo sprintf(__("Earning Data for the year of %s", 'tutor-report'), $year);?></h4>
+    <h4><?php echo sprintf(__("Earning Data for the year of %s", 'tutor'), $year);?></h4>
     <?php
     tutor_load_template('dashboard.earning.chart-body', compact('chartData', 'statements'));
     ?>

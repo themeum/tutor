@@ -42,7 +42,7 @@ global $wpdb;
 
             <ul>
                 <li>
-					<?php _e('Time Duration : ') ?>
+					<?php _e('Time Duration : ', 'tutor') ?>
                     <strong><?php echo $time_duration["value"] ? $time_duration["value"] . ' ' .$time_duration["time"] : __('No limit', 'tutor'); ?></strong>
                 </li>
                 <!--<li>
@@ -50,11 +50,11 @@ global $wpdb;
                     <strong><?php /*echo "7 Days, 12 Hour"; */?></strong>
                 </li>-->
                 <li>
-					<?php _e('Total Points : ') ?>
+					<?php _e('Total Points : ', 'tutor') ?>
                     <strong><?php echo $total_mark; ?></strong>
                 </li>
                 <li>
-					<?php _e('Minimum Pass Points : ') ?>
+					<?php _e('Minimum Pass Points : ', 'tutor') ?>
                     <strong><?php echo $pass_mark; ?></strong>
                 </li>
             </ul>
@@ -161,7 +161,7 @@ global $wpdb;
                     <div class="assignment-result-wrap">
                         <h4><?php echo sprintf(__('You received %s points out of %s', 'tutor'), "<span class='received-marks'>{$given_mark}</span>", "<span class='out-of-marks'>{$max_mark}</span>") ?></h4>
                         <h4 class="submitted-assignment-grade">
-							<?php _e('Your Grade is '); ?>
+							<?php _e('Your Grade is ', 'tutor'); ?>
 							<?php if ($given_mark >= $pass_mark){
 								?>
                                 <span class="submitted-assignment-grade-pass">
@@ -243,10 +243,6 @@ global $wpdb;
 			}
 		}
 		?>
-
-
-
-
     </div>
 
 <?php do_action('tutor_assignment/single/after/content'); ?>
