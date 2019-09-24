@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.4.2
+Stable tag: 1.4.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.4.2 - 19 September, 2019 =
+= 1.4.2 - 24 September, 2019 =
 
 * Added: Greadbook Addons in the Tutor LMS Pro version
 * Added: action hook after quiz attempt end, `do_action('tutor_quiz/attempt_ended', $attempt);`, `do_action('tutor_quiz/attempt_analysing/before', $attempt);`
@@ -257,6 +257,7 @@ do_action('tutor_addon_after_enable_disable');
 * Updated: Tutor Settings page URL is now updating when change settings page
 * Fixed: Rating placing issue, sometime it missed rating value, but it will never hapen again.
 * Fixed: `.tutor-icon-angle-left` `.tutor-icon-angle-right` toggle during lesson single sidebar show hide
+* Updated: Addon icons
 
 
 = 1.4.1 - 10 September, 2019 =
