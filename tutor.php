@@ -8,8 +8,8 @@ Version: 1.4.2
 Author URI: http://themeum.com
 Requires at least: 4.5
 Tested up to: 5.2
+License: GPLv2 or later
 Text Domain: tutor
-Domain Path: /languages/
 */
 if ( ! defined( 'ABSPATH' ) )
 	exit;
