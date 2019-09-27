@@ -427,7 +427,26 @@ if ( ! function_exists('get_item_content_drip_settings')){
 if ( ! function_exists('tutor_alert')){
 	function tutor_alert($msg = null, $type = 'warning', $echo = true){
 	    if ( ! $msg){
-	        $msg = tutor_flash_get($type);
+
+	        if ($type === 'any'){
+		        if ( ! $msg){
+			        $type = 'warning';
+			        $msg = tutor_flash_get($type);
+		        }
+		        if ( ! $msg){
+			        $type = 'danger';
+			        $msg = tutor_flash_get($type);
+		        }
+		        if ( ! $msg){
+			        $type = 'success';
+			        $msg = tutor_flash_get($type);
+		        }
+
+	        }else{
+		        $msg = tutor_flash_get($type);
+	        }
+
+
         }
         if ( ! $msg){
 	        return $msg;
@@ -491,7 +510,7 @@ if ( ! function_exists('tutor_flash_get')) {
 		if ( $key ) {
 			// ensure session is started
 			if ( session_status() !== PHP_SESSION_ACTIVE ) {
-				session_start();
+				@session_start();
 			}
 			if ( empty( $_SESSION ) ) {
 				return null;
@@ -503,5 +522,22 @@ if ( ! function_exists('tutor_flash_get')) {
 			return $message;
 		}
 		return $key;
+	}
+}
+
+if ( ! function_exists('tutor_redirect_back')) {
+	/**
+	 * @param null $url
+     *
+     * Redirect to back or a specific URL and terminate
+     *
+     * @since v.1.4.3
+	 */
+	function tutor_redirect_back( $url = null ) {
+		if ( ! $url ) {
+			$url = tutils()->referer();
+		}
+		wp_redirect( $url );
+		exit();
 	}
 }

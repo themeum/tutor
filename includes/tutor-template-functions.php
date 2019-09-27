@@ -112,6 +112,31 @@ if ( ! function_exists('tutor_load_template')) {
 	}
 }
 
+
+function tutor_load_template_part($template = null, $variables = array(), $tutor_pro = false){
+	$variables = (array) $variables;
+	$variables = apply_filters('get_tutor_load_template_variables', $variables);
+	extract($variables);
+
+	/**
+	 * Get template first from child-theme if exists
+	 * If child theme not exists, then get template from parent theme
+	 */
+	$template_location = trailingslashit( get_stylesheet_directory() ) . "tutor/template.php";
+	if ( ! file_exists($template_location)){
+		$template_location = trailingslashit( get_template_directory() ) . "tutor/template.php";
+	}
+
+	if ( ! file_exists( $template_location ) ) {
+		$template_location = trailingslashit( tutor()->path ) . "templates/template.php";
+		if ( ! file_exists($template_location) && $tutor_pro && function_exists('tutor_pro')){
+			$template_location = trailingslashit( tutor_pro()->path ) . "templates/template.php";
+		}
+	}
+
+	include apply_filters('tutor_get_template_part_path', $template_location, $template);
+}
+
 if ( ! function_exists('tutor_course_loop_start')){
 	function tutor_course_loop_start($echo = true ){
 		ob_start();

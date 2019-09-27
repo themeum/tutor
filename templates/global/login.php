@@ -36,15 +36,27 @@ if ( ! defined( 'ABSPATH' ) )
 	    'id_remember' => 'rememberme',
 	    'id_submit' => 'wp-submit',
 	    'remember' => true,
-	    'value_username' => '',
+	    'value_username' => tutils()->input_old('log'),
 	    // Set 'value_remember' to true to default the "Remember me" checkbox to checked.
 	    'value_remember' => false,
 	    'wp_lostpassword_url' => wp_lostpassword_url(),
 	    'wp_lostpassword_label' => __('Forgot Password?'),
     );
 
+    //action="' . esc_url( site_url( 'wp-login.php', 'login_post' ) ) . '"
+
+	tutor_alert(null, 'warning');
+
+	ob_start();
+	tutor_nonce_field();
+	$nonce_field = ob_get_clean();
+
     $form = '
-		<form name="' . $args['form_id'] . '" id="' . $args['form_id'] . '" action="' . esc_url( site_url( 'wp-login.php', 'login_post' ) ) . '" method="post">
+		<form name="' . $args['form_id'] . '" id="' . $args['form_id'] . '" method="post">
+	
+		'.$nonce_field.'
+		
+		<input type="hidden" name="tutor_action" value="tutor_user_login" />
 			<p class="login-username">
 				<input type="text" placeholder="'.esc_html( $args['label_username'] ).'" name="log" id="' . esc_attr( $args['id_username'] ) . '" class="input" value="' . esc_attr( $args['value_username'] ) . '" size="20" />
 			</p>

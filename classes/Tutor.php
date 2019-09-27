@@ -50,6 +50,7 @@ final class Tutor{
 	private $course_widget;
 	private $upgrader;
 	private $dashboard;
+	private $form_handler;
 
 	/**
 	 * @return null|Tutor
@@ -135,6 +136,7 @@ final class Tutor{
 		$this->course_widget = new Course_Widget();
 		$this->upgrader = new Upgrader();
 		$this->dashboard = new Dashboard();
+		$this->form_handler = new FormHandler();
 
 		/**
 		 * Run Method

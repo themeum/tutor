@@ -1815,6 +1815,11 @@ class Utils {
 	}
 
 	/**
+	 *
+	 * @param int $course_id
+	 * @param int $order_id
+	 * @param int $user_id
+	 *
 	 * Saving enroll information to posts table
 	 * post_author = enrolled_student_id (wp_users id)
 	 * post_parent = enrolled course id
@@ -1823,14 +1828,18 @@ class Utils {
 	 * @return bool;
 	 *
 	 * @since v.1.0.0
+	 * @updated v.1.4.3
+	 *
+	 * @return bool
 	 */
-	public function do_enroll($course_id = 0, $order_id = 0){
+
+	public function do_enroll($course_id = 0, $order_id = 0, $user_id = 0){
 		if ( ! $course_id){
 			return false;
 		}
 
 		do_action('tutor_before_enroll', $course_id);
-		$user_id = get_current_user_id();
+		$user_id = $this->get_user_id($user_id);
 		$title = __('Course Enrolled', 'tutor')." &ndash; ".date_i18n(get_option('date_format')) .' @ '.date_i18n(get_option('time_format') ) ;
 
 		$enrolment_status = 'completed';
@@ -2061,6 +2070,7 @@ class Utils {
 		$new_navs = array(
 			'settings'          => __('Settings', 'tutor'),
 			'logout'            => __('Logout', 'tutor'),
+			'retrieve-password' => array('title' => __('Retrieve Password', 'tutor'), 'login_require' => false),
 		);
 		$all_nav_items = array_merge($nav_items, $new_navs);
 

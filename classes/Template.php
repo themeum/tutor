@@ -288,27 +288,39 @@ class Template extends Tutor_Base {
 					die();
 				}
 
-				/**
-				 * Load view page based on dashboard Endpoint
-				 */
-				if (is_user_logged_in()) {
-					$template = tutor_get_template( 'dashboard' );
+
+				$dashboard_page = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
+				$get_dashboard_config = tutils()->tutor_dashboard_pages();
+				$target_dashboard_page = tutils()->array_get($dashboard_page, $get_dashboard_config);
+
+				if (isset($target_dashboard_page['login_require']) && $target_dashboard_page['login_require'] === false){
+					$template = tutor_load_template_part( "dashboard.{$dashboard_page}" );
+				}else{
+
 					/**
-					 * Check page page permission
-					 *
-					 * @since v.1.3.4
+					 * Load view page based on dashboard Endpoint
 					 */
-					$query_var = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
-					$dashboard_pages = tutor_utils()->tutor_dashboard_pages();
-					$dashboard_page_item = tutor_utils()->array_get($query_var, $dashboard_pages);
-					$auth_cap = tutor_utils()->array_get('auth_cap', $dashboard_page_item);
-					if ($auth_cap && ! current_user_can($auth_cap) ){
-						wp_die(__('Permission Denied', 'tutor'));
+					if (is_user_logged_in()) {
+						$template = tutor_get_template( 'dashboard' );
+						/**
+						 * Check page page permission
+						 *
+						 * @since v.1.3.4
+						 */
+						$query_var = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
+						$dashboard_pages = tutor_utils()->tutor_dashboard_pages();
+						$dashboard_page_item = tutor_utils()->array_get($query_var, $dashboard_pages);
+						$auth_cap = tutor_utils()->array_get('auth_cap', $dashboard_page_item);
+						if ($auth_cap && ! current_user_can($auth_cap) ){
+							wp_die(__('Permission Denied', 'tutor'));
+						}
+
+					}else{
+						$template = tutor_get_template( 'login' );
 					}
 
-				}else{
-					$template = tutor_get_template( 'login' );
 				}
+
 			}
 		}
 
