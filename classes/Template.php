@@ -290,7 +290,7 @@ class Template extends Tutor_Base {
 
 
 				$dashboard_page = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
-				$get_dashboard_config = tutils()->tutor_dashboard_pages();
+				$get_dashboard_config = tutils()->tutor_dashboard_permalinks();
 				$target_dashboard_page = tutils()->array_get($dashboard_page, $get_dashboard_config);
 
 				if (isset($target_dashboard_page['login_require']) && $target_dashboard_page['login_require'] === false){

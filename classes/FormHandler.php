@@ -22,6 +22,7 @@ class FormHandler {
 		add_action('tutor_action_tutor_retrieve_password', array($this, 'tutor_retrieve_password'));
 
 		add_action( 'tutor_reset_password_notification', array( $this, 'reset_password_notification' ), 10, 2 );
+		add_filter( 'tutor_lostpassword_url', array( $this, 'lostpassword_url' ) );
 	}
 
 	public function process_login(){
@@ -147,9 +148,7 @@ class FormHandler {
 
 
 	public function reset_password_notification( $user_login = '', $reset_key = ''){
-
-		//var_dump($user_login);
-		///die(var_dump($reset_key));
+		$this->sendNotification($user_login, $reset_key);
 
 		$html = "<h3>".__('Check your E-Mail', 'tutor')."</h3>";
 		$html .= "<p>".__("We've sent an email to this account's email address. Click the link in the email to reset your password", 'tutor')."</p>";
@@ -157,5 +156,29 @@ class FormHandler {
 		tutor_flash_set('success', $html);
 	}
 
+	public function lostpassword_url($url){
+		return tutils()->tutor_dashboard_url('retrieve-password');
+	}
+
+
+	public function sendNotification($user_login, $reset_key){
+		//Send the E-Mail to user
+
+		$user_data = get_user_by( 'login', $user_login );
+
+
+		$variable = array(
+			'user_login' => $user_login,
+			'reset_key' => $reset_key,
+			'user_id' => $user_data->ID,
+		);
+
+		ob_start();
+		tutor_load_template('email.send-reset-password', $variable);
+		$html = ob_get_clean();
+
+		die($html);
+
+	}
 
 }

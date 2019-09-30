@@ -2070,11 +2070,23 @@ class Utils {
 		$new_navs = array(
 			'settings'          => __('Settings', 'tutor'),
 			'logout'            => __('Logout', 'tutor'),
-			'retrieve-password' => array('title' => __('Retrieve Password', 'tutor'), 'login_require' => false),
+			//'retrieve-password' => array('title' => __('Retrieve Password', 'tutor'), 'login_require' => false),
 		);
 		$all_nav_items = array_merge($nav_items, $new_navs);
 
 		return apply_filters('tutor_dashboard/nav_items_all', $all_nav_items);
+	}
+
+	public function tutor_dashboard_permalinks(){
+		$dashboard_pages = $this->tutor_dashboard_pages();
+
+		$dashboard_permalinks = apply_filters('tutor_dashboard/permalinks', array(
+			'retrieve-password' => array('title' => __('Retrieve Password', 'tutor'), 'login_require' => false),
+		));
+
+		$dashboard_pages = array_merge($dashboard_pages, $dashboard_permalinks);
+
+		return $dashboard_pages;
 	}
 
 	/**
