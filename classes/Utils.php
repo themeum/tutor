@@ -5252,4 +5252,40 @@ class Utils {
 	}
 
 
+	public function tutor_pages(){
+		$pages = apply_filters('tutor_pages', array(
+			'tutor_dashboard_page_id'   => __('Dashboard Page', 'tutor'),
+			'instructor_register_page'  => __('Instructor Registration Page', 'tutor'),
+			'student_register_page'     => __('Student Registration Page', 'tutor'),
+		));
+
+		$new_pages = array();
+		foreach ($pages as $key => $page){
+			$page_id = (int) get_tutor_option($key);
+
+			$wp_page_name = '';
+			$wp_page = get_post($page_id);
+			$page_exists = (bool) $wp_page;
+			$page_visible = false;
+
+			if ($wp_page){
+				$wp_page_name = $wp_page->post_title;
+				$page_visible = $wp_page->post_status === 'publish';
+			}
+
+			$new_pages[] = array(
+				'option_key'    => $key,
+				'page_name'     => $page,
+				'wp_page_name'  => $wp_page_name,
+				'page_id'       => $page_id,
+				'page_exists'   => $page_exists,
+				'page_visible'  => $page_visible,
+			);
+
+		}
+
+		return $new_pages;
+	}
+
+
 }

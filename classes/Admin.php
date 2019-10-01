@@ -75,6 +75,8 @@ class Admin{
 
 		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
 
+		add_submenu_page('tutor', __('Tools', 'tutor'), __('Tools', 'tutor'), 'manage_tutor', 'tutor-tools', array($this, 'tutor_tools') );
+
 		if ( ! $hasPro){
 			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
 		}
@@ -122,6 +124,21 @@ class Admin{
 
 	public function tutor_status(){
 		include tutor()->path.'views/pages/status.php';
+	}
+
+
+	public function tutor_tools(){
+		$pages = apply_filters('tutor_tool_pages', array(
+			'tutor_pages' => array('title' => __('Tutor Pages', 'tutor') ),
+		));
+
+		$current_page = 'tutor_pages';
+		$requested_page = sanitize_text_field(tutils()->array_get('sub_page', $_GET));
+		if ($requested_page){
+			$current_page = $requested_page;
+		}
+
+		include tutor()->path.'views/pages/tools.php';
 	}
 
 	public function tutor_uninstall(){

@@ -4,11 +4,7 @@
 
 	<?php
 	$environment      = \TUTOR\Admin::get_environment_info();
-
-
 	?>
-
-
 
 	<table class="tutor_status_table widefat" cellspacing="0" id="status">
 		<thead>

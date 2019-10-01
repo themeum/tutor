@@ -541,3 +541,27 @@ if ( ! function_exists('tutor_redirect_back')) {
 		exit();
 	}
 }
+
+/**
+ * @param string $action
+ * @param bool $echo
+ *
+ * @return string
+ *
+ * @since v.1.4.3
+ */
+
+if ( ! function_exists('tutor_action_field')) {
+	function tutor_action_field( $action = '', $echo = true ) {
+		$output = '';
+		if ( $action ) {
+			$output = "<input type='hidden' name='tutor_action' value='{$action}'>";
+		}
+
+		if ( $echo ) {
+			echo $output;
+		} else {
+			return $output;
+		}
+	}
+}

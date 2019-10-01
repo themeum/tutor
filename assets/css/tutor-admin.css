@@ -828,15 +828,11 @@ Video MetaBox
     transition: 300ms;
     text-decoration: none;
 }
-
-
 .tutor-course-builder-attachements .tutor-added-attachment:hover,
 .tutor-course-builder-attachements .tutor-added-attachment:hover .tutor-delete-attachment{
     border-color: #D71830;
     opacity: 1;
 }
-
-
 .tutor-course-builder-attachements .tutor-added-attachment span{
     display: block;
 }
@@ -3256,6 +3252,11 @@ Pagination
     background: #F6FFF2;
     color: #3D7400;
 }
+.tutor-alert.tutor-alert-info{
+    border: 1px solid #13aaf6;
+    background: #eaf8ff;
+    color: #0586c7;
+}
 .tutor-alert::before {
     content: '\e95f';
     position: absolute;
@@ -3288,9 +3289,63 @@ Pagination
     content: "\e90f";
     background: #69BC0D;
 }
+.tutor-alert.tutor-alert-info::before{
+    content: "\e96c";
+    background: #13aaf6;
+}
 .tutor-alert-content p {
     margin: 0;
 }
 /**
 *END Alert CSS
+ */
+
+/**
+ * Tutor Table
+ */
+table.tutor-table {
+    border-spacing: 0;
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #dcdfe5;
+}
+table.tutor-table td,
+table.tutor-table th {
+    padding: 1em 1.41575em;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #dcdfe5;
+}
+table.tutor-table td p:last-child,
+table.tutor-table th p:last-child {
+    margin-bottom: 0; }
+table.tutor-table th {
+    font-weight: 600; }
+table.tutor-table thead th {
+    padding: 1.41575em;
+    vertical-align: middle; }
+table.tutor-table tbody h2 {
+    font-size: 1em;
+    letter-spacing: normal;
+    font-weight: normal; }
+table.tutor-table tbody h2 a {
+    font-weight: normal; }
+table.tutor-table th {
+    background-color: #fafbfc;
+}
+table.tutor-table tbody td {
+    background-color: #ffffff;
+}
+table.tutor-table tbody tr:nth-child(2n) td {
+    background-color: #fafbfc;
+}
+table.tutor-table a{
+    text-decoration: none;
+}
+table.tutor-table p{
+    margin: 0;
+}
+
+/**
+ * END Tutor Table
  */
