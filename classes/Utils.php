@@ -2070,7 +2070,6 @@ class Utils {
 		$new_navs = array(
 			'settings'          => __('Settings', 'tutor'),
 			'logout'            => __('Logout', 'tutor'),
-			//'retrieve-password' => array('title' => __('Retrieve Password', 'tutor'), 'login_require' => false),
 		);
 		$all_nav_items = array_merge($nav_items, $new_navs);
 
@@ -5230,6 +5229,26 @@ class Utils {
 			}
 		}
 		return $html;
+	}
+
+	/**
+	 * @param $user
+	 * @param $new_pass
+	 *
+	 * Reset Password
+	 *
+	 * @since v.1.4.3
+	 */
+	public function reset_password( $user, $new_pass ) {
+		do_action( 'password_reset', $user, $new_pass );
+
+		wp_set_password( $new_pass, $user->ID );
+
+		$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
+		$rp_path   = isset( $_SERVER['REQUEST_URI'] ) ? current( explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) : ''; // WPCS: input var ok, sanitization ok.
+
+		setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+		wp_password_change_notification( $user );
 	}
 
 

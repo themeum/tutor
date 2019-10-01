@@ -518,10 +518,23 @@ class Options {
 				),
 			),
 
-
 		);
 
-		return apply_filters('tutor/options/attr', $attr);
+		$attrs = apply_filters('tutor/options/attr', $attr);
+		$extends = apply_filters('tutor/options/extend/attr', array());
+
+		if (tutils()->count($extends)){
+			foreach ($extends as $extend_key => $extend_option){
+				if (isset($attrs[$extend_key])&& tutils()->count($extend_option['sections']) ){
+					$sections = $attrs[$extend_key]['sections'];
+					$sections = array_merge($sections, $extend_option['sections']);
+					$attrs[$extend_key]['sections'] = $sections;
+				}
+			}
+		}
+
+		return $attrs;
+
 	}
 
 	/**

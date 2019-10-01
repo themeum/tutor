@@ -51,6 +51,7 @@ final class Tutor{
 	private $upgrader;
 	private $dashboard;
 	private $form_handler;
+	private $email;
 
 	/**
 	 * @return null|Tutor
@@ -137,6 +138,7 @@ final class Tutor{
 		$this->upgrader = new Upgrader();
 		$this->dashboard = new Dashboard();
 		$this->form_handler = new FormHandler();
+		$this->email = new Email();
 
 		/**
 		 * Run Method

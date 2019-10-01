@@ -155,13 +155,14 @@ if ( ! function_exists('tutor_load_template_part')) {
  * @since v.1.4.3
  */
 
+if ( ! function_exists('tutor_get_template_html')) {
+	function tutor_get_template_html( $template_name, $variables = array() ) {
+		ob_start();
+		tutor_load_template( $template_name, $variables );
 
-function tutor_get_template_html( $template_name, $variables = array() ) {
-	ob_start();
-	tutor_load_template( $template_name, $variables);
-	return ob_get_clean();
+		return ob_get_clean();
+	}
 }
-
 
 if ( ! function_exists('tutor_course_loop_start')){
 	function tutor_course_loop_start($echo = true ){

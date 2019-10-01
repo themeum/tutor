@@ -294,7 +294,7 @@ class Template extends Tutor_Base {
 				$target_dashboard_page = tutils()->array_get($dashboard_page, $get_dashboard_config);
 
 				if (isset($target_dashboard_page['login_require']) && $target_dashboard_page['login_require'] === false){
-					$template = tutor_load_template_part( "dashboard.{$dashboard_page}" );
+					$template = tutor_load_template_part( "template-part.{$dashboard_page}" );
 				}else{
 
 					/**

@@ -20,6 +20,7 @@ class FormHandler {
 	public function __construct() {
 		add_action('tutor_action_tutor_user_login', array($this, 'process_login'));
 		add_action('tutor_action_tutor_retrieve_password', array($this, 'tutor_retrieve_password'));
+		add_action('tutor_action_tutor_process_reset_password', array($this, 'tutor_process_reset_password'));
 
 		add_action( 'tutor_reset_password_notification', array( $this, 'reset_password_notification' ), 10, 2 );
 		add_filter( 'tutor_lostpassword_url', array( $this, 'lostpassword_url' ) );
@@ -140,7 +141,7 @@ class FormHandler {
 		}
 
 		// Get password reset key (function introduced in WordPress 4.4).
-		$key = get_password_reset_key( $user_data );
+		$key = get_password_reset_key($user_data);
 
 		// Send email notification.
 		do_action( 'tutor_reset_password_notification', $user_login, $key );
@@ -160,12 +161,60 @@ class FormHandler {
 		return tutils()->tutor_dashboard_url('retrieve-password');
 	}
 
+	public function tutor_process_reset_password(){
+		tutils()->checking_nonce();
 
+		$reset_key = sanitize_text_field(tutils()->array_get('reset_key', $_POST));
+		$user_id = (int) sanitize_text_field(tutils()->array_get('user_id', $_POST));
+		$password = sanitize_text_field(tutils()->array_get('password', $_POST));
+		$confirm_password = sanitize_text_field(tutils()->array_get('confirm_password', $_POST));
+
+		$user = get_user_by('ID', $user_id);
+		$user = check_password_reset_key( $reset_key, $user->user_login );
+
+		if ( is_wp_error( $user ) ) {
+			tutor_flash_set('danger', __( 'This key is invalid or has already been used. Please reset your password again if needed.', 'tutor') );
+			return false;
+		}
+
+
+		if ( $user instanceof \WP_User ) {
+			if ( !$password ) {
+				tutor_flash_set('danger', __( 'Please enter your password.', 'tutor') );
+				return false;
+			}
+
+			if ( $password !== $confirm_password) {
+				tutor_flash_set('danger', __( 'Passwords do not match.', 'tutor') );
+				return false;
+			}
+
+			tutils()->reset_password($user, $password);
+
+			do_action( 'tutor_user_reset_password', $user );
+
+			// Perform the login.
+			$creds = array('user_login' => $user->user_login, 'user_password' => $password, 'remember' => true);
+			$user = wp_signon( apply_filters( 'tutor_login_credentials', $creds ), is_ssl() );
+
+			do_action( 'tutor_user_reset_password_login', $user );
+
+			wp_safe_redirect( tutils()->tutor_dashboard_url() );
+			exit;
+		}
+	}
+
+	/**
+	 * @param $user_login
+	 * @param $reset_key
+	 *
+	 * Send E-Mail notification
+	 * We are sending directly right now, later we will introduce centralised E-Mail notification System...
+	 */
 	public function sendNotification($user_login, $reset_key){
 		//Send the E-Mail to user
 
 		$user_data = get_user_by( 'login', $user_login );
-
 
 		$variable = array(
 			'user_login' => $user_login,
@@ -173,12 +222,27 @@ class FormHandler {
 			'user_id' => $user_data->ID,
 		);
 
-		ob_start();
-		tutor_load_template('email.send-reset-password', $variable);
-		$html = ob_get_clean();
+		$html = tutor_get_template_html('email.send-reset-password', $variable);
+		$subject = sprintf(__( 'Password Reset Request for %s', 'tutor' ), get_option( 'blogname' ));
 
-		die($html);
+		$header = 'Content-Type: text/html' . "\r\n";
 
+		add_filter( 'wp_mail_from', array( $this, 'get_from_address' ) );
+		add_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
+
+		wp_mail($user_data->user_email, $subject, $html, $header);
+
+		remove_filter( 'wp_mail_from', array( $this, 'get_from_address' ) );
+		remove_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
 	}
+
+	public function get_from_address(){
+		return apply_filters('tutor_email_from_address', get_tutor_option('email_from_address'));
+	}
+
+	public function get_from_name(){
+		return apply_filters('tutor_email_from_name', get_tutor_option('email_from_name'));
+	}
+
 
 }

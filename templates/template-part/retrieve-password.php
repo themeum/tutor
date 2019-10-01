@@ -2,10 +2,15 @@
 
 defined( 'ABSPATH' ) || exit;
 
-do_action( 'tutor_before_lost_password_form' );
 
 tutor_alert(null, 'any');
-?>
+
+
+if (tutils()->array_get('reset_key', $_GET) && tutils()->array_get('user_id', $_GET)){
+    tutor_load_template('template-part.form-retrieve-password');
+}else{
+	do_action( 'tutor_before_retrieve_password_form' );
+	?>
 
     <form method="post" class="tutor-ResetPassword lost_reset_password">
 		<?php tutor_nonce_field(); ?>
@@ -30,7 +35,6 @@ tutor_alert(null, 'any');
         <div class="tutor-form-row">
             <div class="tutor-form-col-6">
                 <div class="tutor-form-group">
-
                     <button type="submit" class="tutor-button tutor-button-primary" value="<?php esc_attr_e( 'Reset password', 'tutor' ); ?>"><?php
 						esc_html_e( 'Reset password', 'tutor' ); ?></button>
                 </div>
@@ -38,5 +42,7 @@ tutor_alert(null, 'any');
         </div>
 
     </form>
-<?php
-do_action( 'tutor_after_lost_password_form' );
+
+	<?php
+	do_action( 'tutor_after_retrieve_password_form' );
+}
