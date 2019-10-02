@@ -36,7 +36,6 @@ final class Tutor{
 	private $student;
 	private $q_and_a;
 	private $quiz;
-	private $question;
 	private $tools;
 	private $user;
 	private $theme_compatibility;
@@ -125,7 +124,6 @@ final class Tutor{
 		$this->student = new Student();
 		$this->q_and_a = new Q_and_A();
 		$this->quiz = new Quiz();
-		$this->question = new Question();
 		$this->tools = new Tools();
 		$this->user = new User();
 		$this->theme_compatibility = new Theme_Compatibility();

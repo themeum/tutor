@@ -71,15 +71,13 @@ class Admin{
 
 		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_page') );
 
-		add_submenu_page('tutor',__('Uninstall Tutor LMS', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
-
-		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
-
 		add_submenu_page('tutor', __('Tools', 'tutor'), __('Tools', 'tutor'), 'manage_tutor', 'tutor-tools', array($this, 'tutor_tools') );
 
 		if ( ! $hasPro){
 			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
 		}
+
+		add_submenu_page('tutor',__('Uninstall Tutor LMS', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
 
 	}
 
@@ -122,14 +120,10 @@ class Admin{
 		}
 	}
 
-	public function tutor_status(){
-		include tutor()->path.'views/pages/status.php';
-	}
-
-
 	public function tutor_tools(){
 		$pages = apply_filters('tutor_tool_pages', array(
 			'tutor_pages' => array('title' => __('Tutor Pages', 'tutor') ),
+			'status' => __('Status', 'tutor'),
 		));
 
 		$current_page = 'tutor_pages';
@@ -353,7 +347,6 @@ class Admin{
 				$course_post_type,
 				$lesson_post_type,
 				'tutor_quiz',
-				'tutor_question',
 				'tutor_enrolled',
 				'topics',
 				'tutor_enrolled',

@@ -3124,9 +3124,6 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		//$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question'
-		// AND post_parent = {$quiz_id} ORDER BY menu_order ASC ");
-
 		$questions = $wpdb->get_results("SELECT * from {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} ORDER BY question_order ASC ");
 
 		if (is_array($questions) && count($questions)){
@@ -3215,9 +3212,6 @@ class Utils {
 	public function quiz_next_question_order_id($quiz_id){
 		global $wpdb;
 
-		//$last_order = (int) $wpdb->get_var("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = {$quiz_id} AND post_type =
-		// 'tutor_question';");
-
 		$last_order = (int) $wpdb->get_var("SELECT MAX(question_order) FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} ;");
 		return $last_order + 1;
 	}
@@ -3240,7 +3234,7 @@ class Utils {
 	public function get_quiz_id_by_question($question_id){
 		global $wpdb;
 
-		$quiz_id = $wpdb->get_var("SELECT post_parent FROM {$wpdb->posts} WHERE ID = {$question_id} AND post_type = 'tutor_question' ;");
+		$quiz_id = $wpdb->get_var("SELECT quiz_id FROM {$wpdb->tutor_quiz_questions} WHERE question_id = {$question_id} ;");
 		return $quiz_id;
 	}
 
@@ -3342,9 +3336,11 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		$total_question = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} where post_parent = {$quiz_id} AND post_type = 'tutor_question' ");
 
-		return $total_question;
+		$max_questions_count = (int) tutor_utils()->get_quiz_option(get_the_ID(), 'max_questions_for_answer');
+		$total_question = (int) $wpdb->get_var("select count(question_id) from {$wpdb->tutor_quiz_questions} where quiz_id = {$quiz_id}");
+
+		return min($max_questions_count, $total_question);
 	}
 
 	/**

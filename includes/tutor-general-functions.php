@@ -537,7 +537,7 @@ if ( ! function_exists('tutor_redirect_back')) {
 		if ( ! $url ) {
 			$url = tutils()->referer();
 		}
-		wp_redirect( $url );
+		wp_safe_redirect( $url );
 		exit();
 	}
 }
