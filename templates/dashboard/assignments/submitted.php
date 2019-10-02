@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 global $wpdb;
 
 $assignment = sanitize_text_field($_GET['assignment']);

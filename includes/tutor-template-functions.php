@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) )
  *
  * @since v.1.0.0
  * @updated v.1.4.2
- *
+ * @updated v.1.4.3
  */
 
 if ( ! function_exists('tutor_get_template')) {
@@ -34,8 +34,12 @@ if ( ! function_exists('tutor_get_template')) {
 		$file_in_theme = $template_location;
 		if ( ! file_exists( $template_location ) ) {
 			$template_location = trailingslashit( tutor()->path ) . "templates/{$template}.php";
-			if ( ! file_exists($template_location) && $tutor_pro && function_exists('tutor_pro')){
-				$template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+
+			if ( $tutor_pro && function_exists('tutor_pro')){
+				$pro_template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+				if (file_exists($pro_template_location)){
+					$template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+				}
 			}
 
 			if ( ! file_exists($template_location)){
@@ -156,9 +160,9 @@ if ( ! function_exists('tutor_load_template_part')) {
  */
 
 if ( ! function_exists('tutor_get_template_html')) {
-	function tutor_get_template_html( $template_name, $variables = array() ) {
+	function tutor_get_template_html( $template_name, $variables = array(), $tutor_pro = false ) {
 		ob_start();
-		tutor_load_template( $template_name, $variables );
+		tutor_load_template( $template_name, $variables, $tutor_pro );
 
 		return ob_get_clean();
 	}

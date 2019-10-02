@@ -1811,7 +1811,6 @@ class Utils {
 		do_action('tutor_mark_lesson_complete_before', $post_id, $user_id);
 		update_user_meta($user_id, '_tutor_completed_lesson_id_'.$post_id, time());
 		do_action('tutor_mark_lesson_complete_after', $post_id, $user_id);
-
 	}
 
 	/**
@@ -3236,43 +3235,6 @@ class Utils {
 
 		$quiz_id = $wpdb->get_var("SELECT quiz_id FROM {$wpdb->tutor_quiz_questions} WHERE question_id = {$question_id} ;");
 		return $quiz_id;
-	}
-
-	/**
-	 * @param array $config
-	 *
-	 * @return array|bool|null|object
-	 *
-	 * It was used in previous quiz algorithm
-	 *
-	 * @deprecated
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_unattached_quiz($config = array()){
-		global $wpdb;
-
-		$default_attr = array(
-			'search_term' => '',
-			'start' => '0',
-			'limit' => '10',
-			'order' => 'DESC',
-			'order_by' => 'ID',
-		);
-		$attr = array_merge($default_attr, $config);
-		extract($attr);
-
-		$search_query = '';
-		if (! empty($search_term)){
-			$search_query = "AND post_title LIKE '%{$search_term}%'";
-		}
-
-		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_quiz' AND post_status = 'publish' AND post_parent = 0 {$search_query} ORDER BY {$order_by} {$order}  LIMIT {$start},{$limit} ");
-
-		if (is_array($questions) && count($questions)){
-			return $questions;
-		}
-		return false;
 	}
 
 	/**
@@ -5151,7 +5113,7 @@ class Utils {
 	 * @param int $quiz_id
 	 * @param int $user_id
 	 *
-	 * @return array|bool|null|object|void
+	 * @return array|bool|null|object
 	 *
 	 * Get Attempt row by grade method settings
 	 *
@@ -5247,7 +5209,13 @@ class Utils {
 		wp_password_change_notification( $user );
 	}
 
-
+	/**
+	 * @return array
+	 *
+	 * Get tutor pages, required to show dashboard, and others forms
+	 *
+	 * @since v.1.4.3
+	 */
 	public function tutor_pages(){
 		$pages = apply_filters('tutor_pages', array(
 			'tutor_dashboard_page_id'   => __('Dashboard Page', 'tutor'),
