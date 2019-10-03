@@ -1,3 +1,10 @@
+<?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+?>
+
 <form method="post" id="tutor_update_review_form">
 	<div class="tutor-write-review-box">
 		<div class="tutor-form-group">

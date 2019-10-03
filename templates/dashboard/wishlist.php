@@ -1,4 +1,10 @@
-<?php global $post; ?>
+<?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
+global $post; ?>
 
 
 <h3><?php _e('Wishlist', 'tutor'); ?></h3>

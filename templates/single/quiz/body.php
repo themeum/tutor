@@ -240,7 +240,6 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                             </div>
 
                                             <div class="quiz-answer-matching-items-wrap">
-
 												<?php
 												foreach ($answers as $answer){
 													?>
@@ -250,7 +249,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 															if ($question_type === 'matching') {
 
 																if ($answer->answer_view_format !== 'image'){
-																	echo "<p class='tutor-quiz-answer-title'>{$answer_title}</p>";
+																	echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
 																}
 																if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
 																	?>

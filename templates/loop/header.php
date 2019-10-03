@@ -1,3 +1,11 @@
+<?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
+?>
+
 <div class="tutor-course-header">
 	<?php
 	tutor_course_loop_thumbnail();

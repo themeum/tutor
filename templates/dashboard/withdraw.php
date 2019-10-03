@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 $earning_sum = tutor_utils()->get_earning_sum();
 $min_withdraw = tutor_utils()->get_option('min_withdraw_amount');
 

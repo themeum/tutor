@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 $is_instructor = tutor_utils()->is_instructor();
 if ($is_instructor){
 	?>

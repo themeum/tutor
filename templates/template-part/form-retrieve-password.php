@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 do_action( 'tutor_before_reset_password_form' ); ?>

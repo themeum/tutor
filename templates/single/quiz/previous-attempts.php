@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
 
 ?>

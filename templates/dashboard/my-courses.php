@@ -1,3 +1,11 @@
+<?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
+?>
+
 <h3><?php _e('My Courses', 'tutor'); ?></h3>
 
 <div class="tutor-dashboard-content-inner">

@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 $isLoggedIn = is_user_logged_in();
 $rating = $isLoggedIn ? tutor_utils()->get_course_rating_by_user() : '';
 ?>
