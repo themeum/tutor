@@ -270,9 +270,24 @@ jQuery(document).ready(function($){
             var attachment = frame.state().get('selection').first().toJSON();
             $that.closest('.option-media-wrap').find('.option-media-preview').html('<img src="'+attachment.url+'" alt="" />');
             $that.closest('.option-media-wrap').find('input').val(attachment.id);
+            $that.closest('.option-media-wrap').find('.tutor-media-option-trash-btn').show();
         });
         frame.open();
     });
+
+    /**
+     * Remove option media
+     * @since v.1.4.3
+     */
+    $(document).on('click', '.tutor-media-option-trash-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        $that.closest('.option-media-wrap').find('img').remove();
+        $that.closest('.option-media-wrap').find('input').val('');
+        $that.closest('.option-media-wrap').find('.tutor-media-option-trash-btn').hide();
+    });
+
 
     $(document).on('change', '.tutor_addons_list_item', function(e) {
         var $that = $(this);
