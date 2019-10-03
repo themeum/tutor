@@ -76,9 +76,6 @@ class Admin{
 		if ( ! $hasPro){
 			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
 		}
-
-		add_submenu_page('tutor',__('Uninstall Tutor LMS', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
-
 	}
 
 	public function tutor_page(){
@@ -97,10 +94,10 @@ class Admin{
 	public function question_answer(){
 		include tutor()->path.'views/pages/question_answer.php';
 	}
-
+/*
 	public function quiz_attempts(){
 		include tutor()->path.'views/pages/quiz_attempts.php';
-	}
+	}*/
 
 	/**
 	 * Show the withdraw requests table
@@ -121,22 +118,24 @@ class Admin{
 	}
 
 	public function tutor_tools(){
-		$pages = apply_filters('tutor_tool_pages', array(
-			'tutor_pages' => array('title' => __('Tutor Pages', 'tutor') ),
-			'status' => __('Status', 'tutor'),
-		));
+		$tutor_admin_tools_page = tutils()->array_get('tutor_admin_tools_page', $_GET);
+		if ($tutor_admin_tools_page){
+			include apply_filters('tutor_admin_tools_page', tutor()->path."views/pages/{$tutor_admin_tools_page}.php", $tutor_admin_tools_page);
+		}else{
+			$pages = apply_filters('tutor_tool_pages', array(
+				'tutor_pages' => array('title' => __('Tutor Pages', 'tutor') ),
+				'status' => __('Status', 'tutor'),
+			));
 
-		$current_page = 'tutor_pages';
-		$requested_page = sanitize_text_field(tutils()->array_get('sub_page', $_GET));
-		if ($requested_page){
-			$current_page = $requested_page;
+			$current_page = 'tutor_pages';
+			$requested_page = sanitize_text_field(tutils()->array_get('sub_page', $_GET));
+			if ($requested_page){
+				$current_page = $requested_page;
+			}
+
+			include tutor()->path.'views/pages/tools.php';
 		}
 
-		include tutor()->path.'views/pages/tools.php';
-	}
-
-	public function tutor_uninstall(){
-		include tutor()->path.'views/pages/uninstall.php';
 	}
 
 	public function tutor_get_pro(){
@@ -422,7 +421,7 @@ class Admin{
 			$plugin_file = tutor()->basename;
 			if ( current_user_can( 'deactivate_plugin', $plugin_file ) ) {
 				if ( isset( $actions['deactivate'] ) ) {
-					$actions['deactivate'] = '<a href="admin.php?page=tutor-uninstall">' . __('Uninstall', 'tutor') . '</a>';
+					$actions['deactivate'] = '<a href="admin.php?page=tutor-tools&tutor_admin_tools_page=uninstall">' . __('Uninstall', 'tutor') . '</a>';
 				}
 			}
 		}
