@@ -212,7 +212,7 @@ final class Tutor{
 			update_option('tutor_option', $options);
 
 			//Rewrite Flush
-			update_option('required_rewrite_flush', time());
+			update_option('required_rewrite_flush', tutor_time());
 			self::manage_tutor_roles_and_permissions();
 
 			self::save_data();//Save initial Page
@@ -221,7 +221,7 @@ final class Tutor{
 
 		//Set Schedule
 		if (! wp_next_scheduled ( 'tutor_once_in_day_run_schedule' )) {
-			wp_schedule_event(time(), 'twicedaily', 'tutor_once_in_day_run_schedule');
+			wp_schedule_event(tutor_time(), 'twicedaily', 'tutor_once_in_day_run_schedule');
 		}
 
 		/**
@@ -235,7 +235,7 @@ final class Tutor{
 			//Update the tutor version
 			update_option('tutor_version', '1.2.0');
 			//Rewrite Flush
-			update_option('required_rewrite_flush', time());
+			update_option('required_rewrite_flush', tutor_time());
 		}
 
 		/**
@@ -257,7 +257,7 @@ final class Tutor{
 		 */
 		$first_activation_date = get_option('tutor_first_activation_time');
 		if ( ! $first_activation_date){
-			update_option('tutor_first_activation_time', time());
+			update_option('tutor_first_activation_time', tutor_time());
 		}
 
 	}

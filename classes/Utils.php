@@ -1809,7 +1809,7 @@ class Utils {
 		$user_id = $this->get_user_id($user_id);
 
 		do_action('tutor_mark_lesson_complete_before', $post_id, $user_id);
-		update_user_meta($user_id, '_tutor_completed_lesson_id_'.$post_id, time());
+		update_user_meta($user_id, '_tutor_completed_lesson_id_'.$post_id, tutor_time());
 		do_action('tutor_mark_lesson_complete_after', $post_id, $user_id);
 	}
 
@@ -1866,14 +1866,14 @@ class Utils {
 			do_action('tutor_after_enroll', $course_id, $isEnrolled);
 
 			//Mark Current User as Students with user meta data
-			update_user_meta( $user_id, '_is_tutor_student', time() );
+			update_user_meta( $user_id, '_is_tutor_student', tutor_time() );
 
 			if ($order_id) {
 				//Mark order for course and user
 				$product_id = $this->get_course_product_id($course_id);
 				update_post_meta( $isEnrolled, '_tutor_enrolled_by_order_id', $order_id );
 				update_post_meta( $isEnrolled, '_tutor_enrolled_by_product_id', $product_id );
-				update_post_meta( $order_id, '_is_tutor_order_for_course', time() );
+				update_post_meta( $order_id, '_is_tutor_order_for_course', tutor_time() );
 				update_post_meta( $order_id, '_tutor_order_for_course_id_'.$course_id, $isEnrolled );
 			}
 			return true;
@@ -4420,7 +4420,7 @@ class Utils {
 		do_action('tutor_before_approved_instructor', $instructor_id);
 
 		update_user_meta($instructor_id, '_tutor_instructor_status', 'approved');
-		update_user_meta($instructor_id, '_tutor_instructor_approved', time());
+		update_user_meta($instructor_id, '_tutor_instructor_approved', tutor_time());
 
 		$instructor = new \WP_User($instructor_id);
 		$instructor->add_role(tutor()->instructor_role);
@@ -5205,7 +5205,7 @@ class Utils {
 		$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
 		$rp_path   = isset( $_SERVER['REQUEST_URI'] ) ? current( explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) : ''; // WPCS: input var ok, sanitization ok.
 
-		setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+		setcookie( $rp_cookie, ' ', tutor_time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
 		wp_password_change_notification( $user );
 	}
 

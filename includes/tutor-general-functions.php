@@ -498,3 +498,17 @@ if ( ! function_exists('tutor_action_field')) {
 		}
 	}
 }
+
+/**
+ * @return int|string
+ *
+ * Return current Time from wordpress time
+ *
+ * @since v.1.4.3
+ */
+
+if ( ! function_exists('tutor_time')) {
+	function tutor_time() {
+		return current_time( 'timestamp' );
+	}
+}
