@@ -14,7 +14,7 @@
 	$enrolled_course = tutor_utils()->get_enrolled_courses_by_user();
 	$completed_courses = tutor_utils()->get_completed_courses_ids_by_user();
 	$total_students = tutor_utils()->get_total_students_by_instructor(get_current_user_id());
-	$my_courses = tutor_utils()->get_courses_by_instructor(get_current_user_id(), 'any');
+	$my_courses = tutor_utils()->get_courses_by_instructor(get_current_user_id(), 'publish');
 	$earning_sum = tutor_utils()->get_earning_sum();
 
 	$enrolled_course_count = $enrolled_course ? $enrolled_course->post_count : 0;

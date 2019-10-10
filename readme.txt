@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,23 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.4.3 - 10 October, 2019 =
+
+* Added: `tutor_redirect_back()` Redirect to back or a specific URL and terminate the script.
+* Added: `tutor_get_template_html( $template_name, $variables = array() );` function, it will return view as HTML code, usefull for E-Mail
+* Added: Reset Password, Tutor LMS native login system
+* Added: function `tutor_action_field()` to generate tutor action field within form
+* Added: re-generate tutor pages, create new page if any issue on those page.
+* Added: Instructor can delete submitted assignment.
+* Added: Added quiz attempt view by student (TutorLMS Pro)
+* Updated: Options is now expandable, pass additional options params to  filter `tutor/options/extend/attr`
+* Updated: User Login controlling by Tutor
+* Updated: media upload field improved with media delete option
+* Deleted: Quiz depricated code.
+* Fixed: Touch supports for quiz Sortable / draggable items
+* Fixed: Quiz matching question type repeated issue
+* Fixed: Admin gets automatically added when review course
 
 = 1.4.2 - 25 September, 2019 =
 
