@@ -241,22 +241,25 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.4.3 - 10 October, 2019 =
+= 1.4.3 - 11 October, 2019 =
 
+* Added: Reset Password, Tutor LMS native login system
+* Added: re-generate tutor pages, create new page if any issue on those page.
+* Added: Added quiz attempt view by student (TutorLMS Pro)
+* Added: function `tutor_action_field()` to generate tutor action field within form
+* Added: Instructor can delete submitted assignment.
 * Added: `tutor_redirect_back()` Redirect to back or a specific URL and terminate the script.
 * Added: `tutor_get_template_html( $template_name, $variables = array() );` function, it will return view as HTML code, usefull for E-Mail
-* Added: Reset Password, Tutor LMS native login system
-* Added: function `tutor_action_field()` to generate tutor action field within form
-* Added: re-generate tutor pages, create new page if any issue on those page.
-* Added: Instructor can delete submitted assignment.
-* Added: Added quiz attempt view by student (TutorLMS Pro)
+* Added: Frontend Course Builder Page Logo Upload Option, Settings > General > Tutor LMS Pro Settings
 * Updated: Options is now expandable, pass additional options params to  filter `tutor/options/extend/attr`
 * Updated: User Login controlling by Tutor
 * Updated: media upload field improved with media delete option
-* Deleted: Quiz depricated code.
+* Deleted: Quiz Deprecated code.
 * Fixed: Touch supports for quiz Sortable / draggable items
 * Fixed: Quiz matching question type repeated issue
 * Fixed: Admin gets automatically added when review course
+* Fixed: Instructor total course does not update after deleting a course
+* Fixed: Updated time to tutor_time() to get WordPress UTC time
 
 = 1.4.2 - 25 September, 2019 =
 

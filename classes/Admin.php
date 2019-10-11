@@ -94,10 +94,10 @@ class Admin{
 	public function question_answer(){
 		include tutor()->path.'views/pages/question_answer.php';
 	}
-/*
+
 	public function quiz_attempts(){
 		include tutor()->path.'views/pages/quiz_attempts.php';
-	}*/
+	}
 
 	/**
 	 * Show the withdraw requests table
