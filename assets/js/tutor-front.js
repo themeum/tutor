@@ -591,6 +591,25 @@ jQuery(document).ready(function($){
     });
 
     /**
+     *
+     * @type {jQuery}
+     *
+     * Improved Quiz draggable answers drop accessibility
+     * Answers draggable wrap will be now same height.
+     *
+     * @since v.1.4.4
+     */
+    var countDraggableAnswers = $('.quiz-draggable-rand-answers').length;
+    if (countDraggableAnswers){
+        $('.quiz-draggable-rand-answers').each(function(){
+            var $that = $(this);
+            var draggableDivHeight = $that.height();
+
+            $that.css({"height": draggableDivHeight});
+        });
+    }
+
+    /**
      * Add to cart in guest mode, show login form
      *
      * @since v.1.0.4
