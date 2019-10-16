@@ -245,6 +245,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 * Fixed: quiz question sortable sorting item
 * Improved: quiz draggable answer drop accessibility
+* Fixed: prevented fatal error in single quiz question with no option and trying to finish quiz.
 
 = 1.4.3 - 11 October, 2019 =
 
