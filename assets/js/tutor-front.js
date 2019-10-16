@@ -515,7 +515,7 @@ jQuery(document).ready(function($){
     function init_quiz_builder() {
         if (jQuery().sortable) {
             $(".tutor-quiz-answers-wrap").sortable({
-                //handle: ".answer-sorting-bar",
+                handle: ".answer-sorting-bar",
                 start: function (e, ui) {
                     ui.placeholder.css('visibility', 'visible');
                 },
@@ -526,8 +526,7 @@ jQuery(document).ready(function($){
 
             $(".quiz-draggable-rand-answers, .quiz-answer-matching-droppable").sortable({
                 connectWith: ".quiz-answer-matching-droppable",
-                placeholder: "drop-hover"
-
+                placeholder: "drop-hover",
             }).disableSelection();
         }
     }

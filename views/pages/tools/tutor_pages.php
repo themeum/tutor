@@ -1,13 +1,8 @@
-
 <?php
 $tutor_pages = tutils()->tutor_pages();
-
 ?>
 
 <div id="tools-tutor-pages" class="tools-tutor-pages">
-
-
-
 
     <table class="tutor-table tutor-pages-table">
 
@@ -20,14 +15,12 @@ $tutor_pages = tutils()->tutor_pages();
         </tr>
         </thead>
 
-
         <tbody>
 
 		<?php
 		foreach ($tutor_pages as $page){
 		    $page_id = $page['page_id'];
 			?>
-
             <tr>
                 <td><?php echo $page_id; ?></td>
                 <td>
@@ -74,18 +67,12 @@ $tutor_pages = tutils()->tutor_pages();
                     }
                     ?>
                 </td>
-
             </tr>
 			<?php
-
 		}
 		?>
-
         </tbody>
-
     </table>
-
-
 
     <form action="" method="post">
         <?php
@@ -97,16 +84,7 @@ $tutor_pages = tutils()->tutor_pages();
         </p>
     </form>
 
-
-
 	<?php
 	tutor_alert(__('Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.', 'tutor'), 'info');
 	?>
-
-	<?php
-	echo '<pre>';
-	//print_r($tutor_pages);
-	echo '<pre>';
-	?>
-
 </div>

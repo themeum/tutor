@@ -501,6 +501,7 @@ class Utils {
 			$where_post_status = "AND $wpdb->posts.post_status IN({$statuses}) ";
 		}
 
+		//AND $wpdb->posts.post_date < NOW()
 		$querystr = "
 	    SELECT $wpdb->posts.* 
 	    FROM $wpdb->posts
@@ -508,7 +509,7 @@ class Utils {
 	
 	    WHERE 1 = 1 {$where_post_status}
 	    AND $wpdb->posts.post_type = '{$course_post_type}'
-	    AND $wpdb->posts.post_date < NOW()
+	    
 	    ORDER BY $wpdb->posts.post_date DESC";
 
 		$pageposts = $wpdb->get_results($querystr, OBJECT);
