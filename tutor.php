@@ -68,8 +68,10 @@ if ( ! class_exists('Tutor')){
  * Get all helper functions/methods
  *
  */
-function tutor_utils(){
-	return new \TUTOR\Utils();
+if ( ! function_exists('tutor_utils')) {
+	function tutor_utils() {
+		return new \TUTOR\Utils();
+	}
 }
 
 /**

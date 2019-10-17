@@ -674,7 +674,7 @@ a.tutor-button.button-light:hover,
   height: auto;
   display: block;
 }
-a.tutor-profile-photo-upload-btn {
+a.tutor-profile-photo-upload-btn, button.tutor-profile-photo-upload-btn {
   position: absolute;
   top: 100%;
   background-color: var(--tutor-primary-color);
@@ -686,7 +686,7 @@ a.tutor-profile-photo-upload-btn {
 }
 
 
-a.tutor-profile-photo-upload-btn:hover{
+a.tutor-profile-photo-upload-btn:hover, button.tutor-profile-photo-upload-btn:hover{
   background-color: var(--tutor-primary-hover-color);
   color: #fff;
 }
