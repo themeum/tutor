@@ -509,6 +509,7 @@ if ( ! function_exists('tutor_action_field')) {
 
 if ( ! function_exists('tutor_time')) {
 	function tutor_time() {
-		return current_time( 'timestamp' );
+		//return current_time( 'timestamp' );
+		return time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
 	}
 }

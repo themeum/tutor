@@ -376,22 +376,22 @@ class WooCommerce extends Tutor_Base {
 			}
 
 			$earning_data = array(
-			        'user_id'                   => $user_id,
-			        'course_id'                 => $course_id,
-			        'order_id'                  => $order_id,
-			        'order_status'              => $order_status,
-			        'course_price_total'        => $total_price,
-			        'course_price_grand_total'  => $course_price_grand_total,
+				'user_id'                   => $user_id,
+				'course_id'                 => $course_id,
+				'order_id'                  => $order_id,
+				'order_status'              => $order_status,
+				'course_price_total'        => $total_price,
+				'course_price_grand_total'  => $course_price_grand_total,
 
-			        'instructor_amount'         => $instructor_amount,
-			        'instructor_rate'           => $instructor_rate,
-			        'admin_amount'              => $admin_amount,
-			        'admin_rate'                => $admin_rate,
+				'instructor_amount'         => $instructor_amount,
+				'instructor_rate'           => $instructor_rate,
+				'admin_amount'              => $admin_amount,
+				'admin_rate'                => $admin_rate,
 
-			        'commission_type'           => 'percent',
-			        'process_by'                => 'woocommerce',
-			        'created_at'                => date( 'Y-m-d H:i:s'),
-            );
+				'commission_type'           => 'percent',
+				'process_by'                => 'woocommerce',
+				'created_at'                => date( 'Y-m-d H:i:s', tutor_time()),
+			);
 			$earning_data = apply_filters('tutor_new_earning_data', array_merge($earning_data, $fees_deduct_data));
 
 			$wpdb->insert($wpdb->prefix.'tutor_earnings', $earning_data);

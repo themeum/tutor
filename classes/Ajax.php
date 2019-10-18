@@ -86,7 +86,7 @@ class Ajax{
 
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
-		$date = date("Y-m-d H:i:s");
+		$date = date("Y-m-d H:i:s", tutor_time());
 
 		do_action('tutor_before_rating_placed');
 
@@ -153,7 +153,7 @@ class Ajax{
 
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
-		$date = date("Y-m-d H:i:s");
+		$date = date("Y-m-d H:i:s", tutor_time());
 
 		do_action('tutor_before_add_question', $course_id);
 		$data = apply_filters('tutor_add_question_data', array(
@@ -198,7 +198,7 @@ class Ajax{
 
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
-		$date = date("Y-m-d H:i:s");
+		$date = date("Y-m-d H:i:s", tutor_time());
 
 		do_action('tutor_before_answer_to_question');
 		$data = apply_filters('tutor_add_answer_data', array(
