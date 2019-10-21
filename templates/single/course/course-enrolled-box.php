@@ -35,10 +35,6 @@ global $wp_query;
         <?php
         if ( $wp_query->query['post_type'] !== 'lesson') {
             $lesson_url = tutor_utils()->get_course_first_lesson();
-
-
-            echo $lesson_url;
-
             $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
             if ( $lesson_url ) { ?>
                 <a href="<?php echo $lesson_url; ?>" class="tutor-button tutor-success">

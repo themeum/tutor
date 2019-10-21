@@ -159,7 +159,7 @@ Have the most secure learning management system when creating your online course
 
 - **Frontend Course Builder:** Build your course on the go using the frontend course builder in Tutor LMS plugin. Instructors can see how their course looks live without even having to go backend. The industry-first frontend course builder in any WordPress LMS plugin ever.
 
-- **5 Pro Question Patterns:**
+- ** 5 Pro Question Patterns: **
 
     * Short Answer
     * Matching
@@ -246,6 +246,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 * Added: Disable Course Review option
 * Updated: removed media uploader on dashboard profile photo upload added native file upload system.
 * Updated: Time GMT from WordPress settings
+* Fixed: course start and continue to lesson order fixed
 
 = 1.4.4 - 16 October, 2019 =
 
