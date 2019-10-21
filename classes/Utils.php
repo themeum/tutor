@@ -2067,11 +2067,18 @@ class Utils {
 			'purchase_history'  => __('Purchase History', 'tutor'),
 		));
 
+		$disable = get_tutor_option('disable_course_review');
+		if ($disable && isset($nav_items['reviews'])){
+			unset($nav_items['reviews']);
+		}
+
 		$new_navs = array(
 			'settings'          => __('Settings', 'tutor'),
 			'logout'            => __('Logout', 'tutor'),
 		);
 		$all_nav_items = array_merge($nav_items, $new_navs);
+
+
 
 		return apply_filters('tutor_dashboard/nav_items_all', $all_nav_items);
 	}
