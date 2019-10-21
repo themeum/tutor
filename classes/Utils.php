@@ -2078,8 +2078,6 @@ class Utils {
 		);
 		$all_nav_items = array_merge($nav_items, $new_navs);
 
-
-
 		return apply_filters('tutor_dashboard/nav_items_all', $all_nav_items);
 	}
 
