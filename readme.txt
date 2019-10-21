@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,12 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.4.5 - 21 October, 2019 =
+
+* Added: Disable Course Review option
+* Updated: removed media uploader on dashboard profile photo upload added native file upload system.
+* Updated: Time GMT from WordPress settings
 
 = 1.4.4 - 16 October, 2019 =
 
