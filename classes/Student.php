@@ -226,7 +226,7 @@ class Student {
 
 		if ($previous_password_checked && ! empty($new_password) && $new_password === $confirm_new_password){
 			wp_set_password($new_password, $user->ID);
-			tutor_utils()->set_flash_msg('Password set successfully');
+			tutor_utils()->set_flash_msg( __('Password set successfully', 'tutor') );
 		}
 
 		wp_redirect(wp_get_raw_referer());

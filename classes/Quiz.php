@@ -77,7 +77,6 @@ class Quiz {
 		$output = ob_get_clean();
 
 		wp_send_json_success(array('output' => $output));
-
 	}
 
 	public function remove_quiz_from_post(){
@@ -818,12 +817,6 @@ class Quiz {
 
 		ob_start();
 
-		/*
-		 * @TODO: Should We remove this text?
-		 * Screenshot: http://prntscr.com/ngl2mb
-		 * Screenshot: http://prntscr.com/ngl2ak
-		 */
-
 		switch ($question_type){
 			case 'true_false':
 				echo '<label>'.__('Answer options &amp; mark correct', 'tutor').'</label>';
@@ -925,7 +918,6 @@ class Quiz {
 		        $wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('answer_order' => $i), array('answer_id' => $answer_id));
             }
         }
-
     }
 
 	/**
@@ -952,12 +944,10 @@ class Quiz {
 	 */
 	public function tutor_quiz_modal_update_settings(){
 		$quiz_id = sanitize_text_field($_POST['quiz_id']);
-
 		$quiz_option = tutor_utils()->sanitize_array($_POST['quiz_option']);
+
 		update_post_meta($quiz_id, 'tutor_quiz_option', $quiz_option);
-
 		do_action('tutor_quiz_settings_updated', $quiz_id);
-
 		wp_send_json_success();
 	}
 
@@ -983,13 +973,10 @@ class Quiz {
 		//tutor_lesson_content();
 
 		single_quiz_contents();
-
 		wp_reset_postdata();
-
 
 		$html = ob_get_clean();
 		wp_send_json_success(array('html' => $html));
 	}
-
 
 }
