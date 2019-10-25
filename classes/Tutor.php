@@ -52,6 +52,9 @@ final class Tutor{
 	private $form_handler;
 	private $email;
 
+	private $migration_ld;
+	private $migration_lp;
+
 	/**
 	 * @return null|Tutor
 	 *
@@ -137,6 +140,9 @@ final class Tutor{
 		$this->dashboard = new Dashboard();
 		$this->form_handler = new FormHandler();
 		$this->email = new Email();
+
+		//$this->migration_ld = new MigrationLD();
+		$this->migration_lp = new MigrationLP();
 
 		/**
 		 * Run Method

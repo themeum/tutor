@@ -1861,7 +1861,7 @@ class Utils {
 
 		do_action('tutor_before_enroll', $course_id);
 		$user_id = $this->get_user_id($user_id);
-		$title = __('Course Enrolled', 'tutor')." &ndash; ".date_i18n(get_option('date_format')) .' @ '.date_i18n(get_option('time_format') ) ;
+		$title = __('Course Enrolled', 'tutor')." &ndash; ".date(get_option('date_format')) .' @ '.date(get_option('time_format') ) ;
 
 		$enrolment_status = 'completed';
 

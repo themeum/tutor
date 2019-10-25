@@ -2,7 +2,7 @@
 	<h1 class="wp-heading-inline"><?php _e('Tools', 'tutor'); ?></h1>
 	<hr class="wp-header-end">
 
-	<nav class="nav-tab-wrapper tutor-gradebook-nav-wrapper">
+	<nav class="nav-tab-wrapper tutor-nav-tab-wrapper">
 		<?php
 		if (tutils()->count($pages)){
 			foreach ($pages as $key => $page){
