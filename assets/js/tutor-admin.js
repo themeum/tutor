@@ -622,4 +622,39 @@ jQuery(document).ready(function($){
         }
     });
 
+    /**
+     * LP Migration
+     * Since v.1.4.6
+     */
+
+
+    $(document).on( 'click', '#migrate_lp_courses_btn',  function( e ){
+        e.preventDefault();
+
+        var $that = $(this);
+        
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {action : 'lp_migrate_course_to_tutor' },
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+                    window.location.reload();
+                }
+            },
+            complete: function () {
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+        
+        
+        
+        
+    });
+
+
 });

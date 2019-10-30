@@ -137,6 +137,33 @@ jQuery(document).ready(function($){
         });
     });
 
+    /**
+     * Resorting...
+     */
+    function enable_sorting_topic_lesson(){
+        if (jQuery().sortable) {
+            $(".course-contents").sortable({
+                handle: ".course-move-handle",
+                start: function (e, ui) {
+                    ui.placeholder.css('visibility', 'visible');
+                },
+                stop: function (e, ui) {
+                    tutor_sorting_topics_and_lesson();
+                },
+            });
+            $(".tutor-lessons:not(.drop-lessons)").sortable({
+                connectWith: ".tutor-lessons",
+                items: "div.course-content-item",
+                start: function (e, ui) {
+                    ui.placeholder.css('visibility', 'visible');
+                },
+                stop: function (e, ui) {
+                    tutor_sorting_topics_and_lesson();
+                },
+            });
+        }
+    }
+
     $(document).on('change keyup', '.course-edit-topic-title-input', function (e) {
         e.preventDefault();
         $(this).closest('.tutor-topics-top').find('.topic-inner-title').html($(this).val());

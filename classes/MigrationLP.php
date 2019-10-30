@@ -19,6 +19,8 @@ class MigrationLP {
 
 		add_action('tutor_option_save_after', array($this, 'tutor_option_save_after'));
 		add_action('init', array($this, 'check_if_maintenance'));
+
+		add_action('wp_ajax_lp_migrate_course_to_tutor', array($this, 'lp_migrate_course_to_tutor'));
 	}
 
 	public function tutor_tool_pages($pages){
@@ -31,11 +33,25 @@ class MigrationLP {
 		return $pages;
 	}
 
+	public function lp_migrate_course_to_tutor(){
+		global $wpdb;
+
+
+		$course_id = 1826;
+
+		$this->migrate_course($course_id);
+	}
+
 
 	public function migrate_course($course_id){
 		global $wpdb;
 
 		$course = learn_press_get_course($course_id);
+		die(var_dump());
+		if ( ! $course){
+			return;
+		}
+
 		$curriculum = $course->get_curriculum() ;
 
 		$lesson_post_type = tutor()->lesson_post_type;
@@ -79,7 +95,6 @@ class MigrationLP {
 			$tutor_course[] = $topic;
 		}
 
-
 		if (tutils()->count($tutor_course)){
 			foreach ($tutor_course as $course_topic){
 
@@ -88,10 +103,16 @@ class MigrationLP {
 				unset($course_topic['items']);
 
 				//Insert Topic post type
-				$topic_id = wp_insert_post( $course_topic );
+				//$topic_id = wp_insert_post( $course_topic );
 
 				//Update lesson from LearnPress to TutorLMS
 				foreach ($lessons as $lesson){
+
+
+					die(print_r($lesson));
+
+
+					/*
 					$lesson['post_parent'] = $topic_id;
 					wp_update_post($lesson);
 
@@ -99,6 +120,15 @@ class MigrationLP {
 					if ($lesson_id){
 						update_post_meta( $lesson_id, '_tutor_course_id_for_lesson', $course_id );
 					}
+
+					$_lp_preview = get_post_meta($lesson_id, '_lp_preview', true);
+					if ($_lp_preview === 'yes'){
+						update_post_meta($lesson_id, '_is_preview', 1);
+					}else{
+						delete_post_meta($lesson_id, '_is_preview');
+					}
+					*/
+
 				}
 			}
 		}
@@ -108,9 +138,59 @@ class MigrationLP {
 			'ID'            => $course_id,
 			'post_type'     => $course_post_type,
 		);
-		wp_update_post($tutor_course);
-		update_post_meta($course_id, '_was_lp_course', true);
+		//wp_update_post($tutor_course);
+		//update_post_meta($course_id, '_was_lp_course', true);
 
+		/**
+		 * Create WC Product and attaching it with course
+		 */
+
+		$_lp_price = get_post_meta($course_id, '_lp_price', true);
+		$_lp_sale_price = get_post_meta($course_id, '_lp_sale_price', true);
+
+		if ($_lp_price){
+			update_post_meta($course_id, '_tutor_course_price_type', 'paid');
+
+			$product_id = wp_insert_post( array(
+				'post_title' => $course->get_title().' Product',
+				'post_content' => '',
+				'post_status' => 'publish',
+				'post_type' => "product",
+			) );
+			if ($product_id) {
+				$product_metas = array(
+					'_stock_status'      => 'instock',
+					'total_sales'        => '0',
+					'_regular_price'     => $_lp_price,
+					'_sale_price'        => $_lp_sale_price,
+					'_price'             => $_lp_price,
+					'_sold_individually' => 'no',
+					'_manage_stock'      => 'no',
+					'_backorders'        => 'no',
+					'_stock'             => '',
+					'_virtual'           => 'yes',
+					'_tutor_product'     => 'yes',
+				);
+				foreach ( $product_metas as $key => $value ) {
+					update_post_meta( $product_id, $key, $value );
+				}
+			}
+
+			/**
+			 * Attaching product to course
+			 */
+			update_post_meta( $course_id, '_tutor_course_product_id', $product_id );
+			$coursePostThumbnail = get_post_meta( $course_id, '_thumbnail_id', true );
+			if ( $coursePostThumbnail ) {
+				set_post_thumbnail( $product_id, $coursePostThumbnail );
+			}
+		}else{
+			update_post_meta($course_id, '_tutor_course_price_type', 'free');
+		}
+
+		/**
+		 * Enrollment Migration to this course
+		 */
 		$lp_enrollments = $wpdb->get_results( "SELECT lp_user_items.*,
         lp_order.ID as order_id,
         lp_order.post_date as order_time

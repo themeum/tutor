@@ -16,9 +16,8 @@
     <p>----</p>
 
     <?php
-    tutor_maintenance_mode(false);
 
-    $course_id = 1567;
+    // $course_id = 1567;
 
     ?>
 
