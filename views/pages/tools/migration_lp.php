@@ -13,12 +13,8 @@
 
     <button id="migrate_lp_orders_btn" class="tutor-button button-success"><?php echo sprintf(__('Migrate %s orders', 'tutor'), $orders_count); ?></button>
 
-    <p>----</p>
 
-    <?php
 
-    // $course_id = 1567;
-
-    ?>
+    <div id="course_migration_progress" style="margin-top: 50px;"></div>
 
 </div>

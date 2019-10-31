@@ -639,11 +639,11 @@ jQuery(document).ready(function($){
             data : {action : 'lp_migrate_course_to_tutor' },
             beforeSend: function () {
                 $that.addClass('tutor-updating-message');
+                get_live_progress_course_migrating_info();
             },
             success: function (data) {
-                console.log(data)
                 if (data.success) {
-                    window.location.reload();
+                    //window.location.reload();
                 }
             },
             complete: function () {
@@ -651,10 +651,26 @@ jQuery(document).ready(function($){
             }
         });
         
-        
-        
-        
     });
+
+
+    function get_live_progress_course_migrating_info(){
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : {action : '_get_lp_live_progress_course_migrating_info' },
+            success: function (data) {
+                if (data.success) {
+                    if (data.data.migrated_count) {
+                        $('#course_migration_progress').html('<div class="tutor-alert tutor-alert-info">'+data.data.progress_text+'</div>');
+                    }
+
+                    setTimeout(get_live_progress_course_migrating_info, 2000);
+                }
+            }
+        });
+    }
+
 
 
 });

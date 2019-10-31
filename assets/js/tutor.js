@@ -164,6 +164,24 @@ jQuery(document).ready(function($){
         }
     }
 
+    function tutor_sorting_topics_and_lesson(){
+        var topics = {};
+        $('.tutor-topics-wrap').each(function(index, item){
+            var $topic = $(this);
+            var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
+            var lessons = {};
+
+            $topic.find('.course-content-item').each(function(lessonIndex, lessonItem){
+                var $lesson = $(this);
+                var lesson_id = parseInt($lesson.attr('id').match(/\d+/)[0], 10);
+
+                lessons[lessonIndex] = lesson_id;
+            });
+            topics[index] = { 'topic_id' : topics_id, 'lesson_ids' : lessons };
+        });
+        $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
+    }
+
     $(document).on('change keyup', '.course-edit-topic-title-input', function (e) {
         e.preventDefault();
         $(this).closest('.tutor-topics-top').find('.topic-inner-title').html($(this).val());

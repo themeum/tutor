@@ -21,6 +21,7 @@ class MigrationLP {
 		add_action('init', array($this, 'check_if_maintenance'));
 
 		add_action('wp_ajax_lp_migrate_course_to_tutor', array($this, 'lp_migrate_course_to_tutor'));
+		add_action('wp_ajax__get_lp_live_progress_course_migrating_info', array($this, '_get_lp_live_progress_course_migrating_info'));
 	}
 
 	public function tutor_tool_pages($pages){
@@ -36,18 +37,45 @@ class MigrationLP {
 	public function lp_migrate_course_to_tutor(){
 		global $wpdb;
 
+		//$course_id = 1826;
 
-		$course_id = 1826;
+		update_option('_tutor_migrated_course_count', 0);
 
-		$this->migrate_course($course_id);
+		$lp_courses = $wpdb->get_results("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'lp_course';");
+		if (tutils()->count($lp_courses)){
+			$course_i = 0;
+			foreach ($lp_courses as $lp_course){
+				$course_i++;
+
+				//$this->migrate_course($lp_course->ID);
+
+				update_option('_tutor_migrated_course_count', $course_i);
+			}
+		}
+
+		wp_send_json_success();
 	}
+
+
+	/**
+	 *
+	 * Get Live Update about course migrating info
+	 */
+
+	public function _get_lp_live_progress_course_migrating_info(){
+		$migrated_count = (int) get_option('_tutor_migrated_course_count');
+		$progress_text = sprintf(__('Migrated %s course', 'tutor'), $migrated_count);
+
+		wp_send_json_success(array('progress_text' => $progress_text, 'migrated_count' => $migrated_count ));
+	}
+
 
 
 	public function migrate_course($course_id){
 		global $wpdb;
 
 		$course = learn_press_get_course($course_id);
-		die(var_dump());
+
 		if ( ! $course){
 			return;
 		}
@@ -95,6 +123,7 @@ class MigrationLP {
 			$tutor_course[] = $topic;
 		}
 
+
 		if (tutils()->count($tutor_course)){
 			foreach ($tutor_course as $course_topic){
 
@@ -103,16 +132,78 @@ class MigrationLP {
 				unset($course_topic['items']);
 
 				//Insert Topic post type
-				//$topic_id = wp_insert_post( $course_topic );
+				$topic_id = wp_insert_post( $course_topic );
 
 				//Update lesson from LearnPress to TutorLMS
 				foreach ($lessons as $lesson){
 
+					if ($lesson['post_type'] === 'tutor_quiz'){
+						$quiz_id = tutils()->array_get('ID', $lesson);
 
-					die(print_r($lesson));
+						$questions = $wpdb->get_results("SELECT question_id, question_order, questions.ID, questions.post_content, questions.post_title, question_type_meta.meta_value as question_type, question_mark_meta.meta_value as question_mark
+						FROM {$wpdb->prefix}learnpress_quiz_questions 
+						LEFT JOIN {$wpdb->posts} questions on question_id = questions.ID 
+						LEFT JOIN {$wpdb->postmeta} question_type_meta on question_id = question_type_meta.post_id AND question_type_meta.meta_key = '_lp_type'
+						LEFT JOIN {$wpdb->postmeta} question_mark_meta on question_id = question_mark_meta.post_id AND question_mark_meta.meta_key = '_lp_mark'
+						WHERE quiz_id = {$quiz_id}  ");
+
+						if (tutils()->count($questions)){
+							foreach ($questions as $question) {
+
+								$question_type = null;
+								if ($question->question_type === 'true_or_false'){
+									$question_type = 'true_false';
+								}
+								if ($question->question_type === 'single_choice'){
+									$question_type = 'single_choice';
+								}
+								if ($question->question_type === 'multiple_choice'){
+									$question_type = 'multi_choice';
+								}
+
+								if ($question_type) {
+
+									$new_question_data = array(
+										'quiz_id'              => $quiz_id,
+										'question_title'       => $question->post_title,
+										'question_description' => $question->post_content,
+										'question_type'        => $question_type,
+										'question_mark'        => $question->question_mark,
+										'question_settings'    => maybe_serialize( array() ),
+										'question_order'       => $question->question_order,
+									);
 
 
-					/*
+									$wpdb->insert($wpdb->prefix.'tutor_quiz_questions', $new_question_data);
+									$question_id = $wpdb->insert_id;
+
+									$answer_items = $wpdb->get_results("SELECT * from {$wpdb->prefix}learnpress_question_answers where question_id = {$question->question_id} ");
+
+									if (tutils()->count($answer_items)){
+										foreach ($answer_items as $answer_item){
+											$answer_data = maybe_unserialize($answer_item->answer_data);
+
+											$answer_data = array(
+												'belongs_question_id'   => $question_id,
+												'belongs_question_type' => $question_type,
+												'answer_title'          => tutils()->array_get('text', $answer_data),
+												'is_correct'            => tutils()->array_get('is_true', $answer_data) == 'true' ? 1 : 0,
+												'answer_order'          => $answer_item->answer_order,
+											);
+
+											$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
+										}
+									}
+								}
+
+							}
+
+
+						}
+
+					}
+
+
 					$lesson['post_parent'] = $topic_id;
 					wp_update_post($lesson);
 
@@ -127,7 +218,7 @@ class MigrationLP {
 					}else{
 						delete_post_meta($lesson_id, '_is_preview');
 					}
-					*/
+
 
 				}
 			}
@@ -138,8 +229,8 @@ class MigrationLP {
 			'ID'            => $course_id,
 			'post_type'     => $course_post_type,
 		);
-		//wp_update_post($tutor_course);
-		//update_post_meta($course_id, '_was_lp_course', true);
+		wp_update_post($tutor_course);
+		update_post_meta($course_id, '_was_lp_course', true);
 
 		/**
 		 * Create WC Product and attaching it with course
@@ -244,9 +335,7 @@ class MigrationLP {
 			tutor_alert(__('Briefly unavailable for scheduled maintenance. Check back in a minute.', 'tutor'));
 			die();
 		}
-
 	}
-
 
 
 }
