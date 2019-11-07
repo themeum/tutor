@@ -643,7 +643,7 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 if (data.success) {
-                    //window.location.reload();
+                    window.location.reload();
                 }
             },
             complete: function () {
@@ -652,7 +652,6 @@ jQuery(document).ready(function($){
         });
         
     });
-
 
     function get_live_progress_course_migrating_info(){
         $.ajax({

@@ -22,6 +22,9 @@ class MigrationLP {
 
 		add_action('wp_ajax_lp_migrate_course_to_tutor', array($this, 'lp_migrate_course_to_tutor'));
 		add_action('wp_ajax__get_lp_live_progress_course_migrating_info', array($this, '_get_lp_live_progress_course_migrating_info'));
+
+		add_action('tutor_action_migrate_lp_orders', array($this, 'migrate_lp_orders'));
+		add_action('tutor_action_migrate_lp_reviews', array($this, 'migrate_lp_reviews'));
 	}
 
 	public function tutor_tool_pages($pages){
@@ -47,7 +50,7 @@ class MigrationLP {
 			foreach ($lp_courses as $lp_course){
 				$course_i++;
 
-				//$this->migrate_course($lp_course->ID);
+				$this->migrate_course($lp_course->ID);
 
 				update_option('_tutor_migrated_course_count', $course_i);
 			}
@@ -173,7 +176,6 @@ class MigrationLP {
 										'question_order'       => $question->question_order,
 									);
 
-
 									$wpdb->insert($wpdb->prefix.'tutor_quiz_questions', $new_question_data);
 									$question_id = $wpdb->insert_id;
 
@@ -187,7 +189,7 @@ class MigrationLP {
 												'belongs_question_id'   => $question_id,
 												'belongs_question_type' => $question_type,
 												'answer_title'          => tutils()->array_get('text', $answer_data),
-												'is_correct'            => tutils()->array_get('is_true', $answer_data) == 'true' ? 1 : 0,
+												'is_correct'            => tutils()->array_get('is_true', $answer_data) == 'yes' ? 1 : 0,
 												'answer_order'          => $answer_item->answer_order,
 											);
 
@@ -335,6 +337,125 @@ class MigrationLP {
 			tutor_alert(__('Briefly unavailable for scheduled maintenance. Check back in a minute.', 'tutor'));
 			die();
 		}
+	}
+
+
+	public function migrate_lp_orders(){
+		global $wpdb;
+
+		$lp_orders = $wpdb->get_results("SELECT * FROM {$wpdb->posts} WHERE post_type = 'lp_order' AND post_status = 'lp-completed' ;");
+
+		foreach ($lp_orders as $lp_order){
+			
+			$order_id = $lp_order->ID;
+
+			$migrate_order_data = array(
+				'ID'    => $order_id,
+				'post_status'    => 'wc-completed',
+				'post_type'    => 'shop_order',
+			);
+
+			wp_update_post($migrate_order_data);
+
+			$_items = $this->get_lp_order_items($order_id);
+
+			foreach ($_items as $item){
+
+				$item_data = array(
+					'order_item_name'   => $item->name,
+					'order_item_type'   => 'line_item',
+					'order_id'          => $order_id,
+				);
+
+				$wpdb->insert($wpdb->prefix.'woocommerce_order_items', $item_data);
+				$order_item_id = (int) $wpdb->insert_id;
+
+				$lp_item_metas = $wpdb->get_results("SELECT meta_key, meta_value FROM {$wpdb->prefix}learnpress_order_itemmeta WHERE learnpress_order_item_id = {$item->id} ");
+
+				$lp_formatted_metas = array();
+				foreach ($lp_item_metas as $item_meta) {
+					$lp_formatted_metas[$item_meta->meta_key] = $item_meta->meta_value;
+				}
+
+				$_course_id = tutils()->array_get('_course_id', $lp_formatted_metas);
+				$_quantity = tutils()->array_get('_quantity', $lp_formatted_metas);
+				$_subtotal = tutils()->array_get('_subtotal', $lp_formatted_metas);
+				$_total = tutils()->array_get('_total', $lp_formatted_metas);
+
+				$wc_item_metas = array(
+					'_product_id'        => $_course_id,
+					'_variation_id'      => 0,
+					'_qty'               => $_quantity,
+					'_tax_class'         => '',
+					'_line_subtotal'     => $_subtotal,
+					'_line_subtotal_tax' => 0,
+					'_line_total'        => $_total,
+					'_line_tax'          => 0,
+					'_line_tax_data'     => maybe_serialize( array( 'total' => array(), 'subtotal' => array() ) ),
+				);
+
+				foreach ($wc_item_metas as $wc_item_meta_key => $wc_item_meta_value ){
+					$wc_item_metas = array(
+						'order_item_id' => $order_item_id,
+						'meta_key'      => $wc_item_meta_key,
+						'meta_value'    => $wc_item_meta_value,
+					);
+					$wpdb->insert($wpdb->prefix.'woocommerce_order_itemmeta', $wc_item_metas);
+				}
+
+			}
+
+			update_post_meta($order_id, '_customer_user', get_post_meta($order_id, '_user_id', true));
+			update_post_meta($order_id, '_customer_ip_address', get_post_meta($order_id, '_user_ip_address', true));
+			update_post_meta($order_id, '_customer_user_agent', get_post_meta($order_id, '_user_agent', true));
+
+			$user_email = $wpdb->get_var("SELECT user_email from {$wpdb->users} WHERE ID = {$lp_order->post_author} ");
+			update_post_meta($order_id, '_billing_address_index', $user_email );
+			update_post_meta($order_id, '_billing_email', $user_email );
+		}
+
+	}
+
+	public function migrate_lp_reviews(){
+		global $wpdb;
+
+		$lp_review_ids = $wpdb->get_col("SELECT comments.comment_ID FROM {$wpdb->comments} comments INNER JOIN {$wpdb->commentmeta} cm ON cm.comment_id = comments.comment_ID AND cm.meta_key = '_lpr_rating' WHERE comments.comment_type = 'review';");
+
+
+		if (tutils()->count($lp_review_ids)){
+			foreach ($lp_review_ids as $lp_review_id){
+				$review_migrate_data = array(
+					'comment_approved'  => 'approved',
+					'comment_type'      => 'tutor_course_rating',
+					'comment_agent'     => 'TutorLMSPlugin',
+				);
+
+				$wpdb->update($wpdb->comments, $review_migrate_data, array( 'comment_ID' => $lp_review_id));
+
+				$wpdb->update($wpdb->commentmeta, array('meta_key' => 'tutor_rating'), array( 'comment_id' => $lp_review_id, 'meta_key' => '_lpr_rating' ));
+				$wpdb->delete($wpdb->commentmeta, array('comment_id' => $lp_review_id, 'meta_key' => '_lpr_review_title'));
+			}
+		}
+
+
+	}
+
+	public function get_lp_order_items($order_id){
+		global $wpdb;
+
+		$query = $wpdb->prepare( "
+			SELECT order_item_id as id, order_item_name as name 
+				, oim.meta_value as `course_id`
+				# , oim2.meta_value as `quantity`
+				# , oim3.meta_value as `total`
+			FROM {$wpdb->learnpress_order_items} oi 
+				INNER JOIN {$wpdb->learnpress_order_itemmeta} oim ON oi.order_item_id = oim.learnpress_order_item_id AND oim.meta_key='_course_id'
+				# INNER JOIN {$wpdb->learnpress_order_itemmeta} oim2 ON oi.order_item_id = oim2.learnpress_order_item_id AND oim2.meta_key='_quantity'
+				# INNER JOIN {$wpdb->learnpress_order_itemmeta} oim3 ON oi.order_item_id = oim3.learnpress_order_item_id AND oim3.meta_key='_total'
+			WHERE order_id = %d 
+		", $order_id );
+
+		return $wpdb->get_results( $query );
 	}
 
 
