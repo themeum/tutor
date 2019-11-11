@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,14 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+
+= 1.4.6 - 11 November, 2019 =
+
+* Added: Maintenance Mode
+* Added: Frontend course edit link from Course Edit Page Admin bar LINK
+* Fixed: bug during add topic in course builder
+* Fixed: certificate download fatal error related microtime() in tutor-pro version
 
 = 1.4.5 - 21 October, 2019 =
 
