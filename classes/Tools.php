@@ -11,6 +11,11 @@ class Tools {
 	public function __construct() {
 		//add_action('tutor_once_in_day_run_schedule', array($this, 'delete_auto_draft_posts'));
 		add_action('tutor_action_regenerate_tutor_pages', array($this, 'regenerate_tutor_pages'));
+
+
+		add_action('tutor_option_save_after', array($this, 'tutor_option_save_after'));
+		add_action('init', array($this, 'check_if_maintenance'));
+
 	}
 
 	/**
@@ -39,5 +44,34 @@ class Tools {
 			}
 		}
 	}
+
+
+	/**
+	 * Enable Maintenance Mode
+	 */
+
+	public function tutor_option_save_after(){
+		$maintenance_mode = (bool) get_tutor_option('enable_tutor_maintenance_mode');
+		if ($maintenance_mode){
+			tutor_maintenance_mode(true);
+		}else{
+			tutor_maintenance_mode();
+		}
+	}
+
+	public function check_if_maintenance(){
+		if ( ! is_admin()) {
+			$maintenance_mode = (bool) get_tutor_option( 'enable_tutor_maintenance_mode' );
+			if ( ! $maintenance_mode){
+				return;
+			}
+
+			header( 'Retry-After: 600' );
+			include tutor()->path.'views/maintenance.php';
+			die();
+		}
+	}
+
+
 
 }
