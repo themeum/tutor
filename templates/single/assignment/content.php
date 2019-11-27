@@ -241,6 +241,11 @@ global $wpdb;
 			}
 		}
 		?>
+
+	    <?php tutor_next_previous_pagination(); ?>
+
     </div>
+
+
 
 <?php do_action('tutor_assignment/single/after/content'); ?>

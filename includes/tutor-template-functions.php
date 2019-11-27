@@ -333,7 +333,7 @@ if ( ! function_exists('tutor_container_classes')) {
 
 		$classes = apply_filters( 'tutor_container_classes', array(
 			'tutor-wrap tutor-courses-wrap',
-            'tutor-container'
+			'tutor-container'
 		) );
 
 		$class = implode( ' ', $classes );
@@ -349,7 +349,7 @@ if ( ! function_exists('tutor_post_class')) {
 	function tutor_post_class($default = '') {
 		$classes = apply_filters( 'tutor_post_class', array(
 			'tutor-wrap',
-            $default
+			$default
 		) );
 
 		post_class( $classes );
@@ -839,14 +839,14 @@ if ( ! function_exists('tutor_course_target_reviews_html')) {
 if ( ! function_exists('tutor_course_target_review_form_html')) {
 	function tutor_course_target_review_form_html($echo = true) {
 		ob_start();
-        tutor_load_template( 'single.course.review-form' );
-        $output = apply_filters( 'tutor_course/single/reviews_form', ob_get_clean() );
+		tutor_load_template( 'single.course.review-form' );
+		$output = apply_filters( 'tutor_course/single/reviews_form', ob_get_clean() );
 
-        if ($echo){
-            echo $output;
-        }
+		if ($echo){
+			echo $output;
+		}
 
-        return $output;
+		return $output;
 
 	}
 }
@@ -1037,23 +1037,23 @@ if ( ! function_exists('tutor_course_enrolled_nav')) {
 		ob_start();
 		global $post;
 
-        if ( ! empty($post->post_type) && $post->post_type === $course_post_type){
-	        tutor_load_template( 'single.course.enrolled.nav' );
-        }elseif(! empty($post->post_type) && $post->post_type === $lesson_post_type){
-	        $lesson_id = get_the_ID();
-	        $course_id = tutor_utils()->get_course_id_by_lesson($lesson_id);
+		if ( ! empty($post->post_type) && $post->post_type === $course_post_type){
+			tutor_load_template( 'single.course.enrolled.nav' );
+		}elseif(! empty($post->post_type) && $post->post_type === $lesson_post_type){
+			$lesson_id = get_the_ID();
+			$course_id = tutor_utils()->get_course_id_by_lesson($lesson_id);
 
-	        $course_post_type = tutor()->course_post_type;
-	        $queryCourse = new WP_Query(array('p' => $course_id, 'post_type' => $course_post_type));
+			$course_post_type = tutor()->course_post_type;
+			$queryCourse = new WP_Query(array('p' => $course_id, 'post_type' => $course_post_type));
 
-	        if ($queryCourse->have_posts()){
-		        while ($queryCourse->have_posts()){
-			        $queryCourse->the_post();
-			        tutor_load_template( 'single.course.enrolled.nav' );
-		        }
-		        wp_reset_postdata();
-	        }
-        }
+			if ($queryCourse->have_posts()){
+				while ($queryCourse->have_posts()){
+					$queryCourse->the_post();
+					tutor_load_template( 'single.course.enrolled.nav' );
+				}
+				wp_reset_postdata();
+			}
+		}
 		$output = apply_filters( 'tutor_course/single/enrolled/nav', ob_get_clean() );
 
 		if ( $echo ) {
@@ -1077,16 +1077,16 @@ if ( ! function_exists('tutor_course_video')){
 }
 
 if ( ! function_exists('tutor_lesson_video')){
-    function tutor_lesson_video($echo = true){
-	    ob_start();
-	    tutor_load_template( 'single.video.video' );
-	    $output = apply_filters( 'tutor_lesson/single/video', ob_get_clean() );
+	function tutor_lesson_video($echo = true){
+		ob_start();
+		tutor_load_template( 'single.video.video' );
+		$output = apply_filters( 'tutor_lesson/single/video', ob_get_clean() );
 
-	    if ( $echo ) {
-		    echo $output;
-	    }
-	    return $output;
-    }
+		if ( $echo ) {
+			echo $output;
+		}
+		return $output;
+	}
 }
 
 /**
@@ -1368,17 +1368,17 @@ if ( ! function_exists('get_tutor_course_tags')){
  */
 
 if ( ! function_exists('tutor_course_tags_html')) {
-    function tutor_course_tags_html( $echo = true ) {
-        ob_start();
-        tutor_load_template( 'single.course.tags' );
-        $output = apply_filters( 'tutor_course/single/tags_html', ob_get_clean() );
+	function tutor_course_tags_html( $echo = true ) {
+		ob_start();
+		tutor_load_template( 'single.course.tags' );
+		$output = apply_filters( 'tutor_course/single/tags_html', ob_get_clean() );
 
-        if ( $echo ) {
-            echo $output;
-        }
+		if ( $echo ) {
+			echo $output;
+		}
 
-        return $output;
-    }
+		return $output;
+	}
 }
 
 /**
@@ -1475,4 +1475,56 @@ if ( ! function_exists('get_tnotice')) {
 
 		return $output;
 	}
+}
+
+/**
+ * @param int $course_content_id
+ * @param bool $echo
+ *
+ * @return mixed|void
+ *
+ * Next Previous Pagination
+ *
+ * @since v.1.4.7
+ */
+
+function tutor_next_previous_pagination($course_content_id = 0, $echo = true){
+	$content_id = tutils()->get_post_id($course_content_id);
+	$course_id = tutils()->get_course_id_by_content($content_id);
+	$course_contents = tutils()->get_course_contents_by_id($course_id);
+
+	$previous_id = 0;
+	$next_id = 0;
+
+	if (tutils()->count($course_contents)){
+		$ids = wp_list_pluck($course_contents, 'ID');
+
+		$i=0;
+		foreach ($ids as $key => $id){
+			$previous_i = $key - 1;
+			$next_i = $key + 1;
+
+			if ($id == $content_id){
+				if (isset($ids[$previous_i])){
+					$previous_id = $ids[$previous_i];
+				}
+				if (isset($ids[$next_i])){
+					$next_id = $ids[$next_i];
+				}
+			}
+			$i++;
+		}
+	}
+
+	ob_start();
+	do_action('tutor_lesson_next_previous_pagination_before');
+	tutor_load_template( 'single.next-previous-pagination', compact('previous_id', 'next_id') );
+	do_action('tutor_lesson_next_previous_pagination_after');
+	$output = apply_filters( 'tutor/single/next_previous_pagination', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
+
+	return $output;
 }
