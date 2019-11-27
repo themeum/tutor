@@ -1,4 +1,4 @@
-<img src=".github/tutor-github.png" alt="TutorLMS" width="300px">
+<img src=".github/tutor-github.png" alt="TutorLMS" width="100%">
 
 
 [![WordPress plugin](https://img.shields.io/wordpress/plugin/v/tutor.svg)](https://wordpress.org/plugins/tutor/)
