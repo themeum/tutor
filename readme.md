@@ -6,14 +6,12 @@
 [![WordPress rating](https://img.shields.io/wordpress/plugin/r/tutor.svg)](https://wordpress.org/support/plugin/tutor/reviews/)
 [![WordPress](https://img.shields.io/wordpress/plugin/dt/tutor.svg)](https://wordpress.org/plugins/tutor/advanced/)
 [![Wordpress Plugin Active Installs](https://img.shields.io/wordpress/plugin/installs/tutor.svg)](https://wordpress.org/plugins/tutor/)
-[![All Contributors](https://img.shields.io/badge/all_contributors-29-orange.svg?style=flat-square)](#contributors)
-
 
 
 [TutorLMS](https://www.themeum.com/product/tutor-lms/) is a complete, feature-packed and robust WordPress LMS plugin to create & sell courses online easily. All the features of this learning management system hits all the checkpoints for a full-fledged online course marketplace. You can create challenging and fun quizzes, interactive lessons, powerful reports and stats making Tutor potentially the best free WordPress LMS plugin. Manage, administer and monetize your education, online school, and online courses without having to write a single line of code.
 
 
-### [Changelog](./changelog.md)
+### [TutorLMS Changelog](./changelog.md)
 
 
 ### Documentation
