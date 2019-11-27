@@ -8,14 +8,15 @@
 [![Wordpress Plugin Active Installs](https://img.shields.io/wordpress/plugin/installs/tutor.svg)](https://wordpress.org/plugins/tutor/)
 
 
-[TutorLMS](https://www.themeum.com/product/tutor-lms/) is a complete, feature-packed and robust WordPress LMS plugin to create & sell courses online easily. All the features of this learning management system hits all the checkpoints for a full-fledged online course marketplace. You can create challenging and fun quizzes, interactive lessons, powerful reports and stats making Tutor potentially the best free WordPress LMS plugin. Manage, administer and monetize your education, online school, and online courses without having to write a single line of code.
+[TutorLMS](https://www.themeum.com/product/tutor-lms/?utm_source=github_repository) is a complete, 
+feature-packed and robust WordPress LMS plugin to create & sell courses online easily. All the features of this learning management system hits all the checkpoints for a full-fledged online course marketplace. You can create challenging and fun quizzes, interactive lessons, powerful reports and stats making Tutor potentially the best free WordPress LMS plugin. Manage, administer and monetize your education, online school, and online courses without having to write a single line of code.
 
 
 ### [Changelog](./.github/changelog.md)
 
 
 ### Documentation
-[https://www.themeum.com/docs/tutor-introduction/](https://www.themeum.com/docs/tutor-introduction/)
+[https://www.themeum.com/docs/tutor-introduction/](https://www.themeum.com/docs/tutor-introduction/?utm_source=github_repository)
 
 
 ### Reporting a Bug
@@ -41,236 +42,113 @@ To install Tutor manually, you need to download the plugin and upload it to your
 
 The WordPress codex contains [instructions on how to do this here](https://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
 
-#Available Addon's in the TutorLMS Pro Version
+#Available Addon's in the [TutorLMS Pro Version](https://www.themeum.com/product/tutor-lms/?utm_source=github_repository)
+
+Our all premium addons comes with Premium Plugins. When you purchase [TutorLMS Pro Version](https://www.themeum.com/product/tutor-lms/?utm_source=github_repository), then you will get automatically all addons.
+
 
 
 <table>
 
-
 <tr>
 
-
-
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/content-drip.png" alt="Content Drip" ></td>
-<td>
+<img src=".github/addons/content-drip.png" alt="Content Drip" width="100%" >
 <h4>Content Drip</h4>
 Unlock lessons by schedule or when the student meets specific condition.
 </td>
-</tr>
-</table>
-</td>
-
 
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/enrollments.png" alt="Enrollments" ></td>
-<td>
+<img src=".github/addons/enrollments.png" alt="Enrollments" width="100%" >
 <h4>Enrollments</h4>
 Take advanced control on enrollments. Enroll the student manually.
 </td>
-</tr>
-</table>
-</td>
-
-
 
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/gradebook.png" alt="Gradebook" ></td>
-<td>
+<img src=".github/addons/gradebook.png" alt="Gradebook" width="100%" >
 <h4>Gradebook</h4>
 Shows student progress from assignment and quiz
-</td>
 </tr>
-</table>
-</td>
-
-</tr>
-
-
-
-
-
-
-
 
 <tr>
 
-
-
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/pmpro.png" alt="Paid Memberships Pro" ></td>
-<td>
+<img src=".github/addons/pmpro.png" alt="Paid Memberships Pro" width="100%" >
 <h4>Paid Memberships Pro</h4>
 Maximize revenue by selling membership access to all of your courses.
 </td>
-</tr>
-</table>
-</td>
-
 
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/tutor-assignments.png" alt="Assignments" ></td>
-<td>
+<img src=".github/addons/tutor-assignments.png" alt="Assignments" width="100%" >
 <h4>Assignments</h4>
 Tutor assignments is a great way to assign tasks to students.
 </td>
-</tr>
-</table>
-</td>
-
-
 
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/tutor-certificate.png" alt="Certificate" ></td>
-<td>
+<img src=".github/addons/tutor-certificate.png" alt="Certificate" width="100%" >
 <h4>Certificate</h4>
 Students will be able to download a certificate after course completion.
 </td>
-</tr>
-</table>
-</td>
 
 </tr>
 
 
-
-
 <tr>
 
-
-
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/tutor-course-attachments.png" alt="Course Attachments" ></td>
-<td>
+<img src=".github/addons/tutor-course-attachments.png" alt="Course Attachments" width="100%" >
 <h4>Course Attachments</h4>
 Add unlimited attachments/ private files to any Tutor course
 </td>
-</tr>
-</table>
-</td>
-
 
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/tutor-course-preview.png" alt="Course Preview" ></td>
-<td>
+<img src=".github/addons/tutor-course-preview.png" alt="Course Preview" width="100%" >
 <h4>Course Preview</h4>
 Unlock some lessons for students before enrollment.
 </td>
-</tr>
-</table>
-</td>
-
-
 
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/tutor-email.png" alt="E-Mail" ></td>
-<td>
+<img src=".github/addons/tutor-email.png" alt="E-Mail" width="100%" >
 <h4>E-Mail</h4>
 Send email on various tutor events
-
-</td>
-</tr>
-</table>
 </td>
 
 </tr>
 
 
-
-
-
-
-
-
 <tr>
 
-
-
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/tutor-multi-instructors.png" alt="Multi Instructors" ></td>
-<td>
+<img src=".github/addons/tutor-multi-instructors.png" alt="Multi Instructors" width="100%" >
 <h4>Multi Instructors</h4>
 Start a course with multiple instructors by Tutor Multi Instructors
 </td>
-</tr>
-</table>
-</td>
-
 
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/tutor-prerequisites.png" alt="Prerequisites" ></td>
-<td>
+<img src=".github/addons/tutor-prerequisites.png" alt="Prerequisites" width="100%" >
 <h4>Prerequisites</h4>
 Specific course you must complete before you can enroll new course by Tutor Prerequisites
 </td>
-</tr>
-</table>
-</td>
-
-
 
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/tutor-report.png" alt="Report" ></td>
-<td>
+<img src=".github/addons/tutor-report.png" alt="Report" width="100%" >
 <h4>Report</h4>
 Check your course performance through Tutor Report stats.
 </td>
-</tr>
-</table>
-</td>
 
 </tr>
 
-
-
-
-
-
-
 <tr>
 
-
-
 <td>
-<table>
-<tr>
-<td><img src=".github/addons/wc-subscriptions.png" alt="WooCommerce Subscriptions" ></td>
-<td>
+<img src=".github/addons/wc-subscriptions.png" alt="WooCommerce Subscriptions" width="100%" >
 <h4>WooCommerce Subscriptions</h4>
 Capture Residual Revenue with Recurring Payments.
-</td>
-</tr>
-</table>
+
 </td>
 
 <td></td>
 <td></td>
-
-
 
 </tr>
 
