@@ -301,7 +301,7 @@ do_action('tutor_addon_after_enable_disable');
 * Updated: Addon icons
 
 
-[View the full changelog](https://github.com/themeum/tutor/blob/master/changelog.md#tutorlms-changelog)
+[View the full changelog](https://github.com/themeum/tutor/blob/master/.github/changelog.md#tutorlms-changelog)
 
 == Upgrade Notice ==
 
