@@ -48,7 +48,7 @@ Our all premium addons comes with Premium Plugins. When you purchase [TutorLMS P
 
 
 
-<table style="text-align:center;">
+<table style="text-align: center;">
 
 <tr>
 
