@@ -42,7 +42,7 @@ To install Tutor manually, you need to download the plugin and upload it to your
 
 The WordPress codex contains [instructions on how to do this here](https://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
 
-#Available Addon's in the [TutorLMS Pro Version](https://www.themeum.com/product/tutor-lms/?utm_source=github_repository)
+### Available Addon's in the [TutorLMS Pro Version](https://www.themeum.com/product/tutor-lms/?utm_source=github_repository)
 
 Our all premium addons comes with Premium Plugins. When you purchase [TutorLMS Pro Version](https://www.themeum.com/product/tutor-lms/?utm_source=github_repository), then you will get automatically all addons.
 
@@ -53,19 +53,19 @@ Our all premium addons comes with Premium Plugins. When you purchase [TutorLMS P
 <tr>
 
 <td>
-<img src=".github/addons/content-drip.png" alt="Content Drip" width="100%" >
+<img src=".github/addons/content-drip.png" alt="Content Drip" height="100px" >
 <h4>Content Drip</h4>
 Unlock lessons by schedule or when the student meets specific condition.
 </td>
 
 <td>
-<img src=".github/addons/enrollments.png" alt="Enrollments" width="100%" >
+<img src=".github/addons/enrollments.png" alt="Enrollments" height="100px" >
 <h4>Enrollments</h4>
 Take advanced control on enrollments. Enroll the student manually.
 </td>
 
 <td>
-<img src=".github/addons/gradebook.png" alt="Gradebook" width="100%" >
+<img src=".github/addons/gradebook.png" alt="Gradebook" height="100px" >
 <h4>Gradebook</h4>
 Shows student progress from assignment and quiz
 </tr>
@@ -73,19 +73,19 @@ Shows student progress from assignment and quiz
 <tr>
 
 <td>
-<img src=".github/addons/pmpro.png" alt="Paid Memberships Pro" width="100%" >
+<img src=".github/addons/pmpro.png" alt="Paid Memberships Pro" height="100px" >
 <h4>Paid Memberships Pro</h4>
 Maximize revenue by selling membership access to all of your courses.
 </td>
 
 <td>
-<img src=".github/addons/tutor-assignments.png" alt="Assignments" width="100%" >
+<img src=".github/addons/tutor-assignments.png" alt="Assignments" height="100px" >
 <h4>Assignments</h4>
 Tutor assignments is a great way to assign tasks to students.
 </td>
 
 <td>
-<img src=".github/addons/tutor-certificate.png" alt="Certificate" width="100%" >
+<img src=".github/addons/tutor-certificate.png" alt="Certificate" height="100px" >
 <h4>Certificate</h4>
 Students will be able to download a certificate after course completion.
 </td>
@@ -96,19 +96,19 @@ Students will be able to download a certificate after course completion.
 <tr>
 
 <td>
-<img src=".github/addons/tutor-course-attachments.png" alt="Course Attachments" width="100%" >
+<img src=".github/addons/tutor-course-attachments.png" alt="Course Attachments" height="100px" >
 <h4>Course Attachments</h4>
 Add unlimited attachments/ private files to any Tutor course
 </td>
 
 <td>
-<img src=".github/addons/tutor-course-preview.png" alt="Course Preview" width="100%" >
+<img src=".github/addons/tutor-course-preview.png" alt="Course Preview" height="100px" >
 <h4>Course Preview</h4>
 Unlock some lessons for students before enrollment.
 </td>
 
 <td>
-<img src=".github/addons/tutor-email.png" alt="E-Mail" width="100%" >
+<img src=".github/addons/tutor-email.png" alt="E-Mail" height="100px" >
 <h4>E-Mail</h4>
 Send email on various tutor events
 </td>
@@ -119,19 +119,19 @@ Send email on various tutor events
 <tr>
 
 <td>
-<img src=".github/addons/tutor-multi-instructors.png" alt="Multi Instructors" width="100%" >
+<img src=".github/addons/tutor-multi-instructors.png" alt="Multi Instructors" height="100px" >
 <h4>Multi Instructors</h4>
 Start a course with multiple instructors by Tutor Multi Instructors
 </td>
 
 <td>
-<img src=".github/addons/tutor-prerequisites.png" alt="Prerequisites" width="100%" >
+<img src=".github/addons/tutor-prerequisites.png" alt="Prerequisites" height="100px" >
 <h4>Prerequisites</h4>
 Specific course you must complete before you can enroll new course by Tutor Prerequisites
 </td>
 
 <td>
-<img src=".github/addons/tutor-report.png" alt="Report" width="100%" >
+<img src=".github/addons/tutor-report.png" alt="Report" height="100px" >
 <h4>Report</h4>
 Check your course performance through Tutor Report stats.
 </td>
@@ -141,7 +141,7 @@ Check your course performance through Tutor Report stats.
 <tr>
 
 <td>
-<img src=".github/addons/wc-subscriptions.png" alt="WooCommerce Subscriptions" width="100%" >
+<img src=".github/addons/wc-subscriptions.png" alt="WooCommerce Subscriptions" height="100px" >
 <h4>WooCommerce Subscriptions</h4>
 Capture Residual Revenue with Recurring Payments.
 
