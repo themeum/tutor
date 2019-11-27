@@ -1,4 +1,4 @@
-# Changelog
+# TutorLMS Changelog
 
 
 ### 1.4.6 - 11 November, 2019
