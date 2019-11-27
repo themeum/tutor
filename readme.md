@@ -18,6 +18,10 @@
 [https://www.themeum.com/docs/tutor-introduction/](https://www.themeum.com/docs/tutor-introduction/)
 
 
+### Reporting a Bug
+
+Bugs can be reported at [https://github.com/themeum/tutor/issues/new](https://github.com/themeum/tutor/issues/new)
+
 ### Installation
 
 #### Minimum Requirements
