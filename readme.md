@@ -48,23 +48,23 @@ Our all premium addons comes with Premium Plugins. When you purchase [TutorLMS P
 
 
 
-<table style="text-align: center;">
+<table>
 
 <tr>
 
-<td>
+<td align="center">
 <img src=".github/addons/content-drip.png" alt="Content Drip" height="100px" >
 <h4>Content Drip</h4>
 Unlock lessons by schedule or when the student meets specific condition.
 </td>
 
-<td>
+<td align="center">
 <img src=".github/addons/enrollments.png" alt="Enrollments" height="100px" >
 <h4>Enrollments</h4>
 Take advanced control on enrollments. Enroll the student manually.
 </td>
 
-<td>
+<td align="center">
 <img src=".github/addons/gradebook.png" alt="Gradebook" height="100px" >
 <h4>Gradebook</h4>
 Shows student progress from assignment and quiz
@@ -72,19 +72,19 @@ Shows student progress from assignment and quiz
 
 <tr>
 
-<td>
+<td align="center">
 <img src=".github/addons/pmpro.png" alt="Paid Memberships Pro" height="100px" >
 <h4>Paid Memberships Pro</h4>
 Maximize revenue by selling membership access to all of your courses.
 </td>
 
-<td>
+<td align="center">
 <img src=".github/addons/tutor-assignments.png" alt="Assignments" height="100px" >
 <h4>Assignments</h4>
 Tutor assignments is a great way to assign tasks to students.
 </td>
 
-<td>
+<td align="center">
 <img src=".github/addons/tutor-certificate.png" alt="Certificate" height="100px" >
 <h4>Certificate</h4>
 Students will be able to download a certificate after course completion.
@@ -95,19 +95,19 @@ Students will be able to download a certificate after course completion.
 
 <tr>
 
-<td>
+<td align="center">
 <img src=".github/addons/tutor-course-attachments.png" alt="Course Attachments" height="100px" >
 <h4>Course Attachments</h4>
 Add unlimited attachments/ private files to any Tutor course
 </td>
 
-<td>
+<td align="center">
 <img src=".github/addons/tutor-course-preview.png" alt="Course Preview" height="100px" >
 <h4>Course Preview</h4>
 Unlock some lessons for students before enrollment.
 </td>
 
-<td>
+<td align="center">
 <img src=".github/addons/tutor-email.png" alt="E-Mail" height="100px" >
 <h4>E-Mail</h4>
 Send email on various tutor events
@@ -118,19 +118,19 @@ Send email on various tutor events
 
 <tr>
 
-<td>
+<td align="center">
 <img src=".github/addons/tutor-multi-instructors.png" alt="Multi Instructors" height="100px" >
 <h4>Multi Instructors</h4>
 Start a course with multiple instructors by Tutor Multi Instructors
 </td>
 
-<td>
+<td align="center">
 <img src=".github/addons/tutor-prerequisites.png" alt="Prerequisites" height="100px" >
 <h4>Prerequisites</h4>
 Specific course you must complete before you can enroll new course by Tutor Prerequisites
 </td>
 
-<td>
+<td align="center">
 <img src=".github/addons/tutor-report.png" alt="Report" height="100px" >
 <h4>Report</h4>
 Check your course performance through Tutor Report stats.
@@ -140,15 +140,15 @@ Check your course performance through Tutor Report stats.
 
 <tr>
 
-<td>
+<td align="center">
 <img src=".github/addons/wc-subscriptions.png" alt="WooCommerce Subscriptions" height="100px" >
 <h4>WooCommerce Subscriptions</h4>
 Capture Residual Revenue with Recurring Payments.
 
 </td>
 
-<td></td>
-<td></td>
+<td align="center"></td>
+<td align="center"></td>
 
 </tr>
 
