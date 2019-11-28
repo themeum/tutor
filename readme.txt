@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.3
 Requires PHP: 5.4.0
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,6 +241,12 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
+= 1.4.7 - 28 November, 2019 =
+
+* Added: Next Previous Lesson|quiz|assignments
+* Added: User Profile Update From Backend and Frontend Dashboard is now synced, no matters it's from media or browser file input.
+* Added: Quiz description implementation
+* Added: `tutor_single_quiz_content()` to get quiz description within Standard Loop
 
 = 1.4.6 - 11 November, 2019 =
 
