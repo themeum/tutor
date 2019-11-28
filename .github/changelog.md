@@ -1,5 +1,11 @@
 # TutorLMS Changelog
 
+### 1.4.7 - 28 November, 2019
+
+* Added: Next Previous Lesson|quiz|assignments
+* Added: User Profile Update From Backend and Frontend Dashboard is now synced, no matters it's from media or browser file input.
+* Added: Quiz description implementation
+* Added: `tutor_single_quiz_content()` to get quiz description within Standard Loop
 
 ### 1.4.6 - 11 November, 2019
 
