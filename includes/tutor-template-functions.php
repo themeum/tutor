@@ -1257,6 +1257,25 @@ function tutor_single_quiz_body($echo = true){
 	return $output;
 }
 
+/**
+ * @param bool $echo
+ *
+ * @return mixed|void
+ *
+ * Get the quiz description
+ */
+function tutor_single_quiz_content($echo = true){
+	ob_start();
+	tutor_load_template( 'single.quiz.content' );
+	$output = apply_filters( 'tutor_single_quiz/content', ob_get_clean() );
+
+	if ( $echo ) {
+		echo $output;
+	}
+	return $output;
+}
+
+
 function tutor_single_quiz_no_course_belongs($echo = true){
 	ob_start();
 	tutor_load_template( 'single.quiz.no_course_belongs' );
