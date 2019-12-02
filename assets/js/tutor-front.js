@@ -515,7 +515,7 @@ jQuery(document).ready(function($){
     function init_quiz_builder() {
         if (jQuery().sortable) {
             $(".tutor-quiz-answers-wrap").sortable({
-                //handle: ".answer-sorting-bar",
+                handle: ".answer-sorting-bar",
                 start: function (e, ui) {
                     ui.placeholder.css('visibility', 'visible');
                 },
@@ -526,8 +526,7 @@ jQuery(document).ready(function($){
 
             $(".quiz-draggable-rand-answers, .quiz-answer-matching-droppable").sortable({
                 connectWith: ".quiz-answer-matching-droppable",
-                placeholder: "drop-hover"
-
+                placeholder: "drop-hover",
             }).disableSelection();
         }
     }
@@ -590,6 +589,25 @@ jQuery(document).ready(function($){
         }
         $that.closest('.tutor-quiz-answers-wrap').find('.characters_remaining').html(remaining);
     });
+
+    /**
+     *
+     * @type {jQuery}
+     *
+     * Improved Quiz draggable answers drop accessibility
+     * Answers draggable wrap will be now same height.
+     *
+     * @since v.1.4.4
+     */
+    var countDraggableAnswers = $('.quiz-draggable-rand-answers').length;
+    if (countDraggableAnswers){
+        $('.quiz-draggable-rand-answers').each(function(){
+            var $that = $(this);
+            var draggableDivHeight = $that.height();
+
+            $that.css({"height": draggableDivHeight});
+        });
+    }
 
     /**
      * Add to cart in guest mode, show login form
