@@ -2212,8 +2212,8 @@ Course question and answer
 
 .answer-type-image_matching .quiz-answer-item-matching {
   /*display: inline-block;
-	  width: 190px;
-	  margin-right: 10px;*/
+      width: 190px;
+      margin-right: 10px;*/
   display: block;
 }
 
@@ -2303,6 +2303,22 @@ Course question and answer
 .tutor-quiz-answers-wrap .quiz-image-answering-input-field-wrap input:focus {
   background: transparent;
   outline-offset: 0 !important;
+}
+
+/**
+* Pagination
+*/
+.tutor-next-previous-pagination-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.tutor-next-previous-pagination-wrap a {
+  color: var(--tutor-primary-color);
 }
 
 /**

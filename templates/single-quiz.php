@@ -49,6 +49,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
 		        <?php
 		        if ($course){
 			        tutor_single_quiz_top();
+			        tutor_single_quiz_content();
 			        tutor_single_quiz_body();
 		        }else{
 			        tutor_single_quiz_no_course_belongs();

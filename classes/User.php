@@ -24,6 +24,7 @@ class User {
 	public function profile_update($user_id){
 		$_tutor_profile_job_title = sanitize_text_field(tutor_utils()->avalue_dot('_tutor_profile_job_title', $_POST));
 		$_tutor_profile_bio = wp_kses_post(tutor_utils()->avalue_dot('_tutor_profile_bio', $_POST));
+		$_tutor_profile_photo_field = sanitize_text_field(tutor_utils()->avalue_dot('_tutor_profile_photo_field', $_POST));
 
 		update_user_meta($user_id, '_tutor_profile_job_title', $_tutor_profile_job_title);
 		update_user_meta($user_id, '_tutor_profile_bio', $_tutor_profile_bio);
@@ -67,6 +68,8 @@ class User {
 					update_user_meta( $user_id, '_tutor_profile_photo', $media_id );
 				}
 			}
+		}elseif ($_tutor_profile_photo_field){
+			update_user_meta( $user_id, '_tutor_profile_photo', $_tutor_profile_photo_field );
 		}
 
 	}
