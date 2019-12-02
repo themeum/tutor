@@ -463,6 +463,7 @@ class Quiz {
 
 		$quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
 		$attempt = tutor_utils()->is_started_quiz($quiz_id);
+		$attempt_id = $attempt->attempt_id;
 
 		$attempt_info = array(
 			'total_answered_questions'  => 0,
@@ -470,7 +471,10 @@ class Quiz {
 			'attempt_status'            => 'attempt_ended',
 			'attempt_ended_at'          => date("Y-m-d H:i:s"),
 		);
-		$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_info, array('attempt_id' => $attempt->attempt_id));
+
+		do_action('tutor_quiz_before_finish', $attempt_id, $quiz_id, $attempt->user_id);
+		$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_info, array('attempt_id' => $attempt_id));
+		do_action('tutor_quiz_finished', $attempt_id, $quiz_id, $attempt->user_id);
 
 		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 	}
@@ -485,12 +489,17 @@ class Quiz {
 		$attempt = tutor_utils()->is_started_quiz($quiz_id);
 
 		if ($attempt) {
-		    $data = array(
+			$attempt_id = $attempt->attempt_id;
+
+			$data = array(
 			    'attempt_status' => 'attempt_timeout',
 			    'attempt_ended_at'          => date("Y-m-d H:i:s"),
 		    );
 		    $wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $data, array('attempt_id' => $attempt->attempt_id));
-		    wp_send_json_success();
+
+			do_action('tutor_quiz_timeout', $attempt_id, $quiz_id, $attempt->user_id);
+
+			wp_send_json_success();
 		}
 
 		wp_send_json_error(__('Quiz has been timeout already', 'tutor'));
@@ -507,11 +516,12 @@ class Quiz {
 		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
 		$mark_as = sanitize_text_field($_GET['mark_as']);
 
-
 		$attempt_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = {$attempt_answer_id} ");
 		$attempt = tutor_utils()->get_attempt($attempt_id);
 
 		$is_correct = (int) $attempt_answer->is_correct;
+
+		do_action('tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as);
 
 		if ($mark_as === 'correct' && ! $is_correct){
 
@@ -545,6 +555,7 @@ class Quiz {
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
 		}
+		do_action('tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as);
 
 		wp_redirect(admin_url("admin.php?page=tutor_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
 		die();
@@ -570,6 +581,7 @@ class Quiz {
 			'menu_order'    => $next_order_id,
 		);
 		$quiz_id = wp_insert_post( $post_arr );
+		do_action('tutor_initial_quiz_created', $quiz_id);
 
 		ob_start();
 		include  tutor()->path.'views/modal/edit_quiz.php';
@@ -598,6 +610,8 @@ class Quiz {
 	    $post = get_post($quiz_id);
 
 	    if ( $post->post_type === 'tutor_quiz'){
+	        do_action('tutor_delete_quiz_before', $quiz_id);
+
 	        $wpdb->delete($wpdb->prefix.'tutor_quiz_attempts', array('quiz_id' => $quiz_id));
 	        $wpdb->delete($wpdb->prefix.'tutor_quiz_attempt_answers', array('quiz_id' => $quiz_id));
 
@@ -610,6 +624,10 @@ class Quiz {
 
 		    wp_delete_post($quiz_id, true);
 		    delete_post_meta($quiz_id, '_tutor_course_id_for_lesson');
+
+		    do_action('tutor_delete_quiz_after', $quiz_id);
+
+
 		    wp_send_json_success();
         }
 
@@ -634,6 +652,8 @@ class Quiz {
 
 		);
 		$quiz_id = wp_update_post( $post_arr );
+
+		do_action('tutor_quiz_updated', $quiz_id);
 
 		ob_start();
 		?>
