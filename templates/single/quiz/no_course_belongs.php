@@ -1,4 +1,9 @@
-
+<?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+?>
 
 <div class="tutor-alert-warning">
 	<h2><?php _e('No course found for this quiz', 'tutor'); ?></h2>

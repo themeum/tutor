@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 
 $product_id = tutor_utils()->get_course_product_id();
 $product = wc_get_product( $product_id );

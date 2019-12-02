@@ -108,7 +108,7 @@ class Addons {
 					$api_data = tutor_utils()->avalue_dot('body', $response);
 
 					$addons_themes_data = array(
-						'last_checked_time' => time(),
+						'last_checked_time' => tutor_time(),
 						'data' => $api_data,
 					);
 				}

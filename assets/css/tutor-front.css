@@ -3278,6 +3278,10 @@ Instructor
   margin-bottom: 4px;
 }
 
+.tutor-login-form-wrap .tutor-alert {
+  margin-bottom: 20px;
+}
+
 .tutor-login-form-wrap input[type="password"],
 .tutor-login-form-wrap input[type="text"] {
   width: 100%;
@@ -6267,6 +6271,15 @@ END Content Drip
   border-radius: 3px;
   padding: 20px 25px 20px 95px;
   color: #A86D00;
+  margin-bottom: 20px;
+}
+
+.tutor-alert p {
+  margin-bottom: 10px;
+}
+
+.tutor-alert p:last-child {
+  margin: 0;
 }
 
 .tutor-alert.tutor-alert-danger {

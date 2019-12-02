@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) )
  *
  * @since v.1.0.0
  * @updated v.1.4.2
- *
+ * @updated v.1.4.3
  */
 
 if ( ! function_exists('tutor_get_template')) {
@@ -34,8 +34,12 @@ if ( ! function_exists('tutor_get_template')) {
 		$file_in_theme = $template_location;
 		if ( ! file_exists( $template_location ) ) {
 			$template_location = trailingslashit( tutor()->path ) . "templates/{$template}.php";
-			if ( ! file_exists($template_location) && $tutor_pro && function_exists('tutor_pro')){
-				$template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+
+			if ( $tutor_pro && function_exists('tutor_pro')){
+				$pro_template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+				if (file_exists($pro_template_location)){
+					$template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+				}
 			}
 
 			if ( ! file_exists($template_location)){
@@ -109,6 +113,58 @@ if ( ! function_exists('tutor_load_template')) {
 		do_action('tutor_load_template_before', $template, $variables);
 		include tutor_get_template( $template, $tutor_pro );
 		do_action('tutor_load_template_after', $template, $variables);
+	}
+}
+
+/**
+ * @param null $template
+ * @param array $variables
+ * @param bool $tutor_pro
+ *
+ * @since v.1.4.3
+ */
+
+if ( ! function_exists('tutor_load_template_part')) {
+	function tutor_load_template_part( $template = null, $variables = array(), $tutor_pro = false ) {
+		$variables = (array) $variables;
+		$variables = apply_filters( 'get_tutor_load_template_variables', $variables );
+		extract( $variables );
+
+		/**
+		 * Get template first from child-theme if exists
+		 * If child theme not exists, then get template from parent theme
+		 */
+		$template_location = trailingslashit( get_stylesheet_directory() ) . "tutor/template.php";
+		if ( ! file_exists( $template_location ) ) {
+			$template_location = trailingslashit( get_template_directory() ) . "tutor/template.php";
+		}
+
+		if ( ! file_exists( $template_location ) ) {
+			$template_location = trailingslashit( tutor()->path ) . "templates/template.php";
+			if ( ! file_exists( $template_location ) && $tutor_pro && function_exists( 'tutor_pro' ) ) {
+				$template_location = trailingslashit( tutor_pro()->path ) . "templates/template.php";
+			}
+		}
+
+		include apply_filters( 'tutor_get_template_part_path', $template_location, $template );
+	}
+}
+
+/**
+ * @param $template_name
+ * @param array $variables
+ *
+ * @return string
+ *
+ * @since v.1.4.3
+ */
+
+if ( ! function_exists('tutor_get_template_html')) {
+	function tutor_get_template_html( $template_name, $variables = array(), $tutor_pro = false ) {
+		ob_start();
+		tutor_load_template( $template_name, $variables, $tutor_pro );
+
+		return ob_get_clean();
 	}
 }
 

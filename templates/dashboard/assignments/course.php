@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 global $wpdb;
 $course_id = (int) sanitize_text_field(tutor_utils()->array_get('course_id', $_GET));
 $assignments = tutor_utils()->get_assignments_by_course($course_id);

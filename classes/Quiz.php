@@ -17,17 +17,9 @@ if ( ! defined( 'ABSPATH' ) )
 class Quiz {
 
 	public function __construct() {
-		add_filter( "manage_tutor_quiz_posts_columns", array($this, 'add_column'), 10,1 );
-		add_action( "manage_tutor_quiz_posts_custom_column" , array($this, 'custom_question_column'), 10, 2 );
-
-		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
 		add_action('save_post_tutor_quiz', array($this, 'save_quiz_meta'));
 
-		//Depricated at alpha version
-		add_action('wp_ajax_tutor_load_quiz_modal', array($this, 'tutor_load_quiz_modal'));
-
 		add_action('wp_ajax_tutor_load_quiz_builder_modal', array($this, 'tutor_load_quiz_builder_modal'));
-		add_action('wp_ajax_tutor_add_quiz_to_post', array($this, 'tutor_add_quiz_to_post'));
 		add_action('wp_ajax_remove_quiz_from_post', array($this, 'remove_quiz_from_post'));
 
 		add_action('wp_ajax_tutor_quiz_timeout', array($this, 'tutor_quiz_timeout'));
@@ -62,99 +54,18 @@ class Quiz {
 		add_action('wp_ajax_tutor_mark_answer_as_correct', array($this, 'tutor_mark_answer_as_correct'));
 		add_action('wp_ajax_tutor_quiz_modal_update_settings', array($this, 'tutor_quiz_modal_update_settings'));
 
-
-
 		/**
          * Frontend Stuff
          */
-
 		add_action('wp_ajax_tutor_render_quiz_content', array($this, 'tutor_render_quiz_content'));
-
 	}
 
-	public function add_column($columns){
-		$date_col = $columns['date'];
-		unset($columns['date']);
-		$columns['quiz'] = __('Course', 'tutor');
-		$columns['questions'] = __('Questions', 'tutor');
-		$columns['date'] = $date_col;
-
-		return $columns;
-	}
-
-	public function custom_question_column($column, $post_id ){
-		if ($column === 'quiz'){
-			$quiz = tutor_utils()->get_course_by_quiz($post_id);
-
-			if ($quiz){
-				echo '<a href="'.admin_url('post.php?post='.$quiz->ID.'&action=edit').'">'.get_the_title($quiz->ID).'</a>';
-			}
-		}
-
-		if ($column === 'questions'){
-			echo tutor_utils()->total_questions_for_student_by_quiz($post_id);
-		}
-	}
-
-	public function register_meta_box(){
-		add_meta_box( 'tutor-quiz-questions', __( 'Questions', 'tutor' ), array($this, 'quiz_questions'), 'tutor_quiz' );
-		add_meta_box( 'tutor-quiz-settings', __( 'Settings', 'tutor' ), array($this, 'quiz_settings'), 'tutor_quiz' );
-	}
-
-	public function quiz_questions(){
-		include  tutor()->path.'views/metabox/quiz_questions.php';
-	}
-
-	public function quiz_settings(){
-		include  tutor()->path.'views/metabox/quizzes.php';
-	}
 
 	public function save_quiz_meta($post_ID){
 		if (isset($_POST['quiz_option'])){
 			$quiz_option = tutor_utils()->sanitize_array($_POST['quiz_option']);
 			update_post_meta($post_ID, 'tutor_quiz_option', $quiz_option);
 		}
-	}
-
-	/**
-	 * @depricated at alpha version
-	 * Check tutor_load_quiz_builder_modal instead of this method
-	 */
-	public function tutor_load_quiz_modal(){
-		$quiz_for_post_id = (int) sanitize_text_field($_POST['quiz_for_post_id']);
-
-		$search_terms = sanitize_text_field(tutor_utils()->avalue_dot('search_terms', $_POST));
-		$quizzes = tutor_utils()->get_unattached_quiz(array('search_term' => $search_terms));
-
-		$output = '';
-		if ($quizzes){
-			foreach ($quizzes as $quiz){
-				$output .= "<p><label><input type='checkbox' name='quiz_for[{$quiz_for_post_id}][quiz_id][]' value='{$quiz->ID}' > {$quiz->post_title} </label></p>";
-			}
-			$output .= '<p class="quiz-search-suggest-text">Search the quiz to get specific quiz</p>';
-		}else{
-			$add_question_url = admin_url('post-new.php?post_type=tutor_quiz');
-			$output .= sprintf('No quiz available right now, please %s add some quiz %s', '<a href="'.$add_question_url.'" target="_blank">', '</a>'  );
-		}
-
-		ob_start();
-		?>
-        <div class="tutor-option-field-row">
-            <div class="tutor-option-field-label">
-                <label for="">
-					<?php _e('New quiz title', 'tutor'); ?>
-                </label>
-            </div>
-            <div class="tutor-option-field">
-                <input type="text" name="quiz_title" placeholder="<?php _e('Place quiz title to create new quiz', 'tutor'); ?>" >
-                <p class="desc"><?php _e('Provide a quiz title to create a quiz from here.'); ?></p>
-            </div>
-        </div>
-
-		<?php
-		$output .= ob_get_clean();
-
-		wp_send_json_success(array('output' => $output));
 	}
 
 	/**
@@ -167,56 +78,6 @@ class Quiz {
 
 		wp_send_json_success(array('output' => $output));
 
-	}
-
-	public function tutor_add_quiz_to_post(){
-		global $wpdb;
-
-		$quiz_data = tutor_utils()->avalue_dot('quiz_for', $_POST);
-
-		$output = '';
-		$post_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('parent_post_id', $_POST)) ;
-		if ($quiz_data){
-			foreach ($quiz_data as $post_id => $quiz_ids_a);
-
-			$quiz_ids = tutor_utils()->avalue_dot('quiz_id', $quiz_ids_a);
-			foreach ($quiz_ids as $quiz_id){
-				$wpdb->update($wpdb->posts, array('post_parent' => $post_id), array('ID' => $quiz_id) );
-			}
-		}
-
-		$quiz_title = sanitize_text_field(tutor_utils()->avalue_dot('quiz_title', $_POST));
-		if ($quiz_title){
-			wp_insert_post(array(
-				'post_parent'   => $post_id,
-				'post_title'    => $quiz_title,
-				'post_type'     => 'tutor_quiz',
-				'post_status'   => 'publish',
-			));
-		}
-
-		if ($post_id) {
-			ob_start();
-			$attached_quizzes = tutor_utils()->get_attached_quiz( $post_id );
-			if ( $attached_quizzes ) {
-				foreach ( $attached_quizzes as $attached_quiz ) {
-					?>
-                    <div id="added-quiz-id-<?php echo $attached_quiz->ID; ?>" class="added-quiz-item added-quiz-item-<?php echo $attached_quiz->ID; ?>" data-quiz-id="<?php echo $attached_quiz->ID; ?>">
-                        <span class="quiz-icon"><i class="dashicons dashicons-clock"></i></span>
-                        <span class="quiz-name">
-							<?php edit_post_link( $attached_quiz->post_title, null, null, $attached_quiz->ID ); ?>
-						</span>
-                        <span class="quiz-control">
-							<a href="javascript:;" class="tutor-quiz-delete-btn"><i class="dashicons dashicons-trash"></i></a>
-						</span>
-                    </div>
-					<?php
-				}
-			}
-			$output .= ob_get_clean();
-		}
-
-		wp_send_json_success(array('output' => $output));
 	}
 
 	public function remove_quiz_from_post(){

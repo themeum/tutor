@@ -1809,12 +1809,16 @@ class Utils {
 		$user_id = $this->get_user_id($user_id);
 
 		do_action('tutor_mark_lesson_complete_before', $post_id, $user_id);
-		update_user_meta($user_id, '_tutor_completed_lesson_id_'.$post_id, time());
+		update_user_meta($user_id, '_tutor_completed_lesson_id_'.$post_id, tutor_time());
 		do_action('tutor_mark_lesson_complete_after', $post_id, $user_id);
-
 	}
 
 	/**
+	 *
+	 * @param int $course_id
+	 * @param int $order_id
+	 * @param int $user_id
+	 *
 	 * Saving enroll information to posts table
 	 * post_author = enrolled_student_id (wp_users id)
 	 * post_parent = enrolled course id
@@ -1823,14 +1827,18 @@ class Utils {
 	 * @return bool;
 	 *
 	 * @since v.1.0.0
+	 * @updated v.1.4.3
+	 *
+	 * @return bool
 	 */
-	public function do_enroll($course_id = 0, $order_id = 0){
+
+	public function do_enroll($course_id = 0, $order_id = 0, $user_id = 0){
 		if ( ! $course_id){
 			return false;
 		}
 
 		do_action('tutor_before_enroll', $course_id);
-		$user_id = get_current_user_id();
+		$user_id = $this->get_user_id($user_id);
 		$title = __('Course Enrolled', 'tutor')." &ndash; ".date_i18n(get_option('date_format')) .' @ '.date_i18n(get_option('time_format') ) ;
 
 		$enrolment_status = 'completed';
@@ -1858,14 +1866,14 @@ class Utils {
 			do_action('tutor_after_enroll', $course_id, $isEnrolled);
 
 			//Mark Current User as Students with user meta data
-			update_user_meta( $user_id, '_is_tutor_student', time() );
+			update_user_meta( $user_id, '_is_tutor_student', tutor_time() );
 
 			if ($order_id) {
 				//Mark order for course and user
 				$product_id = $this->get_course_product_id($course_id);
 				update_post_meta( $isEnrolled, '_tutor_enrolled_by_order_id', $order_id );
 				update_post_meta( $isEnrolled, '_tutor_enrolled_by_product_id', $product_id );
-				update_post_meta( $order_id, '_is_tutor_order_for_course', time() );
+				update_post_meta( $order_id, '_is_tutor_order_for_course', tutor_time() );
 				update_post_meta( $order_id, '_tutor_order_for_course_id_'.$course_id, $isEnrolled );
 			}
 			return true;
@@ -2065,6 +2073,18 @@ class Utils {
 		$all_nav_items = array_merge($nav_items, $new_navs);
 
 		return apply_filters('tutor_dashboard/nav_items_all', $all_nav_items);
+	}
+
+	public function tutor_dashboard_permalinks(){
+		$dashboard_pages = $this->tutor_dashboard_pages();
+
+		$dashboard_permalinks = apply_filters('tutor_dashboard/permalinks', array(
+			'retrieve-password' => array('title' => __('Retrieve Password', 'tutor'), 'login_require' => false),
+		));
+
+		$dashboard_pages = array_merge($dashboard_pages, $dashboard_permalinks);
+
+		return $dashboard_pages;
 	}
 
 	/**
@@ -3103,9 +3123,6 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		//$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_question'
-		// AND post_parent = {$quiz_id} ORDER BY menu_order ASC ");
-
 		$questions = $wpdb->get_results("SELECT * from {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} ORDER BY question_order ASC ");
 
 		if (is_array($questions) && count($questions)){
@@ -3194,9 +3211,6 @@ class Utils {
 	public function quiz_next_question_order_id($quiz_id){
 		global $wpdb;
 
-		//$last_order = (int) $wpdb->get_var("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = {$quiz_id} AND post_type =
-		// 'tutor_question';");
-
 		$last_order = (int) $wpdb->get_var("SELECT MAX(question_order) FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} ;");
 		return $last_order + 1;
 	}
@@ -3219,45 +3233,8 @@ class Utils {
 	public function get_quiz_id_by_question($question_id){
 		global $wpdb;
 
-		$quiz_id = $wpdb->get_var("SELECT post_parent FROM {$wpdb->posts} WHERE ID = {$question_id} AND post_type = 'tutor_question' ;");
+		$quiz_id = $wpdb->get_var("SELECT quiz_id FROM {$wpdb->tutor_quiz_questions} WHERE question_id = {$question_id} ;");
 		return $quiz_id;
-	}
-
-	/**
-	 * @param array $config
-	 *
-	 * @return array|bool|null|object
-	 *
-	 * It was used in previous quiz algorithm
-	 *
-	 * @deprecated
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_unattached_quiz($config = array()){
-		global $wpdb;
-
-		$default_attr = array(
-			'search_term' => '',
-			'start' => '0',
-			'limit' => '10',
-			'order' => 'DESC',
-			'order_by' => 'ID',
-		);
-		$attr = array_merge($default_attr, $config);
-		extract($attr);
-
-		$search_query = '';
-		if (! empty($search_term)){
-			$search_query = "AND post_title LIKE '%{$search_term}%'";
-		}
-
-		$questions = $wpdb->get_results("SELECT ID, post_content, post_title, post_parent from {$wpdb->posts} WHERE post_type = 'tutor_quiz' AND post_status = 'publish' AND post_parent = 0 {$search_query} ORDER BY {$order_by} {$order}  LIMIT {$start},{$limit} ");
-
-		if (is_array($questions) && count($questions)){
-			return $questions;
-		}
-		return false;
 	}
 
 	/**
@@ -3321,9 +3298,11 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		$total_question = (int) $wpdb->get_var("select count(ID) from {$wpdb->posts} where post_parent = {$quiz_id} AND post_type = 'tutor_question' ");
 
-		return $total_question;
+		$max_questions_count = (int) tutor_utils()->get_quiz_option(get_the_ID(), 'max_questions_for_answer');
+		$total_question = (int) $wpdb->get_var("select count(question_id) from {$wpdb->tutor_quiz_questions} where quiz_id = {$quiz_id}");
+
+		return min($max_questions_count, $total_question);
 	}
 
 	/**
@@ -4441,7 +4420,7 @@ class Utils {
 		do_action('tutor_before_approved_instructor', $instructor_id);
 
 		update_user_meta($instructor_id, '_tutor_instructor_status', 'approved');
-		update_user_meta($instructor_id, '_tutor_instructor_approved', time());
+		update_user_meta($instructor_id, '_tutor_instructor_approved', tutor_time());
 
 		$instructor = new \WP_User($instructor_id);
 		$instructor->add_role(tutor()->instructor_role);
@@ -5134,7 +5113,7 @@ class Utils {
 	 * @param int $quiz_id
 	 * @param int $user_id
 	 *
-	 * @return array|bool|null|object|void
+	 * @return array|bool|null|object
 	 *
 	 * Get Attempt row by grade method settings
 	 *
@@ -5208,6 +5187,68 @@ class Utils {
 			}
 		}
 		return $html;
+	}
+
+	/**
+	 * @param $user
+	 * @param $new_pass
+	 *
+	 * Reset Password
+	 *
+	 * @since v.1.4.3
+	 */
+	public function reset_password( $user, $new_pass ) {
+		do_action( 'password_reset', $user, $new_pass );
+
+		wp_set_password( $new_pass, $user->ID );
+
+		$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
+		$rp_path   = isset( $_SERVER['REQUEST_URI'] ) ? current( explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) : ''; // WPCS: input var ok, sanitization ok.
+
+		setcookie( $rp_cookie, ' ', tutor_time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+		wp_password_change_notification( $user );
+	}
+
+	/**
+	 * @return array
+	 *
+	 * Get tutor pages, required to show dashboard, and others forms
+	 *
+	 * @since v.1.4.3
+	 */
+	public function tutor_pages(){
+		$pages = apply_filters('tutor_pages', array(
+			'tutor_dashboard_page_id'   => __('Dashboard Page', 'tutor'),
+			'instructor_register_page'  => __('Instructor Registration Page', 'tutor'),
+			'student_register_page'     => __('Student Registration Page', 'tutor'),
+		));
+
+		$new_pages = array();
+		foreach ($pages as $key => $page){
+			$page_id = (int) get_tutor_option($key);
+
+			$wp_page_name = '';
+			$wp_page = get_post($page_id);
+			$page_exists = (bool) $wp_page;
+			$page_visible = false;
+
+			if ($wp_page){
+				$wp_page_name = $wp_page->post_title;
+				$page_visible = $wp_page->post_status === 'publish';
+			}
+
+			$new_pages[] = array(
+				'option_key'    => $key,
+				'page_name'     => $page,
+				'wp_page_name'  => $wp_page_name,
+				'page_id'       => $page_id,
+				'page_exists'   => $page_exists,
+				'page_visible'  => $page_visible,
+			);
+
+		}
+
+		return $new_pages;
 	}
 
 

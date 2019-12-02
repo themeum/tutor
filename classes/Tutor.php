@@ -36,7 +36,6 @@ final class Tutor{
 	private $student;
 	private $q_and_a;
 	private $quiz;
-	private $question;
 	private $tools;
 	private $user;
 	private $theme_compatibility;
@@ -50,6 +49,8 @@ final class Tutor{
 	private $course_widget;
 	private $upgrader;
 	private $dashboard;
+	private $form_handler;
+	private $email;
 
 	/**
 	 * @return null|Tutor
@@ -123,7 +124,6 @@ final class Tutor{
 		$this->student = new Student();
 		$this->q_and_a = new Q_and_A();
 		$this->quiz = new Quiz();
-		$this->question = new Question();
 		$this->tools = new Tools();
 		$this->user = new User();
 		$this->theme_compatibility = new Theme_Compatibility();
@@ -135,6 +135,8 @@ final class Tutor{
 		$this->course_widget = new Course_Widget();
 		$this->upgrader = new Upgrader();
 		$this->dashboard = new Dashboard();
+		$this->form_handler = new FormHandler();
+		$this->email = new Email();
 
 		/**
 		 * Run Method
@@ -210,7 +212,7 @@ final class Tutor{
 			update_option('tutor_option', $options);
 
 			//Rewrite Flush
-			update_option('required_rewrite_flush', time());
+			update_option('required_rewrite_flush', tutor_time());
 			self::manage_tutor_roles_and_permissions();
 
 			self::save_data();//Save initial Page
@@ -219,7 +221,7 @@ final class Tutor{
 
 		//Set Schedule
 		if (! wp_next_scheduled ( 'tutor_once_in_day_run_schedule' )) {
-			wp_schedule_event(time(), 'twicedaily', 'tutor_once_in_day_run_schedule');
+			wp_schedule_event(tutor_time(), 'twicedaily', 'tutor_once_in_day_run_schedule');
 		}
 
 		/**
@@ -233,7 +235,7 @@ final class Tutor{
 			//Update the tutor version
 			update_option('tutor_version', '1.2.0');
 			//Rewrite Flush
-			update_option('required_rewrite_flush', time());
+			update_option('required_rewrite_flush', tutor_time());
 		}
 
 		/**
@@ -255,7 +257,7 @@ final class Tutor{
 		 */
 		$first_activation_date = get_option('tutor_first_activation_time');
 		if ( ! $first_activation_date){
-			update_option('tutor_first_activation_time', time());
+			update_option('tutor_first_activation_time', tutor_time());
 		}
 
 	}

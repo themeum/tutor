@@ -828,15 +828,11 @@ Video MetaBox
     transition: 300ms;
     text-decoration: none;
 }
-
-
 .tutor-course-builder-attachements .tutor-added-attachment:hover,
 .tutor-course-builder-attachements .tutor-added-attachment:hover .tutor-delete-attachment{
     border-color: #D71830;
     opacity: 1;
 }
-
-
 .tutor-course-builder-attachements .tutor-added-attachment span{
     display: block;
 }
@@ -1137,72 +1133,6 @@ Quiz-question
 .tutor-flex-col:last-child{
     margin-right: 0;
 }
-.quiz-question-field{
-    padding: 10px 20px;
-}
-.quiz-question-field input[type=text],.quiz-question-field input[type=email],.quiz-question-field input[type=number],.quiz-question-field input[type=password], .quiz-question-field textarea{
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    box-shadow: none;
-    color: #333;
-    display: inline-block;
-    vertical-align: middle;
-    padding: 7px 12px;
-    margin: 0 10px 0 0;
-    width: 100%;
-    min-height: 35px
-}
-.quiz-question-field textarea{
-    min-height: 100px;
-}
-.quiz-question-field:nth-child(2n+1) {
-    background: #f4f4f4;
-}
-.question-details{
-    border: 1px solid #EEEEEE;
-    margin-right: 10px;
-}
-.answer-details{
-    margin-left: 10px;
-}
-.question-details, .answer-details{
-    width: 100%;
-}
-.quiz-question-field label{
-    font-weight: bold;
-}
-.quiz-question-field .desc{
-    font-style: italic;
-    font-size: 12px;
-    color: #666666;
-}
-table.multi-answers-options{
-    border: 1px solid #EEEEEE;
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-
-table.multi-answers-options th, table.multi-answers-options td{
-    text-align: left;
-    padding: 10px 5px;
-}
-table.multi-answers-options tr:nth-child(2n+1){
-    background: #f4f4f4;
-}
-table.multi-answers-options td input[type=text]{
-    border: none;
-    box-shadow: none;
-    background-color: transparent;
-    width: 100%;
-}
-table.multi-answers-options a{
-    text-decoration: none;
-    color: #FF0000;
-}
-.add_answer_option_wrap {
-    margin: 20px 0;
-}
 .tutor-add-question-wrap{
     margin: 20px 0;
     background-color: #f4f4f4;
@@ -1231,58 +1161,6 @@ table.multi-answers-options a{
 .tutor-add-question-wrap .button{
     height: 35px;
     margin-left: 10px;
-}
-.single-question-item {
-    margin: 1px 0;
-}
-.tutor-question-item-head{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    line-height: 50px;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-}
-
-.tutor-question-item-head > div{
-    padding: 0 10px;
-}
-.tutor-question-item-head .question-title {
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-}
-.tutor-question-item-head i{
-    line-height: 50px;
-
-}
-.single-question-item .tutor-question-item-head{
-    background-color: #fcfcfc;
-}
-.single-question-item:nth-child(2n+1) .tutor-question-item-head{
-    background-color: #f4f4f4;
-}
-.tutor-question-item-head a{
-    text-decoration: none;
-}
-
-.question-action-btn.trash{
-    color: #FF0000;
-}
-.question-action-btn.down{
-    background-color: #000000;
-    color: #ffffff;
-    padding: 0 10px;
-}
-.question-action-btn.down:hover {
-    background-color: #333333;
 }
 .question-actions-wrap{
     padding-right: 0 !important;
@@ -3256,6 +3134,11 @@ Pagination
     background: #F6FFF2;
     color: #3D7400;
 }
+.tutor-alert.tutor-alert-info{
+    border: 1px solid #13aaf6;
+    background: #eaf8ff;
+    color: #0586c7;
+}
 .tutor-alert::before {
     content: '\e95f';
     position: absolute;
@@ -3288,9 +3171,63 @@ Pagination
     content: "\e90f";
     background: #69BC0D;
 }
+.tutor-alert.tutor-alert-info::before{
+    content: "\e96c";
+    background: #13aaf6;
+}
 .tutor-alert-content p {
     margin: 0;
 }
 /**
 *END Alert CSS
+ */
+
+/**
+ * Tutor Table
+ */
+table.tutor-table {
+    border-spacing: 0;
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #dcdfe5;
+}
+table.tutor-table td,
+table.tutor-table th {
+    padding: 1em 1.41575em;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #dcdfe5;
+}
+table.tutor-table td p:last-child,
+table.tutor-table th p:last-child {
+    margin-bottom: 0; }
+table.tutor-table th {
+    font-weight: 600; }
+table.tutor-table thead th {
+    padding: 1.41575em;
+    vertical-align: middle; }
+table.tutor-table tbody h2 {
+    font-size: 1em;
+    letter-spacing: normal;
+    font-weight: normal; }
+table.tutor-table tbody h2 a {
+    font-weight: normal; }
+table.tutor-table th {
+    background-color: #fafbfc;
+}
+table.tutor-table tbody td {
+    background-color: #ffffff;
+}
+table.tutor-table tbody tr:nth-child(2n) td {
+    background-color: #fafbfc;
+}
+table.tutor-table a{
+    text-decoration: none;
+}
+table.tutor-table p{
+    margin: 0;
+}
+
+/**
+ * END Tutor Table
  */

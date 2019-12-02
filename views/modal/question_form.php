@@ -212,13 +212,9 @@ $settings = maybe_unserialize($question->question_settings);
 
         </div>
 
-
     </div>
 
 </div>
-
-
-
 
 
 <div class="tutor-quiz-builder-modal-control-btn-group question_form_inner">
@@ -228,9 +224,4 @@ $settings = maybe_unserialize($question->question_settings);
     <div class="quiz-builder-btn-group-right">
         <a href="javascript:;" class="quiz-modal-tab-navigation-btn quiz-modal-btn-cancel"><?php _e('Cancel', 'tutor'); ?></a>
     </div>
-</div>
-
-
-
-
 </div>

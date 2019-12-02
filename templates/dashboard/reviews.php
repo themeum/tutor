@@ -6,7 +6,9 @@
  *
  * @author Themeum
  * @url https://themeum.com
- * @package Tutor
+ *
+ * @package TutorLMS/Templates
+ * @version 1.4.3
  */
 
 $reviews = tutor_utils()->get_reviews_by_user();

@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 
 global $post;
 $currentPost = $post;
@@ -17,6 +22,9 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 <div id="tutor-quiz-body" class="tutor-quiz-body tutor-quiz-body-<?php the_ID(); ?>">
 	<?php
+
+    do_action('tutor_quiz/body/before', $quiz_id);
+
 	if ($is_started_quiz){
 		$quiz_attempt_info = tutor_utils()->quiz_attempt_info($is_started_quiz->attempt_info);
 		$quiz_attempt_info['date_time_now'] = date("Y-m-d H:i:s");
@@ -110,7 +118,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 								if ( is_array($answers) && count($answers) ) {
 									foreach ($answers as $answer){
 									    $answer_title = stripslashes($answer->answer_title);
-									    
+
 										if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 											?>
                                             <label class="answer-view-<?php echo $answer->answer_view_format; ?>">
@@ -232,7 +240,6 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                             </div>
 
                                             <div class="quiz-answer-matching-items-wrap">
-
 												<?php
 												foreach ($answers as $answer){
 													?>
@@ -242,7 +249,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 															if ($question_type === 'matching') {
 
 																if ($answer->answer_view_format !== 'image'){
-																	echo "<p class='tutor-quiz-answer-title'>{$answer_title}</p>";
+																	echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
 																}
 																if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
 																	?>
@@ -377,6 +384,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 		}
 	}else{
 		if ($attempt_remaining > 0 || $attempts_allowed == 0) {
+			do_action('tuotr_quiz/start_form/before', $quiz_id);
 			?>
             <div class="start-quiz-wrap">
                 <form id="tutor-start-quiz" method="post">
@@ -392,92 +400,23 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
             </div>
 
 			<?php
+            do_action('tuotr_quiz/start_form/after', $quiz_id);
 		}
+
+
 
 		if ($previous_attempts){
-		    ob_start();
-
 			do_action('tutor_quiz/previous_attempts_html/before', $previous_attempts, $quiz_id);
-			?>
-            <h4 class="tutor-quiz-attempt-history-title"><?php _e('Previous attempts', 'tutor'); ?></h4>
-            <div class="tutor-quiz-attempt-history single-quiz-page">
-                <table>
-                    <tr>
-                        <th><?php _e('Time', 'tutor'); ?></th>
-                        <th><?php _e('Questions', 'tutor'); ?></th>
-                        <th><?php _e('Total Marks', 'tutor'); ?></th>
-                        <th><?php _e('Earned Marks', 'tutor'); ?></th>
-                        <th><?php _e('Pass Mark', 'tutor'); ?></th>
-                        <th><?php _e('Result', 'tutor'); ?></th>
-                    </tr>
-					<?php
-					foreach ( $previous_attempts as $attempt){
-						?>
 
-                        <tr>
-                            <td title="<?php _e('Time', 'tutor'); ?>">
-								<?php
-								echo date_i18n(get_option('date_format'), strtotime($attempt->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->attempt_started_at));
-
-								if ($attempt->is_manually_reviewed){
-									?>
-                                    <p class="attempt-reviewed-text">
-										<?php
-										echo __('Manually reviewed at', 'tutor').date_i18n(get_option('date_format', strtotime($attempt->manually_reviewed_at))).' '.date_i18n(get_option('time_format', strtotime($attempt->manually_reviewed_at)));
-										?>
-                                    </p>
-									<?php
-								}
-								?>
-                            </td>
-                            <td  title="<?php _e('Questions', 'tutor'); ?>">
-								<?php echo $attempt->total_questions; ?>
-                            </td>
-
-                            <td title="<?php _e('Total Marks', 'tutor'); ?>">
-								<?php echo $attempt->total_marks; ?>
-                            </td>
-
-                            <td title="<?php _e('Earned Marks', 'tutor'); ?>">
-								<?php
-								$earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
-								echo $attempt->earned_marks."({$earned_percentage}%)";
-								?>
-                            </td>
-
-                            <td title="<?php _e('Pass Mark', 'tutor'); ?>">
-								<?php
-								$pass_marks = ($attempt->total_marks * $passing_grade) / 100;
-								if ($pass_marks > 0){
-									echo number_format_i18n($pass_marks, 2);
-								}
-								echo "({$passing_grade}%)";
-								?>
-                            </td>
-
-                            <td title="<?php _e('Result', 'tutor'); ?>">
-								<?php
-								if ($earned_percentage >= $passing_grade){
-									echo '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
-								}else{
-									echo '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
-								}
-								?>
-                            </td>
-                        </tr>
-
-						<?php
-					}
-					?>
-
-                </table>
-            </div>
-			<?php
-			do_action('tutor_quiz/previous_attempts/after', $previous_attempts, $quiz_id);
-
+			ob_start();
+			tutor_load_template('single.quiz.previous-attempts', compact('previous_attempts', 'quiz_id'));
 			$previous_attempts_html = ob_get_clean();
             echo apply_filters('tutor_quiz/previous_attempts_html', $previous_attempts_html, $previous_attempts, $quiz_id);
+
+			do_action('tutor_quiz/previous_attempts/after', $previous_attempts, $quiz_id);
 		}
 	}
+
+	do_action('tutor_quiz/body/after', $quiz_id);
 	?>
 </div>

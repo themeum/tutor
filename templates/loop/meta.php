@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 global $post, $authordata;
 
 $profile_url = tutor_utils()->profile_url($authordata->ID);

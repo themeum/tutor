@@ -1,3 +1,11 @@
+<?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
+?>
+
 <div class="tutor-date-range-filter-wrap">
 	<?php
 	$time_periods = array(

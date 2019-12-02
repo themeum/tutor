@@ -120,7 +120,7 @@ class Instructors_List extends \Tutor_List_Table {
 			do_action('tutor_before_approved_instructor', $instructor_id);
 
 			update_user_meta($instructor_id, '_tutor_instructor_status', 'approved');
-			update_user_meta($instructor_id, '_tutor_instructor_approved', time());
+			update_user_meta($instructor_id, '_tutor_instructor_approved', tutor_time());
 
 			$instructor = new \WP_User($instructor_id);
 			$instructor->add_role(tutor()->instructor_role);

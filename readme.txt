@@ -1,11 +1,11 @@
 === Tutor LMS - eLearning and online course solution ===
-Contributors: themeum, kawshar, jakirhasan, mhshohel, anik4e, delowardev, rejuancse, fahimmurshed, badsha_eee, faisalahmed29, joomcoder, sksaaju, mehedih
+Contributors: themeum, kawshar, mhshohel, jakirhasan, anik4e, delowardev, rejuancse, fahimmurshed, badsha_eee, faisalahmed29, joomcoder, sksaaju
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,26 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.4.3 - 11 October, 2019 =
+
+* Added: Reset Password, Tutor LMS native login system
+* Added: re-generate tutor pages, create new page if any issue on those page.
+* Added: Added quiz attempt view by student (TutorLMS Pro)
+* Added: function `tutor_action_field()` to generate tutor action field within form
+* Added: Instructor can delete submitted assignment.
+* Added: `tutor_redirect_back()` Redirect to back or a specific URL and terminate the script.
+* Added: `tutor_get_template_html( $template_name, $variables = array() );` function, it will return view as HTML code, usefull for E-Mail
+* Added: Frontend Course Builder Page Logo Upload Option, Settings > General > Tutor LMS Pro Settings
+* Updated: Options is now expandable, pass additional options params to  filter `tutor/options/extend/attr`
+* Updated: User Login controlling by Tutor
+* Updated: media upload field improved with media delete option
+* Deleted: Quiz Deprecated code.
+* Fixed: Touch supports for quiz Sortable / draggable items
+* Fixed: Quiz matching question type repeated issue
+* Fixed: Admin gets automatically added when review course
+* Fixed: Instructor total course does not update after deleting a course
+* Fixed: Updated time to tutor_time() to get WordPress UTC time
 
 = 1.4.2 - 25 September, 2019 =
 
@@ -570,13 +590,14 @@ Added: action hook `do_action('tutor_load_template_before', $template, $variable
 
 * Added Quiz, quiz builder, course builder
 * Fixed huge bugs from alpha version
-* Removed some depricated code from aplha
 * Stable Release
 
 = 1.0.0-alpha - 06 Feb, 2019 =
+
 * Alpha Release
 
 == Upgrade Notice ==
+
 = 1.4.0 =
 
 It’s recommended to have a backup of your website before hitting the update button.
