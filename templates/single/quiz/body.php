@@ -391,8 +391,6 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 			<?php
 		}
 
-
-
 		if ($previous_attempts){
 			?>
             <h4 class="tutor-quiz-attempt-history-title"><?php _e('Previous attempts', 'tutor'); ?></h4>

@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.3.8
+Stable tag: 1.3.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -169,7 +169,8 @@ For a detailed guideline on how to build a Learning Management system, refer to 
 
 = Where can I report a bug? =
 
-This is an alpha version of Tutor, as bugs and issues expected, if you found any bugs or issues, please let us know by posting on the support section of this plugin on WordPress plugin directory or directly on our support forums: https://www.themeum.com/support/ 🙂
+If you found any bugs or issues, please let us know by posting on the support section of this plugin on WordPress plugin directory or directly on our
+support forums: https://www.themeum.com/support/ 🙂
 
 = Is this plugin free? =
 
@@ -208,6 +209,12 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.3.9 - 19 August, 2019 =
+
+* Fixed: Resetting Paid Membership Pro plugins settings when saving tutor settings.
+* Fixed: quiz question issue when no settings saved.
+* Fixed: Complete lesson button responsive issue
 
 = 1.3.8 - 09 August, 2019 =
 

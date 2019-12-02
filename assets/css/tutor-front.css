@@ -1377,6 +1377,10 @@ a.tutor-btn.bordered-btn:hover,
   margin-bottom: 45px;
 }
 
+.tutor-wrap {
+  width: 100%;
+}
+
 .tutor-wrap nav.course-enrolled-nav ul {
   list-style: none;
   margin: 0 0 -1px;
@@ -1820,15 +1824,29 @@ span.toogle-informaiton-icon {
 .tutor-single-page-top-bar a {
   color: #ffffff;
   vertical-align: middle;
+  display: inline-block;
+  overflow: hidden;
 }
 
-.tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i {
-  font-size: 29px;
-  display: block;
+.tutor-single-page-top-bar a i {
+  float: left;
+  margin-right: 7px;
+}
+
+@media (max-width: 546px) {
+  .tutor-single-page-top-bar a {
+    font-size: 14px;
+  }
 }
 
 .tutor-topbar-home-btn {
   margin-left: 20px;
+}
+
+@media screen and (max-width: 546px) {
+  .tutor-topbar-home-btn {
+    margin-left: 10px;
+  }
 }
 
 .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button {
@@ -1879,6 +1897,13 @@ span.toogle-informaiton-icon {
   }
 }
 
+@media (max-width: 767px) {
+  .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button {
+    padding: 7px 12px;
+    font-size: 14px;
+  }
+}
+
 .tutor-single-page-top-bar .tutor-topbar-content-title-wrap i {
   vertical-align: middle;
   line-height: 1;
@@ -1901,6 +1926,23 @@ span.toogle-informaiton-icon {
   padding: 0 18px;
   display: inline-block;
   line-height: 68px;
+}
+
+@media only screen and (max-width: 546px) {
+  .tutor-lesson-sidebar-hide-bar {
+    padding: 0 10px;
+  }
+}
+
+.tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i {
+  font-size: 29px;
+  display: block;
+}
+
+@media only screen and (max-width: 546px) {
+  .tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i {
+    font-size: 19px;
+  }
 }
 
 .tutor-sidebar-tabs-wrap {
@@ -2364,6 +2406,19 @@ ul.tutor-required-fields {
 .tutor-star-rating-group i {
   /*cursor: pointer;*/
   margin-right: 4px;
+}
+
+@media (max-width: 546px) {
+  .tutor-write-review-box .tutor-star-rating-group {
+    font-size: 26px;
+    display: block;
+    text-align: center;
+  }
+}
+
+.tutor-write-review-box .tutor-star-rating-group i {
+  margin-right: 4px;
+  cursor: pointer;
 }
 
 .tutor-queston-and-answer-wrap {
@@ -4089,6 +4144,12 @@ social share
 .rtl .tutor-topbar-home-btn {
   margin-left: 0;
   margin-right: 20px;
+}
+
+@media screen and (max-width: 546px) {
+  .rtl .tutor-topbar-home-btn {
+    margin-right: 10px;
+  }
 }
 
 .rtl .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button {
