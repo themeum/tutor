@@ -19,3 +19,8 @@ add_action('tutor_course/loop/rating', 'tutor_course_loop_rating');
 add_action('tutor_course/loop/end_content_wrap', 'tutor_course_loop_end_content_wrap');
 
 add_action('tutor_course/loop/footer', 'tutor_course_loop_footer');
+
+if (function_exists('wc_print_notices')){
+	add_action( 'tutor_course/single/before/inner-wrap', 'wc_print_notices', 10 );
+	add_action( 'tutor_course/single/enrolled/before/inner-wrap', 'wc_print_notices', 10 );
+}

@@ -6,9 +6,6 @@
  * @since v.1.0.0
  * @author themeum
  * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
  */
 
 
@@ -20,46 +17,29 @@ if ( ! defined( 'ABSPATH' ) )
 	<?php //wp_login_form(); ?>
 
     <?php
-    $current_url = tutils()->get_current_url();
-    $register_page = tutor_utils()->student_register_url();
-	$register_url = add_query_arg ('redirect_to', $current_url, $register_page);
-
-	//redirect_to
     $args = array(
 	    'echo' => true,
 	    // Default 'redirect' value takes the user back to the request URI.
 	    'redirect' => ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
 	    'form_id' => 'loginform',
-	    'label_username' => __( 'Username or Email Address', 'tutor' ),
-	    'label_password' => __( 'Password', 'tutor' ),
-	    'label_remember' => __( 'Remember Me', 'tutor' ),
-	    'label_log_in' => __( 'Log In', 'tutor' ),
+	    'label_username' => __( 'Username or Email Address' ),
+	    'label_password' => __( 'Password' ),
+	    'label_remember' => __( 'Remember Me' ),
+	    'label_log_in' => __( 'Log In' ),
 	    'id_username' => 'user_login',
 	    'id_password' => 'user_pass',
 	    'id_remember' => 'rememberme',
 	    'id_submit' => 'wp-submit',
 	    'remember' => true,
-	    'value_username' => tutils()->input_old('log'),
+	    'value_username' => '',
 	    // Set 'value_remember' to true to default the "Remember me" checkbox to checked.
 	    'value_remember' => false,
-	    'wp_lostpassword_url' => apply_filters('tutor_lostpassword_url', wp_lostpassword_url()),
-	    'wp_lostpassword_label' => __('Forgot Password?', 'tutor'),
+	    'wp_lostpassword_url' => wp_lostpassword_url(),
+	    'wp_lostpassword_label' => __('Forgot Password?'),
     );
 
-    //action="' . esc_url( site_url( 'wp-login.php', 'login_post' ) ) . '"
-
-	tutor_alert(null, 'warning');
-
-	ob_start();
-	tutor_nonce_field();
-	$nonce_field = ob_get_clean();
-
     $form = '
-		<form name="' . $args['form_id'] . '" id="' . $args['form_id'] . '" method="post">
-	
-		'.$nonce_field.'
-		
-		<input type="hidden" name="tutor_action" value="tutor_user_login" />
+		<form name="' . $args['form_id'] . '" id="' . $args['form_id'] . '" action="' . esc_url( site_url( 'wp-login.php', 'login_post' ) ) . '" method="post">
 			<p class="login-username">
 				<input type="text" placeholder="'.esc_html( $args['label_username'] ).'" name="log" id="' . esc_attr( $args['id_username'] ) . '" class="input" value="' . esc_attr( $args['value_username'] ) . '" size="20" />
 			</p>
@@ -76,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) )
 				<input type="hidden" name="redirect_to" value="' . esc_url( $args['redirect'] ) . '" />
 			</p>
 			<p class="tutor-form-register-wrap">
-			    <a href="'. esc_url($register_url). '">'.esc_html('Create a new account').'</a>
+			    <a href="'. esc_url(tutor_utils()->student_register_url()). '">'.esc_html('Create a new account').'</a>
             </p>
 		</form>';
     echo $form;

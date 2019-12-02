@@ -10,6 +10,7 @@ class Q_and_A{
 		add_action('admin_post_tutor_place_answer', array($this, 'place_answer'));
 	}
 
+
 	public function place_answer(){
 		tutor_utils()->checking_nonce();
 
@@ -21,7 +22,7 @@ class Q_and_A{
 
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
-		$date = date("Y-m-d H:i:s", tutor_time());
+		$date = date("Y-m-d H:i:s");
 
 		do_action('tutor_before_answer_to_question');
 
@@ -38,6 +39,7 @@ class Q_and_A{
 			'user_id'           => $user_id,
 		));
 
+
 		$wpdb->insert($wpdb->comments, $data);
 		$answer_id = (int) $wpdb->insert_id;
 
@@ -48,6 +50,5 @@ class Q_and_A{
 
 		wp_redirect(wp_get_referer());
 	}
-
 
 }

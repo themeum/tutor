@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template for displaying course tags
  *
@@ -6,18 +7,17 @@
  *
  * @author Themeum
  * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
  */
 
 do_action('tutor_course/single/before/tags');
 
+?>
+<?php
 $course_tags = get_tutor_course_tags();
 if(is_array($course_tags) && count($course_tags)){ ?>
     <div class="tutor-single-course-segment">
         <div class="course-benefits-title">
-            <h4 class="tutor-segment-title"><?php esc_html_e('Tags', 'tutor') ?></h4>
+            <h4 class="tutor-segment-title"><?php esc_html_e('Skills', 'tutor') ?></h4>
         </div>
         <div class="tutor-course-tags">
             <?php
@@ -30,5 +30,5 @@ if(is_array($course_tags) && count($course_tags)){ ?>
     </div>
 <?php
 }
-
-do_action('tutor_course/single/after/tags'); ?>
+?>
+<?php do_action('tutor_course/single/after/tags'); ?>

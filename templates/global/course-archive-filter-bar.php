@@ -1,17 +1,8 @@
-<?php
-/**
- * @package TutorLMS/Templates
- * @version 1.4.3
- */
-
-?>
-
-
 <div class="tutor-course-filter-wrap">
     <div class="tutor-course-archive-results-wrap">
 		<?php
 		$courseCount = tutor_utils()->get_archive_page_course_count();
-		echo sprintf(__("%s Courses", "tutor"), "<strong>{$courseCount}</strong>");
+		_e(sprintf("%s Courses", "<strong>{$courseCount}</strong>"), "tutor");
 		?>
     </div>
 
@@ -26,4 +17,6 @@
             </select>
         </form>
     </div>
+
+    <div style="clear: both;"></div>
 </div>

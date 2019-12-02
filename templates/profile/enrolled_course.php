@@ -1,17 +1,4 @@
 <?php
-/**
- * @package TutorLMS/Templates
- * @version 1.4.3
- */
-
-if ( ! defined( 'ABSPATH' ) )
-	exit;
-
-$show_enrolled_course = tutor_utils()->get_option('show_courses_completed_by_student');
-if ( ! $show_enrolled_course){
-    return;
-}
-
 $user_name = sanitize_text_field(get_query_var('tutor_student_username'));
 $get_user = tutor_utils()->get_user_by_login($user_name);
 $user_id = $get_user->ID;
@@ -19,7 +6,7 @@ $user_id = $get_user->ID;
 $my_courses = tutor_utils()->get_enrolled_courses_by_user($user_id);
 ?>
 
-<div class="tutor-courses ">
+<div class="tutor-courses <?php tutor_container_classes() ?>">
 	<?php
 	if ($my_courses && $my_courses->have_posts()):
 		while ($my_courses->have_posts()):

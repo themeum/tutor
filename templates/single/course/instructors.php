@@ -6,9 +6,6 @@
  *
  * @author Themeum
  * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
  */
 
 
@@ -20,7 +17,7 @@ if ($instructors){
 	?>
 	<h4 class="tutor-segment-title"><?php _e('About the instructors', 'tutor'); ?></h4>
 
-	<div class="tutor-course-instructors-wrap tutor-single-course-segment" id="single-course-ratings">
+	<div class="tutor-course-instructors-wrap tutor-single-course-segment">
 		<?php
 		foreach ($instructors as $instructor){
 		    $profile_url = tutor_utils()->profile_url($instructor->ID);
@@ -36,11 +33,7 @@ if ($instructors){
 
                         <div class="instructor-name">
                             <h3><a href="<?php echo $profile_url; ?>"><?php echo $instructor->display_name; ?></a> </h3>
-                            <?php
-                            if ( ! empty($instructor->tutor_profile_job_title)){
-                                echo "<h4>{$instructor->tutor_profile_job_title}</h4>";
-                            }
-                            ?>
+                            <h4><?php echo $instructor->tutor_profile_job_title; ?></h4>
                         </div>
                     </div>
 					<div class="instructor-bio">
@@ -69,6 +62,7 @@ if ($instructors){
 							<i class='tutor-icon-mortarboard'></i>
 							<?php echo tutor_utils()->get_course_count_by_instructor($instructor->ID); ?> <span class="tutor-text-mute"> <?php _e('Courses', 'tutor'); ?></span>
 						</p>
+
 					</div>
 
 					<div class="students">
@@ -78,7 +72,7 @@ if ($instructors){
 
 						<p>
 							<i class='tutor-icon-user'></i>
-							<?php echo $total_students; ?>
+							<?php echo  $total_students; ?>
 							<span class="tutor-text-mute">  <?php _e('students', 'tutor'); ?></span>
 						</p>
 					</div>

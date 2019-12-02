@@ -22,396 +22,6 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-
-/**
-Animation Spinner
- */
-@-moz-keyframes spin {
-    0% {
-        -moz-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-
-    100% {
-        -moz-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-@-webkit-keyframes spin {
-    0% {
-        -moz-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-
-    100% {
-        -moz-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-@-o-keyframes spin {
-    0% {
-        -moz-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-
-    100% {
-        -moz-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-@-ms-keyframes spin {
-    0% {
-        -moz-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-
-    100% {
-        -moz-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-@keyframes spin {
-    0% {
-        -moz-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-
-    100% {
-        -moz-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-
-/**
- * Icon Contents
- */
-
-.tutor-icon-classic-editor:before {
-    content: "\e9a0";
-}
-.tutor-icon-home:before {
-    content: "\e9a7";
-}
-.tutor-icon-save:before {
-    content: "\e994";
-}
-.tutor-icon-myspace:before {
-    content: "\e997";
-}
-.tutor-icon-soundcloud:before {
-    content: "\e998";
-}
-.tutor-icon-blogger:before {
-    content: "\e999";
-}
-.tutor-icon-google-drive:before {
-    content: "\e99a";
-}
-.tutor-icon-skype:before {
-    content: "\e99b";
-}
-.tutor-icon-yelp:before {
-    content: "\e99c";
-}
-.tutor-icon-dribbble:before {
-    content: "\e99d";
-}
-.tutor-icon-flickr:before {
-    content: "\e99e";
-}
-.tutor-icon-snapchat:before {
-    content: "\e99f";
-}
-.tutor-icon-html:before {
-    content: "\e9a1";
-}
-.tutor-icon-reddit:before {
-    content: "\e9a2";
-}
-.tutor-icon-spotify:before {
-    content: "\e9a3";
-}
-.tutor-icon-earth:before {
-    content: "\e9a4";
-}
-.tutor-icon-github-logo:before {
-    content: "\e9a5";
-}
-.tutor-icon-instagram:before {
-    content: "\e9a6";
-}
-.tutor-icon-photo-add:before {
-    content: "\e995";
-}
-.tutor-icon-add-group:before {
-    content: "\e996";
-}
-.tutor-icon-coding:before {
-    content: "\e98f";
-}
-.tutor-icon-vimeo:before {
-    content: "\e990";
-}
-.tutor-icon-link:before {
-    content: "\e991";
-}
-.tutor-icon-html5:before {
-    content: "\e992";
-}
-.tutor-icon-upload:before {
-    content: "\e993";
-}
-.tutor-icon-search-file:before {
-    content: "\e989";
-}
-.tutor-icon-upload-file:before {
-    content: "\e98a";
-}
-.tutor-icon-assignment:before {
-    content: "\e98b";
-}
-.tutor-icon-feedback:before {
-    content: "\e98c";
-}
-.tutor-icon-purchase:before {
-    content: "\e98d";
-}
-.tutor-icon-uoload-success:before {
-    content: "\e98e";
-}
-.tutor-icon-gallery:before {
-    content: "\e95b";
-}
-.tutor-icon-emoji:before {
-    content: "\e95c";
-}
-.tutor-icon-text-document-add-button-with-plus-sign:before {
-    content: "\e95d";
-}
-.tutor-icon-checkbox-pen-outline:before {
-    content: "\e95e";
-}
-.tutor-icon-warning-2:before {
-    content: "\e95f";
-}
-.tutor-icon-wallet-filled-money-tool:before {
-    content: "\e960";
-}
-.tutor-icon-settings-11:before {
-    content: "\e961";
-}
-.tutor-icon-sign-out-option:before {
-    content: "\e962";
-}
-.tutor-icon-man-user-1:before {
-    content: "\e963";
-}
-.tutor-icon-shopping-cart-2:before {
-    content: "\e964";
-}
-.tutor-icon-space:before {
-    content: "\e965";
-}
-.tutor-icon-refresh-button-1:before {
-    content: "\e966";
-}
-.tutor-icon-notifications-button:before {
-    content: "\e967";
-}
-.tutor-icon-dashboard:before {
-    content: "\e968";
-}
-.tutor-icon-college-graduation:before {
-    content: "\e969";
-}
-.tutor-icon-black-back-closed-envelope-shape:before {
-    content: "\e96a";
-}
-.tutor-icon-badge:before {
-    content: "\e96b";
-}
-.tutor-icon-light-bulb:before {
-    content: "\e96c";
-}
-.tutor-icon-ai:before {
-    content: "\e96d";
-}
-.tutor-icon-avi:before {
-    content: "\e96e";
-}
-.tutor-icon-css:before {
-    content: "\e96f";
-}
-.tutor-icon-csv:before {
-    content: "\e970";
-}
-.tutor-icon-dbf:before {
-    content: "\e971";
-}
-.tutor-icon-doc:before {
-    content: "\e972";
-}
-.tutor-icon-dwg:before {
-    content: "\e973";
-}
-.tutor-icon-exe:before {
-    content: "\e974";
-}
-.tutor-icon-iso:before {
-    content: "\e975";
-}
-.tutor-icon-javascript:before {
-    content: "\e976";
-}
-.tutor-icon-json-file:before {
-    content: "\e977";
-}
-.tutor-icon-mp4:before {
-    content: "\e978";
-}
-.tutor-icon-png:before {
-    content: "\e979";
-}
-.tutor-icon-ppt:before {
-    content: "\e97a";
-}
-.tutor-icon-psd:before {
-    content: "\e97b";
-}
-.tutor-icon-rtf:before {
-    content: "\e97c";
-}
-.tutor-icon-txt:before {
-    content: "\e97d";
-}
-.tutor-icon-xls:before {
-    content: "\e97e";
-}
-.tutor-icon-xml:before {
-    content: "\e97f";
-}
-.tutor-icon-jpg:before {
-    content: "\e980";
-}
-.tutor-icon-mp3:before {
-    content: "\e981";
-}
-.tutor-icon-pdf:before {
-    content: "\e982";
-}
-.tutor-icon-svg:before {
-    content: "\e983";
-}
-.tutor-icon-zip-2:before {
-    content: "\e984";
-}
-.tutor-icon-calendar-1:before {
-    content: "\e985";
-}
-.tutor-icon-glasses:before {
-    content: "\e986";
-}
-.tutor-icon-add-friend:before {
-    content: "\e987";
-}
-.tutor-icon-attach:before {
-    content: "\e988";
-}
-.tutor-icon-image-ans:before {
-    content: "\e959";
-}
-.tutor-icon-short-ans:before {
-    content: "\e95a";
-}
-.tutor-icon-image-matching:before {
-    content: "\e956";
-}
-.tutor-icon-menu:before {
-    content: "\e957";
-}
-.tutor-icon-image1:before {
-    content: "\e958";
-}
-.tutor-icon-answer-shorting:before {
-    content: "\e94a";
-}
-.tutor-icon-assesment:before {
-    content: "\e94b";
-}
-.tutor-icon-fill-gaps:before {
-    content: "\e94c";
-}
-.tutor-icon-matching:before {
-    content: "\e94d";
-}
-.tutor-icon-multiple-choice:before {
-    content: "\e94e";
-}
-.tutor-icon-open-ended:before {
-    content: "\e94f";
-}
-.tutor-icon-ordering:before {
-    content: "\e950";
-}
-.tutor-icon-yes-no:before {
-    content: "\e951";
-}
-.tutor-icon-line-cross:before {
-    content: "\e952";
-}
-.tutor-icon-filter-tool-black-shape:before {
-    content: "\e953";
-}
-.tutor-icon-plus-square-button:before {
-    content: "\e954";
-}
-.tutor-icon-settings-1:before {
-    content: "\e955";
-}
-.tutor-icon-cross:before {
-    content: "\e913";
-}
-.tutor-icon-cup:before {
-    content: "\e943";
-}
-.tutor-icon-next-2:before {
-    content: "\e944";
-}
-.tutor-icon-next2:before {
-    content: "\e945";
-}
-.tutor-icon-menu-2:before {
-    content: "\e946";
-}
-.tutor-icon-question-2:before {
-    content: "\e947";
-}
-.tutor-icon-question-1:before {
-    content: "\e948";
-}
-.tutor-icon-education:before {
-    content: "\e949";
-}
 .tutor-icon-manual:before {
     content: "\e936";
 }
@@ -565,7 +175,7 @@ Animation Spinner
 .tutor-icon-group:before {
     content: "\e90c";
 }
-.tutor-icon-linkedin:before {
+.tutor-icon-linkdin:before {
     content: "\e90d";
 }
 .tutor-icon-lock:before {
@@ -582,6 +192,9 @@ Animation Spinner
 }
 .tutor-icon-offer:before {
     content: "\e912";
+}
+.tutor-icon-play:before {
+    content: "\e913";
 }
 .tutor-icon-plus:before {
     content: "\e914";
@@ -609,4 +222,83 @@ Animation Spinner
 }
 .tutor-icon-youtube:before {
     content: "\e91c";
+}
+
+/**
+Animation Spinner
+ */
+@-moz-keyframes spin {
+    0% {
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -moz-transform: rotate(359deg);
+        -o-transform: rotate(359deg);
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@-webkit-keyframes spin {
+    0% {
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -moz-transform: rotate(359deg);
+        -o-transform: rotate(359deg);
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@-o-keyframes spin {
+    0% {
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -moz-transform: rotate(359deg);
+        -o-transform: rotate(359deg);
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@-ms-keyframes spin {
+    0% {
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -moz-transform: rotate(359deg);
+        -o-transform: rotate(359deg);
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@keyframes spin {
+    0% {
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -moz-transform: rotate(359deg);
+        -o-transform: rotate(359deg);
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
 }

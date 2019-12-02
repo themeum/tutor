@@ -1,190 +1,150 @@
 <?php
+
 /**
  * Display Topics and Lesson lists for learn
  *
  * @since v.1.0.0
  * @author themeum
  * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
  */
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 global $post;
-
 $currentPost = $post;
 
-$course_id = 0;
-if ($post->post_type === 'tutor_quiz'){
-	$course = tutor_utils()->get_course_by_quiz(get_the_ID());
-	$course_id = $course->ID;
-}elseif($post->post_type === 'tutor_assignments'){
-	$course_id = get_post_meta($post->ID, '_tutor_course_id_for_assignments', true);
-
-} else{
-	$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
-}
-
-$enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
-
-
+$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
 ?>
 
 <?php do_action('tutor_lesson/single/before/lesson_sidebar'); ?>
 
     <div class="tutor-sidebar-tabs-wrap">
         <div class="tutor-tabs-btn-group">
-            <a href="#tutor-lesson-sidebar-tab-content" class="<?php echo $enable_q_and_a_on_course ? "active" : ""; ?>"> <i class="tutor-icon-education"></i> <span> <?php esc_html_e('Lesson List', 'tutor'); ?></span></a>
-			<?php if($enable_q_and_a_on_course) { ?>
-                <a href="#tutor-lesson-sidebar-qa-tab-content"> <i class="tutor-icon-question-1"></i> <span><?php esc_html_e('Browse Q&A', 'tutor'); ?></span></a>
-			<?php } ?>
+            <a href="#tutor-lesson-sidebar-tab-content" class="active">Lesson List</a>
+            <!--<a href="#tutor-lesson-sidebar-qa-tab-content">Browse Q&A</a>-->
         </div>
 
         <div class="tutor-sidebar-tabs-content">
 
+            <div id="tutor-lesson-sidebar-qa-tab-content" class="tutor-lesson-sidebar-tab-item" style="display: none;">
+                <h3>No questions yet</h3>
+                <p>Perhaps you can make a try by search</p>
+            </div>
+
             <div id="tutor-lesson-sidebar-tab-content" class="tutor-lesson-sidebar-tab-item">
-				<?php
-				$topics = tutor_utils()->get_topics($course_id);
-				if ($topics->have_posts()){
-					while ($topics->have_posts()){ $topics->the_post();
-						$topic_id = get_the_ID();
-						$topic_summery = get_the_content();
-						?>
+		        <?php
+		        $topics = tutor_utils()->get_topics($course_id);
+		        if ($topics->have_posts()){
+			        while ($topics->have_posts()){ $topics->the_post();
+				        $topic_id = get_the_ID();
+				        $topic_summery = get_the_content();
+				        ?>
 
                         <div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
                             <div class="tutor-topics-title <?php echo $topic_summery ? 'has-summery' : ''; ?>">
                                 <h3>
-									<?php
-									the_title();
-									if($topic_summery) {
-										echo "<span class='toogle-informaiton-icon'>&quest;</span>";
-									}
-									?>
+							        <?php
+							        the_title();
+							        if($topic_summery) {
+								        echo "<i class='tutor-icon-angle-down'></i>";
+							        }
+							        ?>
                                 </h3>
-                                <button class="tutor-single-lesson-topic-toggle"><i class="tutor-icon-plus"></i></button>
                             </div>
 
-							<?php
-							if ($topic_summery){
-								?>
+					        <?php
+					        if ($topic_summery){
+						        ?>
                                 <div class="tutor-topics-summery">
-									<?php echo $topic_summery; ?>
+							        <?php echo $topic_summery; ?>
                                 </div>
-								<?php
-							}
-							?>
+						        <?php
+					        }
+					        ?>
 
-                            <div class="tutor-lessons-under-topic" style="display: none">
-								<?php
-								do_action('tutor/lesson_list/before/topic', $topic_id);
+                            <div class="tutor-lessons-under-topic">
+						        <?php
+						        do_action('tutor/lesson_list/before/topic', $topic_id);
 
-								$lessons = tutor_utils()->get_course_contents_by_topic(get_the_ID(), -1);
-								if ($lessons->have_posts()){
-									while ($lessons->have_posts()){
-										$lessons->the_post();
+						        $lessons = tutor_utils()->get_lessons_by_topic(get_the_ID());
+						        if ($lessons->have_posts()){
+							        while ($lessons->have_posts()){
+								        $lessons->the_post();
+								        $video = tutor_utils()->get_video_info();
 
-										if ($post->post_type === 'tutor_quiz') {
-											$quiz = $post;
-											?>
-                                            <div class="tutor-single-lesson-items quiz-single-item quiz-single-item-<?php echo $quiz->ID; ?> <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
-                                                <a href="<?php echo get_permalink($quiz->ID); ?>" class="sidebar-single-quiz-a" data-quiz-id="<?php echo $quiz->ID; ?>">
-                                                    <i class="tutor-icon-doubt"></i>
-                                                    <span class="lesson_title"><?php echo $quiz->post_title; ?></span>
-                                                    <span class="tutor-lesson-right-icons">
-                                                    <?php
-                                                    do_action('tutor/lesson_list/right_icon_area', $post);
+								        $play_time = false;
+								        if ($video){
+									        $play_time = $video->playtime;
+								        }
+								        $is_completed_lesson = tutor_utils()->is_completed_lesson();
+								        ?>
 
-                                                    $time_limit = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_value');
-                                                    if ($time_limit){
-	                                                    $time_type = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_type');
-	                                                    echo "<span class='quiz-time-limit'>{$time_limit} {$time_type}</span>";
-                                                    }
-                                                    ?>
-                                                    </span>
-                                                </a>
-                                            </div>
-											<?php
-										}elseif($post->post_type === 'tutor_assignments'){
-											/**
-											 * Assignments
-											 * @since this block v.1.3.3
-											 */
+                                        <div class="tutor-single-lesson-items <?php echo ($currentPost->ID === get_the_ID()) ? 'active' : ''; ?>">
+                                            <a href="<?php the_permalink(); ?>" class="tutor-single-lesson-a" data-lesson-id="<?php the_ID(); ?>">
 
-											?>
-                                            <div class="tutor-single-lesson-items assignments-single-item assignment-single-item-<?php echo $post->ID; ?> <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>"
-                                                 data-assignment-id="<?php echo $post->ID; ?>">
-                                                <a href="<?php echo get_permalink($post->ID); ?>" class="sidebar-single-assignment-a" data-assignment-id="<?php echo $post->ID; ?>">
-                                                    <i class="tutor-icon-clipboard"></i>
-                                                    <span class="lesson_title"> <?php echo $post->post_title; ?> </span>
-                                                    <span class="tutor-lesson-right-icons">
-                                                        <?php do_action('tutor/lesson_list/right_icon_area', $post); ?>
-                                                    </span>
-                                                </a>
-                                            </div>
-											<?php
+										        <?php
+										        $tutor_lesson_type_icon = $play_time ? 'youtube' : 'document';
+										        echo "<i class='tutor-icon-$tutor_lesson_type_icon'></i>";
+										        ?>
+                                                <span class="lesson_title"><?php the_title(); ?></span>
+                                                <span class="tutor-lesson-right-icons">
+                                        <?php
+                                        if ($play_time){
+	                                        echo "<i class='tutor-play-duration'>$play_time</i>";
+                                        }
+                                        $lesson_complete_icon = $is_completed_lesson ? 'tutor-icon-mark tutor-done' : '';
+                                        echo "<i class='tutor-lesson-complete $lesson_complete_icon'></i>";
+                                        ?>
+                                        </span>
+                                            </a>
+                                        </div>
 
-										}else{
+								        <?php
+							        }
+							        $lessons->reset_postdata();
+						        }
 
-											/**
-											 * Lesson
-											 */
+						        #quizzes
+						        $quizzes = tutor_utils()->get_attached_quiz($topic_id);
+						        if ($quizzes){
+							        ?>
+							        <?php
+							        foreach ($quizzes as $quiz){
+								        ?>
+                                        <div class="tutor-single-lesson-items quiz-single-item-<?php echo $quiz->ID; ?>">
+                                            <a href="<?php echo get_permalink($quiz->ID); ?>">
+                                                <i class="tutor-icon-doubt"></i>
+                                                <span class="lesson_title"><?php echo $quiz->post_title; ?></span>
+                                                <span class="tutor-lesson-right-icons">
 
-											$video = tutor_utils()->get_video_info();
+                                            <?php
+                                            $time_limit = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_value');
+                                            if ($time_limit){
+	                                            $time_type = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_type');
+	                                            echo "<span class='quiz-time-limit'>{$time_limit} {$time_type}</span>";
+                                            }
+                                            ?>
+                                            </span>
+                                            </a>
+                                        </div>
+								        <?php
+							        }
+							        ?>
+							        <?php
+						        }
+						        ?>
 
-											$play_time = false;
-											if ( $video ) {
-												$play_time = $video->playtime;
-											}
-											$is_completed_lesson = tutor_utils()->is_completed_lesson();
-											?>
-
-                                            <div class="tutor-single-lesson-items <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>">
-                                                <a href="<?php the_permalink(); ?>" class="tutor-single-lesson-a" data-lesson-id="<?php the_ID(); ?>">
-
-													<?php
-													$tutor_lesson_type_icon = $play_time ? 'youtube' : 'document';
-													echo "<i class='tutor-icon-$tutor_lesson_type_icon'></i>";
-													?>
-                                                    <span class="lesson_title"><?php the_title(); ?></span>
-                                                    <span class="tutor-lesson-right-icons">
-                                                        <?php
-                                                        do_action('tutor/lesson_list/right_icon_area', $post);
-                                                        if ( $play_time ) {
-	                                                        echo "<i class='tutor-play-duration'>$play_time</i>";
-                                                        }
-                                                        $lesson_complete_icon = $is_completed_lesson ? 'tutor-icon-mark tutor-done' : '';
-                                                        echo "<i class='tutor-lesson-complete $lesson_complete_icon'></i>";
-                                                        ?>
-                                                    </span>
-                                                </a>
-                                            </div>
-
-											<?php
-										}
-									}
-									$lessons->reset_postdata();
-								}
-								?>
-
-								<?php do_action('tutor/lesson_list/after/topic', $topic_id); ?>
+						        <?php do_action('tutor/lesson_list/after/topic', $topic_id); ?>
                             </div>
                         </div>
 
-						<?php
-					}
-					$topics->reset_postdata();
-					wp_reset_postdata();
-				}
-				?>
-            </div>
-
-            <div id="tutor-lesson-sidebar-qa-tab-content" class="tutor-lesson-sidebar-tab-item" style="display: none;">
-				<?php
-				tutor_lesson_sidebar_question_and_answer();
-				?>
+				        <?php
+			        }
+			        $topics->reset_postdata();
+			        wp_reset_postdata();
+		        }
+		        ?>
             </div>
 
         </div>

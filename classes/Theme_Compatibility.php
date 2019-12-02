@@ -12,9 +12,6 @@
 namespace TUTOR;
 
 
-if ( ! defined( 'ABSPATH' ) )
-	exit;
-
 class Theme_Compatibility {
 
 	public function __construct() {

@@ -11,6 +11,10 @@ class Lesson extends Tutor_Base {
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
 		add_action('save_post_'.$this->lesson_post_type, array($this, "save_lesson_meta"));
 
+
+		//add_action('wp_ajax_tutor_create_lesson', array($this, "tutor_create_lesson"));
+		//add_action('wp_ajax_tutor_update_inline_lesson', array($this, "tutor_update_inline_lesson"));
+
 		add_action('wp_ajax_tutor_load_edit_lesson_modal', array($this, "tutor_load_edit_lesson_modal"));
 		add_action('wp_ajax_tutor_modal_create_or_update_lesson', array($this, "tutor_modal_create_or_update_lesson"));
 		add_action('wp_ajax_tutor_delete_lesson_by_id', array($this, "tutor_delete_lesson_by_id"));
@@ -70,11 +74,8 @@ class Lesson extends Tutor_Base {
 		}
 
 		//Video
-		$video_source = tutils()->array_get('video.source', $_POST);
-		if ( $video_source === '-1'){
-			delete_post_meta($post_ID, '_video');
-		}elseif($video_source) {
-			$video = tutor_utils()->array_get('video', $_POST);
+		if ( ! empty($_POST['video']['source'])){
+			$video = tutor_utils()->sanitize_array($_POST['video']);
 			update_post_meta($post_ID, '_video', $video);
 		}
 
@@ -86,6 +87,53 @@ class Lesson extends Tutor_Base {
 		}
 		update_post_meta($post_ID, '_tutor_attachments', $attachments);
 	}
+
+	/**
+	 * Create Lesson from topic area in course builder
+	 */
+
+	/*
+	public function tutor_create_lesson(){
+		$course_id = (int) sanitize_text_field( $_POST['course_id'] );
+		$topic_id = (int) sanitize_text_field( $_POST['topic_id'] );
+		$lesson_title = sanitize_text_field($_POST['lesson_title']);
+
+		$post_arr = array(
+			'post_type'    => $this->lesson_post_type,
+			'post_title'   => $lesson_title,
+			'post_status'  => 'publish',
+			'post_author'  => get_current_user_id(),
+			'post_parent'  => $topic_id,
+		);
+		$post_ID = wp_insert_post( $post_arr );
+
+		if ( $course_id && $post_ID ) {
+			update_post_meta( $post_ID, '_tutor_course_id_for_lesson', $course_id );
+
+			ob_start();
+			include  tutor()->path.'views/metabox/course-contents.php';
+			$course_contents = ob_get_clean();
+
+			wp_send_json_success(array('course_contents' => $course_contents));
+		}
+
+		wp_send_json_error();
+	}
+
+
+	public function tutor_update_inline_lesson(){
+		$lesson_id = (int) sanitize_text_field( $_POST['lesson_id'] );
+		$lesson_title = sanitize_text_field($_POST['lesson_title']);
+
+		$post_arr = array(
+			'ID'    => $lesson_id,
+			'post_title'   => $lesson_title,
+		);
+		wp_update_post( $post_arr );
+		wp_send_json_success();
+	}
+
+	*/
 
 	public function tutor_load_edit_lesson_modal(){
 		$lesson_id = (int) tutor_utils()->avalue_dot('lesson_id', $_POST);
@@ -111,6 +159,7 @@ class Lesson extends Tutor_Base {
 		}
 
 		$post = get_post($lesson_id);
+
 		ob_start();
 		include tutor()->path.'views/modal/edit-lesson.php';
 		$output = ob_get_clean();
@@ -128,20 +177,15 @@ class Lesson extends Tutor_Base {
 		$lesson_data = array(
 			'ID'            => $lesson_id,
 			'post_title'    => $title,
-			'post_name'     => sanitize_title($title),
 			'post_content'  => $lesson_content,
 		);
 
 		if ($_lesson_thumbnail_id){
 			$lesson_data['_thumbnail_id'] = $_lesson_thumbnail_id;
 		}
-
-		do_action('tutor/lesson_update/before', $lesson_id);
 		wp_update_post($lesson_data);
-		do_action('tutor/lesson_update/after', $lesson_id);
 
 		$course_id = tutor_utils()->get_course_id_by_lesson($lesson_id);
-
 		ob_start();
 		include  tutor()->path.'views/metabox/course-contents.php';
 		$course_contents = ob_get_clean();
@@ -249,7 +293,7 @@ class Lesson extends Tutor_Base {
 
 		do_action('tutor_lesson_completed_before', $lesson_id);
 		/**
-		 * Marking lesson at user meta, meta format, _tutor_completed_lesson_id_{id} and value = tutor_time();
+		 * Marking lesson at user meta, meta format, _tutor_completed_lesson_id_{id} and value = time();
 		 */
 		tutor_utils()->mark_lesson_complete($lesson_id);
 

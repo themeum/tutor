@@ -6,9 +6,6 @@
  *
  * @author Themeum
  * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.5
  */
 
 if ( ! defined( 'ABSPATH' ) )
@@ -20,26 +17,20 @@ global $post, $authordata;
 $profile_url = tutor_utils()->profile_url($authordata->ID);
 ?>
 <div class="tutor-single-course-segment tutor-single-course-lead-info">
-
-	<?php
-	$disable = get_tutor_option('disable_course_review');
-	if ( ! $disable){
-		?>
-        <div class="tutor-leadinfo-top-meta">
+    <div class="tutor-leadinfo-top-meta">
             <span class="tutor-single-course-rating">
             <?php
             $course_rating = tutor_utils()->get_course_rating();
             tutor_utils()->star_rating_generator($course_rating->rating_avg);
             ?>
                 <span class="tutor-single-rating-count">
-                    <?php
-                    echo $course_rating->rating_avg;
-                    echo '<i>('.$course_rating->rating_count.')</i>';
-                    ?>
-                </span>
+                <?php
+                echo $course_rating->rating_avg;
+                echo '<i>('.$course_rating->rating_count.')</i>';
+                ?>
             </span>
-        </div>
-	<?php } ?>
+        </span>
+    </div>
 
     <h1 class="tutor-course-header-h1"><?php the_title(); ?></h1>
 
@@ -53,22 +44,15 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                     <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
                 </div>
                 <div class="tutor-single-course-author-name">
-                    <span><?php _e('by', 'tutor'); ?></span>
+                    <strong><?php _e('by', 'tutor'); ?></strong>
                     <a href="<?php echo tutor_utils()->profile_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a>
                 </div>
             </li>
             <li class="tutor-course-level">
-                <span><?php _e('Course level:', 'tutor'); ?></span>
+                <strong><?php _e('Course level:', 'tutor'); ?></strong>
 				<?php echo get_tutor_course_level(); ?>
             </li>
-
-            <li class="tutor-social-share">
-                <span><?php _e('Share:', 'tutor'); ?></span>
-				<?php tutor_social_share(); ?>
-            </li>
-
         </ul>
-
     </div>
 
 
@@ -79,14 +63,14 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			if(is_array($course_categories) && count($course_categories)){
 				?>
                 <li>
-                    <span><?php esc_html_e('Categories', 'tutor') ?></span>
-					<?php
-					foreach ($course_categories as $course_category){
-						$category_name = $course_category->name;
-						$category_link = get_term_link($course_category->term_id);
-						echo "<a href='$category_link'>$category_name</a>";
-					}
-					?>
+                    <strong><?php esc_html_e('Categories', 'tutor') ?></strong>
+                    <?php
+                    foreach ($course_categories as $course_category){
+                        $category_name = $course_category->name;
+                        $category_link = get_term_link($course_category->term_id);
+                        echo "<a href='$category_link'>$category_name</a>";
+                    }
+                    ?>
                 </li>
 			<?php } ?>
 
@@ -95,16 +79,22 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			if(!empty($course_duration)){
 				?>
                 <li>
-                    <span><?php esc_html_e('Total Hour', 'tutor') ?></span>
-					<?php echo $course_duration; ?>
+                    <strong><?php esc_html_e('Total Hour', 'tutor') ?></strong>
+                    <span><?php echo $course_duration; ?></span>
                 </li>
 			<?php } ?>
             <li>
-                <span><?php esc_html_e('Total Enrolled', 'tutor') ?></span>
-				<?php echo (int) tutor_utils()->count_enrolled_users_by_course(); ?>
+                <strong><?php esc_html_e('Total Enrolled', 'tutor') ?></strong>
+                <span>
+                    <?php
+                    $get_total_student = tutor_utils()->get_total_students();
+                    $total_students = $get_total_student ? $get_total_student : 0;
+                    echo $total_students;
+                    ?>
+                </span>
             </li>
             <li>
-                <span><?php esc_html_e('Last Update', 'tutor') ?></span>
+                <strong><?php esc_html_e('Last Update', 'tutor') ?></strong>
 				<?php echo esc_html(get_the_modified_date()); ?>
             </li>
         </ul>
@@ -113,24 +103,24 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
     <div class="tutor-course-enrolled-info">
 		<?php $count_completed_lesson = tutor_course_completing_progress_bar(); ?>
 
-        <!--<div class="tutor-lead-info-btn-group">
+        <div class="tutor-lead-info-btn-group">
 			<?php
-		/*			if ( $wp_query->query['post_type'] !== 'lesson') {
-						$lesson_url = tutor_utils()->get_course_first_lesson();
-						if ( $lesson_url ) {
-							*/?>
-                    <a href="<?php /*echo $lesson_url; */?>" class="tutor-button"><?php /*_e( 'Continue to lesson', 'tutor' ); */?></a>
-                <?php /*}
+			if ( $wp_query->query['post_type'] !== 'lesson') {
+				$lesson_url = tutor_utils()->get_course_first_lesson();
+				if ( $lesson_url ) {
+					?>
+                    <a href="<?php echo $lesson_url; ?>" class="tutor-button"><?php _e( 'Continue to lesson', 'tutor' ); ?></a>
+                <?php }
             }
-            */?>
-            <?php /*tutor_course_mark_complete_html(); */?>
-        </div>-->
+            ?>
+            <?php tutor_course_mark_complete_html(); ?>
+        </div>
     </div>
 
 	<?php do_action('tutor_course/single/lead_meta/after'); ?>
 	<?php do_action('tutor_course/single/excerpt/before'); ?>
 
-	<?php
+    <?php
 	$excerpt = tutor_get_the_excerpt();
 	if (! empty($excerpt)){
 		?>

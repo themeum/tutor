@@ -1,17 +1,4 @@
 <?php
-/**
- * @package TutorLMS/Templates
- * @version 1.4.3
- */
-
-if ( ! defined( 'ABSPATH' ) )
-	exit;
-
-$enable_show_reviews_wrote = tutor_utils()->get_option('students_own_review_show_at_profile');
-if ( ! $enable_show_reviews_wrote){
-    return;
-}
-
 $user_name = sanitize_text_field(get_query_var('tutor_student_username'));
 $get_user = tutor_utils()->get_user_by_login($user_name);
 $user_id = $get_user->ID;
@@ -31,7 +18,7 @@ if ( ! is_array($reviews) || ! count($reviews)){ ?>
 
 <div class=" tutor-course-reviews-wrap">
     <div class="course-target-reviews-title">
-        <h4><?php echo sprintf(__('Reviews wrote by %s ', 'tutor'), $get_user->display_name); ?></h4>
+        <h4><?php _e(sprintf('Reviews wrote by %s ', $get_user->display_name), 'tutor'); ?></h4>
     </div>
 
     <div class="tutor-reviews-list">
@@ -51,7 +38,7 @@ if ( ! is_array($reviews) || ! count($reviews)){ ?>
 
                         <p> <a href="<?php echo $profile_url; ?>">  <?php echo $review->display_name; ?> </a> </p>
                         <p class="review-meta">
-                            <?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($review->comment_date))) ?>
+		                    <?php _e(sprintf('%s ago', human_time_diff(strtotime($review->comment_date))), 'tutor'); ?>
                         </p>
                     </div>
                 </div>
