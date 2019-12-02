@@ -100,13 +100,14 @@ class Rewrite_Rules extends Tutor_Base {
 					$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
 				}
 				//Checking if this lesson
-				if ($course->post_type !== $this->course_post_type){
+				if (isset($course->post_type) && $course->post_type !== $this->course_post_type){
 					$course = $wpdb->get_row("select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} ");
 				}
 
-				return home_url("/{$this->course_post_type}/".$course->post_name."/tutor_quiz/". $post->post_name.'/');
+				$course_post_name = isset($course->post_name) ? $course->post_name : 'sample-course';
+				return home_url("/{$this->course_post_type}/{$course_post_name}/tutor_quiz/{$post->post_name}/");
 			}else{
-				return home_url("/{$this->course_post_type}/sample-course/tutor_quiz/". $post->post_name.'/');
+				return home_url("/{$this->course_post_type}/sample-course/tutor_quiz/{$post->post_name}/");
 			}
 		}
 		return $post_link;

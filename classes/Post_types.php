@@ -14,8 +14,7 @@ class Post_types{
 		
 		add_action( 'init', array($this, 'register_course_post_types') );
 		add_action( 'init', array($this, 'register_lesson_post_types') );
-		//add_action( 'init', array($this, 'register_quiz_post_types') );
-		//add_action( 'init', array($this, 'register_quiz_question_post_types') );
+		add_action( 'init', array($this, 'register_quiz_post_types') );
 	}
 	
 	public function register_course_post_types() {
@@ -103,22 +102,22 @@ class Post_types{
 		register_taxonomy( 'course-category', $this->course_post_type, $args );
 
 		$labels = array(
-			'name'                       => _x( 'Tags', 'taxonomy general name', 'tutor' ),
-			'singular_name'              => _x( 'Tag', 'taxonomy singular name', 'tutor' ),
-			'search_items'               => __( 'Search Tags', 'tutor' ),
-			'popular_items'              => __( 'Popular Tags', 'tutor' ),
-			'all_items'                  => __( 'All Tags', 'tutor' ),
+			'name'                       => _x( 'Skills', 'taxonomy general name', 'tutor' ),
+			'singular_name'              => _x( 'Skill', 'taxonomy singular name', 'tutor' ),
+			'search_items'               => __( 'Search Skills', 'tutor' ),
+			'popular_items'              => __( 'Popular Skills', 'tutor' ),
+			'all_items'                  => __( 'All Skills', 'tutor' ),
 			'parent_item'                => null,
 			'parent_item_colon'          => null,
-			'edit_item'                  => __( 'Edit Tag', 'tutor' ),
-			'update_item'                => __( 'Update Tag', 'tutor' ),
-			'add_new_item'               => __( 'Add New Tag', 'tutor' ),
-			'new_item_name'              => __( 'New Tag Name', 'tutor' ),
-			'separate_items_with_commas' => __( 'Separate tags with commas', 'tutor' ),
-			'add_or_remove_items'        => __( 'Add or remove tags', 'tutor' ),
-			'choose_from_most_used'      => __( 'Choose from the most used tags', 'tutor' ),
-			'not_found'                  => __( 'No tags found.', 'tutor' ),
-			'menu_name'                  => __( 'Tags', 'tutor' ),
+			'edit_item'                  => __( 'Edit Skill', 'tutor' ),
+			'update_item'                => __( 'Update Skill', 'tutor' ),
+			'add_new_item'               => __( 'Add New Skill', 'tutor' ),
+			'new_item_name'              => __( 'New Skill Name', 'tutor' ),
+			'separate_items_with_commas' => __( 'Separate skills with commas', 'tutor' ),
+			'add_or_remove_items'        => __( 'Add or remove skills', 'tutor' ),
+			'choose_from_most_used'      => __( 'Choose from the most used skills', 'tutor' ),
+			'not_found'                  => __( 'No skills found.', 'tutor' ),
+			'menu_name'                  => __( 'Skills', 'tutor' ),
 		);
 
 		$args = array(
@@ -157,7 +156,7 @@ class Post_types{
 			'description'        => __( 'Description.', 'tutor' ),
 			'public'             => true,
 			'publicly_queryable' => true,
-			'show_ui'            => true,
+			'show_ui'            => false,
 			'show_in_menu'       => 'tutor',
 			'query_var'          => true,
 			'rewrite'            => array( 'slug' => $this->lesson_post_type ),
@@ -206,7 +205,7 @@ class Post_types{
 			'description'        => __( 'Description.', 'tutor' ),
 			'public'             => true,
 			'publicly_queryable' => true,
-			'show_ui'            => true,
+			'show_ui'            => false,
 			'show_in_menu'       => 'tutor',
 			'query_var'          => true,
 			'rewrite'            => array( 'slug' => $this->lesson_post_type ),
@@ -231,53 +230,5 @@ class Post_types{
 
 		register_post_type( 'tutor_quiz', $args );
 	}
-	
-	public function register_quiz_question_post_types() {
-		$labels = array(
-			'name'               => _x( 'Questions', 'post type general name', 'tutor' ),
-			'singular_name'      => _x( 'Question', 'post type singular name', 'tutor' ),
-			'menu_name'          => _x( 'Questions', 'admin menu', 'tutor' ),
-			'name_admin_bar'     => _x( 'Question', 'add new on admin bar', 'tutor' ),
-			'add_new'            => _x( 'Add New', $this->lesson_post_type, 'tutor' ),
-			'add_new_item'       => __( 'Add New Question', 'tutor' ),
-			'new_item'           => __( 'New Question', 'tutor' ),
-			'edit_item'          => __( 'Edit Question', 'tutor' ),
-			'view_item'          => __( 'View Question', 'tutor' ),
-			'all_items'          => __( 'Questions', 'tutor' ),
-			'search_items'       => __( 'Search Questions', 'tutor' ),
-			'parent_item_colon'  => __( 'Parent Questions:', 'tutor' ),
-			'not_found'          => __( 'No questions found.', 'tutor' ),
-			'not_found_in_trash' => __( 'No questions found in Trash.', 'tutor' )
-		);
 
-		$args = array(
-			'labels'             => $labels,
-			'description'        => __( 'Description.', 'tutor' ),
-			'public'             => true,
-			'publicly_queryable' => true,
-			'show_ui'            => true,
-			'show_in_menu'       => 'tutor',
-			'query_var'          => true,
-			'rewrite'            => array( 'slug' => $this->lesson_post_type ),
-			'menu_icon'          => 'dashicons-editor-help',
-			'capability_type'    => 'post',
-			'has_archive'        => true,
-			'hierarchical'       => false,
-			'menu_position'      => null,
-			'supports'           => array( ''),
-			'capabilities' => array(
-				'edit_post'          => 'edit_tutor_question',
-				'read_post'          => 'read_tutor_question',
-				'delete_post'        => 'delete_tutor_question',
-				'delete_posts'       => 'delete_tutor_questions',
-				'edit_posts'         => 'edit_tutor_questions',
-				'edit_others_posts'  => 'edit_others_tutor_questions',
-				'publish_posts'      => 'publish_tutor_questions',
-				'read_private_posts' => 'read_private_tutor_questions',
-				'create_posts'       => 'edit_tutor_questions',
-			),
-		);
-
-		register_post_type( 'tutor_question', $args );
-	}
 }

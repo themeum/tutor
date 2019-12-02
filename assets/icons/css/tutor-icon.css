@@ -22,6 +22,81 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.tutor-icon-image-ans:before {
+    content: "\e959";
+}
+.tutor-icon-short-ans:before {
+    content: "\e95a";
+}
+.tutor-icon-image-matching:before {
+    content: "\e956";
+}
+.tutor-icon-menu:before {
+    content: "\e957";
+}
+.tutor-icon-image1:before {
+    content: "\e958";
+}
+.tutor-icon-answer-shorting:before {
+    content: "\e94a";
+}
+.tutor-icon-assesment:before {
+    content: "\e94b";
+}
+.tutor-icon-fill-gaps:before {
+    content: "\e94c";
+}
+.tutor-icon-matching:before {
+    content: "\e94d";
+}
+.tutor-icon-multiple-choice:before {
+    content: "\e94e";
+}
+.tutor-icon-open-ended:before {
+    content: "\e94f";
+}
+.tutor-icon-ordering:before {
+    content: "\e950";
+}
+.tutor-icon-yes-no:before {
+    content: "\e951";
+}
+.tutor-icon-line-cross:before {
+    content: "\e952";
+}
+.tutor-icon-filter-tool-black-shape:before {
+    content: "\e953";
+}
+.tutor-icon-plus-square-button:before {
+    content: "\e954";
+}
+.tutor-icon-settings-1:before {
+    content: "\e955";
+}
+.tutor-icon-cross:before {
+    content: "\e913";
+}
+.tutor-icon-cup:before {
+    content: "\e943";
+}
+.tutor-icon-next-2:before {
+    content: "\e944";
+}
+.tutor-icon-next2:before {
+    content: "\e945";
+}
+.tutor-icon-menu-2:before {
+    content: "\e946";
+}
+.tutor-icon-question-2:before {
+    content: "\e947";
+}
+.tutor-icon-question-1:before {
+    content: "\e948";
+}
+.tutor-icon-education:before {
+    content: "\e949";
+}
 .tutor-icon-manual:before {
     content: "\e936";
 }
@@ -192,9 +267,6 @@
 }
 .tutor-icon-offer:before {
     content: "\e912";
-}
-.tutor-icon-play:before {
-    content: "\e913";
 }
 .tutor-icon-plus:before {
     content: "\e914";

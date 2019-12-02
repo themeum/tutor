@@ -33,16 +33,16 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	function column_student($item){
 		$actions = array();
 
-		$actions['answer'] = sprintf('<a href="?page=%s&sub_page=%s&attempt_id=%s">'.__('Review', 'tutor').'</a>',$_REQUEST['page'],'view_attempt',$item->comment_ID);
-		//$actions['delete'] = sprintf('<a href="?page=%s&action=%s&attempt_id=%s">Delete</a>',$_REQUEST['page'],'delete',$item->comment_ID);
+		$actions['answer'] = sprintf('<a href="?page=%s&sub_page=%s&attempt_id=%s">'.__('Review', 'tutor').'</a>',$_REQUEST['page'],'view_attempt',$item->attempt_id);
+		//$actions['delete'] = sprintf('<a href="?page=%s&action=%s&attempt_id=%s">Delete</a>',$_REQUEST['page'],'delete',$item->attempt_id);
 
 		$quiz_title = '<strong>'.$item->display_name.'</strong> <br />'.$item->user_email.'<br /><br />'. human_time_diff(strtotime
-			($item->comment_date)).__(' ago', 'tutor');
+			($item->attempt_ended_at)).__(' ago', 'tutor');
 
 		//Return the title contents
 		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
 			$quiz_title,
-			$item->comment_ID,
+			$item->attempt_id,
 			$this->row_actions($actions)
 		);
 	}
@@ -55,12 +55,12 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			/*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("instructor")
-			/*$2%s*/ $item->comment_ID                //The value of the checkbox should be the record's id
+			/*$2%s*/ $item->attempt_id                //The value of the checkbox should be the record's id
 		);
 	}
 
 	function column_course($item) {
-		$quiz = tutor_utils()->get_course_by_quiz($item->comment_post_ID);
+		$quiz = tutor_utils()->get_course_by_quiz($item->quiz_id);
 
 		if ($quiz) {
 			$title = get_the_title( $quiz->ID );
@@ -68,25 +68,17 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		}
 	}
 
-
 	function column_total_questions($item) {
-		$attempt_info = maybe_unserialize($item->quiz_attempt_info);
-
-		echo tutor_utils()->avalue_dot('total_question', $attempt_info);
+		echo $item->total_questions;
 	}
 
 	function column_earned_marks($item){
-		$attempt_info = maybe_unserialize($item->quiz_attempt_info);
+		$pass_mark_percent = tutor_utils()->get_quiz_option($item->quiz_id, 'passing_grade', 0);
+		$earned_percentage = $item->earned_marks > 0 ? ( number_format(($item->earned_marks * 100) / $item->total_marks)) : 0;
 
-		$answers_mark = wp_list_pluck(tutor_utils()->avalue_dot('answers', $attempt_info), 'question_mark' );
-		$total_marks = array_sum($answers_mark);
+		$output = $item->earned_marks." out of {$item->total_marks} <br />";
+		$output .= "({$earned_percentage}%) out of ({$pass_mark_percent}%) <br />";
 
-		$marks_earned = tutor_utils()->avalue_dot('marks_earned', $attempt_info);
-		$earned_percentage = $marks_earned > 0 ? ( number_format(($marks_earned * 100) / $total_marks)) : 0;
-
-		$pass_mark_percent = tutor_utils()->avalue_dot('pass_mark_percent', $attempt_info);
-
-		$output = $marks_earned." out of {$total_marks} ({$earned_percentage}%)  ";
 		if ($earned_percentage >= $pass_mark_percent){
 			$output .= '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
 		}else{
@@ -101,7 +93,6 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		return  "<span class='tutor-status-context {$item->attempt_status}'>{$status}</span>";
 	}
 
-
 	function get_columns(){
 		$columns = array(
 			'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
@@ -110,7 +101,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			'course'            => __('Course', 'tutor'),
 			'total_questions'   => __('Total Questions', 'tutor'),
 			'earned_marks'      => __('Earned Mark', 'tutor'),
-			'attempt_status'      => __('Earned Mark', 'tutor'),
+			'attempt_status'      => __('Attempt Status', 'tutor'),
 		);
 		return $columns;
 	}

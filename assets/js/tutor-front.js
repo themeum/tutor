@@ -235,7 +235,7 @@ jQuery(document).ready(function($){
         attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
         var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
 
-        var countDownDate = new Date(attempt_settings.quiz_started_at).getTime() + (attempt_meta.time_limit_seconds * 1000);
+        var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + (attempt_meta.time_limit.time_limit_seconds * 1000);
         var time_now = new Date(attempt_meta.date_time_now).getTime();
 
         var tutor_quiz_interval = setInterval(function() {
@@ -266,28 +266,52 @@ jQuery(document).ready(function($){
                 countdown_human = "EXPIRED";
                 //Set the quiz attempt to timeout in ajax
 
-                var quiz_id = $('#tutor_quiz_id').val();
-                var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
-                var quiz_timeout_data = { quiz_id : quiz_id,  action : 'tutor_quiz_timeout' };
+                if (_tutorobject.options.quiz_when_time_expires === 'autosubmit'){
+                    /**
+                     * Auto Submit
+                     */
+                    $('form#tutor-answering-quiz').submit();
 
-                $.ajax({
-                    url: _tutorobject.ajaxurl,
-                    type: 'POST',
-                    data: quiz_timeout_data,
-                    success: function (data) {
-                        if (data.success){
+                } else if(_tutorobject.options.quiz_when_time_expires === 'autoabandon'){
+                    /**
+                     *
+                     * @type {jQuery}
+                     *
+                     * Current attempt will be cancel with attempt status attempt_timeout
+                     */
+
+                    var quiz_id = $('#tutor_quiz_id').val();
+                    var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
+                    var quiz_timeout_data = { quiz_id : quiz_id,  action : 'tutor_quiz_timeout' };
+
+                    $.ajax({
+                        url: _tutorobject.ajaxurl,
+                        type: 'POST',
+                        data: quiz_timeout_data,
+                        success: function (data) {
+                            if (data.success){
+                                window.location.reload(true);
+                            }
+                        },
+                        complete: function () {
+                            $('#tutor-quiz-body').html('');
                             window.location.reload(true);
                         }
-                    },
-                    complete: function () {
-                        $('#tutor-quiz-body').html('');
-                        window.location.reload(true);
-                    }
-                });
+                    });
+
+                }
+
             }
             time_now = time_now + 1000;
             $tutor_quiz_time_update.html(countdown_human);
         }, 1000);
+    }
+
+    var $quiz_start_form = $('#tutor-quiz-body form#tutor-start-quiz');
+    if ($quiz_start_form.length){
+        if (_tutorobject.quiz_options.quiz_auto_start === '1'){
+            $quiz_start_form.submit();
+        }
     }
 
     // tutor course content accordion
@@ -337,7 +361,7 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var lesson_id = $that.attr('data-lesson-id');
-        var $wrap = $('#tutor-single-lesson-entry-content');
+        var $wrap = $('#tutor-single-entry-content');
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -361,6 +385,36 @@ jQuery(document).ready(function($){
         });
     });
 
+    $(document).on('click', '.sidebar-single-quiz-a', function (e) {
+        e.preventDefault();
+
+        var $that = $(this);
+        var quiz_id = $that.attr('data-quiz-id');
+        var page_title = $that.find('.lesson_title').text();
+        var $wrap = $('#tutor-single-entry-content');
+
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: {quiz_id : quiz_id, 'action': 'tutor_render_quiz_content'},
+            beforeSend: function () {
+                $('head title').text(page_title);
+                window.history.pushState('obj', page_title, $that.attr('href'));
+                $wrap.addClass('loading-lesson');
+                $('.tutor-single-lesson-items').removeClass('active');
+                $that.closest('.tutor-single-lesson-items').addClass('active');
+            },
+            success: function (data) {
+                $wrap.html(data.data.html);
+            },
+            complete: function () {
+                $wrap.removeClass('loading-lesson');
+            }
+        });
+
+
+    });
+
     /**
      * @date 05 Feb, 2019
      */
@@ -374,7 +428,6 @@ jQuery(document).ready(function($){
         e.preventDefault();
         var $that = $(this);
 
-
         var tabSelector = $that.attr('href');
         $('.tutor-lesson-sidebar-tab-item').hide();
         $(tabSelector).show();
@@ -382,6 +435,92 @@ jQuery(document).ready(function($){
         $('.tutor-tabs-btn-group a').removeClass('active');
         $that.addClass('active');
     });
+    /**
+     * @date 18 Feb, 2019
+     * @since v.1.0.0
+     */
+
+    if (jQuery().sortable) {
+        $(".tutor-quiz-answers-wrap").sortable({
+            handle: ".answer-sorting-bar",
+            start: function (e, ui) {
+                ui.placeholder.css('visibility', 'visible');
+            },
+            stop: function (e, ui) {
+
+                //Sorting Stopped...
+            },
+        }).disableSelection();;
+
+
+        $( ".quiz-draggable-rand-answers, .quiz-answer-matching-droppable" ).sortable({
+            connectWith: ".quiz-answer-matching-droppable",
+            placeholder: "drop-hover"
+
+        }).disableSelection();
+    }
+
+    /**
+     * Quiz view
+     * @date 22 Feb, 2019
+     * @since v.1.0.0
+     */
+
+    $(document).on('click', '.tutor-quiz-answer-next-btn', function (e) {
+        e.preventDefault();
+        var $that = $(this);
+        var question_id = parseInt($that.closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
+
+        var next_question_id = $that.closest('.quiz-attempt-single-question').attr('data-next-question-id');
+
+        if (next_question_id) {
+            var $nextQuestion = $(next_question_id);
+            if ($nextQuestion && $nextQuestion.length) {
+                $('.quiz-attempt-single-question').hide();
+                $nextQuestion.show();
+
+                /**
+                 * If pagination exists, set active class
+                 */
+
+                if ($('.tutor-quiz-questions-pagination').length){
+                    $('.tutor-quiz-question-paginate-item').removeClass('active');
+                    $('.tutor-quiz-questions-pagination a[href="'+next_question_id+'"]').addClass('active');
+                }
+
+            }
+        }
+    });
+    $(document).on('click', '.tutor-quiz-question-paginate-item', function (e) {
+        e.preventDefault();
+        var $that = $(this);
+        var $question = $($that.attr('href'));
+        $('.quiz-attempt-single-question').hide();
+        $question.show();
+
+        //Active Class
+        $('.tutor-quiz-question-paginate-item').removeClass('active');
+        $that.addClass('active');
+    });
+
+    /**
+     * Limit Short Answer Question Type
+     */
+    $(document).on('keyup', 'textarea.question_type_short_answer', function (e) {
+        var $that = $(this);
+        var value = $that.val();
+        var limit = _tutorobject.quiz_options.short_answer_characters_limit;
+        var remaining = limit - value.length;
+
+        if (remaining < 1){
+            $that.val(value.substr(0, limit));
+            remaining = 0;
+        }
+        $that.closest('.tutor-quiz-answers-wrap').find('.characters_remaining').html(remaining);
+    });
+
+
+
 
 
 });

@@ -19,10 +19,8 @@ class Question {
 		add_action('wp_ajax_quiz_question_delete', array($this, 'quiz_question_delete'));
 		add_action('wp_ajax_sorting_quiz_questions', array($this, 'sorting_quiz_questions'));
 
-
 		add_filter( "manage_tutor_question_posts_columns", array($this, 'add_column'), 10,1 );
 		add_action( "manage_tutor_question_posts_custom_column" , array($this, 'custom_question_column'), 10, 2 );
-
 	}
 
 	public function register_meta_box(){

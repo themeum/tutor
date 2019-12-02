@@ -9,16 +9,10 @@ class Assets{
 	public function __construct() {
 		add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
 		add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
-
 		add_action( 'admin_head', array($this, 'tutor_add_mce_button'));
-
-
-
 		add_filter( 'get_the_generator_html', array($this, 'tutor_generator_tag'), 10, 2 );
 		add_filter( 'get_the_generator_xhtml', array($this, 'tutor_generator_tag'), 10, 2 );
-
 	}
-
 
 	public function admin_scripts(){
 		wp_enqueue_style('tutor-select2', tutor()->url.'assets/packages/select2/select2.min.css', array(), tutor()->version);
@@ -44,15 +38,27 @@ class Assets{
 	 * Load frontend scripts
 	 */
 	public function frontend_scripts(){
+		global $post;
 
 		wp_enqueue_editor();
 
+		$options = tutor_utils()->get_option();
 		$localize_data = array(
-			'ajaxurl'   => admin_url('admin-ajax.php'),
-			'nonce_key' => tutor()->nonce,
+			'ajaxurl'       => admin_url('admin-ajax.php'),
+			'nonce_key'     => tutor()->nonce,
 			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
+			'options'       => $options,
 		);
 
+		if ( ! empty($post->post_type) && $post->post_type === 'tutor_quiz'){
+			$quiz_options = tutor_utils()->get_quiz_option($post->ID);
+			$localize_data['quiz_options'] = $quiz_options;
+		}
+
+		/**
+		 * Enabling Sorting, draggable, droppable...
+		 */
+		wp_enqueue_script('jquery-ui-sortable');
 
 		//Plyr
 		wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), tutor()->version );
@@ -70,6 +76,8 @@ class Assets{
 			}
 		}
 
+		$localize_data = apply_filters('tutor_localize_data', $localize_data);
+
 		if (tutor_utils()->get_option('load_tutor_css')){
 			wp_enqueue_style('tutor-frontend', tutor()->url.'assets/css/tutor-front.css', array(), tutor()->version);
 		}
@@ -79,12 +87,10 @@ class Assets{
 		}
 	}
 
-
 	/**
 	 * Add Tinymce button for placing shortcode
 	 */
 	function tutor_add_mce_button() {
-
 		// check user permissions
 		if ( !current_user_can( 'edit_posts' ) && !current_user_can( 'edit_pages' ) ) {
 			return;
@@ -105,7 +111,6 @@ class Assets{
 		array_push( $buttons, 'tutor_button' );
 		return $buttons;
 	}
-
 
 	/**
 	 * Output generator tag to aid debugging.
