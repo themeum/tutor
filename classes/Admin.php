@@ -26,11 +26,6 @@ class Admin{
 
 		//Plugin Row Meta
 		add_filter('plugin_row_meta', array($this, 'plugin_row_meta'), 10, 2);
-
-		//Admin Footer Text
-		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
-		//Register Course Widget
-		add_action( 'widgets_init', array($this, 'register_course_widget') );
 	}
 
 	public function register_menu(){
@@ -44,13 +39,8 @@ class Admin{
 
 		$course_post_type = tutor()->course_post_type;
 
-		$pro_text = '';
-		if ($hasPro){
-			$pro_text = ' '.__('Pro', 'tutor');
-		}
+		add_menu_page(__('Tutor LMS', 'tutor'), __('Tutor LMS', 'tutor'), 'manage_tutor_instructor', 'tutor', null, 'dashicons-welcome-learn-more', 2);
 
-		add_menu_page(__('Tutor LMS', 'tutor').$pro_text, __('Tutor LMS', 'tutor').$pro_text, 'manage_tutor_instructor', 'tutor', null,
-			'dashicons-welcome-learn-more', 2);
 		add_submenu_page('tutor', __('Categories', 'tutor'), __('Categories', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type='.$course_post_type, null );
 
 		add_submenu_page('tutor', __('Tags', 'tutor'), __('Tags', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type='.$course_post_type, null );
@@ -62,20 +52,25 @@ class Admin{
 		add_submenu_page('tutor', __('Q & A', 'tutor'), __('Q & A '.$unanswered_bubble, 'tutor'), 'manage_tutor_instructor', 'question_answer', array($this, 'question_answer') );
 
 		add_submenu_page('tutor', __('Quiz Attempts', 'tutor'), __('Quiz Attempts', 'tutor'), 'manage_tutor_instructor', 'tutor_quiz_attempts',array($this, 'quiz_attempts') );
-		add_submenu_page('tutor', __('Withdraw Requests', 'tutor'), __('Withdraw Requests', 'tutor'), 'manage_tutor_instructor', 'tutor_withdraw_requests', array($this, 'withdraw_requests') );
 
 		//add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(),'addons_page') );
-		add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), __( 'Add-ons', 'tutor' ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
+
+		if (defined('TUTOR_PRO_VERSION')) {
+			add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), __( 'Add-ons', 'tutor' ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
+		}
+
+		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
 
 		do_action('tutor_admin_register');
 
 		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_page') );
 
-		add_submenu_page('tutor', __('Tools', 'tutor'), __('Tools', 'tutor'), 'manage_tutor', 'tutor-tools', array($this, 'tutor_tools') );
-
+		add_submenu_page('tutor',__('Uninstall Tutor LMS', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
+/*
 		if ( ! $hasPro){
 			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
-		}
+		}*/
+
 	}
 
 	public function tutor_page(){
@@ -99,43 +94,16 @@ class Admin{
 		include tutor()->path.'views/pages/quiz_attempts.php';
 	}
 
-	/**
-	 * Show the withdraw requests table
-	 *
-	 * @since v.1.2.0
-	 */
-	public function withdraw_requests(){
-		include tutor()->path.'views/pages/withdraw_requests.php';
-	}
-
 	public function enable_disable_addons(){
-
-		if (defined('TUTOR_PRO_VERSION')) {
-			include tutor()->path.'views/pages/enable_disable_addons.php';
-		}else{
-			include tutor()->path.'views/pages/tutor-pro-addons.php';
-		}
+		include tutor()->path.'views/pages/enable_disable_addons.php';
 	}
 
-	public function tutor_tools(){
-		$tutor_admin_tools_page = tutils()->array_get('tutor_admin_tools_page', $_GET);
-		if ($tutor_admin_tools_page){
-			include apply_filters('tutor_admin_tools_page', tutor()->path."views/pages/{$tutor_admin_tools_page}.php", $tutor_admin_tools_page);
-		}else{
-			$pages = apply_filters('tutor_tool_pages', array(
-				'tutor_pages' => array('title' => __('Tutor Pages', 'tutor') ),
-				'status' => __('Status', 'tutor'),
-			));
+	public function tutor_status(){
+		include tutor()->path.'views/pages/status.php';
+	}
 
-			$current_page = 'tutor_pages';
-			$requested_page = sanitize_text_field(tutils()->array_get('sub_page', $_GET));
-			if ($requested_page){
-				$current_page = $requested_page;
-			}
-
-			include tutor()->path.'views/pages/tools.php';
-		}
-
+	public function tutor_uninstall(){
+		include tutor()->path.'views/pages/uninstall.php';
 	}
 
 	public function tutor_get_pro(){
@@ -195,23 +163,21 @@ class Admin{
 	}
 
 	/**
-	 * Prevent unauthorised course/lesson edit page by direct URL
+	 * Prevent unauthorised post edit page by direct URL
 	 *
 	 * @since v.1.0.0
 	 */
 	public function check_if_current_users_post(){
-		if (current_user_can('administrator') || ! current_user_can(tutor()->instructor_role)) {
+		if (! current_user_can(tutor()->instructor_role)) {
 			return;
 		}
 
 		if (! empty($_GET['post']) ) {
 			$get_post_id = (int) sanitize_text_field($_GET['post']);
 			$get_post = get_post($get_post_id);
-			$tutor_post_types = array(tutor()->course_post_type, tutor()->lesson_post_type);
-
 			$current_user = get_current_user_id();
 
-			if (in_array($get_post->post_type, $tutor_post_types) &&  $get_post->post_author != $current_user){
+			if ($get_post->post_author != $current_user){
 				global $wpdb;
 
 				$get_assigned_courses_ids = (int) $wpdb->get_var("SELECT user_id from {$wpdb->usermeta} WHERE user_id = {$current_user} AND meta_key = '_tutor_instructor_course_id' AND meta_value = {$get_post_id} ");
@@ -232,6 +198,7 @@ class Admin{
 		if ( ! $template_path){
 			$template_path = tutor()->path.'templates/';
 		}
+
 
 		$files  = @scandir( $template_path ); // @codingStandardsIgnoreLine.
 		$result = array();
@@ -324,7 +291,7 @@ class Admin{
 			'gzip_enabled'              => is_callable( 'gzopen' ),
 			'mbstring_enabled'          => extension_loaded( 'mbstring' ),
 		);
-
+		
 	}
 
 
@@ -346,6 +313,7 @@ class Admin{
 				$course_post_type,
 				$lesson_post_type,
 				'tutor_quiz',
+				'tutor_question',
 				'tutor_enrolled',
 				'topics',
 				'tutor_enrolled',
@@ -362,7 +330,7 @@ class Admin{
 					foreach( $terms as $term ){
 						/**D*/ wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-category' );
 					}
-
+					
 					//Delete tags if available
 					$terms = wp_get_object_terms( $post_id, 'course-tag' );
 					foreach( $terms as $term ){
@@ -398,22 +366,22 @@ class Admin{
 
 			//Deleting Table
 			$prefix = $wpdb->prefix;
-			/**D*/ $wpdb->query("DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers, {$prefix}tutor_earnings, {$prefix}tutor_withdraws ");
+			/**D*/ $wpdb->query("DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers ");
 
 			deactivate_plugins($plugin_file);
 		}
-
+		
 		wp_redirect('plugins.php');
 		die();
 	}
 
 	public function plugin_action_links($actions){
-		$hasPro = tutor()->has_pro;
+		/*$hasPro = tutor()->has_pro;
 
 		if(!$hasPro){
 			$actions['tutor_pro_link'] = '<a href="https://www.themeum.com/product/tutor-lms/#pricing?utm_source=tutor_plugin_action_link&utm_medium=wordpress_dashboard&utm_campaign=go_premium" target="_blank"><span
- style="color: #ff7742; font-weight: bold;">' . __('Upgrade to Pro', 'wp-megamenu') . '</span></a>';
-		}
+ style="color: #39a700eb; font-weight: bold;">'.__('Upgrade to Pro', 'wp-megamenu').'</span></a>';
+		}*/
 
 		$is_erase_data = tutor_utils()->get_option('delete_on_uninstall');
 
@@ -421,7 +389,7 @@ class Admin{
 			$plugin_file = tutor()->basename;
 			if ( current_user_can( 'deactivate_plugin', $plugin_file ) ) {
 				if ( isset( $actions['deactivate'] ) ) {
-					$actions['deactivate'] = '<a href="admin.php?page=tutor-tools&tutor_admin_tools_page=uninstall">' . __('Uninstall', 'tutor') . '</a>';
+					$actions['deactivate'] = '<a href="admin.php?page=tutor-uninstall">' . __('Uninstall', 'tutor') . '</a>';
 				}
 			}
 		}
@@ -431,6 +399,7 @@ class Admin{
 	}
 
 	public function plugin_row_meta($plugin_meta, $plugin_file){
+
 
 		if ($plugin_file === tutor()->basename) {
 			$plugin_meta[] = sprintf( '<a href="%s">%s</a>',
@@ -446,34 +415,6 @@ class Admin{
 		return $plugin_meta;
 	}
 
-	/**
-	 * @param $footer_text
-	 *
-	 * @return string
-	 *
-	 * Add footer text only on tutor pages
-	 */
-	public function admin_footer_text( $footer_text ) {
-		$current_screen = get_current_screen();
-
-		/**
-		 * We are making sure that this message will be only on Tutor Admin page
-		 */
-		if ( apply_filters( 'tutor_display_admin_footer_text', (tutor_utils()->array_get('parent_base', $current_screen) === 'tutor' ) ) ) {
-			$footer_text = sprintf(
-				__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'tutor' ),
-				sprintf( '<strong>%s</strong>', esc_html__( 'Tutor LMS', 'tutor' ) ),
-				'<a href="https://wordpress.org/support/plugin/tutor/reviews?rate=5#new-post" target="_blank" class="tutor-rating-link">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
-			);
-		}
-
-		return $footer_text;
-	}
-
-
-	public function register_course_widget(){
-		register_widget( 'Tutor\Course_Widget' );
-	}
 
 
 }

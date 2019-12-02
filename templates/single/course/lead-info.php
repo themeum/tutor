@@ -6,9 +6,6 @@
  *
  * @author Themeum
  * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
  */
 
 if ( ! defined( 'ABSPATH' ) )
@@ -19,12 +16,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 ?>
 
 <div class="tutor-single-course-segment tutor-single-course-lead-info">
-
-	<?php
-	$disable = get_tutor_option('disable_course_review');
-	if ( ! $disable){
-		?>
-        <div class="tutor-leadinfo-top-meta">
+    <div class="tutor-leadinfo-top-meta">
         <span class="tutor-single-course-rating">
             <?php
             $course_rating = tutor_utils()->get_course_rating();
@@ -37,8 +29,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                 ?>
             </span>
         </span>
-        </div>
-	<?php } ?>
+    </div>
 
 	<?php do_action('tutor_course/single/title/before'); ?>
     <h1 class="tutor-course-header-h1"><?php the_title(); ?></h1>
@@ -99,7 +90,11 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			<?php } ?>
             <li>
                 <span><?php esc_html_e('Total Enrolled', 'tutor') ?></span>
-                <?php echo (int) tutor_utils()->count_enrolled_users_by_course(); ?>
+                <?php
+                    $get_total_student = tutor_utils()->get_total_students();
+                    $total_students = $get_total_student ? $get_total_student : 0;
+                    echo $total_students;
+                ?>
             </li>
             <li>
                 <span><?php esc_html_e('Last Update', 'tutor') ?></span>

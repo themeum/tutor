@@ -5,9 +5,6 @@
  * @since v.1.0.0
  * @author themeum
  * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
  */
 
 $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
@@ -44,7 +41,7 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
                             </div>
                             <p class="review-meta">
                                 <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a>
-                                <span class="tutor-text-mute"><?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($question->comment_date))); ?></span>
+                                <span class="tutor-text-mute"><?php _e(sprintf('%s ago', human_time_diff(strtotime($question->comment_date))), 'tutor'); ?></span>
                             </p>
                         </div>
 
@@ -73,7 +70,7 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
                                                 <p class="review-meta">
                                                     <a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a>
                                                     <span class="tutor-text-mute">
-                                                        <?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($answer->comment_date))); ?>
+                                                        <?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'tutor'); ?>
                                                     </span>
                                                 </p>
                                             </div>
@@ -159,7 +156,7 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
             </div>
 
             <div class="tutor-form-group">
-                <button type="submit" class="tutor_ask_question_btn tutor-button tutor-success" name="tutor_question_search_btn"><?php _e('Submit My Question', 'tutor'); ?></button>
+                <button type="submit" class="tutor_ask_question_btn" name="tutor_question_search_btn"><?php _e('Submit My Question', 'tutor'); ?></button>
             </div>
         </form>
     </div>

@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Template for displaying price
@@ -6,9 +7,6 @@
  *
  * @author Themeum
  * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
  */
 
 
@@ -16,12 +14,12 @@ $is_purchasable = tutor_utils()->is_course_purchasable();
 $price = apply_filters('get_tutor_course_price', null, get_the_ID());
 
 if ($is_purchasable && $price){
-    echo '<div class="price">'.$price.'</div>';
+    echo '<p class="price">'.$price.'</p>';
 }else{
 	?>
-	<div class="price">
+	<p class="price">
 		<?php _e('Free', 'tutor'); ?>
-	</div>
+	</p>
 	<?php
 }
 ?>

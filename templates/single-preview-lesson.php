@@ -6,9 +6,6 @@
  *
  * @author Themeum
  * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
  */
 
 get_header();
@@ -16,6 +13,7 @@ get_header();
 global $post;
 $currentPost = $post;
 ?>
+
 <?php do_action('tutor_lesson/single/before/wrap'); ?>
     <div <?php tutor_post_class('tutor-single-lesson-wrap tutor-page-wrap'); ?>>
         <div class="tutor-container">
@@ -25,6 +23,7 @@ $currentPost = $post;
                     <?php the_content(); ?>
                     <?php get_tutor_posts_attachments(); ?>
                 </div>
+
             </div>
         </div>
     </div>

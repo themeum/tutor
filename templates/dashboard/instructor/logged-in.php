@@ -1,9 +1,4 @@
 <?php
-/**
- * @package TutorLMS/Templates
- * @version 1.4.3
- */
-
 $is_instructor = tutor_utils()->is_instructor();
 if ($is_instructor){
 	?>
@@ -12,16 +7,11 @@ if ($is_instructor){
         <h2><?php _e("You are instructor", 'tutor'); ?></h2>
 
         <p>
-			<?php
-			echo sprintf(__("Registered at : %s %s", 'tutor'), date_i18n(get_option('date_format'), $is_instructor), date_i18n(get_option('time_format'),
-                $is_instructor) );
-			?>
+			<?php _e(sprintf("Registered at : %s %s", date_i18n(get_option('date_format'), $is_instructor), date_i18n(get_option('time_format'), $is_instructor) ), 'tutor'); ?>
         </p>
 
         <p>
-			<?php
-            echo sprintf(__('Status : %s', 'tutor'), tutor_utils()->instructor_status());
-            ?>
+			<?php _e(sprintf('Status : %s', tutor_utils()->instructor_status()), 'tutor'); ?>
         </p>
 
     </div>

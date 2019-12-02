@@ -6,9 +6,6 @@
  * @since v.1.0.0
  * @author themeum
  * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
  */
 
 
@@ -31,6 +28,7 @@ do_action('tutor_course/loop/after_rating');
 do_action('tutor_course/loop/before_title');
 do_action('tutor_course/loop/title');
 do_action('tutor_course/loop/after_title');
+
 
 do_action('tutor_course/loop/before_meta');
 do_action('tutor_course/loop/meta');

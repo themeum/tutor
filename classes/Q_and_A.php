@@ -21,7 +21,7 @@ class Q_and_A{
 
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
-		$date = date("Y-m-d H:i:s", tutor_time());
+		$date = date("Y-m-d H:i:s");
 
 		do_action('tutor_before_answer_to_question');
 

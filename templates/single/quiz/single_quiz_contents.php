@@ -1,28 +1,26 @@
-<?php
-/**
- * @package TutorLMS/Templates
- * @version 1.4.3
- */
 
+<?php
 $course = tutor_utils()->get_course_by_quiz(get_the_ID());
 ?>
 
+
+
 <div class="tutor-single-page-top-bar">
     <div class="tutor-topbar-item tutor-hide-sidebar-bar">
-        <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-angle-left"></i> </a>
-        <a href="<?php echo get_the_permalink($course->ID); ?>"  class="tutor-topbar-home-btn">
-            <i class="tutor-icon-home"></i> <?php echo __('Go to Course Home', 'tutor') ; ?>
-        </a>
+        <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-menu-2"></i> </a>
     </div>
     <div class="tutor-topbar-item tutor-topbar-content-title-wrap">
-        <?php
-        tutor_utils()->get_lesson_type_icon(get_the_ID(), true, true);
-        the_title(); ?>
+		<?php
+		tutor_utils()->get_lesson_type_icon(get_the_ID(), true, true);
+		the_title(); ?>
     </div>
 
-    <div class="tutor-topbar-item tutor-topbar-mark-to-done" style="width: 150px;"></div>
+    <div class="tutor-topbar-item tutor-topbar-back-to-curse-wrap">
+        <a href="<?php echo get_the_permalink($course->ID); ?>">
+            <i class="tutor-icon-next-2"></i> <?php echo sprintf(__('Go to %s Course Home %s', 'tutor'), '<strong>', '</strong>') ; ?>
+        </a>
+    </div>
 </div>
-
 
 <div class="tutor-quiz-single-wrap ">
     <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">

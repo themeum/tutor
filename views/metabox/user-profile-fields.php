@@ -45,7 +45,7 @@ wp_enqueue_media();
 					}
 					?>
 				</p>
-				<input type="hidden" name="_tutor_profile_photo_field" value="<?php echo $user_profile_photo; ?>">
+				<input type="hidden" name="_tutor_profile_photo" value="<?php echo $user_profile_photo; ?>">
 				<button type="button" class="tutor_video_poster_upload_btn button button-primary"><?php _e('Upload', 'tutor'); ?></button>
 			</div>
 

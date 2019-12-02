@@ -13,26 +13,25 @@
         <label for=""><?php _e('Announcements', 'tutor'); ?></label>
     </div>
     <div class="tutor-option-field">
-        <div class="tutor-announcement-editor tutor-course-builder-form-elem">
-            <?php
-                $editor_settings = array(
-                    'teeny'         => true,
-                    'media_buttons' => false,
-                    'quicktags'     => false,
-                    'editor_height' => 150,
-                    'textarea_name' => 'announcements[content]'
-                );
-                wp_editor(null, 'announcements_content', $editor_settings);
-            ?>
-        </div>
+		<?php
+		$editor_settings = array(
+			'teeny'         => true,
+			'media_buttons' => false,
+			'quicktags'     => false,
+			'editor_height' => 150,
+			'textarea_name' => 'announcements[content]'
+		);
+		wp_editor(null, 'announcements_content', $editor_settings);
+		?>
+
         <p class="desc"><?php _e('available variable', 'tutor'); ?>, {user_display_name}</p>
+
+		<?php
+		submit_button(__('Add Announcement', 'tutor')); ?>
     </div>
 </div>
-<div class="tutor-option-field-row">
-    <div class="submit">
-        <button type="submit" name="submit" id="submit" class="tutor-btn bordered-btn"><i class="tutor-icon-speaker"></i><?php _e('Add Announcement', 'tutor'); ?></button>
-    </div>
-</div>
+
+
 
 
 <?php
@@ -49,7 +48,7 @@ if (is_array($announcements) && count($announcements)){
 
                         <span class="announcement-delete-btn">
                             <a href="<?php echo wp_nonce_url(admin_url('admin.php?action=tutor_delete_announcement&topic_id='.$announcement->ID), tutor()->nonce_action, tutor()->nonce); ?>" title="<?php _e('Delete Announcement'); ?>">
-                                <i class="tutor-icon-garbage"></i>
+                                <i class="dashicons dashicons-trash"></i>
                             </a>
                         </span>
                     </h3>

@@ -50,25 +50,24 @@ class Options {
 			exit();
 		}
 
-		do_action('tutor_option_save_before');
-
 		$option = (array) isset($_POST['tutor_option']) ? $_POST['tutor_option'] : array();
 		$option = apply_filters('tutor_option_input', $option);
 		update_option('tutor_option', $option);
 
-		do_action('tutor_option_save_after');
 		//re-sync settings
-		//init::tutor_activate();
+		init::tutor_activate();
 
 		wp_send_json_success( array('msg' => __('Option Updated', 'tutor') ) );
 	}
-
+	
 	public function options_attr(){
 		$pages = tutor_utils()->get_pages();
 
 		//$course_base = tutor_utils()->course_archive_page_url();
 		$lesson_url = site_url().'/course/'.'sample-course/<code>lessons</code>/sample-lesson/';
+
 		$student_url = tutor_utils()->profile_url();
+
 		$attempts_allowed = array();
 		$attempts_allowed['unlimited'] = __('Unlimited' , 'tutor');
 		$attempts_allowed = array_merge($attempts_allowed, array_combine(range(1,20), range(1,20)));
@@ -81,80 +80,33 @@ class Options {
 						'label' => __('General', 'tutor'),
 						'desc' => __('General Settings', 'tutor'),
 						'fields' => array(
-							'tutor_dashboard_page_id' => array(
-								'type'          => 'select',
-								'label'         => __('Dashboard Page', 'tutor'),
-								'default'       => '0',
-								'options'       => $pages,
-								'desc'          => __('This page will be used for student and instructor dashboard', 'tutor'),
-							),
 							'enable_public_profile' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Public Profile', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
+								'label'     => __('Enable Public Profile', 'tutor'),
 								'default' => '0',
 								'desc'      => __('Enable this to make a profile publicly visible',	'tutor')."<br />" .$student_url,
 							),
 							'load_tutor_css' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Load Tutor CSS', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
-								'default' => '1',
+								'label'     => __('Load Tutor default CSS', 'tutor'),
+								'default'   => '1',
 								'desc'      => __('If your theme has its own styling, then you can turn it off to load CSS from the plugin directory', 'tutor'),
 							),
 							'load_tutor_js' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Load Tutor JavaScript', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
-								'default' => '1',
+								'label'     => __('Load Tutor default JavaScript', 'tutor'),
+								'default'   => '1',
 								'desc'      => __('If you have put required script in your theme javascript file, then you can turn it off to load JavaScript from the plugin directory', 'tutor'),
 							),
 							'student_must_login_to_view_course' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Course Visibility', 'tutor'),
-								'label_title' => __('Logged in only', 'tutor'),
+								'label'     => __('Course Permission', 'tutor'),
 								'desc'      => __('Students must be logged in to view course', 'tutor'),
 							),
 							'delete_on_uninstall' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Erase upon uninstallation', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
-								'desc'      => __('Delete all data during uninstallation', 'tutor'),
-							),
-
-							'enable_spotlight_mode' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Spotlight mode', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
-								'default' => '0',
-								'desc'      => __('This will hide the header and the footer and enable spotlight (full screen) mode when students view lessons.',	'tutor'),
-							),
-							'disable_default_player_youtube' => array(
-								'type'      => 'checkbox',
-								'label'     => __('YouTube Player', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
-								'default' => '0',
-								'desc'      => __('Disable this option to use Tutor LMS video player.',	'tutor'),
-							),
-							'disable_default_player_vimeo' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Vimeo Player', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
-								'default' => '0',
-								'desc'      => __('Disable this option to use Tutor LMS video player.',	'tutor'),
-							),
-							'pagination_per_page' => array(
-								'type'      => 'number',
-								'label'      => __('Pagination', 'tutor'),
-								'default'   => '20',
-								'desc'  => __('Number of items you would like displayed "per page" in the pagination', 'tutor'),
-							),
-							'enable_tutor_maintenance_mode' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Maintenance Mode', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
-								'default'   => '0',
-								'desc'      => __('Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.',	'tutor'),
+								'desc'      => __('Delete all data during uninstall', 'tutor'),
 							),
 						)
 					)
@@ -167,31 +119,16 @@ class Options {
 						'label' => __('General', 'tutor'),
 						'desc' => __('Course Settings', 'tutor'),
 						'fields' => array(
-							'enable_gutenberg_course_edit' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Gutenberg Editor', 'tutor'),
-								'label_title'   => __('Enable', 'tutor'),
-								'desc' => __('Use Gutenberg editor on course description area.', 'tutor'),
-							),
 							'display_course_instructors' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Display Instructor Info', 'tutor'),
-								'label_title'   => __('Enable', 'tutor'),
-								'desc' => __('Show instructor bio on each page', 'tutor'),
+								'label'     => __('Display instructors profile', 'tutor'),
+								'label_title'   => __('Show the instructor profile on course single page.', 'tutor'),
 							),
 							'enable_q_and_a_on_course' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Question and Answer', 'tutor'),
-								'label_title' => __('Enable','tutor'),
+								'label'     => __('Enable Q &amp; A on course', 'tutor'),
 								'default'   => '0',
-								'desc'      => __('Enabling this feature will add a Q&amp;A section on every course.',	'tutor'),
-							),
-							'disable_course_review' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Course review', 'tutor'),
-								'label_title' => __('Disable','tutor'),
-								'default'   => '0',
-								'desc'      => __('Disabling this feature will be removed course review system from the course page.',	'tutor'),
+								'desc'      => __('Allow student to place their questions and answers on the course page, only enrolled student can do this',	'tutor'),
 							),
 						),
 					),
@@ -204,14 +141,14 @@ class Options {
 								'label'     => __('Course Archive Page', 'tutor'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('This page will be used to list all the published courses.',	'tutor'),
+								'desc'      => __('Choose the page from the dropdown list where you want to show all of the courses',	'tutor'),
 							),
 							'courses_col_per_row' => array(
 								'type'      => 'slider',
 								'label'     => __('Column per row', 'tutor'),
 								'default'   => '4',
 								'options'   => array('min'=> 1, 'max' => 6),
-								'desc'      => __('Define how many column you want to use to display courses.', 'tutor'),
+								'desc'      => __('Define how many column you want to show on the course single page', 'tutor'),
 							),
 							'courses_per_page' => array(
 								'type'      => 'slider',
@@ -231,19 +168,15 @@ class Options {
 						'label' => __('Lesson Settings', 'tutor'),
 						'desc' => __('Lesson settings will be here', 'tutor'),
 						'fields' => array(
-							'enable_lesson_classic_editor' => array(
-								'type'          => 'checkbox',
-								'label'         => __('Classic Editor', 'tutor'),
-								'label_title'   => __('Enable', 'tutor'),
-								'desc'          => __('Enable classic editor to get full support of any editor/page builder.', 'tutor'),
-							),
 							'lesson_permalink_base' => array(
 								'type'      => 'text',
 								'label'     => __('Lesson Permalink Base', 'tutor'),
 								'default'   => 'lessons',
 								'desc'      => $lesson_url,
 							),
+
 						),
+
 					),
 
 				),
@@ -258,7 +191,7 @@ class Options {
 							'quiz_time_limit' => array(
 								'type'      => 'group_fields',
 								'label'     => __('Time Limit', 'tutor'),
-								'desc'      => __('0 means unlimited time.', 'tutor'),
+								'desc'      => __('Default time limit for quizzes. 0 means no time limit.', 'tutor'),
 								'group_fields'  => array(
 									'value' => array(
 										'type'      => 'text',
@@ -278,27 +211,30 @@ class Options {
 									),
 								),
 							),
+
 							'quiz_when_time_expires' => array(
 								'type'      => 'radio',
 								'label'      => __('When time expires', 'tutor'),
 								'default'   => 'minutes',
 								'select_options'   => false,
 								'options'   => array(
-									'autosubmit'    =>  __('The current quiz answers are submitted automatically.', 'tutor'),
-									'graceperiod'   =>  __('The current quiz answers are submitted by students.', 'tutor'),
+									'autosubmit'    =>  __('Current attempts are submitted automatically', 'tutor'),
+									'graceperiod'   =>  __('There is a grace period when current attempts can be submitted, but no more questions answered', 'tutor'),
 									'autoabandon'   =>  __('Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor'),
 								),
-								'desc'  => __('Choose which action to follow when the quiz time expires.', 'tutor'),
+								'desc'  => __('What should happen by default if a student does not submit the quiz before time expires.', 'tutor'),
 							),
+
 							'quiz_attempts_allowed' => array(
 								'type'      => 'number',
 								'label'      => __('Attempts allowed', 'tutor'),
 								'default'   => '10',
-								'desc'  => __('The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor'),
+								'desc'  => __('Restriction on the number of attempts students are allowed to take for a quiz. 0 for no limit', 'tutor'),
 							),
+
 							'quiz_grade_method' => array(
 								'type'      => 'select',
-								'label'      => __('Final grade calculation', 'tutor'),
+								'label'      => __('Grading method', 'tutor'),
 								'default'   => 'minutes',
 								'select_options'   => false,
 								'options'   => array(
@@ -320,38 +256,24 @@ class Options {
 						'label' => __('Instructor Profile Settings', 'tutor'),
 						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
 						'fields' => array(
-							'enable_course_marketplace' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Course Marketplace', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
-								'default' => '0',
-								'desc'      => __('Allow multiple instructors to upload their courses.',	'tutor'),
-							),
 							'instructor_register_page' => array(
 								'type'      => 'select',
-								'label'     => __('Instructor Registration Page', 'tutor'),
+								'label'     => __('Instructor Register Page', 'tutor'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('This page will be used to sign up new instructors.', 'tutor'),
+								'desc'      => __('This will be instructor register page', 'tutor'),
 							),
 							'instructor_can_publish_course' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Allow publishing course', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
+								'label'     => __('Can publish course', 'tutor'),
 								'default' => '0',
-								'desc'      => __('Enable instructors to publish course directly. <strong>Do not select</strong> if admins want to review courses before publishing.',	'tutor'),
-							),
-							'enable_become_instructor_btn' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Become Instructor Button', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
-								'default' => '0',
-								'desc'      => __('Uncheck this option to hide the button from student dashboard.',	'tutor'),
+								'desc'      => __('Define if a instructor can publish his courses directly or not, if unchecked, they can still add courses, but it will go to admin for review',	'tutor'),
 							),
 						),
 					),
 				),
 			),
+
 			'students' => array(
 				'label'     => __('Students', 'tutor'),
 				'sections'    => array(
@@ -361,195 +283,44 @@ class Options {
 						'fields' => array(
 							'student_register_page' => array(
 								'type'          => 'select',
-								'label'         => __('Student Registration Page', 'tutor'),
+								'label'         => __('Student Register Page', 'tutor'),
 								'default'       => '0',
 								'options'       => $pages,
 								'desc'          => __('Choose the page for student registration page', 'tutor'),
 							),
+							'student_dashboard' => array(
+								'type'          => 'select',
+								'label'         => __('Student Dashboard', 'tutor'),
+								'default'       => '0',
+								'options'       => $pages,
+								'desc'          => __('This page will show students related stuff, like my courses, order, etc', 'tutor'),
+							),
+
 							'students_own_review_show_at_profile' => array(
 								'type'          => 'checkbox',
 								'label'         => __('Show reviews on profile', 'tutor'),
-								'label_title'   => __('Enable', 'tutor'),
+								'label_title'   => __('Enable students review on their profile', 'tutor'),
 								'default'       => '0',
-								'desc'          => __('Enabling this will show the reviews written by each student on their profile', 'tutor')."<br />" .$student_url,
+								'desc'          => __('Enabling this will allow the reviews written by each individual students on their profile',	'tutor')."<br />" .$student_url,
 							),
 							'show_courses_completed_by_student' => array(
 								'type'          => 'checkbox',
-								'label'         => __('Show completed courses', 'tutor'),
-								'label_title'   => __('Enable', 'tutor'),
+								'label'         => __('Show Completed Course', 'tutor'),
 								'default'       => '0',
-								'desc'          => __('Completed courses will be shown on student profiles. <br/> For example, you can see this link-',	'tutor').$student_url,
+								'desc'          => __('Completed courses will be show on student profile',	'tutor')."<br />".$student_url,
 							),
+
 						),
 					),
 				),
 			),
-			'tutor_earning' => array(
-				'label'     => __('Earning', 'tutor'),
-				'sections'    => array(
-					'general' => array(
-						'label' => __('Earning and commission allocation', 'tutor'),
-						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
-						'fields' => array(
-							'enable_tutor_earning' => array(
-								'type'          => 'checkbox',
-								'label'         => __('Earning', 'tutor'),
-								'label_title'   => __('Enable', 'tutor'),
-								'default'       => '0',
-								'desc'          => __('If disabled, the Admin will receive 100% of the earning',	'tutor'),
-							),
-							'earning_admin_commission' => array(
-								'type'      => 'number',
-								'label'      => __('Admin Commission Percentage', 'tutor'),
-								'default'   => '20',
-								'desc'  => __('Define the commission of the Admin from each sale.(after deducting fees)', 'tutor'),
-							),
-							'earning_instructor_commission' => array(
-								'type'      => 'number',
-								'label'      => __('Instructor Commission Percentage', 'tutor'),
-								'default'   => '80',
-								'desc'  => __('Define the commission for instructors from each sale.(after deducting fees)', 'tutor'),
-							),
-							'tutor_earning_fees' => array(
-								'type'      => 'group_fields',
-								'label'     => __('Fee Deduction', 'tutor'),
-								'desc'      => __('Fees are charged from the entire sales amount. The remaining amount will be divided among admin and instructors.',	'tutor'),
-								'group_fields'  => array(
 
-									'enable_fees_deducting' => array(
-										'type'          => 'checkbox',
-										'label'         => __('Enable', 'tutor'),
-										'default'       => '0',
-									),
-									'fees_name' => array(
-										'type'      => 'text',
-										'label'         => __('Fee Name', 'tutor'),
-										'default'   => '',
-									),
-									'fees_amount' => array(
-										'type'      => 'number',
-										'label'         => __('Fee Amount', 'tutor'),
-										'default'   => '',
-									),
-									'fees_type' => array(
-										'type'      => 'select',
-										'default'   => 'minutes',
-										'select_options'   => false,
-										'options'   => array(
-											''     =>  __('Select Fees Type', 'tutor'),
-											'percent'     =>  __('Percent', 'tutor'),
-											'fixed'      =>  __('Fixed', 'tutor'),
-										),
-									),
-
-								),
-							),
-							'statement_show_per_page' => array(
-								'type'      => 'number',
-								'label'      => __('Show Statement Per Page', 'tutor'),
-								'default'   => '20',
-								'desc'  => __('Define the number of statements to show.', 'tutor'),
-							),
-						),
-					),
-				),
-			),
-			'tutor_withdraw' => array(
-				'label'     => __('Withdraw', 'tutor'),
-				'sections'    => array(
-					'general' => array(
-						'label' => __('Withdrawal Settings', 'tutor'),
-						'fields' => array(
-							'min_withdraw_amount' => array(
-								'type'      => 'number',
-								'label'     => __('Minimum Withdraw Amount', 'tutor'),
-								'default'   => '80',
-								'desc'      => __('Instructors should earn equal or above this amount to make a withdraw request.',	'tutor'),
-							),
-						),
-					),
-
-					'withdraw_methods' => array(
-						'label' => __('Withdraw Methods', 'tutor'),
-						'desc' => __('Set withdraw settings', 'tutor'),
-					),
-				),
-			),
-
-			'tutor_style' => array(
-				'label'     => __('Style', 'tutor'),
-				'sections'    => array(
-					'general' => array(
-						'label' => __('Color Style', 'tutor'),
-						'fields' => array(
-							'tutor_primary_color' => array(
-								'type'      => 'color',
-								'label'     => __('Primary Color', 'tutor'),
-								'default'   => '',
-							),
-							'tutor_primary_hover_color' => array(
-								'type'      => 'color',
-								'label'     => __('Primary Hover Color', 'tutor'),
-								'default'   => '',
-							),
-							'tutor_text_color' => array(
-								'type'      => 'color',
-								'label'     => __('Text color', 'tutor'),
-								'default'   => '',
-							),
-							'tutor_light_color' => array(
-								'type'      => 'color',
-								'label'     => __('Light color', 'tutor'),
-								'default'   => '',
-							),
-						),
-					),
-
-				),
-			),
-
-			'monetization' => array(
-				'label' => __('Monetization', 'tutor'),
-				'sections'    => array(
-					'general' => array(
-						'label' => __('Monetization', 'tutor'),
-						'desc' => __('You can monetize your LMS website by selling courses in a various way.', 'tutor'),
-						'fields' => array(
-
-							'monetize_by' => array(
-								'type'      => 'radio',
-								'label'      => __('Monetize Option', 'tutor'),
-								'default'   => 'free',
-								'select_options'   => false,
-								'options'   => apply_filters('tutor_monetization_options', array(
-									'free'          =>  __('Disable Monetization', 'tutor'),
-								)),
-								'desc'  => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro',	'tutor'),
-							),
-
-						)
-					)
-				),
-			),
 
 		);
 
-		$attrs = apply_filters('tutor/options/attr', $attr);
-		$extends = apply_filters('tutor/options/extend/attr', array());
-
-		if (tutils()->count($extends)){
-			foreach ($extends as $extend_key => $extend_option){
-				if (isset($attrs[$extend_key])&& tutils()->count($extend_option['sections']) ){
-					$sections = $attrs[$extend_key]['sections'];
-					$sections = array_merge($sections, $extend_option['sections']);
-					$attrs[$extend_key]['sections'] = $sections;
-				}
-			}
-		}
-
-		return $attrs;
-
+		return apply_filters('tutor/options/attr', $attr);
 	}
+
 
 	/**
 	 * @param array $field
@@ -575,5 +346,7 @@ class Options {
 		include tutor()->path.'views/options/options_generator.php';
 		return ob_get_clean();
 	}
+
+
 
 }

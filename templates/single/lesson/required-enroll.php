@@ -1,13 +1,11 @@
 <?php
+
 /**
  * Display single login
  *
  * @since v.1.0.0
  * @author themeum
  * @url https://themeum.com
- *
- * @package TutorLMS/Templates
- * @version 1.4.3
  */
 
 if ( ! defined( 'ABSPATH' ) )
@@ -27,7 +25,7 @@ get_header();
 				?>
 
                 <h2><?php _e('Please enroll This course first', 'tutor'); ?></h2>
-                <h3> <?php echo sprintf(__('Course name : %s'), 'tutor'), get_the_title($course_id); ?> </h3>
+                <h3> <?php _e(sprintf('Course name : %s', get_the_title($course_id)), 'tutor'); ?> </h3>
                 <a href="<?php echo get_permalink($course_id); ?>" class="tutor-button"><?php _e('View Course', 'tutor'); ?></a>
             </div>
         </div>

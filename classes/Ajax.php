@@ -20,13 +20,6 @@ class Ajax{
 		 * Addon Enable Disable Control
 		 */
 		add_action('wp_ajax_addon_enable_disable', array($this, 'addon_enable_disable'));
-
-		/**
-		 * Update Rating/review
-		 * @since  v.1.4.0
-		 */
-		add_action('wp_ajax_tutor_load_edit_review_modal', array($this, 'tutor_load_edit_review_modal'));
-		add_action('wp_ajax_tutor_update_review_modal', array($this, 'tutor_update_review_modal'));
 	}
 
 	/**
@@ -86,7 +79,7 @@ class Ajax{
 
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
-		$date = date("Y-m-d H:i:s", tutor_time());
+		$date = date("Y-m-d H:i:s");
 
 		do_action('tutor_before_rating_placed');
 
@@ -97,13 +90,9 @@ class Ajax{
 			$wpdb->update( $wpdb->comments, array('comment_content' => $review),
 				array('comment_ID' => $previous_rating_id)
 			);
-
-			$rating_info = $wpdb->get_row("SELECT * FROM {$wpdb->commentmeta} WHERE comment_id = {$previous_rating_id} AND meta_key = 'tutor_rating'; ");
-			if ($rating_info){
-				$wpdb->update( $wpdb->commentmeta, array('meta_value' => $rating), array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating') );
-			}else{
-				$wpdb->insert( $wpdb->commentmeta, array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating', 'meta_value' => $rating) );
-			}
+			$wpdb->update( $wpdb->commentmeta, array('meta_value' => $rating),
+				array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating')
+			);
 		}else{
 			$data = array(
 				'comment_post_ID'   => $course_id,
@@ -153,7 +142,7 @@ class Ajax{
 
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
-		$date = date("Y-m-d H:i:s", tutor_time());
+		$date = date("Y-m-d H:i:s");
 
 		do_action('tutor_before_add_question', $course_id);
 		$data = apply_filters('tutor_add_question_data', array(
@@ -198,7 +187,7 @@ class Ajax{
 
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
-		$date = date("Y-m-d H:i:s", tutor_time());
+		$date = date("Y-m-d H:i:s");
 
 		do_action('tutor_before_answer_to_question');
 		$data = apply_filters('tutor_add_answer_data', array(
@@ -236,7 +225,7 @@ class Ajax{
 			$wpdb->delete($wpdb->usermeta, array('user_id' => $user_id, 'meta_key' => '_tutor_course_wishlist', 'meta_value' => $course_id ));
 			wp_send_json_success(array('status' => 'removed', 'msg' => __('Course removed from wish list', 'tutor')));
 		}else{
-			add_user_meta($user_id, '_tutor_course_wishlist', $course_id);
+			update_user_meta($user_id, '_tutor_course_wishlist', $course_id);
 			wp_send_json_success(array('status' => 'added', 'msg' => __('Course added to wish list', 'tutor')));
 		}
 	}
@@ -250,69 +239,15 @@ class Ajax{
 		$isEnable = (bool) sanitize_text_field(tutor_utils()->avalue_dot('isEnable', $_POST));
 		$addonFieldName = sanitize_text_field(tutor_utils()->avalue_dot('addonFieldName', $_POST));
 
-		do_action('tutor_addon_before_enable_disable');
 		if ($isEnable){
-			do_action("tutor_addon_before_enable_{$addonFieldName}");
-			do_action('tutor_addon_before_enable', $addonFieldName);
 			$addonsConfig[$addonFieldName]['is_enable'] = 1;
-			update_option('tutor_addons_config', $addonsConfig);
-
-			do_action('tutor_addon_after_enable', $addonFieldName);
-			do_action("tutor_addon_after_enable_{$addonFieldName}");
 		}else{
-			do_action("tutor_addon_before_disable_{$addonFieldName}");
-			do_action('tutor_addon_before_disable', $addonFieldName);
 			$addonsConfig[$addonFieldName]['is_enable'] = 0;
-			update_option('tutor_addons_config', $addonsConfig);
-
-			do_action('tutor_addon_after_disable', $addonFieldName);
-			do_action("tutor_addon_after_disable_{$addonFieldName}");
 		}
 
-		do_action('tutor_addon_after_enable_disable');
+		update_option('tutor_addons_config', $addonsConfig);
+
 		wp_send_json_success();
-	}
-
-
-	/**
-	 * Load review edit form
-	 * @since v.1.4.0
-	 */
-	public function tutor_load_edit_review_modal(){
-		tutor_utils()->checking_nonce();
-
-		$review_id = (int) sanitize_text_field(tutils()->array_get('review_id', $_POST));
-		$rating = tutils()->get_rating_by_id($review_id);
-
-		ob_start();
-		tutor_load_template('dashboard.reviews.edit-review-form', array('rating' => $rating));
-		$output = ob_get_clean();
-
-		wp_send_json_success(array('output' => $output));
-	}
-
-	public function tutor_update_review_modal(){
-		global $wpdb;
-
-		tutor_utils()->checking_nonce();
-
-		$review_id = (int) sanitize_text_field(tutils()->array_get('review_id', $_POST));
-		$rating = sanitize_text_field(tutor_utils()->avalue_dot('rating', $_POST));
-		$review = wp_kses_post(tutor_utils()->avalue_dot('review', $_POST));
-
-		$is_exists = $wpdb->get_var("select comment_ID from {$wpdb->comments} WHERE comment_ID={$review_id} AND comment_type = 'tutor_course_rating' ;");
-
-		if ( $is_exists) {
-			$wpdb->update( $wpdb->comments, array( 'comment_content' => $review ),
-				array( 'comment_ID' => $review_id )
-			);
-			$wpdb->update( $wpdb->commentmeta, array( 'meta_value' => $rating ),
-				array( 'comment_id' => $review_id, 'meta_key' => 'tutor_rating' )
-			);
-
-			wp_send_json_success();
-		}
-		wp_send_json_error();
 	}
 
 }
