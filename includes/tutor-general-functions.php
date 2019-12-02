@@ -426,10 +426,82 @@ if ( ! function_exists('get_item_content_drip_settings')){
  */
 if ( ! function_exists('tutor_alert')){
 	function tutor_alert($msg = null, $type = 'warning', $echo = true){
+	    if ( ! $msg){
+	        $msg = tutor_flash_get($type);
+        }
+        if ( ! $msg){
+	        return $msg;
+        }
+
 		$html = "<div class='tutor-alert tutor-alert-{$type}'>{$msg}</div>";
 		if ($echo){
 			echo $html;
 		}
 		return $html;
+	}
+}
+
+
+/**
+ * @param bool $echo
+ *
+ * Simply call tutor_nonce_field() to generate nonce field
+ *
+ * @since v.1.4.2
+ */
+
+if ( ! function_exists('tutor_nonce_field')) {
+	function tutor_nonce_field( $echo = true ) {
+		wp_nonce_field( tutor()->nonce_action, tutor()->nonce, $echo );
+	}
+}
+
+/**
+ * @param null $key
+ * @param string $message
+ *
+ * Set Flash Message
+ */
+
+if ( ! function_exists('tutor_flash_set')) {
+	function tutor_flash_set( $key = null, $message = '' ) {
+		if ( ! $key ) {
+			return;
+		}
+		// ensure session is started
+		if ( session_status() !== PHP_SESSION_ACTIVE ) {
+			session_start();
+		}
+		$_SESSION[ $key ] = $message;
+	}
+}
+
+/**
+ * @param null $key
+ *
+ * @return array|bool|mixed|null
+ *
+ * @since v.1.4.2
+ *
+ * Get flash message
+ */
+
+if ( ! function_exists('tutor_flash_get')) {
+	function tutor_flash_get( $key = null ) {
+		if ( $key ) {
+			// ensure session is started
+			if ( session_status() !== PHP_SESSION_ACTIVE ) {
+				session_start();
+			}
+			if ( empty( $_SESSION ) ) {
+				return null;
+			}
+			$message = tutils()->array_get( $key, $_SESSION );
+			if ( $message ) {
+				unset( $_SESSION[ $key ] );
+			}
+			return $message;
+		}
+		return $key;
 	}
 }

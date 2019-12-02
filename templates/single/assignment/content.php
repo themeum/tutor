@@ -26,10 +26,7 @@ global $wpdb;
 			tutor_utils()->get_lesson_type_icon(get_the_ID(), true, true);
 			the_title(); ?>
         </div>
-
     </div>
-
-
 
     <div class="tutor-lesson-content-area">
         <div class="tutor-assignment-title">
@@ -37,15 +34,15 @@ global $wpdb;
         </div>
 
         <div class="tutor-assignment-information">
-            <?php
-                $time_duration = tutor_utils()->get_assignment_option(get_the_ID(), 'time_duration');
-                $total_mark = tutor_utils()->get_assignment_option(get_the_ID(), 'total_mark');
-                $pass_mark = tutor_utils()->get_assignment_option(get_the_ID(), 'pass_mark');
-            ?>
+			<?php
+			$time_duration = tutor_utils()->get_assignment_option(get_the_ID(), 'time_duration');
+			$total_mark = tutor_utils()->get_assignment_option(get_the_ID(), 'total_mark');
+			$pass_mark = tutor_utils()->get_assignment_option(get_the_ID(), 'pass_mark');
+			?>
 
             <ul>
                 <li>
-                    <?php _e('Time Duration : ') ?>
+					<?php _e('Time Duration : ', 'tutor') ?>
                     <strong><?php echo $time_duration["value"] ? $time_duration["value"] . ' ' .$time_duration["time"] : __('No limit', 'tutor'); ?></strong>
                 </li>
                 <!--<li>
@@ -53,11 +50,11 @@ global $wpdb;
                     <strong><?php /*echo "7 Days, 12 Hour"; */?></strong>
                 </li>-->
                 <li>
-                    <?php _e('Total Points : ') ?>
+					<?php _e('Total Points : ', 'tutor') ?>
                     <strong><?php echo $total_mark; ?></strong>
                 </li>
                 <li>
-                    <?php _e('Minimum Pass Points : ') ?>
+					<?php _e('Minimum Pass Points : ', 'tutor') ?>
                     <strong><?php echo $pass_mark; ?></strong>
                 </li>
             </ul>
@@ -68,47 +65,40 @@ global $wpdb;
         <div class="tutor-assignment-content">
             <h2><?php _e('Description', 'tutor'); ?></h2>
 
-            <?php the_content(); ?>
+			<?php the_content(); ?>
         </div>
 
-
-	    <?php
-        $assignment_attachments = maybe_unserialize(get_post_meta(get_the_ID(),'_tutor_assignment_attachments', true));
-	    if (tutor_utils()->count($assignment_attachments)){
-		    ?>
+		<?php
+		$assignment_attachments = maybe_unserialize(get_post_meta(get_the_ID(),'_tutor_assignment_attachments', true));
+		if (tutor_utils()->count($assignment_attachments)){
+			?>
             <div class="tutor-assignment-attachments">
                 <h2><?php _e('Attachments', 'tutor'); ?></h2>
-			    <?php
-			    foreach ($assignment_attachments as $attachment_id){
-				    if ($attachment_id) {
+				<?php
+				foreach ($assignment_attachments as $attachment_id){
+					if ($attachment_id) {
 
-					    $attachment_name =  get_post_meta( $attachment_id, '_wp_attached_file', true );
-					    $attachment_name = substr($attachment_name, strrpos($attachment_name, '/')+1);
-					    ?>
+						$attachment_name =  get_post_meta( $attachment_id, '_wp_attached_file', true );
+						$attachment_name = substr($attachment_name, strrpos($attachment_name, '/')+1);
+						?>
                         <p class="attachment-file-name">
                             <a href="<?php echo wp_get_attachment_url($attachment_id); ?>" target="_blank">
                                 <i class="tutor-icon-attach"></i> <?php echo $attachment_name; ?>
                             </a>
                         </p>
-					    <?php
-				    }
-			    }
-			    ?>
+						<?php
+					}
+				}
+				?>
             </div>
-		    <?php
-	    }
-	    ?>
+			<?php
+		}
 
-
-
-
-        <?php
 		$is_submitting = tutor_utils()->is_assignment_submitting(get_the_ID());
 		if ($is_submitting){
 			?>
 
             <div class="tutor-assignment-submit-form-wrap">
-
                 <h2><?php _e('Assignment answer form', 'tutor'); ?></h2>
 
                 <form action="" method="post" id="tutor_assignment_submit_form" enctype="multipart/form-data">
@@ -117,7 +107,6 @@ global $wpdb;
                     <input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 
 					<?php $allowd_upload_files = (int) tutor_utils()->get_assignment_option(get_the_ID(), 'upload_files_limit'); ?>
-
 
                     <div class="tutor-form-group">
                         <p><?php _e('Write your answer briefly', 'tutor'); ?></p>
@@ -129,28 +118,24 @@ global $wpdb;
 					<?php if ($allowd_upload_files){ ?>
                         <p><?php _e('Attach assignment files', 'tutor'); ?></p>
                         <div class="tutor-assignment-attachment-upload-wrap">
-
-                            <?php
-                            for ($item = 1; $item <= $allowd_upload_files; $item++){
-                                ?>
-                                    <div class="tutor-form-group">
-                                        <label for="tutor-assignment-input-<?php echo $item; ?>"><i class="tutor-icon-upload-file"></i><span><?php _e('Upload file', 'tutor'); ?></span></label>
-                                        <input class="tutor-assignment-file-upload"  id="tutor-assignment-input-<?php echo $item; ?>" type="file" name="attached_assignment_files[]">
-                                    </div>
-                                <?php
-                            }
-                            ?>
-
+							<?php
+							for ($item = 1; $item <= $allowd_upload_files; $item++){
+								?>
+                                <div class="tutor-form-group">
+                                    <label for="tutor-assignment-input-<?php echo $item; ?>"><i class="tutor-icon-upload-file"></i><span><?php _e('Upload file', 'tutor'); ?></span></label>
+                                    <input class="tutor-assignment-file-upload"  id="tutor-assignment-input-<?php echo $item; ?>" type="file" name="attached_assignment_files[]">
+                                </div>
+								<?php
+							}
+							?>
                         </div>
-                        <?php
+						<?php
 					}
 					?>
-
                     <div class="tutor-assignment-submit-btn-wrap">
                         <button type="submit" class="tutor-button tutor-success" id="tutor_assignment_submit_btn"> <?php _e('Submit Assignment', 'tutor');
 							?> </button>
                     </div>
-
                 </form>
 
             </div>
@@ -163,17 +148,20 @@ global $wpdb;
 				$is_reviewed_by_instructor = get_comment_meta($submitted_assignment->comment_ID, 'evaluate_time', true);
 
 				if ($is_reviewed_by_instructor){
+					$assignment_id = $submitted_assignment->comment_post_ID;
+					$submit_id = $submitted_assignment->comment_ID;
+
 					$max_mark = tutor_utils()->get_assignment_option($submitted_assignment->comment_post_ID, 'total_mark');
 					$pass_mark = tutor_utils()->get_assignment_option($submitted_assignment->comment_post_ID, 'pass_mark');
 					$given_mark = get_comment_meta($submitted_assignment->comment_ID, 'assignment_mark', true);
 					?>
 
+					<?php ob_start(); ?>
+
                     <div class="assignment-result-wrap">
                         <h4><?php echo sprintf(__('You received %s points out of %s', 'tutor'), "<span class='received-marks'>{$given_mark}</span>", "<span class='out-of-marks'>{$max_mark}</span>") ?></h4>
                         <h4 class="submitted-assignment-grade">
-							<?php _e('Your Grade is '); ?>
-
-
+							<?php _e('Your Grade is ', 'tutor'); ?>
 							<?php if ($given_mark >= $pass_mark){
 								?>
                                 <span class="submitted-assignment-grade-pass">
@@ -189,6 +177,9 @@ global $wpdb;
 							} ?>
                         </h4>
                     </div>
+
+					<?php echo apply_filters('tutor_assignment/single/results/after', ob_get_clean(), $submit_id, $assignment_id ); ?>
+
 				<?php } ?>
 
 
@@ -196,12 +187,9 @@ global $wpdb;
 
                     <h2><?php _e('Your Answers', 'tutor'); ?></h2>
 
-					<?php echo nl2br(stripslashes($submitted_assignment->comment_content)); ?>
-
-					<?php
+					<?php echo nl2br(stripslashes($submitted_assignment->comment_content));
 
 					$attached_files = get_comment_meta($submitted_assignment->comment_ID, 'uploaded_attachments', true);
-
 					if ($attached_files){
 						$attached_files = json_decode($attached_files, true);
 
@@ -224,31 +212,22 @@ global $wpdb;
 								<?php
 							}
 						}
-
 					}
-
 
 					if ($is_reviewed_by_instructor){
 						?>
 
                         <div class="instructor-note-wrap">
                             <h2><?php _e('Instructor Note', 'tutor'); ?></h2>
-
                             <p><?php echo nl2br(get_comment_meta($submitted_assignment->comment_ID,'instructor_note', true)) ?></p>
                         </div>
 						<?php
 					}
-
 					?>
-
                 </div>
-
-
 
 				<?php
 			}else {
-
-
 				?>
 
                 <div class="tutor-assignment-start-btn-wrap">
@@ -260,15 +239,10 @@ global $wpdb;
                         <button type="submit" class="tutor-button" id="tutor_assignment_start_btn"> <?php _e( 'Start assignment submit', 'tutor' ); ?> </button>
                     </form>
                 </div>
-
 				<?php
 			}
 		}
 		?>
-
-
-
-
     </div>
 
 <?php do_action('tutor_assignment/single/after/content'); ?>

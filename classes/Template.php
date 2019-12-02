@@ -144,7 +144,10 @@ class Template extends Tutor_Base {
 				//If Course Subpage Exists
 				if ( is_user_logged_in() ) {
 					$course_subpage = $wp_query->query_vars['course_subpage'];
-					$template = tutor_get_template( 'single-course-enrolled-'.$course_subpage);
+					$template = tutor_get_template_path( 'single-course-enrolled-' . $course_subpage );
+					if ( ! file_exists( $template ) ) {
+						$template = tutor_get_template( 'single-course-enrolled-subpage' );
+					}
 				}else{
 					$template = tutor_get_template('login');
 				}

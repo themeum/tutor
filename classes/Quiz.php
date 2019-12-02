@@ -311,7 +311,7 @@ class Quiz {
 	}
 
 	public function answering_quiz(){
-		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_answering_quiz_question' ){
+		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_answering_quiz_question' ){
 			return;
 		}
 		//Checking nonce
@@ -327,6 +327,8 @@ class Quiz {
 
 		global $wpdb;
 		$user_id = get_current_user_id();
+
+		do_action('tutor_quiz/attempt_analysing/before', $attempt_id);
 
 		if ($attempt_answers && is_array($attempt_answers) && count($attempt_answers)){
 		    foreach ($attempt_answers as $attempt_id => $attempt_answers){
@@ -437,6 +439,8 @@ class Quiz {
                 );
 			    $wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_info, array('attempt_id' => $attempt_id));
             }
+
+            do_action('tutor_quiz/attempt_ended', $attempt_id);
         }
 
 		wp_redirect(get_the_permalink($attempt->quiz_id));

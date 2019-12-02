@@ -18,4 +18,3 @@ if ( ! isset($field['group_fields']) || ! is_array($field['group_fields']) || ! 
 	}
 	?>
 </div>
-

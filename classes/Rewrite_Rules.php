@@ -50,6 +50,7 @@ class Rewrite_Rules extends Tutor_Base {
 
 		//Nav Items
 		$course_nav_items = tutor_utils()->course_sub_pages();
+		$course_nav_items = apply_filters('tutor_course/single/enrolled/nav_items_rewrite', $course_nav_items);
 		//$course_nav_items = array_keys($course_nav_items);
 
 		if (is_array($course_nav_items) && count($course_nav_items)){

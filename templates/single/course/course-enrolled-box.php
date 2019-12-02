@@ -27,8 +27,9 @@ global $wp_query;
     </div>
 
     <div class="tutor-lead-info-btn-group">
-        <?php
+	    <?php do_action('tutor_course/single/actions_btn_group/before'); ?>
 
+        <?php
         if ( $wp_query->query['post_type'] !== 'lesson') {
             $lesson_url = tutor_utils()->get_course_first_lesson();
             $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
@@ -46,6 +47,8 @@ global $wp_query;
         }
         ?>
         <?php tutor_course_mark_complete_html(); ?>
+
+        <?php do_action('tutor_course/single/actions_btn_group/after'); ?>
     </div>
 
 

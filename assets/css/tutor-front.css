@@ -689,6 +689,11 @@ body {
   align-items: flex-start;
 }
 
+table.course-single-gradebooks .datetime {
+  margin: 0;
+  font-size: 80%;
+}
+
 /* ***********************      */
 /* Single Lesson  */
 /************************       */
@@ -1082,6 +1087,10 @@ span.toogle-informaiton-icon {
   .tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i {
     font-size: 19px;
   }
+}
+
+.sidebar-hidden a.tutor-lesson-sidebar-hide-bar .tutor-icon-angle-left:before {
+  content: "\e903";
 }
 
 .tutor-sidebar-tabs-wrap {
@@ -2957,6 +2966,20 @@ a.tutor-btn.bordered-btn:hover,
   background-color: var(--tutor-primary-color);
 }
 
+a.tutor-button.button-light,
+.tutor-button.button-light {
+  color: #B1B8C9;
+  background-color: #DAE4E6;
+  border: 1px solid #DAE4E6;
+}
+
+a.tutor-button.button-light:hover,
+.tutor-button.button-light:hover {
+  color: #939BAE;
+  background-color: #E8EFF1;
+  border: 1px solid #E8EFF1;
+}
+
 .tutor-button.tutor-danger {
   background-color: #E53935;
   border-color: #E53935;
@@ -2984,6 +3007,14 @@ a.tutor-btn.bordered-btn:hover,
 .course-enrolled-nav-wrap {
   border-bottom: 1px solid #dedfe0;
   margin-bottom: 45px;
+}
+
+.tutor-button-block {
+  width: 100%;
+  text-align: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .tutor-wrap {
@@ -6297,6 +6328,102 @@ END Content Drip
 
 /**
 END Alert CSS
+ */
+/**
+GradeBook
+ */
+.gradename-bg {
+  text-align: center;
+  color: #ffffff;
+  height: 32px;
+  min-width: 32px;
+  font-size: 16px;
+  line-height: 32px;
+  padding: 0 8px;
+  display: inline-block;
+  border-radius: 20px;
+  font-weight: bold;
+  margin-right: 7px;
+}
+
+.gradename-outline {
+  text-align: center;
+  height: 32px;
+  min-width: 32px;
+  font-size: 16px;
+  line-height: 26px;
+  padding: 0 8px;
+  display: inline-block;
+  border-radius: 20px;
+  border: 2px solid;
+  margin-right: 7px;
+}
+
+.generate-course-gradebook-btn-wrap {
+  margin: 10px 0;
+}
+
+.gradebook-result-for-label {
+  margin: 0;
+  padding: 4px 7px;
+  background-color: #E8EFF1;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+table.course-single-gradebooks {
+  border-spacing: 0;
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #dcdfe5;
+}
+
+table.course-single-gradebooks th {
+  padding: 1em 1.41575em;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #dcdfe5;
+}
+
+table.course-single-gradebooks th {
+  font-weight: 600;
+}
+
+table.course-single-gradebooks thead th {
+  background-color: rgba(220, 223, 229, 0.14);
+  padding: 1.41575em;
+  vertical-align: middle;
+}
+
+table.course-single-gradebooks tbody td {
+  border-bottom: 1px solid #dcdfe5;
+  background-color: #ffffff !important;
+}
+
+table.course-single-gradebooks a {
+  color: #4B5981;
+}
+
+.text-label {
+  margin: 0;
+  padding: 4px 7px;
+  background-color: #E8EFF1;
+  display: inline-block;
+  border-radius: 3px;
+}
+
+.text-label.submitted-assignment-grade-pass {
+  background-color: #86B223;
+  color: #ffffff;
+}
+
+.text-label.submitted-assignment-grade-failed {
+  background-color: #D71830;
+  color: #ffffff;
+}
+
+/**
+* END Gradebook
  */
 /* *********************** */
 /* Tutor Dashboard */

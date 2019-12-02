@@ -22,52 +22,56 @@ class Addons {
 
 	public function tutor_addons_lists_to_show(){
 		$addons = array(
+			'gradebook'     => array(
+				'name'          => __('Gradebook', 'tutor'),
+				'description'   => 'Shows student progress from assignment and quiz',
+			),
 			'content-drip'  => array(
-				'name'          => __('Content Drip', 'tutor-pmpro'),
+				'name'          => __('Content Drip', 'tutor'),
 				'description'   => 'Unlock lessons by schedule or when the student meets specific condition.',
 			),
 			'enrollments'       => array(
-				'name'          => __('Enrollments', 'tutor-pmpro'),
+				'name'          => __('Enrollments', 'tutor'),
 				'description'   => 'Take advanced control on enrollments. Enroll the student manually.',
 			),
 			'wc-subscriptions' => array(
-				'name'          => __('WooCommerce Subscriptions', 'tutor-pmpro'),
+				'name'          => __('WooCommerce Subscriptions', 'tutor'),
 				'description'   => 'Capture Residual Revenue with Recurring Payments.',
 			),
 			'pmpro'             => array(
-				'name'          => __('Paid Memberships Pro', 'tutor-pmpro'),
+				'name'          => __('Paid Memberships Pro', 'tutor'),
 				'description'   => 'Maximize revenue by selling membership access to all of your courses.',
 			),
 			'tutor-assignments' => array(
-				'name'          => __('Tutor Assignments', 'tutor-certificate'),
+				'name'          => __('Tutor Assignments', 'tutor'),
 				'description'   => 'Tutor assignments is a great way to assign tasks to students.',
 			),
 			'tutor-certificate' => array(
-				'name'          => __('Tutor Certificate', 'tutor-certificate'),
+				'name'          => __('Tutor Certificate', 'tutor'),
 				'description'   => 'Students will be able to download a certificate after course completion.',
 			),
 			'tutor-course-attachments' => array(
-				'name'          => __('Tutor Course Attachments', 'tutor-certificate'),
+				'name'          => __('Tutor Course Attachments', 'tutor'),
 				'description'   => 'Add unlimited attachments/ private files to any Tutor course',
 			),
 			'tutor-course-preview' => array(
-				'name'          => __('Tutor Course Preview', 'tutor-certificate'),
+				'name'          => __('Tutor Course Preview', 'tutor'),
 				'description'   => 'Unlock some lessons for students before enrollment.',
 			),
 			'tutor-email' => array(
-				'name'          => __('Tutor E-Mail', 'tutor-certificate'),
+				'name'          => __('Tutor E-Mail', 'tutor'),
 				'description'   => 'Send email on various tutor events',
 			),
 			'tutor-multi-instructors' => array(
-				'name'          => __('Tutor Multi Instructors', 'tutor-certificate'),
+				'name'          => __('Tutor Multi Instructors', 'tutor'),
 				'description'   => 'Start a course with multiple instructors by Tutor Multi Instructors',
 			),
 			'tutor-prerequisites' => array(
-				'name'          => __('Tutor Prerequisites', 'tutor-certificate'),
+				'name'          => __('Tutor Prerequisites', 'tutor'),
 				'description'   => 'Specific course you must complete before you can enroll new course by Tutor Prerequisites',
 			),
 			'tutor-report' => array(
-				'name'          => __('Tutor Report', 'tutor-certificate'),
+				'name'          => __('Tutor Report', 'tutor'),
 				'description'   => 'Check your course performance through Tutor Report stats.',
 			),
 		);

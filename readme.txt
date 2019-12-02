@@ -1,11 +1,11 @@
 === Tutor LMS - eLearning and online course solution ===
-Contributors: themeum
+Contributors: themeum, kawshar, jakirhasan, mhshohel, anik4e, delowardev, rejuancse, fahimmurshed, badsha_eee, faisalahmed29, joomcoder, sksaaju, mehedih
 Donate link: https://www.themeum.com
-Tags: lms, course, elearning, education, quiz, training, sell courses, courses, e-Learning, learning, learning management system, WordPress LMS
+Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,25 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.4.2 - 25 September, 2019 =
+
+* Added: Greadbook Addons in the Tutor LMS Pro version
+* Added: action hook after quiz attempt end, `do_action('tutor_quiz/attempt_ended', $attempt);`, `do_action('tutor_quiz/attempt_analysing/before', $attempt);`
+* Added: Assignment submmiting / submitted flag to lesson sidebar in lesson single page
+* Added: Template support from Tutor Pro
+* Added: action hook after addon enable disable,
+do_action('tutor_addon_before_enable_disable');
+do_action('tutor_addon_before_enable', $addonFieldName);
+do_action('tutor_addon_after_enable', $addonFieldName);
+do_action('tutor_addon_before_disable', $addonFieldName);
+do_action('tutor_addon_after_disable', $addonFieldName);
+do_action('tutor_addon_after_enable_disable');
+* Updated: Tutor Settings page URL is now updating when change settings page
+* Fixed: Rating placing issue, sometime it missed rating value, but it will never hapen again.
+* Fixed: `.tutor-icon-angle-left` `.tutor-icon-angle-right` toggle during lesson single sidebar show hide
+* Updated: Addon icons
+
 
 = 1.4.1 - 10 September, 2019 =
 
@@ -551,14 +570,13 @@ Added: action hook `do_action('tutor_load_template_before', $template, $variable
 
 * Added Quiz, quiz builder, course builder
 * Fixed huge bugs from alpha version
+* Removed some depricated code from aplha
 * Stable Release
 
 = 1.0.0-alpha - 06 Feb, 2019 =
-
 * Alpha Release
 
 == Upgrade Notice ==
-
 = 1.4.0 =
 
 It’s recommended to have a backup of your website before hitting the update button.

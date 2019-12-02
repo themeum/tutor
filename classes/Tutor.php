@@ -71,6 +71,23 @@ final class Tutor{
 		$this->url = plugin_dir_url(TUTOR_FILE);
 		$this->basename = plugin_basename(TUTOR_FILE);
 
+		/**
+		 * Adding Tutor Database table to $wpdb;
+		 * @since v.1.4.2
+		 */
+		global $wpdb;
+		$wpdb->tutor_earnings	 = $wpdb->prefix.'tutor_earnings';
+		$wpdb->tutor_gradebooks = $wpdb->prefix.'tutor_gradebooks';
+		$wpdb->tutor_gradebooks_results = $wpdb->prefix.'tutor_gradebooks_results';
+		$wpdb->tutor_quiz_attempts = $wpdb->prefix.'tutor_quiz_attempts';
+		$wpdb->tutor_quiz_attempt_answers = $wpdb->prefix.'tutor_quiz_attempt_answers';
+		$wpdb->tutor_quiz_questions = $wpdb->prefix.'tutor_quiz_questions';
+		$wpdb->tutor_quiz_question_answers = $wpdb->prefix.'tutor_quiz_question_answers';
+		$wpdb->tutor_withdraws = $wpdb->prefix.'tutor_withdraws';
+
+		/**
+		 * Changing default wp doing ajax return based on tutor ajax action
+		 */
 		add_filter('wp_doing_ajax', array($this, 'wp_doing_ajax'));
 
 		/**

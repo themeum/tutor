@@ -97,9 +97,13 @@ class Ajax{
 			$wpdb->update( $wpdb->comments, array('comment_content' => $review),
 				array('comment_ID' => $previous_rating_id)
 			);
-			$wpdb->update( $wpdb->commentmeta, array('meta_value' => $rating),
-				array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating')
-			);
+
+			$rating_info = $wpdb->get_row("SELECT * FROM {$wpdb->commentmeta} WHERE comment_id = {$previous_rating_id} AND meta_key = 'tutor_rating'; ");
+			if ($rating_info){
+				$wpdb->update( $wpdb->commentmeta, array('meta_value' => $rating), array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating') );
+			}else{
+				$wpdb->insert( $wpdb->commentmeta, array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating', 'meta_value' => $rating) );
+			}
 		}else{
 			$data = array(
 				'comment_post_ID'   => $course_id,
@@ -246,14 +250,26 @@ class Ajax{
 		$isEnable = (bool) sanitize_text_field(tutor_utils()->avalue_dot('isEnable', $_POST));
 		$addonFieldName = sanitize_text_field(tutor_utils()->avalue_dot('addonFieldName', $_POST));
 
+		do_action('tutor_addon_before_enable_disable');
 		if ($isEnable){
+			do_action("tutor_addon_before_enable_{$addonFieldName}");
+			do_action('tutor_addon_before_enable', $addonFieldName);
 			$addonsConfig[$addonFieldName]['is_enable'] = 1;
+			update_option('tutor_addons_config', $addonsConfig);
+
+			do_action('tutor_addon_after_enable', $addonFieldName);
+			do_action("tutor_addon_after_enable_{$addonFieldName}");
 		}else{
+			do_action("tutor_addon_before_disable_{$addonFieldName}");
+			do_action('tutor_addon_before_disable', $addonFieldName);
 			$addonsConfig[$addonFieldName]['is_enable'] = 0;
+			update_option('tutor_addons_config', $addonsConfig);
+
+			do_action('tutor_addon_after_disable', $addonFieldName);
+			do_action("tutor_addon_after_disable_{$addonFieldName}");
 		}
 
-		update_option('tutor_addons_config', $addonsConfig);
-
+		do_action('tutor_addon_after_enable_disable');
 		wp_send_json_success();
 	}
 
