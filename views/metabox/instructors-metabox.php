@@ -2,7 +2,6 @@
 <div class="tutor-course-instructors-metabox-wrap">
 	<?php
 	$instructors = tutor_utils()->get_instructors_by_course();
-
 	?>
 
 	<div class="tutor-course-available-instructors">

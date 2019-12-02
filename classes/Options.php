@@ -62,7 +62,7 @@ class Options {
 
 		wp_send_json_success( array('msg' => __('Option Updated', 'tutor') ) );
 	}
-	
+
 	public function options_attr(){
 		$pages = tutor_utils()->get_pages();
 
@@ -83,35 +83,40 @@ class Options {
 						'fields' => array(
 							'tutor_dashboard_page_id' => array(
 								'type'          => 'select',
-								'label'         => __('Tutor Dashboard', 'tutor'),
+								'label'         => __('Dashboard Page', 'tutor'),
 								'default'       => '0',
 								'options'       => $pages,
-								'desc'          => __('This page will show dashboard related stuff, like my courses, order, earnings, logout etc', 'tutor'),
+								'desc'          => __('This page will be used for student and instructor dashboard', 'tutor'),
 							),
 							'enable_public_profile' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Enable Public Profile', 'tutor'),
+								'label'     => __('Public Profile', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
 								'default' => '0',
 								'desc'      => __('Enable this to make a profile publicly visible',	'tutor')."<br />" .$student_url,
 							),
 							'load_tutor_css' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Load Tutor default CSS', 'tutor'),
+								'label'     => __('Load Tutor CSS', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
 								'desc'      => __('If your theme has its own styling, then you can turn it off to load CSS from the plugin directory', 'tutor'),
 							),
 							'load_tutor_js' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Load Tutor default JavaScript', 'tutor'),
+								'label'     => __('Load Tutor JavaScript', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
 								'desc'      => __('If you have put required script in your theme javascript file, then you can turn it off to load JavaScript from the plugin directory', 'tutor'),
 							),
 							'student_must_login_to_view_course' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Course Permission', 'tutor'),
+								'label'     => __('Course Visibility', 'tutor'),
+								'label_title' => __('Logged in only', 'tutor'),
 								'desc'      => __('Students must be logged in to view course', 'tutor'),
 							),
 							'delete_on_uninstall' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Erase upon uninstallation', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
 								'desc'      => __('Delete all data during uninstall', 'tutor'),
 							),
 						)
@@ -127,19 +132,22 @@ class Options {
 						'fields' => array(
 							'enable_gutenberg_course_edit' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Enable Gutenberg', 'tutor'),
-								'label_title'   => __('Enable Gutenberg support in course edit page.', 'tutor'),
+								'label'     => __('Gutenberg Editor', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
+								'desc' => __('Use Gutenberg editor on course description area.', 'tutor'),
 							),
 							'display_course_instructors' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Display instructors profile', 'tutor'),
-								'label_title'   => __('Show the instructor profile on course single page.', 'tutor'),
+								'label'     => __('Display Instructor Info', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
+								'desc' => __('Show tutor bio on each course page.', 'tutor'),
 							),
 							'enable_q_and_a_on_course' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Enable Q &amp; A on course', 'tutor'),
+								'label'     => __('Question and Answer', 'tutor'),
+								'label_title' => __('Enable','tutor'),
 								'default'   => '0',
-								'desc'      => __('Allow student to place their questions and answers on the course page, only enrolled student can do this',	'tutor'),
+								'desc'      => __('Enabling this feature will add a Q&amp;A section on every course.',	'tutor'),
 							),
 						),
 					),
@@ -152,7 +160,7 @@ class Options {
 								'label'     => __('Course Archive Page', 'tutor'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('Choose the page from the dropdown list where you want to show all of the courses',	'tutor'),
+								'desc'      => __('This page will be used to list all the published courses.',	'tutor'),
 							),
 							'courses_col_per_row' => array(
 								'type'      => 'slider',
@@ -263,16 +271,17 @@ class Options {
 						'fields' => array(
 							'enable_course_marketplace' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Enable Course Marketplace', 'tutor'),
+								'label'     => __('Course Marketplace', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
 								'default' => '0',
 								'desc'      => __('By enabling this settings will allow multiple instructors can upload their course.',	'tutor'),
 							),
 							'instructor_register_page' => array(
 								'type'      => 'select',
-								'label'     => __('Instructor Register Page', 'tutor'),
+								'label'     => __('Instructor Registration Page', 'tutor'),
 								'default'   => '0',
 								'options'   => $pages,
-								'desc'      => __('This will be instructor register page', 'tutor'),
+								'desc'      => __('This page will be used to sign up new instructors.', 'tutor'),
 							),
 							'instructor_can_publish_course' => array(
 								'type'      => 'checkbox',
@@ -282,9 +291,10 @@ class Options {
 							),
 							'enable_become_instructor_btn' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Enable Become Instructor Button', 'tutor'),
+								'label'     => __('Become Instructor Button', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
 								'default' => '0',
-								'desc'      => __('It will show an Button to go Instructor registration form in student dashboard',	'tutor'),
+								'desc'      => __('Uncheck this option to hide the button from student dashboard.',	'tutor'),
 							),
 						),
 					),
@@ -299,7 +309,7 @@ class Options {
 						'fields' => array(
 							'student_register_page' => array(
 								'type'          => 'select',
-								'label'         => __('Student Register Page', 'tutor'),
+								'label'         => __('Student Registration Page', 'tutor'),
 								'default'       => '0',
 								'options'       => $pages,
 								'desc'          => __('Choose the page for student registration page', 'tutor'),
@@ -307,13 +317,14 @@ class Options {
 							'students_own_review_show_at_profile' => array(
 								'type'          => 'checkbox',
 								'label'         => __('Show reviews on profile', 'tutor'),
-								'label_title'   => __('Enable students review on their profile', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
 								'default'       => '0',
-								'desc'          => __('Enabling this will allow the reviews written by each individual students on their profile',	'tutor')."<br />" .$student_url,
+								'desc'          => __('Enabling this will show the reviews written by each student on their profile', 'tutor')."<br />" .$student_url,
 							),
 							'show_courses_completed_by_student' => array(
 								'type'          => 'checkbox',
-								'label'         => __('Show Completed Course', 'tutor'),
+								'label'         => __('Show Completed Courses', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
 								'default'       => '0',
 								'desc'          => __('Completed courses will be show on student profile',	'tutor')."<br />".$student_url,
 							),
@@ -322,50 +333,50 @@ class Options {
 				),
 			),
 			'tutor_earning' => array(
-				'label'     => __('Earning', 'tutor'),
+				'label'     => __('Revenue Sharing', 'tutor'),
 				'sections'    => array(
 					'general' => array(
-						'label' => __('Earning and commission allocation', 'tutor'),
+						'label' => __('Revenue Sharing', 'tutor'),
 						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
 						'fields' => array(
 							'enable_tutor_earning' => array(
 								'type'          => 'checkbox',
-								'label'         => __('Enable/Disable', 'tutor'),
-								'label_title'   => __('Enable Instructor Earning and commission allocation', 'tutor'),
+								'label'         => __('Revenue Sharing', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
 								'default'       => '0',
-								'desc'          => __('You can set commission and generate earning for instructor who interested sell their course with this platform by enabling this feature',	'tutor'),
+								'desc'          => __('If disabled, the Admin will receive 100% of the revenue',	'tutor'),
 							),
 							'earning_admin_commission' => array(
 								'type'      => 'number',
-								'label'      => __('Admin / Platform Owner Commission', 'tutor'),
+								'label'      => __('Admin Share Percentage', 'tutor'),
 								'default'   => '20',
-								'desc'  => __('Define the sales commission for admin from every course sell.', 'tutor'),
+								'desc'  => __('Define the share of the Admin from each sale.(after deducting fees)', 'tutor'),
 							),
 							'earning_instructor_commission' => array(
 								'type'      => 'number',
-								'label'      => __('Instructor Commission', 'tutor'),
+								'label'      => __('Instructor Share Percentage', 'tutor'),
 								'default'   => '80',
-								'desc'  => __('Define the sales commission for instructor from every course sell.', 'tutor'),
+								'desc'  => __('Define the share for instructors from each sale.(after deducting fees)', 'tutor'),
 							),
 							'tutor_earning_fees' => array(
 								'type'      => 'group_fields',
-								'label'     => __('Others Fees', 'tutor'),
-								'desc'      => __('Deduct the more fees from the instructor, the deducting process will be, first deduct this fees from total course payment, then commission will be allocation on rest amount.',	'tutor'),
+								'label'     => __('Fee Deduction', 'tutor'),
+								'desc'      => __('Fees are charged from the entire sales amount. The remaining amount will be divided among admin and instructors.',	'tutor'),
 								'group_fields'  => array(
 
 									'enable_fees_deducting' => array(
 										'type'          => 'checkbox',
-										'label'         => __('Enable Deduct Fees', 'tutor'),
+										'label'         => __('Enable', 'tutor'),
 										'default'       => '0',
 									),
 									'fees_name' => array(
 										'type'      => 'text',
-										'label'         => __('Fees Name', 'tutor'),
+										'label'         => __('Fee Name', 'tutor'),
 										'default'   => '',
 									),
 									'fees_amount' => array(
 										'type'      => 'number',
-										'label'         => __('Fees Amount', 'tutor'),
+										'label'         => __('Fee Amount', 'tutor'),
 										'default'   => '',
 									),
 									'fees_type' => array(

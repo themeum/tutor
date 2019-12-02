@@ -1301,3 +1301,26 @@ if ( ! function_exists('tutor_social_share')) {
 	}
 }
 
+/**
+ * @param bool $echo
+ *
+ * @return mixed
+ *
+ * Get Assignment content
+ *
+ * @since  v.1.3.3
+ */
+
+if ( ! function_exists('tutor_assignment_content')) {
+	function tutor_assignment_content( $echo = true ) {
+		ob_start();
+		tutor_load_template( 'single.assignment.content' );
+		$output = apply_filters( 'tutor_assignment/single/content', ob_get_clean() );
+
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+}

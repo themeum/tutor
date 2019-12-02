@@ -244,13 +244,13 @@ Animation Spinner
 .tutor-icon-attach:before {
     content: "\e988";
 }
-.tutor-icon-Image-ans:before {
+.tutor-icon-image-ans:before {
     content: "\e959";
 }
 .tutor-icon-short-ans:before {
     content: "\e95a";
 }
-.tutor-icon-Image-matching:before {
+.tutor-icon-image-matching:before {
     content: "\e956";
 }
 .tutor-icon-menu:before {

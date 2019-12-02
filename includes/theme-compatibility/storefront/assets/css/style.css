@@ -1,4 +1,4 @@
-body.single-lesson #content .col-full, body.single-tutor_quiz #content .col-full{
+body.single-lesson #content .col-full, body.single-tutor_quiz #content .col-full, body.single-tutor_assignments #content .col-full{
     width: 100%;
     max-width: 100%;
     padding: 0;

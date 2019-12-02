@@ -17,16 +17,20 @@ do_action('tutor_course/single/enrolled/before/wrap');
         <div class="tutor-container">
             <div class="tutor-row">
                 <div class="tutor-col-8  tutor-col-md-100">
+                    <?php do_action('tutor_course/single/enrolled/before/inner-wrap'); ?>
                     <?php tutor_course_enrolled_lead_info(); ?>
                     <?php tutor_course_enrolled_nav(); ?>
                     <?php get_tutor_posts_attachments(); ?>
+                    <?php do_action('tutor_course/single/enrolled/after/inner-wrap'); ?>
                 </div>
                 <div class="tutor-col-4">
                     <div class="tutor-single-course-sidebar">
+                        <?php do_action('tutor_course/single/enrolled/before/sidebar'); ?>
                         <?php tutor_course_enroll_box(); ?>
                         <?php tutor_course_requirements_html(); ?>
                         <?php tutor_course_tags_html(); ?>
                         <?php tutor_course_target_audience_html(); ?>
+                        <?php do_action('tutor_course/single/enrolled/after/sidebar'); ?>
                     </div>
                 </div>
             </div>

@@ -16,7 +16,7 @@ class Post_types{
 		add_action( 'init', array($this, 'register_lesson_post_types') );
 		add_action( 'init', array($this, 'register_quiz_post_types') );
 		add_action( 'init', array($this, 'register_topic_post_types') );
-
+		add_action( 'init', array($this, 'register_assignments_post_types') );
 
 		/**
 		 * Customize the message of course
@@ -81,7 +81,7 @@ class Post_types{
 		 * Taxonomy
 		 */
 		$labels = array(
-			'name'                       => _x( 'Categories', 'taxonomy general name', 'tutor' ),
+			'name'                       => _x( 'Course Categories', 'taxonomy general name', 'tutor' ),
 			'singular_name'              => _x( 'Category', 'taxonomy singular name', 'tutor' ),
 			'search_items'               => __( 'Search Categories', 'tutor' ),
 			'popular_items'              => __( 'Popular Categories', 'tutor' ),
@@ -96,7 +96,7 @@ class Post_types{
 			'add_or_remove_items'        => __( 'Add or remove categories', 'tutor' ),
 			'choose_from_most_used'      => __( 'Choose from the most used categories', 'tutor' ),
 			'not_found'                  => __( 'No categories found.', 'tutor' ),
-			'menu_name'                  => __( 'Categories', 'tutor' ),
+			'menu_name'                  => __( 'Course Categories', 'tutor' ),
 		);
 
 		$args = array(
@@ -254,6 +254,55 @@ class Post_types{
 			'menu_position'      => null,
 		);
 		register_post_type( 'topics', $args );
+	}
+
+	public function register_assignments_post_types() {
+		$labels = array(
+			'name'               => _x( 'Assignments', 'post type general name', 'tutor' ),
+			'singular_name'      => _x( 'Assignment', 'post type singular name', 'tutor' ),
+			'menu_name'          => _x( 'Assignments', 'admin menu', 'tutor' ),
+			'name_admin_bar'     => _x( 'Assignment', 'add new on admin bar', 'tutor' ),
+			'add_new'            => _x( 'Add New', $this->lesson_post_type, 'tutor' ),
+			'add_new_item'       => __( 'Add New Assignment', 'tutor' ),
+			'new_item'           => __( 'New Assignment', 'tutor' ),
+			'edit_item'          => __( 'Edit Assignment', 'tutor' ),
+			'view_item'          => __( 'View Assignment', 'tutor' ),
+			'all_items'          => __( 'Assignments', 'tutor' ),
+			'search_items'       => __( 'Search Assignments', 'tutor' ),
+			'parent_item_colon'  => __( 'Parent Assignments:', 'tutor' ),
+			'not_found'          => __( 'No Assignments found.', 'tutor' ),
+			'not_found_in_trash' => __( 'No Assignments found in Trash.', 'tutor' )
+		);
+
+		$args = array(
+			'labels'             => $labels,
+			'description'        => __( 'Description.', 'tutor' ),
+			'public'             => true,
+			'publicly_queryable' => true,
+			'show_ui'            => false,
+			'show_in_menu'       => 'tutor',
+			'query_var'          => true,
+			'rewrite'            => array( 'slug' => $this->lesson_post_type ),
+			'menu_icon'          => 'dashicons-editor-help',
+			'capability_type'    => 'post',
+			'has_archive'        => true,
+			'hierarchical'       => false,
+			'menu_position'      => null,
+			'supports'           => array( 'title', 'editor'),
+			'capabilities' => array(
+				'edit_post'          => 'edit_tutor_assignment',
+				'read_post'          => 'read_tutor_assignment',
+				'delete_post'        => 'delete_tutor_assignment',
+				'delete_posts'       => 'delete_tutor_assignments',
+				'edit_posts'         => 'edit_tutor_assignments',
+				'edit_others_posts'  => 'edit_others_tutor_assignments',
+				'publish_posts'      => 'publish_tutor_assignments',
+				'read_private_posts' => 'read_private_tutor_assignments',
+				'create_posts'       => 'edit_tutor_assignments',
+			),
+		);
+
+		register_post_type( 'tutor_assignments', $args );
 	}
 
 	function course_updated_messages( $messages ) {

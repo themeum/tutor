@@ -1,6 +1,6 @@
 <?php
 /**
- * Template for displaying single lesson
+ * Template for displaying assignment
  *
  * @since v.1.0.0
  *
@@ -14,15 +14,18 @@ global $post;
 $currentPost = $post;
 ?>
 
-<?php do_action('tutor_lesson/single/before/wrap'); ?>
+<?php do_action('tutor_assignment/single/before/wrap'); ?>
     <div class="tutor-single-lesson-wrap ">
+
         <div class="tutor-lesson-sidebar">
 			<?php tutor_lessons_sidebar(); ?>
         </div>
+
         <div id="tutor-single-entry-content" class="tutor-lesson-content tutor-single-entry-content tutor-single-entry-content-<?php the_ID(); ?>">
-		    <?php tutor_lesson_content(); ?>
+		    <?php tutor_assignment_content(); ?>
         </div>
+        
     </div>
-<?php do_action('tutor_lesson/single/after/wrap');
+<?php do_action('tutor_assignment/single/after/wrap');
 
 get_footer();
