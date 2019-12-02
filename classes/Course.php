@@ -520,7 +520,7 @@ class Course extends Tutor_Base {
 
 		global $wpdb;
 
-		$date = date("Y-m-d H:i:s");
+		$date = date("Y-m-d H:i:s", tutor_time());
 
 		//Making sure that, hash is unique
 		do{

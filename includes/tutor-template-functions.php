@@ -488,9 +488,19 @@ if ( ! function_exists('tutor_course_loop_price')) {
 
 /**
  * Get Course rating
+ *
+ * @since v.1.0.0
+ * @updated v.1.4.5
  */
+
 if ( ! function_exists('tutor_course_loop_rating')) {
 	function tutor_course_loop_rating() {
+
+		$disable = get_tutor_option('disable_course_review');
+		if ($disable){
+			return;
+		}
+
 		ob_start();
 		tutor_load_template( 'loop.rating' );
 		$output = apply_filters( 'tutor_course_loop_rating', ob_get_clean() );

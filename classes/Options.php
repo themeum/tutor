@@ -179,6 +179,13 @@ class Options {
 								'default'   => '0',
 								'desc'      => __('Enabling this feature will add a Q&amp;A section on every course.',	'tutor'),
 							),
+							'disable_course_review' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Course review', 'tutor'),
+								'label_title' => __('Disable','tutor'),
+								'default'   => '0',
+								'desc'      => __('Disabling this feature will be removed course review system from the course page.',	'tutor'),
+							),
 						),
 					),
 					'archive' => array(

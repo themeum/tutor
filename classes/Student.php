@@ -132,11 +132,8 @@ class Student {
 		$user_id  = wp_update_user( $userdata );
 
 		if ( ! is_wp_error( $user_id ) ) {
-			$_tutor_profile_photo = sanitize_text_field(tutils()->array_get('tutor_profile_photo_id', $_POST));
-
 			update_user_meta($user_id, 'phone_number', $phone_number);
 			update_user_meta($user_id, '_tutor_profile_bio', $tutor_profile_bio);
-			update_user_meta($user_id, '_tutor_profile_photo', $_tutor_profile_photo);
 
             $tutor_user_social = tutils()->tutor_user_social_icons();
             foreach ($tutor_user_social as $key => $social){
@@ -229,7 +226,7 @@ class Student {
 
 		if ($previous_password_checked && ! empty($new_password) && $new_password === $confirm_new_password){
 			wp_set_password($new_password, $user->ID);
-			tutor_utils()->set_flash_msg('Password set successfully');
+			tutor_utils()->set_flash_msg( __('Password set successfully', 'tutor') );
 		}
 
 		wp_redirect(wp_get_raw_referer());

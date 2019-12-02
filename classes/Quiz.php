@@ -77,7 +77,6 @@ class Quiz {
 		$output = ob_get_clean();
 
 		wp_send_json_success(array('output' => $output));
-
 	}
 
 	public function remove_quiz_from_post(){
@@ -119,7 +118,7 @@ class Quiz {
 		    die('There is something went wrong with course, please check if quiz attached with a course');
         }
 
-		$date = date("Y-m-d H:i:s");
+		$date = date("Y-m-d H:i:s", tutor_time());
 
 		$tutor_quiz_option = (array) maybe_unserialize(get_post_meta($quiz_id, 'tutor_quiz_option', true));
 		$attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
@@ -301,7 +300,7 @@ class Quiz {
 			            'total_answered_questions'  => tutils()->count($quiz_answers),
 			            'earned_marks'              => $total_marks,
 			            'attempt_status'            => 'attempt_ended',
-			            'attempt_ended_at'          => date("Y-m-d H:i:s"),
+			            'attempt_ended_at'          => date("Y-m-d H:i:s", tutor_time()),
                 );
 			    $wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_info, array('attempt_id' => $attempt_id));
             }
@@ -340,7 +339,7 @@ class Quiz {
 			'total_answered_questions'  => 0,
 			'earned_marks'              => 0,
 			'attempt_status'            => 'attempt_ended',
-			'attempt_ended_at'          => date("Y-m-d H:i:s"),
+			'attempt_ended_at'          => date("Y-m-d H:i:s", tutor_time()),
 		);
 
 		do_action('tutor_quiz_before_finish', $attempt_id, $quiz_id, $attempt->user_id);
@@ -364,7 +363,7 @@ class Quiz {
 
 			$data = array(
 			    'attempt_status' => 'attempt_timeout',
-			    'attempt_ended_at'          => date("Y-m-d H:i:s"),
+			    'attempt_ended_at'          => date("Y-m-d H:i:s", tutor_time()),
 		    );
 		    $wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $data, array('attempt_id' => $attempt->attempt_id));
 
@@ -404,7 +403,7 @@ class Quiz {
 			$attempt_update_data = array(
 				'earned_marks' => $attempt->earned_marks + $attempt_answer->question_mark,
 				'is_manually_reviewed' => 1,
-				'manually_reviewed_at' => date("Y-m-d H:i:s"),
+				'manually_reviewed_at' => date("Y-m-d H:i:s", tutor_time()),
 			);
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
@@ -420,7 +419,7 @@ class Quiz {
 			$attempt_update_data = array(
 				'earned_marks'          => $attempt->earned_marks - $attempt_answer->question_mark,
 				'is_manually_reviewed'  => 1,
-				'manually_reviewed_at'  => date("Y-m-d H:i:s"),
+				'manually_reviewed_at'  => date("Y-m-d H:i:s", tutor_time()),
 			);
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
@@ -818,12 +817,6 @@ class Quiz {
 
 		ob_start();
 
-		/*
-		 * @TODO: Should We remove this text?
-		 * Screenshot: http://prntscr.com/ngl2mb
-		 * Screenshot: http://prntscr.com/ngl2ak
-		 */
-
 		switch ($question_type){
 			case 'true_false':
 				echo '<label>'.__('Answer options &amp; mark correct', 'tutor').'</label>';
@@ -925,7 +918,6 @@ class Quiz {
 		        $wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('answer_order' => $i), array('answer_id' => $answer_id));
             }
         }
-
     }
 
 	/**
@@ -952,12 +944,10 @@ class Quiz {
 	 */
 	public function tutor_quiz_modal_update_settings(){
 		$quiz_id = sanitize_text_field($_POST['quiz_id']);
-
 		$quiz_option = tutor_utils()->sanitize_array($_POST['quiz_option']);
+
 		update_post_meta($quiz_id, 'tutor_quiz_option', $quiz_option);
-
 		do_action('tutor_quiz_settings_updated', $quiz_id);
-
 		wp_send_json_success();
 	}
 
@@ -983,13 +973,10 @@ class Quiz {
 		//tutor_lesson_content();
 
 		single_quiz_contents();
-
 		wp_reset_postdata();
-
 
 		$html = ob_get_clean();
 		wp_send_json_success(array('html' => $html));
 	}
-
 
 }

@@ -1003,7 +1003,7 @@ class Utils {
 	public function get_course_first_lesson($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
-
+/*
 		$lesson_id = $wpdb->get_var("
 		SELECT post_id as lesson_id
 		FROM $wpdb->postmeta 
@@ -1011,7 +1011,7 @@ class Utils {
 		WHERE meta_key = '_tutor_course_id_for_lesson' AND meta_value = {$course_id}
 		
 		 ORDER BY menu_order ASC LIMIT 1
-		");
+		");*/
 
 		/*
 		$lesson_id = $wpdb->get_var(" select main_posts.ID from {$wpdb->posts} main_posts
@@ -1022,9 +1022,30 @@ class Utils {
 					ORDER BY main_posts.menu_order ASC LIMIT 1 ;");
 		*/
 
-		if ($lesson_id){
-			return get_permalink($lesson_id);
+
+		$user_id = get_current_user_id();
+
+		$lessons = $wpdb->get_results("SELECT items.* FROM {$wpdb->posts} topic
+				INNER JOIN {$wpdb->posts} items ON topic.ID = items.post_parent 
+				WHERE topic.post_parent = {$course_id} AND items.post_status = 'publish' order by topic.menu_order ASC, items.menu_order ASC;");
+
+		$first_lesson = false;
+
+		if (tutils()->count($lessons)){
+
+			foreach ($lessons as $lesson){
+				$is_complete = get_user_meta($user_id, "_tutor_completed_lesson_id_{$lesson->ID}", true);
+				if ( ! $is_complete){
+					$first_lesson = $lesson;
+					break;
+				}
+			}
+
+			if (! empty($first_lesson->ID)){
+				return get_permalink($first_lesson->ID);
+			}
 		}
+
 		return false;
 	}
 
@@ -2066,6 +2087,11 @@ class Utils {
 
 			'purchase_history'  => __('Purchase History', 'tutor'),
 		));
+
+		$disable = get_tutor_option('disable_course_review');
+		if ($disable && isset($nav_items['reviews'])){
+			unset($nav_items['reviews']);
+		}
 
 		$new_navs = array(
 			'settings'          => __('Settings', 'tutor'),

@@ -118,7 +118,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 		global $wpdb;
 
 		$withdraw_page_url = admin_url('admin.php?page=tutor_withdraw_requests');
-		$date = date("Y-m-d H:i:s");
+		$date = date("Y-m-d H:i:s", tutor_time());
 		$redirect = false;
 
 		//Detect when a bulk action is being triggered...
