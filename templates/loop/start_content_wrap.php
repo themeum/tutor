@@ -1,1 +1,0 @@
-<div class="tutor-loop-course-container">
