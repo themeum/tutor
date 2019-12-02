@@ -1,6 +1,14 @@
 jQuery(document).ready(function($){
     'use strict';
 
+    /**
+     * Color Picker
+     * @since v.1.2.21
+     */
+    if (jQuery().wpColorPicker) {
+        $('.tutor_colorpicker').wpColorPicker();
+    }
+
     if (jQuery().select2){
         $('.tutor_select2').select2();
     }

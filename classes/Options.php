@@ -256,6 +256,12 @@ class Options {
 						'label' => __('Instructor Profile Settings', 'tutor'),
 						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
 						'fields' => array(
+							'enable_course_marketplace' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable Course Marketplace', 'tutor'),
+								'default' => '0',
+								'desc'      => __('By enabling this settings will allow multiple instructors can upload their course.',	'tutor'),
+							),
 							'instructor_register_page' => array(
 								'type'      => 'select',
 								'label'     => __('Instructor Register Page', 'tutor'),
@@ -268,6 +274,12 @@ class Options {
 								'label'     => __('Can publish course', 'tutor'),
 								'default' => '0',
 								'desc'      => __('Define if a instructor can publish his courses directly or not, if unchecked, they can still add courses, but it will go to admin for review',	'tutor'),
+							),
+							'enable_become_instructor_btn' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable Become Instructor Button', 'tutor'),
+								'default' => '0',
+								'desc'      => __('It will show an Button to go Instructor registration form in student dashboard',	'tutor'),
 							),
 						),
 					),
@@ -394,6 +406,40 @@ class Options {
 					),
 				),
 			),
+
+			'tutor_style' => array(
+				'label'     => __('Style', 'tutor'),
+				'sections'    => array(
+					'general' => array(
+						'label' => __('Color Style', 'tutor'),
+						'fields' => array(
+							'tutor_primary_color' => array(
+								'type'      => 'color',
+								'label'     => __('Primary Color', 'tutor'),
+								'default'   => '',
+							),
+							'tutor_primary_hover_color' => array(
+								'type'      => 'color',
+								'label'     => __('Primary Hover Color', 'tutor'),
+								'default'   => '',
+							),
+							'tutor_text_color' => array(
+								'type'      => 'color',
+								'label'     => __('Text color', 'tutor'),
+								'default'   => '',
+							),
+							'tutor_light_color' => array(
+								'type'      => 'color',
+								'label'     => __('Light color', 'tutor'),
+								'default'   => '',
+							),
+						),
+					),
+
+				),
+			),
+
+
 		);
 
 		return apply_filters('tutor/options/attr', $attr);

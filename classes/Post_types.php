@@ -15,6 +15,7 @@ class Post_types{
 		add_action( 'init', array($this, 'register_course_post_types') );
 		add_action( 'init', array($this, 'register_lesson_post_types') );
 		add_action( 'init', array($this, 'register_quiz_post_types') );
+		add_action( 'init', array($this, 'register_topic_post_types') );
 
 
 		/**
@@ -237,7 +238,20 @@ class Post_types{
 		register_post_type( 'tutor_quiz', $args );
 	}
 
-
+	public function register_topic_post_types(){
+		$args = array(
+			'label'  => 'Topics',
+			'description'        => __( 'Description.', 'tutor' ),
+			'public'             => false,
+			'publicly_queryable' => false,
+			'show_ui'            => false,
+			'query_var'          => false,
+			'has_archive'        => false,
+			'hierarchical'       => false,
+			'menu_position'      => null,
+		);
+		register_post_type( 'topics', $args );
+	}
 
 	function course_updated_messages( $messages ) {
 		$post             = get_post();

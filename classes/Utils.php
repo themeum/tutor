@@ -1939,17 +1939,18 @@ class Utils {
 
 		if (current_user_can(tutor()->instructor_role)) {
 			$instructor_items = array(
-				'my-courses'        => __('My Courses', 'tutor'),
-				'quiz-attempts'        => __('Quiz Attempts', 'tutor'),
-				'earning'        => __('Earning', 'tutor'),
-				'withdraw'        => __('Withdraw', 'tutor'),
+				'my-courses'    => __('My Courses', 'tutor'),
+				'quiz-attempts' => __('Quiz Attempts', 'tutor'),
+				'earning'       => __('Earning', 'tutor'),
+				'withdraw'      => __('Withdraw', 'tutor'),
 			);
 
 			$nav_items = array_merge($nav_items, $instructor_items);
 		}
 
-		$nav_items['settings'] = __('Settings', 'tutor');
-		$nav_items['logout'] = __('Logout', 'tutor');
+		$nav_items['purchase_history']  = __('Purchase History', 'tutor');
+		$nav_items['settings']          = __('Settings', 'tutor');
+		$nav_items['logout']            = __('Logout', 'tutor');
 
 		return apply_filters('tutor_dashboard/nav_items', $nav_items);
 	}
@@ -4105,6 +4106,11 @@ class Utils {
 
 	}
 
+	/**
+	 * @param int $instructor_id
+	 *
+	 * Add Instructor role to any user by user iD
+	 */
 	public function add_instructor_role($instructor_id = 0){
 		if ( ! $instructor_id){
 			return;
@@ -4120,6 +4126,11 @@ class Utils {
 		do_action('tutor_after_approved_instructor', $instructor_id);
 	}
 
+	/**
+	 * @param int $instructor_id
+	 *
+	 * Remove instructor role by instructor id
+	 */
 	public function remove_instructor_role($instructor_id = 0){
 		if ( ! $instructor_id){
 			return;
@@ -4131,6 +4142,76 @@ class Utils {
 		$instructor = new \WP_User($instructor_id);
 		$instructor->remove_role(tutor()->instructor_role);
 		do_action('tutor_after_blocked_instructor', $instructor_id);
+	}
+
+	/**
+	 * @param string $msg
+	 * @param string $name
+	 *
+	 * Set Flash Message to view in next action / route
+	 */
+	public function set_flash_msg($msg = '', $name = 'success'){
+		global $wp_filesystem;
+		if ( ! $wp_filesystem ) {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		}
+
+		$filename = "tutor_flash_msg_{$name}.txt";
+		$upload_dir = wp_upload_dir();
+		$dir = trailingslashit($upload_dir['basedir']) . 'tutor/';
+
+		WP_Filesystem( false, $upload_dir['basedir'], true );
+
+		if( ! $wp_filesystem->is_dir( $dir ) ) {
+			$wp_filesystem->mkdir( $dir );
+		}
+		$wp_filesystem->put_contents( $dir . $filename, $msg );
+	}
+
+	/**
+	 * @param null $name
+	 *
+	 * @return mixed|string|void
+	 *
+	 * Get Flash Message
+	 */
+	public function get_flash_msg($name = null){
+		if ( ! $name){
+			return '';
+		}
+
+		$upload_dir = wp_get_upload_dir();
+		$upload_dir = trailingslashit($upload_dir['basedir']);
+		$msg_name = 'tutor_flash_msg_'.$name;
+
+		$msg = '';
+		$flash_msg_file_name = $upload_dir."tutor/{$msg_name}.txt";
+		if (file_exists($flash_msg_file_name)){
+			$msg = file_get_contents($flash_msg_file_name);
+			unlink($flash_msg_file_name);
+		}
+
+		return apply_filters('tutor_get_flash_msg', $msg, $name);
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get purchase history by customer id
+	 */
+
+	public function get_orders_by_user_id($user_id = 0){
+		global $wpdb;
+
+		$user_id = $this->get_user_id();
+
+		$query = $wpdb->get_results("SELECT {$wpdb->posts}.* FROM {$wpdb->posts}
+ 			INNER JOIN {$wpdb->postmeta} customer ON ID = customer.post_id AND customer.meta_key = '_customer_user'
+ 			INNER JOIN {$wpdb->postmeta} tutor_order ON ID = tutor_order.post_id AND tutor_order.meta_key = '_is_tutor_order_for_course'
+ 			where post_type = 'shop_order' AND customer.meta_value = {$user_id}  ");
+		return $query;
 	}
 
 }
