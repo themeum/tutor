@@ -1610,6 +1610,19 @@ Instructor
     width: 100%;
     text-align: center;
 }
+.tutor-single-add-to-cart-box.cart-required-login {
+    position: relative;
+}
+.tutor-single-add-to-cart-box.cart-required-login:before{
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    cursor: pointer;
+}
 
 /*******************/
 /*tutor review form*/

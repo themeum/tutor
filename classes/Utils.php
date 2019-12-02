@@ -1814,6 +1814,18 @@ class Utils {
 	}
 
 	/**
+	 * @return array|null|object
+	 *
+	 * Get EDD Products
+	 */
+	public function get_edd_products(){
+		global $wpdb;
+		$query = $wpdb->get_results("SELECT ID, post_title from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'download' ");
+
+		return $query;
+	}
+
+	/**
 	 * @param int $course_id
 	 *
 	 * @return int

@@ -5,7 +5,7 @@ Tags: lms, education, wp-lms, education management system
 Requires at least: 4.5
 Tested up to: 5.1
 Requires PHP: 5.4.0
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -182,6 +182,12 @@ This is an alpha version of Tutor, as bugs and issues expected, if you found any
 16. Course builder
 
 == Changelog ==
+
+
+= 1.0.8 - 25 March, 2019 =
+
+* Added: WooCommerce and EDD support to sell courses
+
 
 = 1.0.7 - 22 March, 2019 =
 
