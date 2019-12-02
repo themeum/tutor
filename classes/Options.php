@@ -149,6 +149,13 @@ class Options {
 								'default'   => '20',
 								'desc'  => __('Number of items you would like displayed "per page" in the pagination', 'tutor'),
 							),
+							'enable_tutor_maintenance_mode' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Maintenance Mode', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
+								'default'   => '0',
+								'desc'      => __('Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.',	'tutor'),
+							),
 						)
 					)
 				),

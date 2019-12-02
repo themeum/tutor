@@ -3231,3 +3231,48 @@ table.tutor-table p{
 /**
  * END Tutor Table
  */
+
+/**
+Tools Nav
+ */
+.tutor-nav-tab-wrapper{
+    margin-bottom: 10px;
+}
+.nav-tab-item {
+    float: left;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    margin-left: .5em;
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.33;
+    font-weight: 600;
+    background: #e5e5e5;
+    color: #555;
+    text-decoration: none;
+    white-space: nowrap
+}
+.nav-tab-item:first-child{
+    margin-left: 0;
+}
+.nav-tab-item:focus,.nav-tab-item:hover {
+    background-color: #fff;
+    color: #444
+}
+.nav-tab-item-active,.nav-tab-item:focus:active {
+    box-shadow: none
+}
+.nav-tab-item-active {
+    margin-bottom: -1px;
+    color: #444
+}
+.nav-tab-item-active,.nav-tab-item-active:focus,.nav-tab-item-active:focus:active,.nav-tab-item-active:hover {
+    border-bottom: 1px solid #f1f1f1;
+    background: #f1f1f1;
+    color: #000
+}
+
+
+/**
+* END Tools
+ */

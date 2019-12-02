@@ -513,3 +513,29 @@ if ( ! function_exists('tutor_time')) {
 		return time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
 	}
 }
+
+/**
+ * Toggle maintenance mode for the site.
+ *
+ * Creates/deletes the maintenance file to enable/disable maintenance mode.
+ *
+ * @since v.1.4.6
+ *
+ * @global WP_Filesystem_Base $wp_filesystem Subclass
+ *
+ * @param bool $enable True to enable maintenance mode, false to disable.
+ */
+if ( ! function_exists('tutor_maintenance_mode')) {
+	function tutor_maintenance_mode( $enable = false ) {
+		global $wp_filesystem;
+		$file = $wp_filesystem->abspath() . '.tutor_maintenance';
+		if ( $enable ) {
+			// Create maintenance file to signal that we are upgrading
+			$maintenance_string = '<?php $upgrading = ' . time() . '; ?>';
+			$wp_filesystem->delete( $file );
+			$wp_filesystem->put_contents( $file, $maintenance_string, FS_CHMOD_FILE );
+		} elseif ( ! $enable && $wp_filesystem->exists( $file ) ) {
+			$wp_filesystem->delete( $file );
+		}
+	}
+}
