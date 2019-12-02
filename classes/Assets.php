@@ -17,6 +17,7 @@ class Assets{
 	public function admin_scripts(){
 		wp_enqueue_style('tutor-select2', tutor()->url.'assets/packages/select2/select2.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-admin', tutor()->url.'assets/css/tutor-admin.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-icon', tutor()->url.'assets/icons/css/tutor-icon.css', array(), tutor()->version);
 
 		/**
 		 * Scripts
@@ -42,12 +43,18 @@ class Assets{
 
 		wp_enqueue_editor();
 
+		$tutor_dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
+		if ($tutor_dashboard_page_id === get_the_ID()){
+			wp_enqueue_media();
+		}
+
 		$options = tutor_utils()->get_option();
 		$localize_data = array(
 			'ajaxurl'       => admin_url('admin-ajax.php'),
 			'nonce_key'     => tutor()->nonce,
 			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
 			'options'       => $options,
+			'placeholder_img_src'              => tutor_placeholder_img_src(),
 		);
 
 		if ( ! empty($post->post_type) && $post->post_type === 'tutor_quiz'){

@@ -24,25 +24,20 @@
             <div class="tutor-mycourse-wrap tutor-mycourse-<?php the_ID(); ?>">
 
                 <div class="tutor-mycourse-thumbnail">
-	                <?php
-
-	                tutor_course_loop_thumbnail();
-
-	                ?>
+	                <?php tutor_course_loop_thumbnail(); ?>
                 </div>
 
                 <div class="tutor-mycourse-content">
 
                     <div class="tutor-mycourse-rating">
-		                <?php
-		                tutor_utils()->star_rating_generator($avg_rating);
-		                ?>
+		                <?php tutor_utils()->star_rating_generator($avg_rating); ?>
+                        <a href="<?php echo get_the_permalink().'#single-course-ratings'; ?>"><?php _e('Leave a rating', 'tutor') ?></a>
                     </div>
                     <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a> </h3>
                     <div class="tutor-meta tutor-course-metadata">
 		                <?php
-		                $total_lessons = tutor_utils()->get_lesson_count_by_course();
-		                $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
+                            $total_lessons = tutor_utils()->get_lesson_count_by_course();
+                            $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
 		                ?>
                         <ul>
                             <li>
@@ -69,7 +64,7 @@
 
 		wp_reset_postdata();
     else:
-        echo "<div class='tutor-mycourse-wrap'>You didn't purchased any course</div>";
+        echo "<div class='tutor-mycourse-wrap'><div class='tutor-mycourse-content'>".__('You didn\'t purchased any course', 'tutor')."</div></div>";
 	endif;
 
 	?>

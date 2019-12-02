@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, quiz, training, sell courses, courses, e-Learning, learning, learning management system, WordPress LMS
 Requires at least: 4.5
-Tested up to: 5.1
+Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.2.13
+Stable tag: 1.2.20
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -205,6 +205,19 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 16. Course builder
 
 == Changelog ==
+
+= 1.2.20 - 10 May, 2019 =
+
+* Added: Reset Password from Tutor dashboard
+* Added: Course Category Image
+* Added: my course delete / trash from the dashboard
+* Added: profile photo upload from dashboard profile edit page
+* Added: Profile Edit from settings page
+* Fixed: a default value issue in option checkbox
+* Fixed: a permission issue for administrator while attempt to edit other authors course
+* Fixed: course post type in rewrite URL, if it changes via the filter
+* Removed: Gutenburg Addon for tutor dashboard as it's not necessary, now dashboard comes with settings > selected dashboard page.
+* Renamed: Gutenberg blocks label
 
 = 1.2.13 - 26 April, 2019 =
 

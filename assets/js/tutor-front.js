@@ -125,10 +125,7 @@ jQuery(document).ready(function($){
                     var review_id = data.data.review_id;
                     var review = data.data.review;
                     $('.tutor-review-'+review_id+' .review-content').html(review);
-                },
-                complete: function () {
-                    $('.tutor-write-review-form').slideUp();
-                    $that.removeClass('updating-icon');
+                    location.reload();
                 }
             });
         }
@@ -542,6 +539,7 @@ jQuery(document).ready(function($){
 
     $(document).on('keyup', function (e) {
         if (e.keyCode === 27) {
+            $('.tutor-frontend-modal').hide();
             $('.tutor-cart-box-login-form').fadeOut(100);
         }
     });
@@ -575,13 +573,28 @@ jQuery(document).ready(function($){
         $( ".tutor_report_datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
     }
 
-    $(document).on('click', '.withdraw-method-select-input', function(e){
-        var $that = $(this);
-        var method_id = $that.closest('.withdraw-method-select').attr('data-withdraw-method');
 
+    /**
+     * Withdraw Form Tab/Toggle
+     *
+     * @since v.1.1.2
+     */
+
+    $(".withdraw-method-select-input").on('change', function(e){
+        var $that = $(this);
         $('.withdraw-method-form').hide();
-        $('#withdraw-method-form-'+method_id).show();
+        $('#withdraw-method-form-'+$that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
     });
+
+    $('.withdraw-method-select-input').each(function () {
+        var $that = $(this);
+        if($that.is(":checked")){
+            $('.withdraw-method-form').hide();
+            $('#withdraw-method-form-'+$that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
+        }
+    });
+
+
 
     /**
      * Setting account for withdraw earning
@@ -671,6 +684,95 @@ jQuery(document).ready(function($){
             }
         });
     });
+
+    var frontEndModal = $('.tutor-frontend-modal');
+    frontEndModal.each(function () {
+        var modal = $(this),
+            action = $(this).data('popup-rel');
+        $('[href="'+action+'"]').on('click', function (e) {
+            modal.fadeIn();
+            e.preventDefault();
+        });
+    });
+    $(document).on('click', '.tm-close, .tutor-frontend-modal-overlay, .tutor-modal-btn-cancel', function () {
+        frontEndModal.fadeOut();
+    });
+
+    /**
+     * Delete Course
+     */
+    $(document).on('click', '.tutor-mycourse-delete-btn', function (e) {
+        e.preventDefault();
+        var course_id = $(this).attr('data-course-id');
+        $('#tutor-course-delete-id').val(course_id);
+    });
+    $(document).on('submit', '#tutor-delete-course-form', function (e) {
+        e.preventDefault();
+
+        var course_id = $('#tutor-course-delete-id').val();
+        var $btn = $('.tutor-modal-course-delete-btn');
+        var data = $(this).serialize();
+
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: data,
+            beforeSend: function () {
+                $btn.addClass('updating-icon');
+            },
+            success: function (data) {
+                if (data.success){
+                    $('#tutor-dashboard-course-'+course_id).remove();
+                }
+            },
+            complete: function () {
+                $btn.removeClass('updating-icon');
+                $('.tutor-frontend-modal').hide();
+            }
+        });
+    });
+
+    /**
+     * Frontend Profile
+     */
+
+    if (! $('#tutor_profile_photo_id').val()) {
+        $('.tutor-profile-photo-delete-btn').hide();
+    }
+    // Uploading files
+    var file_frame;
+    $( document ).on( 'click', '.tutor-profile-photo-upload-btn', function( event ) {
+        event.preventDefault();
+
+        if ( file_frame ) {
+            file_frame.open();
+            return;
+        }
+        file_frame = wp.media.frames.downloadable_file = wp.media({
+            title: 'Choose an image',
+            button: {
+                text: 'Use image'
+            },
+            multiple: false
+        });
+        file_frame.on( 'select', function() {
+            var attachment           = file_frame.state().get( 'selection' ).first().toJSON();
+            var attachment_thumbnail = attachment.sizes.thumbnail || attachment.sizes.full;
+
+            $( '#tutor_profile_photo_id' ).val( attachment.id );
+            $( '.tutor-profile-photo-upload-wrap' ).find( 'img' ).attr( 'src', attachment_thumbnail.url );
+            $( '.tutor-profile-photo-delete-btn' ).show();
+        });
+        file_frame.open();
+    });
+
+    $( document ).on( 'click', '.tutor-profile-photo-delete-btn', function() {
+        $( '.tutor-profile-photo-upload-wrap' ).find( 'img' ).attr( 'src', _tutorobject.placeholder_img_src );
+        $( '#tutor_profile_photo_id' ).val( '' );
+        $( '.tutor-profile-photo-delete-btn' ).hide();
+        return false;
+    });
+
 
 
 

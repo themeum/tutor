@@ -70,37 +70,49 @@ $statements = tutor_utils()->get_earning_statements($user_id, compact('start_dat
 
 ?>
 
-    <div class="tutor-dashboard-earning-info-row">
-
-        <div class="tutor-dashboard-earning-sum">
-            <h3><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></h3>
-            <p><?php _e('My Earning', 'tutor'); ?></p>
-            <p class="text-small"><?php _e('All time', 'tutor'); ?></p>
+    <div class="tutor-dashboard-info-cards">
+        <div class="tutor-dashboard-info-card" title="<?php _e('All time', 'tutor'); ?>">
+            <p>
+                <span> <?php _e('My Earning', 'tutor'); ?> </span>
+                <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></span>
+            </p>
+        </div>
+        <div class="tutor-dashboard-info-card" title="<?php _e('Based on course price', 'tutor'); ?>">
+            <p>
+                <span> <?php _e('All time sales', 'tutor'); ?> </span>
+                <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->course_price_total); ?></span>
+            </p>
+        </div>
+        <div class="tutor-dashboard-info-card">
+            <p>
+                <span> <?php _e('Deducted Commissions', 'tutor'); ?> </span>
+                <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->admin_amount); ?></span>
+            </p>
         </div>
 
-        <div class="tutor-dashboard-earning-sum">
-            <h3><?php echo tutor_utils()->tutor_price($earning_sum->course_price_total); ?></h3>
-            <p><?php _e('All time sales.', 'tutor'); ?></p>
-            <p class="text-small"><?php _e('Based on course price.', 'tutor'); ?></p>
-        </div>
 
-        <div class="tutor-dashboard-earning-sum">
-            <h3><?php echo tutor_utils()->tutor_price($earning_sum->admin_amount); ?></h3>
-            <p><?php _e('Deducted Commissions', 'tutor'); ?></p>
-        </div>
-
-		<?php
-		if ($earning_sum->deduct_fees_amount > 0){
-			?>
-            <div class="tutor-dashboard-earning-sum">
-                <h3><?php echo tutor_utils()->tutor_price($earning_sum->deduct_fees_amount); ?></h3>
-                <p><?php _e('Deducted Fees', 'tutor'); ?></p>
+        <?php if ($earning_sum->deduct_fees_amount > 0){ ?>
+            <div class="tutor-dashboard-info-card" title="<?php _e('Deducted Fees', 'tutor'); ?>">
+                <p>
+                    <span> <?php _e('Deducted Fees', 'tutor'); ?> </span>
+                    <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->deduct_fees_amount); ?></span>
+                </p>
             </div>
-		<?php } ?>
+        <?php } ?>
     </div>
 
 
-
+<div class="tutor-dashboard-item-group">
     <h4><?php echo sprintf(__("Showing Result from %s to %s", 'tutor-report'), $begin->format('d F, Y'), $end->format('d F, Y')); ?></h4>
+    <?php
+        tutor_load_template('dashboard.earning.chart-body', compact('chartData', 'statements'));
+    ?>
+</div>
 
-<?php tutor_load_template('dashboard.earning.chart-body', compact('chartData', 'statements')); ?>
+<div class="tutor-dashboard-item-group">
+    <h4><?php _e('Sales statements for this period', 'tutor') ?></h4>
+    <?php tutor_load_template('dashboard.earning.statement', compact('chartData', 'statements')); ?>
+</div>
+
+
+

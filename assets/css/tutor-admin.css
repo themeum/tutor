@@ -2,9 +2,13 @@
 @package: Tutor LMS
 @author: themeum
  */
-
-/** Slider CSS */
-@import "../icons/css/tutor-icon.css";
+:root{
+    --tutor-primary-color: #1B52D8;
+    --tutor-primary-hover-color: #1b52a9;
+    --tutor-text-color: #4B5981;
+    --tutor-light-color: #B1B8C9;
+    --tutor-success-button-color: #86B223;
+}
 
 .ui-slider { position: relative; text-align: left; }
 .ui-slider .ui-slider-handle {
@@ -237,7 +241,7 @@ p.course-empty-content {
 }
 .tutor_btn_lg{
     line-height: 45px;
-    background-color: #3057D5;
+    background-color: var(--tutor-primary-color);
     color: #ffffff;
     padding: 0 20px;
     display: inline-block;
@@ -255,7 +259,7 @@ p.course-empty-content {
 }
 .tutor_btn_lg:focus,
 .tutor_btn_lg:hover{
-    background-color: #2149C9;
+    background-color: var(--tutor-primary-color);
     color: #ffffff;
 }
 
@@ -378,7 +382,7 @@ p.course-empty-content {
     cursor: pointer;
 }
 .tutor-add-quiz-btn i{
-    color: #4aade2;
+    color: var(--tutor-primary-color);
 }
 /**
 Instructor
@@ -394,7 +398,7 @@ Meta Box Heading
     line-height: 30px;
 }
 #tutor-course-topics h2:before, #tutor-instructors h2:before {
-    color: #3057D5;
+    color: var(--tutor-primary-color);
     font-family: 'tutor' !important;
     speak: none;
     font-style: normal;
@@ -467,7 +471,7 @@ a.tutor-button, button.tutor-button{
     margin-right: 20px;
 }
 .tutor-button-primary{
-    background-color: #3057D5;
+    background-color: var(--tutor-primary-color);
     color: #ffffff;
     display: inline-block;
     border-radius: 2px;
@@ -481,7 +485,7 @@ a.tutor-button, button.tutor-button{
     background-color: #2446A6;
 }
 .tutor-status-approved-context, .tutor-button.button-success {
-    background-color: #7BBC30;
+    background-color: var(--tutor-success-button-color);
     color: #ffffff;
     border-radius: 2px;
 }
@@ -517,7 +521,7 @@ table.tutor_status_table h2{
     margin: 0;
 }
 table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
-    color: #06d004;
+    color: var(--tutor-success-button-color);
     background-color: transparent;
 }
 
@@ -583,7 +587,7 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
     background-color: #ff0000;
 }
 .tutor-label-success{
-    background-color: #06d004;
+    background-color: var(--tutor-success-button-color);
     color: #ffffff;
     padding: 3px 7px;
 }
@@ -595,7 +599,7 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
     padding: 3px;
 }
 .tutor-addons .addon-current-price{
-    color: #25bd25;
+    color: var(--tutor-success-button-color);
     font-size: 18px;
     padding: 3px;
 }
@@ -606,7 +610,7 @@ table.tutor_status_table td mark.yes, table.tutor_status_table th mark.yes {
     margin: 10px 0 0;
 }
 a.addon-buynow-link {
-    background: #0073aa;
+    background: var(--tutor-primary-color);
     color: #fff;
     padding: 5px 10px;
     display: inline-block;
@@ -668,7 +672,7 @@ table.tutor-addons-list-table td, table.tutor-addons-list-table th{
     width: 16px;
 }
 input:checked + .btn-slider {
-    background-color: #0073aa;
+    background-color: var(--tutor-primary-color);
 }
 input:checked + .btn-slider:before {
     -webkit-transform: translateX(16px);
@@ -1022,14 +1026,14 @@ Quiz Modal
     margin-right: 5px;
 }
 #tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item.active i{
-    color: #3057D5;
+    color: var(--tutor-primary-color);
 }
 .quiz-modal-tab-navigation-btn{
     padding: 10px 20px;
     border-radius: 3px;
 }
 .quiz-modal-btn-next, .quiz-modal-btn-next:focus, .quiz-modal-btn-first-step, .quiz-modal-btn-first-step:focus, .quiz-modal-question-save-btn, .quiz-modal-question-save-btn:focus, .quiz-modal-settings-save-btn, .quiz-modal-settings-save-btn:focus{
-    background-color: #1B52D8;
+    background-color: var(--tutor-primary-color);
     color: #ffffff;
 }
 .quiz-modal-btn-next:hover, .quiz-modal-btn-first-step:hover, .quiz-modal-question-save-btn:hover, .quiz-modal-settings-save-btn:hover{
@@ -1143,7 +1147,7 @@ Quiz Modal
 .tutor-quiz-builder-group input[type="email"]:focus,
 .tutor-quiz-builder-group input[type="number"]:focus,
 .tutor-quiz-builder-group input[type="password"]:focus{
-    border-color: #3057D5;
+    border-color: var(--tutor-primary-color);
 }
 
 .tutor-quiz-builder-group textarea{
@@ -1198,7 +1202,7 @@ Quiz Modal
     border-radius: 3px;
 }
 .modal-container .tutor-quiz-add-question-btn i{
-    color: #3057D5;
+    color: var(--tutor-primary-color);
     line-height: 16px;
     margin-right: 3px;
 }
@@ -1221,7 +1225,7 @@ Quiz Modal
 }
 
 label.btn-switch input:checked + .btn-slider {
-    background-color: #4CD964;
+    background-color: var(--tutor-success-button-color);
 }
 
 .btn-switch + span{
@@ -1289,7 +1293,7 @@ label.btn-switch input:checked + .btn-slider {
     border-radius: 3px;
 }
 .tutor-select .tutor-select-options .tutor-select-option:hover {
-    border-color: #3057D5;
+    border-color: var(--tutor-primary-color);
 }
 .question-type-pro {
     color: #fff;
@@ -1318,7 +1322,7 @@ i.tutor-icon-block.tutor-icon-image-ans{
     background-color: #a322f9;
 }
 i.tutor-icon-block.tutor-icon-yes-no{
-    background-color: #1a4bd8;
+    background-color: var(--tutor-primary-color);
 }
 i.tutor-icon-block.tutor-icon-multiple-choice{
     background-color: #9034a9;
@@ -1345,14 +1349,14 @@ i.tutor-icon-block.tutor-icon-image-matching{
     background-color: #8a4a1b;
 }
 i.tutor-icon-block.tutor-icon-ordering{
-    background-color: #1128d4;
+    background-color: var(--tutor-primary-color);
 }
 i.tutor-icon-block.tutor-icon-plus-square-button, i.tutor-icon-block.tutor-icon-plus{
-    background-color: #7BBC30;
+    background-color: var(--tutor-success-button-color);
 }
 
 .create-lesson-in-topic-btn i.tutor-icon-block.tutor-icon-plus{
-    background-color: #3057d5;
+    background-color: var(--tutor-primary-color);
 }
 
 a.back-to-quiz-questions-btn {
@@ -1436,7 +1440,7 @@ a.back-to-quiz-questions-btn {
     border-radius: 4px;
 }
 .tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-content {
-    background-color: #3057D5;
+    background-color: var(--tutor-primary-color);
     border: none;
     height: 4px;
     border-radius: 4px;
@@ -1446,14 +1450,14 @@ a.back-to-quiz-questions-btn {
     border-radius: 4px;
 }
 .tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-content .ui-state-default{
-    background-color: #3057D5;
-    border: 1px solid #3057D5;
+    background-color: var(--tutor-primary-color);
+    border: 1px solid var(--tutor-primary-color);
     border-radius: 50%;
 }
 .tutor-quiz-builder-modal-wrap .tutor-field-type-slider .tutor-field-type-slider-value {
     font-size: 16px;
     font-weight: 600;
-    background: #3057D5;
+    background: var(--tutor-primary-color);
     position: absolute;
     right: 5px;
     top: 50%;
@@ -1471,7 +1475,7 @@ a.back-to-quiz-questions-btn {
     position: absolute;
     border: 7px solid transparent;
     top: 50%;
-    border-right-color: #3057D5;
+    border-right-color: var(--tutor-primary-color);
     right: 100%;
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
@@ -1524,14 +1528,14 @@ span.tutor-quiz-answer-title {
     width: auto;
 }
 button#quiz-answer-save-btn, button#quiz-answer-edit-btn {
-    background-color: #7BBC30;
+    background-color: var(--tutor-success-button-color);
     color: #fff;
     padding: 10px 15px;
     border: none;
     cursor: pointer;
 }
 button#quiz-answer-save-btn:hover, button#quiz-answer-edit-btn:hover {
-    background-color: #5e981b;
+    background-color: var(--tutor-success-button-color);
 }
 /**
 Tutor Media Upload
@@ -1605,7 +1609,7 @@ p.quiz-search-suggest-text{
     font-size: 12px;
 }
 span.result-pass{
-    background-color: #7BBC30;
+    background-color: var(--tutor-success-button-color);
     color: #fff;
     padding: 3px 5px;
     border-radius: 2px;
@@ -1614,7 +1618,7 @@ span.result-fail{
     color: #FF0000;
 }
 .attempt-status-attempt_ended{
-    background-color: #7BBC30;
+    background-color: var(--tutor-success-button-color);
     color: #ffffff;
     padding: 3px 5px;
     border-radius: 2px;
@@ -1685,8 +1689,8 @@ span.result-fail{
     border-bottom: 1px solid #EAEAEA;
 }
 .attempt-mark-correct-btn {
-    border: 1px solid #7BBC30;
-    color: #7BBC30;
+    border: 1px solid var(--tutor-success-button-color);
+    color: var(--tutor-success-button-color);
     border-radius: 4px;
     padding: 10px;
     text-decoration: none;
@@ -1694,9 +1698,9 @@ span.result-fail{
     margin-right: 5px;
 }
 .attempt-mark-correct-btn:hover {
-    border: 1px solid #3fbc12;
+    border: 1px solid var(--tutor-success-button-color);
     color: #ffffff;
-    background-color: #3fbc12;
+    background-color: var(--tutor-success-button-color);
 }
 .attempt-mark-incorrect-btn{
     border: 1px solid #ec0001;
@@ -1734,7 +1738,7 @@ span.notice-excl {
     margin: 0;
 }
 .circle-arrow{
-    color: #3057D5;
+    color: var(--tutor-primary-color);
     font-weight: bold;
     font-size: 16px;
     font-size: 1rem;
@@ -1744,7 +1748,7 @@ h2.attempt-review-title{
     margin-bottom: 30px !important;
 }
 h2.attempt-review-title i{
-    color: #3057D5;
+    color: var(--tutor-primary-color);
 }
 /**
 End Attempt
@@ -1927,7 +1931,7 @@ span.withdraw-method-label {
     margin-left: 3px;
 }
 .withdraw-status.withdraw-status-approved {
-    background: #00d63d;
+    background: var(--tutor-success-button-color);
     color: #fff;
     padding: 5px 10px;
 }
@@ -1945,7 +1949,7 @@ span.withdraw-method-label {
     font-weight: bold;
 }
 .withdraw-list-row-actions .approved a{
-    color: #00d63d;
+    color: var(--tutor-success-button-color);
 }
 .withdraw-list-row-actions .rejected a{
     color: #ff3842;

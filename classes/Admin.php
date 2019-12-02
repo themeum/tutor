@@ -184,7 +184,7 @@ class Admin{
 	 * @since v.1.0.0
 	 */
 	public function check_if_current_users_post(){
-		if (! current_user_can(tutor()->instructor_role)) {
+		if (current_user_can('administrator') || ! current_user_can(tutor()->instructor_role)) {
 			return;
 		}
 
@@ -216,7 +216,6 @@ class Admin{
 		if ( ! $template_path){
 			$template_path = tutor()->path.'templates/';
 		}
-
 
 		$files  = @scandir( $template_path ); // @codingStandardsIgnoreLine.
 		$result = array();

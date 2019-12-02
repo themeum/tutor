@@ -15,3 +15,11 @@ if ( ! function_exists('tutor_withdrawal_methods')){
 		return $withdraw->available_withdraw_methods;
 	}
 }
+
+
+if ( ! function_exists('tutor_placeholder_img_src')) {
+	function tutor_placeholder_img_src() {
+		$src = tutor()->url . 'assets/images/placeholder.jpg';
+		return apply_filters( 'tutor_placeholder_img_src', $src );
+	}
+}

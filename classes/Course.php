@@ -28,6 +28,12 @@ class Course extends Tutor_Base {
 		add_action('wp_ajax_tutor_load_instructors_modal', array($this, 'tutor_load_instructors_modal'));
 		add_action('wp_ajax_tutor_add_instructors_to_course', array($this, 'tutor_add_instructors_to_course'));
 		add_action('wp_ajax_detach_instructor_from_course', array($this, 'detach_instructor_from_course'));
+
+		/**
+		 * Frontend Dashboard
+		 */
+		add_action('wp_ajax_tutor_delete_dashboard_course', array($this, 'tutor_delete_dashboard_course'));
+
 	}
 	/**
 	 * Registering metabox
@@ -516,6 +522,12 @@ class Course extends Tutor_Base {
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 
 		$wpdb->delete($wpdb->usermeta, array('user_id' => $instructor_id, 'meta_key' => '_tutor_instructor_course_id', 'meta_value' => $course_id) );
+		wp_send_json_success();
+	}
+
+	public function tutor_delete_dashboard_course(){
+		$course_id = intval(sanitize_text_field($_POST['course_id']));
+		wp_trash_post($course_id);
 		wp_send_json_success();
 	}
 

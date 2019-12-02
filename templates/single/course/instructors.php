@@ -17,7 +17,7 @@ if ($instructors){
 	?>
 	<h4 class="tutor-segment-title"><?php _e('About the instructors', 'tutor'); ?></h4>
 
-	<div class="tutor-course-instructors-wrap tutor-single-course-segment">
+	<div class="tutor-course-instructors-wrap tutor-single-course-segment" id="single-course-ratings">
 		<?php
 		foreach ($instructors as $instructor){
 		    $profile_url = tutor_utils()->profile_url($instructor->ID);
@@ -62,7 +62,6 @@ if ($instructors){
 							<i class='tutor-icon-mortarboard'></i>
 							<?php echo tutor_utils()->get_course_count_by_instructor($instructor->ID); ?> <span class="tutor-text-mute"> <?php _e('Courses', 'tutor'); ?></span>
 						</p>
-
 					</div>
 
 					<div class="students">
@@ -72,7 +71,7 @@ if ($instructors){
 
 						<p>
 							<i class='tutor-icon-user'></i>
-							<?php echo  $total_students; ?>
+							<?php echo $total_students; ?>
 							<span class="tutor-text-mute">  <?php _e('students', 'tutor'); ?></span>
 						</p>
 					</div>

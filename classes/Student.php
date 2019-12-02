@@ -15,6 +15,11 @@ class Student {
 	protected $error_msgs = '';
 	public function __construct() {
 		add_action('template_redirect', array($this, 'register_student'));
+		add_action('template_redirect', array($this, 'update_profile'));
+
+		add_filter('get_avatar_url', array($this, 'filter_avatar'), 10, 3);
+
+		add_action('tutor_action_tutor_reset_password', array($this, 'tutor_reset_password'));
 	}
 
 	/**
@@ -105,6 +110,120 @@ class Student {
 	public function tutor_student_form_validation_errors(){
 		return $this->error_msgs;
 	}
-	
+
+	public function update_profile(){
+		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_profile_edit' ){
+			return;
+		}
+
+		//Checking nonce
+		tutor_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
+		$first_name     = sanitize_text_field(tutor_utils()->input_old('first_name'));
+		$last_name      = sanitize_text_field(tutor_utils()->input_old('last_name'));
+		$phone_number   = sanitize_text_field(tutor_utils()->input_old('phone_number'));
+		$tutor_profile_bio = wp_kses_post(tutor_utils()->input_old('tutor_profile_bio'));
+
+		$userdata = array(
+			'ID'            =>  $user_id,
+			'first_name'    =>  $first_name,
+			'last_name'     =>  $last_name,
+		);
+		$user_id  = wp_update_user( $userdata );
+
+		if ( ! is_wp_error( $user_id ) ) {
+			$_tutor_profile_photo = sanitize_text_field(tutor_utils()->avalue_dot('tutor_profile_photo_id', $_POST));
+
+			update_user_meta($user_id, 'phone_number', $phone_number);
+			update_user_meta($user_id, '_tutor_profile_bio', $tutor_profile_bio);
+			update_user_meta($user_id, '_tutor_profile_photo', $_tutor_profile_photo);
+		}
+
+		wp_redirect(wp_get_raw_referer());
+		die();
+	}
+
+	/**
+	 * @param $url
+	 * @param $id_or_email
+	 * @param $args
+	 *
+	 * @return false|string
+	 *
+	 * Change avatar URL with Tutor User Photo
+	 */
+
+	public function filter_avatar( $url, $id_or_email, $args){
+		global $wpdb;
+
+		$finder = false;
+
+        if ( is_numeric( $id_or_email ) ) {
+            $finder = absint( $id_or_email ) ;
+        } elseif ( is_string( $id_or_email ) ) {
+            $finder = $id_or_email;
+        } elseif ( $id_or_email instanceof WP_User ) {
+            // User Object
+            $finder = $id_or_email->ID;
+        } elseif ( $id_or_email instanceof WP_Post ) {
+            // Post Object
+            $finder = (int) $id_or_email->post_author;
+        } elseif ( $id_or_email instanceof WP_Comment ) {
+            return $url;
+        }
+
+        if ( ! $finder){
+            return $url;
+        }
+
+		$user_id = (int) $wpdb->get_var("SELECT ID FROM {$wpdb->users} WHERE ID = '{$finder}' OR user_email = '{$finder}' ");
+		if ($user_id){
+			$profile_photo = get_user_meta($user_id, '_tutor_profile_photo', true);
+			if ($profile_photo){
+				$url = wp_get_attachment_image_url($profile_photo, 'thumbnail');
+			}
+		}
+		return $url;
+	}
+
+	public function tutor_reset_password(){
+		//Checking nonce
+		tutor_utils()->checking_nonce();
+
+		$user = wp_get_current_user();
+
+		$previous_password = sanitize_text_field($_POST['previous_password']);
+		$new_password = sanitize_text_field($_POST['new_password']);
+		$confirm_new_password = sanitize_text_field($_POST['confirm_new_password']);
+
+		$previous_password_checked = wp_check_password( $previous_password, $user->user_pass, $user->ID);
+
+		$validation_errors = array();
+		if ( ! $previous_password_checked){
+			$validation_errors['incorrect_previous_password'] = __('Incorrect Previous Password', 'tutor');
+		}
+		if (empty($new_password)){
+			$validation_errors['new_password_required'] = __('New Password Required', 'tutor');
+		}
+		if (empty($confirm_new_password)){
+			$validation_errors['confirm_password_required'] = __('Confirm Password Required', 'tutor');
+		}
+		if ( $new_password !== $confirm_new_password){
+			$validation_errors['password_not_matched'] = __('New password and confirm password does not matched', 'tutor');
+		}
+		if (count($validation_errors)){
+			$this->error_msgs = $validation_errors;
+			add_filter('tutor_reset_password_validation_errors', array($this, 'tutor_student_form_validation_errors'));
+			return;
+		}
+
+		if ($previous_password_checked && ! empty($new_password) && $new_password === $confirm_new_password){
+			wp_set_password($new_password, $user->ID);
+		}
+
+		wp_redirect(wp_get_raw_referer());
+		die();
+	}
 
 }

@@ -68,6 +68,8 @@ foreach ($chartData as $key => $salesCount){
 ?>
 
 
+<h3><?php _e('Earnings', 'tutor') ?></h3>
+
 <div class="tutor-dashboard-content-inner">
 
 	<div class="tutor-dashboard-inline-links">
@@ -81,54 +83,58 @@ foreach ($chartData as $key => $salesCount){
 		</ul>
 	</div>
 
-	
-	<div class="tutor-dashboard-earning-info-row">
-
-		<div class="tutor-dashboard-earning-sum">
-			<h3><?php echo tutor_utils()->tutor_price($earning_sum->balance); ?></h3>
-			<p><?php _e('My Balance', 'tutor'); ?></p>
-		</div>
-
-		<div class="tutor-dashboard-earning-sum">
-
-
-			<h3><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></h3>
-			<p><?php _e('My Earning', 'tutor'); ?></p>
-			<p class="text-small"><?php _e('All time', 'tutor'); ?></p>
-		</div>
-
-		<div class="tutor-dashboard-earning-sum">
-			<h3><?php echo tutor_utils()->tutor_price($earning_sum->course_price_total); ?></h3>
-			<p><?php _e('All time sales.', 'tutor'); ?></p>
-			<p class="text-small"><?php _e('Based on course price.', 'tutor'); ?></p>
-		</div>
-
-        <div class="tutor-dashboard-earning-sum">
-            <h3><?php echo tutor_utils()->tutor_price($earning_sum->withdraws_amount); ?></h3>
-            <p><?php _e('All time withdraws.', 'tutor'); ?></p>
-            <p class="text-small"><?php _e('All of withdraw type excluding rejected.', 'tutor'); ?></p>
+    <div class="tutor-dashboard-info-cards">
+        <div class="tutor-dashboard-info-card">
+            <p>
+                <span> <?php _e('My Balance', 'tutor'); ?> </span>
+                <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->balance); ?></span>
+            </p>
+        </div>
+        <div class="tutor-dashboard-info-card" title="<?php _e('All Time', 'tutor'); ?>">
+            <p>
+                <span> <?php _e('My Earning', 'tutor'); ?> </span>
+                <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></span>
+            </p>
+        </div>
+        <div class="tutor-dashboard-info-card"  title="<?php _e('Based on course price', 'tutor'); ?>">
+            <p>
+                <span> <?php _e('All time sales.', 'tutor'); ?> </span>
+                <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->course_price_total); ?></span>
+            </p>
+        </div>
+        <div class="tutor-dashboard-info-card" title="<?php _e('All of withdraw type excluding rejected.', 'tutor'); ?>">
+            <p>
+                <span> <?php _e('All time withdraws.', 'tutor'); ?> </span>
+                <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->withdraws_amount); ?></span>
+            </p>
+        </div>
+        <div class="tutor-dashboard-info-card">
+            <p>
+                <span> <?php _e('Deducted Commissions.', 'tutor'); ?> </span>
+                <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->admin_amount); ?></span>
+            </p>
         </div>
 
-		<div class="tutor-dashboard-earning-sum">
-			<h3><?php echo tutor_utils()->tutor_price($earning_sum->admin_amount); ?></h3>
-			<p><?php _e('Deducted Commissions', 'tutor'); ?></p>
-		</div>
+        <?php if ($earning_sum->deduct_fees_amount > 0){ ?>
+            <div class="tutor-dashboard-info-card">
+                <p>
+                    <span> <?php _e('Deducted Fees.', 'tutor'); ?> </span>
+                    <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->deduct_fees_amount); ?></span>
+                </p>
+            </div>
+        <?php } ?>
+    </div>
 
-		<?php
-		if ($earning_sum->deduct_fees_amount > 0){
-			?>
-			<div class="tutor-dashboard-earning-sum">
-				<h3><?php echo tutor_utils()->tutor_price($earning_sum->deduct_fees_amount); ?></h3>
-				<p><?php _e('Deducted Fees', 'tutor'); ?></p>
-			</div>
-		<?php } ?>
-	</div>
+    <div class="tutor-dashboard-item-group">
+        <h4><?php _e('Earning Chart for this month', 'tutor') ?> (<?php echo date("F") ?>)</h4>
+        <canvas id="tutorChart" style="width: 100%; height: 400px;"></canvas>
+    </div>
 
 </div>
 
-<h4>Earning Chart for this month (<?php echo date("F") ?>)</h4>
 
-<canvas id="tutorChart" style="width: 100%; height: 400px;"></canvas>
+
+
 <script>
     var ctx = document.getElementById("tutorChart").getContext('2d');
     var tutorChart = new Chart(ctx, {

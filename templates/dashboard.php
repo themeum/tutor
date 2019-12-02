@@ -26,7 +26,7 @@ if (isset($wp_query->query_vars['tutor_dashboard_sub_page']) && $wp_query->query
 	$dashboard_page_name = $wp_query->query_vars['tutor_dashboard_sub_page'];
 	if ($dashboard_page_slug){
 		$dashboard_page_name = $dashboard_page_slug.'/'.$dashboard_page_name;
-    }
+	}
 }
 
 $user_id = get_current_user_id();
@@ -40,49 +40,62 @@ do_action('tutor_dashboard/before/wrap'); ?>
 
             <div class="tutor-row">
                 <div class="tutor-col-12">
-                    <div class="tutor-dashboard-header-wrap">
-                        <div class="tutor-wrap tutor-dashboard-header">
+                    <div class="tutor-dashboard-header">
 
-                            <div class="tutor-dashboard-header-avatar">
-                                <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink(); ?>">
-                                    <img src="<?php echo get_avatar_url($user_id); ?>" />
-                                </a>
+                        <div class="tutor-dashboard-header-avatar">
+                            <img src="<?php echo get_avatar_url($user_id, array('size' => 150)); ?>" />
+                        </div>
+
+                        <div class="tutor-dashboard-header-info">
+
+                            <div class="tutor-dashboard-header-display-name">
+                                <h4><?php _e('Howdy,', 'tutor'); ?> <strong><?php echo $user->display_name; ?></strong> </h4>
                             </div>
 
-                            <div class="tutor-dashboard-header-info">
+							<?php
+							$instructor_rating = tutor_utils()->get_instructor_ratings($user->ID);
+							?>
 
-                                <div class="tutor-dashboard-header-display-name">
-                                    <h4><?php _e('Howdy,', 'tutor'); ?> <strong><?php echo $user->display_name; ?></strong> </h4>
-                                </div>
-
-                                <!--
+							<?php
+							if (current_user_can(tutor()->instructor_role)){
+								?>
                                 <div class="tutor-dashboard-header-stats">
-                                    <div class="tutor-dashboard-header-social-wrap">
-                                        <a href=""><i class="tutor-icon-facebook"></i> </a>
-                                        <a href=""><i class="tutor-icon-twitter"></i> </a>
-                                        <a href=""><i class="tutor-icon-youtube"></i> </a>
-                                    </div>
                                     <div class="tutor-dashboard-header-ratings">
-						                <?php
-/*						                tutor_utils()->star_rating_generator('4.6');
-						                */?>
-                                        <span>4.6</span>
-                                        <span> (<?php /*_e(sprintf('%d Ratings', 172), 'tutor') */?>) </span>
+										<?php tutor_utils()->star_rating_generator($instructor_rating->rating_avg); ?>
+                                        <span><?php echo esc_html($instructor_rating->rating_avg);  ?></span>
+                                        <span> (<?php _e(sprintf('%d Ratings', $instructor_rating->rating_count), 'tutor') ?>) </span>
                                     </div>
-                                    <div class="tutor-dashboard-header-notifications">
-                                        <p class="tutor-notification-text"><?php /*_e('Notification'); */?> <span>9</span> </p>
-                                    </div>
-                                </div>-->
+                                    <!--<div class="tutor-dashboard-header-notifications">
+                                        <?php /*_e('Notification'); */?> <span>9</span>
+                                    </div>-->
+                                </div>
+							<?php } ?>
 
-                            </div>
+                        </div>
+
+                        <div class="tutor-dashboard-header-button">
+							<?php
+
+							if(current_user_can(tutor()->instructor_role)){
+								$button_page_url = add_query_arg(array('post_type'=>'course'),admin_url('post-new.php'));
+								$buton_text = __('<i class="tutor-icon-video-camera"></i> &nbsp; Upload A Course', 'tutor');
+							}else{
+								$button_page_url = tutor_utils()->instructor_register_url();
+								$buton_text = __('<i class="tutor-icon-man-user"></i> &nbsp; Become an instructor', 'tutor');
+							}
+							?>
+
+	                        <?php if (! current_user_can(tutor()->instructor_role)){ ?>
+                                <a class="tutor-btn bordered-btn" href="<?php echo esc_url($button_page_url); ?>">
+			                        <?php echo $buton_text; ?>
+                                </a>
+	                        <?php } ?>
 
                         </div>
 
                     </div>
-
                 </div>
             </div>
-
 
             <div class="tutor-row">
                 <div class="tutor-col-3 tutor-dashboard-left-menu">
@@ -90,7 +103,7 @@ do_action('tutor_dashboard/before/wrap'); ?>
 						<?php
 						$dashboard_pages = tutor_utils()->tutor_dashboard_pages();
 						foreach ($dashboard_pages as $dashboard_key => $dashboard_page){
-						    $li_class = "tutor-dashboard-menu-{$dashboard_key}";
+							$li_class = "tutor-dashboard-menu-{$dashboard_key}";
 							if ($dashboard_key === 'index')
 								$dashboard_key = '';
 							$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';

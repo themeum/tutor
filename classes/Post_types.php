@@ -108,22 +108,22 @@ class Post_types{
 		register_taxonomy( 'course-category', $this->course_post_type, $args );
 
 		$labels = array(
-			'name'                       => _x( 'Skills', 'taxonomy general name', 'tutor' ),
-			'singular_name'              => _x( 'Skill', 'taxonomy singular name', 'tutor' ),
-			'search_items'               => __( 'Search Skills', 'tutor' ),
-			'popular_items'              => __( 'Popular Skills', 'tutor' ),
-			'all_items'                  => __( 'All Skills', 'tutor' ),
+			'name'                       => _x( 'Tags', 'taxonomy general name', 'tutor' ),
+			'singular_name'              => _x( 'Tag', 'taxonomy singular name', 'tutor' ),
+			'search_items'               => __( 'Search Tags', 'tutor' ),
+			'popular_items'              => __( 'Popular Tags', 'tutor' ),
+			'all_items'                  => __( 'All Tags', 'tutor' ),
 			'parent_item'                => null,
 			'parent_item_colon'          => null,
-			'edit_item'                  => __( 'Edit Skill', 'tutor' ),
-			'update_item'                => __( 'Update Skill', 'tutor' ),
-			'add_new_item'               => __( 'Add New Skill', 'tutor' ),
-			'new_item_name'              => __( 'New Skill Name', 'tutor' ),
-			'separate_items_with_commas' => __( 'Separate skills with commas', 'tutor' ),
-			'add_or_remove_items'        => __( 'Add or remove skills', 'tutor' ),
-			'choose_from_most_used'      => __( 'Choose from the most used skills', 'tutor' ),
-			'not_found'                  => __( 'No skills found.', 'tutor' ),
-			'menu_name'                  => __( 'Skills', 'tutor' ),
+			'edit_item'                  => __( 'Edit Tag', 'tutor' ),
+			'update_item'                => __( 'Update Tag', 'tutor' ),
+			'add_new_item'               => __( 'Add New Tag', 'tutor' ),
+			'new_item_name'              => __( 'New Tag Name', 'tutor' ),
+			'separate_items_with_commas' => __( 'Separate Tags with commas', 'tutor' ),
+			'add_or_remove_items'        => __( 'Add or remove Tags', 'tutor' ),
+			'choose_from_most_used'      => __( 'Choose from the most used Tags', 'tutor' ),
+			'not_found'                  => __( 'No Tags found.', 'tutor' ),
+			'menu_name'                  => __( 'Tags', 'tutor' ),
 		);
 
 		$args = array(
