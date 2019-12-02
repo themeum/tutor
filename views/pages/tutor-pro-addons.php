@@ -1,24 +1,28 @@
 <div class="wrap">
     <div class="tutor-addons-list">
-        <h3 class="addon-list-heading"><?php _e('Addons List', 'tutor'); ?></h3>
+        <h3 class="addon-list-heading"><?php _e('Available Pro Addons', 'tutor'); ?></h3>
         <br class="clear">
 		<?php
-		$addons = apply_filters('tutor_addons_lists_config', array());
+		$addons = apply_filters('tutor_pro_addons_lists_for_display', array());
 
 		if (is_array($addons) && count($addons)){
 			?>
             <div class="wp-list-table widefat plugin-install">
                 <div id="the-list">
 					<?php
+
 					foreach ( $addons as $basName => $addon ) {
 						$addonConfig = tutor_utils()->get_addon_config($basName);
-						$isEnable = (bool) tutor_utils()->avalue_dot('is_enable', $addonConfig);
+
+						$addons_path = trailingslashit(tutor()->path."assets/addons/{$basName}");
+						$addons_url = trailingslashit(tutor()->url."assets/addons/{$basName}");
 
 						$thumbnailURL =  tutor()->url.'assets/images/tutor-plugin.png';
-						if (file_exists($addon['path'].'assets/images/thumbnail.png') ){
-							$thumbnailURL = $addon['url'].'assets/images/thumbnail.png';
-                        }elseif (file_exists($addon['path'].'assets/images/thumbnail.svg')){
-							$thumbnailURL = $addon['url'].'assets/images/thumbnail.svg';
+
+						if (file_exists($addons_path.'thumbnail.png') ){
+							$thumbnailURL = $addons_url.'thumbnail.png';
+                        }elseif (file_exists($addons_path.'thumbnail.svg')){
+							$thumbnailURL = $addons_url.'thumbnail.svg';
 						}
 
 						?>
@@ -35,22 +39,19 @@
                                 <div class="action-links">
                                     <ul class="plugin-action-buttons">
                                         <li>
-                                            <label class="btn-switch">
-                                                <input type="checkbox" class="tutor_addons_list_item" value="1" name="<?php echo $basName; ?>" <?php checked(true, $isEnable) ?> />
-                                                <div class="btn-slider btn-round"></div>
-                                            </label>
+                                            <a href="https://www.themeum.com/product/tutor-lms/?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists"
+                                               class="addon-buynow-link" target="_blank">Buy Now</a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="desc column-description">
                                     <p><?php echo $addon['description']; ?></p>
-
-                                    <p class="authors"><cite>By <a href="https://www.themeum.com" target="_blank">Themeum</a></cite></p>
+                                    <p class="authors"><cite>By <a href="https://www.themeum.com/?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists" target="_blank">Themeum</a></cite></p>
                                 </div>
                             </div>
                             <div class="plugin-card-bottom">
 								<?php
-								echo "<div class='plugin-version'> " . __( 'Version', 'tutor' ) . " : ".TUTOR_VERSION." </div>";
+                                echo "<div class='plugin-version'> " . __( 'Version', 'tutor' ) . " : ".TUTOR_VERSION." </div>";
 								?>
                             </div>
                         </div>

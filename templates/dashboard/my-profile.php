@@ -28,8 +28,6 @@
 
                         <label for="withdraw_method_select_<?php echo $method_id; ?>">
 							<p><?php echo tutor_utils()->avalue_dot('method_name', $method);  ?></p>
-
-
                             <small><?php _e('Min withdraw', 'tutor'); ?> <?php echo tutor_utils()->tutor_price($min_withdraw_amount);
                             ?></small>
                         </label>

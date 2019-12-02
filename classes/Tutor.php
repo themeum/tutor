@@ -24,6 +24,7 @@ final class Tutor{
 	public $options;
 	public $shortcode;
 
+	private $addons;
 	private $post_types;
 	private $assets;
 	private $course;
@@ -81,6 +82,7 @@ final class Tutor{
 
 		do_action('tutor_before_load');
 
+		$this->addons = new Addons();
 		$this->post_types = new Post_types();
 		$this->assets = new Assets();
 		$this->admin = new Admin();

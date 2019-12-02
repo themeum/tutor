@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.1
 Requires PHP: 5.4.0
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -205,6 +205,13 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 16. Course builder
 
 == Changelog ==
+
+= 1.2.1 - 23 April, 2019 =
+
+* Added: email field type at withdrawals methods form generator
+* Added: addon lists added to regular version when the pro is not exists
+* Fixed: Some design issue in quiz builder
+* Fixed: Paypal E-Mail field name, physical address field name at e-check method
 
 = 1.2.0 - 19 April, 2019 =
 

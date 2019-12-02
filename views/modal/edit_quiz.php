@@ -39,19 +39,23 @@ if ( ! $quiz){
 
 
     <div id="tutor-quiz-builder-modal-tabs-container" class="tutor-quiz-builder-modal-tabs-container">
-
         <div id="quiz-builder-tab-quiz-info" class="quiz-builder-tab-container">
-
             <div class="quiz-builder-tab-body">
-                <div class="tutor-quiz-builder-form-row">
-                    <input type="text" name="quiz_title" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo
-					$quiz->post_title; ?>">
-
-                    <div class="quiz_form_msg"></div>
+                <div class="tutor-quiz-builder-group">
+                    <div class="tutor-quiz-builder-row">
+                        <div class="tutor-quiz-builder-col">
+                            <input type="text" name="quiz_title" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo
+                            $quiz->post_title; ?>">
+                        </div>
+                    </div>
+                    <p class="warning quiz_form_msg"></p>
                 </div>
-
-                <div class="tutor-quiz-builder-form-row">
-                    <textarea name="quiz_description" rows="5"><?php echo $quiz->post_content; ?></textarea>
+                <div class="tutor-quiz-builder-group">
+                    <div class="tutor-quiz-builder-row">
+                        <div class="tutor-quiz-builder-col">
+                            <textarea name="quiz_description" rows="5"><?php echo $quiz->post_content; ?></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -135,19 +139,14 @@ if ( ! $quiz){
             <div class="quiz-builder-tab-body">
 
                 <div class="quiz-builder-modal-settins">
-
-                    <div class="tutor-quiz-builder-form-row">
-                        <div class="tutor-quiz-builder-form-cols-row">
-                            <label><?php _e('Time Limit', 'tutor'); ?></label>
-                        </div>
-                        <div class="tutor-quiz-builder-form-cols-row">
-                            <div class="quiz-form-field-col">
+                    <div class="tutor-quiz-builder-group">
+                        <h4> <?php _e('Time Limit', 'tutor'); ?> </h4>
+                        <div class="tutor-quiz-builder-row">
+                            <div class="tutor-quiz-builder-col auto-width">
                                 <input type="text" name="quiz_option[time_limit][time_value]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ?>">
                             </div>
-
-                            <div class="quiz-form-field-col">
-				                <?php $limit_time_type = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_type', 'minutes') ?>
-
+                            <div class="tutor-quiz-builder-col auto-width">
+                                <?php $limit_time_type = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_type', 'minutes') ?>
                                 <select name="quiz_option[time_limit][time_type]">
                                     <option value="seconds" <?php selected('seconds', $limit_time_type); ?> ><?php _e('Seconds', 'tutor'); ?></option>
                                     <option value="minutes" <?php selected('minutes', $limit_time_type); ?> ><?php _e('Minutes', 'tutor'); ?></option>
@@ -156,67 +155,57 @@ if ( ! $quiz){
                                     <option value="weeks" <?php selected('weeks', $limit_time_type); ?>  ><?php _e('Weeks', 'tutor'); ?></option>
                                 </select>
                             </div>
+                            <div class="tutor-quiz-builder-col auto-width">
+                                <label class="btn-switch">
+                                    <input type="checkbox" value="1" name="quiz_option[hide_quiz_time_display]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_quiz_time_display')); ?> />
+                                    <div class="btn-slider btn-round"></div>
+                                </label>
+                                <span><?php _e('Hide quiz time - display', 'tutor'); ?></span>
+                            </div>
+                        </div>
+                        <p class="help"><?php _e('Time limit for this quiz. 0 means no time limit.', 'tutor'); ?></p>
+                    </div> <!-- .tutor-quiz-builder-group -->
 
-                            <div class="quiz-form-field-col">
-                                <div class="quiz-form-field-col">
-                                    <label class="btn-switch">
-                                        <input type="checkbox" value="1" name="quiz_option[hide_quiz_time_display]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_quiz_time_display')); ?> />
-                                        <div class="btn-slider btn-round"></div>
-                                    </label>
-                                    <label><?php _e('Hide quiz time - display', 'tutor'); ?></label>
+                    <div class="tutor-quiz-builder-group">
+                        <h4><?php _e('Attempts Allowed', 'tutor'); ?> <span>(<?php _e('Optional', 'tutor'); ?>)</span></h4>
+                        <div class="tutor-quiz-builder-row">
+                            <div class="tutor-quiz-builder-col">
+                                <?php
+                                $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
+                                $attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
+                                ?>
+
+                                <div class="tutor-field-type-slider" data-min="0" data-max="20">
+                                    <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
+                                    <div class="tutor-field-slider"></div>
+                                    <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
                                 </div>
                             </div>
                         </div>
+                        <p class="help"><?php _e('Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit', 'tutor'); ?></p>
+                    </div> <!-- .tutor-quiz-builder-group -->
 
-                        <p class="quiz-modal-form-help"><?php _e('Time limit for this quiz. 0 means no time limit.', 'tutor'); ?></p>
-                    </div>
-
-
-                    <div class="tutor-quiz-builder-form-row">
-                        <label><?php _e('Attempts Allowed', 'tutor'); ?> <span>(<?php _e('Optional', 'tutor'); ?>)</span> </label>
-                        <div class="quiz-modal-field-wrap">
-
-	                        <?php
-	                        $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
-	                        $attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
-	                        ?>
-
-                            <div class="tutor-field-type-slider" data-min="0" data-max="20">
-                                <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
-                                <div class="tutor-field-slider"></div>
-                                <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
-                            </div>
-
-                            <p class="quiz-modal-form-help"><?php _e('Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit', 'tutor'); ?></p>
-                        </div>
-                    </div>
-
-                    <div class="tutor-quiz-builder-form-row">
-                        <label><?php _e('Passing Grade', 'tutor'); ?> </label>
-                        <div class="tutor-quiz-builder-form-cols-row">
-                            <div class="quiz-form-field-col">
+                    <div class="tutor-quiz-builder-group">
+                        <h4><?php _e('Passing Grade (%)', 'tutor'); ?></h4>
+                        <div class="tutor-quiz-builder-row">
+                            <div class="tutor-quiz-builder-col">
                                 <input type="number" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10">
                             </div>
+                        </div>
+                        <p class="help"><?php _e('Set the passing percentage for this quiz', 'tutor'); ?></p>
+                    </div> <!-- .tutor-quiz-builder-group -->
 
-                            <div class="quiz-form-field-col">
-                                %
+                    <div class="tutor-quiz-builder-group">
+                        <h4><?php _e('Max questions allowed to answer', 'tutor'); ?></h4>
+                        <div class="tutor-quiz-builder-row">
+                            <div class="tutor-quiz-builder-col">
+                                <input type="number" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>">
                             </div>
                         </div>
-                        <p class="quiz-modal-form-help"><?php _e('Set the passing percentage for this quiz', 'tutor'); ?></p>
-                    </div>
-
-                    <div class="tutor-quiz-builder-form-row">
-                        <label for=""><?php _e('Max questions allowed to answer', 'tutor'); ?></label>
-                        <div class="quiz-modal-field-wrap">
-                            <input type="number" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>">
-                        </div>
-                        <p class="quiz-modal-form-help"><?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater then available question, then all questions will be available for a student to answer.', 'tutor'); ?></p>
-                    </div>
+                        <p class="help"><?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater then available question, then all questions will be available for a student to answer.', 'tutor'); ?></p>
+                    </div> <!-- .tutor-quiz-builder-group -->
 
                 </div>
-
-
-
             </div>
 
             <div class="tutor-quiz-builder-modal-control-btn-group">
@@ -232,72 +221,59 @@ if ( ! $quiz){
 
         <div id="quiz-builder-tab-advanced-options" class="quiz-builder-tab-container" style="display: none;">
 
-            <div class="tutor-quiz-builder-form-row">
-                <div class="tutor-quiz-builder-form-cols-row">
-                    <div class="quiz-form-field-col">
-                        <label><?php _e('Quiz Auto Start', 'tutor'); ?></label>
-                    </div>
 
-                    <div class="quiz-form-field-col">
+            <div class="tutor-quiz-builder-group">
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col auto-width">
                         <label class="btn-switch">
                             <input type="checkbox" value="1" name="quiz_option[quiz_auto_start]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'quiz_auto_start')); ?> />
                             <div class="btn-slider btn-round"></div>
                         </label>
-                        <p class="quiz-modal-form-help"><?php _e('If you enable this option, the quiz will start automatically after the page is loaded.', 'tutor'); ?></p>
+                        <span><?php _e('Quiz Auto Start', 'tutor'); ?></span>
                     </div>
                 </div>
+                <p class="help"><?php _e('If you enable this option, the quiz will start automatically after the page is loaded.', 'tutor'); ?></p>
             </div>
 
-            <div class="tutor-quiz-builder-form-row">
-                <div class="tutor-quiz-builder-form-cols-row">
-                    <div class="quiz-form-field-col">
-                        <label><?php _e('Question Layout', 'tutor'); ?></label>
-                    </div>
-
-                    <div class="quiz-form-field-col">
-
+            <div class="tutor-quiz-builder-group">
+                <h4><?php _e('Question Layout', 'tutor'); ?></h4>
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col auto-width">
                         <select name="quiz_option[question_layout_view]">
                             <option value=""><?php _e('Set question layout view', 'tutor'); ?></option>
                             <option value="single_question" <?php selected('single_question', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Single Question', 'tutor'); ?> </option>
                             <option value="question_pagination" <?php selected('question_pagination', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view') ); ?>> <?php _e('Question Pagination', 'tutor'); ?> </option>
                             <option value="question_below_each_other" <?php selected('question_below_each_other', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view') ); ?>> <?php _e('Question below each other', 'tutor'); ?> </option>
                         </select>
-
                     </div>
                 </div>
             </div>
 
-            <div class="tutor-quiz-builder-form-row">
-                <div class="tutor-quiz-builder-form-cols-row">
-                    <div class="quiz-form-field-col">
-                        <label><?php _e('Hide question number', 'tutor'); ?></label>
-                    </div>
 
-                    <div class="quiz-form-field-col">
+            <div class="tutor-quiz-builder-group">
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col auto-width">
                         <label class="btn-switch">
                             <input type="checkbox" value="1" name="quiz_option[hide_question_number_overview]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_question_number_overview')); ?> />
                             <div class="btn-slider btn-round"></div>
                         </label>
-                        <p class="quiz-modal-form-help"><?php _e('Show/hide question number during attempt.', 'tutor'); ?></p>
+                        <span><?php _e('Hide question number', 'tutor'); ?></span>
                     </div>
                 </div>
+                <p class="help"><?php _e('Show/hide question number during attempt.', 'tutor'); ?></p>
             </div>
 
-
-            <div class="tutor-quiz-builder-form-row">
-                <div class="tutor-quiz-builder-form-cols-row">
-                    <div class="quiz-form-field-col">
-                        <label><?php _e('Short answer characters limit', 'tutor'); ?></label>
-                    </div>
-
-                    <div class="quiz-form-field-col">
+            <div class="tutor-quiz-builder-group">
+                <h4><?php _e('Short answer characters limit', 'tutor'); ?></h4>
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col">
                         <input type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option
                         ($quiz_id, 'short_answer_characters_limit', 200); ?>" >
-                        <p class="quiz-modal-form-help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor');
-                        ?></p>
                     </div>
                 </div>
+                <p class="help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor'); ?></p>
             </div>
+
 
             <div class="tutor-quiz-builder-modal-control-btn-group">
                 <div class="quiz-builder-btn-group-left">

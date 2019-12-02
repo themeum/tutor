@@ -17,57 +17,55 @@ $settings = maybe_unserialize($question->question_settings);
 
         <div class="quiz_question_form">
 
-            <div class="tutor-quiz-builder-form-row">
-                <label><?php _e('Write your question here', 'tutor'); ?></label>
-                <div class="quiz-modal-field-wrap">
-                    <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" placeholder="<?php _e('Type your quiz title here',
-						'tutor'); ?>" value="<?php echo $question->question_title; ?>">
+            <div class="tutor-quiz-builder-group">
+                <h4><?php _e('Write your question here', 'tutor'); ?></h4>
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col">
+                        <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo $question->question_title; ?>">
+                    </div>
                 </div>
             </div>
 
+            <div class="tutor-quiz-builder-group">
+                <h4><?php _e('Question Type', 'tutor'); ?></h4>
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col">
+                        <div class="tutor-select">
+                            <div class="select-header">
+                                <span class="lead-option"> <i class="tutor-icon-yes-no"></i> True or False  </span>
+                                <span class="select-dropdown"><i class="tutor-icon-light-down"></i> </span>
+                                <input type="hidden" class="tutor_select_value_holder" name="tutor_quiz_question[<?php echo $question_id; ?>][question_type]" value="" >
+                            </div>
 
-            <div class="tutor-quiz-builder-form-row">
-                <div class="tutor-quiz-builder-form-cols-row">
-                    <div class="quiz-form-field-col">
-                        <label><?php _e('Question Type', 'tutor'); ?></label>
-                        <div class="quiz-modal-field-wrap">
-
-                            <div class="tutor-select">
-                                <div class="select-header">
-                                    <span class="lead-option"> <i class="tutor-icon-yes-no"></i> True or False  </span>
-                                    <span class="select-dropdown"><i class="tutor-icon-light-down"></i> </span>
-                                    <input type="hidden" class="tutor_select_value_holder" name="tutor_quiz_question[<?php echo $question_id; ?>][question_type]" value="" >
-                                </div>
-
-                                <?php $question_types = tutor_utils()->get_question_types();
+                            <?php $question_types = tutor_utils()->get_question_types();
 
 
-                                ?>
+                            ?>
 
-                                <div class="tutor-select-options" style="display: none;">
-                                    <?php
-                                    $has_tutor_pro = tutor()->has_pro;
+                            <div class="tutor-select-options" style="display: none;">
+                                <?php
+                                $has_tutor_pro = tutor()->has_pro;
 
-                                    foreach ($question_types as $type => $question_type){
-                                        ?>
-                                        <p class="tutor-select-option" data-value="<?php echo $type; ?>" <?php echo $question->question_type===$type ? ' data-selected="selected"' : ''; ?> data-is-pro="<?php echo (! $has_tutor_pro &&  $question_type['is_pro']) ? 'true' : 'false' ?>" >
-                                            <?php echo $question_type['icon'].' '.$question_type['name']; ?>
-
-                                            <?php
-                                            if (! $has_tutor_pro && $question_type['is_pro']){
-                                                echo '<span class="question-type-pro">PRO</span>';
-                                            }
-                                            ?>
-                                        </p>
-                                    <?php
-                                    }
+                                foreach ($question_types as $type => $question_type){
                                     ?>
-                                    <!--<p class="tutor-select-option" data-value="true_false" <?php /*echo $question->question_type === 'true_false' ? ' data-selected="selected"' : ''; */?> >
+                                    <p class="tutor-select-option" data-value="<?php echo $type; ?>" <?php echo $question->question_type===$type ? ' data-selected="selected"' : ''; ?> data-is-pro="<?php echo (! $has_tutor_pro &&  $question_type['is_pro']) ? 'true' : 'false' ?>" >
+                                        <?php echo $question_type['icon'].' '.$question_type['name']; ?>
+
+                                        <?php
+                                        if (! $has_tutor_pro && $question_type['is_pro']){
+                                            echo '<span class="question-type-pro">PRO</span>';
+                                        }
+                                        ?>
+                                    </p>
+                                    <?php
+                                }
+                                ?>
+                                <!--<p class="tutor-select-option" data-value="true_false" <?php /*echo $question->question_type === 'true_false' ? ' data-selected="selected"' : ''; */?> >
                                         <i class="tutor-icon-block tutor-icon-yes-no"></i> <?php /*_e('True False'); */?>
                                     </p>-->
 
 
-                                    <!--<p class="tutor-select-option" data-value="single_choice" <?php /*echo $question->question_type === 'single_choice' ? ' data-selected="selected"' : ''; */?>>
+                                <!--<p class="tutor-select-option" data-value="single_choice" <?php /*echo $question->question_type === 'single_choice' ? ' data-selected="selected"' : ''; */?>>
                                         <i class="tutor-icon-block tutor-icon-mark"></i> <?php /*_e('Single Choice'); */?>
                                     </p>
                                     <p class="tutor-select-option" data-value="multiple_choice" <?php /*echo $question->question_type === 'multiple_choice' ? ' data-selected="selected"' : ''; */?>>
@@ -94,153 +92,151 @@ $settings = maybe_unserialize($question->question_settings);
                                     <p class="tutor-select-option" data-value="ordering" <?php /*echo $question->question_type === 'ordering' ? ' data-selected="selected"' : ''; */?>>
                                         <i class="tutor-icon-block tutor-icon-ordering"></i> <?php /*_e('Ordering', 'tutor'); */?>
                                     </p>-->
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="quiz-form-field-col">
-                        <div class="quiz-modal-field-wrap">
-                            <div class="quiz-modal-switch-field">
-                                <label class="btn-switch">
-                                    <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][answer_required]" <?php checked('1', tutor_utils()->avalue_dot('answer_required', $settings)); ?> />
-                                    <div class="btn-slider btn-round"></div>
-                                </label>
-                                <label><?php _e('Answer Required', 'tutor'); ?></label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="quiz-form-field-col">
-                        <div class="quiz-modal-field-wrap">
-                            <div class="quiz-modal-switch-field">
-                                <label class="btn-switch">
-                                    <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][randomize_question]" <?php checked('1', tutor_utils()->avalue_dot('randomize_question', $settings)); ?> />
-                                    <div class="btn-slider btn-round"></div>
-                                </label>
-                                <label><?php _e('Randomize', 'tutor'); ?></label>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-
-            <div class="tutor-quiz-builder-form-row">
-
-                <div class="tutor-quiz-builder-form-cols-row">
-                    <div class="quiz-form-field-col">
-                        <label><?php _e('Mark for this question', 'tutor'); ?></label>
-                        <div class="quiz-modal-field-wrap">
-                            <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_mark]" placeholder="<?php _e('set the mark ex. 10', 'tutor'); ?>" value="<?php
-							echo $question->question_mark; ?>">
-                        </div>
+            <div class="tutor-quiz-builder-group">
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col auto-width">
+                        <label class="btn-switch">
+                            <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][answer_required]" <?php checked('1', tutor_utils()->avalue_dot('answer_required', $settings)); ?> />
+                            <div class="btn-slider btn-round"></div>
+                        </label>
+                        <span><?php _e('Answer Required', 'tutor'); ?></span>
                     </div>
-
-                    <div class="quiz-form-field-col">
-                        <div class="quiz-modal-field-wrap">
-                            <div class="quiz-modal-switch-field">
-                                <label class="btn-switch">
-                                    <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][show_question_mark]" <?php checked('1', tutor_utils()->avalue_dot('show_question_mark', $settings)); ?> />
-                                    <div class="btn-slider btn-round"></div>
-                                </label>
-                                <label><?php _e('Show marks', 'tutor'); ?></label>
-                            </div>
-                        </div>
+                    <div class="tutor-quiz-builder-col auto-width">
+                        <label class="btn-switch">
+                            <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][randomize_question]" <?php checked('1', tutor_utils()->avalue_dot('randomize_question', $settings)); ?> />
+                            <div class="btn-slider btn-round"></div>
+                        </label>
+                        <span><?php _e('Randomize', 'tutor'); ?></span>
                     </div>
-                </div>
-
-            </div>
-
-            <div class="tutor-quiz-builder-form-row">
-                <label><?php _e('Description', 'tutor'); ?> <span>(<?php _e('Optional', 'tutor'); ?>)</span> </label>
-                <div class="quiz-modal-field-wrap">
-                    <textarea name="tutor_quiz_question[<?php echo $question_id; ?>][question_description]"><?php echo $question->question_description;?></textarea>
                 </div>
             </div>
 
+            <div class="tutor-quiz-builder-group">
+                <h4><?php _e('Mark for this question', 'tutor'); ?></h4>
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col">
+                        <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_mark]" placeholder="<?php _e('set the mark ex. 10', 'tutor'); ?>" value="<?php
+                        echo $question->question_mark; ?>">
+                    </div>
+                </div>
+            </div>
 
-            <div class="tutor-quiz-builder-form-row">
+            <div class="tutor-quiz-builder-group">
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col auto-width">
+                        <label class="btn-switch">
+                            <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][show_question_mark]" <?php checked('1', tutor_utils()->avalue_dot('show_question_mark', $settings)); ?> />
+                            <div class="btn-slider btn-round"></div>
+                        </label>
+                        <span><?php _e('Show marks', 'tutor'); ?></span>
+                    </div>
+                </div>
+            </div>
 
+            <div class="tutor-quiz-builder-group">
+                <h4><?php _e('Description', 'tutor'); ?> <span>(<?php _e('Optional', 'tutor'); ?>)</span></h4>
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col">
+                        <textarea name="tutor_quiz_question[<?php echo $question_id; ?>][question_description]"><?php echo $question->question_description;?></textarea>
+                    </div>
+                </div>
+            </div>
 
-                <div id="tuotr_question_options_for_quiz" class="quiz-modal-field-wrap">
-                    <div id="tutor_quiz_question_answers" data-question-id="<?php echo $question_id; ?>">
-						<?php
-						switch ($question->question_type){
-							case 'true_false':
-								echo '<label>'.__('Answer options &amp; mark correct', 'tutor').'</label>';
-								break;
-							case 'ordering':
-								echo '<label>'.__('Student should order below items exact this order, make sure your answer is in right order, you can re-order them', 'tutor').'</label>';
-								break;
-						}
+            <div class="tutor-quiz-builder-group">
+                <h4>
+                    <?php
+                        switch ($question->question_type){
+                            case 'true_false':
+                                echo __('Answer options &amp; mark correct', 'tutor');
+                                break;
+                            case 'ordering':
+                                echo __('Student should order below items exact this order, make sure your answer is in right order, you can re-order them', 'tutor');
+                                break;
+                        }
+                    ?>
+                </h4>
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col">
+                        <div id="tuotr_question_options_for_quiz" class="quiz-modal-field-wrap">
+                            <div id="tutor_quiz_question_answers" data-question-id="<?php echo $question_id; ?>">
+                                <?php
 
-						$answers = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question->question_type}' order by answer_order asc ;");
-						if (is_array($answers) && count($answers)){
-							foreach ($answers as $answer){
-								?>
-                                <div class="tutor-quiz-answer-wrap" data-answer-id="<?php echo $answer->answer_id; ?>">
-                                    <div class="tutor-quiz-answer">
+                                $answers = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question->question_type}' order by answer_order asc ;");
+                                if (is_array($answers) && count($answers)){
+                                    foreach ($answers as $answer){
+                                        ?>
+                                        <div class="tutor-quiz-answer-wrap" data-answer-id="<?php echo $answer->answer_id; ?>">
+                                            <div class="tutor-quiz-answer">
                                         <span class="tutor-quiz-answer-title">
                                             <?php
                                             echo $answer->answer_title;
                                             if ($answer->belongs_question_type === 'fill_in_the_blank'){
-	                                            echo ' ('.__('Answer', 'tutor').' : ';
-	                                            echo "<strong>{$answer->answer_two_gap_match} </strong>)";
+                                                echo ' ('.__('Answer', 'tutor').' : ';
+                                                echo "<strong>{$answer->answer_two_gap_match} </strong>)";
                                             }
                                             if ($answer->belongs_question_type === 'matching'){
-	                                            echo " - {$answer->answer_two_gap_match}";
+                                                echo " - {$answer->answer_two_gap_match}";
                                             }
                                             ?>
                                         </span>
 
-										<?php
-										if ($answer->image_id){
-											echo '<span class="tutor-question-answer-image"><img src="'.wp_get_attachment_image_url($answer->image_id).'" /> </span>';
-										}
-										if ($question->question_type === 'true_false' || $question->question_type === 'single_choice'){
-											?>
-                                            <span class="tutor-quiz-answers-mark-correct-wrap">
+                                                <?php
+                                                if ($answer->image_id){
+                                                    echo '<span class="tutor-question-answer-image"><img src="'.wp_get_attachment_image_url($answer->image_id).'" /> </span>';
+                                                }
+                                                if ($question->question_type === 'true_false' || $question->question_type === 'single_choice'){
+                                                    ?>
+                                                    <span class="tutor-quiz-answers-mark-correct-wrap">
                                                 <input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]"
                                                        value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                                             </span>
-											<?php
-										}elseif ($question->question_type === 'multiple_choice'){
-											?>
-                                            <span class="tutor-quiz-answers-mark-correct-wrap">
+                                                    <?php
+                                                }elseif ($question->question_type === 'multiple_choice'){
+                                                    ?>
+                                                    <span class="tutor-quiz-answers-mark-correct-wrap">
                                                 <input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]"
                                                        value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                                             </span>
-											<?php
-										}
-										?>
-                                        <span class="tutor-quiz-answer-edit">
+                                                    <?php
+                                                }
+                                                ?>
+                                                <span class="tutor-quiz-answer-edit">
                                             <a href="javascript:;"><i class="tutor-icon-pencil"></i> </a>
                                         </span>
-                                        <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
-                                    </div>
+                                                <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
+                                            </div>
 
-                                    <div class="tutor-quiz-answer-trash-wrap">
-                                        <a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>"><i class="tutor-icon-garbage"></i> </a>
-                                    </div>
-                                </div>
-								<?php
-							}
-						}
-						?>
+                                            <div class="tutor-quiz-answer-trash-wrap">
+                                                <a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>"><i class="tutor-icon-garbage"></i> </a>
+                                            </div>
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+
+
+                            <div id="tutor_quiz_question_answer_form"></div>
+
+
+                            <a href="javascript:;" class="add_question_answers_option" data-question-id="<?php echo $question_id; ?>">
+                                <i class="tutor-icon-block tutor-icon-plus"></i>
+                                <?php _e('Add An Option', 'tutor'); ?>
+                            </a>
+                        </div>
                     </div>
-
-
-                    <div id="tutor_quiz_question_answer_form"></div>
-
-
-                    <a href="javascript:;" class="add_question_answers_option" data-question-id="<?php echo $question_id; ?>">
-                        <i class="tutor-icon-block tutor-icon-plus"></i>
-						<?php _e('Add An Option', 'tutor'); ?>
-                    </a>
                 </div>
             </div>
+
+        </div>
+
 
         </div>
 
@@ -250,7 +246,7 @@ $settings = maybe_unserialize($question->question_settings);
 
 
 
-    <div class="tutor-quiz-builder-modal-control-btn-group">
+    <div class="tutor-quiz-builder-modal-control-btn-group question_form_inner">
         <div class="quiz-builder-btn-group-left">
             <a href="javascript:;" class="quiz-modal-tab-navigation-btn quiz-modal-question-save-btn"><?php _e('Save &amp; Continue', 'tutor');
 				?></a>
