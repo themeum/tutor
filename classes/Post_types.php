@@ -184,7 +184,7 @@ class Post_types{
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'thumbnail'),
+			'supports'           => array( 'title', 'editor'),
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_lesson',
 				'read_post'          => 'read_tutor_lesson',

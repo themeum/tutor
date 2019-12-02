@@ -63,7 +63,6 @@
 		include tutor()->path.'views/metabox/lesson-attachments-metabox.php';
 		?>
 
-
         <?php do_action('tutor_lesson_edit_modal_form_after', $post); ?>
 
     </div>

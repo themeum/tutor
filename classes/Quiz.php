@@ -1086,6 +1086,8 @@ class Quiz {
 		$quiz_option = tutor_utils()->sanitize_array($_POST['quiz_option']);
 		update_post_meta($quiz_id, 'tutor_quiz_option', $quiz_option);
 
+		do_action('tutor_quiz_settings_updated', $quiz_id);
+
 		wp_send_json_success();
 	}
 

@@ -1,4 +1,4 @@
-<h2>Purchase History</h2>
+<h2><?php _e('Purchase History', 'tutor'); ?></h2>
 
 <?php
 $orders = tutor_utils()->get_orders_by_user_id();

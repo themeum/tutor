@@ -17,7 +17,9 @@
 						$thumbnailURL =  tutor()->url.'assets/images/tutor-plugin.png';
 						if (file_exists($addon['path'].'assets/images/thumbnail.png') ){
 							$thumbnailURL = $addon['url'].'assets/images/thumbnail.png';
-                        }elseif (file_exists($addon['path'].'assets/images/thumbnail.svg')){
+                        }elseif (file_exists($addon['path'].'assets/images/thumbnail.jpg') ){
+							$thumbnailURL = $addon['url'].'assets/images/thumbnail.jpg';
+						}elseif (file_exists($addon['path'].'assets/images/thumbnail.svg')){
 							$thumbnailURL = $addon['url'].'assets/images/thumbnail.svg';
 						}
 

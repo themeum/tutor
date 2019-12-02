@@ -92,6 +92,8 @@ if ( ! $can_publish_course){
                                         </div>
                                     </div>  <!--.tutor-frontend-builder-item-scope-->
 
+                                    <?php do_action('tutor/frontend_course_edit/after/description', $post) ?>
+
                                     <div class="tutor-frontend-builder-item-scope">
                                         <div class="tutor-form-group">
                                             <label>
@@ -140,32 +142,6 @@ if ( ! $can_publish_course){
 
                                     <div class="tutor-frontend-builder-item-scope">
                                         <div class="tutor-form-group">
-                                            <div class="tutor-option-field-label">
-                                                <label class="tutor-builder-item-heading">
-													<?php _e('Level', 'tutor'); ?>
-                                                </label>
-                                            </div>
-                                            <div class="tutor-course-level-meta">
-												<?php
-												$levels = tutor_utils()->course_levels();
-												$course_level = get_post_meta($course_id, '_tutor_course_level', true);
-												foreach ($levels as $level_key => $level){
-													?>
-                                                    <label class="tutor-styled-radio">
-                                                        <input type="radio" name="course_level" value="<?php echo $level_key; ?>" <?php $course_level ? checked($level_key, $course_level) : $level_key === 'intermediate' ? checked(1, 1): ''; ?> >
-                                                        <span>
-                                                            <?php echo $level; ?>
-                                                        </span>
-                                                    </label>
-													<?php
-												}
-												?>
-                                            </div>
-                                        </div>
-                                    </div>  <!--.tutor-frontend-builder-item-scope-->
-
-                                    <div class="tutor-frontend-builder-item-scope">
-                                        <div class="tutor-form-group">
                                             <label>
 												<?php _e('Course Thumbnail', 'tutor'); ?>
                                             </label>
@@ -184,8 +160,7 @@ if ( ! $can_publish_course){
 															?>
                                                             <img src="<?php echo $_thumbnail_url; ?>" class="thumbnail-img" data-placeholder-src="<?php echo $builder_course_img_src; ?>">
                                                             <a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display: <?php echo
-															$post_thumbnail_id ? 'block':'none'; ?>;"><i
-                                                                        class="tutor-icon-line-cross"></i></a>
+															$post_thumbnail_id ? 'block':'none'; ?>;"><i class="tutor-icon-line-cross"></i></a>
                                                         </div>
                                                     </div>
 

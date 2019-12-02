@@ -204,6 +204,8 @@ jQuery(document).ready(function($){
                 tinymce.init(tinymceConfig);
                 tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_lesson_modal_editor' );
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_lesson_modal_editor");
+
+                $(document).trigger('lesson_modal_loaded', {lesson_id : lesson_id, topic_id : topic_id, course_id : course_id});
             },
             complete: function () {
                 quicktags({id : "tutor_lesson_modal_editor"});
@@ -362,6 +364,8 @@ jQuery(document).ready(function($){
                 $('#tutor-quiz-modal-tab-items-wrap a[href="#quiz-builder-tab-questions"]').trigger('click');
 
                 tutor_slider_init();
+
+                $(document).trigger('quiz_modal_loaded', {topic_id : topic_id, course_id : course_id});
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -398,6 +402,9 @@ jQuery(document).ready(function($){
                     var tabSelector = $that.attr('data-back-to-tab');
                     $('#tutor-quiz-modal-tab-items-wrap a[href="'+tabSelector+'"]').trigger('click');
                 }
+
+                $(document).trigger('quiz_modal_loaded', {quiz_id : quiz_id, topic_id : topic_id, course_id : course_id});
+
                 tutor_slider_init();
                 enable_quiz_questions_sorting();
             },
@@ -1082,5 +1089,39 @@ jQuery(document).ready(function($){
         });
     });
 
+    $(document).on('click', '.settings-tabs-navs li', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var data_target = $that.find('a').attr('data-target');
+        var url = $that.find('a').attr('href');
+
+        $that.addClass('active').siblings('li.active').removeClass('active');
+        $('.settings-tab-wrap').removeClass('active').hide().siblings(data_target).addClass('active').show();
+
+        window.history.pushState({}, '', url);
+    });
+
+    /**
+     * Re init required
+     * Modal Loaded...
+     */
+
+    $(document).on('lesson_modal_loaded quiz_modal_loaded assignment_modal_loaded', function(e, obj){
+        if (jQuery().select2){
+            $('.select2_multiselect').select2({
+                dropdownCssClass:'increasezindex'
+            });
+        }
+        if (jQuery.datepicker){
+            $( ".tutor_date_picker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
+        }
+    });
+    $(document).on('lesson_modal_loaded', function(e, obj){
+        $('.tutor-lesson-modal-wrap .modal-title h1').html('Lesson');
+    });
+    $(document).on('assignment_modal_loaded', function(e, obj){
+        $('.tutor-lesson-modal-wrap .modal-title h1').html('Assignment');
+    });
 
 });

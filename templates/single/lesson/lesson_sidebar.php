@@ -36,9 +36,9 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
     <div class="tutor-sidebar-tabs-wrap">
         <div class="tutor-tabs-btn-group">
             <a href="#tutor-lesson-sidebar-tab-content" class="<?php echo $enable_q_and_a_on_course ? "active" : ""; ?>"> <i class="tutor-icon-education"></i> <span> <?php esc_html_e('Lesson List', 'tutor'); ?></span></a>
-            <?php if($enable_q_and_a_on_course) { ?>
+			<?php if($enable_q_and_a_on_course) { ?>
                 <a href="#tutor-lesson-sidebar-qa-tab-content"> <i class="tutor-icon-question-1"></i> <span><?php esc_html_e('Browse Q&A', 'tutor'); ?></span></a>
-            <?php } ?>
+			<?php } ?>
         </div>
 
         <div class="tutor-sidebar-tabs-content">
@@ -85,8 +85,6 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 										$lessons->the_post();
 
 										if ($post->post_type === 'tutor_quiz') {
-
-
 											$quiz = $post;
 											?>
                                             <div class="tutor-single-lesson-items quiz-single-item quiz-single-item-<?php echo $quiz->ID; ?> <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
@@ -94,8 +92,9 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
                                                     <i class="tutor-icon-doubt"></i>
                                                     <span class="lesson_title"><?php echo $quiz->post_title; ?></span>
                                                     <span class="tutor-lesson-right-icons">
-
                                                     <?php
+                                                    do_action('tutor/lesson_list/right_icon_area', $post);
+
                                                     $time_limit = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_value');
                                                     if ($time_limit){
 	                                                    $time_type = tutor_utils()->get_quiz_option($quiz->ID, 'time_limit.time_type');
@@ -107,10 +106,10 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
                                             </div>
 											<?php
 										}elseif($post->post_type === 'tutor_assignments'){
-										    /**
-                                             * Assignments
-                                             * @since this block v.1.3.3
-                                             */
+											/**
+											 * Assignments
+											 * @since this block v.1.3.3
+											 */
 
 											?>
                                             <div class="tutor-single-lesson-items assignments-single-item assignment-single-item-<?php echo $post->ID; ?> <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>"
@@ -118,11 +117,14 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
                                                 <a href="<?php echo get_permalink($post->ID); ?>" class="sidebar-single-assignment-a" data-assignment-id="<?php echo $post->ID; ?>">
                                                     <i class="tutor-icon-clipboard"></i>
                                                     <span class="lesson_title"> <?php echo $post->post_title; ?> </span>
+                                                    <span class="tutor-lesson-right-icons">
+                                                        <?php do_action('tutor/lesson_list/right_icon_area', $post); ?>
+                                                    </span>
                                                 </a>
                                             </div>
 											<?php
 
-                                        }else{
+										}else{
 
 											/**
 											 * Lesson
@@ -147,8 +149,9 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
                                                     <span class="lesson_title"><?php the_title(); ?></span>
                                                     <span class="tutor-lesson-right-icons">
                                                         <?php
+                                                        do_action('tutor/lesson_list/right_icon_area', $post);
                                                         if ( $play_time ) {
-                                                            echo "<i class='tutor-play-duration'>$play_time</i>";
+	                                                        echo "<i class='tutor-play-duration'>$play_time</i>";
                                                         }
                                                         $lesson_complete_icon = $is_completed_lesson ? 'tutor-icon-mark tutor-done' : '';
                                                         echo "<i class='tutor-lesson-complete $lesson_complete_icon'></i>";
@@ -158,14 +161,10 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
                                             </div>
 
 											<?php
-
-
 										}
-
 									}
 									$lessons->reset_postdata();
 								}
-
 								?>
 
 								<?php do_action('tutor/lesson_list/after/topic', $topic_id); ?>
@@ -180,14 +179,11 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 				?>
             </div>
 
-
             <div id="tutor-lesson-sidebar-qa-tab-content" class="tutor-lesson-sidebar-tab-item" style="display: none;">
 				<?php
 				tutor_lesson_sidebar_question_and_answer();
 				?>
             </div>
-
-
 
         </div>
 
