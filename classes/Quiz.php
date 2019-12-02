@@ -316,6 +316,9 @@ class Quiz {
 		//Checking nonce
 		tutor_utils()->checking_nonce();
 
+		$attempt_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('attempt_id', $_POST));
+		$attempt = tutor_utils()->get_attempt($attempt_id);
+
 		$attempt_answers = isset($_POST['attempt']) ? $_POST['attempt'] : false;
 		if ( ! is_user_logged_in()){
 			die('Please sign in to do this operation');
@@ -326,7 +329,6 @@ class Quiz {
 
 		if ($attempt_answers && is_array($attempt_answers) && count($attempt_answers)){
 		    foreach ($attempt_answers as $attempt_id => $attempt_answers){
-			    $attempt = tutor_utils()->get_attempt($attempt_id);
 
 			    /**
 			     * Get total marks of all question comes
@@ -436,7 +438,7 @@ class Quiz {
             }
         }
 
-		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
+		wp_redirect(get_the_permalink($attempt->quiz_id));
 		die();
 	}
 

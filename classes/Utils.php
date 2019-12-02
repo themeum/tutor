@@ -606,7 +606,7 @@ class Utils {
 		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
 
 		if ($total_lesson > 0 && $completed_lesson > 0){
-			return number_format(($completed_lesson * 100) / $total_lesson, 1);
+			return number_format(($completed_lesson * 100) / $total_lesson);
 		}
 
 		return 0;

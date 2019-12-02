@@ -85,7 +85,7 @@ $poster = tutor_utils()->avalue_dot('poster', $video);
     </div>
 </div>
 
-<div class="tutor-option-field-row">
+<div class="tutor-option-field-row tutor-video-poster-field" style="display: <?php echo $videoSource === 'html5' ? 'block': 'none'; ?>;">
     <div class="tutor-option-field-label">
         <label for=""><?php _e('Video Poster', 'tutor'); ?></label>
     </div>

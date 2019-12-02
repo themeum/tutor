@@ -25,6 +25,8 @@
             <div class="tutor-option-field-label">
                 <label for="">
 					<?php _e('First Name', 'tutor'); ?>
+
+                    <span class="tutor-required-fields">*</span>
                 </label>
             </div>
             <div class="tutor-option-field">
@@ -37,6 +39,7 @@
             <div class="tutor-option-field-label">
                 <label>
 					<?php _e('Last Name', 'tutor'); ?>
+                    <span class="tutor-required-fields">*</span>
                 </label>
             </div>
 
@@ -49,6 +52,7 @@
             <div class="tutor-option-field-label">
                 <label>
 					<?php _e('User Name', 'tutor'); ?>
+                    <span class="tutor-required-fields">*</span>
                 </label>
             </div>
 
@@ -61,6 +65,7 @@
             <div class="tutor-option-field-label">
                 <label>
 					<?php _e('E-Mail', 'tutor'); ?>
+                    <span class="tutor-required-fields">*</span>
                 </label>
             </div>
 
@@ -73,6 +78,7 @@
             <div class="tutor-option-field-label">
                 <label>
 					<?php _e('Phone Number', 'tutor'); ?>
+                    <span class="tutor-required-fields">*</span>
                 </label>
             </div>
 
@@ -85,6 +91,7 @@
             <div class="tutor-option-field-label">
                 <label>
 					<?php _e('Password', 'tutor'); ?>
+                    <span class="tutor-required-fields">*</span>
                 </label>
             </div>
 
@@ -97,6 +104,7 @@
             <div class="tutor-option-field-label">
                 <label>
 					<?php _e('Password confirmation', 'tutor'); ?>
+                    <span class="tutor-required-fields">*</span>
                 </label>
             </div>
 
