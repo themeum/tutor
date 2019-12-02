@@ -20,8 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	?>
     <span class="tutor-rating-count">
         <?php
-        echo $course_rating->rating_avg;
-        echo '<i>('.$course_rating->rating_count.')</i>';
+        if ($course_rating->rating_avg > 0) {
+	        echo apply_filters('tutor_course_rating_average', $course_rating->rating_avg);
+	        echo '<i>(' . apply_filters('tutor_course_rating_count', $course_rating->rating_count) . ')</i>';
+        }
         ?>
     </span>
 </div>

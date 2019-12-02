@@ -29,6 +29,9 @@ class Admin{
 
 		//Admin Footer Text
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
+
+		//Register Course Widget
+		add_action( 'widgets_init', array($this, 'register_course_widget') );
 	}
 
 	public function register_menu(){
@@ -454,6 +457,11 @@ class Admin{
 		}
 
 		return $footer_text;
+	}
+
+
+	public function register_course_widget(){
+		register_widget( 'Tutor\Course_Widget' );
 	}
 
 

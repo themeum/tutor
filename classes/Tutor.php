@@ -46,6 +46,8 @@ final class Tutor{
 	private $edd;
 	private $withdraw;
 
+	private $course_widget;
+
 	/**
 	 * @return null|Tutor
 	 *
@@ -65,6 +67,8 @@ final class Tutor{
 		$this->path = plugin_dir_path(TUTOR_FILE);
 		$this->url = plugin_dir_url(TUTOR_FILE);
 		$this->basename = plugin_basename(TUTOR_FILE);
+
+		add_action('admin_init', array($this, 'tutor_course_post_type_update'));
 
 		/**
 		 * Include Files
@@ -108,6 +112,8 @@ final class Tutor{
 		$this->edd = new TutorEDD();
 		$this->withdraw = new Withdraw();
 
+		$this->course_widget = new Course_Widget();
+
 		/**
 		 * Run Method
 		 * @since v.1.2.0
@@ -116,9 +122,9 @@ final class Tutor{
 
 		do_action('tutor_loaded');
 
-
 		add_action( 'init', array( $this, 'init_action' ) );
 	}
+
 	/**
 	 * @param $className
 	 *
@@ -207,11 +213,41 @@ final class Tutor{
 			update_option('required_rewrite_flush', time());
 		}
 
+		/**
+		 * Backward Compatibility to < 1.3.1 for make course plural
+		 */
+		if (version_compare(get_option('TUTOR_VERSION'), '1.3.1', '<')){
+			global $wpdb;
+
+			if ( ! get_option('is_course_post_type_updated')){
+				$wpdb->update($wpdb->posts, array('post_type' => 'courses'), array('post_type' => 'course'));
+				update_option('is_course_post_type_updated', true);
+				update_option('tutor_version', '1.3.1');
+				flush_rewrite_rules();
+			}
+		}
+
 	}
 
 	//Run task on deactivation
 	public function tutor_deactivation() {
 		wp_clear_scheduled_hook('tutor_once_in_day_run_schedule');
+	}
+
+	public function tutor_course_post_type_update(){
+		/**
+		 * Backward Compatibility to < 1.3.1 for make course plural
+		 */
+		if (version_compare(get_option('TUTOR_VERSION'), '1.3.1', '<')){
+			global $wpdb;
+
+			if ( ! get_option('is_course_post_type_updated')){
+				$wpdb->update($wpdb->posts, array('post_type' => 'courses'), array('post_type' => 'course'));
+				update_option('is_course_post_type_updated', true);
+				update_option('tutor_version', '1.3.1');
+				flush_rewrite_rules();
+			}
+		}
 	}
 
 	public function create_database(){

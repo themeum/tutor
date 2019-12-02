@@ -25,7 +25,10 @@ if ( empty($content)){
     </div>
 
     <div class="tutor-course-content-content">
-        <?php echo wpautop($content); ?>
+        <?php
+        the_content();
+        //echo wpautop($content);
+        ?>
     </div>
 </div>
 

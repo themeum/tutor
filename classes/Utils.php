@@ -796,6 +796,38 @@ class Utils {
 	/**
 	 * @param int $course_id
 	 *
+	 * @return object
+	 *
+	 * Get raw course price and sale price of a course
+	 * It could help you to calculate something
+	 * Such as Calculate discount by regular price and sale price
+	 *
+	 * @since v.1.3.1
+	 */
+	public function get_raw_course_price($course_id = 0){
+		$course_id = $this->get_post_id($course_id);
+
+		$prices = array(
+			'regular_price' => 0,
+			'sale_price'    => 0,
+		);
+
+		if ($this->is_course_purchasable($course_id)){
+			if ($this->get_option('enable_course_sell_by_woocommerce') && $this->has_wc()){
+				$prices['regular_price']= get_post_meta($course_id, '_regular_price', true);
+				$prices['sale_price']= get_post_meta($course_id, '_sale_price', true);
+			}elseif ($this->get_option('enable_tutor_edd') && $this->has_edd() ){
+				$prices['regular_price']= get_post_meta($course_id, 'edd_price', true);
+				$prices['sale_price']= get_post_meta($course_id, 'edd_price', true);
+			}
+		}
+
+		return (object) $prices;
+	}
+
+	/**
+	 * @param int $course_id
+	 *
 	 * @return array|bool|null|object
 	 *
 	 * Check if current user has been enrolled or not
@@ -4212,6 +4244,22 @@ class Utils {
  			INNER JOIN {$wpdb->postmeta} tutor_order ON ID = tutor_order.post_id AND tutor_order.meta_key = '_is_tutor_order_for_course'
  			where post_type = 'shop_order' AND customer.meta_value = {$user_id}  ");
 		return $query;
+	}
+
+	/**
+	 * @param null $status
+	 *
+	 * @return string
+	 *
+	 * Get status contact formatted for order
+	 *
+	 * @since v.1.3.1
+	 */
+	public function order_status_context($status = null){
+		$status = str_replace('wc-', '', $status);
+		$status_name = ucwords(str_replace('-', ' ', $status));
+
+		return "<span class='label-order-status label-status-{$status}'>$status_name</span>";
 	}
 
 }

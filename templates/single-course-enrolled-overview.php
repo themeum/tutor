@@ -19,7 +19,6 @@ do_action('tutor_course/single/enrolled/before/wrap');
                 <div class="tutor-col-8">
                     <?php tutor_course_enrolled_lead_info(); ?>
                     <?php tutor_course_enrolled_nav(); ?>
-                    <?php tutor_course_content(); ?>
                     <?php get_tutor_posts_attachments(); ?>
                 </div>
                 <div class="tutor-col-4">
