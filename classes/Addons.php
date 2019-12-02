@@ -36,7 +36,7 @@ class Addons {
 			),
 			'tutor-certificate' => array(
 				'name'          => __('Tutor Certificate', 'tutor-certificate'),
-				'description'   => 'Student will able to download certificate of completed course',
+				'description'   => 'Students will be able to download a certificate after course completion.',
 			),
 			'tutor-course-attachments' => array(
 				'name'          => __('Tutor Course Attachments', 'tutor-certificate'),
@@ -44,7 +44,7 @@ class Addons {
 			),
 			'tutor-course-preview' => array(
 				'name'          => __('Tutor Course Preview', 'tutor-certificate'),
-				'description'   => 'Open some lesson to check course overview for guest',
+				'description'   => 'Unlock some lessons for students before enrollment.',
 			),
 			'tutor-email' => array(
 				'name'          => __('Tutor E-Mail', 'tutor-certificate'),
@@ -60,7 +60,7 @@ class Addons {
 			),
 			'tutor-report' => array(
 				'name'          => __('Tutor Report', 'tutor-certificate'),
-				'description'   => 'Check your tutor assets performance through tutor report',
+				'description'   => 'Check your course performance through Tutor Report stats.',
 			),
 		);
 

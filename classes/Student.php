@@ -19,9 +19,7 @@ class Student {
 	public function __construct() {
 		add_action('template_redirect', array($this, 'register_student'));
 		add_action('template_redirect', array($this, 'update_profile'));
-
 		add_filter('get_avatar_url', array($this, 'filter_avatar'), 10, 3);
-
 		add_action('tutor_action_tutor_reset_password', array($this, 'tutor_reset_password'));
 	}
 
@@ -31,7 +29,7 @@ class Student {
 	 * @since v.1.0.0
 	 */
 	public function register_student(){
-		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_register_student' ){
+		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_register_student' ){
 			return;
 		}
 		//Checking nonce
@@ -89,8 +87,12 @@ class Student {
 				wp_set_auth_cookie( $user_id );
 			}
 
-			$dashboard_url = tutor_utils()->tutor_dashboard_url();
-			wp_redirect($dashboard_url);
+			//Redirect page
+			$redirect_page = tutils()->array_get('redirect_to', $_REQUEST);
+			if ( ! $redirect_page){
+				$redirect_page = tutor_utils()->tutor_dashboard_url();
+			}
+			wp_redirect($redirect_page);
 			die();
 		}else{
 			$this->error_msgs = $user_id->get_error_messages();
@@ -108,7 +110,7 @@ class Student {
 	}
 
 	public function update_profile(){
-		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_profile_edit' ){
+		if (tutils()->array_get('tutor_action', $_POST) !== 'tutor_profile_edit' ){
 			return;
 		}
 
@@ -233,6 +235,5 @@ class Student {
 		wp_redirect(wp_get_raw_referer());
 		die();
 	}
-
 
 }

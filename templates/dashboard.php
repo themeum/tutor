@@ -53,7 +53,7 @@ do_action('tutor_dashboard/before/wrap'); ?>
                                     <div class="tutor-dashboard-header-ratings">
 										<?php tutor_utils()->star_rating_generator($instructor_rating->rating_avg); ?>
                                         <span><?php echo esc_html($instructor_rating->rating_avg);  ?></span>
-                                        <span> (<?php _e(sprintf('%d Ratings', $instructor_rating->rating_count), 'tutor') ?>) </span>
+                                        <span> (<?php echo sprintf(__('%d Ratings', 'tutor'), $instructor_rating->rating_count); ?>) </span>
                                     </div>
                                     <!--<div class="tutor-dashboard-header-notifications">
                                         <?php /*_e('Notification'); */?> <span>9</span>

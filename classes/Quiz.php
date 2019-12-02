@@ -38,6 +38,7 @@ class Quiz {
 		add_action('template_redirect', array($this, 'finishing_quiz_attempt'));
 
 		add_action('admin_action_review_quiz_answer', array($this, 'review_quiz_answer'));
+		add_action('wp_ajax_review_quiz_answer', array($this, 'review_quiz_answer'));
 
 		/**
 		 * New Design Quiz
@@ -510,8 +511,7 @@ class Quiz {
 	 */
 
 	public function review_quiz_answer(){
-	    global $wpdb;
-
+		global $wpdb;
 		$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
 		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
 		$mark_as = sanitize_text_field($_GET['mark_as']);
@@ -557,7 +557,12 @@ class Quiz {
 		}
 		do_action('tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as);
 
-		wp_redirect(admin_url("admin.php?page=tutor_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
+		if (wp_doing_ajax()){
+		    wp_send_json_success();
+        }else{
+			wp_redirect(admin_url("admin.php?page=tutor_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
+		}
+
 		die();
 	}
 
@@ -727,7 +732,7 @@ class Quiz {
 		$question_data = $_POST['tutor_quiz_question'];
 
 		foreach ($question_data as $question_id => $question){
-			$question_title         = $question['question_title'];
+			$question_title         = sanitize_text_field($question['question_title']);
 			$question_description   = $question['question_description'];
 			$question_type          = $question['question_type'];
 			$question_mark          = $question['question_mark'];
@@ -744,6 +749,29 @@ class Quiz {
 			);
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_questions', $data, array('question_id' => $question_id) );
+
+
+			/**
+			 * Validation
+			 */
+			if ($question_type === 'true_false' || $question_type === 'single_choice'){
+			    $question_options = tutils()->get_answers_by_quiz_question($question_id);
+			    if (tutils()->count($question_options)){
+			        $required_validate = true;
+			        foreach ($question_options as $question_option){
+			            if ($question_option->is_correct){
+				            $required_validate = false;
+                        }
+                    }
+                    if ($required_validate){
+	                    $validation_msg = "<p class='tutor-error-msg'>".__('Please select the correct answer', 'tutor')."</p>";
+	                    wp_send_json_error(array('validation_msg' => $validation_msg ));
+                    }
+                }else{
+			        $validation_msg = "<p class='tutor-error-msg'>".__('Please make sure you have added more than one option and saved them', 'tutor')."</p>";
+				    wp_send_json_error(array('validation_msg' => $validation_msg ));
+			    }
+            }
 		}
 
 		wp_send_json_success();
@@ -931,7 +959,7 @@ class Quiz {
 				echo '<label>'.__('Answer options &amp; mark correct', 'tutor').'</label>';
 				break;
 			case 'ordering':
-				echo '<label>'.__('Student should order below items exact this order, make sure your answer is in right order, you can re-order them', 'tutor').'</label>';
+				echo '<label>'.__('Make sure you’re saving the answers in the right order. Students will have to match this order exactly.', 'tutor').'</label>';
 				break;
 		}
 
@@ -942,7 +970,7 @@ class Quiz {
                     <div class="tutor-quiz-answer">
                         <span class="tutor-quiz-answer-title">
                             <?php
-                            echo $answer->answer_title;
+                            echo stripslashes($answer->answer_title);
                             if ($answer->belongs_question_type === 'fill_in_the_blank'){
                                 echo ' ('.__('Answer', 'tutor').' : ';
                                 echo "<strong>{$answer->answer_two_gap_match} </strong>)";

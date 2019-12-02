@@ -88,7 +88,7 @@ if ( ! $quiz){
                                         <i class="tutor-icon-move"></i>
                                     </span>
 
-                                    <span class="question-title"><?php echo $question->question_title; ?></span>
+                                    <span class="question-title"><?php echo stripslashes($question->question_title); ?></span>
 
                                     <span class="question-icon">
                                         <?php
@@ -172,7 +172,7 @@ if ( ! $quiz){
                             <div class="tutor-quiz-builder-col">
                                 <?php
                                 $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
-                                $attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
+                                $attempts_allowed = (int) tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
                                 ?>
 
                                 <div class="tutor-field-type-slider" data-min="0" data-max="20">
@@ -236,9 +236,10 @@ if ( ! $quiz){
             </div>
 
             <div class="tutor-quiz-builder-group">
-                <h4><?php _e('Question Layout', 'tutor'); ?></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col auto-width">
+                        <h4><?php _e('Question Layout', 'tutor'); ?></h4>
+
                         <select name="quiz_option[question_layout_view]">
                             <option value=""><?php _e('Set question layout view', 'tutor'); ?></option>
                             <option value="single_question" <?php selected('single_question', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Single Question', 'tutor'); ?> </option>
@@ -246,6 +247,19 @@ if ( ! $quiz){
                             <option value="question_below_each_other" <?php selected('question_below_each_other', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view') ); ?>> <?php _e('Question below each other', 'tutor'); ?> </option>
                         </select>
                     </div>
+
+                    <div class="tutor-quiz-builder-col auto-width">
+                        <h4><?php _e('Questions Order', 'tutor'); ?></h4>
+
+                        <select name="quiz_option[questions_order]">
+                            <option value="rand" <?php selected('rand', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Random', 'tutor'); ?> </option>
+                            <option value="sorting" <?php selected('sorting', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Sorting', 'tutor'); ?> </option>
+
+                            <option value="asc" <?php selected('asc', tutils()->get_quiz_option($quiz_id, 'questions_order') ); ?>> <?php _e('Ascending', 'tutor'); ?> </option>
+                            <option value="desc" <?php selected('desc', tutils()->get_quiz_option($quiz_id, 'questions_order') ); ?>> <?php _e('Descending', 'tutor'); ?> </option>
+                        </select>
+                    </div>
+
                 </div>
             </div>
 

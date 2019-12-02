@@ -26,7 +26,7 @@ if ( ! is_array($reviews) || ! count($reviews)){ ?>
 
 <div class=" tutor-course-reviews-wrap">
     <div class="course-target-reviews-title">
-        <h4><?php _e(sprintf('Reviews wrote by %s ', $get_user->display_name), 'tutor'); ?></h4>
+        <h4><?php echo sprintf(__('Reviews wrote by %s ', 'tutor'), $get_user->display_name); ?></h4>
     </div>
 
     <div class="tutor-reviews-list">

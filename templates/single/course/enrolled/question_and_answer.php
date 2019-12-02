@@ -68,7 +68,8 @@ if ( ! $enable_q_and_a_on_course) {
                             </div>
                             <p class="review-meta">
                                 <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a>
-                                <span class="tutor-text-mute"><?php _e(sprintf('%s ago', human_time_diff(strtotime($question->comment_date))), 'tutor'); ?></span>
+                                <span class="tutor-text-mute"><?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime
+                                    ($question->comment_date))) ; ?></span>
                             </p>
                         </div>
 
@@ -97,7 +98,7 @@ if ( ! $enable_q_and_a_on_course) {
                                                 <p class="review-meta">
                                                     <a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a>
                                                     <span class="tutor-text-mute">
-                                                        <?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'tutor'); ?>
+                                                        <?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($answer->comment_date)) ) ; ?>
                                                     </span>
                                                 </p>
                                             </div>

@@ -15,10 +15,10 @@ global $wpdb;
 
     <div class="tutor-single-page-top-bar">
         <div class="tutor-topbar-item tutor-hide-sidebar-bar">
-            <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-menu-2"></i> </a>
+            <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-angle-left"></i> </a>
 			<?php $course_id = get_post_meta(get_the_ID(), '_tutor_course_id_for_assignments', true); ?>
             <a href="<?php echo get_the_permalink($course_id); ?>" class="tutor-topbar-home-btn">
-                <i class="tutor-icon-next-2"></i> <?php echo __('Go to Course Home', 'tutor') ; ?>
+                <i class="tutor-icon-home"></i> <?php echo __('Go to Course Home', 'tutor') ; ?>
             </a>
         </div>
         <div class="tutor-topbar-item tutor-topbar-content-title-wrap">
@@ -53,11 +53,11 @@ global $wpdb;
                     <strong><?php /*echo "7 Days, 12 Hour"; */?></strong>
                 </li>-->
                 <li>
-                    <?php _e('Total Marks : ') ?>
+                    <?php _e('Total Points : ') ?>
                     <strong><?php echo $total_mark; ?></strong>
                 </li>
                 <li>
-                    <?php _e('Passing Marks : ') ?>
+                    <?php _e('Minimum Pass Points : ') ?>
                     <strong><?php echo $pass_mark; ?></strong>
                 </li>
             </ul>
@@ -111,7 +111,6 @@ global $wpdb;
 
                 <h2><?php _e('Assignment answer form', 'tutor'); ?></h2>
 
-
                 <form action="" method="post" id="tutor_assignment_submit_form" enctype="multipart/form-data">
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                     <input type="hidden" value="tutor_assignment_submit" name="tutor_action"/>
@@ -125,8 +124,10 @@ global $wpdb;
                         <textarea name="assignment_answer"></textarea>
                     </div>
 
+                    <div id="form_validation_response"></div>
+
 					<?php if ($allowd_upload_files){ ?>
-                        <p>Attach assignment files</p>
+                        <p><?php _e('Attach assignment files', 'tutor'); ?></p>
                         <div class="tutor-assignment-attachment-upload-wrap">
 
                             <?php
@@ -168,7 +169,7 @@ global $wpdb;
 					?>
 
                     <div class="assignment-result-wrap">
-                        <h4><?php echo sprintf(__('You received %s marks out of %s', 'tutor'), "<span class='received-marks'>{$given_mark}</span>", "<span class='out-of-marks'>{$max_mark}</span>") ?></h4>
+                        <h4><?php echo sprintf(__('You received %s points out of %s', 'tutor'), "<span class='received-marks'>{$given_mark}</span>", "<span class='out-of-marks'>{$max_mark}</span>") ?></h4>
                         <h4 class="submitted-assignment-grade">
 							<?php _e('Your Grade is '); ?>
 

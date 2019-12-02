@@ -28,15 +28,6 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? $old_answer
                     <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
                 </div>
             </div>
-            <?php
-                if ($question_type === 'ordering'){
-                    printf(
-                        '<p class="help">%s <b>%s</b></p>',
-                        __('Make sure you are saving answer in right sorting in answers lists, student should ordering should match with this answer order.', 'tutor'),
-                        __('You can re-order it from above answer list.', 'tutor')
-                    );
-                }
-            ?>
         </div>
 
         <div class="tutor-quiz-builder-group">
@@ -64,7 +55,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? $old_answer
             </div>
         </div>
         <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Answer option view format', 'tutor'); ?></h4>
+            <h4><?php _e('Display format for options', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>
@@ -99,7 +90,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? $old_answer
         </div>
 
         <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Gap Answer', 'tutor'); ?></h4>
+            <h4><?php _e('Correct Answer(s)', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
                     <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_two_gap_match]" value="<?php echo $answer_two_gap_match; ?>">
@@ -155,7 +146,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? $old_answer
         </div>
 
         <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Answer option view format', 'tutor'); ?></h4>
+            <h4><?php _e('Display format for options', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>
@@ -251,7 +242,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? $old_answer
                     <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
                 </div>
             </div>
-            <p class="help"><?php _e('Student input text should be matched with this answer, write in <b>Small Caps</b>','tutor'); ?></p>
+            <p class="help"><?php _e('The answers that students enter should match with this text. Write in <strong>small caps</strong>','tutor'); ?></p>
         </div> <!-- /.tutor-quiz-builder-group -->
 
 		<?php

@@ -143,7 +143,7 @@ if ($statements->count) {
                         <p class="small-text">
                             <span class="statement-order-<?php echo $statement->order_status; ?>"><?php echo $statement->order_status; ?></span>
                             &nbsp; <strong><?php _e('Date:', 'tutor') ?></strong>
-                            <i><?php echo date(get_option('date_format', strtotime($statement->created_at))).' '.date(get_option('time_format', strtotime($statement->created_at))) ?></i>
+                            <i><?php echo date_i18n(get_option('date_format', strtotime($statement->created_at))).' '.date_i18n(get_option('time_format', strtotime($statement->created_at))) ?></i>
                         </p>
 
                         <p>

@@ -25,6 +25,11 @@ class Post_types{
 		 * Customize the message of course
 		 */
 		add_filter( 'post_updated_messages', array($this, 'course_updated_messages') );
+
+		/**
+		 * Since 1.4.0
+		 */
+		add_action( 'init', array($this, 'register_tutor_enrolled_post_types') );
 	}
 	
 	public function register_course_post_types() {
@@ -170,8 +175,8 @@ class Post_types{
 			'description'        => __( 'Description.', 'tutor' ),
 			'public'             => true,
 			'publicly_queryable' => true,
-			'show_ui'            => false,
-			'show_in_menu'       => 'tutor',
+			'show_ui'            => true,
+			'show_in_menu'       => false,
 			'query_var'          => true,
 			'rewrite'            => array( 'slug' => $this->lesson_post_type ),
 			'menu_icon'    => 'dashicons-list-view',
@@ -364,6 +369,25 @@ class Post_types{
 	public function gutenberg_can_edit_post_type( $can_edit, $post_type ) {
 		$enable_gutenberg = (bool) tutor_utils()->get_option('enable_gutenberg_course_edit');
 		return $this->course_post_type === $post_type ? $enable_gutenberg : $can_edit;
+	}
+
+	/**
+	 * Register tutor_enrolled post type
+	 * @since v.1.4.0
+	 */
+	public function register_tutor_enrolled_post_types(){
+		$args = array(
+			'label'  => 'Tutor Enrolled',
+			'description'        => __( 'Description.', 'tutor' ),
+			'public'             => false,
+			'publicly_queryable' => false,
+			'show_ui'            => false,
+			'query_var'          => false,
+			'has_archive'        => false,
+			'hierarchical'       => false,
+			'menu_position'      => null,
+		);
+		register_post_type( 'tutor_enrolled', $args );
 	}
 
 }

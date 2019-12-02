@@ -119,7 +119,7 @@ class Options {
 								'type'      => 'checkbox',
 								'label'     => __('Erase upon uninstallation', 'tutor'),
 								'label_title' => __('Enable', 'tutor'),
-								'desc'      => __('Delete all data during uninstall', 'tutor'),
+								'desc'      => __('Delete all data during uninstallation', 'tutor'),
 							),
 
 							'enable_spotlight_mode' => array(
@@ -127,21 +127,27 @@ class Options {
 								'label'     => __('Spotlight mode', 'tutor'),
 								'label_title' => __('Enable', 'tutor'),
 								'default' => '0',
-								'desc'      => __('This will hide the header & footer and enable Spotlight (full-screen) mode for the course learning interface.',	'tutor'),
+								'desc'      => __('This will hide the header and the footer and enable spotlight (full screen) mode when students view lessons.',	'tutor'),
 							),
 							'disable_default_player_youtube' => array(
 								'type'      => 'checkbox',
 								'label'     => __('YouTube Player', 'tutor'),
-								'label_title' => __('Disable default video player on the youtube video', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
 								'default' => '0',
-								'desc'      => __('',	'tutor'),
+								'desc'      => __('Disable this option to use Tutor LMS video player.',	'tutor'),
 							),
 							'disable_default_player_vimeo' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Vimeo Player', 'tutor'),
-								'label_title' => __('Disable default video player on the vimeo video', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
 								'default' => '0',
-								'desc'      => __('',	'tutor'),
+								'desc'      => __('Disable this option to use Tutor LMS video player.',	'tutor'),
+							),
+							'pagination_per_page' => array(
+								'type'      => 'number',
+								'label'      => __('Pagination', 'tutor'),
+								'default'   => '20',
+								'desc'  => __('Number of items you would like displayed "per page" in the pagination', 'tutor'),
 							),
 						)
 					)
@@ -164,7 +170,7 @@ class Options {
 								'type'      => 'checkbox',
 								'label'     => __('Display Instructor Info', 'tutor'),
 								'label_title'   => __('Enable', 'tutor'),
-								'desc' => __('Show tutor bio on each course page.', 'tutor'),
+								'desc' => __('Show instructor bio on each page', 'tutor'),
 							),
 							'enable_q_and_a_on_course' => array(
 								'type'      => 'checkbox',
@@ -191,7 +197,7 @@ class Options {
 								'label'     => __('Column per row', 'tutor'),
 								'default'   => '4',
 								'options'   => array('min'=> 1, 'max' => 6),
-								'desc'      => __('Define how many column you want to show on the course single page', 'tutor'),
+								'desc'      => __('Define how many column you want to use to display courses.', 'tutor'),
 							),
 							'courses_per_page' => array(
 								'type'      => 'slider',
@@ -211,13 +217,18 @@ class Options {
 						'label' => __('Lesson Settings', 'tutor'),
 						'desc' => __('Lesson settings will be here', 'tutor'),
 						'fields' => array(
+							'enable_lesson_classic_editor' => array(
+								'type'          => 'checkbox',
+								'label'         => __('Classic Editor', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
+								'desc'          => __('Enable classic editor to get full support of any editor/page builder.', 'tutor'),
+							),
 							'lesson_permalink_base' => array(
 								'type'      => 'text',
 								'label'     => __('Lesson Permalink Base', 'tutor'),
 								'default'   => 'lessons',
 								'desc'      => $lesson_url,
 							),
-
 						),
 					),
 
@@ -233,7 +244,7 @@ class Options {
 							'quiz_time_limit' => array(
 								'type'      => 'group_fields',
 								'label'     => __('Time Limit', 'tutor'),
-								'desc'      => __('Default time limit for quizzes. 0 means no time limit.', 'tutor'),
+								'desc'      => __('0 means unlimited time.', 'tutor'),
 								'group_fields'  => array(
 									'value' => array(
 										'type'      => 'text',
@@ -259,21 +270,21 @@ class Options {
 								'default'   => 'minutes',
 								'select_options'   => false,
 								'options'   => array(
-									'autosubmit'    =>  __('Current attempts are submitted automatically', 'tutor'),
-									'graceperiod'   =>  __('There is a grace period when current attempts can be submitted, but no more questions answered', 'tutor'),
+									'autosubmit'    =>  __('The current quiz answers are submitted automatically.', 'tutor'),
+									'graceperiod'   =>  __('The current quiz answers are submitted by students.', 'tutor'),
 									'autoabandon'   =>  __('Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor'),
 								),
-								'desc'  => __('What should happen by default if a student does not submit the quiz before time expires.', 'tutor'),
+								'desc'  => __('Choose which action to follow when the quiz time expires.', 'tutor'),
 							),
 							'quiz_attempts_allowed' => array(
 								'type'      => 'number',
 								'label'      => __('Attempts allowed', 'tutor'),
 								'default'   => '10',
-								'desc'  => __('Restriction on the number of attempts students are allowed to take for a quiz. 0 for no limit', 'tutor'),
+								'desc'  => __('The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor'),
 							),
 							'quiz_grade_method' => array(
 								'type'      => 'select',
-								'label'      => __('Grading method', 'tutor'),
+								'label'      => __('Final grade calculation', 'tutor'),
 								'default'   => 'minutes',
 								'select_options'   => false,
 								'options'   => array(
@@ -300,7 +311,7 @@ class Options {
 								'label'     => __('Course Marketplace', 'tutor'),
 								'label_title' => __('Enable', 'tutor'),
 								'default' => '0',
-								'desc'      => __('By enabling this settings will allow multiple instructors can upload their course.',	'tutor'),
+								'desc'      => __('Allow multiple instructors to upload their courses.',	'tutor'),
 							),
 							'instructor_register_page' => array(
 								'type'      => 'select',
@@ -311,9 +322,10 @@ class Options {
 							),
 							'instructor_can_publish_course' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Can publish course', 'tutor'),
+								'label'     => __('Allow publishing course', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
 								'default' => '0',
-								'desc'      => __('Define if a instructor can publish his courses directly or not, if unchecked, they can still add courses, but it will go to admin for review',	'tutor'),
+								'desc'      => __('Enable instructors to publish course directly. <strong>Do not select</strong> if admins want to review courses before publishing.',	'tutor'),
 							),
 							'enable_become_instructor_btn' => array(
 								'type'      => 'checkbox',
@@ -349,10 +361,10 @@ class Options {
 							),
 							'show_courses_completed_by_student' => array(
 								'type'          => 'checkbox',
-								'label'         => __('Show Completed Courses', 'tutor'),
+								'label'         => __('Show completed courses', 'tutor'),
 								'label_title'   => __('Enable', 'tutor'),
 								'default'       => '0',
-								'desc'          => __('Completed courses will be show on student profile',	'tutor')."<br />".$student_url,
+								'desc'          => __('Completed courses will be shown on student profiles. <br/> For example, you can see this link-',	'tutor').$student_url,
 							),
 						),
 					),
@@ -422,7 +434,7 @@ class Options {
 								'type'      => 'number',
 								'label'      => __('Show Statement Per Page', 'tutor'),
 								'default'   => '20',
-								'desc'  => __('Define the number of statement should show.', 'tutor'),
+								'desc'  => __('Define the number of statements to show.', 'tutor'),
 							),
 						),
 					),
@@ -438,7 +450,7 @@ class Options {
 								'type'      => 'number',
 								'label'     => __('Minimum Withdraw Amount', 'tutor'),
 								'default'   => '80',
-								'desc'      => __('Define the withdraw amount, anyone can make withdraw request if their earning above or equal this amount.',	'tutor'),
+								'desc'      => __('Instructors should earn equal or above this amount to make a withdraw request.',	'tutor'),
 							),
 						),
 					),

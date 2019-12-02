@@ -57,8 +57,10 @@ global $wp_query;
             <i class="tutor-icon-purchase"></i>
             <?php
                 $enrolled = tutor_utils()->is_enrolled();
-                _e(sprintf("You have been enrolled on %s.", "<span>". date(get_option('date_format'), strtotime($enrolled->post_date) )."</span>" ), 'tutor');
-            ?>
+
+                echo sprintf(__('You have been enrolled on %s.', 'tutor'),  "<span>". date_i18n(get_option('date_format'), strtotime($enrolled->post_date)
+                    )."</span>"  );
+                ?>
         </p>
         <?php do_action('tutor_enrolled_box_after') ?>
 

@@ -51,7 +51,7 @@ $question = tutor_utils()->get_qa_question($question_id);
                     <p class="review-meta">
 						<?php echo $question->display_name; ?> -
                         <span class="text-muted">
-							<?php _e(sprintf('%s ago', human_time_diff(strtotime($question->comment_date))), 'tutor'); ?>
+							<?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($question->comment_date))); ?>
 						</span>
                     </p>
                 </div>
@@ -91,7 +91,7 @@ $question = tutor_utils()->get_qa_question($question_id);
                                 <p class="review-meta">
 									<?php echo $answer->display_name; ?> -
                                     <span class="text-muted">
-										<?php _e(sprintf('%s ago', human_time_diff(strtotime($answer->comment_date))), 'tutor'); ?>
+										<?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($answer->comment_date))); ?>
 									</span>
                                 </p>
                             </div>

@@ -1,13 +1,23 @@
-
 <form class="tutor_lesson_modal_form">
     <input type="hidden" name="action" value="tutor_modal_create_or_update_lesson">
     <input type="hidden" name="lesson_id" value="<?php echo $post->ID; ?>">
     <input type="hidden" name="current_topic_id" value="<?php echo $topic_id; ?>">
 
+	<?php
+	if (get_tutor_option('enable_lesson_classic_editor')){
+		?>
+        <div class="modal-classic-btn-wrap">
+            <a class="tutor-classic-editor-btn btn-sm" target="_blank" href="<?php echo esc_url(get_admin_url("/")); ?>post.php?post=<?php echo $post->ID; ?>&action=edit" >
+                <i class="tutor-icon-classic-editor topic-edit-icon"></i> <?php echo __('Classic Editor', 'tutor'); ?>
+            </a>
+        </div>
+		<?php
+	}
+	?>
+
     <div class="lesson-modal-form-wrap">
 
 	    <?php do_action('tutor_lesson_edit_modal_form_before', $post); ?>
-
 
         <div class="tutor-option-field-row">
             <div class="tutor-option-field tutor-lesson-modal-title-wrap">
@@ -42,7 +52,7 @@
 							?>
                         </p>
                         <input type="hidden" class="_lesson_thumbnail_id" name="_lesson_thumbnail_id" value="">
-                        <button type="button" class="lesson_thumbnail_upload_btn tutor-btn"><?php echo $thumbnail_upload_text; ?></button>
+                        <button type="button" class="lesson_thumbnail_upload_btn tutor-btn bordered-btn"><?php echo $thumbnail_upload_text; ?></button>
                     </div>
                 </div>
             </div>

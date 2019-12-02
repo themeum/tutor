@@ -14,7 +14,7 @@
 	$attached_lesson_ids = array();
 
 	if ( ! count($query_topics->posts)){
-		echo '<p class="course-empty-content">'.__('Add a topics to build this course', 'tutor').'</p>';
+		echo '<p class="course-empty-content">'.__('Add a topic to build your course', 'tutor').'</p>';
 	}
 
 	foreach ($query_topics->posts as $topic){
@@ -64,7 +64,7 @@
 								<?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
                             </p>
 
-                            <button type="button" class="button button-primary tutor-topics-edit-button"><i class="tutor-icon-pencil"></i> <?php _e('Edit Topic', 'tutor'); ?></button>
+                            <button type="button" class="button button-primary tutor-topics-edit-button"><i class="tutor-icon-pencil"></i> <?php _e('Update Topic', 'tutor'); ?></button>
                         </div>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
                                     <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                        <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz->post_title; ?>
+                                        <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
                                     <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
@@ -165,7 +165,7 @@
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
                                     <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                        <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz->post_title; ?>
+                                        <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
                                     <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>

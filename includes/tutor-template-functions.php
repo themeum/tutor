@@ -1340,3 +1340,28 @@ if ( ! function_exists('tutor_assignment_content')) {
 		return $output;
 	}
 }
+
+/**
+ * @param string $msg
+ * @param string $title
+ * @param string $type
+ *
+ * @return string
+ *
+ * @since v.1.4.0
+ */
+
+if ( ! function_exists('get_tnotice')) {
+	function get_tnotice( $msg = '', $title = 'Success', $type = 'success' ) {
+
+		$output = '<div class="tnotice tnotice--' . $type . '">
+        <div class="tnotice__icon">&iexcl;</div>
+        <div class="tnotice__content">
+            <p class="tnotice__type">' . $title . '</p>
+            <p class="tnotice__message">' . $msg . '</p>
+        </div>
+    	</div>';
+
+		return $output;
+	}
+}

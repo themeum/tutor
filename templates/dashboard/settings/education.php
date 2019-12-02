@@ -14,12 +14,6 @@
             <li>
                 <a href="<?php echo esc_url($settings_url);  ?>"> <?php _e('Profile', 'tutor'); ?></a>
             </li>
-           <!-- <li class="active">
-                <a href="<?php /*echo esc_url($education);  */?>"> <?php /*_e('Education', 'tutor'); */?></a>
-            </li>
-            <li>
-                <a href="<?php /*echo esc_url($skill);  */?>"> <?php /*_e('Expertise & Skill', 'tutor'); */?></a>
-            </li>-->
             <?php if(current_user_can(tutor()->instructor_role)){ ?>
                 <li>
                     <a href="<?php echo esc_url($withdraw);  ?>"> <?php _e('Withdraw', 'tutor'); ?></a>

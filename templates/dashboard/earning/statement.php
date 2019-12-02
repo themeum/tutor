@@ -32,7 +32,7 @@ if ($statements->count) {
                             _e('Order ID'); ?> #<?php echo $statement->order_id; ?>,
 
                             <strong><?php _e('Date:', 'tutor') ?></strong>
-                            <i><?php echo date(get_option('date_format', strtotime($statement->created_at))).' '.date(get_option('time_format', strtotime($statement->created_at))) ?></i>
+                            <i><?php echo date_i18n(get_option('date_format', strtotime($statement->created_at))).' '.date_i18n(get_option('time_format', strtotime($statement->created_at))) ?></i>
                         </p>
 
                         <?php

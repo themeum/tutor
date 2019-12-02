@@ -20,6 +20,13 @@ class Ajax{
 		 * Addon Enable Disable Control
 		 */
 		add_action('wp_ajax_addon_enable_disable', array($this, 'addon_enable_disable'));
+
+		/**
+		 * Update Rating/review
+		 * @since  v.1.4.0
+		 */
+		add_action('wp_ajax_tutor_load_edit_review_modal', array($this, 'tutor_load_edit_review_modal'));
+		add_action('wp_ajax_tutor_update_review_modal', array($this, 'tutor_update_review_modal'));
 	}
 
 	/**
@@ -248,6 +255,48 @@ class Ajax{
 		update_option('tutor_addons_config', $addonsConfig);
 
 		wp_send_json_success();
+	}
+
+
+	/**
+	 * Load review edit form
+	 * @since v.1.4.0
+	 */
+	public function tutor_load_edit_review_modal(){
+		tutor_utils()->checking_nonce();
+
+		$review_id = (int) sanitize_text_field(tutils()->array_get('review_id', $_POST));
+		$rating = tutils()->get_rating_by_id($review_id);
+
+		ob_start();
+		tutor_load_template('dashboard.reviews.edit-review-form', array('rating' => $rating));
+		$output = ob_get_clean();
+
+		wp_send_json_success(array('output' => $output));
+	}
+
+	public function tutor_update_review_modal(){
+		global $wpdb;
+
+		tutor_utils()->checking_nonce();
+
+		$review_id = (int) sanitize_text_field(tutils()->array_get('review_id', $_POST));
+		$rating = sanitize_text_field(tutor_utils()->avalue_dot('rating', $_POST));
+		$review = wp_kses_post(tutor_utils()->avalue_dot('review', $_POST));
+
+		$is_exists = $wpdb->get_var("select comment_ID from {$wpdb->comments} WHERE comment_ID={$review_id} AND comment_type = 'tutor_course_rating' ;");
+
+		if ( $is_exists) {
+			$wpdb->update( $wpdb->comments, array( 'comment_content' => $review ),
+				array( 'comment_ID' => $review_id )
+			);
+			$wpdb->update( $wpdb->commentmeta, array( 'meta_value' => $rating ),
+				array( 'comment_id' => $review_id, 'meta_key' => 'tutor_rating' )
+			);
+
+			wp_send_json_success();
+		}
+		wp_send_json_error();
 	}
 
 }
