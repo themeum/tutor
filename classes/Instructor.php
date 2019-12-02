@@ -16,6 +16,9 @@ class Instructor {
 	public function __construct() {
 		add_action('template_redirect', array($this, 'register_instructor'));
 		add_action('template_redirect', array($this, 'apply_instructor'));
+
+		//Add instructor from admin panel.
+		add_action('wp_ajax_tutor_add_instructor', array($this, 'add_new_instructor'));
 	}
 
 	/**
@@ -132,6 +135,66 @@ class Instructor {
 
 		wp_redirect(tutor_utils()->input_old('_wp_http_referer'));
 		die();
+	}
+
+
+	public function add_new_instructor(){
+		$required_fields = apply_filters('tutor_instructor_registration_required_fields', array(
+			'first_name'                => __('First name field is required', 'tutor'),
+			'last_name'                 =>  __('Last name field is required', 'tutor'),
+			'email'                     => __('E-Mail field is required', 'tutor'),
+			'user_login'                => __('User Name field is required', 'tutor'),
+			'phone_number'              => __('Phone Number field is required', 'tutor'),
+			'password'                  => __('Password field is required', 'tutor'),
+			'password_confirmation'     => __('Password Confirmation field is required', 'tutor'),
+		));
+
+		$validation_errors = array();
+		foreach ($required_fields as $required_key => $required_value){
+			if (empty($_POST[$required_key])){
+				$validation_errors[$required_key] = $required_value;
+			}
+		}
+
+		if (!filter_var(tutor_utils()->input_old('email'), FILTER_VALIDATE_EMAIL)) {
+			$validation_errors['email'] = __('Valid E-Mail is required', 'tutor');
+		}
+		if (tutor_utils()->input_old('password') !== tutor_utils()->input_old('password_confirmation')){
+			$validation_errors['password_confirmation'] = __('Confirm password does not matched with Password field', 'tutor');
+		}
+
+		if (count($validation_errors)){
+			wp_send_json_error(array('errors' => $validation_errors));
+		}
+
+		$first_name     = sanitize_text_field(tutor_utils()->input_old('first_name'));
+		$last_name      = sanitize_text_field(tutor_utils()->input_old('last_name'));
+		$email          = sanitize_text_field(tutor_utils()->input_old('email'));
+		$user_login     = sanitize_text_field(tutor_utils()->input_old('user_login'));
+		$phone_number   = sanitize_text_field(tutor_utils()->input_old('phone_number'));
+		$password       = sanitize_text_field(tutor_utils()->input_old('password'));
+		$tutor_profile_bio = wp_kses_post(tutor_utils()->input_old('tutor_profile_bio'));
+
+		$userdata = array(
+			'user_login'    =>  $user_login,
+			'user_email'    =>  $email,
+			'first_name'    =>  $first_name,
+			'last_name'     =>  $last_name,
+			'role'          =>  tutor()->instructor_role,
+			'user_pass'     =>  $password,
+		);
+		$user_id = wp_insert_user( $userdata ) ;
+		if ( ! is_wp_error($user_id)) {
+			update_user_meta($user_id, 'phone_number', $phone_number);
+			update_user_meta($user_id, 'description', $tutor_profile_bio);
+			update_user_meta($user_id, '_tutor_profile_bio', $tutor_profile_bio);
+			update_user_meta($user_id, '_is_tutor_instructor', time());
+			update_user_meta($user_id, '_tutor_instructor_status', apply_filters('tutor_initial_instructor_status', 'approved'));
+
+			wp_send_json_success(array('msg' => __('Instructor has been added successfully', 'tutor') ));
+		}
+
+		wp_send_json_error(array('errors' => $user_id));
 	}
 
 }

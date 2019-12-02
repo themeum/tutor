@@ -4,14 +4,17 @@
 .tutor-wrap{
     color: #4B5981;
 }
-/*
+/**
+Most Important CSS
+.tutor-container
+ */
 .tutor-container{
     padding-left: 15px;
     padding-right: 15px;
     max-width: 1170px;
     margin-right: auto;
     margin-left: auto;
-}*/
+}
 .tutor-row{
     display: -ms-flexbox;
     display: flex;

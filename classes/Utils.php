@@ -3213,7 +3213,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1 {$search_term} ");
+			WHERE 1=1 AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} ");
 		return (int) $count;
 	}
 
@@ -3242,7 +3242,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1 {$search_term} 
+			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} 
 			ORDER BY quiz_attempts.attempt_id DESC 
 			LIMIT {$start},{$limit}; ");
 		return $query;
@@ -3250,7 +3250,6 @@ class Utils {
 
 	public function get_quiz_attempts_by_course_ids($start = 0, $limit = 10, $course_ids = array(), $search_term = '') {
 		global $wpdb;
-
 
 		if ($search_term){
 			$search_term = " AND ( user_email like '%{$search_term}%' OR display_name like '%{$search_term}%' OR post_title like '%{$search_term}%' ) ";
@@ -3266,7 +3265,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1 {$search_term} 
+			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} 
 			ORDER BY quiz_attempts.attempt_id DESC 
 			LIMIT {$start},{$limit}; ");
 		return $query;
@@ -3289,7 +3288,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1 {$search_term} ");
+			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} ");
 		return (int) $count;
 	}
 

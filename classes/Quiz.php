@@ -394,20 +394,20 @@ class Quiz {
 				        }
 
                     }elseif ($question_type === 'image_answering'){
-				        $image_inputs = tutor_utils()->avalue_dot('answer_id', $answers);
-				        $given_answer = maybe_serialize($image_inputs);
+				        echo '<pre>';
 
+				        $image_inputs = tutor_utils()->avalue_dot('answer_id', $answers);
+				        $image_inputs = (array) array_map('sanitize_text_field', $image_inputs);
+				        $given_answer = maybe_serialize($image_inputs);
 				        $is_answer_was_correct = false;
 
-			            if (is_array($image_inputs) && count($image_inputs)){
-			                foreach ($image_inputs as $answer_id => $answer){
-				                $db_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = {$answer_id} ;");
+				        $db_answer = $wpdb->get_col("SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question_id} AND belongs_question_type = 
+'image_answering' ORDER BY answer_order asc ;");
 
-				                $is_answer_was_correct = sanitize_text_field($answer) == $db_answer->answer_title;
-			                }
+				        if (is_array($db_answer) && count($db_answer)){
+				            $is_answer_was_correct = (strtolower(maybe_serialize(array_values($image_inputs))) == strtolower(maybe_serialize($db_answer)) );
                         }
-
-                    }
+			        }
 
 			        $question_mark = $is_answer_was_correct ? $question->question_mark : 0;
 				    $total_marks += $question_mark;
@@ -505,6 +505,7 @@ class Quiz {
 		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
 		$mark_as = sanitize_text_field($_GET['mark_as']);
 
+
 		$attempt_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = {$attempt_answer_id} ");
 		$attempt = tutor_utils()->get_attempt($attempt_id);
 
@@ -532,12 +533,12 @@ class Quiz {
 				'achieved_mark' => '0.00',
 				'is_correct' => 0,
 			);
-			$wpdb->update($wpdb->prefix.'tutor_quiz_attempt_answers', $answer_update_data, array('attempt_answer_id' => $attempt_id ));
+			$wpdb->update($wpdb->prefix.'tutor_quiz_attempt_answers', $answer_update_data, array('attempt_answer_id' => $attempt_answer_id ));
 
 			$attempt_update_data = array(
-				'earned_marks' => $attempt->earned_marks - $attempt_answer->question_mark,
-				'is_manually_reviewed' => 1,
-				'manually_reviewed_at' => date("Y-m-d H:i:s"),
+				'earned_marks'          => $attempt->earned_marks - $attempt_answer->question_mark,
+				'is_manually_reviewed'  => 1,
+				'manually_reviewed_at'  => date("Y-m-d H:i:s"),
 			);
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
@@ -928,13 +929,13 @@ class Quiz {
 						if ($answer->image_id){
 							echo '<span class="tutor-question-answer-image"><img src="'.wp_get_attachment_image_url($answer->image_id).'" /> </span>';
 						}
-						if ($question->question_type === 'true_false' || $question->question_type === 'single_choice'){
+						if ($question_type === 'true_false' || $question_type === 'single_choice'){
 							?>
                             <span class="tutor-quiz-answers-mark-correct-wrap">
                                 <input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                             </span>
 							<?php
-						}elseif ($question->question_type === 'multiple_choice'){
+						}elseif ($question_type === 'multiple_choice'){
 							?>
                             <span class="tutor-quiz-answers-mark-correct-wrap">
                                 <input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >

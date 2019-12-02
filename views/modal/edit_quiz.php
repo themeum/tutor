@@ -225,8 +225,6 @@ if ( ! $quiz){
                 <div class="quiz-builder-btn-group-left">
                     <a href="#quiz-builder-tab-questions" class="quiz-modal-tab-navigation-btn quiz-modal-btn-back"><?php _e('Back', 'tutor'); ?></a>
                     <a href="#quiz-builder-tab-advanced-options" class="quiz-modal-tab-navigation-btn quiz-modal-settings-save-btn"><?php _e('Save', 'tutor'); ?></a>
-                    <a href="#quiz-builder-tab-advanced-options" class="quiz-modal-tab-navigation-btn quiz-modal-settings-save-btn"
-                       data-action="modal_close"><?php _e('Save &amp; Exit', 'tutor'); ?></a>
                 </div>
                 <!--<div class="quiz-builder-btn-group-right">
                     <a href="#quiz-builder-tab-questions" class="quiz-modal-tab-navigation-btn quiz-modal-btn-cancel"><?php /*_e('Cancel', 'tutor'); */?></a>
@@ -271,22 +269,6 @@ if ( ! $quiz){
                 </div>
             </div>
 
-           <!-- <div class="tutor-quiz-builder-form-row">
-                <div class="tutor-quiz-builder-form-cols-row">
-                    <div class="quiz-form-field-col">
-                        <label><?php /*_e('Show correct questions - display', 'tutor'); */?></label>
-                    </div>
-
-                    <div class="quiz-form-field-col">
-                        <label class="btn-switch">
-                            <input type="checkbox" value="1" name="quiz_option[show_correct_questions]" <?php /*checked('1', tutor_utils()->get_quiz_option($quiz_id, 'show_correct_questions')); */?> />
-                            <div class="btn-slider btn-round"></div>
-                        </label>
-                        <p class="quiz-modal-form-help"><?php /*_e('If this option is activated, all answers are displayed below each other, i.e. all questions are on a single page.', 'tutor'); */?></p>
-                    </div>
-                </div>
-            </div>-->
-
             <div class="tutor-quiz-builder-form-row">
                 <div class="tutor-quiz-builder-form-cols-row">
                     <div class="quiz-form-field-col">
@@ -319,58 +301,10 @@ if ( ! $quiz){
                 </div>
             </div>
 
-            <!--<div class="tutor-quiz-builder-form-row">
-                <div class="tutor-quiz-builder-form-cols-row">
-                    <div class="quiz-form-field-col">
-                        <label><?php /*_e('Question overview', 'tutor'); */?></label>
-                    </div>
-
-                    <div class="quiz-form-field-col">
-                        <label class="btn-switch">
-                            <input type="checkbox" value="1" name="quiz_option[question_overview]" <?php /*checked('1', tutor_utils()->get_quiz_option($quiz_id, 'question_overview')); */?> />
-                            <div class="btn-slider btn-round"></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tutor-quiz-builder-form-row">
-                <div class="tutor-quiz-builder-form-cols-row">
-                    <div class="quiz-form-field-col">
-                        <label><?php _e('Hide "Skip Question"', 'tutor'); ?></label>
-                    </div>
-
-                    <div class="quiz-form-field-col">
-                        <label class="btn-switch">
-                            <input type="checkbox" value="1" name="quiz_option[hide_skip_question]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_skip_question')); ?> />
-                            <div class="btn-slider btn-round"></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tutor-quiz-builder-form-row">
-                <div class="tutor-quiz-builder-form-cols-row">
-                    <div class="quiz-form-field-col">
-                        <label><?php _e('Hide "Retry Quiz"', 'tutor'); ?></label>
-                    </div>
-
-                    <div class="quiz-form-field-col">
-                        <label class="btn-switch">
-                            <input type="checkbox" value="1" name="quiz_option[hide_retry_quiz]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_retry_quiz')); ?> />
-                            <div class="btn-slider btn-round"></div>
-                        </label>
-                    </div>
-                </div>
-            </div>-->
-
-
             <div class="tutor-quiz-builder-modal-control-btn-group">
                 <div class="quiz-builder-btn-group-left">
                     <a href="#quiz-builder-tab-settings" class="quiz-modal-tab-navigation-btn quiz-modal-btn-back"><?php _e('Back', 'tutor'); ?></a>
                     <a href="#quiz-builder-tab-advanced-options" class="quiz-modal-tab-navigation-btn quiz-modal-settings-save-btn"><?php _e('Save', 'tutor'); ?></a>
-                    <a href="#quiz-builder-tab-advanced-options" class="quiz-modal-tab-navigation-btn quiz-modal-settings-save-btn"
-                       data-action="modal_close"><?php _e('Save &amp; Exit', 'tutor'); ?></a>
                 </div>
                 <!--<div class="quiz-builder-btn-group-right">
                     <a href="#quiz-builder-tab-questions" class="quiz-modal-tab-navigation-btn quiz-modal-btn-cancel"><?php /*_e('Cancel', 'tutor'); */?></a>

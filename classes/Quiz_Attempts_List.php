@@ -36,8 +36,13 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		$actions['answer'] = sprintf('<a href="?page=%s&sub_page=%s&attempt_id=%s">'.__('Review', 'tutor').'</a>',$_REQUEST['page'],'view_attempt',$item->attempt_id);
 		//$actions['delete'] = sprintf('<a href="?page=%s&action=%s&attempt_id=%s">Delete</a>',$_REQUEST['page'],'delete',$item->attempt_id);
 
-		$quiz_title = '<strong>'.$item->display_name.'</strong> <br />'.$item->user_email.'<br /><br />'. human_time_diff(strtotime
-			($item->attempt_ended_at)).__(' ago', 'tutor');
+		$quiz_title = "<p><strong>{$item->display_name}</strong></p>";
+		$quiz_title .= "<p>{$item->user_email}</p>";
+
+		if ($item->attempt_ended_at){
+			$ended_ago_time = human_time_diff(strtotime($item->attempt_ended_at)).__(' ago', 'tutor');
+			$quiz_title .= "<span>{$ended_ago_time}</span>";
+		}
 
 		//Return the title contents
 		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
@@ -90,7 +95,8 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 
 	function column_attempt_status($item){
 		$status = ucwords(str_replace('quiz_', '', $item->attempt_status));
-		return  "<span class='tutor-status-context {$item->attempt_status}'>{$status}</span>";
+
+		return "<span class='attempt-status-{$item->attempt_status}'>{$status}</span>";
 	}
 
 	function get_columns(){
