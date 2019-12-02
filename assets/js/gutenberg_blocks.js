@@ -2,9 +2,6 @@ var el = wp.element.createElement,
     registerBlockType = wp.blocks.registerBlockType,
     withSelect = wp.data.withSelect;
 
-
-
-
 /**
  * Block for student registration
  *

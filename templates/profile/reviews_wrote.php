@@ -26,7 +26,7 @@ if ( ! is_array($reviews) || ! count($reviews)){ ?>
 
 <div class=" tutor-course-reviews-wrap">
     <div class="course-target-reviews-title">
-        <h4><?php _e(sprintf('Reviews wrote by %s ', $get_user->display_name), 'tutor'); ?></h4>
+        <h4><?php echo sprintf(__('Reviews wrote by %s ', 'tutor'), $get_user->display_name); ?></h4>
     </div>
 
     <div class="tutor-reviews-list">
@@ -46,7 +46,7 @@ if ( ! is_array($reviews) || ! count($reviews)){ ?>
 
                         <p> <a href="<?php echo $profile_url; ?>">  <?php echo $review->display_name; ?> </a> </p>
                         <p class="review-meta">
-		                    <?php _e(sprintf('%s ago', human_time_diff(strtotime($review->comment_date))), 'tutor'); ?>
+                            <?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($review->comment_date))) ?>
                         </p>
                     </div>
                 </div>

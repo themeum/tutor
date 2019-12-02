@@ -67,14 +67,13 @@ class Admin{
 		//add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(),'addons_page') );
 		add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), __( 'Add-ons', 'tutor' ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
 
-
-		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
-
 		do_action('tutor_admin_register');
 
 		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_page') );
 
 		add_submenu_page('tutor',__('Uninstall Tutor LMS', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
+
+		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
 
 		if ( ! $hasPro){
 			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
@@ -400,12 +399,12 @@ class Admin{
 	}
 
 	public function plugin_action_links($actions){
-		/*$hasPro = tutor()->has_pro;
+		$hasPro = tutor()->has_pro;
 
 		if(!$hasPro){
 			$actions['tutor_pro_link'] = '<a href="https://www.themeum.com/product/tutor-lms/#pricing?utm_source=tutor_plugin_action_link&utm_medium=wordpress_dashboard&utm_campaign=go_premium" target="_blank"><span
- style="color: #39a700eb; font-weight: bold;">'.__('Upgrade to Pro', 'wp-megamenu').'</span></a>';
-		}*/
+ style="color: #ff7742; font-weight: bold;">' . __('Upgrade to Pro', 'wp-megamenu') . '</span></a>';
+		}
 
 		$is_erase_data = tutor_utils()->get_option('delete_on_uninstall');
 
@@ -447,12 +446,11 @@ class Admin{
 	 */
 	public function admin_footer_text( $footer_text ) {
 		$current_screen = get_current_screen();
-		$tutor_pages = tutor_utils()->tutor_get_screen_ids();
 
 		/**
 		 * We are making sure that this message will be only on Tutor Admin page
 		 */
-		if ( isset( $current_screen->id ) && apply_filters( 'tutor_display_admin_footer_text', in_array( $current_screen->id, $tutor_pages ) ) ) {
+		if ( apply_filters( 'tutor_display_admin_footer_text', (tutor_utils()->array_get('parent_base', $current_screen) === 'tutor' ) ) ) {
 			$footer_text = sprintf(
 				__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'tutor' ),
 				sprintf( '<strong>%s</strong>', esc_html__( 'Tutor LMS', 'tutor' ) ),

@@ -2,7 +2,7 @@
     <div class="tutor-course-archive-results-wrap">
 		<?php
 		$courseCount = tutor_utils()->get_archive_page_course_count();
-		_e(sprintf("%s Courses", "<strong>{$courseCount}</strong>"), "tutor");
+		echo sprintf(__("%s Courses", "tutor"), "<strong>{$courseCount}</strong>");
 		?>
     </div>
 
@@ -17,6 +17,4 @@
             </select>
         </form>
     </div>
-
-    <div style="clear: both;"></div>
 </div>

@@ -1,18 +1,17 @@
-
 <div class="tutor-course-instructors-metabox-wrap">
 	<?php
 	$instructors = tutor_utils()->get_instructors_by_course();
-
 	?>
 
 	<div class="tutor-course-available-instructors">
 		<?php
 		$t = wp_get_current_user();
 
-		$currentInstructorHtml = '<div id="added-instructor-id-'.$t->ID.'" class="added-instructor-item added-instructor-item-'.$t->ID.'" data-instructor-id="'.$t->ID
-              .'">
-                    <span class="instructor-icon">'.get_avatar($t->ID, 30).'</span>
-                    <span class="instructor-name"> '.$t->display_name.' </span>
+		$instructor_crown_src = tutor()->url.'assets/images/crown.svg';
+
+		$currentInstructorHtml = '<div id="added-instructor-id-'.$t->ID.'" class="added-instructor-item added-instructor-item-'.$t->ID.'" data-instructor-id="'.$t->ID.'">
+                    <div class="instructor-icon">'.get_avatar($t->ID, 45).'</div>
+                    <div class="instructor-name"> '.$t->display_name.' <img src="'.$instructor_crown_src.'"><i class="instructor-name-tooltip" title="'. __("Author", "tutor") .'">'. __("Author", "tutor") .'</i></div>
                 </div>';
         echo $currentInstructorHtml;
 
@@ -28,7 +27,7 @@
                     </span>
 					<span class="instructor-name"> <?php echo $instructor->display_name; ?> </span>
 					<span class="instructor-control">
-						<a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-garbage"></i></a>
+						<a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-line-cross"></i></a>
 					</span>
 				</div>
 				<?php
@@ -38,9 +37,7 @@
 	</div>
 
 	<div class="tutor-add-instructor-button-wrap">
-		<p>
-            <button type="button" class="tutor_btn_lg tutor-add-instructor-btn"> <i class="tutor-icon-add-line"></i> <?php _e('Add More Instructor', 'tutor'); ?> </button>
-        </p>
+        <button type="button" class="tutor-btn tutor-add-instructor-btn bordered-btn"> <i class="tutor-icon-add-friend"></i> <?php _e('Add More Instructors', 'tutor'); ?> </button>
 	</div>
 
     <?php
@@ -54,16 +51,22 @@
 <div class="tutor-modal-wrap tutor-instructors-modal-wrap">
 	<div class="tutor-modal-content">
 		<div class="modal-header">
-			<div class="search-bar">
-				<input type="text" class="tutor-modal-search-input" placeholder="<?php _e('Search instructor...'); ?>">
-			</div>
-			<div class="modal-close-wrap">
-				<a href="javascript:;" class="modal-close-btn">&times;</a>
-			</div>
+            <div class="modal-title">
+                <h1><?php _e("Add instructors", "tutor") ?></h1>
+            </div>
+            <div class="lesson-modal-close-wrap">
+                <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i></a>
+            </div>
 		</div>
+        <div class="modal-content-body">
+
+            <div class="search-bar">
+                <input type="text" class="tutor-modal-search-input" placeholder="<?php _e('Search instructors...'); ?>">
+            </div>
+        </div>
 		<div class="modal-container"></div>
-		<div class="modal-footer">
-			<button type="button" class="button button-primary add_instructor_to_course_btn"><?php _e('Add Instructors', 'tutor'); ?></button>
+		<div class="modal-footer has-padding">
+			<button type="button" class="tutor-btn add_instructor_to_course_btn"><?php _e('Add Instructors', 'tutor'); ?></button>
 		</div>
 	</div>
 </div>

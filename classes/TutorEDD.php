@@ -13,13 +13,15 @@ class TutorEDD extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
-		add_action('tutor_options_before_tutor_edd', array($this, 'notice_before_option'));
+		//add_action('tutor_options_before_tutor_edd', array($this, 'notice_before_option'));
 
 		//Add Tutor Option
-		add_filter('tutor/options/attr', array($this, 'add_options'));
+		add_filter('tutor_monetization_options', array($this, 'tutor_monetization_options'));
+		//add_filter('tutor/options/attr', array($this, 'add_options'));
 
-		$course_sell = tutor_utils()->get_option('enable_tutor_edd');
-		if ( ! $course_sell){
+		$monetize_by = tutils()->get_option('monetize_by');
+
+		if ( $monetize_by !== 'edd'){
 			return;
 		}
 
@@ -82,6 +84,23 @@ class TutorEDD extends Tutor_Base {
 		return $attr;
 	}
 
+	/**
+	 * @param $arr
+	 *
+	 * @return mixed
+	 *
+	 * Returning monetization options
+	 *
+	 * @since v.1.3.5
+	 */
+	public function tutor_monetization_options($arr){
+		$has_edd = tutils()->has_edd();
+		if ($has_edd){
+			$arr['edd'] = __('Easy Digital Downloads', 'tutor');
+		}
+		return $arr;
+	}
+
 	public function register_meta_box(){
 		add_meta_box( 'tutor-attached-edd-product', __( 'Add Product', 'tutor' ), array($this, 'course_add_product_metabox'), $this->course_post_type, 'advanced', 'high' );
 	}
@@ -95,10 +114,14 @@ class TutorEDD extends Tutor_Base {
 	}
 
 	public function save_course_meta($post_ID){
-		$product_id = (int) tutor_utils()->avalue_dot('_tutor_course_product_id', $_POST);
-		if ($product_id){
-			update_post_meta($post_ID, '_tutor_course_product_id', $product_id);
-			update_post_meta($product_id, '_tutor_product', 'yes');
+		$product_id = tutor_utils()->avalue_dot('_tutor_course_product_id', $_POST);
+
+		if ($product_id !== '-1'){
+			$product_id = (int) $product_id;
+			if ($product_id){
+				update_post_meta($post_ID, '_tutor_course_product_id', $product_id);
+				update_post_meta($product_id, '_tutor_product', 'yes');
+            }
 		}else{
 			delete_post_meta($post_ID, '_tutor_course_product_id');
 		}

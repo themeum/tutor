@@ -7,11 +7,16 @@ if ($is_instructor){
         <h2><?php _e("You are instructor", 'tutor'); ?></h2>
 
         <p>
-			<?php _e(sprintf("Registered at : %s %s", date_i18n(get_option('date_format'), $is_instructor), date_i18n(get_option('time_format'), $is_instructor) ), 'tutor'); ?>
+			<?php
+			echo sprintf(__("Registered at : %s %s", 'tutor'), date_i18n(get_option('date_format'), $is_instructor), date_i18n(get_option('time_format'),
+                $is_instructor) );
+			?>
         </p>
 
         <p>
-			<?php _e(sprintf('Status : %s', tutor_utils()->instructor_status()), 'tutor'); ?>
+			<?php
+            echo sprintf(__('Status : %s', 'tutor'), tutor_utils()->instructor_status());
+            ?>
         </p>
 
     </div>

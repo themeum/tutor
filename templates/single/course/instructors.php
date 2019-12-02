@@ -33,7 +33,11 @@ if ($instructors){
 
                         <div class="instructor-name">
                             <h3><a href="<?php echo $profile_url; ?>"><?php echo $instructor->display_name; ?></a> </h3>
-                            <h4><?php echo $instructor->tutor_profile_job_title; ?></h4>
+                            <?php
+                            if ( ! empty($instructor->tutor_profile_job_title)){
+                                echo "<h4>{$instructor->tutor_profile_job_title}</h4>";
+                            }
+                            ?>
                         </div>
                     </div>
 					<div class="instructor-bio">

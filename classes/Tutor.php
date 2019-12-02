@@ -41,6 +41,7 @@ final class Tutor{
 	private $user;
 	private $theme_compatibility;
 	private $gutenberg;
+	private $course_settings_tabs;
 
 	private $woocommerce;
 	private $edd;
@@ -48,6 +49,7 @@ final class Tutor{
 
 	private $course_widget;
 	private $upgrader;
+	private $dashboard;
 
 	/**
 	 * @return null|Tutor
@@ -68,6 +70,25 @@ final class Tutor{
 		$this->path = plugin_dir_path(TUTOR_FILE);
 		$this->url = plugin_dir_url(TUTOR_FILE);
 		$this->basename = plugin_basename(TUTOR_FILE);
+
+		/**
+		 * Adding Tutor Database table to $wpdb;
+		 * @since v.1.4.2
+		 */
+		global $wpdb;
+		$wpdb->tutor_earnings	 = $wpdb->prefix.'tutor_earnings';
+		$wpdb->tutor_gradebooks = $wpdb->prefix.'tutor_gradebooks';
+		$wpdb->tutor_gradebooks_results = $wpdb->prefix.'tutor_gradebooks_results';
+		$wpdb->tutor_quiz_attempts = $wpdb->prefix.'tutor_quiz_attempts';
+		$wpdb->tutor_quiz_attempt_answers = $wpdb->prefix.'tutor_quiz_attempt_answers';
+		$wpdb->tutor_quiz_questions = $wpdb->prefix.'tutor_quiz_questions';
+		$wpdb->tutor_quiz_question_answers = $wpdb->prefix.'tutor_quiz_question_answers';
+		$wpdb->tutor_withdraws = $wpdb->prefix.'tutor_withdraws';
+
+		/**
+		 * Changing default wp doing ajax return based on tutor ajax action
+		 */
+		add_filter('wp_doing_ajax', array($this, 'wp_doing_ajax'));
 
 		/**
 		 * Include Files
@@ -107,12 +128,13 @@ final class Tutor{
 		$this->user = new User();
 		$this->theme_compatibility = new Theme_Compatibility();
 		$this->gutenberg = new Gutenberg();
+		$this->course_settings_tabs = new Course_Settings_Tabs();
 		$this->woocommerce = new WooCommerce();
 		$this->edd = new TutorEDD();
 		$this->withdraw = new Withdraw();
-
 		$this->course_widget = new Course_Widget();
 		$this->upgrader = new Upgrader();
+		$this->dashboard = new Dashboard();
 
 		/**
 		 * Run Method
@@ -171,6 +193,7 @@ final class Tutor{
 		if (isset($_REQUEST['tutor_action'])){
 			do_action('tutor_action_'.$_REQUEST['tutor_action']);
 		}
+
 	}
 
 	/**
@@ -225,6 +248,14 @@ final class Tutor{
 				update_option('tutor_version', '1.3.1');
 				flush_rewrite_rules();
 			}
+		}
+
+		/**
+		 * Save First activation Time
+		 */
+		$first_activation_date = get_option('tutor_first_activation_time');
+		if ( ! $first_activation_date){
+			update_option('tutor_first_activation_time', time());
 		}
 
 	}
@@ -482,10 +513,11 @@ final class Tutor{
 
 	public static function default_options(){
 		$options = array (
+			'pagination_per_page'               => '20',
 			'load_tutor_css'                    => '1',
 			'load_tutor_js'                     => '1',
 			'course_allow_upload_private_files' => '1',
-			'display_course_instructors'           => '1',
+			'display_course_instructors'        => '1',
 			'enable_q_and_a_on_course'          => '1',
 			'courses_col_per_row'               => '3',
 			'courses_per_page'                  => '3',
@@ -579,6 +611,22 @@ final class Tutor{
 		 */
 		$previous_dashboard_page_id = (int) tutor_utils()->get_option('student_dashboard');
 		tutor_utils()->update_option('tutor_dashboard_page_id', $previous_dashboard_page_id);
+	}
+
+	/**
+	 * @param $bool
+	 *
+	 * @return bool
+	 *
+	 * Filter the wp_doing_ajax from tutor requests to get advanced advantages from Tutor
+	 *
+	 * @since v.1.3.4
+	 */
+	public function wp_doing_ajax($bool){
+		if (isset($_REQUEST['tutor_ajax_action'])){
+			return true;
+		}
+		return $bool;
 	}
 
 

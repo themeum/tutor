@@ -28,10 +28,15 @@ class Assets{
 		wp_enqueue_style( 'wp-color-picker' );
 
 		wp_enqueue_script('jquery-ui-slider');
-		wp_enqueue_script('tutor-select2', tutor()->url.'assets/packages/select2/select2.min.js', array('jquery'), tutor()->version, true );
+		wp_enqueue_script('jquery-ui-datepicker');
+
+		wp_enqueue_script('tutor-select2', tutor()->url.'assets/packages/select2/select2.full.min.js', array('jquery'), tutor()->version, true );
+		wp_enqueue_script( 'tutor-main', tutor()->url . 'assets/js/tutor.js', array( 'jquery' ), tutor()->version, true );
 		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker'), tutor()->version, true );
 
-		$tutor_localize_data = array();
+		$tutor_localize_data = array(
+			'delete_confirm_text' => __('Are you sure? it can not be undone.', 'tutor'),
+		);
 		if ( ! empty($_GET['taxonomy']) && ( $_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag') ){
 			$tutor_localize_data['open_tutor_admin_menu'] = true;
 		}
@@ -45,7 +50,22 @@ class Assets{
 	public function frontend_scripts(){
 		global $post, $wp_query;
 
-		wp_enqueue_editor();
+		$is_script_debug = tutor_utils()->is_script_debug();
+		$suffix = $is_script_debug ? '' : '.min';
+
+		/**
+		 * We checked wp_enqueue_editor() in condition because it conflicting with Divi Builder
+		 * condition @since v.1.3.3
+		 */
+
+		if (is_single()){
+			wp_enqueue_editor();
+		}
+
+		/**
+		 * Initializing quicktags script to use in wp_editor();
+		 */
+		wp_enqueue_script( 'quicktags');
 
 		$tutor_dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
 		if ($tutor_dashboard_page_id === get_the_ID()){
@@ -58,7 +78,12 @@ class Assets{
 			'nonce_key'     => tutor()->nonce,
 			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
 			'options'       => $options,
-			'placeholder_img_src'              => tutor_placeholder_img_src(),
+			'placeholder_img_src' => tutor_placeholder_img_src(),
+			'enable_lesson_classic_editor' => get_tutor_option('enable_lesson_classic_editor'),
+
+			'text' => array(
+				'assignment_text_validation_msg' => __('Assignment answer can not be empty', 'tutor'),
+			),
 		);
 
 		if ( ! empty($post->post_type) && $post->post_type === 'tutor_quiz'){
@@ -85,7 +110,6 @@ class Assets{
 
 		//Including player assets if video exists
 		if (tutor_utils()->has_video_in_single()) {
-
 			$localize_data['post_id'] = get_the_ID();
 			$localize_data['best_watch_time'] = 0;
 
@@ -98,21 +122,28 @@ class Assets{
 		/**
 		 * Chart Data
 		 */
-		if ( ! empty($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_vars['tutor_dashboard_page'] === 'earning') {
-			wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/js/Chart.bundle.min.js', array(), tutor()->version );
-			wp_enqueue_script( 'jquery-ui-datepicker' );
+		if ( ! empty($wp_query->query_vars['tutor_dashboard_page']) ) {
+			wp_enqueue_script('jquery-ui-slider');
+
+			wp_enqueue_style('tutor-select2', tutor()->url.'assets/packages/select2/select2.min.css', array(), tutor()->version);
+			wp_enqueue_script('tutor-select2', tutor()->url.'assets/packages/select2/select2.full.min.js', array('jquery'), tutor()->version, true );
+
+			if ($wp_query->query_vars['tutor_dashboard_page'] === 'earning'){
+				wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/js/Chart.bundle.min.js', array(), tutor()->version );
+				wp_enqueue_script( 'jquery-ui-datepicker' );
+			}
 		}
 		//End: chart data
 
 		$localize_data = apply_filters('tutor_localize_data', $localize_data);
 		if (tutor_utils()->get_option('load_tutor_css')){
-			wp_enqueue_style('tutor-frontend', tutor()->url.'assets/css/tutor-front.css', array(), tutor()->version);
+			wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front{$suffix}.css", array(), tutor()->version);
 		}
 		if (tutor_utils()->get_option('load_tutor_js')) {
+			wp_enqueue_script( 'tutor-main', tutor()->url . 'assets/js/tutor.js', array( 'jquery' ), tutor()->version, true );
 			wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery' ), tutor()->version, true );
 			wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
 		}
-
 
 		/**
 		 * Default Color

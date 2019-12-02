@@ -1,11 +1,11 @@
 === Tutor LMS - eLearning and online course solution ===
-Contributors: themeum
+Contributors: themeum, kawshar, jakirhasan, mhshohel, anik4e, delowardev, rejuancse, fahimmurshed, badsha_eee, faisalahmed29, joomcoder, sksaaju, mehedih
 Donate link: https://www.themeum.com
-Tags: lms, course, elearning, education, quiz, training, sell courses, courses, e-Learning, learning, learning management system, WordPress LMS
+Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.3.2
+Stable tag: 1.4.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -15,7 +15,9 @@ A complete WordPress LMS plugin to create any e-learning website easily.
 
 Tutor is a complete, feature-packed and robust WordPress LMS plugin to create & sell courses online easily. All the features of this learning management system hits all the checkpoints for a full-fledged online course marketplace. You can create challenging and fun quizzes, interactive lessons, powerful reports and stats making Tutor potentially the best free WordPress LMS plugin. Manage, administer and monetize your education, online school, and online courses without having to write a single line of code.
 
-Tutor LMS is a completely free plugin with premium high quality addons that you can add to empower the core plugin more! This WordPress LMS plugin is lightweight with addons to enable certificates, e-mail notifications, shopping carts and so much more!
+⭐ [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) ⭐ || ⭐ [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/) ⭐ || [Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/)
+
+Tutor LMS is a completely free Wordpress LMS plugin with premium high-quality addons that you can add to empower the core plugin more! This WordPress LMS plugin is lightweight with addons to enable certificates, e-mail notifications, shopping carts and so much more!
 
 Get Tutor, the most advanced and powerful WordPress online course plugin.
 
@@ -23,7 +25,8 @@ Get Tutor, the most advanced and powerful WordPress online course plugin.
 
 Create, customize, manage, and sell online courses by building a functional e-learning website with this free LMS plugin for WordPress.
 
-[Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/) || [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) || [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/)
+
+Want to know all the latest news and be part of the Tutor LMS community? Join our [Facebook Tutor LMS Community group!](https://www.facebook.com/groups/tutorlms)
 
 = Features =
 
@@ -33,11 +36,16 @@ Here are the most notable features of Tutor LMS plugin. If you need any further 
   * Unlimited courses and lessons
   * Frontend student dashboard
   * Video lessons
-  * Multiple video sources (self-hosted, YouTube, Vimeo)
+  * Multiple video sources (self-hosted, YouTube, Vimeo, Embedded Video)
   * Teacher profiles and panels
   * Lesson management
   * Course requirement & instruction
   * Quizzes
+  * Earning & Commission Allocation
+  * Withdrawal Options
+  * Purchase History
+  * Styling Options
+  * Course Widget
   * Teacher registration form
   * Course review and rating system
   * Q&A for students with course teacher
@@ -45,9 +53,14 @@ Here are the most notable features of Tutor LMS plugin. If you need any further 
   * Tracking course progress
   * Course Difficulty Level
   * Define Course Duration
+  * Course Marketplace
   * Add course requirement and instruction
   * Quiz Timer
   * Quiz Attempts
+  * Centralized Monetization Settings
+  * Spotlight Mode
+  * RTL Ready
+  * Page Builder Support
   * Gutenberg compatible
   * Content Security
 
@@ -61,10 +74,10 @@ Tutor LMS can be used by anyone looking to create a full-fledged learning manage
   * Training courses
   * Professional continuing education
 
-These are just a few possibilities that Tutor LMS opens up for its users. There’s a whole new world of intuitive learning that’s yet to discover using this online course plugin.
+These are just a few possibilities that Tutor LMS opens up for its users. There’s a whole new world of intuitive learning that’s yet to discover using this WordPress LMS plugin.
 
 = Intuitive Course Builder =
-Create courses with their details like videos, attachments, excerpt, additional data, benefit of the course, requirement, topic, summary, announcement, and video banners. Have lessons under course and attach video and other attachments to each lesson. Tutor, the advanced WordPress LMS plugin lets you present courses on an intuitive user interface with all required options to offer a top-notch learning system.
+Create courses with their details like videos, attachments, excerpt, additional data, the benefit of the course, requirement, topic, summary, announcement, and video banners in this WordPress LMS plugin. Have lessons under course and attach video and other attachments to each lesson. Tutor, the advanced WordPress LMS plugin lets you present courses on an intuitive user interface with all required options to offer a top-notch learning system.
 
 = Smart Course and Lesson Manager =
 With tons of awesome features inside this WordPress course plugin, it is easy to setup, control, and manage teachers, students, courses & lessons.
@@ -85,10 +98,9 @@ Create quizzes with this WordPress course plugin. Add questions while setting up
 Engage your students by uploading multimedia lessons in versatile video sources such as Vimeo, YouTube videos, etc. Set an introductory video at the start of your course easily and define video poster and duration with this  WordPress course plugin.
 
 = Question Patterns =
-With this free LMS plugin for WordPress, you create questions that are supposed to be added to the Quizzes. Create questions by defining question type (True/False, Multiple Choice, Single Choice), marks for each question (if answered right), answer type, descriptions and answer hints for the students to attempt the right answer.
+With this free LMS plugin for WordPress, you create questions that are supposed to be added to the Quizzes. There are over 10 question types that you can choose from to fulfill all your quizzing needs. Using the WordPress LMS plugin, create questions by defining question type (True/False, Multiple Choice, Single Choice), marks for each question (if answered right), answer type, descriptions and answer hints for the students to attempt the right answer.) and more!
 
 = Student Question and Answers =
-
 Students can submit questions about courses before enrolling from their respective profiles. This useful feature in the WordPress LMS plugin encourages student interactions and helps boost conversion rates.
 
 = Email Notifications =
@@ -96,19 +108,32 @@ Sending emails to students and teachers has been made automated in Tutor. You ca
 
 
 = POWER OF WOOCOMMERCE =
-Being integrated with WooCommerce, Tutor, the WordPress LMS plugin offers eCommerce functionalities and enables you to sell courses on your website. You can see sales data, completed and pending orders for your courses from WooCommerce reports. If you want to issue discount coupons or PDF invoice, that too is possible. You can use any WooCommerce addon to monitor and improve your sales and marketing.
+Being integrated with WooCommerce, Tutor, the WordPress LMS plugin offers eCommerce functionalities and enables you to sell courses on your website.
+You can see sales data, completed and pending orders for your courses from WooCommerce reports. If you want to issue discount coupons or PDF invoice, that too is possible. You can use any WooCommerce addon to monitor and improve your sales and marketing along with this WordPress LMS plugin.
 
 = Easy Digital Downloads Integration to monetize courses =
 
 Integrate your learning management system with the renowned EDD plugin. Sell your courses seamlessly with multiple payment gateways supported by EDD.
 
+= Earning and Commission Allocation =
+The earning and commission allocation feature in Tutor allows easy distribution of course earnings between the admin and other instructors using the WordPress LMS plugin. You can easily set the percentage of earning distribution with this option, any other fees that need to be deducted, and statements to show per page. You’ll get a detailed report on all your earning stats, deducted fees, deducted commissions, and every other useful information on your dashboard inside this WordPress LMS plugin as well. There’s a detailed graphical representation of your earning along with advanced filters to know how much you earned over a specific period of time.
+
+= Easy Withdrawal Method =
+The withdraw option in Tutor LMS helps manage withdrawals easily. You can predefine the minimum amount in this WordPress LMS plugin that needs to be earned before instructors can send a withdrawal request. It also comes with the option to select the withdrawal method such as bank transfer, PayPal and ECHECK. If you want to add additional information on withdrawal you can do so too with this WordPress LMS plugin. Easily view all the withdrawal information from your dashboard displaying current balance, pending, completed, and rejected withdrawal stats.
+
+= Purchase History =
+Keep track of all the purchase options using the purchase history in the dashboard in the WordPress LMS plugin. Check the purchase status, amount and when the purchase was made inside Tutor LMS.
+
+= Spotlight Mode =
+Tutor LMS comes with the setting to hide the header & footer for the course learning interface. Offer students a distraction free lesson with the spotlight mode option.
+
 = Gutenberg Compatible =
 
-Create online courses with the new Gutenberg editor without facing any issues whatsoever. Tutor is completely compatible with the Gutenberg editor in case you want to display your courses in the block interface.
+Create online courses with the new Gutenberg editor without facing any issues whatsoever in the innovative WordPress LMS plugin. Tutor LMS is completely compatible with the Gutenberg editor in case you want to display your courses in the block interface. Moreover, Tutor LMS comes with three custom Gutenberg blocks. The blocks are- Tutor Student Dashboard, Student Registration, and Instructor Registration Form.
 
 = Content Security =
 
-Have the most secured learning management system when creating your online courses. Third parties cannot view the videos with the URL. It ensures that only enrolled students can have access to course videos.
+Have the most secure learning management system when creating your online courses. Third parties cannot view the videos with the URL when you use our WordPress LMS plugin. It ensures that only enrolled students can have access to course videos.
 
 == PREMIUM FEATURE FOR TUTOR ==
 
@@ -125,6 +150,14 @@ Have the most secured learning management system when creating your online cours
 - **Tutor Multi Instructors:** Add as many instructors as you want to individual courses. Enhance course experience of students by having the option to have a great lineup of teachers.
 
 - **Tutor Prerequisites:** Define a certain set of courses that students need to complete before enrolling for a new course.
+
+- **Tutor Assignments:** Create assignments that students can submit easily with a number of useful settings to assess students smartly.
+
+- **Tutor Paid Memberships Pro:** Subscriptions are made easy with the Tutor Paid Membership pro addon. Using the Tutor Paid Memberships Pro plugin integration with Tutor LMS, include site wise and category wise subscription for your eLearning platform.
+
+- **WooCommerce Subscriptions:** Have all the subscription options supported by WooCommerce using the WooCommerce Subscriptions addon. Earn higher revenue with the versatile subscription options in WooCommerce.
+
+- **Frontend Course Builder:** Build your course on the go using the frontend course builder in Tutor LMS plugin. Instructors can see how their course looks live without even having to go backend. The industry-first frontend course builder in any WordPress LMS plugin ever.
 
 - **5 Pro Question Patterns:**
 
@@ -159,31 +192,32 @@ The WordPress codex contains [instructions on how to do this here](https://codex
 
 = Can I use Tutor with my existing theme? =
 
-Yes. Tutor can be used with your existing theme or any theme you wish to use it with.
+Tutor LMS is a WordPress LMS plugin that works with any modern theme without any issues of site breakage.
 
 = Where can I find Tutor LMS user guides and documentation? =
 
-For a detailed guideline on how to build a Learning Management system, refer to our user documentation on the Themeum site.
+For a detailed guideline on how to build a Learning Management system using our WordPress LMS plugin, refer to our user documentation on the Themeum site.
 
 = Where can I report a bug? =
 
-This is an alpha version of Tutor, as bugs and issues expected, if you found any bugs or issues, please let us know by posting on the support section of this plugin on WordPress plugin directory or directly on our support forums: https://www.themeum.com/support/ 🙂
+If you found any bugs or issues, please let us know by posting on the support section of this plugin on WordPress plugin directory or directly on our
+support forums: https://www.themeum.com/support/ 🙂
 
 = Is this plugin free? =
 
-This WordPress course plugin has two versions. One is free and another is paid. The paid version has more advanced features which are not accessible in this free version. Click here to get the paid version.
+This WordPress course plugin has two versions. One is free and another is paid. The paid version of the WordPress LMS plugin has more advanced features which are not accessible in this free version. Click here to get the paid version.
 
 = Where can I get support? =
 
 You can get support by posting your issues on the support section of this plugin on WordPress plugins directory or directly place your question to Themeum Forums.
 
-= Is Tutor LMS device friendly? =
+= Is Tutor LMS device friendly WordPress LMS plugin? =
 
 If you’re using a responsive theme, then Tutor LMS will look great across all devices.
 
 = Can I use any plugins with Tutor? =
 
-Tutor enables you to use any third party plugins without facing any compatibility issues. You can integrate Tutor easily in your existing site without any trouble.
+Tutor enables you to use any third party plugins without facing any compatibility issues. You can integrate and use the WordPress LMS plugin easily in your existing site without any trouble.
 
 == Screenshots ==
 
@@ -206,6 +240,134 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.4.2 - 25 September, 2019 =
+
+* Added: Greadbook Addons in the Tutor LMS Pro version
+* Added: action hook after quiz attempt end, `do_action('tutor_quiz/attempt_ended', $attempt);`, `do_action('tutor_quiz/attempt_analysing/before', $attempt);`
+* Added: Assignment submmiting / submitted flag to lesson sidebar in lesson single page
+* Added: Template support from Tutor Pro
+* Added: action hook after addon enable disable,
+do_action('tutor_addon_before_enable_disable');
+do_action('tutor_addon_before_enable', $addonFieldName);
+do_action('tutor_addon_after_enable', $addonFieldName);
+do_action('tutor_addon_before_disable', $addonFieldName);
+do_action('tutor_addon_after_disable', $addonFieldName);
+do_action('tutor_addon_after_enable_disable');
+* Updated: Tutor Settings page URL is now updating when change settings page
+* Fixed: Rating placing issue, sometime it missed rating value, but it will never hapen again.
+* Fixed: `.tutor-icon-angle-left` `.tutor-icon-angle-right` toggle during lesson single sidebar show hide
+* Updated: Addon icons
+
+
+= 1.4.1 - 10 September, 2019 =
+
+* Added: utils method `get_course_settings($course_id = 0, $key = null, $default = false)`
+* Added: `get_tutor_course_settings($course_id = 0, $key = null, $default = false);`
+* Added: Content Drip Addon (Pro)
+* Added: Course settings with developer support
+* Added: tutor_alert() function to print various type of alert, warning, success, danger
+
+= 1.4.0 - 30 August, 2019 =
+
+* Added: Page builder support on the lesson.
+* Added: Enrollments list on in admin area, admin can now cancel, approve enrolment or delete. (Pro)
+* Added: Manually enrollment student to a course  (Pro)
+* Added: students quiz attempts on the frontend
+* Added: Sticky lesson sidebar on the spotlight mode
+* Added: Course permalink on the dashboard Most Popular Courses
+* Added: Quiz Questions Order settings, Student answer to quiz questions as per order. 4 types of order, (random, sorting, asc, desc)
+* Added: Redirect to the current course page after register.
+* Added: Review update from dashboard > review > Given
+* Added: Received reviews on all courses in dashboard
+* Added: Assignment submission validation for the answer.
+* Added: Quiz question options validation and correct answer validation
+* Fixed: save and continue to click on question edit modal, open question lists immediately under a quiz.
+* Fixed: text formatting issue in the quiz, some of the single or double quote comes with a slash. used `stripslashes();`
+* Fixed: some default value issue on the quiz.
+* Fixed: quiz page spotlight mode.
+* Fixed: Multiples text translation issues
+* Fixed: Chart-js Initiate in the pro version
+* Fixed: Report Datepicker css/js in the frontend dashboard
+* Fixed: Rating delete issues, it was actually report.js loading issues
+* Fixed: Multiple E-Mail template loading issue
+* Updated: Turned off reload the page while tutor settings save.
+
+= 1.3.9 - 19 August, 2019 =
+
+* Fixed: Resetting Paid Membership Pro plugins settings when saving tutor settings.
+* Fixed: quiz question issue when no settings saved.
+* Fixed: Complete lesson button responsive issue
+
+= 1.3.8 - 09 August, 2019 =
+
+* Fixed: `tutor_get_template()` function, it's now checking template from child-theme also, if template not found in the child theme, then it will look from the parent theme.
+* Fixed: Show/Hide browse Q&A based on settings.
+* Fixed: create_certificate under init hook from Tutor Certificate Addon (Pro)
+
+= 1.3.7 - 08 August, 2019 =
+
+* Added: WooCommerce Subscriptions Addon in the pro version
+* Added action hook `do_action('tutor_is_enrolled_before', $course_id, $user_id);` and filter hook `apply_filters('tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id);`
+* Added: user social links ability from frontend dashboard
+* Fixed: Quiz attempt allowed 0 issue has been fixed. Strictly checking if it's zero, then it will be no limit
+* Fixed: Tutor LMS Pro addon loading issue on the windows machine
+* Fixed: query public profile user by user_nicename instead of user_login
+* Fixed: touch event on click Lessn and Q&A navigation in mobile
+* Updated: student public profile design updated
+
+= 1.3.6 - 05 August, 2019 =
+
+* Added: Centralized course monetization partner system, it's moved to under monetization tab in the settings. A centralized system to select course selling platform
+* Added: Tutor Assignments on the free versions add-on lists to notify users
+* Added: a function `get_tutor_option($key = null, $default = false)` to get tutor option, an alies of `tutils()->get_option($key, $default);`
+* Added: a function `update_tutor_option($key = null, $value = false)` to update tutor option, an alies of `tutils()->update_option($key, $value);`
+* Added: Paid Membership Pro for subscription plan (Pro)
+* Fixed: WC Notice print when adding to cart course
+* Fixed: Single course template loading issue
+
+= 1.3.5 - 29 July, 2019 =
+
+* Added: Direct publish course from frontend course builder if the current user is an administrator
+* Added: a helper method to get course type `tutils()->price_type()`
+* Added: course type (free or paid) to the course editor from
+* Added: Filter to change template path apply_filters('tutor_get_template_path', $template_location, $template)
+* Updated: `is_course_purchasable()` is now checking if there is any course type. if it free, then it will return false under 'is_course_paid' filter
+* Fixed: add to wishlists, it didn't work on multiple courses wishlists
+* Fixed: duplicate entry for the topic in the course builder
+
+= 1.3.4 - 23 July, 2019 =
+
+* Added: Frontend Drag and Drop Course Builder with quiz builder and assignment creation options
+* Added: Lifetime deal license checking and validation to get regular update and pro features in the pro version.
+* Added: add new instructor action hook and filter hook,
+`do_action('tutor_add_new_instructor_form_fields_before'); `, `do_action('tutor_add_new_instructor_form_fields_after');`, `do_action('tutor_add_new_instructor_before');`, `do_action('tutor_add_new_instructor_after', $user_id);`, `apply_filters('add_new_instructor_data', $userdata)`
+* Added: Dashboard subpage and dashboard menu item load permission basis
+* Added: Topic toggle in lesson single page and information about toggle icon added
+* Added: Course content is now linkable on the enrolled course page
+* Added: Filter `apply_filters('get_tutor_load_template_variables', $variables);` at `tutor_load_template()` function
+Added: action hook `do_action('tutor_load_template_before', $template, $variables);`, `do_action('tutor_load_template_before_after', $template, $variables);` at `tutor_load_template()` function
+* Added: create and attached product with course while creating a course from frontend
+* Added: Full-Screen Mode, students now can learn the lesson in full-screen mode without any inturruption.
+* Added: Enable disable settings for YouTube and Vimeo Video default player
+* Added: a new helper functions called `tutils()`, it's alies of `tutor_utils()`
+* Fixed: complete lesson button from mobile view.
+* Updated: Tutor frontend dashboard menu title now could be string or array with the `show_ui` key in the`array()`, show_ui key will be true or false to show it in the menu item visible or not.
+* Fixed: Total Enrolled count in course details page
+* Fixed: Course content looping count, lesson exact count by course content in the lesson.
+* Fixed: some addon loading issue, tutor pro classes autoloading issue"
+* Fixed: Delete video meta when select none from the video source in the course and lesson option.
+
+= 1.3.3 - 21 June, 2019 =
+
+* Added: Tutor Assignment Addon in the pro version
+* Added: Upgrade to pro text in plugin action links if Tutor Pro LMS does not exist or not installed
+* Added: tutor_assignments course post type
+* Added: `tutor_course_contents_post_types` course content filter
+* Rename: categories to course categories
+* Updated: some template hook modified
+* Fixed: tutor pro function checking `function_exists('tutor_pro');`
+* Fixed: `wp_enqueue_editor()` in Assets class frontend frontend_scripts method conflict issue with divi builder
 
 = 1.3.2 - 29 May, 2019 =
 
@@ -408,12 +570,13 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 * Added Quiz, quiz builder, course builder
 * Fixed huge bugs from alpha version
+* Removed some depricated code from aplha
 * Stable Release
 
 = 1.0.0-alpha - 06 Feb, 2019 =
-
 * Alpha Release
 
 == Upgrade Notice ==
+= 1.4.0 =
 
-Nothing here
+It’s recommended to have a backup of your website before hitting the update button.

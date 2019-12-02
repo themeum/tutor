@@ -20,7 +20,6 @@ class Withdraw {
 	protected $withdraw_methods;
 
 	public function __construct() {
-
 		$this->get_options = $this->get_options();
 		$this->withdraw_methods = $this->withdraw_methods();
 		$this->available_withdraw_methods = $this->available_withdraw_methods();
@@ -28,17 +27,11 @@ class Withdraw {
 		add_action('tutor_options_tutor_withdraw_withdraw_methods_before', array($this, 'withdraw_admin_options'));
 		add_action('tutor_option_save_after', array($this, 'withdraw_option_save'));
 
-
 		add_action('wp_ajax_tutor_save_withdraw_account', array($this, 'tutor_save_withdraw_account'));
 		add_action('wp_ajax_tutor_make_an_withdraw', array($this, 'tutor_make_an_withdraw'));
-
-
 	}
 
-
-
 	public function withdraw_methods(){
-
 		$methods = array(
 			'bank_transfer_withdraw' => array(
 				'method_name'  => __('Bank Transfer', 'tutor'),
@@ -80,13 +73,13 @@ class Withdraw {
 			),
 
 			'echeck_withdraw' => array(
-				'method_name'  => __('ECHECK', 'tutor'),
+				'method_name'  => __('E-Check', 'tutor'),
 
 				'form_fields'           => array(
 					'physical_address' => array(
 						'type'      => 'textarea',
 						'label'     => __('Your Physical Address', 'tutor'),
-						'desc'      => __('We will send you an ECHECK to this address directly.', 'tutor'),
+						'desc'      => __('We will send you an E-Check to this address directly.', 'tutor'),
 					),
 				),
 			),
@@ -146,7 +139,6 @@ class Withdraw {
 	 * @since v.1.2.0
 	 */
 	public function withdraw_option_save(){
-		
 		do_action('tutor_withdraw_options_save_before');
 
 		$option = (array) isset($_POST['tutor_withdraw_options']) ? $_POST['tutor_withdraw_options'] : array();
@@ -154,8 +146,6 @@ class Withdraw {
 		update_option('tutor_withdraw_options', $option);
 
 		do_action('tutor_withdraw_options_save_after');
-
-		
 	}
 
 	/**

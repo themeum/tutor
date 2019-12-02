@@ -16,16 +16,23 @@ class Post_types{
 		add_action( 'init', array($this, 'register_lesson_post_types') );
 		add_action( 'init', array($this, 'register_quiz_post_types') );
 		add_action( 'init', array($this, 'register_topic_post_types') );
+		add_action( 'init', array($this, 'register_assignments_post_types') );
 
+		add_filter( 'gutenberg_can_edit_post_type', array( $this, 'gutenberg_can_edit_post_type' ), 10, 2 );
+		add_filter( 'use_block_editor_for_post_type', array( $this, 'gutenberg_can_edit_post_type' ), 10, 2 );
 
 		/**
 		 * Customize the message of course
 		 */
 		add_filter( 'post_updated_messages', array($this, 'course_updated_messages') );
+
+		/**
+		 * Since 1.4.0
+		 */
+		add_action( 'init', array($this, 'register_tutor_enrolled_post_types') );
 	}
 	
 	public function register_course_post_types() {
-		$enable_gutenberg = (bool) tutor_utils()->get_option('enable_gutenberg_course_edit');
 
 		$labels = array(
 			'name'               => _x( 'Courses', 'post type general name', 'tutor' ),
@@ -60,7 +67,7 @@ class Post_types{
 			'menu_position'      => null,
 			'taxonomies'         => array( 'course-category', 'course-tag' ),
 			'supports'           => array( 'title', 'editor', 'thumbnail', 'excerpt'),
-			'show_in_rest'       => $enable_gutenberg,
+			'show_in_rest'       => true,
 
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_course',
@@ -81,7 +88,7 @@ class Post_types{
 		 * Taxonomy
 		 */
 		$labels = array(
-			'name'                       => _x( 'Categories', 'taxonomy general name', 'tutor' ),
+			'name'                       => _x( 'Course Categories', 'taxonomy general name', 'tutor' ),
 			'singular_name'              => _x( 'Category', 'taxonomy singular name', 'tutor' ),
 			'search_items'               => __( 'Search Categories', 'tutor' ),
 			'popular_items'              => __( 'Popular Categories', 'tutor' ),
@@ -96,7 +103,7 @@ class Post_types{
 			'add_or_remove_items'        => __( 'Add or remove categories', 'tutor' ),
 			'choose_from_most_used'      => __( 'Choose from the most used categories', 'tutor' ),
 			'not_found'                  => __( 'No categories found.', 'tutor' ),
-			'menu_name'                  => __( 'Categories', 'tutor' ),
+			'menu_name'                  => __( 'Course Categories', 'tutor' ),
 		);
 
 		$args = array(
@@ -106,6 +113,7 @@ class Post_types{
 			'show_admin_column'     => true,
 			'update_count_callback' => '_update_post_term_count',
 			'query_var'             => true,
+			'show_in_rest'          => true,
 			'rewrite'               => array( 'slug' => 'course-category' ),
 		);
 
@@ -137,6 +145,7 @@ class Post_types{
 			'show_admin_column'     => true,
 			'update_count_callback' => '_update_post_term_count',
 			'query_var'             => true,
+			'show_in_rest'          => true,
 			'rewrite'               => array( 'slug' => 'course-tag' ),
 		);
 
@@ -166,8 +175,8 @@ class Post_types{
 			'description'        => __( 'Description.', 'tutor' ),
 			'public'             => true,
 			'publicly_queryable' => true,
-			'show_ui'            => false,
-			'show_in_menu'       => 'tutor',
+			'show_ui'            => true,
+			'show_in_menu'       => false,
 			'query_var'          => true,
 			'rewrite'            => array( 'slug' => $this->lesson_post_type ),
 			'menu_icon'    => 'dashicons-list-view',
@@ -175,7 +184,7 @@ class Post_types{
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'thumbnail'),
+			'supports'           => array( 'title', 'editor'),
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_lesson',
 				'read_post'          => 'read_tutor_lesson',
@@ -256,6 +265,55 @@ class Post_types{
 		register_post_type( 'topics', $args );
 	}
 
+	public function register_assignments_post_types() {
+		$labels = array(
+			'name'               => _x( 'Assignments', 'post type general name', 'tutor' ),
+			'singular_name'      => _x( 'Assignment', 'post type singular name', 'tutor' ),
+			'menu_name'          => _x( 'Assignments', 'admin menu', 'tutor' ),
+			'name_admin_bar'     => _x( 'Assignment', 'add new on admin bar', 'tutor' ),
+			'add_new'            => _x( 'Add New', $this->lesson_post_type, 'tutor' ),
+			'add_new_item'       => __( 'Add New Assignment', 'tutor' ),
+			'new_item'           => __( 'New Assignment', 'tutor' ),
+			'edit_item'          => __( 'Edit Assignment', 'tutor' ),
+			'view_item'          => __( 'View Assignment', 'tutor' ),
+			'all_items'          => __( 'Assignments', 'tutor' ),
+			'search_items'       => __( 'Search Assignments', 'tutor' ),
+			'parent_item_colon'  => __( 'Parent Assignments:', 'tutor' ),
+			'not_found'          => __( 'No Assignments found.', 'tutor' ),
+			'not_found_in_trash' => __( 'No Assignments found in Trash.', 'tutor' )
+		);
+
+		$args = array(
+			'labels'             => $labels,
+			'description'        => __( 'Description.', 'tutor' ),
+			'public'             => true,
+			'publicly_queryable' => true,
+			'show_ui'            => false,
+			'show_in_menu'       => 'tutor',
+			'query_var'          => true,
+			'rewrite'            => array( 'slug' => $this->lesson_post_type ),
+			'menu_icon'          => 'dashicons-editor-help',
+			'capability_type'    => 'post',
+			'has_archive'        => true,
+			'hierarchical'       => false,
+			'menu_position'      => null,
+			'supports'           => array( 'title', 'editor'),
+			'capabilities' => array(
+				'edit_post'          => 'edit_tutor_assignment',
+				'read_post'          => 'read_tutor_assignment',
+				'delete_post'        => 'delete_tutor_assignment',
+				'delete_posts'       => 'delete_tutor_assignments',
+				'edit_posts'         => 'edit_tutor_assignments',
+				'edit_others_posts'  => 'edit_others_tutor_assignments',
+				'publish_posts'      => 'publish_tutor_assignments',
+				'read_private_posts' => 'read_private_tutor_assignments',
+				'create_posts'       => 'edit_tutor_assignments',
+			),
+		);
+
+		register_post_type( 'tutor_assignments', $args );
+	}
+
 	function course_updated_messages( $messages ) {
 		$post             = get_post();
 		$post_type        = get_post_type( $post );
@@ -297,6 +355,39 @@ class Post_types{
 		}
 
 		return $messages;
+	}
+
+	/**
+	 * @param $can_edit
+	 * @param $post_type
+	 *
+	 * @return bool
+	 *
+	 * Enable / Disable Gutenberg Editor
+	 * @since v.1.3.4
+	 */
+	public function gutenberg_can_edit_post_type( $can_edit, $post_type ) {
+		$enable_gutenberg = (bool) tutor_utils()->get_option('enable_gutenberg_course_edit');
+		return $this->course_post_type === $post_type ? $enable_gutenberg : $can_edit;
+	}
+
+	/**
+	 * Register tutor_enrolled post type
+	 * @since v.1.4.0
+	 */
+	public function register_tutor_enrolled_post_types(){
+		$args = array(
+			'label'  => 'Tutor Enrolled',
+			'description'        => __( 'Description.', 'tutor' ),
+			'public'             => false,
+			'publicly_queryable' => false,
+			'show_ui'            => false,
+			'query_var'          => false,
+			'has_archive'        => false,
+			'hierarchical'       => false,
+			'menu_position'      => null,
+		);
+		register_post_type( 'tutor_enrolled', $args );
 	}
 
 }

@@ -19,9 +19,7 @@ class Student {
 	public function __construct() {
 		add_action('template_redirect', array($this, 'register_student'));
 		add_action('template_redirect', array($this, 'update_profile'));
-
 		add_filter('get_avatar_url', array($this, 'filter_avatar'), 10, 3);
-
 		add_action('tutor_action_tutor_reset_password', array($this, 'tutor_reset_password'));
 	}
 
@@ -31,7 +29,7 @@ class Student {
 	 * @since v.1.0.0
 	 */
 	public function register_student(){
-		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_register_student' ){
+		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_register_student' ){
 			return;
 		}
 		//Checking nonce
@@ -89,8 +87,12 @@ class Student {
 				wp_set_auth_cookie( $user_id );
 			}
 
-			$dashboard_url = tutor_utils()->tutor_dashboard_url();
-			wp_redirect($dashboard_url);
+			//Redirect page
+			$redirect_page = tutils()->array_get('redirect_to', $_REQUEST);
+			if ( ! $redirect_page){
+				$redirect_page = tutor_utils()->tutor_dashboard_url();
+			}
+			wp_redirect($redirect_page);
 			die();
 		}else{
 			$this->error_msgs = $user_id->get_error_messages();
@@ -108,12 +110,13 @@ class Student {
 	}
 
 	public function update_profile(){
-		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_profile_edit' ){
+		if (tutils()->array_get('tutor_action', $_POST) !== 'tutor_profile_edit' ){
 			return;
 		}
 
 		//Checking nonce
 		tutor_utils()->checking_nonce();
+        do_action('tutor_profile_update_before');
 
 		$user_id = get_current_user_id();
 		$first_name     = sanitize_text_field(tutor_utils()->input_old('first_name'));
@@ -129,13 +132,23 @@ class Student {
 		$user_id  = wp_update_user( $userdata );
 
 		if ( ! is_wp_error( $user_id ) ) {
-			$_tutor_profile_photo = sanitize_text_field(tutor_utils()->avalue_dot('tutor_profile_photo_id', $_POST));
+			$_tutor_profile_photo = sanitize_text_field(tutils()->array_get('tutor_profile_photo_id', $_POST));
 
 			update_user_meta($user_id, 'phone_number', $phone_number);
 			update_user_meta($user_id, '_tutor_profile_bio', $tutor_profile_bio);
 			update_user_meta($user_id, '_tutor_profile_photo', $_tutor_profile_photo);
-		}
 
+            $tutor_user_social = tutils()->tutor_user_social_icons();
+            foreach ($tutor_user_social as $key => $social){
+                $user_social_value = sanitize_text_field(tutor_utils()->input_old($key));
+                if($user_social_value){
+                    update_user_meta($user_id, $key, $user_social_value);
+                }else{
+                    delete_user_meta($user_id, $key);
+                }
+            }
+		}
+        do_action('tutor_profile_update_after', $user_id);
 		wp_redirect(wp_get_raw_referer());
 		die();
 	}
@@ -222,6 +235,5 @@ class Student {
 		wp_redirect(wp_get_raw_referer());
 		die();
 	}
-
 
 }

@@ -38,6 +38,9 @@ class Rewrite_Rules extends Tutor_Base {
 			$this->course_post_type."/(.+?)/{$this->lesson_base_permalink}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=".$wp_rewrite->preg_index(2),
 			//Quiz Permalink
 			$this->course_post_type."/(.+?)/tutor_quiz/(.+?)/?$" => "index.php?post_type=tutor_quiz&name=".$wp_rewrite->preg_index(2),
+			//Assignments URL
+			$this->course_post_type."/(.+?)/assignments/(.+?)/?$" => "index.php?post_type=tutor_assignments&name=".$wp_rewrite->preg_index(2),
+
 			//Private Video URL
 			"video-url/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=". $wp_rewrite->preg_index(1),
 			//Student Public Profile URL
@@ -47,6 +50,7 @@ class Rewrite_Rules extends Tutor_Base {
 
 		//Nav Items
 		$course_nav_items = tutor_utils()->course_sub_pages();
+		$course_nav_items = apply_filters('tutor_course/single/enrolled/nav_items_rewrite', $course_nav_items);
 		//$course_nav_items = array_keys($course_nav_items);
 
 		if (is_array($course_nav_items) && count($course_nav_items)){
@@ -61,7 +65,8 @@ class Rewrite_Rules extends Tutor_Base {
 			$new_rules["(.+?)/{$dashboard_key}/?$"] ='index.php?pagename='.$wp_rewrite->preg_index(1).'&tutor_dashboard_page=' .$dashboard_key;
 
 			//Sub Page of dashboard sub page
-			$new_rules["(.+?)/{$dashboard_key}/([^/]*)/?$"] ='index.php?pagename='.$wp_rewrite->preg_index(1).'&tutor_dashboard_page=' .$dashboard_key.'&tutor_dashboard_sub_page='.$wp_rewrite->preg_index(2);
+			//regext = ([^/]*)
+			$new_rules["(.+?)/{$dashboard_key}/(.+?)/?$"] ='index.php?pagename='.$wp_rewrite->preg_index(1).'&tutor_dashboard_page=' .$dashboard_key.'&tutor_dashboard_sub_page='.$wp_rewrite->preg_index(2);
 		}
 
 		$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;

@@ -20,6 +20,7 @@
 	    }
 	    ?>
 
+        <?php do_action('tutor_add_new_instructor_form_fields_before'); ?>
 
         <div class="tutor-option-field-row">
             <div class="tutor-option-field-label">
@@ -120,10 +121,11 @@
                 </label>
             </div>
             <div class="tutor-option-field">
-
                 <textarea name="tutor_profile_bio"><?php echo tutor_utils()->input_old('tutor_profile_bio'); ?></textarea>
             </div>
         </div>
+
+	    <?php do_action('tutor_add_new_instructor_form_fields_after'); ?>
 
         <div class="tutor-option-field-row">
             <div class="tutor-option-field-label"></div>

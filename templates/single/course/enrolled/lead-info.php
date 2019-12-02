@@ -92,11 +92,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			<?php } ?>
             <li>
                 <span><?php esc_html_e('Total Enrolled', 'tutor') ?></span>
-                <?php
-                    $get_total_student = tutor_utils()->get_total_students();
-                    $total_students = $get_total_student ? $get_total_student : 0;
-                    echo $total_students;
-                ?>
+	            <?php echo (int) tutor_utils()->count_enrolled_users_by_course(); ?>
             </li>
             <li>
                 <span><?php esc_html_e('Last Update', 'tutor') ?></span>
@@ -108,18 +104,18 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
     <div class="tutor-course-enrolled-info">
 		<?php $count_completed_lesson = tutor_course_completing_progress_bar(); ?>
 
-        <div class="tutor-lead-info-btn-group">
+        <!--<div class="tutor-lead-info-btn-group">
 			<?php
-			if ( $wp_query->query['post_type'] !== 'lesson') {
+/*			if ( $wp_query->query['post_type'] !== 'lesson') {
 				$lesson_url = tutor_utils()->get_course_first_lesson();
 				if ( $lesson_url ) {
-					?>
-                    <a href="<?php echo $lesson_url; ?>" class="tutor-button"><?php _e( 'Continue to lesson', 'tutor' ); ?></a>
-                <?php }
+					*/?>
+                    <a href="<?php /*echo $lesson_url; */?>" class="tutor-button"><?php /*_e( 'Continue to lesson', 'tutor' ); */?></a>
+                <?php /*}
             }
-            ?>
-            <?php tutor_course_mark_complete_html(); ?>
-        </div>
+            */?>
+            <?php /*tutor_course_mark_complete_html(); */?>
+        </div>-->
     </div>
 
 	<?php do_action('tutor_course/single/lead_meta/after'); ?>

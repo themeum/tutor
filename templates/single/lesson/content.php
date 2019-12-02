@@ -23,14 +23,14 @@ if ($best_watch_time > 0){
 ?>
 
 
-
+<?php do_action('tutor_lesson/single/before/content'); ?>
 
 <div class="tutor-single-page-top-bar">
     <div class="tutor-topbar-item tutor-hide-sidebar-bar">
-        <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-menu-2"></i> </a>
+        <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-angle-left"></i> </a>
         <?php $course_id = get_post_meta(get_the_ID(), '_tutor_course_id_for_lesson', true); ?>
         <a href="<?php echo get_the_permalink($course_id); ?>" class="tutor-topbar-home-btn">
-            <i class="tutor-icon-next-2"></i> <?php echo __('Go to Course Home', 'tutor') ; ?>
+            <i class="tutor-icon-home"></i> <?php echo __('Go to Course Home', 'tutor') ; ?>
         </a>
     </div>
     <div class="tutor-topbar-item tutor-topbar-content-title-wrap">
@@ -43,7 +43,6 @@ if ($best_watch_time > 0){
         <?php tutor_lesson_mark_complete_html(); ?>
     </div>
 
-
 </div>
 
 
@@ -55,5 +54,4 @@ if ($best_watch_time > 0){
 	<?php get_tutor_posts_attachments(); ?>
 </div>
 
-<?php
-do_action('tutor_lesson/single/after/content'); ?>
+<?php do_action('tutor_lesson/single/after/content'); ?>

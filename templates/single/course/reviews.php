@@ -19,11 +19,9 @@ if ( ! is_array($reviews) || ! count($reviews)){
 ?>
 
 <div class="tutor-single-course-segment">
-
     <div class="course-student-rating-title">
         <h4 class="tutor-segment-title"><?php _e('Student Feedback', 'tutor'); ?></h4>
     </div>
-
     <div class="tutor-course-reviews-wrap">
         <div class="tutor-course-student-rating-wrap">
             <div class="course-avg-rating-wrap">
@@ -35,18 +33,12 @@ if ( ! is_array($reviews) || ! count($reviews)){
 							echo number_format($rating->rating_avg, 1);
 							?>
                         </p>
-
-
                         <p class="course-avg-rating-html">
 		                    <?php tutor_utils()->star_rating_generator($rating->rating_avg);?>
                         </p>
                         <p class="tutor-course-avg-rating-total">Total <span><?php echo $rating->rating_count;?></span> Ratings</p>
 
                     </div>
-
-
-
-
                     <div class="tutor-col">
                         <div class="course-ratings-count-meter-wrap">
 							<?php
@@ -91,7 +83,7 @@ if ( ! is_array($reviews) || ! count($reviews)){
                             <div class="review-time-name">
                                 <p> <a href="<?php echo $profile_url; ?>">  <?php echo $review->display_name; ?> </a> </p>
                                 <p class="review-meta">
-									<?php _e(sprintf('%s ago', human_time_diff(strtotime($review->comment_date))), 'tutor'); ?>
+                                    <?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($review->comment_date))); ?>
                                 </p>
                             </div>
                             <div class="individual-review-rating-wrap">

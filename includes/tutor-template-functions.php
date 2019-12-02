@@ -5,32 +5,81 @@ if ( ! defined( 'ABSPATH' ) )
 
 /**
  * @param null $template
+ * @param bool $tutor_pro
  *
  * @return bool|string
  *
  * Load template with override file system
  *
  * @since v.1.0.0
+ * @updated v.1.4.2
+ *
  */
 
 if ( ! function_exists('tutor_get_template')) {
-	function tutor_get_template( $template = null ) {
+	function tutor_get_template( $template = null, $tutor_pro = false ) {
 		if ( ! $template ) {
 			return false;
 		}
 		$template = str_replace( '.', DIRECTORY_SEPARATOR, $template );
 
-		$template_location = trailingslashit( get_template_directory() ) . "tutor/{$template}.php";
+		/**
+		 * Get template first from child-theme if exists
+		 * If child theme not exists, then get template from parent theme
+		 */
+		$template_location = trailingslashit( get_stylesheet_directory() ) . "tutor/{$template}.php";
+		if ( ! file_exists($template_location)){
+			$template_location = trailingslashit( get_template_directory() ) . "tutor/{$template}.php";
+		}
 		$file_in_theme = $template_location;
 		if ( ! file_exists( $template_location ) ) {
 			$template_location = trailingslashit( tutor()->path ) . "templates/{$template}.php";
+			if ( ! file_exists($template_location) && $tutor_pro && function_exists('tutor_pro')){
+				$template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+			}
 
 			if ( ! file_exists($template_location)){
 				echo '<div class="tutor-notice-warning"> '.__(sprintf('The file you are trying to load is not exists in your theme or tutor plugins location, if you are a developer and extending tutor plugin, please create a php file at location %s ', "<code>{$file_in_theme}</code>"), 'tutor').' </div>';
 			}
 		}
 
-		return $template_location;
+		return apply_filters('tutor_get_template_path', $template_location, $template);
+	}
+}
+
+/**
+ * @param null $template
+ * @param bool $tutor_pro
+ *
+ * @return bool|mixed|void
+ *
+ * Get only template path without any warning...
+ *
+ * @since v.1.4.2
+ */
+if ( ! function_exists('tutor_get_template_path')) {
+	function tutor_get_template_path( $template = null, $tutor_pro = false ) {
+		if ( ! $template ) {
+			return false;
+		}
+		$template = str_replace( '.', DIRECTORY_SEPARATOR, $template );
+
+		/**
+		 * Get template first from child-theme if exists
+		 * If child theme not exists, then get template from parent theme
+		 */
+		$template_location = trailingslashit( get_stylesheet_directory() ) . "tutor/{$template}.php";
+		if ( ! file_exists( $template_location ) ) {
+			$template_location = trailingslashit( get_template_directory() ) . "tutor/{$template}.php";
+		}
+		if ( ! file_exists( $template_location ) ) {
+			$template_location = trailingslashit( tutor()->path ) . "templates/{$template}.php";
+		}
+		if ( ! file_exists($template_location) && $tutor_pro && function_exists('tutor_pro')){
+			$template_location = trailingslashit( tutor_pro()->path ) . "templates/{$template}.php";
+		}
+
+		return apply_filters( 'tutor_get_template_path', $template_location, $template );
 	}
 }
 
@@ -47,11 +96,19 @@ if ( ! function_exists('tutor_get_template')) {
  */
 
 if ( ! function_exists('tutor_load_template')) {
-	function tutor_load_template( $template = null, $variables = array() ) {
+	function tutor_load_template( $template = null, $variables = array(), $tutor_pro = false ) {
 		$variables = (array) $variables;
+		$variables = apply_filters('get_tutor_load_template_variables', $variables);
 		extract($variables);
 
-		include tutor_get_template( $template );
+		$isLoad = apply_filters('should_tutor_load_template', true, $template, $variables);
+		if ( ! $isLoad){
+			return;
+		}
+
+		do_action('tutor_load_template_before', $template, $variables);
+		include tutor_get_template( $template, $tutor_pro );
+		do_action('tutor_load_template_after', $template, $variables);
 	}
 }
 
@@ -290,7 +347,8 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
 		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
 
 		if ( $post_thumbnail_id ) {
-			$size = apply_filters( 'post_thumbnail_size', $size, $post_id );
+			//$size = apply_filters( 'post_thumbnail_size', $size, $post_id );
+			$size = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
 			if ($url){
 				return wp_get_attachment_image_url($post_thumbnail_id, $size);
 			}
@@ -316,7 +374,7 @@ if ( ! function_exists('get_tutor_course_thumbnail_src')) {
 		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
 
 		if ( $post_thumbnail_id ) {
-			$size = apply_filters( 'post_thumbnail_size', $size, $post_id );
+			$size = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
 			$src = wp_get_attachment_image_url( $post_thumbnail_id, $size, false );
 		} else {
 			$src = tutor()->url . 'assets/images/placeholder.jpg';
@@ -473,7 +531,7 @@ if ( ! function_exists('get_tutor_course_author')) {
 
 function get_tutor_course_author_id(){
 	global $post;
-	return $post->post_author;
+	return (int) $post->post_author;
 }
 
 /**
@@ -895,7 +953,7 @@ function tutor_single_course_add_to_cart($echo = true){
 		tutor_load_template( 'single.course.login' );
 		$login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );
 
-		$output .= "<div class='tutor-cart-box-login-form' style='display: none;'><div class='tutor-cart-box-login-form-inner'><button class='tutor-popup-form-close tutor-icon-line-cross'></button>{$login_form}</div></div>";
+		$output .= "<div class='tutor-cart-box-login-form' style='display: none;'><span class='login-overlay-close'></span><div class='tutor-cart-box-login-form-inner'><button class='tutor-popup-form-close tutor-icon-line-cross'></button>{$login_form}</div></div>";
 	}
 
 	if ( $echo ) {
@@ -1301,3 +1359,54 @@ if ( ! function_exists('tutor_social_share')) {
 	}
 }
 
+/**
+ * @param bool $echo
+ *
+ * @return mixed
+ *
+ * Get Assignment content
+ *
+ * @since  v.1.3.3
+ */
+
+if ( ! function_exists('tutor_assignment_content')) {
+	function tutor_assignment_content( $echo = true ) {
+		ob_start();
+		tutor_load_template( 'single.assignment.content' );
+		$output = apply_filters( 'tutor_assignment/single/content', ob_get_clean() );
+
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+}
+
+/**
+ * @param string $msg
+ * @param string $title
+ * @param string $type
+ *
+ * @return string
+ *
+ * @since v.1.4.0
+ */
+
+if ( ! function_exists('get_tnotice')) {
+	function get_tnotice( $msg = '', $title = 'Success', $type = 'success' ) {
+
+		$output = '<div class="tnotice tnotice--' . $type . '">
+        <div class="tnotice__icon">&iexcl;</div>
+        <div class="tnotice__content">';
+
+		if ($title){
+			$output .='<p class="tnotice__type">' . $title . '</p>';
+		}
+		$output .='<p class="tnotice__message">' . $msg . '</p>
+        </div>
+    	</div>';
+
+		return $output;
+	}
+}

@@ -17,6 +17,11 @@ if ( ! defined( 'ABSPATH' ) )
 	<?php //wp_login_form(); ?>
 
     <?php
+    $current_url = tutils()->get_current_url();
+    $register_page = tutor_utils()->student_register_url();
+	$register_url = add_query_arg ('redirect_to', $current_url, $register_page) ;
+
+	//redirect_to
     $args = array(
 	    'echo' => true,
 	    // Default 'redirect' value takes the user back to the request URI.
@@ -56,7 +61,7 @@ if ( ! defined( 'ABSPATH' ) )
 				<input type="hidden" name="redirect_to" value="' . esc_url( $args['redirect'] ) . '" />
 			</p>
 			<p class="tutor-form-register-wrap">
-			    <a href="'. esc_url(tutor_utils()->student_register_url()). '">'.esc_html('Create a new account').'</a>
+			    <a href="'. esc_url($register_url). '">'.esc_html('Create a new account').'</a>
             </p>
 		</form>';
     echo $form;

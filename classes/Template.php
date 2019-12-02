@@ -23,6 +23,7 @@ class Template extends Tutor_Base {
 		add_filter( 'template_include', array($this, 'load_single_lesson_template'), 99 );
 		add_filter( 'template_include', array($this, 'play_private_video'), 99 );
 		add_filter( 'template_include', array($this, 'load_quiz_template'), 99 );
+		add_filter( 'template_include', array($this, 'load_assignment_template'), 99 );
 
 		add_filter( 'template_include', array($this, 'student_public_profile'), 99 );
 		add_filter( 'template_include', array($this, 'tutor_dashboard'), 99 );
@@ -118,6 +119,7 @@ class Template extends Tutor_Base {
 	 * Load Single Course Template
 	 *
 	 * @since v.1.0.0
+	 * @updated v.1.3.5
 	 */
 	public function load_single_course_template($template){
 		global $wp_query;
@@ -130,6 +132,7 @@ class Template extends Tutor_Base {
 				}
 			}
 
+			wp_reset_query();
 			if (empty( $wp_query->query_vars['course_subpage'])) {
 				$template = tutor_get_template( 'single-course' );
 				if ( is_user_logged_in() ) {
@@ -141,7 +144,10 @@ class Template extends Tutor_Base {
 				//If Course Subpage Exists
 				if ( is_user_logged_in() ) {
 					$course_subpage = $wp_query->query_vars['course_subpage'];
-					$template = tutor_get_template( 'single-course-enrolled-'.$course_subpage);
+					$template = tutor_get_template_path( 'single-course-enrolled-' . $course_subpage );
+					if ( ! file_exists( $template ) ) {
+						$template = tutor_get_template( 'single-course-enrolled-subpage' );
+					}
 				}else{
 					$template = tutor_get_template('login');
 				}
@@ -179,6 +185,11 @@ class Template extends Tutor_Base {
 				}else{
 					//You need to enroll first
 					$template = tutor_get_template( 'single.lesson.required-enroll' );
+
+					//Check Lesson edit access to support page builders
+					if(current_user_can(tutor()->instructor_role) && tutils()->has_lesson_edit_access()){
+						$template = tutor_get_template( 'single-lesson' );
+					}
 				}
 			}else{
 				$template = tutor_get_template('login');
@@ -270,7 +281,7 @@ class Template extends Tutor_Base {
 				 * Handle if logout URL
 				 * @since v.1.1.2
 				 */
-				if ( ! empty($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_vars['tutor_dashboard_page'] === 'logout'){
+				if (tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars) === 'logout'){
 					$redirect = get_permalink($student_dashboard_page_id);
 					wp_logout();
 					wp_redirect($redirect);
@@ -282,18 +293,28 @@ class Template extends Tutor_Base {
 				 */
 				if (is_user_logged_in()) {
 					$template = tutor_get_template( 'dashboard' );
+					/**
+					 * Check page page permission
+					 *
+					 * @since v.1.3.4
+					 */
+					$query_var = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
+					$dashboard_pages = tutor_utils()->tutor_dashboard_pages();
+					$dashboard_page_item = tutor_utils()->array_get($query_var, $dashboard_pages);
+					$auth_cap = tutor_utils()->array_get('auth_cap', $dashboard_page_item);
+					if ($auth_cap && ! current_user_can($auth_cap) ){
+						wp_die(__('Permission Denied', 'tutor'));
+					}
+
 				}else{
 					$template = tutor_get_template( 'login' );
 				}
-
-
-
 			}
 		}
 
 		return $template;
 	}
-	
+
 	/**
 	 * @param $template
 	 *
@@ -312,6 +333,21 @@ class Template extends Tutor_Base {
 			}
 			return $template;
 		}
+		return $template;
+	}
+
+	public function load_assignment_template($template){
+		global $wp_query;
+
+		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === 'tutor_assignments'){
+			if (is_user_logged_in()){
+				$template = tutor_get_template( 'single-assignment' );
+			}else{
+				$template = tutor_get_template('login');
+			}
+			return $template;
+		}
+
 		return $template;
 	}
 

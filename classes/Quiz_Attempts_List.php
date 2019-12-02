@@ -82,7 +82,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		$earned_percentage = $item->earned_marks > 0 ? ( number_format(($item->earned_marks * 100) / $item->total_marks)) : 0;
 
 		$output = $item->earned_marks." out of {$item->total_marks} <br />";
-		$output .= "({$earned_percentage}%) out of ({$pass_mark_percent}%) <br />";
+		$output .= "({$earned_percentage}%) pass ({$pass_mark_percent}%) <br />";
 
 		if ($earned_percentage >= $pass_mark_percent){
 			$output .= '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
@@ -106,7 +106,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			'quiz'              => __('Quiz', 'tutor'),
 			'course'            => __('Course', 'tutor'),
 			'total_questions'   => __('Total Questions', 'tutor'),
-			'earned_marks'      => __('Earned Mark', 'tutor'),
+			'earned_marks'      => __('Earned Points', 'tutor'),
 			'attempt_status'      => __('Attempt Status', 'tutor'),
 		);
 		return $columns;
