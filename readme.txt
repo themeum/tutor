@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.3.4
+Stable tag: 1.3.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -206,6 +206,16 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.3.5 - 29 July, 2019 =
+
+* Added: Direct publish course from frontend course builder if the current user is an administrator
+* Added: a helper method to get course type `tutils()->price_type()`
+* Added: course type (free or paid) to the course editor from
+* Added: Filter to change template path apply_filters('tutor_get_template_path', $template_location, $template)
+* Updated: `is_course_purchasable()` is now checking if there is any course type. if it free, then it will return false under 'is_course_paid' filter
+* Fixed: add to wishlists, it didn't work on multiple courses wishlists
+* Fixed: duplicate entry for the topic in the course builder
 
 = 1.3.4 - 23 July, 2019 =
 

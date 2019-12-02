@@ -626,28 +626,87 @@ Meta Box Heading
 End Metabox Heading
  */
 
-.video_source_wrap_html5{
-    width: 100px;
-    text-align: center;
+/**
+Video MetaBox
+ */
+
+.tutor-video-metabox-wrap{
+    margin-bottom: 50px;
 }
-.video_source_wrap_html5 a{
-    border: 1px solid #e4e4e4;
-    text-align: center;
-    display: block;
+.video-metabox-source-input-wrap{
     padding: 30px;
+    background-color: #F4F7F8;
+    border: 1px solid #DCDFE5;
+    border-radius: 3px;
 }
-.video_source_wrap_html5 a i{
-    font-size: 30px;
-    width: 40px;
-    height: 40px;
+.video-metabox-source-html5-upload {
+    background-color: #fff;
+    text-align: center;
+    padding: 40px 20px;
+    border: 1px solid #DCDFE5;
+    border-radius: 3px;
 }
-.video-poster-img img{
-    max-width: 200px;
-    height: auto;
+.video-metabox-source-html5-upload p{
+    margin-bottom: 5px;
+}
+.tutor-video-metabox-wrap p{
+    margin: 0;
+    padding: 0;
+}
+.video-metabox-source-html5-upload .video-upload-icon i{
+    font-size: 50px;
+    color: #1B52D8;
+    line-height: 45px;
+}
+.video_source_upload_wrap_html5{
+    margin-top: 10px;
+}
+.video-metabox-source-html5-poster {
+    padding-top: 20px;
+}
+.video_source_wrap_html5{
+    width: 100%;
+}
+.button-transparent{
+    background: transparent !important;
+}
+.button-transparent:hover{
+    color: var(--tutor-primary-color) !important;
+}
+.builder-course-thumbnail-upload-wrap .button-transparent{
+    float: right;
+}
+.html5-video-poster{
+    height: 100px;
+}
+.html5-video-poster img{
+    height: 100%;
+    width: auto;
 }
 
+/** END Video metabox */
 
-
+.builder-course-thumbnail-img-src {
+    position: relative;
+}
+.builder-course-thumbnail-img-src .tutor-course-thumbnail-delete-btn {
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    color: #E53935;
+    -webkit-transition: 300ms;
+    transition: 300ms;
+    text-decoration: none;
+}
+.video-metabox-source-html5-poster .tutor-row{
+    display: flex;
+}
+.video-metabox-source-html5-poster .tutor-row .tutor-col-5{
+    width: 38%;
+}
+.video-metabox-source-html5-poster .tutor-col-7{
+    width: 62%;
+}
 .tutor-course-builder-attachements *{
     box-sizing: border-box;
 }
@@ -2202,10 +2261,6 @@ Lesson Edit Modal
     position: sticky;
     bottom: 0;
     position: -webkit-sticky;
-}
-.tutor-lesson-modal-wrap .tutor-thumbnail-wrap img{
-    max-width: 150px;
-    height: auto;
 }
 .tutor-get-pro-text {
     color: #e02424;

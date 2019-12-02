@@ -30,7 +30,7 @@ if ( ! function_exists('tutor_get_template')) {
 			}
 		}
 
-		return $template_location;
+		return apply_filters('tutor_get_template_path', $template_location, $template);
 	}
 }
 

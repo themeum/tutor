@@ -8,13 +8,14 @@
  * @since v.1.0.0
  */
 
+$_tutor_course_price_type = tutils()->price_type();
 ?>
 
 <div class="tutor-option-field-row">
     <div class="tutor-option-field-label">
         <label for="">
-			<?php _e('Select product', 'tutor-edd'); ?> <br />
-            <p class="text-muted">(<?php _e('When selling the course', 'tutor-edd'); ?>)</p>
+			<?php _e('Select product', 'tutor'); ?> <br />
+            <p class="text-muted">(<?php _e('When selling the course', 'tutor'); ?>)</p>
         </label>
     </div>
     <div class="tutor-option-field">
@@ -31,11 +32,31 @@
 				echo "<option value='{$product->ID}' ".selected($product->ID, $product_id)." >{$product->post_title}</option>";
 			}
 			?>
-
         </select>
 
         <p class="desc">
-			<?php _e('Sell your product, process by EDD', 'tutor-edd'); ?>
+			<?php _e('Sell your product, process by EDD', 'tutor'); ?>
         </p>
+
+    </div>
+</div>
+
+
+<div class="tutor-option-field-row">
+    <div class="tutor-option-field-label">
+        <label for="">
+			<?php _e('Course Type', 'tutor'); ?> <br />
+        </label>
+    </div>
+    <div class="tutor-option-field">
+
+        <label>
+            <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'paid') : checked('true', 'true'); ?> >
+            <?php _e('Paid', 'tutor'); ?>
+        </label>
+        <label>
+            <input type="radio" name="tutor_course_price_type" value="free"  <?php checked($_tutor_course_price_type, 'free'); ?> >
+	        <?php _e('Free', 'tutor'); ?>
+        </label>
     </div>
 </div>

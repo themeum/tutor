@@ -8,7 +8,9 @@ global $post;
 
 $course_id = get_the_ID();
 $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course');
-
+if ( ! $can_publish_course){
+	$can_publish_course = current_user_can('administrator');
+}
 ?>
 
 <?php do_action('tutor/dashboard_course_builder_before'); ?>
@@ -110,6 +112,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                     $course_price = tutor_utils()->get_raw_course_price(get_the_ID());
                                     $currency_symbol = tutor_utils()->currency_symbol();
 
+                                    $_tutor_course_price_type = tutils()->price_type();
                                     ?>
                                     <div class="tutor-frontend-builder-item-scope tutor-frontend-builder-course-price">
                                         <label class="tutor-builder-item-heading">
@@ -118,7 +121,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                         <div class="tutor-row tutor-align-items-center">
                                             <div class="tutor-col-auto">
                                                 <label for="tutor_course_price_type_pro" class="tutor-styled-radio">
-                                                    <input id="tutor_course_price_type_pro" type="radio" checked name="tutor_course_price_type">
+                                                    <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'paid') : checked('true', 'true'); ?> >
                                                     <span></span>
                                                     <div class="tutor-form-group">
                                                         <span class="tutor-input-prepand"><?php echo $currency_symbol; ?></span>
@@ -128,7 +131,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                             </div>
                                             <div class="tutor-col-auto">
                                                 <label class="tutor-styled-radio">
-                                                    <input type="radio" name="tutor_course_price_type" value="free">
+                                                    <input type="radio" name="tutor_course_price_type" value="free"  <?php checked($_tutor_course_price_type, 'free'); ?> >
                                                     <span><?php _e('Free', "tutor") ?></span>
                                                 </label>
                                             </div>
@@ -175,7 +178,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                             <div class="tutor-col-5">
                                                 <div class="builder-course-thumbnail-img-src">
                                                     <?php
-                                                    $builder_course_img_src = tutor_placeholder_img_src();
+                                                    $builder_course_img_src = tutor()->url . 'assets/images/placeholder-course.jpg';
                                                     $_thumbnail_url = get_the_post_thumbnail_url($course_id);
                                                     $post_thumbnail_id = get_post_thumbnail_id( $course_id );
 
