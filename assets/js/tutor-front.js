@@ -234,81 +234,80 @@ jQuery(document).ready(function($){
         attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
         var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
 
-        if (attempt_meta.time_limit.time_limit_seconds === 0) {
+        if (attempt_meta.time_limit.time_limit_seconds > 0) {
             //No time Zero limit for
-            return;
-        }
+            var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + (attempt_meta.time_limit.time_limit_seconds * 1000);
+            var time_now = new Date(attempt_meta.date_time_now).getTime();
 
-        var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + (attempt_meta.time_limit.time_limit_seconds * 1000);
-        var time_now = new Date(attempt_meta.date_time_now).getTime();
+            var tutor_quiz_interval = setInterval(function () {
+                var distance = countDownDate - time_now;
 
-        var tutor_quiz_interval = setInterval(function() {
-            var distance = countDownDate - time_now;
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                var countdown_human = '';
 
-            var countdown_human = '';
-
-            if (days){
-                countdown_human += days + "d ";
-            }
-            if (hours){
-                countdown_human += hours + "h ";
-            }
-            if (minutes){
-                countdown_human += minutes + "m ";
-            }
-            if (seconds){
-                countdown_human += seconds + "s ";
-            }
-
-            if (distance < 0) {
-                clearInterval(tutor_quiz_interval);
-                countdown_human = "EXPIRED";
-                //Set the quiz attempt to timeout in ajax
-
-                if (_tutorobject.options.quiz_when_time_expires === 'autosubmit'){
-                    /**
-                     * Auto Submit
-                     */
-                    $('form#tutor-answering-quiz').submit();
-
-                } else if(_tutorobject.options.quiz_when_time_expires === 'autoabandon'){
-                    /**
-                     *
-                     * @type {jQuery}
-                     *
-                     * Current attempt will be cancel with attempt status attempt_timeout
-                     */
-
-                    var quiz_id = $('#tutor_quiz_id').val();
-                    var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
-                    var quiz_timeout_data = { quiz_id : quiz_id,  action : 'tutor_quiz_timeout' };
-
-                    $.ajax({
-                        url: _tutorobject.ajaxurl,
-                        type: 'POST',
-                        data: quiz_timeout_data,
-                        success: function (data) {
-                            if (data.success){
-                                window.location.reload(true);
-                            }
-                        },
-                        complete: function () {
-                            $('#tutor-quiz-body').html('');
-                            window.location.reload(true);
-                        }
-                    });
-
+                if (days) {
+                    countdown_human += days + "d ";
+                }
+                if (hours) {
+                    countdown_human += hours + "h ";
+                }
+                if (minutes) {
+                    countdown_human += minutes + "m ";
+                }
+                if (seconds) {
+                    countdown_human += seconds + "s ";
                 }
 
-            }
-            time_now = time_now + 1000;
-            $tutor_quiz_time_update.html(countdown_human);
-        }, 1000);
+                if (distance < 0) {
+                    clearInterval(tutor_quiz_interval);
+                    countdown_human = "EXPIRED";
+                    //Set the quiz attempt to timeout in ajax
+
+                    if (_tutorobject.options.quiz_when_time_expires === 'autosubmit') {
+                        /**
+                         * Auto Submit
+                         */
+                        $('form#tutor-answering-quiz').submit();
+
+                    } else if (_tutorobject.options.quiz_when_time_expires === 'autoabandon') {
+                        /**
+                         *
+                         * @type {jQuery}
+                         *
+                         * Current attempt will be cancel with attempt status attempt_timeout
+                         */
+
+                        var quiz_id = $('#tutor_quiz_id').val();
+                        var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
+                        var quiz_timeout_data = {quiz_id: quiz_id, action: 'tutor_quiz_timeout'};
+
+                        $.ajax({
+                            url: _tutorobject.ajaxurl,
+                            type: 'POST',
+                            data: quiz_timeout_data,
+                            success: function (data) {
+                                if (data.success) {
+                                    window.location.reload(true);
+                                }
+                            },
+                            complete: function () {
+                                $('#tutor-quiz-body').html('');
+                                window.location.reload(true);
+                            }
+                        });
+                    }
+
+                }
+                time_now = time_now + 1000;
+                $tutor_quiz_time_update.html(countdown_human);
+            }, 1000);
+        }else{
+            $tutor_quiz_time_update.closest('.time-remaining').remove();
+        }
     }
 
     var $quiz_start_form = $('#tutor-quiz-body form#tutor-start-quiz');
