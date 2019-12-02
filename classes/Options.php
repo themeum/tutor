@@ -482,6 +482,30 @@ class Options {
 				),
 			),
 
+			'monetization' => array(
+				'label' => __('Monetization', 'tutor'),
+				'sections'    => array(
+					'general' => array(
+						'label' => __('Monetization', 'tutor'),
+						'desc' => __('You can monetize your LMS website by selling courses in a various way.', 'tutor'),
+						'fields' => array(
+
+							'monetize_by' => array(
+								'type'      => 'radio',
+								'label'      => __('Monetize Option', 'tutor'),
+								'default'   => 'free',
+								'select_options'   => false,
+								'options'   => apply_filters('tutor_monetization_options', array(
+									'free'          =>  __('Disable Monetization', 'tutor'),
+								)),
+								'desc'  => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro',	'tutor'),
+							),
+
+						)
+					)
+				),
+			),
+
 
 		);
 

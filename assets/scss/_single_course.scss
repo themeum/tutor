@@ -67,6 +67,10 @@
   font-weight: 500;
   margin: 0 0 29px;
   padding: 0;
+  @media (max-width: 767px) {
+    font-size: 26px;
+    line-height: 36px;
+  }
 }
 .tutor-course-summery{
   margin-bottom: 40px;
@@ -252,7 +256,7 @@
   -moz-column-gap: 30px;
   column-gap: 30px;
   margin: 0;
-  font-size: var(--tutor-text-size);
+  //font-size: var(--tutor-text-size);
 }
 
 /*.tutor-course-topics-wrap*/

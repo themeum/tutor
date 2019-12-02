@@ -11,7 +11,6 @@
 
 namespace TUTOR;
 
-
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
@@ -22,8 +21,15 @@ class Addons {
 	}
 
 	public function tutor_addons_lists_to_show(){
-
 		$addons = array(
+			'pmpro'             => array(
+				'name'          => __('Paid Memberships Pro', 'tutor-pmpro'),
+				'description'   => 'Maximize revenue by selling membership access to all of your courses.',
+			),
+			'tutor-assignments' => array(
+				'name'          => __('Tutor Assignments', 'tutor-certificate'),
+				'description'   => 'Tutor assignments is a great way to assign tasks to students.',
+			),
 			'tutor-certificate' => array(
 				'name'          => __('Tutor Certificate', 'tutor-certificate'),
 				'description'   => 'Student will able to download certificate of completed course',
@@ -53,7 +59,6 @@ class Addons {
 				'description'   => 'Check your tutor assets performance through tutor report',
 			),
 		);
-
 
 		return $addons;
 	}

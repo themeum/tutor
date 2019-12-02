@@ -13,13 +13,15 @@ class TutorEDD extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
-		add_action('tutor_options_before_tutor_edd', array($this, 'notice_before_option'));
+		//add_action('tutor_options_before_tutor_edd', array($this, 'notice_before_option'));
 
 		//Add Tutor Option
-		add_filter('tutor/options/attr', array($this, 'add_options'));
+		add_filter('tutor_monetization_options', array($this, 'tutor_monetization_options'));
+		//add_filter('tutor/options/attr', array($this, 'add_options'));
 
-		$course_sell = tutor_utils()->get_option('enable_tutor_edd');
-		if ( ! $course_sell){
+		$monetize_by = tutils()->get_option('monetize_by');
+
+		if ( $monetize_by !== 'edd'){
 			return;
 		}
 
@@ -80,6 +82,23 @@ class TutorEDD extends Tutor_Base {
 			),
 		);
 		return $attr;
+	}
+
+	/**
+	 * @param $arr
+	 *
+	 * @return mixed
+	 *
+	 * Returning monetization options
+	 *
+	 * @since v.1.3.5
+	 */
+	public function tutor_monetization_options($arr){
+		$has_edd = tutils()->has_edd();
+		if ($has_edd){
+			$arr['edd'] = __('Easy Digital Downloads', 'tutor');
+		}
+		return $arr;
 	}
 
 	public function register_meta_box(){

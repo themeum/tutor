@@ -194,6 +194,9 @@ Option Field
 .select2-container {
     min-width: 250px !important;
 }
+.membership_course_categories .select2-container{
+    min-width: 50% !important;
+}
 /**
 Group Field Option
  */
@@ -634,10 +637,10 @@ Video MetaBox
     margin-bottom: 50px;
 }
 .video-metabox-source-input-wrap{
-    padding: 30px;
-    background-color: #F4F7F8;
-    border: 1px solid #DCDFE5;
-    border-radius: 3px;
+    /*padding: 30px;*/
+    /*background-color: #F4F7F8;*/
+    /*border: 1px solid #DCDFE5;*/
+    /*border-radius: 3px;*/
 }
 .video-metabox-source-html5-upload {
     background-color: #fff;
@@ -671,19 +674,46 @@ Video MetaBox
     background: transparent !important;
 }
 .button-transparent:hover{
-    color: var(--tutor-primary-color) !important;
+    background: var(--tutor-primary-color) !important;
 }
 .builder-course-thumbnail-upload-wrap .button-transparent{
     float: right;
 }
-.html5-video-poster{
-    height: 100px;
-}
+
 .html5-video-poster img{
     height: 100%;
     width: auto;
 }
+.html5-video-poster {
+    height: 100px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
 
+.html5-video-poster .tutor-builder-course-video-poster-text {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.html5-video-poster .tutor-builder-course-video-poster-text h5 {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 5px;
+}
+
+.html5-video-poster .tutor-builder-course-video-poster-text span {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.html5-video-poster img {
+    height: 100%;
+    width: auto;
+}
 /** END Video metabox */
 
 .builder-course-thumbnail-img-src {
@@ -700,6 +730,9 @@ Video MetaBox
 }
 .video-metabox-source-html5-poster .tutor-row{
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
 }
 .video-metabox-source-html5-poster .tutor-row .tutor-col-5{
     width: 38%;
@@ -707,16 +740,25 @@ Video MetaBox
 .video-metabox-source-html5-poster .tutor-col-7{
     width: 62%;
 }
+
+.video-metabox-source-html5-poster .tutor-row .tutor-course-thumbnail-upload-btn{
+    margin: 10px 0;
+}
+
 .tutor-course-builder-attachements *{
     box-sizing: border-box;
 }
+
 .tutor-course-builder-attachements{
     display: flex;
     margin-left: -20px;
     flex-wrap: wrap;
     box-sizing: border-box;
-    padding: 30px 20px;
+    padding: 0 0 10px;
 }
+.tutor-course-builder-attachements:empty {
+     display: none;
+ }
 .tutor-course-builder-attachements .tutor-added-attachment{
     flex: 0 0 calc(16.6666% - 20px);
     max-width: calc(16.6666% - 20px);
@@ -778,10 +820,6 @@ Video MetaBox
     flex-wrap: wrap;
     flex-direction: row-reverse;
 }
-
-
-
-
 .tutor-status-context{
     padding: 5px 10px;
     margin: 5px 0;
@@ -791,9 +829,10 @@ Video MetaBox
     background-color: #EEEEEE;
 }
 a.tutor-button, button.tutor-button{
+    white-space: nowrap;
     padding: 10px 20px;
     text-decoration: none;
-    margin-right: 20px;
+    /*margin-right: 20px;*/
 }
 .tutor-button-primary{
     background-color: var(--tutor-primary-color);

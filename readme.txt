@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, quiz, training, sell courses, courses, 
 Requires at least: 4.5
 Tested up to: 5.2
 Requires PHP: 5.4.0
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -23,7 +23,9 @@ Get Tutor, the most advanced and powerful WordPress online course plugin.
 
 Create, customize, manage, and sell online courses by building a functional e-learning website with this free LMS plugin for WordPress.
 
-[Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/) || [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) || [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/)
+⭐ [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) ⭐ || ⭐ [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/) ⭐ || [Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/)
+
+Want to know all the latest news and be part of the Tutor LMS community? Join our [Facebook Tutor LMS Community group!](https://www.facebook.com/groups/tutorlms)
 
 = Features =
 
@@ -206,6 +208,16 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.3.6 - 05 August, 2019 =
+
+* Added: Centralized course monetization partner system, it's moved to under monetization tab in the settings. A centralized system to select course selling platform
+* Added: Tutor Assignments on the free versions add-on lists to notify users
+* Added: a function `get_tutor_option($key = null, $default = false)` to get tutor option, an alies of `tutils()->get_option($key, $default);`
+* Added: a function `update_tutor_option($key = null, $value = false)` to update tutor option, an alies of `tutils()->update_option($key, $value);`
+* Added: Paid Membership Pro for subscription plan (Pro)
+* Fixed: WC Notice print when adding to cart course
+* Fixed: Single course template loading issue
 
 = 1.3.5 - 29 July, 2019 =
 

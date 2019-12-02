@@ -119,6 +119,7 @@ class Template extends Tutor_Base {
 	 * Load Single Course Template
 	 *
 	 * @since v.1.0.0
+	 * @updated v.1.3.5
 	 */
 	public function load_single_course_template($template){
 		global $wp_query;
@@ -131,6 +132,7 @@ class Template extends Tutor_Base {
 				}
 			}
 
+			wp_reset_query();
 			if (empty( $wp_query->query_vars['course_subpage'])) {
 				$template = tutor_get_template( 'single-course' );
 				if ( is_user_logged_in() ) {

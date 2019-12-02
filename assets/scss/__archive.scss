@@ -291,7 +291,7 @@ div[class*="tutor-course-col"] {
   width: 16.66%;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .tutor-course-col-6,
   .tutor-course-col-5,
   .tutor-course-col-4,
@@ -312,27 +312,28 @@ div[class*="tutor-course-col"] {
 }
 
 .tutor-course-filter-wrap{
-  clear: both;
   margin-bottom: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 .tutor-course-filter-form{
   display: inline-block;
+  margin: 0;
 }
-.tutor-course-archive-results-wrap{
-  float: left;
-  width: 45%;
-}
-.tutor-course-archive-filters-wrap{
-  float: right;
-  width: 45%;
-  text-align: right;
-}
+//.tutor-course-archive-results-wrap{
+//  float: left;
+//  width: 45%;
+//}
+//.tutor-course-archive-filters-wrap{
+//  float: right;
+//  width: 45%;
+//  text-align: right;
+//}
 .tutor-courses{
   clear: both;
-  
-  
   display: flex;
-  
   flex-wrap: wrap;
   margin-left: -15px;
   margin-right: -15px;
@@ -652,7 +653,6 @@ a.tutor-btn.bordered-btn:hover,
 
 .tutor-dashboard-header-info{
   -webkit-box-flex: 1;
-  
   flex-grow: 1;
   padding-left: 20px;
   padding-top: 15px;
@@ -1462,17 +1462,13 @@ Withdraw Method
 
 
 .withdraw-method-select-wrap{
-  
-  
   display: flex;
-  
   flex-wrap: wrap;
   margin: 0 -15px 40px;
 }
 
 .withdraw-method-select-wrap .withdraw-method-select{
   -webkit-box-flex: 1;
-  
   flex-grow: 1;
   padding: 0 15px;
   margin-bottom: 30px;
@@ -1531,10 +1527,7 @@ Withdraw Method
 }
 
 .withdraw-method-form{
-  
-  
   display: flex;
-  
   flex-wrap: wrap;
   margin: 0 -15px;
 }
@@ -1542,7 +1535,6 @@ Withdraw Method
 
 .withdraw-method-form > div{
   -webkit-box-flex: 1;
-  
   flex-grow: 1;
   min-width: 50%;
   padding: 0 15px 20px;
@@ -1943,6 +1935,9 @@ Instructor
   padding: 15px 20px;
   text-align: right;
   overflow: hidden;
+  @media (max-width: 767px) {
+    text-align: left;
+  }
 }
 .single-instructor-wrap .single-instructor-bottom p{
   margin: 0;
@@ -2067,6 +2062,8 @@ Instructor
   padding: 0 5px;
   font-size: 16px;
   background: transparent;
+  border: none;
+  color: var(--tutor-text-color);
 }
 .tutor-topics-in-single-lesson.tutor-topic-active .tutor-topics-title button i::before{
   content: '\e910';
@@ -2080,9 +2077,9 @@ Instructor
 }
 .tutor-topics-in-single-lesson .tutor-topics-title h3{
   cursor: pointer;
+  line-height: 30px;
 }
 span.toogle-informaiton-icon {
-  /* padding: 3px; */
   background: #ccc;
   color: #fff;
   height: 15px;
@@ -2617,8 +2614,6 @@ Tutor Dashboard Content
 Form CSS
  */
 .tutor-form-row{
-  
-  
   display: flex;
   margin-left: -15px;
   margin-right: -15px;
@@ -3359,7 +3354,7 @@ Course question and answer
 }
 .tutor-login-form-wrap label{
   display: block;
-  font-size: 13px;
+  //font-size: 13px;
   margin-bottom: 4px;
 }
 .tutor-login-form-wrap input[type="password"],
@@ -3471,8 +3466,6 @@ Course question and answer
 
 
 .tutor-cart-box-login-form{
-  
-  
   display: flex;
   position: fixed;
   width: 100%;
@@ -3484,6 +3477,15 @@ Course question and answer
   justify-content: center;
   align-items: center;
 }
+
+.login-overlay-close{
+  position: absolute;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
 .course-login-title{
   margin-bottom: 50px;
 }
@@ -3494,6 +3496,8 @@ Course question and answer
   width: 400px;
   font-size: 16px;
   font-weight: 400;
+  max-height: 90%;
+  overflow: auto;
 }
 
 .tutor-cart-box-login-form-inner button.tutor-popup-form-close{
@@ -3509,6 +3513,7 @@ Course question and answer
   cursor: pointer;
   -webkit-transition: 300ms;
   transition: 300ms;
+  color: var(--tutor-text-color);
 }
 
 .tutor-cart-box-login-form-inner button.tutor-popup-form-close:hover{
@@ -3716,7 +3721,7 @@ Course question and answer
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered{
-  line-height: 48px;
+  line-height: 46px;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow{
@@ -4044,21 +4049,16 @@ Course question and answer
   margin: 0 !important;
   box-shadow: 0 0 1px rgba(0,0,0,0.08);
 }
-
 .prerequisites-course-lists li .prerequisites-course-title{
   -webkit-box-flex: 1;
-  
   flex-grow: 1;
   padding-left: 15px;
   -webkit-transition: 300ms;
   transition: 300ms;
 }
-
 .prerequisites-course-lists li a:hover .prerequisites-course-title{
   color: var(--tutor-primary-color);
 }
-
-
 .prerequisites-course-checkmark{
   line-height: 24px;
   height: 24px;
@@ -4089,6 +4089,8 @@ social share
 .tutor-single-course-meta ul li.tutor-social-share{
   float: right;
   margin-right: 0;
+  display: inline-flex;
+  align-items: center;
 }
 
 @media (max-width: 575px) {
@@ -4544,8 +4546,6 @@ p.course-empty-content {
   cursor: pointer;
 }
 .tutor-topic-title{
-  
-  
   display: flex;
   font-size: 16px;
   font-weight: 300;
@@ -4827,7 +4827,7 @@ Quiz Modal
   background-color: rgba(0, 0, 0, 0.5);
 }
 .tutor-modal-wrap.show {
-  display: flex;
+  display: flex !important;
   opacity: 1;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   z-index: 99999;
@@ -5556,6 +5556,7 @@ Tutor Media Upload
   overflow: hidden;
   z-index: 1;
   margin: 0 0 25px;
+  cursor: pointer;
 }
 .tutor-course-builder-section-title h3::after{
   content: '';
@@ -5584,66 +5585,6 @@ Tutor Media Upload
   padding: 0 15px 0 9px;
 }
 
-/*
-.tutor-form-field-course-categories {
-  max-height: 200px;
-  overflow-y: scroll;
-  border: 1px solid #DCDFE5;
-}
-.tutor-form-field-course-categories ul{
-  list-style: none;
-  margin: 0;
-  padding-left: 15px;
-}
-
-.tutor-form-field-course-categories label{
-  margin-bottom: 0;
-  cursor: pointer;
-  position: relative;
-}
-.tutor-form-field-course-categories label input{
-  display: none;
-}
-
-
-.tutor-form-field-course-categories label input + span{
-  padding-left: 30px;
-  position: relative;
-  display: block;
-  line-height: 26px;
-}
-
-.tutor-form-field-course-categories label input + span::before{
-  content: '\e90f';
-  height: 16px;
-  width: 16px;
-  background: #f7f7f7;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 1px solid #DCDFE5;
-  font-family: 'tutor';
-  font-size: 11px;
-  line-height: 18px;
-  text-align: center;
-  color: #f7f7f7;
-  transition: 300ms;
-  border-radius: 3px;
-}
-
-.tutor-form-field-course-categories label input:checked + span::before{
-  color: var(--tutor-primary-color);
-  border-color: var(--tutor-primary-color);
-}
-.tutor-form-field-course-categories label:hover input + span::before{
-  border-color: var(--tutor-primary-color);
-}
-
-.tutor-form-field-course-categories label:hover{
-  color: var(--tutor-primary-color);
-}*/
-
 .tutor-frontend-builder-item-scope{
   margin-bottom: 30px;
 }
@@ -5660,7 +5601,7 @@ Tutor Media Upload
   display: block;
 }
 
-.builder-course-thumbnail-upload-wrap h4{
+.builder-course-thumbnail-upload-wrap > div{
   font-size: var(--tutor-text-size);
   line-height: 25px;
   margin-bottom: 20px;
@@ -5672,20 +5613,22 @@ Tutor Media Upload
 }
 
 .builder-course-thumbnail-img-src .tutor-course-thumbnail-delete-btn {
+  font-size: 10px;
   position: absolute;
   top: -4px;
   left: -4px;
   color: #E53935;
   -webkit-transition: 300ms;
   transition: 300ms;
-  background: #fff;
-  font-size: 9px;
-  /* padding: 6px; */
   border-radius: 50%;
   width: 20px;
   height: 20px;
   line-height: 20px;
-  border: 1px solid #666;
+  background: #fff;
+  text-align: center;
+  i{
+    line-height: 20px;
+  }
 }
 .tutor-course-builder-header{
   text-align: right;
@@ -5846,10 +5789,25 @@ Frontend Course Builder
 Video MetaBox
  */
 
+.select2-selection__rendered [class^="tutor-icon-"]{
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 6px;
+}
+.select2-results__options [class^="tutor-icon-"]{
+  color: var(--tutor-primary-color);
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 6px;
+}
+
+.select2-results__option--highlighted [class^="tutor-icon-"]{
+  color: #fff;
+}
+
 .tutor-video-metabox-wrap{
   margin-bottom: 50px;
 }
-
 .video-metabox-source-input-wrap{
   padding: 30px;
   background-color: #F4F7F8;
@@ -5872,30 +5830,48 @@ Video MetaBox
 }
 .video-metabox-source-html5-upload .video-upload-icon i{
   font-size: 50px;
-  color: #1B52D8;
+  color: var(--tutor-primary-color);
 }
 .video_source_upload_wrap_html5{
   margin-top: 10px;
 }
 .video-metabox-source-html5-poster {
-  padding-top: 20px;
+  padding-top: 30px;
 }
 .video_source_wrap_html5{
   width: 100%;
 }
-.button-transparent{
-  background: transparent !important;
-}
-.button-transparent:hover{
-  color: var(--tutor-primary-color) !important;
-}
+
 .builder-course-thumbnail-upload-wrap .button-transparent{
   float: right;
+  background: transparent !important;
+  &:hover{
+    background: var(--tutor-primary-color) !important;
+  }
 }
 .html5-video-poster{
   height: 100px;
+  display: flex;
+  align-items: center;
+  .tutor-builder-course-video-poster-text{
+    text-align: left;
+    padding-left: 20px;
+    h5{
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 0 6px;
+      line-height: 1;
+    }
+    span{
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
 }
 .html5-video-poster img{
   height: 100%;
   width: auto;
+}
+.no-memberhsip-msg-wrap p{
+  margin: 0;
 }

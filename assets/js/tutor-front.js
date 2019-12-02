@@ -439,10 +439,9 @@ jQuery(document).ready(function($){
         $('.tutor-lesson-sidebar').toggle();
     });
 
-    $(document).on('click', '.tutor-tabs-btn-group a', function (e) {
+    $(".tutor-tabs-btn-group a").click( function (e) {
         e.preventDefault();
         var $that = $(this);
-
         var tabSelector = $that.attr('href');
         $('.tutor-lesson-sidebar-tab-item').hide();
         $(tabSelector).show();
@@ -549,7 +548,7 @@ jQuery(document).ready(function($){
         $('.tutor-cart-box-login-form').fadeIn(100);
     });
 
-    $('.tutor-popup-form-close').on('click', function () {
+    $('.tutor-popup-form-close, .login-overlay-close').on('click', function () {
         $('.tutor-cart-box-login-form').fadeOut(100);
     });
 
@@ -2148,6 +2147,7 @@ jQuery(document).ready(function($){
         $(this).closest('.tutor-individual-attachment-file').remove();
     });
 
+
     /**
      *
      * @type {jQuery}
@@ -2178,6 +2178,24 @@ jQuery(document).ready(function($){
             }
         });
     }
+
+    /**
+     *
+     * @type {jQuery}
+     *
+     * Course builder section toggle
+     *
+     * @since v.1.3.5
+     */
+
+    $('.tutor-course-builder-section-title').on('click', function () {
+        if($(this).find('i').hasClass("tutor-icon-up")){
+            $(this).find('i').removeClass('tutor-icon-up').addClass('tutor-icon-down');
+        }else{
+            $(this).find('i').removeClass('tutor-icon-down').addClass('tutor-icon-up');
+        }
+        $(this).next('div').slideToggle();
+    })
 
 
 });

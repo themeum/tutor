@@ -224,6 +224,19 @@ class Utils {
 	}
 
 	/**
+	 * @return bool
+	 *
+	 * Determine if PMPro is activated
+	 *
+	 * @since v.1.3.6
+	 */
+	public function has_pmpro(){
+		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
+		$depends = array('paid-memberships-pro/paid-memberships-pro.php');
+		return count(array_intersect($depends, $activated_plugins)) == count($depends);
+	}
+	
+	/**
 	 * @return mixed
 	 *
 	 * @since v.1.0.0
@@ -813,7 +826,9 @@ class Utils {
 		$price = null;
 
 		if ($this->is_course_purchasable()) {
-			if ($this->has_wc()){
+			$monetize_by = $this->get_option('monetize_by');
+
+			if ($this->has_wc() && $monetize_by === 'wc'){
 				$product_id = tutor_utils()->get_course_product_id($course_id);
 				$product    = wc_get_product( $product_id );
 
@@ -847,13 +862,15 @@ class Utils {
 			'sale_price'    => 0,
 		);
 
+		$monetize_by = $this->get_option('monetize_by');
+
 		//if ($this->is_course_purchasable($course_id)){
 			$product_id = $this->get_course_product_id($course_id);
 			if ($product_id) {
-				if ( $this->get_option( 'enable_course_sell_by_woocommerce' ) && $this->has_wc() ) {
+				if ( $monetize_by === 'wc' && $this->has_wc() ) {
 					$prices['regular_price'] = get_post_meta( $product_id, '_regular_price', true );
 					$prices['sale_price']    = get_post_meta( $product_id, '_sale_price', true );
-				} elseif ( $this->get_option( 'enable_tutor_edd' ) && $this->has_edd() ) {
+				} elseif ( $monetize_by === 'edd' && $this->has_edd() ) {
 					$prices['regular_price'] = get_post_meta( $product_id, 'edd_price', true );
 					$prices['sale_price']    = get_post_meta( $product_id, 'edd_price', true );
 				}
@@ -4160,14 +4177,14 @@ class Utils {
 
 	public function currency_symbol(){
 		$enable_tutor_edd = tutor_utils()->get_option('enable_tutor_edd');
-		$enable_wc = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
+		$monetize_by = $this->get_option('monetize_by');
 
 		$symbol = '&#36;';
 		if ($enable_tutor_edd && function_exists('edd_currency_symbol')){
 			$symbol = edd_currency_symbol();
 		}
 
-		if ($enable_wc && function_exists('get_woocommerce_currency_symbol') ){
+		if ($monetize_by === 'wc' && function_exists('get_woocommerce_currency_symbol') ){
 			$symbol = get_woocommerce_currency_symbol();
 		}
 
@@ -4532,6 +4549,27 @@ class Utils {
 		}
 
 		return $children;
+	}
+
+	/**
+	 * @param int $parent_id
+	 *
+	 * @return array|int|\WP_Error
+	 *
+	 * Get course categories terms in raw array
+	 *
+	 * @since v.1.3.5
+	 */
+	public function get_course_categories_term($parent_id = 0){
+		$args = apply_filters('tutor_get_course_categories_terms_args', array(
+			'taxonomy' => 'course-category',
+			'parent' => $parent_id,
+			'hide_empty' => false,
+		));
+
+		$terms = get_terms($args);
+
+		return $terms;
 	}
 
 	/**
