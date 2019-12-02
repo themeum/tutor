@@ -44,15 +44,22 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                     <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
                 </div>
                 <div class="tutor-single-course-author-name">
-                    <strong><?php _e('by', 'tutor'); ?></strong>
+                    <span><?php _e('by', 'tutor'); ?></span>
                     <a href="<?php echo tutor_utils()->profile_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a>
                 </div>
             </li>
             <li class="tutor-course-level">
-                <strong><?php _e('Course level:', 'tutor'); ?></strong>
+                <span><?php _e('Course level:', 'tutor'); ?></span>
 				<?php echo get_tutor_course_level(); ?>
             </li>
+
+            <li class="tutor-social-share">
+                <span><?php _e('Share:', 'tutor'); ?></span>
+                <?php tutor_social_share(); ?>
+            </li>
+
         </ul>
+
     </div>
 
 
@@ -63,7 +70,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			if(is_array($course_categories) && count($course_categories)){
 				?>
                 <li>
-                    <strong><?php esc_html_e('Categories', 'tutor') ?></strong>
+                    <span><?php esc_html_e('Categories', 'tutor') ?></span>
                     <?php
                     foreach ($course_categories as $course_category){
                         $category_name = $course_category->name;
@@ -79,22 +86,20 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			if(!empty($course_duration)){
 				?>
                 <li>
-                    <strong><?php esc_html_e('Total Hour', 'tutor') ?></strong>
-                    <span><?php echo $course_duration; ?></span>
+                    <span><?php esc_html_e('Total Hour', 'tutor') ?></span>
+                    <?php echo $course_duration; ?>
                 </li>
 			<?php } ?>
             <li>
-                <strong><?php esc_html_e('Total Enrolled', 'tutor') ?></strong>
-                <span>
-                    <?php
+                <span><?php esc_html_e('Total Enrolled', 'tutor') ?></span>
+                <?php
                     $get_total_student = tutor_utils()->get_total_students();
                     $total_students = $get_total_student ? $get_total_student : 0;
                     echo $total_students;
-                    ?>
-                </span>
+                ?>
             </li>
             <li>
-                <strong><?php esc_html_e('Last Update', 'tutor') ?></strong>
+                <span><?php esc_html_e('Last Update', 'tutor') ?></span>
 				<?php echo esc_html(get_the_modified_date()); ?>
             </li>
         </ul>

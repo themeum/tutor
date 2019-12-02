@@ -6,7 +6,7 @@ $user_id = $get_user->ID;
 $my_courses = tutor_utils()->get_enrolled_courses_by_user($user_id);
 ?>
 
-<div class="tutor-courses <?php tutor_container_classes() ?>">
+<div class="tutor-courses ">
 	<?php
 	if ($my_courses && $my_courses->have_posts()):
 		while ($my_courses->have_posts()):

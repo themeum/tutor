@@ -9,7 +9,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 </div>
 
 <div class="tutor-single-course-author-name">
-	<strong><?php _e('by', 'tutor'); ?></strong>
+	<span><?php _e('by', 'tutor'); ?></span>
     <a href="<?php echo $profile_url; ?>"><?php echo get_the_author(); ?></a>
 </div>
 
@@ -18,12 +18,12 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 	$course_categories = get_tutor_course_categories();
 	if(!empty($course_categories) && is_array($course_categories ) && count($course_categories)){
 		?>
-		<strong><?php esc_html_e('In', 'tutor') ?></strong>
+		<span><?php esc_html_e('In', 'tutor') ?></span>
 		<?php
         foreach ($course_categories as $course_category){
             $category_name = $course_category->name;
             $category_link = get_term_link($course_category->term_id);
-            echo "<a href='$category_link'>$category_name</a>";
+            echo "<a href='$category_link'>$category_name </a>";
         }
 	}
 	?>

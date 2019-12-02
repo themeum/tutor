@@ -49,4 +49,5 @@ class Q_and_A{
 		wp_redirect(wp_get_referer());
 	}
 
+
 }

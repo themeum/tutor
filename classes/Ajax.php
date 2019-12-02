@@ -75,9 +75,7 @@ class Ajax{
 
 		$rating = sanitize_text_field(tutor_utils()->avalue_dot('rating', $_POST));
 		$course_id = sanitize_text_field(tutor_utils()->avalue_dot('course_id', $_POST));
-
 		$review = wp_kses_post(tutor_utils()->avalue_dot('review', $_POST));
-
 
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
@@ -89,17 +87,12 @@ class Ajax{
 
 		$review_ID = $previous_rating_id;
 		if ( $previous_rating_id){
-			if ($review){
-				$wpdb->update( $wpdb->comments, array('comment_content' => $review),
-					array('comment_ID' => $previous_rating_id)
-				);
-			}
-
-			if ($rating){
-				$wpdb->update( $wpdb->commentmeta, array('meta_value' => $rating),
-					array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating')
-				);
-			}
+			$wpdb->update( $wpdb->comments, array('comment_content' => $review),
+				array('comment_ID' => $previous_rating_id)
+			);
+			$wpdb->update( $wpdb->commentmeta, array('meta_value' => $rating),
+				array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating')
+			);
 		}else{
 			$data = array(
 				'comment_post_ID'   => $course_id,

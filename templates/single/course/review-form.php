@@ -21,11 +21,9 @@
             <input type="hidden" name="tutor_course_id" value="<?php echo get_the_ID(); ?>">
             <div class="tutor-write-review-box">
                 <div class="tutor-form-group">
-                    <span class="tutor-ratings-wrap">
-                        <?php
-                            tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($rating->rating));
-                        ?>
-                    </span>
+	                <?php
+	                tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($rating->rating));
+	                ?>
                 </div>
                 <div class="tutor-form-group">
                     <textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo stripslashes($rating->review); ?></textarea>

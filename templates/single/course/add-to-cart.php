@@ -10,6 +10,7 @@
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
+$isLoggedIn = is_user_logged_in();
 
 $tutor_form_class = apply_filters( 'tutor_enroll_form_classes', array(
 	'tutor-enroll-form',
@@ -21,7 +22,7 @@ $tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
 do_action('tutor_course/single/add-to-cart/before');
 ?>
 
-<div class="tutor-single-add-to-cart-box">
+<div class="tutor-single-add-to-cart-box <?php echo ! $isLoggedIn ? 'cart-required-login' : ''; ?> ">
 	<?php
 	if ($is_purchasable && $tutor_course_sell_by){
 	    tutor_load_template('single.course.add-to-cart-'.$tutor_course_sell_by);

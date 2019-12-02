@@ -11,7 +11,7 @@ jQuery(document).ready(function($){
         video_track_data : $('#tutor_video_tracking_information').val(),
         track_player : function(){
             var that = this;
-            
+
             var video_data = this.video_track_data ? JSON.parse(this.video_track_data) : {};
 
             if (typeof Plyr !== 'undefined') {
@@ -89,30 +89,29 @@ jQuery(document).ready(function($){
     /**
      * Hover tutor rating and set value
      */
-    $(document).on('hover', '.tutor-ratings-wrap i', function(){
-        $(this).closest('.tutor-ratings-wrap').find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+    $(document).on('hover', '.tutor-write-review-box .tutor-star-rating-group i', function(){
+        $(this).closest('.tutor-star-rating-group').find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
         var currentRateValue = $(this).attr('data-rating-value');
         for (var i = 1; i<= currentRateValue; i++){
-            $(this).closest('.tutor-ratings-wrap').find('i[data-rating-value="'+i+'"]').removeClass('tutor-icon-star-line').addClass('tutor-icon-star-full');
+            $(this).closest('.tutor-star-rating-group').find('i[data-rating-value="'+i+'"]').removeClass('tutor-icon-star-line').addClass('tutor-icon-star-full');
         }
+        $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(currentRateValue);
     });
 
-    $(document).on('click', '.tutor-ratings-wrap i', function(){
+    $(document).on('click', '.tutor-star-rating-group i', function(){
         var rating = $(this).attr('data-rating-value');
-        var course_id = $('input[name="tutor_course_id"]').val();
-        var data = {course_id : course_id, rating:rating, action: 'tutor_place_rating' };
-
-        $.post(_tutorobject.ajaxurl, data);
+        $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
     });
 
     $(document).on('click', '.tutor_submit_review_btn', function (e) {
         e.preventDefault();
         var $that = $(this);
-        var review = $(this).closest('form').find('textarea[name="review"]').val();
+        var rating = $that.closest('form').find('input[name="tutor_rating_gen_input"]').val();
+        var review = $that.closest('form').find('textarea[name="review"]').val();
         review = review.trim();
 
         var course_id = $('input[name="tutor_course_id"]').val();
-        var data = {course_id : course_id, review:review, action: 'tutor_place_rating' };
+        var data = {course_id : course_id, rating : rating, review:review, action: 'tutor_place_rating' };
 
         if (review) {
             $.ajax({
@@ -519,8 +518,46 @@ jQuery(document).ready(function($){
         $that.closest('.tutor-quiz-answers-wrap').find('.characters_remaining').html(remaining);
     });
 
+    /**
+     * Add to cart in guest mode, show login form
+     *
+     * @since v.1.0.4
+     */
 
+    $(document).on('submit', '.cart-required-login form', function (e) {
+        e.preventDefault();
 
+        $('.tutor-cart-box-login-form').fadeIn(100);
+    });
 
+    $('.tutor-popup-form-close').on('click', function () {
+        $('.tutor-cart-box-login-form').fadeOut(100);
+    });
+
+    $(document).on('keyup', function (e) {
+        if (e.keyCode === 27) {
+            $('.tutor-cart-box-login-form').fadeOut(100);
+        }
+    });
+    /**
+     * Share Link enable
+     *
+     * @since v.1.0.4
+     */
+    if($.fn.ShareLink){
+        var $social_share_wrap = $('.tutor-social-share-wrap');
+        if ($social_share_wrap.length) {
+            var share_config = JSON.parse($social_share_wrap.attr('data-social-share-config'));
+
+            $('.tutor_share').ShareLink({
+                title: share_config.title,
+                text: share_config.text,
+                image: share_config.image,
+                class_prefix: 's_',
+                width: 640,
+                height: 480,
+            });
+        }
+    }
 
 });

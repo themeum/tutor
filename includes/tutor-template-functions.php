@@ -246,16 +246,24 @@ if ( ! function_exists('tutor_course_archive_filter_bar')) {
  * Get the post thumbnail
  */
 if ( ! function_exists('get_tutor_course_thumbnail')) {
-	function get_tutor_course_thumbnail() {
+	function get_tutor_course_thumbnail($url = false) {
 		$post_id           = get_the_ID();
 		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
 
 		if ( $post_thumbnail_id ) {
+
 			$size = 'post-thumbnail';
 			$size = apply_filters( 'post_thumbnail_size', $size, $post_id );
+			if ($url){
+				return wp_get_attachment_image_url($post_thumbnail_id, $size);
+			}
+
 			$html = wp_get_attachment_image( $post_thumbnail_id, $size, false );
 		} else {
 			$placeHolderUrl = tutor()->url . 'assets/images/placeholder.jpg';
+			if ($url){
+				return $placeHolderUrl;
+			}
 			$html = '<img src="' . $placeHolderUrl . '" />';
 		}
 
@@ -821,14 +829,17 @@ function tutor_single_course_add_to_cart($echo = true){
 	ob_start();
 
 	$isLoggedIn = is_user_logged_in();
+	$output = '';
 
-	if ($isLoggedIn) {
-		tutor_load_template( 'single.course.add-to-cart' );
-		$output = apply_filters( 'tutor_course/single/add-to-cart', ob_get_clean() );
+	tutor_load_template( 'single.course.add-to-cart' );
+	$output .= apply_filters( 'tutor_course/single/add-to-cart', ob_get_clean() );
 
-	}else{
+	if ( ! $isLoggedIn){
+		ob_start();
 		tutor_load_template( 'single.course.login' );
-		$output = apply_filters( 'tutor_course/global/login', ob_get_clean() );
+		$login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );
+
+		$output .= "<div class='tutor-cart-box-login-form' style='display: none;'><div class='tutor-cart-box-login-form-inner'><button class='tutor-popup-form-close tutor-icon-line-cross'></button>{$login_form}</div></div>";
 	}
 
 	if ( $echo ) {
@@ -1173,14 +1184,31 @@ if ( ! function_exists('tutor_course_tags_html')) {
     }
 }
 
-function tutor_lesson_sidebar_question_and_answer($echo = true){
-	ob_start();
-	tutor_load_template( 'single.lesson.sidebar_question_and_answer' );
-	$output = apply_filters( 'tutor_lesson/single/sidebar_question_and_answer', ob_get_clean() );
+if ( ! function_exists('tutor_lesson_sidebar_question_and_answer')) {
+	function tutor_lesson_sidebar_question_and_answer( $echo = true ) {
+		ob_start();
+		tutor_load_template( 'single.lesson.sidebar_question_and_answer' );
+		$output = apply_filters( 'tutor_lesson/single/sidebar_question_and_answer', ob_get_clean() );
 
-	if ( $echo ) {
-		echo $output;
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
 	}
-
-	return $output;
 }
+
+if ( ! function_exists('tutor_social_share')) {
+	function tutor_social_share( $echo = true ) {
+		ob_start();
+		tutor_load_template( 'single.course.social_share' );
+		$output = apply_filters( 'tutor_course/single/social_share', ob_get_clean() );
+
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+}
+

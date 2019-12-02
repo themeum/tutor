@@ -9,7 +9,7 @@ class Course extends Tutor_Base {
 		parent::__construct();
 
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
-		add_action('save_post_'.$this->course_post_type, array($this, 'save_course_meta'));
+		add_action('save_post_'.$this->course_post_type, array($this, 'save_course_meta'), 10, 2);
 		add_action('wp_ajax_tutor_add_course_topic', array($this, 'tutor_add_course_topic'));
 		add_action('wp_ajax_tutor_update_topic', array($this, 'tutor_update_topic'));
 
@@ -64,7 +64,7 @@ class Course extends Tutor_Base {
 	 *
 	 * Insert Topic and attached it with Course
 	 */
-	public function save_course_meta($post_ID){
+	public function save_course_meta($post_ID, $post){
 		global $wpdb;
 		/**
 		 * Insert Topic
@@ -168,6 +168,16 @@ class Course extends Tutor_Base {
 		if ( ! empty($_POST['video']['source'])){
 			$video = tutor_utils()->sanitize_array($_POST['video']);
 			update_post_meta($post_ID, '_video', $video);
+		}
+
+		/**
+		 * Adding author to instructor automatically
+		 */
+
+		$author_id = $post->post_author;
+		$attached = (int) $wpdb->get_var(" SELECT COUNT(umeta_id) FROM {$wpdb->usermeta} WHERE user_id = {$author_id} AND meta_key = '_tutor_instructor_course_id' AND meta_value = {$post_ID} ");
+		if ( ! $attached){
+			add_user_meta($author_id, '_tutor_instructor_course_id', $post_ID);
 		}
 
 		//Announcements
@@ -431,12 +441,12 @@ class Course extends Tutor_Base {
 		$instructors = array();
 
 
-		$not_in_sql = '';
+		$not_in_sql = apply_filters('tutor_instructor_query_when_exists', " AND ID <1 ");
+
 		if ($saved_instructors){
 			$saved_instructors_ids = wp_list_pluck($saved_instructors, 'ID');
 			$instructor_not_in_ids = implode(',', $saved_instructors_ids);
-			$activated = apply_filters('tutor_instructor_query_when_exists', " AND ID <1 ");
-			$not_in_sql = $activated."AND ID NOT IN($instructor_not_in_ids) ";
+			$not_in_sql .= "AND ID NOT IN($instructor_not_in_ids) ";
 		}
 
 		$search_sql = '';
@@ -460,6 +470,11 @@ class Course extends Tutor_Base {
 
 		}else{
 			$output .= __('No instructor available or you have already added maximum instructors', 'tutor');
+		}
+
+
+		if ( ! defined('TUTOR_MT_VERSION')){
+			$output .= '<p class="tutor-notice-warning" style="margin-top: 50px; font-size: 14px;">'. sprintf( __('To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s', 'tutor'), '<a href="https://www.themeum.com/product/tutor-lms" target="_blank">', "</a>" ) .'</p>';
 		}
 
 		wp_send_json_success(array('output' => $output));
