@@ -409,13 +409,12 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 $wrap.html(data.data.html);
+                init_quiz_builder();
             },
             complete: function () {
                 $wrap.removeClass('loading-lesson');
             }
         });
-
-
     });
 
     /**
@@ -443,26 +442,29 @@ jQuery(document).ready(function($){
      * @since v.1.0.0
      */
 
-    if (jQuery().sortable) {
-        $(".tutor-quiz-answers-wrap").sortable({
-            handle: ".answer-sorting-bar",
-            start: function (e, ui) {
-                ui.placeholder.css('visibility', 'visible');
-            },
-            stop: function (e, ui) {
+    function init_quiz_builder() {
+        if (jQuery().sortable) {
+            $(".tutor-quiz-answers-wrap").sortable({
+                handle: ".answer-sorting-bar",
+                start: function (e, ui) {
+                    ui.placeholder.css('visibility', 'visible');
+                },
+                stop: function (e, ui) {
 
-                //Sorting Stopped...
-            },
-        }).disableSelection();;
+                    //Sorting Stopped...
+                },
+            }).disableSelection();
+            ;
 
 
-        $( ".quiz-draggable-rand-answers, .quiz-answer-matching-droppable" ).sortable({
-            connectWith: ".quiz-answer-matching-droppable",
-            placeholder: "drop-hover"
+            $(".quiz-draggable-rand-answers, .quiz-answer-matching-droppable").sortable({
+                connectWith: ".quiz-answer-matching-droppable",
+                placeholder: "drop-hover"
 
-        }).disableSelection();
+            }).disableSelection();
+        }
     }
-
+    init_quiz_builder();
     /**
      * Quiz view
      * @date 22 Feb, 2019
