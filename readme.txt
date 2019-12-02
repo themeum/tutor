@@ -5,7 +5,7 @@ Tags: lms, education, wp-lms, education management system
 Requires at least: 4.5
 Tested up to: 5.1
 Requires PHP: 5.4.0
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -183,6 +183,9 @@ This is an alpha version of Tutor, as bugs and issues expected, if you found any
 
 == Changelog ==
 
+= 1.0.5 - 18 March, 2019 =
+
+* Updated Rating and review, added individual 5 stars, 4 stars, 3 stars, 2 stars, 1 star rating count with the meter
 
 = 1.0.4 - 15 March, 2019 =
 

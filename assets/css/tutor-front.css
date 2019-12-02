@@ -2746,8 +2746,31 @@ Course question and answer
     margin-right: 4px;
     color: #F8C51C;
 }
-
-
+.course-rating-meter {
+    display: flex;
+}
+.course-rating-meter i.tutor-icon-star-full{
+    color: #F8C51C;
+}
+.rating-meter-bar-wrap{
+    flex: 1;
+}
+.rating-meter-col{
+    margin: 0 3px;
+}
+.rating-meter-bar {
+    height: 10px;
+    width: 100%;
+    background: #E8EFF1;
+    margin-top: 6px;
+}
+.rating-meter-fill-bar {
+    background: #F8C51C;
+    height: 10px;
+}
+.rating-meter-col.rating-text-col{
+    flex: 0 0 100px;
+}
 
 /* ********************* */
 /* Tutor Pagination Wrap */
