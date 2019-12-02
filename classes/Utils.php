@@ -1237,6 +1237,10 @@ class Utils {
 	 */
 
 	public function is_completed_course($course_id = 0, $user_id = 0){
+		if ( ! is_user_logged_in()){
+			return false;
+		}
+
 		global $wpdb;
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
@@ -2895,18 +2899,16 @@ class Utils {
 
 	public function get_question_types($type = null){
 		$types = array(
-			'true_false'        => array('name' => __('True/False', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-yes-no"></i>'),
-			'single_choice'     => array('name' => __('Single Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-mark"></i>'),
-			'multiple_choice'   => array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-multiple-choice"></i>'),
-			'open_ended'        => array('name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-open-ended"></i>'),
-			'short_answer'        => array('name' => __('Short Answer', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-short-ans"></i>'),
-			'fill_in_the_blank'  => array('name' => __('Fill In The Blank', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-fill-gaps"></i>'),
-			'answer_sorting'    => array('name' => __('Answer Sorting', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-answer-shorting"></i>'),
-			'assessment'        => array('name' => __('Assessment', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-assesment"></i>'),
-			'matching'          => array('name' => __('Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-matching"></i>'),
-			'image_matching'    => array('name' => __('Image Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-matching"></i>'),
-			'image_answering'    => array('name' => __('Image Answering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-ans"></i>'),
-			'ordering'          => array('name' => __('Ordering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-ordering"></i>'),
+			'true_false'        => array('name' => __('True/False', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-yes-no"></i>', 'is_pro' => false),
+			'single_choice'     => array('name' => __('Single Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-mark"></i>', 'is_pro' => false),
+			'multiple_choice'   => array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-multiple-choice"></i>', 'is_pro' => false),
+			'open_ended'        => array('name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-open-ended"></i>', 'is_pro' => false),
+			'fill_in_the_blank'  => array('name' => __('Fill In The Blank', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-fill-gaps"></i>', 'is_pro' => false),
+			'short_answer'          => array('name' => __('Short Answer', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-short-ans"></i>', 'is_pro' => true),
+			'matching'              => array('name' => __('Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-matching"></i>', 'is_pro' => true),
+			'image_matching'        => array('name' => __('Image Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-matching"></i>', 'is_pro' => true),
+			'image_answering'       => array('name' => __('Image Answering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-ans"></i>', 'is_pro' => true),
+			'ordering'          => array('name' => __('Ordering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-ordering"></i>', 'is_pro' => true),
 		);
 
 		if (isset($types[$type])){

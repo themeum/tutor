@@ -146,8 +146,6 @@ class WooCommerce extends Tutor_Base {
 		}
 	}
 
-
-
 	public function save_wc_product_meta($post_ID){
 		$is_tutor_product = tutor_utils()->avalue_dot('_tutor_product', $_POST);
 		if ($is_tutor_product === 'on'){
@@ -162,7 +160,7 @@ class WooCommerce extends Tutor_Base {
 	 */
 
 	public function course_placing_order( $item_id, $item, $order_id){
-		//$item = new \WC_Order_Item_Product($item);
+		$item = new \WC_Order_Item_Product($item);
 
 		$product_id = $item->get_product_id();
 		$if_has_course = tutor_utils()->product_belongs_with_course($product_id);

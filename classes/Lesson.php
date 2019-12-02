@@ -126,6 +126,7 @@ class Lesson extends Tutor_Base {
 		$lesson_data = array(
 			'ID'            => $lesson_id,
 			'post_title'    => $title,
+			'post_name'     => sanitize_title($title),
 			'post_content'  => $lesson_content,
 		);
 

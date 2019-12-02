@@ -1719,7 +1719,7 @@ msgid "Select product"
 msgstr ""
 
 #: views/metabox/course-add-product-metabox.php:17
-msgid "Only for if you sell course"
+msgid "When selling the course"
 msgstr ""
 
 #: views/metabox/course-add-product-metabox.php:27

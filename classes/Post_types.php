@@ -15,6 +15,12 @@ class Post_types{
 		add_action( 'init', array($this, 'register_course_post_types') );
 		add_action( 'init', array($this, 'register_lesson_post_types') );
 		add_action( 'init', array($this, 'register_quiz_post_types') );
+
+
+		/**
+		 * Customize the message of course
+		 */
+		add_filter( 'post_updated_messages', array($this, 'course_updated_messages') );
 	}
 	
 	public function register_course_post_types() {
@@ -229,6 +235,51 @@ class Post_types{
 		);
 
 		register_post_type( 'tutor_quiz', $args );
+	}
+
+
+
+	function course_updated_messages( $messages ) {
+		$post             = get_post();
+		$post_type        = get_post_type( $post );
+		$post_type_object = get_post_type_object( $post_type );
+		
+		$course_post_type = tutor()->course_post_type;
+
+		$messages[$course_post_type] = array(
+			0  => '', // Unused. Messages start at index 1.
+			1  => __( 'Course updated.', 'tutor' ),
+			2  => __( 'Custom field updated.', 'tutor' ),
+			3  => __( 'Custom field deleted.', 'tutor' ),
+			4  => __( 'Course updated.', 'tutor' ),
+			/* translators: %s: date and time of the revision */
+			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Course restored to revision from %s', 'tutor' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			6  => __( 'Course published.', 'tutor' ),
+			7  => __( 'Course saved.', 'tutor' ),
+			8  => __( 'Course submitted.', 'tutor' ),
+			9  => sprintf(
+				__( 'Course scheduled for: <strong>%1$s</strong>.', 'tutor' ),
+				// translators: Publish box date format, see http://php.net/date
+				date_i18n( __( 'M j, Y @ G:i', 'tutor' ), strtotime( $post->post_date ) )
+			),
+			10 => __( 'Course draft updated.', 'tutor' )
+		);
+
+		if ( $post_type_object->publicly_queryable && $course_post_type === $post_type ) {
+			$permalink = get_permalink( $post->ID );
+
+			$view_link = sprintf( ' <a href="%s">%s</a>', esc_url( $permalink ), __( 'View course', 'tutor' ) );
+			$messages[ $post_type ][1] .= $view_link;
+			$messages[ $post_type ][6] .= $view_link;
+			$messages[ $post_type ][9] .= $view_link;
+
+			$preview_permalink = add_query_arg( 'preview', 'true', $permalink );
+			$preview_link = sprintf( ' <a target="_blank" href="%s">%s</a>', esc_url( $preview_permalink ), __( 'Preview course', 'tutor' ) );
+			$messages[ $post_type ][8]  .= $preview_link;
+			$messages[ $post_type ][10] .= $preview_link;
+		}
+
+		return $messages;
 	}
 
 }
