@@ -8,7 +8,7 @@
  * @url https://themeum.com
  */
 
-get_header();
+get_tutor_header();
 
 global $post;
 $currentPost = $post;
@@ -25,4 +25,4 @@ $currentPost = $post;
     </div>
 <?php do_action('tutor_lesson/single/after/wrap');
 
-get_footer();
+get_tutor_footer();

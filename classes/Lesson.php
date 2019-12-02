@@ -71,8 +71,11 @@ class Lesson extends Tutor_Base {
 
 		//Video
 		if ( ! empty($_POST['video']['source'])){
-			$video = tutor_utils()->sanitize_array($_POST['video']);
+			//$video = tutor_utils()->sanitize_array($_POST['video']);
+			$video = tutor_utils()->array_get('video', $_POST);
 			update_post_meta($post_ID, '_video', $video);
+		}else{
+			delete_post_meta($post_ID, '_video');
 		}
 
 		//Attachments
@@ -108,7 +111,6 @@ class Lesson extends Tutor_Base {
 		}
 
 		$post = get_post($lesson_id);
-
 		ob_start();
 		include tutor()->path.'views/modal/edit-lesson.php';
 		$output = ob_get_clean();
@@ -136,6 +138,7 @@ class Lesson extends Tutor_Base {
 		wp_update_post($lesson_data);
 
 		$course_id = tutor_utils()->get_course_id_by_lesson($lesson_id);
+
 		ob_start();
 		include  tutor()->path.'views/metabox/course-contents.php';
 		$course_contents = ob_get_clean();

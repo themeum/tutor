@@ -581,9 +581,18 @@ class Utils {
 		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
 
-		$count_lesson = $wpdb->get_var("select count(meta_id) from {$wpdb->postmeta} where meta_key = '_tutor_course_id_for_lesson' AND meta_value = {$course_id} ");
+		$lesson_post_type = tutor()->lesson_post_type;
 
-		return (int) $count_lesson;
+		$course_id = $this->get_post_id($course_id);
+		$topicIDS = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'topics' AND post_parent = {$course_id} ");
+
+		$lesson_count = 0;
+		if ($this->count($topicIDS)){
+			$inIDS = implode(",", $topicIDS);
+			$lesson_count = $wpdb->get_var("SELECT COUNT(ID)  FROM {$wpdb->posts} WHERE post_parent IN({$inIDS}) AND post_type = '{$lesson_post_type}' ");
+		}
+
+		return (int) $lesson_count;
 	}
 
 	/**
@@ -805,7 +814,6 @@ class Utils {
 			}else{
 				$price = apply_filters('get_tutor_course_price', null, $course_id);
 			}
-
 		}
 
 		return $price;
@@ -831,12 +839,13 @@ class Utils {
 		);
 
 		if ($this->is_course_purchasable($course_id)){
+			$product_id = $this->get_course_product_id($course_id);
 			if ($this->get_option('enable_course_sell_by_woocommerce') && $this->has_wc()){
-				$prices['regular_price']= get_post_meta($course_id, '_regular_price', true);
-				$prices['sale_price']= get_post_meta($course_id, '_sale_price', true);
+				$prices['regular_price']= get_post_meta($product_id, '_regular_price', true);
+				$prices['sale_price']= get_post_meta($product_id, '_sale_price', true);
 			}elseif ($this->get_option('enable_tutor_edd') && $this->has_edd() ){
-				$prices['regular_price']= get_post_meta($course_id, 'edd_price', true);
-				$prices['sale_price']= get_post_meta($course_id, 'edd_price', true);
+				$prices['regular_price']= get_post_meta($product_id, 'edd_price', true);
+				$prices['sale_price']= get_post_meta($product_id, 'edd_price', true);
 			}
 		}
 
@@ -1903,7 +1912,9 @@ class Utils {
 	 */
 	public function get_course_product_id($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
-		return (int) get_post_meta($course_id, '_tutor_course_product_id', true);
+		$product_id =  (int) get_post_meta($course_id, '_tutor_course_product_id', true);
+
+		return $product_id;
 	}
 
 	/**
@@ -1970,39 +1981,62 @@ class Utils {
 	/**
 	 * @return mixed
 	 *
-	 * Tutor Dashboard Pages
+	 * Tutor Dashboard Pages, supporting for the URL rewriting
 	 *
 	 * @since v.1.0.0
 	 */
 
 	public function tutor_dashboard_pages(){
-		$nav_items = array(
+		$nav_items = apply_filters('tutor_dashboard/nav_items', array(
 			'index'             => __('Dashboard', 'tutor'),
 			'my-profile'        => __('My Profile', 'tutor'),
+			'create-course'     => array('title' => __('Create Course', 'tutor'), 'show_ui' => false, 'auth_cap' => tutor()->instructor_role),
 			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
 			'wishlist'          => __('Wishlist', 'tutor'),
 			'reviews'           => __('Reviews', 'tutor'),
 
-			//'purchase-history'        => __('Purchase History', 'tutor'),
-			//'messages'        => __('Messages', 'tutor'),
+			'my-courses'        => array('title' => __('My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+			'earning'           => array('title' => __('Earning', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+			'withdraw'          => array('title' => __('Withdraw', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+
+			'purchase_history'  => __('Purchase History', 'tutor'),
+		));
+
+		$new_navs = array(
+			'settings'          => __('Settings', 'tutor'),
+			'logout'            => __('Logout', 'tutor'),
 		);
 
-		if (current_user_can(tutor()->instructor_role)) {
-			$instructor_items = array(
-				'my-courses'    => __('My Courses', 'tutor'),
-				'quiz-attempts' => __('Quiz Attempts', 'tutor'),
-				'earning'       => __('Earning', 'tutor'),
-				'withdraw'      => __('Withdraw', 'tutor'),
-			);
+		$all_nav_items = array_merge($nav_items, $new_navs);
 
-			$nav_items = array_merge($nav_items, $instructor_items);
+		return apply_filters('tutor_dashboard/nav_items_all', $all_nav_items);
+	}
+
+	/**
+	 * @return mixed
+	 *
+	 * Tutor Dashboard UI nav, only for using in the nav, it's handling user permission based
+	 *  Dashboard nav items
+	 *
+	 * @since v.1.3.4
+	 */
+	public function tutor_dashboard_nav_ui_items(){
+		$nav_items = $this->tutor_dashboard_pages();
+
+		foreach ($nav_items as $key => $nav_item){
+			if (is_array($nav_item)){
+
+				if ( isset($nav_item['show_ui']) && ! tutor_utils()->array_get('show_ui', $nav_item)){
+					unset($nav_items[$key]);
+				}
+				if (  isset($nav_item['auth_cap'] ) && ! current_user_can($nav_item['auth_cap']) ){
+					unset($nav_items[$key]);
+				}
+			}
 		}
 
-		$nav_items['purchase_history']  = __('Purchase History', 'tutor');
-		$nav_items['settings']          = __('Settings', 'tutor');
-		$nav_items['logout']            = __('Logout', 'tutor');
-
-		return apply_filters('tutor_dashboard/nav_items', $nav_items);
+		return apply_filters('tutor_dashboard/nav_ui_items', $nav_items);
 	}
 
 	/**
@@ -3671,10 +3705,22 @@ class Utils {
 	 *
 	 * Get frontend dashboard URL
 	 */
-	public function tutor_dashboard_url(){
+	public function tutor_dashboard_url($sub_url = ''){
 		$page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
-		$page_id = apply_filters('tutor_dashboard_url', $page_id);
-		return get_the_permalink($page_id);
+		$page_id = apply_filters('tutor_dashboard_page_id', $page_id);
+		return trailingslashit(get_the_permalink($page_id)).$sub_url;
+	}
+
+	/**
+	 * Get the tutor dashboard page ID
+	 *
+	 * @return int
+	 *
+	 */
+	public function dashboard_page_id(){
+		$page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
+		$page_id = apply_filters('tutor_dashboard_page_id', $page_id);
+		return $page_id;
 	}
 
 	/**
@@ -4077,6 +4123,30 @@ class Utils {
 	}
 
 	/**
+	 * @return mixed
+	 *
+	 * Get currency symbol from activated plugin, WC,EDD
+	 *
+	 * @since  v.1.3.4
+	 */
+
+	public function currency_symbol(){
+		$enable_tutor_edd = tutor_utils()->get_option('enable_tutor_edd');
+		$enable_wc = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
+
+		$symbol = '&#36;';
+		if ($enable_tutor_edd && function_exists('edd_currency_symbol')){
+			$symbol = edd_currency_symbol();
+		}
+
+		if ($enable_wc && function_exists('get_woocommerce_currency_symbol') ){
+			$symbol = get_woocommerce_currency_symbol();
+		}
+
+		return apply_filters('get_tutor_currency_symbol', $symbol);
+	}
+
+	/**
 	 * @param int $user_id
 	 *
 	 * @return bool|mixed
@@ -4362,7 +4432,6 @@ class Utils {
 		global $wpdb;
 
 		$assignment_submitted_id = $this->get_post_id($assignment_submitted_id);
-
 		$submitted_info = $wpdb->get_row("SELECT * FROM {$wpdb->comments} WHERE comment_ID = {$assignment_submitted_id} AND comment_type = 'tutor_assignment' AND comment_approved = 'submitted' ");
 
 		return $submitted_info;
@@ -4397,9 +4466,143 @@ class Utils {
 		global $wpdb;
 		$user_id = $this->get_user_id($user_id);
 
+		$course_post_type = tutor()->course_post_type;
 		$get_assigned_courses_ids = $wpdb->get_col("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = {$user_id} GROUP BY meta_value ; ");
 
+		/*
+		$author_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} where post_type = '{$course_post_type}' AND post_author = {$user_id}");
+		$final_course_ids = array_merge($get_assigned_courses_ids, $author_ids);
+        $final_course_ids = array_unique($final_course_ids);
+		*/
+
 		return $get_assigned_courses_ids;
+	}
+
+	/**
+	 * @param int $parent
+	 *
+	 * @return array
+	 *
+	 * Get course categories in array with child
+	 *
+	 * @since v.1.3.4
+	 */
+
+	public function get_course_categories($parent = 0 ){
+		$args = apply_filters('tutor_get_course_categories_args', array(
+			'taxonomy' => 'course-category',
+			'hide_empty'    => false,
+			'parent' => $parent,
+		));
+
+		$terms = get_terms($args);
+
+		$children = array();
+		foreach ( $terms as $term ){
+			$term->children = $this->get_course_categories( $term->term_id );
+			$children[ $term->term_id ] = $term;
+		}
+
+		return $children;
+	}
+
+	/**
+	 * @return mixed
+	 *
+	 * Get back url from the request
+	 * @since v.1.3.4
+	 */
+	public function referer(){
+		$url = $this->array_get('_wp_http_referer', $_REQUEST);
+		return apply_filters('tutor_referer_url', $url);
+	}
+
+	/**
+	 * @param int $course_id
+	 *
+	 * @return false|string
+	 *
+	 * Get the frontend dashboard course edit page
+	 *
+	 * @since v.1.3.4
+	 */
+	public function course_edit_link($course_id = 0){
+		$course_id = $this->get_post_id($course_id);
+
+		$url = admin_url("post.php?post={$course_id}&action=edit");
+		if (tutor()->has_pro){
+			$url = $this->tutor_dashboard_url("create-course/?course_ID=".$course_id);
+		}
+
+		return $url;
+	}
+
+	public function get_assignments_by_instructor($instructor_id = 0, $filter_data = array()){
+		global $wpdb;
+
+		$instructor_id = $this->get_user_id($instructor_id);
+		$course_ids = tutor_utils()->get_assigned_courses_ids_by_instructors($instructor_id);
+
+		//$new_course_ids = tutils()->get_courses_by_instructor();
+
+		//die($this->print_view($course_ids));
+
+		$in_course_ids = implode("','", $course_ids);
+
+		$count = (int) $wpdb->get_var("SELECT COUNT(ID) FROM {$wpdb->postmeta} post_meta
+ 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
+ 			where post_type = 'tutor_assignments' AND post_meta.meta_value IN('$in_course_ids') ORDER BY ID DESC ");
+
+		$pagination_query = '';
+		if ($this->count($filter_data)) {
+			extract( $filter_data );
+
+			if ( ! empty( $per_page ) ) {
+				$offset           = (int) ! empty( $offset ) ? $offset : 0;
+				$pagination_query = " LIMIT {$offset}, {$per_page}  ";
+			}
+		}
+
+		$query = $wpdb->get_results("SELECT * FROM {$wpdb->postmeta} post_meta
+ 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
+ 			where post_type = 'tutor_assignments' AND post_meta.meta_value IN('$in_course_ids')  ORDER BY ID DESC {$pagination_query} ");
+
+		return (object) array('count' => $count, 'results' => $query);
+	}
+
+	/**
+	 * @param int $course_id
+	 *
+	 * @return bool|object
+	 *
+	 * Get assignments by course id
+	 */
+	public function get_assignments_by_course($course_id = 0){
+		if ( ! $course_id){
+			return false;
+		}
+		global $wpdb;
+
+		$count = (int) $wpdb->get_var("SELECT COUNT(ID) FROM {$wpdb->postmeta} post_meta
+ 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
+ 			where post_type = 'tutor_assignments' AND post_meta.meta_value = {$course_id} ORDER BY ID DESC ");
+
+		$query = $wpdb->get_results("SELECT * FROM {$wpdb->postmeta} post_meta
+ 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
+ 			where post_type = 'tutor_assignments' AND post_meta.meta_value = {$course_id} ORDER BY ID DESC");
+
+		return (object) array('count' => $count, 'results' => $query);
+	}
+
+	/**
+	 * @return bool
+	 *
+	 * Determine if script debug
+	 *
+	 * @since v.1.3.4
+	 */
+	public function is_script_debug(){
+		return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
 	}
 
 }

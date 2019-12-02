@@ -257,7 +257,7 @@ jQuery(document).ready(function($){
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id}).addClass('show');
 
-                tinymce.init(tinyMCEPreInit.mceInit.content);
+                tinymce.init(tinyMCEPreInit.mceInit.tutor_editor_config);
                 tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_lesson_modal_editor' );
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_lesson_modal_editor");
             },
@@ -353,7 +353,8 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var content;
-        var editor = tinyMCE.get('tutor_lesson_modal_editor');
+        var inputid = 'tutor_lesson_modal_editor';
+        var editor = tinyMCE.get(inputid);
         if (editor) {
             content = editor.getContent();
         } else {
@@ -1292,40 +1293,6 @@ jQuery(document).ready(function($){
     }
 
 
-
-    /**
-     * Deprecated, should remove
-     * @todo: should remove this
-     */
-
-    $(document).on('click', '.add_quiz_to_post_btn', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var $modal = $('.tutor-modal-wrap');
-
-        var quiz_for_post_id = $modal.attr('quiz-for-post-id');
-        var data = $modal.find('input').serialize()+'&action=tutor_add_quiz_to_post&parent_post_id='+quiz_for_post_id;
-
-        $.ajax({
-            url : ajaxurl,
-            type : 'POST',
-            data : data,
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success){
-                    $('[data-add-quiz-under="'+quiz_for_post_id+'"] .tutor-available-quizzes').html(data.data.output);
-                    $('.tutor-modal-wrap').removeClass('show');
-                }
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
     $(document).on('change keyup', '.tutor-quiz-modal-wrap .tutor-modal-search-input', function(e){
         e.preventDefault();
 
@@ -1704,7 +1671,7 @@ jQuery(document).ready(function($){
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-lesson-modal-wrap').attr('data-topic-id', topic_id).addClass('show');
 
-                tinymce.init(tinyMCEPreInit.mceInit.content);
+                tinymce.init(tinyMCEPreInit.mceInit.tutor_editor_config);
                 tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_assignments_modal_editor' );
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
             },
@@ -1735,7 +1702,7 @@ jQuery(document).ready(function($){
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-lesson-modal-wrap').attr({'data-assignment-id' : assignment_id, 'data-topic-id':topic_id}).addClass('show');
 
-                tinymce.init(tinyMCEPreInit.mceInit.content);
+                tinymce.init(tinyMCEPreInit.mceInit.tutor_editor_config);
                 tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_assignments_modal_editor' );
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
             },
@@ -1754,7 +1721,8 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var content;
-        var editor = tinyMCE.get('tutor_assignments_modal_editor');
+        var inputid = 'tutor_assignments_modal_editor';
+        var editor = tinyMCE.get(inputid);
         if (editor) {
             content = editor.getContent();
         } else {

@@ -57,10 +57,12 @@
                     <div class="mycourse-footer">
                         <div class="tutor-mycourses-stats">
 	                        <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
-                            <a href="<?php echo get_edit_post_link(get_the_ID()); ?>" class="tutor-mycourse-edit"> <i class="tutor-icon-pencil"></i> Edit</a>
-                            <a href="#tutor-course-delete" class="tutor-mycourse-delete-btn" data-course-id="<?php echo $post->ID; ?>"> <i
-                                        class="tutor-icon-garbage"></i>
-                                Delete</a>
+                            <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-mycourse-edit"> <i
+                                        class="tutor-icon-pencil"></i>
+                                Edit</a>
+                            <a href="#tutor-course-delete" class="tutor-mycourse-delete-btn" data-course-id="<?php echo $post->ID; ?>">
+                                <i class="tutor-icon-garbage"></i> Delete
+                            </a>
                         </div>
                     </div>
                 </div>

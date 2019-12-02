@@ -48,6 +48,7 @@ final class Tutor{
 
 	private $course_widget;
 	private $upgrader;
+	private $dashboard;
 
 	/**
 	 * @return null|Tutor
@@ -68,6 +69,8 @@ final class Tutor{
 		$this->path = plugin_dir_path(TUTOR_FILE);
 		$this->url = plugin_dir_url(TUTOR_FILE);
 		$this->basename = plugin_basename(TUTOR_FILE);
+
+		add_filter('wp_doing_ajax', array($this, 'wp_doing_ajax'));
 
 		/**
 		 * Include Files
@@ -113,6 +116,7 @@ final class Tutor{
 
 		$this->course_widget = new Course_Widget();
 		$this->upgrader = new Upgrader();
+		$this->dashboard = new Dashboard();
 
 		/**
 		 * Run Method
@@ -171,6 +175,7 @@ final class Tutor{
 		if (isset($_REQUEST['tutor_action'])){
 			do_action('tutor_action_'.$_REQUEST['tutor_action']);
 		}
+
 	}
 
 	/**
@@ -579,6 +584,22 @@ final class Tutor{
 		 */
 		$previous_dashboard_page_id = (int) tutor_utils()->get_option('student_dashboard');
 		tutor_utils()->update_option('tutor_dashboard_page_id', $previous_dashboard_page_id);
+	}
+
+	/**
+	 * @param $bool
+	 *
+	 * @return bool
+	 *
+	 * Filter the wp_doing_ajax from tutor requests to get advanced advantages from Tutor
+	 *
+	 * @since v.1.3.4
+	 */
+	public function wp_doing_ajax($bool){
+		if (isset($_REQUEST['tutor_ajax_action'])){
+			return true;
+		}
+		return $bool;
 	}
 
 

@@ -39,6 +39,19 @@ class Course extends Tutor_Base {
 		 */
 
 		add_filter('wp_insert_post_data', array($this, 'tutor_add_gutenberg_author'), '99', 2);
+
+		/**
+		 * Frontend metabox supports for course builder
+		 * @since  v.1.3.4
+		 */
+
+		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'register_meta_box_in_frontend'));
+
+
+		/**
+		 * Do Stuff for the course save from frontend
+		 */
+		add_action('save_tutor_course', array($this, 'attach_product_with_course'), 10, 2);
 	}
 	/**
 	 * Registering metabox
@@ -46,32 +59,98 @@ class Course extends Tutor_Base {
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
 		$course_marketplace = tutor_utils()->get_option('enable_course_marketplace');
-
+        add_meta_box( 'tutor-course-levels', __( 'Course Level', 'tutor' ), array($this, 'course_level_metabox'), $coursePostType );
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
-
 		if ($course_marketplace) {
 			add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array( $this, 'instructors_metabox' ), $coursePostType );
 		}
 		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
 	}
-	public function course_meta_box(){
+	public function course_meta_box($echo = true){
+		ob_start();
 		include  tutor()->path.'views/metabox/course-topics.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
 	}
-	public function course_additional_data_meta_box(){
+	public function course_additional_data_meta_box($echo = true){
+
+		ob_start();
 		include  tutor()->path.'views/metabox/course-additional-data.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
 	}
-	public function video_metabox(){
+	public function video_metabox($echo = true){
+		ob_start();
 		include  tutor()->path.'views/metabox/video-metabox.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
 	}
 
-	public function announcements_metabox(){
+	public function course_level_metabox($echo = true){
+		ob_start();
+		include  tutor()->path.'views/metabox/course-level-metabox.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
+	}
+
+	public function announcements_metabox($echo = true){
+		ob_start();
 		include  tutor()->path.'views/metabox/announcements-metabox.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
 	}
 
-	public function instructors_metabox(){
+	public function instructors_metabox($echo = true){
+		ob_start();
 		include tutor()->path . 'views/metabox/instructors-metabox.php';
+		$content = ob_get_clean();
+
+		if ($echo){
+			echo $content;
+		}else{
+			return $content;
+		}
+	}
+
+	/**
+	 * Register metabox in course builder tutor
+	 * @since v.1.3.4
+	 */
+	public function register_meta_box_in_frontend(){
+		do_action('tutor_course_builder_metabox_before', get_the_ID());
+        course_builder_section_wrap($this->video_metabox($echo = false), 'Video');
+        course_builder_section_wrap($this->course_meta_box($echo = false), 'Course Builder');
+        course_builder_section_wrap($this->instructors_metabox($echo = false), 'Instructors');
+        course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), 'Additional Data');
+        course_builder_section_wrap($this->announcements_metabox($echo = false), 'Announcements');
+		do_action('tutor_course_builder_metabox_after', get_the_ID());
 	}
 
 	/**
@@ -178,11 +257,13 @@ class Course extends Tutor_Base {
 			}
 		}
 
-
 		//Video
 		if ( ! empty($_POST['video']['source'])){
-			$video = tutor_utils()->sanitize_array($_POST['video']);
+			//$video = tutor_utils()->sanitize_array($_POST['video']);
+			$video = tutor_utils()->array_get('video', $_POST);
 			update_post_meta($post_ID, '_video', $video);
+		}else{
+			delete_post_meta($post_ID, '_video');
 		}
 
 		/**
@@ -196,20 +277,22 @@ class Course extends Tutor_Base {
 		}
 
 		//Announcements
-		$announcement_title = tutor_utils()->avalue_dot('announcements.title', $_POST );
-		if ( ! empty($announcement_title)){
-			$title = sanitize_text_field(tutor_utils()->avalue_dot('announcements.title', $_POST ));
-			$content = wp_kses_post(tutor_utils()->avalue_dot('announcements.content', $_POST ));
+		if ( ! wp_doing_ajax()) {
+			$announcement_title = tutor_utils()->avalue_dot( 'announcements.title', $_POST );
+			if ( ! empty( $announcement_title ) ) {
+				$title   = sanitize_text_field( tutor_utils()->avalue_dot( 'announcements.title', $_POST ) );
+				$content = wp_kses_post( tutor_utils()->avalue_dot( 'announcements.content', $_POST ) );
 
-			$post_arr = array(
-				'post_type'    => 'tutor_announcements',
-				'post_title'   => $title,
-				'post_content' => $content,
-				'post_status'  => 'publish',
-				'post_author'  => get_current_user_id(),
-				'post_parent'  => $post_ID,
-			);
-			wp_insert_post( $post_arr );
+				$post_arr = array(
+					'post_type'    => 'tutor_announcements',
+					'post_title'   => $title,
+					'post_content' => $content,
+					'post_status'  => 'publish',
+					'post_author'  => get_current_user_id(),
+					'post_parent'  => $post_ID,
+				);
+				wp_insert_post( $post_arr );
+			}
 		}
 	}
 
@@ -348,8 +431,9 @@ class Course extends Tutor_Base {
 	}
 
 	public function enroll_now(){
+
 		//Checking if action comes from Enroll form
-		if ( ! isset($_POST['tutor_course_action']) || $_POST['tutor_course_action'] !== '_tutor_course_enroll_now' || ! isset($_POST['tutor_course_id']) ){
+		if (tutor_utils()->array_get('tutor_course_action', $_POST) !== '_tutor_course_enroll_now' || ! isset($_POST['tutor_course_id']) ){
 			return;
 		}
 		//Checking Nonce
@@ -484,7 +568,7 @@ class Course extends Tutor_Base {
 			$output .= '<p class="quiz-search-suggest-text">'.__('Search to get the specific instructors', 'tutor').'</p>';
 
 		}else{
-			$output .= __('No instructor available or you have already added maximum instructors', 'tutor');
+			$output .= __('<p>No instructor available or you have already added maximum instructors</p>', 'tutor');
 		}
 
 
@@ -515,7 +599,7 @@ class Course extends Tutor_Base {
                     <span class="instructor-icon">'.get_avatar($t->ID, 30).'</span>
                     <span class="instructor-name"> '.$t->display_name.' </span>
                     <span class="instructor-control">
-                        <a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-garbage"></i></a>
+                        <a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-line-cross"></i></a>
                     </span>
                 </div>';
 			}
@@ -562,5 +646,114 @@ class Course extends Tutor_Base {
 
 		return $data;
 	}
+
+
+	/**
+	 * @param $post_ID
+	 * @param $postData
+	 *
+	 * Attach product during save course from the frontend course dashboard.
+	 * 
+	 * @return string
+	 *
+	 * @since v.1.3.4
+	 */
+	
+	public function attach_product_with_course($post_ID, $postData){
+		$attached_product_id = tutor_utils()->get_course_product_id($post_ID);
+		$course_price = sanitize_text_field(tutor_utils()->array_get('course_price', $_POST));
+		if ( ! $course_price){
+			return;
+		}
+
+		$sell_by_wc = tutor_utils()->get_option('enable_course_sell_by_woocommerce');
+		$sell_by_edd = tutor_utils()->get_option('enable_tutor_edd');
+		$course = get_post($post_ID);
+
+		if ($sell_by_wc){
+
+			$is_update = false;
+			if ($attached_product_id){
+				$wc_product = get_post_meta($attached_product_id, '_product_version', true);
+				if ($wc_product){
+					$is_update = true;
+				}
+			}
+
+			if ($is_update){
+
+				$productObj = new \WC_Product($attached_product_id);
+				$productObj->set_price($course_price); // set product price
+				$productObj->set_regular_price($course_price); // set product regular price
+				$product_id = $productObj->save();
+
+			}else{
+
+				$productObj = new \WC_Product();
+				$productObj->set_name($course->post_title);
+				$productObj->set_status('publish');
+				$productObj->set_price($course_price); // set product price
+				$productObj->set_regular_price($course_price); // set product regular price
+
+				$product_id = $productObj->save();
+				if ($product_id) {
+					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
+					//Mark product for woocommerce
+					update_post_meta( $product_id, '_virtual', 'yes' );
+					update_post_meta( $product_id, '_tutor_product', 'yes' );
+
+					$coursePostThumbnail = get_post_meta( $post_ID, '_thumbnail_id', true );
+					if ( $coursePostThumbnail ) {
+						set_post_thumbnail( $product_id, $coursePostThumbnail );
+					}
+				}
+			}
+
+		}elseif ($sell_by_edd){
+			$is_update = false;
+			
+			if ($attached_product_id){
+				$edd_price = get_post_meta($attached_product_id, 'edd_price', true);
+				if ($edd_price){
+					$is_update = true;
+				}
+			}
+
+			if ($is_update){
+				//Update the product
+				update_post_meta( $attached_product_id, 'edd_price', $course_price );
+			}else{
+				//Create new product
+
+				$post_arr = array(
+					'post_type'    => 'download',
+					'post_title'   => $course->post_title,
+					'post_status'  => 'publish',
+					'post_author'  => get_current_user_id(),
+				);
+				$download_id = wp_insert_post( $post_arr );
+				if ($download_id ) {
+					//edd_price
+					update_post_meta( $download_id, 'edd_price', $course_price );
+
+					update_post_meta( $post_ID, '_tutor_course_product_id', $download_id );
+					//Mark product for EDD
+					update_post_meta( $download_id, '_tutor_product', 'yes' );
+
+					$coursePostThumbnail = get_post_meta( $post_ID, '_thumbnail_id', true );
+					if ( $coursePostThumbnail ) {
+						set_post_thumbnail( $download_id, $coursePostThumbnail );
+					}
+					
+				}
+
+			}
+
+
+		}
+
+	}
+
+
 
 }

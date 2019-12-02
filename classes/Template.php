@@ -271,7 +271,7 @@ class Template extends Tutor_Base {
 				 * Handle if logout URL
 				 * @since v.1.1.2
 				 */
-				if ( ! empty($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_vars['tutor_dashboard_page'] === 'logout'){
+				if (tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars) === 'logout'){
 					$redirect = get_permalink($student_dashboard_page_id);
 					wp_logout();
 					wp_redirect($redirect);
@@ -283,18 +283,28 @@ class Template extends Tutor_Base {
 				 */
 				if (is_user_logged_in()) {
 					$template = tutor_get_template( 'dashboard' );
+					/**
+					 * Check page page permission
+					 *
+					 * @since v.1.3.4
+					 */
+					$query_var = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
+					$dashboard_pages = tutor_utils()->tutor_dashboard_pages();
+					$dashboard_page_item = tutor_utils()->array_get($query_var, $dashboard_pages);
+					$auth_cap = tutor_utils()->array_get('auth_cap', $dashboard_page_item);
+					if ($auth_cap && ! current_user_can($auth_cap) ){
+						wp_die(__('Permission Denied', 'tutor'));
+					}
+
 				}else{
 					$template = tutor_get_template( 'login' );
 				}
-
-
-
 			}
 		}
 
 		return $template;
 	}
-	
+
 	/**
 	 * @param $template
 	 *

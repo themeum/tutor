@@ -105,7 +105,42 @@ Animation Spinner
 /**
  * Icon Contents
  */
-
+.tutor-icon-coding:before {
+    content: "\e98f";
+}
+.tutor-icon-vimeo:before {
+    content: "\e990";
+}
+.tutor-icon-link:before {
+    content: "\e991";
+}
+.tutor-icon-html5:before {
+    content: "\e992";
+}
+.tutor-icon-upload:before {
+    content: "\e993";
+}
+.tutor-icon-save:before {
+    content: "\e994";
+}
+.tutor-icon-search-file:before {
+    content: "\e989";
+}
+.tutor-icon-upload-file:before {
+    content: "\e98a";
+}
+.tutor-icon-assignment:before {
+    content: "\e98b";
+}
+.tutor-icon-feedback:before {
+    content: "\e98c";
+}
+.tutor-icon-purchase:before {
+    content: "\e98d";
+}
+.tutor-icon-uoload-success:before {
+    content: "\e98e";
+}
 .tutor-icon-gallery:before {
     content: "\e95b";
 }
@@ -517,4 +552,3 @@ Animation Spinner
 .tutor-icon-youtube:before {
     content: "\e91c";
 }
-

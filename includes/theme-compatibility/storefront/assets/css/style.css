@@ -5,6 +5,6 @@ body.single-lesson #content .col-full, body.single-tutor_quiz #content .col-full
     margin: 0;
 }
 .tutor-container{
-    max-width: 100%;
-    padding: 0;
+    max-width: 1170px;
+    padding: 0 15px 0 15px;
 }

@@ -25,7 +25,7 @@
 		?>
 
         <select name="_tutor_course_product_id" class="tutor_select2" style="min-width: 300px;">
-            <option value=""><?php _e('Select a Product'); ?></option>
+            <option value="-1"><?php _e('Select a Product'); ?></option>
 			<?php
 			foreach ($products as $product){
 				echo "<option value='{$product->ID}' ".selected($product->ID, $product_id)." >{$product->post_title}</option>";

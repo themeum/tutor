@@ -447,12 +447,11 @@ class Admin{
 	 */
 	public function admin_footer_text( $footer_text ) {
 		$current_screen = get_current_screen();
-		$tutor_pages = tutor_utils()->tutor_get_screen_ids();
 
 		/**
 		 * We are making sure that this message will be only on Tutor Admin page
 		 */
-		if ( isset( $current_screen->id ) && apply_filters( 'tutor_display_admin_footer_text', in_array( $current_screen->id, $tutor_pages ) ) ) {
+		if ( apply_filters( 'tutor_display_admin_footer_text', (tutor_utils()->array_get('parent_base', $current_screen) === 'tutor' ) ) ) {
 			$footer_text = sprintf(
 				__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'tutor' ),
 				sprintf( '<strong>%s</strong>', esc_html__( 'Tutor LMS', 'tutor' ) ),

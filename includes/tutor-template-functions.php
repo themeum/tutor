@@ -49,9 +49,17 @@ if ( ! function_exists('tutor_get_template')) {
 if ( ! function_exists('tutor_load_template')) {
 	function tutor_load_template( $template = null, $variables = array() ) {
 		$variables = (array) $variables;
+		$variables = apply_filters('get_tutor_load_template_variables', $variables);
 		extract($variables);
 
+		$isLoad = apply_filters('should_tutor_load_template', true, $template, $variables);
+		if ( ! $isLoad){
+			return;
+		}
+
+		do_action('tutor_load_template_before', $template, $variables);
 		include tutor_get_template( $template );
+		do_action('tutor_load_template_after', $template, $variables);
 	}
 }
 
@@ -473,7 +481,7 @@ if ( ! function_exists('get_tutor_course_author')) {
 
 function get_tutor_course_author_id(){
 	global $post;
-	return $post->post_author;
+	return (int) $post->post_author;
 }
 
 /**

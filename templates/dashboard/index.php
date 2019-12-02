@@ -26,8 +26,17 @@ if (isset($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_var
                     foreach ($dashboard_pages as $dashboard_key => $dashboard_page){
                         if ($dashboard_key === 'index')
                             $dashboard_key = '';
+
+	                    $menu_title = $dashboard_page;
+	                    if (is_array($dashboard_page)){
+		                    $menu_title = tutor_utils()->array_get('title', $dashboard_page);
+		                    if ( isset($dashboard_page['show_ui']) && ! tutor_utils()->array_get('show_ui', $dashboard_page)){
+			                    continue;
+		                    }
+	                    }
+
                         $active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-                        echo "<li class='{$active_class}'><a href='".tutor_utils()->get_tutor_dashboard_page_permalink($dashboard_key)."'> {$dashboard_page} </a> </li>";
+                        echo "<li class='{$active_class}'><a href='".tutor_utils()->get_tutor_dashboard_page_permalink($dashboard_key)."'> {$menu_title} </a> </li>";
                     }
                     ?>
                 </ul>

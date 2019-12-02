@@ -171,14 +171,17 @@ class Instructor {
 		$password       = sanitize_text_field(tutor_utils()->input_old('password'));
 		$tutor_profile_bio = wp_kses_post(tutor_utils()->input_old('tutor_profile_bio'));
 
-		$userdata = array(
+		$userdata = apply_filters('add_new_instructor_data', array(
 			'user_login'    =>  $user_login,
 			'user_email'    =>  $email,
 			'first_name'    =>  $first_name,
 			'last_name'     =>  $last_name,
 			'role'          =>  tutor()->instructor_role,
 			'user_pass'     =>  $password,
-		);
+		));
+
+		do_action('tutor_add_new_instructor_before');
+
 		$user_id = wp_insert_user( $userdata ) ;
 		if ( ! is_wp_error($user_id)) {
 			update_user_meta($user_id, 'phone_number', $phone_number);
@@ -186,6 +189,8 @@ class Instructor {
 			update_user_meta($user_id, '_tutor_profile_bio', $tutor_profile_bio);
 			update_user_meta($user_id, '_is_tutor_instructor', time());
 			update_user_meta($user_id, '_tutor_instructor_status', apply_filters('tutor_initial_instructor_status', 'approved'));
+
+			do_action('tutor_add_new_instructor_after', $user_id);
 
 			wp_send_json_success(array('msg' => __('Instructor has been added successfully', 'tutor') ));
 		}
