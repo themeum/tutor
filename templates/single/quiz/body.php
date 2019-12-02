@@ -104,23 +104,15 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 							?>
                             <p class="question-description"><?php echo $question->question_description; ?></p>
 
-                            <div class="tutor-quiz-answers-wrap">
+                            <div class="tutor-quiz-answers-wrap question-type-<?php echo $question_type; ?>">
 								<?php
 								if ( is_array($answers) && count($answers) ) {
 									foreach ($answers as $answer){
 										if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 											?>
-                                            <label>
-                                                <div class="quiz-answer-input-field">
-                                                    <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
-                                                    <span>&nbsp;</span>
-                                                </div>
-
+                                            <label class="answer-view-<?php echo $answer->answer_view_format; ?>">
                                                 <div class="quiz-answer-input-body">
 													<?php
-													if ($answer->answer_view_format !== 'image'){
-														echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
-													}
 													if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
 														?>
                                                         <div class="quiz-answer-image-wrap">
@@ -129,30 +121,39 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 														<?php
 													}
 													?>
+                                                    <div class="quiz-answer-input-bottom">
+                                                        <div class="quiz-answer-input-field">
+                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
+                                                            <span>&nbsp;</span>
+                                                            <?php
+                                                                if ($answer->answer_view_format !== 'image'){ echo $answer->answer_title;}
+                                                            ?>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </label>
 											<?php
 										}elseif ($question_type === 'multiple_choice'){
 											?>
-                                            <label>
-                                                <div class="quiz-answer-input-field">
-                                                    <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
-                                                    <span>&nbsp;</span>
-                                                </div>
+                                            <label class="answer-view-<?php echo $answer->answer_view_format; ?>">
+
 
                                                 <div class="quiz-answer-input-body">
-													<?php
-													if ($answer->answer_view_format !== 'image'){
-														echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
-													}
-													if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
-														?>
+													<?php if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){ ?>
                                                         <div class="quiz-answer-image-wrap">
                                                             <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
                                                         </div>
-														<?php
-													}
-													?>
+                                                    <?php } ?>
+
+                                                    <div class="quiz-answer-input-bottom">
+                                                        <div class="quiz-answer-input-field">
+                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
+                                                            <span>&nbsp;</span>
+                                                            <?php if ($answer->answer_view_format !== 'image'){
+                                                                echo $answer->answer_title;
+                                                            } ?>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </label>
 											<?php
