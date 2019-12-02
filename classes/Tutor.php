@@ -47,6 +47,7 @@ final class Tutor{
 	private $withdraw;
 
 	private $course_widget;
+	private $upgrader;
 
 	/**
 	 * @return null|Tutor
@@ -67,8 +68,6 @@ final class Tutor{
 		$this->path = plugin_dir_path(TUTOR_FILE);
 		$this->url = plugin_dir_url(TUTOR_FILE);
 		$this->basename = plugin_basename(TUTOR_FILE);
-
-		add_action('admin_init', array($this, 'tutor_course_post_type_update'));
 
 		/**
 		 * Include Files
@@ -113,6 +112,7 @@ final class Tutor{
 		$this->withdraw = new Withdraw();
 
 		$this->course_widget = new Course_Widget();
+		$this->upgrader = new Upgrader();
 
 		/**
 		 * Run Method
@@ -202,7 +202,7 @@ final class Tutor{
 		/**
 		 * Backward Compatibility for version < 1.2.0
 		 */
-		if (version_compare(get_option('TUTOR_VERSION'), '1.2.0', '<')){
+		if (version_compare(get_option('tutor_version'), '1.2.0', '<')){
 			/**
 			 * Creating New Database
 			 */
@@ -216,7 +216,7 @@ final class Tutor{
 		/**
 		 * Backward Compatibility to < 1.3.1 for make course plural
 		 */
-		if (version_compare(get_option('TUTOR_VERSION'), '1.3.1', '<')){
+		if (version_compare(get_option('tutor_version'), '1.3.1', '<')){
 			global $wpdb;
 
 			if ( ! get_option('is_course_post_type_updated')){
@@ -232,22 +232,6 @@ final class Tutor{
 	//Run task on deactivation
 	public function tutor_deactivation() {
 		wp_clear_scheduled_hook('tutor_once_in_day_run_schedule');
-	}
-
-	public function tutor_course_post_type_update(){
-		/**
-		 * Backward Compatibility to < 1.3.1 for make course plural
-		 */
-		if (version_compare(get_option('TUTOR_VERSION'), '1.3.1', '<')){
-			global $wpdb;
-
-			if ( ! get_option('is_course_post_type_updated')){
-				$wpdb->update($wpdb->posts, array('post_type' => 'courses'), array('post_type' => 'course'));
-				update_option('is_course_post_type_updated', true);
-				update_option('tutor_version', '1.3.1');
-				flush_rewrite_rules();
-			}
-		}
 	}
 
 	public function create_database(){

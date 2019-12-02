@@ -17,7 +17,7 @@ get_header();
 	<div <?php tutor_post_class('tutor-question-answare-wrap tutor-page-wrap'); ?>>
 		<div class="tutor-container">
 			<div class="tutor-row">
-				<div class="tutor-col-8">
+				<div class="tutor-col-8  tutor-col-md-100">
 					<?php tutor_course_enrolled_lead_info(); ?>
 					<?php tutor_course_enrolled_nav(); ?>
 					<?php tutor_course_question_and_answer(); ?>

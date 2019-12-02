@@ -1,1 +1,1 @@
-<h2>You are already logged in</h2>
+<h2><?php _e('You are already logged in', 'tutor') ?></h2>

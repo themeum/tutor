@@ -34,6 +34,11 @@ class Course extends Tutor_Base {
 		 */
 		add_action('wp_ajax_tutor_delete_dashboard_course', array($this, 'tutor_delete_dashboard_course'));
 
+		/**
+		 * Gutenberg author support
+		 */
+
+		add_filter('wp_insert_post_data', array($this, 'tutor_add_gutenberg_author'), '99', 2);
 	}
 	/**
 	 * Registering metabox
@@ -535,5 +540,27 @@ class Course extends Tutor_Base {
 		wp_send_json_success();
 	}
 
+
+	public function tutor_add_gutenberg_author($data , $postarr){
+		global $wpdb;
+
+		$post_author = (int) tutor_utils()->avalue_dot('post_author', $data);
+
+		if ( ! $post_author){
+			$user_ID = (int) tutor_utils()->avalue_dot('user_ID', $postarr);
+			if ($user_ID){
+				$data['post_author'] = $user_ID;
+			}else{
+				global $wpdb;
+
+				$post_ID = (int) tutor_utils()->avalue_dot('ID', $postarr);
+				$post_author = (int) $wpdb->get_var("SELECT post_author FROM {$wpdb->posts} WHERE ID = {$post_ID} ");
+
+				$data['post_author'] = $post_author;
+			}
+		}
+
+		return $data;
+	}
 
 }

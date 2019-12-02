@@ -93,7 +93,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 							echo '<h4 class="question-text">';
 							if ( ! $hide_question_number_overview){
-								echo $question_i;
+								echo $question_i. ". ";
 							}
 							echo $question->question_title;
 							echo '</h4>';
@@ -397,7 +397,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 			?>
             <h4 class="tutor-quiz-attempt-history-title"><?php _e('Previous attempts', 'tutor'); ?></h4>
 
-            <div class="tutor-quiz-attempt-history">
+            <div class="tutor-quiz-attempt-history single-quiz-page">
                 <table>
                     <tr>
                         <th><?php _e('Time', 'tutor'); ?></th>
@@ -412,7 +412,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 						?>
 
                         <tr>
-                            <td>
+                            <td title="<?php _e('Time', 'tutor'); ?>">
 								<?php
 								echo date_i18n(get_option('date_format'), strtotime($attempt->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->attempt_started_at));
 
@@ -420,29 +420,29 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 									?>
                                     <p class="attempt-reviewed-text">
 										<?php
-										echo __('Manually reviewed at', 'tutor').' <br /> '.date_i18n(get_option('date_format', strtotime($attempt->manually_reviewed_at))).' '.date_i18n(get_option('time_format', strtotime($attempt->manually_reviewed_at)));
+										echo __('Manually reviewed at', 'tutor').date_i18n(get_option('date_format', strtotime($attempt->manually_reviewed_at))).' '.date_i18n(get_option('time_format', strtotime($attempt->manually_reviewed_at)));
 										?>
                                     </p>
 									<?php
 								}
 								?>
                             </td>
-                            <td>
+                            <td  title="<?php _e('Questions', 'tutor'); ?>">
 								<?php echo $attempt->total_questions; ?>
                             </td>
 
-                            <td>
+                            <td title="<?php _e('Total Marks', 'tutor'); ?>">
 								<?php echo $attempt->total_marks; ?>
                             </td>
 
-                            <td>
+                            <td title="<?php _e('Earned Marks', 'tutor'); ?>">
 								<?php
 								$earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
 								echo $attempt->earned_marks."({$earned_percentage}%)";
 								?>
                             </td>
 
-                            <td>
+                            <td title="<?php _e('Pass Mark', 'tutor'); ?>">
 								<?php
 
 								$pass_marks = ($attempt->total_marks * $passing_grade) / 100;
@@ -453,7 +453,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 								?>
                             </td>
 
-                            <td>
+                            <td title="<?php _e('Result', 'tutor'); ?>">
 								<?php
 								if ($earned_percentage >= $passing_grade){
 									echo '<span class="result-pass">'.__('Pass', 'tutor').'</span>';

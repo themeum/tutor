@@ -1,5 +1,3 @@
-
-
 <div class="tutor-dashboard-content-inner">
 
     <div class="tutor-dashboard-inline-links">
@@ -15,18 +13,16 @@
             <li class="active">
                 <a href="<?php echo esc_url($reset_password);  ?>"> <?php _e('Reset Password', 'tutor'); ?></a>
             </li>
-            <li>
-                <a href="<?php echo esc_url($withdraw);  ?>"> <?php _e('Withdraw', 'tutor'); ?></a>
-            </li>
+            <?php if(current_user_can(tutor()->instructor_role)){ ?>
+                <li>
+                    <a href="<?php echo esc_url($withdraw);  ?>"> <?php _e('Withdraw', 'tutor'); ?></a>
+                </li>
+            <?php } ?>
 
         </ul>
     </div>
 
-
     <h3><?php _e('Reset Password', 'tutor') ?></h3>
-
-
-
 
     <div class="tutor-reset-password-form-wrap">
 
@@ -59,19 +55,27 @@
 
 			<?php do_action('tutor_reset_password_input_before') ?>
 
-            <div class="tutor-form-group">
-                <label class="tutor-form-col-3"> <?php _e('Previous Password', 'tutor'); ?> </label>
-                <input type="password" name="previous_password">
+            <div class="tutor-form-row">
+                <div class="tutor-form-col-12">
+                    <div class="tutor-form-group">
+                        <label> <?php _e('Previous Password', 'tutor'); ?> </label>
+                        <input type="password" name="previous_password">
+                    </div>
+                </div>
             </div>
-
-            <div class="tutor-form-group">
-                <label><?php _e('New Password', 'tutor'); ?></label>
-                <input type="password" name="new_password">
-            </div>
-
-            <div class="tutor-form-group">
-                <label><?php _e('Confirm New Password', 'tutor'); ?></label>
-                <input type="password" name="confirm_new_password">
+            <div class="tutor-form-row">
+                <div class="tutor-form-col-6">
+                    <div class="tutor-form-group">
+                        <label><?php _e('New Password', 'tutor'); ?></label>
+                        <input type="password" name="new_password">
+                    </div>
+                </div>
+                <div class="tutor-form-col-6">
+                    <div class="tutor-form-group">
+                        <label><?php _e('Confirm New Password', 'tutor'); ?></label>
+                        <input type="password" name="confirm_new_password">
+                    </div>
+                </div>
             </div>
 
             <div class="tutor-form-group">
