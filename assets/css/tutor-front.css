@@ -14,6 +14,11 @@ body {
 .tutor-wrap{
     color: var(--tutor-text-color);
 }
+
+.tutor-wrap img{
+    max-width: 100%;
+    height: auto;
+}
 /**
 Most Important CSS
 .tutor-container
@@ -158,6 +163,10 @@ Most Important CSS
     margin-bottom: 40px;
 }
 
+.responsive-table-wrap{
+    overflow-x: auto;
+}
+
 /********************/
 /*start single course*/
 /********************/
@@ -257,6 +266,12 @@ Most Important CSS
     margin-bottom: 5px;
     min-width: 95px;
 }
+@media (max-width: 575px) {
+    .tutor-single-course-meta ul li{
+        margin-right: 10px;
+    }
+}
+
 .tutor-single-course-meta ul li:last-child{
     margin-right: 0;
 }
@@ -336,6 +351,7 @@ Most Important CSS
         border: 1px solid #ddd;
         border-radius: 4px;
     }
+
 }
 
 .tutor-single-course-meta.tutor-lead-meta ul{
@@ -376,6 +392,30 @@ Most Important CSS
     content: ',';
     margin-right: 4px;
 }
+
+@media (max-width: 575px){
+    .tutor-single-course-meta.tutor-lead-meta ul{
+        display: block;
+    }
+    .tutor-single-course-meta.tutor-lead-meta ul li{
+        display: block;
+        border: none;
+        margin: 0;
+        width: 100%;
+        padding: 0 0 10px;
+    }
+    .tutor-single-course-meta.tutor-lead-meta ul li span{
+        display: inline-block;
+        color: var(--tutor-text-color);
+        font-weight: 700;
+    }
+
+    .tutor-single-course-meta.tutor-lead-meta ul li span::after{
+        content: ':';
+        color: var(--tutor-text-color);
+    }
+}
+
 /*benifit*/
 .tutor-course-benefits-content ul{
     list-style: none;
@@ -520,7 +560,7 @@ div[class*="tutor-course-col"] {
     border-radius: 4px;
     -webkit-transition: 300ms;
     transition: 300ms;
-    border: 1px solid #DCDFE5;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     height: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -627,25 +667,49 @@ div[class*="tutor-course-col"] {
     margin-right: 4px;
     margin-left: 0;
 }
-.tutor-course-loop-title a h2{
-    font-size: 22px;
+.tutor-course-loop-title h2{
+    font-size: 20px;
     line-height: 28px;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 17px;
+}
+.tutor-course-loop-title h2 a{
     color: var(--tutor-text-color);
 }
-.tutor-course-loop-title a:hover h2{
+.tutor-course-loop-title h2 a:hover{
     color: var(--tutor-primary-color);
 }
+.tutor-course-loop-meta{
+    margin-bottom: 15px;
+    color: var(--tutor-text-color);
+}
+.tutor-course-loop-meta > div{
+    display: inline-block;
+}
+
+
+.tutor-course-loop-meta > div i{
+    font-size: 16px;
+    margin-right: 4px;
+}
+
+.tutor-course-loop-meta > div i,
+.tutor-course-loop-meta > div span{
+    vertical-align: middle;
+}
+
+.tutor-course-loop-meta > div + div{
+    margin-left: 10px;
+}
+
 .tutor-loop-course-footer{
     padding: 15px;
-    border-top: 1px solid #DCDFE5;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
     color: #838791;
     font-size: 12px;
     line-height: 25px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-    position: relative;
     font-weight: 400;
 }
 .tutor-loop-course-footer:after{
@@ -653,37 +717,15 @@ div[class*="tutor-course-col"] {
     display: table;
     clear: both;
 }
-
-.tutor-loop-course-footer i{
-    font-size: 15px;
-    color: var(--tutor-light-color);
-    line-height: 25px;
-    margin-right: 3px;
-    float: left;
-}
-.tutor-loop-course-footer i:not(:first-child){
-    margin-left: 12px;
-}
-
-.tutor-loop-course-footer span{
-    line-height: 25px;
-    float: left;
-}
-
 .tutor-loop-course-footer span.woocommerce-Price-currencySymbol{
     vertical-align: top;
 }
 
 .tutor-course-loop-price{
-    float: right;
     color: var(--tutor-text-color);
-    font-size: 17px;
-    font-weight: 500;
+    font-size: 16px;
 }
 .tutor-course-loop-price .price del{
-    font-size: 12px;
-    opacity: 1;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     font-weight: 400;
 }
 
@@ -699,54 +741,57 @@ div[class*="tutor-course-col"] {
 .tutor-course-loop-price .price del + ins{
     background: transparent;
     margin-left: 0;
+    text-decoration: none;
 }
-.tutor-loop-course-footer .tutor-loop-cart-btn-wrap{
-    position: absolute;
-    left: -1px;
-    top: 0;
-    width: calc(100% + 2px);
-    height: calc(100% + 1px);
-    color: #fff;
-    text-align: center;
-    top: 0;
-    opacity: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    -webkit-transition: 100ms;
-    transition: 100ms;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    background: var(--tutor-primary-color);
+.tutor-course-loop-price > .price{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 600;
 }
-.tutor-loop-course-footer .tutor-loop-cart-btn-wrap a{
-    color: #fff;
-    font-size: 14px;
-    text-transform: uppercase;
-    font-weight: 700;
-    -webkit-animation: rotate_cs 5s infinite; /* Safari 4.0 - 8.0 */
-    animation: rotate_cs 5s infinite;
-    padding: 0;
+
+.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a{
+    color: var(--tutor-text-color);
+    position: relative;
+    line-height: 20px;
+    vertical-align: top;
     display: block;
-    width: 100%;
-    line-height: 54px;
-    background: var(--tutor-primary-color);
+    font-weight: 400;
+    font-size: 14px;
+    background: transparent;
+    padding: 0;
 }
-.tutor-loop-course-footer .tutor-loop-cart-btn-wrap a.added{
+
+
+.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a:hover{
+    color: var(--tutor-primary-color);
+}
+
+
+.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap{
+    margin-left: auto;
+}
+.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a.added{
     display: none;
 }
 
-.tutor-loop-course-footer .tutor-loop-cart-btn-wrap a.added_to_cart{
-    background-color: #000000;
-}
-
-.tutor-loop-course-footer .tutor-loop-cart-btn-wrap a:before{
+.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a::before{
     content: '\e915';
-    font-family: "tutor";
+    font-family: 'tutor' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 20px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     margin-right: 5px;
+    vertical-align: top;
 }
 
-.tutor-loop-course-footer .tutor-loop-cart-btn-wrap a.added_to_cart:before{
-    display: none;
-}
+
+
 
 /* Standard syntax */
 @-webkit-keyframes mymove {
@@ -816,15 +861,9 @@ div[class*="tutor-course-col"] {
     }
 }
 
-.tutor-course-loop-title h2{
-    font-size: 16px;
-    font-size: 16px;
-    font-size: 16px;
-    font-size: 1rem;
-}
 .tutor-course-filter-wrap{
     clear: both;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 }
 .tutor-course-filter-form{
     display: inline-block;
@@ -904,7 +943,7 @@ div[class*="tutor-course-col"] {
 
 .tutor-loop-author > div a{
     color: var(--tutor-text-color);
-    font-weight: 700;
+    font-weight: 500;
     -webkit-transition: 300ms;
     transition: 300ms;
 }
@@ -1039,6 +1078,8 @@ a.tutor-btn.bordered-btn:hover,
 .tutor-wrap nav.course-enrolled-nav ul li{
     display: inline-block;
 }
+
+
 .tutor-wrap nav.course-enrolled-nav ul li a{
     display: block;
     font-size: 16px;
@@ -1054,6 +1095,23 @@ a.tutor-btn.bordered-btn:hover,
     border-bottom: 2px solid var(--tutor-primary-color);
     color: var(--tutor-text-color);
 }
+
+
+@media (max-width: 575px) {
+    .tutor-wrap nav.course-enrolled-nav ul li{
+        display: inline-block;
+    }
+    .tutor-wrap nav.course-enrolled-nav ul li:not(:first-child) a,
+    .tutor-wrap nav.course-enrolled-nav ul li a{
+        padding: 8px;
+        margin: 0;
+    }
+    .tutor-wrap nav.course-enrolled-nav ul li.active a{
+        border: none;
+        color: var(--tutor-primary-color);
+    }
+}
+
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */
@@ -1067,6 +1125,7 @@ a.tutor-btn.bordered-btn:hover,
     align-items: center;
     padding-bottom: 30px;
     border-bottom: 1px solid #DCDFE5;
+    flex-wrap: wrap;
 }
 
 .tutor-dashboard-header-avatar img{
@@ -1081,11 +1140,19 @@ a.tutor-btn.bordered-btn:hover,
     -ms-flex-positive: 1;
     flex-grow: 1;
     padding-left: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.tutor-dashboard-header-button{
+    padding-top: 15px;
 }
 
 .tutor-dashboard-header-display-name h4{
     font-size: 30px;
-    margin-bottom: 0;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    line-height: 34px;
 }
 
 .tutor-dashboard-header-stats{
@@ -1094,11 +1161,14 @@ a.tutor-btn.bordered-btn:hover,
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
+    line-height: 25px;
 }
 
 .tutor-dashboard-header-stats > div:not(:first-child){
     margin-left: 30px;
 }
+
+
 
 
 /* end dashboard header */
@@ -1247,7 +1317,9 @@ a.tutor-btn.bordered-btn:hover,
 }
 
 /*dashboard quiz attempts*/
-
+.tutor-dashboard-content{
+    margin-bottom: 60px;
+}
 .tutor-dashboard-content  .tutor-quiz-attempt-history tr th,
 .tutor-dashboard-content  .tutor-quiz-attempt-history tr td{
     vertical-align: middle;
@@ -1268,6 +1340,39 @@ a.tutor-btn.bordered-btn:hover,
     line-height: 19px;
     padding: 0 5px;
     margin-right: 4px;
+}
+
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr th{
+    background: #FAFBFC;
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr td{
+    background: #fff;
+}
+
+@media (max-width: 768px) {
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr{
+        display: flex;
+        flex-wrap: wrap;
+        box-sizing: border-box;
+    }
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr th{
+        display: none;
+    }
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr td{
+        width: 100%;
+    }
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:not(:first-child){
+        text-align: right;
+    }
+
+    .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:not(:first-child)::before{
+        content: attr(title) ": ";
+        float: left;
+        font-weight: 700;
+    }
+
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history table a{
@@ -1304,8 +1409,21 @@ a.tutor-btn.bordered-btn:hover,
     display: -ms-flexbox;
     display: flex;
 }
+
 .tutor-dashboard-profile .tutor-dashboard-profile-item .heading{
     min-width: 190px;
+}
+
+@media (max-width: 480px) {
+    .tutor-dashboard-profile .tutor-dashboard-profile-item{
+        flex-wrap: wrap;
+    }
+    .tutor-dashboard-profile .tutor-dashboard-profile-item .heading{
+        min-width: 100%;
+        width: 100%;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
 }
 
 .tutor-dashboard-profile .tutor-dashboard-profile-item .content{
@@ -1425,14 +1543,6 @@ a.tutor-btn.bordered-btn:hover,
 }
 
 @media (max-width: 991px) {
-    ul.tutor-dashboard-permalinks li{
-        display: inline-block;
-        border-bottom: none !important;
-        border-right: 1px solid #E8EFF1;
-    }
-    ul.tutor-dashboard-permalinks li:last-child{
-        border-right-color: transparent;
-    }
     .tutor-dashboard-student .tutor-col-3,
     .tutor-dashboard-student .tutor-col-9{
         -webkit-box-flex: 0;
@@ -1534,27 +1644,32 @@ a.tutor-btn.bordered-btn:hover,
 
 /** Earning Report */
 .tutor-date-range-filter-wrap{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
     margin: 15px 0 20px;
     font-size: 12px;
 }
+
+
 .report-top-sub-menu{
-    margin: 0;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
+    margin: 0 10px 5px 0;
+    display: inline-block;
+    font-size: 0;
 }
+
 .report-top-sub-menu a{
     text-decoration: none;
     padding: 5px 8px;
     border: 1px solid #D7DADF;
     color: #AAAEB3;
+    white-space: nowrap;
+    display: inline-block;
+    font-size: 12px;
 }
+
+
+.report-top-sub-menu a:not(:first-child){
+    margin-left: -1px;
+}
+
 .report-top-sub-menu a:hover{
     background: #EDF0F9;
     color: #333;
@@ -1564,24 +1679,37 @@ a.tutor-btn.bordered-btn:hover,
     color: #ffffff;
     border: 1px solid var(--tutor-primary-hover-color);
 }
-
-.report-top-sub-menu a:not(:last-child){
-    border-right: none;
+.tutor-date-range-wrap{
+    display: inline-block;
 }
-
 .report-date-range-form{
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     margin-bottom: 0;
+    max-width: 370px;
 }
 .date-range-input{
     position: relative;
-    margin-right: 5px;
 }
+
+
+.date-range-input input{
+    border-radius: 0 !important;
+    margin: 0 !important;
+    border-right: none !important;
+    font-size: 14px;
+}
+
 .date-range-input:last-child{
     margin-right: 0;
 }
+
+
+.date-range-input:last-child button{
+    border-radius: 0;
+}
+
 .date-range-input input, .date-range-input input[type=text]{
     border: 1px solid #D7DADF;
     box-shadow: none;
@@ -1590,6 +1718,7 @@ a.tutor-btn.bordered-btn:hover,
     padding-right: 30px;
     padding-top: 0;
     padding-bottom: 0;
+    width: 100%;
 }
 .date-range-input i.tutor-icon-calendar{
     position: absolute;
@@ -1609,6 +1738,11 @@ a.tutor-btn.bordered-btn:hover,
 .report-download-csv-icon a{
     text-decoration: none;
 }
+
+.tutor-dashboard-statement-table-wrap{
+    overflow-x: auto;
+}
+
 table.tutor-dashboard-statement-table p{
     margin: 0;
     padding: 0;
@@ -1630,7 +1764,7 @@ Withdraw Method
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    margin: 0 -15px 50px;
+    margin: 0 -15px 40px;
 }
 
 .withdraw-method-select-wrap .withdraw-method-select{
@@ -1638,6 +1772,7 @@ Withdraw Method
     -ms-flex-positive: 1;
     flex-grow: 1;
     padding: 0 15px;
+    margin-bottom: 30px;
 }
 .withdraw-method-select-wrap .withdraw-method-select label{
     display: block;
@@ -1710,6 +1845,12 @@ Withdraw Method
     padding: 0 15px 20px;
 }
 
+@media (max-width: 480px) {
+    .withdraw-method-form > div{
+        width: 100%;
+    }
+}
+
 .withdraw-method-form > div.withdraw-account-save-btn-wrap{
     width: 100%;
 }
@@ -1764,114 +1905,14 @@ label[for="tutor_withdraw_amount"]{
 
 /** END Withdraw */
 
-/**
-DatePicker
- */
-.ui-datepicker {
-    background-color: #fff;
-    border: 1px solid #EEEEEE;
-    display: none;
-    margin-top: 4px;
-    padding: 5px;
-    width: 180px;
-}
-.ui-datepicker a,
-.ui-datepicker a:hover {
-    text-decoration: none;
-}
-.ui-datepicker a:hover,
-.ui-datepicker td:hover a {
-    color: var(--tutor-primary-hover-color);
-    -webkit-transition: color 0.1s ease-in-out;
-    transition: color 0.1s ease-in-out;
-}
-.ui-datepicker .ui-datepicker-header {
-    margin-bottom: 4px;
-    text-align: center;
-}
-.ui-datepicker .ui-datepicker-title {
-    font-weight: 700;
-}
-.ui-datepicker .ui-datepicker-prev,
-.ui-datepicker .ui-datepicker-next {
-    cursor: default;
-    font-family: 'tutor';
-    -webkit-font-smoothing: antialiased;
-    font-style: normal;
-    font-weight: normal;
-    height: 20px;
-    line-height: 1;
-    margin-top: 2px;
-    width: 30px;
-}
-.ui-datepicker .ui-datepicker-prev {
-    float: left;
-    text-align: left;
-}
-.ui-datepicker .ui-datepicker-next {
-    float: right;
-    text-align: right;
-}
-.ui-datepicker .ui-datepicker-prev:before {
-    content: "\e921";
-}
-.ui-datepicker .ui-datepicker-next:before {
-    content: "\e903";
-}
-.ui-datepicker .ui-icon {
-    display: none;
-}
-.ui-datepicker .ui-datepicker-calendar {
-    table-layout: fixed;
-    width: 100%;
-}
-.ui-datepicker .ui-datepicker-calendar th,
-.ui-datepicker .ui-datepicker-calendar td {
-    text-align: center;
-    padding: 0;
-}
-.ui-datepicker .ui-datepicker-calendar td {
-    border-radius: 4px;
-    -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
-    transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
-}
-.ui-datepicker .ui-datepicker-calendar td:hover {
-    background-color: #eee;
-    cursor: pointer;
-}
-.ui-datepicker .ui-datepicker-calendar td a {
-    text-decoration: none;
-}
-.ui-datepicker .ui-datepicker-current-day {
-    background-color: var( --tutor-primary-hover-color);
-}
-.ui-datepicker .ui-datepicker-current-day a {
-    color: #fff
-}
-.ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
-    background-color: #fff;
-    cursor: default;
-}
-
-.ui-datepicker-calendar .ui-state-default {
-    border: none;
-    background: none;
-}
-.ui-datepicker-calendar .ui-state-default.ui-state-highlight {
-    background: #EEEEEE;
-    padding: 3px;
-    display: block;
-}
-
-/** End DatePicker **/
-
-
 .tutor-mycourse-thumbnail {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 250px;
     flex: 0 0 250px;
     -ms-flex-item-align: center;
-    align-self: center;
+    -webkit-background-size: cover;
+    background-size: cover;
+    background-position: center;
 }
 .tutor-mycourse-content {
     padding: 20px;
@@ -1879,6 +1920,19 @@ DatePicker
     -ms-flex: 1;
     flex: 1;
 }
+
+
+@media (max-width: 580px) {
+    .tutor-mycourse-thumbnail{
+        height: 200px;
+    }
+    .tutor-mycourse-thumbnail,
+    .tutor-mycourse-content{
+        min-width: 100%;
+        width: 100%;
+    }
+}
+
 .tutor-mycourse-content h3{
     margin: 0 0 9px;
 }
@@ -1925,7 +1979,16 @@ DatePicker
     margin-bottom: 30px;
     border: 1px solid #DCDFE5;
     border-radius: 4px;
+    flex-direction: row;
+    overflow: hidden;
 }
+
+@media (max-width: 580px) {
+    .tutor-dashboard-content-inner .tutor-mycourse-wrap{
+        flex-wrap: wrap;
+    }
+}
+
 .tutor-dashboard-content-inner .tutor-mycourse-wrap .tutor-course-status h4{
     display: none;
 }
@@ -2004,7 +2067,6 @@ DatePicker
 
 .tutor-course-delete-popup{
     text-align: center;
-    padding: 40px 35px;
     font-size: 16px;
     line-height: 25px;
     font-weight: 400;
@@ -2059,46 +2121,53 @@ DatePicker
     color: #ffffff;
 }
 
+@media (max-width: 768px) {
+    .tutor-modal-button-group button{
+        padding: 5px 20px;
+        min-width: auto;
+        margin-bottom: 6px;
+    }
+    .tutor-modal-button-group{
+        margin-top: 20px;
+    }
+}
+
 /* ***********************      */
 /* End Tutor Student Dashboard  */
 /************************       */
 .tutor-profile-photo-upload-wrap{
     width: 200px;
-    height: 200px;
-    margin-bottom: 50px;
+    height: auto;
+    margin-bottom: 70px;
     position: relative;
 }
 .tutor-profile-photo-upload-wrap img{
     width: 100%;
-    height: 100%;
+    height: auto;
+    display: block;
 }
 a.tutor-profile-photo-upload-btn {
     position: absolute;
-    bottom: 0;
+    top: 100%;
     background-color: var(--tutor-primary-color);
     color: #fff;
     display: block;
     width: 100%;
     text-align: CENTER;
-    padding: 7px 0;
+    padding: 9px 0;
 }
+
+
+a.tutor-profile-photo-upload-btn:hover{
+    background-color: var(--tutor-primary-hover-color);
+    color: #fff;
+}
+
 .tutor-profile-photo-delete-btn{
     position: absolute;
     color: #ff000c;
     right: 10px;
     top: 10px;
-}
-.tutor-reset-password-form-wrap .tutor-form-group{
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    max-width: 500px;
-}
-
-.tutor-reset-password-form-wrap .tutor-form-group label{
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 200px;
-    flex: 0 0 200px;
 }
 /**
 Instructor
@@ -2257,6 +2326,7 @@ a.page-numbers:hover {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    position: relative;
 }
 .tutor-lesson-sidebar{
     -webkit-box-flex: 0;
@@ -2266,9 +2336,16 @@ a.page-numbers:hover {
 
 @media (max-width: 991px) {
     .tutor-lesson-sidebar{
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 300px;
-        flex: 0 0 300px;
+        position: absolute;
+        left: 0;
+        top: 70px;
+        width: 400px;
+        max-width: 95%;
+        height: calc(100% - 70px);
+        z-index: 9;
+        background: #fff;
+        overflow-y: auto;
+        display: none;
     }
 }
 
@@ -2731,7 +2808,7 @@ a.page-numbers:hover {
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap{
     width: calc(50% - 22px);
     text-align: center;
-    margin: 10px;
+    margin: 9px;
     display: inline-block;
 }
 
@@ -2945,8 +3022,8 @@ ul.tutor-required-fields{
     font-family: 'tutor';
     margin-right: 5px;
     content: "\e91d";
-    -webkit-animation: spin 2s infinite linear;
-    animation: spin 2s infinite linear;
+    -webkit-animation: spin 1s steps(8) infinite;
+    animation: spin 1s steps(8) infinite;
     display: inline-block;
 }
 .loading-lesson .tutor-lesson-video-wrap:before{
@@ -3151,6 +3228,12 @@ Course question and answer
     color: var(--tutor-text-color);
 }
 
+.tutor-quiz-header .tutor-quiz-meta li strong{
+    display: block;
+    color: var(--tutor-light-color);
+    font-weight: 400;
+}
+
 @media (max-width: 767px) {
     .tutor-quiz-header .tutor-quiz-meta{
         display: block;
@@ -3158,18 +3241,17 @@ Course question and answer
         padding: 0;
     }
     .tutor-quiz-header .tutor-quiz-meta li{
-        display: inline-block;
+        display: block;
         color: var(--tutor-text-color);
         margin: 5px;
-        border: 1px solid #dddddd;
-        padding: 5px 10px;
-        border-radius: 4px;
+        border: none;
+        padding: 0;
+        border-radius: 0;
     }
-}
-.tutor-quiz-header .tutor-quiz-meta li strong{
-    display: block;
-    color: var(--tutor-light-color);
-    font-weight: 400;
+    .tutor-quiz-header .tutor-quiz-meta li strong{
+        display: inline-block;
+        margin-right: 5px;
+    }
 }
 .tutor-quiz-attempt-history{
     overflow-x: auto;
@@ -3213,6 +3295,34 @@ Course question and answer
 .tutor-quiz-attempt-history table span.result-pass{
     background: var(--tutor-success-button-color);
 }
+
+@media (max-width: 767px) {
+    .single-quiz-page.tutor-quiz-attempt-history table tr{
+        display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
+    }
+    .single-quiz-page.tutor-quiz-attempt-history table tr th{
+        display: none;
+    }
+    .single-quiz-page.tutor-quiz-attempt-history table tr td{
+        width: 100%;
+    }
+
+    .single-quiz-page.tutor-quiz-attempt-history table tr td:first-child{
+        font-weight: 600;
+        background: #f1f1f1;
+    }
+    .single-quiz-page.tutor-quiz-attempt-history table tr td:not(:first-child){
+        text-align: right;
+    }
+    .single-quiz-page.tutor-quiz-attempt-history table tr td:not(:first-child)::before{
+        content: attr(title) ": ";
+        float: left;
+        font-weight: 700;
+    }
+}
+
 /*.attempt-reviewed-text {*/
 /*color: #777;*/
 /*font-size: 12px;*/
@@ -3273,9 +3383,10 @@ Course question and answer
     height: 175px;
     border-radius: 5px;
     box-shadow: none;
-    min-width: 740px;
+    min-width: 100%;
     margin-bottom: 5px;
 }
+
 .tutor-quiz-answers-wrap textarea:focus{
     background: transparent;
     outline: none !important;
@@ -3401,6 +3512,17 @@ Course question and answer
     vertical-align: top;
 }
 
+@media (max-width: 767px) {
+    .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching{
+        width: 50%;
+    }
+}
+
+@media (max-width: 575px) {
+    .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching{
+        width: 100%;
+    }
+}
 
 .answer-type-matching .quiz-answer-matching-items-wrap{
     margin:  0 -10px;
@@ -4147,6 +4269,12 @@ social share
     margin-right: 0;
 }
 
+@media (max-width: 575px) {
+    .tutor-single-course-meta ul li.tutor-social-share{
+        display: none;
+    }
+}
+
 .tutor-single-course-meta ul li.tutor-social-share button{
     margin: 0;
     border: none;
@@ -4311,9 +4439,21 @@ social share
     background: #fff;
     padding: 60px;
     width: 90%;
-    max-width: 850px;
+    max-width: 750px;
     max-height: 90%;
     overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+    .tutor-frontend-modal .tutor-frontend-modal-content{
+        padding: 40px;
+    }
+}
+
+@media (max-width: 540px) {
+    .tutor-frontend-modal .tutor-frontend-modal-content{
+        padding: 20px;
+    }
 }
 
 button.tm-close.tutor-icon-line-cross {
@@ -4323,6 +4463,11 @@ button.tm-close.tutor-icon-line-cross {
     background: transparent;
     padding: 0;
     font-size: 24px;
+    border: none;
+    color: var(--tutor-light-color);
+}
+button.tm-close.tutor-icon-line-cross:hover{
+    color: red;
 }
 
 .label-order-status{

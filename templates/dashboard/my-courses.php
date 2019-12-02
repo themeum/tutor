@@ -11,16 +11,11 @@
 			setup_postdata($post);
 
 			$avg_rating = tutor_utils()->get_course_rating()->rating_avg;
+            $tutor_course_img = get_tutor_course_thumbnail_src();
 			?>
         
             <div id="tutor-dashboard-course-<?php the_ID(); ?>" class="tutor-mycourse-wrap tutor-mycourse-<?php the_ID(); ?>">
-
-                <div class="tutor-mycourse-thumbnail">
-					<?php
-                    tutor_course_loop_thumbnail();
-					?>
-                </div>
-
+                <div class="tutor-mycourse-thumbnail" style="background-image: url(<?php echo esc_url($tutor_course_img); ?>)"></div>
                 <div class="tutor-mycourse-content">
                     <div class="tutor-mycourse-rating">
 						<?php

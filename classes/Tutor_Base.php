@@ -8,6 +8,8 @@
 
 namespace TUTOR;
 
+if ( ! defined( 'ABSPATH' ) )
+	exit;
 
 class Tutor_Base {
 

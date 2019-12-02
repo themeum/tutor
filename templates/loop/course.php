@@ -29,7 +29,6 @@ do_action('tutor_course/loop/before_title');
 do_action('tutor_course/loop/title');
 do_action('tutor_course/loop/after_title');
 
-
 do_action('tutor_course/loop/before_meta');
 do_action('tutor_course/loop/meta');
 do_action('tutor_course/loop/after_meta');

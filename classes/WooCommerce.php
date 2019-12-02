@@ -8,6 +8,9 @@
 
 namespace TUTOR;
 
+if ( ! defined( 'ABSPATH' ) )
+	exit;
+
 class WooCommerce extends Tutor_Base {
 
 	public function __construct() {
@@ -263,6 +266,12 @@ class WooCommerce extends Tutor_Base {
 							'label'     => __('Enable / Disable', 'tutor'),
 							'label_title'   => __('Enable WooComerce to sell course', 'tutor'),
 							'desc'      => __('By integrating WooCommerce, you can sell your course',	'tutor'),
+						),
+						'enable_guest_course_cart' => array(
+							'type'      => 'checkbox',
+							'label'     => __('Enable / Disable', 'tutor'),
+							'label_title'   => __('Enable Add to cart by guest', 'tutor'),
+							'desc'      => __('From the course details page, any user without login can add to cart course',	'tutor'),
 						),
 					),
 				),

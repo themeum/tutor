@@ -32,7 +32,7 @@ if ($attempted_count){
 				$passing_grade = tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
 				?>
                 <tr class="<?php echo esc_attr($earned_percentage >= $passing_grade ? 'pass' : 'fail') ?>">
-                    <td>
+                    <td class="td-course-title" title="<?php _e('Course Title', 'tutor'); ?>">
                         <div>
                             <?php
                                 echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
@@ -54,14 +54,13 @@ if ($attempted_count){
                         </div>
                         <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank"><?php echo get_the_title($attempt->course_id); ?></a>
                     </td>
-                    <td><?php echo $attempt->total_questions; ?> </td>
-                    <td> <?php echo $attempt->total_marks; ?> </td>
+                    <td  title="<?php _e('Questions', 'tutor'); ?>" class="td-questions"><?php echo $attempt->total_questions; ?> </td>
+                    <td   title="<?php _e('Total Marks', 'tutor'); ?>" class="td-total-marks"> <?php echo $attempt->total_marks; ?> </td>
 
-                    <td>
+                    <td  title="<?php _e('Earned Marks', 'tutor'); ?>" class="td-earned-marks">
 						<?php echo $attempt->earned_marks."({$earned_percentage}%)"; ?>
                     </td>
-
-                    <td>
+                    <td  title="<?php _e('Pass Marks', 'tutor'); ?>" class="td-pass-marks">
 						<?php
 
 						$pass_marks = ($attempt->total_marks * $passing_grade) / 100;

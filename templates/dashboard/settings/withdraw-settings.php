@@ -1,7 +1,5 @@
 
-
 <div class="tutor-dashboard-content-inner">
-
     <div class="tutor-dashboard-inline-links">
         <?php
         $settings_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings');
@@ -14,15 +12,15 @@
             </li>
             <li>
                 <a href="<?php echo esc_url($reset_password);  ?>"> <?php _e('Reset Password', 'tutor'); ?></a>
-            </li>
-            <li  class="active">
-                <a href="<?php echo esc_url($withdraw);  ?>"> <?php _e('Withdraw', 'tutor'); ?></a>
-            </li>
+            </li><?php if(current_user_can(tutor()->instructor_role)){ ?>
+                <li  class="active">
+                    <a href="<?php echo esc_url($withdraw);  ?>"> <?php _e('Withdraw', 'tutor'); ?></a>
+                </li>
+            <?php } ?>
         </ul>
     </div>
 
     <h3><?php _e('Select a withdraw method', 'tutor') ?></h3>
-
 
     <form id="tutor-withdraw-account-set-form" action="" method="post">
 

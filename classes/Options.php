@@ -125,6 +125,11 @@ class Options {
 						'label' => __('General', 'tutor'),
 						'desc' => __('Course Settings', 'tutor'),
 						'fields' => array(
+							'enable_gutenberg_course_edit' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable Gutenberg', 'tutor'),
+								'label_title'   => __('Enable Gutenberg support in course edit page.', 'tutor'),
+							),
 							'display_course_instructors' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Display instructors profile', 'tutor'),

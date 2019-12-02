@@ -77,8 +77,9 @@ do_action('tutor_dashboard/before/wrap'); ?>
 							<?php
 
 							if(current_user_can(tutor()->instructor_role)){
+							    $course_type = tutor()->course_post_type;
 								?>
-                                <a class="tutor-btn bordered-btn" href="<?php echo esc_url(add_query_arg(array('post_type'=>'course'),admin_url('post-new.php'))); ?>">
+                                <a class="tutor-btn bordered-btn" href="<?php echo esc_url(add_query_arg(array('post_type'=>$course_type),admin_url('post-new.php'))); ?>">
 									<?php _e('<i class="tutor-icon-video-camera"></i> &nbsp; Upload A Course', 'tutor'); ?>
                                 </a>
 								<?php
