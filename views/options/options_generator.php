@@ -42,6 +42,8 @@
                     <!--<h3><?php /*echo $option_group['label']; */?></h3>-->
 
 					<?php
+					do_action('tutor_options_before_'.$key);
+
 					if (!empty($option_group['sections'])){
 						foreach ($option_group['sections'] as $fgKey => $field_group){
 							?>
@@ -51,14 +53,19 @@
                             </div>
 
 							<?php
-                            do_action('tutor_options_before_'.$key);
-							foreach ($field_group['fields'] as $field_key => $field){
-								$field['field_key'] = $field_key;
-								echo $this->generate_field($field);
-							}
-							do_action('tutor_options_after_'.$key);
+                            do_action("tutor_options_{$key}_{$fgKey}_before");
+                            if ( ! empty($field_group['fields']) && tutor_utils()->count($field_group['fields'])) {
+	                            foreach ( $field_group['fields'] as $field_key => $field ) {
+		                            $field['field_key'] = $field_key;
+		                            echo $this->generate_field( $field );
+	                            }
+                            }
+							do_action("tutor_options_{$key}_{$fgKey}_after");
 						}
 					}
+
+					do_action('tutor_options_after_'.$key);
+
 					?>
                 </div>
 				<?php

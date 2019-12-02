@@ -50,12 +50,16 @@ class Options {
 			exit();
 		}
 
+		do_action('tutor_option_save_before');
+
 		$option = (array) isset($_POST['tutor_option']) ? $_POST['tutor_option'] : array();
 		$option = apply_filters('tutor_option_input', $option);
 		update_option('tutor_option', $option);
 
+		do_action('tutor_option_save_after');
+
 		//re-sync settings
-		init::tutor_activate();
+		//init::tutor_activate();
 
 		wp_send_json_success( array('msg' => __('Option Updated', 'tutor') ) );
 	}
@@ -80,6 +84,13 @@ class Options {
 						'label' => __('General', 'tutor'),
 						'desc' => __('General Settings', 'tutor'),
 						'fields' => array(
+							'tutor_dashboard_page_id' => array(
+								'type'          => 'select',
+								'label'         => __('Tutor Dashboard', 'tutor'),
+								'default'       => '0',
+								'options'       => $pages,
+								'desc'          => __('This page will show dashboard related stuff, like my courses, order, earnings, logout etc', 'tutor'),
+							),
 							'enable_public_profile' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Enable Public Profile', 'tutor'),
@@ -288,14 +299,6 @@ class Options {
 								'options'       => $pages,
 								'desc'          => __('Choose the page for student registration page', 'tutor'),
 							),
-							'student_dashboard' => array(
-								'type'          => 'select',
-								'label'         => __('Student Dashboard', 'tutor'),
-								'default'       => '0',
-								'options'       => $pages,
-								'desc'          => __('This page will show students related stuff, like my courses, order, etc', 'tutor'),
-							),
-
 							'students_own_review_show_at_profile' => array(
 								'type'          => 'checkbox',
 								'label'         => __('Show reviews on profile', 'tutor'),
@@ -314,6 +317,122 @@ class Options {
 					),
 				),
 			),
+
+			'tutor_earning' => array(
+				'label'     => __('Earning', 'tutor'),
+				'sections'    => array(
+					'general' => array(
+						'label' => __('Earning and commission allocation', 'tutor'),
+						'desc' => __('Enable Disable Option to on/off notification on various event', 'tutor'),
+						'fields' => array(
+
+							'enable_tutor_earning' => array(
+								'type'          => 'checkbox',
+								'label'         => __('Enable/Disable', 'tutor'),
+								'label_title'   => __('Enable Instructor Earning and commission allocation', 'tutor'),
+								'default'       => '0',
+								'desc'          => __('You can set commission and generate earning for instructor who interested sell their course with this platform by enabling this feature',	'tutor'),
+							),
+
+							'earning_admin_commission' => array(
+								'type'      => 'number',
+								'label'      => __('Admin / Platform Owner Commission', 'tutor'),
+								'default'   => '20',
+								'desc'  => __('Define the sales commission for admin from every course sell.', 'tutor'),
+							),
+							'earning_instructor_commission' => array(
+								'type'      => 'number',
+								'label'      => __('Instructor Commission', 'tutor'),
+								'default'   => '80',
+								'desc'  => __('Define the sales commission for instructor from every course sell.', 'tutor'),
+							),
+
+							'tutor_earning_fees' => array(
+								'type'      => 'group_fields',
+								'label'     => __('Others Fees', 'tutor'),
+								'desc'      => __('Deduct the more fees from the instructor, the deducting process will be, first deduct this fees from total course payment, then commission will be allocation on rest amount.',	'tutor'),
+								'group_fields'  => array(
+
+									'enable_fees_deducting' => array(
+										'type'          => 'checkbox',
+										'label'         => __('Enable Deduct Fees', 'tutor'),
+										'default'       => '0',
+									),
+									'fees_name' => array(
+										'type'      => 'text',
+										'label'         => __('Fees Name', 'tutor'),
+										'default'   => '',
+									),
+									'fees_amount' => array(
+										'type'      => 'number',
+										'label'         => __('Fees Amount', 'tutor'),
+										'default'   => '',
+									),
+									'fees_type' => array(
+										'type'      => 'select',
+										'default'   => 'minutes',
+										'select_options'   => false,
+										'options'   => array(
+											''     =>  __('Select Fees Type', 'tutor'),
+											'percent'     =>  __('Percent', 'tutor'),
+											'fixed'      =>  __('Fixed', 'tutor'),
+										),
+									),
+								),
+							),
+							'statement_show_per_page' => array(
+								'type'      => 'number',
+								'label'      => __('Show Statement Per Page', 'tutor'),
+								'default'   => '20',
+								'desc'  => __('Define the number of statement should show.', 'tutor'),
+							),
+
+						),
+					),
+
+
+				),
+			),
+
+
+
+
+
+
+
+
+			'tutor_withdraw' => array(
+				'label'     => __('Withdraw', 'tutor'),
+				'sections'    => array(
+					'general' => array(
+						'label' => __('Earning and commission allocation', 'tutor'),
+						'fields' => array(
+
+							'min_withdraw_amount' => array(
+								'type'      => 'number',
+								'label'     => __('Minimum Withdraw Amount', 'tutor'),
+								'default'   => '80',
+								'desc'      => __('Define the withdraw amount, anyone can make withdraw request if their earning above or equal this amount.',	'tutor'),
+							),
+
+						),
+					),
+
+					'withdraw_methods' => array(
+						'label' => __('Withdraw Methods', 'tutor'),
+						'desc' => __('Set withdraw settings', 'tutor'),
+					),
+
+				),
+			),
+
+
+
+
+
+
+
+
 
 
 		);

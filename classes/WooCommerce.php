@@ -37,9 +37,7 @@ class WooCommerce extends Tutor_Base {
 		add_action('save_post_product', array($this, 'save_wc_product_meta'));
 
 		add_action('tutor_course/single/before/enroll', 'wc_print_notices');
-
 		add_action('woocommerce_new_order_item', array($this, 'course_placing_order'), 10, 3);
-
 
 		/**
 		 * Order Status Hook
@@ -47,6 +45,12 @@ class WooCommerce extends Tutor_Base {
 		 * Remove course from active courses if an order is cancelled or refunded
 		 */
 		add_action( 'woocommerce_order_status_changed', array( $this, 'enrolled_courses_status_change' ), 10, 3 );
+
+		/**
+		 * Add Earning Data
+		 */
+		add_action('woocommerce_new_order_item', array($this, 'add_earning_data'), 10, 3);
+		add_action( 'woocommerce_order_status_changed', array( $this, 'add_earning_data_status_change' ), 10, 3 );
 
 	}
 
@@ -96,9 +100,9 @@ class WooCommerce extends Tutor_Base {
 		if ($product) {
 			ob_start();
 			?>
-			<p class="price">
+			<div class="price">
 				<?php echo $product->get_price_html(); ?>
-			</p>
+			</div>
 			<?php
 			return ob_get_clean();
 		}
@@ -158,7 +162,6 @@ class WooCommerce extends Tutor_Base {
 	/**
 	 * Do something after course order place
 	 */
-
 	public function course_placing_order( $item_id, $item, $order_id){
 		$item = new \WC_Order_Item_Product($item);
 
@@ -211,8 +214,8 @@ class WooCommerce extends Tutor_Base {
 			$course_enrolled_by_order = array();
 			foreach ($courses_ids as $courses_id){
 				$course_id = str_replace('_tutor_order_for_course_id_', '',$courses_id->meta_key);
-				//array(order_id =>  array('course_id' => $course_id, 'enrolled_id' => enrolled_id))
-				$course_enrolled_by_order[$courses_id->post_id] = array('course_id' => $course_id, 'enrolled_id' => $courses_id->meta_value);
+				//array(order_id =>  array('course_id' => $course_id, 'enrolled_id' => enrolled_id, 'order_id' => $courses_id->post_id))
+				$course_enrolled_by_order[] = array('course_id' => $course_id, 'enrolled_id' => $courses_id->meta_value, 'order_id' => $courses_id->post_id );
 			}
 			return $course_enrolled_by_order;
 		}
@@ -263,5 +266,118 @@ class WooCommerce extends Tutor_Base {
 		return $attr;
 	}
 
+	/**
+	 * @param $item_id
+	 * @param $item
+	 * @param $order_id
+     *
+	 * Adding Earning Data processing WooCommerce
+	 *
+	 * @since v.1.1.2
+	 */
+	public function add_earning_data( $item_id, $item, $order_id){
+	    global $wpdb;
+		$item = new \WC_Order_Item_Product($item);
+
+		$product_id = $item->get_product_id();
+		$if_has_course = tutor_utils()->product_belongs_with_course($product_id);
+
+		if ($if_has_course){
+
+		    $enable_tutor_earning = tutor_utils()->get_option('enable_tutor_earning');
+		    if ( ! $enable_tutor_earning){
+		        return;
+            }
+
+			$course_id = $if_has_course->post_id;
+		    $user_id = $wpdb->get_var("SELECT post_author FROM {$wpdb->posts} WHERE ID = {$course_id} ");
+			$order_status = $wpdb->get_var("SELECT post_status from {$wpdb->posts} where ID = {$order_id} ");
+
+		    $total_price = $item->get_total();
+
+		    $fees_deduct_data = array();
+			$tutor_earning_fees = tutor_utils()->get_option('tutor_earning_fees');
+			$enable_fees_deducting = tutor_utils()->avalue_dot('enable_fees_deducting', $tutor_earning_fees);
+
+			$course_price_grand_total = $total_price;
+
+			if ($enable_fees_deducting){
+				$fees_name = tutor_utils()->avalue_dot('fees_name', $tutor_earning_fees);
+				$fees_amount = tutor_utils()->avalue_dot('fees_amount', $tutor_earning_fees);
+				$fees_type = tutor_utils()->avalue_dot('fees_type', $tutor_earning_fees);
+
+				if ($fees_amount > 0) {
+					if ( $fees_type === 'percent' ) {
+						$course_price_grand_total = ( $total_price * $fees_amount ) / 100;
+					}
+					if ( $fees_type === 'fixed' ) {
+						$course_price_grand_total = $total_price - $fees_amount;
+					}
+				}
+
+				$fees_deduct_data = array(
+					'deduct_fees_amount'    => $fees_amount,
+					'deduct_fees_name'      => $fees_name,
+					'deduct_fees_type'      => $fees_type,
+                );
+            }
+
+			$instructor_rate = tutor_utils()->get_option('earning_instructor_commission');
+			$admin_rate = tutor_utils()->get_option('earning_admin_commission');
+
+			$instructor_amount = 0;
+			if ($instructor_rate > 0){
+				$instructor_amount = ($course_price_grand_total * $instructor_rate) / 100;
+            }
+
+			$admin_amount = 0;
+			if ($admin_rate > 0){
+				$admin_amount = ($course_price_grand_total * $admin_rate) / 100;
+			}
+
+			$earning_data = array(
+			        'user_id'                   => $user_id,
+			        'course_id'                 => $course_id,
+			        'order_id'                  => $order_id,
+			        'order_status'              => $order_status,
+			        'course_price_total'        => $total_price,
+			        'course_price_grand_total'  => $course_price_grand_total,
+
+			        'instructor_amount'         => $instructor_amount,
+			        'instructor_rate'           => $instructor_rate,
+			        'admin_amount'              => $admin_amount,
+			        'admin_rate'                => $admin_rate,
+
+			        'commission_type'           => 'percent',
+			        'process_by'                => 'woocommerce',
+			        'created_at'                => date( 'Y-m-d H:i:s'),
+            );
+			$earning_data = apply_filters('tutor_new_earning_data', array_merge($earning_data, $fees_deduct_data));
+
+			$wpdb->insert($wpdb->prefix.'tutor_earnings', $earning_data);
+		}
+	}
+
+
+	/**
+	 * @param $order_id
+	 * @param $status_from
+	 * @param $status_to
+     *
+     * Change Earning data status
+     *
+     * @since v.1.1.2
+	 */
+	public function add_earning_data_status_change($order_id, $status_from, $status_to){
+		if ( ! tutor_utils()->is_tutor_order($order_id)){
+			return;
+		}
+		global $wpdb;
+
+		$is_earning_data = (int) $wpdb->get_var("SELECT COUNT(earning_id) FROM {$wpdb->prefix}tutor_earnings WHERE order_id = {$order_id}  ");
+		if ($is_earning_data){
+		    $wpdb->update( $wpdb->prefix.'tutor_earnings', array( 'order_status' => $status_to ), array( 'order_id' => $order_id ) );
+		}
+	}
 
 }

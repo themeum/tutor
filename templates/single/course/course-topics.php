@@ -57,7 +57,7 @@ $course_id = get_the_ID();
                         </div>
 
 
-                        <div class="tutor-course-lessons">
+                        <div class="tutor-course-lessons" style="<?php echo $index > 1 ? 'display: none' : ''; ?>">
 
 							<?php
 							$lessons = tutor_utils()->get_course_contents_by_topic(get_the_ID());

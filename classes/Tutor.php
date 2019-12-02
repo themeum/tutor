@@ -4,11 +4,18 @@ namespace TUTOR;
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-class init{
+final class Tutor{
 	public $version = TUTOR_VERSION;
 	public $path;
 	public $url;
 	public $basename;
+
+	/**
+	 * The single instance of the class.
+	 *
+	 * @since v.1.2.0
+	 */
+	protected static $_instance = null;
 
 	//Components
 	public $utils;
@@ -35,6 +42,21 @@ class init{
 
 	private $woocommerce;
 	private $edd;
+	private $withdraw;
+
+	/**
+	 * @return null|Tutor
+	 *
+	 * Run the TUTOR
+	 *
+	 * @since 1.2.0
+	 */
+	public static function instance() {
+		if ( is_null( self::$_instance ) ) {
+			self::$_instance = new self();
+		}
+		return self::$_instance;
+	}
 
 	function __construct() {
 
@@ -45,12 +67,16 @@ class init{
 		/**
 		 * Include Files
 		 */
-		add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
+		//add_action( 'init', array( $this, 'includes' ), 11 );
+		$this->includes();
 
 		/**
 		 * Loading Autoloader
 		 */
 
+		if ( function_exists( '__autoload' ) ) {
+			spl_autoload_register( '__autoload' );
+		}
 		spl_autoload_register(array($this, 'loader'));
 
 		do_action('tutor_before_load');
@@ -76,6 +102,13 @@ class init{
 		$this->gutenberg = new Gutenberg();
 		$this->woocommerce = new WooCommerce();
 		$this->edd = new TutorEDD();
+		$this->withdraw = new Withdraw();
+
+		/**
+		 * Run Method
+		 * @since v.1.2.0
+		 */
+		$this->run();
 
 		do_action('tutor_loaded');
 	}
@@ -92,7 +125,7 @@ class init{
 				$className
 			);
 
-			$className = str_replace('TUTOR/', 'classes/', $className);
+			$className = str_replace('TUTOR'.DIRECTORY_SEPARATOR, 'classes'.DIRECTORY_SEPARATOR, $className);
 			$file_name = $this->path.$className.'.php';
 
 			if (file_exists($file_name) ) {
@@ -101,7 +134,8 @@ class init{
 		}
 	}
 
-	public function include_template_functions(){
+	public function includes(){
+		include tutor()->path.'includes/tutor-general-functions.php';
 		include tutor()->path.'includes/tutor-template-functions.php';
 		include tutor()->path.'includes/tutor-template-hook.php';
 	}
@@ -110,7 +144,7 @@ class init{
 	public function run(){
 		do_action('tutor_before_run');
 
-		register_activation_hook( TUTOR_FILE, array( $this, 'tutor_activate' ) );
+		register_activation_hook( TUTOR_FILE, array($this, 'tutor_activate' ) );
 		register_deactivation_hook(TUTOR_FILE, array($this, 'tutor_deactivation'));
 
 		do_action('tutor_after_run');
@@ -143,22 +177,17 @@ class init{
 		}
 
 		/**
-		 * backward / Alpha version compatibility
-		 * todo: should remove in version 1.1.0
+		 * Backward Compatibility for version < 1.2.0
 		 */
-		if (version_compare(get_option('TUTOR_VERSION'), '1.0.0', '<')){
-			//Create Database
-			$this->create_database();
-			update_option('tutor_version', '1.0.0');
-		}
-		/**
-		 * backward / v.1.0.0 compatibility
-		 * todo: should remove in version 1.1.0
-		 */
-		if (get_option('TUTOR_VERSION') == '1.0.0' && version_compare(get_option('TUTOR_VERSION'), '1.0.1', '<')){
-			//Adding column course_id in prefix_tutor_quiz_attempts
-			$this->upgrading_db_1_0_1();
-			update_option('tutor_version', '1.0.1');
+		if (version_compare(get_option('TUTOR_VERSION'), '1.2.0', '<')){
+			/**
+			 * Creating New Database
+			 */
+			$this->create_withdraw_database();
+			//Update the tutor version
+			update_option('tutor_version', '1.2.0');
+			//Rewrite Flush
+			update_option('required_rewrite_flush', time());
 		}
 
 	}
@@ -180,6 +209,8 @@ class init{
 		 * {$wpdb->prefix}tutor_quiz_attempt_answers
 		 * {$wpdb->prefix}tutor_quiz_questions
 		 * {$wpdb->prefix}tutor_quiz_question_answers
+		 * {$wpdb->prefix}tutor_earnings
+		 * {$wpdb->prefix}tutor_withdraws
 		 *
 		 * @since v.1.0.0
 		 */
@@ -242,34 +273,45 @@ class init{
 				PRIMARY KEY (answer_id)
 			) $charset_collate;";
 
+		$earning_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_earnings (
+			earning_id int(11) NOT NULL AUTO_INCREMENT,
+			user_id int(11) DEFAULT NULL,
+			course_id int(11) DEFAULT NULL,
+			order_id int(11) DEFAULT NULL,
+			order_status varchar(50) DEFAULT NULL,
+			course_price_total decimal(16,2) DEFAULT NULL,
+			course_price_grand_total decimal(16,2) DEFAULT NULL,
+			instructor_amount decimal(16,2) DEFAULT NULL,
+			instructor_rate decimal(16,2) DEFAULT NULL,
+			admin_amount decimal(16,2) DEFAULT NULL,
+			admin_rate decimal(16,2) DEFAULT NULL,
+			commission_type varchar(20) DEFAULT NULL,
+			deduct_fees_amount decimal(16,2) DEFAULT NULL,
+			deduct_fees_name varchar(250) DEFAULT NULL,
+			deduct_fees_type varchar(20) DEFAULT NULL,
+			process_by varchar(20) DEFAULT NULL,
+			created_at datetime DEFAULT NULL,
+			PRIMARY KEY (earning_id)
+		) $charset_collate;";
+
+		$withdraw_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_withdraws (
+			withdraw_id int(11) NOT NULL AUTO_INCREMENT,
+			user_id int(11) DEFAULT NULL,
+			amount decimal(16,2) DEFAULT NULL,
+			method_data text DEFAULT NULL,
+			status varchar(50) DEFAULT NULL,
+			updated_at datetime DEFAULT NULL,
+			created_at datetime DEFAULT NULL,
+			PRIMARY KEY (withdraw_id)
+		) $charset_collate;";
+
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $quiz_attempts_sql );
 		dbDelta( $quiz_attempt_answers );
 		dbDelta( $tutor_quiz_questions );
 		dbDelta( $tutor_quiz_question_answers );
-	}
-
-	/**
-	 * upgrading quiz_attempts_database adding course_id
-	 * @since v.1.0.1
-	 */
-	public function upgrading_db_1_0_1(){
-		global $wpdb;
-		/**
-		 * Adding course_id column in tutor_quiz_attempts table
-		 */
-		$sql = "ALTER TABLE {$wpdb->prefix}tutor_quiz_attempts ADD course_id INT NULL DEFAULT NULL AFTER attempt_id;";
-		$wpdb->query($sql);
-		/**
-		 * Setting Course_id column data;
-		 */
-		$attempts = $wpdb->get_results("SELECT * from {$wpdb->prefix}tutor_quiz_attempts;");
-		if (is_array($attempts) && count($attempts)){
-			foreach ($attempts as $attempt){
-				$course = tutor_utils()->get_course_by_quiz($attempt->quiz_id);
-				$wpdb->update($wpdb->prefix."tutor_quiz_attempts", array('course_id' => $course->ID), array('attempt_id' => $attempt->attempt_id));
-			}
-		}
+		dbDelta( $earning_table );
+		dbDelta( $withdraw_table );
 	}
 
 	public static function manage_tutor_roles_and_permissions(){
@@ -365,13 +407,13 @@ class init{
 	 */
 	public static function save_data(){
 		$student_dashboard_args = array(
-			'post_title'    => __('Student Dashboard', 'tutor'),
-			'post_content'  => '[tutor_student_dashboard]',
+			'post_title'    => __('Dashboard', 'tutor'),
+			'post_content'  => '',
 			'post_type'     => 'page',
 			'post_status'   => 'publish',
 		);
 		$student_dashboard_page_id = wp_insert_post( $student_dashboard_args );
-		tutor_utils()->update_option('student_dashboard', $student_dashboard_page_id);
+		tutor_utils()->update_option('tutor_dashboard_page_id', $student_dashboard_page_id);
 
 		$student_registration_args = array(
 			'post_title'    => __('Student Registration', 'tutor'),
@@ -426,9 +468,71 @@ class init{
 			'email_from_name'                   => get_option('blogname'),
 			'email_from_address'                => get_option('admin_email'),
 			'email_footer_text'                 => '',
-			'enable_course_sell_by_woocommerce' => '1',
 		);
 		return $options;
+	}
+
+
+	/**
+	 * Create withdraw database
+	 *
+	 * @since v.1.2.0
+	 */
+	public function create_withdraw_database(){
+		global $wpdb;
+
+		$charset_collate = $wpdb->get_charset_collate();
+
+		/**
+		 * Table SQL
+		 *
+		 * {$wpdb->prefix}tutor_earnings
+		 * {$wpdb->prefix}tutor_withdraws
+		 *
+		 * @since v.1.2.0
+		 */
+
+		$earning_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_earnings (
+			earning_id int(11) NOT NULL AUTO_INCREMENT,
+			user_id int(11) DEFAULT NULL,
+			course_id int(11) DEFAULT NULL,
+			order_id int(11) DEFAULT NULL,
+			order_status varchar(50) DEFAULT NULL,
+			course_price_total decimal(16,2) DEFAULT NULL,
+			course_price_grand_total decimal(16,2) DEFAULT NULL,
+			instructor_amount decimal(16,2) DEFAULT NULL,
+			instructor_rate decimal(16,2) DEFAULT NULL,
+			admin_amount decimal(16,2) DEFAULT NULL,
+			admin_rate decimal(16,2) DEFAULT NULL,
+			commission_type varchar(20) DEFAULT NULL,
+			deduct_fees_amount decimal(16,2) DEFAULT NULL,
+			deduct_fees_name varchar(250) DEFAULT NULL,
+			deduct_fees_type varchar(20) DEFAULT NULL,
+			process_by varchar(20) DEFAULT NULL,
+			created_at datetime DEFAULT NULL,
+			PRIMARY KEY (earning_id)
+		) $charset_collate;";
+
+		$withdraw_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_withdraws (
+			withdraw_id int(11) NOT NULL AUTO_INCREMENT,
+			user_id int(11) DEFAULT NULL,
+			amount decimal(16,2) DEFAULT NULL,
+			method_data text DEFAULT NULL,
+			status varchar(50) DEFAULT NULL,
+			updated_at datetime DEFAULT NULL,
+			created_at datetime DEFAULT NULL,
+			PRIMARY KEY (withdraw_id)
+		) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $earning_table );
+		dbDelta( $withdraw_table );
+
+		/**
+		 * Setting previous dashboard to new dashboard
+		 */
+		$previous_dashboard_page_id = (int) tutor_utils()->get_option('student_dashboard');
+		tutor_utils()->update_option('tutor_dashboard_page_id', $previous_dashboard_page_id);
 	}
 
 

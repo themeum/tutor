@@ -18,4 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	$course_rating = tutor_utils()->get_course_rating();
 	tutor_utils()->star_rating_generator($course_rating->rating_avg);
 	?>
+    <span class="tutor-rating-count">
+        <?php
+        echo $course_rating->rating_avg;
+        echo '<i>('.$course_rating->rating_count.')</i>';
+        ?>
+    </span>
 </div>
+

@@ -156,7 +156,7 @@ $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
             </div>
 
             <div class="tutor-form-group">
-                <button type="submit" class="tutor_ask_question_btn" name="tutor_question_search_btn"><?php _e('Submit My Question', 'tutor'); ?></button>
+                <button type="submit" class="tutor_ask_question_btn tutor-button tutor-success" name="tutor_question_search_btn"><?php _e('Submit My Question', 'tutor'); ?></button>
             </div>
         </form>
     </div>

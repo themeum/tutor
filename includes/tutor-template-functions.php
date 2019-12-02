@@ -37,13 +37,20 @@ if ( ! function_exists('tutor_get_template')) {
 /**
  * @param null $template
  *
+ * @param array $variables
+ *
  * Load template for TUTOR
  *
  * @since v.1.0.0
+ *
+ * @updated v.1.1.2
  */
 
 if ( ! function_exists('tutor_load_template')) {
-	function tutor_load_template( $template = null ) {
+	function tutor_load_template( $template = null, $variables = array() ) {
+		$variables = (array) $variables;
+		extract($variables);
+
 		include tutor_get_template( $template );
 	}
 }
@@ -264,7 +271,7 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
 			if ($url){
 				return $placeHolderUrl;
 			}
-			$html = '<img src="' . $placeHolderUrl . '" />';
+			$html = sprintf('<img alt="%s" src="' . $placeHolderUrl . '" />', __('Placeholder', 'tutor'));
 		}
 
 		echo $html;

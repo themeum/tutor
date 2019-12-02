@@ -14,12 +14,12 @@ $is_purchasable = tutor_utils()->is_course_purchasable();
 $price = apply_filters('get_tutor_course_price', null, get_the_ID());
 
 if ($is_purchasable && $price){
-    echo '<p class="price">'.$price.'</p>';
+    echo '<div class="price">'.$price.'</div>';
 }else{
 	?>
-	<p class="price">
+	<div class="price">
 		<?php _e('Free', 'tutor'); ?>
-	</p>
+	</div>
 	<?php
 }
 ?>

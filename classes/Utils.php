@@ -448,18 +448,23 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_courses_by_instructor($instructor_id){
+	public function get_courses_by_instructor($instructor_id = 0, $post_status = 'publish'){
 		global $wpdb;
 
+		$instructor_id = $this->get_user_id($instructor_id);
 		$course_post_type = tutor()->course_post_type;
+
+		$where_post_status = "AND $wpdb->posts.post_status = 'publish' ";
+		if ($post_status === 'any'){
+			$where_post_status = "";
+		}
 
 		$querystr = "
 	    SELECT $wpdb->posts.* 
 	    FROM $wpdb->posts
 		INNER JOIN {$wpdb->usermeta} ON $wpdb->usermeta.user_id = {$instructor_id} AND $wpdb->usermeta.meta_key = '_tutor_instructor_course_id' AND $wpdb->usermeta.meta_value = $wpdb->posts.ID 
 	
-	    
-	    WHERE $wpdb->posts.post_status = 'publish' 
+	    WHERE 1 = 1 {$where_post_status}
 	    AND $wpdb->posts.post_type = '{$course_post_type}'
 	    AND $wpdb->posts.post_date < NOW()
 	    ORDER BY $wpdb->posts.post_date DESC";
@@ -1792,7 +1797,7 @@ class Utils {
 			foreach ($courses_ids as $courses_id){
 				$course_id = str_replace('_tutor_order_for_course_id_', '',$courses_id->meta_key);
 				//array(order_id =>  array('course_id' => $course_id, 'enrolled_id' => enrolled_id))
-				$course_enrolled_by_order[$courses_id->post_id] = array('course_id' => $course_id, 'enrolled_id' => $courses_id->meta_value);
+				$course_enrolled_by_order[] = array('course_id' => $course_id, 'enrolled_id' => $courses_id->meta_value, 'order_id' => $courses_id->post_id );
 			}
 			return $course_enrolled_by_order;
 		}
@@ -1867,14 +1872,17 @@ class Utils {
 	 */
 
 	public function get_enrolled_statuses(){
-		return array (
-			'pending',
-			'processing',
-			'on-hold',
-			'completed',
-			'cancelled',
-			'refunded',
-			'failed',
+		return apply_filters(
+			'tutor_get_enrolled_statuses',
+			array (
+				'pending',
+				'processing',
+				'on-hold',
+				'completed',
+				'cancelled',
+				'refunded',
+				'failed',
+			)
 		);
 	}
 
@@ -1894,18 +1902,37 @@ class Utils {
 	/**
 	 * @return mixed
 	 *
+	 * @deprecated
+	 */
+	public function tutor_student_dashboard_pages(){
+		_deprecated_function(__METHOD__, '1.1.2', 'tutor_dashboard_pages');
+		return $this->tutor_dashboard_pages();
+	}
+
+	/**
+	 * @return mixed
+	 *
 	 * Tutor Dashboard Pages
 	 *
 	 * @since v.1.0.0
 	 */
 
-	public function tutor_student_dashboard_pages(){
+	public function tutor_dashboard_pages(){
 		$nav_items = array(
-			'index' => __('Home', 'tutor'),
-			'my-courses' => __('My Courses', 'tutor'),
-			'active-courses' => __('Active Courses', 'tutor'),
-			'completed-courses' => __('Completed Courses', 'tutor'),
-			'wishlist' => __('WishList', 'tutor'),
+
+			'index'             => __('Dashboard', 'tutor'),
+			'my-profile'        => __('My Profile', 'tutor'),
+			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
+			'my-courses'        => __('My Courses', 'tutor'),
+			'wishlist'          => __('Wishlist', 'tutor'),
+			'my-reviews'        => __('My Reviews', 'tutor'),
+			'quiz-attempts'        => __('Quiz Attempts', 'tutor'),
+			'earning'        => __('Earning', 'tutor'),
+			'withdraw'        => __('Withdraw', 'tutor'),
+			//'purchase-history'        => __('Purchase History', 'tutor'),
+			//'messages'        => __('Messages', 'tutor'),
+			//'settings'        => __('Settings', 'tutor'),
+			'logout'        => __('Logout', 'tutor'),
 		);
 
 		return apply_filters('tutor_dashboard/student/pages', $nav_items);
@@ -3289,6 +3316,21 @@ class Utils {
 		return false;
 	}
 
+
+	public function get_all_quiz_attempts_by_user($user_id = 0){
+		global $wpdb;
+
+		$user_id = $this->get_user_id($user_id);
+
+		$attempts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id = {$user_id} ");
+
+		if (is_array($attempts) && count($attempts)){
+			return $attempts;
+		}
+
+		return false;
+	}
+
 	/**
 	 * @param string $search_term
 	 *
@@ -3539,7 +3581,7 @@ class Utils {
 	 * Get frontend dashboard URL
 	 */
 	public function tutor_dashboard_url(){
-		$page_id = (int) tutor_utils()->get_option('student_dashboard');
+		$page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
 		$page_id = apply_filters('tutor_dashboard_url', $page_id);
 		return get_the_permalink($page_id);
 	}
@@ -3724,6 +3766,290 @@ class Utils {
 	 */
 	public function count($array = array()){
 		return is_array($array) && count($array);
+	}
+
+	/**
+	 * @return array
+	 *
+	 * get all screen ids
+	 *
+	 * @since v.1.1.2
+	 */
+	public function tutor_get_screen_ids(){
+		$screen_ids = array(
+			"edit-course",
+			"course",
+			"edit-course-category",
+			"edit-course-tag",
+			"tutor-lms_page_tutor-students",
+			"tutor-lms_page_tutor-instructors",
+			"tutor-lms_page_question_answer",
+			"tutor-lms_page_tutor_quiz_attempts",
+			"tutor-lms_page_tutor-addons",
+			"tutor-lms_page_tutor-status",
+			"tutor-lms_page_tutor_report",
+			"tutor-lms_page_tutor_settings",
+			"tutor-lms_page_tutor_emails",
+		);
+
+		return apply_filters('tutor_get_screen_ids', $screen_ids);
+	}
+
+
+	/**
+	 * @return mixed
+	 *
+	 * get earning transaction completed status
+	 *
+	 * @since v.1.1.2
+	 */
+	public function get_earnings_completed_statuses(){
+		return apply_filters(
+			'tutor_get_earnings_completed_statuses',
+			array (
+				'wc-completed',
+				'completed',
+				'complete',
+			)
+		);
+	}
+
+	/**
+	 * @param int $user_id
+	 * @param array $date_filter
+	 *
+	 * @return array|null|object
+	 *
+	 * Get all time earning sum for an instructor with all commission
+	 *
+	 * @since v.1.1.2
+	 */
+
+	public function get_earning_sum($user_id = 0, $date_filter = array()){
+		global $wpdb;
+
+		$user_id = $this->get_user_id($user_id);
+		$date_query = '';
+		if ($this->count($date_filter)){
+			extract($date_filter);
+
+			if ( ! empty($dataFor)){
+				if ($dataFor === 'yearly'){
+					if (empty($year)){
+						$year = date('Y');
+					}
+					$date_query = "AND YEAR(created_at) = {$year} ";
+				}
+			}else{
+				$date_query = " AND (created_at BETWEEN '{$start_date}' AND '{$end_date}') ";
+			}
+		}
+
+		$complete_status = tutor_utils()->get_earnings_completed_statuses();
+		$complete_status = "'".implode("','", $complete_status)."'";
+
+		$earning_sum = $wpdb->get_row("SELECT SUM(course_price_total) as course_price_total, 
+                    SUM(course_price_grand_total) as course_price_grand_total, 
+                    SUM(instructor_amount) as instructor_amount, 
+                    (SELECT SUM(amount) FROM {$wpdb->prefix}tutor_withdraws WHERE user_id = {$user_id} AND status != 'rejected' ) as 
+                    withdraws_amount,
+                    (SUM(instructor_amount) - (SELECT withdraws_amount) ) as balance,
+                    SUM(admin_amount) as admin_amount, 
+                    SUM(deduct_fees_amount)  as deduct_fees_amount
+                    FROM {$wpdb->prefix}tutor_earnings 
+                    WHERE user_id = {$user_id} AND order_status IN({$complete_status}) {$date_query} ");
+
+		if ( ! $earning_sum->course_price_total){
+			$earning_sum = (object) array(
+				'course_price_total'        => 0,
+				'course_price_grand_total'  => 0,
+				'instructor_amount'         => 0,
+				'withdraws_amount'          => 0,
+				'balance'                   => 0,
+				'admin_amount'              => 0,
+				'deduct_fees_amount'        => 0,
+			);
+		}
+
+		return $earning_sum;
+	}
+
+	/**
+	 * @param int $user_id
+	 * @param array $date_filter
+	 *
+	 * @return array|null|object
+	 *
+	 * Get earning statements
+	 *
+	 * @since v.1.1.2
+	 */
+	public function get_earning_statements($user_id = 0, $filter_data = array()){
+		global $wpdb;
+
+		$user_sql = "";
+		if ($user_id){
+			$user_sql = " AND user_id='{$user_id}' ";
+		}
+
+		$date_query = '';
+		$query_by_status = '';
+		$pagination_query = '';
+
+		/**
+		 * Query by Date Filter
+		 */
+		if ($this->count($filter_data)){
+			extract($filter_data);
+
+			if ( ! empty($dataFor)){
+				if ($dataFor === 'yearly'){
+					if (empty($year)){
+						$year = date('Y');
+					}
+					$date_query = "AND YEAR(created_at) = {$year} ";
+				}
+			}else{
+				$date_query = " AND (created_at BETWEEN '{$start_date}' AND '{$end_date}') ";
+			}
+
+			/**
+			 * Query by order status related to this earning transaction
+			 */
+			if ( ! empty($statuses)) {
+				if ( $this->count( $statuses ) ) {
+					$status          = "'" . implode( "','", $statuses ) . "'";
+					$query_by_status = "AND order_status IN({$status})";
+				} elseif ( $statuses === 'completed' ) {
+
+					$get_earnings_completed_statuses = $this->get_earnings_completed_statuses();
+					if ( $this->count( $get_earnings_completed_statuses ) ) {
+						$status          = "'" . implode( "','", $get_earnings_completed_statuses ) . "'";
+						$query_by_status = "AND order_status IN({$status})";
+					}
+				}
+			}
+
+			if ( ! empty($per_page)){
+				$offset = (int) ! empty($offset) ? $offset : 0;
+
+				$pagination_query = " LIMIT {$offset}, {$per_page}  ";
+
+			}
+
+
+		}
+
+		$query = $wpdb->get_results("SELECT earning_tbl.*, course.post_title as course_title
+					FROM {$wpdb->prefix}tutor_earnings earning_tbl
+					LEFT JOIN {$wpdb->posts} course ON earning_tbl.course_id = course.ID
+                    WHERE 1=1 {$user_sql} {$date_query} {$query_by_status} ORDER BY created_at DESC {$pagination_query} ");
+
+
+		$query_count = (int) $wpdb->get_var("SELECT COUNT(earning_tbl.earning_id)
+					FROM {$wpdb->prefix}tutor_earnings earning_tbl
+                    WHERE 1=1 {$user_sql} {$date_query} {$query_by_status} ORDER BY created_at DESC ");
+
+		return (object) array(
+			'count' => $query_count,
+			'results' => $query,
+		);
+	}
+
+	/**
+	 * @param int $price
+	 *
+	 * @return int|string
+	 *
+	 * Get the price format
+	 *
+	 * @since v.1.1.2
+	 */
+
+	public function tutor_price($price = 0){
+		if (function_exists('wc_price')){
+			return wc_price($price);
+		}elseif (function_exists('edd_currency_filter')){
+			return edd_currency_filter(edd_format_amount($price));
+		}else{
+			return number_format_i18n($price);
+		}
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool|mixed
+	 *
+	 * Get withdraw method for a specific
+	 */
+	public function get_user_withdraw_method($user_id = 0){
+		$user_id = $this->get_user_id($user_id);
+
+		$account = get_user_meta($user_id, '_tutor_withdraw_method_data', true);
+		if ($account){
+			return maybe_unserialize($account);
+		}
+
+		return false;
+	}
+
+
+	public function get_withdrawals_history($user_id = 0, $filter = array()){
+		global $wpdb;
+
+		$filter = (array) $filter;
+		extract($filter);
+
+		$query_by_status_sql = "";
+		$query_by_user_sql = "";
+		$query_by_pagination = "";
+
+		if ( ! empty($status)){
+			$status = (array) $status;
+			$status = "'".implode("','", $status)."'";
+
+			$query_by_status_sql = " AND status IN({$status}) ";
+		}
+
+		if ( ! empty($per_page)){
+			if ( empty($start))
+				$start = 0;
+
+			$query_by_pagination = " LIMIT {$start}, {$per_page} ";
+		}
+
+		if ($user_id){
+			$query_by_user_sql = " AND user_id = {$user_id} ";
+		}
+
+
+		$count = (int) $wpdb->get_var("SELECT COUNT(withdraw_id) FROM {$wpdb->prefix}tutor_withdraws WHERE 1=1 {$query_by_user_sql} {$query_by_status_sql} ");
+
+		$results = $wpdb->get_results("SELECT withdraw_tbl.*, 
+		user_tbl.display_name as user_name, 
+		user_tbl.user_email 
+		FROM {$wpdb->prefix}tutor_withdraws withdraw_tbl 
+		INNER JOIN {$wpdb->users} user_tbl ON withdraw_tbl.user_id = user_tbl.ID
+		WHERE 1=1 
+		{$query_by_user_sql} 
+		{$query_by_status_sql} ORDER BY 
+		created_at DESC  {$query_by_pagination} ");
+
+		$withdraw_history = array(
+			'count' => 0,
+			'results' => null,
+		);
+
+		if ($count){
+			$withdraw_history['count'] = $count;
+		}
+
+		if (tutor_utils()->count($results)){
+			$withdraw_history['results'] = $results;
+		}
+		return (object) $withdraw_history;
+
 	}
 
 }

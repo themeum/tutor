@@ -566,4 +566,112 @@ jQuery(document).ready(function($){
         }
     }
 
+    /**
+     * Datepicker initiate
+     *
+     * @since v.1.1.2
+     */
+    if (jQuery.datepicker){
+        $( ".tutor_report_datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
+    }
+
+    $(document).on('click', '.withdraw-method-select-input', function(e){
+        var $that = $(this);
+        var method_id = $that.closest('.withdraw-method-select').attr('data-withdraw-method');
+
+        $('.withdraw-method-form').hide();
+        $('#withdraw-method-form-'+method_id).show();
+    });
+
+    /**
+     * Setting account for withdraw earning
+     *
+     * @since v.1.2.0
+     */
+    $(document).on('submit', '#tutor-withdraw-account-set-form', function(e){
+        e.preventDefault();
+
+        var $form = $(this);
+        var $btn = $form.find('.tutor_set_withdraw_account_btn');
+        var data = $form.serialize();
+
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: data,
+            beforeSend: function () {
+                $form.find('.tutor-success-msg').remove();
+                $btn.addClass('updating-icon');
+            },
+            success: function (data) {
+                if (data.success){
+                    var successMsg = '<div class="tutor-success-msg" style="display: none;"><i class="tutor-icon-mark"></i> '+data.data.msg+' </div>';
+                    $btn.closest('.withdraw-account-save-btn-wrap').append(successMsg);
+                    if ($form.find('.tutor-success-msg').length) {
+                        $form.find('.tutor-success-msg').slideDown();
+                    }
+                    setTimeout(function () {
+                        $form.find('.tutor-success-msg').slideUp();
+                    }, 5000)
+                }
+            },
+            complete: function () {
+                $btn.removeClass('updating-icon');
+            }
+        });
+    });
+
+    /**
+     * Make Withdraw Form
+     *
+     * @since v.1.2.0
+     */
+
+    $(document).on('click', 'a.open-withdraw-form-btn', function(e){
+        e.preventDefault();
+        $('.tutor-earning-withdraw-form-wrap').slideToggle();
+    });
+
+    $(document).on('submit', '#tutor-earning-withdraw-form', function(e){
+        e.preventDefault();
+
+        var $form = $(this);
+        var $btn = $('#tutor-earning-withdraw-btn');
+        var $responseDiv = $('#tutor-withdraw-form-response');
+        var data = $form.serialize();
+
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: data,
+            beforeSend: function () {
+                $form.find('.tutor-success-msg').remove();
+                $btn.addClass('updating-icon');
+            },
+            success: function (data) {
+                var Msg;
+                if (data.success){
+
+                    if (data.data.available_balance !== 'undefined') {
+                        $('.withdraw-balance-col .available_balance').html(data.data.available_balance);
+                    }
+                    Msg = '<div class="tutor-success-msg"><i class="tutor-icon-mark"></i> '+data.data.msg+' </div>';
+
+                }else{
+                    Msg = '<div class="tutor-error-msg"><i class="tutor-icon-line-cross"></i> '+data.data.msg+' </div>';
+                }
+
+                $responseDiv.html(Msg);
+                setTimeout(function () {
+                    $responseDiv.html('');
+                }, 5000)
+            },
+            complete: function () {
+                $btn.removeClass('updating-icon');
+            }
+        });
+    });
+
+
+
 });

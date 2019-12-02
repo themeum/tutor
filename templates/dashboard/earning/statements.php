@@ -1,0 +1,193 @@
+<?php
+/**
+ * Template for displaying Instructor Statements
+ *
+ * @since v.1.1.2
+ *
+ * @author Themeum
+ * @url https://themeum.com
+ */
+
+if ( ! defined( 'ABSPATH' ) )
+	exit;
+
+$sub_page = 'this_month';
+if ( ! empty($_GET['time_period'])){
+	$sub_page = sanitize_text_field($_GET['time_period']);
+}
+if ( ! empty($_GET['date_range_from']) && ! empty($_GET['date_range_to'])){
+	$sub_page = 'date_range';
+}
+?>
+    <div class="tutor-dashboard-inline-links">
+        <ul>
+            <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning'); ?>"> <?php _e('Earning'); ?></a>
+            </li>
+            <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/report'); ?>"> <?php _e('Report'); ?> </a></li>
+            <li class="active">
+                <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/statements'); ?>">
+					<?php _e('Statements'); ?> </a>
+            </li>
+        </ul>
+    </div>
+
+    <h3><?php _e('Statements', 'tutor'); ?></h3>
+
+<?php
+tutor_load_template('dashboard.earning.earning-report-top-menu', compact('sub_page'));
+
+$user_id = get_current_user_id();
+
+$complete_status = tutor_utils()->get_earnings_completed_statuses();
+$statuses = $complete_status;
+$complete_status = "'".implode("','", $complete_status)."'";
+
+$statements = false;
+
+//Pagination Variable
+$per_page = tutor_utils()->get_option('statement_show_per_page', 20);
+$current_page = max( 1, tutor_utils()->avalue_dot('current_page', $_GET) );
+$offset = ($current_page-1)*$per_page;
+
+
+switch ($sub_page){
+
+	case 'last_year':
+		$year = date('Y', strtotime('-1 year'));
+		$dataFor = 'yearly';
+
+		$statements = tutor_utils()->get_earning_statements($user_id, compact('year', 'dataFor', 'per_page', 'offset'));
+		break;
+
+	case 'this_year':
+		$year = date('Y');
+		$dataFor = 'yearly';
+
+		$statements = tutor_utils()->get_earning_statements($user_id, compact('year', 'dataFor', 'per_page', 'offset'));
+		break;
+
+	case 'last_month':
+		$start_date = date("Y-m", strtotime('-1 month'));
+		$start_date = $start_date.'-1';
+		$end_date = date("Y-m-t", strtotime($start_date));
+
+		$statements = tutor_utils()->get_earning_statements($user_id, compact('start_date', 'end_date', 'per_page', 'offset'));
+		break;
+
+	case 'this_month':
+
+		$start_date = date("Y-m-01");
+		$end_date = date("Y-m-t");
+
+		$statements = tutor_utils()->get_earning_statements($user_id, compact('start_date', 'end_date', 'per_page', 'offset'));
+		break;
+
+	case 'last_week':
+
+		$previous_week = strtotime("-1 week +1 day");
+		$start_date = strtotime("last sunday midnight",$previous_week);
+		$end_date = strtotime("next saturday",$start_date);
+		$start_date = date("Y-m-d",$start_date);
+		$end_date = date("Y-m-d",$end_date);
+
+		$statements = tutor_utils()->get_earning_statements($user_id, compact('start_date', 'end_date', 'per_page', 'offset'));
+		break;
+
+
+	case 'this_week':
+		$start_date = date("Y-m-d", strtotime("last sunday midnight"));
+		$end_date = date("Y-m-d", strtotime("next saturday"));
+
+		$statements = tutor_utils()->get_earning_statements($user_id, compact('start_date', 'end_date', 'per_page', 'offset'));
+		break;
+
+	case 'date_range':
+
+		$start_date = sanitize_text_field(tutor_utils()->avalue_dot('date_range_from', $_GET));
+		$end_date = sanitize_text_field(tutor_utils()->avalue_dot('date_range_to', $_GET));
+
+		$statements = tutor_utils()->get_earning_statements($user_id, compact('start_date', 'end_date', 'per_page', 'offset'));
+		break;
+}
+
+if ($statements->count) {
+	?>
+
+    <p class="tutor-dashboard-pagination-results-stats">
+
+		<?php
+		echo sprintf(__('Showing results %d to %d of %d', 'tutor'), $offset +1, min($statements->count, $offset +1+tutor_utils()->count($statements->results)), $statements->count) ;
+		?>
+    </p>
+
+    <table class="tutor-dashboard-statement-table">
+        <tr>
+            <th><?php _e('Course', 'tutor'); ?></th>
+            <th><?php _e('Earning', 'tutor'); ?></th>
+            <th><?php _e('Deduct', 'tutor'); ?></th>
+        </tr>
+
+		<?php
+		foreach ($statements->results as $statement){
+			?>
+            <tr>
+                <td>
+                    <p>
+                        <a href="<?php echo get_the_permalink($statement->course_id); ?>" target="_blank">
+							<?php echo $statement->course_title; ?>
+                        </a>
+                    </p>
+
+                    <p>
+						<?php _e('Price', 'tutor'); ?>
+						<?php echo tutor_utils()->tutor_price($statement->course_price_total); ?>
+                    </p>
+
+                    <p class="small-text">
+                        <span class="statement-order-<?php echo $statement->order_status; ?>"><?php echo $statement->order_status; ?></span> <?php
+						_e('Order ID'); ?> #<?php echo $statement->order_id; ?>,
+
+                        <strong><?php _e('Date:', 'tutor') ?></strong>
+                        <i><?php echo date(get_option('date_format', strtotime($statement->created_at))).' '.date(get_option('time_format', strtotime($statement->created_at))) ?></i>
+                    </p>
+
+					<?php
+					$order = new WC_Order($statement->order_id);
+					echo '<div class="statement-address"> <strong>Purchaser</strong> <address>'.$order->get_formatted_billing_address().'</address></div>';
+					?>
+                </td>
+                <td>
+                    <p><?php echo tutor_utils()->tutor_price($statement->instructor_amount); ?></p>
+                    <p class="small-text"> <?php _e('As per');  ?> <?php echo $statement->instructor_rate ?> (<?php echo $statement->commission_type ?>) </p>
+                </td>
+
+                <td>
+                    <p><?php _e('Commission', 'tutor'); ?> : <?php echo tutor_utils()->tutor_price($statement->admin_amount); ?> </p>
+                    <p class="small-text"><?php _e('Rate', 'tutor'); ?> : <?php echo $statement->admin_rate; ?> </p>
+                    <p class="small-text"><?php _e('Type', 'tutor'); ?> : <?php echo $statement->commission_type; ?> </p>
+
+                    <p><?php _e('Deducted', 'tutor'); ?> : <?php echo $statement->deduct_fees_name; ?>  <?php echo tutor_utils()->tutor_price
+						($statement->deduct_fees_amount); ?>
+                    </p>
+                    <p class="small-text"><?php _e('Type', 'tutor'); ?> : <?php echo $statement->deduct_fees_type; ?> </p>
+                </td>
+            </tr>
+			<?php
+		}
+		?>
+    </table>
+
+    <div class="tutor-pagination">
+
+		<?php
+		echo paginate_links( array(
+			'format' => '?current_page=%#%',
+			'current' => $current_page,
+			'total' => ceil($statements->count/$per_page)
+		) );
+		?>
+
+    </div>
+
+	<?php
+}

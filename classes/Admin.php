@@ -26,6 +26,9 @@ class Admin{
 
 		//Plugin Row Meta
 		add_filter('plugin_row_meta', array($this, 'plugin_row_meta'), 10, 2);
+
+		//Admin Footer Text
+		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 	}
 
 	public function register_menu(){
@@ -52,6 +55,7 @@ class Admin{
 		add_submenu_page('tutor', __('Q & A', 'tutor'), __('Q & A '.$unanswered_bubble, 'tutor'), 'manage_tutor_instructor', 'question_answer', array($this, 'question_answer') );
 
 		add_submenu_page('tutor', __('Quiz Attempts', 'tutor'), __('Quiz Attempts', 'tutor'), 'manage_tutor_instructor', 'tutor_quiz_attempts',array($this, 'quiz_attempts') );
+		add_submenu_page('tutor', __('Withdraw Requests', 'tutor'), __('Withdraw Requests', 'tutor'), 'manage_tutor_instructor', 'tutor_withdraw_requests', array($this, 'withdraw_requests') );
 
 		//add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(),'addons_page') );
 
@@ -92,6 +96,15 @@ class Admin{
 
 	public function quiz_attempts(){
 		include tutor()->path.'views/pages/quiz_attempts.php';
+	}
+
+	/**
+	 * Show the withdraw requests table
+	 *
+	 * @since v.1.2.0
+	 */
+	public function withdraw_requests(){
+		include tutor()->path.'views/pages/withdraw_requests.php';
 	}
 
 	public function enable_disable_addons(){
@@ -163,7 +176,7 @@ class Admin{
 	}
 
 	/**
-	 * Prevent unauthorised post edit page by direct URL
+	 * Prevent unauthorised course/lesson edit page by direct URL
 	 *
 	 * @since v.1.0.0
 	 */
@@ -175,9 +188,11 @@ class Admin{
 		if (! empty($_GET['post']) ) {
 			$get_post_id = (int) sanitize_text_field($_GET['post']);
 			$get_post = get_post($get_post_id);
+			$tutor_post_types = array(tutor()->course_post_type, tutor()->lesson_post_type);
+
 			$current_user = get_current_user_id();
 
-			if ($get_post->post_author != $current_user){
+			if (in_array($get_post->post_type, $tutor_post_types) &&  $get_post->post_author != $current_user){
 				global $wpdb;
 
 				$get_assigned_courses_ids = (int) $wpdb->get_var("SELECT user_id from {$wpdb->usermeta} WHERE user_id = {$current_user} AND meta_key = '_tutor_instructor_course_id' AND meta_value = {$get_post_id} ");
@@ -366,7 +381,7 @@ class Admin{
 
 			//Deleting Table
 			$prefix = $wpdb->prefix;
-			/**D*/ $wpdb->query("DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers ");
+			/**D*/ $wpdb->query("DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers, {$prefix}tutor_earnings, {$prefix}tutor_withdraws ");
 
 			deactivate_plugins($plugin_file);
 		}
@@ -400,7 +415,6 @@ class Admin{
 
 	public function plugin_row_meta($plugin_meta, $plugin_file){
 
-
 		if ($plugin_file === tutor()->basename) {
 			$plugin_meta[] = sprintf( '<a href="%s">%s</a>',
 				esc_url( 'https://www.themeum.com/docs/tutor-introduction/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_docs_link' ),
@@ -415,6 +429,30 @@ class Admin{
 		return $plugin_meta;
 	}
 
+	/**
+	 * @param $footer_text
+	 *
+	 * @return string
+	 *
+	 * Add footer text only on tutor pages
+	 */
+	public function admin_footer_text( $footer_text ) {
+		$current_screen = get_current_screen();
+		$tutor_pages = tutor_utils()->tutor_get_screen_ids();
+
+		/**
+		 * We are making sure that this message will be only on Tutor Admin page
+		 */
+		if ( isset( $current_screen->id ) && apply_filters( 'tutor_display_admin_footer_text', in_array( $current_screen->id, $tutor_pages ) ) ) {
+			$footer_text = sprintf(
+				__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'tutor' ),
+				sprintf( '<strong>%s</strong>', esc_html__( 'Tutor LMS', 'tutor' ) ),
+				'<a href="https://wordpress.org/support/plugin/tutor/reviews?rate=5#new-post" target="_blank" class="tutor-rating-link">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
+			);
+		}
+
+		return $footer_text;
+	}
 
 
 }
