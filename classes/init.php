@@ -90,7 +90,7 @@ class init{
 			$className = str_replace('TUTOR/', 'classes/', $className);
 			$file_name = $this->path.$className.'.php';
 
-			if (file_exists($file_name) && is_readable( $file_name ) ) {
+			if (file_exists($file_name) ) {
 				require_once $file_name;
 			}
 		}
@@ -139,6 +139,7 @@ class init{
 
 		/**
 		 * backward / Alpha version compatibility
+		 * todo: should remove in version 1.1.0
 		 */
 		if (version_compare(get_option('TUTOR_VERSION'), '1.0.0', '<')){
 			//Create Database
@@ -147,6 +148,7 @@ class init{
 		}
 		/**
 		 * backward / v.1.0.0 compatibility
+		 * todo: should remove in version 1.1.0
 		 */
 		if (get_option('TUTOR_VERSION') == '1.0.0' && version_compare(get_option('TUTOR_VERSION'), '1.0.1', '<')){
 			//Adding column course_id in prefix_tutor_quiz_attempts

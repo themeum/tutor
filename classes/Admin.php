@@ -361,6 +361,10 @@ class Admin{
 			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_tutor_instructor'));
 			/**D*/ $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE  '%_tutor_completed_lesson_id_%' ");
 
+			//Deleting Table
+			$prefix = $wpdb->prefix;
+			/**D*/ $wpdb->query("DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers ");
+
 			deactivate_plugins($plugin_file);
 		}
 		
