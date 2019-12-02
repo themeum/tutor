@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) )
     <?php
     $current_url = tutils()->get_current_url();
     $register_page = tutor_utils()->student_register_url();
-	$register_url = add_query_arg ('redirect_to', $current_url, $register_page) ;
+	$register_url = add_query_arg ('redirect_to', $current_url, $register_page);
 
 	//redirect_to
     $args = array(
