@@ -53,7 +53,7 @@ class Video_Stream {
 
 		header("Content-Type: {$this->videoFormats[strtolower(pathinfo($this->path, PATHINFO_EXTENSION))]}");
 		header("Cache-Control: max-age=2592000, public");
-		header("Expires: ".gmdate('D, d M Y H:i:s', time()+2592000) . ' GMT');
+		header("Expires: ".gmdate('D, d M Y H:i:s', tutor_time()+2592000) . ' GMT');
 		header("Last-Modified: ".gmdate('D, d M Y H:i:s', @filemtime($this->path)) . ' GMT' );
 		$this->start = 0;
 		$this->size  = filesize($this->path);

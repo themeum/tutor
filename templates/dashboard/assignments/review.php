@@ -6,6 +6,9 @@
  *
  * @author Themeum
  * @url https://themeum.com
+ *
+ * @package TutorLMS/Templates
+ * @version 1.4.3
  */
 
 $assignment_submitted_id = (int) sanitize_text_field(tutor_utils()->array_get('view_assignment', $_GET));

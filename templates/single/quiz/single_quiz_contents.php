@@ -1,5 +1,9 @@
-
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 $course = tutor_utils()->get_course_by_quiz(get_the_ID());
 ?>
 

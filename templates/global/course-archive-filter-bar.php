@@ -1,3 +1,12 @@
+<?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
+?>
+
+
 <div class="tutor-course-filter-wrap">
     <div class="tutor-course-archive-results-wrap">
 		<?php

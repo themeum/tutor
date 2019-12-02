@@ -14,6 +14,24 @@ jQuery(document).ready(function($){
     }
     //END: select2
 
+
+/*!
+ * jQuery UI Touch Punch 0.2.3
+ *
+ * Copyright 2011–2014, Dave Furfero
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * Depends:
+ *  jquery.ui.widget.js
+ *  jquery.ui.mouse.js
+ */
+    !function(a){function f(a,b){if(!(a.originalEvent.touches.length>1)){a.preventDefault();var c=a.originalEvent.changedTouches[0],d=document.createEvent("MouseEvents");d.initMouseEvent(b,!0,!0,window,1,c.screenX,c.screenY,c.clientX,c.clientY,!1,!1,!1,!1,0,null),a.target.dispatchEvent(d)}}if(a.support.touch="ontouchend"in document,a.support.touch){var e,b=a.ui.mouse.prototype,c=b._mouseInit,d=b._mouseDestroy;b._touchStart=function(a){var b=this;!e&&b._mouseCapture(a.originalEvent.changedTouches[0])&&(e=!0,b._touchMoved=!1,f(a,"mouseover"),f(a,"mousemove"),f(a,"mousedown"))},b._touchMove=function(a){e&&(this._touchMoved=!0,f(a,"mousemove"))},b._touchEnd=function(a){e&&(f(a,"mouseup"),f(a,"mouseout"),this._touchMoved||f(a,"click"),e=!1)},b._mouseInit=function(){var b=this;b.element.bind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),c.call(b)},b._mouseDestroy=function(){var b=this;b.element.unbind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),d.call(b)}}}(jQuery);
+
+    /**
+     * END jQuery UI Touch Punch
+     */
+
+
     $(document).on('change', '.tutor-course-filter-form', function(e){
         e.preventDefault();
         $(this).closest('form').submit();
@@ -502,17 +520,13 @@ jQuery(document).ready(function($){
                     ui.placeholder.css('visibility', 'visible');
                 },
                 stop: function (e, ui) {
-
                     //Sorting Stopped...
                 },
             }).disableSelection();
-            ;
-
 
             $(".quiz-draggable-rand-answers, .quiz-answer-matching-droppable").sortable({
                 connectWith: ".quiz-answer-matching-droppable",
-                placeholder: "drop-hover"
-
+                placeholder: "drop-hover",
             }).disableSelection();
         }
     }
@@ -575,6 +589,25 @@ jQuery(document).ready(function($){
         }
         $that.closest('.tutor-quiz-answers-wrap').find('.characters_remaining').html(remaining);
     });
+
+    /**
+     *
+     * @type {jQuery}
+     *
+     * Improved Quiz draggable answers drop accessibility
+     * Answers draggable wrap will be now same height.
+     *
+     * @since v.1.4.4
+     */
+    var countDraggableAnswers = $('.quiz-draggable-rand-answers').length;
+    if (countDraggableAnswers){
+        $('.quiz-draggable-rand-answers').each(function(){
+            var $that = $(this);
+            var draggableDivHeight = $that.height();
+
+            $that.css({"height": draggableDivHeight});
+        });
+    }
 
     /**
      * Add to cart in guest mode, show login form
@@ -794,39 +827,21 @@ jQuery(document).ready(function($){
     if (! $('#tutor_profile_photo_id').val()) {
         $('.tutor-profile-photo-delete-btn').hide();
     }
-    // Uploading files
-    var file_frame;
-    $( document ).on( 'click', '.tutor-profile-photo-upload-btn', function( event ) {
-        event.preventDefault();
-
-        if ( file_frame ) {
-            file_frame.open();
-            return;
-        }
-        file_frame = wp.media.frames.downloadable_file = wp.media({
-            title: 'Choose an image',
-            button: {
-                text: 'Use image'
-            },
-            multiple: false
-        });
-        file_frame.on( 'select', function() {
-            var attachment           = file_frame.state().get( 'selection' ).first().toJSON();
-            var attachment_thumbnail = attachment.sizes.thumbnail || attachment.sizes.full;
-
-            $( '#tutor_profile_photo_id' ).val( attachment.id );
-            $( '.tutor-profile-photo-upload-wrap' ).find( 'img' ).attr( 'src', attachment_thumbnail.url );
-            $( '.tutor-profile-photo-delete-btn' ).show();
-        });
-        file_frame.open();
-    });
 
     $( document ).on( 'click', '.tutor-profile-photo-delete-btn', function() {
         $( '.tutor-profile-photo-upload-wrap' ).find( 'img' ).attr( 'src', _tutorobject.placeholder_img_src );
         $( '#tutor_profile_photo_id' ).val( '' );
         $( '.tutor-profile-photo-delete-btn' ).hide();
+
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: {'action' : 'tutor_profile_photo_remove'},
+        });
+
         return false;
     });
+
 
 
     /**
@@ -1335,6 +1350,28 @@ jQuery(document).ready(function($){
         });
     });
 
+    /**
+     * Profile photo upload
+     * @since v.1.4.5
+     */
 
+    $(document).on('click', '#tutor_profile_photo_button', function(e){
+        e.preventDefault();
+
+        $('#tutor_profile_photo_file').trigger('click');
+    });
+
+    $(document).on('change', '#tutor_profile_photo_file', function(event){
+        event.preventDefault();
+
+        var $file = this;
+        if ($file.files && $file.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $( '.tutor-profile-photo-upload-wrap' ).find( 'img' ).attr( 'src',  e.target.result);
+            }
+            reader.readAsDataURL($file.files[0]);
+        }
+    });
 
 });

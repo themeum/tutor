@@ -71,14 +71,11 @@ class Admin{
 
 		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_page') );
 
-		add_submenu_page('tutor',__('Uninstall Tutor LMS', 'tutor'), null, 'deactivate_plugin', 'tutor-uninstall', array($this, 'tutor_uninstall'));
-
-		add_submenu_page('tutor', __('Status', 'tutor'), __('Status', 'tutor'), 'manage_tutor', 'tutor-status', array($this, 'tutor_status') );
+		add_submenu_page('tutor', __('Tools', 'tutor'), __('Tools', 'tutor'), 'manage_tutor', 'tutor-tools', array($this, 'tutor_tools') );
 
 		if ( ! $hasPro){
 			add_submenu_page( 'tutor', __( 'Get Pro', 'tutor' ), __( '<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor' ), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro') );
 		}
-
 	}
 
 	public function tutor_page(){
@@ -120,12 +117,25 @@ class Admin{
 		}
 	}
 
-	public function tutor_status(){
-		include tutor()->path.'views/pages/status.php';
-	}
+	public function tutor_tools(){
+		$tutor_admin_tools_page = tutils()->array_get('tutor_admin_tools_page', $_GET);
+		if ($tutor_admin_tools_page){
+			include apply_filters('tutor_admin_tools_page', tutor()->path."views/pages/{$tutor_admin_tools_page}.php", $tutor_admin_tools_page);
+		}else{
+			$pages = apply_filters('tutor_tool_pages', array(
+				'tutor_pages' => array('title' => __('Tutor Pages', 'tutor') ),
+				'status' => __('Status', 'tutor'),
+			));
 
-	public function tutor_uninstall(){
-		include tutor()->path.'views/pages/uninstall.php';
+			$current_page = 'tutor_pages';
+			$requested_page = sanitize_text_field(tutils()->array_get('sub_page', $_GET));
+			if ($requested_page){
+				$current_page = $requested_page;
+			}
+
+			include tutor()->path.'views/pages/tools.php';
+		}
+
 	}
 
 	public function tutor_get_pro(){
@@ -336,7 +346,6 @@ class Admin{
 				$course_post_type,
 				$lesson_post_type,
 				'tutor_quiz',
-				'tutor_question',
 				'tutor_enrolled',
 				'topics',
 				'tutor_enrolled',
@@ -412,7 +421,7 @@ class Admin{
 			$plugin_file = tutor()->basename;
 			if ( current_user_can( 'deactivate_plugin', $plugin_file ) ) {
 				if ( isset( $actions['deactivate'] ) ) {
-					$actions['deactivate'] = '<a href="admin.php?page=tutor-uninstall">' . __('Uninstall', 'tutor') . '</a>';
+					$actions['deactivate'] = '<a href="admin.php?page=tutor-tools&tutor_admin_tools_page=uninstall">' . __('Uninstall', 'tutor') . '</a>';
 				}
 			}
 		}

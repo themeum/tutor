@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: mhshohel
- * Date: 19/6/19
- * Time: 1:19 PM
+ * @package TutorLMS/Templates
+ * @version 1.4.3
  */
 
 if ( ! defined( 'ABSPATH' ) )
@@ -243,6 +241,11 @@ global $wpdb;
 			}
 		}
 		?>
+
+	    <?php tutor_next_previous_pagination(); ?>
+
     </div>
+
+
 
 <?php do_action('tutor_assignment/single/after/content'); ?>

@@ -82,7 +82,7 @@ class Instructor {
 
 		$user_id = wp_insert_user( $userdata ) ;
 		if ( ! is_wp_error($user_id)){
-			update_user_meta($user_id, '_is_tutor_instructor', time());
+			update_user_meta($user_id, '_is_tutor_instructor', tutor_time());
 			update_user_meta($user_id, '_tutor_instructor_status', apply_filters('tutor_initial_instructor_status', 'pending'));
 
 			$user = get_user_by( 'id', $user_id );
@@ -122,7 +122,7 @@ class Instructor {
 			if (tutor_utils()->is_instructor()){
 				die(__('Already applied for instructor', 'tutor'));
 			}else{
-				update_user_meta($user_id, '_is_tutor_instructor', time());
+				update_user_meta($user_id, '_is_tutor_instructor', tutor_time());
 				update_user_meta($user_id, '_tutor_instructor_status', apply_filters('tutor_initial_instructor_status', 'pending'));
 			}
 		}else{
@@ -187,7 +187,7 @@ class Instructor {
 			update_user_meta($user_id, 'phone_number', $phone_number);
 			update_user_meta($user_id, 'description', $tutor_profile_bio);
 			update_user_meta($user_id, '_tutor_profile_bio', $tutor_profile_bio);
-			update_user_meta($user_id, '_is_tutor_instructor', time());
+			update_user_meta($user_id, '_is_tutor_instructor', tutor_time());
 			update_user_meta($user_id, '_tutor_instructor_status', apply_filters('tutor_initial_instructor_status', 'approved'));
 
 			do_action('tutor_add_new_instructor_after', $user_id);

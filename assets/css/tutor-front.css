@@ -2212,8 +2212,8 @@ Course question and answer
 
 .answer-type-image_matching .quiz-answer-item-matching {
   /*display: inline-block;
-	  width: 190px;
-	  margin-right: 10px;*/
+      width: 190px;
+      margin-right: 10px;*/
   display: block;
 }
 
@@ -2303,6 +2303,22 @@ Course question and answer
 .tutor-quiz-answers-wrap .quiz-image-answering-input-field-wrap input:focus {
   background: transparent;
   outline-offset: 0 !important;
+}
+
+/**
+* Pagination
+*/
+.tutor-next-previous-pagination-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.tutor-next-previous-pagination-wrap a {
+  color: var(--tutor-primary-color);
 }
 
 /**
@@ -3081,7 +3097,7 @@ a.tutor-button.button-light:hover,
   display: block;
 }
 
-a.tutor-profile-photo-upload-btn {
+a.tutor-profile-photo-upload-btn, button.tutor-profile-photo-upload-btn {
   position: absolute;
   top: 100%;
   background-color: var(--tutor-primary-color);
@@ -3092,7 +3108,7 @@ a.tutor-profile-photo-upload-btn {
   padding: 9px 0;
 }
 
-a.tutor-profile-photo-upload-btn:hover {
+a.tutor-profile-photo-upload-btn:hover, button.tutor-profile-photo-upload-btn:hover {
   background-color: var(--tutor-primary-hover-color);
   color: #fff;
 }
@@ -3276,6 +3292,10 @@ Instructor
 .tutor-login-form-wrap label {
   display: block;
   margin-bottom: 4px;
+}
+
+.tutor-login-form-wrap .tutor-alert {
+  margin-bottom: 20px;
 }
 
 .tutor-login-form-wrap input[type="password"],
@@ -6267,6 +6287,15 @@ END Content Drip
   border-radius: 3px;
   padding: 20px 25px 20px 95px;
   color: #A86D00;
+  margin-bottom: 20px;
+}
+
+.tutor-alert p {
+  margin-bottom: 10px;
+}
+
+.tutor-alert p:last-child {
+  margin: 0;
 }
 
 .tutor-alert.tutor-alert-danger {

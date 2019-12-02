@@ -1,15 +1,21 @@
 <?php
-    $uid = get_current_user_id();
-    $user = get_userdata( $uid );
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
 
-    $profile_settings_link = tutor_utils()->get_tutor_dashboard_page_permalink('settings');
-    $rdate = date( "D d M Y, h:i:s a", strtotime( $user->user_registered ) );
-    $fname = $user->first_name;
-    $lname = $user->last_name;
-    $uname = $user->user_login;
-    $email = $user->user_email;
-    $phone = get_user_meta($uid,'phone_number',true);
-    $bio = nl2br(strip_tags(get_user_meta($uid,'_tutor_profile_bio',true)));
+
+$uid = get_current_user_id();
+$user = get_userdata( $uid );
+
+$profile_settings_link = tutor_utils()->get_tutor_dashboard_page_permalink('settings');
+$rdate = date( "D d M Y, h:i:s a", strtotime( $user->user_registered ) );
+$fname = $user->first_name;
+$lname = $user->last_name;
+$uname = $user->user_login;
+$email = $user->user_email;
+$phone = get_user_meta($uid,'phone_number',true);
+$bio = nl2br(strip_tags(get_user_meta($uid,'_tutor_profile_bio',true)));
 ?>
 
 <h3><?php _e('My Profile', 'tutor'); ?></h3>

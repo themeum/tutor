@@ -284,73 +284,6 @@ if ( ! function_exists('generate_categories_for_pmpro')) {
 	}
 }
 
-/*
-function generate_categories_select_for_pmpro($level_categories = array(), $args = array()){
-
-	$default = array(
-		'classes'  => '',
-		'name'  => 'tax_input[course-category]',
-		'multiple' => true,
-	);
-
-	$args = apply_filters('tutor_course_categories_dropdown_args', array_merge($default, $args));
-
-	$multiple_select = '';
-
-	if (tutor_utils()->array_get('multiple', $args)){
-		if (isset($args['name'])){
-			$args['name'] = $args['name'].'[]';
-		}
-		$multiple_select = "multiple='multiple'";
-	}
-
-	extract($args);
-
-	$classes = (array) $classes;
-	$classes = implode(' ', $classes);
-
-	$categories = tutor_utils()->get_course_categories();
-
-	$output = '';
-	$output .= "<select name='{$name}' {$multiple_select} class='{$classes}'>";
-	$output .= "<option value=''>". __('Select categories', 'tutor') ."</option>";
-	$output .= _generate_categories_select_option_for_pmpro($level_categories, $categories, $args);
-	$output .= "</select>";
-
-	return $output;
-}
-
-function _generate_categories_select_option_for_pmpro($level_categories = array(), $categories, $args = array(), $depth = 0){
-	$output = '';
-
-	if (tutor_utils()->count($categories)) {
-		foreach ( $categories as $category_id => $category ) {
-			if ( ! $category->parent){
-				$depth = 0;
-			}
-
-			$childrens = tutor_utils()->array_get( 'children', $category );
-			$has_in_term = in_array($category->term_id, $level_categories);
-
-			$depth_seperator = '';
-			if ($depth){
-				for ($depth_i = 0; $depth_i < $depth; $depth_i++){
-					$depth_seperator.='-';
-				}
-			}
-
-			$output .= "<option value='{$category->term_id}' ".selected($has_in_term, true, false)." >{$depth_seperator} {$category->name}</option> ";
-
-			if ( tutor_utils()->count( $childrens ) ) {
-				$depth++;
-				$output .= _generate_categories_select_option_for_pmpro($level_categories,$childrens, $args, $depth);
-			}
-		}
-	}
-	return $output;
-}*/
-
-
 /**
  * @param null $key
  * @param bool $default
@@ -427,7 +360,26 @@ if ( ! function_exists('get_item_content_drip_settings')){
 if ( ! function_exists('tutor_alert')){
 	function tutor_alert($msg = null, $type = 'warning', $echo = true){
 	    if ( ! $msg){
-	        $msg = tutor_flash_get($type);
+
+	        if ($type === 'any'){
+		        if ( ! $msg){
+			        $type = 'warning';
+			        $msg = tutor_flash_get($type);
+		        }
+		        if ( ! $msg){
+			        $type = 'danger';
+			        $msg = tutor_flash_get($type);
+		        }
+		        if ( ! $msg){
+			        $type = 'success';
+			        $msg = tutor_flash_get($type);
+		        }
+
+	        }else{
+		        $msg = tutor_flash_get($type);
+	        }
+
+
         }
         if ( ! $msg){
 	        return $msg;
@@ -491,7 +443,7 @@ if ( ! function_exists('tutor_flash_get')) {
 		if ( $key ) {
 			// ensure session is started
 			if ( session_status() !== PHP_SESSION_ACTIVE ) {
-				session_start();
+				@session_start();
 			}
 			if ( empty( $_SESSION ) ) {
 				return null;
@@ -503,5 +455,87 @@ if ( ! function_exists('tutor_flash_get')) {
 			return $message;
 		}
 		return $key;
+	}
+}
+
+if ( ! function_exists('tutor_redirect_back')) {
+	/**
+	 * @param null $url
+     *
+     * Redirect to back or a specific URL and terminate
+     *
+     * @since v.1.4.3
+	 */
+	function tutor_redirect_back( $url = null ) {
+		if ( ! $url ) {
+			$url = tutils()->referer();
+		}
+		wp_safe_redirect( $url );
+		exit();
+	}
+}
+
+/**
+ * @param string $action
+ * @param bool $echo
+ *
+ * @return string
+ *
+ * @since v.1.4.3
+ */
+
+if ( ! function_exists('tutor_action_field')) {
+	function tutor_action_field( $action = '', $echo = true ) {
+		$output = '';
+		if ( $action ) {
+			$output = "<input type='hidden' name='tutor_action' value='{$action}'>";
+		}
+
+		if ( $echo ) {
+			echo $output;
+		} else {
+			return $output;
+		}
+	}
+}
+
+/**
+ * @return int|string
+ *
+ * Return current Time from wordpress time
+ *
+ * @since v.1.4.3
+ */
+
+if ( ! function_exists('tutor_time')) {
+	function tutor_time() {
+		//return current_time( 'timestamp' );
+		return time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
+	}
+}
+
+/**
+ * Toggle maintenance mode for the site.
+ *
+ * Creates/deletes the maintenance file to enable/disable maintenance mode.
+ *
+ * @since v.1.4.6
+ *
+ * @global WP_Filesystem_Base $wp_filesystem Subclass
+ *
+ * @param bool $enable True to enable maintenance mode, false to disable.
+ */
+if ( ! function_exists('tutor_maintenance_mode')) {
+	function tutor_maintenance_mode( $enable = false ) {
+		global $wp_filesystem;
+		$file = $wp_filesystem->abspath() . '.tutor_maintenance';
+		if ( $enable ) {
+			// Create maintenance file to signal that we are upgrading
+			$maintenance_string = '<?php $upgrading = ' . time() . '; ?>';
+			$wp_filesystem->delete( $file );
+			$wp_filesystem->put_contents( $file, $maintenance_string, FS_CHMOD_FILE );
+		} elseif ( ! $enable && $wp_filesystem->exists( $file ) ) {
+			$wp_filesystem->delete( $file );
+		}
 	}
 }

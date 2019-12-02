@@ -1,4 +1,10 @@
+<?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
 
+?>
 
 <canvas id="tutorChart" style="width: 100%; height: 400px;"></canvas>
 <script>

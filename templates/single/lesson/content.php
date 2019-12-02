@@ -5,6 +5,9 @@
  * @since v.1.0.0
  * @author themeum
  * @url https://themeum.com
+ *
+ * @package TutorLMS/Templates
+ * @version 1.4.3
  */
 
 if ( ! defined( 'ABSPATH' ) )
@@ -52,6 +55,7 @@ if ($best_watch_time > 0){
 	<?php tutor_lesson_video(); ?>
 	<?php the_content(); ?>
 	<?php get_tutor_posts_attachments(); ?>
+	<?php tutor_next_previous_pagination(); ?>
 </div>
 
 <?php do_action('tutor_lesson/single/after/content'); ?>

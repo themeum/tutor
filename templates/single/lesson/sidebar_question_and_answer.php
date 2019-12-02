@@ -5,6 +5,9 @@
  * @since v.1.0.0
  * @author themeum
  * @url https://themeum.com
+ *
+ * @package TutorLMS/Templates
+ * @version 1.4.3
  */
 
 $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');

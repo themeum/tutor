@@ -6,11 +6,18 @@
  *
  * @author Themeum
  * @url https://themeum.com
+ *
+ * @package TutorLMS/Templates
+ * @version 1.4.5
  */
 
 
 do_action('tutor_course/single/enrolled/before/reviews');
 
+$disable = get_tutor_option('disable_course_review');
+if ($disable){
+    return;
+}
 
 $reviews = tutor_utils()->get_course_reviews();
 if ( ! is_array($reviews) || ! count($reviews)){

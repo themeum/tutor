@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package TutorLMS/Templates
+ * @version 1.4.3
+ */
+
 $user = wp_get_current_user();
 ?>
 
@@ -80,7 +85,8 @@ $user = wp_get_current_user();
                         <a href="javascript:;" class="tutor-profile-photo-delete-btn"><i class="tutor-icon-garbage"></i> </a>
                         <img src="<?php echo $profile_photo_src; ?>" class="profile-photo-img">
                         <input type="hidden" id="tutor_profile_photo_id" name="tutor_profile_photo_id" value="<?php echo $profile_photo_id; ?>">
-                        <a href="javascript:;" class="tutor-profile-photo-upload-btn"><?php _e('Upload Image', 'tutor'); ?></a>
+                        <input type="file" name="tutor_profile_photo_file" id="tutor_profile_photo_file" style="display:none"/>
+                        <button type="button" id="tutor_profile_photo_button" class="tutor-profile-photo-upload-btn"><?php _e('Upload Image', 'tutor'); ?></button>
                     </div>
                 </div>
             </div>

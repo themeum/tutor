@@ -149,6 +149,13 @@ class Options {
 								'default'   => '20',
 								'desc'  => __('Number of items you would like displayed "per page" in the pagination', 'tutor'),
 							),
+							'enable_tutor_maintenance_mode' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Maintenance Mode', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
+								'default'   => '0',
+								'desc'      => __('Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.',	'tutor'),
+							),
 						)
 					)
 				),
@@ -178,6 +185,13 @@ class Options {
 								'label_title' => __('Enable','tutor'),
 								'default'   => '0',
 								'desc'      => __('Enabling this feature will add a Q&amp;A section on every course.',	'tutor'),
+							),
+							'disable_course_review' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Course review', 'tutor'),
+								'label_title' => __('Disable','tutor'),
+								'default'   => '0',
+								'desc'      => __('Disabling this feature will be removed course review system from the course page.',	'tutor'),
 							),
 						),
 					),
@@ -518,10 +532,23 @@ class Options {
 				),
 			),
 
-
 		);
 
-		return apply_filters('tutor/options/attr', $attr);
+		$attrs = apply_filters('tutor/options/attr', $attr);
+		$extends = apply_filters('tutor/options/extend/attr', array());
+
+		if (tutils()->count($extends)){
+			foreach ($extends as $extend_key => $extend_option){
+				if (isset($attrs[$extend_key])&& tutils()->count($extend_option['sections']) ){
+					$sections = $attrs[$extend_key]['sections'];
+					$sections = array_merge($sections, $extend_option['sections']);
+					$attrs[$extend_key]['sections'] = $sections;
+				}
+			}
+		}
+
+		return $attrs;
+
 	}
 
 	/**

@@ -6,7 +6,10 @@
  *
  * @author Themeum
  * @url https://themeum.com
- * @package Tutor
+ *
+ *
+ * @package TutorLMS/Templates
+ * @version 1.4.3
  */
 
 $previous_attempts = tutor_utils()->get_all_quiz_attempts_by_user();

@@ -6,6 +6,9 @@
  *
  * @author Themeum
  * @url https://themeum.com
+ *
+ * @package TutorLMS/Templates
+ * @version 1.4.5
  */
 
 if ( ! defined( 'ABSPATH' ) )
@@ -17,20 +20,26 @@ global $post, $authordata;
 $profile_url = tutor_utils()->profile_url($authordata->ID);
 ?>
 <div class="tutor-single-course-segment tutor-single-course-lead-info">
-    <div class="tutor-leadinfo-top-meta">
+
+	<?php
+	$disable = get_tutor_option('disable_course_review');
+	if ( ! $disable){
+		?>
+        <div class="tutor-leadinfo-top-meta">
             <span class="tutor-single-course-rating">
             <?php
             $course_rating = tutor_utils()->get_course_rating();
             tutor_utils()->star_rating_generator($course_rating->rating_avg);
             ?>
                 <span class="tutor-single-rating-count">
-                <?php
-                echo $course_rating->rating_avg;
-                echo '<i>('.$course_rating->rating_count.')</i>';
-                ?>
+                    <?php
+                    echo $course_rating->rating_avg;
+                    echo '<i>('.$course_rating->rating_count.')</i>';
+                    ?>
+                </span>
             </span>
-        </span>
-    </div>
+        </div>
+	<?php } ?>
 
     <h1 class="tutor-course-header-h1"><?php the_title(); ?></h1>
 
@@ -55,7 +64,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 
             <li class="tutor-social-share">
                 <span><?php _e('Share:', 'tutor'); ?></span>
-                <?php tutor_social_share(); ?>
+				<?php tutor_social_share(); ?>
             </li>
 
         </ul>
@@ -71,13 +80,13 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 				?>
                 <li>
                     <span><?php esc_html_e('Categories', 'tutor') ?></span>
-                    <?php
-                    foreach ($course_categories as $course_category){
-                        $category_name = $course_category->name;
-                        $category_link = get_term_link($course_category->term_id);
-                        echo "<a href='$category_link'>$category_name</a>";
-                    }
-                    ?>
+					<?php
+					foreach ($course_categories as $course_category){
+						$category_name = $course_category->name;
+						$category_link = get_term_link($course_category->term_id);
+						echo "<a href='$category_link'>$category_name</a>";
+					}
+					?>
                 </li>
 			<?php } ?>
 
@@ -87,12 +96,12 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 				?>
                 <li>
                     <span><?php esc_html_e('Total Hour', 'tutor') ?></span>
-                    <?php echo $course_duration; ?>
+					<?php echo $course_duration; ?>
                 </li>
 			<?php } ?>
             <li>
                 <span><?php esc_html_e('Total Enrolled', 'tutor') ?></span>
-	            <?php echo (int) tutor_utils()->count_enrolled_users_by_course(); ?>
+				<?php echo (int) tutor_utils()->count_enrolled_users_by_course(); ?>
             </li>
             <li>
                 <span><?php esc_html_e('Last Update', 'tutor') ?></span>
@@ -106,10 +115,10 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 
         <!--<div class="tutor-lead-info-btn-group">
 			<?php
-/*			if ( $wp_query->query['post_type'] !== 'lesson') {
-				$lesson_url = tutor_utils()->get_course_first_lesson();
-				if ( $lesson_url ) {
-					*/?>
+		/*			if ( $wp_query->query['post_type'] !== 'lesson') {
+						$lesson_url = tutor_utils()->get_course_first_lesson();
+						if ( $lesson_url ) {
+							*/?>
                     <a href="<?php /*echo $lesson_url; */?>" class="tutor-button"><?php /*_e( 'Continue to lesson', 'tutor' ); */?></a>
                 <?php /*}
             }
@@ -121,7 +130,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 	<?php do_action('tutor_course/single/lead_meta/after'); ?>
 	<?php do_action('tutor_course/single/excerpt/before'); ?>
 
-    <?php
+	<?php
 	$excerpt = tutor_get_the_excerpt();
 	if (! empty($excerpt)){
 		?>
