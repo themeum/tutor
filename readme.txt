@@ -5,7 +5,7 @@ Tags: lms, education, wp-lms, education management system
 Requires at least: 4.5
 Tested up to: 5.0
 Requires PHP: 5.4.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -43,7 +43,7 @@ Here are the most notable features of Tutor LMS plugin. If you need any further 
   * Add course requirement and instruction
   * Quiz Timer
   * Quiz Attempts
-  
+
 
 = Intuitive Course Builder =
 Create courses with their details like videos, attachments, excerpt, additional data, benefit of the course, requirement, topic, summary, announcement, and video banners. Have lessons under course and attach video and other attachments to each lesson. Tutor, the advanced WordPress LMS plugin lets you present courses on an intuitive user interface with all required options to offer a top notch learning system.
@@ -127,6 +127,15 @@ This is an alpha version of Tutor, as bugs and issues expected, if you found any
 16. Course builder
 
 == Changelog ==
+
+= 1.0.1 - 05 March, 2019 =
+
+* Added a course_column in attempts table
+* Showed his courses attempts on instructors panel
+* Added v.1, added v.1.0.0 compatibility
+* Showed full courses comment in guest/public view of single course
+* Renamed tags to skills
+* Fixed few bugs, improved performance
 
 = 1.0.0 - 01 March, 2019 =
 
