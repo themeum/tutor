@@ -324,7 +324,6 @@ class Admin{
 			'gzip_enabled'              => is_callable( 'gzopen' ),
 			'mbstring_enabled'          => extension_loaded( 'mbstring' ),
 		);
-
 	}
 
 
