@@ -268,12 +268,33 @@ class Options {
 								'default'   => '0',
 								'desc'      => __('Disabling this feature will be removed course status from the course page.', 'tutor'),
 							),
+							'disable_course_material' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Course material', 'tutor'),
+								'label_title' => __('Disable','tutor'),
+								'default'   => '0',
+								'desc'      => __('Disabling this feature will be removed course material from the course page.', 'tutor'),
+							),
+							'disable_course_excerpt' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Course excerpt', 'tutor'),
+								'label_title' => __('Disable','tutor'),
+								'default'   => '0',
+								'desc'      => __('Disabling this feature will be removed course about from the course page.', 'tutor'),
+							),
 							'disable_course_description' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Course description', 'tutor'),
 								'label_title' => __('Disable','tutor'),
 								'default'   => '0',
 								'desc'      => __('Disabling this feature will be removed course description from the course page.', 'tutor'),
+							),
+							'disable_course_benefits' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Course benefits', 'tutor'),
+								'label_title' => __('Disable','tutor'),
+								'default'   => '0',
+								'desc'      => __('Disabling this feature will be removed course benefits from the course page.', 'tutor'),
 							),
 							'disable_course_requirements' => array(
 								'type'      => 'checkbox',
@@ -317,8 +338,6 @@ class Options {
 								'default'   => '0',
 								'desc'      => __('Disabling this feature will be removed course announcements from the course page.', 'tutor'),
 							),
-
-
 							'disable_course_review' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Course review', 'tutor'),

@@ -37,14 +37,12 @@ class Course extends Tutor_Base {
 		/**
 		 * Gutenberg author support
 		 */
-
 		add_filter('wp_insert_post_data', array($this, 'tutor_add_gutenberg_author'), '99', 2);
 
 		/**
 		 * Frontend metabox supports for course builder
 		 * @since  v.1.3.4
 		 */
-
 		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'register_meta_box_in_frontend'));
 
 
@@ -57,9 +55,15 @@ class Course extends Tutor_Base {
 		 * Add course level to course settings
 		 * @since v.1.4.1
 		 */
-
 		add_action('tutor_course/settings_tab_content/after/general', array($this, 'add_course_level_to_settings'));
+
+		/**
+		 * Enable Disable Course Details Page Feature
+		 * @since v.1.4.8
+		 */
+		$this->course_elements_enable_disable();
 	}
+
 	/**
 	 * Registering metabox
 	 */
@@ -783,5 +787,24 @@ class Course extends Tutor_Base {
 	}
 
 
+	/**
+	 * Add Course level to course settings
+	 * @since v.1.4.8
+	 */
+	public function course_elements_enable_disable(){
+		add_filter('tutor_course/single/material_includes', array($this, 'enable_disable_material_includes') );
+	}
 
+
+	/**
+	 * Enable disable material includes
+	 * @since v.1.4.8
+	 */
+	public function enable_disable_material_includes($html){
+		$disable_material = (bool) get_tutor_option('disable_course_material');
+		if($disable_material){
+			return '';
+		}
+		return $html;
+	}
 }

@@ -47,26 +47,37 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 	<?php do_action('tutor_course/single/lead_meta/before'); ?>
 
     <div class="tutor-single-course-meta tutor-meta-top">
+        <?php
+            $disable_course_author = get_tutor_option('disable_course_author');
+            $disable_course_level = get_tutor_option('disable_course_level');
+            $disable_course_share = get_tutor_option('disable_course_share');
+        ?>
         <ul>
-            <li class="tutor-single-course-author-meta">
-                <div class="tutor-single-course-avatar">
-                    <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
-                </div>
-                <div class="tutor-single-course-author-name">
-                    <span><?php _e('by', 'tutor'); ?></span>
-                    <a href="<?php echo tutor_utils()->profile_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a>
-                </div>
-            </li>
-            <li class="tutor-course-level">
-                <span><?php _e('Course level:', 'tutor'); ?></span>
-				<?php echo get_tutor_course_level(); ?>
-            </li>
+            <?php if ( !$disable_course_author){ ?>
+                <li class="tutor-single-course-author-meta">
+                    <div class="tutor-single-course-avatar">
+                        <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
+                    </div>
+                    <div class="tutor-single-course-author-name">
+                        <span><?php _e('by', 'tutor'); ?></span>
+                        <a href="<?php echo tutor_utils()->profile_url($authordata->ID); ?>"><?php echo get_the_author(); ?></a>
+                    </div>
+                </li>
+            <?php } ?>
 
-            <li class="tutor-social-share">
-                <span><?php _e('Share:', 'tutor'); ?></span>
-				<?php tutor_social_share(); ?>
-            </li>
+            <?php if ( !$disable_course_level){ ?>
+                <li class="tutor-course-level">
+                    <span><?php _e('Course level:', 'tutor'); ?></span>
+                    <?php echo get_tutor_course_level(); ?>
+                </li>
+            <?php } ?>
 
+            <?php if ( !$disable_course_share){ ?>
+                <li class="tutor-social-share">
+                    <span><?php _e('Share:', 'tutor'); ?></span>
+                    <?php tutor_social_share(); ?>
+                </li>
+            <?php } ?>
         </ul>
 
     </div>
@@ -91,22 +102,31 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			<?php } ?>
 
 			<?php
-			$course_duration = get_tutor_course_duration_context();
-			if(!empty($course_duration)){
-				?>
+			$disable_total_hour = get_tutor_option('disable_course_total_hour');
+            $disable_total_enrolled = get_tutor_option('disable_course_total_enrolled');
+            $disable_update_date = get_tutor_option('disable_course_update_date');
+            $course_duration = get_tutor_course_duration_context();
+            
+			if( !empty($course_duration) && !$disable_total_hour){ ?>
                 <li>
                     <span><?php esc_html_e('Total Hour', 'tutor') ?></span>
-					<?php echo $course_duration; ?>
+                    <?php echo $course_duration; ?>
                 </li>
-			<?php } ?>
-            <li>
-                <span><?php esc_html_e('Total Enrolled', 'tutor') ?></span>
-				<?php echo (int) tutor_utils()->count_enrolled_users_by_course(); ?>
-            </li>
-            <li>
-                <span><?php esc_html_e('Last Update', 'tutor') ?></span>
-				<?php echo esc_html(get_the_modified_date()); ?>
-            </li>
+            <?php }
+            
+            if( !$disable_total_enrolled){ ?>
+                <li>
+                    <span><?php esc_html_e('Total Enrolled', 'tutor') ?></span>
+                    <?php echo (int) tutor_utils()->count_enrolled_users_by_course(); ?>
+                </li>
+            <?php } 
+
+            if( !$disable_update_date){ ?>
+                <li>
+                    <span><?php esc_html_e('Last Update', 'tutor') ?></span>
+                    <?php echo esc_html(get_the_modified_date()); ?>
+                </li>
+            <?php } ?>
         </ul>
     </div>
 
