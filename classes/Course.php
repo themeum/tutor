@@ -59,6 +59,13 @@ class Course extends Tutor_Base {
 		 */
 
 		add_action('tutor_course/settings_tab_content/after/general', array($this, 'add_course_level_to_settings'));
+
+		/**
+		 * @since v.1.4.8
+		 * Check if course starting, set meta if starting
+		 */
+		add_action('tutor_lesson_load_before', array($this, 'tutor_lesson_load_before'));
+
 	}
 	/**
 	 * Registering metabox
@@ -313,6 +320,8 @@ class Course extends Tutor_Base {
 				wp_insert_post( $post_arr );
 			}
 		}
+
+		do_action( "tutor_save_course_after", $post_ID, $post);
 	}
 
 	/**
@@ -782,6 +791,22 @@ class Course extends Tutor_Base {
 		include  tutor()->path.'views/metabox/course-level-metabox.php';
 	}
 
+	/**
+	 * Check if course starting
+	 *
+	 * @since v.1.4.8
+	 */
+	public function tutor_lesson_load_before(){
+		$course_id = tutils()->get_course_id_by_content(get_the_ID());
+		$completed_lessons = tutor_utils()->get_completed_lesson_count_by_course($course_id);
+		if (is_user_logged_in()){
+			$is_course_started = get_post_meta($course_id, '_tutor_course_started', true);
+			if ( ! $completed_lessons && ! $is_course_started){
+				update_post_meta($course_id, '_tutor_course_started', tutor_time());
+				do_action('tutor/course/started', $course_id);
+			}
+		}
+	}
 
 
 }
