@@ -243,6 +243,20 @@ class Utils {
 		return count(array_intersect($depends, $activated_plugins)) == count($depends);
 	}
 
+
+	/**
+	 * @return bool
+	 *
+	 * checking if BuddyPress exists and activated;
+	 *
+	 * @since v.1.4.8
+	 */
+	public function has_bp(){
+		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
+		$depends = array('buddypress/bp-loader.php');
+		return count(array_intersect($depends, $activated_plugins)) == count($depends);
+	}
+
 	/**
 	 * @return mixed
 	 *
@@ -973,8 +987,9 @@ class Utils {
 	public function is_course_enrolled_by_lesson($lesson_id = 0, $user_id = 0){
 		$lesson_id = $this->get_post_id($lesson_id);
 		$user_id = $this->get_user_id($user_id);
+		$course_id = $this->get_course_id_by_lesson($lesson_id);
 
-		return $this->is_enrolled($this->get_course_id_by_lesson($lesson_id));
+		return $this->is_enrolled($course_id);
 	}
 
 	/**
@@ -985,10 +1000,23 @@ class Utils {
 	 * Get the course ID by Lesson
 	 *
 	 * @since v.1.0.0
+	 *
+	 * @updated v.1.4.8
+	 * Added Legacy Supports
 	 */
+
 	public function get_course_id_by_lesson($lesson_id = 0){
 		$lesson_id = $this->get_post_id($lesson_id);
-		return get_post_meta($lesson_id, '_tutor_course_id_for_lesson', true);
+		$course_id = get_post_meta($lesson_id, '_tutor_course_id_for_lesson', true);
+
+		if ( ! $course_id) {
+			$course_id = $this->get_course_id_by_content($lesson_id);
+		}
+		if ( ! $course_id){
+			$course_id = 0;
+		}
+
+		return $course_id;
 	}
 
 	/**
@@ -1003,7 +1031,8 @@ class Utils {
 	public function get_course_first_lesson($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
-/*
+
+		/*
 		$lesson_id = $wpdb->get_var("
 		SELECT post_id as lesson_id
 		FROM $wpdb->postmeta 
