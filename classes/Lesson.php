@@ -106,6 +106,7 @@ class Lesson extends Tutor_Base {
 			);
 			$lesson_id = wp_insert_post( $post_arr );
 			if ($lesson_id ) {
+				do_action('tutor/lesson/created', $lesson_id);
 				update_post_meta( $lesson_id, '_tutor_course_id_for_lesson', $course_id );
 			}
 		}
