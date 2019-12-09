@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.3
 Requires PHP: 5.4.0
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,15 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.4.8 - 10 December, 2019 =
+
+* Added: Restrict Content Pro Integration (TutorLMS Pro)
+* Added: Course Details Page elements enable / disable
+* Added: action hook `do_action( "tutor_save_course_after", $post_ID, $post);`
+* Added: action hook `do_action('tutor/course/started', $course_id);`
+* Added: action hook `do_action('tutor/lesson/created', $lesson_id);`
+* Fixed: implode parameter in utils `utils()->get_total_quiz_attempts_by_course_ids()`;
 
 = 1.4.7 - 28 November, 2019 =
 

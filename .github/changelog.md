@@ -1,5 +1,15 @@
 # TutorLMS Changelog
 
+### 1.4.8 - 10 December, 2019
+
+* Added: Restrict Content Pro Integration (TutorLMS Pro)
+* Added: Course Details Page elements enable / disable
+* Added: action hook `do_action( "tutor_save_course_after", $post_ID, $post);`
+* Added: action hook `do_action('tutor/course/started', $course_id);`
+* Added: action hook `do_action('tutor/lesson/created', $lesson_id);`
+* Fixed: implode parameter in utils `utils()->get_total_quiz_attempts_by_course_ids()`;
+
+
 ### 1.4.7 - 28 November, 2019
 
 * Added: Next Previous Lesson|quiz|assignments
