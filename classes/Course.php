@@ -68,7 +68,6 @@ class Course extends Tutor_Base {
 		 * Check if course starting, set meta if starting
 		 */
 		add_action('tutor_lesson_load_before', array($this, 'tutor_lesson_load_before'));
-
 	}
 
 	/**
@@ -86,6 +85,7 @@ class Course extends Tutor_Base {
 		}
 		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
 	}
+
 	public function course_meta_box($echo = true){
 		ob_start();
 		include  tutor()->path.'views/metabox/course-topics.php';
@@ -97,6 +97,7 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 	}
+
 	public function course_additional_data_meta_box($echo = true){
 
 		ob_start();
@@ -109,6 +110,7 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 	}
+
 	public function video_metabox($echo = true){
 		ob_start();
 		include  tutor()->path.'views/metabox/video-metabox.php';
@@ -385,7 +387,6 @@ class Course extends Tutor_Base {
 	 *
 	 * Add Lesson column
 	 */
-
 	public function add_column($columns){
 		$date_col = $columns['date'];
 		unset($columns['date']);
@@ -689,7 +690,6 @@ class Course extends Tutor_Base {
 	 *
 	 * @since v.1.3.4
 	 */
-	
 	public function attach_product_with_course($post_ID, $postData){
 		$attached_product_id = tutor_utils()->get_course_product_id($post_ID);
 		$course_price = sanitize_text_field(tutor_utils()->array_get('course_price', $_POST));
