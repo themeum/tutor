@@ -42,6 +42,10 @@ class Addons {
 				'name'          => __('Paid Memberships Pro', 'tutor'),
 				'description'   => 'Maximize revenue by selling membership access to all of your courses.',
 			),
+			'restrict-content'  => array(
+				'name'          => __('Restrict Content Pro', 'tutor'),
+				'description'   => 'Unlock Course depending on Restrict Content Pro Plugin Permission.',
+			),
 			'tutor-assignments' => array(
 				'name'          => __('Tutor Assignments', 'tutor'),
 				'description'   => 'Tutor assignments is a great way to assign tasks to students.',
