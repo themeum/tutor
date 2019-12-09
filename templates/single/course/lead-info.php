@@ -134,8 +134,8 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 
 	<?php
 	$excerpt = tutor_get_the_excerpt();
-
-	if (! empty($excerpt)){
+    $disable_excerpt = get_tutor_option('disable_course_excerpt');
+	if (! empty($excerpt) && ! $disable_excerpt){
 		?>
         <div class="tutor-course-summery">
             <h4  class="tutor-segment-title"><?php esc_html_e('About Course', 'tutor') ?></h4>

@@ -173,19 +173,6 @@ class Options {
 								'label_title'   => __('Enable', 'tutor'),
 								'desc' => __('Use Gutenberg editor on course description area.', 'tutor'),
 							),
-							'display_course_instructors' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Display Instructor Info', 'tutor'),
-								'label_title'   => __('Enable', 'tutor'),
-								'desc' => __('Show instructor bio on each page', 'tutor'),
-							),
-							'enable_q_and_a_on_course' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Question and Answer', 'tutor'),
-								'label_title' => __('Enable','tutor'),
-								'default'   => '0',
-								'desc'      => __('Enabling this feature will add a Q&amp;A section on every course.',	'tutor'),
-							),
 						),
 					),
 					'archive' => array(
@@ -216,9 +203,22 @@ class Options {
 						),
 					),
 					'enable_disable' => array(
-						'label' => __('Enable Disable', 'tutor'),
+						'label' => __('Enable/Disable', 'tutor'),
 						'desc' => __('Course Display Settings', 'tutor'),
 						'fields' => array(
+							'display_course_instructors' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Display Instructor Info', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
+								'desc' => __('Show instructor bio on each page', 'tutor'),
+							),
+							'enable_q_and_a_on_course' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Question and Answer', 'tutor'),
+								'label_title' => __('Enable','tutor'),
+								'default'   => '0',
+								'desc'      => __('Enabling this feature will add a Q&amp;A section on every course.',	'tutor'),
+							),
 							'disable_course_author' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Course author', 'tutor'),
@@ -261,12 +261,12 @@ class Options {
 								'default'   => '0',
 								'desc'      => __('Disabling this feature will be removed course update date from the course page.', 'tutor'),
 							),
-							'disable_course_status' => array(
+							'disable_course_progress_bar' => array(
 								'type'      => 'checkbox',
-								'label'     => __('Course status', 'tutor'),
+								'label'     => __('Course Progress Bar', 'tutor'),
 								'label_title' => __('Disable','tutor'),
 								'default'   => '0',
-								'desc'      => __('Disabling this feature will be removed course status from the course page.', 'tutor'),
+								'desc'      => __('Disabling this feature will be removed completing progress bar from the course page.', 'tutor'),
 							),
 							'disable_course_material' => array(
 								'type'      => 'checkbox',
@@ -309,27 +309,6 @@ class Options {
 								'label_title' => __('Disable','tutor'),
 								'default'   => '0',
 								'desc'      => __('Disabling this feature will be removed course target audience from the course page.', 'tutor'),
-							),
-							'disable_course_target_audience' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Course target audience', 'tutor'),
-								'label_title' => __('Disable','tutor'),
-								'default'   => '0',
-								'desc'      => __('Disabling this feature will be removed course target audience from the course page.', 'tutor'),
-							),
-							'disable_course_overview' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Course overview', 'tutor'),
-								'label_title' => __('Disable','tutor'),
-								'default'   => '0',
-								'desc'      => __('Disabling this feature will be removed course overview from the course page.', 'tutor'),
-							),
-							'disable_course_qa' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Course Q&A', 'tutor'),
-								'label_title' => __('Disable','tutor'),
-								'default'   => '0',
-								'desc'      => __('Disabling this feature will be removed course Q&A from the course page.', 'tutor'),
 							),
 							'disable_course_announcements' => array(
 								'type'      => 'checkbox',
