@@ -46,7 +46,7 @@ class Addons {
 				'name'          => __('Paid Memberships Pro', 'tutor'),
 				'description'   => 'Maximize revenue by selling membership access to all of your courses.',
 			),
-			'restrict-content'  => array(
+			'restrict-content-pro'  => array(
 				'name'          => __('Restrict Content Pro', 'tutor'),
 				'description'   => 'Unlock Course depending on Restrict Content Pro Plugin Permission.',
 			),
