@@ -801,7 +801,6 @@ class Course extends Tutor_Base {
 		add_filter('tutor_course/single/enrolled/nav_items', array($this, 'enable_disable_course_nav_items') );
 	}
 
-
 	/**
 	 * Enable disable course progress bar
 	 * @since v.1.4.8
@@ -851,7 +850,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Enable disable course benefits
+	 * Enable disable course requirements
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_requirements($html){
@@ -863,7 +862,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Enable disable course benefits
+	 * Enable disable course target audience
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_target_audience($html){
