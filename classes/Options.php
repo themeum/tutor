@@ -203,7 +203,7 @@ class Options {
 						),
 					),
 					'enable_disable' => array(
-						'label' => __('Enable/Disable', 'tutor'),
+						'label' => __('Enable / Disable', 'tutor'),
 						'desc' => __('Course Display Settings', 'tutor'),
 						'fields' => array(
 							'display_course_instructors' => array(
