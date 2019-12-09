@@ -3687,7 +3687,7 @@ class Utils {
 			$search_term = " AND ( user_email like '%{$search_term}%' OR display_name like '%{$search_term}%' OR post_title like '%{$search_term}%' ) ";
 		}
 
-		$course_ids_in = implode($course_ids, ',');
+		$course_ids_in = implode(',', $course_ids);
 		$sql = " AND quiz_attempts.course_id IN({$course_ids_in}) ";
 		$search_term = $sql.$search_term;
 

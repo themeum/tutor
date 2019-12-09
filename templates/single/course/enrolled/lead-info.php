@@ -102,14 +102,14 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 			<?php } ?>
 
 			<?php
-			$disable_total_hour = get_tutor_option('disable_course_total_hour');
+			$disable_course_duration = get_tutor_option('disable_course_duration');
             $disable_total_enrolled = get_tutor_option('disable_course_total_enrolled');
             $disable_update_date = get_tutor_option('disable_course_update_date');
             $course_duration = get_tutor_course_duration_context();
             
-			if( !empty($course_duration) && !$disable_total_hour){ ?>
+			if( !empty($course_duration) && !$disable_course_duration){ ?>
                 <li>
-                    <span><?php esc_html_e('Total Hour', 'tutor') ?></span>
+                    <span><?php esc_html_e('Duration', 'tutor') ?></span>
                     <?php echo $course_duration; ?>
                 </li>
             <?php }
@@ -152,8 +152,8 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 
 	<?php
     $excerpt = tutor_get_the_excerpt();
-    $disable_excerpt = get_tutor_option('disable_course_excerpt');
-	if (! empty($excerpt) && ! $disable_excerpt){
+    $disable_about = get_tutor_option('disable_course_about');
+	if (! empty($excerpt) && ! $disable_about){
 		?>
         <div class="tutor-course-summery">
             <h4  class="tutor-segment-title"><?php esc_html_e('About Course', 'tutor') ?></h4>
