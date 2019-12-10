@@ -934,15 +934,15 @@ class Course extends Tutor_Base {
 		if(!$hide_course_from_shop_page){
 			return;
 		}
-		add_action('woocommerce_product_query', array($this, 'hide_product_in_wc_shop_page'));
-		//add_action('woocommerce_product_query', array($this, 'hide_product_in_wc_shop_page'));
+		add_action('woocommerce_product_query', array($this, 'filter_woocommerce_product_query'));
+		add_filter('edd_downloads_query', array($this, 'filter_edd_downloads_query'), 10, 2);
 	}
 
 	/**
 	 * Filter product in woocommerce shop page
 	 * @since v.1.4.9
 	 */
-	public function hide_product_in_wc_shop_page($wp_query){
+	public function filter_woocommerce_product_query($wp_query){
 		$meta_query = array(
 			array(
 				'key'     	=> '_tutor_product',
@@ -954,17 +954,16 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Filter product in EDD shop page
+	 * Filter product in edd downloads page
 	 * @since v.1.4.9
 	 */
-	public function hide_product_in_edd_shop_page($wp_query){
-		$meta_query = array(
+	public function filter_edd_downloads_query($query){
+		$query['meta_query'] = array(
 			array(
 				'key'     	=> '_tutor_product',
 				'compare' 	=> 'NOT EXISTS'
 			)
 		);
-		$wp_query->set('meta_query', $meta_query);
-		return $wp_query;
+		return $query;
 	}
 }
