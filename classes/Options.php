@@ -176,8 +176,8 @@ class Options {
 							'hide_course_from_shop_page' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Enable / Disable', 'tutor'),
-								'label_title'   => __('Hide Course Products from Shop and Archive Page', 'tutor'),
-								'desc' => __('Enabling this feature will be removed course products from the shop and archive page.', 'tutor'),
+								'label_title'   => __('Hide course products from shop page', 'tutor'),
+								'desc' => __('Enabling this feature will be removed course products from the shop page.', 'tutor'),
 							),
 						),
 					),

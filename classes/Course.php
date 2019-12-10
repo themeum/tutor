@@ -940,7 +940,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Tutor product meta query for splice
+	 * Tutor product meta query
 	 * @since v.1.4.9
 	 */
 	public function tutor_product_meta_query(){
