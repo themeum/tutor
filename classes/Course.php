@@ -936,6 +936,19 @@ class Course extends Tutor_Base {
 		}
 		add_action('woocommerce_product_query', array($this, 'filter_woocommerce_product_query'));
 		add_filter('edd_downloads_query', array($this, 'filter_edd_downloads_query'), 10, 2);
+		add_action('pre_get_posts', array($this, 'filter_archive_meta_query'), 1);
+	}
+
+	/**
+	 * Tutor product meta query for splice
+	 * @since v.1.4.9
+	 */
+	public function tutor_product_meta_query(){
+		$meta_query = array(
+			'key'     	=> '_tutor_product',
+			'compare' 	=> 'NOT EXISTS'
+		);
+		return $meta_query;
 	}
 
 	/**
@@ -943,27 +956,27 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.9
 	 */
 	public function filter_woocommerce_product_query($wp_query){
-		$meta_query = array(
-			array(
-				'key'     	=> '_tutor_product',
-				'compare' 	=> 'NOT EXISTS'
-			)
-		);
-		$wp_query->set('meta_query', $meta_query);
+		$wp_query->set('meta_query', array($this->tutor_product_meta_query()));
 		return $wp_query;
 	}
 
 	/**
-	 * Filter product in edd downloads page
+	 * Filter product in edd downloads shortcode page
 	 * @since v.1.4.9
 	 */
 	public function filter_edd_downloads_query($query){
-		$query['meta_query'] = array(
-			array(
-				'key'     	=> '_tutor_product',
-				'compare' 	=> 'NOT EXISTS'
-			)
-		);
+		$query['meta_query'][] = $this->tutor_product_meta_query();
 		return $query;
+	}
+
+	/**
+	 * Filter product in edd downloads archive page
+	 * @since v.1.4.9
+	 */
+	public function filter_archive_meta_query($wp_query){
+		if(!is_admin() && $wp_query->is_archive && $wp_query->get('post_type') === 'download'){
+			$wp_query->set('meta_query', array($this->tutor_product_meta_query()));
+		}
+		return $wp_query;
 	}
 }
