@@ -118,6 +118,8 @@ class Quiz {
 		    die('There is something went wrong with course, please check if quiz attached with a course');
         }
 
+        do_action('tutor_quiz/start/before', $quiz_id, $user_id);
+
 		$date = date("Y-m-d H:i:s", tutor_time());
 
 		$tutor_quiz_option = (array) maybe_unserialize(get_post_meta($quiz_id, 'tutor_quiz_option', true));
@@ -165,6 +167,8 @@ class Quiz {
 
 		$wpdb->insert($wpdb->prefix.'tutor_quiz_attempts', $attempt_data);
 		$attempt_id = (int) $wpdb->insert_id;
+
+		do_action('tutor_quiz/start/after', $quiz_id, $user_id, $attempt_id);
 
 		wp_redirect(get_permalink($quiz_id));
 		die();
