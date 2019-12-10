@@ -173,6 +173,12 @@ class Options {
 								'label_title'   => __('Enable', 'tutor'),
 								'desc' => __('Use Gutenberg editor on course description area.', 'tutor'),
 							),
+							'hide_course_from_shop_page' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Hide Course from Shop Page', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
+								'desc' => __('Enabling this feature will be removed course from the woocommerce shop page.', 'tutor'),
+							),
 						),
 					),
 					'archive' => array(
