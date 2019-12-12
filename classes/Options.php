@@ -347,6 +347,12 @@ class Options {
 								'label_title'   => __('Enable', 'tutor'),
 								'desc'          => __('Enable classic editor to get full support of any editor/page builder.', 'tutor'),
 							),
+							'autoload_next_course_content' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable / Disable', 'tutor'),
+								'label_title'   => __('Automatically load next course content.', 'tutor'),
+								'desc' => __('Enabling this feature will be load next course content automatically after finishing current video.', 'tutor'),
+							),
 							'lesson_permalink_base' => array(
 								'type'      => 'text',
 								'label'     => __('Lesson Permalink Base', 'tutor'),

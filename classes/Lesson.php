@@ -294,7 +294,12 @@ class Lesson extends Tutor_Base {
 		$post_id = sanitize_text_field($_POST['post_id']);
 		$content_id = tutils()->get_post_id($post_id);
 		$contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
-		$next_url = ($contents->next_id) ? get_the_permalink($contents->next_id) : false;
+
+		$autoload_course_content = (bool) get_tutor_option('autoload_next_course_content');
+		$next_url = false;
+		if($autoload_course_content) {
+			$next_url = get_the_permalink($contents->next_id);
+		}
 		wp_send_json_success(array('next_url' => $next_url));
 	}
 

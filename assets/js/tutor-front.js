@@ -59,7 +59,7 @@ jQuery(document).ready(function($){
                 });
 
                 var tempTimeNow = 0;
-                var intervalSeconds = 5; //Send to tutor backend about video playing time in this interval
+                var intervalSeconds = 30; //Send to tutor backend about video playing time in this interval
                 player.on('timeupdate', function(event){
                     const instance = event.detail.plyr;
                     var tempTimeNowInSec = (tempTimeNow / 4); //timeupdate firing 250ms interval
