@@ -71,10 +71,13 @@ jQuery(document).ready(function($){
                 });
 
                 player.on('ended', function(event) {
+                    const video_data = that.video_data();
                     const instance = event.detail.plyr;
                     const data = {is_ended:true};
                     that.sync_time(instance, data);
-                    that.autoload_lesson();
+                    if(video_data.autoload_next_course_content) {
+                        that.autoload_content();
+                    }
                 });
             }
         },
@@ -89,7 +92,7 @@ jQuery(document).ready(function($){
             }
             $.post(this.ajaxurl, data_send);
         },
-        autoload_lesson: function() {
+        autoload_content: function() {
             const post_id = this.video_data().post_id;
             const data = {action: 'autoload_next_lesson_item', post_id};
             data[this.nonce_key] = _tutorobject[this.nonce_key];
