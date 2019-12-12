@@ -29,6 +29,13 @@ class Lesson extends Tutor_Base {
 		add_action('template_redirect', array($this, 'mark_lesson_complete'));
 
 		add_action('wp_ajax_tutor_render_lesson_content', array($this, "tutor_render_lesson_content"));
+
+		/**
+		 * Autoplay next video
+		 * @since v.1.4.9
+		 */
+		add_action('wp_ajax_autoload_next_lesson_item', array($this, 'autoload_next_lesson_item'));
+		add_action('wp_ajax_nopriv_autoload_next_lesson_item', array($this, 'autoload_next_lesson_item_noprev'));
 	}
 
 	/**
@@ -275,6 +282,24 @@ class Lesson extends Tutor_Base {
 
 		$html = ob_get_clean();
 		wp_send_json_success(array('html' => $html));
+	}
+
+	/**
+	 * Update video information and data when necessary
+	 *
+	 * @since v.1.4.9
+	 */
+	public function autoload_next_lesson_item(){
+		tutor_utils()->checking_nonce();
+		$post_id = sanitize_text_field($_POST['post_id']);
+		$content_id = tutils()->get_post_id($post_id);
+		$contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
+		$next_url = ($contents->next_id) ? get_the_permalink($contents->next_id) : false;
+		wp_send_json_success(array('next_url' => $next_url));
+	}
+
+	public function autoload_next_lesson_item_noprev(){
+
 	}
 
 }
