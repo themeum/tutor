@@ -34,8 +34,8 @@ class Lesson extends Tutor_Base {
 		 * Autoplay next video
 		 * @since v.1.4.9
 		 */
-		add_action('wp_ajax_autoload_next_lesson_item', array($this, 'autoload_next_lesson_item'));
-		add_action('wp_ajax_nopriv_autoload_next_lesson_item', array($this, 'autoload_next_lesson_item_noprev'));
+		add_action('wp_ajax_autoload_next_course_content', array($this, 'autoload_next_course_content'));
+		add_action('wp_ajax_nopriv_autoload_next_course_content', array($this, 'autoload_next_course_content_noprev'));
 	}
 
 	/**
@@ -285,11 +285,11 @@ class Lesson extends Tutor_Base {
 	}
 
 	/**
-	 * Update video information and data when necessary
+	 * Load next course item automatically
 	 *
 	 * @since v.1.4.9
 	 */
-	public function autoload_next_lesson_item(){
+	public function autoload_next_course_content(){
 		tutor_utils()->checking_nonce();
 		$post_id = sanitize_text_field($_POST['post_id']);
 		$content_id = tutils()->get_post_id($post_id);
@@ -303,7 +303,7 @@ class Lesson extends Tutor_Base {
 		wp_send_json_success(array('next_url' => $next_url));
 	}
 
-	public function autoload_next_lesson_item_noprev(){
+	public function autoload_next_course_content_noprev(){
 
 	}
 

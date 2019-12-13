@@ -94,7 +94,7 @@ jQuery(document).ready(function($){
         },
         autoload_content: function() {
             const post_id = this.video_data().post_id;
-            const data = {action: 'autoload_next_lesson_item', post_id};
+            const data = {action: 'autoload_next_course_content', post_id};
             data[this.nonce_key] = _tutorobject[this.nonce_key];
             $.post(this.ajaxurl, data).done(function(response) {
                 if(response.success && response.data.next_url) {
