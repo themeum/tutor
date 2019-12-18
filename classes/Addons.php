@@ -22,6 +22,10 @@ class Addons {
 
 	public function tutor_addons_lists_to_show(){
 		$addons = array(
+			'buddypress'     => array(
+				'name'          => __('BuddyPress', 'tutor-pro'),
+				'description'   => 'Discuss about course and share your knowledge with your friends through BuddyPress',
+			),
 			'gradebook'     => array(
 				'name'          => __('Gradebook', 'tutor'),
 				'description'   => 'Shows student progress from assignment and quiz',
@@ -41,6 +45,10 @@ class Addons {
 			'pmpro'             => array(
 				'name'          => __('Paid Memberships Pro', 'tutor'),
 				'description'   => 'Maximize revenue by selling membership access to all of your courses.',
+			),
+			'restrict-content-pro'  => array(
+				'name'          => __('Restrict Content Pro', 'tutor'),
+				'description'   => 'Unlock Course depending on Restrict Content Pro Plugin Permission.',
 			),
 			'tutor-assignments' => array(
 				'name'          => __('Tutor Assignments', 'tutor'),

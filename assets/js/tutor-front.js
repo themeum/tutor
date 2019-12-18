@@ -1385,4 +1385,37 @@ jQuery(document).ready(function($){
         }
     });
 
+    /**
+     * Addon, Tutor BuddyPress
+     * Retrieve MetaInformation on BuddyPress message system
+     * @for TutorLMS Pro
+     * @since v.1.4.8
+     */
+
+    $(document).on('click', '.thread-content .subject', function(e){
+        var $btn = $(this);
+
+        var thread_id = parseInt($btn.closest('.thread-content').attr('data-thread-id'));
+
+        var nonce_key = _tutorobject.nonce_key;
+        var json_data = {thread_id : thread_id, action: 'tutor_bp_retrieve_user_records_for_thread'};
+        json_data[nonce_key] = _tutorobject[nonce_key];
+
+        $.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            data: json_data,
+            beforeSend: function(){
+                $('#tutor-bp-thread-wrap').html('');
+            },
+            success: function (data) {
+                if (data.success){
+                    $('#tutor-bp-thread-wrap').html(data.data.thread_head_html);
+                }
+            }
+        });
+
+    });
+
+
 });
