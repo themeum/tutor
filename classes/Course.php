@@ -68,6 +68,12 @@ class Course extends Tutor_Base {
 		 * Check if course starting, set meta if starting
 		 */
 		add_action('tutor_lesson_load_before', array($this, 'tutor_lesson_load_before'));
+
+		/**
+		 * @since v.1.4.9
+		 * Filter product in shop page
+		 */
+		$this->filter_product_in_shop_page();
 	}
 
 	/**
@@ -917,5 +923,60 @@ class Course extends Tutor_Base {
 			}
 		}
 		return $items;
+	}
+
+	/**
+	 * Filter product in shop page
+	 * @since v.1.4.9
+	 */
+	public function filter_product_in_shop_page(){
+		$hide_course_from_shop_page = (bool) get_tutor_option('hide_course_from_shop_page');
+		if(!$hide_course_from_shop_page){
+			return;
+		}
+		add_action('woocommerce_product_query', array($this, 'filter_woocommerce_product_query'));
+		add_filter('edd_downloads_query', array($this, 'filter_edd_downloads_query'), 10, 2);
+		add_action('pre_get_posts', array($this, 'filter_archive_meta_query'), 1);
+	}
+
+	/**
+	 * Tutor product meta query
+	 * @since v.1.4.9
+	 */
+	public function tutor_product_meta_query(){
+		$meta_query = array(
+			'key'     	=> '_tutor_product',
+			'compare' 	=> 'NOT EXISTS'
+		);
+		return $meta_query;
+	}
+
+	/**
+	 * Filter product in woocommerce shop page
+	 * @since v.1.4.9
+	 */
+	public function filter_woocommerce_product_query($wp_query){
+		$wp_query->set('meta_query', array($this->tutor_product_meta_query()));
+		return $wp_query;
+	}
+
+	/**
+	 * Filter product in edd downloads shortcode page
+	 * @since v.1.4.9
+	 */
+	public function filter_edd_downloads_query($query){
+		$query['meta_query'][] = $this->tutor_product_meta_query();
+		return $query;
+	}
+
+	/**
+	 * Filter product in edd downloads archive page
+	 * @since v.1.4.9
+	 */
+	public function filter_archive_meta_query($wp_query){
+		if(!is_admin() && $wp_query->is_archive && $wp_query->get('post_type') === 'download'){
+			$wp_query->set('meta_query', array($this->tutor_product_meta_query()));
+		}
+		return $wp_query;
 	}
 }

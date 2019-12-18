@@ -1509,31 +1509,9 @@ if ( ! function_exists('get_tnotice')) {
 
 function tutor_next_previous_pagination($course_content_id = 0, $echo = true){
 	$content_id = tutils()->get_post_id($course_content_id);
-	$course_id = tutils()->get_course_id_by_content($content_id);
-	$course_contents = tutils()->get_course_contents_by_id($course_id);
-
-	$previous_id = 0;
-	$next_id = 0;
-
-	if (tutils()->count($course_contents)){
-		$ids = wp_list_pluck($course_contents, 'ID');
-
-		$i=0;
-		foreach ($ids as $key => $id){
-			$previous_i = $key - 1;
-			$next_i = $key + 1;
-
-			if ($id == $content_id){
-				if (isset($ids[$previous_i])){
-					$previous_id = $ids[$previous_i];
-				}
-				if (isset($ids[$next_i])){
-					$next_id = $ids[$next_i];
-				}
-			}
-			$i++;
-		}
-	}
+	$contents = tutils()->get_course_prev_next_contents_by_id($content_id);
+	$previous_id = $contents->previous_id;
+	$next_id = $contents->next_id;
 
 	ob_start();
 	do_action('tutor_lesson_next_previous_pagination_before');

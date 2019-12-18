@@ -173,6 +173,12 @@ class Options {
 								'label_title'   => __('Enable', 'tutor'),
 								'desc' => __('Use Gutenberg editor on course description area.', 'tutor'),
 							),
+							'hide_course_from_shop_page' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable / Disable', 'tutor'),
+								'label_title'   => __('Hide course products from shop page', 'tutor'),
+								'desc' => __('Enabling this feature will be removed course products from the shop page.', 'tutor'),
+							),
 						),
 					),
 					'archive' => array(
@@ -340,6 +346,12 @@ class Options {
 								'label'         => __('Classic Editor', 'tutor'),
 								'label_title'   => __('Enable', 'tutor'),
 								'desc'          => __('Enable classic editor to get full support of any editor/page builder.', 'tutor'),
+							),
+							'autoload_next_course_content' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable / Disable', 'tutor'),
+								'label_title'   => __('Automatically load next course content.', 'tutor'),
+								'desc' => __('Enabling this feature will be load next course content automatically after finishing current video.', 'tutor'),
 							),
 							'lesson_permalink_base' => array(
 								'type'      => 'text',

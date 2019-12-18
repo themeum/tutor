@@ -18,6 +18,7 @@ do_action('tutor_lesson/single/before/content');
 $jsonData = array();
 $jsonData['post_id'] = get_the_ID();
 $jsonData['best_watch_time'] = 0;
+$jsonData['autoload_next_course_content'] = (bool) get_tutor_option('autoload_next_course_content');
 
 $best_watch_time = tutor_utils()->get_lesson_reading_info(get_the_ID(), 0, 'video_best_watched_time');
 if ($best_watch_time > 0){

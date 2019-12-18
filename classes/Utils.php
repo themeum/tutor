@@ -5302,5 +5302,41 @@ class Utils {
 		return $new_pages;
 	}
 
+	/**
+	 * @param int $course_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get Course prev next lession contents by content ID
+	 *
+	 * @since v.1.4.9
+	 */
+	public function get_course_prev_next_contents_by_id($content_id = 0){
 
+		$course_id = $this->get_course_id_by_content($content_id);
+		$course_contents = $this->get_course_contents_by_id($course_id);
+		$previous_id = 0;
+		$next_id = 0;
+		if ($this->count($course_contents)){
+			$ids = wp_list_pluck($course_contents, 'ID');
+
+			$i=0;
+			foreach ($ids as $key => $id){
+				$previous_i = $key - 1;
+				$next_i = $key + 1;
+
+				if ($id == $content_id){
+					if (isset($ids[$previous_i])){
+						$previous_id = $ids[$previous_i];
+					}
+					if (isset($ids[$next_i])){
+						$next_id = $ids[$next_i];
+					}
+				}
+				$i++;
+			}
+		}
+
+		return (object) ['previous_id'=>$previous_id, 'next_id'=>$next_id];
+	}
 }

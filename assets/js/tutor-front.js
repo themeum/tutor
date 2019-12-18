@@ -38,30 +38,31 @@ jQuery(document).ready(function($){
     });
 
     const videoPlayer = {
-        nonce_key : _tutorobject.nonce_key,
-        video_track_data : $('#tutor_video_tracking_information').val(),
-        track_player : function(){
-            var that = this;
-
-            var video_data = this.video_track_data ? JSON.parse(this.video_track_data) : {};
-
+        ajaxurl: _tutorobject.ajaxurl,
+        nonce_key: _tutorobject.nonce_key,
+        video_data: function() {
+            const video_track_data = $('#tutor_video_tracking_information').val();
+            return video_track_data ? JSON.parse(video_track_data) : {};
+        },
+        track_player: function() {
+            const that = this;
             if (typeof Plyr !== 'undefined') {
                 const player = new Plyr('#tutorPlayer');
-
+                const video_data = that.video_data();
                 player.on('ready', function(event){
                     const instance = event.detail.plyr;
-                    if (video_data.best_watch_time > 0) {
-                        instance.media.currentTime = video_data.best_watch_time;
+                    const { best_watch_time } = video_data;
+                    if (best_watch_time > 0 && instance.duration > Math.round(best_watch_time)) {
+                        instance.media.currentTime = best_watch_time;
                     }
                     that.sync_time(instance);
                 });
 
-                var tempTimeNow = 0;
-                var intervalSeconds = 60; //Send to tutor backend about video playing time in this interval
-                player.on('timeupdate', function(event){
+                let tempTimeNow = 0;
+                let intervalSeconds = 30; //Send to tutor backend about video playing time in this interval
+                player.on('timeupdate', function(event) {
                     const instance = event.detail.plyr;
-
-                    var tempTimeNowInSec = (tempTimeNow / 4); //timeupdate firing 250ms interval
+                    const tempTimeNowInSec = (tempTimeNow / 4); //timeupdate firing 250ms interval
                     if (tempTimeNowInSec >= intervalSeconds){
                         that.sync_time(instance);
                         tempTimeNow = 0;
@@ -69,29 +70,39 @@ jQuery(document).ready(function($){
                     tempTimeNow++;
                 });
 
-                player.on('ended', function(event){
+                player.on('ended', function(event) {
+                    const video_data = that.video_data();
                     const instance = event.detail.plyr;
-
-                    var data = {is_ended:true};
-                    that.sync_time(instance, data)
+                    const data = {is_ended:true};
+                    that.sync_time(instance, data);
+                    if(video_data.autoload_next_course_content) {
+                        that.autoload_content();
+                    }
                 });
             }
         },
-        sync_time: function(instance, options){
-            /**
-             * TUTOR is sending about video playback information to server.
-             */
-            var video_data = this.video_track_data ? JSON.parse(this.video_track_data) : {};
-            var data = {action: 'sync_video_playback', currentTime : instance.currentTime, duration:instance.duration,  post_id : video_data.post_id};
+        sync_time: function(instance, options) {
+            const post_id = this.video_data().post_id;
+            //TUTOR is sending about video playback information to server.
+            let data = {action: 'sync_video_playback', currentTime: instance.currentTime, duration:instance.duration, post_id};
             data[this.nonce_key] = _tutorobject[this.nonce_key];
-
-            var data_send = data;
+            let data_send = data;
             if(options){
                 data_send = Object.assign(data, options);
             }
-            $.post(_tutorobject.ajaxurl, data_send);
+            $.post(this.ajaxurl, data_send);
         },
-        init: function(){
+        autoload_content: function() {
+            const post_id = this.video_data().post_id;
+            const data = {action: 'autoload_next_course_content', post_id};
+            data[this.nonce_key] = _tutorobject[this.nonce_key];
+            $.post(this.ajaxurl, data).done(function(response) {
+                if(response.success && response.data.next_url) {
+                    location.href = response.data.next_url;
+                }
+            });
+        },
+        init: function() {
             this.track_player();
         }
     };
