@@ -506,7 +506,6 @@ class Utils {
 		$instructor_id = $this->get_user_id($instructor_id);
 		$course_post_type = tutor()->course_post_type;
 
-
 		if ($post_status === 'any'){
 			$where_post_status = "";
 		}else{
@@ -1398,16 +1397,18 @@ class Utils {
 	 * @param int $course_id
 	 * @param int $user_id
 	 *
-	 * @return array|bool|null|object|void
+	 * @return array|bool|null|object
 	 *
 	 * Determine if a course completed
 	 *
 	 * @since v.1.0.0
+	 *
+	 * @updated v.1.4.9
 	 */
 
 	public function is_completed_course($course_id = 0, $user_id = 0){
 		if ( ! is_user_logged_in()){
-			return false;
+			return apply_filters('is_completed_course', false, $course_id, $user_id);
 		}
 
 		global $wpdb;
@@ -1426,10 +1427,10 @@ class Utils {
 		AND user_id = {$user_id} ;");
 
 		if ($is_completed){
-			return $is_completed;
+			return apply_filters('is_completed_course', $is_completed, $course_id, $user_id);
 		}
 
-		return false;
+		return apply_filters('is_completed_course', false, $course_id, $user_id);
 	}
 
 	/**
