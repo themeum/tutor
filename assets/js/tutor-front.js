@@ -1418,4 +1418,36 @@ jQuery(document).ready(function($){
     });
 
 
+    $('ul.tutor-bp-enrolled-course-list').each(function(){
+
+        var $that = $(this);
+        var $li = $that.find(' > li');
+        var itemShow = 3;
+
+        if ($li.length > itemShow){
+            var plusCourseCount = $li.length - itemShow;
+            $li.each(function(liIndex, liItem){
+                var $liItem = $(this);
+
+                if (liIndex >= itemShow){
+                    $liItem.hide();
+                }
+            });
+
+            var infoHtml = '<a href="javascript:;" class="tutor_bp_plus_courses"><strong>+'+plusCourseCount+' More </strong></a> Courses';
+            $that.closest('.tutor-bp-enrolled-courses-wrap').find('.thread-participant-enrolled-info').html(infoHtml);
+        }
+
+        $that.show();
+    });
+
+    $(document).on('click', 'a.tutor_bp_plus_courses', function(e){
+        e.preventDefault();
+
+        var $btn = $(this);
+        $btn.closest('.tutor-bp-enrolled-courses-wrap').find('.tutor-bp-enrolled-course-list li').show();
+        $btn.closest('.thread-participant-enrolled-info').html('');
+    });
+
+
 });

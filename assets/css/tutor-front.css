@@ -6454,6 +6454,80 @@ table.course-single-gradebooks a {
 /**
 * END Gradebook
  */
+/**
+* Tutor BuddyPress Addon CSS
+*/
+.tutor-bp-message-recipient-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.tutor-bp-recipient-info-wrap {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.tutor-bp-message-recipient-avatar-wrap img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.tutor-bp-message-recipient-avatar-wrap {
+  margin-right: 35px;
+}
+
+.tutor-bp-message-recipient-header .tutor-bp-thread-recipient-name h3 {
+  margin: 0 0 8px !important;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.tutor-bp-message-recipient-header .tutor-bp-thread-recipient-name h4 {
+  margin: 0 0 20px !important;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 500;
+}
+
+.tutor-bp-enrolled-courses-wrap {
+  margin: 0;
+}
+
+.tutor-bp-enrolled-courses-wrap .tutor-bp-enrolled-total-course-notice {
+  font-weight: 400;
+  color: #1C294B;
+  margin-bottom: 10px;
+}
+
+.tutor-bp-enrolled-courses-wrap ul {
+  padding: 0 0 0 17px;
+  margin: 0;
+  color: #50616F;
+}
+
+.tutor-bp-enrolled-courses-wrap ul li a {
+  line-height: 2;
+  display: block;
+  color: #54616d;
+  padding-left: 10px;
+}
+
+.tutor-bp-enrolled-courses-wrap ul li a:hover {
+  color: var(--tutor-primary-color);
+  opacity: 1;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+  text-decoration: underline !important;
+}
+
+/**
+* END Tutor BuddyPress
+*/
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */
