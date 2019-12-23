@@ -1,5 +1,14 @@
 # TutorLMS Changelog
 
+### 1.4.9 - 24 December, 2019
+
+* Added: BuddyPress Integration (TutorLMS Pro)
+* Added: Go next lesson after ending video lesson
+* Added: Hide course-product from shop page.
+* Added: action hook `do_action('tutor_quiz/start/before', $quiz_id, $user_id);`
+* Added: action hook `do_action('tutor_quiz/start/after', $quiz_id, $user_id, $attempt_id);`
+* Added: filter `apply_filters('is_completed_course', $is_completed, $course_id, $user_id)`
+
 ### 1.4.8 - 10 December, 2019
 
 * Added: Restrict Content Pro Integration (TutorLMS Pro)
