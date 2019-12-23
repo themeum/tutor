@@ -3661,15 +3661,15 @@ table.course-single-gradebooks a{
     flex-grow: 1;
 }
 .tutor-bp-message-recipient-avatar-wrap img {
-    width: 100px;
-    height: 100px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
 }
 .tutor-bp-message-recipient-avatar-wrap {
     margin-right: 35px;
 }
 .tutor-bp-message-recipient-header .tutor-bp-thread-recipient-name h3 {
-    margin: 0 0 8px !important;
+    margin: 10px 0 8px !important;
     font-size: 22px;
     font-weight: 600;
     line-height: 28px;
@@ -3686,7 +3686,7 @@ table.course-single-gradebooks a{
 .tutor-bp-enrolled-courses-wrap .tutor-bp-enrolled-total-course-notice{
     font-weight: 400;
     color: #1C294B;
-    margin-bottom: 10px;
+    margin: 10px 0 8px !important;
 }
 .tutor-bp-enrolled-courses-wrap ul {
     padding: 0 0 0 17px;
@@ -3694,7 +3694,7 @@ table.course-single-gradebooks a{
     color: #50616F;
 }
 .tutor-bp-enrolled-courses-wrap ul li a {
-    line-height: 2;
+    line-height: 1.7;
     display: block;
     color: #54616d;
     padding-left: 10px;
