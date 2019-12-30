@@ -673,8 +673,6 @@ class Course extends Tutor_Base {
 			if ($user_ID){
 				$data['post_author'] = $user_ID;
 			}else{
-				global $wpdb;
-
 				$post_ID = (int) tutor_utils()->avalue_dot('ID', $postarr);
 				$post_author = (int) $wpdb->get_var("SELECT post_author FROM {$wpdb->posts} WHERE ID = {$post_ID} ");
 

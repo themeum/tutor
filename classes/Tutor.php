@@ -137,6 +137,7 @@ final class Tutor{
 		$this->dashboard = new Dashboard();
 		$this->form_handler = new FormHandler();
 		$this->email = new Email();
+		$this->rest_api = new RestAPI();
 
 		/**
 		 * Run Method
