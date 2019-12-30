@@ -33,6 +33,8 @@ class Post_types{
 	}
 	
 	public function register_course_post_types() {
+		$course_post_type = $this->course_post_type;
+		$courses_base_slug = apply_filters('tutor_courses_base_slug', $course_post_type);
 
 		$labels = array(
 			'name'                      => _x( 'Courses', 'post type general name', 'tutor' ),
@@ -59,7 +61,7 @@ class Post_types{
 			'show_ui'                   => true,
 			'show_in_menu'              => 'tutor',
 			'query_var'                 => true,
-			'rewrite'                   => array( 'slug' => $this->course_post_type, 'with_front' => false ),
+			'rewrite'                   => array( 'slug' => $courses_base_slug, 'with_front' => false ),
 			'menu_icon'                 => 'dashicons-book-alt',
 			'capability_type'           => 'post',
 			'has_archive'               => true,
@@ -83,7 +85,7 @@ class Post_types{
 
 		);
 
-		register_post_type($this->course_post_type, $args);
+		register_post_type($course_post_type, $args);
 
 		/**
 		 * Taxonomy
@@ -154,12 +156,15 @@ class Post_types{
 	}
 
 	public function register_lesson_post_types() {
+		$lesson_post_type = $this->lesson_post_type;
+		$lesson_base_slug = apply_filters('tutor_lesson_base_slug', $lesson_post_type);
+
 		$labels = array(
 			'name'               => _x( 'Lessons', 'post type general name', 'tutor' ),
 			'singular_name'      => _x( 'Lesson', 'post type singular name', 'tutor' ),
 			'menu_name'          => _x( 'Lessons', 'admin menu', 'tutor' ),
 			'name_admin_bar'     => _x( 'Lesson', 'add new on admin bar', 'tutor' ),
-			'add_new'            => _x( 'Add New', $this->lesson_post_type, 'tutor' ),
+			'add_new'            => _x( 'Add New', $lesson_post_type, 'tutor' ),
 			'add_new_item'       => __( 'Add New Lesson', 'tutor' ),
 			'new_item'           => __( 'New Lesson', 'tutor' ),
 			'edit_item'          => __( 'Edit Lesson', 'tutor' ),
@@ -179,8 +184,8 @@ class Post_types{
 			'show_ui'            => true,
 			'show_in_menu'       => false,
 			'query_var'          => true,
-			'rewrite'            => array( 'slug' => $this->lesson_post_type ),
-			'menu_icon'    => 'dashicons-list-view',
+			'rewrite'            => array( 'slug' => $lesson_base_slug ),
+			'menu_icon'         => 'dashicons-list-view',
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'hierarchical'       => false,
@@ -199,7 +204,7 @@ class Post_types{
 			),
 		);
 
-		register_post_type( $this->lesson_post_type, $args );
+		register_post_type($lesson_post_type, $args );
 	}
 	
 	public function register_quiz_post_types() {
