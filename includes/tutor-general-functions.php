@@ -527,15 +527,18 @@ if ( ! function_exists('tutor_time')) {
  */
 if ( ! function_exists('tutor_maintenance_mode')) {
 	function tutor_maintenance_mode( $enable = false ) {
-		global $wp_filesystem;
-		$file = $wp_filesystem->abspath() . '.tutor_maintenance';
+		$file = ABSPATH . '.tutor_maintenance';
 		if ( $enable ) {
 			// Create maintenance file to signal that we are upgrading
 			$maintenance_string = '<?php $upgrading = ' . time() . '; ?>';
-			$wp_filesystem->delete( $file );
-			$wp_filesystem->put_contents( $file, $maintenance_string, FS_CHMOD_FILE );
-		} elseif ( ! $enable && $wp_filesystem->exists( $file ) ) {
-			$wp_filesystem->delete( $file );
+
+			if ( ! file_exists($file)){
+				file_put_contents($file, $maintenance_string);
+			}
+		} else{
+		    if (file_exists($file)){
+		        unlink($file);
+		    }
 		}
 	}
 }

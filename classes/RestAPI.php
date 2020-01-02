@@ -35,16 +35,16 @@ class RestAPI {
 		global $wpdb;
 
 		$a = array_merge(array(
-			'post_type'         => $this->course_post_type,
-			'post_status'       => 'publish',
+			'post_type'     => $this->course_post_type,
+			'post_status'   => 'publish',
 
-			'id'       => '',
-			'exclude_ids'       => '',
-			'category'       => '',
+			'id'            => '',
+			'exclude_ids'   => '',
+			'category'      => '',
 
-			'orderby'           => 'ID',
-			'order'             => 'DESC',
-			'count'     => '10',
+			'orderby'       => 'ID',
+			'order'         => 'DESC',
+			'count'         => '10',
 		), $_GET);
 
 		$limit = (int) $a['count'];
@@ -52,6 +52,9 @@ class RestAPI {
 		$in_ids_query = '';
 		$tax_join = '';
 		$tax_where = '';
+
+		$orderby = sanitize_text_field($a['orderby']);
+		$order = sanitize_text_field($a['order']);
 
 		/**
 		 * Exclude Course IDS
@@ -88,9 +91,8 @@ class RestAPI {
 			$tax_where = tutils()->array_get('where', $tax_sql);
 		}
 
-
 		$course_post_type = tutor()->course_post_type;
-		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order 
+		$query = $wpdb->get_results("SELECT ID, post_author, post_title 
 			from {$wpdb->posts} 
 			
 			{$tax_join}
@@ -99,7 +101,7 @@ class RestAPI {
 			{$exclude_ids_query}
 			{$in_ids_query}
 			{$tax_where}
-			AND post_type = '{$course_post_type}' LIMIT {$limit} ", ARRAY_A);
+			AND post_type = '{$course_post_type}' ORDER BY {$orderby} {$order} LIMIT {$limit} ", ARRAY_A);
 
 
 		if (tutils()->count($query)){

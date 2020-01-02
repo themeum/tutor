@@ -131,7 +131,7 @@ class Lesson extends Tutor_Base {
 		$_lesson_thumbnail_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('_lesson_thumbnail_id', $_POST));
 
 		$title = sanitize_text_field($_POST['lesson_title']);
-		$lesson_content = wp_kses_post($_POST['lesson_content']);
+		$lesson_content = wp_kses_post($_POST['tutor_lesson_modal_editor']);
 
 		$lesson_data = array(
 			'ID'            => $lesson_id,
