@@ -186,8 +186,10 @@ final class Tutor{
 		/**
 		 * Oxygen Assets
 		 */
-		include tutor()->path.'includes/integrations/oxygen/elements/OxygenTutorElements.php';
-		include tutor()->path.'includes/integrations/oxygen/elements/CourseBuilder.php';
+		if (class_exists('OxyEl')){
+			include tutor()->path.'includes/integrations/oxygen/elements/OxygenTutorElements.php';
+			include tutor()->path.'includes/integrations/oxygen/elements/CourseBuilder.php';
+		}
 
 	}
 
