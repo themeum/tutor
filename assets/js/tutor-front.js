@@ -15,16 +15,16 @@ jQuery(document).ready(function($){
     //END: select2
 
 
-/*!
- * jQuery UI Touch Punch 0.2.3
- *
- * Copyright 2011–2014, Dave Furfero
- * Dual licensed under the MIT or GPL Version 2 licenses.
- *
- * Depends:
- *  jquery.ui.widget.js
- *  jquery.ui.mouse.js
- */
+    /*!
+     * jQuery UI Touch Punch 0.2.3
+     *
+     * Copyright 2011–2014, Dave Furfero
+     * Dual licensed under the MIT or GPL Version 2 licenses.
+     *
+     * Depends:
+     *  jquery.ui.widget.js
+     *  jquery.ui.mouse.js
+     */
     !function(a){function f(a,b){if(!(a.originalEvent.touches.length>1)){a.preventDefault();var c=a.originalEvent.changedTouches[0],d=document.createEvent("MouseEvents");d.initMouseEvent(b,!0,!0,window,1,c.screenX,c.screenY,c.clientX,c.clientY,!1,!1,!1,!1,0,null),a.target.dispatchEvent(d)}}if(a.support.touch="ontouchend"in document,a.support.touch){var e,b=a.ui.mouse.prototype,c=b._mouseInit,d=b._mouseDestroy;b._touchStart=function(a){var b=this;!e&&b._mouseCapture(a.originalEvent.changedTouches[0])&&(e=!0,b._touchMoved=!1,f(a,"mouseover"),f(a,"mousemove"),f(a,"mousedown"))},b._touchMove=function(a){e&&(this._touchMoved=!0,f(a,"mousemove"))},b._touchEnd=function(a){e&&(f(a,"mouseup"),f(a,"mouseout"),this._touchMoved||f(a,"click"),e=!1)},b._mouseInit=function(){var b=this;b.element.bind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),c.call(b)},b._mouseDestroy=function(){var b=this;b.element.unbind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),d.call(b)}}}(jQuery);
 
     /**
@@ -1333,7 +1333,7 @@ jQuery(document).ready(function($){
         var review_id = $that.closest('.tutor-edit-review-modal-wrap ').attr('data-review-id');
 
         var nonce_key = _tutorobject.nonce_key;
-        
+
         var rating = $that.find('input[name="tutor_rating_gen_input"]').val();
         var review = $that.find('textarea[name="review"]').val();
         review = review.trim();
@@ -1450,6 +1450,43 @@ jQuery(document).ready(function($){
         var $btn = $(this);
         $btn.closest('.tutor-bp-enrolled-courses-wrap').find('.tutor-bp-enrolled-course-list li').show();
         $btn.closest('.thread-participant-enrolled-info').html('');
+    });
+
+
+
+    /**
+     * Addon, Tutor Certificate
+     * Certificate dropdown content and copy link
+     * @for TutorLMS Pro
+     * @since v.1.5.1
+     */
+    $(document).on('click', '.tutor-dropbtn', function (e) {
+        var $content = $(this).parent().find(".tutor-dropdown-content");
+        $content.slideToggle(100);
+    });
+    $(document).on('click', '.tutor-copy-link', function (e) {
+        var $btn = $(this);
+        var copy = '<i class="tutor-icon-copy"></i> Copy Link';
+        var copied = '<i class="tutor-icon-mark"></i> Copied';
+        var dummy = document.createElement('input'),
+            text = window.location.href;
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        document.execCommand('copy');
+        document.body.removeChild(dummy);
+        $btn.html(copied);
+        setTimeout( function() {
+            $btn.html(copy);
+        }, 2500);
+    });
+    $(document).on('click', function(e) {
+        var container = $(".tutor-dropdown");
+        var $content = container.find('.tutor-dropdown-content');
+        // if the target of the click isn't the container nor a descendant of the container
+        if (!container.is(e.target) && container.has(e.target).length === 0)  {
+            $content.slideUp(100);
+        }
     });
 
 
