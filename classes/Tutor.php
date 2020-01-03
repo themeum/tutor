@@ -41,9 +41,6 @@ final class Tutor{
 	private $theme_compatibility;
 	private $gutenberg;
 	private $course_settings_tabs;
-
-	private $woocommerce;
-	private $edd;
 	private $withdraw;
 
 	private $course_widget;
@@ -51,6 +48,12 @@ final class Tutor{
 	private $dashboard;
 	private $form_handler;
 	private $email;
+
+	//Integrations
+	private $woocommerce;
+	private $edd;
+	private $oxygen;
+
 
 	/**
 	 * @return null|Tutor
@@ -129,8 +132,6 @@ final class Tutor{
 		$this->theme_compatibility = new Theme_Compatibility();
 		$this->gutenberg = new Gutenberg();
 		$this->course_settings_tabs = new Course_Settings_Tabs();
-		$this->woocommerce = new WooCommerce();
-		$this->edd = new TutorEDD();
 		$this->withdraw = new Withdraw();
 		$this->course_widget = new Course_Widget();
 		$this->upgrader = new Upgrader();
@@ -138,6 +139,11 @@ final class Tutor{
 		$this->form_handler = new FormHandler();
 		$this->email = new Email();
 		$this->rest_api = new RestAPI();
+
+		//Integrations
+		$this->woocommerce = new WooCommerce();
+		$this->edd = new TutorEDD();
+		$this->oxygen = new Oxygen();
 
 		/**
 		 * Run Method
@@ -176,6 +182,13 @@ final class Tutor{
 		include tutor()->path.'includes/tutor-general-functions.php';
 		include tutor()->path.'includes/tutor-template-functions.php';
 		include tutor()->path.'includes/tutor-template-hook.php';
+
+		/**
+		 * Oxygen Assets
+		 */
+		include tutor()->path.'includes/integrations/oxygen/elements/OxygenTutorElements.php';
+		include tutor()->path.'includes/integrations/oxygen/elements/CourseBuilder.php';
+
 	}
 
 	//Run the TUTOR right now

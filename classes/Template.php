@@ -16,6 +16,15 @@ class Template extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
+
+		/**
+		 * check if Oxygen installed and active
+		 * If we found that Oxygen Builder Found, then we will not use this file
+		 */
+		if (class_exists('OxygenElement')) {
+			return;
+		}
+
 		add_action( 'pre_get_posts', array($this, 'limit_course_query_archive'), 1 );
 
 		add_filter( 'template_include', array($this, 'load_course_archive_template'), 99 );
@@ -29,7 +38,7 @@ class Template extends Tutor_Base {
 		add_filter( 'template_include', array($this, 'tutor_dashboard'), 99 );
 		add_filter( 'pre_get_document_title', array($this, 'student_public_profile_title') );
 
-		add_filter('the_content', array($this, 'convert_static_page_to_template'));
+		add_filter( 'the_content', array($this, 'convert_static_page_to_template'));
 	}
 
 	/**
