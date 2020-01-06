@@ -99,4 +99,5 @@ if ( ! function_exists('tutor_lms')){
 		return \TUTOR\Tutor::instance();
 	}
 }
-$GLOBALS['tutor'] = tutor_lms();
+add_action('plugins_loaded', 'tutor_lms');
+//$GLOBALS['tutor'] = tutor_lms();
