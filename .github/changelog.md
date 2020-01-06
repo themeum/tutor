@@ -1,5 +1,13 @@
 # TutorLMS Changelog
 
+### 1.5.0 - 06 January, 2020
+
+* Certificate verification public URL (Pro)
+* Added: filter `apply_filters('tutor_courses_base_slug', $course_post_type)`
+* Added: fitler `apply_filters('tutor_lesson_base_slug', $lesson_post_type)`
+* Fixed: lesson editor content post issue, some content sometime not saved before.
+* Fixed: file system issue after update option hook, while create maintance mode file.
+
 ### 1.4.9 - 24 December, 2019
 
 * Added: BuddyPress Integration (TutorLMS Pro)
