@@ -52,8 +52,6 @@ final class Tutor{
 	//Integrations
 	private $woocommerce;
 	private $edd;
-	private $oxygen;
-
 
 	/**
 	 * @return null|Tutor
@@ -143,7 +141,6 @@ final class Tutor{
 		//Integrations
 		$this->woocommerce = new WooCommerce();
 		$this->edd = new TutorEDD();
-		$this->oxygen = new Oxygen();
 
 		/**
 		 * Run Method
@@ -182,15 +179,6 @@ final class Tutor{
 		include tutor()->path.'includes/tutor-general-functions.php';
 		include tutor()->path.'includes/tutor-template-functions.php';
 		include tutor()->path.'includes/tutor-template-hook.php';
-
-		/**
-		 * Oxygen Assets
-		 */
-		if (class_exists('OxyEl')){
-			include tutor()->path.'includes/integrations/oxygen/elements/OxygenTutorElements.php';
-			include tutor()->path.'includes/integrations/oxygen/elements/CourseBuilder.php';
-		}
-
 	}
 
 	//Run the TUTOR right now

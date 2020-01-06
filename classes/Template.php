@@ -16,16 +16,19 @@ class Template extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
+		add_action( 'pre_get_posts', array($this, 'limit_course_query_archive'), 1 );
+
 
 		/**
-		 * check if Oxygen installed and active
-		 * If we found that Oxygen Builder Found, then we will not use this file
+		 * Should Load Template Override
+		 * Integration for specially oxygen builder
+		 * If we found false of below filter, then we will not use this file
 		 */
-		if (class_exists('OxygenElement')) {
+
+		$template_override = apply_filters('tutor_lms_should_template_override', true);
+		if ( ! $template_override){
 			return;
 		}
-
-		add_action( 'pre_get_posts', array($this, 'limit_course_query_archive'), 1 );
 
 		add_filter( 'template_include', array($this, 'load_course_archive_template'), 99 );
 		add_filter( 'template_include', array($this, 'load_single_course_template'), 99 );
