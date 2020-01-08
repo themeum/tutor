@@ -126,12 +126,16 @@ class Lesson extends Tutor_Base {
 		wp_send_json_success(array('output' => $output));
 	}
 
+	/**
+	 * @since v.1.0.0
+	 * @updated v.1.5.1
+	 */
 	public function tutor_modal_create_or_update_lesson(){
 		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
 		$_lesson_thumbnail_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('_lesson_thumbnail_id', $_POST));
 
 		$title = sanitize_text_field($_POST['lesson_title']);
-		$lesson_content = wp_kses_post($_POST['tutor_lesson_modal_editor']);
+		$lesson_content = wp_kses_post($_POST['lesson_content']);
 
 		$lesson_data = array(
 			'ID'            => $lesson_id,

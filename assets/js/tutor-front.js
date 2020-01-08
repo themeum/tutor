@@ -991,7 +991,7 @@ jQuery(document).ready(function($){
         }
 
         var form_data = $(this).closest('form').serialize();
-        form_data += '&lesson_content='+content;
+        form_data += '&lesson_content='+encodeURIComponent(content);
 
         $.ajax({
             url : ajaxurl,
