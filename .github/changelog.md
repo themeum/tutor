@@ -1,5 +1,9 @@
 # TutorLMS Changelog
 
+### 1.5.1 - 08 January, 2020
+
+* Fixed an update during lesson content from modal
+
 ### 1.5.0 - 06 January, 2020
 
 * Certificate verification public URL (Pro)
