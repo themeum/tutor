@@ -2518,7 +2518,7 @@ class Utils {
 			from {$wpdb->comments}
 			INNER JOIN {$wpdb->commentmeta} 
 			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
-			INNER  JOIN {$wpdb->users}
+			LEFT JOIN {$wpdb->users}
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
 			AND comment_type = 'tutor_course_rating' AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
