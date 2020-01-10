@@ -3948,12 +3948,14 @@ class Utils {
 	 */
 	public function get_wishlist($user_id = 0){
 		$user_id = $this->get_user_id($user_id);
+		$course_post_type = tutor()->course_post_type;
+
 		global $wpdb;
 
 		$query = "SELECT $wpdb->posts.*
 	    FROM $wpdb->posts
 	    LEFT JOIN $wpdb->usermeta ON ($wpdb->posts.ID = $wpdb->usermeta.meta_value)
-	    WHERE $wpdb->usermeta.meta_key = '_tutor_course_wishlist'
+	    WHERE post_type = '{$course_post_type}' AND post_status = 'publish' AND $wpdb->usermeta.meta_key = '_tutor_course_wishlist'
 	    AND $wpdb->usermeta.user_id = {$user_id}
 	    ORDER BY $wpdb->usermeta.umeta_id DESC ";
 		$pageposts = $wpdb->get_results($query, OBJECT);
@@ -5340,4 +5342,26 @@ class Utils {
 
 		return (object) ['previous_id'=>$previous_id, 'next_id'=>$next_id];
 	}
+
+
+	/**
+	 * Get a subset of the items from the given array.
+	 *
+	 * @param array $array
+	 * @param array|string  $keys
+	 *
+	 * @return array|bool
+	 *
+	 * @since v.1.5.2
+	 */
+
+	public function array_only($array = array(), $keys = null){
+		if ( ! $this->count($array) || ! $keys){
+			return false;
+		}
+
+		return array_intersect_key($array, array_flip((array) $keys));
+	}
+
+
 }
