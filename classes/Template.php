@@ -260,7 +260,7 @@ class Template extends Tutor_Base {
 	 * @since v.1.0.0
 	 */
 	public function convert_static_page_to_template($content){
-		//Student Registration Page
+		//Dashboard Page
 		$student_dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
 		if ($student_dashboard_page_id === get_the_ID()){
 			$shortcode = new Shortcode();
