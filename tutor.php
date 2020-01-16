@@ -101,3 +101,5 @@ if ( ! function_exists('tutor_lms')){
 }
 add_action('plugins_loaded', 'tutor_lms');
 //$GLOBALS['tutor'] = tutor_lms();
+
+include_once 'classes/Tutor_Setup.php';
