@@ -89,6 +89,13 @@ if ( ! function_exists('tutils')){
 }
 
 /**
+ * Do some task during activation
+ * @moved here @since v.1.5.2
+ */
+register_activation_hook( TUTOR_FILE, array('\TUTOR\Tutor', 'tutor_activate' ) );
+register_deactivation_hook(TUTOR_FILE, array('\TUTOR\Tutor', 'tutor_deactivation'));
+
+/**
  * @return null|\TUTOR\Tutor
  * Run main instance of the Tutor
  *

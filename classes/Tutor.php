@@ -185,9 +185,6 @@ final class Tutor{
 	public function run(){
 		do_action('tutor_before_run');
 
-		register_activation_hook( TUTOR_FILE, array($this, 'tutor_activate' ) );
-		register_deactivation_hook(TUTOR_FILE, array($this, 'tutor_deactivation'));
-
 		do_action('tutor_after_run');
 	}
 
@@ -199,18 +196,20 @@ final class Tutor{
 		if (isset($_REQUEST['tutor_action'])){
 			do_action('tutor_action_'.$_REQUEST['tutor_action']);
 		}
-
 	}
 
 	/**
 	 * Do some task during plugin activation
 	 */
-	public function tutor_activate(){
+	public static function tutor_activate(){
 		$version = get_option('tutor_version');
+		if ( ! function_exists('tutor_time')){
+			include tutor()->path.'includes/tutor-general-functions.php';
+		}
 		//Save Option
 		if ( ! $version){
 			//Create Database
-			$this->create_database();
+			self::create_database();
 
 			$options = self::default_options();
 			update_option('tutor_option', $options);
@@ -235,7 +234,7 @@ final class Tutor{
 			/**
 			 * Creating New Database
 			 */
-			$this->create_withdraw_database();
+			self::create_withdraw_database();
 			//Update the tutor version
 			update_option('tutor_version', '1.2.0');
 			//Rewrite Flush
@@ -267,11 +266,11 @@ final class Tutor{
 	}
 
 	//Run task on deactivation
-	public function tutor_deactivation() {
+	public static function tutor_deactivation() {
 		wp_clear_scheduled_hook('tutor_once_in_day_run_schedule');
 	}
 
-	public function create_database(){
+	public static function create_database(){
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
@@ -562,7 +561,7 @@ final class Tutor{
 	 *
 	 * @since v.1.2.0
 	 */
-	public function create_withdraw_database(){
+	public static function create_withdraw_database(){
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
