@@ -1,0 +1,11 @@
+.tutor-wrapper-video,
+.tutor-wrapper-type,
+.tutor-wrapper-boarding {
+    display: none;
+}
+
+.tutor-wrapper-video.active,
+.tutor-wrapper-type.active,
+.tutor-wrapper-boarding.active {
+    display: block;
+}
