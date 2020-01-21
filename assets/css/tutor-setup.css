@@ -9,3 +9,10 @@
 .tutor-wrapper-boarding.active {
     display: block;
 }
+
+ul.tutor-setup-content li{
+    display: none;
+}
+ul.tutor-setup-content li.active{
+    display: block;
+}
