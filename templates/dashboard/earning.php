@@ -77,9 +77,9 @@ foreach ($chartData as $key => $salesCount){
 
 	<div class="tutor-dashboard-inline-links">
 		<ul>
-			<li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning'); ?>"> <?php _e('Earning'); ?></a>
+			<li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning'); ?>"> <?php _e('Earnings'); ?></a>
 			</li>
-			<li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/report'); ?>"> <?php _e('Report'); ?> </a>
+			<li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/report'); ?>"> <?php _e('Reports'); ?> </a>
 			</li>
 			<li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/statements'); ?>">
 					<?php _e('Statements'); ?> </a> </li>
@@ -95,25 +95,25 @@ foreach ($chartData as $key => $salesCount){
         </div>
         <div class="tutor-dashboard-info-card" title="<?php _e('All Time', 'tutor'); ?>">
             <p>
-                <span> <?php _e('My Earning', 'tutor'); ?> </span>
+                <span> <?php _e('My Earnings', 'tutor'); ?> </span>
                 <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></span>
             </p>
         </div>
         <div class="tutor-dashboard-info-card"  title="<?php _e('Based on course price', 'tutor'); ?>">
             <p>
-                <span> <?php _e('All time sales.', 'tutor'); ?> </span>
+                <span> <?php _e('All time sales', 'tutor'); ?> </span>
                 <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->course_price_total); ?></span>
             </p>
         </div>
         <div class="tutor-dashboard-info-card" title="<?php _e('All of withdraw type excluding rejected.', 'tutor'); ?>">
             <p>
-                <span> <?php _e('All time withdraws.', 'tutor'); ?> </span>
+                <span> <?php _e('All time withdrawals', 'tutor'); ?> </span>
                 <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->withdraws_amount); ?></span>
             </p>
         </div>
         <div class="tutor-dashboard-info-card">
             <p>
-                <span> <?php _e('Deducted Commissions.', 'tutor'); ?> </span>
+                <span> <?php _e('Deducted Commissions', 'tutor'); ?> </span>
                 <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->admin_amount); ?></span>
             </p>
         </div>
@@ -129,7 +129,7 @@ foreach ($chartData as $key => $salesCount){
     </div>
 
     <div class="tutor-dashboard-item-group">
-        <h4><?php _e('Earning Chart for this month', 'tutor') ?> (<?php echo date("F") ?>)</h4>
+        <h4><?php _e('Earnings Chart for this month', 'tutor') ?> (<?php echo date("F") ?>)</h4>
         <canvas id="tutorChart" style="width: 100%; height: 400px;"></canvas>
     </div>
 
