@@ -20,7 +20,7 @@ if ( ! $enable_q_and_a_on_course) {
 global $post;
 $currentPost = $post;
 
-$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
+$course_id = tutils()->get_course_id_by_content($post);
 
 ?>
 <?php do_action('tutor_course/question_and_answer/before'); ?>
