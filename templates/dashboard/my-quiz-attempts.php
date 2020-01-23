@@ -84,5 +84,5 @@ if ($attempted_count){
     </div>
 
 <?php } else {
-    echo __('Quiz data is empty', 'tutor');
+    echo __('You have not attempted any quiz yet', 'tutor');
 } ?>
