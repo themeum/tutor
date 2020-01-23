@@ -7,7 +7,7 @@
 global $post; ?>
 
 
-<h3><?php _e('Wishlist Ding Ding', 'tutor'); ?></h3>
+<h3><?php _e('Wishlist', 'tutor'); ?></h3>
 <div class="tutor-dashboard-content-inner">
     <div class="tutor-row">
 
