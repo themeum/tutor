@@ -571,7 +571,7 @@ class Options {
 				),
 			),
 			'tutor_withdraw' => array(
-				'label'     => __('Withdraw', 'tutor'),
+				'label'     => __('Withdrawal', 'tutor'),
 				'sections'    => array(
 					'general' => array(
 						'label' => __('Withdrawal Settings', 'tutor'),
