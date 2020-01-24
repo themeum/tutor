@@ -139,7 +139,7 @@ if ( !class_exists('Tutor_Setup') ) {
             ?>
             <div class="tutor-wrapper-boarding active">
                 <div><?php _e('Hello, Welcome Tutor LMS.', 'tutor'); ?></div>
-                <div>
+                <div class="tutor-setup-wrapper">
                     <ul class="tutor-setup-title">
                         <li class="active"><?php _e('General', 'tutor'); ?></li>
                         <li><?php _e('Course', 'tutor'); ?></li>
@@ -147,41 +147,41 @@ if ( !class_exists('Tutor_Setup') ) {
                     </ul>
                     <ul class="tutor-setup-content">
 
-                    <form id="tutor-setup-form" method="post">
-                        <input type="hidden" name="action" value="setup_action">
-                        <li class="active">
-                            <div class="tutor-setup-content-heading">
-                                <div><?php _e('General Settings', 'tutor'); ?></div>
-                                <div><?php _e('1 / 8 Step Completed', 'tutor'); ?></div>
-                                <div><?php _e('Reset Default', 'tutor'); ?></div>
-                            </div>
-                            <div class="tutor-setup-content-heading">
-                                <?php $this->tutor_setup_generator($field_arr); ?>
-                            </div>
-                            <?php $this->tutor_setup_wizard_action(); ?>
-                        </li>
+                        <form id="tutor-setup-form" method="post">
+                            <input type="hidden" name="action" value="setup_action">
+                            <li class="active">
+                                <div class="tutor-setup-content-heading heading">
+                                    <div><?php _e('General Settings', 'tutor'); ?></div>
+                                    <div><?php _e('1 / 8 Step Completed', 'tutor'); ?></div>
+                                    <div><?php _e('Reset Default', 'tutor'); ?></div>
+                                </div>
+                                <div class="tutor-setup-content-heading body">
+                                    <?php $this->tutor_setup_generator($field_arr); ?>
+                                </div>
+                                <?php $this->tutor_setup_wizard_action(); ?>
+                            </li>
 
-                        <li>
-                            <div class="tutor-setup-content-heading">
-                                <div><?php _e('General Settings', 'tutor'); ?></div>
-                                <div><?php _e('2 / 8 Step Completed', 'tutor'); ?></div>
-                                <div><?php _e('Reset Default', 'tutor'); ?></div>
-                            </div>
-                            <div class="tutor-setup-content-heading">
-                                <?php $this->tutor_setup_generator($field_arr2); ?>
-                            </div>
-                            <?php $this->tutor_setup_wizard_action(); ?>
-                        </li>
+                            <li>
+                                <div class="tutor-setup-content-heading heading">
+                                    <div><?php _e('General Settings', 'tutor'); ?></div>
+                                    <div><?php _e('2 / 8 Step Completed', 'tutor'); ?></div>
+                                    <div><?php _e('Reset Default', 'tutor'); ?></div>
+                                </div>
+                                <div class="tutor-setup-content-heading body">
+                                    <?php $this->tutor_setup_generator($field_arr2); ?>
+                                </div>
+                                <?php $this->tutor_setup_wizard_action(); ?>
+                            </li>
 
-                        <li>
-                            <div class="tutor-setup-content-heading">
-                                <h2><?php _e('Thank You!', 'tutor'); ?></h2>
-                                <p><?php _e('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses. ', 'tutor'); ?></p>
-                                <button class="tutor-redirect" data-url="<?php echo admin_url('admin.php?page=tutor_settings'); ?>"><?php _e('Finish', 'tutor'); ?></button>
-                            </div>
-                        </li>
+                            <li>
+                                <div class="tutor-setup-content-heading">
+                                    <h2><?php _e('Thank You!', 'tutor'); ?></h2>
+                                    <p><?php _e('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses. ', 'tutor'); ?></p>
+                                    <button class="tutor-redirect" data-url="<?php echo admin_url('admin.php?page=tutor_settings'); ?>"><?php _e('Finish', 'tutor'); ?></button>
+                                </div>
+                            </li>
 
-                    </form>
+                        </form>
 
                     </ul>
                     
@@ -192,10 +192,18 @@ if ( !class_exists('Tutor_Setup') ) {
 
         public function tutor_setup_wizard_action() {
             ?>
-            <div>
-                <button class="tutor-setup-previous"><?php _e('Previous', 'tutor'); ?></button>
-                <button class="tutor-setup-skip"><?php _e('Skip This Step', 'tutor'); ?></button>
-                <button class="tutor-setup-next"><?php _e('Next', 'tutor'); ?></button>
+            <div class="tutor-setup-content-footer footer">
+                <div class="tutor-setup-btn-wrapper">
+                    <button class="tutor-setup-previous"><?php _e('Previous', 'tutor'); ?></button>
+                </div>
+                <div class="tutor-setup-btn-wrapper">
+                    <button class="tutor-setup-skip"><?php _e('Skip This Step', 'tutor'); ?></button>
+                </div>
+                <div class="tutor-setup-btn-wrapper">
+                    <button class="tutor-setup-next"><?php _e('Next', 'tutor'); ?></button>
+                </div>
+                
+                
             </div>
             <?php
         }

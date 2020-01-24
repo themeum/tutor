@@ -17,3 +17,76 @@ ul.tutor-setup-content li {
 ul.tutor-setup-content li.active {
     display: block;
 }
+
+/* ******************* */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    background: #f0f3f6;
+}
+
+.tutor-setup-content {
+    border-radius: 3px;
+    box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
+    background-color: #ffffff;
+    padding: 25px 33px;
+}
+
+.tutor-setup-wrapper {
+    display: grid;
+    grid-template-columns: 122px 762px;
+    grid-gap: 20px;
+}
+
+.tutor-setup-title {
+    justify-self: right;
+    align-self: center;
+    list-style: none;
+    display: grid;
+    grid-gap: 45px;
+}
+
+.tutor-wrapper-boarding {
+    display: grid !important;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    place-items: center;
+    background: #ff000005;
+}
+
+.tutor-setup-content-heading.heading,
+.active .tutor-setup-content-heading.heading {
+    background: #fdf4fd;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    grid-gap: 20px;
+}
+
+.tutor-setup-content .tutor-setting {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-gap: 30px;
+}
+
+.tutor-setup-content-footer.footer {
+    padding: 20px 0;
+    background: #eaf7ff;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr auto auto;
+    grid-gap: 20px;
+}
+
+.tutor-setup-btn-wrapper {
+    justify-self: left;
+}
+
+button.tutor-setup-previous {
+    display: inline-block;
+    padding: 0 50px;
+}
