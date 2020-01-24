@@ -47,6 +47,7 @@ final class Tutor{
 	private $upgrader;
 	private $dashboard;
 	private $form_handler;
+	private $frontend;
 	private $email;
 
 	//Integrations
@@ -135,6 +136,7 @@ final class Tutor{
 		$this->upgrader = new Upgrader();
 		$this->dashboard = new Dashboard();
 		$this->form_handler = new FormHandler();
+		$this->frontend = new Frontend();
 		$this->email = new Email();
 		$this->rest_api = new RestAPI();
 
