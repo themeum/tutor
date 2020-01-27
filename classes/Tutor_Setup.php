@@ -174,7 +174,7 @@ if ( !class_exists('Tutor_Setup') ) {
                             </li>
 
                             <li>
-                                <div class="tutor-setup-content-heading">
+                                <div class="tutor-setup-content-heading greetings">
                                     <h2><?php _e('Thank You!', 'tutor'); ?></h2>
                                     <p><?php _e('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses. ', 'tutor'); ?></p>
                                     <button class="tutor-redirect" data-url="<?php echo admin_url('admin.php?page=tutor_settings'); ?>"><?php _e('Finish', 'tutor'); ?></button>

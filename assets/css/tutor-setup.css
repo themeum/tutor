@@ -1,3 +1,19 @@
+:root {
+    --initial: #fff;
+    --primary-text: #81878f;
+    --secondary-text: #1f2949;
+    --radio-bg: #f8f9fa;
+    --radio-dot: #d6d8df;
+    --primary-btn: #3057d5;
+    --primary-btn-txt: #3057d5;
+    --secondary-btn: #eaeef3;
+    --tertiary-btn: #717881;
+    --switch-bg: #e2e7eb;
+    --switch-dot: #d71830;
+    --switch-lebel: #969696;
+    --switch-active: #4bd863;
+}
+
 .tutor-wrapper-video,
 .tutor-wrapper-type,
 .tutor-wrapper-boarding {
@@ -24,16 +40,23 @@ ul.tutor-setup-content li.active {
     padding: 0;
 }
 
-html,
-body {
+.tutor-setup {
     background: #f0f3f6;
+}
+
+.tutor-wrapper-boarding {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.83;
+    color: var(--primary-text);
 }
 
 .tutor-setup-content {
     border-radius: 3px;
     box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
     background-color: #ffffff;
-    padding: 25px 33px;
+    /* padding: 25px 33px; */
 }
 
 .tutor-setup-wrapper {
@@ -64,6 +87,21 @@ body {
     display: grid;
     grid-template-columns: 1fr auto auto;
     grid-gap: 20px;
+    border-bottom: solid 1px #e3e3e3;
+}
+
+.tutor-setup-content-heading.greetings {
+    display: block;
+    text-align: center;
+}
+
+.tutor-setup-content-heading.body {
+    padding: 0px 33px;
+}
+
+.tutor-setup-content-heading.heading,
+.tutor-setup-content-footer.footer {
+    padding: 25px 33px;
 }
 
 .tutor-setup-content .tutor-setting {
@@ -71,10 +109,11 @@ body {
     grid-template-rows: 1fr;
     grid-template-columns: 1fr 3fr 1fr;
     grid-gap: 30px;
+    margin: 42px 0;
 }
 
 .tutor-setup-content-footer.footer {
-    padding: 20px 0;
+    padding: 20px 33px;
     background: #eaf7ff;
     display: grid;
     grid-template-rows: auto;
@@ -89,4 +128,37 @@ body {
 button.tutor-setup-previous {
     display: inline-block;
     padding: 0 50px;
+}
+
+.tutor-setup-title li {
+    cursor: pointer;
+    letter-spacing: -0.08px;
+    text-align: right;
+    color: #81878f;
+    color: var(--primary-text);
+}
+
+.tutor-setup-title li.active {
+    font-weight: 600;
+    color: var(--secondary-text);
+}
+
+.tutor-setup-content-heading.heading>div:nth-child(1) {
+    font-size: 20px;
+    line-height: 1;
+    font-weight: 300;
+    color: var(--secondary-text);
+}
+
+.tutor-setup-content-heading.heading>div {
+    font-weight: 300;
+    color: var(--primary-text);
+}
+
+.tutor-setting .title {
+    font-size: 16px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: -0.19px;
 }
