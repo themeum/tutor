@@ -54,7 +54,16 @@ if ( !class_exists('Tutor_Setup') ) {
                             $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'].'</div>' : '';
                             $html .= isset( $field['desc'] ) ? '<div class="content">'.$field['desc'].'</div>' : '';
                             $html .= '<div class="settings">';
-                                $html .= '<input type="checkbox" name="'.$key.'" value="1" '.(isset($options[$key]) && $options[$key] ? 'checked' : '').'/>';
+
+                                $html .= '<label for="'.$key.'" class="switch-label input-switch-label">';
+                                    $html .= '<span class="label-text">OFF</span>';
+                                    $html .= '<div class="switchbox-wrapper">';
+                                            $html .= '<input id="'.$key.'" class="input-switchbox" type="checkbox" name="'.$key.'" value="1" '.(isset($options[$key]) && $options[$key] ? 'checked' : '').'/>';
+                                            $html .= '<span class="switchbox-icon"></span>';
+                                    $html .= '</div>';
+                                    $html .= '<span class="label-text">ON</span>';
+                                $html .= '</label>';
+                                //$html .= '<input type="checkbox" name="'.$key.'" value="1" '.(isset($options[$key]) && $options[$key] ? 'checked' : '').'/>';
                             $html .= '</div>';
                             break;
 
@@ -62,7 +71,7 @@ if ( !class_exists('Tutor_Setup') ) {
                             $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'].'</div>' : '';
                             $html .= isset( $field['desc'] ) ? '<div class="content">'.$field['desc'].'</div>' : '';
                             $html .= '<div class="settings">';
-                                $html .= '<input type="text" name="'.$key.'" value="" />';
+                                $html .= '<input type="text" name="'.$key.'" value="'.(isset($options[$key]) ? $options[$key] : '').'" />';
                             $html .= '</div>';
                             break;
                         
@@ -77,7 +86,10 @@ if ( !class_exists('Tutor_Setup') ) {
         }
         
         public function tutor_setup_wizard_settings() {
-            $field_arr = array(
+
+            $options = (array) maybe_unserialize(get_option('tutor_option'));
+
+            $general_fields = array(
                 'enable_public_profile' => array(
                     'type' => 'switch',
                     'lable' => __('Public Profile', 'tutor'),
@@ -111,7 +123,7 @@ if ( !class_exists('Tutor_Setup') ) {
             );
 
 
-            $field_arr2 = array(
+            $course_fields = array(
                 'display_course_instructors' => array(
                     'type' => 'switch',
                     'lable' => __('Show Instructor Bio', 'tutor'),
@@ -156,7 +168,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                     <div><?php _e('Reset Default', 'tutor'); ?></div>
                                 </div>
                                 <div class="tutor-setup-content-heading body">
-                                    <?php $this->tutor_setup_generator($field_arr); ?>
+                                    <?php $this->tutor_setup_generator($general_fields); ?>
                                 </div>
                                 <?php $this->tutor_setup_wizard_action(); ?>
                             </li>
@@ -168,7 +180,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                     <div><?php _e('Reset Default', 'tutor'); ?></div>
                                 </div>
                                 <div class="tutor-setup-content-heading body">
-                                    <?php $this->tutor_setup_generator($field_arr2); ?>
+                                    <?php $this->tutor_setup_generator($course_fields); ?>
                                 </div>
                                 <?php $this->tutor_setup_wizard_action(); ?>
                             </li>
