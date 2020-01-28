@@ -10,17 +10,49 @@ if ( !class_exists('Tutor_Setup') ) {
                 add_action( 'admin_menu', array( $this, 'admin_menus' ) );
                 add_action( 'admin_init', array( $this, 'setup_wizard' ) );
                 add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-                add_action( 'wp_ajax_setup_action', array( $this, 'setup_action' ) );
+                add_action( 'wp_ajax_setup_action', array( $this, 'tutor_setup_action' ) );
             // }
+            
+            add_filter('tutor_wizard_attributes', array( $this, 'tutor_setup_attributes_callback' ));
         }
 
-        public function tutor_modal_create_or_update_lesson(){
-            // $lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
-            // $_lesson_thumbnail_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('_lesson_thumbnail_id', $_POST));
-            
-            
-    
-            wp_send_json_success(array('course_contents' => 'wow'));
+        function tutor_setup_attributes_callback($attr) {
+            $options = (array) maybe_unserialize(get_option('tutor_option'));
+            $final_arr = array();
+            $data_arr = $this->tutor_setup_attributes();
+            foreach ($data_arr as $key => $section) {
+                foreach ($section as $k => $val) {
+                    $final_arr[$k] = $options[$k];
+                }
+            }
+            return $final_arr;
+        }
+        
+
+        public function tutor_setup_action(){
+            $options = (array) maybe_unserialize(get_option('tutor_option'));
+            if(!isset($_POST['action']) && $_POST['action'] != 'setup_action') {
+                return;
+            }
+
+            $change_data = apply_filters('tutor_wizard_attributes');
+            foreach ($change_data as $key => $value) {
+                if ( isset($_POST[$key]) ) {
+                    if ($_POST[$key] != $change_data[$key]) {
+                        if ($_POST[$key] == '') {
+                            unset($options[$key]);
+                        } else {
+                            $options[$key] = $_POST[$key];
+                        }
+                    }
+                } else {
+                    unset($options[$key]);
+                }
+            }
+
+            update_option('tutor_option', $options);
+
+            wp_send_json_success(array('status' => 'success'));
         }
 
 
@@ -74,6 +106,28 @@ if ( !class_exists('Tutor_Setup') ) {
                                 $html .= '<input type="text" name="'.$key.'" value="'.(isset($options[$key]) ? $options[$key] : '').'" />';
                             $html .= '</div>';
                             break;
+
+                        case 'rows':
+                            $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'].'</div>' : '';
+                            $html .= isset( $field['desc'] ) ? '<div class="content">'.$field['desc'].'</div>' : '';
+                            $html .= '<div class="settings">';
+                                // $html .= '<input type="text" name="'.$key.'" value="'.(isset($options[$key]) ? $options[$key] : '').'" />';
+                            $html .= '</div>';
+                            break;
+                        
+                        case 'radio':
+                            $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'].'</div>' : '';
+                            $html .= isset( $field['desc'] ) ? '<div class="content">'.$field['desc'].'</div>' : '';
+                            $html .= '<div class="settings">';
+                                if ( isset($field['options']) ) {
+                                    foreach ($field['options'] as $k => $val) {
+                                        $html .= '<input type="radio" name="'.$key.'" value="'.$k.'" '.( isset($options[$key]) && $options[$key] == $k ? 'checked' : '' ).' />';  
+                                        $html .= $val.'<br>';
+                                    }
+                                }
+                            $html .= '</div>';
+                            break;
+
                         
                         default:
                             # code...
@@ -84,69 +138,83 @@ if ( !class_exists('Tutor_Setup') ) {
             }
             echo $html;
         }
+
+
+        public function tutor_setup_attributes() {
+            $general_fields = array(
+                'general' => array(
+                    'enable_public_profile' => array(
+                        'type' => 'switch',
+                        'lable' => __('Public Profile', 'tutor'),
+                        'desc' => __('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses.', 'tutor'),
+                    ),
+                    'enable_spotlight_mode' => array(
+                        'type' => 'switch',
+                        'lable' => __('Spotlight Mode', 'tutor'),
+                        'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you! Live Demo.', 'tutor'),
+                    ),
+                    'disable_default_player_youtube' => array(
+                        'type' => 'switch',
+                        'lable' => __('YouTube Player', 'tutor'),
+                        'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you! Live Demo.', 'tutor'),
+                    ),
+                    'disable_default_player_vimeo' => array(
+                        'type' => 'switch',
+                        'lable' => __('Vimeo Player', 'tutor'),
+                        'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you!', 'tutor'),
+                    ),
+                    'lesson_permalink_base' => array(
+                        'type' => 'text',
+                        'lable' => __('Lesson permalink', 'tutor'),
+                        'desc' => 'http://tutor.test/course/sample-course/lesson/sample-lesson/',
+                    ),
+    
+                    // test start
+                    'radio_test' => array(
+                        'type' => 'radio',
+                        'lable' => __('Radio Test', 'tutor'),
+                        'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you!', 'tutor'),
+                        'options' => array(
+                            'one_x' => 'One X',
+                            'two_x' => 'Two X',
+                            'three_x' => 'Three X',
+                        )
+                    ),
+                    // test close
+                ),
+                'course' => array(
+                    'display_course_instructors' => array(
+                        'type' => 'switch',
+                        'lable' => __('Show Instructor Bio', 'tutor'),
+                        'desc' => __('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses. ', 'tutor'),
+                        'default' => ''
+                    ),
+                    'enable_q_and_a_on_course' => array(
+                        'type' => 'switch',
+                        'lable' => __('Question and Anwser', 'tutor'),
+                        'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you! Live Demo', 'tutor'),
+                        'default' => ''
+                    ),
+                    'courses_col_per_row' => array(
+                        'type' => 'switch',
+                        'lable' => __('Courses Per Row', 'tutor'),
+                        'default' => ''
+                    ),
+                    'courses_per_page' => array(
+                        'type' => 'switch',
+                        'lable' => __('Courses Per Page', 'tutor'),
+                        'default' => ''
+                    ),
+                ),
+
+            );
+
+            return $general_fields;
+        }
         
         public function tutor_setup_wizard_settings() {
 
             $options = (array) maybe_unserialize(get_option('tutor_option'));
-
-            $general_fields = array(
-                'enable_public_profile' => array(
-                    'type' => 'switch',
-                    'lable' => __('Public Profile', 'tutor'),
-                    'desc' => __('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses.', 'tutor'),
-                    'default' => 1
-                ),
-                'enable_spotlight_mode' => array(
-                    'type' => 'switch',
-                    'lable' => __('Spotlight Mode', 'tutor'),
-                    'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you! Live Demo.', 'tutor'),
-                    'default' => ''
-                ),
-                'disable_default_player_youtube' => array(
-                    'type' => 'switch',
-                    'lable' => __('YouTube Player', 'tutor'),
-                    'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you! Live Demo.', 'tutor'),
-                    'default' => ''
-                ),
-                'disable_default_player_vimeo' => array(
-                    'type' => 'switch',
-                    'lable' => __('Vimeo Player', 'tutor'),
-                    'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you!', 'tutor'),
-                    'default' => ''
-                ),
-                'lesson_permalink_base' => array(
-                    'type' => 'text',
-                    'lable' => __('Lesson permalink', 'tutor'),
-                    'desc' => 'http://tutor.test/course/sample-course/lesson/sample-lesson/',
-                    'default' => ''
-                ),
-            );
-
-
-            $course_fields = array(
-                'display_course_instructors' => array(
-                    'type' => 'switch',
-                    'lable' => __('Show Instructor Bio', 'tutor'),
-                    'desc' => __('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses. ', 'tutor'),
-                    'default' => ''
-                ),
-                'enable_q_and_a_on_course' => array(
-                    'type' => 'switch',
-                    'lable' => __('Question and Anwser', 'tutor'),
-                    'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you! Live Demo', 'tutor'),
-                    'default' => ''
-                ),
-                'courses_col_per_row' => array(
-                    'type' => 'switch',
-                    'lable' => __('Courses Per Row', 'tutor'),
-                    'default' => ''
-                ),
-                'courses_per_page' => array(
-                    'type' => 'switch',
-                    'lable' => __('Courses Per Page', 'tutor'),
-                    'default' => ''
-                ),
-            );
 
             ?>
             <div class="tutor-wrapper-boarding active">
@@ -223,6 +291,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                     </div>
                                     <!-- /custom markup -->
 
+                                    <?php $this->tutor_setup_generator( $this->tutor_setup_attributes()['general'] ); ?>
                                 </div>
                                 <?php $this->tutor_setup_wizard_action(); ?>
                                 
@@ -235,7 +304,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                     <div><?php _e('Reset Default', 'tutor'); ?></div>
                                 </div>
                                 <div class="tutor-setup-content-heading body">
-                                    <?php $this->tutor_setup_generator($course_fields); ?>
+                                    <?php $this->tutor_setup_generator( $this->tutor_setup_attributes()['course'] ); ?>
                                 </div>
                                 <?php $this->tutor_setup_wizard_action(); ?>
                             </li>

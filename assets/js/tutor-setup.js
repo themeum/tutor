@@ -110,7 +110,7 @@ jQuery(document).ready(function ($) {
             },
             complete: function () {
                 // $form.find('.button').removeClass('tutor-updating-message');
-                window.location = $(this).data('url');
+                //window.location = $(this).data('url');
             }
         });
     });
