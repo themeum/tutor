@@ -90,22 +90,11 @@ jQuery(document).ready(function ($) {
     });
 
 
-<<<<<<< HEAD
-    $(document).on('submit', '#tutor-setup-form', function(e){
-        e.preventDefault();
-        
-        const _form = $(this).serialize();
-        // = (array) maybe_unserialize(get_option('tutor_option'));
-        console.log( 'EMC->', _form );
-        
-        
-=======
     $(document).on('submit', '#tutor-setup-form', function (e) {
         const _form = $(this).serialize();
         // = (array) maybe_unserialize(get_option('tutor_option'));
         console.log('EMC->', _form);
 
->>>>>>> f10db3c4c5b8b29af6f789ca7ec18077f3cd42ff
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
