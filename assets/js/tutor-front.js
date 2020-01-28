@@ -1080,6 +1080,7 @@ jQuery(document).ready(function($){
 
     $('.tutor-single-lesson-items.active').closest('.tutor-lessons-under-topic').show();
     $('.tutor-single-lesson-items.active').closest('.tutor-topics-in-single-lesson').addClass('tutor-topic-active');
+    $('.tutor-course-lesson.active').closest('.tutor-lessons-under-topic').show();
 
 
     /**

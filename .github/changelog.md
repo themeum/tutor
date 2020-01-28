@@ -1,5 +1,17 @@
 # TutorLMS Changelog
 
+
+### 1.5.2 - 29 January, 2020 
+
+* Tutor LMS plugin is now running under 'plugins_loaded' hook (Architectural update)
+* Added: hide frontend admin bar based on the option check
+* Updated: Preview lesson got the full view with unenrolled behavior (Pro)
+* FIxed docs links in edit quiz modal in the quiz builder
+* Fixed: reviews database query reviews now query with or without user ID
+* Fixed: wishlist query, added where post type = courses and post_status = publish
+* Fixed: ask the question from assignments and quiz page.
+* Fixed: permission issue for auto-installation tutor plugin
+
 ### 1.5.1 - 08 January, 2020
 
 * Fixed an update during lesson content from modal
