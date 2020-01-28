@@ -169,8 +169,63 @@ if ( !class_exists('Tutor_Setup') ) {
                                 </div>
                                 <div class="tutor-setup-content-heading body">
                                     <?php $this->tutor_setup_generator($general_fields); ?>
+                                    
+                                    <!-- custom markup (Lesson Permalink) -->
+                                    <div class="tutor-setting">
+                                        <div class="title">Lesson Permalink</div>
+                                        <div class="content">
+                                            <input type="text" id="" class="lesson-permalink" value="lesson" placeholder="Lesson Permalink">    
+                                            <div>http://tutor.test/course/sample-course/lesson/sample-lesson/</div>
+                                        </div>
+                                        <div class="settings">
+                                        </div>
+                                    </div>
+                                    <!-- /custom markup -->
+
+                                    <!-- custom markup (Courses Per Row) -->
+                                    <div class="tutor-setting">
+                                        <div class="title">Courses Per Row</div>
+                                        <div class="content">
+                                            <label for="course-per-row" class="course-per-row">
+                                                <div class="wrapper">
+                                                    <input type="radio" name="course-per-row" class="course" id="course-1">
+                                                    <span class="span-1"><span>1</span></span>
+                                                </div>
+                                                <div class="wrapper">
+                                                    <input type="radio" name="course-per-row" class="course" id="course-2">
+                                                    <span class="span-1">
+                                                        <span>2</span>
+                                                        <span>2</span>
+                                                    </span>
+                                                </div>
+                                                <div class="wrapper">
+                                                    <input type="radio" name="course-per-row" class="course" id="course-3">
+                                                    <span class="span-1">
+                                                        <span>3</span>
+                                                        <span>3</span>
+                                                        <span>3</span>
+                                                    </span>
+                                                </div>
+                                                <div class="wrapper">
+                                                    <input type="radio" name="course-per-row" class="course" id="course-4">
+                                                    <span class="span-1">
+                                                        <span>4</span>
+                                                        <span>4</span>
+                                                        <span>4</span>
+                                                        <span>4</span>
+                                                    </span>
+                                                </div>
+                                                <!-- <input type="radio" name="course-per-row" class="course-2" id="course-2">
+                                                <input type="radio" name="course-per-row" class="course-3" id="course-3">
+                                                <input type="radio" name="course-per-row" class="course-4" id="course-4"> -->
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- /custom markup -->
+
                                 </div>
                                 <?php $this->tutor_setup_wizard_action(); ?>
+                                
                             </li>
 
                             <li>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap');
+
 :root {
     --initial: #fff;
     --primary-text: #81878f;
@@ -13,8 +15,20 @@
     --switch-active: #4bd863;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+}
+
 img {
-    width: 100%;
+    max-width: 100%;
     display: block;
 }
 
@@ -91,46 +105,58 @@ ul.tutor-setup-content li.active {
     height: calc(100% - 30px);
 }
 
-
-
 .tutor-setup-title li {
     position: relative;
 }
 
-.tutor-setup-title li:before,
-.tutor-setup-title li:after {
+.tutor-setup-title li:before {
     content: '';
     position: absolute;
-    width: 18px;
-    height: 18px;
+    width: 8px;
+    height: 8px;
     top: calc(50% - 9px);
     right: -45px;
-    background: var(--radio-bg);
+    background: #d6d8df;
     border-radius: 50%;
+    border: 5px solid #f8f9fa;
+    transition: .3s ease-in-out;
 }
 
-.tutor-setup-title li:after {
-    background: var(--radio-dot);
-    transform: scale(.45);
-}
-
-.tutor-setup-title li.active:after {
+.tutor-setup-title li.active:before {
     background: var(--primary-btn);
 }
 
 .tutor-setup-title li:first-child:before {
-    width: 20px;
-    height: 20px;
-}
-
-.tutor-setup-title li:first-child:after {
-    transform: scale(1);
     background: url(../images/checkmark.svg) no-repeat center center;
     right: -46px;
     background-color: #2f57d5;
     width: 20px;
     height: 20px;
+    border: none;
 }
+
+.tutor-setup-title li:after {
+    content: '';
+    position: absolute;
+    border-right: 10px solid #fff;
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    top: calc(50% - 13px);
+    right: calc(0% - 96px);
+    filter: drop-shadow(-2px 0px 2px rgba(219, 215, 215, .45));
+    transform: translateX(3px) scale(.7);
+    opacity: 0;
+    transition: transform .1s linear;
+}
+
+.tutor-setup-title li.active:after {
+    opacity: 1;
+    transform: translateX(0px) scale(1);
+}
+
+/* .tutor-setup-title li:not(.active):after {
+    display: none;
+} */
 
 .tutor-wrapper-boarding {
     display: grid !important;
@@ -189,7 +215,7 @@ ul.tutor-setup-content li.active {
 .tutor-setup-content-heading.greetings .content {
     display: grid;
     grid-gap: 20px;
-    padding: 150px 0;
+    padding: 145px 200px;
 }
 
 .tutor-setup-content-heading.greetings .content h2 {
@@ -205,6 +231,77 @@ ul.tutor-setup-content li.active {
 
 .tutor-setup-content-heading.greetings .content p {
     color: var(--primary-text);
+}
+
+/* Lesson Permalink */
+.tutor-setting .content input[type="text"].lesson-permalink {
+    width: 100%;
+    height: 44px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: solid 1px #dcdfe5;
+    background-color: var(--initial);
+    font-size: 14px;
+    line-height: 1.57;
+    letter-spacing: normal;
+    color: var(--secondary-text);
+    outline: none;
+    margin-bottom: 13px;
+}
+
+.tutor-setting .content input[type="text"].lesson-permalink::placeholder {
+    color: var(--primary-text);
+    font-weight: 300;
+}
+
+.tutor-setting .content input[type="text"].lesson-permalink:focus {
+    border-color: var(--primary-btn);
+}
+
+/* Courses Per Row */
+.tutor-setting .content input[type="radio"].course {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    width: 78px;
+    height: 32px;
+    background: #dbdbdb;
+}
+
+.tutor-setting .content .course-per-row {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: auto auto auto auto;
+    justify-content: space-between;
+}
+
+
+.tutor-setting .content .wrapper {
+    position: relative;
+    width: 78px;
+    height: 32px;
+}
+
+.tutor-setting .content .span-1 {
+    border-radius: 2px;
+    border: solid 1px #d6dce3;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #f0f3f6;
+    width: 78px;
+    height: 32px;
+}
+
+input[type="radio"].course:checked+.span-1 {
+    color: orange;
+    background: black;
+}
+
+input[type="radio"].course:checked+.span-1 span {
+    background: green;
 }
 
 .tutor-setup-btn-wrapper {
@@ -370,7 +467,15 @@ input[type="checkbox"].input-switchbox:checked~.switchbox-icon {
     left: calc(100% - 25.732px);
 }
 
+.input-switch-label.checked .label-off {
+    color: #c8c8c8;
+}
+
 .input-switch-label .label-off {
+    color: #969696;
+}
+
+.input-switch-label.checked .label-on {
     color: #969696;
 }
 
@@ -378,13 +483,6 @@ input[type="checkbox"].input-switchbox:checked~.switchbox-icon {
     color: #c8c8c8;
 }
 
-.input-switch-label.checked .label-off {
-    color: #c8c8c8;
-}
-
-.input-switch-label.checked .label-on {
-    color: #969696;
-}
 
 /* SVG Animated Button */
 .animated-btn,
@@ -522,4 +620,6 @@ button.tutor-setup-skip {
     background: transparent;
     border: none;
     padding: 5px;
+    font-weight: 300;
+    letter-spacing: .1px;
 }

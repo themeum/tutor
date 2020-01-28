@@ -118,7 +118,7 @@ jQuery(document).ready(function ($) {
 
     $(function () {
         $('.input-switch-label').on('click', function (e) {
-            return $(this).toggleClass('checked');
+            $(this).toggleClass('checked');
         });
     })
 
