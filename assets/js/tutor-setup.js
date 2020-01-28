@@ -87,9 +87,12 @@ jQuery(document).ready(function($){
 
 
     $(document).on('submit', '#tutor-setup-form', function(e){
+        e.preventDefault();
+        
         const _form = $(this).serialize();
         // = (array) maybe_unserialize(get_option('tutor_option'));
         console.log( 'EMC->', _form );
+        
         
         $.ajax({
             url : _tutorobject.ajaxurl,
@@ -106,7 +109,7 @@ jQuery(document).ready(function($){
             },
             complete: function () {
                 // $form.find('.button').removeClass('tutor-updating-message');
-                window.location = $(this).data('url');
+                //window.location = $(this).data('url');
             }
         });
     });
