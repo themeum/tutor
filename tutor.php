@@ -68,6 +68,11 @@ if ( ! class_exists('Tutor')){
  * Get all helper functions/methods
  *
  */
+
+if ( ! class_exists('\TUTOR\Utils')){
+	include_once 'classes/Utils.php';
+}
+
 if ( ! function_exists('tutor_utils')) {
 	function tutor_utils() {
 		return new \TUTOR\Utils();
