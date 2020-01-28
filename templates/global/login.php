@@ -76,7 +76,7 @@ if ( ! defined( 'ABSPATH' ) )
 				<input type="hidden" name="redirect_to" value="' . esc_url( $args['redirect'] ) . '" />
 			</p>
 			<p class="tutor-form-register-wrap">
-			    <a href="'. esc_url($register_url). '">'.esc_html('Create a new account').'</a>
+			    <a href="'. esc_url($register_url). '">'.esc_html('Create a new account', 'tutor').'</a>
             </p>
 		</form>';
     echo $form;

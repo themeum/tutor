@@ -77,12 +77,13 @@ foreach ($chartData as $key => $salesCount){
 
 	<div class="tutor-dashboard-inline-links">
 		<ul>
-			<li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning'); ?>"> <?php _e('Earnings'); ?></a>
+			<li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning'); ?>"> <?php _e('Earnings', 'tutor');
+			?></a>
 			</li>
-			<li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/report'); ?>"> <?php _e('Reports'); ?> </a>
+			<li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/report'); ?>"> <?php _e('Reports', 'tutor'); ?> </a>
 			</li>
-			<li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/statements'); ?>">
-					<?php _e('Statements'); ?> </a> </li>
+			<li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/statements', 'tutor'); ?>">
+					<?php _e('Statements', 'tutor'); ?> </a> </li>
 		</ul>
 	</div>
 
