@@ -88,12 +88,12 @@ if ( !class_exists('Tutor_Setup') ) {
                             $html .= '<div class="settings">';
 
                                 $html .= '<label for="'.$key.'" class="switch-label input-switch-label">';
-                                    $html .= '<span class="label-text">OFF</span>';
+                                    $html .= '<span class="label-off">OFF</span>';
                                     $html .= '<div class="switchbox-wrapper">';
                                             $html .= '<input id="'.$key.'" class="input-switchbox" type="checkbox" name="'.$key.'" value="1" '.(isset($options[$key]) && $options[$key] ? 'checked' : '').'/>';
                                             $html .= '<span class="switchbox-icon"></span>';
                                     $html .= '</div>';
-                                    $html .= '<span class="label-text">ON</span>';
+                                    $html .= '<span class="label-on">ON</span>';
                                 $html .= '</label>';
                                 //$html .= '<input type="checkbox" name="'.$key.'" value="1" '.(isset($options[$key]) && $options[$key] ? 'checked' : '').'/>';
                             $html .= '</div>';
@@ -254,10 +254,19 @@ if ( !class_exists('Tutor_Setup') ) {
                             </li>
 
                             <li>
-                                <div class="tutor-setup-content-heading">
-                                    <h2><?php _e('Thank You!', 'tutor'); ?></h2>
-                                    <p><?php _e('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses. ', 'tutor'); ?></p>
-                                    <button class="tutor-redirect" data-url="<?php echo admin_url('admin.php?page=tutor_settings'); ?>"><?php _e('Finish', 'tutor'); ?></button>
+                                <div class="tutor-setup-content-heading greetings ">
+                                    <div class="header">
+                                        <img src="http://saief.local/WP-TutorLMS/wp-content/uploads/2020/01/greeting-img.jpg" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <h2><?php _e('Thank You!', 'tutor'); ?></h2>
+                                        <p><?php _e('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses. ', 'tutor'); ?></p>
+
+                                    </div>
+                                    <div class="tutor-setup-content-footer footer">
+                                        <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor_settings'); ?>"><?php _e('Finish', 'tutor'); ?></button>
+
+                                    </div>
                                 </div>
                             </li>
 
@@ -274,13 +283,32 @@ if ( !class_exists('Tutor_Setup') ) {
             ?>
             <div class="tutor-setup-content-footer footer">
                 <div class="tutor-setup-btn-wrapper">
-                    <button class="tutor-setup-previous"><?php _e('Previous', 'tutor'); ?></button>
+                    <button class="tutor-setup-previous previous animated-btn">
+                        <!-- <?php _e('Previous', 'tutor'); ?> -->
+						<svg xmlns="http://www.w3.org/2000/svg" id="prev-arrow-1" width="17" height="12">
+                            <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
+                        </svg>
+                        <span><?php _e('Previous', 'tutor'); ?></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" id="prev-arrow-2" width="17" height="12">
+                            <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
+                        </svg>
+                    </button>
                 </div>
                 <div class="tutor-setup-btn-wrapper">
                     <button class="tutor-setup-skip"><?php _e('Skip This Step', 'tutor'); ?></button>
                 </div>
                 <div class="tutor-setup-btn-wrapper">
-                    <button class="tutor-setup-next"><?php _e('Next', 'tutor'); ?></button>
+                    <button class="tutor-setup-next next animated-btn">
+                        <!-- <?php _e('Next', 'tutor'); ?> -->
+                            <svg xmlns="http://www.w3.org/2000/svg" id="next-arrow-1" width="17" height="12">
+                                <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
+                            </svg>
+                            <span><?php _e('Next', 'tutor'); ?></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" id="next-arrow-2" width="17" height="12">
+                                <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
+                            </svg>
+                        </button>
+                    </button>
                 </div>
                 
                 

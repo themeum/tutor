@@ -1,14 +1,18 @@
-jQuery(document).ready(function($){
+jQuery(document).ready(function ($) {
     'use strict';
 
-    const player = new Plyr('#player', {autoplay: true, muted: true, volume: 2});
+    const player = new Plyr('#player', {
+        autoplay: true,
+        muted: true,
+        volume: 2
+    });
     player.on('ended', event => {
         $('.tutor-wrapper-video').removeClass('active');
         $('.tutor-wrapper-type').addClass('active');
     });
 
 
-    $('.tutor-type-next, .tutor-type-skip').on( 'click', function(e) {
+    $('.tutor-type-next, .tutor-type-skip').on('click', function (e) {
         e.preventDefault();
         $('.tutor-wrapper-type').removeClass('active');
         $('.tutor-wrapper-boarding').addClass('active');
@@ -39,17 +43,17 @@ jQuery(document).ready(function($){
             }
         ]
     });
-    
 
-    $( '.tutor-boarding-next, .tutor-boarding-skip' ).on( 'click', function(e) {
+
+    $('.tutor-boarding-next, .tutor-boarding-skip').on('click', function (e) {
         e.preventDefault();
         $('.tutor-wrapper-boarding').removeClass('active');
         $('.tutor-wrapper-settings').addClass('active');
     });
 
 
-    $( 'ul.tutor-setup-title li' ).on( 'click', function(e) {
-        $( 'ul.tutor-setup-title li' ).removeClass('active');
+    $('ul.tutor-setup-title li').on('click', function (e) {
+        $('ul.tutor-setup-title li').removeClass('active');
         $(this).addClass('active');
 
         $('ul.tutor-setup-content li').removeClass('active');
@@ -61,7 +65,7 @@ jQuery(document).ready(function($){
     // $( 'ul.tutor-setup-title li' ).on( 'click', function(e) {
     //     //$(selector)[0].reset();
     // });
-    
+
     // Redirect after Finished
     // $('.tutor-redirect').on('click', function(e){
     //     e.preventDefault();
@@ -70,7 +74,7 @@ jQuery(document).ready(function($){
 
 
     // Tutor Bottom Action Button
-    $('.tutor-setup-previous').on('click', function(e) {
+    $('.tutor-setup-previous').on('click', function (e) {
         e.preventDefault();
         const _index = $(this).closest('li').index()
         if (_index > 0) {
@@ -78,7 +82,7 @@ jQuery(document).ready(function($){
             $('ul.tutor-setup-content li').removeClass('active').eq(_index - 1).addClass('active');
         }
     });
-    $('.tutor-setup-skip, .tutor-setup-next').on('click', function(e) {
+    $('.tutor-setup-skip, .tutor-setup-next').on('click', function (e) {
         e.preventDefault();
         const _index = $(this).closest('li').index() + 1
         $('ul.tutor-setup-title li').removeClass('active').eq(_index).addClass('active');
@@ -86,6 +90,7 @@ jQuery(document).ready(function($){
     });
 
 
+<<<<<<< HEAD
     $(document).on('submit', '#tutor-setup-form', function(e){
         e.preventDefault();
         
@@ -94,10 +99,17 @@ jQuery(document).ready(function($){
         console.log( 'EMC->', _form );
         
         
+=======
+    $(document).on('submit', '#tutor-setup-form', function (e) {
+        const _form = $(this).serialize();
+        // = (array) maybe_unserialize(get_option('tutor_option'));
+        console.log('EMC->', _form);
+
+>>>>>>> f10db3c4c5b8b29af6f789ca7ec18077f3cd42ff
         $.ajax({
-            url : _tutorobject.ajaxurl,
-            type : 'POST',
-            data : _form,
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: _form,
             beforeSend: function () {
                 // $form.find('.button').addClass('tutor-updating-message');
             },
@@ -113,6 +125,13 @@ jQuery(document).ready(function($){
             }
         });
     });
-    
+
+
+    $(function () {
+        $('.input-switch-label').on('click', function (e) {
+            return $(this).toggleClass('checked');
+        });
+    })
+
 
 });
