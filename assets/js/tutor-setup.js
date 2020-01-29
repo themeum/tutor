@@ -120,6 +120,10 @@ jQuery(document).ready(function ($) {
         $('.input-switch-label').on('click', function (e) {
             $(this).toggleClass('checked');
         });
+
+        $('.tooltip-btn').on('click', function (e) {
+            $(this).toggleClass('active');
+        });
     })
 
 

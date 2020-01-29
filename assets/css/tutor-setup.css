@@ -172,21 +172,25 @@ ul.tutor-setup-content li.active {
     grid-gap: 20px;
     border-bottom: solid 1px #e3e3e3;
 }
-.tutor-setup-content-heading.heading strong, 
+
+.tutor-setup-content-heading.heading strong,
 .active .tutor-setup-content-heading.heading strong {
     font-weight: 600;
     color: var(--secondary-text);
 }
+
 .tutor-setup-content-heading.heading div:last-child {
     position: relative;
     padding-left: 22px;
 }
+
 .tutor-setup-content-heading.heading div:last-child:before {
     content: url(../images/roload-arrow.svg);
     position: absolute;
     left: 0;
     top: 3px;
 }
+
 .tutor-setup-content-heading.greetings {
     display: block;
     text-align: center;
@@ -247,8 +251,9 @@ ul.tutor-setup-content li.active {
     color: var(--primary-text);
 }
 
-/* Lesson Permalink */
-.tutor-setting .content input[type="text"].lesson-permalink {
+/* Lesson Permalink Input */
+.tutor-setting .content input[type="text"].lesson-permalink,
+.tutor-setting .content textarea.lesson-message {
     width: 100%;
     height: 44px;
     padding: 10px 15px;
@@ -263,13 +268,22 @@ ul.tutor-setup-content li.active {
     margin-bottom: 13px;
 }
 
-.tutor-setting .content input[type="text"].lesson-permalink::placeholder {
+.tutor-setting .content input[type="text"].lesson-permalink::placeholder,
+.tutor-setting .content textarea.lesson-message::placeholder {
     color: var(--primary-text);
     font-weight: 300;
 }
 
-.tutor-setting .content input[type="text"].lesson-permalink:focus {
+.tutor-setting .content input[type="text"].lesson-permalink:focus,
+.tutor-setting .content textarea.lesson-message:focus {
     border-color: var(--primary-btn);
+}
+
+/* Lesson Message Textarea */
+.tutor-setting .content textarea.lesson-message {
+    width: calc(100% - 20px);
+    height: 87px;
+    padding: 11px 13px;
 }
 
 /* Courses Per Row */
@@ -278,21 +292,95 @@ ul.tutor-setup-content li.active {
     grid-gap: 15px;
 }
 
-.tutor-setting .title a{
+.tutor-setting .title a {
     position: relative;
+    margin-left: 10px;
 }
 
-.tutor-setting.wrapper-row .title a:after,
-.tutor-setting.wrapper-page .title a:after {
-    content: url(../images/info-icon.svg);
+.tutor-setting .title a span {
     position: absolute;
+    left: -1px;
     top: -1px;
-    margin-left: 7px;
 }
-.tutor-setting.wrapper-row .title a,
-.tutor-setting.wrapper-page .title a{
-    /* text-indent: -99999px; */
+
+.tutor-setting .title a span:after,
+.tutor-setting .title a span:after {
+    content: url(../images/info-icon.svg);
 }
+
+
+/* ********************* */
+/**
+ * Tooltip Styles
+ */
+
+/* Add this attribute to the element that needs a tooltip */
+[data-tooltip] {
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+}
+
+/* Hide the tooltip content by default */
+[data-tooltip]:before,
+[data-tooltip]:after {
+    visibility: hidden;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Position tooltip above the element */
+[data-tooltip]:before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 150%;
+    left: 50%;
+    margin-bottom: 0px;
+    margin-left: -60px;
+    padding: 7px;
+    width: 120px;
+    border-radius: 3px;
+    background-color: #f0f3f6;
+    border: 1px solid #dcdfe5;
+    color: #1f2849;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.1;
+    font-weight: 300;
+}
+
+/* Triangle hack to make tooltip look like a speech bubble */
+[data-tooltip]:after {
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(10%);
+    border-top: 5px solid #cfcfcf;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    content: " ";
+    font-size: 0;
+    line-height: 0;
+}
+
+[data-tooltip]:before,
+[data-tooltip]:after {
+    transform: translateY(15px);
+    transition: .2s ease;
+}
+
+/* [data-tooltip]:hover:before,
+[data-tooltip]:hover:after, */
+.active[data-tooltip]:before,
+.active[data-tooltip]:after {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+/* ********************* */
 .tutor-setting .content input[type="radio"].course {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -308,14 +396,18 @@ ul.tutor-setup-content li.active {
 .tutor-setting .content .course-per-row {
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: repeat(4, auto);
     grid-gap: 10px;
     margin-left: -8px;
 }
 
 .tutor-setting .content .course-per-page {
     display: grid;
-    grid-template-columns: auto auto auto auto auto;
+    grid-template-columns: repeat(5, auto);
+}
+
+.tutor-setting .content .attemps-allowed {
+    grid-template-columns: repeat(5, 1fr);
 }
 
 .tutor-setting .content .course-per-page .wrapper {
@@ -437,6 +529,34 @@ input[type="radio"].course:checked+.span span {
     font-size: 16px;
     font-weight: 600;
     color: var(--secondary-text);
+}
+
+.attempts-allowed.course-per-page span.label-text-2 {
+    width: 65px;
+    height: 40px;
+    top: -10px;
+}
+
+.course-per-page input[type=number].attempts {
+    width: 65px;
+    height: 40px;
+    border-radius: 5px;
+    border: solid 1px #dcdfe5;
+    background-color: #ffffff;
+    outline: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--secondary-text);
+    padding: 7px 2px 7px 10px;
+}
+
+.course-per-page input[type=number].attempts:focus {
+    border-color: var(--primary-btn);
+}
+
+.course-per-page input[type="radio"].course-p:checked+input[type=number].attempts:focus {
+    border-color: var(--primary-btn);
 }
 
 .tutor-setup-btn-wrapper {
@@ -742,6 +862,7 @@ button[class^="tutor-setup-"] {
     transition: .2s ease;
 }
 
+
 button.tutor-setup-next.next,
 button.tutor-setup-previous.previous {
     text-transform: uppercase;
@@ -759,6 +880,7 @@ button.tutor-setup-skip {
     font-weight: 300;
     letter-spacing: .1px;
 }
+
 button.tutor-setup-skip:hover {
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
 }

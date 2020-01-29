@@ -238,7 +238,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                 <div class="tutor-setup-content-heading body">
                                     <?php $this->tutor_setup_generator($general_fields); ?>                                    
 
-                                    <?php $this->tutor_setup_generator( $this->tutor_setup_attributes()['general'] ); ?>
+                                    <!-- <?php $this->tutor_setup_generator( $this->tutor_setup_attributes()['general'] ); ?> -->
                                     
                                     <!-- custom markup (Lesson Permalink) -->
                                     <div class="tutor-setting">
@@ -253,8 +253,11 @@ if ( !class_exists('Tutor_Setup') ) {
                                     <!-- /custom markup -->
 
                                     <!-- custom markup (Courses Per Row) -->
-                                    <div class="tutor-setting course-setting-wrapper wrapper-row">
-                                        <div class="title">Courses Per Row <a href="#"></a></div>
+                                    <div class="tutor-setting course-setting-wrapper">
+                                        <div class="title">
+                                            Courses Per Row 
+                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                        </div>
                                         <div class="content">
                                             <div class="course-per-row">
                                                 <div class="wrapper">
@@ -299,10 +302,10 @@ if ( !class_exists('Tutor_Setup') ) {
                                     <!-- /custom markup -->
 
                                     <!-- custom markup (Courses Per Page) -->
-                                    <div class="tutor-setting course-setting-wrapper wrapper-page">
+                                    <div class="tutor-setting course-setting-wrapper">
                                         <div class="title">
-                                            Courses Per Page 
-                                            <a href="#"></a> 
+                                            Courses Per Page
+                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a> 
                                         </div>
                                         <div class="content">
                                             <div class="course-per-page">
@@ -342,6 +345,46 @@ if ( !class_exists('Tutor_Setup') ) {
                                                     </label>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <!-- /custom markup -->
+
+                                    <!-- custom markup (Lesson Message) -->
+                                    <div class="tutor-setting course-setting-wrapper">
+                                        <div class="title">
+                                            When Time Expires
+                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                        </div>
+                                        <div class="content">
+                                            <textarea name="" id="" class="lesson-message" placeholder="Type your expired message"></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- /custom markup -->
+
+                                    <!-- custom markup (Attempts allowed) -->
+                                    <div class="tutor-setting course-setting-wrapper">
+                                        <div class="title">
+                                            Attempts allowed
+                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                        </div>
+                                        <div class="content">
+                                            <div class="course-per-page attempts-allowed">
+                                                <div class="wrapper">
+                                                    <label for="attempts-allowed-1">
+                                                        <input type="radio" name="attempts-allowed" class="course-p" id="attempts-allowed-1">
+                                                        <span class="radio-icon"></span>
+                                                        <span class="label-text label-text-2"><input type="number" name="attempts-allowed" class="attempts" id="attempts-allowed-1"></span>
+                                                        
+                                                    </label>
+                                                </div>
+                                                <div class="wrapper">
+                                                    <label for="attempts-allowed-2">
+                                                        <input type="radio" name="attempts-allowed" class="course-p" id="attempts-allowed-2">
+                                                        <span class="radio-icon"></span>
+                                                        <span class="label-text">Unlimited</span>
+                                                    </label>
+                                                </div>
+                                            </div> 
                                         </div>
                                     </div>
                                     <!-- /custom markup -->
