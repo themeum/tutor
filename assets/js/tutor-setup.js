@@ -126,5 +126,45 @@ jQuery(document).ready(function ($) {
         });
     })
 
+    /* Grade Calculation Dropdwon  */
+    $(function () {
+        const selected = document.querySelector(".selected");
+        const optionsContainer = document.querySelector(".options-container");
+
+        const optionsList = document.querySelectorAll(".option");
+
+        selected.addEventListener("click", () => {
+            optionsContainer.classList.toggle("active");
+        });
+
+        optionsList.forEach(option => {
+            option.addEventListener("click", () => {
+                selected.innerHTML = option.querySelector("label").innerHTML;
+                optionsContainer.classList.remove("active");
+            });
+        });
+
+    });
+
+    /* Time Limit sliders */
+    $(function () {
+        $('#time-limit-range').on('mousemove', function (e) {
+            $('#time-limit-value').text($(this).val())
+        });
+    });
+
+    $(function () {
+        $('#attempts-allowed-1').on('click', function (e) {
+            if ($('#attempts-allowed-numer').prop("disabled", true)) {
+                $('#attempts-allowed-numer').prop("disabled", false);
+            }
+        });
+        $('#attempts-allowed-2').on('click', function (e) {
+            if ($('#attempts-allowed-2').is(':checked')) {
+                $('#attempts-allowed-numer').prop("disabled", true);
+            }
+        });
+    });
+
 
 });

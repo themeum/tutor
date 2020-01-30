@@ -53,11 +53,6 @@ ul.tutor-setup-content li.active {
 }
 
 /* ******************* */
-* {
-    margin: 0;
-    padding: 0;
-}
-
 .tutor-setup {
     background: #f0f3f6;
 }
@@ -272,6 +267,8 @@ ul.tutor-setup-content li.active {
 .tutor-setting .content textarea.lesson-message::placeholder {
     color: var(--primary-text);
     font-weight: 300;
+    font-family: "Open Sans", sans-serif;
+    font-size: 13px;
 }
 
 .tutor-setting .content input[type="text"].lesson-permalink:focus,
@@ -508,6 +505,10 @@ input[type="radio"].course:checked+.span span {
 .course-per-page input[type="radio"].course-p:checked+.radio-icon:before {
     background: #f0f3f6;
     transform: scale(.4);
+}
+
+input#attempts-allowed-1:checked~.label-text-2 input {
+    border: 1px solid #2f57d5;
 }
 
 .course-per-page input.course-p {
@@ -883,4 +884,285 @@ button.tutor-setup-skip {
 
 button.tutor-setup-skip:hover {
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tutor-setting .grade-calculation {
+    display: grid;
+    grid-template-columns: auto;
+}
+
+/* Grade Calculation Dropdwon */
+.select-box {
+    display: flex;
+    width: 400px;
+    flex-direction: column;
+    position: relative;
+}
+
+.select-box .options-container {
+    max-height: 0;
+    width: calc(100% - 12px);
+    opacity: 0;
+    transition: all 0.4s;
+    overflow: hidden;
+    border-radius: 5px;
+    border: solid 1px #dcdfe5;
+    background-color: #ffffff;
+
+    position: absolute;
+    top: 68px;
+    z-index: 99;
+
+    order: 1;
+}
+
+.selected {
+    background: #2f3640;
+    margin-bottom: 8px;
+    position: relative;
+    width: 388px;
+    height: 64px;
+    border-radius: 5px;
+    border: solid 1px #dcdfe5;
+    background-color: #ffffff;
+
+    order: 0;
+}
+
+.selected::after {
+    /* BG Img */
+    content: url("../images/angle-shape.svg");
+
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform .5s;
+}
+
+
+.selected h3,
+.select-box label h3,
+.checkbox-wrapper .ecommerce h4 {
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.57;
+    color: #1f2949;
+}
+
+.selected h5,
+.select-box label h5,
+.checkbox-wrapper .ecommerce h5 {
+    font-family: "Open Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.83;
+    color: var(--primary-text);
+}
+
+.select-box .options-container.active {
+    max-height: 240px;
+    opacity: 1;
+    overflow-y: scroll;
+}
+
+.select-box .options-container.active+.selected::after {
+    transform: translateY(-50%) rotateX(180deg);
+}
+
+.select-box .options-container.active+.selected {
+    border-color: #2f57d5;
+}
+
+.select-box .options-container::-webkit-scrollbar {
+    width: 8px;
+    background: #0d141f;
+    background: var(--primary-text);
+    background: #f1f2f3;
+    border-radius: 0 5px 5px 0;
+}
+
+.select-box .options-container::-webkit-scrollbar-thumb {
+    background: #525861;
+    background: var(--primary-text);
+    border-radius: 0 5px 5px 0;
+}
+
+.select-box .options-container::-moz-scrollbar {
+    width: 8px;
+    background: #0d141f;
+    background: var(--primary-text);
+    background: #f1f2f3;
+    border-radius: 0 5px 5px 0;
+}
+
+.select-box .options-container::-moz-scrollbar-thumb {
+    background: #525861;
+    background: var(--primary-text);
+    border-radius: 0 5px 5px 0;
+}
+
+.select-box .option,
+.selected {
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.select-box .option:hover {
+    background: #dcdfe5;
+}
+
+.select-box label {
+    cursor: pointer;
+}
+
+.select-box .option .radio {
+    display: none;
+}
+
+.tutor-setting .content .limit-slider {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-gap: 30px;
+}
+
+.tutor-setting .content .limit-slider h5 {
+    font-size: 12px;
+    font-weight: 400;
+    text-align: right;
+    margin-right: 20px;
+    color: #1f2949;
+}
+
+.tutor-setting .content .limit-slider h5 span {
+    margin-right: 4px;
+    font-weight: 600;
+}
+
+/* Time Limit */
+.limit-slider input[type=range].time-limit-range {
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    max-width: 383px;
+    height: 6px;
+    border-radius: 8px;
+    background-color: #f0f3f6;
+    background-image: url(../images/slider-dot.png);
+    background-repeat: repeat-x;
+    background-size: contain;
+}
+
+/* For Chrome (-webkit-slider-thumb) */
+input[type=range].time-limit-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #f0f3f6;
+    border: 5px solid #3057d5;
+}
+
+/* For Mozilla (-moz-range-track and -moz-range-thumb) */
+input[type=range].time-limit-range::-moz-range-track {
+    max-width: 383px;
+    height: 6px;
+    border-radius: 8px;
+    background-color: #f0f3f6;
+}
+
+input[type=range].time-limit-range::-moz-range-thumb {
+    -moz-appearance: none;
+    appearance: none;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #f0f3f6;
+    border: 5px solid #3057d5;
+}
+
+
+/* Checkbox Field */
+.checkbox-wrapper.column-1 {
+    display: grid;
+    grid-template-columns: repeat(1, auto);
+}
+
+.checkbox-wrapper.column-2 {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+}
+
+.checkbox-wrapper.column-3 {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+}
+
+.checkbox-wrapper .ecommerce label {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 15px;
+    margin: 17px 0;
+    position: relative;
+}
+
+.checkbox-wrapper .ecommerce:first-child label {
+    margin-top: 0;
+}
+
+.checkbox-wrapper .ecommerce .check-icon,
+.checkbox-wrapper .ecommerce label {
+    cursor: pointer;
+}
+
+input.check-round {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    outline: none;
+    display: none;
+}
+
+.checkbox-wrapper .ecommerce .check-icon {
+    width: 18.5px;
+    height: 18.5px;
+    border: solid 1px #d6dce3;
+    background-color: #f0f3f6;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    top: 4px;
+    transition: .2s ease-in-out;
+}
+
+.checkbox-wrapper .ecommerce .check-icon:before {
+    content: url(../images/checkmark.svg);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: scale(1.5);
+    opacity: 0;
+    transition: .2s ease-in-out;
+    margin: -1px 1px;
+}
+
+.checkbox-wrapper .ecommerce input.check-round:checked+.check-icon {
+    background: var(--primary-btn);
+    border-color: var(--primary-btn);
+}
+
+.checkbox-wrapper .ecommerce input.check-round:checked+.check-icon:before {
+    transform: scale(1.2);
+    opacity: 1
 }

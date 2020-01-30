@@ -349,6 +349,58 @@ if ( !class_exists('Tutor_Setup') ) {
                                     </div>
                                     <!-- /custom markup -->
 
+                                    <!-- custom markup (Grade Calculation) -->
+                                    <div class="tutor-setting course-setting-wrapper">
+                                        <div class="title">
+                                            Final Grade <br> Calculation
+                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                        </div>
+                                        <div class="content">
+                                            <div class="grade-calculation">
+                                                <div class="select-box">
+                                                    <div class="options-container">          
+                                                        <div class="option">
+                                                            <input type="radio" class="radio" id="grade-a" name="category"/>
+                                                            <label for="grade-a">
+                                                                <h3>Highest Grade</h3> 
+                                                                <h5>Lorem ipsum dolor sit amet consectetur.</h5> 
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="option">
+                                                            <input type="radio" class="radio" id="grade-b" name="category" />
+                                                            <label for="grade-b">
+                                                                <h3>Average Grade</h3> 
+                                                                <h5>Individual and want to spread knowledge </h5> 
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="option">
+                                                            <input type="radio" class="radio" id="grade-c" name="category" />
+                                                            <label for="grade-c">
+                                                                <h3>Below Average Grade</h3> 
+                                                                <h5>Lorem ipsum dolor consectetur adipisicing.</h5> 
+                                                            </label>
+                                                        </div>
+                                                        <div class="option">
+                                                            <input type="radio" class="radio" id="grade-c" name="category" />
+                                                            <label for="grade-c">
+                                                                <h3>Poor Grade</h3> 
+                                                                <h5>Individual and want to spread knowledge</h5> 
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="selected">
+                                                        <h3>Highest Grade</h3> 
+                                                        <h5>Individual and want to spread knowledge </h5>
+                                                    </div> 
+                                                </div>
+                                                <!-- /.select-box -->
+                                            </div> 
+                                        </div>
+                                    </div>
+                                    <!-- /custom markup -->
+
                                     <!-- custom markup (Lesson Message) -->
                                     <div class="tutor-setting course-setting-wrapper">
                                         <div class="title">
@@ -373,13 +425,15 @@ if ( !class_exists('Tutor_Setup') ) {
                                                     <label for="attempts-allowed-1">
                                                         <input type="radio" name="attempts-allowed" class="course-p" id="attempts-allowed-1">
                                                         <span class="radio-icon"></span>
-                                                        <span class="label-text label-text-2"><input type="number" name="attempts-allowed" class="attempts" id="attempts-allowed-1"></span>
+                                                        <span class="label-text label-text-2">
+                                                            <input type="number" name="attempts-allowed" disabled class="attempts" id="attempts-allowed-numer">
+                                                        </span>
                                                         
                                                     </label>
                                                 </div>
                                                 <div class="wrapper">
                                                     <label for="attempts-allowed-2">
-                                                        <input type="radio" name="attempts-allowed" class="course-p" id="attempts-allowed-2">
+                                                        <input type="radio" checked name="attempts-allowed" class="course-p" id="attempts-allowed-2">
                                                         <span class="radio-icon"></span>
                                                         <span class="label-text">Unlimited</span>
                                                     </label>
@@ -388,6 +442,76 @@ if ( !class_exists('Tutor_Setup') ) {
                                         </div>
                                     </div>
                                     <!-- /custom markup -->
+
+                                    <!-- custom markup (Time Limit) -->
+                                    <div class="tutor-setting course-setting-wrapper">
+                                        <div class="title">
+                                            Time Limit
+                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                        </div>
+                                        <div class="content">
+                                            <div class="limit-slider">
+                                                <div>
+                                                    <input type="range" min="0" max="60" step="1" value="0" id="time-limit-range"  class="time-limit-range" name=""/>
+                                                </div>
+                                                <div>
+                                                    <h5><span id="time-limit-value">0</span>min</h5>
+                                                </div>                                                
+                                                
+                                            </div> 
+                                        </div>
+                                    </div>
+                                    <!-- /custom markup -->
+
+                                    <!-- custom markup (eCommerce Engine) -->
+                                    <div class="tutor-setting course-setting-wrapper">
+                                        <div class="title">
+                                            eCommerce Engine
+                                        </div>
+                                        <div class="content">
+                                            <div class="checkbox-wrapper column-1">
+                                                <div class="ecommerce">
+                                                    <label for="ecommerce-1" class="label">
+                                                        <div>
+                                                            <input type="checkbox"  name="ecommerce-1" id="ecommerce-1" class="check-round">
+                                                            <span class="check-icon"></span>
+                                                        </div>
+                                                        <div>
+                                                            <h4>WooCommerce</h4>
+                                                            <h5>Individual and want to spread knowledge </h5>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                                <div class="ecommerce">
+                                                    <label for="ecommerce-2" class="label">
+                                                        <div>
+                                                            <input type="checkbox" checked name="ecommerce-2" id="ecommerce-2" class="check-round">
+                                                            <span class="check-icon"></span>
+                                                        </div>
+                                                        <div>
+                                                            <h4>Easy Digital Downloads (EDD)</h4>
+                                                            <h5>Easy Digital Downloads is a complete eCommerce solution</h5>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                                <div class="ecommerce">
+                                                    <label for="ecommerce-3" class="label">
+                                                        <div>
+                                                            <input type="checkbox"  name="ecommerce-3" id="ecommerce-3" class="check-round">
+                                                            <span class="check-icon"></span>
+                                                        </div>
+                                                        <div>
+                                                            <h4>Paid Membership Pro (PMPro)</h4>
+                                                            <h5>Premium content sites, clubs/associations, subscription products, newsletters and more! </h5>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /custom markup -->
+
+                                    
                                 </div>
                                 <?php $this->tutor_setup_wizard_action(); ?>
                                 
