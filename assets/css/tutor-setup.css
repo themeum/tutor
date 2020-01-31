@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i&display=swap');
 
 :root {
     --initial: #fff;
@@ -58,7 +59,6 @@ ul.tutor-setup-content li.active {
 }
 
 .tutor-wrapper-boarding {
-    font-family: 'Open Sans', sans-serif;
     font-size: 12px;
     font-weight: 400;
     line-height: 1.83;
@@ -267,7 +267,7 @@ ul.tutor-setup-content li.active {
 .tutor-setting .content textarea.lesson-message::placeholder {
     color: var(--primary-text);
     font-weight: 300;
-    font-family: "Open Sans", sans-serif;
+    font-family: "Lato", sans-serif;
     font-size: 13px;
 }
 
@@ -760,6 +760,7 @@ input[type="checkbox"].input-switchbox:checked~.switchbox-icon {
     padding: 14px 34px;
     overflow: hidden;
     cursor: pointer;
+    outline: none;
 }
 
 .animated-btn span {
@@ -861,6 +862,7 @@ button[class^="tutor-setup-"] {
     text-align: center;
     color: var(--tertiary-btn);
     transition: .2s ease;
+    outline: none;
 }
 
 
@@ -943,8 +945,7 @@ button.tutor-setup-skip:hover {
 
 .selected h3,
 .select-box label h3,
-.checkbox-wrapper .ecommerce h4 {
-    font-family: "Open Sans", sans-serif;
+.checkbox-wrapper h4 {
     font-size: 14px;
     font-weight: 400;
     line-height: 1.57;
@@ -953,8 +954,7 @@ button.tutor-setup-skip:hover {
 
 .selected h5,
 .select-box label h5,
-.checkbox-wrapper .ecommerce h5 {
-    font-family: "Open Sans", sans-serif;
+.checkbox-wrapper h5 {
     font-size: 12px;
     font-weight: 400;
     line-height: 1.83;
@@ -1021,6 +1021,7 @@ button.tutor-setup-skip:hover {
     display: none;
 }
 
+/* Sider 1st */
 .tutor-setting .content .limit-slider {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -1041,7 +1042,7 @@ button.tutor-setup-skip:hover {
 }
 
 /* Time Limit */
-.limit-slider input[type=range].time-limit-range {
+.limit-slider input[type=range].range-input {
     width: 100%;
     outline: none;
     -webkit-appearance: none;
@@ -1057,7 +1058,7 @@ button.tutor-setup-skip:hover {
 }
 
 /* For Chrome (-webkit-slider-thumb) */
-input[type=range].time-limit-range::-webkit-slider-thumb {
+input[type=range].range-input::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 15px;
@@ -1069,14 +1070,14 @@ input[type=range].time-limit-range::-webkit-slider-thumb {
 }
 
 /* For Mozilla (-moz-range-track and -moz-range-thumb) */
-input[type=range].time-limit-range::-moz-range-track {
+input[type=range].range-input::-moz-range-track {
     max-width: 383px;
     height: 6px;
     border-radius: 8px;
     background-color: #f0f3f6;
 }
 
-input[type=range].time-limit-range::-moz-range-thumb {
+input[type=range].range-input::-moz-range-thumb {
     -moz-appearance: none;
     appearance: none;
     width: 5px;
@@ -1085,6 +1086,99 @@ input[type=range].time-limit-range::-moz-range-thumb {
     cursor: pointer;
     background-color: #f0f3f6;
     border: 5px solid #3057d5;
+}
+
+/* Sider 2nd */
+.tutor-setting .limit-slider.column-1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+}
+
+.limit-slider.column-1 input[type=range].range-input {
+    max-width: 100%;
+    height: 6px;
+    border-radius: 8px;
+    background-color: #639aff;
+}
+
+.limit-slider.column-1 input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #cbcfd3;
+    border: 5.5px solid #fff;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.28)
+}
+
+.limit-slider.column-1 input[type=range]::-moz-range-track {
+    max-width: 100%;
+    height: 6px;
+    border-radius: 8px;
+    background-color: #639aff;
+}
+
+.limit-slider.column-1 input[type=range]::-moz-range-thumb {
+    width: 7px;
+    height: 7px;
+    background-color: #cbcfd3;
+    border: 6px solid #fff;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.28);
+}
+
+
+
+
+
+.tutor-setting .limit-slider .commision-data {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.tutor-setting .limit-slider .commision-data div:first-child {
+    justify-self: flex-start;
+    text-align: left;
+}
+
+
+.tutor-setting .limit-slider .commision-data div:last-child {
+    justify-self: flex-end;
+    text-align: right;
+}
+
+.tutor-setting .limit-slider .commision-data .data h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2949;
+    margin-right: 0;
+}
+
+.tutor-setting .limit-slider .commision-data .data h5 {
+    font-size: 12px;
+    line-height: 1.33;
+    color: #81878f;
+    margin-right: 0;
+    position: relative;
+    padding-left: 10px;
+}
+
+.limit-slider .commision-data .data h5:before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #639aff;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.limit-slider .commision-data .data:last-child h5:before {
+    background: #3b57c4;
 }
 
 
@@ -1096,7 +1190,8 @@ input[type=range].time-limit-range::-moz-range-thumb {
 
 .checkbox-wrapper.column-2 {
     display: grid;
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: repeat(2, .26fr);
+    grid-gap: 10px;
 }
 
 .checkbox-wrapper.column-3 {
@@ -1104,24 +1199,36 @@ input[type=range].time-limit-range::-moz-range-thumb {
     grid-template-columns: repeat(3, auto);
 }
 
-.checkbox-wrapper .ecommerce label {
+.checkbox-wrapper label {
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-gap: 15px;
-    margin: 17px 0;
+    grid-gap: 10px;
     position: relative;
 }
 
-.checkbox-wrapper .ecommerce:first-child label {
+.checkbox-wrapper>div {
+    margin: 17px 0;
+}
+
+.checkbox-wrapper.column-1>div:first-child,
+.checkbox-wrapper.column-2>div:nth-child(1),
+.checkbox-wrapper.column-2>div:nth-child(2),
+.checkbox-wrapper.column-3>div:nth-child(1),
+.checkbox-wrapper.column-3>div:nth-child(2),
+.checkbox-wrapper.column-3>div:nth-child(3) {
     margin-top: 0;
 }
 
-.checkbox-wrapper .ecommerce .check-icon,
-.checkbox-wrapper .ecommerce label {
+.checkbox-wrapper.column-1>div {
+    padding-right: 40px;
+}
+
+.checkbox-wrapper .check-icon,
+.checkbox-wrapper label {
     cursor: pointer;
 }
 
-input.check-round {
+input.checkbox {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -1131,7 +1238,7 @@ input.check-round {
     display: none;
 }
 
-.checkbox-wrapper .ecommerce .check-icon {
+.checkbox-wrapper .check-icon {
     width: 18.5px;
     height: 18.5px;
     border: solid 1px #d6dce3;
@@ -1143,7 +1250,16 @@ input.check-round {
     transition: .2s ease-in-out;
 }
 
-.checkbox-wrapper .ecommerce .check-icon:before {
+.checkbox-wrapper .check-icon.square {
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+    border: solid 1px #dcdfe5;
+    background-color: #f1f3f7;
+    top: 2px;
+}
+
+.checkbox-wrapper .check-icon:before {
     content: url(../images/checkmark.svg);
     position: absolute;
     width: 100%;
@@ -1157,12 +1273,83 @@ input.check-round {
     margin: -1px 1px;
 }
 
-.checkbox-wrapper .ecommerce input.check-round:checked+.check-icon {
+.checkbox-wrapper .check-icon.square:before {
+    margin: -1px 0px 0px 1px;
+}
+
+
+
+.checkbox-wrapper input.checkbox:checked+.check-icon {
     background: var(--primary-btn);
     border-color: var(--primary-btn);
 }
 
-.checkbox-wrapper .ecommerce input.check-round:checked+.check-icon:before {
+.checkbox-wrapper input.checkbox:checked+.check-icon:before {
     transform: scale(1.2);
     opacity: 1
+}
+
+.checkbox-wrapper .payment-setting label {
+    grid-template-rows: auto;
+    grid-template-columns: auto;
+    place-items: center;
+    grid-gap: 0;
+    width: 110px;
+    height: 110px;
+}
+
+.payment-setting input.payment {
+    width: 110px;
+    height: 110px;
+    border-radius: 3px;
+    border: solid 1px #d6dce3;
+    display: block;
+    cursor: pointer;
+    transition: .3s ease-in-out;
+}
+
+.checkbox-wrapper .payment-setting label>div {
+    position: absolute;
+}
+
+
+.payment-setting .check-icon.round {
+    top: -7px;
+    left: -7px;
+}
+
+.checkbox-wrapper input.payment:checked+.check-icon:before {
+    transform: scale(1);
+}
+
+.checkbox-wrapper .payment-setting .check-icon {
+    width: 18.2px;
+    height: 18.2px;
+}
+
+.checkbox-wrapper .payment-setting .check-icon {
+    opacity: 0;
+    opacity: 0;
+    transform: scale(1.1);
+    transition: .3s ease-in-out;
+    position: absolute;
+    z-index: 1;
+}
+
+.checkbox-wrapper .payment-setting input.checkbox:checked+.check-icon {
+    opacity: 1;
+}
+
+.checkbox-wrapper .payment-setting .check-icon:before {
+    transform: scale(1);
+    margin: -1px 0px;
+}
+
+.payment-setting input.payment:checked {
+    border-color: #3057d5;
+}
+
+.checkbox-wrapper .payment-setting h4 {
+    text-align: center;
+    margin-top: 16px;
 }

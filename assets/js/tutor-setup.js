@@ -143,13 +143,15 @@ jQuery(document).ready(function ($) {
                 optionsContainer.classList.remove("active");
             });
         });
-
     });
 
     /* Time Limit sliders */
     $(function () {
-        $('#time-limit-range').on('mousemove', function (e) {
-            $('#time-limit-value').text($(this).val())
+        $('.range-input').on('mousemove', function (e) {
+            let rangeInput = $(this).val();
+            let rangeValue = $(this).parent().parent().find(".range-value");
+
+            rangeValue.text(rangeInput);
         });
     });
 
