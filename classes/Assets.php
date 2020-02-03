@@ -36,6 +36,9 @@ class Assets{
 
 		$tutor_localize_data = array(
 			'delete_confirm_text' => __('Are you sure? it can not be undone.', 'tutor'),
+
+			'nonce_key'     => tutor()->nonce,
+			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
 		);
 		if ( ! empty($_GET['taxonomy']) && ( $_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag') ){
 			$tutor_localize_data['open_tutor_admin_menu'] = true;

@@ -22,6 +22,14 @@ class Instructor {
 
 		//Add instructor from admin panel.
 		add_action('wp_ajax_tutor_add_instructor', array($this, 'add_new_instructor'));
+
+		/**
+		 * Instructor Approval
+		 * Block Unblock
+		 *
+		 * @since v.1.5.3
+		 */
+		add_action('wp_ajax_instructor_approval_action', array($this, 'instructor_approval_action'));
 	}
 
 	/**
@@ -196,6 +204,39 @@ class Instructor {
 		}
 
 		wp_send_json_error(array('errors' => $user_id));
+	}
+
+	public function instructor_approval_action(){
+		tutils()->checking_nonce();
+
+		$instructor_id = (int) sanitize_text_field(tutils()->array_get('instructor_id', $_POST));
+		$action = sanitize_text_field(tutils()->array_get('action_name', $_POST));
+
+		if( 'approve' === $action ) {
+			do_action('tutor_before_approved_instructor', $instructor_id);
+
+			update_user_meta($instructor_id, '_tutor_instructor_status', 'approved');
+			update_user_meta($instructor_id, '_tutor_instructor_approved', tutor_time());
+
+			$instructor = new \WP_User($instructor_id);
+			$instructor->add_role(tutor()->instructor_role);
+
+			//TODO: send E-Mail to this user about instructor approval, should via hook
+			do_action('tutor_after_approved_instructor', $instructor_id);
+		}
+
+		if( 'blocked' === $action ) {
+			do_action('tutor_before_blocked_instructor', $instructor_id);
+			update_user_meta($instructor_id, '_tutor_instructor_status', 'blocked');
+
+			$instructor = new \WP_User($instructor_id);
+			$instructor->remove_role(tutor()->instructor_role);
+			do_action('tutor_after_blocked_instructor', $instructor_id);
+
+			//TODO: send E-Mail to this user about instructor blocked, should via hook
+		}
+
+		wp_send_json_success();
 	}
 
 }
