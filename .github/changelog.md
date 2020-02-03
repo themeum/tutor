@@ -2,7 +2,8 @@
 
 ### 1.5.3 - 04 February, 2020
 
-* Updated: Instructor approved/blocked by ajax request in post method with nonce check (Security Update) 
+* Added: Go auto next after finish lesson (When no video)
+* Updated: Instructor approved/blocked by ajax request in post method with the nonce check (Security Update)
 
 ### 1.5.2 - 29 January, 2020 
 
