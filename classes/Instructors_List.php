@@ -19,7 +19,7 @@ class Instructors_List extends \Tutor_List_Table {
 			'ajax'      => false        //does this table support ajax?
 		) );
 
-		$this->process_bulk_action();
+		//$this->process_bulk_action();
 	}
 
 	function column_default($item, $column_name){
@@ -63,13 +63,13 @@ class Instructors_List extends \Tutor_List_Table {
 
 		switch ($status){
 			case 'pending':
-				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&instructor=%s">Approve</a>',$_REQUEST['page'],'approve',$item->ID);
+				$actions['approved'] = sprintf('<a class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">Approve</a>', $_REQUEST['page'],'approve',$item->ID);
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf('<a href="?page=%s&action=%s&instructor=%s">Block</a>',$_REQUEST['page'],'blocked',$item->ID);
+				$actions['blocked'] = sprintf('<a class="instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">Block</a>', $_REQUEST['page'],'blocked',$item->ID);
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&instructor=%s">Un Block</a>',$_REQUEST['page'],'approve',$item->ID);
+				$actions['approved'] = sprintf('<a class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">Un Block</a>',$_REQUEST['page'],'approve',$item->ID);
 				break;
 		}
 		//Return the title contents
@@ -90,7 +90,7 @@ class Instructors_List extends \Tutor_List_Table {
 
 	function get_columns(){
 		$columns = array(
-			'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
+			//'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
 			'display_name'      => __('Name', 'tutor'),
 			'user_email'        => __('E-Mail', 'tutor'),
 			'total_course'      => __('Total Course', 'tutor'),
