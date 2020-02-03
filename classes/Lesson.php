@@ -38,7 +38,7 @@ class Lesson extends Tutor_Base {
 		add_action('wp_ajax_nopriv_autoload_next_course_content', array($this, 'autoload_next_course_content_noprev'));
 
 		/**
-		 * Autoplay next video
+		 * Load next course item after click complete button
 		 * @since v.1.5.3
 		 */
 		add_action('tutor_lesson_completed_after', array($this, 'tutor_lesson_completed_after'));
