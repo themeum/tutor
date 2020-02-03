@@ -20,15 +20,18 @@ jQuery(document).ready(function ($) {
 
 
     $(".tutor-boarding").slick({
+        speed: 800,
         centerMode: true,
-        centerPadding: "60px",
+        centerPadding: "19.5%",
         slidesToShow: 1,
+        arrows: false,
+        dots: true,
         responsive: [{
                 breakpoint: 768,
                 settings: {
                     arrows: false,
                     centerMode: true,
-                    centerPadding: "40px",
+                    centerPadding: "30px",
                     slidesToShow: 1
                 }
             },
@@ -37,7 +40,7 @@ jQuery(document).ready(function ($) {
                 settings: {
                     arrows: false,
                     centerMode: true,
-                    centerPadding: "40px",
+                    centerPadding: "15px",
                     slidesToShow: 1
                 }
             }

@@ -66,9 +66,9 @@ if ( !class_exists('Tutor_Setup') ) {
                 if( $_GET['page'] == 'tutor-setup' ) {
                     ob_start();
                     $this->tutor_setup_wizard_header();
-                    // $this->tutor_setup_wizard_video();
-                    // $this->tutor_setup_wizard_type();
-                    // $this->tutor_setup_wizard_boarding();
+                    $this->tutor_setup_wizard_video();
+                    $this->tutor_setup_wizard_type();
+                    $this->tutor_setup_wizard_boarding();
                     $this->tutor_setup_wizard_settings();
                     $this->tutor_setup_wizard_footer();
                     exit;
@@ -217,473 +217,476 @@ if ( !class_exists('Tutor_Setup') ) {
             $options = (array) maybe_unserialize(get_option('tutor_option'));
 
             ?>
-            <div class="tutor-wrapper-boarding active">
-                <div><?php _e('Hello, Welcome Tutor LMS.', 'tutor'); ?></div>
-                <div class="tutor-setup-wrapper">
-                    <ul class="tutor-setup-title">
-                        <li class="active"><?php _e('General', 'tutor'); ?></li>
-                        <li><?php _e('Course', 'tutor'); ?></li>
-                        <li><?php _e('Finish', 'tutor'); ?></li>
-                    </ul>
-                    <ul class="tutor-setup-content">
+            <div class="tutor-wizard-container">
+                <div class="tutor-wrapper-boarding tutor-setup-wizard-settings active">
+                    <div><?php _e('Hello, Welcome Tutor LMS.', 'tutor'); ?></div>
+                    <div class="tutor-setup-wrapper">
+                        <ul class="tutor-setup-title">
+                            <li class="active"><?php _e('General', 'tutor'); ?></li>
+                            <li><?php _e('Course', 'tutor'); ?></li>
+                            <li><?php _e('Finish', 'tutor'); ?></li>
+                        </ul>
+                        <ul class="tutor-setup-content">
 
-                        <form id="tutor-setup-form" method="post">
-                            <input type="hidden" name="action" value="setup_action">
-                            <li class="active">
-                                <div class="tutor-setup-content-heading heading">
-                                    <div><?php _e('General Settings', 'tutor'); ?></div>
-                                    <div><?php _e('<strong>1</strong> / 8 Step Completed', 'tutor'); ?></div>
-                                    <div><?php _e('Reset Default', 'tutor'); ?></div>
-                                </div>
-                                <div class="tutor-setup-content-heading body">
-                                    <?php $this->tutor_setup_generator($general_fields); ?>                                    
-
-                                    <!-- <?php $this->tutor_setup_generator( $this->tutor_setup_attributes()['general'] ); ?> -->
-                                    
-                                    <!-- custom markup (Lesson Permalink) -->
-                                    <div class="tutor-setting">
-                                        <div class="title">Lesson Permalink</div>
-                                        <div class="content">
-                                            <input type="text" id="lesson-permalink" class="lesson-permalink" value="lesson" placeholder="Lesson Permalink">    
-                                            <div>http://tutor.test/course/sample-course/lesson/sample-lesson/</div>
-                                        </div>
-                                        <div class="settings">
-                                        </div>
+                            <form id="tutor-setup-form" method="post">
+                                <input type="hidden" name="action" value="setup_action">
+                                <li class="active">
+                                    <div class="tutor-setup-content-heading heading">
+                                        <div><?php _e('General Settings', 'tutor'); ?></div>
+                                        <div><?php _e('<strong>1</strong> / 8 Step Completed', 'tutor'); ?></div>
+                                        <div><?php _e('Reset Default', 'tutor'); ?></div>
                                     </div>
-                                    <!-- /custom markup -->
+                                    <div class="tutor-setup-content-heading body">
+                                        <?php $this->tutor_setup_generator($general_fields); ?>                                    
 
-                                    <!-- custom markup (Courses Per Row) -->
-                                    <div class="tutor-setting course-setting-wrapper">
-                                        <div class="title">
-                                            Courses Per Row 
-                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                        <!-- <?php $this->tutor_setup_generator( $this->tutor_setup_attributes()['general'] ); ?> -->
+                                        
+                                        <!-- custom markup (Lesson Permalink) -->
+                                        <div class="tutor-setting">
+                                            <div class="title">Lesson Permalink</div>
+                                            <div class="content">
+                                                <input type="text" id="lesson-permalink" class="lesson-permalink" value="lesson" placeholder="Lesson Permalink">    
+                                                <div>http://tutor.test/course/sample-course/lesson/sample-lesson/</div>
+                                            </div>
+                                            <div class="settings">
+                                            </div>
                                         </div>
-                                        <div class="content">
-                                            <div class="course-per-row">
-                                                <div class="wrapper">
-                                                    <label for="course-1">
-                                                        <input type="radio" name="course-per-row" class="course" id="course-1">
-                                                        <span class="span"><span>1</span></span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-2">
-                                                        <input type="radio" checked name="course-per-row" class="course" id="course-2">
-                                                        <span class="span">
-                                                            <span>2</span>
-                                                            <span>2</span>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-3">
-                                                        <input type="radio" name="course-per-row" class="course" id="course-3">
-                                                        <span class="span">
-                                                            <span>3</span>
-                                                            <span>3</span>
-                                                            <span>3</span>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-4">
-                                                        <input type="radio" name="course-per-row" class="course" id="course-4">
-                                                        <span class="span">
-                                                            <span>4</span>
-                                                            <span>4</span>
-                                                            <span>4</span>
-                                                            <span>4</span>
-                                                        </span>
-                                                    </label>
+                                        <!-- /custom markup -->
+
+                                        <!-- custom markup (Courses Per Row) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                Courses Per Row 
+                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                            </div>
+                                            <div class="content">
+                                                <div class="course-per-row">
+                                                    <div class="wrapper">
+                                                        <label for="course-1">
+                                                            <input type="radio" name="course-per-row" class="course" id="course-1">
+                                                            <span class="span"><span>1</span></span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="wrapper">
+                                                        <label for="course-2">
+                                                            <input type="radio" checked name="course-per-row" class="course" id="course-2">
+                                                            <span class="span">
+                                                                <span>2</span>
+                                                                <span>2</span>
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="wrapper">
+                                                        <label for="course-3">
+                                                            <input type="radio" name="course-per-row" class="course" id="course-3">
+                                                            <span class="span">
+                                                                <span>3</span>
+                                                                <span>3</span>
+                                                                <span>3</span>
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="wrapper">
+                                                        <label for="course-4">
+                                                            <input type="radio" name="course-per-row" class="course" id="course-4">
+                                                            <span class="span">
+                                                                <span>4</span>
+                                                                <span>4</span>
+                                                                <span>4</span>
+                                                                <span>4</span>
+                                                            </span>
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- /custom markup -->
+                                        <!-- /custom markup -->
 
-                                    <!-- custom markup (Courses Per Page) -->
-                                    <div class="tutor-setting course-setting-wrapper">
-                                        <div class="title">
-                                            Courses Per Page
-                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a> 
-                                        </div>
-                                        <div class="content">
-                                            <div class="course-per-page">
-                                                <div class="wrapper">
-                                                    <label for="course-p-1">
-                                                        <input type="radio" name="course-per-page" class="course-p" id="course-p-1">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text">4</span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-p-2">
-                                                        <input type="radio" name="course-per-page" class="course-p" id="course-p-2">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text">8</span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-p-3">
-                                                        <input type="radio" name="course-per-page" class="course-p" id="course-p-3">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text">12</span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-p-4">
-                                                        <input type="radio" name="course-per-page" class="course-p" id="course-p-4">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text">16</span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-p-5">
-                                                        <input type="radio" name="course-per-page" class="course-p" id="course-p-5">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text">20</span>
-                                                    </label>
+                                        <!-- custom markup (Courses Per Page) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                Courses Per Page
+                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a> 
+                                            </div>
+                                            <div class="content">
+                                                <div class="course-per-page">
+                                                    <div class="wrapper">
+                                                        <label for="course-p-1">
+                                                            <input type="radio" name="course-per-page" class="course-p" id="course-p-1">
+                                                            <span class="radio-icon"></span>
+                                                            <span class="label-text">4</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="wrapper">
+                                                        <label for="course-p-2">
+                                                            <input type="radio" name="course-per-page" class="course-p" id="course-p-2">
+                                                            <span class="radio-icon"></span>
+                                                            <span class="label-text">8</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="wrapper">
+                                                        <label for="course-p-3">
+                                                            <input type="radio" name="course-per-page" class="course-p" id="course-p-3">
+                                                            <span class="radio-icon"></span>
+                                                            <span class="label-text">12</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="wrapper">
+                                                        <label for="course-p-4">
+                                                            <input type="radio" name="course-per-page" class="course-p" id="course-p-4">
+                                                            <span class="radio-icon"></span>
+                                                            <span class="label-text">16</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="wrapper">
+                                                        <label for="course-p-5">
+                                                            <input type="radio" name="course-per-page" class="course-p" id="course-p-5">
+                                                            <span class="radio-icon"></span>
+                                                            <span class="label-text">20</span>
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- /custom markup -->
+                                        <!-- /custom markup -->
 
-                                    <!-- custom markup (Grade Calculation) -->
-                                    <div class="tutor-setting course-setting-wrapper">
-                                        <div class="title">
-                                            Final Grade <br> Calculation
-                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
-                                        </div>
-                                        <div class="content">
-                                            <div class="grade-calculation">
-                                                <div class="select-box">
-                                                    <div class="options-container">          
-                                                        <div class="option">
-                                                            <input type="radio" class="radio" id="grade-a" name="category"/>
-                                                            <label for="grade-a">
-                                                                <h3>Highest Grade</h3> 
-                                                                <h5>Lorem ipsum dolor sit amet consectetur.</h5> 
-                                                            </label>
-                                                        </div>
-
-                                                        <div class="option">
-                                                            <input type="radio" class="radio" id="grade-b" name="category" />
-                                                            <label for="grade-b">
-                                                                <h3>Average Grade</h3> 
-                                                                <h5>Individual and want to spread knowledge </h5> 
-                                                            </label>
-                                                        </div>
-
-                                                        <div class="option">
-                                                            <input type="radio" class="radio" id="grade-c" name="category" />
-                                                            <label for="grade-c">
-                                                                <h3>Below Average Grade</h3> 
-                                                                <h5>Lorem ipsum dolor consectetur adipisicing.</h5> 
-                                                            </label>
-                                                        </div>
-                                                        <div class="option">
-                                                            <input type="radio" class="radio" id="grade-d" name="category" />
-                                                            <label for="grade-d">
-                                                                <h3>Poor Grade</h3> 
-                                                                <h5>Individual and want to spread knowledge</h5> 
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="selected">
-                                                        <h3>Highest Grade</h3> 
-                                                        <h5>Individual and want to spread knowledge </h5>
-                                                    </div> 
-                                                </div>
-                                                <!-- /.select-box -->
-                                            </div> 
-                                        </div>
-                                    </div>
-                                    <!-- /custom markup -->
-
-                                    <!-- custom markup (Lesson Message) -->
-                                    <div class="tutor-setting course-setting-wrapper">
-                                        <div class="title">
-                                            When Time Expires
-                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
-                                        </div>
-                                        <div class="content">
-                                            <textarea name="" id="lesson-message" class="lesson-message" placeholder="Type your expired message"></textarea>
-                                        </div>
-                                    </div>
-                                    <!-- /custom markup -->
-
-                                    <!-- custom markup (Attempts allowed) -->
-                                    <div class="tutor-setting course-setting-wrapper">
-                                        <div class="title">
-                                            Attempts allowed
-                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
-                                        </div>
-                                        <div class="content">
-                                            <div class="course-per-page attempts-allowed">
-                                                <div class="wrapper">
-                                                    <label for="attempts-allowed-1">
-                                                        <input type="radio" name="attempts-allowed" class="course-p" id="attempts-allowed-1">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text label-text-2">
-                                                            <input type="number" name="attempts-allowed" disabled class="attempts" id="attempts-allowed-numer">
-                                                        </span>
-                                                        
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="attempts-allowed-2">
-                                                        <input type="radio" checked name="attempts-allowed" class="course-p" id="attempts-allowed-2">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text">Unlimited</span>
-                                                    </label>
-                                                </div>
-                                            </div> 
-                                        </div>
-                                    </div>
-                                    <!-- /custom markup -->
-
-                                    <!-- custom markup (Time Limit) -->
-                                    <div class="tutor-setting course-setting-wrapper">
-                                        <div class="title">
-                                            Time Limit
-                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
-                                        </div>
-                                        <div class="content">
-                                            <div class="limit-slider">
-                                                <div>
-                                                    <input type="range" min="0" max="60" step="1" value="0"  class="range-input" name=""/>
-                                                </div>
-                                                <div>
-                                                    <h5><span class="range-value">0</span>min</h5>
-                                                </div>
+                                        <!-- custom markup (Grade Calculation) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                Final Grade <br> Calculation
+                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <!-- /custom markup -->
+                                            <div class="content">
+                                                <div class="grade-calculation">
+                                                    <div class="select-box">
+                                                        <div class="options-container">          
+                                                            <div class="option">
+                                                                <input type="radio" class="radio" id="grade-a" name="category"/>
+                                                                <label for="grade-a">
+                                                                    <h3>Highest Grade</h3> 
+                                                                    <h5>Lorem ipsum dolor sit amet consectetur.</h5> 
+                                                                </label>
+                                                            </div>
 
-                                    <!-- custom markup (Commission Rate) -->
-                                    <div class="tutor-setting course-setting-wrapper">
-                                        <div class="title">
-                                            Commission Rate
-                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
-                                        </div>
-                                        <div class="content">
-                                            <div class="limit-slider column-1">
-                                                <div>
-                                                    <input type="range" min="0" max="100" step="1" value="0" class="range-input" name=""/>
-                                                </div>
-                                                <div class="commision-data">
-                                                    <div class="data">
-                                                        <h4 class="range-value-1">80%</h4>
-                                                        <h5>Instructor</h5>
-                                                    </div>
-                                                    <div class="data">
-                                                        <h4 class="range-value-2">20%</h4>
-                                                        <h5>Admin</h5>
-                                                    </div>
-                                                </div>
-                                            </div> 
-                                        </div>
-                                    </div>
-                                    <!-- /custom markup -->
+                                                            <div class="option">
+                                                                <input type="radio" class="radio" id="grade-b" name="category" />
+                                                                <label for="grade-b">
+                                                                    <h3>Average Grade</h3> 
+                                                                    <h5>Individual and want to spread knowledge </h5> 
+                                                                </label>
+                                                            </div>
 
-                                    <!-- custom markup (eCommerce Engine) -->
-                                    <div class="tutor-setting course-setting-wrapper">
-                                        <div class="title">
-                                            eCommerce Engine
-                                        </div>
-                                        <div class="content">
-                                            <div class="checkbox-wrapper column-1">
-                                                <div class="ecommerce">
-                                                    <label for="ecommerce-1" class="label">
-                                                        <div>
-                                                            <input type="checkbox"  name="ecommerce-1" id="ecommerce-1" class="checkbox">
-                                                            <span class="check-icon"></span>
+                                                            <div class="option">
+                                                                <input type="radio" class="radio" id="grade-c" name="category" />
+                                                                <label for="grade-c">
+                                                                    <h3>Below Average Grade</h3> 
+                                                                    <h5>Lorem ipsum dolor consectetur adipisicing.</h5> 
+                                                                </label>
+                                                            </div>
+                                                            <div class="option">
+                                                                <input type="radio" class="radio" id="grade-d" name="category" />
+                                                                <label for="grade-d">
+                                                                    <h3>Poor Grade</h3> 
+                                                                    <h5>Individual and want to spread knowledge</h5> 
+                                                                </label>
+                                                            </div>
                                                         </div>
-                                                        <div>
-                                                            <h4>WooCommerce</h4>
+                                                        <div class="selected">
+                                                            <h3>Highest Grade</h3> 
                                                             <h5>Individual and want to spread knowledge </h5>
-                                                        </div>
-                                                    </label>
-                                                </div>
-                                                <div class="ecommerce">
-                                                    <label for="ecommerce-2" class="label">
-                                                        <div>
-                                                            <input type="checkbox" checked name="ecommerce-2" id="ecommerce-2" class="checkbox">
-                                                            <span class="check-icon"></span>
-                                                        </div>
-                                                        <div>
-                                                            <h4>Easy Digital Downloads (EDD)</h4>
-                                                            <h5>Easy Digital Downloads is a complete eCommerce solution</h5>
-                                                        </div>
-                                                    </label>
-                                                </div>
-                                                <div class="ecommerce">
-                                                    <label for="ecommerce-3" class="label">
-                                                        <div>
-                                                            <input type="checkbox"  name="ecommerce-3" id="ecommerce-3" class="checkbox">
-                                                            <span class="check-icon"></span>
-                                                        </div>
-                                                        <div>
-                                                            <h4>Paid Membership Pro (PMPro)</h4>
-                                                            <h5>Premium content sites, clubs/associations, subscription products, newsletters and more! </h5>
-                                                        </div>
-                                                    </label>
+                                                        </div> 
+                                                    </div>
+                                                    <!-- /.select-box -->
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        <!-- /custom markup -->
+
+                                        <!-- custom markup (Lesson Message) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                When Time Expires
+                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                            </div>
+                                            <div class="content">
+                                                <textarea name="" id="lesson-message" class="lesson-message" placeholder="Type your expired message"></textarea>
+                                            </div>
+                                        </div>
+                                        <!-- /custom markup -->
+
+                                        <!-- custom markup (Attempts allowed) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                Attempts allowed
+                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                            </div>
+                                            <div class="content">
+                                                <div class="course-per-page attempts-allowed">
+                                                    <div class="wrapper">
+                                                        <label for="attempts-allowed-1">
+                                                            <input type="radio" name="attempts-allowed" class="course-p" id="attempts-allowed-1">
+                                                            <span class="radio-icon"></span>
+                                                            <span class="label-text label-text-2">
+                                                                <input type="number" name="attempts-allowed" disabled class="attempts" id="attempts-allowed-numer">
+                                                            </span>
+                                                            
+                                                        </label>
+                                                    </div>
+                                                    <div class="wrapper">
+                                                        <label for="attempts-allowed-2">
+                                                            <input type="radio" checked name="attempts-allowed" class="course-p" id="attempts-allowed-2">
+                                                            <span class="radio-icon"></span>
+                                                            <span class="label-text">Unlimited</span>
+                                                        </label>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        <!-- /custom markup -->
+
+                                        <!-- custom markup (Time Limit) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                Time Limit
+                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                            </div>
+                                            <div class="content">
+                                                <div class="limit-slider">
+                                                    <div>
+                                                        <input type="range" min="0" max="60" step="1" value="0"  class="range-input" name=""/>
+                                                    </div>
+                                                    <div>
+                                                        <h5><span class="range-value">0</span>min</h5>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- /custom markup -->
+                                        <!-- /custom markup -->
 
-                                    <!-- custom markup (Email Notification) -->
-                                    <div class="tutor-setting course-setting-wrapper">
-                                        <div class="title">
-                                            Quiz Complited
-                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                        <!-- custom markup (Commission Rate) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                Commission Rate
+                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                            </div>
+                                            <div class="content">
+                                                <div class="limit-slider column-1">
+                                                    <div>
+                                                        <input type="range" min="0" max="100" step="1" value="0" class="range-input" name=""/>
+                                                    </div>
+                                                    <div class="commision-data">
+                                                        <div class="data">
+                                                            <h4 class="range-value-1">80%</h4>
+                                                            <h5>Instructor</h5>
+                                                        </div>
+                                                        <div class="data">
+                                                            <h4 class="range-value-2">20%</h4>
+                                                            <h5>Admin</h5>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                            </div>
                                         </div>
-                                        <div class="content">
-                                            <div class="checkbox-wrapper column-1">
-                                                <div class="ecommerce email-notification">
-                                                    <label for="email-notification-1" class="label">
-                                                        <div>
-                                                            <input type="checkbox" name="email-notification-1" id="email-notification-1" class="checkbox">
-                                                            <span class="check-icon square"></span>
-                                                        </div>
-                                                        <div>
-                                                            <h4>Student</h4>
-                                                        </div>
-                                                    </label>
+                                        <!-- /custom markup -->
+
+                                        <!-- custom markup (eCommerce Engine) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                eCommerce Engine
+                                            </div>
+                                            <div class="content">
+                                                <div class="checkbox-wrapper column-1">
+                                                    <div class="ecommerce">
+                                                        <label for="ecommerce-1" class="label">
+                                                            <div>
+                                                                <input type="checkbox"  name="ecommerce-1" id="ecommerce-1" class="checkbox">
+                                                                <span class="check-icon"></span>
+                                                            </div>
+                                                            <div>
+                                                                <h4>WooCommerce</h4>
+                                                                <h5>Individual and want to spread knowledge </h5>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="ecommerce">
+                                                        <label for="ecommerce-2" class="label">
+                                                            <div>
+                                                                <input type="checkbox" checked name="ecommerce-2" id="ecommerce-2" class="checkbox">
+                                                                <span class="check-icon"></span>
+                                                            </div>
+                                                            <div>
+                                                                <h4>Easy Digital Downloads (EDD)</h4>
+                                                                <h5>Easy Digital Downloads is a complete eCommerce solution</h5>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="ecommerce">
+                                                        <label for="ecommerce-3" class="label">
+                                                            <div>
+                                                                <input type="checkbox"  name="ecommerce-3" id="ecommerce-3" class="checkbox">
+                                                                <span class="check-icon"></span>
+                                                            </div>
+                                                            <div>
+                                                                <h4>Paid Membership Pro (PMPro)</h4>
+                                                                <h5>Premium content sites, clubs/associations, subscription products, newsletters and more! </h5>
+                                                            </div>
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- /custom markup -->
+                                        <!-- /custom markup -->
 
-                                    <!-- custom markup (Course Completed) -->
-                                    <div class="tutor-setting course-setting-wrapper">
-                                        <div class="title">
-                                            Course Complited
-                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
-                                        </div>
-                                        <div class="content">
-                                            <div class="checkbox-wrapper column-2">
-                                                <div class="email-notification">
-                                                    <label for="course-completed-1" class="label">
-                                                        <div>
-                                                            <input type="checkbox" checked name="course-completed-1" id="course-completed-1" class="checkbox">
-                                                            <span class="check-icon square"></span>
-                                                        </div>
-                                                        <div>
-                                                            <h4>Student</h4>
-                                                        </div>
-                                                    </label>
+                                        <!-- custom markup (Email Notification) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                Quiz Complited
+                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                            </div>
+                                            <div class="content">
+                                                <div class="checkbox-wrapper column-1">
+                                                    <div class="ecommerce email-notification">
+                                                        <label for="email-notification-1" class="label">
+                                                            <div>
+                                                                <input type="checkbox" name="email-notification-1" id="email-notification-1" class="checkbox">
+                                                                <span class="check-icon square"></span>
+                                                            </div>
+                                                            <div>
+                                                                <h4>Student</h4>
+                                                            </div>
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                                <div class="email-notification">
-                                                    <label for="course-completed-2" class="abel">
-                                                        <div>
-                                                            <input type="checkbox" name="course-completed-2" id="course-completed-2" class="checkbox">
-                                                            <span class="check-icon square"></span>
-                                                        </div>
-                                                        <div>
-                                                            <h4>Instructor</h4>
-                                                        </div>
-                                                    </label>
-                                                </div>  
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- /custom markup -->
+                                        <!-- /custom markup -->
 
-                                    <!-- custom markup (Payment Withdraw Method) -->
-                                    <div class="tutor-setting course-setting-wrapper">
-                                        <div class="title">
-                                            Payment Withdraw Method
-                                            <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
-                                        </div>
-                                        <div class="content">
-                                            <div class="checkbox-wrapper column-3">
-                                                <div class="payment-setting">
-                                                    <label for="payment-1" class="label">
-                                                        <div>
-                                                            <input type="radio" checked name="payment" id="payment-1" class="checkbox payment">
-                                                            <span class="check-icon round"></span>
-                                                        </div>
-                                                        <div>
-                                                            <img src="<?php echo tutor()->url . 'assets/images/payment-icon-1-min.png'; ?>" alt="Payemnt Check">
-                                                            <h4>Bank</h4>
-                                                        </div>
-                                                    </label>
+                                        <!-- custom markup (Course Completed) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                Course Complited
+                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                            </div>
+                                            <div class="content">
+                                                <div class="checkbox-wrapper column-2">
+                                                    <div class="email-notification">
+                                                        <label for="course-completed-1" class="label">
+                                                            <div>
+                                                                <input type="checkbox" checked name="course-completed-1" id="course-completed-1" class="checkbox">
+                                                                <span class="check-icon square"></span>
+                                                            </div>
+                                                            <div>
+                                                                <h4>Student</h4>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="email-notification">
+                                                        <label for="course-completed-2" class="abel">
+                                                            <div>
+                                                                <input type="checkbox" name="course-completed-2" id="course-completed-2" class="checkbox">
+                                                                <span class="check-icon square"></span>
+                                                            </div>
+                                                            <div>
+                                                                <h4>Instructor</h4>
+                                                            </div>
+                                                        </label>
+                                                    </div>  
                                                 </div>
-                                                <div class="payment-setting">
-                                                    <label for="payment-2" class="label">
-                                                        <div>
-                                                            <input type="radio" name="payment" id="payment-2" class="checkbox payment">
-                                                            <span class="check-icon round"></span>
-                                                        </div>
-                                                        <div>
-                                                            <img src="<?php echo tutor()->url . 'assets/images/payment-icon-2-min.png'; ?>" alt="Payemnt Check">                                                            
-                                                            <h4>Check</h4>
-                                                        </div>
-                                                    </label>
-                                                </div>  
-                                                <div class="payment-setting">
-                                                    <label for="payment-3" class="label">
-                                                        <div>
-                                                            <input type="radio" name="payment" id="payment-3" class="checkbox payment">
-                                                            <span class="check-icon round"></span>
-                                                        </div>
-                                                        <div>
-                                                            <img src="<?php echo tutor()->url . 'assets/images/payment-icon-3-min.png'; ?>" alt="Payemnt Check">
-                                                            <h4>Paypal</h4>
-                                                        </div>
-                                                    </label>
-                                                </div>  
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- /custom markup -->
+                                        <!-- /custom markup -->
 
+                                        <!-- custom markup (Payment Withdraw Method) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                Payment Withdraw Method
+                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                            </div>
+                                            <div class="content">
+                                                <div class="checkbox-wrapper column-3">
+                                                    <div class="payment-setting">
+                                                        <label for="payment-1" class="label">
+                                                            <div>
+                                                                <input type="radio" checked name="payment" id="payment-1" class="checkbox payment">
+                                                                <span class="check-icon round"></span>
+                                                            </div>
+                                                            <div>
+                                                                <img src="<?php echo tutor()->url . 'assets/images/payment-icon-1-min.png'; ?>" alt="Payemnt Check">
+                                                                <h4>Bank</h4>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="payment-setting">
+                                                        <label for="payment-2" class="label">
+                                                            <div>
+                                                                <input type="radio" name="payment" id="payment-2" class="checkbox payment">
+                                                                <span class="check-icon round"></span>
+                                                            </div>
+                                                            <div>
+                                                                <img src="<?php echo tutor()->url . 'assets/images/payment-icon-2-min.png'; ?>" alt="Payemnt Check">                                                            
+                                                                <h4>Check</h4>
+                                                            </div>
+                                                        </label>
+                                                    </div>  
+                                                    <div class="payment-setting">
+                                                        <label for="payment-3" class="label">
+                                                            <div>
+                                                                <input type="radio" name="payment" id="payment-3" class="checkbox payment">
+                                                                <span class="check-icon round"></span>
+                                                            </div>
+                                                            <div>
+                                                                <img src="<?php echo tutor()->url . 'assets/images/payment-icon-3-min.png'; ?>" alt="Payemnt Check">
+                                                                <h4>Paypal</h4>
+                                                            </div>
+                                                        </label>
+                                                    </div>  
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /custom markup -->
+
+                                        
+                                    </div>
+                                    <?php $this->tutor_setup_wizard_action(); ?>
                                     
-                                </div>
-                                <?php $this->tutor_setup_wizard_action(); ?>
-                                
-                            </li>
+                                </li>
 
-                            <li>
-                                <div class="tutor-setup-content-heading heading">
-                                    <div><?php _e('General Settings', 'tutor'); ?></div>
-                                    <div><?php _e('<strong>2</strong> / 8 Step Completed', 'tutor'); ?></div>
-                                    <div><?php _e('Reset Default', 'tutor'); ?></div>
-                                </div>
-                                <div class="tutor-setup-content-heading body">
-                                    <?php $this->tutor_setup_generator( $this->tutor_setup_attributes()['course'] ); ?>
-                                </div>
-                                <?php $this->tutor_setup_wizard_action(); ?>
-                            </li>
-
-                            <li>
-                                <div class="tutor-setup-content-heading greetings ">
-                                    <div class="header">
-                                        <img src="http://saief.local/WP-TutorLMS/wp-content/uploads/2020/01/greeting-img.jpg" alt="">
+                                <li>
+                                    <div class="tutor-setup-content-heading heading">
+                                        <div><?php _e('General Settings', 'tutor'); ?></div>
+                                        <div><?php _e('<strong>2</strong> / 8 Step Completed', 'tutor'); ?></div>
+                                        <div><?php _e('Reset Default', 'tutor'); ?></div>
                                     </div>
-                                    <div class="content">
-                                        <h2><?php _e('Thank You!', 'tutor'); ?></h2>
-                                        <p><?php _e('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses. ', 'tutor'); ?></p>
-
+                                    <div class="tutor-setup-content-heading body">
+                                        <?php $this->tutor_setup_generator( $this->tutor_setup_attributes()['course'] ); ?>
                                     </div>
-                                    <div class="tutor-setup-content-footer footer">
-                                        <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor_settings'); ?>"><?php _e('Finish', 'tutor'); ?></button>
+                                    <?php $this->tutor_setup_wizard_action(); ?>
+                                </li>
 
+                                <li>
+                                    <div class="tutor-setup-content-heading greetings ">
+                                        <div class="header">
+                                            <img src="http://saief.local/WP-TutorLMS/wp-content/uploads/2020/01/greeting-img.jpg" alt="">
+                                        </div>
+                                        <div class="content">
+                                            <h2><?php _e('Thank You!', 'tutor'); ?></h2>
+                                            <p><?php _e('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses. ', 'tutor'); ?></p>
+
+                                        </div>
+                                        <div class="tutor-setup-content-footer footer">
+                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor_settings'); ?>"><?php _e('Finish', 'tutor'); ?></button>
+
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
+                                </li>
 
-                        </form>
+                            </form>
 
-                    </ul>
-                    
+                        </ul>
+                        
+                    </div>
                 </div>
+            </div>
             <?php
         }
 
@@ -727,40 +730,46 @@ if ( !class_exists('Tutor_Setup') ) {
 
         public function tutor_setup_wizard_boarding() {
             ?>
-            <div class="tutor-wrapper-boarding active">
-                <div><?php _e('Hello, Welcome Tutor LMS.', 'tutor'); ?></div>
-                <div>
-                    <ul class="slider tutor-boarding">
-                        <li>
-                            <img src="<?php echo tutor()->url.'assets/images/setup-individual.jpg'; ?>" />
-                            <div><?php _e('Install Theme 1', 'tutor'); ?></div>
-                            <div><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
-                        </li>
-                        <li>
-                            <img src="<?php echo tutor()->url.'assets/images/setup-marketplace.jpg'; ?>" />
-                            <div><?php _e('Install Theme 2', 'tutor'); ?></div>
-                            <div><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
-                        </li>
-                        <li>
-                            <img src="<?php echo tutor()->url.'assets/images/setup-individual.jpg'; ?>" />
-                            <div><?php _e('Install Theme 3', 'tutor'); ?></div>
-                            <div><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
-                        </li>
-                        <li>
-                            <img src="<?php echo tutor()->url.'assets/images/setup-individual.jpg'; ?>" />
-                            <div><?php _e('Install Theme 4', 'tutor'); ?></div>
-                            <div><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
-                        </li>
-                        <li>
-                            <img src="<?php echo tutor()->url.'assets/images/setup-individual.jpg'; ?>" />
-                            <div><?php _e('Install Theme 5', 'tutor'); ?></div>
-                            <div><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <a class="tutor-boarding-next" href="#"><?php _e('I alredy know, Skip it!', 'tutor'); ?></a>
-                    <div class="tutor-boarding-skip"><?php _e('Contact with Live support', 'tutor'); ?></div>
+            <div class="tutor-wizard-container">
+                <div class="tutor-wrapper-boarding tutor-setup-wizard-boarding active">
+                    <div class="wizard-boarding-header">
+                        <div><img src="<?php echo tutor()->url.'assets/images/tutor-logo.svg'; ?>" /></div>
+                        <div><?php _e('Hello, Welcome Tutor LMS.', 'tutor'); ?></div>
+                    </div>
+                    <div class="wizard-boarding-body">
+                        <ul class="slider tutor-boarding">
+                            <li>
+                                <!-- <img src="<?php echo tutor()->url.'assets/images/setup-individual.jpg'; ?>" /> -->
+                                <div class="slide-thumb"><img src="https://picsum.photos/540/350" alt="Random Placeholder Image"/></div>
+                                <div class="slide-title"><?php _e('Install Theme 1', 'tutor'); ?></div>
+                                <div class="slide-subtitle"><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
+                            </li>
+                            <li>
+                                <div class="slide-thumb"><img src="https://picsum.photos/540/350" alt="Random Placeholder Image"/></div>
+                                <div class="slide-title"><?php _e('Install Theme 2', 'tutor'); ?></div>
+                                <div class="slide-subtitle"><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
+                            </li>
+                            <li>
+                                <div class="slide-thumb"><img src="https://picsum.photos/540/350" alt="Random Placeholder Image"/></div>
+                                <div class="slide-title"><?php _e('Install Theme 3', 'tutor'); ?></div>
+                                <div class="slide-subtitle"><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
+                            </li>
+                            <li>
+                                <div class="slide-thumb"><img src="https://picsum.photos/540/350" alt="Random Placeholder Image"/></div>
+                                <div class="slide-title"><?php _e('Install Theme 4', 'tutor'); ?></div>
+                                <div class="slide-subtitle"><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
+                            </li>
+                            <li>
+                                <div class="slide-thumb"><img src="https://picsum.photos/540/350" alt="Random Placeholder Image"/></div>
+                                <div class="slide-title"><?php _e('Install Theme 5', 'tutor'); ?></div>
+                                <div class="slide-subtitle"><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="wizard-boarding-footer">
+                        <a class="tutor-boarding-next" href="#"><?php _e('I alredy know, Skip it!', 'tutor'); ?></a>
+                        <div class="tutor-boarding-skip"><?php _e('Contact with Live support', 'tutor'); ?></div>
+                    </div>
                 </div>
             </div>
             <?php
@@ -769,32 +778,41 @@ if ( !class_exists('Tutor_Setup') ) {
         public function tutor_setup_wizard_type() {
             $course_marketplace = tutor_utils()->get_option('enable_course_marketplace');
             ?>
-            <div class="tutor-wrapper-type active">
-                <div>
-                    <div><?php _e('First, let’s get you set up.', 'tutor'); ?></div>
-                    <div><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
-                </div>
-                <div>
-                    <div>
-                        <input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="0" <?php if(!$course_marketplace){ echo 'checked'; } ?> />
-                        <label for="enable_course_marketplace-0">
-                            <img src="<?php echo tutor()->url.'assets/images/setup-individual.jpg'; ?>" />
-                            <div><?php _e( 'Individual', 'tutor' ); ?></div>
-                            <div><?php _e( 'Destination that helps everyone gain the skills.', 'tutor' ); ?></div>
-                        </label>
+            <div class="tutor-wizard-container">
+                <div class="tutor-wrapper-type tutor-setup-wizard-type active">
+                    <div class="wizard-type-header">
+                        <div class="logo"><img src="<?php echo tutor()->url.'assets/images/tutor-logo.svg'; ?>" /></div>
+                        <div class="title"><?php _e('First, let’s get you set up.', 'tutor'); ?></div>
+                        <div class="subtitle"><?php _e('Pick a project category to connect with a specific community. You can always update this later.', 'tutor'); ?></div>
                     </div>
-                    <div>
-                        <input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="1" <?php if($course_marketplace){ echo 'checked'; } ?>/>
-                        <label for="enable_course_marketplace-1">
-                            <img src="<?php echo tutor()->url.'assets/images/setup-marketplace.jpg'; ?>" />
-                            <div><?php _e( 'Marketplace', 'tutor' ); ?></div>
-                            <div><?php _e( 'Destination that helps everyone gain the skills.', 'tutor' ); ?></div>
-                        </label>
+                    <div class="wizard-type-body">
+                        <div class="wizard-type-item">
+                            <input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="0" <?php if(!$course_marketplace){ echo 'checked'; } ?> />
+                            <span class="icon"></span>
+                            <label for="enable_course_marketplace-0">
+                                <img src="<?php echo tutor()->url.'assets/images/setup-marketplace.jpg'; ?>" />
+                                <div class="title"><?php _e( 'Individual', 'tutor' ); ?></div>
+                                <div class="subtitle"><?php _e( 'Destination that helps everyone gain the skills.', 'tutor' ); ?></div>
+                            </label>
+                        </div>
+                        <div class="wizard-type-item">
+                            <input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="1" <?php if($course_marketplace){ echo 'checked'; } ?>/>
+                            <span class="icon"></span>
+                            <label for="enable_course_marketplace-1">
+                                <img src="<?php echo tutor()->url.'assets/images/setup-individual.jpg'; ?>" />
+                                <div class="title"><?php _e( 'Marketplace', 'tutor' ); ?></div>
+                                <div class="subtitle"><?php _e( 'Destination that helps everyone gain the skills.', 'tutor' ); ?></div>
+                            </label>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <button class="tutor-type-next"><?php _e('Let’s Start', 'tutor'); ?></button>
-                    <a href="#" class="tutor-type-skip" class=""><?php _e('I am confused, Skip this step', 'tutor'); ?></a>
+                    <div class="wizard-type-footer">
+                        <div>
+                            <button class="tutor-type-next primary-btn "><?php _e('Let’s Start', 'tutor'); ?></button>
+                        </div>
+                        <div>
+                            <a href="#" class="tutor-type-skip" class=""><?php _e('I am confused, Skip this step', 'tutor'); ?></a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <?php
