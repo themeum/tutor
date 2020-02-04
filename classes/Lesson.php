@@ -35,7 +35,6 @@ class Lesson extends Tutor_Base {
 		 * @since v.1.4.9
 		 */
 		add_action('wp_ajax_autoload_next_course_content', array($this, 'autoload_next_course_content'));
-		add_action('wp_ajax_nopriv_autoload_next_course_content', array($this, 'autoload_next_course_content_noprev'));
 
 		/**
 		 * Load next course item after click complete button
@@ -310,10 +309,6 @@ class Lesson extends Tutor_Base {
 			$next_url = get_the_permalink($contents->next_id);
 		}
 		wp_send_json_success(array('next_url' => $next_url));
-	}
-
-	public function autoload_next_course_content_noprev(){
-
 	}
 
 	/**
