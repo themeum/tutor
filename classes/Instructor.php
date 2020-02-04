@@ -143,6 +143,8 @@ class Instructor {
 
 
 	public function add_new_instructor(){
+		tutils()->checking_nonce();
+
 		$required_fields = apply_filters('tutor_instructor_registration_required_fields', array(
 			'first_name'                => __('First name field is required', 'tutor'),
 			'last_name'                 =>  __('Last name field is required', 'tutor'),
