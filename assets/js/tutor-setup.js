@@ -4,7 +4,8 @@ jQuery(document).ready(function ($) {
     const player = new Plyr('#player', {
         autoplay: true,
         muted: true,
-        volume: 2
+        volume: 2,
+        controls: false
     });
     player.on('ended', event => {
         $('.tutor-wrapper-video').removeClass('active');
@@ -20,7 +21,7 @@ jQuery(document).ready(function ($) {
 
 
     $(".tutor-boarding").slick({
-        speed: 800,
+        speed: 1000,
         centerMode: true,
         centerPadding: "19.5%",
         slidesToShow: 1,
@@ -120,9 +121,16 @@ jQuery(document).ready(function ($) {
 
 
     $(function () {
+
         $('.input-switch-label').on('click', function (e) {
             $(this).toggleClass('checked');
         });
+
+        /* if ($('.input-switchbox').is(':checked')) {
+            $(this).find('.switch-label [class^=label-]').addClass('checked');
+        } else {
+            $(this).find('.switch-label [class^=label-]').removeClass('checked');
+        } */
 
         $('.tooltip-btn').on('click', function (e) {
             $(this).toggleClass('active');
@@ -161,15 +169,16 @@ jQuery(document).ready(function ($) {
     $(function () {
         $('#attempts-allowed-1').on('click', function (e) {
             if ($('#attempts-allowed-numer').prop("disabled", true)) {
+                $(this).parent().parent().parent().addClass('active')
                 $('#attempts-allowed-numer').prop("disabled", false);
             }
         });
         $('#attempts-allowed-2').on('click', function (e) {
             if ($('#attempts-allowed-2').is(':checked')) {
+                $(this).parent().parent().parent().removeClass('active')
                 $('#attempts-allowed-numer').prop("disabled", true);
             }
         });
     });
-
 
 });

@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i&display=swap');
 
 :root {
     --initial: #fff;
@@ -77,6 +76,10 @@ ul.tutor-setup-content li.active {
     font-weight: 400;
     line-height: 1.83;
     color: var(--primary-text);
+}
+
+.tutor-setup-wizard-settings {
+    padding: 70px 0;
 }
 
 .tutor-setup-content {
@@ -163,10 +166,6 @@ ul.tutor-setup-content li.active {
     transform: translateX(0px) scale(1);
 }
 
-/* .tutor-setup-title li:not(.active):after {
-    display: none;
-} */
-
 .tutor-setup-wizard-settings {
     display: grid !important;
     grid-template-columns: auto;
@@ -206,25 +205,35 @@ ul.tutor-setup-content li.active {
     text-align: center;
 }
 
-.tutor-setup-content-heading.body {
-    padding: 0px 33px;
+[class^=tutor-setup-content-] {
+    padding: 25px 28px 25px 33px;
 }
 
-.tutor-setup-content-heading.heading,
-.tutor-setup-content-footer.footer {
-    padding: 25px 26px 28px 28px;
+.tutor-setup-content-heading.body {
+    padding-top: 37px;
 }
 
 .tutor-setup-content .tutor-setting {
     display: grid;
     grid-template-rows: 1fr;
-    grid-template-columns: 1.5fr 3fr 1fr;
-    grid-gap: 20px;
+    grid-template-columns: 1.3fr 3fr .8fr;
+    grid-gap: 50px;
     margin: 42px 0;
 }
 
+.tutor-setup-content .tutor-setting:first-child {
+    margin-top: 0;
+}
+
+.tutor-setup-content .tutor-setting:nth-child(-n+4) .content {
+    padding: 0 30px 0 0;
+}
+
+.align-center {
+    align-items: center;
+}
+
 .tutor-setup-content-footer.footer {
-    padding: 25px 26px 28px 32px;
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: 1fr auto auto;
@@ -234,6 +243,7 @@ ul.tutor-setup-content li.active {
     background: url(../images/stripe-pattern-tiny.png);
     background-size: cover;
     background-repeat: no-repeat;
+    padding: 25px 28px 29px 33px;
 }
 
 .greetings .tutor-setup-content-footer.footer {
@@ -243,7 +253,7 @@ ul.tutor-setup-content li.active {
 .tutor-setup-content-heading.greetings .content {
     display: grid;
     grid-gap: 20px;
-    padding: 145px 200px;
+    padding: 65px 200px 73px 200px;
 }
 
 .tutor-setup-content-heading.greetings .content h2 {
@@ -278,6 +288,10 @@ ul.tutor-setup-content li.active {
     margin-bottom: 13px;
 }
 
+.tutor-setting .content input[type="text"].lesson-permalink {
+    margin-top: -10px;
+}
+
 .tutor-setting .content input[type="text"].lesson-permalink::placeholder,
 .tutor-setting .content textarea.lesson-message::placeholder {
     color: var(--primary-text);
@@ -304,19 +318,19 @@ ul.tutor-setup-content li.active {
     grid-gap: 15px;
 }
 
-.tutor-setting .title a {
+.tutor-setting .title .tooltip-btn {
     position: relative;
     margin-left: 10px;
 }
 
-.tutor-setting .title a span {
+.tutor-setting .title .tooltip-btn span {
     position: absolute;
     left: -1px;
     top: -1px;
 }
 
-.tutor-setting .title a span:after,
-.tutor-setting .title a span:after {
+.tutor-setting .title .tooltip-btn span:after,
+.tutor-setting .title .tooltip-btn span:after {
     content: url(../images/info-icon.svg);
 }
 
@@ -485,7 +499,8 @@ input[type="radio"].course:checked+.span span {
 }
 
 /* Course Per Page */
-.course-per-page span.radio-icon {
+.course-per-page span.radio-icon,
+.course-setting-wrapper .ecommerce .radio-icon {
     position: absolute;
     width: 18px;
     height: 18px;
@@ -498,7 +513,8 @@ input[type="radio"].course:checked+.span span {
     transition: all .2s ease-in-out;
 }
 
-.course-per-page span.radio-icon:before {
+.course-per-page span.radio-icon:before,
+.course-setting-wrapper .ecommerce .radio-icon:before {
     content: '';
     width: 20px;
     height: 20px;
@@ -512,21 +528,28 @@ input[type="radio"].course:checked+.span span {
     transition: all .2s ease-in-out;
 }
 
-.course-per-page input[type="radio"].course-p:checked+.radio-icon {
+.course-per-page input[type="radio"].course-p:checked+.radio-icon,
+.course-setting-wrapper .ecommerce .radio-input:checked+.radio-icon {
     background: #2f57d5;
     border-color: #2f57d5;
 }
 
-.course-per-page input[type="radio"].course-p:checked+.radio-icon:before {
+.course-per-page input[type="radio"].course-p:checked+.radio-icon:before,
+.course-setting-wrapper .ecommerce .radio-input:checked+.radio-icon:before {
     background: #f0f3f6;
     transform: scale(.4);
+}
+
+.course-setting-wrapper .ecommerce .radio-icon {
+    margin-top: 5px;
 }
 
 input#attempts-allowed-1:checked~.label-text-2 input {
     border: 1px solid #2f57d5;
 }
 
-.course-per-page input.course-p {
+.course-per-page input.course-p,
+.course-setting-wrapper input.radio-input {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -567,6 +590,14 @@ input#attempts-allowed-1:checked~.label-text-2 input {
     padding: 7px 2px 7px 10px;
 }
 
+.attempts-allowed.active input[type=number].attempts {
+    color: var(--secondary-text);
+}
+
+:not(.active) input[type=number].attempts {
+    color: #d7dce3;
+}
+
 .course-per-page input[type=number].attempts:focus {
     border-color: var(--primary-btn);
 }
@@ -574,6 +605,7 @@ input#attempts-allowed-1:checked~.label-text-2 input {
 .course-per-page input[type="radio"].course-p:checked+input[type=number].attempts:focus {
     border-color: var(--primary-btn);
 }
+
 
 .tutor-setup-btn-wrapper {
     justify-self: left;
@@ -618,10 +650,19 @@ button.tutor-setup-previous {
     color: var(--secondary-text);
 }
 
+.tutor-setting .content b {
+    font-weight: 600;
+}
+
 /* Tutor Input Switch Button styles*/
+.tutor-setup-content .tutor-setting .settings {
+    justify-self: flex-end;
+}
+
 label.switch-label {
     display: grid;
-    grid-template-columns: auto 40px auto;
+    grid-template-columns: repeat(3, auto);
+    grid-gap: 6px;
     place-items: center;
 }
 
@@ -720,10 +761,10 @@ input[type="checkbox"].input-switchbox {
     position: absolute;
     width: 2px;
     height: 8px;
-    background: blue;
+    background: #d71830;
+    border-radius: 2px;
     top: calc(50% - 4px);
     left: calc(50% - 1px);
-    background: #d71830;
 }
 
 input[type="checkbox"].input-switchbox:checked {
@@ -744,6 +785,7 @@ input[type="checkbox"].input-switchbox:checked~.switchbox-icon {
 
 .input-switch-label .label-off {
     color: #969696;
+    padding-right: 2px;
 }
 
 .input-switch-label.checked .label-on {
@@ -977,7 +1019,7 @@ button.tutor-setup-skip:hover {
 }
 
 .select-box .options-container.active {
-    max-height: 240px;
+    max-height: 190px;
     opacity: 1;
     overflow-y: scroll;
 }
@@ -992,8 +1034,6 @@ button.tutor-setup-skip:hover {
 
 .select-box .options-container::-webkit-scrollbar {
     width: 8px;
-    background: #0d141f;
-    background: var(--primary-text);
     background: #f1f2f3;
     border-radius: 0 5px 5px 0;
 }
@@ -1006,8 +1046,6 @@ button.tutor-setup-skip:hover {
 
 .select-box .options-container::-moz-scrollbar {
     width: 8px;
-    background: #0d141f;
-    background: var(--primary-text);
     background: #f1f2f3;
     border-radius: 0 5px 5px 0;
 }
@@ -1318,9 +1356,10 @@ input.checkbox {
     height: 110px;
     border-radius: 3px;
     border: solid 1px #d6dce3;
+    background-color: #f0f3f6;
     display: block;
     cursor: pointer;
-    transition: .3s ease-in-out;
+    transition: .1s ease-in-out;
 }
 
 .checkbox-wrapper .payment-setting label>div {
@@ -1510,9 +1549,13 @@ input.checkbox {
     color: #686d73;
 }
 
-.tutor-boarding-next {
-    margin-bottom: 20px;
-    display: inline-block;
+.wizard-boarding-footer {
+    display: grid;
+    grid-gap: 32px;
+}
+
+.wizard-boarding-footer .animated-btn {
+    background-color: #3057d5;
 }
 
 /* ******* Tutor Setup Wizard Type */
@@ -1562,7 +1605,8 @@ input.checkbox {
 
 .wizard-type-body .wizard-type-item label {
     cursor: pointer;
-    display: block;
+    display: grid;
+    place-items: center;
     width: 280px;
     height: 352px;
     border: 2px solid transparent;
@@ -1570,12 +1614,24 @@ input.checkbox {
     box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
     background-color: #ffffff;
     padding-bottom: 40px;
-    transition: .3s ease;
+    transition: .2s ease;
 }
 
 .wizard-type-body .wizard-type-item img {
     max-width: 225px;
     margin: 0 auto 0px auto;
+}
+
+.wizard-type-body .wizard-type-item video {}
+
+@keyframes Fade {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 .wizard-type-body .wizard-type-item .title,

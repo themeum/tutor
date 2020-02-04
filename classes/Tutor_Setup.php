@@ -67,8 +67,8 @@ if ( !class_exists('Tutor_Setup') ) {
                     ob_start();
                     $this->tutor_setup_wizard_header();
                     $this->tutor_setup_wizard_video();
-                    $this->tutor_setup_wizard_type();
                     $this->tutor_setup_wizard_boarding();
+                    $this->tutor_setup_wizard_type();
                     $this->tutor_setup_wizard_settings();
                     $this->tutor_setup_wizard_footer();
                     exit;
@@ -239,14 +239,15 @@ if ( !class_exists('Tutor_Setup') ) {
                                     <div class="tutor-setup-content-heading body">
                                         <?php $this->tutor_setup_generator($general_fields); ?>                                    
 
-                                        <!-- <?php $this->tutor_setup_generator( $this->tutor_setup_attributes()['general'] ); ?> -->
+                                        <?php $this->tutor_setup_generator( $this->tutor_setup_attributes()['general'] ); ?>
                                         
                                         <!-- custom markup (Lesson Permalink) -->
                                         <div class="tutor-setting">
                                             <div class="title">Lesson Permalink</div>
                                             <div class="content">
                                                 <input type="text" id="lesson-permalink" class="lesson-permalink" value="lesson" placeholder="Lesson Permalink">    
-                                                <div>http://tutor.test/course/sample-course/lesson/sample-lesson/</div>
+                                                <div>http://tutor.test/course/sample-course/<b>lesson</b>/sample-lesson/</div>
+                                                
                                             </div>
                                             <div class="settings">
                                             </div>
@@ -254,10 +255,12 @@ if ( !class_exists('Tutor_Setup') ) {
                                         <!-- /custom markup -->
 
                                         <!-- custom markup (Courses Per Row) -->
-                                        <div class="tutor-setting course-setting-wrapper">
+                                        <div class="tutor-setting course-setting-wrapper align-center">
                                             <div class="title">
                                                 Courses Per Row 
-                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                                <span id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text.">
+                                                    <span></span>
+                                                </span>
                                             </div>
                                             <div class="content">
                                                 <div class="course-per-row">
@@ -303,10 +306,12 @@ if ( !class_exists('Tutor_Setup') ) {
                                         <!-- /custom markup -->
 
                                         <!-- custom markup (Courses Per Page) -->
-                                        <div class="tutor-setting course-setting-wrapper">
+                                        <div class="tutor-setting course-setting-wrapper align-center">
                                             <div class="title">
                                                 Courses Per Page
-                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a> 
+                                                <span id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text.">
+                                                    <span></span>
+                                                </span> 
                                             </div>
                                             <div class="content">
                                                 <div class="course-per-page">
@@ -354,7 +359,9 @@ if ( !class_exists('Tutor_Setup') ) {
                                         <div class="tutor-setting course-setting-wrapper">
                                             <div class="title">
                                                 Final Grade <br> Calculation
-                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                                <span id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text.">
+                                                    <span></span>
+                                                </span>
                                             </div>
                                             <div class="content">
                                                 <div class="grade-calculation">
@@ -406,7 +413,9 @@ if ( !class_exists('Tutor_Setup') ) {
                                         <div class="tutor-setting course-setting-wrapper">
                                             <div class="title">
                                                 When Time Expires
-                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                                <span id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text.">
+                                                    <span></span>
+                                                </span>
                                             </div>
                                             <div class="content">
                                                 <textarea name="" id="lesson-message" class="lesson-message" placeholder="Type your expired message"></textarea>
@@ -418,7 +427,9 @@ if ( !class_exists('Tutor_Setup') ) {
                                         <div class="tutor-setting course-setting-wrapper">
                                             <div class="title">
                                                 Attempts allowed
-                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                                <span id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text.">
+                                                    <span></span>
+                                                </span>
                                             </div>
                                             <div class="content">
                                                 <div class="course-per-page attempts-allowed">
@@ -427,7 +438,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                                             <input type="radio" name="attempts-allowed" class="course-p" id="attempts-allowed-1">
                                                             <span class="radio-icon"></span>
                                                             <span class="label-text label-text-2">
-                                                                <input type="number" name="attempts-allowed" disabled class="attempts" id="attempts-allowed-numer">
+                                                                <input type="number" name="attempts-allowed" value="0" disabled class="attempts" id="attempts-allowed-numer">
                                                             </span>
                                                             
                                                         </label>
@@ -448,7 +459,9 @@ if ( !class_exists('Tutor_Setup') ) {
                                         <div class="tutor-setting course-setting-wrapper">
                                             <div class="title">
                                                 Time Limit
-                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                                <span id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text. tiny.cc ">
+                                                    <span></span>
+                                                </span>
                                             </div>
                                             <div class="content">
                                                 <div class="limit-slider">
@@ -467,7 +480,9 @@ if ( !class_exists('Tutor_Setup') ) {
                                         <div class="tutor-setting course-setting-wrapper">
                                             <div class="title">
                                                 Commission Rate
-                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                                <span id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text.">
+                                                    <span></span>
+                                                </span>
                                             </div>
                                             <div class="content">
                                                 <div class="limit-slider column-1">
@@ -499,8 +514,8 @@ if ( !class_exists('Tutor_Setup') ) {
                                                     <div class="ecommerce">
                                                         <label for="ecommerce-1" class="label">
                                                             <div>
-                                                                <input type="checkbox"  name="ecommerce-1" id="ecommerce-1" class="checkbox">
-                                                                <span class="check-icon"></span>
+                                                                <input type="radio" name="ecommerce" class="radio-input" id="ecommerce-1">
+                                                                <span class="radio-icon"></span>
                                                             </div>
                                                             <div>
                                                                 <h4>WooCommerce</h4>
@@ -511,8 +526,8 @@ if ( !class_exists('Tutor_Setup') ) {
                                                     <div class="ecommerce">
                                                         <label for="ecommerce-2" class="label">
                                                             <div>
-                                                                <input type="checkbox" checked name="ecommerce-2" id="ecommerce-2" class="checkbox">
-                                                                <span class="check-icon"></span>
+                                                                <input type="radio" name="ecommerce" class="radio-input" id="ecommerce-2">
+                                                                <span class="radio-icon"></span>
                                                             </div>
                                                             <div>
                                                                 <h4>Easy Digital Downloads (EDD)</h4>
@@ -523,8 +538,8 @@ if ( !class_exists('Tutor_Setup') ) {
                                                     <div class="ecommerce">
                                                         <label for="ecommerce-3" class="label">
                                                             <div>
-                                                                <input type="checkbox"  name="ecommerce-3" id="ecommerce-3" class="checkbox">
-                                                                <span class="check-icon"></span>
+                                                                <input type="radio" name="ecommerce" class="radio-input" id="ecommerce-3">
+                                                                <span class="radio-icon"></span>
                                                             </div>
                                                             <div>
                                                                 <h4>Paid Membership Pro (PMPro)</h4>
@@ -541,7 +556,9 @@ if ( !class_exists('Tutor_Setup') ) {
                                         <div class="tutor-setting course-setting-wrapper">
                                             <div class="title">
                                                 Quiz Complited
-                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                                <span id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text.">
+                                                    <span></span>
+                                                </span>
                                             </div>
                                             <div class="content">
                                                 <div class="checkbox-wrapper column-1">
@@ -565,7 +582,9 @@ if ( !class_exists('Tutor_Setup') ) {
                                         <div class="tutor-setting course-setting-wrapper">
                                             <div class="title">
                                                 Course Complited
-                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                                <span id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text.">
+                                                    <span></span>
+                                                </span>
                                             </div>
                                             <div class="content">
                                                 <div class="checkbox-wrapper column-2">
@@ -600,7 +619,9 @@ if ( !class_exists('Tutor_Setup') ) {
                                         <div class="tutor-setting course-setting-wrapper">
                                             <div class="title">
                                                 Payment Withdraw Method
-                                                <a href="#" id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text."><span></span></a>
+                                                <span id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text.">
+                                                    <span></span>
+                                                </span>
                                             </div>
                                             <div class="content">
                                                 <div class="checkbox-wrapper column-3">
@@ -767,7 +788,18 @@ if ( !class_exists('Tutor_Setup') ) {
                         </ul>
                     </div>
                     <div class="wizard-boarding-footer">
-                        <a class="tutor-boarding-next" href="#"><?php _e('I alredy know, Skip it!', 'tutor'); ?></a>
+                        <div>
+                            <button class="tutor-setup-next next animated-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="next-arrow-1" width="17" height="12">
+                                    <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
+                                </svg>
+                                <span><?php _e('Next', 'tutor'); ?></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" id="next-arrow-2" width="17" height="12">
+                                    <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div><a class="tutor-boarding-next" href="#"><?php _e('I alredy know, Skip it!', 'tutor'); ?></a></div>
                         <div class="tutor-boarding-skip"><?php _e('Contact with Live support', 'tutor'); ?></div>
                     </div>
                 </div>
@@ -790,21 +822,24 @@ if ( !class_exists('Tutor_Setup') ) {
                             <input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="0" <?php if(!$course_marketplace){ echo 'checked'; } ?> />
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-0">
-                                <img src="<?php echo tutor()->url.'assets/images/setup-marketplace.jpg'; ?>" />
+                                <!-- <img src="<?php echo tutor()->url.'assets/images/setup-marketplace.jpg'; ?>" /> -->
+                                <img src="<?php echo tutor()->url.'assets/images/setup-individual.gif'; ?>" />
                                 <div class="title"><?php _e( 'Individual', 'tutor' ); ?></div>
                                 <div class="subtitle"><?php _e( 'Destination that helps everyone gain the skills.', 'tutor' ); ?></div>
                             </label>
                         </div>
+
                         <div class="wizard-type-item">
                             <input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="1" <?php if($course_marketplace){ echo 'checked'; } ?>/>
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-1">
-                                <img src="<?php echo tutor()->url.'assets/images/setup-individual.jpg'; ?>" />
+                                <img src="<?php echo tutor()->url.'assets/images/setup-marketplace.jpg'; ?>" />
                                 <div class="title"><?php _e( 'Marketplace', 'tutor' ); ?></div>
                                 <div class="subtitle"><?php _e( 'Destination that helps everyone gain the skills.', 'tutor' ); ?></div>
                             </label>
                         </div>
                     </div>
+
                     <div class="wizard-type-footer">
                         <div>
                             <button class="tutor-type-next primary-btn "><?php _e('Let’s Start', 'tutor'); ?></button>
@@ -824,8 +859,7 @@ if ( !class_exists('Tutor_Setup') ) {
             <div class="tutor-wrapper-video active">
 
                 <video poster="/path/to/poster.jpg" id="player" playsinline controls>
-                    <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4" />
-                    <source src="http://techslides.com/demos/sample-videos/small.webm" type="video/webm" />
+                    <source src="<?php echo tutor()->url . 'assets/images/tutor-preloader-video.mp4'; ?>" type="video/mp4" />
                 </video>
 
             </div>
