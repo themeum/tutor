@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
                 settings: {
                     arrows: false,
                     centerMode: true,
-                    centerPadding: "30px",
+                    centerPadding: "50px",
                     slidesToShow: 1
                 }
             },
@@ -41,7 +41,7 @@ jQuery(document).ready(function ($) {
                 settings: {
                     arrows: false,
                     centerMode: true,
-                    centerPadding: "15px",
+                    centerPadding: "30px",
                     slidesToShow: 1
                 }
             }
@@ -121,20 +121,37 @@ jQuery(document).ready(function ($) {
 
 
     $(function () {
-
-        $('.input-switch-label').on('click', function (e) {
-            $(this).toggleClass('checked');
-        });
-
-        /* if ($('.input-switchbox').is(':checked')) {
-            $(this).find('.switch-label [class^=label-]').addClass('checked');
-        } else {
-            $(this).find('.switch-label [class^=label-]').removeClass('checked');
-        } */
-
         $('.tooltip-btn').on('click', function (e) {
             $(this).toggleClass('active');
         });
+
+        /*  Input Label Toggle Color */
+        //initail input on/of emphasizing
+        var inputswitch = $(".input-switchbox");
+        inputswitch.each(function () {
+            inputCheckEmphasizing($(this));
+        });
+
+        function isChecked(th) {
+            return th.prop('checked') ? true : false;
+        }
+
+        function inputCheckEmphasizing(th) {
+            var checkboxRoot = th.parent().parent();
+            if (isChecked(th)) {
+                checkboxRoot.find('.label-on').addClass("active");
+                checkboxRoot.find('.label-off').removeClass("active");
+            } else {
+                checkboxRoot.find('.label-on').removeClass("active");
+                checkboxRoot.find('.label-off').addClass("active");
+            }
+        }
+
+        // on/of emphasizing after input check click
+        $(".input-switchbox").click(function () {
+            inputCheckEmphasizing($(this));
+        });
+
     })
 
     /* Grade Calculation Dropdwon  */

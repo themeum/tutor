@@ -55,7 +55,8 @@ ul.tutor-setup-content li.active {
 /* ******** Tutor Setup Wizard *********** */
 .tutor-wizard-container {
     position: relative;
-    width: 100%;
+    max-width: 100%;
+    padding: 0 15px;
     margin-right: auto;
     margin-left: auto;
     overflow-x: hidden;
@@ -72,7 +73,7 @@ ul.tutor-setup-content li.active {
 }
 
 .tutor-wrapper-boarding {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 400;
     line-height: 1.83;
     color: var(--primary-text);
@@ -85,7 +86,7 @@ ul.tutor-setup-content li.active {
 .tutor-setup-content {
     border-radius: 3px;
     box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
-    background-color: #ffffff
+    background-color: #ffffff;
 }
 
 .tutor-setup-wrapper {
@@ -203,6 +204,7 @@ ul.tutor-setup-content li.active {
 .tutor-setup-content-heading.greetings {
     display: block;
     text-align: center;
+    padding: 0;
 }
 
 [class^=tutor-setup-content-] {
@@ -642,7 +644,7 @@ button.tutor-setup-previous {
 }
 
 .tutor-setting .title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: normal;
     font-stretch: normal;
     font-style: normal;
@@ -664,6 +666,7 @@ label.switch-label {
     grid-template-columns: repeat(3, auto);
     grid-gap: 6px;
     place-items: center;
+    font-size: 11px;
 }
 
 .input-switch-label-1 .switchbox-wrapper span.switchbox-icon:before {
@@ -779,22 +782,23 @@ input[type="checkbox"].input-switchbox:checked~.switchbox-icon {
     left: calc(100% - 25.732px);
 }
 
-.input-switch-label.checked .label-off {
+.input-switch-label .label-on {
     color: #c8c8c8;
 }
 
 .input-switch-label .label-off {
-    color: #969696;
     padding-right: 2px;
-}
-
-.input-switch-label.checked .label-on {
-    color: #969696;
-}
-
-.input-switch-label .label-on {
     color: #c8c8c8;
 }
+
+.input-switch-label .label-on.active {
+    color: #969696;
+}
+
+.input-switch-label .label-off.active {
+    color: #969696;
+}
+
 
 
 /* SVG Animated Button */
@@ -991,7 +995,6 @@ button.tutor-setup-skip:hover {
 .selected::after {
     /* BG Img */
     content: url("../images/angle-shape.svg");
-
     position: absolute;
     right: 15px;
     top: 50%;
@@ -1077,8 +1080,9 @@ button.tutor-setup-skip:hover {
 /* Sider 1st */
 .tutor-setting .content .limit-slider {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: .92fr auto;
     grid-gap: 30px;
+    place-content: flex-start;
 }
 
 .tutor-setting .content .limit-slider h5 {
@@ -1102,6 +1106,7 @@ button.tutor-setup-skip:hover {
     -moz-appearance: none;
     appearance: none;
     max-width: 383px;
+    max-width: 100%;
     height: 6px;
     border-radius: 8px;
     background-color: #f0f3f6;
@@ -1125,6 +1130,7 @@ input[type=range].range-input::-webkit-slider-thumb {
 /* For Mozilla (-moz-range-track and -moz-range-thumb) */
 input[type=range].range-input::-moz-range-track {
     max-width: 383px;
+    max-width: 100%;
     height: 6px;
     border-radius: 8px;
     background-color: #f0f3f6;
@@ -1146,6 +1152,7 @@ input[type=range].range-input::-moz-range-thumb {
     display: grid;
     grid-template-columns: 1fr;
     grid-gap: 10px;
+    margin-right: 20px;
 }
 
 .limit-slider.column-1 input[type=range].range-input {
@@ -1181,10 +1188,6 @@ input[type=range].range-input::-moz-range-thumb {
     border: 6px solid #fff;
     box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.28);
 }
-
-
-
-
 
 .tutor-setting .limit-slider .commision-data {
     display: grid;
@@ -1233,7 +1236,6 @@ input[type=range].range-input::-moz-range-thumb {
 .limit-slider .commision-data .data:last-child h5:before {
     background: #3b57c4;
 }
-
 
 /* Checkbox Field */
 .checkbox-wrapper.column-1 {
@@ -1417,15 +1419,11 @@ input.checkbox {
 .wizard-boarding-header {
     display: grid;
     place-items: center;
-    grid-gap: 57px;
+    grid-gap: 20px;
 }
 
 .wizard-boarding-body {
-    margin-top: 57px;
-}
-
-.slick-slide {
-    margin: 0 15px;
+    margin-top: 35px;
 }
 
 .wizard-boarding-header div {
@@ -1444,6 +1442,7 @@ input.checkbox {
     border-radius: 3px;
     box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
     background-color: #ffffff;
+    width: 100%;
 }
 
 .wizard-boarding-body .slide-title {
@@ -1466,11 +1465,9 @@ input.checkbox {
 .wizard-boarding-body .slick-slide {
     outline: none;
     cursor: pointer;
-}
-
-.wizard-boarding-body .slick-slide {
     opacity: 1;
     transition: .8s;
+    margin: 0 15px;
 }
 
 .wizard-boarding-body .slick-slide:not(.slick-active) {
@@ -1536,7 +1533,7 @@ input.checkbox {
 
 
 .wizard-boarding-footer {
-    margin-top: 175px;
+    margin-top: 85px;
 }
 
 .wizard-boarding-footer,
@@ -1551,11 +1548,12 @@ input.checkbox {
 
 .wizard-boarding-footer {
     display: grid;
-    grid-gap: 32px;
+    grid-gap: 15px;
 }
 
 .wizard-boarding-footer .animated-btn {
     background-color: #3057d5;
+    margin-bottom: 20px;
 }
 
 /* ******* Tutor Setup Wizard Type */
@@ -1706,20 +1704,10 @@ input.checkbox {
     border-color: #3057d5;
 }
 
-button.tutor-type-next.primary-btn {
-    font-size: 18px;
-    font-weight: 500;
-    letter-spacing: normal;
-    color: #ffffff;
-    border-radius: 3px;
-    background-color: #3057d5;
-    padding: 20px 56px;
-}
-
 /* *************************** Responsive Media Queries */
 @media (max-width: 1199px) {
     .tutor-setup-wizard-boarding {
-        padding: 40px 15px 70px 15px;
+        padding: 40px 0px 70px 0px;
     }
 
     .wizard-boarding-body .slide-subtitle {
@@ -1728,6 +1716,14 @@ button.tutor-type-next.primary-btn {
 }
 
 @media (max-width: 991px) {
+    .tutor-setting .title br {
+        display: none;
+    }
+
+    .tutor-setting .title .tooltip-btn {
+        margin-left: 5px;
+    }
+
     .wizard-boarding-header {
         grid-gap: 25px;
     }
@@ -1747,15 +1743,243 @@ button.tutor-type-next.primary-btn {
     .wizard-type-header {
         padding: 0 10px;
     }
+
+    .wizard-type-body {
+        grid-gap: 30px;
+    }
+
+    .tutor-setup-wrapper {
+        grid-template-columns: 1fr 10fr;
+        grid-gap: 46px;
+    }
+
+    .tutor-setup-title li:after {
+        right: calc(0% - 46px);
+    }
+
+    .tutor-setup-title:before {
+        right: -22px;
+    }
+
+    .tutor-setup-title li:first-child:before,
+    .tutor-setup-title li:before {
+        right: -30px;
+    }
+
+    .tutor-setup-content-heading.greetings .content {
+        padding: 55px 20px 73px 20px;
+    }
+
 }
 
 @media (max-width: 767px) {
-    .slick-slide {
+    .wizard-boarding-body .slick-slide {
         margin: 0 5px;
     }
+
+
+    .tutor-setup-wrapper {
+        grid-template-columns: auto;
+        grid-gap: 0;
+        margin-top: 20px;
+    }
+
+    .tutor-setup-content-heading.heading,
+    .active .tutor-setup-content-heading.heading {
+        grid-template-columns: 1fr auto auto;
+    }
+
+    [class^=tutor-setup-content-] {
+        padding: 20px;
+    }
+
+    .tutor-setup-content .tutor-setting {
+        grid-template-columns: 1fr 3fr 1fr;
+        grid-gap: 10px;
+    }
+
+    .tutor-setup-content .tutor-setting:nth-child(-n+4) .content {
+        padding: 0;
+    }
+
+    .tutor-setup-content .tutor-setting.course-setting-wrapper {
+        grid-template-columns: 1fr 4fr;
+        grid-gap: 20px;
+    }
+
+    .tutor-setup-title {
+        overflow-x: scroll;
+        width: 100%;
+        padding-bottom: 65px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .tutor-setup-title li {
+        margin: 0 20px;
+    }
+
+    .tutor-setup-title:before {
+        top: auto;
+        bottom: 45px;
+        right: 50px;
+        width: calc(100% - 100px);
+        height: 1px;
+        border: none;
+        border-bottom: solid 1px #e3e3e3;
+    }
+
+    .tutor-setup-content {
+        margin-top: -5px;
+        z-index: 99;
+    }
+
+    .tutor-setup-title li:after {
+        right: auto;
+        top: auto;
+        left: 50%;
+        margin-left: -13px;
+        bottom: -60px;
+        border-top: 13px solid transparent;
+        border-right: 13px solid transparent;
+        border-bottom: 13px solid #fff;
+        border-left: 13px solid transparent;
+        transform: translate(0px, 5px) scale(1);
+    }
+
+    .tutor-setup-title li.active:after {
+        transform: translate(0px) scale(1);
+    }
+
+
+    .tutor-setup-title li:before {
+        top: auto;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -28px;
+    }
+
 }
 
-@media (max-width: 575px) {}
+@media (max-width: 575px) {
+    .wizard-type-body {
+        grid-template-columns: auto;
+    }
+
+    .tutor-setup-content-heading.heading>div:nth-child(1) {
+        font-size: 3.5vw;
+    }
+
+    .course-per-page span.label-text,
+    .course-per-page input[type=number].attempts {
+        font-size: 3vw;
+    }
+
+    .tutor-setting .title,
+    .selected h3,
+    .select-box label h3,
+    .checkbox-wrapper h4,
+    .tutor-setting .limit-slider .commision-data .data h4 {
+        font-size: 2.5vw;
+    }
+
+    .tutor-wrapper-boarding,
+    .selected h5,
+    .select-box label h5,
+    .checkbox-wrapper h5,
+    .tutor-setting .content input[type="text"].lesson-permalink,
+    .tutor-setting .content textarea.lesson-message,
+    .tutor-setting .content input[type="text"].lesson-permalink::placeholder,
+    .tutor-setting .content textarea.lesson-message::placeholder,
+    .tutor-setting .limit-slider .commision-data .data h5 {
+        font-size: 2vw;
+    }
+
+    label.switch-label {
+        font-size: 1.7vw;
+    }
+
+    .tutor-setting .content .course-per-row {
+        grid-template-rows: repeat(2, auto);
+        grid-template-columns: repeat(2, .3fr);
+        place-items: center flex-start;
+    }
+
+    .tutor-setup-content {
+        overflow-x: scroll;
+    }
+
+    .switchbox-wrapper,
+    input[type="checkbox"].input-switchbox,
+    .switchbox-wrapper span.switchbox-icon {
+        height: 18px;
+        width: 30px;
+    }
+
+    input[type="checkbox"].input-switchbox {
+        border-radius: 18px;
+    }
+
+    .switchbox-wrapper span.switchbox-icon {
+        width: 18px;
+    }
+
+    input[type="checkbox"].input-switchbox:checked~.switchbox-icon {
+        left: calc(100% - 17.732px);
+    }
+
+    .switchbox-wrapper span.switchbox-icon {
+        top: calc(50% - 9px);
+    }
+
+    .selected {
+        width: 80%;
+        height: auto;
+    }
+
+    .tutor-setting .content .course-per-page.attempts-allowed {
+        grid-template-columns: repeat(2, auto);
+    }
+
+    .checkbox-wrapper .check-icon.square:before,
+    .checkbox-wrapper .payment-setting .check-icon:before {
+        margin: 0;
+    }
+
+    .checkbox-wrapper .payment-setting label,
+    .payment-setting input.payment {
+        width: 80px;
+        height: 80px;
+    }
+
+    .checkbox-wrapper .payment-setting h4 {
+        margin-top: 6px;
+    }
+
+    .tutor-setup-content-footer.footer {
+        padding: 20px;
+    }
+
+    .checkbox-wrapper .check-icon.square {
+        width: 15px;
+        height: 15px;
+    }
+
+    .course-per-page span.radio-icon,
+    .course-setting-wrapper .ecommerce .radio-icon,
+    .course-setting-wrapper input.radio-input {
+        width: 16px;
+        height: 16px;
+    }
+
+    .checkbox-wrapper .payment-setting .check-icon {
+        transform: scale(1);
+    }
+
+}
 
 @media (max-width: 450px) {
     .slick-dotted.slick-slider {
@@ -1773,5 +1997,20 @@ button.tutor-type-next.primary-btn {
 
     .wizard-boarding-body .slide-title {
         margin-top: 0px;
+    }
+
+    .checkbox-wrapper .payment-setting label,
+    .payment-setting input.payment {
+        width: 50px;
+        height: 50px;
+    }
+
+    .checkbox-wrapper .payment-setting label img {
+        max-width: 20px;
+        margin: 0 auto;
+    }
+
+    .checkbox-wrapper .payment-setting h4 {
+        margin-top: 0;
     }
 }

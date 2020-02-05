@@ -514,7 +514,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                                     <div class="ecommerce">
                                                         <label for="ecommerce-1" class="label">
                                                             <div>
-                                                                <input type="radio" name="ecommerce" class="radio-input" id="ecommerce-1">
+                                                                <input type="radio" name="ecommerce" class="radio-input" id="ecommerce-1" checked>
                                                                 <span class="radio-icon"></span>
                                                             </div>
                                                             <div>
