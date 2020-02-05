@@ -15,7 +15,6 @@ class Tools {
 
 		add_action('tutor_option_save_after', array($this, 'tutor_option_save_after'));
 		add_action('init', array($this, 'check_if_maintenance'));
-
 	}
 
 	/**
@@ -45,7 +44,6 @@ class Tools {
 		}
 	}
 
-
 	/**
 	 * Enable Maintenance Mode
 	 */
@@ -60,7 +58,7 @@ class Tools {
 	}
 
 	public function check_if_maintenance(){
-		if ( ! is_admin()) {
+		if ( ! is_admin() && ! $this->is_wplogin()) {
 			$maintenance_mode = (bool) get_tutor_option( 'enable_tutor_maintenance_mode' );
 			if ( ! $maintenance_mode){
 				return;
@@ -72,6 +70,10 @@ class Tools {
 		}
 	}
 
+	function is_wplogin(){
+		$ABSPATH_MY = str_replace(array('\\','/'), DIRECTORY_SEPARATOR, ABSPATH);
+		return ((in_array($ABSPATH_MY.'wp-login.php', get_included_files()) || in_array($ABSPATH_MY.'wp-register.php', get_included_files()) ) || (isset($_GLOBALS['pagenow']) && $GLOBALS['pagenow'] === 'wp-login.php') || $_SERVER['PHP_SELF']== '/wp-login.php');
+	}
 
 
 }
