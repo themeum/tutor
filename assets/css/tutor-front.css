@@ -6528,6 +6528,16 @@ table.course-single-gradebooks a {
 /**
 * END Tutor BuddyPress
 */
+/**
+* Oxygen Integration CSS
+ */
+.oxy-tutor-element {
+  width: 100%;
+}
+
+/**
+* END Oxygen Integration CSS
+ */
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */

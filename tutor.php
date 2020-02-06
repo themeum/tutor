@@ -98,7 +98,7 @@ if ( ! function_exists('tutils')){
  * @moved here from Tutor Class
  * @since v.1.5.2
  */
-register_activation_hook( TUTOR_FILE, array('\TUTOR\Tutor', 'tutor_activate' ) );
+register_activation_hook( TUTOR_FILE, array('\TUTOR\Tutor', 'tutor_activate'));
 register_deactivation_hook(TUTOR_FILE, array('\TUTOR\Tutor', 'tutor_deactivation'));
 
 /**
