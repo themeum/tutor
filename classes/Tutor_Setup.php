@@ -615,6 +615,43 @@ if ( !class_exists('Tutor_Setup') ) {
                                         </div>
                                         <!-- /custom markup -->
 
+                                        <!-- custom markup (Course Completed) -->
+                                        <div class="tutor-setting course-setting-wrapper">
+                                            <div class="title">
+                                                Enrolled Confirmation
+                                                <span id="tooltip-btn" class="tooltip-btn" data-tooltip="I’m the tooltip text.">
+                                                    <span></span>
+                                                </span>
+                                            </div>
+                                            <div class="content">
+                                                <div class="checkbox-wrapper column-2">
+                                                    <div class="email-notification">
+                                                        <label for="enrolled-confirmation-1" class="label">
+                                                            <div>
+                                                                <input type="checkbox" checked name="enrolled-confirmation-1" id="enrolled-confirmation-1" class="checkbox">
+                                                                <span class="check-icon square"></span>
+                                                            </div>
+                                                            <div>
+                                                                <h4>Student</h4>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="email-notification">
+                                                        <label for="enrolled-confirmation-2" class="abel">
+                                                            <div>
+                                                                <input type="checkbox" name="enrolled-confirmation-2" id="enrolled-confirmation-2" class="checkbox">
+                                                                <span class="check-icon square"></span>
+                                                            </div>
+                                                            <div>
+                                                                <h4>Instructor</h4>
+                                                            </div>
+                                                        </label>
+                                                    </div>  
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /custom markup -->
+
                                         <!-- custom markup (Payment Withdraw Method) -->
                                         <div class="tutor-setting course-setting-wrapper">
                                             <div class="title">
@@ -799,7 +836,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                 </svg>
                             </button>
                         </div>
-                        <div><a class="tutor-boarding-next" href="#"><?php _e('I alredy know, Skip it!', 'tutor'); ?></a></div>
+                        <div><a class="tutor-boarding-next" href="#"><?php _e('I already know, Skip it!', 'tutor'); ?></a></div>
                         <div class="tutor-boarding-skip"><?php _e('Contact with Live support', 'tutor'); ?></div>
                     </div>
                 </div>

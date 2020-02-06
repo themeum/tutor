@@ -1578,7 +1578,6 @@ input.checkbox {
     letter-spacing: -0.4px;
     text-align: center;
     color: #1f2949;
-    margin-top: 30px;
 }
 
 .wizard-type-header .subtitle {
@@ -1618,18 +1617,6 @@ input.checkbox {
 .wizard-type-body .wizard-type-item img {
     max-width: 225px;
     margin: 0 auto 0px auto;
-}
-
-.wizard-type-body .wizard-type-item video {}
-
-@keyframes Fade {
-    from {
-        opacity: 1;
-    }
-
-    to {
-        opacity: 0;
-    }
 }
 
 .wizard-type-body .wizard-type-item .title,
@@ -1777,7 +1764,6 @@ input.checkbox {
         margin: 0 5px;
     }
 
-
     .tutor-setup-wrapper {
         grid-template-columns: auto;
         grid-gap: 0;
@@ -1853,7 +1839,6 @@ input.checkbox {
         transform: translate(0px) scale(1);
     }
 
-
     .tutor-setup-title li:before {
         top: auto;
         right: auto;
@@ -1862,6 +1847,42 @@ input.checkbox {
         bottom: -28px;
     }
 
+    .wizard-type-header .title,
+    .wizard-boarding-header div {
+        font-size: 4.5vw;
+    }
+
+    .wizard-boarding-body .slide-title,
+    .wizard-boarding-footer,
+    .wizard-boarding-footer a,
+    .tutor-type-skip {
+        font-size: 3vw;
+    }
+
+    .wizard-boarding-body .slide-subtitle,
+    .wizard-type-header .subtitle {
+        font-size: 2.6vw;
+    }
+
+}
+
+@media (max-width: 650px) {
+    .slick-dotted.slick-slider {
+        padding-bottom: 70px;
+        margin-bottom: 0 !important;
+    }
+
+    .wizard-boarding-body .slide-title {
+        margin-top: 0px;
+    }
+
+    .wizard-boarding-body ul.slick-dots {
+        bottom: 0;
+    }
+
+    .wizard-boarding-body .slide-thumb {
+        margin-bottom: 15px;
+    }
 }
 
 @media (max-width: 575px) {
@@ -1882,7 +1903,8 @@ input.checkbox {
     .selected h3,
     .select-box label h3,
     .checkbox-wrapper h4,
-    .tutor-setting .limit-slider .commision-data .data h4 {
+    .tutor-setting .limit-slider .commision-data .data h4,
+    button[class^="tutor-setup-"] {
         font-size: 2.5vw;
     }
 
@@ -1935,9 +1957,13 @@ input.checkbox {
         top: calc(50% - 9px);
     }
 
-    .selected {
-        width: 80%;
-        height: auto;
+    .select-box {
+        width: calc(100% - 50px);
+    }
+
+    .selected,
+    .select-box .options-container {
+        width: 100%;
     }
 
     .tutor-setting .content .course-per-page.attempts-allowed {
@@ -1979,25 +2005,40 @@ input.checkbox {
         transform: scale(1);
     }
 
+    .animated-btn,
+    .primary-btn,
+    button.tutor-setup-next.next,
+    button.tutor-setup-previous.previous {
+        padding: 8px 23px;
+    }
+
+    button.tutor-setup-previous.previous {
+        padding: 8px 35px;
+    }
+
+    #next-arrow-2 {
+        transform: translateX(10px);
+    }
+
+    .animated-btn:hover #next-arrow-1 {
+        transform: translateX(-15px);
+    }
+
+    .previous.animated-btn svg#prev-arrow-1 {
+        transform: rotate(180deg) translateX(25px);
+    }
+
+    .previous.animated-btn:hover svg#prev-arrow-2 {
+        transform: rotate(180deg) translateX(-25px);
+    }
+
+    .previous.animated-btn span {
+        transform: translateX(10px);
+    }
+
 }
 
 @media (max-width: 450px) {
-    .slick-dotted.slick-slider {
-        padding-bottom: 50px;
-        margin-bottom: 0 !important;
-    }
-
-    .wizard-boarding-body .slide-thumb {
-        margin-bottom: 6px;
-    }
-
-    .wizard-boarding-body ul.slick-dots {
-        bottom: 0;
-    }
-
-    .wizard-boarding-body .slide-title {
-        margin-top: 0px;
-    }
 
     .checkbox-wrapper .payment-setting label,
     .payment-setting input.payment {
