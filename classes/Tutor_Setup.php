@@ -80,9 +80,9 @@ if ( !class_exists('Tutor_Setup') ) {
             $html = '';
             $options = (array) maybe_unserialize(get_option('tutor_option'));
             foreach ($field_arr as $key => $field) {
-                $html .= '<div class="tutor-setting">';
-                    switch ($field['type']) {
-                        case 'switch':
+                switch ($field['type']) {
+                    case 'switch':
+                        $html .= '<div class="tutor-setting">';
                             $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'].'</div>' : '';
                             $html .= isset( $field['desc'] ) ? '<div class="content">'.$field['desc'].'</div>' : '';
                             $html .= '<div class="settings">';
@@ -97,25 +97,57 @@ if ( !class_exists('Tutor_Setup') ) {
                                 $html .= '</label>';
                                 //$html .= '<input type="checkbox" name="'.$key.'" value="1" '.(isset($options[$key]) && $options[$key] ? 'checked' : '').'/>';
                             $html .= '</div>';
-                            break;
+                        $html .= '</div>';
+                        break;
 
-                        case 'text':
+                    case 'text':
+                        $html .= '<div class="tutor-setting">';
                             $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'].'</div>' : '';
-                            $html .= isset( $field['desc'] ) ? '<div class="content">'.$field['desc'].'</div>' : '';
-                            $html .= '<div class="settings">';
-                                $html .= '<input type="text" name="'.$key.'" value="'.(isset($options[$key]) ? $options[$key] : '').'" />';
-                            $html .= '</div>';
-                            break;
+                                $html .= '<div class="content">';
+                                    $html .= '<input type="text" name="'.$key.'" class="lesson-permalink" value="'.(isset($options[$key]) ? $options[$key] : '').'" />';    
+                                    $html .= isset( $field['desc'] ) ? '<div>'.$field['desc'].'</div>' : '';
+                                $html .= '</div>';
+                            $html .= '<div class="settings"></div>';
+                        $html .= '</div>';
+                        break;
 
-                        case 'rows':
+                    case 'rows':
+                        $html .= '<div class="tutor-setting course-setting-wrapper wrapper-row">';
                             $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'].'</div>' : '';
-                            $html .= isset( $field['desc'] ) ? '<div class="content">'.$field['desc'].'</div>' : '';
-                            $html .= '<div class="settings">';
-                                // $html .= '<input type="text" name="'.$key.'" value="'.(isset($options[$key]) ? $options[$key] : '').'" />';
+                            $html .= '<div class="content">';
+                                $html .= '<div class="course-per-row">';
+                                    $html .= '<div class="wrapper">';
+                                        $html .= '<label for="'.$key.'1">';
+                                            $html .= '<input type="radio" value="1" name="'.$key.'" class="course" id="'.$key.'1" '.( isset($options[$key]) && $options[$key] == 1 ? 'checked' : '' ).'>';
+                                            $html .= '<span class="span"><span>1</span></span>';
+                                        $html .= '</label>';
+                                    $html .= '</div>';
+                                    $html .= '<div class="wrapper">';
+                                        $html .= '<label for="'.$key.'2">';
+                                            $html .= '<input type="radio" value="2" name="'.$key.'" class="course" id="'.$key.'2" '.( isset($options[$key]) && $options[$key] == 2 ? 'checked' : '' ).'>';
+                                            $html .= '<span class="span"><span>2</span><span>2</span></span>';
+                                        $html .= '</label>';
+                                    $html .= '</div>';
+                                    $html .= '<div class="wrapper">';
+                                        $html .= '<label for="'.$key.'3">';
+                                            $html .= '<input type="radio" value="3" name="'.$key.'" class="course" id="'.$key.'3" '.( isset($options[$key]) && $options[$key] == 3 ? 'checked' : '' ).'>';
+                                            $html .= '<span class="span"><span>3</span><span>3</span><span>3</span></span>';
+                                        $html .= '</label>';
+                                    $html .= '</div>';
+                                    $html .= '<div class="wrapper">';
+                                        $html .= '<label for="'.$key.'4">';
+                                            $html .= '<input type="radio" value="4" name="'.$key.'" class="course" id="'.$key.'4" '.( isset($options[$key]) && $options[$key] == 4 ? 'checked' : '' ).'>';
+                                            $html .= '<span class="span"><span>4</span><span>4</span><span>4</span><span>4</span></span>';
+                                        $html .= '</label>';
+                                    $html .= '</div>';
+                                $html .= '</div>';
                             $html .= '</div>';
-                            break;
-                        
-                        case 'radio':
+                            $html .= '<div class="settings"></div>';
+                        $html .= '</div>';
+                        break;
+                    
+                    case 'radio':
+                        $html .= '<div class="tutor-setting">';
                             $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'].'</div>' : '';
                             $html .= isset( $field['desc'] ) ? '<div class="content">'.$field['desc'].'</div>' : '';
                             $html .= '<div class="settings">';
@@ -126,15 +158,14 @@ if ( !class_exists('Tutor_Setup') ) {
                                     }
                                 }
                             $html .= '</div>';
-                            break;
+                        $html .= '</div>';
+                        break;
 
-                        
-                        default:
-                            # code...
-                            break;
-                    }
                     
-                $html .= '</div>';
+                    default:
+                        # code...
+                        break;
+                }
             }
             echo $html;
         }
@@ -163,49 +194,46 @@ if ( !class_exists('Tutor_Setup') ) {
                         'lable' => __('Vimeo Player', 'tutor'),
                         'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you!', 'tutor'),
                     ),
-                    /* 'lesson_permalink_base' => array(
+                    'lesson_permalink_base' => array(
                         'type' => 'text',
                         'lable' => __('Lesson permalink', 'tutor'),
                         'desc' => 'http://tutor.test/course/sample-course/lesson/sample-lesson/',
-                    ), */
-    
-                    // test start
-                    /* 'radio_test' => array(
-                        'type' => 'radio',
-                        'lable' => __('Radio Test', 'tutor'),
-                        'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you!', 'tutor'),
-                        'options' => array(
-                            'one_x' => 'One X',
-                            'two_x' => 'Two X',
-                            'three_x' => 'Three X',
-                        )
-                    ), */
-                    // test close
+                    ),
                 ),
                 'course' => array(
                     'display_course_instructors' => array(
                         'type' => 'switch',
                         'lable' => __('Show Instructor Bio', 'tutor'),
                         'desc' => __('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses. ', 'tutor'),
-                        'default' => ''
                     ),
                     'enable_q_and_a_on_course' => array(
                         'type' => 'switch',
                         'lable' => __('Question and Anwser', 'tutor'),
                         'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you! Live Demo', 'tutor'),
-                        'default' => ''
                     ),
                     'courses_col_per_row' => array(
-                        'type' => 'switch',
+                        'type' => 'rows',
                         'lable' => __('Courses Per Row', 'tutor'),
-                        'default' => ''
                     ),
                     'courses_per_page' => array(
                         'type' => 'switch',
+                        'desc' => __('Are you an individual and want to spread knowledge online? Tutor is for you!', 'tutor'),
                         'lable' => __('Courses Per Page', 'tutor'),
-                        'default' => ''
                     ),
                 ),
+
+                // 'course' => array(
+                //     'display_course_instructors' => array(
+                //         'type' => 'switch',
+                //         'lable' => __('Show Instructor Bio', 'tutor'),
+                //         'desc' => __('Tutor LMS comes with a revolutionary drag & drop system to create resourceful courses. ', 'tutor'),
+                //     ),
+                // )
+                // Quiz Settings 
+                // Time Limit
+                // When Time Expires
+                // Attempts allowed
+                // Final Grade Calculation
 
             );
 
@@ -218,7 +246,6 @@ if ( !class_exists('Tutor_Setup') ) {
 
             ?>
             <div class="tutor-wrapper-boarding active">
-                <div><?php _e('Hello, Welcome Tutor LMS.', 'tutor'); ?></div>
                 <div class="tutor-setup-wrapper">
                     <ul class="tutor-setup-title">
                         <li class="active"><?php _e('General', 'tutor'); ?></li>
@@ -236,120 +263,10 @@ if ( !class_exists('Tutor_Setup') ) {
                                     <div><?php _e('Reset Default', 'tutor'); ?></div>
                                 </div>
                                 <div class="tutor-setup-content-heading body">
-                                    <?php $this->tutor_setup_generator($general_fields); ?>                                    
-
                                     <?php $this->tutor_setup_generator( $this->tutor_setup_attributes()['general'] ); ?>
-                                    
-                                    <!-- custom markup (Lesson Permalink) -->
-                                    <div class="tutor-setting">
-                                        <div class="title">Lesson Permalink</div>
-                                        <div class="content">
-                                            <input type="text" id="" class="lesson-permalink" value="lesson" placeholder="Lesson Permalink">    
-                                            <div>http://tutor.test/course/sample-course/lesson/sample-lesson/</div>
-                                        </div>
-                                        <div class="settings">
-                                        </div>
-                                    </div>
-                                    <!-- /custom markup -->
-
-                                    <!-- custom markup (Courses Per Row) -->
-                                    <div class="tutor-setting course-setting-wrapper wrapper-row">
-                                        <div class="title">Courses Per Row <a href="#"></a></div>
-                                        <div class="content">
-                                            <div class="course-per-row">
-                                                <div class="wrapper">
-                                                    <label for="course-1">
-                                                        <input type="radio" name="course-per-row" class="course" id="course-1">
-                                                        <span class="span"><span>1</span></span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-2">
-                                                        <input type="radio" checked name="course-per-row" class="course" id="course-2">
-                                                        <span class="span">
-                                                            <span>2</span>
-                                                            <span>2</span>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-3">
-                                                        <input type="radio" name="course-per-row" class="course" id="course-3">
-                                                        <span class="span">
-                                                            <span>3</span>
-                                                            <span>3</span>
-                                                            <span>3</span>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-4">
-                                                        <input type="radio" name="course-per-row" class="course" id="course-4">
-                                                        <span class="span">
-                                                            <span>4</span>
-                                                            <span>4</span>
-                                                            <span>4</span>
-                                                            <span>4</span>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /custom markup -->
-
-                                    <!-- custom markup (Courses Per Page) -->
-                                    <div class="tutor-setting course-setting-wrapper wrapper-page">
-                                        <div class="title">
-                                            Courses Per Page 
-                                            <a href="#"></a> 
-                                        </div>
-                                        <div class="content">
-                                            <div class="course-per-page">
-                                                <div class="wrapper">
-                                                    <label for="course-p-1">
-                                                        <input type="radio" name="course-per-page" class="course-p" id="course-p-1">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text">4</span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-p-2">
-                                                        <input type="radio" name="course-per-page" class="course-p" id="course-p-2">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text">8</span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-p-3">
-                                                        <input type="radio" name="course-per-page" class="course-p" id="course-p-3">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text">12</span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-p-4">
-                                                        <input type="radio" name="course-per-page" class="course-p" id="course-p-4">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text">16</span>
-                                                    </label>
-                                                </div>
-                                                <div class="wrapper">
-                                                    <label for="course-p-5">
-                                                        <input type="radio" name="course-per-page" class="course-p" id="course-p-5">
-                                                        <span class="radio-icon"></span>
-                                                        <span class="label-text">20</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /custom markup -->
                                 </div>
                                 <?php $this->tutor_setup_wizard_action(); ?>
-                                
                             </li>
-
                             <li>
                                 <div class="tutor-setup-content-heading heading">
                                     <div><?php _e('General Settings', 'tutor'); ?></div>
@@ -361,7 +278,6 @@ if ( !class_exists('Tutor_Setup') ) {
                                 </div>
                                 <?php $this->tutor_setup_wizard_action(); ?>
                             </li>
-
                             <li>
                                 <div class="tutor-setup-content-heading greetings ">
                                     <div class="header">

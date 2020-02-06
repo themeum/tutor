@@ -273,7 +273,7 @@ ul.tutor-setup-content li.active {
 }
 
 /* Courses Per Row */
-.tutor-setting.course-setting-wrapper {
+.tutor-settings.course-setting-wrapper {
     grid-template-columns: 1.5fr 4fr;
     grid-gap: 15px;
 }
@@ -282,15 +282,15 @@ ul.tutor-setup-content li.active {
     position: relative;
 }
 
-.tutor-setting.wrapper-row .title a:after,
-.tutor-setting.wrapper-page .title a:after {
+.tutor-settings.wrapper-row .title a:after,
+.tutor-settings.wrapper-page .title a:after {
     content: url(../images/info-icon.svg);
     position: absolute;
     top: -1px;
     margin-left: 7px;
 }
-.tutor-setting.wrapper-row .title a,
-.tutor-setting.wrapper-page .title a{
+.tutor-settings.wrapper-row .title a,
+.tutor-settings.wrapper-page .title a{
     /* text-indent: -99999px; */
 }
 .tutor-setting .content input[type="radio"].course {
