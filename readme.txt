@@ -244,9 +244,9 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.5.4 - 11 February, 2020 =
 
-* Fixed an infinite loop in frontend course builder when SEO or some plugin get activated. `classes/Shortcode.php`line number `53`
-* Fixed: Maintenance mode in wp-login.php page
-* Improved: Frontend Dashboard Performance
+* Fix: An infinite loop in frontend course builder for SEO related plugin activation: `classes/Shortcode.php`line number `53`
+* Fix: Maintenance mode override for wp-login.php page
+* Improvement: Frontend dashboard performance
 
 = 1.5.3 - 04 February, 2020 =
 
