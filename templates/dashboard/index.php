@@ -31,15 +31,24 @@ if (isset($wp_query->query_vars['tutor_dashboard_page']) && $wp_query->query_var
                             $dashboard_key = '';
 
 	                    $menu_title = $dashboard_page;
+	                    $menu_link = tutor_utils()->get_tutor_dashboard_page_permalink($dashboard_key);
 	                    if (is_array($dashboard_page)){
 		                    $menu_title = tutor_utils()->array_get('title', $dashboard_page);
 		                    if ( isset($dashboard_page['show_ui']) && ! tutor_utils()->array_get('show_ui', $dashboard_page)){
 			                    continue;
-		                    }
+                            }
+
+                            /**
+                             * Add new menu item property "url" for custom link
+                             * @since v 1.5.5
+                             */
+                            if (isset($dashboard_page['url'])){
+                                $menu_link = $dashboard_page['url'];
+                            }
 	                    }
 
                         $active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-                        echo "<li class='{$active_class}'><a href='".tutor_utils()->get_tutor_dashboard_page_permalink($dashboard_key)."'> {$menu_title} </a> </li>";
+                        echo "<li class='{$active_class}'><a href='".$menu_link."'> {$menu_title} </a> </li>";
                     }
                     ?>
                 </ul>

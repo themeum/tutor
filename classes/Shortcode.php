@@ -49,14 +49,21 @@ class Shortcode {
 
 		ob_start();
 		if (is_user_logged_in()){
-			/**
-			 * Added isset() Condition to avoid infinite loop since v.1.5.4
-			 * This has cause error by others plugin, Such AS SEO
-			 */
 
-			if ( ! isset($wp_query->query_vars['tutor_dashboard_page'])){
-				tutor_load_template( 'dashboard.index' );
+			/**
+			 * Handle if logout URL
+			 * @since v.1.5.5
+			 */
+			$student_dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
+			if (tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars) === 'logout'){
+				$redirect = get_permalink($student_dashboard_page_id);
+				wp_logout();
+				wp_redirect($redirect);
+				die();
 			}
+			
+			tutor_load_template( 'dashboard.index' );
+			
 		}else{
 			tutor_load_template( 'global.login' );
 		}
