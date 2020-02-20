@@ -26,13 +26,10 @@ if (! $product_id || ! $product){
  * @since v 1.5.5
  */
 $isLoggedIn = is_user_logged_in();
-$monetize_by = tutils()->get_option('monetize_by');
 $enable_guest_course_cart = tutor_utils()->get_option('enable_guest_course_cart');
-$is_purchasable = tutor_utils()->is_course_purchasable();
 $required_loggedin_class = '';
 $ajax_add_to_cart_class = '';
-
-if ( ! $isLoggedIn && $monetize_by === 'wc' && ! $enable_guest_course_cart){
+if ( ! $isLoggedIn && ! $enable_guest_course_cart){
 	$required_loggedin_class = apply_filters('tutor_enroll_required_login_class', 'cart-required-login');
 } else {
 	$ajax_add_to_cart_class = $product->supports( 'ajax_add_to_cart' ) ? 'ajax_add_to_cart' : '';
