@@ -37,11 +37,6 @@ $user = get_user_by('ID', $user_id);
 <div class="tutor-wrap tutor-dashboard tutor-dashboard-student">
     <div class="tutor-container">
 
-
-
-
-
-
         <div class="tutor-row">
             <div class="tutor-col-12">
                 <div class="tutor-dashboard-header">
@@ -92,11 +87,6 @@ $user = get_user_by('ID', $user_id);
                 </div>
             </div>
         </div>
-
-
-
-
-
 
         <div class="tutor-row">
             <div class="tutor-col-3">
