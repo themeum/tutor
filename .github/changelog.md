@@ -1,5 +1,17 @@
 # TutorLMS Changelog
 
+### 1.5.5 - 25 February, 2020
+
+* New: Custom links now supported in Dashboard menu
+* New: Dashboard headers added in shortcode/oxygen dashboard template
+* Update: All purchase history items now sorted by descending order
+* Fix: Create new account translate issue. templates/global/login.php line number 79
+* Fix: Dashboard page load and logout issue by Shortcode
+* Fix: Guest add to cart issue on course archive page for both WooCommerce and EDD
+* Fix: Course Settings single tab toggle click hide issue fix
+* Fix: Active links with page in the dashboard for shortcode/oxygen
+* Fix: E-Mail to Students on Quiz Completed is now working (Pro)
+
 ### 1.5.4 - 11 February, 2020
 
 * Fix: An infinite loop in frontend course builder for SEO related plugin activation: `classes/Shortcode.php`line number `53`
