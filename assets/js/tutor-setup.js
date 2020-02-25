@@ -1,10 +1,14 @@
 jQuery(document).ready(function ($) {
     'use strict';
 
+    /* ----------------------
+    * Wizard Autoplay Video 
+    * ---------------------- */
     const player = new Plyr('#player', {
-        autoplay: true,
+        // autoplay: true,
         muted: true,
-        volume: 2
+        volume: 2,
+        controls: false
     });
     player.on('ended', event => {
         $('.tutor-wrapper-video').removeClass('active');
@@ -12,6 +16,9 @@ jQuery(document).ready(function ($) {
     });
 
 
+    /* ----------------------
+    * Wizard Skip Type
+    * ---------------------- */
     $('.tutor-type-next, .tutor-type-skip').on('click', function (e) {
         e.preventDefault();
         $('.tutor-wrapper-type').removeClass('active');
@@ -19,16 +26,22 @@ jQuery(document).ready(function ($) {
     });
 
 
+    /* ----------------------
+    * Wizard Slick Slider
+    * ---------------------- */
     $(".tutor-boarding").slick({
+        speed: 1000,
         centerMode: true,
-        centerPadding: "60px",
+        centerPadding: "19.5%",
         slidesToShow: 1,
+        arrows: false,
+        dots: true,
         responsive: [{
                 breakpoint: 768,
                 settings: {
                     arrows: false,
                     centerMode: true,
-                    centerPadding: "40px",
+                    centerPadding: "50px",
                     slidesToShow: 1
                 }
             },
@@ -37,7 +50,7 @@ jQuery(document).ready(function ($) {
                 settings: {
                     arrows: false,
                     centerMode: true,
-                    centerPadding: "40px",
+                    centerPadding: "30px",
                     slidesToShow: 1
                 }
             }
@@ -45,6 +58,9 @@ jQuery(document).ready(function ($) {
     });
 
 
+    /* ----------------------
+    * Wizard Skip Settings
+    * ---------------------- */
     $('.tutor-boarding-next, .tutor-boarding-skip').on('click', function (e) {
         e.preventDefault();
         $('.tutor-wrapper-boarding').removeClass('active');
@@ -52,6 +68,9 @@ jQuery(document).ready(function ($) {
     });
 
 
+    /* ----------------------
+    * Wizard Direct Click
+    * ---------------------- */
     $('ul.tutor-setup-title li').on('click', function (e) {
         $('ul.tutor-setup-title li').removeClass('active');
         $(this).addClass('active');
@@ -117,10 +136,80 @@ jQuery(document).ready(function ($) {
 
 
     $(function () {
-        $('.input-switch-label').on('click', function (e) {
-            $(this).toggleClass('checked');
+        $('.tooltip-btn').on('click', function (e) {
+            $(this).toggleClass('active');
         });
+
+        /*  Input Label Toggle Color */
+        //initail input on/of emphasizing
+        var inputswitch = $(".input-switchbox");
+        inputswitch.each(function () {
+            inputCheckEmphasizing($(this));
+        });
+
+        function isChecked(th) {
+            return th.prop('checked') ? true : false;
+        }
+
+        function inputCheckEmphasizing(th) {
+            var checkboxRoot = th.parent().parent();
+            if (isChecked(th)) {
+                checkboxRoot.find('.label-on').addClass("active");
+                checkboxRoot.find('.label-off').removeClass("active");
+            } else {
+                checkboxRoot.find('.label-on').removeClass("active");
+                checkboxRoot.find('.label-off').addClass("active");
+            }
+        }
+
+        // on/of emphasizing after input check click
+        $(".input-switchbox").click(function () {
+            inputCheckEmphasizing($(this));
+        });
+
     })
 
+    /* Grade Calculation Dropdwon  */
+    $(function () {
+        const selected = document.querySelector(".selected");
+        const optionsContainer = document.querySelector(".options-container");
+        const optionsList = document.querySelectorAll(".option");
+        if( selected ){
+            selected.addEventListener("click", () => {
+                optionsContainer.classList.toggle("active");
+            });
+            optionsList.forEach(option => {
+                option.addEventListener("click", () => {
+                    selected.innerHTML = option.querySelector("label").innerHTML;
+                    optionsContainer.classList.remove("active");
+                });
+            });
+        }
+    });
+
+    /* Time Limit sliders */
+    $(function () {
+        $('.range-input').on('mousemove', function (e) {
+            let rangeInput = $(this).val();
+            let rangeValue = $(this).parent().parent().find(".range-value");
+
+            rangeValue.text(rangeInput);
+        });
+    });
+
+    $(function () {
+        $('#attempts-allowed-1').on('click', function (e) {
+            if ($('#attempts-allowed-numer').prop("disabled", true)) {
+                $(this).parent().parent().parent().addClass('active')
+                $('#attempts-allowed-numer').prop("disabled", false);
+            }
+        });
+        $('#attempts-allowed-2').on('click', function (e) {
+            if ($('#attempts-allowed-2').is(':checked')) {
+                $(this).parent().parent().parent().removeClass('active')
+                $('#attempts-allowed-numer').prop("disabled", true);
+            }
+        });
+    });
 
 });
