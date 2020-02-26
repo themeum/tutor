@@ -268,7 +268,7 @@ class Lesson extends Tutor_Base {
 		/**
 		 * Marking lesson at user meta, meta format, _tutor_completed_lesson_id_{id} and value = tutor_time();
 		 */
-		//tutor_utils()->mark_lesson_complete($lesson_id);
+		tutor_utils()->mark_lesson_complete($lesson_id);
 
 		do_action('tutor_lesson_completed_after', $lesson_id);
 	}
