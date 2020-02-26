@@ -40,7 +40,7 @@ class Lesson extends Tutor_Base {
 		 * Load next course item after click complete button
 		 * @since v.1.5.3
 		 */
-		add_action('tutor_lesson_completed_after', array($this, 'tutor_lesson_completed_after'));
+		add_action('tutor_lesson_completed_after', array($this, 'tutor_lesson_completed_after'), 999);
 	}
 
 	/**
@@ -268,10 +268,9 @@ class Lesson extends Tutor_Base {
 		/**
 		 * Marking lesson at user meta, meta format, _tutor_completed_lesson_id_{id} and value = tutor_time();
 		 */
-		tutor_utils()->mark_lesson_complete($lesson_id);
+		//tutor_utils()->mark_lesson_complete($lesson_id);
 
 		do_action('tutor_lesson_completed_after', $lesson_id);
-
 	}
 
 	/**
