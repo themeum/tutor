@@ -66,10 +66,9 @@ if ( !class_exists('Tutor_Setup') ) {
                 if( $_GET['page'] == 'tutor-setup' ) {
                     ob_start();
                     $this->tutor_setup_wizard_header();
-                    $this->tutor_setup_wizard_video();
                     $this->tutor_setup_wizard_boarding();
-                    // $this->tutor_setup_wizard_type();
-                    // $this->tutor_setup_wizard_settings();
+                    $this->tutor_setup_wizard_type();
+                    $this->tutor_setup_wizard_settings();
                     $this->tutor_setup_wizard_footer();
                     exit;
                 }
@@ -92,13 +91,13 @@ if ( !class_exists('Tutor_Setup') ) {
                     $html .= '<div class="tutor-setup-content-heading heading">';
                         $html .= '<div>'.$field_parent['lable'].'</div>';
                         $html .= '<div><strong>'.$i.'</strong> / '.count($field_arr).' '.__('Step Completed', 'tutor').'</div>';
-                        $html .= '<div>'.__('Reset Default', 'tutor').'</div>';
+                        $html .= '<div class="tutor-reset-section">'.__('Reset Default', 'tutor').'</div>';
                     $html .= '</div>';
                     $html .= '<div class="tutor-setup-content-heading body">';
 
                         foreach ($field_parent['attr'] as $key => $field) {
 
-                            $html .= '<div class="tutor-setting'.(in_array( $field['type'], $down_desc_fields ) ? " course-setting-wrapper" : "").'">';
+                            $html .= '<div class="tutor-setting'.(in_array( $field['type'], $full_width_fields ) ? " course-setting-wrapper" : "").'">';
                                 $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'] : '';
                                 $html .= isset( $field['tooltip'] ) ? '<span id="tooltip-btn" class="tooltip-btn" data-tooltip="'.$field['tooltip'].'"><span></span></span>' : '';
                                 $html .= isset( $field['lable'] ) ? '</div>' : '';
@@ -240,18 +239,18 @@ if ( !class_exists('Tutor_Setup') ) {
                                         case 'range':
                                             $html .= '<div class="limit-slider column-1">';
                                                 $html .= '<div>';
-                                                    $html .= '<input type="range" min="0" max="100" step="1" value="'.$options["earning_instructor_commission"].'" class="range-input" name=""/>';
+                                                    $html .= '<input type="range" min="0" max="100" step="1" value="'.$options["earning_instructor_commission"].'" class="range-input double-range-slider" name=""/>';
                                                 $html .= '</div>';
                                                 $html .= '<div class="commision-data">';
                                                     $html .= '<div class="data">';
                                                         $html .= '<h4 class="range-value-1">'.$options["earning_instructor_commission"].'%</h4>';
                                                         $html .= '<h5>'.__('Instructor', 'tutor').'</h5>';
-                                                        $html .= '<input type="hidden" min="0" max="100" step="1" value="'.$options["earning_instructor_commission"].'" class="range-input" name="earning_instructor_commission"/>';
+                                                        $html .= '<input type="hidden" min="0" max="100" step="1" value="'.$options["earning_instructor_commission"].'" class="range-value-data-1 range-input" name="earning_instructor_commission"/>';
                                                     $html .= '</div>';
                                                     $html .= '<div class="data">';
                                                         $html .= '<h4 class="range-value-2">'.$options["earning_admin_commission"].'%</h4>';
                                                         $html .= '<h5>'.__('Admin', 'tutor').'</h5>';
-                                                        $html .= '<input type="hidden" min="0" max="100" step="1" value="'.$options["earning_admin_commission"].'" class="range-input" name="earning_admin_commission"/>';
+                                                        $html .= '<input type="hidden" min="0" max="100" step="1" value="'.$options["earning_admin_commission"].'" class="range-value-data-2 range-input" name="earning_admin_commission"/>';
                                                     $html .= '</div>';
                                                 $html .= '</div>';
                                             $html .= '</div> ';
@@ -511,7 +510,7 @@ if ( !class_exists('Tutor_Setup') ) {
 
             ?>
             <div class="tutor-wizard-container">
-                <div class="tutor-wrapper-boarding tutor-setup-wizard-settings">
+                <div class="tutor-wrapper-boarding tutor-setup-wizard-settings active">
                     <div class="tutor-setup-wrapper">
                         <ul class="tutor-setup-title">
                             <li class="active"><?php _e('General', 'tutor'); ?></li>
@@ -522,13 +521,12 @@ if ( !class_exists('Tutor_Setup') ) {
                             <li><?php _e('Payment', 'tutor'); ?></li>
                             <li><?php _e('Finish', 'tutor'); ?></li>
                         </ul>
-                        <ul class="tutor-setup-content">
 
-                            <form id="tutor-setup-form" method="post">
-                                <input type="hidden" name="action" value="setup_action">
-                                
+
+                        <form id="tutor-setup-form" method="post">
+                            <input type="hidden" name="action" value="setup_action">
+                            <ul class="tutor-setup-content">
                                 <?php $this->tutor_setup_generator(); ?>
-    
                                 <li>
                                     <div class="tutor-setup-content-heading greetings">
                                         <div class="header">
@@ -540,16 +538,14 @@ if ( !class_exists('Tutor_Setup') ) {
 
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
-                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor_settings'); ?>"><?php _e('Finish', 'tutor'); ?></button>
-
+                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('edit.php?post_type=courses'); ?>"><?php _e('Finish', 'tutor'); ?></button>
                                         </div>
                                     </div>
                                 </li>
+                            </ul>
+                        </form>
 
-                            </form>
 
-                        </ul>
-                        
                     </div>
                 </div>
             </div>
@@ -593,7 +589,7 @@ if ( !class_exists('Tutor_Setup') ) {
         public function tutor_setup_wizard_boarding() {
             ?>
             <div class="tutor-wizard-container">
-                <div class="tutor-wrapper-boarding tutor-setup-wizard-boarding active">
+                <div class="tutor-wrapper-boarding tutor-setup-wizard-boarding">
                     <div class="wizard-boarding-header">
                         <div><img src="<?php echo tutor()->url.'assets/images/tutor-logo.svg'; ?>" /></div>
                         <div><?php _e('Hello, Welcome Tutor LMS.', 'tutor'); ?></div>
@@ -630,7 +626,7 @@ if ( !class_exists('Tutor_Setup') ) {
                     </div>
                     <div class="wizard-boarding-footer">
                         <div>
-                            <button class="tutor-setup-next next animated-btn">
+                            <button class="tutor-boarding-next next animated-btn">
                                 <svg xmlns="http://www.w3.org/2000/svg" id="next-arrow-1" width="17" height="12">
                                     <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
                                 </svg>
@@ -640,8 +636,8 @@ if ( !class_exists('Tutor_Setup') ) {
                                 </svg>
                             </button>
                         </div>
-                        <div><a class="tutor-boarding-next" href="#"><?php _e('I already know, Skip it!', 'tutor'); ?></a></div>
-                        <div class="tutor-boarding-skip"><?php _e('Contact with Live support', 'tutor'); ?></div>
+                        <div><a class="tutor-boarding-skip" href="#"><?php _e('I already know, Skip it!', 'tutor'); ?></a></div>
+                        <div><?php _e('Contact with Live support', 'tutor'); ?></div>
                     </div>
                 </div>
             </div>
@@ -652,7 +648,7 @@ if ( !class_exists('Tutor_Setup') ) {
             $course_marketplace = tutor_utils()->get_option('enable_course_marketplace');
             ?>
             <div class="tutor-wizard-container">
-                <div class="tutor-wrapper-type tutor-setup-wizard-type active">
+                <div class="tutor-wrapper-type tutor-setup-wizard-type">
                     <div class="wizard-type-header">
                         <div class="logo"><img src="<?php echo tutor()->url.'assets/images/tutor-logo.svg'; ?>" /></div>
                         <div class="title"><?php _e('First, let’s get you set up.', 'tutor'); ?></div>
@@ -695,19 +691,6 @@ if ( !class_exists('Tutor_Setup') ) {
         }
 
 
-        public function tutor_setup_wizard_video() {
-            ?>
-            <div class="tutor-wrapper-video active">
-
-                <video poster="<?php echo tutor()->url . 'assets/images/placeholder.jpg'; ?>" id="player" playsinline controls>
-                    <source src="<?php echo tutor()->url . 'assets/images/tutor-preloader-video.mp4'; ?>" type="video/mp4" />
-                </video>
-
-            </div>
-            <?php
-        }
-
-
         public function tutor_setup_wizard_header() {
             set_current_screen();
             ?>
@@ -738,18 +721,11 @@ if ( !class_exists('Tutor_Setup') ) {
 
 
         public function enqueue_scripts() {
-            //Plyr
-		    wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), tutor()->version );
-		    wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.min.js', array( 'jquery' ), tutor()->version, true );
-
             wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.css', array(), tutor()->version );
-
             wp_enqueue_style( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.css', array(), tutor()->version );
             wp_enqueue_style( 'tutor-slick-theme', tutor()->url . 'assets/packages/slick/slick-theme.css', array(), tutor()->version );
             wp_register_script( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.min.js', array( 'jquery' ), tutor()->version, true );
-
-            wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'jquery', 'tutor-plyr', 'tutor-slick' ), tutor()->version, true );
-
+            wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'jquery', 'tutor-slick' ), tutor()->version, true );
             wp_localize_script('tutor-setup', '_tutorobject', array('ajaxurl' => admin_url('admin-ajax.php')));
         }
 

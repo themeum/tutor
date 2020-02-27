@@ -1,34 +1,34 @@
 jQuery(document).ready(function ($) {
     'use strict';
 
-    /* ----------------------
-    * Wizard Autoplay Video 
-    * ---------------------- */
-    const player = new Plyr('#player', {
-        // autoplay: true,
-        muted: true,
-        volume: 2,
-        controls: false
-    });
-    player.on('ended', event => {
-        $('.tutor-wrapper-video').removeClass('active');
-        $('.tutor-wrapper-type').addClass('active');
-    });
+    // tutor-setup-wizard-video
+    // tutor-setup-wizard-type
+    // tutor-setup-wizard-boarding
+    // tutor-setup-wizard-settings
 
 
-    /* ----------------------
-    * Wizard Skip Type
+    /* ---------------------
+    * Wizard Skip
     * ---------------------- */
+    $('.tutor-boarding-next, .tutor-boarding-skip').on('click', function (e) {
+        e.preventDefault();
+        $('.tutor-setup-wizard-boarding').removeClass('active');
+        $('.tutor-setup-wizard-type').addClass('active');
+    });
     $('.tutor-type-next, .tutor-type-skip').on('click', function (e) {
         e.preventDefault();
-        $('.tutor-wrapper-type').removeClass('active');
-        $('.tutor-wrapper-boarding').addClass('active');
+        $('.tutor-setup-wizard-type').removeClass('active');
+        $('.tutor-setup-wizard-settings').addClass('active');
     });
+    
 
 
-    /* ----------------------
+    /* ---------------------
     * Wizard Slick Slider
     * ---------------------- */
+   
+    console.log('Its Working!!!');
+
     $(".tutor-boarding").slick({
         speed: 1000,
         centerMode: true,
@@ -58,17 +58,7 @@ jQuery(document).ready(function ($) {
     });
 
 
-    /* ----------------------
-    * Wizard Skip Settings
-    * ---------------------- */
-    $('.tutor-boarding-next, .tutor-boarding-skip').on('click', function (e) {
-        e.preventDefault();
-        $('.tutor-wrapper-boarding').removeClass('active');
-        $('.tutor-wrapper-settings').addClass('active');
-    });
-
-
-    /* ----------------------
+    /* ---------------------
     * Wizard Direct Click
     * ---------------------- */
     $('ul.tutor-setup-title li').on('click', function (e) {
@@ -84,27 +74,66 @@ jQuery(document).ready(function ($) {
     // $( 'ul.tutor-setup-title li' ).on( 'click', function(e) {
     //     //$(selector)[0].reset();
     // });
+    $( '.tutor-reset-section' ).on( 'click', function(e) {
+        $(this).closest('li').find('input').val(function(){
+            switch (this.type){
+                case 'text':
+                    console.log('ddd->1');
+                    return this.defaultValue;
+                    break;
+
+                case 'checkbox':
+                case 'radio':
+                    console.log('ddd->2');
+                    this.checked = this.defaultChecked;
+                    break;
+
+                case 'range':
+                    const rangeval = $(this).closest('.limit-slider')
+                    if ( rangeval.find('.range-input').hasClass('double-range-slider') ){
+                        rangeval.find('.range-value-1').html(this.defaultValue+'%')
+                        $('.range-value-data-1').val( this.defaultValue )
+                        rangeval.find('.range-value-2').html((100 - this.defaultValue)+'%')
+                        $('.range-value-data-2').val( 100 - this.defaultValue )
+                    } else {
+                        rangeval.find('.range-value').html(this.defaultValue)
+                        return this.defaultValue;
+                    }
+                    break;
+                    
+                case 'hidden':
+                    return this.value;
+                    break;
+            }
+        });
+
+    });
+    
 
     // Redirect after Finished
-    // $('.tutor-redirect').on('click', function(e){
-    //     e.preventDefault();
-    //     window.location = $(this).data('url');
-    // });
+    $('.tutor-redirect').on('click', function(e){
+        e.preventDefault();
+        console.log('Finished!!!');
+        //window.location = $(this).data('url');
+    });
 
 
-    // Tutor Bottom Action Button
+    /* ---------------------
+    * Wizard Settings Button Action
+    * ---------------------- */
     $('.tutor-setup-previous').on('click', function (e) {
         e.preventDefault();
         const _index = $(this).closest('li').index()
         if (_index > 0) {
-            $('ul.tutor-setup-title li').removeClass('active').eq(_index - 1).addClass('active');
+            $('ul.tutor-setup-title li').eq(_index).removeClass('active');
+            $('ul.tutor-setup-title li').eq(_index - 1).addClass('active');
             $('ul.tutor-setup-content li').removeClass('active').eq(_index - 1).addClass('active');
         }
     });
     $('.tutor-setup-skip, .tutor-setup-next').on('click', function (e) {
         e.preventDefault();
         const _index = $(this).closest('li').index() + 1
-        $('ul.tutor-setup-title li').removeClass('active').eq(_index).addClass('active');
+        $('ul.tutor-setup-title li').eq(_index).addClass('active');
         $('ul.tutor-setup-content li').removeClass('active').eq(_index).addClass('active');
     });
 
@@ -122,7 +151,6 @@ jQuery(document).ready(function ($) {
                 // $form.find('.button').addClass('tutor-updating-message');
             },
             success: function (data) {
-                console.log('EEE->', data);
                 if (data.success) {
                     //window.location.reload();
                 }
@@ -189,11 +217,18 @@ jQuery(document).ready(function ($) {
 
     /* Time Limit sliders */
     $(function () {
-        $('.range-input').on('mousemove', function (e) {
+        $('.range-input').on('change mousemove', function (e) {
             let rangeInput = $(this).val();
             let rangeValue = $(this).parent().parent().find(".range-value");
-
             rangeValue.text(rangeInput);
+        });
+
+        $('.double-range-slider').on("change mousemove", function() {
+            const selector = $(this).closest('.settings');
+            selector.find('.range-value-1').text( $(this).val()+'%' );
+            selector.find('input[name="earning_instructor_commission"]').val( $(this).val() )
+            selector.find('.range-value-2').text( ( 100 - $(this).val() ) +'%' );
+            selector.find('input[name="earning_admin_commission"]').val( 100 - $(this).val() )
         });
     });
 
