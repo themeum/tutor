@@ -542,4 +542,3 @@ if ( ! function_exists('tutor_maintenance_mode')) {
 		}
 	}
 }
-
