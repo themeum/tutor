@@ -1525,23 +1525,3 @@ function tutor_next_previous_pagination($course_content_id = 0, $echo = true){
 
 	return $output;
 }
-
-
-/**
- * Required login form in archive page
- * @param bool $echo
- * @since v 1.5.5
- */
-function tutor_archive_course_add_to_cart($echo = true){
-	$output = '';
-	if ( ! is_user_logged_in()){
-		ob_start();
-		tutor_load_template( 'single.course.login' );
-		$login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );
-		$output .= "<div class='tutor-cart-box-login-form' style='display: none;'><span class='login-overlay-close'></span><div class='tutor-cart-box-login-form-inner'><button class='tutor-popup-form-close tutor-icon-line-cross'></button>{$login_form}</div></div>";
-	}
-	if ( $echo ) {
-		echo $output;
-	}
-	return $output;
-}

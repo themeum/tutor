@@ -1142,8 +1142,7 @@ jQuery(document).ready(function($){
         var url = $that.find('a').attr('href');
 
         $that.addClass('active').siblings('li.active').removeClass('active');
-        $('.settings-tab-wrap').removeClass('active').hide();
-        $(data_target).addClass('active').show();
+        $('.settings-tab-wrap').removeClass('active').hide().siblings(data_target).addClass('active').show();
 
         window.history.pushState({}, '', url);
     });
