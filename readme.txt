@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.3
 Requires PHP: 5.4.0
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,6 +241,17 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
+= 1.5.5 - 27 February, 2020 =
+
+* New: Custom links now supported in Dashboard menu
+* New: Dashboard headers added in shortcode/oxygen dashboard template
+* Update: All purchase history items now sorted by descending order
+* Fix: Create new account translate issue. templates/global/login.php line number 79
+* Fix: Dashboard page load and logout issue by Shortcode
+* Fix: Guest add to cart issue on course archive page for both WooCommerce and EDD
+* Fix: Course Settings single tab toggle click hide issue fix
+* Fix: Active links with page in the dashboard for shortcode/oxygen
+* Fix: E-Mail to Students on Quiz Completed is now working (Pro)
 
 = 1.5.4 - 11 February, 2020 =
 
