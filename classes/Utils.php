@@ -4566,7 +4566,8 @@ class Utils {
 		$query = $wpdb->get_results("SELECT {$wpdb->posts}.* FROM {$wpdb->posts}
  			INNER JOIN {$wpdb->postmeta} customer ON ID = customer.post_id AND customer.meta_key = '_customer_user'
  			INNER JOIN {$wpdb->postmeta} tutor_order ON ID = tutor_order.post_id AND tutor_order.meta_key = '_is_tutor_order_for_course'
- 			where post_type = 'shop_order' AND customer.meta_value = {$user_id}  ");
+			WHERE post_type = 'shop_order' AND customer.meta_value = {$user_id}  
+			ORDER BY {$wpdb->posts}.ID DESC");
 		return $query;
 	}
 
