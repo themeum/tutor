@@ -1,6 +1,6 @@
 # TutorLMS Changelog
 
-### 1.5.5 - 25 February, 2020
+### 1.5.5 - 27 February, 2020
 
 * New: Custom links now supported in Dashboard menu
 * New: Dashboard headers added in shortcode/oxygen dashboard template
