@@ -1054,21 +1054,23 @@ button.tutor-setup-skip:hover {
     background: var(--primary-text);
     border-radius: 0 5px 5px 0;
 }
-
-.select-box .option,
-.selected {
+.option{
+    display: none;
+}
+.option.selected{
+    display: block;
+}
+.selected,
+.select-box .option {
     padding: 10px 15px;
     cursor: pointer;
 }
-
 .select-box .option:hover {
     background: #dcdfe5;
 }
-
 .select-box label {
     cursor: pointer;
 }
-
 .select-box .option .radio {
     display: none;
 }

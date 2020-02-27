@@ -138,6 +138,9 @@ jQuery(document).ready(function ($) {
     });
 
 
+    /* ---------------------
+    * Wizard Submit Form Action
+    * ---------------------- */
     $(document).on('submit', '#tutor-setup-form', function (e) {
         const _form = $(this).serialize();
         // = (array) maybe_unserialize(get_option('tutor_option'));
@@ -163,88 +166,79 @@ jQuery(document).ready(function ($) {
     });
 
 
-    $(function () {
-        $('.tooltip-btn').on('click', function (e) {
-            $(this).toggleClass('active');
-        });
-
-        /*  Input Label Toggle Color */
-        //initail input on/of emphasizing
-        var inputswitch = $(".input-switchbox");
-        inputswitch.each(function () {
-            inputCheckEmphasizing($(this));
-        });
-
-        function isChecked(th) {
-            return th.prop('checked') ? true : false;
-        }
-
-        function inputCheckEmphasizing(th) {
-            var checkboxRoot = th.parent().parent();
-            if (isChecked(th)) {
-                checkboxRoot.find('.label-on').addClass("active");
-                checkboxRoot.find('.label-off').removeClass("active");
-            } else {
-                checkboxRoot.find('.label-on').removeClass("active");
-                checkboxRoot.find('.label-off').addClass("active");
-            }
-        }
-
-        // on/of emphasizing after input check click
-        $(".input-switchbox").click(function () {
-            inputCheckEmphasizing($(this));
-        });
-
-    })
-
-    /* Grade Calculation Dropdwon  */
-    $(function () {
-        const selected = document.querySelector(".selected");
-        const optionsContainer = document.querySelector(".options-container");
-        const optionsList = document.querySelectorAll(".option");
-        if( selected ){
-            selected.addEventListener("click", () => {
-                optionsContainer.classList.toggle("active");
-            });
-            optionsList.forEach(option => {
-                option.addEventListener("click", () => {
-                    selected.innerHTML = option.querySelector("label").innerHTML;
-                    optionsContainer.classList.remove("active");
-                });
-            });
-        }
+    /* ---------------------
+    * Wizard Tooltip
+    * ---------------------- */
+    $('.tooltip-btn').on('click', function (e) {
+        e.preventDefault();
+        $(this).toggleClass('active');
     });
+
+    /*  Input Label Toggle Color */
+    $(".input-switchbox").each(function () {
+        inputCheckEmphasizing($(this));
+    });
+
+    function isChecked(th) {
+        return th.prop('checked') ? true : false;
+    }
+
+    function inputCheckEmphasizing(th) {
+        var checkboxRoot = th.parent().parent();
+        if (isChecked(th)) {
+            checkboxRoot.find('.label-on').addClass("active");
+            checkboxRoot.find('.label-off').removeClass("active");
+        } else {
+            checkboxRoot.find('.label-on').removeClass("active");
+            checkboxRoot.find('.label-off').addClass("active");
+        }
+    }
+
+    // on/of emphasizing after input check click
+    $(".input-switchbox").click(function () {
+        inputCheckEmphasizing($(this));
+    });
+
+    
+    $('.options-container').on('click', function (e) {
+        e.preventDefault();
+        $(this).toggleClass('active');
+    });
+    $('.options-container .option').on('click', function(e) {
+        e.preventDefault();
+        $(this).closest('.options-container').find('.option').removeClass('selected');
+        $(this).addClass('selected');
+    });
+    
 
     /* Time Limit sliders */
-    $(function () {
-        $('.range-input').on('change mousemove', function (e) {
-            let rangeInput = $(this).val();
-            let rangeValue = $(this).parent().parent().find(".range-value");
-            rangeValue.text(rangeInput);
-        });
-
-        $('.double-range-slider').on("change mousemove", function() {
-            const selector = $(this).closest('.settings');
-            selector.find('.range-value-1').text( $(this).val()+'%' );
-            selector.find('input[name="earning_instructor_commission"]').val( $(this).val() )
-            selector.find('.range-value-2').text( ( 100 - $(this).val() ) +'%' );
-            selector.find('input[name="earning_admin_commission"]').val( 100 - $(this).val() )
-        });
+    $('.range-input').on('change mousemove', function (e) {
+        let rangeInput = $(this).val();
+        let rangeValue = $(this).parent().parent().find(".range-value");
+        rangeValue.text(rangeInput);
     });
 
-    $(function () {
-        $('#attempts-allowed-1').on('click', function (e) {
-            if ($('#attempts-allowed-numer').prop("disabled", true)) {
-                $(this).parent().parent().parent().addClass('active')
-                $('#attempts-allowed-numer').prop("disabled", false);
-            }
-        });
-        $('#attempts-allowed-2').on('click', function (e) {
-            if ($('#attempts-allowed-2').is(':checked')) {
-                $(this).parent().parent().parent().removeClass('active')
-                $('#attempts-allowed-numer').prop("disabled", true);
-            }
-        });
+    $('.double-range-slider').on("change mousemove", function() {
+        const selector = $(this).closest('.settings');
+        selector.find('.range-value-1').text( $(this).val()+'%' );
+        selector.find('input[name="earning_instructor_commission"]').val( $(this).val() )
+        selector.find('.range-value-2').text( ( 100 - $(this).val() ) +'%' );
+        selector.find('input[name="earning_admin_commission"]').val( 100 - $(this).val() )
     });
+    
+
+    $('#attempts-allowed-1').on('click', function (e) {
+        if ($('#attempts-allowed-numer').prop("disabled", true)) {
+            $(this).parent().parent().parent().addClass('active')
+            $('#attempts-allowed-numer').prop("disabled", false);
+        }
+    });
+    $('#attempts-allowed-2').on('click', function (e) {
+        if ($('#attempts-allowed-2').is(':checked')) {
+            $(this).parent().parent().parent().removeClass('active')
+            $('#attempts-allowed-numer').prop("disabled", true);
+        }
+    });
+    
 
 });
