@@ -159,8 +159,8 @@ if ( !class_exists('Tutor_Setup') ) {
                                         case 'radio':
                                             if ( isset($field['options']) ) {
                                                 foreach ($field['options'] as $k => $val) {
-                                                    $html .= '<input type="radio" name="'.$key.'" value="'.$k.'" '.( isset($options[$key]) && $options[$key] == $k ? 'checked' : '' ).' /> ';
-                                                    $html .= $val.'<br>';
+                                                    $html .= '<label for="'.$key.$k.'" class="time-expires"><input type="radio" id="'.$key.$k.'" name="'.$key.'" value="'.$k.'" '.( isset($options[$key]) && $options[$key] == $k ? 'checked' : '' ).' /> '.'<span class="radio-icon"></span>';
+                                                    $html .= $val.'</label>';
                                                 }
                                             }
                                         break;
@@ -170,8 +170,9 @@ if ( !class_exists('Tutor_Setup') ) {
                                                 if (isset($field['time'])) {
                                                     $html .= '<input type="range" name="'.$key.'[value]" min="'.(isset($field['min']) ? $field['min'] : 0).'" max="'.(isset($field['max']) ? $field['max'] : 60).'" step="1" value="'.(isset($options[$key]['value']) ? $options[$key]['value'] : '').'"  class="range-input"/>';
                                                     $html .= '<input type="hidden" name="'.$key.'[time]" value="'.(isset($options[$key]['time']) ? $options[$key]['time'] : 'minutes').'"  class="range-input"/>';
-                                                    $html .= ' <span class="range-value">'.(isset($options[$key]['value']) ? $options[$key]['value'] : '').'</span> ';
+                                                    $html .= '<span class=""><span class="range-value">'.(isset($options[$key]['value']) ? $options[$key]['value'] : '').'</span>';
                                                     $html .= isset($options[$key]['time']) ? $options[$key]['time'] : '';
+                                                    $html .= '</span>';
                                                 } else {
                                                     $html .= '<input type="range" name="'.$key.'" min="'.(isset($field['min']) ? $field['min'] : "").'" max="'.(isset($field['max']) ? $field['max'] : "" ).'" step="1" value="'.(isset($options[$key]) ? $options[$key] : '').'"  class="range-input"/>';
                                                     $html .= ' <strong class="range-value">'.(isset($options[$key]) ? $options[$key] : '').'</strong>';
@@ -183,7 +184,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                             $html .= '<div class="grade-calculation"><div class="select-box"><div class="options-container">';
                                                 if (isset($field['options'])) {
                                                     foreach ($field['options'] as $val) {
-                                                        $html .= '<div class="option '.($val['value'] == $options[$key] ? 'selected' : '').'">';
+                                                        $html .= '<div class="option">';
                                                             $html .= '<input type="radio" class="radio" id="'.$val['value'].'" name="'.$key.'"/>';
                                                             $html .= '<label for="'.$val['value'].'">';
                                                                 $html .= '<h3>'.$val['title'].'</h3>';
@@ -192,6 +193,10 @@ if ( !class_exists('Tutor_Setup') ) {
                                                         $html .= '</div>';
                                                     }
                                                 }
+                                            $html .= '</div>';
+                                            $html .= '<div class="selected">';
+                                                $html .= '<h3>'.$val['title'].'</h3>';
+                                                $html .= '<h5>'.$val['desc'].'</h5>';
                                             $html .= '</div></div></div>';
                                         break;
 
