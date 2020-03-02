@@ -20,15 +20,23 @@ jQuery(document).ready(function ($) {
         $('.tutor-setup-wizard-type').removeClass('active');
         $('.tutor-setup-wizard-settings').addClass('active');
     });
-    
+
+
+    /* ---------------------
+    * Marketplace Type
+    * ---------------------- */
+    $('input[type=radio][name=enable_course_marketplace_setup]').change(function() {
+        if (this.value == '0') {
+            $('input[name=enable_course_marketplace]').val('');
+        } else if (this.value == '1') {
+            $('input[name=enable_course_marketplace]').val('1');
+        }
+    });
 
 
     /* ---------------------
     * Wizard Slick Slider
     * ---------------------- */
-   
-    console.log('Its Working!!!');
-
     $(".tutor-boarding").slick({
         speed: 1000,
         centerMode: true,
@@ -113,8 +121,28 @@ jQuery(document).ready(function ($) {
     // Redirect after Finished
     $('.tutor-redirect').on('click', function(e){
         e.preventDefault();
-        console.log('Finished!!!');
+        const _form = $('#tutor-setup-form').serialize();
+        console.log('EE->', _form);
+
         //window.location = $(this).data('url');
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: _form,
+            beforeSend: function () {
+                // $form.find('.button').addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                if (data.success) {
+                    //window.location.reload();
+                }
+            },
+            complete: function () {
+                // $form.find('.button').removeClass('tutor-updating-message');
+                // window.location = $(this).data('url');
+            }
+        });
+
     });
 
 
@@ -141,6 +169,7 @@ jQuery(document).ready(function ($) {
     /* ---------------------
     * Wizard Submit Form Action
     * ---------------------- */
+   /*
     $(document).on('submit', '#tutor-setup-form', function (e) {
         const _form = $(this).serialize();
         // = (array) maybe_unserialize(get_option('tutor_option'));
@@ -164,6 +193,7 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+    */
 
 
     /* ---------------------
@@ -199,7 +229,7 @@ jQuery(document).ready(function ($) {
         inputCheckEmphasizing($(this));
     });
 
-    
+
     $('.options-container').on('click', function (e) {
         e.preventDefault();
         $(this).toggleClass('active');
