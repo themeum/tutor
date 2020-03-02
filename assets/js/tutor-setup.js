@@ -1,13 +1,7 @@
 jQuery(document).ready(function($) {
   "use strict";
 
-  /* ---------------------
-   * Wizard Direct Click
-   * ---------------------- */
-  $("ul.tutor-setup-title li").on("click", function(e) {
-    $("ul.tutor-setup-title li").removeClass("active");
-    $(this).addClass("active");
-  });
+
 
   /* ---------------------
    * Wizard Skip
@@ -36,37 +30,25 @@ jQuery(document).ready(function($) {
     }
   );
 
-  /* ---------------------
-   * Wizard Slick Slider
-   * ---------------------- */
-  $(".tutor-boarding").slick({
-    speed: 1000,
-    centerMode: true,
-    centerPadding: "19.5%",
-    slidesToShow: 1,
-    arrows: false,
-    dots: true,
-    responsive: [
-      {
-        breakpoint: 768,
-        settings: {
-          arrows: false,
-          centerMode: true,
-          centerPadding: "50px",
-          slidesToShow: 1
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          arrows: false,
-          centerMode: true,
-          centerPadding: "30px",
-          slidesToShow: 1
-        }
-      }
-    ]
-  });
+
+	/* ---------------------
+	* Wizard Skip
+	* ---------------------- */
+	$('.tutor-setup-previous').on('click', function (e) {
+        e.preventDefault();
+        const _index = $(this).closest('li').index()
+        if (_index > 0) {
+            $('ul.tutor-setup-title li').eq(_index).removeClass('active');
+            $('ul.tutor-setup-title li').eq(_index - 1).addClass('active');
+			$('ul.tutor-setup-content li').removeClass('active').eq(_index - 1).addClass('active');
+		}
+	});
+  	$('.tutor-setup-skip, .tutor-setup-next').on('click', function (e) {
+		e.preventDefault();
+		const _index = $(this).closest('li').index() + 1
+		$('ul.tutor-setup-title li').eq(_index).addClass('active');
+		$('ul.tutor-setup-content li').removeClass('active').eq(_index).addClass('active');
+	});
 
   /* ---------------------
    * Wizard Skip
@@ -135,6 +117,7 @@ jQuery(document).ready(function($) {
   });
 
   $(".tutor-reset-section").on("click", function(e) {
+	  console.log('WOW');
     $(this)
       .closest("li")
       .find("input")
