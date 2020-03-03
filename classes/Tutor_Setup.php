@@ -202,7 +202,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                             $html .= '<div class="grade-calculation"><div class="select-box"><div class="options-container">';
                                                 if (isset($field['options'])) {
                                                     foreach ($field['options'] as $val) {
-                                                        $html .= '<div class="option '.((isset($options[$key]) && $val['value'] == $options[$key]) ? 'selected' : '').'">';
+                                                        $html .= '<div class="option">';
                                                             $html .= '<input type="radio" class="radio" id="'.$val['value'].'" name="'.$key.'"/>';
                                                             $html .= '<label for="'.$val['value'].'">';
                                                                 $html .= '<h3>'.$val['title'].'</h3>';
