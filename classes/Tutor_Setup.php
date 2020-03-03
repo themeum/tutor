@@ -200,22 +200,28 @@ if ( !class_exists('Tutor_Setup') ) {
 
                                         case 'dropdown':
                                             $html .= '<div class="grade-calculation"><div class="select-box"><div class="options-container">';
+                                                $selected_data = '';
                                                 if (isset($field['options'])) {
                                                     foreach ($field['options'] as $val) {
                                                         $html .= '<div class="option">';
-                                                            $html .= '<input type="radio" class="radio" id="'.$val['value'].'" name="'.$key.'"/>';
+                                                            $html .= '<input type="radio" class="radio" id="'.$val['value'].'" name="'.$key.'" value="'.$val['value'].'"/>';
                                                             $html .= '<label for="'.$val['value'].'">';
                                                                 $html .= '<h3>'.$val['title'].'</h3>';
                                                                 $html .= '<h5>'.$val['desc'].'</h5>';
                                                             $html .= '</label>';
                                                         $html .= '</div>';
+                                                        
+                                                        if (isset($options[$key]) && $options[$key] == $val['value']) {
+                                                            $selected_data .= '<div class="selected">';
+                                                            $selected_data .= '<h3>'.$val['title'].'</h3>';
+                                                            $selected_data .= '<h5>'.$val['desc'].'</h5>';    
+                                                            $selected_data .= '</div>';
+                                                        }
                                                     }
                                                 }
                                             $html .= '</div>';
-                                            $html .= '<div class="selected">';
-                                                $html .= '<h3>'.$val['title'].'</h3>';
-                                                $html .= '<h5>'.$val['desc'].'</h5>';    
-                                            $html .= '</div></div></div>';
+                                            $html .= $selected_data ? $selected_data : '<div class="selected"><h3>'.$field['options'][0]['title'].'</h3><h5>'.$field['options'][0]['desc'].'</h5></div>';
+                                            $html .= '</div></div>';
                                         break;
 
                                         case 'payments':
@@ -516,7 +522,7 @@ if ( !class_exists('Tutor_Setup') ) {
                 <div class="tutor-wrapper-boarding tutor-setup-wizard-settings">
                     <div class="tutor-setup-wrapper">
                         <ul class="tutor-setup-title">
-                            <li class="active"><?php _e('General', 'tutor'); ?></li>
+                            <li class="active current"><?php _e('General', 'tutor'); ?></li>
                             <li><?php _e('Course', 'tutor'); ?></li>
                             <li><?php _e('Quiz', 'tutor'); ?></li>
                             <li><?php _e('Instructor', 'tutor'); ?></li>

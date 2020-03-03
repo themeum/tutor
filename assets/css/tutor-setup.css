@@ -166,7 +166,7 @@ ul.tutor-setup-content li.active {
   transition: transform 0.1s linear;
 }
 
-.tutor-setup-title li.active:after {
+.tutor-setup-title li.current:after {
   opacity: 1;
   transform: translateX(0px) scale(1);
 }
@@ -627,7 +627,6 @@ button.tutor-setup-previous {
 }
 
 .tutor-setup-title li {
-  cursor: pointer;
   letter-spacing: -0.08px;
   text-align: right;
   color: var(--primary-text);
