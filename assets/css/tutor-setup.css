@@ -196,6 +196,7 @@ ul.tutor-setup-content li.active {
   position: relative;
   padding-left: 22px;
   opacity: 0.7;
+  cursor: pointer;
 }
 
 .tutor-setup-content-heading.heading div:last-child:before {
@@ -378,7 +379,7 @@ ul.tutor-setup-content li.active {
   color: #1f2849;
   text-align: center;
   font-size: 12px;
-  line-height: 1.1;
+  line-height: 1.4;
   font-weight: 300;
 }
 
@@ -1502,7 +1503,7 @@ input.checkbox {
   background-color: #f0f3f6;
   left: 50%;
   margin-left: calc(-244px / 2);
-  bottom: calc(150px - 19px);
+  bottom: calc(150px + 6px);
   display: flex !important;
   align-items: center;
   justify-content: center;
@@ -1608,6 +1609,7 @@ input.checkbox {
   cursor: pointer;
   display: grid;
   place-items: center;
+  grid-gap: 28px;
   width: 280px;
   height: 352px;
   border: 2px solid transparent;
@@ -1620,7 +1622,7 @@ input.checkbox {
 
 .wizard-type-body .wizard-type-item img {
   max-width: 225px;
-  margin: 0 auto 0px auto;
+  margin: 25px auto 0px auto;
 }
 
 .wizard-type-body .wizard-type-item .title,
@@ -1635,7 +1637,6 @@ input.checkbox {
   letter-spacing: -0.24px;
   text-align: center;
   color: #1f2949;
-  margin-bottom: 25px;
 }
 
 .wizard-type-body .wizard-type-item .subtitle {
@@ -1649,9 +1650,13 @@ input.checkbox {
 .wizard-type-body .wizard-type-item input {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
-  display: none;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  margin: 15px 0 0 15px;
+  z-index: 9;
+  cursor: pointer;
+  outline: none;
 }
 
 .wizard-type-body .wizard-type-item .icon {
