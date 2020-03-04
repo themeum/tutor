@@ -16,7 +16,7 @@ class Template extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'pre_get_posts', array($this, 'limit_course_query_archive'), 1 );
+		add_action( 'pre_get_posts', array($this, 'limit_course_query_archive'), 99 );
 
 
 		/**
@@ -84,7 +84,8 @@ class Template extends Tutor_Base {
 
 				if ($page_id === $selected_archive_page){
 					$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
-					query_posts(array('post_type' => $this->course_post_type, 'paged' => $paged ));
+					$search_query = get_search_query();
+					query_posts(array('post_type' => $this->course_post_type, 'paged' => $paged, 's' => $search_query ));
 				}
 			}
 		}
