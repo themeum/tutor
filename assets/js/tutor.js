@@ -279,10 +279,26 @@ jQuery(document).ready(function($){
         });
         frame.on( 'select', function() {
             var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('<img src="'+attachment.url+'" alt="" />');
+            $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('<img src="'+attachment.url+'" alt="" /><a href="javascript:;" class="tutor-lesson-thumbnail-delete-btn"><i class="tutor-icon-line-cross"></i></a>');
             $that.closest('.tutor-thumbnail-wrap').find('input').val(attachment.id);
+            $('.tutor-lesson-thumbnail-delete-btn').show();
         });
         frame.open();
+    });
+
+    /**
+     * Lesson Feature Image Delete
+     * @since v.1.5.6
+     */
+    $(document).on('click', '.tutor-lesson-thumbnail-delete-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+
+        $that.closest('.tutor-thumbnail-wrap').find('._lesson_thumbnail_id').val('');
+        $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('');
+        $that.hide();
+
     });
 
     /**

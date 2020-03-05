@@ -68,7 +68,7 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 
 							if ($lessons->have_posts()){
 								while ($lessons->have_posts()){ $lessons->the_post();
-								global $post;
+									global $post;
 
 									$video = tutor_utils()->get_video_info();
 
@@ -81,7 +81,7 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 
 									if ($post->post_type === 'tutor_quiz'){
 										$lesson_icon = 'tutor-icon-doubt';
-                                    }
+									}
 									if ($post->post_type === 'tutor_assignments'){
 										$lesson_icon = 'tutor-icon-clipboard';
 									}
@@ -90,20 +90,25 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
                                     <div class="tutor-course-lesson">
                                         <h5>
 											<?php
-                                                $lesson_title = "<i class='$lesson_icon'></i>";
+											$lesson_title = '';
+											if (has_post_thumbnail()){
+												$thumbnail_url = get_the_post_thumbnail_url(get_the_ID(), 'thumbnail');
+												$lesson_title .= "<i style='background:url({$thumbnail_url})' class='tutor-lesson-thumbnail-icon $lesson_icon'></i>";
+											}else{
+												$lesson_title .= "<i class='$lesson_icon'></i>";
+											}
 
-                                                if ($is_enrolled){
-	                                                $lesson_title .= "<a href='".get_the_permalink()."'> ".get_the_title()." </a>";
+											if ($is_enrolled){
+												$lesson_title .= "<a href='".get_the_permalink()."'> ".get_the_title()." </a>";
 
+												$lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>$play_time</span>" : '';
 
-	                                                $lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>$play_time</span>" : '';
-
-	                                                echo $lesson_title;
-                                                }else{
-	                                                $lesson_title .= get_the_title();
-	                                                $lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>$play_time</span>" : '';
-	                                                echo apply_filters('tutor_course/contents/lesson/title', $lesson_title, get_the_ID());
-                                                }
+												echo $lesson_title;
+											}else{
+												$lesson_title .= get_the_title();
+												$lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>$play_time</span>" : '';
+												echo apply_filters('tutor_course/contents/lesson/title', $lesson_title, get_the_ID());
+											}
 
 											?>
                                         </h5>
