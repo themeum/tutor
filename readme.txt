@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.3
 Requires PHP: 5.4.0
-Stable tag: 1.5.5
+Stable tag: 1.5.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,13 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.5.6 - 06 March, 2020 =
+
+New: Feature image support for lessons
+Fix: Courses per page issue on course archives in Divi Builder
+Fix: Search issue on custom course archive pages
+Fix: Redirect to next lesson issue after completing lessons (headers sent)
 
 = 1.5.5 - 27 February, 2020 =
 
