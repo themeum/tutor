@@ -714,7 +714,7 @@ Instructor
 
 @media (max-width: 767px) {
   .single-instructor-wrap .single-instructor-top{
-    
+
     flex-wrap: wrap;
   }
 }
@@ -1471,8 +1471,8 @@ Instructor
 .tutor-pagination,
 .tutor-pagination-wrap{
   a, span{
-      padding: 3px;
-      display: inline-block;
+    padding: 3px;
+    display: inline-block;
   }
 }
 
@@ -1956,7 +1956,7 @@ button.tm-close.tutor-icon-line-cross:hover{
       color: red;
     }
   }
-  
+
 }
 
 .tutor-lessons.ui-sortable {
@@ -2631,7 +2631,7 @@ Quiz Modal
   padding-left: 10px;
   padding-right: 10px;
   -webkit-box-flex: 1;
-  
+
   flex-grow: 1;
 }
 .tutor-quiz-builder-col.auto-width{
@@ -2687,8 +2687,8 @@ Quiz Modal
 
 
 .tutor-quiz-builder-modal-control-btn-group{
-  
-  
+
+
   display: flex;
   margin-top: 20px;
 }
@@ -2727,8 +2727,8 @@ Quiz Modal
   width: 100%;
 }
 .quiz-modal-switch-field {
-  
-  
+
+
   display: flex;
   margin-top: 30px;
 }
@@ -2761,8 +2761,8 @@ label.btn-switch input:checked + .btn-slider {
   width: 100%;
   box-shadow: none;
   background-color: #fff;
-  
-  
+
+
   display: flex;
   cursor: pointer;
   box-sizing: border-box;
@@ -2785,10 +2785,10 @@ label.btn-switch input:checked + .btn-slider {
   position: absolute;
   font-size: 0;
   z-index: 9;
-  
-  
+
+
   display: flex;
-  
+
   flex-wrap: wrap;
   box-shadow: 0px 2px 10px rgba(0,0,0,.08);
   top: 55px;
@@ -3656,56 +3656,56 @@ table.course-single-gradebooks a{
 */
 
 .tutor-bp-message-recipient-header {
-    display: flex;
-    margin-bottom: 20px;
+  display: flex;
+  margin-bottom: 20px;
 }
 .tutor-bp-recipient-info-wrap {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 .tutor-bp-message-recipient-avatar-wrap img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
 }
 .tutor-bp-message-recipient-avatar-wrap {
-    margin-right: 35px;
+  margin-right: 35px;
 }
 .tutor-bp-message-recipient-header .tutor-bp-thread-recipient-name h3 {
-    margin: 10px 0 8px !important;
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 28px;
+  margin: 10px 0 8px !important;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 28px;
 }
 .tutor-bp-message-recipient-header .tutor-bp-thread-recipient-name h4 {
-    margin: 0  0 20px!important;
-    font-size: 16px;
-    line-height: 1;
-    font-weight: 500;
+  margin: 0  0 20px!important;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 500;
 }
 .tutor-bp-enrolled-courses-wrap {
-    margin: 0;
+  margin: 0;
 }
 .tutor-bp-enrolled-courses-wrap .tutor-bp-enrolled-total-course-notice{
-    font-weight: 400;
-    color: #1C294B;
-    margin: 10px 0 8px !important;
+  font-weight: 400;
+  color: #1C294B;
+  margin: 10px 0 8px !important;
 }
 .tutor-bp-enrolled-courses-wrap ul {
-    padding: 0 0 0 17px;
-    margin: 0;
-    color: #50616F;
+  padding: 0 0 0 17px;
+  margin: 0;
+  color: #50616F;
 }
 .tutor-bp-enrolled-courses-wrap ul li a {
-    line-height: 1.7;
-    display: block;
-    color: #54616d;
-    padding-left: 10px;
+  line-height: 1.7;
+  display: block;
+  color: #54616d;
+  padding-left: 10px;
 }
 .tutor-bp-enrolled-courses-wrap ul li a:hover {
-    color: var(--tutor-primary-color);
-    opacity: 1;
-    transition: 300ms;
-    text-decoration: underline !important;
+  color: var(--tutor-primary-color);
+  opacity: 1;
+  transition: 300ms;
+  text-decoration: underline !important;
 }
 /**
 * END Tutor BuddyPress
