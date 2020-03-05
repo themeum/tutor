@@ -40,18 +40,21 @@
             </div>
             <div class="tutor-option-field">
                 <div class="tutor-option-gorup-fields-wrap">
-                    <div class="tutor-thumbnail-wrap">
-                        <p class="thumbnail-img">
+                    <div class="tutor-thumbnail-wrap ">
+                        <p class="thumbnail-img tutor-lesson-edit-feature-img">
 							<?php
 							$thumbnail_upload_text = __('Upload Feature Image', 'tutor');
+							$lesson_thumbnail_id = '';
 							if (has_post_thumbnail($post->ID)){
+							    $lesson_thumbnail_id = get_post_meta($post->ID, '_thumbnail_id', true);
 								echo get_the_post_thumbnail($post->ID);
 								$thumbnail_upload_text = __('Update Feature Image', 'tutor');
 							}
-
 							?>
+                            <a href="javascript:;" class="tutor-lesson-thumbnail-delete-btn" style="display: <?php echo $lesson_thumbnail_id ? 'block':'none'; ?>;"><i class="tutor-icon-line-cross"></i></a>
                         </p>
-                        <input type="hidden" class="_lesson_thumbnail_id" name="_lesson_thumbnail_id" value="">
+
+                        <input type="hidden" class="_lesson_thumbnail_id" name="_lesson_thumbnail_id" value="<?php echo $lesson_thumbnail_id; ?>">
                         <button type="button" class="lesson_thumbnail_upload_btn tutor-btn bordered-btn"><?php echo $thumbnail_upload_text; ?></button>
                     </div>
                 </div>
