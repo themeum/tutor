@@ -6,13 +6,10 @@ if ( !class_exists('Tutor_Setup') ) {
 
 
         public function __construct() {
-            //if ( get_option( 'tutor_enable_setup_wizard', '' ) ) {
-                add_action( 'admin_menu', array( $this, 'admin_menus' ) );
-                add_action( 'admin_init', array( $this, 'setup_wizard' ) );
-                add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-                add_action( 'wp_ajax_setup_action', array( $this, 'tutor_setup_action' ) );
-            // }
-            
+            add_action( 'admin_menu', array( $this, 'admin_menus' ) );
+            add_action( 'admin_init', array( $this, 'setup_wizard' ) );
+            add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+            add_action( 'wp_ajax_setup_action', array( $this, 'tutor_setup_action' ) );
             add_filter('tutor_wizard_attributes', array( $this, 'tutor_setup_attributes_callback' ));
         }
 
@@ -204,7 +201,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                                 if (isset($field['options'])) {
                                                     foreach ($field['options'] as $val) {
                                                         $html .= '<div class="option">';
-                                                            $html .= '<input type="radio" class="radio" id="'.$val['value'].'" name="'.$key.'" value="'.$val['value'].'"/>';
+                                                            $html .= '<input type="radio" class="radio" id="'.$val['value'].'" name="'.$key.'" value="'.$val['value'].'" '.( isset($options[$key]) && $options[$key] == $val['value'] ? 'checked' : '' ).' />';
                                                             $html .= '<label for="'.$val['value'].'">';
                                                                 $html .= '<h3>'.$val['title'].'</h3>';
                                                                 $html .= '<h5>'.$val['desc'].'</h5>';
@@ -229,11 +226,11 @@ if ( !class_exists('Tutor_Setup') ) {
                                                 $html .= '<div class="payment-setting">';
                                                     $html .= '<label for="payment-1" class="label">';
                                                         $html .= '<div>';
-                                                            $html .= '<input type="checkbox" checked name="bank_transfer_withdraw" id="payment-1" class="checkbox payment">';
+                                                            $html .= '<input type="checkbox" name="bank_transfer_withdraw" id="payment-1" class="checkbox payment" '.(isset($options['bank_transfer_withdraw']['enabled']) && $options['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
                                                             $html .= '<span class="check-icon round"></span>';
                                                         $html .= '</div>';
                                                         $html .= '<div>';
-                                                            $html .= '<img src="'.tutor()->url . 'assets/images/payment-icon-1-min.png" alt="Payment Check">';
+                                                            $html .= '<img src="'.tutor()->url . 'assets/images/payment-bank.png" alt="Payment Bank">';
                                                             $html .= '<h4>'.__('Bank','tutor').'</h4>';
                                                         $html .= '</div>';
                                                     $html .= '</label>';
@@ -241,11 +238,11 @@ if ( !class_exists('Tutor_Setup') ) {
                                                 $html .= '<div class="payment-setting">';
                                                     $html .= '<label for="payment-2" class="label">';
                                                         $html .= '<div>';
-                                                            $html .= '<input type="checkbox" name="echeck_withdraw" id="payment-2" class="checkbox payment">';
+                                                            $html .= '<input type="checkbox" name="echeck_withdraw" id="payment-2" class="checkbox payment" '.(isset($options['bank_transfer_withdraw']['enabled']) && $options['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
                                                             $html .= '<span class="check-icon round"></span>';
                                                         $html .= '</div>';
                                                         $html .= '<div>';
-                                                            $html .= '<img src="'.tutor()->url . 'assets/images/payment-icon-2-min.png" alt="Payment echeck">';
+                                                            $html .= '<img src="'.tutor()->url . 'assets/images/payment-echeck.png" alt="Payment echeck">';
                                                             $html .= '<h4>'.__('Check','tutor').'</h4>';
                                                         $html .= '</div>';
                                                     $html .= '</label>';
@@ -253,11 +250,11 @@ if ( !class_exists('Tutor_Setup') ) {
                                                 $html .= '<div class="payment-setting">';
                                                     $html .= '<label for="payment-3" class="label">';
                                                         $html .= '<div>';
-                                                            $html .= '<input type="checkbox" name="paypal_withdraw" id="payment-3" class="checkbox payment">';
+                                                            $html .= '<input type="checkbox" name="paypal_withdraw" id="payment-3" class="checkbox payment" '.(isset($options['bank_transfer_withdraw']['enabled']) && $options['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
                                                             $html .= '<span class="check-icon round"></span>';
                                                         $html .= '</div>';
                                                         $html .= '<div>';
-                                                            $html .= '<img src="'.tutor()->url . 'assets/images/payment-icon-3-min.png" alt="Payment Paypal">';
+                                                            $html .= '<img src="'.tutor()->url . 'assets/images/payment-paypal.png" alt="Payment Paypal">';
                                                             $html .= '<h4>'.__('Paypal','tutor').'</h4>';
                                                         $html .= '</div>';
                                                     $html .= '</label>';
@@ -608,28 +605,28 @@ if ( !class_exists('Tutor_Setup') ) {
                     <div class="wizard-boarding-body">
                         <ul class="slider tutor-boarding">
                             <li>
-                                <!-- <img src="<?php echo tutor()->url.'assets/images/setup-individual.jpg'; ?>" /> -->
-                                <div class="slide-thumb"><img src="https://picsum.photos/540/350" alt="<?php _e('A Powerful, Smart, and Scalable LMS Solution', 'tutor') ?>"/></div>
+
+                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/scalable_lms_solution.jpg'; ?>" alt="<?php _e('A Powerful, Smart, and Scalable LMS Solution', 'tutor') ?>"/></div>
                                 <div class="slide-title"><?php _e('A Powerful, Smart, and Scalable LMS Solution', 'tutor'); ?></div>
                                 <div class="slide-subtitle"><?php _e('From individual instructors to vast eLearning platforms, Tutor LMS grows with you to create your ideal vision of an LMS website.', 'tutor'); ?></div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="https://picsum.photos/540/350" alt="<?php _e('Extensive Course Builder', 'tutor') ?>"/></div>
+                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/extensive_course_builder.jpg'; ?>" alt="<?php _e('Extensive Course Builder', 'tutor') ?>"/></div>
                                 <div class="slide-title"><?php _e('Extensive Course Builder', 'tutor'); ?></div>
                                 <div class="slide-subtitle"><?php _e('Tutor LMS comes with a state-of-the-art frontend course builder. Construct rich and resourceful courses with ease.', 'tutor'); ?></div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="https://picsum.photos/540/350" alt="<?php _e('Advanced Quiz Creator', 'tutor'); ?>"/></div>
+                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/advanced_quiz_creator.jpg'; ?>" alt="<?php _e('Advanced Quiz Creator', 'tutor'); ?>"/></div>
                                 <div class="slide-title"><?php _e('Advanced Quiz Creator', 'tutor'); ?></div>
                                 <div class="slide-subtitle"><?php _e('Build interactive quizzes with the vast selection of question types and verify the learning of your students.', 'tutor'); ?></div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="https://picsum.photos/540/350" alt="<?php _e('Freedom With eCommerce', 'tutor'); ?>"/></div>
+                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/freedom_with_ecommerce.jpg'; ?>" alt="<?php _e('Freedom With eCommerce', 'tutor'); ?>"/></div>
                                 <div class="slide-title"><?php _e('Freedom With eCommerce', 'tutor'); ?></div>
                                 <div class="slide-subtitle"><?php _e('Select an eCommerce plugin and sell courses any way you like and use any payment gateway you want!', 'tutor'); ?></div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="https://picsum.photos/540/350" alt="<?php _e('Reports and Analytics', 'tutor'); ?>"/></div>
+                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/reports_and_analytics.jpg'; ?>" alt="<?php _e('Reports and Analytics', 'tutor'); ?>"/></div>
                                 <div class="slide-title"><?php _e('Reports and Analytics', 'tutor'); ?></div>
                                 <div class="slide-subtitle"><?php _e('Track what type of courses sell the most! Gain insights on user purchases, manage reviews and track quiz attempts.', 'tutor'); ?></div>
                             </li>

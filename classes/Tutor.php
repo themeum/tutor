@@ -221,6 +221,9 @@ final class Tutor{
 
 			self::save_data();//Save initial Page
 			update_option('tutor_version', TUTOR_VERSION);
+
+			// include tutor()->path.'classes/Tutor_Setup.php';
+			// wp_redirect(admin_url('admin.php?page=tutor-setup'));
 		}
 
 		//Set Schedule
