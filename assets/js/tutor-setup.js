@@ -103,6 +103,7 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		const that = $(this);
 		const formData = $("#tutor-setup-form").serialize();
+		console.log('formData->', formData);
 		$.ajax({
 			url: _tutorobject.ajaxurl,
 			type: "POST",
@@ -110,7 +111,7 @@ jQuery(document).ready(function($) {
 			success: function(data) {
 				if (data.success) {
 					//window.location.reload();
-					window.location = $(that).data("url");
+					//window.location = $(that).data("url");
 				}
 			}
 		});

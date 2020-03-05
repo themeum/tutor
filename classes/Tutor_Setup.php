@@ -10,7 +10,7 @@ if ( !class_exists('Tutor_Setup') ) {
             add_action( 'admin_init', array( $this, 'setup_wizard' ) );
             add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
             add_action( 'wp_ajax_setup_action', array( $this, 'tutor_setup_action' ) );
-            add_filter('tutor_wizard_attributes', array( $this, 'tutor_setup_attributes_callback' ));
+            add_filter( 'tutor_wizard_attributes', array( $this, 'tutor_setup_attributes_callback' ) );
         }
 
         function tutor_setup_attributes_callback($attr) {
@@ -28,7 +28,7 @@ if ( !class_exists('Tutor_Setup') ) {
 
         public function tutor_setup_action(){
             $options = (array) maybe_unserialize(get_option('tutor_option'));
-            if(!isset($_POST['action']) && $_POST['action'] != 'setup_action') {
+            if (!isset($_POST['action']) && $_POST['action'] != 'setup_action') {
                 return;
             }
 
@@ -57,15 +57,14 @@ if ( !class_exists('Tutor_Setup') ) {
                 if(isset($_POST[$key])){
                     $payments[$key]['enabled'] = 1;
                 } else {
-                    if($key == 'bank_transfer_withdraw') {
+                    if ($key == 'bank_transfer_withdraw') {
                         unset($payments[$key]['enabled']);
-                    }else{
+                    } else {
                         unset($payments[$key]);
                     }
                 }
             }
             update_option('tutor_withdraw_options', $payments);
-
 
             wp_send_json_success(array('status' => 'success'));
         }
@@ -95,6 +94,7 @@ if ( !class_exists('Tutor_Setup') ) {
             $i = 1;
             $html = '';
             $options = (array) maybe_unserialize(get_option('tutor_option'));
+            $payments = (array) maybe_unserialize(get_option('tutor_withdraw_options'));
             $field_arr = $this->tutor_setup_attributes();
 
             $down_desc_fields = array('rows', 'slider', 'text', 'radio', 'dropdown', 'range', 'payments');
@@ -226,7 +226,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                                 $html .= '<div class="payment-setting">';
                                                     $html .= '<label for="payment-1" class="label">';
                                                         $html .= '<div>';
-                                                            $html .= '<input type="checkbox" name="bank_transfer_withdraw" id="payment-1" class="checkbox payment" '.(isset($options['bank_transfer_withdraw']['enabled']) && $options['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
+                                                            $html .= '<input type="checkbox" name="bank_transfer_withdraw" id="payment-1" class="checkbox payment" '.(isset($payments['bank_transfer_withdraw']['enabled']) && $payments['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
                                                             $html .= '<span class="check-icon round"></span>';
                                                         $html .= '</div>';
                                                         $html .= '<div>';
@@ -238,7 +238,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                                 $html .= '<div class="payment-setting">';
                                                     $html .= '<label for="payment-2" class="label">';
                                                         $html .= '<div>';
-                                                            $html .= '<input type="checkbox" name="echeck_withdraw" id="payment-2" class="checkbox payment" '.(isset($options['bank_transfer_withdraw']['enabled']) && $options['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
+                                                            $html .= '<input type="checkbox" name="echeck_withdraw" id="payment-2" class="checkbox payment" '.(isset($payments['bank_transfer_withdraw']['enabled']) && $payments['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
                                                             $html .= '<span class="check-icon round"></span>';
                                                         $html .= '</div>';
                                                         $html .= '<div>';
@@ -250,7 +250,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                                 $html .= '<div class="payment-setting">';
                                                     $html .= '<label for="payment-3" class="label">';
                                                         $html .= '<div>';
-                                                            $html .= '<input type="checkbox" name="paypal_withdraw" id="payment-3" class="checkbox payment" '.(isset($options['bank_transfer_withdraw']['enabled']) && $options['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
+                                                            $html .= '<input type="checkbox" name="paypal_withdraw" id="payment-3" class="checkbox payment" '.(isset($payments['bank_transfer_withdraw']['enabled']) && $payments['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
                                                             $html .= '<span class="check-icon round"></span>';
                                                         $html .= '</div>';
                                                         $html .= '<div>';
@@ -330,6 +330,9 @@ if ( !class_exists('Tutor_Setup') ) {
                 'general' => array(
                     'lable' => __('General Settings', 'tutor'),
                     'attr' => array(
+                        'enable_course_marketplace' => array(
+                            'type' => 'marketplace'
+                        ),
                         'enable_public_profile' => array(
                             'type' => 'switch',
                             'lable' => __('Public Profile', 'tutor'),
@@ -638,7 +641,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                 <svg xmlns="http://www.w3.org/2000/svg" id="next-arrow-1" width="17" height="12">
                                     <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
                                 </svg>
-                                <span><?php _e('Next', 'tutor'); ?></span>
+                                <span><?php _e('Let’s Start', 'tutor'); ?></span>
                                 <svg xmlns="http://www.w3.org/2000/svg" id="next-arrow-2" width="17" height="12">
                                     <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
                                 </svg>
@@ -686,7 +689,11 @@ if ( !class_exists('Tutor_Setup') ) {
 
                     <div class="wizard-type-footer">
                         <div>
-                            <button class="tutor-type-next primary-btn "><?php _e('Let’s Start', 'tutor'); ?></button>
+                            <button class="tutor-type-next primary-btn "><?php _e('Next', 'tutor'); ?>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="12">
+                                    <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
+                                </svg>
+                            </button>
                         </div>
                         <div>
                             <a href="#" class="tutor-type-skip" class=""><?php _e('Not sure. Let’s go to the next step.', 'tutor'); ?></a>

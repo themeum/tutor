@@ -858,6 +858,7 @@ input[type="checkbox"].input-switchbox:checked ~ .switchbox-icon {
 #next-arrow-2 {
   transform: translateX(18px);
   transition: 0.3s ease-in-out;
+  margin-left: 25px;
 }
 
 #next-arrow-2 path {
