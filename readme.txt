@@ -243,10 +243,10 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.5.6 - 06 March, 2020 =
 
-New: Feature image support for lessons
-Fix: Courses per page issue on course archives in Divi Builder
-Fix: Search issue on custom course archive pages
-Fix: Redirect to next lesson issue after completing lessons (headers sent)
+* New: Feature image support for lessons
+* Fix: Courses per page issue on course archives in Divi Builder
+* Fix: Search issue on custom course archive pages
+* Fix: Redirect to next lesson issue after completing lessons (headers sent)
 
 = 1.5.5 - 27 February, 2020 =
 
