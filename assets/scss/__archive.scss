@@ -709,8 +709,6 @@ Instructor
 .single-instructor-wrap .single-instructor-top{
   padding: 20px;
   border-bottom: 1px solid #e8eff1;
-  
-  
   display: flex;
 }
 
@@ -1430,8 +1428,6 @@ Instructor
   color: #F8C51C;
 }
 .course-rating-meter {
-  
-  
   display: flex;
 }
 .course-rating-meter i.tutor-icon-star-full{
@@ -1686,7 +1682,6 @@ social share
 
 .rtl .tutor-course-lesson h5 .tutor-lesson-duration{
   -webkit-box-flex: 1;
-  
   flex-grow: 1;
   text-align: left;
 }
@@ -2904,15 +2899,11 @@ a.back-to-quiz-questions-btn.tutor-updating-message i{
   margin-bottom: 25px;
 }
 .quiz-builder-question-wrap {
-  
-  
   display: flex;
   margin-bottom: 15px;
 }
 .quiz-builder-question {
   flex: 1;
-  
-  
   display: flex;
   background: #fff;
   padding: 10px;
@@ -3002,8 +2993,6 @@ a.back-to-quiz-questions-btn.tutor-updating-message i{
   transform: translateY(-50%);
 }
 .tutor-quiz-answer-wrap {
-  
-  
   display: flex;
 }
 .tutor-quiz-answer {
@@ -3011,8 +3000,6 @@ a.back-to-quiz-questions-btn.tutor-updating-message i{
   flex: 1;
   padding: 10px 15px;
   border: 1px solid #DEDEDE;
-  
-  
   display: flex;
   line-height: 22px;
   border-radius: 3px;
@@ -3060,8 +3047,6 @@ Tutor Media Upload
 
 .tutor-media-upload-wrap {
   border: 1px solid #DEDEDE;
-  
-  
   display: flex;
   width: 130px;
 }
@@ -3663,7 +3648,7 @@ table.course-single-gradebooks a{
 
 /**
 * END Gradebook
- */
+*/
 
 
 /**
