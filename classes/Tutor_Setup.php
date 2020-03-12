@@ -78,7 +78,6 @@ if ( !class_exists('Tutor_Setup') ) {
         public function setup_wizard() {
             if( isset($_GET['page']) ) {
                 if( $_GET['page'] == 'tutor-setup' ) {
-                    ob_start();
                     $this->tutor_setup_wizard_header();
                     $this->tutor_setup_wizard_boarding();
                     $this->tutor_setup_wizard_type();
