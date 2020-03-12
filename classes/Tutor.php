@@ -179,6 +179,7 @@ final class Tutor{
 		include tutor()->path.'includes/tutor-general-functions.php';
 		include tutor()->path.'includes/tutor-template-functions.php';
 		include tutor()->path.'includes/tutor-template-hook.php';
+		include tutor()->path.'classes/Tutor_Setup.php';
 	}
 
 	//Run the TUTOR right now
@@ -208,7 +209,7 @@ final class Tutor{
 	public function tutor_activate(){
 		$version = get_option('tutor_version');
 		//Save Option
-		if ( ! $version){
+		if ( ! $version ){
 			//Create Database
 			$this->create_database();
 
@@ -221,9 +222,11 @@ final class Tutor{
 
 			self::save_data();//Save initial Page
 			update_option('tutor_version', TUTOR_VERSION);
+		}
 
-			// include tutor()->path.'classes/Tutor_Setup.php';
-			// wp_redirect(admin_url('admin.php?page=tutor-setup'));
+		$wizard = get_option('tutor_wizard');
+		if( !$wizard ) {
+			wp_redirect(admin_url('admin.php?page=tutor-setup'));
 		}
 
 		//Set Schedule

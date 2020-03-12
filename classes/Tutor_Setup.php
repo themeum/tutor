@@ -65,6 +65,9 @@ if ( !class_exists('Tutor_Setup') ) {
                 }
             }
             update_option('tutor_withdraw_options', $payments);
+            
+            // Add wizard flug
+            update_option('tutor_wizard', 'active');
 
             wp_send_json_success(array('status' => 'success'));
         }
