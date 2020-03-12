@@ -26,24 +26,25 @@ if ( ! defined( 'ABSPATH' ) )
 
 	//redirect_to
     $args = array(
-	    'echo' => true,
+	    'echo'                      => true,
 	    // Default 'redirect' value takes the user back to the request URI.
-	    'redirect' => ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
-	    'form_id' => 'loginform',
-	    'label_username' => __( 'Username or Email Address', 'tutor' ),
-	    'label_password' => __( 'Password', 'tutor' ),
-	    'label_remember' => __( 'Remember Me', 'tutor' ),
-	    'label_log_in' => __( 'Log In', 'tutor' ),
-	    'id_username' => 'user_login',
-	    'id_password' => 'user_pass',
-	    'id_remember' => 'rememberme',
-	    'id_submit' => 'wp-submit',
-	    'remember' => true,
-	    'value_username' => tutils()->input_old('log'),
+	    'redirect'                  => ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
+	    'form_id'                   => 'loginform',
+	    'label_username'            => __( 'Username or Email Address', 'tutor' ),
+	    'label_password'            => __( 'Password', 'tutor' ),
+	    'label_remember'            => __( 'Remember Me', 'tutor' ),
+	    'label_log_in'              => __( 'Log In', 'tutor' ),
+	    'label_create_new_account'  => __( 'Create a new account', 'tutor' ),
+	    'id_username'               => 'user_login',
+	    'id_password'               => 'user_pass',
+	    'id_remember'               => 'rememberme',
+	    'id_submit'                 => 'wp-submit',
+	    'remember'                  => true,
+	    'value_username'            => tutils()->input_old('log'),
 	    // Set 'value_remember' to true to default the "Remember me" checkbox to checked.
-	    'value_remember' => false,
-	    'wp_lostpassword_url' => apply_filters('tutor_lostpassword_url', wp_lostpassword_url()),
-	    'wp_lostpassword_label' => __('Forgot Password?', 'tutor'),
+	    'value_remember'            => false,
+	    'wp_lostpassword_url'       => apply_filters('tutor_lostpassword_url', wp_lostpassword_url()),
+	    'wp_lostpassword_label'     => __('Forgot Password?', 'tutor'),
     );
 
     //action="' . esc_url( site_url( 'wp-login.php', 'login_post' ) ) . '"
@@ -76,7 +77,7 @@ if ( ! defined( 'ABSPATH' ) )
 				<input type="hidden" name="redirect_to" value="' . esc_url( $args['redirect'] ) . '" />
 			</p>
 			<p class="tutor-form-register-wrap">
-			    <a href="'. esc_url($register_url). '">'.esc_html__('Create a new account', 'tutor').'</a>
+			    <a href="'. esc_url($register_url). '">'.$args['label_create_new_account'].'</a>
             </p>
 		</form>';
     echo $form;

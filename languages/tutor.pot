@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Tutor LMS\n"
-"POT-Creation-Date: 2020-01-28 12:02+0600\n"
-"PO-Revision-Date: 2020-01-28 12:02+0600\n"
+"POT-Creation-Date: 2020-03-12 15:18+0600\n"
+"PO-Revision-Date: 2020-03-12 15:18+0600\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: classes/Admin.php:220 classes/Template.php:327
+#: classes/Admin.php:220 classes/Template.php:329
 msgid "Permission Denied"
 msgstr ""
 
@@ -222,7 +222,7 @@ msgstr ""
 msgid "Are you sure? it can not be undone."
 msgstr ""
 
-#: classes/Assets.php:85
+#: classes/Assets.php:88
 msgid "Assignment answer can not be empty"
 msgstr ""
 
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Please Sign In first"
 msgstr ""
 
-#: classes/Course.php:531 classes/Lesson.php:257
+#: classes/Course.php:531 classes/Lesson.php:263
 msgid "Please Sign-In"
 msgstr ""
 
@@ -470,51 +470,51 @@ msgstr ""
 msgid "Password Reset Request for %s"
 msgstr ""
 
-#: classes/Instructor.php:40 classes/Instructor.php:139 classes/Student.php:39
+#: classes/Instructor.php:48 classes/Instructor.php:149 classes/Student.php:39
 msgid "First name field is required"
 msgstr ""
 
-#: classes/Instructor.php:41 classes/Instructor.php:140 classes/Student.php:40
+#: classes/Instructor.php:49 classes/Instructor.php:150 classes/Student.php:40
 msgid "Last name field is required"
 msgstr ""
 
-#: classes/Instructor.php:42 classes/Instructor.php:141 classes/Student.php:41
+#: classes/Instructor.php:50 classes/Instructor.php:151 classes/Student.php:41
 msgid "E-Mail field is required"
 msgstr ""
 
-#: classes/Instructor.php:43 classes/Instructor.php:142 classes/Student.php:42
+#: classes/Instructor.php:51 classes/Instructor.php:152 classes/Student.php:42
 msgid "User Name field is required"
 msgstr ""
 
-#: classes/Instructor.php:44 classes/Instructor.php:144 classes/Student.php:43
+#: classes/Instructor.php:52 classes/Instructor.php:154 classes/Student.php:43
 msgid "Password field is required"
 msgstr ""
 
-#: classes/Instructor.php:45 classes/Instructor.php:145 classes/Student.php:44
+#: classes/Instructor.php:53 classes/Instructor.php:155 classes/Student.php:44
 msgid "Password Confirmation field is required"
 msgstr ""
 
-#: classes/Instructor.php:56 classes/Instructor.php:156 classes/Student.php:55
+#: classes/Instructor.php:64 classes/Instructor.php:166 classes/Student.php:55
 msgid "Valid E-Mail is required"
 msgstr ""
 
-#: classes/Instructor.php:59 classes/Instructor.php:159 classes/Student.php:58
+#: classes/Instructor.php:67 classes/Instructor.php:169 classes/Student.php:58
 msgid "Confirm password does not matched with Password field"
 msgstr ""
 
-#: classes/Instructor.php:123
+#: classes/Instructor.php:131
 msgid "Already applied for instructor"
 msgstr ""
 
-#: classes/Instructor.php:129 classes/Template.php:245
+#: classes/Instructor.php:137 classes/Template.php:247
 msgid "Permission denied"
 msgstr ""
 
-#: classes/Instructor.php:143
+#: classes/Instructor.php:153
 msgid "Phone Number field is required"
 msgstr ""
 
-#: classes/Instructor.php:195
+#: classes/Instructor.php:205
 msgid "Instructor has been added successfully"
 msgstr ""
 
@@ -523,7 +523,7 @@ msgstr ""
 #: templates/dashboard/instructor/registration.php:66
 #: templates/dashboard/registration.php:61
 #: templates/dashboard/registration.php:64
-#: views/pages/add_new_instructor.php:68 views/pages/add_new_instructor.php:74
+#: views/pages/add_new_instructor.php:69 views/pages/add_new_instructor.php:75
 msgid "E-Mail"
 msgstr ""
 
@@ -531,24 +531,24 @@ msgstr ""
 msgid "Total Course"
 msgstr ""
 
-#: classes/Lesson.php:47 views/metabox/lesson-metabox.php:3
+#: classes/Lesson.php:52 views/metabox/lesson-metabox.php:3
 msgid "Select Course"
 msgstr ""
 
-#: classes/Lesson.php:48
+#: classes/Lesson.php:53
 msgid "Lesson Video"
 msgstr ""
 
-#: classes/Lesson.php:49 templates/global/attachments.php:23
+#: classes/Lesson.php:54 templates/global/attachments.php:23
 #: templates/single/assignment/content.php:74
 msgid "Attachments"
 msgstr ""
 
-#: classes/Lesson.php:109
+#: classes/Lesson.php:114
 msgid "Draft Lesson"
 msgstr ""
 
-#: classes/Lesson.php:218 classes/Options.php:171
+#: classes/Lesson.php:224 classes/Options.php:171
 #: classes/Question_Answers_List.php:72 classes/Quiz_Attempts_List.php:107
 #: templates/dashboard/assignments/review.php:37
 #: templates/dashboard/earning/statement.php:13
@@ -565,7 +565,7 @@ msgstr ""
 msgid "Unlimited"
 msgstr ""
 
-#: classes/Options.php:86 classes/Utils.php:5275
+#: classes/Options.php:86 classes/Utils.php:5276
 msgid "Dashboard Page"
 msgstr ""
 
@@ -1049,7 +1049,7 @@ msgstr ""
 msgid "Allow multiple instructors to upload their courses."
 msgstr ""
 
-#: classes/Options.php:455 classes/Utils.php:5276
+#: classes/Options.php:455 classes/Utils.php:5277
 msgid "Instructor Registration Page"
 msgstr ""
 
@@ -1079,7 +1079,7 @@ msgstr ""
 msgid "Student Profile settings"
 msgstr ""
 
-#: classes/Options.php:487 classes/Utils.php:5277
+#: classes/Options.php:487 classes/Utils.php:5278
 msgid "Student Registration Page"
 msgstr ""
 
@@ -2110,15 +2110,15 @@ msgstr ""
 msgid "Linkedin URL"
 msgstr ""
 
-#: classes/Utils.php:5234
+#: classes/Utils.php:5235
 msgid "Completed"
 msgstr ""
 
-#: classes/Utils.php:5238
+#: classes/Utils.php:5239
 msgid "In Progress"
 msgstr ""
 
-#: classes/Utils.php:5240
+#: classes/Utils.php:5241
 msgid "Not Taken"
 msgstr ""
 
@@ -2279,21 +2279,23 @@ msgstr ""
 msgid "Placeholder"
 msgstr ""
 
-#: templates/dashboard.php:49 templates/student-public-profile.php:44
+#: templates/dashboard.php:49 templates/dashboard/index.php:48
+#: templates/student-public-profile.php:44
 msgid "Howdy,"
 msgstr ""
 
-#: templates/dashboard.php:59 templates/student-public-profile.php:54
+#: templates/dashboard.php:59 templates/dashboard/index.php:58
+#: templates/student-public-profile.php:54
 #, php-format
 msgid "%d Ratings"
 msgstr ""
 
-#: templates/dashboard.php:74
+#: templates/dashboard.php:74 templates/dashboard/index.php:73
 #, php-format
 msgid "%s Add A New Course "
 msgstr ""
 
-#: templates/dashboard.php:81
+#: templates/dashboard.php:81 templates/dashboard/index.php:80
 #, php-format
 msgid "%s Become an instructor"
 msgstr ""
@@ -2902,7 +2904,7 @@ msgstr ""
 #: templates/dashboard/registration.php:31
 #: templates/dashboard/settings/profile.php:35
 #: templates/dashboard/settings/profile.php:37
-#: views/pages/add_new_instructor.php:28 views/pages/add_new_instructor.php:34
+#: views/pages/add_new_instructor.php:29 views/pages/add_new_instructor.php:35
 msgid "First Name"
 msgstr ""
 
@@ -2913,7 +2915,7 @@ msgstr ""
 #: templates/dashboard/registration.php:41
 #: templates/dashboard/settings/profile.php:44
 #: templates/dashboard/settings/profile.php:46
-#: views/pages/add_new_instructor.php:42 views/pages/add_new_instructor.php:48
+#: views/pages/add_new_instructor.php:43 views/pages/add_new_instructor.php:49
 msgid "Last Name"
 msgstr ""
 
@@ -2921,7 +2923,7 @@ msgstr ""
 #: templates/dashboard/instructor/registration.php:56
 #: templates/dashboard/registration.php:51
 #: templates/dashboard/registration.php:54
-#: views/pages/add_new_instructor.php:55 views/pages/add_new_instructor.php:61
+#: views/pages/add_new_instructor.php:56 views/pages/add_new_instructor.php:62
 msgid "User Name"
 msgstr ""
 
@@ -2930,19 +2932,19 @@ msgstr ""
 #: templates/dashboard/registration.php:74
 #: templates/dashboard/registration.php:77 templates/global/login.php:34
 #: templates/template-part/form-retrieve-password.php:25
-#: views/pages/add_new_instructor.php:94 views/pages/add_new_instructor.php:100
+#: views/pages/add_new_instructor.php:95 views/pages/add_new_instructor.php:101
 msgid "Password"
 msgstr ""
 
 #: templates/dashboard/instructor/registration.php:86
 #: templates/dashboard/registration.php:84
-#: views/pages/add_new_instructor.php:107
+#: views/pages/add_new_instructor.php:108
 msgid "Password confirmation"
 msgstr ""
 
 #: templates/dashboard/instructor/registration.php:89
 #: templates/dashboard/registration.php:87
-#: views/pages/add_new_instructor.php:113
+#: views/pages/add_new_instructor.php:114
 msgid "Password Confirmation"
 msgstr ""
 
@@ -3021,14 +3023,14 @@ msgstr ""
 #: templates/dashboard/my-profile.php:66
 #: templates/dashboard/settings/profile.php:53
 #: templates/dashboard/settings/profile.php:55
-#: views/pages/add_new_instructor.php:81 views/pages/add_new_instructor.php:87
+#: views/pages/add_new_instructor.php:82 views/pages/add_new_instructor.php:88
 msgid "Phone Number"
 msgstr ""
 
 #: templates/dashboard/my-profile.php:75
 #: templates/dashboard/settings/profile.php:64
 #: templates/student-public-profile.php:100
-#: views/pages/add_new_instructor.php:120
+#: views/pages/add_new_instructor.php:121
 msgid "Bio"
 msgstr ""
 
@@ -3435,12 +3437,24 @@ msgstr ""
 msgid "Log In"
 msgstr ""
 
-#: templates/global/login.php:46
+#: templates/global/login.php:37
+msgid "Create a new account"
+msgstr ""
+
+#: templates/global/login.php:47
 msgid "Forgot Password?"
 msgstr ""
 
 #: templates/login.php:26
 msgid "Please Sign-In to view this section"
+msgstr ""
+
+#: templates/loop/add-to-cart-edd.php:17 views/pages/addons.php:59
+msgid "Buy Now"
+msgstr ""
+
+#: templates/loop/add-to-cart-edd.php:17
+msgid "Purchase"
 msgstr ""
 
 #: templates/loop/course-price-edd.php:19
@@ -4246,11 +4260,11 @@ msgstr ""
 msgid "Upload Feature Image"
 msgstr ""
 
-#: views/modal/edit-lesson.php:49
+#: views/modal/edit-lesson.php:51
 msgid "Update Feature Image"
 msgstr ""
 
-#: views/modal/edit-lesson.php:71
+#: views/modal/edit-lesson.php:74
 msgid "Update Lesson"
 msgstr ""
 
@@ -4532,7 +4546,7 @@ msgstr ""
 msgid "Enable "
 msgstr ""
 
-#: views/pages/add_new_instructor.php:3 views/pages/add_new_instructor.php:137
+#: views/pages/add_new_instructor.php:3 views/pages/add_new_instructor.php:138
 msgid "Add new instructor"
 msgstr ""
 
@@ -4551,10 +4565,6 @@ msgstr ""
 #: views/pages/addons.php:36
 #, php-format
 msgid "Last checked %s ago, It will check again after %s from now"
-msgstr ""
-
-#: views/pages/addons.php:59
-msgid "Buy Now"
 msgstr ""
 
 #: views/pages/addons.php:79 views/pages/enable_disable_addons.php:84
