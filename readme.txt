@@ -1,5 +1,5 @@
 === Tutor LMS - eLearning and online course solution ===
-Contributors: themeum, kawshar, mhshohel, jakirhasan, anik4e, delowardev, rejuancse, fahimmurshed, badsha_eee, faisalahmed29, joomcoder, sksaaju
+Contributors: themeum, kawshar, mhshohel, jakirhasan, anik4e, delowardev, rejuancse, badsha_eee, faisalahmed29, joomcoder, sksaaju
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
