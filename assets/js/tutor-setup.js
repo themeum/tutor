@@ -1,6 +1,40 @@
 jQuery(document).ready(function($) {
   "use strict";
 
+
+	const url = window.location.href;
+	if (url.indexOf('#') > 0) {
+		$(".tutor-wizard-container > div").removeClass("active");
+		$(".tutor-wizard-container > div.tutor-setup-wizard-settings").addClass("active");
+		const split_data = url.split("#");
+		if (split_data[1]) {
+			const _length = $(".tutor-setup-title li."+split_data[1]).index();
+			$(".tutor-setup-title li").removeClass("current");
+			$(".tutor-setup-content li").removeClass("active");
+			for (let index = 0; index <= _length; index++) {
+				$(".tutor-setup-title li").eq(index).addClass('active');
+				if(_length == index){
+					$(".tutor-setup-title li").eq(index).addClass("current");
+					$(".tutor-setup-content li").eq(index).addClass("active");
+				}
+			}
+		}
+	}
+
+	$(".tutor-setup-title li").on("click", function(e) {
+		e.preventDefault();
+		const _length = $(this).closest("li").index();
+		$(".tutor-setup-title li").removeClass("active");
+		$(".tutor-setup-title li").eq(_length).addClass("active");
+		$(".tutor-setup-content li").removeClass("active");
+		$(".tutor-setup-content li").eq(_length).addClass("active");
+		window.location.hash = $("ul.tutor-setup-title li").eq(_length).data("url");
+		for (let index = 0; index <= _length; index++) {
+			$(".tutor-setup-title li").eq(index).addClass('active');
+		}
+	});
+	
+
 	/* ---------------------
 	* Wizard Skip
 	* ---------------------- */
@@ -32,14 +66,13 @@ jQuery(document).ready(function($) {
 	* ---------------------- */
 	$(".tutor-setup-previous").on("click", function(e) {
 		e.preventDefault();
-		const _index = $(this)
-		.closest("li")
-		.index();
+		const _index = $(this).closest("li").index();
 		if (_index > 0) {
 			$("ul.tutor-setup-title li").eq(_index).removeClass("active");
 			$("ul.tutor-setup-title li").eq(_index - 1).addClass("active");
 			$("ul.tutor-setup-content li").removeClass("active").eq(_index - 1).addClass("active");
 			$("ul.tutor-setup-title li").removeClass("current").eq(_index - 1).addClass("current");
+			window.location.hash = $("ul.tutor-setup-title li").eq(_index - 1).data('url');
 		}
 	});
 	$(".tutor-setup-skip, .tutor-setup-next").on("click", function(e) {
@@ -48,6 +81,7 @@ jQuery(document).ready(function($) {
 		$("ul.tutor-setup-title li").eq(_index).addClass("active");
 		$("ul.tutor-setup-content li").removeClass("active").eq(_index).addClass("active");
 		$("ul.tutor-setup-title li").removeClass("current").eq(_index).addClass("current");
+		window.location.hash = $("ul.tutor-setup-title li").eq(_index).data("url");
 	});
 
 	/* ---------------------
@@ -62,6 +96,7 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		$(".tutor-setup-wizard-type").removeClass("active");
 		$(".tutor-setup-wizard-settings").addClass("active");
+		window.location.hash = "general";
 	});
 
 	/* ---------------------
@@ -101,9 +136,7 @@ jQuery(document).ready(function($) {
 	* ---------------------- */
 	$(".tutor-redirect").on("click", function(e) {
 		e.preventDefault();
-		const that = $(this);
 		const formData = $("#tutor-setup-form").serialize();
-		console.log('formData->', formData);
 		$.ajax({
 			url: _tutorobject.ajaxurl,
 			type: "POST",
@@ -111,7 +144,7 @@ jQuery(document).ready(function($) {
 			success: function(data) {
 				if (data.success) {
 					//window.location.reload();
-					//window.location = $(that).data("url");
+					window.location = $(that).data("url");
 				}
 			}
 		});

@@ -77,8 +77,12 @@ if ( !class_exists('Tutor_Setup') ) {
 
         public function setup_wizard() {
             if( isset($_GET['page']) ) {
-                if( $_GET['page'] == 'tutor-setup' ) {
-                    ob_start();
+                if ( $_GET['page'] == 'tutor-setup' ) {
+
+                    // echo '<pre>';
+                    // print_r( $_SERVER );
+                    // echo '</pre>';
+
                     $this->tutor_setup_wizard_header();
                     $this->tutor_setup_wizard_boarding();
                     $this->tutor_setup_wizard_type();
@@ -436,7 +440,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                     'title' => __('Last Attempt', 'tutor'),
                                     'desc' => __('Pick the most recent attempt', 'tutor'),
                                     'value' => 'last_attempt',
-                                ),          
+                                ),
                             ),
                             'tooltip' => __('When you allow multiple quiz attempts, which grade do you want to count?', 'tutor'),
                         )
@@ -522,13 +526,13 @@ if ( !class_exists('Tutor_Setup') ) {
                 <div class="tutor-wrapper-boarding tutor-setup-wizard-settings">
                     <div class="tutor-setup-wrapper">
                         <ul class="tutor-setup-title">
-                            <li class="active current"><?php _e('General', 'tutor'); ?></li>
-                            <li><?php _e('Course', 'tutor'); ?></li>
-                            <li><?php _e('Quiz', 'tutor'); ?></li>
-                            <li><?php _e('Instructor', 'tutor'); ?></li>
-                            <li><?php _e('Profile', 'tutor'); ?></li>
-                            <li><?php _e('Payment', 'tutor'); ?></li>
-                            <li><?php _e('Finish', 'tutor'); ?></li>
+                            <li data-url="general" class="general active current"><?php _e('General', 'tutor'); ?></li>
+                            <li data-url="course" class="course"><?php _e('Course', 'tutor'); ?></li>
+                            <li data-url="quiz" class="quiz"><?php _e('Quiz', 'tutor'); ?></li>
+                            <li data-url="instructor" class="instructor"><?php _e('Instructor', 'tutor'); ?></li>
+                            <li data-url="profile" class="profile"><?php _e('Profile', 'tutor'); ?></li>
+                            <li data-url="payment" class="payment"><?php _e('Payment', 'tutor'); ?></li>
+                            <li data-url="finish" class="finish"><?php _e('Finish', 'tutor'); ?></li>
                         </ul>
 
 
@@ -548,7 +552,8 @@ if ( !class_exists('Tutor_Setup') ) {
                                             <p><?php _e( 'If you need further assistance, please don’t hesitate to contact us via our <a href="https://www.themeum.com/contact-us/">contact form.</a>', 'tutor' ); ?></p>
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
-                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('edit.php?post_type=courses'); ?>"><?php _e('Finish', 'tutor'); ?></button>
+                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>"><?php _e('CREATE A NEW COURSE', 'tutor'); ?></button>
+                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor_settings'); ?>"><?php _e('EXPLORE ADDONS', 'tutor'); ?></button>
                                         </div>
                                     </div>
                                 </li>

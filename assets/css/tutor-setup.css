@@ -121,6 +121,9 @@ ul.tutor-setup-content li.active {
 .tutor-setup-title li {
   position: relative;
 }
+.tutor-setup-title li:hover {
+  cursor: pointer;
+}
 
 .tutor-setup-title li:before {
   content: "";
