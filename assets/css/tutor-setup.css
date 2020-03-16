@@ -1623,7 +1623,7 @@ input.checkbox {
   place-items: center;
   grid-gap: 28px;
   width: 280px;
-  height: 352px;
+  /* height: 352px; */
   border: 2px solid transparent;
   border-radius: 3px;
   box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);

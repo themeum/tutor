@@ -19,7 +19,7 @@ if ( !class_exists('Tutor_Setup') ) {
             $data_arr = $this->tutor_setup_attributes();
             foreach ($data_arr as $key => $section) {
                 foreach ($section['attr'] as $k => $val) {
-                    $final_arr[$k] = $options[$k];
+                    $final_arr[$k] = isset($options[$k]) ? $options[$k] : '';
                 }
             }
             return $final_arr;
@@ -33,7 +33,7 @@ if ( !class_exists('Tutor_Setup') ) {
             }
 
             // General Settings
-            $change_data = apply_filters('tutor_wizard_attributes');
+            $change_data = apply_filters('tutor_wizard_attributes', array());
             foreach ($change_data as $key => $value) {
                 if ( isset($_POST[$key]) ) {
                     if ($_POST[$key] != $change_data[$key]) {
@@ -265,20 +265,22 @@ if ( !class_exists('Tutor_Setup') ) {
                                         break;
 
                                         case 'range':
+                                            $earning_instructor = isset($options["earning_instructor_commission"]) ? $options["earning_instructor_commission"] : 80;
+                                            $earning_admin = isset($options["earning_admin_commission"]) ? $options["earning_admin_commission"] : 20;
                                             $html .= '<div class="limit-slider column-1">';
                                                 $html .= '<div>';
-                                                    $html .= '<input type="range" min="0" max="100" step="1" value="'.$options["earning_instructor_commission"].'" class="range-input double-range-slider" name=""/>';
+                                                    $html .= '<input type="range" min="0" max="100" step="1" value="'.$earning_instructor.'" class="range-input double-range-slider" name=""/>';
                                                 $html .= '</div>';
                                                 $html .= '<div class="commision-data">';
                                                     $html .= '<div class="data">';
-                                                        $html .= '<h4 class="range-value-1">'.$options["earning_instructor_commission"].'%</h4>';
+                                                        $html .= '<h4 class="range-value-1">'.$earning_instructor.'%</h4>';
                                                         $html .= '<h5>'.__('Instructor', 'tutor').'</h5>';
-                                                        $html .= '<input type="hidden" min="0" max="100" step="1" value="'.$options["earning_instructor_commission"].'" class="range-value-data-1 range-input" name="earning_instructor_commission"/>';
+                                                        $html .= '<input type="hidden" min="0" max="100" step="1" value="'.$earning_instructor.'" class="range-value-data-1 range-input" name="earning_instructor_commission"/>';
                                                     $html .= '</div>';
                                                     $html .= '<div class="data">';
-                                                        $html .= '<h4 class="range-value-2">'.$options["earning_admin_commission"].'%</h4>';
+                                                        $html .= '<h4 class="range-value-2">'.$earning_admin.'%</h4>';
                                                         $html .= '<h5>'.__('Admin', 'tutor').'</h5>';
-                                                        $html .= '<input type="hidden" min="0" max="100" step="1" value="'.$options["earning_admin_commission"].'" class="range-value-data-2 range-input" name="earning_admin_commission"/>';
+                                                        $html .= '<input type="hidden" min="0" max="100" step="1" value="'.$earning_admin.'" class="range-value-data-2 range-input" name="earning_admin_commission"/>';
                                                     $html .= '</div>';
                                                 $html .= '</div>';
                                             $html .= '</div> ';
@@ -551,7 +553,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
                                             <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>"><?php _e('CREATE A NEW COURSE', 'tutor'); ?></button>
-                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor_settings'); ?>"><?php _e('EXPLORE ADDONS', 'tutor'); ?></button>
+                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>"><?php _e('EXPLORE ADDONS', 'tutor'); ?></button>
                                         </div>
                                     </div>
                                 </li>
@@ -673,7 +675,7 @@ if ( !class_exists('Tutor_Setup') ) {
                             <input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace_setup" value="0" <?php if(!$course_marketplace){ echo 'checked'; } ?> />
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-0">
-                                <img src="<?php echo tutor()->url.'assets/images/single-marketplace.svg'; ?>" />
+                                <img src="<?php echo tutor()->url.'assets/images/single-marketplace.png'; ?>" />
                                 <div class="title"><?php _e( 'Individual', 'tutor' ); ?></div>
                                 <div class="subtitle"><?php _e( 'I want to start my solo journey as an educator and spread my knowledge.', 'tutor' ); ?></div>
                             </label>
@@ -683,7 +685,7 @@ if ( !class_exists('Tutor_Setup') ) {
                             <input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace_setup" value="1" <?php if($course_marketplace){ echo 'checked'; } ?>/>
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-1">
-                                <img src="<?php echo tutor()->url.'assets/images/multiple-marketplace.svg'; ?>" />
+                                <img src="<?php echo tutor()->url.'assets/images/multiple-marketplace.png'; ?>" />
                                 <div class="title"><?php _e( 'Marketplace', 'tutor' ); ?></div>
                                 <div class="subtitle"><?php _e( 'I want to create an eLearning platform to let anyone earn by teaching online.', 'tutor' ); ?></div>
                             </label>

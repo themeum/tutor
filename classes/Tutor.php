@@ -186,6 +186,12 @@ final class Tutor{
 	public function run(){
 		do_action('tutor_before_run');
 
+		$wizard = get_option('tutor_wizard');
+		if( !$wizard ) {
+			wp_redirect(admin_url('admin.php?page=tutor-setup'));
+			update_option('tutor_wizard', 'active');
+		}
+
 		register_activation_hook( TUTOR_FILE, array($this, 'tutor_activate' ) );
 		register_deactivation_hook(TUTOR_FILE, array($this, 'tutor_deactivation'));
 
@@ -222,11 +228,6 @@ final class Tutor{
 
 			self::save_data();//Save initial Page
 			update_option('tutor_version', TUTOR_VERSION);
-		}
-
-		$wizard = get_option('tutor_wizard');
-		if( !$wizard ) {
-			wp_redirect(admin_url('admin.php?page=tutor-setup'));
 		}
 
 		//Set Schedule
@@ -558,6 +559,9 @@ final class Tutor{
 			'email_from_name'                   => get_option('blogname'),
 			'email_from_address'                => get_option('admin_email'),
 			'email_footer_text'                 => '',
+			'earning_admin_commission'			=> '20',
+			'earning_admin_commission'			=> '20',
+			'earning_instructor_commission'		=> '80'
 		);
 		return $options;
 	}

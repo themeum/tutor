@@ -135,6 +135,7 @@ jQuery(document).ready(function($) {
 	* Form Submit and Redirect after Finished
 	* ---------------------- */
 	$(".tutor-redirect").on("click", function(e) {
+		const that = $(this)
 		e.preventDefault();
 		const formData = $("#tutor-setup-form").serialize();
 		$.ajax({
@@ -143,8 +144,7 @@ jQuery(document).ready(function($) {
 			data: formData,
 			success: function(data) {
 				if (data.success) {
-					//window.location.reload();
-					window.location = $(that).data("url");
+					window.location = that.data("url");
 				}
 			}
 		});
