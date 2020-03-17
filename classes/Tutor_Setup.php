@@ -695,6 +695,10 @@ if ( ! defined( 'ABSPATH' ) )
 
                     <div class="wizard-type-footer">
                         <div>
+                            <button class="tutor-setup-type-previous previous animated-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="prev-arrow-1" width="17" height="12"><path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"></path></svg><span>Previous</span><svg xmlns="http://www.w3.org/2000/svg" id="prev-arrow-2" width="17" height="12"><path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"></path></svg>
+                            </button>
+
                             <button class="tutor-type-next primary-btn "><?php _e('Next', 'tutor'); ?>
                             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="12">
                                     <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>

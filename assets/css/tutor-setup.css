@@ -827,7 +827,9 @@ input[type="checkbox"].input-switchbox:checked ~ .switchbox-icon {
   cursor: pointer;
   outline: none;
 }
-
+.tutor-type-next {
+  margin-left: 10px;
+}
 .animated-btn span {
   position: absolute;
   top: 0;

@@ -75,6 +75,10 @@ jQuery(document).ready(function($) {
 			window.location.hash = $("ul.tutor-setup-title li").eq(_index - 1).data('url');
 		}
 	});
+	$('.tutor-setup-type-previous').on("click", function(e){
+		$('.tutor-setup-wizard-type').removeClass('active');
+		$('.tutor-setup-wizard-boarding').addClass('active');
+	});
 	$(".tutor-setup-skip, .tutor-setup-next").on("click", function(e) {
 		e.preventDefault();
 		const _index = $(this).closest("li").index() + 1;
