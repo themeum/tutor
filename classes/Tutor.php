@@ -137,6 +137,7 @@ final class Tutor{
 		$this->form_handler = new FormHandler();
 		$this->email = new Email();
 		$this->rest_api = new RestAPI();
+		$this->setup = new Tutor_Setup();
 
 		//Integrations
 		$this->woocommerce = new WooCommerce();
@@ -151,6 +152,22 @@ final class Tutor{
 		do_action('tutor_loaded');
 
 		add_action( 'init', array( $this, 'init_action' ) );
+		
+		add_action( 'activated_plugin', array( $this, 'activated_tutor' ) );
+	}
+
+	/**
+	 * @param $className
+	 *
+	 * Run after the activate plugins
+	 */
+	public function activated_tutor( $plugin ) {
+		if( $plugin == tutor()->basename ) {
+			if( (! get_option('tutor_wizard') ) && version_compare(TUTOR_VERSION, '1.5.0', '>') ) {
+				update_option('tutor_wizard', 'active');
+				exit(wp_redirect(admin_url('admin.php?page=tutor-setup')));
+			}
+		}
 	}
 
 	/**
@@ -179,18 +196,11 @@ final class Tutor{
 		include tutor()->path.'includes/tutor-general-functions.php';
 		include tutor()->path.'includes/tutor-template-functions.php';
 		include tutor()->path.'includes/tutor-template-hook.php';
-		include tutor()->path.'classes/Tutor_Setup.php';
 	}
 
 	//Run the TUTOR right now
 	public function run(){
 		do_action('tutor_before_run');
-
-		$wizard = get_option('tutor_wizard');
-		if( !$wizard ) {
-			wp_redirect(admin_url('admin.php?page=tutor-setup'));
-			update_option('tutor_wizard', 'active');
-		}
 
 		register_activation_hook( TUTOR_FILE, array($this, 'tutor_activate' ) );
 		register_deactivation_hook(TUTOR_FILE, array($this, 'tutor_deactivation'));

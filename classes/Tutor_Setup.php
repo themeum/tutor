@@ -1,9 +1,11 @@
 <?php
-defined( 'ABSPATH' ) || exit;
+namespace TUTOR;
 
-if ( !class_exists('Tutor_Setup') ) {
+if ( ! defined( 'ABSPATH' ) )
+	exit;
+
+
     class Tutor_Setup {
-
 
         public function __construct() {
             add_action( 'admin_menu', array( $this, 'admin_menus' ) );
@@ -652,8 +654,7 @@ if ( !class_exists('Tutor_Setup') ) {
                                 </svg>
                             </button>
                         </div>
-                        <div><a class="tutor-boarding-skip" href="#"><?php _e('I already know, Skip it!', 'tutor'); ?></a></div>
-                        <div><?php _e('Contact with Live support', 'tutor'); ?></div>
+                        <div><a class="tutor-boarding-skip" href="#"><?php _e('I already know, skip this!', 'tutor'); ?></a></div>
                     </div>
                 </div>
             </div>
@@ -740,15 +741,18 @@ if ( !class_exists('Tutor_Setup') ) {
 
 
         public function enqueue_scripts() {
-            wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.css', array(), tutor()->version );
-            wp_enqueue_style( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.css', array(), tutor()->version );
-            wp_enqueue_style( 'tutor-slick-theme', tutor()->url . 'assets/packages/slick/slick-theme.css', array(), tutor()->version );
-            wp_register_script( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.min.js', array( 'jquery' ), tutor()->version, true );
-            wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'jquery', 'tutor-slick' ), tutor()->version, true );
-            wp_localize_script('tutor-setup', '_tutorobject', array('ajaxurl' => admin_url('admin-ajax.php')));
+            if (isset($_GET['page'])) {
+                if ($_GET['page'] == 'tutor-setup') {
+                    wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.css', array(), tutor()->version );
+                    wp_enqueue_style( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.css', array(), tutor()->version );
+                    wp_enqueue_style( 'tutor-slick-theme', tutor()->url . 'assets/packages/slick/slick-theme.css', array(), tutor()->version );
+                    wp_register_script( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.min.js', array( 'jquery' ), tutor()->version, true );
+                    wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'jquery', 'tutor-slick' ), tutor()->version, true );
+                    wp_localize_script('tutor-setup', '_tutorobject', array('ajaxurl' => admin_url('admin-ajax.php')));
+                }
+            }
         }
 
 
     }
-    new Tutor_Setup();
-}
+
