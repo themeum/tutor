@@ -25,19 +25,19 @@
     <div class="tutor-dashboard-info-cards">
         <div class="tutor-dashboard-info-card">
             <p>
-                <span><?php _e('Enrolled Course', 'tutor'); ?></span>
+                <span><?php _e('Enrolled Courses', 'tutor'); ?></span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($enrolled_course_count); ?></span>
             </p>
         </div>
         <div class="tutor-dashboard-info-card">
             <p>
-                <span><?php _e('Active Course', 'tutor'); ?></span>
+                <span><?php _e('Active Courses', 'tutor'); ?></span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($active_course_count); ?></span>
             </p>
         </div>
         <div class="tutor-dashboard-info-card">
             <p>
-                <span><?php _e('Completed Course', 'tutor'); ?></span>
+                <span><?php _e('Completed Courses', 'tutor'); ?></span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($completed_course_count); ?></span>
             </p>
         </div>
@@ -59,7 +59,7 @@
             </div>
             <div class="tutor-dashboard-info-card">
                 <p>
-                    <span><?php _e('Total Earning', 'tutor'); ?></span>
+                    <span><?php _e('Total Earnings', 'tutor'); ?></span>
                     <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></span>
                 </p>
             </div>

@@ -45,9 +45,18 @@ class Shortcode {
 	 * @since v.1.0.0
 	 */
 	public function tutor_dashboard(){
+		global $wp_query;
+
 		ob_start();
 		if (is_user_logged_in()){
-			tutor_load_template( 'dashboard.index' );
+			/**
+			 * Added isset() Condition to avoid infinite loop since v.1.5.4
+			 * This has cause error by others plugin, Such AS SEO
+			 */
+
+			if ( ! isset($wp_query->query_vars['tutor_dashboard_page'])){
+				tutor_load_template( 'dashboard.index' );
+			}
 		}else{
 			tutor_load_template( 'global.login' );
 		}
