@@ -21,6 +21,13 @@
   box-sizing: border-box;
 }
 
+a:hover,
+a:visited,
+a:active,
+a:focus {
+  color: var(--primary-btn);
+}
+
 body {
   font-family: "Open Sans", sans-serif;
   font-size: 12px;
@@ -277,11 +284,9 @@ ul.tutor-setup-content li.active {
   text-align: center;
   color: var(--secondary-text);
 }
-
 .tutor-setup-content-heading.greetings .content p {
   color: var(--primary-text);
 }
-
 /* Lesson Permalink Input */
 .tutor-setting input[type="text"].lesson-permalink,
 .tutor-setting textarea.lesson-message {
@@ -616,8 +621,8 @@ input#attempts-allowed-1:checked ~ .label-text-2 input {
 }
 
 .course-per-page,
-  input[type="radio"].course-p:checked,
-  + input[type="number"].attempts:focus {
+input[type="radio"].course-p:checked,
++ input[type="number"].attempts:focus {
   border-color: var(--primary-btn);
 }
 
