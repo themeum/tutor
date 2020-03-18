@@ -877,6 +877,9 @@ button.next:hover svg{
   color: #ffffff;
 }
 
+.next.animated-btn:hover{
+  background: #3254C1;
+}
 
 .previous.animated-btn svg {
   transform: rotate(180deg);
@@ -922,7 +925,7 @@ button.tutor-setup-skip {
 }
 
 button.tutor-setup-skip:hover {
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+  color: #3254C1;
 }
 
 .tutor-setting .grade-calculation {
@@ -1069,6 +1072,15 @@ button.tutor-setup-skip:hover {
   grid-gap: 30px;
   place-content: flex-start;
 }
+.limit-slider-has-parent{
+  display: flex;
+}
+.tutor-setting .limit-slider > strong:last-child,
+.tutor-setting .limit-slider > span:last-child{
+  margin-left: 32px;
+  min-width: 15px;
+  text-align: right;
+}
 
 .tutor-setting .content .limit-slider h5 {
   font-size: 12px;
@@ -1083,14 +1095,13 @@ button.tutor-setup-skip:hover {
   font-weight: 600;
 }
 .course-setting-wrapper .settings .limit-slider {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
   grid-gap: 30px;
-  place-items: center;
+  align-items: center;
+  justify-content: space-between;
 }
 /* Time Limit */
 .limit-slider input[type="range"].range-input {
-  width: 100%;
   outline: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1099,25 +1110,29 @@ button.tutor-setup-skip:hover {
   max-width: 100%;
   height: 6px;
   border-radius: 8px;
-  background-color: #f0f3f6;
-  background-image: url(../images/slider-dot.png);
+  background-color: var(--primary-btn);
+  /*background-image: url(../images/slider-dot.png);*/
   background-repeat: repeat-x;
   background-size: contain;
   background-position: center;
+  flex-grow: 1;
 }
 .limit-slider .range-value {
   margin-right: 5px;
+  min-width: 15px;
+  display: inline-block;
 }
 /* For Chrome (-webkit-slider-thumb) */
 input[type="range"].range-input::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   cursor: pointer;
-  background-color: #f0f3f6;
-  border: 5px solid #3057d5;
+  background-color: #cbcfd3;
+  border: 6px solid white;
+  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.28);
 }
 
 /* For Mozilla (-moz-range-track and -moz-range-thumb) */
@@ -1153,7 +1168,7 @@ input[type="range"].range-input::-moz-range-thumb {
   max-width: 100%;
   height: 6px;
   border-radius: 8px;
-  background-color: rgba(47, 87, 213, 0.39);
+  background-color: var(--primary-btn);
   box-shadow: inset 0 0 0 1px rgba(47, 87, 213, 0.15);
 }
 
@@ -1535,7 +1550,14 @@ input.checkbox {
   line-height: 1.69;
   letter-spacing: normal;
   text-align: center;
-  color: #686d73;
+  color: var(--primary-btn);
+}
+
+
+.wizard-boarding-footer:hover,
+.wizard-boarding-footer a:hover,
+.tutor-type-skip:hover{
+  color: #3254C1;
 }
 
 .wizard-boarding-footer {

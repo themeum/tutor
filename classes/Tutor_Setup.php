@@ -199,7 +199,7 @@ if ( ! defined( 'ABSPATH' ) )
                                                     $html .= isset($options[$key]['time']) ? $options[$key]['time'] : '';
                                                     $html .= '</span>';
                                                 } else {
-                                                    $html .= '<input type="range" name="'.$key.'" min="'.(isset($field['min']) ? $field['min'] : "").'" max="'.(isset($field['max']) ? $field['max'] : 50 ).'" step="1" value="'.(isset($options[$key]) ? $options[$key] : '').'"  class="range-input"/>';
+                                                    $html .= '<input type="range" name="'.$key.'" min="'.(isset($field['min']) ? $field['min'] : "").'" max="'.(isset($field['max']) ? $field['max'] : 30 ).'" step="1" value="'.(isset($options[$key]) ? $options[$key] : '').'"  class="range-input"/>';
                                                     $html .= ' <strong class="range-value">'.(isset($options[$key]) ? $options[$key] : '').'</strong>';
                                                 }
                                             $html .= '</div>';
@@ -257,7 +257,7 @@ if ( ! defined( 'ABSPATH' ) )
                                             $earning_instructor = isset($options["earning_instructor_commission"]) ? $options["earning_instructor_commission"] : 80;
                                             $earning_admin = isset($options["earning_admin_commission"]) ? $options["earning_admin_commission"] : 20;
                                             $html .= '<div class="limit-slider column-1">';
-                                                $html .= '<div>';
+                                                $html .= '<div class="limit-slider-has-parent">';
                                                     $html .= '<input type="range" min="0" max="100" step="1" value="'.$earning_instructor.'" class="range-input double-range-slider" name=""/>';
                                                 $html .= '</div>';
                                                 $html .= '<div class="commision-data">';
