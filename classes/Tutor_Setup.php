@@ -655,7 +655,7 @@ if ( ! defined( 'ABSPATH' ) )
                                 </svg>
                             </button>
                         </div>
-                        <div><a class="tutor-boarding-skip" href="#"><?php _e('I already know, skip this!', 'tutor'); ?></a></div>
+                        <div><a href="<?php echo admin_url(); ?>"><?php _e('I already know, skip this!', 'tutor'); ?></a></div>
                     </div>
                 </div>
             </div>
