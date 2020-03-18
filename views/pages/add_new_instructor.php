@@ -4,6 +4,7 @@
     <hr class="wp-header-end">
 
     <form action="" id="new-instructor-form" method="post">
+        <?php tutor_nonce_field(); ?>
         <input type="hidden" name="action" value="add_new_instructor">
 
 

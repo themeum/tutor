@@ -11,7 +11,8 @@ class Upgrader {
 	public function __construct() {
 		add_action('admin_init', array($this, 'init_upgrader'));
 
-		add_action( 'in_plugin_update_message-tutor/tutor.php', array( $this, 'in_plugin_update_message' ), 10, 2 );
+		$base_name = tutor()->basename;
+		add_action( 'in_plugin_update_message-'.$base_name, array( $this, 'in_plugin_update_message' ), 10, 2 );
 
 		/**
 		 * Installing Gradebook Addon from TutorPro
@@ -116,7 +117,5 @@ class Upgrader {
 		}
 
 	}
-
-
 
 }

@@ -332,7 +332,6 @@ jQuery(document).ready(function($){
                     if (errors && Object.keys(errors).length){
                         $.each(data.data.errors, function( index, value ) {
                             if (isObject(value)){
-
                                 $.each(value, function( key, value1 ) {
                                     errorMsg += '<p class="tutor-required-fields">'+value1[0]+'</p>';
                                 });
@@ -348,10 +347,42 @@ jQuery(document).ready(function($){
         });
     });
 
+
+    /**
+     * Instructor block unblock action
+     * @since v.1.5.3
+     */
+
+    $(document).on('click', 'a.instructor-action', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+        var action = $that.attr('data-action');
+        var instructor_id = $that.attr('data-instructor-id');
+
+        var nonce_key = tutor_data.nonce_key;
+        var json_data = { instructor_id : instructor_id, action_name : action, action: 'instructor_approval_action'};
+        json_data[nonce_key] = tutor_data[nonce_key];
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : json_data,
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                location.reload(true);
+            },
+            complete: function () {
+                $that.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
     function isObject (value) {
         return value && typeof value === 'object' && value.constructor === Object;
     }
-
 
     /**
      * Tutor Assignments JS

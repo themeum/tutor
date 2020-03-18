@@ -74,7 +74,7 @@
 		endwhile;
 		wp_reset_postdata();
     else:
-        echo "<div class='tutor-mycourse-wrap'><div class='tutor-mycourse-content'>".__('There\'s no active course', 'tutor')."</div></div>";
+        echo "<div class='tutor-mycourse-wrap'><div class='tutor-mycourse-content'>".__('You are not enrolled in any course at this moment.', 'tutor')."</div></div>";
 	endif;
 
 	?>
