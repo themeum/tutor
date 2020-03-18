@@ -79,7 +79,6 @@ if ( ! defined( 'ABSPATH' ) )
             add_dashboard_page( '', '', 'manage_options', 'tutor-setup', '' );
         }
 
-
         public function setup_wizard() {
             if( isset($_GET['page']) ) {
                 if( $_GET['page'] == 'tutor-setup' ) {
