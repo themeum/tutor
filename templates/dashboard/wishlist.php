@@ -14,7 +14,6 @@ global $post; ?>
 	<?php
 	$wishlists = tutor_utils()->get_wishlist();
 
-
 	if (is_array($wishlists) && count($wishlists)):
         foreach ($wishlists as $post):
 	        setup_postdata($post);
@@ -40,7 +39,8 @@ global $post; ?>
 		wp_reset_postdata();
 
 	else:
-        echo "<div class=\"tutor-col\">".esc_html('There\'s no active course')."</div>";
+        $msg = __('You do not have any course on the wishlist yet.', 'tutor');
+        echo "<div class=\"tutor-col\">{$msg}</div>";
 	endif;
 
 	?>

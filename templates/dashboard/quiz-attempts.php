@@ -101,5 +101,5 @@ if ( $quiz_attempts_count ){
 		?>
     </div>
 <?php } else {
-	_e('There is no quiz attempts', 'tutor');
+	_e('You have not attempted for any quiz yet.', 'tutor');
 } ?>

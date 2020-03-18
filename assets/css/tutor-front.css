@@ -694,6 +694,33 @@ table.course-single-gradebooks .datetime {
   font-size: 80%;
 }
 
+.tutor-course-lessons .tutor-course-lesson h5 i.tutor-lesson-thumbnail-icon {
+  height: 50px;
+  width: 70px;
+  border-radius: 3px;
+  text-align: center;
+  line-height: 50px;
+  color: #fff;
+  margin-right: 10px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  font-size: 20px;
+  background-position: center center !important;
+  background-size: cover !important;
+}
+
+.tutor-course-lessons .tutor-course-lesson h5 i.tutor-lesson-thumbnail-icon:after {
+  position: absolute;
+  content: '';
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
 /* ***********************      */
 /* Single Lesson  */
 /************************       */
@@ -4929,6 +4956,26 @@ Lesson Edit Modal
   position: -webkit-sticky;
 }
 
+.tutor-option-field .tutor-lesson-edit-feature-img {
+  width: 100px;
+  position: relative;
+}
+
+.tutor-option-field .tutor-lesson-edit-feature-img img {
+  width: 100%;
+  height: auto;
+}
+
+a.tutor-lesson-thumbnail-delete-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: red;
+  background: #fff;
+  padding: 3px 5px;
+  border-radius: 5px;
+}
+
 .tutor-get-pro-text {
   color: #e02424;
 }
@@ -6453,7 +6500,7 @@ table.course-single-gradebooks a {
 
 /**
 * END Gradebook
- */
+*/
 /**
 * Tutor BuddyPress Addon CSS
 */
@@ -6528,6 +6575,16 @@ table.course-single-gradebooks a {
 /**
 * END Tutor BuddyPress
 */
+/**
+* Oxygen Integration CSS
+ */
+.oxy-tutor-element {
+  width: 100%;
+}
+
+/**
+* END Oxygen Integration CSS
+ */
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */

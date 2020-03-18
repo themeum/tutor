@@ -1,5 +1,48 @@
 # TutorLMS Changelog
 
+
+### 1.5.6 - 06 March, 2020
+
+* New: Feature image support for lessons
+* Fix: Courses per page issue on course archives in Divi Builder
+* Fix: Search issue on custom course archive pages
+* Fix: Redirect to next lesson issue after completing lessons (headers sent)
+
+### 1.5.5 - 27 February, 2020
+
+* New: Custom links now supported in Dashboard menu
+* New: Dashboard headers added in shortcode/oxygen dashboard template
+* Update: All purchase history items now sorted by descending order
+* Fix: Create new account translate issue. templates/global/login.php line number 79
+* Fix: Dashboard page load and logout issue by Shortcode
+* Fix: Guest add to cart issue on course archive page for both WooCommerce and EDD
+* Fix: Course Settings single tab toggle click hide issue fix
+* Fix: Active links with page in the dashboard for shortcode/oxygen
+* Fix: E-Mail to Students on Quiz Completed is now working (Pro)
+
+### 1.5.4 - 11 February, 2020
+
+* Fix: An infinite loop in frontend course builder for SEO related plugin activation: `classes/Shortcode.php`line number `53`
+* Fix: Maintenance mode override for wp-login.php page
+* Improvement: Frontend dashboard performance
+
+### 1.5.3 - 04 February, 2020
+
+* Added: Go auto next after finish lesson (When no video)
+* Added: Nonce field at add instructor form to determine that request comes from the dedicated page.
+* Updated: Instructor approved/blocked by ajax request in post method with the nonce check (Security Update)
+
+### 1.5.2 - 29 January, 2020 
+
+* Tutor LMS plugin is now running under 'plugins_loaded' hook (Architectural update)
+* Added: hide frontend admin bar based on the option check
+* Updated: Preview lesson got the full view with unenrolled behavior (Pro)
+* FIxed docs links in edit quiz modal in the quiz builder
+* Fixed: reviews database query reviews now query with or without user ID
+* Fixed: wishlist query, added where post type = courses and post_status = publish
+* Fixed: ask the question from assignments and quiz page.
+* Fixed: permission issue for auto-installation tutor plugin
+
 ### 1.5.1 - 08 January, 2020
 
 * Fixed an update during lesson content from modal
