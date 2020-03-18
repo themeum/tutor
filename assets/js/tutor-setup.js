@@ -73,6 +73,10 @@ jQuery(document).ready(function($) {
 			$("ul.tutor-setup-content li").removeClass("active").eq(_index - 1).addClass("active");
 			$("ul.tutor-setup-title li").removeClass("current").eq(_index - 1).addClass("current");
 			window.location.hash = $("ul.tutor-setup-title li").eq(_index - 1).data('url');
+		} else {
+			$('.tutor-setup-wizard-settings').removeClass('active');
+			$('.tutor-setup-wizard-type').addClass('active');
+			window.location.hash = '';
 		}
 	});
 	$('.tutor-setup-type-previous').on("click", function(e){
