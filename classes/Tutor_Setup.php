@@ -233,9 +233,9 @@ if ( ! defined( 'ABSPATH' ) )
 
                                         case 'payments':
                                             $html .= '<div class="checkbox-wrapper column-3">';
-                                                $available_withdraw_method = tutor_all_withdrawal_methods();
-                                                if ( !empty($available_withdraw_method) ) {
-                                                    foreach ($available_withdraw_method as $key => $value) {
+                                                $available_withdraw_methods = get_tutor_all_withdrawal_methods();
+                                                if ( !empty($available_withdraw_methods) ) {
+                                                    foreach ($available_withdraw_methods as $key => $value) {
                                                         $html .= '<div class="payment-setting">';
                                                             $html .= '<label for="'.$key.'" class="label">';
                                                                 $html .= '<div>';
