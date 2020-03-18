@@ -1430,7 +1430,9 @@ input.checkbox {
   text-align: center;
   margin-top: 16px;
 }
-
+.payment-setting img{
+  margin: 0 auto;
+}
 /* ******* Tutor Setup Wizard Boarding (Slick Slider) */
 .tutor-setup-wizard-boarding {
   text-align: center;

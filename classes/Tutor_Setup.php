@@ -233,42 +233,23 @@ if ( ! defined( 'ABSPATH' ) )
 
                                         case 'payments':
                                             $html .= '<div class="checkbox-wrapper column-3">';
-                                                $html .= '<div class="payment-setting">';
-                                                    $html .= '<label for="payment-1" class="label">';
-                                                        $html .= '<div>';
-                                                            $html .= '<input type="checkbox" name="bank_transfer_withdraw" id="payment-1" class="checkbox payment" '.(isset($payments['bank_transfer_withdraw']['enabled']) && $payments['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
-                                                            $html .= '<span class="check-icon round"></span>';
+                                                $available_withdraw_method = tutor_all_withdrawal_methods();
+                                                if ( !empty($available_withdraw_method) ) {
+                                                    foreach ($available_withdraw_method as $key => $value) {
+                                                        $html .= '<div class="payment-setting">';
+                                                            $html .= '<label for="'.$key.'" class="label">';
+                                                                $html .= '<div>';
+                                                                    $html .= '<input type="checkbox" name="'.$key.'" id="'.$key.'" class="checkbox payment" '.(isset($payments[$key]['enabled']) && $payments[$key]['enabled'] ? 'checked' : '').' />';
+                                                                    $html .= '<span class="check-icon round"></span>';
+                                                                $html .= '</div>';
+                                                                $html .= '<div>';
+                                                                    $html .= '<img src="'.$value["image"]. '" alt="'.$value["method_name"].'">';
+                                                                    $html .= '<h4>'.$value["method_name"].'</h4>';
+                                                                $html .= '</div>';
+                                                            $html .= '</label>';
                                                         $html .= '</div>';
-                                                        $html .= '<div>';
-                                                            $html .= '<img src="'.tutor()->url . 'assets/images/payment-bank.png" alt="Payment Bank">';
-                                                            $html .= '<h4>'.__('Bank','tutor').'</h4>';
-                                                        $html .= '</div>';
-                                                    $html .= '</label>';
-                                                $html .= '</div>';
-                                                $html .= '<div class="payment-setting">';
-                                                    $html .= '<label for="payment-2" class="label">';
-                                                        $html .= '<div>';
-                                                            $html .= '<input type="checkbox" name="echeck_withdraw" id="payment-2" class="checkbox payment" '.(isset($payments['bank_transfer_withdraw']['enabled']) && $payments['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
-                                                            $html .= '<span class="check-icon round"></span>';
-                                                        $html .= '</div>';
-                                                        $html .= '<div>';
-                                                            $html .= '<img src="'.tutor()->url . 'assets/images/payment-echeck.png" alt="Payment echeck">';
-                                                            $html .= '<h4>'.__('Check','tutor').'</h4>';
-                                                        $html .= '</div>';
-                                                    $html .= '</label>';
-                                                $html .= '</div>';
-                                                $html .= '<div class="payment-setting">';
-                                                    $html .= '<label for="payment-3" class="label">';
-                                                        $html .= '<div>';
-                                                            $html .= '<input type="checkbox" name="paypal_withdraw" id="payment-3" class="checkbox payment" '.(isset($payments['bank_transfer_withdraw']['enabled']) && $payments['bank_transfer_withdraw']['enabled'] ? 'checked' : '').' />';
-                                                            $html .= '<span class="check-icon round"></span>';
-                                                        $html .= '</div>';
-                                                        $html .= '<div>';
-                                                            $html .= '<img src="'.tutor()->url . 'assets/images/payment-paypal.png" alt="Payment Paypal">';
-                                                            $html .= '<h4>'.__('Paypal','tutor').'</h4>';
-                                                        $html .= '</div>';
-                                                    $html .= '</label>';
-                                                $html .= '</div>';
+                                                    }
+                                                }
                                             $html .= '</div>';
                                         break;
 
