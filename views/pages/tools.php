@@ -13,6 +13,7 @@
 
 				echo "<a href='{$url}' class='nav-tab-item {$active_class} '>{$title}</a>";
 			}
+			echo '<a class="nav-tab-item" href="'.admin_url("admin.php?page=tutor-setup").'">'.__('Setup Wizard','tutor').'</a>';
 		}
 		?>
 	</nav>
