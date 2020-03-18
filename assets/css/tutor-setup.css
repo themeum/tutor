@@ -615,8 +615,8 @@ input#attempts-allowed-1:checked ~ .label-text-2 input {
   border-color: var(--primary-btn);
 }
 
-.course-per-page
-  input[type="radio"].course-p:checked
+.course-per-page,
+  input[type="radio"].course-p:checked,
   + input[type="number"].attempts:focus {
   border-color: var(--primary-btn);
 }
@@ -628,6 +628,7 @@ input#attempts-allowed-1:checked ~ .label-text-2 input {
 button.tutor-setup-previous {
   display: inline-block;
   padding: 0 50px;
+  text-transform: uppercase;
 }
 
 .tutor-setup-title li {
@@ -822,24 +823,37 @@ input[type="checkbox"].input-switchbox:checked ~ .switchbox-icon {
   border-radius: 3px;
   background-color: var(--primary-btn);
   border: 1px solid var(--primary-btn);
-  padding: 14px 34px;
-  overflow: hidden;
+  padding: 14px 20px;
   cursor: pointer;
   outline: none;
 }
 .tutor-type-next {
   margin-left: 10px;
 }
-.animated-btn span {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
-  transform: translateX(-14px);
-  transition: all 0.3s ease-in-out;
+
+
+button.previous span,
+button.previous svg,
+button.next span,
+button.next svg{
+  vertical-align: middle;
+  transition: 200ms;
+}
+
+button.previous svg{
+  margin-right: 10px;
+}
+button.next svg{
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+button.previous:hover svg{
+  transform: translateX(-4px) rotate(180deg);
+}
+
+button.next:hover svg{
+  transform: translateX(4px);
 }
 
 .animated-btn:hover span {
@@ -850,37 +864,12 @@ input[type="checkbox"].input-switchbox:checked ~ .switchbox-icon {
   margin-top: -2px;
 }
 
-/* next arrow 1 */
-#next-arrow-1 {
-  transform: translateX(-55px);
-  transition: 0.3s ease-in-out;
-}
-
-.animated-btn:hover #next-arrow-1 {
-  transform: translateX(-22px);
-}
-
-/* next arrow 2 */
-#next-arrow-2 {
-  transform: translateX(18px);
-  transition: 0.3s ease-in-out;
-  margin-left: 25px;
-}
-
-#next-arrow-2 path {
-  transition: 0.3s ease-in-out;
-}
-
-.animated-btn:hover #next-arrow-2 {
-  transform: translateX(55px);
-}
-
 /* Prevoius Button */
 .previous.animated-btn {
   background-color: var(--secondary-btn);
   border-color: var(--secondary-btn);
   color: var(--primary-text);
-  padding: 10px 47.6px;
+  text-transform: uppercase;
 }
 
 .previous.animated-btn span {
@@ -900,27 +889,9 @@ input[type="checkbox"].input-switchbox:checked ~ .switchbox-icon {
   fill: var(--primary-text);
 }
 
-.previous.animated-btn svg#prev-arrow-1 {
-  transform: rotate(180deg) translateX(30px);
-  transition: 0.3s ease-in-out;
-}
-
-.previous.animated-btn:hover svg#prev-arrow-1 {
-  transform: rotate(180deg) translateX(85px);
-}
-
-.previous.animated-btn svg#prev-arrow-2 {
-  transform: rotate(180deg) translateX(-85px);
-  transition: 0.3s ease-in-out;
-}
-
-.previous.animated-btn:hover svg#prev-arrow-2 {
-  transform: rotate(180deg) translateX(-35px);
-}
-
 button[class^="tutor-setup-"] {
   cursor: pointer;
-  padding: 10px 35px;
+  padding: 10px 20px;
   font-size: 14px;
   font-weight: normal;
   font-stretch: normal;
@@ -933,14 +904,9 @@ button[class^="tutor-setup-"] {
   outline: none;
 }
 
-button.tutor-setup-next.next,
-button.tutor-setup-previous.previous {
-  text-transform: uppercase;
-}
-
 button.tutor-setup-next.next {
   color: var(--initial);
-  padding: 10px 35.09px;
+  text-transform: uppercase;
 }
 
 button.tutor-setup-skip {
@@ -2042,36 +2008,6 @@ input.checkbox {
     transform: scale(1);
   }
 
-  .animated-btn,
-  .primary-btn,
-  button.tutor-setup-next.next,
-  button.tutor-setup-previous.previous {
-    padding: 8px 23px;
-  }
-
-  button.tutor-setup-previous.previous {
-    padding: 8px 35px;
-  }
-
-  #next-arrow-2 {
-    transform: translateX(10px);
-  }
-
-  .animated-btn:hover #next-arrow-1 {
-    transform: translateX(-15px);
-  }
-
-  .previous.animated-btn svg#prev-arrow-1 {
-    transform: rotate(180deg) translateX(25px);
-  }
-
-  .previous.animated-btn:hover svg#prev-arrow-2 {
-    transform: rotate(180deg) translateX(-25px);
-  }
-
-  .previous.animated-btn span {
-    transform: translateX(10px);
-  }
 }
 
 @media (max-width: 450px) {
