@@ -1,5 +1,10 @@
 # TutorLMS Changelog
 
+### 1.5.7 - 18 March, 2020
+
+* New: Installation Wizard
+* Fix: Timezone issue at quiz start and the remaining time
+* Fix: few translation texts domain
 
 ### 1.5.6 - 06 March, 2020
 
