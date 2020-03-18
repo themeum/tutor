@@ -193,7 +193,7 @@ if ( ! defined( 'ABSPATH' ) )
                                                     $html .= isset($options[$key]['time']) ? $options[$key]['time'] : '';
                                                     $html .= '</span>';
                                                 } else {
-                                                    $html .= '<input type="range" name="'.$key.'" min="'.(isset($field['min']) ? $field['min'] : "").'" max="'.(isset($field['max']) ? $field['max'] : "" ).'" step="1" value="'.(isset($options[$key]) ? $options[$key] : '').'"  class="range-input"/>';
+                                                    $html .= '<input type="range" name="'.$key.'" min="'.(isset($field['min']) ? $field['min'] : "").'" max="'.(isset($field['max']) ? $field['max'] : 50 ).'" step="1" value="'.(isset($options[$key]) ? $options[$key] : '').'"  class="range-input"/>';
                                                     $html .= ' <strong class="range-value">'.(isset($options[$key]) ? $options[$key] : '').'</strong>';
                                                 }
                                             $html .= '</div>';
@@ -361,6 +361,7 @@ if ( ! defined( 'ABSPATH' ) )
                         ),
                         'lesson_permalink_base' => array(
                             'type' => 'text',
+                            'max' => 50,
                             'lable' => __('Lesson Permalink', 'tutor'),
                             'desc' => 'Pick the URL prefix you want for your lessons.',
                         )
@@ -369,7 +370,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 
                 'course' => array(
-                    'lable' => __('General Settings', 'tutor'),
+                    'lable' => __('Course Settings', 'tutor'),
                     'attr' => array(
                         'display_course_instructors' => array(
                             'type' => 'switch',
@@ -550,8 +551,8 @@ if ( ! defined( 'ABSPATH' ) )
                                         </div>
                                         <div class="content">
                                             <h2><?php _e('Congratulations, you’re all set!', 'tutor'); ?></h2>
-                                            <p><?php _e( 'Tutor LMS is up and running on your website! If you really want to become a Tutor LMS genius, read our <a href="https://www.themeum.com/docs/tutor-introduction/">documentation</a> that covers everything!', 'tutor' ); ?></p>
-                                            <p><?php _e( 'If you need further assistance, please don’t hesitate to contact us via our <a href="https://www.themeum.com/contact-us/">contact form.</a>', 'tutor' ); ?></p>
+                                            <p><?php _e( 'Tutor LMS is up and running on your website! If you really want to become a Tutor LMS genius, read our <a target="_blank" href="https://www.themeum.com/docs/tutor-introduction/">documentation</a> that covers everything!', 'tutor' ); ?></p>
+                                            <p><?php _e( 'If you need further assistance, please don’t hesitate to contact us via our <a target="_blank" href="https://www.themeum.com/contact-us/">contact form.</a>', 'tutor' ); ?></p>
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
                                             <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>"><?php _e('CREATE A NEW COURSE', 'tutor'); ?></button>
@@ -654,7 +655,7 @@ if ( ! defined( 'ABSPATH' ) )
                                 </svg>
                             </button>
                         </div>
-                        <div><a class="tutor-boarding-skip" href="#"><?php _e('I already know, skip this!', 'tutor'); ?></a></div>
+                        <div><a href="<?php echo admin_url(); ?>"><?php _e('I already know, skip this!', 'tutor'); ?></a></div>
                     </div>
                 </div>
             </div>
