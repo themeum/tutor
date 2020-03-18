@@ -24,8 +24,8 @@ jQuery(document).ready(function($) {
 	$(".tutor-setup-title li").on("click", function(e) {
 		e.preventDefault();
 		const _length = $(this).closest("li").index();
-		$(".tutor-setup-title li").removeClass("active");
-		$(".tutor-setup-title li").eq(_length).addClass("active");
+		$(".tutor-setup-title li").removeClass("active current");
+		$(".tutor-setup-title li").eq(_length).addClass("active current");
 		$(".tutor-setup-content li").removeClass("active");
 		$(".tutor-setup-content li").eq(_length).addClass("active");
 		window.location.hash = $("ul.tutor-setup-title li").eq(_length).data("url");
