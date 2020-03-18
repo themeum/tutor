@@ -108,7 +108,14 @@ if ( ! defined( 'ABSPATH' ) )
                 $html .= '<li class="'.($i==1 ? "active" : "").'">';
                     $html .= '<div class="tutor-setup-content-heading heading">';
                         $html .= '<div>'.$field_parent['lable'].'</div>';
-                        $html .= '<div><strong>'.$i.'</strong> / '.count($field_arr).' '.__('Step Completed', 'tutor').'</div>';
+                        $html .= '<div>';
+                            $html .= '<strong>'.$i.'</strong> / '.count($field_arr).' ';
+                            if ($i > 1) {
+                                $html .= __('Steps Completed', 'tutor');
+                            } else {
+                                $html .= __('Step Completed', 'tutor');
+                            }
+                        $html .= '</div>';
                         $html .= '<div class="tutor-reset-section">'.__('Reset Default', 'tutor').'</div>';
                     $html .= '</div>';
                     $html .= '<div class="tutor-setup-content-heading body">';
