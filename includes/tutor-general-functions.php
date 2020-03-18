@@ -14,7 +14,6 @@ if ( ! function_exists('tutor_withdrawal_methods')){
 	}
 }
 
-
 /**
  * @return array
  *
