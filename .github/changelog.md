@@ -3,8 +3,11 @@
 ### 1.5.7 - 18 March, 2020
 
 * New: Installation Wizard
+* New: `get_tutor_all_withdrawal_methods()` function to get all available withdraw methods.
+* Updated: optimize database query on `get_course_first_lesson()` on Utils
 * Fix: Timezone issue at quiz start and the remaining time
 * Fix: few translation texts domain
+* Fix: Continue to Lesson button on issue when 100% complete course
 
 ### 1.5.6 - 06 March, 2020
 
