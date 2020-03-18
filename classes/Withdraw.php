@@ -17,7 +17,7 @@ class Withdraw {
 
 	public $available_withdraw_methods;
 	public $get_options;
-	protected $withdraw_methods;
+	public $withdraw_methods;
 
 	public function __construct() {
 		$this->get_options = $this->get_options();
@@ -35,6 +35,7 @@ class Withdraw {
 		$methods = array(
 			'bank_transfer_withdraw' => array(
 				'method_name'  => __('Bank Transfer', 'tutor'),
+				'image' => tutor()->url . 'assets/images/payment-bank.png',
 				'desc'  => __('Get your payment directly into your bank account', 'tutor'),
 
 				'admin_form_fields'           => array(
@@ -74,7 +75,7 @@ class Withdraw {
 
 			'echeck_withdraw' => array(
 				'method_name'  => __('E-Check', 'tutor'),
-
+				'image' => tutor()->url . 'assets/images/payment-echeck.png',
 				'form_fields'           => array(
 					'physical_address' => array(
 						'type'      => 'textarea',
@@ -86,7 +87,7 @@ class Withdraw {
 
 			'paypal_withdraw' => array(
 				'method_name'  => __('PayPal Payment', 'tutor'),
-
+				'image'	=> tutor()->url . 'assets/images/payment-paypal.png',
 				'form_fields'           => array(
 					'paypal_email' => array(
 						'type'      => 'email',
