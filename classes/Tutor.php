@@ -154,6 +154,30 @@ final class Tutor{
 		do_action('tutor_loaded');
 
 		add_action( 'init', array( $this, 'init_action' ) );
+
+        /**
+         * redirect to the wizard page
+         * @since v.1.5.7
+         *
+         */
+
+		add_action( 'activated_plugin', array( $this, 'activated_tutor' ) );
+	}
+
+    /**
+     * @param $plugin
+     *
+     * redirect to the wizard page
+     * @since v.1.5.7
+     *
+     */
+	public function activated_tutor( $plugin ) {
+		if( $plugin == tutor()->basename ) {
+			if( (! get_option('tutor_wizard') ) && version_compare(TUTOR_VERSION, '1.5.6', '>') ) {
+				update_option('tutor_wizard', 'active');
+				exit(wp_redirect(admin_url('admin.php?page=tutor-setup')));
+			}
+		}
 	}
 
 	/**
@@ -265,16 +289,6 @@ final class Tutor{
 		if ( ! $first_activation_date){
 			update_option('tutor_first_activation_time', tutor_time());
 		}
-
-        /**
-         * redirect to the wizard page
-         * @since v.1.5.7
-         */
-        if( (! get_option('tutor_wizard') ) && version_compare(TUTOR_VERSION, '1.5.6', '>') ) {
-            update_option('tutor_wizard', 'active');
-            exit(wp_redirect(admin_url('admin.php?page=tutor-setup')));
-        }
-
 	}
 
 	//Run task on deactivation
