@@ -6,7 +6,7 @@
   --secondary-text: #1f2949;
   --radio-bg: #f8f9fa;
   --radio-dot: #d6d8df;
-  --primary-btn: #3057d5;
+  --primary-btn: #4467D6;
   --secondary-btn: #eaeef3;
   --tertiary-btn: #717881;
   --switch-bg: #e2e7eb;
@@ -151,7 +151,7 @@ ul.tutor-setup-content li.active {
   background-image: url(../images/checkmark.svg);
   background-repeat: no-repeat;
   background-position: center;
-  background-color: #2f57d5;
+  background-color: var(--primary-btn);
   box-shadow: inset 0px 0px 0px 5px transparent;
 }
 
@@ -541,8 +541,8 @@ input[type="radio"].course:checked + .span span {
 .course-per-page input[type="radio"].course-p:checked + .radio-icon,
 .course-setting-wrapper .ecommerce .radio-input:checked + .radio-icon,
 .settings .time-expires input[type="radio"]:checked + .radio-icon {
-  background: #2f57d5;
-  border-color: #2f57d5;
+  background: var(--primary-btn);
+  border-color: var(--primary-btn);
 }
 
 .course-per-page input[type="radio"].course-p:checked + .radio-icon:before,
@@ -558,7 +558,7 @@ input[type="radio"].course:checked + .span span {
 }
 
 input#attempts-allowed-1:checked ~ .label-text-2 input {
-  border: 1px solid #2f57d5;
+  border: 1px solid var(--primary-btn);
 }
 
 .course-per-page input.course-p,
@@ -837,15 +837,15 @@ button.previous svg,
 button.next span,
 button.next svg{
   vertical-align: middle;
-  transition: 200ms;
 }
 
 button.previous svg{
   margin-right: 10px;
+  transition: 200ms;
 }
 button.next svg{
+  transition: 200ms;
   margin-left: 10px;
-  vertical-align: middle;
 }
 
 button.previous:hover svg{
@@ -866,27 +866,29 @@ button.next:hover svg{
 
 /* Prevoius Button */
 .previous.animated-btn {
-  background-color: var(--secondary-btn);
-  border-color: var(--secondary-btn);
-  color: var(--primary-text);
+  background-color: transparent;
+  border-color: var(--primary-btn);
+  color: var(--primary-btn);
   text-transform: uppercase;
 }
 
-.previous.animated-btn span {
-  transform: translateX(14px);
-  transition: 0.3s ease-in-out;
+.previous.animated-btn:hover{
+  background: var(--primary-btn);
+  color: #ffffff;
 }
 
-.previous.animated-btn:hover span {
-  transform: translateX(-11px);
-}
 
 .previous.animated-btn svg {
   transform: rotate(180deg);
 }
 
 .previous.animated-btn svg path {
-  fill: var(--primary-text);
+  fill: var(--primary-btn);
+  transition: 200ms;
+}
+
+.previous.animated-btn:hover svg path{
+  fill: white;
 }
 
 button[class^="tutor-setup-"] {
@@ -900,7 +902,7 @@ button[class^="tutor-setup-"] {
   text-transform: capitalize;
   text-align: center;
   color: var(--tertiary-btn);
-  transition: 0.2s ease;
+  transition: 200ms;
   outline: none;
 }
 
@@ -915,6 +917,8 @@ button.tutor-setup-skip {
   padding: 5px;
   font-weight: 300;
   letter-spacing: 0.1px;
+  color: var(--primary-btn);
+  text-decoration: underline;
 }
 
 button.tutor-setup-skip:hover {
@@ -1009,7 +1013,7 @@ button.tutor-setup-skip:hover {
 }
 
 .select-box .options-container.active + .selected {
-  border-color: #2f57d5;
+  border-color: var(--primary-btn);
 }
 
 .select-box .options-container::-webkit-scrollbar {
@@ -1540,7 +1544,7 @@ input.checkbox {
 }
 
 .wizard-boarding-footer .animated-btn {
-  background-color: #3057d5;
+  background-color: var(--primary-btn);
   margin-bottom: 20px;
 }
 
