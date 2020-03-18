@@ -67,7 +67,7 @@ if ($statements->count) {
     </div>
     <?php
 }else{
-    printf("<span>%s</span>", __('Statement data is empty', 'tutor'));
+    printf("<span>%s</span>", __('There is not enough sales data to generate a statement', 'tutor'));
 }
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package TutorLMS/Templates
- * @version 1.4.3
+ * @version 1.5.7
  */
 
 
@@ -27,7 +27,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 	if ($is_started_quiz){
 		$quiz_attempt_info = tutor_utils()->quiz_attempt_info($is_started_quiz->attempt_info);
-		$quiz_attempt_info['date_time_now'] = date("Y-m-d H:i:s");
+		$quiz_attempt_info['date_time_now'] = date("Y-m-d H:i:s", tutor_time());
 
 		$time_limit_seconds = tutor_utils()->avalue_dot('time_limit.time_limit_seconds', $quiz_attempt_info);
 		$question_layout_view = tutor_utils()->avalue_dot('question_layout_view', $quiz_attempt_info);

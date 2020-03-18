@@ -16,7 +16,7 @@ class Template extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'pre_get_posts', array($this, 'limit_course_query_archive'), 1 );
+		add_action( 'pre_get_posts', array($this, 'limit_course_query_archive'), 99 );
 
 
 		/**
@@ -76,6 +76,8 @@ class Template extends Tutor_Base {
 	 * Make a page to archive listing for courses
 	 */
 	public function limit_course_query_archive($query){
+		$courses_per_page = (int) tutor_utils()->get_option('courses_per_page', 10);
+
 		if ($query->is_main_query() && ! $query->is_feed() && ! is_admin() && is_page() ){
 			$queried_object = get_queried_object();
 			if ($queried_object instanceof \WP_Post){
@@ -84,7 +86,8 @@ class Template extends Tutor_Base {
 
 				if ($page_id === $selected_archive_page){
 					$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
-					query_posts(array('post_type' => $this->course_post_type, 'paged' => $paged ));
+					$search_query = get_search_query();
+					query_posts(array('post_type' => $this->course_post_type, 'paged' => $paged, 's' => $search_query, 'posts_per_page' => $courses_per_page ));
 				}
 			}
 		}
@@ -93,7 +96,6 @@ class Template extends Tutor_Base {
 			$post_type = get_query_var('post_type');
 			$course_category = get_query_var('course-category');
 			if ( ($post_type === $this->course_post_type || ! empty($course_category) )){
-				$courses_per_page = (int) tutor_utils()->get_option('courses_per_page', 10);
 				$query->set('posts_per_page', $courses_per_page);
 
 				$course_filter = 'newest_first';

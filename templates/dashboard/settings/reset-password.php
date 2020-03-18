@@ -66,7 +66,7 @@
             <div class="tutor-form-row">
                 <div class="tutor-form-col-12">
                     <div class="tutor-form-group">
-                        <label> <?php _e('Previous Password', 'tutor'); ?> </label>
+                        <label> <?php _e('Current Password', 'tutor'); ?> </label>
                         <input type="password" name="previous_password">
                     </div>
                 </div>
