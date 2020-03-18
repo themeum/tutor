@@ -135,7 +135,6 @@ class Admin{
 
 			include tutor()->path.'views/pages/tools.php';
 		}
-
 	}
 
 	public function tutor_get_pro(){
