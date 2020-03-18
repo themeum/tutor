@@ -1,5 +1,4 @@
 <?php
-
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
@@ -15,23 +14,21 @@ if ( ! function_exists('tutor_withdrawal_methods')){
 	}
 }
 
-
 /**
  * @return array
  *
- * Get all Withdraw Methods Parameters
+ * Get all Withdraw Methods available on this system
  *
  * @since v.1.5.7
  */
 
-if ( ! function_exists('tutor_all_withdrawal_methods')){
-	function tutor_all_withdrawal_methods(){
+if ( ! function_exists('get_tutor_all_withdrawal_methods')){
+	function get_tutor_all_withdrawal_methods(){
 		$withdraw = new \TUTOR\Withdraw();
 
 		return $withdraw->withdraw_methods;
 	}
 }
-
 
 if ( ! function_exists('tutor_placeholder_img_src')) {
 	function tutor_placeholder_img_src() {
