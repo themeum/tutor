@@ -109,7 +109,7 @@ if ( ! defined( 'ABSPATH' ) )
                     $html .= '<div class="tutor-setup-content-heading heading">';
                         $html .= '<div>'.$field_parent['lable'].'</div>';
                         $html .= '<div>';
-                            $html .= '<strong>'.$i.'</strong> / '.count($field_arr).' ';
+                            $html .= '<strong class="tutor-steps-current">'.$i.'</strong> / <span class="tutor-steps">'.count($field_arr).'</span> ';
                             if ($i > 1) {
                                 $html .= __('Steps Completed', 'tutor');
                             } else {
@@ -121,8 +121,8 @@ if ( ! defined( 'ABSPATH' ) )
                     $html .= '<div class="tutor-setup-content-heading body">';
 
                         foreach ($field_parent['attr'] as $key => $field) {
-
-                            $html .= '<div class="tutor-setting'.(in_array( $field['type'], $full_width_fields ) ? " course-setting-wrapper" : "").'">';
+                            if(!isset($field['lable'])){ continue; }
+                            $html .= '<div class="tutor-setting'.(in_array( $field['type'], $full_width_fields ) ? " course-setting-wrapper" : "").' '.(isset($field['class']) ? $field['class'] : '').'">';
                                 $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'] : '';
                                 $html .= isset( $field['tooltip'] ) ? '<span id="tooltip-btn" class="tooltip-btn" data-tooltip="'.$field['tooltip'].'"><span></span></span>' : '';
                                 $html .= isset( $field['lable'] ) ? '</div>' : '';
@@ -268,7 +268,7 @@ if ( ! defined( 'ABSPATH' ) )
                                                     $html .= '</div>';
                                                     $html .= '<div class="data">';
                                                         $html .= '<h4 class="range-value-2">'.$earning_admin.'%</h4>';
-                                                        $html .= '<h5>'.__('Admin', 'tutor').'</h5>';
+                                                        $html .= '<h5>'.__('Admin / Owner', 'tutor').'</h5>';
                                                         $html .= '<input type="hidden" min="0" max="100" step="1" value="'.$earning_admin.'" class="range-value-data-2 range-input" name="earning_admin_commission"/>';
                                                     $html .= '</div>';
                                                 $html .= '</div>';
@@ -339,17 +339,17 @@ if ( ! defined( 'ABSPATH' ) )
                         'disable_default_player_youtube' => array(
                             'type' => 'switch',
                             'lable' => __('YouTube Player', 'tutor'),
-                            'desc' => __('Toggle OFF to use the default YouTube player.', 'tutor'),
+                            'desc' => __('Toggle to use the default YouTube player.', 'tutor'),
                         ),
                         'disable_default_player_vimeo' => array(
                             'type' => 'switch',
                             'lable' => __('Vimeo Player', 'tutor'),
-                            'desc' => __('Toggle OFF to use the default Vimeo player.', 'tutor'),
+                            'desc' => __('Toggle to use the default Vimeo player.', 'tutor'),
                         ),
                         'lesson_permalink_base' => array(
                             'type' => 'text',
                             'max' => 50,
-                            'lable' => __('Lesson Permalink', 'tutor'),
+                            'lable' => __('Lesson Slug', 'tutor'),
                             'desc' => 'Pick the URL prefix you want for your lessons.',
                         )
                     )
@@ -483,6 +483,7 @@ if ( ! defined( 'ABSPATH' ) )
                         'commission_split' => array(
                             'type' => 'range',
                             'lable' => __('Commission Rate', 'tutor'),
+                            'class' => 'tutor-show-hide',
                             'tooltip' => __('Control revenue sharing between admin and instructor.', 'tutor')
                         ),
                         'earning_instructor_commission' => array(
@@ -494,6 +495,7 @@ if ( ! defined( 'ABSPATH' ) )
                         'withdraw_split' => array(
                             'type' => 'payments',
                             'lable' => __('Payment Withdrawal Method', 'tutor'),
+                            'class' => 'tutor-show-hide',
                             'desc' => __('Choose your preferred withdrawal method from the options.', 'tutor')
                         ),
           
@@ -528,7 +530,8 @@ if ( ! defined( 'ABSPATH' ) )
 
                         <form id="tutor-setup-form" method="post">
                             <input type="hidden" name="action" value="setup_action">
-                            <input type="hidden" name="enable_course_marketplace" class="enable_course_marketplace_data" value="">
+                            <?php $course_marketplace = tutor_utils()->get_option('enable_course_marketplace'); ?>
+                            <input type="hidden" name="enable_course_marketplace" class="enable_course_marketplace_data" value="<?php echo ($course_marketplace ? 1 : 0); ?>">
                             <ul class="tutor-setup-content">
                                 <?php $this->tutor_setup_generator(); ?>
                                 <li>

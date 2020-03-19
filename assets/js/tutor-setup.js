@@ -19,6 +19,8 @@ jQuery(document).ready(function($) {
 				}
 			}
 		}
+		const enable = $("input[name='enable_course_marketplace'").val()
+		showHide( enable ? enable : 0 )
 	}
 
 	$(".tutor-setup-title li").on("click", function(e) {
@@ -47,6 +49,9 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		$(".tutor-setup-wizard-type").removeClass("active");
 		$(".tutor-setup-wizard-settings").addClass("active");
+		$('.tutor-setup-title li').eq(0).addClass('active')
+		window.location.hash = "general";
+		showHide( $("input[name='enable_course_marketplace_setup']:checked").val() )
 	});
 
 	/* ---------------------
@@ -66,9 +71,14 @@ jQuery(document).ready(function($) {
 	* ---------------------- */
 	$(".tutor-setup-previous").on("click", function(e) {
 		e.preventDefault();
-		const _index = $(this).closest("li").index();
+		let _index = $(this).closest("li").index();
+
+		$("ul.tutor-setup-title li").eq(_index).removeClass("active");
+		if( _index > 0 && _index == ($('.tutor-setup-title li.instructor').index() + 1) && $('.tutor-setup-title li.instructor').hasClass('hide-this') ) {
+			_index = _index - 1 
+		}
+
 		if (_index > 0) {
-			$("ul.tutor-setup-title li").eq(_index).removeClass("active");
 			$("ul.tutor-setup-title li").eq(_index - 1).addClass("active");
 			$("ul.tutor-setup-content li").removeClass("active").eq(_index - 1).addClass("active");
 			$("ul.tutor-setup-title li").removeClass("current").eq(_index - 1).addClass("current");
@@ -78,6 +88,7 @@ jQuery(document).ready(function($) {
 			$('.tutor-setup-wizard-type').addClass('active');
 			window.location.hash = '';
 		}
+		setpSet()
 	});
 	$('.tutor-setup-type-previous').on("click", function(e){
 		$('.tutor-setup-wizard-type').removeClass('active');
@@ -85,11 +96,18 @@ jQuery(document).ready(function($) {
 	});
 	$(".tutor-setup-skip, .tutor-setup-next").on("click", function(e) {
 		e.preventDefault();
-		const _index = $(this).closest("li").index() + 1;
+		let _index = $(this).closest("li").index() + 1;
+
+		if( _index == $('.tutor-setup-title li.instructor').index() && $('.tutor-setup-title li.instructor').hasClass('hide-this') ){
+			_index = _index + 1
+		}
+
 		$("ul.tutor-setup-title li").eq(_index).addClass("active");
 		$("ul.tutor-setup-content li").removeClass("active").eq(_index).addClass("active");
 		$("ul.tutor-setup-title li").removeClass("current").eq(_index).addClass("current");
 		window.location.hash = $("ul.tutor-setup-title li").eq(_index).data("url");
+
+		setpSet();
 	});
 
 	/* ---------------------
@@ -100,12 +118,7 @@ jQuery(document).ready(function($) {
 		$(".tutor-setup-wizard-boarding").removeClass("active");
 		$(".tutor-setup-wizard-type").addClass("active");
 	});
-	$(".tutor-type-next, .tutor-type-skip").on("click", function(e) {
-		e.preventDefault();
-		$(".tutor-setup-wizard-type").removeClass("active");
-		$(".tutor-setup-wizard-settings").addClass("active");
-		window.location.hash = "general";
-	});
+	
 
 	/* ---------------------
 	* Wizard Slick Slider
@@ -268,4 +281,37 @@ jQuery(document).ready(function($) {
 			$("#attempts-allowed-numer").prop("disabled", true);
 		}
 	});
+
+	$('.wizard-type-item').on('click', function(e) {
+		showHide( $(this).find('input').val() )
+	});
+
+	function showHide(val){
+		if(val==1) {
+			$('.tutor-show-hide').addClass('active')
+			$('.tutor-setup-title li.instructor').removeClass('hide-this')
+			$('.tutor-setup-content li').eq($('.tutor-setup-title li.instructor')).removeClass('hide-this')
+		} else {
+			$('.tutor-show-hide').removeClass('active')
+			$('.tutor-setup-title li.instructor').addClass('hide-this')
+			$('.tutor-setup-content li').eq($('.tutor-setup-title li.instructor')).addClass('hide-this')
+		}
+	}
+
+	setpSet();
+	function setpSet(){
+		if( $('.tutor-setup-title li.instructor').hasClass('hide-this') ){
+			$('.tutor-steps').html(5)
+			let _index = $('.tutor-setup-title li.current').index()
+			if (_index > 2) {
+				$('.tutor-setup-content li.active .tutor-steps-current').html( _index )
+			}
+		} else {
+			$('.tutor-steps').html(6)
+			$(".tutor-setup-content li").each(function() {
+				$(this).find('.tutor-steps-current').html($(this).index() + 1)
+			});
+		}
+	}
+
 });
