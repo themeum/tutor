@@ -86,7 +86,7 @@ class Withdraw {
 			),
 
 			'paypal_withdraw' => array(
-				'method_name'  => __('PayPal Payment', 'tutor'),
+				'method_name'  => __('PayPal', 'tutor'),
 				'image'	=> tutor()->url . 'assets/images/payment-paypal.png',
 				'form_fields'           => array(
 					'paypal_email' => array(
