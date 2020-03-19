@@ -622,7 +622,7 @@ input#attempts-allowed-1:checked ~ .label-text-2 input {
 
 .course-per-page,
 input[type="radio"].course-p:checked,
-+ input[type="number"].attempts:focus {
+input[type="number"].attempts:focus {
   border-color: var(--primary-btn);
 }
 
