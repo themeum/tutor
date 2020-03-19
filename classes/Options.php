@@ -524,13 +524,13 @@ class Options {
 							'earning_admin_commission' => array(
 								'type'      => 'number',
 								'label'      => __('Admin Commission Percentage', 'tutor'),
-								'default'   => '20',
+								'default'   => '0',
 								'desc'  => __('Define the commission of the Admin from each sale.(after deducting fees)', 'tutor'),
 							),
 							'earning_instructor_commission' => array(
 								'type'      => 'number',
 								'label'      => __('Instructor Commission Percentage', 'tutor'),
-								'default'   => '80',
+								'default'   => '0',
 								'desc'  => __('Define the commission for instructors from each sale.(after deducting fees)', 'tutor'),
 							),
 							'tutor_earning_fees' => array(
