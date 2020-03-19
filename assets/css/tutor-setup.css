@@ -6,7 +6,7 @@
   --secondary-text: #1f2949;
   --radio-bg: #f8f9fa;
   --radio-dot: #d6d8df;
-  --primary-btn: #4467D6;
+  --primary-btn: #4467d6;
   --secondary-btn: #eaeef3;
   --tertiary-btn: #717881;
   --switch-bg: #e2e7eb;
@@ -834,30 +834,30 @@ input[type="checkbox"].input-switchbox:checked ~ .switchbox-icon {
 }
 .tutor-type-next {
   margin-left: 10px;
+  border: none;
 }
-
 
 button.previous span,
 button.previous svg,
 button.next span,
-button.next svg{
+button.next svg {
   vertical-align: middle;
 }
 
-button.previous svg{
+button.previous svg {
   margin-right: 10px;
   transition: 200ms;
 }
-button.next svg{
+button.next svg {
   transition: 200ms;
   margin-left: 10px;
 }
 
-button.previous:hover svg{
+button.previous:hover svg {
   transform: translateX(-4px) rotate(180deg);
 }
 
-button.next:hover svg{
+button.next:hover svg {
   transform: translateX(4px);
 }
 
@@ -877,13 +877,13 @@ button.next:hover svg{
   text-transform: uppercase;
 }
 
-.previous.animated-btn:hover{
+.previous.animated-btn:hover {
   background: var(--primary-btn);
   color: #ffffff;
 }
 
-.next.animated-btn:hover{
-  background: #3254C1;
+.next.animated-btn:hover {
+  background: #3254c1;
 }
 
 .previous.animated-btn svg {
@@ -895,7 +895,7 @@ button.next:hover svg{
   transition: 200ms;
 }
 
-.previous.animated-btn:hover svg path{
+.previous.animated-btn:hover svg path {
   fill: white;
 }
 
@@ -930,7 +930,7 @@ button.tutor-setup-skip {
 }
 
 button.tutor-setup-skip:hover {
-  color: #3254C1;
+  color: #3254c1;
 }
 
 .tutor-setting .grade-calculation {
@@ -938,13 +938,11 @@ button.tutor-setup-skip:hover {
   grid-template-columns: auto;
 }
 
-
 /* Greetings Button */
 .greetings .primary-btn:last-child {
   background: transparent;
   color: var(--secondary-text);
 }
-
 
 /* Grade Calculation Dropdwon */
 .select-box {
@@ -1077,11 +1075,11 @@ button.tutor-setup-skip:hover {
   grid-gap: 30px;
   place-content: flex-start;
 }
-.limit-slider-has-parent{
+.limit-slider-has-parent {
   display: flex;
 }
 .tutor-setting .limit-slider > strong:last-child,
-.tutor-setting .limit-slider > span:last-child{
+.tutor-setting .limit-slider > span:last-child {
   margin-left: 32px;
   min-width: 15px;
   text-align: right;
@@ -1421,7 +1419,7 @@ input.checkbox {
   margin-top: 16px;
   word-break: break-word;
 }
-.payment-setting img{
+.payment-setting img {
   margin: 0 auto;
 }
 /* ******* Tutor Setup Wizard Boarding (Slick Slider) */
@@ -1559,11 +1557,10 @@ input.checkbox {
   color: var(--primary-btn);
 }
 
-
 .wizard-boarding-footer:hover,
 .wizard-boarding-footer a:hover,
-.tutor-type-skip:hover{
-  color: #3254C1;
+.tutor-type-skip:hover {
+  color: #3254c1;
 }
 
 .wizard-boarding-footer {
@@ -1587,7 +1584,6 @@ input.checkbox {
 .wizard-type-header {
   display: grid;
   place-items: center;
-  padding: 0 330px;
   grid-gap: 25px;
 }
 
@@ -2041,7 +2037,6 @@ input.checkbox {
   .checkbox-wrapper .payment-setting .check-icon {
     transform: scale(1);
   }
-
 }
 
 @media (max-width: 450px) {
@@ -2061,19 +2056,19 @@ input.checkbox {
   }
 }
 
-.slick-slider li:hover{
+.slick-slider li:hover {
   cursor: ew-resize;
 }
-.slick-slider li.slick-current:hover{
+.slick-slider li.slick-current:hover {
   cursor: pointer;
 }
-.tutor-show-hide{
+.tutor-show-hide {
   display: none !important;
 }
-.tutor-show-hide.active{
+.tutor-show-hide.active {
   display: grid !important;
 }
-.hide-this{
+.hide-this {
   display: none;
 }
 .tutor-unlimited-value{
