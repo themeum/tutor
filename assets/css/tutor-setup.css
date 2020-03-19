@@ -613,7 +613,7 @@ input#attempts-allowed-1:checked ~ .label-text-2 input {
 }
 
 :not(.active) input[type="number"].attempts {
-  color: #d7dce3;
+  color: #818890;
 }
 
 .course-per-page input[type="number"].attempts:focus {
@@ -2075,4 +2075,10 @@ input.checkbox {
 }
 .hide-this{
   display: none;
+}
+.tutor-unlimited-value{
+  margin-left: 90px;
+}
+input[name='quiz_attempts_allowed']{
+  color: var(--secondary-text);
 }
