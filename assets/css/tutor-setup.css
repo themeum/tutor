@@ -1414,6 +1414,7 @@ input.checkbox {
 .checkbox-wrapper .payment-setting h4 {
   text-align: center;
   margin-top: 16px;
+  word-break: break-word;
 }
 .payment-setting img{
   margin: 0 auto;
@@ -2053,4 +2054,20 @@ input.checkbox {
   .checkbox-wrapper .payment-setting h4 {
     margin-top: 0;
   }
+}
+
+.slick-slider li:hover{
+  cursor: ew-resize;
+}
+.slick-slider li.slick-current:hover{
+  cursor: pointer;
+}
+.tutor-show-hide{
+  display: none !important;
+}
+.tutor-show-hide.active{
+  display: grid !important;
+}
+.hide-this{
+  display: none;
 }
