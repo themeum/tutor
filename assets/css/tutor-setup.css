@@ -1478,7 +1478,7 @@ input.checkbox {
 
 .wizard-boarding-body .slick-slide {
   outline: none;
-  cursor: pointer;
+  cursor: move;
   opacity: 1;
   transition: 0.8s;
   margin: 0 15px;
@@ -1546,7 +1546,7 @@ input.checkbox {
 }
 
 .wizard-boarding-footer {
-  margin-top: 85px;
+  margin-top: 30px;
 }
 
 .wizard-boarding-footer,
