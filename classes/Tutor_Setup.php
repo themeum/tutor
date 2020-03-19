@@ -101,7 +101,7 @@ if ( ! defined( 'ABSPATH' ) )
             $field_arr = $this->tutor_setup_attributes();
 
             $down_desc_fields = array('rows', 'slider', 'text', 'radio', 'dropdown', 'range', 'payments');
-            $full_width_fields = array('rows', 'slider', 'radio', 'range', 'payments');
+            $full_width_fields = array('rows', 'slider', 'radio', 'range', 'payments', 'dropdown');
 
             foreach ($field_arr as $key_parent => $field_parent) {
 
