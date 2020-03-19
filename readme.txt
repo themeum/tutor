@@ -241,14 +241,15 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.5.7 - 18 March, 2020 =
+= 1.5.7 - 19 March, 2020 =
 
-* New: Installation Wizard
+* New: Setup Wizard
 * New: `get_tutor_all_withdrawal_methods()` function to get all available withdraw methods.
 * Updated: optimize database query on `get_course_first_lesson()` on Utils
+* Updated: show/hide withdraw requests and Instructors menu from Tutor Admin Menu based on enable/disable course marketplace
 * Fix: Timezone issue at quiz start and the remaining time
 * Fix: few translation texts domain
-* Fix: Continue to Lesson button on issue when 100% complete course
+* Fix: Continue to Lesson button issue when 100% complete course
 
 = 1.5.6 - 06 March, 2020 =
 
