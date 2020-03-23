@@ -17,13 +17,8 @@ if ( ! defined( 'ABSPATH' ) )
 class Quiz_Export_Import {
 
 	public function __construct() {
-
 		add_action('wp_ajax_quiz_export_data', array($this, 'quiz_export_data_callback'));
-		add_action('wp_ajax_nopriv_quiz_export_data', array($this, 'quiz_export_data_callback'));
-
 		add_action('wp_ajax_quiz_import_data', array($this, 'quiz_import_data_callback'));
-		add_action('wp_ajax_nopriv_quiz_import_data', array($this, 'quiz_import_data_callback'));
-
 	}
 
 
