@@ -3293,3 +3293,23 @@ Tools Nav
 /**
 * END Tools
  */
+ .btn-csv-download span{
+    color: #737578;
+    padding: 1px 16px 0;
+ }
+ .btn-csv-download span:hover{
+     color: #212223;
+ }
+ .btn-tutor-submit span{
+    border: none;
+    color: #737578;
+    background: none;
+    cursor: pointer;
+ }
+ .btn-tutor-submit span:hover{
+    color: #212223;
+ }
+ .tutor-csv-file{
+     width: 190px;
+     padding: 0;
+ }

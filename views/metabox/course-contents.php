@@ -87,6 +87,16 @@
                                     <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
+                                    <span class="tutor-quiz-export-import-form">
+                                        <input type="hidden" name="quiz_id" value="<?php echo $quiz->ID; ?>" />
+                                        <input name="csv_file" class="tutor-csv-file" type="file" accept=".csv" />
+                                        <a class="btn-tutor-submit">
+                                            <span class="dashicons dashicons-upload"></span>
+                                        </a>
+                                    </span>
+                                    <a href="#quiz-builder-export" class="btn-csv-download" data-id="<?php echo $quiz->ID; ?>">
+                                        <span class="dashicons dashicons-download"></span>
+                                    </a>
                                     <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>

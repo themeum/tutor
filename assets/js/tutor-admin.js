@@ -653,4 +653,82 @@ jQuery(document).ready(function($){
         }
     });
 
+    /**
+     * Quiz CSV export action
+     *
+     * @since 
+     */
+    $(document).on( 'click', '.btn-csv-download',  function( event ){
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: {quiz_id : $(this).data('id'), 'action': 'quiz_export_data'},
+            beforeSend: function () {
+                // $that.addClass('updating-icon');
+            },
+            success: function (arr) {
+                if (arr.success) {
+                    let csvContent = "data:text/csv;charset=utf-8,";
+                    arr.data.forEach(function(rowArray) {
+                        let row = rowArray.join(",");
+                        csvContent += row + "\r\n";
+                    });
+                    const encodedUri = encodeURI(csvContent);
+                    let link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", "my_data.csv");
+                    document.body.appendChild(link);
+                    link.click();
+                }
+            },
+            complete: function () {
+                // $that.removeClass('updating-icon');
+            }
+        });
+    });
+
+    /**
+     * Quiz CSV import action
+     *
+     * @since 
+     */
+    $(document).on('click', '.btn-tutor-submit', function (e) {
+        e.preventDefault();
+        const _file = $(this).closest('.tutor-quiz-export-import-form').find("input[name='csv_file']").prop('files')
+
+        if ( _file[0] ) {
+            if( _file[0].type == 'text/csv' ) {
+                if ( _file[0].size > 0 ) {
+                    if (_file[0].size < 10000) {
+                        let formData = new FormData();
+                        formData.append( 'action', 'quiz_import_data' );
+                        formData.append( 'csv_file', _file[0] );
+                        formData.append( 'quiz_id', $(this).closest('.tutor-quiz-export-import-form').find("input[name='quiz_id']").val() );
+                        $.ajax({
+                            url: ajaxurl,
+                            type: 'POST',
+                            data: formData,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                alert('Quiz Import Done.');
+                            },
+                        });
+                    } else {
+                        alert('File is too large.');    
+                    }
+                } else {
+                    alert('File is Empty.');
+                }
+            } else {
+                alert('File Type Not Supported.');
+            }
+        } else {
+            alert('No CSV file selected.');
+        }
+    });
+    
+       
+
 });
