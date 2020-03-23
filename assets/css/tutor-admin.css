@@ -3293,21 +3293,24 @@ Tools Nav
 /**
 * END Tools
  */
- .btn-csv-download span{
-    color: #737578;
-    padding: 1px 16px 0;
+ .btn-csv-download svg{
+    width: 15px;
+    fill: #737578;
+    padding: 4px 20px 0;
+    height: 15px;
  }
- .btn-csv-download span:hover{
-     color: #212223;
- }
- .btn-tutor-submit span{
+ .btn-tutor-submit svg{
+    width: 15px;
     border: none;
-    color: #737578;
+    fill: #737578;
     background: none;
     cursor: pointer;
+    height: 15px;
+    padding-top: 5px;
  }
- .btn-tutor-submit span:hover{
-    color: #212223;
+ .btn-csv-download svg:hover,
+ .btn-tutor-submit svg:hover{
+    fill: #565758;
  }
  .tutor-csv-file{
      width: 190px;
