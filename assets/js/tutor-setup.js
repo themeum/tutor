@@ -314,4 +314,24 @@ jQuery(document).ready(function($) {
 		}
 	}
 
+	/* ---------------------
+	* Attempt Allowed
+	* ---------------------- */
+	$("input[name='attempts-allowed']").on('change', function(e){
+		const _val = $(this).filter(':checked').val()
+		if( _val == 'unlimited' ) {
+			$("input[name='quiz_attempts_allowed']").val(0)
+		} else {
+			$("input[name='quiz_attempts_allowed']").val( $("input[name='attempts-allowed-number").val() )
+		}
+	});
+	$("input[name='attempts-allowed-number']").on('change', function(e){
+		$("input[name='quiz_attempts_allowed']").val($(this).val())
+	})
+	$("input[name='attempts-allowed-number']").on('focus', function(e){
+		$("input[name='attempts-allowed'][value='single']").attr('checked', true);
+	})
+	
+
+
 });

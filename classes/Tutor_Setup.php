@@ -294,6 +294,34 @@ if ( ! defined( 'ABSPATH' ) )
                                             }
                                             $html .= '</div>';
                                         break;
+
+                                        case 'attempt':
+                                            $html .= '<div class="tutor-setting course-setting-wrapper">';
+                                                
+                                                $html .= '<input type="hidden" name="quiz_attempts_allowed" value="'.$options[$key].'">';
+
+                                                $html .= '<div class="content">';
+                                                    $html .= '<div class="course-per-page attempts-allowed">';
+                                                        $html .= '<div class="wrapper">';
+                                                            $html .= '<label for="attempts-allowed-1">';
+                                                                $html .= '<input type="radio" value="single" name="attempts-allowed" class="course-p" id="attempts-allowed-1" '.( isset($options[$key]) && $options[$key] ? 'checked' : '' ).'>';
+                                                                $html .= '<span class="radio-icon"></span>';
+                                                                $html .= '<span class="label-text label-text-2">';
+                                                                    $html .= '<input type="number" value="'.$options[$key].'" name="attempts-allowed-number" class="attempts" id="attempts-allowed-1" min="'.(isset($field['min']) ? $field['min'] : 0).'" max="'.(isset($field['max']) ? $field['max'] : 30 ).'">';
+                                                                $html .= '</span>';
+                                                            $html .= '</label>';
+                                                        $html .= '</div>';
+                                                        $html .= '<div class="wrapper tutor-unlimited-value">';
+                                                            $html .= '<label for="attempts-allowed-2">';
+                                                                $html .= '<input type="radio" name="attempts-allowed" value="unlimited" class="course-p" id="attempts-allowed-2" '.( (!isset($options[$key])) || $options[$key] == 0 ? 'checked' : '' ).'>';
+                                                                $html .= '<span class="radio-icon"></span>';
+                                                                $html .= '<span class="label-text">'.__('Unlimited' ,'tutor').'</span>';
+                                                            $html .= '</label>';
+                                                        $html .= '</div>';
+                                                    $html .= '</div>';
+                                                $html .= '</div>';
+                                            $html .= '</div>';
+                                        break;
                                         
                                         default:
                                             # code...
@@ -403,7 +431,7 @@ if ( ! defined( 'ABSPATH' ) )
                             'tooltip' => __('What message to display when the quiz time expires?', 'tutor'),
                         ),
                         'quiz_attempts_allowed' => array(
-                            'type' => 'slider',
+                            'type' => 'attempt',
                             'lable' => __('Attempts Allowed', 'tutor'),
                             'tooltip' => __('How many attempts does a student get to pass a quiz?', 'tutor'),
                         ),
