@@ -666,6 +666,10 @@ class Course extends Tutor_Base {
 	public function tutor_add_gutenberg_author($data , $postarr){
 		global $wpdb;
 
+		$courses_post_type = tutor()->course_post_type;
+		$post_type = tutils()->array_get('post_type', $postarr);
+
+		/*
 		$post_author = (int) tutor_utils()->avalue_dot('post_author', $data);
 
 		if ( ! $post_author){
@@ -678,7 +682,18 @@ class Course extends Tutor_Base {
 
 				$data['post_author'] = $post_author;
 			}
-		}
+		}*/
+
+		if ($courses_post_type === $post_type){
+            $post_ID = (int) tutor_utils()->avalue_dot('ID', $postarr);
+            $post_author = (int) $wpdb->get_var("SELECT post_author FROM {$wpdb->posts} WHERE ID = {$post_ID} ");
+
+            if ($post_author > 0){
+                $data['post_author'] = $post_author;
+            }else{
+                $data['post_author'] = get_current_user_id();
+            }
+        }
 
 		return $data;
 	}
