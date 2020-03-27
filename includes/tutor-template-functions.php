@@ -838,6 +838,12 @@ if ( ! function_exists('tutor_course_target_reviews_html')) {
 
 if ( ! function_exists('tutor_course_target_review_form_html')) {
 	function tutor_course_target_review_form_html($echo = true) {
+
+	    $isDisableReview = (bool) tutils()->get_option('disable_course_review');
+	    if ($isDisableReview){
+	        return apply_filters('tutor_review_disabled_text', '');
+        }
+
 		ob_start();
 		tutor_load_template( 'single.course.review-form' );
 		$output = apply_filters( 'tutor_course/single/reviews_form', ob_get_clean() );
