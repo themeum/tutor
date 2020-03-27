@@ -16,17 +16,20 @@
 			$authorTag = '<img src="'.$instructor_crown_src.'"><i class="instructor-name-tooltip" title="'. __("Author", "tutor") .'">'. __("Author", "tutor") .'</i>';
 		}
 
+		/*
 		$currentInstructorHtml = '<div id="added-instructor-id-'.$t->ID.'" class="added-instructor-item added-instructor-item-'.$t->ID.'" data-instructor-id="'.$t->ID.'">
                     <div class="instructor-icon">'.get_avatar($t->ID, 45).'</div>
                     <div class="instructor-name"> '.$t->display_name.' '.$authorTag.' </div>
                 </div>';
 		echo $currentInstructorHtml;
+		*/
 
 		if (is_array($instructors) && count($instructors)){
 			foreach ($instructors as $instructor){
+			    /*
 				if ($t->ID == $instructor->ID){
 					continue;
-				}
+				}*/
 
 				if ($post->post_author == $instructor->ID){
 					$authorTag = '<img src="'.$instructor_crown_src.'"><i class="instructor-name-tooltip" title="'. __("Author", "tutor") .'">'. __("Author", "tutor") .'</i>';
