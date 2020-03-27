@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.3
 Requires PHP: 5.4.0
-Stable tag: 1.5.7
+Stable tag: 1.5.8
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,13 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.5.7 - 19 March, 2020 =
+
+* Update: remove course price in the single course if the course already enrolled.
+* Fix: set value 0 to show default value in option panel
+* Fix: Auto-assign Admin while approving pending course at Gutenberg editor
+* Fix: Instructor display condition
 
 = 1.5.7 - 19 March, 2020 =
 

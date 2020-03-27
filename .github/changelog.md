@@ -1,5 +1,12 @@
 # TutorLMS Changelog
 
+### 1.5.7 - 19 March, 2020
+
+* Update: remove course price in the single course if the course already enrolled.
+* Fix: set value 0 to show default value in option panel
+* Fix: Auto-assign Admin while approving pending course at Gutenberg editor
+* Fix: Instructor display condition
+
 ### 1.5.7 - 19 March, 2020 =
 
 * New: Setup Wizard for faster and smoother launch

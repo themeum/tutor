@@ -999,8 +999,14 @@ class Course extends Tutor_Base {
 		return $wp_query;
 	}
 
-
-
+    /**
+     * @param $html
+     * @return string
+     *
+     * Removed course price if already enrolled at single course
+     *
+     * @since v.1.5.8
+     */
 	public function remove_price_if_enrolled($html){
 	    $should_removed = apply_filters('should_remove_price_if_enrolled', true);
 
@@ -1011,9 +1017,7 @@ class Course extends Tutor_Base {
 	            $html = '';
             }
         }
-
 	    return $html;
-
     }
 
 }
