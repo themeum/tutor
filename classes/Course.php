@@ -74,6 +74,12 @@ class Course extends Tutor_Base {
 		 * Filter product in shop page
 		 */
 		$this->filter_product_in_shop_page();
+
+        /**
+         * Remove the course price if enrolled
+         * @since 1.5.8
+         */
+		add_filter('tutor_course_price', array($this, 'remove_price_if_enrolled'));
 	}
 
 	/**
@@ -992,4 +998,22 @@ class Course extends Tutor_Base {
 		}
 		return $wp_query;
 	}
+
+
+
+	public function remove_price_if_enrolled($html){
+	    $should_removed = apply_filters('should_remove_price_if_enrolled', true);
+
+	    if ($should_removed){
+            $course_id = get_the_ID();
+	        $enrolled = tutils()->is_enrolled($course_id);
+	        if ($enrolled){
+	            $html = '';
+            }
+        }
+
+	    return $html;
+
+    }
+
 }
