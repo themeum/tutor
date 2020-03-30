@@ -1539,17 +1539,41 @@ function tutor_next_previous_pagination($course_content_id = 0, $echo = true){
  * Required login form in archive page
  * @param bool $echo
  * @since v 1.5.5
+ *
+ * @todo, it will be remove from 2.0.0
  */
 function tutor_archive_course_add_to_cart($echo = true){
+    _deprecated_function( __FUNCTION__, '1.5.8' );
+
     $output = '';
-    if ( ! is_user_logged_in()){
-        ob_start();
-        tutor_load_template( 'single.course.login' );
-        $login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );
-        $output .= "<div class='tutor-cart-box-login-form' style='display: none;'><span class='login-overlay-close'></span><div class='tutor-cart-box-login-form-inner'><button class='tutor-popup-form-close tutor-icon-line-cross'></button>{$login_form}</div></div>";
-    }
     if ( $echo ) {
         echo $output;
     }
     return $output;
+}
+
+/**
+ * @param bool $echo
+ * @return string
+ *
+ * Display login form in popup where necessary
+ *
+ * @since v.1.5.8
+ */
+
+if ( ! function_exists('tutor_login_form_popup')) {
+    function tutor_login_form_popup($echo = true){
+        $output = '';
+        ob_start();
+        tutor_load_template('single.course.login');
+        $login_form = apply_filters('tutor_course/global/login', ob_get_clean());
+        $output .= "<div class='tutor-cart-box-login-form' style='display: none;'><span class='login-overlay-close'></span><div class='tutor-cart-box-login-form-inner'><button class='tutor-popup-form-close tutor-icon-line-cross'></button>{$login_form}</div></div>";
+
+        $output = apply_filters('tutor_login_form_popup_html', $output);
+
+        if ($echo) {
+            echo $output;
+        }
+        return $output;
+    }
 }
