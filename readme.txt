@@ -241,12 +241,18 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.5.8 - 27 March, 2020 =
+= 1.5.8 - 31 March, 2020 =
 
-* Update: remove course price in the single course if the course already enrolled.
 * Fix: set value 0 to show default value in option panel
 * Fix: Auto-assign Admin while approving pending course at Gutenberg editor
 * Fix: Instructor display condition
+* Fix: Disable review option working properly, disabled course review form
+* Update: remove course price in the single course if the course already enrolled.
+* Fix: Quiz Attempts ended time fix
+* Fix: Quiz Attempts answers order
+* deprecated : tutor_archive_course_add_to_cart() from v.1.5.8
+* Removed: `tutor_archive_course_add_to_cart()` from the `plugins/tutor/templates/archive-course.php`, please update if you override this file to your theme.
+* Updated: Wishlist will show tutor popup login form to non logged users
 
 = 1.5.7 - 19 March, 2020 =
 
