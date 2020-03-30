@@ -3723,7 +3723,7 @@ class Utils {
 		$results = $wpdb->get_results("SELECT answers.*, question.question_title, question.question_type
 		FROM {$wpdb->prefix}tutor_quiz_attempt_answers answers
  		LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question ON answers.question_id = question.question_id
- 		WHERE answers.quiz_attempt_id = {$attempt_id} ");
+ 		WHERE answers.quiz_attempt_id = {$attempt_id} ORDER BY attempt_answer_id ASC ;");
 
 		return $results;
 	}
