@@ -2,16 +2,17 @@
 
 ### 1.5.8 - 31 March, 2020
 
-* Fix: set value 0 to show default value in option panel
+* Updated: Wishlist will now show Tutor LMS popup login form to non-logged users
+* Update: No more course price in a single course if the course already enrolled.
+* Fix: Set value 0 to show default value in option panel
 * Fix: Auto-assign Admin while approving pending course at Gutenberg editor
-* Fix: Instructor display condition
+* Fix: Admin added as an instructor by default in courses
 * Fix: Disable review option working properly, disabled course review form
-* Update: remove course price in the single course if the course already enrolled.
-* Fix: Quiz Attempts ended time fix
+* Fix: Quiz Attempts end time
 * Fix: Quiz Attempts answers order
-* deprecated : tutor_archive_course_add_to_cart() from v.1.5.8
-* Removed: `tutor_archive_course_add_to_cart()` from the `plugins/tutor/templates/archive-course.php`, please update if you override this file to your theme.
-* Updated: Wishlist will show tutor popup login form to non logged users
+* Fix: Wrong calculation when enabled fees deduction before instructor and admin share divide.
+* Deprecated: tutor_archive_course_add_to_cart() from v.1.5.8
+* Removed: "tutor_archive_course_add_to_cart()" from the "plugins/tutor/templates/archive-course.php". Please update if you had overridden this file to your theme.
 
 ### 1.5.7 - 19 March, 2020 =
 
