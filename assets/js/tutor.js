@@ -1045,6 +1045,17 @@ jQuery(document).ready(function($){
         $that.closest('.tutor-media-upload-wrap').find('input').val('');
     });
 
+    /**
+     * Delay Function
+     */
+
+    var tutor_delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+            clearTimeout (timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
 
     /**
      * Add instructor modal
