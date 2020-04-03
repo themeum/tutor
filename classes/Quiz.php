@@ -195,12 +195,12 @@ class Quiz {
 		do_action('tutor_quiz/attempt_analysing/before', $attempt_id);
 
 		if ($attempt_answers && is_array($attempt_answers) && count($attempt_answers)){
-		    foreach ($attempt_answers as $attempt_id => $attempt_answers){
+		    foreach ($attempt_answers as $attempt_id => $attempt_answer){
 
 			    /**
 			     * Get total marks of all question comes
 			     */
-			    $question_ids = tutor_utils()->avalue_dot('quiz_question_ids', $attempt_answers);
+			    $question_ids = tutor_utils()->avalue_dot('quiz_question_ids', $attempt_answer);
 			    if (is_array($question_ids) && count($question_ids)){
 			        $question_ids_string = "'".implode("','", $question_ids)."'";
 			        $total_question_marks = $wpdb->get_var("SELECT SUM(question_mark) FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id IN({$question_ids_string}) ;");
@@ -211,7 +211,7 @@ class Quiz {
 				    die('Operation not allowed, attempt not found or permission denied');
 			    }
 
-			    $quiz_answers = tutor_utils()->avalue_dot('quiz_question', $attempt_answers);
+			    $quiz_answers = tutor_utils()->avalue_dot('quiz_question', $attempt_answer);
 
 			    $total_marks = 0;
 
