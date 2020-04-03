@@ -246,10 +246,9 @@ class Quiz {
 						    $gap_answer          = (array) explode( '|', $get_original_answer->answer_two_gap_match );
 
 						    $gap_answer = array_map( 'sanitize_text_field', $gap_answer );
-						    if ( $given_answer == maybe_serialize( $gap_answer ) ) {
-							    $is_answer_was_correct = true;
-						    }
-
+                            if ( strtolower($given_answer) == strtolower(maybe_serialize( $gap_answer )) ) {
+                                $is_answer_was_correct = true;
+                            }
 					    } elseif ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 
 						    $given_answer = wp_kses_post( $answers );
@@ -758,7 +757,7 @@ class Quiz {
 						'belongs_question_id'   => $question_id,
 						'belongs_question_type' => $question_type,
 						'answer_title'          => $answer['answer_title'],
-						'answer_two_gap_match'           => isset($answer['answer_two_gap_match']) ? strtolower(trim($answer['answer_two_gap_match'])) : null,
+						'answer_two_gap_match'           => isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null,
 					);
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
 				}
@@ -799,7 +798,7 @@ class Quiz {
 					}
 
 					if ($question_type === 'fill_in_the_blank'){
-						$answer_data['answer_two_gap_match'] = isset($answer['answer_two_gap_match']) ? strtolower(trim($answer['answer_two_gap_match'])) : null;
+						$answer_data['answer_two_gap_match'] = isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null;
 					}
 
 					$wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', $answer_data, array('answer_id' => $answer_id));
