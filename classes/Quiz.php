@@ -266,8 +266,6 @@ class Quiz {
 						    }
 
 					    } elseif ( $question_type === 'image_answering' ) {
-						    echo '<pre>';
-
 						    $image_inputs          = tutor_utils()->avalue_dot( 'answer_id', $answers );
 						    $image_inputs          = (array) array_map( 'sanitize_text_field', $image_inputs );
 						    $given_answer          = maybe_serialize( $image_inputs );
