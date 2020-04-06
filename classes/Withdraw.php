@@ -214,12 +214,12 @@ class Withdraw {
 		}
 
 		if ($withdraw_amount < $min_withdraw){
-			$required_min_withdraw = apply_filters('tutor_required_min_amount_msg', sprintf(__('Minimum withdraw amount is %s %s %s ', 'tutor') , '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
+			$required_min_withdraw = apply_filters('tutor_required_min_amount_msg', sprintf(__('Minimum withdrawal amount is %s %s %s ', 'tutor') , '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
 			wp_send_json_error(array('msg' => $required_min_withdraw ));
 		}
 
 		if ($earning_sum->balance < $withdraw_amount){
-			$insufficient_balence = apply_filters('tutor_withdraw_insufficient_balance_msg', sprintf(__('Insufficient balance to withdraw, your balance is %s %s %s ', 'tutor'),'<strong>', $formatted_balance, '</strong>' ) );
+			$insufficient_balence = apply_filters('tutor_withdraw_insufficient_balance_msg', sprintf(__('You do not have sufficient balance to make a withdrawal request. Current balance: %s %s %s ', 'tutor'),'<strong>', $formatted_balance, '</strong>' ) );
 
 			wp_send_json_error(array('msg' => $insufficient_balence ));
 		}
@@ -252,7 +252,7 @@ class Withdraw {
 
 		do_action('tutor_withdraw_after');
 
-		$withdraw_successfull_msg = apply_filters('tutor_withdraw_successful_msg', __('Withdraw has been successful', 'tutor'));
+		$withdraw_successfull_msg = apply_filters('tutor_withdraw_successful_msg', __('Withdrawal Request Sent!', 'tutor'));
 		wp_send_json_success(array('msg' => $withdraw_successfull_msg, 'available_balance' => $new_available_balance ));
 	}
 
