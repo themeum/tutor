@@ -18,8 +18,8 @@ $user_id = get_current_user_id();
 /**
  * Getting the This Month
  */
-$start_date = date("Y-m-01");
-$end_date = date("Y-m-t");
+$start_date = date("Y-m-01 00:00:00");
+$end_date = date("Y-m-t 23:59:59");
 
 
 $earning_sum = tutor_utils()->get_earning_sum($user_id, compact('start_date', 'end_date'));
@@ -36,7 +36,7 @@ $complete_status = "'".implode("','", $complete_status)."'";
  * Format Date Name
  */
 $begin = new DateTime($start_date);
-$end = new DateTime($end_date.' + 1 day');
+$end = new DateTime($end_date);
 $interval = DateInterval::createFromDateString('1 day');
 $period = new DatePeriod($begin, $interval, $end);
 

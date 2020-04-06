@@ -1,6 +1,6 @@
 <div class="tutor-course-builder-header">
-    <a href="javascript:;" class="tutor-expand-all-topic"><?php _e('Expand all'); ?></a> |
-    <a href="javascript:;" class="tutor-collapse-all-topic"><?php _e('Collapse all'); ?></a>
+    <a href="javascript:;" class="tutor-expand-all-topic"><?php _e('Expand all', 'tutor'); ?></a> |
+    <a href="javascript:;" class="tutor-collapse-all-topic"><?php _e('Collapse all', 'tutor'); ?></a>
 </div>
 
 <?php $course_id = get_the_ID(); ?>
@@ -51,7 +51,7 @@
     <div class="tutor-modal-content">
         <div class="modal-header">
             <div class="modal-title">
-                <h1><?php _e('Quiz'); ?></h1>
+                <h1><?php _e('Quiz', 'tutor'); ?></h1>
             </div>
             <div class="modal-close-wrap">
                 <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i> </a>

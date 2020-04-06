@@ -1031,35 +1031,18 @@ class Utils {
 		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
 
-		/*
-		$lesson_id = $wpdb->get_var("
-		SELECT post_id as lesson_id
-		FROM $wpdb->postmeta 
-		INNER JOIN {$wpdb->posts} ON post_id = {$wpdb->posts}.ID
-		WHERE meta_key = '_tutor_course_id_for_lesson' AND meta_value = {$course_id}
-		
-		 ORDER BY menu_order ASC LIMIT 1
-		");*/
-
-		/*
-		$lesson_id = $wpdb->get_var(" select main_posts.ID from {$wpdb->posts} main_posts
-					WHERE  post_parent =
-					(SELECT sub_posts.ID FROM {$wpdb->posts} sub_posts
-					WHERE post_type = 'topics' AND
-					sub_posts.post_parent = {$course_id} ORDER BY sub_posts.menu_order ASC LIMIT 1 )
-					ORDER BY main_posts.menu_order ASC LIMIT 1 ;");
-		*/
-
-
 		$user_id = get_current_user_id();
 
-		$lessons = $wpdb->get_results("SELECT items.* FROM {$wpdb->posts} topic
+		$lessons = $wpdb->get_results("SELECT items.ID FROM {$wpdb->posts} topic
 				INNER JOIN {$wpdb->posts} items ON topic.ID = items.post_parent 
 				WHERE topic.post_parent = {$course_id} AND items.post_status = 'publish' order by topic.menu_order ASC, items.menu_order ASC;");
 
 		$first_lesson = false;
 
 		if (tutils()->count($lessons)){
+		    if (! empty($lessons[0])){
+                $first_lesson = $lessons[0];
+            }
 
 			foreach ($lessons as $lesson){
 				$is_complete = get_user_meta($user_id, "_tutor_completed_lesson_id_{$lesson->ID}", true);
@@ -3740,7 +3723,7 @@ class Utils {
 		$results = $wpdb->get_results("SELECT answers.*, question.question_title, question.question_type
 		FROM {$wpdb->prefix}tutor_quiz_attempt_answers answers
  		LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question ON answers.question_id = question.question_id
- 		WHERE answers.quiz_attempt_id = {$attempt_id} ");
+ 		WHERE answers.quiz_attempt_id = {$attempt_id} ORDER BY attempt_answer_id ASC ;");
 
 		return $results;
 	}
@@ -4566,7 +4549,8 @@ class Utils {
 		$query = $wpdb->get_results("SELECT {$wpdb->posts}.* FROM {$wpdb->posts}
  			INNER JOIN {$wpdb->postmeta} customer ON ID = customer.post_id AND customer.meta_key = '_customer_user'
  			INNER JOIN {$wpdb->postmeta} tutor_order ON ID = tutor_order.post_id AND tutor_order.meta_key = '_is_tutor_order_for_course'
- 			where post_type = 'shop_order' AND customer.meta_value = {$user_id}  ");
+			WHERE post_type = 'shop_order' AND customer.meta_value = {$user_id}  
+			ORDER BY {$wpdb->posts}.ID DESC");
 		return $query;
 	}
 

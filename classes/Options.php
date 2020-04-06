@@ -156,6 +156,13 @@ class Options {
 								'default'   => '0',
 								'desc'      => __('Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.',	'tutor'),
 							),
+							'hide_admin_bar_for_users' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Frontend Admin Bar', 'tutor'),
+								'label_title' => __('Hide', 'tutor'),
+								'default'   => '0',
+								'desc'      => __('Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user',	'tutor'),
+							),
 						)
 					)
 				),
@@ -517,13 +524,13 @@ class Options {
 							'earning_admin_commission' => array(
 								'type'      => 'number',
 								'label'      => __('Admin Commission Percentage', 'tutor'),
-								'default'   => '20',
+								'default'   => '0',
 								'desc'  => __('Define the commission of the Admin from each sale.(after deducting fees)', 'tutor'),
 							),
 							'earning_instructor_commission' => array(
 								'type'      => 'number',
 								'label'      => __('Instructor Commission Percentage', 'tutor'),
-								'default'   => '80',
+								'default'   => '0',
 								'desc'  => __('Define the commission for instructors from each sale.(after deducting fees)', 'tutor'),
 							),
 							'tutor_earning_fees' => array(

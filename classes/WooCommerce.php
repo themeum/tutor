@@ -343,17 +343,21 @@ class WooCommerce extends Tutor_Base {
 
 			if ($enable_fees_deducting){
 				$fees_name = tutor_utils()->avalue_dot('fees_name', $tutor_earning_fees);
-				$fees_amount = tutor_utils()->avalue_dot('fees_amount', $tutor_earning_fees);
+				$fees_amount = (int) tutor_utils()->avalue_dot('fees_amount', $tutor_earning_fees);
 				$fees_type = tutor_utils()->avalue_dot('fees_type', $tutor_earning_fees);
 
 				if ($fees_amount > 0) {
 					if ( $fees_type === 'percent' ) {
-						$course_price_grand_total = ( $total_price * $fees_amount ) / 100;
+                        $fees_amount = ( $total_price * $fees_amount ) / 100;
 					}
+
+					/*
 					if ( $fees_type === 'fixed' ) {
 						$course_price_grand_total = $total_price - $fees_amount;
-					}
-				}
+					}*/
+
+                    $course_price_grand_total = $total_price - $fees_amount;
+                }
 
 				$fees_deduct_data = array(
 					'deduct_fees_amount'    => $fees_amount,

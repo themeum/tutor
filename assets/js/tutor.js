@@ -279,10 +279,26 @@ jQuery(document).ready(function($){
         });
         frame.on( 'select', function() {
             var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('<img src="'+attachment.url+'" alt="" />');
+            $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('<img src="'+attachment.url+'" alt="" /><a href="javascript:;" class="tutor-lesson-thumbnail-delete-btn"><i class="tutor-icon-line-cross"></i></a>');
             $that.closest('.tutor-thumbnail-wrap').find('input').val(attachment.id);
+            $('.tutor-lesson-thumbnail-delete-btn').show();
         });
         frame.open();
+    });
+
+    /**
+     * Lesson Feature Image Delete
+     * @since v.1.5.6
+     */
+    $(document).on('click', '.tutor-lesson-thumbnail-delete-btn', function(e){
+        e.preventDefault();
+
+        var $that = $(this);
+
+        $that.closest('.tutor-thumbnail-wrap').find('._lesson_thumbnail_id').val('');
+        $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('');
+        $that.hide();
+
     });
 
     /**
@@ -1029,6 +1045,17 @@ jQuery(document).ready(function($){
         $that.closest('.tutor-media-upload-wrap').find('input').val('');
     });
 
+    /**
+     * Delay Function
+     */
+
+    var tutor_delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+            clearTimeout (timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
 
     /**
      * Add instructor modal
@@ -1142,7 +1169,8 @@ jQuery(document).ready(function($){
         var url = $that.find('a').attr('href');
 
         $that.addClass('active').siblings('li.active').removeClass('active');
-        $('.settings-tab-wrap').removeClass('active').hide().siblings(data_target).addClass('active').show();
+        $('.settings-tab-wrap').removeClass('active').hide();
+        $(data_target).addClass('active').show();
 
         window.history.pushState({}, '', url);
     });

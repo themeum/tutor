@@ -35,7 +35,12 @@ class Lesson extends Tutor_Base {
 		 * @since v.1.4.9
 		 */
 		add_action('wp_ajax_autoload_next_course_content', array($this, 'autoload_next_course_content'));
-		add_action('wp_ajax_nopriv_autoload_next_course_content', array($this, 'autoload_next_course_content_noprev'));
+
+		/**
+		 * Load next course item after click complete button
+		 * @since v.1.5.3
+		 */
+		add_action('tutor_lesson_completed_after', array($this, 'tutor_lesson_completed_after'), 999);
 	}
 
 	/**
@@ -144,12 +149,13 @@ class Lesson extends Tutor_Base {
 			'post_content'  => $lesson_content,
 		);
 
-		if ($_lesson_thumbnail_id){
-			$lesson_data['_thumbnail_id'] = $_lesson_thumbnail_id;
-		}
-
 		do_action('tutor/lesson_update/before', $lesson_id);
 		wp_update_post($lesson_data);
+		if ($_lesson_thumbnail_id){
+			update_post_meta($lesson_id, '_thumbnail_id', $_lesson_thumbnail_id);
+		}else{
+			delete_post_meta($lesson_id, '_thumbnail_id');
+		}
 		do_action('tutor/lesson_update/after', $lesson_id);
 
 		$course_id = tutor_utils()->get_course_id_by_lesson($lesson_id);
@@ -266,9 +272,6 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->mark_lesson_complete($lesson_id);
 
 		do_action('tutor_lesson_completed_after', $lesson_id);
-
-
-		wp_redirect(get_the_permalink($lesson_id));
 	}
 
 	/**
@@ -308,8 +311,20 @@ class Lesson extends Tutor_Base {
 		wp_send_json_success(array('next_url' => $next_url));
 	}
 
-	public function autoload_next_course_content_noprev(){
-
+	/**
+	 * Load next course item after click complete button
+	 *
+	 * @since v.1.5.3
+	 */
+	public function tutor_lesson_completed_after($content_id){
+		$contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
+		$autoload_course_content = (bool) get_tutor_option('autoload_next_course_content');
+		if($autoload_course_content) {
+			wp_redirect(get_the_permalink($contents->next_id));
+		} else {
+			wp_redirect(get_the_permalink($content_id));
+		}
+		die();
 	}
 
 }

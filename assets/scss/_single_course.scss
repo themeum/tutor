@@ -353,3 +353,30 @@ table.course-single-gradebooks .datetime{
   margin: 0;
   font-size: 80%;
 }
+
+.tutor-course-lessons .tutor-course-lesson h5 i.tutor-lesson-thumbnail-icon {
+  height: 50px;
+  width: 70px;
+  border-radius: 3px;
+  text-align: center;
+  line-height: 50px;
+  color: #fff;
+  margin-right: 10px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  font-size: 20px;
+  background-position: center center !important;
+  background-size: cover !important
+}
+
+.tutor-course-lessons .tutor-course-lesson h5 i.tutor-lesson-thumbnail-icon:after {
+  position: absolute;
+  content: '';
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,.5);
+  z-index: -1
+}
