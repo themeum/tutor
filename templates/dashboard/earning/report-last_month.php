@@ -102,10 +102,6 @@ $statements = tutor_utils()->get_earning_statements($user_id, compact('start_dat
         <?php } ?>
     </div>
 
-
-
-
-
 <div class="tutor-dashboard-item-group">
     <h4><?php echo sprintf(__("Earning Data for the month of %s", 'tutor'), date("F, Y", strtotime($start_date)));?></h4>
     <?php

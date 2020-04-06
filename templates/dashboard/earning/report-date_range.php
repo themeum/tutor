@@ -116,6 +116,3 @@ $statements = tutor_utils()->get_earning_statements($user_id, compact('start_dat
     <h4><?php _e('Sales statements for this period', 'tutor') ?></h4>
     <?php tutor_load_template('dashboard.earning.statement', compact('chartData', 'statements')); ?>
 </div>
-
-
-

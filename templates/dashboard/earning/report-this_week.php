@@ -105,12 +105,6 @@ $statements = tutor_utils()->get_earning_statements($user_id, compact('start_dat
         <?php } ?>
     </div>
 
-
-
-
-
-
-
 <div class="tutor-dashboard-item-group">
     <h4><?php echo sprintf(__("Showing Result from %s to %s", 'tutor'), $begin->format('d F, Y'), $end->format('d F, Y')); ?></h4>
     <?php
