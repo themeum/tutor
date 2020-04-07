@@ -2038,6 +2038,7 @@ Course question and answer
 .quiz-draggable-rand-answers {
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 80px;
 }
 
 .drop-hover {
