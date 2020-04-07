@@ -112,9 +112,9 @@ $user_id = get_current_user_id();
 
 
 	<?php
-	$withdraw_pending_histories = tutor_utils()->get_withdrawals_history(null, array('status' => array('pending')));
-	$withdraw_completed_histories = tutor_utils()->get_withdrawals_history(null, array('status' => array('approved')));
-	$withdraw_rejected_histories = tutor_utils()->get_withdrawals_history(null, array('status' => array('rejected')));
+	$withdraw_pending_histories = tutor_utils()->get_withdrawals_history($user_id, array('status' => array('pending')));
+	$withdraw_completed_histories = tutor_utils()->get_withdrawals_history($user_id, array('status' => array('approved')));
+	$withdraw_rejected_histories = tutor_utils()->get_withdrawals_history($user_id, array('status' => array('rejected')));
 	?>
 
     <div class="withdraw-history-table-wrap">
