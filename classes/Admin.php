@@ -439,7 +439,7 @@ class Admin{
 
 		if ($plugin_file === tutor()->basename) {
 			$plugin_meta[] = sprintf( '<a href="%s">%s</a>',
-				esc_url( 'https://www.themeum.com/docs/tutor-introduction/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_docs_link' ),
+				esc_url( 'https://docs.themeum.com/tutor-lms/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_docs_link' ),
 				__( '<strong style="color: #03bd24">Documentation</strong>', 'tutor' )
 			);
 			$plugin_meta[] = sprintf( '<a href="%s">%s</a>',
