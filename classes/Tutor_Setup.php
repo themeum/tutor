@@ -569,7 +569,7 @@ if ( ! defined( 'ABSPATH' ) )
                                         </div>
                                         <div class="content">
                                             <h2><?php _e('Congratulations, you’re all set!', 'tutor'); ?></h2>
-                                            <p><?php _e( 'Tutor LMS is up and running on your website! If you really want to become a Tutor LMS genius, read our <a target="_blank" href="https://www.themeum.com/docs/tutor-introduction/">documentation</a> that covers everything!', 'tutor' ); ?></p>
+                                            <p><?php _e( 'Tutor LMS is up and running on your website! If you really want to become a Tutor LMS genius, read our <a target="_blank" href="https://docs.themeum.com/tutor-lms/">documentation</a> that covers everything!', 'tutor' ); ?></p>
                                             <p><?php _e( 'If you need further assistance, please don’t hesitate to contact us via our <a target="_blank" href="https://www.themeum.com/contact-us/">contact form.</a>', 'tutor' ); ?></p>
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
