@@ -17,9 +17,8 @@ if ( ! defined( 'ABSPATH' ) )
 class Quiz_Export_Import {
 
 	public function __construct() {
-		add_action('wp_ajax_quiz_export_data', array($this, 'quiz_export_data_callback'));
-		add_action('wp_ajax_quiz_import_data', array($this, 'quiz_import_data_callback'));
-
+		add_action('wp_ajax_quiz_export_data', 			array($this, 'quiz_export_data_callback'));
+		add_action('wp_ajax_quiz_import_data', 			array($this, 'quiz_import_data_callback'));
 		add_action('wp_ajax_tutor_quiz_builder_import', array($this, 'tutor_quiz_builder_import_callback'));
 	}
 
@@ -169,6 +168,8 @@ class Quiz_Export_Import {
 									$temp['hide_quiz_time_display'] = $_time ? $_time : 0;
 									$temp['quiz_auto_start'] = $_start ? $_start : 0;
 									$temp['hide_question_number_overview'] = $_overview ? $_overview : 0;
+
+									update_post_meta($quiz_id, 'tutor_quiz_option', $temp);
 								}
 							}
 						}

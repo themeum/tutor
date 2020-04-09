@@ -676,7 +676,7 @@ jQuery(document).ready(function($){
                     const encodedUri = encodeURI(csvContent);
                     let link = document.createElement("a");
                     link.setAttribute("href", encodedUri);
-                    link.setAttribute("download", "my_data.csv");
+                    link.setAttribute("download", "tutor_quiz_data.csv");
                     document.body.appendChild(link);
                     link.click();
                 }
