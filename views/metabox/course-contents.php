@@ -87,15 +87,9 @@
                                     <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
-                                    <span class="tutor-quiz-export-import-form">
-                                        <input type="hidden" name="quiz_id" value="<?php echo $quiz->ID; ?>" />
-                                        <input name="csv_file" class="tutor-csv-file" type="file" accept=".csv" />
-                                        <a class="btn-tutor-submit">
-                                            <svg id="Solid" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m280 128.569v223.431a24 24 0 0 1 -48 0v-223.431l24-24zm136.971 80.4a24 24 0 0 0 0-33.942l-144-144a24 24 0 0 0 -33.942 0l-144 144a24 24 0 0 0 33.942 33.942l127.029-127.028 127.029 127.03a24 24 0 0 0 33.942 0zm71.029 255.031v-112a24 24 0 0 0 -48 0v88h-368v-88a24 24 0 0 0 -48 0v112a24 24 0 0 0 24 24h416a24 24 0 0 0 24-24z"/></svg>   
-                                        </a>
-                                    </span>
                                     <a href="#quiz-builder-export" class="btn-csv-download" data-id="<?php echo $quiz->ID; ?>">
                                         <svg id="Solid" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m232 271.431v-223.431a24 24 0 0 1 48 0v223.431l-24 24zm40.971 97.54 144-144a24 24 0 0 0 -33.942-33.942l-127.029 127.03-127.029-127.03a24 24 0 0 0 -33.942 33.942l144 144a24 24 0 0 0 33.942 0zm215.029 95.029v-112a24 24 0 0 0 -48 0v88h-368v-88a24 24 0 0 0 -48 0v112a24 24 0 0 0 24 24h416a24 24 0 0 0 24-24z"/></svg>
+                                        <?php _e('Export', 'tutor'); ?>
                                     </a>
                                     <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
@@ -145,6 +139,12 @@
                             <?php _e('Add Topic Quiz', 'tutor'); ?>
                         </button>
 
+                        <input name="csv_file" class="tutor-csv-file" data-topic="<?php echo $topic->ID; ?>" type="file" accept=".csv" />
+                        <button type="button" class="icon-bl btn-tutor-submit tutor-btn default-btn">
+                            <svg id="Solid" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m280 128.569v223.431a24 24 0 0 1 -48 0v-223.431l24-24zm136.971 80.4a24 24 0 0 0 0-33.942l-144-144a24 24 0 0 0 -33.942 0l-144 144a24 24 0 0 0 33.942 33.942l127.029-127.028 127.029 127.03a24 24 0 0 0 33.942 0zm71.029 255.031v-112a24 24 0 0 0 -48 0v88h-368v-88a24 24 0 0 0 -48 0v112a24 24 0 0 0 24 24h416a24 24 0 0 0 24-24z"/></svg>
+                            <?php _e('Import Quiz', 'tutor'); ?>
+                        </button>
+
                         <?php do_action('tutor_course_builder_after_btn_group', $topic->ID); ?>
                     </div>
                 </div>
@@ -176,6 +176,10 @@
                                     <i class="tutor-icon-move"></i>
                                     <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo stripslashes($quiz->post_title); ?>
+                                    </a>
+                                    <a href="#quiz-builder-export" class="btn-csv-download" data-id="<?php echo $quiz->ID; ?>">
+                                        <svg id="Solid" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m232 271.431v-223.431a24 24 0 0 1 48 0v223.431l-24 24zm40.971 97.54 144-144a24 24 0 0 0 -33.942-33.942l-127.029 127.03-127.029-127.03a24 24 0 0 0 -33.942 33.942l144 144a24 24 0 0 0 33.942 0zm215.029 95.029v-112a24 24 0 0 0 -48 0v88h-368v-88a24 24 0 0 0 -48 0v112a24 24 0 0 0 24 24h416a24 24 0 0 0 24-24z"/></svg>
+                                        <?php _e('Export', 'tutor'); ?>
                                     </a>
                                     <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
