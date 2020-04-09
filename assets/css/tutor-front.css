@@ -8756,4 +8756,41 @@ Content Drip (Pro)
   }
 }
 
+/**
+ * Quiz Export Import 
+ */
+ .btn-csv-download{
+  padding: 0px 10px 0;
+  margin-right: 10px;
+}
+.btn-csv-download svg{
+  top: 3px;
+  width: 17px;
+  height: 17px;
+  fill: #737578;
+  position: relative;
+  margin-right: 2px;
+}
+.btn-tutor-submit{
+  float: right;
+  padding-top: 8px;
+  padding-bottom: 11px;
+}
+.btn-tutor-submit svg{
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  fill: var(--tutor-primary-color);
+  position: relative;
+  margin-right: 5px;
+}
+.btn-tutor-submit:hover svg{
+  fill: #ffffff;
+}
+.tutor-csv-file{
+  display: none;
+}
+/**
+* Quiz Export Import End
+*/
 /*# sourceMappingURL=tutor-front.css.map */

@@ -692,10 +692,9 @@ jQuery(document).ready(function($){
      *
      * @since 
      */
-    $(document).on('click', '.btn-tutor-submit', function (e) {
-        e.preventDefault();
-        const _file = $(this).closest('.tutor-quiz-export-import-form').find("input[name='csv_file']").prop('files')
-
+    $(document).on('change', '.tutor-add-quiz-button-wrap input[name="csv_file"]', function (e) {
+        const _file = $(this).parent().find("input[name='csv_file']").prop('files')
+        const that = $(this)
         if ( _file[0] ) {
             if( _file[0].type == 'text/csv' ) {
                 if ( _file[0].size > 0 ) {
@@ -703,7 +702,7 @@ jQuery(document).ready(function($){
                         let formData = new FormData();
                         formData.append( 'action', 'quiz_import_data' );
                         formData.append( 'csv_file', _file[0] );
-                        formData.append( 'quiz_id', $(this).closest('.tutor-quiz-export-import-form').find("input[name='quiz_id']").val() );
+                        formData.append( 'topic_id', $(this).parent().find("input[name='csv_file']").data('topic') );
                         $.ajax({
                             url: ajaxurl,
                             type: 'POST',
@@ -712,7 +711,9 @@ jQuery(document).ready(function($){
                             contentType: false,
                             processData: false,
                             success: function (data) {
-                                alert('Quiz Import Done.');
+                                if(data.success){
+                                    that.closest('.tutor-topics-body').find('.tutor-lessons').append(data.data.output_quiz_row)
+                                }
                             },
                         });
                     } else {
@@ -725,10 +726,12 @@ jQuery(document).ready(function($){
                 alert('File Type Not Supported.');
             }
         } else {
-            alert('No CSV file selected.');
+            alert('No File Selected.');
         }
     });
-    
-       
+    $(document).on('click', '.btn-tutor-submit', function (e) {
+        e.preventDefault();
+        $(this).parent().find('.tutor-csv-file').click();
+    });
 
 });
