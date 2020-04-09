@@ -3,7 +3,7 @@ Contributors: themeum, kawshar, mhshohel, jakirhasan, anik4e, delowardev, rejuan
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.4.0
 Stable tag: 1.5.9
 License: GPLv3
