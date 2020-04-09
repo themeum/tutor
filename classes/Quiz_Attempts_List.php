@@ -40,7 +40,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		$quiz_title .= "<p>{$item->user_email}</p>";
 
 		if ($item->attempt_ended_at){
-			$ended_ago_time = human_time_diff(strtotime($item->attempt_ended_at)).__(' ago', 'tutor');
+			$ended_ago_time = human_time_diff(strtotime($item->attempt_ended_at), tutor_time()).__(' ago', 'tutor');
 			$quiz_title .= "<span>{$ended_ago_time}</span>";
 		}
 

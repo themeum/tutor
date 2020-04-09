@@ -19,8 +19,8 @@ $user_id = get_current_user_id();
  * Getting the This Week
  */
 
-$start_date = sanitize_text_field(tutor_utils()->avalue_dot('date_range_from', $_GET));
-$end_date = sanitize_text_field(tutor_utils()->avalue_dot('date_range_to', $_GET));
+$start_date = sanitize_text_field(tutor_utils()->avalue_dot('date_range_from', $_GET)).' 00:00:00';
+$end_date = sanitize_text_field(tutor_utils()->avalue_dot('date_range_to', $_GET)).' 23:59:59';
 
 $earning_sum = tutor_utils()->get_earning_sum($user_id, compact('start_date', 'end_date'));
 if ( ! $earning_sum){
@@ -36,7 +36,7 @@ $complete_status = "'".implode("','", $complete_status)."'";
  * Format Date Name
  */
 $begin = new DateTime($start_date);
-$end = new DateTime($end_date.' + 1 day');
+$end = new DateTime($end_date);
 $interval = DateInterval::createFromDateString('1 day');
 $period = new DatePeriod($begin, $interval, $end);
 
@@ -116,6 +116,3 @@ $statements = tutor_utils()->get_earning_statements($user_id, compact('start_dat
     <h4><?php _e('Sales statements for this period', 'tutor') ?></h4>
     <?php tutor_load_template('dashboard.earning.statement', compact('chartData', 'statements')); ?>
 </div>
-
-
-

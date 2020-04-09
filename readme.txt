@@ -3,9 +3,9 @@ Contributors: themeum, kawshar, mhshohel, jakirhasan, anik4e, delowardev, rejuan
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.4.0
-Stable tag: 1.5.6
+Stable tag: 1.5.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -15,7 +15,7 @@ A complete WordPress LMS plugin to create any e-learning website easily.
 
 Tutor is a complete, feature-packed and robust WordPress LMS plugin to create & sell courses online easily. All the features of this learning management system hits all the checkpoints for a full-fledged online course marketplace. You can create challenging and fun quizzes, interactive lessons, powerful reports and stats making Tutor potentially the best free WordPress LMS plugin. Manage, administer and monetize your education, online school, and online courses without having to write a single line of code.
 
-⭐ [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) ⭐ || ⭐ [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/) ⭐ || [Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/)
+⭐ [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) ⭐ || ⭐ [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/) ⭐ || [Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://docs.themeum.com/tutor-lms/)
 
 Tutor LMS is a completely free Wordpress LMS plugin with premium high-quality addons that you can add to empower the core plugin more! This WordPress LMS plugin is lightweight with addons to enable certificates, e-mail notifications, shopping carts and so much more!
 
@@ -240,6 +240,45 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.5.9 - 08 April, 2020 =
+
+* Fixed: Dashboard > Earning > Statements link fixed from Earning page
+* Fixed: Course author flag, the flag will be only author name besides.
+* Fixed: Instructor search options
+* Fixed: Capability to add more than 10 Instructors
+* Fixed: Fill the gap quiz option is not accepting capital letters
+* Fixed: Perfect report showing from starting day to ending day, scenario: Last Month, This Month, Last Week, This Week, Date Range.
+* Fixed: Allow Publishing Course option is not working in Gutenberg editor backend
+* Fixed: Quiz image matching question image covering the matching words issue
+* Fixed: Withdrawal timezone issue
+* Fixed: One instructor can view others withdrawal amount
+* Fixed: (Oxygen Builder Integration) Student getting Instructor dashboard
+* Fixed: few spelling issue
+
+= 1.5.8 - 31 March, 2020 =
+
+* Updated: Wishlist will now show Tutor LMS popup login form to non-logged users
+* Update: No more course price in a single course if the course already enrolled.
+* Fix: Set value 0 to show default value in option panel
+* Fix: Auto-assign Admin while approving pending course at Gutenberg editor
+* Fix: Admin added as an instructor by default in courses
+* Fix: Disable review option working properly, disabled course review form
+* Fix: Quiz Attempts end time
+* Fix: Quiz Attempts answers order
+* Fix: Wrong calculation when enabled fees deduction before instructor and admin share divide.
+* Deprecated: tutor_archive_course_add_to_cart() from v.1.5.8
+* Removed: "tutor_archive_course_add_to_cart()" from the "plugins/tutor/templates/archive-course.php". Please update if you had overridden this file to your theme.
+
+= 1.5.7 - 19 March, 2020 =
+
+* New: Setup Wizard for faster and smoother launch
+* New: get_tutor_all_withdrawal_methods() function to get all available withdrawal methods
+* Update: Optimized database query on get_course_first_lesson() on Utils
+* Update: Show/hide withdrawal requests and Instructors menu from Tutor Admin Menu based on enable/disable course marketplace
+* Fix: Timezone issue at quiz start and the remaining time
+* Fix: Few text domains added for translation support
+* Fix: Continue to Lesson button issue when 100% of the course is complete
 
 = 1.5.6 - 06 March, 2020 =
 

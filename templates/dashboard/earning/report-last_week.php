@@ -22,8 +22,8 @@ $user_id = get_current_user_id();
 $previous_week = strtotime("-1 week +1 day");
 $start_date = strtotime("last sunday midnight",$previous_week);
 $end_date = strtotime("next saturday",$start_date);
-$start_date = date("Y-m-d",$start_date);
-$end_date = date("Y-m-d",$end_date);
+$start_date = date("Y-m-d 00:00:00",$start_date);
+$end_date = date("Y-m-d 23:59:59",$end_date);
 
 
 $earning_sum = tutor_utils()->get_earning_sum($user_id, compact('start_date', 'end_date'));
@@ -40,7 +40,7 @@ $complete_status = "'".implode("','", $complete_status)."'";
  * Format Date Name
  */
 $begin = new DateTime($start_date);
-$end = new DateTime($end_date.' + 1 day');
+$end = new DateTime($end_date);
 $interval = DateInterval::createFromDateString('1 day');
 $period = new DatePeriod($begin, $interval, $end);
 

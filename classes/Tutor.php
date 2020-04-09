@@ -140,6 +140,7 @@ final class Tutor{
 		$this->frontend = new Frontend();
 		$this->email = new Email();
 		$this->rest_api = new RestAPI();
+		$this->setup = new Tutor_Setup();
 
 		//Integrations
 		$this->woocommerce = new WooCommerce();
@@ -154,6 +155,30 @@ final class Tutor{
 		do_action('tutor_loaded');
 
 		add_action( 'init', array( $this, 'init_action' ) );
+
+        /**
+         * redirect to the wizard page
+         * @since v.1.5.7
+         *
+         */
+
+		add_action( 'activated_plugin', array( $this, 'activated_tutor' ) );
+	}
+
+    /**
+     * @param $plugin
+     *
+     * redirect to the wizard page
+     * @since v.1.5.7
+     *
+     */
+	public function activated_tutor( $plugin ) {
+		if( $plugin == tutor()->basename ) {
+			if( (! get_option('tutor_wizard') ) && version_compare(TUTOR_VERSION, '1.5.6', '>') ) {
+				update_option('tutor_wizard', 'active');
+				exit(wp_redirect(admin_url('admin.php?page=tutor-setup')));
+			}
+		}
 	}
 
 	/**
@@ -210,7 +235,7 @@ final class Tutor{
 			include tutor()->path.'includes/tutor-general-functions.php';
 		}
 		//Save Option
-		if ( ! $version){
+		if ( ! $version ){
 			//Create Database
 			self::create_database();
 
@@ -265,7 +290,6 @@ final class Tutor{
 		if ( ! $first_activation_date){
 			update_option('tutor_first_activation_time', tutor_time());
 		}
-
 	}
 
 	//Run task on deactivation
@@ -554,6 +578,9 @@ final class Tutor{
 			'email_from_name'                   => get_option('blogname'),
 			'email_from_address'                => get_option('admin_email'),
 			'email_footer_text'                 => '',
+			'earning_admin_commission'			=> '20',
+			'earning_admin_commission'			=> '20',
+			'earning_instructor_commission'		=> '80'
 		);
 		return $options;
 	}

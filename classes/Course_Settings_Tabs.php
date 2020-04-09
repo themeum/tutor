@@ -47,9 +47,7 @@ class Course_Settings_Tabs{
 						'desc'      => __('Number of maximum students can enroll in this course, set zero for no limits', 'tutor'),
 					),
 				),
-
 			),
-
 		);
 
 		return apply_filters('tutor_course_settings_tabs', $args);
