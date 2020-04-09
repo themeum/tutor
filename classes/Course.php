@@ -74,6 +74,12 @@ class Course extends Tutor_Base {
 		 * Filter product in shop page
 		 */
 		$this->filter_product_in_shop_page();
+
+        /**
+         * Remove the course price if enrolled
+         * @since 1.5.8
+         */
+		add_filter('tutor_course_price', array($this, 'remove_price_if_enrolled'));
 	}
 
 	/**
@@ -666,6 +672,10 @@ class Course extends Tutor_Base {
 	public function tutor_add_gutenberg_author($data , $postarr){
 		global $wpdb;
 
+		$courses_post_type = tutor()->course_post_type;
+		$post_type = tutils()->array_get('post_type', $postarr);
+
+		/*
 		$post_author = (int) tutor_utils()->avalue_dot('post_author', $data);
 
 		if ( ! $post_author){
@@ -678,7 +688,18 @@ class Course extends Tutor_Base {
 
 				$data['post_author'] = $post_author;
 			}
-		}
+		}*/
+
+		if ($courses_post_type === $post_type){
+            $post_ID = (int) tutor_utils()->avalue_dot('ID', $postarr);
+            $post_author = (int) $wpdb->get_var("SELECT post_author FROM {$wpdb->posts} WHERE ID = {$post_ID} ");
+
+            if ($post_author > 0){
+                $data['post_author'] = $post_author;
+            }else{
+                $data['post_author'] = get_current_user_id();
+            }
+        }
 
 		return $data;
 	}
@@ -977,4 +998,26 @@ class Course extends Tutor_Base {
 		}
 		return $wp_query;
 	}
+
+    /**
+     * @param $html
+     * @return string
+     *
+     * Removed course price if already enrolled at single course
+     *
+     * @since v.1.5.8
+     */
+	public function remove_price_if_enrolled($html){
+	    $should_removed = apply_filters('should_remove_price_if_enrolled', true);
+
+	    if ($should_removed){
+            $course_id = get_the_ID();
+	        $enrolled = tutils()->is_enrolled($course_id);
+	        if ($enrolled){
+	            $html = '';
+            }
+        }
+	    return $html;
+    }
+
 }

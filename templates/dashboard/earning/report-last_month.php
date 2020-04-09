@@ -18,10 +18,8 @@ $user_id = get_current_user_id();
 /**
  * Getting the Last Month
  */
-$start_date = date("Y-m", strtotime('-1 month'));
-$start_date = $start_date.'-1';
-$end_date = date("Y-m-t", strtotime($start_date));
-
+$start_date = date('Y-m-01 00:00:00', strtotime('last day of last month'));
+$end_date = date("Y-m-t 23:59:59", strtotime($start_date));
 
 $earning_sum = tutor_utils()->get_earning_sum($user_id, compact('start_date', 'end_date'));
 if ( ! $earning_sum){
@@ -37,7 +35,7 @@ $complete_status = "'".implode("','", $complete_status)."'";
  * Format Date Name
  */
 $begin = new DateTime($start_date);
-$end = new DateTime($end_date.' + 1 day');
+$end = new DateTime($end_date);
 $interval = DateInterval::createFromDateString('1 day');
 $period = new DatePeriod($begin, $interval, $end);
 
@@ -69,7 +67,6 @@ foreach ($chartData as $key => $salesCount){
 	$formatDate = date('d M', strtotime($key));
 	$chartData[$formatDate] = $salesCount;
 }
-
 $statements = tutor_utils()->get_earning_statements($user_id, compact('start_date', 'end_date', 'statuses'));
 
 ?>
@@ -104,10 +101,6 @@ $statements = tutor_utils()->get_earning_statements($user_id, compact('start_dat
             </div>
         <?php } ?>
     </div>
-
-
-
-
 
 <div class="tutor-dashboard-item-group">
     <h4><?php echo sprintf(__("Earning Data for the month of %s", 'tutor'), date("F, Y", strtotime($start_date)));?></h4>

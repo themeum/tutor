@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h1><?php _e('Tutor Settings'); ?></h1>
+    <h1><?php _e('Tutor Settings', 'tutor'); ?></h1>
 
 
     <form id="tutor-option-form" class="tutor-option-form" method="post">

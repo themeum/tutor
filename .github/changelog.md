@@ -1,5 +1,43 @@
 # TutorLMS Changelog
 
+### 1.5.9 - 08 April, 2020
+
+* Fixed: Dashboard > Earning > Statements link fixed from Earning page
+* Fixed: Course author flag, the flag will be only author name besides.
+* Fixed: Instructor search options
+* Fixed: Capability to add more than 10 Instructors
+* Fixed: Fill the gap quiz option is not accepting capital letters
+* Fixed: Perfect report showing from starting day to ending day, scenario: Last Month, This Month, Last Week, This Week, Date Range.
+* Fixed: Allow Publishing Course option is not working in Gutenberg editor backend
+* Fixed: Quiz image matching question image covering the matching words issue
+* Fixed: Withdrawal timezone issue
+* Fixed: One instructor can view others withdrawal amount
+* Fixed: (Oxygen Builder Integration) Student getting Instructor dashboard
+* Fixed: few spelling issue
+
+### 1.5.8 - 31 March, 2020
+
+* Updated: Wishlist will now show Tutor LMS popup login form to non-logged users
+* Update: No more course price in a single course if the course already enrolled.
+* Fix: Set value 0 to show default value in option panel
+* Fix: Auto-assign Admin while approving pending course at Gutenberg editor
+* Fix: Admin added as an instructor by default in courses
+* Fix: Disable review option working properly, disabled course review form
+* Fix: Quiz Attempts end time
+* Fix: Quiz Attempts answers order
+* Fix: Wrong calculation when enabled fees deduction before instructor and admin share divide.
+* Deprecated: tutor_archive_course_add_to_cart() from v.1.5.8
+* Removed: "tutor_archive_course_add_to_cart()" from the "plugins/tutor/templates/archive-course.php". Please update if you had overridden this file to your theme.
+
+### 1.5.7 - 19 March, 2020 =
+
+* New: Setup Wizard for faster and smoother launch
+* New: get_tutor_all_withdrawal_methods() function to get all available withdrawal methods
+* Update: Optimized database query on get_course_first_lesson() on Utils
+* Update: Show/hide withdrawal requests and Instructors menu from Tutor Admin Menu based on enable/disable course marketplace
+* Fix: Timezone issue at quiz start and the remaining time
+* Fix: Few text domains added for translation support
+* Fix: Continue to Lesson button issue when 100% of the course is complete
 
 ### 1.5.6 - 06 March, 2020
 

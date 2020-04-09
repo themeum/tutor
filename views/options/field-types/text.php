@@ -1,6 +1,6 @@
 <?php
 $value = $this->get($field['field_key']);
-if ( ! $value && isset($field['default'])){
+if ( $value != '0' && ! $value && isset($field['default'])){
 	$value = $field['default'];
 }
 ?>

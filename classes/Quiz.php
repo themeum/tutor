@@ -195,12 +195,12 @@ class Quiz {
 		do_action('tutor_quiz/attempt_analysing/before', $attempt_id);
 
 		if ($attempt_answers && is_array($attempt_answers) && count($attempt_answers)){
-		    foreach ($attempt_answers as $attempt_id => $attempt_answers){
+		    foreach ($attempt_answers as $attempt_id => $attempt_answer){
 
 			    /**
 			     * Get total marks of all question comes
 			     */
-			    $question_ids = tutor_utils()->avalue_dot('quiz_question_ids', $attempt_answers);
+			    $question_ids = tutor_utils()->avalue_dot('quiz_question_ids', $attempt_answer);
 			    if (is_array($question_ids) && count($question_ids)){
 			        $question_ids_string = "'".implode("','", $question_ids)."'";
 			        $total_question_marks = $wpdb->get_var("SELECT SUM(question_mark) FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id IN({$question_ids_string}) ;");
@@ -211,7 +211,7 @@ class Quiz {
 				    die('Operation not allowed, attempt not found or permission denied');
 			    }
 
-			    $quiz_answers = tutor_utils()->avalue_dot('quiz_question', $attempt_answers);
+			    $quiz_answers = tutor_utils()->avalue_dot('quiz_question', $attempt_answer);
 
 			    $total_marks = 0;
 
@@ -246,10 +246,9 @@ class Quiz {
 						    $gap_answer          = (array) explode( '|', $get_original_answer->answer_two_gap_match );
 
 						    $gap_answer = array_map( 'sanitize_text_field', $gap_answer );
-						    if ( $given_answer == maybe_serialize( $gap_answer ) ) {
-							    $is_answer_was_correct = true;
-						    }
-
+                            if ( strtolower($given_answer) == strtolower(maybe_serialize( $gap_answer )) ) {
+                                $is_answer_was_correct = true;
+                            }
 					    } elseif ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 
 						    $given_answer = wp_kses_post( $answers );
@@ -267,8 +266,6 @@ class Quiz {
 						    }
 
 					    } elseif ( $question_type === 'image_answering' ) {
-						    echo '<pre>';
-
 						    $image_inputs          = tutor_utils()->avalue_dot( 'answer_id', $answers );
 						    $image_inputs          = (array) array_map( 'sanitize_text_field', $image_inputs );
 						    $given_answer          = maybe_serialize( $image_inputs );
@@ -766,7 +763,7 @@ class Quiz {
 						'belongs_question_id'   => $question_id,
 						'belongs_question_type' => $question_type,
 						'answer_title'          => $answer['answer_title'],
-						'answer_two_gap_match'           => isset($answer['answer_two_gap_match']) ? strtolower(trim($answer['answer_two_gap_match'])) : null,
+						'answer_two_gap_match'           => isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null,
 					);
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
 				}
@@ -807,7 +804,7 @@ class Quiz {
 					}
 
 					if ($question_type === 'fill_in_the_blank'){
-						$answer_data['answer_two_gap_match'] = isset($answer['answer_two_gap_match']) ? strtolower(trim($answer['answer_two_gap_match'])) : null;
+						$answer_data['answer_two_gap_match'] = isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null;
 					}
 
 					$wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', $answer_data, array('answer_id' => $answer_id));

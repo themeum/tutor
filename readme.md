@@ -16,7 +16,7 @@ feature-packed and robust WordPress LMS plugin to create & sell courses online e
 
 
 ### Documentation
-[https://www.themeum.com/docs/tutor-introduction/](https://www.themeum.com/docs/tutor-introduction/?utm_source=github_repository)
+[https://docs.themeum.com/tutor-lms/](https://docs.themeum.com/tutor-lms/?utm_source=github_repository)
 
 
 ### Reporting a Bug

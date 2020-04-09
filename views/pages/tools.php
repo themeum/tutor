@@ -7,10 +7,8 @@
 		if (tutils()->count($pages)){
 			foreach ($pages as $key => $page){
 				$title = is_array($page)? $page['title'] : $page;
-
 				$active_class = $key == $current_page ? 'nav-tab-item-active' : '';
 				$url = add_query_arg(array('sub_page' => $key ));
-
 				echo "<a href='{$url}' class='nav-tab-item {$active_class} '>{$title}</a>";
 			}
 		}

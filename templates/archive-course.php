@@ -8,7 +8,7 @@
  * @url https://themeum.com
  *
  * @package TutorLMS/Templates
- * @version 1.4.3
+ * @version 1.5.8
  */
 
 get_header(); ?>
@@ -52,12 +52,6 @@ get_header(); ?>
 		endif;
 
 		tutor_course_archive_pagination();
-
-		/**
-		 * Required loggedin form popup
-		 * @since v 1.5.5
-		 */
-		tutor_archive_course_add_to_cart();
 
 		do_action('tutor_course/archive/after_loop');
 		?>
