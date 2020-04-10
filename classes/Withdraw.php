@@ -226,7 +226,7 @@ class Withdraw {
 		}
 
 
-		$date = date("Y-m-d H:i:s");
+        $date = date("Y-m-d H:i:s", tutor_time());
 
 		$withdraw_data = apply_filters('tutor_pre_withdraw_data', array(
 			'user_id'       => $user_id,

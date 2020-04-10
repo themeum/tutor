@@ -30,7 +30,13 @@ class Instructor {
 		 * @since v.1.5.3
 		 */
 		add_action('wp_ajax_instructor_approval_action', array($this, 'instructor_approval_action'));
-	}
+
+        /**
+         * Check if instructor can publish courses
+         * @since v.1.5.9
+         */
+        add_action('tutor_option_save_after', array($this, 'can_publish_tutor_courses'));
+    }
 
 	/**
 	 * Register new user and mark him as instructor
@@ -240,5 +246,23 @@ class Instructor {
 
 		wp_send_json_success();
 	}
+
+    /**
+     * Can instructor publish courses directly
+     * Fixed in Gutenberg @since v.1.5.9
+     */
+
+	public function can_publish_tutor_courses(){
+        $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course');
+
+        $instructor_role = tutor()->instructor_role;
+        $instructor = get_role( $instructor_role );
+
+        if ($can_publish_course){
+            $instructor->add_cap('publish_tutor_courses');
+        }else{
+            $instructor->remove_cap('publish_tutor_courses');
+        }
+    }
 
 }

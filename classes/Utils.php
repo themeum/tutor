@@ -197,15 +197,11 @@ class Utils {
 	 * Check if WooCommerce Activated
 	 *
 	 * @since v.1.0.0
+     * @updated @1.5.9
 	 */
 
 	public function has_wc(){
-		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
-		//$depends = array('woocommerce/woocommerce.php', 'tutor-woocommerce/tutor-woocommerce.php');
-		$depends = array('woocommerce/woocommerce.php');
-		$has = count(array_intersect($depends, $activated_plugins)) == count($depends);
-
-		return $has;
+		return class_exists('WooCommerce');
 	}
 
 	/**

@@ -3,9 +3,9 @@ Contributors: themeum, kawshar, mhshohel, jakirhasan, anik4e, delowardev, rejuan
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.4.0
-Stable tag: 1.5.8
+Stable tag: 1.5.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -15,7 +15,7 @@ A complete WordPress LMS plugin to create any e-learning website easily.
 
 Tutor is a complete, feature-packed and robust WordPress LMS plugin to create & sell courses online easily. All the features of this learning management system hits all the checkpoints for a full-fledged online course marketplace. You can create challenging and fun quizzes, interactive lessons, powerful reports and stats making Tutor potentially the best free WordPress LMS plugin. Manage, administer and monetize your education, online school, and online courses without having to write a single line of code.
 
-⭐ [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) ⭐ || ⭐ [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/) ⭐ || [Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://www.themeum.com/docs/tutor-introduction/)
+⭐ [Tutor LMS Pro](https://www.themeum.com/product/tutor-lms/) ⭐ || ⭐ [Tutor LMS Themes](https://www.themeum.com/theme-category/tutor/) ⭐ || [Live Demo](https://demo.themeum.com/plugins/tutor/) || [Documentation](https://docs.themeum.com/tutor-lms/)
 
 Tutor LMS is a completely free Wordpress LMS plugin with premium high-quality addons that you can add to empower the core plugin more! This WordPress LMS plugin is lightweight with addons to enable certificates, e-mail notifications, shopping carts and so much more!
 
@@ -240,6 +240,21 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.5.9 - 08 April, 2020 =
+
+* Fixed: Dashboard > Earning > Statements link fixed from Earning page
+* Fixed: Course author flag, the flag will be only author name besides.
+* Fixed: Instructor search options
+* Fixed: Capability to add more than 10 Instructors
+* Fixed: Fill the gap quiz option is not accepting capital letters
+* Fixed: Perfect report showing from starting day to ending day, scenario: Last Month, This Month, Last Week, This Week, Date Range.
+* Fixed: Allow Publishing Course option is not working in Gutenberg editor backend
+* Fixed: Quiz image matching question image covering the matching words issue
+* Fixed: Withdrawal timezone issue
+* Fixed: One instructor can view others withdrawal amount
+* Fixed: (Oxygen Builder Integration) Student getting Instructor dashboard
+* Fixed: few spelling issue
 
 = 1.5.8 - 31 March, 2020 =
 

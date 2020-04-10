@@ -1,5 +1,20 @@
 # TutorLMS Changelog
 
+### 1.5.9 - 08 April, 2020
+
+* Fixed: Dashboard > Earning > Statements link fixed from Earning page
+* Fixed: Course author flag, the flag will be only author name besides.
+* Fixed: Instructor search options
+* Fixed: Capability to add more than 10 Instructors
+* Fixed: Fill the gap quiz option is not accepting capital letters
+* Fixed: Perfect report showing from starting day to ending day, scenario: Last Month, This Month, Last Week, This Week, Date Range.
+* Fixed: Allow Publishing Course option is not working in Gutenberg editor backend
+* Fixed: Quiz image matching question image covering the matching words issue
+* Fixed: Withdrawal timezone issue
+* Fixed: One instructor can view others withdrawal amount
+* Fixed: (Oxygen Builder Integration) Student getting Instructor dashboard
+* Fixed: few spelling issue
+
 ### 1.5.8 - 31 March, 2020
 
 * Updated: Wishlist will now show Tutor LMS popup login form to non-logged users
