@@ -1908,6 +1908,27 @@ class Utils {
 		return false;
 	}
 
+
+    /**
+     * @param int $course_id
+     * @param int $user_id
+     * @param string $cancel_status
+     */
+	public function cancel_course_enrol($course_id = 0, $user_id = 0, $cancel_status = 'cancel'){
+	    $course_id = $this->get_post_id($course_id);
+	    $user_id = $this->get_user_id($user_id);
+
+	    if ($this->is_enrolled($course_id, $user_id)){
+	        global $wpdb;
+
+	        if ($cancel_status === 'delete'){
+	            $wpdb->delete($wpdb->posts, array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id));
+            }else{
+	            $wpdb->update($wpdb->posts, array('post_status' => $cancel_status), array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id) );
+            }
+        }
+    }
+
 	/**
 	 * @param $order_id
 	 *
