@@ -1914,15 +1914,28 @@ class Utils {
      * @param int $user_id
      * @param string $cancel_status
      */
-	public function cancel_course_enrol($course_id = 0, $user_id = 0, $cancel_status = 'cancel'){
+	public function cancel_course_enrol($course_id = 0, $user_id = 0, $cancel_status = 'canceled'){
 	    $course_id = $this->get_post_id($course_id);
 	    $user_id = $this->get_user_id($user_id);
 
-	    if ($this->is_enrolled($course_id, $user_id)){
+
+	    $enrolled = $this->is_enrolled($course_id, $user_id);
+
+	    if ($enrolled){
 	        global $wpdb;
 
 	        if ($cancel_status === 'delete'){
 	            $wpdb->delete($wpdb->posts, array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id));
+
+	            //Delete Related Meta Data
+	            delete_post_meta($enrolled->ID, '_tutor_enrolled_by_product_id');
+	            $order_id = get_post_meta($enrolled->ID, '_tutor_enrolled_by_order_id', true);
+	            if ($order_id){
+	                delete_post_meta($enrolled->ID, '_tutor_enrolled_by_order_id');
+	                delete_post_meta($order_id, '_is_tutor_order_for_course');
+	                delete_post_meta($order_id, '_tutor_order_for_course_id_'.$course_id);
+                }
+
             }else{
 	            $wpdb->update($wpdb->posts, array('post_status' => $cancel_status), array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id) );
             }

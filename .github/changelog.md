@@ -1,5 +1,11 @@
 # TutorLMS Changelog
 
+### 1.6.0 - 13 April, 2020
+
+* Added: method `tutils()->cancel_course_enrol()`
+* Added: function `is_single_course()`
+* Fixed: Paid Membership Pro expiration issue
+
 ### 1.5.9 - 08 April, 2020
 
 * Fixed: Dashboard > Earning > Statements link fixed from Earning page
