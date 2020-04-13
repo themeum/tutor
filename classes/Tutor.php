@@ -126,7 +126,6 @@ final class Tutor{
 		$this->student = new Student();
 		$this->q_and_a = new Q_and_A();
 		$this->quiz = new Quiz();
-		$this->quiz_export_import = new Quiz_Export_Import();
 		$this->tools = new Tools();
 		$this->user = new User();
 		$this->theme_compatibility = new Theme_Compatibility();
