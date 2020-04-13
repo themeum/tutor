@@ -82,6 +82,10 @@ class Addons {
 				'name'          => __('Tutor Report', 'tutor'),
 				'description'   => 'Check your course performance through Tutor Report stats.',
 			),
+			'quiz-import-export' => array(
+				'name'          => __('Quiz Import Export', 'tutor'),
+				'description'   => __('Save time by exporting/importing quiz data with easy options', 'tutor'),
+			),
 		);
 
 		return $addons;
