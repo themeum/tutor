@@ -1918,7 +1918,6 @@ class Utils {
 	    $course_id = $this->get_post_id($course_id);
 	    $user_id = $this->get_user_id($user_id);
 
-
 	    $enrolled = $this->is_enrolled($course_id, $user_id);
 
 	    if ($enrolled){
@@ -1935,7 +1934,6 @@ class Utils {
 	                delete_post_meta($order_id, '_is_tutor_order_for_course');
 	                delete_post_meta($order_id, '_tutor_order_for_course_id_'.$course_id);
                 }
-
             }else{
 	            $wpdb->update($wpdb->posts, array('post_status' => $cancel_status), array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id) );
             }
