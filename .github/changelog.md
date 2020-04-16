@@ -7,6 +7,7 @@
 * Added: Function `is_single_course();`
 * Added: Action hook `do_action('tutor_new_instructor_after', $user_id);` at register instructor and apply as an instructor
 * Added: action hook `do_action(“tutor_course_builder_before_quiz_btn_action”, $quiz_id);`
+* Improved: Certificate generator PDF compatibility with PHP 7.3
 * Removed: Options from the _tutorobject JavaScript Variable
 * Fixed: Email notification showing raw variable {instructor_username}
 * Fixed: Paid Membership Pro expiration issue
