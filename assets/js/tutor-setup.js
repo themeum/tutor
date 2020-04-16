@@ -60,8 +60,10 @@ jQuery(document).ready(function($) {
 	$("input[type=radio][name=enable_course_marketplace_setup]").change( function() {
 			if (this.value == "0") {
 				$("input[name=enable_course_marketplace]").val("");
+				$("input[name=enable_tutor_earning]").val("");
 			} else if (this.value == "1") {
 				$("input[name=enable_course_marketplace]").val("1");
+				$("input[name=enable_tutor_earning]").val("1");
 			}
 		}
 	);
