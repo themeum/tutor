@@ -306,13 +306,13 @@ jQuery(document).ready(function($){
                     countdown_human = "EXPIRED";
                     //Set the quiz attempt to timeout in ajax
 
-                    if (_tutorobject.options.quiz_when_time_expires === 'autosubmit') {
+                    if (_tutorobject.quiz_options.quiz_when_time_expires === 'autosubmit') {
                         /**
                          * Auto Submit
                          */
                         $('form#tutor-answering-quiz').submit();
 
-                    } else if (_tutorobject.options.quiz_when_time_expires === 'autoabandon') {
+                    } else if (_tutorobject.quiz_options.quiz_when_time_expires === 'autoabandon') {
                         /**
                          *
                          * @type {jQuery}
