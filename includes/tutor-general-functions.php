@@ -558,3 +558,22 @@ if ( ! function_exists('tutor_maintenance_mode')) {
 	}
 }
 
+/**
+ * @return bool
+ *
+ * Check if the current page is course single page
+ *
+ * @since v.1.6.0
+ */
+
+if ( ! function_exists('is_single_course')) {
+    function is_single_course(){
+        global $wp_query;
+        $course_post_type = tutor()->course_post_type;
+
+        if (is_single() && !empty($wp_query->query['post_type']) && $wp_query->query['post_type'] === $course_post_type) {
+            return true;
+        }
+        return false;
+    }
+}

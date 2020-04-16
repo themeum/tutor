@@ -1,5 +1,18 @@
 # TutorLMS Changelog
 
+### 1.6.0 - 16 April, 2020
+
+* New: Quiz Export/Import add-on (Pro)
+* Added: Method `tutils()->cancel_course_enrol()`
+* Added: Function `is_single_course();`
+* Added: Action hook `do_action('tutor_new_instructor_after', $user_id);` at register instructor and apply as an instructor
+* Added: action hook `do_action(“tutor_course_builder_before_quiz_btn_action”, $quiz_id);`
+* Removed: Options from the _tutorobject JavaScript Variable
+* Fixed: Email notification showing raw variable {instructor_username}
+* Fixed: Paid Membership Pro expiration issue
+* Fixed: ability to empty and deleting empty additional meta fields from the post_meta.
+* Fixed: Earning option enable if the marketplace was selected during the setup wizard
+
 ### 1.5.9 - 08 April, 2020
 
 * Fixed: Dashboard > Earning > Statements link fixed from Earning page

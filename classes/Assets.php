@@ -75,12 +75,12 @@ class Assets{
 			wp_enqueue_media();
 		}
 
-		$options = tutor_utils()->get_option();
+		//$options = tutor_utils()->get_option();
 		$localize_data = array(
 			'ajaxurl'       => admin_url('admin-ajax.php'),
 			'nonce_key'     => tutor()->nonce,
 			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
-			'options'       => $options,
+			//'options'       => $options,
 			'placeholder_img_src' => tutor_placeholder_img_src(),
 			'enable_lesson_classic_editor' => get_tutor_option('enable_lesson_classic_editor'),
 
@@ -90,7 +90,12 @@ class Assets{
 		);
 
 		if ( ! empty($post->post_type) && $post->post_type === 'tutor_quiz'){
-			$quiz_options = tutor_utils()->get_quiz_option($post->ID);
+			$single_quiz_options = tutor_utils()->get_quiz_option($post->ID);
+			$saved_quiz_options = array(
+			    'quiz_when_time_expires' => tutils()->get_option('quiz_when_time_expires'),
+            );
+
+            $quiz_options = array_merge($single_quiz_options, $saved_quiz_options);
 			$localize_data['quiz_options'] = $quiz_options;
 		}
 
