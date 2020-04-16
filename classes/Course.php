@@ -235,22 +235,38 @@ class Course extends Tutor_Base {
 
 		if (isset($_POST['course_benefits'])){
 			$course_benefits = sanitize_textarea_field($_POST['course_benefits']);
-			update_post_meta($post_ID, '_tutor_course_benefits', $course_benefits);
+			if ($course_benefits) {
+				update_post_meta($post_ID, '_tutor_course_benefits', $course_benefits);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_benefits');
+			}
 		}
 
 		if (isset($_POST['course_requirements'])){
 			$requirements = sanitize_textarea_field($_POST['course_requirements']);
-			update_post_meta($post_ID, '_tutor_course_requirements', $requirements);
+			if ($requirements) {
+				update_post_meta($post_ID, '_tutor_course_requirements', $requirements);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_requirements');
+			}
 		}
 
 		if (isset($_POST['course_target_audience'])){
 			$target_audience = sanitize_textarea_field($_POST['course_target_audience']);
-			update_post_meta($post_ID, '_tutor_course_target_audience', $target_audience);
+			if ($target_audience) {
+				update_post_meta($post_ID, '_tutor_course_target_audience', $target_audience);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_target_audience');
+			}
 		}
 
 		if (isset($_POST['course_material_includes'])){
 			$material_includes = sanitize_textarea_field($_POST['course_material_includes']);
-			update_post_meta($post_ID, '_tutor_course_material_includes', $material_includes);
+			if ($material_includes) {
+				update_post_meta($post_ID, '_tutor_course_material_includes', $material_includes);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_material_includes');
+			}
 		}
 		/**
 		 * Sorting Topics and lesson
