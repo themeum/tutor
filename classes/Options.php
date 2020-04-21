@@ -186,6 +186,17 @@ class Options {
 								'label_title'   => __('Hide course products from shop page', 'tutor'),
 								'desc' => __('Enabling this feature will be removed course products from the shop page.', 'tutor'),
 							),
+                            'course_completion_process' => array(
+                                'type'          => 'radio',
+                                'label'         => __('Course Completion Process', 'tutor'),
+                                'default'       => 'flexible',
+                                'select_options'   => false,
+                                'options'   => array(
+                                    'flexible'  =>  __('Flexible', 'tutor'),
+                                    'strict'    =>  __('Strict Mode', 'tutor'),
+                                ),
+                                'desc'          => __('Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor'),
+                            ),
 						),
 					),
 					'archive' => array(
