@@ -214,6 +214,9 @@ Group Field Option
     width: 100px;
     margin-right: 5px;
 }
+.option-type-radio-wrap{
+    margin-top: 0;
+}
 
 /**
 * Course adding page
