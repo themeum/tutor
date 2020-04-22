@@ -1985,6 +1985,9 @@ Tutor Media Upload
 .tutor-add-quiz-button-wrap {
     margin: 20px 0;
 }
+.tutor-add-quiz-button-wrap a{
+    color: #2756d1;
+}
 .tutor-quiz-delete-btn{
     color: #FF0000;
 }
