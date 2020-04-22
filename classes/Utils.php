@@ -968,6 +968,32 @@ class Utils {
 		return false;
 	}
 
+
+    /**
+     * @param int $enrol_id
+     * @return array|bool|\WP_Post|null
+     *
+     * Get course by enrol id
+     *
+     * @since v.1.6.1
+     */
+
+	public function get_course_by_enrol_id($enrol_id = 0){
+	    if ( ! $enrol_id){
+	        return false;
+        }
+
+        global $wpdb;
+
+        $course_id = (int) $wpdb->get_var( "select post_parent from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND ID = {$enrol_id}" );
+
+        if ( $course_id ) {
+            return get_post($course_id);
+        }
+
+        return null;
+    }
+
 	/**
 	 * @param int $lesson_id
 	 * @param int $user_id
@@ -1907,6 +1933,27 @@ class Utils {
 
 		return false;
 	}
+
+    /**
+     * @param bool $enrol_id
+     * @param string $new_status
+     *
+     * Enrol Status change
+     *
+     * @since v.1.6.1
+     */
+
+	public function course_enrol_status_change($enrol_id = false, $new_status = ''){
+	    if ( ! $enrol_id){
+	        return;
+        }
+
+	    global $wpdb;
+
+	    do_action('tutor/course/enrol_status_change/before',$enrol_id, $new_status );
+        $wpdb->update( $wpdb->posts, array( 'post_status' => $new_status ), array( 'ID' => $enrol_id ) );
+        do_action('tutor/course/enrol_status_change/after',$enrol_id, $new_status );
+    }
 
 
     /**
