@@ -757,7 +757,7 @@ class Quiz {
 						'belongs_question_id'   => $question_id,
 						'belongs_question_type' => $question_type,
 						'answer_title'          => $answer['answer_title'],
-						'answer_two_gap_match'           => isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null,
+						'answer_two_gap_match'  => isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null,
 					);
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
 				}
