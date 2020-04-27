@@ -550,7 +550,21 @@ jQuery(document).ready(function($){
 
     $(document).on('click', '.tutor-quiz-answer-next-btn', function (e) {
         e.preventDefault();
+
         var $that = $(this);
+        var $question_wrap = $that.closest('.quiz-attempt-single-question');
+        /**
+         * Validating required answer
+         * @type {jQuery}
+         *
+         * @since v.1.6.1
+         */
+
+        var validated = tutor_quiz_validation($question_wrap);
+        if ( ! validated){
+            return;
+        }
+
         var question_id = parseInt($that.closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
 
         var next_question_id = $that.closest('.quiz-attempt-single-question').attr('data-next-question-id');
@@ -573,6 +587,24 @@ jQuery(document).ready(function($){
             }
         }
     });
+
+
+    $(document).on('submit', '#tutor-answering-quiz', function (e) {
+        var $questions_wrap = $('.quiz-attempt-single-question');
+        var validated = true;
+        if ($questions_wrap.length){
+            $questions_wrap.each(function(index, question){
+                validated = tutor_quiz_validation($(question));
+            });
+        }
+
+        if ( ! validated){
+            e.preventDefault();
+        }
+
+    });
+
+
     $(document).on('click', '.tutor-quiz-question-paginate-item', function (e) {
         e.preventDefault();
         var $that = $(this);
@@ -619,6 +651,84 @@ jQuery(document).ready(function($){
             $that.css({"height": draggableDivHeight});
         });
     }
+
+
+    /**
+     * Quiz Validation Helper
+     *
+     * @since v.1.6.1
+     */
+
+    function tutor_quiz_validation($question_wrap){
+        var validated = true;
+
+        var $required_answer_wrap = $question_wrap.find('.quiz-answer-required');
+
+
+        if ($required_answer_wrap.length){
+
+            /**
+             * Radio field validation
+             *
+             * @type {jQuery}
+             *
+             * @since v.1.6.1
+             */
+            var $inputs = $required_answer_wrap.find('input');
+            if ($inputs.length){
+                var $type = $inputs.attr('type');
+                if ($type === 'radio') {
+                    if ($required_answer_wrap.find('input[type="radio"]:checked').length == 0) {
+                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Select option to answer</p>');
+                        validated = false;
+                    }
+                }else if ($type === 'checkbox'){
+                    if ($required_answer_wrap.find('input[type="checkbox"]:checked').length == 0) {
+                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Check option to answer</p>');
+                        validated = false;
+                    }
+                }else if($type === 'text'){
+                    //Fill in the gaps if many, validation all
+                    $inputs.each(function(index, input){
+                        if ( ! $(input).val().trim().length){
+                            $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Answer required</p>');
+                            validated = false;
+                        }
+                    });
+                }
+
+            }
+            if ($required_answer_wrap.find('textarea').length) {
+                if ($required_answer_wrap.find('textarea').val().trim().length < 1){
+                    $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Answer required</p>');
+                    validated = false;
+                }
+            }
+
+            /**
+             * Matching Question
+             */
+            var $matchingDropable = $required_answer_wrap.find('.quiz-answer-matching-droppable');
+            if ($matchingDropable.length){
+
+                $matchingDropable.each(function(index, matching){
+                    if ( ! $(matching).find('.quiz-draggable-answer-item').length){
+                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please match all item</p>');
+                        validated = false;
+                    }
+
+                });
+
+            }
+
+
+
+        }
+
+        return validated;
+    }
+
+
 
     /**
      * Add to cart in guest mode, show login form
