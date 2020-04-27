@@ -1,5 +1,17 @@
 # TutorLMS Changelog
 
+### 1.6.1 - 28 April, 2020
+
+* Added: Course Completion Process. Flexible and Strict mode. in strict mode, students have to complete all lessons and pass all quizzes in order to complete any course.
+* Added: Quiz question validation, all type of quiz are now under validation except quiz ordering type
+* Added: hook, `tutor/course/enrol_status_change/after`
+* Added: utils method, `get_course_by_enrol_id($enrol_id)`;
+* Added utils method, `course_enrol_status_change($enrol_id = false, $new_status = '')`;
+* Improved: curriculum content add button group design, now it's link style button.
+* Fixed: Tutor is sending the Course Enrollment email to the instructor without completing the payment
+* Fixed: quiz question description div print even if the description is not exist
+
+
 ### 1.6.0 - 16 April, 2020
 
 * New: Quiz Export/Import add-on (Pro)
