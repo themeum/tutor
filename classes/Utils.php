@@ -663,16 +663,39 @@ class Utils {
 	 * @return float|int
 	 *
 	 * @since v.1.0.0
+     * @updated v.1.6.1
 	 */
 	public function get_course_completed_percent($course_id = 0, $user_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
 
-		$total_lesson = $this->get_lesson_count_by_course($course_id);
 		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
 
-		if ($total_lesson > 0 && $completed_lesson > 0){
-			return number_format(($completed_lesson * 100) / $total_lesson);
+        $course_contents = tutils()->get_course_contents_by_id($course_id);
+
+        $totalContents = $this->count($course_contents);
+        $totalContents = $totalContents ? $totalContents : 0;
+
+        $completedCount = $completed_lesson;
+
+        if (tutils()->count($course_contents)){
+            foreach ($course_contents as $content){
+                if ($content->post_type === 'tutor_quiz'){
+                    $attempt = $this->get_quiz_attempt($content->ID);
+                    if ($attempt){
+                        $completedCount++;
+                    }
+                }elseif ($content->post_type === 'tutor_assignments'){
+                    $isSubmitted = $this->is_assignment_submitted($content->ID);
+                    if ($isSubmitted){
+                        $completedCount++;
+                    }
+                }
+            }
+        }
+
+		if ($totalContents > 0 && $completedCount > 0){
+			return number_format(($completedCount * 100) / $totalContents);
 		}
 
 		return 0;
