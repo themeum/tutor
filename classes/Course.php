@@ -87,6 +87,7 @@ class Course extends Tutor_Base {
          * @since v.1.6.1
          */
         add_filter('tutor_course/single/complete_form', array($this, 'tutor_lms_hide_course_complete_btn'));
+        add_filter('get_gradebook_generate_form_html', array($this, 'get_generate_greadbook'));
     }
 
 	/**
@@ -1094,6 +1095,13 @@ class Course extends Tutor_Base {
             return '<p class="suggestion-before-course-complete">'.sprintf(__('You are required to pass %s quiz to complete this course', 'tutor'), $required_quiz_pass).'</p>';
         }
 
+        return $html;
+    }
+
+    public function get_generate_greadbook($html){
+        if ( ! tutils()->is_completed_course()){
+            return '';
+        }
         return $html;
     }
 
