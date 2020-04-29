@@ -214,9 +214,6 @@ Group Field Option
     width: 100px;
     margin-right: 5px;
 }
-.option-type-radio-wrap{
-    margin-top: 0;
-}
 
 /**
 * Course adding page
@@ -1985,9 +1982,6 @@ Tutor Media Upload
 .tutor-add-quiz-button-wrap {
     margin: 20px 0;
 }
-.tutor-add-quiz-button-wrap a{
-    color: #2756d1;
-}
 .tutor-quiz-delete-btn{
     color: #FF0000;
 }
@@ -3294,6 +3288,8 @@ Tools Nav
     background: #f1f1f1;
     color: #000
 }
+
+
 /**
 * END Tools
  */

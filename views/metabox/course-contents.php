@@ -87,7 +87,6 @@
                                     <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
-                                    <?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz->ID); ?>
                                     <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
@@ -123,18 +122,19 @@
                 </div>
 
                 <div class="tutor_add_quiz_wrap" data-add-quiz-under="<?php echo $topic->ID; ?>">
-                    <div class="tutor-add-cotnents-btn-group tutor-add-quiz-button-wrap">
+                    <div class="tutor-add-quiz-button-wrap">
 
 	                    <?php do_action('tutor_course_builder_before_btn_group', $topic->ID); ?>
 
-                        <a href="javascript:;" class="open-tutor-lesson-modal create-lesson-in-topic-btn" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" >
+                        <a href="javascript:;" class="tutor-btn default-btn active open-tutor-lesson-modal create-lesson-in-topic-btn" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" >
                             <i class="tutor-icon-plus-square-button"></i>
-                            <?php _e('Lesson', 'tutor'); ?>
+                            <?php _e('Add new lesson', 'tutor'); ?>
                         </a>
-                        <a href="javascript:;" class="tutor-add-quiz-btn">
-                            <i class="tutor-icon-plus-square-button"></i>
-                            <?php _e('Quiz', 'tutor'); ?>
-                        </a>
+                        <button type="button" class="icon-bl tutor-add-quiz-btn tutor-btn default-btn">
+                            <i class="tutor-icon-doubt"></i>
+                            <?php _e('Add Topic Quiz', 'tutor'); ?>
+                        </button>
+
                         <?php do_action('tutor_course_builder_after_btn_group', $topic->ID); ?>
                     </div>
                 </div>
@@ -167,7 +167,6 @@
                                     <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
-                                    <?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz->ID); ?>
                                     <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>

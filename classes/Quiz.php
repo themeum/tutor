@@ -469,7 +469,6 @@ class Quiz {
                 <i class="tutor-icon-move"></i>
                 <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
 				?>"> <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz_title; ?> </a>
-				<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
                 <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
             </div>
         </div>
@@ -537,7 +536,6 @@ class Quiz {
             <i class="tutor-icon-move"></i>
             <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
 			?>"> <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz_title; ?> </a>
-			<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
             <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
         </div>
 		<?php
@@ -757,7 +755,7 @@ class Quiz {
 						'belongs_question_id'   => $question_id,
 						'belongs_question_type' => $question_type,
 						'answer_title'          => $answer['answer_title'],
-						'answer_two_gap_match'  => isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null,
+						'answer_two_gap_match'           => isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null,
 					);
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
 				}

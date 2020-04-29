@@ -80,15 +80,7 @@ class Course extends Tutor_Base {
          * @since 1.5.8
          */
 		add_filter('tutor_course_price', array($this, 'remove_price_if_enrolled'));
-
-
-        /**
-         * Remove course complete button if course completion is strict mode
-         * @since v.1.6.1
-         */
-        add_filter('tutor_course/single/complete_form', array($this, 'tutor_lms_hide_course_complete_btn'));
-        add_filter('get_gradebook_generate_form_html', array($this, 'get_generate_greadbook'));
-    }
+	}
 
 	/**
 	 * Registering metabox
@@ -241,35 +233,25 @@ class Course extends Tutor_Base {
 			update_post_meta($post_ID, '_tutor_course_level', $course_level);
 		}
 
-        if ( ! empty($_POST['course_benefits'])){
-            $course_benefits = wp_kses_post($_POST['course_benefits']);
-            update_post_meta($post_ID, '_tutor_course_benefits', $course_benefits);
-        }else{
-            delete_post_meta($post_ID, '_tutor_course_benefits');
-        }
+		if ( ! empty($_POST['course_benefits'])){
+			$course_benefits = wp_kses_post($_POST['course_benefits']);
+			update_post_meta($post_ID, '_tutor_course_benefits', $course_benefits);
+		}
 
-        if ( ! empty($_POST['course_requirements'])){
-            $requirements = wp_kses_post($_POST['course_requirements']);
-            update_post_meta($post_ID, '_tutor_course_requirements', $requirements);
-        }else{
-            delete_post_meta($post_ID, '_tutor_course_requirements');
-        }
+		if ( ! empty($_POST['course_requirements'])){
+			$requirements = wp_kses_post($_POST['course_requirements']);
+			update_post_meta($post_ID, '_tutor_course_requirements', $requirements);
+		}
 
-        if ( ! empty($_POST['course_target_audience'])){
-            $target_audience = wp_kses_post($_POST['course_target_audience']);
-            update_post_meta($post_ID, '_tutor_course_target_audience', $target_audience);
-        }else{
-            delete_post_meta($post_ID, '_tutor_course_target_audience');
-        }
+		if ( ! empty($_POST['course_target_audience'])){
+			$target_audience = wp_kses_post($_POST['course_target_audience']);
+			update_post_meta($post_ID, '_tutor_course_target_audience', $target_audience);
+		}
 
-        if ( ! empty($_POST['course_material_includes'])){
-            $material_includes = wp_kses_post($_POST['course_material_includes']);
-            update_post_meta($post_ID, '_tutor_course_material_includes', $material_includes);
-        }else{
-            delete_post_meta($post_ID, '_tutor_course_material_includes');
-        }
-
-
+		if ( ! empty($_POST['course_material_includes'])){
+			$material_includes = wp_kses_post($_POST['course_material_includes']);
+			update_post_meta($post_ID, '_tutor_course_material_includes', $material_includes);
+		}
 		/**
 		 * Sorting Topics and lesson
 		 */
@@ -1037,73 +1019,5 @@ class Course extends Tutor_Base {
         }
 	    return $html;
     }
-
-    /**
-     * @param $html
-     * @return string
-     *
-     * Check if all lessons and quizzes done before mark course complete.
-     */
-    function tutor_lms_hide_course_complete_btn($html){
-
-	    $completion_mode = tutils()->get_option('course_completion_process');
-	    if ($completion_mode !== 'strict'){
-	        return $html;
-        }
-
-        $completed_lesson = tutils()->get_completed_lesson_count_by_course();
-        $lesson_count = tutils()->get_lesson_count_by_course();
-
-        if ($completed_lesson < $lesson_count){
-            return '<p class="suggestion-before-course-complete">'.__('complete all lessons to mark this course as complete', 'tutor').'</p>';
-        }
-
-        $quizzes = array();
-
-        $course_contents = tutils()->get_course_contents_by_id();
-        if (tutils()->count($course_contents)){
-            foreach ($course_contents as $content){
-                if ($content->post_type === 'tutor_quiz'){
-                    $quizzes[] = $content;
-                }
-            }
-        }
-
-        $is_pass = true;
-        $required_quiz_pass = 0;
-
-        if (tutils()->count($quizzes)){
-            foreach ($quizzes as $quiz){
-
-                $attempt = tutils()->get_quiz_attempt($quiz->ID);
-                if ($attempt) {
-                    $passing_grade = tutor_utils()->get_quiz_option($quiz->ID, 'passing_grade', 0);
-                    $earned_percentage = $attempt->earned_marks > 0 ? (number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
-
-                    if ($earned_percentage < $passing_grade) {
-                        $required_quiz_pass++;
-                        $is_pass = false;
-                    }
-                }else{
-                    $required_quiz_pass++;
-                    $is_pass = false;
-                }
-            }
-        }
-
-        if ( ! $is_pass){
-            return '<p class="suggestion-before-course-complete">'.sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass).'</p>';
-        }
-
-        return $html;
-    }
-
-    public function get_generate_greadbook($html){
-        if ( ! tutils()->is_completed_course()){
-            return '';
-        }
-        return $html;
-    }
-
 
 }

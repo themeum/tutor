@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.4
 Requires PHP: 5.4.0
-Stable tag: 1.6.1
+Stable tag: 1.5.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,32 +240,6 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
-
-= 1.6.1 - 29 April, 2020 =
-
-* Added: Course Completion Process. Flexible and Strict mode. in strict mode, students have to complete all lessons and pass all quizzes in order to complete any course.
-* Added: Quiz question validation, all type of quiz are now under validation except quiz ordering type
-* Added: hook, `tutor/course/enrol_status_change/after`
-* Added: utils method, `get_course_by_enrol_id($enrol_id)`;
-* Added utils method, `course_enrol_status_change($enrol_id = false, $new_status = '')`;
-* Improved: curriculum content add button group design, now it's link style button.
-* Improved: course completion progress bar, is now counting quiz attempts and assignment. It will show 100% progress when you done all lessons, quiz, and assignments.
-* Fixed: Tutor is sending the Course Enrollment email to the instructor without completing the payment
-* Fixed: quiz question description div print even if the description is not exist
-
-= 1.6.0 - 16 April, 2020 =
-
-* New: Quiz Export/Import add-on (Pro)
-* Added: Method `tutils()->cancel_course_enrol()`
-* Added: Function `is_single_course();`
-* Added: Action hook `do_action('tutor_new_instructor_after', $user_id);` at register instructor and apply as an instructor
-* Added: action hook `do_action(“tutor_course_builder_before_quiz_btn_action”, $quiz_id);`
-* Improved: Certificate generator PDF compatibility with PHP 7.3
-* Removed: Options from the _tutorobject JavaScript Variable
-* Fixed: Email notification showing raw variable {instructor_username}
-* Fixed: Paid Membership Pro expiration issue
-* Fixed: ability to empty and deleting empty additional meta fields from the post_meta.
-* Fixed: Earning option enable if the marketplace was selected during the setup wizard
 
 = 1.5.9 - 08 April, 2020 =
 

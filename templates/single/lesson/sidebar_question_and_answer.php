@@ -49,7 +49,7 @@ $course_id = tutils()->get_course_id_by_content($post);
                         </div>
 
                         <div class="tutor_question_area">
-                            <p><strong><?php echo stripslashes($question->question_title); ?> </strong></p>
+                            <p><strong><?php echo $question->question_title; ?> </strong></p>
 							<?php echo wpautop(stripslashes($question->comment_content)); ?>
                         </div>
                     </div>

@@ -99,7 +99,6 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 							$question_type = $question->question_type;
 							$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id);
 							$show_question_mark = (bool) tutor_utils()->avalue_dot('show_question_mark', $question_settings);
-							$answer_required = (bool) tutils()->array_get('answer_required', $question_settings);
 
 							echo '<h4 class="question-text">';
 							if ( ! $hide_question_number_overview){
@@ -111,14 +110,10 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 							if ($show_question_mark){
 								echo '<p class="question-marks"> '.__('Marks : ', 'tutor').$question->question_mark.' </p>';
 							}
-
-							$question_description = stripslashes(esc_html($question->question_description));
-							if ($question_description){
-							    echo "<p class='question-description'>{$question_description}</p>";
-                            }
 							?>
+                            <p class="question-description"><?php echo stripslashes($question->question_description); ?></p>
 
-                            <div class="tutor-quiz-answers-wrap question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> ">
+                            <div class="tutor-quiz-answers-wrap question-type-<?php echo $question_type; ?>">
 								<?php
 								if ( is_array($answers) && count($answers) ) {
 									foreach ($answers as $answer){
@@ -325,9 +320,6 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 									<?php
 								}
 								?>
-
-                                <div class="answer-help-block"></div>
-
                             </div>
 
 							<?php

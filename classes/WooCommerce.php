@@ -210,7 +210,7 @@ class WooCommerce extends Tutor_Base {
 
 			if (is_array($enrolled_ids) && count($enrolled_ids)){
 				foreach ($enrolled_ids as $enrolled_id){
-				    tutils()->course_enrol_status_change($enrolled_id, $status_to);
+					$wpdb->update( $wpdb->posts, array( 'post_status' => $status_to ), array( 'ID' => $enrolled_id ) );
 				}
 			}
 		}
