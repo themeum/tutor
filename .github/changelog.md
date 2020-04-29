@@ -1,6 +1,6 @@
 # TutorLMS Changelog
 
-### 1.6.1 - 28 April, 2020
+### 1.6.1 - 29 April, 2020
 
 * Added: Course Completion Process. Flexible and Strict mode. in strict mode, students have to complete all lessons and pass all quizzes in order to complete any course.
 * Added: Quiz question validation, all type of quiz are now under validation except quiz ordering type
