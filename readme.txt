@@ -249,6 +249,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 * Added: utils method, `get_course_by_enrol_id($enrol_id)`;
 * Added utils method, `course_enrol_status_change($enrol_id = false, $new_status = '')`;
 * Improved: curriculum content add button group design, now it's link style button.
+* Improved: course completion progress bar, is now counting quiz attempts and assignment. It will show 100% progress when you done all lessons, quiz, and assignments.
 * Fixed: Tutor is sending the Course Enrollment email to the instructor without completing the payment
 * Fixed: quiz question description div print even if the description is not exist
 

@@ -670,7 +670,6 @@ class Utils {
 		$user_id = $this->get_user_id($user_id);
 
 		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
-
         $course_contents = tutils()->get_course_contents_by_id($course_id);
 
         $totalContents = $this->count($course_contents);
