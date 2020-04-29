@@ -87,6 +87,7 @@
                                     <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
+                                    <?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz->ID); ?>
                                     <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
@@ -134,7 +135,6 @@
                             <i class="tutor-icon-doubt"></i>
                             <?php _e('Add Topic Quiz', 'tutor'); ?>
                         </button>
-
                         <?php do_action('tutor_course_builder_after_btn_group', $topic->ID); ?>
                     </div>
                 </div>
@@ -167,6 +167,7 @@
                                     <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
+                                    <?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz->ID); ?>
                                     <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>

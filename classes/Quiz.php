@@ -469,6 +469,7 @@ class Quiz {
                 <i class="tutor-icon-move"></i>
                 <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
 				?>"> <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz_title; ?> </a>
+				<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
                 <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
             </div>
         </div>
@@ -536,6 +537,7 @@ class Quiz {
             <i class="tutor-icon-move"></i>
             <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
 			?>"> <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz_title; ?> </a>
+			<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
             <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
         </div>
 		<?php
