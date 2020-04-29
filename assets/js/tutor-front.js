@@ -679,19 +679,19 @@ jQuery(document).ready(function($){
                 var $type = $inputs.attr('type');
                 if ($type === 'radio') {
                     if ($required_answer_wrap.find('input[type="radio"]:checked').length == 0) {
-                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Select option to answer</p>');
+                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please select an option to answer</p>');
                         validated = false;
                     }
                 }else if ($type === 'checkbox'){
                     if ($required_answer_wrap.find('input[type="checkbox"]:checked').length == 0) {
-                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Check option to answer</p>');
+                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please select at least one option to answer.</p>');
                         validated = false;
                     }
                 }else if($type === 'text'){
                     //Fill in the gaps if many, validation all
                     $inputs.each(function(index, input){
                         if ( ! $(input).val().trim().length){
-                            $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Answer required</p>');
+                            $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">The answer for this question is required</p>');
                             validated = false;
                         }
                     });
@@ -700,7 +700,7 @@ jQuery(document).ready(function($){
             }
             if ($required_answer_wrap.find('textarea').length) {
                 if ($required_answer_wrap.find('textarea').val().trim().length < 1){
-                    $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Answer required</p>');
+                    $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">The answer for this question is required</p>');
                     validated = false;
                 }
             }
@@ -713,7 +713,7 @@ jQuery(document).ready(function($){
 
                 $matchingDropable.each(function(index, matching){
                     if ( ! $(matching).find('.quiz-draggable-answer-item').length){
-                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please match all item</p>');
+                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please match all the items</p>');
                         validated = false;
                     }
 
