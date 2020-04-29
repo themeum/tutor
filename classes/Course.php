@@ -1092,7 +1092,7 @@ class Course extends Tutor_Base {
         }
 
         if ( ! $is_pass){
-            return '<p class="suggestion-before-course-complete">'.sprintf(__('You are required to pass %s quiz to complete this course', 'tutor'), $required_quiz_pass).'</p>';
+            return '<p class="suggestion-before-course-complete">'.sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass).'</p>';
         }
 
         return $html;
