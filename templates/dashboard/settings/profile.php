@@ -130,7 +130,7 @@ $user = wp_get_current_user();
                         ?>
                     </select>
 
-                    <p><small><?php _e('The display name shown to all public places, such as author name, instructor name, student name, and name what will be print on the certificate.', 'tutor'); ?></small> </p>
+                    <p><small><?php _e('The display name is shown in all public fields, such as the author name, instructor name, student name, and name that will be printed on the certificate.', 'tutor'); ?></small> </p>
 
                 </div>
 
