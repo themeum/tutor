@@ -124,10 +124,13 @@ class Student {
 		$phone_number   = sanitize_text_field(tutor_utils()->input_old('phone_number'));
 		$tutor_profile_bio = wp_kses_post(tutor_utils()->input_old('tutor_profile_bio'));
 
-		$userdata = array(
+        $display_name   = sanitize_text_field(tutils()->input_old('display_name'));
+
+        $userdata = array(
 			'ID'            =>  $user_id,
 			'first_name'    =>  $first_name,
 			'last_name'     =>  $last_name,
+			'display_name'  =>  $display_name,
 		);
 		$user_id  = wp_update_user( $userdata );
 
