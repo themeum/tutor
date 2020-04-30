@@ -91,12 +91,10 @@ $user = wp_get_current_user();
                 </div>
             </div>
 
-
-
             <div class="tutor-form-col-6">
 
                 <div class="tutor-form-group">
-                    <label for="display_name"><?php _e( 'Display name publicly as' ); ?></label>
+                    <label for="display_name"><?php _e( 'Display name publicly as', 'tutor' ); ?></label>
 
                     <select name="display_name" id="display_name">
                         <?php
