@@ -1609,6 +1609,7 @@ class Utils {
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
 				'post__in'      => $course_ids,
+                'posts_per_page' => -1
 			);
 
 			return new \WP_Query($course_args);
@@ -1640,6 +1641,7 @@ class Utils {
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
 				'post__in'      => $active_courses,
+                'posts_per_page' => -1,
 			);
 
 			return new \WP_Query($course_args);
@@ -1701,6 +1703,7 @@ class Utils {
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
 				'post__in'      => $course_ids,
+                'posts_per_page' => -1
 			);
 			return new \WP_Query($course_args);
 		}
