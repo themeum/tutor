@@ -23,6 +23,7 @@ do_action('tutor_course/single/enrolled/before/wrap');
                 <?php do_action('tutor_course/single/enrolled/before/inner-wrap'); ?>
                 <?php tutor_course_enrolled_lead_info(); ?>
                 <?php tutor_course_content(); ?>
+                <?php tutor_course_benefits_html(); ?>
                 <?php tutor_course_enrolled_nav(); ?>
                 <?php tutor_course_topics(); ?>
                 <?php tutor_course_instructors_html(); ?>
