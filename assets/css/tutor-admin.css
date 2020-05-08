@@ -2005,7 +2005,12 @@ span.result-pass{
 span.result-fail{
     color: #FF0000;
 }
-
+span.result-review-required{
+    background: #f5b30d;
+    color: #fff;
+    padding: 3px 5px;
+    border-radius: 2px;
+}
 
 .tutor-emails-lists-wrap{
     background-color: #ffffff;

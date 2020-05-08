@@ -1784,6 +1784,15 @@ Course question and answer
   background: var(--tutor-success-button-color);
 }
 
+.tutor-quiz-attempt-history table span.result-review-required {
+  background: #f5b30d;
+  padding: 3px 5px;
+  color: #fff;
+  border-radius: 2px;
+  text-align: center;
+  font-size: 90%;
+}
+
 @media (max-width: 767px) {
   .single-quiz-page.tutor-quiz-attempt-history table tr {
     display: flex;
@@ -7531,6 +7540,7 @@ label[for=tutor_withdraw_amount] {
 .tutor-quiz-attempt-info-row .attempt-view-bottom .attempt-info-col {
   align-items: flex-start;
 }
+.tutor-quiz-attempt-info-row .attempt-info-content span.result-review-required,
 .tutor-quiz-attempt-info-row .attempt-info-content span.result-pass,
 .tutor-quiz-attempt-info-row .attempt-info-content span.result-fail {
   background: #DF3247;
@@ -7543,6 +7553,9 @@ label[for=tutor_withdraw_amount] {
 }
 .tutor-quiz-attempt-info-row .attempt-info-content span.result-pass {
   background: var(--tutor-success-button-color);
+}
+.tutor-quiz-attempt-info-row .attempt-info-content span.result-review-required {
+  background: #f5b30d;
 }
 .tutor-quiz-attempt-info-row .attempt-info-content h4,
 .tutor-quiz-attempt-info-row .attempt-info-content h5 {

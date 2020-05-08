@@ -3729,7 +3729,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1 AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} ");
+			WHERE 1=1 AND attempt_status != 'attempt_started'  {$search_term} ");
 		return (int) $count;
 	}
 
@@ -3758,7 +3758,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} 
+			WHERE 1=1  AND attempt_status != 'attempt_started'  {$search_term} 
 			ORDER BY quiz_attempts.attempt_id DESC 
 			LIMIT {$start},{$limit}; ");
 		return $query;
@@ -3781,7 +3781,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} 
+			WHERE 1=1  AND attempt_status != 'attempt_started' {$search_term} 
 			ORDER BY quiz_attempts.attempt_id DESC 
 			LIMIT {$start},{$limit}; ");
 		return $query;
@@ -3804,7 +3804,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} ");
+			WHERE 1=1  AND attempt_status != 'attempt_started' {$search_term} ");
 		return (int) $count;
 	}
 
