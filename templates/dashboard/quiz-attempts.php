@@ -42,7 +42,12 @@ if ( $quiz_attempts_count ){
                 <tr class="<?php echo esc_attr($earned_percentage >= $passing_grade ? 'pass' : 'fail') ?>">
                     <td title="<?php echo __('Quiz', 'tutor'); ?>">
 						<?php
-						echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+                        if ($attempt->attempt_status === 'review_required'){
+                            echo '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
+                        }else{
+                            echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+                        }
+
 						if ($attempt->attempt_ended_at){
 							$ended_ago_time = human_time_diff(strtotime($attempt->attempt_ended_at)).__(' ago', 'tutor');
 							echo " <small>{$ended_ago_time}</small>";
