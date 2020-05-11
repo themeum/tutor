@@ -394,6 +394,7 @@ class Quiz {
 
 		$attempt_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = {$attempt_answer_id} ");
 		$attempt = tutor_utils()->get_attempt($attempt_id);
+		$question = tutils()->get_quiz_question_by_id($attempt_answer->question_id);
 
 		$is_correct = (int) $attempt_answer->is_correct;
 
@@ -409,9 +410,13 @@ class Quiz {
 
 			$attempt_update_data = array(
 				'earned_marks' => $attempt->earned_marks + $attempt_answer->question_mark,
-				'is_manually_reviewed' => 1,
+                'is_manually_reviewed' => 1,
 				'manually_reviewed_at' => date("Y-m-d H:i:s", tutor_time()),
 			);
+
+			if ($question->question_type === 'open_ended' || $question->question_type === 'short_answer' ){
+                $attempt_update_data['attempt_status'] = 'attempt_ended';
+            }
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
 
@@ -428,6 +433,10 @@ class Quiz {
 				'is_manually_reviewed'  => 1,
 				'manually_reviewed_at'  => date("Y-m-d H:i:s", tutor_time()),
 			);
+
+            if ($question->question_type === 'open_ended' || $question->question_type === 'short_answer' ){
+                $attempt_update_data['attempt_status'] = 'attempt_ended';
+            }
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
 		}

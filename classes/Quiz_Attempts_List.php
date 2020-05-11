@@ -79,7 +79,6 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 
 	function column_earned_marks($item){
 
-
 	    if ($item->attempt_status === 'review_required'){
             $output = '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
         }else {
