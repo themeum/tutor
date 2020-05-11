@@ -187,6 +187,7 @@ jQuery(document).ready(function($){
             button: {
                 text: 'Use this media'
             },
+            library: { type: 'video' },
             multiple: false  // Set to true to allow multiple files to be selected
         });
 
