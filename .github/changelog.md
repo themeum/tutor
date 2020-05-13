@@ -1,5 +1,13 @@
 # TutorLMS Changelog
 
+### 1.6.2 - 14 May, 2020
+
+* Added: Display Name preference on the certificate, added settings to Dashboard > Settings > Profile
+* Fixed: Tutor LMS > Enrollments is showing same date for all items
+* Fixed: Instant result publish for quiz question types open-ended and short description
+* Does not show 11th course on Dashboard
+* Custom HTML Support support on question description.
+
 ### 1.6.1 - 29 April, 2020
 
 * Added: Course Completion Process. Flexible and Strict mode. in strict mode, students have to complete all lessons and pass all quizzes in order to complete any course.

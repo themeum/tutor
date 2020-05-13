@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.4
 Requires PHP: 5.4.0
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,14 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.6.2 - 14 May, 2020 =
+
+* Added: Display Name preference on the certificate, added settings to Dashboard > Settings > Profile
+* Fixed: Tutor LMS > Enrollments is showing same date for all items
+* Fixed: Instant result publish for quiz question types open-ended and short description
+* Does not show 11th course on Dashboard
+* Custom HTML Support support on question description.
 
 = 1.6.1 - 29 April, 2020 =
 
