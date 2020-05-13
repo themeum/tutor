@@ -112,7 +112,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			'course'            => __('Course', 'tutor'),
 			'total_questions'   => __('Total Questions', 'tutor'),
 			'earned_marks'      => __('Earned Points', 'tutor'),
-			'attempt_status'      => __('Attempt Status', 'tutor'),
+			//'attempt_status'      => __('Attempt Status', 'tutor'),
 		);
 		return $columns;
 	}
