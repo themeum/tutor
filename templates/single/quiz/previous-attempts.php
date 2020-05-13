@@ -72,11 +72,17 @@ $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
 
                 <td title="<?php _e('Result', 'tutor-pro'); ?>">
 					<?php
-					if ($earned_percentage >= $passing_grade){
-						echo '<span class="result-pass">'.__('Pass', 'tutor-pro').'</span>';
-					}else{
-						echo '<span class="result-fail">'.__('Fail', 'tutor-pro').'</span>';
-					}
+
+                    if ($attempt->attempt_status === 'review_required'){
+                        echo '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
+                    }else {
+
+                        if ($earned_percentage >= $passing_grade) {
+                            echo '<span class="result-pass">' . __('Pass', 'tutor-pro') . '</span>';
+                        } else {
+                            echo '<span class="result-fail">' . __('Fail', 'tutor-pro') . '</span>';
+                        }
+                    }
 					?>
                 </td>
 
