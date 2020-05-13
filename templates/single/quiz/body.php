@@ -97,7 +97,16 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 
 							$question_type = $question->question_type;
-							$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id);
+
+							$rand_choice = false;
+							if($question_type == 'single_choice' || $question_type == 'multiple_choice'){
+								$choice = maybe_unserialize($question->question_settings);
+								if(isset($choice['randomize_question'])){
+									$rand_choice = $choice['randomize_question'] == 1 ? true : false;
+								}
+							}
+
+							$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id, $rand_choice);
 							$show_question_mark = (bool) tutor_utils()->avalue_dot('show_question_mark', $question_settings);
 
 							echo '<h4 class="question-text">';
