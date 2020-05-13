@@ -87,17 +87,23 @@ $user = get_userdata($user_id);
                     <h5><?php echo __('Result', 'tutor'); ?></h5>
                     <h4>
                         <?php
-                        $pass_mark_percent = tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
-                        $earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
-                        $output = '';
-                        if ($earned_percentage >= $pass_mark_percent){
-                            $output .= '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
-                        }else{
-                            $output .= '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
-                        }
 
-                        $output .= "".$attempt->earned_marks." out of {$attempt->total_marks}";
-                        $output .= "<span>, Marks earned ({$earned_percentage}%)</span>";
+                        if ($attempt->attempt_status === 'review_required'){
+                            $output = '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
+                        }else {
+
+                            $pass_mark_percent = tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
+                            $earned_percentage = $attempt->earned_marks > 0 ? (number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
+                            $output = '';
+                            if ($earned_percentage >= $pass_mark_percent) {
+                                $output .= '<span class="result-pass">' . __('Pass', 'tutor') . '</span>';
+                            } else {
+                                $output .= '<span class="result-fail">' . __('Fail', 'tutor') . '</span>';
+                            }
+
+                            $output .= "" . $attempt->earned_marks . " out of {$attempt->total_marks}";
+                            $output .= "<span>, Marks earned ({$earned_percentage}%)</span>";
+                        }
                         echo $output;
                         ?>
                     </h4>
