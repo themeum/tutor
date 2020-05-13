@@ -30,7 +30,6 @@ if ( $quiz_attempts_count ){
                 <th><?php _e('Students', 'tutor'); ?></th>
                 <th><?php _e('Count', 'tutor'); ?></th>
                 <th><?php _e('Earned Mark', 'tutor'); ?></th>
-                <th><?php _e('Status', 'tutor'); ?></th>
                 <th><?php _e('Review', 'tutor'); ?></th>
             </tr>
 			<?php
@@ -88,7 +87,6 @@ if ( $quiz_attempts_count ){
 						echo sprintf(__('%1$s out of %2$s <br> Pass Mark: %3$s <br> Earned total: %4$s%%','tutor'), $attempt->earned_marks, $attempt->total_marks, $pass_marks ,$passing_grade );
 						?>
                     </td>
-                    <td title="<?php echo __('Attempt Status', 'tutor'); ?>"><?php echo str_replace('attempt_', '', $attempt->attempt_status); ?></td>
                     <td><a href="<?php echo $attempt_action; ?>"><i class="tutor-icon-angle-right"></i></a></td>
                 </tr>
 				<?php
