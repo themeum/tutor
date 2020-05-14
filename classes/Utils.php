@@ -2262,7 +2262,9 @@ class Utils {
 		if ($page_key === 'index'){
 			$page_key = '';
 		}
-		$page_id = $this->get_post_id($page_id);
+		if ( ! $page_id){
+            $page_id = (int) tutils()->get_option('tutor_dashboard_page_id');
+        }
 		return trailingslashit(get_permalink($page_id)).$page_key;
 	}
 
