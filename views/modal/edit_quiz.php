@@ -294,6 +294,17 @@ if ( ! $quiz){
                 <p class="help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor'); ?></p>
             </div>
 
+            <div class="tutor-quiz-builder-group">
+                <h4><?php _e('Open Ended/Esaay answer characters limit', 'tutor'); ?></h4>
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col">
+                        <input type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option
+                        ($quiz_id, 'open_ended_answer_characters_limit', 500); ?>" >
+                    </div>
+                </div>
+                <p class="help"><?php _e('Student will place answer in Open Ended/Esaay question type within this characters limit.', 'tutor'); ?></p>
+            </div>
+
 
             <div class="tutor-quiz-builder-modal-control-btn-group">
                 <div class="quiz-builder-btn-group-left">

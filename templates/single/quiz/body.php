@@ -292,12 +292,24 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                     <textarea class="question_type_<?php echo $question_type; ?>" name="attempt[<?php echo
 									$is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]"></textarea>
 									<?php
-
-									if ($question_type === 'short_answer'){
-										$characters_limit = tutor_utils()->avalue_dot('short_answer_characters_limit', $quiz_attempt_info);
-										echo '<p class="answer_limit_desc">  characters remaining <span class="characters_remaining">'.$characters_limit.'</span> </p>';
+									if ($question_type === 'short_answer') {
+										$get_option_meta = tutor_utils()->get_quiz_option($quiz_id);
+										if(isset($get_option_meta['short_answer_characters_limit'])){
+											if($get_option_meta['short_answer_characters_limit'] != "" ){
+												$characters_limit = tutor_utils()->avalue_dot('short_answer_characters_limit', $quiz_attempt_info);
+												echo '<p class="answer_limit_desc">  characters remaining <span class="characters_remaining">'.$characters_limit.'</span> </p>';
+											}
+										}
 									}
-
+									if ($question_type === 'open_ended') {
+										$get_option_meta = tutor_utils()->get_quiz_option($quiz_id);
+										if(isset($get_option_meta['open_ended_answer_characters_limit'])){
+											if($get_option_meta['open_ended_answer_characters_limit'] != "" ){
+												$characters_limit = $get_option_meta['open_ended_answer_characters_limit'];
+												echo '<p class="answer_limit_desc">  characters remaining <span class="characters_remaining">'.$characters_limit.'</span> </p>';
+											}
+										}
+									}
 								}
 
 
