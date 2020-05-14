@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) )
 class FormHandler {
 
 	public function __construct() {
-		add_action('tutor_action_tutor_user_login', array($this, 'process_login'));
+		//add_action('tutor_action_tutor_user_login', array($this, 'process_login'));
 		add_action('tutor_action_tutor_retrieve_password', array($this, 'tutor_retrieve_password'));
 		add_action('tutor_action_tutor_process_reset_password', array($this, 'tutor_process_reset_password'));
 
