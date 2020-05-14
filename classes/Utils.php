@@ -3410,10 +3410,10 @@ class Utils {
 
 		if ($post) {
 			$course_post_type = tutor()->course_post_type;
-			$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
+			$course = $wpdb->get_row( "select ID, post_author, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
 			if ($course) {
 				if ( $course->post_type !== $course_post_type ) {
-					$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
+					$course = $wpdb->get_row( "select ID, post_author, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
 				}
 				return $course;
 			}
