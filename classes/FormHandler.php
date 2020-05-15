@@ -18,61 +18,11 @@ if ( ! defined( 'ABSPATH' ) )
 class FormHandler {
 
 	public function __construct() {
-		//add_action('tutor_action_tutor_user_login', array($this, 'process_login'));
 		add_action('tutor_action_tutor_retrieve_password', array($this, 'tutor_retrieve_password'));
 		add_action('tutor_action_tutor_process_reset_password', array($this, 'tutor_process_reset_password'));
 
 		add_action( 'tutor_reset_password_notification', array( $this, 'reset_password_notification' ), 10, 2 );
 		add_filter( 'tutor_lostpassword_url', array( $this, 'lostpassword_url' ) );
-	}
-
-	public function process_login(){
-		tutils()->checking_nonce();
-
-		$username = tutils()->array_get('log', $_POST);
-		$password = tutils()->array_get('pwd', $_POST);
-
-		try {
-			$creds = array(
-				'user_login'    => trim( wp_unslash( $username ) ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				'user_password' => $password, // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-				'remember'      => isset( $_POST['rememberme'] ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			);
-
-			$validation_error = new \WP_Error();
-			$validation_error = apply_filters( 'tutor_process_login_errors', $validation_error, $creds['user_login'], $creds['user_password'] );
-
-			if ( $validation_error->get_error_code() ) {
-				throw new \Exception( '<strong>' . __( 'Error:', 'tutor' ) . '</strong> ' . $validation_error->get_error_message() );
-			}
-
-			if ( empty( $creds['user_login'] ) ) {
-				throw new \Exception( '<strong>' . __( 'Error:', 'tutor' ) . '</strong> ' . __( 'Username is required.', 'tutor' ) );
-			}
-
-			// On multisite, ensure user exists on current site, if not add them before allowing login.
-			if ( is_multisite() ) {
-				$user_data = get_user_by( is_email( $creds['user_login'] ) ? 'email' : 'login', $creds['user_login'] );
-
-				if ( $user_data && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) {
-					add_user_to_blog( get_current_blog_id(), $user_data->ID, 'customer' );
-				}
-			}
-
-			// Perform the login.
-			$user = wp_signon( apply_filters( 'tutor_login_credentials', $creds ), is_ssl() );
-
-			if ( is_wp_error( $user ) ) {
-				$message = $user->get_error_message();
-				$message = str_replace( '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', $message );
-				throw new \Exception( $message );
-			} else {
-				tutor_redirect_back(apply_filters('tutor_login_redirect_url', tutils()->tutor_dashboard_url()));
-			}
-		} catch ( \Exception $e ) {
-			tutor_flash_set('warning', apply_filters( 'login_errors', $e->getMessage()) );
-			do_action( 'tutor_login_failed' );
-		}
 	}
 
 	public function tutor_retrieve_password(){
