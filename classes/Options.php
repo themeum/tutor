@@ -163,6 +163,12 @@ class Options {
 								'default'   => '0',
 								'desc'      => __('Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user',	'tutor'),
 							),
+							'login_error_message' => array(
+								'type'      => 'text',
+								'label'     => __('Error message for wrong login credentials', 'tutor'),
+								'default'   => 'Incorrect username or password.',
+								'desc'      => __('Login error message displayed when the user puts wrong login credentials.', 'tutor'),
+							),
 						)
 					)
 				),

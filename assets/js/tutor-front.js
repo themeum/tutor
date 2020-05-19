@@ -620,10 +620,10 @@ jQuery(document).ready(function ($) {
     /**
      * Limit Short Answer Question Type
      */
-    $(document).on('keyup', 'textarea.question_type_short_answer', function (e) {
+    $(document).on('keyup', 'textarea.question_type_short_answer, textarea.question_type_open_ended', function (e) {
         var $that = $(this);
         var value = $that.val();
-        var limit = _tutorobject.quiz_options.short_answer_characters_limit;
+        var limit = $that.hasClass('question_type_short_answer') ? _tutorobject.quiz_options.short_answer_characters_limit : _tutorobject.quiz_options.open_ended_answer_characters_limit;
         var remaining = limit - value.length;
 
         if (remaining < 1) {

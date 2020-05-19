@@ -7,6 +7,11 @@
 * Added: Quiz status pending if contains open ended and short questions.
 * Fixed: Tutor LMS > Enrollments is showing same date for all items
 * Fixed: Does not show 11th course on Dashboard
+* Fixed: Check file extension while uploading the video
+* FIxed: Wrong link in withdraw preference in dashboard
+* FIxed: What Will I Learn section is hidden for enrolled students
+* Fixed: Missing translations in dashboard
+* Update: Course status 'Publish' to 'Published' in dashboard
 
 ### 1.6.1 - 29 April, 2020
 
