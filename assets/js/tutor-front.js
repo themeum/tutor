@@ -625,13 +625,8 @@ jQuery(document).ready(function ($) {
         var value = $that.val();
         var limit = $that.hasClass('question_type_short_answer') ? _tutorobject.quiz_options.short_answer_characters_limit : _tutorobject.quiz_options.open_ended_answer_characters_limit;
         var remaining = limit - value.length;
-<<<<<<< HEAD
-        
-        if (remaining < 1){
-=======
 
         if (remaining < 1) {
->>>>>>> master
             $that.val(value.substr(0, limit));
             remaining = 0;
         }
