@@ -315,13 +315,10 @@ if ( ! $quiz){
                     <a href="#quiz-builder-tab-questions" class="quiz-modal-tab-navigation-btn quiz-modal-btn-cancel"><?php /*_e('Cancel', 'tutor'); */?></a>
                 </div>-->
             </div>
-
-
         </div>
 
-
-
     </div>
+
     <div class="tutor-quiz-builder-modal-tabs-notice">
 	    <?php
 	    // TODO: These links are must be updated
