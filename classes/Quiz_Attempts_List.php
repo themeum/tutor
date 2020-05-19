@@ -78,18 +78,23 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	}
 
 	function column_earned_marks($item){
-		$pass_mark_percent = tutor_utils()->get_quiz_option($item->quiz_id, 'passing_grade', 0);
-		$earned_percentage = $item->earned_marks > 0 ? ( number_format(($item->earned_marks * 100) / $item->total_marks)) : 0;
 
-		$output = $item->earned_marks." out of {$item->total_marks} <br />";
-		$output .= "({$earned_percentage}%) pass ({$pass_mark_percent}%) <br />";
+	    if ($item->attempt_status === 'review_required'){
+            $output = '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
+        }else {
 
-		if ($earned_percentage >= $pass_mark_percent){
-			$output .= '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
-		}else{
-			$output .= '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
-		}
+            $pass_mark_percent = tutor_utils()->get_quiz_option($item->quiz_id, 'passing_grade', 0);
+            $earned_percentage = $item->earned_marks > 0 ? (number_format(($item->earned_marks * 100) / $item->total_marks)) : 0;
 
+            $output = $item->earned_marks . " out of {$item->total_marks} <br />";
+            $output .= "({$earned_percentage}%) pass ({$pass_mark_percent}%) <br />";
+
+            if ($earned_percentage >= $pass_mark_percent) {
+                $output .= '<span class="result-pass">' . __('Pass', 'tutor') . '</span>';
+            } else {
+                $output .= '<span class="result-fail">' . __('Fail', 'tutor') . '</span>';
+            }
+        }
 		return $output;
 	}
 
@@ -107,7 +112,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			'course'            => __('Course', 'tutor'),
 			'total_questions'   => __('Total Questions', 'tutor'),
 			'earned_marks'      => __('Earned Points', 'tutor'),
-			'attempt_status'      => __('Attempt Status', 'tutor'),
+			//'attempt_status'      => __('Attempt Status', 'tutor'),
 		);
 		return $columns;
 	}

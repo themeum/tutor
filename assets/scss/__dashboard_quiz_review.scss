@@ -36,6 +36,7 @@
 		align-items: flex-start;
 	}
 	.attempt-info-content{
+		span.result-review-required,
 		span.result-pass,
 		span.result-fail{
 			background: #DF3247;
@@ -48,6 +49,9 @@
 		}
 		span.result-pass{
 			background: var(--tutor-success-button-color);
+		}
+		span.result-review-required{
+			background: #f5b30d;
 		}
 		h4,
 		h5{

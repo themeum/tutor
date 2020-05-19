@@ -1,13 +1,13 @@
-jQuery(document).ready(function($){
+jQuery(document).ready(function ($) {
     'use strict';
 
     /**
      * Initiate Select2
      * @since v.1.3.4
      */
-    if (jQuery().select2){
+    if (jQuery().select2) {
         $('.tutor_select2').select2({
-            escapeMarkup : function(markup) {
+            escapeMarkup: function (markup) {
                 return markup;
             }
         });
@@ -25,14 +25,14 @@ jQuery(document).ready(function($){
      *  jquery.ui.widget.js
      *  jquery.ui.mouse.js
      */
-    !function(a){function f(a,b){if(!(a.originalEvent.touches.length>1)){a.preventDefault();var c=a.originalEvent.changedTouches[0],d=document.createEvent("MouseEvents");d.initMouseEvent(b,!0,!0,window,1,c.screenX,c.screenY,c.clientX,c.clientY,!1,!1,!1,!1,0,null),a.target.dispatchEvent(d)}}if(a.support.touch="ontouchend"in document,a.support.touch){var e,b=a.ui.mouse.prototype,c=b._mouseInit,d=b._mouseDestroy;b._touchStart=function(a){var b=this;!e&&b._mouseCapture(a.originalEvent.changedTouches[0])&&(e=!0,b._touchMoved=!1,f(a,"mouseover"),f(a,"mousemove"),f(a,"mousedown"))},b._touchMove=function(a){e&&(this._touchMoved=!0,f(a,"mousemove"))},b._touchEnd=function(a){e&&(f(a,"mouseup"),f(a,"mouseout"),this._touchMoved||f(a,"click"),e=!1)},b._mouseInit=function(){var b=this;b.element.bind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),c.call(b)},b._mouseDestroy=function(){var b=this;b.element.unbind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),d.call(b)}}}(jQuery);
+    !function (a) { function f(a, b) { if (!(a.originalEvent.touches.length > 1)) { a.preventDefault(); var c = a.originalEvent.changedTouches[0], d = document.createEvent("MouseEvents"); d.initMouseEvent(b, !0, !0, window, 1, c.screenX, c.screenY, c.clientX, c.clientY, !1, !1, !1, !1, 0, null), a.target.dispatchEvent(d) } } if (a.support.touch = "ontouchend" in document, a.support.touch) { var e, b = a.ui.mouse.prototype, c = b._mouseInit, d = b._mouseDestroy; b._touchStart = function (a) { var b = this; !e && b._mouseCapture(a.originalEvent.changedTouches[0]) && (e = !0, b._touchMoved = !1, f(a, "mouseover"), f(a, "mousemove"), f(a, "mousedown")) }, b._touchMove = function (a) { e && (this._touchMoved = !0, f(a, "mousemove")) }, b._touchEnd = function (a) { e && (f(a, "mouseup"), f(a, "mouseout"), this._touchMoved || f(a, "click"), e = !1) }, b._mouseInit = function () { var b = this; b.element.bind({ touchstart: a.proxy(b, "_touchStart"), touchmove: a.proxy(b, "_touchMove"), touchend: a.proxy(b, "_touchEnd") }), c.call(b) }, b._mouseDestroy = function () { var b = this; b.element.unbind({ touchstart: a.proxy(b, "_touchStart"), touchmove: a.proxy(b, "_touchMove"), touchend: a.proxy(b, "_touchEnd") }), d.call(b) } } }(jQuery);
 
     /**
      * END jQuery UI Touch Punch
      */
 
 
-    $(document).on('change', '.tutor-course-filter-form', function(e){
+    $(document).on('change', '.tutor-course-filter-form', function (e) {
         e.preventDefault();
         $(this).closest('form').submit();
     });
@@ -40,16 +40,16 @@ jQuery(document).ready(function($){
     const videoPlayer = {
         ajaxurl: _tutorobject.ajaxurl,
         nonce_key: _tutorobject.nonce_key,
-        video_data: function() {
+        video_data: function () {
             const video_track_data = $('#tutor_video_tracking_information').val();
             return video_track_data ? JSON.parse(video_track_data) : {};
         },
-        track_player: function() {
+        track_player: function () {
             const that = this;
             if (typeof Plyr !== 'undefined') {
                 const player = new Plyr('#tutorPlayer');
                 const video_data = that.video_data();
-                player.on('ready', function(event){
+                player.on('ready', function (event) {
                     const instance = event.detail.plyr;
                     const { best_watch_time } = video_data;
                     if (best_watch_time > 0 && instance.duration > Math.round(best_watch_time)) {
@@ -60,49 +60,49 @@ jQuery(document).ready(function($){
 
                 let tempTimeNow = 0;
                 let intervalSeconds = 30; //Send to tutor backend about video playing time in this interval
-                player.on('timeupdate', function(event) {
+                player.on('timeupdate', function (event) {
                     const instance = event.detail.plyr;
                     const tempTimeNowInSec = (tempTimeNow / 4); //timeupdate firing 250ms interval
-                    if (tempTimeNowInSec >= intervalSeconds){
+                    if (tempTimeNowInSec >= intervalSeconds) {
                         that.sync_time(instance);
                         tempTimeNow = 0;
                     }
                     tempTimeNow++;
                 });
 
-                player.on('ended', function(event) {
+                player.on('ended', function (event) {
                     const video_data = that.video_data();
                     const instance = event.detail.plyr;
-                    const data = {is_ended:true};
+                    const data = { is_ended: true };
                     that.sync_time(instance, data);
-                    if(video_data.autoload_next_course_content) {
+                    if (video_data.autoload_next_course_content) {
                         that.autoload_content();
                     }
                 });
             }
         },
-        sync_time: function(instance, options) {
+        sync_time: function (instance, options) {
             const post_id = this.video_data().post_id;
             //TUTOR is sending about video playback information to server.
-            let data = {action: 'sync_video_playback', currentTime: instance.currentTime, duration:instance.duration, post_id};
+            let data = { action: 'sync_video_playback', currentTime: instance.currentTime, duration: instance.duration, post_id };
             data[this.nonce_key] = _tutorobject[this.nonce_key];
             let data_send = data;
-            if(options){
+            if (options) {
                 data_send = Object.assign(data, options);
             }
             $.post(this.ajaxurl, data_send);
         },
-        autoload_content: function() {
+        autoload_content: function () {
             const post_id = this.video_data().post_id;
-            const data = {action: 'autoload_next_course_content', post_id};
+            const data = { action: 'autoload_next_course_content', post_id };
             data[this.nonce_key] = _tutorobject[this.nonce_key];
-            $.post(this.ajaxurl, data).done(function(response) {
-                if(response.success && response.data.next_url) {
+            $.post(this.ajaxurl, data).done(function (response) {
+                if (response.success && response.data.next_url) {
                     location.href = response.data.next_url;
                 }
             });
         },
-        init: function() {
+        init: function () {
             this.track_player();
         }
     };
@@ -111,11 +111,11 @@ jQuery(document).ready(function($){
      * Fire TUTOR video
      * @since v.1.0.0
      */
-    if ($('#tutorPlayer').length){
+    if ($('#tutorPlayer').length) {
         videoPlayer.init();
     }
 
-    $(document).on('change keyup paste', '.tutor_user_name', function(){
+    $(document).on('change keyup paste', '.tutor_user_name', function () {
         $(this).val(tutor_slugify($(this).val()));
     });
 
@@ -131,16 +131,16 @@ jQuery(document).ready(function($){
     /**
      * Hover tutor rating and set value
      */
-    $(document).on('hover', '.tutor-write-review-box .tutor-star-rating-group i', function(){
+    $(document).on('hover', '.tutor-write-review-box .tutor-star-rating-group i', function () {
         $(this).closest('.tutor-star-rating-group').find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
         var currentRateValue = $(this).attr('data-rating-value');
-        for (var i = 1; i<= currentRateValue; i++){
-            $(this).closest('.tutor-star-rating-group').find('i[data-rating-value="'+i+'"]').removeClass('tutor-icon-star-line').addClass('tutor-icon-star-full');
+        for (var i = 1; i <= currentRateValue; i++) {
+            $(this).closest('.tutor-star-rating-group').find('i[data-rating-value="' + i + '"]').removeClass('tutor-icon-star-line').addClass('tutor-icon-star-full');
         }
         $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(currentRateValue);
     });
 
-    $(document).on('click', '.tutor-star-rating-group i', function(){
+    $(document).on('click', '.tutor-star-rating-group i', function () {
         var rating = $(this).attr('data-rating-value');
         $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
     });
@@ -153,7 +153,7 @@ jQuery(document).ready(function($){
         review = review.trim();
 
         var course_id = $('input[name="tutor_course_id"]').val();
-        var data = {course_id : course_id, rating : rating, review:review, action: 'tutor_place_rating' };
+        var data = { course_id: course_id, rating: rating, review: review, action: 'tutor_place_rating' };
 
         if (review) {
             $.ajax({
@@ -166,32 +166,32 @@ jQuery(document).ready(function($){
                 success: function (data) {
                     var review_id = data.data.review_id;
                     var review = data.data.review;
-                    $('.tutor-review-'+review_id+' .review-content').html(review);
+                    $('.tutor-review-' + review_id + ' .review-content').html(review);
                     location.reload();
                 }
             });
         }
     });
 
-    $(document).on('click', '.write-course-review-link-btn', function(e){
+    $(document).on('click', '.write-course-review-link-btn', function (e) {
         e.preventDefault();
         $(this).siblings('.tutor-write-review-form').slideToggle();
     });
 
-    $(document).on('click', '.tutor-ask-question-btn', function(e){
+    $(document).on('click', '.tutor-ask-question-btn', function (e) {
         e.preventDefault();
         $('.tutor-add-question-wrap').slideToggle();
     });
-    $(document).on('click', '.tutor_question_cancel', function(e){
+    $(document).on('click', '.tutor_question_cancel', function (e) {
         e.preventDefault();
         $('.tutor-add-question-wrap').toggle();
     });
 
-    $(document).on('submit', '#tutor-ask-question-form', function(e){
+    $(document).on('submit', '#tutor-ask-question-form', function (e) {
         e.preventDefault();
 
         var $form = $(this);
-        var data = $(this).serialize()+'&action=tutor_ask_question';
+        var data = $(this).serialize() + '&action=tutor_ask_question';
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -201,7 +201,7 @@ jQuery(document).ready(function($){
                 $form.find('.tutor_ask_question_btn').addClass('updating-icon');
             },
             success: function (data) {
-                if (data.success){
+                if (data.success) {
                     $('.tutor-add-question-wrap').hide();
                     window.location.reload();
                 }
@@ -212,11 +212,11 @@ jQuery(document).ready(function($){
         });
     });
 
-    $(document).on('submit', '.tutor-add-answer-form', function(e){
+    $(document).on('submit', '.tutor-add-answer-form', function (e) {
         e.preventDefault();
 
         var $form = $(this);
-        var data = $(this).serialize()+'&action=tutor_add_answer';
+        var data = $(this).serialize() + '&action=tutor_add_answer';
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -226,7 +226,7 @@ jQuery(document).ready(function($){
                 $form.find('.tutor_add_answer_btn').addClass('updating-icon');
             },
             success: function (data) {
-                if (data.success){
+                if (data.success) {
                     window.location.reload();
                 }
             },
@@ -236,29 +236,29 @@ jQuery(document).ready(function($){
         });
     });
 
-    $(document).on('focus', '.tutor_add_answer_textarea', function(e){
+    $(document).on('focus', '.tutor_add_answer_textarea', function (e) {
         e.preventDefault();
 
         var question_id = $(this).closest('.tutor_add_answer_wrap').attr('data-question-id');
         var conf = {
             tinymce: {
-                wpautop:true,
+                wpautop: true,
                 //plugins : 'charmap colorpicker compat3x directionality fullscreen hr image lists media paste tabfocus textcolor wordpress wpautoresize wpdialogs wpeditimage wpemoji wpgallery wplink wptextpattern wpview',
                 toolbar1: 'bold italic underline bullist strikethrough numlist  blockquote  alignleft aligncenter alignright undo redo link unlink spellchecker fullscreen'
             },
         };
-        wp.editor.initialize('tutor_answer_'+question_id, conf);
+        wp.editor.initialize('tutor_answer_' + question_id, conf);
     });
 
-    $(document).on('click', '.tutor_cancel_wp_editor', function(e){
+    $(document).on('click', '.tutor_cancel_wp_editor', function (e) {
         e.preventDefault();
         $(this).closest('.tutor_wp_editor_wrap').toggle();
         $(this).closest('.tutor_add_answer_wrap').find('.tutor_wp_editor_show_btn_wrap').toggle();
         var question_id = $(this).closest('.tutor_add_answer_wrap').attr('data-question-id');
-        wp.editor.remove('tutor_answer_'+question_id);
+        wp.editor.remove('tutor_answer_' + question_id);
     });
 
-    $(document).on('click', '.tutor_wp_editor_show_btn', function(e){
+    $(document).on('click', '.tutor_wp_editor_show_btn', function (e) {
         e.preventDefault();
         $(this).closest('.tutor_add_answer_wrap').find('.tutor_wp_editor_wrap').toggle();
         $(this).closest('.tutor_wp_editor_show_btn_wrap').toggle();
@@ -269,7 +269,7 @@ jQuery(document).ready(function($){
      */
     var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
     var attempt_settings = null;
-    if ($tutor_quiz_time_update.length){
+    if ($tutor_quiz_time_update.length) {
         attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
         var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
 
@@ -306,13 +306,13 @@ jQuery(document).ready(function($){
                     countdown_human = "EXPIRED";
                     //Set the quiz attempt to timeout in ajax
 
-                    if (_tutorobject.options.quiz_when_time_expires === 'autosubmit') {
+                    if (_tutorobject.quiz_options.quiz_when_time_expires === 'autosubmit') {
                         /**
                          * Auto Submit
                          */
                         $('form#tutor-answering-quiz').submit();
 
-                    } else if (_tutorobject.options.quiz_when_time_expires === 'autoabandon') {
+                    } else if (_tutorobject.quiz_options.quiz_when_time_expires === 'autoabandon') {
                         /**
                          *
                          * @type {jQuery}
@@ -322,7 +322,7 @@ jQuery(document).ready(function($){
 
                         var quiz_id = $('#tutor_quiz_id').val();
                         var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
-                        var quiz_timeout_data = {quiz_id: quiz_id, action: 'tutor_quiz_timeout'};
+                        var quiz_timeout_data = { quiz_id: quiz_id, action: 'tutor_quiz_timeout' };
 
                         $.ajax({
                             url: _tutorobject.ajaxurl,
@@ -344,14 +344,14 @@ jQuery(document).ready(function($){
                 time_now = time_now + 1000;
                 $tutor_quiz_time_update.html(countdown_human);
             }, 1000);
-        }else{
+        } else {
             $tutor_quiz_time_update.closest('.time-remaining').remove();
         }
     }
 
     var $quiz_start_form = $('#tutor-quiz-body form#tutor-start-quiz');
-    if ($quiz_start_form.length){
-        if (_tutorobject.quiz_options.quiz_auto_start === '1'){
+    if ($quiz_start_form.length) {
+        if (_tutorobject.quiz_options.quiz_auto_start === '1') {
             $quiz_start_form.submit();
         }
     }
@@ -360,7 +360,7 @@ jQuery(document).ready(function($){
      * Quiz Frontend Review Action
      * @since 1.4.0
      */
-    $(document).on('click', '.quiz-manual-review-action', function(e){
+    $(document).on('click', '.quiz-manual-review-action', function (e) {
         e.preventDefault();
         var $that = $(this),
             attempt_id = $that.attr('data-attempt-id'),
@@ -368,9 +368,9 @@ jQuery(document).ready(function($){
             mark_as = $that.attr('data-mark-as');
 
         $.ajax({
-            url : _tutorobject.ajaxurl,
-            type : 'GET',
-            data : {action:'review_quiz_answer', attempt_id: attempt_id, attempt_answer_id : attempt_answer_id, mark_as : mark_as },
+            url: _tutorobject.ajaxurl,
+            type: 'GET',
+            data: { action: 'review_quiz_answer', attempt_id: attempt_id, attempt_answer_id: attempt_answer_id, mark_as: mark_as },
             beforeSend: function () {
                 $that.find('i').addClass('updating-icon');
             },
@@ -405,18 +405,18 @@ jQuery(document).ready(function($){
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
-            data: {course_id : course_id, 'action': 'tutor_course_add_to_wishlist'},
+            data: { course_id: course_id, 'action': 'tutor_course_add_to_wishlist' },
             beforeSend: function () {
                 $that.addClass('updating-icon');
             },
             success: function (data) {
-                if (data.success){
-                    if (data.data.status === 'added'){
+                if (data.success) {
+                    if (data.data.status === 'added') {
                         $that.addClass('has-wish-listed');
-                    }else{
+                    } else {
                         $that.removeClass('has-wish-listed');
                     }
-                }else{
+                } else {
                     window.location = data.data.redirect_to;
                 }
             },
@@ -434,7 +434,7 @@ jQuery(document).ready(function($){
      *
      * @updated v.1.4.0
      */
-    if ( ! _tutorobject.enable_lesson_classic_editor) {
+    if (!_tutorobject.enable_lesson_classic_editor) {
 
         $(document).on('click', '.tutor-single-lesson-a', function (e) {
             e.preventDefault();
@@ -446,7 +446,7 @@ jQuery(document).ready(function($){
             $.ajax({
                 url: _tutorobject.ajaxurl,
                 type: 'POST',
-                data: {lesson_id : lesson_id, 'action': 'tutor_render_lesson_content'},
+                data: { lesson_id: lesson_id, 'action': 'tutor_render_lesson_content' },
                 beforeSend: function () {
                     var page_title = $that.find('.lesson_title').text();
                     $('head title').text(page_title);
@@ -477,7 +477,7 @@ jQuery(document).ready(function($){
             $.ajax({
                 url: _tutorobject.ajaxurl,
                 type: 'POST',
-                data: {quiz_id : quiz_id, 'action': 'tutor_render_quiz_content'},
+                data: { quiz_id: quiz_id, 'action': 'tutor_render_quiz_content' },
                 beforeSend: function () {
                     $('head title').text(page_title);
                     window.history.pushState('obj', page_title, $that.attr('href'));
@@ -501,7 +501,7 @@ jQuery(document).ready(function($){
      * @date 05 Feb, 2019
      */
 
-    $(document).on('click', '.tutor-lesson-sidebar-hide-bar', function(e){
+    $(document).on('click', '.tutor-lesson-sidebar-hide-bar', function (e) {
         e.preventDefault();
         $('.tutor-lesson-sidebar').toggle();
         $('#tutor-single-entry-content').toggleClass("sidebar-hidden");
@@ -550,7 +550,21 @@ jQuery(document).ready(function($){
 
     $(document).on('click', '.tutor-quiz-answer-next-btn', function (e) {
         e.preventDefault();
+
         var $that = $(this);
+        var $question_wrap = $that.closest('.quiz-attempt-single-question');
+        /**
+         * Validating required answer
+         * @type {jQuery}
+         *
+         * @since v.1.6.1
+         */
+
+        var validated = tutor_quiz_validation($question_wrap);
+        if (!validated) {
+            return;
+        }
+
         var question_id = parseInt($that.closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
 
         var next_question_id = $that.closest('.quiz-attempt-single-question').attr('data-next-question-id');
@@ -565,14 +579,32 @@ jQuery(document).ready(function($){
                  * If pagination exists, set active class
                  */
 
-                if ($('.tutor-quiz-questions-pagination').length){
+                if ($('.tutor-quiz-questions-pagination').length) {
                     $('.tutor-quiz-question-paginate-item').removeClass('active');
-                    $('.tutor-quiz-questions-pagination a[href="'+next_question_id+'"]').addClass('active');
+                    $('.tutor-quiz-questions-pagination a[href="' + next_question_id + '"]').addClass('active');
                 }
 
             }
         }
     });
+
+
+    $(document).on('submit', '#tutor-answering-quiz', function (e) {
+        var $questions_wrap = $('.quiz-attempt-single-question');
+        var validated = true;
+        if ($questions_wrap.length) {
+            $questions_wrap.each(function (index, question) {
+                validated = tutor_quiz_validation($(question));
+            });
+        }
+
+        if (!validated) {
+            e.preventDefault();
+        }
+
+    });
+
+
     $(document).on('click', '.tutor-quiz-question-paginate-item', function (e) {
         e.preventDefault();
         var $that = $(this);
@@ -593,8 +625,13 @@ jQuery(document).ready(function($){
         var value = $that.val();
         var limit = $that.hasClass('question_type_short_answer') ? _tutorobject.quiz_options.short_answer_characters_limit : _tutorobject.quiz_options.open_ended_answer_characters_limit;
         var remaining = limit - value.length;
+<<<<<<< HEAD
         
         if (remaining < 1){
+=======
+
+        if (remaining < 1) {
+>>>>>>> master
             $that.val(value.substr(0, limit));
             remaining = 0;
         }
@@ -611,14 +648,92 @@ jQuery(document).ready(function($){
      * @since v.1.4.4
      */
     var countDraggableAnswers = $('.quiz-draggable-rand-answers').length;
-    if (countDraggableAnswers){
-        $('.quiz-draggable-rand-answers').each(function(){
+    if (countDraggableAnswers) {
+        $('.quiz-draggable-rand-answers').each(function () {
             var $that = $(this);
             var draggableDivHeight = $that.height();
 
-            $that.css({"height": draggableDivHeight});
+            $that.css({ "height": draggableDivHeight });
         });
     }
+
+
+    /**
+     * Quiz Validation Helper
+     *
+     * @since v.1.6.1
+     */
+
+    function tutor_quiz_validation($question_wrap) {
+        var validated = true;
+
+        var $required_answer_wrap = $question_wrap.find('.quiz-answer-required');
+
+
+        if ($required_answer_wrap.length) {
+
+            /**
+             * Radio field validation
+             *
+             * @type {jQuery}
+             *
+             * @since v.1.6.1
+             */
+            var $inputs = $required_answer_wrap.find('input');
+            if ($inputs.length) {
+                var $type = $inputs.attr('type');
+                if ($type === 'radio') {
+                    if ($required_answer_wrap.find('input[type="radio"]:checked').length == 0) {
+                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please select an option to answer</p>');
+                        validated = false;
+                    }
+                } else if ($type === 'checkbox') {
+                    if ($required_answer_wrap.find('input[type="checkbox"]:checked').length == 0) {
+                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please select at least one option to answer.</p>');
+                        validated = false;
+                    }
+                } else if ($type === 'text') {
+                    //Fill in the gaps if many, validation all
+                    $inputs.each(function (index, input) {
+                        if (!$(input).val().trim().length) {
+                            $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">The answer for this question is required</p>');
+                            validated = false;
+                        }
+                    });
+                }
+
+            }
+            if ($required_answer_wrap.find('textarea').length) {
+                if ($required_answer_wrap.find('textarea').val().trim().length < 1) {
+                    $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">The answer for this question is required</p>');
+                    validated = false;
+                }
+            }
+
+            /**
+             * Matching Question
+             */
+            var $matchingDropable = $required_answer_wrap.find('.quiz-answer-matching-droppable');
+            if ($matchingDropable.length) {
+
+                $matchingDropable.each(function (index, matching) {
+                    if (!$(matching).find('.quiz-draggable-answer-item').length) {
+                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please match all the items</p>');
+                        validated = false;
+                    }
+
+                });
+
+            }
+
+
+
+        }
+
+        return validated;
+    }
+
+
 
     /**
      * Add to cart in guest mode, show login form
@@ -647,7 +762,7 @@ jQuery(document).ready(function($){
      *
      * @since v.1.0.4
      */
-    if($.fn.ShareLink){
+    if ($.fn.ShareLink) {
         var $social_share_wrap = $('.tutor-social-share-wrap');
         if ($social_share_wrap.length) {
             var share_config = JSON.parse($social_share_wrap.attr('data-social-share-config'));
@@ -668,8 +783,8 @@ jQuery(document).ready(function($){
      *
      * @since v.1.1.2
      */
-    if (jQuery.datepicker){
-        $( ".tutor_report_datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
+    if (jQuery.datepicker) {
+        $(".tutor_report_datepicker").datepicker({ "dateFormat": 'yy-mm-dd' });
     }
 
 
@@ -679,17 +794,17 @@ jQuery(document).ready(function($){
      * @since v.1.1.2
      */
 
-    $(".withdraw-method-select-input").on('change', function(e){
+    $(".withdraw-method-select-input").on('change', function (e) {
         var $that = $(this);
         $('.withdraw-method-form').hide();
-        $('#withdraw-method-form-'+$that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
+        $('#withdraw-method-form-' + $that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
     });
 
     $('.withdraw-method-select-input').each(function () {
         var $that = $(this);
-        if($that.is(":checked")){
+        if ($that.is(":checked")) {
             $('.withdraw-method-form').hide();
-            $('#withdraw-method-form-'+$that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
+            $('#withdraw-method-form-' + $that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
         }
     });
 
@@ -700,7 +815,7 @@ jQuery(document).ready(function($){
      *
      * @since v.1.2.0
      */
-    $(document).on('submit', '#tutor-withdraw-account-set-form', function(e){
+    $(document).on('submit', '#tutor-withdraw-account-set-form', function (e) {
         e.preventDefault();
 
         var $form = $(this);
@@ -716,8 +831,8 @@ jQuery(document).ready(function($){
                 $btn.addClass('updating-icon');
             },
             success: function (data) {
-                if (data.success){
-                    var successMsg = '<div class="tutor-success-msg" style="display: none;"><i class="tutor-icon-mark"></i> '+data.data.msg+' </div>';
+                if (data.success) {
+                    var successMsg = '<div class="tutor-success-msg" style="display: none;"><i class="tutor-icon-mark"></i> ' + data.data.msg + ' </div>';
                     $btn.closest('.withdraw-account-save-btn-wrap').append(successMsg);
                     if ($form.find('.tutor-success-msg').length) {
                         $form.find('.tutor-success-msg').slideDown();
@@ -739,12 +854,12 @@ jQuery(document).ready(function($){
      * @since v.1.2.0
      */
 
-    $(document).on('click', 'a.open-withdraw-form-btn', function(e){
+    $(document).on('click', 'a.open-withdraw-form-btn', function (e) {
         e.preventDefault();
         $('.tutor-earning-withdraw-form-wrap').slideToggle();
     });
 
-    $(document).on('submit', '#tutor-earning-withdraw-form', function(e){
+    $(document).on('submit', '#tutor-earning-withdraw-form', function (e) {
         e.preventDefault();
 
         var $form = $(this);
@@ -762,15 +877,15 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 var Msg;
-                if (data.success){
+                if (data.success) {
 
                     if (data.data.available_balance !== 'undefined') {
                         $('.withdraw-balance-col .available_balance').html(data.data.available_balance);
                     }
-                    Msg = '<div class="tutor-success-msg"><i class="tutor-icon-mark"></i> '+data.data.msg+' </div>';
+                    Msg = '<div class="tutor-success-msg"><i class="tutor-icon-mark"></i> ' + data.data.msg + ' </div>';
 
-                }else{
-                    Msg = '<div class="tutor-error-msg"><i class="tutor-icon-line-cross"></i> '+data.data.msg+' </div>';
+                } else {
+                    Msg = '<div class="tutor-error-msg"><i class="tutor-icon-line-cross"></i> ' + data.data.msg + ' </div>';
                 }
 
                 $responseDiv.html(Msg);
@@ -788,7 +903,7 @@ jQuery(document).ready(function($){
     frontEndModal.each(function () {
         var modal = $(this),
             action = $(this).data('popup-rel');
-        $('[href="'+action+'"]').on('click', function (e) {
+        $('[href="' + action + '"]').on('click', function (e) {
             modal.fadeIn();
             e.preventDefault();
         });
@@ -820,8 +935,8 @@ jQuery(document).ready(function($){
                 $btn.addClass('updating-icon');
             },
             success: function (data) {
-                if (data.success){
-                    $('#tutor-dashboard-course-'+course_id).remove();
+                if (data.success) {
+                    $('#tutor-dashboard-course-' + course_id).remove();
                 }
             },
             complete: function () {
@@ -835,37 +950,34 @@ jQuery(document).ready(function($){
      * Frontend Profile
      */
 
-    if (! $('#tutor_profile_photo_id').val()) {
+    if (!$('#tutor_profile_photo_id').val()) {
         $('.tutor-profile-photo-delete-btn').hide();
     }
 
-    $( document ).on( 'click', '.tutor-profile-photo-delete-btn', function() {
-        $( '.tutor-profile-photo-upload-wrap' ).find( 'img' ).attr( 'src', _tutorobject.placeholder_img_src );
-        $( '#tutor_profile_photo_id' ).val( '' );
-        $( '.tutor-profile-photo-delete-btn' ).hide();
+    $(document).on('click', '.tutor-profile-photo-delete-btn', function () {
+        $('.tutor-profile-photo-upload-wrap').find('img').attr('src', _tutorobject.placeholder_img_src);
+        $('#tutor_profile_photo_id').val('');
+        $('.tutor-profile-photo-delete-btn').hide();
 
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
-            data: {'action' : 'tutor_profile_photo_remove'},
+            data: { 'action': 'tutor_profile_photo_remove' },
         });
 
         return false;
     });
-
-
 
     /**
      * Assignment
      *
      * @since v.1.3.3
      */
-
-    $( document ).on( 'submit', '#tutor_assignment_start_form', function(e) {
+    $(document).on('submit', '#tutor_assignment_start_form', function (e) {
         e.preventDefault();
 
         var $that = $(this);
-        var form_data = $that.serialize()+'&action=tutor_start_assignment';
+        var form_data = $that.serialize() + '&action=tutor_start_assignment';
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -875,11 +987,11 @@ jQuery(document).ready(function($){
                 $('#tutor_assignment_start_btn').addClass('updating-icon');
             },
             success: function (data) {
-                if (data.success){
+                if (data.success) {
                     location.reload();
                 }
             },
-            complete : function () {
+            complete: function () {
                 $('#tutor_assignment_start_btn').removeClass('updating-icon');
             }
         });
@@ -888,10 +1000,10 @@ jQuery(document).ready(function($){
     /**
      * Assignment answer validation
      */
-    $( document ).on( 'submit', '#tutor_assignment_submit_form', function(e) {
+    $(document).on('submit', '#tutor_assignment_submit_form', function (e) {
         var assignment_answer = $('textarea[name="assignment_answer"]').val();
         if (assignment_answer.trim().length < 1) {
-            $('#form_validation_response').html('<div class="tutor-error-msg">'+_tutorobject.text.assignment_text_validation_msg+'</div>');
+            $('#form_validation_response').html('<div class="tutor-error-msg">' + _tutorobject.text.assignment_text_validation_msg + '</div>');
             e.preventDefault();
         }
     });
@@ -902,13 +1014,13 @@ jQuery(document).ready(function($){
      */
 
 
-    $(document).on( 'click', '.video_source_upload_wrap_html5 .video_upload_btn',  function( event ){
+    $(document).on('click', '.video_source_upload_wrap_html5 .video_upload_btn', function (event) {
         event.preventDefault();
 
         var $that = $(this);
         var frame;
         // If the media frame already exists, reopen it.
-        if ( frame ) {
+        if (frame) {
             frame.open();
             return;
         }
@@ -917,9 +1029,10 @@ jQuery(document).ready(function($){
             button: {
                 text: 'Use this media'
             },
+            library: { type: 'video' },
             multiple: false  // Set to true to allow multiple files to be selected
         });
-        frame.on( 'select', function() {
+        frame.on('select', function () {
             // Get media attachment details from the frame state
             var attachment = frame.state().get('selection').first().toJSON();
             $that.closest('.video_source_upload_wrap_html5').find('span.video_media_id').text(attachment.id).closest('p').show();
@@ -933,7 +1046,7 @@ jQuery(document).ready(function($){
      * Course and lesson sorting
      */
 
-    function enable_sorting_topic_lesson(){
+    function enable_sorting_topic_lesson() {
         if (jQuery().sortable) {
             $(".course-contents").sortable({
                 handle: ".course-move-handle",
@@ -957,20 +1070,20 @@ jQuery(document).ready(function($){
         }
     }
     enable_sorting_topic_lesson();
-    function tutor_sorting_topics_and_lesson(){
+    function tutor_sorting_topics_and_lesson() {
         var topics = {};
-        $('.tutor-topics-wrap').each(function(index, item){
+        $('.tutor-topics-wrap').each(function (index, item) {
             var $topic = $(this);
             var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
             var lessons = {};
 
-            $topic.find('.course-content-item').each(function(lessonIndex, lessonItem){
+            $topic.find('.course-content-item').each(function (lessonIndex, lessonItem) {
                 var $lesson = $(this);
                 var lesson_id = parseInt($lesson.attr('id').match(/\d+/)[0], 10);
 
                 lessons[lessonIndex] = lesson_id;
             });
-            topics[index] = { 'topic_id' : topics_id, 'lesson_ids' : lessons };
+            topics[index] = { 'topic_id': topics_id, 'lesson_ids': lessons };
         });
         $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
     }
@@ -978,7 +1091,7 @@ jQuery(document).ready(function($){
     /**
      * Lesson Update or Create Modal
      */
-    $(document).on( 'click', '.update_lesson_modal_btn',  function( event ){
+    $(document).on('click', '.update_lesson_modal_btn', function (event) {
         event.preventDefault();
 
         var $that = $(this);
@@ -987,21 +1100,21 @@ jQuery(document).ready(function($){
         if (editor) {
             content = editor.getContent();
         } else {
-            content = $('#'+inputid).val();
+            content = $('#' + inputid).val();
         }
 
         var form_data = $(this).closest('form').serialize();
-        form_data += '&lesson_content='+encodeURIComponent(content);
+        form_data += '&lesson_content=' + encodeURIComponent(content);
 
         $.ajax({
-            url : ajaxurl,
-            type : 'POST',
-            data : form_data,
+            url: ajaxurl,
+            type: 'POST',
+            data: form_data,
             beforeSend: function () {
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
-                if (data.success){
+                if (data.success) {
                     $('#tutor-course-content-wrap').html(data.data.course_contents);
                     enable_sorting_topic_lesson();
 
@@ -1023,16 +1136,16 @@ jQuery(document).ready(function($){
      * Attachment in forntend course builder
      * @since v.1.3.4
      */
-    $(document).on('click', 'a.tutor-delete-attachment', function(e){
+    $(document).on('click', 'a.tutor-delete-attachment', function (e) {
         e.preventDefault();
         $(this).closest('.tutor-added-attachment').remove();
     });
-    $(document).on('click', '.tutorUploadAttachmentBtn', function(e){
+    $(document).on('click', '.tutorUploadAttachmentBtn', function (e) {
         e.preventDefault();
 
         var $that = $(this);
         var frame;
-        if ( frame ) {
+        if (frame) {
             frame.open();
             return;
         }
@@ -1043,13 +1156,13 @@ jQuery(document).ready(function($){
             },
             multiple: true  // Set to true to allow multiple files to be selected
         });
-        frame.on( 'select', function() {
+        frame.on('select', function () {
             var attachments = frame.state().get('selection').toJSON();
-            if (attachments.length){
-                for (var i=0; i < attachments.length; i++){
+            if (attachments.length) {
+                for (var i = 0; i < attachments.length; i++) {
                     var attachment = attachments[i];
 
-                    var inputHtml = '<div class="tutor-added-attachment"><i class="tutor-icon-archive"></i><a href="javascript:;" class="tutor-delete-attachment tutor-icon-line-cross"></a> <span> <a href="'+attachment.url+'">'+attachment.filename+'</a> </span> <input type="hidden" name="tutor_attachments[]" value="'+attachment.id+'"></div>';
+                    var inputHtml = '<div class="tutor-added-attachment"><i class="tutor-icon-archive"></i><a href="javascript:;" class="tutor-delete-attachment tutor-icon-line-cross"></a> <span> <a href="' + attachment.url + '">' + attachment.filename + '</a> </span> <input type="hidden" name="tutor_attachments[]" value="' + attachment.id + '"></div>';
                     $that.closest('.tutor-lesson-attachments-metabox').find('.tutor-added-attachments-wrap').append(inputHtml);
                 }
             }
@@ -1094,7 +1207,7 @@ jQuery(document).ready(function($){
      * Tutor Assignments JS
      * @since v.1.3.3
      */
-    $(document).on('click', '.tutor-create-assignments-btn', function(e){
+    $(document).on('click', '.tutor-create-assignments-btn', function (e) {
         e.preventDefault();
 
         var $that = $(this);
@@ -1102,9 +1215,9 @@ jQuery(document).ready(function($){
         var course_id = $('#post_ID').val();
 
         $.ajax({
-            url : ajaxurl,
-            type : 'POST',
-            data : {topic_id : topic_id, course_id : course_id, action: 'tutor_load_assignments_builder_modal'},
+            url: ajaxurl,
+            type: 'POST',
+            data: { topic_id: topic_id, course_id: course_id, action: 'tutor_load_assignments_builder_modal' },
             beforeSend: function () {
                 $that.addClass('tutor-updating-message');
             },
@@ -1112,20 +1225,20 @@ jQuery(document).ready(function($){
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-lesson-modal-wrap').attr('data-topic-id', topic_id).addClass('show');
 
-                $(document).trigger('assignment_modal_loaded', {topic_id : topic_id, course_id : course_id});
+                $(document).trigger('assignment_modal_loaded', { topic_id: topic_id, course_id: course_id });
 
                 tinymce.init(tinyMCEPreInit.mceInit.course_description);
-                tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_assignments_modal_editor' );
+                tinymce.execCommand('mceRemoveEditor', false, 'tutor_assignments_modal_editor');
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
             },
             complete: function () {
-                quicktags({id : "tutor_assignments_modal_editor"});
+                quicktags({ id: "tutor_assignments_modal_editor" });
                 $that.removeClass('tutor-updating-message');
             }
         });
     });
 
-    $(document).on('click', '.open-tutor-assignment-modal', function(e){
+    $(document).on('click', '.open-tutor-assignment-modal', function (e) {
         e.preventDefault();
 
         var $that = $(this);
@@ -1134,24 +1247,24 @@ jQuery(document).ready(function($){
         var course_id = $('#post_ID').val();
 
         $.ajax({
-            url : ajaxurl,
-            type : 'POST',
-            data : {assignment_id : assignment_id, topic_id : topic_id, course_id : course_id, action: 'tutor_load_assignments_builder_modal'},
+            url: ajaxurl,
+            type: 'POST',
+            data: { assignment_id: assignment_id, topic_id: topic_id, course_id: course_id, action: 'tutor_load_assignments_builder_modal' },
             beforeSend: function () {
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
-                $('.tutor-lesson-modal-wrap').attr({'data-assignment-id' : assignment_id, 'data-topic-id':topic_id}).addClass('show');
+                $('.tutor-lesson-modal-wrap').attr({ 'data-assignment-id': assignment_id, 'data-topic-id': topic_id }).addClass('show');
 
-                $(document).trigger('assignment_modal_loaded', {assignment_id : assignment_id, topic_id : topic_id, course_id : course_id});
+                $(document).trigger('assignment_modal_loaded', { assignment_id: assignment_id, topic_id: topic_id, course_id: course_id });
 
                 tinymce.init(tinyMCEPreInit.mceInit.course_description);
-                tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_assignments_modal_editor' );
+                tinymce.execCommand('mceRemoveEditor', false, 'tutor_assignments_modal_editor');
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
             },
             complete: function () {
-                quicktags({id : "tutor_assignments_modal_editor"});
+                quicktags({ id: "tutor_assignments_modal_editor" });
                 $that.removeClass('tutor-updating-message');
             }
         });
@@ -1160,7 +1273,7 @@ jQuery(document).ready(function($){
     /**
      * Update Assignment Data
      */
-    $(document).on( 'click', '.update_assignment_modal_btn',  function( event ){
+    $(document).on('click', '.update_assignment_modal_btn', function (event) {
         event.preventDefault();
 
         var $that = $(this);
@@ -1169,21 +1282,21 @@ jQuery(document).ready(function($){
         if (editor) {
             content = editor.getContent();
         } else {
-            content = $('#'+inputid).val();
+            content = $('#' + inputid).val();
         }
 
         var form_data = $(this).closest('form').serialize();
-        form_data += '&assignment_content='+content;
+        form_data += '&assignment_content=' + content;
 
         $.ajax({
-            url : ajaxurl,
-            type : 'POST',
-            data : form_data,
+            url: ajaxurl,
+            type: 'POST',
+            data: form_data,
             beforeSend: function () {
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
-                if (data.success){
+                if (data.success) {
                     $('#tutor-course-content-wrap').html(data.data.course_contents);
                     enable_sorting_topic_lesson();
 
@@ -1200,13 +1313,13 @@ jQuery(document).ready(function($){
     /**
      * Add Assignment
      */
-    $(document).on( 'click', '.add-assignment-attachments',  function( event ){
+    $(document).on('click', '.add-assignment-attachments', function (event) {
         event.preventDefault();
 
         var $that = $(this);
         var frame;
         // If the media frame already exists, reopen it.
-        if ( frame ) {
+        if (frame) {
             frame.open();
             return;
         }
@@ -1221,11 +1334,11 @@ jQuery(document).ready(function($){
         });
 
         // When an image is selected in the media frame...
-        frame.on( 'select', function() {
+        frame.on('select', function () {
             // Get media attachment details from the frame state
             var attachment = frame.state().get('selection').first().toJSON();
 
-            var  field_markup = '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">'+attachment.filename+'</p><input type="hidden" name="tutor_assignment_attachments[]" value="'+attachment.id+'"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
+            var field_markup = '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">' + attachment.filename + '</p><input type="hidden" name="tutor_assignment_attachments[]" value="' + attachment.id + '"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
 
             $('#assignment-attached-file').append(field_markup);
             $that.closest('.video_source_upload_wrap_html5').find('input').val(attachment.id);
@@ -1234,7 +1347,7 @@ jQuery(document).ready(function($){
         frame.open();
     });
 
-    $(document).on( 'click', '.remove-assignment-attachment-a',  function( event ){
+    $(document).on('click', '.remove-assignment-attachment-a', function (event) {
         event.preventDefault();
         $(this).closest('.tutor-individual-attachment-file').remove();
     });
@@ -1249,16 +1362,16 @@ jQuery(document).ready(function($){
      * @since v.1.3.4
      */
     var tutor_course_builder = $('input[name="tutor_action"]').val();
-    if (tutor_course_builder === 'tutor_add_course_builder'){
+    if (tutor_course_builder === 'tutor_add_course_builder') {
         setInterval(auto_draft_save_course_builder, 30000);
     }
 
-    function auto_draft_save_course_builder(){
+    function auto_draft_save_course_builder() {
         var form_data = $('form#tutor-frontend-course-builder').serialize();
         $.ajax({
             //url : _tutorobject.ajaxurl,
-            type : 'POST',
-            data : form_data+'&tutor_ajax_action=tutor_course_builder_draft_save',
+            type: 'POST',
+            data: form_data + '&tutor_ajax_action=tutor_course_builder_draft_save',
             beforeSend: function () {
                 $('.tutor-dashboard-builder-draft-btn span').text('Saving...');
             },
@@ -1281,9 +1394,9 @@ jQuery(document).ready(function($){
      */
 
     $('.tutor-course-builder-section-title').on('click', function () {
-        if($(this).find('i').hasClass("tutor-icon-up")){
+        if ($(this).find('i').hasClass("tutor-icon-up")) {
             $(this).find('i').removeClass('tutor-icon-up').addClass('tutor-icon-down');
-        }else{
+        } else {
             $(this).find('i').removeClass('tutor-icon-down').addClass('tutor-icon-up');
         }
         $(this).next('div').slideToggle();
@@ -1293,7 +1406,7 @@ jQuery(document).ready(function($){
      * Open Tutor Modal to edit review
      * @since v.1.4.0
      */
-    $(document).on('click', '.open-tutor-edit-review-modal', function(e){
+    $(document).on('click', '.open-tutor-edit-review-modal', function (e) {
         e.preventDefault();
 
         var $that = $(this);
@@ -1301,13 +1414,13 @@ jQuery(document).ready(function($){
 
         var nonce_key = _tutorobject.nonce_key;
 
-        var json_data = {review_id : review_id, action: 'tutor_load_edit_review_modal'};
+        var json_data = { review_id: review_id, action: 'tutor_load_edit_review_modal' };
         json_data[nonce_key] = _tutorobject[nonce_key];
 
         $.ajax({
-            url : _tutorobject.ajaxurl,
-            type : 'POST',
-            data : json_data,
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: json_data,
             beforeSend: function () {
                 $that.addClass('tutor-updating-message');
             },
@@ -1327,7 +1440,7 @@ jQuery(document).ready(function($){
      * Update the rating
      * @since v.1.4.0
      */
-    $(document).on('submit', '#tutor_update_review_form', function(e){
+    $(document).on('submit', '#tutor_update_review_form', function (e) {
         e.preventDefault();
 
         var $that = $(this);
@@ -1339,18 +1452,18 @@ jQuery(document).ready(function($){
         var review = $that.find('textarea[name="review"]').val();
         review = review.trim();
 
-        var json_data = {review_id : review_id, rating : rating, review : review, action: 'tutor_update_review_modal'};
+        var json_data = { review_id: review_id, rating: rating, review: review, action: 'tutor_update_review_modal' };
         json_data[nonce_key] = _tutorobject[nonce_key];
 
         $.ajax({
-            url : _tutorobject.ajaxurl,
-            type : 'POST',
-            data : json_data,
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: json_data,
             beforeSend: function () {
                 $that.find('button[type="submit"]').addClass('tutor-updating-message');
             },
             success: function (data) {
-                if (data.success){
+                if (data.success) {
                     //Close the modal
                     $('.tutor-edit-review-modal-wrap').removeClass('show');
                     location.reload(true);
@@ -1367,20 +1480,20 @@ jQuery(document).ready(function($){
      * @since v.1.4.5
      */
 
-    $(document).on('click', '#tutor_profile_photo_button', function(e){
+    $(document).on('click', '#tutor_profile_photo_button', function (e) {
         e.preventDefault();
 
         $('#tutor_profile_photo_file').trigger('click');
     });
 
-    $(document).on('change', '#tutor_profile_photo_file', function(event){
+    $(document).on('change', '#tutor_profile_photo_file', function (event) {
         event.preventDefault();
 
         var $file = this;
         if ($file.files && $file.files[0]) {
             var reader = new FileReader();
-            reader.onload = function(e) {
-                $( '.tutor-profile-photo-upload-wrap' ).find( 'img' ).attr( 'src',  e.target.result);
+            reader.onload = function (e) {
+                $('.tutor-profile-photo-upload-wrap').find('img').attr('src', e.target.result);
             }
             reader.readAsDataURL($file.files[0]);
         }
@@ -1393,24 +1506,24 @@ jQuery(document).ready(function($){
      * @since v.1.4.8
      */
 
-    $(document).on('click', '.thread-content .subject', function(e){
+    $(document).on('click', '.thread-content .subject', function (e) {
         var $btn = $(this);
 
         var thread_id = parseInt($btn.closest('.thread-content').attr('data-thread-id'));
 
         var nonce_key = _tutorobject.nonce_key;
-        var json_data = {thread_id : thread_id, action: 'tutor_bp_retrieve_user_records_for_thread'};
+        var json_data = { thread_id: thread_id, action: 'tutor_bp_retrieve_user_records_for_thread' };
         json_data[nonce_key] = _tutorobject[nonce_key];
 
         $.ajax({
             type: 'POST',
             url: ajaxurl,
             data: json_data,
-            beforeSend: function(){
+            beforeSend: function () {
                 $('#tutor-bp-thread-wrap').html('');
             },
             success: function (data) {
-                if (data.success){
+                if (data.success) {
                     $('#tutor-bp-thread-wrap').html(data.data.thread_head_html);
                     tutor_bp_setting_enrolled_courses_list();
                 }
@@ -1420,23 +1533,23 @@ jQuery(document).ready(function($){
     });
 
 
-    function tutor_bp_setting_enrolled_courses_list(){
-        $('ul.tutor-bp-enrolled-course-list').each(function(){
+    function tutor_bp_setting_enrolled_courses_list() {
+        $('ul.tutor-bp-enrolled-course-list').each(function () {
             var $that = $(this);
             var $li = $that.find(' > li');
             var itemShow = 3;
 
-            if ($li.length > itemShow){
+            if ($li.length > itemShow) {
                 var plusCourseCount = $li.length - itemShow;
-                $li.each(function(liIndex, liItem){
+                $li.each(function (liIndex, liItem) {
                     var $liItem = $(this);
 
-                    if (liIndex >= itemShow){
+                    if (liIndex >= itemShow) {
                         $liItem.hide();
                     }
                 });
 
-                var infoHtml = '<a href="javascript:;" class="tutor_bp_plus_courses"><strong>+'+plusCourseCount+' More </strong></a> Courses';
+                var infoHtml = '<a href="javascript:;" class="tutor_bp_plus_courses"><strong>+' + plusCourseCount + ' More </strong></a> Courses';
                 $that.closest('.tutor-bp-enrolled-courses-wrap').find('.thread-participant-enrolled-info').html(infoHtml);
             }
 
@@ -1445,14 +1558,13 @@ jQuery(document).ready(function($){
     }
     tutor_bp_setting_enrolled_courses_list();
 
-    $(document).on('click', 'a.tutor_bp_plus_courses', function(e){
+    $(document).on('click', 'a.tutor_bp_plus_courses', function (e) {
         e.preventDefault();
 
         var $btn = $(this);
         $btn.closest('.tutor-bp-enrolled-courses-wrap').find('.tutor-bp-enrolled-course-list li').show();
         $btn.closest('.thread-participant-enrolled-info').html('');
     });
-
 
 
     /**
@@ -1477,18 +1589,46 @@ jQuery(document).ready(function($){
         document.execCommand('copy');
         document.body.removeChild(dummy);
         $btn.html(copied);
-        setTimeout( function() {
+        setTimeout(function () {
             $btn.html(copy);
         }, 2500);
     });
-    $(document).on('click', function(e) {
+    $(document).on('click', function (e) {
         var container = $(".tutor-dropdown");
         var $content = container.find('.tutor-dropdown-content');
         // if the target of the click isn't the container nor a descendant of the container
-        if (!container.is(e.target) && container.has(e.target).length === 0)  {
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
             $content.slideUp(100);
         }
     });
 
+
+    /**
+     * Tutor ajax login
+     *
+     * @since v.1.6.3
+     */
+    $(document).on('submit', '.tutor-login-form-wrap #loginform', function (e) {
+        e.preventDefault();
+        var $that = $(this);
+        var $form_wrapper = $('.tutor-login-form-wrap');
+        var form_data = $that.serialize() + '&action=tutor_user_login';
+        $.ajax({
+            url: _tutorobject.ajaxurl,
+            type: 'POST',
+            data: form_data,
+            success: function (response) {
+                if (response.success) {
+                    location.href = response.data.redirect;
+                } else {
+                    if ($form_wrapper.find('.tutor-alert').length) {
+                        $form_wrapper.find('.tutor-alert').html(response.data);
+                    } else {
+                        $form_wrapper.prepend('<div class="tutor-alert tutor-alert-warning">'+response.data+'</div>');
+                    }
+                }
+            },
+        });
+    });
 
 });
