@@ -29,7 +29,15 @@ $course_id = tutils()->get_course_id_by_content($post);
 
     <div class="tutor_question_answer_wrap">
 		<?php
-		$questions = tutor_utils()->get_top_question($course_id);
+        $current_user = tutor_utils()->get_user_id();
+        $all_instructors = tutor_utils()->get_instructors_by_course($course_id);
+        $all_instructors = wp_list_pluck( (array)$all_instructors, 'ID' );
+        
+        if( in_array($current_user ,$all_instructors) ) {
+            $questions = tutor_utils()->get_top_question($course_id, $current_user, 0 , 20, true);
+        } else {
+            $questions = tutor_utils()->get_top_question($course_id);
+        }
 
 		if (is_array($questions) && count($questions)){
 			foreach ($questions as $question){

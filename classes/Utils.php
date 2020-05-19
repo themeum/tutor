@@ -2262,7 +2262,9 @@ class Utils {
 		if ($page_key === 'index'){
 			$page_key = '';
 		}
-		$page_id = $this->get_post_id($page_id);
+		if ( ! $page_id){
+            $page_id = (int) tutils()->get_option('tutor_dashboard_page_id');
+        }
 		return trailingslashit(get_permalink($page_id)).$page_key;
 	}
 
@@ -2961,12 +2963,13 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_top_question($course_id = 0, $user_id = 0, $offset = 0, $limit = 20){
+	public function get_top_question($course_id = 0, $user_id = 0, $offset = 0, $limit = 20, $is_author = false ){
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
 
 		global $wpdb;
-
+		$author_sql = $is_author ? "" : "AND {$wpdb->comments}.user_id = {$user_id}";
+		
 		$questions = $wpdb->get_results("select {$wpdb->comments}.comment_ID, 
 			{$wpdb->comments}.comment_post_ID, 
 			{$wpdb->comments}.comment_author, 
@@ -2982,7 +2985,7 @@ class Utils {
 			INNER  JOIN {$wpdb->users}
 			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
-			AND {$wpdb->comments}.user_id = {$user_id}
+			{$author_sql}
 			AND {$wpdb->comments}.comment_type	 = 'tutor_q_and_a'
 			AND meta_key = 'tutor_question_title' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
 		);
@@ -3410,10 +3413,10 @@ class Utils {
 
 		if ($post) {
 			$course_post_type = tutor()->course_post_type;
-			$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
+			$course = $wpdb->get_row( "select ID, post_author, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
 			if ($course) {
 				if ( $course->post_type !== $course_post_type ) {
-					$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
+					$course = $wpdb->get_row( "select ID, post_author, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
 				}
 				return $course;
 			}
