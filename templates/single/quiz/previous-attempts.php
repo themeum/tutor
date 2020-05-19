@@ -78,6 +78,8 @@ $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
 						echo '<span class="result-fail">'.__('Fail', 'tutor-pro').'</span>';
 					}
 					?>
+					<?php  ?>
+					<a href="" target="_blank"><?php _e('Details', 'tutor'); ?></a>
                 </td>
 
 				<?php do_action('tutor_quiz/previous_attempts/table/tbody/col', $attempt); ?>
