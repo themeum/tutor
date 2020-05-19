@@ -165,9 +165,9 @@ class Options {
 							),
 							'login_error_message' => array(
 								'type'      => 'text',
-								'label'     => __('Login Error Message', 'tutor'),
-								'default'   => 'Incorrect Username or Password.',
-								'desc'      => __('Login Error Message shows when user put wrong login credentials.',	'tutor'),
+								'label'     => __('Error message for wrong login credentials', 'tutor'),
+								'default'   => 'Incorrect username or password.',
+								'desc'      => __('Login error message displayed when the user puts wrong login credentials.', 'tutor'),
 							),
 						)
 					)
