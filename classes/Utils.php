@@ -2187,7 +2187,6 @@ class Utils {
 			'wishlist'          => __('Wishlist', 'tutor'),
 			'reviews'           => __('Reviews', 'tutor'),
 			'my-quiz-attempts'  => __('My Quiz Attempts', 'tutor'),
-			'attempts-details'  => __('Attempts Details', 'tutor'),
 
 			'my-courses'        => array('title' => __('My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'earning'           => array('title' => __('Earnings', 'tutor'), 'auth_cap' => tutor()->instructor_role),
