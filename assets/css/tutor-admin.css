@@ -214,6 +214,9 @@ Group Field Option
     width: 100px;
     margin-right: 5px;
 }
+.option-type-radio-wrap{
+    margin-top: 0;
+}
 
 /**
 * Course adding page
@@ -1982,6 +1985,9 @@ Tutor Media Upload
 .tutor-add-quiz-button-wrap {
     margin: 20px 0;
 }
+.tutor-add-quiz-button-wrap a{
+    color: #2756d1;
+}
 .tutor-quiz-delete-btn{
     color: #FF0000;
 }
@@ -1999,7 +2005,12 @@ span.result-pass{
 span.result-fail{
     color: #FF0000;
 }
-
+span.result-review-required{
+    background: #f5b30d;
+    color: #fff;
+    padding: 3px 5px;
+    border-radius: 2px;
+}
 
 .tutor-emails-lists-wrap{
     background-color: #ffffff;
@@ -3288,8 +3299,6 @@ Tools Nav
     background: #f1f1f1;
     color: #000
 }
-
-
 /**
 * END Tools
  */

@@ -30,7 +30,6 @@ if ( $quiz_attempts_count ){
                 <th><?php _e('Students', 'tutor'); ?></th>
                 <th><?php _e('Count', 'tutor'); ?></th>
                 <th><?php _e('Earned Mark', 'tutor'); ?></th>
-                <th><?php _e('Status', 'tutor'); ?></th>
                 <th><?php _e('Review', 'tutor'); ?></th>
             </tr>
 			<?php
@@ -42,7 +41,12 @@ if ( $quiz_attempts_count ){
                 <tr class="<?php echo esc_attr($earned_percentage >= $passing_grade ? 'pass' : 'fail') ?>">
                     <td title="<?php echo __('Quiz', 'tutor'); ?>">
 						<?php
-						echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+                        if ($attempt->attempt_status === 'review_required'){
+                            echo '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
+                        }else{
+                            echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+                        }
+
 						if ($attempt->attempt_ended_at){
 							$ended_ago_time = human_time_diff(strtotime($attempt->attempt_ended_at)).__(' ago', 'tutor');
 							echo " <small>{$ended_ago_time}</small>";
@@ -83,7 +87,6 @@ if ( $quiz_attempts_count ){
 						echo sprintf(__('%1$s out of %2$s <br> Pass Mark: %3$s <br> Earned total: %4$s%%','tutor'), $attempt->earned_marks, $attempt->total_marks, $pass_marks ,$passing_grade );
 						?>
                     </td>
-                    <td title="<?php echo __('Attempt Status', 'tutor'); ?>"><?php echo str_replace('attempt_', '', $attempt->attempt_status); ?></td>
                     <td><a href="<?php echo $attempt_action; ?>"><i class="tutor-icon-angle-right"></i></a></td>
                 </tr>
 				<?php
