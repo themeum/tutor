@@ -50,17 +50,21 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
     </tr>
     
     <tr>
-        <th><?php echo $attempt_data->attempt_id; ?></th>
-        <th><?php echo $attempt_data->attempt_started_at; ?></th>
-        <th><?php echo $attempt_data->total_questions; ?></th>
-        <th><?php echo $attempt_data->total_marks; ?></th>
-        <th>
+        <td><?php echo $attempt_data->attempt_id; ?></td>
+        <td>
+            <?php
+                echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
+            ?>
+        </td>
+        <td><?php echo $attempt_data->total_questions; ?></td>
+        <td><?php echo $attempt_data->total_marks; ?></td>
+        <td>
             <?php 
                 $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
                 echo $pass_mark_percent.'%';
             ?>
-        </th>
-        <th>
+        </td>
+        <td>
             <?php
             $correct = 0;
             $incorrect = 0;
@@ -78,16 +82,16 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
             }
             echo $correct;
             ?>
-        </th>
-        <th><?php echo $incorrect; ?></th>
-        <th><?php echo $attempt_data->earned_marks; ?></th>
-        <th>
+        </td>
+        <td><?php echo $incorrect; ?></td>
+        <td><?php echo $attempt_data->earned_marks; ?></td>
+        <td>
             <?php 
                 $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
                 echo $earned_percentage.'%';
             ?>
-        </th>
-        <th>
+        </td>
+        <td>
             <?php 
                 if ($earned_percentage >= $pass_mark_percent){
                     echo '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
@@ -95,7 +99,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                     echo '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
                 }
             ?>
-        </th>
+        </td>
     </tr>
 </table>
 
