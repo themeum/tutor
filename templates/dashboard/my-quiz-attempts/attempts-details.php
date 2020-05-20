@@ -2,9 +2,7 @@
 if ( ! defined( 'ABSPATH' ) )
 exit;
 
-
-$attempt_id = 4;//(int) sanitize_text_field($_GET['attempt_id']);
-$user_id = tutor_utils()->get_user_id();
+$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
 
 
 if (!$attempt_id){
@@ -14,10 +12,11 @@ if (!$attempt_id){
     return;
 }
 
+$user_id = tutor_utils()->get_user_id();
 $attempt_data = tutor_utils()->get_attempt($attempt_id);
 if ( $user_id != $attempt_data->user_id ){
     ?>
-    <h1><?php _e('You have no access', 'tutor'); ?></h1>
+    <h1><?php _e('You have no access.', 'tutor'); ?></h1>
     <?php
     return;
 }
@@ -29,7 +28,6 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
     <?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts'); ?>
     <a href="<?php echo $attempts_page; ?>"><?php _e('< Back to Quiz List', 'tutor'); ?></a>
 </div>
-
 
 
 <div class="tutor-quiz-attempt-review-wrap">
@@ -100,9 +98,6 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
         </th>
     </tr>
 </table>
-
-
-
 
 
 <div class="tutor-quiz-attempt-review-wrap">
