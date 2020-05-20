@@ -26,7 +26,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
 
 <div>
     <?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts'); ?>
-    <a href="<?php echo $attempts_page; ?>"><?php _e('< Back to Quiz List', 'tutor'); ?></a>
+    <a href="<?php echo $attempts_page; ?>"><?php _e('< Back to Attempt List', 'tutor'); ?></a>
 </div>
 
 
