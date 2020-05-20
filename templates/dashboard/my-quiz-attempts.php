@@ -73,6 +73,7 @@ if ($attempted_count){
                         }
 						echo "({$passing_grade}%)";
 						?>
+                        <a href="#" target="_blank"><?php _e('Details', 'tutor'); ?></a>
                     </td>
 
                 </tr>
