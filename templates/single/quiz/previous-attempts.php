@@ -84,6 +84,11 @@ $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
                         }
                     }
 					?>
+                    <?php 
+                        $attempts_url = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts/attempts-details');
+                        $attempts_url = add_query_arg( 'attempt_id', $attempt->attempt_id, $attempts_url );
+                    ?>
+                    <a href="<?php echo $attempts_url; ?>"><?php _e('Details', 'tutor'); ?></a>
                 </td>
 
 				<?php do_action('tutor_quiz/previous_attempts/table/tbody/col', $attempt); ?>
