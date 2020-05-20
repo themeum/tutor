@@ -1197,4 +1197,21 @@ jQuery(document).ready(function($){
         $('.tutor-lesson-modal-wrap .modal-title h1').html('Assignment');
     });
 
+    /**
+     * Tutor number validation
+     *
+     * @since v.1.6.3
+     */
+    $(document).on('keyup change', '.tutor-number-validation', function(e) {
+        var input = $(this);
+        var val = parseInt(input.val());
+        var min = parseInt(input.attr('data-min'));
+        var max = parseInt(input.attr('data-max'));
+        if ( val < min )  { 
+            input.val(min);
+        } else if ( val > max ) {
+            input.val(max);
+        }
+    });
+
 });
