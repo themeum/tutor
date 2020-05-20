@@ -19,7 +19,7 @@ $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 <?php
 if ($attempted_count){
 
-	?>
+    ?>
     <div class="tutor-quiz-attempt-history">
         <table>
             <tr>
@@ -29,30 +29,35 @@ if ($attempted_count){
                 <th><?php _e('Earned Marks', 'tutor'); ?></th>
                 <th><?php _e('Pass Mark', 'tutor'); ?></th>
             </tr>
-			<?php
-			foreach ( $previous_attempts as $attempt){
+            <?php
+            foreach ( $previous_attempts as $attempt){
                 $earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
-				$passing_grade = (int) tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
-				?>
+                $passing_grade = (int) tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
+                ?>
                 <tr class="<?php echo esc_attr($earned_percentage >= $passing_grade ? 'pass' : 'fail') ?>">
                     <td class="td-course-title" title="<?php _e('Course Title', 'tutor'); ?>">
                         <div>
                             <?php
-                                echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+
+                            if ($attempt->attempt_status === 'review_required'){
+                                echo '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
+                            }else {
+                                echo $earned_percentage >= $passing_grade ? '<span class="result-pass">' . __('Pass', 'tutor') . '</span>' : '<span class="result-fail">' . __('Fail', 'tutor') . '</span>';
+                            }
                             ?>
 
                             <?php
-                                echo date_i18n(get_option('date_format'), strtotime($attempt->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->attempt_started_at));
+                            echo date_i18n(get_option('date_format'), strtotime($attempt->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->attempt_started_at));
 
-                                if ($attempt->is_manually_reviewed){
-                                    ?>
-                                    <span class="attempt-reviewed-text" title="Manually reviewed at: ">
+                            if ($attempt->is_manually_reviewed){
+                                ?>
+                                <span class="attempt-reviewed-text" title="Manually reviewed at: ">
                                         <?php
                                         echo __(', Updated: ', 'tutor').date_i18n(get_option('date_format', strtotime($attempt->manually_reviewed_at))).' '.date_i18n(get_option('time_format', strtotime($attempt->manually_reviewed_at)));
                                         ?>
                                     </span>
-                                    <?php
-                                }
+                                <?php
+                            }
                             ?>
                         </div>
                         <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank"><?php echo get_the_title($attempt->course_id); ?></a>
@@ -61,15 +66,15 @@ if ($attempted_count){
                     <td   title="<?php _e('Total Marks', 'tutor'); ?>" class="td-total-marks"> <?php echo $attempt->total_marks; ?> </td>
 
                     <td  title="<?php _e('Earned Marks', 'tutor'); ?>" class="td-earned-marks">
-						<?php echo $attempt->earned_marks."({$earned_percentage}%)"; ?>
+                        <?php echo $attempt->earned_marks."({$earned_percentage}%)"; ?>
                     </td>
                     <td  title="<?php _e('Pass Marks', 'tutor'); ?>" class="td-pass-marks">
-						<?php
+                        <?php
                         if ($passing_grade > 0){
-	                        $pass_marks = ($attempt->total_marks * $passing_grade) / 100;
-	                        if ($pass_marks > 0){
-		                        echo number_format_i18n($pass_marks, 2);
-	                        }
+                            $pass_marks = ($attempt->total_marks * $passing_grade) / 100;
+                            if ($pass_marks > 0){
+                                echo number_format_i18n($pass_marks, 2);
+                            }
                         }
 						echo "({$passing_grade}%)";
 						?>
@@ -77,9 +82,9 @@ if ($attempted_count){
                     </td>
 
                 </tr>
-				<?php
-			}
-			?>
+                <?php
+            }
+            ?>
 
         </table>
     </div>

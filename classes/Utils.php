@@ -663,16 +663,38 @@ class Utils {
 	 * @return float|int
 	 *
 	 * @since v.1.0.0
+     * @updated v.1.6.1
 	 */
 	public function get_course_completed_percent($course_id = 0, $user_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
 
-		$total_lesson = $this->get_lesson_count_by_course($course_id);
 		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
+        $course_contents = tutils()->get_course_contents_by_id($course_id);
 
-		if ($total_lesson > 0 && $completed_lesson > 0){
-			return number_format(($completed_lesson * 100) / $total_lesson);
+        $totalContents = $this->count($course_contents);
+        $totalContents = $totalContents ? $totalContents : 0;
+
+        $completedCount = $completed_lesson;
+
+        if (tutils()->count($course_contents)){
+            foreach ($course_contents as $content){
+                if ($content->post_type === 'tutor_quiz'){
+                    $attempt = $this->get_quiz_attempt($content->ID);
+                    if ($attempt){
+                        $completedCount++;
+                    }
+                }elseif ($content->post_type === 'tutor_assignments'){
+                    $isSubmitted = $this->is_assignment_submitted($content->ID);
+                    if ($isSubmitted){
+                        $completedCount++;
+                    }
+                }
+            }
+        }
+
+		if ($totalContents > 0 && $completedCount > 0){
+			return number_format(($completedCount * 100) / $totalContents);
 		}
 
 		return 0;
@@ -967,6 +989,32 @@ class Utils {
 		}
 		return false;
 	}
+
+
+    /**
+     * @param int $enrol_id
+     * @return array|bool|\WP_Post|null
+     *
+     * Get course by enrol id
+     *
+     * @since v.1.6.1
+     */
+
+	public function get_course_by_enrol_id($enrol_id = 0){
+	    if ( ! $enrol_id){
+	        return false;
+        }
+
+        global $wpdb;
+
+        $course_id = (int) $wpdb->get_var( "select post_parent from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND ID = {$enrol_id}" );
+
+        if ( $course_id ) {
+            return get_post($course_id);
+        }
+
+        return null;
+    }
 
 	/**
 	 * @param int $lesson_id
@@ -1561,6 +1609,7 @@ class Utils {
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
 				'post__in'      => $course_ids,
+                'posts_per_page' => -1
 			);
 
 			return new \WP_Query($course_args);
@@ -1592,6 +1641,7 @@ class Utils {
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
 				'post__in'      => $active_courses,
+                'posts_per_page' => -1,
 			);
 
 			return new \WP_Query($course_args);
@@ -1653,6 +1703,7 @@ class Utils {
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
 				'post__in'      => $course_ids,
+                'posts_per_page' => -1
 			);
 			return new \WP_Query($course_args);
 		}
@@ -1908,6 +1959,59 @@ class Utils {
 		return false;
 	}
 
+    /**
+     * @param bool $enrol_id
+     * @param string $new_status
+     *
+     * Enrol Status change
+     *
+     * @since v.1.6.1
+     */
+
+	public function course_enrol_status_change($enrol_id = false, $new_status = ''){
+	    if ( ! $enrol_id){
+	        return;
+        }
+
+	    global $wpdb;
+
+	    do_action('tutor/course/enrol_status_change/before',$enrol_id, $new_status );
+        $wpdb->update( $wpdb->posts, array( 'post_status' => $new_status ), array( 'ID' => $enrol_id ) );
+        do_action('tutor/course/enrol_status_change/after',$enrol_id, $new_status );
+    }
+
+
+    /**
+     * @param int $course_id
+     * @param int $user_id
+     * @param string $cancel_status
+     */
+	public function cancel_course_enrol($course_id = 0, $user_id = 0, $cancel_status = 'canceled'){
+	    $course_id = $this->get_post_id($course_id);
+	    $user_id = $this->get_user_id($user_id);
+
+	    $enrolled = $this->is_enrolled($course_id, $user_id);
+
+	    if ($enrolled){
+	        global $wpdb;
+
+	        if ($cancel_status === 'delete'){
+	            $wpdb->delete($wpdb->posts, array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id));
+
+	            //Delete Related Meta Data
+	            delete_post_meta($enrolled->ID, '_tutor_enrolled_by_product_id');
+	            $order_id = get_post_meta($enrolled->ID, '_tutor_enrolled_by_order_id', true);
+	            if ($order_id){
+	                delete_post_meta($enrolled->ID, '_tutor_enrolled_by_order_id');
+	                delete_post_meta($order_id, '_is_tutor_order_for_course');
+	                delete_post_meta($order_id, '_tutor_order_for_course_id_'.$course_id);
+                }
+            }else{
+	            $wpdb->update($wpdb->posts, array('post_status' => $cancel_status), array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id) );
+            }
+        }
+    }
+
 	/**
 	 * @param $order_id
 	 *
@@ -2159,7 +2263,9 @@ class Utils {
 		if ($page_key === 'index'){
 			$page_key = '';
 		}
-		$page_id = $this->get_post_id($page_id);
+		if ( ! $page_id){
+            $page_id = (int) tutils()->get_option('tutor_dashboard_page_id');
+        }
 		return trailingslashit(get_permalink($page_id)).$page_key;
 	}
 
@@ -3308,10 +3414,10 @@ class Utils {
 
 		if ($post) {
 			$course_post_type = tutor()->course_post_type;
-			$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
+			$course = $wpdb->get_row( "select ID, post_author, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
 			if ($course) {
 				if ( $course->post_type !== $course_post_type ) {
-					$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
+					$course = $wpdb->get_row( "select ID, post_author, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
 				}
 				return $course;
 			}
@@ -3627,7 +3733,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1 AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} ");
+			WHERE 1=1 AND attempt_status != 'attempt_started'  {$search_term} ");
 		return (int) $count;
 	}
 
@@ -3656,7 +3762,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} 
+			WHERE 1=1  AND attempt_status != 'attempt_started'  {$search_term} 
 			ORDER BY quiz_attempts.attempt_id DESC 
 			LIMIT {$start},{$limit}; ");
 		return $query;
@@ -3679,7 +3785,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} 
+			WHERE 1=1  AND attempt_status != 'attempt_started' {$search_term} 
 			ORDER BY quiz_attempts.attempt_id DESC 
 			LIMIT {$start},{$limit}; ");
 		return $query;
@@ -3702,7 +3808,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} ");
+			WHERE 1=1  AND attempt_status != 'attempt_started' {$search_term} ");
 		return (int) $count;
 	}
 

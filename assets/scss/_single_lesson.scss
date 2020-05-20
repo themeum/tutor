@@ -1061,7 +1061,14 @@ Course question and answer
 .tutor-quiz-attempt-history table span.result-pass{
     background: var(--tutor-success-button-color);
 }
-
+.tutor-quiz-attempt-history table span.result-review-required{
+    background: #f5b30d;
+    padding: 3px 5px;
+    color: #fff;
+    border-radius: 2px;
+    text-align: center;
+    font-size: 90%;
+}
 @media (max-width: 767px) {
     .single-quiz-page.tutor-quiz-attempt-history table tr{
         display: flex;

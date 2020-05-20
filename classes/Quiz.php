@@ -214,8 +214,9 @@ class Quiz {
 			    $quiz_answers = tutor_utils()->avalue_dot('quiz_question', $attempt_answer);
 
 			    $total_marks = 0;
+                $review_required = false;
 
-			    if ( tutils()->count($quiz_answers)) {
+                if ( tutils()->count($quiz_answers)) {
 
 				    foreach ( $quiz_answers as $question_id => $answers ) {
 					    $question      = tutor_utils()->get_quiz_question_by_id( $question_id );
@@ -250,7 +251,7 @@ class Quiz {
                                 $is_answer_was_correct = true;
                             }
 					    } elseif ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
-
+					        $review_required = true;
 						    $given_answer = wp_kses_post( $answers );
 
 					    } elseif ( $question_type === 'ordering' || $question_type === 'matching' || $question_type === 'image_matching' ) {
@@ -303,6 +304,11 @@ class Quiz {
 			            'attempt_status'            => 'attempt_ended',
 			            'attempt_ended_at'          => date("Y-m-d H:i:s", tutor_time()),
                 );
+
+                if ($review_required){
+                    $attempt_info['attempt_status'] = 'review_required';
+                }
+
 			    $wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_info, array('attempt_id' => $attempt_id));
             }
 
@@ -388,6 +394,7 @@ class Quiz {
 
 		$attempt_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = {$attempt_answer_id} ");
 		$attempt = tutor_utils()->get_attempt($attempt_id);
+		$question = tutils()->get_quiz_question_by_id($attempt_answer->question_id);
 
 		$is_correct = (int) $attempt_answer->is_correct;
 
@@ -403,9 +410,13 @@ class Quiz {
 
 			$attempt_update_data = array(
 				'earned_marks' => $attempt->earned_marks + $attempt_answer->question_mark,
-				'is_manually_reviewed' => 1,
+                'is_manually_reviewed' => 1,
 				'manually_reviewed_at' => date("Y-m-d H:i:s", tutor_time()),
 			);
+
+			if ($question->question_type === 'open_ended' || $question->question_type === 'short_answer' ){
+                $attempt_update_data['attempt_status'] = 'attempt_ended';
+            }
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
 
@@ -422,6 +433,10 @@ class Quiz {
 				'is_manually_reviewed'  => 1,
 				'manually_reviewed_at'  => date("Y-m-d H:i:s", tutor_time()),
 			);
+
+            if ($question->question_type === 'open_ended' || $question->question_type === 'short_answer' ){
+                $attempt_update_data['attempt_status'] = 'attempt_ended';
+            }
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
 		}
@@ -469,6 +484,7 @@ class Quiz {
                 <i class="tutor-icon-move"></i>
                 <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
 				?>"> <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz_title; ?> </a>
+				<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
                 <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
             </div>
         </div>
@@ -536,6 +552,7 @@ class Quiz {
             <i class="tutor-icon-move"></i>
             <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
 			?>"> <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz_title; ?> </a>
+			<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
             <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
         </div>
 		<?php
@@ -603,7 +620,7 @@ class Quiz {
 
 		foreach ($question_data as $question_id => $question){
 			$question_title         = sanitize_text_field($question['question_title']);
-			$question_description   = $question['question_description'];
+			$question_description   = wp_kses_post($question['question_description']);
 			$question_type          = $question['question_type'];
 			$question_mark          = $question['question_mark'];
 
@@ -755,7 +772,7 @@ class Quiz {
 						'belongs_question_id'   => $question_id,
 						'belongs_question_type' => $question_type,
 						'answer_title'          => $answer['answer_title'],
-						'answer_two_gap_match'           => isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null,
+						'answer_two_gap_match'  => isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null,
 					);
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
 				}
