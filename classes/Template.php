@@ -150,7 +150,7 @@ class Template extends Tutor_Base {
 			if (empty( $wp_query->query_vars['course_subpage'])) {
 				$template = tutor_get_template( 'single-course' );
 				if ( is_user_logged_in() ) {
-					if ( tutor_utils()->is_enrolled() ) {
+					if ( tutils()->is_enrolled() || tutils()->is_instructor_of_this_course() ) {
 						$template = tutor_get_template( 'single-course-enrolled' );
 					}
 				}
