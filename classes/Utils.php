@@ -5451,4 +5451,35 @@ class Utils {
 	}
 
 
+	/**
+	 * @param int $instructor_id
+	 * @param int $course_id
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Is instructor of this course
+	 *
+	 * @since v.1.6.4
+	 */
+	public function is_instructor_of_this_course($instructor_id=0, $course_id=0) {
+		global $wpdb;
+
+		$instructor_id 	= $this->get_user_id($instructor_id);
+		$course_id 		= $this->get_post_id($course_id);
+
+		$instructor = $wpdb->get_col("
+			SELECT 	umeta_id
+			FROM   	{$wpdb->usermeta} 
+			WHERE  	user_id = {$instructor_id}
+					AND meta_key = '_tutor_instructor_course_id' 
+					AND meta_value = {$course_id}
+			"
+		);
+		
+		if (is_array($instructor) && count($instructor)) {
+			return $instructor;
+		}
+
+		return false;
+	}
 }
