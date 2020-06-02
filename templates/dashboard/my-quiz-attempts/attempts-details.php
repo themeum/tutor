@@ -4,6 +4,39 @@ exit;
 
 $attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
 
+function show_correct_answer( $answers= array() ){
+    if(!empty($answers)){
+        foreach ($answers as $key => $ans) {
+            $type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';
+            switch ($type) {
+                case 'text_image':
+                    if(isset($ans->answer_title)) {
+                        echo $ans->answer_title;
+                    }
+                    if(isset($ans->image_id)){
+                        echo '<img src="'.wp_get_attachment_image_url($ans->image_id).'" />';
+                    }
+                    break;
+                case 'text':
+                    if(isset($ans->answer_title)) {
+                        echo $ans->answer_title;
+                    }
+                    break;
+                case 'image':
+                    if(isset($ans->image_id)){
+                        echo '<img src="'.wp_get_attachment_image_url($ans->image_id).'" />';
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (isset($ans->answer_two_gap_match)) {
+                echo ' - '.$ans->answer_two_gap_match;
+            }
+        }
+    }
+}
+
 
 if (!$attempt_id){
     ?>
@@ -105,6 +138,18 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
 
 
 <div class="tutor-quiz-attempt-review-wrap">
+    <div class="quiz-attempt-answers-wrap">
+        <div class="attempt-answers-header">
+            <h3><?php _e('Instructor Feedback', 'tutor'); ?></h3>
+        </div>
+        <div>
+            <?php echo get_post_meta($attempt_id ,'instructor_feedback', true); ?>
+        </div>
+    </div>
+</div>
+
+
+<div class="tutor-quiz-attempt-review-wrap">
     <?php
     if (is_array($answers) && count($answers)){
 
@@ -117,10 +162,11 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
 
             <table class="wp-list-table">
                 <tr>
-                    <th><?php _e('Type', 'tutor'); ?></th>
                     <th><?php _e('No.', 'tutor'); ?></th>
+                    <th><?php _e('Type', 'tutor'); ?></th>
                     <th><?php _e('Question', 'tutor'); ?></th>
                     <th><?php _e('Given Answers', 'tutor'); ?></th>
+                    <th><?php _e('Correct Answers', 'tutor'); ?></th>
                     <th><?php _e('Correct/Incorrect', 'tutor'); ?></th>
                 </tr>
                 <?php
@@ -130,8 +176,11 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                     $question_type = tutor_utils()->get_question_types($answer->question_type);
                     ?>
                     <tr>
-                        <td><?php echo $question_type['icon']; ?></td>
                         <td><?php echo $answer_i; ?></td>
+                        <td>
+                            <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
+                            <span data-title="<?php echo $type['name']; ?>"><?php echo $question_type['icon']; ?></span>
+                        </td>
                         <td><?php echo stripslashes($answer->question_title); ?></td>
                         <td>
                             <?php
@@ -154,7 +203,6 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                                     $dash_string = array();
                                     $input_data = array();
                                     for($i=0; $i<$count_dash_fields; $i++){
-                                        //$dash_string[] = '{dash}';
                                         $input_data[] =  isset($answer_titles[$i]) ? "<span class='filled_dash_unser'>{$answer_titles[$i]}</span>" : "______";
                                     }
                                     $answer_title = $db_answer->answer_title;
@@ -233,6 +281,44 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                             ?>
                         </td>
 
+
+                        <td>
+                            <?php
+                            // if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
+                                
+                            // } else {
+                            //     if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+                            //     }else {
+                                    global $wpdb;
+                                    if ( $answer->question_type === 'true_false' ) {
+                                        $correct_answer = $wpdb->get_var( "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1" );
+                                        echo $correct_answer;
+                                    } elseif ( $answer->question_type === 'single_choice' ) {
+                                        $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1" );
+                                        show_correct_answer($correct_answer);
+                                    } elseif ( $answer->question_type === 'multiple_choice' ) {
+                                        $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1 ;" );
+                                        show_correct_answer($correct_answer);
+                                    } elseif ( $answer->question_type === 'fill_in_the_blank' ) {
+                                        $correct_answer = $wpdb->get_var( "SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id}" );
+                                        if($correct_answer){
+                                            echo implode(', ', explode('|', $correct_answer));
+                                        }
+                                    } elseif ( $answer->question_type === 'ordering' ) {
+                                        $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                        show_correct_answer($correct_answer);
+                                    } elseif( $answer->question_type === 'matching' ){
+                                        $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_two_gap_match, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                        show_correct_answer($correct_answer);
+                                    } elseif( $answer->question_type === 'image_matching' ) {
+                                        $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                        show_correct_answer($correct_answer);
+                                    }
+                            //     }
+                            // }
+                            ?>
+                        </td>
+
                         <td>
                             <?php
 
@@ -259,3 +345,17 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
     }
     ?>
 </div>
+
+
+<div>
+    <?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts'); ?>
+    <a href="<?php echo $attempts_page; ?>"><?php _e('< Back to Attempt List', 'tutor'); ?></a>
+</div>
+
+
+
+<!-- <div>
+Problems: Instructor could be many
+    < ?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts'); ?>
+    <a href="< ?php echo $attempts_page; ? >">< ?php _e('Conatct with Instractor', 'tutor'); ? ></a>
+</div> -->

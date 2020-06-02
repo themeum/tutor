@@ -31,6 +31,7 @@ class Quiz {
 
 		add_action('admin_action_review_quiz_answer', array($this, 'review_quiz_answer'));
 		add_action('wp_ajax_review_quiz_answer', array($this, 'review_quiz_answer'));
+		add_action('wp_ajax_tutor_instructor_feedback', array($this, 'tutor_instructor_feedback')); // Instructor Feedback Action
 
 		/**
 		 * New Design Quiz
@@ -60,6 +61,11 @@ class Quiz {
 		add_action('wp_ajax_tutor_render_quiz_content', array($this, 'tutor_render_quiz_content'));
 	}
 
+	public function tutor_instructor_feedback(){
+		if (isset($_POST['attempts_id'])){
+			update_post_meta(sanitize_text_field($_POST['attempts_id']), 'instructor_feedback', sanitize_text_field($_POST['feedback']));
+		}
+	}
 
 	public function save_quiz_meta($post_ID){
 		if (isset($_POST['quiz_option'])){

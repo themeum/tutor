@@ -334,3 +334,15 @@ $user = get_userdata($user_id);
     }
     ?>
 </div>
+
+
+
+<div class="quiz-attempt-answers-wrap">
+    <div class="attempt-answers-header">
+        <h3><?php _e('Instructor Feedback', 'tutor'); ?></h3>
+    </div>
+    <div class="tutor-instructor-feedback-wrap">
+        <textarea class="tutor-instructor-feedback-content" style="width:100%; height: 100px;"><?php echo get_post_meta($attempt_id, 'instructor_feedback', true); ?></textarea>
+        <a class="tutor-button tutor-button-primary tutor-instructor-feedback" data-attemptid="<?php echo $attempt_id; ?>"><?php _e('Update', 'tutor'); ?></a>
+    </div>
+</div>
