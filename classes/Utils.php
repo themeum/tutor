@@ -5468,13 +5468,12 @@ class Utils {
 		$course_id 		= $this->get_post_id($course_id);
 
 		$instructor = $wpdb->get_col("
-			SELECT 	umeta_id
-			FROM   	{$wpdb->usermeta} 
-			WHERE  	user_id = {$instructor_id}
-					AND meta_key = '_tutor_instructor_course_id' 
-					AND meta_value = {$course_id}
-			"
-		);
+			SELECT umeta_id
+			FROM   {$wpdb->usermeta}
+			WHERE  user_id = {$instructor_id}
+				AND meta_key = '_tutor_instructor_course_id'
+				AND meta_value = {$course_id}
+		");
 		
 		if (is_array($instructor) && count($instructor)) {
 			return $instructor;
