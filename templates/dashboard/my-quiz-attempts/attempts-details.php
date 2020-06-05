@@ -64,77 +64,79 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
 
 
 <div class="tutor-quiz-attempt-review-wrap">
-    <h5><?php echo __('Quiz:','tutor')." <a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></h5>
-    <p><?php echo __('Course:','tutor')." <a href='" .get_permalink($attempt_data->course_id)."'>".get_the_title($attempt_data->course_id)."</a>"; ?></p>
-</div>
-
-<table class="wp-list-table">
-    <tr>
-        <th><?php _e('#', 'tutor'); ?></th>
-        <th><?php _e('Attempts Date', 'tutor'); ?></th>
-        <th><?php _e('Questions', 'tutor'); ?></th>
-        <th><?php _e('Total Marks', 'tutor'); ?></th>
-        <th><?php _e('Pass Marks', 'tutor'); ?></th>
-        <th><?php _e('Correct', 'tutor'); ?></th>
-        <th><?php _e('Incorrect', 'tutor'); ?></th>
-        <th><?php _e('Earned Marks', 'tutor'); ?></th>
-        <th><?php _e('Grade', 'tutor'); ?></th>
-        <th><?php _e('Results', 'tutor'); ?></th>
-    </tr>
-    
-    <tr>
-        <td><?php echo $attempt_data->attempt_id; ?></td>
-        <td>
-            <?php
-                echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
-            ?>
-        </td>
-        <td><?php echo $attempt_data->total_questions; ?></td>
-        <td><?php echo $attempt_data->total_marks; ?></td>
-        <td>
-            <?php 
-                $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
-                echo $pass_mark_percent.'%';
-            ?>
-        </td>
-        <td>
-            <?php
-            $correct = 0;
-            $incorrect = 0;
-            if(is_array($answers) && count($answers) > 0) {
-                foreach ($answers as $answer){
-                    if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-                        $correct++;
-                    } else {
-                        if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+    <div class="attempt-answers-header">
+        <h5><?php echo __('Quiz:','tutor')." <a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></h5>
+        <p><?php echo __('Course:','tutor')." <a href='" .get_permalink($attempt_data->course_id)."'>".get_the_title($attempt_data->course_id)."</a>"; ?></p>
+    </div>
+        
+    <table class="wp-list-table">
+        <tr>
+            <th><?php _e('#', 'tutor'); ?></th>
+            <th><?php _e('Attempts Date', 'tutor'); ?></th>
+            <th><?php _e('Questions', 'tutor'); ?></th>
+            <th><?php _e('Total Marks', 'tutor'); ?></th>
+            <th><?php _e('Pass Marks', 'tutor'); ?></th>
+            <th><?php _e('Correct', 'tutor'); ?></th>
+            <th><?php _e('Incorrect', 'tutor'); ?></th>
+            <th><?php _e('Earned Marks', 'tutor'); ?></th>
+            <th><?php _e('Grade', 'tutor'); ?></th>
+            <th><?php _e('Results', 'tutor'); ?></th>
+        </tr>
+        
+        <tr>
+            <td><?php echo $attempt_data->attempt_id; ?></td>
+            <td>
+                <?php
+                    echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
+                ?>
+            </td>
+            <td><?php echo $attempt_data->total_questions; ?></td>
+            <td><?php echo $attempt_data->total_marks; ?></td>
+            <td>
+                <?php 
+                    $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
+                    echo $pass_mark_percent.'%';
+                ?>
+            </td>
+            <td>
+                <?php
+                $correct = 0;
+                $incorrect = 0;
+                if(is_array($answers) && count($answers) > 0) {
+                    foreach ($answers as $answer){
+                        if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
+                            $correct++;
                         } else {
-                            $incorrect++;
+                            if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+                            } else {
+                                $incorrect++;
+                            }
                         }
                     }
                 }
-            }
-            echo $correct;
-            ?>
-        </td>
-        <td><?php echo $incorrect; ?></td>
-        <td><?php echo $attempt_data->earned_marks; ?></td>
-        <td>
-            <?php 
-                $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
-                echo $earned_percentage.'%';
-            ?>
-        </td>
-        <td>
-            <?php 
-                if ($earned_percentage >= $pass_mark_percent){
-                    echo '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
-                }else{
-                    echo '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
-                }
-            ?>
-        </td>
-    </tr>
-</table>
+                echo $correct;
+                ?>
+            </td>
+            <td><?php echo $incorrect; ?></td>
+            <td><?php echo $attempt_data->earned_marks; ?></td>
+            <td>
+                <?php 
+                    $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
+                    echo $earned_percentage.'%';
+                ?>
+            </td>
+            <td>
+                <?php 
+                    if ($earned_percentage >= $pass_mark_percent){
+                        echo '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
+                    }else{
+                        echo '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+                    }
+                ?>
+            </td>
+        </tr>
+    </table>
+</div>
 
 
 <div class="tutor-quiz-attempt-review-wrap">
