@@ -2192,6 +2192,7 @@ class Utils {
 			'earning'           => array('title' => __('Earnings', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'withdraw'          => array('title' => __('Withdrawal', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+			'question-answer'   => array('title' => __('Question & Answer', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 
 			'purchase_history'  => __('Purchase History', 'tutor'),
 		));
