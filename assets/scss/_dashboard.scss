@@ -336,7 +336,7 @@
 		table
 		tr
 		td:not(:first-child)::before {
-		content: attr(title) ': ';
+		content: attr(title) ": ";
 		float: left;
 		font-weight: 700;
 	}
@@ -668,8 +668,8 @@
 }
 
 .tutor-dashboard-permalinks a:before {
-	content: '\e968';
-	font-family: 'tutor' !important;
+	content: "\e968";
+	font-family: "tutor" !important;
 	speak: none;
 	font-style: normal;
 	font-weight: normal;
@@ -682,64 +682,64 @@
 	vertical-align: middle;
 	color: var(--tutor-primary-color);
 	opacity: 0.6;
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=60)';
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
 	font-size: 17px;
 }
 .tutor-dashboard-permalinks a:hover:before {
 	opacity: 1;
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 }
 
 .tutor-dashboard-permalinks li.active a:before {
 	opacity: 1;
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 	color: #fff;
 }
 .tutor-dashboard-menu-bio a:before,
 .tutor-dashboard-menu-my-profile a:before {
-	content: '\e963';
+	content: "\e963";
 }
 
 .tutor-dashboard-menu-enrolled-courses a:before {
-	content: '\e969';
+	content: "\e969";
 }
 
 .tutor-dashboard-menu-courses_taken a:before,
 .tutor-dashboard-menu-my-courses a:before {
-	content: '\e965';
+	content: "\e965";
 }
 
 .tutor-dashboard-menu-wishlist a:before {
-	content: '\e908';
+	content: "\e908";
 }
 
 .tutor-dashboard-menu-reviews a:before {
-	content: '\e917';
+	content: "\e917";
 }
 
 .tutor-dashboard-menu-quiz-attempts a:before {
-	content: '\e948';
+	content: "\e948";
 }
 
 .tutor-dashboard-menu-earning a:before {
-	content: '\e96b';
+	content: "\e96b";
 }
 
 .tutor-dashboard-menu-withdraw a:before {
-	content: '\e960';
+	content: "\e960";
 }
 .tutor-dashboard-menu-settings a:before {
-	content: '\e961';
+	content: "\e961";
 }
 .tutor-dashboard-menu-logout a:before {
-	content: '\e962';
+	content: "\e962";
 }
 
 .tutor-dashboard-menu-purchase_history a:before {
-	content: '\e964';
+	content: "\e964";
 }
 .tutor-dashboard-menu-assignments a:before {
-	content: '\e98b';
+	content: "\e98b";
 }
 .tutor-dashboard-content {
 	padding-top: 30px;
@@ -817,7 +817,7 @@
 }
 
 .date-range-input input,
-.date-range-input input[type='text'] {
+.date-range-input input[type="text"] {
 	border: 1px solid #d7dadf;
 	box-shadow: none;
 	line-height: 29px;
@@ -1040,7 +1040,7 @@ UI DatePicker
 .ui-datepicker .ui-datepicker-prev,
 .ui-datepicker .ui-datepicker-next {
 	cursor: default;
-	font-family: 'tutor';
+	font-family: "tutor";
 	-webkit-font-smoothing: antialiased;
 	font-style: normal;
 	font-weight: normal;
@@ -1058,10 +1058,10 @@ UI DatePicker
 	text-align: right;
 }
 .ui-datepicker .ui-datepicker-prev:before {
-	content: '\e921';
+	content: "\e921";
 }
 .ui-datepicker .ui-datepicker-next:before {
-	content: '\e903';
+	content: "\e903";
 }
 .ui-datepicker .ui-icon {
 	display: none;
