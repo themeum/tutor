@@ -6,34 +6,48 @@ $attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
 
 function show_correct_answer( $answers= array() ){
     if(!empty($answers)){
+
+		echo '<div class="correct-answer-wrap">';
         foreach ($answers as $key => $ans) {
-            $type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';
+			$type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';			
+			
             switch ($type) {
-                case 'text_image':
-                    if(isset($ans->answer_title)) {
-                        echo $ans->answer_title;
-                    }
+				case 'text_image':
+					echo '<div class="text-image-type">';                    
                     if(isset($ans->image_id)){
-                        echo '<img src="'.wp_get_attachment_image_url($ans->image_id).'" />';
-                    }
-                    break;
-                case 'text':
+						$img_url = wp_get_attachment_image_url($ans->image_id);
+						if($img_url){
+							echo '<p class="image"><img src="'.$img_url.'" /></p>';
+						}
+					}
                     if(isset($ans->answer_title)) {
-                        echo $ans->answer_title;
-                    }
+                        echo '<p class="caption">'.$ans->answer_title.'</p>';
+					}
+					echo '</div>';
                     break;
-                case 'image':
+				case 'text':
+					echo '<div class="text-type">';
+                    if(isset($ans->answer_title)) {
+                        echo '<p class="text-item-caption">'.$ans->answer_title;
+					}
+                    break;
+				case 'image':
+					echo '</div><div class="image-type">';
                     if(isset($ans->image_id)){
-                        echo '<img src="'.wp_get_attachment_image_url($ans->image_id).'" />';
-                    }
+						$img_url = wp_get_attachment_image_url($ans->image_id);
+						if($img_url){
+							echo '<p class="image"><img src="'.$img_url.'" />'.'</p>';
+						}
+					}
                     break;
                 default:
                     break;
             }
             if (isset($ans->answer_two_gap_match)) {
-                echo ' - '.$ans->answer_two_gap_match;
-            }
+                echo ' - '.$ans->answer_two_gap_match.'</p></div>';
+			}
         }
+		echo '</div>';
     }
 }
 
@@ -59,7 +73,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
 
 <div>
     <?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts'); ?>
-    <a href="<?php echo $attempts_page; ?>"><?php _e('< Back to Attempt List', 'tutor'); ?></a>
+    <a class="prev-btn" href="<?php echo $attempts_page; ?>"><span>&leftarrow;</span><?php _e('Back to Attempt List', 'tutor'); ?></a>
 </div>
 
 
@@ -144,8 +158,8 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
         <div class="attempt-answers-header">
             <h3><?php _e('Instructor Feedback', 'tutor'); ?></h3>
         </div>
-        <div>
-            <?php echo get_post_meta($attempt_id ,'instructor_feedback', true); ?>
+        <div class="instructor-feedback-content">
+            <p><?php echo get_post_meta($attempt_id ,'instructor_feedback', true); ?></p>
         </div>
     </div>
 </div>
@@ -351,7 +365,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
 
 <div>
     <?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts'); ?>
-    <a href="<?php echo $attempts_page; ?>"><?php _e('< Back to Attempt List', 'tutor'); ?></a>
+    <a class="prev-btn" href="<?php echo $attempts_page; ?>"><span>&leftarrow;</span><?php _e('Back to Attempt List', 'tutor'); ?></a>
 </div>
 
 
