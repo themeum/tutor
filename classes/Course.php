@@ -689,7 +689,7 @@ class Course extends Tutor_Base {
 	public function tutor_delete_dashboard_course(){
 		$course_id = intval(sanitize_text_field($_POST['course_id']));
 		wp_trash_post($course_id);
-		wp_send_json_success();
+		wp_send_json_success(['element'=>'course']);
 	}
 
 
