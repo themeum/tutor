@@ -10,12 +10,14 @@
 <h2><?php _e('Question & Answer', 'tutor'); ?></h2>
 
 <?php
-$questions = tutils()->get_qa_questions();
+$per_page = 10;
+$current_page = max( 1, tutils()->avalue_dot('current_page', $_GET) );
+$offset = ($current_page-1)*$per_page;
 
-/* echo "<pre>";
-print_r($questions); */
+$total_items = tutils()->get_total_qa_question();
+$questions = tutils()->get_qa_questions($offset,  $per_page);
 
-if (tutor_utils()->count($questions)) {
+if (tutils()->count($questions)) {
 ?>
     <div class="tutor-dashboard-info-table-wrap">
         <table class="tutor-dashboard-info-table">
@@ -43,6 +45,17 @@ if (tutor_utils()->count($questions)) {
             }
             ?>
         </table>
+        <div class="tutor-pagination">
+            <?php
+
+            echo paginate_links( array(
+                'format' => '?current_page=%#%',
+                'current' => $current_page,
+                'total' => ceil($total_items/$per_page)
+            ) );
+            ?>
+        </div>
+        
         <div class="tutor-frontend-modal" data-popup-rel="#tutor-question-delete" style="display: none">
             <div class="tutor-frontend-modal-overlay"></div>
             <div class="tutor-frontend-modal-content">

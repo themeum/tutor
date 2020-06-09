@@ -80,7 +80,7 @@ $profile_url = tutils()->profile_url($question->user_id);
                         ?>
                     </div>
                     <div class="tutor-form-group">
-                        <button type="submit" class="tutor-button tutor-info" name="tutor_question_search_btn"><?php _e('Reply', 'tutor'); ?> </button>
+                        <button type="submit" class="tutor-button tutor-button-primary" name="tutor_question_search_btn"><?php _e('Reply', 'tutor'); ?> </button>
                     </div>
                 </form>
             </div>
