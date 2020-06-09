@@ -299,6 +299,57 @@
 	span.result-review-required {
 		background: #f5b30d;
 	}
+
+	// Tooltip
+	.tooltip-btn[data-tooltip] {
+		position: relative;
+		z-index: 2;
+		cursor: pointer;
+		&:before,
+		&:after {
+			visibility: hidden;
+			opacity: 0;
+			pointer-events: none;
+			transform: translateY(15px);
+			transition: 0.15s ease;
+		}
+		&:before {
+			content: attr(data-tooltip);
+			position: absolute;
+			bottom: 40px;
+			left: 50%;
+			margin-bottom: 0px;
+			margin-left: -60px;
+			min-width: 122px;
+			text-align: center;
+			padding: 4px 7px;
+			font-size: 14px;
+			line-height: 1.2;
+			font-weight: 300;
+			border-radius: 12px;
+			background-color: #3f435b;
+			color: #fff;
+		}
+		&:after {
+			position: absolute;
+			content: "";
+			bottom: 34px;
+			left: 50%;
+			margin-left: -10px;
+			border-top: 8px solid #3f435b;
+			border-right: 10px solid transparent;
+			border-left: 10px solid transparent;
+		}
+	}
+	.active[data-tooltip],
+	.active[data-tooltip] {
+		&:before,
+		&:after {
+			visibility: visible;
+			opacity: 1;
+			transform: translateY(0px);
+		}
+	}
 }
 
 .tutor-status-blocked-context i,
