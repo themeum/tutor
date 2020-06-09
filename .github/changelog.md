@@ -1,6 +1,6 @@
 # TutorLMS Changelog
 
-### 1.6.3 - 14 May, 2020
+### 1.6.3 - 20 May, 2020
 
 * New: Now students can answer Q&A from the frontend
 * New: Set answer word limit for Open-Ended and Essay type questions
