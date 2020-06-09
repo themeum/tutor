@@ -7843,6 +7843,52 @@ label[for=tutor_withdraw_amount] {
 .tutor-quiz-attempt-review-wrap span.result-review-required {
   background: #f5b30d;
 }
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip] {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:before, .tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:after {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(15px);
+  transition: 0.15s ease;
+}
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  margin-bottom: 0px;
+  margin-left: -60px;
+  min-width: 122px;
+  text-align: center;
+  padding: 4px 7px;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 300;
+  border-radius: 12px;
+  background-color: #3f435b;
+  color: #fff;
+}
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:after {
+  position: absolute;
+  content: "";
+  bottom: 34px;
+  left: 50%;
+  margin-left: -10px;
+  border-top: 8px solid #3f435b;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+}
+.tutor-quiz-attempt-review-wrap .active[data-tooltip]:before, .tutor-quiz-attempt-review-wrap .active[data-tooltip]:after,
+.tutor-quiz-attempt-review-wrap .active[data-tooltip]:before,
+.tutor-quiz-attempt-review-wrap .active[data-tooltip]:after {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0px);
+}
 
 .tutor-status-blocked-context i,
 .tutor-status-approved-context i,
