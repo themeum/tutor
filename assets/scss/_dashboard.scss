@@ -242,6 +242,17 @@
 /*dashboard quiz attempts*/
 .tutor-dashboard-content {
 	margin-bottom: 60px;
+	.prev-btn {
+		font-size: 16px;
+		line-height: 1.88;
+		color: #3f435b;
+		span {
+			font-size: 18px;
+			font-weight: 800;
+			color: #3e64de;
+			margin-right: 7px;
+		}
+	}
 }
 
 .tutor-dashboard-content > h2 {
@@ -308,7 +319,7 @@
 	line-height: 1.5;
 	letter-spacing: 0.12px;
 	color: #737787;
-	padding: 15px 10px !important;
+	padding: 15px 10px;
 }
 
 @media (max-width: 768px) {
@@ -751,7 +762,6 @@
 	line-height: 1.5;
 	margin-bottom: 27px;
 	color: #3f435b;
-	padding: 0px 25px;
 }
 
 /** Earning Report */

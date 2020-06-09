@@ -123,6 +123,7 @@
 // review table
 .quiz-attempt-answers-wrap {
 	background: #fff;
+	margin: 0 0 1.5em;
 	.attempt-answers-header {
 		padding: 30px 20px;
 		h3 {
@@ -202,6 +203,8 @@
 .tutor-quiz-attempt-review-wrap {
 	.attempt-answers-header {
 		background: #fff;
+		padding: 20px;
+		margin-top: 20px;
 		a {
 			color: #3f435b;
 		}
@@ -210,13 +213,17 @@
 			margin-top: 10px;
 			margin-bottom: 0;
 		}
-	}
-	.attempt-answers-header {
-		padding: 30px 20px;
+
 		h3 {
 			font-size: 20px;
 			line-height: 1.5;
 			color: #3f435b;
+		}
+	}
+	.instructor-feedback-content {
+		padding: 0px 20px 10px 20px;
+		> p {
+			margin-bottom: 1em;
 		}
 	}
 	table {
@@ -254,7 +261,13 @@
 			font-size: 14px;
 			font-weight: 400;
 			line-height: 1.71;
-			padding: 15px 8px;
+			padding: 15px 6px;
+			&:first-child {
+				padding: 12px;
+			}
+			&:last-child {
+				padding: 12px 10px;
+			}
 		}
 	}
 	span.result-review-required,
@@ -262,10 +275,10 @@
 	span.result-fail {
 		background: #df3247;
 		font-size: 14px;
-		font-weight: 400;
+		font-weight: bold;
 		color: #fff;
-		padding: 1px 4px;
-		margin-right: 13px;
+		padding: 4px 11px;
+		// margin-right: 13px;
 		border-radius: 2px;
 	}
 	span.result-pass {
@@ -303,6 +316,7 @@
 	.image-matching-item {
 		display: flex;
 		align-items: center;
+		margin-bottom: 12px;
 		img {
 			max-width: 35px;
 		}
@@ -310,8 +324,18 @@
 			font-size: 14px;
 			margin-left: 12px;
 		}
-		&:not(:last-child) {
-			margin-bottom: 12px;
+	}
+}
+
+.correct-answer-wrap {
+	.text-image-type {
+		display: flex;
+		align-items: center;
+		&:not(:first-child) {
+			margin-top: 10px;
+		}
+		.image {
+			margin-right: 8px;
 		}
 	}
 }
