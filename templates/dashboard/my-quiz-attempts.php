@@ -24,11 +24,14 @@ if ($attempted_count){
             <tr>
                 <th>#</th>
                 <th><?php _e('Course Title', 'tutor'); ?></th>
+                <th><?php _e('Questions', 'tutor'); ?></th>
+                <th><?php _e('Total Marks', 'tutor'); ?></th>
                 <th><?php _e('Attempts Date', 'tutor'); ?></th>
                 <th><?php _e('Correct Answer', 'tutor'); ?></th>
                 <th><?php _e('Incorrect Answer', 'tutor'); ?></th>
                 <th><?php _e('Earned Marks', 'tutor'); ?></th>
                 <th><?php _e('Result', 'tutor'); ?></th>
+                <th></th>
             </tr>
             <?php
             foreach ( $previous_attempts as $attempt){
@@ -38,17 +41,10 @@ if ($attempted_count){
                 <tr class="<?php echo esc_attr($earned_percentage >= $passing_grade ? 'pass' : 'fail') ?>">
                     <td  title="<?php _e('Attempt ID', 'tutor'); ?>"><?php echo $attempt->attempt_id; ?> </td>
                     <td class="td-course-title" title="<?php _e('Course Title', 'tutor'); ?>">
-                        <div>
-                            <?php
-                                if ($attempt->attempt_status === 'review_required'){
-                                    echo '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
-                                } else {
-                                    echo $earned_percentage >= $passing_grade ? '<span class="result-pass">' . __('Pass', 'tutor') . '</span>' : '<span class="result-fail">' . __('Fail', 'tutor') . '</span>';
-                                }
-                            ?>
-                        </div>
                         <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank"><?php echo get_the_title($attempt->course_id); ?></a>
                     </td>
+                    <td  title="<?php _e('Questions', 'tutor'); ?>"><?php echo count(tutor_utils()->get_quiz_answers_by_attempt_id($attempt->attempt_id)); ?></td>
+                    <td  title="<?php _e('Total Marks', 'tutor'); ?>"><?php echo $attempt->total_marks; ?></td>
                     <td  title="<?php _e('Date', 'tutor'); ?>">
                         <?php
                             echo date_i18n(get_option('date_format'), strtotime($attempt->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->attempt_started_at));
@@ -113,6 +109,8 @@ if ($attempted_count){
                             $attempts_url = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts/attempts-details');
                             $attempts_url = add_query_arg( 'attempt_id', $attempt->attempt_id, $attempts_url );
                         ?>
+                    </td>
+                    <td>
                         <a href="<?php echo $attempts_url; ?>"><?php _e('Details', 'tutor'); ?></a>
                     </td>
 
