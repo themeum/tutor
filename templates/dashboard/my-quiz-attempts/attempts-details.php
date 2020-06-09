@@ -9,42 +9,46 @@ function show_correct_answer( $answers= array() ){
 
 		echo '<div class="correct-answer-wrap">';
         foreach ($answers as $key => $ans) {
-			$type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';			
-			
+            $type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';
+            if (isset($ans->answer_two_gap_match)) { echo '<div class="matching-type">'; }
             switch ($type) {
 				case 'text_image':
-					echo '<div class="text-image-type">';                    
-                    if(isset($ans->image_id)){
-						$img_url = wp_get_attachment_image_url($ans->image_id);
-						if($img_url){
-							echo '<p class="image"><img src="'.$img_url.'" /></p>';
-						}
-					}
-                    if(isset($ans->answer_title)) {
-                        echo '<p class="caption">'.$ans->answer_title.'</p>';
-					}
+					echo '<div class="text-image-type">';
+                        if(isset($ans->image_id)){
+                            $img_url = wp_get_attachment_image_url($ans->image_id);
+                            if($img_url){
+                                echo '<span class="image"><img src="'.$img_url.'" /></span>';
+                            }
+                        }
+                        if(isset($ans->answer_title)) {
+                            echo '<span class="caption">'.$ans->answer_title.'</span>';
+                        }
 					echo '</div>';
                     break;
 				case 'text':
 					echo '<div class="text-type">';
-                    if(isset($ans->answer_title)) {
-                        echo '<p class="text-item-caption">'.$ans->answer_title;
-					}
+                        if(isset($ans->answer_title)) {
+                            echo '<span class="text-item-caption">'.$ans->answer_title;
+                        }
+                    echo '</div>';
                     break;
 				case 'image':
-					echo '</div><div class="image-type">';
-                    if(isset($ans->image_id)){
-						$img_url = wp_get_attachment_image_url($ans->image_id);
-						if($img_url){
-							echo '<p class="image"><img src="'.$img_url.'" />'.'</p>';
-						}
-					}
+					echo '<div class="image-type">';
+                        if(isset($ans->image_id)){
+                            $img_url = wp_get_attachment_image_url($ans->image_id);
+                            if($img_url){
+                                echo '<span class="image"><img src="'.$img_url.'" />'.'</span>';
+                            }
+                        }
+                    echo '</div>';
                     break;
                 default:
                     break;
             }
             if (isset($ans->answer_two_gap_match)) {
-                echo ' - '.$ans->answer_two_gap_match.'</p></div>';
+                echo '<div class="matching-separator"> - </div>';
+                echo '<div class="image-match">'.$ans->answer_two_gap_match.'</div>';
+                echo '</div>';
 			}
         }
 		echo '</div>';
