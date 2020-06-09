@@ -270,6 +270,18 @@
 			}
 		}
 	}
+
+	.quiz-attempt-answers-wrap {
+		table {
+			th,
+			td {
+				&:nth-child(3),
+				&:nth-child(4) {
+					width: 28%;
+				}
+			}
+		}
+	}
 	span.result-review-required,
 	span.result-pass,
 	span.result-fail {
@@ -316,7 +328,9 @@
 	.image-matching-item {
 		display: flex;
 		align-items: center;
-		margin-bottom: 12px;
+		&:not(:last-child) {
+			margin-bottom: 12px;
+		}
 		img {
 			max-width: 35px;
 		}
@@ -328,14 +342,17 @@
 }
 
 .correct-answer-wrap {
+	.matching-type {
+		display: flex;
+	}
 	.text-image-type {
 		display: flex;
 		align-items: center;
-		&:not(:first-child) {
-			margin-top: 10px;
+		&:not(:last-child) {
+			margin-bottom: 12px;
 		}
 		.image {
-			margin-right: 8px;
+			margin-right: 12px;
 		}
 	}
 }
