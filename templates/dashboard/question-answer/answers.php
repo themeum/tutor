@@ -12,31 +12,6 @@ $profile_url = tutils()->profile_url($question->user_id);
 
 <h2><?php _e('Answer', 'tutor'); ?></h2>
 <div class="tutor-queston-and-answer-wrap">
-    <div class="tutor-add-question-wrap">
-        <form action="<?php echo admin_url('admin-post.php') ?>" id="tutor_admin_answer_form" method="post">
-            <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-            <input type="hidden" value="tutor_place_answer" name="action"/>
-            <input type="hidden" value="<?php echo $question_id; ?>" name="question_id"/>
-
-            <div class="tutor-form-group">
-				<?php
-				$editor_settings = array(
-					'teeny' => true,
-					'media_buttons' => false,
-					'quicktags' => false,
-					'editor_height' => 100,
-				);
-				wp_editor(null, 'answer', $editor_settings);
-				?>
-            </div>
-
-            <div class="tutor-form-group">
-                <a href="<?php echo tutils()->get_tutor_dashboard_page_permalink('question-answer'); ?>" class="tutor-button tutor-danger"><?php _e('Cancel', 'tutor'); ?></a>
-                <button type="submit" class="tutor-button tutor-success" name="tutor_question_search_btn"><?php _e('Place answer', 'tutor'); ?> </button>
-            </div>
-        </form>
-    </div>
-
     <div class="tutor_question_answer_wrap">
         <div class="tutor_original_question">
             <div class="tutor-question-wrap">
@@ -58,10 +33,10 @@ $profile_url = tutils()->profile_url($question->user_id);
             </div>
         </div>
 
-        <?php if (is_array($answers) && count($answers)) { ?>
-            <div class="tutor_admin_answers_list_wrap">
-                <?php
-                    foreach ($answers as $answer){
+        <div class="tutor_admin_answers_list_wrap">
+            <?php
+                if (is_array($answers) && count($answers)) {
+                    foreach ($answers as $answer) {
                         $answer_profile = tutils()->profile_url($answer->user_id);
                         ?>
                         <div class="tutor_individual_answer <?php echo ($question->user_id == $answer->user_id) ? 'tutor-bg-white' : 'tutor-bg-light'
@@ -86,10 +61,29 @@ $profile_url = tutils()->profile_url($question->user_id);
                         </div>
                         <?php
                     }
-                ?>
+                }
+            ?>
+            <div class="tutor-add-question-wrap">
+                <form action="<?php echo admin_url('admin-post.php') ?>" id="tutor_admin_answer_form" method="post">
+                    <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+                    <input type="hidden" value="tutor_place_answer" name="action"/>
+                    <input type="hidden" value="<?php echo $question_id; ?>" name="question_id"/>
+                    <div class="tutor-form-group">
+                        <?php
+                        $editor_settings = array(
+                            'teeny' => true,
+                            'media_buttons' => false,
+                            'quicktags' => false,
+                            'editor_height' => 100,
+                        );
+                        wp_editor(null, 'answer', $editor_settings);
+                        ?>
+                    </div>
+                    <div class="tutor-form-group">
+                        <button type="submit" class="tutor-button tutor-info" name="tutor_question_search_btn"><?php _e('Reply', 'tutor'); ?> </button>
+                    </div>
+                </form>
             </div>
-        <?php
-        }
-        ?>
+        </div>
     </div>
 </div>
