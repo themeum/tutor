@@ -19,7 +19,7 @@ $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 <?php
 if ($attempted_count){
     ?>
-    <div class="tutor-quiz-attempt-history my-quiz-attempts">
+    <div class="tutor-quiz-attempt-history ">
         <table>
             <tr>
                 <th><?php _e('Course Info', 'tutor'); ?></th>
@@ -39,13 +39,13 @@ if ($attempted_count){
                 ?>
                 <tr>
                     <td>
-                        <div>
+                        <div class="course">
                             <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank"><?php echo get_the_title($attempt->course_id); ?></a>
                         </div>
-                        <div>
-                            <?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?>
-                            <strong><?php _e('Question: ','tutor'); ?></strong><?php echo count($answers); ?>
-                            <strong><?php _e('Total Marks: ','tutor'); ?></strong><?php echo $attempt->total_marks; ?>
+                        <div class="course-meta">
+                            <span><?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?></span>
+                            <span><?php _e('Question: ','tutor'); ?><strong><?php echo count($answers); ?></strong></span>
+                            <span><?php _e('Total Marks: ','tutor'); ?><strong><?php echo $attempt->total_marks; ?></strong></span>
                         </div>
                     </td>
                     <td>

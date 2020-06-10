@@ -1062,24 +1062,6 @@ Course question and answer
 	border: 1px solid #e8eff1;
 	padding: 10px !important;
 }
-
-.tutor-quiz-attempt-history table {
-	thead {
-		tr {
-			&:first-child {
-				background-color: #fafbfc;
-			}
-		}
-	}
-	tr {
-		border: 0;
-		background-color: #fff;
-	}
-	th,
-	td {
-		border: 1px solid #dcdfe5 !important;
-	}
-}
 .tutor-quiz-attempt-history table span.result-fail,
 .tutor-quiz-attempt-history table span.result-pass {
 	display: inline-block;
