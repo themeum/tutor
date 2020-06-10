@@ -378,9 +378,6 @@
 .single-quiz-page.tutor-quiz-attempt-history table {
 	margin-bottom: 30px;
 }
-.tutor-quiz-attempt-history-title {
-	margin-bottom: 30px;
-}
 
 @media (max-width: 768px) {
 	.tutor-dashboard-content .tutor-quiz-attempt-history table tr {
@@ -816,12 +813,13 @@
 	padding-top: 30px;
 }
 
-.tutor-dashboard-content > h3 {
-	font-size: 20px;
-	font-weight: 500;
-	line-height: 1.5;
+.quiz-attempts-title,
+.tutor-quiz-attempt-history-title {
+	font-size: 22px;
+	font-weight: 600;
+	line-height: 1.27;
+	color: #4b5981;
 	margin-bottom: 31px;
-	color: #3f435b;
 }
 
 /** Earning Report */

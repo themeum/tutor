@@ -33,7 +33,7 @@ $user = get_userdata($user_id);
 
 
 <div class="tutor-quiz-attempt-review-wrap">
-    <h2 class="attempt-review-title"> <i class="tutor-icon-list"></i> <?php _e('View Attempts', 'tutor'); ?></h2>
+    <div class="attempt-review-title"> <i class="tutor-icon-list"></i> <?php _e('View Attempts', 'tutor'); ?></div>
     <div class="tutor-quiz-attempt-info-row">
         <div class="attempt-view-top">
             <div class="attempt-info-col">

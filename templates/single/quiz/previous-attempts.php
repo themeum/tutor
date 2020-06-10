@@ -8,7 +8,7 @@ $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
 
 ?>
 
-<h4 class="tutor-quiz-attempt-history-title"><?php _e('Previous attempts', 'tutor-pro'); ?></h4>
+<div class="tutor-quiz-attempt-history-title"><?php _e('Previous attempts', 'tutor-pro'); ?></div>
 <div class="tutor-quiz-attempt-history single-quiz-page">
     <table>
         <thead>
