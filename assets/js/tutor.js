@@ -1197,32 +1197,48 @@ jQuery(document).ready(function($){
         $('.tutor-lesson-modal-wrap .modal-title h1').html('Assignment');
     });
 
-
-    /*
-    * Quiz Attempts Instructor Feedback 
-    */
-    $(document).on('click', '.tutor-instructor-feedback', function(e){
-        e.preventDefault();
-        var $that = $(this);
-        console.log('Here->', $that.data('attemptid'),  $('.tutor-instructor-feedback-content').val());
-        $.ajax({
-            url : ajaxurl,
-            type : 'POST',
-            data : {attempts_id: $that.data('attemptid'), feedback: $('.tutor-instructor-feedback-content').val() , action: 'tutor_instructor_feedback'},
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success){
-                    $that.closest('.course-content-item').remove();
-                    alert('Done');
-                }
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
+    /**
+     * Tutor number validation
+     *
+     * @since v.1.6.3
+     */
+    $(document).on('keyup change', '.tutor-number-validation', function(e) {
+        var input = $(this);
+        var val = parseInt(input.val());
+        var min = parseInt(input.attr('data-min'));
+        var max = parseInt(input.attr('data-max'));
+        if ( val < min )  { 
+            input.val(min);
+        } else if ( val > max ) {
+            input.val(max);
+        }
     });
 
+    /*
+    * @since v.1.6.4
+    * Quiz Attempts Instructor Feedback 
+    */
+   $(document).on('click', '.tutor-instructor-feedback', function(e){
+    e.preventDefault();
+    var $that = $(this);
+    console.log('Here->', $that.data('attemptid'),  $('.tutor-instructor-feedback-content').val());
+    $.ajax({
+        url : ajaxurl,
+        type : 'POST',
+        data : {attempts_id: $that.data('attemptid'), feedback: $('.tutor-instructor-feedback-content').val() , action: 'tutor_instructor_feedback'},
+        beforeSend: function () {
+            $that.addClass('tutor-updating-message');
+        },
+        success: function (data) {
+            if (data.success){
+                $that.closest('.course-content-item').remove();
+                alert('Done');
+            }
+        },
+        complete: function () {
+            $that.removeClass('tutor-updating-message');
+        }
+    });
+});
 
 });
