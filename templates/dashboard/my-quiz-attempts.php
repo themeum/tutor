@@ -9,7 +9,7 @@
  *
  *
  * @package TutorLMS/Templates
- * @version 1.4.3
+ * @version 1.6.4
  */
 
 $previous_attempts = tutor_utils()->get_all_quiz_attempts_by_user();
@@ -19,7 +19,7 @@ $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 <?php
 if ($attempted_count){
     ?>
-    <div class="tutor-quiz-attempt-history">
+    <div class="tutor-quiz-attempt-history my-quiz-attempts">
         <table>
             <tr>
                 <th><?php _e('Course Info', 'tutor'); ?></th>

@@ -1,14 +1,14 @@
 <?php
 /**
  * @package TutorLMS/Templates
- * @version 1.4.3
+ * @version 1.6.4
  */
 
 $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
 
 ?>
 
-<h4 class="tutor-quiz-attempt-history-title"><?php _e('Previous attempts', 'tutor-pro'); ?></h4>
+<h4 class="tutor-quiz-attempt-history-title"><?php _e('Previous attempts adasdf', 'tutor-pro'); ?></h4>
 <div class="tutor-quiz-attempt-history single-quiz-page">
     <table>
         <thead>
@@ -77,8 +77,7 @@ $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
                     ?>
                 </td>
                 <td><a href="<?php echo $attempt_action; ?>"><?php _e('Details', 'tutor'); ?></a></td>
-
-				<?php do_action('tutor_quiz/previous_attempts/table/tbody/col', $attempt); ?>
+                <?php do_action('tutor_quiz/previous_attempts/table/tbody/col', $attempt); ?>
             </tr>
 			<?php
 		}
