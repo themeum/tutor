@@ -402,9 +402,3 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 	}
 	?>
 </div>
-
-
-<div>
-    <?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts'); ?>
-    <a class="prev-btn" href="<?php echo $attempts_page; ?>"><span>&leftarrow;</span><?php _e('Back to Attempt List', 'tutor'); ?></a>
-</div>
