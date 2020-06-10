@@ -256,33 +256,8 @@
 	> h2 {
 		margin-bottom: 20px;
 	}
-
-	.tutor-quiz-attempt-history table {
-		tr {
-			border: 0;
-			background-color: #fff;
-			&:first-child {
-				background-color: #fafbfc;
-			}
-		}
-		th,
-		td {
-			border: 1px solid #dcdfe5 !important;
-		}
-	}
-	// .my-quiz-attempts table {
-	// 	tr {
-	// 		border: 0;
-	// 		&:first-child {
-	// 			background-color: #fafbfc;
-	// 		}
-	// 	}
-	// 	th,
-	// 	td {
-	// 		border: 1px solid #dcdfe5 !important;
-	// 	}
-	// }
 }
+
 .tutor-dashboard-content .tutor-quiz-attempt-history tr th,
 .tutor-dashboard-content .tutor-quiz-attempt-history tr td {
 	vertical-align: middle;
@@ -303,7 +278,7 @@
 	width: auto;
 	height: auto;
 	line-height: 19px;
-	padding: 0 5px;
+	padding: 0 6.5px;
 	margin-right: 4px;
 }
 .label-course-status {
@@ -317,7 +292,6 @@
 	background-color: var(--tutor-success-button-color);
 }
 
-.tutor-dashboard-content .tutor-quiz-attempt-history table tr th,
 .tutor-dashboard-content .quiz-attempt-answers-wrap table th {
 	font-size: 14px;
 	font-weight: 400;
@@ -325,6 +299,87 @@
 	letter-spacing: 0.12px;
 	color: #737787;
 	padding: 15px 10px;
+}
+
+/* quiz attempt history (common table) */
+.tutor-dashboard-content .tutor-quiz-attempt-history table,
+.single-quiz-page.tutor-quiz-attempt-history table {
+	thead tr {
+		background-color: #fafbfc;
+	}
+	tr {
+		border: 0;
+		background-color: #fff;
+		&:first-child {
+			background-color: #fafbfc;
+		}
+	}
+	th,
+	td {
+		border: 1px solid #dcdfe5 !important;
+		vertical-align: middle;
+		&:first-child {
+			width: 62%;
+		}
+		&:nth-child(2),
+		&:nth-child(4) {
+			width: 11%;
+		}
+		&:nth-child(3),
+		&:nth-child(5),
+		&:nth-child(6) {
+			width: 9%;
+		}
+	}
+	th {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 1.14;
+		color: #8792b2;
+		&:not(:first-child) {
+			text-align: center;
+		}
+	}
+	td {
+		background-color: #fff;
+		font-size: 14px;
+		font-weight: 400;
+		color: #4b5981;
+		&:not(:first-child) {
+			font-weight: 500;
+			text-align: center;
+			padding-left: 3px !important;
+			padding-right: 3px !important;
+		}
+		&:last-child {
+			padding-left: 0px !important;
+			padding-right: 0px !important;
+		}
+		a {
+			font-weight: 500;
+			color: #4b5981;
+			text-decoration: underline;
+		}
+		.course a {
+			font-weight: 600;
+			line-height: 1.29;
+			color: #4b5981;
+			text-decoration: none;
+		}
+		.course-meta {
+			display: inline-block;
+			margin-top: 5px;
+			span:nth-child(2) {
+				margin: 0 17px;
+			}
+		}
+	}
+}
+.single-quiz-page.tutor-quiz-attempt-history table {
+	margin-bottom: 30px;
+}
+.tutor-quiz-attempt-history-title {
+	margin-bottom: 30px;
 }
 
 @media (max-width: 768px) {
@@ -765,7 +820,7 @@
 	font-size: 20px;
 	font-weight: 500;
 	line-height: 1.5;
-	margin-bottom: 27px;
+	margin-bottom: 31px;
 	color: #3f435b;
 }
 

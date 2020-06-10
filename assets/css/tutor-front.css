@@ -1768,18 +1768,6 @@ Course question and answer
   padding: 10px !important;
 }
 
-.tutor-quiz-attempt-history table thead tr:first-child {
-  background-color: #fafbfc;
-}
-.tutor-quiz-attempt-history table tr {
-  border: 0;
-  background-color: #fff;
-}
-.tutor-quiz-attempt-history table th,
-.tutor-quiz-attempt-history table td {
-  border: 1px solid #dcdfe5 !important;
-}
-
 .tutor-quiz-attempt-history table span.result-fail,
 .tutor-quiz-attempt-history table span.result-pass {
   display: inline-block;
@@ -6440,17 +6428,6 @@ table.course-single-gradebooks a {
 .tutor-dashboard-content > h2 {
   margin-bottom: 20px;
 }
-.tutor-dashboard-content .tutor-quiz-attempt-history table tr {
-  border: 0;
-  background-color: #fff;
-}
-.tutor-dashboard-content .tutor-quiz-attempt-history table tr:first-child {
-  background-color: #fafbfc;
-}
-.tutor-dashboard-content .tutor-quiz-attempt-history table th,
-.tutor-dashboard-content .tutor-quiz-attempt-history table td {
-  border: 1px solid #dcdfe5 !important;
-}
 
 .tutor-dashboard-content .tutor-quiz-attempt-history tr th,
 .tutor-dashboard-content .tutor-quiz-attempt-history tr td {
@@ -6467,7 +6444,7 @@ table.course-single-gradebooks a {
   width: auto;
   height: auto;
   line-height: 19px;
-  padding: 0 5px;
+  padding: 0 6.5px;
   margin-right: 4px;
 }
 
@@ -6483,7 +6460,6 @@ table.course-single-gradebooks a {
   background-color: var(--tutor-success-button-color);
 }
 
-.tutor-dashboard-content .tutor-quiz-attempt-history table tr th,
 .tutor-dashboard-content .quiz-attempt-answers-wrap table th {
   font-size: 14px;
   font-weight: 400;
@@ -6491,6 +6467,115 @@ table.course-single-gradebooks a {
   letter-spacing: 0.12px;
   color: #737787;
   padding: 15px 10px;
+}
+
+/* quiz attempt history (common table) */
+.tutor-dashboard-content .tutor-quiz-attempt-history table thead tr,
+.single-quiz-page.tutor-quiz-attempt-history table thead tr {
+  background-color: #fafbfc;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr,
+.single-quiz-page.tutor-quiz-attempt-history table tr {
+  border: 0;
+  background-color: #fff;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr:first-child,
+.single-quiz-page.tutor-quiz-attempt-history table tr:first-child {
+  background-color: #fafbfc;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th,
+.tutor-dashboard-content .tutor-quiz-attempt-history table td,
+.single-quiz-page.tutor-quiz-attempt-history table th,
+.single-quiz-page.tutor-quiz-attempt-history table td {
+  border: 1px solid #dcdfe5 !important;
+  vertical-align: middle;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th:first-child,
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:first-child,
+.single-quiz-page.tutor-quiz-attempt-history table th:first-child,
+.single-quiz-page.tutor-quiz-attempt-history table td:first-child {
+  width: 62%;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th:nth-child(2), .tutor-dashboard-content .tutor-quiz-attempt-history table th:nth-child(4),
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:nth-child(2),
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:nth-child(4),
+.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(2),
+.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(4),
+.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(2),
+.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(4) {
+  width: 11%;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th:nth-child(3), .tutor-dashboard-content .tutor-quiz-attempt-history table th:nth-child(5), .tutor-dashboard-content .tutor-quiz-attempt-history table th:nth-child(6),
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:nth-child(3),
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:nth-child(5),
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:nth-child(6),
+.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(3),
+.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(5),
+.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(6),
+.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(3),
+.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(5),
+.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(6) {
+  width: 9%;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th,
+.single-quiz-page.tutor-quiz-attempt-history table th {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.14;
+  color: #8792b2;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th:not(:first-child),
+.single-quiz-page.tutor-quiz-attempt-history table th:not(:first-child) {
+  text-align: center;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td,
+.single-quiz-page.tutor-quiz-attempt-history table td {
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  color: #4b5981;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:not(:first-child),
+.single-quiz-page.tutor-quiz-attempt-history table td:not(:first-child) {
+  font-weight: 500;
+  text-align: center;
+  padding-left: 3px !important;
+  padding-right: 3px !important;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:last-child,
+.single-quiz-page.tutor-quiz-attempt-history table td:last-child {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td a,
+.single-quiz-page.tutor-quiz-attempt-history table td a {
+  font-weight: 500;
+  color: #4b5981;
+  text-decoration: underline;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td .course a,
+.single-quiz-page.tutor-quiz-attempt-history table td .course a {
+  font-weight: 600;
+  line-height: 1.29;
+  color: #4b5981;
+  text-decoration: none;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td .course-meta,
+.single-quiz-page.tutor-quiz-attempt-history table td .course-meta {
+  display: inline-block;
+  margin-top: 5px;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td .course-meta span:nth-child(2),
+.single-quiz-page.tutor-quiz-attempt-history table td .course-meta span:nth-child(2) {
+  margin: 0 17px;
+}
+
+.single-quiz-page.tutor-quiz-attempt-history table {
+  margin-bottom: 30px;
+}
+
+.tutor-quiz-attempt-history-title {
+  margin-bottom: 30px;
 }
 
 @media (max-width: 768px) {
@@ -6935,7 +7020,7 @@ table.course-single-gradebooks a {
   font-size: 20px;
   font-weight: 500;
   line-height: 1.5;
-  margin-bottom: 27px;
+  margin-bottom: 31px;
   color: #3f435b;
 }
 

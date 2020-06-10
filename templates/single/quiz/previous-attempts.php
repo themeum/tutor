@@ -8,7 +8,7 @@ $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
 
 ?>
 
-<h4 class="tutor-quiz-attempt-history-title"><?php _e('Previous attempts adasdf', 'tutor-pro'); ?></h4>
+<h4 class="tutor-quiz-attempt-history-title"><?php _e('Previous attempts', 'tutor-pro'); ?></h4>
 <div class="tutor-quiz-attempt-history single-quiz-page">
     <table>
         <thead>
@@ -33,13 +33,13 @@ $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
             ?>
             <tr>
                 <td>
-                    <div>
+                    <div class="course">
                         <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank"><?php echo get_the_title($attempt->course_id); ?></a>
                     </div>
-                    <div>
-                        <?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?>
-                        <strong><?php _e('Question: ','tutor'); ?></strong><?php echo count($answers); ?>
-                        <strong><?php _e('Total Marks: ','tutor'); ?></strong><?php echo $attempt->total_marks; ?>
+                    <div class="course-meta">
+                        <span><?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?></span>
+                        <span><?php _e('Question: ','tutor'); ?><strong><?php echo count($answers); ?></strong></span>
+                        <span><?php _e('Total Marks: ','tutor'); ?><strong><?php echo $attempt->total_marks; ?></strong></span>
                     </div>
                 </td>
                 <td>
