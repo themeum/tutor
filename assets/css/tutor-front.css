@@ -6552,6 +6552,7 @@ table.course-single-gradebooks a {
   font-weight: 500;
   color: #4b5981;
   text-decoration: underline;
+  word-break: initial;
 }
 .tutor-dashboard-content .tutor-quiz-attempt-history table td .course a,
 .single-quiz-page.tutor-quiz-attempt-history table td .course a {
