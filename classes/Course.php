@@ -87,7 +87,13 @@ class Course extends Tutor_Base {
          * @since v.1.6.1
          */
         add_filter('tutor_course/single/complete_form', array($this, 'tutor_lms_hide_course_complete_btn'));
-        add_filter('get_gradebook_generate_form_html', array($this, 'get_generate_greadbook'));
+		add_filter('get_gradebook_generate_form_html', array($this, 'get_generate_greadbook'));
+		
+        /**
+         * Add social share content in header
+         * @since v.1.6.3
+         */
+        add_action('wp_head', array($this, 'social_share_content'));
     }
 
 	/**
@@ -1103,7 +1109,25 @@ class Course extends Tutor_Base {
             return '';
         }
         return $html;
+	}
+
+	/**
+	 * Add social share content in header
+	 * @since v.1.6.3
+	 */
+    public function social_share_content(){
+		global $wp_query, $post;
+		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $this->course_post_type) { ?>
+			<!--Facebook-->
+			<meta property="og:type" content="website"/>
+			<meta property="og:image" content="<?php echo get_tutor_course_thumbnail_src(); ?>" />
+			<meta property="og:description" content="<?php echo esc_html($post->post_content); ?>" />
+			<!--Twitter-->
+			<meta name="twitter:image" content="<?php echo get_tutor_course_thumbnail_src(); ?>">
+			<meta name="twitter:description" content="<?php echo esc_html($post->post_content); ?>">
+			<!--Google+-->
+			<meta itemprop="image" content="<?php echo get_tutor_course_thumbnail_src(); ?>">
+			<meta itemprop="description" content="<?php echo esc_html($post->post_content); ?>"> <?php
+		}
     }
-
-
 }
