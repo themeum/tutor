@@ -188,7 +188,7 @@ $user = get_userdata($user_id);
         <div class="quiz-attempt-answers-wrap">
 
             <div class="attempt-answers-header">
-                <h3><?php _e('Quiz Overview', 'tutor'); ?></h3>
+                <div class="attempt-header-quiz"><?php _e('Quiz Overview', 'tutor'); ?></div>
             </div>
 
             <table class="wp-list-table">
