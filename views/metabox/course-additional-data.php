@@ -24,16 +24,16 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
             <div class="tutor-lesson-video-runtime">
 
                 <div class="tutor-option-group-field">
-                    <input type="text" value="<?php echo $durationHours ? $durationHours : '00'; ?>" name="course_duration[hours]">
+                    <input type="number" value="<?php echo $durationHours ? $durationHours : '00'; ?>" name="course_duration[hours]">
                     <p class="desc"><?php _e('HH', 'tutor'); ?></p>
                 </div>
                 <div class="tutor-option-group-field">
-                    <input type="text" value="<?php echo $durationMinutes ? $durationMinutes : '00'; ?>" name="course_duration[minutes]">
+                    <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $durationMinutes ? $durationMinutes : '00'; ?>" name="course_duration[minutes]">
                     <p class="desc"><?php _e('MM', 'tutor'); ?></p>
                 </div>
 
                 <div class="tutor-option-group-field">
-                    <input type="text" value="<?php echo $durationSeconds ? $durationSeconds : '00'; ?>" name="course_duration[seconds]">
+                    <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $durationSeconds ? $durationSeconds : '00'; ?>" name="course_duration[seconds]">
                     <p class="desc"><?php _e('SS', 'tutor'); ?></p>
                 </div>
 

@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.4
 Requires PHP: 5.4.0
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,18 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.6.3 - 20 May, 2020 =
+
+New: Now students can answer Q&A from the frontend
+New: Set answer word limit for Open-Ended and Essay type questions
+New: Replace the login error message for an incorrect password with your own custom message
+Update: Course single page overview tab renamed to resources page.
+Fix: Randomize feature not working for answering options
+Fix: Close login popup without show any error message.
+Fix: Password/username validation messages and UX
+Fix: Social share content issue.
+Fix: Course duration and video playback time validation.
 
 = 1.6.2 - 14 May, 2020 =
 
