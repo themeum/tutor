@@ -258,24 +258,9 @@
 	}
 
 	.tutor-quiz-attempt-history table {
-		border: none;
-		tr {
-			background-color: #fff;
-
-			&:first-child {
-				background-color: #f7f7f9;
-			}
-			&:not(:first-child) {
-				border-top: 1px solid #dcdce1;
-			}
-			&:not(:last-child) {
-				border-bottom: 1px solid #dcdce1;
-			}
-		}
-	}
-	.my-quiz-attempts table {
 		tr {
 			border: 0;
+			background-color: #fff;
 			&:first-child {
 				background-color: #fafbfc;
 			}
@@ -285,6 +270,18 @@
 			border: 1px solid #dcdfe5 !important;
 		}
 	}
+	// .my-quiz-attempts table {
+	// 	tr {
+	// 		border: 0;
+	// 		&:first-child {
+	// 			background-color: #fafbfc;
+	// 		}
+	// 	}
+	// 	th,
+	// 	td {
+	// 		border: 1px solid #dcdfe5 !important;
+	// 	}
+	// }
 }
 .tutor-dashboard-content .tutor-quiz-attempt-history tr th,
 .tutor-dashboard-content .tutor-quiz-attempt-history tr td {
