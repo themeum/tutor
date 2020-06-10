@@ -6552,6 +6552,7 @@ table.course-single-gradebooks a {
   font-weight: 500;
   color: #4b5981;
   text-decoration: underline;
+  word-break: initial;
 }
 .tutor-dashboard-content .tutor-quiz-attempt-history table td .course a,
 .single-quiz-page.tutor-quiz-attempt-history table td .course a {
@@ -7771,8 +7772,6 @@ label[for=tutor_withdraw_amount] {
 }
 .quiz-attempt-answers-wrap .attempt-answers-header {
   padding: 30px 20px;
-}
-.quiz-attempt-answers-wrap .attempt-answers-header h3 {
   font-size: 20px;
   line-height: 1.5;
   color: #3f435b;

@@ -191,7 +191,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
         <div class="quiz-attempt-answers-wrap">
 
             <div class="attempt-answers-header">
-                <h3><?php _e('Quiz Overview', 'tutor'); ?></h3>
+                <?php _e('Quiz Overview', 'tutor'); ?>
             </div>
 
             <table class="wp-list-table">
