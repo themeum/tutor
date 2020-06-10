@@ -6414,19 +6414,20 @@ table.course-single-gradebooks a {
 .tutor-dashboard-content {
   margin-bottom: 60px;
 }
-.tutor-dashboard-content .prev-btn {
+.tutor-dashboard-content > h2 {
+  margin-bottom: 20px;
+}
+
+.prev-btn {
   font-size: 16px;
   line-height: 1.88;
   color: #3f435b;
 }
-.tutor-dashboard-content .prev-btn span {
+.prev-btn span {
   font-size: 18px;
   font-weight: 800;
   color: #3e64de;
   margin-right: 7px;
-}
-.tutor-dashboard-content > h2 {
-  margin-bottom: 20px;
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history tr th,
@@ -7770,7 +7771,7 @@ label[for=tutor_withdraw_amount] {
 .quiz-attempt-answers-wrap .attempt-answers-header {
   padding: 30px 20px;
 }
-.quiz-attempt-answers-wrap .attempt-answers-header .attempt-header-quiz {
+.quiz-attempt-answers-wrap .attempt-answers-header h3 {
   font-size: 20px;
   line-height: 1.5;
   color: #3f435b;
@@ -7850,12 +7851,12 @@ label[for=tutor_withdraw_amount] {
 .tutor-quiz-attempt-review-wrap .attempt-answers-header a {
   color: #3f435b;
 }
-.tutor-quiz-attempt-review-wrap .attempt-answers-header .attempt-header-course {
+.tutor-quiz-attempt-review-wrap .attempt-answers-header > p {
   color: #737787;
   margin-top: 10px;
   margin-bottom: 0;
 }
-.tutor-quiz-attempt-review-wrap .attempt-answers-header .attempt-header-quiz {
+.tutor-quiz-attempt-review-wrap .attempt-answers-header h3 {
   font-size: 20px;
   line-height: 1.5;
   color: #3f435b;
@@ -7932,19 +7933,24 @@ label[for=tutor_withdraw_amount] {
 .tutor-quiz-attempt-review-wrap span.result-review-required {
   background: #f5b30d;
 }
-.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip] {
+
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip],
+.quiz-attempt-answers-wrap .tooltip-btn[data-tooltip] {
   position: relative;
   z-index: 2;
   cursor: pointer;
 }
-.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:before, .tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:after {
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:before, .tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:after,
+.quiz-attempt-answers-wrap .tooltip-btn[data-tooltip]:before,
+.quiz-attempt-answers-wrap .tooltip-btn[data-tooltip]:after {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
   transform: translateY(15px);
   transition: 0.15s ease;
 }
-.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:before {
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:before,
+.quiz-attempt-answers-wrap .tooltip-btn[data-tooltip]:before {
   content: attr(data-tooltip);
   position: absolute;
   bottom: 40px;
@@ -7962,7 +7968,8 @@ label[for=tutor_withdraw_amount] {
   color: #fff;
   z-index: 99999;
 }
-.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:after {
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:after,
+.quiz-attempt-answers-wrap .tooltip-btn[data-tooltip]:after {
   position: absolute;
   content: "";
   bottom: 34px;
@@ -7974,7 +7981,11 @@ label[for=tutor_withdraw_amount] {
 }
 .tutor-quiz-attempt-review-wrap .active[data-tooltip]:before, .tutor-quiz-attempt-review-wrap .active[data-tooltip]:after,
 .tutor-quiz-attempt-review-wrap .active[data-tooltip]:before,
-.tutor-quiz-attempt-review-wrap .active[data-tooltip]:after {
+.tutor-quiz-attempt-review-wrap .active[data-tooltip]:after,
+.quiz-attempt-answers-wrap .active[data-tooltip]:before,
+.quiz-attempt-answers-wrap .active[data-tooltip]:after,
+.quiz-attempt-answers-wrap .active[data-tooltip]:before,
+.quiz-attempt-answers-wrap .active[data-tooltip]:after {
   visibility: visible;
   opacity: 1;
   transform: translateY(0px);

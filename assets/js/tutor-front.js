@@ -1624,7 +1624,7 @@ jQuery(document).ready(function ($) {
                     if ($form_wrapper.find('.tutor-alert').length) {
                         $form_wrapper.find('.tutor-alert').html(response.data);
                     } else {
-                        $form_wrapper.prepend('<div class="tutor-alert tutor-alert-warning">' + response.data + '</div>');
+                        $form_wrapper.prepend('<div class="tutor-alert tutor-alert-warning">'+response.data+'</div>');
                     }
                 }
             },

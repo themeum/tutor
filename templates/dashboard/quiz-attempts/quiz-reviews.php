@@ -222,8 +222,8 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 
             <table class="wp-list-table">
                 <tr>
-                    <th><?php _e('Type', 'tutor'); ?></th>
                     <th><?php _e('No.', 'tutor'); ?></th>
+                    <th><?php _e('Type', 'tutor'); ?></th>
                     <th><?php _e('Question', 'tutor'); ?></th>
                     <th><?php _e('Given Answers', 'tutor'); ?></th>
                     <th><?php _e('Correct Answers', 'tutor'); ?></th>
@@ -237,8 +237,8 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 					$question_type = tutor_utils()->get_question_types($answer->question_type);
 					?>
                     <tr>
-                        <td><?php echo $question_type['icon']; ?></td>
                         <td><?php echo $answer_i; ?></td>
+                        <td><?php echo $question_type['icon']; ?></td>
                         <td><?php echo stripslashes($answer->question_title); ?></td>
                         <td>
 							<?php
