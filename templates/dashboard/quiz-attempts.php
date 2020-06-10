@@ -26,68 +26,68 @@ if ( $quiz_attempts_count ){
     <div class="tutor-quiz-attempt-history">
         <table>
             <tr>
-                <th><?php _e('Title (Quiz & Course)', 'tutor'); ?></th>
-                <th><?php _e('Students', 'tutor'); ?></th>
-                <th><?php _e('Count', 'tutor'); ?></th>
+                <th><?php _e('Course Info', 'tutor'); ?></th>
+                <th><?php _e('Correct Answer', 'tutor'); ?></th>
+                <th><?php _e('Incorrect Answer', 'tutor'); ?></th>
                 <th><?php _e('Earned Mark', 'tutor'); ?></th>
-                <th><?php _e('Review', 'tutor'); ?></th>
+                <th><?php _e('Result', 'tutor'); ?></th>
+                <th></th>
+                <?php do_action('tutor_quiz/my_attempts/table/thead/col'); ?>
             </tr>
 			<?php
 			foreach ( $quiz_attempts as $attempt){
 				$attempt_action = tutor_utils()->get_tutor_dashboard_page_permalink('quiz-attempts/quiz-reviews/?attempt_id='.$attempt->attempt_id);
 				$earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
-				$passing_grade = tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
+                $passing_grade = tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
+                $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt->attempt_id);
 				?>
-                <tr class="<?php echo esc_attr($earned_percentage >= $passing_grade ? 'pass' : 'fail') ?>">
-                    <td title="<?php echo __('Quiz', 'tutor'); ?>">
-						<?php
-                        if ($attempt->attempt_status === 'review_required'){
-                            echo '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
-                        }else{
-                            echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
-                        }
-
-						if ($attempt->attempt_ended_at){
-							$ended_ago_time = human_time_diff(strtotime($attempt->attempt_ended_at)).__(' ago', 'tutor');
-							echo " <small>{$ended_ago_time}</small>";
-						}
-						?>
+                <tr>
+                    <td>
                         <div>
-							<?php echo "#".$attempt->attempt_id; ?>: <a href="<?php echo esc_url($attempt_action); ?>"><?php echo $attempt->post_title; ?></a>
+                            <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank"><?php echo get_the_title($attempt->course_id); ?></a>
                         </div>
                         <div>
-                            <?php //echo __('Course:', 'tutor'); ?><!-- <a href="--><?php //echo get_the_permalink($attempt->course_id); ?><!--" target="_blank">--><?php //echo get_the_title($attempt->course_id); ?><!--</a>-->
-							<?php echo __('Course:', 'tutor'); ?> <?php echo get_the_title($attempt->course_id); ?>
+                            <?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?>
+                            <strong><?php _e('Question: ','tutor'); ?></strong><?php echo count($answers); ?>
+                            <strong><?php _e('Total Marks: ','tutor'); ?></strong><?php echo $attempt->total_marks; ?>
                         </div>
                     </td>
-                    <td class="td-course-title" title="<?php _e('Course Title', 'tutor'); ?>">
-						<?php
-						$quiz_title = "<div><strong>{$attempt->display_name}</strong></div>";
-						$quiz_title .= "<div>{$attempt->user_email}</div>";
-						echo $quiz_title;
-						?>
+                    <td>
+                        <?php
+                            $correct = 0;
+                            $incorrect = 0;
+                            if(is_array($answers) && count($answers) > 0) {
+                                foreach ($answers as $answer){
+                                    if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
+                                        $correct++;
+                                    } else {
+                                        if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+                                        } else {
+                                            $incorrect++;
+                                        }
+                                    }
+                                }
+                            }
+                            echo $correct;
+                        ?>
                     </td>
-                    <td title="<?php echo __('Total Questions', 'tutor'); ?>"><?php echo $attempt->total_questions; ?></td>
-                    <td title="<?php echo __('Earned Mark', 'tutor'); ?>" style="white-space: nowrap">
-						<?php
-
-						$pass_marks = 0;
-                        if ($passing_grade > 0){
-	                        $pass_marks = ($attempt->total_marks * $passing_grade) / 100;
-                        }
-
-//						if ($pass_marks > 0){
-//							echo number_format_i18n($pass_marks, 2);
-//						}
-
-//						if ($passing_grade){
-//							echo "({$passing_grade}%)";
-//						}
-
-						echo sprintf(__('%1$s out of %2$s <br> Pass Mark: %3$s <br> Earned total: %4$s%%','tutor'), $attempt->earned_marks, $attempt->total_marks, $pass_marks ,$passing_grade );
-						?>
+                    <td>
+                        <?php echo $incorrect; ?>
                     </td>
-                    <td><a href="<?php echo $attempt_action; ?>"><i class="tutor-icon-angle-right"></i></a></td>
+                    <td>
+                        <?php echo $attempt->earned_marks.' ('.$passing_grade.'%)'; ?>
+                    </td>
+                    <td>
+                        <?php
+                            if ($attempt->attempt_status === 'review_required'){
+                                echo '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
+                            }else{
+                                echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+                            }
+                        ?>
+                    </td>
+                    <td><a href="<?php echo $attempt_action; ?>"><?php _e('Details', 'tutor'); ?></a></td>
+                    <?php do_action('tutor_quiz/my_attempts/table/tbody/col'); ?>
                 </tr>
 				<?php
 			}
