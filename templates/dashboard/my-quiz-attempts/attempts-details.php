@@ -171,16 +171,19 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
 </div>
 
 
-<div class="tutor-quiz-attempt-review-wrap">
-    <div class="quiz-attempt-answers-wrap">
-        <div class="attempt-answers-header">
-            <h3><?php _e('Instructor Feedback', 'tutor'); ?></h3>
-        </div>
-        <div class="instructor-feedback-content">
-            <p><?php echo get_post_meta($attempt_id ,'instructor_feedback', true); ?></p>
+<?php $feedback = get_post_meta($attempt_id ,'instructor_feedback', true); ?>
+<?php if($feedback){ ?>
+    <div class="tutor-quiz-attempt-review-wrap">
+        <div class="quiz-attempt-answers-wrap">
+            <div class="attempt-answers-header">
+                <h3><?php _e('Instructor Feedback', 'tutor'); ?></h3>
+            </div>
+            <div class="instructor-feedback-content">
+                <p><?php echo $feedback; ?></p>
+            </div>
         </div>
     </div>
-</div>
+<?php } ?>
 
 
 <div class="tutor-quiz-attempt-review-wrap">
