@@ -29,8 +29,58 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt->attempt_id);
 
 $user_id = tutor_utils()->avalue_dot('user_id', $attempt);
 $user = get_userdata($user_id);
-?>
 
+function show_correct_answer( $answers= array() ){
+    if(!empty($answers)){
+
+		echo '<div class="correct-answer-wrap">';
+        foreach ($answers as $key => $ans) {
+            $type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';
+            if (isset($ans->answer_two_gap_match)) { echo '<div class="matching-type">'; }
+            switch ($type) {
+				case 'text_image':
+					echo '<div class="text-image-type">';
+                        if(isset($ans->image_id)){
+                            $img_url = wp_get_attachment_image_url($ans->image_id);
+                            if($img_url){
+                                echo '<span class="image"><img src="'.$img_url.'" /></span>';
+                            }
+                        }
+                        if(isset($ans->answer_title)) {
+                            echo '<span class="caption">'.$ans->answer_title.'</span>';
+                        }
+					echo '</div>';
+                    break;
+				case 'text':
+					echo '<div class="text-type">';
+                        if(isset($ans->answer_title)) {
+                            echo '<span class="text-item-caption">'.$ans->answer_title;
+                        }
+                    echo '</div>';
+                    break;
+				case 'image':
+					echo '<div class="image-type">';
+                        if(isset($ans->image_id)){
+                            $img_url = wp_get_attachment_image_url($ans->image_id);
+                            if($img_url){
+                                echo '<span class="image"><img src="'.$img_url.'" />'.'</span>';
+                            }
+                        }
+                    echo '</div>';
+                    break;
+                default:
+                    break;
+            }
+            if (isset($ans->answer_two_gap_match)) {
+                echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
+                echo '<div class="image-match">'.$ans->answer_two_gap_match.'</div>';
+                echo '</div>';
+			}
+        }
+		echo '</div>';
+    }
+}
+?>
 
 <div class="tutor-quiz-attempt-review-wrap">
     <div class="attempt-review-title"> <i class="tutor-icon-list"></i> <?php _e('View Attempts', 'tutor'); ?></div>
@@ -197,6 +247,7 @@ $user = get_userdata($user_id);
                     <th><?php _e('No.', 'tutor'); ?></th>
                     <th><?php _e('Question', 'tutor'); ?></th>
                     <th><?php _e('Given Answers', 'tutor'); ?></th>
+                    <th><?php _e('Correct Answers', 'tutor'); ?></th>
                     <th><?php _e('Correct/Incorrect', 'tutor'); ?></th>
                     <th><?php _e('Manual Review', 'tutor'); ?></th>
                 </tr>
@@ -308,6 +359,38 @@ $user = get_userdata($user_id);
 							}
 
 							?>
+                        </td>
+
+                        <td>
+                            <?php
+                            if ( !$answer->is_correct && ($answer->question_type != 'open_ended' && $answer->question_type != 'short_answer')) {
+                                global $wpdb;
+                                if ( $answer->question_type === 'true_false' ) {
+                                    $correct_answer = $wpdb->get_var( "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1" );
+                                    echo $correct_answer;
+                                } elseif ( $answer->question_type === 'single_choice' ) {
+                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1" );
+                                    show_correct_answer($correct_answer);
+                                } elseif ( $answer->question_type === 'multiple_choice' ) {
+                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1 ;" );
+                                    show_correct_answer($correct_answer);
+                                } elseif ( $answer->question_type === 'fill_in_the_blank' ) {
+                                    $correct_answer = $wpdb->get_var( "SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id}" );
+                                    if($correct_answer){
+                                        echo implode(', ', explode('|', $correct_answer));
+                                    }
+                                } elseif ( $answer->question_type === 'ordering' ) {
+                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                    show_correct_answer($correct_answer);
+                                } elseif( $answer->question_type === 'matching' ){
+                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_two_gap_match, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                    show_correct_answer($correct_answer);
+                                } elseif( $answer->question_type === 'image_matching' ) {
+                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                    show_correct_answer($correct_answer);
+                                }
+                            }
+                            ?>
                         </td>
 
                         <td>
