@@ -6575,10 +6575,6 @@ table.course-single-gradebooks a {
   margin-bottom: 30px;
 }
 
-.tutor-quiz-attempt-history-title {
-  margin-bottom: 30px;
-}
-
 @media (max-width: 768px) {
   .tutor-dashboard-content .tutor-quiz-attempt-history table tr {
     display: flex;
@@ -7017,12 +7013,13 @@ table.course-single-gradebooks a {
   padding-top: 30px;
 }
 
-.tutor-dashboard-content > h3 {
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1.5;
+.quiz-attempts-title,
+.tutor-quiz-attempt-history-title {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.27;
+  color: #4b5981;
   margin-bottom: 31px;
-  color: #3f435b;
 }
 
 /** Earning Report */
@@ -7772,6 +7769,8 @@ label[for=tutor_withdraw_amount] {
 }
 .quiz-attempt-answers-wrap .attempt-answers-header {
   padding: 30px 20px;
+}
+.quiz-attempt-answers-wrap .attempt-answers-header h3 {
   font-size: 20px;
   line-height: 1.5;
   color: #3f435b;
@@ -7961,6 +7960,7 @@ label[for=tutor_withdraw_amount] {
   border-radius: 12px;
   background-color: #3f435b;
   color: #fff;
+  z-index: 99999;
 }
 .tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:after {
   position: absolute;
