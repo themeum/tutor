@@ -19,7 +19,7 @@ $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 <?php
 if ($attempted_count){
     ?>
-    <div class="tutor-quiz-attempt-history">
+    <div class="tutor-quiz-attempt-history my-quiz-attempts">
         <table>
             <tr>
                 <th>#</th>

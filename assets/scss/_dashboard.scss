@@ -207,7 +207,7 @@
 .tutor-modal-wrap form {
 	margin-bottom: 20px;
 }
-/*dashboard content*/
+/* dashboard content */
 .tutor-dashboard-info-cards {
 	margin: 0 -15px 15px;
 	padding: 0;
@@ -239,7 +239,7 @@
 	}
 }
 
-/*dashboard quiz attempts*/
+/* dashboard quiz attempts */
 .tutor-dashboard-content {
 	margin-bottom: 60px;
 	.prev-btn {
@@ -253,16 +253,12 @@
 			margin-right: 7px;
 		}
 	}
-}
+	> h2 {
+		margin-bottom: 20px;
+	}
 
-.tutor-dashboard-content > h2 {
-	margin-bottom: 20px;
-}
-.tutor-dashboard-content {
-	.tutor-quiz-attempt-history {
-		table {
-			border: none;
-		}
+	.tutor-quiz-attempt-history table {
+		border: none;
 		tr {
 			background-color: #fff;
 
@@ -275,6 +271,18 @@
 			&:not(:last-child) {
 				border-bottom: 1px solid #dcdce1;
 			}
+		}
+	}
+	.my-quiz-attempts table {
+		tr {
+			border: 0;
+			&:first-child {
+				background-color: #fafbfc;
+			}
+		}
+		th,
+		td {
+			border: 1px solid #dcdfe5 !important;
 		}
 	}
 }
