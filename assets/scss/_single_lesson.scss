@@ -110,7 +110,7 @@
 	.tutor-topics-title
 	button
 	i::before {
-	content: '\e910';
+	content: "\e910";
 }
 .tutor-topics-in-single-lesson .tutor-topics-title h3 {
 	margin: 0;
@@ -349,7 +349,7 @@ span.toogle-informaiton-icon {
 	}
 }
 .sidebar-hidden a.tutor-lesson-sidebar-hide-bar .tutor-icon-angle-left:before {
-	content: '\e903';
+	content: "\e903";
 }
 
 .tutor-sidebar-tabs-wrap {
@@ -522,7 +522,7 @@ span.toogle-informaiton-icon {
 }
 
 .tutor-progress-bar .tutor-progress-filled:after {
-	content: '';
+	content: "";
 	position: absolute;
 	height: 15px;
 	width: 15px;
@@ -647,7 +647,7 @@ span.toogle-informaiton-icon {
 }
 .tutor-single-add-to-cart-box.cart-required-login:before {
 	position: absolute;
-	content: '';
+	content: "";
 	top: 0;
 	bottom: 0;
 	left: 0;
@@ -788,7 +788,7 @@ ul.tutor-required-fields {
 .tutor-question-search-form form {
 	display: flex;
 }
-.tutor-question-search-form input[type='text'] {
+.tutor-question-search-form input[type="text"] {
 	max-width: 60%;
 }
 .tutor-add-question-wrap {
@@ -801,16 +801,16 @@ ul.tutor-required-fields {
 	margin-right: 5px;
 }
 .updating-icon:before {
-	font-family: 'tutor';
+	font-family: "tutor";
 	margin-right: 5px;
-	content: '\e91d';
+	content: "\e91d";
 	-webkit-animation: spin 1s steps(8) infinite;
 	animation: spin 1s steps(8) infinite;
 	display: inline-block;
 }
 .loading-lesson .tutor-lesson-video-wrap:before {
-	font-family: 'tutor';
-	content: '\e91d';
+	font-family: "tutor";
+	content: "\e91d";
 	-webkit-animation: spin 2s infinite linear;
 	animation: spin 2s infinite linear;
 	display: inline-block;
@@ -824,7 +824,7 @@ ul.tutor-required-fields {
 }
 .loading-lesson .tutor-lesson-video-wrap:after {
 	position: absolute;
-	content: '';
+	content: "";
 	top: 0;
 	left: 0;
 	background: rgba(255, 255, 255, 0.8);
@@ -1062,6 +1062,24 @@ Course question and answer
 	border: 1px solid #e8eff1;
 	padding: 10px !important;
 }
+
+.tutor-quiz-attempt-history table {
+	thead {
+		tr {
+			&:first-child {
+				background-color: #fafbfc;
+			}
+		}
+	}
+	tr {
+		border: 0;
+		background-color: #fff;
+	}
+	th,
+	td {
+		border: 1px solid #dcdfe5 !important;
+	}
+}
 .tutor-quiz-attempt-history table span.result-fail,
 .tutor-quiz-attempt-history table span.result-pass {
 	display: inline-block;
@@ -1111,7 +1129,7 @@ Course question and answer
 		table
 		tr
 		td:not(:first-child)::before {
-		content: attr(title) ': ';
+		content: attr(title) ": ";
 		float: left;
 		font-weight: 700;
 	}
@@ -1237,9 +1255,9 @@ Course question and answer
 	border-color: var(--tutor-primary-color);
 }
 .tutor-quiz-answers-wrap label input:checked + span:after {
-	content: '\e90f';
+	content: "\e90f";
 	position: absolute;
-	font-family: 'tutor';
+	font-family: "tutor";
 	color: #fff;
 	top: 50%;
 	left: 50%;
@@ -1247,15 +1265,15 @@ Course question and answer
 	font-size: 11px;
 	line-height: 1;
 }
-.tutor-quiz-answers-wrap label input[type='radio'] + span {
-	content: '';
+.tutor-quiz-answers-wrap label input[type="radio"] + span {
+	content: "";
 	border-radius: 50%;
 	margin-right: 4px;
 	vertical-align: top;
 	font-size: 1em;
 }
-.tutor-quiz-answers-wrap label input[type='radio'] + span:after {
-	content: '';
+.tutor-quiz-answers-wrap label input[type="radio"] + span:after {
+	content: "";
 	height: 8px;
 	width: 8px;
 	background: #fff;

@@ -1768,6 +1768,18 @@ Course question and answer
   padding: 10px !important;
 }
 
+.tutor-quiz-attempt-history table thead tr:first-child {
+  background-color: #fafbfc;
+}
+.tutor-quiz-attempt-history table tr {
+  border: 0;
+  background-color: #fff;
+}
+.tutor-quiz-attempt-history table th,
+.tutor-quiz-attempt-history table td {
+  border: 1px solid #dcdfe5 !important;
+}
+
 .tutor-quiz-attempt-history table span.result-fail,
 .tutor-quiz-attempt-history table span.result-pass {
   display: inline-block;
@@ -6378,7 +6390,7 @@ table.course-single-gradebooks a {
   margin-bottom: 20px;
 }
 
-/*dashboard content*/
+/* dashboard content */
 .tutor-dashboard-info-cards {
   margin: 0 -15px 15px;
   padding: 0;
@@ -6410,7 +6422,7 @@ table.course-single-gradebooks a {
   vertical-align: middle;
 }
 
-/*dashboard quiz attempts*/
+/* dashboard quiz attempts */
 .tutor-dashboard-content {
   margin-bottom: 60px;
 }
@@ -6425,25 +6437,19 @@ table.course-single-gradebooks a {
   color: #3e64de;
   margin-right: 7px;
 }
-
 .tutor-dashboard-content > h2 {
   margin-bottom: 20px;
 }
-
-.tutor-dashboard-content .tutor-quiz-attempt-history table {
-  border: none;
-}
-.tutor-dashboard-content .tutor-quiz-attempt-history tr {
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr {
+  border: 0;
   background-color: #fff;
 }
-.tutor-dashboard-content .tutor-quiz-attempt-history tr:first-child {
-  background-color: #f7f7f9;
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr:first-child {
+  background-color: #fafbfc;
 }
-.tutor-dashboard-content .tutor-quiz-attempt-history tr:not(:first-child) {
-  border-top: 1px solid #dcdce1;
-}
-.tutor-dashboard-content .tutor-quiz-attempt-history tr:not(:last-child) {
-  border-bottom: 1px solid #dcdce1;
+.tutor-dashboard-content .tutor-quiz-attempt-history table th,
+.tutor-dashboard-content .tutor-quiz-attempt-history table td {
+  border: 1px solid #dcdfe5 !important;
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history tr th,
@@ -7943,6 +7949,9 @@ label[for=tutor_withdraw_amount] {
 }
 .correct-answer-wrap .text-image-type .image {
   margin-right: 12px;
+}
+.correct-answer-wrap .text-image-type img {
+  max-width: 35px;
 }
 
 .tutor-dashboard-builder-header {
