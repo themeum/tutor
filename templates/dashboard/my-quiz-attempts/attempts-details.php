@@ -111,7 +111,6 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
             <th><?php _e('Correct', 'tutor'); ?></th>
             <th><?php _e('Incorrect', 'tutor'); ?></th>
             <th><?php _e('Earned Marks', 'tutor'); ?></th>
-            <th><?php _e('Grade', 'tutor'); ?></th>
             <th><?php _e('Results', 'tutor'); ?></th>
         </tr>
         
@@ -150,11 +149,11 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                 ?>
             </td>
             <td><?php echo $incorrect; ?></td>
-            <td><?php echo $attempt_data->earned_marks; ?></td>
             <td>
                 <?php 
+                    echo $attempt_data->earned_marks; 
                     $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
-                    echo $earned_percentage.'%';
+                    echo '('.$earned_percentage.'%)';
                 ?>
             </td>
             <td>
