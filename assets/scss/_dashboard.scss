@@ -242,19 +242,20 @@
 /* dashboard quiz attempts */
 .tutor-dashboard-content {
 	margin-bottom: 60px;
-	.prev-btn {
-		font-size: 16px;
-		line-height: 1.88;
-		color: #3f435b;
-		span {
-			font-size: 18px;
-			font-weight: 800;
-			color: #3e64de;
-			margin-right: 7px;
-		}
-	}
 	> h2 {
 		margin-bottom: 20px;
+	}
+}
+
+.prev-btn {
+	font-size: 16px;
+	line-height: 1.88;
+	color: #3f435b;
+	span {
+		font-size: 18px;
+		font-weight: 800;
+		color: #3e64de;
+		margin-right: 7px;
 	}
 }
 
