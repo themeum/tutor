@@ -126,7 +126,7 @@
 	margin: 0 0 1.5em;
 	.attempt-answers-header {
 		padding: 30px 20px;
-		.attempt-header-quiz{
+		h3 {
 			font-size: 20px;
 			line-height: 1.5;
 			color: #3f435b;
@@ -208,12 +208,13 @@
 		a {
 			color: #3f435b;
 		}
-		> .attempt-header-course {
+		> p {
 			color: #737787;
 			margin-top: 10px;
 			margin-bottom: 0;
 		}
-		.attempt-header-quiz{
+
+		h3 {
 			font-size: 20px;
 			line-height: 1.5;
 			color: #3f435b;
@@ -298,7 +299,9 @@
 	span.result-review-required {
 		background: #f5b30d;
 	}
-
+}
+.tutor-quiz-attempt-review-wrap,
+.quiz-attempt-answers-wrap {
 	// Tooltip
 	.tooltip-btn[data-tooltip] {
 		position: relative;
