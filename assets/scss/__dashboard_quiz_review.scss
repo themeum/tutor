@@ -126,7 +126,7 @@
 	margin: 0 0 1.5em;
 	.attempt-answers-header {
 		padding: 30px 20px;
-		h3 {
+		.attempt-header-quiz{
 			font-size: 20px;
 			line-height: 1.5;
 			color: #3f435b;
@@ -208,13 +208,12 @@
 		a {
 			color: #3f435b;
 		}
-		> p {
+		> .attempt-header-course {
 			color: #737787;
 			margin-top: 10px;
 			margin-bottom: 0;
 		}
-
-		h3 {
+		.attempt-header-quiz{
 			font-size: 20px;
 			line-height: 1.5;
 			color: #3f435b;

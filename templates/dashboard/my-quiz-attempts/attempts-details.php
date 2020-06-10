@@ -97,8 +97,8 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
 
 <div class="tutor-quiz-attempt-review-wrap">
     <div class="attempt-answers-header">
-        <h5><?php echo __('Quiz:','tutor')." <a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></h5>
-        <p><?php echo __('Course:','tutor')." <a href='" .get_permalink($attempt_data->course_id)."'>".get_the_title($attempt_data->course_id)."</a>"; ?></p>
+        <div class="attempt-header-quiz"><?php echo __('Quiz:','tutor')." <a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></div>
+        <div class="attempt-header-course"><?php echo __('Course:','tutor')." <a href='" .get_permalink($attempt_data->course_id)."'>".get_the_title($attempt_data->course_id)."</a>"; ?></div>
     </div>
         
     <table class="wp-list-table">
@@ -176,7 +176,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
     <div class="tutor-quiz-attempt-review-wrap">
         <div class="quiz-attempt-answers-wrap">
             <div class="attempt-answers-header">
-                <h3><?php _e('Instructor Feedback', 'tutor'); ?></h3>
+                <div class="attempt-header-quiz"><?php _e('Instructor Feedback', 'tutor'); ?></div>
             </div>
             <div class="instructor-feedback-content">
                 <p><?php echo $feedback; ?></p>
@@ -194,7 +194,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
         <div class="quiz-attempt-answers-wrap">
 
             <div class="attempt-answers-header">
-                <?php _e('Quiz Overview', 'tutor'); ?>
+                <div class="attempt-header-quiz"><?php _e('Quiz Overview', 'tutor'); ?></div>
             </div>
 
             <table class="wp-list-table">

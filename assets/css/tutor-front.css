@@ -7770,7 +7770,7 @@ label[for=tutor_withdraw_amount] {
 .quiz-attempt-answers-wrap .attempt-answers-header {
   padding: 30px 20px;
 }
-.quiz-attempt-answers-wrap .attempt-answers-header h3 {
+.quiz-attempt-answers-wrap .attempt-answers-header .attempt-header-quiz {
   font-size: 20px;
   line-height: 1.5;
   color: #3f435b;
@@ -7850,12 +7850,12 @@ label[for=tutor_withdraw_amount] {
 .tutor-quiz-attempt-review-wrap .attempt-answers-header a {
   color: #3f435b;
 }
-.tutor-quiz-attempt-review-wrap .attempt-answers-header > p {
+.tutor-quiz-attempt-review-wrap .attempt-answers-header .attempt-header-course {
   color: #737787;
   margin-top: 10px;
   margin-bottom: 0;
 }
-.tutor-quiz-attempt-review-wrap .attempt-answers-header h3 {
+.tutor-quiz-attempt-review-wrap .attempt-answers-header .attempt-header-quiz {
   font-size: 20px;
   line-height: 1.5;
   color: #3f435b;

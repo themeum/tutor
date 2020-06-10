@@ -182,7 +182,7 @@ $user = get_userdata($user_id);
         <div class="quiz-attempt-answers-wrap">
 
             <div class="attempt-answers-header">
-                <h3><?php _e('Quiz Overview', 'tutor'); ?></h3>
+                <div class="attempt-header-quiz"><?php _e('Quiz Overview', 'tutor'); ?></div>
             </div>
 
             <table class="wp-list-table">
@@ -339,7 +339,7 @@ $user = get_userdata($user_id);
 
 <div class="quiz-attempt-answers-wrap">
     <div class="attempt-answers-header">
-        <h3><?php _e('Instructor Feedback', 'tutor'); ?></h3>
+        <div class="attempt-header-quiz"><?php _e('Instructor Feedback', 'tutor'); ?></div>
     </div>
     <div class="tutor-instructor-feedback-wrap">
         <textarea class="tutor-instructor-feedback-content" style="width:100%; height: 100px;"><?php echo get_post_meta($attempt_id, 'instructor_feedback', true); ?></textarea>
