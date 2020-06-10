@@ -1,5 +1,16 @@
 # TutorLMS Changelog
 
+### 1.6.3 - 20 May, 2020
+
+* New: Now students can answer Q&A from the frontend
+* New: Set answer word limit for Open-Ended and Essay type questions
+* New: Replace the login error message for an incorrect password with your own custom message
+* Fix: Randomize feature not working for answering options
+* Fix: Close login popup without show any error message.
+* Fix: Password/username validation messages and UX
+* Fix: Social share content issue.
+* Fix: Course duration and video playback time validation.
+
 ### 1.6.2 - 14 May, 2020
 
 * Added: Display Name preference on the certificate, added settings to Dashboard > Settings > Profile

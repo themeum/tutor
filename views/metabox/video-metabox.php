@@ -134,17 +134,17 @@ if ( $post->post_type !== tutor()->course_post_type){
             <div class="tutor-option-gorup-fields-wrap">
                 <div class="tutor-lesson-video-runtime">
                     <div class="tutor-option-group-field">
-                        <input type="text" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]">
+                        <input type="number" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]">
                         <p class="desc"><?php _e('HH', 'tutor'); ?></p>
                     </div>
 
                     <div class="tutor-option-group-field">
-                        <input type="text" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]">
+                        <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]">
                         <p class="desc"><?php _e('MM', 'tutor'); ?></p>
                     </div>
 
                     <div class="tutor-option-group-field">
-                        <input type="text" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]">
+                        <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]">
                         <p class="desc"><?php _e('SS', 'tutor'); ?></p>
                     </div>
                 </div>
