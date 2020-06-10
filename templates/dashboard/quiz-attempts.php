@@ -26,7 +26,7 @@ if ( $quiz_attempts_count ){
     <div class="tutor-quiz-attempt-history">
         <table>
             <tr>
-                <th><?php _e('Course Info', 'tutor'); ?></th>
+                <th><?php _e('Course InfoA', 'tutor'); ?></th>
                 <th><?php _e('Correct Answer', 'tutor'); ?></th>
                 <th><?php _e('Incorrect Answer', 'tutor'); ?></th>
                 <th><?php _e('Earned Mark', 'tutor'); ?></th>
