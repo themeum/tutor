@@ -2855,6 +2855,21 @@ a.tutor-button.button-light:hover,
   margin-bottom: 45px;
 }
 
+.tutor-button:disabled,
+.tutor-button[disabled],
+.tutor-button:disabled:hover,
+.tutor-button[disabled]:hover {
+  border: 0px;
+  background-color: #DCDCE1;
+  color: #737787;
+  cursor: default;
+}
+
+.tutor-button span {
+  font-size: 12px;
+  display: block;
+}
+
 .tutor-button-block {
   width: 100%;
   text-align: center;
