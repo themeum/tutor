@@ -565,6 +565,11 @@ jQuery(document).ready(function ($) {
             return;
         }
 
+        var feedBackNext = feedback_response($question_wrap);
+        if (!feedBackNext){
+            return;
+        }
+
         var question_id = parseInt($that.closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
 
         var next_question_id = $that.closest('.quiz-attempt-single-question').attr('data-next-question-id');
@@ -586,6 +591,12 @@ jQuery(document).ready(function ($) {
 
             }
         }
+    });
+
+
+    $(document).on('click', '.tutor-quiz-answer-next-btn', function (e) {
+        e.preventDefault();
+
     });
 
 
@@ -728,6 +739,60 @@ jQuery(document).ready(function ($) {
         return validated;
     }
 
+    function feedback_response($question_wrap) {
+        var goNext = false;
+
+        var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
+        $('.wrong-right-text').remove();
+        $('.quiz-answer-input-bottom').removeClass('wrong-answer');
+
+        if (feedBackMode === 'retry'){
+            var $inputs = $question_wrap.find('input');
+            var $checkedInputs = $question_wrap.find('input[type="radio"]:checked');
+
+            var validatedTrue = true;
+
+
+            if ($checkedInputs.length == 0) {
+                validatedTrue = false;
+            }else{
+
+                $checkedInputs.each(function(){
+                    var $input = $(this);
+
+                    var $type = $input.attr('type');
+                    if ($type === 'radio' || $type === 'checkbox'){
+
+                        var isTrue = $input.attr('data-is-correct') == '1';
+                        if ( isTrue){
+
+                        }else{
+                            if ($input.prop("checked")) {
+                                $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append('<span class="wrong-right-text"><i class="tutor-icon-line-cross"></i> Incorrect, Please try again</span>');
+                            }
+                            validatedTrue = false;
+                        }
+
+
+                    }
+                });
+
+
+
+            }
+
+
+        }
+
+        console.log(validatedTrue);
+
+        if (validatedTrue){
+            goNext = true;
+        }
+
+
+        return goNext;
+    }
 
 
     /**

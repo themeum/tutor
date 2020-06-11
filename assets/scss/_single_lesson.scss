@@ -1196,10 +1196,12 @@ Course question and answer
 }
 .quiz-answer-input-bottom{
     position: relative;
-    display: inline-block;
+    display: flex;
     line-height: 20px;
 }
-
+.quiz-answer-input-bottom.wrong-answer .quiz-answer-input-field{
+    border: 1px solid #e27d8b;
+}
 .tutor-quiz-answers-wrap label input{
     display: none;
 }

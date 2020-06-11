@@ -3436,7 +3436,6 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-
 		$max_questions_count = (int) tutor_utils()->get_quiz_option(get_the_ID(), 'max_questions_for_answer');
 		$total_question = (int) $wpdb->get_var("select count(question_id) from {$wpdb->tutor_quiz_questions} where quiz_id = {$quiz_id}");
 
