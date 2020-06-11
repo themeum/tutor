@@ -383,6 +383,11 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    // Quiz Review : Tooltip
+    $(".tooltip-btn").on("hover", function (e) {
+        $(this).toggleClass("active");
+    });
+
     // tutor course content accordion
     $('.tutor-course-topic.tutor-active').find('.tutor-course-lessons').slideDown();
     $('.tutor-course-title').on('click', function () {
