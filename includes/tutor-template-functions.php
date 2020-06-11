@@ -1019,10 +1019,19 @@ function tutor_single_course_add_to_cart($echo = true){
     $isLoggedIn = is_user_logged_in();
     $output = '';
 
-    tutor_load_template( 'single.course.add-to-cart' );
-    $output .= apply_filters( 'tutor_course/single/add-to-cart', ob_get_clean() );
+    $total_enrolled = tutor_utils()->count_enrolled_users_by_course();
+    $maximum_students = (int) tutor_utils()->get_course_settings(null, 'maximum_students');
 
-    if ( ! $isLoggedIn){
+    if ($maximum_students && $maximum_students === $total_enrolled) {
+        $template = 'closed-enrollment';
+    } else {
+        $template = 'add-to-cart';
+    }
+
+    tutor_load_template( 'single.course.'.$template );
+    $output .= apply_filters( 'tutor_course/single/'.$template, ob_get_clean() );
+
+    if (!$isLoggedIn) {
         ob_start();
         tutor_load_template( 'single.course.login' );
         $login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );

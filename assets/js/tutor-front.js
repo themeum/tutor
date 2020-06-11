@@ -980,16 +980,16 @@ jQuery(document).ready(function ($) {
     /**
      * Delete Course
      */
-    $(document).on('click', '.tutor-mycourse-delete-btn', function (e) {
+    $(document).on('click', '.tutor-dashboard-element-delete-btn', function (e) {
         e.preventDefault();
-        var course_id = $(this).attr('data-course-id');
-        $('#tutor-course-delete-id').val(course_id);
+        var element_id = $(this).attr('data-id');
+        $('#tutor-dashboard-delete-element-id').val(element_id);
     });
-    $(document).on('submit', '#tutor-delete-course-form', function (e) {
+    $(document).on('submit', '#tutor-dashboard-delete-element-form', function (e) {
         e.preventDefault();
 
-        var course_id = $('#tutor-course-delete-id').val();
-        var $btn = $('.tutor-modal-course-delete-btn');
+        var element_id = $('#tutor-dashboard-delete-element-id').val();
+        var $btn = $('.tutor-modal-element-delete-btn');
         var data = $(this).serialize();
 
         $.ajax({
@@ -999,9 +999,9 @@ jQuery(document).ready(function ($) {
             beforeSend: function () {
                 $btn.addClass('updating-icon');
             },
-            success: function (data) {
-                if (data.success) {
-                    $('#tutor-dashboard-course-' + course_id).remove();
+            success: function (res) {
+                if (res.success) {
+                    $('#tutor-dashboard-'+res.data.element+'-' + element_id).remove();
                 }
             },
             complete: function () {
