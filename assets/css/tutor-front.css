@@ -648,7 +648,7 @@ table.course-single-gradebooks .datetime {
 .tutor-topics-lesson-list .tutor-topics-in-single-lesson {
   border-radius: 4px;
   margin-bottom: 30px;
-  border: 1px solid #E8EFF1;
+  border: 1px solid #e8eff1;
 }
 
 .tutor-single-lesson-wrap {
@@ -680,7 +680,7 @@ table.course-single-gradebooks .datetime {
   width: 400px;
   height: 100vh;
   overflow-y: scroll;
-  background: #F4F8FA;
+  background: #f4f8fa;
 }
 .tutor-spotlight-mode #tutor-single-entry-content {
   padding-left: 400px;
@@ -714,7 +714,7 @@ table.course-single-gradebooks .datetime {
   display: flex;
   color: var(--tutor-text-color);
   position: relative;
-  border-top: 1px solid #E8EFF1;
+  border-top: 1px solid #e8eff1;
 }
 
 .tutor-single-lesson-button-group .tutor-single-lesson-button:first-child a {
@@ -793,7 +793,7 @@ span.toogle-informaiton-icon {
   vertical-align: middle;
   display: inline-block;
   padding: 5px;
-  color: #C7C7C7;
+  color: #c7c7c7;
   -webkit-transition: 300ms;
   transition: 300ms;
   cursor: pointer;
@@ -805,7 +805,7 @@ span.toogle-informaiton-icon {
 
 .tutor-single-lesson-button-group .tutor-single-lesson-button a > i:first-child,
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a > i:first-child {
-  color: #C7C7C7;
+  color: #c7c7c7;
   line-height: 22px;
   display: inline-block;
   vertical-align: middle;
@@ -818,7 +818,7 @@ span.toogle-informaiton-icon {
 
 .tutor-topics-in-single-lesson .tutor-topics-summery {
   padding: 14px;
-  border-top: 1px solid #DCE4E6;
+  border-top: 1px solid #dce4e6;
   display: none;
 }
 
@@ -831,7 +831,7 @@ span.toogle-informaiton-icon {
 .tutor-lessons-under-topic .tutor-lesson-right-icons .tutor-lesson-complete {
   height: 16px;
   width: 16px;
-  border: 1px solid #E8EFF1;
+  border: 1px solid #e8eff1;
   border-radius: 50%;
   font-size: 9px;
   display: inline-block;
@@ -963,11 +963,13 @@ span.toogle-informaiton-icon {
   margin-right: 3px;
 }
 
-.tutor-lesson-content-area, .tutor-quiz-single-wrap {
+.tutor-lesson-content-area,
+.tutor-quiz-single-wrap {
   margin: 0 100px 80px;
 }
 @media (max-width: 1366px) {
-  .tutor-lesson-content-area, .tutor-quiz-single-wrap {
+  .tutor-lesson-content-area,
+.tutor-quiz-single-wrap {
     margin: 0 60px 80px;
   }
 }
@@ -1006,7 +1008,7 @@ span.toogle-informaiton-icon {
 }
 
 .tutor-sidebar-tabs-wrap {
-  border-top: 1px solid #E0E9EC;
+  border-top: 1px solid #e0e9ec;
 }
 
 .tutor-tabs-btn-group {
@@ -1015,13 +1017,13 @@ span.toogle-informaiton-icon {
 }
 
 .tutor-tabs-btn-group a {
-  background-color: #F1F6F8;
+  background-color: #f1f6f8;
   color: var(--tutor-text-color);
   display: block;
   line-height: 70px;
   width: 100%;
   text-align: center;
-  border: 1px solid #E0E9EC;
+  border: 1px solid #e0e9ec;
   border-top: none;
 }
 
@@ -1056,7 +1058,7 @@ span.toogle-informaiton-icon {
 }
 
 .tutor-single-lesson-wrap {
-  background: #F4F8FA;
+  background: #f4f8fa;
 }
 
 .tutor-lesson-video-wrap .plyr--video {
@@ -1069,7 +1071,7 @@ span.toogle-informaiton-icon {
 }
 
 #tutor-lesson-sidebar-qa-tab-content .tutor-add-question-wrap {
-  border-top: 1px solid #E8EFF1;
+  border-top: 1px solid #e8eff1;
   padding-top: 25px;
 }
 
@@ -1102,7 +1104,7 @@ span.toogle-informaiton-icon {
 
 .tutor-lesson-sidebar-emptyqa-wrap i {
   font-size: 150px;
-  color: #E8EFF1;
+  color: #e8eff1;
   line-height: 0.8;
 }
 
@@ -1113,11 +1115,11 @@ span.toogle-informaiton-icon {
 
 .tutor-attachments-wrap .tutor-lesson-attachment {
   display: inline-block;
-  border: 1px solid #E8EFF1;
+  border: 1px solid #e8eff1;
   border-radius: 4px;
   padding: 10px 16px 10px 12px;
   overflow: hidden;
-  background: #F4F7F8;
+  background: #f4f7f8;
   margin: 3px;
   -webkit-transition: 300ms;
   transition: 300ms;
@@ -1292,7 +1294,7 @@ span.toogle-informaiton-icon {
 .tutor-lead-info-btn-group .tutor-course-compelte-form-wrap button {
   display: block;
   width: 100%;
-  background: #E8EFF1;
+  background: #e8eff1;
   color: var(--tutor-light-color);
 }
 
@@ -1536,7 +1538,7 @@ Course question and answer
 /*}*/
 .tutor_question_area {
   padding: 25px 20px;
-  background: #F4F7F8;
+  background: #f4f7f8;
   border-radius: 4px;
 }
 
@@ -1573,7 +1575,7 @@ Course question and answer
 }
 
 .tutor_admin_answers_list_wrap .tutor_question_area {
-  background: #EDF9F1;
+  background: #edf9f1;
 }
 
 .question-top-meta .tutor-question-avater a {
@@ -1667,7 +1669,7 @@ Course question and answer
 /* Single Quiz */
 /* ********************* */
 .tutor-quiz-header span {
-  background: #F88F1C;
+  background: #f88f1c;
   color: #ffffff;
   display: inline-block;
   padding: 4px 10px;
@@ -1698,8 +1700,8 @@ Course question and answer
   list-style: none;
   margin: 20px 0 40px;
   padding: 15px 0;
-  border-top: 1px solid #DCDFE5;
-  border-bottom: 1px solid #DCDFE5;
+  border-top: 1px solid #dcdfe5;
+  border-bottom: 1px solid #dcdfe5;
   display: flex;
   justify-content: space-between;
 }
@@ -1752,6 +1754,7 @@ Course question and answer
 .tutor-quiz-attempt-history table {
   border-collapse: collapse;
   border-radius: 4px;
+  margin-bottom: 0;
 }
 
 .tutor-quiz-attempt-history th {
@@ -1761,7 +1764,7 @@ Course question and answer
 .tutor-quiz-attempt-history table,
 .tutor-quiz-attempt-history th,
 .tutor-quiz-attempt-history td {
-  border: 1px solid #E8EFF1;
+  border: 1px solid #e8eff1;
   padding: 10px !important;
 }
 
@@ -1777,7 +1780,7 @@ Course question and answer
 }
 
 .tutor-quiz-attempt-history table span.result-fail {
-  background: #DF3247;
+  background: #df3247;
 }
 
 .tutor-quiz-attempt-history table span.result-pass {
@@ -1879,7 +1882,7 @@ Course question and answer
 
 .tutor-quiz-answers-wrap textarea {
   background: transparent;
-  border: 1px solid #D4DADB;
+  border: 1px solid #d4dadb;
   height: 175px;
   border-radius: 5px;
   box-shadow: none;
@@ -1935,7 +1938,7 @@ Course question and answer
 .tutor-quiz-answers-wrap label input + span {
   width: 20px;
   height: 20px;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   display: inline-block;
   border-radius: 2px;
   position: relative;
@@ -1977,7 +1980,7 @@ Course question and answer
 }
 
 .question-type-ordering-item {
-  border: 1px solid #D4DADB;
+  border: 1px solid #d4dadb;
   padding: 10px;
   margin-bottom: 10px;
   width: 250px;
@@ -2028,12 +2031,12 @@ Course question and answer
 .quiz-answer-matching-droppable {
   height: 48px;
   min-width: 200px;
-  border: 1px dashed #D4DADB;
+  border: 1px dashed #d4dadb;
 }
 
 .quiz-draggable-answer-item {
   padding: 10px 20px;
-  border: 1px solid #D4DADB;
+  border: 1px solid #d4dadb;
   margin-right: 10px;
   margin-bottom: 10px;
   background-color: #fff;
@@ -2073,8 +2076,8 @@ Course question and answer
 
 .answer-type-image_matching .quiz-answer-item-matching {
   /*display: inline-block;
-    width: 190px;
-    margin-right: 10px;*/
+       width: 190px;
+       margin-right: 10px;*/
   display: block;
 }
 
@@ -2114,7 +2117,8 @@ Course question and answer
   color: #ffffff;
 }
 
-.tutor-quiz-questions-pagination ul li a:hover, .tutor-quiz-questions-pagination ul li a.active {
+.tutor-quiz-questions-pagination ul li a:hover,
+.tutor-quiz-questions-pagination ul li a.active {
   background-color: var(--tutor-primary-color);
 }
 
@@ -2144,7 +2148,7 @@ Course question and answer
 .tutor-quiz-answers-wrap .quiz-image-answering-input-field-wrap input {
   width: 100%;
   display: block;
-  border: 1px solid #D4DADB;
+  border: 1px solid #d4dadb;
   box-shadow: none;
   background: transparent;
   border-radius: 2px;
@@ -2193,7 +2197,8 @@ div[class*=tutor-course-col] {
   justify-content: space-between;
 }
 
-.tutor-course-loop a, .tutor-widget-course a {
+.tutor-course-loop a,
+.tutor-widget-course a {
   text-decoration: none !important;
 }
 
@@ -2251,7 +2256,7 @@ div[class*=tutor-course-col] {
 
 .tutor-course-loop-level {
   display: inline-block;
-  background: #9013FE;
+  background: #9013fe;
   padding: 0 7px;
   color: #fff;
   font-size: 12px;
@@ -2280,7 +2285,7 @@ div[class*=tutor-course-col] {
 }
 
 .tutor-loop-rating-wrap {
-  color: #F8C51C;
+  color: #f8c51c;
   margin-bottom: 2px;
   font-size: 16px;
 }
@@ -2544,13 +2549,15 @@ div[class*=tutor-course-col] {
   height: 100%;
 }
 
-.clearfix:before, .clearfix:after {
+.clearfix:before,
+.clearfix:after {
   display: block;
   clear: both;
   content: "";
 }
 
-.tutor-loop-author, .tutor-meta {
+.tutor-loop-author,
+.tutor-meta {
   color: #bac0cf;
 }
 
@@ -2619,7 +2626,7 @@ Topicstutor-course-title
   margin: 0 -20px -20px !important;
   padding: 12px 20px;
   overflow: hidden;
-  border-top: 1px solid #DCDFE5;
+  border-top: 1px solid #dcdfe5;
   font-size: 14px;
 }
 
@@ -2662,21 +2669,21 @@ Alert Box Css
 
 .tutor-info-msg {
   color: var(--tutor-primary-color);
-  background-color: #BEF;
+  background-color: #bef;
 }
 
 .tutor-success-msg {
   color: var(--tutor-success-button-color);
-  background-color: #DFF2BF;
+  background-color: #dff2bf;
 }
 
 .tutor-warning-msg {
-  color: #9F6000;
-  background-color: #FEEFB3;
+  color: #9f6000;
+  background-color: #feefb3;
 }
 
 .tutor-error-msg {
-  color: #D8000C;
+  color: #d8000c;
   background-color: #fbdcdc;
   border: 1px solid #d8000c;
 }
@@ -2684,7 +2691,9 @@ Alert Box Css
 /**
 End Alert box css
  */
-.cart-required-login, .cart-required-login a, .cart-required-login form {
+.cart-required-login,
+.cart-required-login a,
+.cart-required-login form {
   cursor: pointer;
 }
 
@@ -2740,8 +2749,8 @@ a.tutor-button.default-btn,
 .tutor-button.default-btn,
 a.tutor-btn.default-btn,
 .tutor-btn.default-btn {
-  color: #393C40;
-  border: 1px solid #B8BABE;
+  color: #393c40;
+  border: 1px solid #b8babe;
   background: #fff;
 }
 a.tutor-button.default-btn i,
@@ -2785,26 +2794,26 @@ a.tutor-btn.bordered-btn:hover,
 
 a.tutor-button.button-light,
 .tutor-button.button-light {
-  color: #B1B8C9;
-  background-color: #DAE4E6;
-  border: 1px solid #DAE4E6;
+  color: #b1b8c9;
+  background-color: #dae4e6;
+  border: 1px solid #dae4e6;
 }
 
 a.tutor-button.button-light:hover,
 .tutor-button.button-light:hover {
-  color: #939BAE;
-  background-color: #E8EFF1;
-  border: 1px solid #E8EFF1;
+  color: #939bae;
+  background-color: #e8eff1;
+  border: 1px solid #e8eff1;
 }
 
 .tutor-button.tutor-danger {
-  background-color: #E53935;
-  border-color: #E53935;
+  background-color: #e53935;
+  border-color: #e53935;
 }
 
 .tutor-button.tutor-danger:hover {
-  background-color: #E53935;
-  border-color: #E53935;
+  background-color: #e53935;
+  border-color: #e53935;
   filter: brightness(0.9);
 }
 
@@ -2837,14 +2846,6 @@ a.tutor-button.button-light:hover,
 .tutor-button span {
   font-size: 12px;
   display: block;
-  text-align: left;
-}
-
-.tutor-course-enroll-wrap .tutor-button:disabled,
-.tutor-course-enroll-wrap .tutor-button[disabled] {
-  text-align: left;
-  width: 100%;
-  padding: 10px 25px;
 }
 
 .tutor-button-block {
@@ -2918,7 +2919,8 @@ a.tutor-button.button-light:hover,
   display: block;
 }
 
-a.tutor-profile-photo-upload-btn, button.tutor-profile-photo-upload-btn {
+a.tutor-profile-photo-upload-btn,
+button.tutor-profile-photo-upload-btn {
   position: absolute;
   top: 100%;
   background-color: var(--tutor-primary-color);
@@ -2929,7 +2931,8 @@ a.tutor-profile-photo-upload-btn, button.tutor-profile-photo-upload-btn {
   padding: 9px 0;
 }
 
-a.tutor-profile-photo-upload-btn:hover, button.tutor-profile-photo-upload-btn:hover {
+a.tutor-profile-photo-upload-btn:hover,
+button.tutor-profile-photo-upload-btn:hover {
   background-color: var(--tutor-primary-hover-color);
   color: #fff;
 }
@@ -3114,11 +3117,11 @@ Instructor
 .tutor-login-form-wrap input[type=text] {
   width: 100%;
   display: block;
-  border: 1px solid #E8EFF1;
+  border: 1px solid #e8eff1;
   box-shadow: none;
   margin-bottom: 20px;
   border-radius: 4px;
-  background: #ECEEF4;
+  background: #eceef4;
   line-height: 48px;
   padding: 0;
   text-indent: 15px;
@@ -3173,7 +3176,7 @@ Instructor
 .tutor-form-register-wrap a,
 .tutor-login-rememeber-wrap a,
 .tutor-login-rememeber-wrap label {
-  color: #606C8F;
+  color: #606c8f;
   vertical-align: middle;
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
@@ -3302,7 +3305,7 @@ Instructor
 .tutor-form-group input[type=password] {
   width: 100%;
   display: block;
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   box-shadow: none;
   margin-bottom: 20px;
   border-radius: 4px;
@@ -3325,7 +3328,7 @@ Instructor
   line-height: 50px;
   padding: 0 12px;
   background: transparent;
-  border-right: 1px solid #DCDFE5;
+  border-right: 1px solid #dcdfe5;
   top: 1px;
 }
 .tutor-form-group span.tutor-input-prepand + input {
@@ -3348,8 +3351,8 @@ Instructor
 }
 .tutor-option-field .select2-container li.select2-selection__choice,
 .tutor-form-group .select2-container li.select2-selection__choice {
-  background: #EBEEF0;
-  color: #606C8F;
+  background: #ebeef0;
+  color: #606c8f;
   line-height: 29px;
   border-radius: 3px;
   padding: 0 9px;
@@ -3365,25 +3368,25 @@ Instructor
 }
 .tutor-option-field .select2-container .select2-search__field::-webkit-input-placeholder,
 .tutor-form-group .select2-container .select2-search__field::-webkit-input-placeholder {
-  color: #ABAFB6;
+  color: #abafb6;
 }
 .tutor-option-field .select2-container .select2-search__field::-moz-placeholder,
 .tutor-form-group .select2-container .select2-search__field::-moz-placeholder {
-  color: #ABAFB6;
+  color: #abafb6;
 }
 .tutor-option-field .select2-container .select2-search__field:-ms-input-placeholder,
 .tutor-form-group .select2-container .select2-search__field:-ms-input-placeholder {
-  color: #ABAFB6;
+  color: #abafb6;
 }
 .tutor-option-field .select2-container .select2-search__field:-moz-placeholder,
 .tutor-form-group .select2-container .select2-search__field:-moz-placeholder {
-  color: #ABAFB6;
+  color: #abafb6;
 }
 .tutor-option-field .select2-container .select2-selection--single,
 .tutor-option-field .select2-container .select2-selection--multiple,
 .tutor-form-group .select2-container .select2-selection--single,
 .tutor-form-group .select2-container .select2-selection--multiple {
-  border-color: #DCDFE5;
+  border-color: #dcdfe5;
 }
 .tutor-option-field .select2-container.select2-container--focus .select2-selection--single, .tutor-option-field .select2-container.select2-container--focus .select2-selection--multiple,
 .tutor-form-group .select2-container.select2-container--focus .select2-selection--single,
@@ -3518,7 +3521,7 @@ Instructor
 /* Tutor Price Preview Box */
 /* ********************* */
 .tutor-price-preview-box {
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   padding: 20px;
   margin-bottom: 30px;
   border-radius: 4px;
@@ -3575,7 +3578,7 @@ Instructor
 /* Tutor Course Review Wrap */
 /* ************************ */
 .tutor-course-reviews-wrap {
-  border: 1px solid #E8EFF1;
+  border: 1px solid #e8eff1;
   border-radius: 4px;
 }
 
@@ -3588,7 +3591,7 @@ Instructor
 }
 
 .tutor-review-individual-item {
-  border-top: 1px solid #E8EFF1;
+  border-top: 1px solid #e8eff1;
   padding: 30px;
   overflow: hidden;
 }
@@ -3687,13 +3690,13 @@ Instructor
 }
 
 .individual-review-rating-wrap {
-  color: #F8C51C;
+  color: #f8c51c;
 }
 
 .individual-review-rating-wrap i,
 .course-avg-rating-html i {
   margin-right: 4px;
-  color: #F8C51C;
+  color: #f8c51c;
 }
 
 .course-rating-meter {
@@ -3701,7 +3704,7 @@ Instructor
 }
 
 .course-rating-meter i.tutor-icon-star-full {
-  color: #F8C51C;
+  color: #f8c51c;
 }
 
 .rating-meter-bar-wrap {
@@ -3719,14 +3722,14 @@ Instructor
 .rating-meter-bar {
   height: 5px;
   width: 100%;
-  background: #E8EFF1;
+  background: #e8eff1;
   margin-top: 11px;
   border-radius: 15px;
   overflow: hidden;
 }
 
 .rating-meter-fill-bar {
-  background: #F8C51C;
+  background: #f8c51c;
   height: 5px;
 }
 
@@ -3743,7 +3746,8 @@ Instructor
   margin: 20px 0;
 }
 
-.tutor-pagination a, .tutor-pagination span,
+.tutor-pagination a,
+.tutor-pagination span,
 .tutor-pagination-wrap a,
 .tutor-pagination-wrap span {
   padding: 3px;
@@ -3764,7 +3768,7 @@ Instructor
 
 .tutor-course-tags a {
   padding: 6px 15px;
-  background: #E8EFF1;
+  background: #e8eff1;
   display: inline-block;
   margin: 5px;
   color: var(--tutor-text-color);
@@ -3801,7 +3805,7 @@ Instructor
 
 .prerequisites-course-lists li a {
   padding: 13px 15px;
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   margin-bottom: 20px;
   border-radius: 4px;
   font-weight: 500;
@@ -3863,8 +3867,8 @@ Instructor
 .prerequisites-course-checkmark i {
   height: 24px;
   width: 24px;
-  background: #DBDDDD;
-  color: #DBDDDD;
+  background: #dbdddd;
+  color: #dbdddd;
   display: inline-block;
   text-align: center;
   border-radius: 2px;
@@ -4089,17 +4093,17 @@ button.tm-close.tutor-icon-line-cross:hover {
 }
 
 .label-status-completed {
-  background-color: #4BD863;
+  background-color: #4bd863;
   color: #ffffff;
 }
 
 .label-status-cancelled {
-  background-color: #FD6A03;
+  background-color: #fd6a03;
   color: #ffffff;
 }
 
 .label-status-on-hold {
-  background-color: #DB5382;
+  background-color: #db5382;
   color: #ffffff;
 }
 
@@ -4170,7 +4174,7 @@ button.tm-close.tutor-icon-line-cross:hover {
 
 .tutor-assignment-attachment-upload-wrap .tutor-form-group label {
   padding: 15px 17px;
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   overflow: hidden;
   margin-right: 15px;
   border-radius: 4px;
@@ -4201,7 +4205,7 @@ button.tm-close.tutor-icon-line-cross:hover {
 }
 
 #tutor-course-topics .tutor-topics-wrap {
-  border-bottom: 1px solid #F6F8FA;
+  border-bottom: 1px solid #f6f8fa;
   padding-bottom: 0;
   margin: 0;
 }
@@ -4209,8 +4213,8 @@ button.tm-close.tutor-icon-line-cross:hover {
 .tutor-untopics-lessons .course-content-item,
 .course-contents .course-content-item {
   padding: 10px 12px 10px 25px;
-  border-bottom: 1px solid #D9D9D9;
-  background-color: #EBEEF0;
+  border-bottom: 1px solid #d9d9d9;
+  background-color: #ebeef0;
 }
 .tutor-untopics-lessons .course-content-item .tutor-lesson-top,
 .course-contents .course-content-item .tutor-lesson-top {
@@ -4227,7 +4231,7 @@ button.tm-close.tutor-icon-line-cross:hover {
 }
 .tutor-untopics-lessons .course-content-item .tutor-lesson-top a,
 .course-contents .course-content-item .tutor-lesson-top a {
-  color: #393C40;
+  color: #393c40;
   font-weight: 400;
   display: inline-flex;
   align-items: center;
@@ -4235,7 +4239,7 @@ button.tm-close.tutor-icon-line-cross:hover {
 .tutor-untopics-lessons .course-content-item .tutor-lesson-top i,
 .course-contents .course-content-item .tutor-lesson-top i {
   padding-right: 7px;
-  color: #393C40;
+  color: #393c40;
 }
 .tutor-untopics-lessons .course-content-item .tutor-lesson-top .tutor-updating-message i,
 .course-contents .course-content-item .tutor-lesson-top .tutor-updating-message i {
@@ -4255,14 +4259,15 @@ button.tm-close.tutor-icon-line-cross:hover {
 }
 
 #tutor-course-topics .course-content-item:hover {
-  background-color: #EBEEF0;
+  background-color: #ebeef0;
 }
 
 #tutor-course-topics .tutor-lessons {
   padding-left: 0;
 }
 
-#tutor-course-topics .tutor-lesson-top, #tutor-course-topics .tutor-lesson-top i {
+#tutor-course-topics .tutor-lesson-top,
+#tutor-course-topics .tutor-lesson-top i {
   font-size: 15px;
 }
 
@@ -4297,7 +4302,7 @@ button.tm-close.tutor-icon-line-cross:hover {
 }
 
 #tutor-course-topics .tutor-lesson-top a {
-  color: #393C40;
+  color: #393c40;
 }
 
 #tutor-course-topics .tutor-lesson-top a.tutor-updating-message i {
@@ -4366,7 +4371,8 @@ p.course-empty-content {
   text-align: center;
 }
 
-.tutor-metabox-add-topics .tutor-option-field-row:last-child, .tutor-topics-edit-form .tutor-option-field-row:last-child {
+.tutor-metabox-add-topics .tutor-option-field-row:last-child,
+.tutor-topics-edit-form .tutor-option-field-row:last-child {
   border-bottom: none;
 }
 
@@ -4393,7 +4399,7 @@ p.course-empty-content {
 }
 
 .tutor-topic-title a {
-  color: #393C40;
+  color: #393c40;
 }
 
 .tutor-topic-title .topic-inner-title {
@@ -4409,7 +4415,7 @@ p.course-empty-content {
 }
 
 .tutor-topic-title span.expand-collapse-wrap {
-  border-left: 1px solid #E7E7E7;
+  border-left: 1px solid #e7e7e7;
 }
 
 .tutor-topic-title span.expand-collapse-wrap a {
@@ -4457,7 +4463,7 @@ p.course-empty-content {
 }
 
 .tutor-topics-wrap:nth-child(2n) {
-  background: #F6F8FA;
+  background: #f6f8fa;
 }
 
 #tutor-course-content-wrap {
@@ -4473,7 +4479,7 @@ p.course-empty-content {
 }
 
 #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body {
-  background: #EBEEF0;
+  background: #ebeef0;
   padding: 0px;
 }
 
@@ -4844,7 +4850,7 @@ Quiz Modal
 }
 
 .tutor-modal-wrap.tutor-quiz-builder-modal-wrap .modal-container {
-  background-color: #F1F1F1;
+  background-color: #f1f1f1;
   padding: 0;
 }
 
@@ -4861,15 +4867,15 @@ Quiz Modal
 #tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item {
   padding: 15px 25px;
   display: inline-block;
-  color: #393C40;
-  border-left: 1px solid #F1F1F1;
+  color: #393c40;
+  border-left: 1px solid #f1f1f1;
   overflow: hidden;
   line-height: 17px;
   vertical-align: middle;
 }
 
 #tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item.active {
-  background-color: #F1F1F1;
+  background-color: #f1f1f1;
 }
 
 #tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item i {
@@ -4888,18 +4894,29 @@ Quiz Modal
   border-radius: 3px;
 }
 
-.quiz-modal-btn-next, .quiz-modal-btn-next:focus, .quiz-modal-btn-first-step, .quiz-modal-btn-first-step:focus, .quiz-modal-question-save-btn, .quiz-modal-question-save-btn:focus, .quiz-modal-settings-save-btn, .quiz-modal-settings-save-btn:focus {
+.quiz-modal-btn-next,
+.quiz-modal-btn-next:focus,
+.quiz-modal-btn-first-step,
+.quiz-modal-btn-first-step:focus,
+.quiz-modal-question-save-btn,
+.quiz-modal-question-save-btn:focus,
+.quiz-modal-settings-save-btn,
+.quiz-modal-settings-save-btn:focus {
   background-color: var(--tutor-primary-color);
   color: #ffffff;
 }
 
-.quiz-modal-btn-next:hover, .quiz-modal-btn-first-step:hover, .quiz-modal-question-save-btn:hover, .quiz-modal-settings-save-btn:hover {
+.quiz-modal-btn-next:hover,
+.quiz-modal-btn-first-step:hover,
+.quiz-modal-question-save-btn:hover,
+.quiz-modal-settings-save-btn:hover {
   color: #ffffff;
 }
 
-.quiz-modal-btn-cancel, .quiz-modal-btn-back {
-  color: #4B5981;
-  border: 1px solid #D4DADB;
+.quiz-modal-btn-cancel,
+.quiz-modal-btn-back {
+  color: #4b5981;
+  border: 1px solid #d4dadb;
 }
 
 .tutor-quiz-builder-form-row .quiz-form-warning {
@@ -4919,7 +4936,7 @@ Quiz Modal
   padding: 20px;
   -webkit-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   border-radius: 3px;
   margin-bottom: 20px;
 }
@@ -4929,19 +4946,19 @@ Quiz Modal
 }
 
 .tutor-course-builder-wrap {
-  border: 1px dashed #DCDFE5;
+  border: 1px dashed #dcdfe5;
 }
 
 /** Tutor Quiz Modal Form */
 .tutor-quiz-builder-modal-tabs-notice {
-  background: #D8D8D8;
+  background: #d8d8d8;
   line-height: 20px;
   padding: 10px 30px;
-  color: #A4A4A4;
+  color: #a4a4a4;
 }
 
 .tutor-quiz-builder-modal-tabs-notice a {
-  color: #A4A4A4;
+  color: #a4a4a4;
   text-decoration: underline;
 }
 
@@ -4956,13 +4973,13 @@ Quiz Modal
 }
 
 .tutor-quiz-builder-group > p.help {
-  color: #A4A4A4;
+  color: #a4a4a4;
   font-size: 12px;
   margin-top: 7px;
 }
 
 .tutor-quiz-builder-group > h4 {
-  color: #393C40;
+  color: #393c40;
   font-weight: 600;
   margin: 0 0 15px;
 }
@@ -4995,13 +5012,13 @@ Quiz Modal
   text-indent: 15px;
   background: #fff;
   display: inline-block;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   border-radius: 3px;
   box-shadow: none;
   height: 40px;
   margin: 0;
   width: 100%;
-  color: #393C40;
+  color: #393c40;
 }
 
 .tutor-quiz-builder-group textarea:focus,
@@ -5055,9 +5072,9 @@ Quiz Modal
 }
 
 .modal-container .tutor-quiz-add-question-btn {
-  border: 1px solid #C6C9CF;
+  border: 1px solid #c6c9cf;
   padding: 10px 15px;
-  color: #393C40;
+  color: #393c40;
   display: inline-block;
   border-radius: 3px;
 }
@@ -5104,7 +5121,7 @@ label.btn-switch input:checked + .btn-slider {
 }
 
 .tutor-select .select-header {
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   margin: 0;
   padding: 10px;
   width: 100%;
@@ -5129,7 +5146,7 @@ label.btn-switch input:checked + .btn-slider {
 }
 
 .tutor-select .tutor-select-options {
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   background-color: #fff;
   padding: 22px 10px 8px;
   width: calc(100% - 22px);
@@ -5151,7 +5168,7 @@ label.btn-switch input:checked + .btn-slider {
   position: relative;
   box-sizing: border-box;
   margin: 0 11px 15px;
-  border: 1px solid #E2E2E2;
+  border: 1px solid #e2e2e2;
   border-radius: 3px;
   font-size: 13px;
 }
@@ -5223,14 +5240,15 @@ i.tutor-icon-block.tutor-icon-matching {
 }
 
 i.tutor-icon-block.tutor-icon-image-matching {
-  background-color: #8a4a1b;
+  background-color: #f37512;
 }
 
 i.tutor-icon-block.tutor-icon-ordering {
   background-color: var(--tutor-primary-color);
 }
 
-i.tutor-icon-block.tutor-icon-plus-square-button, i.tutor-icon-block.tutor-icon-plus {
+i.tutor-icon-block.tutor-icon-plus-square-button,
+i.tutor-icon-block.tutor-icon-plus {
   background-color: var(--tutor-success-button-color);
 }
 
@@ -5241,7 +5259,7 @@ i.tutor-icon-block.tutor-icon-plus-square-button, i.tutor-icon-block.tutor-icon-
 a.back-to-quiz-questions-btn {
   font-size: 16px;
   font-weight: 300;
-  color: #393C40;
+  color: #393c40;
   margin-bottom: 10px;
   display: block;
 }
@@ -5276,7 +5294,7 @@ a.back-to-quiz-questions-btn.tutor-updating-message i {
   display: flex;
   background: #fff;
   padding: 10px;
-  border: 1px solid #E2E2E2;
+  border: 1px solid #e2e2e2;
   border-radius: 3px;
   max-width: calc(100% - 52px);
 }
@@ -5321,7 +5339,7 @@ a.back-to-quiz-questions-btn.tutor-updating-message i {
 }
 
 .tutor-quiz-builder-modal-wrap .tutor-field-type-slider {
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   padding: 20px 70px 20px 10px;
   background-color: #ffffff;
   position: relative;
@@ -5336,7 +5354,7 @@ a.back-to-quiz-questions-btn.tutor-updating-message i {
 }
 
 .tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-header {
-  background: #DEDEDE;
+  background: #dedede;
   border-radius: 4px;
 }
 
@@ -5383,7 +5401,7 @@ a.back-to-quiz-questions-btn.tutor-updating-message i {
   background-color: #fff;
   flex: 1;
   padding: 10px 15px;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   display: flex;
   line-height: 22px;
   border-radius: 3px;
@@ -5423,7 +5441,8 @@ span.tutor-quiz-answer-title {
   width: auto;
 }
 
-button#quiz-answer-save-btn, button#quiz-answer-edit-btn {
+button#quiz-answer-save-btn,
+button#quiz-answer-edit-btn {
   background-color: var(--tutor-success-button-color);
   color: #fff;
   padding: 10px 15px;
@@ -5431,7 +5450,8 @@ button#quiz-answer-save-btn, button#quiz-answer-edit-btn {
   cursor: pointer;
 }
 
-button#quiz-answer-save-btn:hover, button#quiz-answer-edit-btn:hover {
+button#quiz-answer-save-btn:hover,
+button#quiz-answer-edit-btn:hover {
   background-color: var(--tutor-success-button-color);
 }
 
@@ -5439,7 +5459,7 @@ button#quiz-answer-save-btn:hover, button#quiz-answer-edit-btn:hover {
 Tutor Media Upload
  */
 .tutor-media-upload-wrap {
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   display: flex;
   width: 130px;
 }
@@ -5458,7 +5478,7 @@ Tutor Media Upload
   font-size: 50px;
   line-height: 50px;
   text-align: center;
-  color: #DEDEDE;
+  color: #dedede;
 }
 
 .tutor-media-upload-trash-wrap {
@@ -5484,7 +5504,7 @@ Tutor Media Upload
 .tutor-metabox-add-topics,
 .tutor-topics-edit-form {
   background-color: #f7f7f7;
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   margin-top: 25px;
   padding: 20px;
 }
@@ -5496,7 +5516,7 @@ Tutor Media Upload
 .tutor-course-builder-section-title h3 {
   font-size: 20px;
   font-weight: 700;
-  color: #1D1F37;
+  color: #1d1f37;
   position: relative;
   overflow: hidden;
   z-index: 1;
@@ -5563,7 +5583,7 @@ Tutor Media Upload
   position: absolute;
   top: -4px;
   left: -4px;
-  color: #E53935;
+  color: #e53935;
   -webkit-transition: 300ms;
   transition: 300ms;
   border-radius: 50%;
@@ -5587,7 +5607,7 @@ Tutor Media Upload
 }
 
 .tutor-course-builder-section .tutor-course-builder-header a {
-  color: #393C40;
+  color: #393c40;
 }
 
 .tutor-course-builder-section .tutor-course-builder-header a:first-child {
@@ -5618,7 +5638,7 @@ Tutor Media Upload
 .tutor-course-available-instructors .added-instructor-item {
   flex: 0 0 calc(50% - 15px);
   max-width: calc(50% - 15px);
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   padding: 13px;
   display: inline-flex;
   align-items: center;
@@ -5677,7 +5697,7 @@ Tutor Media Upload
   position: absolute;
   bottom: 34px;
   right: 9px;
-  background: #2A344F;
+  background: #2a344f;
   -webkit-transform: translateX(50%);
   transform: translateX(50%);
   color: #fff;
@@ -5692,7 +5712,7 @@ Tutor Media Upload
 .tutor-course-available-instructors .added-instructor-item i.instructor-name-tooltip::before {
   content: "";
   position: absolute;
-  border: 5px solid #2A344F;
+  border: 5px solid #2a344f;
   bottom: -3px;
   left: 50%;
   margin-left: -5px;
@@ -5809,8 +5829,8 @@ Video MetaBox
 
 .video-metabox-source-input-wrap {
   padding: 30px;
-  background-color: #F4F7F8;
-  border: 1px solid #DCDFE5;
+  background-color: #f4f7f8;
+  border: 1px solid #dcdfe5;
   border-radius: 3px;
 }
 
@@ -5818,7 +5838,7 @@ Video MetaBox
   background-color: #fff;
   text-align: center;
   padding: 40px 20px;
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   border-radius: 3px;
 }
 
@@ -5921,12 +5941,12 @@ END Content Drip
 * since v.1.4.1
  */
 .tutor-alert {
-  border: 1px solid #F8A201;
-  background: #FFFFF2;
+  border: 1px solid #f8a201;
+  background: #fffff2;
   position: relative;
   border-radius: 3px;
   padding: 20px 25px 20px 95px;
-  color: #A86D00;
+  color: #a86d00;
   margin-bottom: 20px;
 }
 
@@ -5939,15 +5959,15 @@ END Content Drip
 }
 
 .tutor-alert.tutor-alert-danger {
-  border: 1px solid #FE1A1A;
-  background: #FFF2F2;
-  color: #A50000;
+  border: 1px solid #fe1a1a;
+  background: #fff2f2;
+  color: #a50000;
 }
 
 .tutor-alert.tutor-alert-success {
-  border: 1px solid #69BC0D;
-  background: #F6FFF2;
-  color: #3D7400;
+  border: 1px solid #69bc0d;
+  background: #f6fff2;
+  color: #3d7400;
 }
 
 .tutor-alert::before {
@@ -5967,7 +5987,7 @@ END Content Drip
   top: 0;
   left: 0;
   text-align: center;
-  background: #F8A201;
+  background: #f8a201;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -5977,12 +5997,12 @@ END Content Drip
 
 .tutor-alert.tutor-alert-danger::before {
   content: "";
-  background: #FE1A1A;
+  background: #fe1a1a;
 }
 
 .tutor-alert.tutor-alert-success::before {
   content: "";
-  background: #69BC0D;
+  background: #69bc0d;
 }
 
 .tutor-alert-content p {
@@ -6029,7 +6049,7 @@ GradeBook
 .gradebook-result-for-label {
   margin: 0;
   padding: 4px 7px;
-  background-color: #E8EFF1;
+  background-color: #e8eff1;
   display: inline-block;
   margin-bottom: 10px;
 }
@@ -6064,24 +6084,24 @@ table.course-single-gradebooks tbody td {
 }
 
 table.course-single-gradebooks a {
-  color: #4B5981;
+  color: #4b5981;
 }
 
 .text-label {
   margin: 0;
   padding: 4px 7px;
-  background-color: #E8EFF1;
+  background-color: #e8eff1;
   display: inline-block;
   border-radius: 3px;
 }
 
 .text-label.submitted-assignment-grade-pass {
-  background-color: #86B223;
+  background-color: #86b223;
   color: #ffffff;
 }
 
 .text-label.submitted-assignment-grade-failed {
-  background-color: #D71830;
+  background-color: #d71830;
   color: #ffffff;
 }
 
@@ -6130,14 +6150,14 @@ table.course-single-gradebooks a {
 
 .tutor-bp-enrolled-courses-wrap .tutor-bp-enrolled-total-course-notice {
   font-weight: 400;
-  color: #1C294B;
+  color: #1c294b;
   margin: 10px 0 8px !important;
 }
 
 .tutor-bp-enrolled-courses-wrap ul {
   padding: 0 0 0 17px;
   margin: 0;
-  color: #50616F;
+  color: #50616f;
 }
 
 .tutor-bp-enrolled-courses-wrap ul li a {
@@ -6174,7 +6194,7 @@ table.course-single-gradebooks a {
   display: flex;
   align-items: center;
   padding-bottom: 30px;
-  border-bottom: 1px solid #DCDFE5;
+  border-bottom: 1px solid #dcdfe5;
   flex-wrap: wrap;
 }
 
@@ -6228,7 +6248,7 @@ table.course-single-gradebooks a {
   font-size: 12px;
   padding: 0 5px;
   line-height: 25px;
-  color: #393C40;
+  color: #393c40;
   transition: 300ms;
 }
 .tutor-dashboard-social-icons a:hover {
@@ -6245,14 +6265,14 @@ table.course-single-gradebooks a {
 .tutor-dashboard-info-table-wrap table {
   margin-bottom: 0;
   border-collapse: collapse;
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   border-radius: 4px;
   width: 100%;
 }
 .tutor-dashboard-info-table-wrap > h3 {
   font-size: 20px;
   font-weight: 500;
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   border-bottom: none;
   margin: 0;
   padding: 30px;
@@ -6263,7 +6283,7 @@ table.course-single-gradebooks a {
 }
 
 .tutor-dashboard-info-table thead {
-  background: #FAFBFC;
+  background: #fafbfc;
 }
 .tutor-dashboard-info-table thead tr td {
   padding: 15px;
@@ -6274,7 +6294,7 @@ table.course-single-gradebooks a {
 }
 .tutor-dashboard-info-table thead tr,
 .tutor-dashboard-info-table tbody tr {
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
 }
 .tutor-dashboard-info-table thead tr td:first-child,
 .tutor-dashboard-info-table tbody tr td:first-child {
@@ -6288,10 +6308,10 @@ table.course-single-gradebooks a {
   border-radius: 2px;
 }
 .tutor-dashboard-info-table span.pending {
-  background-color: #F5A623;
+  background-color: #f5a623;
 }
 .tutor-dashboard-info-table span.fail {
-  background-color: #D71830;
+  background-color: #d71830;
 }
 .tutor-dashboard-info-table span.pass {
   background-color: var(--tutor-success-button-color);
@@ -6301,14 +6321,14 @@ table.course-single-gradebooks a {
  * Tutor Dashboard Review
  */
 .tutor-dashboard-single-review {
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   border-radius: 4px;
   margin-bottom: 30px;
 }
 
 .tutor-dashboard-review-heading {
   padding: 10px 20px;
-  border-bottom: 1px solid #DCDFE5;
+  border-bottom: 1px solid #dcdfe5;
   display: flex;
   align-items: center;
 }
@@ -6338,7 +6358,7 @@ table.course-single-gradebooks a {
 }
 
 .tutor-dashboard-review-links a {
-  color: #8C94A8;
+  color: #8c94a8;
   margin-left: 10px;
   display: inline-flex;
   align-items: center;
@@ -6354,7 +6374,7 @@ table.course-single-gradebooks a {
 .individual-dashboard-review-body .review-meta {
   font-size: 85%;
   margin: 0;
-  color: #8C94A8;
+  color: #8c94a8;
 }
 
 .individual-star-rating-wrap {
@@ -6373,7 +6393,7 @@ table.course-single-gradebooks a {
   margin-bottom: 20px;
 }
 
-/*dashboard content*/
+/* dashboard content */
 .tutor-dashboard-info-cards {
   margin: 0 -15px 15px;
   padding: 0;
@@ -6388,7 +6408,7 @@ table.course-single-gradebooks a {
 .tutor-dashboard-info-cards .tutor-dashboard-info-card p {
   margin: 0;
   padding: 15px 25px;
-  background: #282C36;
+  background: #282c36;
   color: #ffffff;
   border-radius: 4px;
 }
@@ -6405,30 +6425,34 @@ table.course-single-gradebooks a {
   vertical-align: middle;
 }
 
-/*dashboard quiz attempts*/
+/* dashboard quiz attempts */
 .tutor-dashboard-content {
   margin-bottom: 60px;
 }
-
 .tutor-dashboard-content > h2 {
   margin-bottom: 20px;
+}
+
+.prev-btn {
+  font-size: 16px;
+  line-height: 1.88;
+  color: #3f435b;
+}
+.prev-btn span {
+  font-size: 18px;
+  font-weight: 800;
+  color: #3e64de;
+  margin-right: 7px;
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history tr th,
 .tutor-dashboard-content .tutor-quiz-attempt-history tr td {
   vertical-align: middle;
+  border: none;
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history tr td:first-child {
   padding: 15px 13px !important;
-}
-
-.tutor-dashboard-content .tutor-quiz-attempt-history tr.pass {
-  border-left: 3px solid var(--tutor-success-button-color);
-}
-
-.tutor-dashboard-content .tutor-quiz-attempt-history tr.fail {
-  border-left: 3px solid #D71830;
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history table span.result-fail,
@@ -6436,12 +6460,12 @@ table.course-single-gradebooks a {
   width: auto;
   height: auto;
   line-height: 19px;
-  padding: 0 5px;
+  padding: 0 6.5px;
   margin-right: 4px;
 }
 
 .label-course-status {
-  background-color: #CCCCCC;
+  background-color: #cccccc;
   padding: 3px 5px;
   color: #ffffff;
   font-size: 12px;
@@ -6452,12 +6476,119 @@ table.course-single-gradebooks a {
   background-color: var(--tutor-success-button-color);
 }
 
-.tutor-dashboard-content .tutor-quiz-attempt-history table tr th {
-  background: #FAFBFC;
+.tutor-dashboard-content .quiz-attempt-answers-wrap table th {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.12px;
+  color: #737787;
+  padding: 15px 10px;
 }
 
-.tutor-dashboard-content .tutor-quiz-attempt-history table tr td {
-  background: #fff;
+/* quiz attempt history (common table) */
+.tutor-dashboard-content .tutor-quiz-attempt-history table thead tr,
+.single-quiz-page.tutor-quiz-attempt-history table thead tr {
+  background-color: #fafbfc;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr,
+.single-quiz-page.tutor-quiz-attempt-history table tr {
+  border: 0;
+  background-color: #fff;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr:first-child,
+.single-quiz-page.tutor-quiz-attempt-history table tr:first-child {
+  background-color: #fafbfc;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th,
+.tutor-dashboard-content .tutor-quiz-attempt-history table td,
+.single-quiz-page.tutor-quiz-attempt-history table th,
+.single-quiz-page.tutor-quiz-attempt-history table td {
+  border: 1px solid #dcdfe5 !important;
+  vertical-align: middle;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th:first-child,
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:first-child,
+.single-quiz-page.tutor-quiz-attempt-history table th:first-child,
+.single-quiz-page.tutor-quiz-attempt-history table td:first-child {
+  width: 62%;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th:nth-child(2), .tutor-dashboard-content .tutor-quiz-attempt-history table th:nth-child(4),
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:nth-child(2),
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:nth-child(4),
+.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(2),
+.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(4),
+.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(2),
+.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(4) {
+  width: 11%;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th:nth-child(3), .tutor-dashboard-content .tutor-quiz-attempt-history table th:nth-child(5), .tutor-dashboard-content .tutor-quiz-attempt-history table th:nth-child(6),
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:nth-child(3),
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:nth-child(5),
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:nth-child(6),
+.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(3),
+.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(5),
+.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(6),
+.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(3),
+.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(5),
+.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(6) {
+  width: 9%;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th,
+.single-quiz-page.tutor-quiz-attempt-history table th {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.14;
+  color: #8792b2;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table th:not(:first-child),
+.single-quiz-page.tutor-quiz-attempt-history table th:not(:first-child) {
+  text-align: center;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td,
+.single-quiz-page.tutor-quiz-attempt-history table td {
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  color: #4b5981;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:not(:first-child),
+.single-quiz-page.tutor-quiz-attempt-history table td:not(:first-child) {
+  font-weight: 500;
+  text-align: center;
+  padding-left: 3px !important;
+  padding-right: 3px !important;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:last-child,
+.single-quiz-page.tutor-quiz-attempt-history table td:last-child {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td a,
+.single-quiz-page.tutor-quiz-attempt-history table td a {
+  font-weight: 500;
+  color: #4b5981;
+  text-decoration: underline;
+  word-break: initial;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td .course a,
+.single-quiz-page.tutor-quiz-attempt-history table td .course a {
+  font-weight: 600;
+  line-height: 1.29;
+  color: #4b5981;
+  text-decoration: none;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td .course-meta,
+.single-quiz-page.tutor-quiz-attempt-history table td .course-meta {
+  display: inline-block;
+  margin-top: 5px;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td .course-meta span:nth-child(2),
+.single-quiz-page.tutor-quiz-attempt-history table td .course-meta span:nth-child(2) {
+  margin: 0 17px;
+}
+
+.single-quiz-page.tutor-quiz-attempt-history table {
+  margin-bottom: 30px;
 }
 
 @media (max-width: 768px) {
@@ -6497,7 +6628,7 @@ table.course-single-gradebooks a {
 
 .tutor-dashboard-item-group {
   padding: 25px;
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   border-radius: 4px;
   margin-bottom: 30px;
 }
@@ -6514,7 +6645,7 @@ table.course-single-gradebooks a {
 }
 
 .tutor-dashboard-assignment-submitted-table tr td a {
-  color: #8C94A8;
+  color: #8c94a8;
   transition: 300ms;
 }
 
@@ -6524,7 +6655,7 @@ table.course-single-gradebooks a {
 
 .tutor-dashboard-assignment-submitted-table tr td,
 .tutor-dashboard-assignment-submitted-table tr th {
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
 }
 
 /* Dashboard Assignment Review */
@@ -6566,7 +6697,7 @@ table.course-single-gradebooks a {
 
 .tutor-dashboard-assignment-review {
   background: rgba(220, 223, 229, 0.14);
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   padding: 25px;
   font-weight: 400;
   border-radius: 4px;
@@ -6593,7 +6724,7 @@ table.course-single-gradebooks a {
 
 .tutor-dashboard-assignment-files .uploaded-files {
   background-color: #fff;
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   border-radius: 4px;
   margin: 9px;
   transition: 300ms;
@@ -6605,7 +6736,7 @@ table.course-single-gradebooks a {
 
 .tutor-dashboard-assignment-files .uploaded-files a i {
   margin-right: 12px;
-  color: #606C8F;
+  color: #606c8f;
   float: left;
   font-size: 28px;
   line-height: 28px;
@@ -6647,7 +6778,7 @@ table.course-single-gradebooks a {
 
 .tutor-assignment-evaluate-row textarea,
 .tutor-assignment-evaluate-row .tutor-option-field input {
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   height: 50px;
   padding: 0 15px;
   border-radius: 4px;
@@ -6736,7 +6867,7 @@ table.course-single-gradebooks a {
 .tutor-dashboard-inline-links ul {
   margin: 0;
   padding: 0;
-  border-bottom: 1px solid #DFE1E5;
+  border-bottom: 1px solid #dfe1e5;
 }
 
 .tutor-dashboard-inline-links ul li {
@@ -6751,7 +6882,8 @@ table.course-single-gradebooks a {
   line-height: 40px;
 }
 
-.tutor-dashboard-inline-links ul li a:hover, .tutor-dashboard-inline-links ul li.active a {
+.tutor-dashboard-inline-links ul li a:hover,
+.tutor-dashboard-inline-links ul li.active a {
   color: var(--tutor-primary-color);
   border-bottom: 1px solid var(--tutor-primary-color);
   padding-bottom: 4px;
@@ -6787,11 +6919,11 @@ table.course-single-gradebooks a {
   list-style: none;
   margin: 0px 0 20px;
   padding: 20px 0;
-  border-right: 1px solid #DCDFE5;
+  border-right: 1px solid #dcdfe5;
 }
 
 .tutor-dashboard-permalinks li a:hover {
-  background-color: #EDF0F9;
+  background-color: #edf0f9;
 }
 
 .tutor-dashboard-permalinks li.active a {
@@ -6897,12 +7029,13 @@ table.course-single-gradebooks a {
   padding-top: 30px;
 }
 
-.tutor-dashboard-content > h3 {
-  color: var(--tutor-text-color);
+.quiz-attempts-title,
+.tutor-quiz-attempt-history-title {
   font-size: 22px;
-  font-weight: 500;
-  line-height: 23px;
-  margin-bottom: 20px;
+  font-weight: 600;
+  line-height: 1.27;
+  color: #4b5981;
+  margin-bottom: 31px;
 }
 
 /** Earning Report */
@@ -6920,8 +7053,8 @@ table.course-single-gradebooks a {
 .report-top-sub-menu a {
   text-decoration: none;
   padding: 5px 8px;
-  border: 1px solid #D7DADF;
-  color: #AAAEB3;
+  border: 1px solid #d7dadf;
+  color: #aaaeb3;
   white-space: nowrap;
   display: inline-block;
   font-size: 12px;
@@ -6932,7 +7065,7 @@ table.course-single-gradebooks a {
 }
 
 .report-top-sub-menu a:hover {
-  background: #EDF0F9;
+  background: #edf0f9;
   color: #333;
 }
 
@@ -6971,8 +7104,9 @@ table.course-single-gradebooks a {
   border-radius: 0;
 }
 
-.date-range-input input, .date-range-input input[type=text] {
-  border: 1px solid #D7DADF;
+.date-range-input input,
+.date-range-input input[type=text] {
+  border: 1px solid #d7dadf;
   box-shadow: none;
   line-height: 29px;
   margin: 0;
@@ -7050,7 +7184,7 @@ table.tutor-dashboard-statement-table p.small-text {
 }
 
 .tutor-mycourse-rating {
-  color: #F8C51C;
+  color: #f8c51c;
   font-size: 14px;
 }
 
@@ -7085,7 +7219,7 @@ table.tutor-dashboard-statement-table p.small-text {
 .tutor-dashboard-content-inner .tutor-mycourse-wrap {
   display: flex;
   margin-bottom: 30px;
-  border: 1px solid #DCDFE5;
+  border: 1px solid #dcdfe5;
   border-radius: 4px;
   flex-direction: row;
   overflow: hidden;
@@ -7107,7 +7241,7 @@ table.tutor-dashboard-statement-table p.small-text {
 .tutor-dashboard-content-inner .tutor-mycourse-wrap .tutor-mycourse-rating a {
   font-weight: 400;
   margin-left: 5px;
-  color: #8C94A8;
+  color: #8c94a8;
 }
 
 .tutor-dashboard-content-inner .tutor-mycourse-wrap .tutor-mycourse-rating a:hover {
@@ -7173,7 +7307,7 @@ UI DatePicker
  */
 .ui-datepicker {
   background-color: #fff;
-  border: 1px solid #EEEEEE;
+  border: 1px solid #eeeeee;
   display: none;
   margin-top: 4px;
   padding: 5px;
@@ -7187,7 +7321,7 @@ UI DatePicker
 
 .ui-datepicker a:hover,
 .ui-datepicker td:hover a {
-  color: #2A6496;
+  color: #2a6496;
   -webkit-transition: color 0.1s ease-in-out;
   -moz-transition: color 0.1s ease-in-out;
   -o-transition: color 0.1s ease-in-out;
@@ -7285,7 +7419,7 @@ UI DatePicker
 }
 
 .ui-datepicker-calendar .ui-state-default.ui-state-highlight {
-  background: #EEEEEE;
+  background: #eeeeee;
   padding: 3px;
   display: block;
 }
@@ -7566,7 +7700,7 @@ label[for=tutor_withdraw_amount] {
 .tutor-quiz-attempt-info-row .attempt-info-content span.result-review-required,
 .tutor-quiz-attempt-info-row .attempt-info-content span.result-pass,
 .tutor-quiz-attempt-info-row .attempt-info-content span.result-fail {
-  background: #DF3247;
+  background: #df3247;
   font-size: 14px;
   font-weight: 400;
   color: #fff;
@@ -7585,7 +7719,7 @@ label[for=tutor_withdraw_amount] {
   font-size: 14px;
   line-height: 25px;
   margin: 0;
-  color: #7A7F85;
+  color: #7a7f85;
   font-weight: 400;
 }
 .tutor-quiz-attempt-info-row .attempt-info-content h4 a,
@@ -7597,7 +7731,7 @@ label[for=tutor_withdraw_amount] {
 .tutor-quiz-attempt-info-row .attempt-view-top {
   padding-bottom: 30px;
   margin-bottom: 30px;
-  border-bottom: 1px solid #DCDFE5;
+  border-bottom: 1px solid #dcdfe5;
 }
 .tutor-quiz-attempt-info-row .attempt-view-bottom {
   margin-bottom: 60px;
@@ -7632,7 +7766,7 @@ label[for=tutor_withdraw_amount] {
 }
 .attempt-review-notice-wrap p.attempt-review-notice i {
   font-size: 16px;
-  color: #F5C813;
+  color: #f5c813;
   margin-right: 9px;
 }
 .attempt-review-notice-wrap p.attempt-review-at > span {
@@ -7645,23 +7779,64 @@ label[for=tutor_withdraw_amount] {
   margin-right: 5px;
 }
 
+.quiz-attempt-answers-wrap {
+  background: #fff;
+  margin: 0 0 1.5em;
+}
+.quiz-attempt-answers-wrap .attempt-answers-header {
+  padding: 30px 20px;
+}
+.quiz-attempt-answers-wrap .attempt-answers-header h3 {
+  font-size: 20px;
+  line-height: 1.5;
+  color: #3f435b;
+}
+.quiz-attempt-answers-wrap table {
+  border-collapse: collapse;
+  border: none;
+}
+.quiz-attempt-answers-wrap table tr {
+  background-color: #fff;
+}
+.quiz-attempt-answers-wrap table tr:first-child {
+  background-color: #f7f7f9;
+  border-top: 1px solid #eaeaea;
+  border-bottom: 1px solid #eaeaea !important;
+}
+.quiz-attempt-answers-wrap table tr:not(:first-child) {
+  border-top: 1px solid #dcdce1;
+}
+.quiz-attempt-answers-wrap table tr:not(:last-child) {
+  border-bottom: 1px solid #dcdce1;
+}
 .quiz-attempt-answers-wrap table th {
-  background: #FCFCFC;
   font-size: 12px;
   text-transform: inherit;
 }
-.quiz-attempt-answers-wrap table th, .quiz-attempt-answers-wrap table td {
-  padding: 17px 20px !important;
-  border-top: 1px solid #EAEAEA;
-  border-bottom: 1px solid #EAEAEA;
+.quiz-attempt-answers-wrap table th,
+.quiz-attempt-answers-wrap table td {
+  padding: 17px 20px;
   vertical-align: middle;
+  border: none;
+  font-size: 14px;
+  line-height: 1.71;
+  letter-spacing: normal;
+  color: #393c40;
 }
-.quiz-attempt-answers-wrap table th p, .quiz-attempt-answers-wrap table td p {
+.quiz-attempt-answers-wrap table th p,
+.quiz-attempt-answers-wrap table td p {
   margin: 0;
 }
+.quiz-attempt-answers-wrap table th .tutor-icon-block,
+.quiz-attempt-answers-wrap table td .tutor-icon-block {
+  font-size: 14px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
 .quiz-attempt-answers-wrap table .quiz-manual-review-action {
-  border: 1px solid #D4DADB;
-  color: #D4DADB;
+  border: 1px solid #d4dadb;
+  color: #d4dadb;
   height: 30px;
   width: 30px;
   border-radius: 2px;
@@ -7676,40 +7851,217 @@ label[for=tutor_withdraw_amount] {
   color: var(--tutor-success-button-color);
 }
 .quiz-attempt-answers-wrap table .quiz-manual-review-action:last-child:hover {
-  border: 1px solid #DF3247;
-  color: #DF3247;
+  border: 1px solid #df3247;
+  color: #df3247;
 }
 .quiz-attempt-answers-wrap table .quiz-manual-review-action:not(:last-child) {
   margin-right: 17px;
 }
-.quiz-attempt-answers-wrap table .tutor-status-blocked-context i,
-.quiz-attempt-answers-wrap table .tutor-status-approved-context i {
-  font-size: 12px;
+
+.tutor-quiz-attempt-review-wrap .attempt-answers-header {
+  background: #fff;
+  padding: 20px;
+  margin-top: 20px;
+}
+.tutor-quiz-attempt-review-wrap .attempt-answers-header a {
+  color: #3f435b;
+}
+.tutor-quiz-attempt-review-wrap .attempt-answers-header > p {
+  color: #737787;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.tutor-quiz-attempt-review-wrap .attempt-answers-header h3 {
+  font-size: 20px;
+  line-height: 1.5;
+  color: #3f435b;
+}
+.tutor-quiz-attempt-review-wrap .instructor-feedback-content {
+  padding: 0px 20px 10px 20px;
+}
+.tutor-quiz-attempt-review-wrap .instructor-feedback-content > p {
+  margin-bottom: 1em;
+}
+.tutor-quiz-attempt-review-wrap table {
+  border-collapse: collapse;
+  border: none;
+}
+.tutor-quiz-attempt-review-wrap table tr {
+  background-color: #fff;
+}
+.tutor-quiz-attempt-review-wrap table tr:first-child {
+  background-color: #f7f7f9;
+  border-top: 1px solid #eaeaea;
+  border-bottom: 1px solid #eaeaea;
+}
+.tutor-quiz-attempt-review-wrap table tr:first-child th,
+.tutor-quiz-attempt-review-wrap table tr:first-child td {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.tutor-quiz-attempt-review-wrap table tr:not(:first-child) {
+  border-top: 1px solid #dcdce1;
+}
+.tutor-quiz-attempt-review-wrap table tr:not(:first-child) th,
+.tutor-quiz-attempt-review-wrap table tr:not(:first-child) td {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.tutor-quiz-attempt-review-wrap table tr:not(:last-child) {
+  border-bottom: 1px solid #dcdce1;
+}
+.tutor-quiz-attempt-review-wrap table th,
+.tutor-quiz-attempt-review-wrap table td {
+  border: none;
+  vertical-align: top;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.71;
+  padding: 15px 6px;
+}
+.tutor-quiz-attempt-review-wrap table th:first-child,
+.tutor-quiz-attempt-review-wrap table td:first-child {
+  padding: 12px;
+}
+.tutor-quiz-attempt-review-wrap table th:last-child,
+.tutor-quiz-attempt-review-wrap table td:last-child {
+  padding: 12px 10px;
+}
+.tutor-quiz-attempt-review-wrap .quiz-attempt-answers-wrap table th:nth-child(3), .tutor-quiz-attempt-review-wrap .quiz-attempt-answers-wrap table th:nth-child(4),
+.tutor-quiz-attempt-review-wrap .quiz-attempt-answers-wrap table td:nth-child(3),
+.tutor-quiz-attempt-review-wrap .quiz-attempt-answers-wrap table td:nth-child(4) {
+  width: 28%;
+}
+.tutor-quiz-attempt-review-wrap span.result-review-required,
+.tutor-quiz-attempt-review-wrap span.result-pass,
+.tutor-quiz-attempt-review-wrap span.result-fail {
+  background: #df3247;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  padding: 4px 11px;
+  border-radius: 2px;
+}
+.tutor-quiz-attempt-review-wrap span.result-pass {
+  background: var(--tutor-success-button-color);
+}
+.tutor-quiz-attempt-review-wrap span.result-review-required {
+  background: #f5b30d;
+}
+
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip],
+.quiz-attempt-answers-wrap .tooltip-btn[data-tooltip] {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:before, .tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:after,
+.quiz-attempt-answers-wrap .tooltip-btn[data-tooltip]:before,
+.quiz-attempt-answers-wrap .tooltip-btn[data-tooltip]:after {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(15px);
+  transition: 0.15s ease;
+}
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:before,
+.quiz-attempt-answers-wrap .tooltip-btn[data-tooltip]:before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  margin-bottom: 0px;
+  margin-left: -60px;
+  min-width: 122px;
+  text-align: center;
+  padding: 4px 7px;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 300;
+  border-radius: 12px;
+  background-color: #3f435b;
+  color: #fff;
+  z-index: 99999;
+}
+.tutor-quiz-attempt-review-wrap .tooltip-btn[data-tooltip]:after,
+.quiz-attempt-answers-wrap .tooltip-btn[data-tooltip]:after {
+  position: absolute;
+  content: "";
+  bottom: 34px;
+  left: 50%;
+  margin-left: -10px;
+  border-top: 8px solid #3f435b;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+}
+.tutor-quiz-attempt-review-wrap .active[data-tooltip]:before, .tutor-quiz-attempt-review-wrap .active[data-tooltip]:after,
+.tutor-quiz-attempt-review-wrap .active[data-tooltip]:before,
+.tutor-quiz-attempt-review-wrap .active[data-tooltip]:after,
+.quiz-attempt-answers-wrap .active[data-tooltip]:before,
+.quiz-attempt-answers-wrap .active[data-tooltip]:after,
+.quiz-attempt-answers-wrap .active[data-tooltip]:before,
+.quiz-attempt-answers-wrap .active[data-tooltip]:after {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+.tutor-status-blocked-context i,
+.tutor-status-approved-context i,
+.quiz-correct-answer-text i,
+.quiz-incorrect-answer-text i {
+  font-size: 14px;
   height: 20px;
   width: 20px;
   text-align: center;
   line-height: 20px;
-  background: var(--tutor-success-button-color);
+  background: #7bbc30;
   color: #fff;
   display: inline-block;
   border-radius: 2px;
   margin-right: 6px;
 }
-.quiz-attempt-answers-wrap table .tutor-status-blocked-context i {
-  background: #DF3247;
+
+.tutor-status-blocked-context i,
+.quiz-incorrect-answer-text i {
+  background: #f44337;
   font-size: 10px;
+  font-weight: 900;
 }
 
 .answer-image-matched-wrap {
-  display: flex;
+  display: block;
 }
 .answer-image-matched-wrap .image-matching-item {
-  margin: 0 5px;
-  max-width: 70px;
+  display: flex;
+  align-items: center;
+}
+.answer-image-matched-wrap .image-matching-item:not(:last-child) {
+  margin-bottom: 12px;
+}
+.answer-image-matched-wrap .image-matching-item img {
+  max-width: 35px;
 }
 .answer-image-matched-wrap .image-matching-item .dragged-caption {
   font-size: 14px;
-  margin-top: 4px;
+  margin-left: 12px;
+}
+
+.correct-answer-wrap .matching-type {
+  display: flex;
+}
+.correct-answer-wrap .text-image-type {
+  display: flex;
+  align-items: center;
+}
+.correct-answer-wrap .text-image-type:not(:last-child) {
+  margin-bottom: 12px;
+}
+.correct-answer-wrap .text-image-type .image {
+  margin-right: 12px;
+}
+.correct-answer-wrap .text-image-type img {
+  max-width: 35px;
 }
 
 .tutor-dashboard-builder-header {

@@ -169,6 +169,31 @@ if ( ! $quiz){
                         <p class="help"><?php _e('Time limit for this quiz. 0 means no time limit.', 'tutor'); ?></p>
                     </div> <!-- .tutor-quiz-builder-group -->
 
+
+
+                    <div class="tutor-quiz-builder-group">
+                        <h4><?php _e('Quiz Feedback Mode', 'tutor'); ?>  </h4>
+
+                        <p class="help">(<?php _e('Pick the quiz system"s behaviour on choice based questions', 'tutor'); ?>)</p>
+
+                        <div class="tutor-quiz-builder-row">
+                            <div class="tutor-quiz-builder-col auto-width">
+                                <label>
+                                    <input type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?> > <?php _e('Default', 'tutor'); ?>
+                                </label>
+                                <label>
+                                    <input type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?> > <?php _e('Retry Mode', 'tutor'); ?>
+                                </label>
+                                <label>
+                                    <input type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked('reveal', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>  > <?php _e('Reveal Mode', 'tutor'); ?>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div> <!-- .tutor-quiz-builder-group -->
+
+
+
                     <div class="tutor-quiz-builder-group">
                         <h4><?php _e('Attempts Allowed', 'tutor'); ?> <span>(<?php _e('Optional', 'tutor'); ?>)</span></h4>
                         <div class="tutor-quiz-builder-row">
