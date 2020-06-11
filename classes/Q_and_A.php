@@ -1,16 +1,23 @@
 <?php
+
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) )
+if (!defined('ABSPATH'))
 	exit;
 
-class Q_and_A{
+class Q_and_A {
 
 	public function __construct() {
 		add_action('admin_post_tutor_place_answer', array($this, 'place_answer'));
+
+		/**
+		 * Delete question [frontend dashboard]
+		 * @since  v.1.6.4
+		 */
+		add_action('wp_ajax_tutor_delete_dashboard_question', array($this, 'tutor_delete_dashboard_question'));
 	}
 
-	public function place_answer(){
+	public function place_answer() {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
@@ -41,13 +48,28 @@ class Q_and_A{
 		$wpdb->insert($wpdb->comments, $data);
 		$answer_id = (int) $wpdb->insert_id;
 
-		if ($answer_id){
-			$wpdb->update($wpdb->comments, array('comment_approved' => 'answered'), array('comment_ID' =>$question_id ) );
-			do_action('tutor_after_answer_to_question', $answer_id );
+		if ($answer_id) {
+			$wpdb->update($wpdb->comments, array('comment_approved' => 'answered'), array('comment_ID' => $question_id));
+			do_action('tutor_after_answer_to_question', $answer_id);
 		}
 
 		wp_redirect(wp_get_referer());
 	}
 
-
+	/**
+	 * Delete question [frontend dashboard]
+	 * @since  v.1.6.4
+	 */
+	public function tutor_delete_dashboard_question() {
+		global $wpdb;
+		$question_id = intval(sanitize_text_field($_POST['question_id']));
+		if( !$question_id ) {
+			return;
+		}
+		//Deleting question (comment), child question and question meta (comment meta)
+		$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_ID = $question_id" );
+		$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_parent = $question_id" );
+		$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE {$wpdb->commentmeta}.comment_id = $question_id" );
+		wp_send_json_success(['element'=>'question']);
+	}
 }
