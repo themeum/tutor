@@ -2837,6 +2837,7 @@ a.tutor-button.button-light:hover,
 .tutor-button[disabled],
 .tutor-button:disabled:hover,
 .tutor-button[disabled]:hover {
+  display: block;
   border: 0px;
   background-color: #DCDCE1;
   color: #737787;

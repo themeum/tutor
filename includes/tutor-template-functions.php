@@ -1022,7 +1022,7 @@ function tutor_single_course_add_to_cart($echo = true){
     $total_enrolled = tutor_utils()->count_enrolled_users_by_course();
     $maximum_students = (int) tutor_utils()->get_course_settings(null, 'maximum_students');
 
-    if ($maximum_students && $maximum_students === $total_enrolled) {
+    if ($maximum_students && $maximum_students <= $total_enrolled) {
         $template = 'closed-enrollment';
     } else {
         $template = 'add-to-cart';
