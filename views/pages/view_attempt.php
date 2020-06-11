@@ -18,7 +18,7 @@ $user = get_userdata($user_id);
 
 
 <div class="tutor-quiz-attempt-review-wrap">
-    <h2 class="attempt-review-title"> <i class="tutor-icon-list"></i> <?php _e('View Attempts', 'tutor'); ?></h2>
+    <div class="attempt-review-title"> <i class="tutor-icon-list"></i> <?php _e('View Attempts', 'tutor'); ?></div>
 
     <div class="tutor-quiz-attempt-info-row">
         <div class="attempt-view-top">
@@ -182,7 +182,7 @@ $user = get_userdata($user_id);
         <div class="quiz-attempt-answers-wrap">
 
             <div class="attempt-answers-header">
-                <h3><?php _e('Quiz Overview', 'tutor'); ?></h3>
+                <div class="attempt-header-quiz"><?php _e('Quiz Overview', 'tutor'); ?></div>
             </div>
 
             <table class="wp-list-table">
@@ -333,4 +333,16 @@ $user = get_userdata($user_id);
         <?php
     }
     ?>
+</div>
+
+
+
+<div class="quiz-attempt-answers-wrap">
+    <div class="attempt-answers-header">
+        <div class="attempt-header-quiz"><?php _e('Instructor Feedback', 'tutor'); ?></div>
+    </div>
+    <div class="tutor-instructor-feedback-wrap">
+        <textarea class="tutor-instructor-feedback-content" style="width:100%; height: 100px;"><?php echo get_post_meta($attempt_id, 'instructor_feedback', true); ?></textarea>
+        <a class="tutor-button tutor-button-primary tutor-instructor-feedback" data-attemptid="<?php echo $attempt_id; ?>"><?php _e('Update', 'tutor'); ?></a>
+    </div>
 </div>

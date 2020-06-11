@@ -3299,16 +3299,16 @@ class Utils {
 
 	public function get_question_types($type = null){
 		$types = array(
-			'true_false'        => array('name' => __('True/False', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-yes-no"></i>', 'is_pro' => false),
-			'single_choice'     => array('name' => __('Single Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-mark"></i>', 'is_pro' => false),
-			'multiple_choice'   => array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-multiple-choice"></i>', 'is_pro' => false),
-			'open_ended'        => array('name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-open-ended"></i>', 'is_pro' => false),
-			'fill_in_the_blank'  => array('name' => __('Fill In The Blanks', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-fill-gaps"></i>', 'is_pro' => false),
-			'short_answer'          => array('name' => __('Short Answer', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-short-ans"></i>', 'is_pro' => true),
-			'matching'              => array('name' => __('Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-matching"></i>', 'is_pro' => true),
-			'image_matching'        => array('name' => __('Image Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-matching"></i>', 'is_pro' => true),
-			'image_answering'       => array('name' => __('Image Answering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-ans"></i>', 'is_pro' => true),
-			'ordering'          => array('name' => __('Ordering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-ordering"></i>', 'is_pro' => true),
+			'true_false'        => array('name' => __('True/False', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no"></i></span>', 'is_pro' => false),
+			'single_choice'     => array('name' => __('Single Choice', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark"></i></span>', 'is_pro' => false),
+			'multiple_choice'   => array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Multiple Choicee"><i class="tutor-icon-block tutor-icon-multiple-choice"></i></span>', 'is_pro' => false),
+			'open_ended'        => array('name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Open/Essay"><i class="tutor-icon-block tutor-icon-open-ended"></i></span>', 'is_pro' => false),
+			'fill_in_the_blank'  => array('name' => __('Fill In The Blanks', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-fill-gaps"></i></span>', 'is_pro' => false),
+			'short_answer'          => array('name' => __('Short Answer', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Short Answer"><i class="tutor-icon-block tutor-icon-short-ans"></i></span>', 'is_pro' => true),
+			'matching'              => array('name' => __('Matching', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Matching"><i class="tutor-icon-block tutor-icon-matching"></i></span>', 'is_pro' => true),
+			'image_matching'        => array('name' => __('Image Matching', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching"></i></span>', 'is_pro' => true),
+			'image_answering'       => array('name' => __('Image Answering', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Image Answering"><i class="tutor-icon-block tutor-icon-image-ans"></i></span>', 'is_pro' => true),
+			'ordering'          => array('name' => __('Ordering', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Ordering"><i class="tutor-icon-block tutor-icon-ordering"></i></span>', 'is_pro' => true),
 		);
 
 		if (isset($types[$type])){

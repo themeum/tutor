@@ -15,7 +15,9 @@ $instructorList->prepare_items();
 ?>
 
 <div class="wrap">
-	<h2><?php _e('Quiz Attempts', 'tutor'); ?></h2>
+	<div class="quiz-attempts-title">
+		<?php _e('Quiz Attempts', 'tutor'); ?>
+	</div>
 
 	<form id="quiz_attempts-filter" method="get">
 		<input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
