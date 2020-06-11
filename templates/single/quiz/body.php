@@ -16,6 +16,7 @@ $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 $questions_order = tutor_utils()->get_quiz_option($quiz_id, 'questions_order', 'rand');
 $attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
 $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
+$feedback_mode = tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode', 0);
 
 $attempt_remaining = $attempts_allowed - $attempted_count;
 ?>
@@ -91,7 +92,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 						$next_question = isset($questions[$question_i]) ? $questions[$question_i] : false;
 						?>
-                        <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> >
+                        <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> data-quiz-feedback-mode="<?php echo $feedback_mode; ?>" >
 
 							<?php echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
 
@@ -148,7 +149,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 													?>
                                                     <div class="quiz-answer-input-bottom">
                                                         <div class="quiz-answer-input-field">
-                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
+                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>" data-is-correct="<?php echo $answer->is_correct ?>" >
                                                             <span>&nbsp;</span>
                                                             <?php
                                                                 if ($answer->answer_view_format !== 'image'){ echo $answer_title;}
