@@ -18,7 +18,8 @@ do_action('tutor_course/single/closed-enrollment/before');
 
 <div class="tutor-single-add-to-cart-box">
     <div class="tutor-course-enroll-wrap">
-        <button type="button" class="tutor-btn tutor-gray tutor-button-block" disabled="disabled">
+        <button type="button" class="tutor-button tutor-button-block" disabled="disabled">
+            <span><?php _e('100% Booked', 'tutor'); ?></span>
             <?php _e('Closed for Enrollment', 'tutor'); ?>
         </button>
     </div>
