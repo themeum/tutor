@@ -607,11 +607,32 @@ a.tutor-button.button-light:hover,
   border-bottom: 1px solid #dedfe0;
   margin-bottom: 45px;
 }
-.tutor-button-block{
+.tutor-button:disabled,
+.tutor-button[disabled],
+.tutor-button:disabled:hover,
+.tutor-button[disabled]:hover {
+  border: 0px;
+  background-color: #DCDCE1;
+  color: #737787;
+  cursor: default;
+}
+.tutor-button span {
+  font-size: 12px;
+  display: block;
+  text-align: left;
+}
+.tutor-course-enroll-wrap .tutor-button:disabled,
+.tutor-course-enroll-wrap .tutor-button[disabled] {
+  text-align: left;
+  width: 100%;
+  padding: 10px 25px;
+}
+.tutor-button-block {
   width: 100%;
   text-align: center;
   justify-content: center;
 }
+
 .tutor-wrap{
   width: 100%;
 }
