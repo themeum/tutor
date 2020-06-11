@@ -1927,8 +1927,30 @@ Course question and answer
 
 .quiz-answer-input-bottom {
   position: relative;
-  display: inline-block;
+  display: flex;
   line-height: 20px;
+}
+
+.quiz-answer-input-bottom.wrong-answer {
+  color: #e27c89;
+}
+
+.quiz-answer-input-bottom.wrong-answer .quiz-answer-input-field {
+  border: 1px solid #e27c89;
+  padding: 5px 10px;
+}
+
+.quiz-answer-input-bottom.right-answer {
+  color: #86b324;
+}
+
+.quiz-answer-input-bottom.right-answer .quiz-answer-input-field {
+  border: 1px solid #bbd58c;
+  padding: 5px 10px;
+}
+
+.wrong-right-text {
+  padding: 5px 10px;
 }
 
 .tutor-quiz-answers-wrap label input {
