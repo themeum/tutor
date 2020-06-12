@@ -6998,7 +6998,15 @@ table.course-single-gradebooks a {
   content: "";
 }
 
+.tutor-dashboard-menu-my-quiz-attempts a:before {
+  content: "";
+}
+
 .tutor-dashboard-menu-quiz-attempts a:before {
+  content: "";
+}
+
+.tutor-dashboard-menu-question-answer a:before {
   content: "";
 }
 
