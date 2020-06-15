@@ -787,7 +787,15 @@
 	content: "\e917";
 }
 
+.tutor-dashboard-menu-my-quiz-attempts a:before {
+	content: "\e9ab";
+}
+
 .tutor-dashboard-menu-quiz-attempts a:before {
+	content: "\e91f";
+}
+
+.tutor-dashboard-menu-question-answer a:before {
 	content: "\e948";
 }
 
