@@ -611,6 +611,7 @@ jQuery(document).ready(function ($) {
         if ($questions_wrap.length) {
             $questions_wrap.each(function (index, question) {
                 validated = tutor_quiz_validation($(question));
+                validated = feedback_response($(question));
             });
         }
 
@@ -749,25 +750,23 @@ jQuery(document).ready(function ($) {
 
         var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
         $('.wrong-right-text').remove();
-        $('.quiz-answer-input-bottom').removeClass('wrong-answer');
+        $('.quiz-answer-input-bottom').removeClass('wrong-answer right-answer');
+
+
+        var validatedTrue = true;
+        var $inputs = $question_wrap.find('input');
+        var $checkedInputs = $question_wrap.find('input[type="radio"]:checked');
 
         if (feedBackMode === 'retry'){
-            var $inputs = $question_wrap.find('input');
-            var $checkedInputs = $question_wrap.find('input[type="radio"]:checked');
-
-            var validatedTrue = true;
-
 
             if ($checkedInputs.length == 0) {
                 validatedTrue = false;
             }else{
-
                 $checkedInputs.each(function(){
                     var $input = $(this);
 
                     var $type = $input.attr('type');
                     if ($type === 'radio' || $type === 'checkbox'){
-
                         var isTrue = $input.attr('data-is-correct') == '1';
                         if ( isTrue){
 
@@ -777,19 +776,49 @@ jQuery(document).ready(function ($) {
                             }
                             validatedTrue = false;
                         }
+                    }
+                });
+            }
 
+        }else if(feedBackMode === 'reveal'){
 
+            if ($checkedInputs.length == 0) {
+                validatedTrue = false;
+            }else{
+
+                $checkedInputs.each(function(){
+                    var $input = $(this);
+                    var isTrue = $input.attr('data-is-correct') == '1';
+                    if ( ! isTrue){
+                        validatedTrue = false;
                     }
                 });
 
+                $inputs.each(function(){
+                    var $input = $(this);
 
+                    var $type = $input.attr('type');
+                    if ($type === 'radio' || $type === 'checkbox'){
+                        var isTrue = $input.attr('data-is-correct') == '1';
+
+                        if ( isTrue){
+
+                            $input.closest('.quiz-answer-input-bottom').addClass('right-answer').append('<span class="wrong-right-text"><i class="tutor-icon-checkbox-pen-outline"></i> Correct Answer</span>');
+
+                        }else{
+                            if ($input.prop("checked")) {
+                                $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer');
+                            }
+                        }
+                    }
+
+                });
 
             }
 
-
         }
 
-        console.log(validatedTrue);
+
 
         if (validatedTrue){
             goNext = true;
