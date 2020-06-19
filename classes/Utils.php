@@ -1112,7 +1112,6 @@ class Utils {
 	 */
 	public function course_sub_pages(){
 		$nav_items = array(
-			'overview' => __('Resources', 'tutor'),
 			'questions' => __('Q&A', 'tutor'),
 			'announcements' => __('Announcements', 'tutor'),
 		);
