@@ -2859,6 +2859,7 @@ a.tutor-button.button-light:hover,
 .tutor-button[disabled],
 .tutor-button:disabled:hover,
 .tutor-button[disabled]:hover {
+  display: block;
   border: 0px;
   background-color: #DCDCE1;
   color: #737787;
@@ -7019,7 +7020,15 @@ table.course-single-gradebooks a {
   content: "";
 }
 
+.tutor-dashboard-menu-my-quiz-attempts a:before {
+  content: "";
+}
+
 .tutor-dashboard-menu-quiz-attempts a:before {
+  content: "";
+}
+
+.tutor-dashboard-menu-question-answer a:before {
   content: "";
 }
 

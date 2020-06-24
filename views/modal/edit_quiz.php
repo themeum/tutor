@@ -177,15 +177,34 @@ if ( ! $quiz){
                         <p class="help">(<?php _e('Pick the quiz system"s behaviour on choice based questions', 'tutor'); ?>)</p>
 
                         <div class="tutor-quiz-builder-row">
-                            <div class="tutor-quiz-builder-col auto-width">
-                                <label>
-                                    <input type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?> > <?php _e('Default', 'tutor'); ?>
+                            <div class="tutor-quiz-builder-col">
+                                <label class="tutor-quiz-feedback-mode">
+                                    <input type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?> >
+                                    <span class="radio-icon"></span>
+                                    <div class="tutor-quiz-feedback-mode-option">
+                                        <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Default', 'tutor'); ?></h4>
+                                        <p class="tutor-quiz-feedback-option-subtitle">Answers shown after quiz is finished</p>
+                                    </div>
                                 </label>
-                                <label>
-                                    <input type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?> > <?php _e('Retry Mode', 'tutor'); ?>
+                            </div>
+                            <div class="tutor-quiz-builder-col">
+                                <label class="tutor-quiz-feedback-mode">
+                                    <input type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?> >
+                                    <span class="radio-icon"></span>
+                                    <div class="tutor-quiz-feedback-mode-option">
+                                        <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Retry Mode', 'tutor'); ?></h4>
+                                        <p class="tutor-quiz-feedback-option-subtitle">Unlimited attempts on each question. <a href="#"> Live Demo</a></p>
+                                    </div>
                                 </label>
-                                <label>
-                                    <input type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked('reveal', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>  > <?php _e('Reveal Mode', 'tutor'); ?>
+                            </div>
+                            <div class="tutor-quiz-builder-col">
+                                <label class="tutor-quiz-feedback-mode">
+                                    <input type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked('reveal', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>  >
+                                    <span class="radio-icon"></span>
+                                    <div class="tutor-quiz-feedback-mode-option">
+                                        <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Reveal Mode', 'tutor'); ?></h4>
+                                        <p class="tutor-quiz-feedback-option-subtitle">Show result after the attempt. <a href="#"> Live Demo</a></p>
+                                    </div>
                                 </label>
                             </div>
 
