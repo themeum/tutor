@@ -571,7 +571,7 @@ jQuery(document).ready(function ($) {
         }
 
         var feedBackNext = feedback_response($question_wrap);
-        if (!feedBackNext){
+        if (!feedBackNext) {
             return;
         }
 
@@ -681,9 +681,7 @@ jQuery(document).ready(function ($) {
 
         var $required_answer_wrap = $question_wrap.find('.quiz-answer-required');
 
-
         if ($required_answer_wrap.length) {
-
             /**
              * Radio field validation
              *
@@ -733,13 +731,8 @@ jQuery(document).ready(function ($) {
                         $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please match all the items</p>');
                         validated = false;
                     }
-
                 });
-
             }
-
-
-
         }
 
         return validated;
@@ -752,78 +745,75 @@ jQuery(document).ready(function ($) {
         $('.wrong-right-text').remove();
         $('.quiz-answer-input-bottom').removeClass('wrong-answer right-answer');
 
-
         var validatedTrue = true;
         var $inputs = $question_wrap.find('input');
-        var $checkedInputs = $question_wrap.find('input[type="radio"]:checked');
+        var $checkedInputs = $question_wrap.find('input[type="radio"]:checked, input[type="checkbox"]:checked');
 
-        if (feedBackMode === 'retry'){
+        if (feedBackMode === 'retry') {
+            $checkedInputs.each(function () {
+                var $input = $(this);
 
-            if ($checkedInputs.length == 0) {
-                validatedTrue = false;
-            }else{
-                $checkedInputs.each(function(){
-                    var $input = $(this);
-
-                    var $type = $input.attr('type');
-                    if ($type === 'radio' || $type === 'checkbox'){
-                        var isTrue = $input.attr('data-is-correct') == '1';
-                        if ( isTrue){
-
-                        }else{
-                            if ($input.prop("checked")) {
-                                $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append('<span class="wrong-right-text"><i class="tutor-icon-line-cross"></i> Incorrect, Please try again</span>');
-                            }
-                            validatedTrue = false;
-                        }
-                    }
-                });
-            }
-
-        }else if(feedBackMode === 'reveal'){
-
-            if ($checkedInputs.length == 0) {
-                validatedTrue = false;
-            }else{
-
-                $checkedInputs.each(function(){
-                    var $input = $(this);
+                var $type = $input.attr('type');
+                if ($type === 'radio' || $type === 'checkbox') {
                     var isTrue = $input.attr('data-is-correct') == '1';
-                    if ( ! isTrue){
+                    if ( !isTrue) {
+                        if ($input.prop("checked")) {
+                            $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append('<span class="wrong-right-text"><i class="tutor-icon-line-cross"></i> Incorrect, Please try again</span>');
+                        }
                         validatedTrue = false;
                     }
-                });
+                }
+            });
 
-                $inputs.each(function(){
-                    var $input = $(this);
+            $inputs.each(function () {
+                var $input = $(this);
+                var $type = $input.attr('type');
+                if ($type === 'checkbox') {
+                    var isTrue = $input.attr('data-is-correct') == '1';
+                    var checked = $input.is(':checked');
+                
+                    if (isTrue && !checked) {
+                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">More answer for this question is required</p>');
+                        validatedTrue = false;
+                    }
+                }
+            });
 
-                    var $type = $input.attr('type');
-                    if ($type === 'radio' || $type === 'checkbox'){
-                        var isTrue = $input.attr('data-is-correct') == '1';
+        } else if (feedBackMode === 'reveal') {
+            $checkedInputs.each(function () {
+                var $input = $(this);
+                var isTrue = $input.attr('data-is-correct') == '1';
+                if (!isTrue) {
+                    validatedTrue = false;
+                }
+            });
 
-                        if ( isTrue){
+            $inputs.each(function () {
+                var $input = $(this);
 
-                            $input.closest('.quiz-answer-input-bottom').addClass('right-answer').append('<span class="wrong-right-text"><i class="tutor-icon-checkbox-pen-outline"></i> Correct Answer</span>');
+                var $type = $input.attr('type');
+                if ($type === 'radio' || $type === 'checkbox') {
+                    var isTrue = $input.attr('data-is-correct') == '1';
+                    var checked = $input.is(':checked');
 
-                        }else{
-                            if ($input.prop("checked")) {
-                                $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer');
-                            }
+                    if (isTrue) {
+                        $input.closest('.quiz-answer-input-bottom').addClass('right-answer').append('<span class="wrong-right-text"><i class="tutor-icon-checkbox-pen-outline"></i> Correct Answer</span>');
+                    } else {
+                        if ($input.prop("checked")) {
+                            $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer');
                         }
                     }
 
-                });
-
-            }
-
+                    if (isTrue && !checked) {
+                        validatedTrue = false;
+                    }
+                }
+            });
         }
 
-
-
-        if (validatedTrue){
+        if (validatedTrue) {
             goNext = true;
         }
-
 
         return goNext;
     }
@@ -1030,7 +1020,7 @@ jQuery(document).ready(function ($) {
             },
             success: function (res) {
                 if (res.success) {
-                    $('#tutor-dashboard-'+res.data.element+'-' + element_id).remove();
+                    $('#tutor-dashboard-' + res.data.element + '-' + element_id).remove();
                 }
             },
             complete: function () {
@@ -1718,7 +1708,7 @@ jQuery(document).ready(function ($) {
                     if ($form_wrapper.find('.tutor-alert').length) {
                         $form_wrapper.find('.tutor-alert').html(response.data);
                     } else {
-                        $form_wrapper.prepend('<div class="tutor-alert tutor-alert-warning">'+response.data+'</div>');
+                        $form_wrapper.prepend('<div class="tutor-alert tutor-alert-warning">' + response.data + '</div>');
                     }
                 }
             },

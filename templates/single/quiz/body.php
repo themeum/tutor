@@ -173,7 +173,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
                                                     <div class="quiz-answer-input-bottom">
                                                         <div class="quiz-answer-input-field">
-                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
+                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" data-is-correct="<?php echo $answer->is_correct ?>" value="<?php echo $answer->answer_id; ?>">
                                                             <span>&nbsp;</span>
                                                             <?php if ($answer->answer_view_format !== 'image'){
                                                                 echo $answer_title;
