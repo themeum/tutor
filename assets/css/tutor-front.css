@@ -8139,6 +8139,9 @@ label[for=tutor_withdraw_amount] {
   padding: 0 25px;
   position: relative;
 }
+.tutor-dashboard-builder-header .tutor-dashboard-builder-header-left .tutor-dashboard-builder-logo img {
+  max-height: 32px;
+}
 .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left button {
   margin: 0;
   padding: 0px 25px;

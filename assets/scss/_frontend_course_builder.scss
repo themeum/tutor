@@ -35,6 +35,9 @@
 		.tutor-dashboard-builder-logo{
 			padding:0 25px;
 			position: relative;
+			img {
+				max-height: 32px;
+			}
 		}
 		button{
 			margin: 0;
