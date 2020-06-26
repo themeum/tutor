@@ -16,7 +16,7 @@ $current_page = max( 1, tutils()->array_get('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
 ?>
     <div class="quiz-attempts-title">
-        <?php _e('My Quiz Attempts', 'tutor'); ?>
+        <?php _e('Quiz Attempts', 'tutor'); ?>
     </div>
 <?php
 $course_id = tutor_utils()->get_assigned_courses_ids_by_instructors();
@@ -29,6 +29,7 @@ if ( $quiz_attempts_count ){
         <table>
             <tr>
                 <th><?php _e('Course Info', 'tutor'); ?></th>
+                <th><?php _e('Student', 'tutor'); ?></th>
                 <th><?php _e('Correct Answer', 'tutor'); ?></th>
                 <th><?php _e('Incorrect Answer', 'tutor'); ?></th>
                 <th><?php _e('Earned Mark', 'tutor'); ?></th>
@@ -52,6 +53,14 @@ if ( $quiz_attempts_count ){
                             <span><?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?></span>
                             <span><?php _e('Question: ','tutor'); ?><strong><?php echo count($answers); ?></strong></span>
                             <span><?php _e('Total Marks: ','tutor'); ?><strong><?php echo $attempt->total_marks; ?></strong></span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="student">
+                            <?php echo $attempt->display_name; ?></span>
+                        </div>
+                        <div class="student-meta">
+                            <span><?php echo $attempt->user_email; ?></span>
                         </div>
                     </td>
                     <td>
