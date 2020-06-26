@@ -35,7 +35,6 @@
             </ul>
 
 			<?php
-
 			foreach ($options_attr as $key => $option_group){
 				if (empty($option_group)){
 					continue;
@@ -80,7 +79,6 @@
 				<?php
 			}
 		}
-
 		?>
 
         <p class="submit">
