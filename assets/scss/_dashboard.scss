@@ -337,7 +337,7 @@
 		font-weight: 500;
 		line-height: 1.14;
 		color: #8792b2;
-		&:not(:first-child) {
+		&:nth-child(n+3) {
 			text-align: center;
 		}
 	}
@@ -346,7 +346,7 @@
 		font-size: 14px;
 		font-weight: 400;
 		color: #4b5981;
-		&:not(:first-child) {
+		&:nth-child(n+3) {
 			font-weight: 500;
 			text-align: center;
 			padding-left: 3px !important;
@@ -374,6 +374,15 @@
 			span:nth-child(2) {
 				margin: 0 17px;
 			}
+		}
+		.student {
+			font-weight: 600;
+			line-height: 1.29;
+			color: #4b5981;
+		}
+		.student-meta {
+			display: inline-block;
+			margin-top: 5px;
 		}
 	}
 }

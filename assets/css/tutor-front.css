@@ -6563,8 +6563,8 @@ table.course-single-gradebooks a {
   line-height: 1.14;
   color: #8792b2;
 }
-.tutor-dashboard-content .tutor-quiz-attempt-history table th:not(:first-child),
-.single-quiz-page.tutor-quiz-attempt-history table th:not(:first-child) {
+.tutor-dashboard-content .tutor-quiz-attempt-history table th:nth-child(n+3),
+.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(n+3) {
   text-align: center;
 }
 .tutor-dashboard-content .tutor-quiz-attempt-history table td,
@@ -6574,8 +6574,8 @@ table.course-single-gradebooks a {
   font-weight: 400;
   color: #4b5981;
 }
-.tutor-dashboard-content .tutor-quiz-attempt-history table td:not(:first-child),
-.single-quiz-page.tutor-quiz-attempt-history table td:not(:first-child) {
+.tutor-dashboard-content .tutor-quiz-attempt-history table td:nth-child(n+3),
+.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(n+3) {
   font-weight: 500;
   text-align: center;
   padding-left: 3px !important;
@@ -6608,6 +6608,17 @@ table.course-single-gradebooks a {
 .tutor-dashboard-content .tutor-quiz-attempt-history table td .course-meta span:nth-child(2),
 .single-quiz-page.tutor-quiz-attempt-history table td .course-meta span:nth-child(2) {
   margin: 0 17px;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td .student,
+.single-quiz-page.tutor-quiz-attempt-history table td .student {
+  font-weight: 600;
+  line-height: 1.29;
+  color: #4b5981;
+}
+.tutor-dashboard-content .tutor-quiz-attempt-history table td .student-meta,
+.single-quiz-page.tutor-quiz-attempt-history table td .student-meta {
+  display: inline-block;
+  margin-top: 5px;
 }
 
 .single-quiz-page.tutor-quiz-attempt-history table {
