@@ -4647,13 +4647,33 @@ class Utils {
 		global $wpdb;
 
 		$user_id = $this->get_user_id();
+		$monetize_by = tutils()->get_option('monetize_by');
 
-		$query = $wpdb->get_results("SELECT {$wpdb->posts}.* FROM {$wpdb->posts}
- 			INNER JOIN {$wpdb->postmeta} customer ON ID = customer.post_id AND customer.meta_key = '_customer_user'
- 			INNER JOIN {$wpdb->postmeta} tutor_order ON ID = tutor_order.post_id AND tutor_order.meta_key = '_is_tutor_order_for_course'
-			WHERE post_type = 'shop_order' AND customer.meta_value = {$user_id}  
-			ORDER BY {$wpdb->posts}.ID DESC");
-		return $query;
+		if ($monetize_by === 'wc') {
+			$post_type = "shop_order";
+			$user_meta = "_customer_user";
+		} else if ($monetize_by === 'edd') {
+			$post_type = "edd_payment";
+			$user_meta = "_edd_payment_user_id";
+		}
+
+		$orders = $wpdb->get_results(
+			"	SELECT 
+					{$wpdb -> posts}.* 
+				FROM 
+					{$wpdb -> posts} 
+					INNER JOIN {$wpdb -> postmeta} customer ON id = customer.post_id 
+					AND customer.meta_key = '{$user_meta}' 
+					INNER JOIN {$wpdb -> postmeta} tutor_order ON id = tutor_order.post_id 
+					AND tutor_order.meta_key = '_is_tutor_order_for_course' 
+				WHERE 
+					post_type = '{$post_type}'
+					AND customer.meta_value = {$user_id} 
+				ORDER BY
+					{$wpdb -> posts}.id DESC
+			");
+
+		return $orders;
 	}
 
 	/**
