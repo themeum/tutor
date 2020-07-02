@@ -246,7 +246,10 @@ Fixed: Quiz retry and reveal mode error for certain types of quizzes
 Fixed: Resource issue from the course page
 Fixed: Logo image size issue for frontend course builder
 Fixed: Couldn't stop loading certain tutor CSS/JS
-Fixed: Blank content issue while updating course attachment & prerequisites using quick edit
+Fixed: Blank attachment & prerequisites while updating course using quick edit
+Fixed: EDD purchase history in frontend dashboard
+Fixed: Quiz import file size limit increased
+Fixed: CSV quiz import issue for Windows OS
 Updated: New student column in quiz attempt dashboard in the backend
 Updated: Sales & Students report for the Report Add-on(Pro)
 Removed: 'Mr.' text removed from the content of all email notifications
