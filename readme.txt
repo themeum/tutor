@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.6.5 - July 1, 2020 =
+= 1.6.5 - July 2, 2020 =
 Fixed: Quiz retry and reveal mode error for certain types of quizzes
 Fixed: Resource issue from the course page
 Fixed: Logo image size issue for frontend course builder
