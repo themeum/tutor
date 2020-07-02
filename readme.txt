@@ -250,7 +250,7 @@ Fixed: Blank attachment & prerequisites while updating course using quick edit
 Fixed: EDD purchase history in frontend dashboard
 Fixed: Quiz import file size limit increased
 Fixed: CSV quiz import issue for Windows OS
-Updated: New student column in quiz attempt dashboard in the backend
+Updated: New student column in quiz attempt on frontend dashboard
 Updated: Sales & Students report for the Report Add-on(Pro)
 Removed: 'Mr.' text removed from the content of all email notifications
 
