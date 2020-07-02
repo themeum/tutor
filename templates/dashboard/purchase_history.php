@@ -9,9 +9,10 @@
 <h2><?php _e('Purchase History', 'tutor'); ?></h2>
 
 <?php
-$orders = tutor_utils()->get_orders_by_user_id();
+$orders = tutils()->get_orders_by_user_id();
+$monetize_by = tutils()->get_option('monetize_by');
 
-if (tutor_utils()->count($orders)){
+if (tutils()->count($orders)){
 	?>
     <div class="responsive-table-wrap">
         <table>
@@ -23,23 +24,32 @@ if (tutor_utils()->count($orders)){
                 <th><?php _e('Date', 'tutor'); ?></th>
             </tr>
             <?php
-            foreach ($orders as $order){
-                $wc_order = wc_get_order($order->ID);
+            foreach ($orders as $order) {
+                if ($monetize_by === 'wc') {
+                    $wc_order = wc_get_order($order->ID);
+                    $price = tutils()->tutor_price($wc_order->get_total());
+                    $status = tutils()->tutor_price($wc_order->get_total());
+                } else if ($monetize_by === 'edd') {
+                    $edd_order = edd_get_payment($order->ID);
+                    $price = edd_get_payment_amount($order->ID);
+                    $price = edd_currency_filter($price);
+                    $status = $edd_order->status_nicename;
+                }
                 ?>
                 <tr>
                     <td>#<?php echo $order->ID; ?></td>
                     <td>
                         <?php
-                        $courses = tutor_utils()->get_course_enrolled_ids_by_order_id($order->ID);
-                        if (tutor_utils()->count($courses)){
+                        $courses = tutils()->get_course_enrolled_ids_by_order_id($order->ID);
+                        if (tutils()->count($courses)){
                             foreach ($courses as $course){
                                 echo '<p>'.get_the_title($course['course_id']).'</p>';
                             }
                         }
                         ?>
                     </td>
-                    <td><?php echo tutor_utils()->tutor_price($wc_order->get_total()); ?></td>
-                    <td><?php echo tutor_utils()->order_status_context($order->post_status); ?></td>
+                    <td><?php echo $price; ?></td>
+                    <td><?php echo $status; ?></td>
 
                     <td>
                         <?php echo date_i18n(get_option('date_format'), strtotime($order->post_date)) ?>
