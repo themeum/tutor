@@ -242,6 +242,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 == Changelog ==
 
 = 1.6.5 - July 2, 2020 =
+New: Sales & Students report for the Report Add-on(Pro)
 Fixed: Quiz retry and reveal mode error for certain types of quizzes
 Fixed: Resource issue from the course page
 Fixed: Logo image size issue for frontend course builder
@@ -251,7 +252,6 @@ Fixed: EDD purchase history in frontend dashboard
 Fixed: Quiz import file size limit increased
 Fixed: CSV quiz import issue for Windows OS
 Updated: New student column in quiz attempt on frontend dashboard
-Updated: Sales & Students report for the Report Add-on(Pro)
 Removed: 'Mr.' text removed from the content of all email notifications
 
 = 1.6.4 - June 15, 2020 =
