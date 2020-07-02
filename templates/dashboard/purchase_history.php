@@ -32,7 +32,7 @@ if (tutils()->count($orders)){
                 } else if ($monetize_by === 'edd') {
                     $edd_order = edd_get_payment($order->ID);
                     $price = edd_get_payment_amount($order->ID);
-                    $price = edd_currency_filter($price);
+                    $price = edd_currency_filter( edd_format_amount( $price ), edd_get_payment_currency_code( $order->ID ) );
                     $status = $edd_order->status_nicename;
                 }
                 ?>
