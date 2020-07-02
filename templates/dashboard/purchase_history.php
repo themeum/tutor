@@ -28,11 +28,10 @@ if (tutils()->count($orders)){
                 if ($monetize_by === 'wc') {
                     $wc_order = wc_get_order($order->ID);
                     $price = tutils()->tutor_price($wc_order->get_total());
-                    $status = tutils()->tutor_price($wc_order->get_total());
+                    $status = tutils()->order_status_context($order->post_status);
                 } else if ($monetize_by === 'edd') {
                     $edd_order = edd_get_payment($order->ID);
-                    $price = edd_get_payment_amount($order->ID);
-                    $price = edd_currency_filter( edd_format_amount( $price ), edd_get_payment_currency_code( $order->ID ) );
+                    $price = edd_currency_filter( edd_format_amount( $edd_order->total ), edd_get_payment_currency_code( $order->ID ) );
                     $status = $edd_order->status_nicename;
                 }
                 ?>
