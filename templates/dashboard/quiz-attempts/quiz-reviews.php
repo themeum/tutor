@@ -342,7 +342,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 
                         <td>
                             <?php
-                            if ( !$answer->is_correct && ($answer->question_type != 'open_ended' && $answer->question_type != 'short_answer')) {
+                            if (($answer->question_type != 'open_ended' && $answer->question_type != 'short_answer')) {
                                 global $wpdb;
                                 if ( $answer->question_type === 'true_false' ) {
                                     $correct_answer = $wpdb->get_var( "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1" );
