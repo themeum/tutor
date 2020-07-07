@@ -83,30 +83,40 @@
 		}
 	}
 	.profile-completion-warning-content {
-		-webkit-box-flex: 1;
+		display: flex;
+		flex-wrap: wrap;
 		flex-grow: 1;
-		h3 {
+		-webkit-box-flex: 1;
+		h4 {
 			font-size: 20px;
 			line-height: 30px;
 			margin: 0;
 			padding: 0;
+			width: 100%;
 		}
-		ul {
-			list-style: none;
-			li::before {
-				content: "\2022";
-				color: #f44337;
-				font-weight: bold;
-				display: inline-block; 
-				margin-left: -1em;
-			}
-			li {
-				display: inline;
+		p {
+			margin-bottom: 10px;
+		}
+		.profile-completion-warning-details {
+			flex-grow: 1;
+			-webkit-box-flex: 1;
+			ul {
+				list-style: none;
+				li::before {
+					content: "\2022";
+					color: #f44337;
+					font-weight: bold;
+					display: inline-block; 
+					margin-left: -1em;
+				}
+				li {
+					display: inline;
+				}
 			}
 		}
-
-	}
-	.profile-completion-warning-status {
+		.profile-completion-warning-status {
+	
+		}
 
 	}
 }
