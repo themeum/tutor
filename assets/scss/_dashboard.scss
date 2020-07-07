@@ -8,6 +8,18 @@
 	padding-bottom: 30px;
 	border-bottom: 1px solid #dcdfe5;
 	flex-wrap: wrap;
+	.tutor-btn.bordered-btn {
+		background-color: transparent;
+		text-transform: uppercase;
+		font-weight: 400;
+		border-radius: 2px;
+		i {
+			font-size: 20px;
+		}
+	}
+	.tutor-star-rating-group {
+		margin-right: 3px;
+	}
 }
 
 .tutor-dashboard-header-avatar img {
@@ -20,7 +32,7 @@
 .tutor-dashboard-header-info {
 	-webkit-box-flex: 1;
 	flex-grow: 1;
-	padding-left: 20px;
+	padding-left: 24px;
 	padding-top: 15px;
 	padding-bottom: 15px;
 }
@@ -73,7 +85,7 @@
 .tutor-profile-completion-warning {
 	display: flex;
 	flex-wrap: wrap;
-	padding: 30px 0;
+	padding: 20px 0;
 	border-bottom: 1px solid #dcdfe5;
 	.profile-completion-warning-icon {
 		span {
@@ -96,28 +108,69 @@
 		}
 		p {
 			margin-bottom: 10px;
+			font-size: 14px;
+			font-weight: 300;
+			color: #737787;
+
+			a {
+				font-weight: 400;
+				color: #3e64de;
+			}
 		}
 		.profile-completion-warning-details {
 			flex-grow: 1;
 			-webkit-box-flex: 1;
 			ul {
+				margin: 0;
 				list-style: none;
-				li::before {
-					content: "\2022";
-					color: #f44337;
-					font-weight: bold;
-					display: inline-block; 
-					margin-left: -1em;
-				}
+
 				li {
 					display: inline;
+					position: relative;
+					padding-left: 16px;
+					color: #737787;
+
+					&:not(:last-child) {
+						margin-right: 21px;
+					}
+
+					&::before {
+						content: "\2022";
+						position: absolute;
+						color: #f44337;
+						font-weight: bold;
+						display: inline-block;
+						left: 0;
+					}
+
+					span {
+						color: #3f435b;
+					}
 				}
 			}
 		}
 		.profile-completion-warning-status {
-	
+			p {
+				span {
+					font-weight: 400;
+				}
+			}
+			.tutor-progress-bar-wrap {
+				.tutor-progress-bar {
+					height: 6px;
+					border-radius: 8.5px;
+					background-color: #ededf0;
+				}
+				.tutor-progress-filled {
+					height: 6px;
+					border-radius: 3px;
+					background-color: #ed9700;
+					&::after {
+						display: none;
+					}
+				}
+			}
 		}
-
 	}
 }
 
@@ -390,7 +443,7 @@
 		font-weight: 500;
 		line-height: 1.14;
 		color: #8792b2;
-		&:nth-child(n+3) {
+		&:nth-child(n + 3) {
 			text-align: center;
 		}
 	}
@@ -399,7 +452,7 @@
 		font-size: 14px;
 		font-weight: 400;
 		color: #4b5981;
-		&:nth-child(n+3) {
+		&:nth-child(n + 3) {
 			font-weight: 500;
 			text-align: center;
 			padding-left: 3px !important;
@@ -1217,7 +1270,8 @@ UI DatePicker
 }
 .ui-datepicker .ui-datepicker-calendar td {
 	border-radius: 4px;
-	-webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+	-webkit-transition: background-color 0.1s ease-in-out,
+		color 0.1s ease-in-out;
 	-moz-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 	-o-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 	transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;

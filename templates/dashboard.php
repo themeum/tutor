@@ -100,12 +100,12 @@ do_action('tutor_dashboard/before/wrap');
                             <div class="profile-completion-warning-details">
                                 <p>Complete your profile so people can know more about you! Go to Profile <a>Settings</a></p>
                                 <ul>
-                                    <li>Set Your Profile Picture</li>
-                                    <li>Set Your Name</li>
+                                    <li>Set Your <span>Profile Picture</span></li>
+                                    <li>Set Your <span>Full name & Username</span></li>
                                 </ul>
                             </div>
                             <div class="profile-completion-warning-status">
-                                <p>75% Complete, You are almost done!</p>
+                                <p><span>75% Complete,</span> You are almost done!</p>
                                 <div class="tutor-progress-bar-wrap">
                                     <div class="tutor-progress-bar">
                                         <div class="tutor-progress-filled" style="--tutor-progress-left: 75%;"></div>
