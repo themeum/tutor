@@ -5476,7 +5476,7 @@ class Utils {
 	 * @param int $instructor_id
 	 * @param int $course_id
 	 *
-	 * @return array|bool|null|object
+	 * @return bool|int
 	 *
 	 * Is instructor of this course
 	 *
@@ -5501,5 +5501,59 @@ class Utils {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return array|object
+	 *
+	 * User profile completion status
+	 *
+	 * @since v.1.6.6
+	 */
+	public function profile_completion_status($user_id=0) {
+		$user_id = $this->get_user_id($user_id);
+		$instructor = $this->is_instructor($user_id);
+
+		$required_fields = array(
+			'first_name' 					=> __('First Name', 'tutor'),
+			'last_name' 					=> __('Last Name', 'tutor'),
+			'_tutor_profile_photo' 			=> __('Profile Photo', 'tutor'),
+			'_tutor_withdraw_method_data' 	=> __('Withdraw Method', 'tutor'),
+		);
+
+		if (!$instructor) {
+			unset($required_fields['_tutor_withdraw_method_data']);
+		}
+
+		$required_fields = apply_filters('tutor_profile_required_fields', $required_fields);
+
+		$empty_fields = array();
+		foreach ($required_fields as $key => $field) {
+			$value = get_user_meta($user_id, $key, true);
+			if (!$value) {
+				array_push($empty_fields, $field);
+			}
+		}
+
+		$previous_point = 50;
+		$total_empty_fields = count($empty_fields);
+		$total_required_fields = count($required_fields);
+
+		if ($total_empty_fields == 0) {
+			$progress = 100;
+		} else {
+			$completed_field = $total_required_fields-$total_empty_fields;
+			$per_field_point = $previous_point / $total_required_fields;
+			$progress = $previous_point + ceil($per_field_point * $completed_field);
+		}
+
+		$return = array(
+			'empty_fields' => $empty_fields,
+			'progress' => $progress,
+		);
+
+		return (object) $return;
 	}
 }
