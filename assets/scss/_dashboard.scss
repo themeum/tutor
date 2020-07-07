@@ -84,7 +84,6 @@
 /* Dashboard profile completion warning */
 .tutor-profile-completion-warning {
 	display: flex;
-	flex-wrap: wrap;
 	padding: 20px 0;
 	border-bottom: 1px solid #dcdfe5;
 	.profile-completion-warning-icon {
@@ -843,6 +842,10 @@
 		flex: 0 0 100%;
 		max-width: 100%;
 	}
+
+	.profile-completion-warning-details {
+		margin-bottom: 10px;
+	}
 }
 
 .tutor-dashboard-permalinks a {
@@ -1071,6 +1074,9 @@ table.tutor-dashboard-statement-table p.small-text {
 	.tutor-mycourse-content {
 		min-width: 100%;
 		width: 100%;
+	}
+	.profile-completion-warning-details li {
+		display: block !important;
 	}
 }
 
