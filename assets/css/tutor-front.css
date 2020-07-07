@@ -6292,26 +6292,36 @@ table.course-single-gradebooks a {
   padding: 0 15px;
 }
 .tutor-profile-completion-warning .profile-completion-warning-content {
-  -webkit-box-flex: 1;
+  display: flex;
+  flex-wrap: wrap;
   flex-grow: 1;
+  -webkit-box-flex: 1;
 }
-.tutor-profile-completion-warning .profile-completion-warning-content h3 {
+.tutor-profile-completion-warning .profile-completion-warning-content h4 {
   font-size: 20px;
   line-height: 30px;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
-.tutor-profile-completion-warning .profile-completion-warning-content ul {
+.tutor-profile-completion-warning .profile-completion-warning-content p {
+  margin-bottom: 10px;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-details {
+  flex-grow: 1;
+  -webkit-box-flex: 1;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-details ul {
   list-style: none;
 }
-.tutor-profile-completion-warning .profile-completion-warning-content ul li::before {
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-details ul li::before {
   content: "•";
   color: #f44337;
   font-weight: bold;
   display: inline-block;
   margin-left: -1em;
 }
-.tutor-profile-completion-warning .profile-completion-warning-content ul li {
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-details ul li {
   display: inline;
 }
 /* End dashboard profile completion warning */
