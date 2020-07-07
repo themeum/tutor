@@ -6278,7 +6278,43 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-color);
 }
 
-/* end dashboard header */
+/* End dashboard header */
+/* Dashboard profile completion warning */
+.tutor-profile-completion-warning {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 30px 0;
+  border-bottom: 1px solid #dcdfe5;
+}
+.tutor-profile-completion-warning .profile-completion-warning-icon span {
+  font-size: 35px;
+  color: #ed9700;
+  padding: 0 15px;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content {
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content h3 {
+  font-size: 20px;
+  line-height: 30px;
+  margin: 0;
+  padding: 0;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content ul {
+  list-style: none;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content ul li::before {
+  content: "•";
+  color: #f44337;
+  font-weight: bold;
+  display: inline-block;
+  margin-left: -1em;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content ul li {
+  display: inline;
+}
+/* End dashboard profile completion warning */
 /**
  * Dashboard Table
  */

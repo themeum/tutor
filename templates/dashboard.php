@@ -89,6 +89,34 @@ do_action('tutor_dashboard/before/wrap');
                         </div>
                     </div>
                 </div>
+
+                <div class="tutor-col-12">
+                    <div class="tutor-profile-completion-warning">
+                        <div class="profile-completion-warning-icon">
+                            <span class="tutor-icon-warning-2"></span>
+                        </div>
+                        <div class="profile-completion-warning-content">
+                            <h3>Complete Your Profile</h3>
+                            <p>Complete your profile so people can know more about you! Go to Profile <a>Settings</a></p>
+                            <ul>
+                                <li>Set Your Profile Picture</li>
+                                <li>Set Your Name</li>
+                            </ul>
+                        </div>
+                        <div class="profile-completion-warning-status">
+                            <div class="tutor-course-status">
+                                <h4 class="tutor-segment-title">Course Status</h4>
+                                <div class="tutor-progress-bar-wrap">
+                                    <div class="tutor-progress-bar">
+                                        <div class="tutor-progress-filled" style="--tutor-progress-left: 14%;"></div>
+                                    </div>
+                                    <span class="tutor-progress-percent">14%  Complete</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <div class="tutor-row">
