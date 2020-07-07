@@ -67,12 +67,55 @@
 	}
 }
 
-/* end dashboard header */
+/* End dashboard header */
+
+/* Dashboard profile completion warning */
+.tutor-profile-completion-warning {
+	display: flex;
+	flex-wrap: wrap;
+	padding: 30px 0;
+	border-bottom: 1px solid #dcdfe5;
+	.profile-completion-warning-icon {
+		span {
+			font-size: 35px;
+			color: #ed9700;
+			padding: 0 15px;
+		}
+	}
+	.profile-completion-warning-content {
+		-webkit-box-flex: 1;
+		flex-grow: 1;
+		h3 {
+			font-size: 20px;
+			line-height: 30px;
+			margin: 0;
+			padding: 0;
+		}
+		ul {
+			list-style: none;
+			li::before {
+				content: "\2022";
+				color: #f44337;
+				font-weight: bold;
+				display: inline-block; 
+				margin-left: -1em;
+			}
+			li {
+				display: inline;
+			}
+		}
+
+	}
+	.profile-completion-warning-status {
+
+	}
+}
+
+/* End dashboard profile completion warning */
 
 /**
  * Dashboard Table
  */
-
 .tutor-dashboard-info-table-wrap {
 	margin-bottom: 30px;
 	table {
