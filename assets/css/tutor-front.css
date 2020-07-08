@@ -6297,10 +6297,13 @@ table.course-single-gradebooks a {
   padding: 20px 0;
   border-bottom: 1px solid #dcdfe5;
 }
+.tutor-profile-completion-warning .profile-completion-warning-icon {
+  margin-top: 10px;
+}
 .tutor-profile-completion-warning .profile-completion-warning-icon span {
-  font-size: 35px;
+  font-size: 40px;
   color: #ed9700;
-  padding: 0 15px;
+  padding: 0 20px;
 }
 .tutor-profile-completion-warning .profile-completion-warning-content {
   display: flex;

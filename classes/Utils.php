@@ -4651,6 +4651,8 @@ class Utils {
 		$user_id = $this->get_user_id();
 		$monetize_by = tutils()->get_option('monetize_by');
 
+		$post_type = "";
+		$user_meta = "";
 		if ($monetize_by === 'wc') {
 			$post_type = "shop_order";
 			$user_meta = "_customer_user";
@@ -5516,18 +5518,16 @@ class Utils {
 		$user_id = $this->get_user_id($user_id);
 		$instructor = $this->is_instructor($user_id);
 
-		$required_fields = array(
+		$required_fields = apply_filters('tutor_profile_required_fields', array(
 			'first_name' 					=> __('First Name', 'tutor'),
 			'last_name' 					=> __('Last Name', 'tutor'),
 			'_tutor_profile_photo' 			=> __('Profile Photo', 'tutor'),
 			'_tutor_withdraw_method_data' 	=> __('Withdraw Method', 'tutor'),
-		);
+		));
 
-		if (!$instructor) {
+		if (!$instructor && array_key_exists("_tutor_withdraw_method_data", $required_fields)) {
 			unset($required_fields['_tutor_withdraw_method_data']);
 		}
-
-		$required_fields = apply_filters('tutor_profile_required_fields', $required_fields);
 
 		$empty_fields = array();
 		foreach ($required_fields as $key => $field) {
