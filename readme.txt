@@ -2,9 +2,9 @@
 Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
-Requires at least: 4.5
+Requires at least: 5.4
 Tested up to: 5.4
-Requires PHP: 5.4.0
+Requires PHP: 7.3
 Stable tag: 1.6.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -173,8 +173,13 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 = Minimum Requirements =
 
-* PHP version 5.6.0 or greater (PHP 7.1 or greater is recommended)
-* MySQL version 5.0 or greater (MySQL 5.6 or greater is recommended)
+* PHP version 7.3 or greater
+* MySQL version 5.6 or greater
+* Browser – Chrome, Firefox, Safari (recommended)
+Internet Explorer is not supported
+* Server Modules – mod_rewrite, cURL, fsockopen, imagick
+
+*The certificate feature might not work on WordPress.com and Siteground hosting*
 
 = Automatic installation =
 
