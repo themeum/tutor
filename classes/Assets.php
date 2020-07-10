@@ -95,7 +95,14 @@ class Assets{
 			    'quiz_when_time_expires' => tutils()->get_option('quiz_when_time_expires'),
             );
 
-            $quiz_options = array_merge($single_quiz_options, $saved_quiz_options);
+			$quiz_options = array_merge($single_quiz_options, $saved_quiz_options);
+
+			$previous_attempts = tutor_utils()->quiz_attempts();
+
+			if ($previous_attempts && count($previous_attempts)) {
+				$quiz_options['quiz_auto_start'] = 0;
+			}
+			
 			$localize_data['quiz_options'] = $quiz_options;
 		}
 

@@ -151,7 +151,7 @@ $course_id = tutils()->get_course_id_by_content($post);
             <input type="hidden" value="<?php echo $course_id; ?>" name="tutor_course_id"/>
 
             <div class="tutor-form-group">
-                <input type="text" name="question_title" value="" placeholder="<?php _e('Question Title', 'tutor'); ?>">
+                <input type="text" name="question_title" value="" placeholder="<?php _e('Question Title', 'tutor'); ?>" required="required">
             </div>
 
             <div class="tutor-form-group">

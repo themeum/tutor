@@ -32,7 +32,7 @@ if ( ! $enable_q_and_a_on_course) {
             <input type="hidden" value="<?php echo get_the_ID(); ?>" name="tutor_course_id"/>
 
             <div class="tutor-form-group">
-                <input type="text" name="question_title" value="" placeholder="<?php _e('Question Title', 'tutor'); ?>">
+                <input type="text" name="question_title" value="" placeholder="<?php _e('Question Title', 'tutor'); ?>" required="required">
             </div>
 
             <div class="tutor-form-group">

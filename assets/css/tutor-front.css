@@ -6220,6 +6220,18 @@ table.course-single-gradebooks a {
   border-bottom: 1px solid #dcdfe5;
   flex-wrap: wrap;
 }
+.tutor-dashboard-header .tutor-btn.bordered-btn {
+  background-color: transparent;
+  text-transform: uppercase;
+  font-weight: 400;
+  border-radius: 2px;
+}
+.tutor-dashboard-header .tutor-btn.bordered-btn i {
+  font-size: 20px;
+}
+.tutor-dashboard-header .tutor-star-rating-group {
+  margin-right: 3px;
+}
 
 .tutor-dashboard-header-avatar img {
   display: block;
@@ -6231,7 +6243,7 @@ table.course-single-gradebooks a {
 .tutor-dashboard-header-info {
   -webkit-box-flex: 1;
   flex-grow: 1;
-  padding-left: 20px;
+  padding-left: 24px;
   padding-top: 15px;
   padding-bottom: 15px;
 }
@@ -6278,7 +6290,90 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-color);
 }
 
-/* end dashboard header */
+/* End dashboard header */
+/* Dashboard profile completion warning */
+.tutor-profile-completion-warning {
+  display: flex;
+  padding: 20px 0;
+  border-bottom: 1px solid #dcdfe5;
+}
+.tutor-profile-completion-warning .profile-completion-warning-icon {
+  margin-top: 10px;
+}
+.tutor-profile-completion-warning .profile-completion-warning-icon span {
+  font-size: 40px;
+  color: #ed9700;
+  padding: 0 20px;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content {
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  -webkit-box-flex: 1;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content h4 {
+  font-size: 20px;
+  line-height: 30px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content p {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 300;
+  color: #737787;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content p a {
+  font-weight: 400;
+  color: #3e64de;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-details {
+  flex-grow: 1;
+  -webkit-box-flex: 1;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-details ul {
+  margin: 0;
+  list-style: none;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-details ul li {
+  display: inline;
+  position: relative;
+  padding-left: 16px;
+  color: #737787;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-details ul li:not(:last-child) {
+  margin-right: 21px;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-details ul li::before {
+  content: "•";
+  position: absolute;
+  color: #f44337;
+  font-weight: bold;
+  display: inline-block;
+  left: 0;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-details ul li span {
+  color: #3f435b;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-status p span {
+  font-weight: 400;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-status .tutor-progress-bar-wrap .tutor-progress-bar {
+  height: 6px;
+  border-radius: 8.5px;
+  background-color: #ededf0;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-status .tutor-progress-bar-wrap .tutor-progress-filled {
+  height: 6px;
+  border-radius: 3px;
+  background-color: #ed9700;
+}
+.tutor-profile-completion-warning .profile-completion-warning-content .profile-completion-warning-status .tutor-progress-bar-wrap .tutor-progress-filled::after {
+  display: none;
+}
+
+/* End dashboard profile completion warning */
 /**
  * Dashboard Table
  */
@@ -6971,6 +7066,10 @@ table.course-single-gradebooks a {
     flex: 0 0 100%;
     max-width: 100%;
   }
+
+  .profile-completion-warning-details {
+    margin-bottom: 10px;
+  }
 }
 .tutor-dashboard-permalinks a {
   display: block;
@@ -7215,6 +7314,10 @@ table.tutor-dashboard-statement-table p.small-text {
 .tutor-mycourse-content {
     min-width: 100%;
     width: 100%;
+  }
+
+  .profile-completion-warning-details li {
+    display: block !important;
   }
 }
 .tutor-mycourse-content h3 {
