@@ -19,6 +19,8 @@ class Dashboard {
 		add_action('tutor_load_template_before', array($this, 'tutor_load_template_before'), 10, 2);
 		add_action('tutor_load_template_after', array($this, 'tutor_load_template_after'), 10, 2);
 		add_filter('should_tutor_load_template', array($this, 'should_tutor_load_template'), 10, 2);
+
+		add_action('tutor_dashboard/notification_area', array($this, 'profile_completion_notification'), 10, 2);
 	}
 
 	/**
@@ -67,4 +69,23 @@ class Dashboard {
 		return $bool;
 	}
 
+
+	/**
+	 * Display completion notification
+	 * 
+	 * @return string
+	 *
+	 * @since v.1.6.6
+	 */
+	public function profile_completion_notification() {
+        $output = '';
+        $enable_profile_completion = tutils()->get_option('enable_profile_completion');
+        if ($enable_profile_completion) {
+            ob_start();
+            tutor_load_template('dashboard.notifications.profile-completion');
+            $output = apply_filters('tutor_profile_completion_notification_html', ob_get_clean());
+        }
+
+        echo $output;
+    }
 }
