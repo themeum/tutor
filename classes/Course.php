@@ -93,8 +93,14 @@ class Course extends Tutor_Base {
          * Add social share content in header
          * @since v.1.6.3
          */
-        add_action('wp_head', array($this, 'social_share_content'));
-    }
+		add_action('wp_head', array($this, 'social_share_content'));
+		
+        /**
+         * Delete course data after deleted course
+         * @since v.1.6.6
+         */
+        add_action('deleted_post', array($this, 'delete_tutor_course_data'));
+	}
 
 	/**
 	 * Registering metabox
@@ -1129,5 +1135,62 @@ class Course extends Tutor_Base {
 			<meta itemprop="image" content="<?php echo get_tutor_course_thumbnail_src(); ?>">
 			<meta itemprop="description" content="<?php echo esc_html($post->post_content); ?>"> <?php
 		}
-    }
+	}
+
+	/**
+	 * Get posts by type and parent
+	 * @since v.1.6.6
+	 */
+	public function tutor_get_post_ids($post_type, $post_parent) {
+		$args = array(
+			'fields' 		 => 'ids',
+			'post_type'      => $post_type,
+			'post_parent'    => $post_parent,
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+		);
+		return get_posts($args);
+	}
+	
+	/**
+	 * Delete course data when permanently deleting a course.
+	 * @since v.1.6.6
+	 */
+	function delete_tutor_course_data( $post_id ) {
+		$course_post_type = tutor()->course_post_type;
+		$lesson_post_type = tutor()->lesson_post_type;
+
+		if (get_post_type($post_id) == $course_post_type) {
+			global $wpdb;
+			$topic_ids = $this->tutor_get_post_ids('topics', $post_id);
+			if ( !empty($topic_ids) ) {
+				foreach ($topic_ids as $topic_id) {
+					$content_post_type = apply_filters('tutor_course_contents_post_types', array($lesson_post_type, 'tutor_quiz'));
+					$topic_content_ids = $this->tutor_get_post_ids($content_post_type, $topic_id);
+					
+					foreach ($topic_content_ids as $content_id) {
+						if( get_post_type($content_id) == 'tutor_quiz') {
+							$wpdb->delete($wpdb->prefix.'tutor_quiz_attempts', array('quiz_id' => $content_id));
+							$wpdb->delete($wpdb->prefix.'tutor_quiz_attempt_answers', array('quiz_id' => $content_id));
+
+							$questions_ids = $wpdb->get_col("SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$content_id} ");
+							if (is_array($questions_ids) && count($questions_ids)){
+								$in_question_ids = "'".implode("','", $questions_ids)."'";
+								$wpdb->query("DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_question_ids}) ");
+							}
+							$wpdb->delete($wpdb->prefix.'tutor_quiz_questions', array('quiz_id' => $content_id));
+						}
+						wp_delete_post($content_id, true);
+					}
+					wp_delete_post($topic_id, true);
+				}
+			}
+			$child_post_ids = $this->tutor_get_post_ids(array('tutor_announcements', 'tutor_enrolled'), $post_id);
+			if ( !empty($child_post_ids) ) {
+				foreach ($child_post_ids as $child_post_id) {
+					wp_delete_post($child_post_id, true);
+				}
+			}
+		}
+	}
 }

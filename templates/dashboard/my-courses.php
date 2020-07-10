@@ -43,8 +43,9 @@
                             <li>
 								<?php
 								_e('Status:', 'tutor');
-								$status = ucwords($post->post_status);
-								echo "<span>$status</span>";
+                                $status = ucwords($post->post_status);
+                                $status = ($status == 'Publish') ? 'Published' : $status;
+								echo '<span>'.__($status, 'tutor').'</span>';
 								?>
                             </li>
                             <li>
