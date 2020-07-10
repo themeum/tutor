@@ -2970,24 +2970,30 @@ class Utils {
 		global $wpdb;
 		$author_sql = $is_author ? "" : "AND {$wpdb->comments}.user_id = {$user_id}";
 		
-		$questions = $wpdb->get_results("select {$wpdb->comments}.comment_ID, 
-			{$wpdb->comments}.comment_post_ID, 
-			{$wpdb->comments}.comment_author, 
-			{$wpdb->comments}.comment_date, 
-			{$wpdb->comments}.comment_content, 
-			{$wpdb->comments}.user_id, 
-			{$wpdb->commentmeta}.meta_value as question_title,
-			{$wpdb->users}.display_name 
-			
-			from {$wpdb->comments}
-			INNER JOIN {$wpdb->commentmeta} 
-			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
-			INNER  JOIN {$wpdb->users}
-			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
-			{$author_sql}
-			AND {$wpdb->comments}.comment_type	 = 'tutor_q_and_a'
-			AND meta_key = 'tutor_question_title' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
+		$questions = $wpdb->get_results(
+			"SELECT 
+				{$wpdb -> comments}.comment_ID, 
+				{$wpdb -> comments}.comment_post_ID, 
+				{$wpdb -> comments}.comment_author, 
+				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_content, 
+				{$wpdb -> comments}.user_id, 
+				{$wpdb -> commentmeta}.meta_value as question_title, 
+				{$wpdb -> users}.display_name 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> commentmeta} ON {$wpdb -> comments}.comment_ID = {$wpdb -> commentmeta}.comment_id 
+				INNER JOIN {$wpdb -> users} ON {$wpdb -> comments}.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				{$wpdb -> comments}.comment_post_ID = {$course_id} {$author_sql} 
+				AND {$wpdb -> comments}.comment_type = 'tutor_q_and_a' 
+				AND meta_key = 'tutor_question_title' 
+			ORDER BY 
+				comment_ID DESC 
+			LIMIT 
+				{$offset}, 
+				{$limit};
+			"
 		);
 
 		return $questions;
@@ -3027,10 +3033,17 @@ class Utils {
 			}
 		}
 
-		$count = $wpdb->get_var("SELECT COUNT({$wpdb->comments}.comment_ID) FROM {$wpdb->comments} 
-			INNER JOIN {$wpdb->commentmeta} 
-			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-			WHERE comment_type	 = 'tutor_q_and_a' AND comment_parent = 0 {$in_question_id_query} {$search_term} ");
+		$count = $wpdb->get_var(
+			"SELECT 
+				COUNT({$wpdb -> comments}.comment_ID) 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> commentmeta} ON {$wpdb -> comments}.comment_ID = {$wpdb -> commentmeta}.comment_id 
+			WHERE 
+				comment_type = 'tutor_q_and_a' 
+				AND comment_parent = 0 {$in_question_id_query} {$search_term};
+			"
+		);
 
 		return (int) $count;
 	}
@@ -3072,35 +3085,40 @@ class Utils {
 			}
 		}
 
-		$query = $wpdb->get_results("SELECT 
-			{$wpdb->comments}.comment_ID, 
-			{$wpdb->comments}.comment_post_ID, 
-			{$wpdb->comments}.comment_author, 
-			{$wpdb->comments}.comment_date, 
-			{$wpdb->comments}.comment_content, 
-			{$wpdb->comments}.user_id, 
-			{$wpdb->commentmeta}.meta_value as question_title,
-			{$wpdb->users}.display_name,
-			{$wpdb->posts}.post_title,
-			
-			(SELECT COUNT(answers_t.comment_ID) FROM {$wpdb->comments} answers_t
-		  	WHERE answers_t.comment_parent = {$wpdb->comments}.comment_ID ) as answer_count
-		 
-		 	FROM {$wpdb->comments} 
-		
-			INNER JOIN {$wpdb->commentmeta} 
-			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-			
-			INNER JOIN {$wpdb->posts} 
-			ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
-			
-			INNER  JOIN {$wpdb->users}
-			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-		  
-			WHERE {$wpdb->comments}.comment_type = 'tutor_q_and_a' AND {$wpdb->comments}.comment_parent = 0  {$search_term}
-			{$in_question_id_query}
-			ORDER BY {$wpdb->comments}.comment_ID DESC 
-			LIMIT {$start},{$limit}; ");
+		$query = $wpdb->get_results(
+			"SELECT 
+				{$wpdb -> comments}.comment_ID, 
+				{$wpdb -> comments}.comment_post_ID, 
+				{$wpdb -> comments}.comment_author, 
+				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_content, 
+				{$wpdb -> comments}.user_id, 
+				{$wpdb -> commentmeta}.meta_value as question_title, 
+				{$wpdb -> users}.display_name, 
+				{$wpdb -> posts}.post_title, 
+				(
+				SELECT 
+					COUNT(answers_t.comment_ID) 
+				FROM 
+					{$wpdb -> comments} answers_t 
+				WHERE 
+					answers_t.comment_parent = {$wpdb -> comments}.comment_ID
+				) as answer_count 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> commentmeta} ON {$wpdb -> comments}.comment_ID = {$wpdb -> commentmeta}.comment_id 
+				INNER JOIN {$wpdb -> posts} ON {$wpdb -> comments}.comment_post_ID = {$wpdb -> posts}.ID 
+				INNER JOIN {$wpdb -> users} ON {$wpdb -> comments}.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				{$wpdb -> comments}.comment_type = 'tutor_q_and_a' 
+				AND {$wpdb -> comments}.comment_parent = 0 {$search_term} {$in_question_id_query} 
+			ORDER BY 
+				{$wpdb -> comments}.comment_ID DESC 
+			LIMIT 
+				{$start}, 
+				{$limit};
+			"
+		);
 
 		return $query;
 	}
@@ -3116,27 +3134,27 @@ class Utils {
 	 */
 	public function get_qa_question($question_id){
 		global $wpdb;
-		$query = $wpdb->get_row("SELECT 
-			{$wpdb->comments}.comment_ID, 
-			{$wpdb->comments}.comment_post_ID, 
-			{$wpdb->comments}.comment_author, 
-			{$wpdb->comments}.comment_date, 
-			{$wpdb->comments}.comment_content, 
-			{$wpdb->comments}.user_id, 
-			{$wpdb->commentmeta}.meta_value as question_title,
-			{$wpdb->users}.display_name,
-			{$wpdb->posts}.post_title
-		 
-		 	FROM {$wpdb->comments} 
-			INNER JOIN {$wpdb->commentmeta} 
-			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-			
-			INNER JOIN {$wpdb->posts} 
-			ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
-			
-			INNER  JOIN {$wpdb->users}
-			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE comment_type	 = 'tutor_q_and_a' AND {$wpdb->comments}.comment_ID = {$question_id}");
+		$query = $wpdb->get_row(
+			"SELECT 
+				{$wpdb -> comments}.comment_ID, 
+				{$wpdb -> comments}.comment_post_ID, 
+				{$wpdb -> comments}.comment_author, 
+				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_content, 
+				{$wpdb -> comments}.user_id, 
+				{$wpdb -> commentmeta}.meta_value as question_title, 
+				{$wpdb -> users}.display_name, 
+				{$wpdb -> posts}.post_title 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> commentmeta} ON {$wpdb -> comments}.comment_ID = {$wpdb -> commentmeta}.comment_id 
+				INNER JOIN {$wpdb -> posts} ON {$wpdb -> comments}.comment_post_ID = {$wpdb -> posts}.ID 
+				INNER JOIN {$wpdb -> users} ON {$wpdb -> comments}.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				comment_type = 'tutor_q_and_a' 
+				AND {$wpdb -> comments}.comment_ID = {$question_id};
+			"
+		);
 
 		return $query;
 	}
@@ -3150,34 +3168,45 @@ class Utils {
 	 */
 	public function get_qa_answer_by_question($question_id){
 		global $wpdb;
-		$query = $wpdb->get_results("SELECT 
-			{$wpdb->comments}.comment_ID, 
-			{$wpdb->comments}.comment_post_ID, 
-			{$wpdb->comments}.comment_author, 
-			{$wpdb->comments}.comment_date, 
-			{$wpdb->comments}.comment_content, 
-			{$wpdb->comments}.comment_parent,
-			{$wpdb->comments}.user_id,
-			{$wpdb->users}.display_name
-		  		 
-		 	FROM {$wpdb->comments} 
-			
-			INNER  JOIN {$wpdb->users}
-			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE comment_type = 'tutor_q_and_a' 
-			AND {$wpdb->comments}.comment_parent = {$question_id} ORDER BY {$wpdb->comments}.comment_ID ASC ");
+		$query = $wpdb->get_results(
+			"SELECT 
+				{$wpdb -> comments}.comment_ID, 
+				{$wpdb -> comments}.comment_post_ID, 
+				{$wpdb -> comments}.comment_author, 
+				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_content, 
+				{$wpdb -> comments}.comment_parent, 
+				{$wpdb -> comments}.user_id, 
+				{$wpdb -> users}.display_name 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> users} ON {$wpdb -> comments}.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				comment_type = 'tutor_q_and_a' 
+				AND {$wpdb -> comments}.comment_parent = {$question_id} 
+			ORDER BY 
+				{$wpdb -> comments}.comment_ID ASC;
+			"
+		);
 
 		return $query;
 	}
 
 	public function unanswered_question_count(){
 		global $wpdb;
-
-		$count = $wpdb->get_var("select COUNT({$wpdb->comments}.comment_ID) 
-			from {$wpdb->comments} 
-			WHERE {$wpdb->comments}.comment_type = 'tutor_q_and_a' 
-			AND {$wpdb->comments}.comment_approved = 'waiting_for_answer'
-			AND {$wpdb->comments}.comment_parent = 0;");
+		$count = $wpdb->get_var(
+			"SELECT 
+				COUNT({$wpdb -> comments}.comment_ID) 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> posts} ON {$wpdb -> comments}.comment_post_ID = {$wpdb -> posts}.ID 
+				INNER JOIN {$wpdb -> users} ON {$wpdb -> comments}.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				{$wpdb -> comments}.comment_type = 'tutor_q_and_a' 
+				AND {$wpdb -> comments}.comment_approved = 'waiting_for_answer' 
+				AND {$wpdb -> comments}.comment_parent = 0;
+			"
+		);
 		return (int) $count;
 	}
 
@@ -3193,12 +3222,24 @@ class Utils {
 	public function get_announcements($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
-
-		$query = $wpdb->get_results("select {$wpdb->posts}.ID, post_author, post_date, post_content, post_title, display_name
-			from {$wpdb->posts}
-			INNER JOIN {$wpdb->users} ON post_author = {$wpdb->users}.ID
-			WHERE post_type = 'tutor_announcements' 
-			AND post_parent = {$course_id} ORDER BY {$wpdb->posts}.ID DESC;");
+		$query = $wpdb->get_results(
+			"SELECT 
+				{$wpdb -> posts}.ID, 
+				post_author, 
+				post_date, 
+				post_content, 
+				post_title, 
+				display_name 
+			FROM 
+				{$wpdb -> posts} 
+				INNER JOIN {$wpdb -> users} ON post_author = {$wpdb -> users}.ID 
+			WHERE 
+				post_type = 'tutor_announcements' 
+				AND post_parent = {$course_id} 
+			ORDER BY 
+				{$wpdb -> posts}.ID DESC;
+			"
+		);
 		return $query;
 	}
 
@@ -3299,16 +3340,16 @@ class Utils {
 
 	public function get_question_types($type = null){
 		$types = array(
-			'true_false'        => array('name' => __('True/False', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no"></i></span>', 'is_pro' => false),
-			'single_choice'     => array('name' => __('Single Choice', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark"></i></span>', 'is_pro' => false),
-			'multiple_choice'   => array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Multiple Choicee"><i class="tutor-icon-block tutor-icon-multiple-choice"></i></span>', 'is_pro' => false),
-			'open_ended'        => array('name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Open/Essay"><i class="tutor-icon-block tutor-icon-open-ended"></i></span>', 'is_pro' => false),
-			'fill_in_the_blank'  => array('name' => __('Fill In The Blanks', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-fill-gaps"></i></span>', 'is_pro' => false),
+			'true_false'        	=> array('name' => __('True/False', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no"></i></span>', 'is_pro' => false),
+			'single_choice'     	=> array('name' => __('Single Choice', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark"></i></span>', 'is_pro' => false),
+			'multiple_choice'   	=> array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Multiple Choicee"><i class="tutor-icon-block tutor-icon-multiple-choice"></i></span>', 'is_pro' => false),
+			'open_ended'        	=> array('name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Open/Essay"><i class="tutor-icon-block tutor-icon-open-ended"></i></span>', 'is_pro' => false),
+			'fill_in_the_blank'  	=> array('name' => __('Fill In The Blanks', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-fill-gaps"></i></span>', 'is_pro' => false),
 			'short_answer'          => array('name' => __('Short Answer', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Short Answer"><i class="tutor-icon-block tutor-icon-short-ans"></i></span>', 'is_pro' => true),
 			'matching'              => array('name' => __('Matching', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Matching"><i class="tutor-icon-block tutor-icon-matching"></i></span>', 'is_pro' => true),
 			'image_matching'        => array('name' => __('Image Matching', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching"></i></span>', 'is_pro' => true),
 			'image_answering'       => array('name' => __('Image Answering', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Image Answering"><i class="tutor-icon-block tutor-icon-image-ans"></i></span>', 'is_pro' => true),
-			'ordering'          => array('name' => __('Ordering', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Ordering"><i class="tutor-icon-block tutor-icon-ordering"></i></span>', 'is_pro' => true),
+			'ordering'          	=> array('name' => __('Ordering', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Ordering"><i class="tutor-icon-block tutor-icon-ordering"></i></span>', 'is_pro' => true),
 		);
 
 		if (isset($types[$type])){
