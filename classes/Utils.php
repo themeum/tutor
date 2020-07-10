@@ -5551,11 +5551,11 @@ class Utils {
 	 *
 	 * @return array|object
 	 *
-	 * User profile completion status
+	 * User profile completion
 	 *
 	 * @since v.1.6.6
 	 */
-	public function profile_completion_status($user_id=0) {
+	public function user_profile_completion($user_id=0) {
 		$user_id = $this->get_user_id($user_id);
 		$instructor = $this->is_instructor($user_id);
 
