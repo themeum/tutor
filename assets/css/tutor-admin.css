@@ -362,6 +362,7 @@ Group Field Option
 	margin-right: 5px;
 }
 .course-move-handle {
+	align-self: center;
 	cursor: row-resize;
 }
 .new-topic-btn-wrap {
