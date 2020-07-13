@@ -8,7 +8,7 @@
 if ($statements->count) {
     ?>
     <div class="tutor-dashboard-statement-table-wrap">
-        <table class="tutor-dashboard-statement-table">
+        <table class="tutor-dashboard-statement-table tutor-table">
             <tr>
                 <th><?php _e('Course', 'tutor'); ?></th>
                 <th><?php _e('Earning', 'tutor'); ?></th>

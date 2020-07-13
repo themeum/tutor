@@ -13,7 +13,7 @@ if($assignments->count){
 
 <h3><?php echo get_the_title($course_id) ?></h3>
 <div class="tutor-dashboard-info-table-wrap">
-    <table class="tutor-dashboard-info-table tutor-dashboard-assignment-table">
+    <table class="tutor-dashboard-info-table tutor-dashboard-assignment-table tutor-table">
         <thead>
         <tr>
             <th><?php _e('Course Name', 'tutor'); ?></th>
