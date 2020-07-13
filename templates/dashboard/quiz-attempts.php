@@ -26,7 +26,7 @@ $quiz_attempts_count = tutor_utils()->get_total_quiz_attempts_by_course_ids($cou
 if ( $quiz_attempts_count ){
 	?>
     <div class="tutor-quiz-attempt-history">
-        <table>
+        <table class="tutor-table">
             <tr>
                 <th><?php _e('Course Info', 'tutor'); ?></th>
                 <th><?php _e('Student', 'tutor'); ?></th>

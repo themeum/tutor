@@ -22,7 +22,7 @@ $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 if ($attempted_count){
     ?>
     <div class="tutor-quiz-attempt-history ">
-        <table>
+        <table class="tutor-table">
             <tr>
                 <th><?php _e('Course Info', 'tutor'); ?></th>
                 <th><?php _e('Correct Answer', 'tutor'); ?></th>

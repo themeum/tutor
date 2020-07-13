@@ -1036,8 +1036,14 @@ Course question and answer
 		margin-right: 5px;
 	}
 }
-.tutor-quiz-attempt-history {
-	overflow-x: auto;
+
+@media (max-width: 1199.98px) {
+	.tutor-quiz-attempt-history {
+		display: block;
+		width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 }
 .tutor-quiz-attempt-history-title {
 	font-size: 18px;
@@ -1047,10 +1053,10 @@ Course question and answer
 	margin-bottom: 15px;
 	margin-top: 70px;
 }
+
 .tutor-quiz-attempt-history table {
 	border-collapse: collapse;
 	border-radius: 4px;
-	//font-size: var(--tutor-text-size);
 	margin-bottom: 0;
 }
 .tutor-quiz-attempt-history th {
@@ -1062,6 +1068,7 @@ Course question and answer
 	border: 1px solid #e8eff1;
 	padding: 10px !important;
 }
+
 .tutor-quiz-attempt-history table span.result-fail,
 .tutor-quiz-attempt-history table span.result-pass {
 	display: inline-block;
@@ -1086,35 +1093,6 @@ Course question and answer
 	border-radius: 2px;
 	text-align: center;
 	font-size: 90%;
-}
-@media (max-width: 767px) {
-	.single-quiz-page.tutor-quiz-attempt-history table tr {
-		display: flex;
-		flex-wrap: wrap;
-		overflow: hidden;
-	}
-	.single-quiz-page.tutor-quiz-attempt-history table tr th {
-		display: none;
-	}
-	.single-quiz-page.tutor-quiz-attempt-history table tr td {
-		width: 100%;
-	}
-
-	.single-quiz-page.tutor-quiz-attempt-history table tr td:first-child {
-		font-weight: 600;
-		background: #f1f1f1;
-	}
-	.single-quiz-page.tutor-quiz-attempt-history table tr td:not(:first-child) {
-		text-align: right;
-	}
-	.single-quiz-page.tutor-quiz-attempt-history
-		table
-		tr
-		td:not(:first-child)::before {
-		content: attr(title) ": ";
-		float: left;
-		font-weight: 700;
-	}
 }
 
 /*.attempt-reviewed-text {*/
