@@ -7165,6 +7165,19 @@ table.course-single-gradebooks a {
   border: 1px solid var(--tutor-primary-hover-color);
 }
 
+/** Menu divider/separator */
+.tutor-dashboard-menu-divider {
+  height: 1px;
+  margin: 10px 0;
+  overflow: hidden;
+  background-color: #dcdfe5;
+}
+
+.tutor-dashboard-menu-divider-header {
+  color: #acacac;
+  padding: 10px 20px;
+}
+
 .tutor-date-range-wrap {
   display: inline-block;
 }
