@@ -98,9 +98,13 @@ do_action('tutor_dashboard/before/wrap');
                     <ul class="tutor-dashboard-permalinks">
                         <?php
                         $dashboard_pages = tutils()->tutor_dashboard_nav_ui_items();
-                        foreach ($dashboard_pages as $dashboard_key => $dashboard_page){
+
+                        $instructor_pages = array();
+
+                        foreach ($dashboard_pages as $dashboard_key => $dashboard_page) {
                             $menu_title = $dashboard_page;
                             $menu_link = tutils()->get_tutor_dashboard_page_permalink($dashboard_key);
+                            $separator = false;
                             if (is_array($dashboard_page)){
                                 $menu_title = tutils()->array_get('title', $dashboard_page);
 
@@ -111,14 +115,24 @@ do_action('tutor_dashboard/before/wrap');
                                 if (isset($dashboard_page['url'])){
                                     $menu_link = $dashboard_page['url'];
                                 }
+
+                                if (isset($dashboard_page['type']) && $dashboard_page['type'] == 'separator'){
+                                    $separator = true;
+                                }
                             }
 
-                            $li_class = "tutor-dashboard-menu-{$dashboard_key}";
-                            if ($dashboard_key === 'index')
-                                $dashboard_key = '';
-                            $active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-
-                            echo "<li class='{$li_class}  {$active_class}'><a href='".$menu_link."'> {$menu_title} </a> </li>";
+                            if ($separator) {
+                                echo '<li class="tutor-dashboard-menu-divider"></li>';
+                                if ($menu_title) {
+                                    echo "<li class='tutor-dashboard-menu-divider-header'>{$menu_title}</li>";
+                                }
+                            } else {
+                                $li_class = "tutor-dashboard-menu-{$dashboard_key}";
+                                if ($dashboard_key === 'index')
+                                    $dashboard_key = '';
+                                $active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
+                                echo "<li class='{$li_class}  {$active_class}'><a href='".$menu_link."'> {$menu_title} </a> </li>";
+                            }
                         }
                         ?>
                     </ul>
