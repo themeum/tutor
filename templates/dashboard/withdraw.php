@@ -125,7 +125,7 @@ $user_id = get_current_user_id();
 		<?php
 		if (tutor_utils()->count($withdraw_pending_histories->results)){
 			?>
-            <table class="withdrawals-history">
+            <table class="withdrawals-history tutor-table">
                 <thead>
                 <tr>
                     <th><?php _e('Amount', 'tutor') ?></th>
@@ -171,7 +171,7 @@ $user_id = get_current_user_id();
 		<?php
 		if (tutor_utils()->count($withdraw_completed_histories->results)){
 			?>
-            <table class="withdrawals-history">
+            <table class="withdrawals-history tutor-table">
                 <thead>
                 <tr>
                     <th><?php _e('Amount', 'tutor') ?></th>
@@ -227,7 +227,7 @@ $user_id = get_current_user_id();
 		<?php
 		if (tutor_utils()->count($withdraw_rejected_histories->results)){
 			?>
-            <table class="withdrawals-history">
+            <table class="withdrawals-history tutor-table">
                 <thead>
                 <tr>
                     <th><?php _e('Amount', 'tutor') ?></th>

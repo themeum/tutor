@@ -15,7 +15,7 @@ $monetize_by = tutils()->get_option('monetize_by');
 if (tutils()->count($orders)){
 	?>
     <div class="responsive-table-wrap">
-        <table>
+        <table class="tutor-table">
             <tr>
                 <th><?php _e('ID', 'tutor'); ?></th>
                 <th><?php _e('Courses', 'tutor'); ?></th>

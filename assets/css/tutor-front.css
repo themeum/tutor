@@ -1738,10 +1738,14 @@ Course question and answer
     margin-right: 5px;
   }
 }
-.tutor-quiz-attempt-history {
-  overflow-x: auto;
+@media (max-width: 1199.98px) {
+  .tutor-quiz-attempt-history {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
-
 .tutor-quiz-attempt-history-title {
   font-size: 18px;
   color: var(--tutor-light-color);
@@ -1796,36 +1800,6 @@ Course question and answer
   font-size: 90%;
 }
 
-@media (max-width: 767px) {
-  .single-quiz-page.tutor-quiz-attempt-history table tr {
-    display: flex;
-    flex-wrap: wrap;
-    overflow: hidden;
-  }
-
-  .single-quiz-page.tutor-quiz-attempt-history table tr th {
-    display: none;
-  }
-
-  .single-quiz-page.tutor-quiz-attempt-history table tr td {
-    width: 100%;
-  }
-
-  .single-quiz-page.tutor-quiz-attempt-history table tr td:first-child {
-    font-weight: 600;
-    background: #f1f1f1;
-  }
-
-  .single-quiz-page.tutor-quiz-attempt-history table tr td:not(:first-child) {
-    text-align: right;
-  }
-
-  .single-quiz-page.tutor-quiz-attempt-history table tr td:not(:first-child)::before {
-    content: attr(title) ": ";
-    float: left;
-    font-weight: 700;
-  }
-}
 /*.attempt-reviewed-text {*/
 /*color: #777;*/
 /*font-size: 12px;*/
@@ -6720,31 +6694,6 @@ table.course-single-gradebooks a {
   margin-bottom: 30px;
 }
 
-@media (max-width: 768px) {
-  .tutor-dashboard-content .tutor-quiz-attempt-history table tr {
-    display: flex;
-    flex-wrap: wrap;
-    box-sizing: border-box;
-  }
-
-  .tutor-dashboard-content .tutor-quiz-attempt-history table tr th {
-    display: none;
-  }
-
-  .tutor-dashboard-content .tutor-quiz-attempt-history table tr td {
-    width: 100%;
-  }
-
-  .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:not(:first-child) {
-    text-align: right;
-  }
-
-  .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:not(:first-child)::before {
-    content: attr(title) ": ";
-    float: left;
-    font-weight: 700;
-  }
-}
 .tutor-dashboard-content .tutor-quiz-attempt-history table a {
   color: var(--tutor-primary-color);
   font-weight: 700;
@@ -7580,6 +7529,10 @@ UI DatePicker
   background: #eeeeee;
   padding: 3px;
   display: block;
+}
+
+.tutor-table {
+  width: 100%;
 }
 
 /**

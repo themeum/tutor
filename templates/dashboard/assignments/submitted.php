@@ -20,7 +20,7 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
 
     ?>
 
-    <table class="tutor-dashboard-info-table tutor-dashboard-assignment-submitted-table">
+    <table class="tutor-dashboard-info-table tutor-dashboard-assignment-submitted-table tutor-table">
         <thead>
             <tr>
                 <td><?php esc_attr_e('Student', 'tutor'); ?></td>

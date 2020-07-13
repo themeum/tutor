@@ -373,12 +373,6 @@
 .tutor-dashboard-content .tutor-quiz-attempt-history tr td:first-child {
 	padding: 15px 13px !important;
 }
-.tutor-dashboard-content .tutor-quiz-attempt-history tr.pass {
-	// border-left: 3px solid var(--tutor-success-button-color);
-}
-.tutor-dashboard-content .tutor-quiz-attempt-history tr.fail {
-	// border-left: 3px solid #d71830;
-}
 
 .tutor-dashboard-content .tutor-quiz-attempt-history table span.result-fail,
 .tutor-dashboard-content .tutor-quiz-attempt-history table span.result-pass {
@@ -388,6 +382,7 @@
 	padding: 0 6.5px;
 	margin-right: 4px;
 }
+
 .label-course-status {
 	background-color: #cccccc;
 	padding: 3px 5px;
@@ -494,37 +489,6 @@
 }
 .single-quiz-page.tutor-quiz-attempt-history table {
 	margin-bottom: 30px;
-}
-
-@media (max-width: 768px) {
-	.tutor-dashboard-content .tutor-quiz-attempt-history table tr {
-		display: flex;
-		flex-wrap: wrap;
-		box-sizing: border-box;
-	}
-	.tutor-dashboard-content .tutor-quiz-attempt-history table tr th {
-		display: none;
-	}
-	.tutor-dashboard-content .tutor-quiz-attempt-history table tr td {
-		width: 100%;
-	}
-	.tutor-dashboard-content
-		.tutor-quiz-attempt-history
-		table
-		tr
-		td:not(:first-child) {
-		text-align: right;
-	}
-
-	.tutor-dashboard-content
-		.tutor-quiz-attempt-history
-		table
-		tr
-		td:not(:first-child)::before {
-		content: attr(title) ": ";
-		float: left;
-		font-weight: 700;
-	}
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history table a {
@@ -1322,4 +1286,9 @@ UI DatePicker
 	background: #eeeeee;
 	padding: 3px;
 	display: block;
+}
+
+// Table
+.tutor-table {
+	width: 100%;
 }
