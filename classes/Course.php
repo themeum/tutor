@@ -244,7 +244,7 @@ class Course extends Tutor_Base {
 
 		//Course Duration
 		if ( ! empty($_POST['course_duration'])){
-			$video = tutor_utils()->sanitize_array($_POST['course_duration']);
+			$video = tutils()->sanitize_array($_POST['course_duration']);
 			update_post_meta($post_ID, '_course_duration', $video);
 		}
 
@@ -253,33 +253,36 @@ class Course extends Tutor_Base {
 			update_post_meta($post_ID, '_tutor_course_level', $course_level);
 		}
 
-        if ( ! empty($_POST['course_benefits'])){
-            $course_benefits = wp_kses_post($_POST['course_benefits']);
-            update_post_meta($post_ID, '_tutor_course_benefits', $course_benefits);
-        }else{
-            delete_post_meta($post_ID, '_tutor_course_benefits');
-        }
+		$additional_data_edit = tutils()->avalue_dot('_tutor_course_additional_data_edit', $_POST);
+		if ($additional_data_edit) {
+			if (!empty($_POST['course_benefits'])) {
+				$course_benefits = wp_kses_post($_POST['course_benefits']);
+				update_post_meta($post_ID, '_tutor_course_benefits', $course_benefits);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_benefits');
+			}
 
-        if ( ! empty($_POST['course_requirements'])){
-            $requirements = wp_kses_post($_POST['course_requirements']);
-            update_post_meta($post_ID, '_tutor_course_requirements', $requirements);
-        }else{
-            delete_post_meta($post_ID, '_tutor_course_requirements');
-        }
+			if (!empty($_POST['course_requirements'])) {
+				$requirements = wp_kses_post($_POST['course_requirements']);
+				update_post_meta($post_ID, '_tutor_course_requirements', $requirements);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_requirements');
+			}
 
-        if ( ! empty($_POST['course_target_audience'])){
-            $target_audience = wp_kses_post($_POST['course_target_audience']);
-            update_post_meta($post_ID, '_tutor_course_target_audience', $target_audience);
-        }else{
-            delete_post_meta($post_ID, '_tutor_course_target_audience');
-        }
+			if (!empty($_POST['course_target_audience'])) {
+				$target_audience = wp_kses_post($_POST['course_target_audience']);
+				update_post_meta($post_ID, '_tutor_course_target_audience', $target_audience);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_target_audience');
+			}
 
-        if ( ! empty($_POST['course_material_includes'])){
-            $material_includes = wp_kses_post($_POST['course_material_includes']);
-            update_post_meta($post_ID, '_tutor_course_material_includes', $material_includes);
-        }else{
-            delete_post_meta($post_ID, '_tutor_course_material_includes');
-        }
+			if (!empty($_POST['course_material_includes'])) {
+				$material_includes = wp_kses_post($_POST['course_material_includes']);
+				update_post_meta($post_ID, '_tutor_course_material_includes', $material_includes);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_material_includes');
+			}
+		}
 
 
 		/**
@@ -330,14 +333,14 @@ class Course extends Tutor_Base {
 				}
 			}
 		}
-
-		//Video
-		if ( ! empty($_POST['video']['source'])){
-			//$video = tutor_utils()->sanitize_array($_POST['video']);
-			$video = tutor_utils()->array_get('video', $_POST);
-			update_post_meta($post_ID, '_video', $video);
-		}else{
-			delete_post_meta($post_ID, '_video');
+		
+		if ($additional_data_edit) {
+			if ( ! empty($_POST['video']['source'])) { //Video
+				$video = tutor_utils()->array_get('video', $_POST);
+				update_post_meta($post_ID, '_video', $video);
+			}else{
+				delete_post_meta($post_ID, '_video');
+			}
 		}
 
 		/**

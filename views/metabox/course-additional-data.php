@@ -106,4 +106,6 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
     </div>
 </div>
 
+<input type="hidden" name="_tutor_course_additional_data_edit" value="true" />
+
 <?php do_action('tutor_course_metabox_after_additional_data'); ?>
