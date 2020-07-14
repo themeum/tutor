@@ -238,11 +238,12 @@ class Quiz {
 
 					    } elseif ( $question_type === 'multiple_choice' ) {
 
-						    $given_answer         = maybe_serialize( $answers );
+						    $given_answer         = (array) ( $answers );
 						    $get_original_answers = (array) $wpdb->get_col( "SELECT answer_id FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question->question_id} AND belongs_question_type = '{$question_type}' AND is_correct = 1 ;" );
-						    if ( maybe_serialize( $get_original_answers ) == $given_answer ) {
+						    if (count(array_diff($get_original_answers, $given_answer)) === 0 && count($get_original_answers) === count($given_answer)) {
 							    $is_answer_was_correct = true;
-						    }
+							}
+							$given_answer = maybe_serialize( $answers );
 
 					    } elseif ( $question_type === 'fill_in_the_blank' ) {
 
