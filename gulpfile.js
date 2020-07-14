@@ -69,6 +69,7 @@ gulp.task("watch", function () {
        "!./build/**",
        "!./assets/**/*.map",
        "!./assets/scss/**",
+       "!./assets/.sass-cache",
        "!./node_modules/**",
        "!./**/*.zip",
        "!.github",
