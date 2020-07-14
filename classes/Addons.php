@@ -23,7 +23,7 @@ class Addons {
 	public function tutor_addons_lists_to_show(){
 		$addons = array(
 			'buddypress'     => array(
-				'name'          => __('BuddyPress', 'tutor-pro'),
+				'name'          => __('BuddyPress', 'tutor'),
 				'description'   => 'Discuss about course and share your knowledge with your friends through BuddyPress',
 			),
 			'gradebook'     => array(

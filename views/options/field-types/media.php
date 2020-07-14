@@ -26,7 +26,7 @@ $value = (int) $this->get($field['field_key']);
 		    echo $btn_text; ?>
         </button>
 
-        <button class="tutor-button button-danger tutor-media-option-trash-btn" style="display: <?php echo $value? '' : 'none'; ?>;"><i class="tutor-icon-garbage"></i> <?php _e('Delete', 'tutor-pro');
+        <button class="tutor-button button-danger tutor-media-option-trash-btn" style="display: <?php echo $value? '' : 'none'; ?>;"><i class="tutor-icon-garbage"></i> <?php _e('Delete', 'tutor');
         ?></button>
     </div>
 </div>
