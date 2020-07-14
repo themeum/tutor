@@ -21,29 +21,29 @@ class Email {
 
 	public function add_options($attr){
 		$attr['email_notification'] = array(
-			'label'     => __('E-Mail Notification', 'tutor-pro'),
+			'label'     => __('E-Mail Notification', 'tutor'),
 			'sections'    => array(
 				'email_settings' => array(
-					'label' => __('E-Mail Settings', 'tutor-pro'),
-					'desc' => __('Check and place necessary information here.', 'tutor-pro'),
+					'label' => __('E-Mail Settings', 'tutor'),
+					'desc' => __('Check and place necessary information here.', 'tutor'),
 					'fields' => array(
 						'email_from_name' => array(
 							'type'      => 'text',
-							'label'     => __('Name', 'tutor-pro'),
+							'label'     => __('Name', 'tutor'),
 							'default'   => get_option('blogname'),
 							'desc'      => __('The name under which all the emails will be sent',	'tutor'),
 						),
 						'email_from_address' => array(
 							'type'      => 'text',
-							'label'     => __('E-Mail Address', 'tutor-pro'),
+							'label'     => __('E-Mail Address', 'tutor'),
 							'default'   => get_option('admin_email'),
-							'desc'      => __('The E-Mail address from which all emails will be sent', 'tutor-pro'),
+							'desc'      => __('The E-Mail address from which all emails will be sent', 'tutor'),
 						),
 						'email_footer_text' => array(
 							'type'      => 'textarea',
-							'label'     => __('E-Mail Footer Text', 'tutor-pro'),
+							'label'     => __('E-Mail Footer Text', 'tutor'),
 							'default'   => '',
-							'desc'      => __('The text to appear in E-Mail template footer', 'tutor-pro'),
+							'desc'      => __('The text to appear in E-Mail template footer', 'tutor'),
 						),
 					),
 				),

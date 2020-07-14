@@ -28,7 +28,7 @@ class Course_Settings_Tabs{
     }
 
     public function register_meta_box(){
-        add_meta_box( 'course-settings', __( 'Course Settings', 'tutor-pro' ), array($this, 'display'), $this->course_post_type, 'advanced', 'high' );
+        add_meta_box( 'course-settings', __( 'Course Settings', 'tutor' ), array($this, 'display'), $this->course_post_type, 'advanced', 'high' );
     }
 
     public function get_default_args(){

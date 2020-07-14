@@ -5383,13 +5383,13 @@ class Utils {
 		$is_completed = tutils()->is_completed_course($course_id, $user_id);
 		$html = '';
 		if ($is_completed){
-			$html = '<span class="course-completion-status course-completed"><i class="tutor-icon-mark"></i> '.__('Completed', 'tutor-pro').' </span>';
+			$html = '<span class="course-completion-status course-completed"><i class="tutor-icon-mark"></i> '.__('Completed', 'tutor').' </span>';
 		}else{
 			$is_in_progress = tutor_utils()->get_completed_lesson_count_by_course($course_id, $user_id);
 			if($is_in_progress){
-				$html = '<span class="course-completion-status course-inprogress"><i class="tutor-icon-refresh-button-1"></i> '.__('In Progress', 'tutor-pro').' </span>';
+				$html = '<span class="course-completion-status course-inprogress"><i class="tutor-icon-refresh-button-1"></i> '.__('In Progress', 'tutor').' </span>';
 			}else{
-				$html = '<span class="course-completion-status course-not-taken"><i class="tutor-icon-spinner"></i> '.__('Not Taken', 'tutor-pro').' </span>';
+				$html = '<span class="course-completion-status course-not-taken"><i class="tutor-icon-spinner"></i> '.__('Not Taken', 'tutor').' </span>';
 			}
 		}
 		return $html;
