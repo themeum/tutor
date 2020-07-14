@@ -13,6 +13,10 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: classes/Addons.php:26
+msgid "BuddyPress"
+msgstr ""
+
 #: classes/Addons.php:30
 msgid "Gradebook"
 msgstr ""
@@ -257,6 +261,10 @@ msgstr ""
 msgid "You have to pass %s quizzes to complete this course."
 msgstr ""
 
+#: classes/Course_Settings_Tabs.php:31, classes/Options.php:188, classes/Tutor_Setup.php:391, views/metabox/course/settings-tabs.php:13
+msgid "Course Settings"
+msgstr ""
+
 #: classes/Course_Settings_Tabs.php:37, classes/Options.php:78, classes/Options.php:81, classes/Options.php:187, classes/Tutor_Setup.php:552, classes/WooCommerce.php:269
 msgid "General"
 msgstr ""
@@ -337,8 +345,40 @@ msgstr ""
 msgid "Auto Draft"
 msgstr ""
 
+#: classes/Email.php:24
+msgid "E-Mail Notification"
+msgstr ""
+
+#: classes/Email.php:27
+msgid "E-Mail Settings"
+msgstr ""
+
+#: classes/Email.php:28
+msgid "Check and place necessary information here."
+msgstr ""
+
+#: classes/Email.php:32, classes/Instructors_List.php:94, classes/Students_List.php:77
+msgid "Name"
+msgstr ""
+
 #: classes/Email.php:34
 msgid "The name under which all the emails will be sent"
+msgstr ""
+
+#: classes/Email.php:38
+msgid "E-Mail Address"
+msgstr ""
+
+#: classes/Email.php:40
+msgid "The E-Mail address from which all emails will be sent"
+msgstr ""
+
+#: classes/Email.php:44
+msgid "E-Mail Footer Text"
+msgstr ""
+
+#: classes/Email.php:46
+msgid "The text to appear in E-Mail template footer"
 msgstr ""
 
 #: classes/Email.php:60
@@ -431,10 +471,6 @@ msgstr ""
 
 #: classes/Instructor.php:215
 msgid "Instructor has been added successfully"
-msgstr ""
-
-#: classes/Instructors_List.php:94, classes/Students_List.php:77
-msgid "Name"
 msgstr ""
 
 #: classes/Instructors_List.php:95, classes/Students_List.php:78, templates/dashboard/instructor/registration.php:63, templates/dashboard/instructor/registration.php:66, templates/dashboard/registration.php:61, templates/dashboard/registration.php:64, views/pages/add_new_instructor.php:69, views/pages/add_new_instructor.php:75
@@ -587,10 +623,6 @@ msgstr ""
 
 #: classes/Options.php:177
 msgid "Login error message displayed when the user puts wrong login credentials."
-msgstr ""
-
-#: classes/Options.php:188, classes/Tutor_Setup.php:391, views/metabox/course/settings-tabs.php:13
-msgid "Course Settings"
 msgstr ""
 
 #: classes/Options.php:192
@@ -2158,6 +2190,18 @@ msgstr ""
 msgid "Linkedin URL"
 msgstr ""
 
+#: classes/Utils.php:5392
+msgid "Not Taken"
+msgstr ""
+
+#: classes/Utils.php:5390
+msgid "In Progress"
+msgstr ""
+
+#: classes/Utils.php:5386
+msgid "Completed"
+msgstr ""
+
 #: classes/Utils.php:5564, templates/dashboard/instructor/registration.php:28, templates/dashboard/instructor/registration.php:31, templates/dashboard/my-profile.php:34, templates/dashboard/registration.php:28, templates/dashboard/registration.php:31, templates/dashboard/settings/profile.php:35, templates/dashboard/settings/profile.php:37, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35
 msgid "First Name"
 msgstr ""
@@ -2268,10 +2312,8 @@ msgstr ""
 
 #: classes/WooCommerce.php:79
 msgid ""
-" Seems like you don’t have WooCommerce plugin installed on your site. In order to use this functionality, you need to have the 
-\n"
-"                WooCommerce plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling 
-\n"
+" Seems like you don’t have WooCommerce plugin installed on your site. In order to use this functionality, you need to have the \n"
+"                WooCommerce plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling \n"
 "                courses with Tutor."
 msgstr ""
 
@@ -2371,8 +2413,28 @@ msgstr ""
 msgid "Attach assignment file(s)"
 msgstr ""
 
+#: templates/dashboard/assignments/review.php:75
+msgid "Evaluation"
+msgstr ""
+
+#: templates/dashboard/assignments/review.php:82
+msgid "Your Mark"
+msgstr ""
+
+#: templates/dashboard/assignments/review.php:86
+msgid "Mark this assignment out of %s"
+msgstr ""
+
+#: templates/dashboard/assignments/review.php:91
+msgid "Write a note"
+msgstr ""
+
 #: templates/dashboard/assignments/review.php:95
 msgid "Write a note to students about this submission"
+msgstr ""
+
+#: templates/dashboard/assignments/review.php:101
+msgid "Evaluate this submission"
 msgstr ""
 
 #: templates/dashboard/assignments/submitted.php:15
@@ -2779,7 +2841,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:74, templates/dashboard/question-answer.php:40
+#: templates/dashboard/my-courses.php:74, templates/dashboard/question-answer.php:40, views/options/field-types/media.php:29
 msgid "Delete"
 msgstr ""
 
@@ -3543,6 +3605,10 @@ msgstr ""
 msgid "It seems there is no course belongs with this quiz, you can not attempt on this quiz without a course belongs, please notify to your instructor to fix this issue."
 msgstr ""
 
+#: templates/single/quiz/previous-attempts.php:11
+msgid "Previous attempts"
+msgstr ""
+
 #: templates/single/quiz/top.php:49
 msgid "Time"
 msgstr ""
@@ -3645,8 +3711,7 @@ msgstr ""
 
 #: views/metabox/course-additional-data.php:57
 msgid ""
-"List the knowledge and skills that students will learn after completing this course. (One per line)
-\n"
+"List the knowledge and skills that students will learn after completing this course. (One per line)\n"
 ""
 msgstr ""
 
@@ -4184,6 +4249,10 @@ msgstr ""
 
 #: views/pages/enable_disable_addons.php:74
 msgid "Required Plugin(s)"
+msgstr ""
+
+#: views/pages/get-pro.php:2
+msgid "Get pro plugin from themeum.com"
 msgstr ""
 
 #: views/pages/instructors.php:20
