@@ -7911,6 +7911,7 @@ table.tutor-dashboard-statement-table p.small-text {
       -ms-flex-direction: row;
           flex-direction: row;
   overflow: hidden;
+  position: relative;
 }
 
 @media (max-width: 580px) {
@@ -8117,6 +8118,22 @@ UI DatePicker
 
 .tutor-table {
   width: 100%;
+}
+
+.tutor-stretched-link::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: auto;
+  content: "";
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.sr-only {
+  display: none;
 }
 
 /**
