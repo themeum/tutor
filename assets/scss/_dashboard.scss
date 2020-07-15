@@ -1076,28 +1076,24 @@ table.tutor-dashboard-statement-table p.small-text {
 	//font-size: var(--tutor-text-size);
 }
 
+.tutor-mycourse-view,
 .tutor-mycourse-edit,
 .tutor-mycourse-delete {
 	color: var(--tutor-light-color);
-	-webkit-transition: 300ms;
 	transition: 300ms;
+
+	i {
+		line-height: inherit;
+		display: inline-block;
+		vertical-align: top;
+		color: var(--tutor-primary-color);
+	}
+
+	&:hover {
+		color: var(--tutor-primary-color);
+	}
 }
 
-.tutor-mycourse-edit:hover,
-.tutor-mycourse-delete:hover {
-	color: var(--tutor-primary-color);
-}
-
-.tutor-mycourse-edit i,
-.tutor-mycourse-delete i {
-	line-height: inherit;
-	display: inline-block;
-	vertical-align: top;
-	color: var(--tutor-primary-color);
-}
-.tutor-mycourse-delete i {
-	color: #f05120;
-}
 .tutor-dashboard-content-inner .tutor-mycourse-wrap {
 	display: flex;
 	margin-bottom: 30px;
@@ -1308,5 +1304,13 @@ UI DatePicker
     background-color: rgba(0,0,0,0);
 }
 .sr-only {
-	display: none;
+	position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
 }
