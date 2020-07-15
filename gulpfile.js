@@ -20,7 +20,7 @@ var onError = function (err) {
 };
 
 var prefixerOptions = {
-	browsers: ["last 2 versions"],
+	overrideBrowserslist: ["last 2 versions"],
 };
 
 gulp.task("styles", function () {
