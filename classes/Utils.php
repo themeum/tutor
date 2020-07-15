@@ -2205,11 +2205,11 @@ class Utils {
 
 		$nav_items = array_merge($nav_items, $instructor_nav_items);
 
-		$new_navs = array(
+		$new_navs = apply_filters('tutor_dashboard/bottom_nav_items', array(
 			'separator-2'     	=> array('title' => '', 'type' => 'separator'),
 			'settings'          => __('Settings', 'tutor'),
 			'logout'            => __('Logout', 'tutor'),
-		);
+		));
 		$all_nav_items = array_merge($nav_items, $new_navs);
 
 		return apply_filters('tutor_dashboard/nav_items_all', $all_nav_items);
