@@ -2397,7 +2397,7 @@ msgstr ""
 msgid "View Coures"
 msgstr ""
 
-#: templates/dashboard/assignments/review.php:17, templates/dashboard/my-courses.php:86, templates/dashboard/reviews.php:35, templates/dashboard/reviews/received-reviews.php:77, templates/profile/courses_taken.php:43, templates/profile/enrolled_course.php:48, templates/profile/reviews_wrote.php:25
+#: templates/dashboard/assignments/review.php:17, templates/dashboard/my-courses.php:90, templates/dashboard/reviews.php:35, templates/dashboard/reviews/received-reviews.php:77, templates/profile/courses_taken.php:43, templates/profile/enrolled_course.php:48, templates/profile/reviews_wrote.php:25
 msgid "Sorry, but you are looking for something that isn't here."
 msgstr ""
 
@@ -2753,19 +2753,15 @@ msgstr ""
 msgid "All Courses"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:71
+#: templates/dashboard/enrolled-courses.php:73
 msgid "You didn't purchased any course"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:38, templates/dashboard/enrolled-courses/active-courses.php:43, templates/dashboard/enrolled-courses/completed-courses.php:43
-msgid "Leave a rating"
-msgstr ""
-
-#: templates/dashboard/enrolled-courses.php:49, templates/dashboard/enrolled-courses/active-courses.php:54, templates/dashboard/enrolled-courses/completed-courses.php:54
+#: templates/dashboard/enrolled-courses.php:51, templates/dashboard/enrolled-courses/active-courses.php:53, templates/dashboard/enrolled-courses/completed-courses.php:53
 msgid "Total Lessons:"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:55, templates/dashboard/enrolled-courses/active-courses.php:60, templates/dashboard/enrolled-courses/completed-courses.php:60
+#: templates/dashboard/enrolled-courses.php:57, templates/dashboard/enrolled-courses/active-courses.php:59, templates/dashboard/enrolled-courses/completed-courses.php:59
 msgid "Completed Lessons:"
 msgstr ""
 
@@ -2773,11 +2769,11 @@ msgstr ""
 msgid "Active Course"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses/active-courses.php:77
+#: templates/dashboard/enrolled-courses/active-courses.php:76
 msgid "You are not enrolled in any course at this moment."
 msgstr ""
 
-#: templates/dashboard/enrolled-courses/completed-courses.php:77
+#: templates/dashboard/enrolled-courses/completed-courses.php:76
 msgid "There's no completed course"
 msgstr ""
 
@@ -2821,7 +2817,7 @@ msgstr ""
 msgid "You are already logged in"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:85, templates/profile/courses_taken.php:42, templates/profile/enrolled_course.php:47, templates/profile/reviews_wrote.php:24
+#: templates/dashboard/my-courses.php:89, templates/profile/courses_taken.php:42, templates/profile/enrolled_course.php:47, templates/profile/reviews_wrote.php:24
 msgid "Not Found"
 msgstr ""
 
@@ -2838,26 +2834,30 @@ msgid "Students:"
 msgstr ""
 
 #: templates/dashboard/my-courses.php:71
+msgid "View"
+msgstr ""
+
+#: templates/dashboard/my-courses.php:75
 msgid "Edit"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:74, templates/dashboard/question-answer.php:40, views/options/field-types/media.php:29
+#: templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:40, views/options/field-types/media.php:29
 msgid "Delete"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:98
+#: templates/dashboard/my-courses.php:102
 msgid "Delete This Course?"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:99
+#: templates/dashboard/my-courses.php:103
 msgid "You are going to delete this course, it can't be undone"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:104, templates/dashboard/question-answer.php:72, templates/single/course/enrolled/question_and_answer.php:51, templates/single/course/enrolled/question_and_answer.php:136, templates/single/lesson/sidebar_question_and_answer.php:116, views/modal/add_quiz.php:55, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:135, views/modal/question_form.php:225
+#: templates/dashboard/my-courses.php:108, templates/dashboard/question-answer.php:72, templates/single/course/enrolled/question_and_answer.php:51, templates/single/course/enrolled/question_and_answer.php:136, templates/single/lesson/sidebar_question_and_answer.php:116, views/modal/add_quiz.php:55, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:135, views/modal/question_form.php:225
 msgid "Cancel"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:105
+#: templates/dashboard/my-courses.php:109
 msgid "Yes, Delete Course"
 msgstr ""
 
