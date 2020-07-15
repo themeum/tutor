@@ -242,21 +242,22 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 == Changelog ==
 
 = 1.6.6 - July 15, 2020 =
-New: Student/Instructor Profile Completion
-Update: Delete All related course data when permanently deleting a course
+
+New: Student/instructor profile completion
+Update: Delete all related course data when permanently deleting a course
 Update: Course status Publish to Published in instructor's my course panel
-Update: Add server side validation when place Question & Answer
-Update: Add WordPress date format support in certificate
-Update: Improved dashboard sidebar menu
-Fix: Show incorrect quiz result for randomize multiple choice question answers
-Fix: Quiz starts again after completing when Quiz Auto Start is enabled
-Fix: Maximum Students doesn't work for manual enrollment
-Fix: Quick edit vanishes course meta data
+Update: Server-side validation in the Q&A tab
+Update: WordPress date format support in certificates
+Update: Improved Dashboard sidebar menu
+Fix: Quiz restart issue after completion when Quiz Auto Start is enabled
+Fix: Maximum Students limit wasn’t working for manual enrollment
+Fix: Quick edit vanishes course metadata (Intro video, Benefits, Requirements, Targeted Audience, Materials Included)
+Fix: Incorrect quiz result issue for randomized multiple choice question answers
 Fix: Tutor Instructor user role update issue
 Fix: Unanswered question count issue
 
-
 = 1.6.5 - July 2, 2020 =
+
 New: Sales & Students report for the Report Add-on(Pro)
 Fixed: Quiz retry and reveal mode error for certain types of quizzes
 Fixed: Resource issue from the course page
