@@ -64,7 +64,11 @@ gulp.task("watch", function () {
 });
 
 gulp.task('makepot', function () {
-	return gulp.src('**/*.php')
+	return gulp
+		.src('**/*.php')
+		.pipe(plumber({
+			errorHandler: onError
+		}))
 		.pipe(wpPot({
 			domain: 'tutor',
 			package: 'Tutor LMS'
