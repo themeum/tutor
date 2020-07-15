@@ -1562,39 +1562,39 @@ msgstr ""
 msgid "Student"
 msgstr ""
 
-#: classes/Question_Answers_List.php:73, classes/Quiz.php:862, templates/dashboard/question-answer.php:28, templates/dashboard/question-answer/answers.php:13, views/modal/question_form.php:150, views/pages/answer.php:11
+#: classes/Question_Answers_List.php:73, classes/Quiz.php:863, templates/dashboard/question-answer.php:28, templates/dashboard/question-answer/answers.php:13, views/modal/question_form.php:150, views/pages/answer.php:11
 msgid "Answer"
 msgstr ""
 
-#: classes/Quiz.php:388
+#: classes/Quiz.php:389
 msgid "Quiz has been timeout already"
 msgstr ""
 
-#: classes/Quiz.php:664
+#: classes/Quiz.php:665
 msgid "Please make sure you have added more than one option and saved them"
 msgstr ""
 
-#: classes/Quiz.php:660
+#: classes/Quiz.php:661
 msgid "Please select the correct answer"
 msgstr ""
 
-#: classes/Quiz.php:741, views/modal/question_answer_form.php:21
+#: classes/Quiz.php:742, views/modal/question_answer_form.php:21
 msgid "True"
 msgstr ""
 
-#: classes/Quiz.php:748, views/modal/question_answer_form.php:25
+#: classes/Quiz.php:749, views/modal/question_answer_form.php:25
 msgid "False"
 msgstr ""
 
-#: classes/Quiz.php:846
+#: classes/Quiz.php:847
 msgid "Answer options &amp; mark correct"
 msgstr ""
 
-#: classes/Quiz.php:849
+#: classes/Quiz.php:850
 msgid "Make sure you’re saving the answers in the right order. Students will have to match this order exactly."
 msgstr ""
 
-#: classes/Quiz.php:884, classes/Quiz.php:878, templates/dashboard/quiz-attempts/quiz-reviews.php:391, views/modal/question_form.php:174, views/modal/question_form.php:167, views/pages/view_attempt.php:323
+#: classes/Quiz.php:885, classes/Quiz.php:879, templates/dashboard/quiz-attempts/quiz-reviews.php:391, views/modal/question_form.php:174, views/modal/question_form.php:167, views/pages/view_attempt.php:323
 msgid "Mark as correct"
 msgstr ""
 

@@ -2186,7 +2186,9 @@ class Utils {
 			'reviews'           => __('Reviews', 'tutor'),
 			'my-quiz-attempts'  => __('My Quiz Attempts', 'tutor'),
 			'purchase_history'  => __('Purchase History', 'tutor'),
+		));
 
+		$instructor_nav_items = apply_filters('tutor_dashboard/instructor_nav_items', array(
 			'separator-1'     	=> array('title' => __('Instructor', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'type' => 'separator'),
 			'create-course'     => array('title' => __('Create Course', 'tutor'), 'show_ui' => false, 'auth_cap' => tutor()->instructor_role),
 			'my-courses'        => array('title' => __('My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role),
@@ -2200,6 +2202,8 @@ class Utils {
 		if ($disable && isset($nav_items['reviews'])){
 			unset($nav_items['reviews']);
 		}
+
+		$nav_items = array_merge($nav_items, $instructor_nav_items);
 
 		$new_navs = array(
 			'separator-2'     	=> array('title' => '', 'type' => 'separator'),
