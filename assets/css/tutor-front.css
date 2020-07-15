@@ -7875,6 +7875,7 @@ table.tutor-dashboard-statement-table p.small-text {
   margin-right: 4px;
 }
 
+.tutor-mycourse-view,
 .tutor-mycourse-edit,
 .tutor-mycourse-delete {
   color: var(--tutor-light-color);
@@ -7882,11 +7883,7 @@ table.tutor-dashboard-statement-table p.small-text {
   transition: 300ms;
 }
 
-.tutor-mycourse-edit:hover,
-.tutor-mycourse-delete:hover {
-  color: var(--tutor-primary-color);
-}
-
+.tutor-mycourse-view i,
 .tutor-mycourse-edit i,
 .tutor-mycourse-delete i {
   line-height: inherit;
@@ -7895,8 +7892,10 @@ table.tutor-dashboard-statement-table p.small-text {
   color: var(--tutor-primary-color);
 }
 
-.tutor-mycourse-delete i {
-  color: #f05120;
+.tutor-mycourse-view:hover,
+.tutor-mycourse-edit:hover,
+.tutor-mycourse-delete:hover {
+  color: var(--tutor-primary-color);
 }
 
 .tutor-dashboard-content-inner .tutor-mycourse-wrap {
@@ -8078,7 +8077,6 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
-  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
@@ -8133,7 +8131,15 @@ UI DatePicker
 }
 
 .sr-only {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /**
