@@ -31,6 +31,7 @@
 			$tutor_course_img = get_tutor_course_thumbnail_src();
 			?>
             <div class="tutor-mycourse-wrap tutor-mycourse-<?php the_ID(); ?>">
+                <a class="tutor-stretched-link" href="<?php the_permalink(); ?>"><span class="sr-only"><?php the_title(); ?></span></a>
                 <div class="tutor-mycourse-thumbnail" style="background-image: url(<?php echo esc_url($tutor_course_img); ?>)"></div>
                 <div class="tutor-mycourse-content">
                     <div class="tutor-mycourse-rating">
