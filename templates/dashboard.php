@@ -98,29 +98,20 @@ do_action('tutor_dashboard/before/wrap');
                     <ul class="tutor-dashboard-permalinks">
                         <?php
                         $dashboard_pages = tutils()->tutor_dashboard_nav_ui_items();
-
-                        $instructor_pages = array();
-
                         foreach ($dashboard_pages as $dashboard_key => $dashboard_page) {
                             $menu_title = $dashboard_page;
                             $menu_link = tutils()->get_tutor_dashboard_page_permalink($dashboard_key);
                             $separator = false;
                             if (is_array($dashboard_page)){
                                 $menu_title = tutils()->array_get('title', $dashboard_page);
-
-                                /**
-                                 * Add new menu item property "url" for custom link
-                                 * @since v 1.5.5
-                                 */
-                                if (isset($dashboard_page['url'])){
+                                //Add new menu item property "url" for custom link
+                                if (isset($dashboard_page['url'])) {
                                     $menu_link = $dashboard_page['url'];
                                 }
-
-                                if (isset($dashboard_page['type']) && $dashboard_page['type'] == 'separator'){
+                                if (isset($dashboard_page['type']) && $dashboard_page['type'] == 'separator') {
                                     $separator = true;
                                 }
                             }
-
                             if ($separator) {
                                 echo '<li class="tutor-dashboard-menu-divider"></li>';
                                 if ($menu_title) {
