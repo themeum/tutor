@@ -1703,7 +1703,8 @@ jQuery(document).ready(function ($) {
             data: form_data,
             success: function (response) {
                 if (response.success) {
-                    location.href = response.data.redirect;
+                    location.assign(response.data.redirect);
+                    location.reload();
                 } else {
                     if ($form_wrapper.find('.tutor-alert').length) {
                         $form_wrapper.find('.tutor-alert').html(response.data);

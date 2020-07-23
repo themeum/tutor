@@ -315,6 +315,8 @@ class Ajax{
 				array( 'comment_id' => $review_id, 'meta_key' => 'tutor_rating' )
 			);
 
+			do_action('tutor_after_review_update', $review_id, $is_exists);
+
 			wp_send_json_success();
 		}
 		wp_send_json_error();
