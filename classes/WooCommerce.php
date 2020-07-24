@@ -42,7 +42,12 @@ class WooCommerce extends Tutor_Base {
 		add_action('save_post_product', array($this, 'save_wc_product_meta'));
 
 		add_action('tutor_course/single/before/enroll', 'wc_print_notices');
-		add_action('woocommerce_new_order_item', array($this, 'course_placing_order'), 10, 3);
+
+		/**
+		 * After place new order
+		 */
+		add_action('woocommerce_new_order', array($this, 'course_placing_order_from_admin'), 10, 3);
+		add_action('woocommerce_thankyou', array($this, 'course_placing_order_from_customer'), 10, 3);
 
 		/**
 		 * Order Status Hook
@@ -178,27 +183,9 @@ class WooCommerce extends Tutor_Base {
 	}
 
 	/**
-	 * Do something after course order place
-	 */
-	public function course_placing_order($item_id, $item, $order_id) {
-		$item = new \WC_Order_Item_Product($item);
-
-		$product_id = $item->get_product_id();
-		$if_has_course = tutor_utils()->product_belongs_with_course($product_id);
-
-		if ($if_has_course) {
-			$course_id = $if_has_course->post_id;
-			$user_id = get_post_meta($order_id, '_customer_user', true);
-			tutor_utils()->do_enroll($course_id, $order_id, $user_id);
-		}
-	}
-
-
-	/**
 	 *
 	 * Take enrolled course action based on order status change
 	 */
-
 	public function enrolled_courses_status_change($order_id, $status_from, $status_to) {
 		if (!tutor_utils()->is_tutor_order($order_id)) {
 			return;
@@ -404,7 +391,6 @@ class WooCommerce extends Tutor_Base {
 		}
 	}
 
-
 	/**
 	 * @param $order_id
 	 * @param $status_from
@@ -423,6 +409,51 @@ class WooCommerce extends Tutor_Base {
 		$is_earning_data = (int) $wpdb->get_var("SELECT COUNT(earning_id) FROM {$wpdb->prefix}tutor_earnings WHERE order_id = {$order_id}  ");
 		if ($is_earning_data) {
 			$wpdb->update($wpdb->prefix . 'tutor_earnings', array('order_status' => $status_to), array('order_id' => $order_id));
+		}
+	}
+
+	/**
+	 * Course placing order from admin
+	 * 
+	 * @param $order_id
+	 * @since v.1.6.7
+	 */
+	public function course_placing_order_from_admin($order_id) {
+		if (!is_admin()) {
+			return;
+		}
+		$this->enroll_course_by_order_id($order_id);
+	}
+
+	/**
+	 * Course placing order from customer
+	 *
+	 * @param $order_id
+	 * @since v.1.6.7
+	 */
+	public function course_placing_order_from_customer($order_id) {
+		if (is_admin()) {
+			return;
+		}
+		$this->enroll_course_by_order_id($order_id);
+	}
+
+	/**
+	 * Enroll course by order id
+	 *
+	 * @param $order_id
+	 * @since v.1.6.7
+	 */
+	public function enroll_course_by_order_id($order_id) {
+		$order = wc_get_order( $order_id );
+		foreach ($order->get_items() as $item) {
+			$product_id = $item->get_product_id();
+			$if_has_course = tutor_utils()->product_belongs_with_course($product_id);
+			if ($if_has_course) {
+				$course_id = $if_has_course->post_id;
+				$customer_id = $order->get_customer_id();
+				tutor_utils()->do_enroll($course_id, $order_id, $customer_id);
+			}
 		}
 	}
 }
