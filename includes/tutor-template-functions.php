@@ -987,11 +987,17 @@ if ( ! function_exists('tutor_course_enroll_box')) {
         $isLoggedIn = is_user_logged_in();
         $enrolled = tutor_utils()->is_enrolled();
 
+        $is_administrator = current_user_can('administrator');
+        $is_instructor = tutor_utils()->is_instructor_of_this_course();
+
         ob_start();
 
         if ( $enrolled ) {
             tutor_load_template( 'single.course.course-enrolled-box' );
             $output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
+        } else if ( $is_administrator || $is_instructor ) {
+            tutor_load_template( 'single.course.course-lession-continue-box' );
+            $output = apply_filters( 'tutor_course/single/lession_continue_box', ob_get_clean() );
         } else {
             tutor_load_template( 'single.course.course-enroll-box' );
             $output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );
