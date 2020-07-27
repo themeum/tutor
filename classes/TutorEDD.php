@@ -156,6 +156,7 @@ class TutorEDD extends Tutor_Base {
 
 		$payment = new \EDD_Payment( $payment_id );
 		$cart_details   = $payment->cart_details;
+		$user_id        = $payment->user_info['id'];
 
 		if ( is_array( $cart_details ) ) {
 			foreach ( $cart_details as $cart_index => $download ) {
@@ -165,7 +166,7 @@ class TutorEDD extends Tutor_Base {
 					$course_id = $if_has_course->post_id;
 					$has_any_enrolled = tutor_utils()->has_any_enrolled($course_id);
 					if ( ! $has_any_enrolled){
-						tutor_utils()->do_enroll($course_id, $payment_id);
+						tutor_utils()->do_enroll($course_id, $payment_id, $user_id);
 					}
 				}
 			}
