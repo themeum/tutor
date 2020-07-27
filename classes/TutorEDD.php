@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Tutor Course attachments Main Class
  */
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) )
+if (!defined('ABSPATH'))
 	exit;
 
 class TutorEDD extends Tutor_Base {
@@ -21,12 +22,12 @@ class TutorEDD extends Tutor_Base {
 
 		$monetize_by = tutils()->get_option('monetize_by');
 
-		if ( $monetize_by !== 'edd'){
+		if ($monetize_by !== 'edd') {
 			return;
 		}
 
-		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
-		add_action('save_post_'.$this->course_post_type, array($this, 'save_course_meta'));
+		add_action('add_meta_boxes', array($this, 'register_meta_box'));
+		add_action('save_post_' . $this->course_post_type, array($this, 'save_course_meta'));
 
 		/**
 		 * Is Course Purchasable
@@ -38,9 +39,9 @@ class TutorEDD extends Tutor_Base {
 		add_action('edd_update_payment_status', array($this, 'edd_update_payment_status'), 10, 3);
 	}
 
-	public function notice_before_option(){
+	public function notice_before_option() {
 		$has_edd = tutor_utils()->has_edd();
-		if ($has_edd){
+		if ($has_edd) {
 			return;
 		}
 
@@ -63,9 +64,9 @@ class TutorEDD extends Tutor_Base {
 	 *
 	 * Add Option for tutor
 	 */
-	public function add_options($attr){
+	public function add_options($attr) {
 		$attr['tutor_edd'] = array(
-			'label' => __( 'EDD', 'tutor-edd' ),
+			'label' => __('EDD', 'tutor-edd'),
 
 			'sections'    => array(
 				'general' => array(
@@ -93,87 +94,85 @@ class TutorEDD extends Tutor_Base {
 	 *
 	 * @since v.1.3.5
 	 */
-	public function tutor_monetization_options($arr){
+	public function tutor_monetization_options($arr) {
 		$has_edd = tutils()->has_edd();
-		if ($has_edd){
+		if ($has_edd) {
 			$arr['edd'] = __('Easy Digital Downloads', 'tutor');
 		}
 		return $arr;
 	}
 
-	public function register_meta_box(){
-		add_meta_box( 'tutor-attached-edd-product', __( 'Add Product', 'tutor' ), array($this, 'course_add_product_metabox'), $this->course_post_type, 'advanced', 'high' );
+	public function register_meta_box() {
+		add_meta_box('tutor-attached-edd-product', __('Add Product', 'tutor'), array($this, 'course_add_product_metabox'), $this->course_post_type, 'advanced', 'high');
 	}
 
 	/**
 	 * @param $post
 	 * MetaBox for Lesson Modal Edit Mode
 	 */
-	public function course_add_product_metabox(){
-		include  tutor()->path.'views/metabox/course-add-edd-product-metabox.php';
+	public function course_add_product_metabox() {
+		include  tutor()->path . 'views/metabox/course-add-edd-product-metabox.php';
 	}
 
-	public function save_course_meta($post_ID){
+	public function save_course_meta($post_ID) {
 		$product_id = tutor_utils()->avalue_dot('_tutor_course_product_id', $_POST);
 
-		if ($product_id !== '-1'){
+		if ($product_id !== '-1') {
 			$product_id = (int) $product_id;
-			if ($product_id){
+			if ($product_id) {
 				update_post_meta($post_ID, '_tutor_course_product_id', $product_id);
 				update_post_meta($product_id, '_tutor_product', 'yes');
-            }
-		}else{
+			}
+		} else {
 			delete_post_meta($post_ID, '_tutor_course_product_id');
 		}
 	}
 
-	public function is_course_purchasable($bool, $course_id){
-		if ( ! tutor_utils()->has_edd()){
+	public function is_course_purchasable($bool, $course_id) {
+		if (!tutor_utils()->has_edd()) {
 			return false;
 		}
 
 		$course_id = tutor_utils()->get_post_id($course_id);
 		$has_product_id = get_post_meta($course_id, '_tutor_course_product_id', true);
-		if ($has_product_id){
+		if ($has_product_id) {
 			return true;
 		}
 		return false;
 	}
 
-	public function get_tutor_course_price($price, $course_id){
+	public function get_tutor_course_price($price, $course_id) {
 		$product_id = tutor_utils()->get_course_product_id($course_id);
 
 		return edd_price($product_id, false);
 	}
-	public function tutor_course_sell_by(){
+
+	public function tutor_course_sell_by() {
 		return 'edd';
 	}
 
-	public function edd_update_payment_status($payment_id, $new_status, $old_status ){
-		if ($new_status !== 'publish'){
+	public function edd_update_payment_status($payment_id, $new_status, $old_status) {
+		if ($new_status !== 'publish') {
 			return;
 		}
 
-		$payment = new \EDD_Payment( $payment_id );
+		$payment = new \EDD_Payment($payment_id);
 		$cart_details   = $payment->cart_details;
 		$user_id        = $payment->user_info['id'];
 
-		if ( is_array( $cart_details ) ) {
-			foreach ( $cart_details as $cart_index => $download ) {
+		if (is_array($cart_details)) {
+			foreach ($cart_details as $cart_index => $download) {
 
 				$if_has_course = tutor_utils()->product_belongs_with_course($download['id']);
-				if ($if_has_course){
+				if ($if_has_course) {
 					$course_id = $if_has_course->post_id;
-					$has_any_enrolled = tutor_utils()->has_any_enrolled($course_id);
-					if ( ! $has_any_enrolled){
+					$has_any_enrolled = tutor_utils()->has_any_enrolled($course_id, $user_id);
+					if (!$has_any_enrolled) {
 						tutor_utils()->do_enroll($course_id, $payment_id, $user_id);
 					}
 				}
 			}
 			tutor_utils()->complete_course_enroll($payment_id);
 		}
-
 	}
-
-
 }
