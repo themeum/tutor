@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.4
 Requires PHP: 5.4.0
-Stable tag: 1.6.6
+Stable tag: 1.6.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,16 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.6.7 - July 28, 2020 =
+
+Fix: Login redirect issue
+Fix: Certificates translation issue
+Fix: Enrollment issue in WooCommerce manual order
+Fix: Enrollment issue while updating EDD payment status
+Update: Add dynamic template support for Course Prerequisites
+Update: Add action hook "tutor_after_review_update" in Ajax class
+Update: Add access for Admin/Instructor to see their all course content from front-end
 
 = 1.6.6 - July 15, 2020 =
 

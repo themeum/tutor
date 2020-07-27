@@ -145,7 +145,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: classes/Admin.php:226, classes/Template.php:329
+#: classes/Admin.php:226, classes/Template.php:333
 msgid "Permission Denied"
 msgstr ""
 
@@ -193,11 +193,11 @@ msgstr ""
 msgid "Course removed from wish list"
 msgstr ""
 
-#: classes/Ajax.php:345, classes/Ajax.php:349
+#: classes/Ajax.php:347, classes/Ajax.php:351
 msgid "ERROR:"
 msgstr ""
 
-#: classes/Ajax.php:349
+#: classes/Ajax.php:351
 msgid "Username is required."
 msgstr ""
 
@@ -265,7 +265,7 @@ msgstr ""
 msgid "Course Settings"
 msgstr ""
 
-#: classes/Course_Settings_Tabs.php:37, classes/Options.php:78, classes/Options.php:81, classes/Options.php:187, classes/Tutor_Setup.php:552, classes/WooCommerce.php:269
+#: classes/Course_Settings_Tabs.php:37, classes/Options.php:78, classes/Options.php:81, classes/Options.php:187, classes/Tutor_Setup.php:552, classes/WooCommerce.php:258
 msgid "General"
 msgstr ""
 
@@ -457,7 +457,7 @@ msgstr ""
 msgid "Confirm password does not matched with Password field"
 msgstr ""
 
-#: classes/Instructor.php:147, classes/Template.php:247
+#: classes/Instructor.php:147, classes/Template.php:251
 msgid "Permission denied"
 msgstr ""
 
@@ -633,7 +633,7 @@ msgstr ""
 msgid "Use Gutenberg editor on course description area."
 msgstr ""
 
-#: classes/Options.php:198, classes/Options.php:243, classes/Options.php:383, classes/WooCommerce.php:280
+#: classes/Options.php:198, classes/Options.php:243, classes/Options.php:383, classes/WooCommerce.php:269
 msgid "Enable / Disable"
 msgstr ""
 
@@ -1694,27 +1694,27 @@ msgstr ""
 msgid "Instructor Registration"
 msgstr ""
 
-#: classes/TutorEDD.php:51
+#: classes/TutorEDD.php:52
 msgid " Seems like you don’t have <strong>Easy Digital Downloads</strong> plugin installed on your site. In order to use this functionality, you need to have the  <strong>Easy Digital Downloads</strong> plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling courses with Tutor."
 msgstr ""
 
-#: classes/TutorEDD.php:53
+#: classes/TutorEDD.php:54
 msgid "This notice will disappear after activating <strong>EDD</strong>"
 msgstr ""
 
-#: classes/TutorEDD.php:77
+#: classes/TutorEDD.php:78
 msgid "Enable EDD"
 msgstr ""
 
-#: classes/TutorEDD.php:78
+#: classes/TutorEDD.php:79
 msgid "This will enable sell your product via EDD"
 msgstr ""
 
-#: classes/TutorEDD.php:99
+#: classes/TutorEDD.php:100
 msgid "Easy Digital Downloads"
 msgstr ""
 
-#: classes/TutorEDD.php:105, classes/WooCommerce.php:142
+#: classes/TutorEDD.php:106, classes/WooCommerce.php:148
 msgid "Add Product"
 msgstr ""
 
@@ -2287,15 +2287,15 @@ msgid "Please save withdraw method "
 msgstr ""
 
 #: classes/Withdraw.php:218
-msgid "Minimum withdraw amount is %s %s %s "
+msgid "Minimum withdrawal amount is %s %s %s "
 msgstr ""
 
 #: classes/Withdraw.php:223
-msgid "Insufficient balance to withdraw, your balance is %s %s %s "
+msgid "You do not have sufficient balance to make a withdrawal request. Current balance: %s %s %s "
 msgstr ""
 
 #: classes/Withdraw.php:256
-msgid "Withdraw has been successful"
+msgid "Withdrawal Request Sent!"
 msgstr ""
 
 #: classes/Withdraw_Requests_List.php:102
@@ -2310,38 +2310,38 @@ msgstr ""
 msgid "Requested Time"
 msgstr ""
 
-#: classes/WooCommerce.php:79
+#: classes/WooCommerce.php:85
 msgid ""
 " Seems like you don’t have WooCommerce plugin installed on your site. In order to use this functionality, you need to have the \n"
 "                WooCommerce plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling \n"
 "                courses with Tutor."
 msgstr ""
 
-#: classes/WooCommerce.php:83
+#: classes/WooCommerce.php:89
 msgid "This notice will disappear after activating <strong>WooCommerce</strong>"
 msgstr ""
 
-#: classes/WooCommerce.php:133
+#: classes/WooCommerce.php:139
 msgid "For Tutor"
 msgstr ""
 
-#: classes/WooCommerce.php:134
+#: classes/WooCommerce.php:140
 msgid "This checkmark ensure that you will sell a specif course via this product."
 msgstr ""
 
-#: classes/WooCommerce.php:265, classes/WooCommerce.php:304
+#: classes/WooCommerce.php:254, classes/WooCommerce.php:293
 msgid "WooCommerce"
 msgstr ""
 
-#: classes/WooCommerce.php:270
+#: classes/WooCommerce.php:259
 msgid "WooCommerce Settings"
 msgstr ""
 
-#: classes/WooCommerce.php:281
+#: classes/WooCommerce.php:270
 msgid "Enable add to cart feature for guest users"
 msgstr ""
 
-#: classes/WooCommerce.php:282
+#: classes/WooCommerce.php:271
 msgid "Enabling this will let an unregistered user purchase any course from the Course Details page. Head over to Documentation to know how to configure this setting."
 msgstr ""
 
@@ -3421,7 +3421,7 @@ msgstr ""
 msgid "Start Course"
 msgstr ""
 
-#: templates/single/course/course-enrolled-box.php:43
+#: templates/single/course/course-enrolled-box.php:43, templates/single/course/course-lession-continue-box.php:41
 msgid "Continue to lesson"
 msgstr ""
 
