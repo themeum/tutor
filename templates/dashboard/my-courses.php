@@ -74,7 +74,7 @@
                                 <i class="tutor-icon-pencil"></i>
                                 <?php _e('Edit', 'tutor'); ?>
                             </a>
-                            <a href="#tutor-course-delete" class="tutor-mycourse-delete" data-id="<?php echo $post->ID; ?>">
+                            <a href="#tutor-course-delete" class="tutor-dashboard-element-delete-btn" data-id="<?php echo $post->ID; ?>">
                                 <i class="tutor-icon-garbage"></i> <?php _e('Delete', 'tutor') ?>
                             </a>
                         </div>
