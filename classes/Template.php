@@ -150,8 +150,12 @@ class Template extends Tutor_Base {
 			if (empty( $wp_query->query_vars['course_subpage'])) {
 				$template = tutor_get_template( 'single-course' );
 				if ( is_user_logged_in() ) {
+					$is_administrator = current_user_can('administrator');
+					$is_instructor = tutor_utils()->is_instructor_of_this_course();
 					if ( tutor_utils()->is_enrolled() ) {
 						$template = tutor_get_template( 'single-course-enrolled' );
+					} else if ( $is_administrator || $is_instructor ) {
+						$template = tutor_get_template( 'single-course-instructor' );
 					}
 				}
 			}else{
