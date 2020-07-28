@@ -3413,16 +3413,16 @@ msgstr ""
 msgid "Complete Course"
 msgstr ""
 
+#: templates/single/course/continue-lesson.php:41, templates/single/course/course-enrolled-box.php:43
+msgid "Continue to lesson"
+msgstr ""
+
 #: templates/single/course/course-benefits.php:31
 msgid "What Will I Learn?"
 msgstr ""
 
 #: templates/single/course/course-enrolled-box.php:45
 msgid "Start Course"
-msgstr ""
-
-#: templates/single/course/course-enrolled-box.php:43, templates/single/course/course-lession-continue-box.php:41
-msgid "Continue to lesson"
 msgstr ""
 
 #: templates/single/course/course-enrolled-box.php:67
