@@ -47,7 +47,7 @@ class WooCommerce extends Tutor_Base {
 		 * After place new order
 		 */
 		add_action('woocommerce_new_order', array($this, 'course_placing_order_from_admin'), 10, 3);
-		add_action('woocommerce_thankyou', array($this, 'course_placing_order_from_customer'), 10, 3);
+		add_action('woocommerce_new_order_item', array($this, 'course_placing_order_from_customer'), 10, 3);
 
 		/**
 		 * Order Status Hook
@@ -422,29 +422,7 @@ class WooCommerce extends Tutor_Base {
 		if (!is_admin()) {
 			return;
 		}
-		$this->enroll_course_by_order_id($order_id);
-	}
-
-	/**
-	 * Course placing order from customer
-	 *
-	 * @param $order_id
-	 * @since v.1.6.7
-	 */
-	public function course_placing_order_from_customer($order_id) {
-		if (is_admin()) {
-			return;
-		}
-		$this->enroll_course_by_order_id($order_id);
-	}
-
-	/**
-	 * Enroll course by order id
-	 *
-	 * @param $order_id
-	 * @since v.1.6.7
-	 */
-	public function enroll_course_by_order_id($order_id) {
+		
 		$order = wc_get_order( $order_id );
 		foreach ($order->get_items() as $item) {
 			$product_id = $item->get_product_id();
@@ -454,6 +432,27 @@ class WooCommerce extends Tutor_Base {
 				$customer_id = $order->get_customer_id();
 				tutor_utils()->do_enroll($course_id, $order_id, $customer_id);
 			}
+		}
+	}
+
+	/**
+	 * Course placing order from customer
+	 *
+	 * @param $order_id
+	 * @since v.1.6.7
+	 */
+	public function course_placing_order_from_customer($item_id, $item, $order_id) {
+		if (is_admin()) {
+			return;
+		}
+
+		$item = new \WC_Order_Item_Product($item);
+		$product_id = $item->get_product_id();
+		$if_has_course = tutor_utils()->product_belongs_with_course($product_id);
+
+		if ($if_has_course){
+			$course_id = $if_has_course->post_id;
+			tutor_utils()->do_enroll($course_id, $order_id);
 		}
 	}
 }
