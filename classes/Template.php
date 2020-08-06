@@ -208,6 +208,10 @@ class Template extends Tutor_Base {
 					if(current_user_can(tutor()->instructor_role) && tutils()->has_lesson_edit_access()){
 						$template = tutor_get_template( 'single-lesson' );
 					}
+
+					if(current_user_can('administrator')) {
+						$template = tutor_get_template( 'single-lesson' );
+					}
 				}
 			}else{
 				$template = tutor_get_template('login');
