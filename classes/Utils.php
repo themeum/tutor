@@ -5536,6 +5536,10 @@ class Utils {
 		$instructor_id 	= $this->get_user_id($instructor_id);
 		$course_id 		= $this->get_post_id($course_id);
 
+		if (!$instructor_id || !$course_id) {
+			return false;
+		}
+
 		$instructor = $wpdb->get_col("
 			SELECT umeta_id
 			FROM   {$wpdb->usermeta}
