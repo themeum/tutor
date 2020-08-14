@@ -87,6 +87,8 @@ class Student {
 				wp_set_auth_cookie( $user_id );
 			}
 
+			do_action('tutor_after_student_signup', $user_id);
+
 			//Redirect page
 			$redirect_page = tutils()->array_get('redirect_to', $_REQUEST);
 			if ( ! $redirect_page){
