@@ -9,5 +9,5 @@
 <p> Dear Admin, </p>
 
 <p>
-	<strong>{instructor_username}</strong> has recently signup at <strong>{signup_time}</strong>.
+	<strong>{instructor_username}</strong> has recently signup as instructor at <strong>{signup_time}</strong>.
 </p>
