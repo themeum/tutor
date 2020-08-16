@@ -2003,11 +2003,17 @@ class Utils {
 	            if ($order_id){
 	                delete_post_meta($enrolled->ID, '_tutor_enrolled_by_order_id');
 	                delete_post_meta($order_id, '_is_tutor_order_for_course');
-	                delete_post_meta($order_id, '_tutor_order_for_course_id_'.$course_id);
+					delete_post_meta($order_id, '_tutor_order_for_course_id_'.$course_id);
+					
+					do_action('tutor_enrollment/delete/after', $enrolled->ID);
                 }
             }else{
 	            $wpdb->update($wpdb->posts, array('post_status' => $cancel_status), array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id) );
-            }
+			
+				if ($cancel_status === 'cancel'){
+					do_action('tutor_enrollment/cancel/after', $enrolled->ID);
+				}
+			}
         }
     }
 
@@ -5605,5 +5611,43 @@ class Utils {
 		);
 
 		return (object) $return;
+	}
+
+	/**
+	 * @param int $enrol_id
+	 *
+	 * @return array|object
+	 *
+	 * Get enrolment by id
+	 *
+	 * @since v.1.6.9
+	 */
+	public function get_enrolment_by_id($enrol_id = 0){
+		global $wpdb;
+
+		$enrolment = $wpdb->get_col("
+			SELECT  enrol.ID          AS enrol_id,
+					enrol.post_author AS student_id,
+					enrol.post_date   AS enrol_date,
+					enrol.post_title  AS enrol_title,
+					enrol.post_status AS status,
+					enrol.post_parent AS course_id,
+					course.post_title AS course_title,
+					student.user_nicename,
+					student.user_email,
+					student.display_name
+			FROM       {$wpdb->posts} enrol
+			INNER JOIN {$wpdb->posts} course
+			ON         enrol.post_parent = course.ID
+			INNER JOIN {$wpdb->users} student
+			ON         enrol.post_author = student.ID
+			WHERE      enrol.ID = {$enrol_id};
+		");
+
+		if (is_array($enrolment) && count($enrolment)) {
+			return (object) $enrolment;
+		}
+
+		return false;
 	}
 }
