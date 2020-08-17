@@ -368,7 +368,12 @@ class Course extends Tutor_Base {
 					'post_author'  => get_current_user_id(),
 					'post_parent'  => $post_ID,
 				);
-				wp_insert_post( $post_arr );
+				$announcement_id = wp_insert_post( $post_arr );
+
+				if ($announcement_id) {
+					$announcement = (object) $post_arr;
+					do_action('tutor_announcements/after/save', $announcement_id, $announcement);
+				}
 			}
 		}
 
