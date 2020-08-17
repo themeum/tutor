@@ -3203,6 +3203,41 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * @param $answer_id
+	 *
+	 * @return array|null|object
+	 * 
+	 * @since v1.6.9
+	 *
+	 * Get question and asnwer by answer_id
+	 */
+	public function get_qa_answer_by_answer_id($answer_id) {
+		global $wpdb;
+		$query = $wpdb->get_row(
+			"SELECT 
+				answer.*, 
+				user.display_name,
+				question.user_id AS question_by,
+				question.comment_content AS question,
+				question_meta.meta_value AS question_title,
+			FROM 
+				{$wpdb->comments} AS answer
+				INNER JOIN {$wpdb->users} AS user 
+					ON answer.user_id = user.ID 
+				INNER JOIN {$wpdb->comments} AS question 
+					ON answer.comment_parent = question.ID 
+				INNER JOIN {$wpdb->commentmeta} AS question_meta 
+					ON answer.comment_parent = question_meta.comment_id AND question_meta.meta_key = 'tutor_question_title'
+			WHERE 
+				answer.ID = {$answer_id}
+				AND answer.comment_type = 'tutor_q_and_a';
+			"
+		);
+
+		return $query;
+	}
+
 	public function unanswered_question_count(){
 		global $wpdb;
 		$count = $wpdb->get_var(
@@ -5620,12 +5655,12 @@ class Utils {
 	 *
 	 * Get enrolment by enrol_id
 	 *
-	 * @since v.1.6.9
+	 * @since v1.6.9
 	 */
 	public function get_enrolment_by_enrol_id($enrol_id = 0){
 		global $wpdb;
 
-		$enrolment = $wpdb->get_col("
+		$enrolment = $wpdb->get_row("
 			SELECT 	enrol.id          AS enrol_id,
 					enrol.post_author AS student_id,
 					enrol.post_date   AS enrol_date,
@@ -5644,8 +5679,8 @@ class Utils {
 			WHERE  enrol.id = {$enrol_id};
 		");
 
-		if (is_array($enrolment) && count($enrolment)) {
-			return (object) $enrolment;
+		if ( $enrolment ) {
+			return $enrolment;
 		}
 
 		return false;
@@ -5655,6 +5690,8 @@ class Utils {
 	 * @param int $course_id
 	 *
 	 * @return int
+	 * 
+	 * @since v1.6.9
 	 *
 	 * Get students email by course id
 	 */
@@ -5673,7 +5710,7 @@ class Utils {
 		");
 
 		$email_array = array_column($student_emails,'user_email');
-		
+
 		return $email_array;
 	}
 }

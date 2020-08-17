@@ -6,8 +6,9 @@
 
 ?>
 
-<p> Dear Admin, </p>
-
+<p>Hi,</p>
 <p>
-	<strong>{instructor_username}</strong> has recently signup as instructor at <strong>{signup_time}</strong>.
+	A new instructor has signed up to your site {site_url}
+	{instructor_name}
+	{instructor_email}
 </p>

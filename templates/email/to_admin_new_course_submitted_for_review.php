@@ -6,8 +6,11 @@
 
 ?>
 
-<p> Dear Admin, </p>
-
+<p>Hi,</p>
 <p>
-	<strong>{course_name}  {course_url}  {submitted_time}</strong>.
+    A new course has been created by {instructor_name} on your site {site_url} and waiting for approval.
+    Course name- {course_name}
+    View the course - {course_url}
+    
+    Reply to this email to communicate with the instructor.
 </p>
