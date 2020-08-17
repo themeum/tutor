@@ -2005,13 +2005,13 @@ class Utils {
 	                delete_post_meta($order_id, '_is_tutor_order_for_course');
 					delete_post_meta($order_id, '_tutor_order_for_course_id_'.$course_id);
 					
-					do_action('tutor_enrollment/delete/after', $enrolled->ID);
+					do_action('tutor_enrollment/after/delete', $enrolled->ID);
                 }
             }else{
 	            $wpdb->update($wpdb->posts, array('post_status' => $cancel_status), array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id) );
 			
 				if ($cancel_status === 'cancel'){
-					do_action('tutor_enrollment/cancel/after', $enrolled->ID);
+					do_action('tutor_enrollment/after/cancel', $enrolled->ID);
 				}
 			}
         }
@@ -5618,15 +5618,15 @@ class Utils {
 	 *
 	 * @return array|object
 	 *
-	 * Get enrolment by id
+	 * Get enrolment by enrol_id
 	 *
 	 * @since v.1.6.9
 	 */
-	public function get_enrolment_by_id($enrol_id = 0){
+	public function get_enrolment_by_enrol_id($enrol_id = 0){
 		global $wpdb;
 
 		$enrolment = $wpdb->get_col("
-			SELECT  enrol.ID          AS enrol_id,
+			SELECT 	enrol.id          AS enrol_id,
 					enrol.post_author AS student_id,
 					enrol.post_date   AS enrol_date,
 					enrol.post_title  AS enrol_title,
@@ -5636,12 +5636,12 @@ class Utils {
 					student.user_nicename,
 					student.user_email,
 					student.display_name
-			FROM       {$wpdb->posts} enrol
-			INNER JOIN {$wpdb->posts} course
-			ON         enrol.post_parent = course.ID
-			INNER JOIN {$wpdb->users} student
-			ON         enrol.post_author = student.ID
-			WHERE      enrol.ID = {$enrol_id};
+			FROM   {$wpdb->posts} enrol
+					INNER JOIN {$wpdb->posts} course
+							ON enrol.post_parent = course.id
+					INNER JOIN {$wpdb->users} student
+							ON enrol.post_author = student.id
+			WHERE  enrol.id = {$enrol_id};
 		");
 
 		if (is_array($enrolment) && count($enrolment)) {
@@ -5649,5 +5649,31 @@ class Utils {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param int $course_id
+	 *
+	 * @return int
+	 *
+	 * Get students email by course id
+	 */
+	public function get_student_emails_by_course_id($course_id = 0){
+		global $wpdb;
+		$course_id = $this->get_post_id($course_id);
+
+		$student_emails = $wpdb->get_results("
+			SELECT 	student.user_email
+			FROM   	{$wpdb->posts} enrol
+					INNER JOIN {$wpdb->users} student
+						ON enrol.post_author = student.id
+			WHERE  	enrol.post_type = 'tutor_enrolled'
+					AND enrol.post_parent = {$course_id}
+					AND enrol.post_status = 'completed'; 
+		");
+
+		$email_array = array_column($student_emails,'user_email');
+		
+		return $email_array;
 	}
 }
