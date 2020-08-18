@@ -8,7 +8,9 @@
 
 <p>Hi,</p>
 <p>
-	A new instructor has signed up to your site {site_url}
+	A new instructor has signed up to your site <strong>{site_name}</strong>
+	<br />
 	{instructor_name}
+	<br />
 	{instructor_email}
 </p>

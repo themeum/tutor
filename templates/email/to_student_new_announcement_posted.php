@@ -8,7 +8,8 @@
 
 <p>Hi,</p>
 <p>
-    The instructor posted a new announcement on course - {course_name}
+    The instructor posted a new announcement on course - <strong>{course_name}</strong>
+    <br />
     {announcement}
 </p>
 

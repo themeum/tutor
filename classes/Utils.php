@@ -3214,28 +3214,31 @@ class Utils {
 	 */
 	public function get_qa_answer_by_answer_id($answer_id) {
 		global $wpdb;
-		$query = $wpdb->get_row(
-			"SELECT 
-				answer.*, 
-				user.display_name,
-				question.user_id AS question_by,
-				question.comment_content AS question,
-				question_meta.meta_value AS question_title,
-			FROM 
-				{$wpdb->comments} AS answer
-				INNER JOIN {$wpdb->users} AS user 
-					ON answer.user_id = user.ID 
-				INNER JOIN {$wpdb->comments} AS question 
-					ON answer.comment_parent = question.ID 
-				INNER JOIN {$wpdb->commentmeta} AS question_meta 
-					ON answer.comment_parent = question_meta.comment_id AND question_meta.meta_key = 'tutor_question_title'
-			WHERE 
-				answer.ID = {$answer_id}
-				AND answer.comment_type = 'tutor_q_and_a';
+		$answer = $wpdb->get_row("
+			SELECT 	answer.comment_post_ID, 
+					answer.comment_content, 
+					users.display_name,
+					question.user_id AS question_by,
+					question.comment_content AS question,
+					question_meta.meta_value AS question_title
+			FROM   {$wpdb -> comments} answer
+					INNER JOIN {$wpdb -> users} users
+							ON answer.user_id = users.id 
+					INNER JOIN {$wpdb -> comments} question 
+							ON answer.comment_parent = question.comment_ID 
+					INNER JOIN {$wpdb -> commentmeta} question_meta 
+							ON answer.comment_parent = question_meta.comment_id
+							AND question_meta.meta_key = 'tutor_question_title'
+			WHERE  	answer.comment_ID = {$answer_id} 
+					AND answer.comment_type = 'tutor_q_and_a';
 			"
 		);
 
-		return $query;
+		if ( $answer ) {
+			return $answer;
+		}
+
+		return false;
 	}
 
 	public function unanswered_question_count(){

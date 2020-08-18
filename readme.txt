@@ -243,23 +243,23 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.6.9 - August 19, 2020 =
 
-New: 12 New email notification
-Update: User can disable tutor native login system
-Update: ImageMagick extension is no longer needed
-Update: Add new action hooks
+New: 13 new email notification
+New: Added 6 new action hooks
 ```
 do_action('tutor_after_student_signup', $user_id);
 do_action('tutor_enrollment/after/cancel', $enrol_id);
 do_action('tutor_enrollment/after/delete', $enrol_id);
 do_action('tutor_enrollment/after/complete', $enrol_id);
-do_action('tutor_announcements/after/save', $announcement_id, $announcement);
+do_action('tutor_announcements/after/save', $announcement_id);
+do_action('tutor_quiz/attempt/submitted/feedback', $attempt_id);
 ```
-Update: New method
-`tutils()->get_enrolment_by_enrol_id($enrol_id)` to get enrolment details by enrol id
-Update: New method `tutils()->get_student_emails_by_course_id($course_id)` to get array list of enrolled user emails
-Fix: Certificate image generate issues
-Fix: Certificate language issues
-Fix: Review delete issue in report addon
+New: Added helper method `tutils()->get_enrolment_by_enrol_id($enrol_id)` to get enrollment details by enrolid
+New: Added helper method `tutils()->get_student_emails_by_course_id($course_id)` to get array list of enrolled user emails
+Update: User can disable Tutor LMS native login system
+Update: ImageMagick dependency removed from certificate generator
+Fix: Certificate image generation issues
+Fix: Certificate Unicode fonts issue
+Fix: Issue with deleting reviews from Reports addon
 Fix: Lesson page access issue for administrator 
 Fix: SQL syntax error on course page
 
