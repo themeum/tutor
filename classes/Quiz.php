@@ -62,8 +62,11 @@ class Quiz {
 	}
 
 	public function tutor_instructor_feedback(){
-		if (isset($_POST['attempts_id'])){
-			update_post_meta(sanitize_text_field($_POST['attempts_id']), 'instructor_feedback', sanitize_text_field($_POST['feedback']));
+		$feedback = sanitize_text_field($_POST['feedback']);
+		$attempt_id = (int) tutor_utils()->avalue_dot('attempts_id', $_POST);
+		if ($attempt_id) {
+			update_post_meta($attempt_id, 'instructor_feedback', $feedback);
+			do_action('tutor_quiz/attempt/submitted/feedback', $attempt_id);
 		}
 	}
 

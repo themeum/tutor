@@ -7,5 +7,8 @@
 ?>
 
 <p>Hi,</p>
-
-<p>Welcome to the course {course_name} at {site_url}. You can start learning from here- {course_start_url}.</p>
+<p>
+    Welcome to the course <strong>{course_name}</strong> at {site_url}. You can start learning from here- 
+    <br />
+    {course_start_url}.
+</p>

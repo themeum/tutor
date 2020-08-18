@@ -8,9 +8,11 @@
 
 <p>Hi,</p>
 <p>
-    A new course has been published by {instructor_name} on your site {site_url}.
-    Course name- {course_name}
+    A new course has been published by <strong>{instructor_name}</strong> on your site <strong>{site_name}</strong>
+    <br />
+    Course name- <strong>{course_name}</strong>
+    <br />
     View the course - {course_url}
-    
-    Reply to this email to communicate with the instructor.
 </p>
+
+<p>Reply to this email to communicate with the instructor.</p>

@@ -8,8 +8,9 @@
 
 <p>Hi,</p>
 <p>
-    This is to notify you that the instructor has removed you from the course - {course_name}
-
+    This is to notify you that the instructor has removed you from the course - <strong>{course_name}</strong>
+    <br />
+    <br />
     --
     Regards,
     {site_name}
