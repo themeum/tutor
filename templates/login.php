@@ -14,6 +14,14 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
+
+if(tutils()->get_option('tutor_authentication_system_disabled'))
+{
+    // Refer to login oage
+    header('Location: '.wp_login_url($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+    exit;
+}
+    
 get_header();
 
 ?>

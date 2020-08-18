@@ -102,6 +102,13 @@ class Options {
 								'default' => '0',
 								'desc'      => __('Enabling this feature will show a notification bar to students and instructors to complete their profile information',	'tutor'),
 							),
+							'tutor_authentication_system_disabled' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Tutor Authentication System', 'tutor'),
+								'label_title' => __('Disable', 'tutor'),
+								'default' => '0',
+								'desc'      => __('Disabling this feature will get rid of Tutor Authentication System',	'tutor'),
+							),
 							'load_tutor_css' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Load Tutor CSS', 'tutor'),
