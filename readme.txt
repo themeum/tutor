@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.4
 Requires PHP: 5.4.0
-Stable tag: 1.6.8
+Stable tag: 1.6.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,28 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.6.9 - August 19, 2020 =
+
+New: 12 New email notification
+Update: User can disable tutor native login system
+Update: ImageMagick extension is no longer needed
+Update: Add new action hooks
+```
+do_action('tutor_after_student_signup', $user_id);
+do_action('tutor_enrollment/after/cancel', $enrol_id);
+do_action('tutor_enrollment/after/delete', $enrol_id);
+do_action('tutor_enrollment/after/complete', $enrol_id);
+do_action('tutor_announcements/after/save', $announcement_id, $announcement);
+```
+Update: New method
+`tutils()->get_enrolment_by_enrol_id($enrol_id)` to get enrolment details by enrol id
+Update: New method `tutils()->get_student_emails_by_course_id($course_id)` to get array list of enrolled user emails
+Fix: Certificate image generate issues
+Fix: Certificate language issues
+Fix: Review delete issue in report addon
+Fix: Lesson page access issue for administrator 
+Fix: SQL syntax error on course page
 
 = 1.6.8 - July 30, 2020 =
 
