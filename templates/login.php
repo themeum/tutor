@@ -15,8 +15,7 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 
-if(tutils()->get_option('tutor_authentication_system_disabled'))
-{
+if(tutils()->get_option('disable_tutor_native_login')) {
     // Refer to login oage
     header('Location: '.wp_login_url($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
     exit;
