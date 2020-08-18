@@ -828,7 +828,8 @@ jQuery(document).ready(function ($) {
     $(document).on('submit click', '.cart-required-login, .cart-required-login a, .cart-required-login form', function (e) {
         e.preventDefault();
 
-        $('.tutor-cart-box-login-form').fadeIn(100);
+        var login_url = $(this).data('login_page_url');
+        login_url ? window.location.assign(login_url) : $('.tutor-cart-box-login-form').fadeIn(100);
     });
 
     $('.tutor-popup-form-close, .login-overlay-close').on('click', function () {

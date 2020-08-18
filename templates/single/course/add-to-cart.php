@@ -35,9 +35,12 @@ $tutor_form_class = apply_filters( 'tutor_enroll_form_classes', array(
 $tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
 
 do_action('tutor_course/single/add-to-cart/before');
+
+$is_tutor_disabled = tutils()->get_option('tutor_authentication_system_disabled');
+$auth_url = $is_tutor_disabled ? wp_login_url($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) : '';
 ?>
 
-<div class="tutor-single-add-to-cart-box <?php echo $required_loggedin_class; ?> ">
+<div class="tutor-single-add-to-cart-box <?php echo $required_loggedin_class; ?> " data-login_page_url="<?php echo $auth_url; ?>">
 	<?php
 	if ($is_purchasable && $tutor_course_sell_by){
 	    tutor_load_template('single.course.add-to-cart-'.$tutor_course_sell_by);
