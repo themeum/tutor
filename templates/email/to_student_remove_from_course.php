@@ -13,6 +13,7 @@
     <br />
     --
     Regards,
+    <br />
     {site_name}
 </p>
 
