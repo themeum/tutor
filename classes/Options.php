@@ -204,7 +204,13 @@ class Options {
 								'type'      => 'checkbox',
 								'label'     => __('Enable / Disable', 'tutor'),
 								'label_title'   => __('Hide course products from shop page', 'tutor'),
-								'desc' => __('Enabling this feature will be removed course products from the shop page.', 'tutor'),
+								'desc' => __('Enabling this feature will remove course products from the shop page.', 'tutor'),
+							),
+							'course_content_access_for_ia' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable / Disable', 'tutor'),
+								'label_title'   => __('Course Content Access', 'tutor'),
+								'desc' => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
 							),
                             'course_completion_process' => array(
                                 'type'          => 'radio',
