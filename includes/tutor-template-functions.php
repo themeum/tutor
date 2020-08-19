@@ -989,13 +989,13 @@ if ( ! function_exists('tutor_course_enroll_box')) {
 
         $is_administrator = current_user_can('administrator');
         $is_instructor = tutor_utils()->is_instructor_of_this_course();
-
+        $course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
         ob_start();
 
         if ( $enrolled ) {
             tutor_load_template( 'single.course.course-enrolled-box' );
             $output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
-        } else if ( $is_administrator || $is_instructor ) {
+        } else if ( $course_content_access && ($is_administrator || $is_instructor) ) {
             tutor_load_template( 'single.course.continue-lesson' );
             $output = apply_filters( 'tutor_course/single/continue_lesson', ob_get_clean() );
         } else {
