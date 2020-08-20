@@ -3514,3 +3514,10 @@ Tools Nav
 	~ .tutor-quiz-feedback-mode-option {
 	background: #fff;
 }
+
+
+/* Text Overlap issue Fixer */
+#tutor-instructors h2
+{
+	display: block;
+}
