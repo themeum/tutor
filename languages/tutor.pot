@@ -881,7 +881,7 @@ msgstr ""
 msgid "Lesson Permalink Base"
 msgstr ""
 
-#: classes/Options.php:412, classes/Options.php:415, classes/Quiz_Attempts_List.php:111, classes/Tutor_Setup.php:554, templates/single/quiz/top.php:24, views/metabox/course-contents.php:136, views/metabox/course-topics.php:54, views/pages/view_attempt.php:39
+#: classes/Options.php:412, classes/Options.php:415, classes/Quiz_Attempts_List.php:111, classes/Tutor_Setup.php:554, templates/single/quiz/top.php:24, views/metabox/course-contents.php:136, views/metabox/course-topics.php:61, views/pages/view_attempt.php:39
 msgid "Quiz"
 msgstr ""
 
@@ -1500,7 +1500,7 @@ msgstr ""
 msgid "View Assignment"
 msgstr ""
 
-#: classes/Post_types.php:285, views/metabox/course-topics.php:84
+#: classes/Post_types.php:285, views/metabox/course-topics.php:91
 msgid "Assignments"
 msgstr ""
 
@@ -3763,7 +3763,7 @@ msgstr ""
 msgid "Delete Topic"
 msgstr ""
 
-#: views/metabox/course-contents.php:46, views/metabox/course-topics.php:23
+#: views/metabox/course-contents.php:46, views/metabox/course-topics.php:30
 msgid "Topic Name"
 msgstr ""
 
@@ -3771,11 +3771,11 @@ msgstr ""
 msgid "Topic title will be publicly show where required, you can call it as a section also in course"
 msgstr ""
 
-#: views/metabox/course-contents.php:59, views/metabox/course-topics.php:35
+#: views/metabox/course-contents.php:59, views/metabox/course-topics.php:42
 msgid "Topic Summary"
 msgstr ""
 
-#: views/metabox/course-contents.php:64, views/metabox/course-topics.php:40
+#: views/metabox/course-contents.php:64, views/metabox/course-topics.php:47
 msgid "The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name."
 msgstr ""
 
@@ -3783,7 +3783,7 @@ msgstr ""
 msgid "Update Topic"
 msgstr ""
 
-#: views/metabox/course-contents.php:132, views/metabox/course-topics.php:68
+#: views/metabox/course-contents.php:132, views/metabox/course-topics.php:75
 msgid "Lesson"
 msgstr ""
 
@@ -3791,23 +3791,23 @@ msgstr ""
 msgid "Difficulty Level"
 msgstr ""
 
-#: views/metabox/course-topics.php:2
+#: views/metabox/course-topics.php:9
 msgid "Expand all"
 msgstr ""
 
-#: views/metabox/course-topics.php:3
+#: views/metabox/course-topics.php:10
 msgid "Collapse all"
 msgstr ""
 
-#: views/metabox/course-topics.php:14
+#: views/metabox/course-topics.php:21
 msgid "Add new topic"
 msgstr ""
 
-#: views/metabox/course-topics.php:19, views/metabox/course-topics.php:45
+#: views/metabox/course-topics.php:26, views/metabox/course-topics.php:52
 msgid "Add Topic"
 msgstr ""
 
-#: views/metabox/course-topics.php:28
+#: views/metabox/course-topics.php:35
 msgid "Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments."
 msgstr ""
 
