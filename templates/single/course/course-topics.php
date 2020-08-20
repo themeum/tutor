@@ -52,14 +52,32 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 
 			if ($topics->have_posts()){
 				while ($topics->have_posts()){ $topics->the_post();
+					$topic_summery = get_the_content();
 					$index++;
 					?>
 
-                    <div class="tutor-course-topic <?php if($index == 1) echo "tutor-active"; ?>">
-                        <div class="tutor-course-title">
-                            <h4> <i class="tutor-icon-plus"></i> <?php the_title(); ?></h4>
+                    <div class="tutor-course-topic tutor-topics-in-single-lesson <?php if($index == 1) echo "tutor-active"; ?>">
+                        <div class="tutor-course-title <?php echo $topic_summery ? 'has-summery' : ''; ?>">
+                            <h4> 
+								<i class="tutor-icon-plus"></i> 
+								<?php
+								the_title();
+								if($topic_summery) {
+									echo "<span class='toogle-informaiton-icon'>&quest;</span>";
+								}
+								?>
+							</h4>
                         </div>
 
+						<?php
+						if ($topic_summery){
+							?>
+							<div class="tutor-topics-summery">
+								<?php echo $topic_summery; ?>
+							</div>
+							<?php
+						}
+						?>
 
                         <div class="tutor-course-lessons" style="<?php echo $index > 1 ? 'display: none' : ''; ?>">
 
