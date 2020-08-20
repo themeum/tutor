@@ -1,4 +1,11 @@
-<div class="tutor-course-builder-header">
+<?php
+    $classname = '';
+    if(version_compare(get_bloginfo('version'),'5.5', '>=')) {
+        $classname = 'has-postbox-header';
+        echo '<style> #tutor-course-topics .toggle-indicator:before { margin-top: 0; } </style>';
+    }
+?>
+<div class="tutor-course-builder-header <?php echo $classname; ?>">
     <a href="javascript:;" class="tutor-expand-all-topic"><?php _e('Expand all', 'tutor'); ?></a> |
     <a href="javascript:;" class="tutor-collapse-all-topic"><?php _e('Collapse all', 'tutor'); ?></a>
 </div>

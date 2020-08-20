@@ -3514,3 +3514,12 @@ Tools Nav
 	~ .tutor-quiz-feedback-mode-option {
 	background: #fff;
 }
+
+/* Fixing course builder css overlap issue */
+#tutor-course-topics h2, #tutor-instructors h2 {
+	display: block;
+}
+#tutor-course-topics .tutor-course-builder-header.has-postbox-header {
+    top: -69px;
+    right: 96px;
+}
