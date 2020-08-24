@@ -368,6 +368,24 @@ class WooCommerce extends Tutor_Base {
 				$admin_amount = ($course_price_grand_total * $admin_rate) / 100;
 			}
 
+			$commission_type = 'percent';
+
+			// (Use Pro Filter - Start)
+			// The response must be same array structure.
+			// Do not change used variable names here, or change in both of here and pro plugin
+			$pro_arg = [
+				'user_id' => $user_id,
+				'instructor_rate' => $instructor_rate,
+				'admin_rate' => $admin_rate,
+				'instructor_amount' => $instructor_amount,
+				'admin_amount' => $admin_amount,
+				'course_price_grand_total'  => $course_price_grand_total,
+				'commission_type' => $commission_type
+			];
+			$pro_calculation = apply_filters('tutor_pro_earning_calculator', $pro_arg);
+			extract($pro_calculation);
+			// (Use Pro Filter - End) 
+
 			$earning_data = array(
 				'user_id'                   => $user_id,
 				'course_id'                 => $course_id,
@@ -381,7 +399,7 @@ class WooCommerce extends Tutor_Base {
 				'admin_amount'              => $admin_amount,
 				'admin_rate'                => $admin_rate,
 
-				'commission_type'           => 'percent',
+				'commission_type'           => $commission_type,
 				'process_by'                => 'woocommerce',
 				'created_at'                => date('Y-m-d H:i:s', tutor_time()),
 			);
