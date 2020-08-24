@@ -258,10 +258,12 @@ New: Added helper method `tutils()->get_student_emails_by_course_id($course_id)`
 Update: User can disable Tutor LMS native login system
 Update: ImageMagick dependency removed from certificate generator
 Update: Option added to control course content access for instructors and administrators
+Update: Topic Summary toggle option added in course page
 Fix: Certificate Unicode fonts issue
 Fix: Certificate image generation issues
 Fix: Issue with deleting reviews from Reports addon
 Fix: Lesson page access issue for administrator 
+Fix: CSS issue in back-end course builder
 Fix: SQL syntax error on course page
 
 = 1.6.8 - July 30, 2020 =

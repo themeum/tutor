@@ -389,6 +389,16 @@ jQuery(document).ready(function ($) {
     });
 
     // tutor course content accordion
+
+    /**
+	 * Toggle topic summery
+	 * @since v.1.6.9
+	 */
+    $('.tutor-course-title h4 .toogle-informaiton-icon').on('click', function (e) {
+        $(this).closest('.tutor-topics-in-single-lesson').find('.tutor-topics-summery').slideToggle();
+        e.stopPropagation();
+    });
+
     $('.tutor-course-topic.tutor-active').find('.tutor-course-lessons').slideDown();
     $('.tutor-course-title').on('click', function () {
         var lesson = $(this).siblings('.tutor-course-lessons');
