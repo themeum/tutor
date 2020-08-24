@@ -341,3 +341,12 @@ Content Drip (Pro)
 .select2-dropdown.increasezindex {
 	z-index:9999999999999;
 }
+
+.tutor-topic-title {
+	i.tutor-icon-move {
+		line-height: unset;
+	}
+}
+.select2-selection__rendered [class^="tutor-icon-"] {
+    vertical-align: middle;
+}
