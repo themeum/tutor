@@ -504,7 +504,7 @@ p.course-empty-content {
 .tutor-course-builder-header {
 	line-height: 50px;
 	position: absolute;
-	top: -56px;
+	top: -69px;
 	right: 40px;
 }
 .rtl .tutor-course-builder-header {
@@ -3528,7 +3528,7 @@ Tools Nav
 	display: block;
 }
 #tutor-course-topics .tutor-course-builder-header.has-postbox-header {
-    top: -69px;
+	top: -56px;
     right: 96px;
 }
 >>>>>>> master

@@ -9345,6 +9345,14 @@ Content Drip (Pro)
   z-index: 9999999999999;
 }
 
+.tutor-topic-title i.tutor-icon-move {
+  line-height: unset;
+}
+
+.select2-selection__rendered [class^="tutor-icon-"] {
+  vertical-align: middle;
+}
+
 @media (min-width: 992px) {
   .tutor-option-tooltip.tutor-option-field {
     position: relative;
