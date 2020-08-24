@@ -3515,14 +3515,6 @@ Tools Nav
 	background: #fff;
 }
 
-<<<<<<< HEAD
-
-/* Text Overlap issue Fixer */
-#tutor-instructors h2
-{
-	display: block;
-}
-=======
 /* Fixing course builder css overlap issue */
 #tutor-course-topics h2, #tutor-instructors h2 {
 	display: block;
@@ -3531,4 +3523,3 @@ Tools Nav
 	top: -56px;
     right: 96px;
 }
->>>>>>> master
