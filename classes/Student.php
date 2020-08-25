@@ -116,11 +116,12 @@ class Student {
 			return;
 		}
 
+		$user_id = get_current_user_id();
+		
 		//Checking nonce
 		tutor_utils()->checking_nonce();
-        do_action('tutor_profile_update_before');
+        do_action('tutor_profile_update_before', $user_id);
 
-		$user_id = get_current_user_id();
 		$first_name     = sanitize_text_field(tutor_utils()->input_old('first_name'));
 		$last_name      = sanitize_text_field(tutor_utils()->input_old('last_name'));
 		$phone_number   = sanitize_text_field(tutor_utils()->input_old('phone_number'));

@@ -138,6 +138,7 @@ $user = wp_get_current_user();
 
         </div>
 
+        <?php do_action('tutor_profile_edit_before_social_media', $user); ?>
 
         <?php
         $tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
