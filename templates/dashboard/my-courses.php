@@ -77,6 +77,7 @@
                             <a href="#tutor-course-delete" class="tutor-dashboard-element-delete-btn" data-id="<?php echo $post->ID; ?>">
                                 <i class="tutor-icon-garbage"></i> <?php _e('Delete', 'tutor') ?>
                             </a>
+                            <?php do_action('tutor_course_dashboard_actions_after', $post->ID); ?>
                         </div>
                     </div>
                 </div>
