@@ -15,6 +15,8 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 $attachments = tutor_utils()->get_attachments();
+$open_mode_view = apply_filters('tutor_pro_attachment_open_mode', null)=='view' ? ' target="_blank" ' : null;
+
 do_action('tutor_global/before/attachments');
 
 if (is_array($attachments) && count($attachments)){
@@ -24,7 +26,7 @@ if (is_array($attachments) && count($attachments)){
         <?php
         foreach ($attachments as $attachment){
             ?>
-            <a href="<?php echo $attachment->url; ?>" class="tutor-lesson-attachment clearfix">
+            <a href="<?php echo $attachment->url; ?>" <?php echo ($open_mode_view ?? ' download="'.$attachment->name.'" ' ); ?> class="tutor-lesson-attachment clearfix">
                 <div class="tutor-attachment-icon">
                     <i class="tutor-icon-<?php echo $attachment->icon; ?>"></i>
                 </div>
