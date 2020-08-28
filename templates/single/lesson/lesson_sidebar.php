@@ -27,8 +27,8 @@ if ($post->post_type === 'tutor_quiz'){
 } else{
 	$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
 }
-
-$enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
+$disable_qa_for_this_course = get_post_meta($course_id, '_tutor_disable_qa', true);
+$enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course') && $disable_qa_for_this_course != 'yes';
 
 
 ?>
