@@ -982,12 +982,13 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_nav_items($items){
-		global $post;
+		global $wp_query, $post;
 		$enable_q_and_a_on_course = (bool) get_tutor_option('enable_q_and_a_on_course');
 		$disable_course_announcements = (bool) get_tutor_option('disable_course_announcements');
-		$disable_qa_for_this_course = get_post_meta($post->ID, '_tutor_disable_qa', true);
-		
-		if(! $enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes'){
+
+		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_disable_qa', true) : '';
+
+		if(!$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
 			if(tutils()->array_get('questions', $items)) {
 				unset($items['questions']);
 			}
@@ -1231,10 +1232,12 @@ class Course extends Tutor_Base {
 
 		do_action('tutor_before_course_sidebar_settings_metabox', $post);
 		?>
-		<label for="<?php echo $disable_qa; ?>">
-			<input id="<?php echo $disable_qa; ?>" type="checkbox" name="<?php echo $disable_qa; ?>" value="yes" <?php echo $disable_qa_checked; ?> />
-			Disable Q&A
-		</label>
+		<div class="tutor-course-sidebar-settings-item">
+			<label for="<?php echo $disable_qa; ?>">
+				<input id="<?php echo $disable_qa; ?>" type="checkbox" name="<?php echo $disable_qa; ?>" value="yes" <?php echo $disable_qa_checked; ?> />
+				<?php _e('Disable Q&A', 'tutor'); ?>
+			</label>
+		</div>
 		<?php
 		do_action('tutor_after_course_sidebar_settings_metabox', $post);
 	}
