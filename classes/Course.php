@@ -99,7 +99,7 @@ class Course extends Tutor_Base {
          * Delete course data after deleted course
          * @since v.1.6.6
          */
-        add_action('deleted_post', array($this, 'delete_tutor_course_data'));
+		add_action('deleted_post', array($this, 'delete_tutor_course_data'));
 	}
 
 	/**
@@ -116,6 +116,12 @@ class Course extends Tutor_Base {
 			add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array( $this, 'instructors_metabox' ), $coursePostType );
 		}
 		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
+
+		/**
+         * Tutor course sidebar settings metabox
+         * @since v.1.7.0
+         */
+		add_meta_box( 'tutor-course-sidebar-settings', __( 'Tutor Settings', 'tutor' ), array($this, 'tutor_course_setting_metabox'), $coursePostType, 'side' );
 	}
 
 	public function course_meta_box($echo = true){
@@ -375,6 +381,16 @@ class Course extends Tutor_Base {
 					do_action('tutor_announcements/after/save', $announcement_id, $announcement);
 				}
 			}
+		}
+
+		/**
+		 * Disable question and answer for this course
+		 * @since 1.7.0
+		 */
+		$disable_qa = '_tutor_disable_qa';
+		if ($additional_data_edit) {
+			$disable_qa_value = ( isset($_POST[$disable_qa]) ) ? 'yes' : 'no';
+			update_post_meta($post_ID, $disable_qa, $disable_qa_value);
 		}
 
 		do_action( "tutor_save_course_after", $post_ID, $post);
@@ -966,10 +982,13 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_nav_items($items){
+		global $wp_query, $post;
 		$enable_q_and_a_on_course = (bool) get_tutor_option('enable_q_and_a_on_course');
 		$disable_course_announcements = (bool) get_tutor_option('disable_course_announcements');
 
-		if(! $enable_q_and_a_on_course){
+		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_disable_qa', true) : '';
+
+		if(!$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
 			if(tutils()->array_get('questions', $items)) {
 				unset($items['questions']);
 			}
@@ -1200,5 +1219,26 @@ class Course extends Tutor_Base {
 				}
 			}
 		}
+	}
+
+	/**
+	 * tutor course setting metabox
+	 * @since v.1.7.0
+	 */
+	function tutor_course_setting_metabox( $post ) {
+		$disable_qa = '_tutor_disable_qa';
+		$disable_qa_value = get_post_meta($post->ID, $disable_qa, true);
+		$disable_qa_checked = ($disable_qa_value == "yes") ? 'checked="checked"' : '';
+
+		do_action('tutor_before_course_sidebar_settings_metabox', $post);
+		?>
+		<div class="tutor-course-sidebar-settings-item">
+			<label for="<?php echo $disable_qa; ?>">
+				<input id="<?php echo $disable_qa; ?>" type="checkbox" name="<?php echo $disable_qa; ?>" value="yes" <?php echo $disable_qa_checked; ?> />
+				<?php _e('Disable Q&A', 'tutor'); ?>
+			</label>
+		</div>
+		<?php
+		do_action('tutor_after_course_sidebar_settings_metabox', $post);
 	}
 }
