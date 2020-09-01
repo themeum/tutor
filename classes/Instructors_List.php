@@ -72,6 +72,12 @@ class Instructors_List extends \Tutor_List_Table {
 				$actions['approved'] = sprintf('<a class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">Un Block</a>',$_REQUEST['page'],'approve',$item->ID);
 				break;
 		}
+
+		$edit_link = get_edit_user_link($item->ID);
+		$edit_link = '<a href="'.$edit_link.'">'.__('Edit').'</a>';
+
+		$actions['tutor-instructor-edit-link']=$edit_link;
+
 		//Return the title contents
 		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
 			$item->display_name,
@@ -88,12 +94,22 @@ class Instructors_List extends \Tutor_List_Table {
 		);
 	}
 
+	function column_instructor_commission($item){
+		$commision = apply_filters('tutor_pro_instructor_commission_string', $item->ID);
+
+		// If the return value is numeric, it means the filter was not executed.
+		// may be pro is not installed. So show N\A. The return value will something like '23 percent'
+
+		return !is_numeric($commision) ? $commision : 'N\\A';
+	}
+
 	function get_columns(){
 		$columns = array(
 			//'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
 			'display_name'      => __('Name', 'tutor'),
 			'user_email'        => __('E-Mail', 'tutor'),
 			'total_course'      => __('Total Course', 'tutor'),
+			'instructor_commission' => __('Instructor Commission'),
 			'status'            => __('Status', 'tutor'),
 		);
 		return $columns;
