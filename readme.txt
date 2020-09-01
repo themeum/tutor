@@ -243,9 +243,9 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.7.0 - September 02, 2020 =
 
-New: Duplicate any course from the Tutor LMS course list
 New: Set commission per instructor
 New: Instructor signature on the certificate
+New: Duplicate any course from the Tutor LMS course list
 Update: Settings to disable certificate in a single course
 Update: Settings to disable Q&A on a specific course
 Update: Force download for course attachment
