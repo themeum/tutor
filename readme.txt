@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 4.5
 Tested up to: 5.4
 Requires PHP: 5.4.0
-Stable tag: 1.6.9
+Stable tag: 1.7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,17 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.7.0 - September 01, 2020 =
+
+New: Course duplication
+New: Per instructor commission
+New: Instructor signature on certificate
+New: Course attachments open mode
+Update: Setting to disable certificate in single course
+Update: Setting to disable Q&A on specific course
+Fix: Wrong percentage on quiz results
+Fix: Course gets published automatically
 
 = 1.6.9 - August 20, 2020 =
 
