@@ -241,16 +241,17 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.7.0 - September 01, 2020 =
+= 1.7.0 - September 02, 2020 =
 
-New: Course duplication
-New: Per instructor commission
-New: Instructor signature on certificate
-New: Course attachments open mode
-Update: Setting to disable certificate in single course
-Update: Setting to disable Q&A on specific course
-Fix: Wrong percentage on quiz results
-Fix: Course gets published automatically
+New: Duplicate any course from the Tutor LMS course list
+New: Set commission per instructor
+New: Instructor signature on the certificate
+Update: Settings to disable certificate in a single course
+Update: Settings to disable Q&A on a specific course
+Update: Force download for course attachment
+Fix: Wrong percentage was showing on quiz results
+Fix: Course got published automatically
+Fix: Deprecated unparenthesized method
 
 = 1.6.9 - August 20, 2020 =
 

@@ -489,6 +489,10 @@ msgstr ""
 msgid "Total Course"
 msgstr ""
 
+#: classes/Instructors_List.php:112
+msgid "Instructor Commission"
+msgstr ""
+
 #: classes/Lesson.php:52, views/metabox/lesson-metabox.php:3
 msgid "Select Course"
 msgstr ""
