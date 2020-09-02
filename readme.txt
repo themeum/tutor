@@ -2,9 +2,9 @@
 Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
-Requires at least: 4.5
-Tested up to: 5.4
-Requires PHP: 5.4.0
+Requires at least: 5.5
+Tested up to: 5.5
+Requires PHP: 7.3
 Stable tag: 1.7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -241,16 +241,17 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.7.0 - September 01, 2020 =
+= 1.7.0 - September 02, 2020 =
 
-New: Course duplication
-New: Per instructor commission
-New: Instructor signature on certificate
-New: Course attachments open mode
-Update: Setting to disable certificate in single course
-Update: Setting to disable Q&A on specific course
-Fix: Wrong percentage on quiz results
-Fix: Course gets published automatically
+New: Set commission per instructor
+New: Instructor signature on the certificate
+New: Duplicate any course from the Tutor LMS course list
+New: Settings to disable certificate in a single course
+New: Settings to disable Q&A on a specific course
+New: Force download for course attachment
+Fix: Wrong percentage was showing on quiz results
+Fix: Course got published automatically
+Fix: Deprecated unparenthesized method
 
 = 1.6.9 - August 20, 2020 =
 

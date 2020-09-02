@@ -141,7 +141,7 @@ msgstr ""
 msgid "Tutor Pages"
 msgstr ""
 
-#: classes/Admin.php:134, classes/Instructors_List.php:97, templates/dashboard/dashboard.php:82, templates/dashboard/purchase_history.php:23, views/pages/tools/tutor_pages.php:13, views/pages/view_attempt.php:59
+#: classes/Admin.php:134, classes/Instructors_List.php:113, templates/dashboard/dashboard.php:82, templates/dashboard/purchase_history.php:23, views/pages/tools/tutor_pages.php:13, views/pages/view_attempt.php:59
 msgid "Status"
 msgstr ""
 
@@ -365,7 +365,7 @@ msgstr ""
 msgid "Check and place necessary information here."
 msgstr ""
 
-#: classes/Email.php:32, classes/Instructors_List.php:94, classes/Students_List.php:77
+#: classes/Email.php:32, classes/Instructors_List.php:109, classes/Students_List.php:77
 msgid "Name"
 msgstr ""
 
@@ -481,12 +481,16 @@ msgstr ""
 msgid "Instructor has been added successfully"
 msgstr ""
 
-#: classes/Instructors_List.php:95, classes/Students_List.php:78, templates/dashboard/instructor/registration.php:63, templates/dashboard/instructor/registration.php:66, templates/dashboard/registration.php:61, templates/dashboard/registration.php:64, views/pages/add_new_instructor.php:69, views/pages/add_new_instructor.php:75
+#: classes/Instructors_List.php:110, classes/Students_List.php:78, templates/dashboard/instructor/registration.php:63, templates/dashboard/instructor/registration.php:66, templates/dashboard/registration.php:61, templates/dashboard/registration.php:64, views/pages/add_new_instructor.php:69, views/pages/add_new_instructor.php:75
 msgid "E-Mail"
 msgstr ""
 
-#: classes/Instructors_List.php:96
+#: classes/Instructors_List.php:111
 msgid "Total Course"
+msgstr ""
+
+#: classes/Instructors_List.php:112
+msgid "Instructor Commission"
 msgstr ""
 
 #: classes/Lesson.php:52, views/metabox/lesson-metabox.php:3
@@ -3611,6 +3615,10 @@ msgstr ""
 
 #: templates/single/quiz/body.php:122
 msgid "Marks : "
+msgstr ""
+
+#: templates/single/quiz/body.php:306, templates/single/quiz/body.php:315
+msgid "characters remaining"
 msgstr ""
 
 #: templates/single/quiz/body.php:371, templates/single/quiz/body.php:388
