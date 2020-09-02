@@ -303,7 +303,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 										if(isset($get_option_meta['short_answer_characters_limit'])){
 											if($get_option_meta['short_answer_characters_limit'] != "" ){
 												$characters_limit = tutor_utils()->avalue_dot('short_answer_characters_limit', $quiz_attempt_info);
-												echo '<p class="answer_limit_desc">  characters remaining <span class="characters_remaining">'.$characters_limit.'</span> </p>';
+												echo '<p class="answer_limit_desc">'. __('characters remaining', 'tutor' ) .' :<span class="characters_remaining">'.$characters_limit.'</span> </p>';
 											}
 										}
 									}
@@ -312,7 +312,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 										if(isset($get_option_meta['open_ended_answer_characters_limit'])){
 											if($get_option_meta['open_ended_answer_characters_limit'] != "" ){
 												$characters_limit = $get_option_meta['open_ended_answer_characters_limit'];
-												echo '<p class="answer_limit_desc">  characters remaining <span class="characters_remaining">'.$characters_limit.'</span> </p>';
+												echo '<p class="answer_limit_desc">'. __('characters remaining', 'tutor' ) .' :<span class="characters_remaining">'.$characters_limit.'</span> </p>';
 											}
 										}
 									}
