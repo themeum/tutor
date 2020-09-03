@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RestAPI class
  *
@@ -11,7 +12,7 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) )
+if (!defined('ABSPATH'))
 	exit;
 
 class RestAPI {
@@ -23,21 +24,27 @@ class RestAPI {
 		$this->course_post_type = tutor()->course_post_type;
 
 		add_action('rest_api_init', array($this, 'rest_api_init'));
-
 	}
 
 
-	public function rest_api_init(){
-		register_rest_route( $this->namespace, 'courses', array( 'methods' => 'GET', 'callback' => array($this, 'courses_api') ) );
+	public function rest_api_init() {
+		register_rest_route(
+			$this->namespace, 'courses', 
+			array(
+				'methods' => 'GET', 
+				'callback' => array($this, 'courses_api'),
+				'permission_callback' => '__return_true'
+			)
+		);
 	}
 
-	public function courses_api(){
+	public function courses_api() {
 		global $wpdb;
 
 		$a = array_merge(array(
 			'post_type'     => $this->course_post_type,
 			'post_status'   => 'publish',
-
+			
 			'id'            => '',
 			'exclude_ids'   => '',
 			'category'      => '',
@@ -59,21 +66,21 @@ class RestAPI {
 		/**
 		 * Exclude Course IDS
 		 */
-		if ( ! empty($a['exclude_ids'])){
+		if (!empty($a['exclude_ids'])) {
 			$exclude_ids = (array) explode(',', sanitize_text_field($a['exclude_ids']));
-			if (tutils()->count($exclude_ids)){
+			if (tutils()->count($exclude_ids)) {
 				$exclude_ids_query = "AND ID NOT IN('$exclude_ids')";
 			}
 		}
 
-		if ( ! empty($a['id'])){
+		if (!empty($a['id'])) {
 			$ids = (array) explode(',', $a['id']);
-			if (tutils()->count($ids)){
+			if (tutils()->count($ids)) {
 				$in_ids_query = "AND ID IN('$ids')";
 			}
 		}
 
-		if ( ! empty($a['category'])){
+		if (!empty($a['category'])) {
 			$category = (array) explode(',', $a['category']);
 			$tax = new \WP_Tax_Query(
 				array(
@@ -104,15 +111,10 @@ class RestAPI {
 			AND post_type = '{$course_post_type}' ORDER BY {$orderby} {$order} LIMIT {$limit} ", ARRAY_A);
 
 
-		if (tutils()->count($query)){
+		if (tutils()->count($query)) {
 			$results = apply_filters('tutor/api/get_courses', $query);
 			wp_send_json_success($results);
 		}
 		wp_send_json_error();
-
-
 	}
-
-
-
 }
