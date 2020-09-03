@@ -78,10 +78,11 @@ class User {
 		$instructor_role = tutor()->instructor_role;
 
 		if (in_array($instructor_role, $old_roles)){
-			tutor_utils()->remove_instructor_role($user_id);
+			// tutor_utils()->remove_instructor_role($user_id);
 		}
 
-		if ($role === $instructor_role){
+		// if ($role === $instructor_role){
+		if ($role === $instructor_role || in_array($instructor_role, $old_roles)){
 			tutor_utils()->add_instructor_role($user_id);
 		}
 	}
