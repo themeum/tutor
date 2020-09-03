@@ -360,6 +360,12 @@ jQuery(document).ready(function($){
         var $that = $(this);
         var action = $that.attr('data-action');
         var instructor_id = $that.attr('data-instructor-id');
+        
+        var prompt_message = $that.attr('data-prompt-message');
+        if(prompt_message && !confirm(prompt_message)){
+            // Avoid Accidental CLick
+            return;
+        }
 
         var nonce_key = tutor_data.nonce_key;
         var json_data = { instructor_id : instructor_id, action_name : action, action: 'instructor_approval_action'};

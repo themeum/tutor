@@ -66,10 +66,10 @@ class Instructors_List extends \Tutor_List_Table {
 				$actions['approved'] = sprintf('<a class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">Approve</a>', $_REQUEST['page'],'approve',$item->ID);
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf('<a class="instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">Block</a>', $_REQUEST['page'],'blocked',$item->ID);
+				$actions['blocked'] = sprintf('<a data-prompt-message="'.__('Sure to Block?', 'tutor').'" class="instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">Block</a>', $_REQUEST['page'],'blocked',$item->ID);
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf('<a class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">Un Block</a>',$_REQUEST['page'],'approve',$item->ID);
+				$actions['approved'] = sprintf('<a data-prompt-message="'.__('Sure to Un Block?', 'tutor').'" class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">Un Block</a>',$_REQUEST['page'],'approve',$item->ID);
 				break;
 		}
 
@@ -79,7 +79,7 @@ class Instructors_List extends \Tutor_List_Table {
 		$actions['tutor-instructor-edit-link']=$edit_link;
 
 		// Add remove instructor action
-		$actions['tutor-remove-instructor'] = sprintf('<a class="instructor-action" data-action="remove-instructor" data-instructor-id="'.$item->ID.'"  href="?page=%s&action=%s&instructor=%s">'.__('Remove as Instructor').'</a>', $_REQUEST['page'], 'remove-instructor', $item->ID);
+		$actions['tutor-remove-instructor'] = sprintf('<a data-prompt-message="'.__('Sure to Remove as Instructor', 'tutor').'" class="instructor-action" data-action="remove-instructor" data-instructor-id="'.$item->ID.'"  href="?page=%s&action=%s&instructor=%s">'.__('Remove as Instructor').'</a>', $_REQUEST['page'], 'remove-instructor', $item->ID);
 
 		//Return the title contents
 		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
