@@ -581,16 +581,16 @@ span.toogle-informaiton-icon {
 	border-bottom: 1px solid rgba(220, 223, 229, 0.4);
 	padding: 0 20px 30px;
 }
-.tutor-lead-info-btn-group .tutor-course-compelte-form-wrap {
+.tutor-lead-info-btn-group .tutor-course-complete-form-wrap {
 	display: block;
 	margin-top: 15px;
 }
 
-.tutor-lead-info-btn-group .tutor-course-compelte-form-wrap form {
+.tutor-lead-info-btn-group .tutor-course-complete-form-wrap form {
 	margin: 0;
 }
 .tutor-lead-info-btn-group a.tutor-button,
-.tutor-lead-info-btn-group .tutor-course-compelte-form-wrap button {
+.tutor-lead-info-btn-group .tutor-course-complete-form-wrap button {
 	display: block;
 	padding: 18px 20px;
 	border: none;
@@ -604,7 +604,7 @@ span.toogle-informaiton-icon {
 	font-weight: 700;
 }
 .tutor-lead-info-btn-group a.tutor-button,
-.tutor-lead-info-btn-group .tutor-course-compelte-form-wrap {
+.tutor-lead-info-btn-group .tutor-course-complete-form-wrap {
 	width: 100%;
 	text-align: center;
 	display: block;
@@ -612,19 +612,19 @@ span.toogle-informaiton-icon {
 
 @media (max-width: 991px) {
 	.tutor-lead-info-btn-group a.tutor-button,
-	.tutor-lead-info-btn-group .tutor-course-compelte-form-wrap {
+	.tutor-lead-info-btn-group .tutor-course-complete-form-wrap {
 		width: auto;
 	}
 }
 
-.tutor-lead-info-btn-group .tutor-course-compelte-form-wrap button {
+.tutor-lead-info-btn-group .tutor-course-complete-form-wrap button {
 	display: block;
 	width: 100%;
 	background: #e8eff1;
 	color: var(--tutor-light-color);
 }
 
-.tutor-lead-info-btn-group .tutor-course-compelte-form-wrap button:hover {
+.tutor-lead-info-btn-group .tutor-course-complete-form-wrap button:hover {
 	background: var(--tutor-primary-color);
 	color: #ffffff;
 }
