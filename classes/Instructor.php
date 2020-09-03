@@ -233,6 +233,13 @@ class Instructor {
 			$instructor = new \WP_User($instructor_id);
 			$instructor->add_role(tutor()->instructor_role);
 
+			// Remove other role to avoid user edit role overridding issu
+			$to_remove = $instructor->roles ?? array();
+			$to_remove = array_diff($to_remove, array(tutor()->instructor_role));
+			foreach($to_remove as $role_string){
+				$instructor->remove_role($role_string);
+			}
+
 			//TODO: send E-Mail to this user about instructor approval, should via hook
 			do_action('tutor_after_approved_instructor', $instructor_id);
 		}
