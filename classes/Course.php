@@ -100,6 +100,9 @@ class Course extends Tutor_Base {
          * @since v.1.6.6
          */
 		add_action('deleted_post', array($this, 'delete_tutor_course_data'));
+
+		
+		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'tutor_course_setting_metabox_frontend'));
 	}
 
 	/**
@@ -1234,11 +1237,29 @@ class Course extends Tutor_Base {
 		?>
 		<div class="tutor-course-sidebar-settings-item">
 			<label for="<?php echo $disable_qa; ?>">
+				<input type="hidden" name="_tutor_course_additional_data_edit" value="true" />
 				<input id="<?php echo $disable_qa; ?>" type="checkbox" name="<?php echo $disable_qa; ?>" value="yes" <?php echo $disable_qa_checked; ?> />
 				<?php _e('Disable Q&A', 'tutor'); ?>
 			</label>
 		</div>
 		<?php
 		do_action('tutor_after_course_sidebar_settings_metabox', $post);
+	}
+
+	function tutor_course_setting_metabox_frontend( $post ){
+		?>		
+			<div class="tutor-course-builder-section tutor-course-builder-info">
+				<div class="tutor-course-builder-section-title">
+					<h3><i class="tutor-icon-down"></i><span><?php esc_html_e('Tutor Settings', 'tutor'); ?></span></h3>
+				</div>
+				<div class="tutor-course-builder-section-content">
+					<div class="tutor-frontend-builder-item-scope">
+						<div class="tutor-form-group">
+							<?php $this->tutor_course_setting_metabox($post); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php
 	}
 }
