@@ -97,11 +97,11 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: classes/Admin.php:60, classes/Admin.php:60, classes/Course.php:460, classes/Options.php:516, classes/Quiz_Attempts_List.php:110, views/pages/students.php:8
+#: classes/Admin.php:60, classes/Admin.php:60, classes/Course.php:463, classes/Options.php:516, classes/Quiz_Attempts_List.php:110, views/pages/students.php:8
 msgid "Students"
 msgstr ""
 
-#: classes/Admin.php:63, classes/Admin.php:63, classes/Course.php:116, classes/Course.php:208, classes/Options.php:477, views/pages/instructors.php:18
+#: classes/Admin.php:63, classes/Admin.php:63, classes/Course.php:119, classes/Course.php:211, classes/Options.php:477, views/pages/instructors.php:18
 msgid "Instructors"
 msgstr ""
 
@@ -209,63 +209,63 @@ msgstr ""
 msgid "Assignment answer can not be empty"
 msgstr ""
 
-#: classes/Course.php:112, classes/Course.php:207
+#: classes/Course.php:115, classes/Course.php:210
 msgid "Course Builder"
 msgstr ""
 
-#: classes/Course.php:113, classes/Course.php:209
+#: classes/Course.php:116, classes/Course.php:212
 msgid "Additional Data"
 msgstr ""
 
-#: classes/Course.php:114, classes/Course.php:206
+#: classes/Course.php:117, classes/Course.php:209
 msgid "Video"
 msgstr ""
 
-#: classes/Course.php:118, classes/Course.php:210, classes/Utils.php:1116, views/metabox/announcements-metabox.php:13
+#: classes/Course.php:121, classes/Course.php:213, classes/Utils.php:1116, views/metabox/announcements-metabox.php:13
 msgid "Announcements"
 msgstr ""
 
-#: classes/Course.php:124, views/options/options_generator.php:2
+#: classes/Course.php:127, classes/Course.php:1253, views/options/options_generator.php:2
 msgid "Tutor Settings"
 msgstr ""
 
-#: classes/Course.php:445
+#: classes/Course.php:448
 msgid "Topic has been updated"
 msgstr ""
 
-#: classes/Course.php:459, classes/Options.php:382, classes/Post_types.php:172
+#: classes/Course.php:462, classes/Options.php:382, classes/Post_types.php:172
 msgid "Lessons"
 msgstr ""
 
-#: classes/Course.php:461, templates/dashboard/earning/statement.php:30
+#: classes/Course.php:464, templates/dashboard/earning/statement.php:30
 msgid "Price"
 msgstr ""
 
-#: classes/Course.php:543
+#: classes/Course.php:546
 msgid "Please Sign In first"
 msgstr ""
 
-#: classes/Course.php:591, classes/Lesson.php:263
+#: classes/Course.php:594, classes/Lesson.php:263
 msgid "Please Sign-In"
 msgstr ""
 
-#: classes/Course.php:669
+#: classes/Course.php:672
 msgid "<p>No instructor available or you have already added maximum instructors</p>"
 msgstr ""
 
-#: classes/Course.php:674
+#: classes/Course.php:677
 msgid "To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s"
 msgstr ""
 
-#: classes/Course.php:1097
+#: classes/Course.php:1100
 msgid "complete all lessons to mark this course as complete"
 msgstr ""
 
-#: classes/Course.php:1134
+#: classes/Course.php:1137
 msgid "You have to pass %s quizzes to complete this course."
 msgstr ""
 
-#: classes/Course.php:1238
+#: classes/Course.php:1242
 msgid "Disable Q&A"
 msgstr ""
 
