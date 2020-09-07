@@ -29,123 +29,155 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt->attempt_id);
 
 $user_id = tutor_utils()->avalue_dot('user_id', $attempt);
 $user = get_userdata($user_id);
+
+function show_correct_answer( $answers= array() ){
+    if(!empty($answers)){
+
+		echo '<div class="correct-answer-wrap">';
+        foreach ($answers as $key => $ans) {
+            $type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';
+            if (isset($ans->answer_two_gap_match)) { echo '<div class="matching-type">'; }
+            switch ($type) {
+				case 'text_image':
+					echo '<div class="text-image-type">';
+                        if(isset($ans->image_id)){
+                            $img_url = wp_get_attachment_image_url($ans->image_id);
+                            if($img_url){
+                                echo '<span class="image"><img src="'.$img_url.'" /></span>';
+                            }
+                        }
+                        if(isset($ans->answer_title)) {
+                            echo '<span class="caption">'.$ans->answer_title.'</span>';
+                        }
+					echo '</div>';
+                    break;
+				case 'text':
+					echo '<div class="text-type">';
+                        if(isset($ans->answer_title)) {
+                            echo '<span class="text-item-caption">'.$ans->answer_title;
+                        }
+                    echo '</div>';
+                    break;
+				case 'image':
+					echo '<div class="image-type">';
+                        if(isset($ans->image_id)){
+                            $img_url = wp_get_attachment_image_url($ans->image_id);
+                            if($img_url){
+                                echo '<span class="image"><img src="'.$img_url.'" />'.'</span>';
+                            }
+                        }
+                    echo '</div>';
+                    break;
+                default:
+                    break;
+            }
+            if (isset($ans->answer_two_gap_match)) {
+                echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
+                echo '<div class="image-match">'.$ans->answer_two_gap_match.'</div>';
+                echo '</div>';
+			}
+        }
+		echo '</div>';
+    }
+}
+
+$attempt_data = tutor_utils()->get_attempt($attempt_id);
 ?>
 
+<div>
+    <?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('quiz-attempts'); ?>
+    <a class="prev-btn" href="<?php echo $attempts_page; ?>"><span>&leftarrow;</span><?php _e('Back to Attempt List', 'tutor'); ?></a>
+</div>
 
-<div class="tutor-quiz-attempt-review-wrap">
-    <h2 class="attempt-review-title"> <i class="tutor-icon-list"></i> <?php _e('View Attempts', 'tutor'); ?></h2>
-    <div class="tutor-quiz-attempt-info-row">
-        <div class="attempt-view-top">
-            <div class="attempt-info-col">
-                <div class="attempt-user-details">
-                    <div class="attempt-user-avatar">
-                        <img src="<?php echo esc_url(get_avatar_url($user_id)) ?>" alt="<?php echo esc_attr($user->display_name); ?>">
-                    </div>
-                    <div class="attempt-info-content">
-                        <h5><?php echo __('Attempt By', 'tutor'); ?></h5>
-                        <h4><?php echo $user->display_name; ?></h4>
-                    </div>
-                </div>
-            </div>
-            <div class="attempt-info-col">
-                <div class="attempt-info-content">
-                    <h5><?php echo __('Quiz', 'tutor'); ?></h5>
-                    <h4>
-                        <?php
-                            echo "<a href='" .admin_url("post.php?post={$attempt->quiz_id}&action=edit")."'>".get_the_title($attempt->quiz_id)."</a>";
-                        ?>
-                    </h4>
-                </div>
-            </div>
 
-            <div class="attempt-info-col">
-                <div class="attempt-info-content">
-                    <h5><?php echo __('Attempt At', 'tutor'); ?></h5>
-                    <h4>
-                        <?php echo date_i18n(get_option('date_format'), strtotime($attempt->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->attempt_started_at)); ?>
-                    </h4>
-                </div>
-            </div>
-
-            <div class="attempt-info-col">
-                <div class="attempt-info-content">
-                    <h5><?php echo __('Status', 'tutor'); ?></h5>
-                    <h4>
-                        <?php
-                        $status = ucwords(str_replace('quiz_', '', $attempt->attempt_status));
-                        echo $status;
-                        ?>
-                    </h4>
-                </div>
-            </div>
+    <div class="tutor-quiz-attempt-review-wrap">
+        <div class="attempt-answers-header">
+            <div class="attempt-header-quiz"><?php echo __('Quiz:','tutor')." <a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></div>
+            <div class="attempt-header-course"><?php echo __('Course:','tutor')." <a href='" .get_permalink($attempt_data->course_id)."'>".get_the_title($attempt_data->course_id)."</a>"; ?></div>
         </div>
-
-        <div class="attempt-view-bottom">
-            <div class="attempt-info-col">
-                <div class="attempt-info-content">
-                    <h5><?php echo __('Course', 'tutor'); ?></h5>
-                    <h4>
-                        <?php
-                        $quiz = tutor_utils()->get_course_by_quiz($attempt->quiz_id);
-                        if ($quiz) {
-                            echo "<a href='".admin_url( "post.php?post={$quiz->ID}&action=edit" ) . "'>". get_the_title( $quiz->ID )."</a>";
-                        }
-                        ?>
-                    </h4>
-                </div>
-            </div>
-
-            <div class="attempt-info-col">
-                <div class="attempt-info-content">
-                    <h5><?php echo __('Result', 'tutor'); ?></h5>
-                    <h4>
-                        <?php
-                            $pass_mark_percent = tutor_utils()->get_quiz_option($attempt->quiz_id, 'passing_grade', 0);
-                            $earned_percentage = $attempt->earned_marks > 0 ? ( number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
-                            $output = '';
-                            if ($earned_percentage >= $pass_mark_percent){
-                                $output .= '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
-                            }else{
-                                $output .= '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+            
+        <table class="wp-list-table">
+            <tr>
+                <th><?php _e('#', 'tutor'); ?></th>
+                <th><?php _e('Attempts Date', 'tutor'); ?></th>
+                <th><?php _e('Questions', 'tutor'); ?></th>
+                <th><?php _e('Total Marks', 'tutor'); ?></th>
+                <th><?php _e('Pass Marks', 'tutor'); ?></th>
+                <th><?php _e('Correct', 'tutor'); ?></th>
+                <th><?php _e('Incorrect', 'tutor'); ?></th>
+                <th><?php _e('Earned Marks', 'tutor'); ?></th>
+                <th><?php _e('Results', 'tutor'); ?></th>
+            </tr>
+            
+            <tr>
+                <td><?php echo $attempt_data->attempt_id; ?></td>
+                <td>
+                    <?php
+                        echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
+                    ?>
+                </td>
+                <td><?php echo $attempt_data->total_questions; ?></td>
+                <td><?php echo $attempt_data->total_marks; ?></td>
+                <td>
+                    <?php 
+                        $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
+                        echo $pass_mark_percent.'%';
+                    ?>
+                </td>
+                <td>
+                    <?php
+                    $correct = 0;
+                    $incorrect = 0;
+                    if(is_array($answers) && count($answers) > 0) {
+                        foreach ($answers as $answer){
+                            if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
+                                $correct++;
+                            } else {
+                                if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+                                } else {
+                                    $incorrect++;
+                                }
                             }
-
-                            $output .= "".$attempt->earned_marks." out of {$attempt->total_marks}";
-                            $output .= "<div>Marks earned ({$earned_percentage}%)</div>";
-                            echo $output;
-                        ?>
-                    </h4>
-                </div>
-            </div>
-
-            <div class="attempt-info-col">
-                <div class="attempt-info-content">
-                    <h5><?php echo __('Quiz Time', 'tutor'); ?></h5>
-                    <h4>
-                        <?php
-                            $time_limit_seconds = tutor_utils()->avalue_dot('time_limit.time_limit_seconds', $quiz_attempt_info);
-                            echo tutor_utils()->seconds_to_time_context($time_limit_seconds);
-                        ?>
-                    </h4>
-                </div>
-            </div>
-
-            <div class="attempt-info-col">
-                <div class="attempt-info-content">
-                    <h5><?php echo __('Attempt Time', 'tutor'); ?></h5>
-                    <h4>
-                        <?php
-                            $attempt_time_sec = strtotime($attempt->attempt_ended_at) - strtotime($attempt->attempt_started_at);
-                            echo tutor_utils()->seconds_to_time_context($attempt_time_sec);
-                        ?>
-                    </h4>
-                </div>
-
-            </div>
-
-        </div>
-
+                        }
+                    }
+                    echo $correct;
+                    ?>
+                </td>
+                <td><?php echo $incorrect; ?></td>
+                <td>
+                    <?php 
+                        echo $attempt_data->earned_marks; 
+                        $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
+                        echo '('.$earned_percentage.'%)';
+                    ?>
+                </td>
+                <td>
+                    <?php 
+                        if ($earned_percentage >= $pass_mark_percent){
+                            echo '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
+                        }else{
+                            echo '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+                        }
+                    ?>
+                </td>
+            </tr>
+        </table>
     </div>
 
+
+    <?php $feedback = get_post_meta($attempt_id ,'instructor_feedback', true); ?>
+    <?php if($feedback){ ?>
+        <div class="tutor-quiz-attempt-review-wrap">
+            <div class="quiz-attempt-answers-wrap">
+                <div class="attempt-answers-header">
+                    <div class="attempt-header-quiz"><?php _e('Instructor Feedback', 'tutor'); ?></div>
+                </div>
+                <div class="instructor-feedback-content">
+                    <p><?php echo $feedback; ?></p>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
 
     <div class="attempt-review-notice-wrap">
 		<?php
@@ -159,13 +191,10 @@ $user = get_userdata($user_id);
 					$required_review[] = $question_no;
 				}
 			}
-
 			if (count($required_review)){
 				echo '<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>Reminder: </strong> Please review answers for question no. '.implode(', ', $required_review).' </p>';
 			}
 		}
-
-
 		?>
 
 	    <?php if ((bool) $attempt->is_manually_reviewed ){
@@ -179,8 +208,8 @@ $user = get_userdata($user_id);
             </p>
 		    <?php
 	    } ?>
-
     </div>
+
 	<?php
 	if (is_array($answers) && count($answers)){
 
@@ -188,15 +217,16 @@ $user = get_userdata($user_id);
         <div class="quiz-attempt-answers-wrap">
 
             <div class="attempt-answers-header">
-                <h3><?php _e('Quiz Overview', 'tutor'); ?></h3>
+                <div class="attempt-header-quiz"><?php _e('Quiz Overview', 'tutor'); ?></div>
             </div>
 
             <table class="wp-list-table">
                 <tr>
-                    <th><?php _e('Type', 'tutor'); ?></th>
                     <th><?php _e('No.', 'tutor'); ?></th>
+                    <th><?php _e('Type', 'tutor'); ?></th>
                     <th><?php _e('Question', 'tutor'); ?></th>
                     <th><?php _e('Given Answers', 'tutor'); ?></th>
+                    <th><?php _e('Correct Answers', 'tutor'); ?></th>
                     <th><?php _e('Correct/Incorrect', 'tutor'); ?></th>
                     <th><?php _e('Manual Review', 'tutor'); ?></th>
                 </tr>
@@ -207,8 +237,8 @@ $user = get_userdata($user_id);
 					$question_type = tutor_utils()->get_question_types($answer->question_type);
 					?>
                     <tr>
-                        <td><?php echo $question_type['icon']; ?></td>
                         <td><?php echo $answer_i; ?></td>
+                        <td><?php echo $question_type['icon']; ?></td>
                         <td><?php echo stripslashes($answer->question_title); ?></td>
                         <td>
 							<?php
@@ -311,14 +341,49 @@ $user = get_userdata($user_id);
                         </td>
 
                         <td>
-							<?php
+                            <?php
+                            if (($answer->question_type != 'open_ended' && $answer->question_type != 'short_answer')) {
+                                global $wpdb;
+                                if ( $answer->question_type === 'true_false' ) {
+                                    $correct_answer = $wpdb->get_var( "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1" );
+                                    echo $correct_answer;
+                                } elseif ( $answer->question_type === 'single_choice' ) {
+                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1" );
+                                    show_correct_answer($correct_answer);
+                                } elseif ( $answer->question_type === 'multiple_choice' ) {
+                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1 ;" );
+                                    show_correct_answer($correct_answer);
+                                } elseif ( $answer->question_type === 'fill_in_the_blank' ) {
+                                    $correct_answer = $wpdb->get_var( "SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id}" );
+                                    if($correct_answer){
+                                        echo implode(', ', explode('|', $correct_answer));
+                                    }
+                                } elseif ( $answer->question_type === 'ordering' ) {
+                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                    show_correct_answer($correct_answer);
+                                } elseif( $answer->question_type === 'matching' ){
+                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_two_gap_match, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                    show_correct_answer($correct_answer);
+                                } elseif( $answer->question_type === 'image_matching' ) {
+                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                    show_correct_answer($correct_answer);
+                                }
+                            }
+                            ?>
+                        </td>
 
+                        <td>
+							<?php
 							if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
 								echo '<span class="tutor-status-approved-context"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
 							} else {
 								if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
-									echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
-								}else {
+                                    if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
+                                        echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
+                                    } else {
+                                        echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
+                                    }
+								} else {
 									echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
 								}
 							}

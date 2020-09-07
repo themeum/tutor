@@ -27,6 +27,12 @@ class Ajax{
 		 */
 		add_action('wp_ajax_tutor_load_edit_review_modal', array($this, 'tutor_load_edit_review_modal'));
 		add_action('wp_ajax_tutor_update_review_modal', array($this, 'tutor_update_review_modal'));
+
+		/**
+		 * Ajax login
+		 * @since  v.1.6.3
+		 */
+		add_action('wp_ajax_nopriv_tutor_user_login', array($this, 'process_ajax_login'));
 	}
 
 	/**
@@ -273,7 +279,6 @@ class Ajax{
 		wp_send_json_success();
 	}
 
-
 	/**
 	 * Load review edit form
 	 * @since v.1.4.0
@@ -310,9 +315,67 @@ class Ajax{
 				array( 'comment_id' => $review_id, 'meta_key' => 'tutor_rating' )
 			);
 
+			do_action('tutor_after_review_update', $review_id, $is_exists);
+
 			wp_send_json_success();
 		}
 		wp_send_json_error();
 	}
 
+	/**
+	 * Process ajax login
+	 * @since v.1.6.3
+	 */
+	public function process_ajax_login(){
+		tutils()->checking_nonce();
+
+		$username = tutils()->array_get('log', $_POST);
+		$password = tutils()->array_get('pwd', $_POST);
+		$redirect_to = tutils()->array_get('redirect_to', $_POST);
+
+		try {
+			$creds = array(
+				'user_login'    => trim( wp_unslash( $username ) ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				'user_password' => $password, // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+				'remember'      => isset( $_POST['rememberme'] ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			);
+
+			$validation_error = new \WP_Error();
+			$validation_error = apply_filters( 'tutor_process_login_errors', $validation_error, $creds['user_login'], $creds['user_password'] );
+
+			if ( $validation_error->get_error_code() ) {
+				wp_send_json_error( '<strong>' . __( 'ERROR:', 'tutor' ) . '</strong> ' . $validation_error->get_error_message() );
+			}
+
+			if ( empty( $creds['user_login'] ) ) {
+				wp_send_json_error( '<strong>' . __( 'ERROR:', 'tutor' ) . '</strong> ' . __( 'Username is required.', 'tutor' ) );
+			}
+
+			// On multisite, ensure user exists on current site, if not add them before allowing login.
+			if ( is_multisite() ) {
+				$user_data = get_user_by( is_email( $creds['user_login'] ) ? 'email' : 'login', $creds['user_login'] );
+
+				if ( $user_data && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) {
+					add_user_to_blog( get_current_blog_id(), $user_data->ID, 'customer' );
+				}
+			}
+
+			// Perform the login.
+			$user = wp_signon( apply_filters( 'tutor_login_credentials', $creds ), is_ssl() );
+
+			if ( is_wp_error( $user ) ) {
+				$message = $user->get_error_message();
+				$message = str_replace( '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', $message );
+				
+				wp_send_json_error( $message );
+			} else {
+				wp_send_json_success([
+					'redirect' => apply_filters('tutor_login_redirect_url', $redirect_to)
+				]);
+			}
+		} catch ( \Exception $e ) {
+			wp_send_json_error( apply_filters( 'login_errors', $e->getMessage()) );
+			do_action( 'tutor_login_failed' );
+		}
+	}
 }

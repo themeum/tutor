@@ -10,3 +10,5 @@ yarn.lock
 .sass-cache
 assets/css/tutor-front.css.map
 assets/css/tutor-front.min.css.map
+.prettierignore
+*.zip

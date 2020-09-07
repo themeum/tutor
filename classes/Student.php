@@ -87,6 +87,8 @@ class Student {
 				wp_set_auth_cookie( $user_id );
 			}
 
+			do_action('tutor_after_student_signup', $user_id);
+
 			//Redirect page
 			$redirect_page = tutils()->array_get('redirect_to', $_REQUEST);
 			if ( ! $redirect_page){
@@ -114,20 +116,24 @@ class Student {
 			return;
 		}
 
+		$user_id = get_current_user_id();
+		
 		//Checking nonce
 		tutor_utils()->checking_nonce();
-        do_action('tutor_profile_update_before');
+        do_action('tutor_profile_update_before', $user_id);
 
-		$user_id = get_current_user_id();
 		$first_name     = sanitize_text_field(tutor_utils()->input_old('first_name'));
 		$last_name      = sanitize_text_field(tutor_utils()->input_old('last_name'));
 		$phone_number   = sanitize_text_field(tutor_utils()->input_old('phone_number'));
 		$tutor_profile_bio = wp_kses_post(tutor_utils()->input_old('tutor_profile_bio'));
 
-		$userdata = array(
+        $display_name   = sanitize_text_field(tutils()->input_old('display_name'));
+
+        $userdata = array(
 			'ID'            =>  $user_id,
 			'first_name'    =>  $first_name,
 			'last_name'     =>  $last_name,
+			'display_name'  =>  $display_name,
 		);
 		$user_id  = wp_update_user( $userdata );
 

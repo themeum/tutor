@@ -169,6 +169,50 @@ if ( ! $quiz){
                         <p class="help"><?php _e('Time limit for this quiz. 0 means no time limit.', 'tutor'); ?></p>
                     </div> <!-- .tutor-quiz-builder-group -->
 
+
+
+                    <div class="tutor-quiz-builder-group">
+                        <h4><?php _e('Quiz Feedback Mode', 'tutor'); ?>  </h4>
+
+                        <p class="help">(<?php _e('Pick the quiz system"s behaviour on choice based questions', 'tutor'); ?>)</p>
+
+                        <div class="tutor-quiz-builder-row">
+                            <div class="tutor-quiz-builder-col">
+                                <label class="tutor-quiz-feedback-mode">
+                                    <input type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?> >
+                                    <span class="radio-icon"></span>
+                                    <div class="tutor-quiz-feedback-mode-option">
+                                        <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Default', 'tutor'); ?></h4>
+                                        <p class="tutor-quiz-feedback-option-subtitle">Answers shown after quiz is finished</p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="tutor-quiz-builder-col">
+                                <label class="tutor-quiz-feedback-mode">
+                                    <input type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?> >
+                                    <span class="radio-icon"></span>
+                                    <div class="tutor-quiz-feedback-mode-option">
+                                        <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Retry Mode', 'tutor'); ?></h4>
+                                        <p class="tutor-quiz-feedback-option-subtitle">Unlimited attempts on each question. <a href="#"> Live Demo</a></p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="tutor-quiz-builder-col">
+                                <label class="tutor-quiz-feedback-mode">
+                                    <input type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked('reveal', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>  >
+                                    <span class="radio-icon"></span>
+                                    <div class="tutor-quiz-feedback-mode-option">
+                                        <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Reveal Mode', 'tutor'); ?></h4>
+                                        <p class="tutor-quiz-feedback-option-subtitle">Show result after the attempt. <a href="#"> Live Demo</a></p>
+                                    </div>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div> <!-- .tutor-quiz-builder-group -->
+
+
+
                     <div class="tutor-quiz-builder-group">
                         <h4><?php _e('Attempts Allowed', 'tutor'); ?> <span>(<?php _e('Optional', 'tutor'); ?>)</span></h4>
                         <div class="tutor-quiz-builder-row">
@@ -294,6 +338,17 @@ if ( ! $quiz){
                 <p class="help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor'); ?></p>
             </div>
 
+            <div class="tutor-quiz-builder-group">
+                <h4><?php _e('Open-Ended/Essay questions answer character limit', 'tutor'); ?></h4>
+                <div class="tutor-quiz-builder-row">
+                    <div class="tutor-quiz-builder-col">
+                        <input type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option
+                        ($quiz_id, 'open_ended_answer_characters_limit', 500); ?>" >
+                    </div>
+                </div>
+                <p class="help"><?php _e('Students will place the answer in the Open-Ended/Essay question type within this character limit.', 'tutor'); ?></p>
+            </div>
+
 
             <div class="tutor-quiz-builder-modal-control-btn-group">
                 <div class="quiz-builder-btn-group-left">
@@ -304,13 +359,10 @@ if ( ! $quiz){
                     <a href="#quiz-builder-tab-questions" class="quiz-modal-tab-navigation-btn quiz-modal-btn-cancel"><?php /*_e('Cancel', 'tutor'); */?></a>
                 </div>-->
             </div>
-
-
         </div>
 
-
-
     </div>
+
     <div class="tutor-quiz-builder-modal-tabs-notice">
 	    <?php
 	    // TODO: These links are must be updated

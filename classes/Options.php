@@ -95,18 +95,32 @@ class Options {
 								'default' => '0',
 								'desc'      => __('Enable this to make a profile publicly visible',	'tutor')."<br />" .$student_url,
 							),
+							'enable_profile_completion' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Profile Completion', 'tutor'),
+								'label_title' => __('Enable', 'tutor'),
+								'default' => '0',
+								'desc'      => __('Enabling this feature will show a notification bar to students and instructors to complete their profile information',	'tutor'),
+							),
+							'disable_tutor_native_login' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Tutor Native Login', 'tutor'),
+								'label_title' => __('Disable', 'tutor'),
+								'default' => '0',
+								'desc'      => __('Disable to use the default WordPress login page',	'tutor'),
+							),
 							'load_tutor_css' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Load Tutor CSS', 'tutor'),
 								'label_title' => __('Enable', 'tutor'),
-								'default' => '1',
+								'default' => '0',
 								'desc'      => __('If your theme has its own styling, then you can turn it off to load CSS from the plugin directory', 'tutor'),
 							),
 							'load_tutor_js' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Load Tutor JavaScript', 'tutor'),
 								'label_title' => __('Enable', 'tutor'),
-								'default' => '1',
+								'default' => '0',
 								'desc'      => __('If you have put required script in your theme javascript file, then you can turn it off to load JavaScript from the plugin directory', 'tutor'),
 							),
 							'student_must_login_to_view_course' => array(
@@ -163,6 +177,12 @@ class Options {
 								'default'   => '0',
 								'desc'      => __('Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user',	'tutor'),
 							),
+							'login_error_message' => array(
+								'type'      => 'text',
+								'label'     => __('Error message for wrong login credentials', 'tutor'),
+								'default'   => 'Incorrect username or password.',
+								'desc'      => __('Login error message displayed when the user puts wrong login credentials.', 'tutor'),
+							),
 						)
 					)
 				),
@@ -184,8 +204,25 @@ class Options {
 								'type'      => 'checkbox',
 								'label'     => __('Enable / Disable', 'tutor'),
 								'label_title'   => __('Hide course products from shop page', 'tutor'),
-								'desc' => __('Enabling this feature will be removed course products from the shop page.', 'tutor'),
+								'desc' => __('Enabling this feature will remove course products from the shop page.', 'tutor'),
 							),
+							'course_content_access_for_ia' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Enable / Disable', 'tutor'),
+								'label_title'   => __('Course Content Access', 'tutor'),
+								'desc' => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
+							),
+                            'course_completion_process' => array(
+                                'type'          => 'radio',
+                                'label'         => __('Course Completion Process', 'tutor'),
+                                'default'       => 'flexible',
+                                'select_options'   => false,
+                                'options'   => array(
+                                    'flexible'  =>  __('Flexible', 'tutor'),
+                                    'strict'    =>  __('Strict Mode', 'tutor'),
+                                ),
+                                'desc'          => __('Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor'),
+                            ),
 						),
 					),
 					'archive' => array(

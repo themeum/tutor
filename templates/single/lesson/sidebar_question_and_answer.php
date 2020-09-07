@@ -9,18 +9,17 @@
  * @package TutorLMS/Templates
  * @version 1.5.2
  */
-
-$enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
-if ( ! $enable_q_and_a_on_course) {
-	tutor_load_template( 'single.course.q_and_a_turned_off' );
-	return;
-}
-
-
 global $post;
 $currentPost = $post;
 
 $course_id = tutils()->get_course_id_by_content($post);
+
+$disable_qa_for_this_course = get_post_meta($course_id, '_tutor_disable_qa', true);
+$enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
+if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
+	tutor_load_template( 'single.course.q_and_a_turned_off' );
+	return;
+}
 
 ?>
 <?php do_action('tutor_course/question_and_answer/before'); ?>
@@ -29,7 +28,15 @@ $course_id = tutils()->get_course_id_by_content($post);
 
     <div class="tutor_question_answer_wrap">
 		<?php
-		$questions = tutor_utils()->get_top_question($course_id);
+        $current_user = tutor_utils()->get_user_id();
+        $all_instructors = tutor_utils()->get_instructors_by_course($course_id);
+        $all_instructors = wp_list_pluck( (array)$all_instructors, 'ID' );
+        
+        if( in_array($current_user ,$all_instructors) ) {
+            $questions = tutor_utils()->get_top_question($course_id, $current_user, 0 , 20, true);
+        } else {
+            $questions = tutor_utils()->get_top_question($course_id);
+        }
 
 		if (is_array($questions) && count($questions)){
 			foreach ($questions as $question){
@@ -49,7 +56,7 @@ $course_id = tutils()->get_course_id_by_content($post);
                         </div>
 
                         <div class="tutor_question_area">
-                            <p><strong><?php echo $question->question_title; ?> </strong></p>
+                            <p><strong><?php echo stripslashes($question->question_title); ?> </strong></p>
 							<?php echo wpautop(stripslashes($question->comment_content)); ?>
                         </div>
                     </div>
@@ -143,7 +150,7 @@ $course_id = tutils()->get_course_id_by_content($post);
             <input type="hidden" value="<?php echo $course_id; ?>" name="tutor_course_id"/>
 
             <div class="tutor-form-group">
-                <input type="text" name="question_title" value="" placeholder="<?php _e('Question Title', 'tutor'); ?>">
+                <input type="text" name="question_title" value="" placeholder="<?php _e('Question Title', 'tutor'); ?>" required="required">
             </div>
 
             <div class="tutor-form-group">

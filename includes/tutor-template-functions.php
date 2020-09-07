@@ -987,11 +987,17 @@ if ( ! function_exists('tutor_course_enroll_box')) {
         $isLoggedIn = is_user_logged_in();
         $enrolled = tutor_utils()->is_enrolled();
 
+        $is_administrator = current_user_can('administrator');
+        $is_instructor = tutor_utils()->is_instructor_of_this_course();
+        $course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
         ob_start();
 
         if ( $enrolled ) {
             tutor_load_template( 'single.course.course-enrolled-box' );
             $output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
+        } else if ( $course_content_access && ($is_administrator || $is_instructor) ) {
+            tutor_load_template( 'single.course.continue-lesson' );
+            $output = apply_filters( 'tutor_course/single/continue_lesson', ob_get_clean() );
         } else {
             tutor_load_template( 'single.course.course-enroll-box' );
             $output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );
@@ -1019,10 +1025,19 @@ function tutor_single_course_add_to_cart($echo = true){
     $isLoggedIn = is_user_logged_in();
     $output = '';
 
-    tutor_load_template( 'single.course.add-to-cart' );
-    $output .= apply_filters( 'tutor_course/single/add-to-cart', ob_get_clean() );
+    $total_enrolled = tutor_utils()->count_enrolled_users_by_course();
+    $maximum_students = (int) tutor_utils()->get_course_settings(null, 'maximum_students');
 
-    if ( ! $isLoggedIn){
+    if ($maximum_students && $maximum_students <= $total_enrolled) {
+        $template = 'closed-enrollment';
+    } else {
+        $template = 'add-to-cart';
+    }
+
+    tutor_load_template( 'single.course.'.$template );
+    $output .= apply_filters( 'tutor_course/single/'.$template, ob_get_clean() );
+
+    if (!$isLoggedIn) {
         ob_start();
         tutor_load_template( 'single.course.login' );
         $login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );

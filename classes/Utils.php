@@ -663,16 +663,38 @@ class Utils {
 	 * @return float|int
 	 *
 	 * @since v.1.0.0
+     * @updated v.1.6.1
 	 */
 	public function get_course_completed_percent($course_id = 0, $user_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
 
-		$total_lesson = $this->get_lesson_count_by_course($course_id);
 		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
+        $course_contents = tutils()->get_course_contents_by_id($course_id);
 
-		if ($total_lesson > 0 && $completed_lesson > 0){
-			return number_format(($completed_lesson * 100) / $total_lesson);
+        $totalContents = $this->count($course_contents);
+        $totalContents = $totalContents ? $totalContents : 0;
+
+        $completedCount = $completed_lesson;
+
+        if (tutils()->count($course_contents)){
+            foreach ($course_contents as $content){
+                if ($content->post_type === 'tutor_quiz'){
+                    $attempt = $this->get_quiz_attempt($content->ID);
+                    if ($attempt){
+                        $completedCount++;
+                    }
+                }elseif ($content->post_type === 'tutor_assignments'){
+                    $isSubmitted = $this->is_assignment_submitted($content->ID);
+                    if ($isSubmitted){
+                        $completedCount++;
+                    }
+                }
+            }
+        }
+
+		if ($totalContents > 0 && $completedCount > 0){
+			return number_format(($completedCount * 100) / $totalContents);
 		}
 
 		return 0;
@@ -968,6 +990,32 @@ class Utils {
 		return false;
 	}
 
+
+    /**
+     * @param int $enrol_id
+     * @return array|bool|\WP_Post|null
+     *
+     * Get course by enrol id
+     *
+     * @since v.1.6.1
+     */
+
+	public function get_course_by_enrol_id($enrol_id = 0){
+	    if ( ! $enrol_id){
+	        return false;
+        }
+
+        global $wpdb;
+
+        $course_id = (int) $wpdb->get_var( "select post_parent from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND ID = {$enrol_id}" );
+
+        if ( $course_id ) {
+            return get_post($course_id);
+        }
+
+        return null;
+    }
+
 	/**
 	 * @param int $lesson_id
 	 * @param int $user_id
@@ -1064,7 +1112,6 @@ class Utils {
 	 */
 	public function course_sub_pages(){
 		$nav_items = array(
-			'overview' => __('Overview', 'tutor'),
 			'questions' => __('Q&A', 'tutor'),
 			'announcements' => __('Announcements', 'tutor'),
 		);
@@ -1561,6 +1608,7 @@ class Utils {
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
 				'post__in'      => $course_ids,
+                'posts_per_page' => -1
 			);
 
 			return new \WP_Query($course_args);
@@ -1592,6 +1640,7 @@ class Utils {
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
 				'post__in'      => $active_courses,
+                'posts_per_page' => -1,
 			);
 
 			return new \WP_Query($course_args);
@@ -1653,6 +1702,7 @@ class Utils {
 				'post_type'     => $course_post_type,
 				'post_status'   => 'publish',
 				'post__in'      => $course_ids,
+                'posts_per_page' => -1
 			);
 			return new \WP_Query($course_args);
 		}
@@ -1908,6 +1958,65 @@ class Utils {
 		return false;
 	}
 
+    /**
+     * @param bool $enrol_id
+     * @param string $new_status
+     *
+     * Enrol Status change
+     *
+     * @since v.1.6.1
+     */
+
+	public function course_enrol_status_change($enrol_id = false, $new_status = ''){
+	    if ( ! $enrol_id){
+	        return;
+        }
+
+	    global $wpdb;
+
+	    do_action('tutor/course/enrol_status_change/before',$enrol_id, $new_status );
+        $wpdb->update( $wpdb->posts, array( 'post_status' => $new_status ), array( 'ID' => $enrol_id ) );
+        do_action('tutor/course/enrol_status_change/after',$enrol_id, $new_status );
+    }
+
+
+    /**
+     * @param int $course_id
+     * @param int $user_id
+     * @param string $cancel_status
+     */
+	public function cancel_course_enrol($course_id = 0, $user_id = 0, $cancel_status = 'canceled'){
+	    $course_id = $this->get_post_id($course_id);
+	    $user_id = $this->get_user_id($user_id);
+
+	    $enrolled = $this->is_enrolled($course_id, $user_id);
+
+	    if ($enrolled){
+	        global $wpdb;
+
+	        if ($cancel_status === 'delete'){
+	            $wpdb->delete($wpdb->posts, array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id));
+
+	            //Delete Related Meta Data
+	            delete_post_meta($enrolled->ID, '_tutor_enrolled_by_product_id');
+	            $order_id = get_post_meta($enrolled->ID, '_tutor_enrolled_by_order_id', true);
+	            if ($order_id){
+	                delete_post_meta($enrolled->ID, '_tutor_enrolled_by_order_id');
+	                delete_post_meta($order_id, '_is_tutor_order_for_course');
+					delete_post_meta($order_id, '_tutor_order_for_course_id_'.$course_id);
+					
+					do_action('tutor_enrollment/after/delete', $enrolled->ID);
+                }
+            }else{
+	            $wpdb->update($wpdb->posts, array('post_status' => $cancel_status), array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id) );
+			
+				if ($cancel_status === 'cancel'){
+					do_action('tutor_enrollment/after/cancel', $enrolled->ID);
+				}
+			}
+        }
+    }
+
 	/**
 	 * @param $order_id
 	 *
@@ -2078,18 +2187,21 @@ class Utils {
 		$nav_items = apply_filters('tutor_dashboard/nav_items', array(
 			'index'             => __('Dashboard', 'tutor'),
 			'my-profile'        => __('My Profile', 'tutor'),
-			'create-course'     => array('title' => __('Create Course', 'tutor'), 'show_ui' => false, 'auth_cap' => tutor()->instructor_role),
 			'enrolled-courses'  => __('Enrolled Courses', 'tutor'),
 			'wishlist'          => __('Wishlist', 'tutor'),
 			'reviews'           => __('Reviews', 'tutor'),
 			'my-quiz-attempts'  => __('My Quiz Attempts', 'tutor'),
+			'purchase_history'  => __('Purchase History', 'tutor'),
+		));
 
+		$instructor_nav_items = apply_filters('tutor_dashboard/instructor_nav_items', array(
+			'separator-1'     	=> array('title' => __('Instructor', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'type' => 'separator'),
+			'create-course'     => array('title' => __('Create Course', 'tutor'), 'show_ui' => false, 'auth_cap' => tutor()->instructor_role),
 			'my-courses'        => array('title' => __('My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'earning'           => array('title' => __('Earnings', 'tutor'), 'auth_cap' => tutor()->instructor_role),
-			'withdraw'          => array('title' => __('Withdrawal', 'tutor'), 'auth_cap' => tutor()->instructor_role),
+			'withdraw'          => array('title' => __('Withdrawals', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
-
-			'purchase_history'  => __('Purchase History', 'tutor'),
+			'question-answer'   => array('title' => __('Question & Answer', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 		));
 
 		$disable = get_tutor_option('disable_course_review');
@@ -2097,10 +2209,13 @@ class Utils {
 			unset($nav_items['reviews']);
 		}
 
-		$new_navs = array(
+		$nav_items = array_merge($nav_items, $instructor_nav_items);
+
+		$new_navs = apply_filters('tutor_dashboard/bottom_nav_items', array(
+			'separator-2'     	=> array('title' => '', 'type' => 'separator'),
 			'settings'          => __('Settings', 'tutor'),
 			'logout'            => __('Logout', 'tutor'),
-		);
+		));
 		$all_nav_items = array_merge($nav_items, $new_navs);
 
 		return apply_filters('tutor_dashboard/nav_items_all', $all_nav_items);
@@ -2158,7 +2273,9 @@ class Utils {
 		if ($page_key === 'index'){
 			$page_key = '';
 		}
-		$page_id = $this->get_post_id($page_id);
+		if ( ! $page_id){
+            $page_id = (int) tutils()->get_option('tutor_dashboard_page_id');
+        }
 		return trailingslashit(get_permalink($page_id)).$page_key;
 	}
 
@@ -2857,30 +2974,37 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_top_question($course_id = 0, $user_id = 0, $offset = 0, $limit = 20){
+	public function get_top_question($course_id = 0, $user_id = 0, $offset = 0, $limit = 20, $is_author = false ){
 		$course_id = $this->get_post_id($course_id);
 		$user_id = $this->get_user_id($user_id);
 
 		global $wpdb;
-
-		$questions = $wpdb->get_results("select {$wpdb->comments}.comment_ID, 
-			{$wpdb->comments}.comment_post_ID, 
-			{$wpdb->comments}.comment_author, 
-			{$wpdb->comments}.comment_date, 
-			{$wpdb->comments}.comment_content, 
-			{$wpdb->comments}.user_id, 
-			{$wpdb->commentmeta}.meta_value as question_title,
-			{$wpdb->users}.display_name 
-			
-			from {$wpdb->comments}
-			INNER JOIN {$wpdb->commentmeta} 
-			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
-			INNER  JOIN {$wpdb->users}
-			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
-			AND {$wpdb->comments}.user_id = {$user_id}
-			AND {$wpdb->comments}.comment_type	 = 'tutor_q_and_a'
-			AND meta_key = 'tutor_question_title' ORDER BY comment_ID DESC LIMIT {$offset},{$limit} ;"
+		$author_sql = $is_author ? "" : "AND {$wpdb->comments}.user_id = {$user_id}";
+		
+		$questions = $wpdb->get_results(
+			"SELECT 
+				{$wpdb -> comments}.comment_ID, 
+				{$wpdb -> comments}.comment_post_ID, 
+				{$wpdb -> comments}.comment_author, 
+				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_content, 
+				{$wpdb -> comments}.user_id, 
+				{$wpdb -> commentmeta}.meta_value as question_title, 
+				{$wpdb -> users}.display_name 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> commentmeta} ON {$wpdb -> comments}.comment_ID = {$wpdb -> commentmeta}.comment_id 
+				INNER JOIN {$wpdb -> users} ON {$wpdb -> comments}.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				{$wpdb -> comments}.comment_post_ID = {$course_id} {$author_sql} 
+				AND {$wpdb -> comments}.comment_type = 'tutor_q_and_a' 
+				AND meta_key = 'tutor_question_title' 
+			ORDER BY 
+				comment_ID DESC 
+			LIMIT 
+				{$offset}, 
+				{$limit};
+			"
 		);
 
 		return $questions;
@@ -2920,10 +3044,17 @@ class Utils {
 			}
 		}
 
-		$count = $wpdb->get_var("SELECT COUNT({$wpdb->comments}.comment_ID) FROM {$wpdb->comments} 
-			INNER JOIN {$wpdb->commentmeta} 
-			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-			WHERE comment_type	 = 'tutor_q_and_a' AND comment_parent = 0 {$in_question_id_query} {$search_term} ");
+		$count = $wpdb->get_var(
+			"SELECT 
+				COUNT({$wpdb -> comments}.comment_ID) 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> commentmeta} ON {$wpdb -> comments}.comment_ID = {$wpdb -> commentmeta}.comment_id 
+			WHERE 
+				comment_type = 'tutor_q_and_a' 
+				AND comment_parent = 0 {$in_question_id_query} {$search_term};
+			"
+		);
 
 		return (int) $count;
 	}
@@ -2965,35 +3096,40 @@ class Utils {
 			}
 		}
 
-		$query = $wpdb->get_results("SELECT 
-			{$wpdb->comments}.comment_ID, 
-			{$wpdb->comments}.comment_post_ID, 
-			{$wpdb->comments}.comment_author, 
-			{$wpdb->comments}.comment_date, 
-			{$wpdb->comments}.comment_content, 
-			{$wpdb->comments}.user_id, 
-			{$wpdb->commentmeta}.meta_value as question_title,
-			{$wpdb->users}.display_name,
-			{$wpdb->posts}.post_title,
-			
-			(SELECT COUNT(answers_t.comment_ID) FROM {$wpdb->comments} answers_t
-		  	WHERE answers_t.comment_parent = {$wpdb->comments}.comment_ID ) as answer_count
-		 
-		 	FROM {$wpdb->comments} 
-		
-			INNER JOIN {$wpdb->commentmeta} 
-			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-			
-			INNER JOIN {$wpdb->posts} 
-			ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
-			
-			INNER  JOIN {$wpdb->users}
-			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-		  
-			WHERE {$wpdb->comments}.comment_type = 'tutor_q_and_a' AND {$wpdb->comments}.comment_parent = 0  {$search_term}
-			{$in_question_id_query}
-			ORDER BY {$wpdb->comments}.comment_ID DESC 
-			LIMIT {$start},{$limit}; ");
+		$query = $wpdb->get_results(
+			"SELECT 
+				{$wpdb -> comments}.comment_ID, 
+				{$wpdb -> comments}.comment_post_ID, 
+				{$wpdb -> comments}.comment_author, 
+				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_content, 
+				{$wpdb -> comments}.user_id, 
+				{$wpdb -> commentmeta}.meta_value as question_title, 
+				{$wpdb -> users}.display_name, 
+				{$wpdb -> posts}.post_title, 
+				(
+				SELECT 
+					COUNT(answers_t.comment_ID) 
+				FROM 
+					{$wpdb -> comments} answers_t 
+				WHERE 
+					answers_t.comment_parent = {$wpdb -> comments}.comment_ID
+				) as answer_count 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> commentmeta} ON {$wpdb -> comments}.comment_ID = {$wpdb -> commentmeta}.comment_id 
+				INNER JOIN {$wpdb -> posts} ON {$wpdb -> comments}.comment_post_ID = {$wpdb -> posts}.ID 
+				INNER JOIN {$wpdb -> users} ON {$wpdb -> comments}.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				{$wpdb -> comments}.comment_type = 'tutor_q_and_a' 
+				AND {$wpdb -> comments}.comment_parent = 0 {$search_term} {$in_question_id_query} 
+			ORDER BY 
+				{$wpdb -> comments}.comment_ID DESC 
+			LIMIT 
+				{$start}, 
+				{$limit};
+			"
+		);
 
 		return $query;
 	}
@@ -3009,27 +3145,27 @@ class Utils {
 	 */
 	public function get_qa_question($question_id){
 		global $wpdb;
-		$query = $wpdb->get_row("SELECT 
-			{$wpdb->comments}.comment_ID, 
-			{$wpdb->comments}.comment_post_ID, 
-			{$wpdb->comments}.comment_author, 
-			{$wpdb->comments}.comment_date, 
-			{$wpdb->comments}.comment_content, 
-			{$wpdb->comments}.user_id, 
-			{$wpdb->commentmeta}.meta_value as question_title,
-			{$wpdb->users}.display_name,
-			{$wpdb->posts}.post_title
-		 
-		 	FROM {$wpdb->comments} 
-			INNER JOIN {$wpdb->commentmeta} 
-			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-			
-			INNER JOIN {$wpdb->posts} 
-			ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
-			
-			INNER  JOIN {$wpdb->users}
-			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE comment_type	 = 'tutor_q_and_a' AND {$wpdb->comments}.comment_ID = {$question_id}");
+		$query = $wpdb->get_row(
+			"SELECT 
+				{$wpdb -> comments}.comment_ID, 
+				{$wpdb -> comments}.comment_post_ID, 
+				{$wpdb -> comments}.comment_author, 
+				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_content, 
+				{$wpdb -> comments}.user_id, 
+				{$wpdb -> commentmeta}.meta_value as question_title, 
+				{$wpdb -> users}.display_name, 
+				{$wpdb -> posts}.post_title 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> commentmeta} ON {$wpdb -> comments}.comment_ID = {$wpdb -> commentmeta}.comment_id 
+				INNER JOIN {$wpdb -> posts} ON {$wpdb -> comments}.comment_post_ID = {$wpdb -> posts}.ID 
+				INNER JOIN {$wpdb -> users} ON {$wpdb -> comments}.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				comment_type = 'tutor_q_and_a' 
+				AND {$wpdb -> comments}.comment_ID = {$question_id};
+			"
+		);
 
 		return $query;
 	}
@@ -3043,34 +3179,83 @@ class Utils {
 	 */
 	public function get_qa_answer_by_question($question_id){
 		global $wpdb;
-		$query = $wpdb->get_results("SELECT 
-			{$wpdb->comments}.comment_ID, 
-			{$wpdb->comments}.comment_post_ID, 
-			{$wpdb->comments}.comment_author, 
-			{$wpdb->comments}.comment_date, 
-			{$wpdb->comments}.comment_content, 
-			{$wpdb->comments}.comment_parent,
-			{$wpdb->comments}.user_id,
-			{$wpdb->users}.display_name
-		  		 
-		 	FROM {$wpdb->comments} 
-			
-			INNER  JOIN {$wpdb->users}
-			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE comment_type = 'tutor_q_and_a' 
-			AND {$wpdb->comments}.comment_parent = {$question_id} ORDER BY {$wpdb->comments}.comment_ID ASC ");
+		$query = $wpdb->get_results(
+			"SELECT 
+				{$wpdb -> comments}.comment_ID, 
+				{$wpdb -> comments}.comment_post_ID, 
+				{$wpdb -> comments}.comment_author, 
+				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_content, 
+				{$wpdb -> comments}.comment_parent, 
+				{$wpdb -> comments}.user_id, 
+				{$wpdb -> users}.display_name 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> users} ON {$wpdb -> comments}.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				comment_type = 'tutor_q_and_a' 
+				AND {$wpdb -> comments}.comment_parent = {$question_id} 
+			ORDER BY 
+				{$wpdb -> comments}.comment_ID ASC;
+			"
+		);
 
 		return $query;
 	}
 
+	/**
+	 * @param $answer_id
+	 *
+	 * @return array|null|object
+	 * 
+	 * @since v1.6.9
+	 *
+	 * Get question and asnwer by answer_id
+	 */
+	public function get_qa_answer_by_answer_id($answer_id) {
+		global $wpdb;
+		$answer = $wpdb->get_row("
+			SELECT 	answer.comment_post_ID, 
+					answer.comment_content, 
+					users.display_name,
+					question.user_id AS question_by,
+					question.comment_content AS question,
+					question_meta.meta_value AS question_title
+			FROM   {$wpdb -> comments} answer
+					INNER JOIN {$wpdb -> users} users
+							ON answer.user_id = users.id 
+					INNER JOIN {$wpdb -> comments} question 
+							ON answer.comment_parent = question.comment_ID 
+					INNER JOIN {$wpdb -> commentmeta} question_meta 
+							ON answer.comment_parent = question_meta.comment_id
+							AND question_meta.meta_key = 'tutor_question_title'
+			WHERE  	answer.comment_ID = {$answer_id} 
+					AND answer.comment_type = 'tutor_q_and_a';
+			"
+		);
+
+		if ( $answer ) {
+			return $answer;
+		}
+
+		return false;
+	}
+
 	public function unanswered_question_count(){
 		global $wpdb;
-
-		$count = $wpdb->get_var("select COUNT({$wpdb->comments}.comment_ID) 
-			from {$wpdb->comments} 
-			WHERE {$wpdb->comments}.comment_type = 'tutor_q_and_a' 
-			AND {$wpdb->comments}.comment_approved = 'waiting_for_answer'
-			AND {$wpdb->comments}.comment_parent = 0;");
+		$count = $wpdb->get_var(
+			"SELECT 
+				COUNT({$wpdb -> comments}.comment_ID) 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb -> posts} ON {$wpdb -> comments}.comment_post_ID = {$wpdb -> posts}.ID 
+				INNER JOIN {$wpdb -> users} ON {$wpdb -> comments}.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				{$wpdb -> comments}.comment_type = 'tutor_q_and_a' 
+				AND {$wpdb -> comments}.comment_approved = 'waiting_for_answer' 
+				AND {$wpdb -> comments}.comment_parent = 0;
+			"
+		);
 		return (int) $count;
 	}
 
@@ -3086,12 +3271,24 @@ class Utils {
 	public function get_announcements($course_id = 0){
 		$course_id = $this->get_post_id($course_id);
 		global $wpdb;
-
-		$query = $wpdb->get_results("select {$wpdb->posts}.ID, post_author, post_date, post_content, post_title, display_name
-			from {$wpdb->posts}
-			INNER JOIN {$wpdb->users} ON post_author = {$wpdb->users}.ID
-			WHERE post_type = 'tutor_announcements' 
-			AND post_parent = {$course_id} ORDER BY {$wpdb->posts}.ID DESC;");
+		$query = $wpdb->get_results(
+			"SELECT 
+				{$wpdb -> posts}.ID, 
+				post_author, 
+				post_date, 
+				post_content, 
+				post_title, 
+				display_name 
+			FROM 
+				{$wpdb -> posts} 
+				INNER JOIN {$wpdb -> users} ON post_author = {$wpdb -> users}.ID 
+			WHERE 
+				post_type = 'tutor_announcements' 
+				AND post_parent = {$course_id} 
+			ORDER BY 
+				{$wpdb -> posts}.ID DESC;
+			"
+		);
 		return $query;
 	}
 
@@ -3192,16 +3389,16 @@ class Utils {
 
 	public function get_question_types($type = null){
 		$types = array(
-			'true_false'        => array('name' => __('True/False', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-yes-no"></i>', 'is_pro' => false),
-			'single_choice'     => array('name' => __('Single Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-mark"></i>', 'is_pro' => false),
-			'multiple_choice'   => array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-multiple-choice"></i>', 'is_pro' => false),
-			'open_ended'        => array('name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-open-ended"></i>', 'is_pro' => false),
-			'fill_in_the_blank'  => array('name' => __('Fill In The Blanks', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-fill-gaps"></i>', 'is_pro' => false),
-			'short_answer'          => array('name' => __('Short Answer', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-short-ans"></i>', 'is_pro' => true),
-			'matching'              => array('name' => __('Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-matching"></i>', 'is_pro' => true),
-			'image_matching'        => array('name' => __('Image Matching', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-matching"></i>', 'is_pro' => true),
-			'image_answering'       => array('name' => __('Image Answering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-image-ans"></i>', 'is_pro' => true),
-			'ordering'          => array('name' => __('Ordering', 'tutor'), 'icon' => '<i class="tutor-icon-block tutor-icon-ordering"></i>', 'is_pro' => true),
+			'true_false'        	=> array('name' => __('True/False', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no"></i></span>', 'is_pro' => false),
+			'single_choice'     	=> array('name' => __('Single Choice', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark"></i></span>', 'is_pro' => false),
+			'multiple_choice'   	=> array('name' => __('Multiple Choice', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Multiple Choicee"><i class="tutor-icon-block tutor-icon-multiple-choice"></i></span>', 'is_pro' => false),
+			'open_ended'        	=> array('name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Open/Essay"><i class="tutor-icon-block tutor-icon-open-ended"></i></span>', 'is_pro' => false),
+			'fill_in_the_blank'  	=> array('name' => __('Fill In The Blanks', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-fill-gaps"></i></span>', 'is_pro' => false),
+			'short_answer'          => array('name' => __('Short Answer', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Short Answer"><i class="tutor-icon-block tutor-icon-short-ans"></i></span>', 'is_pro' => true),
+			'matching'              => array('name' => __('Matching', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Matching"><i class="tutor-icon-block tutor-icon-matching"></i></span>', 'is_pro' => true),
+			'image_matching'        => array('name' => __('Image Matching', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching"></i></span>', 'is_pro' => true),
+			'image_answering'       => array('name' => __('Image Answering', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Image Answering"><i class="tutor-icon-block tutor-icon-image-ans"></i></span>', 'is_pro' => true),
+			'ordering'          	=> array('name' => __('Ordering', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Ordering"><i class="tutor-icon-block tutor-icon-ordering"></i></span>', 'is_pro' => true),
 		);
 
 		if (isset($types[$type])){
@@ -3306,10 +3503,10 @@ class Utils {
 
 		if ($post) {
 			$course_post_type = tutor()->course_post_type;
-			$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
+			$course = $wpdb->get_row( "select ID, post_author, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
 			if ($course) {
 				if ( $course->post_type !== $course_post_type ) {
-					$course = $wpdb->get_row( "select ID, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
+					$course = $wpdb->get_row( "select ID, post_author, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
 				}
 				return $course;
 			}
@@ -3328,7 +3525,6 @@ class Utils {
 	public function total_questions_for_student_by_quiz($quiz_id){
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
-
 
 		$max_questions_count = (int) tutor_utils()->get_quiz_option(get_the_ID(), 'max_questions_for_answer');
 		$total_question = (int) $wpdb->get_var("select count(question_id) from {$wpdb->tutor_quiz_questions} where quiz_id = {$quiz_id}");
@@ -3625,7 +3821,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1 AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} ");
+			WHERE 1=1 AND attempt_status != 'attempt_started'  {$search_term} ");
 		return (int) $count;
 	}
 
@@ -3654,7 +3850,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} 
+			WHERE 1=1  AND attempt_status != 'attempt_started'  {$search_term} 
 			ORDER BY quiz_attempts.attempt_id DESC 
 			LIMIT {$start},{$limit}; ");
 		return $query;
@@ -3677,7 +3873,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} 
+			WHERE 1=1  AND attempt_status != 'attempt_started' {$search_term} 
 			ORDER BY quiz_attempts.attempt_id DESC 
 			LIMIT {$start},{$limit}; ");
 		return $query;
@@ -3700,7 +3896,7 @@ class Utils {
 			ON quiz_attempts.quiz_id = quiz.ID
 			INNER  JOIN {$wpdb->users}
 			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1  AND quiz_attempts.attempt_ended_at <= NOW() {$search_term} ");
+			WHERE 1=1  AND attempt_status != 'attempt_started' {$search_term} ");
 		return (int) $count;
 	}
 
@@ -4452,6 +4648,7 @@ class Utils {
 		}
 		do_action('tutor_before_approved_instructor', $instructor_id);
 
+		update_user_meta($instructor_id, '_is_tutor_instructor', tutor_time());
 		update_user_meta($instructor_id, '_tutor_instructor_status', 'approved');
 		update_user_meta($instructor_id, '_tutor_instructor_approved', tutor_time());
 
@@ -4472,6 +4669,7 @@ class Utils {
 		}
 
 		do_action('tutor_before_blocked_instructor', $instructor_id);
+		delete_user_meta($instructor_id, '_is_tutor_instructor');
 		update_user_meta($instructor_id, '_tutor_instructor_status', 'blocked');
 
 		$instructor = new \WP_User($instructor_id);
@@ -4541,13 +4739,35 @@ class Utils {
 		global $wpdb;
 
 		$user_id = $this->get_user_id();
+		$monetize_by = tutils()->get_option('monetize_by');
 
-		$query = $wpdb->get_results("SELECT {$wpdb->posts}.* FROM {$wpdb->posts}
- 			INNER JOIN {$wpdb->postmeta} customer ON ID = customer.post_id AND customer.meta_key = '_customer_user'
- 			INNER JOIN {$wpdb->postmeta} tutor_order ON ID = tutor_order.post_id AND tutor_order.meta_key = '_is_tutor_order_for_course'
-			WHERE post_type = 'shop_order' AND customer.meta_value = {$user_id}  
-			ORDER BY {$wpdb->posts}.ID DESC");
-		return $query;
+		$post_type = "";
+		$user_meta = "";
+		if ($monetize_by === 'wc') {
+			$post_type = "shop_order";
+			$user_meta = "_customer_user";
+		} else if ($monetize_by === 'edd') {
+			$post_type = "edd_payment";
+			$user_meta = "_edd_payment_user_id";
+		}
+
+		$orders = $wpdb->get_results(
+			"	SELECT 
+					{$wpdb -> posts}.* 
+				FROM 
+					{$wpdb -> posts} 
+					INNER JOIN {$wpdb -> postmeta} customer ON id = customer.post_id 
+					AND customer.meta_key = '{$user_meta}' 
+					INNER JOIN {$wpdb -> postmeta} tutor_order ON id = tutor_order.post_id 
+					AND tutor_order.meta_key = '_is_tutor_order_for_course' 
+				WHERE 
+					post_type = '{$post_type}'
+					AND customer.meta_value = {$user_id} 
+				ORDER BY
+					{$wpdb -> posts}.id DESC
+			");
+
+		return $orders;
 	}
 
 	/**
@@ -5211,13 +5431,13 @@ class Utils {
 		$is_completed = tutils()->is_completed_course($course_id, $user_id);
 		$html = '';
 		if ($is_completed){
-			$html = '<span class="course-completion-status course-completed"><i class="tutor-icon-mark"></i> '.__('Completed', 'tutor-pro').' </span>';
+			$html = '<span class="course-completion-status course-completed"><i class="tutor-icon-mark"></i> '.__('Completed', 'tutor').' </span>';
 		}else{
 			$is_in_progress = tutor_utils()->get_completed_lesson_count_by_course($course_id, $user_id);
 			if($is_in_progress){
-				$html = '<span class="course-completion-status course-inprogress"><i class="tutor-icon-refresh-button-1"></i> '.__('In Progress', 'tutor-pro').' </span>';
+				$html = '<span class="course-completion-status course-inprogress"><i class="tutor-icon-refresh-button-1"></i> '.__('In Progress', 'tutor').' </span>';
 			}else{
-				$html = '<span class="course-completion-status course-not-taken"><i class="tutor-icon-spinner"></i> '.__('Not Taken', 'tutor-pro').' </span>';
+				$html = '<span class="course-completion-status course-not-taken"><i class="tutor-icon-spinner"></i> '.__('Not Taken', 'tutor').' </span>';
 			}
 		}
 		return $html;
@@ -5344,4 +5564,156 @@ class Utils {
 	}
 
 
+	/**
+	 * @param int $instructor_id
+	 * @param int $course_id
+	 *
+	 * @return bool|int
+	 *
+	 * Is instructor of this course
+	 *
+	 * @since v.1.6.4
+	 */
+	public function is_instructor_of_this_course($instructor_id=0, $course_id=0) {
+		global $wpdb;
+
+		$instructor_id 	= $this->get_user_id($instructor_id);
+		$course_id 		= $this->get_post_id($course_id);
+
+		if (!$instructor_id || !$course_id) {
+			return false;
+		}
+
+		$instructor = $wpdb->get_col("
+			SELECT umeta_id
+			FROM   {$wpdb->usermeta}
+			WHERE  user_id = {$instructor_id}
+				AND meta_key = '_tutor_instructor_course_id'
+				AND meta_value = {$course_id}
+		");
+		
+		if (is_array($instructor) && count($instructor)) {
+			return $instructor;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return array|object
+	 *
+	 * User profile completion
+	 *
+	 * @since v.1.6.6
+	 */
+	public function user_profile_completion($user_id=0) {
+		$user_id = $this->get_user_id($user_id);
+		$instructor = $this->is_instructor($user_id);
+
+		$required_fields = apply_filters('tutor_profile_required_fields', array(
+			'first_name' 					=> __('First Name', 'tutor'),
+			'last_name' 					=> __('Last Name', 'tutor'),
+			'_tutor_profile_photo' 			=> __('Profile Photo', 'tutor'),
+			'_tutor_withdraw_method_data' 	=> __('Withdraw Method', 'tutor'),
+		));
+
+		if (!$instructor && array_key_exists("_tutor_withdraw_method_data", $required_fields)) {
+			unset($required_fields['_tutor_withdraw_method_data']);
+		}
+
+		$empty_fields = array();
+		foreach ($required_fields as $key => $field) {
+			$value = get_user_meta($user_id, $key, true);
+			if (!$value) {
+				array_push($empty_fields, $field);
+			}
+		}
+		
+		$total_empty_fields = count($empty_fields);
+		$total_required_fields = count($required_fields);
+		$signup_point = apply_filters('tutor_profile_completion_signup_point', 50);
+
+		if ($total_empty_fields == 0) {
+			$progress = 100;
+		} else {
+			$completed_field = $total_required_fields-$total_empty_fields;
+			$per_field_point = $signup_point / $total_required_fields;
+			$progress = $signup_point + ceil($per_field_point * $completed_field);
+		}
+
+		$return = array(
+			'empty_fields' => $empty_fields,
+			'progress' => $progress,
+		);
+
+		return (object) $return;
+	}
+
+	/**
+	 * @param int $enrol_id
+	 *
+	 * @return array|object
+	 *
+	 * Get enrolment by enrol_id
+	 *
+	 * @since v1.6.9
+	 */
+	public function get_enrolment_by_enrol_id($enrol_id = 0){
+		global $wpdb;
+
+		$enrolment = $wpdb->get_row("
+			SELECT 	enrol.id          AS enrol_id,
+					enrol.post_author AS student_id,
+					enrol.post_date   AS enrol_date,
+					enrol.post_title  AS enrol_title,
+					enrol.post_status AS status,
+					enrol.post_parent AS course_id,
+					course.post_title AS course_title,
+					student.user_nicename,
+					student.user_email,
+					student.display_name
+			FROM   {$wpdb->posts} enrol
+					INNER JOIN {$wpdb->posts} course
+							ON enrol.post_parent = course.id
+					INNER JOIN {$wpdb->users} student
+							ON enrol.post_author = student.id
+			WHERE  enrol.id = {$enrol_id};
+		");
+
+		if ( $enrolment ) {
+			return $enrolment;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param int $course_id
+	 *
+	 * @return int
+	 * 
+	 * @since v1.6.9
+	 *
+	 * Get students email by course id
+	 */
+	public function get_student_emails_by_course_id($course_id = 0){
+		global $wpdb;
+		$course_id = $this->get_post_id($course_id);
+
+		$student_emails = $wpdb->get_results("
+			SELECT 	student.user_email
+			FROM   	{$wpdb->posts} enrol
+					INNER JOIN {$wpdb->users} student
+						ON enrol.post_author = student.id
+			WHERE  	enrol.post_type = 'tutor_enrolled'
+					AND enrol.post_parent = {$course_id}
+					AND enrol.post_status = 'completed'; 
+		");
+
+		$email_array = array_column($student_emails,'user_email');
+
+		return $email_array;
+	}
 }

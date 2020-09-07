@@ -34,6 +34,7 @@ if (isset($wp_query->query_vars['tutor_dashboard_sub_page']) && $wp_query->query
 
 $user_id = get_current_user_id();
 $user = get_user_by('ID', $user_id);
+$enable_profile_completion = tutils()->get_option('enable_profile_completion');
 
 do_action('tutor_dashboard/before/wrap');
 ?>
@@ -50,13 +51,13 @@ do_action('tutor_dashboard/before/wrap');
                             <div class="tutor-dashboard-header-display-name">
                                 <h4><?php _e('Howdy,', 'tutor'); ?> <strong><?php echo $user->display_name; ?></strong> </h4>
                             </div>
-                            <?php $instructor_rating = tutor_utils()->get_instructor_ratings($user->ID); ?>
+                            <?php $instructor_rating = tutils()->get_instructor_ratings($user->ID); ?>
                             <?php
                             if (current_user_can(tutor()->instructor_role)){
                                 ?>
                                 <div class="tutor-dashboard-header-stats">
                                     <div class="tutor-dashboard-header-ratings">
-                                        <?php tutor_utils()->star_rating_generator($instructor_rating->rating_avg); ?>
+                                        <?php tutils()->star_rating_generator($instructor_rating->rating_avg); ?>
                                         <span><?php echo esc_html($instructor_rating->rating_avg);  ?></span>
                                         <span> (<?php echo sprintf(__('%d Ratings', 'tutor'), $instructor_rating->rating_count); ?>) </span>
                                     </div>
@@ -77,9 +78,9 @@ do_action('tutor_dashboard/before/wrap');
                                 </a>
                                 <?php
                             }else{
-                                if (tutor_utils()->get_option('enable_become_instructor_btn')) {
+                                if (tutils()->get_option('enable_become_instructor_btn')) {
                                     ?>
-                                    <a class="tutor-btn bordered-btn" href="<?php echo esc_url(tutor_utils()->instructor_register_url()); ?>">
+                                    <a class="tutor-btn bordered-btn" href="<?php echo esc_url(tutils()->instructor_register_url()); ?>">
                                         <?php echo sprintf(__("%s Become an instructor", 'tutor'), '<i class="tutor-icon-man-user"></i> &nbsp;'); ?>
                                     </a>
                                     <?php
@@ -89,34 +90,40 @@ do_action('tutor_dashboard/before/wrap');
                         </div>
                     </div>
                 </div>
+                <?php do_action('tutor_dashboard/notification_area'); ?>
             </div>
 
             <div class="tutor-row">
                 <div class="tutor-col-3 tutor-dashboard-left-menu">
                     <ul class="tutor-dashboard-permalinks">
                         <?php
-                        $dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
-                        foreach ($dashboard_pages as $dashboard_key => $dashboard_page){
+                        $dashboard_pages = tutils()->tutor_dashboard_nav_ui_items();
+                        foreach ($dashboard_pages as $dashboard_key => $dashboard_page) {
                             $menu_title = $dashboard_page;
-                            $menu_link = tutor_utils()->get_tutor_dashboard_page_permalink($dashboard_key);
+                            $menu_link = tutils()->get_tutor_dashboard_page_permalink($dashboard_key);
+                            $separator = false;
                             if (is_array($dashboard_page)){
-                                $menu_title = tutor_utils()->array_get('title', $dashboard_page);
-
-                                /**
-                                 * Add new menu item property "url" for custom link
-                                 * @since v 1.5.5
-                                 */
-                                if (isset($dashboard_page['url'])){
+                                $menu_title = tutils()->array_get('title', $dashboard_page);
+                                //Add new menu item property "url" for custom link
+                                if (isset($dashboard_page['url'])) {
                                     $menu_link = $dashboard_page['url'];
                                 }
+                                if (isset($dashboard_page['type']) && $dashboard_page['type'] == 'separator') {
+                                    $separator = true;
+                                }
                             }
-
-                            $li_class = "tutor-dashboard-menu-{$dashboard_key}";
-                            if ($dashboard_key === 'index')
-                                $dashboard_key = '';
-                            $active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-
-                            echo "<li class='{$li_class}  {$active_class}'><a href='".$menu_link."'> {$menu_title} </a> </li>";
+                            if ($separator) {
+                                echo '<li class="tutor-dashboard-menu-divider"></li>';
+                                if ($menu_title) {
+                                    echo "<li class='tutor-dashboard-menu-divider-header'>{$menu_title}</li>";
+                                }
+                            } else {
+                                $li_class = "tutor-dashboard-menu-{$dashboard_key}";
+                                if ($dashboard_key === 'index')
+                                    $dashboard_key = '';
+                                $active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
+                                echo "<li class='{$li_class}  {$active_class}'><a href='".$menu_link."'> {$menu_title} </a> </li>";
+                            }
                         }
                         ?>
                     </ul>

@@ -80,6 +80,29 @@ class Course extends Tutor_Base {
          * @since 1.5.8
          */
 		add_filter('tutor_course_price', array($this, 'remove_price_if_enrolled'));
+
+
+        /**
+         * Remove course complete button if course completion is strict mode
+         * @since v.1.6.1
+         */
+        add_filter('tutor_course/single/complete_form', array($this, 'tutor_lms_hide_course_complete_btn'));
+		add_filter('get_gradebook_generate_form_html', array($this, 'get_generate_greadbook'));
+		
+        /**
+         * Add social share content in header
+         * @since v.1.6.3
+         */
+		add_action('wp_head', array($this, 'social_share_content'));
+		
+        /**
+         * Delete course data after deleted course
+         * @since v.1.6.6
+         */
+		add_action('deleted_post', array($this, 'delete_tutor_course_data'));
+
+		
+		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'tutor_course_setting_metabox_frontend'));
 	}
 
 	/**
@@ -96,6 +119,12 @@ class Course extends Tutor_Base {
 			add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array( $this, 'instructors_metabox' ), $coursePostType );
 		}
 		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
+
+		/**
+         * Tutor course sidebar settings metabox
+         * @since v.1.7.0
+         */
+		add_meta_box( 'tutor-course-sidebar-settings', __( 'Tutor Settings', 'tutor' ), array($this, 'tutor_course_setting_metabox'), $coursePostType, 'side' );
 	}
 
 	public function course_meta_box($echo = true){
@@ -177,11 +206,11 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box_in_frontend(){
 		do_action('tutor_course_builder_metabox_before', get_the_ID());
-        course_builder_section_wrap($this->video_metabox($echo = false), 'Video');
-        course_builder_section_wrap($this->course_meta_box($echo = false), 'Course Builder');
-        course_builder_section_wrap($this->instructors_metabox($echo = false), 'Instructors');
-        course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), 'Additional Data');
-        course_builder_section_wrap($this->announcements_metabox($echo = false), 'Announcements');
+        course_builder_section_wrap($this->video_metabox($echo = false), __( 'Video', 'tutor' ) );
+        course_builder_section_wrap($this->course_meta_box($echo = false), __( 'Course Builder', 'tutor' ) );
+        course_builder_section_wrap($this->instructors_metabox($echo = false), __( 'Instructors', 'tutor' ) );
+        course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), __( 'Additional Data', 'tutor' ) );
+        course_builder_section_wrap($this->announcements_metabox($echo = false), __( 'Announcements', 'tutor' ) );
 		do_action('tutor_course_builder_metabox_after', get_the_ID());
 	}
 
@@ -224,7 +253,7 @@ class Course extends Tutor_Base {
 
 		//Course Duration
 		if ( ! empty($_POST['course_duration'])){
-			$video = tutor_utils()->sanitize_array($_POST['course_duration']);
+			$video = tutils()->sanitize_array($_POST['course_duration']);
 			update_post_meta($post_ID, '_course_duration', $video);
 		}
 
@@ -233,25 +262,38 @@ class Course extends Tutor_Base {
 			update_post_meta($post_ID, '_tutor_course_level', $course_level);
 		}
 
-		if ( ! empty($_POST['course_benefits'])){
-			$course_benefits = wp_kses_post($_POST['course_benefits']);
-			update_post_meta($post_ID, '_tutor_course_benefits', $course_benefits);
+		$additional_data_edit = tutils()->avalue_dot('_tutor_course_additional_data_edit', $_POST);
+		if ($additional_data_edit) {
+			if (!empty($_POST['course_benefits'])) {
+				$course_benefits = wp_kses_post($_POST['course_benefits']);
+				update_post_meta($post_ID, '_tutor_course_benefits', $course_benefits);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_benefits');
+			}
+
+			if (!empty($_POST['course_requirements'])) {
+				$requirements = wp_kses_post($_POST['course_requirements']);
+				update_post_meta($post_ID, '_tutor_course_requirements', $requirements);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_requirements');
+			}
+
+			if (!empty($_POST['course_target_audience'])) {
+				$target_audience = wp_kses_post($_POST['course_target_audience']);
+				update_post_meta($post_ID, '_tutor_course_target_audience', $target_audience);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_target_audience');
+			}
+
+			if (!empty($_POST['course_material_includes'])) {
+				$material_includes = wp_kses_post($_POST['course_material_includes']);
+				update_post_meta($post_ID, '_tutor_course_material_includes', $material_includes);
+			} else {
+				delete_post_meta($post_ID, '_tutor_course_material_includes');
+			}
 		}
 
-		if ( ! empty($_POST['course_requirements'])){
-			$requirements = wp_kses_post($_POST['course_requirements']);
-			update_post_meta($post_ID, '_tutor_course_requirements', $requirements);
-		}
 
-		if ( ! empty($_POST['course_target_audience'])){
-			$target_audience = wp_kses_post($_POST['course_target_audience']);
-			update_post_meta($post_ID, '_tutor_course_target_audience', $target_audience);
-		}
-
-		if ( ! empty($_POST['course_material_includes'])){
-			$material_includes = wp_kses_post($_POST['course_material_includes']);
-			update_post_meta($post_ID, '_tutor_course_material_includes', $material_includes);
-		}
 		/**
 		 * Sorting Topics and lesson
 		 */
@@ -300,14 +342,14 @@ class Course extends Tutor_Base {
 				}
 			}
 		}
-
-		//Video
-		if ( ! empty($_POST['video']['source'])){
-			//$video = tutor_utils()->sanitize_array($_POST['video']);
-			$video = tutor_utils()->array_get('video', $_POST);
-			update_post_meta($post_ID, '_video', $video);
-		}else{
-			delete_post_meta($post_ID, '_video');
+		
+		if ($additional_data_edit) {
+			if ( ! empty($_POST['video']['source'])) { //Video
+				$video = tutor_utils()->array_get('video', $_POST);
+				update_post_meta($post_ID, '_video', $video);
+			}else{
+				delete_post_meta($post_ID, '_video');
+			}
 		}
 
 		/**
@@ -335,8 +377,23 @@ class Course extends Tutor_Base {
 					'post_author'  => get_current_user_id(),
 					'post_parent'  => $post_ID,
 				);
-				wp_insert_post( $post_arr );
+				$announcement_id = wp_insert_post( $post_arr );
+
+				if ($announcement_id) {
+					$announcement = (object) $post_arr;
+					do_action('tutor_announcements/after/save', $announcement_id, $announcement);
+				}
 			}
+		}
+
+		/**
+		 * Disable question and answer for this course
+		 * @since 1.7.0
+		 */
+		$disable_qa = '_tutor_disable_qa';
+		if ($additional_data_edit) {
+			$disable_qa_value = ( isset($_POST[$disable_qa]) ) ? 'yes' : 'no';
+			update_post_meta($post_ID, $disable_qa, $disable_qa_value);
 		}
 
 		do_action( "tutor_save_course_after", $post_ID, $post);
@@ -665,7 +722,7 @@ class Course extends Tutor_Base {
 	public function tutor_delete_dashboard_course(){
 		$course_id = intval(sanitize_text_field($_POST['course_id']));
 		wp_trash_post($course_id);
-		wp_send_json_success();
+		wp_send_json_success(['element'=>'course']);
 	}
 
 
@@ -928,10 +985,13 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_nav_items($items){
+		global $wp_query, $post;
 		$enable_q_and_a_on_course = (bool) get_tutor_option('enable_q_and_a_on_course');
 		$disable_course_announcements = (bool) get_tutor_option('disable_course_announcements');
 
-		if(! $enable_q_and_a_on_course){
+		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_disable_qa', true) : '';
+
+		if(!$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
 			if(tutils()->array_get('questions', $items)) {
 				unset($items['questions']);
 			}
@@ -1020,4 +1080,186 @@ class Course extends Tutor_Base {
 	    return $html;
     }
 
+    /**
+     * @param $html
+     * @return string
+     *
+     * Check if all lessons and quizzes done before mark course complete.
+     */
+    function tutor_lms_hide_course_complete_btn($html){
+
+	    $completion_mode = tutils()->get_option('course_completion_process');
+	    if ($completion_mode !== 'strict'){
+	        return $html;
+        }
+
+        $completed_lesson = tutils()->get_completed_lesson_count_by_course();
+        $lesson_count = tutils()->get_lesson_count_by_course();
+
+        if ($completed_lesson < $lesson_count){
+            return '<p class="suggestion-before-course-complete">'.__('complete all lessons to mark this course as complete', 'tutor').'</p>';
+        }
+
+        $quizzes = array();
+
+        $course_contents = tutils()->get_course_contents_by_id();
+        if (tutils()->count($course_contents)){
+            foreach ($course_contents as $content){
+                if ($content->post_type === 'tutor_quiz'){
+                    $quizzes[] = $content;
+                }
+            }
+        }
+
+        $is_pass = true;
+        $required_quiz_pass = 0;
+
+        if (tutils()->count($quizzes)){
+            foreach ($quizzes as $quiz){
+
+                $attempt = tutils()->get_quiz_attempt($quiz->ID);
+                if ($attempt) {
+                    $passing_grade = tutor_utils()->get_quiz_option($quiz->ID, 'passing_grade', 0);
+                    $earned_percentage = $attempt->earned_marks > 0 ? (number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
+
+                    if ($earned_percentage < $passing_grade) {
+                        $required_quiz_pass++;
+                        $is_pass = false;
+                    }
+                }else{
+                    $required_quiz_pass++;
+                    $is_pass = false;
+                }
+            }
+        }
+
+        if ( ! $is_pass){
+            return '<p class="suggestion-before-course-complete">'.sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass).'</p>';
+        }
+
+        return $html;
+    }
+
+    public function get_generate_greadbook($html){
+        if ( ! tutils()->is_completed_course()){
+            return '';
+        }
+        return $html;
+	}
+
+	/**
+	 * Add social share content in header
+	 * @since v.1.6.3
+	 */
+    public function social_share_content(){
+		global $wp_query, $post;
+		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $this->course_post_type) { ?>
+			<!--Facebook-->
+			<meta property="og:type" content="website"/>
+			<meta property="og:image" content="<?php echo get_tutor_course_thumbnail_src(); ?>" />
+			<meta property="og:description" content="<?php echo esc_html($post->post_content); ?>" />
+			<!--Twitter-->
+			<meta name="twitter:image" content="<?php echo get_tutor_course_thumbnail_src(); ?>">
+			<meta name="twitter:description" content="<?php echo esc_html($post->post_content); ?>">
+			<!--Google+-->
+			<meta itemprop="image" content="<?php echo get_tutor_course_thumbnail_src(); ?>">
+			<meta itemprop="description" content="<?php echo esc_html($post->post_content); ?>"> <?php
+		}
+	}
+
+	/**
+	 * Get posts by type and parent
+	 * @since v.1.6.6
+	 */
+	public function tutor_get_post_ids($post_type, $post_parent) {
+		$args = array(
+			'fields' 		 => 'ids',
+			'post_type'      => $post_type,
+			'post_parent'    => $post_parent,
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+		);
+		return get_posts($args);
+	}
+	
+	/**
+	 * Delete course data when permanently deleting a course.
+	 * @since v.1.6.6
+	 */
+	function delete_tutor_course_data( $post_id ) {
+		$course_post_type = tutor()->course_post_type;
+		$lesson_post_type = tutor()->lesson_post_type;
+
+		if (get_post_type($post_id) == $course_post_type) {
+			global $wpdb;
+			$topic_ids = $this->tutor_get_post_ids('topics', $post_id);
+			if ( !empty($topic_ids) ) {
+				foreach ($topic_ids as $topic_id) {
+					$content_post_type = apply_filters('tutor_course_contents_post_types', array($lesson_post_type, 'tutor_quiz'));
+					$topic_content_ids = $this->tutor_get_post_ids($content_post_type, $topic_id);
+					
+					foreach ($topic_content_ids as $content_id) {
+						if( get_post_type($content_id) == 'tutor_quiz') {
+							$wpdb->delete($wpdb->prefix.'tutor_quiz_attempts', array('quiz_id' => $content_id));
+							$wpdb->delete($wpdb->prefix.'tutor_quiz_attempt_answers', array('quiz_id' => $content_id));
+
+							$questions_ids = $wpdb->get_col("SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$content_id} ");
+							if (is_array($questions_ids) && count($questions_ids)){
+								$in_question_ids = "'".implode("','", $questions_ids)."'";
+								$wpdb->query("DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_question_ids}) ");
+							}
+							$wpdb->delete($wpdb->prefix.'tutor_quiz_questions', array('quiz_id' => $content_id));
+						}
+						wp_delete_post($content_id, true);
+					}
+					wp_delete_post($topic_id, true);
+				}
+			}
+			$child_post_ids = $this->tutor_get_post_ids(array('tutor_announcements', 'tutor_enrolled'), $post_id);
+			if ( !empty($child_post_ids) ) {
+				foreach ($child_post_ids as $child_post_id) {
+					wp_delete_post($child_post_id, true);
+				}
+			}
+		}
+	}
+
+	/**
+	 * tutor course setting metabox
+	 * @since v.1.7.0
+	 */
+	function tutor_course_setting_metabox( $post ) {
+		$disable_qa = '_tutor_disable_qa';
+		$disable_qa_value = get_post_meta($post->ID, $disable_qa, true);
+		$disable_qa_checked = ($disable_qa_value == "yes") ? 'checked="checked"' : '';
+
+		do_action('tutor_before_course_sidebar_settings_metabox', $post);
+		?>
+		<div class="tutor-course-sidebar-settings-item">
+			<label for="<?php echo $disable_qa; ?>">
+				<input type="hidden" name="_tutor_course_additional_data_edit" value="true" />
+				<input id="<?php echo $disable_qa; ?>" type="checkbox" name="<?php echo $disable_qa; ?>" value="yes" <?php echo $disable_qa_checked; ?> />
+				<?php _e('Disable Q&A', 'tutor'); ?>
+			</label>
+		</div>
+		<?php
+		do_action('tutor_after_course_sidebar_settings_metabox', $post);
+	}
+
+	function tutor_course_setting_metabox_frontend( $post ){
+		?>		
+			<div class="tutor-course-builder-section tutor-course-builder-info">
+				<div class="tutor-course-builder-section-title">
+					<h3><i class="tutor-icon-down"></i><span><?php esc_html_e('Tutor Settings', 'tutor'); ?></span></h3>
+				</div>
+				<div class="tutor-course-builder-section-content">
+					<div class="tutor-frontend-builder-item-scope">
+						<div class="tutor-form-group">
+							<?php $this->tutor_course_setting_metabox($post); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php
+	}
 }

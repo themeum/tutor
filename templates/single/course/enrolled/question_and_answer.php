@@ -9,9 +9,10 @@
  * @package TutorLMS/Templates
  * @version 1.4.3
  */
-
+global $post;
+$disable_qa_for_this_course = get_post_meta($post->ID, '_tutor_disable_qa', true);
 $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
-if ( ! $enable_q_and_a_on_course) {
+if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
 	tutor_load_template( 'single.course.q_and_a_turned_off' );
 	return;
 }
@@ -32,7 +33,7 @@ if ( ! $enable_q_and_a_on_course) {
             <input type="hidden" value="<?php echo get_the_ID(); ?>" name="tutor_course_id"/>
 
             <div class="tutor-form-group">
-                <input type="text" name="question_title" value="" placeholder="<?php _e('Question Title', 'tutor'); ?>">
+                <input type="text" name="question_title" value="" placeholder="<?php _e('Question Title', 'tutor'); ?>" required="required">
             </div>
 
             <div class="tutor-form-group">

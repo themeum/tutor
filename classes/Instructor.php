@@ -99,7 +99,9 @@ class Instructor {
 			update_user_meta($user_id, '_is_tutor_instructor', tutor_time());
 			update_user_meta($user_id, '_tutor_instructor_status', apply_filters('tutor_initial_instructor_status', 'pending'));
 
-			$user = get_user_by( 'id', $user_id );
+            do_action('tutor_new_instructor_after', $user_id);
+
+            $user = get_user_by( 'id', $user_id );
 			if( $user ) {
 				wp_set_current_user( $user_id, $user->user_login );
 				wp_set_auth_cookie( $user_id );
@@ -138,7 +140,9 @@ class Instructor {
 			}else{
 				update_user_meta($user_id, '_is_tutor_instructor', tutor_time());
 				update_user_meta($user_id, '_tutor_instructor_status', apply_filters('tutor_initial_instructor_status', 'pending'));
-			}
+
+                do_action('tutor_new_instructor_after', $user_id);
+            }
 		}else{
 			die(__('Permission denied', 'tutor'));
 		}
@@ -242,6 +246,14 @@ class Instructor {
 			do_action('tutor_after_blocked_instructor', $instructor_id);
 
 			//TODO: send E-Mail to this user about instructor blocked, should via hook
+		}
+
+		if( 'remove-instructor' === $action)
+		{
+			$user = new \WP_User($instructor_id);
+			$user->remove_role(tutor()->instructor_role);
+
+			tutor_utils()->remove_instructor_role($instructor_id);
 		}
 
 		wp_send_json_success();

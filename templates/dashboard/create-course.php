@@ -185,7 +185,7 @@ if ( ! $can_publish_course){
                                 </div>
                             </div>
 
-							<?php do_action('tutor/dashboard_course_builder_form_field_after'); ?>
+							<?php do_action('tutor/dashboard_course_builder_form_field_after', $post); ?>
                             <div class="tutor-form-row">
                                 <div class="tutor-form-col-12">
                                     <div class="tutor-form-group">

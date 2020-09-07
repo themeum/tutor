@@ -16,6 +16,7 @@ $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 $questions_order = tutor_utils()->get_quiz_option($quiz_id, 'questions_order', 'rand');
 $attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
 $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
+$feedback_mode = tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode', 0);
 
 $attempt_remaining = $attempts_allowed - $attempted_count;
 ?>
@@ -91,14 +92,24 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
 						$next_question = isset($questions[$question_i]) ? $questions[$question_i] : false;
 						?>
-                        <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> >
+                        <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> data-quiz-feedback-mode="<?php echo $feedback_mode; ?>" >
 
 							<?php echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
 
 
 							$question_type = $question->question_type;
-							$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id);
+
+							$rand_choice = false;
+							if($question_type == 'single_choice' || $question_type == 'multiple_choice'){
+								$choice = maybe_unserialize($question->question_settings);
+								if(isset($choice['randomize_question'])){
+									$rand_choice = $choice['randomize_question'] == 1 ? true : false;
+								}
+							}
+
+							$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id, $rand_choice);
 							$show_question_mark = (bool) tutor_utils()->avalue_dot('show_question_mark', $question_settings);
+							$answer_required = (bool) tutils()->array_get('answer_required', $question_settings);
 
 							echo '<h4 class="question-text">';
 							if ( ! $hide_question_number_overview){
@@ -110,10 +121,14 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 							if ($show_question_mark){
 								echo '<p class="question-marks"> '.__('Marks : ', 'tutor').$question->question_mark.' </p>';
 							}
-							?>
-                            <p class="question-description"><?php echo stripslashes($question->question_description); ?></p>
 
-                            <div class="tutor-quiz-answers-wrap question-type-<?php echo $question_type; ?>">
+							$question_description = stripslashes($question->question_description);
+							if ($question_description){
+							    echo "<p class='question-description'>{$question_description}</p>";
+                            }
+							?>
+
+                            <div class="tutor-quiz-answers-wrap question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> ">
 								<?php
 								if ( is_array($answers) && count($answers) ) {
 									foreach ($answers as $answer){
@@ -134,7 +149,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 													?>
                                                     <div class="quiz-answer-input-bottom">
                                                         <div class="quiz-answer-input-field">
-                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
+                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>" data-is-correct="<?php echo $answer->is_correct ?>" >
                                                             <span>&nbsp;</span>
                                                             <?php
                                                                 if ($answer->answer_view_format !== 'image'){ echo $answer_title;}
@@ -158,7 +173,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
                                                     <div class="quiz-answer-input-bottom">
                                                         <div class="quiz-answer-input-field">
-                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
+                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" data-is-correct="<?php echo $answer->is_correct ?>" value="<?php echo $answer->answer_id; ?>">
                                                             <span>&nbsp;</span>
                                                             <?php if ($answer->answer_view_format !== 'image'){
                                                                 echo $answer_title;
@@ -283,12 +298,24 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                     <textarea class="question_type_<?php echo $question_type; ?>" name="attempt[<?php echo
 									$is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]"></textarea>
 									<?php
-
-									if ($question_type === 'short_answer'){
-										$characters_limit = tutor_utils()->avalue_dot('short_answer_characters_limit', $quiz_attempt_info);
-										echo '<p class="answer_limit_desc">  characters remaining <span class="characters_remaining">'.$characters_limit.'</span> </p>';
+									if ($question_type === 'short_answer') {
+										$get_option_meta = tutor_utils()->get_quiz_option($quiz_id);
+										if(isset($get_option_meta['short_answer_characters_limit'])){
+											if($get_option_meta['short_answer_characters_limit'] != "" ){
+												$characters_limit = tutor_utils()->avalue_dot('short_answer_characters_limit', $quiz_attempt_info);
+												echo '<p class="answer_limit_desc">'. __('characters remaining', 'tutor' ) .' :<span class="characters_remaining">'.$characters_limit.'</span> </p>';
+											}
+										}
 									}
-
+									if ($question_type === 'open_ended') {
+										$get_option_meta = tutor_utils()->get_quiz_option($quiz_id);
+										if(isset($get_option_meta['open_ended_answer_characters_limit'])){
+											if($get_option_meta['open_ended_answer_characters_limit'] != "" ){
+												$characters_limit = $get_option_meta['open_ended_answer_characters_limit'];
+												echo '<p class="answer_limit_desc">'. __('characters remaining', 'tutor' ) .' :<span class="characters_remaining">'.$characters_limit.'</span> </p>';
+											}
+										}
+									}
 								}
 
 
@@ -320,6 +347,9 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 									<?php
 								}
 								?>
+
+                                <div class="answer-help-block"></div>
+
                             </div>
 
 							<?php

@@ -43,8 +43,9 @@
                             <li>
 								<?php
 								_e('Status:', 'tutor');
-								$status = ucwords($post->post_status);
-								echo "<span>$status</span>";
+                                $status = ucwords($post->post_status);
+                                $status = ($status == 'Publish') ? 'Published' : $status;
+								echo '<span>'.__($status, 'tutor').'</span>';
 								?>
                             </li>
                             <li>
@@ -64,14 +65,19 @@
 
                     <div class="mycourse-footer">
                         <div class="tutor-mycourses-stats">
-	                        <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
+                            <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
+                            <a href="<?php the_permalink(); ?>" class="tutor-mycourse-view">
+                                <i class="tutor-icon-detail-link"></i>
+                                <?php _e('View', 'tutor'); ?>
+                            </a>
                             <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-mycourse-edit">
                                 <i class="tutor-icon-pencil"></i>
                                 <?php _e('Edit', 'tutor'); ?>
                             </a>
-                            <a href="#tutor-course-delete" class="tutor-mycourse-delete-btn" data-course-id="<?php echo $post->ID; ?>">
+                            <a href="#tutor-course-delete" class="tutor-dashboard-element-delete-btn" data-id="<?php echo $post->ID; ?>">
                                 <i class="tutor-icon-garbage"></i> <?php _e('Delete', 'tutor') ?>
                             </a>
+                            <?php do_action('tutor_course_dashboard_actions_after', $post->ID); ?>
                         </div>
                     </div>
                 </div>
@@ -97,11 +103,11 @@
                 <h3><?php _e('Delete This Course?', 'tutor'); ?></h3>
                 <p><?php _e("You are going to delete this course, it can't be undone", 'tutor'); ?></p>
                 <div class="tutor-modal-button-group">
-                    <form action="" id="tutor-delete-course-form">
+                    <form action="" id="tutor-dashboard-delete-element-form">
                         <input type="hidden" name="action" value="tutor_delete_dashboard_course">
-                        <input type="hidden" name="course_id" id="tutor-course-delete-id" value="">
+                        <input type="hidden" name="course_id" id="tutor-dashboard-delete-element-id" value="">
                         <button type="button" class="tutor-modal-btn-cancel"><?php _e('Cancel', 'tutor') ?></button>
-                        <button type="submit" class="tutor-danger tutor-modal-course-delete-btn"><?php _e('Yes, Delete Course', 'tutor') ?></button>
+                        <button type="submit" class="tutor-danger tutor-modal-element-delete-btn"><?php _e('Yes, Delete Course', 'tutor') ?></button>
                     </form>
                 </div>
             </div>

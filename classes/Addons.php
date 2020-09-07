@@ -23,7 +23,7 @@ class Addons {
 	public function tutor_addons_lists_to_show(){
 		$addons = array(
 			'buddypress'     => array(
-				'name'          => __('BuddyPress', 'tutor-pro'),
+				'name'          => __('BuddyPress', 'tutor'),
 				'description'   => 'Discuss about course and share your knowledge with your friends through BuddyPress',
 			),
 			'gradebook'     => array(
@@ -81,6 +81,10 @@ class Addons {
 			'tutor-report' => array(
 				'name'          => __('Tutor Report', 'tutor'),
 				'description'   => 'Check your course performance through Tutor Report stats.',
+			),
+			'quiz-import-export' => array(
+				'name'          => __('Quiz Export/Import', 'tutor'),
+				'description'   => __('Save time by exporting/importing quiz data with easy options.', 'tutor'),
 			),
 		);
 

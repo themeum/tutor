@@ -72,23 +72,23 @@ if ( $submitted_assignment){
     </div>
 
     <div class="tutor-assignment-evaluate-wraps">
-        <h3><?php _e('Evaluation', 'tutor-pro'); ?></h3>
+        <h3><?php _e('Evaluation', 'tutor'); ?></h3>
         <form action="" method="post">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
             <input type="hidden" value="tutor_evaluate_assignment_submission" name="tutor_action"/>
             <input type="hidden" value="<?php echo $assignment_submitted_id; ?>" name="assignment_submitted_id"/>
             <div class="tutor-assignment-evaluate-row">
                 <div class="tutor-option-field-label">
-                    <label for=""><?php _e('Your Mark', 'tutor-pro'); ?></label>
+                    <label for=""><?php _e('Your Mark', 'tutor'); ?></label>
                 </div>
                 <div class="tutor-option-field">
                     <input type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>">
-                    <p class="desc"><?php echo sprintf(__('Mark this assignment out of %s', 'tutor-pro'), "<code>{$max_mark}</code>" ); ?></p>
+                    <p class="desc"><?php echo sprintf(__('Mark this assignment out of %s', 'tutor'), "<code>{$max_mark}</code>" ); ?></p>
                 </div>
             </div>
             <div class="tutor-assignment-evaluate-row">
                 <div class="tutor-option-field-label">
-                    <label for=""><?php _e('Write a note', 'tutor-pro'); ?></label>
+                    <label for=""><?php _e('Write a note', 'tutor'); ?></label>
                 </div>
                 <div class="tutor-option-field">
                     <textarea name="evaluate_assignment[instructor_note]"><?php echo $instructor_note; ?></textarea>
@@ -98,7 +98,7 @@ if ( $submitted_assignment){
             <div class="tutor-assignment-evaluate-row">
                 <div class="tutor-option-field-label"></div>
                 <div class="tutor-option-field">
-                    <button type="submit" class="tutor-button tutor-button-primary tutor-success"><?php _e('Evaluate this submission', 'tutor-pro'); ?></button>
+                    <button type="submit" class="tutor-button tutor-button-primary tutor-success"><?php _e('Evaluate this submission', 'tutor'); ?></button>
                 </div>
             </div>
         </form>

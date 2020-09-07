@@ -150,8 +150,13 @@ class Template extends Tutor_Base {
 			if (empty( $wp_query->query_vars['course_subpage'])) {
 				$template = tutor_get_template( 'single-course' );
 				if ( is_user_logged_in() ) {
+					$is_administrator = current_user_can('administrator');
+					$is_instructor = tutor_utils()->is_instructor_of_this_course();
+					$course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
 					if ( tutor_utils()->is_enrolled() ) {
 						$template = tutor_get_template( 'single-course-enrolled' );
+					} else if ( $course_content_access && ($is_administrator || $is_instructor) ) {
+						$template = tutor_get_template( 'single-course-instructor' );
 					}
 				}
 			}else{
@@ -202,6 +207,15 @@ class Template extends Tutor_Base {
 
 					//Check Lesson edit access to support page builders
 					if(current_user_can(tutor()->instructor_role) && tutils()->has_lesson_edit_access()){
+						$template = tutor_get_template( 'single-lesson' );
+					}
+
+					/*
+					* Check access for admin
+					* @since 1.6.9
+					*/
+					$course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
+					if($course_content_access && current_user_can('administrator')) {
 						$template = tutor_get_template( 'single-lesson' );
 					}
 				}
