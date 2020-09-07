@@ -29,13 +29,13 @@ $user_id = get_current_user_id();
                 </p>
 
 				<?php if ($withdraw_method_name) { ?>
-                    <p><a class="open-withdraw-form-btn" href="javascript:;"><?php _e( 'Make a withdraw', 'tutor' ); ?></a></p>
+                    <p><a class="open-withdraw-form-btn" href="javascript:;"><?php _e( 'Submit Withdrawal Request', 'tutor' ); ?></a></p>
 					<?php
 				}
 			}else{
 				?>
 
-                <p class="withdraw-balance-col"> <?php echo sprintf( __('You currently have %s %s %s and this is insufficient balance to withdraw',
+                <p class="withdraw-balance-col"> <?php echo sprintf( __('You have earned %s %s %s so far but it is not sufficient to submit a withdrawal request',
 						'tutor'), "<strong class='available_balance'>", $balance_formatted, '</strong>' ); ?>
                 </p>
 
@@ -53,7 +53,7 @@ $user_id = get_current_user_id();
                         <?php _e('You will get paid by', 'tutor'); ?> <strong><?php echo $withdraw_method_name; ?></strong>
                         <?php
                             $my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings/withdraw-settings');
-                            echo sprintf(__( ', You can change your %s withdraw preference %s ' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
+                            echo sprintf(__( ', You can change your %s withdrawal preference %s ' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
                         ?>
                     </p>
                     <?php
@@ -62,7 +62,7 @@ $user_id = get_current_user_id();
                     <p>
                         <?php
                         $my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings/withdraw-settings');
-                        echo sprintf(__( 'Please add your %s withdraw preference %s to make withdraw' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
+                        echo sprintf(__( 'Please add your %s withdrawal preference %s before submitting a request.' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
                         ?>
                     </p>
                     <?php
@@ -92,11 +92,11 @@ $user_id = get_current_user_id();
                         </div>
                         <div class="tutor-col">
                             <div class="withdraw-form-field-button">
-                                <button class="tutor-btn" type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php _e('Withdraw', 'tutor'); ?></button>
+                                <button class="tutor-btn" type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php _e('Submit Request', 'tutor'); ?></button>
                             </div>
                         </div>
                     </div>
-                    <i><?php _e('Enter withdraw amount and click withdraw button', 'tutor') ?></i>
+                    <i><?php _e('Please enter withdrawal amount and click the Submit Request button', 'tutor') ?></i>
                 </div>
 
                 <div id="tutor-withdraw-form-response"></div>
@@ -129,7 +129,7 @@ $user_id = get_current_user_id();
                 <thead>
                 <tr>
                     <th><?php _e('Amount', 'tutor') ?></th>
-                    <th><?php _e('Withdraw Method', 'tutor') ?></th>
+                    <th><?php _e('Withdrawal Method', 'tutor') ?></th>
                     <th><?php _e('Date', 'tutor') ?></th>
                 </tr>
                 </thead>
@@ -157,7 +157,7 @@ $user_id = get_current_user_id();
 			<?php
 		}else{
 			?>
-            <p><?php _e('No withdrawals pending yet', 'tutor'); ?></p>
+            <p><?php _e('No withdrawal request is pending at this moment', 'tutor'); ?></p>
 			<?php
 		}
 		?>
@@ -165,7 +165,7 @@ $user_id = get_current_user_id();
 
     <div class="withdraw-history-table-wrap">
         <div class="withdraw-history-table-title">
-            <h4> <?php _e('Completed Withdrawals', 'tutor'); ?></h4>
+            <h4> <?php _e('Past Withdrawals', 'tutor'); ?></h4>
         </div>
 
 		<?php
@@ -175,7 +175,7 @@ $user_id = get_current_user_id();
                 <thead>
                 <tr>
                     <th><?php _e('Amount', 'tutor') ?></th>
-                    <th><?php _e('Withdraw Method', 'tutor') ?></th>
+                    <th><?php _e('Withdrawal Method', 'tutor') ?></th>
                     <th><?php _e('Requested At', 'tutor') ?></th>
                     <th><?php _e('Approved At', 'tutor') ?></th>
                 </tr>
@@ -212,7 +212,7 @@ $user_id = get_current_user_id();
 			<?php
 		}else{
 			?>
-            <p><?php _e('No withdrawals completed yet', 'tutor'); ?></p>
+            <p><?php _e('No withdrawal request is completed yet', 'tutor'); ?></p>
 			<?php
 		}
 		?>
@@ -221,7 +221,7 @@ $user_id = get_current_user_id();
 
     <div class="withdraw-history-table-wrap">
         <div class="withdraw-history-table-title">
-            <h4> <?php _e('Rejected Withdrawals', 'tutor'); ?></h4>
+            <h4> <?php _e('Rejected Withdrawal Requests', 'tutor'); ?></h4>
         </div>
 
 		<?php
@@ -231,7 +231,7 @@ $user_id = get_current_user_id();
                 <thead>
                 <tr>
                     <th><?php _e('Amount', 'tutor') ?></th>
-                    <th><?php _e('Withdraw Method', 'tutor') ?></th>
+                    <th><?php _e('Withdrawal Method', 'tutor') ?></th>
                     <th><?php _e('Requested At', 'tutor') ?></th>
                     <th><?php _e('Rejected At', 'tutor') ?></th>
                 </tr>
@@ -268,7 +268,7 @@ $user_id = get_current_user_id();
 			<?php
 		}else{
 			?>
-            <p><?php _e('No withdrawals rejected yet', 'tutor'); ?></p>
+            <p><?php _e('No withdrawal request rejected yet', 'tutor'); ?></p>
 			<?php
 		}
 		?>
