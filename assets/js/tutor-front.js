@@ -128,21 +128,31 @@ jQuery(document).ready(function ($) {
             .replace(/-+$/, '');            // Trim - from end of text
     }
 
+    function toggle_star_(star){
+        star.add(star.prevAll()).filter('i').addClass('tutor-icon-star-full').removeClass('tutor-icon-star-line');
+        star.nextAll().filter('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+    }
+
     /**
      * Hover tutor rating and set value
      */
-    $(document).on('hover', '.tutor-write-review-box .tutor-star-rating-group i', function () {
-        $(this).closest('.tutor-star-rating-group').find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
-        var currentRateValue = $(this).attr('data-rating-value');
-        for (var i = 1; i <= currentRateValue; i++) {
-            $(this).closest('.tutor-star-rating-group').find('i[data-rating-value="' + i + '"]').removeClass('tutor-icon-star-line').addClass('tutor-icon-star-full');
-        }
-        $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(currentRateValue);
+    $(document).on('mouseover', '.tutor-write-review-box .tutor-star-rating-group i', function () {
+        toggle_star_($(this));
     });
 
-    $(document).on('click', '.tutor-star-rating-group i', function () {
+    $(document).on('click', '.tutor-write-review-box .tutor-star-rating-group i', function () {
         var rating = $(this).attr('data-rating-value');
         $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
+        
+        toggle_star_($(this));
+    });
+
+    $(document).on('mouseout', '.tutor-write-review-box .tutor-star-rating-group', function(){
+        var value = $(this).find('input[name="tutor_rating_gen_input"]').val();
+        var rating = parseInt(value);
+        
+        var selected = $(this).find('[data-rating-value="'+rating+'"]');
+        (rating && selected && selected.length>0) ? toggle_star_(selected) : $(this).find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
     });
 
     $(document).on('click', '.tutor_submit_review_btn', function (e) {
