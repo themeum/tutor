@@ -622,16 +622,16 @@ class Options {
 						'fields' => array(
 							'min_withdraw_amount' => array(
 								'type'      => 'number',
-								'label'     => __('Minimum Withdraw Amount', 'tutor'),
+								'label'     => __('Minimum Withdrawal Amount', 'tutor'),
 								'default'   => '80',
-								'desc'      => __('Instructors should earn equal or above this amount to make a withdraw request.',	'tutor'),
+								'desc'      => __('Instructors should earn equal or above this amount to make a withdrawal request.',	'tutor'),
 							),
 						),
 					),
 
 					'withdraw_methods' => array(
-						'label' => __('Withdraw Methods', 'tutor'),
-						'desc' => __('Set withdraw settings', 'tutor'),
+						'label' => __('Withdrawal Methods', 'tutor'),
+						'desc' => __('Enable available options for withdrawal requestf', 'tutor'),
 					),
 				),
 			),
