@@ -210,7 +210,7 @@ class Withdraw {
 
 
 		if ( ! tutor_utils()->count($saved_withdraw_account)){
-			$no_withdraw_method = apply_filters('tutor_no_withdraw_method_msg', __('Please save withdraw method ', 'tutor')  );
+			$no_withdraw_method = apply_filters('tutor_no_withdraw_method_msg', __('Please save withdrawal method ', 'tutor')  );
 			wp_send_json_error(array('msg' => $no_withdraw_method ));
 		}
 
