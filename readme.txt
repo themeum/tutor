@@ -173,7 +173,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 = Minimum Requirements =
 
-* PHP version 5.6.0 or greater (PHP 7.1 or greater is recommended)
+* PHP version 7.3 or greater (PHP 7.4 or greater is recommended)
 * MySQL version 5.0 or greater (MySQL 5.6 or greater is recommended)
 
 = Automatic installation =
@@ -196,12 +196,11 @@ Tutor LMS is a WordPress LMS plugin that works with any modern theme without any
 
 = Where can I find Tutor LMS user guides and documentation? =
 
-For a detailed guideline on how to build a Learning Management system using our WordPress LMS plugin, refer to our user documentation on the Themeum site.
+For a detailed guideline on how to build a Learning Management system using our WordPress LMS plugin, refer to our user documentation here- https://docs.themeum.com/tutor-lms/
 
 = Where can I report a bug? =
 
-If you found any bugs or issues, please let us know by posting on the support section of this plugin on WordPress plugin directory or directly on our
-support forums: https://www.themeum.com/support/ 🙂
+If you found any bugs or issues, please let us know by posting on the support section of this plugin on WordPress plugin directory or directly using the contact form: https://www.themeum.com/contact-us/ 🙂
 
 = Is this plugin free? =
 
@@ -209,13 +208,13 @@ This WordPress course plugin has two versions. One is free and another is paid. 
 
 = Where can I get support? =
 
-You can get support by posting your issues on the support section of this plugin on WordPress plugins directory or directly place your question to Themeum Forums.
+You can get support by posting your issues on the support section of this plugin on WordPress plugins directory or use the contact form on our website.
 
 = Is Tutor LMS device friendly WordPress LMS plugin? =
 
 If you’re using a responsive theme, then Tutor LMS will look great across all devices.
 
-= Can I use any plugins with Tutor? =
+= Can I use any plugin with Tutor? =
 
 Tutor enables you to use any third party plugins without facing any compatibility issues. You can integrate and use the WordPress LMS plugin easily in your existing site without any trouble.
 
