@@ -137,8 +137,6 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 											$play_time = false;
 											if ( $video ) {
 												$play_time = $video->playtime;
-												strpos($play_time, '00:')===0 ? $play_time=substr($play_time, 3) : 0; // Remove Empty hour
-												strpos($play_time, '00:')===0 ? $play_time=substr($play_time, 3) : 0; // Remove empty minute
 											}
 											$is_completed_lesson = tutor_utils()->is_completed_lesson();
 											?>
@@ -155,7 +153,7 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
                                                         <?php
                                                         do_action('tutor/lesson_list/right_icon_area', $post);
                                                         if ( $play_time ) {
-	                                                        echo "<i class='tutor-play-duration'>$play_time</i>";
+	                                                        echo "<i class='tutor-play-duration'>".tutor_utils()->get_optimized_duration($play_time)."</i>";
                                                         }
                                                         $lesson_complete_icon = $is_completed_lesson ? 'tutor-icon-mark tutor-done' : '';
                                                         echo "<i class='tutor-lesson-complete $lesson_complete_icon'></i>";
