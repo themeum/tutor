@@ -119,12 +119,12 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 											if ($is_enrolled){
 												$lesson_title .= "<a href='".get_the_permalink()."'> ".get_the_title()." </a>";
 
-												$lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>$play_time</span>" : '';
+												$lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>".tutor_utils()->get_optimized_duration($play_time)."</span>" : '';
 
 												echo $lesson_title;
 											}else{
 												$lesson_title .= get_the_title();
-												$lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>$play_time</span>" : '';
+												$lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>".tutor_utils()->get_optimized_duration($play_time)."</span>" : '';
 												echo apply_filters('tutor_course/contents/lesson/title', $lesson_title, get_the_ID());
 											}
 
