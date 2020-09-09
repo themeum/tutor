@@ -137,6 +137,8 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 											$play_time = false;
 											if ( $video ) {
 												$play_time = $video->playtime;
+												strpos($play_time, '00:')===0 ? $play_time=substr($play_time, 3) : 0; // Remove Empty hour
+												strpos($play_time, '00:')===0 ? $play_time=substr($play_time, 3) : 0; // Remove empty minute
 											}
 											$is_completed_lesson = tutor_utils()->is_completed_lesson();
 											?>
