@@ -1342,6 +1342,15 @@ class Utils {
 		return (object) $info;
 	}
 
+	public function get_optimized_duration($duration){
+		if(is_string($duration)){
+			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove Empty hour
+			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove empty minute
+		}
+
+		return $duration;
+	}
+
 	/**
 	 * @param int $post_id
 	 *
