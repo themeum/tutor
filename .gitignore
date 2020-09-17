@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+ehthumbs.db
+Thumbs.db
+.npm
+.idea/
+.vscode/
+package-lock.json
+yarn.lock
+.sass-cache
+assets/css/tutor-front.css.map
+assets/css/tutor-front.min.css.map
+.prettierignore
+*.zip
