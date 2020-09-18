@@ -15,8 +15,13 @@ class REST_Lesson
 {
 	use REST_Response;
 	
-	private $post_type = "lesson";
+	private $post_type;
 	private $post_parent;
+
+	public function __construct()
+	{
+		$this->post_type = tutor()->lesson_post_type;
+	}
 
 	public function topic_lesson(WP_REST_Request $request):object
 	{

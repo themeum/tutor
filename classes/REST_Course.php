@@ -15,7 +15,7 @@ class REST_Course
 {
 	use REST_Response;
 
-	private $post_type = "courses";
+	private $post_type;
 
 	private $course_cat_tax = "course-category";
 
@@ -23,9 +23,8 @@ class REST_Course
 
 	public function __construct()
 	{
-
+		$this->post_type = tutor()->course_post_type;
 	}
-
 
 	/*
 	*require rest request

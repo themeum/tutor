@@ -34,7 +34,7 @@ class REST_Author
 
 			$response = array(
 				'status_code'=> 'success',
-				'message'=> __('Author detail retrieved successfully','tutor'),
+				'message'=> __('Author details retrieved successfully','tutor'),
 				'data'=> $author
 			);
 
