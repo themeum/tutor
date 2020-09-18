@@ -76,7 +76,7 @@ class REST_Course
 
 			$response = array(
 				'status_code'=> "success",
-				"message"=> __('Course retrieve successfully','jwt'),
+				"message"=> __('Course retrieved successfully','tutor'),
 				'data'=> $data
 			);
 
@@ -85,7 +85,7 @@ class REST_Course
 
 		$response = array(
 			'status_code'=> "not_found",
-			"message"=> __('Course not found','jwt'),
+			"message"=> __('Course not found','tutor'),
 			'data'=> []
 		);
 
@@ -129,7 +129,7 @@ class REST_Course
 		{
 			$response = array(
 				'status_code'=> "course_detail",
-				"message"=> __('Course detail retrieve successfully','jwt'),
+				"message"=> __('Course detail retrieved successfully','tutor'),
 				'data'=> $detail
 			);
 
@@ -137,7 +137,7 @@ class REST_Course
 		}
 		$response = array(
 			'status_code'=> "course_detail",
-			"message"=> __('Detail not found for given ID','jwt'),
+			"message"=> __('Detail not found for given ID','tutor'),
 			'data'=> []
 		);		
 

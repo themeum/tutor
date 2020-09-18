@@ -44,7 +44,7 @@ class REST_Quiz
 
 				$response = array(
 					'status_code'=> 'success',
-					'message'=> "Quiz retrieved successfully",
+					'message'=> __("Quiz retrieved successfully",'tutor'),
 					'data'=> $data
 				);
 
@@ -53,7 +53,7 @@ class REST_Quiz
 		}	
 		$response = array(
 			'status_code'=> 'not_found',
-			'message'=> "Quiz not found for given ID",
+			'message'=> __("Quiz not found for given ID",'tutor'),
 			'data'=> $data
 		);
 		return self::send($response);
@@ -97,7 +97,7 @@ class REST_Quiz
 
 			$response = array(
 				'status_code'=> 'success',
-				'message'=> 'Question retrieved successfully',
+				'message'=> __('Question retrieved successfully','tutor'),
 				'data'=> $data
 			);
 
@@ -106,7 +106,7 @@ class REST_Quiz
 
 			$response = array(
 				'status_code'=> 'not_found',
-				'message'=> 'Question not found for given ID',
+				'message'=> __('Question not found for given ID','tutor'),
 				'data'=> []
 			);
 

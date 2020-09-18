@@ -45,7 +45,7 @@ class REST_Rating
 
 			$response = array(
 				'status_code'=> 'success',
-				'message'=> 'Course rating retrieved successfully',
+				'message'=> __('Course rating retrieved successfully','tutor'),
 				'data'=> $ratings
 			);
 
@@ -53,7 +53,7 @@ class REST_Rating
 		}
 			$response = array(
 				'status_code'=> 'not_found',
-				'message'=> 'Rating not found',
+				'message'=> __('Rating not found for given ID','tutor'),
 				'data'=> []
 			);
 

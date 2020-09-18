@@ -34,7 +34,7 @@ class REST_Author
 
 			$response = array(
 				'status_code'=> 'success',
-				'message'=> 'Author detail retrieved successfully',
+				'message'=> __('Author detail retrieved successfully','tutor'),
 				'data'=> $author
 			);
 
@@ -42,7 +42,7 @@ class REST_Author
 		}
 			$response = array(
 				'status_code'=> 'invalid_id',
-				'message'=> 'Author not found',
+				'message'=> __('Author not found','tutor'),
 				'data'=> []
 			);
 

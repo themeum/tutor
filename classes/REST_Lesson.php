@@ -56,7 +56,7 @@ class REST_Lesson
 
 			$response = array(
 				'status_code'=> "success",
-				"message"=> __('Lesson retrieved successfully','jwt'),
+				"message"=> __('Lesson retrieved successfully','tutor'),
 				'data'=> $data
 			);
 
@@ -64,7 +64,7 @@ class REST_Lesson
 		}
 		$response = array(
 			'status_code'=> "not_found",
-			"message"=> __('Lesson not found for given topic ID','jwt'),
+			"message"=> __('Lesson not found for given topic ID','tutor'),
 			'data'=> []
 		);
 		return self::send($response);

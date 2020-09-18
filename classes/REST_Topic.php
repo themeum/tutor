@@ -40,7 +40,7 @@ class REST_Topic
 		{
 			$response = array(
 				'status_code'=> "get_topic",
-				"message"=> __('Topic retrieve successfully','jwt'),
+				"message"=> __('Topic retrieved successfully','tutor'),
 				'data'=> $result
 			);			
 			
@@ -48,7 +48,7 @@ class REST_Topic
 		}
 			$response = array(
 				'status_code'=> "not_found",
-				"message"=> __('Topic not found for given ID','jwt'),
+				"message"=> __('Topic not found for given ID','tutor'),
 				'data'=> []
 			);			
 			

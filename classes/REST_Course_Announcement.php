@@ -38,7 +38,7 @@ class REST_Course_Announcement
 		{
 			$response = array(
 				'status_code'=> "success",
-				"message"=> __('Announcement retrieve successfully','jwt'),
+				"message"=> __('Announcement retrieved successfully','tutor'),
 				'data'=> $result
 			);			
 			
@@ -46,7 +46,7 @@ class REST_Course_Announcement
 		}
 			$response = array(
 				'status_code'=> "not_found",
-				"message"=> __('Announcement not found for given ID','jwt'),
+				"message"=> __('Announcement not found for given ID','tutor'),
 				'data'=> []
 			);			
 			

@@ -7,8 +7,7 @@
  * @author_uri: https://themeum.com
  * @package Tutor
  * @since v.1.5.0
- */
-
+*/
 
 namespace TUTOR;
 
@@ -81,31 +80,6 @@ class RestAPI {
 	*/
 	public function init_routes()
 	{
-		// register_rest_route(
-		// 	self::namespace,
-		// 	'authenticate',
-		// 	array(
-		// 		'methods'=> 'POST',
-		// 		'callback'=> array(
-		// 			$this,'/authenticate'
-		// 		),	
-		// 		'permission_callback'=> '__return_true'
-		// 	),
-			
-		// );
-
-		// //verify token
-		// register_rest_route(
-		// 	self::namespace,
-		// 	'/verify-token',
-		// 	array(
-		// 		'methods'=> 'GET',
-		// 		'callback'=> array(
-		// 			$this->jwt_setup_obj,'verify_token'
-		// 		),
-		// 		'permission_callback'=> '__return_true'
-		// 	)
-		// );
 
 		//courses
 		register_rest_route(
@@ -282,52 +256,6 @@ class RestAPI {
 
 
 	} 
-
-	/*
-
-	*/
-	public function authenticate( WP_REST_Request $request):object
-	{
-
-		$username = $request->get_param('username');
-		$password = $request->get_param('password');
-
-		//authenticate with user & pass
-		$user = $this->auth_obj->authentication($username,$password);
-
-		//check if error
-		if(is_wp_error($user))
-		{
-			$error_code = $user->get_error_code();
-			
-
-			$response = array(
-				'status_code'=> $error_code,
-				'message'=> strip_tags($user->get_error_message($error_code)),
-				'data'=>[]
-			);
-
-			return self::send($response);
-
-		}
-
-		// if auth then get jwt
-		$payload_data = array(
-			'ID' => $user->ID,
-			'username' => $username,
-		);
-
-		//get array jwt 
-		$jwt = $this->jwt_setup_obj->create_token($payload_data);
-
-		$response = array(
-			'status_code' => "authenticate_success",
-			'message' => __('Authentication success','jwt'),
-			'data'=> $jwt
-		);
-
-		return self::send($response);
-	}	
 
 
 	public function courses_api() {
