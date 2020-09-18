@@ -14,7 +14,7 @@ trait REST_Response
 {
 	/*
 		@send WP_REST_Response with 
-		code, message alogn with data
+		code, message along with data
 	*/
 	public static function send(array $response):object
 	{
