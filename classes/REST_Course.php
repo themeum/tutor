@@ -152,7 +152,7 @@ class REST_Course
 	/*
 	*return post type terms
 	*/
-	public function course_by_terms(WP_REST_Request $request)
+	public function course_by_terms(WP_REST_Request $request):object
 	{
 		$post_fields = $request->get_params();
 		$validate_err = $this->validate_terms($post_fields);
