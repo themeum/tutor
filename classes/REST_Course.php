@@ -194,13 +194,14 @@ class REST_Course
 
 		$query = new WP_Query ($args);
 
-		//unset filter proterty
-		array_map(function($post){
-			unset($post->filter);
-		}, $query->posts);
-
 		if(count($query->posts)>0)
 		{
+
+			//unset filter proterty
+			array_map(function($post){
+				unset($post->filter);
+			}, $query->posts);			
+		
 			$response = array(
 				'status_code'=> "success",
 				"message"=> "Course retrieved successfully",
