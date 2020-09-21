@@ -201,10 +201,10 @@ class REST_Course
 			array_map(function($post){
 				unset($post->filter);
 			}, $query->posts);			
-		
+
 			$response = array(
 				'status_code'=> "success",
-				"message"=> "Course retrieved successfully",
+				"message"=> __("Course retrieved successfully",'tutor'),
 				'data'=> $query->posts
 			);	
 
@@ -213,7 +213,7 @@ class REST_Course
 
 		$response = array(
 			'status_code'=> "not_found",
-			"message"=> "Course not found for given terms",
+			"message"=> __("Course not found for given terms",'tutor'),
 			'data'=> []
 		);	
 		return self::send($response);
