@@ -48,18 +48,23 @@ class REST_Course
 		);
 
 		$query = new WP_Query($args);
-		$posts = $query->posts;//get posts
-		
+
+
 		//if post found
-		if($posts)
+		if(count($query->posts)>0)
 		{
+			//unset filter properpty
+			array_map(function($post){
+				unset($post->filter);
+			}, $query->posts);
+
 			$data = [
 				'posts'=> [],
 				'total_course' => $query->found_posts,
 				'total_page' => $query->max_num_pages				
 			];
 
-			foreach($posts as $post)
+			foreach($query->posts as $post)
 			{
 				$category = wp_get_post_terms($post->ID,$this->course_cat_tax);
 
@@ -144,6 +149,98 @@ class REST_Course
 
 	}
 
+	/*
+	*return post type terms
+	*/
+	public function course_by_terms(WP_REST_Request $request)
+	{
+		$post_fields = $request->get_params();
+		$validate_err = $this->validate_terms($post_fields);
+		
+		//check array or not 
+		if(count($validate_err)>0)
+		{
+			$response = array(
+				'status_code'=> "validation_error",
+				"message"=> $validate_err,
+				'data'=> []
+			);	
+
+			return self::send($response);
+		}
+
+		//sanitize terms
+		$categories = sanitize_term( $request['categories'], $this->course_cat_tax, $context = 'db' );
+
+		$tags = sanitize_term( $request['tags'], $this->course_tag_tax, $context = 'db' );
+
+		$args = array(
+		    'post_type' => $this->post_type,
+		    'tax_query' => array(
+		        'relation' => 'OR',
+		        array(
+		            'taxonomy' => $this->course_cat_tax,
+		            'field'    => 'name',
+		            'terms'    => $categories,
+		        ),
+		        array(
+		            'taxonomy' => $this->course_tag_tax,
+		            'field'    => 'name',
+		            'terms'    => $tags,
+		            
+		        ),
+		    ),
+		);
+
+		$query = new WP_Query ($args);
+
+		//unset filter proterty
+		array_map(function($post){
+			unset($post->filter);
+		}, $query->posts);
+
+		if(count($query->posts)>0)
+		{
+			$response = array(
+				'status_code'=> "success",
+				"message"=> "Course retrieved successfully",
+				'data'=> $query->posts
+			);	
+
+			return self::send($response);
+		}
+
+		$response = array(
+			'status_code'=> "not_found",
+			"message"=> "Course not found for given terms",
+			'data'=> []
+		);	
+		return self::send($response);
+	}
+
+	/*
+	*categories array validation
+	*tags array validation
+	*/
+	public function validate_terms(array $post):array
+	{
+		$categories = $post['categories'];
+		$tags = $post['tags'];
+
+		$error = [];
+
+		if(!is_array($categories)) 
+		{
+			array_push($error,__('Categories field is not an array','tutor'));
+		}
+					
+		if(!is_array($tags))
+		{
+			array_push($error,__('Tags field is not an array','tutor'));
+		}
+
+		return $error;
+	}
 
 }
 ?>

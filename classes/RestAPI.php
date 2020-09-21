@@ -92,6 +92,19 @@ class RestAPI {
 				),
 				'permission_callback'=> '__return_true'
 			),
+		);		
+
+		//courses by terms cat and tag
+		register_rest_route(
+			self::namespace,
+			'/course-by-terms',
+			array(
+				'methods'=> "POST",
+				'callback'=> array(
+					$this->courseObj,'course_by_terms'
+				),
+				'permission_callback'=> '__return_true'
+			),
 		);
 
 		//course terms
