@@ -16,7 +16,10 @@ if (!defined('ABSPATH'))
 
 class RestAPI {
 
+	use Custom_Validation;
+
 	const namespace = 'tutor/v1';
+
 	protected $course_post_type;
 
 	private $path;
@@ -105,9 +108,35 @@ class RestAPI {
 				),
 				'permission_callback'=> '__return_true'
 			),
+		);		
+
+		//courses by terms cat and tag
+		register_rest_route(
+			self::namespace,
+			'/course-sorting-by-price',
+			array(
+				'methods'=> "GET",
+				'callback'=> array(
+					$this->courseObj,'course_sort_by_price'
+				),
+				'args'=>array(
+					'order'=> array(
+						'required'=> true,
+						'type'=> 'string',
+						'validate_callback'=> function($order){
+							return $this->validate_order($order);
+						}
+					),
+					'page'=>array(
+						'required'=> false,
+						'type'=> 'number',
+					)
+				),
+				'permission_callback'=> '__return_true'
+			),
 		);
 
-		//course terms
+		//course details
 		register_rest_route(
 			self::namespace,
 			'/course-detail/(?P<id>\d+)',

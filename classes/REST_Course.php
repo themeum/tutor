@@ -243,5 +243,67 @@ class REST_Course
 		return $error;
 	}
 
+	public function course_sort_by_price(WP_REST_Request $request)
+	{
+
+		$order = $request->get_param('order');
+		$paged = $request->get_param('page');
+
+		$order = sanitize_text_field($param);
+		$paged = sanitize_text_field($paged);
+
+		$args = array(
+		    'post_type'=> 'product',
+		    'post_status'=> 'publish',
+		   	'posts_per_page' => 10, 
+        	'paged'=> $paged ? $paged : 1,
+		    'meta_key'=> '_regular_price',
+		    'orderby'=> 'meta_value',
+		    'order'=> $order,
+		    'meta_query'=> array(
+		    	'relation'=>'AND',
+		        array(
+		            'key'=> '_tutor_product',
+		            'value'=> "yes",
+		           
+		        ),
+		    ),
+		);
+
+
+		$query = new WP_Query( $args );
+
+			if(count($query->posts)>0)
+			{
+				//unset filter property
+				array_map(function($post){
+					unset($post->filter);
+				}, $query->posts);
+
+				$data = array(
+					'posts'=> $query->posts,
+					'total_course' => $query->found_posts,
+					'total_page' => $query->max_num_pages
+				);
+
+				$response = array(
+					'status_code'=> 'success',
+					'message'=> __('Course retrieved successfully','tutor'),
+					'data'=> $data
+				);
+
+				return self::send($response);
+			}
+		
+			$response = array(
+				'status'=> 'not_found',
+				'message'=> __('Course not found','tutor'),
+				'data'=> []
+			);
+			return self::send($response);
+
+		
+	}
+
 }
 ?>
