@@ -243,7 +243,7 @@ class REST_Course
 		return $error;
 	}
 
-	public function course_sort_by_price(WP_REST_Request $request)
+	public function course_sort_by_price(WP_REST_Request $request):object
 	{
 
 		$order = $request->get_param('order');
