@@ -249,16 +249,18 @@ class REST_Course
 		$order = $request->get_param('order');
 		$paged = $request->get_param('page');
 
-		$order = sanitize_text_field($param);
+		$order = sanitize_text_field($order);
 		$paged = sanitize_text_field($paged);
+
 
 		$args = array(
 		    'post_type'=> 'product',
 		    'post_status'=> 'publish',
 		   	'posts_per_page' => 10, 
         	'paged'=> $paged ? $paged : 1,
+
 		    'meta_key'=> '_regular_price',
-		    'orderby'=> 'meta_value',
+		    'orderby'=> 'meta_value_num',
 		    'order'=> $order,
 		    'meta_query'=> array(
 		    	'relation'=>'AND',
@@ -280,8 +282,15 @@ class REST_Course
 					unset($post->filter);
 				}, $query->posts);
 
+				$posts = [];
+
+				foreach ($query->posts as $post) {
+					$post->price = get_post_meta($post->ID,'_regular_price', true);
+					array_push($posts, $post);
+				}
+
 				$data = array(
-					'posts'=> $query->posts,
+					'posts'=> $posts,
 					'total_course' => $query->found_posts,
 					'total_page' => $query->max_num_pages
 				);
