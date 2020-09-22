@@ -173,7 +173,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 = Minimum Requirements =
 
-* PHP version 5.6.0 or greater (PHP 7.2 or greater is recommended)
+* PHP 7.2 or greater is recommended
 * MySQL version 5.0 or greater (MySQL 5.6 or greater is recommended)
 
 = Automatic installation =
