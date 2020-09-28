@@ -21,7 +21,6 @@
     <a href="javascript:;" class="create_new_topic_btn tutor-btn bordered-btn"> <i class="tutor-icon-text-document-add-button-with-plus-sign"></i> <?php _e('Add new topic', 'tutor'); ?></a>
 </div>
 
-
 <div class="tutor-metabox-add-topics" style="display: none">
     <h3><?php _e('Add Topic', 'tutor'); ?></h3>
 
@@ -83,12 +82,25 @@
     </div>
 </div>
 
-
 <div class="tutor-modal-wrap tutor-assignment-builder-modal-wrap">
     <div class="tutor-modal-content">
         <div class="modal-header">
             <div class="modal-title">
                 <h1><?php _e('Assignments', 'tutor'); ?></h1>
+            </div>
+            <div class="modal-close-wrap">
+                <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i> </a>
+            </div>
+        </div>
+        <div class="modal-container"></div>
+    </div>
+</div>
+
+<div class="tutor-modal-wrap tutor-zoom-meeting-modal-wrap">
+    <div class="tutor-modal-content">
+        <div class="modal-header">
+            <div class="modal-title">
+                <h1><?php _e('Zoom Meeting', 'tutor'); ?></h1>
             </div>
             <div class="modal-close-wrap">
                 <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i> </a>
