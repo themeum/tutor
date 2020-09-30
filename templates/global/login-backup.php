@@ -67,7 +67,6 @@ if ( ! defined( 'ABSPATH' ) )
 			<p class="login-password">
 				<input type="password" placeholder="'.esc_html( $args['label_password'] ).'" name="pwd" id="' . esc_attr( $args['id_password'] ) . '" class="input" value="" size="20" />
 			</p>
-			'.do_action("login_form",1).'
 			<div class="tutor-login-rememeber-wrap">
 			' . ( $args['remember'] ? '<p class="login-remember"><label><input name="rememberme" type="checkbox" id="' . esc_attr( $args['id_remember'] ) . '" value="forever"' . ( $args['value_remember'] ? ' checked="checked"' : '' ) . ' /> ' . esc_html( $args['label_remember'] ) . '</label></p>' : '' ) . '
 			
