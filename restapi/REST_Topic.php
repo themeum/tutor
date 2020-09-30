@@ -24,7 +24,7 @@ class REST_Topic
 	*require rest request
 	*return topic by course id
 	*/
-	public function course_topic(WP_REST_Request $request):object
+	public function course_topic(WP_REST_Request $request)
 	{
 		$this->post_parent = $request->get_param('id');
 

@@ -21,7 +21,7 @@ class REST_Quiz
 	private $t_quiz_attempt = "tutor_quiz_attempts";
 	private $t_quiz_att_ans = "tutor_quiz_attempt_answers";
 
-	public function quiz_with_settings(WP_REST_Request $request):object
+	public function quiz_with_settings(WP_REST_Request $request)
 	{
 		$this->post_parent = $request->get_param('id');
 
@@ -59,7 +59,7 @@ class REST_Quiz
 		return self::send($response);
 	}
 
-	public function quiz_question_ans(WP_REST_Request $request):object
+	public function quiz_question_ans(WP_REST_Request $request)
 	{
 		global $wpdb;
 

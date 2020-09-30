@@ -23,7 +23,7 @@ class REST_Lesson
 		$this->post_type = tutor()->lesson_post_type;
 	}
 
-	public function topic_lesson(WP_REST_Request $request):object
+	public function topic_lesson(WP_REST_Request $request)
 	{
 		$this->post_parent = $request->get_param('id');
 		global $wpdb;

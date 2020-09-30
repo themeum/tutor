@@ -23,7 +23,7 @@ class REST_Rating
 	*require course id
 	*return comment/review with meta by course id and post type  
 	*/
-	public function course_rating(WP_REST_Request $request):object
+	public function course_rating(WP_REST_Request $request)
 	{
 		$this->post_id = $request->get_param('id');
 

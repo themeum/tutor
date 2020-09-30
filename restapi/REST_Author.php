@@ -15,7 +15,7 @@ class REST_Author
 	*require user id
 	*return json object with user detail 
 	*/
-	public function author_detail(WP_REST_Request $request):object
+	public function author_detail(WP_REST_Request $request)
 	{
 		$this->user_id = $request->get_param('id');
 		global $wpdb;

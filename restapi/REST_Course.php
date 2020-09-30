@@ -32,7 +32,7 @@ class REST_Course
 	*pagination enable
 	*category,tags terms included
 	*/
-	public function course(WP_REST_Request $request):object
+	public function course(WP_REST_Request $request)
 	{
 		$order = sanitize_text_field($request->get_param('order'));
 		$orderby = sanitize_text_field($request->get_param('orderby'));
@@ -101,7 +101,7 @@ class REST_Course
 	*require rest request
 	*return post meta items
 	*/
-	function course_detail(WP_REST_Request $request):object
+	function course_detail(WP_REST_Request $request)
 	{
 		$post_id = $request->get_param('id');
 
@@ -152,7 +152,7 @@ class REST_Course
 	/*
 	*return post type terms
 	*/
-	public function course_by_terms(WP_REST_Request $request):object
+	public function course_by_terms(WP_REST_Request $request)
 	{
 		$post_fields = $request->get_params();
 		$validate_err = $this->validate_terms($post_fields);
@@ -223,7 +223,7 @@ class REST_Course
 	*categories array validation
 	*tags array validation
 	*/
-	public function validate_terms(array $post):array
+	public function validate_terms(array $post)
 	{
 		$categories = $post['categories'];
 		$tags = $post['tags'];
@@ -243,7 +243,7 @@ class REST_Course
 		return $error;
 	}
 
-	public function course_sort_by_price(WP_REST_Request $request):object
+	public function course_sort_by_price(WP_REST_Request $request)
 	{
 
 		$order = $request->get_param('order');

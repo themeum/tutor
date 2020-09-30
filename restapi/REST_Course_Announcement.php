@@ -22,7 +22,7 @@ class REST_Course_Announcement
 	*require rest request
 	*return accoucement by course id
 	*/
-	public function course_annoucement(WP_REST_Request $request):object
+	public function course_annoucement(WP_REST_Request $request)
 	{
 		$this->post_parent = $request->get_param('id');
 
