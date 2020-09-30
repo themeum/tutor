@@ -542,6 +542,39 @@ jQuery(document).ready(function($){
     });
 
     /**
+     * Zoom Meeting js
+     * here for support enable_sorting_topic_lesson function
+     * @since 1.7.1
+     */
+    $('.tutor-zoom-meeting-modal-wrap').on('submit', '.tutor-meeting-modal-form', function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        var data = $form.serialize();
+        var $btn = $form.find('button[type="submit"]');
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: data,
+            beforeSend: function () {
+                $btn.addClass('tutor-updating-message');
+            },
+            success: function (data) {
+                if(data.course_contents) {
+                    $('#tutor-course-content-wrap').html(data.course_contents);
+                    enable_sorting_topic_lesson();
+                    //Close the modal
+                    $('.tutor-zoom-meeting-modal-wrap').removeClass('show');
+                } else {
+                    location.reload();
+                }
+            },
+            complete: function () {
+                $btn.removeClass('tutor-updating-message');
+            }
+        });
+    });
+
+    /**
      * Used for backend profile photo upload.
      */
 
