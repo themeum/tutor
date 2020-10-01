@@ -560,8 +560,10 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 if(data.course_contents) {
-                    $('#tutor-course-content-wrap').html(data.course_contents);
-                    enable_sorting_topic_lesson();
+                    $(data.selector).html(data.course_contents);
+                    if ( data.selector == '#tutor-course-content-wrap') {
+                        enable_sorting_topic_lesson();
+                    }
                     //Close the modal
                     $('.tutor-zoom-meeting-modal-wrap').removeClass('show');
                 } else {

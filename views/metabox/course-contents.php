@@ -111,7 +111,7 @@
                             <div id="tutor-zoom-meeting-<?php echo $lesson->ID; ?>" class="course-content-item tutor-zoom-meeting-item tutor-zoom-meeting-<?php echo $lesson->ID; ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="tutor-zoom-meeting-modal-open-btn" data-meeting-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>" course-builder="true">
+                                    <a href="javascript:;" class="tutor-zoom-meeting-modal-open-btn" data-meeting-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>" data-click-form="course-builder">
                                         <?php echo $lesson->post_title; ?>
                                     </a>
                                     <a href="javascript:;" class="tutor-zoom-meeting-delete-btn" data-meeting-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
