@@ -11,6 +11,7 @@
     <input type="hidden" value="tutor_register_student" name="tutor_action"/>
 
     <?php
+    
     $errors = apply_filters('tutor_student_register_validation_errors', array());
     if (is_array($errors) && count($errors)){
         echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
@@ -94,8 +95,9 @@
         <div class="tutor-form-col-12">
             <div class="tutor-captcha">
                 <?php
-                    apply_filters('login_form_middle','','');
-                    do_action('login_form');
+                    do_action('register_form');
+                    
+                    
                 ?>
             </div>
         </div>
