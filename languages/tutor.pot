@@ -85,6 +85,22 @@ msgstr ""
 msgid "Save time by exporting/importing quiz data with easy options."
 msgstr ""
 
+#: classes/Addons.php:90
+msgid "Tutor Zoom Integration"
+msgstr ""
+
+#: classes/Addons.php:91
+msgid "Connect Tutor LMS with Zoom to host live online classes. Students can attend live classes right from the lesson page."
+msgstr ""
+
+#: classes/Addons.php:94
+msgid "Google Classroom Integration"
+msgstr ""
+
+#: classes/Addons.php:95
+msgid "Helps connect Google Classrooms with Tutor LMS courses, allowing you to use features like Classroom streams and files directly from the Tutor LMS course."
+msgstr ""
+
 #: classes/Admin.php:49
 msgid "Pro"
 msgstr ""
@@ -909,7 +925,7 @@ msgstr ""
 msgid "Lesson Permalink Base"
 msgstr ""
 
-#: classes/Options.php:412, classes/Options.php:415, classes/Quiz_Attempts_List.php:111, classes/Tutor_Setup.php:554, views/metabox/course-contents.php:136, views/metabox/course-topics.php:61, views/pages/view_attempt.php:39, templates/single/quiz/top.php:24
+#: classes/Options.php:412, classes/Options.php:415, classes/Quiz_Attempts_List.php:111, classes/Tutor_Setup.php:554, views/metabox/course-contents.php:148, views/metabox/course-topics.php:64, views/pages/view_attempt.php:39, templates/single/quiz/top.php:24
 msgid "Quiz"
 msgstr ""
 
@@ -1528,7 +1544,7 @@ msgstr ""
 msgid "View Assignment"
 msgstr ""
 
-#: classes/Post_types.php:285, views/metabox/course-topics.php:91
+#: classes/Post_types.php:285, views/metabox/course-topics.php:97
 msgid "Assignments"
 msgstr ""
 
@@ -2397,6 +2413,90 @@ msgstr ""
 msgid "Placeholder"
 msgstr ""
 
+#: restapi/REST_Author.php:37
+msgid "Author details retrieved successfully"
+msgstr ""
+
+#: restapi/REST_Author.php:45
+msgid "Author not found"
+msgstr ""
+
+#: restapi/REST_Course.php:83, restapi/REST_Course.php:207, restapi/REST_Course.php:300
+msgid "Course retrieved successfully"
+msgstr ""
+
+#: restapi/REST_Course.php:92, restapi/REST_Course.php:309
+msgid "Course not found"
+msgstr ""
+
+#: restapi/REST_Course.php:136
+msgid "Course detail retrieved successfully"
+msgstr ""
+
+#: restapi/REST_Course.php:144
+msgid "Detail not found for given ID"
+msgstr ""
+
+#: restapi/REST_Course.php:216
+msgid "Course not found for given terms"
+msgstr ""
+
+#: restapi/REST_Course.php:235
+msgid "Categories field is not an array"
+msgstr ""
+
+#: restapi/REST_Course.php:240
+msgid "Tags field is not an array"
+msgstr ""
+
+#: restapi/REST_Course_Announcement.php:41
+msgid "Announcement retrieved successfully"
+msgstr ""
+
+#: restapi/REST_Course_Announcement.php:49
+msgid "Announcement not found for given ID"
+msgstr ""
+
+#: restapi/REST_Lesson.php:64
+msgid "Lesson retrieved successfully"
+msgstr ""
+
+#: restapi/REST_Lesson.php:72
+msgid "Lesson not found for given topic ID"
+msgstr ""
+
+#: restapi/REST_Quiz.php:47
+msgid "Quiz retrieved successfully"
+msgstr ""
+
+#: restapi/REST_Quiz.php:56
+msgid "Quiz not found for given ID"
+msgstr ""
+
+#: restapi/REST_Quiz.php:100
+msgid "Question retrieved successfully"
+msgstr ""
+
+#: restapi/REST_Quiz.php:109
+msgid "Question not found for given ID"
+msgstr ""
+
+#: restapi/REST_Rating.php:48
+msgid "Course rating retrieved successfully"
+msgstr ""
+
+#: restapi/REST_Rating.php:56
+msgid "Rating not found for given ID"
+msgstr ""
+
+#: restapi/REST_Topic.php:43
+msgid "Topic retrieved successfully"
+msgstr ""
+
+#: restapi/REST_Topic.php:51
+msgid "Topic not found for given ID"
+msgstr ""
+
 #: templates/dashboard.php:52, templates/student-public-profile.php:44, templates/dashboard/index.php:48
 msgid "Howdy,"
 msgstr ""
@@ -3127,7 +3227,7 @@ msgstr ""
 msgid "Delete Topic"
 msgstr ""
 
-#: views/metabox/course-contents.php:46, views/metabox/course-topics.php:30
+#: views/metabox/course-contents.php:46, views/metabox/course-topics.php:33
 msgid "Topic Name"
 msgstr ""
 
@@ -3135,11 +3235,11 @@ msgstr ""
 msgid "Topic title will be publicly show where required, you can call it as a section also in course"
 msgstr ""
 
-#: views/metabox/course-contents.php:59, views/metabox/course-topics.php:42
+#: views/metabox/course-contents.php:59, views/metabox/course-topics.php:45
 msgid "Topic Summary"
 msgstr ""
 
-#: views/metabox/course-contents.php:64, views/metabox/course-topics.php:47
+#: views/metabox/course-contents.php:64, views/metabox/course-topics.php:50
 msgid "The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name."
 msgstr ""
 
@@ -3147,7 +3247,7 @@ msgstr ""
 msgid "Update Topic"
 msgstr ""
 
-#: views/metabox/course-contents.php:132, views/metabox/course-topics.php:75
+#: views/metabox/course-contents.php:144, views/metabox/course-topics.php:78
 msgid "Lesson"
 msgstr ""
 
@@ -3167,12 +3267,16 @@ msgstr ""
 msgid "Add new topic"
 msgstr ""
 
-#: views/metabox/course-topics.php:26, views/metabox/course-topics.php:52
+#: views/metabox/course-topics.php:29, views/metabox/course-topics.php:55
 msgid "Add Topic"
 msgstr ""
 
-#: views/metabox/course-topics.php:35
+#: views/metabox/course-topics.php:38
 msgid "Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments."
+msgstr ""
+
+#: views/metabox/course-topics.php:113
+msgid "Zoom Meeting"
 msgstr ""
 
 #: views/metabox/instructors-metabox.php:15, views/metabox/instructors-metabox.php:15
@@ -4141,6 +4245,10 @@ msgstr ""
 
 #: templates/single/course/course-topics.php:39
 msgid " Lessons"
+msgstr ""
+
+#: templates/single/course/course-topics.php:137
+msgid "Live"
 msgstr ""
 
 #: templates/single/course/instructors.php:21
