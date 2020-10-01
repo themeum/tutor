@@ -1715,7 +1715,7 @@ jQuery(document).ready(function ($) {
      */
     $(document).on('submit', '.tutor-login-form-wrap #loginform', function (e) {
         e.preventDefault();
-        alert('ok');
+        
         var $that = $(this);
         var $form_wrapper = $('.tutor-login-form-wrap');
         var form_data = $that.serialize() + '&action=tutor_user_login';
