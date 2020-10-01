@@ -116,10 +116,26 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 												$lesson_title .= "<i class='$lesson_icon'></i>";
 											}
 
+											$countdown = '';
+											if ($post->post_type === 'tutor_zoom_meeting'){
+												$lesson_title = '<i class="zoom-icon"><img src="'.TUTOR_ZOOM()->url . 'assets/images/zoom-icon-grey.svg"></i>';
+												$start_datetime = get_post_meta($post->ID, '_tutor_zm_start_datetime', true);
+												$meeting_data   = get_post_meta($post->ID, '_tutor_zm_data', true);
+
+												$timezone = isset($meeting_data['timezone']) ? $meeting_data['timezone'] : 'UTC';
+												$meeting_date   = new \DateTime($start_datetime, new \DateTimeZone($timezone));
+												$meeting_date   = $meeting_date->format('Y/m/d H:i:s');
+												
+												$countdown = '<div class="tutor-zoom-lesson-countdown tutor-lesson-duration" data-timer="' . $meeting_date . '"></div>';
+											}
+
 											if ($is_enrolled){
 												$lesson_title .= "<a href='".get_the_permalink()."'> ".get_the_title()." </a>";
 
 												$lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>".tutor_utils()->get_optimized_duration($play_time)."</span>" : '';
+
+												$lesson_title .= $countdown ? '<span class="zoom-live-label">'.__('Live', 'tutor').'</span>' : '';
+												$lesson_title .= $countdown ? $countdown : '';
 
 												echo $lesson_title;
 											}else{
