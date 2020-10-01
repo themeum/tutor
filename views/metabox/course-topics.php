@@ -21,7 +21,10 @@
     <a href="javascript:;" class="create_new_topic_btn tutor-btn bordered-btn"> <i class="tutor-icon-text-document-add-button-with-plus-sign"></i> <?php _e('Add new topic', 'tutor'); ?></a>
 </div>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fb94df0e0a5e5e26d64a2fc09c76514ab2c68fad
 <div class="tutor-metabox-add-topics" style="display: none">
     <h3><?php _e('Add Topic', 'tutor'); ?></h3>
 
@@ -83,7 +86,10 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fb94df0e0a5e5e26d64a2fc09c76514ab2c68fad
 <div class="tutor-modal-wrap tutor-assignment-builder-modal-wrap">
     <div class="tutor-modal-content">
         <div class="modal-header">
@@ -96,4 +102,21 @@
         </div>
         <div class="modal-container"></div>
     </div>
+<<<<<<< HEAD
+=======
+</div>
+
+<div class="tutor-modal-wrap tutor-zoom-meeting-modal-wrap">
+    <div class="tutor-modal-content">
+        <div class="modal-header">
+            <div class="modal-title">
+                <h1><?php _e('Zoom Meeting', 'tutor'); ?></h1>
+            </div>
+            <div class="modal-close-wrap">
+                <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i> </a>
+            </div>
+        </div>
+        <div class="modal-container"></div>
+    </div>
+>>>>>>> fb94df0e0a5e5e26d64a2fc09c76514ab2c68fad
 </div>
