@@ -15,7 +15,6 @@ if ( ! defined( 'ABSPATH' ) )
 
 
 do_action('tutor_course/single/before/complete_form');
-
 $is_completed_course = tutor_utils()->is_completed_course();
 
 if ( ! $is_completed_course) {
