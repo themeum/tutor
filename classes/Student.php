@@ -43,8 +43,17 @@ class Student {
 			'password'                  => __('Password field is required', 'tutor'),
 			'password_confirmation'     => __('Password Confirmation field is required', 'tutor'),
 		));
+		
 
 		$validation_errors = array();
+
+		//check registration_errors
+		$errors = apply_filters('registration_errors',new  \WP_Error,'','');
+		foreach ($errors->errors as $key => $value) {
+		 	echo $validation_errors[$key] = $value[0];
+		 	
+		 }
+
 		foreach ($required_fields as $required_key => $required_value){
 			if (empty($_POST[$required_key])){
 				$validation_errors[$required_key] = $required_value;

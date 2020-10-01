@@ -6,9 +6,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 class Ajax{
 	public function __construct() {
-		//test 
-		add_action('tutor_login_form',array($this,'tutor_login_customize'));
-		//test end
+
 		add_action('wp_ajax_sync_video_playback', array($this, 'sync_video_playback'));
 		add_action('wp_ajax_nopriv_sync_video_playback', array($this, 'sync_video_playback_noprev'));
 		add_action('wp_ajax_tutor_place_rating', array($this, 'tutor_place_rating'));
@@ -38,12 +36,7 @@ class Ajax{
 		add_action('wp_ajax_nopriv_tutor_user_login', array($this, 'process_ajax_login'));
 	}
 
-	//test
-	public function tutor_login_customize()
-	{
-		do_action('login_form');
-	}
-	//test end
+
 
 	/**
 	 * Update video information and data when necessary
