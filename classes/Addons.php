@@ -88,7 +88,7 @@ class Addons {
 			),
 			'tutor-zoom' => array(
 				'name'          => __('Tutor Zoom Integration', 'tutor'),
-				'description'   => __('Host live classes and allow students to join Zoom calls right from the lesson page! Broadcast zoom calls in lessons directly', 'tutor'),
+				'description'   => __('Connect Tutor LMS with Zoom to host live online classes. Students can attend live classes right from the lesson page.', 'tutor'),
 			),
 			'google-classroom' => array(
 				'name'          => __('Google Classroom Integration', 'tutor'),
