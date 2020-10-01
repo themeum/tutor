@@ -17,9 +17,8 @@ if ( ! defined( 'ABSPATH' ) )
 do_action('tutor_course/single/before/complete_form');
 
 $is_completed_course = tutor_utils()->is_completed_course();
-$enable_state = apply_filters('is_tutor_course_complete_button_enabled', array('course_id'=>get_the_ID(), 'state'=>true));
 
-if ( ! $is_completed_course && $enable_state['state']) {
+if ( ! $is_completed_course) {
 	?>
     <div class="tutor-course-compelte-form-wrap">
 
