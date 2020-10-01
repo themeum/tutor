@@ -92,6 +92,17 @@
 
     <div class="tutor-form-row">
         <div class="tutor-form-col-12">
+            <div class="tutor-captcha">
+                <?php
+                    apply_filters('login_form_middle','','');
+                    do_action('login_form');
+                ?>
+            </div>
+        </div>
+    </div>    
+
+    <div class="tutor-form-row">
+        <div class="tutor-form-col-12">
             <div class="tutor-form-group tutor-reg-form-btn-wrap">
                 <button type="submit" name="tutor_register_student_btn" value="register" class="tutor-button"><?php _e('Register', 'tutor'); ?></button>
             </div>
