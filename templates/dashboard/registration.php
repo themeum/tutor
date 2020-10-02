@@ -5,8 +5,12 @@
  */
 
 ?>
+<?php do_action('tutor_before_student_reg_form');?>
 
 <form method="post" enctype="multipart/form-data">
+
+    <?php do_action('tutor_student_reg_form_start');?>
+
 	<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
     <input type="hidden" value="tutor_register_student" name="tutor_action"/>
 
@@ -95,13 +99,14 @@
         <div class="tutor-form-col-12">
             <div class="tutor-captcha">
                 <?php
+                    //providing register_form hook
                     do_action('register_form');
-                    
-                    
                 ?>
             </div>
         </div>
     </div>    
+
+    <?php do_action('tutor_student_reg_form_end');?>
 
     <div class="tutor-form-row">
         <div class="tutor-form-col-12">
@@ -112,3 +117,4 @@
     </div>
 
 </form>
+<?php do_action('tutor_after_student_reg_form');?>
