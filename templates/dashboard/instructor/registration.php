@@ -93,6 +93,17 @@
 
     <div class="tutor-form-row">
         <div class="tutor-form-col-12">
+            <div class="tutor-captcha">
+                <?php
+                    //providing register_form hook
+                    do_action('register_form');
+                ?>
+            </div>
+        </div>
+    </div> 
+
+    <div class="tutor-form-row">
+        <div class="tutor-form-col-12">
             <div class="tutor-form-group tutor-reg-form-btn-wrap">
                 <button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-button"><?php _e('Register as instructor', 'tutor'); ?></button>
             </div>
