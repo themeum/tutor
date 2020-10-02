@@ -5,8 +5,12 @@
  */
 
 ?>
+<?php do_action('tutor_before_instructor_reg_form');?>
 
 <form method="post" enctype="multipart/form-data">
+
+    <?php do_action('tutor_instructor_reg_form_start');?>
+
 	<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
     <input type="hidden" value="tutor_register_instructor" name="tutor_action"/>
 
@@ -102,6 +106,8 @@
         </div>
     </div> 
 
+    <?php do_action('tutor_instructor_reg_form_end');?>
+
     <div class="tutor-form-row">
         <div class="tutor-form-col-12">
             <div class="tutor-form-group tutor-reg-form-btn-wrap">
@@ -111,3 +117,5 @@
     </div>
 
 </form>
+
+<?php do_action('tutor_after_instructor_reg_form');?>
