@@ -47,7 +47,10 @@ class Student {
 
 		$validation_errors = array();
 
-		//check registration_errors
+		/*
+		*registration_errors
+		*push into validation_errors	
+		*/
 		$errors = apply_filters('registration_errors',new  \WP_Error,'','');
 		foreach ($errors->errors as $key => $value) 
 		{
