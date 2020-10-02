@@ -333,7 +333,8 @@ Group Field Option
 }
 #tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal,
 .tutor-quiz .open-tutor-quiz-modal,
-.course-content-item .open-tutor-assignment-modal {
+.course-content-item .open-tutor-assignment-modal,
+.course-content-item .tutor-zoom-meeting-modal-open-btn {
 	-webkit-box-flex: 1;
 	-ms-flex: 1;
 	flex: 1;

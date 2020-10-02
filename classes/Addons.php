@@ -86,6 +86,14 @@ class Addons {
 				'name'          => __('Quiz Export/Import', 'tutor'),
 				'description'   => __('Save time by exporting/importing quiz data with easy options.', 'tutor'),
 			),
+			'tutor-zoom' => array(
+				'name'          => __('Tutor Zoom Integration', 'tutor'),
+				'description'   => __('Connect Tutor LMS with Zoom to host live online classes. Students can attend live classes right from the lesson page.', 'tutor'),
+			),
+			'google-classroom' => array(
+				'name'          => __('Google Classroom Integration', 'tutor'),
+				'description'   => __('Helps connect Google Classrooms with Tutor LMS courses, allowing you to use features like Classroom streams and files directly from the Tutor LMS course.', 'tutor'),
+			),
 		);
 
 		return $addons;
