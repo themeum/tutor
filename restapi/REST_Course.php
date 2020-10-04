@@ -126,7 +126,7 @@ class REST_Course
 
 			'video' =>get_post_meta($post_id,'_video',false),
 			
-			'disable_qa' =>get_post_meta($post_id,'_tutor_disable_qa','_video',false),
+			'disable_qa' =>get_post_meta($post_id,'_tutor_disable_qa','_video',false)
 		);
 
 		if($detail)
@@ -181,15 +181,15 @@ class REST_Course
 		        array(
 		            'taxonomy' => $this->course_cat_tax,
 		            'field'    => 'name',
-		            'terms'    => $categories,
+		            'terms'    => $categories
 		        ),
 		        array(
 		            'taxonomy' => $this->course_tag_tax,
 		            'field'    => 'name',
-		            'terms'    => $tags,
+		            'terms'    => $tags
 		            
-		        ),
-		    ),
+		        )
+		    )
 		);
 
 		$query = new WP_Query ($args);
@@ -266,10 +266,10 @@ class REST_Course
 		    	'relation'=>'AND',
 		        array(
 		            'key'=> '_tutor_product',
-		            'value'=> "yes",
+		            'value'=> "yes"
 		           
-		        ),
-		    ),
+		        )
+		    )
 		);
 
 
