@@ -18,7 +18,7 @@ class RestAPI {
 
 	use Custom_Validation;
 
-	const namespace = 'tutor/v1';
+	private $namespace = 'tutor/v1';
 
 	protected $course_post_type;
 
@@ -60,7 +60,7 @@ class RestAPI {
 	}
 
 
-	private function loader($className):void
+	private function loader($className)
 	{
 		if ( ! class_exists($className)){
 			$className = preg_replace(
@@ -86,7 +86,7 @@ class RestAPI {
 
 		//courses
 		register_rest_route(
-			self::namespace,
+			$this->namespace,
 			'/courses',
 			array(
 				'methods'=> "GET",
@@ -94,12 +94,12 @@ class RestAPI {
 					$this->courseObj,'course'
 				),
 				'permission_callback'=> '__return_true'
-			),
+			)
 		);		
 
 		//courses by terms cat and tag
 		register_rest_route(
-			self::namespace,
+			$this->namespace,
 			'/course-by-terms',
 			array(
 				'methods'=> "POST",
@@ -107,12 +107,12 @@ class RestAPI {
 					$this->courseObj,'course_by_terms'
 				),
 				'permission_callback'=> '__return_true'
-			),
+			)
 		);		
 
 		//courses by terms cat and tag
 		register_rest_route(
-			self::namespace,
+			$this->namespace,
 			'/course-sorting-by-price',
 			array(
 				'methods'=> "GET",
@@ -129,16 +129,16 @@ class RestAPI {
 					),
 					'page'=>array(
 						'required'=> false,
-						'type'=> 'number',
+						'type'=> 'number'
 					)
 				),
 				'permission_callback'=> '__return_true'
-			),
+			)
 		);
 
 		//course details
 		register_rest_route(
-			self::namespace,
+			$this->namespace,
 			'/course-detail/(?P<id>\d+)',
 			array(
 				'methods'=> 'GET',
@@ -153,12 +153,12 @@ class RestAPI {
 					)
 				),
 				'permission_callback'=> '__return_true'
-			),
+			)
 		);
 
 		//course topic
 		register_rest_route(
-			self::namespace,
+			$this->namespace,
 			'/course-topic/(?P<id>\d+)',
 			array(
 				'methods'=> 'GET',
@@ -173,12 +173,12 @@ class RestAPI {
 					)
 				),
 				'permission_callback'=> '__return_true'
-			),
+			)
 		);		
 
 		//lesson by topic
 		register_rest_route(
-			self::namespace,
+			$this->namespace,
 			'/lesson/(?P<id>\d+)',
 			array(
 				'methods'=> 'GET',
@@ -193,12 +193,12 @@ class RestAPI {
 					)
 				),
 				'permission_callback'=> '__return_true'
-			),
+			)
 		);		
 
 		//course annoucement by course id
 		register_rest_route(
-			self::namespace,
+			$this->namespace,
 			'/course-annoucement/(?P<id>\d+)',
 			array(
 				'methods'=> 'GET',
@@ -213,12 +213,12 @@ class RestAPI {
 					)
 				),
 				'permission_callback'=> '__return_true'
-			),
+			)
 		);		
 
 		//course annoucement by course id
 		register_rest_route(
-			self::namespace,
+			$this->namespace,
 			'/quiz/(?P<id>\d+)',
 			array(
 				'methods'=> 'GET',
@@ -233,12 +233,12 @@ class RestAPI {
 					)
 				),
 				'permission_callback'=> '__return_true'
-			),
+			)
 		);		
 
 		//quiz question answer by quiz id
 		register_rest_route(
-			self::namespace,
+			$this->namespace,
 			'/quiz-question-answer/(?P<id>\d+)',
 			array(
 				'methods'=> 'GET',
@@ -253,12 +253,12 @@ class RestAPI {
 					)
 				),
 				'permission_callback'=> '__return_true'
-			),
+			)
 		);			
 
 		//author detail by id
 		register_rest_route(
-			self::namespace,
+			$this->namespace,
 			'/author-information/(?P<id>\d+)',
 			array(
 				'methods'=> 'GET',
@@ -273,12 +273,12 @@ class RestAPI {
 					)
 				),
 				'permission_callback'=> '__return_true'
-			),
+			)
 		);			
 
 		//reviews by course id
 		register_rest_route(
-			self::namespace,
+			$this->namespace,
 			'/course-rating/(?P<id>\d+)',
 			array(
 				'methods'=> 'GET',
@@ -293,7 +293,7 @@ class RestAPI {
 					)
 				),
 				'permission_callback'=> '__return_true'
-			),
+			)
 		);		
 
 
