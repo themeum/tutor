@@ -21,10 +21,11 @@ $course_id = 0;
 if ($post->post_type === 'tutor_quiz'){
 	$course = tutor_utils()->get_course_by_quiz(get_the_ID());
 	$course_id = $course->ID;
-}elseif($post->post_type === 'tutor_assignments'){
+} elseif ($post->post_type === 'tutor_assignments'){
 	$course_id = get_post_meta($post->ID, '_tutor_course_id_for_assignments', true);
-
-} else{
+} elseif ($post->post_type === 'tutor_zoom_meeting'){
+	$course_id = get_post_meta($post->ID, '_tutor_zm_for_course', true);
+} else {
 	$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
 }
 $disable_qa_for_this_course = get_post_meta($course_id, '_tutor_disable_qa', true);
