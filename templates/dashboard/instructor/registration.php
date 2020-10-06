@@ -97,9 +97,10 @@
 
     <div class="tutor-form-row">
         <div class="tutor-form-col-12">
-            <div class="tutor-captcha">
+            <div class="tutor-form-group">
                 <?php
                     //providing register_form hook
+                    do_action('tutor_instructor_reg_form_middle');
                     do_action('register_form');
                 ?>
             </div>
