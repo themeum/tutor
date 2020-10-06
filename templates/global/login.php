@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) )
 ?>
 
 <div class="tutor-login-form-wrap">
-	<?php //wp_login_form(); ?>
+	<?php do_action("tutor_before_login_form");?>
 
     <?php
     $current_url = tutils()->get_current_url();
@@ -54,43 +54,63 @@ if ( ! defined( 'ABSPATH' ) )
 	ob_start();
 	tutor_nonce_field();
 	$nonce_field = ob_get_clean();
+	?>
 
-    $form = '
-		<form name="' . $args['form_id'] . '" id="' . $args['form_id'] . '" method="post">
-		'.do_action("tutor_login_form_before_field").'
-		'.$nonce_field.'
+	<form name="<?= $args['form_id']?>" id="<?= $args['form_id']?>" method="post">
+
+	<?php do_action("tutor_login_form_start");?>
+
+	<?php echo $nonce_field;?>
+	
+	<input type="hidden" name="tutor_action" value="tutor_user_login" />
+		<p class="login-username">
+			<input type="text" placeholder="<?= esc_html( $args['label_username'] )?>" name="log" id="<?= esc_attr( $args['id_username'] )?>" class="input" value="<?= esc_attr( $args['value_username'] )?>" size="20" />
+		</p>
+
+		<p class="login-password">
+			<input type="password" placeholder="<?= esc_html( $args['label_password'] )?>" name="pwd" id="<?= esc_attr( $args['id_password'] )?>" class="input" value="" size="20"/>
+
+		</p>
+		<?php 
+			do_action("tutor_login_form_middle");
+			do_action("login_form");
+			apply_filters("login_form_middle",'','');
+		?>
+
+
+		<div class="tutor-login-rememeber-wrap">
+			<?php  if($args['remember']):?>
+			<p class="login-remember">
+				<label>
+					<input name="rememberme" type="checkbox" id="<?= esc_attr( $args['id_remember'] )?>" 
+					value="forever" 
+					 <?php $args['value_remember'] ? 'checked' : '';?>
+					>
+					<?= esc_html($args['label_remember']);?>
+				</label>
+			</p>
+			<?php endif;?>
+		    <a href="<?= esc_url($args['wp_lostpassword_url'])?>">
+		    	<?= esc_html($args['wp_lostpassword_label']);?>
+		    </a>
+		</div>
 		
-		<input type="hidden" name="tutor_action" value="tutor_user_login" />
-			<p class="login-username">
-				<input type="text" placeholder="'.esc_html( $args['label_username'] ).'" name="log" id="' . esc_attr( $args['id_username'] ) . '" class="input" value="' . esc_attr( $args['value_username'] ) . '" size="20" />
-			</p>
-			<p class="login-password">
-				<input type="password" placeholder="'.esc_html( $args['label_password'] ).'" name="pwd" id="' . esc_attr( $args['id_password'] ) . '" class="input" value="" size="20" />
+		<?php do_action("tutor_login_form_end");?>
 
-			</p>
-			<div class="tutor-captcha">
-			'.apply_filters("login_form_middle",'','').'
-			'.do_action("login_form").'
-			'.do_action("tutor_login_form_middle").'
+		<p class="login-submit">
+			<input type="submit" name="wp-submit" id="<?= esc_attr( $args['id_submit'] )?>" class="button button-primary" value="<?= esc_attr( $args['label_log_in'] )?>" />
+			<input type="hidden" name="redirect_to" value="<?= esc_url( $args['redirect'] )?>" />
+		</p>
+		
+		<p class="tutor-form-register-wrap">
+		    <a href="<?= esc_url($register_url)?>">
+		    	<?= esc_html($args['label_create_new_account']);?>
+		    </a>
+        </p>
+	</form>
 
-			</div>
-			<div class="tutor-login-rememeber-wrap">
-			' . ( $args['remember'] ? '<p class="login-remember"><label><input name="rememberme" type="checkbox" id="' . esc_attr( $args['id_remember'] ) . '" value="forever"' . ( $args['value_remember'] ? ' checked="checked"' : '' ) . ' /> ' . esc_html( $args['label_remember'] ) . '</label></p>' : '' ) . '
-			
-			    <a href="'.$args['wp_lostpassword_url'].'">'.$args['wp_lostpassword_label'].'</a>
-			</div>
-			<p class="login-submit">
-				<input type="submit" name="wp-submit" id="' . esc_attr( $args['id_submit'] ) . '" class="button button-primary" value="' . esc_attr( $args['label_log_in'] ) . '" />
-				<input type="hidden" name="redirect_to" value="' . esc_url( $args['redirect'] ) . '" />
-			</p>
-			'.do_action("tutor_login_form_after_submit").'
-			<p class="tutor-form-register-wrap">
-			    <a href="'. esc_url($register_url). '">'.$args['label_create_new_account'].'</a>
-            </p>
-		</form>';
-    echo $form;
-
-    #@TODO: student_register_url() return false, it must be an valid url.
-
+    <?php
+    	//#@TODO: student_register_url() return false, it must be an valid url.
+     	do_action("tutor_after_login_form");
     ?>
 </div>
