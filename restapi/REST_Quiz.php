@@ -31,7 +31,8 @@ class REST_Quiz
 
 		$quizs = $wpdb->get_results(
 			$wpdb->prepare("SELECT ID, post_title, post_content, post_name FROM $table WHERE post_type = %s AND post_parent = %d", $this->post_type, $this->post_parent)
-		);	
+		);
+
 		$data = [];
 
 		if(count($quizs)>0)
@@ -48,8 +49,9 @@ class REST_Quiz
 					'data'=> $data
 				);
 
-				return self::send($response);
+				
 			}
+			return self::send($response);
 		}	
 		$response = array(
 			'status_code'=> 'not_found',
