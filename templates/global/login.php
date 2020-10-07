@@ -71,6 +71,7 @@ if ( ! defined( 'ABSPATH' ) )
 			<input type="password" placeholder="<?= esc_html( $args['label_password'] )?>" name="pwd" id="<?= esc_attr( $args['id_password'] )?>" class="input" value="" size="20"/>
 
 		</p>
+		
 		<?php 
 			do_action("tutor_login_form_middle");
 			do_action("login_form");
