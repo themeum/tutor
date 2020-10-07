@@ -200,13 +200,14 @@ class WooCommerce extends Tutor_Base {
 			if (is_array($enrolled_ids) && count($enrolled_ids)) {
 				foreach ($enrolled_ids as $enrolled_id) {
 
+					tutils()->course_enrol_status_change($enrolled_id, $status_to);
+
+					// Invoke enrolled hook
 					if($status_to == 'completed'){
 						$user_id = get_post_field('post_author', $enrolled_id);
 						$course_id = get_post_field('post_parent', $enrolled_id);
 						do_action('tutor_after_enrolled', $course_id, $user_id);
 					}
-
-					tutils()->course_enrol_status_change($enrolled_id, $status_to);
 				}
 			}
 		}
