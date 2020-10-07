@@ -216,7 +216,7 @@ class RestAPI {
 			)
 		);		
 
-		//course annoucement by course id
+		//quiz by topic id
 		register_rest_route(
 			$this->namespace,
 			'/quiz/(?P<id>\d+)',
