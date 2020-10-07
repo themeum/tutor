@@ -256,6 +256,26 @@ class RestAPI {
 			)
 		);			
 
+		//quiz attempt details by quiz id
+		register_rest_route(
+			$this->namespace,
+			'/quiz-attempt-details/(?P<id>\d+)',
+			array(
+				'methods'=> 'GET',
+				'callback'=> array(
+					$this->quizObj,'quiz_attempt_details'
+				),
+				'args'=> array(
+					'id'=>array(
+						'validate_callback'=>function($param){
+							return is_numeric($param);
+						}
+					)
+				),
+				'permission_callback'=> '__return_true'
+			)
+		);			
+
 		//author detail by id
 		register_rest_route(
 			$this->namespace,
