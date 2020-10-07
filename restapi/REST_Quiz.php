@@ -19,7 +19,7 @@ class REST_Quiz
 	private $t_quiz_question = "tutor_quiz_questions";
 	private $t_quiz_ques_ans = "tutor_quiz_question_answers";
 	private $t_quiz_attempt = "tutor_quiz_attempts";
-	private $t_quiz_att_ans = "tutor_quiz_attempt_answers";
+	private $t_quiz_attempt_ans = "tutor_quiz_attempt_answers";
 
 	public function quiz_with_settings(WP_REST_Request $request)
 	{
@@ -114,6 +114,118 @@ class REST_Quiz
 
 			return self::send($response);		
 	}
+
+	public function quiz_attempt_details(WP_REST_Request $request)
+	{
+		$quiz_id = $request->get_param('id');
+
+		global $wpdb;
+		$quiz_attempt = $wpdb->prefix.$this->t_quiz_attempt;
+
+
+		$attempts = $wpdb->get_results(
+			$wpdb->prepare("SELECT att.user_id,att.total_questions,att.total_answered_questions,att.total_marks,att.earned_marks,att.attempt_info,att.attempt_status,att.attempt_started_at,att.attempt_ended_at,att.is_manually_reviewed,att.manually_reviewed_at FROM $quiz_attempt att WHERE att.quiz_id = %d", $quiz_id)
+		);
+		
+		if(count($attempts)>0)
+		{
+			//unserialize each attempt info
+			foreach ($attempts as $key => $attempt) {
+				$attempt->attempt_info = maybe_unserialize($attempt->attempt_info);
+				//attach attempt ans
+				$answers = $this->get_quiz_attemp_ans($quiz_id);
+				
+				if($answers !==false)
+				{
+					$attempt->attempts_answer = $answers;
+				}
+				else
+				{
+					$attempt->attempts_answer = [];
+				}
+				
+			}
+
+			$response = array(
+				'status_code'=> 'success',
+				'message'=> __('Quiz attempts retrieved successfully','tutor'),
+				'data'=> $attempts
+			);
+
+			return self::send($response);						
+		}
+		$response = array(
+			'status_code'=> 'not_found',
+			'message'=> __('Quiz attempts not found for given ID','tutor'),
+			'data'=> []
+		);
+
+		return self::send($response);
+
+	}
+
+	/*
+	*required quiz_id
+	*return attempts ans
+	*/
+	protected function get_quiz_attemp_ans($quiz_id)
+	{
+		global $wpdb;
+		$quiz_attempt_ans = $wpdb->prefix.$this->t_quiz_attempt_ans;
+		$quiz_question = $wpdb->prefix.$this->t_quiz_question;		
+		//get attempt answers
+		$answers = $wpdb->get_results(
+			$wpdb->prepare("SELECT q.question_title,att_ans.given_answer,att_ans.question_mark,att_ans.achieved_mark,att_ans.minus_mark,att_ans.is_correct FROM $quiz_attempt_ans as att_ans JOIN $quiz_question q ON q.question_id = att_ans.question_id WHERE att_ans.quiz_id = %d",$quiz_id)
+		);
+
+		if(count($answers)>0)
+		{
+			//unserialize each given answer
+			foreach ($answers as $key => $answer) {
+				$answer->given_answer = maybe_unserialize($answer->given_answer);
+
+				if(is_numeric($answer->given_answer) || is_array($answer->given_answer))
+				{
+					$ids = $answer->given_answer;
+					$ans_title = $this->answer_titles_by_id($ids);
+					$answer->given_answer = $ans_title;
+				}
+			}
+
+			return $answers;			
+		}
+		return false;
+	}
+	/*
+	*require ids (1,2,3)
+	*return results containing answer title
+	*/
+	protected function answer_titles_by_id($id)
+	{
+		global $wpdb;
+		$table = $wpdb->prefix.$this->t_quiz_ques_ans;
+
+		if(is_array($id))
+		{
+			$string = implode(',', $id);
+			$array=array_map('intval', explode(',', $string));
+			$array = implode("','",$array);
+
+			$results = $wpdb->get_results(
+				"SELECT answer_title FROM $table WHERE answer_id IN ('".$array."')"
+			);			
+		}
+		else
+		{
+			$results = $wpdb->get_results(
+				"SELECT answer_title FROM $table WHERE answer_id = {$id}"
+			);
+			
+		}
+
+
+		return $results;
+	} 
 }
 
 ?>
