@@ -1948,7 +1948,14 @@ class Utils {
 		// Insert the post into the database
 		$isEnrolled = wp_insert_post( $enroll_data );
 		if ($isEnrolled) {
+
+			// Run this hook for both of pending and completed enrollment
 			do_action('tutor_after_enroll', $course_id, $isEnrolled);
+
+			// Run this hook for completed enrollment regardless of payment provider and free/paid mode
+			if($enroll_data['post_status'] == 'completed'){
+				do_action('tutor_after_enrolled', $course_id, $user_id);
+			}
 
 			//Mark Current User as Students with user meta data
 			update_user_meta( $user_id, '_is_tutor_student', tutor_time() );

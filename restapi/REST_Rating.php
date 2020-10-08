@@ -12,8 +12,7 @@ use WP_Comment_Query;
 if(!defined( 'ABSPATH' ))
 exit;
 
-class REST_Rating
-{
+class REST_Rating {
 	use REST_Response;
 
 	private $post_id;
@@ -23,8 +22,7 @@ class REST_Rating
 	*require course id
 	*return comment/review with meta by course id and post type  
 	*/
-	public function course_rating(WP_REST_Request $request)
-	{
+	public function course_rating(WP_REST_Request $request) {
 		$this->post_id = $request->get_param('id');
 
 		global $wpdb;
@@ -40,8 +38,7 @@ class REST_Rating
 					$this->post_id,$this->post_type
 				));
 
-		if(count($ratings)>0)
-		{
+		if (count($ratings)>0) {
 
 			$response = array(
 				'status_code'=> 'success',
@@ -51,13 +48,13 @@ class REST_Rating
 
 			return self::send($response);
 		}
-			$response = array(
-				'status_code'=> 'not_found',
-				'message'=> __('Rating not found for given ID','tutor'),
-				'data'=> []
-			);
+		
+		$response = array(
+			'status_code'=> 'not_found',
+			'message'=> __('Rating not found for given ID','tutor'),
+			'data'=> []
+		);
 
-			return self::send($response);		
+		return self::send($response);		
 	}
 }
-?>

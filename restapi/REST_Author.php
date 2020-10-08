@@ -5,8 +5,8 @@ use WP_REST_Request;
 if(!defined( 'ABSPATH' ))
 exit;
 
-class REST_Author
-{
+class REST_Author {
+
 	use REST_Response;
 
 	private $user_id;
@@ -15,8 +15,7 @@ class REST_Author
 	*require user id
 	*return json object with user detail 
 	*/
-	public function author_detail(WP_REST_Request $request)
-	{
+	public function author_detail(WP_REST_Request $request) {
 		$this->user_id = $request->get_param('id');
 		global $wpdb;
 		$table = $wpdb->prefix."users";
@@ -27,8 +26,7 @@ class REST_Author
 			$this->user_id
 		));
 
-		if($author)
-		{
+		if($author) {
 			//get author course id
 			$author->courses = get_user_meta($this->user_id,'_tutor_instructor_course_id',false);
 
@@ -40,13 +38,13 @@ class REST_Author
 
 			return self::send($response);
 		}
-			$response = array(
-				'status_code'=> 'invalid_id',
-				'message'=> __('Author not found','tutor'),
-				'data'=> []
-			);
+		
+		$response = array(
+			'status_code'=> 'invalid_id',
+			'message'=> __('Author not found','tutor'),
+			'data'=> []
+		);
 
-			return self::send($response);		
+		return self::send($response);		
 	}
 }
-?>

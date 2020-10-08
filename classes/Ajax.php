@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 class Ajax{
 	public function __construct() {
+
 		add_action('wp_ajax_sync_video_playback', array($this, 'sync_video_playback'));
 		add_action('wp_ajax_nopriv_sync_video_playback', array($this, 'sync_video_playback_noprev'));
 		add_action('wp_ajax_tutor_place_rating', array($this, 'tutor_place_rating'));
@@ -34,6 +35,8 @@ class Ajax{
 		 */
 		add_action('wp_ajax_nopriv_tutor_user_login', array($this, 'process_ajax_login'));
 	}
+
+
 
 	/**
 	 * Update video information and data when necessary
