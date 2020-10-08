@@ -21,7 +21,6 @@
     <a href="javascript:;" class="create_new_topic_btn tutor-btn bordered-btn"> <i class="tutor-icon-text-document-add-button-with-plus-sign"></i> <?php _e('Add new topic', 'tutor'); ?></a>
 </div>
 
-
 <div class="tutor-metabox-add-topics" style="display: none">
     <h3><?php _e('Add Topic', 'tutor'); ?></h3>
 
@@ -95,8 +94,6 @@
         </div>
         <div class="modal-container"></div>
     </div>
-<<<<<<< HEAD
-=======
 </div>
 
 <div class="tutor-modal-wrap tutor-zoom-meeting-modal-wrap">
@@ -111,5 +108,4 @@
         </div>
         <div class="modal-container"></div>
     </div>
-
 </div>

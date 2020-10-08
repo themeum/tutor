@@ -625,7 +625,7 @@ class Course extends Tutor_Base {
 
 		$wpdb->insert($wpdb->comments, $data);
 
-		do_action('tutor_course_complete_after', $course_id);
+		do_action('tutor_course_complete_after', $course_id, $user_id);
 
 		wp_redirect(get_the_permalink($course_id));
 	}
