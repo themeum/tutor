@@ -184,6 +184,7 @@ class Quiz {
 	}
 
 	public function answering_quiz(){
+
 		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_answering_quiz_question' ){
 			return;
 		}
@@ -304,6 +305,15 @@ class Quiz {
 						    'minus_mark'      => 0,
 						    'is_correct'      => $is_answer_was_correct ? 1 : 0,
 					    );
+					
+					 	/*
+						check if question_type open ended or short ans the set is_correct default value null before saving 
+					 	*/
+						if($question_type==="open_ended" || $question_type ==="short_answer")
+						{
+							$answers_data['is_correct'] = NULL;
+						}
+						
 					    $wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
 				    }
 			    }
@@ -336,6 +346,7 @@ class Quiz {
 	 */
 
 	public function finishing_quiz_attempt(){
+
 		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_finish_quiz_attempt' ){
 			return;
 		}
@@ -397,9 +408,12 @@ class Quiz {
 	 */
 
 	public function review_quiz_answer(){
+
 		global $wpdb;
 		$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
+
 		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
+
 		$mark_as = sanitize_text_field($_GET['mark_as']);
 
 		$attempt_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = {$attempt_answer_id} ");
@@ -430,7 +444,7 @@ class Quiz {
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
 
-		}elseif($mark_as === 'incorrect' && $is_correct){
+		}elseif($mark_as === 'incorrect'){
 
 			$answer_update_data = array(
 				'achieved_mark' => '0.00',
