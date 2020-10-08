@@ -127,6 +127,25 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
                                             </div>
 											<?php
 
+										}elseif($post->post_type === 'tutor_zoom_meeting'){
+											/**
+											 * Zoom Meeting
+											 * @since this block v.1.7.1
+											 */
+
+											?>
+                                            <div class="tutor-single-lesson-items zoom-meeting-single-item zoom-meeting-single-item-<?php echo $post->ID; ?> <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>"
+                                                 data-assignment-id="<?php echo $post->ID; ?>">
+                                                <a href="<?php echo get_permalink($post->ID); ?>" class="sidebar-single-zoom-meeting-a">
+													<i class="zoom-icon"><img src="<?php echo TUTOR_ZOOM()->url; ?>assets/images/zoom-icon-grey.svg"></i>
+                                                    <span class="lesson_title"> <?php echo $post->post_title; ?> </span>
+                                                    <span class="tutor-lesson-right-icons">
+                                                        <?php do_action('tutor/lesson_list/right_icon_area', $post); ?>
+                                                    </span>
+                                                </a>
+                                            </div>
+											<?php
+
 										}else{
 
 											/**
