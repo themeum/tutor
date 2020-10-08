@@ -5,12 +5,17 @@
  */
 
 ?>
+<?php do_action('tutor_before_student_reg_form');?>
 
 <form method="post" enctype="multipart/form-data">
+
+    <?php do_action('tutor_student_reg_form_start');?>
+
 	<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
     <input type="hidden" value="tutor_register_student" name="tutor_action"/>
 
     <?php
+    
     $errors = apply_filters('tutor_student_register_validation_errors', array());
     if (is_array($errors) && count($errors)){
         echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
@@ -92,6 +97,20 @@
 
     <div class="tutor-form-row">
         <div class="tutor-form-col-12">
+            <div class="tutor-form-group">
+            <?php
+                //providing register_form hook
+                do_action('tutor_student_reg_form_middle');
+                do_action('register_form');
+            ?>
+            </div>
+        </div>
+    </div>    
+
+    <?php do_action('tutor_student_reg_form_end');?>
+
+    <div class="tutor-form-row">
+        <div class="tutor-form-col-12">
             <div class="tutor-form-group tutor-reg-form-btn-wrap">
                 <button type="submit" name="tutor_register_student_btn" value="register" class="tutor-button"><?php _e('Register', 'tutor'); ?></button>
             </div>
@@ -99,3 +118,4 @@
     </div>
 
 </form>
+<?php do_action('tutor_after_student_reg_form');?>
