@@ -1,5 +1,4 @@
 <?php
-
 /**
  * RestAPI class
  *
@@ -7,7 +6,7 @@
  * @author_uri: https://themeum.com
  * @package Tutor
  * @since v.1.5.0
-*/
+ */
 
 namespace TUTOR;
 
@@ -42,8 +41,8 @@ class RestAPI {
 
 		$this->path = plugin_dir_path(TUTOR_FILE);
 		//autoloading clases
-		if ( function_exists( '__autoload' ) ) {
-			spl_autoload_register( '__autoload' );
+		if (function_exists('__autoload')) {
+			spl_autoload_register('__autoload');
 		}
 		spl_autoload_register(array($this, 'loader'));
 
@@ -56,83 +55,80 @@ class RestAPI {
 		$this->authorObj = new REST_Author;
 		$this->ratingObj = new REST_Rating;
 
-		add_action('rest_api_init', array($this,'init_routes'));
+		add_action('rest_api_init', array($this, 'init_routes'));
 	}
 
 
-	private function loader($className)
-	{
-		if ( ! class_exists($className)){
+	private function loader($className) {
+		if (!class_exists($className)) {
 			$className = preg_replace(
 				array('/([a-z])([A-Z])/', '/\\\/'),
 				array('$1$2', DIRECTORY_SEPARATOR),
 				$className
 			);
 
-			$className = str_replace('TUTOR'.DIRECTORY_SEPARATOR, 'restapi'.DIRECTORY_SEPARATOR, $className);
-			$file_name = $this->path.$className.'.php';
+			$className = str_replace('TUTOR' . DIRECTORY_SEPARATOR, 'restapi' . DIRECTORY_SEPARATOR, $className);
+			$file_name = $this->path . $className . '.php';
 
-			if (file_exists($file_name) ) {
+			if (file_exists($file_name)) {
 				require_once $file_name;
 			}
-		}		
+		}
 	}
 
 	/*
 	init all routes for api
 	*/
-	public function init_routes()
-	{
-
+	public function init_routes() {
 		//courses
 		register_rest_route(
 			$this->namespace,
 			'/courses',
 			array(
-				'methods'=> "GET",
-				'callback'=> array(
-					$this->courseObj,'course'
+				'methods' => "GET",
+				'callback' => array(
+					$this->courseObj, 'course'
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
-		);		
+		);
 
 		//courses by terms cat and tag
 		register_rest_route(
 			$this->namespace,
 			'/course-by-terms',
 			array(
-				'methods'=> "POST",
-				'callback'=> array(
-					$this->courseObj,'course_by_terms'
+				'methods' => "POST",
+				'callback' => array(
+					$this->courseObj, 'course_by_terms'
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
-		);		
+		);
 
 		//courses by terms cat and tag
 		register_rest_route(
 			$this->namespace,
 			'/course-sorting-by-price',
 			array(
-				'methods'=> "GET",
-				'callback'=> array(
-					$this->courseObj,'course_sort_by_price'
+				'methods' => "GET",
+				'callback' => array(
+					$this->courseObj, 'course_sort_by_price'
 				),
-				'args'=>array(
-					'order'=> array(
-						'required'=> true,
-						'type'=> 'string',
-						'validate_callback'=> function($order){
+				'args' => array(
+					'order' => array(
+						'required' => true,
+						'type' => 'string',
+						'validate_callback' => function ($order) {
 							return $this->validate_order($order);
 						}
 					),
-					'page'=>array(
-						'required'=> false,
-						'type'=> 'number'
+					'page' => array(
+						'required' => false,
+						'type' => 'number'
 					)
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
 		);
 
@@ -141,18 +137,18 @@ class RestAPI {
 			$this->namespace,
 			'/course-detail/(?P<id>\d+)',
 			array(
-				'methods'=> 'GET',
-				'callback'=> array(
-					$this->courseObj,'course_detail'
+				'methods' => 'GET',
+				'callback' => array(
+					$this->courseObj, 'course_detail'
 				),
-				'args'=> array(
-					'id'=>array(
-						'validate_callback'=>function($param){
+				'args' => array(
+					'id' => array(
+						'validate_callback' => function ($param) {
 							return is_numeric($param);
 						}
 					)
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
 		);
 
@@ -161,162 +157,159 @@ class RestAPI {
 			$this->namespace,
 			'/course-topic/(?P<id>\d+)',
 			array(
-				'methods'=> 'GET',
-				'callback'=> array(
-					$this->topicObj,'course_topic'
+				'methods' => 'GET',
+				'callback' => array(
+					$this->topicObj, 'course_topic'
 				),
-				'args'=> array(
-					'id'=>array(
-						'validate_callback'=>function($param){
+				'args' => array(
+					'id' => array(
+						'validate_callback' => function ($param) {
 							return is_numeric($param);
 						}
 					)
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
-		);		
+		);
 
 		//lesson by topic
 		register_rest_route(
 			$this->namespace,
 			'/lesson/(?P<id>\d+)',
 			array(
-				'methods'=> 'GET',
-				'callback'=> array(
-					$this->lessonObj,'topic_lesson'
+				'methods' => 'GET',
+				'callback' => array(
+					$this->lessonObj, 'topic_lesson'
 				),
-				'args'=> array(
-					'id'=>array(
-						'validate_callback'=>function($param){
+				'args' => array(
+					'id' => array(
+						'validate_callback' => function ($param) {
 							return is_numeric($param);
 						}
 					)
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
-		);		
+		);
 
 		//course annoucement by course id
 		register_rest_route(
 			$this->namespace,
 			'/course-annoucement/(?P<id>\d+)',
 			array(
-				'methods'=> 'GET',
-				'callback'=> array(
-					$this->annoucementObj,'course_annoucement'
+				'methods' => 'GET',
+				'callback' => array(
+					$this->annoucementObj, 'course_annoucement'
 				),
-				'args'=> array(
-					'id'=>array(
-						'validate_callback'=>function($param){
+				'args' => array(
+					'id' => array(
+						'validate_callback' => function ($param) {
 							return is_numeric($param);
 						}
 					)
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
-		);		
+		);
 
 		//quiz by topic id
 		register_rest_route(
 			$this->namespace,
 			'/quiz/(?P<id>\d+)',
 			array(
-				'methods'=> 'GET',
-				'callback'=> array(
-					$this->quizObj,'quiz_with_settings'
+				'methods' => 'GET',
+				'callback' => array(
+					$this->quizObj, 'quiz_with_settings'
 				),
-				'args'=> array(
-					'id'=>array(
-						'validate_callback'=>function($param){
+				'args' => array(
+					'id' => array(
+						'validate_callback' => function ($param) {
 							return is_numeric($param);
 						}
 					)
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
-		);		
+		);
 
 		//quiz question answer by quiz id
 		register_rest_route(
 			$this->namespace,
 			'/quiz-question-answer/(?P<id>\d+)',
 			array(
-				'methods'=> 'GET',
-				'callback'=> array(
-					$this->quizObj,'quiz_question_ans'
+				'methods' => 'GET',
+				'callback' => array(
+					$this->quizObj, 'quiz_question_ans'
 				),
-				'args'=> array(
-					'id'=>array(
-						'validate_callback'=>function($param){
+				'args' => array(
+					'id' => array(
+						'validate_callback' => function ($param) {
 							return is_numeric($param);
 						}
 					)
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
-		);			
+		);
 
 		//quiz attempt details by quiz id
 		register_rest_route(
 			$this->namespace,
 			'/quiz-attempt-details/(?P<id>\d+)',
 			array(
-				'methods'=> 'GET',
-				'callback'=> array(
-					$this->quizObj,'quiz_attempt_details'
+				'methods' => 'GET',
+				'callback' => array(
+					$this->quizObj, 'quiz_attempt_details'
 				),
-				'args'=> array(
-					'id'=>array(
-						'validate_callback'=>function($param){
+				'args' => array(
+					'id' => array(
+						'validate_callback' => function ($param) {
 							return is_numeric($param);
 						}
 					)
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
-		);			
+		);
 
 		//author detail by id
 		register_rest_route(
 			$this->namespace,
 			'/author-information/(?P<id>\d+)',
 			array(
-				'methods'=> 'GET',
-				'callback'=> array(
-					$this->authorObj,'author_detail'
+				'methods' => 'GET',
+				'callback' => array(
+					$this->authorObj, 'author_detail'
 				),
-				'args'=> array(
-					'id'=>array(
-						'validate_callback'=>function($param){
+				'args' => array(
+					'id' => array(
+						'validate_callback' => function ($param) {
 							return is_numeric($param);
 						}
 					)
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
-		);			
+		);
 
 		//reviews by course id
 		register_rest_route(
 			$this->namespace,
 			'/course-rating/(?P<id>\d+)',
 			array(
-				'methods'=> 'GET',
-				'callback'=> array(
-					$this->ratingObj,'course_rating'
+				'methods' => 'GET',
+				'callback' => array(
+					$this->ratingObj, 'course_rating'
 				),
-				'args'=> array(
-					'id'=>array(
-						'validate_callback'=>function($param){
+				'args' => array(
+					'id' => array(
+						'validate_callback' => function ($param) {
 							return is_numeric($param);
 						}
 					)
 				),
-				'permission_callback'=> '__return_true'
+				'permission_callback' => '__return_true'
 			)
-		);		
-
-
-	} 
-
+		);
+	}
 }
