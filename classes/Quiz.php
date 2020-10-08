@@ -392,6 +392,16 @@ class Quiz {
 		wp_send_json_error(__('Quiz has been timeout already', 'tutor'));
 	}
 
+	private function enlist_reviewed_question_ids($attempt_info, $question_id, $attempt_id){
+
+		!is_array($attempt_info) ? $attempt_info=[] : 0;
+		!array_key_exists('answered_question_ids', $attempt_info) ? $attempt_info['answered_question_ids']=[] : 0;
+		!in_array($question_id, $attempt_info['answered_question_ids']) ? $attempt_info['answered_question_ids'][]=(int)$question_id : 0;
+
+		global $wpdb;
+		$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', array('attempt_info' => serialize($attempt_info)), array('attempt_id' => $attempt_id));
+	}
+
 	/**
 	 * Review the answer and change individual answer result
 	 */
@@ -404,13 +414,12 @@ class Quiz {
 
 		$attempt_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = {$attempt_answer_id} ");
 		$attempt = tutor_utils()->get_attempt($attempt_id);
+		$attempt_info = unserialize($attempt->attempt_info);
 		$question = tutils()->get_quiz_question_by_id($attempt_answer->question_id);
-
-		$is_correct = (int) $attempt_answer->is_correct;
 
 		do_action('tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as);
 
-		if ($mark_as === 'correct' && ! $is_correct){
+		if ($mark_as === 'correct'){
 
 			$answer_update_data = array(
 				'achieved_mark' => $attempt_answer->question_mark,
@@ -430,7 +439,9 @@ class Quiz {
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
 
-		}elseif($mark_as === 'incorrect' && $is_correct){
+			$this->enlist_reviewed_question_ids((array)$attempt_info, $attempt_answer->question_id, $attempt_id);
+
+		}elseif($mark_as === 'incorrect'){
 
 			$answer_update_data = array(
 				'achieved_mark' => '0.00',
@@ -449,6 +460,8 @@ class Quiz {
             }
 
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
+			
+			$this->enlist_reviewed_question_ids((array)$attempt_info, $attempt_answer->question_id, $attempt_id);
 		}
 		do_action('tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as);
 
