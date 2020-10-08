@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.5.1
 Requires PHP: 7.0
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,16 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.7.1 - October 09, 2020 =
+
+New: Rest API
+New: Zoom Integration
+New: Google Classroom Integration
+Update: Google reCaptcha support
+Update: Dashboard URL rewrite rules
+Fix: Assignment Search issue
+Fix: Course Duplication issue
 
 = 1.7.0 - September 04, 2020 =
 
