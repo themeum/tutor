@@ -11,20 +11,18 @@ use WP_REST_Request;
 if(!defined('ABSPATH'))
 exit;
 
-class REST_Lesson
-{
+class REST_Lesson {
+
 	use REST_Response;
 	
 	private $post_type;
 	private $post_parent;
 
-	public function __construct()
-	{
+	public function __construct() {
 		$this->post_type = tutor()->lesson_post_type;
 	}
 
-	public function topic_lesson(WP_REST_Request $request)
-	{
+	public function topic_lesson(WP_REST_Request $request) {
 		$this->post_parent = $request->get_param('id');
 		global $wpdb;
 
@@ -36,27 +34,20 @@ class REST_Lesson
 		
 		$data = array();
 
-		if(count($lessons)>0)
-		{
+		if(count($lessons)>0) {
 			foreach ($lessons as $lesson) {
 				$attachments = [];
 				$attachments_id = get_post_meta($lesson->ID,'_tutor_attachments',false);
 				$attachments_id = $attachments_id[0];
-				foreach($attachments_id as $id)
-				{
-
-						$guid = get_the_guid($id);
-						array_push($attachments, $guid);		
-
+				foreach($attachments_id as $id) {
+					$guid = get_the_guid($id);
+					array_push($attachments, $guid);		
 				}
 
 				$lesson->attachments = $attachments;
 				$lesson->thumbnail = get_the_post_thumbnail_url($lesson->ID);
-
 				$lesson->video = get_post_meta($lesson->ID, '_video',false);
-
 				array_push($data, $lesson);
-
 			}
 
 			$response = array(
@@ -73,7 +64,5 @@ class REST_Lesson
 			'data'=> []
 		);
 		return self::send($response);
-
 	} 
 }
-?>
