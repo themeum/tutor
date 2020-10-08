@@ -11,9 +11,4 @@ yarn.lock
 assets/css/tutor-front.css.map
 assets/css/tutor-front.min.css.map
 .prettierignore
-<<<<<<< HEAD
 *.zip
-END_POINTS.txt
-=======
-*.zip
->>>>>>> fb94df0e0a5e5e26d64a2fc09c76514ab2c68fad
