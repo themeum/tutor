@@ -395,8 +395,8 @@ class Quiz {
 	private function enlist_reviewed_question_ids($attempt_info, $question_id, $attempt_id){
 
 		!is_array($attempt_info) ? $attempt_info=[] : 0;
-		!array_key_exists('answered_question_ids', $attempt_info) ? $attempt_info['answered_question_ids']=[] : 0;
-		!in_array($question_id, $attempt_info['answered_question_ids']) ? $attempt_info['answered_question_ids'][]=(int)$question_id : 0;
+		!array_key_exists('reviewed_question_ids', $attempt_info) ? $attempt_info['reviewed_question_ids']=[] : 0;
+		!in_array($question_id, $attempt_info['reviewed_question_ids']) ? $attempt_info['reviewed_question_ids'][]=(int)$question_id : 0;
 
 		global $wpdb;
 		$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', array('attempt_info' => serialize($attempt_info)), array('attempt_id' => $attempt_id));
