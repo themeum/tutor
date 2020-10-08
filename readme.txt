@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.7.1 - September 04, 2020 =
+= 1.7.1 - October 09, 2020 =
 
 New: Rest API
 New: Zoom Integration
@@ -249,7 +249,7 @@ New: Google Classroom Integration
 Update: Google reCaptcha support
 Update: Dashboard URL rewrite rules
 Fix: Assignment Search issue
-Fix: Course duplication issue
+Fix: Course Duplication issue
 
 = 1.7.0 - September 04, 2020 =
 
