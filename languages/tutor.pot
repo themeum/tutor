@@ -1622,39 +1622,39 @@ msgstr ""
 msgid "Student"
 msgstr ""
 
-#: classes/Question_Answers_List.php:73, classes/Quiz.php:866, templates/dashboard/question-answer.php:28, views/modal/question_form.php:150, views/pages/answer.php:11, templates/dashboard/question-answer/answers.php:13
+#: classes/Question_Answers_List.php:73, classes/Quiz.php:880, templates/dashboard/question-answer.php:28, views/modal/question_form.php:150, views/pages/answer.php:11, templates/dashboard/question-answer/answers.php:13
 msgid "Answer"
 msgstr ""
 
-#: classes/Quiz.php:392
+#: classes/Quiz.php:403
 msgid "Quiz has been timeout already"
 msgstr ""
 
-#: classes/Quiz.php:668
+#: classes/Quiz.php:682
 msgid "Please make sure you have added more than one option and saved them"
 msgstr ""
 
-#: classes/Quiz.php:664
+#: classes/Quiz.php:678
 msgid "Please select the correct answer"
 msgstr ""
 
-#: classes/Quiz.php:745, views/modal/question_answer_form.php:21
+#: classes/Quiz.php:759, views/modal/question_answer_form.php:21
 msgid "True"
 msgstr ""
 
-#: classes/Quiz.php:752, views/modal/question_answer_form.php:25
+#: classes/Quiz.php:766, views/modal/question_answer_form.php:25
 msgid "False"
 msgstr ""
 
-#: classes/Quiz.php:850
+#: classes/Quiz.php:864
 msgid "Answer options &amp; mark correct"
 msgstr ""
 
-#: classes/Quiz.php:853
+#: classes/Quiz.php:867
 msgid "Make sure you’re saving the answers in the right order. Students will have to match this order exactly."
 msgstr ""
 
-#: classes/Quiz.php:888, classes/Quiz.php:882, views/modal/question_form.php:174, views/modal/question_form.php:167, views/pages/view_attempt.php:327, templates/dashboard/quiz-attempts/quiz-reviews.php:394
+#: classes/Quiz.php:902, classes/Quiz.php:896, views/modal/question_form.php:174, views/modal/question_form.php:167, views/pages/view_attempt.php:338, templates/dashboard/quiz-attempts/quiz-reviews.php:394
 msgid "Mark as correct"
 msgstr ""
 
@@ -2413,95 +2413,95 @@ msgstr ""
 msgid "Placeholder"
 msgstr ""
 
-#: restapi/REST_Author.php:37
+#: restapi/REST_Author.php:35
 msgid "Author details retrieved successfully"
 msgstr ""
 
-#: restapi/REST_Author.php:45
+#: restapi/REST_Author.php:44
 msgid "Author not found"
 msgstr ""
 
-#: restapi/REST_Course.php:83, restapi/REST_Course.php:207, restapi/REST_Course.php:300
+#: restapi/REST_Course.php:79, restapi/REST_Course.php:193, restapi/REST_Course.php:278
 msgid "Course retrieved successfully"
 msgstr ""
 
-#: restapi/REST_Course.php:92, restapi/REST_Course.php:309
+#: restapi/REST_Course.php:88, restapi/REST_Course.php:287
 msgid "Course not found"
 msgstr ""
 
-#: restapi/REST_Course.php:136
+#: restapi/REST_Course.php:128
 msgid "Course detail retrieved successfully"
 msgstr ""
 
-#: restapi/REST_Course.php:144
+#: restapi/REST_Course.php:135
 msgid "Detail not found for given ID"
 msgstr ""
 
-#: restapi/REST_Course.php:216
+#: restapi/REST_Course.php:202
 msgid "Course not found for given terms"
 msgstr ""
 
-#: restapi/REST_Course.php:235
+#: restapi/REST_Course.php:219
 msgid "Categories field is not an array"
 msgstr ""
 
-#: restapi/REST_Course.php:240
+#: restapi/REST_Course.php:223
 msgid "Tags field is not an array"
 msgstr ""
 
-#: restapi/REST_Course_Announcement.php:41
+#: restapi/REST_Course_Announcement.php:38
 msgid "Announcement retrieved successfully"
 msgstr ""
 
-#: restapi/REST_Course_Announcement.php:49
+#: restapi/REST_Course_Announcement.php:47
 msgid "Announcement not found for given ID"
 msgstr ""
 
-#: restapi/REST_Lesson.php:64
+#: restapi/REST_Lesson.php:55
 msgid "Lesson retrieved successfully"
 msgstr ""
 
-#: restapi/REST_Lesson.php:72
+#: restapi/REST_Lesson.php:63
 msgid "Lesson not found for given topic ID"
 msgstr ""
 
-#: restapi/REST_Quiz.php:48
+#: restapi/REST_Quiz.php:45
 msgid "Quiz retrieved successfully"
 msgstr ""
 
-#: restapi/REST_Quiz.php:58
+#: restapi/REST_Quiz.php:53
 msgid "Quiz not found for given ID"
 msgstr ""
 
-#: restapi/REST_Quiz.php:102
+#: restapi/REST_Quiz.php:94
 msgid "Question retrieved successfully"
 msgstr ""
 
-#: restapi/REST_Quiz.php:111
+#: restapi/REST_Quiz.php:103
 msgid "Question not found for given ID"
 msgstr ""
 
-#: restapi/REST_Quiz.php:151
+#: restapi/REST_Quiz.php:140
 msgid "Quiz attempts retrieved successfully"
 msgstr ""
 
-#: restapi/REST_Quiz.php:159
+#: restapi/REST_Quiz.php:148
 msgid "Quiz attempts not found for given ID"
 msgstr ""
 
-#: restapi/REST_Rating.php:48
+#: restapi/REST_Rating.php:45
 msgid "Course rating retrieved successfully"
 msgstr ""
 
-#: restapi/REST_Rating.php:56
+#: restapi/REST_Rating.php:54
 msgid "Rating not found for given ID"
 msgstr ""
 
-#: restapi/REST_Topic.php:43
+#: restapi/REST_Topic.php:38
 msgid "Topic retrieved successfully"
 msgstr ""
 
-#: restapi/REST_Topic.php:51
+#: restapi/REST_Topic.php:46
 msgid "Topic not found for given ID"
 msgstr ""
 
@@ -3807,27 +3807,27 @@ msgstr ""
 msgid "Manual Review"
 msgstr ""
 
-#: views/pages/view_attempt.php:320, views/pages/view_attempt.php:315, templates/dashboard/my-quiz-attempts/attempts-details.php:120, templates/dashboard/my-quiz-attempts/attempts-details.php:374, templates/dashboard/my-quiz-attempts/attempts-details.php:369, templates/dashboard/quiz-attempts/quiz-reviews.php:107, templates/dashboard/quiz-attempts/quiz-reviews.php:387, templates/dashboard/quiz-attempts/quiz-reviews.php:382
+#: views/pages/view_attempt.php:331, views/pages/view_attempt.php:324, templates/dashboard/my-quiz-attempts/attempts-details.php:120, templates/dashboard/my-quiz-attempts/attempts-details.php:374, templates/dashboard/my-quiz-attempts/attempts-details.php:369, templates/dashboard/quiz-attempts/quiz-reviews.php:107, templates/dashboard/quiz-attempts/quiz-reviews.php:387, templates/dashboard/quiz-attempts/quiz-reviews.php:382
 msgid "Incorrect"
 msgstr ""
 
-#: views/pages/view_attempt.php:317, templates/dashboard/my-quiz-attempts/attempts-details.php:371, templates/dashboard/quiz-attempts/quiz-reviews.php:384
-msgid "Review Required"
-msgstr ""
-
-#: views/pages/view_attempt.php:311, templates/dashboard/my-quiz-attempts/attempts-details.php:119, templates/dashboard/my-quiz-attempts/attempts-details.php:365, templates/dashboard/quiz-attempts/quiz-reviews.php:106, templates/dashboard/quiz-attempts/quiz-reviews.php:378
+#: views/pages/view_attempt.php:327, views/pages/view_attempt.php:311, templates/dashboard/my-quiz-attempts/attempts-details.php:119, templates/dashboard/my-quiz-attempts/attempts-details.php:365, templates/dashboard/quiz-attempts/quiz-reviews.php:106, templates/dashboard/quiz-attempts/quiz-reviews.php:378
 msgid "Correct"
 msgstr ""
 
-#: views/pages/view_attempt.php:328, templates/dashboard/quiz-attempts/quiz-reviews.php:395
+#: views/pages/view_attempt.php:320, templates/dashboard/my-quiz-attempts/attempts-details.php:371, templates/dashboard/quiz-attempts/quiz-reviews.php:384
+msgid "Review Required"
+msgstr ""
+
+#: views/pages/view_attempt.php:339, templates/dashboard/quiz-attempts/quiz-reviews.php:395
 msgid "Mark as In correct"
 msgstr ""
 
-#: views/pages/view_attempt.php:346, templates/dashboard/my-quiz-attempts/attempts-details.php:186, templates/dashboard/quiz-attempts/quiz-reviews.php:173
+#: views/pages/view_attempt.php:357, templates/dashboard/my-quiz-attempts/attempts-details.php:186, templates/dashboard/quiz-attempts/quiz-reviews.php:173
 msgid "Instructor Feedback"
 msgstr ""
 
-#: views/pages/view_attempt.php:350
+#: views/pages/view_attempt.php:361
 msgid "Update"
 msgstr ""
 
