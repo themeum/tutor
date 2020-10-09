@@ -1622,39 +1622,39 @@ msgstr ""
 msgid "Student"
 msgstr ""
 
-#: classes/Question_Answers_List.php:73, classes/Quiz.php:866, templates/dashboard/question-answer.php:28, views/modal/question_form.php:150, views/pages/answer.php:11, templates/dashboard/question-answer/answers.php:13
+#: classes/Question_Answers_List.php:73, classes/Quiz.php:880, templates/dashboard/question-answer.php:28, views/modal/question_form.php:150, views/pages/answer.php:11, templates/dashboard/question-answer/answers.php:13
 msgid "Answer"
 msgstr ""
 
-#: classes/Quiz.php:392
+#: classes/Quiz.php:403
 msgid "Quiz has been timeout already"
 msgstr ""
 
-#: classes/Quiz.php:668
+#: classes/Quiz.php:682
 msgid "Please make sure you have added more than one option and saved them"
 msgstr ""
 
-#: classes/Quiz.php:664
+#: classes/Quiz.php:678
 msgid "Please select the correct answer"
 msgstr ""
 
-#: classes/Quiz.php:745, views/modal/question_answer_form.php:21
+#: classes/Quiz.php:759, views/modal/question_answer_form.php:21
 msgid "True"
 msgstr ""
 
-#: classes/Quiz.php:752, views/modal/question_answer_form.php:25
+#: classes/Quiz.php:766, views/modal/question_answer_form.php:25
 msgid "False"
 msgstr ""
 
-#: classes/Quiz.php:850
+#: classes/Quiz.php:864
 msgid "Answer options &amp; mark correct"
 msgstr ""
 
-#: classes/Quiz.php:853
+#: classes/Quiz.php:867
 msgid "Make sure you’re saving the answers in the right order. Students will have to match this order exactly."
 msgstr ""
 
-#: classes/Quiz.php:888, classes/Quiz.php:882, views/modal/question_form.php:174, views/modal/question_form.php:167, views/pages/view_attempt.php:327, templates/dashboard/quiz-attempts/quiz-reviews.php:394
+#: classes/Quiz.php:902, classes/Quiz.php:896, views/modal/question_form.php:174, views/modal/question_form.php:167, views/pages/view_attempt.php:338, templates/dashboard/quiz-attempts/quiz-reviews.php:394
 msgid "Mark as correct"
 msgstr ""
 
@@ -3807,27 +3807,27 @@ msgstr ""
 msgid "Manual Review"
 msgstr ""
 
-#: views/pages/view_attempt.php:320, views/pages/view_attempt.php:315, templates/dashboard/my-quiz-attempts/attempts-details.php:120, templates/dashboard/my-quiz-attempts/attempts-details.php:374, templates/dashboard/my-quiz-attempts/attempts-details.php:369, templates/dashboard/quiz-attempts/quiz-reviews.php:107, templates/dashboard/quiz-attempts/quiz-reviews.php:387, templates/dashboard/quiz-attempts/quiz-reviews.php:382
+#: views/pages/view_attempt.php:331, views/pages/view_attempt.php:324, templates/dashboard/my-quiz-attempts/attempts-details.php:120, templates/dashboard/my-quiz-attempts/attempts-details.php:374, templates/dashboard/my-quiz-attempts/attempts-details.php:369, templates/dashboard/quiz-attempts/quiz-reviews.php:107, templates/dashboard/quiz-attempts/quiz-reviews.php:387, templates/dashboard/quiz-attempts/quiz-reviews.php:382
 msgid "Incorrect"
 msgstr ""
 
-#: views/pages/view_attempt.php:317, templates/dashboard/my-quiz-attempts/attempts-details.php:371, templates/dashboard/quiz-attempts/quiz-reviews.php:384
-msgid "Review Required"
-msgstr ""
-
-#: views/pages/view_attempt.php:311, templates/dashboard/my-quiz-attempts/attempts-details.php:119, templates/dashboard/my-quiz-attempts/attempts-details.php:365, templates/dashboard/quiz-attempts/quiz-reviews.php:106, templates/dashboard/quiz-attempts/quiz-reviews.php:378
+#: views/pages/view_attempt.php:327, views/pages/view_attempt.php:311, templates/dashboard/my-quiz-attempts/attempts-details.php:119, templates/dashboard/my-quiz-attempts/attempts-details.php:365, templates/dashboard/quiz-attempts/quiz-reviews.php:106, templates/dashboard/quiz-attempts/quiz-reviews.php:378
 msgid "Correct"
 msgstr ""
 
-#: views/pages/view_attempt.php:328, templates/dashboard/quiz-attempts/quiz-reviews.php:395
+#: views/pages/view_attempt.php:320, templates/dashboard/my-quiz-attempts/attempts-details.php:371, templates/dashboard/quiz-attempts/quiz-reviews.php:384
+msgid "Review Required"
+msgstr ""
+
+#: views/pages/view_attempt.php:339, templates/dashboard/quiz-attempts/quiz-reviews.php:395
 msgid "Mark as In correct"
 msgstr ""
 
-#: views/pages/view_attempt.php:346, templates/dashboard/my-quiz-attempts/attempts-details.php:186, templates/dashboard/quiz-attempts/quiz-reviews.php:173
+#: views/pages/view_attempt.php:357, templates/dashboard/my-quiz-attempts/attempts-details.php:186, templates/dashboard/quiz-attempts/quiz-reviews.php:173
 msgid "Instructor Feedback"
 msgstr ""
 
-#: views/pages/view_attempt.php:350
+#: views/pages/view_attempt.php:361
 msgid "Update"
 msgstr ""
 

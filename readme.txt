@@ -173,7 +173,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 = Minimum Requirements =
 
-* PHP version 5.6.0 or greater (PHP 7.1 or greater is recommended)
+* PHP 7.2 or greater is recommended
 * MySQL version 5.0 or greater (MySQL 5.6 or greater is recommended)
 
 = Automatic installation =
@@ -580,6 +580,3 @@ do_action('tutor_addon_after_enable_disable');
 = 1.4.0 =
 
 It’s recommended to have a backup of your website before hitting the update button.
->>>>>>> fb94df0e0a5e5e26d64a2fc09c76514ab2c68fad
->>>>>>>>> Temporary merge branch 2
->>>>>>> fb94df0e0a5e5e26d64a2fc09c76514ab2c68fad
