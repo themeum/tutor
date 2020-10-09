@@ -141,14 +141,22 @@ Check your course performance through Tutor Report stats.
 <tr>
 
 <td align="center">
-<img src=".github/addons/wc-subscriptions.png" alt="WooCommerce Subscriptions" height="100px" >
-<h4>WooCommerce Subscriptions</h4>
-Capture Residual Revenue with Recurring Payments.
-
+<img src=".github/addons/tutor-zoom.png" alt="Tutor Zoom Integration" height="100px" >
+<h4>Tutor Zoom Integration</h4>
+Connect Tutor LMS with Zoom to host live online classes. Students can attend live classes right from the lesson page.
 </td>
 
-<td align="center"></td>
-<td align="center"></td>
+<td align="center">
+<img src=".github/addons/google-classroom.png" alt="Google Classroom Integration" height="100px" >
+<h4>Google Classroom Integration</h4>
+Specific course you must complete before you can enroll new course by Tutor Prerequisites
+</td>
+
+<td align="center">
+<img src=".github/addons/wc-subscriptions.png" alt="WooCommerce Subscriptions" height="100px" >
+<h4>WooCommerce Subscriptions</h4>
+Helps connect Google Classrooms with Tutor LMS courses, allowing you to use features like Classroom streams and files directly from the Tutor LMS course.
+</td>
 
 </tr>
 
