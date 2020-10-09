@@ -173,7 +173,7 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 
 = Minimum Requirements =
 
-* PHP version 5.6.0 or greater (PHP 7.1 or greater is recommended)
+* PHP 7.2 or greater is recommended
 * MySQL version 5.0 or greater (MySQL 5.6 or greater is recommended)
 
 = Automatic installation =
@@ -243,13 +243,14 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.7.1 - October 09, 2020 =
 
-New: Rest API
+New: REST API
 New: Zoom Integration
 New: Google Classroom Integration
-Update: Google reCaptcha support
-Update: Dashboard URL rewrite rules
-Fix: Assignment Search issue
-Fix: Course Duplication issue
+New: 3rd Party Google reCaptcha plugin support
+Fix: Compatibility issue with WCFM
+Fix: Quiz attempt review issue
+Fix: Course duplication issue
+Fix: Assignment search issue
 
 = 1.7.0 - September 04, 2020 =
 
@@ -579,6 +580,3 @@ do_action('tutor_addon_after_enable_disable');
 = 1.4.0 =
 
 It’s recommended to have a backup of your website before hitting the update button.
->>>>>>> fb94df0e0a5e5e26d64a2fc09c76514ab2c68fad
->>>>>>>>> Temporary merge branch 2
->>>>>>> fb94df0e0a5e5e26d64a2fc09c76514ab2c68fad
