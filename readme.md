@@ -52,19 +52,19 @@ Our all premium addons comes with Premium Plugins. When you purchase [TutorLMS P
 
 <tr>
 
-<td align="center">
+<td align="center" width="33.3333%">
 <img src=".github/addons/content-drip.png" alt="Content Drip" height="100px" >
 <h4>Content Drip</h4>
 Unlock lessons by schedule or when the student meets specific condition.
 </td>
 
-<td align="center">
+<td align="center" width="33.3333%">
 <img src=".github/addons/enrollments.png" alt="Enrollments" height="100px" >
 <h4>Enrollments</h4>
 Take advanced control on enrollments. Enroll the student manually.
 </td>
 
-<td align="center">
+<td align="center" width="33.3333%">
 <img src=".github/addons/gradebook.png" alt="Gradebook" height="100px" >
 <h4>Gradebook</h4>
 Shows student progress from assignment and quiz
