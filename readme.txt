@@ -243,13 +243,14 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.7.1 - October 09, 2020 =
 
-New: Rest API
+New: REST API
 New: Zoom Integration
 New: Google Classroom Integration
-Update: Google reCaptcha support
-Update: Dashboard URL rewrite rules
-Fix: Assignment Search issue
-Fix: Course Duplication issue
+New: 3rd Party Google reCaptcha plugin support
+Fix: Compatibility issue with WCFM
+Fix: Quiz attempt review issue
+Fix: Course duplication issue
+Fix: Assignment search issue
 
 = 1.7.0 - September 04, 2020 =
 

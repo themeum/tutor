@@ -1618,14 +1618,19 @@ msgstr ""
 msgid "Student"
 msgstr ""
 
+<<<<<<< HEAD
 #: classes/Question_Answers_List.php:73, classes/Quiz.php:879, templates/dashboard/question-answer.php:28, templates/dashboard/question-answer/answers.php:13, views/modal/question_form.php:150, views/pages/answer.php:11
+=======
+#: classes/Question_Answers_List.php:73, classes/Quiz.php:880, templates/dashboard/question-answer.php:28, views/modal/question_form.php:150, views/pages/answer.php:11, templates/dashboard/question-answer/answers.php:13
+>>>>>>> master
 msgid "Answer"
 msgstr ""
 
-#: classes/Quiz.php:392
+#: classes/Quiz.php:403
 msgid "Quiz has been timeout already"
 msgstr ""
 
+<<<<<<< HEAD
 #: classes/Quiz.php:681
 msgid "Please make sure you have added more than one option and saved them"
 msgstr ""
@@ -1651,6 +1656,33 @@ msgid "Make sure you’re saving the answers in the right order. Students will h
 msgstr ""
 
 #: classes/Quiz.php:901, classes/Quiz.php:895, templates/dashboard/quiz-attempts/quiz-reviews.php:394, views/modal/question_form.php:174, views/modal/question_form.php:167, views/pages/view_attempt.php:334
+=======
+#: classes/Quiz.php:682
+msgid "Please make sure you have added more than one option and saved them"
+msgstr ""
+
+#: classes/Quiz.php:678
+msgid "Please select the correct answer"
+msgstr ""
+
+#: classes/Quiz.php:759, views/modal/question_answer_form.php:21
+msgid "True"
+msgstr ""
+
+#: classes/Quiz.php:766, views/modal/question_answer_form.php:25
+msgid "False"
+msgstr ""
+
+#: classes/Quiz.php:864
+msgid "Answer options &amp; mark correct"
+msgstr ""
+
+#: classes/Quiz.php:867
+msgid "Make sure you’re saving the answers in the right order. Students will have to match this order exactly."
+msgstr ""
+
+#: classes/Quiz.php:902, classes/Quiz.php:896, views/modal/question_form.php:174, views/modal/question_form.php:167, views/pages/view_attempt.php:338, templates/dashboard/quiz-attempts/quiz-reviews.php:394
+>>>>>>> master
 msgid "Mark as correct"
 msgstr ""
 
@@ -3817,8 +3849,365 @@ msgstr ""
 msgid "available variable"
 msgstr ""
 
+<<<<<<< HEAD
 #: views/metabox/announcements-metabox.php:33
 msgid "Add Announcement"
+=======
+#: views/modal/edit_quiz.php:217, views/modal/question_form.php:113
+msgid "Optional"
+msgstr ""
+
+#: views/modal/edit_quiz.php:232
+msgid "Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit"
+msgstr ""
+
+#: views/modal/edit_quiz.php:236
+msgid "Passing Grade (%)"
+msgstr ""
+
+#: views/modal/edit_quiz.php:242
+msgid "Set the passing percentage for this quiz"
+msgstr ""
+
+#: views/modal/edit_quiz.php:246
+msgid "Max questions allowed to answer"
+msgstr ""
+
+#: views/modal/edit_quiz.php:252
+msgid "This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater then available question, then all questions will be available for a student to answer."
+msgstr ""
+
+#: views/modal/edit_quiz.php:282
+msgid "Quiz Auto Start"
+msgstr ""
+
+#: views/modal/edit_quiz.php:285
+msgid "If you enable this option, the quiz will start automatically after the page is loaded."
+msgstr ""
+
+#: views/modal/edit_quiz.php:291
+msgid "Question Layout"
+msgstr ""
+
+#: views/modal/edit_quiz.php:294
+msgid "Set question layout view"
+msgstr ""
+
+#: views/modal/edit_quiz.php:295
+msgid "Single Question"
+msgstr ""
+
+#: views/modal/edit_quiz.php:296
+msgid "Question Pagination"
+msgstr ""
+
+#: views/modal/edit_quiz.php:297
+msgid "Question below each other"
+msgstr ""
+
+#: views/modal/edit_quiz.php:302
+msgid "Questions Order"
+msgstr ""
+
+#: views/modal/edit_quiz.php:305
+msgid "Random"
+msgstr ""
+
+#: views/modal/edit_quiz.php:306
+msgid "Sorting"
+msgstr ""
+
+#: views/modal/edit_quiz.php:308
+msgid "Ascending"
+msgstr ""
+
+#: views/modal/edit_quiz.php:309
+msgid "Descending"
+msgstr ""
+
+#: views/modal/edit_quiz.php:324
+msgid "Hide question number"
+msgstr ""
+
+#: views/modal/edit_quiz.php:327
+msgid "Show/hide question number during attempt."
+msgstr ""
+
+#: views/modal/edit_quiz.php:331
+msgid "Short answer characters limit"
+msgstr ""
+
+#: views/modal/edit_quiz.php:338
+msgid "Student will place answer in short answer question type within this characters limit."
+msgstr ""
+
+#: views/modal/edit_quiz.php:342
+msgid "Open-Ended/Essay questions answer character limit"
+msgstr ""
+
+#: views/modal/edit_quiz.php:349
+msgid "Students will place the answer in the Open-Ended/Essay question type within this character limit."
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:239, views/modal/question_answer_form.php:247
+msgid "Answer input value"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:245, views/modal/question_answer_form.php:253
+msgid "The answers that students enter should match with this text. Write in <strong>small caps</strong>"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:202, views/modal/question_answer_form.php:217
+msgid "Image matched text"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:107, views/modal/question_answer_edit_form.php:25, views/modal/question_answer_form.php:138, views/modal/question_answer_form.php:115, views/modal/question_answer_form.php:36
+msgid "Answer title"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:115, views/modal/question_answer_form.php:147, views/modal/question_answer_form.php:124
+msgid "Matched Answer title"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:149, views/modal/question_answer_edit_form.php:58, views/modal/question_answer_form.php:173, views/modal/question_answer_form.php:65
+msgid "Display format for options"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:154, views/modal/question_answer_edit_form.php:63, views/modal/question_answer_form.php:178, views/modal/question_answer_form.php:70
+msgid "Only text"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:160, views/modal/question_answer_edit_form.php:69, views/modal/question_answer_form.php:184, views/modal/question_answer_form.php:76
+msgid "Only Image"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:166, views/modal/question_answer_edit_form.php:74, views/modal/question_answer_form.php:190, views/modal/question_answer_form.php:82
+msgid "Text &amp; Image both"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:83, views/modal/question_answer_form.php:91, templates/single/lesson/sidebar_question_and_answer.php:153, templates/single/course/enrolled/question_and_answer.php:36
+msgid "Question Title"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:89
+msgid "Please make sure that <b>{dash}</b> variable contains in your question title to show dash, You can use multiple variable"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:93, views/modal/question_answer_form.php:101
+msgid "Correct Answer(s)"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:99
+msgid "Separate multiple answer by pipe <b>( | )</b> , 1 answer per variable assigned in question"
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:253
+msgid "Update Answer"
+msgstr ""
+
+#: views/modal/question_answer_form.php:97
+msgid "Please make sure to use the <strong>{dash}</strong> variable in your question title to show the blanks in your question. You can use multiple <strong>{dash}</strong> variables in one question."
+msgstr ""
+
+#: views/modal/question_answer_form.php:107
+msgid "Separate multiple answers by a vertical bar <strong>|</strong>. 1 answer per <strong>{dash}</strong> variable is defined in the question. Example: Apple | Banana | Orange"
+msgstr ""
+
+#: views/modal/question_answer_form.php:16
+msgid "Select the correct option"
+msgstr ""
+
+#: views/modal/question_answer_form.php:261
+msgid "Save Answer"
+msgstr ""
+
+#: views/modal/question_form.php:21
+msgid "Write your question here"
+msgstr ""
+
+#: views/modal/question_form.php:30
+msgid "Question Type"
+msgstr ""
+
+#: views/modal/question_form.php:57
+msgid "Pro version required"
+msgstr ""
+
+#: views/modal/question_form.php:78
+msgid "Answer Required"
+msgstr ""
+
+#: views/modal/question_form.php:85
+msgid "Randomize"
+msgstr ""
+
+#: views/modal/question_form.php:91
+msgid "Point(s) for this answer"
+msgstr ""
+
+#: views/modal/question_form.php:94
+msgid "set the mark ex. 10"
+msgstr ""
+
+#: views/modal/question_form.php:107
+msgid "Display Points"
+msgstr ""
+
+#: views/modal/question_form.php:126
+msgid "Input options for the question and select the correct answer."
+msgstr ""
+
+#: views/modal/question_form.php:129
+msgid "Make sure you’re saving the answers in the right order. Students will have to match this order."
+msgstr ""
+
+#: views/modal/question_form.php:203
+msgid "Add An Option"
+msgstr ""
+
+#: views/modal/question_form.php:222
+msgid "Save &amp; Continue"
+msgstr ""
+
+#: views/options/options_generator.php:85
+msgid "Save Settings"
+msgstr ""
+
+#: views/pages/addons.php:13
+msgid "Plugins"
+msgstr ""
+
+#: views/pages/addons.php:14
+msgid "Themes"
+msgstr ""
+
+#: views/pages/addons.php:94, views/pages/addons.php:90
+msgid "No %s currently avaialable"
+msgstr ""
+
+#: views/pages/addons.php:59
+msgid "Buy Now"
+msgstr ""
+
+#: views/pages/addons.php:79, views/pages/enable_disable_addons.php:84, views/pages/tutor-pro-addons.php:56
+msgid "Version"
+msgstr ""
+
+#: views/pages/add_new_instructor.php:3, views/pages/add_new_instructor.php:138
+msgid "Add new instructor"
+msgstr ""
+
+#: views/pages/answer.php:35
+msgid "Place answer"
+msgstr ""
+
+#: views/pages/answer.php:64
+msgid "on"
+msgstr ""
+
+#: views/pages/enable_disable_addons.php:3
+msgid "Addons List"
+msgstr ""
+
+#: views/pages/enable_disable_addons.php:74
+msgid "Required Plugin(s)"
+msgstr ""
+
+#: views/pages/get-pro.php:2
+msgid "Get pro plugin from themeum.com"
+msgstr ""
+
+#: views/pages/instructors.php:20
+msgid "Add New Instructor"
+msgstr ""
+
+#: views/pages/instructors.php:27, views/pages/question_answer.php:23, views/pages/quiz_attempts.php:25, views/pages/students.php:13, views/pages/withdraw_requests.php:13
+msgid "Search"
+msgstr ""
+
+#: views/pages/tutor-pro-addons.php:3
+msgid "Available Pro Addons"
+msgstr ""
+
+#: views/pages/uninstall.php:9
+msgid "Uninstall Tutor"
+msgstr ""
+
+#: views/pages/uninstall.php:10
+msgid "Just deactive tutor plugin or completely uninstall and erase all of data saved before by tutor."
+msgstr ""
+
+#: views/pages/view_attempt.php:7, templates/dashboard/my-quiz-attempts/attempts-details.php:24, templates/dashboard/my-quiz-attempts/attempts-details.php:83, templates/dashboard/quiz-attempts/quiz-reviews.php:22
+msgid "Attempt not found"
+msgstr ""
+
+#: views/pages/view_attempt.php:21
+msgid "View Attempts"
+msgstr ""
+
+#: views/pages/view_attempt.php:31
+msgid "Student Name"
+msgstr ""
+
+#: views/pages/view_attempt.php:50, views/pages/view_attempt.php:127
+msgid "Attempt Time"
+msgstr ""
+
+#: views/pages/view_attempt.php:115
+msgid "Quiz Time"
+msgstr ""
+
+#: views/pages/view_attempt.php:169, templates/dashboard/quiz-attempts/quiz-reviews.php:205
+msgid "Manually reviewed at: "
+msgstr ""
+
+#: views/pages/view_attempt.php:185, templates/dashboard/my-quiz-attempts/attempts-details.php:204, templates/dashboard/quiz-attempts/quiz-reviews.php:220
+msgid "Quiz Overview"
+msgstr ""
+
+#: views/pages/view_attempt.php:190, templates/dashboard/earning/statement.php:55, templates/dashboard/earning/statement.php:60, templates/dashboard/earning/statements.php:178, templates/dashboard/earning/statements.php:185, templates/dashboard/my-quiz-attempts/attempts-details.php:210, templates/dashboard/quiz-attempts/quiz-reviews.php:226
+msgid "Type"
+msgstr ""
+
+#: views/pages/view_attempt.php:191, templates/dashboard/my-quiz-attempts/attempts-details.php:209, templates/dashboard/quiz-attempts/quiz-reviews.php:225
+msgid "No."
+msgstr ""
+
+#: views/pages/view_attempt.php:193, templates/dashboard/my-quiz-attempts/attempts-details.php:212, templates/dashboard/quiz-attempts/quiz-reviews.php:228
+msgid "Given Answers"
+msgstr ""
+
+#: views/pages/view_attempt.php:194, templates/dashboard/my-quiz-attempts/attempts-details.php:214, templates/dashboard/quiz-attempts/quiz-reviews.php:230
+msgid "Correct/Incorrect"
+msgstr ""
+
+#: views/pages/view_attempt.php:195, templates/dashboard/quiz-attempts/quiz-reviews.php:231
+msgid "Manual Review"
+msgstr ""
+
+#: views/pages/view_attempt.php:331, views/pages/view_attempt.php:324, templates/dashboard/my-quiz-attempts/attempts-details.php:120, templates/dashboard/my-quiz-attempts/attempts-details.php:374, templates/dashboard/my-quiz-attempts/attempts-details.php:369, templates/dashboard/quiz-attempts/quiz-reviews.php:107, templates/dashboard/quiz-attempts/quiz-reviews.php:387, templates/dashboard/quiz-attempts/quiz-reviews.php:382
+msgid "Incorrect"
+msgstr ""
+
+#: views/pages/view_attempt.php:327, views/pages/view_attempt.php:311, templates/dashboard/my-quiz-attempts/attempts-details.php:119, templates/dashboard/my-quiz-attempts/attempts-details.php:365, templates/dashboard/quiz-attempts/quiz-reviews.php:106, templates/dashboard/quiz-attempts/quiz-reviews.php:378
+msgid "Correct"
+msgstr ""
+
+#: views/pages/view_attempt.php:320, templates/dashboard/my-quiz-attempts/attempts-details.php:371, templates/dashboard/quiz-attempts/quiz-reviews.php:384
+msgid "Review Required"
+msgstr ""
+
+#: views/pages/view_attempt.php:339, templates/dashboard/quiz-attempts/quiz-reviews.php:395
+msgid "Mark as In correct"
+msgstr ""
+
+#: views/pages/view_attempt.php:357, templates/dashboard/my-quiz-attempts/attempts-details.php:186, templates/dashboard/quiz-attempts/quiz-reviews.php:173
+msgid "Instructor Feedback"
+msgstr ""
+
+#: views/pages/view_attempt.php:361
+msgid "Update"
+>>>>>>> master
 msgstr ""
 
 #: views/metabox/course-add-edd-product-metabox.php:17, views/metabox/course-add-product-metabox.php:19
