@@ -52,19 +52,19 @@ Our all premium addons comes with Premium Plugins. When you purchase [TutorLMS P
 
 <tr>
 
-<td align="center">
+<td align="center" width="33.3333%">
 <img src=".github/addons/content-drip.png" alt="Content Drip" height="100px" >
 <h4>Content Drip</h4>
 Unlock lessons by schedule or when the student meets specific condition.
 </td>
 
-<td align="center">
+<td align="center" width="33.3333%">
 <img src=".github/addons/enrollments.png" alt="Enrollments" height="100px" >
 <h4>Enrollments</h4>
 Take advanced control on enrollments. Enroll the student manually.
 </td>
 
-<td align="center">
+<td align="center" width="33.3333%">
 <img src=".github/addons/gradebook.png" alt="Gradebook" height="100px" >
 <h4>Gradebook</h4>
 Shows student progress from assignment and quiz
@@ -141,14 +141,23 @@ Check your course performance through Tutor Report stats.
 <tr>
 
 <td align="center">
+<img src=".github/addons/tutor-zoom.png" alt="Tutor Zoom Integration" height="100px" >
+<h4>Tutor Zoom Integration</h4>
+Connect Tutor LMS with Zoom to host live online classes. Students can attend live classes right from the lesson page.
+</td>
+
+<td align="center">
+<img src=".github/addons/google-classroom.png" alt="Google Classroom Integration" height="100px" >
+<h4>Google Classroom Integration</h4>
+Helps connect Google Classrooms with Tutor LMS courses, allowing you to use features like Classroom streams and files directly from the Tutor LMS course.
+</td>
+
+<td align="center">
 <img src=".github/addons/wc-subscriptions.png" alt="WooCommerce Subscriptions" height="100px" >
 <h4>WooCommerce Subscriptions</h4>
 Capture Residual Revenue with Recurring Payments.
-
 </td>
 
-<td align="center"></td>
-<td align="center"></td>
 
 </tr>
 
