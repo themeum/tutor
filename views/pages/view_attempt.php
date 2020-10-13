@@ -307,30 +307,6 @@ $user = get_userdata($user_id);
 <td>
     <?php
 
-<<<<<<< HEAD
-                            if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-                                echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
-                            } else {
-                                if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
-                                    $is_answered = in_array((int)$answer->question_id, ($quiz_attempt_info['reviewed_question_ids'] ?? []));
-                                                                                                          
-                                    if ($is_answered){
-                                        if(!isset( $answer->is_correct ) || $answer->is_correct == 0){
-                                            echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
-                                        }
-                                        else {
-                                            echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
-                                        }
-                                    } else {
-                                        echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
-                                    }
-								} else {
-                                    echo '<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
-                                }
-                            }
-                            ?>
-                        </td>
-=======
     if ( $answer->is_correct ) {
         echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
     } 
@@ -357,7 +333,6 @@ $user = get_userdata($user_id);
     }
     ?>
 </td>
->>>>>>> master
 
                         <td style="white-space: nowrap">
                             <a href="<?php echo admin_url("admin.php?action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=correct"); ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="attempt-mark-correct-btn quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>
