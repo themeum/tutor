@@ -3557,6 +3557,15 @@ END Content Drip
 .tutor-alert p:last-child {
 	margin: 0;
 }
+.tutor-alert.tutor-alert-info {
+    border: 1px solid #13aaf6;
+    background: #eaf8ff;
+    color: #0586c7;
+}
+.tutor-alert.tutor-alert-info::before {
+    content: "\e96c";
+    background: #13aaf6;
+}
 .tutor-alert.tutor-alert-danger {
 	border: 1px solid #fe1a1a;
 	background: #fff2f2;
