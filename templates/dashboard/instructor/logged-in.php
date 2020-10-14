@@ -7,37 +7,7 @@
 $is_instructor = tutor_utils()->is_instructor();
 if ($is_instructor){
     ?>
-<style type="text/css">
-    .tutor-instructor-pending-content img {
-        margin-bottom:69px;
-        border-radius: 10px;        
-    }
-    .tutor-instructor-thankyou-wrapper{
-        text-align: center;
-    }
 
-    .tutor-instructor-thankyou-text {
-        height: 48px;
-        line-height: 48px;
-        font-size: 40px;
-        font-style: normal;
-        font-weight: 500;
-        letter-spacing: 0px;
-        color: #161616;
-        margin: 0 auto 26px auto;
-    }    
-    .tutor-instructor-extra-text {
-        height: 54px;
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 400;
-        letter-spacing: 0px;
-        color: #525252;
-        line-height: 30px;
-        margin: 0 auto 26px auto;
-   
-    }
-</style>
 <div class="tutor-instructor-pending-wrapper">
     <div class="tutor-alert-info tutor-alert">
         <?php _e('With MySpace becoming more popular every day, there is the constant need to be different.','tutor');?>

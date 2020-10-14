@@ -6402,6 +6402,17 @@ END Content Drip
   margin: 0;
 }
 
+.tutor-alert.tutor-alert-info {
+  border: 1px solid #13aaf6;
+  background: #eaf8ff;
+  color: #0586c7;
+}
+
+.tutor-alert.tutor-alert-info::before {
+  content: "\e96c";
+  background: #13aaf6;
+}
+
 .tutor-alert.tutor-alert-danger {
   border: 1px solid #fe1a1a;
   background: #fff2f2;
@@ -9388,6 +9399,37 @@ Content Drip (Pro)
     opacity: 1;
     visibility: visible;
   }
+}
+
+.tutor-instructor-pending-content img {
+  margin-bottom: 69px;
+  border-radius: 10px;
+}
+
+.tutor-instructor-thankyou-wrapper {
+  text-align: center;
+}
+
+.tutor-instructor-thankyou-text {
+  height: 48px;
+  line-height: 48px;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0px;
+  color: #161616;
+  margin: 0 auto 26px auto;
+}
+
+.tutor-instructor-extra-text {
+  height: 54px;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0px;
+  color: #525252;
+  line-height: 30px;
+  margin: 0 auto 26px auto;
 }
 
 /*# sourceMappingURL=tutor-front.css.map */
