@@ -9432,4 +9432,10 @@ Content Drip (Pro)
   margin: 0 auto 26px auto;
 }
 
+@media screen and (max-width: 992px) {
+  .tutor-instructor-extra-text, .tutor-instructor-thankyou-text {
+    height: auto;
+  }
+}
+
 /*# sourceMappingURL=tutor-front.css.map */
