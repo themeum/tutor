@@ -6972,6 +6972,10 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-color);
 }
 
+.tutor-dashboard-review-title a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
 .tutor-dashboard-review-links {
   white-space: nowrap;
   font-weight: 400;
@@ -7264,6 +7268,10 @@ table.course-single-gradebooks a {
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
   color: var(--tutor-primary-color);
 }
 
@@ -7278,6 +7286,10 @@ table.course-single-gradebooks a {
   font-size: 20px;
   color: var(--tutor-primary-color);
   font-weight: 500;
+}
+
+.tutor-dashboard-item-group > h4:hover {
+  color: var(--tutor-primary-hover-color);
 }
 
 /* Dashboard Assignment */
@@ -7398,6 +7410,10 @@ table.course-single-gradebooks a {
   padding: 15px 17px;
 }
 
+.tutor-dashboard-assignment-files .uploaded-files a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
 .tutor-assignment-evaluate-row {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7496,6 +7512,10 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-color);
 }
 
+.tutor-dashboard-profile .tutor-dashboard-profile-item .content small a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
 /* end dashboard profile*/
 .tutor-dashboard-avater img {
   width: 70px;
@@ -7538,6 +7558,10 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-color);
   margin-bottom: -1px;
   line-height: 40px;
+}
+
+.tutor-dashboard-inline-links ul li a:hover {
+  color: var(--tutor-primary-color);
 }
 
 .tutor-dashboard-inline-links ul li a:hover,
@@ -7589,6 +7613,10 @@ table.course-single-gradebooks a {
   color: #ffffff;
 }
 
+.tutor-dashboard-permalinks li.active a:hover {
+  background-color: var(--tutor-primary-hover-color);
+}
+
 @media (max-width: 991px) {
   .tutor-dashboard-student .tutor-col-3,
   .tutor-dashboard-student .tutor-col-9 {
@@ -7628,9 +7656,10 @@ table.course-single-gradebooks a {
   font-size: 17px;
 }
 
-.tutor-dashboard-permalinks a:hover:before {
+.tutor-dashboard-permalinks a:hover::before {
   opacity: 1;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  color: var(--tutor-primary-hover-color);
 }
 
 .tutor-dashboard-permalinks li.active a:before {
@@ -7817,6 +7846,10 @@ table.course-single-gradebooks a {
   border: none;
   line-height: 30px;
   padding: 0 15px;
+}
+
+.date-range-input button:hover {
+  background-color: var(--tutor-primary-hover-color);
 }
 
 .report-download-csv-icon {
