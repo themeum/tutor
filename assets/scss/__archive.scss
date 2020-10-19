@@ -1,3 +1,89 @@
+/* Course filter layout */
+.tutor-course-filter-wrapper{
+	overflow: auto;
+	max-width: 1140px !important;
+	margin: 0 auto !important;
+	&>div{
+		padding: 12px;
+		&:first-child{
+			width: 250px;
+			float: left;
+
+			.tutor-course-search-field{
+				border: 1px solid #BABABA;
+				border-radius: 6px;
+				overflow: hidden;
+				padding: 0 6px;
+
+				input, input:focus, input:active{
+					border: none;
+					outline: 0;
+					padding: 0;
+					display: inline-block;
+					width: calc(100% - 24px);
+					font-weight: normal;
+					font-size: 16px;
+					color: #7A7A7A;
+				}
+
+				i{
+					font-size: 17px;
+					cursor: pointer;
+					color: #3E64DE;;
+				}
+			}
+
+			h4{
+				font-weight: normal;
+				font-size: 20px;
+				color: #161616;
+				margin: 16px 0px 12px;
+			}
+
+			label{
+				display: block;
+				cursor: pointer;
+				font-weight: normal;
+				font-size: 16px;
+				color: #353535;
+			}
+		}		
+		&:last-child{
+			width: calc(100% - 250px);
+			float: right;
+
+			select[name=tutor_course_filter]{
+				border: 1px solid #7A7A7A;
+				color: #7A7A7A;
+				padding: 3px 4px;
+    			font-size: 16px;
+				border-radius: 6px;
+				cursor: pointer;
+			}
+		}
+	}
+
+	@media(max-width:767px){
+		&>div{
+			width: 100% !important;
+			float: none !important;		
+		}
+
+		.tutor-course-filter-container>div{
+			overflow: auto;
+			
+			&>div{
+				width: 50%;
+				float: left;
+
+				&:first-child{
+					width: 100%;
+				}
+			}
+		}
+	}
+}
+
 /**
 Icon Css
  */

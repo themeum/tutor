@@ -32,10 +32,10 @@ jQuery(document).ready(function ($) {
      */
 
 
-    $(document).on('change', '.tutor-course-filter-form', function (e) {
+    /* $(document).on('change', '.tutor-course-filter-form', function (e) {
         e.preventDefault();
         $(this).closest('form').submit();
-    });
+    }); */
 
     const videoPlayer = {
         ajaxurl: _tutorobject.ajaxurl,
@@ -1739,4 +1739,102 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    /**
+     * Show hide is course public checkbox (frontend dashboard editor)
+     * 
+     * @since  v.1.7.2
+    */
+    $('.tutor-frontend-builder-course-price [name="tutor_course_price_type"]').change(function(){
+        if($(this).prop('checked')){
+            var method = $(this).val()=='paid' ? 'hide' : 'show';
+            $('#_tutor_is_course_public_meta_checkbox')[method]();
+        }
+    }).trigger('change');
+
+    
+    /**
+     * Manage course filter
+     * 
+     * @since  v.1.7.2
+    */
+    var filter_criteria = {action:'tutor_course_filter_ajax'};
+    var filter_container = $('.tutor-course-filter-container');
+    var loop_container = $('.tutor-course-filter-loop-container');
+
+    // Sidebar checkbox value change
+    filter_container.find('[type=checkbox]').change(function(){
+        
+        var name = $(this).attr('name');
+        var value = $(this).val();
+        
+        !filter_criteria[name] ? filter_criteria[name]=[] : 0;
+        var index = filter_criteria[name].indexOf(value);
+
+        if($(this).prop('checked')){
+            index==-1 ? filter_criteria[name].push(value) : 0;
+        }
+        else{
+            filter_criteria[name].splice(index, 1);
+        }
+
+        loop_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>');
+
+        $.ajax({
+            url:window._tutorobject.ajaxurl+(filter_criteria.page ? '?paged='+filter_criteria.page : ''),
+            type:'POST',
+            data:filter_criteria,
+            success:function(r){
+                loop_container.html(r).find('.tutor-pagination-wrap a').each(function(){
+                    $(this).attr('data-href', $(this).attr('href')).attr('href', '#');
+                });
+            },
+            error:function(){
+                alert('Request Failed!');
+            }
+        })
+    });
+
+    // Search field 
+    var time_out;
+    filter_container.on('input', '[name="tutor-course-filter-keyword"]', function(){
+        window.clearTimeout(time_out);
+
+        var value = $(this).val();
+        value = value.trim();
+
+        time_out=window.setTimeout(function(){
+            
+            if(value==''){
+                delete filter_criteria.keyword;
+            }
+            else{
+                filter_criteria.keyword=value;
+            }
+            
+            filter_container.find('[type="checkbox"]:first').trigger('change');
+
+        }, 500);
+    });
+
+    // Alter pagination
+    loop_container.on('click', '.tutor-pagination-wrap a', function(e){
+        e.preventDefault();
+        var url = $(this).data('href') || $(this).attr('href');
+
+        if(url){
+            url = new URL(url);
+            var page = url.searchParams.get("paged");
+
+            if(page){
+                filter_criteria.page=page;
+                filter_container.find('[type="checkbox"]:first').trigger('change');
+            }
+        }
+    });
+
+    // Alter sort filter
+    loop_container.on('change', 'select[name="tutor_course_filter"]', function(){
+        filter_criteria.tutor_course_filter=$(this).val();
+        filter_container.find('[type="checkbox"]:first').trigger('change');
+    });
 });
