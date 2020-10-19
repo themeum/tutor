@@ -1508,10 +1508,17 @@ class Utils {
 	public function has_video_in_single($post_id = 0){
 		if (is_single()) {
 			$post_id = $this->get_post_id($post_id);
-
+			
 			$video = $this->get_video( $post_id );
-			if ( $video && $this->array_get('source', $video) !== '-1' ) {
-				return $video;
+			if ( $video && $this->array_get('source', $video) !== '-1') {
+				
+				$not_empty =!empty($video['source_video_id']) || 
+							!empty($video['source_external_url']) || 
+							!empty($video['source_youtube']) || 
+							!empty($video['source_vimeo']) || 
+							!empty($video['source_embedded']);
+							
+				return $not_empty ? $video : false;
 			}
 		}
 		return false;
@@ -2460,12 +2467,17 @@ class Utils {
 		global $wpdb;
 
 		$course_post_type = tutor()->course_post_type;
-		$count = $wpdb->get_var("SELECT COUNT(courses.ID) from {$wpdb->posts} courses
+		$count = $wpdb->get_var("SELECT COUNT(enrollment.ID) FROM {$wpdb->posts} enrollment 
+									LEFT JOIN {$wpdb->posts} course ON enrollment.post_parent=course.ID
+									LEFT JOIN {$wpdb->postmeta} ON {$wpdb->postmeta}.post_id=enrollment.ID
+									LEFT JOIN {$wpdb->posts} wc_order ON {$wpdb->postmeta}.meta_value=wc_order.ID
+										WHERE 
+											course.post_author=1
+											AND course.post_status='publish'
+											AND course.post_type='courses'
+											AND enrollment.post_type='tutor_enrolled'
+											AND (wc_order.post_status IS NULL OR wc_order.post_status='wc-completed');");
 
-			INNER JOIN {$wpdb->posts} enrolled ON courses.ID = enrolled.post_parent AND enrolled.post_type = 'tutor_enrolled'
-			WHERE courses.post_status = 'publish' 
-			AND courses.post_type = '{$course_post_type}' 
-			AND courses.post_author = {$instructor_id}  ; ");
 		return (int) $count;
 	}
 
