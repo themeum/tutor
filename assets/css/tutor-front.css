@@ -3443,7 +3443,7 @@ Instructor
 }
 
 .tutor-login-form-wrap label {
-  display: block;
+  display: block !important;
   margin-bottom: 4px;
 }
 
