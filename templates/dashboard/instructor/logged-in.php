@@ -6,26 +6,35 @@
 
 $is_instructor = tutor_utils()->is_instructor();
 if ($is_instructor){
-	?>
+    ?>
 
-    <div class="tutor-alert-warning tutor-instructor-alert">
-        <h2><?php _e("You are an instructor", 'tutor'); ?></h2>
-
-        <p>
-			<?php
-			echo sprintf(__("Registered at : %s %s", 'tutor'), date_i18n(get_option('date_format'), $is_instructor), date_i18n(get_option('time_format'),
-                $is_instructor) );
-			?>
-        </p>
-
-        <p>
-			<?php
-            echo sprintf(__('Status : %s', 'tutor'), tutor_utils()->instructor_status());
-            ?>
-        </p>
-
+<div class="tutor-instructor-pending-wrapper">
+    <div class="tutor-alert-info tutor-alert">
+        <?php _e('With MySpace becoming more popular every day, there is the constant need to be different.','tutor');?>
     </div>
+    
+    <div class="tutor-instructor-pending-content">
+        <img src="<?php echo esc_url(tutor()->url . 'assets/images/new-user.png')?>" alt="<?php _e('New User','tutor')?>">
+        <div class="tutor-instructor-thankyou-wrapper">
+            <div class="tutor-instructor-thankyou-text">
+                <p>
+                    <?php _e('Thank you for registering as an instructor!','tutor');?>
+                </p>                
+            </div>
+            <div class="tutor-instructor-extra-text">
+                <p>
+                    <?php _e('We\'ve received your application, and we will review it soon. Please hang tight!','tutor');?>
+                </p>                
+            </div>
 
-<?php }else{
+            <a class="tutor-button" href="<?= esc_url(tutor_utils()->tutor_dashboard_url())?>">
+                <?php _e('Go to Dashboard','tutor');?>
+            </a>
+        </div>
+    </div>
+</div>
+
+<?php }
+else{
     tutor_load_template('dashboard.instructor.apply_for_instructor');
 } ?>

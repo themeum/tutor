@@ -20,7 +20,7 @@
                 <a href="<?php echo esc_url($reset_password);  ?>"> <?php _e('Reset Password', 'tutor'); ?></a>
             </li><?php if(current_user_can(tutor()->instructor_role)){ ?>
                 <li  class="active">
-                    <a href="<?php echo esc_url($withdraw);  ?>"> <?php _e('Withdraw', 'tutor'); ?></a>
+                    <a href="<?php echo esc_url($withdraw);  ?>"> <?php _e('Withdrawal', 'tutor'); ?></a>
                 </li>
             <?php } ?>
         </ul>
@@ -114,7 +114,7 @@
                         <?php do_action("tutor_withdraw_set_account_{$method_id}_after"); ?>
 
                         <div class="withdraw-account-save-btn-wrap">
-                            <button type="submit" class="tutor_set_withdraw_account_btn tutor-btn" name="withdraw_btn_submit"><?php _e('Save Withdraw Account', 'tutor'); ?></button>
+                            <button type="submit" class="tutor_set_withdraw_account_btn tutor-btn" name="withdraw_btn_submit"><?php _e('Save Withdrawal Account', 'tutor'); ?></button>
                         </div>
 
                     </div>
