@@ -53,7 +53,7 @@ $user_id = get_current_user_id();
                         <?php _e('You will get paid by', 'tutor'); ?> <strong><?php echo $withdraw_method_name; ?></strong>
                         <?php
                             $my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings/withdraw-settings');
-                            echo sprintf(__( ', You can change your %s withdraw preference %s ' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
+                            echo sprintf(__( ', You can change your %s withdrawal preference %s ' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
                         ?>
                     </p>
                     <?php
@@ -62,7 +62,7 @@ $user_id = get_current_user_id();
                     <p>
                         <?php
                         $my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings/withdraw-settings');
-                        echo sprintf(__( 'Please add your %s withdraw preference %s to make withdraw' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
+                        echo sprintf(__( 'Please add your %s withdrawal preference %s brefore creating a request' , 'tutor'), "<a href='{$my_profile_url}'>", '</a>' );
                         ?>
                     </p>
                     <?php
@@ -96,7 +96,7 @@ $user_id = get_current_user_id();
                             </div>
                         </div>
                     </div>
-                    <i><?php _e('Enter withdraw amount and click withdraw button', 'tutor') ?></i>
+                    <i><?php _e('Enter the amount and click the withdraw button', 'tutor') ?></i>
                 </div>
 
                 <div id="tutor-withdraw-form-response"></div>
@@ -129,7 +129,7 @@ $user_id = get_current_user_id();
                 <thead>
                 <tr>
                     <th><?php _e('Amount', 'tutor') ?></th>
-                    <th><?php _e('Withdraw Method', 'tutor') ?></th>
+                    <th><?php _e('Withdrawal Method', 'tutor') ?></th>
                     <th><?php _e('Date', 'tutor') ?></th>
                 </tr>
                 </thead>
@@ -175,7 +175,7 @@ $user_id = get_current_user_id();
                 <thead>
                 <tr>
                     <th><?php _e('Amount', 'tutor') ?></th>
-                    <th><?php _e('Withdraw Method', 'tutor') ?></th>
+                    <th><?php _e('Withdrawal Method', 'tutor') ?></th>
                     <th><?php _e('Requested At', 'tutor') ?></th>
                     <th><?php _e('Approved At', 'tutor') ?></th>
                 </tr>
@@ -231,7 +231,7 @@ $user_id = get_current_user_id();
                 <thead>
                 <tr>
                     <th><?php _e('Amount', 'tutor') ?></th>
-                    <th><?php _e('Withdraw Method', 'tutor') ?></th>
+                    <th><?php _e('Withdrawal Method', 'tutor') ?></th>
                     <th><?php _e('Requested At', 'tutor') ?></th>
                     <th><?php _e('Rejected At', 'tutor') ?></th>
                 </tr>

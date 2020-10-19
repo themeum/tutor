@@ -92,7 +92,7 @@ class Withdraw {
 					'paypal_email' => array(
 						'type'      => 'email',
 						'label'     => __('PayPal E-Mail Address', 'tutor'),
-						'desc'      => __('Write your paypal email address to get payout directly to your paypal account', 'tutor'),
+						'desc'      => __('We will use this email address to send the money to your Paypal account', 'tutor'),
 					),
 
 				),
@@ -183,7 +183,7 @@ class Withdraw {
 			update_user_meta($user_id, '_tutor_withdraw_method_data', $saved_data);
 		}
 
-		$msg = apply_filters('tutor_withdraw_method_set_success_msg', __('Withdraw account has been set successfully', 'tutor'));
+		$msg = apply_filters('tutor_withdraw_method_set_success_msg', __('Withdrawal account information saved successfully!', 'tutor'));
 		wp_send_json_success(array('msg' => $msg ));
 	}
 
@@ -220,7 +220,7 @@ class Withdraw {
 		}
 
 		if ($earning_sum->balance < $withdraw_amount){
-			$insufficient_balence = apply_filters('tutor_withdraw_insufficient_balance_msg', sprintf(__('You do not have sufficient balance to make a withdrawal request. Current balance: %s %s %s ', 'tutor'),'<strong>', $formatted_balance, '</strong>' ) );
+			$insufficient_balence = apply_filters('tutor_withdraw_insufficient_balance_msg', sprintf(__('You do not have sufficient balance to create a withdrawal request. Current balance: %s %s %s ', 'tutor'),'<strong>', $formatted_balance, '</strong>' ) );
 
 			wp_send_json_error(array('msg' => $insufficient_balence ));
 		}
