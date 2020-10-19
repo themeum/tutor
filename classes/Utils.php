@@ -424,7 +424,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 
-	public function get_courses($excludes = array()){
+	public function get_courses($excludes = array(), $post_status=array('publish')){
 		global $wpdb;
 
 
@@ -434,9 +434,12 @@ class Utils {
 			$exclude_query = implode("','", $excludes);
 		}
 
+		$post_status = array_map(function($element){return "'".$element."'";}, $post_status);
+		$post_status = implode(',', $post_status);
+
 		$course_post_type = tutor()->course_post_type;
 		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order 
-				from {$wpdb->posts} WHERE post_status = 'publish'
+				from {$wpdb->posts} WHERE post_status IN ({$post_status})
 				AND ID NOT IN('$exclude_query')
 				AND post_type = '{$course_post_type}' ");
 		return $query;
