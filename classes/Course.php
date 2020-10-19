@@ -5,6 +5,12 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 class Course extends Tutor_Base {
+	
+	private $additional_meta=array(
+		'_tutor_disable_qa',
+		'_tutor_is_public_course'
+	);
+
 	public function __construct() {
 		parent::__construct();
 
@@ -390,10 +396,11 @@ class Course extends Tutor_Base {
 		 * Disable question and answer for this course
 		 * @since 1.7.0
 		 */
-		$disable_qa = '_tutor_disable_qa';
 		if ($additional_data_edit) {
-			$disable_qa_value = ( isset($_POST[$disable_qa]) ) ? 'yes' : 'no';
-			update_post_meta($post_ID, $disable_qa, $disable_qa_value);
+			
+			foreach($this->additional_meta as $key){
+				update_post_meta($post_ID, $key, (isset($_POST[$key]) ? 'yes' : 'no'));
+			}
 		}
 
 		do_action( "tutor_save_course_after", $post_ID, $post);
@@ -1229,12 +1236,24 @@ class Course extends Tutor_Base {
 	 * @since v.1.7.0
 	 */
 	function tutor_course_setting_metabox( $post ) {
-		$disable_qa = '_tutor_disable_qa';
-		$disable_qa_value = get_post_meta($post->ID, $disable_qa, true);
-		$disable_qa_checked = ($disable_qa_value == "yes") ? 'checked="checked"' : '';
+		
+		$disable_qa = $this->additional_meta[0];
+		$is_public = $this->additional_meta[1];
+
+		$disable_qa_checked = get_post_meta($post->ID, $disable_qa, true)=='yes' ? 'checked="checked"' : '';
+		$is_public_checked = get_post_meta($post->ID, $is_public, true)=='yes' ? 'checked="checked"' : '';
 
 		do_action('tutor_before_course_sidebar_settings_metabox', $post);
 		?>
+		<div class="tutor-course-sidebar-settings-item" id="_tutor_is_course_public_meta_checkbox" style="display:none">
+			<label for="<?php echo $is_public; ?>">
+				<input id="<?php echo $is_public; ?>" type="checkbox" name="<?php echo $is_public; ?>" value="yes" <?php echo $is_public_checked; ?> />
+				<?php _e('Is Course Public', 'tutor'); ?>
+				<small style="display:block;padding-left:24px">
+					<?php _e('No enrollment required and no payment functionality.', 'tutor'); ?> 
+				</small>
+			</label>
+		</div>
 		<div class="tutor-course-sidebar-settings-item">
 			<label for="<?php echo $disable_qa; ?>">
 				<input type="hidden" name="_tutor_course_additional_data_edit" value="true" />

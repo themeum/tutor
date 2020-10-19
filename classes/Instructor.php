@@ -266,6 +266,7 @@ class Instructor {
 			$user->remove_role(tutor()->instructor_role);
 
 			tutor_utils()->remove_instructor_role($instructor_id);
+			update_user_meta($instructor_id, '_is_tutor_instructor_rejected', tutor_time());
 		}
 
 		wp_send_json_success();
