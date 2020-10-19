@@ -1964,7 +1964,7 @@ class Utils {
 
 			// Run this hook for completed enrollment regardless of payment provider and free/paid mode
 			if($enroll_data['post_status'] == 'completed'){
-				do_action('tutor_after_enrolled', $course_id, $user_id);
+				do_action('tutor_after_enrolled', $course_id, $user_id, $isEnrolled);
 			}
 
 			//Mark Current User as Students with user meta data
