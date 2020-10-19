@@ -6488,6 +6488,17 @@ END Content Drip
   margin: 0;
 }
 
+.tutor-alert.tutor-alert-info {
+  border: 1px solid #13aaf6;
+  background: #eaf8ff;
+  color: #0586c7;
+}
+
+.tutor-alert.tutor-alert-info::before {
+  content: "\e96c";
+  background: #13aaf6;
+}
+
 .tutor-alert.tutor-alert-danger {
   border: 1px solid #fe1a1a;
   background: #fff2f2;
@@ -7047,6 +7058,10 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-color);
 }
 
+.tutor-dashboard-review-title a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
 .tutor-dashboard-review-links {
   white-space: nowrap;
   font-weight: 400;
@@ -7339,6 +7354,10 @@ table.course-single-gradebooks a {
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
   color: var(--tutor-primary-color);
 }
 
@@ -7353,6 +7372,10 @@ table.course-single-gradebooks a {
   font-size: 20px;
   color: var(--tutor-primary-color);
   font-weight: 500;
+}
+
+.tutor-dashboard-item-group > h4:hover {
+  color: var(--tutor-primary-hover-color);
 }
 
 /* Dashboard Assignment */
@@ -7473,6 +7496,10 @@ table.course-single-gradebooks a {
   padding: 15px 17px;
 }
 
+.tutor-dashboard-assignment-files .uploaded-files a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
 .tutor-assignment-evaluate-row {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7571,6 +7598,10 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-color);
 }
 
+.tutor-dashboard-profile .tutor-dashboard-profile-item .content small a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
 /* end dashboard profile*/
 .tutor-dashboard-avater img {
   width: 70px;
@@ -7613,6 +7644,10 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-color);
   margin-bottom: -1px;
   line-height: 40px;
+}
+
+.tutor-dashboard-inline-links ul li a:hover {
+  color: var(--tutor-primary-color);
 }
 
 .tutor-dashboard-inline-links ul li a:hover,
@@ -7664,6 +7699,10 @@ table.course-single-gradebooks a {
   color: #ffffff;
 }
 
+.tutor-dashboard-permalinks li.active a:hover {
+  background-color: var(--tutor-primary-hover-color);
+}
+
 @media (max-width: 991px) {
   .tutor-dashboard-student .tutor-col-3,
   .tutor-dashboard-student .tutor-col-9 {
@@ -7703,9 +7742,10 @@ table.course-single-gradebooks a {
   font-size: 17px;
 }
 
-.tutor-dashboard-permalinks a:hover:before {
+.tutor-dashboard-permalinks a:hover::before {
   opacity: 1;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  color: var(--tutor-primary-hover-color);
 }
 
 .tutor-dashboard-permalinks li.active a:before {
@@ -7892,6 +7932,10 @@ table.course-single-gradebooks a {
   border: none;
   line-height: 30px;
   padding: 0 15px;
+}
+
+.date-range-input button:hover {
+  background-color: var(--tutor-primary-hover-color);
 }
 
 .report-download-csv-icon {
@@ -8165,7 +8209,6 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
-  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
@@ -9474,6 +9517,44 @@ Content Drip (Pro)
   .tutor-option-tooltip.tutor-option-field textarea:focus + p.desc {
     opacity: 1;
     visibility: visible;
+  }
+}
+
+.tutor-instructor-pending-content img {
+  margin-bottom: 69px;
+  border-radius: 10px;
+}
+
+.tutor-instructor-thankyou-wrapper {
+  text-align: center;
+}
+
+.tutor-instructor-thankyou-text {
+  height: 48px;
+  line-height: 48px;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0px;
+  color: #161616;
+  margin: 0 auto 26px auto;
+}
+
+.tutor-instructor-extra-text {
+  height: 54px;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0px;
+  color: #525252;
+  line-height: 30px;
+  margin: 0 auto 26px auto;
+}
+
+@media screen and (max-width: 992px) {
+  .tutor-instructor-extra-text,
+  .tutor-instructor-thankyou-text {
+    height: auto;
   }
 }
 
