@@ -206,7 +206,7 @@ class WooCommerce extends Tutor_Base {
 					if($status_to == 'completed'){
 						$user_id = get_post_field('post_author', $enrolled_id);
 						$course_id = get_post_field('post_parent', $enrolled_id);
-						do_action('tutor_after_enrolled', $course_id, $user_id);
+						do_action('tutor_after_enrolled', $course_id, $user_id, $enrolled_id);
 					}
 				}
 			}

@@ -70,6 +70,23 @@ do_action('tutor_dashboard/before/wrap');
 
                         <div class="tutor-dashboard-header-button">
                             <?php
+                            $instructor_status = tutor_utils()->instructor_status();
+                            $instructor_status = is_string($instructor_status) ? strtolower($instructor_status) : '';
+                            $rejected_on = get_user_meta($user->ID , '_is_tutor_instructor_rejected', true);
+                            $info_style = 'position: relative; top: 11px; margin-right: 7px;';
+                            $info_message_style = 'color:#7A7A7A; font-size: 15px;';
+
+                            ob_start();
+                            if (tutils()->get_option('enable_become_instructor_btn')) {
+                                ?>
+                                    &nbsp;
+                                    <a class="tutor-btn bordered-btn" href="<?php echo esc_url(tutils()->instructor_register_url()); ?>">
+                                        <?php echo sprintf(__("%s Become an instructor", 'tutor'), '<i class="tutor-icon-man-user"></i> &nbsp;'); ?>
+                                    </a>
+                                <?php
+                            }
+                            $become_button = ob_get_clean();
+
                             if(current_user_can(tutor()->instructor_role)){
                                 $course_type = tutor()->course_post_type;
                                 ?>
@@ -77,14 +94,26 @@ do_action('tutor_dashboard/before/wrap');
                                     <?php echo sprintf(__('%s Add A New Course ', 'tutor'), '<i class="tutor-icon-checkbox-pen-outline"></i> &nbsp;'); ?>
                                 </a>
                                 <?php
-                            }else{
-                                if (tutils()->get_option('enable_become_instructor_btn')) {
-                                    ?>
-                                    <a class="tutor-btn bordered-btn" href="<?php echo esc_url(tutils()->instructor_register_url()); ?>">
-                                        <?php echo sprintf(__("%s Become an instructor", 'tutor'), '<i class="tutor-icon-man-user"></i> &nbsp;'); ?>
-                                    </a>
-                                    <?php
-                                }
+                            }
+                            else if($instructor_status=='pending'){
+                                $on = get_user_meta($user->ID, '_is_tutor_instructor', true);
+                                $on =  date('d F, Y', $on);
+                                echo '<span style="'.$info_message_style.'">
+                                        <i class="dashicons dashicons-info" style="color:#E53935; '.$info_style.'"></i>', 
+                                        __('Your Application is pending on', 'tutor'), ' <b>', $on, '</b>',
+                                    '</span>';
+                            }
+                            else if($rejected_on){
+                                $on = date('d F, Y', $rejected_on);
+                                echo '<span style="'.$info_message_style.'">
+                                        <i class="dashicons dashicons-info" style="color:#E08E00; '.$info_style.'"></i>', 
+                                        __('Your Application was rejected on', 'tutor'), ' <b>', $on, '</b>',
+                                    '</span>',
+                                    $become_button;                                
+                            }
+                            // else if($instructor_status!=='blocked'){
+                            else {
+                                echo $become_button;
                             }
                             ?>
                         </div>
