@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.5.1
 Requires PHP: 7.0
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,24 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.7.2 - October 21, 2020 =
+
+New: Course filter option in Course Archive page
+New: Public Course/Private course option
+Update: Hide Become Instructor button if someone’s already applied 
+Update: Enable/disable Video source and choose default video source option
+Update: Email Notification after instructor sign-up (Now admin will receive mail notification)
+Update: Assignment page with new deadline notice, expired message and more.
+Update: Instructor Request page with new prompts 
+Fix: Quiz submission email recipients
+Fix: Enrolment email notification issue
+Fix: Assignment submission email recipients
+Fix: Fatal Error in the Sales tab of Reports Addon
+Fix: Canceling order does not update the student count on instructor dashboard
+Fix: RTL layout issue in Add-on list
+Fix: Color settings
+Fix: Minor text issues
 
 = 1.7.1 - October 09, 2020 =
 
