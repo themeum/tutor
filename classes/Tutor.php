@@ -142,6 +142,7 @@ final class Tutor{
 		$this->setup = new Tutor_Setup();
 		$this->private_course_access = new Private_Course_Access();
 		$this->course_filter = new Course_Filter();
+		$this->delete_enrollment = new Delete_Enrollment_With_Order();
 
 		//Integrations
 		$this->woocommerce = new WooCommerce();

@@ -130,7 +130,6 @@ class Shortcode {
 		query_posts($a);
 		ob_start();
 		tutor_load_template('shortcode.tutor-course');
-		// tutor_load_template('archive-course');
 		$output = ob_get_clean();
 		wp_reset_query();
 
