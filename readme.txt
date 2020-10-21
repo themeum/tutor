@@ -245,6 +245,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 New: Course filter option in Course Archive page
 New: Public Course/Private course option
+New: Now student will get email notification after his enrollment
 Update: Hide Become Instructor button if someone’s already applied 
 Update: Enable/disable Video source and choose default video source option
 Update: Email Notification after instructor sign-up (Now admin will receive mail notification)
@@ -253,8 +254,8 @@ Update: Instructor Request page with new prompts
 Fix: Quiz submission email recipients
 Fix: Enrolment email notification issue
 Fix: Assignment submission email recipients
-Fix: Fatal Error in the Sales tab of Reports Addon
 Fix: Canceling order does not update the student count on instructor dashboard
+Fix: Fatal Error in the Sales tab of Reports Addon
 Fix: RTL layout issue in Add-on list
 Fix: Color settings
 Fix: Minor text issues
