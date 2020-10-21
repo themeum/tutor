@@ -1782,13 +1782,6 @@ msgstr ""
 msgid "Setup Wizard"
 msgstr ""
 
-<<<<<<< HEAD
-#: classes/Tutor.php:426, tutor.php:52
-msgid "Tutor Instructor"
-msgstr ""
-
-=======
->>>>>>> master
 #: classes/Tutor.php:521, classes/Utils.php:2214, templates/dashboard/dashboard.php:9
 msgid "Dashboard"
 msgstr ""
@@ -4134,13 +4127,8 @@ msgstr ""
 msgid "Total Marks"
 msgstr ""
 
-<<<<<<< HEAD
-#: views/metabox/video-metabox.php:61
-msgid "Select your preferred video type."
-=======
 #: templates/dashboard/my-quiz-attempts/attempts-details.php:118, templates/dashboard/quiz-attempts/quiz-reviews.php:105
 msgid "Pass Marks"
->>>>>>> master
 msgstr ""
 
 #: templates/dashboard/my-quiz-attempts/attempts-details.php:122, templates/dashboard/quiz-attempts/quiz-reviews.php:109
