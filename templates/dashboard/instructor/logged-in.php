@@ -7,10 +7,26 @@
 $is_instructor = tutor_utils()->is_instructor();
 if ($is_instructor){
     ?>
+<?php
+    $user_id = get_current_user_id();
+    $instructor_status = get_user_meta($user_id,'_tutor_instructor_status',true);
+
+?>
 
 <div class="tutor-instructor-pending-wrapper">
-    <div class="tutor-alert-info tutor-alert">
-        <?php _e('With MySpace becoming more popular every day, there is the constant need to be different.','tutor');?>
+    <div class="tutor-alert <?= ($instructor_status=='pending' ? 'tutor-alert-info' :($instructor_status=='approved' ? 'tutor-alert-success' :($instructor_status=='blocked' ? 'tutor-alert-danger' :'')));?>">
+
+        <?php
+            if($instructor_status=='pending'){
+                _e('Your application will be reviewed and the results will be sent to you by email.','tutor');
+            }
+            else if($instructor_status=='approved'){
+                _e('Your application has been accepted. Further necessary details have been sent to your registered email account.','tutor');
+            }
+            else if($instructor_status=='blocked'){
+                _e('You have been blocked from being an instructor.','tutor');
+            }
+        ?>
     </div>
     
     <div class="tutor-instructor-pending-content">
@@ -18,12 +34,32 @@ if ($is_instructor){
         <div class="tutor-instructor-thankyou-wrapper">
             <div class="tutor-instructor-thankyou-text">
                 <h2>
-                    <?php _e('Thank you for registering as an instructor!','tutor');?>
+                <?php 
+                if($instructor_status=='pending'){
+                    _e('Thank you for registering as an instructor! ','tutor');
+                }
+                else if($instructor_status=='approved'){
+                    _e('Congratulations! You are now registered as an instructor.','tutor');
+                }
+                else if($instructor_status=='blocked'){
+                    _e('Unfortunately, your instructor status has been removed.','tutor');
+                }
+                ?>
                 </h2>                
             </div>
             <div class="tutor-instructor-extra-text">
                 <p>
-                    <?php _e('We\'ve received your application, and we will review it soon. Please hang tight!','tutor');?>
+                <?php 
+                if($instructor_status=='pending'){
+                    _e('We\'ve received your application, and we will review it soon. Please hang tight!','tutor');
+                }
+                else if($instructor_status=='approved'){
+                    _e('Start building your first course today and let your eLearning journey begin.','tutor');
+                }
+                else if($instructor_status=='blocked'){
+                    _e('Please contact the site administrator for further information.','tutor');
+                }
+                ?>
                 </p>                
             </div>
 
