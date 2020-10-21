@@ -58,7 +58,7 @@ $default_source = tutor_utils()->get_option('default_video_source', null);
         </select>
 
         <p class="desc">
-            <?php _e('Select your preferred video type. (.mp4, YouTube, VooPlayer etc.)', 'tutor'); ?>
+            <?php _e('Select your preferred video type.', 'tutor'); ?>
         </p>
 
         <div class="video-metabox-source-input-wrap" style="display: <?php echo ! $videoSource ? 'none' : 'block'; ?>;">
