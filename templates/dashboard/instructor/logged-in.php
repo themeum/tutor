@@ -17,9 +17,9 @@ if ($is_instructor){
         <img src="<?php echo esc_url(tutor()->url . 'assets/images/new-user.png')?>" alt="<?php _e('New User','tutor')?>">
         <div class="tutor-instructor-thankyou-wrapper">
             <div class="tutor-instructor-thankyou-text">
-                <p>
+                <h2>
                     <?php _e('Thank you for registering as an instructor!','tutor');?>
-                </p>                
+                </h2>                
             </div>
             <div class="tutor-instructor-extra-text">
                 <p>
