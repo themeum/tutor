@@ -1744,12 +1744,19 @@ jQuery(document).ready(function ($) {
      * 
      * @since  v.1.7.2
     */
-    $('.tutor-frontend-builder-course-price [name="tutor_course_price_type"]').change(function(){
-        if($(this).prop('checked')){
-            var method = $(this).val()=='paid' ? 'hide' : 'show';
-            $('#_tutor_is_course_public_meta_checkbox')[method]();
-        }
-    }).trigger('change');
+    var price_type = $('.tutor-frontend-builder-course-price [name="tutor_course_price_type"]');
+    if(price_type.length==0){
+        $('#_tutor_is_course_public_meta_checkbox').show();
+    }
+    else{
+        price_type.change(function(){
+            if($(this).prop('checked')){
+                var method = $(this).val()=='paid' ? 'hide' : 'show';
+                $('#_tutor_is_course_public_meta_checkbox')[method]();
+            }
+        }).trigger('change');
+    }
+    
 
     
     /**
