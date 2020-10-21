@@ -1248,7 +1248,7 @@ class Course extends Tutor_Base {
 		<div class="tutor-course-sidebar-settings-item" id="_tutor_is_course_public_meta_checkbox" style="display:none">
 			<label for="<?php echo $is_public; ?>">
 				<input id="<?php echo $is_public; ?>" type="checkbox" name="<?php echo $is_public; ?>" value="yes" <?php echo $is_public_checked; ?> />
-				<?php _e('Is Course Public', 'tutor'); ?>
+				<?php _e('Make This Course Public', 'tutor'); ?>
 				<small style="display:block;padding-left:24px">
 					<?php _e('No enrollment required.', 'tutor'); ?> 
 				</small>

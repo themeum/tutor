@@ -258,6 +258,12 @@ class Options {
 								'options'   => array('min'=> 1, 'max' => 20),
 								'desc'      => __('Define how many courses you want to show per page', 'tutor'),
 							),
+							'course_filter' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Course Filter', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
+								'desc' => __('Show sorting and filtering options on course archive page', 'tutor'),
+							),
 						),
 					),
 					'enable_disable' => array(
