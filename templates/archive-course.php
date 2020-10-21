@@ -14,7 +14,7 @@
 
 get_header();
 
-$course_filter = (bool) tutor_utils()->get_option('course_filter');
+$course_filter = (bool) tutor_utils()->get_option('course_filter', false);
 
 if ($course_filter) {
 ?>
