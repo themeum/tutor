@@ -3121,19 +3121,23 @@ msgstr ""
 msgid "%s Courses"
 msgstr ""
 
-#: templates/global/course-archive-filter-bar.php:24
+#: templates/global/course-archive-filter-bar.php:17
+msgid "%s Course"
+msgstr ""
+
+#: templates/global/course-archive-filter-bar.php:25
 msgid "Release Date (newest first)"
 msgstr ""
 
-#: templates/global/course-archive-filter-bar.php:26
+#: templates/global/course-archive-filter-bar.php:27
 msgid "Release Date (oldest first)"
 msgstr ""
 
-#: templates/global/course-archive-filter-bar.php:27
+#: templates/global/course-archive-filter-bar.php:28
 msgid "Course Title (a-z)"
 msgstr ""
 
-#: templates/global/course-archive-filter-bar.php:28
+#: templates/global/course-archive-filter-bar.php:29
 msgid "Course Title (z-a)"
 msgstr ""
 
@@ -4051,7 +4055,7 @@ msgstr ""
 msgid "Apply to become an instructor"
 msgstr ""
 
-#: templates/dashboard/instructor/logged-in.php:27
+#: templates/dashboard/instructor/logged-in.php:26
 msgid "You have been blocked from being an instructor."
 msgstr ""
 
@@ -4059,39 +4063,39 @@ msgstr ""
 msgid "Your application has been accepted. Further necessary details have been sent to your registered email account."
 msgstr ""
 
-#: templates/dashboard/instructor/logged-in.php:21
+#: templates/dashboard/instructor/logged-in.php:22
 msgid "Your application will be reviewed and the results will be sent to you by email."
 msgstr ""
 
-#: templates/dashboard/instructor/logged-in.php:33
+#: templates/dashboard/instructor/logged-in.php:32
 msgid "New User"
 msgstr ""
 
-#: templates/dashboard/instructor/logged-in.php:45
+#: templates/dashboard/instructor/logged-in.php:42
 msgid "Unfortunately, your instructor status has been removed."
 msgstr ""
 
-#: templates/dashboard/instructor/logged-in.php:42
+#: templates/dashboard/instructor/logged-in.php:40
 msgid "Congratulations! You are now registered as an instructor."
 msgstr ""
 
-#: templates/dashboard/instructor/logged-in.php:39
+#: templates/dashboard/instructor/logged-in.php:38
 msgid "Thank you for registering as an instructor! "
 msgstr ""
 
-#: templates/dashboard/instructor/logged-in.php:60
+#: templates/dashboard/instructor/logged-in.php:55
 msgid "Please contact the site administrator for further information."
 msgstr ""
 
-#: templates/dashboard/instructor/logged-in.php:57
+#: templates/dashboard/instructor/logged-in.php:53
 msgid "Start building your first course today and let your eLearning journey begin."
 msgstr ""
 
-#: templates/dashboard/instructor/logged-in.php:54
+#: templates/dashboard/instructor/logged-in.php:51
 msgid "We've received your application, and we will review it soon. Please hang tight!"
 msgstr ""
 
-#: templates/dashboard/instructor/logged-in.php:67
+#: templates/dashboard/instructor/logged-in.php:62
 msgid "Go to Dashboard"
 msgstr ""
 
