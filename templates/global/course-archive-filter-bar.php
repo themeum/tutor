@@ -13,8 +13,9 @@
 <div class="tutor-course-filter-wrap">
     <div class="tutor-course-archive-results-wrap">
 		<?php
-		$courseCount = tutor_utils()->get_archive_page_course_count();
-		echo sprintf(__("%s Courses", "tutor"), "<strong>{$courseCount}</strong>");
+        $courseCount = tutor_utils()->get_archive_page_course_count();
+        $count_text = $courseCount>1 ? __("%s Courses", "tutor") : __("%s Course", "tutor");
+		echo sprintf($count_text, "<strong>{$courseCount}</strong>");
 		?>
     </div>
 
