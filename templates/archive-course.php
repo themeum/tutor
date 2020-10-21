@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template for displaying courses
  *
@@ -11,7 +12,12 @@
  * @version 1.5.8
  */
 
-get_header(); ?>
+get_header();
+
+$course_filter = (bool) tutor_utils()->get_option('course_filter');
+
+if ($course_filter) {
+?>
 	<div class="tutor-course-filter-wrapper">
 		<div class="tutor-course-filter-container">
 			<?php tutor_load_template('course-filter.filters'); ?>
@@ -22,6 +28,8 @@ get_header(); ?>
 			</div><!-- .wrap -->
 		</div>
 	</div>
-	
-
-<?php get_footer();
+<?php
+} else {
+	tutor_load_template('archive-course-init');
+}
+get_footer(); ?>
