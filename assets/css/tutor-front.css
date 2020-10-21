@@ -8209,7 +8209,6 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
-  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
@@ -9521,42 +9520,36 @@ Content Drip (Pro)
   }
 }
 
+.tutor-instructor-pending-content {
+  text-align: center;
+}
+
+.tutor-instructor-pending-content a {
+  margin-top: 26px;
+}
+
 .tutor-instructor-pending-content img {
   margin-bottom: 69px;
   border-radius: 10px;
 }
 
-.tutor-instructor-thankyou-wrapper {
-  text-align: center;
-}
-
-.tutor-instructor-thankyou-text {
-  /* height: 48px; */
+.tutor-instructor-thankyou-text h2 {
   line-height: 48px;
   font-size: 40px;
   font-style: normal;
   font-weight: 500;
   letter-spacing: 0px;
   color: #161616;
-  margin: 0 auto 26px auto;
+  margin-bottom: 26px;
 }
 
 .tutor-instructor-extra-text {
-  height: 54px;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
   letter-spacing: 0px;
   color: #525252;
   line-height: 30px;
-  margin: 0 auto 26px auto;
-}
-
-@media screen and (max-width: 992px) {
-  .tutor-instructor-extra-text,
-  .tutor-instructor-thankyou-text {
-    height: auto;
-  }
 }
 
 /*# sourceMappingURL=tutor-front.css.map */
