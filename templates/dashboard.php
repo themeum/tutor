@@ -73,7 +73,7 @@ do_action('tutor_dashboard/before/wrap');
                             $instructor_status = tutor_utils()->instructor_status();
                             $instructor_status = is_string($instructor_status) ? strtolower($instructor_status) : '';
                             $rejected_on = get_user_meta($user->ID , '_is_tutor_instructor_rejected', true);
-                            $info_style = 'margin-right: 7px;';
+                            $info_style = 'vertical-align: middle; margin-right: 7px;';
                             $info_message_style = 'display:inline-block; color:#7A7A7A; font-size: 15px;';
 
                             ob_start();

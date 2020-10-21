@@ -1848,7 +1848,6 @@ jQuery(document).ready(function ($) {
 
     // Alter pagination
     loop_container.on('click', '.tutor-pagination-wrap a', function(e){
-        e.preventDefault();
         var url = $(this).data('href') || $(this).attr('href');
 
         if(url){
@@ -1856,6 +1855,7 @@ jQuery(document).ready(function ($) {
             var page = url.searchParams.get("paged");
 
             if(page){
+                e.preventDefault();
                 toggle_criteria('page', page);
                 
                 filter_container.find('[type="checkbox"]:first').trigger('change');
