@@ -22,7 +22,7 @@
 
 
 	<?php
-	$my_courses = tutor_utils()->get_enrolled_courses_by_user();
+	$my_courses = tutor_utils()->get_enrolled_courses_by_user(get_current_user_id(), array('private', 'publish'));
 
 	if ($my_courses && $my_courses->have_posts()):
 		while ($my_courses->have_posts()):

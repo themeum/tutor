@@ -1250,7 +1250,7 @@ class Course extends Tutor_Base {
 				<input id="<?php echo $is_public; ?>" type="checkbox" name="<?php echo $is_public; ?>" value="yes" <?php echo $is_public_checked; ?> />
 				<?php _e('Is Course Public', 'tutor'); ?>
 				<small style="display:block;padding-left:24px">
-					<?php _e('No enrollment required and no payment functionality.', 'tutor'); ?> 
+					<?php _e('No enrollment required.', 'tutor'); ?> 
 				</small>
 			</label>
 		</div>

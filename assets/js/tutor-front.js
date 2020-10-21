@@ -1760,23 +1760,52 @@ jQuery(document).ready(function ($) {
     var filter_criteria = {action:'tutor_course_filter_ajax'};
     var filter_container = $('.tutor-course-filter-container');
     var loop_container = $('.tutor-course-filter-loop-container');
+    var toggle_criteria = function(name, value, is_checked, no_push_state){
+
+        if(is_checked===undefined){
+            
+            if(!value){
+                delete filter_criteria[name];
+            }
+            else{
+                filter_criteria[name]=value;
+            }
+        }
+        else{
+            !filter_criteria[name] ? filter_criteria[name]=[] : 0;
+            var index = filter_criteria[name].indexOf(value);
+
+            if(is_checked){
+                index==-1 ? filter_criteria[name].push(value) : 0;
+            }
+            else{
+                filter_criteria[name].splice(index, 1);
+            }
+        }
+
+        no_push_state===undefined ? push_state() : 0;
+    }
+
+    var push_state=function(){
+        var str = Object.keys(filter_criteria).map(function(key){
+            var val = filter_criteria[key];
+            var str = Array.isArray(val) ? val.join(',') : val;
+
+            return (key=='action' || !str) ? null : key+'='+str;
+
+        }).filter(q=>q!==null).join('&');
+        
+        window.history.replaceState({'id':'tutor_courses'}, 'Courses', (str ? '?'+str : ''));
+    }
 
     // Sidebar checkbox value change
     filter_container.find('[type=checkbox]').change(function(){
         
         var name = $(this).attr('name');
         var value = $(this).val();
+
+        toggle_criteria(name, value, $(this).prop('checked'));
         
-        !filter_criteria[name] ? filter_criteria[name]=[] : 0;
-        var index = filter_criteria[name].indexOf(value);
-
-        if($(this).prop('checked')){
-            index==-1 ? filter_criteria[name].push(value) : 0;
-        }
-        else{
-            filter_criteria[name].splice(index, 1);
-        }
-
         loop_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>');
 
         $.ajax({
@@ -1804,15 +1833,9 @@ jQuery(document).ready(function ($) {
 
         time_out=window.setTimeout(function(){
             
-            if(value==''){
-                delete filter_criteria.keyword;
-            }
-            else{
-                filter_criteria.keyword=value;
-            }
-            
-            filter_container.find('[type="checkbox"]:first').trigger('change');
+            toggle_criteria('keyword', value);
 
+            filter_container.find('[type="checkbox"]:first').trigger('change');
         }, 500);
     });
 
@@ -1826,7 +1849,8 @@ jQuery(document).ready(function ($) {
             var page = url.searchParams.get("paged");
 
             if(page){
-                filter_criteria.page=page;
+                toggle_criteria('page', page);
+                
                 filter_container.find('[type="checkbox"]:first').trigger('change');
             }
         }
@@ -1834,7 +1858,43 @@ jQuery(document).ready(function ($) {
 
     // Alter sort filter
     loop_container.on('change', 'select[name="tutor_course_filter"]', function(){
-        filter_criteria.tutor_course_filter=$(this).val();
+        toggle_criteria('tutor_course_filter', $(this).val());
         filter_container.find('[type="checkbox"]:first').trigger('change');
     });
+
+    // Parse filter from URL
+    var url = new URL(window.location.href);
+    var trigger_load=false;
+    filter_container.find('[type="checkbox"]').each(function(){
+        var name = $(this).attr('name');
+        var arg = url.searchParams.get(name);
+
+        if(arg){
+            arg = arg.split(',');
+
+            for(var i=0; i<arg.length; i++){
+                var value = arg[i];
+                filter_container.find('[type="checkbox"]').filter('[name="'+name+'"]').filter('[value="'+value+'"]').prop('checked', true);
+                toggle_criteria(name, value, true, false);
+                trigger_load=true;
+            }
+        }
+    });
+
+    ['page', 'keyword', 'tutor_course_filter'].forEach(function(name){
+        var value = url.searchParams.get(name);
+
+        if(value){
+            toggle_criteria(name, value, undefined, false);
+            name=='keyword' ? filter_container.find('[name="tutor-course-filter-keyword"]').val(value) : 0;
+            name=='tutor_course_filter' ? loop_container.find('select[name="tutor_course_filter"]').val(value) : 0;
+            trigger_load=true;
+        }
+    });
+
+    if(trigger_load){
+        filter_container.find('[type="checkbox"]:first').trigger('change');
+    }
+
+    // Push filter to url
 });

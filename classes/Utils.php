@@ -1709,7 +1709,7 @@ class Utils {
 	 *
 	 * Get the enrolled courses by user
 	 */
-	public function get_enrolled_courses_by_user($user_id = 0){
+	public function get_enrolled_courses_by_user($user_id = 0, $post_status='publish'){
 		global $wpdb;
 
 		$user_id = $this->get_user_id($user_id);
@@ -1719,7 +1719,7 @@ class Utils {
 			$course_post_type = tutor()->course_post_type;
 			$course_args = array(
 				'post_type'     => $course_post_type,
-				'post_status'   => 'publish',
+				'post_status'   => $post_status,
 				'post__in'      => $course_ids,
                 'posts_per_page' => -1
 			);
@@ -2472,14 +2472,12 @@ class Utils {
 		$course_post_type = tutor()->course_post_type;
 		$count = $wpdb->get_var("SELECT COUNT(enrollment.ID) FROM {$wpdb->posts} enrollment 
 									LEFT JOIN {$wpdb->posts} course ON enrollment.post_parent=course.ID
-									LEFT JOIN {$wpdb->postmeta} ON {$wpdb->postmeta}.post_id=enrollment.ID
-									LEFT JOIN {$wpdb->posts} wc_order ON {$wpdb->postmeta}.meta_value=wc_order.ID
 										WHERE 
-											course.post_author=1
+											course.post_author={$instructor_id}
 											AND course.post_status='publish'
 											AND course.post_type='courses'
 											AND enrollment.post_type='tutor_enrolled'
-											AND (wc_order.post_status IS NULL OR wc_order.post_status='wc-completed');");
+											AND enrollment.post_status='completed'");
 
 		return (int) $count;
 	}

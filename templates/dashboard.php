@@ -73,14 +73,13 @@ do_action('tutor_dashboard/before/wrap');
                             $instructor_status = tutor_utils()->instructor_status();
                             $instructor_status = is_string($instructor_status) ? strtolower($instructor_status) : '';
                             $rejected_on = get_user_meta($user->ID , '_is_tutor_instructor_rejected', true);
-                            $info_style = 'position: relative; top: 11px; margin-right: 7px;';
-                            $info_message_style = 'color:#7A7A7A; font-size: 15px;';
+                            $info_style = 'margin-right: 7px;';
+                            $info_message_style = 'display:inline-block; color:#7A7A7A; font-size: 15px;';
 
                             ob_start();
                             if (tutils()->get_option('enable_become_instructor_btn')) {
                                 ?>
-                                    &nbsp;
-                                    <a class="tutor-btn bordered-btn" href="<?php echo esc_url(tutils()->instructor_register_url()); ?>">
+                                    <a style="vertical-align:middle" class="tutor-btn bordered-btn" href="<?php echo esc_url(tutils()->instructor_register_url()); ?>">
                                         <?php echo sprintf(__("%s Become an instructor", 'tutor'), '<i class="tutor-icon-man-user"></i> &nbsp;'); ?>
                                     </a>
                                 <?php
@@ -111,8 +110,7 @@ do_action('tutor_dashboard/before/wrap');
                                     '</span>',
                                     $become_button;                                
                             }
-                            // else if($instructor_status!=='blocked'){
-                            else {
+                            else if($instructor_status!=='blocked'){
                                 echo $become_button;
                             }
                             ?>
