@@ -2470,14 +2470,14 @@ class Utils {
 		global $wpdb;
 
 		$course_post_type = tutor()->course_post_type;
-		$count = $wpdb->get_var("SELECT COUNT(enrollment.ID) FROM {$wpdb->posts} enrollment 
-									LEFT JOIN {$wpdb->posts} course ON enrollment.post_parent=course.ID
-										WHERE 
-											course.post_author={$instructor_id}
-											AND course.post_status='publish'
-											AND course.post_type='courses'
-											AND enrollment.post_type='tutor_enrolled'
-											AND enrollment.post_status='completed'");
+		$count = $wpdb->get_var(
+			"SELECT COUNT(enrollment.ID) FROM {$wpdb->posts} enrollment 
+			LEFT JOIN {$wpdb->posts} course ON enrollment.post_parent=course.ID
+			WHERE course.post_author={$instructor_id}
+				AND course.post_status='publish'
+				AND course.post_type='courses'
+				AND enrollment.post_type='tutor_enrolled'
+				AND enrollment.post_status='completed'");
 
 		return (int) $count;
 	}
