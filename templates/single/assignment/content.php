@@ -7,6 +7,17 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 global $wpdb;
+$is_submitted = false;
+$is_submitting = tutor_utils()->is_assignment_submitting(get_the_ID());
+//get the comment
+$post_id = get_the_ID();
+$user_id = get_current_user_id();
+$assignment_comment = tutor_utils()->get_single_comment_user_post_id($post_id,$user_id);
+
+if($assignment_comment !=false){
+	$submitted = $assignment_comment->comment_approved;
+	$submitted=='submitted' ? $is_submitted = true :'';
+}
 ?>
 
 <?php do_action('tutor_assignment/single/before/content'); ?>
@@ -70,7 +81,7 @@ global $wpdb;
 					<?php _e('Time Duration : ', 'tutor') ?>
                     <strong><?php echo $time_duration["value"] ? $time_duration["value"] . ' ' .$time_duration["time"] : __('No limit', 'tutor'); ?></strong>
                 </li>                
-                <?php if($now>$remaining_time):?>
+                <?php if($now>$remaining_time AND $is_submitted==false):?>
                 <li>
 					<?php _e('Deadline : ', 'tutor') ?>
                     <strong><?php _e('Expired', 'tutor'); ?></strong>
@@ -93,7 +104,7 @@ global $wpdb;
         </div>
 
         <hr />
-        <?php if($now>$remaining_time):?>
+        <?php if($now>$remaining_time AND $is_submitted==false):?>
         <div class="tutor-asignment-expire tutor-alert-danger tutor-alert" style="margin:36px 0 46px">
 
         	<?php _e('You have missed the submission deadline. Please contact the instructor for more information.','tutor');?>
@@ -132,8 +143,8 @@ global $wpdb;
 			<?php
 		}
 
-		$is_submitting = tutor_utils()->is_assignment_submitting(get_the_ID());
-		if ($is_submitting){
+		
+		if ($remaining_time > $now AND $is_submitting){
 			?>
 
             <div class="tutor-assignment-submit-form-wrap">
