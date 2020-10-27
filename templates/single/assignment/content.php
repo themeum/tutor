@@ -45,15 +45,15 @@ if($assignment_comment !=false){
         <div class="tutor-assignment-information">
 			<?php
 			$time_duration = tutor_utils()->get_assignment_option(get_the_ID(), 'time_duration');
-
+				
 			$total_mark = tutor_utils()->get_assignment_option(get_the_ID(), 'total_mark');
 			$pass_mark = tutor_utils()->get_assignment_option(get_the_ID(), 'pass_mark');
 
 			
 			global $post;
 			$assignment_created_time = strtotime($post->post_date);
-			$time_duration_in_sec;
-			if(!empty($time_duration['value']) AND !empty($time_duration['time']))
+			$time_duration_in_sec = 0;
+			if(isset($time_duration['value']) AND isset($time_duration['time']))
 			{
 				switch ($time_duration['time']) {
 					case 'hours':
@@ -81,12 +81,22 @@ if($assignment_comment !=false){
 					<?php _e('Time Duration : ', 'tutor') ?>
                     <strong><?php echo $time_duration["value"] ? $time_duration["value"] . ' ' .$time_duration["time"] : __('No limit', 'tutor'); ?></strong>
                 </li>                
-                <?php if($now>$remaining_time AND $is_submitted==false):?>
+                <?php
+		        /*
+				*time_duration[value]==0 means no limit
+				*if have unlimited time then no msg should
+				*appear 
+		        */                
+                if($time_duration['value'] !=0):
+                if($now>$remaining_time AND $is_submitted==false):?>
                 <li>
 					<?php _e('Deadline : ', 'tutor') ?>
                     <strong><?php _e('Expired', 'tutor'); ?></strong>
                 </li>
-            	<?php endif;?>
+            	<?php 
+            		endif; 
+            		endif;
+            	?>
                 <!--<li>
                     <?php /*_e('Time Remaining : ') */?>
                     <strong><?php /*echo "7 Days, 12 Hour"; */?></strong>
@@ -104,13 +114,23 @@ if($assignment_comment !=false){
         </div>
 
         <hr />
-        <?php if($now>$remaining_time AND $is_submitted==false):?>
+        <?php
+        /*
+		*time_duration[value]==0 means no limit
+		*if have unlimited time then no msg should
+		*appear 
+        */
+        if($time_duration['value'] !=0): 
+        if($now>$remaining_time AND $is_submitted==false):?>
         <div class="tutor-asignment-expire tutor-alert-danger tutor-alert" style="margin:36px 0 46px">
 
         	<?php _e('You have missed the submission deadline. Please contact the instructor for more information.','tutor');?>
 
         </div>
-    	<?php endif;?>
+    	<?php 
+    		endif;
+    		endif;
+    	?>
         <div class="tutor-assignment-content">
             <h2><?php _e('Description', 'tutor'); ?></h2>
 
@@ -144,7 +164,7 @@ if($assignment_comment !=false){
 		}
 
 		
-		if ($remaining_time > $now AND $is_submitting){
+		if ($is_submitting AND ($remaining_time > $now OR $time_duration['value']==0)){
 			?>
 
             <div class="tutor-assignment-submit-form-wrap">
@@ -285,12 +305,19 @@ if($assignment_comment !=false){
                         <input type="hidden" value="tutor_assignment_start_submit" name="tutor_action"/>
                         <input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 
-                        <?php if($now > $remaining_time):?>
                         
-                        <button type="submit" class="tutor-button" id="tutor_assignment_start_btn" disabled=""> <?php _e( 'Start assignment submit', 'tutor' ); ?> </button>
-                        <?php else:?>
-                        <button type="submit" class="tutor-button" id="tutor_assignment_start_btn"> <?php _e( 'Start assignment submit', 'tutor' ); ?> </button>
-                        <?php endif;?>	
+                    <button type="submit" class="tutor-button" id="tutor_assignment_start_btn" 
+                    <?php 
+                    if($time_duration['value'] !=0){
+                    	if($now > $remaining_time){
+                    		echo "disabled";
+                    	}
+                    }
+                    ?> 
+                    > 
+                    	<?php _e( 'Start assignment submit', 'tutor' ); ?> 
+                    </button>
+	
                     </form>
                 </div>
 				<?php
