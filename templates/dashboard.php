@@ -96,14 +96,14 @@ do_action('tutor_dashboard/before/wrap');
                             }
                             else if($instructor_status=='pending'){
                                 $on = get_user_meta($user->ID, '_is_tutor_instructor', true);
-                                $on =  date('d F, Y', $on);
+                                $on =  date_i18n('d F, Y', $on);
                                 echo '<span style="'.$info_message_style.'">
                                         <i class="dashicons dashicons-info" style="color:#E53935; '.$info_style.'"></i>', 
                                         __('Your Application is pending on', 'tutor'), ' <b>', $on, '</b>',
                                     '</span>';
                             }
                             else if($rejected_on){
-                                $on = date('d F, Y', $rejected_on);
+                                $on = date_i18n('d F, Y', $rejected_on);
                                 echo '<span style="'.$info_message_style.'">
                                         <i class="dashicons dashicons-info" style="color:#E08E00; '.$info_style.'"></i>', 
                                         __('Your Application was rejected on', 'tutor'), ' <b>', $on, '</b>',

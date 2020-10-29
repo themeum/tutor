@@ -51,7 +51,7 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
             ?>
             <tr>
                 <td><?php echo $comment_author->display_name; ?></td>
-                <td><?php echo date('j M, Y. h:i a', strtotime($assignment->comment_date)); ?></td>
+                <td><?php echo date_i18n('j M, Y. h:i a', strtotime($assignment->comment_date)); ?></td>
                 <td><?php echo $pass_mark; ?></td>
                 <td><?php echo !empty($given_mark) ? $given_mark . '/' . $max_mark : $max_mark; ?></td>
                 <td><?php echo $status; ?></td>

@@ -64,7 +64,7 @@ $dateWiseSales = array_combine($queried_date, $total_earning);
 $chartData = array_merge($datesPeriod, $dateWiseSales);
 foreach ($chartData as $key => $salesCount){
 	unset($chartData[$key]);
-	$formatDate = date('d M', strtotime($key));
+	$formatDate = date_i18n('d M', strtotime($key));
 	$chartData[$formatDate] = $salesCount;
 }
 $statements = tutor_utils()->get_earning_statements($user_id, compact('start_date', 'end_date', 'statuses'));
@@ -103,7 +103,7 @@ $statements = tutor_utils()->get_earning_statements($user_id, compact('start_dat
     </div>
 
 <div class="tutor-dashboard-item-group">
-    <h4><?php echo sprintf(__("Earning Data for the month of %s", 'tutor'), date("F, Y", strtotime($start_date)));?></h4>
+    <h4><?php echo sprintf(__("Earning Data for the month of %s", 'tutor'), date_i18n("F, Y", strtotime($start_date)));?></h4>
     <?php
     tutor_load_template('dashboard.earning.chart-body', compact('chartData', 'statements'));
     ?>
