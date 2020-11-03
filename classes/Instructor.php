@@ -245,7 +245,7 @@ class Instructor {
 			$instructor = new \WP_User($instructor_id);
 			$instructor->add_role(tutor()->instructor_role);
 
-			//TODO: send E-Mail to this user about instructor approval, should via hook
+			// Send E-Mail to this user about instructor approval via hook
 			do_action('tutor_after_approved_instructor', $instructor_id);
 		}
 
@@ -262,11 +262,16 @@ class Instructor {
 
 		if( 'remove-instructor' === $action)
 		{
+			do_action('tutor_before_rejected_instructor', $instructor_id);
+
 			$user = new \WP_User($instructor_id);
 			$user->remove_role(tutor()->instructor_role);
 
 			tutor_utils()->remove_instructor_role($instructor_id);
 			update_user_meta($instructor_id, '_is_tutor_instructor_rejected', tutor_time());
+
+			// Send E-Mail to this user about instructor rejection via hook
+			do_action('tutor_after_rejected_instructor', $instructor_id);
 		}
 
 		wp_send_json_success();

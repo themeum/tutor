@@ -128,7 +128,7 @@ if ( ! $can_publish_course){
                                             <div class="tutor-row tutor-align-items-center">
                                                 <div class="tutor-col-auto">
                                                     <label for="tutor_course_price_type_pro" class="tutor-styled-radio">
-                                                        <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'paid') : checked('true', 'true'); ?> >
+                                                        <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> >
                                                         <span></span>
                                                         <div class="tutor-form-group">
                                                             <span class="tutor-input-prepand"><?php echo $currency_symbol; ?></span>
@@ -138,7 +138,7 @@ if ( ! $can_publish_course){
                                                 </div>
                                                 <div class="tutor-col-auto">
                                                     <label class="tutor-styled-radio">
-                                                        <input type="radio" name="tutor_course_price_type" value="free"  <?php checked($_tutor_course_price_type, 'free'); ?> >
+                                                        <input type="radio" name="tutor_course_price_type" value="free"  <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?> >
                                                         <span><?php _e('Free', "tutor") ?></span>
                                                     </label>
                                                 </div>

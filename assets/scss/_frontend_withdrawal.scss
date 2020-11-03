@@ -1,0 +1,123 @@
+.tutor-frontend-dashboard-withdrawal{
+    .withdraw-page-current-balance{
+        border:  1px solid #DCDBDC;
+        border-radius: 6px;
+        padding: 15px;
+        overflow: auto;
+
+        &>img{
+            vertical-align: middle;
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        &>div:nth-of-type(1){
+            vertical-align: middle;
+            display: inline-block;
+
+            &>small{
+                font-size: 13px;
+            }
+
+            &>p{
+                font-size: 20px;
+                margin: 0;
+            }
+        }
+
+        &>div:nth-of-type(2){
+            float: right;
+            display: inline-block;    
+            margin-top: 19px;
+            margin-left: 15px;
+
+            a, a:hover, a:focus, a:active{
+                text-decoration: none;
+                background: #3E64DE;
+                border-radius: 3px;
+                display: inline-block;
+                padding: 3px 16px;
+                font-weight: 500;
+                font-size: 16px;
+                color: white;
+                cursor: pointer;
+            }        
+            
+            a:hover{
+                background: #2548bb;
+            }    
+        }
+    }
+
+    h4{
+        font-weight: 500;
+        font-size: 24px;
+    }
+
+    .withdrawal-preference{
+        font-size: 15px;
+        color: #7A7A7A;
+
+        &>img{
+            vertical-align: middle;
+            width: 23px;
+        }
+
+        &>span{
+            vertical-align: middle;
+        }
+    }
+
+    .tutor-earning-withdraw-form-wrap{
+        margin-top: 20px;
+        border: 1px solid #DCDBDC;
+        padding: 15px;
+        border-radius: 6px;
+    }
+
+    table.withdrawals-history{
+        border: 1px solid #DCDBDC;
+        box-sizing: border-box;
+
+        th{
+            background:  #F3F3F3;
+        }
+
+        td:odd{
+            background: #F3F3F3;
+        }
+
+        th, td{
+            padding: 10px;
+            border:none;
+            font-weight: normal;
+            font-size: 13px;
+            text-align: left;
+
+            &{
+                border-bottom: 1px solid #DCDBDC;
+                border-collapse: collapse;
+            }
+        }
+    }
+
+    .tutor-status-text{
+        display: inline-block;
+        font-weight: bold;
+        font-size: 13px;
+        color: #FFFFFF;
+        background: gray;
+        border-radius: 2px;
+        padding: 0 9px;
+
+        &.status-approved{
+            background:  #24A148;
+        }
+        &.status-pending{
+            background:   #ED9700;
+        }
+        &.status-rejected{
+            background:  #F44337;;
+        }
+    }
+}

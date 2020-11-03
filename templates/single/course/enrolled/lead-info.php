@@ -67,7 +67,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 
             <?php if ( !$disable_course_level){ ?>
                 <li class="tutor-course-level">
-                    <span><?php _e('Course level:', 'tutor'); ?></span>
+                    <span><?php _e(tutor_utils()->get_option('tutor_coure_level_label', 'Course level:'), 'tutor'); ?></span>
                     <?php echo get_tutor_course_level(); ?>
                 </li>
             <?php } ?>
