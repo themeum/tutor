@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.5.1
 Requires PHP: 7.0
-Stable tag: 1.7.3
+Stable tag: 1.7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,20 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.7.4 - November 05, 2020 =
+
+New: More Email Notifications
+New: Course difficulty level label field in dashboard
+New: Assignment evaluation status column in dashboard
+New: Course filter preference checkbox
+New: Shortcode to show all instructors
+New: Filter hook to modify sub nav menu of setting page in frontend dashboard
+Update: Withdrawal Page design update
+Update: Show 'Continue Course' instead of 'Add to Cart' if already purchased
+Update: Course filter enable/disable option in 'tutor_course' Shortcode
+Fix: Compatibility issue with Divi Builder
+Fix: BuddyPress completed learning percentage 0
 
 = 1.7.3 - October 21, 2020 =
 
