@@ -73,12 +73,20 @@ class Options {
 		$attempts_allowed['unlimited'] = __('Unlimited' , 'tutor');
 		$attempts_allowed = array_merge($attempts_allowed, array_combine(range(1,20), range(1,20)));
 
-		$video_sources=array(
+		$video_sources = array(
 			'html5' => __('HTML 5 (mp4)', 'tutor'),
 			'external_url' => __('External URL', 'tutor'),
 			'youtube' => __('Youtube', 'tutor'),
 			'vimeo' => __('Vimeo', 'tutor'),
 			'embedded' => __('Embedded', 'tutor')
+		);
+
+		$course_filters = array(
+			'search' => 'Keyword Search',
+			'category' => 'Category',
+			'tag' => 'Tag',
+			'difficulty_level' => 'Difficulty Level',
+			'price_type' => 'Price Type'
 		);
 
 		$attr = array(
@@ -230,7 +238,13 @@ class Options {
                                     'strict'    =>  __('Strict Mode', 'tutor'),
                                 ),
                                 'desc'          => __('Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor'),
-                            ),
+							),
+							'tutor_coure_level_label' => array(
+								'type'          => 'text',
+								'label'         => __('Course Level Label', 'tutor'),
+								'default'       => 'Course level',
+								'desc'          => __('The text to appear for course level.', 'tutor'),
+							),
 						),
 					),
 					'archive' => array(
@@ -263,6 +277,12 @@ class Options {
 								'label'     => __('Course Filter', 'tutor'),
 								'label_title'   => __('Enable', 'tutor'),
 								'desc' => __('Show sorting and filtering options on course archive page', 'tutor'),
+							),
+							'supported_course_filters' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Preferred Course Filters', 'tutor'),
+								'options'	=> $course_filters,
+								'desc'      => __('Choose preferred filter options you\'d like to show in course archive page.', 'tutor'),
 							),
 						),
 					),

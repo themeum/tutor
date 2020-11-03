@@ -177,7 +177,7 @@ class Admin{
 	 */
 	public function filter_posts_for_instructors(){
 		if ( ! current_user_can('administrator') && current_user_can(tutor()->instructor_role)){
-			remove_menu_page( 'edit-comments.php' ); //Comments
+			@remove_menu_page( 'edit-comments.php' ); //Comments
 			add_filter( 'posts_clauses_request', array($this, 'posts_clauses_request') );
 		}
 	}

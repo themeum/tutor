@@ -475,15 +475,19 @@ if ( ! function_exists('tutor_course_loop_price')) {
     function tutor_course_loop_price() {
         ob_start();
 
-        $tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
-        if ($tutor_course_sell_by){
-            tutor_load_template( 'loop.course-price-'.$tutor_course_sell_by );
-        }else{
-            tutor_load_template( 'loop.course-price' );
+        if(tutils()->is_enrolled(get_the_ID())){
+            tutor_load_template( 'loop.course-continue' );
         }
-        $output = apply_filters( 'tutor_course_loop_price', ob_get_clean() );
+        else{
+            $tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
+            if ($tutor_course_sell_by){
+                tutor_load_template( 'loop.course-price-'.$tutor_course_sell_by );
+            }else{
+                tutor_load_template( 'loop.course-price' );
+            }
+        }
 
-        echo $output;
+        echo apply_filters( 'tutor_course_loop_price', ob_get_clean() );
     }
 }
 

@@ -2386,6 +2386,7 @@ Course question and answer
   border-radius: 6px;
   overflow: hidden;
   padding: 0 6px;
+  height: auto;
 }
 
 .tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input, .tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input:focus, .tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input:active {
@@ -2397,6 +2398,7 @@ Course question and answer
   font-weight: normal;
   font-size: 16px;
   color: #7A7A7A;
+  height: 35px;
 }
 
 .tutor-course-filter-wrapper > div:first-child .tutor-course-search-field i {
@@ -2432,6 +2434,10 @@ Course question and answer
   font-size: 16px;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.tutor-course-filter-wrapper > div .tutor-course-filter-loop-container {
+  display: none;
 }
 
 @media (max-width: 767px) {
@@ -8209,6 +8215,7 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
+  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
@@ -9550,6 +9557,131 @@ Content Drip (Pro)
   letter-spacing: 0px;
   color: #525252;
   line-height: 30px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance {
+  border: 1px solid #DCDBDC;
+  border-radius: 6px;
+  padding: 15px;
+  overflow: auto;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > img {
+  vertical-align: middle;
+  display: inline-block;
+  margin-right: 15px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(1) {
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(1) > small {
+  font-size: 13px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(1) > p {
+  font-size: 20px;
+  margin: 0;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) {
+  float: right;
+  display: inline-block;
+  margin-top: 19px;
+  margin-left: 15px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) a, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) a:hover, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) a:focus, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) a:active {
+  text-decoration: none;
+  background: #3E64DE;
+  border-radius: 3px;
+  display: inline-block;
+  padding: 3px 16px;
+  font-weight: 500;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) a:hover {
+  background: #2548bb;
+}
+
+.tutor-frontend-dashboard-withdrawal h4 {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdrawal-preference {
+  font-size: 15px;
+  color: #7A7A7A;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdrawal-preference > img {
+  vertical-align: middle;
+  width: 23px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdrawal-preference > span {
+  vertical-align: middle;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap {
+  margin-top: 20px;
+  border: 1px solid #DCDBDC;
+  padding: 15px;
+  border-radius: 6px;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history {
+  border: 1px solid #DCDBDC;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th {
+  background: #F3F3F3;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history td:odd {
+  background: #F3F3F3;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td {
+  padding: 10px;
+  border: none;
+  font-weight: normal;
+  font-size: 13px;
+  text-align: left;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td {
+  border-bottom: 1px solid #DCDBDC;
+  border-collapse: collapse;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-status-text {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 13px;
+  color: #FFFFFF;
+  background: gray;
+  border-radius: 2px;
+  padding: 0 9px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-approved {
+  background: #24A148;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-pending {
+  background: #ED9700;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-rejected {
+  background: #F44337;
 }
 
 /*# sourceMappingURL=tutor-front.css.map */

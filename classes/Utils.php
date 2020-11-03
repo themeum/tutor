@@ -2405,7 +2405,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors($start = 0, $limit = 10, $search_term = ''){
+	public function get_instructors($start = 0, $limit = 10, $search_term = '', $status=null){
 		$meta_key = '_is_tutor_instructor';
 		global $wpdb;
 
@@ -2413,9 +2413,17 @@ class Utils {
 			$search_term = " AND ( {$wpdb->users}.display_name LIKE '%{$search_term}%' OR {$wpdb->users}.user_email LIKE '%{$search_term}%' ) ";
 		}
 
-		$instructors = $wpdb->get_results("SELECT SQL_CALC_FOUND_ROWS {$wpdb->users}.* FROM {$wpdb->users} 
-			INNER JOIN {$wpdb->usermeta} 
-			ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id ) 
+		if($status){
+			!is_array($status) ? $status=array($status) : 0;
+			$status = array_map(function($str){return "'{$str}'";}, $status);
+			$status = implode(',', $status);
+			
+			$search_term.=" AND inst_status.meta_key='_tutor_instructor_status' AND inst_status.meta_value IN ({$status})";
+		}
+
+		$instructors = $wpdb->get_results("SELECT DISTINCT SQL_CALC_FOUND_ROWS {$wpdb->users}.* FROM {$wpdb->users} 
+			INNER JOIN {$wpdb->usermeta} ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id ) 
+			INNER JOIN {$wpdb->usermeta} inst_status ON ( {$wpdb->users}.ID = inst_status.user_id ) 
 			WHERE 1=1 AND ( {$wpdb->usermeta}.meta_key = '{$meta_key}' )  {$search_term}
 			ORDER BY {$wpdb->usermeta}.meta_value DESC 
 			LIMIT {$start}, {$limit} ");

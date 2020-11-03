@@ -23,13 +23,17 @@ if ($course_filter) {
 			<?php tutor_load_template('course-filter.filters'); ?>
 		</div>
 		<div>
-			<div class="<?php tutor_container_classes() ?> tutor-course-filter-loop-container">
+			<div class="<?php tutor_container_classes(); ?> tutor-course-filter-loop-container">
 				<?php tutor_load_template('archive-course-init'); ?>
 			</div><!-- .wrap -->
 		</div>
 	</div>
 <?php
 } else {
-	tutor_load_template('archive-course-init');
+	?>
+		<div class="<?php tutor_container_classes(); ?>">
+			<?php tutor_load_template('archive-course-init'); ?>
+		</div>
+	<?php
 }
 get_footer(); ?>

@@ -1767,7 +1767,7 @@ jQuery(document).ready(function ($) {
     var filter_criteria = {action:'tutor_course_filter_ajax'};
     var filter_container = $('.tutor-course-filter-container');
     var loop_container = $('.tutor-course-filter-loop-container');
-    var toggle_criteria = function(name, value, is_checked, no_push_state){
+    var toggle_criteria = function(name, value, is_checked){
 
         if(is_checked===undefined){
             
@@ -1789,8 +1789,8 @@ jQuery(document).ready(function ($) {
                 filter_criteria[name].splice(index, 1);
             }
         }
-
-        no_push_state===undefined ? push_state() : 0;
+        
+        push_state();
     }
 
     var push_state=function(){
@@ -1806,14 +1806,11 @@ jQuery(document).ready(function ($) {
     }
 
     // Sidebar checkbox value change
-    filter_container.find('[type=checkbox]').change(function(){
+    filter_container.find('[type=checkbox]').change(function(e){
         
-        var name = $(this).attr('name');
-        var value = $(this).val();
-
-        toggle_criteria(name, value, $(this).prop('checked'));
+        e.originalEvent ? toggle_criteria($(this).attr('name'), $(this).val(), $(this).prop('checked')) : 0;
         
-        loop_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>');
+        loop_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>').show();
 
         $.ajax({
             url:window._tutorobject.ajaxurl+(filter_criteria.page ? '?paged='+filter_criteria.page : ''),
@@ -1874,17 +1871,16 @@ jQuery(document).ready(function ($) {
     var trigger_load=false;
     filter_container.find('[type="checkbox"]').each(function(){
         var name = $(this).attr('name');
+        var value = $(this).val();
+        var checked = $(this).prop('checked');
+
         var arg = url.searchParams.get(name);
+        arg = arg ? arg.split(',') : [];
+        
 
-        if(arg){
-            arg = arg.split(',');
-
-            for(var i=0; i<arg.length; i++){
-                var value = arg[i];
-                filter_container.find('[type="checkbox"]').filter('[name="'+name+'"]').filter('[value="'+value+'"]').prop('checked', true);
-                toggle_criteria(name, value, true, false);
-                trigger_load=true;
-            }
+        if(arg.indexOf(value)>-1 || checked){
+            $(this).prop('checked', true);
+            toggle_criteria(name, value, true, false);
         }
     });
 
@@ -1899,9 +1895,10 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    if(trigger_load){
+    if(trigger_load || filter_container.find('input:checked').length>0){
         filter_container.find('[type="checkbox"]:first').trigger('change');
     }
-
-    // Push filter to url
+    else{
+        loop_container.show();
+    }
 });

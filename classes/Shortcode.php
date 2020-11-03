@@ -18,6 +18,7 @@ class Shortcode {
 		add_shortcode('tutor_dashboard', array($this, 'tutor_dashboard'));
 		add_shortcode('tutor_instructor_registration_form', array($this, 'instructor_registration_form'));
 		add_shortcode('tutor_course', array($this, 'tutor_course'));
+		add_shortcode('tutor_instructors', array($this, 'tutor_instructors'));
 	}
 
 	/**
@@ -137,5 +138,15 @@ class Shortcode {
 	}
 
 
-
+	/**
+	 * @param $atts
+	 *
+	 * @return string
+	 *
+	 * Shortcode for showing active instructors
+	 * @since v.1.7.4
+	 */
+	public function tutor_instructors($atts){
+		var_dump(tutils()->get_instructors(0, 10, '', 'approved'));
+	}
 }

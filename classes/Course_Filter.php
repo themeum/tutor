@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) )
 class Course_Filter{
     private $category = 'course-category';
     private $tag = 'course-tag';
+    private $current_term_id = null;
 
     function __construct(){
         add_action('wp_ajax_tutor_course_filter_ajax', array($this, 'load_listing'));
@@ -79,13 +80,25 @@ class Course_Filter{
         exit;
     }
 
+    private function get_current_term_id(){
+        
+        if($this->current_term_id===null){
+            $queried = get_queried_object();
+            $this->current_term_id = (is_object($queried) && $queried->term_id) ? $queried->term_id : false;
+        }
+        
+        return $this->current_term_id;
+    }
+
     public function render_terms($taxonomy){
+
+        $term_id = $this->get_current_term_id();
         $terms = get_terms( array('taxonomy' => $this->$taxonomy, 'hide_empty' => true));
 
         foreach($terms as $term){
             ?>
                 <label>
-                    <input type="checkbox" name="tutor-course-filter-<?php echo $taxonomy; ?>" value="<?php echo $term->term_id; ?>"/>&nbsp;
+                    <input type="checkbox" name="tutor-course-filter-<?php echo $taxonomy; ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id==$term_id ? 'checked="checked"' : ''; ?>/>&nbsp;
                     <?php echo $term->name; ?>
                 </label>
             <?php
