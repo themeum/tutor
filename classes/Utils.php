@@ -5753,4 +5753,17 @@ class Utils {
 
 		return $email_array;
 	}
+
+	/*
+	*requie post id & user id
+	*return single comment post
+	*/
+	public function get_single_comment_user_post_id($post_id,$user_id){
+		global $wpdb;
+		$table = $wpdb->prefix."comments";
+		$query = $wpdb->get_row(
+			$wpdb->prepare("SELECT * FROM $table WHERE comment_post_ID = %d AND user_id = %d LIMIT 1",$post_id,$user_id)
+		);
+		return $query ? $query : false;
+	}
 }
