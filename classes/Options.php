@@ -238,13 +238,7 @@ class Options {
                                     'strict'    =>  __('Strict Mode', 'tutor'),
                                 ),
                                 'desc'          => __('Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor'),
-							),
-							'tutor_coure_level_label' => array(
-								'type'          => 'text',
-								'label'         => __('Course Level Label', 'tutor'),
-								'default'       => 'Course level',
-								'desc'          => __('The text to appear for course level.', 'tutor'),
-							),
+							)
 						),
 					),
 					'archive' => array(
@@ -272,7 +266,7 @@ class Options {
 								'options'   => array('min'=> 1, 'max' => 20),
 								'desc'      => __('Define how many courses you want to show per page', 'tutor'),
 							),
-							'course_filter' => array(
+							'course_archive_filter' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Course Filter', 'tutor'),
 								'label_title'   => __('Enable', 'tutor'),

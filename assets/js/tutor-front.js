@@ -959,9 +959,17 @@ jQuery(document).ready(function ($) {
      * @since v.1.2.0
      */
 
-    $(document).on('click', 'a.open-withdraw-form-btn', function (e) {
+    $(document).on('click', 'a.open-withdraw-form-btn, .close-withdraw-form-btn', function (e) {
         e.preventDefault();
-        $('.tutor-earning-withdraw-form-wrap').slideToggle();
+
+        if($(this).data('reload')=='yes'){
+            window.location.reload();
+            return;
+        }
+
+        $('.tutor-earning-withdraw-form-wrap').toggle();
+        $('.tutor-withdrawal-op-up-success').hide().next().show();
+        $('html, body').css('overflow', ($('.tutor-earning-withdraw-form-wrap').is(':visible') ? 'hidden' : 'auto'));
     });
 
     $(document).on('submit', '#tutor-earning-withdraw-form', function (e) {
@@ -988,6 +996,7 @@ jQuery(document).ready(function ($) {
                         $('.withdraw-balance-col .available_balance').html(data.data.available_balance);
                     }
                     Msg = '<div class="tutor-success-msg"><i class="tutor-icon-mark"></i> ' + data.data.msg + ' </div>';
+                    $('.tutor-withdrawal-op-up-success').show().next().hide();
 
                 } else {
                     Msg = '<div class="tutor-error-msg"><i class="tutor-icon-line-cross"></i> ' + data.data.msg + ' </div>';
@@ -1809,7 +1818,7 @@ jQuery(document).ready(function ($) {
     filter_container.find('[type=checkbox]').change(function(e){
         
         e.originalEvent ? toggle_criteria($(this).attr('name'), $(this).val(), $(this).prop('checked')) : 0;
-        
+        filter_criteria.column_per_row = loop_container.data('column_per_row');
         loop_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>').show();
 
         $.ajax({
