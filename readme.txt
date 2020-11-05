@@ -241,16 +241,16 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.7.4 - November 05, 2020 =
+= 1.7.4 - November 06, 2020 =
 
-New: More Email Notifications
-New: Course difficulty level field in the dashboard
-New: Assignment evaluation status column in the dashboard
-New: Course filter preference checkbox
-New: Shortcode to show all instructors
+New: 3 new email notification for withdrawal requests.
+New: 3 new email notification for content drip published lessons, quizzes and assignments.
+New: 3 new email notification for instructor registration management system.
 New: Filter hook to modify sub nav menu of setting page in frontend dashboard
-Update: Show 'Continue Course' instead of 'Add to Cart' if already purchased
-Update: Now you can enable/disable course filter in 'tutor_course' shortcode
+New: Assignment evaluation status column in the dashboard.
+New: Enable/Disable option for course filters
+Update: Show 'Continue Course' instead of 'Add to Cart' if already purchased on course achieve page.
+Update: Enable/disable parameter for course filter in 'tutor_course' shortcode
 Update: Withdrawal Page design update
 Fix: BuddyPress completed learning percentage 0
 Fix: Compatibility issue with Divi Builder
