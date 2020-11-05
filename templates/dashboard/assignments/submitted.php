@@ -28,6 +28,7 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
                 <td><?php esc_attr_e('Pass Mark', 'tutor'); ?></td>
                 <td><?php esc_attr_e('Total Mark', 'tutor'); ?></td>
                 <td><?php esc_attr_e('Result', 'tutor'); ?></td>
+                <td><?php esc_attr_e('Evaluated', 'tutor'); ?></td>
                 <td>&nbsp;</td>
             </tr>
         </thead>
@@ -55,6 +56,12 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
                 <td><?php echo $pass_mark; ?></td>
                 <td><?php echo !empty($given_mark) ? $given_mark . '/' . $max_mark : $max_mark; ?></td>
                 <td><?php echo $status; ?></td>
+                <td>
+                    <?php 
+                        $not_checked = get_comment_meta($assignment->comment_ID, 'assignment_mark', true)==='';
+                        echo $not_checked ? _e('No', 'tutor') :  _e('Yes', 'tutor-pro'); 
+                    ?>
+                </td>
                 <td> <?php echo "<a title='". __('Review this assignment', 'tutor') ."' href='".esc_url($review_url.'?view_assignment='.$assignment->comment_ID)."'><i class='tutor-icon-angle-right'></i> </a>"; ?> </td>
             </tr>
             <?php

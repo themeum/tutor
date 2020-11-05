@@ -76,6 +76,8 @@ class Course_Filter{
 
         query_posts($args);
         
+		add_filter( 'courses_col_per_row', function(){return $_POST['column_per_row'];});
+        
         tutor_load_template('archive-course-init');
         exit;
     }
@@ -84,7 +86,7 @@ class Course_Filter{
         
         if($this->current_term_id===null){
             $queried = get_queried_object();
-            $this->current_term_id = (is_object($queried) && $queried->term_id) ? $queried->term_id : false;
+            $this->current_term_id = (is_object($queried) && property_exists($queried, 'term_id')) ? $queried->term_id : false;
         }
         
         return $this->current_term_id;

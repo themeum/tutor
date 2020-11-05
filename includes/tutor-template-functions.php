@@ -313,8 +313,8 @@ if( ! function_exists('tutor_course_loop_wrap_classes')) {
 
 if( ! function_exists('tutor_course_loop_col_classes')) {
     function tutor_course_loop_col_classes( $echo = true ) {
-        $course_filter  = (bool) tutor_utils()->get_option('course_filter', false);
-        $course_cols    = ($course_filter) ? 2 : tutor_utils()->get_option('courses_col_per_row', 4);
+        $course_filter  = (bool) tutor_utils()->get_option('course_archive_filter', false);
+        $course_cols    = /* ($course_filter) ? 2 :  */ tutor_utils()->get_option('courses_col_per_row', 4);
         $classes        = apply_filters( 'tutor_course_loop_col_classes', array(
             'tutor-course-col-' . $course_cols,
         ) );

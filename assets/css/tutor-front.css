@@ -9619,20 +9619,133 @@ Content Drip (Pro)
   color: #7A7A7A;
 }
 
-.tutor-frontend-dashboard-withdrawal .withdrawal-preference > img {
+.tutor-frontend-dashboard-withdrawal .inline-image-text > img {
   vertical-align: middle;
   width: 23px;
 }
 
-.tutor-frontend-dashboard-withdrawal .withdrawal-preference > span {
+.tutor-frontend-dashboard-withdrawal .inline-image-text > span {
   vertical-align: middle;
 }
 
+.tutor-frontend-dashboard-withdrawal .inline-image-text.is-inline-block > img, .tutor-frontend-dashboard-withdrawal .inline-image-text.is-inline-block > span {
+  display: inline-block;
+}
+
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap {
-  margin-top: 20px;
-  border: 1px solid #DCDBDC;
+  display: none;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div {
+  width: 100%;
+  height: 100%;
   padding: 15px;
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 9999999999;
+  background: rgba(0, 0, 0, 0.342);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div {
+  display: inline-block;
+  max-height: 100%;
+  width: 100%;
+  max-width: 690px;
+  background: white;
+  overflow: auto;
+  border-radius: 15px;
+  position: relative;
+  padding: 0;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div {
+  padding: 40px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child > .tutor-icon-line-cross {
+  position: absolute;
+  cursor: pointer;
+  right: 29px;
+  font-size: 20px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child tr, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child td, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child table, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child tbody {
+  border: none;
+  margin: 0;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child h3 {
+  margin: 7px 0px;
+  font-weight: 600;
+  padding: 0;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:last-child {
+  border-top: 1px solid #E8E8E8;
+  background: #F3F3F3;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount {
+  border: 1px solid #BABABA;
   border-radius: 6px;
+  background: white;
+  height: 43px;
+  overflow: hidden;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount span {
+  display: inline-block;
+  text-align: center;
+  width: 40px;
+  background: #f3f3f3;
+  padding: 9px;
+  font-size: 18px;
+  font-weight: bold;
+  height: 100%;
+  border-right: 1px solid #BABABA;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount input, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount input:focus, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount input:active {
+  border: none;
+  outline: 0;
+  height: 100%;
+  width: calc(100% - 45px);
+  display: inline-block;
+  margin: 0;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-button-container {
+  margin: 50px 0 0;
+  overflow: auto;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-button-container > button:last-child {
+  float: right;
 }
 
 .tutor-frontend-dashboard-withdrawal table.withdrawals-history {

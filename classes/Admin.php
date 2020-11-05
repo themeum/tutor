@@ -443,7 +443,7 @@ class Admin{
 				__( '<strong style="color: #03bd24">Documentation</strong>', 'tutor' )
 			);
 			$plugin_meta[] = sprintf( '<a href="%s">%s</a>',
-				esc_url( 'https://www.themeum.com/support-forums/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_support_link' ),
+				esc_url( 'https://www.themeum.com/contact-us/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_support_link' ),
 				__( '<strong style="color: #03bd24">Get Support</strong>', 'tutor' )
 			);
 		}
