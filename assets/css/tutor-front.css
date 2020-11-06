@@ -8215,6 +8215,7 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
+  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
@@ -9588,7 +9589,7 @@ Content Drip (Pro)
 .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) {
   float: right;
   display: inline-block;
-  margin-top: 19px;
+  margin-top: 17px;
   margin-left: 15px;
 }
 
@@ -9597,7 +9598,7 @@ Content Drip (Pro)
   background: #3E64DE;
   border-radius: 3px;
   display: inline-block;
-  padding: 3px 16px;
+  padding: 8px 18px;
   font-weight: 500;
   font-size: 16px;
   color: white;
@@ -9619,15 +9620,15 @@ Content Drip (Pro)
 }
 
 .tutor-frontend-dashboard-withdrawal .inline-image-text > img {
-  vertical-align: middle;
   width: 23px;
+  display: inline-block !important;
 }
 
-.tutor-frontend-dashboard-withdrawal .inline-image-text > span {
+.tutor-frontend-dashboard-withdrawal .inline-image-text > * {
   vertical-align: middle;
 }
 
-.tutor-frontend-dashboard-withdrawal .inline-image-text.is-inline-block > img, .tutor-frontend-dashboard-withdrawal .inline-image-text.is-inline-block > span {
+.tutor-frontend-dashboard-withdrawal .inline-image-text.is-inline-block > * {
   display: inline-block;
 }
 
@@ -9646,7 +9647,7 @@ Content Drip (Pro)
   top: 0;
   bottom: 0;
   z-index: 9999999999;
-  background: rgba(0, 0, 0, 0.342);
+  background: rgba(0, 0, 0, 0.589);
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -9683,19 +9684,21 @@ Content Drip (Pro)
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div {
-  padding: 40px;
+  padding: 50px 70px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child > .tutor-icon-line-cross {
   position: absolute;
   cursor: pointer;
-  right: 29px;
+  top: 30px;
+  right: 30px;
   font-size: 20px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child tr, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child td, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child table, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child tbody {
   border: none;
   margin: 0;
+  padding: 0;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child h3 {
@@ -9736,6 +9739,7 @@ Content Drip (Pro)
   width: calc(100% - 45px);
   display: inline-block;
   margin: 0;
+  padding: 0;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-button-container {
@@ -9745,6 +9749,37 @@ Content Drip (Pro)
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-button-container > button:last-child {
   float: right;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response {
+  position: fixed;
+  left: 50px;
+  bottom: 50px;
+  border: 1px solid #E8E8E8;
+  background: white;
+  border-radius: 10px;
+  margin: 0;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response:empty {
+  display: none;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response > * {
+  background: white;
+  border: none;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response i {
+  margin: 0 10px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response b {
+  font-weight: 600;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response span {
+  color: #333333;
 }
 
 .tutor-frontend-dashboard-withdrawal table.withdrawals-history {
@@ -9774,6 +9809,12 @@ Content Drip (Pro)
   border-collapse: collapse;
 }
 
+.tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container {
+  position: absolute;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
 .tutor-frontend-dashboard-withdrawal .tutor-status-text {
   display: inline-block;
   font-weight: bold;
@@ -9781,7 +9822,7 @@ Content Drip (Pro)
   color: #FFFFFF;
   background: gray;
   border-radius: 2px;
-  padding: 0 9px;
+  padding: 3px 9px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-status-text.status-approved {
@@ -9794,6 +9835,210 @@ Content Drip (Pro)
 
 .tutor-frontend-dashboard-withdrawal .tutor-status-text.status-rejected {
   background: #F44337;
+}
+
+.tutor-tooltip-inside {
+  /* Tooltip shared base styles */
+  /* Tooltip visibility class toggled by jQuery */
+  /* Tooltip positioning */
+  /** Common styles: Horizontally Centered **/
+  /** Common styles: Bottom positions **/
+  /** Common styles: Top positions **/
+  /** Common styles: Corner positions **/
+  /** Common styles: Left corner positions **/
+  /** Common styles: Right corner positions **/
+  /** Common styles: Vertically Centered **/
+  /** Left position only **/
+  /** Right position only **/
+  /* Tooltip arrow shared base styles */
+  /** Common styles: Horizontally Centered, Up/Down arrows **/
+  /** Common styles: Up arrow **/
+  /** Common styles: Down arrow **/
+  /** Common styles: Left-/Right-aligned, Up/Down arrows **/
+  /** Common styles: Right-aligned, Up/Down arrows **/
+  /** Common styles: Left-aligned, Up/Down arrows **/
+  /** Common styles: Vertically Centered, Left/Right arrows **/
+  /** Right arrow **/
+  /** Left arrow **/
+}
+
+.tutor-tooltip-inside .tooltip {
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  width: 0;
+  height: 0;
+  padding: 0;
+  cursor: default;
+  color: #fff;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-size: 1.4rem;
+  line-height: normal;
+  text-align: center;
+  white-space: nowrap;
+  border-width: 0;
+  border-style: solid;
+  border-color: #6d6e71;
+  border-top-color: #373739;
+  background-color: #373739;
+  opacity: 0;
+  -webkit-transition: opacity .3s ease-in .3s;
+  transition: opacity .3s ease-in .3s;
+  font-size: 13px;
+  color: #FFFFFF;
+  height: auto;
+  text-align: center;
+  white-space: normal;
+  font-size: 12px;
+  background: #353535;
+  border-radius: 10px;
+  padding: 7px;
+}
+
+.tutor-tooltip-inside .tooltip.isVisible {
+  overflow: visible;
+  clip: auto;
+  width: 150px;
+  height: auto;
+  padding: 10px 15px;
+  border-width: 1px;
+  opacity: 1;
+}
+
+.tutor-tooltip-inside .tooltip,
+.tutor-tooltip-inside .tooltip.tip-bottom,
+.tutor-tooltip-inside .tooltip.tip-top {
+  left: 50%;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+}
+
+.tutor-tooltip-inside .tooltip,
+.tutor-tooltip-inside .tooltip.tip-bottom,
+.tutor-tooltip-inside .tooltip.tip-bottom-left,
+.tutor-tooltip-inside .tooltip.tip-bottom-right {
+  top: 110%;
+  top: calc(100% + 5px);
+}
+
+.tutor-tooltip-inside .tooltip.tip-top,
+.tutor-tooltip-inside .tooltip.tip-top-left,
+.tutor-tooltip-inside .tooltip.tip-top-right {
+  top: auto;
+  bottom: 110%;
+  bottom: calc(100% + 5px);
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-left,
+.tutor-tooltip-inside .tooltip.tip-bottom-right,
+.tutor-tooltip-inside .tooltip.tip-top-left,
+.tutor-tooltip-inside .tooltip.tip-top-right {
+  -webkit-transform: none;
+  transform: none;
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-left,
+.tutor-tooltip-inside .tooltip.tip-top-left {
+  right: 50%;
+  left: auto;
+  margin-right: -25px;
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-right,
+.tutor-tooltip-inside .tooltip.tip-top-right {
+  margin-left: -25px;
+}
+
+.tutor-tooltip-inside .tooltip.tip-left,
+.tutor-tooltip-inside .tooltip.tip-right {
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
+
+.tutor-tooltip-inside .tooltip.tip-left {
+  right: 110%;
+  right: calc(100% + 5px);
+  left: auto;
+}
+
+.tutor-tooltip-inside .tooltip.tip-right {
+  left: 110%;
+  left: calc(100% + 5px);
+}
+
+.tutor-tooltip-inside .tooltip:after {
+  content: ' ';
+  display: block;
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-width: 10px;
+  border-style: solid;
+  pointer-events: none;
+}
+
+.tutor-tooltip-inside .tooltip:after,
+.tutor-tooltip-inside .tooltip.tip-bottom:after,
+.tutor-tooltip-inside .tooltip.tip-top:after {
+  left: 50%;
+  margin-left: -10px;
+}
+
+.tutor-tooltip-inside .tooltip:after,
+.tutor-tooltip-inside .tooltip.tip-bottom:after,
+.tutor-tooltip-inside .tooltip.tip-bottom-left:after,
+.tutor-tooltip-inside .tooltip.tip-bottom-right:after {
+  top: -20px;
+  border-color: transparent transparent #373739 transparent;
+}
+
+.tutor-tooltip-inside .tooltip.tip-top:after,
+.tutor-tooltip-inside .tooltip.tip-top-left:after,
+.tutor-tooltip-inside .tooltip.tip-top-right:after {
+  top: auto;
+  bottom: -20px;
+  border-color: #373739 transparent transparent transparent;
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-left:after,
+.tutor-tooltip-inside .tooltip.tip-bottom-right:after,
+.tutor-tooltip-inside .tooltip.tip-top-left:after,
+.tutor-tooltip-inside .tooltip.tip-top-right:after {
+  margin-left: 0;
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-left:after,
+.tutor-tooltip-inside .tooltip.tip-top-left:after {
+  right: 15px;
+  left: auto;
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-right:after,
+.tutor-tooltip-inside .tooltip.tip-top-right:after {
+  left: 15px;
+}
+
+.tutor-tooltip-inside .tooltip.tip-left:after,
+.tutor-tooltip-inside .tooltip.tip-right:after {
+  top: 50%;
+  margin-top: -10px;
+  margin-left: auto;
+}
+
+.tutor-tooltip-inside .tooltip.tip-left:after {
+  right: -20px;
+  left: auto;
+  border-color: transparent transparent transparent #373739;
+}
+
+.tutor-tooltip-inside .tooltip.tip-right:after {
+  left: -20px;
+  border-color: transparent #373739 transparent transparent;
 }
 
 /*# sourceMappingURL=tutor-front.css.map */

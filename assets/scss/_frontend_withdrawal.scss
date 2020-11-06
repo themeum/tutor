@@ -30,7 +30,7 @@
         &>div:nth-of-type(2){
             float: right;
             display: inline-block;    
-            margin-top: 19px;
+            margin-top: 17px;
             margin-left: 15px;
 
             a, a:hover, a:focus, a:active{
@@ -38,7 +38,7 @@
                 background: #3E64DE;
                 border-radius: 3px;
                 display: inline-block;
-                padding: 3px 16px;
+                padding: 8px 18px;
                 font-weight: 500;
                 font-size: 16px;
                 color: white;
@@ -65,16 +65,16 @@
 
     .inline-image-text{
         &>img{
-            vertical-align: middle;
             width: 23px;
+            display: inline-block !important;
         }
 
-        &>span{
+        &>*{
             vertical-align: middle;
         }
 
         &.is-inline-block{
-            &>img, &>span{
+            &>*{
                 display: inline-block;
             }
         }
@@ -94,12 +94,11 @@
             top: 0;
             bottom: 0;
             z-index: 9999999999;
-            background: rgba(0, 0, 0, 0.342);
+            background: rgba(0, 0, 0, 0.589);
 
             @include valueWithPrefix(display, flex);
             @include propertyWithPrefix(align-items, center);
             @include propertyWithPrefix(justify-content, center);
-
 
             &>div
             {
@@ -116,20 +115,21 @@
                 padding: 0;
 
                 &>div{
-                    padding: 40px;
-
+                    padding: 50px 70px;
                 
                     &:first-child{
                         &>.tutor-icon-line-cross{
                         position: absolute;
                         cursor: pointer;
-                        right: 29px;
+                        top: 30px;
+                        right: 30px;
                         font-size: 20px;
                         }
 
                         tr, td, table, tbody{
                             border: none;
                             margin: 0;
+                            padding: 0;
                         }
 
                         h3{
@@ -174,6 +174,7 @@
                     width: calc(100% - 45px);
                     display: inline-block;
                     margin: 0;
+                    padding: 0;
                 }
             }
         }
@@ -185,6 +186,37 @@
                 &:last-child{
                     float: right;
                 }
+            }
+        }
+        
+        .tutor-withdraw-form-response{
+            position: fixed;
+            left: 50px;
+            bottom: 50px;
+            border: 1px solid #E8E8E8;
+            background: white;
+            border-radius: 10px;
+            margin: 0;
+
+            &:empty{
+                display: none;
+            }
+
+            &>*{
+                background: white;
+                border: none;
+            }
+
+            i{
+                margin: 0 10px;
+            }
+
+            b{
+                font-weight: 600;
+            }
+
+            span{
+                color: rgb(51, 51, 51);
             }
         }
     }
@@ -215,6 +247,14 @@
         }
     }
 
+    .tutor-status-text-container{
+        .tool-tip-container{
+            position: absolute;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+    }
+
     .tutor-status-text{
         display: inline-block;
         font-weight: bold;
@@ -222,7 +262,7 @@
         color: #FFFFFF;
         background: gray;
         border-radius: 2px;
-        padding: 0 9px;
+        padding: 3px 9px;
 
         &.status-approved{
             background:  #24A148;

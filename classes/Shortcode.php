@@ -136,7 +136,7 @@ class Shortcode {
 		});
 
 		add_filter( 'course_archive_filter', function($state) use($atts){
-			(isset($atts['course_filter']) && $atts['course_filter']=='on') ? $state=true : 0;
+			isset($atts['course_filter']) ? $state=$atts['course_filter']==='on' : 0;
 			return $state;
 		});
 		

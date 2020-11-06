@@ -977,7 +977,7 @@ jQuery(document).ready(function ($) {
 
         var $form = $(this);
         var $btn = $('#tutor-earning-withdraw-btn');
-        var $responseDiv = $('#tutor-withdraw-form-response');
+        var $responseDiv = $('.tutor-withdraw-form-response');
         var data = $form.serialize();
 
         $.ajax({
@@ -995,11 +995,24 @@ jQuery(document).ready(function ($) {
                     if (data.data.available_balance !== 'undefined') {
                         $('.withdraw-balance-col .available_balance').html(data.data.available_balance);
                     }
-                    Msg = '<div class="tutor-success-msg"><i class="tutor-icon-mark"></i> ' + data.data.msg + ' </div>';
+                    Msg = '<div class="tutor-success-msg inline-image-text is-inline-block">\
+                                <i class="tutor-icon-mark"></i> \
+                                <div>\
+                                    <b>Successful</b><br/>\
+                                    <span>' + data.data.msg + '</span>\
+                                </div>\
+                            </div>';
+
                     $('.tutor-withdrawal-op-up-success').show().next().hide();
 
                 } else {
-                    Msg = '<div class="tutor-error-msg"><i class="tutor-icon-line-cross"></i> ' + data.data.msg + ' </div>';
+                    Msg = '<div class="tutor-error-msg inline-image-text is-inline-block">\
+                            <i class="tutor-icon-line-cross"></i> \
+                            <div>\
+                                <b>Error</b><br/>\
+                                <span>'+ data.data.msg + '</span>\
+                            </div>\
+                        </div>';
                 }
 
                 $responseDiv.html(Msg);
@@ -1765,6 +1778,51 @@ jQuery(document).ready(function ($) {
             }
         }).trigger('change');
     }
+    
+    /**
+     * Withdrawal page tooltip
+     * 
+     * @since  v.1.7.4
+    */
+    // Fully accessible tooltip jQuery plugin with delegation.
+    // Ideal for view containers that may re-render content.
+    (function ($) {
+        $.fn.tutor_tooltip = function () {
+        this
+    
+        // Delegate to tooltip, Hide if tooltip receives mouse or is clicked (tooltip may stick if parent has focus)
+            .on('mouseenter click', '.tooltip', function (e) {
+            e.stopPropagation();
+            $(this).removeClass('isVisible');
+            })
+            // Delegate to parent of tooltip, Show tooltip if parent receives mouse or focus
+            .on('mouseenter focus', ':has(>.tooltip)', function (e) {
+            if (!$(this).prop('disabled')) { // IE 8 fix to prevent tooltip on `disabled` elements
+                $(this)
+                .find('.tooltip')
+                .addClass('isVisible');
+            }
+            })
+            // Delegate to parent of tooltip, Hide tooltip if parent loses mouse or focus
+            .on('mouseleave blur keydown', ':has(>.tooltip)', function (e) {
+            if (e.type === 'keydown') {
+                if(e.which === 27) {
+                $(this)
+                    .find('.tooltip')
+                    .removeClass('isVisible');
+                }
+            } else {
+                $(this)
+                .find('.tooltip')
+                .removeClass('isVisible');
+            }
+            });
+        return this;
+        };
+    }(jQuery));
+    
+    // Bind event listener to container element
+    $('.tutor-tooltip-inside').tutor_tooltip();
     
 
     
