@@ -23,6 +23,10 @@ $method_icons = array(
     'paypal_withdraw' => $image_base.'icon-paypal.svg'
 );
 
+$status_message = array(
+    'rejected' => __('Please contact the site administrator for more information.', 'tutor'),
+    'pending' => __('Withdrawal request is pending for approval, please hold tight.', 'tutor')
+);
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal">
@@ -86,6 +90,7 @@ $method_icons = array(
                         </div>
                         <br/>
                         <br/>
+                        <div class="tutor-withdraw-form-response"></div>
                     </div>
                 </div>
                 <div class="tutor-withdrawal-op-up-frorm">
@@ -127,10 +132,10 @@ $method_icons = array(
 
                             <div class="tutor-withdraw-button-container">
                                 <button class="tutor-btn tutor-btn-secondary close-withdraw-form-btn"><?php _e('Cancel', 'tutor'); ?></button>
-                                <button class="tutor-btn" type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php _e('Withdraw', 'tutor'); ?></button>
+                                <button class="tutor-btn" type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php _e('Submit Request', 'tutor'); ?></button>
                             </div>
                             
-                            <div id="tutor-withdraw-form-response"></div>
+                            <div class="tutor-withdraw-form-response"></div>
 
                             <?php do_action('tutor_withdraw_form_after'); ?>
                         </form>
@@ -144,7 +149,7 @@ $method_icons = array(
     ?>
 
     <br/>
-    <div class="withdraw-history-table-wrap">
+    <div class="withdraw-history-table-wrap tutor-tooltip-inside">
         <div class="withdraw-history-table-title">
             <h4> <?php _e('Withdrawals', 'tutor'); ?></h4>
         </div>
@@ -197,8 +202,23 @@ $method_icons = array(
                                     ?>
                                 </td>
                                 <td>
-                                    <span class="tutor-status-text status-<?php echo $withdraw_history->status; ?>">
-                                        <?php echo __(ucfirst($withdraw_history->status), 'tutor'); ?>
+                                    <span class="tutor-status-text-container inline-image-text is-inline-block">
+                                        <span class="tutor-status-text status-<?php echo $withdraw_history->status; ?>">
+                                            <?php echo __(ucfirst($withdraw_history->status), 'tutor'); ?>
+                                        </span>
+
+                                        <?php 
+                                        if($withdraw_history->status!=='approved' && isset($status_message[$withdraw_history->status])){
+                                            ?>
+                                            <span class="tool-tip-container">
+                                                <img src="<?php echo $image_base; ?>info-icon-question.svg"/>
+                                                <span class="tooltip tip-bottom" role="tooltip">
+                                                    <?php echo $status_message[$withdraw_history->status]; ?>
+                                                </span>
+                                            </span>
+                                            <?php
+                                        }
+                                        ?>
                                     </span>
                                 </td>
                             </tr>
