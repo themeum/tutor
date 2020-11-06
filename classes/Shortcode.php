@@ -100,7 +100,7 @@ class Shortcode {
 
 			'orderby'           => 'ID',
 			'order'             => 'DESC',
-			'count'     => '6',
+			'count'     => tutor_utils()->get_option('courses_col_per_row', 4),
 		), $atts );
 
 		if ( ! empty($a['id'])){
@@ -130,15 +130,11 @@ class Shortcode {
 		query_posts($a);
 		ob_start();
 
-		add_filter( 'courses_col_per_row', function($count) use($atts){
-			isset($atts['column_per_row']) ? $count=$atts['column_per_row'] : 0;
-			return $count;
-		});
-
-		add_filter( 'course_archive_filter', function($state) use($atts){
-			isset($atts['course_filter']) ? $state=$atts['course_filter']==='on' : 0;
-			return $state;
-		});
+		$GLOBALS['tutor_shortcode_arg']=array(
+			'include_course_filter' => isset($atts['course_filter']) ? $atts['course_filter']==='on' : null,
+			'column_per_row' => isset($atts['column_per_row']) ? $atts['column_per_row'] : null,
+			'course_per_page' => $a['posts_per_page']
+		);
 		
 		tutor_load_template('shortcode.tutor-course');
 		$output = ob_get_clean();

@@ -15,7 +15,7 @@ class Course_Filter{
     }
 
     public function load_listing(){
-		$courses_per_page = (int) tutor_utils()->get_option('courses_per_page', 10);
+		$courses_per_page = $_POST['course_per_page'];
         $page = (isset($_POST['page']) && is_numeric($_POST['page']) && $_POST['page']>0) ? $_POST['page'] : 1;
 
         // Prepare taxonomy
@@ -76,8 +76,12 @@ class Course_Filter{
 
         query_posts($args);
         
-		add_filter( 'courses_col_per_row', function(){return $_POST['column_per_row'];});
         
+		$GLOBALS['tutor_shortcode_arg']=array(
+			'column_per_row' => $_POST['column_per_row'],
+			'course_per_page' => $_POST['course_per_page']
+		);
+		
         tutor_load_template('archive-course-init');
         exit;
     }

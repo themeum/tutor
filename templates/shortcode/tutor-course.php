@@ -4,7 +4,10 @@
  * @package TutorLMS/Templates
  * @version 1.4.3
  */
-$course_filter = (bool) tutor_utils()->get_option('course_archive_filter', false);
+
+$column_per_row = $GLOBALS['tutor_shortcode_arg']['column_per_row'];
+$course_per_page = $GLOBALS['tutor_shortcode_arg']['course_per_page'];
+$course_filter = $GLOBALS['tutor_shortcode_arg']['include_course_filter']===null ? (bool) tutor_utils()->get_option('course_archive_filter', false) : $GLOBALS['tutor_shortcode_arg']['include_course_filter'];
 
 if ($course_filter) { ?>
 	<div class="tutor-course-filter-wrapper">
@@ -12,7 +15,7 @@ if ($course_filter) { ?>
 			<?php tutor_load_template('course-filter.filters'); ?>
 		</div>
 		<div>
-			<div class="<?php tutor_container_classes() ?> tutor-course-filter-loop-container" data-column_per_row="<?php echo tutor_utils()->get_option( 'courses_col_per_row', 4 ); ?>"> <?php 
+			<div class="<?php tutor_container_classes() ?> tutor-course-filter-loop-container" data-column_per_row="<?php echo $column_per_row; ?>" data-course_per_page="<?php echo $course_per_page; ?>"> <?php 
 	}
 				if ( have_posts() ) :
 					/* Start the Loop */

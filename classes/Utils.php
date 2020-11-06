@@ -23,7 +23,7 @@ class Utils {
 			return $default;
 		}
 		if ( ! $key){
-			return apply_filters($key, $option);
+			return $option;
 		}
 		if (array_key_exists($key, $option)){
 			return apply_filters($key, $option[$key]);
@@ -43,7 +43,7 @@ class Utils {
 			return apply_filters($key, $new_option);
 		}
 
-		return apply_filters($key, $default);
+		return $default;
 	}
 
 	/**

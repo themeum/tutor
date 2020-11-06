@@ -1861,11 +1861,13 @@ jQuery(document).ready(function ($) {
     }
 
     var push_state=function(){
+        var exclude = ['column_per_row', 'course_per_page'];
+        
         var str = Object.keys(filter_criteria).map(function(key){
             var val = filter_criteria[key];
             var str = Array.isArray(val) ? val.join(',') : val;
 
-            return (key=='action' || !str) ? null : key+'='+str;
+            return (key=='action' || !str || exclude.indexOf(key)>-1) ? null : key+'='+str;
 
         }).filter(q=>q!==null).join('&');
         
@@ -1877,6 +1879,7 @@ jQuery(document).ready(function ($) {
         
         e.originalEvent ? toggle_criteria($(this).attr('name'), $(this).val(), $(this).prop('checked')) : 0;
         filter_criteria.column_per_row = loop_container.data('column_per_row');
+        filter_criteria.course_per_page = loop_container.data('course_per_page');
         loop_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>').show();
 
         $.ajax({
