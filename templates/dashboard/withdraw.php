@@ -168,68 +168,6 @@ $status_message = array(
                     foreach ($all_histories->results as $withdraw_history) {
                     ?>
                         <tr>
-<<<<<<< HEAD
-                            <th><?php _e('Withdrawal Method', 'tutor') ?></th>
-                            <th><?php _e('Amount', 'tutor') ?></th>
-                            <th><?php _e('Date', 'tutor') ?></th>
-                            <th><?php _e('Status', 'tutor') ?></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($all_histories->results as $withdraw_history){
-                            ?>
-                            <tr>
-                                <td>
-                                    <?php 
-                                        $method_data = maybe_unserialize($withdraw_history->method_data); 
-                                        $method_key = $method_data['withdraw_method_key'];
-                                        $method_title = '';
-
-                                        switch($method_key){
-                                            case 'bank_transfer_withdraw' : 
-                                                $method_title = $method_data['account_number']['value']; 
-                                                $method_title = substr_replace($method_title, '****', 2, strlen($method_title)-4);
-                                                break;
-
-                                            case 'paypal_withdraw' : 
-                                                $method_title = $method_data['paypal_email']['value']; 
-                                                $email_base = substr($method_title, 0, strpos($method_title, '@'));
-                                                $method_title = substr_replace($email_base, '****', 2, strlen($email_base)-3) . substr($method_title, strpos($method_title, '@'));
-                                                break;
-                                        }
-                                    ?>
-                                    <div class="inline-image-text is-inline-block">
-                                        <img src="<?php echo isset($method_icons[$method_key]) ? $method_icons[$method_key] : ''; ?>"/>
-                                        &nbsp; 
-                                        <span>
-                                            <?php 
-                                            echo tutor_utils()->avalue_dot('withdraw_method_name', $method_data); 
-                                            echo '<small>', (!empty($method_title) ? '<br/>' : ''), $method_title, '</small>';
-                                            ?>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <?php echo tutor_utils()->tutor_price($withdraw_history->amount); ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($withdraw_history->created_at));
-                                    ?>
-                                </td>
-                                <td>
-                                    <span class="inline-image-text is-inline-block">
-                                        <span class="tutor-status-text status-<?php echo $withdraw_history->status; ?>">
-                                            <?php echo __(ucfirst($withdraw_history->status), 'tutor'); ?>
-                                        </span>
-                                    </span>
-                                </td>
-                                <td>
-                                    <?php 
-                                    if($withdraw_history->status!=='approved' && isset($status_message[$withdraw_history->status])){
-=======
                             <td>
                                 <?php
                                 $method_data = maybe_unserialize($withdraw_history->method_data);
@@ -255,7 +193,6 @@ $status_message = array(
                                         <?php
                                         echo tutor_utils()->avalue_dot('withdraw_method_name', $method_data);
                                         echo '<small>', (!empty($method_title) ? '<br/>' : ''), $method_title, '</small>';
->>>>>>> master
                                         ?>
                                     </span>
                                 </div>
