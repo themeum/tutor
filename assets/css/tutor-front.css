@@ -9720,16 +9720,21 @@ Content Drip (Pro)
   overflow: hidden;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount span {
-  display: inline-block;
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount > span {
+  display: block;
   text-align: center;
   width: 40px;
+  float: left;
+  height: 100%;
   background: #f3f3f3;
-  padding: 9px;
+  border-right: 1px solid #BABABA;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount > span > span {
   font-size: 18px;
   font-weight: bold;
-  height: 100%;
-  border-right: 1px solid #BABABA;
+  display: inline-block;
+  line-height: 41px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount input, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount input:focus, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount input:active {
@@ -9740,6 +9745,7 @@ Content Drip (Pro)
   display: inline-block;
   margin: 0;
   padding: 0;
+  padding-left: 7px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-button-container {
@@ -9770,8 +9776,8 @@ Content Drip (Pro)
   border: none;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response i {
-  margin: 0 10px;
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response img {
+  margin: 15px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response b {
@@ -9782,10 +9788,25 @@ Content Drip (Pro)
   color: #333333;
 }
 
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap button.close-withdraw-form-btn {
+  background: #F3F3F3;
+  border: 1px solid #DCDBDC;
+  color: #7A7A7A;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap button.close-withdraw-form-btn:hover {
+  background: #e6e6e6;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdrawal-pop-up-success img {
+  display: inline-block !important;
+}
+
 .tutor-frontend-dashboard-withdrawal table.withdrawals-history {
   border: 1px solid #DCDBDC;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  position: relative;
 }
 
 .tutor-frontend-dashboard-withdrawal table.withdrawals-history th {
@@ -9810,9 +9831,8 @@ Content Drip (Pro)
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container {
-  position: absolute;
+  position: relative;
   cursor: pointer;
-  margin-left: 20px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-status-text {
@@ -9922,7 +9942,7 @@ Content Drip (Pro)
 .tutor-tooltip-inside .tooltip.tip-bottom-left,
 .tutor-tooltip-inside .tooltip.tip-bottom-right {
   top: 110%;
-  top: calc(100% + 5px);
+  top: calc(100% + 13px);
 }
 
 .tutor-tooltip-inside .tooltip.tip-top,
@@ -9930,7 +9950,7 @@ Content Drip (Pro)
 .tutor-tooltip-inside .tooltip.tip-top-right {
   top: auto;
   bottom: 110%;
-  bottom: calc(100% + 5px);
+  bottom: calc(100% + 13px);
 }
 
 .tutor-tooltip-inside .tooltip.tip-bottom-left,
@@ -9962,13 +9982,13 @@ Content Drip (Pro)
 
 .tutor-tooltip-inside .tooltip.tip-left {
   right: 110%;
-  right: calc(100% + 5px);
+  right: calc(100% + 13px);
   left: auto;
 }
 
 .tutor-tooltip-inside .tooltip.tip-right {
   left: 110%;
-  left: calc(100% + 5px);
+  left: calc(100% + 13px);
 }
 
 .tutor-tooltip-inside .tooltip:after {

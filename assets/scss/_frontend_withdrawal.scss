@@ -154,16 +154,21 @@
             height: 43px;
             overflow: hidden;
 
-            span{
-                display: inline-block;
+            &>span{
+                display: block;
                 text-align: center;
                 width: 40px;
-                background: #f3f3f3;
-                padding: 9px;
-                font-size: 18px;
-                font-weight: bold;
+                float: left;
                 height: 100%;
+                background: #f3f3f3;
                 border-right: 1px solid #BABABA;
+                
+                &>span{
+                    font-size: 18px;
+                    font-weight: bold;
+                    display: inline-block;
+                    line-height: 41px;
+                }
             }
 
             input{
@@ -175,6 +180,7 @@
                     display: inline-block;
                     margin: 0;
                     padding: 0;
+                    padding-left: 7px;
                 }
             }
         }
@@ -207,8 +213,8 @@
                 border: none;
             }
 
-            i{
-                margin: 0 10px;
+            img{
+                margin: 15px;
             }
 
             b{
@@ -219,11 +225,27 @@
                 color: rgb(51, 51, 51);
             }
         }
+
+        button.close-withdraw-form-btn{
+            background: #F3F3F3;
+            border: 1px solid #DCDBDC;
+            color: #7A7A7A;
+            &:hover{
+                background: #e6e6e6;
+            }
+        }
+
+        .tutor-withdrawal-pop-up-success img{
+            display: inline-block !important;
+
+            
+        }
     }
 
     table.withdrawals-history{
         border: 1px solid #DCDBDC;
         box-sizing: border-box;
+        position: relative;
 
         th{
             background:  #F3F3F3;
@@ -249,9 +271,8 @@
 
     .tutor-status-text-container{
         .tool-tip-container{
-            position: absolute;
+            position: relative;
             cursor: pointer;
-            margin-left: 20px;
         }
     }
 
