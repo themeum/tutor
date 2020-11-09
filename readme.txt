@@ -243,7 +243,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.7.4 - November 09, 2020 =
 
-New: 3 new email notifications for withdrawal requests.
+New: 4 new email notifications for withdrawal requests.
 New: 3 new email notifications for content drip published lessons, quizzes and assignments.
 New: 3 new email notification for instructor registration management system.
 New: Filter hook to modify sub nav menu of settings page in frontend dashboard.
