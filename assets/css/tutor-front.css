@@ -9601,7 +9601,7 @@ Content Drip (Pro)
 
 .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .balance-info p {
   font-size: 20px;
-  line-height: 25px;
+  line-height: 26px;
   margin: 0;
 }
 
@@ -9735,7 +9735,7 @@ Content Drip (Pro)
   background: white;
   height: 43px;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount > span {
@@ -9759,7 +9759,7 @@ Content Drip (Pro)
   border: none;
   outline: 0;
   height: 100%;
-  width: calc(100% - 45px);
+  width: calc(100% - 40px);
   display: inline-block;
   margin: 0;
   padding: 0;
@@ -9879,6 +9879,7 @@ Content Drip (Pro)
 
 .tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container img {
   display: inline-block !important;
+  width: 16px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-status-text {
