@@ -157,9 +157,9 @@ $status_message = array(
                 <thead>
                     <tr>
                         <th><?php _e('Withdrawal Method', 'tutor') ?></th>
-                        <th><?php _e('Amount', 'tutor') ?></th>
-                        <th><?php _e('Date', 'tutor') ?></th>
-                        <th><?php _e('Status', 'tutor') ?></th>
+                        <th width="30%"><?php _e('Requested On', 'tutor') ?></th>
+                        <th width="15%"><?php _e('Amount', 'tutor') ?></th>
+                        <th width="15%"><?php _e('Status', 'tutor') ?></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -191,19 +191,19 @@ $status_message = array(
                                     &nbsp;
                                     <span>
                                         <?php
-                                        echo tutor_utils()->avalue_dot('withdraw_method_name', $method_data);
-                                        echo '<small>', (!empty($method_title) ? '<br/>' : ''), $method_title, '</small>';
+                                        echo '<strong class="withdraw-method-name">', tutor_utils()->avalue_dot('withdraw_method_name', $method_data), '</strong>';
+                                        echo '<small>', $method_title, '</small>';
                                         ?>
                                     </span>
                                 </div>
                             </td>
                             <td>
-                                <strong><?php echo tutor_utils()->tutor_price($withdraw_history->amount); ?></strong>
-                            </td>
-                            <td>
                                 <?php
                                 echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($withdraw_history->created_at));
                                 ?>
+                            </td>
+                            <td>
+                                <strong><?php echo tutor_utils()->tutor_price($withdraw_history->amount); ?></strong>
                             </td>
                             <td>
                                 <span class="inline-image-text is-inline-block">

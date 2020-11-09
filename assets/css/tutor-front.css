@@ -9735,6 +9735,7 @@ Content Drip (Pro)
   background: white;
   height: 43px;
   overflow: hidden;
+  margin-bottom: 10px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount > span {
@@ -9837,6 +9838,7 @@ Content Drip (Pro)
   font-weight: normal;
   font-size: 13px;
   text-align: left;
+  vertical-align: middle;
 }
 
 .tutor-frontend-dashboard-withdrawal table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td {
@@ -9845,7 +9847,7 @@ Content Drip (Pro)
 }
 
 .tutor-frontend-dashboard-withdrawal table.withdrawals-history th:first-child, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:first-child {
-  padding-left: 15px;
+  padding: 10px 0 15px 15px;
 }
 
 .tutor-frontend-dashboard-withdrawal table.withdrawals-history th:last-child, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:last-child {
@@ -9856,6 +9858,16 @@ Content Drip (Pro)
 
 .tutor-frontend-dashboard-withdrawal table.withdrawals-history th:nth-child(4), .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:nth-child(4) {
   width: 105px;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history .withdraw-method-name {
+  line-height: 20px;
+  font-size: 15px;
+  display: block;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history small {
+  font-size: 13px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container {

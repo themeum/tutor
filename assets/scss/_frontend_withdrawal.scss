@@ -260,6 +260,7 @@
             font-weight: normal;
             font-size: 13px;
             text-align: left;
+            vertical-align: middle;
 
             &{
                 border-bottom: 1px solid #DCDBDC;
@@ -267,7 +268,7 @@
             }
 
             &:first-child{
-                padding-left: 15px;
+                padding: 10px 0 15px 15px;
             }
 
             &:last-child{
@@ -279,6 +280,14 @@
             &:nth-child(4){
                 width: 105px;
             }
+        }
+        .withdraw-method-name {
+            line-height: 20px;
+            font-size: 15px;
+            display: block;
+        }
+        small {
+            font-size: 13px;
         }
     }
 
