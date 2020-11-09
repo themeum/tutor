@@ -65,7 +65,7 @@
     .tooltip.tip-bottom-left,
     .tooltip.tip-bottom-right {
         top: 110%;
-        top: calc(100% + 5px);
+        top: calc(100% + 13px);
     }
     /** Common styles: Top positions **/
     .tooltip.tip-top,
@@ -73,7 +73,7 @@
     .tooltip.tip-top-right {
         top: auto;
         bottom: 110%;
-        bottom: calc(100% + 5px);
+        bottom: calc(100% + 13px);
     }
     /** Common styles: Corner positions **/
     .tooltip.tip-bottom-left,
@@ -107,13 +107,13 @@
     /** Left position only **/
     .tooltip.tip-left {
         right: 110%;
-        right: calc(100% + 5px);
+        right: calc(100% + 13px);
         left: auto;
     }
     /** Right position only **/
     .tooltip.tip-right {
         left: 110%;
-        left: calc(100% + 5px);
+        left: calc(100% + 13px);
     }
 
     /* Tooltip arrow shared base styles */

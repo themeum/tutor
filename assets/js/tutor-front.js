@@ -968,7 +968,7 @@ jQuery(document).ready(function ($) {
         }
 
         $('.tutor-earning-withdraw-form-wrap').toggle();
-        $('.tutor-withdrawal-op-up-success').hide().next().show();
+        $('.tutor-withdrawal-pop-up-success').hide().next().show();
         $('html, body').css('overflow', ($('.tutor-earning-withdraw-form-wrap').is(':visible') ? 'hidden' : 'auto'));
     });
 
@@ -996,18 +996,18 @@ jQuery(document).ready(function ($) {
                         $('.withdraw-balance-col .available_balance').html(data.data.available_balance);
                     }
                     Msg = '<div class="tutor-success-msg inline-image-text is-inline-block">\
-                                <i class="tutor-icon-mark"></i> \
+                                <img src="'+window.tutor_url_base+'assets/images/icon-check.svg"/> \
                                 <div>\
                                     <b>Successful</b><br/>\
                                     <span>' + data.data.msg + '</span>\
                                 </div>\
                             </div>';
 
-                    $('.tutor-withdrawal-op-up-success').show().next().hide();
+                    $('.tutor-withdrawal-pop-up-success').show().next().hide();
 
                 } else {
                     Msg = '<div class="tutor-error-msg inline-image-text is-inline-block">\
-                            <i class="tutor-icon-line-cross"></i> \
+                            <img src="'+window.tutor_url_base+'assets/images/icon-cross.svg"/> \
                             <div>\
                                 <b>Error</b><br/>\
                                 <span>'+ data.data.msg + '</span>\

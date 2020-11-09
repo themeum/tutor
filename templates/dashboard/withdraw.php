@@ -78,7 +78,7 @@ $status_message = array(
 
         <div class="tutor-earning-withdraw-form-wrap">    
             <div>
-                <div class="tutor-withdrawal-op-up-success">
+                <div class="tutor-withdrawal-pop-up-success">
                     <div>
                         <i class="tutor-icon-line-cross close-withdraw-form-btn" data-reload="yes"></i>
                         <br/>
@@ -122,7 +122,7 @@ $status_message = array(
                             <div class="withdraw-form-field-row">
                                 <label for="tutor_withdraw_amount"><?php _e('Amount', 'tutor') ?></label>
                                 <div class="withdraw-form-field-amount">
-                                    <span>$</span> <input type="text" name="tutor_withdraw_amount">
+                                    <span><span>$</span></span> <input type="text" name="tutor_withdraw_amount">
                                 </div>
                                 <div class="inline-image-text">
                                     <img src="<?php echo $image_base; ?>info-icon-question.svg"/>
@@ -164,6 +164,7 @@ $status_message = array(
                             <th><?php _e('Amount', 'tutor') ?></th>
                             <th><?php _e('Date', 'tutor') ?></th>
                             <th><?php _e('Status', 'tutor') ?></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -202,24 +203,27 @@ $status_message = array(
                                     ?>
                                 </td>
                                 <td>
-                                    <span class="tutor-status-text-container inline-image-text is-inline-block">
+                                    <span class="inline-image-text is-inline-block">
                                         <span class="tutor-status-text status-<?php echo $withdraw_history->status; ?>">
                                             <?php echo __(ucfirst($withdraw_history->status), 'tutor'); ?>
                                         </span>
-
-                                        <?php 
-                                        if($withdraw_history->status!=='approved' && isset($status_message[$withdraw_history->status])){
-                                            ?>
+                                    </span>
+                                </td>
+                                <td style="width:60px; vertical-align:middle;">
+                                    <?php 
+                                    if($withdraw_history->status!=='approved' && isset($status_message[$withdraw_history->status])){
+                                        ?>
+                                        <span class="tutor-status-text-container">
                                             <span class="tool-tip-container">
                                                 <img src="<?php echo $image_base; ?>info-icon-question.svg"/>
                                                 <span class="tooltip tip-bottom" role="tooltip">
                                                     <?php echo $status_message[$withdraw_history->status]; ?>
                                                 </span>
                                             </span>
-                                            <?php
-                                        }
-                                        ?>
-                                    </span>
+                                        </span>
+                                        <?php
+                                    }
+                                    ?>
                                 </td>
                             </tr>
                             <?php
