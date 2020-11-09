@@ -7,6 +7,7 @@
 * New: 3 new email notification for instructor registration management system.
 * New: Filter hook to modify sub nav menu of settings page in frontend dashboard
 * New: Assignment evaluation status column in the frontend dashboard.
+* New: You can now enable or disable specific course filter options.
 * Update: Show 'Continue Course' instead of 'Add to Cart' if already purchased on the course archive page.
 * Update: Added 'course_filter' and 'column_per_row' in 'tutor_course' shortcode
 * Update: Withdrawal page design update
