@@ -64,7 +64,7 @@ $status_message = array(
             <?php
             $my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings/withdraw-settings');
             echo $withdraw_method_name ?  __(sprintf('The preferred payment method is selected as %s. ', $withdraw_method_name), 'tutor') : '';
-            echo sprintf(__('You can change your %s withdrawal preference %s.', 'tutor'), "<a href='{$my_profile_url}'>", '</a>');
+            echo sprintf(__('You can change your %s withdrawal preference %s', 'tutor'), "<a href='{$my_profile_url}'>", '</a>');
             ?>
         </span>
     </div>
