@@ -8215,7 +8215,6 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
-  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
@@ -9559,41 +9558,54 @@ Content Drip (Pro)
   line-height: 30px;
 }
 
-.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance {
-  border: 1px solid #DCDBDC;
-  border-radius: 6px;
-  padding: 15px;
-  overflow: auto;
+.tutor-frontend-dashboard-withdrawal h4 {
+  margin-bottom: 25px;
 }
 
-.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > img {
-  vertical-align: middle;
-  display: inline-block;
+.withdraw-history-table-title h4 {
+  margin-top: 45px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  border: 1px solid #DCDBDC;
+  border-radius: 6px;
+  padding: 25px 35px 25px 30px;
+  margin-bottom: 15px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .balance-info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .balance-info img {
   margin-right: 15px;
 }
 
-.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(1) {
-  vertical-align: middle;
-  display: inline-block;
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .balance-info small {
+  font-size: 16px;
 }
 
-.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(1) > small {
-  font-size: 13px;
-}
-
-.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(1) > p {
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .balance-info p {
   font-size: 20px;
+  line-height: 25px;
   margin: 0;
 }
 
-.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) {
-  float: right;
-  display: inline-block;
-  margin-top: 17px;
-  margin-left: 15px;
-}
-
-.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) a, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) a:hover, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) a:focus, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) a:active {
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .make-withdraw a, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .make-withdraw a:hover, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .make-withdraw a:focus, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .make-withdraw a:active {
   text-decoration: none;
   background: #3E64DE;
   border-radius: 3px;
@@ -9605,7 +9617,7 @@ Content Drip (Pro)
   cursor: pointer;
 }
 
-.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance > div:nth-of-type(2) a:hover {
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .make-withdraw a:hover {
   background: #2548bb;
 }
 
@@ -9630,6 +9642,11 @@ Content Drip (Pro)
 
 .tutor-frontend-dashboard-withdrawal .inline-image-text.is-inline-block > * {
   display: inline-block;
+}
+
+.tutor-frontend-dashboard-withdrawal .inline-image-text a {
+  text-decoration: underline;
+  color: #444;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap {
