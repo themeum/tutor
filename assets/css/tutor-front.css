@@ -8215,6 +8215,7 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
+  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
@@ -9776,7 +9777,8 @@ Content Drip (Pro)
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response img {
-  margin: 15px;
+  width: 34px;
+  margin: 5px 13px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response b {
@@ -9812,10 +9814,6 @@ Content Drip (Pro)
   background: #F3F3F3;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history td:odd {
-  background: #F3F3F3;
-}
-
 .tutor-frontend-dashboard-withdrawal table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td {
   padding: 10px;
   border: none;
@@ -9829,9 +9827,29 @@ Content Drip (Pro)
   border-collapse: collapse;
 }
 
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:first-child, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:first-child {
+  padding-left: 15px;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:last-child, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:last-child {
+  text-align: right;
+  padding-right: 15px;
+  width: 50px;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:nth-child(4), .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:nth-child(4) {
+  width: 105px;
+}
+
 .tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container {
   position: relative;
+  display: inline-block;
+  height: 24px;
   cursor: pointer;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container img {
+  display: inline-block !important;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-status-text {

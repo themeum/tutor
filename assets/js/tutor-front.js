@@ -967,7 +967,7 @@ jQuery(document).ready(function ($) {
             return;
         }
 
-        $('.tutor-earning-withdraw-form-wrap').toggle();
+        $('.tutor-earning-withdraw-form-wrap').toggle().find('[name="tutor_withdraw_amount"]').val('');
         $('.tutor-withdrawal-pop-up-success').hide().next().show();
         $('html, body').css('overflow', ($('.tutor-earning-withdraw-form-wrap').is(':visible') ? 'hidden' : 'auto'));
     });

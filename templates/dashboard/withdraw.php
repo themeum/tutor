@@ -209,14 +209,14 @@ $status_message = array(
                                         </span>
                                     </span>
                                 </td>
-                                <td style="width:60px; vertical-align:middle;">
+                                <td>
                                     <?php 
                                     if($withdraw_history->status!=='approved' && isset($status_message[$withdraw_history->status])){
                                         ?>
                                         <span class="tutor-status-text-container">
                                             <span class="tool-tip-container">
                                                 <img src="<?php echo $image_base; ?>info-icon-question.svg"/>
-                                                <span class="tooltip tip-bottom" role="tooltip">
+                                                <span class="tooltip tip-left" role="tooltip">
                                                     <?php echo $status_message[$withdraw_history->status]; ?>
                                                 </span>
                                             </span>
