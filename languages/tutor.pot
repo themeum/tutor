@@ -3081,7 +3081,7 @@ msgstr ""
 msgid "Submit Request"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:234
+#: templates/dashboard/withdraw.php:238
 msgid "No withdrawal yet"
 msgstr ""
 
@@ -3935,15 +3935,15 @@ msgstr ""
 msgid "Evaluated"
 msgstr ""
 
-#: templates/dashboard/assignments/submitted.php:45
+#: templates/dashboard/assignments/submitted.php:46
 msgid "%s Pending %s"
 msgstr ""
 
-#: templates/dashboard/assignments/submitted.php:47
+#: templates/dashboard/assignments/submitted.php:48
 msgid "%s Pass %s"
 msgstr ""
 
-#: templates/dashboard/assignments/submitted.php:47
+#: templates/dashboard/assignments/submitted.php:48
 msgid "%s Fail %s"
 msgstr ""
 
