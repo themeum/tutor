@@ -8,8 +8,9 @@
 $column_per_row = $GLOBALS['tutor_shortcode_arg']['column_per_row'];
 $course_per_page = $GLOBALS['tutor_shortcode_arg']['course_per_page'];
 $course_filter = $GLOBALS['tutor_shortcode_arg']['include_course_filter']===null ? (bool) tutor_utils()->get_option('course_archive_filter', false) : $GLOBALS['tutor_shortcode_arg']['include_course_filter'];
+$supported_filters = tutor_utils()->get_option('supported_course_filters', array());
 
-if ($course_filter) { ?>
+if ($course_filter && count($supported_filters)) { ?>
 	<div class="tutor-course-filter-wrapper">
 		<div class="tutor-course-filter-container">
 			<?php tutor_load_template('course-filter.filters'); ?>
