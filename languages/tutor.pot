@@ -161,7 +161,7 @@ msgstr ""
 msgid "Tutor Pages"
 msgstr ""
 
-#: classes/Admin.php:134, classes/Instructors_List.php:116, templates/dashboard/dashboard.php:82, templates/dashboard/purchase_history.php:23, templates/dashboard/withdraw.php:166, views/pages/view_attempt.php:59, views/pages/tools/tutor_pages.php:13
+#: classes/Admin.php:134, classes/Instructors_List.php:116, templates/dashboard/dashboard.php:82, templates/dashboard/purchase_history.php:23, templates/dashboard/withdraw.php:162, views/pages/view_attempt.php:59, views/pages/tools/tutor_pages.php:13
 msgid "Status"
 msgstr ""
 
@@ -1205,7 +1205,7 @@ msgstr ""
 msgid "Define the number of statements to show."
 msgstr ""
 
-#: classes/Options.php:659, templates/dashboard/withdraw.php:33
+#: classes/Options.php:659, templates/dashboard/withdraw.php:34
 msgid "Withdrawal"
 msgstr ""
 
@@ -2190,7 +2190,7 @@ msgstr ""
 msgid "Earnings"
 msgstr ""
 
-#: classes/Utils.php:2228, templates/dashboard/withdraw.php:154
+#: classes/Utils.php:2228
 msgid "Withdrawals"
 msgstr ""
 
@@ -2418,11 +2418,11 @@ msgstr ""
 msgid "Requested By"
 msgstr ""
 
-#: classes/Withdraw_Requests_List.php:103, templates/dashboard/purchase_history.php:22, templates/dashboard/withdraw.php:123, templates/dashboard/withdraw.php:164
+#: classes/Withdraw_Requests_List.php:103, templates/dashboard/purchase_history.php:22, templates/dashboard/withdraw.php:120, templates/dashboard/withdraw.php:160
 msgid "Amount"
 msgstr ""
 
-#: classes/Withdraw_Requests_List.php:104, templates/dashboard/withdraw.php:163
+#: classes/Withdraw_Requests_List.php:104, templates/dashboard/withdraw.php:159
 msgid "Withdrawal Method"
 msgstr ""
 
@@ -2893,7 +2893,7 @@ msgstr ""
 msgid "You are going to delete this course, it can't be undone"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:72, templates/dashboard/withdraw.php:134, views/modal/add_quiz.php:55, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:135, views/modal/question_form.php:225, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:137
+#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:72, templates/dashboard/withdraw.php:131, views/modal/add_quiz.php:55, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:135, views/modal/question_form.php:225, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:137
 msgid "Cancel"
 msgstr ""
 
@@ -2957,7 +2957,7 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: templates/dashboard/purchase_history.php:24, templates/dashboard/withdraw.php:165
+#: templates/dashboard/purchase_history.php:24, templates/dashboard/withdraw.php:161
 msgid "Date"
 msgstr ""
 
@@ -3029,23 +3029,23 @@ msgstr ""
 msgid "You do not have any course on the wishlist yet."
 msgstr ""
 
-#: templates/dashboard/withdraw.php:27
+#: templates/dashboard/withdraw.php:28
 msgid "Please contact the site administrator for more information."
 msgstr ""
 
-#: templates/dashboard/withdraw.php:28
+#: templates/dashboard/withdraw.php:29
 msgid "Withdrawal request is pending for approval, please hold tight."
 msgstr ""
 
-#: templates/dashboard/withdraw.php:38, templates/dashboard/withdraw.php:106
+#: templates/dashboard/withdraw.php:40, templates/dashboard/withdraw.php:103
 msgid "Current Balance"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:45
+#: templates/dashboard/withdraw.php:46
 msgid "You currently have %s %s %s and this is insufficient balance to withdraw"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:42
+#: templates/dashboard/withdraw.php:44
 msgid "You currently have %s %s %s ready to withdraw"
 msgstr ""
 
@@ -3053,35 +3053,39 @@ msgstr ""
 msgid "Make a withdraw"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:70
-msgid "You can change your %s withdrawal preference %s."
+#: templates/dashboard/withdraw.php:67
+msgid "You can change your %s withdrawal preference %s"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:88
+#: templates/dashboard/withdraw.php:85
 msgid "Your withdrawal request has been successfully accepted"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:89
+#: templates/dashboard/withdraw.php:86
 msgid "Please check your transaction notification on your connected withdrawal method"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:100
+#: templates/dashboard/withdraw.php:97
 msgid "Make a Withdrawal"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:101
+#: templates/dashboard/withdraw.php:98
 msgid "Please enter withdrawal amount and click the submit request button"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:110
+#: templates/dashboard/withdraw.php:107
 msgid "Selected Payment Method"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:135
+#: templates/dashboard/withdraw.php:132
 msgid "Submit Request"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:238
+#: templates/dashboard/withdraw.php:150
+msgid "Withdrawal History"
+msgstr ""
+
+#: templates/dashboard/withdraw.php:240
 msgid "No withdrawal yet"
 msgstr ""
 

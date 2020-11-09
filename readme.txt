@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.7.4 - November 09, 2020 =
+= 1.7.4 - November 10, 2020 =
 
 New: 4 new email notifications for withdrawal requests.
 New: 3 new email notifications for content drip published lessons, quizzes and assignments.
