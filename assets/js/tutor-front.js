@@ -995,13 +995,6 @@ jQuery(document).ready(function ($) {
                     if (data.data.available_balance !== 'undefined') {
                         $('.withdraw-balance-col .available_balance').html(data.data.available_balance);
                     }
-                    Msg = '<div class="tutor-success-msg inline-image-text is-inline-block">\
-                                <img src="'+window.tutor_url_base+'assets/images/icon-check.svg"/> \
-                                <div>\
-                                    <b>Successful</b><br/>\
-                                    <span>' + data.data.msg + '</span>\
-                                </div>\
-                            </div>';
 
                     $('.tutor-withdrawal-pop-up-success').show().next().hide();
 
@@ -1013,12 +1006,12 @@ jQuery(document).ready(function ($) {
                                 <span>'+ data.data.msg + '</span>\
                             </div>\
                         </div>';
-                }
 
-                $responseDiv.html(Msg);
-                setTimeout(function () {
-                    $responseDiv.html('');
-                }, 5000)
+                    $responseDiv.html(Msg);
+                    setTimeout(function () {
+                        $responseDiv.html('');
+                    }, 5000)
+                }
             },
             complete: function () {
                 $btn.removeClass('updating-icon');

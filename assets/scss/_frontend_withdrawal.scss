@@ -27,7 +27,7 @@
             }
             p {
                 font-size: 20px;
-                line-height: 25px;
+                line-height: 26px;
                 margin: 0;
             }
         }
@@ -156,7 +156,7 @@
             background: white;
             height: 43px;
             overflow: hidden;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
 
             &>span{
                 display: block;
@@ -180,7 +180,7 @@
                     border: none;
                     outline: 0;
                     height: 100%;
-                    width: calc(100% - 45px);
+                    width: calc(100% - 40px);
                     display: inline-block;
                     margin: 0;
                     padding: 0;
@@ -300,6 +300,7 @@
             
             img{
                 display: inline-block !important;
+                width: 16px;
             }
         }
     }

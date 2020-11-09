@@ -218,7 +218,7 @@ $status_message = array(
                                 ?>
                                     <span class="tutor-status-text-container">
                                         <span class="tool-tip-container">
-                                            <img src="<?php echo $image_base; ?>info-icon-question.svg" />
+                                            <img src="<?php echo $image_base; ?>info-icon.svg" />
                                             <span class="tooltip tip-left" role="tooltip">
                                                 <?php echo $status_message[$withdraw_history->status]; ?>
                                             </span>

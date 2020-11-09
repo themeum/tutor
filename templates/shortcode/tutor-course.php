@@ -45,7 +45,7 @@ if ($course_filter && count($supported_filters)) { ?>
 				
 				endif;
 
-if ($course_filter) { ?>
+if ($course_filter && count($supported_filters)) { ?>
 			</div><!-- .wrap -->
 		</div>
 	</div>
