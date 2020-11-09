@@ -220,7 +220,7 @@ class Withdraw {
 		}
 
 		if ($earning_sum->balance < $withdraw_amount){
-			$insufficient_balence = apply_filters('tutor_withdraw_insufficient_balance_msg', sprintf(__('You do not have sufficient balance to create a withdrawal request. Current balance: %s %s %s ', 'tutor'),'<strong>', $formatted_balance, '</strong>' ) );
+			$insufficient_balence = apply_filters('tutor_withdraw_insufficient_balance_msg', __('Insufficient balance.', 'tutor'));
 
 			wp_send_json_error(array('msg' => $insufficient_balence ));
 		}
