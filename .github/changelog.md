@@ -1,5 +1,19 @@
 # TutorLMS Changelog
 
+### 1.7.4 - November 09, 2020
+
+* New: 3 new email notifications for withdrawal requests.
+* New: 3 new email notifications for content drip published lessons, quizzes and assignments.
+* New: 3 new email notification for instructor registration management system.
+* New: Filter hook to modify sub nav menu of settings page in frontend dashboard
+* New: Assignment evaluation status column in the frontend dashboard.
+* Update: Show 'Continue Course' instead of 'Add to Cart' if already purchased on the course archive page.
+* Update: Added 'course_filter' and 'column_per_row' in 'tutor_course' shortcode
+* Update: Withdrawal page design update
+* Fix: Course URL not showing after course completion in BuddyPress post
+* Fix: Compatibility issue with Divi Builder
+
+
 ###  1.7.3 - October 21, 2020
 
 * Update: Added option to turn on course archive filters
