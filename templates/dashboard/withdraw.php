@@ -179,8 +179,16 @@ $status_message = array(
                                         $method_title = '';
 
                                         switch($method_key){
-                                            case 'bank_transfer_withdraw' : $method_title=$method_data['account_number']['value']; break;
-                                            case 'paypal_withdraw' : $method_title=$method_data['paypal_email']['value']; break;
+                                            case 'bank_transfer_withdraw' : 
+                                                $method_title = $method_data['account_number']['value']; 
+                                                $method_title = substr_replace($method_title, '****', 2, strlen($method_title)-4);
+                                                break;
+
+                                            case 'paypal_withdraw' : 
+                                                $method_title = $method_data['paypal_email']['value']; 
+                                                $email_base = substr($method_title, 0, strpos($method_title, '@'));
+                                                $method_title = substr_replace($email_base, '****', 2, strlen($email_base)-3) . substr($method_title, strpos($method_title, '@'));
+                                                break;
                                         }
                                     ?>
                                     <div class="inline-image-text is-inline-block">
