@@ -99,7 +99,7 @@ do_action('tutor_dashboard/before/wrap');
                                 $on =  date('d F, Y', $on);
                                 echo '<span style="'.$info_message_style.'">
                                         <i class="dashicons dashicons-info" style="color:#E53935; '.$info_style.'"></i>', 
-                                        __('Your Application is pending on', 'tutor'), ' <b>', $on, '</b>',
+                                        __('Your Application is pending from', 'tutor'), ' <b>', $on, '</b>',
                                     '</span>';
                             }
                             else if($rejected_on){
