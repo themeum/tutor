@@ -2418,7 +2418,7 @@ msgstr ""
 msgid "Requested By"
 msgstr ""
 
-#: classes/Withdraw_Requests_List.php:103, templates/dashboard/purchase_history.php:22, templates/dashboard/withdraw.php:120, templates/dashboard/withdraw.php:160
+#: classes/Withdraw_Requests_List.php:103, templates/dashboard/purchase_history.php:22, templates/dashboard/withdraw.php:120, templates/dashboard/withdraw.php:161
 msgid "Amount"
 msgstr ""
 
@@ -2586,7 +2586,7 @@ msgid "Your Application was rejected on"
 msgstr ""
 
 #: templates/dashboard.php:102
-msgid "Your Application is pending on"
+msgid "Your Application is pending from"
 msgstr ""
 
 #: templates/dashboard.php:93, templates/dashboard/index.php:73
@@ -2957,7 +2957,7 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: templates/dashboard/purchase_history.php:24, templates/dashboard/withdraw.php:161
+#: templates/dashboard/purchase_history.php:24
 msgid "Date"
 msgstr ""
 
@@ -3087,6 +3087,10 @@ msgstr ""
 
 #: templates/dashboard/withdraw.php:240
 msgid "No withdrawal yet"
+msgstr ""
+
+#: templates/dashboard/withdraw.php:160
+msgid "Requested On"
 msgstr ""
 
 #: templates/email/send-reset-password.php:11
