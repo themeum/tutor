@@ -3540,3 +3540,7 @@ Tools Nav
 	top: -56px;
     right: 96px;
 }
+
+#settings-tab-general .tutor-option-field-row input[type="number"] {
+	width: 185px;
+}
