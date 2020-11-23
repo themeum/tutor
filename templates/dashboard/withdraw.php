@@ -28,6 +28,15 @@ $status_message = array(
     'rejected' => __('Please contact the site administrator for more information.', 'tutor'),
     'pending' => __('Withdrawal request is pending for approval, please hold tight.', 'tutor')
 );
+
+$currency_symbol = '';
+if(function_exists('get_woocommerce_currency_symbol')){
+    $currency_symbol=get_woocommerce_currency_symbol();
+}
+else if(function_exists('edd_currency_symbol')){
+    $currency_symbol=edd_currency_symbol();
+}
+
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal">
@@ -119,7 +128,10 @@ $status_message = array(
                             <div class="withdraw-form-field-row">
                                 <label for="tutor_withdraw_amount"><?php _e('Amount', 'tutor') ?></label>
                                 <div class="withdraw-form-field-amount">
-                                    <span><span>$</span></span> <input type="text" name="tutor_withdraw_amount">
+                                    <span>
+                                        <span><?php echo $currency_symbol; ?></span>
+                                    </span>
+                                    <input type="text" name="tutor_withdraw_amount">
                                 </div>
                                 <div class="inline-image-text">
                                     <img src="<?php echo $image_base; ?>info-icon-question.svg" />

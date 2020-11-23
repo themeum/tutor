@@ -8215,6 +8215,7 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
+  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
@@ -9039,6 +9040,453 @@ label[for="tutor_withdraw_amount"] {
 
 .correct-answer-wrap .text-image-type img {
   max-width: 35px;
+}
+
+#tutor_profile_cover_photo_editor {
+  height: 344px;
+  position: relative;
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_meta_area {
+  text-align: right;
+  padding-left: 180px;
+  margin-top: 16px;
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_meta_area > img, #tutor_profile_cover_photo_editor #tutor_photo_meta_area > span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_meta_area > span {
+  white-space: nowrap;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 18px;
+  color: #7A7A7A;
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_meta_area > span > span {
+  color: black;
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_meta_area > span.loader-area {
+  display: none;
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area {
+  height: 245px;
+  background-color: #E9EDFB;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_overlay {
+  height: 70%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.6)));
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader {
+  background: #3E64DE;
+  border-radius: 3px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  color: #FFFFFF;
+  position: absolute;
+  padding: 8px 20px;
+  right: 22px;
+  bottom: 22px;
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader:hover {
+  background: #2f52c4;
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_deleter {
+  position: absolute;
+  color: white;
+  background: rgba(0, 0, 0, 0.247);
+  text-align: center;
+  width: 36px;
+  border-radius: 50%;
+  font-size: 17px;
+  line-height: 40px;
+  height: 36px;
+  right: 22px;
+  top: 22px;
+  cursor: pointer;
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_deleter:hover {
+  background: rgba(0, 0, 0, 0.438);
+}
+
+#tutor_profile_cover_photo_editor #tutor_profile_area {
+  width: 142px;
+  height: 142px;
+  left: 35px;
+  top: 145px;
+  border-radius: 50%;
+  border: 5px solid white;
+  position: absolute;
+  overflow: hidden;
+  background-color: #E9EDFB;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 688px) {
+  #tutor_profile_cover_photo_editor #tutor_profile_area {
+    width: 120px;
+    height: 120px;
+    left: 31px;
+    top: 183px;
+  }
+}
+
+#tutor_profile_cover_photo_editor #tutor_profile_area .tutor_overlay {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.253);
+  padding: 8px 0;
+  cursor: pointer;
+  color: white;
+}
+
+#tutor_profile_cover_photo_editor #tutor_profile_area .tutor_overlay:hover {
+  background: rgba(0, 0, 0, 0.411);
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option {
+  position: absolute;
+  background: #353535;
+  width: 157px;
+  top: 294px;
+  left: 27px;
+  border-radius: 6px;
+  color: white;
+  z-index: 99;
+  display: none;
+}
+
+@media (max-width: 688px) {
+  #tutor_profile_cover_photo_editor #tutor_pp_option {
+    top: 313px;
+    left: 10px;
+  }
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option span {
+  display: block;
+  padding: 5px 10px;
+  cursor: pointer;
+  overflow: hidden;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 26px;
+  color: #FFFFFF;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option span:first-of-type {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option span:last-of-type {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option span:hover {
+  background: #6b6b6b;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option .up-arrow {
+  text-align: center;
+  height: 0;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option .up-arrow i {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  position: relative;
+  top: -17px;
+  border-bottom: 5px solid #353535;
+}
+
+#tutor_profile_cover_photo_editor.pop-up-opened #tutor_pp_option {
+  display: block;
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_dialogue_box {
+  display: none;
+}
+
+.tutor-user-public-profile .photo-area {
+  overflow: hidden;
+  height: 414px;
+  margin-top: 30px;
+}
+
+.tutor-user-public-profile .photo-area .cover-area {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.tutor-user-public-profile .photo-area .cover-area > div:first-child {
+  height: 375px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.tutor-user-public-profile .photo-area .cover-area > div:last-child {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 70%;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.6)));
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+}
+
+.tutor-user-public-profile .photo-area .pp-area {
+  position: relative;
+  top: -111px;
+  padding-left: 49px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-pic {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: inline-block;
+  border: 8px solid white;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-name {
+  padding-left: 23px;
+  padding-bottom: 30px;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-name h3 {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 48px;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-name > span {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  color: #757575;
+  margin-right: 10px;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-name > span > span {
+  color: white;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-rating-media {
+  text-align: right;
+  padding-right: 30px;
+  padding-bottom: 20px;
+  -webkit-box-flex: 1;
+          flex: 1;
+  -o-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-rating-container {
+  font-size: 16px;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-rating-container .rating-digits {
+  color: white;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-rating-container .rating-total-meta {
+  color: #757575;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-social-container {
+  margin-top: 15px;
+  text-align: right;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-social-container a {
+  display: inline-block;
+  margin-left: 20px;
+  color: whitesmoke;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-social-container a:hover {
+  color: white;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-pic {
+  border-radius: 50%;
+  height: 153px;
+  width: 153px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area {
+  overflow: initial;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-pic {
+  border-radius: 10px;
+  height: 200px;
+  width: 153px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-rating-media {
+  padding-bottom: 75px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .tutor-user-profile-sidebar {
+  margin-top: 79px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .photo-area {
+  height: auto;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .cover-area {
+  display: none;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area {
+  top: 0;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-pic {
+  border-radius: 50%;
+  height: 153px;
+  width: 153px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name {
+  padding-top: 49px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name h3 {
+  color: #161616 !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name > span > span {
+  color: black !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media {
+  position: absolute;
+  left: 226px;
+  top: 15px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media .rating-digits {
+  color: #161616 !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media.has-social-media {
+  top: 0px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container {
+  text-align: left !important;
+  margin-top: 5px !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container a {
+  margin-left: 0 !important;
+  margin-right: 20px;
+  color: #757575 !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container a:hover {
+  color: #161616 !important;
+}
+
+.tutor-user-public-profile .tutor-user-profile-sidebar {
+  padding: 15px;
+  width: 223px;
+  float: left;
+}
+
+.tutor-user-public-profile .tutor-user-profile-content {
+  width: calc(100% - 228px);
+  float: left;
+  margin-bottom: 30px;
+}
+
+.tutor-user-public-profile .tutor-user-profile-content > h3 {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 34px;
+  color: #161616;
+}
+
+.tutor-user-public-profile .tutor-user-profile-content > h3:first-child {
+  margin-top: 0;
+}
+
+@media (max-width: 800px) {
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area {
+    padding-left: 0 !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media {
+    left: 178px !important;
+  }
+  .tutor-user-public-profile .tutor-user-profile-sidebar, .tutor-user-public-profile .tutor-user-profile-content {
+    width: 100%;
+    float: none;
+  }
 }
 
 .tutor-dashboard-builder-header {
@@ -10106,6 +10554,141 @@ Content Drip (Pro)
 .tutor-tooltip-inside .tooltip.tip-right:after {
   left: -20px;
   border-color: transparent #373739 transparent transparent;
+}
+
+.tutor-instructor-list, .tutor-instructor-list:focus, .tutor-instructor-list:active {
+  outline: none;
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+.tutor-instructor-list .tutor-instructor-profile-photo, .tutor-instructor-list .tutor-instructor-cover-photo {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.tutor-instructor-list .tutor-instructor-profile-photo {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+}
+
+.tutor-instructor-list .tutor-instructor-name {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  color: #161616;
+  margin: 10px 0 5px;
+}
+
+.tutor-instructor-list .tutor-instructor-course-count > span {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  color: #161616;
+}
+
+.tutor-instructor-list .tutor-instructor-course-count > span:last-child {
+  color: #808080;
+}
+
+.tutor-instructor-list .tutor-instructor-rating * {
+  font-size: 16px;
+}
+
+.tutor-instructor-list .tutor-instructor-rating .rating-digits {
+  color: #161616;
+}
+
+.tutor-instructor-list .tutor-instructor-rating .rating-total-meta {
+  color: #7A7A7A;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-cover-photo {
+  width: 100%;
+  height: 153px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-profile-photo {
+  border: 4px solid white;
+  margin: -31px 15px 0;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-rating {
+  padding: 0 15px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-cover-photo {
+  display: none;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-profile-photo {
+  border-radius: 0%;
+  width: 100%;
+  height: 160px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-rating {
+  padding: 0 15px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-name {
+  margin-top: 15px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-left {
+  padding: 15px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-left .tutor-instructor-cover-photo {
+  display: none;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-full, .tutor-instructor-list.tutor-instructor-list-pp-left-middle {
+  position: relative;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-cover-photo, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-cover-photo {
+  display: none;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-profile-photo, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-profile-photo {
+  border-radius: 0%;
+  height: 100px;
+  width: 100px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-rating, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
+  position: absolute;
+  margin-left: 110px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-rating, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
+  top: 42px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-course-count {
+  top: 62px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
+  display: none;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-profile-photo {
+  border-radius: 60%;
+  height: 80px;
+  width: 80px;
+  margin: 10px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-name {
+  top: 11px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-course-count {
+  top: 46px;
 }
 
 /*# sourceMappingURL=tutor-front.css.map */

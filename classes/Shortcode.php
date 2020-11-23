@@ -13,11 +13,22 @@ if (!defined('ABSPATH'))
 
 class Shortcode {
 
+	private $instructor_layout = array(
+        'pp-top-full',
+        'pp-cp',
+        'pp-top-left',
+        'pp-left-middle',
+        'pp-left-full'
+	);
+	
 	public function __construct() {
 		add_shortcode('tutor_student_registration_form', array($this, 'student_registration_form'));
 		add_shortcode('tutor_dashboard', array($this, 'tutor_dashboard'));
 		add_shortcode('tutor_instructor_registration_form', array($this, 'instructor_registration_form'));
 		add_shortcode('tutor_course', array($this, 'tutor_course'));
+
+		add_shortcode('tutor_instructor_list', array($this, 'tutor_instructor_list'));
+		add_action('tutor_options_after_instructors', array($this, 'tutor_instructor_layout'));
 	}
 
 	/**
@@ -141,5 +152,49 @@ class Shortcode {
 		wp_reset_query();
 
 		return $output;
+	}
+
+	
+	/**
+	 * @param $atts
+	 *
+	 * @return string
+	 *
+	 * Shortcode for getting instructors
+	 */
+	public function tutor_instructor_list($atts){
+		$limit = isset($atts['count']) ? $atts['count'] : 9;
+		$current_page = (isset($_GET['instructor-page']) && is_numeric($_GET['instructor-page']) && $_GET['instructor-page']>=1) ? $_GET['instructor-page'] : 1;
+		$page = $current_page-1;
+		
+		// Get instructor list to sow
+		$instructors = tutor_utils()->get_instructors($limit*$page, $limit);
+		$next_instructors = tutor_utils()->get_instructors($limit*$current_page, $limit);
+
+		$previous_page = $page>0 ? '?'.http_build_query(array_merge($_GET, array('instructor-page'=>$current_page-1))) : null;
+		$next_page = (is_array($next_instructors) && count($next_instructors)>0) ? '?'.http_build_query(array_merge($_GET, array('instructor-page'=>$current_page+1))) : null;
+		
+		$layout = (isset($atts['layout']) && in_array($atts['layout'], $this->instructor_layout)) ? $atts['layout'] : null;
+		$layout = $layout ? $layout : tutor_utils()->get_option('instructor_list_layout', $this->instructor_layout[0]);
+
+		$payload=array(
+			'instructors' => is_array($instructors) ? $instructors : array(), 
+			'next_page' => $next_page, 
+			'previous_page' => $previous_page,
+			'column_count' => isset($atts['column_per_row']) ? $atts['column_per_row'] : 3,
+			'layout' => $layout
+		);
+
+		ob_start();
+		tutor_load_template('shortcode.tutor-instructor', $payload);
+		return ob_get_clean();
+	}
+
+	
+	/**
+	 * Show layout selection dasboard in instructor setting
+	 */
+	public function tutor_instructor_layout(){
+		tutor_load_template('instructor-setting', array('templates'=>$this->instructor_layout));
 	}
 }
