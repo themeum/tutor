@@ -214,7 +214,7 @@ class Withdraw {
 			wp_send_json_error(array('msg' => $no_withdraw_method ));
 		}
 
-		if ($withdraw_amount < $min_withdraw){
+		if ((!is_numeric($withdraw_amount) && !is_float($withdraw_amount)) || $withdraw_amount < $min_withdraw){
 			$required_min_withdraw = apply_filters('tutor_required_min_amount_msg', sprintf(__('Minimum withdrawal amount is %s %s %s ', 'tutor') , '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
 			wp_send_json_error(array('msg' => $required_min_withdraw ));
 		}

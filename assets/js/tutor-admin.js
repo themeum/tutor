@@ -677,5 +677,16 @@ jQuery(document).ready(function($){
                 $('#_tutor_is_course_public_meta_checkbox')[method]();
             }
         }).trigger('change');
-    }     
+    }    
+    
+    
+    /**
+     * Focus selected instructor layout in setting page
+     * 
+     * @since  v.1.7.5
+    */
+    $(document).on('click', '.instructor-layout-template', function(){
+        $('.instructor-layout-template').removeClass('selected-template');
+        $(this).addClass('selected-template');
+    });
 });
