@@ -86,7 +86,7 @@ if ( $quiz_attempts_count ){
                         <?php echo $incorrect; ?>
                     </td>
                     <td>
-                        <?php echo $attempt->earned_marks.' ('.$passing_grade.'%)'; ?>
+                        <?php echo $attempt->earned_marks.' ('.$earned_percentage.'%)'; ?>
                     </td>
                     <td>
                         <?php

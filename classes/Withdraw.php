@@ -92,7 +92,7 @@ class Withdraw {
 					'paypal_email' => array(
 						'type'      => 'email',
 						'label'     => __('PayPal E-Mail Address', 'tutor'),
-						'desc'      => __('Write your paypal email address to get payout directly to your paypal account', 'tutor'),
+						'desc'      => __('We will use this email address to send the money to your Paypal account', 'tutor'),
 					),
 
 				),
@@ -183,7 +183,7 @@ class Withdraw {
 			update_user_meta($user_id, '_tutor_withdraw_method_data', $saved_data);
 		}
 
-		$msg = apply_filters('tutor_withdraw_method_set_success_msg', __('Withdraw account has been set successfully', 'tutor'));
+		$msg = apply_filters('tutor_withdraw_method_set_success_msg', __('Withdrawal account information saved successfully!', 'tutor'));
 		wp_send_json_success(array('msg' => $msg ));
 	}
 
@@ -214,13 +214,13 @@ class Withdraw {
 			wp_send_json_error(array('msg' => $no_withdraw_method ));
 		}
 
-		if ($withdraw_amount < $min_withdraw){
-			$required_min_withdraw = apply_filters('tutor_required_min_amount_msg', sprintf(__('Minimum withdraw amount is %s %s %s ', 'tutor') , '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
+		if ((!is_numeric($withdraw_amount) && !is_float($withdraw_amount)) || $withdraw_amount < $min_withdraw){
+			$required_min_withdraw = apply_filters('tutor_required_min_amount_msg', sprintf(__('Minimum withdrawal amount is %s %s %s ', 'tutor') , '<strong>', $formatted_min_withdraw_amount, '</strong>' ) );
 			wp_send_json_error(array('msg' => $required_min_withdraw ));
 		}
 
 		if ($earning_sum->balance < $withdraw_amount){
-			$insufficient_balence = apply_filters('tutor_withdraw_insufficient_balance_msg', sprintf(__('Insufficient balance to withdraw, your balance is %s %s %s ', 'tutor'),'<strong>', $formatted_balance, '</strong>' ) );
+			$insufficient_balence = apply_filters('tutor_withdraw_insufficient_balance_msg', __('Insufficient balance.', 'tutor'));
 
 			wp_send_json_error(array('msg' => $insufficient_balence ));
 		}
@@ -253,7 +253,7 @@ class Withdraw {
 
 		do_action('tutor_withdraw_after');
 
-		$withdraw_successfull_msg = apply_filters('tutor_withdraw_successful_msg', __('Withdraw has been successful', 'tutor'));
+		$withdraw_successfull_msg = apply_filters('tutor_withdraw_successful_msg', __('Withdrawal Request Sent!', 'tutor'));
 		wp_send_json_success(array('msg' => $withdraw_successfull_msg, 'available_balance' => $new_available_balance ));
 	}
 

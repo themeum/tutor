@@ -9,18 +9,17 @@
  * @package TutorLMS/Templates
  * @version 1.5.2
  */
-
-$enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
-if ( ! $enable_q_and_a_on_course) {
-	tutor_load_template( 'single.course.q_and_a_turned_off' );
-	return;
-}
-
-
 global $post;
 $currentPost = $post;
 
 $course_id = tutils()->get_course_id_by_content($post);
+
+$disable_qa_for_this_course = get_post_meta($course_id, '_tutor_disable_qa', true);
+$enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
+if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
+	tutor_load_template( 'single.course.q_and_a_turned_off' );
+	return;
+}
 
 ?>
 <?php do_action('tutor_course/question_and_answer/before'); ?>

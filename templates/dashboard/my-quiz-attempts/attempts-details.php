@@ -17,6 +17,14 @@ if ( ! defined( 'ABSPATH' ) )
 exit;
 
 $attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
+$attempt = tutor_utils()->get_attempt($attempt_id);
+
+if ( ! $attempt){
+	?>
+    <h1><?php _e('Attempt not found', 'tutor'); ?></h1>
+	<?php
+	return;
+}
 
 function show_correct_answer( $answers= array() ){
     if(!empty($answers)){
@@ -357,8 +365,12 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                                 echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
                             } else {
                                 if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
-                                    echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
-                                }else {
+                                    if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
+                                        echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
+                                    } else {
+                                        echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
+                                    }
+								} else {
                                     echo '<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
                                 }
                             }

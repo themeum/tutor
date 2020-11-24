@@ -5,6 +5,12 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 class Course extends Tutor_Base {
+	
+	private $additional_meta=array(
+		'_tutor_disable_qa',
+		'_tutor_is_public_course'
+	);
+
 	public function __construct() {
 		parent::__construct();
 
@@ -99,7 +105,10 @@ class Course extends Tutor_Base {
          * Delete course data after deleted course
          * @since v.1.6.6
          */
-        add_action('deleted_post', array($this, 'delete_tutor_course_data'));
+		add_action('deleted_post', array($this, 'delete_tutor_course_data'));
+
+		
+		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'tutor_course_setting_metabox_frontend'));
 	}
 
 	/**
@@ -116,6 +125,12 @@ class Course extends Tutor_Base {
 			add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array( $this, 'instructors_metabox' ), $coursePostType );
 		}
 		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
+
+		/**
+         * Tutor course sidebar settings metabox
+         * @since v.1.7.0
+         */
+		add_meta_box( 'tutor-course-sidebar-settings', __( 'Tutor Settings', 'tutor' ), array($this, 'tutor_course_setting_metabox'), $coursePostType, 'side' );
 	}
 
 	public function course_meta_box($echo = true){
@@ -368,7 +383,23 @@ class Course extends Tutor_Base {
 					'post_author'  => get_current_user_id(),
 					'post_parent'  => $post_ID,
 				);
-				wp_insert_post( $post_arr );
+				$announcement_id = wp_insert_post( $post_arr );
+
+				if ($announcement_id) {
+					$announcement = (object) $post_arr;
+					do_action('tutor_announcements/after/save', $announcement_id, $announcement);
+				}
+			}
+		}
+
+		/**
+		 * Disable question and answer for this course
+		 * @since 1.7.0
+		 */
+		if ($additional_data_edit) {
+			
+			foreach($this->additional_meta as $key){
+				update_post_meta($post_ID, $key, (isset($_POST[$key]) ? 'yes' : 'no'));
 			}
 		}
 
@@ -467,7 +498,7 @@ class Course extends Tutor_Base {
 					echo '<span class="tutor-label-success">'.$price.'</span>';
 				}
 			}else{
-				echo 'free';
+				echo apply_filters('tutor-loop-default-price', 'free');
 			}
 		}
 	}
@@ -601,7 +632,7 @@ class Course extends Tutor_Base {
 
 		$wpdb->insert($wpdb->comments, $data);
 
-		do_action('tutor_course_complete_after', $course_id);
+		do_action('tutor_course_complete_after', $course_id, $user_id);
 
 		wp_redirect(get_the_permalink($course_id));
 	}
@@ -961,10 +992,13 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_nav_items($items){
+		global $wp_query, $post;
 		$enable_q_and_a_on_course = (bool) get_tutor_option('enable_q_and_a_on_course');
 		$disable_course_announcements = (bool) get_tutor_option('disable_course_announcements');
 
-		if(! $enable_q_and_a_on_course){
+		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_disable_qa', true) : '';
+
+		if(!$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
 			if(tutils()->array_get('questions', $items)) {
 				unset($items['questions']);
 			}
@@ -1195,5 +1229,56 @@ class Course extends Tutor_Base {
 				}
 			}
 		}
+	}
+
+	/**
+	 * tutor course setting metabox
+	 * @since v.1.7.0
+	 */
+	function tutor_course_setting_metabox( $post ) {
+		
+		$disable_qa = $this->additional_meta[0];
+		$is_public = $this->additional_meta[1];
+
+		$disable_qa_checked = get_post_meta($post->ID, $disable_qa, true)=='yes' ? 'checked="checked"' : '';
+		$is_public_checked = get_post_meta($post->ID, $is_public, true)=='yes' ? 'checked="checked"' : '';
+
+		do_action('tutor_before_course_sidebar_settings_metabox', $post);
+		?>
+		<div class="tutor-course-sidebar-settings-item" id="_tutor_is_course_public_meta_checkbox" style="display:none">
+			<label for="<?php echo $is_public; ?>">
+				<input id="<?php echo $is_public; ?>" type="checkbox" name="<?php echo $is_public; ?>" value="yes" <?php echo $is_public_checked; ?> />
+				<?php _e('Make This Course Public', 'tutor'); ?>
+				<small style="display:block;padding-left:24px">
+					<?php _e('No enrollment required.', 'tutor'); ?> 
+				</small>
+			</label>
+		</div>
+		<div class="tutor-course-sidebar-settings-item">
+			<label for="<?php echo $disable_qa; ?>">
+				<input type="hidden" name="_tutor_course_additional_data_edit" value="true" />
+				<input id="<?php echo $disable_qa; ?>" type="checkbox" name="<?php echo $disable_qa; ?>" value="yes" <?php echo $disable_qa_checked; ?> />
+				<?php _e('Disable Q&A', 'tutor'); ?>
+			</label>
+		</div>
+		<?php
+		do_action('tutor_after_course_sidebar_settings_metabox', $post);
+	}
+
+	function tutor_course_setting_metabox_frontend( $post ){
+		?>		
+			<div class="tutor-course-builder-section tutor-course-builder-info">
+				<div class="tutor-course-builder-section-title">
+					<h3><i class="tutor-icon-down"></i><span><?php esc_html_e('Tutor Settings', 'tutor'); ?></span></h3>
+				</div>
+				<div class="tutor-course-builder-section-content">
+					<div class="tutor-frontend-builder-item-scope">
+						<div class="tutor-form-group">
+							<?php $this->tutor_course_setting_metabox($post); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php
 	}
 }

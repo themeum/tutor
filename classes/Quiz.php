@@ -62,8 +62,11 @@ class Quiz {
 	}
 
 	public function tutor_instructor_feedback(){
-		if (isset($_POST['attempts_id'])){
-			update_post_meta(sanitize_text_field($_POST['attempts_id']), 'instructor_feedback', sanitize_text_field($_POST['feedback']));
+		$feedback = sanitize_text_field($_POST['feedback']);
+		$attempt_id = (int) tutor_utils()->avalue_dot('attempts_id', $_POST);
+		if ($attempt_id) {
+			update_post_meta($attempt_id, 'instructor_feedback', $feedback);
+			do_action('tutor_quiz/attempt/submitted/feedback', $attempt_id);
 		}
 	}
 
@@ -181,6 +184,7 @@ class Quiz {
 	}
 
 	public function answering_quiz(){
+
 		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_answering_quiz_question' ){
 			return;
 		}
@@ -301,6 +305,15 @@ class Quiz {
 						    'minus_mark'      => 0,
 						    'is_correct'      => $is_answer_was_correct ? 1 : 0,
 					    );
+					
+					 	/*
+						check if question_type open ended or short ans the set is_correct default value null before saving 
+					 	*/
+						if($question_type==="open_ended" || $question_type ==="short_answer")
+						{
+							$answers_data['is_correct'] = NULL;
+						}
+						
 					    $wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
 				    }
 			    }
@@ -333,6 +346,7 @@ class Quiz {
 	 */
 
 	public function finishing_quiz_attempt(){
+
 		if ( ! isset($_POST['tutor_action'])  ||  $_POST['tutor_action'] !== 'tutor_finish_quiz_attempt' ){
 			return;
 		}
@@ -394,40 +408,50 @@ class Quiz {
 	 */
 
 	public function review_quiz_answer(){
+
 		global $wpdb;
 		$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
+
 		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
+
 		$mark_as = sanitize_text_field($_GET['mark_as']);
 
 		$attempt_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = {$attempt_answer_id} ");
+
 		$attempt = tutor_utils()->get_attempt($attempt_id);
 		$question = tutils()->get_quiz_question_by_id($attempt_answer->question_id);
 
-		$is_correct = (int) $attempt_answer->is_correct;
+		$previous_ans =  $attempt_answer->is_correct;
 
 		do_action('tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as);
 
-		if ($mark_as === 'correct' && ! $is_correct){
+		if ($mark_as === 'correct'){
 
 			$answer_update_data = array(
 				'achieved_mark' => $attempt_answer->question_mark,
 				'is_correct' => 1,
 			);
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempt_answers', $answer_update_data, array('attempt_answer_id' => $attempt_answer_id ));
+			if($previous_ans ==0 OR $previous_ans ==null)
+			{
+				
+				//if previous answer was wrong or in review then add point as correct
+				$attempt_update_data = array(
+					'earned_marks' => $attempt->earned_marks + $attempt_answer->question_mark,
+	                'is_manually_reviewed' => 1,
+					'manually_reviewed_at' => date("Y-m-d H:i:s", tutor_time()),
+				);
 
-			$attempt_update_data = array(
-				'earned_marks' => $attempt->earned_marks + $attempt_answer->question_mark,
-                'is_manually_reviewed' => 1,
-				'manually_reviewed_at' => date("Y-m-d H:i:s", tutor_time()),
-			);
-
+				
+			}
+			
 			if ($question->question_type === 'open_ended' || $question->question_type === 'short_answer' ){
                 $attempt_update_data['attempt_status'] = 'attempt_ended';
-            }
-
+            }				
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
-
-		}elseif($mark_as === 'incorrect' && $is_correct){
+		}
+		elseif($mark_as === 'incorrect')
+		{
 
 			$answer_update_data = array(
 				'achieved_mark' => '0.00',
@@ -435,23 +459,31 @@ class Quiz {
 			);
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempt_answers', $answer_update_data, array('attempt_answer_id' => $attempt_answer_id ));
 
-			$attempt_update_data = array(
-				'earned_marks'          => $attempt->earned_marks - $attempt_answer->question_mark,
-				'is_manually_reviewed'  => 1,
-				'manually_reviewed_at'  => date("Y-m-d H:i:s", tutor_time()),
-			);
 
+			if($previous_ans ==1)
+			{
+			
+				//if previous ans was right then mynus
+				$attempt_update_data = array(
+					'earned_marks'          => $attempt->earned_marks - $attempt_answer->question_mark,
+					'is_manually_reviewed'  => 1,
+					'manually_reviewed_at'  => date("Y-m-d H:i:s", tutor_time()),
+				);
+
+			}
             if ($question->question_type === 'open_ended' || $question->question_type === 'short_answer' ){
                 $attempt_update_data['attempt_status'] = 'attempt_ended';
-            }
-
-			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
+            }	
+				
+			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));			
 		}
 		do_action('tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as);
 
-		if (wp_doing_ajax()){
+		if (wp_doing_ajax())
+		{
 		    wp_send_json_success();
-        }else{
+        }
+        else{
 			wp_redirect(admin_url("admin.php?page=tutor_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
 		}
 

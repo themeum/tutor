@@ -32,10 +32,10 @@ jQuery(document).ready(function ($) {
      */
 
 
-    $(document).on('change', '.tutor-course-filter-form', function (e) {
+    /* $(document).on('change', '.tutor-course-filter-form', function (e) {
         e.preventDefault();
         $(this).closest('form').submit();
-    });
+    }); */
 
     const videoPlayer = {
         ajaxurl: _tutorobject.ajaxurl,
@@ -128,21 +128,31 @@ jQuery(document).ready(function ($) {
             .replace(/-+$/, '');            // Trim - from end of text
     }
 
+    function toggle_star_(star){
+        star.add(star.prevAll()).filter('i').addClass('tutor-icon-star-full').removeClass('tutor-icon-star-line');
+        star.nextAll().filter('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+    }
+
     /**
      * Hover tutor rating and set value
      */
-    $(document).on('hover', '.tutor-write-review-box .tutor-star-rating-group i', function () {
-        $(this).closest('.tutor-star-rating-group').find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
-        var currentRateValue = $(this).attr('data-rating-value');
-        for (var i = 1; i <= currentRateValue; i++) {
-            $(this).closest('.tutor-star-rating-group').find('i[data-rating-value="' + i + '"]').removeClass('tutor-icon-star-line').addClass('tutor-icon-star-full');
-        }
-        $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(currentRateValue);
+    $(document).on('mouseover', '.tutor-write-review-box .tutor-star-rating-group i', function () {
+        toggle_star_($(this));
     });
 
-    $(document).on('click', '.tutor-star-rating-group i', function () {
+    $(document).on('click', '.tutor-write-review-box .tutor-star-rating-group i', function () {
         var rating = $(this).attr('data-rating-value');
         $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
+        
+        toggle_star_($(this));
+    });
+
+    $(document).on('mouseout', '.tutor-write-review-box .tutor-star-rating-group', function(){
+        var value = $(this).find('input[name="tutor_rating_gen_input"]').val();
+        var rating = parseInt(value);
+        
+        var selected = $(this).find('[data-rating-value="'+rating+'"]');
+        (rating && selected && selected.length>0) ? toggle_star_(selected) : $(this).find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
     });
 
     $(document).on('click', '.tutor_submit_review_btn', function (e) {
@@ -389,6 +399,16 @@ jQuery(document).ready(function ($) {
     });
 
     // tutor course content accordion
+
+    /**
+	 * Toggle topic summery
+	 * @since v.1.6.9
+	 */
+    $('.tutor-course-title h4 .toogle-informaiton-icon').on('click', function (e) {
+        $(this).closest('.tutor-topics-in-single-lesson').find('.tutor-topics-summery').slideToggle();
+        e.stopPropagation();
+    });
+
     $('.tutor-course-topic.tutor-active').find('.tutor-course-lessons').slideDown();
     $('.tutor-course-title').on('click', function () {
         var lesson = $(this).siblings('.tutor-course-lessons');
@@ -828,7 +848,8 @@ jQuery(document).ready(function ($) {
     $(document).on('submit click', '.cart-required-login, .cart-required-login a, .cart-required-login form', function (e) {
         e.preventDefault();
 
-        $('.tutor-cart-box-login-form').fadeIn(100);
+        var login_url = $(this).data('login_page_url');
+        login_url ? window.location.assign(login_url) : $('.tutor-cart-box-login-form').fadeIn(100);
     });
 
     $('.tutor-popup-form-close, .login-overlay-close').on('click', function () {
@@ -938,9 +959,17 @@ jQuery(document).ready(function ($) {
      * @since v.1.2.0
      */
 
-    $(document).on('click', 'a.open-withdraw-form-btn', function (e) {
+    $(document).on('click', 'a.open-withdraw-form-btn, .close-withdraw-form-btn', function (e) {
         e.preventDefault();
-        $('.tutor-earning-withdraw-form-wrap').slideToggle();
+
+        if($(this).data('reload')=='yes'){
+            window.location.reload();
+            return;
+        }
+
+        $('.tutor-earning-withdraw-form-wrap').toggle().find('[name="tutor_withdraw_amount"]').val('');
+        $('.tutor-withdrawal-pop-up-success').hide().next().show();
+        $('html, body').css('overflow', ($('.tutor-earning-withdraw-form-wrap').is(':visible') ? 'hidden' : 'auto'));
     });
 
     $(document).on('submit', '#tutor-earning-withdraw-form', function (e) {
@@ -948,7 +977,7 @@ jQuery(document).ready(function ($) {
 
         var $form = $(this);
         var $btn = $('#tutor-earning-withdraw-btn');
-        var $responseDiv = $('#tutor-withdraw-form-response');
+        var $responseDiv = $('.tutor-withdraw-form-response');
         var data = $form.serialize();
 
         $.ajax({
@@ -966,16 +995,23 @@ jQuery(document).ready(function ($) {
                     if (data.data.available_balance !== 'undefined') {
                         $('.withdraw-balance-col .available_balance').html(data.data.available_balance);
                     }
-                    Msg = '<div class="tutor-success-msg"><i class="tutor-icon-mark"></i> ' + data.data.msg + ' </div>';
+
+                    $('.tutor-withdrawal-pop-up-success').show().next().hide();
 
                 } else {
-                    Msg = '<div class="tutor-error-msg"><i class="tutor-icon-line-cross"></i> ' + data.data.msg + ' </div>';
-                }
+                    Msg = '<div class="tutor-error-msg inline-image-text is-inline-block">\
+                            <img src="'+window.tutor_url_base+'assets/images/icon-cross.svg"/> \
+                            <div>\
+                                <b>Error</b><br/>\
+                                <span>'+ data.data.msg + '</span>\
+                            </div>\
+                        </div>';
 
-                $responseDiv.html(Msg);
-                setTimeout(function () {
-                    $responseDiv.html('');
-                }, 5000)
+                    $responseDiv.html(Msg);
+                    setTimeout(function () {
+                        $responseDiv.html('');
+                    }, 5000)
+                }
             },
             complete: function () {
                 $btn.removeClass('updating-icon');
@@ -1694,9 +1730,11 @@ jQuery(document).ready(function ($) {
      */
     $(document).on('submit', '.tutor-login-form-wrap #loginform', function (e) {
         e.preventDefault();
+        
         var $that = $(this);
         var $form_wrapper = $('.tutor-login-form-wrap');
         var form_data = $that.serialize() + '&action=tutor_user_login';
+        
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
@@ -1716,4 +1754,334 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    /**
+     * Show hide is course public checkbox (frontend dashboard editor)
+     * 
+     * @since  v.1.7.2
+    */
+    var price_type = $('.tutor-frontend-builder-course-price [name="tutor_course_price_type"]');
+    if(price_type.length==0){
+        $('#_tutor_is_course_public_meta_checkbox').show();
+    }
+    else{
+        price_type.change(function(){
+            if($(this).prop('checked')){
+                var method = $(this).val()=='paid' ? 'hide' : 'show';
+                $('#_tutor_is_course_public_meta_checkbox')[method]();
+            }
+        }).trigger('change');
+    }
+    
+    /**
+     * Withdrawal page tooltip
+     * 
+     * @since  v.1.7.4
+    */
+    // Fully accessible tooltip jQuery plugin with delegation.
+    // Ideal for view containers that may re-render content.
+    (function ($) {
+        $.fn.tutor_tooltip = function () {
+        this
+    
+        // Delegate to tooltip, Hide if tooltip receives mouse or is clicked (tooltip may stick if parent has focus)
+            .on('mouseenter click', '.tooltip', function (e) {
+            e.stopPropagation();
+            $(this).removeClass('isVisible');
+            })
+            // Delegate to parent of tooltip, Show tooltip if parent receives mouse or focus
+            .on('mouseenter focus', ':has(>.tooltip)', function (e) {
+            if (!$(this).prop('disabled')) { // IE 8 fix to prevent tooltip on `disabled` elements
+                $(this)
+                .find('.tooltip')
+                .addClass('isVisible');
+            }
+            })
+            // Delegate to parent of tooltip, Hide tooltip if parent loses mouse or focus
+            .on('mouseleave blur keydown', ':has(>.tooltip)', function (e) {
+            if (e.type === 'keydown') {
+                if(e.which === 27) {
+                $(this)
+                    .find('.tooltip')
+                    .removeClass('isVisible');
+                }
+            } else {
+                $(this)
+                .find('.tooltip')
+                .removeClass('isVisible');
+            }
+            });
+        return this;
+        };
+    }(jQuery));
+    
+    // Bind event listener to container element
+    $('.tutor-tooltip-inside').tutor_tooltip();
+    
+
+    
+    /**
+     * Manage course filter
+     * 
+     * @since  v.1.7.2
+    */
+    var filter_criteria = {action:'tutor_course_filter_ajax'};
+    var filter_container = $('.tutor-course-filter-container');
+    var loop_container = $('.tutor-course-filter-loop-container');
+    var toggle_criteria = function(name, value, is_checked){
+
+        if(is_checked===undefined){
+            
+            if(!value){
+                delete filter_criteria[name];
+            }
+            else{
+                filter_criteria[name]=value;
+            }
+        }
+        else{
+            !filter_criteria[name] ? filter_criteria[name]=[] : 0;
+            var index = filter_criteria[name].indexOf(value);
+
+            if(is_checked){
+                index==-1 ? filter_criteria[name].push(value) : 0;
+            }
+            else{
+                filter_criteria[name].splice(index, 1);
+            }
+        }
+        
+        push_state();
+    }
+
+    var push_state=function(){
+        var exclude = ['column_per_row', 'course_per_page'];
+        
+        var str = Object.keys(filter_criteria).map(function(key){
+            var val = filter_criteria[key];
+            var str = Array.isArray(val) ? val.join(',') : val;
+
+            return (key=='action' || !str || exclude.indexOf(key)>-1) ? null : key+'='+str;
+
+        }).filter(q=>q!==null).join('&');
+        
+        window.history.replaceState({'id':'tutor_courses'}, 'Courses', (str ? '?'+str : ''));
+    }
+
+    // Sidebar checkbox value change
+    filter_container.find('[type=checkbox]').change(function(e){
+        
+        e.originalEvent ? toggle_criteria($(this).attr('name'), $(this).val(), $(this).prop('checked')) : 0;
+        filter_criteria.column_per_row = loop_container.data('column_per_row');
+        filter_criteria.course_per_page = loop_container.data('course_per_page');
+        loop_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>').show();
+
+        $.ajax({
+            url:window._tutorobject.ajaxurl+(filter_criteria.page ? '?paged='+filter_criteria.page : ''),
+            type:'POST',
+            data:filter_criteria,
+            success:function(r){
+                loop_container.html(r).find('.tutor-pagination-wrap a').each(function(){
+                    $(this).attr('data-href', $(this).attr('href')).attr('href', '#');
+                });
+            },
+            error:function(){
+                alert('Request Failed!');
+            }
+        })
+    });
+
+    // Search field 
+    var time_out;
+    filter_container.on('input', '[name="tutor-course-filter-keyword"]', function(){
+        window.clearTimeout(time_out);
+
+        var value = $(this).val();
+        value = value.trim();
+
+        time_out=window.setTimeout(function(){
+            
+            toggle_criteria('keyword', value);
+
+            filter_container.find('[type="checkbox"]:first').trigger('change');
+        }, 500);
+    });
+
+    // Alter pagination
+    loop_container.on('click', '.tutor-pagination-wrap a', function(e){
+        var url = $(this).data('href') || $(this).attr('href');
+
+        if(url){
+            url = new URL(url);
+            var page = url.searchParams.get("paged");
+
+            if(page){
+                e.preventDefault();
+                toggle_criteria('page', page);
+                
+                filter_container.find('[type="checkbox"]:first').trigger('change');
+            }
+        }
+    });
+
+    // Alter sort filter
+    loop_container.on('change', 'select[name="tutor_course_filter"]', function(){
+        toggle_criteria('tutor_course_filter', $(this).val());
+        filter_container.find('[type="checkbox"]:first').trigger('change');
+    });
+
+    // Parse filter from URL
+    var url = new URL(window.location.href);
+    var trigger_load=false;
+    filter_container.find('[type="checkbox"]').each(function(){
+        var name = $(this).attr('name');
+        var value = $(this).val();
+        var checked = $(this).prop('checked');
+
+        var arg = url.searchParams.get(name);
+        arg = arg ? arg.split(',') : [];
+        
+
+        if(arg.indexOf(value)>-1 || checked){
+            $(this).prop('checked', true);
+            toggle_criteria(name, value, true, false);
+        }
+    });
+
+    ['page', 'keyword', 'tutor_course_filter'].forEach(function(name){
+        var value = url.searchParams.get(name);
+
+        if(value){
+            toggle_criteria(name, value, undefined, false);
+            name=='keyword' ? filter_container.find('[name="tutor-course-filter-keyword"]').val(value) : 0;
+            name=='tutor_course_filter' ? loop_container.find('select[name="tutor_course_filter"]').val(value) : 0;
+            trigger_load=true;
+        }
+    });
+
+    if(trigger_load || filter_container.find('input:checked').length>0){
+        filter_container.find('[type="checkbox"]:first').trigger('change');
+    }
+    else{
+        loop_container.show();
+    }
+   
+    
+    
+    /**
+     * Profile Photo and Cover Photo editor
+     * 
+     * @since  v.1.7.5
+    */
+    var PhotoEditor=function(photo_editor){
+
+        this.dialogue_box = photo_editor.find('#tutor_photo_dialogue_box');
+
+        
+        this.open_dialogue_box = function(name){
+            this.dialogue_box.attr('name', name);
+            this.dialogue_box.trigger('click');
+        }
+
+        this.validate_image = function(file){
+            return true;
+        }
+
+        this.upload_selected_image = function(name, file){
+            if(!file || !this.validate_image(file)){
+                return;
+            }
+
+            var context = this;
+            context.toggle_loader(name, true);
+
+            // Prepare payload to upload
+            var form_data = new FormData();
+            form_data.append('action', 'tutor_user_photo_upload');
+            form_data.append('photo_type', name);
+            form_data.append('photo_file', file, file.name);
+            
+            $.ajax({
+                url:window._tutorobject.ajaxurl,
+                data:form_data,
+                type:'POST',
+                processData: false,
+                contentType: false,
+                error:context.error_alert,
+                complete:function(){
+                    context.toggle_loader(name, false);
+                }
+            })
+        }
+
+        this.accept_upload_image=function(context, e){
+            var file = e.currentTarget.files[0] || null;
+            context.update_preview(e.currentTarget.name, file);
+            context.upload_selected_image(e.currentTarget.name, file);
+            $(e.currentTarget).val('');
+        }
+
+        this.delete_image=function(name){
+            var context = this;
+            context.toggle_loader(name, true);
+            
+            $.ajax({
+                url:window._tutorobject.ajaxurl,
+                data:{action:'tutor_user_photo_remove', photo_type:name},
+                type:'POST',
+                error:context.error_alert,
+                complete:function(){
+                    context.toggle_loader(name, false);
+                }
+            });
+        }
+
+        this.update_preview=function(name, file){
+            var renderer = photo_editor.find(name=='cover_photo' ? '#tutor_cover_area' : '#tutor_profile_area');
+
+            if(!file){
+                renderer.css('background-image', 'url('+renderer.data('fallback')+')');
+                this.delete_image(name);
+                return;
+            }
+            
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                renderer.css('background-image', 'url('+e.target.result+')');
+            }
+            
+            reader.readAsDataURL(file); 
+        }
+
+        this.toggle_profile_pic_action=function(show){
+            var method = show===undefined ? 'toggleClass' : (show ? 'addClass' : 'removeClass');
+            photo_editor[method]('pop-up-opened');
+        }
+
+        this.error_alert=function(){
+            alert('Something Went Wrong.');
+        }
+
+        this.toggle_loader = function(name, show){
+            photo_editor.find('#tutor_photo_meta_area .loader-area').css('display', (show ? 'block' : 'none'));
+        }
+
+        this.initialize = function(){
+            var context = this;
+
+            this.dialogue_box.change(function(e){context.accept_upload_image(context, e)});
+
+            photo_editor.find('#tutor_profile_area .tutor_overlay').click(function(){context.toggle_profile_pic_action()});
+
+            // Upload new
+            photo_editor.find('.tutor_cover_uploader').click(function(){context.open_dialogue_box('cover_photo')});
+            photo_editor.find('.tutor_pp_uploader').click(function(){context.open_dialogue_box('profile_photo')});
+
+            // Delete existing
+            photo_editor.find('.tutor_cover_deleter').click(function(){context.update_preview('cover_photo', null)});
+            photo_editor.find('.tutor_pp_deleter').click(function(){context.update_preview('profile_photo', null)});
+        }
+    }
+
+    var photo_editor = $('#tutor_profile_cover_photo_editor');
+    photo_editor.length>0 ? new PhotoEditor(photo_editor).initialize() : 0;
 });

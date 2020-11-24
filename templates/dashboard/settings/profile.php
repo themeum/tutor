@@ -5,11 +5,69 @@
  */
 
 $user = wp_get_current_user();
+
+$profile_placeholder = tutor()->url.'assets/images/profile-photo.png';
+$profile_photo_src = $profile_placeholder;
+$profile_photo_id = get_user_meta($user->ID, '_tutor_profile_photo', true);
+if ($profile_photo_id){
+    $url = wp_get_attachment_image_url($profile_photo_id, 'full');
+    !empty($url) ? $profile_photo_src = $url : 0;
+}
+
+$cover_placeholder = tutor()->url.'assets/images/cover-photo.jpg';
+$cover_photo_src = $cover_placeholder;
+$cover_photo_id = get_user_meta($user->ID, '_tutor_cover_photo', true);
+if ($cover_photo_id){
+    $url = wp_get_attachment_image_url($cover_photo_id, 'full');
+    !empty($url) ? $cover_photo_src = $url : 0;
+}
 ?>
 
 <div class="tutor-dashboard-content-inner">
 
     <?php do_action('tutor_profile_edit_form_before'); ?>
+
+    <div id="tutor_profile_cover_photo_editor">
+        <input id="tutor_photo_dialogue_box" type="file" accept=".png,.jpg,.jpeg"/>
+        <div id="tutor_cover_area" data-fallback="<?php echo $cover_placeholder; ?>" style="background-image:url(<?php echo $cover_photo_src; ?>)">
+            <span class="tutor_cover_deleter">
+                <i class="tutor-icon-garbage"></i>
+            </span>
+            <div class="tutor_overlay">
+                <button class="tutor_cover_uploader">
+                    <i class="tutor-icon-image-ans"></i>&nbsp;
+                    <span>
+                       <?php
+                            echo $profile_photo_id ? __('Update Cover Photo', 'tutor') : __('Upload Cover Photo', 'tutor');
+                        ?> 
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div id="tutor_photo_meta_area">
+            <img src="<?php echo tutor()->url . '/assets/images/'; ?>info-icon.svg" />
+            <span>Profile Photo Size: <span>200x200</span> pixels,</span>
+            <span>Cover Photo Size: <span>700x430</span> pixels </span>
+            <span class="loader-area">Saving...</span>
+        </div>
+        <div id="tutor_profile_area" data-fallback="<?php echo $profile_placeholder; ?>" style="background-image:url(<?php echo $profile_photo_src; ?>)">
+            <div class="tutor_overlay">
+                <i class="tutor-icon-image-ans"></i>
+            </div>
+        </div>
+        <div id="tutor_pp_option">
+            <div class="up-arrow">
+                <i></i>
+            </div>
+            
+            <span class="tutor_pp_uploader">
+                <i class="tutor-icon-image"></i> <?php _e('Upload Photo', 'tutor'); ?>
+            </span>
+            <span class="tutor_pp_deleter">
+                <i class="tutor-icon-garbage"></i> <?php _e('Delete', 'tutor'); ?>
+            </span>
+        </div>
+    </div>
 
     <form action="" method="post" enctype="multipart/form-data">
         <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
@@ -29,7 +87,7 @@ $user = wp_get_current_user();
         <?php do_action('tutor_profile_edit_input_before'); ?>
 
         <div class="tutor-form-row">
-            <div class="tutor-form-col-4">
+            <div class="tutor-form-col-6">
                 <div class="tutor-form-group">
                     <label>
                         <?php _e('First Name', 'tutor'); ?>
@@ -38,7 +96,7 @@ $user = wp_get_current_user();
                 </div>
             </div>
 
-            <div class="tutor-form-col-4">
+            <div class="tutor-form-col-6">
                 <div class="tutor-form-group">
                     <label>
                         <?php _e('Last Name', 'tutor'); ?>
@@ -46,13 +104,24 @@ $user = wp_get_current_user();
                     <input type="text" name="last_name" value="<?php echo $user->last_name; ?>" placeholder="<?php _e('Last Name', 'tutor'); ?>">
                 </div>
             </div>
+        </div>
 
-            <div class="tutor-form-col-4">
+        <div class="tutor-form-row">
+            <div class="tutor-form-col-6">
+                <div class="tutor-form-group">
+                    <label>
+                        <?php _e('User Name', 'tutor'); ?>
+                    </label>
+                    <input type="text" disabled="disabled" value="<?php echo $user->user_login; ?>">
+                </div>
+            </div>
+
+            <div class="tutor-form-col-6">
                 <div class="tutor-form-group">
                     <label>
                         <?php _e('Phone Number', 'tutor'); ?>
                     </label>
-                    <input type="text" name="phone_number" value="<?php echo get_user_meta($user->ID,'phone_number',true); ?>" placeholder="<?php _e('Phone Number', 'tutor'); ?>">
+                    <input type="number" min="1" name="phone_number" value="<?php echo get_user_meta($user->ID,'phone_number',true); ?>" placeholder="<?php _e('Phone Number', 'tutor'); ?>">
                 </div>
             </div>
         </div>
@@ -69,28 +138,6 @@ $user = wp_get_current_user();
         </div>
 
         <div class="tutor-form-row">
-            <div class="tutor-form-col-6">
-                <div class="tutor-form-group">
-                    <label>
-                        <?php _e('Profile Photo', 'tutor'); ?>
-                    </label>
-                    <div class="tutor-profile-photo-upload-wrap">
-                        <?php
-                        $profile_photo_src = tutor_placeholder_img_src();
-                        $profile_photo_id = get_user_meta($user->ID, '_tutor_profile_photo', true);
-                        if ($profile_photo_id){
-                            $profile_photo_src = wp_get_attachment_image_url($profile_photo_id, 'thumbnail');
-                        }
-                        ?>
-                        <a href="javascript:;" class="tutor-profile-photo-delete-btn"><i class="tutor-icon-garbage"></i> </a>
-                        <img src="<?php echo $profile_photo_src; ?>" class="profile-photo-img">
-                        <input type="hidden" id="tutor_profile_photo_id" name="tutor_profile_photo_id" value="<?php echo $profile_photo_id; ?>">
-                        <input type="file" name="tutor_profile_photo_file" id="tutor_profile_photo_file" style="display:none"/>
-                        <button type="button" id="tutor_profile_photo_button" class="tutor-profile-photo-upload-btn"><?php _e('Upload Image', 'tutor'); ?></button>
-                    </div>
-                </div>
-            </div>
-
             <div class="tutor-form-col-6">
 
                 <div class="tutor-form-group">
@@ -138,6 +185,7 @@ $user = wp_get_current_user();
 
         </div>
 
+        <?php do_action('tutor_profile_edit_before_social_media', $user); ?>
 
         <?php
         $tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();

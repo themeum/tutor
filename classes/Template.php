@@ -150,8 +150,13 @@ class Template extends Tutor_Base {
 			if (empty( $wp_query->query_vars['course_subpage'])) {
 				$template = tutor_get_template( 'single-course' );
 				if ( is_user_logged_in() ) {
+					$is_administrator = current_user_can('administrator');
+					$is_instructor = tutor_utils()->is_instructor_of_this_course();
+					$course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
 					if ( tutor_utils()->is_enrolled() ) {
 						$template = tutor_get_template( 'single-course-enrolled' );
+					} else if ( $course_content_access && ($is_administrator || $is_instructor) ) {
+						$template = tutor_get_template( 'single-course-instructor' );
 					}
 				}
 			}else{
@@ -169,6 +174,13 @@ class Template extends Tutor_Base {
 			return $template;
 		}
 		return $template;
+	}
+
+	private function get_root_post_parent_id($id){
+		$ancestors = get_post_ancestors($id);
+		$root = is_array($ancestors) ? end($ancestors) : null;
+
+		return is_numeric($root) ? $root : $id;
 	}
 
 	/**
@@ -204,12 +216,27 @@ class Template extends Tutor_Base {
 					if(current_user_can(tutor()->instructor_role) && tutils()->has_lesson_edit_access()){
 						$template = tutor_get_template( 'single-lesson' );
 					}
+
+					/*
+					* Check access for admin
+					* @since 1.6.9
+					*/
+					$course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
+					if($course_content_access && current_user_can('administrator')) {
+						$template = tutor_get_template( 'single-lesson' );
+					}
 				}
 			}else{
 				$template = tutor_get_template('login');
 			}
 			wp_reset_postdata();
 
+			// Forcefully show lessons if it is public and not paid
+			$course_id = $this->get_root_post_parent_id($page_id);
+			if(get_post_meta($course_id, '_tutor_is_public_course', true)=='yes' && !tutor_utils()->is_course_purchasable($course_id)){
+				$template = tutor_get_template( 'single-lesson' );
+			}
+			
 			return apply_filters('tutor_lesson_template', $template);
 		}
 		return $template;

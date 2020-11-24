@@ -304,20 +304,35 @@ $user = get_userdata($user_id);
                             ?>
                         </td>
 
-                        <td>
-                            <?php
+<td>
+    <?php
 
-                            if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-                                echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
-                            } else {
-                                if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
-                                    echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
-                                }else {
-                                    echo '<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
-                                }
-                            }
-                            ?>
-                        </td>
+    if ( $answer->is_correct ) {
+        echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
+    } 
+    else {
+        if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer')
+        {
+
+            //if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
+            if($answer->is_correct==NULL)
+            {
+                echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
+            }
+            else if ( $answer->is_correct == 0 ) {
+
+                echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
+            } 
+            else {
+                echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
+            }
+        } 
+        else {
+            echo '<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
+        }
+    }
+    ?>
+</td>
 
                         <td style="white-space: nowrap">
                             <a href="<?php echo admin_url("admin.php?action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=correct"); ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="attempt-mark-correct-btn quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>

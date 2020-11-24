@@ -60,6 +60,18 @@ class Instructor {
 		));
 
 		$validation_errors = array();
+
+		/*
+		*registration_errors
+		*push into validation_errors	
+		*/
+		$errors = apply_filters('registration_errors',new  \WP_Error,'','');
+		foreach ($errors->errors as $key => $value) 
+		{
+		 	$validation_errors[$key] = $value[0];
+		 	
+		}
+				
 		foreach ($required_fields as $required_key => $required_value){
 			if (empty($_POST[$required_key])){
 				$validation_errors[$required_key] = $required_value;
@@ -233,7 +245,7 @@ class Instructor {
 			$instructor = new \WP_User($instructor_id);
 			$instructor->add_role(tutor()->instructor_role);
 
-			//TODO: send E-Mail to this user about instructor approval, should via hook
+			// Send E-Mail to this user about instructor approval via hook
 			do_action('tutor_after_approved_instructor', $instructor_id);
 		}
 
@@ -246,6 +258,20 @@ class Instructor {
 			do_action('tutor_after_blocked_instructor', $instructor_id);
 
 			//TODO: send E-Mail to this user about instructor blocked, should via hook
+		}
+
+		if( 'remove-instructor' === $action)
+		{
+			do_action('tutor_before_rejected_instructor', $instructor_id);
+
+			$user = new \WP_User($instructor_id);
+			$user->remove_role(tutor()->instructor_role);
+
+			tutor_utils()->remove_instructor_role($instructor_id);
+			update_user_meta($instructor_id, '_is_tutor_instructor_rejected', tutor_time());
+
+			// Send E-Mail to this user about instructor rejection via hook
+			do_action('tutor_after_rejected_instructor', $instructor_id);
 		}
 
 		wp_send_json_success();

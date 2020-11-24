@@ -360,6 +360,12 @@ jQuery(document).ready(function($){
         var $that = $(this);
         var action = $that.attr('data-action');
         var instructor_id = $that.attr('data-instructor-id');
+        
+        var prompt_message = $that.attr('data-prompt-message');
+        if(prompt_message && !confirm(prompt_message)){
+            // Avoid Accidental CLick
+            return;
+        }
 
         var nonce_key = tutor_data.nonce_key;
         var json_data = { instructor_id : instructor_id, action_name : action, action: 'instructor_approval_action'};
@@ -654,4 +660,33 @@ jQuery(document).ready(function($){
         }
     });
     
+
+    /**
+     * Show hide is course public checkbox (backend dashboard editor)
+     * 
+     * @since  v.1.7.2
+    */
+    var price_type = $('#tutor-attach-product [name="tutor_course_price_type"]');
+    if(price_type.length==0){
+        $('#_tutor_is_course_public_meta_checkbox').show();
+    }
+    else{
+        price_type.change(function(){
+            if($(this).prop('checked')){
+                var method = $(this).val()=='paid' ? 'hide' : 'show';
+                $('#_tutor_is_course_public_meta_checkbox')[method]();
+            }
+        }).trigger('change');
+    }    
+    
+    
+    /**
+     * Focus selected instructor layout in setting page
+     * 
+     * @since  v.1.7.5
+    */
+    $(document).on('click', '.instructor-layout-template', function(){
+        $('.instructor-layout-template').removeClass('selected-template');
+        $(this).addClass('selected-template');
+    });
 });
