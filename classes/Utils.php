@@ -1348,7 +1348,7 @@ class Utils {
 	public function get_optimized_duration($duration){
 		if(is_string($duration)){
 			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove Empty hour
-			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove empty minute
+			// strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove empty minute
 		}
 
 		return $duration;
@@ -5765,5 +5765,50 @@ class Utils {
 			$wpdb->prepare("SELECT * FROM $table WHERE comment_post_ID = %d AND user_id = %d LIMIT 1",$post_id,$user_id)
 		);
 		return $query ? $query : false;
+	}
+	
+	/**
+	 * @param int $course_id
+	 *
+	 * @return bool
+	 * 
+	 * @since v1.7.5
+	 *
+	 * Check if course is in wc cart
+	 */
+	public function is_course_added_to_cart($course_or_product_id = 0, $is_product_id=false){
+		
+		switch($this->get_option('monetize_by')){
+			case 'wc':
+				global $woocommerce;
+				$product_id = $is_product_id ? $course_or_product_id : $this->get_course_product_id($course_or_product_id);
+ 
+				foreach($woocommerce->cart->get_cart() as $key => $val ) {
+					if($product_id == $val['product_id']) {
+						return true;
+					}
+				}
+				break;
+		}
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool
+	 * 
+	 * @since v1.7.5
+	 *
+	 * Get profile pic url
+	 */
+	public function get_cover_photo_url($user_id){
+		$cover_photo_src = tutor()->url.'assets/images/cover-photo.svg';
+		$cover_photo_id = get_user_meta($user_id, '_tutor_cover_photo', true);
+		if ($cover_photo_id){
+			$url = wp_get_attachment_image_url($cover_photo_id, 'full');
+			!empty($url) ? $cover_photo_src = $url : 0;
+		}
+
+		return $cover_photo_src;
 	}
 }

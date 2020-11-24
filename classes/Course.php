@@ -498,7 +498,7 @@ class Course extends Tutor_Base {
 					echo '<span class="tutor-label-success">'.$price.'</span>';
 				}
 			}else{
-				echo 'free';
+				echo apply_filters('tutor-loop-default-price', 'free');
 			}
 		}
 	}

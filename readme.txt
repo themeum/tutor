@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.5.1
 Requires PHP: 7.0
-Stable tag: 1.7.4
+Stable tag: 1.7.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,20 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.7.5 - November 25, 2020 =
+
+New: Introducing customizable shortcode to showcase your instructors in a list 
+New: Upload a cover photo for the public profile of a user
+New: Public Profile is getting a brand new design update.
+Update: Withdrawal and Phone number fields now accept numbers only.
+Fix: Add to Cart option still showed after adding the product in the Course Details Page
+Fix: Showed wrong information for multiple pages for the Students list in the Dashboard  →Report →Courses →Course Details section.
+Fix: Student's name didn't show up when downloading the certificate as a PDF.
+Fix: Grammatical corrections in the enrolment section of the course page.
+Fix: Minute indicator added for reading time consisting of only seconds on the course page.
+Fix: The course was displaying free even when it was part of a membership package.
+Fix: Course dependent on Paid Memberships Pro plugin got canceled after a user enrolled in it.
 
 = 1.7.4 - November 10, 2020 =
 
