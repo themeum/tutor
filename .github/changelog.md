@@ -6,6 +6,7 @@
 * New: Upload a cover photo for the public profile of a user
 * New: Public Profile is getting a brand new design update.
 * Update: Withdrawal and Phone number fields now accept numbers only.
+* Update: {site_url} and {site_name} attributes added to all Tutor Email addon emails.
 * Fix: Add to Cart option still showed after adding the product in the Course Details Page
 * Fix: Showed wrong information for multiple pages for the Students list in the Dashboard  →Report →Courses →Course Details section.
 * Fix: Student's name didn't show up when downloading the certificate as a PDF.
