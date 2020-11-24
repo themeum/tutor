@@ -14,36 +14,60 @@ class User {
 
 		add_action('profile_update', array($this, 'profile_update'));
 		add_action('set_user_role', array($this, 'set_user_role'), 10, 3);
-		add_action('wp_ajax_tutor_profile_photo_remove', array($this, 'tutor_profile_photo_remove'));
+
+		add_action('wp_ajax_tutor_user_photo_remove', array($this, 'tutor_user_photo_remove'));
+		add_action('wp_ajax_tutor_user_photo_upload', array($this, 'update_user_photo'));
+		
+		add_action('tutor_options_after_students', array($this, 'tutor_public_profile_layout'));
+	}
+
+	private $profile_layout = array(
+		'pp-circle',
+		'pp-rectangle',
+		'no-cp'
+	);
+
+	/**
+	 * Show layout selection dasboard in instructor setting
+	 */
+	public function tutor_public_profile_layout(){
+		tutor_load_template('public-profile-setting', array('profile_templates'=>$this->profile_layout));
 	}
 
 	public function edit_user_profile($user){
 		include  tutor()->path.'views/metabox/user-profile-fields.php';
 	}
 
-	public function profile_update($user_id){
-		$_tutor_profile_job_title = sanitize_text_field(tutor_utils()->avalue_dot('_tutor_profile_job_title', $_POST));
-		$_tutor_profile_bio = wp_kses_post(tutor_utils()->avalue_dot('_tutor_profile_bio', $_POST));
-		$_tutor_profile_photo_field = sanitize_text_field(tutor_utils()->avalue_dot('_tutor_profile_photo_field', $_POST));
+	private function delete_existing_user_photo($user_id, $type){
+		$meta_key = $type=='cover_photo' ? '_tutor_cover_photo' : '_tutor_profile_photo';
+		$photo_id = get_user_meta($user_id, $meta_key, true);
+		is_numeric($photo_id) ? wp_delete_attachment( $photo_id, true) : 0;
+		delete_user_meta( $user_id, $meta_key);
+	}
 
-		update_user_meta($user_id, '_tutor_profile_job_title', $_tutor_profile_job_title);
-		update_user_meta($user_id, '_tutor_profile_bio', $_tutor_profile_bio);
+	public function tutor_user_photo_remove(){
+		$this->delete_existing_user_photo(get_current_user_id(), $_POST['photo_type']);
+	}
 
+	public function update_user_photo(){
+		$user_id = get_current_user_id();
+		$meta_key = $_POST['photo_type']=='cover_photo' ? '_tutor_cover_photo' : '_tutor_profile_photo';
+		
 		/**
-		 * Profile Photo Update from profile
+		 * Photo Update from profile
 		 *
 		 */
-		$profile_photo = tutils()->array_get('tutor_profile_photo_file', $_FILES);
-		$profile_photo_size = tutils()->array_get('size', $profile_photo);
-		$profile_photo_type = tutils()->array_get('type', $profile_photo);
+		$photo = tutils()->array_get('photo_file', $_FILES);
+		$photo_size = tutils()->array_get('size', $photo);
+		$photo_type = tutils()->array_get('type', $photo);
 
-		if ($profile_photo_size && strpos($profile_photo_type, 'image') !== false) {
+		if ($photo_size && strpos($photo_type, 'image') !== false) {
 			if ( ! function_exists( 'wp_handle_upload' ) ) {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			}
 
 			$upload_overrides = array( 'test_form' => false );
-			$movefile         = wp_handle_upload( $profile_photo, $upload_overrides );
+			$movefile         = wp_handle_upload( $photo, $upload_overrides );
 
 			if ( $movefile && ! isset( $movefile['error'] ) ) {
 				$file_path = tutils()->array_get( 'file', $movefile );
@@ -65,13 +89,21 @@ class User {
 					wp_update_attachment_metadata( $media_id, wp_generate_attachment_metadata( $media_id, $file_path ) );
 
 					//Update it to user profile
-					update_user_meta( $user_id, '_tutor_profile_photo', $media_id );
+					$this->delete_existing_user_photo($user_id, $_POST['photo_type']);
+					update_user_meta($user_id, $meta_key, $media_id );
+
+					exit(json_encode(array('status'=>'success')));
 				}
 			}
-		}elseif ($_tutor_profile_photo_field){
-			update_user_meta( $user_id, '_tutor_profile_photo', $_tutor_profile_photo_field );
 		}
+	}
 
+	public function profile_update($user_id){
+		$_tutor_profile_job_title = sanitize_text_field(tutor_utils()->avalue_dot('_tutor_profile_job_title', $_POST));
+		$_tutor_profile_bio = wp_kses_post(tutor_utils()->avalue_dot('_tutor_profile_bio', $_POST));
+
+		update_user_meta($user_id, '_tutor_profile_job_title', $_tutor_profile_job_title);
+		update_user_meta($user_id, '_tutor_profile_bio', $_tutor_profile_bio);
 	}
 
 	public function set_user_role($user_id, $role, $old_roles ){
@@ -86,17 +118,4 @@ class User {
 			tutor_utils()->add_instructor_role($user_id);
 		}
 	}
-
-
-
-	/**
-	 *
-	 * Delete profile photo
-	 * @since v.1.4.5
-	 */
-	public function tutor_profile_photo_remove(){
-		$user_id = get_current_user_id();
-		delete_user_meta($user_id, '_tutor_profile_photo');
-	}
-
 }

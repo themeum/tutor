@@ -1,0 +1,147 @@
+.tutor-instructor-list{
+
+    &, &:focus, &:active{
+        outline: none;
+        cursor: pointer;
+        text-decoration: none !important;
+    }
+
+    .tutor-instructor-profile-photo, .tutor-instructor-cover-photo{
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+
+    .tutor-instructor-profile-photo{
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+    }
+
+    .tutor-instructor-name{
+        font-style: normal;
+        font-weight: 500;
+        font-size: 24px;
+        color: #161616;
+        margin: 10px 0 5px;
+    }
+
+    .tutor-instructor-course-count{
+        &>span{
+            font-style: normal;
+            font-weight: 500;
+            font-size: 15px;
+            color: #161616;
+
+            &:last-child{
+                color:#808080;
+            }
+        }
+    }
+
+    .tutor-instructor-rating{
+        *{
+            font-size: 16px;
+        }
+
+        .rating-digits{
+            color: #161616;
+        }
+
+        .rating-total-meta{
+            color: #7A7A7A;;
+        }
+    }
+
+    // Layout specific styles
+    &.tutor-instructor-list-pp-cp{
+        .tutor-instructor-cover-photo{
+            width:100%;
+            height: 153px;
+        }
+
+        .tutor-instructor-profile-photo{
+            border: 4px solid white;
+            margin: -31px 15px 0;
+        }
+
+        .tutor-instructor-name, .tutor-instructor-course-count, .tutor-instructor-rating{
+            padding: 0 15px;
+        }
+    }
+
+    &.tutor-instructor-list-pp-top-full{
+        .tutor-instructor-cover-photo{
+            display: none;
+        }
+
+        .tutor-instructor-profile-photo{
+            border-radius: 0%;
+            width: 100%;
+            height: 160px;
+        }
+
+        .tutor-instructor-name, .tutor-instructor-course-count, .tutor-instructor-rating{
+            padding: 0 15px;
+        }
+        
+        .tutor-instructor-name{
+            margin-top: 15px;
+        }
+    }
+    
+    &.tutor-instructor-list-pp-top-left{
+        .tutor-instructor-cover-photo{
+            display: none;
+        }
+        padding: 15px;
+    }
+    
+    &.tutor-instructor-list-pp-left-full, &.tutor-instructor-list-pp-left-middle{
+        position: relative;
+        
+        .tutor-instructor-cover-photo{
+            display: none;
+        }
+
+        .tutor-instructor-profile-photo{
+            border-radius: 0%;
+            height: 100px;
+            width: 100px;
+        }
+        
+        .tutor-instructor-name, .tutor-instructor-course-count, .tutor-instructor-rating{
+            position: absolute;
+            margin-left: 110px;
+        }
+
+        .tutor-instructor-rating{
+            top: 42px;
+        }
+
+        .tutor-instructor-course-count{
+            top: 62px;
+        }
+    }
+    
+    &.tutor-instructor-list-pp-left-middle{
+        .tutor-instructor-rating{
+            display: none;
+        }
+        
+        .tutor-instructor-profile-photo{
+            border-radius: 60%;
+            height: 80px;
+            width: 80px;
+            margin: 10px;
+        }
+
+        .tutor-instructor-name{
+            top:11px;
+        }
+        
+        .tutor-instructor-course-count{
+            top:46px;
+        }
+    }
+}

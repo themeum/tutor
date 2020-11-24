@@ -3544,3 +3544,25 @@ Tools Nav
 #settings-tab-general .tutor-option-field-row input[type="number"] {
 	width: 185px;
 }
+
+/* Instructor list layout style */
+.instructor-layout-templates-fields {
+	display: flex;
+	flex-wrap: wrap;
+}
+.instructor-layout-template {
+	max-width: 150px;
+	padding: 5px;
+	margin: 3px;
+}
+.instructor-layout-template img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	border : 6px solid transparent;
+	transition: border-color 400ms;
+}
+.instructor-layout-template.selected-template img,
+.instructor-layout-template:hover img{
+	border : 6px solid #3057d6;
+}

@@ -477,7 +477,10 @@ if ( ! function_exists('tutor_course_loop_price')) {
     function tutor_course_loop_price() {
         ob_start();
 
-        if(tutils()->is_enrolled(get_the_ID())){
+        if(tutils()->is_course_added_to_cart(get_the_ID())){
+            tutor_load_template( 'loop.course-in-cart' );
+        }
+        else if(tutils()->is_enrolled(get_the_ID())){
             tutor_load_template( 'loop.course-continue' );
         }
         else{
