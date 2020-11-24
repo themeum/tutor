@@ -14,7 +14,7 @@ if ($profile_photo_id){
     !empty($url) ? $profile_photo_src = $url : 0;
 }
 
-$cover_placeholder = tutor()->url.'assets/images/cover-photo.svg';
+$cover_placeholder = tutor()->url.'assets/images/cover-photo.jpg';
 $cover_photo_src = $cover_placeholder;
 $cover_photo_id = get_user_meta($user->ID, '_tutor_cover_photo', true);
 if ($cover_photo_id){

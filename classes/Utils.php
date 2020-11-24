@@ -5802,7 +5802,7 @@ class Utils {
 	 * Get profile pic url
 	 */
 	public function get_cover_photo_url($user_id){
-		$cover_photo_src = tutor()->url.'assets/images/cover-photo.svg';
+		$cover_photo_src = tutor()->url.'assets/images/cover-photo.jpg';
 		$cover_photo_id = get_user_meta($user_id, '_tutor_cover_photo', true);
 		if ($cover_photo_id){
 			$url = wp_get_attachment_image_url($cover_photo_id, 'full');
