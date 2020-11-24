@@ -215,6 +215,7 @@ class Lesson extends Tutor_Base {
 		$is_required_flush = get_option('required_rewrite_flush');
 		if ($is_required_flush){
 			flush_rewrite_rules();
+			delete_option( 'required_rewrite_flush' );
 		}
 	}
 
