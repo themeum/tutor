@@ -44,8 +44,7 @@ $my_courses = tutor_utils()->get_enrolled_courses_by_user($user_id);
 		wp_reset_postdata();
 	else : ?>
     <div>
-        <h2><?php _e("Not Found" , 'tutor'); ?></h2>
-        <p><?php _e("Sorry, but you are looking for something that isn't here." , 'tutor'); ?></p>
+        <p><?php _e("No course yet." , 'tutor'); ?></p>
     </div>
 	<?php endif; ?>
 </div>

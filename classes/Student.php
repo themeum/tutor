@@ -43,8 +43,21 @@ class Student {
 			'password'                  => __('Password field is required', 'tutor'),
 			'password_confirmation'     => __('Password Confirmation field is required', 'tutor'),
 		));
+		
 
 		$validation_errors = array();
+
+		/*
+		*registration_errors
+		*push into validation_errors	
+		*/
+		$errors = apply_filters('registration_errors',new  \WP_Error,'','');
+		foreach ($errors->errors as $key => $value) 
+		{
+		 	$validation_errors[$key] = $value[0];
+		 	
+		}
+
 		foreach ($required_fields as $required_key => $required_value){
 			if (empty($_POST[$required_key])){
 				$validation_errors[$required_key] = $required_value;
@@ -87,6 +100,8 @@ class Student {
 				wp_set_auth_cookie( $user_id );
 			}
 
+			do_action('tutor_after_student_signup', $user_id);
+
 			//Redirect page
 			$redirect_page = tutils()->array_get('redirect_to', $_REQUEST);
 			if ( ! $redirect_page){
@@ -114,11 +129,12 @@ class Student {
 			return;
 		}
 
+		$user_id = get_current_user_id();
+		
 		//Checking nonce
 		tutor_utils()->checking_nonce();
-        do_action('tutor_profile_update_before');
+        do_action('tutor_profile_update_before', $user_id);
 
-		$user_id = get_current_user_id();
 		$first_name     = sanitize_text_field(tutor_utils()->input_old('first_name'));
 		$last_name      = sanitize_text_field(tutor_utils()->input_old('last_name'));
 		$phone_number   = sanitize_text_field(tutor_utils()->input_old('phone_number'));

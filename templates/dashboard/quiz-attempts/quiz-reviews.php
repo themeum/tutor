@@ -85,7 +85,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 ?>
 
 <div>
-    <?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts'); ?>
+    <?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('quiz-attempts'); ?>
     <a class="prev-btn" href="<?php echo $attempts_page; ?>"><span>&leftarrow;</span><?php _e('Back to Attempt List', 'tutor'); ?></a>
 </div>
 
@@ -374,13 +374,16 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 
                         <td>
 							<?php
-
 							if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
 								echo '<span class="tutor-status-approved-context"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
 							} else {
 								if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
-									echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
-								}else {
+                                    if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
+                                        echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
+                                    } else {
+                                        echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
+                                    }
+								} else {
 									echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
 								}
 							}

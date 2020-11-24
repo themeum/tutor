@@ -28,6 +28,7 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
                 <td><?php esc_attr_e('Pass Mark', 'tutor'); ?></td>
                 <td><?php esc_attr_e('Total Mark', 'tutor'); ?></td>
                 <td><?php esc_attr_e('Result', 'tutor'); ?></td>
+                <td><?php esc_attr_e('Evaluated', 'tutor'); ?></td>
                 <td>&nbsp;</td>
             </tr>
         </thead>
@@ -41,8 +42,9 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
             $max_mark = tutor_utils()->get_assignment_option($assignment->comment_post_ID, 'total_mark');
             $pass_mark = tutor_utils()->get_assignment_option($assignment->comment_post_ID, 'pass_mark');
             $given_mark = get_comment_meta($assignment->comment_ID, 'assignment_mark', true);
+            $not_evaluated = $given_mark==='';
             $status = sprintf(__('%s Pending %s', 'tutor'), '<span class="pending">', '</span>');
-            if(!empty($given_mark)){
+            if(!empty($given_mark) || !$not_evaluated){
                 $status = (int) $given_mark >= (int) $pass_mark ? sprintf(__('%s Pass %s', 'tutor'), '<span class="pass">', '</span>') : sprintf(__('%s Fail %s', 'tutor'), '<span class="fail">', '</span>');
             }
 
@@ -55,6 +57,11 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
                 <td><?php echo $pass_mark; ?></td>
                 <td><?php echo !empty($given_mark) ? $given_mark . '/' . $max_mark : $max_mark; ?></td>
                 <td><?php echo $status; ?></td>
+                <td>
+                    <?php 
+                        echo $not_evaluated ? _e('No', 'tutor') :  _e('Yes', 'tutor-pro'); 
+                    ?>
+                </td>
                 <td> <?php echo "<a title='". __('Review this assignment', 'tutor') ."' href='".esc_url($review_url.'?view_assignment='.$assignment->comment_ID)."'><i class='tutor-icon-angle-right'></i> </a>"; ?> </td>
             </tr>
             <?php

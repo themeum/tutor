@@ -333,7 +333,8 @@ Group Field Option
 }
 #tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal,
 .tutor-quiz .open-tutor-quiz-modal,
-.course-content-item .open-tutor-assignment-modal {
+.course-content-item .open-tutor-assignment-modal,
+.course-content-item .tutor-zoom-meeting-modal-open-btn {
 	-webkit-box-flex: 1;
 	-ms-flex: 1;
 	flex: 1;
@@ -504,7 +505,7 @@ p.course-empty-content {
 .tutor-course-builder-header {
 	line-height: 50px;
 	position: absolute;
-	top: -56px;
+	top: -69px;
 	right: 40px;
 }
 .rtl .tutor-course-builder-header {
@@ -1146,6 +1147,22 @@ table.tutor-addons-list-table th {
 .tutor-addons-list .plugin-card .name {
 	margin-right: 50px;
 }
+
+/* RTL Style for name and desc */
+.tutor-lms-pro_page_tutor-addons.rtl .plugin-card .desc, 
+.tutor-lms-pro_page_tutor-addons.rtl .plugin-card .name{
+	margin-right: 148px !important;
+}
+
+.tutor-lms-pro_page_tutor-addons.rtl .plugin-card .desc{
+	margin-left: 0 !important;
+}
+
+.tutor-lms-pro_page_tutor-addons.rtl .plugin-card .name{
+	margin-left: 53px !important;
+}
+
+
 .btn-switch {
 	display: inline-block;
 	height: 22px;
@@ -3513,4 +3530,39 @@ Tools Nav
 	input[type="radio"]:checked
 	~ .tutor-quiz-feedback-mode-option {
 	background: #fff;
+}
+
+/* Fixing course builder css overlap issue */
+#tutor-course-topics h2, #tutor-instructors h2 {
+	display: block;
+}
+#tutor-course-topics .tutor-course-builder-header.has-postbox-header {
+	top: -56px;
+    right: 96px;
+}
+
+#settings-tab-general .tutor-option-field-row input[type="number"] {
+	width: 185px;
+}
+
+/* Instructor list layout style */
+.instructor-layout-templates-fields {
+	display: flex;
+	flex-wrap: wrap;
+}
+.instructor-layout-template {
+	max-width: 150px;
+	padding: 5px;
+	margin: 3px;
+}
+.instructor-layout-template img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	border : 6px solid transparent;
+	transition: border-color 400ms;
+}
+.instructor-layout-template.selected-template img,
+.instructor-layout-template:hover img{
+	border : 6px solid #3057d6;
 }

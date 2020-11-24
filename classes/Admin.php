@@ -177,7 +177,7 @@ class Admin{
 	 */
 	public function filter_posts_for_instructors(){
 		if ( ! current_user_can('administrator') && current_user_can(tutor()->instructor_role)){
-			remove_menu_page( 'edit-comments.php' ); //Comments
+			@remove_menu_page( 'edit-comments.php' ); //Comments
 			add_filter( 'posts_clauses_request', array($this, 'posts_clauses_request') );
 		}
 	}
@@ -443,7 +443,7 @@ class Admin{
 				__( '<strong style="color: #03bd24">Documentation</strong>', 'tutor' )
 			);
 			$plugin_meta[] = sprintf( '<a href="%s">%s</a>',
-				esc_url( 'https://www.themeum.com/support-forums/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_support_link' ),
+				esc_url( 'https://www.themeum.com/contact-us/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_support_link' ),
 				__( '<strong style="color: #03bd24">Get Support</strong>', 'tutor' )
 			);
 		}

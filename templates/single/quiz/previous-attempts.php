@@ -65,7 +65,7 @@ $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
                     <?php echo $incorrect; ?>
                 </td>
                 <td>
-                    <?php echo $attempt->earned_marks.' ('.$passing_grade.'%)'; ?>
+                    <?php echo $attempt->earned_marks.' ('.$earned_percentage.'%)'; ?>
                 </td>
                 <td>
                     <?php

@@ -313,9 +313,12 @@ if( ! function_exists('tutor_course_loop_wrap_classes')) {
 
 if( ! function_exists('tutor_course_loop_col_classes')) {
     function tutor_course_loop_col_classes( $echo = true ) {
-        $courseCols = tutor_utils()->get_option( 'courses_col_per_row', 4 );
-        $classes    = apply_filters( 'tutor_course_loop_col_classes', array(
-            'tutor-course-col-' . $courseCols,
+        $course_filter  = (bool) tutor_utils()->get_option('course_archive_filter', false);
+        // $course_cols    = ($course_filter) ? 2 :  tutor_utils()->get_option('courses_col_per_row', 4);
+        $shortcode_arg  = isset($GLOBALS['tutor_shortcode_arg']) ? $GLOBALS['tutor_shortcode_arg']['column_per_row'] : null;
+        $course_cols    = $shortcode_arg===null ? tutor_utils()->get_option('courses_col_per_row', 4) : $shortcode_arg;
+        $classes        = apply_filters( 'tutor_course_loop_col_classes', array(
+            'tutor-course-col-' . $course_cols,
         ) );
 
         $class = implode( ' ', $classes );
@@ -474,15 +477,22 @@ if ( ! function_exists('tutor_course_loop_price')) {
     function tutor_course_loop_price() {
         ob_start();
 
-        $tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
-        if ($tutor_course_sell_by){
-            tutor_load_template( 'loop.course-price-'.$tutor_course_sell_by );
-        }else{
-            tutor_load_template( 'loop.course-price' );
+        if(tutils()->is_course_added_to_cart(get_the_ID())){
+            tutor_load_template( 'loop.course-in-cart' );
         }
-        $output = apply_filters( 'tutor_course_loop_price', ob_get_clean() );
+        else if(tutils()->is_enrolled(get_the_ID())){
+            tutor_load_template( 'loop.course-continue' );
+        }
+        else{
+            $tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
+            if ($tutor_course_sell_by){
+                tutor_load_template( 'loop.course-price-'.$tutor_course_sell_by );
+            }else{
+                tutor_load_template( 'loop.course-price' );
+            }
+        }
 
-        echo $output;
+        echo apply_filters( 'tutor_course_loop_price', ob_get_clean() );
     }
 }
 
@@ -987,11 +997,17 @@ if ( ! function_exists('tutor_course_enroll_box')) {
         $isLoggedIn = is_user_logged_in();
         $enrolled = tutor_utils()->is_enrolled();
 
+        $is_administrator = current_user_can('administrator');
+        $is_instructor = tutor_utils()->is_instructor_of_this_course();
+        $course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
         ob_start();
 
         if ( $enrolled ) {
             tutor_load_template( 'single.course.course-enrolled-box' );
             $output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
+        } else if ( $course_content_access && ($is_administrator || $is_instructor) ) {
+            tutor_load_template( 'single.course.continue-lesson' );
+            $output = apply_filters( 'tutor_course/single/continue_lesson', ob_get_clean() );
         } else {
             tutor_load_template( 'single.course.course-enroll-box' );
             $output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );

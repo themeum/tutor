@@ -1,5 +1,166 @@
 # TutorLMS Changelog
 
+### 1.7.5 - November 25, 2020
+
+* New: Introducing customizable shortcode to showcase your instructors in a list 
+* New: Upload a cover photo for the public profile of a user
+* New: Public Profile is getting a brand new design update.
+* Update: Withdrawal and Phone number fields now accept numbers only.
+* Update: {site_url} and {site_name} attributes added to all Tutor Email addon emails.
+* Fix: Add to Cart option still showed after adding the product in the Course Details Page
+* Fix: Showed wrong information for multiple pages for the Students list in the Dashboard  →Report →Courses →Course Details section.
+* Fix: Student's name didn't show up when downloading the certificate as a PDF.
+* Fix: Grammatical corrections in the enrolment section of the course page.
+* Fix: Minute indicator added for reading time consisting of only seconds on the course page.
+* Fix: The course was displaying free even when it was part of a membership package.
+* Fix: Course dependent on Paid Memberships Pro plugin got canceled after a user enrolled in it.
+
+
+### 1.7.4 - November 09, 2020
+
+* New: 4 new email notifications for withdrawal requests.
+* New: 3 new email notifications for content drip published lessons, quizzes and assignments.
+* New: 3 new email notification for instructor registration management system.
+* New: Filter hook to modify sub nav menu of settings page in frontend dashboard.
+* New: Assignment evaluation status column in the frontend dashboard.
+* New: You can now enable or disable specific course filter options.
+* Update: Show 'Continue Course' instead of 'Add to Cart' (if already purchased) on the course archive page
+* Update: Added 'course_filter' and 'column_per_row' attributes in 'tutor_course' shortcode
+* Update: Withdrawal page design improvement
+* Fix: Course URL not showing after course completion in BuddyPress post.
+* Fix: Compatibility issue with Divi Builder.
+
+
+###  1.7.3 - October 21, 2020
+
+* Update: Added option to turn on course archive filters
+
+
+###  1.7.2 - October 21, 2020
+
+* New: Course filter option in Course Archive page
+* New: Public Course/Private course option
+* New: Now student will get email notification after his enrollment
+* Update: Hide Become Instructor button if someone’s already applied
+* Update: Enable/disable Video source and choose default video source option
+* Update: Email Notification after instructor sign-up (Now admin will receive mail notification)
+* Update: Assignment page with new deadline notice, expired message and more.
+* Update: Instructor Request page with new prompts
+* Fix: Quiz submission email recipients
+* Fix: Enrolment email notification issue
+* Fix: Assignment submission email recipients
+* Fix: Canceling order does not update the student count on instructor dashboard
+* Fix: Fatal Error in the Sales tab of Reports Addon
+* Fix: RTL layout issue in Add-on list
+* Fix: Color settings
+* Fix: Minor text issues
+
+
+###  1.7.1 - October 09, 2020
+
+* New: REST API
+* New: Zoom Integration
+* New: Google Classroom Integration
+* New: 3rd Party Google reCaptcha plugin support
+* Fix: Compatibility issue with WCFM
+* Fix: Quiz attempt review issue
+* Fix: Course duplication issue
+* Fix: Assignment search issue
+
+
+### 1.7.0 - September 04, 2020
+
+* New: Set commission per instructor
+* New: Instructor signature on the certificate
+* New: Duplicate any course from the Tutor LMS course list
+* New: Settings to disable certificate in a single course
+* New: Settings to disable Q&A on a specific course
+* New: Force download for course attachment
+* New: Compatibility with the GeneratePress theme
+* Fix: Review issue for answers regarding Open Ended/Essay questions
+* Fix: Wrong percentage was showing on quiz results
+* Fix: Course got published automatically
+* Fix: Deprecated unparenthesized method
+
+### 1.6.9 - August 20, 2020
+
+* New: 13 new email notification
+* New: Added 6 new action hooks
+```
+do_action('tutor_after_student_signup', $user_id);
+do_action('tutor_enrollment/after/cancel', $enrol_id);
+do_action('tutor_enrollment/after/delete', $enrol_id);
+do_action('tutor_enrollment/after/complete', $enrol_id);
+do_action('tutor_announcements/after/save', $announcement_id);
+do_action('tutor_quiz/attempt/submitted/feedback', $attempt_id);
+```
+* New: Added helper method `tutils()->get_enrolment_by_enrol_id($enrol_id)` to get enrollment details by enrolid
+* New: Added helper method `tutils()->get_student_emails_by_course_id($course_id)` to get array list of enrolled user emails
+* Update: User can disable Tutor LMS native login system
+* Update: ImageMagick dependency removed from certificate generator
+* Update: Option added to control course content access for instructors and administrators
+* Update: Topic Summary toggle option added in course page
+* Fix: Certificate Unicode fonts issue
+* Fix: Certificate image generation issues
+* Fix: Issue with deleting reviews from Reports addon
+* Fix: Lesson page access issue for administrator 
+* Fix: CSS issue in back-end course builder
+* Fix: SQL syntax error on course page
+
+### 1.6.8 - July 30, 2020
+
+* Fix: WooCommerce enrollment issue
+
+### 1.6.7 - July 28, 2020
+
+* Update: Admins/instructors can view their course content from the front-end
+* Update: Add dynamic template support for Course Prerequisites
+* Update: Add action hook "tutor_after_review_update" in Ajax class
+* Fix: Enrollment issue while updating EDD payment status
+* Fix: Enrollment issue in WooCommerce manual order
+* Fix: Certificates translation issue
+* Fix: Login redirect issue
+
+### 1.6.6 - July 15, 2020
+
+* New: Student/instructor profile completion
+* Update: Delete all related course data when permanently deleting a course
+* Update: Course status Publish to Published in instructor's my course panel
+* Update: Server-side validation in the Q&A tab
+* Update: WordPress date format support in certificates
+* Update: Improved Dashboard sidebar menu
+* Fix: Quiz restart issue after completion when Quiz Auto Start is enabled
+* Fix: Maximum Students limit wasn’t working for manual enrollment
+* Fix: Quick edit vanishes course metadata (Intro video, Benefits, Requirements, Targeted Audience, Materials Included)
+* Fix: Incorrect quiz result issue for randomized multiple choice question answers
+* Fix: Tutor Instructor user role update issue
+* Fix: Unanswered question count issue
+
+### 1.6.5 - July 2, 2020
+
+* New: Sales & Students report for the Report Add-on(Pro)
+* Update: New student column in quiz attempt on frontend dashboard
+* Remove: 'Mr.' text removed from the content of all email notifications
+* Fix: Quiz retry and reveal mode error for certain types of quizzes
+* Fix: Resource issue from the course page
+* Fix: Logo image size issue for frontend course builder
+* Fix: Couldn't stop loading certain tutor CSS/JS
+* Fix: Blank attachment & prerequisites while updating course using quick edit
+* Fix: EDD purchase history in frontend dashboard
+* Fix: Quiz import file size limit increased
+* Fix: CSV quiz import issue for Windows OS
+
+### 1.6.4 - June 15, 2020
+
+* New: Quiz Feedback system
+* New: Now instructor can manage Q&A from the frontend dashboard
+* Update: Quiz attempt and my quiz attempt icon
+* Update: Quiz attempt re-designed
+* Remove: Unnecessary css file from certificate addon
+* Fix: {enroll_time} parameter issue in Q&A email notification template
+* Fix: Special Character & Content issue in Q&A email notification template
+* Fix: Maximum Number of students for Course Enrolment
+
 ### 1.6.3 - 20 May, 2020
 
 * New: Now students can answer Q&A from the frontend

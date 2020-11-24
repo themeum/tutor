@@ -1,0 +1,327 @@
+@import "./mixins";
+
+.tutor-frontend-dashboard-withdrawal h4 {
+    margin-bottom: 25px;
+}
+.withdraw-history-table-title h4 {
+    margin-top: 45px;
+}
+.tutor-frontend-dashboard-withdrawal {
+    .withdraw-page-current-balance {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border:  1px solid #DCDBDC;
+        border-radius: 6px;
+        padding: 25px 35px 25px 30px;
+        margin-bottom: 15px;
+        
+        .balance-info {
+            display: flex;
+            align-items: center;
+            img {
+                margin-right: 15px;
+            }
+            small {
+                font-size: 16px;
+            }
+            p {
+                font-size: 20px;
+                line-height: 26px;
+                margin: 0;
+            }
+        }
+
+        .make-withdraw {
+            a, a:hover, a:focus, a:active{
+                text-decoration: none;
+                background: #3E64DE;
+                border-radius: 3px;
+                display: inline-block;
+                padding: 8px 18px;
+                font-weight: 500;
+                font-size: 16px;
+                color: white;
+                cursor: pointer;
+            }
+            a:hover{
+                background: #2548bb;
+            }    
+        }
+    }
+
+    h4{
+        font-weight: 500;
+        font-size: 24px;
+    }
+
+    .withdrawal-preference{
+        font-size: 15px;
+        color: #7A7A7A;
+
+        
+    }
+
+    .inline-image-text{
+        &>img{
+            width: 23px;
+            display: inline-block !important;
+        }
+
+        &>*{
+            vertical-align: middle;
+        }
+
+        &.is-inline-block{
+            &>*{
+                display: inline-block;
+            }
+        }
+        a {
+            text-decoration: underline;
+            color: #444;
+        }
+    }
+
+    .tutor-earning-withdraw-form-wrap{
+        display: none;
+
+        &>div{
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            overflow: hidden;
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 9999999999;
+            background: rgba(0, 0, 0, 0.589);
+
+            @include valueWithPrefix(display, flex);
+            @include propertyWithPrefix(align-items, center);
+            @include propertyWithPrefix(justify-content, center);
+
+            &>div
+            {
+                display: inline-block;
+
+                max-height: 100%;
+                width: 100%;
+                max-width: 690px;
+
+                background: white;
+                overflow: auto;
+                border-radius: 15px;
+                position: relative;
+                padding: 0;
+
+                &>div{
+                    padding: 50px 70px;
+                
+                    &:first-child{
+                        &>.tutor-icon-line-cross{
+                        position: absolute;
+                        cursor: pointer;
+                        top: 30px;
+                        right: 30px;
+                        font-size: 20px;
+                        }
+
+                        tr, td, table, tbody{
+                            border: none;
+                            margin: 0;
+                            padding: 0;
+                        }
+
+                        h3{
+                            margin: 7px 0px;
+                            font-weight: 600;
+                            padding: 0;
+                        }
+                    }
+
+                    &:last-child{
+                        border-top: 1px solid #E8E8E8;;
+                        background: #F3F3F3;
+                    }
+                }
+            }
+        }  
+
+        .withdraw-form-field-amount{
+            border: 1px solid #BABABA;
+            border-radius:  6px;
+            background: white;
+            height: 43px;
+            overflow: hidden;
+            margin-bottom: 12px;
+
+            &>span{
+                display: block;
+                text-align: center;
+                width: 40px;
+                float: left;
+                height: 100%;
+                background: #f3f3f3;
+                border-right: 1px solid #BABABA;
+                
+                &>span{
+                    font-size: 18px;
+                    font-weight: bold;
+                    display: inline-block;
+                    line-height: 41px;
+                }
+            }
+
+            input{
+                &, &:focus, &:active{
+                    border: none;
+                    outline: 0;
+                    height: 100%;
+                    width: calc(100% - 40px);
+                    display: inline-block;
+                    margin: 0;
+                    padding: 0;
+                    padding-left: 7px;
+                }
+            }
+        }
+
+        .tutor-withdraw-button-container{
+            margin: 50px 0 0;
+            overflow: auto;
+            &>button{
+                &:last-child{
+                    float: right;
+                }
+            }
+        }
+        
+        .tutor-withdraw-form-response{
+            position: fixed;
+            left: 50px;
+            bottom: 50px;
+            border: 1px solid #E8E8E8;
+            background: white;
+            border-radius: 10px;
+            margin: 0;
+
+            &:empty{
+                display: none;
+            }
+
+            &>*{
+                background: white;
+                border: none;
+            }
+
+            img{
+                width: 34px;
+                margin: 5px 13px;
+            }
+
+            b{
+                font-weight: 600;
+            }
+
+            span{
+                color: rgb(51, 51, 51);
+            }
+        }
+
+        button.close-withdraw-form-btn{
+            background: #F3F3F3;
+            border: 1px solid #DCDBDC;
+            color: #7A7A7A;
+            &:hover{
+                background: #e6e6e6;
+            }
+        }
+
+        .tutor-withdrawal-pop-up-success img{
+            display: inline-block !important;
+        }
+    }
+
+    table.withdrawals-history{
+        border: 1px solid #DCDBDC;
+        box-sizing: border-box;
+        position: relative;
+
+        th{
+            background:  #F3F3F3;
+        }
+
+        th, td{
+            padding: 10px;
+            border:none;
+            font-weight: normal;
+            font-size: 13px;
+            text-align: left;
+            vertical-align: middle;
+
+            &{
+                border-bottom: 1px solid #DCDBDC;
+                border-collapse: collapse;
+            }
+
+            &:first-child{
+                padding: 10px 0 15px 15px;
+            }
+
+            &:last-child{
+                text-align: right;
+                padding-right: 15px;
+                width: 50px;
+            }
+            
+            &:nth-child(4){
+                width: 105px;
+            }
+        }
+        .withdraw-method-name {
+            line-height: 20px;
+            font-size: 15px;
+            display: block;
+        }
+        small {
+            font-size: 13px;
+        }
+    }
+
+    .tutor-status-text-container{
+        .tool-tip-container{
+            position: relative;
+            display: inline-block;
+            height: 24px;
+            cursor: pointer;
+            
+            img{
+                display: inline-block !important;
+                width: 16px;
+            }
+        }
+    }
+
+    .tutor-status-text{
+        display: inline-block;
+        font-weight: bold;
+        font-size: 13px;
+        color: #FFFFFF;
+        background: gray;
+        border-radius: 2px;
+        padding: 3px 9px;
+
+        &.status-approved{
+            background:  #24A148;
+        }
+        &.status-pending{
+            background:   #ED9700;
+        }
+        &.status-rejected{
+            background:  #F44337;;
+        }
+    }
+}
