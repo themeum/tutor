@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.7.5 - November 25, 2020 =
+= 1.7.5 - November 30, 2020 =
 
 New: Introducing customizable shortcode to showcase your instructors in a list 
 New: Upload a cover photo for the public profile of a user
