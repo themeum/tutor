@@ -4,6 +4,9 @@
         outline: none;
         cursor: pointer;
         text-decoration: none !important;
+        background: #FFFFFF;
+        border: 1px solid #DCDBDC;
+        border-radius: 6px;
     }
 
     .tutor-instructor-profile-photo, .tutor-instructor-cover-photo{
@@ -23,10 +26,11 @@
         font-weight: 500;
         font-size: 24px;
         color: #161616;
-        margin: 10px 0 5px;
+        margin: 0;
     }
 
     .tutor-instructor-course-count{
+        margin-bottom: 10px;
         &>span{
             font-style: normal;
             font-weight: 500;
@@ -98,41 +102,38 @@
     }
     
     &.tutor-instructor-list-pp-left-full, &.tutor-instructor-list-pp-left-middle{
-        position: relative;
-        
         .tutor-instructor-cover-photo{
             display: none;
         }
 
         .tutor-instructor-profile-photo{
             border-radius: 0%;
-            height: 100px;
-            width: 100px;
+            height: 102px;
+            width: 102px;
+            top: 0px;
+            position: absolute;
         }
         
         .tutor-instructor-name, .tutor-instructor-course-count, .tutor-instructor-rating{
-            position: absolute;
-            margin-left: 110px;
+            margin-left: 118px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;    
+            width: calc(100% - 110px);
+            display: inline-block;
         }
 
         .tutor-instructor-rating{
-            top: 42px;
-        }
-
-        .tutor-instructor-course-count{
-            top: 62px;
+            top: 7px;
+            position: relative;
         }
     }
     
     &.tutor-instructor-list-pp-left-middle{
-        .tutor-instructor-rating{
-            display: none;
-        }
-        
         .tutor-instructor-profile-photo{
-            border-radius: 60%;
-            height: 80px;
-            width: 80px;
+            border-radius: 50%;
+            height: 82px;
+            width: 82px;
             margin: 10px;
         }
 

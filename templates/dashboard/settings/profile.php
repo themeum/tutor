@@ -47,7 +47,7 @@ if ($cover_photo_id){
         <div id="tutor_photo_meta_area">
             <img src="<?php echo tutor()->url . '/assets/images/'; ?>info-icon.svg" />
             <span>Profile Photo Size: <span>200x200</span> pixels,</span>
-            <span>Cover Photo Size: <span>700x430</span> pixels </span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;Cover Photo Size: <span>700x430</span> pixels </span>
             <span class="loader-area">Saving...</span>
         </div>
         <div id="tutor_profile_area" data-fallback="<?php echo $profile_placeholder; ?>" style="background-image:url(<?php echo $profile_photo_src; ?>)">
@@ -66,6 +66,8 @@ if ($cover_photo_id){
             <span class="tutor_pp_deleter">
                 <i class="tutor-icon-garbage"></i> <?php _e('Delete', 'tutor'); ?>
             </span>
+
+            <div></div>
         </div>
     </div>
 

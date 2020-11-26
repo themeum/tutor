@@ -1965,7 +1965,15 @@ jQuery(document).ready(function ($) {
         loop_container.show();
     }
    
-    
+    // Refresh page after coming back to course archive page from cart
+    var archive_loop = $('.tutor-course-loop');
+    if(archive_loop.length>0){
+        window.sessionStorage.getItem('tutor_refresh_archive')==='yes' ? window.location.reload() : 0;
+        window.sessionStorage.removeItem('tutor_refresh_archive');
+        archive_loop.on('click', '.tutor-loop-cart-btn-wrap', function(){
+            window.sessionStorage.setItem('tutor_refresh_archive', 'yes');
+        });
+    }
     
     /**
      * Profile Photo and Cover Photo editor
@@ -2070,7 +2078,7 @@ jQuery(document).ready(function ($) {
 
             this.dialogue_box.change(function(e){context.accept_upload_image(context, e)});
 
-            photo_editor.find('#tutor_profile_area .tutor_overlay').click(function(){context.toggle_profile_pic_action()});
+            photo_editor.find('#tutor_profile_area .tutor_overlay, #tutor_pp_option>div:last-child').click(function(){context.toggle_profile_pic_action()});
 
             // Upload new
             photo_editor.find('.tutor_cover_uploader').click(function(){context.open_dialogue_box('cover_photo')});

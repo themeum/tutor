@@ -18,7 +18,8 @@ class User {
 		add_action('wp_ajax_tutor_user_photo_remove', array($this, 'tutor_user_photo_remove'));
 		add_action('wp_ajax_tutor_user_photo_upload', array($this, 'update_user_photo'));
 		
-		add_action('tutor_options_after_students', array($this, 'tutor_public_profile_layout'));
+		add_action('tutor_options_after_instructors', array($this, 'tutor_instructor_profile_layout'));
+		// add_action('tutor_options_after_students', array($this, 'tutor_student_profile_layout'));
 	}
 
 	private $profile_layout = array(
@@ -28,10 +29,13 @@ class User {
 	);
 
 	/**
-	 * Show layout selection dasboard in instructor setting
+	 * Show layout selection dashboard in instructor and student setting
 	 */
-	public function tutor_public_profile_layout(){
-		tutor_load_template('public-profile-setting', array('profile_templates'=>$this->profile_layout));
+	public function tutor_instructor_profile_layout(){
+		tutor_load_template('public-profile-setting', array('profile_templates'=>$this->profile_layout, 'layout_option_name'=>'instructor'));
+	}
+	public function tutor_student_profile_layout(){
+		tutor_load_template('public-profile-setting', array('profile_templates'=>$this->profile_layout, 'layout_option_name'=>'student'));
 	}
 
 	public function edit_user_profile($user){

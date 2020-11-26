@@ -131,7 +131,7 @@ else if(function_exists('edd_currency_symbol')){
                                     <span>
                                         <span><?php echo $currency_symbol; ?></span>
                                     </span>
-                                    <input type="text" name="tutor_withdraw_amount">
+                                    <input type="number" min="1" name="tutor_withdraw_amount">
                                 </div>
                                 <div class="inline-image-text">
                                     <img src="<?php echo $image_base; ?>info-icon-question.svg" />

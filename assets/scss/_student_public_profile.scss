@@ -176,12 +176,11 @@
             .rating-digits{
                 color: #161616 !important;
             }
-
-            &.has-social-media{
-                top: 0px;
-            }
         }
 
+        .tutor-rating-container{
+            text-align: left;
+        }
         
         .tutor-social-container{
             text-align: left !important;
@@ -195,6 +194,16 @@
                 &:hover{
                     color: #161616 !important;
                 }
+            }
+        }
+
+        .profile-rating-media{
+            width: calc(100% - 157px);
+
+            .tutor-social-container{
+                position: absolute;
+                right: 36px;
+                left: auto;
             }
         }
     }
@@ -217,6 +226,7 @@
             font-size: 24px;
             line-height: 34px;
             color: #161616;
+            margin-top: 20px;
 
             &:first-child{
                 margin-top: 0;
@@ -237,6 +247,17 @@
         .tutor-user-profile-sidebar, .tutor-user-profile-content{
             width: 100%;
             float: none;
+        }
+    }
+
+    .user-public-profile-basic-info{
+        &, td{
+            border: none;
+        }
+
+        td:first-child{
+            width: 150px;
+            padding-left: 0;
         }
     }
 }

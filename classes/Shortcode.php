@@ -168,8 +168,8 @@ class Shortcode {
 		$page = $current_page-1;
 		
 		// Get instructor list to sow
-		$instructors = tutor_utils()->get_instructors($limit*$page, $limit);
-		$next_instructors = tutor_utils()->get_instructors($limit*$current_page, $limit);
+		$instructors = tutor_utils()->get_instructors($limit*$page, $limit, '', 'approved');
+		$next_instructors = tutor_utils()->get_instructors($limit*$current_page, $limit, '', 'approved');
 
 		$previous_page = $page>0 ? '?'.http_build_query(array_merge($_GET, array('instructor-page'=>$current_page-1))) : null;
 		$next_page = (is_array($next_instructors) && count($next_instructors)>0) ? '?'.http_build_query(array_merge($_GET, array('instructor-page'=>$current_page+1))) : null;
@@ -192,7 +192,7 @@ class Shortcode {
 
 	
 	/**
-	 * Show layout selection dasboard in instructor setting
+	 * Show layout selection dashboard in instructor setting
 	 */
 	public function tutor_instructor_layout(){
 		tutor_load_template('instructor-setting', array('templates'=>$this->instructor_layout));

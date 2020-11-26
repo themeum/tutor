@@ -9155,7 +9155,7 @@ label[for="tutor_withdraw_amount"] {
     width: 120px;
     height: 120px;
     left: 31px;
-    top: 183px;
+    top: 168px;
   }
 }
 
@@ -9164,11 +9164,32 @@ label[for="tutor_withdraw_amount"] {
   right: 0;
   left: 0;
   bottom: 0;
-  text-align: center;
   background: rgba(0, 0, 0, 0.253);
-  padding: 8px 0;
+  padding: 0;
+  height: 37px;
   cursor: pointer;
   color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
 }
 
 #tutor_profile_cover_photo_editor #tutor_profile_area .tutor_overlay:hover {
@@ -9189,7 +9210,7 @@ label[for="tutor_withdraw_amount"] {
 
 @media (max-width: 688px) {
   #tutor_profile_cover_photo_editor #tutor_pp_option {
-    top: 313px;
+    top: 294px;
     left: 10px;
   }
 }
@@ -9234,6 +9255,22 @@ label[for="tutor_withdraw_amount"] {
   position: relative;
   top: -17px;
   border-bottom: 5px solid #353535;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option > *:not(:last-child) {
+  position: relative;
+  z-index: 1;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option > div:last-child {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 0;
+  z-index: 0;
 }
 
 #tutor_profile_cover_photo_editor.pop-up-opened #tutor_pp_option {
@@ -9433,8 +9470,8 @@ label[for="tutor_withdraw_amount"] {
   color: #161616 !important;
 }
 
-.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media.has-social-media {
-  top: 0px;
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-rating-container {
+  text-align: left;
 }
 
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container {
@@ -9450,6 +9487,16 @@ label[for="tutor_withdraw_amount"] {
 
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container a:hover {
   color: #161616 !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media {
+  width: calc(100% - 157px);
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media .tutor-social-container {
+  position: absolute;
+  right: 36px;
+  left: auto;
 }
 
 .tutor-user-public-profile .tutor-user-profile-sidebar {
@@ -9470,6 +9517,7 @@ label[for="tutor_withdraw_amount"] {
   font-size: 24px;
   line-height: 34px;
   color: #161616;
+  margin-top: 20px;
 }
 
 .tutor-user-public-profile .tutor-user-profile-content > h3:first-child {
@@ -9487,6 +9535,15 @@ label[for="tutor_withdraw_amount"] {
     width: 100%;
     float: none;
   }
+}
+
+.tutor-user-public-profile .user-public-profile-basic-info, .tutor-user-public-profile .user-public-profile-basic-info td {
+  border: none;
+}
+
+.tutor-user-public-profile .user-public-profile-basic-info td:first-child {
+  width: 150px;
+  padding-left: 0;
 }
 
 .tutor-dashboard-builder-header {
@@ -10560,6 +10617,9 @@ Content Drip (Pro)
   outline: none;
   cursor: pointer;
   text-decoration: none !important;
+  background: #FFFFFF;
+  border: 1px solid #DCDBDC;
+  border-radius: 6px;
 }
 
 .tutor-instructor-list .tutor-instructor-profile-photo, .tutor-instructor-list .tutor-instructor-cover-photo {
@@ -10579,7 +10639,11 @@ Content Drip (Pro)
   font-weight: 500;
   font-size: 24px;
   color: #161616;
-  margin: 10px 0 5px;
+  margin: 0;
+}
+
+.tutor-instructor-list .tutor-instructor-course-count {
+  margin-bottom: 10px;
 }
 
 .tutor-instructor-list .tutor-instructor-course-count > span {
@@ -10645,41 +10709,36 @@ Content Drip (Pro)
   display: none;
 }
 
-.tutor-instructor-list.tutor-instructor-list-pp-left-full, .tutor-instructor-list.tutor-instructor-list-pp-left-middle {
-  position: relative;
-}
-
 .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-cover-photo, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-cover-photo {
   display: none;
 }
 
 .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-profile-photo, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-profile-photo {
   border-radius: 0%;
-  height: 100px;
-  width: 100px;
+  height: 102px;
+  width: 102px;
+  top: 0px;
+  position: absolute;
 }
 
 .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-rating, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
-  position: absolute;
-  margin-left: 110px;
+  margin-left: 118px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100% - 110px);
+  display: inline-block;
 }
 
 .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-rating, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
-  top: 42px;
-}
-
-.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-course-count {
-  top: 62px;
-}
-
-.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
-  display: none;
+  top: 7px;
+  position: relative;
 }
 
 .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-profile-photo {
-  border-radius: 60%;
-  height: 80px;
-  width: 80px;
+  border-radius: 50%;
+  height: 82px;
+  width: 82px;
   margin: 10px;
 }
 
