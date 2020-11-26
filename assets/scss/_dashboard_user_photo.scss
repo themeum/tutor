@@ -1,3 +1,5 @@
+@import "_mixins";
+
 #tutor_profile_cover_photo_editor{
     height: 344px;
     position: relative;
@@ -107,7 +109,7 @@
             width: 120px;
             height: 120px;  
             left: 31px;
-            top: 183px;              
+            top: 168px;              
         }
     
         .tutor_overlay{
@@ -115,11 +117,14 @@
             right: 0;
             left: 0;
             bottom: 0;
-            text-align: center;
             background:rgba(0, 0, 0, 0.253);
-            padding: 8px 0;
+            padding: 0;
+            height: 37px;
             cursor: pointer;
             color: white;
+            @include valueWithPrefix(display, flex);
+            @include propertyWithPrefix(align-items, center);
+            @include propertyWithPrefix(justify-content, center);
 
             &:hover{
                 background:rgba(0, 0, 0, 0.411);
@@ -139,7 +144,7 @@
         display: none;
 
         @media(max-width:688px){
-            top: 313px;
+            top: 294px;
             left: 10px;
         }
         
@@ -183,7 +188,23 @@
                 top: -17px;
                 border-bottom: 5px solid #353535;
             }
-        }        
+        }      
+
+        &>*:not(:last-child){
+            position: relative;
+            z-index: 1;
+        }
+        
+        &>div:last-child{
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background: transparent;
+            z-index: 0;
+            z-index: 0;
+        }
     }
     
     &.pop-up-opened{

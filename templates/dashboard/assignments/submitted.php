@@ -59,7 +59,7 @@ $assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHE
                 <td><?php echo $status; ?></td>
                 <td>
                     <?php 
-                        echo $not_evaluated ? _e('No', 'tutor') :  _e('Yes', 'tutor-pro'); 
+                        echo $not_evaluated ? _e('No', 'tutor') :  _e('Yes', 'tutor'); 
                     ?>
                 </td>
                 <td> <?php echo "<a title='". __('Review this assignment', 'tutor') ."' href='".esc_url($review_url.'?view_assignment='.$assignment->comment_ID)."'><i class='tutor-icon-angle-right'></i> </a>"; ?> </td>

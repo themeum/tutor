@@ -82,11 +82,11 @@ class Options {
 		);
 
 		$course_filters = array(
-			'search' => 'Keyword Search',
-			'category' => 'Category',
-			'tag' => 'Tag',
-			'difficulty_level' => 'Difficulty Level',
-			'price_type' => 'Price Type'
+			'search' => __('Keyword Search', 'tutor'),
+			'category' => __('Category', 'tutor'),
+			'tag' => __('Tag', 'tutor'),
+			'difficulty_level' => __('Difficulty Level', 'tutor'),
+			'price_type' => __('Price Type', 'tutor')
 		);
 
 		$attr = array(

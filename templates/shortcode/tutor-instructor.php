@@ -8,9 +8,7 @@
             <div class="tutor-course-col-<?php echo $column_count; ?>">
                 <a href="<?php echo tutor_utils()->profile_url($instructor->ID); ?>" class="tutor-course tutor-course-loop tutor-instructor-list tutor-instructor-list-<?php echo $layout; ?> tutor-instructor-list-<?php echo $instructor->ID; ?>">
                     <div class="tutor-instructor-cover-photo" style="background-image:url(<?php echo tutor_utils()->get_cover_photo_url($instructor->ID); ?>)"></div>
-                    <div class="tutor-instructor-profile-photo" style="background-image:url(<?php echo get_avatar_url($instructor->ID, array('size'=>500)); ?>)"></div>
-                    
-                    <h4 class="tutor-instructor-name"><?php echo $instructor->display_name; ?></h4>
+                    <div class="tutor-instructor-profile-photo" style="background-image:url(<?php echo get_avatar_url($instructor->ID, array('size'=>500)); ?>)"></div>                    
                     <div class="tutor-instructor-rating">
                         <div class="ratings">
                             <span class="rating-generated">
@@ -23,6 +21,7 @@
                             ?>
                         </div>
                     </div>
+                    <h4 class="tutor-instructor-name"><?php echo $instructor->display_name; ?></h4>
                     <div class="tutor-instructor-course-count">
                         <span><?php echo $course_count; ?></span>
                         <span><?php $course_count>1 ? _e('Courses', 'tutor') : _e('Course', 'tutor'); ?></span>

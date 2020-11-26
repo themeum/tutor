@@ -8,7 +8,7 @@
         ?>
 
         <select name="selected_course" class="tutor_select2">
-            <option value=""><?php _e('Select a course'); ?></option>
+            <option value=""><?php _e('Select a course', 'tutor'); ?></option>
 
 	        <?php
             $course_id = get_post_meta(get_the_ID(), '_tutor_course_id_for_lesson', true);

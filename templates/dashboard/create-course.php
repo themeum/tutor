@@ -207,7 +207,7 @@ if ( ! $can_publish_course){
                             <h3 class="tutor-course-builder-tips-title"><i class="tutor-icon-light-bulb"></i><?php _e('Course Upload Tips', 'tutor') ?></h3>
                             <ul>
                                 <li><?php _e("Set the Course Price option or make it free.", 'tutor');?></li>
-                                <li><?php _e("Standard size for course thumbnail is 700x430.", 'tutor');?></li>
+                                <li><?php _e("Standard size for the course thumbnail is 700x430.", 'tutor');?></li>
                                 <li><?php _e("Video section controls the course overview video.", 'tutor');?></li>
                                 <li><?php _e("Course Builder is where you create & organize a course.", 'tutor');?></li>
                                 <li><?php _e("Add Topics in the Course Builder section to create lessons, quizzes, and assignments.", 'tutor'); ?></li>
