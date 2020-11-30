@@ -9537,15 +9537,6 @@ label[for="tutor_withdraw_amount"] {
   }
 }
 
-.tutor-user-public-profile .user-public-profile-basic-info, .tutor-user-public-profile .user-public-profile-basic-info td {
-  border: none;
-}
-
-.tutor-user-public-profile .user-public-profile-basic-info td:first-child {
-  width: 150px;
-  padding-left: 0;
-}
-
 .tutor-dashboard-builder-header {
   padding: 10px 0px;
   border-bottom: 2px solid #DCDFE5;
@@ -10728,6 +10719,8 @@ Content Drip (Pro)
   text-overflow: ellipsis;
   width: calc(100% - 110px);
   display: inline-block;
+  position: relative;
+  top: 6px;
 }
 
 .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-rating, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {

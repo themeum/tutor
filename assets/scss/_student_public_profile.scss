@@ -249,15 +249,4 @@
             float: none;
         }
     }
-
-    .user-public-profile-basic-info{
-        &, td{
-            border: none;
-        }
-
-        td:first-child{
-            width: 150px;
-            padding-left: 0;
-        }
-    }
 }

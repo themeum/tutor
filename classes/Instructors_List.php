@@ -63,7 +63,7 @@ class Instructors_List extends \Tutor_List_Table {
 
 		switch ($status){
 			case 'pending':
-				$actions['approved'] = sprintf('<a class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">Approve</a>', $_REQUEST['page'],'approve',$item->ID);
+				$actions['approved'] = sprintf('<a class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Approve', 'tutor').'</a>', $_REQUEST['page'],'approve',$item->ID);
 				break;
 			case 'approved':
 				$actions['blocked'] = sprintf('<a data-prompt-message="'.__('Sure to Block?', 'tutor').'" class="instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Block', 'tutor').'</a>', $_REQUEST['page'],'blocked',$item->ID);

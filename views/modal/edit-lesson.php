@@ -36,7 +36,7 @@
 
         <div class="tutor-option-field-row">
             <div class="tutor-option-field-label">
-                <label for=""><?php _e('Feature Image'); ?></label>
+                <label for=""><?php _e('Feature Image', 'tutor'); ?></label>
             </div>
             <div class="tutor-option-field">
                 <div class="tutor-option-gorup-fields-wrap">

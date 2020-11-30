@@ -121,6 +121,8 @@
             text-overflow: ellipsis;    
             width: calc(100% - 110px);
             display: inline-block;
+            position: relative;
+            top:6px;
         }
 
         .tutor-instructor-rating{
