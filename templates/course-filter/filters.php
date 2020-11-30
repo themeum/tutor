@@ -65,7 +65,9 @@
                 <?php
             }
 
-            if(in_array('price_type', $supported_filters)){
+            
+            $is_membership = get_tutor_option('monetize_by')=='pmpro' && tutils()->has_pmpro();
+            if(!$is_membership && in_array('price_type', $supported_filters)){
                 ?>
                 <div>
                     <h4><?php _e('Price', 'tutor'); ?></h4>
