@@ -72,7 +72,7 @@ else if(function_exists('edd_currency_symbol')){
         <span>
             <?php
             $my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings/withdraw-settings');
-            echo $withdraw_method_name ?  __(sprintf('The preferred payment method is selected as %s. ', $withdraw_method_name), 'tutor') : '';
+            echo $withdraw_method_name ?  sprintf(__('The preferred payment method is selected as %s. ', 'tutor'), $withdraw_method_name) : '';
             echo sprintf(__('You can change your %s withdrawal preference %s', 'tutor'), "<a href='{$my_profile_url}'>", '</a>');
             ?>
         </span>

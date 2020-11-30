@@ -522,7 +522,7 @@ class Quiz {
             <div class="tutor-lesson-top">
                 <i class="tutor-icon-move"></i>
                 <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
-				?>"> <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz_title; ?> </a>
+				?>"> <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo $quiz_title; ?> </a>
 				<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
                 <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
             </div>
@@ -590,7 +590,7 @@ class Quiz {
         <div class="tutor-lesson-top">
             <i class="tutor-icon-move"></i>
             <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
-			?>"> <i class=" tutor-icon-doubt"></i>[QUIZ] <?php echo $quiz_title; ?> </a>
+			?>"> <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo $quiz_title; ?> </a>
 			<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
             <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
         </div>
@@ -631,7 +631,7 @@ class Quiz {
 
 			$new_question_data = array(
 				'quiz_id'               => $quiz_id,
-				'question_title'        => __('Question ').$next_question_id,
+				'question_title'        => __('Question', 'tutor').' '.$next_question_id,
 				'question_description'  => '',
 				'question_type'         => 'true_false',
 				'question_mark'         => 1,

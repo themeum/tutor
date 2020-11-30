@@ -192,7 +192,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 				}
 			}
 			if (count($required_review)){
-				echo '<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>Reminder: </strong> Please review answers for question no. '.implode(', ', $required_review).' </p>';
+				echo '<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>'.__('Reminder:', 'tutor').' </strong> '.sprintf(__('Please review answers for question no. %s', 'tutor'), implode(', ', $required_review)).'</p>';
 			}
 		}
 		?>

@@ -28,4 +28,3 @@ do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
 <?php
     do_action('tutor_course/single/enrolled/after/lead_info/progress_bar');
 ?>
-

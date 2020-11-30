@@ -122,14 +122,6 @@ get_header();
                 <?php // tutor_load_template('profile.badge', ['profile_badges'=>(new )]); ?>
             </div>
             <div class="tutor-user-profile-content">
-                <?php
-                    if(!$is_instructor){
-                        ?>
-                            <h3><?php _e('Basic Info', 'tutor'); ?></h3>
-                            <?php tutor_load_template('profile.basic'); ?>
-                        <?php
-                    }
-                ?>
             
                 <h3><?php _e('Biography', 'tutor'); ?></h3>
                 <?php tutor_load_template('profile.bio'); ?>
