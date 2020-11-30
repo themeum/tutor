@@ -256,8 +256,8 @@ Fix: Grammatical corrections in the enrolment section of the course page.
 Fix: Minute indicator added for reading time consisting of only seconds on the course page.
 Fix: The course was displaying free even when it was part of a membership package.
 Fix: Course dependent on Paid Memberships Pro plugin got canceled after a user enrolled in it.
-Fix: 404 page conflict issue with BuddyPress, BuddyBoss
-Fix: Backslashes issue in quiz question answer title
+Fix: Backslashes issue in quiz question answer title multiple type question answer titles.
+Fix: Conflict issue with BuddyPress, BuddyBoss that showed 404 page.
 
 = 1.7.4 - November 10, 2020 =
 

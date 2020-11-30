@@ -509,6 +509,10 @@ msgstr ""
 msgid "Instructor has been added successfully"
 msgstr ""
 
+#: classes/Instructors_List.php:66, classes/Withdraw_Requests_List.php:49, classes/Withdraw_Requests_List.php:57
+msgid "Approve"
+msgstr ""
+
 #: classes/Instructors_List.php:69
 msgid "Sure to Block?"
 msgstr ""
@@ -1346,7 +1350,7 @@ msgstr ""
 msgid "View Course"
 msgstr ""
 
-#: classes/Post_types.php:49, templates/student-public-profile.php:58, templates/student-public-profile.php:140, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, templates/single/course/instructors.php:72
+#: classes/Post_types.php:49, templates/student-public-profile.php:58, templates/student-public-profile.php:132, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, templates/single/course/instructors.php:72
 msgid "Courses"
 msgstr ""
 
@@ -1706,7 +1710,7 @@ msgstr ""
 msgid "Preview course"
 msgstr ""
 
-#: classes/Question_Answers_List.php:70, templates/dashboard/question-answer.php:25, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:211, templates/dashboard/quiz-attempts/quiz-reviews.php:227
+#: classes/Question_Answers_List.php:70, classes/Quiz.php:634, templates/dashboard/question-answer.php:25, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:211, templates/dashboard/quiz-attempts/quiz-reviews.php:227
 msgid "Question"
 msgstr ""
 
@@ -1720,6 +1724,10 @@ msgstr ""
 
 #: classes/Quiz.php:403
 msgid "Quiz has been timeout already"
+msgstr ""
+
+#: classes/Quiz.php:525, classes/Quiz.php:593, views/metabox/course-contents.php:88, views/metabox/course-contents.php:180
+msgid "QUIZ"
 msgstr ""
 
 #: classes/Quiz.php:697
@@ -2462,6 +2470,14 @@ msgstr ""
 msgid "Withdrawal Request Sent!"
 msgstr ""
 
+#: classes/Withdraw_Requests_List.php:51, classes/Withdraw_Requests_List.php:54
+msgid "Rejected"
+msgstr ""
+
+#: classes/Withdraw_Requests_List.php:61, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:40, templates/dashboard/settings/profile.php:67, views/options/field-types/media.php:29
+msgid "Delete"
+msgstr ""
+
 #: classes/Withdraw_Requests_List.php:102
 msgid "Requested By"
 msgstr ""
@@ -2681,11 +2697,7 @@ msgstr ""
 msgid "Course Completed"
 msgstr ""
 
-#: templates/student-public-profile.php:128
-msgid "Basic Info"
-msgstr ""
-
-#: templates/student-public-profile.php:134
+#: templates/student-public-profile.php:126
 msgid "Biography"
 msgstr ""
 
@@ -2949,10 +2961,6 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:40, templates/dashboard/settings/profile.php:67, views/options/field-types/media.php:29
-msgid "Delete"
-msgstr ""
-
 #: templates/dashboard/my-courses.php:103
 msgid "Delete This Course?"
 msgstr ""
@@ -2969,7 +2977,7 @@ msgstr ""
 msgid "Yes, Delete Course"
 msgstr ""
 
-#: templates/dashboard/my-profile.php:26, templates/profile/basic.php:10
+#: templates/dashboard/my-profile.php:26
 msgid "Registration Date"
 msgstr ""
 
@@ -3123,6 +3131,10 @@ msgstr ""
 
 #: templates/dashboard/withdraw.php:64
 msgid "Make a withdraw"
+msgstr ""
+
+#: templates/dashboard/withdraw.php:75
+msgid "The preferred payment method is selected as %s. "
 msgstr ""
 
 #: templates/dashboard/withdraw.php:76
@@ -3567,6 +3579,10 @@ msgstr ""
 msgid "Lesson title"
 msgstr ""
 
+#: views/modal/edit-lesson.php:39
+msgid "Feature Image"
+msgstr ""
+
 #: views/modal/edit-lesson.php:46
 msgid "Upload Feature Image"
 msgstr ""
@@ -3721,6 +3737,10 @@ msgstr ""
 
 #: views/modal/edit_quiz.php:349
 msgid "Students will place the answer in the Open-Ended/Essay question type within this character limit."
+msgstr ""
+
+#: views/modal/question_answer_edit_form.php:3, views/modal/question_answer_form.php:3
+msgid "No option is necessary for this answer type"
 msgstr ""
 
 #: views/modal/question_answer_edit_form.php:239, views/modal/question_answer_form.php:247
@@ -3911,6 +3931,10 @@ msgstr ""
 msgid "Just deactive tutor plugin or completely uninstall and erase all of data saved before by tutor."
 msgstr ""
 
+#: views/pages/uninstall.php:17
+msgid "Completely Uninstall and erase all data"
+msgstr ""
+
 #: views/pages/view_attempt.php:7, templates/dashboard/my-quiz-attempts/attempts-details.php:24, templates/dashboard/my-quiz-attempts/attempts-details.php:83, templates/dashboard/quiz-attempts/quiz-reviews.php:22
 msgid "Attempt not found"
 msgstr ""
@@ -3929,6 +3953,14 @@ msgstr ""
 
 #: views/pages/view_attempt.php:115
 msgid "Quiz Time"
+msgstr ""
+
+#: views/pages/view_attempt.php:157, templates/dashboard/quiz-attempts/quiz-reviews.php:195
+msgid "Reminder:"
+msgstr ""
+
+#: views/pages/view_attempt.php:157, templates/dashboard/quiz-attempts/quiz-reviews.php:195
+msgid "Please review answers for question no. %s"
 msgstr ""
 
 #: views/pages/view_attempt.php:169, templates/dashboard/quiz-attempts/quiz-reviews.php:205

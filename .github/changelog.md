@@ -1,10 +1,11 @@
 # TutorLMS Changelog
 
-### 1.7.5 - November 25, 2020
+### 1.7.5 - December 01, 2020
 
 * New: Introducing customizable shortcode to showcase your instructors in a list 
 * New: Upload a cover photo for the public profile of a user
 * New: Public Profile is getting a brand new design update.
+* Update: Added certificate view page, template override option.
 * Update: Withdrawal and Phone number fields now accept numbers only.
 * Update: {site_url} and {site_name} attributes added to all Tutor Email addon emails.
 * Fix: Add to Cart option still showed after adding the product in the Course Details Page
@@ -14,6 +15,8 @@
 * Fix: Minute indicator added for reading time consisting of only seconds on the course page.
 * Fix: The course was displaying free even when it was part of a membership package.
 * Fix: Course dependent on Paid Memberships Pro plugin got canceled after a user enrolled in it.
+* Fix: Backslashes issue in quiz question answer title multiple type question answer titles.
+* Fix: Conflict issue with BuddyPress, BuddyBoss that showed 404 page.
 
 
 ### 1.7.4 - November 09, 2020
