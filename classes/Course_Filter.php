@@ -32,8 +32,14 @@ class Course_Filter{
         }
 
         // Prepare level and price type
+        $is_membership = get_tutor_option('monetize_by')=='pmpro' && tutils()->has_pmpro();
         $level_price=array();
         foreach(['level', 'price'] as $type){
+            
+            if($is_membership && $type=='price'){
+                continue;
+            }
+
             if(isset($_POST['tutor-course-filter-'.$type]) && count($_POST['tutor-course-filter-'.$type])>0){
                 $level_price[]=array(
                     'key' => $type=='level' ? '_tutor_course_level' : '_tutor_course_price_type',
@@ -42,7 +48,7 @@ class Course_Filter{
                 );
             }
         }
-        
+
         $args = array(
             'post_type' => 'courses',
             'posts_per_page' => $courses_per_page,
