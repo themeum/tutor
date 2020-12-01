@@ -257,7 +257,7 @@ msgstr ""
 msgid "Lessons"
 msgstr ""
 
-#: classes/Course.php:471, templates/course-filter/filters.php:71, templates/dashboard/earning/statement.php:30
+#: classes/Course.php:471, templates/course-filter/filters.php:73, templates/dashboard/earning/statement.php:30
 msgid "Price"
 msgstr ""
 
