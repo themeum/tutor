@@ -6,9 +6,9 @@
 
 ?>
 
-<p>Hi,</p>
+<p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    The instructor posted a new announcement on course - <strong>{course_name}</strong>
+    <?php printf(__('The instructor posted a new announcement on course - %s', 'tutor'), '<strong>{course_name}</strong>'); ?>
     <br />
     {announcement}
 </p>

@@ -6,8 +6,8 @@
 
 ?>
 
-<p> Dear {instructor_username}, </p>
+<p><?php printf(__('Dear %s,', 'tutor'), '{instructor_username}'); ?></p>
 
 <p>
-	<strong>{student_username}</strong> has recently completed the lesson <strong>{lesson_name}</strong> of <strong>{course_name}</strong> at <strong>{completion_time}</strong>. The completed lesson URL is: <strong>{lesson_url}</strong>.
+	<?php printf(__('%s has recently completed the lesson %s of %s at %s. The completed lesson URL is: %s.', 'tutor'), '<strong>{student_username}</strong>', '<strong>{lesson_name}</strong>', '<strong>{course_name}</strong>', '<strong>{completion_time}</strong>', '<strong>{lesson_url}</strong>'); ?>
 </p>

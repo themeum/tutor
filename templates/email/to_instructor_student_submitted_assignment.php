@@ -6,17 +6,17 @@
 
 ?>
 
-<p>Hi,</p>
+<p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    You have received a submission for an assignment.
+    <?php _e('You have received a submission for an assignment.', 'tutor'); ?>
     <br />
-    Student Name - <strong>{student_name}</strong>
+    <?php printf(__('Student Name - %s', 'tutor'), '<strong>{student_name}</strong>'); ?>
     <br />
-    Course Name - <strong>{course_name}</strong>
+    <?php printf(__('Course Name - %s', 'tutor'), '<strong>{course_name}</strong>'); ?>
     <br />
-    Assignment Name - <strong>{assignment_name}</strong>
+    <?php printf(__('Assignment Name - %s', 'tutor'), '<strong>{assignment_name}</strong>'); ?>
     <br />
-    Review Submission - {review_link}
+    <?php printf(__('Review Submission - %s', 'tutor'), '{review_link}'); ?>
 </p>
 
-<p>Reply to this email to communicate with the instructor.</p>
+<p><?php _e('Reply to this email to communicate with the instructor.', 'tutor'); ?></p>

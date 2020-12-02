@@ -6,9 +6,9 @@
 
 ?>
 
-<p>Hi,</p>
+<p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-	A new student has signed up to your site <strong>{site_name}</strong>
+	<?php printf(__('A new student has signed up to your site %s', 'tutor'), '<strong>{site_name}</strong>'); ?>
 	<br />
 	{student_name}
 	<br />

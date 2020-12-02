@@ -7,5 +7,5 @@
 ?>
 
 <p>
-    {instructor_username} has submitted a new withdrawal request.
+    <?php printf(__('%s  has submitted a new withdrawal request.', 'tutor'), '{instructor_username}'); ?>
 </p>

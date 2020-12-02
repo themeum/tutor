@@ -6,9 +6,7 @@
 
 ?>
 
-<p>Hi,</p>
+<p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    Welcome to the course <strong>{course_name}</strong> at {site_url}. You can start learning from here- 
-    <br />
-    {course_start_url}.
+    <?php printf(__('Welcome to the course %s at %s. You can start learning from here- %s.', 'tutor'), '<strong>{course_name}</strong>', '{site_url}', '{course_start_url}'); ?>
 </p>
