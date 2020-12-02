@@ -6,13 +6,13 @@
 
 ?>
 
-<p>Hi,</p>
+<p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    A new course has been published by <strong>{instructor_name}</strong> on your site <strong>{site_name}</strong>
+    <?php printf(__('A new course has been published by %s on your site %s', 'tutor'), '<strong>{instructor_name}</strong>', '<strong>{site_name}</strong>'); ?>
     <br />
-    Course name- <strong>{course_name}</strong>
+    <?php printf(__('Course name - %s', 'tutor'), '<strong>{course_name}</strong>'); ?>
     <br />
-    View the course - {course_url}
+    <?php printf(__('View the course - %s', 'tutor'), '{course_url}'); ?>
 </p>
 
-<p>Reply to this email to communicate with the instructor.</p>
+<p><?php _e('Reply to this email to communicate with the instructor.', 'tutor'); ?></p>

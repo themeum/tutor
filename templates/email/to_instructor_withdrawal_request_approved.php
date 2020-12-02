@@ -6,8 +6,8 @@
 
 ?>
 
-<p> Dear {instructor_username}, </p>
+<p><?php printf(__('Dear %s,', 'tutor'), '{instructor_username}'); ?></p>
 
 <p>
-	Your withdrawal request has been approved. Please check the transaction notification on your connected withdrawal method.
+	<?php _e('Your withdrawal request has been approved. Please check the transaction notification on your connected withdrawal method.', 'tutor'); ?>
 </p>

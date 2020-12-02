@@ -6,9 +6,9 @@
 
 ?>
 
-<h4>Congrats!</h4>
-<p> Dear {instructor_username}, </p>
+<h4><?php _e('Congrats!', 'tutor'); ?></h4>
+<p><?php printf(__('Dear %s,', 'tutor'), '{instructor_username}'); ?></p>
 
 <p>
-	You are now an instructor for the <b>{site_name}</b> team. Go ahead and start creating your first course today!
+	<?php printf(__('You are now an instructor for the %s team. Go ahead and start creating your first course today!', 'tutor'), '<b>{site_name}</b>'); ?>
 </p>
