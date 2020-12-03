@@ -8215,7 +8215,6 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
-  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
@@ -9049,8 +9048,14 @@ label[for="tutor_withdraw_amount"] {
 
 #tutor_profile_cover_photo_editor #tutor_photo_meta_area {
   text-align: right;
-  padding-left: 180px;
+  padding-left: 190px;
   margin-top: 16px;
+}
+
+@media (max-width: 492px) {
+  #tutor_profile_cover_photo_editor #tutor_photo_meta_area {
+    padding-left: 120px;
+  }
 }
 
 #tutor_profile_cover_photo_editor #tutor_photo_meta_area > img, #tutor_profile_cover_photo_editor #tutor_photo_meta_area > span {
@@ -9114,6 +9119,16 @@ label[for="tutor_withdraw_amount"] {
 
 #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader:hover {
   background: #2f52c4;
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader > span {
+  margin-left: 6px;
+}
+
+@media (max-width: 432px) {
+  #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader > span {
+    display: none;
+  }
 }
 
 #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_deleter {
@@ -9388,12 +9403,12 @@ label[for="tutor_withdraw_amount"] {
   color: #757575;
 }
 
-.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-social-container {
+.tutor-user-public-profile .photo-area .pp-area .tutor-social-container {
   margin-top: 15px;
   text-align: right;
 }
 
-.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-social-container a {
+.tutor-user-public-profile .photo-area .pp-area .tutor-social-container a {
   display: inline-block;
   margin-left: 20px;
   color: whitesmoke;
@@ -9402,7 +9417,7 @@ label[for="tutor_withdraw_amount"] {
   font-size: 16px;
 }
 
-.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-social-container a:hover {
+.tutor-user-public-profile .photo-area .pp-area .tutor-social-container a:hover {
   color: white;
 }
 
@@ -9493,10 +9508,113 @@ label[for="tutor_withdraw_amount"] {
   width: calc(100% - 157px);
 }
 
-.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media .tutor-social-container {
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container {
   position: absolute;
   right: 36px;
   left: auto;
+}
+
+@media (min-width: 768px) {
+  .tutor-user-public-profile .content-for-mobile {
+    display: none;
+  }
+  .tutor-user-public-profile .content-for-desktop {
+    display: block;
+  }
+}
+
+@media (max-width: 767px) {
+  .tutor-user-public-profile .content-for-mobile {
+    display: block;
+    margin: 22px 0 0 0;
+    padding: 0 !important;
+  }
+  .tutor-user-public-profile .content-for-desktop {
+    display: none;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .photo-area, .tutor-user-public-profile.tutor-user-public-profile-no-cp .photo-area, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area {
+    height: auto;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .photo-area .cover-area > div:first-child, .tutor-user-public-profile.tutor-user-public-profile-no-cp .photo-area .cover-area > div:first-child, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .cover-area > div:first-child {
+    height: 220px;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .pp-area, .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .pp-area {
+    padding-left: 0 !important;
+    top: -82px !important;
+    flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -o-justify-content: center;
+    -ms-justify-content: center;
+    -moz-justify-content: center;
+    -webkit-justify-content: center;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-rating-media {
+    width: 100% !important;
+    text-align: center !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name > span > span, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name > span > span, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name > span > span {
+    color: black !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name > span:nth-of-type(2) > span, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name > span:nth-of-type(2) > span, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name > span:nth-of-type(2) > span {
+    color: #C4C4C4 !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name h3, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name h3, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name h3 {
+    color: #161616 !important;
+    font-size: 30px !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .rating-digits, .tutor-user-public-profile.tutor-user-public-profile-no-cp .rating-digits, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .rating-digits {
+    color: #161616 !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .pp-area {
+    top: -98px !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-pic {
+    height: 160px !important;
+    width: 153px !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container, .tutor-user-public-profile.tutor-user-public-profile-no-cp .ratings {
+    position: static !important;
+    top: 0 !important;
+    text-align: center !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name {
+    padding: 0 !important;
+  }
+  .tutor-user-public-profile .tutor-social-container {
+    margin: 15px 0 0 0 !important;
+  }
+  .tutor-user-public-profile .tutor-social-container a {
+    color: #7A7A7A !important;
+  }
+  .tutor-user-public-profile .profile-name {
+    padding: 0 !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .pp-area, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .pp-area {
+    margin-top: -83px !important;
+    position: relative !important;
+    top: 0 !important;
+  }
+  .tutor-user-public-profile .tutor-user-profile-sidebar {
+    margin-top: 0 !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area {
+    -webkit-box-pack: left !important;
+        -ms-flex-pack: left !important;
+            justify-content: left !important;
+    -o-justify-content: left !important;
+    -ms-justify-content: left !important;
+    -moz-justify-content: left !important;
+    -webkit-justify-content: left !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area * {
+    text-align: left !important;
+  }
 }
 
 .tutor-user-public-profile .tutor-user-profile-sidebar {

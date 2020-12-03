@@ -35,7 +35,7 @@ if ($cover_photo_id){
             </span>
             <div class="tutor_overlay">
                 <button class="tutor_cover_uploader">
-                    <i class="tutor-icon-image-ans"></i>&nbsp;
+                    <i class="tutor-icon-image-ans"></i>
                     <span>
                        <?php
                             echo $profile_photo_id ? __('Update Cover Photo', 'tutor') : __('Upload Cover Photo', 'tutor');
