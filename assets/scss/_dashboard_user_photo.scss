@@ -6,8 +6,12 @@
 
     #tutor_photo_meta_area{
         text-align: right;
-        padding-left: 180px;
+        padding-left: 190px;
         margin-top: 16px;
+
+        @media (max-width:492px){
+            padding-left: 120px;
+        }
 
         &>img, &>span{
             display: inline-block;
@@ -68,6 +72,14 @@
 
             &:hover{
                 background: #2f52c4;
+            }
+
+            &>span{
+                margin-left: 6px;
+
+                @media (max-width:432px){
+                    display: none;
+                }
             }
         }
 

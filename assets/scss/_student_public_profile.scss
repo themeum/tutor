@@ -86,21 +86,22 @@
                     }
                 }
 
-                .tutor-social-container{
-                    margin-top: 15px;
-                    text-align: right;
+            }
 
-                    a{
-                        display: inline-block;
-                        margin-left: 20px;
-                        color: whitesmoke;
-                        cursor: pointer;
-                        text-decoration: none;
-                        font-size: 16px;
+            .tutor-social-container{
+                margin-top: 15px;
+                text-align: right;
 
-                        &:hover{
-                            color: white;
-                        }
+                a{
+                    display: inline-block;
+                    margin-left: 20px;
+                    color: whitesmoke;
+                    cursor: pointer;
+                    text-decoration: none;
+                    font-size: 16px;
+
+                    &:hover{
+                        color: white;
                     }
                 }
             }
@@ -200,10 +201,125 @@
         .profile-rating-media{
             width: calc(100% - 157px);
 
-            .tutor-social-container{
-                position: absolute;
-                right: 36px;
-                left: auto;
+        }
+
+        .tutor-social-container{
+            position: absolute;
+            right: 36px;
+            left: auto;
+        }
+    }
+
+    @media(min-width:768px){
+        .content-for-mobile{
+            display: none;
+        }
+        .content-for-desktop{
+            display: block;
+        }
+    }
+
+    @media (max-width:767px){
+
+        .content-for-mobile{
+            display: block;
+            margin: 22px 0 0 0;
+            padding: 0 !important;
+        }
+        .content-for-desktop{
+            display: none;
+        }
+
+        &.tutor-user-public-profile-pp-circle, &.tutor-user-public-profile-no-cp, &.tutor-user-public-profile-pp-rectangle{
+            .photo-area{
+                height: auto;
+                .cover-area>div:first-child{
+                    height: 220px;
+                }
+            }
+
+            .pp-area{
+                padding-left: 0 !important;
+                top: -82px !important;
+                @include propertyWithPrefix(flex-wrap, wrap);
+                @include propertyWithPrefix(justify-content, center);
+            }
+
+            .profile-name, .profile-rating-media{
+                width: 100% !important;
+                text-align: center!important;
+            }
+
+            .profile-name>span>span{
+                color: black !important;
+            }
+
+            .profile-name>span:nth-of-type(2)>span{
+                color: #C4C4C4 !important;
+            }
+
+            .profile-name h3{
+                color: #161616 !important;
+                font-size: 30px !important;
+            }
+
+            .rating-digits{
+                color: #161616 !important;
+            }
+        }
+
+        &.tutor-user-public-profile-pp-rectangle{
+            .pp-area{
+                top: -98px !important;
+            }
+            .profile-pic{
+                height: 160px !important;
+                width: 153px !important;
+            }
+        }
+
+        &.tutor-user-public-profile-no-cp{
+            .pp-area, .profile-rating-media, .tutor-social-container, .ratings{
+                position: static !important;
+                top:0 !important;
+                text-align: center !important;
+            }
+
+            .profile-name{
+                padding: 0 !important;
+            }
+        }
+
+        .tutor-social-container {
+            margin: 15px 0 0 0 !important;
+            a{
+                color: #7A7A7A !important;
+            }
+        }
+
+        .profile-name{
+            padding: 0 !important;
+        }
+
+        &.tutor-user-public-profile-pp-circle, &.tutor-user-public-profile-pp-rectangle{
+            .pp-area{
+                margin-top: -83px !important;
+                position: relative !important;
+                top: 0 !important;
+            }
+        }
+
+        .tutor-user-profile-sidebar{
+            margin-top:0 !important;
+        }
+
+        &.tutor-user-public-profile-no-cp{
+            .pp-area{
+                @include propertyWithPrefix(justify-content, left !important);
+
+                *{
+                    text-align: left !important;
+                }
             }
         }
     }

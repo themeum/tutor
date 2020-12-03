@@ -36,6 +36,38 @@ foreach ($tutor_user_social_icons as $key => $social_icon){
 get_header();
 ?>
 
+<?php
+    // Rating content 
+    ob_start();
+    if($is_instructor){
+        $instructor_rating = tutor_utils()->get_instructor_ratings($user_id);
+        ?>
+        <div class="tutor-rating-container">      
+            <div class="ratings">
+                <span class="rating-generated">
+                    <?php tutor_utils()->star_rating_generator($instructor_rating->rating_avg); ?>
+                </span>
+
+                <?php
+                echo " <span class='rating-digits'>{$instructor_rating->rating_avg}</span> ";
+                echo " <span class='rating-total-meta'>({$instructor_rating->rating_count})</span> ";
+                ?>
+            </div>
+        </div>
+        <?php
+    }
+    $rating_content=ob_get_clean();
+
+
+    // Social media content
+    ob_start();
+    foreach ($tutor_user_social_icons as $key => $social_icon){
+        $url = $social_icon['url'];
+        echo !empty($url) ? '<a href="'.$url.'" target="_blank" rel="noopener noreferrer nofollow" class="'.$social_icon['icon_classes'].'" title="'.$social_icon['label'].'"></a>' : '';
+    }
+    $social_media=ob_get_clean();
+?>
+
 <?php do_action('tutor_student/before/wrap'); ?>
 
     <div <?php tutor_post_class('tutor-full-width-student-profile tutor-page-wrap tutor-user-public-profile tutor-user-public-profile-'.$profile_layout); ?>>
@@ -46,7 +78,15 @@ get_header();
             </div>
             <div class="pp-area">
                 <div class="profile-pic" style="background-image:url(<?php echo get_avatar_url($user_id, array('size' => 150)); ?>)"></div>
+                
                 <div class="profile-name">
+                    <div class="profile-rating-media content-for-mobile">
+                        <?php echo $rating_content; ?>
+                        <div class="tutor-social-container content-for-desktop">
+                            <?php echo $social_media; ?>
+                        </div>
+                    </div>
+
                     <h3><?php echo $get_user->display_name; ?></h3>
                     <?php
                         if($is_instructor){
@@ -84,27 +124,14 @@ get_header();
                         }
                     ?>
                 </div>
-                <div class="profile-rating-media">
-                    <?php 
-                        if($is_instructor){
-                            $instructor_rating = tutor_utils()->get_instructor_ratings($user_id);
-                            ?>
-                            <div class="tutor-rating-container">      
-                                <div class="ratings">
-                                    <span class="rating-generated">
-                                        <?php tutor_utils()->star_rating_generator($instructor_rating->rating_avg); ?>
-                                    </span>
 
-                                    <?php
-                                    echo " <span class='rating-digits'>{$instructor_rating->rating_avg}</span> ";
-                                    echo " <span class='rating-total-meta'>({$instructor_rating->rating_count})</span> ";
-                                    ?>
-                                </div>
-                            </div>
-                            <?php
-                        }
-                    ?>
-                    <div class="tutor-social-container">
+                <div class="tutor-social-container content-for-mobile">
+                    <?php echo $social_media; ?>
+                </div>
+                
+                <div class="profile-rating-media content-for-desktop">
+                    <?php echo $rating_content; ?>
+                    <div class="tutor-social-container content-for-desktop">
                         <?php    
                             foreach ($tutor_user_social_icons as $key => $social_icon){
                                 $url = $social_icon['url'];
