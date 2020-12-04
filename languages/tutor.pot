@@ -3370,7 +3370,7 @@ msgid "You can continue the discussion here - %s"
 msgstr ""
 
 #: templates/email/to_student_quiz_completed.php:12
-msgid "Thank you for submitting your answers for %s in course %s at %. This message is to confirm that we have received your answers. You can access this quiz on: %s."
+msgid "Thank you for submitting your answers for %s in course %s at %s. This message is to confirm that we have received your answers. You can access this quiz on: %s."
 msgstr ""
 
 #: templates/email/to_student_rate_course_and_instructor.php:11
