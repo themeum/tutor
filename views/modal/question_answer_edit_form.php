@@ -7,7 +7,7 @@ if ($question_type === 'open_ended'){
 $answer_title = ! empty($old_answer->answer_title) ? stripslashes($old_answer->answer_title) : '';
 $image_id = ! empty($old_answer->image_id) ? $old_answer->image_id : '';
 $answer_view_format = ! empty($old_answer->answer_view_format) ? $old_answer->answer_view_format : '';
-$answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? $old_answer->answer_two_gap_match : '';
+$answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashes($old_answer->answer_two_gap_match) : '';
 ?>
 
 <div class="tutor-quiz-question-answers-form">
