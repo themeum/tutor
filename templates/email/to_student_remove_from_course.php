@@ -8,7 +8,7 @@
 
 <p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    <?php printf(__('This is to notify you that the instructor has removed you from the course - %s', 'tutor'), '<strong>{course_name}</strong>'); ?>
+    <?php _e('This is to notify you that the instructor has removed you from the course - <strong>{course_name}</strong>', 'tutor'); ?>
     <br />
     <br />
     --

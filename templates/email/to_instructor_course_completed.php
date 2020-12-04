@@ -6,8 +6,8 @@
 
 ?>
 
-<p><?php printf(__('Dear %s,', 'tutor'), '{instructor_username}'); ?></p>
+<p><?php _e('Dear {instructor_username},', 'tutor'); ?></p>
 
 <p>
-	<?php printf(__('%s has recently completed %s at %s. The completed course URL is: %s.', 'tutor'), '{student_username}', '<strong>{course_name}</strong>', '<strong>{completion_time}</strong>', '<strong>{course_url}</strong>'); ?>
+	<?php _e('{student_username} has recently completed <strong>{course_name}</strong> at <strong>{completion_time}</strong>. The completed course URL is: <strong>{course_url}</strong>.', 'tutor'); ?>
 </p>

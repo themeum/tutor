@@ -8,10 +8,10 @@
 
 <p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    <?php printf(__('The instructor has answered your question on the course- %s. Here is the answer-', 'tutor'), '<strong>{course_name}</strong>'); ?>
+    <?php _e('The instructor has answered your question on the course- <strong>{course_name}</strong>. Here is the answer-', 'tutor'); ?>
     <br />
     {answer}
 </p>
 
-<p><?php printf(__('You can continue the discussion here - %s', 'tutor'), '{course_url}'); ?></p>
+<p><?php _e('You can continue the discussion here - {course_url}', 'tutor'); ?></p>
 

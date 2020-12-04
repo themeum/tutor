@@ -7,8 +7,8 @@
 ?>
 
 <h4><?php _e('Congrats!', 'tutor'); ?></h4>
-<p><?php printf(__('Dear %s,', 'tutor'), '{instructor_username}'); ?></p>
+<p><?php _e('Dear {instructor_username},', 'tutor'); ?></p>
 
 <p>
-	<?php printf(__('You are now an instructor for the %s team. Go ahead and start creating your first course today!', 'tutor'), '<b>{site_name}</b>'); ?>
+	<?php _e('You are now an instructor for the <b>{site_name}</b> team. Go ahead and start creating your first course today!', 'tutor'); ?>
 </p>

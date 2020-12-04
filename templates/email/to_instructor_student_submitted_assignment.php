@@ -10,13 +10,13 @@
 <p>
     <?php _e('You have received a submission for an assignment.', 'tutor'); ?>
     <br />
-    <?php printf(__('Student Name - %s', 'tutor'), '<strong>{student_name}</strong>'); ?>
+    <?php _e('Student Name - <strong>{student_name}</strong>', 'tutor'); ?>
     <br />
-    <?php printf(__('Course Name - %s', 'tutor'), '<strong>{course_name}</strong>'); ?>
+    <?php _e('Course Name - <strong>{course_name}</strong>', 'tutor'); ?>
     <br />
-    <?php printf(__('Assignment Name - %s', 'tutor'), '<strong>{assignment_name}</strong>'); ?>
+    <?php _e('Assignment Name - <strong>{assignment_name}</strong>', 'tutor'); ?>
     <br />
-    <?php printf(__('Review Submission - %s', 'tutor'), '{review_link}'); ?>
+    <?php _e('Review Submission - {review_link}', 'tutor'); ?>
 </p>
 
 <p><?php _e('Reply to this email to communicate with the instructor.', 'tutor'); ?></p>

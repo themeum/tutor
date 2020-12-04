@@ -6,7 +6,7 @@
 
 ?>
 
-<p><?php printf(__('Dear %s,', 'tutor'), '{instructor_username}'); ?></p>
+<p><?php _e('Dear {instructor_username},', 'tutor'); ?></p>
 
 <p>
 	<?php _e('Your application for becoming an instructor has been received. Please hold tight as we review your application. You will receive a notification about your status as soon as possible.', 'tutor'); ?>

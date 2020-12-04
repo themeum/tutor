@@ -6,10 +6,10 @@
 
 ?>
 
-<p><?php printf(__('Dear %s', 'tutor'), '{instructor_username},'); ?></p>
+<p><?php _e('Dear {instructor_username},', 'tutor'); ?></p>
 
 <p>
-	<?php printf(__('%s asked a question on %s at %s. The reply URL is: %s. You will find the question below.', 'tutor'), '{student_username}', '<strong>{course_name}</strong>', '<strong>{enroll_time}</strong>', '<strong>{course_url}</strong>'); ?>
+	<?php _e('{student_username} asked a question on <strong>{course_name}</strong> at <strong>{enroll_time}</strong>. The reply URL is: <strong>{course_url}</strong>. You will find the question below.', 'tutor'); ?>
 </p>
 
 <br />

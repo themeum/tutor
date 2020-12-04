@@ -8,11 +8,11 @@
 
 <p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    <?php printf(__('Instructor %s has edited a course on %s', 'tutor'), '<strong>{instructor_name}</strong>', '<strong>{site_name}</strong>'); ?>
+    <?php _e('Instructor <strong>{instructor_name}</strong> has edited a course on <strong>{site_name}</strong>', 'tutor'); ?>
     <br />
-    <?php printf(__('Course name - %s', 'tutor'), '<strong>{course_name}</strong>'); ?>
+    <?php _e('Course name - <strong>{course_name}</strong>', 'tutor'); ?>
     <br />
-    <?php printf(__('View the course - %s', 'tutor'), '{course_url}'); ?>
+    <?php _e('View the course - {course_url}', 'tutor'); ?>
 </p>
 
 <p><?php _e('Reply to this email to communicate with the instructor.', 'tutor'); ?></p>
