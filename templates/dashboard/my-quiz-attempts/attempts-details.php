@@ -43,14 +43,14 @@ function show_correct_answer( $answers= array() ){
                             }
                         }
                         if(isset($ans->answer_title)) {
-                            echo '<span class="caption">'.$ans->answer_title.'</span>';
+                            echo '<span class="caption">'.stripslashes($ans->answer_title).'</span>';
                         }
 					echo '</div>';
                     break;
 				case 'text':
 					echo '<div class="text-type">';
                         if(isset($ans->answer_title)) {
-                            echo '<span class="text-item-caption">'.$ans->answer_title;
+                            echo '<span class="text-item-caption">'.stripslashes($ans->answer_title);
                         }
                     echo '</div>';
                     break;
@@ -69,7 +69,7 @@ function show_correct_answer( $answers= array() ){
             }
             if (isset($ans->answer_two_gap_match)) {
                 echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
-                echo '<div class="image-match">'.$ans->answer_two_gap_match.'</div>';
+                echo '<div class="image-match">'.stripslashes($ans->answer_two_gap_match).'</div>';
                 echo '</div>';
 			}
         }
@@ -253,7 +253,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                                     foreach($input_data as $replace){
                                         $answer_title = preg_replace('/{dash}/i', $replace, $answer_title, 1);
                                     }
-                                    echo str_replace('{dash}', '_____', $answer_title);
+                                    echo str_replace('{dash}', '_____', stripslashes($answer_title));
                                 }
 
                             }elseif ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
@@ -282,7 +282,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                                     $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
                                     if(tutils()->count($provided_answer_order)){
                                         foreach ($provided_answer_order as $provided_answer_order);
-                                        echo $original_saved_answer->answer_title  ." - {$provided_answer_order->answer_two_gap_match} <br />";
+                                        echo stripslashes($original_saved_answer->answer_title)  .' - '. stripslashes($provided_answer_order->answer_two_gap_match).'<br />';
                                     }
                                 }
 
@@ -299,7 +299,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                                     ?>
                                     <div class="image-matching-item">
                                         <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $original_saved_answer->image_id); ?>" /> </p>
-                                        <p class="dragged-caption"><?php echo $provided_answer_order->answer_title; ?></p>
+                                        <p class="dragged-caption"><?php echo stripslashes($provided_answer_order->answer_title); ?></p>
                                     </div>
                                     <?php
                                 }

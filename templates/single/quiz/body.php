@@ -241,9 +241,9 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
                                                     <div class="quiz-draggable-answer-item">
 														<?php
 														if ($question_type === 'matching'){
-															echo "<span class='draggable-answer-title'>{$rand_answer->answer_two_gap_match}</span>";
+															echo '<span class="draggable-answer-title">'.stripslashes($rand_answer->answer_two_gap_match).'</span>';
 														}else{
-															echo "<span class='draggable-answer-title'>{$rand_answer->answer_title}</span>";
+															echo '<span class="draggable-answer-title">'.stripslashes($rand_answer->answer_title).'</span>';
 														}
 														?>
                                                         <span class="draggable-answer-icon"> <i class="tutor-icon-menu-2"></i> </span>
@@ -264,7 +264,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 															if ($question_type === 'matching') {
 
 																if ($answer->answer_view_format !== 'image'){
-																	echo "<p class='tutor-quiz-answer-title'>{$answer->answer_title}</p>";
+																	echo '<p class="tutor-quiz-answer-title">'.stripslashes($answer->answer_title).'</p>';
 																}
 																if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
 																	?>
