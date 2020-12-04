@@ -232,7 +232,7 @@ $user = get_userdata($user_id);
                                     foreach($input_data as $replace){
                                         $answer_title = preg_replace('/{dash}/i', $replace, $answer_title, 1);
                                     }
-                                    echo str_replace('{dash}', '_____', $answer_title);
+                                    echo str_replace('{dash}', '_____', stripslashes($answer_title));
                                 }
 
                             }elseif ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
@@ -261,7 +261,7 @@ $user = get_userdata($user_id);
                                     $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
                                     if(tutils()->count($provided_answer_order)){
                                         foreach ($provided_answer_order as $provided_answer_order);
-                                        echo $original_saved_answer->answer_title  ." - {$provided_answer_order->answer_two_gap_match} <br />";
+                                        echo stripslashes($original_saved_answer->answer_title)  .' - '.stripslashes($provided_answer_order->answer_two_gap_match).'<br />';
                                     }
                                 }
 
@@ -278,7 +278,7 @@ $user = get_userdata($user_id);
                                     ?>
                                     <div class="image-matching-item">
                                         <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $original_saved_answer->image_id); ?>" /> </p>
-                                        <p class="dragged-caption"><?php echo $provided_answer_order->answer_title; ?></p>
+                                        <p class="dragged-caption"><?php echo stripslashes($provided_answer_order->answer_title); ?></p>
                                     </div>
                                     <?php
                                 }
