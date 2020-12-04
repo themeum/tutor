@@ -356,7 +356,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
                                 } elseif ( $answer->question_type === 'fill_in_the_blank' ) {
                                     $correct_answer = $wpdb->get_var( "SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id}" );
                                     if($correct_answer){
-                                        echo stripslashes(implode(', ', explode('|', $correct_answer)));
+                                        echo implode(', ', explode('|', stripslashes($correct_answer)));
                                     }
                                 } elseif ( $answer->question_type === 'ordering' ) {
                                     $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
