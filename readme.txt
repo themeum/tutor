@@ -246,7 +246,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 New: Added translation support on email notification templates.
 Update: Q&A timestamp is now aligned with WordPress timezone settings.
 Fix: Instructor profile is now responsive on all devices.
-Fix: Backslashes issue in quiz answer input field.
+Fix: Backslashes issue in quiz module.
 
 = 1.7.5 - December 01, 2020 =
 
