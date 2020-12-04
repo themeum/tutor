@@ -6,7 +6,7 @@
 
 ?>
 
-<p><?php printf(__('Dear %s,', 'tutor'), '{instructor_username}'); ?> </p>
+<p><?php _e('Dear {instructor_username},', 'tutor'); ?> </p>
 
 <p>
 	<?php _e('Unfortunately, your withdrawal request has been rejected. Please contact the site admins directly for further information.', 'tutor'); ?>

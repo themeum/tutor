@@ -8,7 +8,7 @@
 
 <p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    <?php printf(__('Welcome to the course %s at %s. You can start learning from here-', 'tutor'), '<strong>{course_name}</strong>', '{site_url}'); ?> 
+    <?php _e('Welcome to the course <strong>{course_name}</strong> at {site_url}. You can start learning from here-', 'tutor'); ?> 
     <br />
     {course_start_url}.
 </p>

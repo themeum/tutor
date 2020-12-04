@@ -6,8 +6,8 @@
 
 ?>
 
-<p><?php printf(__('Dear %s,', 'tutor'), '{student_username}'); ?></p>
+<p><?php _e('Dear {student_username},', 'tutor'); ?></p>
 
 <p>
-	<?php printf(__('A new %s has been published for the course %s called %s. Go ahead and get started today!', 'tutor'), '{lqa_type}', '<b>{course_title}</b>', '<b>{lqa_title}</b>'); ?>
+	<?php _e('A new {lqa_type} has been published for the course <b>{course_title}</b> called <b>{lqa_title}</b>. Go ahead and get started today!', 'tutor'); ?>
 </p>

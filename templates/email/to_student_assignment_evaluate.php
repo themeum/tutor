@@ -7,9 +7,9 @@
 ?>
 
 <p><?php _e('Hi,', 'tutor'); ?></p>
-<p><?php printf(__('The grade has been submitted for the assignment %s for the course %', 'tutor'), '<strong>{assignment_name}</strong>', '<strong>{course_name}</strong>'); ?></p>
+<p><?php _e('The grade has been submitted for the assignment <strong>{assignment_name}</strong> for the course <strong>{course_name}</strong>', 'tutor'); ?></p>
 <p>
-    <?php printf(__('Your score: %s', 'tutor'), '<strong>{assignemnt_score}</strong>'); ?>
+    <?php _e('Your score: <strong>{assignemnt_score}</strong>', 'tutor'); ?>
     <br />
-    <?php printf(__('Instructor Comment: %s', 'tutor'), '{assignment_comment}'); ?>
+    <?php _e('Instructor Comment: {assignment_comment}', 'tutor'); ?>
 </p>

@@ -8,7 +8,7 @@
 
 <p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    <?php printf(__('The instructor posted a new announcement on course - %s', 'tutor'), '<strong>{course_name}</strong>'); ?>
+    <?php _e('The instructor posted a new announcement on course - <strong>{course_name}</strong>', 'tutor'); ?>
     <br />
     {announcement}
 </p>
