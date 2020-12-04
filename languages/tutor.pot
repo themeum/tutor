@@ -617,7 +617,7 @@ msgstr ""
 msgid "Price Type"
 msgstr ""
 
-#: classes/Options.php:102, classes/Utils.php:5512
+#: classes/Options.php:102, classes/Utils.php:5515
 msgid "Dashboard Page"
 msgstr ""
 
@@ -1125,7 +1125,7 @@ msgstr ""
 msgid "Allow multiple instructors to upload their courses."
 msgstr ""
 
-#: classes/Options.php:533, classes/Utils.php:5513
+#: classes/Options.php:533, classes/Utils.php:5516
 msgid "Instructor Registration Page"
 msgstr ""
 
@@ -1153,7 +1153,7 @@ msgstr ""
 msgid "Student Profile settings"
 msgstr ""
 
-#: classes/Options.php:565, classes/Utils.php:5514
+#: classes/Options.php:565, classes/Utils.php:5517
 msgid "Student Registration Page"
 msgstr ""
 
@@ -2274,119 +2274,119 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: classes/Utils.php:3429
+#: classes/Utils.php:3432
 msgid "True/False"
 msgstr ""
 
-#: classes/Utils.php:3430
+#: classes/Utils.php:3433
 msgid "Single Choice"
 msgstr ""
 
-#: classes/Utils.php:3431
+#: classes/Utils.php:3434
 msgid "Multiple Choice"
 msgstr ""
 
-#: classes/Utils.php:3432
+#: classes/Utils.php:3435
 msgid "Open Ended/Essay"
 msgstr ""
 
-#: classes/Utils.php:3433
+#: classes/Utils.php:3436
 msgid "Fill In The Blanks"
 msgstr ""
 
-#: classes/Utils.php:3434
+#: classes/Utils.php:3437
 msgid "Short Answer"
 msgstr ""
 
-#: classes/Utils.php:3435
+#: classes/Utils.php:3438
 msgid "Matching"
 msgstr ""
 
-#: classes/Utils.php:3436
+#: classes/Utils.php:3439
 msgid "Image Matching"
 msgstr ""
 
-#: classes/Utils.php:3437
+#: classes/Utils.php:3440
 msgid "Image Answering"
 msgstr ""
 
-#: classes/Utils.php:3438
+#: classes/Utils.php:3441
 msgid "Ordering"
 msgstr ""
 
-#: classes/Utils.php:4032
+#: classes/Utils.php:4035
 msgid "All Levels"
 msgstr ""
 
-#: classes/Utils.php:4033
+#: classes/Utils.php:4036
 msgid "Beginner"
 msgstr ""
 
-#: classes/Utils.php:4034
+#: classes/Utils.php:4037
 msgid "Intermediate"
 msgstr ""
 
-#: classes/Utils.php:4035
+#: classes/Utils.php:4038
 msgid "Expert"
 msgstr ""
 
-#: classes/Utils.php:4058
+#: classes/Utils.php:4061
 msgid "Courses Taken"
 msgstr ""
 
-#: classes/Utils.php:4065
+#: classes/Utils.php:4068
 msgid "Enrolled Course"
 msgstr ""
 
-#: classes/Utils.php:4068
+#: classes/Utils.php:4071
 msgid "Reviews Written"
 msgstr ""
 
-#: classes/Utils.php:4311
+#: classes/Utils.php:4314
 msgid "Website URL"
 msgstr ""
 
-#: classes/Utils.php:4316
+#: classes/Utils.php:4319
 msgid "Github URL"
 msgstr ""
 
-#: classes/Utils.php:4321
+#: classes/Utils.php:4324
 msgid "Facebook URL"
 msgstr ""
 
-#: classes/Utils.php:4326
+#: classes/Utils.php:4329
 msgid "Twitter URL"
 msgstr ""
 
-#: classes/Utils.php:4331
+#: classes/Utils.php:4334
 msgid "Linkedin URL"
 msgstr ""
 
-#: classes/Utils.php:5477
+#: classes/Utils.php:5480
 msgid "Not Taken"
 msgstr ""
 
-#: classes/Utils.php:5475
+#: classes/Utils.php:5478
 msgid "In Progress"
 msgstr ""
 
-#: classes/Utils.php:5471
+#: classes/Utils.php:5474
 msgid "Completed"
 msgstr ""
 
-#: classes/Utils.php:5653, templates/dashboard/my-profile.php:34, templates/dashboard/registration.php:33, templates/dashboard/registration.php:36, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:32, templates/dashboard/instructor/registration.php:35, templates/dashboard/settings/profile.php:95, templates/dashboard/settings/profile.php:97
+#: classes/Utils.php:5656, templates/dashboard/my-profile.php:34, templates/dashboard/registration.php:33, templates/dashboard/registration.php:36, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:32, templates/dashboard/instructor/registration.php:35, templates/dashboard/settings/profile.php:95, templates/dashboard/settings/profile.php:97
 msgid "First Name"
 msgstr ""
 
-#: classes/Utils.php:5654, templates/dashboard/my-profile.php:42, templates/dashboard/registration.php:43, templates/dashboard/registration.php:46, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:42, templates/dashboard/instructor/registration.php:45, templates/dashboard/settings/profile.php:104, templates/dashboard/settings/profile.php:106
+#: classes/Utils.php:5657, templates/dashboard/my-profile.php:42, templates/dashboard/registration.php:43, templates/dashboard/registration.php:46, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:42, templates/dashboard/instructor/registration.php:45, templates/dashboard/settings/profile.php:104, templates/dashboard/settings/profile.php:106
 msgid "Last Name"
 msgstr ""
 
-#: classes/Utils.php:5655
+#: classes/Utils.php:5658
 msgid "Profile Photo"
 msgstr ""
 
-#: classes/Utils.php:5656
+#: classes/Utils.php:5659
 msgid "Withdraw Method"
 msgstr ""
 
@@ -2969,7 +2969,7 @@ msgstr ""
 msgid "You are going to delete this course, it can't be undone"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:72, templates/dashboard/withdraw.php:143, views/modal/add_quiz.php:55, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:135, views/modal/question_form.php:225, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:137
+#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:72, templates/dashboard/withdraw.php:143, views/modal/add_quiz.php:55, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:135, views/modal/question_form.php:225, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
 msgid "Cancel"
 msgstr ""
 
@@ -3097,7 +3097,7 @@ msgstr ""
 msgid "Edit Feedback"
 msgstr ""
 
-#: templates/dashboard/reviews.php:65, templates/profile/reviews_wrote.php:49, views/pages/answer.php:54, views/pages/answer.php:94, templates/dashboard/question-answer/answers.php:24, templates/dashboard/question-answer/answers.php:52, templates/dashboard/reviews/received-reviews.php:64, templates/single/course/reviews.php:93, templates/single/lesson/sidebar_question_and_answer.php:54, templates/single/lesson/sidebar_question_and_answer.php:83, templates/single/course/enrolled/question_and_answer.php:75, templates/single/course/enrolled/question_and_answer.php:105
+#: templates/dashboard/reviews.php:65, templates/profile/reviews_wrote.php:49, views/pages/answer.php:54, views/pages/answer.php:94, templates/dashboard/question-answer/answers.php:24, templates/dashboard/question-answer/answers.php:52, templates/dashboard/reviews/received-reviews.php:64, templates/single/course/reviews.php:93, templates/single/lesson/sidebar_question_and_answer.php:54, templates/single/lesson/sidebar_question_and_answer.php:83, templates/single/course/enrolled/question_and_answer.php:75, templates/single/course/enrolled/question_and_answer.php:104
 msgid "%s ago"
 msgstr ""
 
@@ -4807,15 +4807,15 @@ msgstr ""
 msgid "Be the first to ask your question! You’ll be able to add details in the next step."
 msgstr ""
 
-#: templates/single/lesson/sidebar_question_and_answer.php:102, templates/single/course/enrolled/question_and_answer.php:124
+#: templates/single/lesson/sidebar_question_and_answer.php:102, templates/single/course/enrolled/question_and_answer.php:123
 msgid "Add an answer"
 msgstr ""
 
-#: templates/single/lesson/sidebar_question_and_answer.php:111, templates/single/course/enrolled/question_and_answer.php:133
+#: templates/single/lesson/sidebar_question_and_answer.php:111, templates/single/course/enrolled/question_and_answer.php:132
 msgid "Write your answer here..."
 msgstr ""
 
-#: templates/single/lesson/sidebar_question_and_answer.php:117, templates/single/course/enrolled/question_and_answer.php:139
+#: templates/single/lesson/sidebar_question_and_answer.php:117, templates/single/course/enrolled/question_and_answer.php:138
 msgid "Add Answer"
 msgstr ""
 

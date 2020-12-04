@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.5.1
 Requires PHP: 7.0
-Stable tag: 1.7.5
+Stable tag: 1.7.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,13 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.7.6 - December 04, 2020 =
+
+New: Added translation support on email notification templates.
+Update: Q&A timestamp is now aligned with WordPress timezone settings.
+Fix: Instructor profile is now responsive on all devices.
+Fix: Backslashes issue in quiz answer input field.
 
 = 1.7.5 - December 01, 2020 =
 
