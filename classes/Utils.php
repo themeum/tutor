@@ -3189,6 +3189,7 @@ class Utils {
 				{$wpdb -> comments}.comment_post_ID, 
 				{$wpdb -> comments}.comment_author, 
 				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_date_gmt, 
 				{$wpdb -> comments}.comment_content, 
 				{$wpdb -> comments}.user_id, 
 				{$wpdb -> commentmeta}.meta_value as question_title, 

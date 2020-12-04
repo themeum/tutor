@@ -22,7 +22,7 @@ $profile_url = tutils()->profile_url($question->user_id);
                     <p class="review-meta">
                         <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a>
                         <span class="tutor-text-mute"><?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime
-                            ($question->comment_date))) ; ?></span>
+                            ($question->comment_date_gmt))) ; ?></span>
                     </p>
                 </div>
 
@@ -49,7 +49,7 @@ $profile_url = tutils()->profile_url($question->user_id);
                                     <p class="review-meta">
                                         <a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a>
                                         <span class="tutor-text-mute">
-                                            <?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($answer->comment_date)) ) ; ?>
+                                            <?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($answer->comment_date_gmt)) ) ; ?>
                                         </span>
                                     </p>
                                 </div>
