@@ -5732,7 +5732,7 @@ class Utils {
 	/**
 	 * @param int $course_id
 	 *
-	 * @return int
+	 * @return array
 	 * 
 	 * @since v1.6.9
 	 *
