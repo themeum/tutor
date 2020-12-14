@@ -48,7 +48,7 @@ class Ajax{
 
 		$duration = sanitize_text_field($_POST['duration']);
 		$currentTime = sanitize_text_field($_POST['currentTime']);
-		$post_id = sanitize_text_field($_POST['post_id']);
+		$post_id = isset($_POST['post_id']) ? sanitize_text_field($_POST['post_id']) : 0;
 
 		/**
 		 * Update posts attached video
