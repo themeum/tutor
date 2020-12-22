@@ -148,10 +148,10 @@ $settings = maybe_unserialize($question->question_settings);
                                             echo stripslashes($answer->answer_title);
                                             if ($answer->belongs_question_type === 'fill_in_the_blank'){
 	                                            echo ' ('.__('Answer', 'tutor').' : ';
-	                                            echo "<strong>{$answer->answer_two_gap_match} </strong>)";
+	                                            echo '<strong>'.stripslashes($answer->answer_two_gap_match).'</strong>)';
                                             }
                                             if ($answer->belongs_question_type === 'matching'){
-	                                            echo " - {$answer->answer_two_gap_match}";
+	                                            echo ' - '.stripslashes($answer->answer_two_gap_match);
                                             }
                                             ?>
                                         </span>

@@ -137,12 +137,12 @@ if ( ! defined( 'ABSPATH' ) )
 
                                         case 'switch':
                                             $html .= '<label for="'.$key.'" class="switch-label input-switch-label">';
-                                                $html .= '<span class="label-off">OFF</span>';
+                                                $html .= '<span class="label-off">'.__('OFF', 'tutor').'</span>';
                                                 $html .= '<div class="switchbox-wrapper">';
                                                         $html .= '<input id="'.$key.'" class="input-switchbox" type="checkbox" name="'.$key.'" value="1" '.(isset($options[$key]) && $options[$key] ? 'checked' : '').'/>';
                                                         $html .= '<span class="switchbox-icon"></span>';
                                                 $html .= '</div>';
-                                                $html .= '<span class="label-on">ON</span>';
+                                                $html .= '<span class="label-on">'.__('ON', 'tutor').'</span>';
                                             $html .= '</label>';
                                         break;
                     
@@ -381,7 +381,7 @@ if ( ! defined( 'ABSPATH' ) )
                             'type' => 'text',
                             'max' => 50,
                             'lable' => __('Lesson Slug', 'tutor'),
-                            'desc' => 'Pick the URL prefix you want for your lessons.',
+                            'desc' => __('Pick the URL prefix you want for your lessons.', 'tutor'),
                         )
                     )
                 ),

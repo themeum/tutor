@@ -424,7 +424,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 
-	public function get_courses($excludes = array()){
+	public function get_courses($excludes = array(), $post_status=array('publish')){
 		global $wpdb;
 
 
@@ -434,9 +434,12 @@ class Utils {
 			$exclude_query = implode("','", $excludes);
 		}
 
+		$post_status = array_map(function($element){return "'".$element."'";}, $post_status);
+		$post_status = implode(',', $post_status);
+
 		$course_post_type = tutor()->course_post_type;
 		$query = $wpdb->get_results("SELECT ID, post_author, post_title, post_name,post_status, menu_order 
-				from {$wpdb->posts} WHERE post_status = 'publish'
+				from {$wpdb->posts} WHERE post_status IN ({$post_status})
 				AND ID NOT IN('$exclude_query')
 				AND post_type = '{$course_post_type}' ");
 		return $query;
@@ -1343,10 +1346,10 @@ class Utils {
 	}
 
 	public function get_optimized_duration($duration){
-		if(is_string($duration)){
+		/* if(is_string($duration)){
 			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove Empty hour
 			strpos($duration, '00:')===0 ? $duration=substr($duration, 3) : 0; // Remove empty minute
-		}
+		} */
 
 		return $duration;
 	}
@@ -1508,10 +1511,17 @@ class Utils {
 	public function has_video_in_single($post_id = 0){
 		if (is_single()) {
 			$post_id = $this->get_post_id($post_id);
-
+			
 			$video = $this->get_video( $post_id );
-			if ( $video && $this->array_get('source', $video) !== '-1' ) {
-				return $video;
+			if ( $video && $this->array_get('source', $video) !== '-1') {
+				
+				$not_empty =!empty($video['source_video_id']) || 
+							!empty($video['source_external_url']) || 
+							!empty($video['source_youtube']) || 
+							!empty($video['source_vimeo']) || 
+							!empty($video['source_embedded']);
+							
+				return $not_empty ? $video : false;
 			}
 		}
 		return false;
@@ -1699,7 +1709,7 @@ class Utils {
 	 *
 	 * Get the enrolled courses by user
 	 */
-	public function get_enrolled_courses_by_user($user_id = 0){
+	public function get_enrolled_courses_by_user($user_id = 0, $post_status='publish'){
 		global $wpdb;
 
 		$user_id = $this->get_user_id($user_id);
@@ -1709,7 +1719,7 @@ class Utils {
 			$course_post_type = tutor()->course_post_type;
 			$course_args = array(
 				'post_type'     => $course_post_type,
-				'post_status'   => 'publish',
+				'post_status'   => $post_status,
 				'post__in'      => $course_ids,
                 'posts_per_page' => -1
 			);
@@ -1954,7 +1964,7 @@ class Utils {
 
 			// Run this hook for completed enrollment regardless of payment provider and free/paid mode
 			if($enroll_data['post_status'] == 'completed'){
-				do_action('tutor_after_enrolled', $course_id, $user_id);
+				do_action('tutor_after_enrolled', $course_id, $user_id, $isEnrolled);
 			}
 
 			//Mark Current User as Students with user meta data
@@ -2395,7 +2405,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors($start = 0, $limit = 10, $search_term = ''){
+	public function get_instructors($start = 0, $limit = 10, $search_term = '', $status=null){
 		$meta_key = '_is_tutor_instructor';
 		global $wpdb;
 
@@ -2403,9 +2413,17 @@ class Utils {
 			$search_term = " AND ( {$wpdb->users}.display_name LIKE '%{$search_term}%' OR {$wpdb->users}.user_email LIKE '%{$search_term}%' ) ";
 		}
 
-		$instructors = $wpdb->get_results("SELECT SQL_CALC_FOUND_ROWS {$wpdb->users}.* FROM {$wpdb->users} 
-			INNER JOIN {$wpdb->usermeta} 
-			ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id ) 
+		if($status){
+			!is_array($status) ? $status=array($status) : 0;
+			$status = array_map(function($str){return "'{$str}'";}, $status);
+			$status = implode(',', $status);
+			
+			$search_term.=" AND inst_status.meta_key='_tutor_instructor_status' AND inst_status.meta_value IN ({$status})";
+		}
+
+		$instructors = $wpdb->get_results("SELECT DISTINCT SQL_CALC_FOUND_ROWS {$wpdb->users}.* FROM {$wpdb->users} 
+			INNER JOIN {$wpdb->usermeta} ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id ) 
+			INNER JOIN {$wpdb->usermeta} inst_status ON ( {$wpdb->users}.ID = inst_status.user_id ) 
 			WHERE 1=1 AND ( {$wpdb->usermeta}.meta_key = '{$meta_key}' )  {$search_term}
 			ORDER BY {$wpdb->usermeta}.meta_value DESC 
 			LIMIT {$start}, {$limit} ");
@@ -2460,12 +2478,15 @@ class Utils {
 		global $wpdb;
 
 		$course_post_type = tutor()->course_post_type;
-		$count = $wpdb->get_var("SELECT COUNT(courses.ID) from {$wpdb->posts} courses
+		$count = $wpdb->get_var(
+			"SELECT COUNT(enrollment.ID) FROM {$wpdb->posts} enrollment 
+			LEFT JOIN {$wpdb->posts} course ON enrollment.post_parent=course.ID
+			WHERE course.post_author={$instructor_id}
+				AND course.post_status='publish'
+				AND course.post_type='courses'
+				AND enrollment.post_type='tutor_enrolled'
+				AND enrollment.post_status='completed'");
 
-			INNER JOIN {$wpdb->posts} enrolled ON courses.ID = enrolled.post_parent AND enrolled.post_type = 'tutor_enrolled'
-			WHERE courses.post_status = 'publish' 
-			AND courses.post_type = '{$course_post_type}' 
-			AND courses.post_author = {$instructor_id}  ; ");
 		return (int) $count;
 	}
 
@@ -3003,6 +3024,7 @@ class Utils {
 				{$wpdb -> comments}.comment_post_ID, 
 				{$wpdb -> comments}.comment_author, 
 				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_date_gmt, 
 				{$wpdb -> comments}.comment_content, 
 				{$wpdb -> comments}.user_id, 
 				{$wpdb -> commentmeta}.meta_value as question_title, 
@@ -3167,6 +3189,7 @@ class Utils {
 				{$wpdb -> comments}.comment_post_ID, 
 				{$wpdb -> comments}.comment_author, 
 				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_date_gmt, 
 				{$wpdb -> comments}.comment_content, 
 				{$wpdb -> comments}.user_id, 
 				{$wpdb -> commentmeta}.meta_value as question_title, 
@@ -3201,6 +3224,7 @@ class Utils {
 				{$wpdb -> comments}.comment_post_ID, 
 				{$wpdb -> comments}.comment_author, 
 				{$wpdb -> comments}.comment_date, 
+				{$wpdb -> comments}.comment_date_gmt, 
 				{$wpdb -> comments}.comment_content, 
 				{$wpdb -> comments}.comment_parent, 
 				{$wpdb -> comments}.user_id, 
@@ -5708,7 +5732,7 @@ class Utils {
 	/**
 	 * @param int $course_id
 	 *
-	 * @return int
+	 * @return array
 	 * 
 	 * @since v1.6.9
 	 *
@@ -5731,5 +5755,63 @@ class Utils {
 		$email_array = array_column($student_emails,'user_email');
 
 		return $email_array;
+	}
+
+	/*
+	*requie post id & user id
+	*return single comment post
+	*/
+	public function get_single_comment_user_post_id($post_id,$user_id){
+		global $wpdb;
+		$table = $wpdb->prefix."comments";
+		$query = $wpdb->get_row(
+			$wpdb->prepare("SELECT * FROM $table WHERE comment_post_ID = %d AND user_id = %d LIMIT 1",$post_id,$user_id)
+		);
+		return $query ? $query : false;
+	}
+	
+	/**
+	 * @param int $course_id
+	 *
+	 * @return bool
+	 * 
+	 * @since v1.7.5
+	 *
+	 * Check if course is in wc cart
+	 */
+	public function is_course_added_to_cart($course_or_product_id = 0, $is_product_id=false){
+		
+		switch($this->get_option('monetize_by')){
+			case 'wc':
+				global $woocommerce;
+				$product_id = $is_product_id ? $course_or_product_id : $this->get_course_product_id($course_or_product_id);
+ 
+				foreach($woocommerce->cart->get_cart() as $key => $val ) {
+					if($product_id == $val['product_id']) {
+						return true;
+					}
+				}
+				break;
+		}
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return bool
+	 * 
+	 * @since v1.7.5
+	 *
+	 * Get profile pic url
+	 */
+	public function get_cover_photo_url($user_id){
+		$cover_photo_src = tutor()->url.'assets/images/cover-photo.jpg';
+		$cover_photo_id = get_user_meta($user_id, '_tutor_cover_photo', true);
+		if ($cover_photo_id){
+			$url = wp_get_attachment_image_url($cover_photo_id, 'full');
+			!empty($url) ? $cover_photo_src = $url : 0;
+		}
+
+		return $cover_photo_src;
 	}
 }

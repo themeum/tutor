@@ -6,8 +6,8 @@
 
 ?>
 
-<p> Dear {instructor_username}, </p>
+<p><?php _e('Dear {instructor_username},', 'tutor'); ?></p>
 
 <p>
-	{student_username} has recently completed <strong>{course_name}</strong> at <strong>{completion_time}</strong>. The completed course URL is: <strong>{course_url}</strong>.
+	<?php _e('{student_username} has recently completed <strong>{course_name}</strong> at <strong>{completion_time}</strong>. The completed course URL is: <strong>{course_url}</strong>.', 'tutor'); ?>
 </p>

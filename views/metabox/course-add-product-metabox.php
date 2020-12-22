@@ -58,11 +58,11 @@ $_tutor_course_price_type = tutils()->price_type();
     <div class="tutor-option-field">
 
         <label>
-            <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'paid') : checked('true', 'true'); ?> >
+            <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> >
 			<?php _e('Paid', 'tutor'); ?>
         </label>
         <label>
-            <input type="radio" name="tutor_course_price_type" value="free"  <?php checked($_tutor_course_price_type, 'free'); ?> >
+            <input type="radio" name="tutor_course_price_type" value="free"  <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?> >
 			<?php _e('Free', 'tutor'); ?>
         </label>
     </div>

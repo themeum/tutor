@@ -6,12 +6,12 @@
 
 ?>
 
-<p>Hi,</p>
+<p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    The instructor has submitted the marks for the quiz <strong>{quiz_name}</strong> in the course <strong>{course_name}</strong>. You have got- <strong>{earned_marks}</strong>
+    <?php _e('The instructor has submitted the marks for the quiz <strong>{quiz_name}</strong> in the course <strong>{course_name}</strong>. You have got- <strong>{earned_marks}</strong>', 'tutor'); ?>
     <br />
-    Instructor feedback: {instructor_feedback}
+    <?php _e('Instructor feedback: {instructor_feedback}', 'tutor'); ?>
 </p>
 
-<p>You may reply to this email to communicate with the instructor.</p>
+<p><?php _e('You may reply to this email to communicate with the instructor.', 'tutor'); ?></p>
 

@@ -154,7 +154,7 @@ $user = get_userdata($user_id);
             }
 
             if (count($required_review)){
-                echo '<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>Reminder: </strong> Please review answers for question no. '.implode(', ', $required_review).' </p>';
+                echo '<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>'.__('Reminder:', 'tutor').' </strong> '.sprintf(__('Please review answers for question no. %s', 'tutor'), implode(', ', $required_review)).'</p>';
             }
         }
 
@@ -232,7 +232,7 @@ $user = get_userdata($user_id);
                                     foreach($input_data as $replace){
                                         $answer_title = preg_replace('/{dash}/i', $replace, $answer_title, 1);
                                     }
-                                    echo str_replace('{dash}', '_____', $answer_title);
+                                    echo str_replace('{dash}', '_____', stripslashes($answer_title));
                                 }
 
                             }elseif ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
@@ -261,7 +261,7 @@ $user = get_userdata($user_id);
                                     $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
                                     if(tutils()->count($provided_answer_order)){
                                         foreach ($provided_answer_order as $provided_answer_order);
-                                        echo $original_saved_answer->answer_title  ." - {$provided_answer_order->answer_two_gap_match} <br />";
+                                        echo stripslashes($original_saved_answer->answer_title)  .' - '.stripslashes($provided_answer_order->answer_two_gap_match).'<br />';
                                     }
                                 }
 
@@ -278,7 +278,7 @@ $user = get_userdata($user_id);
                                     ?>
                                     <div class="image-matching-item">
                                         <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $original_saved_answer->image_id); ?>" /> </p>
-                                        <p class="dragged-caption"><?php echo $provided_answer_order->answer_title; ?></p>
+                                        <p class="dragged-caption"><?php echo stripslashes($provided_answer_order->answer_title); ?></p>
                                     </div>
                                     <?php
                                 }
@@ -304,24 +304,35 @@ $user = get_userdata($user_id);
                             ?>
                         </td>
 
-                        <td>
-                            <?php
+<td>
+    <?php
 
-                            if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-                                echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
-                            } else {
-                                if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
-                                    if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
-                                        echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
-                                    } else {
-                                        echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
-                                    }
-								} else {
-                                    echo '<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
-                                }
-                            }
-                            ?>
-                        </td>
+    if ( $answer->is_correct ) {
+        echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
+    } 
+    else {
+        if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer')
+        {
+
+            //if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
+            if($answer->is_correct==NULL)
+            {
+                echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
+            }
+            else if ( $answer->is_correct == 0 ) {
+
+                echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
+            } 
+            else {
+                echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
+            }
+        } 
+        else {
+            echo '<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
+        }
+    }
+    ?>
+</td>
 
                         <td style="white-space: nowrap">
                             <a href="<?php echo admin_url("admin.php?action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=correct"); ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="attempt-mark-correct-btn quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>

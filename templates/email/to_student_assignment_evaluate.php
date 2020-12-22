@@ -6,10 +6,10 @@
 
 ?>
 
-<p>Hi,</p>
-<p>The grade has been submitted for the assignment <strong>{assignment_name}</strong> for the course <strong>{course_name}</strong></p>
+<p><?php _e('Hi,', 'tutor'); ?></p>
+<p><?php _e('The grade has been submitted for the assignment <strong>{assignment_name}</strong> for the course <strong>{course_name}</strong>', 'tutor'); ?></p>
 <p>
-    Your score: <strong>{assignemnt_score}</strong>
+    <?php _e('Your score: <strong>{assignemnt_score}</strong>', 'tutor'); ?>
     <br />
-    Instructor Comment: {assignment_comment}
+    <?php _e('Instructor Comment: {assignment_comment}', 'tutor'); ?>
 </p>

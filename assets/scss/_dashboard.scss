@@ -278,6 +278,9 @@
 	font-weight: 500;
 	color: var(--tutor-primary-color);
 }
+.tutor-dashboard-review-title a:hover {
+	color: var(--tutor-primary-hover-color);
+}
 
 .tutor-dashboard-review-links {
 	white-space: nowrap;
@@ -499,6 +502,11 @@
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
+	color: var(--tutor-primary-hover-color);
+
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
 	color: var(--tutor-primary-color);
 }
 
@@ -513,6 +521,10 @@
 	font-size: 20px;
 	color: var(--tutor-primary-color);
 	font-weight: 500;
+}
+.tutor-dashboard-item-group > h4:hover {
+	color: var(--tutor-primary-hover-color);
+
 }
 
 /* Dashboard Assignment */
@@ -626,6 +638,9 @@
 	line-height: 28px;
 	padding: 15px 17px;
 }
+.tutor-dashboard-assignment-files .uploaded-files a:hover {
+	color: var(--tutor-primary-hover-color);
+}
 
 .tutor-assignment-evaluate-row {
 	display: flex;
@@ -718,6 +733,9 @@
 .tutor-dashboard-profile .tutor-dashboard-profile-item .content small a {
 	color: var(--tutor-primary-color);
 }
+.tutor-dashboard-profile .tutor-dashboard-profile-item .content small a:hover {
+	color: var(--tutor-primary-hover-color);
+}
 
 /* end dashboard profile*/
 
@@ -755,6 +773,11 @@
 	color: var(--tutor-primary-color);
 	margin-bottom: -1px;
 	line-height: 40px;
+}
+.tutor-dashboard-inline-links ul li a:hover {
+
+	color: var(--tutor-primary-color);
+
 }
 .tutor-dashboard-inline-links ul li a:hover,
 .tutor-dashboard-inline-links ul li.active a {
@@ -801,6 +824,10 @@
 	color: #ffffff;
 }
 
+.tutor-dashboard-permalinks li.active a:hover {
+	background-color: var(--tutor-primary-hover-color);
+}
+
 @media (max-width: 991px) {
 	.tutor-dashboard-student .tutor-col-3,
 	.tutor-dashboard-student .tutor-col-9 {
@@ -838,9 +865,10 @@
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
 	font-size: 17px;
 }
-.tutor-dashboard-permalinks a:hover:before {
+.tutor-dashboard-permalinks a:hover::before {
 	opacity: 1;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+	color:var(--tutor-primary-hover-color);
 }
 
 .tutor-dashboard-permalinks li.active a:before {
@@ -1013,6 +1041,9 @@
 	border: none;
 	line-height: 30px;
 	padding: 0 15px;
+}
+.date-range-input button:hover {
+	background-color: var(--tutor-primary-hover-color);
 }
 .report-download-csv-icon {
 	float: right;

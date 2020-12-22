@@ -1147,6 +1147,22 @@ table.tutor-addons-list-table th {
 .tutor-addons-list .plugin-card .name {
 	margin-right: 50px;
 }
+
+/* RTL Style for name and desc */
+.tutor-lms-pro_page_tutor-addons.rtl .plugin-card .desc, 
+.tutor-lms-pro_page_tutor-addons.rtl .plugin-card .name{
+	margin-right: 148px !important;
+}
+
+.tutor-lms-pro_page_tutor-addons.rtl .plugin-card .desc{
+	margin-left: 0 !important;
+}
+
+.tutor-lms-pro_page_tutor-addons.rtl .plugin-card .name{
+	margin-left: 53px !important;
+}
+
+
 .btn-switch {
 	display: inline-block;
 	height: 22px;
@@ -3523,4 +3539,30 @@ Tools Nav
 #tutor-course-topics .tutor-course-builder-header.has-postbox-header {
 	top: -56px;
     right: 96px;
+}
+
+#settings-tab-general .tutor-option-field-row input[type="number"] {
+	width: 185px;
+}
+
+/* Instructor list layout style */
+.instructor-layout-templates-fields {
+	display: flex;
+	flex-wrap: wrap;
+}
+.instructor-layout-template {
+	max-width: 150px;
+	padding: 5px;
+	margin: 3px;
+}
+.instructor-layout-template img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	border : 6px solid transparent;
+	transition: border-color 400ms;
+}
+.instructor-layout-template.selected-template img,
+.instructor-layout-template:hover img{
+	border : 6px solid #3057d6;
 }
