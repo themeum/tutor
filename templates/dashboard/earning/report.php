@@ -33,7 +33,7 @@ if ( ! empty($_GET['date_range_from']) && ! empty($_GET['date_range_to'])){
             </li>
             <li>
                 <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/statements'); ?>">
-                    <?php _e('Statements'); ?> </a>
+                    <?php _e('Statements', 'tutor'); ?> </a>
             </li>
         </ul>
     </div>
