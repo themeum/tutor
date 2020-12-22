@@ -159,7 +159,7 @@ if ( ! $tutor_primary_color){
         data: {
             labels: <?php echo json_encode(array_keys($chartData)); ?>,
             datasets: [{
-                label: 'Earning',
+                label: __('Earning', 'tutor'),
                 backgroundColor: '<?php echo $tutor_primary_color; ?>',
                 borderColor: '<?php echo $tutor_primary_color; ?>',
                 data: <?php echo json_encode(array_values($chartData)); ?>,
