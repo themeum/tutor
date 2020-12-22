@@ -630,20 +630,20 @@ class Quiz {
 			$next_question_order = tutor_utils()->quiz_next_question_order_id($quiz_id);
 
 			$new_question_data = array(
-				'quiz_id'               => $quiz_id,
-				'question_title'        => __('Question', 'tutor').' '.$next_question_id,
+				'quiz_id'               => esc_sql( $quiz_id ) ,
+				'question_title'        => __('Question', 'tutor').' '.esc_sql( $next_question_id ) ,
 				'question_description'  => '',
 				'question_type'         => 'true_false',
 				'question_mark'         => 1,
 				'question_settings'     => maybe_serialize(array()),
-				'question_order'        => $next_question_order,
+				'question_order'        => esc_sql( $next_question_order ) ,
 			);
 
 			$wpdb->insert($wpdb->prefix.'tutor_quiz_questions', $new_question_data);
 			$question_id = $wpdb->insert_id;
 		}
 
-		$question = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions where question_id = {$question_id} ");
+		$question = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions where question_id = %d ", $question_id));
 
 		ob_start();
 		include  tutor()->path.'views/modal/question_form.php';
@@ -869,8 +869,8 @@ class Quiz {
 		$question_id = sanitize_text_field($_POST['question_id']);
 		$question_type = sanitize_text_field($_POST['question_type']);
 
-		$question = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id = {$question_id} ");
-		$answers = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question_type}' order by answer_order asc ;");
+		$question = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id = %d ", $question_id));
+		$answers = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = %d AND belongs_question_type = %s order by answer_order asc ;", $question_id, $question_type));
 
 		ob_start();
 
@@ -941,7 +941,7 @@ class Quiz {
 		global $wpdb;
 		$answer_id = sanitize_text_field($_POST['answer_id']);
 
-		$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('answer_id' => $answer_id));
+		$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('answer_id' => esc_sql( $answer_id ) ));
 		wp_send_json_success();
 	}
 
@@ -955,8 +955,10 @@ class Quiz {
 		if (is_array($question_ids) && count($question_ids) ){
 			$i = 0;
 			foreach ($question_ids as $key => $question_id){
-				$i++;
-				$wpdb->update($wpdb->prefix.'tutor_quiz_questions', array('question_order' => $i), array('question_id' => $question_id));
+				if(is_numeric($question_id)) {
+					$i++;
+					$wpdb->update($wpdb->prefix.'tutor_quiz_questions', array('question_order' => $i), array('question_id' => $question_id));
+				}
 			}
 		}
     }
@@ -971,8 +973,10 @@ class Quiz {
 	        $answer_ids = $_POST['sorted_answer_ids'];
 	        $i = 0;
 	        foreach ($answer_ids as $key => $answer_id){
-	            $i++;
-		        $wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('answer_order' => $i), array('answer_id' => $answer_id));
+				if(is_numeric($answer_id)) {
+					$i++;
+		        	$wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('answer_order' => $i), array('answer_id' => $answer_id));
+				}
             }
         }
     }
@@ -987,11 +991,11 @@ class Quiz {
 	    $answer_id = sanitize_text_field($_POST['answer_id']);
 	    $inputValue = sanitize_text_field($_POST['inputValue']);
 
-	    $answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = {$answer_id} LIMIT 0,1 ;");
-	    if ($answer->belongs_question_type === 'single_choice'){
-		    $wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('is_correct' => 0), array('belongs_question_id' => $answer->belongs_question_id));
+	    $answer = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = %d LIMIT 0,1 ;", $answer_id));
+	    if ($answer->belongs_question_type === 'single_choice') {
+		    $wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('is_correct' => 0), array('belongs_question_id' => esc_sql( $answer->belongs_question_id ) ));
 	    }
-	    $wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('is_correct' => $inputValue), array('answer_id' => $answer_id));
+	    $wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('is_correct' => esc_sql( $inputValue ) ), array('answer_id' => esc_sql( $answer_id ) ));
     }
 
 	/**
