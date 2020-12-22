@@ -29,6 +29,7 @@ class Lesson extends Tutor_Base {
 		add_action('template_redirect', array($this, 'mark_lesson_complete'));
 
 		add_action('wp_ajax_tutor_render_lesson_content', array($this, "tutor_render_lesson_content"));
+		add_action('wp_ajax_nopriv_tutor_render_lesson_content', array($this, "tutor_render_lesson_content")); // For public course access
 
 		/**
 		 * Autoplay next video
@@ -214,6 +215,7 @@ class Lesson extends Tutor_Base {
 		$is_required_flush = get_option('required_rewrite_flush');
 		if ($is_required_flush){
 			flush_rewrite_rules();
+			delete_option( 'required_rewrite_flush' );
 		}
 	}
 
@@ -279,6 +281,15 @@ class Lesson extends Tutor_Base {
 	 */
 	public function tutor_render_lesson_content(){
 		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
+
+		$ancestors = get_post_ancestors($lesson_id); 
+		$course_id = !empty($ancestors) ? array_pop($ancestors): $lesson_id;
+
+		// Course must be public or current user must be enrolled to access this lesson
+		if(get_post_meta($course_id, '_tutor_is_public_course', true)!=='yes' && !tutils()->is_enrolled($course_id)){
+			http_response_code(400);
+			exit;
+		}
 
 		ob_start();
 		global $post;

@@ -6,8 +6,8 @@
 
 ?>
 
-<p> Dear {instructor_username}, </p>
+<p><?php _e('Dear {instructor_username},', 'tutor'); ?></p>
 
 <p>
-	{student_username} has enrolled on <strong>{course_name}</strong> at <strong>{enroll_time}</strong>. The enrolled course URL is: <strong>{course_url}</strong>.
+	<?php _e('{student_username} has enrolled on <strong>{course_name}</strong> at <strong>{enroll_time}</strong>. The enrolled course URL is: <strong>{course_url}</strong>.', 'tutor'); ?>
 </p>

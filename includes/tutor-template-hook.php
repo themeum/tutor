@@ -19,3 +19,11 @@ add_action('tutor_course/loop/rating', 'tutor_course_loop_rating');
 add_action('tutor_course/loop/end_content_wrap', 'tutor_course_loop_end_content_wrap');
 
 add_action('tutor_course/loop/footer', 'tutor_course_loop_footer');
+
+add_action('wp_head', function(){
+    ?>
+        <script>
+            var tutor_url_base="<?php echo tutor()->url; ?>";
+        </script>
+    <?php
+});

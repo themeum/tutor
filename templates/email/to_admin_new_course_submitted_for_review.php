@@ -6,13 +6,13 @@
 
 ?>
 
-<p>Hi,</p>
+<p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    A new course has been created by <strong>{instructor_name}</strong> on your site <strong>{site_name}</strong> and waiting for approval.
+    <?php _e('A new course has been created by <strong>{instructor_name}</strong> on your site <strong>{site_name}</strong> and waiting for approval.', 'tutor'); ?>
     <br />
-    Course name- <strong>{course_name}</strong>
+    <?php _e('Course name - <strong>{course_name}</strong>', 'tutor'); ?>
     <br />
-    View the course - {course_url}
+    <?php _e('View the course - {course_url}', 'tutor'); ?>
 </p>
 
-<p>Reply to this email to communicate with the instructor.</p>
+<p><?php _e('Reply to this email to communicate with the instructor.', 'tutor'); ?></p>

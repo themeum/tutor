@@ -176,6 +176,13 @@ class Template extends Tutor_Base {
 		return $template;
 	}
 
+	private function get_root_post_parent_id($id){
+		$ancestors = get_post_ancestors($id);
+		$root = is_array($ancestors) ? end($ancestors) : null;
+
+		return is_numeric($root) ? $root : $id;
+	}
+
 	/**
 	 * @param $template
 	 *
@@ -224,6 +231,12 @@ class Template extends Tutor_Base {
 			}
 			wp_reset_postdata();
 
+			// Forcefully show lessons if it is public and not paid
+			$course_id = $this->get_root_post_parent_id($page_id);
+			if(get_post_meta($course_id, '_tutor_is_public_course', true)=='yes' && !tutor_utils()->is_course_purchasable($course_id)){
+				$template = tutor_get_template( 'single-lesson' );
+			}
+			
 			return apply_filters('tutor_lesson_template', $template);
 		}
 		return $template;

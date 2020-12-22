@@ -1,6 +1,6 @@
 <?php
 if ($question_type === 'open_ended' || $question_type === 'short_answer'){
-	echo '<p class="open-ended-notice" style="color: #ff0000;">No option is necessary for this answer type</p>';
+	echo '<p class="open-ended-notice" style="color: #ff0000;">'.__('No option is necessary for this answer type', 'tutor').'</p>';
 	return '';
 }
 

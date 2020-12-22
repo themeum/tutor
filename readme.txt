@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.5.1
 Requires PHP: 7.0
-Stable tag: 1.7.1
+Stable tag: 1.7.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,15 +241,77 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
+= 1.7.6 - December 04, 2020 =
+
+New: Added translation support on email notification templates.
+Update: Q&A timestamp is now aligned with WordPress timezone settings.
+Fix: Instructor profile is now responsive on all devices.
+Fix: Backslashes issue in quiz module.
+
+= 1.7.5 - December 01, 2020 =
+
+New: Introducing customizable shortcode to showcase your instructors in a list 
+New: Upload a cover photo for the public profile of a user
+New: Public Profile is getting a brand new design
+Update: Withdrawal and Phone number fields now accept numbers only.
+Update: {site_url} and {site_name} attributes added to all Tutor Email addon emails.
+Update: Added certificate view page, template override option.
+Fix: Add to Cart option still showed after adding the product in the Course Details Page
+Fix: Showed wrong information for multiple pages for the Students list in the Dashboard  →Report →Courses →Course Details section.
+Fix: Student's name didn't show up when downloading the certificate as a PDF.
+Fix: Grammatical corrections in the enrolment section of the course page.
+Fix: The course was displaying free even when it was part of a membership package.
+Fix: Course dependent on Paid Membership plugin got canceled after a user enrolled in it.
+Fix: Backslashes issue in quiz question answer title multiple type question answer titles
+Fix: Conflict issue with BuddyPress, BuddyBoss that showed 404 page
+
+= 1.7.4 - November 10, 2020 =
+
+New: 4 new email notifications for withdrawal requests.
+New: 3 new email notifications for content drip published lessons, quizzes and assignments.
+New: 3 new email notification for instructor registration management system.
+New: Filter hook to modify sub nav menu of settings page in frontend dashboard.
+New: Assignment evaluation status column in the frontend dashboard.
+New: You can now enable or disable specific course filter options.
+Update: Show 'Continue Course' instead of 'Add to Cart' (if already purchased) on the course archive page
+Update: Added 'course_filter' and 'column_per_row' attributes in 'tutor_course' shortcode
+Update: Withdrawal page design improvement
+Fix: Course URL not showing after course completion in BuddyPress post.
+Fix: Compatibility issue with Divi Builder.
+
+= 1.7.3 - October 21, 2020 =
+
+Update: Added option to turn on course archive filters
+
+= 1.7.2 - October 21, 2020 =
+
+New: Course filter option in Course Archive page
+New: Public Course/Private course option
+New: Now student will get email notification after his enrollment
+Update: Hide Become Instructor button if someone’s already applied 
+Update: Enable/disable Video source and choose default video source option
+Update: Email Notification after instructor sign-up (Now admin will receive mail notification)
+Update: Assignment page with new deadline notice, expired message and more.
+Update: Instructor Request page with new prompts 
+Fix: Quiz submission email recipients
+Fix: Enrolment email notification issue
+Fix: Assignment submission email recipients
+Fix: Canceling order does not update the student count on instructor dashboard
+Fix: Fatal Error in the Sales tab of Reports Addon
+Fix: RTL layout issue in Add-on list
+Fix: Color settings
+Fix: Minor text issues
+
 = 1.7.1 - October 09, 2020 =
 
-New: Rest API
+New: REST API
 New: Zoom Integration
 New: Google Classroom Integration
-Update: Google reCaptcha support
-Update: Dashboard URL rewrite rules
-Fix: Assignment Search issue
-Fix: Course Duplication issue
+New: 3rd Party Google reCaptcha plugin support
+Fix: Compatibility issue with WCFM
+Fix: Quiz attempt review issue
+Fix: Course duplication issue
+Fix: Assignment search issue
 
 = 1.7.0 - September 04, 2020 =
 

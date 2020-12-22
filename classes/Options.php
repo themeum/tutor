@@ -73,6 +73,22 @@ class Options {
 		$attempts_allowed['unlimited'] = __('Unlimited' , 'tutor');
 		$attempts_allowed = array_merge($attempts_allowed, array_combine(range(1,20), range(1,20)));
 
+		$video_sources = array(
+			'html5' => __('HTML 5 (mp4)', 'tutor'),
+			'external_url' => __('External URL', 'tutor'),
+			'youtube' => __('Youtube', 'tutor'),
+			'vimeo' => __('Vimeo', 'tutor'),
+			'embedded' => __('Embedded', 'tutor')
+		);
+
+		$course_filters = array(
+			'search' => __('Keyword Search', 'tutor'),
+			'category' => __('Category', 'tutor'),
+			'tag' => __('Tag', 'tutor'),
+			'difficulty_level' => __('Difficulty Level', 'tutor'),
+			'price_type' => __('Price Type', 'tutor')
+		);
+
 		$attr = array(
 			'general' => array(
 				'label'     => __('General', 'tutor'),
@@ -222,7 +238,7 @@ class Options {
                                     'strict'    =>  __('Strict Mode', 'tutor'),
                                 ),
                                 'desc'          => __('Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor'),
-                            ),
+							)
 						),
 					),
 					'archive' => array(
@@ -249,6 +265,18 @@ class Options {
 								'default'   => '12',
 								'options'   => array('min'=> 1, 'max' => 20),
 								'desc'      => __('Define how many courses you want to show per page', 'tutor'),
+							),
+							'course_archive_filter' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Course Filter', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
+								'desc' => __('Show sorting and filtering options on course archive page', 'tutor'),
+							),
+							'supported_course_filters' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Preferred Course Filters', 'tutor'),
+								'options'	=> $course_filters,
+								'desc'      => __('Choose preferred filter options you\'d like to show in course archive page.', 'tutor'),
 							),
 						),
 					),
@@ -373,6 +401,19 @@ class Options {
 								'label_title' => __('Disable','tutor'),
 								'default'   => '0',
 								'desc'      => __('Disabling this feature will be removed course review system from the course page.', 'tutor'),
+							),
+							'supported_video_sources' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Preferred Video Source', 'tutor'),
+								'options'	=> $video_sources,
+								'desc'      => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
+							),
+							'default_video_source' => array(
+								'type'      => 'select',
+								'label'     => __('Default Video Source', 'tutor'),
+								'default'   => '',
+								'options'   => $video_sources,
+								'desc'      => __('Choose video source to be selected by default.',	'tutor'),
 							),
 						),
 					),

@@ -12,7 +12,7 @@ namespace TUTOR;
 class Email {
 
 	public function __construct() {
-		add_filter('tutor/options/attr', array($this, 'add_options'));
+		add_filter('tutor/options/attr', array($this, 'add_options'), 10); // Priority index is important. Content Drip uses 11.
 
 		if ( ! function_exists('tutor_pro')) {
 			add_action( 'tutor_options_before_email_notification', array( $this, 'no_pro_message' ) );

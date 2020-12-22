@@ -21,8 +21,7 @@ $reviews = tutor_utils()->get_reviews_by_user($user_id);
 
 if ( ! is_array($reviews) || ! count($reviews)){ ?>
     <div>
-		<h2><?php _e("Not Found" , 'tutor'); ?></h2>
-		<p><?php _e("Sorry, but you are looking for something that isn't here." , 'tutor'); ?></p>
+		<p><?php _e("No review yet." , 'tutor'); ?></p>
     </div>
     <?php
 	return;
@@ -30,10 +29,6 @@ if ( ! is_array($reviews) || ! count($reviews)){ ?>
 ?>
 
 <div class=" tutor-course-reviews-wrap">
-    <div class="course-target-reviews-title">
-        <h4><?php echo sprintf(__('Reviews wrote by %s ', 'tutor'), $get_user->display_name); ?></h4>
-    </div>
-
     <div class="tutor-reviews-list">
 		<?php
 		foreach ($reviews as $review){

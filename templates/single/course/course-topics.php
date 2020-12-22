@@ -124,7 +124,10 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 												$countdown = '<div class="tutor-zoom-lesson-countdown tutor-lesson-duration" data-timer="'.$zoom_meeting->countdown_date.'" data-timezone="'.$zoom_meeting->timezone.'"></div>';
 											}
 
-											if ($is_enrolled){
+											
+											// Show clickable content if enrolled
+											// Or if it is public and not paid, then show content forcefully
+											if ($is_enrolled || (get_post_meta($course_id, '_tutor_is_public_course', true)=='yes' && !tutor_utils()->is_course_purchasable($course_id))){
 												$lesson_title .= "<a href='".get_the_permalink()."'> ".get_the_title()." </a>";
 
 												$lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>".tutor_utils()->get_optimized_duration($play_time)."</span>" : '';

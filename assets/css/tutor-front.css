@@ -2365,6 +2365,98 @@ Course question and answer
   color: var(--tutor-primary-color);
 }
 
+/* Course filter layout */
+.tutor-course-filter-wrapper {
+  overflow: auto;
+  max-width: 1140px !important;
+  margin: 0 auto !important;
+}
+
+.tutor-course-filter-wrapper > div {
+  padding: 12px;
+}
+
+.tutor-course-filter-wrapper > div:first-child {
+  width: 250px;
+  float: left;
+}
+
+.tutor-course-filter-wrapper > div:first-child .tutor-course-search-field {
+  border: 1px solid #BABABA;
+  border-radius: 6px;
+  overflow: hidden;
+  padding: 0 6px;
+  height: auto;
+}
+
+.tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input, .tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input:focus, .tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input:active {
+  border: none;
+  outline: 0;
+  padding: 0;
+  display: inline-block;
+  width: calc(100% - 24px);
+  font-weight: normal;
+  font-size: 16px;
+  color: #7A7A7A;
+  height: 35px;
+}
+
+.tutor-course-filter-wrapper > div:first-child .tutor-course-search-field i {
+  font-size: 17px;
+  cursor: pointer;
+  color: #3E64DE;
+}
+
+.tutor-course-filter-wrapper > div:first-child h4 {
+  font-weight: normal;
+  font-size: 20px;
+  color: #161616;
+  margin: 16px 0px 12px;
+}
+
+.tutor-course-filter-wrapper > div:first-child label {
+  display: block;
+  cursor: pointer;
+  font-weight: normal;
+  font-size: 16px;
+  color: #353535;
+}
+
+.tutor-course-filter-wrapper > div:last-child {
+  width: calc(100% - 250px);
+  float: right;
+}
+
+.tutor-course-filter-wrapper > div:last-child select[name=tutor_course_filter] {
+  border: 1px solid #7A7A7A;
+  color: #7A7A7A;
+  padding: 3px 4px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tutor-course-filter-wrapper > div .tutor-course-filter-loop-container {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .tutor-course-filter-wrapper > div {
+    width: 100% !important;
+    float: none !important;
+  }
+  .tutor-course-filter-wrapper .tutor-course-filter-container > div {
+    overflow: auto;
+  }
+  .tutor-course-filter-wrapper .tutor-course-filter-container > div > div {
+    width: 50%;
+    float: left;
+  }
+  .tutor-course-filter-wrapper .tutor-course-filter-container > div > div:first-child {
+    width: 100%;
+  }
+}
+
 /**
 Icon Css
  */
@@ -3357,7 +3449,7 @@ Instructor
 }
 
 .tutor-login-form-wrap label {
-  display: block;
+  display: block !important;
   margin-bottom: 4px;
 }
 
@@ -6402,6 +6494,17 @@ END Content Drip
   margin: 0;
 }
 
+.tutor-alert.tutor-alert-info {
+  border: 1px solid #13aaf6;
+  background: #eaf8ff;
+  color: #0586c7;
+}
+
+.tutor-alert.tutor-alert-info::before {
+  content: "\e96c";
+  background: #13aaf6;
+}
+
 .tutor-alert.tutor-alert-danger {
   border: 1px solid #fe1a1a;
   background: #fff2f2;
@@ -6961,6 +7064,10 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-color);
 }
 
+.tutor-dashboard-review-title a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
 .tutor-dashboard-review-links {
   white-space: nowrap;
   font-weight: 400;
@@ -7253,6 +7360,10 @@ table.course-single-gradebooks a {
 }
 
 .tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
   color: var(--tutor-primary-color);
 }
 
@@ -7267,6 +7378,10 @@ table.course-single-gradebooks a {
   font-size: 20px;
   color: var(--tutor-primary-color);
   font-weight: 500;
+}
+
+.tutor-dashboard-item-group > h4:hover {
+  color: var(--tutor-primary-hover-color);
 }
 
 /* Dashboard Assignment */
@@ -7387,6 +7502,10 @@ table.course-single-gradebooks a {
   padding: 15px 17px;
 }
 
+.tutor-dashboard-assignment-files .uploaded-files a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
 .tutor-assignment-evaluate-row {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7485,6 +7604,10 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-color);
 }
 
+.tutor-dashboard-profile .tutor-dashboard-profile-item .content small a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
 /* end dashboard profile*/
 .tutor-dashboard-avater img {
   width: 70px;
@@ -7527,6 +7650,10 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-color);
   margin-bottom: -1px;
   line-height: 40px;
+}
+
+.tutor-dashboard-inline-links ul li a:hover {
+  color: var(--tutor-primary-color);
 }
 
 .tutor-dashboard-inline-links ul li a:hover,
@@ -7578,6 +7705,10 @@ table.course-single-gradebooks a {
   color: #ffffff;
 }
 
+.tutor-dashboard-permalinks li.active a:hover {
+  background-color: var(--tutor-primary-hover-color);
+}
+
 @media (max-width: 991px) {
   .tutor-dashboard-student .tutor-col-3,
   .tutor-dashboard-student .tutor-col-9 {
@@ -7617,9 +7748,10 @@ table.course-single-gradebooks a {
   font-size: 17px;
 }
 
-.tutor-dashboard-permalinks a:hover:before {
+.tutor-dashboard-permalinks a:hover::before {
   opacity: 1;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  color: var(--tutor-primary-hover-color);
 }
 
 .tutor-dashboard-permalinks li.active a:before {
@@ -7806,6 +7938,10 @@ table.course-single-gradebooks a {
   border: none;
   line-height: 30px;
   padding: 0 15px;
+}
+
+.date-range-input button:hover {
+  background-color: var(--tutor-primary-hover-color);
 }
 
 .report-download-csv-icon {
@@ -8905,6 +9041,620 @@ label[for="tutor_withdraw_amount"] {
   max-width: 35px;
 }
 
+#tutor_profile_cover_photo_editor {
+  height: 344px;
+  position: relative;
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_meta_area {
+  text-align: right;
+  padding-left: 190px;
+  margin-top: 16px;
+}
+
+@media (max-width: 492px) {
+  #tutor_profile_cover_photo_editor #tutor_photo_meta_area {
+    padding-left: 120px;
+  }
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_meta_area > img, #tutor_profile_cover_photo_editor #tutor_photo_meta_area > span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_meta_area > span {
+  white-space: nowrap;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 18px;
+  color: #7A7A7A;
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_meta_area > span > span {
+  color: black;
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_meta_area > span.loader-area {
+  display: none;
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area {
+  height: 245px;
+  background-color: #E9EDFB;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_overlay {
+  height: 70%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.6)));
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader {
+  background: #3E64DE;
+  border-radius: 3px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  color: #FFFFFF;
+  position: absolute;
+  padding: 8px 20px;
+  right: 22px;
+  bottom: 22px;
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader:hover {
+  background: #2f52c4;
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader > span {
+  margin-left: 6px;
+}
+
+@media (max-width: 432px) {
+  #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader > span {
+    display: none;
+  }
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_deleter {
+  position: absolute;
+  color: white;
+  background: rgba(0, 0, 0, 0.247);
+  text-align: center;
+  width: 36px;
+  border-radius: 50%;
+  font-size: 17px;
+  line-height: 40px;
+  height: 36px;
+  right: 22px;
+  top: 22px;
+  cursor: pointer;
+}
+
+#tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_deleter:hover {
+  background: rgba(0, 0, 0, 0.438);
+}
+
+#tutor_profile_cover_photo_editor #tutor_profile_area {
+  width: 142px;
+  height: 142px;
+  left: 35px;
+  top: 145px;
+  border-radius: 50%;
+  border: 5px solid white;
+  position: absolute;
+  overflow: hidden;
+  background-color: #E9EDFB;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 688px) {
+  #tutor_profile_cover_photo_editor #tutor_profile_area {
+    width: 120px;
+    height: 120px;
+    left: 31px;
+    top: 168px;
+  }
+}
+
+#tutor_profile_cover_photo_editor #tutor_profile_area .tutor_overlay {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.253);
+  padding: 0;
+  height: 37px;
+  cursor: pointer;
+  color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+}
+
+#tutor_profile_cover_photo_editor #tutor_profile_area .tutor_overlay:hover {
+  background: rgba(0, 0, 0, 0.411);
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option {
+  position: absolute;
+  background: #353535;
+  width: 157px;
+  top: 294px;
+  left: 27px;
+  border-radius: 6px;
+  color: white;
+  z-index: 99;
+  display: none;
+}
+
+@media (max-width: 688px) {
+  #tutor_profile_cover_photo_editor #tutor_pp_option {
+    top: 294px;
+    left: 10px;
+  }
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option span {
+  display: block;
+  padding: 5px 10px;
+  cursor: pointer;
+  overflow: hidden;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 26px;
+  color: #FFFFFF;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option span:first-of-type {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option span:last-of-type {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option span:hover {
+  background: #6b6b6b;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option .up-arrow {
+  text-align: center;
+  height: 0;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option .up-arrow i {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  position: relative;
+  top: -17px;
+  border-bottom: 5px solid #353535;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option > *:not(:last-child) {
+  position: relative;
+  z-index: 1;
+}
+
+#tutor_profile_cover_photo_editor #tutor_pp_option > div:last-child {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 0;
+  z-index: 0;
+}
+
+#tutor_profile_cover_photo_editor.pop-up-opened #tutor_pp_option {
+  display: block;
+}
+
+#tutor_profile_cover_photo_editor #tutor_photo_dialogue_box {
+  display: none;
+}
+
+.tutor-user-public-profile .photo-area {
+  overflow: hidden;
+  height: 414px;
+  margin-top: 30px;
+}
+
+.tutor-user-public-profile .photo-area .cover-area {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.tutor-user-public-profile .photo-area .cover-area > div:first-child {
+  height: 375px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.tutor-user-public-profile .photo-area .cover-area > div:last-child {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 70%;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.6)));
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+}
+
+.tutor-user-public-profile .photo-area .pp-area {
+  position: relative;
+  top: -111px;
+  padding-left: 49px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-pic {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: inline-block;
+  border: 8px solid white;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-name {
+  padding-left: 23px;
+  padding-bottom: 30px;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-name h3 {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 48px;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-name > span {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  color: #757575;
+  margin-right: 10px;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-name > span > span {
+  color: white;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-rating-media {
+  text-align: right;
+  padding-right: 30px;
+  padding-bottom: 20px;
+  -webkit-box-flex: 1;
+          flex: 1;
+  -o-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-rating-container {
+  font-size: 16px;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-rating-container .rating-digits {
+  color: white;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-rating-container .rating-total-meta {
+  color: #757575;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .tutor-social-container {
+  margin-top: 15px;
+  text-align: right;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .tutor-social-container a {
+  display: inline-block;
+  margin-left: 20px;
+  color: whitesmoke;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.tutor-user-public-profile .photo-area .pp-area .tutor-social-container a:hover {
+  color: white;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-pic {
+  border-radius: 50%;
+  height: 153px;
+  width: 153px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area {
+  overflow: initial;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-pic {
+  border-radius: 10px;
+  height: 200px;
+  width: 153px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-rating-media {
+  padding-bottom: 75px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .tutor-user-profile-sidebar {
+  margin-top: 79px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .photo-area {
+  height: auto;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .cover-area {
+  display: none;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area {
+  top: 0;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-pic {
+  border-radius: 50%;
+  height: 153px;
+  width: 153px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name {
+  padding-top: 49px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name h3 {
+  color: #161616 !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name > span > span {
+  color: black !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media {
+  position: absolute;
+  left: 226px;
+  top: 15px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media .rating-digits {
+  color: #161616 !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-rating-container {
+  text-align: left;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container {
+  text-align: left !important;
+  margin-top: 5px !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container a {
+  margin-left: 0 !important;
+  margin-right: 20px;
+  color: #757575 !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container a:hover {
+  color: #161616 !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media {
+  width: calc(100% - 157px);
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container {
+  position: absolute;
+  right: 36px;
+  left: auto;
+}
+
+@media (min-width: 768px) {
+  .tutor-user-public-profile .content-for-mobile {
+    display: none;
+  }
+  .tutor-user-public-profile .content-for-desktop {
+    display: block;
+  }
+}
+
+@media (max-width: 767px) {
+  .tutor-user-public-profile .content-for-mobile {
+    display: block;
+    margin: 22px 0 0 0;
+    padding: 0 !important;
+  }
+  .tutor-user-public-profile .content-for-desktop {
+    display: none;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .photo-area, .tutor-user-public-profile.tutor-user-public-profile-no-cp .photo-area, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area {
+    height: auto;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .photo-area .cover-area > div:first-child, .tutor-user-public-profile.tutor-user-public-profile-no-cp .photo-area .cover-area > div:first-child, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .cover-area > div:first-child {
+    height: 220px;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .pp-area, .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .pp-area {
+    padding-left: 0 !important;
+    top: -82px !important;
+    flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -o-justify-content: center;
+    -ms-justify-content: center;
+    -moz-justify-content: center;
+    -webkit-justify-content: center;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-rating-media {
+    width: 100% !important;
+    text-align: center !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name > span > span, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name > span > span, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name > span > span {
+    color: black !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name > span:nth-of-type(2) > span, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name > span:nth-of-type(2) > span, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name > span:nth-of-type(2) > span {
+    color: #C4C4C4 !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name h3, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name h3, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name h3 {
+    color: #161616 !important;
+    font-size: 30px !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .rating-digits, .tutor-user-public-profile.tutor-user-public-profile-no-cp .rating-digits, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .rating-digits {
+    color: #161616 !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .pp-area {
+    top: -98px !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-pic {
+    height: 160px !important;
+    width: 153px !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container, .tutor-user-public-profile.tutor-user-public-profile-no-cp .ratings {
+    position: static !important;
+    top: 0 !important;
+    text-align: center !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name {
+    padding: 0 !important;
+  }
+  .tutor-user-public-profile .tutor-social-container {
+    margin: 15px 0 0 0 !important;
+  }
+  .tutor-user-public-profile .tutor-social-container a {
+    color: #7A7A7A !important;
+  }
+  .tutor-user-public-profile .profile-name {
+    padding: 0 !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .pp-area, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .pp-area {
+    margin-top: -83px !important;
+    position: relative !important;
+    top: 0 !important;
+  }
+  .tutor-user-public-profile .tutor-user-profile-sidebar {
+    margin-top: 0 !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area {
+    -webkit-box-pack: left !important;
+        -ms-flex-pack: left !important;
+            justify-content: left !important;
+    -o-justify-content: left !important;
+    -ms-justify-content: left !important;
+    -moz-justify-content: left !important;
+    -webkit-justify-content: left !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area * {
+    text-align: left !important;
+  }
+}
+
+.tutor-user-public-profile .tutor-user-profile-sidebar {
+  padding: 15px;
+  width: 223px;
+  float: left;
+}
+
+.tutor-user-public-profile .tutor-user-profile-content {
+  width: calc(100% - 228px);
+  float: left;
+  margin-bottom: 30px;
+}
+
+.tutor-user-public-profile .tutor-user-profile-content > h3 {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 34px;
+  color: #161616;
+  margin-top: 20px;
+}
+
+.tutor-user-public-profile .tutor-user-profile-content > h3:first-child {
+  margin-top: 0;
+}
+
+@media (max-width: 800px) {
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area {
+    padding-left: 0 !important;
+  }
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media {
+    left: 178px !important;
+  }
+  .tutor-user-public-profile .tutor-user-profile-sidebar, .tutor-user-public-profile .tutor-user-profile-content {
+    width: 100%;
+    float: none;
+  }
+}
+
 .tutor-dashboard-builder-header {
   padding: 10px 0px;
   border-bottom: 2px solid #DCDFE5;
@@ -9388,6 +10138,727 @@ Content Drip (Pro)
     opacity: 1;
     visibility: visible;
   }
+}
+
+.tutor-instructor-pending-content {
+  text-align: center;
+}
+
+.tutor-instructor-pending-content a {
+  margin-top: 26px;
+}
+
+.tutor-instructor-pending-content img {
+  margin-bottom: 69px;
+  border-radius: 10px;
+}
+
+.tutor-instructor-thankyou-text h2 {
+  line-height: 48px;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0px;
+  color: #161616;
+  margin-bottom: 26px;
+}
+
+.tutor-instructor-extra-text {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0px;
+  color: #525252;
+  line-height: 30px;
+}
+
+.tutor-frontend-dashboard-withdrawal h4 {
+  margin-bottom: 25px;
+}
+
+.withdraw-history-table-title h4 {
+  margin-top: 45px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  border: 1px solid #DCDBDC;
+  border-radius: 6px;
+  padding: 25px 35px 25px 30px;
+  margin-bottom: 15px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .balance-info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .balance-info img {
+  margin-right: 15px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .balance-info small {
+  font-size: 16px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .balance-info p {
+  font-size: 20px;
+  line-height: 26px;
+  margin: 0;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .make-withdraw a, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .make-withdraw a:hover, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .make-withdraw a:focus, .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .make-withdraw a:active {
+  text-decoration: none;
+  background: #3E64DE;
+  border-radius: 3px;
+  display: inline-block;
+  padding: 8px 18px;
+  font-weight: 500;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance .make-withdraw a:hover {
+  background: #2548bb;
+}
+
+.tutor-frontend-dashboard-withdrawal h4 {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdrawal-preference {
+  font-size: 15px;
+  color: #7A7A7A;
+}
+
+.tutor-frontend-dashboard-withdrawal .inline-image-text > img {
+  width: 23px;
+  display: inline-block !important;
+}
+
+.tutor-frontend-dashboard-withdrawal .inline-image-text > * {
+  vertical-align: middle;
+}
+
+.tutor-frontend-dashboard-withdrawal .inline-image-text.is-inline-block > * {
+  display: inline-block;
+}
+
+.tutor-frontend-dashboard-withdrawal .inline-image-text a {
+  text-decoration: underline;
+  color: #444;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap {
+  display: none;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div {
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 9999999999;
+  background: rgba(0, 0, 0, 0.589);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div {
+  display: inline-block;
+  max-height: 100%;
+  width: 100%;
+  max-width: 690px;
+  background: white;
+  overflow: auto;
+  border-radius: 15px;
+  position: relative;
+  padding: 0;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div {
+  padding: 50px 70px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child > .tutor-icon-line-cross {
+  position: absolute;
+  cursor: pointer;
+  top: 30px;
+  right: 30px;
+  font-size: 20px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child tr, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child td, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child table, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child tbody {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:first-child h3 {
+  margin: 7px 0px;
+  font-weight: 600;
+  padding: 0;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap > div > div > div:last-child {
+  border-top: 1px solid #E8E8E8;
+  background: #F3F3F3;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount {
+  border: 1px solid #BABABA;
+  border-radius: 6px;
+  background: white;
+  height: 43px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount > span {
+  display: block;
+  text-align: center;
+  width: 40px;
+  float: left;
+  height: 100%;
+  background: #f3f3f3;
+  border-right: 1px solid #BABABA;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount > span > span {
+  font-size: 18px;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 41px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount input, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount input:focus, .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount input:active {
+  border: none;
+  outline: 0;
+  height: 100%;
+  width: calc(100% - 40px);
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  padding-left: 7px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-button-container {
+  margin: 50px 0 0;
+  overflow: auto;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-button-container > button:last-child {
+  float: right;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response {
+  position: fixed;
+  left: 50px;
+  bottom: 50px;
+  border: 1px solid #E8E8E8;
+  background: white;
+  border-radius: 10px;
+  margin: 0;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response:empty {
+  display: none;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response > * {
+  background: white;
+  border: none;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response img {
+  width: 34px;
+  margin: 5px 13px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response b {
+  font-weight: 600;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdraw-form-response span {
+  color: #333333;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap button.close-withdraw-form-btn {
+  background: #F3F3F3;
+  border: 1px solid #DCDBDC;
+  color: #7A7A7A;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap button.close-withdraw-form-btn:hover {
+  background: #e6e6e6;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .tutor-withdrawal-pop-up-success img {
+  display: inline-block !important;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history {
+  border: 1px solid #DCDBDC;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  position: relative;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th {
+  background: #F3F3F3;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td {
+  padding: 10px;
+  border: none;
+  font-weight: normal;
+  font-size: 13px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td {
+  border-bottom: 1px solid #DCDBDC;
+  border-collapse: collapse;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:first-child, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:first-child {
+  padding: 10px 0 15px 15px;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:last-child, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:last-child {
+  text-align: right;
+  padding-right: 15px;
+  width: 50px;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:nth-child(4), .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:nth-child(4) {
+  width: 105px;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history .withdraw-method-name {
+  line-height: 20px;
+  font-size: 15px;
+  display: block;
+}
+
+.tutor-frontend-dashboard-withdrawal table.withdrawals-history small {
+  font-size: 13px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container {
+  position: relative;
+  display: inline-block;
+  height: 24px;
+  cursor: pointer;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container img {
+  display: inline-block !important;
+  width: 16px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-status-text {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 13px;
+  color: #FFFFFF;
+  background: gray;
+  border-radius: 2px;
+  padding: 3px 9px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-approved {
+  background: #24A148;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-pending {
+  background: #ED9700;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-rejected {
+  background: #F44337;
+}
+
+.tutor-tooltip-inside {
+  /* Tooltip shared base styles */
+  /* Tooltip visibility class toggled by jQuery */
+  /* Tooltip positioning */
+  /** Common styles: Horizontally Centered **/
+  /** Common styles: Bottom positions **/
+  /** Common styles: Top positions **/
+  /** Common styles: Corner positions **/
+  /** Common styles: Left corner positions **/
+  /** Common styles: Right corner positions **/
+  /** Common styles: Vertically Centered **/
+  /** Left position only **/
+  /** Right position only **/
+  /* Tooltip arrow shared base styles */
+  /** Common styles: Horizontally Centered, Up/Down arrows **/
+  /** Common styles: Up arrow **/
+  /** Common styles: Down arrow **/
+  /** Common styles: Left-/Right-aligned, Up/Down arrows **/
+  /** Common styles: Right-aligned, Up/Down arrows **/
+  /** Common styles: Left-aligned, Up/Down arrows **/
+  /** Common styles: Vertically Centered, Left/Right arrows **/
+  /** Right arrow **/
+  /** Left arrow **/
+}
+
+.tutor-tooltip-inside .tooltip {
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  width: 0;
+  height: 0;
+  padding: 0;
+  cursor: default;
+  color: #fff;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-size: 1.4rem;
+  line-height: normal;
+  text-align: center;
+  white-space: nowrap;
+  border-width: 0;
+  border-style: solid;
+  border-color: #6d6e71;
+  border-top-color: #373739;
+  background-color: #373739;
+  opacity: 0;
+  -webkit-transition: opacity .3s ease-in .3s;
+  transition: opacity .3s ease-in .3s;
+  font-size: 13px;
+  color: #FFFFFF;
+  height: auto;
+  text-align: center;
+  white-space: normal;
+  font-size: 12px;
+  background: #353535;
+  border-radius: 10px;
+  padding: 7px;
+}
+
+.tutor-tooltip-inside .tooltip.isVisible {
+  overflow: visible;
+  clip: auto;
+  width: 150px;
+  height: auto;
+  padding: 10px 15px;
+  border-width: 1px;
+  opacity: 1;
+}
+
+.tutor-tooltip-inside .tooltip,
+.tutor-tooltip-inside .tooltip.tip-bottom,
+.tutor-tooltip-inside .tooltip.tip-top {
+  left: 50%;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+}
+
+.tutor-tooltip-inside .tooltip,
+.tutor-tooltip-inside .tooltip.tip-bottom,
+.tutor-tooltip-inside .tooltip.tip-bottom-left,
+.tutor-tooltip-inside .tooltip.tip-bottom-right {
+  top: 110%;
+  top: calc(100% + 13px);
+}
+
+.tutor-tooltip-inside .tooltip.tip-top,
+.tutor-tooltip-inside .tooltip.tip-top-left,
+.tutor-tooltip-inside .tooltip.tip-top-right {
+  top: auto;
+  bottom: 110%;
+  bottom: calc(100% + 13px);
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-left,
+.tutor-tooltip-inside .tooltip.tip-bottom-right,
+.tutor-tooltip-inside .tooltip.tip-top-left,
+.tutor-tooltip-inside .tooltip.tip-top-right {
+  -webkit-transform: none;
+  transform: none;
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-left,
+.tutor-tooltip-inside .tooltip.tip-top-left {
+  right: 50%;
+  left: auto;
+  margin-right: -25px;
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-right,
+.tutor-tooltip-inside .tooltip.tip-top-right {
+  margin-left: -25px;
+}
+
+.tutor-tooltip-inside .tooltip.tip-left,
+.tutor-tooltip-inside .tooltip.tip-right {
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
+
+.tutor-tooltip-inside .tooltip.tip-left {
+  right: 110%;
+  right: calc(100% + 13px);
+  left: auto;
+}
+
+.tutor-tooltip-inside .tooltip.tip-right {
+  left: 110%;
+  left: calc(100% + 13px);
+}
+
+.tutor-tooltip-inside .tooltip:after {
+  content: ' ';
+  display: block;
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-width: 10px;
+  border-style: solid;
+  pointer-events: none;
+}
+
+.tutor-tooltip-inside .tooltip:after,
+.tutor-tooltip-inside .tooltip.tip-bottom:after,
+.tutor-tooltip-inside .tooltip.tip-top:after {
+  left: 50%;
+  margin-left: -10px;
+}
+
+.tutor-tooltip-inside .tooltip:after,
+.tutor-tooltip-inside .tooltip.tip-bottom:after,
+.tutor-tooltip-inside .tooltip.tip-bottom-left:after,
+.tutor-tooltip-inside .tooltip.tip-bottom-right:after {
+  top: -20px;
+  border-color: transparent transparent #373739 transparent;
+}
+
+.tutor-tooltip-inside .tooltip.tip-top:after,
+.tutor-tooltip-inside .tooltip.tip-top-left:after,
+.tutor-tooltip-inside .tooltip.tip-top-right:after {
+  top: auto;
+  bottom: -20px;
+  border-color: #373739 transparent transparent transparent;
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-left:after,
+.tutor-tooltip-inside .tooltip.tip-bottom-right:after,
+.tutor-tooltip-inside .tooltip.tip-top-left:after,
+.tutor-tooltip-inside .tooltip.tip-top-right:after {
+  margin-left: 0;
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-left:after,
+.tutor-tooltip-inside .tooltip.tip-top-left:after {
+  right: 15px;
+  left: auto;
+}
+
+.tutor-tooltip-inside .tooltip.tip-bottom-right:after,
+.tutor-tooltip-inside .tooltip.tip-top-right:after {
+  left: 15px;
+}
+
+.tutor-tooltip-inside .tooltip.tip-left:after,
+.tutor-tooltip-inside .tooltip.tip-right:after {
+  top: 50%;
+  margin-top: -10px;
+  margin-left: auto;
+}
+
+.tutor-tooltip-inside .tooltip.tip-left:after {
+  right: -20px;
+  left: auto;
+  border-color: transparent transparent transparent #373739;
+}
+
+.tutor-tooltip-inside .tooltip.tip-right:after {
+  left: -20px;
+  border-color: transparent #373739 transparent transparent;
+}
+
+.tutor-instructor-list, .tutor-instructor-list:focus, .tutor-instructor-list:active {
+  outline: none;
+  cursor: pointer;
+  text-decoration: none !important;
+  background: #FFFFFF;
+  border: 1px solid #DCDBDC;
+  border-radius: 6px;
+}
+
+.tutor-instructor-list .tutor-instructor-profile-photo, .tutor-instructor-list .tutor-instructor-cover-photo {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.tutor-instructor-list .tutor-instructor-profile-photo {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+}
+
+.tutor-instructor-list .tutor-instructor-name {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  color: #161616;
+  margin: 0;
+}
+
+.tutor-instructor-list .tutor-instructor-course-count {
+  margin-bottom: 10px;
+}
+
+.tutor-instructor-list .tutor-instructor-course-count > span {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  color: #161616;
+}
+
+.tutor-instructor-list .tutor-instructor-course-count > span:last-child {
+  color: #808080;
+}
+
+.tutor-instructor-list .tutor-instructor-rating * {
+  font-size: 16px;
+}
+
+.tutor-instructor-list .tutor-instructor-rating .rating-digits {
+  color: #161616;
+}
+
+.tutor-instructor-list .tutor-instructor-rating .rating-total-meta {
+  color: #7A7A7A;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-cover-photo {
+  width: 100%;
+  height: 153px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-profile-photo {
+  border: 4px solid white;
+  margin: -31px 15px 0;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-rating {
+  padding: 0 15px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-cover-photo {
+  display: none;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-profile-photo {
+  border-radius: 0%;
+  width: 100%;
+  height: 160px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-rating {
+  padding: 0 15px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-name {
+  margin-top: 15px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-left {
+  padding: 15px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-left .tutor-instructor-cover-photo {
+  display: none;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-cover-photo, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-cover-photo {
+  display: none;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-profile-photo, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-profile-photo {
+  border-radius: 0%;
+  height: 102px;
+  width: 102px;
+  top: 0px;
+  position: absolute;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-rating, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
+  margin-left: 118px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100% - 110px);
+  display: inline-block;
+  position: relative;
+  top: 6px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-rating, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
+  top: 7px;
+  position: relative;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-profile-photo {
+  border-radius: 50%;
+  height: 82px;
+  width: 82px;
+  margin: 10px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-name {
+  top: 11px;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-course-count {
+  top: 46px;
 }
 
 /*# sourceMappingURL=tutor-front.css.map */

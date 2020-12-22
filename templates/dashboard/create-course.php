@@ -128,7 +128,7 @@ if ( ! $can_publish_course){
                                             <div class="tutor-row tutor-align-items-center">
                                                 <div class="tutor-col-auto">
                                                     <label for="tutor_course_price_type_pro" class="tutor-styled-radio">
-                                                        <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'paid') : checked('true', 'true'); ?> >
+                                                        <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> >
                                                         <span></span>
                                                         <div class="tutor-form-group">
                                                             <span class="tutor-input-prepand"><?php echo $currency_symbol; ?></span>
@@ -138,7 +138,7 @@ if ( ! $can_publish_course){
                                                 </div>
                                                 <div class="tutor-col-auto">
                                                     <label class="tutor-styled-radio">
-                                                        <input type="radio" name="tutor_course_price_type" value="free"  <?php checked($_tutor_course_price_type, 'free'); ?> >
+                                                        <input type="radio" name="tutor_course_price_type" value="free"  <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?> >
                                                         <span><?php _e('Free', "tutor") ?></span>
                                                     </label>
                                                 </div>
@@ -207,7 +207,7 @@ if ( ! $can_publish_course){
                             <h3 class="tutor-course-builder-tips-title"><i class="tutor-icon-light-bulb"></i><?php _e('Course Upload Tips', 'tutor') ?></h3>
                             <ul>
                                 <li><?php _e("Set the Course Price option or make it free.", 'tutor');?></li>
-                                <li><?php _e("Standard size for course thumbnail is 700x430.", 'tutor');?></li>
+                                <li><?php _e("Standard size for the course thumbnail is 700x430.", 'tutor');?></li>
                                 <li><?php _e("Video section controls the course overview video.", 'tutor');?></li>
                                 <li><?php _e("Course Builder is where you create & organize a course.", 'tutor');?></li>
                                 <li><?php _e("Add Topics in the Course Builder section to create lessons, quizzes, and assignments.", 'tutor'); ?></li>

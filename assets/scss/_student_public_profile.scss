@@ -1,0 +1,368 @@
+@import "./mixins";
+
+.tutor-user-public-profile{
+    .photo-area{
+        overflow: hidden;
+        height: 414px;
+        margin-top: 30px;
+
+        .cover-area{
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+            &>div:first-child{
+                height: 375px;
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+
+            &>div:last-child{
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 70%;
+                background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+            }
+        }
+
+        .pp-area{
+            position: relative;
+            top: -111px;
+            padding-left: 49px;
+            @include valueWithPrefix(display, flex);
+            @include propertyWithPrefix(align-items, center);
+            
+            .profile-pic{
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                display: inline-block;
+                border: 8px solid white;
+            }
+            
+            .profile-name{
+                padding-left: 23px;
+                padding-bottom: 30px;
+
+                h3{
+                    font-style: normal;
+                    font-weight: 600;
+                    font-size: 40px;
+                    line-height: 48px;
+                    color: #FFFFFF;
+                    margin: 0;
+                }
+
+                &>span{
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 15px;
+                    color: #757575;
+                    margin-right: 10px;
+
+                    &>span{
+                        color:white;
+                    }
+                }
+            }
+            
+            .profile-rating-media{
+                text-align: right;    
+                padding-right: 30px;
+                padding-bottom: 20px;
+                @include propertyWithPrefix(flex, 1);
+
+                .tutor-rating-container{
+                    font-size: 16px;
+
+                    .rating-digits{
+                        color: white;
+                    }
+
+                    .rating-total-meta{
+                        color: #757575;;
+                    }
+                }
+
+            }
+
+            .tutor-social-container{
+                margin-top: 15px;
+                text-align: right;
+
+                a{
+                    display: inline-block;
+                    margin-left: 20px;
+                    color: whitesmoke;
+                    cursor: pointer;
+                    text-decoration: none;
+                    font-size: 16px;
+
+                    &:hover{
+                        color: white;
+                    }
+                }
+            }
+        }
+    }    
+
+
+    // Layout specific styles
+    &.tutor-user-public-profile-pp-circle{
+        .profile-pic{
+            border-radius: 50%;
+            height: 153px;
+            width: 153px;
+        }
+    }
+
+    &.tutor-user-public-profile-pp-rectangle{
+        .photo-area{
+            overflow: initial;
+    
+            .profile-pic{
+                border-radius: 10px;
+                height: 200px;
+                width: 153px;
+            }
+
+            .profile-name, .profile-rating-media{
+                padding-bottom: 75px;
+            }
+        }  
+        
+        .tutor-user-profile-sidebar{
+            margin-top: 79px;
+        }
+    }
+    
+    &.tutor-user-public-profile-no-cp{
+
+        .photo-area{
+            height: auto;
+        }
+
+        .cover-area{
+            display: none;
+        }
+
+        .pp-area{
+            top: 0;
+        }
+
+        .profile-pic{
+            border-radius: 50%;
+            height: 153px;
+            width: 153px;
+        }
+
+        .profile-name{
+            padding-top: 49px;
+            h3{
+                color: #161616 !important;
+            }
+
+            &>span>span{
+                color: black !important;
+            }
+        }
+
+        .profile-rating-media{
+            position: absolute;
+            left: 226px;
+            top: 15px;
+
+            .rating-digits{
+                color: #161616 !important;
+            }
+        }
+
+        .tutor-rating-container{
+            text-align: left;
+        }
+        
+        .tutor-social-container{
+            text-align: left !important;
+            margin-top: 5px !important;
+
+            a{
+                margin-left: 0 !important;
+                margin-right: 20px;
+                color: #757575 !important;
+                
+                &:hover{
+                    color: #161616 !important;
+                }
+            }
+        }
+
+        .profile-rating-media{
+            width: calc(100% - 157px);
+
+        }
+
+        .tutor-social-container{
+            position: absolute;
+            right: 36px;
+            left: auto;
+        }
+    }
+
+    @media(min-width:768px){
+        .content-for-mobile{
+            display: none;
+        }
+        .content-for-desktop{
+            display: block;
+        }
+    }
+
+    @media (max-width:767px){
+
+        .content-for-mobile{
+            display: block;
+            margin: 22px 0 0 0;
+            padding: 0 !important;
+        }
+        .content-for-desktop{
+            display: none;
+        }
+
+        &.tutor-user-public-profile-pp-circle, &.tutor-user-public-profile-no-cp, &.tutor-user-public-profile-pp-rectangle{
+            .photo-area{
+                height: auto;
+                .cover-area>div:first-child{
+                    height: 220px;
+                }
+            }
+
+            .pp-area{
+                padding-left: 0 !important;
+                top: -82px !important;
+                @include propertyWithPrefix(flex-wrap, wrap);
+                @include propertyWithPrefix(justify-content, center);
+            }
+
+            .profile-name, .profile-rating-media{
+                width: 100% !important;
+                text-align: center!important;
+            }
+
+            .profile-name>span>span{
+                color: black !important;
+            }
+
+            .profile-name>span:nth-of-type(2)>span{
+                color: #C4C4C4 !important;
+            }
+
+            .profile-name h3{
+                color: #161616 !important;
+                font-size: 30px !important;
+            }
+
+            .rating-digits{
+                color: #161616 !important;
+            }
+        }
+
+        &.tutor-user-public-profile-pp-rectangle{
+            .pp-area{
+                top: -98px !important;
+            }
+            .profile-pic{
+                height: 160px !important;
+                width: 153px !important;
+            }
+        }
+
+        &.tutor-user-public-profile-no-cp{
+            .pp-area, .profile-rating-media, .tutor-social-container, .ratings{
+                position: static !important;
+                top:0 !important;
+                text-align: center !important;
+            }
+
+            .profile-name{
+                padding: 0 !important;
+            }
+        }
+
+        .tutor-social-container {
+            margin: 15px 0 0 0 !important;
+            a{
+                color: #7A7A7A !important;
+            }
+        }
+
+        .profile-name{
+            padding: 0 !important;
+        }
+
+        &.tutor-user-public-profile-pp-circle, &.tutor-user-public-profile-pp-rectangle{
+            .pp-area{
+                margin-top: -83px !important;
+                position: relative !important;
+                top: 0 !important;
+            }
+        }
+
+        .tutor-user-profile-sidebar{
+            margin-top:0 !important;
+        }
+
+        &.tutor-user-public-profile-no-cp{
+            .pp-area{
+                @include propertyWithPrefix(justify-content, left !important);
+
+                *{
+                    text-align: left !important;
+                }
+            }
+        }
+    }
+      
+    // Content container
+    .tutor-user-profile-sidebar{
+        padding: 15px;
+        width: 223px;
+        float: left;
+    }
+  
+    .tutor-user-profile-content{
+        width: calc(100% - 228px);
+        float: left;
+        margin-bottom: 30px;
+
+        &>h3{
+            font-style: normal;
+            font-weight: normal;
+            font-size: 24px;
+            line-height: 34px;
+            color: #161616;
+            margin-top: 20px;
+
+            &:first-child{
+                margin-top: 0;
+            }
+        }
+    }
+
+    @media(max-width:800px){
+        &.tutor-user-public-profile-no-cp{
+            .pp-area{
+            padding-left: 0 !important;
+            }
+            .profile-rating-media{
+                left: 178px !important;
+            }
+        }
+        
+        .tutor-user-profile-sidebar, .tutor-user-profile-content{
+            width: 100%;
+            float: none;
+        }
+    }
+}

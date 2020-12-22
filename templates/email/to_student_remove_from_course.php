@@ -6,13 +6,13 @@
 
 ?>
 
-<p>Hi,</p>
+<p><?php _e('Hi,', 'tutor'); ?></p>
 <p>
-    This is to notify you that the instructor has removed you from the course - <strong>{course_name}</strong>
+    <?php _e('This is to notify you that the instructor has removed you from the course - <strong>{course_name}</strong>', 'tutor'); ?>
     <br />
     <br />
     --
-    Regards,
+    <?php _e('Regards', 'tutor'); ?>,
     <br />
     {site_name}
 </p>

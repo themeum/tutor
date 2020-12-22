@@ -10,7 +10,15 @@
 @import "_dashboard_withdraw_method";
 @import "_dashboard_assignment";
 @import "_dashboard_quiz_review";
+@import "_dashboard_user_photo";
+@import "_student_public_profile";
 
 //frontend-builder
 @import "frontend_course_builder";
 @import "option_input";
+@import "_instructor_registration";
+@import "_frontend_withdrawal";
+@import "_tooltip";
+
+// Instructor list short code
+@import "_instructor";

@@ -183,7 +183,7 @@ if ( ! $quiz){
                                     <span class="radio-icon"></span>
                                     <div class="tutor-quiz-feedback-mode-option">
                                         <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Default', 'tutor'); ?></h4>
-                                        <p class="tutor-quiz-feedback-option-subtitle">Answers shown after quiz is finished</p>
+                                        <p class="tutor-quiz-feedback-option-subtitle"><?php _e('Answers shown after quiz is finished', 'tutor'); ?></p>
                                     </div>
                                 </label>
                             </div>
@@ -193,7 +193,7 @@ if ( ! $quiz){
                                     <span class="radio-icon"></span>
                                     <div class="tutor-quiz-feedback-mode-option">
                                         <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Retry Mode', 'tutor'); ?></h4>
-                                        <p class="tutor-quiz-feedback-option-subtitle">Unlimited attempts on each question. <a href="#"> Live Demo</a></p>
+                                        <p class="tutor-quiz-feedback-option-subtitle"><?php _e('Unlimited attempts on each question.', 'tutor'); ?>  <a href="#"> <?php _e('Live Demo', 'tutor'); ?></a></p>
                                     </div>
                                 </label>
                             </div>
@@ -203,7 +203,7 @@ if ( ! $quiz){
                                     <span class="radio-icon"></span>
                                     <div class="tutor-quiz-feedback-mode-option">
                                         <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Reveal Mode', 'tutor'); ?></h4>
-                                        <p class="tutor-quiz-feedback-option-subtitle">Show result after the attempt. <a href="#"> Live Demo</a></p>
+                                        <p class="tutor-quiz-feedback-option-subtitle"><?php _e('Show result after the attempt.', 'tutor'); ?>  <a href="#"><?php _e('Live Demo', 'tutor'); ?></a></p>
                                     </div>
                                 </label>
                             </div>
@@ -249,7 +249,7 @@ if ( ! $quiz){
                                 <input type="number" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>">
                             </div>
                         </div>
-                        <p class="help"><?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater then available question, then all questions will be available for a student to answer.', 'tutor'); ?></p>
+                        <p class="help"><?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?></p>
                     </div> <!-- .tutor-quiz-builder-group -->
 
 	                <?php do_action('tutor_quiz_edit_modal_settings_tab_after', $quiz) ?>

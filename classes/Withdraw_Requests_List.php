@@ -46,19 +46,19 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 		$actions = array();
 		switch ($item->status){
 			case 'pending':
-				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s">Approve</a>',$_REQUEST['page'],'approved',
+				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s">'.__('Approve', 'tutor').'</a>',$_REQUEST['page'],'approved',
 					$item->withdraw_id);
-				$actions['rejected'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s">Rejected</a>',$_REQUEST['page'],'rejected',$item->withdraw_id);
+				$actions['rejected'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s">'.__('Rejected', 'tutor').'</a>',$_REQUEST['page'],'rejected',$item->withdraw_id);
 				break;
 			case 'approved':
-				$actions['rejected'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s">Rejected</a>',$_REQUEST['page'],'rejected',$item->withdraw_id);
+				$actions['rejected'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s">'.__('Rejected', 'tutor').'</a>',$_REQUEST['page'],'rejected',$item->withdraw_id);
 				break;
 			case 'rejected':
-				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s">Approve</a>',$_REQUEST['page'],'approved',$item->withdraw_id);
+				$actions['approved'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s">'.__('Approve', 'tutor').'</a>',$_REQUEST['page'],'approved',$item->withdraw_id);
 				break;
 		}
 
-		$actions['delete'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s" onclick="return confirm(\'Are you Sure? It can not be undone\')">Delete</a>',$_REQUEST['page'],'delete',
+		$actions['delete'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s" onclick="return confirm(\'Are you Sure? It can not be undone\')">'.__('Delete', 'tutor').'</a>',$_REQUEST['page'],'delete',
 			$item->withdraw_id);
 
 		return "<div class='withdraw-list-row-actions'>". $this->row_actions($actions)."</div>";

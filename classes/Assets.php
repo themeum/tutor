@@ -58,11 +58,18 @@ class Assets{
 
 		/**
 		 * We checked wp_enqueue_editor() in condition because it conflicting with Divi Builder
-		 * condition @since v.1.3.3
+		 * condition updated @since v.1.7.4
 		 */
 
 		if (is_single()){
-			wp_enqueue_editor();
+			if (function_exists('et_pb_is_pagebuilder_used')) {
+				$is_page_builder_used = et_pb_is_pagebuilder_used(get_the_ID());
+				if (!$is_page_builder_used) {
+					wp_enqueue_editor();
+				}
+			} else {
+				wp_enqueue_editor();
+			}
 		}
 
 		/**
