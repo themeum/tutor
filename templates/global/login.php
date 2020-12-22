@@ -103,11 +103,17 @@ if ( ! defined( 'ABSPATH' ) )
 			<input type="hidden" name="redirect_to" value="<?= esc_url( $args['redirect'] )?>" />
 		</p>
 		
-		<p class="tutor-form-register-wrap">
-		    <a href="<?= esc_url($register_url)?>">
-		    	<?= esc_html($args['label_create_new_account']);?>
-		    </a>
-        </p>
+		<?php 
+			if(get_option( 'users_can_register', false )) {
+				?>
+				<p class="tutor-form-register-wrap">
+					<a href="<?= esc_url($register_url)?>">
+						<?= esc_html($args['label_create_new_account']);?>
+					</a>
+				</p>
+				<?php
+			}
+		?>
 	</form>
 
     <?php

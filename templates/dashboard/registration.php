@@ -5,6 +5,13 @@
  */
 
 ?>
+
+<?php 
+    if(!get_option( 'users_can_register', false )) {
+        echo '<h4 class="text-center txt-center">',__('Access Denied', 'tutor'),'</h4>';
+        return;
+    }
+?>
 <?php do_action('tutor_before_student_reg_form');?>
 
 <form method="post" enctype="multipart/form-data">
