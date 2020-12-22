@@ -502,8 +502,8 @@ class Quiz {
 
 		$post_arr = array(
 			'post_type'     => 'tutor_quiz',
-			'post_title'    => $quiz_title,
-			'post_content'  => $quiz_description,
+			'post_title'    => esc_sql( $quiz_title ) ,
+			'post_content'  => esc_sql( $quiz_description ) ,
 			'post_status'   => 'publish',
 			'post_author'   => get_current_user_id(),
 			'post_parent'   => $topic_id,
@@ -843,16 +843,16 @@ class Quiz {
 					$answer_data = array(
 						'belongs_question_id'   => $question_id,
 						'belongs_question_type' => $question_type,
-						'answer_title'          => $answer['answer_title'],
+						'answer_title'          => esc_sql( $answer['answer_title'] ) ,
 						'image_id'              => isset($answer['image_id']) ? $answer['image_id'] : 0,
 						'answer_view_format'    => isset($answer['answer_view_format']) ? $answer['answer_view_format'] : '',
 					);
 					if (isset($answer['matched_answer_title'])){
-						$answer_data['answer_two_gap_match'] = $answer['matched_answer_title'];
+						$answer_data['answer_two_gap_match'] = esc_sql( $answer['matched_answer_title'] ) ;
 					}
 
 					if ($question_type === 'fill_in_the_blank'){
-						$answer_data['answer_two_gap_match'] = isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null;
+						$answer_data['answer_two_gap_match'] = isset($answer['answer_two_gap_match']) ? esc_sql(trim($answer['answer_two_gap_match'])) : null;
 					}
 
 					$wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', $answer_data, array('answer_id' => $answer_id));
