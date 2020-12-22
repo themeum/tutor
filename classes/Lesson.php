@@ -145,9 +145,9 @@ class Lesson extends Tutor_Base {
 
 		$lesson_data = array(
 			'ID'            => $lesson_id,
-			'post_title'    => $title,
-			'post_name'     => sanitize_title($title),
-			'post_content'  => $lesson_content,
+			'post_title'    => esc_sql( $title ) ,
+			'post_name'     => esc_sql( sanitize_title($title) ) ,
+			'post_content'  => esc_sql( $lesson_content ) ,
 		);
 
 		do_action('tutor/lesson_update/before', $lesson_id);
