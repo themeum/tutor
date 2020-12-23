@@ -254,6 +254,11 @@ class Ajax{
 	 * Method for enable / disable addons
 	 */
 	public function addon_enable_disable(){
+
+		if(!current_user_can( 'manage_options' )) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
+
 		$addonsConfig = maybe_unserialize(get_option('tutor_addons_config'));
 
 		$isEnable = (bool) sanitize_text_field(tutor_utils()->avalue_dot('isEnable', $_POST));

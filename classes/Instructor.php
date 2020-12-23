@@ -239,6 +239,10 @@ class Instructor {
 	public function instructor_approval_action(){
 		tutils()->checking_nonce();
 
+		if(!current_user_can( 'manage_options' )) {
+			wp_send_json_error( array('message' => 'Access Denied') );
+		}
+
 		$instructor_id = (int) sanitize_text_field(tutils()->array_get('instructor_id', $_POST));
 		$action = sanitize_text_field(tutils()->array_get('action_name', $_POST));
 
