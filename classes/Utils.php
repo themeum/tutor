@@ -5858,6 +5858,7 @@ class Utils {
 
 			case 'course' :
 			case 'topic' :
+			case 'lesson' :
 			case 'quiz' :
 				$authentic = (int)$wpdb->get_var($wpdb->prepare("SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_author=%d AND ID=%d LIMIT 1", $user_id, $object_id));
 				break;
@@ -5879,7 +5880,6 @@ class Utils {
 					INNER JOIN {$wpdb->posts} topic ON topic.ID=quiz.post_parent
 					WHERE topic.post_author=%d AND attempt_answer.attempt_answer_id=%d LIMIT 1", $user_id, $object_id));
 				break;
-
 		}
 
 		return $authentic;

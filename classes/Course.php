@@ -415,6 +415,10 @@ class Course extends Tutor_Base {
 		}
 		$course_id = (int) tutor_utils()->avalue_dot('tutor_topic_course_ID', $_POST);
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id);
+		
+		if(!tutils()->can_user_manage('course', $course_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
 
 		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
 		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
@@ -444,6 +448,10 @@ class Course extends Tutor_Base {
 		$topic_id = (int) sanitize_text_field($_POST['topic_id']);
 		$topic_title = sanitize_text_field($_POST['topic_title']);
 		$topic_summery = wp_kses_post($_POST['topic_summery']);
+
+		if(!tutils()->can_user_manage('topic', $topic_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
 
 		$topic_attr = array(
 			'ID'           => $topic_id,
