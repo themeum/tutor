@@ -809,7 +809,7 @@ class Quiz {
 				"SELECT MAX(answer_order) 
 				FROM {$wpdb->prefix}tutor_quiz_question_answers 
 				where belongs_question_id = %d 
-				AND belongs_question_type = %s ", $question_id, $question_type));
+				AND belongs_question_type = %s ", $question_id, esc_sql( $question_type )));
 
 			$next_order_id = $next_order_id + 1;
 
@@ -928,7 +928,7 @@ class Quiz {
 		}
 
 		$question = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id = %d ", $question_id));
-		$answers = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = %d AND belongs_question_type = %s order by answer_order asc ;", $question_id, $question_type));
+		$answers = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = %d AND belongs_question_type = %s order by answer_order asc ;", $question_id, esc_sql( $question_type ) ));
 
 		ob_start();
 

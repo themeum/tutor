@@ -690,6 +690,10 @@ class Course extends Tutor_Base {
 	public function tutor_add_instructors_to_course(){
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 		$instructor_ids = tutor_utils()->avalue_dot('tutor_instructor_ids', $_POST);
+		
+		if(!tutils()->can_user_manage('course', $course_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
 
 		if (is_array($instructor_ids) && count($instructor_ids)){
 			foreach ($instructor_ids as $instructor_id){
@@ -722,6 +726,10 @@ class Course extends Tutor_Base {
 		$instructor_id = (int) sanitize_text_field($_POST['instructor_id']);
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 
+		if(!tutils()->can_user_manage('course', $course_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
+		
 		$wpdb->delete($wpdb->usermeta, array('user_id' => $instructor_id, 'meta_key' => '_tutor_instructor_course_id', 'meta_value' => $course_id) );
 		wp_send_json_success();
 	}
