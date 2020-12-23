@@ -8,7 +8,7 @@
 
 <?php 
     if(!get_option( 'users_can_register', false )) {
-        echo '<h4 class="text-center txt-center">',__('Access Denied', 'tutor'),'</h4>';
+        echo '<p style="text-align:center">',__('Access Denied', 'tutor'),'</p>';
         return;
     }
 ?>
