@@ -998,6 +998,10 @@ class Quiz {
 	public function tutor_quiz_builder_delete_answer(){
 		global $wpdb;
 		$answer_id = sanitize_text_field($_POST['answer_id']);
+		
+		if(!tutils()->can_user_manage('quiz_answer', $answer_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
 
 		$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('answer_id' => esc_sql( $answer_id ) ));
 		wp_send_json_success();
@@ -1013,7 +1017,7 @@ class Quiz {
 		if (is_array($question_ids) && count($question_ids) ){
 			$i = 0;
 			foreach ($question_ids as $key => $question_id){
-				if(is_numeric($question_id)) {
+				if(tutils()->can_user_manage('question', $question_id)) {
 					$i++;
 					$wpdb->update($wpdb->prefix.'tutor_quiz_questions', array('question_order' => $i), array('question_id' => $question_id));
 				}
@@ -1031,7 +1035,7 @@ class Quiz {
 	        $answer_ids = $_POST['sorted_answer_ids'];
 	        $i = 0;
 	        foreach ($answer_ids as $key => $answer_id){
-				if(is_numeric($answer_id)) {
+				if(tutils()->can_user_manage('quiz_answer', $answer_id)) {
 					$i++;
 		        	$wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('answer_order' => $i), array('answer_id' => $answer_id));
 				}
@@ -1048,6 +1052,10 @@ class Quiz {
 
 	    $answer_id = sanitize_text_field($_POST['answer_id']);
 	    $inputValue = sanitize_text_field($_POST['inputValue']);
+		
+		if(!tutils()->can_user_manage('quiz_answer', $answer_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
 
 	    $answer = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = %d LIMIT 0,1 ;", $answer_id));
 	    if ($answer->belongs_question_type === 'single_choice') {

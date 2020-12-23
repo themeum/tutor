@@ -139,6 +139,10 @@ class Lesson extends Tutor_Base {
 	public function tutor_modal_create_or_update_lesson(){
 		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
 		$_lesson_thumbnail_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('_lesson_thumbnail_id', $_POST));
+		
+		if(!tutils()->can_user_manage('lesson', $lesson_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
 
 		$title = sanitize_text_field($_POST['lesson_title']);
 		$lesson_content = wp_kses_post($_POST['lesson_content']);
