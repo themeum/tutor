@@ -5786,9 +5786,11 @@ class Utils {
 				global $woocommerce;
 				$product_id = $is_product_id ? $course_or_product_id : $this->get_course_product_id($course_or_product_id);
  
-				foreach($woocommerce->cart->get_cart() as $key => $val ) {
-					if($product_id == $val['product_id']) {
-						return true;
+				if($woocommerce->cart) {
+					foreach($woocommerce->cart->get_cart() as $key => $val ) {
+						if($product_id == $val['product_id']) {
+							return true;
+						}
 					}
 				}
 				break;
@@ -5813,5 +5815,73 @@ class Utils {
 		}
 
 		return $cover_photo_src;
+	}
+
+
+	/**
+	 * @param string $by, int $id
+	 *
+	 * @return bool
+	 * 
+	 * @since v1.7.7
+	 *
+	 * Check if current user has access to tutor content
+	 */
+	public function can_user_manage(string $content, $object_id, $user_id=0, $allow_current_admin=true) {
+		
+		if($allow_current_admin && current_user_can( 'manage_options' )){
+			// Admin has access
+			return true;
+		}
+
+		global $wpdb;
+		$authentic = false;
+		$user_id = $this->get_user_id($user_id);
+
+		switch($content) {
+			case 'quiz_answer' :
+				$authentic = (int)$wpdb->get_var($wpdb->prepare(
+					"SELECT COUNT(answer.answer_id) 
+					FROM {$wpdb->prefix}tutor_quiz_question_answers answer
+					INNER JOIN {$wpdb->prefix}tutor_quiz_questions question ON answer.belongs_question_id=question.question_id
+					INNER JOIN {$wpdb->posts} quiz ON question.quiz_id=quiz.ID
+					WHERE quiz.post_author=%d AND answer.answer_id=%d LIMIT 1", $user_id, $object_id));
+				break;
+
+			case 'question' : 
+				$authentic = (int)$wpdb->get_var($wpdb->prepare(
+					"SELECT COUNT(question.question_id) 
+					FROM {$wpdb->prefix}tutor_quiz_questions question
+					INNER JOIN {$wpdb->posts} quiz ON question.quiz_id=quiz.ID
+					WHERE quiz.post_author=%d AND question.question_id=%d LIMIT 1", $user_id, $object_id));
+				break;
+
+			case 'course' :
+			case 'topic' :
+			case 'quiz' :
+				$authentic = (int)$wpdb->get_var($wpdb->prepare("SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_author=%d AND ID=%d LIMIT 1", $user_id, $object_id));
+				break;
+
+			case 'attempt' :
+				$authentic = (int)$wpdb->get_var($wpdb->prepare(
+					"SELECT COUNT(attempt.attempt_id) 
+					FROM {$wpdb->prefix}tutor_quiz_attempts attempt 
+					INNER JOIN {$wpdb->posts} quiz ON attempt.quiz_id=quiz.ID
+					INNER JOIN {$wpdb->posts} topic ON topic.ID=quiz.post_parent
+					WHERE topic.post_author=%d AND attempt.attempt_id=%d LIMIT 1", $user_id, $object_id));
+				break;
+
+			case 'attempt_answer' :
+				$authentic = (int)$wpdb->get_var($wpdb->prepare(
+					"SELECT COUNT(attempt_answer.attempt_answer_id) 
+					FROM {$wpdb->prefix}tutor_quiz_attempt_answers attempt_answer 
+					INNER JOIN {$wpdb->posts} quiz ON attempt_answer.quiz_id=quiz.ID
+					INNER JOIN {$wpdb->posts} topic ON topic.ID=quiz.post_parent
+					WHERE topic.post_author=%d AND attempt_answer.attempt_answer_id=%d LIMIT 1", $user_id, $object_id));
+				break;
+
+		}
+
+		return $authentic;
 	}
 }

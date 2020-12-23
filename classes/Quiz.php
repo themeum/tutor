@@ -64,7 +64,8 @@ class Quiz {
 	public function tutor_instructor_feedback(){
 		$feedback = sanitize_text_field($_POST['feedback']);
 		$attempt_id = (int) tutor_utils()->avalue_dot('attempts_id', $_POST);
-		if ($attempt_id) {
+
+		if ($attempt_id && tutils()->can_user_manage('attempt', $attempt_id)) {
 			update_post_meta($attempt_id, 'instructor_feedback', $feedback);
 			do_action('tutor_quiz/attempt/submitted/feedback', $attempt_id);
 		}
@@ -91,6 +92,11 @@ class Quiz {
 	public function remove_quiz_from_post(){
 		global $wpdb;
 		$quiz_id = (int) tutor_utils()->avalue_dot('quiz_id', $_POST);
+
+		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
+
 		$wpdb->update($wpdb->posts, array('post_parent' => 0), array('ID' => $quiz_id) );
 		wp_send_json_success();
 	}
@@ -410,13 +416,16 @@ class Quiz {
 	public function review_quiz_answer(){
 
 		global $wpdb;
+
 		$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
-
 		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
-
 		$mark_as = sanitize_text_field($_GET['mark_as']);
 
-		$attempt_answer = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = {$attempt_answer_id} ");
+		if(!tutils()->can_user_manage('attempt', $attempt_id) || !tutils()->can_user_manage('attempt_answer', $attempt_answer_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
+
+		$attempt_answer = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = %d ", $attempt_answer_id));
 
 		$attempt = tutor_utils()->get_attempt($attempt_id);
 		$question = tutils()->get_quiz_question_by_id($attempt_answer->question_id);
@@ -500,6 +509,10 @@ class Quiz {
 		$quiz_description   = sanitize_text_field($_POST['quiz_description']);
 		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id);
 
+		if(!tutils()->can_user_manage('topic', $topic_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
+
 		$post_arr = array(
 			'post_type'     => 'tutor_quiz',
 			'post_title'    => esc_sql( $quiz_title ) ,
@@ -539,17 +552,24 @@ class Quiz {
 	    $quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
 	    $post = get_post($quiz_id);
 
+		
+		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
+
 	    if ( $post->post_type === 'tutor_quiz'){
 	        do_action('tutor_delete_quiz_before', $quiz_id);
 
 	        $wpdb->delete($wpdb->prefix.'tutor_quiz_attempts', array('quiz_id' => $quiz_id));
 	        $wpdb->delete($wpdb->prefix.'tutor_quiz_attempt_answers', array('quiz_id' => $quiz_id));
 
-            $questions_ids = $wpdb->get_col("SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$quiz_id} ");
-            if (is_array($questions_ids) && count($questions_ids)){
+            $questions_ids = $wpdb->get_col($wpdb->prepare("SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $quiz_id));
+			
+			if (is_array($questions_ids) && count($questions_ids)){
                 $in_question_ids = "'".implode("','", $questions_ids)."'";
                 $wpdb->query("DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_question_ids}) ");
-            }
+			}
+			
 		    $wpdb->delete($wpdb->prefix.'tutor_quiz_questions', array('quiz_id' => $quiz_id));
 
 		    wp_delete_post($quiz_id, true);
@@ -575,10 +595,14 @@ class Quiz {
 		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
 		$quiz_description   = sanitize_text_field($_POST['quiz_description']);
 
+		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
+
 		$post_arr = array(
 			'ID'    => $quiz_id,
-			'post_title'    => $quiz_title,
-			'post_content'  => $quiz_description,
+			'post_title'    => esc_sql( $quiz_title ),
+			'post_content'  => esc_sql( $quiz_description ),
 
 		);
 		$quiz_id = wp_update_post( $post_arr );
@@ -657,7 +681,12 @@ class Quiz {
 
 		$question_data = $_POST['tutor_quiz_question'];
 
-		foreach ($question_data as $question_id => $question){
+		foreach ($question_data as $question_id => $question) {
+
+			if(!tutils()->can_user_manage('question', $question_id)) {
+				continue;
+			}
+
 			$question_title         = sanitize_text_field($question['question_title']);
 			$question_description   = wp_kses_post($question['question_description']);
 			$question_type          = $question['question_type'];
@@ -667,9 +696,9 @@ class Quiz {
 			unset($question['question_description']);
 
 			$data = array(
-				'question_title'        => $question_title,
-				'question_description'  => $question_description,
-				'question_type'         => $question_type,
+				'question_title'        => esc_sql( $question_title ) ,
+				'question_description'  => esc_sql( $question_description ) ,
+				'question_type'         => esc_sql( $question_type ),
 				'question_mark'         => $question_mark,
 				'question_settings'     => maybe_serialize($question),
 			);
@@ -707,8 +736,13 @@ class Quiz {
 		global $wpdb;
 
 		$question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
+		
+		if(!tutils()->can_user_manage('question', $question_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
+
 		if ($question_id){
-			$wpdb->delete($wpdb->prefix.'tutor_quiz_questions', array('question_id' => $question_id));
+			$wpdb->delete($wpdb->prefix.'tutor_quiz_questions', array('question_id' => esc_sql( $question_id ) ));
 		}
 
 		wp_send_json_success();
@@ -738,6 +772,11 @@ class Quiz {
 	 */
 	public function tutor_quiz_edit_question_answer(){
 		$answer_id = (int) sanitize_text_field($_POST['answer_id']);
+
+		if(!tutils()->can_user_manage('quiz_answer', $answer_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
+		
 		$old_answer = tutor_utils()->get_answer_by_id($answer_id);
 		foreach ($old_answer as $old_answer);
 		$question_id = $old_answer->belongs_question_id;
@@ -757,11 +796,21 @@ class Quiz {
 		$answers = $_POST['quiz_answer'];
 
 		foreach ($answers as $question_id => $answer){
+
+			if(!tutils()->can_user_manage('question', $question_id)) {
+				continue;
+			}
+
 			$question = tutor_utils()->avalue_dot($question_id, $questions);
 			$question_type = $question['question_type'];
 
 			//Getting next sorting order
-			$next_order_id = (int) $wpdb->get_var("SELECT MAX(answer_order) FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question_type}' ");
+			$next_order_id = (int) $wpdb->get_var($wpdb->prepare(
+				"SELECT MAX(answer_order) 
+				FROM {$wpdb->prefix}tutor_quiz_question_answers 
+				where belongs_question_id = %d 
+				AND belongs_question_type = %s ", $question_id, $question_type));
+
 			$next_order_id = $next_order_id + 1;
 
 			if ($question){
@@ -769,14 +818,14 @@ class Quiz {
 					$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('belongs_question_id' => $question_id, 'belongs_question_type' => $question_type));
 					$data_true_false = array(
 						array(
-							'belongs_question_id'   => $question_id,
+							'belongs_question_id'   => esc_sql( $question_id ) ,
 							'belongs_question_type' => $question_type,
 							'answer_title'          => __('True', 'tutor'),
 							'is_correct'            => $answer['true_false'] == 'true' ? 1 : 0,
 							'answer_two_gap_match'  => 'true',
 						),
 						array(
-							'belongs_question_id'   => $question_id,
+							'belongs_question_id'   => esc_sql( $question_id ) ,
 							'belongs_question_type' => $question_type,
 							'answer_title'          => __('False', 'tutor'),
 							'is_correct'            => $answer['true_false'] == 'false' ? 1 : 0,
@@ -792,15 +841,15 @@ class Quiz {
                         $question_type === 'matching' || $question_type === 'image_matching' || $question_type === 'image_answering'  ){
 
 					$answer_data = array(
-						'belongs_question_id'   => $question_id,
+						'belongs_question_id'   => esc_sql( $question_id ),
 						'belongs_question_type' => $question_type,
-						'answer_title'          => $answer['answer_title'],
+						'answer_title'          => esc_sql( $answer['answer_title'] ),
 						'image_id'              => isset($answer['image_id']) ? $answer['image_id'] : 0,
 						'answer_view_format'    => isset($answer['answer_view_format']) ? $answer['answer_view_format'] : 0,
 						'answer_order'          => $next_order_id,
 					);
 					if (isset($answer['matched_answer_title'])){
-						$answer_data['answer_two_gap_match'] = $answer['matched_answer_title'];
+						$answer_data['answer_two_gap_match'] = esc_sql( $answer['matched_answer_title'] );
                     }
 
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
@@ -808,10 +857,10 @@ class Quiz {
 				}elseif($question_type === 'fill_in_the_blank'){
 					$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('belongs_question_id' => $question_id, 'belongs_question_type' => $question_type));
 					$answer_data = array(
-						'belongs_question_id'   => $question_id,
+						'belongs_question_id'   => esc_sql( $question_id ) ,
 						'belongs_question_type' => $question_type,
-						'answer_title'          => $answer['answer_title'],
-						'answer_two_gap_match'  => isset($answer['answer_two_gap_match']) ? trim($answer['answer_two_gap_match']) : null,
+						'answer_title'          => esc_sql( $answer['answer_title'] ),
+						'answer_two_gap_match'  => isset($answer['answer_two_gap_match']) ? esc_sql( trim($answer['answer_two_gap_match']) ) : null,
 					);
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
 				}
@@ -830,6 +879,11 @@ class Quiz {
 		global $wpdb;
 
 		$answer_id = (int) sanitize_text_field($_POST['tutor_quiz_answer_id']);
+
+		if(!tutils()->can_user_manage('quiz_answer', $answer_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
+
 		$questions = $_POST['tutor_quiz_question'];
 		$answers = $_POST['quiz_answer'];
 
@@ -845,7 +899,7 @@ class Quiz {
 						'belongs_question_type' => $question_type,
 						'answer_title'          => esc_sql( $answer['answer_title'] ) ,
 						'image_id'              => isset($answer['image_id']) ? $answer['image_id'] : 0,
-						'answer_view_format'    => isset($answer['answer_view_format']) ? $answer['answer_view_format'] : '',
+						'answer_view_format'    => isset($answer['answer_view_format']) ? esc_sql( $answer['answer_view_format'] )  : '',
 					);
 					if (isset($answer['matched_answer_title'])){
 						$answer_data['answer_two_gap_match'] = esc_sql( $answer['matched_answer_title'] ) ;
@@ -868,6 +922,10 @@ class Quiz {
 		global $wpdb;
 		$question_id = sanitize_text_field($_POST['question_id']);
 		$question_type = sanitize_text_field($_POST['question_type']);
+
+		if(!tutils()->can_user_manage('question', $question_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
 
 		$question = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id = %d ", $question_id));
 		$answers = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = %d AND belongs_question_type = %s order by answer_order asc ;", $question_id, $question_type));

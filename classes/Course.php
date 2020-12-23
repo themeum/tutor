@@ -728,6 +728,11 @@ class Course extends Tutor_Base {
 
 	public function tutor_delete_dashboard_course(){
 		$course_id = intval(sanitize_text_field($_POST['course_id']));
+
+		if(!tutils()->can_user_manage('course', $course_id)) {
+			wp_send_json_error( array('message'=>'Access Denied') );
+		}
+
 		wp_trash_post($course_id);
 		wp_send_json_success(['element'=>'course']);
 	}
