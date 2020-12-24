@@ -26,10 +26,10 @@ if ( ! empty($_GET['date_range_from']) && ! empty($_GET['date_range_to'])){
         <ul>
             <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning'); ?>"> <?php _e('Earning'); ?></a>
             </li>
-            <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/report'); ?>"> <?php _e('Report'); ?> </a></li>
+            <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/report'); ?>"> <?php _e('Report', 'tutor'); ?> </a></li>
             <li class="active">
                 <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning/statements'); ?>">
-					<?php _e('Statements'); ?> </a>
+					<?php _e('Statements', 'tutor'); ?> </a>
             </li>
         </ul>
     </div>
