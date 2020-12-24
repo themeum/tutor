@@ -240,7 +240,7 @@ class Instructor {
 		tutils()->checking_nonce();
 
 		if(!current_user_can( 'manage_options' )) {
-			wp_send_json_error( array('message' => 'Access Denied') );
+			wp_send_json_error( array('message' =>__('Access Denied', 'tutor')) );
 		}
 
 		$instructor_id = (int) sanitize_text_field(tutils()->array_get('instructor_id', $_POST));

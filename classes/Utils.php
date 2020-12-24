@@ -5819,13 +5819,11 @@ class Utils {
 
 
 	/**
-	 * @param string $by, int $id
-	 *
 	 * @return bool
 	 * 
 	 * @since v1.7.7
 	 *
-	 * Check if current user has access to tutor content
+	 * Check if user can create, edit, delete various tutor contents such as lesson, quiz, answer etc. 
 	 */
 	public function can_user_manage(string $content, $object_id, $user_id=0, $allow_current_admin=true) {
 		
