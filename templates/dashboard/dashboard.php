@@ -87,7 +87,7 @@
 				$instructor_course = tutor_utils()->get_courses_for_instructors(get_current_user_id());
 				foreach ($instructor_course as $course){
                     $enrolled = tutor_utils()->count_enrolled_users_by_course($course->ID);
-                    $course_status = ($course->post_status == 'publish') ? 'published' : $course->post_status; ?>
+                    $course_status = ($course->post_status == 'publish') ? __('Published', 'tutor') : $course->post_status; ?>
                     <tr>
                         <td>
                             <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank"><?php echo $course->post_title; ?></a>

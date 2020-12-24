@@ -1,13 +1,13 @@
 <?php
     $filter_object = new \TUTOR\Course_Filter();
     $filter_levels = array(
-        'beginner'=>'Beginner',
-        'intermediate'=>'Intermediate',
-        'expert'=>'Expert'
+        'beginner'=> __('Beginner', 'tutor'),
+        'intermediate'=> __('Intermediate', 'tutor'),
+        'expert'=> __('Expert', 'tutor')
     );
     $filter_prices=array(
-        'free'=>'Free',
-        'paid'=>'Paid'
+        'free'=> __('Free', 'tutor'),
+        'paid'=> __('Paid', 'tutor'),
     );
 
     $supported_filters = tutor_utils()->get_option('supported_course_filters', array());
