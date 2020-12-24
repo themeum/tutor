@@ -703,6 +703,29 @@ class Options {
 								'label'     => __('Light color', 'tutor'),
 								'default'   => '',
 							),
+							//tutor button style options
+							
+							'tutor_button_primary' => array(
+								'type' => 'color',
+								'label' => __('Button Primary Color','tutor'),
+								'default' => ''
+							),							
+							
+							'tutor_button_danger' => array(
+								'type' => 'color',
+								'label' => __('Button Danger Color','tutor'),
+								'default' => ''
+							),
+							'tutor_button_success' => array(
+								'type' => 'color',
+								'label' => __('Button Success Color','tutor'),
+								'default' => ''
+							),
+							'tutor_button_warning' => array(
+								'type' => 'color',
+								'label' => __('Button Warning Color','tutor'),
+								'default' => ''
+							),
 						),
 					),
 

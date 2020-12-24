@@ -176,6 +176,14 @@ class Assets{
 		$tutor_text_color = tutor_utils()->get_option('tutor_text_color');
 		$tutor_light_color = tutor_utils()->get_option('tutor_light_color');
 
+		/**
+		 * tutor buttons style
+		 */
+		$tutor_button_primary = tutor_utils()->get_option('tutor_button_primary');
+		$tutor_button_danger = tutor_utils()->get_option('tutor_button_danger');
+		$tutor_button_success = tutor_utils()->get_option('tutor_button_success');
+		$tutor_button_warning = tutor_utils()->get_option('tutor_button_warning');
+
 		if ($tutor_primary_color){
 			$tutor_css .= " --tutor-primary-color: {$tutor_primary_color};";
 		}
@@ -187,6 +195,22 @@ class Assets{
 		}
 		if ($tutor_light_color){
 			$tutor_css .= " --tutor-light-color: {$tutor_light_color};";
+		}
+
+		/**
+		 * check if button style setup
+		 */
+		if($tutor_button_primary){
+			$tutor_css .= " --tutor-primary-button-color: {$tutor_button_primary}; ";
+		}
+		if($tutor_button_danger){
+			$tutor_css .= " --tutor-danger-button-color: {$tutor_button_danger}; ";
+		}
+		if($tutor_button_success){
+			$tutor_css .= " --tutor-success-button-color: {$tutor_button_success}; ";
+		}
+		if($tutor_button_warning){
+			$tutor_css .= " --tutor-warning-button-color: {$tutor_button_warning}; ";
 		}
 
 		$tutor_css .= "}";
