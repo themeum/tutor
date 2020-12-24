@@ -256,7 +256,7 @@ class Ajax{
 	public function addon_enable_disable(){
 
 		if(!current_user_can( 'manage_options' )) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		$addonsConfig = maybe_unserialize(get_option('tutor_addons_config'));

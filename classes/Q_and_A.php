@@ -66,7 +66,7 @@ class Q_and_A {
 		$question_id = intval(sanitize_text_field($_POST['question_id']));
 		
 		if( !$question_id || !tutils()->can_user_manage('question', $question_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		//Deleting question (comment), child question and question meta (comment meta)

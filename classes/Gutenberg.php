@@ -72,6 +72,16 @@ class Gutenberg {
 	//For editor
 	public function render_block_tutor(){
 		$shortcode = sanitize_text_field($_POST['shortcode']);
+		
+		$allowed_shortcode = array(
+			'tutor_instructor_registration_form',
+			'tutor_student_registration_form'
+		);
+		
+		if(!in_array($shortcode, $allowed_shortcode)) {
+			wp_send_json_error( );
+		}
+
 		wp_send_json_success(do_shortcode("[{$shortcode}]"));
 	}
 

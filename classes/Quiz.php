@@ -94,7 +94,7 @@ class Quiz {
 		$quiz_id = (int) tutor_utils()->avalue_dot('quiz_id', $_POST);
 
 		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		$wpdb->update($wpdb->posts, array('post_parent' => 0), array('ID' => $quiz_id) );
@@ -422,7 +422,7 @@ class Quiz {
 		$mark_as = sanitize_text_field($_GET['mark_as']);
 
 		if(!tutils()->can_user_manage('attempt', $attempt_id) || !tutils()->can_user_manage('attempt_answer', $attempt_answer_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		$attempt_answer = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = %d ", $attempt_answer_id));
@@ -510,7 +510,7 @@ class Quiz {
 		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id);
 
 		if(!tutils()->can_user_manage('topic', $topic_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		$post_arr = array(
@@ -554,7 +554,7 @@ class Quiz {
 
 		
 		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 	    if ( $post->post_type === 'tutor_quiz'){
@@ -596,7 +596,7 @@ class Quiz {
 		$quiz_description   = sanitize_text_field($_POST['quiz_description']);
 
 		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		$post_arr = array(
@@ -631,7 +631,11 @@ class Quiz {
 	 */
 	public function tutor_load_edit_quiz_modal(){
 		$quiz_id           = sanitize_text_field($_POST['quiz_id']);
-
+		
+		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
+		
 		ob_start();
 		include  tutor()->path.'views/modal/edit_quiz.php';
 		$output = ob_get_clean();
@@ -738,7 +742,7 @@ class Quiz {
 		$question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
 		
 		if(!tutils()->can_user_manage('question', $question_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		if ($question_id){
@@ -774,7 +778,7 @@ class Quiz {
 		$answer_id = (int) sanitize_text_field($_POST['answer_id']);
 
 		if(!tutils()->can_user_manage('quiz_answer', $answer_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 		
 		$old_answer = tutor_utils()->get_answer_by_id($answer_id);
@@ -881,7 +885,7 @@ class Quiz {
 		$answer_id = (int) sanitize_text_field($_POST['tutor_quiz_answer_id']);
 
 		if(!tutils()->can_user_manage('quiz_answer', $answer_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		$questions = $_POST['tutor_quiz_question'];
@@ -924,7 +928,7 @@ class Quiz {
 		$question_type = sanitize_text_field($_POST['question_type']);
 
 		if(!tutils()->can_user_manage('question', $question_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		$question = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id = %d ", $question_id));
@@ -1000,7 +1004,7 @@ class Quiz {
 		$answer_id = sanitize_text_field($_POST['answer_id']);
 		
 		if(!tutils()->can_user_manage('quiz_answer', $answer_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('answer_id' => esc_sql( $answer_id ) ));
@@ -1054,7 +1058,7 @@ class Quiz {
 	    $inputValue = sanitize_text_field($_POST['inputValue']);
 		
 		if(!tutils()->can_user_manage('quiz_answer', $answer_id)) {
-			wp_send_json_error( array('message'=>'Access Denied') );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 	    $answer = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = %d LIMIT 0,1 ;", $answer_id));
@@ -1072,6 +1076,10 @@ class Quiz {
 	public function tutor_quiz_modal_update_settings(){
 		$quiz_id = sanitize_text_field($_POST['quiz_id']);
 		$quiz_option = tutor_utils()->sanitize_array($_POST['quiz_option']);
+				
+		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
 
 		update_post_meta($quiz_id, 'tutor_quiz_option', $quiz_option);
 		do_action('tutor_quiz_settings_updated', $quiz_id);
