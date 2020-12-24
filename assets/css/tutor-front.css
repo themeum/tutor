@@ -3,7 +3,10 @@
   --tutor-primary-hover-color: #1b52a9;
   --tutor-text-color: #4B5981;
   --tutor-light-color: #B1B8C9;
+  --tutor-primary-button-color: #3E64DE;
+  --tutor-danger-button-color: #F44337;
   --tutor-success-button-color: #4BD863;
+  --tutor-warning-button-color: #ED9700;
   --tutor-text-size: 16px;
 }
 
@@ -3025,8 +3028,8 @@ a.tutor-button,
 a.tutor-btn,
 .tutor-btn {
   color: #fff;
-  border: 1px solid var(--tutor-primary-color);
-  background-color: var(--tutor-primary-color);
+  border: 1px solid var(--tutor-primary-button-color);
+  background-color: var(--tutor-primary-button-color);
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -3070,8 +3073,8 @@ a.tutor-button.bordered-button,
 a.tutor-btn.bordered-btn,
 .tutor-btn.bordered-btn {
   color: var(--tutor-primary-color);
-  border: 1px solid var(--tutor-primary-color);
-  background-color: #fff;
+  border: 1px solid var(--tutor-primary-button-color);
+  background-color: var(--tutor-primary-button-color);
 }
 
 a.tutor-button.default-btn,
@@ -3080,7 +3083,7 @@ a.tutor-btn.default-btn,
 .tutor-btn.default-btn {
   color: #393c40;
   border: 1px solid #b8babe;
-  background: #fff;
+  background: var(--tutor-primary-button-color);
 }
 
 a.tutor-button.default-btn i,
@@ -3094,7 +3097,7 @@ a.tutor-button.default-btn:hover,
 .tutor-button.default-btn:hover,
 a.tutor-btn.default-btn:hover,
 .tutor-btn.default-btn:hover {
-  background-color: var(--tutor-primary-color);
+  background-color: var(--tutor-primary-button-color);
   border-color: var(--tutor-primary-color);
   color: #fff;
 }
@@ -3110,17 +3113,19 @@ a.tutor-button:hover,
 .tutor-button:hover,
 a.tutor-btn:hover,
 .tutor-btn:hover {
-  background-color: var(--tutor-primary-hover-color);
-  border-color: var(--tutor-primary-hover-color);
+  background-color: var(--tutor-primary-button-color);
+  border-color: var(--tutor-primary-button-color);
   color: #fff;
+  -webkit-filter: brightness(0.9);
+          filter: brightness(0.9);
 }
 
 a.tutor-button.bordered-button:hover,
 .tutor-button.bordered-button:hover,
 a.tutor-btn.bordered-btn:hover,
 .tutor-btn.bordered-btn:hover {
-  border: 1px solid var(--tutor-primary-color);
-  background-color: var(--tutor-primary-color);
+  border: 1px solid var(--tutor-primary-button-color);
+  background-color: var(--tutor-primary-button-color);
 }
 
 a.tutor-button.button-light,
@@ -3138,13 +3143,13 @@ a.tutor-button.button-light:hover,
 }
 
 .tutor-button.tutor-danger {
-  background-color: #e53935;
+  background-color: var(--tutor-danger-button-color);
   border-color: #e53935;
 }
 
 .tutor-button.tutor-danger:hover {
-  background-color: #e53935;
-  border-color: #e53935;
+  background-color: var(--tutor-danger-button-color);
+  border-color: var(--tutor-danger-button-color);
   -webkit-filter: brightness(0.9);
           filter: brightness(0.9);
 }
@@ -3157,6 +3162,18 @@ a.tutor-button.button-light:hover,
 .tutor-button.tutor-success:hover {
   background: var(--tutor-success-button-color);
   border-color: var(--tutor-success-button-color);
+  -webkit-filter: brightness(0.9);
+          filter: brightness(0.9);
+}
+
+.tutor-button.tutor-warning {
+  background: var(--tutor-waring-button-color);
+  border-color: var(--tutor-warning-button-color);
+}
+
+.tutor-button.tutor-warning:hover {
+  background: var(--tutor-warning-button-color);
+  border-color: var(--tutor-warning-button-color);
   -webkit-filter: brightness(0.9);
           filter: brightness(0.9);
 }
@@ -3538,8 +3555,6 @@ Instructor
 
 .tutor-login-form-wrap input[type="submit"] {
   color: #fff;
-  background-color: var(--tutor-success-button-color);
-  border-color: var(--tutor-success-button-color);
   padding: 15px 30px;
   border-radius: 4px;
   text-transform: uppercase;
@@ -3548,12 +3563,6 @@ Instructor
   width: 100%;
   -webkit-transition: 300ms;
   transition: 300ms;
-}
-
-.tutor-login-form-wrap input[type="submit"]:hover {
-  color: #fff;
-  background-color: var(--tutor-success-button-color);
-  border-color: var(--tutor-success-button-color);
 }
 
 .tutor-login-form-wrap input[type="checkbox"] {
@@ -3837,11 +3846,6 @@ Instructor
 }
 
 /*option field*/
-.tutor-form-group.tutor-reg-form-btn-wrap .tutor-button {
-  background: var(--tutor-success-button-color);
-  border-color: var(--tutor-success-button-color);
-}
-
 .tutor-option-field p.desc {
   margin: -10px 0 20px;
   font-size: 13px;
