@@ -5825,7 +5825,7 @@ class Utils {
 	 *
 	 * Check if user can create, edit, delete various tutor contents such as lesson, quiz, answer etc. 
 	 */
-	public function can_user_manage(string $content, $object_id, $user_id=0, $allow_current_admin=true) {
+	public function can_user_manage($content, $object_id, $user_id=0, $allow_current_admin=true) {
 		
 		if($allow_current_admin && current_user_can( 'manage_options' )){
 			// Admin has access
