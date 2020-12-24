@@ -5785,12 +5785,15 @@ class Utils {
 			case 'wc':
 				global $woocommerce;
 				$product_id = $is_product_id ? $course_or_product_id : $this->get_course_product_id($course_or_product_id);
- 
-				foreach($woocommerce->cart->get_cart() as $key => $val ) {
-					if($product_id == $val['product_id']) {
-						return true;
+				if($woocommerce->cart !==null)
+				{
+					foreach($woocommerce->cart->get_cart() as $key => $val ) {
+						if($product_id == $val['product_id']) {
+							return true;
+						}
 					}
 				}
+
 				break;
 		}
 	}
