@@ -3167,7 +3167,7 @@ a.tutor-button.button-light:hover,
 }
 
 .tutor-button.tutor-warning {
-  background: var(--tutor-waring-button-color);
+  background: var(--tutor-warning-button-color);
   border-color: var(--tutor-warning-button-color);
 }
 
@@ -8219,6 +8219,7 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
+  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
