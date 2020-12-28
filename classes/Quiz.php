@@ -691,7 +691,7 @@ class Quiz {
 				continue;
 			}
 
-			$question_title         = sanitize_text_field($question['question_title']);
+			$question_title         = stripslashes(sanitize_text_field($question['question_title']));
 			$question_description   = wp_kses_post($question['question_description']);
 			$question_type          = $question['question_type'];
 			$question_mark          = $question['question_mark'];
