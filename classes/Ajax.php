@@ -99,15 +99,15 @@ class Ajax{
 
 		do_action('tutor_before_rating_placed');
 
-		$previous_rating_id = $wpdb->get_var("select comment_ID from {$wpdb->comments} WHERE comment_post_ID={$course_id} AND user_id = {$user_id} AND comment_type = 'tutor_course_rating' LIMIT 1;");
+		$previous_rating_id = $wpdb->get_var($wpdb->prepare("select comment_ID from {$wpdb->comments} WHERE comment_post_ID=%d AND user_id = %d AND comment_type = 'tutor_course_rating' LIMIT 1;", $course_id, $user_id));
 
 		$review_ID = $previous_rating_id;
 		if ( $previous_rating_id){
-			$wpdb->update( $wpdb->comments, array('comment_content' => $review),
+			$wpdb->update( $wpdb->comments, array('comment_content' => esc_sql( $review ) ),
 				array('comment_ID' => $previous_rating_id)
 			);
 
-			$rating_info = $wpdb->get_row("SELECT * FROM {$wpdb->commentmeta} WHERE comment_id = {$previous_rating_id} AND meta_key = 'tutor_rating'; ");
+			$rating_info = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->commentmeta} WHERE comment_id = %d AND meta_key = 'tutor_rating'; ", $previous_rating_id));
 			if ($rating_info){
 				$wpdb->update( $wpdb->commentmeta, array('meta_value' => $rating), array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating') );
 			}else{
@@ -115,7 +115,7 @@ class Ajax{
 			}
 		}else{
 			$data = array(
-				'comment_post_ID'   => $course_id,
+				'comment_post_ID'   => esc_sql( $course_id ) ,
 				'comment_approved'  => 'approved',
 				'comment_type'      => 'tutor_course_rating',
 				'comment_date'      => $date,
@@ -254,6 +254,11 @@ class Ajax{
 	 * Method for enable / disable addons
 	 */
 	public function addon_enable_disable(){
+
+		if(!current_user_can( 'manage_options' )) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
+
 		$addonsConfig = maybe_unserialize(get_option('tutor_addons_config'));
 
 		$isEnable = (bool) sanitize_text_field(tutor_utils()->avalue_dot('isEnable', $_POST));

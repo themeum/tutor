@@ -29,9 +29,11 @@ class Student {
 	 * @since v.1.0.0
 	 */
 	public function register_student(){
-		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_register_student' ){
+		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_register_student' || !get_option( 'users_can_register', false ) ){
+			// Action must be register, and registrtion must be enabled in dashoard
 			return;
 		}
+		
 		//Checking nonce
 		tutor_utils()->checking_nonce();
 

@@ -46,8 +46,8 @@ class Options {
 	}
 
 	public function tutor_option_save(){
-		if ( ! isset($_POST['_wpnonce']) || ! wp_verify_nonce( $_POST['_wpnonce'], 'tutor_option_save' ) ){
-			exit();
+		if ( !isset($_POST['_wpnonce']) || !wp_verify_nonce( $_POST['_wpnonce'], 'tutor_option_save' ) || !current_user_can( 'manage_options' )){
+			wp_send_json_error( );
 		}
 
 		do_action('tutor_option_save_before');

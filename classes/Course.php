@@ -415,14 +415,18 @@ class Course extends Tutor_Base {
 		}
 		$course_id = (int) tutor_utils()->avalue_dot('tutor_topic_course_ID', $_POST);
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id);
+		
+		if(!tutils()->can_user_manage('course', $course_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
 
 		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
 		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
 
 		$post_arr = array(
 			'post_type'    => 'topics',
-			'post_title'   => $topic_title,
-			'post_content' => $topic_summery,
+			'post_title'   => esc_sql( $topic_title ) ,
+			'post_content' => esc_sql( $topic_summery ) ,
 			'post_status'  => 'publish',
 			'post_author'  => get_current_user_id(),
 			'post_parent'  => $course_id,
@@ -445,10 +449,14 @@ class Course extends Tutor_Base {
 		$topic_title = sanitize_text_field($_POST['topic_title']);
 		$topic_summery = wp_kses_post($_POST['topic_summery']);
 
+		if(!tutils()->can_user_manage('topic', $topic_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
+
 		$topic_attr = array(
 			'ID'           => $topic_id,
-			'post_title'   => $topic_title,
-			'post_content' => $topic_summery,
+			'post_title'   => esc_sql( $topic_title ) ,
+			'post_content' => esc_sql( $topic_summery ) ,
 		);
 		wp_update_post( $topic_attr );
 
@@ -644,10 +652,12 @@ class Course extends Tutor_Base {
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 		$search_terms = sanitize_text_field(tutor_utils()->avalue_dot('search_terms', $_POST));
 
+		if(!tutils()->can_user_manage('course', $course_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
+		
 		$saved_instructors = tutor_utils()->get_instructors_by_course($course_id);
-
 		$instructors = array();
-
 
 		$not_in_sql = apply_filters('tutor_instructor_query_when_exists', " AND ID <1 ");
 
@@ -690,6 +700,10 @@ class Course extends Tutor_Base {
 	public function tutor_add_instructors_to_course(){
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 		$instructor_ids = tutor_utils()->avalue_dot('tutor_instructor_ids', $_POST);
+		
+		if(!tutils()->can_user_manage('course', $course_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
 
 		if (is_array($instructor_ids) && count($instructor_ids)){
 			foreach ($instructor_ids as $instructor_id){
@@ -722,12 +736,21 @@ class Course extends Tutor_Base {
 		$instructor_id = (int) sanitize_text_field($_POST['instructor_id']);
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 
+		if(!tutils()->can_user_manage('course', $course_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
+		
 		$wpdb->delete($wpdb->usermeta, array('user_id' => $instructor_id, 'meta_key' => '_tutor_instructor_course_id', 'meta_value' => $course_id) );
 		wp_send_json_success();
 	}
 
 	public function tutor_delete_dashboard_course(){
 		$course_id = intval(sanitize_text_field($_POST['course_id']));
+
+		if(!tutils()->can_user_manage('course', $course_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
+
 		wp_trash_post($course_id);
 		wp_send_json_success(['element'=>'course']);
 	}
