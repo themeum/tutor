@@ -241,13 +241,14 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.7.7 - December 28, 2020 =
+= 1.7.7 - December 30, 2020 =
 
 New: More settings to control button colors in login, registration, enrolment
-Update: Added translation support for some of the static strings
 Update: Enhanced security features in gradebook and other necessary places. Thanks to Wordfence!
+Update: Added translation support for some of the static strings
 Fix: Fatal error on course archive and shortcode page for misconfigured monetization settings
 Fix: Auto-save email notification issue from frontend course builder
+Fix: Course preview access issue for admin
 
 = 1.7.6 - December 04, 2020 =
 
