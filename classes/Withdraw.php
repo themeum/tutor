@@ -176,7 +176,7 @@ class Withdraw {
 			$saved_data['withdraw_method_name'] = tutor_utils()->avalue_dot($method.".method_name",  $available_withdraw_method);
 
 			foreach ($method_data as $input_name => $value){
-				$saved_data[$input_name]['value'] = sanitize_text_field($value);
+				$saved_data[$input_name]['value'] = esc_sql( sanitize_text_field($value) ) ;
 				$saved_data[$input_name]['label'] = tutor_utils()->avalue_dot($method.".form_fields.{$input_name}.label",  $available_withdraw_method);
 			}
 

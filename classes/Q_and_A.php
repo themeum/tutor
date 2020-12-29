@@ -64,13 +64,16 @@ class Q_and_A {
 	public function tutor_delete_dashboard_question() {
 		global $wpdb;
 		$question_id = intval(sanitize_text_field($_POST['question_id']));
-		if( !$question_id ) {
-			return;
+		
+		if( !$question_id || !tutils()->can_user_manage('question', $question_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
+
 		//Deleting question (comment), child question and question meta (comment meta)
-		$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_ID = $question_id" );
-		$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_parent = $question_id" );
-		$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE {$wpdb->commentmeta}.comment_id = $question_id" );
+		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_ID = %d", $question_id));
+		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_parent = %d", $question_id));
+		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->commentmeta} WHERE {$wpdb->commentmeta}.comment_id = %d", $question_id));
+		
 		wp_send_json_success(['element'=>'question']);
 	}
 }

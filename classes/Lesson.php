@@ -104,6 +104,10 @@ class Lesson extends Tutor_Base {
 		$lesson_id = (int) tutor_utils()->avalue_dot('lesson_id', $_POST);
 		$topic_id = (int) sanitize_text_field( $_POST['topic_id'] );
 
+		if(!tutils()->can_user_manage('topic', $topic_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
+
 		/**
 		 * If Lesson Not Exists, create One
 		 */
@@ -139,15 +143,19 @@ class Lesson extends Tutor_Base {
 	public function tutor_modal_create_or_update_lesson(){
 		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
 		$_lesson_thumbnail_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('_lesson_thumbnail_id', $_POST));
+		
+		if(!tutils()->can_user_manage('lesson', $lesson_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
 
 		$title = sanitize_text_field($_POST['lesson_title']);
 		$lesson_content = wp_kses_post($_POST['lesson_content']);
 
 		$lesson_data = array(
 			'ID'            => $lesson_id,
-			'post_title'    => $title,
-			'post_name'     => sanitize_title($title),
-			'post_content'  => $lesson_content,
+			'post_title'    => esc_sql( $title ) ,
+			'post_name'     => esc_sql( sanitize_title($title) ) ,
+			'post_content'  => esc_sql( $lesson_content ) ,
 		);
 
 		do_action('tutor/lesson_update/before', $lesson_id);
@@ -173,6 +181,11 @@ class Lesson extends Tutor_Base {
 	 */
 	public function tutor_delete_lesson_by_id(){
 		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
+
+		if(!tutils()->can_user_manage('lesson', $lesson_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
+
 		wp_delete_post($lesson_id, true);
 		delete_post_meta($lesson_id, '_tutor_course_id_for_lesson');
 		wp_send_json_success();
