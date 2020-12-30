@@ -21,14 +21,14 @@
 
         <div class="tutor-option-field-row">
             <div class="tutor-option-field tutor-lesson-modal-title-wrap">
-                <input type="text" name="lesson_title" value="<?php echo $post->post_title; ?>" placeholder="<?php _e('Lesson title', 'tutor'); ?>">
+                <input type="text" name="lesson_title" value="<?php echo stripslashes($post->post_title); ?>" placeholder="<?php _e('Lesson title', 'tutor'); ?>">
             </div>
         </div>
 
         <div class="tutor-option-field-row">
             <div class="tutor-option-field">
 				<?php
-                wp_editor($post->post_content, 'tutor_lesson_modal_editor', array( 'editor_height' => 150));
+                wp_editor(stripslashes($post->post_content), 'tutor_lesson_modal_editor', array( 'editor_height' => 150));
 				?>
             </div>
         </div>
