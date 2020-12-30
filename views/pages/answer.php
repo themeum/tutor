@@ -58,7 +58,7 @@ $question = tutor_utils()->get_qa_question($question_id);
 
                 <div class="tutor_question_area">
                     <p>
-                        <strong><?php echo $question->question_title; ?> </strong>
+                        <strong><?php echo stripslashes($question->question_title); ?> </strong>
 
                         <span class="text-muted">
 							<?php _e('on', 'tutor'); ?> <?php echo $question->post_title; ?>

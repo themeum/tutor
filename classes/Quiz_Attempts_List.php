@@ -182,7 +182,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 
 			$custom_author_query = "AND {$wpdb->posts}.post_author = {$user_id}";
 			if (is_array($get_assigned_courses_ids) && count($get_assigned_courses_ids)){
-				$in_query_pre = implode($get_assigned_courses_ids, ',');
+				$in_query_pre = implode(',', $get_assigned_courses_ids);
 				$custom_author_query = "  AND ( {$wpdb->posts}.post_author = {$user_id} OR {$wpdb->posts}.ID IN({$in_query_pre}) ) ";
 			}
 			$course_post_type = tutor()->course_post_type;

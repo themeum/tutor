@@ -77,8 +77,8 @@ if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
                         </div>
 
                         <div class="tutor_question_area">
-                            <p><strong><?php echo $question->question_title; ?> </strong></p>
-							<?php echo wpautop(stripslashes($question->comment_content)); ?>
+                            <p><strong><?php echo stripslashes($question->question_title); ?> </strong></p>
+							<?php echo stripslashes($question->comment_content); ?>
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@ if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
                                             </div>
 
                                             <div class="tutor_question_area">
-                                                <?php echo wpautop(stripslashes($answer->comment_content)); ?>
+                                                <?php echo stripslashes($answer->comment_content); ?>
                                             </div>
                                         </div>
                                     </div>

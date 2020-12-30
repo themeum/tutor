@@ -206,7 +206,7 @@ class Template extends Tutor_Base {
 			if (is_user_logged_in()){
 				$is_course_enrolled = tutor_utils()->is_course_enrolled_by_lesson();
 
-				if ($is_course_enrolled) {
+				if ($is_course_enrolled || current_user_can( 'manage_options' )) {
 					$template = tutor_get_template( 'single-lesson' );
 				}else{
 					//You need to enroll first

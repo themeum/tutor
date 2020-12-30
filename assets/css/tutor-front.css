@@ -3072,7 +3072,7 @@ a.tutor-button.bordered-button,
 .tutor-button.bordered-button,
 a.tutor-btn.bordered-btn,
 .tutor-btn.bordered-btn {
-  color: var(--tutor-primary-color);
+  color: #fff;
   border: 1px solid var(--tutor-primary-button-color);
   background-color: transparent !important;
 }
@@ -3090,7 +3090,7 @@ a.tutor-button.default-btn i,
 .tutor-button.default-btn i,
 a.tutor-btn.default-btn i,
 .tutor-btn.default-btn i {
-  color: var(--tutor-primary-color);
+  color: #fff;
 }
 
 a.tutor-button.default-btn:hover,
@@ -5342,6 +5342,7 @@ Quiz Modal
   overflow: hidden;
   line-height: 17px;
   vertical-align: middle;
+  font-size: 14px !important;
 }
 
 #tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item.active {
