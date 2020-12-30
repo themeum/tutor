@@ -3074,7 +3074,7 @@ a.tutor-btn.bordered-btn,
 .tutor-btn.bordered-btn {
   color: var(--tutor-primary-color);
   border: 1px solid var(--tutor-primary-button-color);
-  background-color: var(--tutor-primary-button-color);
+  background-color: transparent !important;
 }
 
 a.tutor-button.default-btn,
@@ -3125,7 +3125,8 @@ a.tutor-button.bordered-button:hover,
 a.tutor-btn.bordered-btn:hover,
 .tutor-btn.bordered-btn:hover {
   border: 1px solid var(--tutor-primary-button-color);
-  background-color: var(--tutor-primary-button-color);
+  background-color: var(--tutor-primary-button-color) !important;
+  color: #fff !important;
 }
 
 a.tutor-button.button-light,
@@ -8221,7 +8222,6 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
-  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
