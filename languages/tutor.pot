@@ -1033,7 +1033,7 @@ msgstr ""
 msgid "The values you set here define the default values that are used in the settings form when you create a new quiz."
 msgstr ""
 
-#: classes/Options.php:461, classes/Tutor_Setup.php:423, views/modal/edit_quiz.php:146
+#: classes/Options.php:461, classes/Tutor_Setup.php:423, views/modal/edit_quiz.php:140
 msgid "Time Limit"
 msgstr ""
 
@@ -1041,23 +1041,23 @@ msgstr ""
 msgid "0 means unlimited time."
 msgstr ""
 
-#: classes/Options.php:473, views/modal/edit_quiz.php:158
+#: classes/Options.php:473, views/modal/edit_quiz.php:152
 msgid "Weeks"
 msgstr ""
 
-#: classes/Options.php:474, views/modal/edit_quiz.php:157
+#: classes/Options.php:474, views/modal/edit_quiz.php:151
 msgid "Days"
 msgstr ""
 
-#: classes/Options.php:475, views/modal/edit_quiz.php:156
+#: classes/Options.php:475, views/modal/edit_quiz.php:150
 msgid "Hours"
 msgstr ""
 
-#: classes/Options.php:476, views/modal/edit_quiz.php:155
+#: classes/Options.php:476, views/modal/edit_quiz.php:149
 msgid "Minutes"
 msgstr ""
 
-#: classes/Options.php:477, views/modal/edit_quiz.php:154
+#: classes/Options.php:477, views/modal/edit_quiz.php:148
 msgid "Seconds"
 msgstr ""
 
@@ -1998,7 +1998,7 @@ msgstr ""
 msgid "What message to display when the quiz time expires?"
 msgstr ""
 
-#: classes/Tutor_Setup.php:438, views/modal/edit_quiz.php:217, templates/single/quiz/top.php:57
+#: classes/Tutor_Setup.php:438, views/modal/edit_quiz.php:207, templates/single/quiz/top.php:57
 msgid "Attempts Allowed"
 msgstr ""
 
@@ -2134,7 +2134,7 @@ msgstr ""
 msgid "Skip This Step"
 msgstr ""
 
-#: classes/Tutor_Setup.php:613, classes/Tutor_Setup.php:720, templates/shortcode/tutor-instructor.php:46, views/modal/add_quiz.php:68, views/modal/add_quiz.php:85, views/modal/edit_quiz.php:132
+#: classes/Tutor_Setup.php:613, classes/Tutor_Setup.php:720, templates/shortcode/tutor-instructor.php:46, views/modal/add_quiz.php:68, views/modal/add_quiz.php:85, views/modal/edit_quiz.php:126
 msgid "Next"
 msgstr ""
 
@@ -2757,7 +2757,7 @@ msgstr ""
 msgid "View Coures"
 msgstr ""
 
-#: templates/dashboard/create-course.php:38, views/modal/edit_quiz.php:264, views/modal/edit_quiz.php:356
+#: templates/dashboard/create-course.php:38, views/modal/edit_quiz.php:253, views/modal/edit_quiz.php:340
 msgid "Save"
 msgstr ""
 
@@ -2997,7 +2997,7 @@ msgstr ""
 msgid "You are going to delete this course, it can't be undone"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:72, templates/dashboard/withdraw.php:143, views/modal/add_quiz.php:55, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:135, views/modal/question_form.php:225, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
+#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:72, templates/dashboard/withdraw.php:143, views/modal/add_quiz.php:55, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:67, views/modal/edit_quiz.php:129, views/modal/question_form.php:225, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
 msgid "Cancel"
 msgstr ""
 
@@ -3771,27 +3771,27 @@ msgstr ""
 msgid "Advanced Options"
 msgstr ""
 
-#: views/modal/add_quiz.php:37, views/modal/edit_quiz.php:47, views/modal/question_form.php:24
+#: views/modal/add_quiz.php:37, views/modal/edit_quiz.php:45, views/modal/question_form.php:24
 msgid "Type your quiz title here"
 msgstr ""
 
-#: views/modal/add_quiz.php:52, views/modal/edit_quiz.php:68
+#: views/modal/add_quiz.php:52, views/modal/edit_quiz.php:64
 msgid "Save &amp; Next"
 msgstr ""
 
-#: views/modal/add_quiz.php:66, views/modal/add_quiz.php:83, views/modal/edit_quiz.php:131, views/modal/edit_quiz.php:263, views/modal/edit_quiz.php:355, views/modal/question_form.php:11
+#: views/modal/add_quiz.php:66, views/modal/add_quiz.php:83, views/modal/edit_quiz.php:125, views/modal/edit_quiz.php:252, views/modal/edit_quiz.php:339, views/modal/question_form.php:11
 msgid "Back"
 msgstr ""
 
-#: views/modal/add_quiz.php:105, views/modal/edit_quiz.php:369
+#: views/modal/add_quiz.php:105, views/modal/edit_quiz.php:353
 msgid "Knowledge Base"
 msgstr ""
 
-#: views/modal/add_quiz.php:107, views/modal/edit_quiz.php:371
+#: views/modal/add_quiz.php:107, views/modal/edit_quiz.php:355
 msgid "Documentation"
 msgstr ""
 
-#: views/modal/add_quiz.php:108, views/modal/edit_quiz.php:372
+#: views/modal/add_quiz.php:108, views/modal/edit_quiz.php:356
 msgid "Need any Help? Please visit our %s and %s."
 msgstr ""
 
@@ -3815,147 +3815,147 @@ msgstr ""
 msgid "Update Lesson"
 msgstr ""
 
-#: views/modal/edit_quiz.php:121
+#: views/modal/edit_quiz.php:117
 msgid "Add Question"
 msgstr ""
 
-#: views/modal/edit_quiz.php:166
+#: views/modal/edit_quiz.php:160
 msgid "Hide quiz time - display"
 msgstr ""
 
-#: views/modal/edit_quiz.php:169
+#: views/modal/edit_quiz.php:163
 msgid "Time limit for this quiz. 0 means no time limit."
 msgstr ""
 
-#: views/modal/edit_quiz.php:175
+#: views/modal/edit_quiz.php:167
 msgid "Quiz Feedback Mode"
 msgstr ""
 
-#: views/modal/edit_quiz.php:177
+#: views/modal/edit_quiz.php:169
 msgid "Pick the quiz system\"s behaviour on choice based questions"
 msgstr ""
 
-#: views/modal/edit_quiz.php:185
+#: views/modal/edit_quiz.php:177
 msgid "Default"
 msgstr ""
 
-#: views/modal/edit_quiz.php:186
+#: views/modal/edit_quiz.php:178
 msgid "Answers shown after quiz is finished"
 msgstr ""
 
-#: views/modal/edit_quiz.php:195
+#: views/modal/edit_quiz.php:187
 msgid "Retry Mode"
 msgstr ""
 
-#: views/modal/edit_quiz.php:196
+#: views/modal/edit_quiz.php:188
 msgid "Unlimited attempts on each question."
 msgstr ""
 
-#: views/modal/edit_quiz.php:196, views/modal/edit_quiz.php:206
+#: views/modal/edit_quiz.php:188, views/modal/edit_quiz.php:198
 msgid "Live Demo"
 msgstr ""
 
-#: views/modal/edit_quiz.php:205
+#: views/modal/edit_quiz.php:197
 msgid "Reveal Mode"
 msgstr ""
 
-#: views/modal/edit_quiz.php:206
+#: views/modal/edit_quiz.php:198
 msgid "Show result after the attempt."
 msgstr ""
 
-#: views/modal/edit_quiz.php:217, views/modal/question_form.php:113
+#: views/modal/edit_quiz.php:207, views/modal/question_form.php:113
 msgid "Optional"
 msgstr ""
 
-#: views/modal/edit_quiz.php:232
+#: views/modal/edit_quiz.php:222
 msgid "Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit"
 msgstr ""
 
-#: views/modal/edit_quiz.php:236
+#: views/modal/edit_quiz.php:226
 msgid "Passing Grade (%)"
 msgstr ""
 
-#: views/modal/edit_quiz.php:242
+#: views/modal/edit_quiz.php:232
 msgid "Set the passing percentage for this quiz"
 msgstr ""
 
-#: views/modal/edit_quiz.php:246
+#: views/modal/edit_quiz.php:236
 msgid "Max questions allowed to answer"
 msgstr ""
 
-#: views/modal/edit_quiz.php:252
+#: views/modal/edit_quiz.php:242
 msgid "This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer."
 msgstr ""
 
-#: views/modal/edit_quiz.php:282
+#: views/modal/edit_quiz.php:270
 msgid "Quiz Auto Start"
 msgstr ""
 
-#: views/modal/edit_quiz.php:285
+#: views/modal/edit_quiz.php:273
 msgid "If you enable this option, the quiz will start automatically after the page is loaded."
 msgstr ""
 
-#: views/modal/edit_quiz.php:291
+#: views/modal/edit_quiz.php:279
 msgid "Question Layout"
 msgstr ""
 
-#: views/modal/edit_quiz.php:294
+#: views/modal/edit_quiz.php:282
 msgid "Set question layout view"
 msgstr ""
 
-#: views/modal/edit_quiz.php:295
+#: views/modal/edit_quiz.php:283
 msgid "Single Question"
 msgstr ""
 
-#: views/modal/edit_quiz.php:296
+#: views/modal/edit_quiz.php:284
 msgid "Question Pagination"
 msgstr ""
 
-#: views/modal/edit_quiz.php:297
+#: views/modal/edit_quiz.php:285
 msgid "Question below each other"
 msgstr ""
 
-#: views/modal/edit_quiz.php:302
+#: views/modal/edit_quiz.php:290
 msgid "Questions Order"
 msgstr ""
 
-#: views/modal/edit_quiz.php:305
+#: views/modal/edit_quiz.php:293
 msgid "Random"
 msgstr ""
 
-#: views/modal/edit_quiz.php:306
+#: views/modal/edit_quiz.php:294
 msgid "Sorting"
 msgstr ""
 
-#: views/modal/edit_quiz.php:308
+#: views/modal/edit_quiz.php:296
 msgid "Ascending"
 msgstr ""
 
-#: views/modal/edit_quiz.php:309
+#: views/modal/edit_quiz.php:297
 msgid "Descending"
 msgstr ""
 
-#: views/modal/edit_quiz.php:324
+#: views/modal/edit_quiz.php:311
 msgid "Hide question number"
 msgstr ""
 
-#: views/modal/edit_quiz.php:327
+#: views/modal/edit_quiz.php:314
 msgid "Show/hide question number during attempt."
 msgstr ""
 
-#: views/modal/edit_quiz.php:331
+#: views/modal/edit_quiz.php:318
 msgid "Short answer characters limit"
 msgstr ""
 
-#: views/modal/edit_quiz.php:338
+#: views/modal/edit_quiz.php:324
 msgid "Student will place answer in short answer question type within this characters limit."
 msgstr ""
 
-#: views/modal/edit_quiz.php:342
+#: views/modal/edit_quiz.php:328
 msgid "Open-Ended/Essay questions answer character limit"
 msgstr ""
 
-#: views/modal/edit_quiz.php:349
+#: views/modal/edit_quiz.php:334
 msgid "Students will place the answer in the Open-Ended/Essay question type within this character limit."
 msgstr ""
 
@@ -4041,6 +4041,10 @@ msgstr ""
 
 #: views/modal/question_form.php:30
 msgid "Question Type"
+msgstr ""
+
+#: views/modal/question_form.php:35
+msgid "True or False"
 msgstr ""
 
 #: views/modal/question_form.php:57

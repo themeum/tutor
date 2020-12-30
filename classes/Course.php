@@ -425,8 +425,8 @@ class Course extends Tutor_Base {
 
 		$post_arr = array(
 			'post_type'    => 'topics',
-			'post_title'   => esc_sql( $topic_title ) ,
-			'post_content' => esc_sql( $topic_summery ) ,
+			'post_title'   => $topic_title,
+			'post_content' => $topic_summery,
 			'post_status'  => 'publish',
 			'post_author'  => get_current_user_id(),
 			'post_parent'  => $course_id,
@@ -455,8 +455,8 @@ class Course extends Tutor_Base {
 
 		$topic_attr = array(
 			'ID'           => $topic_id,
-			'post_title'   => esc_sql( $topic_title ) ,
-			'post_content' => esc_sql( $topic_summery ) ,
+			'post_title'   => $topic_title,
+			'post_content' => $topic_summery,
 		);
 		wp_update_post( $topic_attr );
 

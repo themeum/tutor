@@ -3072,7 +3072,7 @@ a.tutor-button.bordered-button,
 .tutor-button.bordered-button,
 a.tutor-btn.bordered-btn,
 .tutor-btn.bordered-btn {
-  color: var(--tutor-primary-color);
+  color: #fff;
   border: 1px solid var(--tutor-primary-button-color);
   background-color: var(--tutor-primary-button-color);
 }
@@ -3090,7 +3090,7 @@ a.tutor-button.default-btn i,
 .tutor-button.default-btn i,
 a.tutor-btn.default-btn i,
 .tutor-btn.default-btn i {
-  color: var(--tutor-primary-color);
+  color: #fff;
 }
 
 a.tutor-button.default-btn:hover,
