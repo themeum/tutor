@@ -618,7 +618,7 @@ a.tutor-button.bordered-button,
 .tutor-button.bordered-button,
 a.tutor-btn.bordered-btn,
 .tutor-btn.bordered-btn {
-	color: #fff;
+	color: var(--tutor-primary-button-color);
 	border: 1px solid var(--tutor-primary-button-color);
 	background-color: transparent !important;
 }
