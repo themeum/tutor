@@ -3167,7 +3167,7 @@ a.tutor-button.button-light:hover,
 }
 
 .tutor-button.tutor-warning {
-  background: var(--tutor-waring-button-color);
+  background: var(--tutor-warning-button-color);
   border-color: var(--tutor-warning-button-color);
 }
 
@@ -3555,6 +3555,8 @@ Instructor
 
 .tutor-login-form-wrap input[type="submit"] {
   color: #fff;
+  background-color: var(--tutor-primary-button-color);
+  border-color: var(--tutor-primary-button-color);
   padding: 15px 30px;
   border-radius: 4px;
   text-transform: uppercase;
@@ -5339,6 +5341,7 @@ Quiz Modal
   overflow: hidden;
   line-height: 17px;
   vertical-align: middle;
+  font-size: 14px !important;
 }
 
 #tutor-quiz-modal-tab-items-wrap .tutor-quiz-modal-tab-item.active {
