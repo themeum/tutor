@@ -2556,6 +2556,26 @@ class Utils {
 		return $output;
 	}
 
+
+	/**
+	 * @param $string
+	 *
+	 * @return string
+	 *
+	 * Split string regardless of ASCI, Unicode
+	 *
+	 * 
+	 */
+	public function str_split ($string) {
+		$strlen = mb_strlen($string);
+		while ($strlen) {
+			$array[] = mb_substr($string,0,1,"UTF-8");
+			$string = mb_substr($string,1,$strlen,"UTF-8");
+			$strlen = mb_strlen($string);
+		}
+		return $array;
+	} 
+
 	/**
 	 * @param null $name
 	 *
@@ -2580,14 +2600,8 @@ class Utils {
 		$name = $user->display_name;
 		$arr = explode(' ', trim($name));
 
-		if (count($arr) > 1){
-			$first_char = substr($arr[0], 0, 1) ;
-			$second_char = substr($arr[1], 0, 1) ;
-		}else{
-			$first_char = substr($arr[0], 0, 1) ;
-			$second_char = substr($arr[0], 1, 1) ;
-		}
-
+		$first_char = !empty($arr[0]) ? $this->str_split($arr[0])[0] : '';
+		$second_char = !empty($arr[1]) ? $this->str_split($arr[1])[0] : '';		
 		$initial_avatar = strtoupper($first_char.$second_char);
 
 		$bg_color = '#'.substr(md5($initial_avatar), 0, 6);
