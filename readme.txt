@@ -248,7 +248,7 @@ Update: Enhanced security features in gradebook and other necessary places. Than
 Update: Translation support for several of static strings added
 Fix: Fatal error on course archive and shortcode page for misconfigured monetization settings
 Fix: Auto-save email notification issue on frontend course builder
-Fix: Course preview access issue for admin
+Fix: Lesson preview access issue for admin
 
 = 1.7.6 - December 04, 2020 =
 
