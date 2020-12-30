@@ -45,7 +45,7 @@ class Question_Answers_List extends \Tutor_List_Table {
 
 		//Return the title contents
 		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
-			$item->comment_content,
+			stripslashes($item->comment_content),
 			$item->comment_ID,
 			$this->row_actions($actions)
 		);
