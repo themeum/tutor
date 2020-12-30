@@ -32,7 +32,7 @@ $settings = maybe_unserialize($question->question_settings);
                     <div class="tutor-quiz-builder-col">
                         <div class="tutor-select">
                             <div class="select-header">
-                                <span class="lead-option"> <i class="tutor-icon-yes-no"></i> True or False  </span>
+                                <span class="lead-option"> <i class="tutor-icon-yes-no"></i> <?php _e('True or False', 'tutor'); ?> </span>
                                 <span class="select-dropdown"><i class="tutor-icon-light-down"></i> </span>
                                 <input type="hidden" class="tutor_select_value_holder" name="tutor_quiz_question[<?php echo $question_id; ?>][question_type]" value="" >
                             </div>

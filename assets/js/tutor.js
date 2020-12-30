@@ -491,7 +491,7 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
-                $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).addClass('show');
+                $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('quiz-for-post-id', topic_id).addClass('show');
 
                 //Back to question Tab if exists
                 if ($that.attr('data-back-to-tab')){

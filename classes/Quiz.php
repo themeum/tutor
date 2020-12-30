@@ -515,8 +515,8 @@ class Quiz {
 
 		$post_arr = array(
 			'post_type'     => 'tutor_quiz',
-			'post_title'    => esc_sql( $quiz_title ) ,
-			'post_content'  => esc_sql( $quiz_description ) ,
+			'post_title'    => $quiz_title,
+			'post_content'  => $quiz_description,
 			'post_status'   => 'publish',
 			'post_author'   => get_current_user_id(),
 			'post_parent'   => $topic_id,
@@ -535,7 +535,7 @@ class Quiz {
             <div class="tutor-lesson-top">
                 <i class="tutor-icon-move"></i>
                 <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
-				?>"> <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo $quiz_title; ?> </a>
+				?>"> <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo stripslashes($quiz_title); ?> </a>
 				<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
                 <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
             </div>
@@ -590,8 +590,8 @@ class Quiz {
 	 * @since v.1.0.0
 	 */
 	public function tutor_quiz_builder_quiz_update(){
-		$quiz_id         = sanitize_text_field($_POST['quiz_id']);
-		$topic_id         = sanitize_text_field($_POST['topic_id']);
+		$quiz_id         	= sanitize_text_field($_POST['quiz_id']);
+		$topic_id         	= sanitize_text_field($_POST['topic_id']);
 		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
 		$quiz_description   = sanitize_text_field($_POST['quiz_description']);
 
@@ -601,8 +601,8 @@ class Quiz {
 
 		$post_arr = array(
 			'ID'    => $quiz_id,
-			'post_title'    => esc_sql( $quiz_title ),
-			'post_content'  => esc_sql( $quiz_description ),
+			'post_title'    => $quiz_title,
+			'post_content'  => $quiz_description,
 
 		);
 		$quiz_id = wp_update_post( $post_arr );
@@ -614,7 +614,7 @@ class Quiz {
         <div class="tutor-lesson-top">
             <i class="tutor-icon-move"></i>
             <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
-			?>"> <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo $quiz_title; ?> </a>
+			?>"> <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo stripslashes($quiz_title); ?> </a>
 			<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
             <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
         </div>
@@ -630,7 +630,7 @@ class Quiz {
 	 * @since v.1.0.0
 	 */
 	public function tutor_load_edit_quiz_modal(){
-		$quiz_id           = sanitize_text_field($_POST['quiz_id']);
+		$quiz_id = sanitize_text_field($_POST['quiz_id']);
 		
 		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
@@ -658,8 +658,8 @@ class Quiz {
 			$next_question_order = tutor_utils()->quiz_next_question_order_id($quiz_id);
 
 			$new_question_data = array(
-				'quiz_id'               => esc_sql( $quiz_id ) ,
-				'question_title'        => __('Question', 'tutor').' '.esc_sql( $next_question_id ) ,
+				'quiz_id'               => $quiz_id,
+				'question_title'        => __('Question', 'tutor').' '.$next_question_id,
 				'question_description'  => '',
 				'question_type'         => 'true_false',
 				'question_mark'         => 1,
@@ -691,18 +691,18 @@ class Quiz {
 				continue;
 			}
 
-			$question_title         = stripslashes(sanitize_text_field($question['question_title']));
-			$question_description   = wp_kses_post($question['question_description']);
-			$question_type          = $question['question_type'];
-			$question_mark          = $question['question_mark'];
+			$question_title         = sanitize_text_field($question['question_title']);
+			$question_description   = sanitize_text_field($question['question_description']);
+			$question_type          = sanitize_text_field($question['question_type']);
+			$question_mark          = sanitize_text_field($question['question_mark']);
 
 			unset($question['question_title']);
 			unset($question['question_description']);
 
 			$data = array(
-				'question_title'        => esc_sql( $question_title ) ,
-				'question_description'  => esc_sql( $question_description ) ,
-				'question_type'         => esc_sql( $question_type ),
+				'question_title'        => $question_title,
+				'question_description'  => $question_description,
+				'question_type'         => $question_type,
 				'question_mark'         => $question_mark,
 				'question_settings'     => maybe_serialize($question),
 			);
@@ -845,15 +845,15 @@ class Quiz {
                         $question_type === 'matching' || $question_type === 'image_matching' || $question_type === 'image_answering'  ){
 
 					$answer_data = array(
-						'belongs_question_id'   => esc_sql( $question_id ),
+						'belongs_question_id'   => sanitize_text_field( $question_id ),
 						'belongs_question_type' => $question_type,
-						'answer_title'          => esc_sql( $answer['answer_title'] ),
+						'answer_title'          => sanitize_text_field( $answer['answer_title'] ),
 						'image_id'              => isset($answer['image_id']) ? $answer['image_id'] : 0,
 						'answer_view_format'    => isset($answer['answer_view_format']) ? $answer['answer_view_format'] : 0,
 						'answer_order'          => $next_order_id,
 					);
 					if (isset($answer['matched_answer_title'])){
-						$answer_data['answer_two_gap_match'] = esc_sql( $answer['matched_answer_title'] );
+						$answer_data['answer_two_gap_match'] = sanitize_text_field( $answer['matched_answer_title'] );
                     }
 
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
@@ -861,10 +861,10 @@ class Quiz {
 				}elseif($question_type === 'fill_in_the_blank'){
 					$wpdb->delete($wpdb->prefix.'tutor_quiz_question_answers', array('belongs_question_id' => $question_id, 'belongs_question_type' => $question_type));
 					$answer_data = array(
-						'belongs_question_id'   => esc_sql( $question_id ) ,
+						'belongs_question_id'   => sanitize_text_field( $question_id ) ,
 						'belongs_question_type' => $question_type,
-						'answer_title'          => esc_sql( $answer['answer_title'] ),
-						'answer_two_gap_match'  => isset($answer['answer_two_gap_match']) ? esc_sql( trim($answer['answer_two_gap_match']) ) : null,
+						'answer_title'          => sanitize_text_field( $answer['answer_title'] ),
+						'answer_two_gap_match'  => isset($answer['answer_two_gap_match']) ? sanitize_text_field( trim($answer['answer_two_gap_match']) ) : null,
 					);
 					$wpdb->insert($wpdb->prefix.'tutor_quiz_question_answers', $answer_data);
 				}
@@ -901,16 +901,16 @@ class Quiz {
 					$answer_data = array(
 						'belongs_question_id'   => $question_id,
 						'belongs_question_type' => $question_type,
-						'answer_title'          => esc_sql( $answer['answer_title'] ) ,
+						'answer_title'          => sanitize_text_field( $answer['answer_title'] ) ,
 						'image_id'              => isset($answer['image_id']) ? $answer['image_id'] : 0,
-						'answer_view_format'    => isset($answer['answer_view_format']) ? esc_sql( $answer['answer_view_format'] )  : '',
+						'answer_view_format'    => isset($answer['answer_view_format']) ? sanitize_text_field( $answer['answer_view_format'] )  : '',
 					);
 					if (isset($answer['matched_answer_title'])){
-						$answer_data['answer_two_gap_match'] = esc_sql( $answer['matched_answer_title'] ) ;
+						$answer_data['answer_two_gap_match'] = sanitize_text_field( $answer['matched_answer_title'] ) ;
 					}
 
 					if ($question_type === 'fill_in_the_blank'){
-						$answer_data['answer_two_gap_match'] = isset($answer['answer_two_gap_match']) ? esc_sql(trim($answer['answer_two_gap_match'])) : null;
+						$answer_data['answer_two_gap_match'] = isset($answer['answer_two_gap_match']) ? sanitize_text_field(trim($answer['answer_two_gap_match'])) : null;
 					}
 
 					$wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', $answer_data, array('answer_id' => $answer_id));
