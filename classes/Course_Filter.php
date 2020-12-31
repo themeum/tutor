@@ -50,6 +50,7 @@ class Course_Filter{
         }
 
         $args = array(
+            'post_status' => 'publish',
             'post_type' => 'courses',
             'posts_per_page' => $courses_per_page,
             'paged' => $page
