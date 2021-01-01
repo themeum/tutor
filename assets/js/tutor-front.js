@@ -1405,13 +1405,21 @@ jQuery(document).ready(function ($) {
             content = $('#' + inputid).val();
         }
 
-        var form_data = $(this).closest('form').serialize();
-        form_data += '&assignment_content=' + content;
+        var form_data = $(this).closest('form').serializeArray();
+        var data = {};
+
+        /**
+         * push data in data obj
+         */
+        for(let d of form_data){
+            data[d.name] = d.value;
+        }
+        data.assignment_content = content;
 
         $.ajax({
             url: ajaxurl,
             type: 'POST',
-            data: form_data,
+            data: data,
             beforeSend: function () {
                 $that.addClass('tutor-updating-message');
             },
