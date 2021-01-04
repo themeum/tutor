@@ -2373,6 +2373,9 @@ Course question and answer
   overflow: auto;
   max-width: 1140px !important;
   margin: 0 auto !important;
+  /*
+		@ clear all filter button
+	*/
 }
 
 .tutor-course-filter-wrapper > div {
@@ -2441,6 +2444,29 @@ Course question and answer
 
 .tutor-course-filter-wrapper > div .tutor-course-filter-loop-container {
   display: none;
+}
+
+.tutor-course-filter-wrapper .tutor-clear-all-filter {
+  margin-top: 28px;
+  display: none;
+}
+
+.tutor-course-filter-wrapper .tutor-clear-all-filter > a {
+  height: 21px;
+  background: #E8E8E8;
+  border-radius: 22px;
+  line-height: 21px;
+  text-align: center;
+  /* color: #7A7A7A; */
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 20px;
+  color: #7a7a7a;
+  padding: 5px 10px;
+}
+
+.tutor-course-filter-wrapper .tutor-clear-all-filter a > i {
+  font-size: 10px;
 }
 
 @media (max-width: 767px) {

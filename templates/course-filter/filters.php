@@ -86,4 +86,10 @@
             }
         ?>
     </div>
+    <div class="tutor-clear-all-filter">
+        <a href="<?= esc_url(tutor_utils()->course_archive_page_url());?>">
+            <i class="tutor-icon-cross"></i> Clear All Filter
+        </a>
+       
+    </div>
 </div>
