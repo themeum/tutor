@@ -1658,7 +1658,7 @@ Quiz Modal
 	border: 1px solid #ccc;
 	box-shadow: none;
 	height: 42px !important;
-	padding: 0 12px !important;
+	padding: 0 24px 0 12px!important;
 	margin: 0;
 }
 
