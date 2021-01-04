@@ -1877,7 +1877,12 @@ jQuery(document).ready(function ($) {
 
     // Sidebar checkbox value change
     filter_container.find('[type=checkbox]').change(function(e){
-        
+        /**
+         * check if checkbox is checked
+         */
+        var is_checked = filter_container.find('[type=checkbox]').is(":checked");
+        is_checked ? $(".tutor-clear-all-filter").show() : $(".tutor-clear-all-filter").hide();
+
         e.originalEvent ? toggle_criteria($(this).attr('name'), $(this).val(), $(this).prop('checked')) : 0;
         filter_criteria.column_per_row = loop_container.data('column_per_row');
         filter_criteria.course_per_page = loop_container.data('course_per_page');

@@ -70,6 +70,30 @@
 		}
 	}
 
+	/*
+		@ clear all filter button
+	*/
+	.tutor-clear-all-filter {
+		margin-top: 28px;
+		display: none;
+	}
+	.tutor-clear-all-filter > a {
+		height: 21px;
+		background: #E8E8E8;
+		border-radius: 22px;
+		line-height: 21px;
+		text-align: center;
+		/* color: #7A7A7A; */
+		font-size: 13px;
+		font-weight: 500;
+		margin-top: 20px;			
+		color: #7a7a7a;
+		padding:5px 10px;
+	}
+	.tutor-clear-all-filter  a > i {
+		font-size: 10px;
+	}
+	
 	@media(max-width:767px){
 		&>div{
 			width: 100% !important;
