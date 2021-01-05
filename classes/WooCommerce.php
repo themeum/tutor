@@ -70,6 +70,13 @@ class WooCommerce extends Tutor_Base {
 			add_action('tutor_course/single/before/inner-wrap', 'wc_print_notices', 10);
 			add_action('tutor_course/single/enrolled/before/inner-wrap', 'wc_print_notices', 10);
 		}
+
+		/**
+		 * Manage WooCommerce plugin dependency
+		 * @since v.1.7.8
+		 */
+		$woocommerce_path = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR .  'woocommerce' . DIRECTORY_SEPARATOR . 'woocommerce.php';
+		register_deactivation_hook( $woocommerce_path, array($this, 'disable_tutor_monetization') );
 	}
 
 	public function notice_before_option() {
@@ -481,4 +488,24 @@ class WooCommerce extends Tutor_Base {
 			tutor_utils()->do_enroll($course_id, $order_id);
 		}
 	}
+
+	/**
+	 * Disable course monetization on woocommerce deactivation
+	 * @since v.1.7.8
+	 */
+	public function disable_tutor_monetization() {
+		tutils()->update_option('monetize_by', 'free');
+		update_option('tutor_show_woocommerce_notice', true);
+	}
 }
+
+
+add_action('admin_notices', function() {
+
+	$show = get_option( 'tutor_show_woocommerce_notice' ) && tutils()->get_option('monetize_by', 'free')=='free';
+
+	if($show) {
+		$message = __('Since WooCommerce is disabled, your monetized courses have been set to free. Please make sure to enable Tutor LMS monetization if you decide to re-enable WooCommerce.', 'tutor');
+		echo '<div class="notice notice-error"><p>' . $message . '</p></div>';
+	}
+});
