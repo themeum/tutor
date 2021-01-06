@@ -3649,28 +3649,64 @@ msgstr ""
 msgid "Thanks for reading."
 msgstr ""
 
-#: templates/email/to_admin_course_updated.php:9, templates/email/to_admin_new_course_published.php:9, templates/email/to_admin_new_course_submitted_for_review.php:9, templates/email/to_admin_new_instructor_signup.php:9, templates/email/to_admin_new_student_signup.php:9, templates/email/to_instructor_student_submitted_assignment.php:9, templates/email/to_student_assignment_evaluate.php:9, templates/email/to_student_course_enrolled.php:9, templates/email/to_student_feedback_submitted_for_quiz.php:9, templates/email/to_student_manual_enrollment.php:9, templates/email/to_student_new_announcement_posted.php:9, templates/email/to_student_question_answered.php:9, templates/email/to_student_rate_course_and_instructor.php:9, templates/email/to_student_remove_from_course.php:9
+#: templates/email/to_admin_announcement_created.php:9, templates/email/to_admin_announcement_updated.php:9, templates/email/to_admin_assignment_created.php:9, templates/email/to_admin_assignment_updated.php:9, templates/email/to_admin_course_updated.php:9, templates/email/to_admin_lesson_created.php:9, templates/email/to_admin_lesson_updated.php:9, templates/email/to_admin_new_course_published.php:9, templates/email/to_admin_new_course_submitted_for_review.php:9, templates/email/to_admin_new_instructor_signup.php:9, templates/email/to_admin_new_student_signup.php:9, templates/email/to_admin_topic_created.php:9, templates/email/to_admin_topic_updated.php:9, templates/email/to_instructor_student_submitted_assignment.php:9, templates/email/to_student_assignment_evaluate.php:9, templates/email/to_student_course_enrolled.php:9, templates/email/to_student_feedback_submitted_for_quiz.php:9, templates/email/to_student_manual_enrollment.php:9, templates/email/to_student_new_announcement_posted.php:9, templates/email/to_student_question_answered.php:9, templates/email/to_student_rate_course_and_instructor.php:9, templates/email/to_student_remove_from_course.php:9
 msgid "Hi,"
 msgstr ""
 
-#: templates/email/to_admin_course_updated.php:11
-msgid "Instructor <strong>{instructor_name}</strong> has edited a course on <strong>{site_name}</strong>"
+#: templates/email/to_admin_announcement_created.php:12
+msgid "Instructor <strong>{instructor_name}</strong> has created an announcement to {course_name} on <strong>{site_name}</strong>"
 msgstr ""
 
-#: templates/email/to_admin_course_updated.php:13, templates/email/to_admin_new_course_published.php:13, templates/email/to_admin_new_course_submitted_for_review.php:13
-msgid "Course name - <strong>{course_name}</strong>"
+#: templates/email/to_admin_announcement_created.php:15, templates/email/to_admin_announcement_updated.php:15, templates/email/to_admin_assignment_created.php:15, templates/email/to_admin_assignment_updated.php:15, templates/email/to_admin_course_updated.php:15, templates/email/to_admin_lesson_created.php:15, templates/email/to_admin_lesson_updated.php:15, templates/email/to_admin_topic_created.php:15, templates/email/to_admin_topic_updated.php:15
+msgid "Course Link: {course_url}"
 msgstr ""
 
-#: templates/email/to_admin_course_updated.php:15, templates/email/to_admin_new_course_published.php:15, templates/email/to_admin_new_course_submitted_for_review.php:15
-msgid "View the course - {course_url}"
+#: templates/email/to_admin_announcement_created.php:16, templates/email/to_admin_announcement_updated.php:16
+msgid "Announcement Name: {post_name}"
 msgstr ""
 
-#: templates/email/to_admin_course_updated.php:18, templates/email/to_admin_new_course_published.php:18, templates/email/to_admin_new_course_submitted_for_review.php:18, templates/email/to_instructor_student_submitted_assignment.php:22
+#: templates/email/to_admin_announcement_created.php:17, templates/email/to_admin_announcement_updated.php:17, templates/email/to_admin_assignment_created.php:17, templates/email/to_admin_assignment_updated.php:17, templates/email/to_admin_course_updated.php:17, templates/email/to_admin_lesson_created.php:17, templates/email/to_admin_lesson_updated.php:17, templates/email/to_admin_new_course_published.php:18, templates/email/to_admin_new_course_submitted_for_review.php:18, templates/email/to_admin_topic_created.php:17, templates/email/to_admin_topic_updated.php:17, templates/email/to_instructor_student_submitted_assignment.php:22
 msgid "Reply to this email to communicate with the instructor."
+msgstr ""
+
+#: templates/email/to_admin_announcement_updated.php:12
+msgid "Instructor <strong>{instructor_name}</strong> has updated an announcement to {course_name} on <strong>{site_name}</strong>"
+msgstr ""
+
+#: templates/email/to_admin_assignment_created.php:12, templates/email/to_admin_assignment_updated.php:12
+msgid "Instructor <strong>{instructor_name}</strong> has added a new assignment to  {course_name} on <strong>{site_name}</strong>"
+msgstr ""
+
+#: templates/email/to_admin_assignment_created.php:16, templates/email/to_admin_assignment_updated.php:16
+msgid "Assignment Name: {post_name}"
+msgstr ""
+
+#: templates/email/to_admin_course_updated.php:12
+msgid "Instructor <strong>{instructor_name}</strong> has updated {course_name} on <strong>{site_name}</strong>"
+msgstr ""
+
+#: templates/email/to_admin_lesson_created.php:12
+msgid "Instructor <strong>{instructor_name}</strong> has added a new lesson to {course_name} on <strong>{site_name}</strong>"
+msgstr ""
+
+#: templates/email/to_admin_lesson_created.php:16, templates/email/to_admin_lesson_updated.php:16
+msgid "Lesson Name: {post_name}"
+msgstr ""
+
+#: templates/email/to_admin_lesson_updated.php:12
+msgid "Instructor <strong>{instructor_name}</strong> has updated a lesson from {course_name} on <strong>{site_name}</strong>"
 msgstr ""
 
 #: templates/email/to_admin_new_course_published.php:11
 msgid "A new course has been published by <strong>{instructor_name}</strong> on your site <strong>{site_name}</strong>"
+msgstr ""
+
+#: templates/email/to_admin_new_course_published.php:13, templates/email/to_admin_new_course_submitted_for_review.php:13
+msgid "Course name - <strong>{course_name}</strong>"
+msgstr ""
+
+#: templates/email/to_admin_new_course_published.php:15, templates/email/to_admin_new_course_submitted_for_review.php:15
+msgid "View the course - {course_url}"
 msgstr ""
 
 #: templates/email/to_admin_new_course_submitted_for_review.php:11
@@ -3687,6 +3723,18 @@ msgstr ""
 
 #: templates/email/to_admin_new_withdrawal_request.php:10
 msgid "{instructor_username}  has submitted a new withdrawal request."
+msgstr ""
+
+#: templates/email/to_admin_topic_created.php:12
+msgid "Instructor <strong>{instructor_name}</strong> added a new topic to {course_name} on <strong>{site_name}</strong>"
+msgstr ""
+
+#: templates/email/to_admin_topic_created.php:16, templates/email/to_admin_topic_updated.php:16
+msgid "Topic Name: {post_name}"
+msgstr ""
+
+#: templates/email/to_admin_topic_updated.php:12
+msgid "Instructor <strong>{instructor_name}</strong> had updated a topic on {course_name} on <strong>{site_name}</strong>"
 msgstr ""
 
 #: templates/email/to_instructor_asked_question_by_student.php:9, templates/email/to_instructor_become_application_approved.php:10, templates/email/to_instructor_become_application_received.php:9, templates/email/to_instructor_become_application_rejected.php:9, templates/email/to_instructor_course_completed.php:9, templates/email/to_instructor_course_enrolled.php:9, templates/email/to_instructor_lesson_completed.php:9, templates/email/to_instructor_withdrawal_request_approved.php:9, templates/email/to_instructor_withdrawal_request_received.php:9, templates/email/to_instructor_withdrawal_request_rejected.php:9
