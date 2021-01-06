@@ -167,7 +167,7 @@ class Lesson extends Tutor_Base {
 			if ($lesson_id ) {
 				do_action('tutor/lesson/created', $lesson_id);
 
-				$course_id = $wpdb->get_var( $wpdb->prepare("SELECT post_parent WHERE ID=%d", $topic_id) );
+				$course_id = $wpdb->get_var( $wpdb->prepare("SELECT post_parent FROM {$wpdb->posts} WHERE ID=%d", $topic_id) );
 				update_post_meta( $lesson_id, '_tutor_course_id_for_lesson', $course_id );
 			}
 			else {
