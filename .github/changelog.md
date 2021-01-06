@@ -1,5 +1,18 @@
 # TutorLMS Changelog
 
+### 1.7.8 - January 07, 2021
+
+* Update: PDF Certificate quality enhanced
+* Update: Clear all filter button added on course filter page
+* Update: WooCommerce plugin not found message and disable monetization
+* Fix: Auto-draft issue for Lesson and Assignment in course builder
+* Fix: PDF certificate download not working on Firefox browser
+* Fix: Paid Membership Pro course wrong eligibility status text
+* Fix: Assignments: ampersand (&) is not working
+* Fix: Draft courses are showing on category archive
+* Fix: CSS quiz time caret
+
+
 ### 1.7.7 - December 30, 2020
 
 * New: More options to control button colors in login, registration, and enrolment
