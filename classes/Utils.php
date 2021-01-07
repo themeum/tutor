@@ -1398,11 +1398,11 @@ class Utils {
 
 		$tutor_lesson_type_icon = $play_time ? 'youtube' : 'document';
 
-		if ($html){
+		if ($html) {
 			$tutor_lesson_type_icon = "<i class='tutor-icon-$tutor_lesson_type_icon'></i> ";
 		}
 
-		if ($tutor_lesson_type_icon){
+		if ($echo) {
 			echo $tutor_lesson_type_icon;
 		}
 
