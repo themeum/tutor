@@ -99,7 +99,7 @@ class Ajax{
 
 		do_action('tutor_before_rating_placed');
 
-		$previous_rating_id = $wpdb->get_var($wpdb->prepare("select comment_ID from {$wpdb->comments} WHERE comment_post_ID=%d AND user_id = %d AND comment_type = 'tutor_course_rating' LIMIT 1;", $course_id, $user_id));
+		$previous_rating_id = $wpdb->get_var($wpdb->prepare("select comment_ID from {$wpdb->comments} WHERE comment_post_ID = %d AND user_id = %d AND comment_type = 'tutor_course_rating' LIMIT 1;", $course_id, $user_id));
 
 		$review_ID = $previous_rating_id;
 		if ( $previous_rating_id){
@@ -232,6 +232,8 @@ class Ajax{
 
 
 	public function tutor_course_add_to_wishlist(){
+		tutils()->checking_nonce();
+
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 		if ( ! is_user_logged_in()){
 			wp_send_json_error(array('redirect_to' => wp_login_url( wp_get_referer() ) ) );
@@ -239,7 +241,7 @@ class Ajax{
 		global $wpdb;
 
 		$user_id = get_current_user_id();
-		$if_added_to_list = $wpdb->get_row("select * from {$wpdb->usermeta} WHERE user_id = {$user_id} AND meta_key = '_tutor_course_wishlist' AND meta_value = {$course_id} ;");
+		$if_added_to_list = $wpdb->get_row($wpdb->prepare("SELECT * from {$wpdb->usermeta} WHERE user_id = %d AND meta_key = '_tutor_course_wishlist' AND meta_value = %d;", $user_id, $course_id));
 
 		if ( $if_added_to_list){
 			$wpdb->delete($wpdb->usermeta, array('user_id' => $user_id, 'meta_key' => '_tutor_course_wishlist', 'meta_value' => $course_id ));

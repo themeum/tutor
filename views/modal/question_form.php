@@ -137,7 +137,7 @@ $settings = maybe_unserialize($question->question_settings);
                             <div id="tutor_quiz_question_answers" data-question-id="<?php echo $question_id; ?>">
 								<?php
 
-								$answers = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = {$question_id} AND belongs_question_type = '{$question->question_type}' order by answer_order asc ;");
+								$answers = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = %d AND belongs_question_type = %s order by answer_order asc ;", $question_id, $question->question_type));
 								if (is_array($answers) && count($answers)){
 									foreach ($answers as $answer){
 										?>

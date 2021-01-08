@@ -84,6 +84,8 @@ class Quiz {
 	 * Tutor Quiz Builder Modal
 	 */
 	public function tutor_load_quiz_builder_modal(){
+		tutils()->checking_nonce();
+
 		ob_start();
 		include  tutor()->path.'views/modal/add_quiz.php';
 		$output = ob_get_clean();
@@ -391,9 +393,16 @@ class Quiz {
 	 * Quiz timeout by ajax
 	 */
 	public function tutor_quiz_timeout(){
+		tutils()->checking_nonce();
+
 		global $wpdb;
 
 		$quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
+
+		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
+
 		$attempt = tutor_utils()->is_started_quiz($quiz_id);
 
 		if ($attempt) {
@@ -641,6 +650,8 @@ class Quiz {
 	 * @since v.1.0.0
 	 */
 	public function tutor_load_edit_quiz_modal(){
+		tutils()->checking_nonce();
+
 		$quiz_id = sanitize_text_field($_POST['quiz_id']);
 		
 		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
@@ -660,10 +671,16 @@ class Quiz {
 	 * @since v.1.0.0
 	 */
 	public function tutor_quiz_builder_get_question_form(){
+		tutils()->checking_nonce();
+
 		global $wpdb;
 		$quiz_id = sanitize_text_field($_POST['quiz_id']);
 		$question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
 
+		if(!tutils()->can_user_manage('question', $question_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
+		
 		if ( ! $question_id){
 			$next_question_id = tutor_utils()->quiz_next_question_id();
 			$next_question_order = tutor_utils()->quiz_next_question_order_id($quiz_id);
@@ -773,9 +790,15 @@ class Quiz {
 	 * @since v.1.0.0
 	 */
 	public function tutor_quiz_add_question_answers(){
+		tutils()->checking_nonce();
+
 		$question_id = sanitize_text_field($_POST['question_id']);
 		$question = tutor_utils()->avalue_dot($question_id, $_POST['tutor_quiz_question']);
 		$question_type = $question['question_type'];
+
+		if(!tutils()->can_user_manage('question', $question_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
 
 		ob_start();
 		include  tutor()->path.'views/modal/question_answer_form.php';
@@ -1040,6 +1063,8 @@ class Quiz {
 	 * Save quiz questions sorting
 	 */
 	public function tutor_quiz_question_sorting(){
+		tutils()->checking_nonce();
+
 		global $wpdb;
 
 		$question_ids = tutor_utils()->avalue_dot('sorted_question_ids', $_POST);
@@ -1058,6 +1083,8 @@ class Quiz {
 	 * Save sorting data for quiz answers
 	 */
 	public function tutor_quiz_answer_sorting(){
+		tutils()->checking_nonce();
+
 	    global $wpdb;
 
 	    if ( ! empty($_POST['sorted_answer_ids']) && is_array($_POST['sorted_answer_ids']) && count($_POST['sorted_answer_ids']) ){
@@ -1127,7 +1154,14 @@ class Quiz {
 	 */
 
 	public function tutor_render_quiz_content(){
+
+		tutils()->checking_nonce();
+
 		$quiz_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('quiz_id', $_POST));
+
+		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied.', 'tutor')) );
+		}
 
 		ob_start();
 		global $post;

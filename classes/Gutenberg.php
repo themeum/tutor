@@ -71,6 +71,8 @@ class Gutenberg {
 
 	//For editor
 	public function render_block_tutor(){
+		tutils()->checking_nonce();
+
 		$shortcode = sanitize_text_field($_POST['shortcode']);
 		
 		$allowed_shortcode = array(

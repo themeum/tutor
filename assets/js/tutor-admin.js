@@ -697,4 +697,20 @@ jQuery(document).ready(function($){
         $('.instructor-layout-template').removeClass('selected-template');
         $(this).addClass('selected-template');
     });
+
+
+    
+    /**
+     * Programmatically open preview link. For some reason it's not working normally.
+     * 
+     * @since  v.1.7.9
+    */
+   $('#preview-action a.preview').click(function(e) {
+        var href = $(this).attr('href');
+
+        if(href) {
+            e.preventDefault();
+            window.open(href, '_blank');
+        }
+   });
 });

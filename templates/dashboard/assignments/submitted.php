@@ -7,7 +7,7 @@
 global $wpdb;
 
 $assignment = sanitize_text_field($_GET['assignment']);
-$assignments_submitted = $wpdb->get_results("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = {$assignment}");
+$assignments_submitted = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d", $assignment));
 
 ?>
 

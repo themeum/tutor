@@ -166,12 +166,13 @@ class Instructor {
 
 	public function add_new_instructor(){
 
+		tutils()->checking_nonce();
+		
 		// Only admin should be able to add instructor
 		if(!current_user_can( 'manage_options' ) || !get_option( 'users_can_register', false )) {
 			wp_send_json_error( );
 		}
 		
-		tutils()->checking_nonce();
 
 		$required_fields = apply_filters('tutor_instructor_registration_required_fields', array(
 			'first_name'                => __('First name field is required', 'tutor'),

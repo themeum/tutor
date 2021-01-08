@@ -62,6 +62,8 @@ class Q_and_A {
 	 * @since  v.1.6.4
 	 */
 	public function tutor_delete_dashboard_question() {
+		tutils()->checking_nonce();
+
 		global $wpdb;
 		$question_id = intval(sanitize_text_field($_POST['question_id']));
 		
