@@ -410,6 +410,8 @@ class Course extends Tutor_Base {
 	 * Tutor add course topic
 	 */
 	public function tutor_add_course_topic(){
+		tutils()->checking_nonce();
+
 		if (empty($_POST['topic_title']) ) {
 			wp_send_json_error();
 		}
@@ -445,6 +447,8 @@ class Course extends Tutor_Base {
 	 * Update the topic
 	 */
 	public function tutor_update_topic(){
+		tutils()->checking_nonce();
+
 		$topic_id = (int) sanitize_text_field($_POST['topic_id']);
 		$topic_title = sanitize_text_field($_POST['topic_title']);
 		$topic_summery = wp_kses_post($_POST['topic_summery']);
@@ -647,6 +651,8 @@ class Course extends Tutor_Base {
 
 	
 	public function tutor_load_instructors_modal(){
+		tutils()->checking_nonce();
+		
 		global $wpdb;
 
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
@@ -698,6 +704,8 @@ class Course extends Tutor_Base {
 	}
 
 	public function tutor_add_instructors_to_course(){
+		tutils()->checking_nonce();
+
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 		$instructor_ids = tutor_utils()->avalue_dot('tutor_instructor_ids', $_POST);
 		
@@ -731,6 +739,8 @@ class Course extends Tutor_Base {
 	}
 
 	public function detach_instructor_from_course(){
+		tutils()->checking_nonce();
+
 		global $wpdb;
 
 		$instructor_id = (int) sanitize_text_field($_POST['instructor_id']);
@@ -745,6 +755,8 @@ class Course extends Tutor_Base {
 	}
 
 	public function tutor_delete_dashboard_course(){
+		tutils()->checking_nonce();
+
 		$course_id = intval(sanitize_text_field($_POST['course_id']));
 
 		if(!tutils()->can_user_manage('course', $course_id)) {

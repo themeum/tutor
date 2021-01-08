@@ -62,6 +62,8 @@ class Quiz {
 	}
 
 	public function tutor_instructor_feedback(){
+		tutils()->checking_nonce();
+
 		$feedback = sanitize_text_field($_POST['feedback']);
 		$attempt_id = (int) tutor_utils()->avalue_dot('attempts_id', $_POST);
 
@@ -90,6 +92,8 @@ class Quiz {
 	}
 
 	public function remove_quiz_from_post(){
+		tutils()->checking_nonce();
+
 		global $wpdb;
 		$quiz_id = (int) tutor_utils()->avalue_dot('quiz_id', $_POST);
 
@@ -414,6 +418,7 @@ class Quiz {
 	 */
 
 	public function review_quiz_answer(){
+		tutils()->checking_nonce();
 
 		global $wpdb;
 
@@ -504,6 +509,8 @@ class Quiz {
 	 * New Design Quiz
 	 */
 	public function tutor_create_quiz_and_load_modal(){
+		tutils()->checking_nonce();
+
 		$topic_id           = sanitize_text_field($_POST['topic_id']);
 		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
 		$quiz_description   = sanitize_text_field($_POST['quiz_description']);
@@ -547,6 +554,8 @@ class Quiz {
 	}
 
 	public function tutor_delete_quiz_by_id(){
+		tutils()->checking_nonce();
+
 	    global $wpdb;
 
 	    $quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
@@ -590,6 +599,8 @@ class Quiz {
 	 * @since v.1.0.0
 	 */
 	public function tutor_quiz_builder_quiz_update(){
+		tutils()->checking_nonce();
+
 		$quiz_id         	= sanitize_text_field($_POST['quiz_id']);
 		$topic_id         	= sanitize_text_field($_POST['topic_id']);
 		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
@@ -681,6 +692,8 @@ class Quiz {
 	}
 
 	public function tutor_quiz_modal_update_question(){
+		tutils()->checking_nonce();
+
 		global $wpdb;
 
 		$question_data = $_POST['tutor_quiz_question'];
@@ -737,6 +750,8 @@ class Quiz {
 	}
 
 	public function tutor_quiz_builder_question_delete(){
+		tutils()->checking_nonce();
+
 		global $wpdb;
 
 		$question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
@@ -775,6 +790,8 @@ class Quiz {
      * @since v.1.0.0
 	 */
 	public function tutor_quiz_edit_question_answer(){
+		tutils()->checking_nonce();
+
 		$answer_id = (int) sanitize_text_field($_POST['answer_id']);
 
 		if(!tutils()->can_user_manage('quiz_answer', $answer_id)) {
@@ -794,6 +811,8 @@ class Quiz {
     }
 
 	public function tutor_save_quiz_answer_options(){
+		tutils()->checking_nonce();
+
 		global $wpdb;
 
 		$questions = $_POST['tutor_quiz_question'];
@@ -880,6 +899,8 @@ class Quiz {
      * @since v.1.0.0
 	 */
 	public function tutor_update_quiz_answer_options(){
+		tutils()->checking_nonce();
+
 		global $wpdb;
 
 		$answer_id = (int) sanitize_text_field($_POST['tutor_quiz_answer_id']);
@@ -923,6 +944,8 @@ class Quiz {
     }
 
 	public function tutor_quiz_builder_get_answers_by_question(){
+		tutils()->checking_nonce();
+
 		global $wpdb;
 		$question_id = sanitize_text_field($_POST['question_id']);
 		$question_type = sanitize_text_field($_POST['question_type']);
@@ -1000,6 +1023,8 @@ class Quiz {
 	}
 
 	public function tutor_quiz_builder_delete_answer(){
+		tutils()->checking_nonce();
+
 		global $wpdb;
 		$answer_id = sanitize_text_field($_POST['answer_id']);
 		
@@ -1052,6 +1077,8 @@ class Quiz {
 	 */
 
     public function tutor_mark_answer_as_correct(){
+		tutils()->checking_nonce();
+
 	    global $wpdb;
 
 	    $answer_id = sanitize_text_field($_POST['answer_id']);
@@ -1074,6 +1101,8 @@ class Quiz {
 	 * @since : v.1.0.0
 	 */
 	public function tutor_quiz_modal_update_settings(){
+		tutils()->checking_nonce();
+
 		$quiz_id = sanitize_text_field($_POST['quiz_id']);
 		$quiz_option = tutor_utils()->sanitize_array($_POST['quiz_option']);
 				
