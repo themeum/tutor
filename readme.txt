@@ -243,15 +243,14 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.7.8 - January 07, 2021 =
 
-Update: Quality of certificates' PDF files improved.
+Update: Quality of certificates' PDF files improved
 Update: A clear all filter button on the course filter page added
-Update: Monetization activation issue while deactivating WooCommerce plugin.
+Update: Monetization activation issue while deactivating WooCommerce plugin
 Fix: Course lesson and assignment auto-draft issue in course builder
-Fix: PDF certificate not downloading on Firefox web browser.
+Fix: PDF certificate not downloading on Firefox web browser
 Fix: Wrong course eligibility status on Paid Membership Pro plugin activation
-Fix: Conjunction sign "&" not working issue in the assignments description section.
-Fix: Courses in draft status showing issue while showing category lists from the archives.
-Fix: Multiple email notifications are sent after announcement is published
+Fix: Conjunction sign "&" not working issue in the assignments description section
+Fix: Courses in draft status showing issue while showing category lists from the archives
 Fix: CSS issue while selecting quiz time limit.
 
 = 1.7.7 - December 30, 2020 =
