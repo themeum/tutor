@@ -29,6 +29,8 @@ if ( ! defined( 'ABSPATH' ) )
         
 
         public function tutor_setup_action(){
+            tutils()->checking_nonce();
+    
             $options = (array) maybe_unserialize(get_option('tutor_option'));
             if (!isset($_POST['action']) || $_POST['action'] != 'setup_action' || !current_user_can( 'manage_options' )) {
                 return;

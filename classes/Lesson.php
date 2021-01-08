@@ -101,6 +101,8 @@ class Lesson extends Tutor_Base {
 	}
 
 	public function tutor_load_edit_lesson_modal(){
+		tutils()->checking_nonce();
+
 		$lesson_id = (int) tutor_utils()->avalue_dot('lesson_id', $_POST);
 		$topic_id = (int) sanitize_text_field( $_POST['topic_id'] );
 
@@ -135,6 +137,7 @@ class Lesson extends Tutor_Base {
 	 * @updated v.1.5.1
 	 */
 	public function tutor_modal_create_or_update_lesson(){
+		tutils()->checking_nonce();
 
 		global $wpdb;
 		
@@ -200,6 +203,8 @@ class Lesson extends Tutor_Base {
 	 * Delete Lesson from course builder
 	 */
 	public function tutor_delete_lesson_by_id(){
+		tutils()->checking_nonce();
+
 		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
 
 		if(!tutils()->can_user_manage('lesson', $lesson_id)) {
