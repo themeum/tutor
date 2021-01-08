@@ -318,6 +318,8 @@ class Lesson extends Tutor_Base {
 	 * Render the lesson content
 	 */
 	public function tutor_render_lesson_content(){
+		tutils()->checking_nonce();
+
 		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
 
 		$ancestors = get_post_ancestors($lesson_id); 
@@ -348,6 +350,7 @@ class Lesson extends Tutor_Base {
 	 */
 	public function autoload_next_course_content(){
 		tutor_utils()->checking_nonce();
+
 		$post_id = sanitize_text_field($_POST['post_id']);
 		$content_id = tutils()->get_post_id($post_id);
 		$contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);

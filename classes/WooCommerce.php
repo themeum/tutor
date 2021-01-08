@@ -229,7 +229,7 @@ class WooCommerce extends Tutor_Base {
 		global $wpdb;
 		//Getting all of courses ids within this order
 
-		$courses_ids = $wpdb->get_results("SELECT * FROM {$wpdb->postmeta} WHERE post_id = {$order_id} AND meta_key LIKE '_tutor_order_for_course_id_%' ");
+		$courses_ids = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key LIKE '_tutor_order_for_course_id_%' ", $order_id));
 
 		if (is_array($courses_ids) && count($courses_ids)) {
 			$course_enrolled_by_order = array();
@@ -252,7 +252,7 @@ class WooCommerce extends Tutor_Base {
 		global $wpdb;
 		//Getting all of courses ids within this order
 
-		$courses_ids = $wpdb->get_results("SELECT * FROM {$wpdb->postmeta} WHERE post_id = {$order_id} meta_key LIKE '_tutor_order_for_course_id_%' ");
+		$courses_ids = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->postmeta} WHERE post_id = %d meta_key LIKE '_tutor_order_for_course_id_%' ", $order_id));
 	}
 
 
