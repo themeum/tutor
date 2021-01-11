@@ -363,7 +363,10 @@ class Course extends Tutor_Base {
 		 */
 
 		$author_id = $post->post_author;
-		$attached = (int) $wpdb->get_var(" SELECT COUNT(umeta_id) FROM {$wpdb->usermeta} WHERE user_id = {$author_id} AND meta_key = '_tutor_instructor_course_id' AND meta_value = {$post_ID} ");
+		$attached = (int) $wpdb->get_var($wpdb->prepare(
+			"SELECT COUNT(umeta_id) FROM {$wpdb->usermeta} 
+			WHERE user_id = %d AND meta_key = '_tutor_instructor_course_id' AND meta_value = %d ", $author_id, $post_ID));
+
 		if ( ! $attached){
 			add_user_meta($author_id, '_tutor_instructor_course_id', $post_ID);
 		}
@@ -627,7 +630,10 @@ class Course extends Tutor_Base {
 		//Making sure that, hash is unique
 		do{
 			$hash = substr(md5(wp_generate_password(32).$date.$course_id.$user_id), 0, 16);
-			$hasHash = (int) $wpdb->get_var("SELECT COUNT(comment_ID) from {$wpdb->comments} WHERE comment_agent = 'TutorLMSPlugin' AND comment_type = 'course_completed' AND comment_content = '{$hash}' ");
+			$hasHash = (int) $wpdb->get_var($wpdb->prepare(
+				"SELECT COUNT(comment_ID) from {$wpdb->comments} 
+				WHERE comment_agent = 'TutorLMSPlugin' AND comment_type = 'course_completed' AND comment_content = %s ", $hash));
+
 		}while($hasHash > 0);
 
 		$data = array(
@@ -791,7 +797,7 @@ class Course extends Tutor_Base {
 
 		if ($courses_post_type === $post_type){
             $post_ID = (int) tutor_utils()->avalue_dot('ID', $postarr);
-            $post_author = (int) $wpdb->get_var("SELECT post_author FROM {$wpdb->posts} WHERE ID = {$post_ID} ");
+            $post_author = (int) $wpdb->get_var($wpdb->prepare("SELECT post_author FROM {$wpdb->posts} WHERE ID = %d ", $post_ID));
 
             if ($post_author > 0){
                 $data['post_author'] = $post_author;
@@ -1245,7 +1251,7 @@ class Course extends Tutor_Base {
 							$wpdb->delete($wpdb->prefix.'tutor_quiz_attempts', array('quiz_id' => $content_id));
 							$wpdb->delete($wpdb->prefix.'tutor_quiz_attempt_answers', array('quiz_id' => $content_id));
 
-							$questions_ids = $wpdb->get_col("SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = {$content_id} ");
+							$questions_ids = $wpdb->get_col($wpdb->prepare("SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id));
 							if (is_array($questions_ids) && count($questions_ids)){
 								$in_question_ids = "'".implode("','", $questions_ids)."'";
 								$wpdb->query("DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id IN({$in_question_ids}) ");

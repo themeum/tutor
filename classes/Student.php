@@ -204,7 +204,7 @@ class Student {
             return $url;
         }
 
-		$user_id = (int) $wpdb->get_var("SELECT ID FROM {$wpdb->users} WHERE ID = '{$finder}' OR user_email = '{$finder}' ");
+		$user_id = (int) $wpdb->get_var($wpdb->prepare("SELECT ID FROM {$wpdb->users} WHERE ID = %s OR user_email = %s ", $finder, $finder));
 		if ($user_id){
 			$profile_photo = get_user_meta($user_id, '_tutor_profile_photo', true);
 			if ($profile_photo){

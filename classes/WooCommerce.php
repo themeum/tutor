@@ -334,8 +334,8 @@ class WooCommerce extends Tutor_Base {
 			}
 
 			$course_id = $if_has_course->post_id;
-			$user_id = $wpdb->get_var("SELECT post_author FROM {$wpdb->posts} WHERE ID = {$course_id} ");
-			$order_status = $wpdb->get_var("SELECT post_status from {$wpdb->posts} where ID = {$order_id} ");
+			$user_id = $wpdb->get_var($wpdb->prepare("SELECT post_author FROM {$wpdb->posts} WHERE ID = %d ", $course_id));
+			$order_status = $wpdb->get_var($wpdb->prepare("SELECT post_status from {$wpdb->posts} where ID = %d ", $order_id));
 
 			$total_price = $item->get_total();
 
@@ -439,7 +439,7 @@ class WooCommerce extends Tutor_Base {
 		}
 		global $wpdb;
 
-		$is_earning_data = (int) $wpdb->get_var("SELECT COUNT(earning_id) FROM {$wpdb->prefix}tutor_earnings WHERE order_id = {$order_id}  ");
+		$is_earning_data = (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(earning_id) FROM {$wpdb->prefix}tutor_earnings WHERE order_id = %d  ", $order_id));
 		if ($is_earning_data) {
 			$wpdb->update($wpdb->prefix . 'tutor_earnings', array('order_status' => $status_to), array('order_id' => $order_id));
 		}

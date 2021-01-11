@@ -220,7 +220,10 @@ class Admin{
 			if (in_array($get_post->post_type, $tutor_post_types) &&  $get_post->post_author != $current_user){
 				global $wpdb;
 
-				$get_assigned_courses_ids = (int) $wpdb->get_var("SELECT user_id from {$wpdb->usermeta} WHERE user_id = {$current_user} AND meta_key = '_tutor_instructor_course_id' AND meta_value = {$get_post_id} ");
+				$get_assigned_courses_ids = (int) $wpdb->get_var($wpdb->prepare(
+					"SELECT user_id 
+					from {$wpdb->usermeta} 
+					WHERE user_id = %d AND meta_key = '_tutor_instructor_course_id' AND meta_value = %d ", $current_user, $get_post_id));
 
 				if ( ! $get_assigned_courses_ids){
 					wp_die(__('Permission Denied', 'tutor'));
