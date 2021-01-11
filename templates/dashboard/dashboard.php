@@ -19,7 +19,9 @@
 
 	$enrolled_course_count = $enrolled_course ? $enrolled_course->post_count : 0;
 	$completed_course_count = count($completed_courses);
-	$active_course_count = $enrolled_course_count - $completed_course_count;
+    $active_course_count = $enrolled_course_count - $completed_course_count;
+    $active_course_count<0 ? $active_course_count=0 : 0;
+    
 	?>
 
     <div class="tutor-dashboard-info-cards">

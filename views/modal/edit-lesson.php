@@ -1,4 +1,5 @@
 <form class="tutor_lesson_modal_form">
+	<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
     <input type="hidden" name="action" value="tutor_modal_create_or_update_lesson">
     <input type="hidden" name="lesson_id" value="<?php echo $post->ID; ?>">
     <input type="hidden" name="current_topic_id" value="<?php echo $topic_id; ?>">
