@@ -34,7 +34,7 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $form = $(this);
-        var data = $form.serialize();
+        var data = $form.serializeObject();
 
         $.ajax({
             url : ajaxurl,
@@ -130,8 +130,8 @@ jQuery(document).ready(function($){
             content = $('#'+inputid).val();
         }
 
-        var form_data = $(this).closest('form').serialize();
-        form_data += '&lesson_content='+encodeURIComponent(content);
+        var form_data = $(this).closest('form').serializeObject();
+        form_data.lesson_content = content;
 
         $.ajax({
             url : ajaxurl,
@@ -316,7 +316,8 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-        var formData = $that.serialize()+'&action=tutor_add_instructor';
+        var formData = $that.serializeObject();
+        formData.action = 'tutor_add_instructor';
 
         $.ajax({
             url : ajaxurl,

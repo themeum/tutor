@@ -160,7 +160,8 @@ jQuery(document).ready(function($) {
 	$(".tutor-redirect").on("click", function(e) {
 		const that = $(this)
 		e.preventDefault();
-		const formData = $("#tutor-setup-form").serialize();
+		const formData = $("#tutor-setup-form").serializeObject();
+		
 		$.ajax({
 			url: _tutorobject.ajaxurl,
 			type: "POST",

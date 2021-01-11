@@ -112,7 +112,8 @@ jQuery(document).ready(function($){
     $(document).on('click', '#tutor-add-topic-btn', function (e) {
         e.preventDefault();
         var $that = $(this);
-        var form_data = $that.closest('.tutor-metabox-add-topics').find('input, textarea').serialize()+'&action=tutor_add_course_topic';
+        var form_data = $that.closest('.tutor-metabox-add-topics').find('input, textarea').serializeObject();
+        form_data.action = 'tutor_add_course_topic';
 
         $.ajax({
             url : ajaxurl,
@@ -145,8 +146,9 @@ jQuery(document).ready(function($){
     $('.tutor-zoom-meeting-modal-wrap').on('submit', '.tutor-meeting-modal-form', function (e) {
         e.preventDefault();
         var $form = $(this);
-        var data = $form.serialize();
+        var data = $form.serializeObject();
         var $btn = $form.find('button[type="submit"]');
+
         $.ajax({
             url: ajaxurl,
             type: 'POST',
@@ -516,7 +518,9 @@ jQuery(document).ready(function($){
         var $that = $(this);
         var quiz_id = $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id');
 
-        var $formInput = $('#quiz-builder-tab-settings :input, #quiz-builder-tab-advanced-options :input').serialize()+'&quiz_id='+quiz_id+'&action=tutor_quiz_modal_update_settings';
+        var $formInput = $('#quiz-builder-tab-settings :input, #quiz-builder-tab-advanced-options :input').serializeObject();
+        $formInput.quiz_id = quiz_id;
+        $formInput.action = 'tutor_quiz_modal_update_settings';
 
         $.ajax({
             url : ajaxurl,
@@ -545,7 +549,9 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-        var $formInput = $('.quiz_question_form :input').serialize()+'&action=tutor_quiz_modal_update_question';
+        var $formInput = $('.quiz_question_form :input').serializeObject();
+        $formInput.action = 'tutor_quiz_modal_update_question';
+
         $.ajax({
             url : ajaxurl,
             type : 'POST',
@@ -742,7 +748,10 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var question_id = $that.attr('data-question-id');
-        var $formInput = $('.quiz_question_form :input').serialize()+'&question_id='+question_id+'&action=tutor_quiz_add_question_answers';
+        
+        var $formInput = $('.quiz_question_form :input').serializeObject();
+        $formInput.question_id = question_id;
+        $formInput.action = 'tutor_quiz_add_question_answers';
 
         $.ajax({
             url : ajaxurl,
@@ -798,7 +807,8 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-        var $formInput = $('.quiz_question_form :input').serialize()+'&action=tutor_save_quiz_answer_options';
+        var $formInput = $('.quiz_question_form :input').serializeObject();
+        $formInput.action = 'tutor_save_quiz_answer_options';
 
         $.ajax({
             url : ajaxurl,
@@ -826,7 +836,8 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-        var $formInput = $('.quiz_question_form :input').serialize()+'&action=tutor_update_quiz_answer_options';
+        var $formInput = $('.quiz_question_form :input').serializeObject();
+        $formInput.action = 'tutor_update_quiz_answer_options';
 
         $.ajax({
             url : ajaxurl,
@@ -1156,7 +1167,10 @@ jQuery(document).ready(function($){
         var $that = $(this);
         var $modal = $('.tutor-modal-wrap');
         var course_id = $('#post_ID').val();
-        var data = $modal.find('input').serialize()+'&course_id='+course_id+'&action=tutor_add_instructors_to_course';
+        
+        var data = $modal.find('input').serializeObject();
+        data.course_id = course_id;
+        data.action = 'tutor_add_instructors_to_course';
 
         $.ajax({
             url : ajaxurl,
@@ -1286,9 +1300,30 @@ jQuery(document).ready(function($){
     var nonce_key = nonce_data.nonce_key || '';
     var nonce_value = nonce_data[nonce_key] || '';
 
+    console.log(nonce_key, nonce_value);
+
     if(nonce_key) {
         $.ajaxSetup({
             data:{[nonce_key]:nonce_value}
         });
     }
 });
+
+jQuery.fn.serializeObject = function()
+{
+   var values = {};
+   var array = this.serializeArray();
+
+   jQuery.each(array, function() {
+       if (values[this.name]) {
+           if (!values[this.name].push) {
+               values[this.name] = [values[this.name]];
+           }
+           values[this.name].push(this.value || '');
+       } else {
+           values[this.name] = this.value || '';
+       }
+   });
+
+   return values;
+};

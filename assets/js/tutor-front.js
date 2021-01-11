@@ -201,7 +201,9 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
 
         var $form = $(this);
-        var data = $(this).serialize() + '&action=tutor_ask_question';
+
+        var data = $(this).serializeObject();
+        data.action = 'tutor_ask_question';
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -226,7 +228,8 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
 
         var $form = $(this);
-        var data = $(this).serialize() + '&action=tutor_add_answer';
+        var data = $(this).serializeObject();
+        data.action = 'tutor_add_answer';
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -925,7 +928,7 @@ jQuery(document).ready(function ($) {
 
         var $form = $(this);
         var $btn = $form.find('.tutor_set_withdraw_account_btn');
-        var data = $form.serialize();
+        var data = $form.serializeObject();
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -978,7 +981,7 @@ jQuery(document).ready(function ($) {
         var $form = $(this);
         var $btn = $('#tutor-earning-withdraw-btn');
         var $responseDiv = $('.tutor-withdraw-form-response');
-        var data = $form.serialize();
+        var data = $form.serializeObject();
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -1045,7 +1048,7 @@ jQuery(document).ready(function ($) {
 
         var element_id = $('#tutor-dashboard-delete-element-id').val();
         var $btn = $('.tutor-modal-element-delete-btn');
-        var data = $(this).serialize();
+        var data = $(this).serializeObject();
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -1097,7 +1100,8 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
 
         var $that = $(this);
-        var form_data = $that.serialize() + '&action=tutor_start_assignment';
+        var form_data = $that.serializeObject();
+        form_data.action = 'tutor_start_assignment';
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -1223,8 +1227,8 @@ jQuery(document).ready(function ($) {
             content = $('#' + inputid).val();
         }
 
-        var form_data = $(this).closest('form').serialize();
-        form_data += '&lesson_content=' + encodeURIComponent(content);
+        var form_data = $(this).closest('form').serializeObject();
+        form_data.lesson_content = content;
 
         $.ajax({
             url: ajaxurl,
@@ -1495,11 +1499,14 @@ jQuery(document).ready(function ($) {
     }
 
     function auto_draft_save_course_builder() {
-        var form_data = $('form#tutor-frontend-course-builder').serialize();
+        
+        var form_data = $('form#tutor-frontend-course-builder').serializeObject();
+        form_data.tutor_ajax_action = 'tutor_course_builder_draft_save';
+
         $.ajax({
             //url : _tutorobject.ajaxurl,
             type: 'POST',
-            data: form_data + '&tutor_ajax_action=tutor_course_builder_draft_save',
+            data: form_data,
             beforeSend: function () {
                 $('.tutor-dashboard-builder-draft-btn span').text('Saving...');
             },
@@ -1741,7 +1748,9 @@ jQuery(document).ready(function ($) {
         
         var $that = $(this);
         var $form_wrapper = $('.tutor-login-form-wrap');
-        var form_data = $that.serialize() + '&action=tutor_user_login';
+
+        var form_data = $that.serializeObject();
+        form_data.action = 'tutor_user_login';
         
         $.ajax({
             url: _tutorobject.ajaxurl,

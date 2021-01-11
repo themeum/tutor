@@ -526,7 +526,7 @@ class Quiz {
 		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id);
 
 		if(!tutils()->can_user_manage('topic', $topic_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor'), 'data'=>$_POST) );
 		}
 
 		$post_arr = array(
@@ -677,7 +677,7 @@ class Quiz {
 		$quiz_id = sanitize_text_field($_POST['quiz_id']);
 		$question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
 
-		if(!tutils()->can_user_manage('question', $question_id)) {
+		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 		

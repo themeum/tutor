@@ -49,7 +49,7 @@ if ( ! defined( 'ABSPATH' ) )
 
     //action="' . esc_url( site_url( 'wp-login.php', 'login_post' ) ) . '"
 
-	tutor_alert(null, 'warning');
+	// tutor_alert(null, 'warning');
 
 	ob_start();
 	tutor_nonce_field();
