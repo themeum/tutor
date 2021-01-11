@@ -146,7 +146,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 		 */
 		if( 'approved' === $this->current_action() ) {
 			$withdraw_id = (int) sanitize_text_field($_GET['withdraw_id']);
-			$withdraw = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = {$withdraw_id} ");
+			$withdraw = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id));
 			if ( ! $withdraw || $withdraw->status === 'approved'){
 				return;
 			}
@@ -165,7 +165,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 		 */
 		if( 'rejected' === $this->current_action() ) {
 			$withdraw_id = (int) sanitize_text_field($_GET['withdraw_id']);
-			$withdraw = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = {$withdraw_id} ");
+			$withdraw = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id));
 			if ( ! $withdraw || $withdraw->status === 'rejected'){
 				return;
 			}

@@ -315,7 +315,7 @@ class Ajax{
 		$rating = sanitize_text_field(tutor_utils()->avalue_dot('rating', $_POST));
 		$review = wp_kses_post(tutor_utils()->avalue_dot('review', $_POST));
 
-		$is_exists = $wpdb->get_var("select comment_ID from {$wpdb->comments} WHERE comment_ID={$review_id} AND comment_type = 'tutor_course_rating' ;");
+		$is_exists = $wpdb->get_var($wpdb->prepare("SELECT comment_ID from {$wpdb->comments} WHERE comment_ID=%d AND comment_type = 'tutor_course_rating' ;", $review_id));
 
 		if ( $is_exists) {
 			$wpdb->update( $wpdb->comments, array( 'comment_content' => $review ),

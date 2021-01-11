@@ -13,7 +13,7 @@ class Delete_Enrollment_With_Order {
     public function delete_associated_enrollment($post_id){
         global $wpdb;
 
-        $enroll_id = $wpdb->get_var("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='_tutor_enrolled_by_order_id' AND meta_value={$post_id}");
+        $enroll_id = $wpdb->get_var($wpdb->prepare("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='_tutor_enrolled_by_order_id' AND meta_value = %d", $post_id));
         
         if(is_numeric($enroll_id) && $enroll_id>0){
 
