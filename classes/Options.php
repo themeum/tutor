@@ -48,9 +48,7 @@ class Options {
 	public function tutor_option_save(){
 		tutils()->checking_nonce();
 
-		if ( !isset($_POST['_wpnonce']) || !wp_verify_nonce( $_POST['_wpnonce'], 'tutor_option_save' ) || !current_user_can( 'manage_options' )){
-			wp_send_json_error( );
-		}
+		!current_user_can( 'manage_options' ) ? wp_send_json_error( ) : 0;
 
 		do_action('tutor_option_save_before');
 
