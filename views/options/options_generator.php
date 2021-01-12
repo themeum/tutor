@@ -3,7 +3,6 @@
 
 
     <form id="tutor-option-form" class="tutor-option-form" method="post">
-        <?php wp_nonce_field('tutor_option_save') ?>
         <input type="hidden" name="action" value="tutor_option_save" >
 
 		<?php

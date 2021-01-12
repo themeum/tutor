@@ -1,3 +1,12 @@
+function tutor_get_nonce_data() {
+
+    var nonce_data = window.tutor_data || window._tutorobject || {};
+    var nonce_key = nonce_data.nonce_key || '';
+    var nonce_value = nonce_data[nonce_key] || '';
+
+    return {[nonce_key]:nonce_value};
+}
+
 jQuery(document).ready(function($){
     'use strict';
 
@@ -1296,17 +1305,7 @@ jQuery(document).ready(function($){
     * @since v.1.7.9
     * Send wp nonce to every ajax request
     */
-    var nonce_data = window.tutor_data || window._tutorobject || {};
-    var nonce_key = nonce_data.nonce_key || '';
-    var nonce_value = nonce_data[nonce_key] || '';
-
-    console.log(nonce_key, nonce_value);
-
-    if(nonce_key) {
-        $.ajaxSetup({
-            data:{[nonce_key]:nonce_value}
-        });
-    }
+    $.ajaxSetup({data : tutor_get_nonce_data()});
 });
 
 jQuery.fn.serializeObject = function()

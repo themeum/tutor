@@ -45,7 +45,7 @@ if ($assignment_comment != false) {
 
 	<div class="tutor-assignment-information">
 		<?php
-		$time_duration = tutor_utils()->get_assignment_option(get_the_ID(), 'time_duration');
+		$time_duration = tutor_utils()->get_assignment_option(get_the_ID(), 'time_duration', array('time'=>'', 'value'=>0));
 
 		$total_mark = tutor_utils()->get_assignment_option(get_the_ID(), 'total_mark');
 		$pass_mark = tutor_utils()->get_assignment_option(get_the_ID(), 'pass_mark');

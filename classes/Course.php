@@ -520,12 +520,10 @@ class Course extends Tutor_Base {
 
 
 	public function tutor_delete_topic(){
-		if (!isset($_GET[tutor()->nonce]) || !wp_verify_nonce($_GET[tutor()->nonce], tutor()->nonce_action)) {
-			exit();
-		}
-		if ( ! isset($_GET['topic_id'])){
-			exit();
-		}
+
+		tutils()->checking_nonce('get'); 
+		
+		!isset($_GET['topic_id']) ? exit() : 0;
 
 		global $wpdb;
 

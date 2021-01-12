@@ -820,16 +820,12 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function checking_nonce($request_method = 'post'){
-		if ($request_method === 'post'){
-			if (!isset($_POST[tutor()->nonce]) || !wp_verify_nonce($_POST[tutor()->nonce], tutor()->nonce_action)) {
-				exit('Nonce does not matched');
-			}
-		}else{
-			if (!isset($_GET[tutor()->nonce]) || !wp_verify_nonce($_GET[tutor()->nonce], tutor()->nonce_action)) {
-				exit('Nonce does not matched');
-			}
-		}
+	public function checking_nonce($request_method = 'post') {
+
+		$data = $request_method === 'post' ? $_POST : $_GET;
+		$matched = !empty($data[tutor()->nonce]) && wp_verify_nonce($data[tutor()->nonce], tutor()->nonce_action);
+
+		!$matched ? exit(__('Nonce not matched', 'tutor')) : 0;
 	}
 
 	/**
