@@ -482,10 +482,10 @@ class Utils {
 		global $wpdb;
 
 		$course_post_type = tutor()->course_post_type;
-		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} 
-			INNER JOIN {$wpdb->usermeta} ON user_id = {$instructor_id} AND meta_key = '_tutor_instructor_course_id' AND meta_value = ID 
+		$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ID) from {$wpdb->posts} 
+			INNER JOIN {$wpdb->usermeta} ON user_id = %d AND meta_key = '_tutor_instructor_course_id' AND meta_value = ID 
 			WHERE post_status = 'publish' 
-			AND post_type = '{$course_post_type}' ; ");
+			AND post_type = %s ; ", $instructor_id, $course_post_type));
 
 		return $count;
 	}
@@ -551,7 +551,7 @@ class Utils {
 		global $wpdb;
 
 		$course_post_type = tutor()->course_post_type;
-		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = '{$course_post_type}'; ");
+		$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = %s; ", $course_post_type));
 		return $count;
 	}
 
@@ -566,7 +566,7 @@ class Utils {
 		global $wpdb;
 
 		$lesson_post_type = tutor()->lesson_post_type;
-		$count = $wpdb->get_var("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = '{$lesson_post_type}'; ");
+		$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ID) from {$wpdb->posts} WHERE post_status = 'publish' AND post_type = %s; ", $lesson_post_type));
 		return $count;
 	}
 
@@ -617,12 +617,12 @@ class Utils {
 		$lesson_post_type = tutor()->lesson_post_type;
 
 		$course_id = $this->get_post_id($course_id);
-		$topicIDS = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'topics' AND post_parent = {$course_id} ");
+		$topicIDS = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'topics' AND post_parent = %d", $course_id));
 
 		$lesson_count = 0;
 		if ($this->count($topicIDS)){
 			$inIDS = implode(",", $topicIDS);
-			$lesson_count = $wpdb->get_var("SELECT COUNT(ID)  FROM {$wpdb->posts} WHERE post_parent IN({$inIDS}) AND post_type = '{$lesson_post_type}' ");
+			$lesson_count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent IN({$inIDS}) AND post_type = %s ", $lesson_post_type));
 		}
 
 		return (int) $lesson_count;
@@ -643,7 +643,7 @@ class Utils {
 		$user_id = $this->get_user_id($user_id);
 		global $wpdb;
 
-		$completed_lesson_ids = $wpdb->get_col("select post_id from {$wpdb->postmeta} where meta_key = '_tutor_course_id_for_lesson' AND meta_value = {$course_id} ");
+		$completed_lesson_ids = $wpdb->get_col($wpdb->prepare("SELECT post_id from {$wpdb->postmeta} where meta_key = '_tutor_course_id_for_lesson' AND meta_value = %d ", $course_id));
 
 		$count = 0;
 		if (is_array($completed_lesson_ids) && count($completed_lesson_ids)){
@@ -653,7 +653,7 @@ class Utils {
 			}
 			$in_ids = implode("','", $completed_lesson_meta_ids);
 
-			$count = (int) $wpdb->get_var("select count(umeta_id) from {$wpdb->usermeta} WHERE user_id = '{$user_id}' AND meta_key in('{$in_ids}') ");
+			$count = (int) $wpdb->get_var($wpdb->prepare("SELECT count(umeta_id) from {$wpdb->usermeta} WHERE user_id = %d AND meta_key in('{$in_ids}') ", $user_id));
 		}
 
 		return $count;
@@ -739,7 +739,8 @@ class Utils {
 	public function get_next_topic_order_id($course_ID){
 		global $wpdb;
 
-		$last_order = (int) $wpdb->get_var("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = {$course_ID} AND post_type = 'topics';");
+		$last_order = (int) $wpdb->get_var($wpdb->prepare("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = %d AND post_type = 'topics';", $course_ID));
+		
 		return $last_order + 1;
 	}
 
@@ -755,7 +756,7 @@ class Utils {
 	public function get_next_course_content_order_id($topic_ID){
 		global $wpdb;
 
-		$last_order = (int) $wpdb->get_var("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = {$topic_ID};");
+		$last_order = (int) $wpdb->get_var($wpdb->prepare("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_parent = %d;", $topic_ID));
 		return $last_order + 1;
 	}
 
@@ -1006,7 +1007,7 @@ class Utils {
 
         global $wpdb;
 
-        $course_id = (int) $wpdb->get_var( "select post_parent from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND ID = {$enrol_id}" );
+        $course_id = (int) $wpdb->get_var($wpdb->prepare("select post_parent from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND ID = %d", $enrol_id));
 
         if ( $course_id ) {
             return get_post($course_id);
@@ -1595,11 +1596,11 @@ class Utils {
 
 		$user_id = $this->get_user_id($user_id);
 
-		$course_ids = (array) $wpdb->get_col("SELECT comment_post_ID as course_id
+		$course_ids = (array) $wpdb->get_col($wpdb->prepare("SELECT comment_post_ID as course_id
 		from {$wpdb->comments} 
 		WHERE comment_agent = 'TutorLMSPlugin' 
 		AND comment_type = 'course_completed' 
-		AND user_id = {$user_id} ;");
+		AND user_id = %d ", $user_id));
 
 		return $course_ids;
 	}
@@ -1677,7 +1678,7 @@ class Utils {
 	public function get_enrolled_courses_ids_by_user($user_id = 0){
 		global $wpdb;
 		$user_id = $this->get_user_id($user_id);
-		$course_ids = $wpdb->get_col("select post_parent from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_author = {$user_id} AND post_status = 'completed'; ");
+		$course_ids = $wpdb->get_col($wpdb->prepare("SELECT post_parent from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_author = %d AND post_status = 'completed'; ", $user_id));
 
 		return $course_ids;
 	}
@@ -1693,7 +1694,10 @@ class Utils {
 		global $wpdb;
 		$course_id = $this->get_post_id($course_id);
 
-		$course_ids = $wpdb->get_var("select COUNT(ID) from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_status = 'completed'; ");
+		$course_ids = $wpdb->get_var($wpdb->prepare(
+			"SELECT COUNT(ID) 
+			from {$wpdb->posts} 
+			WHERE post_type = 'tutor_enrolled' AND post_parent = %d AND post_status = 'completed'; ", $course_id));
 
 		return (int) $course_ids;
 	}
@@ -2706,35 +2710,35 @@ class Utils {
 			/**
 			 * Get individual Rating by integer
 			 */
-			$five_stars_count = $wpdb->get_var("select COUNT(meta_value) as rating_count
+			$five_stars_count = $wpdb->get_var("SELECT COUNT(meta_value) as rating_count
 				from {$wpdb->comments}
 				INNER JOIN {$wpdb->commentmeta} ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
 				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
 				AND {$wpdb->comments}.comment_type = 'tutor_course_rating'
 				AND meta_key = 'tutor_rating' AND meta_value = 5 ;"
 			);
-			$four_stars_count = $wpdb->get_var("select COUNT(meta_value) as rating_count
+			$four_stars_count = $wpdb->get_var("SELECT COUNT(meta_value) as rating_count
 				from {$wpdb->comments}
 				INNER JOIN {$wpdb->commentmeta} ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
 				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
 				AND {$wpdb->comments}.comment_type = 'tutor_course_rating'
 				AND meta_key = 'tutor_rating' AND meta_value = 4 ;"
 			);
-			$three_stars_count = $wpdb->get_var("select COUNT(meta_value) as rating_count
+			$three_stars_count = $wpdb->get_var("SELECT COUNT(meta_value) as rating_count
 				from {$wpdb->comments}
 				INNER JOIN {$wpdb->commentmeta} ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
 				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
 				AND {$wpdb->comments}.comment_type = 'tutor_course_rating'
 				AND meta_key = 'tutor_rating' AND meta_value = 3 ;"
 			);
-			$two_stars_count = $wpdb->get_var("select COUNT(meta_value) as rating_count
+			$two_stars_count = $wpdb->get_var("SELECT COUNT(meta_value) as rating_count
 				from {$wpdb->comments}
 				INNER JOIN {$wpdb->commentmeta} ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
 				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
 				AND {$wpdb->comments}.comment_type = 'tutor_course_rating'
 				AND meta_key = 'tutor_rating' AND meta_value = 2 ;"
 			);
-			$one_stars_count = $wpdb->get_var("select COUNT(meta_value) as rating_count
+			$one_stars_count = $wpdb->get_var("SELECT COUNT(meta_value) as rating_count
 				from {$wpdb->comments}
 				INNER JOIN {$wpdb->commentmeta} ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
 				WHERE {$wpdb->comments}.comment_post_ID = {$course_id} 
@@ -3081,8 +3085,8 @@ class Utils {
 		 * Get only assinged  courses questions if current user is a
 		 */
 		if ( ! current_user_can('administrator') && current_user_can(tutor()->instructor_role)) {
-			$get_course_ids           = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_author = {$user_id} AND post_type = '{$course_type}' AND post_status = 'publish' " );
-			$get_assigned_courses_ids = $wpdb->get_col( "SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = {$user_id}  " );
+			$get_course_ids           = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_type = %s AND post_status = 'publish' ", $user_id, $course_type));
+			$get_assigned_courses_ids = $wpdb->get_col($wpdb->prepare("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = %d ", $user_id));
 			$my_course_ids            = array_unique( array_merge( $get_course_ids, $get_assigned_courses_ids ) );
 
 			if ( $this->count( $my_course_ids ) ) {
@@ -3133,8 +3137,8 @@ class Utils {
 		 * Get only assinged  courses questions if current user is a
 		 */
 		if ( ! current_user_can('administrator') && current_user_can(tutor()->instructor_role)) {
-			$get_course_ids           = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_author = {$user_id} AND post_type = '{$course_type}' AND post_status = 'publish' " );
-			$get_assigned_courses_ids = $wpdb->get_col( "SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = {$user_id}  " );
+			$get_course_ids           = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_type = %s AND post_status = 'publish' ", $user_id, $course_type));
+			$get_assigned_courses_ids = $wpdb->get_col($wpdb->prepare("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = %d  ", $user_id));
 			$my_course_ids            = array_unique( array_merge( $get_course_ids, $get_assigned_courses_ids ) );
 
 			if ( $this->count( $my_course_ids ) ) {
@@ -3574,7 +3578,7 @@ class Utils {
 		global $wpdb;
 
 		$max_questions_count = (int) tutor_utils()->get_quiz_option(get_the_ID(), 'max_questions_for_answer');
-		$total_question = (int) $wpdb->get_var("select count(question_id) from {$wpdb->tutor_quiz_questions} where quiz_id = {$quiz_id}");
+		$total_question = (int) $wpdb->get_var($wpdb->prepare("SELECT count(question_id) from {$wpdb->tutor_quiz_questions} where quiz_id = %d", $quiz_id));
 
 		return min($max_questions_count, $total_question);
 	}
@@ -3616,7 +3620,7 @@ class Utils {
 		$quiz_id = $this->get_post_id($quiz_id);
 		global $wpdb;
 
-		$max_questions = (int) $wpdb->get_var("select count(question_id) from {$wpdb->prefix}tutor_quiz_questions where quiz_id = {$quiz_id}  ");
+		$max_questions = (int) $wpdb->get_var($wpdb->prepare("SELECT count(question_id) from {$wpdb->prefix}tutor_quiz_questions where quiz_id = %d  ", $quiz_id));
 		$max_mentioned = (int) $this->get_quiz_option($quiz_id, 'max_questions_for_answer', 10);
 
 		if ($max_mentioned < $max_questions ){
@@ -4880,11 +4884,11 @@ class Utils {
 		$assignment_id = $this->get_post_id($assignment_id);
 		$user_id = $this->get_user_id($user_id);
 
-		$is_running_submit = (int) $wpdb->get_var("SELECT comment_ID FROM {$wpdb->comments} 
+		$is_running_submit = (int) $wpdb->get_var($wpdb->prepare("SELECT comment_ID FROM {$wpdb->comments} 
 		WHERE comment_type = 'tutor_assignment' 
 		AND comment_approved = 'submitting' 
-		AND user_id = {$user_id} 
-		AND comment_post_ID = {$assignment_id} ");
+		AND user_id = %d 
+		AND comment_post_ID = %d", $user_id, $assignment_id));
 
 		return $is_running_submit;
 	}
@@ -4950,7 +4954,7 @@ class Utils {
 		$user_id = $this->get_user_id($user_id);
 
 		$course_post_type = tutor()->course_post_type;
-		$get_assigned_courses_ids = $wpdb->get_col("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = {$user_id} GROUP BY meta_value ; ");
+		$get_assigned_courses_ids = $wpdb->get_col($wpdb->prepare("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = %d GROUP BY meta_value ; ", $user_id));
 
 		/*
 		$author_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} where post_type = '{$course_post_type}' AND post_author = {$user_id}");
@@ -5367,7 +5371,7 @@ class Utils {
 	public function get_course_id_by_content($post = null){
 		global $wpdb;
 		$post = get_post($post);
-		$course_id = $wpdb->get_var("SELECT post_parent FROM {$wpdb->posts} WHERE ID = {$post->post_parent} AND post_type = 'topics'");
+		$course_id = $wpdb->get_var($wpdb->prepare("SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d AND post_type = 'topics'", $post->post_parent));
 
 		return (int) $course_id;
 	}
@@ -5630,13 +5634,12 @@ class Utils {
 			return false;
 		}
 
-		$instructor = $wpdb->get_col("
-			SELECT umeta_id
+		$instructor = $wpdb->get_col($wpdb->prepare(
+			"SELECT umeta_id
 			FROM   {$wpdb->usermeta}
-			WHERE  user_id = {$instructor_id}
+			WHERE  user_id = %d
 				AND meta_key = '_tutor_instructor_course_id'
-				AND meta_value = {$course_id}
-		");
+				AND meta_value = %d", $instructor_id, $course_id));
 		
 		if (is_array($instructor) && count($instructor)) {
 			return $instructor;

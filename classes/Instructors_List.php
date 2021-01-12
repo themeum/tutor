@@ -36,7 +36,7 @@ class Instructors_List extends \Tutor_List_Table {
 		global $wpdb;
 		$course_post_type = tutor()->course_post_type;
 
-		$total_course = (int) $wpdb->get_var("SELECT count(ID) from {$wpdb->posts} WHERE post_author={$item->ID} AND post_type='{$course_post_type}' ");
+		$total_course = (int) $wpdb->get_var($wpdb->prepare("SELECT count(ID) from {$wpdb->posts} WHERE post_author=%d AND post_type=%s ", $item->ID, $course_post_type));
 
 		echo $total_course;
 	}
