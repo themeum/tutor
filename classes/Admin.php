@@ -187,7 +187,7 @@ class Admin{
 
 		$user_id = get_current_user_id();
 
-		$get_assigned_courses_ids = $wpdb->get_col("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = {$user_id}  ");
+		$get_assigned_courses_ids = $wpdb->get_col($wpdb->prepare("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = %d", $user_id));
 
 		$custom_author_query = "AND {$wpdb->posts}.post_author = {$user_id}";
 		if (is_array($get_assigned_courses_ids) && count($get_assigned_courses_ids)){

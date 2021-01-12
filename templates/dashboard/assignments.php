@@ -38,7 +38,7 @@ if($assignments->count){ ?>
                 $course_id = tutor_utils()->get_course_id_by_assignment($item->ID);
                 $course_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/course');
                 $submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/submitted');
-                $comment_count = $wpdb->get_var("SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = $item->ID");
+                $comment_count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d", $item->ID));
                 // @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish
                 ?>
                 <tr>

@@ -255,8 +255,13 @@ class Quiz {
 					    } elseif ( $question_type === 'multiple_choice' ) {
 
 						    $given_answer         = (array) ( $answers );
-						    $get_original_answers = (array) $wpdb->get_col( "SELECT answer_id FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question->question_id} AND belongs_question_type = '{$question_type}' AND is_correct = 1 ;" );
-						    if (count(array_diff($get_original_answers, $given_answer)) === 0 && count($get_original_answers) === count($given_answer)) {
+						    $get_original_answers = (array) $wpdb->get_col($wpdb->prepare(
+								"SELECT answer_id 
+								FROM {$wpdb->prefix}tutor_quiz_question_answers 
+								WHERE belongs_question_id = %d AND belongs_question_type = %s AND is_correct = 1 ;", $question->question_id, $question_type));
+							
+							
+							if (count(array_diff($get_original_answers, $given_answer)) === 0 && count($get_original_answers) === count($given_answer)) {
 							    $is_answer_was_correct = true;
 							}
 							$given_answer = maybe_serialize( $answers );
@@ -282,8 +287,12 @@ class Quiz {
 						    $given_answer = (array) array_map( 'sanitize_text_field', tutor_utils()->avalue_dot( 'answers', $answers ) );
 						    $given_answer = maybe_serialize( $given_answer );
 
-						    $get_original_answers = (array) $wpdb->get_col( "SELECT answer_id FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question->question_id} AND belongs_question_type = '{$question_type}' ORDER BY answer_order ASC ;" );
-						    $get_original_answers = array_map( 'sanitize_text_field', $get_original_answers );
+						    $get_original_answers = (array) $wpdb->get_col($wpdb->prepare(
+								"SELECT answer_id 
+								FROM {$wpdb->prefix}tutor_quiz_question_answers 
+								WHERE belongs_question_id = %d AND belongs_question_type = %s ORDER BY answer_order ASC ;", $question->question_id, $question_type));
+							
+							$get_original_answers = array_map( 'sanitize_text_field', $get_original_answers );
 
 						    if ( $given_answer == maybe_serialize( $get_original_answers ) ) {
 							    $is_answer_was_correct = true;
@@ -295,8 +304,10 @@ class Quiz {
 						    $given_answer          = maybe_serialize( $image_inputs );
 						    $is_answer_was_correct = false;
 
-						    $db_answer = $wpdb->get_col( "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question_id} AND belongs_question_type = 
-'image_answering' ORDER BY answer_order asc ;" );
+						    $db_answer = $wpdb->get_col($wpdb->prepare(
+								"SELECT answer_title 
+								FROM {$wpdb->prefix}tutor_quiz_question_answers 
+								WHERE belongs_question_id = %d AND belongs_question_type = 'image_answering' ORDER BY answer_order asc ;", $question_id));
 
 						    if ( is_array( $db_answer ) && count( $db_answer ) ) {
 							    $is_answer_was_correct = ( strtolower( maybe_serialize( array_values( $image_inputs ) ) ) == strtolower( maybe_serialize( $db_answer ) ) );
