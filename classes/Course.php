@@ -838,11 +838,6 @@ class Course extends Tutor_Base {
 					$is_update = true;
 				}
 			}
-			/* var_dump($post_ID);
-			var_dump($attached_product_id);
-			var_dump($wc_product);
-			var_dump($is_update);
-			exit; */
 
 			if ($is_update) {
 				$productObj = wc_get_product($attached_product_id);
