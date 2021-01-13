@@ -838,16 +838,21 @@ class Course extends Tutor_Base {
 					$is_update = true;
 				}
 			}
+			/* var_dump($post_ID);
+			var_dump($attached_product_id);
+			var_dump($wc_product);
+			var_dump($is_update);
+			exit; */
 
-			if ($is_update){
-
-				$productObj = new \WC_Product($attached_product_id);
+			if ($is_update) {
+				$productObj = wc_get_product($attached_product_id);
 				$productObj->set_price($course_price); // set product price
 				$productObj->set_regular_price($course_price); // set product regular price
 				$product_id = $productObj->save();
-
-			}else{
-
+				if($productObj->is_type('subscription')) {
+					update_post_meta( $attached_product_id, '_subscription_price', $course_price );
+				}
+			} else {
 				$productObj = new \WC_Product();
 				$productObj->set_name($course->post_title);
 				$productObj->set_status('publish');
