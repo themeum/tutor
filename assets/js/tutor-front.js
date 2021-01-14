@@ -773,8 +773,6 @@ jQuery(document).ready(function ($) {
         var $inputs = $question_wrap.find('input');
         var $checkedInputs = $question_wrap.find('input[type="radio"]:checked, input[type="checkbox"]:checked');
 
-        console.log($question_wrap, feedBackMode);
-
         if (feedBackMode === 'retry') {
             $checkedInputs.each(function () {
                 var $input = $(this);
@@ -836,10 +834,7 @@ jQuery(document).ready(function ($) {
                 }
             });
         }
-        else {
-            console.log(feedBackMode);
-        }
-
+        
         if (validatedTrue) {
             goNext = true;
         }
