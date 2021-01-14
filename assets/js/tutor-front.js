@@ -764,6 +764,7 @@ jQuery(document).ready(function ($) {
     function feedback_response($question_wrap) {
         var goNext = false;
 
+
         var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
         $('.wrong-right-text').remove();
         $('.quiz-answer-input-bottom').removeClass('wrong-answer right-answer');
@@ -771,6 +772,8 @@ jQuery(document).ready(function ($) {
         var validatedTrue = true;
         var $inputs = $question_wrap.find('input');
         var $checkedInputs = $question_wrap.find('input[type="radio"]:checked, input[type="checkbox"]:checked');
+
+        console.log($question_wrap, feedBackMode);
 
         if (feedBackMode === 'retry') {
             $checkedInputs.each(function () {
@@ -832,6 +835,9 @@ jQuery(document).ready(function ($) {
                     }
                 }
             });
+        }
+        else {
+            console.log(feedBackMode);
         }
 
         if (validatedTrue) {
