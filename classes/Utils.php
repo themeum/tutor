@@ -2445,7 +2445,7 @@ class Utils {
 		global $wpdb;
 		$course_id = $this->get_post_id($course_id);
 
-		$instructors = $wpdb->get_results("select ID, display_name, 
+		$instructors = $wpdb->get_results("SELECT ID, display_name, 
 			get_course.meta_value as taught_course_id,
 			tutor_job_title.meta_value as tutor_profile_job_title,
 			tutor_bio.meta_value as tutor_profile_bio,
@@ -5826,6 +5826,67 @@ class Utils {
 		return $cover_photo_src;
 	}
 
+	/**
+	 * @return bool
+	 * 
+	 * @since v1.7.9
+	 *
+	 * Return the course ID by lession, quiz, answer etc.
+	 */
+	public function get_course_id_by($content, $object_id) {
+		
+		global $wpdb;
+		$course_id = null;
+
+		switch ($content) {
+			
+			case 'course' :
+				$course_id = $object_id;
+				break;
+
+			case 'topic' :
+			case 'lesson' :
+			case 'quiz' :
+			case 'assignmnent' :
+				$course_id = $wpdb->get_var($wpdb->prepare(
+					"SELECT post_parent
+					FROM {$wpdb->posts} 
+					WHERE ID=%d LIMIT 1", $object_id));
+				break;
+			
+			case 'question' : 
+				$course_id = $wpdb->get_var($wpdb->prepare(
+					"SELECT topic.post_parent 
+					FROM {$wpdb->posts} topic
+					INNER JOIN {$wpdb->posts} quiz ON quiz.post_parent=topic.ID
+					INNER JOIN {$wpdb->prefix}tutor_quiz_questions question ON question.quiz_id=quiz.ID
+					WHERE question.question_id=%d", $object_id));
+				break;
+	
+			case 'quiz_answer' :
+				$course_id = $wpdb->get_var($wpdb->prepare(
+					"SELECT topic.post_parent 
+					FROM {$wpdb->posts} topic
+					INNER JOIN {$wpdb->posts} quiz ON quiz.post_parent=topic.ID
+					INNER JOIN {$wpdb->prefix}tutor_quiz_questions question ON question.quiz_id=quiz.ID
+					INNER JOIN {$wpdb->prefix}tutor_quiz_question_answers answer answer.belongs_question_id=question.question_id
+					WHERE answer.answer_id=%d", $object_id));
+				break;
+					
+			case 'attempt' :
+				$course_id = $wpdb->get_var($wpdb->prepare(
+					"SELECT course_id FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id=%d", $object_id));
+				break;
+
+			case 'attempt_answer' :
+				$course_id = $wpdb->get_var($wpdb->prepare(
+					"SELECT course_id FROM {$wpdb->prefix}tutor_quiz_attempts 
+					WHERE attempt_id=(SELECT quiz_attempt_id FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id=%d)", $object_id));
+		}
+
+		return null;// $course_id;
+	}
+
 
 	/**
 	 * @return bool
@@ -5837,62 +5898,21 @@ class Utils {
 	public function can_user_manage($content, $object_id, $user_id=0, $allow_current_admin=true) {
 		
 		if($allow_current_admin && current_user_can( 'manage_options' )){
-			// Admin has access
+			// Admin has access to everything
 			return true;
 		}
 
-		global $wpdb;
-		$authentic = false;
-		$user_id = $this->get_user_id($user_id);
+		$course_id = $this->get_course_id_by($content, $object_id);
 
-		switch($content) {
-			case 'quiz_answer' :
-				$authentic = (int)$wpdb->get_var($wpdb->prepare(
-					"SELECT COUNT(answer.answer_id) 
-					FROM {$wpdb->prefix}tutor_quiz_question_answers answer
-					INNER JOIN {$wpdb->prefix}tutor_quiz_questions question ON answer.belongs_question_id=question.question_id
-					INNER JOIN {$wpdb->posts} quiz ON question.quiz_id=quiz.ID
-					WHERE quiz.post_author=%d AND answer.answer_id=%d LIMIT 1", $user_id, $object_id));
-				break;
+		if($course_id) {
+			
+			$instructors = $this->get_instructors_by_course($course_id);
+			$instructor_ids = is_array($instructors) ? array_map(function($instructor){ return (int)$instructor->ID; }, $instructors) : array();
+			
+			$user_id = (int)$this->get_user_id($user_id);
+			$is_listed = in_array($user_id, $instructor_ids);
 
-			case 'question' : 
-				$authentic = (int)$wpdb->get_var($wpdb->prepare(
-					"SELECT COUNT(question.question_id) 
-					FROM {$wpdb->prefix}tutor_quiz_questions question
-					INNER JOIN {$wpdb->posts} quiz ON question.quiz_id=quiz.ID
-					WHERE quiz.post_author=%d AND question.question_id=%d LIMIT 1", $user_id, $object_id));
-				break;
-
-			case 'course' :
-			case 'topic' :
-			case 'lesson' :
-			case 'quiz' :
-			case 'assignmnent' :
-				$authentic = (int)$wpdb->get_var($wpdb->prepare(
-					"SELECT COUNT(ID) 
-					FROM {$wpdb->posts} 
-					WHERE post_author=%d AND ID=%d LIMIT 1", $user_id, $object_id));
-				break;
-
-			case 'attempt' :
-				$authentic = (int)$wpdb->get_var($wpdb->prepare(
-					"SELECT COUNT(attempt.attempt_id) 
-					FROM {$wpdb->prefix}tutor_quiz_attempts attempt 
-					INNER JOIN {$wpdb->posts} quiz ON attempt.quiz_id=quiz.ID
-					INNER JOIN {$wpdb->posts} topic ON topic.ID=quiz.post_parent
-					WHERE topic.post_author=%d AND attempt.attempt_id=%d LIMIT 1", $user_id, $object_id));
-				break;
-
-			case 'attempt_answer' :
-				$authentic = (int)$wpdb->get_var($wpdb->prepare(
-					"SELECT COUNT(attempt_answer.attempt_answer_id) 
-					FROM {$wpdb->prefix}tutor_quiz_attempt_answers attempt_answer 
-					INNER JOIN {$wpdb->posts} quiz ON attempt_answer.quiz_id=quiz.ID
-					INNER JOIN {$wpdb->posts} topic ON topic.ID=quiz.post_parent
-					WHERE topic.post_author=%d AND attempt_answer.attempt_answer_id=%d LIMIT 1", $user_id, $object_id));
-				break;
+			return $is_listed;
 		}
-
-		return $authentic;
 	}
 }
