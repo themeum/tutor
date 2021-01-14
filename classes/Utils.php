@@ -5845,15 +5845,20 @@ class Utils {
 				break;
 
 			case 'topic' :
-			case 'lesson' :
-			case 'quiz' :
-			case 'assignmnent' :
 				$course_id = $wpdb->get_var($wpdb->prepare(
 					"SELECT post_parent
 					FROM {$wpdb->posts} 
 					WHERE ID=%d LIMIT 1", $object_id));
 				break;
 			
+			case 'lesson' :
+			case 'quiz' :
+			case 'assignmnent' :
+				$course_id = $wpdb->get_var($wpdb->prepare(
+					"SELECT post_parent FROM {$wpdb->posts} 
+					WHERE ID=(SELECT post_parent FROM {$wpdb->posts} WHERE ID=%d)", $object_id));
+				break;
+				
 			case 'question' : 
 				$course_id = $wpdb->get_var($wpdb->prepare(
 					"SELECT topic.post_parent 
@@ -5884,7 +5889,7 @@ class Utils {
 					WHERE attempt_id=(SELECT quiz_attempt_id FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id=%d)", $object_id));
 		}
 
-		return null;// $course_id;
+		return $course_id;
 	}
 
 
@@ -5899,7 +5904,7 @@ class Utils {
 		
 		if($allow_current_admin && current_user_can( 'manage_options' )){
 			// Admin has access to everything
-			return true;
+			// return true;
 		}
 
 		$course_id = $this->get_course_id_by($content, $object_id);
@@ -5914,5 +5919,7 @@ class Utils {
 
 			return $is_listed;
 		}
+
+		return false;
 	}
 }
