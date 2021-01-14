@@ -335,8 +335,12 @@ $user = get_userdata($user_id);
 </td>
 
                         <td style="white-space: nowrap">
-                            <a href="<?php echo admin_url("admin.php?action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=correct"); ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="attempt-mark-correct-btn quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>
-                            <a href="<?php echo admin_url("admin.php?action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=incorrect"); ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="attempt-mark-incorrect-btn quiz-manual-review-action"><i class="tutor-icon-line-cross"></i></a>
+                            <?php 
+                                $nonce_key = tutor()->nonce;
+                                $nonce_value = wp_create_nonce(tutor()->nonce_action);
+                            ?>
+                            <a href="<?php echo admin_url("admin.php?{$nonce_key}={$nonce_value}&action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=correct"); ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="attempt-mark-correct-btn quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>
+                            <a href="<?php echo admin_url("admin.php?{$nonce_key}={$nonce_value}&action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=incorrect"); ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="attempt-mark-incorrect-btn quiz-manual-review-action"><i class="tutor-icon-line-cross"></i></a>
                         </td>
                     </tr>
                     <?php

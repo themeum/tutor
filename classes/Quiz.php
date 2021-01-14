@@ -437,8 +437,9 @@ class Quiz {
 	 * Review the answer and change individual answer result
 	 */
 
-	public function review_quiz_answer(){
-		tutils()->checking_nonce();
+	public function review_quiz_answer() {
+		
+		tutils()->checking_nonce(strtolower($_SERVER['REQUEST_METHOD']));
 
 		global $wpdb;
 
