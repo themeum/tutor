@@ -4,7 +4,7 @@
  * post type register
  * announcement management
  */
-namespace  TUTOR_EMAIL;
+namespace  TUTOR;
 
 class TutorAnnouncements {
 
@@ -13,7 +13,7 @@ class TutorAnnouncements {
 		 * register announcement page
 		 */
         add_action('admin_menu', array($this,'register_menu'));
-        add_action('admin_enqueue_scripts', array($this, 'announcements_scripts'));
+        //add_action('admin_enqueue_scripts', array($this, 'announcements_scripts'));
         add_action("wp_ajax_tutor_announcement_create", array($this,'create_or_update_annoucement'));
         add_action("wp_ajax_tutor_announcement_delete", array($this,'delete_annoucement'));
     }
@@ -40,7 +40,7 @@ class TutorAnnouncements {
     }
 
 	public function tutor_announcements(){
-		include TUTOR_EMAIL()->path . 'views/pages/tutor_announcements.php';
+		include tutor()->path . 'views/pages/tutor_announcements.php';
     }
     
     public function create_or_update_annoucement(){   
