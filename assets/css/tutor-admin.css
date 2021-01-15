@@ -3635,7 +3635,7 @@ Tools Nav
 	line-height: 10px;
 }
 .tutor-announcement-pagination {
-	padding:20px;
+	padding:20px 20px 0px 20px;
 	font-weight: 500;
 	font-size: 15px;
 	float: right;
