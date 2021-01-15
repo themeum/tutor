@@ -3628,3 +3628,15 @@ Tools Nav
     color: #525252;
     
 }
+.tutor-announcement-table td {
+	vertical-align: middle !important;
+}
+.tutor-announcement-content {
+	line-height: 10px;
+}
+.tutor-announcement-pagination {
+	padding:20px;
+	font-weight: 500;
+	font-size: 15px;
+	float: right;
+}

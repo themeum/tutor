@@ -22,12 +22,12 @@ $day  = date('d', strtotime($date_filter));
 $args = array(
     'post_type'         => 'tutor_announcements',
     'post_status'       => 'publish',
-    's'                 => $search_filter,
-    'post_parent'       => $course_id,
-    'posts_per_page'    => $per_page,
-    'paged'             => $paged,
+    's'                 => sanitize_text_field($search_filter),
+    'post_parent'       => sanitize_text_field($course_id),
+    'posts_per_page'    => sanitize_text_field($per_page),
+    'paged'             => sanitize_text_field($paged),
     'orderBy'           => 'ID',
-    'order'             => $order_filter,
+    'order'             => sanitize_text_field($order_filter),
 
 );
 if(!empty($date_filter)){
@@ -49,8 +49,8 @@ $the_query = new WP_Query($args);
 
         <div class="menu-label"><?php _e('Search', 'tutor-pro'); ?></div>
         <div>
-            <input type="text" class="tutor-report-search" value="<?= $search_filter; ?>" autocomplete="off" placeholder="<?php _e('Search Announcements', 'tutor-pro'); ?>" />
-            <button class="tutor-report-search-btn"><i class="tutor-icon-magnifying-glass-1"></i></button>
+            <input type="text" class="tutor-report-search tutor-announcement-search-field" value="<?= $search_filter; ?>" autocomplete="off" placeholder="<?php _e('Search Announcements', 'tutor-pro'); ?>" />
+            <button class="tutor-report-search-btn tutor-announcement-search-sorting"><i class="tutor-icon-magnifying-glass-1"></i></button>
         </div>
     </div>
 
@@ -63,12 +63,13 @@ $the_query = new WP_Query($args);
                     
                 ?>
 
-            <select class="tutor-report-category">
+            <select class="tutor-report-category tutor-announcement-course-sorting">
+                <?php if(empty($course_id)):?>
+                        <option value="">Select course</option>
+                <?php endif;?>
                 <?php if($courses):?>
                 <?php foreach($courses as $course):?>
-                    <?php if(empty($course_id)):?>
-                        <option value="">Select course</option>
-                    <?php endif;?>
+
                     <option value="<?= esc_attr($course->ID)?>" <?php selected($course_id,$course->ID,'selected')?>>
                         <?= $course->post_title;?>
                     </option>
@@ -83,7 +84,7 @@ $the_query = new WP_Query($args);
     <div>
         <div class="menu-label"><?php _e('Sort By', 'tutor-pro'); ?></div>
         <div>
-            <select class="tutor-report-sort">
+            <select class="tutor-report-sort tutor-announcement-order-sorting">
                 <option <?php selected( $order_filter, 'ASC' ); ?>>ASC</option>
                 <option <?php selected( $order_filter, 'DESC' ); ?>>DESC</option>
             </select>
@@ -93,7 +94,7 @@ $the_query = new WP_Query($args);
     <div>
         <div class="menu-label"><?php _e('Date', 'tutor-pro'); ?></div>
         <div class="date-range-input">
-            <input type="text" class="tutor_report_datepicker tutor-report-date" value="<?php echo $date_filter; ?>" autocomplete="off" placeholder="<?= esc_attr(date("Y-m-d", strtotime("now")));?>" />
+            <input type="text" class="tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off"/>
             <i class="tutor-icon-calendar"></i>
         </div>
     </div>
@@ -110,7 +111,7 @@ $the_query = new WP_Query($args);
         <table class="tutor-list-table tutor-announcement-table">
             <thead>
                 <tr>
-                    <th><?php _e('Date', 'tutor-pro'); ?></th>
+                    <th style="width:20%"><?php _e('Date', 'tutor-pro'); ?></th>
                     <th><?php _e('Announcements', 'tutor-pro'); ?></th>
 
                 </tr>
@@ -157,6 +158,20 @@ $the_query = new WP_Query($args);
   
 </div>
 
+        <!--pagination-->
+        <div class="tutor-announcement-pagination">
+            <?php
+                $big = 999999999; // need an unlikely integer
+                
+                echo paginate_links( array(
+                    'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+                    'format' => '?paged=%#%',
+                    'current' => $paged,
+                    'total' => $the_query->max_num_pages
+                ) );
+            ?>
+        </div>
+        <!--pagination end-->
 <!--create announcements modal-->
 <div class="tutor-modal-wrap tutor-announcements-modal-wrap  tutor-accouncement-create-modal">
     <div class="tutor-modal-content">
@@ -257,7 +272,7 @@ $the_query = new WP_Query($args);
             
         <form action="" class="tutor-announcements-update-form">
                 <?php tutor_nonce_field();?>
-                <input type="hidden" id="announcement_id">
+                <input type="hidden" name="announcement_id" id="announcement_id">
                 <div class="tutor-option-field-row">
                     <label for="tutor_announcement_course">
                         <?php esc_html_e('Select Course', 'tutor');?>
@@ -322,4 +337,4 @@ $the_query = new WP_Query($args);
         </div>
     </div>
 </div>
-<!--create announcements modal end-->
+<!--update announcements modal end-->

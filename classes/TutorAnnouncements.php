@@ -13,7 +13,6 @@ class TutorAnnouncements {
 		 * register announcement page
 		 */
         add_action('admin_menu', array($this,'register_menu'));
-        //add_action('admin_enqueue_scripts', array($this, 'announcements_scripts'));
         add_action("wp_ajax_tutor_announcement_create", array($this,'create_or_update_annoucement'));
         add_action("wp_ajax_tutor_announcement_delete", array($this,'delete_annoucement'));
     }
@@ -23,27 +22,14 @@ class TutorAnnouncements {
         add_submenu_page('tutor', __('Announcements', 'tutor-pro'), __('Announcements', 'tutor-pro'), 'manage_tutor', 'tutor_announcements', array($this, 'tutor_announcements'));
     }
     
-    public function announcements_scripts(){
-        wp_enqueue_style(
-            'tutor-announcements',
-            TUTOR_EMAIL()->url."assets/announcements.css",
-            '',
-            time()
-        );
-        wp_enqueue_script(
-            'tutor-announcements',
-            TUTOR_EMAIL()->url."assets/announcements.js",
-            array('jquery'),
-            time(),
-            true
-        );
-    }
+
 
 	public function tutor_announcements(){
 		include tutor()->path . 'views/pages/tutor_announcements.php';
     }
     
     public function create_or_update_annoucement(){   
+
         //prepare alert message
         $create_success_msg = __("Announcement created successfully",'tutor');
         $update_success_msg = __("Announcement updated successfully",'tutor');
