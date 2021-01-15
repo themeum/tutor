@@ -47,15 +47,15 @@ $the_query = new WP_Query($args);
  
     <div>
 
-        <div class="menu-label"><?php _e('Search', 'tutor-pro'); ?></div>
+        <div class="menu-label"><?php _e('Search', 'tutor'); ?></div>
         <div>
-            <input type="text" class="tutor-report-search tutor-announcement-search-field" value="<?= $search_filter; ?>" autocomplete="off" placeholder="<?php _e('Search Announcements', 'tutor-pro'); ?>" />
+            <input type="text" class="tutor-report-search tutor-announcement-search-field" value="<?= $search_filter; ?>" autocomplete="off" placeholder="<?php _e('Search Announcements', 'tutor'); ?>" />
             <button class="tutor-report-search-btn tutor-announcement-search-sorting"><i class="tutor-icon-magnifying-glass-1"></i></button>
         </div>
     </div>
 
     <div>
-        <div class="menu-label"><?php _e('Courses', 'tutor-pro'); ?></div>
+        <div class="menu-label"><?php _e('Courses', 'tutor'); ?></div>
         <div>
                 <?php
                     //get courses
@@ -82,7 +82,7 @@ $the_query = new WP_Query($args);
     </div>
 
     <div>
-        <div class="menu-label"><?php _e('Sort By', 'tutor-pro'); ?></div>
+        <div class="menu-label"><?php _e('Sort By', 'tutor'); ?></div>
         <div>
             <select class="tutor-report-sort tutor-announcement-order-sorting">
                 <option <?php selected( $order_filter, 'ASC' ); ?>>ASC</option>
@@ -92,7 +92,7 @@ $the_query = new WP_Query($args);
     </div>
 
     <div>
-        <div class="menu-label"><?php _e('Date', 'tutor-pro'); ?></div>
+        <div class="menu-label"><?php _e('Date', 'tutor'); ?></div>
         <div class="date-range-input">
             <input type="text" class="tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off"/>
             <i class="tutor-icon-calendar"></i>
@@ -102,17 +102,17 @@ $the_query = new WP_Query($args);
 
 <div class="tutor-list-wrap tutor-report-course-list">
     <div class="tutor-list-header tutor-announcements-header">
-        <div class="heading"><?php _e('Announcements', 'tutor-pro'); ?></div>
+        <div class="heading"><?php _e('Announcements', 'tutor'); ?></div>
         <button type="button" class="tutor-btn bordered-btn tutor-announcement-add-new">
-            <?php esc_html_e('Add new','tutor-pro');?>
+            <?php esc_html_e('Add new','tutor');?>
         </button>
     </div>
    
         <table class="tutor-list-table tutor-announcement-table">
             <thead>
                 <tr>
-                    <th style="width:20%"><?php _e('Date', 'tutor-pro'); ?></th>
-                    <th><?php _e('Announcements', 'tutor-pro'); ?></th>
+                    <th style="width:20%"><?php _e('Date', 'tutor'); ?></th>
+                    <th><?php _e('Announcements', 'tutor'); ?></th>
 
                 </tr>
             </thead>
@@ -137,10 +137,10 @@ $the_query = new WP_Query($args);
                                 </div>
                                 <div class="tutor-announcement-buttons">
                                     <button type="button" announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-btn bordered-btn tutor-announcement-edit">
-                                        <?php esc_html_e('Edit','tutor-pro');?>
+                                        <?php esc_html_e('Edit','tutor');?>
                                     </button>
                                     <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?= $post->ID;?>">
-                                        <?php esc_html_e('Delete','tutor-pro');?>
+                                        <?php esc_html_e('Delete','tutor');?>
                                     </button>
                                 </div>
                             </td>
@@ -149,7 +149,7 @@ $the_query = new WP_Query($args);
                     <?php else:?>
                     <tr>
                         <td>
-                            <?= esc_html_e('Announcements not found','tutor-pro');?>
+                            <?= esc_html_e('Announcements not found','tutor');?>
                         </td>
                     </tr>
                     <?php endif;?>
@@ -177,7 +177,7 @@ $the_query = new WP_Query($args);
     <div class="tutor-modal-content">
         <div class="modal-header">
             <div class="modal-title">
-                <h1><?php esc_html_e('Create New Announcement', 'tutor-pro');?></h1>
+                <h1><?php esc_html_e('Create New Announcement', 'tutor');?></h1>
             </div>
             <div class="tutor-announcements-modal-close-wrap">
                         <a href="#" class="tutor-announcement-close-btn">
@@ -212,11 +212,11 @@ $the_query = new WP_Query($args);
 
                 <div class="tutor-option-field-row">
                     <label for="tutor_announcement_course">
-                        <?php esc_html_e('Announcement Title', 'tutor-pro');?>
+                        <?php esc_html_e('Announcement Title', 'tutor');?>
                     </label>
                     
                     <div class="tutor-announcement-form-control">
-                        <input type="text" name="tutor_annoument_title" value="" placeholder="<?php _e('Announcement title', 'tutor-pro'); ?>"> 
+                        <input type="text" name="tutor_annoument_title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>"> 
                     </div>
                 </div>
 
@@ -226,12 +226,12 @@ $the_query = new WP_Query($args);
                     </label>
                     
                     <div class="tutor-announcement-form-control">
-                        <textarea rows="8" type="text" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor-pro'); ?>"></textarea>
+                        <textarea rows="8" type="text" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
                     </div>
                 </div>
                 <div class="tutor-option-field-row">
                         <input type="checkbox" name="tutor_notify_students" checked>
-                        <span><?php esc_html_e('Notify to all students of this course.', 'tutor-pro');?></span>
+                        <span><?php esc_html_e('Notify to all students of this course.', 'tutor');?></span>
                 </div>
 
                 <div class="tutor-option-field-row">
@@ -241,10 +241,10 @@ $the_query = new WP_Query($args);
                 <div class="modal-footer">
                     <div class="tutor-quiz-builder-modal-control-btn-group">
                         <div class="quiz-builder-btn-group-left">
-                            <button class="tutor-btn"><?php esc_html_e('Publish','tutor-pro')?></button>
+                            <button class="tutor-btn"><?php esc_html_e('Publish','tutor')?></button>
                         </div>
                         <div class="quiz-builder-btn-group-right">
-                            <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php esc_html_e('Cancel','tutor-pro')?></button>
+                            <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php esc_html_e('Cancel','tutor')?></button>
                         </div>
                     </div>
                 </div>
@@ -259,7 +259,7 @@ $the_query = new WP_Query($args);
     <div class="tutor-modal-content">
         <div class="modal-header">
             <div class="modal-title">
-                <h1><?php esc_html_e('Update Announcement', 'tutor-pro');?></h1>
+                <h1><?php esc_html_e('Update Announcement', 'tutor');?></h1>
             </div>
             <div class="tutor-announcements-modal-close-wrap">
                         <a href="#" class="tutor-announcement-close-btn">
@@ -297,11 +297,11 @@ $the_query = new WP_Query($args);
 
                 <div class="tutor-option-field-row">
                     <label for="tutor_announcement_course">
-                        <?php esc_html_e('Announcement Title', 'tutor-pro');?>
+                        <?php esc_html_e('Announcement Title', 'tutor');?>
                     </label>
                     
                     <div class="tutor-announcement-form-control">
-                        <input type="text" name="tutor_annoument_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor-pro'); ?>"> 
+                        <input type="text" name="tutor_annoument_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>"> 
                     </div>
                 </div>
 
@@ -311,12 +311,12 @@ $the_query = new WP_Query($args);
                     </label>
                     
                     <div class="tutor-announcement-form-control">
-                        <textarea rows="8" type="text" id="tutor-announcement-summary" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor-pro'); ?>"></textarea>
+                        <textarea rows="8" type="text" id="tutor-announcement-summary" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
                     </div>
                 </div>
                 <div class="tutor-option-field-row">
                         <input type="checkbox" name="tutor_notify_students">
-                        <span><?php esc_html_e('Notify to all students of this course.', 'tutor-pro');?></span>
+                        <span><?php esc_html_e('Notify to all students of this course.', 'tutor');?></span>
                 </div>
 
                 <div class="tutor-option-field-row">
@@ -326,10 +326,10 @@ $the_query = new WP_Query($args);
                 <div class="modal-footer">
                     <div class="tutor-quiz-builder-modal-control-btn-group">
                         <div class="quiz-builder-btn-group-left">
-                            <button class="tutor-btn"><?php esc_html_e('Publish','tutor-pro')?></button>
+                            <button class="tutor-btn"><?php esc_html_e('Publish','tutor')?></button>
                         </div>
                         <div class="quiz-builder-btn-group-right">
-                            <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php esc_html_e('Cancel','tutor-pro')?></button>
+                            <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php esc_html_e('Cancel','tutor')?></button>
                         </div>
                     </div>
                 </div>
