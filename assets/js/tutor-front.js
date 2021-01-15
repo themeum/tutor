@@ -764,6 +764,7 @@ jQuery(document).ready(function ($) {
     function feedback_response($question_wrap) {
         var goNext = false;
 
+
         var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
         $('.wrong-right-text').remove();
         $('.quiz-answer-input-bottom').removeClass('wrong-answer right-answer');
@@ -833,7 +834,7 @@ jQuery(document).ready(function ($) {
                 }
             });
         }
-
+        
         if (validatedTrue) {
             goNext = true;
         }
