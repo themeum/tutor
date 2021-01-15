@@ -22,12 +22,15 @@ $assignments = tutor_utils()->get_assignments_by_instructor(null,  compact('per_
 
 if($assignments->count){ ?>
     <div class="tutor-dashboard-info-table-wrap">
+        <div class="heading">
+            <h3><?php _e('Announcements', 'tutor'); ?></h3>
+        </div>
         <table class="tutor-dashboard-info-table tutor-dashboard-assignment-table">
             <thead>
             <tr>
                 <th><?php _e('Date', 'tutor') ?></th>
-                <th><?php _e('Announcements', 'tutor') ?></th>
-                <th>&nbsp;</th>
+                <th style="text-align:left"><?php _e('Announcements', 'tutor') ?></th>
+               
             </tr>
             </thead>
             <tbody>
@@ -42,11 +45,11 @@ if($assignments->count){ ?>
                 ?>
                 <tr>
                     <td>11/11/21</td>
-                    <td>
+                    <td style="text-align:left">
                         <h5><?php echo $item->post_title ?></h5>
                         <h5><a href='<?php echo esc_url($course_url.'?course_id='.$course_id) ?>'><?php echo __('Course: ', 'tutor'). get_the_title($course_id); ?> </a></h5>
                     </td>
-                    <td> <?php echo "<a title='". __('View Coures', 'tutor') ."' href='".esc_url($submitted_url.'?assignment='.$item->ID)."'><i class='tutor-icon-angle-right'></i> </a>"; ?> </td>
+                    
                 </tr>
                 <?php
             }
