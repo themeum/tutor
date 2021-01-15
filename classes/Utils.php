@@ -5874,7 +5874,7 @@ class Utils {
 					FROM {$wpdb->posts} topic
 					INNER JOIN {$wpdb->posts} quiz ON quiz.post_parent=topic.ID
 					INNER JOIN {$wpdb->prefix}tutor_quiz_questions question ON question.quiz_id=quiz.ID
-					INNER JOIN {$wpdb->prefix}tutor_quiz_question_answers answer answer.belongs_question_id=question.question_id
+					INNER JOIN {$wpdb->prefix}tutor_quiz_question_answers answer ON answer.belongs_question_id=question.question_id
 					WHERE answer.answer_id=%d", $object_id));
 				break;
 					
@@ -5904,7 +5904,7 @@ class Utils {
 		
 		if($allow_current_admin && current_user_can( 'manage_options' )){
 			// Admin has access to everything
-			// return true;
+			return true;
 		}
 
 		$course_id = $this->get_course_id_by($content, $object_id);
