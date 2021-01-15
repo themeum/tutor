@@ -10,8 +10,18 @@
 	}
 
 	$query_lesson = tutor_utils()->get_lesson($course_id, -1);
-	$query_topics = tutor_utils()->get_topics($course_id);
+	// $query_topics = tutor_utils()->get_topics($course_id);
 	$attached_lesson_ids = array();
+
+    // tutor_utils()->get_topics function doesn't work correctly for multi instructor case. Rather use get_posts.    
+    $topic_args = array(
+        'post_type'  => 'topics',
+        'post_parent'  => $course_id,
+        'orderby' => 'menu_order',
+        'order'   => 'ASC',
+        'posts_per_page'    => -1,
+    );
+    $query_topics = (object) array('posts' => get_posts($topic_args));
 
 	if ( ! count($query_topics->posts)){
 		echo '<p class="course-empty-content">'.__('Add a topic to build your course', 'tutor').'</p>';
