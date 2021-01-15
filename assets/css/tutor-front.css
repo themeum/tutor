@@ -624,6 +624,7 @@ body {
   border: 1px solid #DCE4E6;
   margin-bottom: 20px;
   border-radius: 5px;
+  overflow: hidden;
 }
 
 .tutor-course-title,
