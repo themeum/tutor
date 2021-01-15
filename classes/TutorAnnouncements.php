@@ -1,6 +1,6 @@
 <?php
 /**
- * Since 1.7.8
+ * Since 1.7.9
  * post type register
  * announcement management
  */
