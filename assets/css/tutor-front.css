@@ -10896,4 +10896,24 @@ Content Drip (Pro)
   top: 46px;
 }
 
+/*
+ * since 1.7.9
+ * announcements style
+*/
+.tutor-announcement-content-wrap {
+  text-align: left !important;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.tutor-dashboard-announcement-sorting-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 /*# sourceMappingURL=tutor-front.css.map */

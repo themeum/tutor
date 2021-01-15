@@ -136,12 +136,14 @@ $the_query = new WP_Query($args);
                                     </p>
                                 </div>
                                 <div class="tutor-announcement-buttons">
+
                                     <button type="button" announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-btn bordered-btn tutor-announcement-edit">
                                         <?php esc_html_e('Edit','tutor');?>
                                     </button>
-                                    <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?= $post->ID;?>">
+                                    <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?//= $post->ID;?>">
                                         <?php esc_html_e('Delete','tutor');?>
                                     </button>
+
                                 </div>
                             </td>
                         </tr>
