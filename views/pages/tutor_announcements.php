@@ -3,21 +3,21 @@ if ( ! defined( 'ABSPATH' ) )
 exit;
 
 /**
- * Since 1.7.8
+ * Since 1.7.9
  * configure query with get params
  */
-$per_page = 10;
-$paged       = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
+$per_page           = 10;
+$paged              = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
 
 $order_filter       = isset($_GET['order']) ? $_GET['order'] : 'DESC';
 $search_filter      = isset($_GET['search']) ? $_GET['search'] : '';
 //announcement's parent
-$course_id      = isset($_GET['course-id']) ? $_GET['course-id'] : ''; 
-$date_filter = isset($_GET['date']) ? $_GET['date'] : ''; 
+$course_id          = isset($_GET['course-id']) ? $_GET['course-id'] : ''; 
+$date_filter        = isset($_GET['date']) ? $_GET['date'] : ''; 
 
-$year  = date('Y', strtotime($date_filter));
-$month  = date('m', strtotime($date_filter));
-$day  = date('d', strtotime($date_filter));
+$year               = date('Y', strtotime($date_filter));
+$month              = date('m', strtotime($date_filter));
+$day                = date('d', strtotime($date_filter));
 
 $args = array(
     'post_type'         => 'tutor_announcements',
@@ -33,9 +33,9 @@ $args = array(
 if(!empty($date_filter)){
     $args['date_query'] = array(
         array(
-            'year'  => $year,
-            'month' => $month,
-            'day'   => $day
+            'year'      => $year,
+            'month'     => $month,
+            'day'       => $day
         )
     );
 }
@@ -164,10 +164,10 @@ $the_query = new WP_Query($args);
                 $big = 999999999; // need an unlikely integer
                 
                 echo paginate_links( array(
-                    'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-                    'format' => '?paged=%#%',
-                    'current' => $paged,
-                    'total' => $the_query->max_num_pages
+                    'base'      => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+                    'format'    => '?paged=%#%',
+                    'current'   => $paged,
+                    'total'     => $the_query->max_num_pages
                 ) );
             ?>
         </div>

@@ -716,7 +716,7 @@ jQuery(document).ready(function($){
    });
 
     /**
-     * Since 1.7.8
+     * Since 1.7.9
      * Announcements scripts
      */
    
@@ -767,19 +767,23 @@ jQuery(document).ready(function($){
             
             },
             success: function(data) {
-                $(".tutor-announcements-create-alert").html();
+                
+                $(".tutor-alert").remove();
+                
                 if(data.status=="success"){
                 
                     location.reload();
                 }
                 if(data.status=="validation_error"){
-                for(let [key,value] of Object.entries(data.message)){
-                    $(".tutor-announcements-create-alert").append(`<li>${value}</li>`);
-                }
+                    $(".tutor-announcements-create-alert").append(`<div class="tutor-alert alert-warning"></div>`);
+                    for(let [key,value] of Object.entries(data.message)){
+                        
+                        $(".tutor-announcements-create-alert .tutor-alert").append(`<li>${value}</li>`);
+                    }
                 }                
                 if(data.status=="fail"){
                     
-                        $(".tutor-announcements-create-alert").html(`<li>${data.message}</li>`);
+                    $(".tutor-announcements-create-alert").html(`<li>${data.message}</li>`);
                 
                 }            
             },
@@ -802,14 +806,15 @@ jQuery(document).ready(function($){
             },
             success: function(data) {
                 
-                $(".tutor-announcements-update-alert").html();
+                $(".tutor-alert").remove();
                 if(data.status=="success"){
                     location.reload();
                 }
                 if(data.status=="validation_error"){
-                for(let [key,value] of Object.entries(data.message)){
-                    $(".tutor-announcements-update-alert").append(`<li>${value}</li>`);
-                }
+                    $(".tutor-announcements-update-alert").append(`<div class="tutor-alert alert-warning"></div>`);
+                    for(let [key,value] of Object.entries(data.message)){
+                        $(".tutor-announcements-update-alert > .tutor-alert").append(`<li>${value}</li>`);
+                    }
                 }                
                 if(data.status=="fail"){
                     
