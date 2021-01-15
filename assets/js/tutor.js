@@ -1299,7 +1299,172 @@ jQuery(document).ready(function($){
     });
 });
 
+    /**
+     * Since 1.7.9
+     * Announcements scripts
+     */
+   
+    var add_new_button = $(".tutor-announcement-add-new");
+    var update_button = $(".tutor-announcement-edit");
+    var delete_button = $(".tutor-announcement-delete");
+    var close_button = $(".tutor-announcement-close-btn");
+    var create_modal = $(".tutor-accouncement-create-modal");
+    var update_modal = $(".tutor-accouncement-update-modal");
 
+    //open create modal
+    $(add_new_button).click(function(){
+        create_modal.addClass("show");
+    })
+
+    //open update modal
+    $(update_button).click(function(){
+        var announcement_id = $(this).attr('announcement-id');
+        var course_id = $(this).attr('course-id');
+        var announcement_title = $(this).attr('announcement-title');
+        var announcement_summary = $(this).attr('announcement-summary');
+
+        $("#tutor-announcement-course-id").val(course_id);
+        $("#announcement_id").val(announcement_id);
+        $("#tutor-announcement-title").val(announcement_title);
+        $("#tutor-announcement-summary").val(announcement_summary);
+        
+        update_modal.addClass("show");
+    })
+
+    //close create and update modal
+    $(close_button).click(function(){
+        create_modal.removeClass("show");
+        update_modal.removeClass("show");
+        
+    })
+
+    //create announcement
+    $(".tutor-announcements-form").on('submit',function(e){
+        e.preventDefault();
+        var formData  = $(".tutor-announcements-form").serialize() + '&action=tutor_announcement_create' + '&action_type=create';
+
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : formData,
+            beforeSend: function() {
+            
+            },
+            success: function(data) {
+                
+                $(".tutor-alert").remove();
+                
+                if(data.status=="success"){
+                
+                    location.reload();
+                }
+                if(data.status=="validation_error"){
+                    $(".tutor-announcements-create-alert").append(`<div class="tutor-alert alert-warning"></div>`);
+                    for(let [key,value] of Object.entries(data.message)){
+                        
+                        $(".tutor-announcements-create-alert .tutor-alert").append(`<li>${value}</li>`);
+                    }
+                }                
+                if(data.status=="fail"){
+                    
+                    $(".tutor-announcements-create-alert").html(`<li>${data.message}</li>`);
+                
+                }            
+            },
+            error: function(data){
+
+            }
+        })
+    })
+    //update announcement
+    $(".tutor-announcements-update-form").on('submit',function(e){
+        e.preventDefault();
+        var formData  = $(".tutor-announcements-update-form").serialize() + '&action=tutor_announcement_create' + '&action_type=update';
+       
+        $.ajax({
+            url : ajaxurl,
+            type : 'POST',
+            data : formData,
+            beforeSend: function() {
+            
+            },
+            success: function(data) {
+                
+                $(".tutor-alert").remove();
+                if(data.status=="success"){
+                    location.reload();
+                }
+                if(data.status=="validation_error"){
+                    $(".tutor-announcements-update-alert").append(`<div class="tutor-alert alert-warning"></div>`);
+                    for(let [key,value] of Object.entries(data.message)){
+                        $(".tutor-announcements-update-alert > .tutor-alert").append(`<li>${value}</li>`);
+                    }
+                }                
+                if(data.status=="fail"){
+                    
+                        $(".tutor-announcements-create-alert").html(`<li>${data.message}</li>`);
+                
+                }  
+            },
+            error: function(){
+
+            }
+        })
+    });
+
+    $(delete_button).click(function(){
+        var announcement_id = $(this).attr('announcement-id');
+        var whichtr = $(this).closest("tr");
+        if(confirm("Do you want to delete?")){
+            $.ajax({
+                url : ajaxurl,
+                type : 'POST',
+                data : {action:'tutor_announcement_delete',announcement_id:announcement_id},
+                beforeSend: function() {
+                
+                },
+                success: function(data) {
+                    
+                    whichtr.remove();
+                    if(data.status == "fail"){
+                        console.log(data.message);
+                    }
+                },
+                error: function(){
+
+                }
+            })            
+        }
+    })
+    //sorting 
+    if (jQuery.datepicker){
+        $( "#tutor-announcement-datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
+    }
+    function urlPrams(type, val){
+        var url = new URL(window.location.href);
+        var search_params = url.searchParams;
+        search_params.set(type, val);
+        
+        url.search = search_params.toString();
+        
+        search_params.set('paged', 1);
+        url.search = search_params.toString();
+
+        return url.toString();
+    }
+    $('.tutor-announcement-course-sorting').on('change', function(e){
+        window.location = urlPrams( 'course-id', $(this).val() );
+    });
+    $('.tutor-announcement-order-sorting').on('change', function(e){
+        window.location = urlPrams( 'order', $(this).val() );
+    });
+    $('.tutor-announcement-date-sorting').on('change', function(e){
+        window.location = urlPrams( 'date', $(this).val() );
+    });
+    $('.tutor-announcement-search-sorting').on('click', function(e){
+        window.location = urlPrams( 'search', $(".tutor-announcement-search-field").val() );
+    });
+   //announcement end
 
     /*
     * @since v.1.7.9
