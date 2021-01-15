@@ -56,14 +56,14 @@ class TutorAnnouncements {
 
         //validation message set
         if(empty($form_data['post_parent'])){
-            $error['post_parent'] = __('Course name is required','tutor'); 
+            $error['post_parent'] = __('Course name required','tutor'); 
 
         }
         if(empty($form_data['post_title'])){
-            $error['post_title'] = __('Announcement title is required','tutor'); 
+            $error['post_title'] = __('Announcement title required','tutor'); 
         }
         if(empty($form_data['post_content'])){
-            $error['post_content'] = __('Announcements summary is required','tutor'); 
+            $error['post_content'] = __('Announcement summary required','tutor'); 
 
         }
 
