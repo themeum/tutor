@@ -5325,40 +5325,6 @@ class Utils {
 			}
 		}
 
-/*
-
-		if ($post->menu_order > 0){
-
-			$contents = $wpdb->get_results("SELECT items.* FROM {$wpdb->posts} topic
-				INNER JOIN {$wpdb->posts} items ON topic.ID = items.post_parent 
-				WHERE topic.post_parent = {$course_id} AND items.post_status = 'publish' order by topic.menu_order ASC, items.menu_order ASC;");
-
-
-
-			if (tutils()->count($contents)){
-				foreach ($contents as $key => $content){
-					if ($post->ID == $content->ID){
-						if ( ! empty($contents[$key-1]->ID)){
-							//return $contents[$key-1]->ID;
-						}
-					}
-				}
-			}
-
-			die(print_r($contents));
-
-		}else{
-			$previous = $wpdb->get_row("SELECT items.* FROM {$wpdb->posts} topic 
-              		INNER JOIN {$wpdb->posts} items ON topic.ID = items.post_parent 
-					WHERE topic.post_parent = {$course_id} 
-					AND items.post_status = 'publish' 
-					AND items.ID < {$post->ID} ORDER BY ID DESC  LIMIT 1; ");
-
-			if ( ! empty($previous->ID)){
-				return $previous->ID;
-			}
-		}*/
-
 		return false;
 	}
 
@@ -5854,7 +5820,7 @@ class Utils {
 			
 			case 'lesson' :
 			case 'quiz' :
-			case 'assignmnent' :
+			case 'assignment' :
 				$course_id = $wpdb->get_var($wpdb->prepare(
 					"SELECT post_parent FROM {$wpdb->posts} 
 					WHERE ID=(SELECT post_parent FROM {$wpdb->posts} WHERE ID=%d)", $object_id));
@@ -5888,6 +5854,10 @@ class Utils {
 				$course_id = $wpdb->get_var($wpdb->prepare(
 					"SELECT course_id FROM {$wpdb->prefix}tutor_quiz_attempts 
 					WHERE attempt_id=(SELECT quiz_attempt_id FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id=%d)", $object_id));
+				break;
+			case 'review' :
+				$course_id = $wpdb->get_var($wpdb->prepare(
+					"SELECT comment_post_ID FROM {$wpdb->comments} WHERE comment_ID=%d", $object_id));
 		}
 
 		return $course_id;
@@ -5919,6 +5889,32 @@ class Utils {
 			$is_listed = in_array($user_id, $instructor_ids);
 
 			return $is_listed;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return bool
+	 * 
+	 * @since v1.7.9
+	 *
+	 * Check if user has access for content like lesson, quiz, assignment etc.
+	 */
+	public function has_enrolled_content_access($content, $object_id=0, $user_id=0) {
+		$user_id = $this->get_user_id($user_id);
+		$object_id = $this->get_post_id($object_id);
+		$course_id = $this->get_course_id_by($content, $object_id);
+		$course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
+
+		if ($this->is_enrolled($course_id, $user_id)) {
+			return true;
+		}
+		if($course_content_access && current_user_can('manage_options')) {
+			return true;
+		}
+		if(current_user_can(tutor()->instructor_role) && tutils()->has_lesson_edit_access()){
+			return true;
 		}
 
 		return false;
