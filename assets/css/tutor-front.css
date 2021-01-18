@@ -7809,6 +7809,10 @@ table.course-single-gradebooks a {
   content: "\e965";
 }
 
+.tutor-dashboard-menu-announcements a:before {
+  content: "\e93f";
+}
+
 .tutor-dashboard-menu-wishlist a:before {
   content: "\e908";
 }
