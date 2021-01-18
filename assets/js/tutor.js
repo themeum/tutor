@@ -1464,6 +1464,15 @@ jQuery(document).ready(function($){
     $('.tutor-announcement-search-sorting').on('click', function(e){
         window.location = urlPrams( 'search', $(".tutor-announcement-search-field").val() );
     });
+    //dropdown toggle
+    $(document).click(function(){
+        $(".tutor-dropdown").removeClass('show');
+      });
+
+      $(".tutor-dropdown").click(function(e){
+        e.stopPropagation();
+        $(this).addClass('show');
+      });
    //announcement end
 
     /*
