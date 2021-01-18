@@ -120,7 +120,7 @@ $image_base = tutor()->url . '/assets/images/';
 <div class="tutor-announcement-table-wrap">
 
    
-        <table class="tutor-dashboard-info-table tutor-dashboard-assignment-table">
+        <table class="tutor-dashboard-info-table tutor-dashboard-announcement-table">
             <thead>
                 <tr>
                     <th style="width:20%"><?php _e('Date', 'tutor'); ?></th>
@@ -148,25 +148,27 @@ $image_base = tutor()->url . '/assets/images/';
                                     </p>
                                 </div>
                                 <div class="tutor-announcement-buttons">
-                                    <button type="button" announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-btn bordered-btn tutor-announcement-edit">
-                                        <?php esc_html_e('Details','tutor');?>
-                                    </button>
-                                    <i>icon</i>
-                                    <div class="tutor-announcement-dropdown-wrap">
-                                        <div class="up-arrow">
-                                            <i></i>
-                                        </div>
-                                        <div class="tutor-announcement-dropdwownment">
-                                            <li  announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-announcement-edit">
-                                                <i></i>
-                                                <?php esc_html_e('Edit','tutor');?>
-                                            </li>
-                                            <li class="tutor-announcement-delete" announcement-id="<?= $post->ID;?>">
-                                                <i></i>
-                                                <?php esc_html_e('Delete','tutor');?>
-                                            </li>
-                                        </div>
-                                    </div>
+                                    <li>
+                                        <a type="button" announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-btn bordered-btn tutor-announcement-edit">
+                                            <?php esc_html_e('Details','tutor');?>
+                                        </a>
+                                    </li>
+                                    
+                                    <li class="tutor-dropdown ">
+                                       <i class="tutor-icon-action"></i>
+                                        <div class="arrow-up"></div>
+                                        <ul  class="tutor-dropdown-menu">
+                                        <li  announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-announcement-edit">
+                                            <i class="tutor-icon-classic-editor"></i>
+                                            <?php esc_html_e('Edit','tutor');?>
+                                        </li>
+                                        <li class="tutor-announcement-delete" announcement-id="<?= $post->ID;?>">
+                                            <i class="tutor-icon-cross"></i>
+                                            <?php esc_html_e('Delete','tutor');?>
+                                        </li>
+                                        </ul>
+                                                                            
+                                    </li>
                                     
                                 </div>
                             </td>
