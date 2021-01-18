@@ -6,7 +6,7 @@
  */
 namespace  TUTOR;
 
-class TutorAnnouncements {
+class Announcements {
 
     public function __construct(){
 		/**
