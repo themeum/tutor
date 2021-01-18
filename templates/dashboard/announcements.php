@@ -149,11 +149,25 @@ $image_base = tutor()->url . '/assets/images/';
                                 </div>
                                 <div class="tutor-announcement-buttons">
                                     <button type="button" announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-btn bordered-btn tutor-announcement-edit">
-                                        <?php esc_html_e('Edit','tutor');?>
+                                        <?php esc_html_e('Details','tutor');?>
                                     </button>
-                                    <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?= $post->ID;?>">
-                                        <?php esc_html_e('Delete','tutor');?>
-                                    </button>
+
+                                    <div class="tutor-announcement-dropdown-wrap">
+                                        <div class="up-arrow">
+                                            <i></i>
+                                        </div>
+                                        <div class="tutor-announcement-dropdwownment">
+                                            <li  announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-announcement-edit">
+                                                <i></i>
+                                                <?php esc_html_e('Edit','tutor');?>
+                                            </li>
+                                            <li class="tutor-announcement-delete" announcement-id="<?= $post->ID;?>">
+                                                <i></i>
+                                                <?php esc_html_e('Delete','tutor');?>
+                                            </li>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                             </td>
                         </tr>
