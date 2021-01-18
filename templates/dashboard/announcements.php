@@ -49,16 +49,39 @@ $the_query = new WP_Query($args);
 
 //get courses
 $courses = tutils()->get_courses();
-
+$image_base = tutor()->url . '/assets/images/';
 ?>
 
-<div class="tutor-dashboard-announcement-sorting-wrap">
+<div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal">
+<h4><?php echo __('Announcement', 'tutor'); ?></h4>
+    <!--notice-->
+    <div class="withdraw-page-current-balance new-announcement-wrap">
+        <div class="balance-info new-announcement-content">
+            <img src="<?php echo $image_base; ?>wallet.svg" />
+            <div>
+                <small><?php esc_html_e('Create Announcement', 'tutor'); ?></small>
+                <p>
+                    <strong>
+                        <?php esc_html_e('Notify all students of your course','tutor');?>
+                    </strong>
+                </p>
+            </div>
+        </div>
+        <div class="new-announcement-button">
+            <button type="button" class="tutor-btn tutor-announcement-add-new">
+                <?php esc_html_e('Add New Announcement','tutor');?>
+            </button>
+        </div>
+    </div>
+    <!--notice end-->
 
-    <div class="tutor-dashboard-announcement-form-group">
+</div>
+<!--sorting-->
+<div class="tutor-dashboard-announcement-sorting-wrap">
+<div class="tutor-form-group">
         <label for="">
             <?php _e('Courses', 'tutor'); ?>
         </label>
-        <div class="tutor-dashboard-announcement-form-control">
 
             <select class="tutor-report-category tutor-announcement-course-sorting">
                 <?php if(empty($course_id)):?>
@@ -75,37 +98,27 @@ $courses = tutils()->get_courses();
                 <option value="">No course found</option>
                 <?php endif;?>
             </select>
-        </div>
+
     </div>
 
-    <div class="tutor-dashboard-announcement-form-group">
+    <div class="tutor-form-group">
         <label><?php _e('Sort By', 'tutor'); ?></label>
-        <div class="tutor-dashboard-announcement-form-control">
-            <select class="tutor-announcement-order-sorting">
-                <option <?php selected( $order_filter, 'ASC' ); ?>>ASC</option>
-                <option <?php selected( $order_filter, 'DESC' ); ?>>DESC</option>
-            </select>
-        </div>
+        <select class="tutor-announcement-order-sorting">
+            <option <?php selected( $order_filter, 'ASC' ); ?>>ASC</option>
+            <option <?php selected( $order_filter, 'DESC' ); ?>>DESC</option>
+        </select>
+  
     </div>
 
-    <div class="tutor-dashboard-announcement-form-group">
+    <div class="tutor-form-group tutor-announcement-datepicker">
         <label><?php _e('Date', 'tutor'); ?></label>
-        <div class="date-range-input tutor-dashboard-announcement-form-control">
             <input type="text" class="tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off"/>
             <i class="tutor-icon-calendar"></i>
-        </div>
     </div>
 </div>
-
+<!--sorting end-->
 <div class="tutor-announcement-table-wrap">
-    <div class="tutor-list-header tutor-announcements-header">
-        <div class="heading">
-            <h3><?php _e('Announcements', 'tutor'); ?></h3>
-        </div>
-        <button type="button" class="tutor-btn bordered-btn tutor-announcement-add-new">
-            <?php esc_html_e('Add new','tutor');?>
-        </button>
-    </div>
+
    
         <table class="tutor-dashboard-info-table tutor-dashboard-assignment-table">
             <thead>
