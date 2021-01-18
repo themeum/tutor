@@ -211,7 +211,6 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                                 <li><?php _e("Add Topics in the Course Builder section to create lessons, quizzes, and assignments.", 'tutor'); ?></li>
                                 <li><?php _e("Prerequisites refers to the fundamental courses to complete before taking this particular course.", 'tutor'); ?></li>
                                 <li><?php _e("Information from the Additional Data section shows up on the course single page.", 'tutor'); ?></li>
-                                <li><?php _e("Make Announcements to notify any important notes to all enrolled students at once.", 'tutor'); ?></li>
                             </ul>
                         </div>
                     </div> <!--.tutor-col-4-->
