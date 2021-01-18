@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.6
 Requires PHP: 7.0
-Stable tag: 1.7.8
+Stable tag: 1.7.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,20 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.7.9 - January 19, 2021 =
+
+New: Setting to enable showing instructor name on the certificate
+Update: Announcement feature now has a separate menu for better management and avoid email trigger conflicts
+Update: Enhanced security features in all ajax requests and other necessary places. Thanks Wordfence!
+Update: Add WooCommerce subscription compatibility in the front end course builder
+Fix: Zoom meetings fail to update or save on sites running languages other than English
+Fix: Preview button was not working for courses in Admin Dashboard
+Fix: Issue while attaching multiple files in assignments
+Fix: Lesson add/edit access issue for multi instructors
+Fix: Improved navigation for Course Reports page
+Fix: Translation issue in Paid Membership Pro
+Fix: User access issue in Zoom meeting list
 
 = 1.7.8 - January 07, 2021 =
 
