@@ -152,7 +152,7 @@ final class Tutor{
 		$this->edd = new TutorEDD();
 
 		//since 1.7.8
-		$this->announcements = new TutorAnnouncements;
+		$this->announcements = new Announcements;
 		/**
 		 * Run Method
 		 * @since v.1.2.0
