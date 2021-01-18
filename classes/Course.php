@@ -124,7 +124,6 @@ class Course extends Tutor_Base {
 		if ($course_marketplace) {
 			add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array( $this, 'instructors_metabox' ), $coursePostType );
 		}
-		add_meta_box( 'tutor-announcements', __( 'Announcements', 'tutor' ), array($this, 'announcements_metabox'), $coursePostType );
 
 		/**
          * Tutor course sidebar settings metabox
@@ -182,18 +181,6 @@ class Course extends Tutor_Base {
 		}
 	}
 
-	public function announcements_metabox($echo = true){
-		ob_start();
-		include  tutor()->path.'views/metabox/announcements-metabox.php';
-		$content = ob_get_clean();
-
-		if ($echo){
-			echo $content;
-		}else{
-			return $content;
-		}
-	}
-
 	public function instructors_metabox($echo = true){
 		ob_start();
 		include tutor()->path . 'views/metabox/instructors-metabox.php';
@@ -216,7 +203,6 @@ class Course extends Tutor_Base {
         course_builder_section_wrap($this->course_meta_box($echo = false), __( 'Course Builder', 'tutor' ) );
         course_builder_section_wrap($this->instructors_metabox($echo = false), __( 'Instructors', 'tutor' ) );
         course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), __( 'Additional Data', 'tutor' ) );
-        course_builder_section_wrap($this->announcements_metabox($echo = false), __( 'Announcements', 'tutor' ) );
 		do_action('tutor_course_builder_metabox_after', get_the_ID());
 	}
 
@@ -229,25 +215,6 @@ class Course extends Tutor_Base {
 		global $wpdb;
 
 		do_action( "tutor_save_course", $post_ID, $post);
-
-		/**
-		 * Insert Topic
-		 */
-		/*
-		if ( ! empty($_POST['topic_title'])) {
-			$topic_title   = sanitize_text_field( $_POST['topic_title'] );
-			$topic_summery = wp_kses_post( $_POST['topic_summery'] );
-
-			$post_arr = array(
-				'post_type'    => 'topics',
-				'post_title'   => $topic_title,
-				'post_content' => $topic_summery,
-				'post_status'  => 'publish',
-				'post_author'  => get_current_user_id(),
-				'post_parent'  => $post_ID,
-			);
-			wp_insert_post( $post_arr );
-		}*/
 
 		/**
 		 * Save course price type
@@ -371,36 +338,11 @@ class Course extends Tutor_Base {
 			add_user_meta($author_id, '_tutor_instructor_course_id', $post_ID);
 		}
 
-		//Announcements
-		if ( ! wp_doing_ajax()) {
-			$announcement_title = tutor_utils()->avalue_dot( 'announcements.title', $_POST );
-			if ( ! empty( $announcement_title ) ) {
-				$title   = sanitize_text_field( tutor_utils()->avalue_dot( 'announcements.title', $_POST ) );
-				$content = wp_kses_post( tutor_utils()->avalue_dot( 'announcements.content', $_POST ) );
-
-				$post_arr = array(
-					'post_type'    => 'tutor_announcements',
-					'post_title'   => $title,
-					'post_content' => $content,
-					'post_status'  => 'publish',
-					'post_author'  => get_current_user_id(),
-					'post_parent'  => $post_ID,
-				);
-				$announcement_id = wp_insert_post( $post_arr );
-
-				if ($announcement_id) {
-					$announcement = (object) $post_arr;
-					do_action('tutor_announcements/after/save', $announcement_id, $announcement);
-				}
-			}
-		}
-
 		/**
 		 * Disable question and answer for this course
 		 * @since 1.7.0
 		 */
 		if ($additional_data_edit) {
-			
 			foreach($this->additional_meta as $key){
 				update_post_meta($post_ID, $key, (isset($_POST[$key]) ? 'yes' : 'no'));
 			}
