@@ -5828,7 +5828,7 @@ class Utils {
 	}
 
 	/**
-	 * @return bool
+	 * @return int
 	 * 
 	 * @since v1.7.9
 	 *
