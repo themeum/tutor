@@ -10935,6 +10935,21 @@ Content Drip (Pro)
       flex-basis: 30%;
 }
 
+.tutor-announcement-datepicker {
+  position: relative;
+}
+
+.tutor-announcement-datepicker input,
+.tutor-announcement-datepicker i {
+  position: absolute;
+}
+
+.tutor-announcement-datepicker i {
+  top: 50%;
+  right: 5px;
+  color: #3e64de;
+}
+
 .tutor-announcements-update-form .tutor-option-field-row,
 .tutor-announcements-form .tutor-option-field-row {
   padding: 10px 18px 10px 18px;
