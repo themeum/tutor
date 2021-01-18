@@ -10954,6 +10954,18 @@ Content Drip (Pro)
   color: #3e64de;
 }
 
+.tutor-announcement-buttons {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
 .tutor-announcements-update-form .tutor-option-field-row,
 .tutor-announcements-form .tutor-option-field-row {
   padding: 10px 18px 10px 18px;
