@@ -5854,6 +5854,10 @@ class Utils {
 				$course_id = $wpdb->get_var($wpdb->prepare(
 					"SELECT course_id FROM {$wpdb->prefix}tutor_quiz_attempts 
 					WHERE attempt_id=(SELECT quiz_attempt_id FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id=%d)", $object_id));
+				break;
+			case 'review' :
+				$course_id = $wpdb->get_var($wpdb->prepare(
+					"SELECT comment_post_ID FROM {$wpdb->comments} WHERE comment_ID=%d", $object_id));
 		}
 
 		return $course_id;

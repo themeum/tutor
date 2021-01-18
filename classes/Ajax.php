@@ -46,9 +46,15 @@ class Ajax{
 	public function sync_video_playback(){
 		tutor_utils()->checking_nonce();
 
+		$user_id = get_current_user_id();
+		$post_id = isset($_POST['post_id']) ? sanitize_text_field($_POST['post_id']) : 0;
 		$duration = sanitize_text_field($_POST['duration']);
 		$currentTime = sanitize_text_field($_POST['currentTime']);
-		$post_id = isset($_POST['post_id']) ? sanitize_text_field($_POST['post_id']) : 0;
+
+		if(!tutils()->has_enrolled_content_access('lesson', $post_id)) {
+			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
+			exit;
+		}
 
 		/**
 		 * Update posts attached video
@@ -65,8 +71,6 @@ class Ajax{
 		/**
 		 * Sync Lesson Reading Info by Users
 		 */
-
-		$user_id = get_current_user_id();
 
 		$best_watch_time = tutor_utils()->get_lesson_reading_info($post_id, $user_id, 'video_best_watched_time');
 		if ($best_watch_time < $currentTime){
@@ -87,7 +91,7 @@ class Ajax{
 	public function tutor_place_rating(){
 		global $wpdb;
 
-		//TODO: Check nonce
+		tutils()->checking_nonce();
 
 		$rating = sanitize_text_field(tutor_utils()->avalue_dot('rating', $_POST));
 		$course_id = sanitize_text_field(tutor_utils()->avalue_dot('course_id', $_POST));
@@ -96,6 +100,11 @@ class Ajax{
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
 		$date = date("Y-m-d H:i:s", tutor_time());
+
+		if(!tutils()->has_enrolled_content_access('course', $course_id)) {
+			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
+			exit;
+		}
 
 		do_action('tutor_before_rating_placed');
 
@@ -156,6 +165,11 @@ class Ajax{
 		$question_title = sanitize_text_field($_POST['question_title']);
 		$question = wp_kses_post($_POST['question']);
 
+		if(!tutils()->has_enrolled_content_access('course', $course_id)) {
+			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
+			exit;
+		}
+
 		if (empty($question) || empty($question_title)){
 			wp_send_json_error(__('Empty question title or body', 'tutor'));
 		}
@@ -208,6 +222,11 @@ class Ajax{
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
 		$date = date("Y-m-d H:i:s", tutor_time());
+
+		if(!tutils()->has_enrolled_content_access('question', $question_id)) {
+			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
+			exit;
+		}
 
 		do_action('tutor_before_answer_to_question');
 		$data = apply_filters('tutor_add_answer_data', array(
@@ -299,6 +318,11 @@ class Ajax{
 		$review_id = (int) sanitize_text_field(tutils()->array_get('review_id', $_POST));
 		$rating = tutils()->get_rating_by_id($review_id);
 
+		if(!tutils()->has_enrolled_content_access('review', $review_id)) {
+			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
+			exit;
+		}
+
 		ob_start();
 		tutor_load_template('dashboard.reviews.edit-review-form', array('rating' => $rating));
 		$output = ob_get_clean();
@@ -314,6 +338,11 @@ class Ajax{
 		$review_id = (int) sanitize_text_field(tutils()->array_get('review_id', $_POST));
 		$rating = sanitize_text_field(tutor_utils()->avalue_dot('rating', $_POST));
 		$review = wp_kses_post(tutor_utils()->avalue_dot('review', $_POST));
+
+		if(!tutils()->has_enrolled_content_access('review', $review_id)) {
+			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
+			exit;
+		}
 
 		$is_exists = $wpdb->get_var($wpdb->prepare("SELECT comment_ID from {$wpdb->comments} WHERE comment_ID=%d AND comment_type = 'tutor_course_rating' ;", $review_id));
 
