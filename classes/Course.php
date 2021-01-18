@@ -217,25 +217,6 @@ class Course extends Tutor_Base {
 		do_action( "tutor_save_course", $post_ID, $post);
 
 		/**
-		 * Insert Topic
-		 */
-		/*
-		if ( ! empty($_POST['topic_title'])) {
-			$topic_title   = sanitize_text_field( $_POST['topic_title'] );
-			$topic_summery = wp_kses_post( $_POST['topic_summery'] );
-
-			$post_arr = array(
-				'post_type'    => 'topics',
-				'post_title'   => $topic_title,
-				'post_content' => $topic_summery,
-				'post_status'  => 'publish',
-				'post_author'  => get_current_user_id(),
-				'post_parent'  => $post_ID,
-			);
-			wp_insert_post( $post_arr );
-		}*/
-
-		/**
 		 * Save course price type
 		 */
 		$price_type = tutils()->array_get('tutor_course_price_type', $_POST);
