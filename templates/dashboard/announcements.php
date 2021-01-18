@@ -151,7 +151,7 @@ $image_base = tutor()->url . '/assets/images/';
                                     <button type="button" announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-btn bordered-btn tutor-announcement-edit">
                                         <?php esc_html_e('Details','tutor');?>
                                     </button>
-
+                                    <i>icon</i>
                                     <div class="tutor-announcement-dropdown-wrap">
                                         <div class="up-arrow">
                                             <i></i>

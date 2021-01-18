@@ -30,6 +30,13 @@
     color: rgba(62, 100, 222, 1);
 
 }
+.tutor-announcement-buttons {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
 .tutor-announcements-update-form 
 .tutor-option-field-row,
 .tutor-announcements-form 
