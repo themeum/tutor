@@ -203,28 +203,12 @@ class Template extends Tutor_Base {
 
 			setup_postdata($page_id);
 
-			if (is_user_logged_in()){
-				$is_course_enrolled = tutor_utils()->is_course_enrolled_by_lesson();
-
-				if ($is_course_enrolled || current_user_can( 'manage_options' )) {
-					$template = tutor_get_template( 'single-lesson' );
-				}else{
-					//You need to enroll first
-					$template = tutor_get_template( 'single.lesson.required-enroll' );
-
-					//Check Lesson edit access to support page builders
-					if(current_user_can(tutor()->instructor_role) && tutils()->has_lesson_edit_access()){
-						$template = tutor_get_template( 'single-lesson' );
-					}
-
-					/*
-					* Check access for admin
-					* @since 1.6.9
-					*/
-					$course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
-					if($course_content_access && current_user_can('administrator')) {
-						$template = tutor_get_template( 'single-lesson' );
-					}
+			if (is_user_logged_in()) {
+				$has_content_access = tutils()->has_enrolled_content_access('lesson');
+				if ($has_content_access) {
+					$template = tutor_get_template('single-lesson');
+				} else {
+					$template = tutor_get_template('single.lesson.required-enroll'); //You need to enroll first
 				}
 			}else{
 				$template = tutor_get_template('login');
@@ -380,7 +364,12 @@ class Template extends Tutor_Base {
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === 'tutor_quiz'){
 			if (is_user_logged_in()){
-				$template = tutor_get_template( 'single-quiz' );
+				$has_content_access = tutils()->has_enrolled_content_access('quiz');
+				if ($has_content_access) {
+					$template = tutor_get_template('single-quiz');
+				} else {
+					$template = tutor_get_template('single.lesson.required-enroll'); //You need to enroll first
+				}
 			}else{
 				$template = tutor_get_template('login');
 			}
@@ -394,7 +383,12 @@ class Template extends Tutor_Base {
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === 'tutor_assignments'){
 			if (is_user_logged_in()){
-				$template = tutor_get_template( 'single-assignment' );
+				$has_content_access = tutils()->has_enrolled_content_access('assignment');
+				if ($has_content_access) {
+					$template = tutor_get_template('single-assignment');
+				} else {
+					$template = tutor_get_template('single.lesson.required-enroll'); //You need to enroll first
+				}
 			}else{
 				$template = tutor_get_template('login');
 			}
