@@ -177,13 +177,10 @@ $the_query = new WP_Query($args);
 
 
 <?php
-    $notify_checked = '';
-    if (tutils()->get_option('email_to_students.new_announcement_posted')) { 
-        $notify_checked = 'checked'; 
-    }
+    $notify_checked= tutils()->get_option('email_to_students.new_announcement_posted');
 ?>
 <!--create announcements modal-->
-<div class="tutor-modal-wrap tutor-announcements-modal-wrap  tutor-accouncement-create-modal">
+<div class="tutor-modal-wrap tutor-announcements-modal-wrap  tutor-announcement-create-modal">
     <div class="tutor-modal-content">
         <div class="modal-header">
             <div class="modal-title">
@@ -239,11 +236,12 @@ $the_query = new WP_Query($args);
                         <textarea rows="8" type="text" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
                     </div>
                 </div>
-                <div class="tutor-option-field-row">
-                        <input type="checkbox" name="tutor_notify_students" <?php echo $notify_checked; ?>>
-                        <span><?php esc_html_e('Notify to all students of this course.', 'tutor');?></span>
-                </div>
-
+                <?php if($notify_checked):?>
+                    <div class="tutor-option-field-row">
+                        <input type="checkbox" name="tutor_notify_students" id="notify_student">
+                        <label id="notify_student"><?php esc_html_e('Notify to all students of this course.', 'tutor');?></label>
+                    </div>
+                <?php endif;?>
                 <div class="tutor-option-field-row">
                     <div class="tutor-announcements-create-alert"></div>
                 </div>
@@ -324,10 +322,12 @@ $the_query = new WP_Query($args);
                         <textarea rows="8" type="text" id="tutor-announcement-summary" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
                     </div>
                 </div>
-                <div class="tutor-option-field-row">
-                        <input type="checkbox" name="tutor_notify_students">
-                        <span><?php esc_html_e('Notify to all students of this course.', 'tutor');?></span>
-                </div>
+                <?php if($notify_checked):?>
+                    <div class="tutor-option-field-row">
+                        <input type="checkbox" name="tutor_notify_students" id="notify_student">
+                        <label for="notify_student"><?php esc_html_e('Notify to all students of this course.', 'tutor');?></span>
+                    </div>
+                <?php endif;?>
 
                 <div class="tutor-option-field-row">
                     <div class="tutor-announcements-update-alert"></div>

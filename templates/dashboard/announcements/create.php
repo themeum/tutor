@@ -51,11 +51,12 @@
                     <textarea rows="8" type="text" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
                
                 </div>
+                <?php if($notify_checked):?>
                 <div class="tutor-form-group">
                         <input type="checkbox" name="tutor_notify_students" checked>
                         <span><?php esc_html_e('Notify to all students of this course.', 'tutor');?></span>
                 </div>
-
+                <?php endif;?>
                 <div class="tutor-form-group">
                     <div class="tutor-announcements-create-alert"></div>
                 </div>

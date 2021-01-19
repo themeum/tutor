@@ -50,6 +50,7 @@ $the_query = new WP_Query($args);
 //get courses
 $courses = tutils()->get_courses();
 $image_base = tutor()->url . '/assets/images/';
+$notify_checked = tutils()->get_option('email_to_students.new_announcement_posted');
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal">
