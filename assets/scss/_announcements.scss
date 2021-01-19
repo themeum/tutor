@@ -94,13 +94,6 @@
 }
 
 
-.tutor-announcements-update-form 
-.tutor-option-field-row,
-.tutor-announcements-form 
-.tutor-option-field-row
-{
-    padding: 10px 18px 10px 18px
-}
 .tutor-announcements-update-form .tutor-option-field-row input[type=text],
 .tutor-announcements-update-form textarea ,
 .tutor-announcements-form .tutor-option-field-row input[type=text],
@@ -122,6 +115,9 @@
     border: none !important;
 }
 
+.tutor-announcement-modal-content {
+    border-radius: 20px;
+}
 .tutor-announcement-modal-footer-buttons {
     display: flex;
     justify-content: space-between;

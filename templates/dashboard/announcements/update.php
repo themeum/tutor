@@ -1,6 +1,6 @@
 <!--update announcements modal-->
 <div class="tutor-modal-wrap tutor-announcements-modal-wrap tutor-accouncement-update-modal">
-    <div class="tutor-modal-content">
+    <div class="tutor-modal-content tutor-announcement-modal-content">
         <div class="modal-header">
             <div class="modal-title">
                 <h1><?php esc_html_e('Update Announcement', 'tutor');?></h1>
@@ -17,7 +17,7 @@
         <form action="" class="tutor-announcements-update-form">
                 <?php tutor_nonce_field();?>
                 <input type="hidden" name="announcement_id" id="announcement_id">
-                <div class="tutor-form-gorup">
+                <div class="tutor-form-group">
                     <label>
                         <?php esc_html_e('Select Course', 'tutor');?>
                     </label>

@@ -1307,12 +1307,16 @@ jQuery(document).ready(function($){
     var add_new_button = $(".tutor-announcement-add-new");
     var update_button = $(".tutor-announcement-edit");
     var delete_button = $(".tutor-announcement-delete");
+    var details_button = $(".tutor-announcement-details");
     var close_button = $(".tutor-announcement-close-btn");
     var create_modal = $(".tutor-accouncement-create-modal");
     var update_modal = $(".tutor-accouncement-update-modal");
 
     //open create modal
     $(add_new_button).click(function(){
+        create_modal.addClass("show");
+    })
+    $(details_button).click(function(){
         create_modal.addClass("show");
     })
 

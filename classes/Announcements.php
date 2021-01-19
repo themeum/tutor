@@ -26,6 +26,7 @@ class Announcements {
 
 	public function tutor_announcements(){
 		include tutor()->path . 'views/pages/tutor_announcements.php';
+		
     }
     
     public function create_or_update_annoucement(){   
