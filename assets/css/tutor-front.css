@@ -8254,7 +8254,6 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
-  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
@@ -10939,6 +10938,20 @@ Content Drip (Pro)
       flex-basis: 30%;
 }
 
+.tutor-dashboard-announcement-table tr {
+  border: 1px solid #DCDBDC;
+  border-collapse: collapse;
+}
+
+.tutor-dashboard-announcement-table th {
+  padding: 13px 20px 13px 20px;
+  background-color: #F3F3F3;
+}
+
+.tutor-dashboard-announcement-table td {
+  padding: 21px 20px 13px 21px;
+}
+
 .tutor-announcement-datepicker {
   position: relative;
 }
@@ -10991,6 +11004,7 @@ Content Drip (Pro)
   position: absolute;
   right: 0px;
   display: none;
+  border-radius: 6px;
 }
 
 .tutor-dropdown-menu li {
@@ -11001,6 +11015,7 @@ Content Drip (Pro)
 
 .tutor-dropdown-menu li:hover {
   background-color: #6b6b6b;
+  border-radius: 6px;
 }
 
 .tutor-dropdwown-menu li i {
@@ -11031,6 +11046,21 @@ Content Drip (Pro)
 .tutor-announcements-update-form .tutor-option-field-row,
 .tutor-announcements-form .tutor-option-field-row {
   border: none !important;
+}
+
+.tutor-announcement-modal-footer-buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.tutor-announcement-cancel-btn {
+  background: #E8E8E8 !important;
+  border-radius: 3px !important;
+  color: #7A7A7A !important;
 }
 
 /*# sourceMappingURL=tutor-front.css.map */
