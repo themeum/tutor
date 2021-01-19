@@ -5873,7 +5873,7 @@ class Utils {
 	 */
 	public function can_user_manage($content, $object_id, $user_id=0, $allow_current_admin=true) {
 		
-		if($allow_current_admin && current_user_can( 'manage_options' )){
+		if($allow_current_admin && current_user_can( 'administrator' )){
 			// Admin has access to everything
 			return true;
 		}
@@ -5910,10 +5910,11 @@ class Utils {
 		if ($this->is_enrolled($course_id, $user_id)) {
 			return true;
 		}
-		if($course_content_access && current_user_can('manage_options')) {
+		if ($course_content_access && (current_user_can('administrator') || current_user_can(tutor()->instructor_role))) {
 			return true;
 		}
-		if(current_user_can(tutor()->instructor_role) && tutils()->has_lesson_edit_access()){
+		//Check Lesson edit access to support page builders (eg: Oxygen)
+		if (current_user_can(tutor()->instructor_role) && tutils()->has_lesson_edit_access()) {
 			return true;
 		}
 
