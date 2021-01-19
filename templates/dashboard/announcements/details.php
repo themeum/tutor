@@ -1,57 +1,49 @@
-
-<div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal">
-    <div class="tutor-earning-withdraw-form-wrap">
-        <div class="tutor-withdrawal-op-up-frorm">
-            <div>
-                <i class="tutor-icon-line-cross close-withdraw-form-btn"></i>
-                <img src="<?php echo $image_base; ?>wallet.svg" />
-                <h3><?php _e('Make a Withdrawal', 'tutor'); ?></h3>
-                <p><?php _e('Please enter withdrawal amount and click the submit request button', 'tutor'); ?></p>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <span><?php _e('Current Balance', 'tutor'); ?></span><br />
-                                
-                            </td>
-                            <td>
-                                <span><?php _e('Selected Payment Method', 'tutor'); ?></span><br />
-                               
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+<!--create announcements modal-->
+<div class="tutor-modal-wrap tutor-announcements-modal-wrap  tutor-accouncement-details-modal">
+    <div class="tutor-modal-content tutor-announcement-modal-content tutor-announcement-details-modal-content">
+           
+                <a href="#" class="tutor-announcement-close-btn">
+                    <i class="tutor-icon-line-cross"></i>
+                </a>
+    
+        <div class="modal-container tutor-announcement-details-container">
+            <div class="tutor-announcement-big-icon">
+                <i class="tutor-icon-speaker"></i>
             </div>
-            <div>
-                <form id="tutor-earning-withdraw-form" action="" method="post">
+            <div class="tutor-announcement-detail-content">
+  
+            </div>
 
-                
-                    <div class="withdraw-form-field-row">
-                        <label for="tutor_withdraw_amount"><?php _e('Amount', 'tutor') ?></label>
-                        <div class="withdraw-form-field-amount">
-                            <span>
-                                
-                            </span>
-                            <input type="number" min="1" name="tutor_withdraw_amount">
-                        </div>
-                        <div class="inline-image-text">
-                            <img src="<?php echo $image_base; ?>info-icon-question.svg" />
-                            <span>Minimum withdraw amount is </span>
-                        </div>
+        </div>
+
+
+        <div class="tutor-detail-course-content-wrap">
+            <div class="tutor-detail-course-content">
+ 
+                <div class="tutor-detail-course-info-wrap">
+                    <div class="tutor-announcement-detail-course-info">
+                        <label for=""><?php esc_html_e('Course','tutor')?></label>
+                        <p></p>
                     </div>
-
-                    <div class="tutor-withdraw-button-container">
-                        <button class="tutor-btn tutor-btn-secondary close-withdraw-form-btn"><?php _e('Cancel', 'tutor'); ?></button>
-                        <button class="tutor-btn" type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php _e('Submit Request', 'tutor'); ?></button>
+                    <div class="tutor-announcement-detail-date-info">
+                        <label for=""><?php esc_html_e('Publish Date')?></label>
+                        <p></p>
                     </div>
-
-                    <div class="tutor-withdraw-form-response"></div>
-
-                   
-                </form>
+                </div>
+                <div class="tutor-announce-detail-popup-button-wrap">
+                    <div class="announcement-detail-cancel-button">
+                        <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn tutor-announcement-cancel-btn"><?php esc_html_e('Cancel','tutor')?></button>
+                    </div>   
+                    <div class="announcement-detail-edit-delete-button">
+                        <button class="tutor-btn tutor-announcement-delete tutor-border-none"><?php esc_html_e('Delete','tutor')?></button>
+                        <button class="tutor-btn tutor-border-none"><?php esc_html_e('Edit','tutor')?></button>
+                    </div>   
+                </div>                
             </div>
         </div>
 
-    </div>
+</div>
 
-</div> 
+    </div>
+</div>
+<!--create announcements modal end-->

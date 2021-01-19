@@ -127,3 +127,79 @@
     border-radius: 3px !important;
     color: #7A7A7A !important;
 }
+
+/*announcemnets details modal*/
+
+.tutor-announcement-details-modal-content >a{
+    cursor: pointer;
+    padding:20px; 
+    float: right;
+}
+.modal-container.tutor-announcement-details-container {
+    padding: 20px 70px !important;
+}
+.balance-info
+.tutor-announcement-big-icon {
+    margin-right: 10px;
+}
+.tutor-announcement-big-icon {
+    font-size: 32px;
+    width: 76px;
+    height: 76px;
+    border-radius: 100%;
+    background: #E9EDFB;
+    text-align: center;
+    padding: 10px;
+    color: #3E64DE;    
+}
+.tutor-announcement-detail-content {
+    margin: 34px 0px 60px;
+}
+.tutor-announcement-detail-content h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #161616;
+}
+.tutor-announcement-detail-content p {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 26px;
+    color: #7A7A7A;
+    padding-top: 22px;
+}
+.tutor-detail-course-content-wrap {
+    background-color: #F3F3F3;
+}
+.tutor-detail-course-content {
+    padding: 20px 70px;
+}
+.tutor-detail-course-info-wrap {
+    display: flex;
+    justify-content: space-between;
+}
+.tutor-announce-detail-popup-button-wrap {
+    display: flex;
+    justify-content: space-between;
+}
+.announcement-detail-edit-delete-button >
+.tutor-announcement-delete {
+    background: #E8E8E8 !important;
+    color: #7A7A7A !important;    
+}
+.tutor-border-none{
+    border: none !important;
+}
+.announcement-detail-edit-delete-button > button {
+    padding: 10px 20px !important;
+}
+.announcement-detail-edit-delete-button {
+    display: flex;
+    gap: 10px;
+}
+.tutor-announcement-detail-course-info p,
+.tutor-announcement-detail-date-info p {
+    font-size: 16px;
+    color: #161616; 
+    font-weight: 700;   
+}

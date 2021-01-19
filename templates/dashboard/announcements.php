@@ -57,7 +57,10 @@ $image_base = tutor()->url . '/assets/images/';
     <!--notice-->
     <div class="withdraw-page-current-balance new-announcement-wrap">
         <div class="balance-info new-announcement-content">
-            <img src="<?php echo $image_base; ?>wallet.svg" />
+            <div class="tutor-announcement-big-icon">
+                <i class="tutor-icon-speaker"></i>
+            </div> 
+            
             <div>
                 <small><?php esc_html_e('Create Announcement', 'tutor'); ?></small>
                 <p>
@@ -149,7 +152,7 @@ $image_base = tutor()->url . '/assets/images/';
                                 </div>
                                 <div class="tutor-announcement-buttons">
                                     <li>
-                                        <a type="button" announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-btn bordered-btn open-withdraw-form-btn">
+                                        <a type="button" course-name="<?= esc_attr($course->post_title)?>" announcement-date="<?= esc_attr($date_format)?>" announcement-title="<?= esc_attr($post->post_title);?>" announcement-summary="<?= esc_attr($post->post_content);?>" course-id="<?= esc_attr($post->post_parent);?>" announcement-id="<?= esc_attr($post->ID);?>" class="tutor-btn bordered-btn tutor-announcement-details">
                                             <?php esc_html_e('Details','tutor');?>
                                         </a>
                                     </li>
