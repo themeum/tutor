@@ -14,64 +14,59 @@
         <div class="modal-container">
             <form action="" class="tutor-announcements-form">
                 <?php tutor_nonce_field();?>
-                <div class="tutor-option-field-row">
-                    <label for="tutor_announcement_course">
+                <div class="tutor-form-group">
+                    <label>
                         <?php esc_html_e('Select Course', 'tutor');?>
                     </label>
                     
-                    <div class="tutor-announcement-form-control">
-                        <select name="tutor_announcement_course" id="">
-                            <?php if($courses):?>
-                            <?php foreach($courses as $course):?>
+                    <select name="tutor_announcement_course" id="">
+                        <?php if($courses):?>
+                        <?php foreach($courses as $course):?>
 
-                                <option value="<?= esc_attr($course->ID)?>">
-                                    <?= $course->post_title;?>
-                                </option>
-                            <?php endforeach;?>
-                            <?php else:?>
-                            <option value="">No course found</option>
-                            <?php endif;?>                            
-                        </select>
-                        
-                    </div>
+                            <option value="<?= esc_attr($course->ID)?>">
+                                <?= $course->post_title;?>
+                            </option>
+                        <?php endforeach;?>
+                        <?php else:?>
+                        <option value="">No course found</option>
+                        <?php endif;?>                            
+                    </select>
+              
                 </div>
 
-                <div class="tutor-option-field-row">
-                    <label for="tutor_announcement_course">
+                <div class="tutor-form-group">
+                    <label>
                         <?php esc_html_e('Announcement Title', 'tutor');?>
                     </label>
-                    
-                    <div class="tutor-announcement-form-control">
-                        <input type="text" name="tutor_annoument_title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>"> 
-                    </div>
+                    <input type="text" name="tutor_annoument_title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>"> 
+             
                 </div>
 
-                <div class="tutor-option-field-row">
+                <div class="tutor-form-group">
                     <label for="tutor_announcement_course">
                         <?php esc_html_e('Summary', 'tutor');?>
                     </label>
                     
-                    <div class="tutor-announcement-form-control">
-                        <textarea rows="8" type="text" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
-                    </div>
+                  
+                    <textarea rows="8" type="text" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
+               
                 </div>
-                <div class="tutor-option-field-row">
+                <div class="tutor-form-group">
                         <input type="checkbox" name="tutor_notify_students" checked>
                         <span><?php esc_html_e('Notify to all students of this course.', 'tutor');?></span>
                 </div>
 
-                <div class="tutor-option-field-row">
+                <div class="tutor-form-group">
                     <div class="tutor-announcements-create-alert"></div>
                 </div>
            
                 <div class="modal-footer">
-                    <div class="tutor-quiz-builder-modal-control-btn-group">
-                        <div class="quiz-builder-btn-group-left">
-                            <button class="tutor-btn"><?php esc_html_e('Publish','tutor')?></button>
-                        </div>
-                        <div class="quiz-builder-btn-group-right">
-                            <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php esc_html_e('Cancel','tutor')?></button>
-                        </div>
+                    <div class="tutor-announcement-modal-footer-buttons">
+            
+                        <button class="tutor-btn"><?php esc_html_e('Publish','tutor')?></button>
+            
+                        <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn tutor-announcement-cancel-btn"><?php esc_html_e('Cancel','tutor')?></button>
+                       
                     </div>
                 </div>
             </form>

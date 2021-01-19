@@ -120,7 +120,7 @@ $image_base = tutor()->url . '/assets/images/';
 <div class="tutor-announcement-table-wrap">
 
    
-        <table class="tutor-dashboard-info-table tutor-dashboard-announcement-table">
+        <table class="tutor-dashboard-announcement-table">
             <thead>
                 <tr>
                     <th style="width:20%"><?php _e('Date', 'tutor'); ?></th>
