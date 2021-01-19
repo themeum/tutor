@@ -39,14 +39,15 @@ if(!empty($date_filter)){
         )
     );
 }
+if (!current_user_can('administrator')) {
+    $args['author'] = get_current_user_id();
+}
 $the_query = new WP_Query($args);
 ?>
 
 <div class="tutor-report-content-menu tutor-announcement-container">
 
- 
     <div>
-
         <div class="menu-label"><?php _e('Search', 'tutor'); ?></div>
         <div>
             <input type="text" class="tutor-report-search tutor-announcement-search-field" value="<?= $search_filter; ?>" autocomplete="off" placeholder="<?php _e('Search Announcements', 'tutor'); ?>" />
@@ -57,11 +58,10 @@ $the_query = new WP_Query($args);
     <div>
         <div class="menu-label"><?php _e('Courses', 'tutor'); ?></div>
         <div>
-                <?php
-                    //get courses
-                    $courses = tutils()->get_courses();
-                    
-                ?>
+            <?php
+                //get courses
+                $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
+            ?>
 
             <select class="tutor-report-category tutor-announcement-course-sorting">
                 <?php if(empty($course_id)):?>
@@ -157,23 +157,24 @@ $the_query = new WP_Query($args);
                     <?php endif;?>
             </tbody>
         </table>
-  
+
 </div>
 
-        <!--pagination-->
-        <div class="tutor-announcement-pagination">
-            <?php
-                $big = 999999999; // need an unlikely integer
-                
-                echo paginate_links( array(
-                    'base'      => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-                    'format'    => '?paged=%#%',
-                    'current'   => $paged,
-                    'total'     => $the_query->max_num_pages
-                ) );
-            ?>
-        </div>
-        <!--pagination end-->
+<!--pagination-->
+<div class="tutor-announcement-pagination">
+    <?php
+        $big = 999999999; // need an unlikely integer
+        
+        echo paginate_links( array(
+            'base'      => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+            'format'    => '?paged=%#%',
+            'current'   => $paged,
+            'total'     => $the_query->max_num_pages
+        ) );
+    ?>
+</div>
+<!--pagination end-->
+
 <!--create announcements modal-->
 <div class="tutor-modal-wrap tutor-announcements-modal-wrap  tutor-accouncement-create-modal">
     <div class="tutor-modal-content">

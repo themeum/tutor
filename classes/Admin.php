@@ -61,7 +61,9 @@ class Admin{
 
         if ($enable_course_marketplace) {
             add_submenu_page('tutor', __('Instructors', 'tutor'), __('Instructors', 'tutor'), 'manage_tutor', 'tutor-instructors', array($this, 'tutor_instructors'));
-        }
+		}
+		
+		add_submenu_page('tutor', __('Announcements', 'tutor'), __('Announcements', 'tutor'), 'manage_tutor_instructor', 'tutor_announcements', array($this, 'tutor_announcements'));
 
 		add_submenu_page('tutor', __('Q & A', 'tutor'), __('Q & A '.$unanswered_bubble, 'tutor'), 'manage_tutor_instructor', 'question_answer', array($this, 'question_answer') );
 
@@ -71,7 +73,6 @@ class Admin{
             add_submenu_page('tutor', __('Withdraw Requests', 'tutor'), __('Withdraw Requests', 'tutor'), 'manage_tutor_instructor', 'tutor_withdraw_requests', array($this, 'withdraw_requests') );
         }
 
-		//add_submenu_page('tutor', __('Add-ons', 'tutor'), __('Add-ons', 'tutor'), 'manage_tutor', 'tutor-addons', array(new Addons(),'addons_page') );
 		add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), __( 'Add-ons', 'tutor' ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
 
 		do_action('tutor_admin_register');
@@ -96,6 +97,10 @@ class Admin{
 
 	public function tutor_instructors(){
 		include tutor()->path.'views/pages/instructors.php';
+	}
+
+	public function tutor_announcements(){
+		include tutor()->path.'views/pages/announcements.php';
 	}
 
 	public function question_answer(){
