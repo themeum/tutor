@@ -1311,13 +1311,23 @@ jQuery(document).ready(function($){
     var close_button = $(".tutor-announcement-close-btn");
     var create_modal = $(".tutor-accouncement-create-modal");
     var update_modal = $(".tutor-accouncement-update-modal");
+    var details_modal = $(".tutor-accouncement-details-modal");
 
     //open create modal
     $(add_new_button).click(function(){
         create_modal.addClass("show");
     })
+
     $(details_button).click(function(){
-        create_modal.addClass("show");
+        var announcement_date = $(this).attr('announcement-date');
+        var course_name = $(this).attr('course-name');
+        var announcement_title = $(this).attr('announcement-title');
+        var announcement_summary = $(this).attr('announcement-summary'); 
+        
+        $(".tutor-announcement-detail-content").html(`<h3>${announcement_title}</h3><p>${announcement_summary}</p>`);  
+        $(".tutor-announcement-detail-course-info p").html(`${course_name}`);     
+        $(".tutor-announcement-detail-date-info p").html(`${announcement_date}`);     
+        details_modal.addClass("show");
     })
 
     //open update modal
@@ -1339,6 +1349,7 @@ jQuery(document).ready(function($){
     $(close_button).click(function(){
         create_modal.removeClass("show");
         update_modal.removeClass("show");
+        details_modal.removeClass("show");
         
     })
 
