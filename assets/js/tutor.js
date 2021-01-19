@@ -1491,3 +1491,33 @@ jQuery.fn.serializeObject = function()
 
    return values;
 };
+
+function tutor_toast(message, type) {
+    var container = document.createElement('div');
+    container.className='tutor-toast-container';
+
+    var icons = {
+        success : 'succes',
+        error: 'error'
+    }
+
+    container.innerHTML = '<div>\
+        <span></span>\
+        '+message+'\
+        <span class="tutor-toast-close">C</span>\
+    </div>';
+
+    container.getElementsByClassName('tutor-toast-close')[0].onclick=function() {
+        $(this).remove();
+    }
+
+    document.getElementsByTagName('body')[0].appendChild(container);
+
+    setTimeout(function() {
+        if(container) {
+            $(container).fadeOut('fast', function() {
+                $(this).remove();
+            });
+        }
+    }, 5);
+}
