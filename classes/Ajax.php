@@ -477,18 +477,14 @@ class Ajax{
             $post_id = wp_insert_post($form_data);
             if ($post_id > 0) {
 				$announcement = get_post($post_id);
+				$action_type = sanitize_textarea_field($_POST['action_type']);
                 $response['status'] = 'success';
                 //set reponse message as per action type
-                if ($_POST['action_type'] == 'create') {
-                    $response['message'] = $create_success_msg;
-                }
-                if ($_POST['action_type'] == 'update') {
-                    $response['message'] = $update_success_msg;
-				}
+                $response['message'] = ($action_type == 'create') ? $create_success_msg : $update_success_msg;
 
                 //provide action hook
                 if ($_POST['tutor_notify_students']) {
-                    do_action('tutor_announcements_notify_students', $post_id, $announcement, $_POST['action_type']);
+                    do_action('tutor_announcements_notify_students', $post_id, $announcement, $action_type);
 				}
 				
 				do_action('tutor_announcements/after/save', $post_id, $announcement);
