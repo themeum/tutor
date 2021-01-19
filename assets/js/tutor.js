@@ -1285,7 +1285,7 @@ jQuery(document).ready(function($){
         type : 'POST',
         data : {attempts_id: $that.data('attemptid'), feedback: $('.tutor-instructor-feedback-content').val() , action: 'tutor_instructor_feedback'},
         beforeSend: function () {
-            $that.addClass('tutor-updating-message');
+            $that.addClass('tutor-updating-message'); 
         },
         success: function (data) {
             if (data.success){
@@ -1296,14 +1296,14 @@ jQuery(document).ready(function($){
         complete: function () {
             $that.removeClass('tutor-updating-message');
         }
+        });
     });
-});
 
     /**
      * Since 1.7.9
      * Announcements scripts
      */
-   
+
     var add_new_button = $(".tutor-announcement-add-new");
     var update_button = $(".tutor-announcement-edit");
     var delete_button = $(".tutor-announcement-delete");
@@ -1315,6 +1315,7 @@ jQuery(document).ready(function($){
 
     //open create modal
     $(add_new_button).click(function(){
+        
         create_modal.addClass("show");
     })
 
@@ -1489,7 +1490,6 @@ jQuery(document).ready(function($){
         $(this).addClass('show');
       });
    //announcement end
-
     /*
     * @since v.1.7.9
     * Send wp nonce to every ajax request
