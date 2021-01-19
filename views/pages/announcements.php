@@ -140,7 +140,7 @@ $the_query = new WP_Query($args);
                                     <button type="button" announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-btn bordered-btn tutor-announcement-edit">
                                         <?php esc_html_e('Edit','tutor');?>
                                     </button>
-                                    <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?//= $post->ID;?>">
+                                    <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?= $post->ID;?>">
                                         <?php esc_html_e('Delete','tutor');?>
                                     </button>
 
@@ -180,7 +180,7 @@ $the_query = new WP_Query($args);
     $notify_checked= tutils()->get_option('email_to_students.new_announcement_posted');
 ?>
 <!--create announcements modal-->
-<div class="tutor-modal-wrap tutor-announcements-modal-wrap  tutor-announcement-create-modal">
+<div class="tutor-modal-wrap tutor-announcements-modal-wrap tutor-announcement-create-modal">
     <div class="tutor-modal-content">
         <div class="modal-header">
             <div class="modal-title">
@@ -238,8 +238,11 @@ $the_query = new WP_Query($args);
                 </div>
                 <?php if($notify_checked):?>
                     <div class="tutor-option-field-row">
+                        
+                        <label for="notify_student">
+                            <?php esc_html_e('Notify to all students of this course.', 'tutor');?>
+                        </label>
                         <input type="checkbox" name="tutor_notify_students" id="notify_student">
-                        <label id="notify_student"><?php esc_html_e('Notify to all students of this course.', 'tutor');?></label>
                     </div>
                 <?php endif;?>
                 <div class="tutor-option-field-row">
@@ -324,8 +327,9 @@ $the_query = new WP_Query($args);
                 </div>
                 <?php if($notify_checked):?>
                     <div class="tutor-option-field-row">
+                        <label for="notify_student"><?php esc_html_e('Notify to all students of this course.', 'tutor');?></label>
                         <input type="checkbox" name="tutor_notify_students" id="notify_student">
-                        <label for="notify_student"><?php esc_html_e('Notify to all students of this course.', 'tutor');?></span>
+                        
                     </div>
                 <?php endif;?>
 

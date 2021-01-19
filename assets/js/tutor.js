@@ -1312,11 +1312,9 @@ jQuery(document).ready(function($){
     var create_modal = $(".tutor-accouncement-create-modal");
     var update_modal = $(".tutor-accouncement-update-modal");
     var details_modal = $(".tutor-accouncement-details-modal");
-
     //open create modal
     $(add_new_button).click(function(){
-        
-        create_modal.addClass("show");
+      create_modal.addClass("show");
     })
 
     $(details_button).click(function(){
