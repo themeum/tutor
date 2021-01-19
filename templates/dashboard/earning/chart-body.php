@@ -14,7 +14,7 @@
         data: {
             labels: <?php echo json_encode(array_keys($chartData)); ?>,
             datasets: [{
-                label: __('Earning', 'tutor'),
+                label: "<?php _e('Earning', 'tutor') ?>",
                 backgroundColor: '#3057D5',
                 borderColor: '#3057D5',
                 data: <?php echo json_encode(array_values($chartData)); ?>,

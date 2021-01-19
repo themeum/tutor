@@ -165,7 +165,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: classes/Admin.php:229, classes/Template.php:356
+#: classes/Admin.php:229, classes/Template.php:340
 msgid "Permission Denied"
 msgstr ""
 
@@ -185,43 +185,43 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:146
-msgid "Rating placed success"
-msgstr ""
-
-#: classes/Ajax.php:160
-msgid "Empty question title or body"
-msgstr ""
-
-#: classes/Ajax.php:192
-msgid "Question has been added successfully"
-msgstr ""
-
-#: classes/Ajax.php:202
-msgid "Please write answer"
-msgstr ""
-
-#: classes/Ajax.php:230
-msgid "Answer has been added successfully"
-msgstr ""
-
-#: classes/Ajax.php:251
-msgid "Course added to wish list"
-msgstr ""
-
-#: classes/Ajax.php:248
-msgid "Course removed from wish list"
-msgstr ""
-
-#: classes/Ajax.php:261, classes/Course.php:367, classes/Course.php:402, classes/Course.php:608, classes/Course.php:659, classes/Course.php:696, classes/Course.php:709, classes/Instructor.php:244, classes/Lesson.php:110, classes/Lesson.php:149, classes/Lesson.php:211, classes/Quiz.php:103, classes/Quiz.php:414, classes/Quiz.php:451, classes/Quiz.php:541, classes/Quiz.php:587, classes/Quiz.php:631, classes/Quiz.php:670, classes/Quiz.php:693, classes/Quiz.php:789, classes/Quiz.php:812, classes/Quiz.php:833, classes/Quiz.php:944, classes/Quiz.php:989, classes/Quiz.php:1067, classes/Quiz.php:1127, classes/Quiz.php:1149, classes/Q_and_A.php:71, templates/dashboard/registration.php:11
+#: classes/Ajax.php:55, classes/Ajax.php:105, classes/Ajax.php:169, classes/Ajax.php:227, classes/Ajax.php:280, classes/Ajax.php:322, classes/Ajax.php:343, classes/Course.php:367, classes/Course.php:402, classes/Course.php:608, classes/Course.php:659, classes/Course.php:696, classes/Course.php:709, classes/Instructor.php:244, classes/Lesson.php:110, classes/Lesson.php:149, classes/Lesson.php:211, classes/Quiz.php:103, classes/Quiz.php:414, classes/Quiz.php:451, classes/Quiz.php:541, classes/Quiz.php:587, classes/Quiz.php:631, classes/Quiz.php:670, classes/Quiz.php:693, classes/Quiz.php:789, classes/Quiz.php:812, classes/Quiz.php:833, classes/Quiz.php:944, classes/Quiz.php:989, classes/Quiz.php:1067, classes/Quiz.php:1127, classes/Quiz.php:1149, classes/Q_and_A.php:71, templates/dashboard/registration.php:11
 msgid "Access Denied"
 msgstr ""
 
-#: classes/Ajax.php:357, classes/Ajax.php:361
+#: classes/Ajax.php:155
+msgid "Rating placed success"
+msgstr ""
+
+#: classes/Ajax.php:174
+msgid "Empty question title or body"
+msgstr ""
+
+#: classes/Ajax.php:206
+msgid "Question has been added successfully"
+msgstr ""
+
+#: classes/Ajax.php:216
+msgid "Please write answer"
+msgstr ""
+
+#: classes/Ajax.php:249
+msgid "Answer has been added successfully"
+msgstr ""
+
+#: classes/Ajax.php:270
+msgid "Course added to wish list"
+msgstr ""
+
+#: classes/Ajax.php:267
+msgid "Course removed from wish list"
+msgstr ""
+
+#: classes/Ajax.php:386, classes/Ajax.php:390
 msgid "ERROR:"
 msgstr ""
 
-#: classes/Ajax.php:361
+#: classes/Ajax.php:390
 msgid "Username is required."
 msgstr ""
 
@@ -529,7 +529,7 @@ msgstr ""
 msgid "Confirm password does not matched with Password field"
 msgstr ""
 
-#: classes/Instructor.php:159, classes/Template.php:274
+#: classes/Instructor.php:159, classes/Template.php:258
 msgid "Permission denied"
 msgstr ""
 
@@ -657,7 +657,7 @@ msgstr ""
 msgid "Price Type"
 msgstr ""
 
-#: classes/Options.php:102, classes/Utils.php:5526
+#: classes/Options.php:102, classes/Utils.php:5492
 msgid "Dashboard Page"
 msgstr ""
 
@@ -1165,7 +1165,7 @@ msgstr ""
 msgid "Allow multiple instructors to upload their courses."
 msgstr ""
 
-#: classes/Options.php:533, classes/Utils.php:5527
+#: classes/Options.php:533, classes/Utils.php:5493
 msgid "Instructor Registration Page"
 msgstr ""
 
@@ -1193,7 +1193,7 @@ msgstr ""
 msgid "Student Profile settings"
 msgstr ""
 
-#: classes/Options.php:565, classes/Utils.php:5528
+#: classes/Options.php:565, classes/Utils.php:5494
 msgid "Student Registration Page"
 msgstr ""
 
@@ -1217,7 +1217,7 @@ msgstr ""
 msgid "Completed courses will be shown on student profiles. <br/> For example, you can see this link-"
 msgstr ""
 
-#: classes/Options.php:589, classes/Options.php:597, classes/Tutor_Setup.php:484, templates/dashboard/earning/statement.php:14, templates/dashboard/earning/statements.php:135
+#: classes/Options.php:589, classes/Options.php:597, classes/Tutor_Setup.php:484, templates/dashboard/earning/chart-body.php:17, templates/dashboard/earning/statement.php:14, templates/dashboard/earning/statements.php:135
 msgid "Earning"
 msgstr ""
 
@@ -2430,31 +2430,31 @@ msgstr ""
 msgid "Linkedin URL"
 msgstr ""
 
-#: classes/Utils.php:5491
+#: classes/Utils.php:5457
 msgid "Not Taken"
 msgstr ""
 
-#: classes/Utils.php:5489
+#: classes/Utils.php:5455
 msgid "In Progress"
 msgstr ""
 
-#: classes/Utils.php:5485
+#: classes/Utils.php:5451
 msgid "Completed"
 msgstr ""
 
-#: classes/Utils.php:5666, templates/dashboard/my-profile.php:34, templates/dashboard/registration.php:40, templates/dashboard/registration.php:43, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:32, templates/dashboard/instructor/registration.php:35, templates/dashboard/settings/profile.php:95, templates/dashboard/settings/profile.php:97
+#: classes/Utils.php:5632, templates/dashboard/my-profile.php:34, templates/dashboard/registration.php:40, templates/dashboard/registration.php:43, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:32, templates/dashboard/instructor/registration.php:35, templates/dashboard/settings/profile.php:95, templates/dashboard/settings/profile.php:97
 msgid "First Name"
 msgstr ""
 
-#: classes/Utils.php:5667, templates/dashboard/my-profile.php:42, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:42, templates/dashboard/instructor/registration.php:45, templates/dashboard/settings/profile.php:104, templates/dashboard/settings/profile.php:106
+#: classes/Utils.php:5633, templates/dashboard/my-profile.php:42, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:42, templates/dashboard/instructor/registration.php:45, templates/dashboard/settings/profile.php:104, templates/dashboard/settings/profile.php:106
 msgid "Last Name"
 msgstr ""
 
-#: classes/Utils.php:5668
+#: classes/Utils.php:5634
 msgid "Profile Photo"
 msgstr ""
 
-#: classes/Utils.php:5669
+#: classes/Utils.php:5635
 msgid "Withdraw Method"
 msgstr ""
 
