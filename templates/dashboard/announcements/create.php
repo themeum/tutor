@@ -1,6 +1,6 @@
 <!--create announcements modal-->
 <div class="tutor-modal-wrap tutor-announcements-modal-wrap  tutor-accouncement-create-modal">
-    <div class="tutor-modal-content">
+    <div class="tutor-modal-content tutor-announcement-modal-content">
         <div class="modal-header">
             <div class="modal-title">
                 <h1><?php esc_html_e('Create New Announcement', 'tutor');?></h1>

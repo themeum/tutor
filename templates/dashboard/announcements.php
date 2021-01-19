@@ -149,7 +149,7 @@ $image_base = tutor()->url . '/assets/images/';
                                 </div>
                                 <div class="tutor-announcement-buttons">
                                     <li>
-                                        <a type="button" announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-btn bordered-btn tutor-announcement-edit">
+                                        <a type="button" announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-btn bordered-btn open-withdraw-form-btn">
                                             <?php esc_html_e('Details','tutor');?>
                                         </a>
                                     </li>
@@ -204,4 +204,5 @@ $image_base = tutor()->url . '/assets/images/';
 <?php
     include 'announcements/create.php';
     include 'announcements/update.php';
+    include 'announcements/details.php';
 ?>
