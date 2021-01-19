@@ -5873,7 +5873,7 @@ class Utils {
 	 */
 	public function can_user_manage($content, $object_id, $user_id=0, $allow_current_admin=true) {
 		
-		if($allow_current_admin && current_user_can( 'manage_options' )){
+		if($allow_current_admin && current_user_can( 'administrator' )){
 			// Admin has access to everything
 			return true;
 		}
