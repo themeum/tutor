@@ -175,6 +175,13 @@ $the_query = new WP_Query($args);
 </div>
 <!--pagination end-->
 
+
+<?php
+    $notify_checked = '';
+    if (tutils()->get_option('email_to_students.new_announcement_posted')) { 
+        $notify_checked = 'checked'; 
+    }
+?>
 <!--create announcements modal-->
 <div class="tutor-modal-wrap tutor-announcements-modal-wrap  tutor-accouncement-create-modal">
     <div class="tutor-modal-content">
@@ -233,7 +240,7 @@ $the_query = new WP_Query($args);
                     </div>
                 </div>
                 <div class="tutor-option-field-row">
-                        <input type="checkbox" name="tutor_notify_students" checked>
+                        <input type="checkbox" name="tutor_notify_students" <?php echo $notify_checked; ?>>
                         <span><?php esc_html_e('Notify to all students of this course.', 'tutor');?></span>
                 </div>
 
