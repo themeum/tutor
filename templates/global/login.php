@@ -56,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) )
 	$nonce_field = ob_get_clean();
 	?>
 
-	<form name="<?= $args['form_id']?>" id="<?= $args['form_id']?>" method="post">
+	<form name="<?php echo $args['form_id']?>" id="<?php echo $args['form_id']?>" method="post">
 
 	<?php do_action("tutor_login_form_start");?>
 
@@ -64,12 +64,11 @@ if ( ! defined( 'ABSPATH' ) )
 	
 	<input type="hidden" name="tutor_action" value="tutor_user_login" />
 		<p class="login-username">
-			<input type="text" placeholder="<?= esc_html( $args['label_username'] )?>" name="log" id="<?= esc_attr( $args['id_username'] )?>" class="input" value="<?= esc_attr( $args['value_username'] )?>" size="20" />
+			<input type="text" placeholder="<?php echo esc_html( $args['label_username'] )?>" name="log" id="<?php echo esc_attr( $args['id_username'] )?>" class="input" value="<?php echo esc_attr( $args['value_username'] )?>" size="20" />
 		</p>
 
 		<p class="login-password">
-			<input type="password" placeholder="<?= esc_html( $args['label_password'] )?>" name="pwd" id="<?= esc_attr( $args['id_password'] )?>" class="input" value="" size="20"/>
-
+			<input type="password" placeholder="<?php echo esc_html( $args['label_password'] )?>" name="pwd" id="<?php echo esc_attr( $args['id_password'] )?>" class="input" value="" size="20"/>
 		</p>
 		
 		<?php 
@@ -83,32 +82,32 @@ if ( ! defined( 'ABSPATH' ) )
 			<?php  if($args['remember']):?>
 			<p class="login-remember">
 				<label>
-					<input name="rememberme" type="checkbox" id="<?= esc_attr( $args['id_remember'] )?>" 
-					value="forever" 
+					<input name="rememberme" type="checkbox" id="<?php echo esc_attr( $args['id_remember'] )?>" 
+					value="forever"
 					 <?php $args['value_remember'] ? 'checked' : '';?>
 					>
-					<?= esc_html($args['label_remember']);?>
+					<?php echo esc_html($args['label_remember']);?>
 				</label>
 			</p>
 			<?php endif;?>
-		    <a href="<?= esc_url($args['wp_lostpassword_url'])?>">
-		    	<?= esc_html($args['wp_lostpassword_label']);?>
+		    <a href="<?php echo esc_url($args['wp_lostpassword_url'])?>">
+		    	<?php echo esc_html($args['wp_lostpassword_label']);?>
 		    </a>
 		</div>
 		
 		<?php do_action("tutor_login_form_end");?>
 
 		<p class="login-submit">
-			<input type="submit" name="wp-submit" id="<?= esc_attr( $args['id_submit'] )?>" class="tutor-button" value="<?= esc_attr( $args['label_log_in'] )?>" />
-			<input type="hidden" name="redirect_to" value="<?= esc_url( $args['redirect'] )?>" />
+			<input type="submit" name="wp-submit" id="<?php echo esc_attr( $args['id_submit'] )?>" class="tutor-button" value="<?php echo esc_attr( $args['label_log_in'] )?>" />
+			<input type="hidden" name="redirect_to" value="<?php echo esc_url( $args['redirect'] )?>" />
 		</p>
 		
 		<?php 
 			if(get_option( 'users_can_register', false )) {
 				?>
 				<p class="tutor-form-register-wrap">
-					<a href="<?= esc_url($register_url)?>">
-						<?= esc_html($args['label_create_new_account']);?>
+					<a href="<?php echo esc_url($register_url)?>">
+						<?php echo esc_html($args['label_create_new_account']);?>
 					</a>
 				</p>
 				<?php

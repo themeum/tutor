@@ -45,10 +45,13 @@ if(!empty($date_filter)){
         )
     );
 }
+if (!current_user_can('administrator')) {
+    $args['author'] = get_current_user_id();
+}
 $the_query = new WP_Query($args);
 
 //get courses
-$courses = tutils()->get_courses();
+$courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
 $image_base = tutor()->url . '/assets/images/';
 $notify_checked = tutils()->get_option('email_to_students.new_announcement_posted');
 ?>
@@ -87,15 +90,15 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
             <?php _e('Courses', 'tutor'); ?>
         </label>
 
-            <select class="tutor-report-category tutor-announcement-course-sorting">
+            <select class="tutor-report-category tutor-announcement-course-sorting ignore-nice-select">
                 <?php if(empty($course_id)):?>
                         <option value="">Select course</option>
                 <?php endif;?>
                 <?php if($courses):?>
                 <?php foreach($courses as $course):?>
 
-                    <option value="<?= esc_attr($course->ID)?>" <?php selected($course_id,$course->ID,'selected')?>>
-                        <?= $course->post_title;?>
+                    <option value="<?php echo esc_attr($course->ID)?>" <?php selected($course_id,$course->ID,'selected')?>>
+                        <?php echo $course->post_title; ?>
                     </option>
                 <?php endforeach;?>
                 <?php else:?>
@@ -107,7 +110,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
 
     <div class="tutor-form-group">
         <label><?php _e('Sort By', 'tutor'); ?></label>
-        <select class="tutor-announcement-order-sorting">
+        <select class="tutor-announcement-order-sorting ignore-nice-select">
             <option <?php selected( $order_filter, 'ASC' ); ?>>ASC</option>
             <option <?php selected( $order_filter, 'DESC' ); ?>>DESC</option>
         </select>
@@ -141,20 +144,20 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                         $date_format = date_format($dateObj,'F j, Y, g:i a');
                     ?>
                         <tr>
-                            <td class="tutor-announcement-date"><?= esc_html($date_format);?></td>
+                            <td class="tutor-announcement-date"><?php echo esc_html($date_format);?></td>
                             <td class="tutor-announcement-content-wrap">
                                 <div class="tutor-announcement-content">
                                     <span>
-                                        <?= esc_html($post->post_title);?>
+                                        <?php echo esc_html($post->post_title); ?>
                                     </span>
                                     <p>
-                                        <?= $course? $course->post_title : '';?>
+                                        <?php echo $course? $course->post_title : '';?>
                                     </p>
                                 </div>
                                 <div class="tutor-announcement-buttons">
                                     <li>
-                                        <a type="button" course-name="<?= esc_attr($course->post_title)?>" announcement-date="<?= esc_attr($date_format)?>" announcement-title="<?= esc_attr($post->post_title);?>" announcement-summary="<?= esc_attr($post->post_content);?>" course-id="<?= esc_attr($post->post_parent);?>" announcement-id="<?= esc_attr($post->ID);?>" class="tutor-btn bordered-btn tutor-announcement-details">
-                                            <?php esc_html_e('Details','tutor');?>
+                                        <a type="button" course-name="<?php echo esc_attr($course->post_title)?>" announcement-date="<?php echo esc_attr($date_format)?>" announcement-title="<?php echo esc_attr($post->post_title);?>" announcement-summary="<?php echo esc_attr($post->post_content);?>" course-id="<?php echo esc_attr($post->post_parent);?>" announcement-id="<?php echo esc_attr($post->ID);?>" class="tutor-btn bordered-btn tutor-announcement-details">
+                                            <?php _e('Details','tutor');?>
                                         </a>
                                     </li>
                                     
@@ -162,13 +165,13 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                                        <i class="tutor-icon-action"></i>
                                         <div class="arrow-up"></div>
                                         <ul  class="tutor-dropdown-menu">
-                                        <li  announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-announcement-edit">
+                                        <li  announcement-title="<?php echo $post->post_title;?>" announcement-summary="<?php echo $post->post_content;?>" course-id="<?php echo $post->post_parent;?>" announcement-id="<?php echo $post->ID;?>" class="tutor-announcement-edit">
                                             <i class="tutor-icon-classic-editor"></i>
-                                            <?php esc_html_e('Edit','tutor');?>
+                                            <?php _e('Edit','tutor');?>
                                         </li>
-                                        <li class="tutor-announcement-delete" announcement-id="<?= $post->ID;?>">
+                                        <li class="tutor-announcement-delete" announcement-id="<?php echo $post->ID;?>">
                                             <i class="tutor-icon-cross"></i>
-                                            <?php esc_html_e('Delete','tutor');?>
+                                            <?php _e('Delete','tutor');?>
                                         </li>
                                         </ul>
                                                                             
@@ -181,7 +184,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     <?php else:?>
                     <tr>
                         <td>
-                            <?= esc_html_e('Announcements not found','tutor');?>
+                            <?php _e('Announcements not found','tutor');?>
                         </td>
                     </tr>
                     <?php endif;?>
