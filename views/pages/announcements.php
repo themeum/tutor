@@ -342,7 +342,7 @@ $the_query = new WP_Query($args);
                 <div class="modal-footer">
                     <div class="tutor-quiz-builder-modal-control-btn-group">
                         <div class="quiz-builder-btn-group-left">
-                            <button class="tutor-btn"><?php esc_html_e('Publish','tutor')?></button>
+                            <button class="tutor-btn"><?php esc_html_e('Update','tutor')?></button>
                         </div>
                         <div class="quiz-builder-btn-group-right">
                             <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php esc_html_e('Cancel','tutor')?></button>

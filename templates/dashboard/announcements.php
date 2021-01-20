@@ -13,7 +13,7 @@ if (!defined('ABSPATH'))
  * @version 1.7.9
  */
 $per_page           = 10;
-$paged              = isset($_GET['paged']) ? $_GET['paged'] : 1;
+$paged              = isset($_GET['current_page']) ? $_GET['current_page'] : 1;
 
 $order_filter       = isset($_GET['order']) ? $_GET['order'] : 'DESC';
 $search_filter      = isset($_GET['search']) ? $_GET['search'] : '';
@@ -184,14 +184,15 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
 <!--pagination-->
 <div class="tutor-pagination">
     <?php
-    $big = 999999999; // need an unlikely integer
-
-    echo paginate_links(array(
-        'base'      => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
-        'format'    => '?paged=%#%',
-        'current'   => $paged,
-        'total'     => $the_query->max_num_pages
-    ));
+        $big = 999999999; // need an unlikely integer
+        
+        echo paginate_links( array(
+           
+            'format'    => '?current_page=%#%',
+            'current'   => $paged,
+            'total'     => $the_query->max_num_pages
+        ) );
+      
     ?>
 </div>
 <!--pagination end-->
