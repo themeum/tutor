@@ -55,10 +55,8 @@
                     <div class="tutor-announcements-update-alert"></div>
                 </div>
                 <div class="modal-footer">
-                    <div class="tutor-announcement-modal-footer-buttons">
-                        <button class="tutor-btn"><?php _e('Publish', 'tutor') ?></button>
-                        <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn tutor-announcement-cancel-btn "><?php _e('Cancel', 'tutor') ?></button>
-                    </div>
+                    <button class="tutor-btn"><?php _e('Publish', 'tutor') ?></button>
+                    <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn tutor-announcement-cancel-btn "><?php _e('Cancel', 'tutor') ?></button>
                 </div>
             </form>
         </div>
