@@ -1,0 +1,23 @@
+@mixin propertyWithPrefix($property, $value) {
+    #{$property}         : $value;
+    -o-#{$property}      : $value;
+    -ms-#{$property}     : $value;
+    -moz-#{$property}    : $value;
+    -webkit-#{$property} : $value;
+}
+
+@mixin valueWithPrefix($property, $value) {
+    #{$property} : #{$value};
+    #{$property} : -o-#{$value};
+    #{$property} : -ms-#{$value};
+    #{$property} : -moz-#{$value};
+    #{$property} : -webkit-#{$value};
+}
+
+@mixin propertyValueWithPrefix($property, $value) {
+    #{$property}        : #{$value};
+    -o-#{$property}     : -o-#{$value};
+    -ms-#{$property}    : -ms-#{$value};
+    -moz-#{$property}   : -moz-#{$value};
+    -webkit-#{$property}: -webkit-#{$value};
+}
