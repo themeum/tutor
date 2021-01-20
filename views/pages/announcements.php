@@ -50,7 +50,7 @@ $the_query = new WP_Query($args);
     <div>
         <div class="menu-label"><?php _e('Search', 'tutor'); ?></div>
         <div>
-            <input type="text" class="tutor-report-search tutor-announcement-search-field" value="<?= $search_filter; ?>" autocomplete="off" placeholder="<?php _e('Search Announcements', 'tutor'); ?>" />
+            <input type="text" class="tutor-report-search tutor-announcement-search-field" value="<?php echo $search_filter; ?>" autocomplete="off" placeholder="<?php _e('Search Announcements', 'tutor'); ?>" />
             <button class="tutor-report-search-btn tutor-announcement-search-sorting"><i class="tutor-icon-magnifying-glass-1"></i></button>
         </div>
     </div>
@@ -70,8 +70,8 @@ $the_query = new WP_Query($args);
                 <?php if($courses):?>
                 <?php foreach($courses as $course):?>
 
-                    <option value="<?= esc_attr($course->ID)?>" <?php selected($course_id,$course->ID,'selected')?>>
-                        <?= $course->post_title;?>
+                    <option value="<?php echo esc_attr($course->ID)?>" <?php selected($course_id,$course->ID,'selected')?>>
+                        <?php echo $course->post_title;?>
                     </option>
                 <?php endforeach;?>
                 <?php else:?>
@@ -125,22 +125,22 @@ $the_query = new WP_Query($args);
                         $date_format = date_format($dateObj,'F j, Y, g:i a');
                     ?>
                         <tr>
-                            <td class="tutor-announcement-date"><?= esc_html($date_format);?></td>
+                            <td class="tutor-announcement-date"><?php echo esc_html($date_format);?></td>
                             <td class="tutor-announcement-content-wrap">
                                 <div class="tutor-announcement-content">
                                     <span>
-                                        <?= esc_html($post->post_title);?>
+                                        <?php echo esc_html($post->post_title);?>
                                     </span>
                                     <p>
-                                        <?= $course? $course->post_title : '';?>
+                                        <?php echo $course? $course->post_title : '';?>
                                     </p>
                                 </div>
                                 <div class="tutor-announcement-buttons">
 
-                                    <button type="button" announcement-title="<?= $post->post_title;?>" announcement-summary="<?= $post->post_content;?>" course-id="<?= $post->post_parent;?>" announcement-id="<?= $post->ID;?>" class="tutor-btn bordered-btn tutor-announcement-edit">
+                                    <button type="button" announcement-title="<?php echo esc_attr($post->post_title);?>" announcement-summary="<?php echo $post->post_content;?>" course-id="<?php echo $post->post_parent;?>" announcement-id="<?php echo $post->ID;?>" class="tutor-btn bordered-btn tutor-announcement-edit">
                                         <?php esc_html_e('Edit','tutor');?>
                                     </button>
-                                    <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?= $post->ID;?>">
+                                    <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?php echo $post->ID;?>">
                                         <?php esc_html_e('Delete','tutor');?>
                                     </button>
 
@@ -150,8 +150,8 @@ $the_query = new WP_Query($args);
                     <?php endforeach;?>
                     <?php else:?>
                     <tr>
-                        <td>
-                            <?= esc_html_e('Announcements not found','tutor');?>
+                        <td colspan="2">
+                            <?php esc_html_e('Announcements not found','tutor');?>
                         </td>
                     </tr>
                     <?php endif;?>
@@ -205,8 +205,8 @@ $the_query = new WP_Query($args);
                             <?php if($courses):?>
                             <?php foreach($courses as $course):?>
 
-                                <option value="<?= esc_attr($course->ID)?>">
-                                    <?= $course->post_title;?>
+                                <option value="<?php echo esc_attr($course->ID)?>">
+                                    <?php echo $course->post_title;?>
                                 </option>
                             <?php endforeach;?>
                             <?php else:?>
@@ -240,9 +240,10 @@ $the_query = new WP_Query($args);
                     <div class="tutor-option-field-row">
                         
                         <label for="notify_student">
+                            <input type="checkbox" name="tutor_notify_students" id="notify_student">
                             <?php esc_html_e('Notify to all students of this course.', 'tutor');?>
                         </label>
-                        <input type="checkbox" name="tutor_notify_students" id="notify_student">
+                        
                     </div>
                 <?php endif;?>
                 <div class="tutor-option-field-row">
@@ -294,8 +295,8 @@ $the_query = new WP_Query($args);
                             <?php if($courses):?>
                             <?php foreach($courses as $course):?>
 
-                                <option value="<?= esc_attr($course->ID)?>">
-                                    <?= $course->post_title;?>
+                                <option value="<?php echo esc_attr($course->ID)?>">
+                                    <?php echo $course->post_title;?>
                                 </option>
                             <?php endforeach;?>
                             <?php else:?>
@@ -327,9 +328,10 @@ $the_query = new WP_Query($args);
                 </div>
                 <?php if($notify_checked):?>
                     <div class="tutor-option-field-row">
-                        <label for="notify_student"><?php esc_html_e('Notify to all students of this course.', 'tutor');?></label>
-                        <input type="checkbox" name="tutor_notify_students" id="notify_student">
-                        
+                        <label for="notify_student_upate">
+                            <input type="checkbox" name="tutor_notify_students" id="notify_student_upate">
+                            <?php esc_html_e('Notify to all students of this course.', 'tutor');?>
+                        </label>                        
                     </div>
                 <?php endif;?>
 

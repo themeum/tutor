@@ -23,8 +23,8 @@
                         <?php if($courses):?>
                         <?php foreach($courses as $course):?>
 
-                            <option value="<?= esc_attr($course->ID)?>">
-                                <?= $course->post_title;?>
+                            <option value="<?php echo esc_attr($course->ID)?>">
+                                <?php echo $course->post_title;?>
                             </option>
                         <?php endforeach;?>
                         <?php else:?>
@@ -53,8 +53,11 @@
                 </div>
                 <?php if($notify_checked):?>
                 <div class="tutor-form-group">
-                        <input type="checkbox" name="tutor_notify_students" checked>
-                        <span><?php esc_html_e('Notify to all students of this course.', 'tutor');?></span>
+                    <label for="notify_student_create">
+                        <input type="checkbox" name="tutor_notify_students" id="notify_student_create" checked>
+                        <?php esc_html_e('Notify to all students of this course.', 'tutor');?>
+                        
+                    </label>
                 </div>
                 <?php endif;?>
                 <div class="tutor-form-group">
