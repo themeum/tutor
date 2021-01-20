@@ -44,9 +44,12 @@ jQuery(document).ready(function($){
                 $form.find('.button').addClass('tutor-updating-message');
             },
             success: function (data) {
-                if (data.success) {
-                    //window.location.reload();
-                }
+                data.success ? 
+                    tutor_toast('Success', 'Settings Saved', 'success') : 
+                    tutor_toast('Error', 'Something Went Wrong', 'error');
+            },
+            error: function() {
+                tutor_toast('Error', 'Request Error', 'error');
             },
             complete: function () {
                 $form.find('.button').removeClass('tutor-updating-message');
@@ -147,7 +150,15 @@ jQuery(document).ready(function($){
 
                     //Close the modal
                     $('.tutor-lesson-modal-wrap').removeClass('show');
+
+                    tutor_toast('Success', 'Saved', 'success');
                 }
+                else {
+                    tutor_toast('Error', 'Something Went Wrong', 'error');
+                }
+            },
+            error: function () {
+                tutor_toast('Error', 'Request Error', 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -492,7 +503,15 @@ jQuery(document).ready(function($){
 
                     //Close the modal
                     $('.tutor-lesson-modal-wrap').removeClass('show');
+                    
+                    tutor_toast('Success', 'Assignment Updated', 'success');
                 }
+                else {
+                    tutor_toast('Error', 'Something Went Wrong', 'error');
+                }
+            },
+            error: function() {
+                tutor_toast('Error', 'Request Error', 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');

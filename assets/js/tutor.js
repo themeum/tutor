@@ -539,7 +539,12 @@ jQuery(document).ready(function($){
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
-                //
+                data.success ? 
+                    tutor_toast('Success', 'Saved', 'success') : 
+                    tutor_toast('Error', 'Something Went Wrong', 'error');
+            },
+            error: function() {
+                tutor_toast('Error', 'Request Error', 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1290,8 +1295,14 @@ jQuery(document).ready(function($){
         success: function (data) {
             if (data.success){
                 $that.closest('.course-content-item').remove();
-                alert('Done');
+                tutor_toast('Success', 'Feedback Updated', 'success');
             }
+            else {
+                tutor_toast('Error', 'Something Went Wrong', 'error');
+            }
+        },
+        error: function() {
+            tutor_toast('Error', 'Request Error', 'error');
         },
         complete: function () {
             $that.removeClass('tutor-updating-message');
@@ -1492,32 +1503,43 @@ jQuery.fn.serializeObject = function()
    return values;
 };
 
-function tutor_toast(message, type) {
+function tutor_toast(title, description, type) {
+    var tutor_ob = window.tutor_data || window._tutorobject || {};
+    var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
+
     var container = document.createElement('div');
     container.className='tutor-toast-container';
 
     var icons = {
-        success : 'succes',
-        error: 'error'
+        success : asset+'icon-check.svg',
+        error: asset+'icon-cross.svg'
     }
-
-    container.innerHTML = '<div>\
-        <span></span>\
-        '+message+'\
-        <span class="tutor-toast-close">C</span>\
-    </div>';
+    
+    container.innerHTML = '\
+        <div>\
+            <img src="'+icons[type]+'"/>\
+        </div>\
+        <div>\
+            <div>\
+                <b>'+title+'</b>\
+                <span>'+description+'</span>\
+            </div>\
+        </div>\
+        <div>\
+            <i class="tutor-toast-close tutor-icon-line-cross"></i>\
+        </div>';
 
     container.getElementsByClassName('tutor-toast-close')[0].onclick=function() {
-        $(this).remove();
+        jQuery(container).remove();
     }
 
     document.getElementsByTagName('body')[0].appendChild(container);
 
     setTimeout(function() {
         if(container) {
-            $(container).fadeOut('fast', function() {
-                $(this).remove();
+            jQuery(container).fadeOut('fast', function() {
+                jQuery(this).remove();
             });
         }
-    }, 5);
+    }, 5000);
 }
