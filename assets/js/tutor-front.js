@@ -1701,11 +1701,16 @@ jQuery(document).ready(function ($) {
      * @for TutorLMS Pro
      * @since v.1.5.1
      */
-    $(document).on('click', '.tutor-dropbtn', function (e) {
+    //$(document).on('click', '.tutor-dropbtn', function (e) {
+    $('.tutor-dropbtn').click(function(){
+       
         var $content = $(this).parent().find(".tutor-dropdown-content");
         $content.slideToggle(100);
-    });
-    $(document).on('click', '.tutor-copy-link', function (e) {
+    })
+
+
+    //$(document).on('click', '.tutor-copy-link', function (e) {
+    $('.tutor-copy-link').click(function (e) {
         var $btn = $(this);
         var copy = '<i class="tutor-icon-copy"></i> Copy Link';
         var copied = '<i class="tutor-icon-mark"></i> Copied';
@@ -1721,6 +1726,7 @@ jQuery(document).ready(function ($) {
             $btn.html(copy);
         }, 2500);
     });
+    
     $(document).on('click', function (e) {
         var container = $(".tutor-dropdown");
         var $content = container.find('.tutor-dropdown-content');
