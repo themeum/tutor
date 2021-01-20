@@ -180,16 +180,16 @@ $the_query = new WP_Query($args);
     $notify_checked= tutils()->get_option('email_to_students.new_announcement_posted');
 ?>
 <!--create announcements modal-->
-<div class="tutor-modal-wrap tutor-announcements-modal-wrap tutor-announcement-create-modal">
+<div class="tutor-modal-wrap tutor-announcements-modal-wrap tutor-announcement-create-modal" id="tutor-annoucement-backend-create-modal"> 
     <div class="tutor-modal-content">
         <div class="modal-header">
             <div class="modal-title">
                 <h1><?php esc_html_e('Create New Announcement', 'tutor');?></h1>
             </div>
             <div class="tutor-announcements-modal-close-wrap">
-                        <a href="#" class="tutor-announcement-close-btn">
-                            <i class="tutor-icon-line-cross"></i>
-                        </a>
+                <a href="#" class="tutor-announcement-close-btn">
+                    <i class="tutor-icon-line-cross"></i>
+                </a>
             </div>
         </div>
         <div class="modal-container">

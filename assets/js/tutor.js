@@ -1315,6 +1315,7 @@ jQuery(document).ready(function($){
     //open create modal
     $(add_new_button).click(function(){
       create_modal.addClass("show");
+      $("#tutor-annoucement-backend-create-modal").addClass('show');
     })
 
     $(details_button).click(function(){
@@ -1349,7 +1350,7 @@ jQuery(document).ready(function($){
         create_modal.removeClass("show");
         update_modal.removeClass("show");
         details_modal.removeClass("show");
-        
+        $("#tutor-annoucement-backend-create-modal").removeClass('show');
     })
 
     //create announcement
