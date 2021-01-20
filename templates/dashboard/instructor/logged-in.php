@@ -15,7 +15,7 @@ if ($is_instructor) {
     ?>
 
     <div class="tutor-instructor-pending-wrapper">
-        <div class="tutor-alert <?= ($instructor_status == 'pending' ? 'tutor-alert-info' : ($instructor_status == 'approved' ? 'tutor-alert-success' : ($instructor_status == 'blocked' ? 'tutor-alert-danger' : ''))); ?>">
+        <div class="tutor-alert <?php echo ($instructor_status == 'pending' ? 'tutor-alert-info' : ($instructor_status == 'approved' ? 'tutor-alert-success' : ($instructor_status == 'blocked' ? 'tutor-alert-danger' : ''))); ?>">
 
             <?php
             if ($instructor_status == 'pending') {
@@ -58,7 +58,7 @@ if ($is_instructor) {
                     </p>
                 </div>
 
-                <a class="tutor-button" href="<?= esc_url(tutor_utils()->tutor_dashboard_url()) ?>">
+                <a class="tutor-button" href="<?php echo esc_url(tutor_utils()->tutor_dashboard_url()) ?>">
                     <?php _e('Go to Dashboard', 'tutor'); ?>
                 </a>
             </div>
