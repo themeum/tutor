@@ -198,7 +198,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <select name="tutor_announcement_course" id="">
+                        <select name="tutor_announcement_course" id="" required>
                             <?php if ($courses) : ?>
                                 <?php foreach ($courses as $course) : ?>
 
@@ -220,7 +220,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <input type="text" name="tutor_annoument_title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>">
+                        <input type="text" name="tutor_annoument_title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>" required>
                     </div>
                 </div>
 
@@ -230,7 +230,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <textarea rows="8" type="text" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
+                        <textarea rows="8" type="text" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
                     </div>
                 </div>
                 <?php if ($notify_checked) : ?>
@@ -250,7 +250,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                 <div class="modal-footer">
                     <div class="tutor-quiz-builder-modal-control-btn-group">
                         <div class="quiz-builder-btn-group-left">
-                            <button class="tutor-btn"><?php _e('Publish', 'tutor') ?></button>
+                            <button type="submit" class="tutor-btn"><?php _e('Publish', 'tutor') ?></button>
                         </div>
                         <div class="quiz-builder-btn-group-right">
                             <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php _e('Cancel', 'tutor') ?></button>
@@ -287,7 +287,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <select name="tutor_announcement_course" id="tutor-announcement-course-id">
+                        <select name="tutor_announcement_course" id="tutor-announcement-course-id" required>
                             <?php if ($courses) : ?>
                                 <?php foreach ($courses as $course) : ?>
 
@@ -309,7 +309,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <input type="text" name="tutor_annoument_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>">
+                        <input type="text" name="tutor_annoument_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>" required>
                     </div>
                 </div>
 
@@ -319,7 +319,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <textarea rows="8" type="text" id="tutor-announcement-summary" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
+                        <textarea rows="8" type="text" id="tutor-announcement-summary" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
                     </div>
                 </div>
                 <?php if ($notify_checked) : ?>
@@ -338,7 +338,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                 <div class="modal-footer">
                     <div class="tutor-quiz-builder-modal-control-btn-group">
                         <div class="quiz-builder-btn-group-left">
-                            <button class="tutor-btn"><?php _e('Update', 'tutor') ?></button>
+                            <button type="submit" class="tutor-btn"><?php _e('Update', 'tutor') ?></button>
                         </div>
                         <div class="quiz-builder-btn-group-right">
                             <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php _e('Cancel', 'tutor') ?></button>

@@ -19,7 +19,7 @@
                     <label>
                         <?php _e('Select Course', 'tutor'); ?>
                     </label>
-                    <select class="ignore-nice-select" name="tutor_announcement_course" id="tutor-announcement-course-id">
+                    <select class="ignore-nice-select" name="tutor_announcement_course" id="tutor-announcement-course-id" required>
                         <?php if ($courses) : ?>
                             <?php foreach ($courses as $course) : ?>
                                 <option value="<?php echo esc_attr($course->ID) ?>">
@@ -35,13 +35,13 @@
                     <label>
                         <?php _e('Announcement Title', 'tutor'); ?>
                     </label>
-                    <input type="text" name="tutor_annoument_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>">
+                    <input type="text" name="tutor_annoument_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>" required>
                 </div>
                 <div class="tutor-form-group">
                     <label for="tutor_announcement_course">
                         <?php _e('Summary', 'tutor'); ?>
                     </label>
-                    <textarea rows="6" type="text" id="tutor-announcement-summary" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
+                    <textarea rows="6" type="text" id="tutor-announcement-summary" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
                 </div>
                 <?php if ($notify_checked) : ?>
                     <div class="tutor-form-group">
@@ -55,7 +55,7 @@
                     <div class="tutor-announcements-update-alert"></div>
                 </div>
                 <div class="modal-footer">
-                    <button class="tutor-btn"><?php _e('Update', 'tutor') ?></button>
+                    <button type="submit" class="tutor-btn"><?php _e('Update', 'tutor') ?></button>
                     <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn tutor-announcement-cancel-btn "><?php _e('Cancel', 'tutor') ?></button>
                 </div>
             </form>

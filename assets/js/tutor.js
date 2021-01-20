@@ -1370,24 +1370,24 @@ jQuery(document).ready(function($){
     //create announcement
     $(".tutor-announcements-form").on('submit',function(e){
         e.preventDefault();
+        var $btn = $(this).find('button[type="submit"]');
+        var formData = $(".tutor-announcements-form").serialize() + '&action=tutor_announcement_create' + '&action_type=create';
         
-        var formData  = $(".tutor-announcements-form").serialize() + '&action=tutor_announcement_create' + '&action_type=create';
-
         $.ajax({
             url : window._tutorobject ? announcement_url : ajaxurl,
             type : 'POST',
             data : formData,
             beforeSend: function() {
-            
+                $btn.addClass('tutor-updating-message');
             },
             success: function(data) {
                 
                 $(".tutor-alert").remove();
                 
-                if(data.status=="success"){
-                
+                if(data.status=="success") {
                     location.reload();
                 }
+
                 if(data.status=="validation_error"){
                     $(".tutor-announcements-create-alert").append(`<div class="tutor-alert alert-warning"></div>`);
                     for(let [key,value] of Object.entries(data.message)){
@@ -1409,6 +1409,7 @@ jQuery(document).ready(function($){
     //update announcement
     $(".tutor-announcements-update-form").on('submit',function(e){
         e.preventDefault();
+        var $btn = $(this).find('button[type="submit"]');
         var formData  = $(".tutor-announcements-update-form").serialize() + '&action=tutor_announcement_create' + '&action_type=update';
        
         $.ajax({
@@ -1416,7 +1417,7 @@ jQuery(document).ready(function($){
             type : 'POST',
             data : formData,
             beforeSend: function() {
-            
+                $btn.addClass('tutor-updating-message');
             },
             success: function(data) {
                 
@@ -1444,7 +1445,7 @@ jQuery(document).ready(function($){
 
     $(delete_button).click(function(){
         var announcement_id = $(this).attr('announcement-id');
-        var whichtr = $(this).closest("tr");
+        var whichtr = $("#tutor-announcement-tr-"+announcement_id);
         if(confirm("Do you want to delete?")){
             $.ajax({
                 url : window._tutorobject ? announcement_url : ajaxurl,
@@ -1456,6 +1457,9 @@ jQuery(document).ready(function($){
                 success: function(data) {
                     
                     whichtr.remove();
+                    if(details_modal.length){
+                        details_modal.removeClass('show');
+                    }
                     if(data.status == "fail"){
                         console.log(data.message);
                     }

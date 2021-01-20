@@ -125,7 +125,7 @@ msgstr ""
 msgid "Instructors"
 msgstr ""
 
-#: classes/Admin.php:66, classes/Admin.php:66, classes/Utils.php:1116, classes/Utils.php:2228, templates/dashboard/announcements.php:127, views/pages/announcements.php:105, views/pages/announcements.php:115
+#: classes/Admin.php:66, classes/Admin.php:66, classes/Utils.php:1116, classes/Utils.php:2228, templates/dashboard/announcements.php:127, views/pages/announcements.php:104, views/pages/announcements.php:114
 msgid "Announcements"
 msgstr ""
 
@@ -589,7 +589,7 @@ msgstr ""
 msgid "Instructor Commission"
 msgstr ""
 
-#: classes/Lesson.php:53, views/metabox/lesson-metabox.php:3, views/pages/announcements.php:200, views/pages/announcements.php:290, templates/dashboard/announcements/create.php:19, templates/dashboard/announcements/update.php:20
+#: classes/Lesson.php:53, views/metabox/lesson-metabox.php:3, views/pages/announcements.php:197, views/pages/announcements.php:286, templates/dashboard/announcements/create.php:19, templates/dashboard/announcements/update.php:20
 msgid "Select Course"
 msgstr ""
 
@@ -2542,7 +2542,7 @@ msgstr ""
 msgid "Rejected"
 msgstr ""
 
-#: classes/Withdraw_Requests_List.php:61, templates/dashboard/announcements.php:164, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:40, views/pages/announcements.php:144, templates/dashboard/announcements/details.php:32, templates/dashboard/settings/profile.php:67, views/options/field-types/media.php:29
+#: classes/Withdraw_Requests_List.php:61, templates/dashboard/announcements.php:164, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:40, views/pages/announcements.php:142, templates/dashboard/announcements/details.php:32, templates/dashboard/settings/profile.php:67, views/options/field-types/media.php:29
 msgid "Delete"
 msgstr ""
 
@@ -2801,15 +2801,15 @@ msgstr ""
 msgid "Add New Announcement"
 msgstr ""
 
-#: templates/dashboard/announcements.php:93
+#: templates/dashboard/announcements.php:93, views/pages/announcements.php:68
 msgid "Select course"
 msgstr ""
 
-#: templates/dashboard/announcements.php:102, templates/dashboard/announcements/create.php:29, templates/dashboard/announcements/update.php:30
+#: templates/dashboard/announcements.php:102, views/pages/announcements.php:77, templates/dashboard/announcements/create.php:29, templates/dashboard/announcements/update.php:30
 msgid "No course found"
 msgstr ""
 
-#: templates/dashboard/announcements.php:108, views/pages/announcements.php:85
+#: templates/dashboard/announcements.php:108, views/pages/announcements.php:84
 msgid "Sort By"
 msgstr ""
 
@@ -2821,11 +2821,11 @@ msgstr ""
 msgid "DESC"
 msgstr ""
 
-#: templates/dashboard/announcements.php:116, templates/dashboard/announcements.php:126, templates/dashboard/purchase_history.php:24, views/pages/announcements.php:95, views/pages/announcements.php:114
+#: templates/dashboard/announcements.php:116, templates/dashboard/announcements.php:126, templates/dashboard/purchase_history.php:24, views/pages/announcements.php:94, views/pages/announcements.php:113
 msgid "Date"
 msgstr ""
 
-#: templates/dashboard/announcements.php:175, views/pages/announcements.php:154
+#: templates/dashboard/announcements.php:175, views/pages/announcements.php:152
 msgid "Announcements not found"
 msgstr ""
 
@@ -2833,7 +2833,7 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: templates/dashboard/announcements.php:160, templates/dashboard/my-courses.php:75, views/pages/announcements.php:141, templates/dashboard/announcements/details.php:33
+#: templates/dashboard/announcements.php:160, templates/dashboard/my-courses.php:75, views/pages/announcements.php:139, templates/dashboard/announcements/details.php:33
 msgid "Edit"
 msgstr ""
 
@@ -3093,7 +3093,7 @@ msgstr ""
 msgid "You are going to delete this course, it can't be undone"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:72, templates/dashboard/withdraw.php:143, views/modal/add_quiz.php:55, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:67, views/modal/edit_quiz.php:129, views/modal/question_form.php:225, views/pages/announcements.php:259, views/pages/announcements.php:348, templates/dashboard/announcements/create.php:59, templates/dashboard/announcements/details.php:29, templates/dashboard/announcements/update.php:59, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
+#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:72, templates/dashboard/withdraw.php:143, views/modal/add_quiz.php:55, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:67, views/modal/edit_quiz.php:129, views/modal/question_form.php:225, views/pages/announcements.php:256, views/pages/announcements.php:344, templates/dashboard/announcements/create.php:58, templates/dashboard/announcements/details.php:29, templates/dashboard/announcements/update.php:59, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
 msgid "Cancel"
 msgstr ""
 
@@ -4207,43 +4207,43 @@ msgstr ""
 msgid "Search Announcements"
 msgstr ""
 
-#: views/pages/announcements.php:107
+#: views/pages/announcements.php:106
 msgid "Add new"
 msgstr ""
 
-#: views/pages/announcements.php:187, templates/dashboard/announcements/create.php:6
+#: views/pages/announcements.php:184, templates/dashboard/announcements/create.php:6
 msgid "Create New Announcement"
 msgstr ""
 
-#: views/pages/announcements.php:222, views/pages/announcements.php:312, templates/dashboard/announcements/create.php:35, templates/dashboard/announcements/update.php:36
+#: views/pages/announcements.php:219, views/pages/announcements.php:308, templates/dashboard/announcements/create.php:35, templates/dashboard/announcements/update.php:36
 msgid "Announcement Title"
 msgstr ""
 
-#: views/pages/announcements.php:226, views/pages/announcements.php:316, templates/dashboard/announcements/create.php:37, templates/dashboard/announcements/update.php:38
+#: views/pages/announcements.php:223, views/pages/announcements.php:312, templates/dashboard/announcements/create.php:37, templates/dashboard/announcements/update.php:38
 msgid "Announcement title"
 msgstr ""
 
-#: views/pages/announcements.php:232, views/pages/announcements.php:322, templates/dashboard/announcements/create.php:41, templates/dashboard/announcements/update.php:42
+#: views/pages/announcements.php:229, views/pages/announcements.php:318, templates/dashboard/announcements/create.php:41, templates/dashboard/announcements/update.php:42
 msgid "Summary"
 msgstr ""
 
-#: views/pages/announcements.php:236, views/pages/announcements.php:326, templates/dashboard/announcements/create.php:43, templates/dashboard/announcements/update.php:44
+#: views/pages/announcements.php:233, views/pages/announcements.php:322, templates/dashboard/announcements/create.php:43, templates/dashboard/announcements/update.php:44
 msgid "Summary..."
 msgstr ""
 
-#: views/pages/announcements.php:244, views/pages/announcements.php:333, templates/dashboard/announcements/create.php:49, templates/dashboard/announcements/update.php:50
+#: views/pages/announcements.php:241, views/pages/announcements.php:329, templates/dashboard/announcements/create.php:49, templates/dashboard/announcements/update.php:50
 msgid "Notify to all students of this course."
 msgstr ""
 
-#: views/pages/announcements.php:256, templates/dashboard/announcements/create.php:58
+#: views/pages/announcements.php:253, templates/dashboard/announcements/create.php:57
 msgid "Publish"
 msgstr ""
 
-#: views/pages/announcements.php:274, templates/dashboard/announcements/update.php:6
+#: views/pages/announcements.php:271, templates/dashboard/announcements/update.php:6
 msgid "Update Announcement"
 msgstr ""
 
-#: views/pages/announcements.php:345, views/pages/view_attempt.php:365, templates/dashboard/announcements/update.php:58
+#: views/pages/announcements.php:341, views/pages/view_attempt.php:365, templates/dashboard/announcements/update.php:58
 msgid "Update"
 msgstr ""
 
