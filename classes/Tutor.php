@@ -148,10 +148,6 @@ final class Tutor{
 		$this->woocommerce = new WooCommerce();
 		$this->edd = new TutorEDD();
 
-<<<<<<< HEAD
-
-=======
->>>>>>> bb845d47da222720bc9e45a8f04731aa75472f72
 		/**
 		 * Run Method
 		 * @since v.1.2.0
