@@ -209,4 +209,5 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
     include 'announcements/create.php';
     include 'announcements/update.php';
     include 'announcements/details.php';
+
 ?>

@@ -1,4 +1,4 @@
-<!--create announcements modal-->
+<!--details announcements modal-->
 <div class="tutor-modal-wrap tutor-announcements-modal-wrap  tutor-accouncement-details-modal">
     <div class="tutor-modal-content tutor-announcement-modal-content tutor-announcement-details-modal-content">
            
@@ -46,4 +46,4 @@
 
     </div>
 </div>
-<!--create announcements modal end-->
+<!--details announcements modal end-->
