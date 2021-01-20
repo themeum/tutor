@@ -1,19 +1,19 @@
 <?php
-if ( ! defined( 'ABSPATH' ) )
-exit;
+if (!defined('ABSPATH'))
+    exit;
 
 /**
  * Since 1.7.9
  * configure query with get params
  */
 $per_page           = 10;
-$paged              = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
+$paged              = isset($_GET['paged']) ? $_GET['paged'] : 1;
 
 $order_filter       = isset($_GET['order']) ? $_GET['order'] : 'DESC';
 $search_filter      = isset($_GET['search']) ? $_GET['search'] : '';
 //announcement's parent
-$course_id          = isset($_GET['course-id']) ? $_GET['course-id'] : ''; 
-$date_filter        = isset($_GET['date']) ? $_GET['date'] : ''; 
+$course_id          = isset($_GET['course-id']) ? $_GET['course-id'] : '';
+$date_filter        = isset($_GET['date']) ? $_GET['date'] : '';
 
 $year               = date('Y', strtotime($date_filter));
 $month              = date('m', strtotime($date_filter));
@@ -30,7 +30,7 @@ $args = array(
     'order'             => sanitize_text_field($order_filter),
 
 );
-if(!empty($date_filter)){
+if (!empty($date_filter)) {
     $args['date_query'] = array(
         array(
             'year'      => $year,
@@ -59,24 +59,23 @@ $the_query = new WP_Query($args);
         <div class="menu-label"><?php _e('Courses', 'tutor'); ?></div>
         <div>
             <?php
-                //get courses
-                $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
+            //get courses
+            $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
             ?>
 
             <select class="tutor-report-category tutor-announcement-course-sorting">
-                <?php if(empty($course_id)):?>
-                        <option value="">Select course</option>
-                <?php endif;?>
-                <?php if($courses):?>
-                <?php foreach($courses as $course):?>
-
-                    <option value="<?php echo esc_attr($course->ID)?>" <?php selected($course_id,$course->ID,'selected')?>>
-                        <?php echo $course->post_title;?>
-                    </option>
-                <?php endforeach;?>
-                <?php else:?>
-                <option value="">No course found</option>
-                <?php endif;?>
+                <?php if (empty($course_id)) : ?>
+                    <option value=""><?php _e('Select course', 'tutor'); ?></option>
+                <?php endif; ?>
+                <?php if ($courses) : ?>
+                    <?php foreach ($courses as $course) : ?>
+                        <option value="<?php echo esc_attr($course->ID) ?>" <?php selected($course_id, $course->ID, 'selected') ?>>
+                            <?php echo $course->post_title; ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <option value=""><?php _e('No course found', 'tutor'); ?></option>
+                <?php endif; ?>
             </select>
         </div>
     </div>
@@ -85,8 +84,8 @@ $the_query = new WP_Query($args);
         <div class="menu-label"><?php _e('Sort By', 'tutor'); ?></div>
         <div>
             <select class="tutor-report-sort tutor-announcement-order-sorting">
-                <option <?php selected( $order_filter, 'ASC' ); ?>>ASC</option>
-                <option <?php selected( $order_filter, 'DESC' ); ?>>DESC</option>
+                <option <?php selected($order_filter, 'ASC'); ?>>ASC</option>
+                <option <?php selected($order_filter, 'DESC'); ?>>DESC</option>
             </select>
         </div>
     </div>
@@ -94,7 +93,7 @@ $the_query = new WP_Query($args);
     <div>
         <div class="menu-label"><?php _e('Date', 'tutor'); ?></div>
         <div class="date-range-input">
-            <input type="text" class="tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off"/>
+            <input type="text" class="tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off" />
             <i class="tutor-icon-calendar"></i>
         </div>
     </div>
@@ -104,87 +103,85 @@ $the_query = new WP_Query($args);
     <div class="tutor-list-header tutor-announcements-header">
         <div class="heading"><?php _e('Announcements', 'tutor'); ?></div>
         <button type="button" class="tutor-btn bordered-btn tutor-announcement-add-new">
-            <?php esc_html_e('Add new','tutor');?>
+            <?php _e('Add new', 'tutor'); ?>
         </button>
     </div>
-   
-        <table class="tutor-list-table tutor-announcement-table">
-            <thead>
-                <tr>
-                    <th style="width:20%"><?php _e('Date', 'tutor'); ?></th>
-                    <th><?php _e('Announcements', 'tutor'); ?></th>
 
-                </tr>
-            </thead>
-            <tbody>
-                    <?php if($the_query->have_posts()):?>
-                    <?php foreach($the_query->posts as $post):?>
+    <table class="tutor-list-table tutor-announcement-table">
+        <thead>
+            <tr>
+                <th style="width:20%"><?php _e('Date', 'tutor'); ?></th>
+                <th><?php _e('Announcements', 'tutor'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if ($the_query->have_posts()) : ?>
+                <?php foreach ($the_query->posts as $post) : ?>
                     <?php
-                        $course = get_post($post->post_parent);
-                        $dateObj = date_create($post->post_date);
-                        $date_format = date_format($dateObj,'F j, Y, g:i a');
+                    $course = get_post($post->post_parent);
+                    $dateObj = date_create($post->post_date);
+                    $date_format = date_format($dateObj, 'F j, Y, g:i a');
                     ?>
-                        <tr>
-                            <td class="tutor-announcement-date"><?php echo esc_html($date_format);?></td>
-                            <td class="tutor-announcement-content-wrap">
-                                <div class="tutor-announcement-content">
-                                    <span>
-                                        <?php echo esc_html($post->post_title);?>
-                                    </span>
-                                    <p>
-                                        <?php echo $course? $course->post_title : '';?>
-                                    </p>
-                                </div>
-                                <div class="tutor-announcement-buttons">
-
-                                    <button type="button" announcement-title="<?php echo esc_attr($post->post_title);?>" announcement-summary="<?php echo $post->post_content;?>" course-id="<?php echo $post->post_parent;?>" announcement-id="<?php echo $post->ID;?>" class="tutor-btn bordered-btn tutor-announcement-edit">
-                                        <?php esc_html_e('Edit','tutor');?>
-                                    </button>
-                                    <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?php echo $post->ID;?>">
-                                        <?php esc_html_e('Delete','tutor');?>
-                                    </button>
-
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach;?>
-                    <?php else:?>
                     <tr>
-                        <td colspan="2">
-                            <?php esc_html_e('Announcements not found','tutor');?>
+                        <td class="tutor-announcement-date"><?php echo esc_html($date_format); ?></td>
+                        <td class="tutor-announcement-content-wrap">
+                            <div class="tutor-announcement-content">
+                                <span>
+                                    <?php echo esc_html($post->post_title); ?>
+                                </span>
+                                <p>
+                                    <?php echo $course ? $course->post_title : ''; ?>
+                                </p>
+                            </div>
+                            <div class="tutor-announcement-buttons">
+
+                                <button type="button" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo $post->post_content; ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-btn bordered-btn tutor-announcement-edit">
+                                    <?php _e('Edit', 'tutor'); ?>
+                                </button>
+                                <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?php echo $post->ID; ?>">
+                                    <?php _e('Delete', 'tutor'); ?>
+                                </button>
+
+                            </div>
                         </td>
                     </tr>
-                    <?php endif;?>
-            </tbody>
-        </table>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <tr>
+                    <td colspan="2">
+                        <?php _e('Announcements not found', 'tutor'); ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
 
 </div>
 
 <!--pagination-->
 <div class="tutor-announcement-pagination">
     <?php
-        $big = 999999999; // need an unlikely integer
-        
-        echo paginate_links( array(
-            'base'      => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-            'format'    => '?paged=%#%',
-            'current'   => $paged,
-            'total'     => $the_query->max_num_pages
-        ) );
+    $big = 999999999; // need an unlikely integer
+
+    echo paginate_links(array(
+        'base'      => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
+        'format'    => '?paged=%#%',
+        'current'   => $paged,
+        'total'     => $the_query->max_num_pages
+    ));
     ?>
 </div>
 <!--pagination end-->
 
-
 <?php
-    $notify_checked= tutils()->get_option('email_to_students.new_announcement_posted');
+$notify_checked = tutils()->get_option('email_to_students.new_announcement_posted');
 ?>
 <!--create announcements modal-->
-<div class="tutor-modal-wrap tutor-announcements-modal-wrap tutor-announcement-create-modal" id="tutor-annoucement-backend-create-modal"> 
+<div class="tutor-modal-wrap tutor-announcements-modal-wrap tutor-announcement-create-modal" id="tutor-annoucement-backend-create-modal">
     <div class="tutor-modal-content">
         <div class="modal-header">
             <div class="modal-title">
-                <h1><?php esc_html_e('Create New Announcement', 'tutor');?></h1>
+                <h1><?php _e('Create New Announcement', 'tutor'); ?></h1>
             </div>
             <div class="tutor-announcements-modal-close-wrap">
                 <a href="#" class="tutor-announcement-close-btn">
@@ -194,69 +191,69 @@ $the_query = new WP_Query($args);
         </div>
         <div class="modal-container">
             <form action="" class="tutor-announcements-form">
-                <?php tutor_nonce_field();?>
+                <?php tutor_nonce_field(); ?>
                 <div class="tutor-option-field-row">
                     <label for="tutor_announcement_course">
-                        <?php esc_html_e('Select Course', 'tutor');?>
+                        <?php _e('Select Course', 'tutor'); ?>
                     </label>
-                    
+
                     <div class="tutor-announcement-form-control">
                         <select name="tutor_announcement_course" id="">
-                            <?php if($courses):?>
-                            <?php foreach($courses as $course):?>
+                            <?php if ($courses) : ?>
+                                <?php foreach ($courses as $course) : ?>
 
-                                <option value="<?php echo esc_attr($course->ID)?>">
-                                    <?php echo $course->post_title;?>
-                                </option>
-                            <?php endforeach;?>
-                            <?php else:?>
-                            <option value="">No course found</option>
-                            <?php endif;?>                            
+                                    <option value="<?php echo esc_attr($course->ID) ?>">
+                                        <?php echo $course->post_title; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <option value="">No course found</option>
+                            <?php endif; ?>
                         </select>
-                        
+
                     </div>
                 </div>
 
                 <div class="tutor-option-field-row">
                     <label for="tutor_announcement_course">
-                        <?php esc_html_e('Announcement Title', 'tutor');?>
+                        <?php _e('Announcement Title', 'tutor'); ?>
                     </label>
-                    
+
                     <div class="tutor-announcement-form-control">
-                        <input type="text" name="tutor_annoument_title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>"> 
+                        <input type="text" name="tutor_annoument_title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>">
                     </div>
                 </div>
 
                 <div class="tutor-option-field-row">
                     <label for="tutor_announcement_course">
-                        <?php esc_html_e('Summary', 'tutor');?>
+                        <?php _e('Summary', 'tutor'); ?>
                     </label>
-                    
+
                     <div class="tutor-announcement-form-control">
                         <textarea rows="8" type="text" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
                     </div>
                 </div>
-                <?php if($notify_checked):?>
+                <?php if ($notify_checked) : ?>
                     <div class="tutor-option-field-row">
-                        
+
                         <label for="notify_student">
-                            <input type="checkbox" name="tutor_notify_students" id="notify_student">
-                            <?php esc_html_e('Notify to all students of this course.', 'tutor');?>
+                            <input type="checkbox" name="tutor_notify_students" id="notify_student" checked>
+                            <?php _e('Notify to all students of this course.', 'tutor'); ?>
                         </label>
-                        
+
                     </div>
-                <?php endif;?>
+                <?php endif; ?>
                 <div class="tutor-option-field-row">
                     <div class="tutor-announcements-create-alert"></div>
                 </div>
-           
+
                 <div class="modal-footer">
                     <div class="tutor-quiz-builder-modal-control-btn-group">
                         <div class="quiz-builder-btn-group-left">
-                            <button class="tutor-btn"><?php esc_html_e('Publish','tutor')?></button>
+                            <button class="tutor-btn"><?php _e('Publish', 'tutor') ?></button>
                         </div>
                         <div class="quiz-builder-btn-group-right">
-                            <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php esc_html_e('Cancel','tutor')?></button>
+                            <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php _e('Cancel', 'tutor') ?></button>
                         </div>
                     </div>
                 </div>
@@ -271,69 +268,68 @@ $the_query = new WP_Query($args);
     <div class="tutor-modal-content">
         <div class="modal-header">
             <div class="modal-title">
-                <h1><?php esc_html_e('Update Announcement', 'tutor');?></h1>
+                <h1><?php _e('Update Announcement', 'tutor'); ?></h1>
             </div>
             <div class="tutor-announcements-modal-close-wrap">
-                        <a href="#" class="tutor-announcement-close-btn">
-                            <i class="tutor-icon-line-cross"></i>
-                        </a>
+                <a href="#" class="tutor-announcement-close-btn">
+                    <i class="tutor-icon-line-cross"></i>
+                </a>
             </div>
         </div>
 
         <div class="modal-container">
-            
-        <form action="" class="tutor-announcements-update-form">
-                <?php tutor_nonce_field();?>
+            <form action="" class="tutor-announcements-update-form">
+                <?php tutor_nonce_field(); ?>
                 <input type="hidden" name="announcement_id" id="announcement_id">
                 <div class="tutor-option-field-row">
                     <label for="tutor_announcement_course">
-                        <?php esc_html_e('Select Course', 'tutor');?>
+                        <?php _e('Select Course', 'tutor'); ?>
                     </label>
-                    
+
                     <div class="tutor-announcement-form-control">
                         <select name="tutor_announcement_course" id="tutor-announcement-course-id">
-                            <?php if($courses):?>
-                            <?php foreach($courses as $course):?>
+                            <?php if ($courses) : ?>
+                                <?php foreach ($courses as $course) : ?>
 
-                                <option value="<?php echo esc_attr($course->ID)?>">
-                                    <?php echo $course->post_title;?>
-                                </option>
-                            <?php endforeach;?>
-                            <?php else:?>
-                            <option value="">No course found</option>
-                            <?php endif;?>                            
+                                    <option value="<?php echo esc_attr($course->ID) ?>">
+                                        <?php echo $course->post_title; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <option value="">No course found</option>
+                            <?php endif; ?>
                         </select>
-                        
+
                     </div>
                 </div>
 
                 <div class="tutor-option-field-row">
                     <label for="tutor_announcement_course">
-                        <?php esc_html_e('Announcement Title', 'tutor');?>
+                        <?php _e('Announcement Title', 'tutor'); ?>
                     </label>
-                    
+
                     <div class="tutor-announcement-form-control">
-                        <input type="text" name="tutor_annoument_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>"> 
+                        <input type="text" name="tutor_annoument_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>">
                     </div>
                 </div>
 
                 <div class="tutor-option-field-row">
                     <label for="tutor_announcement_course">
-                        <?php esc_html_e('Summary', 'tutor');?>
+                        <?php _e('Summary', 'tutor'); ?>
                     </label>
-                    
+
                     <div class="tutor-announcement-form-control">
                         <textarea rows="8" type="text" id="tutor-announcement-summary" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>"></textarea>
                     </div>
                 </div>
-                <?php if($notify_checked):?>
+                <?php if ($notify_checked) : ?>
                     <div class="tutor-option-field-row">
                         <label for="notify_student_upate">
                             <input type="checkbox" name="tutor_notify_students" id="notify_student_upate">
-                            <?php esc_html_e('Notify to all students of this course.', 'tutor');?>
-                        </label>                        
+                            <?php _e('Notify to all students of this course.', 'tutor'); ?>
+                        </label>
                     </div>
-                <?php endif;?>
+                <?php endif; ?>
 
                 <div class="tutor-option-field-row">
                     <div class="tutor-announcements-update-alert"></div>
@@ -342,10 +338,10 @@ $the_query = new WP_Query($args);
                 <div class="modal-footer">
                     <div class="tutor-quiz-builder-modal-control-btn-group">
                         <div class="quiz-builder-btn-group-left">
-                            <button class="tutor-btn"><?php esc_html_e('Update','tutor')?></button>
+                            <button class="tutor-btn"><?php _e('Update', 'tutor') ?></button>
                         </div>
                         <div class="quiz-builder-btn-group-right">
-                            <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php esc_html_e('Cancel','tutor')?></button>
+                            <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn"><?php _e('Cancel', 'tutor') ?></button>
                         </div>
                     </div>
                 </div>
