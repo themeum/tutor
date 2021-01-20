@@ -123,7 +123,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
     <table class="tutor-dashboard-announcement-table">
         <thead>
             <tr>
-                <th style="width:20%"><?php _e('Date', 'tutor'); ?></th>
+                <th style="width:24%"><?php _e('Date', 'tutor'); ?></th>
                 <th style="text-align:left"><?php _e('Announcements', 'tutor'); ?></th>
             </tr>
         </thead>
@@ -154,14 +154,13 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                                 </li>
                                 <li class="tutor-dropdown ">
                                     <i class="tutor-icon-action"></i>
-                                    <div class="arrow-up"></div>
                                     <ul class="tutor-dropdown-menu">
                                         <li announcement-title="<?php echo $post->post_title; ?>" announcement-summary="<?php echo $post->post_content; ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-announcement-edit">
-                                            <i class="tutor-icon-classic-editor"></i>
+                                            <i class="tutor-icon-pencil"></i>
                                             <?php _e('Edit', 'tutor'); ?>
                                         </li>
                                         <li class="tutor-announcement-delete" announcement-id="<?php echo $post->ID; ?>">
-                                            <i class="tutor-icon-cross"></i>
+                                            <i class="tutor-icon-garbage"></i>
                                             <?php _e('Delete', 'tutor'); ?>
                                         </li>
                                     </ul>

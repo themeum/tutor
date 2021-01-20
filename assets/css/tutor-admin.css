@@ -3655,3 +3655,110 @@ Tools Nav
 	border-radius: 20px !important;
 }
 
+/**
+* announcement css
+* @since v1.7.9 
+*/
+.tutor-admin-search-box-container {
+	display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+	flex-wrap: wrap;
+	margin-top: 45px;
+}
+.tutor-admin-search-box-container > div:nth-child(1) {
+	margin-right: 40px;
+	position: relative;
+}
+
+.tutor-admin-search-box-container > div:nth-child(1) {
+	flex: 2;
+}
+
+.tutor-admin-search-box-container > div:nth-child(2),
+.tutor-admin-search-box-container > div:nth-child(3),
+.tutor-admin-search-box-container > div:nth-child(4) {
+	flex: 1.5;
+}
+
+.tutor-admin-search-box-container > div:not(:last-child) {
+	margin-right: 40px;
+}
+
+.tutor-admin-search-box-container .tutor-report-search-btn {
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	bottom: 0;
+	right: 0;
+	border: 0;
+	background: transparent;
+	color: #3e64de;
+	font-size: 20px;
+	cursor: pointer;
+	outline: none;
+}
+.tutor-admin-search-box-container > div:nth-child(1) input {
+	/* height: 50px; */
+	padding-right: 45px;
+}
+
+.tutor-admin-search-box-container input[type="text"],
+.tutor-admin-search-box-container select {
+	width: 100%;
+	height: 40px;
+	border-radius: 3px;
+	border: solid 1px #dcdce1;
+	background-color: #ffffff;
+	padding: 0 14px;
+	transition: 0.2s;
+}
+
+.tutor-admin-search-box-container .date-range-input i.tutor-icon-calendar {
+	position: absolute;
+	width: 42px;
+	height: 40px;
+	right: 0;
+	top: 0;
+	color: #3e64de;
+	font-size: 18px;
+	text-align: center;
+	line-height: 40px;
+}
+.tutor-admin-search-box-container .menu-label {
+	font-size: 14px;
+	font-weight: 400;
+	color: #737787;
+	margin-bottom: 7px;
+}
+.tutor-admin-search-box-container > div:nth-child(4) input::-webkit-input-placeholder {
+	color: #3f435b;
+	font-size: 15px;
+}
+
+.tutor-admin-search-box-container > div:nth-child(1) input::-webkit-input-placeholder {
+	font-size: 16px;
+	font-weight: 400;
+	color: #737787;
+}
+
+.tutor-admin-search-box-container input[type="text"]:hover,
+.tutor-admin-search-box-container input[type="text"]:focus,
+.tutor-admin-search-box-container select:hover,
+.tutor-admin-search-box-container select:focus,
+.tutor-date-range-wrap .date-range-input input:hover,
+.tutor-date-range-wrap .date-range-input input:focus {
+	border-color: var(--tutor-primary-color) !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+@media (max-width: 767px) {
+	.tutor-admin-search-box-container {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		grid-gap: 15px;
+	}
+	.tutor-admin-search-box-container > div {
+		margin-right: 0 !important;
+	}
+}
