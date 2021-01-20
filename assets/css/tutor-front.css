@@ -11084,8 +11084,12 @@ Content Drip (Pro)
   border-radius: 100%;
   background: #E9EDFB;
   text-align: center;
-  padding: 10px;
   color: #3E64DE;
+}
+
+.tutor-announcement-big-icon .tutor-icon-speaker {
+  position: relative !important;
+  top: calc(50% - 25%) !important;
 }
 
 .tutor-announcement-detail-content {

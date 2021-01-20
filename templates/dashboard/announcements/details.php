@@ -35,8 +35,8 @@
                         <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn tutor-announcement-cancel-btn"><?php esc_html_e('Cancel','tutor')?></button>
                     </div>   
                     <div class="announcement-detail-edit-delete-button">
-                        <button class="tutor-btn tutor-announcement-delete tutor-border-none"><?php esc_html_e('Delete','tutor')?></button>
-                        <button class="tutor-btn tutor-border-none"><?php esc_html_e('Edit','tutor')?></button>
+                        <button class="tutor-btn tutor-announcement-delete tutor-border-none" id="tutor-announcement-delete-from-detail"><?php esc_html_e('Delete','tutor')?></button>
+                        <button class="tutor-btn tutor-border-none tutor-announcement-edit" id="tutor-announcement-edit-from-detail"><?php esc_html_e('Edit','tutor')?></button>
                     </div>   
                 </div>                
             </div>
