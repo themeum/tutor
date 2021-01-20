@@ -45,7 +45,7 @@ if (!current_user_can('administrator')) {
 $the_query = new WP_Query($args);
 ?>
 
-<div class="tutor-report-content-menu tutor-announcement-container">
+<div class="tutor-admin-search-box-container">
 
     <div>
         <div class="menu-label"><?php _e('Search', 'tutor'); ?></div>
