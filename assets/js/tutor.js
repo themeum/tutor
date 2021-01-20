@@ -1320,18 +1320,29 @@ jQuery(document).ready(function($){
 
     $(details_button).click(function(){
         var announcement_date = $(this).attr('announcement-date');
+        var announcement_id = $(this).attr('announcement-id');
+        var course_id = $(this).attr('course-id');
         var course_name = $(this).attr('course-name');
         var announcement_title = $(this).attr('announcement-title');
         var announcement_summary = $(this).attr('announcement-summary'); 
         
         $(".tutor-announcement-detail-content").html(`<h3>${announcement_title}</h3><p>${announcement_summary}</p>`);  
         $(".tutor-announcement-detail-course-info p").html(`${course_name}`);     
-        $(".tutor-announcement-detail-date-info p").html(`${announcement_date}`);     
+        $(".tutor-announcement-detail-date-info p").html(`${announcement_date}`); 
+        //set attr on edit button
+        $("#tutor-announcement-edit-from-detail").attr('announcement-id',announcement_id);    
+        $("#tutor-announcement-edit-from-detail").attr('course-id',course_id);    
+        $("#tutor-announcement-edit-from-detail").attr('announcement-title',announcement_title);    
+        $("#tutor-announcement-edit-from-detail").attr('announcement-summary',announcement_summary);  
+        $("#tutor-announcement-delete-from-detail").attr('announcement-id',announcement_id);  
         details_modal.addClass("show");
     })
 
     //open update modal
     $(update_button).click(function(){
+        if(details_modal){
+            details_modal.removeClass('show');
+        }
         var announcement_id = $(this).attr('announcement-id');
         var course_id = $(this).attr('course-id');
         var announcement_title = $(this).attr('announcement-title');
