@@ -1507,37 +1507,40 @@ function tutor_toast(title, description, type) {
     var tutor_ob = window.tutor_data || window._tutorobject || {};
     var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
-    var container = document.createElement('div');
-    container.className='tutor-toast-container';
+    if(!jQuery('.tutor-toast-parent').length) {
+        jQuery('body').append('<div class="tutor-toast-parent"></div>');
+    }
 
     var icons = {
         success : asset+'icon-check.svg',
         error: asset+'icon-cross.svg'
     }
     
-    container.innerHTML = '\
-        <div>\
-            <img src="'+icons[type]+'"/>\
-        </div>\
+    var content = jQuery('\
         <div>\
             <div>\
-                <b>'+title+'</b>\
-                <span>'+description+'</span>\
+                <img src="'+icons[type]+'"/>\
             </div>\
-        </div>\
-        <div>\
-            <i class="tutor-toast-close tutor-icon-line-cross"></i>\
-        </div>';
+            <div>\
+                <div>\
+                    <b>'+title+'</b>\
+                    <span>'+description+'</span>\
+                </div>\
+            </div>\
+            <div>\
+                <i class="tutor-toast-close tutor-icon-line-cross"></i>\
+            </div>\
+        </div>');
 
-    container.getElementsByClassName('tutor-toast-close')[0].onclick=function() {
-        jQuery(container).remove();
-    }
+    content.find('.tutor-toast-close').click(function() {
+        content.remove();
+    });
 
-    document.getElementsByTagName('body')[0].appendChild(container);
+    jQuery('.tutor-toast-parent').append(content);
 
     setTimeout(function() {
-        if(container) {
-            jQuery(container).fadeOut('fast', function() {
+        if(content) {
+            content.fadeOut('fast', function() {
                 jQuery(this).remove();
             });
         }

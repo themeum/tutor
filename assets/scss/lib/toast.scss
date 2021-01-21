@@ -1,60 +1,71 @@
 @import "./mixins.scss";
 
-.tutor-toast-container {
+.tutor-toast-parent {
     position: fixed;
     right: 25px;
     bottom: 50px;
     right: 50px;
     left: auto;
-    background: white;
-    padding: 10px;
-    border-radius: 15px;
-    z-index: 99999999;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
-    border: 1px solid #E8E8E8;
-    margin: 0;
-    width: 300px;
-    background: white;
-    border: none;
-    
-    @include valueWithPrefix(display, flex);
-    @include propertyWithPrefix(align-content, center);
-    @include propertyWithPrefix(align-items, center);
+    max-height: 400px;
+    width: 350px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: transparent;
+
+    &:empty {
+        display: none;
+    }
 
     &>div {
-        padding: 8px;
+        background: white;
+        padding: 10px;
+        margin: 15px;
+        border-radius: 15px;
+        z-index: 99999999;
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
+        border: 1px solid #E8E8E8;
+        background: white;
+        border: none;
+        
+        @include valueWithPrefix(display, flex);
+        @include propertyWithPrefix(align-content, center);
+        @include propertyWithPrefix(align-items, center);
 
-        &:nth-child(1),
-        &:nth-child(3) {
-            @include propertyWithPrefix(justify-content, center);
+        &>div {
+            padding: 8px;
+
+            &:nth-child(1),
+            &:nth-child(3) {
+                @include propertyWithPrefix(justify-content, center);
+            }
+
+            &:nth-child(2) {
+                @include propertyWithPrefix(flex, 1);
+            }
         }
 
-        &:nth-child(2) {
-            @include propertyWithPrefix(flex, 1);
+        img{
+            width: 100%;
+            height: auto;
         }
-    }
+        
+        b{
+            font-weight: 600;
+            display: block;
+        }
+        
+        span{
+            color: rgb(51, 51, 51);
+        }
 
-    img{
-        width: 100%;
-        height: auto;
-    }
-    
-    b{
-        font-weight: 600;
-        display: block;
-    }
-    
-    span{
-        color: rgb(51, 51, 51);
-    }
-
-    i {
-        cursor: pointer;
-        font-size: 14px;
+        i {
+            cursor: pointer;
+            font-size: 14px;
+        }
     }
 }
 
-body.rtl .tutor-toast-container {
+body.rtl .tutor-toast-parent {
     right: auto;
     left: 50px;
 }
