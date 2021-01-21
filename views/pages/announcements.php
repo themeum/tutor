@@ -122,7 +122,7 @@ $the_query = new WP_Query($args);
                     $dateObj = date_create($post->post_date);
                     $date_format = date_format($dateObj, 'F j, Y, g:i a');
                     ?>
-                    <tr>
+                    <tr id="tutor-announcement-tr-<?php echo $post->ID; ?>">
                         <td class="tutor-announcement-date"><?php echo esc_html($date_format); ?></td>
                         <td class="tutor-announcement-content-wrap">
                             <div class="tutor-announcement-content">

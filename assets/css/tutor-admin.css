@@ -3762,3 +3762,360 @@ Tools Nav
 		margin-right: 0 !important;
 	}
 }
+
+
+
+/** 
+ * Common CSS .tutor-list-*  - start 
+ * .tutor-list-wrap > .tutor-list-header + .tutor-list-table + .tutor-list-footer
+*/
+.tutor-list-wrap {
+	border-radius: 3px;
+	background-color: #ffffff;
+	margin-top: 40px;
+}
+
+.tutor-list-wrap .tutor-list-header,
+.tutor-list-wrap .tutor-list-footer {
+	padding: 30px;
+}
+
+.tutor-list-wrap .heading {
+	font-size: 20px;
+	line-height: 1.5;
+	color: #3f435b;
+}
+
+.tutor-list-wrap .tutor-list-table {
+	width: 100%;
+	text-align: left;
+	border-collapse: collapse;
+}
+.tutor-list-wrap .tutor-list-table .table-toggle {
+	display: none;
+}
+.tutor-list-wrap .tutor-list-table .table-toggle.open {
+	display: table-row;
+}
+[class^="tutor-report-"] .tutor-list-table tbody td.detail {
+	vertical-align: top;
+}
+
+.tutor-list-wrap .tutor-list-table thead,
+.tutor-list-wrap .tutor-list-table tr:first-child th {
+	background-color: #f7f7f9;
+	border-top: 1px solid #eaeaea;
+	border-bottom: 1px solid #eaeaea;
+}
+
+.tutor-list-wrap .tutor-list-table th {
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1.75;
+	letter-spacing: 0.7px;
+	color: #737787;
+	text-transform: uppercase;
+}
+
+.tutor-list-wrap .tutor-list-table td,
+.tutor-list-wrap .tutor-list-table td p {
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 1.75;
+	color: #3f435b;
+}
+
+.report-course-list-wrap .tutor-list-table th i {
+	margin-left: 3px;
+}
+
+.tutor-list-wrap .tutor-list-table tr th,
+.tutor-list-wrap .tutor-list-table tr td {
+	padding: 15px 20px;
+}
+
+.tutor-list-wrap .tutor-list-header,
+.tutor-list-wrap .tutor-list-table th:last-child,
+.tutor-list-wrap .tutor-list-table td:last-child,
+.tutor-report-course-list .tutor-list-footer {
+	padding-right: 36px;
+}
+
+.tutor-list-wrap .tutor-list-header,
+.tutor-list-wrap .tutor-list-table th:first-child,
+.tutor-list-wrap .tutor-list-table td:first-child {
+	padding-left: 30px;
+}
+
+.tutor-list-wrap .tutor-list-table tbody td {
+	padding: 25px 20px;
+	vertical-align: top;
+}
+
+.tutor-list-wrap .tutor-list-table tbody tr:not(:last-child) {
+	border-bottom: 1px solid #dcdce1;
+}
+
+.tutor-list-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-top: 1px solid #dcdce1;
+}
+
+.tutor-list-footer .tutor-report-count {
+	font-size: 14px;
+	line-height: 1.71;
+	color: #737787;
+}
+
+.tutor-list-footer .tutor-report-count strong {
+	color: #3f435b;
+}
+
+.tutor-list-footer .page-numbers.current {
+	border-color: #3e64de;
+	background: transparent;
+}
+
+.tutor-list-footer .page-numbers {
+	border-radius: 4px;
+	border: solid 1px #dcdce1;
+	padding: 11px 14px;
+	font-size: 14px;
+	font-weight: 400;
+	color: #737787;
+	background: #fff;
+	outline: none;
+	transition: 0.2s;
+}
+
+.tutor-list-footer .page-numbers:hover,
+.tutor-list-footer .page-numbers:focus {
+	border-color: #3e64de;
+	background: #3e64de !important;
+	color: #fff;
+	box-shadow: none;
+}
+
+.tutor-list-footer .page-numbers.current:hover,
+.tutor-list-footer .page-numbers.current:focus {
+	background: transparent !important;
+	color: inherit;
+}
+
+.tutor-list-footer .tutor-pagination {
+	margin: 0;
+}
+
+.tutor-list-table td .details-button a,
+.tutor-list-table .link-icon {
+	font-size: 16px;
+	color: #b9bac3;
+	transition: 0.2s;
+}
+.tutor-list-table td .details-button a:first-child {
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1.75;
+	text-align: center;
+	color: #737787;
+	border-radius: 3px;
+	border: solid 1px #dcdce1;
+	padding: 5px 11px;
+	margin-right: 15px;
+	text-decoration: none;
+}
+
+.tutor-list-table td .details-button {
+	text-align: right;
+	display: flex;
+	align-items: center;
+}
+
+.tutor-list-table .course-link a {
+	color: inherit;
+	text-decoration: none;
+}
+.tutor-list-table .tutor-icon-detail-link,
+.profile-table .tutor-icon-detail-link {
+	font-size: 14px;
+}
+
+@media (max-width: 991px) {
+	.tutor-list-wrap {
+		overflow-x: scroll;
+	}
+}
+/** 
+ * Common CSS /.tutor-list-* - end 
+*/
+
+/* .report-course-list - start */
+.report-course-list-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.report-course-list-wrap .tutor-list-table td {
+	font-size: 16px;
+}
+
+.report-course-list-wrap .tutor-list-table td:nth-child(2) {
+	font-size: 14px;
+	font-weight: 400;
+}
+
+.report-course-list-wrap .tutor-list-table td:last-child {
+	text-align: right;
+}
+
+.report-course-list-wrap .tutor-list-table th:nth-child(2),
+.report-course-list-wrap .tutor-list-table td:nth-child(2) {
+	width: 40%;
+}
+
+.report-course-list-wrap .tutor-list-table .total {
+	color: #9698a5;
+}
+
+.report-course-list-wrap .tutor-list-table [class$="-link"] {
+	color: #b9bac3;
+}
+
+.report-course-list-wrap .tutor-list-table a:hover {
+	color: #3057d5;
+}
+
+.report-course-list-wrap .tutor-list-table .course-link {
+	font-size: 12px;
+	margin-left: 5px;
+}
+
+.tutor-list-table .course-percentage {
+	width: 90px;
+	height: 4px;
+	border-radius: 2px;
+	background-color: #dcdce1;
+	position: relative;
+}
+
+.tutor-list-table .course-percentage::before {
+	content: "";
+	position: absolute;
+	width: var(--percent);
+	height: 4px;
+	border-radius: 2px;
+	background-color: #3e64de;
+}
+
+.report-course-list-wrap
+	> .tutor-list-table
+	tbody
+	td:not(.detail):nth-last-child(3) {
+	vertical-align: middle;
+}
+
+.report-course-list-wrap .tutor-list-table .details-link {
+	font-size: 21px;
+}
+
+.tutor-report-content a {
+	transition: 0.2s ease;
+}
+
+.tutor-report-content a:hover,
+.tutor-report-content a:focus,
+.report-student-profile .profile-table a:hover {
+	color: #3057d5;
+}
+
+@media (max-width: 991px) {
+	.report-course-list-wrap .tutor-list-table th:nth-child(n + 7),
+	.report-course-list-wrap .tutor-list-table td:nth-child(n + 7) {
+		display: none;
+	}
+}
+
+.report-course-list-header .status span,
+.report-course-list-wrap .detail .status span {
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 1;
+	color: #737787;
+	margin-left: 25px;
+	padding-left: 14px;
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+}
+
+.report-course-list-header .status span::before,
+.report-course-list-wrap .detail .status span::before {
+	content: "";
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	background: #b9bac3;
+	border-radius: 50%;
+	left: 0;
+}
+
+.report-course-list-wrap .detail .status span {
+	margin-left: 0;
+	padding-left: 16px;
+}
+
+.report-course-list-wrap .detail .status span::before {
+	width: 6px;
+	height: 6px;
+}
+
+.report-course-list-header .status .running::before,
+.report-course-list-wrap .detail .status .running::before {
+	background-color: #3e64de;
+}
+
+.report-course-list-header .status .complete::before,
+.report-course-list-wrap .detail .status .complete::before {
+	background-color: #7bbc30;
+}
+
+.report-course-list-wrap .detail .heading {
+	font-size: 16px;
+	line-height: 1.75;
+	color: #3f435b;
+	margin-bottom: 10px;
+}
+
+.report-course-list-wrap .detail {
+	padding: unset !important;
+	text-align: left !important;
+	font-size: 14px !important;
+	font-weight: 400 !important;
+}
+
+.report-course-list-wrap .tutor-list-table td > table {
+	width: 100%;
+}
+
+.report-course-list .course-list-details {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: 1fr;
+	grid-gap: 20px;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.tutor-list-wrap .tutor-list-table a:hover,
+.tutor-list-wrap .tutor-list-table a:focus {
+	color: #3e64de;
+}
+
+.tutor-list-wrap .no-data-found {
+	display: flex;
+	align-items: center;
+	padding: 0 0 30px 0;
+}
+/* /.report-course-list - end */
