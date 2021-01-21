@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.7.9 - January 19, 2021 =
+= 1.7.9 - January 21, 2021 =
 
 New: Setting to enable showing instructor name on the certificate
 Update: Announcement feature now has a separate menu for better management and avoid email trigger conflicts
