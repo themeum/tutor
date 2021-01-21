@@ -3592,6 +3592,9 @@ Tools Nav
 .tutor-announcement-date {
     width: 100px !important;
 }
+.tutor-announcements-modal-wrap .tutor-modal-content {
+	max-width: 660px !important;
+}
 .tutor-announcements-modal-wrap button {
     padding: 10px 20px !important
 }
