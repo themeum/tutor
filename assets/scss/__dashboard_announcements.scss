@@ -26,14 +26,17 @@
 }
 .tutor-dashboard-announcement-table th,
 .tutor-dashboard-announcement-table td {
-	padding: 30px 40px;
     border: 0;
     &:last-child {
         padding-right: 30px;
     }
 }
 .tutor-dashboard-announcement-table th {
+	padding: 15px 40px;
 	background-color: #f3f3f3;
+}
+.tutor-dashboard-announcement-table td {
+	padding: 30px 40px;
 }
 .tutor-announcement-datepicker {
 	position: relative;
@@ -44,7 +47,7 @@
 }
 .tutor-announcement-datepicker i {
 	top: 50%;
-	right: 5px;
+	right: 10px;
 	color: rgba(62, 100, 222, 1);
 }
 .tutor-announcement-buttons {
