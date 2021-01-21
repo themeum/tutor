@@ -2802,7 +2802,7 @@ msgid "Add New Announcement"
 msgstr ""
 
 #: templates/dashboard/announcements.php:93, views/pages/announcements.php:68
-msgid "Select course"
+msgid "All"
 msgstr ""
 
 #: templates/dashboard/announcements.php:102, views/pages/announcements.php:77, templates/dashboard/announcements/create.php:29, templates/dashboard/announcements/update.php:30
@@ -3317,7 +3317,7 @@ msgstr ""
 msgid "Thanks for reading."
 msgstr ""
 
-#: templates/email/to_admin_course_updated.php:9, templates/email/to_admin_new_course_published.php:9, templates/email/to_admin_new_course_submitted_for_review.php:9, templates/email/to_admin_new_instructor_signup.php:9, templates/email/to_admin_new_student_signup.php:9, templates/email/to_instructor_student_submitted_assignment.php:9, templates/email/to_student_announcement_updated.php:9, templates/email/to_student_assignment_evaluate.php:9, templates/email/to_student_course_enrolled.php:9, templates/email/to_student_feedback_submitted_for_quiz.php:9, templates/email/to_student_manual_enrollment.php:9, templates/email/to_student_new_announcement_posted.php:9, templates/email/to_student_question_answered.php:9, templates/email/to_student_rate_course_and_instructor.php:9, templates/email/to_student_remove_from_course.php:9
+#: templates/email/to_admin_course_updated.php:9, templates/email/to_admin_new_course_published.php:9, templates/email/to_admin_new_course_submitted_for_review.php:9, templates/email/to_admin_new_instructor_signup.php:9, templates/email/to_admin_new_student_signup.php:9, templates/email/to_instructor_student_submitted_assignment.php:9, templates/email/to_student_announcement_updated.php:9, templates/email/to_student_assignment_evaluate.php:9, templates/email/to_student_course_enrolled.php:9, templates/email/to_student_feedback_submitted_for_quiz.php:9, templates/email/to_student_new_announcement_posted.php:9, templates/email/to_student_question_answered.php:9, templates/email/to_student_rate_course_and_instructor.php:9, templates/email/to_student_remove_from_course.php:9
 msgid "Hi,"
 msgstr ""
 
@@ -3471,10 +3471,6 @@ msgstr ""
 
 #: templates/email/to_student_feedback_submitted_for_quiz.php:16
 msgid "You may reply to this email to communicate with the instructor."
-msgstr ""
-
-#: templates/email/to_student_manual_enrollment.php:11
-msgid "Welcome to the course <strong>{course_name}</strong> at {site_url}. You can start learning from here- {course_start_url}."
 msgstr ""
 
 #: templates/email/to_student_new_announcement_posted.php:11
