@@ -249,6 +249,7 @@ Update: Enhanced security features in all ajax requests and other necessary plac
 Update: Add WooCommerce subscription compatibility in the front end course builder
 Fix: Zoom meetings fail to update or save on sites running languages other than English
 Fix: Preview button was not working for courses in Admin Dashboard
+Fix: Multiple email notification issue upon manual enrolment
 Fix: Issue while attaching multiple files in assignments
 Fix: Lesson add/edit access issue for multi instructors
 Fix: Improved navigation for Course Reports page
@@ -371,7 +372,6 @@ New: Added 6 new action hooks
 do_action('tutor_after_student_signup', $user_id);
 do_action('tutor_enrollment/after/cancel', $enrol_id);
 do_action('tutor_enrollment/after/delete', $enrol_id);
-do_action('tutor_enrollment/after/complete', $enrol_id);
 do_action('tutor_announcements/after/save', $announcement_id);
 do_action('tutor_quiz/attempt/submitted/feedback', $attempt_id);
 ```

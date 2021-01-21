@@ -1,6 +1,6 @@
 # TutorLMS Changelog
 
-### 1.7.9 - January 19, 2021
+### 1.7.9 - January 21, 2021
 
 * New: Setting to enable showing instructor name on the certificate
 * Update: Announcement feature now has a separate menu for better management and avoid email trigger conflicts
@@ -8,6 +8,7 @@
 * Update: Add WooCommerce subscription compatibility in the front end course builder
 * Fix: Zoom meetings fail to update or save on sites running languages other than English
 * Fix: Preview button was not working for courses in Admin Dashboard
+* Fix: Multiple email notification issue upon manual enrolment
 * Fix: Issue while attaching multiple files in assignments
 * Fix: Lesson add/edit access issue for multi instructors
 * Fix: Improved navigation for Course Reports page
