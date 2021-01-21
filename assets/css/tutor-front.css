@@ -10979,21 +10979,32 @@ Content Drip (Pro)
   border: none !important;
 }
 
-.tutor-toast-container {
+.tutor-toast-parent {
   position: fixed;
   right: 25px;
   bottom: 50px;
   right: 50px;
   left: auto;
+  max-height: 400px;
+  width: 350px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: transparent;
+}
+
+.tutor-toast-parent:empty {
+  display: none;
+}
+
+.tutor-toast-parent > div {
   background: white;
   padding: 10px;
+  margin: 15px;
   border-radius: 15px;
   z-index: 99999999;
   -webkit-box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
           box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
   border: 1px solid #E8E8E8;
-  margin: 0;
-  width: 300px;
   background: white;
   border: none;
   display: -webkit-box;
@@ -11018,11 +11029,11 @@ Content Drip (Pro)
   -webkit-align-items: center;
 }
 
-.tutor-toast-container > div {
+.tutor-toast-parent > div > div {
   padding: 8px;
 }
 
-.tutor-toast-container > div:nth-child(1), .tutor-toast-container > div:nth-child(3) {
+.tutor-toast-parent > div > div:nth-child(1), .tutor-toast-parent > div > div:nth-child(3) {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -11032,7 +11043,7 @@ Content Drip (Pro)
   -webkit-justify-content: center;
 }
 
-.tutor-toast-container > div:nth-child(2) {
+.tutor-toast-parent > div > div:nth-child(2) {
   -webkit-box-flex: 1;
           flex: 1;
   -o-flex: 1;
@@ -11041,26 +11052,26 @@ Content Drip (Pro)
   -webkit-flex: 1;
 }
 
-.tutor-toast-container img {
+.tutor-toast-parent > div img {
   width: 100%;
   height: auto;
 }
 
-.tutor-toast-container b {
+.tutor-toast-parent > div b {
   font-weight: 600;
   display: block;
 }
 
-.tutor-toast-container span {
+.tutor-toast-parent > div span {
   color: #333333;
 }
 
-.tutor-toast-container i {
+.tutor-toast-parent > div i {
   cursor: pointer;
   font-size: 14px;
 }
 
-body.rtl .tutor-toast-container {
+body.rtl .tutor-toast-parent {
   right: auto;
   left: 50px;
 }
