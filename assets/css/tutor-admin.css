@@ -3626,6 +3626,19 @@ Tools Nav
 .tutor-option-field-row {
     border: none !important;
 }
+.tutor-announcements-form
+.modal-footer button, 
+.tutor-announcements-update-form
+.modal-footer button{
+	cursor: pointer !important;
+}
+.tutor-announcements-form
+.modal-footer, 
+.tutor-announcements-update-form
+.modal-footer{
+	background-color:  #fff !important;
+}
+
 .tutor-announcement-close-btn {
     text-decoration: none;
     color: #525252;
