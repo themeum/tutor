@@ -72,6 +72,8 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="tutor-btn active update_lesson_modal_btn"><?php _e('Update Lesson', 'tutor'); ?></button>
+        <button type="button" class="tutor-btn active update_lesson_modal_btn" data-toast_error="<?php _e('Error', 'tutor'); ?>" data-toast_error_message="<?php _e('Action Failed', 'tutor'); ?>" data-toast_success="<?php _e('Success', 'tutor'); ?>" data-toast_success_message="<?php _e('Lesson Updated', 'tutor'); ?>">
+            <?php _e('Update Lesson', 'tutor'); ?>
+        </button>
     </div>
 </form>

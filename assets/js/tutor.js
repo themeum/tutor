@@ -540,11 +540,11 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 data.success ? 
-                    tutor_toast('Success', 'Saved', 'success') : 
-                    tutor_toast('Error', 'Something Went Wrong', 'error');
+                    tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success') : 
+                    tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
             },
             error: function() {
-                tutor_toast('Error', 'Request Error', 'error');
+                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1295,14 +1295,14 @@ jQuery(document).ready(function($){
         success: function (data) {
             if (data.success){
                 $that.closest('.course-content-item').remove();
-                tutor_toast('Success', 'Feedback Updated', 'success');
+                tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success');
             }
             else {
-                tutor_toast('Error', 'Something Went Wrong', 'error');
+                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
             }
         },
         error: function() {
-            tutor_toast('Error', 'Request Error', 'error');
+            tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
         },
         complete: function () {
             $that.removeClass('tutor-updating-message');
