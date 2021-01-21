@@ -89,9 +89,9 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
             <?php _e('Courses', 'tutor'); ?>
         </label>
         <select class="tutor-report-category tutor-announcement-course-sorting ignore-nice-select">
-            <?php if (empty($course_id)) : ?>
-                <option value=""><?php _e('Select course', 'tutor'); ?></option>
-            <?php endif; ?>
+           
+            <option value=""><?php _e('All', 'tutor'); ?></option>
+        
             <?php if ($courses) : ?>
                 <?php foreach ($courses as $course) : ?>
                     <option value="<?php echo esc_attr($course->ID) ?>" <?php selected($course_id, $course->ID, 'selected') ?>>
@@ -120,7 +120,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
 </div>
 <!--sorting end-->
 <div class="tutor-announcement-table-wrap">
-    <table class="tutor-dashboard-announcement-table">
+    <table class="tutor-dashboard-announcement-table" width="100%">
         <thead>
             <tr>
                 <th style="width:24%"><?php _e('Date', 'tutor'); ?></th>
@@ -171,7 +171,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                 <?php endforeach; ?>
             <?php else : ?>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         <?php _e('Announcements not found', 'tutor'); ?>
                     </td>
                 </tr>
