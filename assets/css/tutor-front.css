@@ -8622,7 +8622,6 @@ label[for="tutor_withdraw_amount"] {
 
 .tutor-dashboard-announcement-table th,
 .tutor-dashboard-announcement-table td {
-  padding: 30px 40px;
   border: 0;
 }
 
@@ -8632,7 +8631,12 @@ label[for="tutor_withdraw_amount"] {
 }
 
 .tutor-dashboard-announcement-table th {
+  padding: 15px 40px;
   background-color: #f3f3f3;
+}
+
+.tutor-dashboard-announcement-table td {
+  padding: 30px 40px;
 }
 
 .tutor-announcement-datepicker {
@@ -8646,7 +8650,7 @@ label[for="tutor_withdraw_amount"] {
 
 .tutor-announcement-datepicker i {
   top: 50%;
-  right: 5px;
+  right: 10px;
   color: #3e64de;
 }
 
