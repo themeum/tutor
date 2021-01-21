@@ -64,9 +64,9 @@ $the_query = new WP_Query($args);
             ?>
 
             <select class="tutor-report-category tutor-announcement-course-sorting">
-                <?php if (empty($course_id)) : ?>
-                    <option value=""><?php _e('Select course', 'tutor'); ?></option>
-                <?php endif; ?>
+               
+                <option value=""><?php _e('All', 'tutor'); ?></option>
+             
                 <?php if ($courses) : ?>
                     <?php foreach ($courses as $course) : ?>
                         <option value="<?php echo esc_attr($course->ID) ?>" <?php selected($course_id, $course->ID, 'selected') ?>>
