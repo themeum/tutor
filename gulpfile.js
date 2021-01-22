@@ -23,44 +23,40 @@ var prefixerOptions = {
 	overrideBrowserslist: ["last 2 versions"],
 };
 
-gulp.task("styles", function () {
-	return gulp
-		.src("assets/scss/main.scss")
-		.pipe(plumber({
-			errorHandler: onError
-		}))
-		.pipe(sourcemaps.init({
-			loadMaps: true
-		}))
-		.pipe(sass({
-			outputStyle: "expanded"
-		}))
-		.pipe(prefix(prefixerOptions))
-		.pipe(rename("tutor-front.css"))
-		.pipe(sourcemaps.write("."))
-		.pipe(gulp.dest("assets/css"));
-});
+var scss_blueprints = {
+	tutor_front : {src: "assets/scss/front/main.scss", mode: 'expanded', destination: 'tutor-front.css'},
+	tutor_front_min: {src: "assets/scss/front/main.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
+	tutor_admin: {src: "assets/scss/admin/main.scss", mode: 'expanded', destination: 'tutor-admin.css'},
+	tutor_admin_min: {src: "assets/scss/admin/main.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
+};
 
-gulp.task("styles.min", function () {
-	return gulp
-		.src("assets/scss/main.scss")
-		.pipe(plumber({
-			errorHandler: onError
-		}))
-		.pipe(sourcemaps.init({
-			loadMaps: true
-		}))
-		.pipe(sass({
-			outputStyle: "compressed"
-		}))
-		.pipe(prefix(prefixerOptions))
-		.pipe(rename("tutor-front.min.css"))
-		.pipe(sourcemaps.write("."))
-		.pipe(gulp.dest("assets/css"));
-});
+var task_keys = Object.keys(scss_blueprints);
+
+for(let task in scss_blueprints) {
+	
+	let blueprint = scss_blueprints[task];
+	
+	gulp.task(task, function () {
+		return gulp
+			.src(blueprint.src)
+			.pipe(plumber({
+				errorHandler: onError
+			}))
+			.pipe(sourcemaps.init({
+				loadMaps: true
+			}))
+			.pipe(sass({
+				outputStyle: blueprint.mode
+			}))
+			.pipe(prefix(prefixerOptions))
+			.pipe(rename(blueprint.destination))
+			.pipe(sourcemaps.write("."))
+			.pipe(gulp.dest("assets/css"));
+	});
+}
 
 gulp.task("watch", function () {
-	gulp.watch("assets/scss/**/*.scss", gulp.series("styles", "styles.min"));
+	gulp.watch("assets/scss/**/*.scss", gulp.series(...task_keys));
 });
 
 gulp.task('makepot', function () {
@@ -130,5 +126,5 @@ exports.build = gulp.series(
 	"make-zip",
 	"clean-build"
 );
-exports.sass = gulp.series("styles", "styles.min");
-exports.default = gulp.series("styles", "styles.min", "watch");
+exports.sass = gulp.series(...task_keys);
+exports.default = gulp.series(...task_keys, "watch");

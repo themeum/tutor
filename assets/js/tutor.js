@@ -539,7 +539,12 @@ jQuery(document).ready(function($){
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
-                //
+                data.success ? 
+                    tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success') : 
+                    tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+            },
+            error: function() {
+                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1290,8 +1295,14 @@ jQuery(document).ready(function($){
         success: function (data) {
             if (data.success){
                 $that.closest('.course-content-item').remove();
-                alert('Done');
+                tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success');
             }
+            else {
+                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+            }
+        },
+        error: function() {
+            tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
         },
         complete: function () {
             $that.removeClass('tutor-updating-message');
@@ -1533,3 +1544,47 @@ jQuery.fn.serializeObject = function()
 
    return values;
 };
+
+function tutor_toast(title, description, type) {
+    var tutor_ob = window.tutor_data || window._tutorobject || {};
+    var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
+
+    if(!jQuery('.tutor-toast-parent').length) {
+        jQuery('body').append('<div class="tutor-toast-parent"></div>');
+    }
+
+    var icons = {
+        success : asset+'icon-check.svg',
+        error: asset+'icon-cross.svg'
+    }
+    
+    var content = jQuery('\
+        <div>\
+            <div>\
+                <img src="'+icons[type]+'"/>\
+            </div>\
+            <div>\
+                <div>\
+                    <b>'+title+'</b>\
+                    <span>'+description+'</span>\
+                </div>\
+            </div>\
+            <div>\
+                <i class="tutor-toast-close tutor-icon-line-cross"></i>\
+            </div>\
+        </div>');
+
+    content.find('.tutor-toast-close').click(function() {
+        content.remove();
+    });
+
+    jQuery('.tutor-toast-parent').append(content);
+
+    setTimeout(function() {
+        if(content) {
+            content.fadeOut('fast', function() {
+                jQuery(this).remove();
+            });
+        }
+    }, 5000);
+}

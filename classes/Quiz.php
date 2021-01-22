@@ -70,6 +70,8 @@ class Quiz {
 		if ($attempt_id && tutils()->can_user_manage('attempt', $attempt_id)) {
 			update_post_meta($attempt_id, 'instructor_feedback', $feedback);
 			do_action('tutor_quiz/attempt/submitted/feedback', $attempt_id);
+
+			wp_send_json_success( );
 		}
 	}
 
