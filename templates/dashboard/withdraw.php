@@ -14,7 +14,7 @@ $withdraw_method_name = tutor_utils()->avalue_dot('withdraw_method_name', $saved
 
 $user_id = get_current_user_id();
 $balance_formatted = tutor_utils()->tutor_price($earning_sum->balance);
-$is_balance_sufficient = $earning_sum->balance >= $min_withdraw;
+$is_balance_sufficient = true; //$earning_sum->balance >= $min_withdraw;
 $all_histories = tutor_utils()->get_withdrawals_history($user_id, array('status' => array('pending', 'approved', 'rejected')));
 
 $image_base = tutor()->url . '/assets/images/';
@@ -79,7 +79,7 @@ else if(function_exists('edd_currency_symbol')){
     </div>
 
     <?php
-    if ($earning_sum->balance >= $min_withdraw && $withdraw_method_name) {
+    if ($is_balance_sufficient && $withdraw_method_name) {
     ?>
 
         <div class="tutor-earning-withdraw-form-wrap">

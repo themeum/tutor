@@ -16,7 +16,7 @@ class Assets{
 
 	public function admin_scripts(){
 		wp_enqueue_style('tutor-select2', tutor()->url.'assets/packages/select2/select2.min.css', array(), tutor()->version);
-		wp_enqueue_style('tutor-admin', tutor()->url.'assets/css/tutor-admin.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-admin', tutor()->url.'assets/css/tutor-admin.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-icon', tutor()->url.'assets/icons/css/tutor-icon.css', array(), tutor()->version);
 
 		/**
@@ -36,7 +36,7 @@ class Assets{
 
 		$tutor_localize_data = array(
 			'delete_confirm_text' => __('Are you sure? it can not be undone.', 'tutor'),
-
+			'tutor_url' => tutor()->url,
 			'nonce_key'     => tutor()->nonce,
 			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
 		);
@@ -85,6 +85,7 @@ class Assets{
 		//$options = tutor_utils()->get_option();
 		$localize_data = array(
 			'ajaxurl'       => admin_url('admin-ajax.php'),
+			'tutor_url' 	=> tutor()->url,
 			'nonce_key'     => tutor()->nonce,
 			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
 			//'options'       => $options,
