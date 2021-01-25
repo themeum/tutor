@@ -3,7 +3,10 @@ namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
-
+/**
+ * @since 1.8.0
+ */
+session_start();
 class Course extends Tutor_Base {
 	
 	private $additional_meta=array(
@@ -13,7 +16,7 @@ class Course extends Tutor_Base {
 
 	public function __construct() {
 		parent::__construct();
-
+		
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
 		add_action('save_post_'.$this->course_post_type, array($this, 'save_course_meta'), 10, 2);
 		add_action('wp_ajax_tutor_add_course_topic', array($this, 'tutor_add_course_topic'));
@@ -108,7 +111,9 @@ class Course extends Tutor_Base {
 		add_action('deleted_post', array($this, 'delete_tutor_course_data'));
 
 		
-		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'tutor_course_setting_metabox_frontend'));
+		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'tutor_course_setting_metabox_frontend'));		
+	
+	   
 	}
 
 	/**
@@ -213,9 +218,6 @@ class Course extends Tutor_Base {
 	 */
 	public function save_course_meta($post_ID, $post){
 		global $wpdb;
-
-		do_action( "tutor_save_course", $post_ID, $post);
-
 		/**
 		 * Save course price type
 		 */
@@ -349,6 +351,10 @@ class Course extends Tutor_Base {
 		}
 
 		do_action( "tutor_save_course_after", $post_ID, $post);
+		/**
+		 * @since 1.8.0
+		 */
+		$_SESSION['tutor_course_updated'] = true;
 	}
 
 	/**
@@ -1262,4 +1268,6 @@ class Course extends Tutor_Base {
 			</div>
 		<?php
 	}
+
+
 }
