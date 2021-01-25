@@ -1,3 +1,22 @@
+jQuery.fn.serializeObject = function()
+{
+   var values = {};
+   var array = this.serializeArray();
+
+   jQuery.each(array, function() {
+       if (values[this.name]) {
+           if (!values[this.name].push) {
+               values[this.name] = [values[this.name]];
+           }
+           values[this.name].push(this.value || '');
+       } else {
+           values[this.name] = this.value || '';
+       }
+   });
+
+   return values;
+};
+
 jQuery(document).ready(function($) {
   "use strict";
 
