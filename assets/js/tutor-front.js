@@ -2036,9 +2036,8 @@ jQuery(document).ready(function ($) {
                 return;
             }
 
-            var nonce_key = window._tutorobject.nonce_key;
-            var nonce_value = window._tutorobject[nonce_key];
-            
+            var nonce = tutor_get_nonce_data(true);
+
             var context = this;
             context.toggle_loader(name, true);
 
@@ -2047,7 +2046,7 @@ jQuery(document).ready(function ($) {
             form_data.append('action', 'tutor_user_photo_upload');
             form_data.append('photo_type', name);
             form_data.append('photo_file', file, file.name);
-            form_data.append(nonce_key, nonce_value);
+            form_data.append(nonce.key, nonce.value);
             
             $.ajax({
                 url:window._tutorobject.ajaxurl,

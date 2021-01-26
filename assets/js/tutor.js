@@ -1,8 +1,12 @@
-function tutor_get_nonce_data() {
+function tutor_get_nonce_data(send_key_value) {
 
     var nonce_data = window.tutor_data || window._tutorobject || {};
     var nonce_key = nonce_data.nonce_key || '';
     var nonce_value = nonce_data[nonce_key] || '';
+
+    if(send_key_value) {
+        return {key:nonce_key, value:nonce_value};
+    }
 
     return {[nonce_key]:nonce_value};
 }
