@@ -438,14 +438,22 @@ class Ajax{
 
         $error = array();
         $response = array();
-        tutils()->checking_nonce();
+		tutils()->checking_nonce();
+
+		$course_id = sanitize_text_field($_POST['tutor_announcement_course']);
+		$announcement_title = sanitize_text_field($_POST['tutor_announcement_title']);
+		$announcement_summary = sanitize_textarea_field($_POST['tutor_announcement_summary']);
+		
+		if(!tutils()->can_user_manage('course', $course_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
         
         //set data and sanitize it
         $form_data = array(
 			'post_type' => 'tutor_announcements',
-			'post_title' => sanitize_text_field($_POST['tutor_annoument_title']),
-			'post_content' => sanitize_textarea_field($_POST['tutor_annoument_summary']),
-			'post_parent' => sanitize_text_field($_POST['tutor_announcement_course']),
+			'post_title' => $announcement_title,
+			'post_content' => $announcement_summary,
+			'post_parent' => $course_id,
 			'post_status' => 'publish'
         );
 
@@ -511,6 +519,11 @@ class Ajax{
     public function delete_annoucement() {
 		$announcement_id = sanitize_text_field($_POST['announcement_id']);
 		tutils()->checking_nonce();
+
+		if(!tutils()->can_user_manage('announcement', $announcement_id)) {
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		}
+
         $delete = wp_delete_post($announcement_id);
         if ($delete) {
             $response = array(
