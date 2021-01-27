@@ -45,7 +45,7 @@ if ( ! function_exists('tutor')) {
 			'basename'              => plugin_basename( TUTOR_FILE ),
 			'version'               => TUTOR_VERSION,
 			'nonce_action'          => 'tutor_nonce_action',
-			'nonce'                 => '_wpnonce',
+			'nonce'                 => '_tutor_nonce',
 			'course_post_type'      => apply_filters( 'tutor_course_post_type', 'courses' ),
 			'lesson_post_type'      => apply_filters( 'tutor_lesson_post_type', 'lesson' ),
 			'instructor_role'       => apply_filters( 'tutor_instructor_role', 'tutor_instructor' ),
