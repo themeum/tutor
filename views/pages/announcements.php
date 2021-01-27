@@ -220,7 +220,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <input type="text" name="tutor_annoument_title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>" required>
+                        <input type="text" name="tutor_announcement_title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>" required>
                     </div>
                 </div>
 
@@ -230,7 +230,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <textarea rows="6" type="text" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
+                        <textarea rows="6" type="text" name="tutor_announcement_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
                     </div>
                 </div>
                 <?php if ($notify_checked) : ?>
@@ -309,7 +309,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <input type="text" name="tutor_annoument_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>" required>
+                        <input type="text" name="tutor_announcement_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>" required>
                     </div>
                 </div>
 
@@ -319,7 +319,7 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <textarea rows="6" type="text" id="tutor-announcement-summary" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
+                        <textarea rows="6" type="text" id="tutor-announcement-summary" name="tutor_announcement_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
                     </div>
                 </div>
                 <?php if ($notify_checked) : ?>
