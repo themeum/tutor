@@ -347,6 +347,65 @@ class Tutor_List_Table {
 	}
 
 	/**
+	 * @since 1.8.0
+	 * get course list
+	 * @param $selected | optional
+	 */
+	public function course_dropdown($selected = ''){
+		$courses = tutils()->get_courses();
+		$markup = '
+			<div class="alignright">
+				<label>'.__('Course', 'tutor-pro').'</label>
+				<select>
+					<option>All</option>
+					OPTIONS_PLACEHOLDER
+				</select>	
+			</div>
+			';
+		$options = '';
+		foreach($courses as $course){
+			$options .= '<option value="'.$course->ID.'" '.selected($selected,$course->ID).'> '.$course->post_title.' </option>';
+		}
+		
+		$content = str_replace('OPTIONS_PLACEHOLDER', $options, $markup);
+		echo $content;
+	}
+
+	/**
+	 * @since 1.8.0
+	 * get sort by param
+	 * @param $selected | optional
+	 */
+
+	public function sorting_order($selected = 'DESC'){
+		$markup = '
+			<div class="alignright">
+				<label>'.__('Sort By', 'tutor-pro').'</label>
+				<select>
+					<option value="DESC" '.selected($selected,'DESC',false).'> DESC </option>
+					<option value="ASC" '.selected($selected,'ASC',false).'> ASC </option>
+				</select>	
+			</div>
+			';
+		echo $markup;		
+	}
+	/**
+	 * @since 1.8.0
+	 * get sort by param
+	 * @param $selected | optional
+	 */
+
+	public function sorting_date($selected = ''){
+		$markup = '
+			<div class="alignright">
+				<label>'.__('Date', 'tutor-pro').'</label>
+				<input type="text" class="hasDatepicker value="'.$selected.'">
+			</div>
+			';		
+		echo $markup;
+	}
+
+	/**
 	 * Get an associative array ( id => link ) with the list
 	 * of views available on this table.
 	 *
