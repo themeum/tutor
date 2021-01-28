@@ -61,7 +61,7 @@ if ($assignments->count) { ?>
             </select>
         </div>
         <div class="tutor-form-group tutor-announcement-datepicker">
-            <label><?php _e('Date', 'tutor'); ?></label>
+            <label><?php _e('Submission Date', 'tutor'); ?></label>
             <input type="text" class="tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off" />
             <i class="tutor-icon-calendar"></i>
         </div>
@@ -89,8 +89,8 @@ if ($assignments->count) { ?>
                 ?>
                     <tr>
                         <td>
-                            <h5><?php echo $item->post_title ?></h5>
-                            <h5><a href='<?php echo esc_url($course_url . '?course_id=' . $course_id) ?>'><?php echo __('Course: ', 'tutor') . get_the_title($course_id); ?> </a></h5>
+                            <h4><?php echo esc_html($item->post_title); ?></h4>
+                            <p><?php echo __('Course: ', 'tutor'); ?><a href='<?php echo esc_url($course_url . '?course_id=' . $course_id) ?>' target="_blank"><?php echo get_the_title($course_id); ?> </a></p>
                         </td>
                         <td><?php echo $max_mark ?></td>
                         <td><?php echo $comment_count ?></td>

@@ -6,30 +6,34 @@
 
 global $wpdb;
 
-$assignment = sanitize_text_field($_GET['assignment']);
-$assignments_submitted = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d", $assignment));
+$assignment_id = sanitize_text_field($_GET['assignment']);
+$assignments_submitted = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d", $assignment_id));
 
 ?>
 
+<div>
+    <?php $assignments_page = tutor_utils()->get_tutor_dashboard_page_permalink('assignments'); ?>
+    <a class="prev-btn" href="<?php echo $assignments_page; ?>"><span>&leftarrow;</span><?php _e('Back to List', 'tutor'); ?></a>
+</div>
 
-<h3><?php esc_html_e('Assignment', 'tutor') ?></h3>
-<div class="tutor-dashboard-info-table-wrap">
+<h3><?php echo get_the_title($assignment_id); ?></h3>
+<div class="tutor-announcement-table-wrap">
     <?php
 
     if (tutor_utils()->count($assignments_submitted)){
 
     ?>
 
-    <table class="tutor-dashboard-info-table tutor-dashboard-assignment-submitted-table tutor-table">
+    <table class="tutor-dashboard-announcement-table" width="100%">
         <thead>
             <tr>
-                <td><?php esc_attr_e('Student', 'tutor'); ?></td>
-                <td><?php esc_attr_e('Date & Time', 'tutor'); ?></td>
-                <td><?php esc_attr_e('Pass Mark', 'tutor'); ?></td>
-                <td><?php esc_attr_e('Total Mark', 'tutor'); ?></td>
-                <td><?php esc_attr_e('Result', 'tutor'); ?></td>
-                <td><?php esc_attr_e('Evaluated', 'tutor'); ?></td>
-                <td>&nbsp;</td>
+                <th><?php esc_attr_e('Student', 'tutor'); ?></td>
+                <th><?php esc_attr_e('Date & Time', 'tutor'); ?></td>
+                <th><?php esc_attr_e('Pass Mark', 'tutor'); ?></td>
+                <th><?php esc_attr_e('Total Mark', 'tutor'); ?></td>
+                <th><?php esc_attr_e('Result', 'tutor'); ?></td>
+                <th><?php esc_attr_e('Evaluated', 'tutor'); ?></td>
+                <th>&nbsp;</td>
             </tr>
         </thead>
 
