@@ -5812,6 +5812,7 @@ class Utils {
 				break;
 
 			case 'topic' :
+			case 'announcement' :
 				$course_id = $wpdb->get_var($wpdb->prepare(
 					"SELECT post_parent
 					FROM {$wpdb->posts} 

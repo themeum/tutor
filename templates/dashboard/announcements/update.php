@@ -35,13 +35,13 @@
                     <label>
                         <?php _e('Announcement Title', 'tutor'); ?>
                     </label>
-                    <input type="text" name="tutor_annoument_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>" required>
+                    <input type="text" name="tutor_announcement_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>" required>
                 </div>
                 <div class="tutor-form-group">
                     <label for="tutor_announcement_course">
                         <?php _e('Summary', 'tutor'); ?>
                     </label>
-                    <textarea rows="6" type="text" id="tutor-announcement-summary" name="tutor_annoument_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
+                    <textarea rows="6" type="text" id="tutor-announcement-summary" name="tutor_announcement_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
                 </div>
                 <?php if ($notify_checked) : ?>
                     <div class="tutor-form-group">
