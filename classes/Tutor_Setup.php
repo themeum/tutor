@@ -562,6 +562,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 
                         <form id="tutor-setup-form" method="post">
+		                    <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                             <input type="hidden" name="action" value="setup_action">
                             <?php $course_marketplace = tutor_utils()->get_option('enable_course_marketplace'); ?>
                             <input type="hidden" name="enable_course_marketplace" class="enable_course_marketplace_data" value="<?php echo ($course_marketplace ? 1 : 0); ?>">

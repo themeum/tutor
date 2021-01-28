@@ -8631,12 +8631,28 @@ label[for="tutor_withdraw_amount"] {
 }
 
 .tutor-dashboard-announcement-table th {
-  padding: 15px 40px;
+  padding: 15px 0;
   background-color: #f3f3f3;
 }
 
+.tutor-dashboard-announcement-table th:first-child {
+  padding-left: 40px;
+}
+
+.tutor-dashboard-announcement-table th:last-child {
+  padding-right: 40px;
+}
+
 .tutor-dashboard-announcement-table td {
-  padding: 30px 40px;
+  padding: 30px 0;
+}
+
+.tutor-dashboard-announcement-table tbody td:first-child {
+  padding-left: 40px;
+}
+
+.tutor-dashboard-announcement-table tbody td:last-child {
+  padding-right: 40px;
 }
 
 .tutor-announcement-datepicker {
