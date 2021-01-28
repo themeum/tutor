@@ -338,11 +338,12 @@ class Tutor_List_Table {
 		if ( ! empty( $_REQUEST['detached'] ) )
 			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
 		?>
-		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
+		<div class="alignright">
+			<label for="<?php echo esc_attr( $input_id ); ?>">
+				<?php _e('Search','tutor-pro');?>
+			</label>
 			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
-			<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
-		</p>
+		</div>
 		<?php
 	}
 
@@ -364,7 +365,7 @@ class Tutor_List_Table {
 			';
 		$options = '';
 		foreach($courses as $course){
-			$options .= '<option value="'.$course->ID.'" '.selected($selected,$course->ID).'> '.$course->post_title.' </option>';
+			$options .= '<option value="'.$course->ID.'" '.selected($selected,$course->ID,false).'> '.$course->post_title.' </option>';
 		}
 		
 		$content = str_replace('OPTIONS_PLACEHOLDER', $options, $markup);
