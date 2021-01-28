@@ -133,26 +133,22 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     <?php
                     $course = get_post($post->post_parent);
                     $dateObj = date_create($post->post_date);
-                    $date_format = date_format($dateObj, 'F j, Y, g:i a');
+                    $date_format = date_format($dateObj, 'j M, Y,<\b\r>h:i a');
                     ?>
                     <tr id="tutor-announcement-tr-<?php echo $post->ID; ?>">
-                        <td class="tutor-announcement-date"><?php echo esc_html($date_format); ?></td>
+                        <td class="tutor-announcement-date"><?php echo $date_format; ?></td>
                         <td class="tutor-announcement-content-wrap">
                             <div class="tutor-announcement-content">
-                                <span>
-                                    <?php echo esc_html($post->post_title); ?>
-                                </span>
-                                <p>
-                                    <?php echo $course ? $course->post_title : ''; ?>
-                                </p>
+                                <h4><?php echo esc_html($post->post_title); ?></h4>
+                                <p><?php echo $course ? $course->post_title : ''; ?></p>
                             </div>
                             <div class="tutor-announcement-buttons">
                                 <li>
-                                    <a type="button" course-name="<?php echo esc_attr($course->post_title) ?>" announcement-date="<?php echo esc_attr($date_format) ?>" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo esc_attr($post->post_content); ?>" course-id="<?php echo esc_attr($post->post_parent); ?>" announcement-id="<?php echo esc_attr($post->ID); ?>" class="tutor-btn bordered-btn tutor-announcement-details">
+                                    <button type="button" course-name="<?php echo esc_attr($course->post_title) ?>" announcement-date="<?php echo esc_attr($date_format) ?>" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo esc_attr($post->post_content); ?>" course-id="<?php echo esc_attr($post->post_parent); ?>" announcement-id="<?php echo esc_attr($post->ID); ?>" class="tutor-btn bordered-btn tutor-announcement-details">
                                         <?php _e('Details', 'tutor'); ?>
-                                    </a>
+                                    </button>
                                 </li>
-                                <li class="tutor-dropdown ">
+                                <li class="tutor-dropdown">
                                     <i class="tutor-icon-action"></i>
                                     <ul class="tutor-dropdown-menu">
                                         <li announcement-title="<?php echo $post->post_title; ?>" announcement-summary="<?php echo $post->post_content; ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-announcement-edit">

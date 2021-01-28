@@ -8625,6 +8625,18 @@ label[for="tutor_withdraw_amount"] {
   border: 0;
 }
 
+.tutor-dashboard-announcement-table th h4,
+.tutor-dashboard-announcement-table td h4 {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.tutor-dashboard-announcement-table th p, .tutor-dashboard-announcement-table th a,
+.tutor-dashboard-announcement-table td p,
+.tutor-dashboard-announcement-table td a {
+  font-size: 13px;
+}
+
 .tutor-dashboard-announcement-table th:last-child,
 .tutor-dashboard-announcement-table td:last-child {
   padding-right: 30px;
@@ -8635,16 +8647,16 @@ label[for="tutor_withdraw_amount"] {
   background-color: #f3f3f3;
 }
 
+.tutor-dashboard-announcement-table td {
+  padding: 30px 0;
+}
+
 .tutor-dashboard-announcement-table th:first-child {
   padding-left: 40px;
 }
 
 .tutor-dashboard-announcement-table th:last-child {
   padding-right: 40px;
-}
-
-.tutor-dashboard-announcement-table td {
-  padding: 30px 0;
 }
 
 .tutor-dashboard-announcement-table tbody td:first-child {
@@ -8691,6 +8703,7 @@ label[for="tutor_withdraw_amount"] {
 
 .tutor-dropdown .tutor-icon-action {
   padding: 5px 10px;
+  margin-right: -10px;
 }
 
 .tutor-dropdown .tutor-icon-action:hover {
@@ -8721,7 +8734,7 @@ label[for="tutor_withdraw_amount"] {
   width: 100%;
   position: absolute;
   top: 40px;
-  right: -3px;
+  right: -13px;
   display: none;
   border-radius: 5px;
   padding: 0;
@@ -8800,7 +8813,7 @@ label[for="tutor_withdraw_amount"] {
 }
 
 .modal-container.tutor-announcement-details-container {
-  padding: 20px 70px !important;
+  padding: 45px 70px !important;
 }
 
 .balance-info .tutor-announcement-big-icon {
@@ -8838,7 +8851,7 @@ label[for="tutor_withdraw_amount"] {
   font-size: 16px;
   color: #7a7a7a;
   margin-top: 15px;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 .tutor-detail-course-content-wrap {
