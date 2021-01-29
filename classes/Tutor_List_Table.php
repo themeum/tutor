@@ -325,7 +325,7 @@ class Tutor_List_Table {
 	 */
 	public function search_box( $text, $input_id ) {
 		if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
-			return;
+		return;
 
 		$input_id = $input_id . '-search-input';
 
@@ -338,13 +338,11 @@ class Tutor_List_Table {
 		if ( ! empty( $_REQUEST['detached'] ) )
 			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
 		?>
-		<div class="alignright assignment-search-box">
-			<label for="<?php echo esc_attr( $input_id ); ?>">
-				<?php _e('Search','tutor-pro');?>
-			</label>
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
 			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
-			<i class="tutor-icon-magnifying-glass-1"></i>
-		</div>
+			<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
+		</p>
 		<?php
 	}
 
