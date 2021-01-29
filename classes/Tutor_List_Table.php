@@ -338,11 +338,12 @@ class Tutor_List_Table {
 		if ( ! empty( $_REQUEST['detached'] ) )
 			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
 		?>
-		<div class="alignright">
+		<div class="alignright assignment-search-box">
 			<label for="<?php echo esc_attr( $input_id ); ?>">
 				<?php _e('Search','tutor-pro');?>
 			</label>
 			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<i class="tutor-icon-magnifying-glass-1"></i>
 		</div>
 		<?php
 	}
@@ -400,7 +401,7 @@ class Tutor_List_Table {
 		$markup = '
 			<div class="alignright">
 				<label>'.__('Date', 'tutor-pro').'</label>
-				<input type="text" class="hasDatepicker value="'.$selected.'">
+				<input type="text" class="hasDatepicker" value="'.$selected.'">
 			</div>
 			';		
 		echo $markup;
