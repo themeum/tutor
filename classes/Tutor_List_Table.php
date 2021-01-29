@@ -357,7 +357,7 @@ class Tutor_List_Table {
 			<div class="alignright">
 				<label>'.__('Course', 'tutor-pro').'</label>
 				<select class="tutor-assignment-course-sorting">
-					<option>All</option>
+					<option value="0">All</option>
 					OPTIONS_PLACEHOLDER
 				</select>	
 			</div>
