@@ -356,7 +356,7 @@ class Tutor_List_Table {
 		$markup = '
 			<div class="alignright">
 				<label>'.__('Course', 'tutor-pro').'</label>
-				<select>
+				<select class="tutor-assignment-course-sorting">
 					<option>All</option>
 					OPTIONS_PLACEHOLDER
 				</select>	
@@ -381,7 +381,7 @@ class Tutor_List_Table {
 		$markup = '
 			<div class="alignright">
 				<label>'.__('Sort By', 'tutor-pro').'</label>
-				<select>
+				<select class="tutor-assignment-order-sorting">
 					<option value="DESC" '.selected($selected,'DESC',false).'> DESC </option>
 					<option value="ASC" '.selected($selected,'ASC',false).'> ASC </option>
 				</select>	
@@ -399,7 +399,7 @@ class Tutor_List_Table {
 		$markup = '
 			<div class="alignright">
 				<label>'.__('Date', 'tutor-pro').'</label>
-				<input type="text" class="hasDatepicker" value="'.$selected.'">
+				<input type="text" class="hasDatepicker tutor-assignment-date-sorting" value="'.$selected.'">
 			</div>
 			';		
 		echo $markup;
