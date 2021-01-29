@@ -402,9 +402,10 @@ class Tutor_List_Table {
 
 	public function sorting_date($selected = ''){
 		$markup = '
-			<div class="alignright">
+			<div class="alignright assignment-date-box">
 				<label>'.__('Date', 'tutor-pro').'</label>
-				<input type="date" class="hasDatepicker tutor-assignment-date-sorting" value="'.$selected.'">
+				<input type="" id="tutor_assignment_calender" class=" tutor-assignment-date-sorting" value="'.$selected.'">
+				<i class="tutor-icon-calendar"></i>
 			</div>
 			';		
 		echo $markup;
