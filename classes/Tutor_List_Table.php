@@ -377,17 +377,22 @@ class Tutor_List_Table {
 	 * @param $selected | optional
 	 */
 
-	public function sorting_order($selected = 'DESC'){
+	public function sorting_order($selected='DESC'){
+		$orders = ['DESC','ASC'];
 		$markup = '
 			<div class="alignright">
 				<label>'.__('Sort By', 'tutor-pro').'</label>
 				<select class="tutor-assignment-order-sorting">
-					<option value="DESC" '.selected($selected,'DESC',false).'> DESC </option>
-					<option value="ASC" '.selected($selected,'ASC',false).'> ASC </option>
+					OPTION_PLACEHOLDER
 				</select>	
 			</div>
 			';
-		echo $markup;		
+		$options = '';
+		foreach($orders as $order){
+			$options .= '<option value="'.$order.'" '.selected($selected,$order,false).'> '.$order.' </option>';
+		}		
+		$content = str_replace('OPTION_PLACEHOLDER', $options, $markup);
+		echo $content;		
 	}
 	/**
 	 * @since 1.8.0
@@ -399,7 +404,7 @@ class Tutor_List_Table {
 		$markup = '
 			<div class="alignright">
 				<label>'.__('Date', 'tutor-pro').'</label>
-				<input type="text" class="hasDatepicker tutor-assignment-date-sorting" value="'.$selected.'">
+				<input type="date" class="hasDatepicker tutor-assignment-date-sorting" value="'.$selected.'">
 			</div>
 			';		
 		echo $markup;
