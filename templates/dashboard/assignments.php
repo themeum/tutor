@@ -18,11 +18,11 @@ $per_page           = 10;
 $current_page       = max(1, tutor_utils()->avalue_dot('current_page', $_GET));
 $offset             = ($current_page - 1) * $per_page;
 
-$order_filter       = isset($_GET['order']) ? $_GET['order'] : 'DESC';
-$search_filter      = isset($_GET['search']) ? $_GET['search'] : '';
+$order_filter       = isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'DESC';
+$search_filter      = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
 //announcement's parent
-$course_id          = isset($_GET['course-id']) ? $_GET['course-id'] : '';
-$date_filter        = isset($_GET['date']) ? $_GET['date'] : '';
+$course_id          = isset($_GET['course-id']) ? sanitize_text_field($_GET['course-id']) : '';
+$date_filter        = isset($_GET['date']) ? sanitize_text_field($_GET['date']) : '';
 
 $year               = date('Y', strtotime($date_filter));
 $month              = date('m', strtotime($date_filter));
