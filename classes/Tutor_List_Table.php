@@ -357,7 +357,7 @@ class Tutor_List_Table {
 			<div class="alignright">
 				<label>'.__('Course', 'tutor-pro').'</label>
 				<select class="tutor-assignment-course-sorting">
-					<option value="0">All</option>
+					<option value="0">'.__('All','tutor').'</option>
 					OPTIONS_PLACEHOLDER
 				</select>	
 			</div>
@@ -381,7 +381,7 @@ class Tutor_List_Table {
 		$orders = ['DESC','ASC'];
 		$markup = '
 			<div class="alignright">
-				<label>'.__('Sort By', 'tutor-pro').'</label>
+				<label>'.__('Sort By', 'tutor').'</label>
 				<select class="tutor-assignment-order-sorting">
 					OPTION_PLACEHOLDER
 				</select>	
@@ -403,7 +403,7 @@ class Tutor_List_Table {
 	public function sorting_date($selected = ''){
 		$markup = '
 			<div class="alignright assignment-date-box">
-				<label>'.__('Date', 'tutor-pro').'</label>
+				<label>'.__('Date', 'tutor').'</label>
 				<input type="" id="tutor_assignment_calender" class=" tutor-assignment-date-sorting" value="'.$selected.'">
 				<i class="tutor-icon-calendar"></i>
 			</div>
