@@ -352,7 +352,7 @@ class Tutor_List_Table {
 	 * @param $selected | optional
 	 */
 	public function course_dropdown($selected = ''){
-		$courses = tutils()->get_courses();
+		$courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
 		$markup = '
 			<div class="alignright">
 				<label>'.__('Course', 'tutor-pro').'</label>
