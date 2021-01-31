@@ -64,7 +64,7 @@ $dateWiseSales = array_combine($queried_date, $total_earning);
 $chartData = array_merge($datesPeriod, $dateWiseSales);
 foreach ($chartData as $key => $salesCount){
 	unset($chartData[$key]);
-	$formatDate = date('d M', strtotime($key));
+	$formatDate = date_i18n('d M', strtotime($key));
 	$chartData[$formatDate] = $salesCount;
 }
 
@@ -138,7 +138,7 @@ foreach ($chartData as $key => $salesCount){
     </div>
 
     <div class="tutor-dashboard-item-group">
-        <h4><?php _e('Earnings Chart for this month', 'tutor') ?> (<?php echo date("F") ?>)</h4>
+        <h4><?php _e('Earnings Chart for this month', 'tutor') ?> (<?php echo date_i18n("F") ?>)</h4>
         <canvas id="tutorChart" style="width: 100%; height: 400px;"></canvas>
     </div>
 

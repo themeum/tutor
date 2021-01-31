@@ -56,7 +56,7 @@ $monthWiseSales = array_combine($months, $total_earning);
  */
 $emptyMonths = array();
 for ($m=1; $m<=12; $m++) {
-	$emptyMonths[date('F', mktime(0,0,0,$m, 1, date('Y')))] = 0;
+	$emptyMonths[date_i18n('F', mktime(0,0,0,$m, 1, date('Y')))] = 0;
 }
 $chartData = array_merge($emptyMonths, $monthWiseSales);
 

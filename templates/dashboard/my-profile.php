@@ -9,7 +9,7 @@ $uid = get_current_user_id();
 $user = get_userdata( $uid );
 
 $profile_settings_link = tutor_utils()->get_tutor_dashboard_page_permalink('settings');
-$rdate = date( "D d M Y, h:i:s a", strtotime( $user->user_registered ) );
+$rdate = date_i18n( "D d M Y, h:i:s a", strtotime( $user->user_registered ) );
 $fname = $user->first_name;
 $lname = $user->last_name;
 $uname = $user->user_login;
