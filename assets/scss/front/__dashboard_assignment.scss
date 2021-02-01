@@ -1,29 +1,103 @@
-.tutor-dashboard-assignment-table{
-	tr {
-		th, td{
-			border: 1px solid #DCDFE5;
-			vertical-align: middle;
-			padding: 20px;
-			&:not(:first-child){
-				text-align: center;
+.submitted-assignment-title {
+	a, h3 {
+		margin-bottom: 20px;
+	}
+}
+.submitted-assignments-sorting-wrap {
+	margin-bottom: 30px;
+	.tutor-form-group {
+		display: flex;
+		align-items: center;
+		flex-basis: 35% !important;
+		label, select {
+			margin-bottom: 0;
+		}
+		label {
+			flex-basis: 35%;
+		}
+		select {
+			height: 40px;
+		}
+	}
+}
+
+.tutor-dashboard-assignment-table {
+	.student-column {
+		display: flex;
+		align-items: center;
+		.student-avatar {
+			width: 34px;
+    		margin-right: 10px;
+			img {
+				border-radius: 50%;
+			}
+			span {
+				border-radius: 50%;
+				width: 34px;
+				height: 34px;
+				padding: 5px;
+				font-size: 12px;
 			}
 		}
-		h5{
-			margin: 0;
-			font-size: 16px;
-			line-height: 18px;
-			font-weight: 700;
-			color: var(--tutor-text-color);
-			&:not(:last-child){
-				margin-bottom: 7px;
+		.student-details {
+			h4, p {
+				line-height: 1.3;
+				margin-bottom: 0;
 			}
 		}
-		a{
-			font-weight: 400;
-			color: var(--tutor-text-color);
-			&:hover{
-				color: var(--tutor-primary-color);
-				transition: 300ms;
+	}
+	span.review-required,
+	span.result-pass,
+	span.result-fail {
+		background: #df3247;
+		font-size: 14px;
+		font-weight: bold;
+		color: #fff;
+		padding: 4px 11px;
+		border-radius: 2px;
+	}
+	span.result-pass {
+		background: var(--tutor-success-button-color);
+	}
+	span.result-review-required {
+		background: #f5b30d;
+	}
+}
+.tutor-assignment-review-header {
+	p span {
+		font-weight: 400;
+		color: var(--tutor-text-color);
+	}
+}
+.tutor-assignment-submitted-page {
+	border-bottom: none;
+	.assignment-info {
+		display: flex;
+		align-items: center;
+		p {
+			margin-right: 15px;
+		}
+	}
+	h3 {
+		margin: 5px 0;
+	}
+}
+.tutor-dashboard-assignment-submitted-content {
+	margin-top: 30px;
+	margin-bottom: 50px;
+}
+.tutor-dashboard-assignment-review {
+	.tutor-assignment-evaluate-row {
+		margin-bottom: 30px;
+		.input-mark {
+			display: flex;
+			align-items: center;
+			input {
+				margin: 0;
+			}
+			p {
+				margin-top: 0;
+				margin-left: 15px;
 			}
 		}
 	}
