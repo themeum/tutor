@@ -102,7 +102,6 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
     <a class="prev-btn" href="<?php echo $attempts_page; ?>"><span>&leftarrow;</span><?php _e('Back to Attempt List', 'tutor'); ?></a>
 </div>
 
-
 <div class="tutor-quiz-attempt-review-wrap">
     <div class="attempt-answers-header">
         <div class="attempt-header-quiz"><?php echo __('Quiz:','tutor')." <a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></div>

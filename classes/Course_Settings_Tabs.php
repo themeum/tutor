@@ -44,7 +44,7 @@ class Course_Settings_Tabs{
                         'label'     => __('Maximum Students', 'tutor'),
                         'label_title' => __('Enable', 'tutor'),
                         'default' => '0',
-                        'desc'      => __('Number of maximum students can enroll in this course, set zero for no limits', 'tutor'),
+                        'desc'      => __('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor'),
                     ),
                 ),
             ),
