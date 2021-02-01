@@ -1,5 +1,23 @@
 # TutorLMS Changelog
 
+### 1.8.0 - February 03, 2021
+
+* New: Search filter in Assignments
+* New: Frontend and backend UX improvements for Assignments 
+* New: Added confirmation message while saving settings on the backend.
+* New: Thank you notice when instructors submit a course for review
+* Update: Move all the email notification templates to pro version
+* Update: Date & time column in Student enrolment report
+* Update: Add user capability check in announcements Ajax action
+* Fix: Redundant or duplicate email issue when student enrolments are changed.
+* Fix: Add New Course, Explore Addons buttons issue in Tutor LMS setup wizard
+* Fix: Incorrect lesson count (due to trashed course) in the report page 
+* Fix: Graph issue in the Earnings tab on the reports page
+* Fix: Profile image saving issue in frontend dashboard
+* Fix: Remove item issue in WooCommerce cart page
+* Fix: Quiz fails to import
+
+
 ### 1.7.9 - January 21, 2021
 
 * New: Setting to enable showing instructor name on the certificate
