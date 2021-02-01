@@ -30,8 +30,8 @@ if ( $submitted_assignment){
     $comment_author = get_user_by('login', $submitted_assignment->comment_author)
 	?>
 
-    <div class="assignment-back-option">
-        <a class="prev-btn" href="<?php echo esc_url($submitted_url . '?assignment=' . $assignment_id); ?>"><span>&leftarrow;</span><?php _e('Back to List', 'tutor'); ?></a>
+    <div class="submitted-assignment-title">
+        <a class="prev-btn" href="<?php echo esc_url($submitted_url . '?assignment=' . $assignment_id); ?>"><span>&leftarrow;</span><?php _e('Back', 'tutor'); ?></a>
     </div>
 
     <div class="tutor-assignment-review-header">
@@ -41,20 +41,22 @@ if ( $submitted_assignment){
             </a>
         </h3>
         <p>
-			<?php _e('Course' , 'tutor'); ?> :
+			<?php _e('Course' , 'tutor'); ?>:
             <a href="<?php echo get_the_permalink($submitted_assignment->comment_parent); ?>" target="_blank">
 				<?php echo get_the_title($submitted_assignment->comment_parent); ?>
             </a>
         </p>
         <p>
-			<?php _e('Student' , 'tutor'); ?> :
+			<?php _e('Student' , 'tutor'); ?>:
             <span><?php echo $comment_author->display_name. ' ('.$comment_author->user_email.')'; ?></span>
         </p>
         <p>
-			<?php _e('Submitted Date' , 'tutor'); ?> :
+			<?php _e('Submitted Date' , 'tutor'); ?>:
             <span><?php echo date('j M, Y, h:i a', strtotime($submitted_assignment->comment_date)); ?></span>
         </p>
     </div>
+
+    <hr>
 
     <div class="tutor-dashboard-assignment-submitted-content">
         <h4><?php _e('Assignment Description:', 'tutor'); ?></h4>
