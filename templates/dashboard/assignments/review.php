@@ -11,7 +11,9 @@
  * @version 1.4.3
  */
 
+$assignment_id = (int) sanitize_text_field(tutor_utils()->array_get('assignment', $_GET));
 $assignment_submitted_id = (int) sanitize_text_field(tutor_utils()->array_get('view_assignment', $_GET));
+$submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/submitted');
 
 if(!$assignment_submitted_id){
 	echo _e("Sorry, but you are looking for something that isn't here." , 'tutor');
@@ -24,8 +26,13 @@ if ( $submitted_assignment){
 	$max_mark = tutor_utils()->get_assignment_option($submitted_assignment->comment_post_ID, 'total_mark');
 
 	$given_mark = get_comment_meta($assignment_submitted_id, 'assignment_mark', true);
-	$instructor_note = get_comment_meta($assignment_submitted_id, 'instructor_note', true);
+    $instructor_note = get_comment_meta($assignment_submitted_id, 'instructor_note', true);
+    $comment_author = get_user_by('login', $submitted_assignment->comment_author)
 	?>
+
+    <div class="assignment-back-option">
+        <a class="prev-btn" href="<?php echo esc_url($submitted_url . '?assignment=' . $assignment_id); ?>"><span>&leftarrow;</span><?php _e('Back to List', 'tutor'); ?></a>
+    </div>
 
     <div class="tutor-assignment-review-header">
         <h3>
@@ -39,9 +46,17 @@ if ( $submitted_assignment){
 				<?php echo get_the_title($submitted_assignment->comment_parent); ?>
             </a>
         </p>
+        <p>
+			<?php _e('Student' , 'tutor'); ?> :
+            <span><?php echo $comment_author->display_name. ' ('.$comment_author->user_email.')'; ?></span>
+        </p>
+        <p>
+			<?php _e('Submitted Date' , 'tutor'); ?> :
+            <span><?php echo date('j M, Y, h:i a', strtotime($submitted_assignment->comment_date)); ?></span>
+        </p>
     </div>
 
-    <div class="tutor-dashboard-assignment-review">
+    <div class="tutor-dashboard-assignment-submitted-content">
         <h4><?php _e('Assignment Description:', 'tutor'); ?></h4>
         <p><?php echo nl2br(stripslashes($submitted_assignment->comment_content)); ?></p>
 
@@ -71,7 +86,7 @@ if ( $submitted_assignment){
 		?>
     </div>
 
-    <div class="tutor-assignment-evaluate-wraps">
+    <div class="tutor-dashboard-assignment-review">
         <h3><?php _e('Evaluation', 'tutor'); ?></h3>
         <form action="" method="post">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
@@ -81,7 +96,7 @@ if ( $submitted_assignment){
                 <div class="tutor-option-field-label">
                     <label for=""><?php _e('Your Mark', 'tutor'); ?></label>
                 </div>
-                <div class="tutor-option-field">
+                <div class="tutor-option-field input-mark">
                     <input type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>">
                     <p class="desc"><?php echo sprintf(__('Mark this assignment out of %s', 'tutor'), "<code>{$max_mark}</code>" ); ?></p>
                 </div>

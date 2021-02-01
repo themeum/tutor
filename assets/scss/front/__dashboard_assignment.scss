@@ -1,3 +1,8 @@
+.assignment-back-option {
+	.prev-btn {
+		margin-bottom: 20px;
+	}
+}
 .submitted-assignment-title {
 	a, h3 {
 		margin-bottom: 30px;
@@ -31,6 +36,13 @@
 			img {
 				border-radius: 50%;
 			}
+			span {
+				border-radius: 50%;
+				width: 34px;
+				height: 34px;
+				padding: 5px;
+				font-size: 12px;
+			}
 		}
 		.student-details {
 			h4, p {
@@ -54,5 +66,32 @@
 	}
 	span.result-review-required {
 		background: #f5b30d;
+	}
+}
+.tutor-assignment-review-header {
+	padding-bottom: 30px;
+    border-bottom: 1px solid #DCDBDC;
+	p span {
+		font-weight: 400;
+		color: var(--tutor-text-color);
+	}
+}
+.tutor-dashboard-assignment-submitted-content {
+	margin-bottom: 50px;
+}
+.tutor-dashboard-assignment-review {
+	.tutor-assignment-evaluate-row {
+		margin-bottom: 30px;
+		.input-mark {
+			display: flex;
+			align-items: center;
+			input {
+				margin: 0;
+			}
+			p {
+				margin-top: 0;
+				margin-left: 15px;
+			}
+		}
 	}
 }

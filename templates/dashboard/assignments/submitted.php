@@ -82,7 +82,7 @@ $assignments_submitted = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb
                 <td><?php echo !empty($given_mark) ? $given_mark . '/' . $max_mark : $max_mark; ?></td>
                 <td><?php echo $status; ?></td>
                 <td>
-                    <a href="<?php echo esc_url($review_url.'?view_assignment='.$assignment->comment_ID); ?>" class="tutor-btn bordered-btn tutor-announcement-details">
+                    <a href="<?php echo esc_url($review_url.'?view_assignment='.$assignment->comment_ID).'&assignment='.$assignment_id; ?>" class="tutor-btn bordered-btn tutor-announcement-details">
                         <?php echo $button_text; ?>
                     </a>
             </tr>
