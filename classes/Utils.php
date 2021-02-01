@@ -5931,13 +5931,15 @@ class Utils {
 	 * Return the assignment deadline date based on duration and assignment creation date
 	 */
 	
-	public function get_assignment_deadline_date($assignment_id, $format='j F, Y, g:i a') {
+	public function get_assignment_deadline_date($assignment_id, $format=null, $fallback=null) {
 		
+		!$format ? $format='j F, Y, g:i a' : 0;
+
 		$value = $this->get_assignment_option($assignment_id, 'time_duration.value');
 		$time = $this->get_assignment_option($assignment_id, 'time_duration.time');
 		
 		if(!$value) {
-			return null;
+			return $fallback;
 		}
 
 		$publish_date = get_post_field( 'post_date', $assignment_id );
