@@ -5052,29 +5052,35 @@ class Utils {
 		$instructor_id = $this->get_user_id($instructor_id);
 		$course_ids = tutor_utils()->get_assigned_courses_ids_by_instructors($instructor_id);
 
-		//$new_course_ids = tutils()->get_courses_by_instructor();
-
-		//die($this->print_view($course_ids));
-
 		$in_course_ids = implode("','", $course_ids);
 
-		$count = (int) $wpdb->get_var("SELECT COUNT(ID) FROM {$wpdb->postmeta} post_meta
- 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
- 			where post_type = 'tutor_assignments' AND post_meta.meta_value IN('$in_course_ids') ORDER BY ID DESC ");
-
-		$pagination_query = '';
+		$pagination_query = $date_query = '';
+		$sort_query = 'ORDER BY ID DESC';
 		if ($this->count($filter_data)) {
 			extract( $filter_data );
 
+			if ( ! empty( $course_id ) ) {
+				$in_course_ids = $course_id;
+			}
+			if ( ! empty( $date_filter ) ) {
+				$date_query = " AND DATE(assignment.post_date) = '{$date_filter}' ";
+			}
+			if ( ! empty( $order_filter ) ) {
+				$sort_query = " ORDER BY ID {$order_filter} ";
+			}
 			if ( ! empty( $per_page ) ) {
 				$offset           = (int) ! empty( $offset ) ? $offset : 0;
 				$pagination_query = " LIMIT {$offset}, {$per_page}  ";
 			}
 		}
 
+		$count = (int) $wpdb->get_var("SELECT COUNT(ID) FROM {$wpdb->postmeta} post_meta
+ 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
+ 			where post_type = 'tutor_assignments' AND post_meta.meta_value {$date_query} IN('$in_course_ids')");
+
 		$query = $wpdb->get_results("SELECT * FROM {$wpdb->postmeta} post_meta
  			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
- 			where post_type = 'tutor_assignments' AND post_meta.meta_value IN('$in_course_ids')  ORDER BY ID DESC {$pagination_query} ");
+ 			where post_type = 'tutor_assignments' AND post_meta.meta_value {$date_query} IN('$in_course_ids') {$sort_query} {$pagination_query} ");
 
 		return (object) array('count' => $count, 'results' => $query);
 	}
