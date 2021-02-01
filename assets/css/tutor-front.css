@@ -8737,6 +8737,7 @@ label[for="tutor_withdraw_amount"] {
 .tutor-dashboard-announcement-table td p,
 .tutor-dashboard-announcement-table td a {
   font-size: 13px;
+  margin-bottom: 0;
 }
 
 .tutor-dashboard-announcement-table th:last-child,

@@ -13,6 +13,8 @@ $assignments_submitted = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb
 
 $max_mark = tutor_utils()->get_assignment_option($assignment_id, 'total_mark');
 $pass_mark = tutor_utils()->get_assignment_option($assignment_id, 'pass_mark');
+$format = get_option('date_format').' '.get_option('time_format');
+$deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format, __('No Limit', 'tutor'));
 ?>
 
 <div class="submitted-assignment-title">
@@ -38,7 +40,7 @@ if (tutor_utils()->count($assignments_submitted)) {
         <div class="assignment-info">
             <p>
                 <?php _e('Submission Deadline', 'tutor'); ?>:
-                <span><?php echo $max_mark; ?></span>
+                <span><?php echo $deadline; ?></span>
             </p>
             <p>
                 <?php _e('Total Marks', 'tutor'); ?>:
