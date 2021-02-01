@@ -8541,6 +8541,10 @@ label[for="tutor_withdraw_amount"] {
   font-style: italic;
 }
 
+.assignment-back-option .prev-btn {
+  margin-bottom: 20px;
+}
+
 .submitted-assignment-title a, .submitted-assignment-title h3 {
   margin-bottom: 30px;
 }
@@ -8591,6 +8595,14 @@ label[for="tutor_withdraw_amount"] {
   border-radius: 50%;
 }
 
+.tutor-dashboard-assignment-table .student-column .student-avatar span {
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  padding: 5px;
+  font-size: 12px;
+}
+
 .tutor-dashboard-assignment-table .student-column .student-details h4, .tutor-dashboard-assignment-table .student-column .student-details p {
   line-height: 1.3;
   margin-bottom: 0;
@@ -8613,6 +8625,42 @@ label[for="tutor_withdraw_amount"] {
 
 .tutor-dashboard-assignment-table span.result-review-required {
   background: #f5b30d;
+}
+
+.tutor-assignment-review-header {
+  padding-bottom: 30px;
+  border-bottom: 1px solid #DCDBDC;
+}
+
+.tutor-assignment-review-header p span {
+  font-weight: 400;
+  color: var(--tutor-text-color);
+}
+
+.tutor-dashboard-assignment-submitted-content {
+  margin-bottom: 50px;
+}
+
+.tutor-dashboard-assignment-review .tutor-assignment-evaluate-row {
+  margin-bottom: 30px;
+}
+
+.tutor-dashboard-assignment-review .tutor-assignment-evaluate-row .input-mark {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tutor-dashboard-assignment-review .tutor-assignment-evaluate-row .input-mark input {
+  margin: 0;
+}
+
+.tutor-dashboard-assignment-review .tutor-assignment-evaluate-row .input-mark p {
+  margin-top: 0;
+  margin-left: 15px;
 }
 
 .tutor-announcement-content-wrap {
