@@ -5921,4 +5921,30 @@ class Utils {
 
 		return false;
 	}
+
+
+	/**
+	 * @return date
+	 * 
+	 * @since v1.8.0
+	 *
+	 * Return the assignment deadline date based on duration and assignment creation date
+	 */
+	
+	public function get_assignment_deadline_date($assignment_id, $format='j F, Y, g:i a') {
+		
+		$value = $this->get_assignment_option($assignment_id, 'time_duration.value');
+		$time = $this->get_assignment_option($assignment_id, 'time_duration.time');
+		
+		if(!$value) {
+			return null;
+		}
+
+		$publish_date = get_post_field( 'post_date', $assignment_id );
+
+		$date = date_create( $publish_date );
+		date_add( $date, date_interval_create_from_date_string($value . ' ' . $time) );
+
+		return date_format($date, $format);
+	}
 }
