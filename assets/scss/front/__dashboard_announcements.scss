@@ -26,17 +26,36 @@
 }
 .tutor-dashboard-announcement-table th,
 .tutor-dashboard-announcement-table td {
-    border: 0;
+	border: 0;
+	h4 {
+		font-size: 16px;
+		margin-bottom: 0;
+	}
+	p, a {
+		font-size: 13px;
+	}
     &:last-child {
         padding-right: 30px;
     }
 }
 .tutor-dashboard-announcement-table th {
-	padding: 15px 40px;
+	padding: 15px 0;
 	background-color: #f3f3f3;
 }
 .tutor-dashboard-announcement-table td {
-	padding: 30px 40px;
+	padding: 30px 0;
+}
+.tutor-dashboard-announcement-table th:first-child {
+	padding-left: 40px;
+}
+.tutor-dashboard-announcement-table th:last-child {
+	padding-right: 40px;
+}
+.tutor-dashboard-announcement-table tbody td:first-child {
+	padding-left: 40px;
+}
+.tutor-dashboard-announcement-table tbody td:last-child {
+	padding-right: 40px;
 }
 .tutor-announcement-datepicker {
 	position: relative;
@@ -62,7 +81,8 @@
 	cursor: pointer;
     margin-left: 30px;
     .tutor-icon-action {
-        padding: 5px 10px;
+		padding: 5px 10px;
+		margin-right: -10px;
         &:hover {
             background: #f3f3f3;
             border-radius: 50%;
@@ -91,7 +111,7 @@
 	width: 100%;
     position: absolute;
     top: 40px;
-	right: -3px;
+	right: -13px;
 	display: none;
 	border-radius: 5px;
     padding: 0;
@@ -154,7 +174,7 @@
 	float: right;
 }
 .modal-container.tutor-announcement-details-container {
-	padding: 20px 70px !important;
+	padding: 45px 70px !important;
 }
 .balance-info .tutor-announcement-big-icon {
 	margin-right: 10px;
@@ -186,7 +206,7 @@
 	font-size: 16px;
 	color: #7a7a7a;
 	margin-top: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 .tutor-detail-course-content-wrap {
 	background-color: #f3f3f3;

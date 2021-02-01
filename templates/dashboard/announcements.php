@@ -13,13 +13,13 @@ if (!defined('ABSPATH'))
  * @version 1.7.9
  */
 $per_page           = 10;
-$paged              = isset($_GET['current_page']) ? $_GET['current_page'] : 1;
+$paged              = max(1, tutor_utils()->avalue_dot('current_page', $_GET));
 
-$order_filter       = isset($_GET['order']) ? $_GET['order'] : 'DESC';
-$search_filter      = isset($_GET['search']) ? $_GET['search'] : '';
+$order_filter       = isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'DESC';
+$search_filter      = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
 //announcement's parent
-$course_id          = isset($_GET['course-id']) ? $_GET['course-id'] : '';
-$date_filter        = isset($_GET['date']) ? $_GET['date'] : '';
+$course_id          = isset($_GET['course-id']) ? sanitize_text_field($_GET['course-id']) : '';
+$date_filter        = isset($_GET['date']) ? sanitize_text_field($_GET['date']) : '';
 
 $year               = date('Y', strtotime($date_filter));
 $month              = date('m', strtotime($date_filter));
@@ -133,26 +133,22 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                     <?php
                     $course = get_post($post->post_parent);
                     $dateObj = date_create($post->post_date);
-                    $date_format = date_format($dateObj, 'F j, Y, g:i a');
+                    $date_format = date_format($dateObj, 'j M, Y,<\b\r>h:i a');
                     ?>
                     <tr id="tutor-announcement-tr-<?php echo $post->ID; ?>">
-                        <td class="tutor-announcement-date"><?php echo esc_html($date_format); ?></td>
+                        <td class="tutor-announcement-date"><?php echo $date_format; ?></td>
                         <td class="tutor-announcement-content-wrap">
                             <div class="tutor-announcement-content">
-                                <span>
-                                    <?php echo esc_html($post->post_title); ?>
-                                </span>
-                                <p>
-                                    <?php echo $course ? $course->post_title : ''; ?>
-                                </p>
+                                <h4><?php echo esc_html($post->post_title); ?></h4>
+                                <p><?php echo $course ? $course->post_title : ''; ?></p>
                             </div>
                             <div class="tutor-announcement-buttons">
                                 <li>
-                                    <a type="button" course-name="<?php echo esc_attr($course->post_title) ?>" announcement-date="<?php echo esc_attr($date_format) ?>" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo esc_attr($post->post_content); ?>" course-id="<?php echo esc_attr($post->post_parent); ?>" announcement-id="<?php echo esc_attr($post->ID); ?>" class="tutor-btn bordered-btn tutor-announcement-details">
+                                    <button type="button" course-name="<?php echo esc_attr($course->post_title) ?>" announcement-date="<?php echo esc_attr($date_format) ?>" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo esc_attr($post->post_content); ?>" course-id="<?php echo esc_attr($post->post_parent); ?>" announcement-id="<?php echo esc_attr($post->ID); ?>" class="tutor-btn bordered-btn tutor-announcement-details">
                                         <?php _e('Details', 'tutor'); ?>
-                                    </a>
+                                    </button>
                                 </li>
-                                <li class="tutor-dropdown ">
+                                <li class="tutor-dropdown">
                                     <i class="tutor-icon-action"></i>
                                     <ul class="tutor-dropdown-menu">
                                         <li announcement-title="<?php echo $post->post_title; ?>" announcement-summary="<?php echo $post->post_content; ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-announcement-edit">
