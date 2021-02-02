@@ -5083,7 +5083,8 @@ class Utils {
 				AND post_meta.meta_key = '_tutor_course_id_for_assignments'
 			WHERE
 				post_type = 'tutor_assignments'
-				AND post_meta.meta_value IN('$in_course_ids') {$date_query}
+				AND post_meta.meta_value IN('$in_course_ids')
+				{$date_query}
 			"
 		);
 
@@ -5096,7 +5097,10 @@ class Utils {
 				AND post_meta.meta_key = '_tutor_course_id_for_assignments'
 			WHERE
 				post_type = 'tutor_assignments'
-				AND post_meta.meta_value IN('$in_course_ids') {$date_query} {$sort_query} {$pagination_query}
+				AND post_meta.meta_value IN('$in_course_ids') 
+				{$date_query}
+				{$sort_query}
+				{$pagination_query}
 			"
 		);
 
