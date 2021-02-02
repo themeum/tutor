@@ -16,7 +16,19 @@ if ( ! defined( 'ABSPATH' ) )
 
 class Quiz {
 
+	private $allowed_attributes = array( 
+		'src' 	=> array(), 
+		'style' => array(), 
+		'class' => array(), 
+		'id' 	=> array(), 
+		'href' 	=> array(), 
+		'alt' 	=> array(), 
+		'title' => array() );
+		
+	private $allowed_html = array( 'img', 'b', 'i', 'br', 'a' );
+
 	public function __construct() {
+		
 		add_action('save_post_tutor_quiz', array($this, 'save_quiz_meta'));
 
 		add_action('wp_ajax_tutor_load_quiz_builder_modal', array($this, 'tutor_load_quiz_builder_modal'));
@@ -59,6 +71,19 @@ class Quiz {
          * Frontend Stuff
          */
 		add_action('wp_ajax_tutor_render_quiz_content', array($this, 'tutor_render_quiz_content'));
+
+		$this->prepare_allowed_html();
+	}
+
+	private function prepare_allowed_html() {
+		
+		$allowed = array();
+
+		foreach($this->allowed_html as $tag) {
+			$allowed[$tag] = $this->allowed_attributes;
+		}
+
+		$this->allowed_html = $allowed;
 	}
 
 	public function tutor_instructor_feedback(){
@@ -536,7 +561,7 @@ class Quiz {
 
 		$topic_id           = sanitize_text_field($_POST['topic_id']);
 		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
-		$quiz_description   = sanitize_text_field($_POST['quiz_description']);
+		$quiz_description   = wp_kses( $_POST['quiz_description'], $this->allowed_html );
 		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id);
 
 		if(!tutils()->can_user_manage('topic', $topic_id)) {
@@ -627,7 +652,7 @@ class Quiz {
 		$quiz_id         	= sanitize_text_field($_POST['quiz_id']);
 		$topic_id         	= sanitize_text_field($_POST['topic_id']);
 		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
-		$quiz_description   = sanitize_text_field($_POST['quiz_description']);
+		$quiz_description   = wp_kses( $_POST['quiz_description'], $this->allowed_html );
 
 		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
@@ -736,7 +761,7 @@ class Quiz {
 			}
 
 			$question_title         = sanitize_text_field($question['question_title']);
-			$question_description   = sanitize_text_field($question['question_description']);
+			$question_description   = wp_kses( $question['question_description'], $this->allowed_html ); // sanitize_text_field($question['question_description']);
 			$question_type          = sanitize_text_field($question['question_type']);
 			$question_mark          = sanitize_text_field($question['question_mark']);
 
