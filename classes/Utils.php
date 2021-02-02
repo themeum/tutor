@@ -5075,23 +5075,29 @@ class Utils {
 		}
 
 		$count = (int) $wpdb->get_var(
-			"SELECT     Count(ID)
-			FROM       {$wpdb->postmeta} post_meta
-			INNER JOIN {$wpdb->posts} assignment
-			ON         post_meta.post_id = assignment.id
-			AND        post_meta.meta_key = '_tutor_course_id_for_assignments'
-			WHERE      post_type = 'tutor_assignments'
-			AND        post_meta.meta_value IN('$in_course_ids') {$date_query}"
+			"SELECT
+				Count(ID)
+			FROM
+				{$wpdb -> postmeta} post_meta
+				INNER JOIN {$wpdb -> posts} assignment ON post_meta.post_id = assignment.id
+				AND post_meta.meta_key = '_tutor_course_id_for_assignments'
+			WHERE
+				post_type = 'tutor_assignments'
+				AND post_meta.meta_value IN('$in_course_ids') {$date_query}
+			"
 		);
 
 		$query = $wpdb->get_results(
-			"SELECT     *
-			FROM       {$wpdb->postmeta} post_meta
-			INNER JOIN {$wpdb->posts} assignment
-			ON         post_meta.post_id = assignment.id
-			AND        post_meta.meta_key = '_tutor_course_id_for_assignments'
-			WHERE      post_type = 'tutor_assignments'
-			AND        post_meta.meta_value IN('$in_course_ids') {$date_query} {$sort_query} {$pagination_query}"
+			"SELECT
+				*
+			FROM
+				{$wpdb -> postmeta} post_meta
+				INNER JOIN {$wpdb -> posts} assignment ON post_meta.post_id = assignment.id
+				AND post_meta.meta_key = '_tutor_course_id_for_assignments'
+			WHERE
+				post_type = 'tutor_assignments'
+				AND post_meta.meta_value IN('$in_course_ids') {$date_query} {$sort_query} {$pagination_query}
+			"
 		);
 
 		return (object) array('count' => $count, 'results' => $query);
