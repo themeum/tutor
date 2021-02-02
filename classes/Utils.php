@@ -5063,7 +5063,7 @@ class Utils {
 				$in_course_ids = $course_id;
 			}
 			if ( ! empty( $date_filter ) ) {
-				$date_query = " AND DATE(assignment.post_date) = '{$date_filter}' ";
+				$date_query = " AND DATE(post_date) = '{$date_filter}'";
 			}
 			if ( ! empty( $order_filter ) ) {
 				$sort_query = " ORDER BY ID {$order_filter} ";
@@ -5074,13 +5074,25 @@ class Utils {
 			}
 		}
 
-		$count = (int) $wpdb->get_var("SELECT COUNT(ID) FROM {$wpdb->postmeta} post_meta
- 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
- 			where post_type = 'tutor_assignments' AND post_meta.meta_value {$date_query} IN('$in_course_ids')");
+		$count = (int) $wpdb->get_var(
+			"SELECT     Count(ID)
+			FROM       {$wpdb->postmeta} post_meta
+			INNER JOIN {$wpdb->posts} assignment
+			ON         post_meta.post_id = assignment.id
+			AND        post_meta.meta_key = '_tutor_course_id_for_assignments'
+			WHERE      post_type = 'tutor_assignments'
+			AND        post_meta.meta_value IN('$in_course_ids') {$date_query}"
+		);
 
-		$query = $wpdb->get_results("SELECT * FROM {$wpdb->postmeta} post_meta
- 			INNER JOIN {$wpdb->posts} assignment ON post_meta.post_id = assignment.ID AND post_meta.meta_key = '_tutor_course_id_for_assignments'
- 			where post_type = 'tutor_assignments' AND post_meta.meta_value {$date_query} IN('$in_course_ids') {$sort_query} {$pagination_query} ");
+		$query = $wpdb->get_results(
+			"SELECT     *
+			FROM       {$wpdb->postmeta} post_meta
+			INNER JOIN {$wpdb->posts} assignment
+			ON         post_meta.post_id = assignment.id
+			AND        post_meta.meta_key = '_tutor_course_id_for_assignments'
+			WHERE      post_type = 'tutor_assignments'
+			AND        post_meta.meta_value IN('$in_course_ids') {$date_query} {$sort_query} {$pagination_query}"
+		);
 
 		return (object) array('count' => $count, 'results' => $query);
 	}
