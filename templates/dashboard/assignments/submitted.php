@@ -43,11 +43,11 @@ if (tutor_utils()->count($assignments_submitted)) {
                 <span><?php echo $deadline; ?></span>
             </p>
             <p>
-                <?php _e('Total Marks', 'tutor'); ?>:
+                <?php _e('Total Points', 'tutor'); ?>:
                 <span><?php echo $max_mark; ?></span>
             </p>
             <p>
-                <?php _e('Pass Marks', 'tutor'); ?>:
+                <?php _e('Pass Points', 'tutor'); ?>:
                 <span><?php echo $pass_mark; ?></span>
             </p>
         </div>
@@ -70,7 +70,7 @@ if (tutor_utils()->count($assignments_submitted)) {
                 <tr>
                     <th style="width:25%;"><?php esc_attr_e('Date', 'tutor'); ?></td>
                     <th><?php esc_attr_e('Student', 'tutor'); ?></td>
-                    <th style="width:15%;"><?php esc_attr_e('Total Marks', 'tutor'); ?></td>
+                    <th style="width:15%;"><?php esc_attr_e('Total Points', 'tutor'); ?></td>
                     <th style="width:12%;"><?php esc_attr_e('Result', 'tutor'); ?></td>
                     <th style="width:10%;">&nbsp;</td>
                 </tr>

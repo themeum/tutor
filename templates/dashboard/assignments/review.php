@@ -96,11 +96,11 @@ if ( $submitted_assignment){
             <input type="hidden" value="<?php echo $assignment_submitted_id; ?>" name="assignment_submitted_id"/>
             <div class="tutor-assignment-evaluate-row">
                 <div class="tutor-option-field-label">
-                    <label for=""><?php _e('Your Mark', 'tutor'); ?></label>
+                    <label for=""><?php _e('Your Points', 'tutor'); ?></label>
                 </div>
                 <div class="tutor-option-field input-mark">
                     <input type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>">
-                    <p class="desc"><?php echo sprintf(__('Mark this assignment out of %s', 'tutor'), "<code>{$max_mark}</code>" ); ?></p>
+                    <p class="desc"><?php echo sprintf(__('Evaluate this assignment out of %s', 'tutor'), "<code>{$max_mark}</code>" ); ?></p>
                 </div>
             </div>
             <div class="tutor-assignment-evaluate-row">

@@ -244,17 +244,17 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 = 1.8.0 - February 03, 2021 =
 
 New: Search filter in Assignments
-New: Frontend and backend UX redesign for Assignments 
 New: Added confirmation message while saving data
+New: Frontend and backend UX redesign for Assignments
 New: Thank you notice when instructors submit a course for review
 Update: Move all the email notification templates to pro version
+Update: Add HTML tag support in Quiz description
 Update: Date time column in Student enrolment report
 Update: Add user capability check in announcements Ajax action
-Update: Add HTML tag support in Quiz description
 Fix: Redundant or duplicate email issue when student enrolments are changed.
 Fix: Add New Course, Explore Addons buttons issue in Tutor LMS setup wizard
 Fix: Incorrect lesson count (due to trashed course) in the report page
-Fix: Profile image saving issue in frontend dashboard
+Fix: Profile and cover photo saving issue in frontend dashboard
 Fix: Graph issue in the Earnings tab in the Report addon
 Fix: Remove item issue in WooCommerce cart page
 Fix: Quiz fails to import

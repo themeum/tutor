@@ -71,8 +71,8 @@ if ($assignments->count) { ?>
             <thead>
                 <tr>
                     <th><?php _e('Course Name', 'tutor') ?></th>
-                    <th width="15%"><?php _e('Total Mark', 'tutor') ?></th>
-                    <th width="15%"><?php _e('Total Submit', 'tutor') ?></th>
+                    <th width="15%"><?php _e('Total Points', 'tutor') ?></th>
+                    <th width="15%"><?php _e('Total Submits', 'tutor') ?></th>
                     <th width="10%">&nbsp;</th>
                 </tr>
             </thead>
