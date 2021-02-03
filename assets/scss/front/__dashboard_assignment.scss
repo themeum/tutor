@@ -32,11 +32,13 @@
 				border-radius: 50%;
 			}
 			span {
-				border-radius: 50%;
+				display: block;
 				width: 34px;
 				height: 34px;
-				padding: 5px;
+				line-height: 34px;
+				border-radius: 50%;
 				font-size: 12px;
+				text-align: center;
 			}
 		}
 		.student-details {
@@ -59,7 +61,7 @@
 	span.result-pass {
 		background: var(--tutor-success-button-color);
 	}
-	span.result-review-required {
+	span.review-required {
 		background: #f5b30d;
 	}
 }

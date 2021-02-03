@@ -10,65 +10,81 @@
 .tutor-dashboard-announcement-sorting-wrap {
 	display: flex;
 	column-gap: 15px;
+	div:nth-child(1) {
+		flex-basis: 50%;
+	}
+	div:nth-child(2) {
+		flex-basis: 20%;
+	}
+	div:nth-child(3) {
+		flex-basis: 30%;
+	}
 }
-.tutor-dashboard-announcement-sorting-wrap div:nth-child(1) {
-	flex-basis: 50%;
-}
-.tutor-dashboard-announcement-sorting-wrap div:nth-child(2) {
-	flex-basis: 20%;
-}
-.tutor-dashboard-announcement-sorting-wrap div:nth-child(3) {
-	flex-basis: 30%;
-}
-.tutor-dashboard-announcement-table tr {
-	border: 1px solid #dcdbdc;
+
+.tutor-dashboard-announcement-table {
+	border-spacing: 0;
 	border-collapse: collapse;
-}
-.tutor-dashboard-announcement-table th,
-.tutor-dashboard-announcement-table td {
-	border: 0;
-	h4 {
-		font-size: 16px;
-		margin-bottom: 0;
+	border: 1px solid #ccd0d4;
+	thead {
+		th, td {
+			border-bottom: 1px solid #ccd0d4;
+		}
 	}
-	p, a {
-		font-size: 13px;
-		margin-bottom: 0;
+	tbody {
+		tr:last-child {
+			border-bottom: 1px solid #ccd0d4;
+		}
+		td:first-child {
+			padding-left: 30px;
+			line-height: 24px;
+		}
 	}
-    &:last-child {
-        padding-right: 30px;
-    }
+	tr {
+		background-color: #F3F3F3;
+	}
+	tr:nth-child(odd) {
+		background-color: #fff;
+	}
+	th, td {
+		border: 0;
+		vertical-align: middle;
+		h4 {
+			font-size: 16px;
+			margin-bottom: 0;
+		}
+		p, a {
+			font-size: 13px;
+			margin-bottom: 0;
+		}
+		&:last-child {
+			padding-right: 30px;
+		}
+	}
+	th {
+		padding: 15px 0;
+		background-color: #f3f3f3;
+	}
+	td {
+		padding: 30px 0;
+	}
+	th:first-child {
+		padding-left: 40px;
+	}
+	th:last-child {
+		padding-right: 40px;
+	}
 }
-.tutor-dashboard-announcement-table th {
-	padding: 15px 0;
-	background-color: #f3f3f3;
-}
-.tutor-dashboard-announcement-table td {
-	padding: 30px 0;
-}
-.tutor-dashboard-announcement-table th:first-child {
-	padding-left: 40px;
-}
-.tutor-dashboard-announcement-table th:last-child {
-	padding-right: 40px;
-}
-.tutor-dashboard-announcement-table tbody td:first-child {
-	padding-left: 40px;
-}
-.tutor-dashboard-announcement-table tbody td:last-child {
-	padding-right: 40px;
-}
+
 .tutor-announcement-datepicker {
 	position: relative;
-}
-.tutor-announcement-datepicker input,
-.tutor-announcement-datepicker i {
-	position: absolute;
-}
-.tutor-announcement-datepicker i {
-	top: 50%;
-	right: 10px;
-	color: rgba(62, 100, 222, 1);
+	input, i {
+		position: absolute;
+	}
+	i {
+		top: 50%;
+		right: 10px;
+		color: rgba(62, 100, 222, 1);
+	}
 }
 .tutor-announcement-buttons {
 	display: flex;
@@ -80,7 +96,7 @@
 .tutor-dropdown {
 	position: relative;
 	cursor: pointer;
-    margin-left: 30px;
+    margin-left: 20px;
     .tutor-icon-action {
 		padding: 5px 10px;
 		margin-right: -10px;

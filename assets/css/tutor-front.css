@@ -8592,11 +8592,13 @@ label[for="tutor_withdraw_amount"] {
 }
 
 .tutor-dashboard-assignment-table .student-column .student-avatar span {
-  border-radius: 50%;
+  display: block;
   width: 34px;
   height: 34px;
-  padding: 5px;
+  line-height: 34px;
+  border-radius: 50%;
   font-size: 12px;
+  text-align: center;
 }
 
 .tutor-dashboard-assignment-table .student-column .student-details h4, .tutor-dashboard-assignment-table .student-column .student-details p {
@@ -8619,7 +8621,7 @@ label[for="tutor_withdraw_amount"] {
   background: var(--tutor-success-button-color);
 }
 
-.tutor-dashboard-assignment-table span.result-review-required {
+.tutor-dashboard-assignment-table span.review-required {
   background: #f5b30d;
 }
 
@@ -8717,31 +8719,49 @@ label[for="tutor_withdraw_amount"] {
       flex-basis: 30%;
 }
 
-.tutor-dashboard-announcement-table tr {
-  border: 1px solid #dcdbdc;
+.tutor-dashboard-announcement-table {
+  border-spacing: 0;
   border-collapse: collapse;
+  border: 1px solid #ccd0d4;
 }
 
-.tutor-dashboard-announcement-table th,
-.tutor-dashboard-announcement-table td {
+.tutor-dashboard-announcement-table thead th, .tutor-dashboard-announcement-table thead td {
+  border-bottom: 1px solid #ccd0d4;
+}
+
+.tutor-dashboard-announcement-table tbody tr:last-child {
+  border-bottom: 1px solid #ccd0d4;
+}
+
+.tutor-dashboard-announcement-table tbody td:first-child {
+  padding-left: 30px;
+  line-height: 24px;
+}
+
+.tutor-dashboard-announcement-table tr {
+  background-color: #F3F3F3;
+}
+
+.tutor-dashboard-announcement-table tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+.tutor-dashboard-announcement-table th, .tutor-dashboard-announcement-table td {
   border: 0;
+  vertical-align: middle;
 }
 
-.tutor-dashboard-announcement-table th h4,
-.tutor-dashboard-announcement-table td h4 {
+.tutor-dashboard-announcement-table th h4, .tutor-dashboard-announcement-table td h4 {
   font-size: 16px;
   margin-bottom: 0;
 }
 
-.tutor-dashboard-announcement-table th p, .tutor-dashboard-announcement-table th a,
-.tutor-dashboard-announcement-table td p,
-.tutor-dashboard-announcement-table td a {
+.tutor-dashboard-announcement-table th p, .tutor-dashboard-announcement-table th a, .tutor-dashboard-announcement-table td p, .tutor-dashboard-announcement-table td a {
   font-size: 13px;
   margin-bottom: 0;
 }
 
-.tutor-dashboard-announcement-table th:last-child,
-.tutor-dashboard-announcement-table td:last-child {
+.tutor-dashboard-announcement-table th:last-child, .tutor-dashboard-announcement-table td:last-child {
   padding-right: 30px;
 }
 
@@ -8762,20 +8782,11 @@ label[for="tutor_withdraw_amount"] {
   padding-right: 40px;
 }
 
-.tutor-dashboard-announcement-table tbody td:first-child {
-  padding-left: 40px;
-}
-
-.tutor-dashboard-announcement-table tbody td:last-child {
-  padding-right: 40px;
-}
-
 .tutor-announcement-datepicker {
   position: relative;
 }
 
-.tutor-announcement-datepicker input,
-.tutor-announcement-datepicker i {
+.tutor-announcement-datepicker input, .tutor-announcement-datepicker i {
   position: absolute;
 }
 
@@ -8801,7 +8812,7 @@ label[for="tutor_withdraw_amount"] {
 .tutor-dropdown {
   position: relative;
   cursor: pointer;
-  margin-left: 30px;
+  margin-left: 20px;
 }
 
 .tutor-dropdown .tutor-icon-action {
