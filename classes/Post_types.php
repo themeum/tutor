@@ -68,7 +68,7 @@ class Post_types{
 			'hierarchical'              => false,
 			'menu_position'             => null,
 			'taxonomies'                => array( 'course-category', 'course-tag' ),
-			'supports'                  => array( 'title', 'editor', 'thumbnail', 'excerpt', 'author'),
+			'supports'                  => array( 'title', 'editor', 'thumbnail', 'excerpt', 'author', 'custom-fields'),
 			'show_in_rest'              => true,
 
 			'capabilities' => array(
