@@ -955,7 +955,7 @@ class Utils {
 
 			do_action('tutor_is_enrolled_before', $course_id, $user_id);
 
-			$getEnrolledInfo = $wpdb->get_row( "select ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} AND post_status = 'completed'; " );
+			$getEnrolledInfo = $wpdb->get_row( "select ID, post_author, post_date, post_date_gmt, post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} AND post_status = 'completed'; " );
 
 			if ( $getEnrolledInfo ) {
 				return apply_filters('tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id);
@@ -5935,6 +5935,8 @@ class Utils {
 		$object_id = $this->get_post_id($object_id);
 		$course_id = $this->get_course_id_by($content, $object_id);
 		$course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
+
+		do_action( 'tutor_before_enrolment_check', $course_id, $user_id );
 
 		if ($this->is_enrolled($course_id, $user_id)) {
 			return true;

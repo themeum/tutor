@@ -11,6 +11,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     background: transparent;
+    z-index: 99999999;
 
     &:empty {
         display: none;
@@ -21,7 +22,6 @@
         padding: 10px;
         margin: 15px;
         border-radius: 15px;
-        z-index: 99999999;
         box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
         border: 1px solid #E8E8E8;
         background: white;
