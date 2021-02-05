@@ -121,7 +121,14 @@ else if(function_exists('edd_currency_symbol')){
                         </table>
                     </div>
                     <div>
- 
+                    <?php
+                        /**
+                         * @since 1.8.1
+                         * set min value for withdraw input field as per settings
+                         * field req step .01
+                         */
+                     
+                    ?>
                         <form id="tutor-earning-withdraw-form" action="" method="post">
                             <?php wp_nonce_field(tutor()->nonce_action, tutor()->nonce); ?>
                             <input type="hidden" value="tutor_make_an_withdraw" name="action" />
