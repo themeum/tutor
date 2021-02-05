@@ -5936,6 +5936,8 @@ class Utils {
 		$course_id = $this->get_course_id_by($content, $object_id);
 		$course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
 
+		do_action( 'tutor_before_enrolment_check', $course_id, $user_id );
+
 		if ($this->is_enrolled($course_id, $user_id)) {
 			return true;
 		}
