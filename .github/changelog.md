@@ -1,5 +1,16 @@
 # TutorLMS Changelog
 
+### 1.8.1 - February 05, 2021
+
+* New: Course enrolment expiration
+* New: Email Notification for course enrolment expiration
+* Update: Improved frontend asset loading on Zoom Meetings
+* Update: Confirmation message after saving Zoom Meetings
+* Fix: Meeting access issue while using Zoom on Course Single Page
+* Fix: Quiz not loading on the lesson page
+* Fix: Max student count not saving
+
+
 ### 1.8.0 - February 03, 2021
 
 * New: Search filter in Assignments
