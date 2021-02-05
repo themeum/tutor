@@ -1198,7 +1198,7 @@ class Quiz {
 
 		$quiz_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('quiz_id', $_POST));
 
-		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+		if(!tutils()->has_enrolled_content_access('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied.', 'tutor')) );
 		}
 
