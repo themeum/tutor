@@ -170,6 +170,11 @@ jQuery(document).ready(function($){
                 $btn.addClass('tutor-updating-message');
             },
             success: function (data) {
+
+                data.success ?
+                    tutor_toast($btn.data('toast_success'), $btn.data('toast_success_message'), 'success'):
+                    tutor_toast($btn.data('toast_error'), $btn.data('toast_error_message'), 'error');
+
                 if(data.course_contents) {
                     $(data.selector).html(data.course_contents);
                     if ( data.selector == '#tutor-course-content-wrap') {
@@ -180,6 +185,9 @@ jQuery(document).ready(function($){
                 } else {
                     location.reload();
                 }
+            },
+            error: function() {
+                tutor_toast($btn.data('toast_error'), $btn.data('toast_error_message'), 'error');
             },
             complete: function () {
                 $btn.removeClass('tutor-updating-message');

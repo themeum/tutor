@@ -4813,6 +4813,7 @@ td:not(.detail):nth-last-child(3) {
   overflow-x: hidden;
   overflow-y: auto;
   background: transparent;
+  z-index: 99999999;
 }
 
 .tutor-toast-parent:empty {
@@ -4824,7 +4825,6 @@ td:not(.detail):nth-last-child(3) {
   padding: 10px;
   margin: 15px;
   border-radius: 15px;
-  z-index: 99999999;
   -webkit-box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
           box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
   border: 1px solid #E8E8E8;
