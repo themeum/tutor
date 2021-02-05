@@ -117,7 +117,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: classes/Admin.php:60, classes/Admin.php:60, classes/Course.php:433, classes/Options.php:557, classes/Quiz_Attempts_List.php:110, templates/student-public-profile.php:103, views/pages/students.php:8
+#: classes/Admin.php:60, classes/Admin.php:60, classes/Course.php:436, classes/Options.php:557, classes/Quiz_Attempts_List.php:110, templates/student-public-profile.php:103, views/pages/students.php:8
 msgid "Students"
 msgstr ""
 
@@ -169,7 +169,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: classes/Admin.php:234, classes/Template.php:340
+#: classes/Admin.php:234, classes/Template.php:343
 msgid "Permission Denied"
 msgstr ""
 
@@ -189,7 +189,7 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:62, classes/Ajax.php:112, classes/Ajax.php:176, classes/Ajax.php:234, classes/Ajax.php:287, classes/Ajax.php:329, classes/Ajax.php:350, classes/Ajax.php:448, classes/Ajax.php:524, classes/Course.php:373, classes/Course.php:408, classes/Course.php:614, classes/Course.php:665, classes/Course.php:702, classes/Course.php:715, classes/Instructor.php:244, classes/Lesson.php:110, classes/Lesson.php:149, classes/Lesson.php:211, classes/Quiz.php:130, classes/Quiz.php:441, classes/Quiz.php:478, classes/Quiz.php:568, classes/Quiz.php:614, classes/Quiz.php:658, classes/Quiz.php:697, classes/Quiz.php:720, classes/Quiz.php:816, classes/Quiz.php:839, classes/Quiz.php:860, classes/Quiz.php:971, classes/Quiz.php:1016, classes/Quiz.php:1094, classes/Quiz.php:1154, classes/Quiz.php:1176, classes/Q_and_A.php:71, templates/dashboard/registration.php:11
+#: classes/Ajax.php:62, classes/Ajax.php:112, classes/Ajax.php:176, classes/Ajax.php:234, classes/Ajax.php:287, classes/Ajax.php:329, classes/Ajax.php:350, classes/Ajax.php:448, classes/Ajax.php:524, classes/Course.php:376, classes/Course.php:411, classes/Course.php:617, classes/Course.php:668, classes/Course.php:705, classes/Course.php:718, classes/Instructor.php:244, classes/Lesson.php:110, classes/Lesson.php:149, classes/Lesson.php:211, classes/Quiz.php:130, classes/Quiz.php:441, classes/Quiz.php:478, classes/Quiz.php:568, classes/Quiz.php:614, classes/Quiz.php:658, classes/Quiz.php:697, classes/Quiz.php:720, classes/Quiz.php:816, classes/Quiz.php:839, classes/Quiz.php:860, classes/Quiz.php:971, classes/Quiz.php:1016, classes/Quiz.php:1094, classes/Quiz.php:1154, classes/Quiz.php:1176, classes/Q_and_A.php:71, templates/dashboard/registration.php:11
 msgid "Access Denied"
 msgstr ""
 
@@ -285,55 +285,55 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: classes/Course.php:137, classes/Course.php:1259, views/options/options_generator.php:2
+#: classes/Course.php:137, classes/Course.php:1262, views/options/options_generator.php:2
 msgid "Tutor Settings"
 msgstr ""
 
-#: classes/Course.php:418
+#: classes/Course.php:421
 msgid "Topic has been updated"
 msgstr ""
 
-#: classes/Course.php:432, classes/Options.php:423, classes/Post_types.php:172
+#: classes/Course.php:435, classes/Options.php:423, classes/Post_types.php:172
 msgid "Lessons"
 msgstr ""
 
-#: classes/Course.php:434, templates/course-filter/filters.php:73, templates/dashboard/earning/statement.php:30
+#: classes/Course.php:437, templates/course-filter/filters.php:73, templates/dashboard/earning/statement.php:30
 msgid "Price"
 msgstr ""
 
-#: classes/Course.php:514
+#: classes/Course.php:517
 msgid "Please Sign In first"
 msgstr ""
 
-#: classes/Course.php:562, classes/Lesson.php:303
+#: classes/Course.php:565, classes/Lesson.php:303
 msgid "Please Sign-In"
 msgstr ""
 
-#: classes/Course.php:647
+#: classes/Course.php:650
 msgid "<p>No instructor available or you have already added maximum instructors</p>"
 msgstr ""
 
-#: classes/Course.php:652
+#: classes/Course.php:655
 msgid "To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s"
 msgstr ""
 
-#: classes/Course.php:1094
+#: classes/Course.php:1097
 msgid "complete all lessons to mark this course as complete"
 msgstr ""
 
-#: classes/Course.php:1131
+#: classes/Course.php:1134
 msgid "You have to pass %s quizzes to complete this course."
 msgstr ""
 
-#: classes/Course.php:1238
+#: classes/Course.php:1241
 msgid "Make This Course Public"
 msgstr ""
 
-#: classes/Course.php:1240
+#: classes/Course.php:1243
 msgid "No enrollment required."
 msgstr ""
 
-#: classes/Course.php:1248
+#: classes/Course.php:1251
 msgid "Disable Q&A"
 msgstr ""
 
@@ -533,7 +533,7 @@ msgstr ""
 msgid "Confirm password does not matched with Password field"
 msgstr ""
 
-#: classes/Instructor.php:159, classes/Template.php:258
+#: classes/Instructor.php:159, classes/Template.php:261
 msgid "Permission denied"
 msgstr ""
 
