@@ -121,6 +121,7 @@ else if(function_exists('edd_currency_symbol')){
                         </table>
                     </div>
                     <div>
+ 
                         <form id="tutor-earning-withdraw-form" action="" method="post">
                             <?php wp_nonce_field(tutor()->nonce_action, tutor()->nonce); ?>
                             <input type="hidden" value="tutor_make_an_withdraw" name="action" />
@@ -131,7 +132,7 @@ else if(function_exists('edd_currency_symbol')){
                                     <span>
                                         <span><?php echo $currency_symbol; ?></span>
                                     </span>
-                                    <input type="number" min="1" name="tutor_withdraw_amount">
+                                    <input type="number" min="<?php echo esc_attr($min_withdraw); ?>" name="tutor_withdraw_amount" step=".01" required>
                                 </div>
                                 <div class="inline-image-text">
                                     <img src="<?php echo $image_base; ?>info-icon-question.svg" />
