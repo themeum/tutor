@@ -955,7 +955,7 @@ class Utils {
 
 			do_action('tutor_is_enrolled_before', $course_id, $user_id);
 
-			$getEnrolledInfo = $wpdb->get_row( "select ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} AND post_status = 'completed'; " );
+			$getEnrolledInfo = $wpdb->get_row( "select ID, post_author, post_date, post_date_gmt, post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} AND post_status = 'completed'; " );
 
 			if ( $getEnrolledInfo ) {
 				return apply_filters('tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id);
