@@ -70,10 +70,10 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                         <div class="tutor-dashboard-course-builder-wrap">
                             <!--since 1.8.0 alert message -->
                             <?php 
-                                $instructor_can_publish  = tutils()->get_option('instructor_can_publish_course');
+                                $instructor_can_publish = tutils()->get_option('instructor_can_publish_course');
                             ?>
-                            <?php if(current_user_can('tutor_instructor') AND !current_user_can('administrator')):?>
-                                <?php if(isset($_SESSION['tutor_course_updated']) AND !$instructor_can_publish):?>
+                            <?php if(current_user_can('tutor_instructor') && !current_user_can('administrator')):?>
+                                <?php if(isset($_SESSION['tutor_course_updated']) && !$instructor_can_publish):?>
                                     <div class="tutor-alert tutor-alert-info">
                                         <?php _e('Your course has been submitted to the admin. It will be published once it has been reviewed by the admins.','tutor');?>
                                     </div>
