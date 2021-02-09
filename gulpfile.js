@@ -9,6 +9,8 @@ var gulp = require("gulp"),
 	clean = require("gulp-clean"),
 	zip = require("gulp-zip");
 
+const is_dev = process.env.NODE_ENV=='development';
+
 var onError = function (err) {
 	notify.onError({
 		title: "Gulp",
@@ -37,21 +39,16 @@ for(let task in scss_blueprints) {
 	let blueprint = scss_blueprints[task];
 	
 	gulp.task(task, function () {
-		return gulp
-			.src(blueprint.src)
-			.pipe(plumber({
-				errorHandler: onError
-			}))
-			.pipe(sourcemaps.init({
-				loadMaps: true
-			}))
-			.pipe(sass({
-				outputStyle: blueprint.mode
-			}))
-			.pipe(prefix(prefixerOptions))
-			.pipe(rename(blueprint.destination))
-			.pipe(sourcemaps.write("."))
-			.pipe(gulp.dest("assets/css"));
+
+		var task = gulp.src(blueprint.src).pipe(plumber({errorHandler: onError}));
+
+		is_dev ? task=task.pipe(sourcemaps.init({loadMaps: true})) : 0;
+
+		task = task.pipe(sass({outputStyle: blueprint.mode})).pipe(prefix(prefixerOptions)).pipe(rename(blueprint.destination));
+
+		is_dev ? task=task.pipe(sourcemaps.write(".")) : 0;
+
+		return task.pipe(gulp.dest("assets/css"));
 	});
 }
 
@@ -119,6 +116,7 @@ gulp.task("make-zip", function () {
  * Export tasks
  */
 exports.build = gulp.series(
+	...task_keys,
 	"clean-zip",
 	"clean-build",
 	"makepot",
