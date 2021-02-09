@@ -729,21 +729,6 @@ class Course extends Tutor_Base {
 		$courses_post_type = tutor()->course_post_type;
 		$post_type = tutils()->array_get('post_type', $postarr);
 
-		/*
-		$post_author = (int) tutor_utils()->avalue_dot('post_author', $data);
-
-		if ( ! $post_author){
-			$user_ID = (int) tutor_utils()->avalue_dot('user_ID', $postarr);
-			if ($user_ID){
-				$data['post_author'] = $user_ID;
-			}else{
-				$post_ID = (int) tutor_utils()->avalue_dot('ID', $postarr);
-				$post_author = (int) $wpdb->get_var("SELECT post_author FROM {$wpdb->posts} WHERE ID = {$post_ID} ");
-
-				$data['post_author'] = $post_author;
-			}
-		}*/
-
 		if ($courses_post_type === $post_type){
             $post_ID = (int) tutor_utils()->avalue_dot('ID', $postarr);
             $post_author = (int) $wpdb->get_var($wpdb->prepare("SELECT post_author FROM {$wpdb->posts} WHERE ID = %d ", $post_ID));
