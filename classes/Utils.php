@@ -2685,48 +2685,65 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_course_rating($course_id = 0){
+	public function get_course_rating($course_id = 0) {
+		global $wpdb;
 		$course_id = $this->get_post_id($course_id);
 
 		$ratings = array(
-			'rating_count'  => 0,
-			'rating_sum'    => 0,
-			'rating_avg'    => 0.00,
-			'count_by_value'    => array(5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0)
+			'rating_count'   => 0,
+			'rating_sum'     => 0,
+			'rating_avg'     => 0.00,
+			'count_by_value' => array(5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0)
 		);
 
-		global $wpdb;
+		$rating = $wpdb->get_row( $wpdb->prepare(
+			"SELECT 
+				COUNT(meta_value) as rating_count, 
+				SUM(meta_value) as rating_sum 
+			FROM 
+				{$wpdb -> comments} 
+				INNER JOIN {$wpdb->commentmeta} 
+					ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+			WHERE
+				{$wpdb->comments}.comment_post_ID = %d 
+				AND {$wpdb->comments}.comment_type = 'tutor_course_rating' 
+				AND meta_key = 'tutor_rating';
+			", 
+			$course_id
+		) );
 
-		$rating = $wpdb->get_row($wpdb->prepare("SELECT COUNT(meta_value) as rating_count, SUM(meta_value) as rating_sum 
-			from {$wpdb->comments}
-			INNER JOIN {$wpdb->commentmeta} 
-			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
-			WHERE {$wpdb->comments}.comment_post_ID = %d 
-			AND {$wpdb->comments}.comment_type = 'tutor_course_rating'
-			AND meta_key = 'tutor_rating' ;", $course_id));
+		if ( $rating->rating_count ) {
+			$avg_rating = number_format( ( $rating->rating_sum / $rating->rating_count ), 2 );
 
-		if ($rating->rating_count){
-			$avg_rating = number_format(($rating->rating_sum / $rating->rating_count), 2);
+			$stars = $wpdb->get_results( $wpdb->prepare(
+				"SELECT 
+					commentmeta.meta_value AS rating, 
+					COUNT(commentmeta.meta_value) as rating_count 
+				FROM 
+					{$wpdb->comments} comments 
+					INNER JOIN {$wpdb->commentmeta} commentmeta 
+						ON comments.comment_ID = commentmeta.comment_id 
+				WHERE 
+					comments.comment_post_ID = %d 
+					AND comments.comment_type = 'tutor_course_rating' 
+					AND commentmeta.meta_key = 'tutor_rating' 
+				GROUP BY 
+					commentmeta.meta_value;
+				", 
+				$course_id
+			) );
 
-			$stars = $wpdb->get_results($wpdb->prepare(
-				"SELECT commentmeta.meta_value AS rating, COUNT(commentmeta.meta_value) as rating_count
-				from {$wpdb->comments} comments
-				INNER JOIN {$wpdb->commentmeta} commentmeta ON comments.comment_ID = commentmeta.comment_id 
-				WHERE comments.comment_post_ID = {$course_id} 
-				AND comments.comment_type = 'tutor_course_rating'
-				AND commentmeta.meta_key = 'tutor_rating' GROUP BY commentmeta.meta_value;"));
-
-			$ratings = array(5=>0, 4=>0, 3=>0, 2=>0, 1=>0);
-			foreach($stars as $star) {
-				$index = (int)$star->rating;
+			$ratings = array( 5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0 );
+			foreach ( $stars as $star ) {
+				$index = (int) $star->rating;
 				array_key_exists($index, $ratings) ? $ratings[ $index ] = $star->rating_count : 0;
 			}
 
 			$ratings = array(
-				'rating_count'  => $rating->rating_count,
-				'rating_sum'    => $rating->rating_sum,
-				'rating_avg'    => $avg_rating,
-				'count_by_value'=> $ratings
+				'rating_count'   => $rating->rating_count,
+				'rating_sum'     => $rating->rating_sum,
+				'rating_avg'     => $avg_rating,
+				'count_by_value' => $ratings
 			);
 		}
 
@@ -3905,7 +3922,7 @@ class Utils {
 		return $query;
 	}
 
-	public function get_total_quiz_attempts_by_course_ids($course_ids = array(), $search_term = ''){
+	public function get_total_quiz_attempts_by_course_ids( $course_ids = array(), $search_term = '' ) {
 		global $wpdb;
 
 		if ($search_term){
@@ -3939,19 +3956,30 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_quiz_answers_by_attempt_id($attempt_id){
+	public function get_quiz_answers_by_attempt_id( $attempt_id ) {
 		global $wpdb;
 
-		$results = $wpdb->get_results($wpdb->prepare("SELECT answers.*, question.question_title, question.question_type
-		FROM {$wpdb->prefix}tutor_quiz_attempt_answers answers
- 		LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question ON answers.question_id = question.question_id
- 		WHERE answers.quiz_attempt_id = %d ORDER BY attempt_answer_id ASC ;", $attempt_id));
+		$results = $wpdb->get_results( $wpdb->prepare(
+			"SELECT 
+				answers.*, 
+				question.question_title, 
+				question.question_type 
+			FROM 
+				{$wpdb->prefix}tutor_quiz_attempt_answers answers 
+				LEFT JOIN {$wpdb -> prefix}tutor_quiz_questions question ON answers.question_id = question.question_id 
+			WHERE 
+				answers.quiz_attempt_id = %d 
+			ORDER BY 
+				attempt_answer_id ASC;
+			",
+			$attempt_id
+		) );
 
 		return $results;
 	}
 
 	/**
-	 * @param $answer_id
+	 * @param $answer_id array|init
 	 *
 	 * @return array|null|object
 	 *
@@ -3959,18 +3987,29 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_answer_by_id($answer_id){
+	public function get_answer_by_id( $answer_id ) {
 		global $wpdb;
 
-		!is_array($answer_id) ? $answer_id=array($answer_id) : 0;
-		$answer_id = array_filter($answer_id, function($id){return is_numeric($id);});
+		!is_array( $answer_id ) ? $answer_id = array( $answer_id ) : 0;
+		
+		$answer_id = array_map( function( $id ) {
+			return "'" . esc_sql( $id ) . "'";
+		}, $answer_id );
 
-		$in_ids = implode(',', $answer_id);
-			
-		$answer = $wpdb->get_results("SELECT answer.*, question.question_title, question.question_type
-		FROM {$wpdb->prefix}tutor_quiz_question_answers answer
- 		LEFT JOIN {$wpdb->prefix}tutor_quiz_questions question ON answer.belongs_question_id = question.question_id
- 		WHERE answer.answer_id IN ({$in_ids})");
+		$in_ids_string = implode( ', ', $answer_id );
+		
+		$query  =  "SELECT 
+						answer.*, 
+						question.question_title, 
+						question.question_type 
+					FROM 
+						{$wpdb -> prefix}tutor_quiz_question_answers answer 
+						LEFT JOIN {$wpdb -> prefix}tutor_quiz_questions question 
+							ON answer.belongs_question_id = question.question_id 
+					WHERE 
+						answer.answer_id IN (" . $in_ids_string . ") AND 1=%d";
+
+		$answer = $wpdb->get_results( $wpdb->prepare( $query, 1 ) );
 
 		return $answer;
 	}
