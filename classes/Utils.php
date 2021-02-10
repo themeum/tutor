@@ -2726,9 +2726,8 @@ class Utils {
 				'rating_count'  => $rating->rating_count,
 				'rating_sum'    => $rating->rating_sum,
 				'rating_avg'    => $avg_rating,
-				'count_by_value'=> array(5 => $ratings[5], 4 => $ratings[4], 3 => $ratings[3], 2 => $ratings[2], 1 => $ratings[1])
+				'count_by_value'=> $ratings
 			);
-
 		}
 
 		return (object) $ratings;
