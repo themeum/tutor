@@ -3,10 +3,7 @@ namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
-/**
- * @since 1.8.0
- */
-session_start();
+
 class Course extends Tutor_Base {
 	
 	private $additional_meta=array(
@@ -357,7 +354,7 @@ class Course extends Tutor_Base {
 		/**
 		 * @since 1.8.0
 		 */
-		$_SESSION['tutor_course_updated'] = true;
+		setcookie( "tutor_course_updated", true, time() + 5 );
 	}
 
 	/**
@@ -1256,6 +1253,4 @@ class Course extends Tutor_Base {
 			</div>
 		<?php
 	}
-
-
 }
