@@ -66,18 +66,16 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
                         <input type="hidden" name="course_ID" id="course_ID" value="<?php echo get_the_ID(); ?>">
                         <input type="hidden" name="post_ID" id="post_ID" value="<?php echo get_the_ID(); ?>">
 
-                        
                         <div class="tutor-dashboard-course-builder-wrap">
                             <!--since 1.8.0 alert message -->
                             <?php 
                                 $instructor_can_publish = tutils()->get_option('instructor_can_publish_course');
                             ?>
                             <?php if(current_user_can('tutor_instructor') && !current_user_can('administrator')):?>
-                                <?php if(isset($_SESSION['tutor_course_updated']) && !$instructor_can_publish):?>
+                                <?php if(isset($_COOKIE['tutor_course_updated']) && !$instructor_can_publish):?>
                                     <div class="tutor-alert tutor-alert-info">
                                         <?php _e('Your course has been submitted to the admin. It will be published once it has been reviewed by the admins.','tutor');?>
                                     </div>
-                                    <?php session_destroy();?>
                                 <?php endif;?>
                             <?php endif;?>
                              <!--alert message end -->
