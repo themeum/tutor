@@ -3899,50 +3899,71 @@ class Utils {
 		return $query;
 	}
 
-	public function get_quiz_attempts_by_course_ids($start = 0, $limit = 10, $course_ids = array(), $search_term = '') {
+	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_term = '' ) {
 		global $wpdb;
 
-		if ($search_term){
-			$search_term = " AND ( user_email like '%{$search_term}%' OR display_name like '%{$search_term}%' OR post_title like '%{$search_term}%' ) ";
-		}
+		$course_ids = array_map( function( $id ) {
+			return "'" . esc_sql( $id ) . "'";
+		}, $course_ids );
 
-		$course_ids_in = implode(',', $course_ids);
-		$sql = " AND quiz_attempts.course_id IN({$course_ids_in}) ";
-		$search_term = $sql.$search_term;
+		$course_ids_in = implode( ', ', $course_ids );
+		$search_term   = $wpdb->esc_like( $search_term ) . '%';
 
-		$query = $wpdb->get_results($wpdb->prepare("SELECT *
-		 	FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
-			INNER JOIN {$wpdb->posts} quiz
-			ON quiz_attempts.quiz_id = quiz.ID
-			INNER  JOIN {$wpdb->users}
-			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1  AND attempt_status != 'attempt_started' {$search_term} 
-			ORDER BY quiz_attempts.attempt_id DESC 
-			LIMIT %d, %d; ", $start, $limit));
+		$query = $wpdb->get_results( $wpdb->prepare(
+			"SELECT 
+				* 
+			FROM 
+				{$wpdb -> prefix}tutor_quiz_attempts quiz_attempts 
+				INNER JOIN {$wpdb -> posts} quiz ON quiz_attempts.quiz_id = quiz.ID 
+				INNER JOIN {$wpdb -> users} ON quiz_attempts.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				quiz_attempts.course_id IN (" . $course_ids_in . ")
+				AND attempt_status != %s 
+				AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
+			ORDER BY 
+				quiz_attempts.attempt_id DESC 
+			LIMIT 
+				%d, 
+				%d;
+			",
+			'attempt_started',
+			$search_term,
+			$search_term,
+			$search_term,
+			$start, 
+			$limit
+		) );
+
 		return $query;
 	}
 
 	public function get_total_quiz_attempts_by_course_ids( $course_ids = array(), $search_term = '' ) {
 		global $wpdb;
-
-		if ($search_term){
-			$search_term = esc_sql( $search_term );
-			$search_term = " AND ( user_email like '%{$search_term}%' OR display_name like '%{$search_term}%' OR post_title like '%{$search_term}%' ) ";
-		}
-
-		$course_ids = array_filter($course_ids, function( $id ) { return is_numeric($id); });
-		$course_ids_in = implode(',', $course_ids);
 		
-		$sql = " AND quiz_attempts.course_id IN({$course_ids_in}) ";
-		$search_term = $sql.$search_term;
+		$course_ids = array_map( function( $id ) {
+			return "'" . esc_sql( $id ) . "'";
+		}, $course_ids );
 
-		$count = $wpdb->get_var("SELECT COUNT(attempt_id)
-		 	FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
-			INNER JOIN {$wpdb->posts} quiz
-			ON quiz_attempts.quiz_id = quiz.ID
-			INNER  JOIN {$wpdb->users}
-			ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 1=1  AND attempt_status != 'attempt_started' {$search_term} ");
+		$course_ids_in = implode( ', ', $course_ids );
+		$search_term   = $wpdb->esc_like( $search_term ) . '%';
+
+		$count = $wpdb->get_var( $wpdb->prepare(
+			"SELECT 
+				COUNT(attempt_id) 
+			FROM 
+				{$wpdb -> prefix}tutor_quiz_attempts quiz_attempts 
+				INNER JOIN {$wpdb -> posts} quiz ON quiz_attempts.quiz_id = quiz.ID 
+				INNER JOIN {$wpdb -> users} ON quiz_attempts.user_id = {$wpdb -> users}.ID 
+			WHERE 
+				quiz_attempts.course_id IN (" . $course_ids_in . ")
+				AND attempt_status != %s 
+				AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
+			",
+			'attempt_started',
+			$search_term,
+			$search_term,
+			$search_term
+		) );
 		
 		return (int) $count;
 	}
