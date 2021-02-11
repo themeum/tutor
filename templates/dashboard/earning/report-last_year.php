@@ -37,14 +37,14 @@ $complete_status = "'".implode("','", $complete_status)."'";
  * Query This Month
  */
 
-$salesQuery = $wpdb->get_results( "
-              SELECT SUM(instructor_amount) as total_earning, 
+$salesQuery = $wpdb->get_results( $wpdb->prepare(
+             "SELECT SUM(instructor_amount) as total_earning, 
               MONTHNAME(created_at)  as month_name 
               from {$wpdb->prefix}tutor_earnings 
-              WHERE user_id = {$user_id} AND order_status IN({$complete_status}) 
-              AND YEAR(created_at) = {$year} 
+              WHERE user_id = %d AND order_status IN({$complete_status}) 
+              AND YEAR(created_at) = %s 
               GROUP BY MONTH (created_at) 
-              ORDER BY MONTH(created_at) ASC ;");
+              ORDER BY MONTH(created_at) ASC ;", $user_id,  $year) );
 
 $total_earning = wp_list_pluck($salesQuery, 'total_earning');
 $months = wp_list_pluck($salesQuery, 'month_name');

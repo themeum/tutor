@@ -955,7 +955,7 @@ class Utils {
 
 			do_action('tutor_is_enrolled_before', $course_id, $user_id);
 
-			$getEnrolledInfo = $wpdb->get_row( "select ID, post_author, post_date, post_date_gmt, post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id} AND post_status = 'completed'; " );
+			$getEnrolledInfo = $wpdb->get_row( $wpdb->prepare( "SELECT ID, post_author, post_date, post_date_gmt, post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = %d AND post_author = %d AND post_status = 'completed'; ", $course_id, $user_id) );
 
 			if ( $getEnrolledInfo ) {
 				return apply_filters('tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id);
@@ -981,7 +981,7 @@ class Utils {
 		if (is_user_logged_in()) {
 			global $wpdb;
 
-			$getEnrolledInfo = $wpdb->get_row( "select ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = {$course_id} AND post_author = {$user_id}; " );
+			$getEnrolledInfo = $wpdb->get_row( $wpdb->prepare( "SELECT ID, post_author, post_date,post_date_gmt,post_title from {$wpdb->posts} WHERE post_type = 'tutor_enrolled' AND post_parent = %d AND post_author = %d; ", $course_id, $user_id ) );
 
 			if ( $getEnrolledInfo ) {
 				return $getEnrolledInfo;
@@ -2932,7 +2932,7 @@ class Utils {
 		global $wpdb;
 		$user_id = $this->get_user_id($user_id);
 
-		$count_reviews = $wpdb->get_var("SELECT COUNT(comment_ID) from {$wpdb->comments} WHERE user_id = {$user_id} AND comment_type = 'tutor_course_rating' ");
+		$count_reviews = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(comment_ID) from {$wpdb->comments} WHERE user_id = %d AND comment_type = 'tutor_course_rating' ", $user_id ));
 		return $count_reviews;
 	}
 
@@ -3546,10 +3546,13 @@ class Utils {
 
 		if ($post) {
 			$course_post_type = tutor()->course_post_type;
-			$course = $wpdb->get_row( "select ID, post_author, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$post->post_parent} " );
+			$query_string = "SELECT ID, post_author, post_name, post_type, post_parent from {$wpdb->posts} where ID = %d ";
+
+			$course = $wpdb->get_row( $wpdb->prepare( $query_string, $post->post_parent ) );
+			
 			if ($course) {
 				if ( $course->post_type !== $course_post_type ) {
-					$course = $wpdb->get_row( "select ID, post_author, post_name, post_type, post_parent from {$wpdb->posts} where ID = {$course->post_parent} " );
+					$course = $wpdb->get_row( $wpdb->prepare( $query_string, $course->post_parent ) );
 				}
 				return $course;
 			}
