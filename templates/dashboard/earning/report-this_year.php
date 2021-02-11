@@ -19,52 +19,15 @@ $user_id = get_current_user_id();
  * Getting the Last Month
  */
 $year = date('Y');
-$dataFor = 'yearly';
 
-$earning_sum = tutor_utils()->get_earning_sum($user_id, compact('year', 'dataFor'));
-
+$stats = tutils()->get_earning_chart_yearly( $user_id, $year );
+extract($stats);
 
 if ( ! $earning_sum){
 	echo '<p>'.__('No Earning info available', 'tutor' ).'</p>';
 	return;
 }
-
-$complete_status = tutor_utils()->get_earnings_completed_statuses();
-$statuses = $complete_status;
-$complete_status = "'".implode("','", $complete_status)."'";
-
-
-/**
- * Query This Month
- */
-
-$salesQuery = $wpdb->get_results( $wpdb->prepare(
-              "SELECT SUM(instructor_amount) as total_earning, 
-              MONTHNAME(created_at)  as month_name 
-              from {$wpdb->prefix}tutor_earnings 
-              WHERE user_id = %d AND order_status IN({$complete_status}) 
-              AND YEAR(created_at) = %s 
-              GROUP BY MONTH (created_at) 
-              ORDER BY MONTH(created_at) ASC ;", $user_id, $year ) );
-
-$total_earning = wp_list_pluck($salesQuery, 'total_earning');
-$months = wp_list_pluck($salesQuery, 'month_name');
-$monthWiseSales = array_combine($months, $total_earning);
-
-/**
- * Format yearly
- */
-$emptyMonths = array();
-for ($m=1; $m<=12; $m++) {
-	$emptyMonths[date('F', mktime(0,0,0,$m, 1, date('Y')))] = 0;
-}
-$chartData = array_merge($emptyMonths, $monthWiseSales);
-
-$statements = tutor_utils()->get_earning_statements($user_id, compact('year', 'dataFor', 'statuses'));
-
-
 ?>
-
     <div class="tutor-dashboard-info-cards">
         <div class="tutor-dashboard-info-card" title="<?php _e('All time', 'tutor'); ?>">
             <p>
