@@ -13,17 +13,7 @@
 
 global $wpdb;
 
-$instructor_id = get_current_user_id();
-
-$earning_sum = tutor_utils()->get_earning_sum();
-if ( ! $earning_sum){
-	echo '<p>'.__('No Earning info available', 'tutor' ).'</p>';
-	return;
-}
-
 $user_id = get_current_user_id();
-$complete_status = tutor_utils()->get_earnings_completed_statuses();
-$complete_status = "'".implode("','", $complete_status)."'";
 
 /**
  * Getting the last week
@@ -31,41 +21,12 @@ $complete_status = "'".implode("','", $complete_status)."'";
 $start_date = date("Y-m-01");
 $end_date = date("Y-m-t");
 
-/**
- * Format Date Name
- */
-$begin = new DateTime($start_date);
-$end = new DateTime($end_date.' + 1 day');
-$interval = DateInterval::createFromDateString('1 day');
-$period = new DatePeriod($begin, $interval, $end);
+$stats = tutils()->get_earning_chart( $user_id, $start_date, $end_date, $datesPeriod );
+extract($stats);
 
-$datesPeriod = array();
-foreach ($period as $dt) {
-	$datesPeriod[$dt->format("Y-m-d")] = 0;
-}
-
-/**
- * Query This Month
- */
-
-$salesQuery = $wpdb->get_results( "
-              SELECT SUM(instructor_amount) as total_earning, 
-              DATE(created_at)  as date_format 
-              from {$wpdb->prefix}tutor_earnings 
-              WHERE user_id = {$user_id} AND order_status IN({$complete_status}) 
-              AND (created_at BETWEEN '{$start_date}' AND '{$end_date}')
-              GROUP BY date_format
-              ORDER BY created_at ASC ;");
-
-$total_earning = wp_list_pluck($salesQuery, 'total_earning');
-$queried_date = wp_list_pluck($salesQuery, 'date_format');
-$dateWiseSales = array_combine($queried_date, $total_earning);
-
-$chartData = array_merge($datesPeriod, $dateWiseSales);
-foreach ($chartData as $key => $salesCount){
-	unset($chartData[$key]);
-	$formatDate = date('d M', strtotime($key));
-	$chartData[$formatDate] = $salesCount;
+if ( ! $earning_sum){
+	echo '<p>'.__('No Earning info available', 'tutor' ).'</p>';
+	return;
 }
 
 ?>

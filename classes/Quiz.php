@@ -17,15 +17,25 @@ if ( ! defined( 'ABSPATH' ) )
 class Quiz {
 
 	private $allowed_attributes = array( 
-		'src' 	=> array(), 
-		'style' => array(), 
-		'class' => array(), 
-		'id' 	=> array(), 
-		'href' 	=> array(), 
-		'alt' 	=> array(), 
-		'title' => array() );
+		'src' 	   => array(), 
+		'style'    => array(), 
+		'class'    => array(), 
+		'id' 	   => array(), 
+		'href' 	   => array(), 
+		'alt' 	   => array(), 
+		'title'    => array(),
+		'type'     => array(),
+		'controls' => array(),
+		'muted'    => array(),
+		'loop'	   => array(),
+		'poster'   => array(),
+		'preload'  => array(),
+		'autoplay' => array(),
+		'width'    => array(),
+		'height'   => array()
+	);
 		
-	private $allowed_html = array( 'img', 'b', 'i', 'br', 'a' );
+	private $allowed_html = array( 'img', 'b', 'i', 'br', 'a', 'audio', 'video', 'source' );
 
 	public function __construct() {
 		
@@ -276,16 +286,35 @@ class Quiz {
 
 					    if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 
+							if(!is_numeric($answers) || !$answers) {
+								wp_send_json_error();
+								exit;
+							}
+
 						    $given_answer          = $answers;
-						    $is_answer_was_correct = (bool) $wpdb->get_var( "SELECT is_correct FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = {$answers} " );
+						    $is_answer_was_correct = (bool) $wpdb->get_var( $wpdb->prepare( "SELECT is_correct FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = %d ", $answers ) );
 
 					    } elseif ( $question_type === 'multiple_choice' ) {
 
-						    $given_answer         = (array) ( $answers );
-						    $get_original_answers = (array) $wpdb->get_col($wpdb->prepare(
-								"SELECT answer_id 
-								FROM {$wpdb->prefix}tutor_quiz_question_answers 
-								WHERE belongs_question_id = %d AND belongs_question_type = %s AND is_correct = 1 ;", $question->question_id, $question_type));
+							$given_answer = (array) ( $answers );
+							
+							$given_answer = array_filter( $given_answer, function($id) {
+								return is_numeric($id) && $id>0;
+							} );
+
+							$get_original_answers = (array) $wpdb->get_col($wpdb->prepare(
+								"SELECT 
+									answer_id 
+								FROM 
+									{$wpdb->prefix}tutor_quiz_question_answers 
+								WHERE 
+									belongs_question_id = %d 
+									AND belongs_question_type = %s 
+									AND is_correct = 1 ;
+								", 
+								$question->question_id, 
+								$question_type
+							) );
 							
 							
 							if (count(array_diff($get_original_answers, $given_answer)) === 0 && count($get_original_answers) === count($given_answer)) {
@@ -298,7 +327,7 @@ class Quiz {
 						    $given_answer = (array) array_map( 'sanitize_text_field', $answers );
 						    $given_answer = maybe_serialize( $given_answer );
 
-						    $get_original_answer = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question->question_id} AND belongs_question_type = '{$question_type}' ;" );
+						    $get_original_answer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND belongs_question_type = %s ;", $question->question_id, $question_type ) );
 						    $gap_answer          = (array) explode( '|', $get_original_answer->answer_two_gap_match );
 
 						    $gap_answer = array_map( 'sanitize_text_field', $gap_answer );
@@ -1198,7 +1227,7 @@ class Quiz {
 
 		$quiz_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('quiz_id', $_POST));
 
-		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+		if(!tutils()->has_enrolled_content_access('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied.', 'tutor')) );
 		}
 

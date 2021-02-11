@@ -3,10 +3,7 @@ namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) )
 	exit;
-/**
- * @since 1.8.0
- */
-session_start();
+
 class Course extends Tutor_Base {
 	
 	private $additional_meta=array(
@@ -54,7 +51,6 @@ class Course extends Tutor_Base {
 		 */
 		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'register_meta_box_in_frontend'));
 
-
 		/**
 		 * Do Stuff for the course save from frontend
 		 */
@@ -90,7 +86,6 @@ class Course extends Tutor_Base {
          */
 		add_filter('tutor_course_price', array($this, 'remove_price_if_enrolled'));
 
-
         /**
          * Remove course complete button if course completion is strict mode
          * @since v.1.6.1
@@ -109,11 +104,13 @@ class Course extends Tutor_Base {
          * @since v.1.6.6
          */
 		add_action('deleted_post', array($this, 'delete_tutor_course_data'));
+		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'tutor_course_setting_metabox_frontend'));
 
-		
-		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'tutor_course_setting_metabox_frontend'));		
-	
-	   
+		/**
+         * Delete course data after deleted course
+         * @since v.1.8.2
+         */
+		add_action('before_delete_post', array($this, 'delete_associated_enrollment'));
 	}
 
 	/**
@@ -218,6 +215,9 @@ class Course extends Tutor_Base {
 	 */
 	public function save_course_meta($post_ID, $post){
 		global $wpdb;
+
+		do_action( "tutor_save_course", $post_ID, $post);
+		
 		/**
 		 * Save course price type
 		 */
@@ -354,7 +354,7 @@ class Course extends Tutor_Base {
 		/**
 		 * @since 1.8.0
 		 */
-		$_SESSION['tutor_course_updated'] = true;
+		setcookie( "tutor_course_updated", true, time() + 5 );
 	}
 
 	/**
@@ -725,21 +725,6 @@ class Course extends Tutor_Base {
 
 		$courses_post_type = tutor()->course_post_type;
 		$post_type = tutils()->array_get('post_type', $postarr);
-
-		/*
-		$post_author = (int) tutor_utils()->avalue_dot('post_author', $data);
-
-		if ( ! $post_author){
-			$user_ID = (int) tutor_utils()->avalue_dot('user_ID', $postarr);
-			if ($user_ID){
-				$data['post_author'] = $user_ID;
-			}else{
-				$post_ID = (int) tutor_utils()->avalue_dot('ID', $postarr);
-				$post_author = (int) $wpdb->get_var("SELECT post_author FROM {$wpdb->posts} WHERE ID = {$post_ID} ");
-
-				$data['post_author'] = $post_author;
-			}
-		}*/
 
 		if ($courses_post_type === $post_type){
             $post_ID = (int) tutor_utils()->avalue_dot('ID', $postarr);
@@ -1269,5 +1254,31 @@ class Course extends Tutor_Base {
 		<?php
 	}
 
+	/**
+	 * Delete associated enrollment
+	 * @since v.1.8.2
+	 */
+	public function delete_associated_enrollment($post_id) {
+        global $wpdb;
 
+        $enroll_id = $wpdb->get_var( $wpdb->prepare(
+			"SELECT 
+				post_id 
+			FROM 
+				{$wpdb->postmeta}
+			WHERE 
+				meta_key='_tutor_enrolled_by_order_id' 
+				AND meta_value = %d
+			", 
+			$post_id
+		) );
+        
+        if(is_numeric($enroll_id) && $enroll_id>0) {
+
+            $course_id = get_post_field('post_parent', $enroll_id);
+            $user_id = get_post_field('post_author', $enroll_id);
+
+            tutils()->cancel_course_enrol($course_id, $user_id);
+        }
+    }
 }
