@@ -40,7 +40,7 @@ if ( ! $earning_sum){
 		<ul>
 			<li class="active">
                 <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('earning'); ?>">
-                    <?php _e('Earnings sfg', 'tutor'); ?>
+                    <?php _e('Earnings', 'tutor'); ?>
                 </a>
 			</li>
 			<li>
