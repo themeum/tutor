@@ -277,7 +277,7 @@ class Quiz {
 					    if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 
 						    $given_answer          = $answers;
-						    $is_answer_was_correct = (bool) $wpdb->get_var( "SELECT is_correct FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = {$answers} " );
+						    $is_answer_was_correct = (bool) $wpdb->get_var( $wpdb->prepare( "SELECT is_correct FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = %d ", $answers ) );
 
 					    } elseif ( $question_type === 'multiple_choice' ) {
 
@@ -298,7 +298,7 @@ class Quiz {
 						    $given_answer = (array) array_map( 'sanitize_text_field', $answers );
 						    $given_answer = maybe_serialize( $given_answer );
 
-						    $get_original_answer = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$question->question_id} AND belongs_question_type = '{$question_type}' ;" );
+						    $get_original_answer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND belongs_question_type = %s ;", $question->question_id, $question_type ) );
 						    $gap_answer          = (array) explode( '|', $get_original_answer->answer_two_gap_match );
 
 						    $gap_answer = array_map( 'sanitize_text_field', $gap_answer );

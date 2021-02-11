@@ -49,14 +49,14 @@ foreach ($period as $dt) {
  * Query This Month
  */
 
-$salesQuery = $wpdb->get_results( "
-              SELECT SUM(instructor_amount) as total_earning, 
+$salesQuery = $wpdb->get_results( $wpdb->prepare(
+              "SELECT SUM(instructor_amount) as total_earning, 
               DATE(created_at)  as date_format 
               from {$wpdb->prefix}tutor_earnings 
-              WHERE user_id = {$user_id} AND order_status IN({$complete_status}) 
-              AND (created_at BETWEEN '{$start_date}' AND '{$end_date}')
+              WHERE user_id = %d AND order_status IN({$complete_status}) 
+              AND (created_at BETWEEN %s AND %s)
               GROUP BY date_format
-              ORDER BY created_at ASC ;");
+              ORDER BY created_at ASC ;", $user_id, $start_date, $end_date ) );
 
 $total_earning = wp_list_pluck($salesQuery, 'total_earning');
 $queried_date = wp_list_pluck($salesQuery, 'date_format');

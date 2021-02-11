@@ -330,27 +330,33 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                             if (($answer->question_type != 'open_ended' && $answer->question_type != 'short_answer')) {
                                 global $wpdb;
                                 if ( $answer->question_type === 'true_false' ) {
-                                    $correct_answer = $wpdb->get_var( "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1" );
+                                    $correct_answer = $wpdb->get_var( $wpdb->prepare( "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1", $answer->question_id ) );
                                     echo $correct_answer;
+
                                 } elseif ( $answer->question_type === 'single_choice' ) {
-                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1" );
+                                    $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1", $answer->question_id ) );
                                     show_correct_answer($correct_answer);
+
                                 } elseif ( $answer->question_type === 'multiple_choice' ) {
-                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} AND is_correct = 1 ;" );
+                                    $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1 ;", $answer->question_id ) );
                                     show_correct_answer($correct_answer);
+
                                 } elseif ( $answer->question_type === 'fill_in_the_blank' ) {
-                                    $correct_answer = $wpdb->get_var( "SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id}" );
+                                    $correct_answer = $wpdb->get_var( $wpdb->prepare( "SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d", $answer->question_id ) );
                                     if($correct_answer){
                                         echo implode(', ', explode('|', stripslashes($correct_answer)));
                                     }
+
                                 } elseif ( $answer->question_type === 'ordering' ) {
-                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                    $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
                                     show_correct_answer($correct_answer);
+
                                 } elseif( $answer->question_type === 'matching' ){
-                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_two_gap_match, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                    $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_two_gap_match, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
                                     show_correct_answer($correct_answer);
+
                                 } elseif( $answer->question_type === 'image_matching' ) {
-                                    $correct_answer = $wpdb->get_results( "SELECT answer_title, image_id, answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = {$answer->question_id} ORDER BY answer_order ASC;" );
+                                    $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
                                     show_correct_answer($correct_answer);
                                 }
                             }
