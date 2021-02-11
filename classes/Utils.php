@@ -2442,23 +2442,47 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors_by_course($course_id = 0){
+	public function get_instructors_by_course( $course_id = 0 ) {
 		global $wpdb;
-		$course_id = $this->get_post_id($course_id);
+		$course_id = $this->get_post_id( $course_id );
 
-		$instructors = $wpdb->get_results("SELECT ID, display_name, 
-			get_course.meta_value as taught_course_id,
-			tutor_job_title.meta_value as tutor_profile_job_title,
-			tutor_bio.meta_value as tutor_profile_bio,
-			tutor_photo.meta_value as tutor_profile_photo
-			from {$wpdb->users}
-			INNER JOIN {$wpdb->usermeta} get_course ON ID = get_course.user_id AND get_course.meta_key = '_tutor_instructor_course_id' AND get_course.meta_value = {$course_id}
-			LEFT JOIN {$wpdb->usermeta} tutor_job_title ON ID = tutor_job_title.user_id AND tutor_job_title.meta_key = '_tutor_profile_job_title'
-			LEFT JOIN {$wpdb->usermeta} tutor_bio ON ID = tutor_bio.user_id AND tutor_bio.meta_key = '_tutor_profile_bio'
-			LEFT JOIN {$wpdb->usermeta} tutor_photo ON ID = tutor_photo.user_id AND tutor_photo.meta_key = '_tutor_profile_photo'
-			");
+		$instructors = $wpdb->get_results( $wpdb->prepare(
+			"SELECT
+				id,
+				display_name,
+				get_course.meta_value AS taught_course_id,
+				tutor_job_title.meta_value AS tutor_profile_job_title,
+				tutor_bio.meta_value AS tutor_profile_bio,
+				tutor_photo.meta_value AS tutor_profile_photo 
+			FROM
+				{$wpdb->users} 
+				INNER JOIN
+					{$wpdb->usermeta} get_course 
+					ON id = get_course.user_id 
+					AND get_course.meta_key = %s 
+					AND get_course.meta_value = %d 
+				LEFT JOIN
+					{$wpdb->usermeta} tutor_job_title 
+					ON id = tutor_job_title.user_id 
+					AND tutor_job_title.meta_key = %s 
+				LEFT JOIN
+					{$wpdb->usermeta} tutor_bio 
+					ON id = tutor_bio.user_id 
+					AND tutor_bio.meta_key = %s 
+				LEFT JOIN
+					{$wpdb->usermeta} tutor_photo 
+					ON id = tutor_photo.user_id 
+					AND tutor_photo.meta_key = %s
+			",
+			'_tutor_instructor_course_id',
+			$course_id,
+			'_tutor_profile_job_title',
+			'_tutor_profile_bio',
+			'_tutor_profile_photo',
 
-		if (is_array($instructors) && count($instructors)){
+		) );
+
+		if ( is_array( $instructors ) && count( $instructors ) ) {
 			return $instructors;
 		}
 
