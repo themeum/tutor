@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.6
 Requires PHP: 7.0
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,16 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.8.1 - February 05, 2021 =
+
+New: Course enrolment expiration
+New: Email Notification for course enrolment expiration
+Update: Improved frontend asset loading on Zoom Meetings
+Update: Confirmation message after saving Zoom Meetings
+Fix: Meeting access issue while using Zoom on Course Single Page
+Fix: Quiz not loading on the lesson page
+Fix: Max student count not saving
 
 = 1.8.0 - February 03, 2021 =
 

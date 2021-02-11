@@ -1,10 +1,13 @@
 {
   "name": "tutor",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "<img src=\".github/tutor-github.png\" alt=\"TutorLMS\" width=\"100%\">",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "NODE_ENV=production gulp build",
+    "build-dev" : "NODE_ENV=development gulp build",
+    "watch": "NODE_ENV=development gulp watch"
   },
   "repository": {
     "type": "git",

@@ -345,7 +345,7 @@ class Admin{
 		global $wpdb;
 
 		$is_erase_data = tutor_utils()->get_option('delete_on_uninstall');
-		/**D*/ //=> Deleting Data
+		//=> Deleting Data
 
 		$plugin_file = tutor()->basename;
 		if ($is_erase_data && current_user_can( 'deactivate_plugin', $plugin_file )) {
@@ -373,18 +373,18 @@ class Admin{
 					//Delete categories
 					$terms = wp_get_object_terms( $post_id, 'course-category' );
 					foreach( $terms as $term ){
-						/**D*/ wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-category' );
+						wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-category' );
 					}
 
 					//Delete tags if available
 					$terms = wp_get_object_terms( $post_id, 'course-tag' );
 					foreach( $terms as $term ){
-						/**D*/ wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-tag' );
+						wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-tag' );
 					}
 
 					//Delete All Meta
-					/**D*/ $wpdb->delete($wpdb->postmeta, array('post_id' => $post_id) );
-					/**D*/ $wpdb->delete($wpdb->posts, array('ID' => $post_id) );
+					$wpdb->delete($wpdb->postmeta, array('post_id' => $post_id) );
+					$wpdb->delete($wpdb->posts, array('ID' => $post_id) );
 				}
 			}
 
@@ -394,24 +394,24 @@ class Admin{
 			$tutor_comments = $wpdb->get_col("SELECT comment_ID from {$wpdb->comments} WHERE comment_agent = 'comment_agent' ;");
 			$comments_ids_strings = "'".implode("','", $tutor_comments)."'";
 			if (is_array($tutor_comments) && count($tutor_comments)){
-				/**D*/ $wpdb->query("DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$comments_ids_strings}) ");
+				$wpdb->query("DELETE from {$wpdb->commentmeta} WHERE comment_ID in({$comments_ids_strings}) ");
 			}
-			/**D*/ $wpdb->delete($wpdb->comments, array('comment_agent' => 'comment_agent'));
+			$wpdb->delete($wpdb->comments, array('comment_agent' => 'comment_agent'));
 
 			/**
 			 * Delete Options
 			 */
 
-			/**D*/ delete_option('tutor_option');
-			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_tutor_student'));
-			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_tutor_instructor_approved'));
-			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_tutor_instructor_status'));
-			/**D*/ $wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_tutor_instructor'));
-			/**D*/ $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE  '%_tutor_completed_lesson_id_%' ");
+			delete_option('tutor_option');
+			$wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_tutor_student'));
+			$wpdb->delete($wpdb->usermeta, array('meta_key' => '_tutor_instructor_approved'));
+			$wpdb->delete($wpdb->usermeta, array('meta_key' => '_tutor_instructor_status'));
+			$wpdb->delete($wpdb->usermeta, array('meta_key' => '_is_tutor_instructor'));
+			$wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE  '%_tutor_completed_lesson_id_%' ");
 
 			//Deleting Table
 			$prefix = $wpdb->prefix;
-			/**D*/ $wpdb->query("DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers, {$prefix}tutor_earnings, {$prefix}tutor_withdraws ");
+			$wpdb->query("DROP TABLE IF EXISTS {$prefix}tutor_quiz_attempts, {$prefix}tutor_quiz_attempt_answers, {$prefix}tutor_quiz_questions, {$prefix}tutor_quiz_question_answers, {$prefix}tutor_earnings, {$prefix}tutor_withdraws ");
 
 			deactivate_plugins($plugin_file);
 		}
