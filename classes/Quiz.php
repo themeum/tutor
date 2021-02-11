@@ -17,15 +17,25 @@ if ( ! defined( 'ABSPATH' ) )
 class Quiz {
 
 	private $allowed_attributes = array( 
-		'src' 	=> array(), 
-		'style' => array(), 
-		'class' => array(), 
-		'id' 	=> array(), 
-		'href' 	=> array(), 
-		'alt' 	=> array(), 
-		'title' => array() );
+		'src' 	   => array(), 
+		'style'    => array(), 
+		'class'    => array(), 
+		'id' 	   => array(), 
+		'href' 	   => array(), 
+		'alt' 	   => array(), 
+		'title'    => array(),
+		'type'     => array(),
+		'controls' => array(),
+		'muted'    => array(),
+		'loop'	   => array(),
+		'poster'   => array(),
+		'preload'  => array(),
+		'autoplay' => array(),
+		'width'    => array(),
+		'height'   => array()
+	);
 		
-	private $allowed_html = array( 'img', 'b', 'i', 'br', 'a' );
+	private $allowed_html = array( 'img', 'b', 'i', 'br', 'a', 'audio', 'video', 'source' );
 
 	public function __construct() {
 		
