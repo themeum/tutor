@@ -6008,4 +6008,124 @@ class Utils {
 
 		return date_format($date, $format);
 	}
+
+	public function get_earning_chart($user_id, $start_date, $end_date) {
+		
+		global $wpdb;
+
+
+		/**
+		 * Format Date Name
+		 */
+		$begin = new \DateTime($start_date);
+		$end = new \DateTime($end_date);
+		$interval = \DateInterval::createFromDateString('1 day');
+		$period = new \DatePeriod($begin, $interval, $end);
+
+		$datesPeriod = array();
+		foreach ($period as $dt) {
+			$datesPeriod[$dt->format("Y-m-d")] = 0;
+		}
+
+		// Get statuses
+		$complete_status = tutor_utils()->get_earnings_completed_statuses();
+		$statuses = $complete_status;
+		$complete_status = "'".implode("','", $complete_status)."'";
+		
+		$salesQuery = $wpdb->get_results( $wpdb->prepare(
+			"SELECT 
+				SUM(instructor_amount) as total_earning, 
+				DATE(created_at)  as date_format 
+			FROM 
+				{$wpdb->prefix}tutor_earnings 
+			WHERE 
+				user_id = %d 
+				AND order_status IN({$complete_status}) 
+				AND (created_at BETWEEN %s AND %s)
+			GROUP 
+				BY date_format
+			ORDER BY 
+				created_at ASC;
+			", 
+			$user_id, 
+			$start_date, 
+			$end_date 
+		) );
+
+		$total_earning = wp_list_pluck($salesQuery, 'total_earning');
+		$queried_date = wp_list_pluck($salesQuery, 'date_format');
+		$dateWiseSales = array_combine($queried_date, $total_earning);
+		$chartData = array_merge($datesPeriod, $dateWiseSales);
+
+		foreach ($chartData as $key => $salesCount){
+			unset($chartData[$key]);
+			$formatDate = date('d M', strtotime($key));
+			$chartData[$formatDate] = $salesCount;
+		}
+
+		$statements = tutor_utils()->get_earning_statements($user_id, compact('start_date', 'end_date', 'statuses'));
+		$earning_sum = tutor_utils()->get_earning_sum($user_id, compact('start_date', 'end_date'));
+
+		return array(
+			'chartData' => $chartData, 
+			'statements' => $statements,
+			'statuses' => $statuses,
+			'begin' => $begin,
+			'end' => $end,
+			'earning_sum' => $earning_sum
+		);
+	}
+
+
+	public function get_earning_chart_yearly($user_id, $year) {
+
+		global $wpdb;
+
+		$complete_status = tutor_utils()->get_earnings_completed_statuses();
+		$statuses = $complete_status;
+		$complete_status = "'".implode("','", $complete_status)."'";
+
+		$salesQuery = $wpdb->get_results( $wpdb->prepare(
+			"SELECT 
+				SUM(instructor_amount) as total_earning, 
+				MONTHNAME(created_at)  as month_name 
+			FROM 
+				{$wpdb->prefix}tutor_earnings 
+			WHERE 
+				user_id = %d 
+				AND order_status IN({$complete_status}) 
+				AND YEAR(created_at) = %s 
+			GROUP BY 
+				MONTH (created_at) 
+			ORDER BY 
+				MONTH(created_at) ASC;
+			", 
+			$user_id, 
+			$year 
+		) );
+
+		$total_earning = wp_list_pluck($salesQuery, 'total_earning');
+		$months = wp_list_pluck($salesQuery, 'month_name');
+		$monthWiseSales = array_combine($months, $total_earning);
+
+		$dataFor = 'yearly';
+
+		/**
+		 * Format yearly
+		 */
+		$emptyMonths = array();
+		for ($m=1; $m<=12; $m++) {
+			$emptyMonths[date('F', mktime(0,0,0,$m, 1, date('Y')))] = 0;
+		}
+
+		$chartData = array_merge($emptyMonths, $monthWiseSales);
+		$statements = tutor_utils()->get_earning_statements($user_id, compact('year', 'dataFor', 'statuses'));
+		$earning_sum = tutor_utils()->get_earning_sum($user_id, compact('year', 'dataFor'));
+
+		return [
+			'chartData' => $chartData,
+			'statements' => $statements,
+			'earning_sum' => $earning_sum
+		];
+	}
 }
