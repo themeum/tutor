@@ -276,16 +276,35 @@ class Quiz {
 
 					    if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 
+							if(!is_numeric($answers) || !$answers) {
+								wp_send_json_error();
+								exit;
+							}
+
 						    $given_answer          = $answers;
 						    $is_answer_was_correct = (bool) $wpdb->get_var( $wpdb->prepare( "SELECT is_correct FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = %d ", $answers ) );
 
 					    } elseif ( $question_type === 'multiple_choice' ) {
 
-						    $given_answer         = (array) ( $answers );
-						    $get_original_answers = (array) $wpdb->get_col($wpdb->prepare(
-								"SELECT answer_id 
-								FROM {$wpdb->prefix}tutor_quiz_question_answers 
-								WHERE belongs_question_id = %d AND belongs_question_type = %s AND is_correct = 1 ;", $question->question_id, $question_type));
+							$given_answer = (array) ( $answers );
+							
+							$given_answer = array_filter( $given_answer, function($id) {
+								return is_numeric($id) && $id>0;
+							} );
+
+							$get_original_answers = (array) $wpdb->get_col($wpdb->prepare(
+								"SELECT 
+									answer_id 
+								FROM 
+									{$wpdb->prefix}tutor_quiz_question_answers 
+								WHERE 
+									belongs_question_id = %d 
+									AND belongs_question_type = %s 
+									AND is_correct = 1 ;
+								", 
+								$question->question_id, 
+								$question_type
+							) );
 							
 							
 							if (count(array_diff($get_original_answers, $given_answer)) === 0 && count($get_original_answers) === count($given_answer)) {
