@@ -51,7 +51,6 @@ class Course extends Tutor_Base {
 		 */
 		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'register_meta_box_in_frontend'));
 
-
 		/**
 		 * Do Stuff for the course save from frontend
 		 */
@@ -87,7 +86,6 @@ class Course extends Tutor_Base {
          */
 		add_filter('tutor_course_price', array($this, 'remove_price_if_enrolled'));
 
-
         /**
          * Remove course complete button if course completion is strict mode
          * @since v.1.6.1
@@ -106,11 +104,13 @@ class Course extends Tutor_Base {
          * @since v.1.6.6
          */
 		add_action('deleted_post', array($this, 'delete_tutor_course_data'));
+		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'tutor_course_setting_metabox_frontend'));
 
-		
-		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'tutor_course_setting_metabox_frontend'));		
-	
-	   
+		/**
+         * Delete course data after deleted course
+         * @since v.1.8.2
+         */
+		add_action('before_delete_post', array($this, 'delete_associated_enrollment'));
 	}
 
 	/**
@@ -1253,4 +1253,32 @@ class Course extends Tutor_Base {
 			</div>
 		<?php
 	}
+
+	/**
+	 * Delete associated enrollment
+	 * @since v.1.8.2
+	 */
+	public function delete_associated_enrollment($post_id) {
+        global $wpdb;
+
+        $enroll_id = $wpdb->get_var( $wpdb->prepare(
+			"SELECT 
+				post_id 
+			FROM 
+				{$wpdb->postmeta}
+			WHERE 
+				meta_key='_tutor_enrolled_by_order_id' 
+				AND meta_value = %d
+			", 
+			$post_id
+		) );
+        
+        if(is_numeric($enroll_id) && $enroll_id>0) {
+
+            $course_id = get_post_field('post_parent', $enroll_id);
+            $user_id = get_post_field('post_author', $enroll_id);
+
+            tutils()->cancel_course_enrol($course_id, $user_id);
+        }
+    }
 }
