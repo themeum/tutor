@@ -2407,11 +2407,11 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors($start = 0, $limit = 10, $search_term = '', $status=null){
+	public function get_instructors($start = 0, $limit = 10, $search_term = '', $status=null) {
 		$meta_key = '_is_tutor_instructor';
 		global $wpdb;
 
-		if ($search_term){
+		if ($search_term) {
 			$search_term = " AND ( {$wpdb->users}.display_name LIKE '%{$search_term}%' OR {$wpdb->users}.user_email LIKE '%{$search_term}%' ) ";
 		}
 
@@ -2448,7 +2448,7 @@ class Utils {
 
 		$instructors = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
-				id,
+				ID,
 				display_name,
 				get_course.meta_value AS taught_course_id,
 				tutor_job_title.meta_value AS tutor_profile_job_title,
@@ -2458,20 +2458,20 @@ class Utils {
 				{$wpdb->users} 
 				INNER JOIN
 					{$wpdb->usermeta} get_course 
-					ON id = get_course.user_id 
+					ON ID = get_course.user_id 
 					AND get_course.meta_key = %s 
 					AND get_course.meta_value = %d 
 				LEFT JOIN
 					{$wpdb->usermeta} tutor_job_title 
-					ON id = tutor_job_title.user_id 
+					ON ID = tutor_job_title.user_id 
 					AND tutor_job_title.meta_key = %s 
 				LEFT JOIN
 					{$wpdb->usermeta} tutor_bio 
-					ON id = tutor_bio.user_id 
+					ON ID = tutor_bio.user_id 
 					AND tutor_bio.meta_key = %s 
 				LEFT JOIN
 					{$wpdb->usermeta} tutor_photo 
-					ON id = tutor_photo.user_id 
+					ON ID = tutor_photo.user_id 
 					AND tutor_photo.meta_key = %s
 			",
 			'_tutor_instructor_course_id',
