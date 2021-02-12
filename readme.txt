@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.6
 Requires PHP: 7.0
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,20 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.8.2 - February 12, 2021 =
+
+New: Certificate link added to the course completion email notification
+New: Settings added to enable/disable course enrollment expiration feature
+Update: Zoom meeting input date format updated to dd/mm/yyyy to avoid internal errors
+Update: If enrollment expiration is set to 0, you will see 'lifetime' on the frontend course page
+Update: Security features enhanced in wpdb query & Quiz. Thanks Wordfence!
+Update: Option added to enter decimal value in withdrawal request
+Update: Code optimization in the frontend Earnings report
+Fix: 404 console error due to min.map asset files
+Fix: An active PHP session was detected issue
+Fix: Division by 0 warning in Gradebook
+Fix: Zoom meeting list pagination issue
 
 = 1.8.1 - February 05, 2021 =
 
