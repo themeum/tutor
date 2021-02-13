@@ -52,6 +52,7 @@ final class Tutor{
 
 	//Integrations
 	private $woocommerce;
+	private $studiocart;
 	private $edd;
 
 	/**
@@ -146,6 +147,7 @@ final class Tutor{
 
 		//Integrations
 		$this->woocommerce = new WooCommerce();
+		$this->studiocart = new Studiocart();
 		$this->edd = new TutorEDD();
 
 		/**

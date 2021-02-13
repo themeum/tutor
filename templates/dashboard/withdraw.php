@@ -30,7 +30,10 @@ $status_message = array(
 );
 
 $currency_symbol = '';
-if(function_exists('get_woocommerce_currency_symbol')){
+if(function_exists('sc_get_currency_symbol')){
+    $currency_symbol=sc_get_currency_symbol();
+}
+else if(function_exists('get_woocommerce_currency_symbol')){
     $currency_symbol=get_woocommerce_currency_symbol();
 }
 else if(function_exists('edd_currency_symbol')){

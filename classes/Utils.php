@@ -4573,7 +4573,9 @@ class Utils {
 	 */
 
 	public function tutor_price($price = 0){
-		if (function_exists('wc_price')){
+        if(function_exists('sc_format_price')) {
+            return sc_format_price($price);
+        }elseif (function_exists('wc_price')){
 			return wc_price($price);
 		}elseif (function_exists('edd_currency_filter')){
 			return edd_currency_filter(edd_format_amount($price));

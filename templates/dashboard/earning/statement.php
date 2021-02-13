@@ -40,8 +40,14 @@ if ($statements->count) {
                         </p>
 
                         <?php
-                        $order = new WC_Order($statement->order_id);
-                        echo '<div class="statement-address"> <strong>Purchaser</strong> <address>'.$order->get_formatted_billing_address().'</address></div>';
+                        if ( get_post_type($statement->order_id) == 'sc_order' ) {
+                            $order = sc_setup_order($statement->order_id);
+                            echo '<div class="statement-address"> <strong>Purchaser</strong> <address>'. $order->firstname . ' ' . $order->lastname .
+                            '<br>' . $order->email . '<br>' . $order->phone.'</address></div>';
+                        } else {
+                            $order = new WC_Order($statement->order_id);
+                            echo '<div class="statement-address"> <strong>Purchaser</strong> <address>'.$order->get_formatted_billing_address().'</address></div>';
+                        }
                         ?>
                     </td>
                     <td>
