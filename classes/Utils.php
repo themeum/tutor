@@ -6795,7 +6795,8 @@ class Utils {
 			'statuses'    => $statuses,
 			'begin'       => $begin,
 			'end'         => $end,
-			'earning_sum' => $earning_sum
+			'earning_sum' => $earning_sum,
+			'datesPeriod' => $period
 		);
 	}
 
