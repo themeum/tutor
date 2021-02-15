@@ -21,7 +21,7 @@ $user_id = get_current_user_id();
 $start_date = date("Y-m-01");
 $end_date = date("Y-m-t");
 
-$stats = tutils()->get_earning_chart( $user_id, $start_date, $end_date, $datesPeriod );
+$stats = tutils()->get_earning_chart( $user_id, $start_date, $end_date );
 extract($stats);
 
 if ( ! $earning_sum){
