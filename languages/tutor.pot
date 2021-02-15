@@ -4811,6 +4811,10 @@ msgstr ""
 msgid "Please enroll This course first"
 msgstr ""
 
+#: templates/single/lesson/required-enroll.php:30
+msgid "Course name : %s"
+msgstr ""
+
 #: templates/single/lesson/sidebar_question_and_answer.php:132
 msgid "No questions yet"
 msgstr ""
