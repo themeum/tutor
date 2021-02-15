@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.8.2 - February 12, 2021 =
+= 1.8.2 - February 15, 2021 =
 
 New: Certificate link added to the course completion email notification
 New: Settings added to enable/disable course enrollment expiration feature
