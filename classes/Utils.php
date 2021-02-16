@@ -2933,23 +2933,31 @@ class Utils {
 		$course_id = $this->get_post_id( $course_id );
 		global $wpdb;
 
-		$reviews = $wpdb->get_results($wpdb->prepare("select {$wpdb->comments}.comment_ID, 
-			{$wpdb->comments}.comment_post_ID, 
-			{$wpdb->comments}.comment_author, 
-			{$wpdb->comments}.comment_author_email, 
-			{$wpdb->comments}.comment_date, 
-			{$wpdb->comments}.comment_content, 
-			{$wpdb->comments}.user_id, 
-			{$wpdb->commentmeta}.meta_value as rating,
-			{$wpdb->users}.display_name 
+		$reviews = $wpdb->get_results( $wpdb->prepare(
+			"SELECT {$wpdb->comments}.comment_ID, 
+					{$wpdb->comments}.comment_post_ID, 
+					{$wpdb->comments}.comment_author, 
+					{$wpdb->comments}.comment_author_email, 
+					{$wpdb->comments}.comment_date, 
+					{$wpdb->comments}.comment_content, 
+					{$wpdb->comments}.user_id, 
+					{$wpdb->commentmeta}.meta_value AS rating,
+					{$wpdb->users}.display_name 
 			
-			from {$wpdb->comments}
-			INNER JOIN {$wpdb->commentmeta} 
-			ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
-			LEFT JOIN {$wpdb->users}
-			ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE {$wpdb->comments}.comment_post_ID = %d 
-			AND comment_type = 'tutor_course_rating' AND meta_key = 'tutor_rating' ORDER BY comment_ID DESC LIMIT %d, %d ;", $course_id, $offset, $limit));
+			FROM 	{$wpdb->comments}
+					INNER JOIN {$wpdb->commentmeta} 
+					ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+					LEFT JOIN {$wpdb->users}
+					ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+			WHERE 	{$wpdb->comments}.comment_post_ID = %d 
+					AND comment_type = 'tutor_course_rating' AND meta_key = 'tutor_rating'
+			ORDER BY comment_ID DESC
+			LIMIT 	%d, %d;
+			",
+			$course_id,
+			$offset,
+			$limit
+		) );
 
 		return $reviews;
 	}
