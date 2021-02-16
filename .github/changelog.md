@@ -1,6 +1,11 @@
 # TutorLMS Changelog
 
-### 1.8.2 - February 12, 2021
+### 1.8.3 - February 16, 2021
+
+* Fix: Unexpected trailing comma error in PHP lower version
+
+
+### 1.8.2 - February 15, 2021
 
 * New: Certificate link added to the course completion email notification
 * New: Settings added to enable/disable course enrollment expiration feature
