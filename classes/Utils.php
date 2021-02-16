@@ -1749,7 +1749,7 @@ class Utils {
 			",
 			'_is_tutor_student',
 			$search_term,
-			$search_term,
+			$search_term
 		) );
 
 		return (int) $count;
@@ -2314,7 +2314,7 @@ class Utils {
 					AND post_type = %s;
 			",
 			'publish',
-			'product',
+			'product'
 		) );
 
 		return $query;
@@ -2335,7 +2335,7 @@ class Utils {
 					AND post_type = %s;
 			",
 			'publish',
-			'download',
+			'download'
 		) );
 
 		return $query;
@@ -2714,7 +2714,7 @@ class Utils {
 			$course_id,
 			'_tutor_profile_job_title',
 			'_tutor_profile_bio',
-			'_tutor_profile_photo',
+			'_tutor_profile_photo'
 		) );
 
 		if ( is_array( $instructors ) && count( $instructors ) ) {
@@ -2754,7 +2754,7 @@ class Utils {
 			$course_post_type,
 			'publish',
 			'tutor_enrolled',
-			'completed',
+			'completed'
 
 		) );
 
@@ -2986,7 +2986,7 @@ class Utils {
 			", 
 			$course_id,
 			'tutor_course_rating',
-			'tutor_rating',
+			'tutor_rating'
 		) );
 
 		if ( $rating->rating_count ) {
@@ -3005,7 +3005,7 @@ class Utils {
 				", 
 				$course_id,
 				'tutor_course_rating',
-				'tutor_rating',
+				'tutor_rating'
 			) );
 
 			$ratings = array( 5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0 );
@@ -3139,7 +3139,7 @@ class Utils {
 				'tutor_course_rating',
 				'tutor_rating',
 				$offset,
-				$limit,
+				$limit
 			 ) );
 		}
 
@@ -3377,7 +3377,7 @@ class Utils {
 			'tutor_q_and_a',
 			'tutor_question_title',
 			$offset,
-			$limit,
+			$limit
 		) );
 
 		return $questions;
@@ -3537,7 +3537,7 @@ class Utils {
 			'tutor_q_and_a',
 			$search_term,
 			$start,
-			$limit,
+			$limit
 		) );
 
 		return $query;
@@ -3576,7 +3576,7 @@ class Utils {
 					AND {$wpdb->comments}.comment_ID = %d;
 			",
 			'tutor_q_and_a',
-			$question_id,
+			$question_id
 		) );
 
 		return $query;
@@ -3609,7 +3609,7 @@ class Utils {
 			ORDER BY {$wpdb->comments}.comment_ID ASC;
 			",
 			'tutor_q_and_a',
-			$question_id,
+			$question_id
 		) );
 
 		return $query;
@@ -4411,7 +4411,7 @@ class Utils {
 			$search_term,
 			$search_term,
 			$start,
-			$limit,
+			$limit
 		) );
 
 		return $query;
@@ -5428,7 +5428,7 @@ class Utils {
 			ORDER BY {$wpdb->posts}.id DESC
 			",
 			$post_type,
-			$user_id,
+			$user_id
 		) );
 
 		return $orders;
@@ -5563,7 +5563,7 @@ class Utils {
 			",
 			$assignment_submitted_id,
 			'tutor_assignment',
-			'submitted',
+			'submitted'
 		) );
 
 		return $submitted_info;
@@ -5595,7 +5595,7 @@ class Utils {
 					AND comment_approved = %s;
 			",
 			'tutor_assignment',
-			'submitted',
+			'submitted'
 		) );
 
 		return $results;
