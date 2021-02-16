@@ -1718,7 +1718,7 @@ class Utils {
 			",
 			'_is_tutor_student',
 			$search_term,
-			$search_term,
+			$search_term
 		) );
 
 		return $students;
