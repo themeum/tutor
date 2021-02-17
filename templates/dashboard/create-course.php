@@ -10,11 +10,12 @@ if ( ! defined( 'ABSPATH' ) )
 
 global $post;
 
-get_tutor_header(true);
 do_action('tutor_load_template_before', 'dashboard.create-course', null);
 
 $course_id = get_the_ID();
 $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course') || current_user_can('administrator');
+
+get_tutor_header(true);
 ?>
 
 <?php do_action('tutor/dashboard_course_builder_before'); ?>
