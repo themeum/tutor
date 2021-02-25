@@ -2132,4 +2132,93 @@ jQuery(document).ready(function ($) {
 
     var photo_editor = $('#tutor_profile_cover_photo_editor');
     photo_editor.length>0 ? new PhotoEditor(photo_editor).initialize() : 0;
+
+
+    /**
+     * 
+     * Instructor list filter
+     * 
+     * @since  v.1.8.4
+    */
+    // Get values on course category selection
+    var filter_root = $('.tutor-instructor-filter');
+    var cat_container = filter_root.find('.course-categories');
+    var filter_result = filter_root.find('.tutor-instructor-filter-result');
+    var result_container = filter_root.find('.filter-result-container');
+
+    var filter_args = {}; 
+
+    function run_instructor_filter(name, value, page_number) {
+
+        var html_cache = result_container.html();
+        var attributes = filter_root.data();
+        attributes.current_page = page_number || 1;
+
+        name ? filter_args[name] = value : filter_args = {};
+        filter_args.attributes = attributes;
+        filter_args.action = 'load_filtered_instructor';
+        
+        result_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>');
+
+        $.ajax({
+            url: window._tutorobject.ajaxurl,
+            data: filter_args,
+            type: 'POST',
+            success: function(r) {
+                result_container.html(r);
+            },
+            error: function() {
+                result_container.html(html_cache);
+                tutor_toast('Error', 'Request Error', 'error');
+            }
+        })
+    }
+
+    cat_container.find('input').change(function() {
+        
+        var values = [];
+        cat_container.find('input:checked').each(function() {
+            values.push($(this).val());
+        });
+
+        run_instructor_filter($(this).attr('name'), values)
+    });
+
+    // Get values on search keyword change
+    var search_input_timeout;
+    filter_result.on('input', '[name="keyword"]', function() {
+
+        var val = $(this).val();
+
+        if(search_input_timeout) {
+            window.clearTimeout(search_input_timeout);
+        }
+
+        search_input_timeout = window.setTimeout(function() {
+
+            run_instructor_filter('keyword', val);
+            search_input_timeout = null;
+
+        }, 500);
+    });
+
+    // On pagination click
+    result_container.on('click', '[data-page_number]', function(e) {
+        e.preventDefault();
+        run_instructor_filter( null, null, $(this).data( 'page_number' ) );
+    });
+
+    // Expand/collapse filter on smaller screen.
+    filter_root.find('.expand-filter').click( function() {
+        filter_root.toggleClass('is-filter-expanded');
+    });
+
+    // Clear filter
+    filter_root.find('.clear-filter').click(function() {
+
+        cat_container.find('input').prop('checked', false);
+        filter_result.find('[name="keyword"]').val('');
+        
+        run_instructor_filter();
+    });
 });

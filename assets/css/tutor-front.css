@@ -11359,6 +11359,92 @@ Content Drip (Pro)
   top: 46px;
 }
 
+.tutor-instructor-filter {
+  overflow: auto;
+}
+
+.tutor-instructor-filter > div {
+  float: left;
+  padding: 0 15px;
+}
+
+.tutor-instructor-filter > div:first-child {
+  width: 220px;
+}
+
+.tutor-instructor-filter > div:last-child {
+  padding: 0 15px;
+  width: calc(100% - 250px);
+}
+
+.tutor-instructor-filter .keyword-field {
+  padding: 5px;
+  border: 1px solid #BABABA;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+
+.tutor-instructor-filter .keyword-field i {
+  padding: 0 5px;
+  color: #3E64DE;
+}
+
+.tutor-instructor-filter .keyword-field i, .tutor-instructor-filter .keyword-field input {
+  font-size: 16px;
+}
+
+.tutor-instructor-filter .keyword-field input {
+  border: none;
+  background: transparent;
+  padding: 0;
+  width: calc(100% - 40px);
+}
+
+.tutor-instructor-filter .keyword-field input, .tutor-instructor-filter .keyword-field input:hover, .tutor-instructor-filter .keyword-field input:active {
+  outline: 0;
+}
+
+.tutor-instructor-filter-sidebar .course-filter h3 {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 34px;
+  overflow: auto;
+}
+
+.tutor-instructor-filter-sidebar .course-filter h3 > span:first-child {
+  position: relative;
+  left: -7px;
+  cursor: pointer;
+}
+
+.tutor-instructor-filter-sidebar .course-filter h3 > span:last-child {
+  display: inline-block;
+  float: right;
+  color: #7A7A7A;
+  cursor: pointer;
+}
+
+.tutor-instructor-filter-sidebar .course-filter h3 > span:last-child i {
+  font-size: 10px;
+}
+
+.tutor-instructor-filter-sidebar .course-filter h3 > span:last-child span {
+  font-size: 16px;
+}
+
+@media (max-width: 767px) {
+  .tutor-instructor-filter-sidebar, .tutor-instructor-filter-result {
+    width: 100% !important;
+    float: none !important;
+  }
+  .tutor-instructor-filter:not(.is-filter-expanded) .tutor-instructor-filter-sidebar > div:not(:first-child), .tutor-instructor-filter:not(.is-filter-expanded) .keyword-field {
+    display: none;
+  }
+}
+
 .tutor-toast-parent {
   position: fixed;
   right: 25px;

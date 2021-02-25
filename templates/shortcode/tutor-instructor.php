@@ -42,8 +42,8 @@
         ?>
         <div class="tutor-pagination-wrap">
             <?php 
-                echo $previous_page ? '<a class="page-numbers" href="'.$previous_page.'">« '.__('Previous', 'tutor').'</a>' : '';
-                echo $next_page ? '&nbsp; <a class="next page-numbers" href="'.$next_page.'">'.__('Next', 'tutor').' »</a>' : '';
+                echo $previous_page ? '<a class="page-numbers" href="#" data-page_number="'.$previous_page.'">« '.__('Previous', 'tutor').'</a>' : '';
+                echo $next_page ? '&nbsp; <a class="next page-numbers" href="#" data-page_number="'.$next_page.'">'.__('Next', 'tutor').' »</a>' : '';
             ?> 
         </div>
         <?php
