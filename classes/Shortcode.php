@@ -29,6 +29,8 @@ class Shortcode {
 
 		add_shortcode('tutor_instructor_list', array($this, 'tutor_instructor_list'));
 		add_action('tutor_options_after_instructors', array($this, 'tutor_instructor_layout'));
+		add_action( 'wp_ajax_load_filtered_instructor', array($this, 'load_filtered_instructor') );
+		add_action( 'wp_ajax_nopriv_load_filtered_instructor', array($this, 'load_filtered_instructor') );
 	}
 
 	/**
@@ -154,25 +156,16 @@ class Shortcode {
 		return $output;
 	}
 
-	
-	/**
-	 * @param $atts
-	 *
-	 * @return string
-	 *
-	 * Shortcode for getting instructors
-	 */
-	public function tutor_instructor_list($atts){
-		$limit = isset($atts['count']) ? $atts['count'] : 9;
-		$current_page = (isset($_GET['instructor-page']) && is_numeric($_GET['instructor-page']) && $_GET['instructor-page']>=1) ? $_GET['instructor-page'] : 1;
-		$page = $current_page-1;
-		
-		// Get instructor list to sow
-		$instructors = tutor_utils()->get_instructors($limit*$page, $limit, '', 'approved');
-		$next_instructors = tutor_utils()->get_instructors($limit*$current_page, $limit, '', 'approved');
+	private function prepare_instructor_list($current_page, $atts, $cat_ids = array(), $keyword = '') {
 
-		$previous_page = $page>0 ? '?'.http_build_query(array_merge($_GET, array('instructor-page'=>$current_page-1))) : null;
-		$next_page = (is_array($next_instructors) && count($next_instructors)>0) ? '?'.http_build_query(array_merge($_GET, array('instructor-page'=>$current_page+1))) : null;
+		$limit = isset( $atts['count'] ) ? $atts['count'] : 9;
+		$page = $current_page - 1;
+
+		$instructors = tutor_utils()->get_instructors($limit*$page, $limit, $keyword, 'approved', $cat_ids);
+		$next_instructors = tutor_utils()->get_instructors($limit*$current_page, $limit, $keyword, 'approved', $cat_ids);
+
+		$previous_page = $page>0 ? $current_page-1 : null;
+		$next_page = (is_array($next_instructors) && count($next_instructors)>0) ? $current_page+1 : null;
 		
 		$layout = (isset($atts['layout']) && in_array($atts['layout'], $this->instructor_layout)) ? $atts['layout'] : null;
 		$layout = $layout ? $layout : tutor_utils()->get_option('instructor_list_layout', $this->instructor_layout[0]);
@@ -182,14 +175,72 @@ class Shortcode {
 			'next_page' => $next_page, 
 			'previous_page' => $previous_page,
 			'column_count' => isset($atts['column_per_row']) ? $atts['column_per_row'] : 3,
-			'layout' => $layout
+			'layout' => $layout,
+			'limit' => $limit,
+			'current_page' => $current_page
 		);
+
+		return $payload;
+	}
+	
+	/**
+	 * @param $atts
+	 *
+	 * @return string
+	 *
+	 * Shortcode for getting instructors
+	 */
+	public function tutor_instructor_list($atts) {
+
+		!is_array( $atts ) ? $atts = array() : 0;
+
+		$current_page = ( isset( $_GET['instructor-page'] ) && is_numeric( $_GET['instructor-page'] ) && $_GET['instructor-page'] >= 1 ) ? $_GET['instructor-page'] : 1;
+		$show_filter = isset( $atts['filter'] ) ? $atts['filter']=='on' : tutor_utils()->get_option( 'instructor_list_show_filter', false );
+		
+		// Get instructor list to sow
+		$payload = $this->prepare_instructor_list($current_page, $atts);
 
 		ob_start();
 		tutor_load_template('shortcode.tutor-instructor', $payload);
-		return ob_get_clean();
+		$content = ob_get_clean();
+
+		if($show_filter) {
+			
+			$course_cats = get_terms( array(
+				'taxonomy' => 'course-category',
+				'hide_empty' => true,
+				'childless' => true
+			) );
+
+			$attributes = $payload;
+			unset( $attributes['instructors'] );
+
+			$payload = array( 
+				'content' => $content,
+				'categories' => $course_cats,
+				'attributes' => array_merge( $atts, $attributes )
+			);
+
+			ob_start();
+
+			tutor_load_template('shortcode.instructor-filter',  $payload);
+		
+			$content = ob_get_clean();
+		}
+
+		return $content;
 	}
 
+	public function load_filtered_instructor() {
+		tutor_utils()->checking_nonce();
+
+		$attributes = $_POST['attributes'];
+		$payload = $this->prepare_instructor_list($attributes['current_page'], $attributes, $_POST['category'], $_POST['keyword']);
+
+		tutor_load_template('shortcode.tutor-instructor', $payload);
+
+		exit;
+	}
 	
 	/**
 	 * Show layout selection dashboard in instructor setting

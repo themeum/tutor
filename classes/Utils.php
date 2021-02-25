@@ -2637,10 +2637,12 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors( $start = 0, $limit = 10, $search_term = '', $status = null ) {
+	public function get_instructors( $start = 0, $limit = 10, $search_term = '', $status = null, $cat_ids = array() ) {
 		global $wpdb;
 
 		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+		$category_join = '';
+		$category_where = '';
 
 		if ( $status ) {
 			!is_array( $status ) ? $status = array( $status ) : 0;
@@ -2652,17 +2654,39 @@ class Utils {
 			$status = " AND inst_status.meta_value IN (".implode( ',', $status ).")";
 		}
 
+		$cat_ids = array_filter($cat_ids, function($id) {
+			return is_numeric($id);
+		});
+
+		if(count( $cat_ids )) {
+
+			$category_join =
+			"INNER JOIN {$wpdb->posts} course
+					ON course.post_author = user.ID
+			INNER JOIN {$wpdb->prefix}term_relationships term_rel
+					ON term_rel.object_id = course.ID
+			INNER JOIN {$wpdb->prefix}term_taxonomy taxonomy
+					ON taxonomy.term_taxonomy_id=term_rel.term_taxonomy_id
+			INNER JOIN {$wpdb->prefix}terms term
+					ON term.term_id=taxonomy.term_id";
+
+			$cat_ids = implode(',', $cat_ids);
+			$category_where = " AND term.term_id IN ({$cat_ids})";
+		}
+
 		$instructors = $wpdb->get_results( $wpdb->prepare(
-			"SELECT DISTINCT SQL_CALC_FOUND_ROWS {$wpdb->users}.* 
-			FROM 	{$wpdb->users} 
-					INNER JOIN {$wpdb->usermeta} 
-							ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id ) 
+			"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date
+			FROM 	{$wpdb->users} user
+					INNER JOIN {$wpdb->usermeta} user_meta
+							ON ( user.ID = user_meta.user_id ) 
 					INNER JOIN {$wpdb->usermeta} inst_status 
-							ON ( {$wpdb->users}.ID = inst_status.user_id ) 
-			WHERE 	{$wpdb->usermeta}.meta_key = %s
-					AND ( {$wpdb->users}.display_name LIKE %s OR {$wpdb->users}.user_email LIKE %s )
+							ON ( user.ID = inst_status.user_id ) 
+					{$category_join}
+			WHERE 	user_meta.meta_key = %s
+					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
 					{$status}
-			ORDER BY {$wpdb->usermeta}.meta_value DESC 
+					{$category_where}
+			ORDER BY user_meta.meta_value DESC 
 			LIMIT 	%d, %d;
 			",
 			'_is_tutor_instructor',
@@ -6859,5 +6883,29 @@ class Utils {
 			'statements'  => $statements,
 			'earning_sum' => $earning_sum
 		];
+	}
+
+	/**
+	 * @return object
+	 * 
+	 * @since v1.8.4
+	 *
+	 * Return object from vendor package
+	 */
+	function get_package_object() {
+
+		$params = func_get_args();
+		
+		$is_pro = $params[0];
+		$class = $params[1];
+		$class_args = array_slice( $params, 2 );
+		$root_path = $is_pro ? tutor_pro()->path : tutor()->path;
+
+		require_once $root_path . '/vendor/autoload.php';
+		
+		$reflector = new \ReflectionClass( $class );
+		$object = $reflector->newInstanceArgs( $class_args );
+
+		return $object;
 	}
 }
