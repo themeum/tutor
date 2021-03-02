@@ -2141,84 +2141,143 @@ jQuery(document).ready(function ($) {
      * @since  v.1.8.4
     */
     // Get values on course category selection
-    var filter_root = $('.tutor-instructor-filter');
-    var cat_container = filter_root.find('.course-categories');
-    var filter_result = filter_root.find('.tutor-instructor-filter-result');
-    var result_container = filter_root.find('.filter-result-container');
+    $('.tutor-instructor-filter').each(function() {
 
-    var filter_args = {}; 
+        var root = $(this);
+        var filter_args = {}; 
+        var time_out;
 
-    function run_instructor_filter(name, value, page_number) {
+        function run_instructor_filter(name, value, page_number) {
 
-        var html_cache = result_container.html();
-        var attributes = filter_root.data();
-        attributes.current_page = page_number || 1;
+            // Prepare http payload
+            var result_container = root.find('.filter-result-container');
+            var html_cache = result_container.html();
+            var attributes = root.data();
+            attributes.current_page = page_number || 1;
 
-        name ? filter_args[name] = value : filter_args = {};
-        filter_args.attributes = attributes;
-        filter_args.action = 'load_filtered_instructor';
-        
-        result_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>');
+            name ? filter_args[name] = value : filter_args = {};
+            filter_args.attributes = attributes;
+            filter_args.action = 'load_filtered_instructor';
+            
+            // Show loading icon
+            result_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>');
 
-        $.ajax({
-            url: window._tutorobject.ajaxurl,
-            data: filter_args,
-            type: 'POST',
-            success: function(r) {
-                result_container.html(r);
-            },
-            error: function() {
-                result_container.html(html_cache);
-                tutor_toast('Error', 'Request Error', 'error');
-            }
-        })
-    }
-
-    cat_container.find('input').change(function() {
-        
-        var values = [];
-        cat_container.find('input:checked').each(function() {
-            values.push($(this).val());
-        });
-
-        run_instructor_filter($(this).attr('name'), values)
-    });
-
-    // Get values on search keyword change
-    var search_input_timeout;
-    filter_result.on('input', '[name="keyword"]', function() {
-
-        var val = $(this).val();
-
-        if(search_input_timeout) {
-            window.clearTimeout(search_input_timeout);
+            $.ajax({
+                url: window._tutorobject.ajaxurl,
+                data: filter_args,
+                type: 'POST',
+                success: function(r) {
+                    result_container.html(r);
+                },
+                error: function() {
+                    result_container.html(html_cache);
+                    tutor_toast('Error', 'Request Error', 'error');
+                }
+            })
         }
 
-        search_input_timeout = window.setTimeout(function() {
+        root.on('change', '.course-category-filter [type="checkbox"]', function() {
 
-            run_instructor_filter('keyword', val);
-            search_input_timeout = null;
+            var values = {};
 
-        }, 500);
-    });
+            $(this).closest('.course-category-filter').find('input:checked').each(function() {
+                values[$(this).val()] = $(this).parent().text();
+            });
 
-    // On pagination click
-    result_container.on('click', '[data-page_number]', function(e) {
-        e.preventDefault();
-        run_instructor_filter( null, null, $(this).data( 'page_number' ) );
-    });
+            // Show selected cat list
+            var cat_parent = root.find('.selected-cate-list').empty();
+            var cat_ids = Object.keys(values);
 
-    // Expand/collapse filter on smaller screen.
-    filter_root.find('.expand-filter').click( function() {
-        filter_root.toggleClass('is-filter-expanded');
-    });
+            cat_ids.forEach(function(value) {
+                cat_parent.append('<span>'+values[value]+' <span class="tutor-icon-line-cross" data-cat_id="'+value+'"></span></span>');
+            });
 
-    // Clear filter
-    filter_root.find('.clear-filter').click(function() {
+            cat_ids.length ? cat_parent.append('<span data-cat_id="0">Clear All</span>') : 0;
 
-        cat_container.find('input').prop('checked', false);
-        filter_result.find('[name="keyword"]').val('');
+            run_instructor_filter($(this).attr('name'), cat_ids);
+        })
+        .on('click', '.selected-cate-list [data-cat_id]', function() {
+
+            var id = $(this).data('cat_id');
+            var inputs = root.find('.mobile-filter-popup [type="checkbox"]');
+            id ? inputs = inputs.filter('[value="'+id+'"]') : 0;
+            
+            inputs.prop('checked', false).trigger('change');
+        })
+        .on('input', '.filter-pc [name="keyword"]', function() {
+            // Get values on search keyword change
+            
+            var val = $(this).val();
+
+            time_out ? window.clearTimeout(time_out) : 0;
+
+            time_out = window.setTimeout(function() {
+
+                run_instructor_filter('keyword', val);
+                time_out = null;
+
+            }, 500);
+        })
+        .on('click', '[data-page_number]', function(e) {
+
+            // On pagination click
+            e.preventDefault();
+            
+            run_instructor_filter(null, null, $(this).data( 'page_number' ) );
+
+        }).on('click', '.clear-instructor-filter', function() {
+
+            // Clear filter
+            var root = $(this).closest('.tutor-instructor-filter');
+            
+            root.find('input[type="checkbox"]').prop('checked', false);
+
+            root.find('[name="keyword"]').val('');
+            
+            run_instructor_filter();
+        })
+        .on('click', '.mobile-filter-container i', function () {
+            // Open mobile screen filter
+            $(this).parent().next().addClass('is-opened');
+        })
+        .on('click', '.mobile-filter-popup button', function() {
+            // Close mobile screen filter
+            $(this).closest('.mobile-filter-popup').removeClass('is-opened');
+
+        }).on('input', '.filter-mobile [name="keyword"]', function() {
+
+            // Sync keyword with two screen
+            
+            root.find('.filter-pc [name="keyword"]').val($(this).val()).trigger('input');
+
+        }).on('change', '.mobile-filter-popup [type="checkbox"]', function() {
+
+            // Sync category with two screen
+            var name = $(this).attr('name');
+            var val = $(this).val();
+            var checked = $(this).prop('checked');
+
+            root.find('.course-category-filter [name="'+name+'"]').filter('[value="'+val+'"]').prop('checked', checked).trigger('change');
         
-        run_instructor_filter();
+        }).on('mousedown touchstart', '.expand-instructor-filter', function(e) {
+            
+            var window_height = $(window).height();
+            var el = root.find('.mobile-filter-popup>div');
+            var el_top = window_height-el.height();
+            var plus = ((e.originalEvent.touches || [])[0] || e).clientY - el_top;
+
+            root.on('mousemove touchmove', function(e){
+
+                var y = ((e.originalEvent.touches || [])[0] || e).clientY;
+
+                var height = (window_height-y)+plus;
+                
+                (height>200 && height<=window_height) ? el.css('height', height+'px') : 0;
+            });
+        
+        }).on('mouseup touchend', function(){
+
+            root.off('mousemove touchmove');
+        });
     });
 });
