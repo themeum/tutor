@@ -162,84 +162,203 @@
         }
 
         &:last-child {
-            padding: 0 15px;
-            width: calc(100% - 250px);
-        }
-    }
-
-    .keyword-field {
-
-        padding: 5px;
-        border: 1px solid #BABABA;
-        box-sizing: border-box;
-        border-radius: 6px;
-        margin-bottom: 30px;
-
-        i{
-            padding: 0 5px;
-            color: #3E64DE;
-        }
-
-        i, input {
-            font-size: 16px;
-        }
-
-        input {
-            border: none;
-            background: transparent;
-            padding: 0;
-            width: calc(100% - 40px);
-
-            &, &:hover, &:active{
-                outline: 0;
+            @media(min-width: 768px) {
+                padding: 0 15px;
+                width: calc(100% - 250px);
             }
         }
     }
-}
 
-.tutor-instructor-filter-sidebar {
-    .course-filter {
-        h3 {
-            font-style: normal;
-            font-weight: 500;
-            font-size: 24px;
-            line-height: 34px;
-            overflow: auto;
-
-            &>span:first-child {
-                position: relative;
-                left: -7px;
-                cursor: pointer;
+    .tutor-instructor-filter-result {
+        .keyword-field {
+            padding: 5px;
+            border: 1px solid #BABABA;
+            box-sizing: border-box;
+            border-radius: 6px;
+            margin-bottom: 30px;
+    
+            i{
+                padding: 0 5px;
+                color: #3E64DE;
             }
+    
+            i, input {
+                font-size: 16px;
+            }
+    
+            input {
+                border: none;
+                background: transparent;
+                padding: 0;
+                width: calc(100% - 40px);
+    
+                &, &:hover, &:active{
+                    outline: 0;
+                }
+            }
+        }    
 
-            &>span:last-child {
+        .mobile-filter-container {
 
+            &>div{
+                width: calc(100% - 25px);
                 display: inline-block;
-                float: right;
-                color: #7A7A7A;
-                cursor: pointer;
+            }
 
-                i {
-                    font-size: 10px;
+            &>i{
+                vertical-align: middle;
+                display: inline-block;
+                margin-left: 5px;
+                cursor: pointer;
+            }
+        }
+
+        .mobile-filter-popup {
+
+            z-index: 9999999999;
+
+            &:not(.is-opened) {
+                display: none;
+            }
+
+            @media(min-width: 768px) {
+                .is-opened {
+                    display: none;
+                }
+            }
+
+            &, &>div {
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                right: 0;
+            }
+
+            &>div>div:first-child {
+                bottom: auto;
+                top: 0;
+            }
+            
+            &{
+                top: 0;
+                background: rgba(0, 0, 0, 0.493);
+            }
+
+            &>div {
+                background: white;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                height: 70%;
+                overflow: hidden;
+
+                &>div{
+
+                    &:first-child, &:last-child {
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        padding: 18px;
+                        background: white;
+                    }
+
+                    &:first-child {
+                        bottom: auto;
+                        top: 0;
+                    }
+
+                    &:nth-child(2){
+                        overflow-x: hidden;
+                        overflow-y: auto;
+                        height: 100%;
+                        padding: 72px 18px;
+                    }
+
+                    &:last-child{
+                        text-align: center;
+
+                        button {
+                            width: 100%;
+                            text-align: center;
+                            display: block;
+                        }
+                    }
+                }
+            }
+
+            &+.selected-cate-list>span {
+                display: inline-block;
+                background: #161616;
+                color: white;
+                border-radius: 50px;
+                padding: 2px 12px;
+                font-size: 13px;
+                margin: 0 7px 7px 0;
+
+                &:last-child{
+                    background: transparent;
+                    color: #161616;
+                    cursor: pointer;
                 }
 
-                span {
-                    font-size: 16px;
+                &>span {
+                    font-size: 10px;
+                    margin-left: 5px;
+                    cursor: pointer;
+                }
+            } 
+
+            .expand-instructor-filter {
+                width: 60px;
+                height: 6px;
+                background: #C4C4C4;
+                border-radius: 50px;
+                margin: 0 auto;
+                cursor: ns-resize;
+            }
+        }
+    }
+
+    .tutor-category-text {
+
+        &>span{
+            &:nth-of-type(1){
+                font-style: normal;
+                font-weight: bold;
+                font-size: 16px;
+                text-transform: uppercase;
+                color: #353535;
+            }
+
+            &:nth-of-type(2){
+                cursor: pointer;
+                float: right;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 16px;
+                line-height: 26px;
+                color: #7A7A7A;
+                i{
+                    font-size: 10px;
+                    margin-right: 5px;
                 }
             }
         }
     }
-}
-
-@media (max-width: 767px) {
-    .tutor-instructor-filter-sidebar, .tutor-instructor-filter-result {
-        width: 100% !important;
-        float: none !important;
+    
+    @media (max-width: 767px) {
+        .tutor-instructor-filter-sidebar, .filter-pc {
+            display: none;
+        }
     }
 
-    .tutor-instructor-filter:not(.is-filter-expanded) {
-        .tutor-instructor-filter-sidebar>div:not(:first-child), .keyword-field {
+    @media (min-width: 768px) {
+        .filter-mobile {
             display: none;
+        }
+
+        .tutor-instructor-filter-result {
+            width: 100%;
         }
     }
 }
