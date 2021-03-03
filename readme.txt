@@ -244,7 +244,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 = 1.8.4 - March 04, 2021 =
 
 New: Instructor list filter option in shortcode using attribute filter="on"
-Update: Tutor Pro plugin file size optimized and reduced to 2.3MB
+Update: Tutor Pro plugin file size optimized from 6.2MB to 2.3MB
 Update: Quiz export/import file size limit waived
 Fix: 'Headers already sent' in course editor frontend
 Fix: Course Prerequisite is not limiting access to quizzes and assignments
