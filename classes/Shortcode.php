@@ -234,8 +234,12 @@ class Shortcode {
 	public function load_filtered_instructor() {
 		tutor_utils()->checking_nonce();
 
-		$attributes = $_POST['attributes'];
-		$payload = $this->prepare_instructor_list($attributes['current_page'], $attributes, $_POST['category'], $_POST['keyword']);
+		$attributes = isset( $_POST['attributes'] ) ? $_POST['attributes'] : array();
+		$current_page = isset( $attributes['current_page'] ) ? $attributes['current_page'] : 1;
+		$category = isset( $_POST['category'] ) ? $_POST['category'] : array();
+		$keyword = isset( $_POST['keyword'] ) ? $_POST['keyword'] : '';
+
+		$payload = $this->prepare_instructor_list($current_page, $attributes, $category, $keyword);
 
 		tutor_load_template('shortcode.tutor-instructor', $payload);
 
