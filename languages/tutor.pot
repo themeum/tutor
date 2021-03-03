@@ -3249,8 +3249,8 @@ msgstr ""
 msgid "You currently have %s %s %s ready to withdraw"
 msgstr ""
 
-#: templates/dashboard/withdraw.php:64
-msgid "Make a withdraw"
+#: templates/dashboard/withdraw.php:64, templates/dashboard/withdraw.php:106
+msgid "Withdrawal Request"
 msgstr ""
 
 #: templates/dashboard/withdraw.php:75
@@ -3267,10 +3267,6 @@ msgstr ""
 
 #: templates/dashboard/withdraw.php:95
 msgid "Please check your transaction notification on your connected withdrawal method"
-msgstr ""
-
-#: templates/dashboard/withdraw.php:106
-msgid "Make a Withdrawal"
 msgstr ""
 
 #: templates/dashboard/withdraw.php:107

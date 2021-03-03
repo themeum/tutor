@@ -61,7 +61,7 @@ else if(function_exists('edd_currency_symbol')){
         <div class="make-withdraw">
             <?php
             if ($is_balance_sufficient && $withdraw_method_name) { ?>
-                <a class="open-withdraw-form-btn" href="javascript:;"><?php _e('Make a withdraw', 'tutor'); ?></a> <?php
+                <a class="open-withdraw-form-btn" href="javascript:;"><?php _e('Withdrawal Request', 'tutor'); ?></a> <?php
             }
             ?>
         </div>
@@ -103,7 +103,7 @@ else if(function_exists('edd_currency_symbol')){
                     <div>
                         <i class="tutor-icon-line-cross close-withdraw-form-btn"></i>
                         <img src="<?php echo $image_base; ?>wallet.svg" />
-                        <h3><?php _e('Make a Withdrawal', 'tutor'); ?></h3>
+                        <h3><?php _e('Withdrawal Request', 'tutor'); ?></h3>
                         <p><?php _e('Please enter withdrawal amount and click the submit request button', 'tutor'); ?></p>
                         <table>
                             <tbody>
