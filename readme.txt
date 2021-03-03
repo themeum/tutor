@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.6
 Requires PHP: 7.0
-Stable tag: 1.8.3
+Stable tag: 1.8.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,16 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.8.4 - March 04, 2021 =
+
+New: Instructor list filter option in shortcode using attribute filter="on"
+Update: Tutor Pro plugin file size optimized and reduced to 2.3MB
+Update: Quiz export/import file size limit waived
+Fix: 'Headers already sent' in course editor frontend
+Fix: Course Prerequisite is not limiting access to quizzes and assignments
+Fix: Quiz title not found in attempt review email
+Fix: Guzzlehttp conflict
 
 = 1.8.3 - February 16, 2021 =
 

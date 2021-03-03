@@ -4,7 +4,7 @@ Plugin Name: Tutor LMS
 Plugin URI: https://www.themeum.com/product/tutor-lms/
 Description: Tutor is a complete solution for creating a Learning Management System in WordPress way. It can help you to create small to large scale online education site very conveniently. Power features like report, certificate, course preview, private file sharing make Tutor a robust plugin for any educational institutes.
 Author: Themeum
-Version: 1.8.3
+Version: 1.8.4
 Author URI: https://themeum.com
 Requires at least: 4.5
 Tested up to: 5.3
@@ -17,14 +17,14 @@ if ( ! defined( 'ABSPATH' ) )
 /**
  * Defined the tutor main file
  */
-define('TUTOR_VERSION', '1.8.3');
-define('TUTOR_FILE', __FILE__);
+define( 'TUTOR_VERSION', '1.8.4' );
+define( 'TUTOR_FILE', __FILE__ );
 
 /**
  * Load tutor text domain for translation
  */
 add_action( 'init', 'tutor_language_load' );
-function tutor_language_load(){
+function tutor_language_load() {
 	load_plugin_textdomain( 'tutor', false, basename( dirname( __FILE__ ) ) . '/languages' );
 }
 
@@ -34,7 +34,7 @@ function tutor_language_load(){
  * @since v.1.0.0
  */
 
-if ( ! function_exists('tutor')) {
+if ( ! function_exists('tutor') ) {
 	function tutor() {
 		$path = plugin_dir_path( TUTOR_FILE );
 		$hasPro = defined('TUTOR_PRO_VERSION');
@@ -58,7 +58,7 @@ if ( ! function_exists('tutor')) {
 	}
 }
 
-if ( ! class_exists('Tutor')){
+if ( ! class_exists('Tutor') ) {
 	include_once 'classes/Tutor.php';
 }
 
@@ -69,11 +69,11 @@ if ( ! class_exists('Tutor')){
  *
  */
 
-if ( ! class_exists('\TUTOR\Utils')){
+if ( ! class_exists('\TUTOR\Utils') ) {
 	include_once 'classes/Utils.php';
 }
 
-if ( ! function_exists('tutor_utils')) {
+if ( ! function_exists('tutor_utils') ) {
 	function tutor_utils() {
 		return new \TUTOR\Utils();
 	}
@@ -87,8 +87,8 @@ if ( ! function_exists('tutor_utils')) {
  * @since v.1.3.4
  */
 
-if ( ! function_exists('tutils')){
-	function tutils(){
+if ( ! function_exists('tutils') ) {
+	function tutils() {
 		return tutor_utils();
 	}
 }
@@ -98,8 +98,8 @@ if ( ! function_exists('tutils')){
  * @moved here from Tutor Class
  * @since v.1.5.2
  */
-register_activation_hook( TUTOR_FILE, array('\TUTOR\Tutor', 'tutor_activate'));
-register_deactivation_hook(TUTOR_FILE, array('\TUTOR\Tutor', 'tutor_deactivation'));
+register_activation_hook( TUTOR_FILE, array('\TUTOR\Tutor', 'tutor_activate') );
+register_deactivation_hook( TUTOR_FILE, array('\TUTOR\Tutor', 'tutor_deactivation') );
 
 /**
  * @return null|\TUTOR\Tutor
@@ -107,8 +107,8 @@ register_deactivation_hook(TUTOR_FILE, array('\TUTOR\Tutor', 'tutor_deactivation
  *
  * @since v.1.2.0
  */
-if ( ! function_exists('tutor_lms')){
-	function tutor_lms(){
+if ( ! function_exists('tutor_lms') ) {
+	function tutor_lms() {
 		return \TUTOR\Tutor::instance();
 	}
 }
