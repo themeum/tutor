@@ -2241,6 +2241,9 @@ jQuery(document).ready(function ($) {
             $(this).parent().next().addClass('is-opened');
         })
         .on('click', '.mobile-filter-popup button', function() {
+            
+            $('.mobile-filter-popup [type="checkbox"]').trigger('change');
+            
             // Close mobile screen filter
             $(this).closest('.mobile-filter-popup').removeClass('is-opened');
 
@@ -2250,7 +2253,11 @@ jQuery(document).ready(function ($) {
             
             root.find('.filter-pc [name="keyword"]').val($(this).val()).trigger('input');
 
-        }).on('change', '.mobile-filter-popup [type="checkbox"]', function() {
+        }).on('change', '.mobile-filter-popup [type="checkbox"]', function(e) {
+
+            if(e.originalEvent) {
+                return;
+            }
 
             // Sync category with two screen
             var name = $(this).attr('name');
@@ -2278,6 +2285,11 @@ jQuery(document).ready(function ($) {
         }).on('mouseup touchend', function(){
 
             root.off('mousemove touchmove');
+        })
+        .on('click', '.mobile-filter-popup>div', function(e) {
+            e.stopImmediatePropagation();
+        }).on('click', '.mobile-filter-popup', function(e) {
+            $(this).removeClass('is-opened');;
         });
     });
 });
