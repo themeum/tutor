@@ -243,7 +243,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.8.4 - March 04, 2021 =
 
-New: Sorting order in Zoom meeting list
+New: Ordering option in Zoom meeting list
 New: Instructor list filter option in shortcode using attribute filter="on"
 Update: Tutor Pro plugin file size optimized from 6.2MB to 2.5MB
 Update: Quiz export/import file size limit waived
