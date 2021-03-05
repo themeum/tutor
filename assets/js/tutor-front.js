@@ -1847,7 +1847,7 @@ jQuery(document).ready(function ($) {
     }(jQuery));
     
     // Bind event listener to container element
-    $('.tutor-tooltip-inside').tutor_tooltip();
+    jQuery('.tutor-tooltip-inside').tutor_tooltip();
     
 
     
