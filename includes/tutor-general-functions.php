@@ -244,7 +244,7 @@ if ( ! function_exists('get_tutor_header')){
             <div id="tutor-page-wrap" class="tutor-site-wrap site">
 			<?php
 		}else{
-			get_header();
+			//get_header();
 		}
 
 	}
