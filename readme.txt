@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.8.5 - March 11, 2021 =
+= 1.8.5 - March 12, 2021 =
 
 Update: "Start Meeting" button will be disabled for expired meetings
 Fix: Yoast conflict with Frontend Course Builder
