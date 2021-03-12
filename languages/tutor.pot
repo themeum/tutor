@@ -2785,7 +2785,7 @@ msgstr ""
 msgid "Biography"
 msgstr ""
 
-#: templates/course-filter/filters.php:9, templates/dashboard/create-course.php:155, templates/loop/course-continue.php:19, templates/loop/course-in-cart.php:20, templates/loop/course-price-edd.php:20, templates/loop/course-price-woocommerce.php:19, templates/loop/course-price.php:19, views/metabox/course-add-edd-product-metabox.php:59, views/metabox/course-add-product-metabox.php:66, templates/single/course/wc-price-html.php:23
+#: templates/course-filter/filters.php:9, templates/dashboard/create-course.php:154, templates/loop/course-continue.php:19, templates/loop/course-in-cart.php:20, templates/loop/course-price-edd.php:20, templates/loop/course-price-woocommerce.php:19, templates/loop/course-price.php:19, views/metabox/course-add-edd-product-metabox.php:59, views/metabox/course-add-product-metabox.php:66, templates/single/course/wc-price-html.php:23
 msgid "Free"
 msgstr ""
 
@@ -2861,103 +2861,103 @@ msgstr ""
 msgid "Course: "
 msgstr ""
 
-#: templates/dashboard/create-course.php:37, views/modal/edit_quiz.php:253, views/modal/edit_quiz.php:340
+#: templates/dashboard/create-course.php:36, views/modal/edit_quiz.php:253, views/modal/edit_quiz.php:340
 msgid "Save"
 msgstr ""
 
-#: templates/dashboard/create-course.php:43
+#: templates/dashboard/create-course.php:42
 msgid "Preview"
 msgstr ""
 
-#: templates/dashboard/create-course.php:51, templates/dashboard/create-course.php:210
+#: templates/dashboard/create-course.php:50, templates/dashboard/create-course.php:209
 msgid "Submit for Review"
 msgstr ""
 
-#: templates/dashboard/create-course.php:47, templates/dashboard/create-course.php:208
+#: templates/dashboard/create-course.php:46, templates/dashboard/create-course.php:207
 msgid "Publish Course"
 msgstr ""
 
-#: templates/dashboard/create-course.php:55
+#: templates/dashboard/create-course.php:54
 msgid "Exit"
 msgstr ""
 
-#: templates/dashboard/create-course.php:78
+#: templates/dashboard/create-course.php:77
 msgid "Your course has been submitted to the admin. It will be published once it has been reviewed by the admins."
 msgstr ""
 
-#: templates/dashboard/create-course.php:87, templates/dashboard/my-quiz-attempts.php:27, templates/dashboard/quiz-attempts.php:31, templates/dashboard/earning/statements.php:134, templates/single/quiz/previous-attempts.php:16
+#: templates/dashboard/create-course.php:86, templates/dashboard/my-quiz-attempts.php:27, templates/dashboard/quiz-attempts.php:31, templates/dashboard/earning/statements.php:134, templates/single/quiz/previous-attempts.php:16
 msgid "Course Info"
 msgstr ""
 
-#: templates/dashboard/create-course.php:93
+#: templates/dashboard/create-course.php:92
 msgid "Course Title"
 msgstr ""
 
-#: templates/dashboard/create-course.php:95
+#: templates/dashboard/create-course.php:94
 msgid "ex. Learn photoshop CS6 from scratch"
 msgstr ""
 
-#: templates/dashboard/create-course.php:101, views/modal/question_form.php:113, templates/single/assignment/content.php:134, templates/single/course/course-content.php:26
+#: templates/dashboard/create-course.php:100, views/modal/question_form.php:113, templates/single/assignment/content.php:134, templates/single/course/course-content.php:26
 msgid "Description"
 msgstr ""
 
-#: templates/dashboard/create-course.php:119
+#: templates/dashboard/create-course.php:118
 msgid "Choose a category"
 msgstr ""
 
-#: templates/dashboard/create-course.php:139
+#: templates/dashboard/create-course.php:138
 msgid "Course Price"
 msgstr ""
 
-#: templates/dashboard/create-course.php:148
+#: templates/dashboard/create-course.php:147
 msgid "Set course price"
 msgstr ""
 
-#: templates/dashboard/create-course.php:165
+#: templates/dashboard/create-course.php:164
 msgid "Course Thumbnail"
 msgstr ""
 
-#: templates/dashboard/create-course.php:188
+#: templates/dashboard/create-course.php:187
 msgid "Important Guideline: %1$s 700x430 pixels %2$s %3$s File Support: %1$s jpg, .jpeg,. gif, or .png %2$s no text on the image."
 msgstr ""
 
-#: templates/dashboard/create-course.php:190, views/metabox/video-metabox.php:106, views/modal/question_answer_edit_form.php:214, views/modal/question_answer_edit_form.php:177, views/modal/question_answer_edit_form.php:124, views/modal/question_answer_edit_form.php:34, views/modal/question_answer_form.php:230, views/modal/question_answer_form.php:201, views/modal/question_answer_form.php:157, views/modal/question_answer_form.php:48
+#: templates/dashboard/create-course.php:189, views/metabox/video-metabox.php:106, views/modal/question_answer_edit_form.php:214, views/modal/question_answer_edit_form.php:177, views/modal/question_answer_edit_form.php:124, views/modal/question_answer_edit_form.php:34, views/modal/question_answer_form.php:230, views/modal/question_answer_form.php:201, views/modal/question_answer_form.php:157, views/modal/question_answer_form.php:48
 msgid "Upload Image"
 msgstr ""
 
-#: templates/dashboard/create-course.php:206
+#: templates/dashboard/create-course.php:205
 msgid "Save course as draft"
 msgstr ""
 
-#: templates/dashboard/create-course.php:220
+#: templates/dashboard/create-course.php:219
 msgid "Course Upload Tips"
 msgstr ""
 
-#: templates/dashboard/create-course.php:222
+#: templates/dashboard/create-course.php:221
 msgid "Set the Course Price option or make it free."
 msgstr ""
 
-#: templates/dashboard/create-course.php:223
+#: templates/dashboard/create-course.php:222
 msgid "Standard size for the course thumbnail is 700x430."
 msgstr ""
 
-#: templates/dashboard/create-course.php:224
+#: templates/dashboard/create-course.php:223
 msgid "Video section controls the course overview video."
 msgstr ""
 
-#: templates/dashboard/create-course.php:225
+#: templates/dashboard/create-course.php:224
 msgid "Course Builder is where you create & organize a course."
 msgstr ""
 
-#: templates/dashboard/create-course.php:226
+#: templates/dashboard/create-course.php:225
 msgid "Add Topics in the Course Builder section to create lessons, quizzes, and assignments."
 msgstr ""
 
-#: templates/dashboard/create-course.php:227
+#: templates/dashboard/create-course.php:226
 msgid "Prerequisites refers to the fundamental courses to complete before taking this particular course."
 msgstr ""
 
-#: templates/dashboard/create-course.php:228
+#: templates/dashboard/create-course.php:227
 msgid "Information from the Additional Data section shows up on the course single page."
 msgstr ""
 
