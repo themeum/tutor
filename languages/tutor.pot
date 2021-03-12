@@ -105,7 +105,7 @@ msgstr ""
 msgid "Pro"
 msgstr ""
 
-#: classes/Admin.php:54, classes/Admin.php:54, classes/Admin.php:478, classes/Gutenberg.php:55
+#: classes/Admin.php:54, classes/Admin.php:54, classes/Admin.php:483, classes/Gutenberg.php:55
 msgid "Tutor LMS"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "Add-ons"
 msgstr ""
 
-#: classes/Admin.php:80, classes/Admin.php:80, classes/Admin.php:442, classes/Utils.php:2467, templates/dashboard/settings.php:8, views/modal/add_quiz.php:21, views/modal/edit_quiz.php:31, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings/education.php:7, templates/dashboard/settings/skill.php:8
+#: classes/Admin.php:80, classes/Admin.php:80, classes/Admin.php:447, classes/Utils.php:2467, templates/dashboard/settings.php:8, views/modal/add_quiz.php:21, views/modal/edit_quiz.php:31, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings/education.php:7, templates/dashboard/settings/skill.php:8
 msgid "Settings"
 msgstr ""
 
@@ -169,23 +169,23 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: classes/Admin.php:234, classes/Template.php:343
+#: classes/Admin.php:239, classes/Template.php:343
 msgid "Permission Denied"
 msgstr ""
 
-#: classes/Admin.php:437
+#: classes/Admin.php:442
 msgid "Uninstall"
 msgstr ""
 
-#: classes/Admin.php:451
+#: classes/Admin.php:456
 msgid "<strong style=\"color: #03bd24\">Documentation</strong>"
 msgstr ""
 
-#: classes/Admin.php:455
+#: classes/Admin.php:460
 msgid "<strong style=\"color: #03bd24\">Get Support</strong>"
 msgstr ""
 
-#: classes/Admin.php:477
+#: classes/Admin.php:482
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
