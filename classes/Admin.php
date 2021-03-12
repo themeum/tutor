@@ -188,20 +188,25 @@ class Admin{
 	}
 
 	public function posts_clauses_request($clauses){
+		
+		$user = wp_get_current_user();
+
+		if (in_array( 'administrator', $user->roles ) ) {
+			return $clauses;
+		}
+
 		global $wpdb;
 
 		$user_id = get_current_user_id();
 
 		$get_assigned_courses_ids = $wpdb->get_col($wpdb->prepare("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = %d", $user_id));
+		$own_courses = is_array($get_assigned_courses_ids) ? $get_assigned_courses_ids : array();
+		$in_query_pre = implode(',', $own_courses);
 
-		$custom_author_query = "AND {$wpdb->posts}.post_author = {$user_id}";
-		if (is_array($get_assigned_courses_ids) && count($get_assigned_courses_ids)){
-			$in_query_pre = implode(',', $get_assigned_courses_ids);
-			$custom_author_query = "  AND ( {$wpdb->posts}.post_author = {$user_id} OR {$wpdb->posts}.ID IN({$in_query_pre}) ) ";
-		}
-
+		$custom_author_query = "  AND ({$wpdb->posts}.post_type!='courses' OR {$wpdb->posts}.post_author = {$user_id} OR {$wpdb->posts}.ID IN({$in_query_pre})) ";
+		
 		$clauses['where'] .= $custom_author_query;
-
+		
 		return $clauses;
 	}
 
