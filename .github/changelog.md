@@ -1,5 +1,24 @@
 # TutorLMS Changelog
 
+### 1.8.5 - March 12, 2021
+
+* Update: "Start Meeting" button will be disabled for expired meetings
+* Fix: Editors with Instructor role can now edit all post types except other's courses
+* Fix: Yoast conflict with Frontend Course Builder
+
+
+### 1.8.4 - March 04, 2021
+
+* New: Ordering option in Zoom meeting list
+* New: Instructor list filter option in shortcode using attribute filter="on"
+* Update: Tutor Pro plugin file size optimized from 6.2MB to 2.5MB
+* Update: Quiz export/import file size limit waived
+* Fix: 'Headers already sent' in course editor frontend
+* Fix: Course Prerequisite is not limiting access to quizzes and assignments
+* Fix: Quiz title not found in attempt review email
+* Fix: Guzzlehttp conflict
+
+
 ### 1.8.3 - February 16, 2021
 
 * Fix: Unexpected trailing comma error in PHP lower version
