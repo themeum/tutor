@@ -244,6 +244,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 = 1.8.5 - March 12, 2021 =
 
 Update: "Start Meeting" button will be disabled for expired meetings
+Fix: Editors with Instructor role can now edit all post types except other's courses
 Fix: Yoast conflict with Frontend Course Builder
 
 = 1.8.4 - March 04, 2021 =
