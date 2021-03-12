@@ -180,8 +180,6 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
 
         <?php
 
-        do_action('tutor_lesson/single/before/content');
-
         $jsonData = array();
         $jsonData['post_id'] = get_the_ID();
         $jsonData['best_watch_time'] = 0;
