@@ -350,11 +350,6 @@ class Course extends Tutor_Base {
 			}
 		}
 
-		/**
-		 * @since 1.8.0
-		 */
-		setcookie( "tutor_course_updated", true, time() + 5 );
-
 		do_action( "tutor_save_course_after", $post_ID, $post);
 	}
 

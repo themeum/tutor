@@ -73,7 +73,7 @@ do_action('tutor_load_template_before', 'dashboard.create-course', null);
                                 $instructor_can_publish = tutils()->get_option('instructor_can_publish_course');
                             ?>
                             <?php if(current_user_can('tutor_instructor') && !current_user_can('administrator')):?>
-                                <?php if(isset($_COOKIE['tutor_course_updated']) && !$instructor_can_publish):?>
+                                <?php if(isset($_COOKIE['course_submit_for_review']) && !$instructor_can_publish):?>
                                     <div class="tutor-alert tutor-alert-info">
                                         <?php _e('Your course has been submitted to the admin. It will be published once it has been reviewed by the admins.','tutor');?>
                                     </div>
