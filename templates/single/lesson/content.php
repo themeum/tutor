@@ -13,8 +13,6 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-do_action('tutor_lesson/single/before/content');
-
 $jsonData = array();
 $jsonData['post_id'] = get_the_ID();
 $jsonData['best_watch_time'] = 0;
@@ -25,7 +23,6 @@ if ($best_watch_time > 0){
 	$jsonData['best_watch_time'] = $best_watch_time;
 }
 ?>
-
 
 <?php do_action('tutor_lesson/single/before/content'); ?>
 
