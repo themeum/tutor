@@ -31,7 +31,8 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 		$quiz_attempt_info['date_time_now'] = date("Y-m-d H:i:s", tutor_time());
 
 		$time_limit_seconds = tutor_utils()->avalue_dot('time_limit.time_limit_seconds', $quiz_attempt_info);
-		$question_layout_view = tutor_utils()->avalue_dot('question_layout_view', $quiz_attempt_info);
+		$question_layout_view = tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view');
+		!$question_layout_view ? $question_layout_view = 'single_question' : 0;
 
 		$hide_quiz_time_display = (bool) tutor_utils()->avalue_dot('hide_quiz_time_display', $quiz_attempt_info);
 		$hide_question_number_overview = (bool) tutor_utils()->avalue_dot('hide_question_number_overview', $quiz_attempt_info);
