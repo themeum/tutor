@@ -2765,7 +2765,7 @@ msgstr ""
 msgid "Lesson List"
 msgstr ""
 
-#: templates/single-preview-lesson.php:199, templates/single-quiz.php:35, templates/single/assignment/content.php:31, templates/single/lesson/content.php:37, templates/single/quiz/single_quiz_contents.php:14
+#: templates/single-preview-lesson.php:197, templates/single-quiz.php:35, templates/single/assignment/content.php:31, templates/single/lesson/content.php:37, templates/single/quiz/single_quiz_contents.php:14
 msgid "Go to Course Home"
 msgstr ""
 
