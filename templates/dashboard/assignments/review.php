@@ -90,7 +90,7 @@ if ( $submitted_assignment){
 
     <div class="tutor-dashboard-assignment-review">
         <h3><?php _e('Evaluation', 'tutor'); ?></h3>
-        <form action="" method="post">
+        <form action="" method="post" class="tutor-form-submit-through-ajax" data-toast_success="<?php _e('Success', 'tutor'); ?>" data-toast_success_message="<?php _e('Assignment evaluated', 'tutor'); ?>" data-toast_error="<?php _e('Error', 'tutor'); ?>" data-toast_error_message="<?php _e('Request Error', 'tutor'); ?>">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
             <input type="hidden" value="tutor_evaluate_assignment_submission" name="tutor_action"/>
             <input type="hidden" value="<?php echo $assignment_submitted_id; ?>" name="assignment_submitted_id"/>

@@ -1531,6 +1531,38 @@ jQuery(document).ready(function($){
         $(this).addClass('show');
       });
    //announcement end
+
+
+   /**
+    * @since v.1.8.6
+    * SUbmit form through ajax
+    */
+    $('.tutor-form-submit-through-ajax').submit(function(e) {
+        e.preventDefault();
+
+        var $that = $(this);
+        var url = $(this).attr('action') || window.location.href;
+        var type = $(this).attr('method') || 'GET';
+        var data = $(this).serializeObject();
+
+        $that.find('button').addClass('tutor-updating-message');
+
+        $.ajax({
+            url: url,
+            type: type,
+            data: data,
+            success: function() {
+                tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success');
+            },
+            error: function () {
+                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+            },
+            complete: function () {
+                $that.find('button').removeClass('tutor-updating-message');
+            }
+        });
+    });
+
     /*
     * @since v.1.7.9
     * Send wp nonce to every ajax request
