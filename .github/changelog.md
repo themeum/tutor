@@ -1,5 +1,13 @@
 # TutorLMS Changelog
 
+### 1.8.6 - March 18, 2021 
+
+* New: Search assignments by Student Name.
+* New: Toast message added after evaluating assignments.
+* Fix: Disabling Content Drip email not working.
+* Fix: Announcement email sending limit issue fixed using queue.
+
+
 ### 1.8.5 - March 12, 2021
 
 * Update: "Start Meeting" button will be disabled for expired meetings
