@@ -2158,7 +2158,7 @@ msgstr ""
 msgid "Payment"
 msgstr ""
 
-#: classes/Tutor_Setup.php:560, templates/single/quiz/body.php:408
+#: classes/Tutor_Setup.php:560, templates/single/quiz/body.php:409
 msgid "Finish"
 msgstr ""
 
@@ -2765,7 +2765,7 @@ msgstr ""
 msgid "Lesson List"
 msgstr ""
 
-#: templates/single-preview-lesson.php:197, templates/single-quiz.php:35, templates/single/assignment/content.php:31, templates/single/lesson/content.php:37, templates/single/quiz/single_quiz_contents.php:14
+#: templates/single-preview-lesson.php:197, templates/single-quiz.php:35, templates/single/assignment/content.php:31, templates/single/lesson/content.php:34, templates/single/quiz/single_quiz_contents.php:14
 msgid "Go to Course Home"
 msgstr ""
 
@@ -3703,7 +3703,7 @@ msgstr ""
 msgid "Update Feature Image"
 msgstr ""
 
-#: views/modal/edit-lesson.php:75, views/modal/edit_quiz.php:253, views/modal/edit_quiz.php:340, views/options/options_generator.php:5, views/pages/view_attempt.php:365
+#: views/modal/edit-lesson.php:75, views/modal/edit_quiz.php:253, views/modal/edit_quiz.php:340, views/options/options_generator.php:5, views/pages/view_attempt.php:365, templates/dashboard/assignments/review.php:93
 msgid "Error"
 msgstr ""
 
@@ -3711,7 +3711,7 @@ msgstr ""
 msgid "Action Failed"
 msgstr ""
 
-#: views/modal/edit-lesson.php:75, views/modal/edit_quiz.php:253, views/modal/edit_quiz.php:340, views/options/options_generator.php:5, views/pages/view_attempt.php:365
+#: views/modal/edit-lesson.php:75, views/modal/edit_quiz.php:253, views/modal/edit_quiz.php:340, views/options/options_generator.php:5, views/pages/view_attempt.php:365, templates/dashboard/assignments/review.php:93
 msgid "Success"
 msgstr ""
 
@@ -4217,6 +4217,14 @@ msgstr ""
 
 #: templates/dashboard/assignments/review.php:92
 msgid "Evaluation"
+msgstr ""
+
+#: templates/dashboard/assignments/review.php:93
+msgid "Assignment evaluated"
+msgstr ""
+
+#: templates/dashboard/assignments/review.php:93
+msgid "Request Error"
 msgstr ""
 
 #: templates/dashboard/assignments/review.php:99
@@ -4851,23 +4859,23 @@ msgstr ""
 msgid "Submit My Question"
 msgstr ""
 
-#: templates/single/quiz/body.php:427
+#: templates/single/quiz/body.php:428
 msgid "Start Quiz"
 msgstr ""
 
-#: templates/single/quiz/body.php:122
+#: templates/single/quiz/body.php:123
 msgid "Marks : "
 msgstr ""
 
-#: templates/single/quiz/body.php:306, templates/single/quiz/body.php:315
+#: templates/single/quiz/body.php:307, templates/single/quiz/body.php:316
 msgid "characters remaining"
 msgstr ""
 
-#: templates/single/quiz/body.php:371, templates/single/quiz/body.php:388
+#: templates/single/quiz/body.php:372, templates/single/quiz/body.php:389
 msgid "Submit Quiz"
 msgstr ""
 
-#: templates/single/quiz/body.php:362
+#: templates/single/quiz/body.php:363
 msgid "Answer &amp; Next Question"
 msgstr ""
 

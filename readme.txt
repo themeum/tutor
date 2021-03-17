@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.7
 Requires PHP: 7.0
-Stable tag: 1.8.5
+Stable tag: 1.8.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,13 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.8.6 - March 18, 2021 =
+
+New: Search assignments by Student Name.
+New: Toast message added after evaluating assignments.
+Fix: Disabling Content Drip email not working.
+Fix: Announcement email sending limit issue fixed using queue.
 
 = 1.8.5 - March 12, 2021 =
 
