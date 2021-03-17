@@ -19,6 +19,8 @@ class Upgrader {
 		 *
 		 */
 		add_action('tutor_addon_before_enable_tutor-pro/addons/gradebook/gradebook.php', array($this, 'install_gradebook'));
+		add_action('tutor_addon_before_enable_tutor-pro/addons/tutor-email/tutor-email.php', array($this, 'install_tutor_email_queue'));
+		add_action('upgrader_process_complete', array($this, 'init_email_table_deployment'), 10, 2);
 	}
 
 	public function init_upgrader(){
@@ -118,4 +120,36 @@ class Upgrader {
 
 	}
 
+	public function init_email_table_deployment($upgrader_object, $options ) {
+
+		$addonConfig = tutor_utils()->get_addon_config('tutor-pro/addons/tutor-email/tutor-email.php');
+		$isEnable = (bool) tutor_utils()->avalue_dot('is_enable', $addonConfig);
+
+		$isEnable ? $this->install_tutor_email_queue() : 0;
+	}
+
+	/**
+	 * Installing email addon if Tutor Pro exists
+	 *
+	 * @since v.1.8.6
+	 */
+	public function install_tutor_email_queue() {
+
+		global $wpdb;
+
+		$charset_collate = $wpdb->get_charset_collate();
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+		$table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_email_queue (
+			`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			`mail_to` varchar(255) NOT NULL,
+			`subject` text NOT NULL,
+			`message` text NOT NULL,
+			`headers` text NOT NULL,
+			PRIMARY KEY (`id`)
+       	) $charset_collate;";
+	
+		dbDelta( $table );
+	}
 }
