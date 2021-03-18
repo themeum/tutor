@@ -142,13 +142,13 @@ class Upgrader {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_email_queue (
-			`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-			`mail_to` varchar(255) NOT NULL,
-			`subject` text NOT NULL,
-			`message` text NOT NULL,
-			`headers` text NOT NULL,
-			PRIMARY KEY (`id`)
-       	) $charset_collate;";
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			mail_to varchar(255) NOT NULL,
+			subject text NOT NULL,
+			message text NOT NULL,
+			headers text NOT NULL,
+			PRIMARY KEY (id)
+       	) {$charset_collate};";
 	
 		dbDelta( $table );
 	}
