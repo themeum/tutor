@@ -122,10 +122,12 @@ class Upgrader {
 
 	public function init_email_table_deployment($upgrader_object, $options ) {
 
-		$addonConfig = tutor_utils()->get_addon_config('tutor-pro/addons/tutor-email/tutor-email.php');
-		$isEnable = (bool) tutor_utils()->avalue_dot('is_enable', $addonConfig);
+		if( is_object( $upgrader_object ) && is_array($upgrader_object->result) && isset($upgrader_object->result['destination_name']) && $upgrader_object->result['destination_name']=='tutor-pro' ) {
+			$addonConfig = tutor_utils()->get_addon_config('tutor-pro/addons/tutor-email/tutor-email.php');
+			$isEnable = (bool) tutor_utils()->avalue_dot('is_enable', $addonConfig);
 
-		$isEnable ? $this->install_tutor_email_queue() : 0;
+			$isEnable ? $this->install_tutor_email_queue() : 0;
+		}
 	}
 
 	/**
