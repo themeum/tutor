@@ -590,7 +590,6 @@ jQuery(document).ready(function($){
         frame.on( 'select', function() {
             // Get media attachment details from the frame state
             var attachment = frame.state().get('selection').first().toJSON();
-            console.log(attachment);
             $that.closest('.tutor-video-poster-wrap').find('.video-poster-img').html('<img src="'+attachment.sizes.thumbnail.url+'" alt="" />');
             $that.closest('.tutor-video-poster-wrap').find('input').val(attachment.id);
         });
