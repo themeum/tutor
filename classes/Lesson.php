@@ -327,8 +327,16 @@ class Lesson extends Tutor_Base {
 
 		// Course must be public or current user must be enrolled to access this lesson
 		if(get_post_meta($course_id, '_tutor_is_public_course', true)!=='yes' && !tutils()->is_enrolled($course_id)){
-			http_response_code(400);
-			exit;
+			
+			$user = wp_get_current_user();
+			$is_admin = in_array('administrator', $user->roles);
+
+			$allowed = $is_admin ? true : tutor_utils()->is_instructor_of_this_course(get_current_user_id(), $course_id);
+
+			if( !$allowed ) {
+				http_response_code(400);
+				exit;
+			}
 		}
 
 		ob_start();
