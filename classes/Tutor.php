@@ -87,6 +87,7 @@ final class Tutor{
 		$wpdb->tutor_quiz_questions = $wpdb->prefix.'tutor_quiz_questions';
 		$wpdb->tutor_quiz_question_answers = $wpdb->prefix.'tutor_quiz_question_answers';
 		$wpdb->tutor_withdraws = $wpdb->prefix.'tutor_withdraws';
+		$wpdb->tutor_email_queue = $wpdb->prefix.'tutor_email_queue';
 
 		/**
 		 * Changing default wp doing ajax return based on tutor ajax action

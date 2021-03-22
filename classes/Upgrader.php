@@ -138,20 +138,22 @@ class Upgrader {
 	public function install_tutor_email_queue() {
 
 		global $wpdb;
-
+		$exists_email_queue_table = $wpdb->query("SHOW TABLES LIKE '{$wpdb->tutor_email_queue}';");
 		$charset_collate = $wpdb->get_charset_collate();
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-		$table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_email_queue (
-			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-			mail_to varchar(255) NOT NULL,
-			subject text NOT NULL,
-			message text NOT NULL,
-			headers text NOT NULL,
-			PRIMARY KEY (id)
-       	) {$charset_collate};";
-	
-		dbDelta( $table );
+		if ( ! $exists_gradebook_table ) {
+			$table = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_email_queue} (
+				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+				mail_to varchar(255) NOT NULL,
+				subject text NOT NULL,
+				message text NOT NULL,
+				headers text NOT NULL,
+				PRIMARY KEY (id)
+			) {$charset_collate};";
+		
+			dbDelta( $table );
+		}
 	}
 }

@@ -13,7 +13,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: tutor.php:52, classes/Tutor.php:425
+#: tutor.php:52, classes/Tutor.php:426
 msgid "Tutor Instructor"
 msgstr ""
 
@@ -1902,15 +1902,15 @@ msgstr ""
 msgid "Setup Wizard"
 msgstr ""
 
-#: classes/Tutor.php:520, classes/Utils.php:2438, templates/dashboard/dashboard.php:9
+#: classes/Tutor.php:521, classes/Utils.php:2438, templates/dashboard/dashboard.php:9
 msgid "Dashboard"
 msgstr ""
 
-#: classes/Tutor.php:529
+#: classes/Tutor.php:530
 msgid "Student Registration"
 msgstr ""
 
-#: classes/Tutor.php:538
+#: classes/Tutor.php:539
 msgid "Instructor Registration"
 msgstr ""
 
