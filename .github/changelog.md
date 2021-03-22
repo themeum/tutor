@@ -4,10 +4,10 @@
 
 * New: Search assignments by Student Name
 * New: Toast message added after evaluating assignments
-* Fix: Disabling Content Drip email not working
-* Fix: Announcement email sending limit issue fixed using queue
-* Fix: Import quizzes not working for Windows users due to file type error
+* New: Updated process for sending Announcement and Content Drip emails
 * Fix: Instructors profile photos were not saving in the WordPress admin panel
+* Fix: Import quizzes not working for Windows users due to file type error
+* Fix: Disabling Content Drip email not working
 
 
 ### 1.8.5 - March 12, 2021
