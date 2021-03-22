@@ -107,6 +107,10 @@ class User {
 	}
 
 	public function profile_update($user_id){
+		if (tutils()->array_get('tutor_action', $_POST) === 'tutor_profile_edit' ){
+			return;
+		}
+
 		$_tutor_profile_job_title = sanitize_text_field(tutor_utils()->avalue_dot('_tutor_profile_job_title', $_POST));
 		$_tutor_profile_bio = wp_kses_post(tutor_utils()->avalue_dot('_tutor_profile_bio', $_POST));
 		$_tutor_profile_image = wp_kses_post(tutor_utils()->avalue_dot('_tutor_profile_photo', $_POST));
