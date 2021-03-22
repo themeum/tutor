@@ -143,7 +143,7 @@ class Upgrader {
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-		if ( ! $exists_gradebook_table ) {
+		if ( ! $exists_email_queue_table ) {
 			$table = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_email_queue} (
 				id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 				mail_to varchar(255) NOT NULL,
