@@ -241,12 +241,13 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.8.6 - March 18, 2021 =
+= 1.8.6 - March 20, 2021 =
 
 New: Search assignments by Student Name.
 New: Toast message added after evaluating assignments.
 Fix: Disabling Content Drip email not working.
 Fix: Announcement email sending limit issue fixed using queue.
+Fix: File type error while uploading quizzes using import feature
 
 = 1.8.5 - March 12, 2021 =
 
