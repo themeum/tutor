@@ -104,6 +104,9 @@ class Ajax{
 		$course_id = sanitize_text_field(tutor_utils()->avalue_dot('course_id', $_POST));
 		$review = wp_kses_post(tutor_utils()->avalue_dot('review', $_POST));
 
+		!$rating ? $rating = 0 : 0;
+		$rating>5 ? $rating = 5 : 0;
+
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
 		$date = date("Y-m-d H:i:s", tutor_time());
@@ -148,7 +151,7 @@ class Ajax{
 			$comment_id = (int) $wpdb->insert_id;
 			$review_ID = $comment_id;
 
-			if ($comment_id && $rating){
+			if ($comment_id){
 				$result = $wpdb->insert( $wpdb->commentmeta, array(
 					'comment_id' => $comment_id,
 					'meta_key' => 'tutor_rating',
@@ -230,7 +233,7 @@ class Ajax{
 		$user = get_userdata($user_id);
 		$date = date("Y-m-d H:i:s", tutor_time());
 
-		if(!tutils()->has_enrolled_content_access('question', $question_id)) {
+		if(!tutils()->has_enrolled_content_access('qa_question', $question_id)) {
 			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
 			exit;
 		}

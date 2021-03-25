@@ -123,7 +123,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 								echo '<p class="question-marks"> '.__('Marks : ', 'tutor').$question->question_mark.' </p>';
 							}
 
-							$question_description = stripslashes($question->question_description);
+							$question_description = nl2br( stripslashes($question->question_description) );
 							if ($question_description){
 							    echo "<p class='question-description'>{$question_description}</p>";
                             }

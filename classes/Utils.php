@@ -6665,6 +6665,7 @@ class Utils {
 				) );
 				break;
 			case 'review' :
+			case 'qa_question' : 
 				$course_id = $wpdb->get_var( $wpdb->prepare(
 					"SELECT comment_post_ID
 					FROM 	{$wpdb->comments}
