@@ -1,5 +1,15 @@
 # TutorLMS Changelog
 
+### 1.8.7 - March 29, 2021 
+
+* Updated: Improved Queuing system for Tutor LMS announcement and content drip email
+* Fix: Users were not able to answer to a Q&A
+* Fix: Custom player didn’t work for Vimeo
+* Fix: The user-submitted reviews for the first time didn’t show up
+* Fix: Line break in Quiz description not working
+* Fix: An instructor couldn’t see his/her own courses if the preview was disabled
+
+
 ### 1.8.6 - March 22, 2021 
 
 * New: Search assignments by Student Name
