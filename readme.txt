@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.7
 Requires PHP: 7.0
-Stable tag: 1.8.6
+Stable tag: 1.8.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,15 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.8.7 - March 29, 2021 =
+
+Updated: Improved Queuing system for Tutor LMS announcement and content drip email
+Fix: Users were not able to answer to a Q&A
+Fix: Custom player didn’t work for Vimeo
+Fix: The user-submitted reviews for the first time didn’t show up
+Fix: Line break in Quiz description not working
+Fix: An instructor couldn’t see his/her own courses if the preview was disabled
 
 = 1.8.6 - March 22, 2021 =
 
