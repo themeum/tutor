@@ -487,7 +487,7 @@ jQuery(document).ready(function ($) {
                     $wrap.html(data.data.html);
                     videoPlayer.init();
                     $('.tutor-lesson-sidebar').css('display', '');
-                    window.dispatchEvent(new window.Event('tutor_ajax_lesson_loaded'));
+                    window.dispatchEvent(new window.Event('tutor_ajax_lesson_loaded')); // Some plugins like h5p needs notification on ajax load
                 },
                 complete: function () {
                     $wrap.removeClass('loading-lesson');
