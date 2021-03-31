@@ -487,6 +487,7 @@ jQuery(document).ready(function ($) {
                     $wrap.html(data.data.html);
                     videoPlayer.init();
                     $('.tutor-lesson-sidebar').css('display', '');
+                    window.dispatchEvent(new window.Event('tutor_ajax_lesson_loaded'));
                 },
                 complete: function () {
                     $wrap.removeClass('loading-lesson');
