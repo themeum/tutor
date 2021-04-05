@@ -2,7 +2,7 @@
 
 ### 1.8.8 - April 05, 2021 
 
-Fix: Patched Local File Inclusion vulnerability (Props to WPScan)
+* Fix: Patched Local File Inclusion vulnerability (Props to WPScan)
 
 ### 1.8.7 - April 01, 2021 
 
