@@ -1,5 +1,9 @@
 # TutorLMS Changelog
 
+### 1.8.8 - April 05, 2021 
+
+* Fix: Patched Local File Inclusion vulnerability
+
 ### 1.8.7 - April 01, 2021 
 
 * Update: Improved Queuing system for Tutor LMS announcement and content drip email

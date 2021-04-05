@@ -145,6 +145,11 @@ class Admin{
 				$current_page = $requested_page;
 			}
 
+			$current_page = str_replace('/', '', $current_page);
+			$current_page = str_replace('.', '', $current_page);
+			$current_page = str_replace('\\', '', $current_page);
+			$current_page = trim($current_page);
+
 			include tutor()->path.'views/pages/tools.php';
 		}
 	}
