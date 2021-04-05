@@ -243,7 +243,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.8.8 - April 05, 2021 =
 
-Fix: Patched Local File Inclusion vulnerability
+Fix: Patched Local File Inclusion vulnerability (Props to WPScan)
 
 = 1.8.7 - April 01, 2021 =
 
