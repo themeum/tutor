@@ -191,6 +191,7 @@ class Post_types{
 			'hierarchical'       => false,
 			'menu_position'      => null,
 			'supports'           => array( 'title', 'editor'),
+			'exclude_from_search' => true,
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_lesson',
 				'read_post'          => 'read_tutor_lesson',
