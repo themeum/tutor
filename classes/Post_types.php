@@ -241,6 +241,7 @@ class Post_types{
 			'hierarchical'       => false,
 			'menu_position'      => null,
 			'supports'           => array( 'title', 'editor'),
+			'exclude_from_search' => true,
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_quiz',
 				'read_post'          => 'read_tutor_quiz',
@@ -305,6 +306,7 @@ class Post_types{
 			'hierarchical'       => false,
 			'menu_position'      => null,
 			'supports'           => array( 'title', 'editor'),
+			'exclude_from_search' => true,
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_assignment',
 				'read_post'          => 'read_tutor_assignment',
