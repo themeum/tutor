@@ -2,6 +2,7 @@
 
 ### 1.8.9 - April 13, 2021
 
+* Update: Improved license key submission form
 * Fix: Instructor can see all other users' files in WP media manager.
 * Fix: Broken link of password reset page
 
