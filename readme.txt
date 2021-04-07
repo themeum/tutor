@@ -243,6 +243,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.8.9 - April 13, 2021 =
 
+Update: Improved license key submission form
 Fix: Instructor can see all other users' files in WP media manager.
 Fix: Broken link of password reset page
 
