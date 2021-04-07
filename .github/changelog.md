@@ -1,5 +1,10 @@
 # TutorLMS Changelog
 
+### 1.8.9 - April 13, 2021
+
+* Fix: Instructor can see all other users' files in WP media manager.
+* Fix: Broken link of password reset page
+
 ### 1.8.8 - April 05, 2021 
 
 * Fix: Patched Local File Inclusion vulnerability (Props to WPScan)

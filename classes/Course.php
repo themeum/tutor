@@ -111,6 +111,22 @@ class Course extends Tutor_Base {
          * @since v.1.8.2
          */
 		add_action('before_delete_post', array($this, 'delete_associated_enrollment'));
+
+		/**
+		 * Show only own uploads in media library if user is instructor
+		 */
+		add_filter('posts_where', array($this, 'restrict_media' ) );
+	}
+
+	function restrict_media( $where ){
+		
+		if( isset( $_POST['action'] ) && $_POST['action'] == 'query-attachments' && tutor_utils()->is_instructor()){
+			if(!tutor_utils()->has_user_role(array('administrator', 'editor'))) {
+				$where .= ' AND post_author=' . get_current_user_id();
+			}
+		}
+	
+		return $where;
 	}
 
 	/**
