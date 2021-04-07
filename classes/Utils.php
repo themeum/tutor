@@ -6909,4 +6909,24 @@ class Utils {
 
 		return $object;
 	}
+
+	/**
+	 * @return boolean
+	 * 
+	 * @since v1.8.9
+	 * 
+	 * Check if user has specific role
+	 */
+	public function has_user_role($roles, $user_id = 0) {
+		
+		!$user_id ? $user_id = get_current_user_id() : 0;
+		!is_array($roles) ? $roles = array($roles) : 0;
+		
+		$user = get_userdata($user_id);
+		$role_list = is_array($user->roles) ? $user->roles : array();
+
+		$without_roles = array_diff($roles, $role_list);
+
+		return count($roles) > count($without_roles);
+	}
 }

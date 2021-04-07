@@ -194,12 +194,11 @@ class Admin{
 
 	public function posts_clauses_request($clauses){
 		
-		$user = wp_get_current_user();
-
-		if (in_array( 'administrator', $user->roles ) ) {
+		if(tutor_utils()->has_user_role(array('administrator', 'editor'))) {
 			return $clauses;
 		}
 
+		// Need multi instructor check
 		global $wpdb;
 
 		$user_id = get_current_user_id();
