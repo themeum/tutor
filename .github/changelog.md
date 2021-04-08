@@ -2,9 +2,11 @@
 
 ### 1.8.9 - April 13, 2021
 
+* New: Enable/disable quiz attempt details view from student profile
 * Update: Improved license key submission form
 * Fix: Instructor can see all other users' files in WP media manager.
 * Fix: Broken link of password reset page
+* Fix: WooCommerce notices not showing inside single course.
 
 ### 1.8.8 - April 05, 2021 
 

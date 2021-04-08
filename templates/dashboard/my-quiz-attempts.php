@@ -12,6 +12,13 @@
  * @version 1.6.4
  */
 
+
+if(isset($_GET['view_quiz_attempt_id']) && get_tutor_option('tutor_quiz_student_attempt_view_in_profile')) {
+    $_GET['attempt_id'] = $_GET['view_quiz_attempt_id'];
+    echo tutor_get_template_html('dashboard.my-quiz-attempts.attempts-details');
+    return;
+}
+
 $previous_attempts = tutor_utils()->get_all_quiz_attempts_by_user();
 $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 ?>
@@ -29,7 +36,6 @@ if ($attempted_count){
                 <th><?php _e('Incorrect Answer', 'tutor'); ?></th>
                 <th><?php _e('Earned Marks', 'tutor'); ?></th>
                 <th><?php _e('Result', 'tutor'); ?></th>
-                <th></th>
                 <?php do_action('tutor_quiz/my_attempts/table/thead/col'); ?>
             </tr>
             <?php
@@ -84,8 +90,7 @@ if ($attempted_count){
                             }
                         ?>
                     </td>
-                    <td><a href="<?php echo $attempt_action; ?>"><?php _e('Details', 'tutor'); ?></a></td>
-                    <?php do_action('tutor_quiz/my_attempts/table/tbody/col'); ?>
+                    <?php do_action('tutor_quiz/my_attempts/table/tbody/col', $attempt); ?>
                 </tr>
                 <?php
             }

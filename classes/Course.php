@@ -114,8 +114,15 @@ class Course extends Tutor_Base {
 
 		/**
 		 * Show only own uploads in media library if user is instructor
+		 * @since v1.8.9
 		 */
 		add_filter('posts_where', array($this, 'restrict_media' ) );
+
+		/**
+		 * Follow course status for course contents like lesson, assignment etc.
+		 * @since v1.8.9
+		 */
+		// add_filter('save_post_' . tutor()->course_post_type, array($this, 'follow_parent_status_recursively'), 10, 1 );
 	}
 
 	function restrict_media( $where ){
@@ -127,6 +134,25 @@ class Course extends Tutor_Base {
 		}
 	
 		return $where;
+	}
+
+	public function follow_parent_status_recursively($post_id, $new_status=null) {
+		
+		global $wpdb;
+
+		!$new_status ? $new_status = get_post_field('post_status', $post_id) : 0;
+		$children_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent=%d", $post_id ) );
+
+		if(!is_array($children_ids) || !count($children_ids)) {
+			// End of recursion level
+			return;
+		}
+
+		$wpdb->query($wpdb->prepare( "UPDATE {$wpdb->posts} SET post_status = %s WHERE ID IN (" . implode($children_ids) . ")", $new_status));
+	
+		foreach($children_ids as $id) {
+			$this->follow_parent_status_recursively($id, $new_status);
+		}
 	}
 
 	/**
