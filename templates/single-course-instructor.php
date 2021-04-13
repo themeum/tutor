@@ -13,7 +13,6 @@
 
 get_header();
 
-do_action('woocommerce_before_single_product');
 do_action('tutor_course/single/instructor/before/wrap');
 ?>
 
