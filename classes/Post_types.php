@@ -191,7 +191,7 @@ class Post_types{
 			'hierarchical'       => false,
 			'menu_position'      => null,
 			'supports'           => array( 'title', 'editor'),
-			'exclude_from_search' => true,
+			'exclude_from_search' => apply_filters('tutor_lesson_exclude_from_search', true),
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_lesson',
 				'read_post'          => 'read_tutor_lesson',
@@ -241,7 +241,7 @@ class Post_types{
 			'hierarchical'       => false,
 			'menu_position'      => null,
 			'supports'           => array( 'title', 'editor'),
-			'exclude_from_search' => true,
+			'exclude_from_search' => apply_filters('tutor_quiz_exclude_from_search', true),
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_quiz',
 				'read_post'          => 'read_tutor_quiz',
@@ -306,7 +306,7 @@ class Post_types{
 			'hierarchical'       => false,
 			'menu_position'      => null,
 			'supports'           => array( 'title', 'editor'),
-			'exclude_from_search' => true,
+			'exclude_from_search' => apply_filters('tutor_assignment_exclude_from_search', true),
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_assignment',
 				'read_post'          => 'read_tutor_assignment',
