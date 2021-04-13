@@ -7,7 +7,6 @@
 * Update: Lessons, quizzes, and assignments removed from WordPress search
 * Fix: Instructor can see all other users' files in WP Media Manager
 * Fix: Broken link of the password reset page
-* Fix: WooCommerce notices not showing inside single course pages
 * Fix: Undefined variable notice in Zoom add-on
 
 ### 1.8.8 - April 05, 2021 
