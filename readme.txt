@@ -250,6 +250,7 @@ Fix: Instructor can see all other users' files in WP Media Manager
 Fix: Broken link of the password reset page
 Fix: Undefined variable notice in Zoom add-on
 Fix: HTML5 videos not playing in lessons
+Fix: 'Edit with frontend course builder' button visible for regular users
 
 = 1.8.8 - April 05, 2021 =
 
