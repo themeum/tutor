@@ -22,7 +22,7 @@ do_action('tutor_lesson/single/before/video/html5');
 ?>
 	<div class="tutor-single-lesson-segment tutor-lesson-video-wrap">
 		<video poster="<?php echo $poster_url; ?>" id="tutorPlayer" playsinline controls >
-			<source src="<?php echo tutor_utils()->get_video_stream_url(); ?>" type="<?php echo tutor_utils()->avalue_dot('type', $video_info); ?>">
+			<source src="<?php echo wp_get_attachment_url($video_info->source_video_id); ?>" type="<?php echo tutor_utils()->avalue_dot('type', $video_info); ?>">
 		</video>
 	</div>
 <?php
