@@ -874,7 +874,7 @@ class Utils {
 			$topic_ID
 		) );
 
-		return $last_order + 1;
+		return is_numeric( $last_order ) ? $last_order+1 : 0;
 	}
 
 	/**
@@ -941,8 +941,9 @@ class Utils {
 	 */
 	public function checking_nonce( $request_method = 'post' ) {
 
-		$data    = $request_method === 'post' ? $_POST : $_GET;
-		$matched = ! empty( $data[tutor()->nonce] ) && wp_verify_nonce( $data[tutor()->nonce], tutor()->nonce_action );
+		$data = $request_method === 'post' ? $_POST : $_GET;
+		$nonce_value = sanitize_text_field(tutils()->array_get(tutor()->nonce, $data, null));
+		$matched = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );
 
 		! $matched ? exit( __('Nonce not matched', 'tutor') ) : 0;
 	}

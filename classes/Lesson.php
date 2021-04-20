@@ -83,7 +83,7 @@ class Lesson extends Tutor_Base {
 		}
 
 		//Video
-		$video_source = tutils()->array_get('video.source', $_POST);
+		$video_source = sanitize_text_field( tutils()->array_get('video.source', $_POST) );
 		if ( $video_source === '-1'){
 			delete_post_meta($post_ID, '_video');
 		}elseif($video_source) {
@@ -155,12 +155,13 @@ class Lesson extends Tutor_Base {
 
 		$lesson_data = array(
 			'post_type'    => $this->lesson_post_type,
-			'post_title'    => $title,
-			'post_name'     => sanitize_title($title),
-			'post_content'  => $lesson_content,
+			'post_title'   => $title,
+			'post_name'    => sanitize_title($title),
+			'post_content' => $lesson_content,
 			'post_status'  => 'publish',
 			'post_author'  => get_current_user_id(),
 			'post_parent'  => $topic_id,
+			'menu_order'   => tutor_utils()->get_next_course_content_order_id( $topic_id )
 		);
 
 		if($lesson_id==0) {

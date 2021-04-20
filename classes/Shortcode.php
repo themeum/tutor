@@ -158,7 +158,7 @@ class Shortcode {
 
 	private function prepare_instructor_list($current_page, $atts, $cat_ids = array(), $keyword = '') {
 
-		$limit = isset( $atts['count'] ) ? $atts['count'] : 9;
+		$limit = (int)sanitize_text_field(tutils()->array_get('count', $atts, 9));
 		$page = $current_page - 1;
 
 		$instructors = tutor_utils()->get_instructors($limit*$page, $limit, $keyword, 'approved', $cat_ids);
@@ -167,17 +167,17 @@ class Shortcode {
 		$previous_page = $page>0 ? $current_page-1 : null;
 		$next_page = (is_array($next_instructors) && count($next_instructors)>0) ? $current_page+1 : null;
 		
-		$layout = (isset($atts['layout']) && in_array($atts['layout'], $this->instructor_layout)) ? $atts['layout'] : null;
-		$layout = $layout ? $layout : tutor_utils()->get_option('instructor_list_layout', $this->instructor_layout[0]);
+		$layout = sanitize_text_field(tutils()->array_get('layout', $atts, ''));
+		$layout = in_array($layout, $this->instructor_layout) ? $layout : tutor_utils()->get_option('instructor_list_layout', $this->instructor_layout[0]);
 
 		$payload=array(
-			'instructors' => is_array($instructors) ? $instructors : array(), 
-			'next_page' => $next_page, 
+			'instructors' 	=> is_array($instructors) ? $instructors : array(), 
+			'next_page' 	=> $next_page, 
 			'previous_page' => $previous_page,
-			'column_count' => isset($atts['column_per_row']) ? $atts['column_per_row'] : 3,
-			'layout' => $layout,
-			'limit' => $limit,
-			'current_page' => $current_page
+			'column_count' 	=> sanitize_text_field(tutils()->array_get('column_per_row', $atts, 3)),
+			'layout' 		=> $layout,
+			'limit' 		=> $limit,
+			'current_page' 	=> $current_page
 		);
 
 		return $payload;
@@ -234,10 +234,10 @@ class Shortcode {
 	public function load_filtered_instructor() {
 		tutor_utils()->checking_nonce();
 
-		$attributes = isset( $_POST['attributes'] ) ? $_POST['attributes'] : array();
-		$current_page = isset( $attributes['current_page'] ) ? $attributes['current_page'] : 1;
-		$category = isset( $_POST['category'] ) ? $_POST['category'] : array();
-		$keyword = isset( $_POST['keyword'] ) ? $_POST['keyword'] : '';
+		$attributes = tutils()->array_get('attributes', $_POST, array());
+		$current_page = sanitize_text_field(tutils()->array_get('current_page', $_POST, 1));
+		$category = tutils()->array_get('category', $_POST, array());
+		$keyword = sanitize_text_field(tutils()->array_get('keyword', $_POST, ''));
 
 		$payload = $this->prepare_instructor_list($current_page, $attributes, $category, $keyword);
 
