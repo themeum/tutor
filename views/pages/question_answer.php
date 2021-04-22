@@ -18,7 +18,7 @@ $instructorList->prepare_items();
 	<h2><?php _e('Question & Answer', 'tutor'); ?></h2>
 
 	<form id="question_answers-filter" method="get">
-		<input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+		<input type="hidden" name="page" value="<?php echo \TUTOR\Question_Answers_List::Question_Answer_PAGE; ?>" />
 		<?php
 		$instructorList->search_box(__('Search', 'tutor'), 'question_answers');
 		$instructorList->display(); ?>

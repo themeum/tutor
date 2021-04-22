@@ -60,9 +60,7 @@ class Course_Filter{
             }
 
             $type_array = tutils()->array_get('tutor-course-filter-'.$type, $_POST, array());
-            $type_array = array_map(function($type) {
-                return sanitize_text_field( $type );
-            });
+            $type_array = array_map('sanitize_text_field', $type_array);
 
             if(count( $type_array ) > 0){
                 $level_price[] = array(
@@ -99,8 +97,9 @@ class Course_Filter{
         }
 
         query_posts($args);
+        $col_per_row = (int)sanitize_text_field(tutils()->array_get('column_per_row', $_POST, 3));
 		$GLOBALS['tutor_shortcode_arg']=array(
-			'column_per_row' => (int)sanitize_text_field(tutils()->array_get('column_per_row', $_POST, 3)),
+			'column_per_row' => $col_per_row<=0 ? 3 : $col_per_row,
 			'course_per_page' => $courses_per_page
 		);
 		
