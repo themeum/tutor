@@ -7,9 +7,9 @@ if (!defined('ABSPATH'))
  * configure query with get params
  */
 $per_page           = 10;
-$paged              = isset($_GET['paged']) ? $_GET['paged'] : 1;
+$paged              = (isset($_GET['paged']) && is_numeric($_GET['paged']) && $_GET['paged']>=1) ? $_GET['paged'] : 1;
 
-$order_filter       = isset($_GET['order']) ? $_GET['order'] : 'DESC';
+$order_filter       = (isset($_GET['order']) && strtolower($_GET['order'])=='asc') ? 'ASC' : 'DESC';
 $search_filter      = isset($_GET['search']) ? $_GET['search'] : '';
 //announcement's parent
 $course_id          = isset($_GET['course-id']) ? $_GET['course-id'] : '';

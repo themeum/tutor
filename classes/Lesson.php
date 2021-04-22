@@ -87,7 +87,7 @@ class Lesson extends Tutor_Base {
 		if ( $video_source === '-1'){
 			delete_post_meta($post_ID, '_video');
 		}elseif($video_source) {
-			$video = tutor_utils()->array_get('video', $_POST);
+			$video = (array)tutor_utils()->array_get('video', $_POST, array());
 			update_post_meta($post_ID, '_video', $video);
 		}
 
@@ -153,6 +153,11 @@ class Lesson extends Tutor_Base {
 		$title = sanitize_text_field($_POST['lesson_title']);
 		$lesson_content = wp_kses_post($_POST['lesson_content']);
 
+		if($lesson_id==14057) {
+			echo $_POST['lesson_content'].'********';
+			echo $lesson_content;
+		}
+
 		$lesson_data = array(
 			'post_type'    => $this->lesson_post_type,
 			'post_title'   => $title,
@@ -160,12 +165,12 @@ class Lesson extends Tutor_Base {
 			'post_content' => $lesson_content,
 			'post_status'  => 'publish',
 			'post_author'  => get_current_user_id(),
-			'post_parent'  => $topic_id,
-			'menu_order'   => tutor_utils()->get_next_course_content_order_id( $topic_id )
+			'post_parent'  => $topic_id
 		);
 
 		if($lesson_id==0) {
-			
+
+			$lesson_data['menu_order'] = tutor_utils()->get_next_course_content_order_id( $topic_id );
 			$lesson_id = wp_insert_post( $lesson_data );
 
 			if ($lesson_id ) {

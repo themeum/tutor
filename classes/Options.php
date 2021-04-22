@@ -52,7 +52,7 @@ class Options {
 
 		do_action('tutor_option_save_before');
 
-		$option = tutils()->array_get('tutor_option', $_POST, array());
+		$option = (array)tutils()->array_get('tutor_option', $_POST, array());
 		$option = apply_filters('tutor_option_input', $option);
 		update_option('tutor_option', $option);
 

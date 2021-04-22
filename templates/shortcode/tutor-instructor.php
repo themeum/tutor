@@ -38,12 +38,14 @@
 </div>
 
 <?php
-    if($previous_page || $next_page){
+    if($previous_page || $next_page) {
+        $prev_url = !$show_filter ? '?instructor-page='.$previous_page : '#';
+        $next_url = !$show_filter ? '?instructor-page='.$next_page : '#';
         ?>
         <div class="tutor-pagination-wrap">
             <?php 
-                echo $previous_page ? '<a class="page-numbers" href="#" data-page_number="'.$previous_page.'">« '.__('Previous', 'tutor').'</a>' : '';
-                echo $next_page ? '&nbsp; <a class="next page-numbers" href="#" data-page_number="'.$next_page.'">'.__('Next', 'tutor').' »</a>' : '';
+                echo $previous_page ? '<a class="page-numbers" href="'.$prev_url.'" data-page_number="'.$previous_page.'">« '.__('Previous', 'tutor').'</a>' : '';
+                echo $next_page ? '&nbsp; <a class="next page-numbers" href="'.$next_url.'" data-page_number="'.$next_page.'">'.__('Next', 'tutor').' »</a>' : '';
             ?> 
         </div>
         <?php
