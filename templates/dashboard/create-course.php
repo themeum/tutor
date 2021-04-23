@@ -17,6 +17,13 @@ $course_id = get_the_ID();
 $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_course') || current_user_can('administrator');
 ?>
 
+<?php
+    if(!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
+        tutor_load_template('permission-denied');
+        return;
+    }
+?>
+
 <?php do_action('tutor/dashboard_course_builder_before'); ?>
     <form action="" id="tutor-frontend-course-builder" method="post" enctype="multipart/form-data">
 		<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
