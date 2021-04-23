@@ -153,11 +153,6 @@ class Lesson extends Tutor_Base {
 		$title = sanitize_text_field($_POST['lesson_title']);
 		$lesson_content = wp_kses_post($_POST['lesson_content']);
 
-		if($lesson_id==14057) {
-			echo $_POST['lesson_content'].'********';
-			echo $lesson_content;
-		}
-
 		$lesson_data = array(
 			'post_type'    => $this->lesson_post_type,
 			'post_title'   => $title,
