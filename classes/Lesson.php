@@ -96,8 +96,19 @@ class Lesson extends Tutor_Base {
 		if ( ! empty($_POST['tutor_attachments'])){
 			$attachments = tutor_utils()->sanitize_array($_POST['tutor_attachments']);
 			$attachments = array_unique($attachments);
+		} 
+
+		/**
+		 * it !empty attachment then update meta else
+		 * delete meta key to prevetn empty data in db
+		 * @since 1.8.9
+		*/
+		if( ! empty($attachments) ) {
+			update_post_meta($post_ID, '_tutor_attachments', $attachments);
+		} else {
+			delete_post_meta($post_ID, '_tutor_attachments');
 		}
-		update_post_meta($post_ID, '_tutor_attachments', $attachments);
+		
 	}
 
 	public function tutor_load_edit_lesson_modal(){
