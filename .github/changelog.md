@@ -6,7 +6,6 @@
 * Update: Improved license key submission form
 * Update: Lessons, quizzes, and assignments removed from WordPress search
 * Update: Security enhancement
-* Update: 'Attachment' add-on optimization
 * Fix: Instructor can see all other users' files in WP Media Manager
 * Fix: Broken link of the password reset page
 * Fix: Undefined variable notice in Zoom add-on
@@ -14,6 +13,10 @@
 * Fix: 'Edit with frontend course builder' button visible for other instructors
 * Fix: Incorrect Lesson order for duplicated courses
 * Fix: 'View certificate' page conflict with BuddyBoss theme
+* Fix: Empty data insert & redundant hooks calling on course attachments addons
+* Fix: Empty meta data insert for lesson 
+* Fix: Content drip option not loading in the classic editor's lesson editing page
+
 
 ### 1.8.8 - April 05, 2021 
 
