@@ -35,7 +35,7 @@ if ( $quiz_attempts_count ){
                 <th><?php _e('Earned Mark', 'tutor'); ?></th>
                 <th><?php _e('Result', 'tutor'); ?></th>
                 <th></th>
-                <?php do_action('tutor_quiz/my_attempts/table/thead/col'); ?>
+                <?php do_action('tutor_quiz/student_attempts/table/thead/col'); ?>
             </tr>
 			<?php
 			foreach ( $quiz_attempts as $attempt){
@@ -98,7 +98,7 @@ if ( $quiz_attempts_count ){
                         ?>
                     </td>
                     <td><a href="<?php echo $attempt_action; ?>"><?php _e('Details', 'tutor'); ?></a></td>
-                    <?php do_action('tutor_quiz/my_attempts/table/tbody/col'); ?>
+                    <?php do_action('tutor_quiz/student_attempts/table/tbody/col', $attempt); ?>
                 </tr>
 				<?php
 			}

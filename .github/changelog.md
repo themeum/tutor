@@ -1,6 +1,6 @@
 # TutorLMS Changelog
 
-### 1.8.9 - April 26, 2021
+### 1.8.9 - April 28, 2021
 
 * New: Option to disable detailed quiz attempt view from student profile
 * Update: Improved license key submission form
