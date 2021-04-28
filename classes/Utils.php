@@ -1228,7 +1228,7 @@ class Utils {
 		$user_id   = get_current_user_id();
 
 		$lessons = $wpdb->get_results( $wpdb->prepare(
-			"SELECT items.ID
+			"SELECT items.ID, items.post_type
 			FROM 	{$wpdb->posts} topic
 					INNER JOIN {$wpdb->posts} items
 							ON topic.ID = items.post_parent
@@ -1250,7 +1250,7 @@ class Utils {
 
 			foreach ( $lessons as $lesson ) {
 				$is_complete = get_user_meta( $user_id, "_tutor_completed_lesson_id_{$lesson->ID}", true );
-				if ( ! $is_complete ) {
+				if ( ! $is_complete && $lesson->post_type === 'lesson' ) {
 					$first_lesson = $lesson;
 					break;
 				}
