@@ -9,6 +9,9 @@ if (! class_exists('Tutor_List_Table')){
 }
 
 class Instructors_List extends \Tutor_List_Table {
+
+	const INSTRUCTOR_LIST_PAGE = 'tutor-instructors';
+
 	function __construct(){
 		global $status, $page;
 
@@ -52,24 +55,21 @@ class Instructors_List extends \Tutor_List_Table {
 		echo "<span class='tutor-status-context tutor-status-{$status}-context'>{$status_name}</span>";
 	}
 
-	function column_display_name($item){
+	function column_display_name($item) {
 		//Build row actions
-		$actions = array(
-			//'edit'      => sprintf('<a href="?page=%s&action=%s&instructor=%s">Edit</a>',$_REQUEST['page'],'edit',$item->ID),
-			//'delete'    => sprintf('<a href="?page=%s&action=%s&instructor=%s">Delete</a>',$_REQUEST['page'],'delete',$item->ID),
-		);
+		$actions = array();
 
 		$status = tutor_utils()->instructor_status($item->ID, false);
 
 		switch ($status){
 			case 'pending':
-				$actions['approved'] = sprintf('<a class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Approve', 'tutor').'</a>', $_REQUEST['page'],'approve',$item->ID);
+				$actions['approved'] = sprintf('<a class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Approve', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf('<a data-prompt-message="'.__('Sure to Block?', 'tutor').'" class="instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Block', 'tutor').'</a>', $_REQUEST['page'],'blocked',$item->ID);
+				$actions['blocked'] = sprintf('<a data-prompt-message="'.__('Sure to Block?', 'tutor').'" class="instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Block', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID);
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf('<a data-prompt-message="'.__('Sure to Un Block?', 'tutor').'" class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Unblock', 'tutor').'</a>',$_REQUEST['page'],'approve',$item->ID);
+				$actions['approved'] = sprintf('<a data-prompt-message="'.__('Sure to Un Block?', 'tutor').'" class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Unblock', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
 				break;
 		}
 
@@ -79,7 +79,7 @@ class Instructors_List extends \Tutor_List_Table {
 		$actions['tutor-instructor-edit-link']=$edit_link;
 
 		// Add remove instructor action
-		$actions['tutor-remove-instructor'] = sprintf('<a data-prompt-message="'.__('Sure to Remove as Instructor?', 'tutor').'" class="instructor-action" data-action="remove-instructor" data-instructor-id="'.$item->ID.'"  href="?page=%s&action=%s&instructor=%s">'.__('Remove as Instructor', 'tutor').'</a>', $_REQUEST['page'], 'remove-instructor', $item->ID);
+		$actions['tutor-remove-instructor'] = sprintf('<a data-prompt-message="'.__('Sure to Remove as Instructor?', 'tutor').'" class="instructor-action" data-action="remove-instructor" data-instructor-id="'.$item->ID.'"  href="?page=%s&action=%s&instructor=%s">'.__('Remove as Instructor', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'remove-instructor', $item->ID);
 
 		//Return the title contents
 		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',

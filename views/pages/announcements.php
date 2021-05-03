@@ -10,10 +10,10 @@ $per_page           = 10;
 $paged              = (isset($_GET['paged']) && is_numeric($_GET['paged']) && $_GET['paged']>=1) ? $_GET['paged'] : 1;
 
 $order_filter       = (isset($_GET['order']) && strtolower($_GET['order'])=='asc') ? 'ASC' : 'DESC';
-$search_filter      = isset($_GET['search']) ? $_GET['search'] : '';
+$search_filter      = sanitize_text_field( tutor_utils()->array_get('search', $_GET, '') );
 //announcement's parent
-$course_id          = isset($_GET['course-id']) ? $_GET['course-id'] : '';
-$date_filter        = isset($_GET['date']) ? $_GET['date'] : '';
+$course_id          = sanitize_text_field( tutor_utils()->array_get('course-id', $_GET, '') );
+$date_filter        = sanitize_text_field( tutor_utils()->array_get('date', $_GET, '') );
 
 $year               = date('Y', strtotime($date_filter));
 $month              = date('m', strtotime($date_filter));
@@ -22,8 +22,8 @@ $day                = date('d', strtotime($date_filter));
 $args = array(
     'post_type'         => 'tutor_announcements',
     'post_status'       => 'publish',
-    's'                 => sanitize_text_field($search_filter),
-    'post_parent'       => sanitize_text_field($course_id),
+    's'                 => $search_filter,
+    'post_parent'       => $course_id,
     'posts_per_page'    => sanitize_text_field($per_page),
     'paged'             => sanitize_text_field($paged),
     'orderBy'           => 'ID',

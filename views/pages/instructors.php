@@ -1,7 +1,9 @@
 <?php
 
-$sub_page = tutor_utils()->avalue_dot('sub_page', $_GET);
-if ( ! empty($sub_page)){
+$allowed_sub_pages = array( 'add_new_instructor' );
+$sub_page = sanitize_text_field( tutor_utils()->array_get('sub_page', $_GET, '') );
+
+if ( is_string( $sub_page ) && in_array($sub_page, $allowed_sub_pages)){
 	$include_file = tutor()->path."views/pages/{$sub_page}.php";
 	if (file_exists($include_file)){
 		include $include_file;
@@ -28,7 +30,7 @@ $instructorList->prepare_items();
     <hr class="wp-header-end">
 
     <form id="students-filter" method="get">
-        <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+        <input type="hidden" name="page" value="<?php echo \TUTOR\Instructors_List::INSTRUCTOR_LIST_PAGE; ?>" />
 		<?php
 		$instructorList->search_box(__('Search', 'tutor'), 'instructors');
 		$instructorList->display(); ?>
