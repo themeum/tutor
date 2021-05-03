@@ -8,7 +8,7 @@ $withdrawList->prepare_items();
 	<h2><?php _e('Withdraw Requests', 'tutor'); ?></h2>
 
 	<form id="withdrawals-filter" method="get">
-		<input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+		<input type="hidden" name="page" value="<?php echo \TUTOR\Withdraw_Requests_List::WITHDRAW_REQUEST_LIST_PAGE; ?>" />
 		<?php
 		$withdrawList->search_box(__('Search', 'tutor'), 'withdrawals');
 		$withdrawList->display(); ?>

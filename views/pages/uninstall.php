@@ -7,7 +7,7 @@
 
 <div class="wrap tutor-uninstall-wrap">
 	<h2><?php _e('Uninstall Tutor', 'tutor'); ?></h2>
-    <p class="desc"><?php _e('Just deactive tutor plugin or completely uninstall and erase all of data saved before by tutor.', 'tutor'); ?></p>
+    <p class="desc"><?php _e('Just deactivate tutor plugin or completely uninstall and erase all of data saved before by tutor.', 'tutor'); ?></p>
 
     <div class="tutor-uninstall-btn-group">
         <?php $plugin_file = tutor()->basename; ?>

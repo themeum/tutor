@@ -20,7 +20,7 @@ $instructorList->prepare_items();
 	</div>
 
 	<form id="quiz_attempts-filter" method="get">
-		<input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+		<input type="hidden" name="page" value="<?php echo \TUTOR\Quiz_Attempts_List::QUIZ_ATTEMPT_PAGE; ?>" />
 		<?php
 		$instructorList->search_box(__('Search', 'tutor'), 'quiz_attempts');
 		$instructorList->display(); ?>

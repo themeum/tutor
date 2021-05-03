@@ -10,6 +10,8 @@ if (! class_exists('Tutor_List_Table')){
 
 class Quiz_Attempts_List extends \Tutor_List_Table {
 
+	const QUIZ_ATTEMPT_PAGE = 'tutor_quiz_attempts';
+
 	function __construct(){
 		global $status, $page;
 
