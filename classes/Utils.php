@@ -784,12 +784,12 @@ class Utils {
         if ( tutils()->count( $course_contents ) ) {
             foreach ( $course_contents as $content ) {
                 if ( $content->post_type === 'tutor_quiz' ) {
-                    $attempt = $this->get_quiz_attempt( $content->ID );
+                    $attempt = $this->get_quiz_attempt( $content->ID, $user_id );
                     if ( $attempt) {
                         $completedCount++;
                     }
                 } elseif ( $content->post_type === 'tutor_assignments' ) {
-                    $isSubmitted = $this->is_assignment_submitted( $content->ID );
+                    $isSubmitted = $this->is_assignment_submitted( $content->ID, $user_id );
                     if ( $isSubmitted ) {
                         $completedCount++;
                     }
