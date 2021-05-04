@@ -19,6 +19,7 @@ $passing_grade = tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 0);
 $feedback_mode = tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode', 0);
 
 $attempt_remaining = $attempts_allowed - $attempted_count;
+$quiz_answers = array();
 ?>
 
 <div id="tutor-quiz-body" class="tutor-quiz-body tutor-quiz-body-<?php the_ID(); ?>">
@@ -134,6 +135,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 								if ( is_array($answers) && count($answers) ) {
 									foreach ($answers as $answer){
 									    $answer_title = stripslashes($answer->answer_title);
+										$answer->is_correct ? $quiz_answers[] = $answer->answer_id : 0;
 
 										if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 											?>
@@ -150,7 +152,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 													?>
                                                     <div class="quiz-answer-input-bottom">
                                                         <div class="quiz-answer-input-field">
-                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>" data-is-correct="<?php echo $answer->is_correct ?>" >
+                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
                                                             <span>&nbsp;</span>
                                                             <?php
                                                                 if ($answer->answer_view_format !== 'image'){ echo $answer_title;}
@@ -174,7 +176,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
                                                     <div class="quiz-answer-input-bottom">
                                                         <div class="quiz-answer-input-field">
-                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" data-is-correct="<?php echo $answer->is_correct ?>" value="<?php echo $answer->answer_id; ?>">
+                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][]" type="checkbox" value="<?php echo $answer->answer_id; ?>">
                                                             <span>&nbsp;</span>
                                                             <?php if ($answer->answer_view_format !== 'image'){
                                                                 echo $answer_title;
@@ -454,3 +456,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
     do_action('tutor_quiz/body/after', $quiz_id);
 	?>
 </div>
+
+<script>
+	window.tutor_quiz_context = '<?php echo strrev(base64_encode(json_encode($quiz_answers))); ?>';
+</script>

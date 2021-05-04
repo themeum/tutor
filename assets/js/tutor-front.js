@@ -758,7 +758,11 @@ jQuery(document).ready(function ($) {
     function feedback_response($question_wrap) {
         var goNext = false;
 
-
+        // Prepare answer array            
+        var quiz_answers = JSON.parse(atob(window.tutor_quiz_context.split('').reverse().join('')));
+        !Array.isArray(quiz_answers) ? quiz_answers=[] : 0;
+        
+        // Evaluate result
         var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
         $('.wrong-right-text').remove();
         $('.quiz-answer-input-bottom').removeClass('wrong-answer right-answer');
@@ -773,7 +777,7 @@ jQuery(document).ready(function ($) {
 
                 var $type = $input.attr('type');
                 if ($type === 'radio' || $type === 'checkbox') {
-                    var isTrue = $input.attr('data-is-correct') == '1';
+                    var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
                     if ( !isTrue) {
                         if ($input.prop("checked")) {
                             $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append('<span class="wrong-right-text"><i class="tutor-icon-line-cross"></i> Incorrect, Please try again</span>');
@@ -787,7 +791,7 @@ jQuery(document).ready(function ($) {
                 var $input = $(this);
                 var $type = $input.attr('type');
                 if ($type === 'checkbox') {
-                    var isTrue = $input.attr('data-is-correct') == '1';
+                    var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
                     var checked = $input.is(':checked');
                 
                     if (isTrue && !checked) {
@@ -800,7 +804,7 @@ jQuery(document).ready(function ($) {
         } else if (feedBackMode === 'reveal') {
             $checkedInputs.each(function () {
                 var $input = $(this);
-                var isTrue = $input.attr('data-is-correct') == '1';
+                var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
                 if (!isTrue) {
                     validatedTrue = false;
                 }
@@ -811,7 +815,7 @@ jQuery(document).ready(function ($) {
 
                 var $type = $input.attr('type');
                 if ($type === 'radio' || $type === 'checkbox') {
-                    var isTrue = $input.attr('data-is-correct') == '1';
+                    var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
                     var checked = $input.is(':checked');
 
                     if (isTrue) {
