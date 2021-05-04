@@ -622,13 +622,6 @@ jQuery(document).ready(function ($) {
         }
     });
 
-
-    $(document).on('click', '.tutor-quiz-answer-next-btn', function (e) {
-        e.preventDefault();
-
-    });
-
-
     $(document).on('submit', '#tutor-answering-quiz', function (e) {
         var $questions_wrap = $('.quiz-attempt-single-question');
         var validated = true;

@@ -50,7 +50,7 @@ function show_correct_answer( $answers= array() ){
 				case 'text':
 					echo '<div class="text-type">';
                         if(isset($ans->answer_title)) {
-                            echo '<span class="text-item-caption">'.stripslashes($ans->answer_title);
+                            echo '<span class="text-item-caption">'.stripslashes($ans->answer_title).'</span>';
                         }
                     echo '</div>';
                     break;

@@ -410,4 +410,13 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 		<?php
 	}
 	?>
+
+<div class="quiz-attempt-answers-wrap">
+    <div class="attempt-answers-header">
+        <div class="attempt-header-quiz"><?php _e('Instructor Feedback', 'tutor'); ?></div>
+    </div>
+    <div class="tutor-instructor-feedback-wrap">
+        <textarea class="tutor-instructor-feedback-content" style="width:100%; height: 100px;"><?php echo get_post_meta($attempt_id, 'instructor_feedback', true); ?></textarea>
+        <a class="tutor-button tutor-button-primary tutor-instructor-feedback" data-attemptid="<?php echo $attempt_id; ?>" data-toast_error="<?php _e('Error', 'tutor'); ?>" data-toast_error_message="<?php _e('Action Failed', 'tutor'); ?>" data-toast_success="<?php _e('Success', 'tutor'); ?>" data-toast_success_message="<?php _e('Updated', 'tutor'); ?>"><?php _e('Update', 'tutor'); ?></a>
+    </div>
 </div>
