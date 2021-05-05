@@ -407,7 +407,7 @@ jQuery(document).ready(function ($) {
 	 * Toggle topic summery
 	 * @since v.1.6.9
 	 */
-    $('.tutor-course-title h4 .toogle-informaiton-icon').on('click', function (e) {
+    $('.tutor-course-title h4 .toggle-information-icon').on('click', function (e) {
         $(this).closest('.tutor-topics-in-single-lesson').find('.tutor-topics-summery').slideToggle();
         e.stopPropagation();
     });
@@ -419,7 +419,7 @@ jQuery(document).ready(function ($) {
         lesson.slideToggle();
     });
 
-    $(document).on('click', '.tutor-topics-title h3 .toogle-informaiton-icon', function (e) {
+    $(document).on('click', '.tutor-topics-title h3 .toggle-information-icon', function (e) {
         $(this).closest('.tutor-topics-in-single-lesson').find('.tutor-topics-summery').slideToggle();
         e.stopPropagation();
     });
