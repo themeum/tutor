@@ -606,8 +606,25 @@ jQuery(document).ready(function ($) {
         if (next_question_id) {
             var $nextQuestion = $(next_question_id);
             if ($nextQuestion && $nextQuestion.length) {
-                $('.quiz-attempt-single-question').hide();
-                $nextQuestion.show();
+                /**
+                 * check if reveal mode wait for 500ms then
+                 * hide question so that correct answer reveal
+                 * @since 1.9.0
+                */
+
+                var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
+                if(feedBackMode === 'reveal') {
+                    setTimeout(()=>{
+                        $('.quiz-attempt-single-question').hide();
+                         $nextQuestion.show();
+                    }, 
+                    500);  
+                } else {
+                    $('.quiz-attempt-single-question').hide();
+                     $nextQuestion.show();
+                }
+                
+               
 
                 /**
                  * If pagination exists, set active class
