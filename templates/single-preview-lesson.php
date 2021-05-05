@@ -89,7 +89,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
 									    <?php
 									    the_title();
 									    if($topic_summery) {
-										    echo "<span class='toogle-informaiton-icon'>&quest;</span>";
+										    echo "<span class='toggle-information-icon'>&quest;</span>";
 									    }
 									    ?>
                                     </h3>
