@@ -1,5 +1,22 @@
 # TutorLMS Changelog
 
+### 1.9.0 - May 6, 2021
+
+* New: Instructors can now give feedback on quiz attempts from the frontend
+* Update: Security enhancements
+* Fix: PHP notice error in new enrollment page
+* Fix: User dashboard showing multiple times on Avada Theme
+* Fix: Wrong percentage stats on course completion in report
+* Fix: Custom template from 'Certificate customizer' plugin not working
+* Fix: Quiz answers security issue fixed
+* Fix: User display name doesn't update on certificate after name change
+* Fix: Question/Answer reveal mode doesn't show anything for correct answer
+* Fix: Profile Picture and bio disappearing after checkout
+* Fix: Categories not showing hierarchically in course filter
+* Fix: CSS class typo
+* Fix: Grammatical text error 
+
+
 ### 1.8.9 - April 28, 2021
 
 * New: Option to disable detailed quiz attempt view from student profile

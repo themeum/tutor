@@ -49,6 +49,7 @@ wp_enqueue_media();
 				<button type="button" class="tutor_video_poster_upload_btn button button-primary"><?php _e('Upload', 'tutor'); ?></button>
 			</div>
 
+			<input type="hidden" name="tutor_action" value="tutor_profile_update_by_wp">
 		</td>
 	</tr>
 
