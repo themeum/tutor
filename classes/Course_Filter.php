@@ -117,18 +117,41 @@ class Course_Filter{
         return $this->current_term_id;
     }
 
+    private function sort_terms_hierarchically($terms, $parent_id=0)
+    {
+        $term_array = array();
+
+        foreach($terms as $term) {
+            if($term->parent==$parent_id) {
+                $term->children = $this->sort_terms_hierarchically($terms, $term->term_id);
+                $term_array[] = $term;
+            }
+        }
+
+        return $term_array;
+    }
+
+    private function render_terms_hierarchically($terms) {
+        
+        foreach($terms as $term){
+            ?>
+                <div class="tutor-course-filter-nested-terms">
+                    <label>
+                        <input type="checkbox" name="tutor-course-filter-<?php echo $taxonomy; ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id==$term_id ? 'checked="checked"' : ''; ?>/>&nbsp;
+                        <?php echo $term->name; ?>
+                    </label>
+
+                    <?php isset($term->children) ? $this->render_terms_hierarchically($term->children) : 0; ?>
+                </div>
+            <?php
+        }
+    }
+
     public function render_terms($taxonomy){
 
         $term_id = $this->get_current_term_id();
         $terms = get_terms( array('taxonomy' => $this->$taxonomy, 'hide_empty' => true));
-
-        foreach($terms as $term){
-            ?>
-                <label>
-                    <input type="checkbox" name="tutor-course-filter-<?php echo $taxonomy; ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id==$term_id ? 'checked="checked"' : ''; ?>/>&nbsp;
-                    <?php echo $term->name; ?>
-                </label>
-            <?php
-        }
+        
+        $this->render_terms_hierarchically( $this->sort_terms_hierarchically( $terms ) );
     }
 }

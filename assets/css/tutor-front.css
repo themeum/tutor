@@ -2470,6 +2470,14 @@ Course question and answer
   font-size: 10px;
 }
 
+.tutor-course-filter-wrapper .tutor-course-filter-container {
+  overflow-x: hidden;
+}
+
+.tutor-course-filter-wrapper .tutor-course-filter-container .tutor-course-filter-nested-terms > .tutor-course-filter-nested-terms {
+  padding-left: 15px;
+}
+
 @media (max-width: 767px) {
   .tutor-course-filter-wrapper > div {
     width: 100% !important;
