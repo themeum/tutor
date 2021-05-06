@@ -107,7 +107,7 @@ class User {
 	}
 
 	public function profile_update($user_id){
-		if (tutils()->array_get('tutor_action', $_POST) === 'tutor_profile_edit' ){
+		if (tutils()->array_get('tutor_action', $_POST) !== 'tutor_profile_update_by_wp' ){
 			return;
 		}
 
