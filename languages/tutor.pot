@@ -3253,15 +3253,15 @@ msgstr ""
 msgid "All Courses"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:73
+#: templates/dashboard/enrolled-courses.php:81
 msgid "You haven't purchased any course"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:51, templates/dashboard/enrolled-courses/active-courses.php:53, templates/dashboard/enrolled-courses/completed-courses.php:53
+#: templates/dashboard/enrolled-courses.php:59, templates/dashboard/enrolled-courses/active-courses.php:53, templates/dashboard/enrolled-courses/completed-courses.php:53
 msgid "Total Lessons:"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:57, templates/dashboard/enrolled-courses/active-courses.php:59, templates/dashboard/enrolled-courses/completed-courses.php:59
+#: templates/dashboard/enrolled-courses.php:65, templates/dashboard/enrolled-courses/active-courses.php:59, templates/dashboard/enrolled-courses/completed-courses.php:59
 msgid "Completed Lessons:"
 msgstr ""
 

@@ -254,6 +254,7 @@ Fix: User display name doesn't update on certificate after name change
 Fix: Question/Answer reveal mode doesn't show anything for correct answer
 Fix: Profile Picture and bio disappearing after checkout
 Fix: Categories not showing hierarchically in course filter
+Fix: Private course not found on the latest version of WordPress
 Fix: CSS class typo
 Fix: Grammatical text error 
 
