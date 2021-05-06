@@ -29,16 +29,24 @@
 			$my_courses->the_post();
 			$avg_rating = tutor_utils()->get_course_rating()->rating_avg;
 			$tutor_course_img = get_tutor_course_thumbnail_src();
+            /**
+             * wp 5.7.1 showing plain permalink for private post
+             * since tutor do not work with plain permalink
+             * url is set to post_type/slug (courses/course-slug)
+             * @since 1.9.0
+            */
+            $post = $my_courses->post;
+            $custom_url = home_url($post->post_type.'/'.$post->post_name);
 			?>
             <div class="tutor-mycourse-wrap tutor-mycourse-<?php the_ID(); ?>">
-                <a class="tutor-stretched-link" href="<?php the_permalink(); ?>"><span class="sr-only"><?php the_title(); ?></span></a>
+                <a class="tutor-stretched-link" href="<?php echo esc_url($custom_url);?>"><span class="sr-only"><?php the_title(); ?></span></a>
                 <div class="tutor-mycourse-thumbnail" style="background-image: url(<?php echo esc_url($tutor_course_img); ?>)"></div>
                 <div class="tutor-mycourse-content">
                     <div class="tutor-mycourse-rating">
 		                <?php tutor_utils()->star_rating_generator($avg_rating); ?>
                     </div>
 
-                    <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+                    <h3><a href="<?php echo esc_url($custom_url);?>"><?php the_title(); ?></a></h3>
                     
                     <div class="tutor-meta tutor-course-metadata">
 		                <?php
