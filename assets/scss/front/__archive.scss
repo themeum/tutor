@@ -94,6 +94,14 @@
 		font-size: 10px;
 	}
 	
+
+	.tutor-course-filter-container {
+		overflow-x: hidden;
+		.tutor-course-filter-nested-terms>.tutor-course-filter-nested-terms {
+			padding-left: 15px;
+		}
+	}
+
 	@media(max-width:767px){
 		&>div{
 			width: 100% !important;
