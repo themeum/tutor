@@ -218,6 +218,9 @@ class Assets{
 		wp_add_inline_style( 'tutor-frontend', $tutor_css );
 		//END: Default Color
 
+
+		// Load date picker for announcement at frontend
+		wp_enqueue_script('jquery-ui-datepicker');
 	}
 
 	/**
