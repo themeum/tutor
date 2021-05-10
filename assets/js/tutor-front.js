@@ -609,7 +609,7 @@ jQuery(document).ready(function ($) {
                 /**
                  * check if reveal mode wait for 500ms then
                  * hide question so that correct answer reveal
-                 * @since 1.9.0
+                 * @since 1.8.10
                 */
 
                 var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
