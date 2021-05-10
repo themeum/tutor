@@ -133,6 +133,8 @@ class Course_Filter{
 
     private function render_terms_hierarchically($terms) {
         
+        $term_id = $this->get_current_term_id();
+
         foreach($terms as $term){
             ?>
                 <div class="tutor-course-filter-nested-terms">
@@ -148,10 +150,7 @@ class Course_Filter{
     }
 
     public function render_terms($taxonomy){
-
-        $term_id = $this->get_current_term_id();
         $terms = get_terms( array('taxonomy' => $this->$taxonomy, 'hide_empty' => true));
-        
         $this->render_terms_hierarchically( $this->sort_terms_hierarchically( $terms ) );
     }
 }
