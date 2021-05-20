@@ -65,7 +65,7 @@ class Admin{
 		
 		add_submenu_page('tutor', __('Announcements', 'tutor'), __('Announcements', 'tutor'), 'manage_tutor_instructor', 'tutor_announcements', array($this, 'tutor_announcements'));
 
-		add_submenu_page('tutor', __('Q & A', 'tutor'), __('Q & A '.$unanswered_bubble, 'tutor'), 'manage_tutor_instructor', Question_Answers_List::Question_Answer_PAGE, array($this, 'question_answer') );
+		add_submenu_page('tutor', __('Q & A', 'tutor'), __('Q & A ', 'tutor').$unanswered_bubble, 'manage_tutor_instructor', Question_Answers_List::Question_Answer_PAGE, array($this, 'question_answer') );
 
 		add_submenu_page('tutor', __('Quiz Attempts', 'tutor'), __('Quiz Attempts', 'tutor'), 'manage_tutor_instructor', Quiz_Attempts_List::QUIZ_ATTEMPT_PAGE, array($this, 'quiz_attempts') );
 

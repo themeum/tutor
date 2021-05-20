@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.7
 Requires PHP: 7.0
-Stable tag: 1.8.10
+Stable tag: 1.8.11
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,11 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.8.11 - May 31, 2021 =
+
+New: tutor_quiz/single/after/wrap hook added in single quiz template
+Fix: Tutor dashboard shortcode not working
 
 = 1.8.10 - May 10, 2021 =
 

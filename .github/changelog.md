@@ -1,5 +1,11 @@
 # TutorLMS Changelog
 
+### 1.8.11 - May 31, 2021
+
+* New: tutor_quiz/single/after/wrap hook added in single quiz template
+* Fix: Tutor dashboard shortcode not working
+
+
 ### 1.8.10 - May 10, 2021
 
 * New: Instructors can now give feedback on quiz attempts from the frontend
