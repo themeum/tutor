@@ -33,7 +33,7 @@
              * wp 5.7.1 showing plain permalink for private post
              * since tutor do not work with plain permalink
              * url is set to post_type/slug (courses/course-slug)
-             * @since 1.9.0
+             * @since 1.8.10
             */
             $post = $my_courses->post;
             $custom_url = home_url($post->post_type.'/'.$post->post_name);
