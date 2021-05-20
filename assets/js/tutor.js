@@ -1298,7 +1298,7 @@ jQuery(document).ready(function($){
     var $that = $(this);
     console.log('Here->', $that.data('attemptid'),  $('.tutor-instructor-feedback-content').val());
     $.ajax({
-        url : ajaxurl,
+        url : (window.ajaxurl || _tutorobject.ajaxurl),
         type : 'POST',
         data : {attempts_id: $that.data('attemptid'), feedback: $('.tutor-instructor-feedback-content').val() , action: 'tutor_instructor_feedback'},
         beforeSend: function () {

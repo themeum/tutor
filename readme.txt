@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.7
 Requires PHP: 7.0
-Stable tag: 1.9.0
+Stable tag: 1.8.10
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.0 - May 6, 2021 =
+= 1.8.10 - May 10, 2021 =
 
 New: Instructors can now give feedback on quiz attempts from the frontend
 Update: Security enhancements
