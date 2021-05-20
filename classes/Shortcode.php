@@ -68,7 +68,7 @@ class Shortcode {
 			 */
 
 			if (!isset($wp_query->query_vars['tutor_dashboard_page'])) {
-				tutor_load_template('dashboard.index');
+				tutor_load_template('dashboard', array('is_shortcode' => true));
 			}
 		} else {
 			tutor_load_template('global.login');
