@@ -1,8 +1,9 @@
+
 jQuery(document).ready(function ($) {
     'use strict';
     /**
-     * translate support 
-     * @since 
+     * wp.i18n translateable functions 
+     * @since 1.8.11
     */
     const { __, _x, _n, _nx } = wp.i18n;
     /**
