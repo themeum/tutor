@@ -1180,7 +1180,7 @@ jQuery(document).ready(function ($) {
         frame.on('select', function () {
             // Get media attachment details from the frame state
             var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.video_source_upload_wrap_html5').find('span.video_media_id').text(attachment.id).trigger('paste').closest('p').show();
+            $that.closest('.video_source_upload_wrap_html5').find('span.video_media_id').data('video_url', attachment.url).text(attachment.id).trigger('paste').closest('p').show();
             $that.closest('.video_source_upload_wrap_html5').find('input').val(attachment.id);
         });
         frame.open();
