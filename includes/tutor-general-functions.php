@@ -94,7 +94,7 @@ if ( ! function_exists('tutor_course_categories_dropdown')){
  */
 
 if ( ! function_exists('_generate_categories_dropdown_option')){
-	function _generate_categories_dropdown_option($post_ID = 0, $categories, $args = array(), $depth = 0){
+	function _generate_categories_dropdown_option($post_ID = 0, $categories = array(), $args = array(), $depth = 0){
 		$output = '';
 
 		if (!tutor_utils()->count($categories)) return $output;
@@ -102,9 +102,7 @@ if ( ! function_exists('_generate_categories_dropdown_option')){
 		if (!is_numeric($post_ID) || $post_ID < 1) return $output;
 
 		foreach ( $categories as $category_id => $category ) {
-			if ( ! $category->parent){
-				$depth = 0;
-			}
+			if (!$category->parent) $depth = 0;
 
 			$childrens = tutor_utils()->array_get( 'children', $category );
 			$has_in_term = has_term( $category->term_id, 'course-category', $post_ID );
