@@ -9,6 +9,12 @@ class Assets{
 	public function __construct() {
 		add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
 		add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
+		/**
+		 * register translateable function to load
+		 * handled script with text domain attached to
+		 * @since 1.8.11
+		*/
+		add_action('wp_enqueue_scripts', array($this, 'tutor_script_text_domain'),100);
 		add_action( 'admin_head', array($this, 'tutor_add_mce_button'));
 		add_filter( 'get_the_generator_html', array($this, 'tutor_generator_tag'), 10, 2 );
 		add_filter( 'get_the_generator_xhtml', array($this, 'tutor_generator_tag'), 10, 2 );
@@ -164,7 +170,13 @@ class Assets{
 		}
 		if (tutor_utils()->get_option('load_tutor_js')) {
 			wp_enqueue_script( 'tutor-main', tutor()->url . 'assets/js/tutor.js', array( 'jquery' ), tutor()->version, true );
-			wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery' ), tutor()->version, true );
+			/**
+			 * dependency wp-i18n added for 
+			 * translate js file
+			 * @since 1.8.11
+			*/
+			wp_register_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
+			wp_enqueue_script( 'tutor-frontend');
 			wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
 		}
 
@@ -265,6 +277,15 @@ class Assets{
 				break;
 		}
 		return $gen;
+	}
+
+	/**
+	 * load text domain handled script after all enqueue_scripts 
+	 * registered functions
+	 * @since 1.8.11
+	*/
+	function tutor_script_text_domain() {
+		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path.'languages/' );
 	}
 	
 }
