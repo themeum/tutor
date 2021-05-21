@@ -97,30 +97,33 @@ if ( ! function_exists('_generate_categories_dropdown_option')){
 	function _generate_categories_dropdown_option($post_ID = 0, $categories, $args = array(), $depth = 0){
 		$output = '';
 
-		if (tutor_utils()->count($categories)) {
-			foreach ( $categories as $category_id => $category ) {
-				if ( ! $category->parent){
-					$depth = 0;
-				}
+		if (!tutor_utils()->count($categories)) return $output;
 
-				$childrens = tutor_utils()->array_get( 'children', $category );
-				$has_in_term = has_term( $category->term_id, 'course-category', $post_ID );
+		if (!is_numeric($post_ID) || $post_ID < 1) return $output;
 
-				$depth_seperator = '';
-				if ($depth){
-					for ($depth_i = 0; $depth_i < $depth; $depth_i++){
-						$depth_seperator.='-';
-					}
-				}
+		foreach ( $categories as $category_id => $category ) {
+			if ( ! $category->parent){
+				$depth = 0;
+			}
 
-				$output .= "<option value='{$category->term_id}' ".selected($has_in_term, true, false)." >   {$depth_seperator} {$category->name}</option> ";
+			$childrens = tutor_utils()->array_get( 'children', $category );
+			$has_in_term = has_term( $category->term_id, 'course-category', $post_ID );
 
-				if ( tutor_utils()->count( $childrens ) ) {
-					$depth++;
-					$output .= _generate_categories_dropdown_option($post_ID,$childrens, $args, $depth);
+			$depth_seperator = '';
+			if ($depth){
+				for ($depth_i = 0; $depth_i < $depth; $depth_i++){
+					$depth_seperator.='-';
 				}
 			}
+
+			$output .= "<option value='{$category->term_id}' ".selected($has_in_term, true, false)." >   {$depth_seperator} {$category->name}</option> ";
+
+			if ( tutor_utils()->count( $childrens ) ) {
+				$depth++;
+				$output .= _generate_categories_dropdown_option($post_ID,$childrens, $args, $depth);
+			}
 		}
+		
 		return $output;
 	}
 }
