@@ -1,6 +1,11 @@
+
 jQuery(document).ready(function ($) {
     'use strict';
-
+    /**
+     * wp.i18n translateable functions 
+     * @since 1.8.11
+    */
+    const { __, _x, _n, _nx } = wp.i18n;
     /**
      * Initiate Select2
      * @since v.1.3.4
@@ -728,19 +733,19 @@ jQuery(document).ready(function ($) {
                 var $type = $inputs.attr('type');
                 if ($type === 'radio') {
                     if ($required_answer_wrap.find('input[type="radio"]:checked').length == 0) {
-                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please select an option to answer</p>');
+                        $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please select an option to answer', 'tutor')}</p>`);
                         validated = false;
                     }
                 } else if ($type === 'checkbox') {
                     if ($required_answer_wrap.find('input[type="checkbox"]:checked').length == 0) {
-                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please select at least one option to answer.</p>');
+                        $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please select at least one option to answer.', 'tutor')}</p>`);
                         validated = false;
                     }
                 } else if ($type === 'text') {
                     //Fill in the gaps if many, validation all
                     $inputs.each(function (index, input) {
                         if (!$(input).val().trim().length) {
-                            $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">The answer for this question is required</p>');
+                            $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('The answer for this question is required', 'tutor')}</p>`);
                             validated = false;
                         }
                     });
@@ -749,7 +754,7 @@ jQuery(document).ready(function ($) {
             }
             if ($required_answer_wrap.find('textarea').length) {
                 if ($required_answer_wrap.find('textarea').val().trim().length < 1) {
-                    $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">The answer for this question is required</p>');
+                    $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('The answer for this question is required', 'tutor')}</p>`);
                     validated = false;
                 }
             }
@@ -762,7 +767,7 @@ jQuery(document).ready(function ($) {
 
                 $matchingDropable.each(function (index, matching) {
                     if (!$(matching).find('.quiz-draggable-answer-item').length) {
-                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">Please match all the items</p>');
+                        $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('Please match all the items', 'tutor')}</p>`);
                         validated = false;
                     }
                 });
@@ -797,7 +802,7 @@ jQuery(document).ready(function ($) {
                     var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
                     if ( !isTrue) {
                         if ($input.prop("checked")) {
-                            $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append('<span class="wrong-right-text"><i class="tutor-icon-line-cross"></i> Incorrect, Please try again</span>');
+                            $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append(`<span class="wrong-right-text"><i class="tutor-icon-line-cross"></i> ${__('Incorrect, Please try again', 'tutor')}</span>`);
                         }
                         validatedTrue = false;
                     }
@@ -812,7 +817,7 @@ jQuery(document).ready(function ($) {
                     var checked = $input.is(':checked');
                 
                     if (isTrue && !checked) {
-                        $question_wrap.find('.answer-help-block').html('<p style="color: #dc3545">More answer for this question is required</p>');
+                        $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('More answer for this question is required', 'tutor')}</p>`);
                         validatedTrue = false;
                     }
                 }
@@ -836,7 +841,7 @@ jQuery(document).ready(function ($) {
                     var checked = $input.is(':checked');
 
                     if (isTrue) {
-                        $input.closest('.quiz-answer-input-bottom').addClass('right-answer').append('<span class="wrong-right-text"><i class="tutor-icon-checkbox-pen-outline"></i> Correct Answer</span>');
+                        $input.closest('.quiz-answer-input-bottom').addClass('right-answer').append(`<span class="wrong-right-text"><i class="tutor-icon-checkbox-pen-outline"></i>${__('Correct Answer', 'tutor')}</span>`);
                     } else {
                         if ($input.prop("checked")) {
                             $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer');
