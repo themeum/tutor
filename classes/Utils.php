@@ -3468,11 +3468,22 @@ class Utils {
 			}
 		}
 
+		/**
+		 * INNER JOIN $wpdb->users, because if user deleted their content
+		 * could be retained thus total number counted and q & a showing
+		 * list is not similar
+		 * now only the q & a will be appeared that is belongs to a user
+		 * @since version 1.8.11
+		*/
 		$count = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT({$wpdb->comments}.comment_ID) 
 			FROM	{$wpdb->comments}
 					INNER JOIN {$wpdb->commentmeta}
-					ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+					ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+
+					INNER JOIN {$wpdb->users} 
+					ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+
 			WHERE 	comment_type = %s 
 					AND comment_parent = 0 {$in_question_id_query}
 					AND {$wpdb->commentmeta}.meta_value LIKE %s;
