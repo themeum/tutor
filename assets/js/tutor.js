@@ -1530,8 +1530,97 @@ jQuery(document).ready(function($){
         e.stopPropagation();
         $(this).addClass('show');
       });
-   //announcement end
+    //announcement end
 
+
+    
+   /**
+    * @since v.1.8.11
+    * Parse and show video duration on link paste in lesson video 
+    */
+    $('body').on('paste', '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5', function(e) {
+
+        var root = $(this).closest('.lesson-modal-form-wrap').find('.tutor-lesson-video-runtime');
+        var is_wp_media = $(this).hasClass('video_source_wrap_html5') || $(this).hasClass('video_source_upload_wrap_html5');
+        var video_url = is_wp_media ? null : e.originalEvent.clipboardData.getData('text');
+                
+        var set_duration = function(duration) {
+            var fragments = duration.split(':');
+            var time_fields = root.find('input');
+
+            for(var i=0; i<3; i++) {
+                time_fields.eq(i).val(fragments[i]);
+            }
+        }
+
+        var second_to_time = function(sec_num) {
+            var hours   = Math.floor(sec_num / 3600);
+            var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+            var seconds = Math.round( sec_num - (hours * 3600) - (minutes * 60) );
+
+            if (hours   < 10) {hours   = "0"+hours;}
+            if (minutes < 10) {minutes = "0"+minutes;}
+            if (seconds < 10) {seconds = "0"+seconds;}
+    
+            return hours+':'+minutes+':'+seconds;
+        }
+        
+        var yt_to_seconds = function (duration) {
+            var match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+          
+            match = match.slice(1).map(function(x) {
+                if (x != null) {
+                    return x.replace(/\D/, '');
+                }
+            });
+          
+            var hours = (parseInt(match[0]) || 0);
+            var minutes = (parseInt(match[1]) || 0);
+            var seconds = (parseInt(match[2]) || 0);
+          
+            return hours * 3600 + minutes * 60 + seconds;
+        }
+
+        if(is_wp_media || $(this).parent().hasClass('video_source_wrap_external_url')) {
+            var player = document.createElement('video');
+            player.addEventListener('loadedmetadata', function() {
+                set_duration( second_to_time( player.duration ));
+            });
+
+            if(!is_wp_media) {
+                player.src = video_url;
+                return;
+            }
+
+        } else if($(this).parent().hasClass('video_source_wrap_vimeo')) {
+
+            var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+            var match = video_url.match(regExp);
+            var video_id = match ? match[5] : null;
+
+            if(video_id) {
+                $.getJSON('http://vimeo.com/api/v2/video/'+video_id+'/json', function(data) {
+                    if(Array.isArray(data) && data[0] && data[0].duration!==undefined) {
+                        set_duration(second_to_time(data[0].duration));
+                    }
+                });
+            }            
+        } else if($(this).parent().hasClass('video_source_wrap_youtube')) {
+            var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            var match = video_url.match(regExp);
+            var video_id = (match && match[7].length==11) ? match[7] : false;
+
+            if(video_id) {
+                var result_url = 'https://www.googleapis.com/youtube/v3/videos?id='+video_id+'&key=AIzaSyBueQl1SZI-5dfBPdrmoUOdA8VwYLEhsUg&part=contentDetails';
+
+                $.getJSON(result_url, function(data) {
+                    if(typeof data=='object' && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.duration) {
+                        set_duration( second_to_time( yt_to_seconds(data.items[0].contentDetails.duration) ) );
+                    }
+                });
+            }
+        }
+    });
 
    /**
     * @since v.1.8.6

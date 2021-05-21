@@ -76,7 +76,7 @@ class Template extends Tutor_Base {
 	 * Make a page to archive listing for courses
 	 */
 	public function limit_course_query_archive($query){
-		$courses_per_page = (int) tutor_utils()->get_option('courses_per_page', 10);
+		$courses_per_page = (int) tutor_utils()->get_option('courses_per_page', 12);
 
 		if ($query->is_main_query() && ! $query->is_feed() && ! is_admin() && is_page() ){
 			$queried_object = get_queried_object();
