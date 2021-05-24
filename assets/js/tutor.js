@@ -1601,9 +1601,10 @@ jQuery(document).ready(function($){
             var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
             var match = video_url.match(regExp);
             var video_id = (match && match[7].length==11) ? match[7] : false;
+            var api_key = $(this).data('youtube_api_key');
 
-            if(video_id) {
-                var result_url = 'https://www.googleapis.com/youtube/v3/videos?id='+video_id+'&key=AIzaSyBueQl1SZI-5dfBPdrmoUOdA8VwYLEhsUg&part=contentDetails';
+            if(video_id && api_key) {
+                var result_url = 'https://www.googleapis.com/youtube/v3/videos?id='+video_id+'&key='+api_key+'&part=contentDetails';
 
                 $.getJSON(result_url, function(data) {
                     if(typeof data=='object' && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.duration) {
