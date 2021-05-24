@@ -444,6 +444,11 @@ class Options {
 								'default'   => 'lessons',
 								'desc'      => $lesson_url,
 							),
+							'lesson_video_duration_youtube_api_key' => array(
+								'type'      => 'text',
+								'label'     => __('Youtube API Key', 'tutor'),
+								'desc'      => __('To get dynamic video duration from Youtube, you need to set API key first'),
+							),
 						),
 					),
 
