@@ -3468,11 +3468,22 @@ class Utils {
 			}
 		}
 
+		/**
+		 * INNER JOIN $wpdb->users, because if user deleted their content
+		 * could be retained thus total number counted and q & a showing
+		 * list is not similar
+		 * now only the q & a will be appeared that is belongs to a user
+		 * @since version 1.8.11
+		*/
 		$count = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT({$wpdb->comments}.comment_ID) 
 			FROM	{$wpdb->comments}
 					INNER JOIN {$wpdb->commentmeta}
-					ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+					ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+
+					INNER JOIN {$wpdb->users} 
+					ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+
 			WHERE 	comment_type = %s 
 					AND comment_parent = 0 {$in_question_id_query}
 					AND {$wpdb->commentmeta}.meta_value LIKE %s;
@@ -3690,6 +3701,52 @@ class Utils {
 
 	public function unanswered_question_count() {
 		global $wpdb;
+		/**
+		 * q & a unanswered showing wrong number when login as
+		 * instructor as it was count unanswered question from all courses
+		 * from now on it will check if tutor instructor and count
+		 * from instructor's course
+		 * @since version 1.8.11
+		*/
+		$user_id 	 = get_current_user_id();
+		$course_type = tutor()->course_post_type;
+
+		$in_question_id_query = '';
+		/**
+		 * Get only assinged  courses questions if current user is a
+		 */
+		if ( ! current_user_can( 'administrator' ) && current_user_can( tutor()->instructor_role ) ) {
+
+			$get_course_ids = $wpdb->get_col( $wpdb->prepare(
+				"SELECT ID
+				FROM 	{$wpdb->posts}
+				WHERE 	post_author = %d
+						AND post_type = %s
+						AND post_status = %s
+				",
+				$user_id,
+				$course_type,
+				'publish'
+			) );
+
+			$get_assigned_courses_ids = $wpdb->get_col( $wpdb->prepare(
+				"SELECT meta_value
+				FROM	{$wpdb->usermeta}
+				WHERE 	meta_key = %s
+						AND user_id = %d
+				",
+				'_tutor_instructor_course_id',
+				$user_id
+			) );
+
+			$my_course_ids = array_unique( array_merge( $get_course_ids, $get_assigned_courses_ids ) );
+
+			if ( $this->count( $my_course_ids ) ) {
+				$implode_ids = implode( ',', $my_course_ids );
+				$in_question_id_query = " AND {$wpdb->comments}.comment_post_ID IN($implode_ids) ";
+			}
+		}
+
 		$count = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT({$wpdb->comments}.comment_ID)
 			FROM    {$wpdb->comments}
@@ -3699,11 +3756,10 @@ class Utils {
 							ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 			WHERE   {$wpdb->comments}.comment_type = %s
 					AND {$wpdb->comments}.comment_approved = %s
-					AND {$wpdb->comments}.comment_parent = %d;
+					AND {$wpdb->comments}.comment_parent = 0 {$in_question_id_query};
 			",
 			'tutor_q_and_a',
-			'waiting_for_answer',
-			0
+			'waiting_for_answer'
 		) );
 		return (int) $count;
 	}
