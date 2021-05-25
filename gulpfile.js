@@ -119,7 +119,7 @@ exports.build = gulp.series(
 	...task_keys,
 	"clean-zip",
 	"clean-build",
-	"makepot",
+	//"makepot",
 	"copy",
 	"make-zip",
 	"clean-build"
