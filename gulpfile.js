@@ -104,7 +104,7 @@ function i18n_makepot(callback, target_dir) {
 
 					added_texts.push(text);
 					translation_texts+= 
-						'\n#: ' + '/' + file_name + ':' + (i+1) 
+						'\n#: ' + (full_path.replace(__dirname+'/', '')) + ':' + (i+1) 
 						+ '\nmsgid "'+text
 						+'"\nmsgstr ""' 
 						+ '\n'; 

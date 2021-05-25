@@ -5226,50 +5226,50 @@ msgstr ""
 msgid "Quiz Time"
 msgstr ""
 
-#: /tutor-admin.js:50
+#: assets/js/tutor-admin.js:50
 msgid "Success"
 msgstr ""
 
-#: /tutor-admin.js:51
+#: assets/js/tutor-admin.js:51
 msgid "Error"
 msgstr ""
 
-#: /tutor-admin.js:51
+#: assets/js/tutor-admin.js:51
 msgid "Action Failed"
 msgstr ""
 
-#: /tutor-admin.js:681
+#: assets/js/tutor-admin.js:681
 msgid "Are you sure? it can not be undone."
 msgstr ""
 
-#: /tutor-front.js:736
+#: assets/js/tutor-front.js:736
 msgid "Please select an option to answer"
 msgstr ""
 
-#: /tutor-front.js:741
+#: assets/js/tutor-front.js:741
 msgid "Please select at least one option to answer."
 msgstr ""
 
-#: /tutor-front.js:748
+#: assets/js/tutor-front.js:748
 msgid "The answer for this question is required"
 msgstr ""
 
-#: /tutor-front.js:770
+#: assets/js/tutor-front.js:770
 msgid "Please match all the items"
 msgstr ""
 
-#: /tutor-front.js:805
+#: assets/js/tutor-front.js:805
 msgid "Incorrect, Please try again"
 msgstr ""
 
-#: /tutor-front.js:820
+#: assets/js/tutor-front.js:820
 msgid "More answer for this question is required"
 msgstr ""
 
-#: /tutor-front.js:844
+#: assets/js/tutor-front.js:844
 msgid "Correct Answer"
 msgstr ""
 
-#: /tutor-front.js:1151
+#: assets/js/tutor-front.js:1151
 msgid "Assignment answer can not be empty"
 msgstr ""
