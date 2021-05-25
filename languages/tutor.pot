@@ -265,14 +265,6 @@ msgstr ""
 msgid "Announcement deleted successfully"
 msgstr ""
 
-#: classes/Assets.php:44
-msgid "Are you sure? it can not be undone."
-msgstr ""
-
-#: classes/Assets.php:102
-msgid "Assignment answer can not be empty"
-msgstr ""
-
 #: classes/Course.php:140, classes/Course.php:222
 msgid "Course Builder"
 msgstr ""
@@ -2570,23 +2562,27 @@ msgstr ""
 msgid "Rejected"
 msgstr ""
 
+#: classes/Withdraw_Requests_List.php:63
+msgid "Are you Sure? It can not be undone."
+msgstr ""
+
 #: classes/Withdraw_Requests_List.php:63, templates/dashboard/announcements.php:160, templates/dashboard/announcements/details.php:32, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:40, templates/dashboard/settings/profile.php:67, views/options/field-types/media.php:29, views/pages/announcements.php:142
 msgid "Delete"
 msgstr ""
 
-#: classes/Withdraw_Requests_List.php:104
+#: classes/Withdraw_Requests_List.php:103
 msgid "Requested By"
 msgstr ""
 
-#: classes/Withdraw_Requests_List.php:105, templates/dashboard/purchase_history.php:22, templates/dashboard/withdraw.php:137, templates/dashboard/withdraw.php:181
+#: classes/Withdraw_Requests_List.php:104, templates/dashboard/purchase_history.php:22, templates/dashboard/withdraw.php:137, templates/dashboard/withdraw.php:181
 msgid "Amount"
 msgstr ""
 
-#: classes/Withdraw_Requests_List.php:106, templates/dashboard/withdraw.php:179
+#: classes/Withdraw_Requests_List.php:105, templates/dashboard/withdraw.php:179
 msgid "Withdrawal Method"
 msgstr ""
 
-#: classes/Withdraw_Requests_List.php:107
+#: classes/Withdraw_Requests_List.php:106
 msgid "Requested Time"
 msgstr ""
 
@@ -2901,20 +2897,8 @@ msgstr ""
 msgid "Evaluation"
 msgstr ""
 
-#: templates/dashboard/assignments/review.php:93, templates/dashboard/quiz-attempts/quiz-reviews.php:420, views/modal/edit-lesson.php:75, views/modal/edit_quiz.php:253, views/modal/edit_quiz.php:340, views/options/options_generator.php:5, views/pages/view_attempt.php:365
-msgid "Success"
-msgstr ""
-
 #: templates/dashboard/assignments/review.php:93
 msgid "Assignment evaluated"
-msgstr ""
-
-#: templates/dashboard/assignments/review.php:93, templates/dashboard/quiz-attempts/quiz-reviews.php:420, views/modal/edit-lesson.php:75, views/modal/edit_quiz.php:253, views/modal/edit_quiz.php:340, views/options/options_generator.php:5, views/pages/view_attempt.php:365
-msgid "Error"
-msgstr ""
-
-#: templates/dashboard/assignments/review.php:93
-msgid "Request Error"
 msgstr ""
 
 #: templates/dashboard/assignments/review.php:99
@@ -3599,10 +3583,6 @@ msgstr ""
 
 #: templates/dashboard/quiz-attempts/quiz-reviews.php:401, views/pages/view_attempt.php:343
 msgid "Mark as In correct"
-msgstr ""
-
-#: templates/dashboard/quiz-attempts/quiz-reviews.php:420, views/modal/edit-lesson.php:75, views/modal/edit_quiz.php:253, views/modal/edit_quiz.php:340, views/options/options_generator.php:5, views/pages/view_attempt.php:365
-msgid "Action Failed"
 msgstr ""
 
 #: templates/dashboard/quiz-attempts/quiz-reviews.php:420, views/pages/view_attempt.php:365
@@ -5244,4 +5224,52 @@ msgstr ""
 
 #: views/pages/view_attempt.php:115
 msgid "Quiz Time"
+msgstr ""
+
+#: /tutor-admin.js:50
+msgid "Success"
+msgstr ""
+
+#: /tutor-admin.js:51
+msgid "Error"
+msgstr ""
+
+#: /tutor-admin.js:51
+msgid "Action Failed"
+msgstr ""
+
+#: /tutor-admin.js:681
+msgid "Are you sure? it can not be undone."
+msgstr ""
+
+#: /tutor-front.js:736
+msgid "Please select an option to answer"
+msgstr ""
+
+#: /tutor-front.js:741
+msgid "Please select at least one option to answer."
+msgstr ""
+
+#: /tutor-front.js:748
+msgid "The answer for this question is required"
+msgstr ""
+
+#: /tutor-front.js:770
+msgid "Please match all the items"
+msgstr ""
+
+#: /tutor-front.js:805
+msgid "Incorrect, Please try again"
+msgstr ""
+
+#: /tutor-front.js:820
+msgid "More answer for this question is required"
+msgstr ""
+
+#: /tutor-front.js:844
+msgid "Correct Answer"
+msgstr ""
+
+#: /tutor-front.js:1151
+msgid "Assignment answer can not be empty"
 msgstr ""
