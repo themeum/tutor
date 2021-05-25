@@ -63,17 +63,24 @@ if ( isset( $args['attributes']['aria-label'] ) ) {
 
 <div class="tutor-loop-cart-btn-wrap">
 	<?php
-	echo apply_filters( 'woocommerce_loop_add_to_cart_link', // WPCS: XSS ok.
-		sprintf( '<a href="%s" data-quantity="%s" class="%s" %s>%s</a>',
-			esc_url( $product->add_to_cart_url() ),
-			esc_attr( isset( $args['quantity'] ) ? $args['quantity'] : 1 ),
-			esc_attr( isset( $args['class'] ) ? $args['class'] : 'button' ),
-			isset( $args['attributes'] ) ? wc_implode_html_attributes( $args['attributes'] ) : '',
-			esc_html( $product->add_to_cart_text() )
-		),
-		$product, $args );
-
+	if(tutils()->is_course_fully_booked()) {
+		?>
+		<span class="tutor-course-booked-fully">
+			<img src="<?php echo tutor()->url; ?>/assets/images/icon-warning-info.svg" style=""/>
+			<span><?php _e('Booked Fully', 'tutor'); ?></span>
+		</span>
+		<?php
+	} else {
+		echo apply_filters( 'woocommerce_loop_add_to_cart_link', // WPCS: XSS ok.
+			sprintf( '<a href="%s" data-quantity="%s" class="%s" %s>%s</a>',
+				esc_url( $product->add_to_cart_url() ),
+				esc_attr( isset( $args['quantity'] ) ? $args['quantity'] : 1 ),
+				esc_attr( isset( $args['class'] ) ? $args['class'] : 'button' ),
+				isset( $args['attributes'] ) ? wc_implode_html_attributes( $args['attributes'] ) : '',
+				esc_html( $product->add_to_cart_text() )
+			),
+			$product, $args );
+	}
 	?>
-
 </div>
 

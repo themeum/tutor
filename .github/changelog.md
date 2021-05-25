@@ -2,8 +2,15 @@
 
 ### 1.8.11 - May 31, 2021
 
+* New: Assign different certificate templates to courses separately
 * New: tutor_quiz/single/after/wrap hook added in single quiz template
-* Fix: Tutor dashboard shortcode not working
+* New: Connect with YouTube API to automatically fetch video duration
+* New: Static texts in JS files are now translatable
+* Update: Button text changed for rejecting instructor requests 
+* Update: Default course count per page changed to 12 from 3
+* Fix: Dashboard shortcode not working
+* Fix: Wrong Q&A count in dashboard
+* Fix: Student can Add to Cart from course archive even after the course is full
 
 
 ### 1.8.10 - May 10, 2021

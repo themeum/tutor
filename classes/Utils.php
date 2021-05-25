@@ -6998,4 +6998,20 @@ class Utils {
 	{
 		return $this->has_user_role(array('administrator', 'editor')) || $this->is_instructor_of_this_course($user_id, $course_id);
 	}
+
+	
+	/**
+	 * @return boolean
+	 * 
+	 * @since v1.8.11
+	 * 
+	 * Check if course member limit full
+	 */
+	public function is_course_fully_booked($course_id = 0) {
+
+		$total_enrolled = $this->count_enrolled_users_by_course($course_id);
+		$maximum_students = (int) $this->get_course_settings($course_id, 'maximum_students');
+	
+		return $maximum_students && $maximum_students <= $total_enrolled;
+	}
 }

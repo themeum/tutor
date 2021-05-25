@@ -374,6 +374,18 @@ div[class*="tutor-course-col"] {
 	color: var(--tutor-primary-color);
 }
 
+.tutor-course-booked-fully {
+	&>* {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	img {
+		width:24px;
+		height:24px;
+	}
+}
+
 /* Standard syntax */
 @-webkit-keyframes mymove {
 	from {

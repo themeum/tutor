@@ -2786,6 +2786,16 @@ div[class*="tutor-course-col"] {
   color: var(--tutor-primary-color);
 }
 
+.tutor-course-booked-fully > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.tutor-course-booked-fully img {
+  width: 24px;
+  height: 24px;
+}
+
 /* Standard syntax */
 @-webkit-keyframes mymove {
   from {
