@@ -483,6 +483,12 @@ class WooCommerce extends Tutor_Base {
 		if ($if_has_course){
 			$course_id = $if_has_course->post_id;
 			tutor_utils()->do_enroll($course_id, $order_id);
+			/**
+			 * Redirect student on enrolled courses after course 
+			 * enrollment complete
+			 * @since 1.8.11
+			*/
+			add_action( 'tutor_after_enrolled', array($this, 'redirect_to_enrolled_courses') );			
 		}
 	}
 
@@ -493,6 +499,20 @@ class WooCommerce extends Tutor_Base {
 	public function disable_tutor_monetization() {
 		tutils()->update_option('monetize_by', 'free');
 		update_option('tutor_show_woocommerce_notice', true);
+	}
+
+	/**
+	 * Redirect student on enrolled courses after course 
+	 * enrollment complete
+	 * @since 1.8.11
+	*/
+	public function redirect_to_enrolled_courses() {
+		$tutor_dashboard_slug	= tutor_utils()->tutor_dashboard_url();
+		$url 					= $tutor_dashboard_slug.'enrolled-courses';
+		nocache_headers();
+		if( wp_safe_redirect( $url ) ) {
+			exit;
+		}			
 	}
 }
 
