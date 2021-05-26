@@ -2,7 +2,6 @@ jQuery(document).ready(function($){
     'use strict';
 
     const { __, _x, _n, _nx } = wp.i18n;
-
     /**
      * Color Picker
      * @since v.1.2.21
@@ -47,11 +46,8 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 data.success ? 
-                    tutor_toast(__('Success', 'tutor'), $form.data('toast_success_message'), 'success') : 
-                    tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
-            },
-            error: function() {
-                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
+                    tutor_toast(__('Saved', 'tutor'), $form.data('toast_success_message'), 'success') : 
+                    tutor_toast(__('Request Error', 'tutor'), __('Could not save', 'tutor'), 'error');
             },
             complete: function () {
                 $form.find('.button').removeClass('tutor-updating-message');
@@ -153,14 +149,8 @@ jQuery(document).ready(function($){
                     //Close the modal
                     $('.tutor-lesson-modal-wrap').removeClass('show');
 
-                    tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
+                    tutor_toast(__('Lesson Updated', 'tutor'), $that.data('toast_success_message'), 'success');
                 }
-                else {
-                    tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
-                }
-            },
-            error: function () {
-                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -208,7 +198,6 @@ jQuery(document).ready(function($){
         frame.on( 'select', function() {
             // Get media attachment details from the frame state
             var attachment = frame.state().get('selection').first().toJSON();
-            console.log(attachment);
             $that.closest('.video_source_wrap_html5').find('span.video_media_id').data('video_url', attachment.url).text(attachment.id).trigger('paste').closest('p').show();
             $that.closest('.video_source_wrap_html5').find('input.input_source_video_id').val(attachment.id);
         });
@@ -507,14 +496,8 @@ jQuery(document).ready(function($){
                     //Close the modal
                     $('.tutor-lesson-modal-wrap').removeClass('show');
                     
-                    tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
+                    tutor_toast(__('Assignment Updated', 'tutor'), $that.data('toast_success_message'), 'success');
                 }
-                else {
-                    tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
-                }
-            },
-            error: function() {
-                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');

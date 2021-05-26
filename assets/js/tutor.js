@@ -175,7 +175,7 @@ jQuery(document).ready(function($){
 
                 data.success ?
                     tutor_toast(__('Success', 'tutor'), $btn.data('toast_success_message'), 'success'):
-                    tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
+                    tutor_toast(__('Update Error', 'tutor'), __('Meeting Update Failed', 'tutor'), 'error');
 
                 if(data.course_contents) {
                     $(data.selector).html(data.course_contents);
@@ -187,9 +187,6 @@ jQuery(document).ready(function($){
                 } else {
                     location.reload();
                 }
-            },
-            error: function() {
-                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $btn.removeClass('tutor-updating-message');
@@ -555,10 +552,7 @@ jQuery(document).ready(function($){
             success: function (data) {
                 data.success ? 
                     tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success') : 
-                    tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
-            },
-            error: function() {
-                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
+                    tutor_toast(__('Update Error', 'tutor'), __('Quiz Update Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1295,10 +1289,11 @@ jQuery(document).ready(function($){
     * @since v.1.6.4
     * Quiz Attempts Instructor Feedback 
     */
-   $(document).on('click', '.tutor-instructor-feedback', function(e){
+   $(document).on('click', '.tutor-instructor-feedback', function(e) {
+
     e.preventDefault();
     var $that = $(this);
-    console.log('Here->', $that.data('attemptid'),  $('.tutor-instructor-feedback-content').val());
+    
     $.ajax({
         url : (window.ajaxurl || _tutorobject.ajaxurl),
         type : 'POST',
@@ -1311,12 +1306,6 @@ jQuery(document).ready(function($){
                 $that.closest('.course-content-item').remove();
                 tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
             }
-            else {
-                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
-            }
-        },
-        error: function() {
-            tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
         },
         complete: function () {
             $that.removeClass('tutor-updating-message');
@@ -1637,9 +1626,6 @@ jQuery(document).ready(function($){
             data: data,
             success: function() {
                 tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
-            },
-            error: function () {
-                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $that.find('button').removeClass('tutor-updating-message');
