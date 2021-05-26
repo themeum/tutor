@@ -1,6 +1,6 @@
 function tutor_get_nonce_data(send_key_value) {
 
-    var nonce_data = window.tutor_data || window._tutorobject || {};
+    var nonce_data = window._tutorobject || {};
     var nonce_key = nonce_data.nonce_key || '';
     var nonce_value = nonce_data[nonce_key] || '';
 
@@ -13,6 +13,8 @@ function tutor_get_nonce_data(send_key_value) {
 
 jQuery(document).ready(function($){
     'use strict';
+
+    const { __, _x, _n, _nx } = wp.i18n;
 
     /**
      * Slider bar
@@ -172,8 +174,8 @@ jQuery(document).ready(function($){
             success: function (data) {
 
                 data.success ?
-                    tutor_toast($btn.data('toast_success'), $btn.data('toast_success_message'), 'success'):
-                    tutor_toast($btn.data('toast_error'), $btn.data('toast_error_message'), 'error');
+                    tutor_toast(__('Success', 'tutor'), $btn.data('toast_success_message'), 'success'):
+                    tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
 
                 if(data.course_contents) {
                     $(data.selector).html(data.course_contents);
@@ -187,7 +189,7 @@ jQuery(document).ready(function($){
                 }
             },
             error: function() {
-                tutor_toast($btn.data('toast_error'), $btn.data('toast_error_message'), 'error');
+                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $btn.removeClass('tutor-updating-message');
@@ -552,11 +554,11 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 data.success ? 
-                    tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success') : 
-                    tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+                    tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success') : 
+                    tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
             },
             error: function() {
-                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1307,14 +1309,14 @@ jQuery(document).ready(function($){
         success: function (data) {
             if (data.success){
                 $that.closest('.course-content-item').remove();
-                tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success');
+                tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
             }
             else {
-                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
             }
         },
         error: function() {
-            tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+            tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
         },
         complete: function () {
             $that.removeClass('tutor-updating-message');
@@ -1634,10 +1636,10 @@ jQuery(document).ready(function($){
             type: type,
             data: data,
             success: function() {
-                tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success');
+                tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
             },
             error: function () {
-                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $that.find('button').removeClass('tutor-updating-message');
@@ -1672,7 +1674,7 @@ jQuery.fn.serializeObject = function()
 };
 
 function tutor_toast(title, description, type) {
-    var tutor_ob = window.tutor_data || window._tutorobject || {};
+    var tutor_ob = window._tutorobject || {};
     var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
     if(!jQuery('.tutor-toast-parent').length) {
