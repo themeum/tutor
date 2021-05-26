@@ -8,6 +8,7 @@ class Assets{
 
 	public function __construct() {
 		add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
+		add_action('admin_enqueue_scripts', array($this, 'tutor_script_text_domain'),100);
 		add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
 		/**
 		 * register translateable function to load
@@ -50,8 +51,8 @@ class Assets{
 		wp_enqueue_script('jquery-ui-datepicker');
 
 		wp_enqueue_script('tutor-select2', tutor()->url.'assets/packages/select2/select2.full.min.js', array('jquery'), tutor()->version, true );
-		wp_enqueue_script( 'tutor-main', tutor()->url . 'assets/js/tutor.js', array( 'jquery' ), tutor()->version, true );
-		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker'), tutor()->version, true );
+		wp_enqueue_script( 'tutor-main', tutor()->url . 'assets/js/tutor.js', array( 'jquery', 'wp-i18n' ), tutor()->version, true );
+		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker', 'wp-i18n'), tutor()->version, true );
 
 		$tutor_localize_data = $this->get_default_localized_data();
 
@@ -166,7 +167,7 @@ class Assets{
 			wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front{$suffix}.css", array(), tutor()->version);
 		}
 		if (tutor_utils()->get_option('load_tutor_js')) {
-			wp_enqueue_script( 'tutor-main', tutor()->url . 'assets/js/tutor.js', array( 'jquery' ), tutor()->version, true );
+			wp_enqueue_script( 'tutor-main', tutor()->url . 'assets/js/tutor.js', array( 'jquery', 'wp-i18n' ), tutor()->version, true );
 			/**
 			 * dependency wp-i18n added for 
 			 * translate js file
@@ -283,6 +284,8 @@ class Assets{
 	*/
 	function tutor_script_text_domain() {
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path.'languages/' );
+		wp_set_script_translations( 'tutor-main', 'tutor', tutor()->path.'languages/' );
+		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path.'languages/' );
 	}
 	
 }
