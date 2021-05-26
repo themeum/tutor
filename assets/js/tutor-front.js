@@ -1024,7 +1024,7 @@ jQuery(document).ready(function ($) {
 
                 } else {
                     Msg = '<div class="tutor-error-msg inline-image-text is-inline-block">\
-                            <img src="'+window.tutor_url_base+'assets/images/icon-cross.svg"/> \
+                            <img src="'+window._tutorobject.tutor_url+'assets/images/icon-cross.svg"/> \
                             <div>\
                                 <b>Error</b><br/>\
                                 <span>'+ data.data.msg + '</span>\
@@ -1148,7 +1148,7 @@ jQuery(document).ready(function ($) {
     $(document).on('submit', '#tutor_assignment_submit_form', function (e) {
         var assignment_answer = $('textarea[name="assignment_answer"]').val();
         if (assignment_answer.trim().length < 1) {
-            $('#form_validation_response').html('<div class="tutor-error-msg">' + _tutorobject.text.assignment_text_validation_msg + '</div>');
+            $('#form_validation_response').html('<div class="tutor-error-msg">' + __('Assignment answer can not be empty', 'tutor') + '</div>');
             e.preventDefault();
         }
     });
@@ -1266,14 +1266,14 @@ jQuery(document).ready(function ($) {
                     //Close the modal
                     $('.tutor-lesson-modal-wrap').removeClass('show');
                     
-                    tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success');
+                    tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
                 }
                 else {
-                    tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+                    tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
                 }
             },
             error: function() {
-                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1456,14 +1456,14 @@ jQuery(document).ready(function ($) {
                     //Close the modal
                     $('.tutor-lesson-modal-wrap').removeClass('show');
 
-                    tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success');
+                    tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
                 }
                 else {
-                    tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+                    tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
                 }
             },
             error: function() {
-                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1930,7 +1930,7 @@ jQuery(document).ready(function ($) {
         e.originalEvent ? toggle_criteria($(this).attr('name'), $(this).val(), $(this).prop('checked')) : 0;
         filter_criteria.column_per_row = loop_container.data('column_per_row');
         filter_criteria.course_per_page = loop_container.data('course_per_page');
-        loop_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>').show();
+        loop_container.html('<div style="text-align:center"><img src="'+window._tutorobject.loading_icon_url+'"/></div>').show();
 
         $.ajax({
             url:window._tutorobject.ajaxurl+(filter_criteria.page ? '?paged='+filter_criteria.page : ''),
@@ -2180,7 +2180,7 @@ jQuery(document).ready(function ($) {
             filter_args.action = 'load_filtered_instructor';
             
             // Show loading icon
-            result_container.html('<div style="text-align:center"><img src="'+window.tutor_loading_icon_url+'"/></div>');
+            result_container.html('<div style="text-align:center"><img src="'+window._tutorobject.loading_icon_url+'"/></div>');
 
             $.ajax({
                 url: window._tutorobject.ajaxurl,

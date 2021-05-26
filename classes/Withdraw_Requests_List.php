@@ -60,8 +60,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 				break;
 		}
 
-		$actions['delete'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s" onclick="return confirm(\'Are you Sure? It can not be undone\')">'.__('Delete', 'tutor').'</a>',self::WITHDRAW_REQUEST_LIST_PAGE,'delete',
-			$item->withdraw_id);
+		$actions['delete'] = sprintf('<a href="?page=%s&action=%s&withdraw_id=%s" onclick="return confirm(\'' . __('Are you Sure? It can not be undone.', 'tutor') . '\')">' . __('Delete', 'tutor') . '</a>', self::WITHDRAW_REQUEST_LIST_PAGE, 'delete', $item->withdraw_id);
 
 		return "<div class='withdraw-list-row-actions'>". $this->row_actions($actions)."</div>";
 	}
