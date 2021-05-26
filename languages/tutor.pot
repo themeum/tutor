@@ -5226,19 +5226,27 @@ msgstr ""
 msgid "Quiz Time"
 msgstr ""
 
+#: assets/js/tutor-admin.js:49
+msgid "Saved"
+msgstr ""
+
 #: assets/js/tutor-admin.js:50
-msgid "Success"
+msgid "Request Error"
 msgstr ""
 
-#: assets/js/tutor-admin.js:51
-msgid "Error"
+#: assets/js/tutor-admin.js:50
+msgid "Could not save"
 msgstr ""
 
-#: assets/js/tutor-admin.js:51
-msgid "Action Failed"
+#: assets/js/tutor-admin.js:152
+msgid "Lesson Updated"
 msgstr ""
 
-#: assets/js/tutor-admin.js:681
+#: assets/js/tutor-admin.js:499
+msgid "Assignment Updated"
+msgstr ""
+
+#: assets/js/tutor-admin.js:664
 msgid "Are you sure? it can not be undone."
 msgstr ""
 
@@ -5272,4 +5280,36 @@ msgstr ""
 
 #: assets/js/tutor-front.js:1151
 msgid "Assignment answer can not be empty"
+msgstr ""
+
+#: assets/js/tutor-front.js:1269
+msgid "Done"
+msgstr ""
+
+#: assets/js/tutor-front.js:1272
+msgid "Failed"
+msgstr ""
+
+#: assets/js/tutor-front.js:1272
+msgid "Lesson Update Failed"
+msgstr ""
+
+#: assets/js/tutor-front.js:1462
+msgid "Assignment Update Failed"
+msgstr ""
+
+#: assets/js/tutor.js:177
+msgid "Success"
+msgstr ""
+
+#: assets/js/tutor.js:178
+msgid "Update Error"
+msgstr ""
+
+#: assets/js/tutor.js:178
+msgid "Meeting Update Failed"
+msgstr ""
+
+#: assets/js/tutor.js:555
+msgid "Quiz Update Failed"
 msgstr ""
