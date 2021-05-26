@@ -1266,14 +1266,14 @@ jQuery(document).ready(function ($) {
                     //Close the modal
                     $('.tutor-lesson-modal-wrap').removeClass('show');
                     
-                    tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
+                    tutor_toast(__('Done', 'tutor'), $that.data('toast_success_message'), 'success');
                 }
                 else {
-                    tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
+                    tutor_toast(__('Failed', 'tutor'), __('Lesson Update Failed', 'tutor'), 'error');
                 }
             },
             error: function() {
-                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
+                tutor_toast(__('Failed', 'tutor'), __('Lesson Update Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1456,14 +1456,14 @@ jQuery(document).ready(function ($) {
                     //Close the modal
                     $('.tutor-lesson-modal-wrap').removeClass('show');
 
-                    tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
+                    tutor_toast(__('Done', 'tutor'), $that.data('toast_success_message'), 'success');
                 }
                 else {
-                    tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
+                    tutor_toast(__('Failed', 'tutor'), __('Assignment Update Failed', 'tutor'), 'error');
                 }
             },
             error: function() {
-                tutor_toast(__('Error', 'tutor'), __('Action Failed', 'tutor'), 'error');
+                tutor_toast(__('Failed', 'tutor'), __('Assignment Update Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -2191,7 +2191,7 @@ jQuery(document).ready(function ($) {
                 },
                 error: function() {
                     result_container.html(html_cache);
-                    tutor_toast('Error', 'Request Error', 'error');
+                    tutor_toast('Failed', 'Request Error', 'error');
                 }
             })
         }
