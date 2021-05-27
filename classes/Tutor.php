@@ -174,7 +174,7 @@ final class Tutor{
      * @since v.1.5.7
      *
      */
-	public function activated_tutor( $plugin, $network_wide ) {
+	public function activated_tutor( $plugin, $network_wide = null ) {
 		if( $plugin == tutor()->basename ) {
 			if( (! get_option('tutor_wizard') ) && version_compare(TUTOR_VERSION, '1.5.6', '>') ) {
 				update_option('tutor_wizard', 'active');
