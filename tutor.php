@@ -23,12 +23,9 @@ define( 'TUTOR_FILE', __FILE__ );
 /**
  * Load tutor text domain for translation
  */
-add_action( 'init', 'tutor_language_load');
-if( !function_exists('tutor_language_load') ) {
-	function tutor_language_load() {
-		load_plugin_textdomain( 'tutor', false, basename( dirname( __FILE__ ) ) . '/languages' );
-	}	
-}
+add_action( 'init', function() {
+	load_plugin_textdomain( 'tutor', false, basename( dirname( __FILE__ ) ) . '/languages' );
+});
 
 /**
  * Tutor Helper function
