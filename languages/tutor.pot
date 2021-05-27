@@ -2592,8 +2592,10 @@ msgstr ""
 
 #: classes/WooCommerce.php:92
 msgid ""
-" Seems like you don’t have WooCommerce plugin installed on your site. In order to use this functionality, you need to have the \n"
-"                WooCommerce plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling \n"
+" Seems like you don’t have WooCommerce plugin installed on your site. In order to use this functionality, you need to have the 
+\n"
+"                WooCommerce plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling 
+\n"
 "                courses with Tutor."
 msgstr ""
 
@@ -4335,7 +4337,8 @@ msgstr ""
 
 #: views/metabox/course-additional-data.php:57
 msgid ""
-"List the knowledge and skills that students will learn after completing this course. (One per line)\n"
+"List the knowledge and skills that students will learn after completing this course. (One per line)
+\n"
 ""
 msgstr ""
 
