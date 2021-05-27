@@ -18,7 +18,7 @@ class Course_Filter{
 		tutils()->checking_nonce();
 
         $default_per_page = tutils()->get_option('courses_per_page', 12);
-		$courses_per_page = 1;// (int)sanitize_text_field(tutils()->array_get('course_per_page', $_POST, $default_per_page));
+		$courses_per_page = (int)sanitize_text_field(tutils()->array_get('course_per_page', $_POST, $default_per_page));
         $page = (isset($_POST['page']) && is_numeric($_POST['page']) && $_POST['page']>0) ? $_POST['page'] : 1;
 
         $args = array(
