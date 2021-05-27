@@ -101,7 +101,7 @@ msgstr ""
 msgid "Pro"
 msgstr ""
 
-#: classes/Admin.php:54, classes/Admin.php:54, classes/Admin.php:487, classes/Gutenberg.php:55
+#: classes/Admin.php:54, classes/Admin.php:54, classes/Admin.php:489, classes/Gutenberg.php:55
 msgid "Tutor LMS"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "Add-ons"
 msgstr ""
 
-#: classes/Admin.php:80, classes/Admin.php:80, classes/Admin.php:451, classes/Utils.php:2468, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings.php:8, templates/dashboard/settings/education.php:7, templates/dashboard/settings/skill.php:8, views/modal/add_quiz.php:21, views/modal/edit_quiz.php:31
+#: classes/Admin.php:80, classes/Admin.php:80, classes/Admin.php:453, classes/Utils.php:2468, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings.php:8, templates/dashboard/settings/education.php:7, templates/dashboard/settings/skill.php:8, views/modal/add_quiz.php:21, views/modal/edit_quiz.php:31
 msgid "Settings"
 msgstr ""
 
@@ -169,23 +169,23 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: classes/Admin.php:243, classes/Template.php:343, templates/permission-denied.php:2
+#: classes/Admin.php:245, classes/Template.php:343, templates/permission-denied.php:2
 msgid "Permission Denied"
 msgstr ""
 
-#: classes/Admin.php:446
+#: classes/Admin.php:448
 msgid "Uninstall"
 msgstr ""
 
-#: classes/Admin.php:460
+#: classes/Admin.php:462
 msgid "<strong style=\"color: #03bd24\">Documentation</strong>"
 msgstr ""
 
-#: classes/Admin.php:464
+#: classes/Admin.php:466
 msgid "<strong style=\"color: #03bd24\">Get Support</strong>"
 msgstr ""
 
-#: classes/Admin.php:486
+#: classes/Admin.php:488
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
@@ -337,7 +337,7 @@ msgstr ""
 msgid "Course Settings"
 msgstr ""
 
-#: classes/Course_Settings_Tabs.php:37, classes/Options.php:94, classes/Options.php:97, classes/Options.php:210, classes/Tutor_Setup.php:554, classes/WooCommerce.php:270
+#: classes/Course_Settings_Tabs.php:37, classes/Options.php:94, classes/Options.php:97, classes/Options.php:210, classes/Tutor_Setup.php:554, classes/WooCommerce.php:276
 msgid "General"
 msgstr ""
 
@@ -801,7 +801,7 @@ msgstr ""
 msgid "Use Gutenberg editor on course description area."
 msgstr ""
 
-#: classes/Options.php:221, classes/Options.php:227, classes/Options.php:284, classes/Options.php:437, classes/WooCommerce.php:281
+#: classes/Options.php:221, classes/Options.php:227, classes/Options.php:284, classes/Options.php:437, classes/WooCommerce.php:287
 msgid "Enable / Disable"
 msgstr ""
 
@@ -1910,7 +1910,7 @@ msgstr ""
 msgid "Setup Wizard"
 msgstr ""
 
-#: classes/Tutor.php:426, tutor.php:54
+#: classes/Tutor.php:426, tutor.php:51
 msgid "Tutor Instructor"
 msgstr ""
 
@@ -1946,7 +1946,7 @@ msgstr ""
 msgid "Easy Digital Downloads"
 msgstr ""
 
-#: classes/TutorEDD.php:106, classes/WooCommerce.php:155
+#: classes/TutorEDD.php:106, classes/WooCommerce.php:161
 msgid "Add Product"
 msgstr ""
 
@@ -2590,44 +2590,42 @@ msgstr ""
 msgid "Requested Time"
 msgstr ""
 
-#: classes/WooCommerce.php:92
+#: classes/WooCommerce.php:98
 msgid ""
-" Seems like you don’t have WooCommerce plugin installed on your site. In order to use this functionality, you need to have the 
-\n"
-"                WooCommerce plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling 
-\n"
+" Seems like you don’t have WooCommerce plugin installed on your site. In order to use this functionality, you need to have the \n"
+"                WooCommerce plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling \n"
 "                courses with Tutor."
 msgstr ""
 
-#: classes/WooCommerce.php:96
+#: classes/WooCommerce.php:102
 msgid "This notice will disappear after activating <strong>WooCommerce</strong>"
 msgstr ""
 
-#: classes/WooCommerce.php:146
+#: classes/WooCommerce.php:152
 msgid "For Tutor"
 msgstr ""
 
-#: classes/WooCommerce.php:147
+#: classes/WooCommerce.php:153
 msgid "This checkmark ensure that you will sell a specif course via this product."
 msgstr ""
 
-#: classes/WooCommerce.php:266, classes/WooCommerce.php:305
+#: classes/WooCommerce.php:272, classes/WooCommerce.php:311
 msgid "WooCommerce"
 msgstr ""
 
-#: classes/WooCommerce.php:271
+#: classes/WooCommerce.php:277
 msgid "WooCommerce Settings"
 msgstr ""
 
-#: classes/WooCommerce.php:282
+#: classes/WooCommerce.php:288
 msgid "Enable add to cart feature for guest users"
 msgstr ""
 
-#: classes/WooCommerce.php:283
+#: classes/WooCommerce.php:289
 msgid "Enabling this will let an unregistered user purchase any course from the Course Details page. Head over to Documentation to know how to configure this setting."
 msgstr ""
 
-#: classes/WooCommerce.php:505
+#: classes/WooCommerce.php:537
 msgid "Since WooCommerce is disabled, your monetized courses have been set to free. Please make sure to enable Tutor LMS monetization if you decide to re-enable WooCommerce."
 msgstr ""
 
@@ -4337,8 +4335,7 @@ msgstr ""
 
 #: views/metabox/course-additional-data.php:57
 msgid ""
-"List the knowledge and skills that students will learn after completing this course. (One per line)
-\n"
+"List the knowledge and skills that students will learn after completing this course. (One per line)\n"
 ""
 msgstr ""
 

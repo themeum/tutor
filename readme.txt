@@ -246,12 +246,15 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 New: Assign different certificate templates to courses separately
 New: tutor_quiz/single/after/wrap hook added in single quiz template
 New: Video duration will be automatically fetched when inserting lesson videos
+New: Filter hook added to course filter
 New: Static texts in JS files are now translatable
-Update: Button text changed for rejecting instructor requests 
+New: Automatic order completion redirects to Enrolled Courses
+Update: Button text changed for rejecting instructor requests
 Update: Default course count per page changed to 12 from 3
 Fix: Dashboard shortcode not working
 Fix: Wrong Q&A count in dashboard
 Fix: Student can Add to Cart from course archive even after the course is full
+Fix: SQL error in custom post types
 
 = 1.8.10 - May 10, 2021 =
 
