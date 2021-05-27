@@ -4,7 +4,7 @@
 
 * New: Assign different certificate templates to courses separately
 * New: tutor_quiz/single/after/wrap hook added in single quiz template
-* New: Connect with YouTube API to automatically fetch video duration
+* New: Video duration will be automatically fetched when inserting lesson videos
 * New: Static texts in JS files are now translatable
 * Update: Button text changed for rejecting instructor requests 
 * Update: Default course count per page changed to 12 from 3
