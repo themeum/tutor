@@ -1876,91 +1876,31 @@ jQuery(document).ready(function ($) {
      * 
      * @since  v.1.7.2
     */
-    var filter_criteria = {action:'tutor_course_filter_ajax'};
-    var filter_container = $('.tutor-course-filter-container');
+    var filter_container = $('.tutor-course-filter-container form');
     var loop_container = $('.tutor-course-filter-loop-container');
-    var toggle_criteria = function(name, value, is_checked){
-
-        if(is_checked===undefined){
-            
-            if(!value){
-                delete filter_criteria[name];
-            }
-            else{
-                filter_criteria[name]=value;
-            }
-        }
-        else{
-            !filter_criteria[name] ? filter_criteria[name]=[] : 0;
-            var index = filter_criteria[name].indexOf(value);
-
-            if(is_checked){
-                index==-1 ? filter_criteria[name].push(value) : 0;
-            }
-            else{
-                filter_criteria[name].splice(index, 1);
-            }
-        }
-        
-        push_state();
-    }
-
-    var push_state=function(){
-        var exclude = ['column_per_row', 'course_per_page'];
-        
-        var str = Object.keys(filter_criteria).map(function(key){
-            var val = filter_criteria[key];
-            var str = Array.isArray(val) ? val.join(',') : val;
-
-            return (key=='action' || !str || exclude.indexOf(key)>-1) ? null : key+'='+str;
-
-        }).filter(q=>q!==null).join('&');
-        
-        window.history.replaceState({'id':'tutor_courses'}, 'Courses', (str ? '?'+str : ''));
-    }
-
+    var filter_modifier = {};
+    
     // Sidebar checkbox value change
-    filter_container.find('[type=checkbox]').change(function(e){
-        /**
-         * check if checkbox is checked
-         */
-        var is_checked = filter_container.find('[type=checkbox]').is(":checked");
-        is_checked ? $(".tutor-clear-all-filter").show() : $(".tutor-clear-all-filter").hide();
+    filter_container.on('submit', function(e) {
+        e.preventDefault();
+    })
+    .find('input').change(function(e){
+        
+        var filter_criteria = Object.assign( filter_container.serializeObject(), filter_modifier);
+        filter_criteria.action = 'tutor_course_filter_ajax';
 
-        e.originalEvent ? toggle_criteria($(this).attr('name'), $(this).val(), $(this).prop('checked')) : 0;
-        filter_criteria.column_per_row = loop_container.data('column_per_row');
-        filter_criteria.course_per_page = loop_container.data('course_per_page');
-        loop_container.html('<div style="text-align:center"><img src="'+window._tutorobject.loading_icon_url+'"/></div>').show();
+        loop_container.html('<center><img src="'+window._tutorobject.loading_icon_url+'"/></center>');
 
         $.ajax({
-            url:window._tutorobject.ajaxurl+(filter_criteria.page ? '?paged='+filter_criteria.page : ''),
+            url:window._tutorobject.ajaxurl,
             type:'POST',
             data:filter_criteria,
-            success:function(r){
+            success:function(r) {
                 loop_container.html(r).find('.tutor-pagination-wrap a').each(function(){
                     $(this).attr('data-href', $(this).attr('href')).attr('href', '#');
                 });
-            },
-            error:function(){
-                alert('Request Failed!');
             }
         })
-    });
-
-    // Search field 
-    var time_out;
-    filter_container.on('input', '[name="tutor-course-filter-keyword"]', function(){
-        window.clearTimeout(time_out);
-
-        var value = $(this).val();
-        value = value.trim();
-
-        time_out=window.setTimeout(function(){
-            
-            toggle_criteria('keyword', value);
-
-            filter_container.find('[type="checkbox"]:first').trigger('change');
-        }, 500);
     });
 
     // Alter pagination
@@ -1970,58 +1910,21 @@ jQuery(document).ready(function ($) {
         if(url){
             url = new URL(url);
             var page = url.searchParams.get("paged");
-
+            
             if(page){
                 e.preventDefault();
-                toggle_criteria('page', page);
-                
-                filter_container.find('[type="checkbox"]:first').trigger('change');
+                filter_modifier.page = page;
+                filter_container.find('input:first').trigger('change');
             }
         }
     });
 
     // Alter sort filter
-    loop_container.on('change', 'select[name="tutor_course_filter"]', function(){
-        toggle_criteria('tutor_course_filter', $(this).val());
-        filter_container.find('[type="checkbox"]:first').trigger('change');
+    loop_container.on('change', 'select[name="tutor_course_filter"]', function() {
+        filter_modifier.tutor_course_filter = $(this).val();
+        filter_container.find('input:first').trigger('change');
     });
 
-    // Parse filter from URL
-    var url = new URL(window.location.href);
-    var trigger_load=false;
-    filter_container.find('[type="checkbox"]').each(function(){
-        var name = $(this).attr('name');
-        var value = $(this).val();
-        var checked = $(this).prop('checked');
-
-        var arg = url.searchParams.get(name);
-        arg = arg ? arg.split(',') : [];
-        
-
-        if(arg.indexOf(value)>-1 || checked){
-            $(this).prop('checked', true);
-            toggle_criteria(name, value, true, false);
-        }
-    });
-
-    ['page', 'keyword', 'tutor_course_filter'].forEach(function(name){
-        var value = url.searchParams.get(name);
-
-        if(value){
-            toggle_criteria(name, value, undefined, false);
-            name=='keyword' ? filter_container.find('[name="tutor-course-filter-keyword"]').val(value) : 0;
-            name=='tutor_course_filter' ? loop_container.find('select[name="tutor_course_filter"]').val(value) : 0;
-            trigger_load=true;
-        }
-    });
-
-    if(trigger_load || filter_container.find('input:checked').length>0){
-        filter_container.find('[type="checkbox"]:first').trigger('change');
-    }
-    else{
-        loop_container.show();
-    }
-   
     // Refresh page after coming back to course archive page from cart
     var archive_loop = $('.tutor-course-loop');
     if(archive_loop.length>0){

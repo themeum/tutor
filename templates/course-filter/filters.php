@@ -13,12 +13,13 @@
     $supported_filters = tutor_utils()->get_option('supported_course_filters', array());
     $supported_filters = array_keys($supported_filters);
 ?>
-<div>    
+<form>  
+    <?php do_action('tutor_course_filter/before'); ?>
     <?php
         if(in_array('search', $supported_filters)){
             ?>
             <div class="tutor-course-search-field">
-                <input type="text" name="tutor-course-filter-keyword" placeholder="<?php _e('Search...'); ?>"/>
+                <input type="text" name="keyword" placeholder="<?php _e('Search...'); ?>"/>
                 <i class="tutor-icon-magnifying-glass-1"></i>
             </div>
             <?php
@@ -90,6 +91,6 @@
         <a href="<?php echo esc_url(tutor_utils()->course_archive_page_url());?>">
             <i class="tutor-icon-cross"></i> Clear All Filter
         </a>
-       
     </div>
-</div>
+    <?php do_action('tutor_course_filter/after'); ?>
+</form>

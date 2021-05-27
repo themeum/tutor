@@ -1531,7 +1531,8 @@ jQuery(document).ready(function($){
     */
     $('body').on('paste', '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5', function(e) {
 
-        var root = $(this).closest('.lesson-modal-form-wrap').find('.tutor-lesson-video-runtime');
+        var root = $(this).closest('.lesson-modal-form-wrap').find('.tutor-option-field-video-duration');
+        var duration_label = root.find('label');
         var is_wp_media = $(this).hasClass('video_source_wrap_html5') || $(this).hasClass('video_source_upload_wrap_html5');
         var video_url = is_wp_media ? $(this).find('span').data('video_url') : e.originalEvent.clipboardData.getData('text');
           
@@ -1549,6 +1550,8 @@ jQuery(document).ready(function($){
             for(var i=0; i<3; i++) {
                 time_fields.eq(i).val(fragments[i]);
             }
+
+            duration_label.find('img').remove();
         }
         
         var yt_to_seconds = function (duration) {
@@ -1565,6 +1568,11 @@ jQuery(document).ready(function($){
             var seconds = (parseInt(match[2]) || 0);
           
             return hours * 3600 + minutes * 60 + seconds;
+        }
+
+        // Show loading icon
+        if(duration_label.find('img').length==0) {
+            duration_label.append(' <img src="'+window._tutorobject.loading_icon_url+'" style="display:inline-block"/>');
         }
 
         if(is_wp_media || $(this).parent().hasClass('video_source_wrap_external_url')) {

@@ -113,11 +113,11 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: classes/Admin.php:60, classes/Admin.php:60, classes/Course.php:446, classes/Options.php:562, classes/Quiz_Attempts_List.php:112, templates/student-public-profile.php:103, views/pages/students.php:8
+#: classes/Admin.php:60, classes/Admin.php:60, classes/Course.php:465, classes/Options.php:562, classes/Quiz_Attempts_List.php:112, templates/student-public-profile.php:103, views/pages/students.php:8
 msgid "Students"
 msgstr ""
 
-#: classes/Admin.php:63, classes/Admin.php:63, classes/Course.php:144, classes/Course.php:223, classes/Options.php:523, views/pages/instructors.php:20
+#: classes/Admin.php:63, classes/Admin.php:63, classes/Course.php:163, classes/Course.php:242, classes/Options.php:523, views/pages/instructors.php:20
 msgid "Instructors"
 msgstr ""
 
@@ -189,7 +189,7 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:62, classes/Ajax.php:115, classes/Ajax.php:179, classes/Ajax.php:237, classes/Ajax.php:290, classes/Ajax.php:332, classes/Ajax.php:353, classes/Ajax.php:451, classes/Ajax.php:527, classes/Course.php:386, classes/Course.php:421, classes/Course.php:627, classes/Course.php:678, classes/Course.php:715, classes/Course.php:728, classes/Instructor.php:244, classes/Lesson.php:121, classes/Lesson.php:160, classes/Lesson.php:223, classes/Quiz.php:140, classes/Quiz.php:470, classes/Quiz.php:507, classes/Quiz.php:597, classes/Quiz.php:643, classes/Quiz.php:687, classes/Quiz.php:726, classes/Quiz.php:749, classes/Quiz.php:845, classes/Quiz.php:868, classes/Quiz.php:889, classes/Quiz.php:1000, classes/Quiz.php:1045, classes/Quiz.php:1123, classes/Quiz.php:1183, classes/Quiz.php:1205, classes/Q_and_A.php:71, templates/dashboard/registration.php:11
+#: classes/Ajax.php:62, classes/Ajax.php:115, classes/Ajax.php:179, classes/Ajax.php:237, classes/Ajax.php:290, classes/Ajax.php:332, classes/Ajax.php:353, classes/Ajax.php:451, classes/Ajax.php:527, classes/Course.php:405, classes/Course.php:440, classes/Course.php:646, classes/Course.php:697, classes/Course.php:734, classes/Course.php:747, classes/Instructor.php:244, classes/Lesson.php:121, classes/Lesson.php:160, classes/Lesson.php:223, classes/Quiz.php:140, classes/Quiz.php:470, classes/Quiz.php:507, classes/Quiz.php:597, classes/Quiz.php:643, classes/Quiz.php:687, classes/Quiz.php:726, classes/Quiz.php:749, classes/Quiz.php:845, classes/Quiz.php:868, classes/Quiz.php:889, classes/Quiz.php:1000, classes/Quiz.php:1045, classes/Quiz.php:1123, classes/Quiz.php:1183, classes/Quiz.php:1205, classes/Q_and_A.php:71, templates/dashboard/registration.php:11
 msgid "Access Denied"
 msgstr ""
 
@@ -265,67 +265,71 @@ msgstr ""
 msgid "Announcement deleted successfully"
 msgstr ""
 
-#: classes/Course.php:140, classes/Course.php:222
+#: classes/Course.php:137
+msgid "Fully booked"
+msgstr ""
+
+#: classes/Course.php:159, classes/Course.php:241
 msgid "Course Builder"
 msgstr ""
 
-#: classes/Course.php:141, classes/Course.php:224
+#: classes/Course.php:160, classes/Course.php:243
 msgid "Additional Data"
 msgstr ""
 
-#: classes/Course.php:142, classes/Course.php:221
+#: classes/Course.php:161, classes/Course.php:240
 msgid "Video"
 msgstr ""
 
-#: classes/Course.php:151, classes/Course.php:1257, views/options/options_generator.php:2
+#: classes/Course.php:170, classes/Course.php:1276, views/options/options_generator.php:2
 msgid "Tutor Settings"
 msgstr ""
 
-#: classes/Course.php:431
+#: classes/Course.php:450
 msgid "Topic has been updated"
 msgstr ""
 
-#: classes/Course.php:445, classes/Options.php:423, classes/Post_types.php:172
+#: classes/Course.php:464, classes/Options.php:423, classes/Post_types.php:172
 msgid "Lessons"
 msgstr ""
 
-#: classes/Course.php:447, templates/course-filter/filters.php:73, templates/dashboard/earning/statement.php:30
+#: classes/Course.php:466, templates/course-filter/filters.php:74, templates/dashboard/earning/statement.php:30
 msgid "Price"
 msgstr ""
 
-#: classes/Course.php:527
+#: classes/Course.php:546
 msgid "Please Sign In first"
 msgstr ""
 
-#: classes/Course.php:575, classes/Lesson.php:315
+#: classes/Course.php:594, classes/Lesson.php:315
 msgid "Please Sign-In"
 msgstr ""
 
-#: classes/Course.php:660
+#: classes/Course.php:679
 msgid "<p>No instructor available or you have already added maximum instructors</p>"
 msgstr ""
 
-#: classes/Course.php:665
+#: classes/Course.php:684
 msgid "To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s"
 msgstr ""
 
-#: classes/Course.php:1092
+#: classes/Course.php:1111
 msgid "complete all lessons to mark this course as complete"
 msgstr ""
 
-#: classes/Course.php:1129
+#: classes/Course.php:1148
 msgid "You have to pass %s quizzes to complete this course."
 msgstr ""
 
-#: classes/Course.php:1236
+#: classes/Course.php:1255
 msgid "Make This Course Public"
 msgstr ""
 
-#: classes/Course.php:1238
+#: classes/Course.php:1257
 msgid "No enrollment required."
 msgstr ""
 
-#: classes/Course.php:1246
+#: classes/Course.php:1265
 msgid "Disable Q&A"
 msgstr ""
 
@@ -645,11 +649,11 @@ msgstr ""
 msgid "Keyword Search"
 msgstr ""
 
-#: classes/Options.php:86, templates/course-filter/filters.php:32
+#: classes/Options.php:86, templates/course-filter/filters.php:33
 msgid "Category"
 msgstr ""
 
-#: classes/Options.php:87, templates/course-filter/filters.php:41
+#: classes/Options.php:87, templates/course-filter/filters.php:42
 msgid "Tag"
 msgstr ""
 
@@ -2737,7 +2741,7 @@ msgstr ""
 msgid "Paid"
 msgstr ""
 
-#: templates/course-filter/filters.php:53
+#: templates/course-filter/filters.php:54
 msgid "Level"
 msgstr ""
 
@@ -3847,10 +3851,6 @@ msgstr ""
 
 #: templates/login.php:33
 msgid "Please Sign-In to view this section"
-msgstr ""
-
-#: templates/loop/add-to-cart-woocommerce.php:70
-msgid "Booked Fully"
 msgstr ""
 
 #: templates/loop/course-continue.php:18

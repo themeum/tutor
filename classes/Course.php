@@ -117,6 +117,25 @@ class Course extends Tutor_Base {
 		 * @since v1.8.9
 		 */
 		add_filter('posts_where', array($this, 'restrict_media' ) );
+
+		/**
+		 * Restrict new enrol/purchase button if course member limit reached
+		 * @since v1.8.11
+		 */
+		add_filter('tutor_course_restrict_new_entry', array($this, 'restrict_new_student_entry'));
+	}
+
+	public function restrict_new_student_entry($content) {
+
+		if(!tutils()->is_course_fully_booked($course_id)) {
+			// No restriction if not fully booked
+			return $content;
+		}
+			
+		return '<span class="tutor-course-booked-fully">
+			<img src="' . tutor()->url . '/assets/images/icon-warning-info.svg"/>
+			<span>' . __('Fully booked', 'tutor') . '</span>
+		</span>';
 	}
 
 	function restrict_media( $where ){
