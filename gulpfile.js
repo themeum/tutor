@@ -4,14 +4,11 @@ var gulp = require("gulp"),
 	prefix = require("gulp-autoprefixer"),
 	plumber = require("gulp-plumber"),
 	notify = require("gulp-notify"),
-	sourcemaps = require("gulp-sourcemaps"),
 	wpPot = require('gulp-wp-pot'),
 	clean = require("gulp-clean"),
 	zip = require("gulp-zip"),
 	fs = require('fs'),
 	path = require('path');
-
-const is_dev = process.env.NODE_ENV=='development';
 
 var onError = function (err) {
 	notify.onError({
@@ -41,16 +38,12 @@ for(let task in scss_blueprints) {
 	let blueprint = scss_blueprints[task];
 	
 	gulp.task(task, function () {
-
-		var task = gulp.src(blueprint.src).pipe(plumber({errorHandler: onError}));
-
-		is_dev ? task=task.pipe(sourcemaps.init({loadMaps: true})) : 0;
-
-		task = task.pipe(sass({outputStyle: blueprint.mode})).pipe(prefix(prefixerOptions)).pipe(rename(blueprint.destination));
-
-		is_dev ? task=task.pipe(sourcemaps.write(".")) : 0;
-
-		return task.pipe(gulp.dest("assets/css"));
+		return gulp.src(blueprint.src)
+			.pipe(plumber({errorHandler: onError}))
+			.pipe(sass({outputStyle: blueprint.mode}))
+			.pipe(prefix(prefixerOptions))
+			.pipe(rename(blueprint.destination))
+			.pipe(gulp.dest("assets/css"));
 	});
 }
 

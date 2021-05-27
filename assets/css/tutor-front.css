@@ -2443,10 +2443,6 @@ Course question and answer
   cursor: pointer;
 }
 
-.tutor-course-filter-wrapper > div .tutor-course-filter-loop-container {
-  display: none;
-}
-
 .tutor-course-filter-wrapper .tutor-clear-all-filter {
   margin-top: 28px;
   display: none;

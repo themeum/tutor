@@ -205,9 +205,11 @@ class Admin{
 
 		$get_assigned_courses_ids = $wpdb->get_col($wpdb->prepare("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = %d", $user_id));
 		$own_courses = is_array($get_assigned_courses_ids) ? $get_assigned_courses_ids : array();
-		$in_query_pre = implode(',', $own_courses);
+		
+		$in_query_pre = count($own_courses) ? implode(',', $own_courses) : null;
+		$in_query_where = $in_query_pre ? " OR {$wpdb->posts}.ID IN({$in_query_pre})" : '';
 
-		$custom_author_query = "  AND ({$wpdb->posts}.post_type!='courses' OR {$wpdb->posts}.post_author = {$user_id} OR {$wpdb->posts}.ID IN({$in_query_pre})) ";
+		$custom_author_query = "  AND ({$wpdb->posts}.post_type!='courses' OR {$wpdb->posts}.post_author = {$user_id}) {$in_query_where}";
 		
 		$clauses['where'] .= $custom_author_query;
 		
