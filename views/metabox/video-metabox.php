@@ -140,7 +140,7 @@ $default_source = tutor_utils()->get_option('default_video_source', null);
 <?php
     if ( $post->post_type !== tutor()->course_post_type){
         ?>
-            <div class="tutor-option-field-row">
+            <div class="tutor-option-field-row tutor-option-field-video-duration">
                 <div class="tutor-option-field-label">
                     <label for=""><?php _e('Video playback time', 'tutor'); ?></label>
                 </div>
