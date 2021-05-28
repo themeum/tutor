@@ -2479,14 +2479,14 @@ Course question and answer
     width: 100% !important;
     float: none !important;
   }
-  .tutor-course-filter-wrapper .tutor-course-filter-container > div {
+  .tutor-course-filter-wrapper .tutor-course-filter-container > form {
     overflow: auto;
   }
-  .tutor-course-filter-wrapper .tutor-course-filter-container > div > div {
+  .tutor-course-filter-wrapper .tutor-course-filter-container > form > div {
     width: 50%;
     float: left;
   }
-  .tutor-course-filter-wrapper .tutor-course-filter-container > div > div:first-child {
+  .tutor-course-filter-wrapper .tutor-course-filter-container > form > div:first-child {
     width: 100%;
   }
 }
@@ -2780,6 +2780,10 @@ div[class*="tutor-course-col"] {
   margin-right: 5px;
   vertical-align: top;
   color: var(--tutor-primary-color);
+}
+
+.tutor-course-booked-fully {
+  margin-left: auto;
 }
 
 .tutor-course-booked-fully > * {

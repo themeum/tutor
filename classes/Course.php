@@ -127,7 +127,7 @@ class Course extends Tutor_Base {
 
 	public function restrict_new_student_entry($content) {
 
-		if(!tutils()->is_course_fully_booked($course_id)) {
+		if(!tutils()->is_course_fully_booked()) {
 			// No restriction if not fully booked
 			return $content;
 		}
