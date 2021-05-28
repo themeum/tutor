@@ -88,7 +88,7 @@
         ?>
     </div>
     <div class="tutor-clear-all-filter">
-        <a href="<?php echo esc_url(tutor_utils()->course_archive_page_url());?>">
+        <a href="#" onclick="window.location.reload()">
             <i class="tutor-icon-cross"></i> Clear All Filter
         </a>
     </div>

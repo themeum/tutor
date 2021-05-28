@@ -1890,6 +1890,7 @@ jQuery(document).ready(function ($) {
         filter_criteria.action = 'tutor_course_filter_ajax';
 
         loop_container.html('<center><img src="'+window._tutorobject.loading_icon_url+'"/></center>');
+        $(this).closest('form').find('.tutor-clear-all-filter').show();
 
         $.ajax({
             url:window._tutorobject.ajaxurl,

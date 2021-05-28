@@ -60,6 +60,7 @@ class Assets{
 			$tutor_localize_data['open_tutor_admin_menu'] = true;
 		}
 
+		$tutor_localize_data = apply_filters( 'tutor_localize_data', $tutor_localize_data );
 		wp_localize_script('tutor-admin', '_tutorobject', $tutor_localize_data);
 	}
 
