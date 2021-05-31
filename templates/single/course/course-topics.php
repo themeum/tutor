@@ -35,9 +35,7 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 				$tutor_course_duration = get_tutor_course_duration_context($course_id);
 
 				if($tutor_lesson_count) {
-					echo "<span> $tutor_lesson_count";
-					_e(' Lessons', 'tutor');
-					echo "</span>";
+					echo '<span>' . $tutor_lesson_count . ' ' . __('Lessons', 'tutor') . '</span>';
 				}
 				if($tutor_course_duration){
 					echo "<span>$tutor_course_duration</span>";

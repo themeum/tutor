@@ -289,7 +289,7 @@ msgstr ""
 msgid "Topic has been updated"
 msgstr ""
 
-#: classes/Course.php:464, classes/Options.php:423, classes/Post_types.php:172
+#: classes/Course.php:464, classes/Options.php:423, classes/Post_types.php:172, templates/single/course/course-topics.php:38
 msgid "Lessons"
 msgstr ""
 
@@ -3933,7 +3933,7 @@ msgstr ""
 msgid "Deadline : "
 msgstr ""
 
-#: templates/single/assignment/content.php:93, templates/single/course/course-topics.php:137
+#: templates/single/assignment/content.php:93, templates/single/course/course-topics.php:135
 msgid "Expired"
 msgstr ""
 
@@ -4053,11 +4053,7 @@ msgstr ""
 msgid "Topics for this course"
 msgstr ""
 
-#: templates/single/course/course-topics.php:39
-msgid " Lessons"
-msgstr ""
-
-#: templates/single/course/course-topics.php:139
+#: templates/single/course/course-topics.php:137
 msgid "Live"
 msgstr ""
 
