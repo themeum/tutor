@@ -80,7 +80,7 @@ class WooCommerce extends Tutor_Base {
 		/**
 		 * Redirect student on enrolled courses after course 
 		 * enrollment complete
-		 * @since 1.8.11
+		 * @since 1.9.0
 		*/			
 		add_action( 'woocommerce_thankyou', array($this, 'redirect_to_enrolled_courses') );			
 	}
@@ -505,7 +505,7 @@ class WooCommerce extends Tutor_Base {
 	 * Redirect student on enrolled courses after course 
 	 * enrollment complete if course is purchasable
 	 * @param $order_id | int
-	 * @since 1.8.11
+	 * @since 1.9.0
 	*/
 	public function redirect_to_enrolled_courses( $order_id ) {
 			//get woo order details

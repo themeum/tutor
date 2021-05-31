@@ -120,7 +120,7 @@ class Course extends Tutor_Base {
 
 		/**
 		 * Restrict new enrol/purchase button if course member limit reached
-		 * @since v1.8.11
+		 * @since v1.9.0
 		 */
 		add_filter('tutor_course_restrict_new_entry', array($this, 'restrict_new_student_entry'));
 	}

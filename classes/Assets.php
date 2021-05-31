@@ -13,7 +13,7 @@ class Assets{
 		/**
 		 * register translateable function to load
 		 * handled script with text domain attached to
-		 * @since 1.8.11
+		 * @since 1.9.0
 		*/
 		add_action('wp_enqueue_scripts', array($this, 'tutor_script_text_domain'),100);
 		add_action( 'admin_head', array($this, 'tutor_add_mce_button'));
@@ -172,7 +172,7 @@ class Assets{
 			/**
 			 * dependency wp-i18n added for 
 			 * translate js file
-			 * @since 1.8.11
+			 * @since 1.9.0
 			*/
 			wp_register_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
 			wp_enqueue_script( 'tutor-frontend');
@@ -281,7 +281,7 @@ class Assets{
 	/**
 	 * load text domain handled script after all enqueue_scripts 
 	 * registered functions
-	 * @since 1.8.11
+	 * @since 1.9.0
 	*/
 	function tutor_script_text_domain() {
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path.'languages/' );

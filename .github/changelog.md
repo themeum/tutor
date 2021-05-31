@@ -1,6 +1,6 @@
 # TutorLMS Changelog
 
-### 1.8.11 - May 31, 2021
+### 1.9.0 - May 31, 2021
 
 * New: Assign different certificate templates to courses separately
 * New: tutor_quiz/single/after/wrap hook added in single quiz template

@@ -3,7 +3,7 @@ jQuery(document).ready(function ($) {
     'use strict';
     /**
      * wp.i18n translateable functions 
-     * @since 1.8.11
+     * @since 1.9.0
     */
     const { __, _x, _n, _nx } = wp.i18n;
     /**

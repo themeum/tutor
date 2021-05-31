@@ -1526,7 +1526,7 @@ jQuery(document).ready(function($){
 
     
    /**
-    * @since v.1.8.11
+    * @since v.1.9.0
     * Parse and show video duration on link paste in lesson video 
     */
     $('body').on('paste', '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5', function(e) {
