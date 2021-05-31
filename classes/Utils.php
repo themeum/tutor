@@ -670,9 +670,7 @@ class Utils {
 			),
 		);
 
-		$query = new \WP_Query( $args );
-
-		return $query;
+		return get_posts( $args );
 	}
 
 	/**
@@ -3473,7 +3471,7 @@ class Utils {
 		 * could be retained thus total number counted and q & a showing
 		 * list is not similar
 		 * now only the q & a will be appeared that is belongs to a user
-		 * @since version 1.8.11
+		 * @since version 1.9.0
 		*/
 		$count = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT({$wpdb->comments}.comment_ID) 
@@ -3706,7 +3704,7 @@ class Utils {
 		 * instructor as it was count unanswered question from all courses
 		 * from now on it will check if tutor instructor and count
 		 * from instructor's course
-		 * @since version 1.8.11
+		 * @since version 1.9.0
 		*/
 		$user_id 	 = get_current_user_id();
 		$course_type = tutor()->course_post_type;
@@ -7003,7 +7001,7 @@ class Utils {
 	/**
 	 * @return boolean
 	 * 
-	 * @since v1.8.11
+	 * @since v1.9.0
 	 * 
 	 * Check if course member limit full
 	 */

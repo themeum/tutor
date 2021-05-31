@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.7
 Requires PHP: 7.0
-Stable tag: 1.8.11
+Stable tag: 1.9.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.8.11 - May 31, 2021 =
+= 1.9.0 - May 31, 2021 =
 
 New: Assign different certificate templates to courses separately
 New: tutor_quiz/single/after/wrap hook added in single quiz template
