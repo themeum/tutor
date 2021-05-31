@@ -3,7 +3,7 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 5.7
+Tested up to: 5.7.2
 Requires PHP: 7.0
 Stable tag: 1.9.0
 License: GPLv3
@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.0 - May 31, 2021 =
+= 1.9.0 - June 01, 2021 =
 
 New: Assign different certificate templates to courses separately
 New: tutor_quiz/single/after/wrap hook added in single quiz template
