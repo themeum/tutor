@@ -6533,6 +6533,29 @@ class Utils {
 		return false;
 	}
 
+	public function get_students_data_by_course_id( $course_id = 0, string $field_name ) {
+
+		global $wpdb;
+		$course_id = $this->get_post_id( $course_id );
+
+		$student_emails = $wpdb->get_results( $wpdb->prepare(
+			"SELECT student.%s
+			FROM   	{$wpdb->posts} enrol
+					INNER JOIN {$wpdb->users} student
+						    ON enrol.post_author = student.id
+			WHERE  	enrol.post_type = %s
+					AND enrol.post_parent = %d
+					AND enrol.post_status = %s; 
+			",
+			$field_name,
+			'tutor_enrolled',
+			$course_id,
+			'completed'
+		) );
+
+		return array_column( $student_emails, $field_name );
+	}
+
 	/**
 	 * @param int $course_id
 	 *
@@ -6543,26 +6566,7 @@ class Utils {
 	 * Get students email by course id
 	 */
 	public function get_student_emails_by_course_id( $course_id = 0 ) {
-		global $wpdb;
-		$course_id = $this->get_post_id( $course_id );
-
-		$student_emails = $wpdb->get_results( $wpdb->prepare(
-			"SELECT student.user_email
-			FROM   	{$wpdb->posts} enrol
-					INNER JOIN {$wpdb->users} student
-						    ON enrol.post_author = student.id
-			WHERE  	enrol.post_type = %s
-					AND enrol.post_parent = %d
-					AND enrol.post_status = %s; 
-			",
-			'tutor_enrolled',
-			$course_id,
-			'completed'
-		) );
-
-		$email_array = array_column( $student_emails, 'user_email' );
-
-		return $email_array;
+		return $this->get_students_data_by_course_id( $course_id, 'user_email' );
 	}
 
 	/*

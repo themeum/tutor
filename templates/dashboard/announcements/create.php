@@ -42,14 +42,9 @@
                     </label>
                     <textarea rows="6" type="text" name="tutor_announcement_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
                 </div>
-                <?php if ($notify_checked) : ?>
-                    <div class="tutor-form-group">
-                        <label for="notify_student_create">
-                            <input type="checkbox" name="tutor_notify_students" id="notify_student_create" checked>
-                            <?php _e('Notify to all students of this course.', 'tutor'); ?>
-                        </label>
-                    </div>
-                <?php endif; ?>
+                
+                <?php do_action('tutor_announcement_editor/after'); ?>
+                
                 <div class="tutor-form-group">
                     <div class="tutor-announcements-create-alert"></div>
                 </div>
