@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.0 - June 01, 2021 =
+= 1.9.0 - June 02, 2021 =
 
 New: Assign different certificate templates to courses separately
 New: tutor_quiz/single/after/wrap hook added in single quiz template
