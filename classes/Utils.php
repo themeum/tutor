@@ -6538,8 +6538,8 @@ class Utils {
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 
-		$student_emails = $wpdb->get_results( $wpdb->prepare(
-			"SELECT student.%s
+		$student_data = $wpdb->get_results( $wpdb->prepare(
+			"SELECT student.{$field_name}
 			FROM   	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->users} student
 						    ON enrol.post_author = student.id
@@ -6547,13 +6547,12 @@ class Utils {
 					AND enrol.post_parent = %d
 					AND enrol.post_status = %s; 
 			",
-			$field_name,
 			'tutor_enrolled',
 			$course_id,
 			'completed'
 		) );
 
-		return array_column( $student_emails, $field_name );
+		return array_column( $student_data, $field_name );
 	}
 
 	/**

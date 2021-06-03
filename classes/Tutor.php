@@ -164,7 +164,7 @@ final class Tutor{
          *
          */
 
-		add_action( 'activated_plugin', array( $this, 'activated_tutor' ) );
+		add_action( 'activated_plugin', array( $this, 'activated_tutor' ), 10, 2 );
 	}
 
     /**
