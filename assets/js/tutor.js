@@ -1317,10 +1317,6 @@ jQuery(document).ready(function($){
      * Since 1.7.9
      * Announcements scripts
      */
-    
-    if(window._tutorobject != undefined){
-        var announcement_url = window._tutorobject.ajaxurl;
-    }
     var add_new_button = $(".tutor-announcement-add-new");
     var update_button = $(".tutor-announcement-edit");
     var delete_button = $(".tutor-announcement-delete");
@@ -1388,7 +1384,7 @@ jQuery(document).ready(function($){
         var formData = $(".tutor-announcements-form").serialize() + '&action=tutor_announcement_create' + '&action_type=create';
         
         $.ajax({
-            url : window._tutorobject ? announcement_url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : formData,
             beforeSend: function() {
@@ -1427,7 +1423,7 @@ jQuery(document).ready(function($){
         var formData  = $(".tutor-announcements-update-form").serialize() + '&action=tutor_announcement_create' + '&action_type=update';
        
         $.ajax({
-            url : window._tutorobject ? announcement_url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : formData,
             beforeSend: function() {
@@ -1462,7 +1458,7 @@ jQuery(document).ready(function($){
         var whichtr = $("#tutor-announcement-tr-"+announcement_id);
         if(confirm("Do you want to delete?")){
             $.ajax({
-                url : window._tutorobject ? announcement_url : ajaxurl,
+                url : window._tutorobject.ajaxurl,
                 type : 'POST',
                 data : {action:'tutor_announcement_delete',announcement_id:announcement_id},
                 beforeSend: function() {
