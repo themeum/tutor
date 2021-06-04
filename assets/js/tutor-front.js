@@ -170,6 +170,11 @@ jQuery(document).ready(function ($) {
         var course_id = $('input[name="tutor_course_id"]').val();
         var data = { course_id: course_id, rating: rating, review: review, action: 'tutor_place_rating' };
 
+        if(!rating || rating==0 || !review) {
+            alert(__('Rating and review required', 'tutor'));
+            return;
+        }
+
         if (review) {
             $.ajax({
                 url: _tutorobject.ajaxurl,
