@@ -243,6 +243,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.9.1 - June 04, 2021 =
 
+New: You can now toggle auto redirection to enrolled courses on auto order completion
 Fix: Plugin activated hook parameter count
 Fix: Saving Zoom meeting redirects to post list
 Fix: Instructor star rating can be zero

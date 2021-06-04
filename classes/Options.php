@@ -228,6 +228,12 @@ class Options {
 								'label_title'   => __('Course Content Access', 'tutor'),
 								'desc' => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
 							),
+							'wc_automatic_order_complete_redirect_to_courses' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Auto redirect to courses', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
+								'desc' => __('When a user\'s WooCommerce order is auto-completed,  they will be redirected to enrolled courses', 'tutor'),
+							),
                             'course_completion_process' => array(
                                 'type'          => 'radio',
                                 'label'         => __('Course Completion Process', 'tutor'),

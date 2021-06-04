@@ -508,6 +508,11 @@ class WooCommerce extends Tutor_Base {
 	 * @since 1.9.0
 	*/
 	public function redirect_to_enrolled_courses( $order_id ) {
+			if(!tutils()->get_option( 'wc_automatic_order_complete_redirect_to_courses' )) {
+				// Since 1.9.1
+				return;
+			}
+
 			//get woo order details
 		    $order 			= wc_get_order( $order_id );
 		    $tutor_product 	= false;
