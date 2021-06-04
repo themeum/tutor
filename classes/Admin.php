@@ -194,7 +194,7 @@ class Admin{
 
 	public function posts_clauses_request($clauses){
 		
-		if(tutor_utils()->has_user_role(array('administrator', 'editor'))) {
+		if(!is_admin() || (!isset($_GET['post_type']) || $_GET['post_type']!='courses') || tutor_utils()->has_user_role(array('administrator', 'editor'))) {
 			return $clauses;
 		}
 
