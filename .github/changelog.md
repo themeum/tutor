@@ -1,5 +1,12 @@
 # TutorLMS Changelog
 
+### 1.9.1 - June 04, 2021
+
+* Fix: Plugin activated hook parameter count
+* Fix: Saving Zoom meeting redirects to post list
+* Fix: Instructor star rating can be zero
+
+
 ### 1.9.0 - June 02, 2021
 
 * New: Assign different certificate templates to courses separately
