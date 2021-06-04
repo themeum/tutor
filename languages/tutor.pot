@@ -5246,51 +5246,55 @@ msgstr ""
 msgid "Are you sure? it can not be undone."
 msgstr ""
 
-#: assets/js/tutor-front.js:736
-msgid "Please select an option to answer"
+#: assets/js/tutor-front.js:174
+msgid "Rating and review required"
 msgstr ""
 
 #: assets/js/tutor-front.js:741
+msgid "Please select an option to answer"
+msgstr ""
+
+#: assets/js/tutor-front.js:746
 msgid "Please select at least one option to answer."
 msgstr ""
 
-#: assets/js/tutor-front.js:748
+#: assets/js/tutor-front.js:753
 msgid "The answer for this question is required"
 msgstr ""
 
-#: assets/js/tutor-front.js:770
+#: assets/js/tutor-front.js:775
 msgid "Please match all the items"
 msgstr ""
 
-#: assets/js/tutor-front.js:805
+#: assets/js/tutor-front.js:810
 msgid "Incorrect, Please try again"
 msgstr ""
 
-#: assets/js/tutor-front.js:820
+#: assets/js/tutor-front.js:825
 msgid "More answer for this question is required"
 msgstr ""
 
-#: assets/js/tutor-front.js:844
+#: assets/js/tutor-front.js:849
 msgid "Correct Answer"
 msgstr ""
 
-#: assets/js/tutor-front.js:1151
+#: assets/js/tutor-front.js:1156
 msgid "Assignment answer can not be empty"
 msgstr ""
 
-#: assets/js/tutor-front.js:1269
+#: assets/js/tutor-front.js:1274
 msgid "Done"
 msgstr ""
 
-#: assets/js/tutor-front.js:1272
+#: assets/js/tutor-front.js:1277
 msgid "Failed"
 msgstr ""
 
-#: assets/js/tutor-front.js:1272
+#: assets/js/tutor-front.js:1277
 msgid "Lesson Update Failed"
 msgstr ""
 
-#: assets/js/tutor-front.js:1462
+#: assets/js/tutor-front.js:1467
 msgid "Assignment Update Failed"
 msgstr ""
 
