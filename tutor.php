@@ -11,8 +11,9 @@ Tested up to: 5.7
 License: GPLv2 or later
 Text Domain: tutor
 */
-if ( ! defined( 'ABSPATH' ) )
-	exit;
+if (! defined('ABSPATH')) {
+    exit;
+}
 
 /**
  * Defined the tutor main file

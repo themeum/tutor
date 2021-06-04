@@ -39,6 +39,8 @@ $user = get_user_by('ID', $user_id);
 $enable_profile_completion = tutils()->get_option('enable_profile_completion');
 
 do_action('tutor_dashboard/before/wrap');
+
+
 ?>
 
     <div class="tutor-wrap tutor-dashboard tutor-dashboard-student">
