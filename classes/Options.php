@@ -324,6 +324,17 @@ class Options {
 								'default'   => '0',
 								'desc'      => __('Disabling this feature will be removed course share option from the course page.', 'tutor'),
 							),
+							'supported_course_social_share' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Social Share Buttons', 'tutor'),
+								'options'	=> array(
+									'facebook' => __('Facebook', 'tutor'),
+									'twitter' => __('Twitter', 'tutor'),
+									'linkedin' => __('Linkedin', 'tutor'),
+									'tumblr' => __('Tumblr', 'tutor'),
+								),
+								'desc'      => __('Choose social media you\'d like users to be able to share course on.', 'tutor'),
+							),
 							'disable_course_duration' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Course Duration', 'tutor'),
