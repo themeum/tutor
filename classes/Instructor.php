@@ -36,6 +36,12 @@ class Instructor {
          * @since v.1.5.9
          */
         add_action('tutor_option_save_after', array($this, 'can_publish_tutor_courses'));
+
+		/**
+		 * Hide instructor rejection message
+		 * @since v1.9.2
+		 */
+		add_action( 'wp_loaded', array($this, 'hide_instructor_notice') );
     }
 
 	/**
@@ -280,12 +286,19 @@ class Instructor {
 
 			tutor_utils()->remove_instructor_role($instructor_id);
 			update_user_meta($instructor_id, '_is_tutor_instructor_rejected', tutor_time());
+			update_user_meta($instructor_id, 'tutor_instructor_show_rejection_message', true);
 
 			// Send E-Mail to this user about instructor rejection via hook
 			do_action('tutor_after_rejected_instructor', $instructor_id);
 		}
 
 		wp_send_json_success();
+	}
+
+	public function hide_instructor_notice() {
+		if(isset( $_GET['tutor_action'] ) && $_GET['tutor_action']=='hide_instructor_notice') {
+			delete_user_meta( get_current_user_id(), 'tutor_instructor_show_rejection_message' );
+		}
 	}
 
     /**

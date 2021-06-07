@@ -105,12 +105,17 @@ do_action('tutor_dashboard/before/wrap');
                                     '</span>';
                             }
                             else if($rejected_on){
-                                $on = date('d F, Y', $rejected_on);
-                                echo '<span style="'.$info_message_style.'">
+                                if(get_user_meta( get_current_user_id(), 'tutor_instructor_show_rejection_message', true )) {
+                                    $on = date('d F, Y', $rejected_on);
+                                    echo '
+                                    <a href="?tutor_action=hide_instructor_notice">✕</a>
+                                    <span style="'.$info_message_style.'">
                                         <i class="dashicons dashicons-info" style="color:#E08E00; '.$info_style.'"></i>', 
                                         __('Your Application was rejected on', 'tutor'), ' <b>', $on, '</b>',
-                                    '</span>',
-                                    $become_button;                                
+                                    '</span>';
+                                }
+                                
+                                echo $become_button;                                
                             }
                             else if($instructor_status!=='blocked'){
                                 echo $become_button;

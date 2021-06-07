@@ -20,6 +20,9 @@ class User {
 		
 		add_action('tutor_options_after_instructors', array($this, 'tutor_instructor_profile_layout'));
 		// add_action('tutor_options_after_students', array($this, 'tutor_student_profile_layout'));
+
+		add_action( 'admin_notices', array( $this, 'show_registration_disabled' ) );
+		add_action( 'wp_loaded', array( $this, 'hide_notices' ) );
 	}
 
 	private $profile_layout = array(
@@ -131,5 +134,29 @@ class User {
 		if ($role === $instructor_role || in_array($instructor_role, $old_roles)){
 			tutor_utils()->add_instructor_role($user_id);
 		}
+	}
+
+	public function hide_notices() {
+		if(is_admin() && isset( $_GET['tutor-hide-notice'] ) && $_GET['tutor-hide-notice']=='registration') {
+			tutils()->checking_nonce('get');
+			update_option( 'tutor_notice_hide_registration', true );
+		}
+	}
+
+	public function show_registration_disabled() {
+
+		$screen = get_current_screen();
+		$in_tutor = is_admin() && is_object($screen) && $screen->parent_base=='tutor';
+		
+		if( !$in_tutor || get_option( 'users_can_register' ) || get_option( 'tutor_notice_hide_registration' )) {
+			return;
+		}
+
+		?>
+		<div class="notice notice-warning" style="position:relative;">
+			<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'tutor-hide-notice', 'registration' ), tutor()->nonce_action, tutor()->nonce ) ); ?>" class="notice-dismiss" style="position:relative;float:right;padding:9px 0px 9px 9px 9px;text-decoration:none;"></a>
+			<p><?php _e('User registration is disabled.', 'tutor'); ?></p>
+		</div>
+		<?php
 	}
 }
