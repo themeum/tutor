@@ -6798,6 +6798,12 @@ table.course-single-gradebooks a {
 /**
 * END Oxygen Integration CSS
  */
+.tutor-forgot-password-form, .tutor-reset-password-form {
+  max-width: 520px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */
