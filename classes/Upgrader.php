@@ -128,6 +128,19 @@ class Upgrader {
 
 			$isEnable ? $this->install_tutor_email_queue() : 0;
 		}
+
+		// Migrate Tutor Social Share
+		if(get_option( 'tutor_social_share_migrated' )) {
+			return;
+		}
+		
+		update_option( 'tutor_social_share_migrated', true );
+		tutils()->update_option( 'supported_course_social_share', array(
+			'facebook',
+			'twitter',
+			'linkedin',
+			'tublr'
+		));
 	}
 
 	/**

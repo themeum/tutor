@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.7.2
 Requires PHP: 7.0
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,17 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.9.2 - June 14, 2021 =
+
+New: Push notification add-on
+New: Social sharing editing option
+New: Show a removable warning in tutor dashboard if signup disabled
+Update: Forgot password page design update
+Update: Button text changed to 'Start Learning' for courses marked as public
+Fix: Instructor can't see filtered courses in course archive
+Fix: Instructor rejected notice is visible forever
+Fix: Last quiz can be submitted without answering even if required
 
 = 1.9.1 - June 04, 2021 =
 

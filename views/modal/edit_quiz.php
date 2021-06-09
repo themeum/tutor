@@ -42,7 +42,7 @@ if (!$quiz) {
                 <div class="tutor-quiz-builder-group">
                     <div class="tutor-quiz-builder-row">
                         <div class="tutor-quiz-builder-col">
-                            <input type="text" name="quiz_title" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo stripslashes($quiz->post_title); ?>">
+                            <input type="text" name="quiz_title" placeholder="<?php _e('Type your question here', 'tutor'); ?>" value="<?php echo htmlspecialchars( stripslashes($quiz->post_title) ); ?>">
                         </div>
                     </div>
                     <p class="warning quiz_form_msg"></p>
