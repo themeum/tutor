@@ -34,7 +34,7 @@ if ( ! empty($_POST['tutor_quiz_builder_quiz_id'])){
                 <div class="tutor-quiz-builder-group">
                     <div class="tutor-quiz-builder-row">
                         <div class="tutor-quiz-builder-col">
-                            <input type="text" name="quiz_title" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>">
+                            <input type="text" name="quiz_title" placeholder="<?php _e('Type your question here', 'tutor'); ?>">
                         </div>
                     </div>
                     <p class="warning quiz_form_msg"></p>
