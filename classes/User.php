@@ -145,10 +145,7 @@ class User {
 
 	public function show_registration_disabled() {
 
-		$screen = get_current_screen();
-		$in_tutor = is_admin() && is_object($screen) && $screen->parent_base=='tutor';
-		
-		if( !$in_tutor || get_option( 'users_can_register' ) || get_option( 'tutor_notice_hide_registration' )) {
+		if( !tutils()->is_tutor_dashboard() || get_option( 'users_can_register' ) || get_option( 'tutor_notice_hide_registration' )) {
 			return;
 		}
 

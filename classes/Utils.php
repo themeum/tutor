@@ -7023,4 +7023,16 @@ class Utils {
 	
 		return $maximum_students && $maximum_students <= $total_enrolled;
 	}
+
+	/**
+	 * @return boolean
+	 * 
+	 * @since v1.9.2
+	 * 
+	 * Check if current screen is under tutor dashboard
+	 */
+	public function is_tutor_dashboard() {
+		$screen = get_current_screen();
+		return is_admin() && is_object( $screen ) && $screen->parent_base == 'tutor';
+	}
 }

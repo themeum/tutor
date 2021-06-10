@@ -3724,7 +3724,7 @@ msgid "Advanced Options"
 msgstr ""
 
 #: views/modal/add_quiz.php:37, views/modal/edit_quiz.php:45, views/modal/question_form.php:24
-msgid "Type your quiz title here"
+msgid "Type your question here"
 msgstr ""
 
 #: views/modal/add_quiz.php:52, views/modal/edit_quiz.php:64
