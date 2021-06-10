@@ -37,10 +37,7 @@ $settings = maybe_unserialize($question->question_settings);
                                 <input type="hidden" class="tutor_select_value_holder" name="tutor_quiz_question[<?php echo $question_id; ?>][question_type]" value="" >
                             </div>
 
-							<?php $question_types = tutor_utils()->get_question_types();
-
-
-							?>
+							<?php $question_types = tutor_utils()->get_question_types(); ?>
 
                             <div class="tutor-select-options" style="display: none;">
 								<?php

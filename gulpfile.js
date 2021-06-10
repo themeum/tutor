@@ -8,7 +8,8 @@ var gulp = require("gulp"),
 	clean = require("gulp-clean"),
 	zip = require("gulp-zip"),
 	fs = require('fs'),
-	path = require('path');
+	path = require('path'),
+	build_name = 'tutor-' + require('./package.json').version + '.zip';
 
 var onError = function (err) {
 	notify.onError({
@@ -134,7 +135,7 @@ gulp.task('makepot', function () {
  * Build
  */
 gulp.task("clean-zip", function () {
-	return gulp.src("./tutor.zip", {
+	return gulp.src("./"+build_name, {
 		read: false,
 		allowEmpty: true
 	}).pipe(clean());
@@ -170,7 +171,7 @@ gulp.task("copy", function () {
 });
 
 gulp.task("make-zip", function () {
-	return gulp.src("./build/**/*.*").pipe(zip("tutor.zip")).pipe(gulp.dest("./"));
+	return gulp.src("./build/**/*.*").pipe(zip(build_name)).pipe(gulp.dest("./"));
 });
 
 /**
