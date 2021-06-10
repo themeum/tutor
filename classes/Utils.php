@@ -7032,7 +7032,12 @@ class Utils {
 	 * Check if current screen is under tutor dashboard
 	 */
 	public function is_tutor_dashboard() {
-		$screen = get_current_screen();
-		return is_admin() && is_object( $screen ) && $screen->parent_base == 'tutor';
+
+		if(is_admin()) {
+			$screen = get_current_screen();
+			return is_object( $screen ) && $screen->parent_base == 'tutor';
+		}
+		
+		return false;
 	}
 }
