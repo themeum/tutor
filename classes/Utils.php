@@ -2418,16 +2418,6 @@ class Utils {
 	/**
 	 * @return mixed
 	 *
-	 * @deprecated
-	 */
-	public function tutor_student_dashboard_pages() {
-		_deprecated_function( __METHOD__, '1.1.2', 'tutor_dashboard_pages' );
-		return $this->tutor_dashboard_pages();
-	}
-
-	/**
-	 * @return mixed
-	 *
 	 * Tutor Dashboard Pages, supporting for the URL rewriting
 	 *
 	 * @since v.1.0.0
