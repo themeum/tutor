@@ -152,7 +152,7 @@ class User {
 		?>
 		<div class="notice notice-warning" style="position:relative;">
 			<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'tutor-hide-notice', 'registration' ), tutor()->nonce_action, tutor()->nonce ) ); ?>" class="notice-dismiss" style="position:relative;float:right;padding:9px 0px 9px 9px 9px;text-decoration:none;"></a>
-			<p><?php _e('User registration is disabled.', 'tutor'); ?></p>
+			<p><?php _e('User registration is disabled. New students and instructors will not be able to register for now.', 'tutor'); ?></p>
 		</div>
 		<?php
 	}
