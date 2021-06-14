@@ -51,18 +51,15 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
         <!-- Start: Sidebar -->
 
         <?php
-
-        $course_id = 0;
-        if ($post->post_type === 'tutor_quiz'){
-        $course = tutor_utils()->get_course_by_quiz(get_the_ID());
-        $course_id = $course->ID;
-        }elseif($post->post_type === 'tutor_assignments'){
-        $course_id = get_post_meta($post->ID, '_tutor_course_id_for_assignments', true);
-
-        } else{
-        $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
-        }
-
+            $course_id = 0;
+            if ($post->post_type === 'tutor_quiz'){
+                $course = tutor_utils()->get_course_by_quiz(get_the_ID());
+                $course_id = $course->ID;
+            }elseif($post->post_type === 'tutor_assignments'){
+                $course_id = get_post_meta($post->ID, '_tutor_course_id_for_assignments', true);
+            } else{
+                $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
+            }
         ?>
 
 	    <?php do_action('tutor_lesson/single/before/lesson_sidebar'); ?>
