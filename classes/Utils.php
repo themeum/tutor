@@ -123,13 +123,25 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_pages() {
+
+		global $sitepress;
+		if (isset($sitepress)) {
+			$wpml_current_lang = apply_filters('wpml_current_language', NULL);
+			$wpml_default_lang = apply_filters('wpml_default_language', NULL);
+			$sitepress->switch_lang($wpml_default_lang);
+		}
 		$pages = array();
 		$wp_pages = get_pages();
-		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
-			foreach ( $wp_pages as $page ) {
+
+		if (is_array($wp_pages) && count($wp_pages)) {
+			foreach ($wp_pages as $page) {
 				$pages[$page->ID] = $page->post_title;
 			}
 		}
+		if (isset($sitepress)) {
+			$sitepress->switch_lang($wpml_current_lang);
+		}
+
 		return $pages;
 	}
 
