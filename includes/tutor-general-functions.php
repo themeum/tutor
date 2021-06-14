@@ -169,7 +169,7 @@ if ( ! function_exists('tutor_course_categories_checkbox')){
  * @since v.1.3.4
  */
 if ( ! function_exists('__tutor_generate_categories_checkbox')){
-	function __tutor_generate_categories_checkbox($post_ID = 0, $categories, $args = array()){
+	function __tutor_generate_categories_checkbox($post_ID = 0, $categories=array(), $args = array()){
 		$output = '';
 		$input_name = tutor_utils()->array_get('name', $args);
 
