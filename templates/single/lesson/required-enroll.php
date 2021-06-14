@@ -23,7 +23,7 @@ get_header();
         <div class="tutor-single-lesson-segment tutor-lessonrequired-enroll-wrap">
             <div class="tutor-notice-warning">
 				<?php
-				$course_id = tutor_utils()->get_course_id_by_lesson();
+				$course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID());
 				?>
 
                 <h2><?php _e('Please enroll in this course first', 'tutor'); ?></h2>

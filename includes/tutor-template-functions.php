@@ -960,7 +960,7 @@ if ( ! function_exists('tutor_lesson_lead_info')) {
         }
 
         ob_start();
-        $course_id = tutor_utils()->get_course_id_by_lesson( $lesson_id );
+        $course_id = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
         $course_post_type = tutor()->course_post_type;
         $queryCourse      = new WP_Query( array( 'p' => $course_id, 'post_type' => $course_post_type ) );
 
@@ -1066,7 +1066,7 @@ if ( ! function_exists('tutor_course_enrolled_nav')) {
             tutor_load_template( 'single.course.enrolled.nav' );
         }elseif(! empty($post->post_type) && $post->post_type === $lesson_post_type){
             $lesson_id = get_the_ID();
-            $course_id = tutor_utils()->get_course_id_by_lesson($lesson_id);
+            $course_id = tutor_utils()->get_course_id_by('lesson', $lesson_id);
 
             $course_post_type = tutor()->course_post_type;
             $queryCourse = new WP_Query(array('p' => $course_id, 'post_type' => $course_post_type));

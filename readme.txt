@@ -244,13 +244,17 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 = 1.9.2 - June 14, 2021 =
 
 New: Push notification add-on
-New: Social sharing editing option
+New: Social sharing editing option (Checkbox)
 New: Show a removable warning in tutor dashboard if signup disabled
 Update: Forgot password page design update
 Update: Button text changed to 'Start Learning' for courses marked as public
-Fix: Instructor can't see filtered courses in course archive
+Update: Quiz question field placeholder text change
+Fix: WP_Query bug for instructor role
 Fix: Instructor rejected notice is visible forever
 Fix: Last quiz can be submitted without answering even if required
+Fix: Texts after double quote not showing in quiz info and question input field on edit
+Fix: Comma inside quiz title and description causes error in import/export
+Fix: Assignment meta data not saving on create. Works only when update.
 
 = 1.9.1 - June 04, 2021 =
 

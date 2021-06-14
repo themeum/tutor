@@ -1179,7 +1179,7 @@ class Utils {
 	public function is_course_enrolled_by_lesson( $lesson_id = 0, $user_id = 0 ) {
 		$lesson_id = $this->get_post_id( $lesson_id );
 		$user_id   = $this->get_user_id( $user_id );
-		$course_id = $this->get_course_id_by_lesson( $lesson_id );
+		$course_id = $this->get_course_id_by( 'lesson', $lesson_id );
 
 		return $this->is_enrolled( $course_id );
 	}
@@ -5921,7 +5921,7 @@ class Utils {
 
 		if ( user_can( $instructor_id, tutor()->instructor_role ) ) {
 			$permitted_course_ids = tutils()->get_assigned_courses_ids_by_instructors();
-			$course_id            = tutils()->get_course_id_by_lesson( $lesson_id );
+			$course_id            = tutils()->get_course_id_by( 'lesson', $lesson_id );
 
 			if ( in_array( $course_id, $permitted_course_ids ) ) {
 				return true;
@@ -6720,6 +6720,7 @@ class Utils {
 					$object_id
 				) );
 				break;
+
 			case 'review' :
 			case 'qa_question' : 
 				$course_id = $wpdb->get_var( $wpdb->prepare(
@@ -6727,8 +6728,9 @@ class Utils {
 					FROM 	{$wpdb->comments}
 					WHERE 	comment_ID = %d;
 					",
-				$object_id
-			) );
+					$object_id
+				) );
+				break;
 		}
 
 		return $course_id;
