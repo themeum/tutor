@@ -135,7 +135,7 @@ $the_query = new WP_Query($args);
                             </div>
                             <div class="tutor-announcement-buttons">
 
-                                <button type="button" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo $post->post_content; ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-btn bordered-btn tutor-announcement-edit">
+                                <button type="button" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo esc_attr( $post->post_content ); ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-btn bordered-btn tutor-announcement-edit">
                                     <?php _e('Edit', 'tutor'); ?>
                                 </button>
                                 <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?php echo $post->ID; ?>">
