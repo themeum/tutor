@@ -4972,14 +4972,6 @@ class Utils {
 			'tumblr'   => array( 'share_class' => 's_tumblr', 'icon_html' => '<i class="tutor-icon-tumblr"></i>' ),
 		);
 
-		$supported = array_keys( tutor_utils()->get_option('supported_course_social_share', array()) );
-
-		foreach($icons as $media => $properties) {
-			if(!in_array( $media, $supported )) {
-				unset( $icons[$media] );
-			}
-		}
-
 		return apply_filters( 'tutor_social_share_icons', $icons );
 	}
 
