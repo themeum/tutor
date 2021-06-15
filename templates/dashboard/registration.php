@@ -40,7 +40,7 @@
 					<?php _e('First Name', 'tutor'); ?>
                 </label>
 
-                <input type="text" name="first_name" value="<?php echo tutor_utils()->input_old('first_name'); ?>" placeholder="<?php _e('First Name', 'tutor'); ?>">
+                <input type="text" name="first_name" value="<?php echo tutor_utils()->input_old('first_name'); ?>" placeholder="<?php _e('First Name', 'tutor'); ?>" required autocomplete="given-name">
             </div>
         </div>
 
@@ -50,7 +50,7 @@
 					<?php _e('Last Name', 'tutor'); ?>
                 </label>
 
-                <input type="text" name="last_name" value="<?php echo tutor_utils()->input_old('last_name'); ?>" placeholder="<?php _e('Last Name', 'tutor'); ?>">
+                <input type="text" name="last_name" value="<?php echo tutor_utils()->input_old('last_name'); ?>" placeholder="<?php _e('Last Name', 'tutor'); ?>" required autocomplete="family-name">
             </div>
         </div>
 
@@ -63,7 +63,7 @@
 				    <?php _e('User Name', 'tutor'); ?>
                 </label>
 
-                <input type="text" name="user_login" class="tutor_user_name" value="<?php echo tutor_utils()->input_old('user_login'); ?>" placeholder="<?php _e('User Name', 'tutor'); ?>">
+                <input type="text" name="user_login" class="tutor_user_name" value="<?php echo tutor_utils()->input_old('user_login'); ?>" placeholder="<?php _e('User Name', 'tutor'); ?>" required autocomplete="username">
             </div>
         </div>
 
@@ -73,7 +73,7 @@
 					<?php _e('E-Mail', 'tutor'); ?>
                 </label>
 
-                <input type="text" name="email" value="<?php echo tutor_utils()->input_old('email'); ?>" placeholder="<?php _e('E-Mail', 'tutor'); ?>">
+                <input type="text" name="email" value="<?php echo tutor_utils()->input_old('email'); ?>" placeholder="<?php _e('E-Mail', 'tutor'); ?>" required autocomplete="email">
             </div>
         </div>
 
@@ -86,7 +86,7 @@
 					<?php _e('Password', 'tutor'); ?>
                 </label>
 
-                <input type="password" name="password" value="<?php echo tutor_utils()->input_old('password'); ?>" placeholder="<?php _e('Password', 'tutor'); ?>">
+                <input type="password" name="password" value="<?php echo tutor_utils()->input_old('password'); ?>" placeholder="<?php _e('Password', 'tutor'); ?>" required autocomplete="new-password">
             </div>
         </div>
 
@@ -96,7 +96,7 @@
 					<?php _e('Password confirmation', 'tutor'); ?>
                 </label>
 
-                <input type="password" name="password_confirmation" value="<?php echo tutor_utils()->input_old('password_confirmation'); ?>" placeholder="<?php _e('Password Confirmation', 'tutor'); ?>">
+                <input type="password" name="password_confirmation" value="<?php echo tutor_utils()->input_old('password_confirmation'); ?>" placeholder="<?php _e('Password Confirmation', 'tutor'); ?>" required autocomplete="new-password">
             </div>
         </div>
     </div>
