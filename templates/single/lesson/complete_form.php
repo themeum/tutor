@@ -18,7 +18,7 @@ do_action('tutor_lesson/single/before/complete_form');
 $is_completed_lesson = tutor_utils()->is_completed_lesson();
 if ( ! $is_completed_lesson) {
 	?>
-    <div class="tutor-single-lesson-segment tutor-lesson-compelte-form-wrap">
+    <div class="tutor-single-lesson-segment tutor-lesson-complete-form-wrap">
 
         <form method="post">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
