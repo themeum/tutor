@@ -2761,7 +2761,7 @@ msgstr ""
 msgid "%s Become an instructor"
 msgstr ""
 
-#: templates/dashboard.php:114
+#: templates/dashboard.php:113
 msgid "Your Application was rejected on"
 msgstr ""
 
