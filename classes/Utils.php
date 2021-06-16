@@ -515,7 +515,15 @@ class Utils {
 			$course_post_type
 		) );
 
-		return $query;
+		
+		global $current_user;
+		$courses = get_posts(array(
+			'post_type' => 'courses',
+			'author' => $current_user->ID,
+			'posts_per_page' => -1
+		));
+		
+		return $courses;
 	}
 
 	/**
