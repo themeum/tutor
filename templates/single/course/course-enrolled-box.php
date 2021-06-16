@@ -40,7 +40,7 @@ global $wp_query;
                 <a href="<?php echo $lesson_url; ?>" class="tutor-button tutor-success">
                     <?php
                         if($completed_lessons){
-                            _e( 'Continue to lesson', 'tutor' );
+                            _e( 'Retake This Course', 'tutor' );
                         }else{
                             _e( 'Start Course', 'tutor' );
                         }
