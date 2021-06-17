@@ -5744,6 +5744,33 @@ class Utils {
 	}
 
 	/**
+	 * @param int $parent
+	 *
+	 * @return array
+	 *
+	 * Get course tags in array with child
+	 *
+	 * @since v.1.3.4
+	 */
+	public function get_course_tags( $parent = 0 ) {
+		$args = apply_filters( 'tutor_get_course_tags_args', array(
+			'taxonomy'   => 'course-tag',
+			'hide_empty' => false,
+			'parent'     => $parent,
+		));
+
+		$terms = get_terms( $args );
+
+		$children = array();
+		foreach ( $terms as $term ) {
+			$term->children = $this->get_course_tags( $term->term_id );
+			$children[ $term->term_id ] = $term;
+		}
+
+		return $children;
+	}
+
+	/**
 	 * @param int $parent_id
 	 *
 	 * @return array|int|\WP_Error
