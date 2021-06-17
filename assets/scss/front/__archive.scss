@@ -347,9 +347,13 @@ div[class*="tutor-course-col"] {
 	color: var(--tutor-primary-color);
 }
 
-.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap {
-	margin-left: auto;
-}
+.tutor-course-loop-price {
+	&>.price .tutor-loop-cart-btn-wrap,
+	.tutor-public-course-start-learning {
+		margin-left: auto;
+	}
+} 
+
 .tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a.added {
 	display: none;
 }
