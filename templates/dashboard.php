@@ -168,6 +168,25 @@ do_action('tutor_dashboard/before/wrap');
                         <?php
                         if ($dashboard_page_name){
                             do_action('tutor_load_dashboard_template_before', $dashboard_page_name);
+                            /**
+                             * dashboard page slug added for tutor_zoom
+                             * 
+                             * @since 1.9.3
+                             */
+                            if( defined('TUTOR_ZOOM_VERSION') ) {
+                                switch ( $dashboard_page_name ) {
+                                    case "zoom/help" : 
+                                        $dashboard_page_name = 'zoom';
+                                        break;
+                                    case 'zoom/settings' : 
+                                        $dashboard_page_name = 'zoom';
+                                        break;
+                                    case 'zoom/set_api' : 
+                                        $dashboard_page_name = 'zoom';
+                                        break;   
+                                }
+                            }
+
                             tutor_load_template("dashboard.".$dashboard_page_name);
                             do_action('tutor_load_dashboard_template_before', $dashboard_page_name);
                         }else{
