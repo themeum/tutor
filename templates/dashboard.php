@@ -166,6 +166,7 @@ do_action('tutor_dashboard/before/wrap');
                 <div class="tutor-col-9">
                     <div class="tutor-dashboard-content">
                         <?php
+        
                         if ($dashboard_page_name){
                             do_action('tutor_load_dashboard_template_before', $dashboard_page_name);
                             /**
@@ -181,7 +182,7 @@ do_action('tutor_dashboard/before/wrap');
                                     case 'zoom/settings' : 
                                         $dashboard_page_name = 'zoom';
                                         break;
-                                    case 'zoom/set_api' : 
+                                    case 'zoom/set-api' : 
                                         $dashboard_page_name = 'zoom';
                                         break;   
                                 }
@@ -189,7 +190,7 @@ do_action('tutor_dashboard/before/wrap');
 
                             tutor_load_template("dashboard.".$dashboard_page_name);
                             do_action('tutor_load_dashboard_template_before', $dashboard_page_name);
-                        }else{
+                        } else {
                             tutor_load_template("dashboard.dashboard");
                         }
                         ?>
