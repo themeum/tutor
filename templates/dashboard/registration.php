@@ -8,10 +8,11 @@
 
 <?php 
     if(!get_option( 'users_can_register', false )) {
-        echo '<p style="text-align:center">',__('Access Denied', 'tutor'),'</p>';
+        echo '<p style="text-align:center">',__('Registration disabled. Please ask site admin to enable registration.', 'tutor'),'</p>';
         return;
     }
 ?>
+
 <?php do_action('tutor_before_student_reg_form');?>
 
 <form method="post" enctype="multipart/form-data">

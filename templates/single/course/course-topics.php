@@ -81,7 +81,7 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 
 							<?php
 							$lessons = tutor_utils()->get_course_contents_by_topic(get_the_ID(), -1);
-
+							
 							if ($lessons->have_posts()){
 								while ($lessons->have_posts()){ $lessons->the_post();
 									global $post;

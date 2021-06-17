@@ -77,6 +77,8 @@
                                 </div>
 		                        <?php
 	                        }
+
+							do_action( 'tutor_addon_list/single/after/required-plugins', $basName, $addon );
 	                        ?>
 
                             <div class="plugin-card-bottom">

@@ -1219,7 +1219,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_course_first_lesson( $course_id = 0 ) {
+	public function get_course_first_lesson( $course_id = 0, $post_type=null ) {
 		global $wpdb;
 
 		$course_id = $this->get_post_id( $course_id );
@@ -1232,6 +1232,7 @@ class Utils {
 							ON topic.ID = items.post_parent
 			WHERE 	topic.post_parent = %d
 					AND items.post_status = %s
+					".( $post_type ? " AND items.post_type='{$post_type}' " : "")."
 			ORDER BY topic.menu_order ASC,
 					items.menu_order ASC;
 			",
@@ -7023,5 +7024,28 @@ class Utils {
 		}
 		
 		return false;
+	}
+
+	public function get_unique_slug($slug, $post_type=null, $num_assigned=false) {
+
+		global $wpdb;
+		$existing_slug = $wpdb->get_var($wpdb->prepare("SELECT post_name FROM {$wpdb->posts} WHERE post_name=%s" . ($post_type ? " AND post_type='{$post_type}' LIMIT 1" : ""), $slug));
+
+		if(!$existing_slug) {
+			return $slug;
+		}
+
+		if(!$num_assigned) {
+			$new_slug = $slug . '-' . 2;
+		} else {
+			$new_slug = explode('-', $slug);
+			$number = end( $new_slug ) + 1;
+			
+			array_pop($new_slug);
+
+			$new_slug = implode('-', $new_slug) . '-' . $number;
+		}
+
+		return $this->get_unique_slug($new_slug, $post_type, true);
 	}
 }
