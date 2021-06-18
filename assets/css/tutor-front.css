@@ -741,6 +741,7 @@ table.course-single-gradebooks .datetime {
   display: -ms-flexbox;
   display: flex;
   position: relative;
+  width: 100%;
 }
 
 .tutor-lesson-sidebar {
@@ -2758,7 +2759,8 @@ div[class*="tutor-course-col"] {
   color: var(--tutor-primary-color);
 }
 
-.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap {
+.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap,
+.tutor-course-loop-price .tutor-public-course-start-learning {
   margin-left: auto;
 }
 
@@ -6802,6 +6804,7 @@ table.course-single-gradebooks a {
   max-width: 520px;
   padding: 15px;
   margin: 0 auto;
+  padding: 15px !important;
 }
 
 /* *********************** */

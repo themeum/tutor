@@ -107,8 +107,7 @@ do_action('tutor_dashboard/before/wrap');
                             else if($rejected_on){
                                 if(get_user_meta( get_current_user_id(), 'tutor_instructor_show_rejection_message', true )) {
                                     $on = date('d F, Y', $rejected_on);
-                                    echo '
-                                    <a href="?tutor_action=hide_instructor_notice">✕</a>
+                                    echo '<a href="?tutor_action=hide_instructor_notice" style="color:gray">✕</a>
                                     <span style="'.$info_message_style.'">
                                         <i class="dashicons dashicons-info" style="color:#E08E00; '.$info_style.'"></i>', 
                                         __('Your Application was rejected on', 'tutor'), ' <b>', $on, '</b>',
