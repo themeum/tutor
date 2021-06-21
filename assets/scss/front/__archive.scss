@@ -351,6 +351,15 @@ div[class*="tutor-course-col"] {
 	&>.price .tutor-loop-cart-btn-wrap,
 	.tutor-public-course-start-learning {
 		margin-left: auto;
+
+		&, a {
+			color: var(--tutor-text-color);
+			font-weight: 400;
+
+			&:hover{
+				color: var(--tutor-primary-color);
+			}
+		}
 	}
 } 
 
