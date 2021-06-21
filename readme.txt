@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 5.7
+Tested up to: 5.7.2
 Requires PHP: 7.0
-Stable tag: 1.8.10
+Stable tag: 1.9.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,28 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.9.1 - June 04, 2021 =
+
+New: Enable/disable auto redirection to enrolled courses on auto order completion
+Fix: Parameter count in plugin activated hook
+Fix: Zoom meeting redirecting to post list while saving
+Fix: Students can no longer give feedback without selecting star rating
+
+= 1.9.0 - June 02, 2021 =
+
+New: Assign different certificate templates to courses separately
+New: tutor_quiz/single/after/wrap hook added in single quiz template
+New: Video duration will be automatically fetched when inserting lesson videos
+New: Filter hook added to course filter
+New: Static texts in JS files are now translatable
+New: Automatic order completion redirects to Enrolled Courses
+Update: Button text changed for rejecting instructor requests
+Update: Default course count per page changed to 12 from 3
+Fix: Dashboard shortcode not working
+Fix: Wrong Q&A count in dashboard
+Fix: Student can Add to Cart from course archive even after the course is full
+Fix: SQL error in custom post types
 
 = 1.8.10 - May 10, 2021 =
 

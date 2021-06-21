@@ -47,7 +47,7 @@ if ( ! function_exists('tutor_placeholder_img_src')) {
 
 if ( ! function_exists('tutor_course_categories_dropdown')){
 	function tutor_course_categories_dropdown($post_ID = 0, $args = array()){
-
+	
 		$default = array(
 			'classes'  => '',
 			'name'  => 'tax_input[course-category]',
@@ -76,6 +76,51 @@ if ( ! function_exists('tutor_course_categories_dropdown')){
 		$output .= "<select name='{$name}' {$multiple_select} class='{$classes}' data-placeholder='". __('Search Course Category. ex. Design, Development, Business', 'tutor') ."'>";
 		$output .= "<option value=''>". __('Select a category', 'tutor') ."</option>";
 		$output .= _generate_categories_dropdown_option($post_ID, $categories, $args);
+		$output .= "</select>";
+
+		return $output;
+	}
+}
+
+/**
+ * @return string
+ *
+ * Get course tags selecting UI
+ *
+ * @since v.1.3.4
+ */
+
+if ( ! function_exists('tutor_course_tags_dropdown')){
+	function tutor_course_tags_dropdown($post_ID = 0, $args = array()){
+	
+		$default = array(
+			'classes'  => '',
+			'name'  => 'tax_input[course-tag]',
+			'multiple' => true,
+		);
+
+		$args = apply_filters('tutor_course_tags_dropdown_args', array_merge($default, $args));
+
+		$multiple_select = '';
+
+		if (tutor_utils()->array_get('multiple', $args)){
+			if (isset($args['name'])){
+				$args['name'] = $args['name'].'[]';
+			}
+			$multiple_select = "multiple='multiple'";
+		}
+
+		extract($args);
+
+		$classes = (array) $classes;
+		$classes = implode(' ', $classes);
+
+		$tags = tutor_utils()->get_course_tags();
+
+		$output = '';
+		$output .= "<select name='{$name}' {$multiple_select} class='{$classes}' data-placeholder='". __('Search Course Tags. ex. Design, Development, Business', 'tutor') ."'>";
+		$output .= "<option value=''>". __('Select a tag', 'tutor') ."</option>";
+		$output .= _generate_tags_dropdown_option($post_ID, $tags, $args);
 		$output .= "</select>";
 
 		return $output;
@@ -125,6 +170,49 @@ if ( ! function_exists('_generate_categories_dropdown_option')){
 		return $output;
 	}
 }
+/**
+ * @param $tags
+ * @param string $parent_name
+ *
+ * @return string
+ *
+ * Get selecting options, recursive supports
+ *
+ * @since v.1.3.4
+ */
+
+if ( ! function_exists('_generate_tags_dropdown_option')){
+	function _generate_tags_dropdown_option($post_ID = 0, $tags = array(), $args = array(), $depth = 0){
+		$output = '';
+
+		if (!tutor_utils()->count($tags)) return $output;
+
+		if (!is_numeric($post_ID) || $post_ID < 1) return $output;
+		
+		foreach ( $tags as $tag_id => $tag ) {
+			if (!$tag->parent) $depth = 0;
+
+			$childrens = tutor_utils()->array_get( 'children', $tag );
+			$has_in_term = has_term( $tag->term_id, 'course-tag', $post_ID );
+
+			$depth_seperator = '';
+			if ($depth){
+				for ($depth_i = 0; $depth_i < $depth; $depth_i++){
+					$depth_seperator.='-';
+				}
+			}
+
+			$output .= "<option value='{$tag->name}' ".selected($has_in_term, true, false)." >   {$depth_seperator} {$tag->name}</option> ";
+
+			if ( tutor_utils()->count( $childrens ) ) {
+				$depth++;
+				$output .= _generate_tags_dropdown_option($post_ID,$childrens, $args, $depth);
+			}
+		}
+		
+		return $output;
+	}
+}
 
 /**
  * @param array $args
@@ -152,6 +240,37 @@ if ( ! function_exists('tutor_course_categories_checkbox')){
 		$categories = tutor_utils()->get_course_categories();
 		$output = '';
 		$output .= __tutor_generate_categories_checkbox($post_ID, $categories, $args);
+
+		return $output;
+	}
+}
+
+/**
+ * @param array $args
+ *
+ * @return string
+ *
+ * Generate course tags checkbox
+ * @since v.1.3.4
+ */
+
+if ( ! function_exists('tutor_course_tags_checkbox')){
+	function tutor_course_tags_checkbox($post_ID = 0, $args = array()){
+		$default = array(
+			'name'  => 'tax_input[course-tag]',
+		);
+
+		$args = apply_filters('tutor_course_tags_checkbox_args', array_merge($default, $args));
+
+		if (isset($args['name'])){
+			$args['name'] = $args['name'].'[]';
+		}
+
+		extract($args);
+
+		$tags = tutor_utils()->get_course_tags();
+		$output = '';
+		$output .= __tutor_generate_tags_checkbox($post_ID, $tags, $args);
 
 		return $output;
 	}
@@ -189,6 +308,43 @@ if ( ! function_exists('__tutor_generate_categories_checkbox')){
 			$output .= "</ul>";
 		}
 		return $output;
+	}
+}
+/**
+ * @param $tags
+ * @param string $parent_name
+ * @param array $args
+ *
+ * @return string
+ *
+ * Internal function to generate course tags checkbox
+ *
+ * @since v.1.3.4
+ */
+if ( ! function_exists('__tutor_generate_tags_checkbox')){
+	function __tutor_generate_tags_checkbox($post_ID = 0, $tags=array(), $args = array()){
+		
+		$output = '';
+		$input_name = tutor_utils()->array_get('name', $args);
+
+		if (tutor_utils()->count($tags)) {
+			$output .= "<ul class='tax-input-course-tag'>";
+			foreach ( $tags as $tag_id => $tag ) {
+				$childrens = tutor_utils()->array_get( 'children', $tag );
+				$has_in_term = has_term( $tag->term_id, 'course-tag', $post_ID );
+
+				$output .= "<li class='tax-input-course-tag-item tax-input-course-tag-item-{$tag->term_id} '><label class='course-tag-checkbox'> <input type='checkbox' name='{$input_name}' value='{$tag->term_id}' ".checked($has_in_term, true, false)." /> <span>{$tag->name}</span> </label>";
+
+				if ( tutor_utils()->count( $childrens ) ) {
+					$output .= __tutor_generate_tags_checkbox($post_ID,$childrens, $args);
+				}
+				$output .= " </li>";
+			}
+			$output .= "</ul>";
+		}
+		
+		return $output;
+
 	}
 }
 

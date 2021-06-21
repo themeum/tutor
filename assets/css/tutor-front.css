@@ -2443,10 +2443,6 @@ Course question and answer
   cursor: pointer;
 }
 
-.tutor-course-filter-wrapper > div .tutor-course-filter-loop-container {
-  display: none;
-}
-
 .tutor-course-filter-wrapper .tutor-clear-all-filter {
   margin-top: 28px;
   display: none;
@@ -2483,14 +2479,14 @@ Course question and answer
     width: 100% !important;
     float: none !important;
   }
-  .tutor-course-filter-wrapper .tutor-course-filter-container > div {
+  .tutor-course-filter-wrapper .tutor-course-filter-container > form {
     overflow: auto;
   }
-  .tutor-course-filter-wrapper .tutor-course-filter-container > div > div {
+  .tutor-course-filter-wrapper .tutor-course-filter-container > form > div {
     width: 50%;
     float: left;
   }
-  .tutor-course-filter-wrapper .tutor-course-filter-container > div > div:first-child {
+  .tutor-course-filter-wrapper .tutor-course-filter-container > form > div:first-child {
     width: 100%;
   }
 }
@@ -2784,6 +2780,20 @@ div[class*="tutor-course-col"] {
   margin-right: 5px;
   vertical-align: top;
   color: var(--tutor-primary-color);
+}
+
+.tutor-course-booked-fully {
+  margin-left: auto;
+}
+
+.tutor-course-booked-fully > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.tutor-course-booked-fully img {
+  width: 24px;
+  height: 24px;
 }
 
 /* Standard syntax */
@@ -8262,7 +8272,6 @@ UI DatePicker
 
 .ui-datepicker .ui-datepicker-calendar td {
   border-radius: 4px;
-  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }

@@ -17,7 +17,7 @@ class Course_Filter{
     public function load_listing(){
 		tutils()->checking_nonce();
 
-        $default_per_page = tutils()->get_option('courses_per_page', 6);
+        $default_per_page = tutils()->get_option('courses_per_page', 12);
 		$courses_per_page = (int)sanitize_text_field(tutils()->array_get('course_per_page', $_POST, $default_per_page));
         $page = (isset($_POST['page']) && is_numeric($_POST['page']) && $_POST['page']>0) ? $_POST['page'] : 1;
 
@@ -35,6 +35,8 @@ class Course_Filter{
         foreach(array('category', 'tag') as $taxonomy) {
 
             $term_array = tutils()->array_get('tutor-course-filter-'.$taxonomy, $_POST, array());
+            !is_array($term_array) ? $term_array = array($term_array) : 0;
+
             $term_array = array_filter($term_array, function($term_id) {
                 return is_numeric($term_id);
             });
@@ -60,7 +62,7 @@ class Course_Filter{
             }
 
             $type_array = tutils()->array_get('tutor-course-filter-'.$type, $_POST, array());
-            $type_array = array_map('sanitize_text_field', $type_array);
+            $type_array = array_map('sanitize_text_field', (is_array($type_array) ? $type_array : array($type_array)));
 
             if(count( $type_array ) > 0){
                 $level_price[] = array(
@@ -96,7 +98,7 @@ class Course_Filter{
             }
         }
 
-        query_posts($args);
+        query_posts( apply_filters( 'tutor_course_filter_args', $args ) );
         $col_per_row = (int)sanitize_text_field(tutils()->array_get('column_per_row', $_POST, 3));
 		$GLOBALS['tutor_shortcode_arg']=array(
 			'column_per_row' => $col_per_row<=0 ? 3 : $col_per_row,
