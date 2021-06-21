@@ -104,23 +104,33 @@ do_action('tutor_dashboard/before/wrap');
                                         __('Your Application is pending from', 'tutor'), ' <b>', $on, '</b>',
                                     '</span>';
                             }
-                            else if($rejected_on){
-                                if(get_user_meta( get_current_user_id(), 'tutor_instructor_show_rejection_message', true )) {
-                                    $on = date('d F, Y', $rejected_on);
-                                    echo '<a href="?tutor_action=hide_instructor_notice" style="color:gray">✕</a>
-                                    <span style="'.$info_message_style.'">
-                                        <i class="dashicons dashicons-info" style="color:#E08E00; '.$info_style.'"></i>', 
-                                        __('Your Application was rejected on', 'tutor'), ' <b>', $on, '</b>',
-                                    '</span>';
-                                }
-                                
-                                echo $become_button;                                
-                            }
-                            else if($instructor_status!=='blocked'){
+                            else if($rejected_on || $instructor_status!=='blocked'){
                                 echo $become_button;
                             }
                             ?>
                         </div>
+
+                        <?php 
+                            if(
+                                    $instructor_status != 'approved' && 
+                                    $instructor_status != 'pending' && 
+                                    $rejected_on && 
+                                    get_user_meta( get_current_user_id(), 'tutor_instructor_show_rejection_message', true )
+                                ) {
+                                ?>
+                                <div class="tutor-instructor-rejection-notice">
+                                    <?php 
+                                        $on = date('d F, Y', $rejected_on);
+                                        echo '<span>
+                                            <i class="dashicons dashicons-info"></i>', 
+                                            __('Your Application was rejected on', 'tutor') . ' ' . $on .
+                                        '</span>
+                                        <a href="?tutor_action=hide_instructor_notice">✕</a>';
+                                    ?>
+                                </div>
+                                <?php
+                            }
+                        ?>
                     </div>
                 </div>
                 <?php do_action('tutor_dashboard/notification_area'); ?>
