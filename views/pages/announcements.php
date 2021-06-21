@@ -135,7 +135,7 @@ $the_query = new WP_Query($args);
                             </div>
                             <div class="tutor-announcement-buttons">
 
-                                <button type="button" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo $post->post_content; ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-btn bordered-btn tutor-announcement-edit">
+                                <button type="button" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo esc_attr( $post->post_content ); ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-btn bordered-btn tutor-announcement-edit">
                                     <?php _e('Edit', 'tutor'); ?>
                                 </button>
                                 <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?php echo $post->ID; ?>">
@@ -173,9 +173,6 @@ $the_query = new WP_Query($args);
 </div>
 <!--pagination end-->
 
-<?php
-$notify_checked = tutils()->get_option('email_to_students.new_announcement_posted');
-?>
 <!--create announcements modal-->
 <div class="tutor-modal-wrap tutor-announcements-modal-wrap tutor-announcement-create-modal" id="tutor-annoucement-backend-create-modal">
     <div class="tutor-modal-content">
@@ -233,16 +230,9 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                         <textarea rows="6" type="text" name="tutor_announcement_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
                     </div>
                 </div>
-                <?php if ($notify_checked) : ?>
-                    <div class="tutor-option-field-row">
+                
+                <?php do_action('tutor_announcement_editor/after'); ?>
 
-                        <label for="notify_student">
-                            <input type="checkbox" name="tutor_notify_students" id="notify_student" checked>
-                            <?php _e('Notify to all students of this course.', 'tutor'); ?>
-                        </label>
-
-                    </div>
-                <?php endif; ?>
                 <div class="tutor-option-field-row">
                     <div class="tutor-announcements-create-alert"></div>
                 </div>
@@ -322,14 +312,8 @@ $notify_checked = tutils()->get_option('email_to_students.new_announcement_poste
                         <textarea rows="6" type="text" id="tutor-announcement-summary" name="tutor_announcement_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
                     </div>
                 </div>
-                <?php if ($notify_checked) : ?>
-                    <div class="tutor-option-field-row">
-                        <label for="notify_student_upate">
-                            <input type="checkbox" name="tutor_notify_students" id="notify_student_upate">
-                            <?php _e('Notify to all students of this course.', 'tutor'); ?>
-                        </label>
-                    </div>
-                <?php endif; ?>
+
+                <?php do_action('tutor_announcement_editor/after'); ?>
 
                 <div class="tutor-option-field-row">
                     <div class="tutor-announcements-update-alert"></div>

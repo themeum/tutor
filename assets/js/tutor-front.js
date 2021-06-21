@@ -654,15 +654,14 @@ jQuery(document).ready(function ($) {
         var validated = true;
         if ($questions_wrap.length) {
             $questions_wrap.each(function (index, question) {
-                validated = tutor_quiz_validation($(question));
-                validated = feedback_response($(question));
+                !tutor_quiz_validation( $(question) ) ? validated = false : 0;
+                !feedback_response( $(question) ) ? validated = false : 0;
             });
         }
 
         if (!validated) {
             e.preventDefault();
         }
-
     });
 
 

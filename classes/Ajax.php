@@ -493,12 +493,7 @@ class Ajax{
                 //set reponse message as per action type
                 $response['message'] = ($action_type == 'create') ? $create_success_msg : $update_success_msg;
 
-                //provide action hook
-                if (isset($_POST['tutor_notify_students']) && $_POST['tutor_notify_students']) {
-                    do_action('tutor_announcements_notify_students', $post_id, $announcement, $action_type);
-				}
-				
-				do_action('tutor_announcements/after/save', $post_id, $announcement);
+				do_action('tutor_announcements/after/save', $post_id, $announcement, $action_type );
                 
                 wp_send_json($response);
             } else {

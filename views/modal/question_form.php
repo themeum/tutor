@@ -21,7 +21,7 @@ $settings = maybe_unserialize($question->question_settings);
                 <h4><?php _e('Write your question here', 'tutor'); ?></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
-                        <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo stripslashes($question->question_title); ?>">
+                        <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" placeholder="<?php _e('Type your question here', 'tutor'); ?>" value="<?php echo htmlspecialchars( stripslashes($question->question_title) ); ?>">
                     </div>
                 </div>
             </div>
@@ -37,10 +37,7 @@ $settings = maybe_unserialize($question->question_settings);
                                 <input type="hidden" class="tutor_select_value_holder" name="tutor_quiz_question[<?php echo $question_id; ?>][question_type]" value="" >
                             </div>
 
-							<?php $question_types = tutor_utils()->get_question_types();
-
-
-							?>
+							<?php $question_types = tutor_utils()->get_question_types(); ?>
 
                             <div class="tutor-select-options" style="display: none;">
 								<?php

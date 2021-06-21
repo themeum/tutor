@@ -72,9 +72,8 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                 </li>
             <?php } ?>
 
-            <?php if ( !$disable_course_share){ ?>
+            <?php if ( !$disable_course_share ){ ?>
                 <li class="tutor-social-share">
-                    <span><?php _e('Share:', 'tutor'); ?></span>
                     <?php tutor_social_share(); ?>
                 </li>
             <?php } ?>

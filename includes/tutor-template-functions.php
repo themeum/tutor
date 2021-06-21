@@ -960,7 +960,7 @@ if ( ! function_exists('tutor_lesson_lead_info')) {
         }
 
         ob_start();
-        $course_id = tutor_utils()->get_course_id_by_lesson( $lesson_id );
+        $course_id = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
         $course_post_type = tutor()->course_post_type;
         $queryCourse      = new WP_Query( array( 'p' => $course_id, 'post_type' => $course_post_type ) );
 
@@ -1066,7 +1066,7 @@ if ( ! function_exists('tutor_course_enrolled_nav')) {
             tutor_load_template( 'single.course.enrolled.nav' );
         }elseif(! empty($post->post_type) && $post->post_type === $lesson_post_type){
             $lesson_id = get_the_ID();
-            $course_id = tutor_utils()->get_course_id_by_lesson($lesson_id);
+            $course_id = tutor_utils()->get_course_id_by('lesson', $lesson_id);
 
             $course_post_type = tutor()->course_post_type;
             $queryCourse = new WP_Query(array('p' => $course_id, 'post_type' => $course_post_type));
@@ -1457,11 +1457,18 @@ if ( ! function_exists('tutor_lesson_sidebar_question_and_answer')) {
 
 if ( ! function_exists('tutor_social_share')) {
     function tutor_social_share( $echo = true ) {
-        ob_start();
-        tutor_load_template( 'single.course.social_share' );
-        $output = apply_filters( 'tutor_course/single/social_share', ob_get_clean() );
 
-        if ( $echo ) {
+        $output = '';
+        $tutor_social_share_icons = tutor_utils()->tutor_social_share_icons();
+
+        if (tutor_utils()->count($tutor_social_share_icons)) {
+            ob_start();
+            tutor_load_template( 'single.course.social_share', array( 'tutor_social_share_icons' => $tutor_social_share_icons ) );
+            $output = apply_filters( 'tutor_course/single/social_share', ob_get_clean() );
+        }
+
+        if ( $echo && $output!='' ) {
+            echo '<span>' . __('Share:', 'tutor') . '</span>';
             echo $output;
         }
 
