@@ -2298,7 +2298,7 @@ msgstr ""
 msgid "Tutor &rsaquo; Setup Wizard"
 msgstr ""
 
-#: classes/User.php:155
+#: classes/User.php:171
 msgid "User registration is disabled. New students and instructors will not be able to register for now."
 msgstr ""
 
@@ -2761,16 +2761,16 @@ msgstr ""
 msgid "%s Become an instructor"
 msgstr ""
 
-#: templates/dashboard.php:113
-msgid "Your Application was rejected on"
-msgstr ""
-
 #: templates/dashboard.php:104
 msgid "Your Application is pending from"
 msgstr ""
 
 #: templates/dashboard.php:95, templates/dashboard/index.php:81
 msgid "%s Add A New Course "
+msgstr ""
+
+#: templates/dashboard.php:126
+msgid "Your Application was rejected on"
 msgstr ""
 
 #: templates/instructor-setting.php:8
@@ -2817,7 +2817,7 @@ msgstr ""
 msgid "Biography"
 msgstr ""
 
-#: templates/course-filter/filters.php:9, templates/dashboard/create-course.php:161, templates/loop/course-continue.php:19, templates/loop/course-in-cart.php:20, templates/loop/course-price-edd.php:20, templates/loop/course-price-woocommerce.php:20, templates/loop/course-price.php:19, views/metabox/course-add-edd-product-metabox.php:59, views/metabox/course-add-product-metabox.php:66, templates/single/course/wc-price-html.php:23
+#: templates/course-filter/filters.php:9, templates/dashboard/create-course.php:161, templates/loop/course-continue.php:19, templates/loop/course-in-cart.php:20, templates/loop/course-price-edd.php:20, templates/loop/course-price-woocommerce.php:20, templates/loop/course-price-woocommerce.php:35, templates/loop/course-price.php:19, views/metabox/course-add-edd-product-metabox.php:59, views/metabox/course-add-product-metabox.php:66, templates/single/course/wc-price-html.php:23
 msgid "Free"
 msgstr ""
 
@@ -3409,7 +3409,7 @@ msgstr ""
 msgid "Get Enrolled"
 msgstr ""
 
-#: templates/loop/course-price-woocommerce.php:36
+#: templates/loop/course-price-woocommerce.php:37
 msgid "Start Learning "
 msgstr ""
 
