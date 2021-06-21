@@ -2770,7 +2770,7 @@ msgid "%s Add A New Course "
 msgstr ""
 
 #: templates/dashboard.php:126
-msgid "Your Application was rejected on"
+msgid "Your application to become an instructor was rejected on"
 msgstr ""
 
 #: templates/instructor-setting.php:8
@@ -4055,7 +4055,7 @@ msgstr ""
 msgid "Buy Now"
 msgstr ""
 
-#: views/pages/addons.php:79, views/pages/enable_disable_addons.php:86, views/pages/tutor-pro-addons.php:56
+#: views/pages/addons.php:79, views/pages/enable_disable_addons.php:113, views/pages/tutor-pro-addons.php:56
 msgid "Version"
 msgstr ""
 
