@@ -1,6 +1,6 @@
 function tutor_get_nonce_data(send_key_value) {
 
-    var nonce_data = window.tutor_data || window._tutorobject || {};
+    var nonce_data = window._tutorobject || {};
     var nonce_key = nonce_data.nonce_key || '';
     var nonce_value = nonce_data[nonce_key] || '';
 
@@ -13,6 +13,8 @@ function tutor_get_nonce_data(send_key_value) {
 
 jQuery(document).ready(function($){
     'use strict';
+
+    const { __, _x, _n, _nx } = wp.i18n;
 
     /**
      * Slider bar
@@ -172,8 +174,8 @@ jQuery(document).ready(function($){
             success: function (data) {
 
                 data.success ?
-                    tutor_toast($btn.data('toast_success'), $btn.data('toast_success_message'), 'success'):
-                    tutor_toast($btn.data('toast_error'), $btn.data('toast_error_message'), 'error');
+                    tutor_toast(__('Success', 'tutor'), $btn.data('toast_success_message'), 'success'):
+                    tutor_toast(__('Update Error', 'tutor'), __('Meeting Update Failed', 'tutor'), 'error');
 
                 if(data.course_contents) {
                     $(data.selector).html(data.course_contents);
@@ -185,9 +187,6 @@ jQuery(document).ready(function($){
                 } else {
                     location.reload();
                 }
-            },
-            error: function() {
-                tutor_toast($btn.data('toast_error'), $btn.data('toast_error_message'), 'error');
             },
             complete: function () {
                 $btn.removeClass('tutor-updating-message');
@@ -552,11 +551,8 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 data.success ? 
-                    tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success') : 
-                    tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
-            },
-            error: function() {
-                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+                    tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success') : 
+                    tutor_toast(__('Update Error', 'tutor'), __('Quiz Update Failed', 'tutor'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1293,10 +1289,11 @@ jQuery(document).ready(function($){
     * @since v.1.6.4
     * Quiz Attempts Instructor Feedback 
     */
-   $(document).on('click', '.tutor-instructor-feedback', function(e){
+   $(document).on('click', '.tutor-instructor-feedback', function(e) {
+
     e.preventDefault();
     var $that = $(this);
-    console.log('Here->', $that.data('attemptid'),  $('.tutor-instructor-feedback-content').val());
+    
     $.ajax({
         url : (window.ajaxurl || _tutorobject.ajaxurl),
         type : 'POST',
@@ -1307,14 +1304,8 @@ jQuery(document).ready(function($){
         success: function (data) {
             if (data.success){
                 $that.closest('.course-content-item').remove();
-                tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success');
+                tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
             }
-            else {
-                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
-            }
-        },
-        error: function() {
-            tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
         },
         complete: function () {
             $that.removeClass('tutor-updating-message');
@@ -1530,8 +1521,114 @@ jQuery(document).ready(function($){
         e.stopPropagation();
         $(this).addClass('show');
       });
-   //announcement end
+    //announcement end
 
+
+    
+   /**
+    * @since v.1.9.0
+    * Parse and show video duration on link paste in lesson video 
+    */
+    $('body').on('paste', '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5', function(e) {
+
+        var root = $(this).closest('.lesson-modal-form-wrap').find('.tutor-option-field-video-duration');
+        var duration_label = root.find('label');
+        var is_wp_media = $(this).hasClass('video_source_wrap_html5') || $(this).hasClass('video_source_upload_wrap_html5');
+        var video_url = is_wp_media ? $(this).find('span').data('video_url') : e.originalEvent.clipboardData.getData('text');
+          
+        var toggle_loading = function(show) {
+
+            if(!show) {
+                duration_label.find('img').remove();
+                return;
+            }
+
+            // Show loading icon
+            if(duration_label.find('img').length==0) {
+                duration_label.append(' <img src="'+window._tutorobject.loading_icon_url+'" style="display:inline-block"/>');
+            }
+        }
+
+        var set_duration = function(sec_num) {
+            var hours   = Math.floor(sec_num / 3600);
+            var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+            var seconds = Math.round( sec_num - (hours * 3600) - (minutes * 60) );
+
+            if (hours   < 10) {hours   = "0"+hours;}
+            if (minutes < 10) {minutes = "0"+minutes;}
+            if (seconds < 10) {seconds = "0"+seconds;}
+    
+            var fragments = [hours, minutes, seconds];
+            var time_fields = root.find('input');
+            for(var i=0; i<3; i++) {
+                time_fields.eq(i).val(fragments[i]);
+            }
+        }
+        
+        var yt_to_seconds = function (duration) {
+            var match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+          
+            match = match.slice(1).map(function(x) {
+                if (x != null) {
+                    return x.replace(/\D/, '');
+                }
+            });
+          
+            var hours = (parseInt(match[0]) || 0);
+            var minutes = (parseInt(match[1]) || 0);
+            var seconds = (parseInt(match[2]) || 0);
+          
+            return hours * 3600 + minutes * 60 + seconds;
+        }
+
+        if(is_wp_media || $(this).parent().hasClass('video_source_wrap_external_url')) {
+            var player = document.createElement('video');
+            player.addEventListener('loadedmetadata', function() {
+                set_duration( player.duration );
+                toggle_loading(false);
+            });
+
+            toggle_loading(true);
+            player.src = video_url;
+
+        } else if($(this).parent().hasClass('video_source_wrap_vimeo')) {
+
+            var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+            var match = video_url.match(regExp);
+            var video_id = match ? match[5] : null;
+
+            if(video_id) {
+                toggle_loading(true);
+
+                $.getJSON('http://vimeo.com/api/v2/video/'+video_id+'/json', function(data) {
+                    if(Array.isArray(data) && data[0] && data[0].duration!==undefined) {
+                        set_duration(data[0].duration);
+                    }
+                    
+                    toggle_loading(false);
+                });
+            }            
+        } else if($(this).parent().hasClass('video_source_wrap_youtube')) {
+            var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            var match = video_url.match(regExp);
+            var video_id = (match && match[7].length==11) ? match[7] : false;
+            var api_key = $(this).data('youtube_api_key');
+
+            if(video_id && api_key) {
+
+                var result_url = 'https://www.googleapis.com/youtube/v3/videos?id='+video_id+'&key='+api_key+'&part=contentDetails';
+                toggle_loading(true);
+
+                $.getJSON(result_url, function(data) {
+                    if(typeof data=='object' && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.duration) {
+                        set_duration( yt_to_seconds(data.items[0].contentDetails.duration) );
+                    }
+
+                    toggle_loading(false);
+                });
+            }
+        }
+    });
 
    /**
     * @since v.1.8.6
@@ -1552,10 +1649,7 @@ jQuery(document).ready(function($){
             type: type,
             data: data,
             success: function() {
-                tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success');
-            },
-            error: function () {
-                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
+                tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
             },
             complete: function () {
                 $that.find('button').removeClass('tutor-updating-message');
@@ -1590,7 +1684,7 @@ jQuery.fn.serializeObject = function()
 };
 
 function tutor_toast(title, description, type) {
-    var tutor_ob = window.tutor_data || window._tutorobject || {};
+    var tutor_ob = window._tutorobject || {};
     var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
     if(!jQuery('.tutor-toast-parent').length) {

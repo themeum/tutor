@@ -1,6 +1,6 @@
 {
   "name": "tutor",
-  "version": "1.8.10",
+  "version": "1.9.1",
   "description": "<img src=\".github/tutor-github.png\" alt=\"TutorLMS\" width=\"100%\">",
   "main": "index.js",
   "scripts": {
@@ -37,6 +37,8 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-wp-pot": "^2.4.3",
     "gulp-zip": "^5.0.2",
-    "node-sass": "^4.14.1"
+    "node-sass": "^4.14.1",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7"
   }
 }

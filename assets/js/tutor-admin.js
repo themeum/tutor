@@ -1,6 +1,7 @@
 jQuery(document).ready(function($){
     'use strict';
 
+    const { __, _x, _n, _nx } = wp.i18n;
     /**
      * Color Picker
      * @since v.1.2.21
@@ -45,11 +46,8 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 data.success ? 
-                    tutor_toast($form.data('toast_success'), $form.data('toast_success_message'), 'success') : 
-                    tutor_toast($form.data('toast_error'), $form.data('toast_error_message'), 'error');
-            },
-            error: function() {
-                tutor_toast($form.data('toast_error'), $form.data('toast_error_message'), 'error');
+                    tutor_toast(__('Saved', 'tutor'), $form.data('toast_success_message'), 'success') : 
+                    tutor_toast(__('Request Error', 'tutor'), __('Could not save', 'tutor'), 'error');
             },
             complete: function () {
                 $form.find('.button').removeClass('tutor-updating-message');
@@ -151,14 +149,8 @@ jQuery(document).ready(function($){
                     //Close the modal
                     $('.tutor-lesson-modal-wrap').removeClass('show');
 
-                    tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success');
+                    tutor_toast(__('Lesson Updated', 'tutor'), $that.data('toast_success_message'), 'success');
                 }
-                else {
-                    tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
-                }
-            },
-            error: function () {
-                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -206,7 +198,7 @@ jQuery(document).ready(function($){
         frame.on( 'select', function() {
             // Get media attachment details from the frame state
             var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.video_source_wrap_html5').find('span.video_media_id').text(attachment.id).closest('p').show();
+            $that.closest('.video_source_wrap_html5').find('span.video_media_id').data('video_url', attachment.url).text(attachment.id).trigger('paste').closest('p').show();
             $that.closest('.video_source_wrap_html5').find('input.input_source_video_id').val(attachment.id);
         });
         // Finally, open the modal on click
@@ -256,7 +248,7 @@ jQuery(document).ready(function($){
     /**
      * Open Sidebar Menu
      */
-    if (tutor_data.open_tutor_admin_menu){
+    if (_tutorobject.open_tutor_admin_menu){
         var $adminMenu = $('#adminmenu');
         $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').addClass('wp-has-current-submenu');
         $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').find('a.wp-has-submenu').removeClass('wp-has-current-submenu').addClass('wp-has-current-submenu');
@@ -379,9 +371,9 @@ jQuery(document).ready(function($){
             return;
         }
 
-        var nonce_key = tutor_data.nonce_key;
+        var nonce_key = _tutorobject.nonce_key;
         var json_data = { instructor_id : instructor_id, action_name : action, action: 'instructor_approval_action'};
-        json_data[nonce_key] = tutor_data[nonce_key];
+        json_data[nonce_key] = _tutorobject[nonce_key];
 
         $.ajax({
             url : ajaxurl,
@@ -504,14 +496,8 @@ jQuery(document).ready(function($){
                     //Close the modal
                     $('.tutor-lesson-modal-wrap').removeClass('show');
                     
-                    tutor_toast($that.data('toast_success'), $that.data('toast_success_message'), 'success');
+                    tutor_toast(__('Assignment Updated', 'tutor'), $that.data('toast_success_message'), 'success');
                 }
-                else {
-                    tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
-                }
-            },
-            error: function() {
-                tutor_toast($that.data('toast_error'), $that.data('toast_error_message'), 'error');
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -675,7 +661,7 @@ jQuery(document).ready(function($){
      * @since v.1.4.0
      */
     $(document).on( 'click', 'table.enrolments .delete a',  function( e ){
-        if (! confirm(tutor_data.delete_confirm_text)) {
+        if (! confirm(__('Are you sure? it can not be undone.', 'tutor'))) {
             e.preventDefault();
         }
     });

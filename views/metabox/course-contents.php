@@ -84,7 +84,18 @@
 
                 <div class="tutor-lessons">
 					<?php
-					$lessons = tutor_utils()->get_course_contents_by_topic($topic->ID, -1);
+                    // Below function doesn't work somehow because of using WP_Query in ajax call. Will be removed in future.
+					// $lessons = tutor_utils()->get_course_contents_by_topic($topic->ID, -1); 
+                    
+		            $post_type = apply_filters( 'tutor_course_contents_post_types', array( tutor()->lesson_post_type, 'tutor_quiz' ) );
+                    $lessons = (object) array('posts' => get_posts(array(
+                        'post_type'      => $post_type,
+                        'post_parent'    => $topic->ID,
+                        'posts_per_page' => -1,
+                        'orderby'        => 'menu_order',
+                        'order'          => 'ASC',
+                    )));
+
 					foreach ($lessons->posts as $lesson){
 						$attached_lesson_ids[] = $lesson->ID;
 
@@ -169,15 +180,15 @@
 </div>
 
 
-<?php if (count($query_lesson->posts)) {
-	if ( count( $query_lesson->posts ) > count( $attached_lesson_ids ) ) {
+<?php 
+	if ( count( $query_lesson ) > count( $attached_lesson_ids ) ) {
 		?>
         <div class="tutor-untopics-lessons">
             <h3><?php _e( 'Un-assigned lessons' ); ?></h3>
 
             <div class="tutor-lessons ">
 				<?php
-				foreach ( $query_lesson->posts as $lesson ) {
+				foreach ( $query_lesson as $lesson ) {
 					if ( ! in_array( $lesson->ID, $attached_lesson_ids ) ) {
 
 						if ($lesson->post_type === 'tutor_quiz'){
@@ -227,5 +238,4 @@
             </div>
         </div>
 	<?php }
-}
 ?>

@@ -250,7 +250,7 @@ if (!$quiz) {
             <div class="tutor-quiz-builder-modal-control-btn-group">
                 <div class="quiz-builder-btn-group-left">
                     <a href="#quiz-builder-tab-questions" class="quiz-modal-tab-navigation-btn quiz-modal-btn-back"><?php _e('Back', 'tutor'); ?></a>
-                    <a href="#quiz-builder-tab-advanced-options" class="quiz-modal-tab-navigation-btn quiz-modal-settings-save-btn" data-toast_error="<?php _e('Error', 'tutor'); ?>" data-toast_error_message="<?php _e('Action Failed', 'tutor'); ?>" data-toast_success="<?php _e('Success', 'tutor'); ?>" data-toast_success_message="<?php _e('Saved', 'tutor'); ?>"><?php _e('Save', 'tutor'); ?></a>
+                    <a href="#quiz-builder-tab-advanced-options" class="quiz-modal-tab-navigation-btn quiz-modal-settings-save-btn" data-toast_success_message="<?php _e('Saved', 'tutor'); ?>"><?php _e('Save', 'tutor'); ?></a>
                 </div>
                 <!--<div class="quiz-builder-btn-group-right">
                     <a href="#quiz-builder-tab-questions" class="quiz-modal-tab-navigation-btn quiz-modal-btn-cancel"><?php /*_e('Cancel', 'tutor'); */ ?></a>
@@ -337,7 +337,7 @@ if (!$quiz) {
             <div class="tutor-quiz-builder-modal-control-btn-group">
                 <div class="quiz-builder-btn-group-left">
                     <a href="#quiz-builder-tab-settings" class="quiz-modal-tab-navigation-btn quiz-modal-btn-back"><?php _e('Back', 'tutor'); ?></a>
-                    <a href="#quiz-builder-tab-advanced-options" class="quiz-modal-tab-navigation-btn quiz-modal-settings-save-btn" data-toast_error="<?php _e('Error', 'tutor'); ?>" data-toast_error_message="<?php _e('Action Failed', 'tutor'); ?>" data-toast_success="<?php _e('Success', 'tutor'); ?>" data-toast_success_message="<?php _e('Saved', 'tutor'); ?>"><?php _e('Save', 'tutor'); ?></a>
+                    <a href="#quiz-builder-tab-advanced-options" class="quiz-modal-tab-navigation-btn quiz-modal-settings-save-btn" data-toast_success_message="<?php _e('Saved', 'tutor'); ?>"><?php _e('Save', 'tutor'); ?></a>
                 </div>
                 <!--<div class="quiz-builder-btn-group-right">
                     <a href="#quiz-builder-tab-questions" class="quiz-modal-tab-navigation-btn quiz-modal-btn-cancel"><?php /*_e('Cancel', 'tutor'); */ ?></a>

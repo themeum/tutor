@@ -61,5 +61,5 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
     </div><!-- .wrap -->
 
 <?php
-
+do_action('tutor_quiz/single/after/wrap');
 get_tutor_footer();

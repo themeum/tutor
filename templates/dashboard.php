@@ -1,6 +1,6 @@
 <?php
 /**
- * Template for displaying student Public Profile
+ * Template for displaying frontend dashboard
  *
  * @since v.1.0.0
  *
@@ -11,8 +11,10 @@
  * @version 1.4.3
  */
 
-get_header();
-
+$is_by_short_code = isset($is_shortcode) && $is_shortcode===true;
+if(!$is_by_short_code) {
+    get_header();
+}
 
 global $wp_query;
 
@@ -176,4 +178,6 @@ do_action('tutor_dashboard/before/wrap');
 <?php do_action('tutor_dashboard/after/wrap'); ?>
 
 <?php
-get_footer();
+if(!$is_by_short_code) {
+    get_footer();
+}

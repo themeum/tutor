@@ -2,7 +2,7 @@
     <h1><?php _e('Tutor Settings', 'tutor'); ?></h1>
 
 
-    <form id="tutor-option-form" class="tutor-option-form" method="post" data-toast_error="<?php _e('Error', 'tutor'); ?>" data-toast_error_message="<?php _e('Action Failed', 'tutor'); ?>" data-toast_success="<?php _e('Success', 'tutor'); ?>" data-toast_success_message="<?php _e('Settings Saved', 'tutor'); ?>">
+    <form id="tutor-option-form" class="tutor-option-form" method="post" data-toast_success_message="<?php _e('Settings Saved', 'tutor'); ?>">
         <input type="hidden" name="action" value="tutor_option_save" >
 
 		<?php

@@ -77,6 +77,12 @@ class WooCommerce extends Tutor_Base {
 		 */
 		$woocommerce_path = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR .  'woocommerce' . DIRECTORY_SEPARATOR . 'woocommerce.php';
 		register_deactivation_hook( $woocommerce_path, array($this, 'disable_tutor_monetization') );
+		/**
+		 * Redirect student on enrolled courses after course 
+		 * enrollment complete
+		 * @since 1.9.0
+		*/			
+		add_action( 'woocommerce_thankyou', array($this, 'redirect_to_enrolled_courses') );			
 	}
 
 	public function notice_before_option() {
@@ -482,7 +488,7 @@ class WooCommerce extends Tutor_Base {
 
 		if ($if_has_course){
 			$course_id = $if_has_course->post_id;
-			tutor_utils()->do_enroll($course_id, $order_id);
+			tutor_utils()->do_enroll($course_id, $order_id);		
 		}
 	}
 
@@ -493,6 +499,37 @@ class WooCommerce extends Tutor_Base {
 	public function disable_tutor_monetization() {
 		tutils()->update_option('monetize_by', 'free');
 		update_option('tutor_show_woocommerce_notice', true);
+	}
+
+	/**
+	 * Redirect student on enrolled courses after course 
+	 * enrollment complete if course is purchasable
+	 * @param $order_id | int
+	 * @since 1.9.0
+	*/
+	public function redirect_to_enrolled_courses( $order_id ) {
+			if(!tutils()->get_option( 'wc_automatic_order_complete_redirect_to_courses' )) {
+				// Since 1.9.1
+				return;
+			}
+
+			//get woo order details
+		    $order 			= wc_get_order( $order_id );
+		    $tutor_product 	= false;
+		    $url = tutor_utils()->tutor_dashboard_url().'enrolled-courses/';
+		    foreach ($order->get_items() as $item) {
+				$product_id = $item->get_product_id();
+				//check if product associated with tutor course
+				$if_has_course = tutor_utils()->product_belongs_with_course($product_id);
+				if( $if_has_course ) {
+					$tutor_product = true;
+				}
+			}
+			//if tutor product & order status completed
+		    if ( $order->has_status( 'completed' ) && $tutor_product ) {
+		        wp_safe_redirect( $url );
+		        exit;
+		    }
 	}
 }
 

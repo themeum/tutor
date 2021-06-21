@@ -164,7 +164,7 @@ final class Tutor{
          *
          */
 
-		add_action( 'activated_plugin', array( $this, 'activated_tutor' ) );
+		add_action( 'activated_plugin', array( $this, 'activated_tutor' ), 10, 2 );
 	}
 
     /**
@@ -174,7 +174,7 @@ final class Tutor{
      * @since v.1.5.7
      *
      */
-	public function activated_tutor( $plugin ) {
+	public function activated_tutor( $plugin, $network_wide = null ) {
 		if( $plugin == tutor()->basename ) {
 			if( (! get_option('tutor_wizard') ) && version_compare(TUTOR_VERSION, '1.5.6', '>') ) {
 				update_option('tutor_wizard', 'active');
@@ -554,7 +554,7 @@ final class Tutor{
 			'display_course_instructors'        => '1',
 			'enable_q_and_a_on_course'          => '1',
 			'courses_col_per_row'               => '3',
-			'courses_per_page'                  => '3',
+			'courses_per_page'                  => '12',
 			'lesson_permalink_base'             => 'lesson',
 			'quiz_time_limit'                   =>
 				array (
