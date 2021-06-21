@@ -123,7 +123,7 @@ do_action('tutor_dashboard/before/wrap');
                                         $on = date('d F, Y', $rejected_on);
                                         echo '<span>
                                             <i class="dashicons dashicons-info"></i>', 
-                                            __('Your Application was rejected on', 'tutor') . ' ' . $on .
+                                            __('Your application to become an instructor was rejected on', 'tutor') . ' ' . $on .
                                         '</span>
                                         <a href="?tutor_action=hide_instructor_notice">✕</a>';
                                     ?>
