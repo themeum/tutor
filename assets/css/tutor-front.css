@@ -9249,6 +9249,12 @@ label[for="tutor_withdraw_amount"] {
   color: #3f435b;
 }
 
+.quiz-attempt-answers-wrap .tutor-instructor-feedback-wrap {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+
 .quiz-attempt-answers-wrap table {
   border-collapse: collapse;
   border: none;
