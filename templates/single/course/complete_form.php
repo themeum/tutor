@@ -19,7 +19,7 @@ do_action('tutor_course/single/before/complete_form');
 $is_completed_course = tutor_utils()->is_completed_course();
 if ( ! $is_completed_course) {
 	?>
-    <div class="tutor-course-compelte-form-wrap">
+    <div class="tutor-course-complete-form-wrap">
 
         <form method="post">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>

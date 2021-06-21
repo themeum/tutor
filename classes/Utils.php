@@ -1179,7 +1179,7 @@ class Utils {
 	public function is_course_enrolled_by_lesson( $lesson_id = 0, $user_id = 0 ) {
 		$lesson_id = $this->get_post_id( $lesson_id );
 		$user_id   = $this->get_user_id( $user_id );
-		$course_id = $this->get_course_id_by_lesson( $lesson_id );
+		$course_id = $this->get_course_id_by( 'lesson', $lesson_id );
 
 		return $this->is_enrolled( $course_id );
 	}
@@ -1219,7 +1219,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_course_first_lesson( $course_id = 0 ) {
+	public function get_course_first_lesson( $course_id = 0, $post_type=null ) {
 		global $wpdb;
 
 		$course_id = $this->get_post_id( $course_id );
@@ -1232,6 +1232,7 @@ class Utils {
 							ON topic.ID = items.post_parent
 			WHERE 	topic.post_parent = %d
 					AND items.post_status = %s
+					".( $post_type ? " AND items.post_type='{$post_type}' " : "")."
 			ORDER BY topic.menu_order ASC,
 					items.menu_order ASC;
 			",
@@ -2413,16 +2414,6 @@ class Utils {
 	 */
 	public function is_tutor_order( $order_id ) {
 		return get_post_meta( $order_id, '_is_tutor_order_for_course', true );
-	}
-
-	/**
-	 * @return mixed
-	 *
-	 * @deprecated
-	 */
-	public function tutor_student_dashboard_pages() {
-		_deprecated_function( __METHOD__, '1.1.2', 'tutor_dashboard_pages' );
-		return $this->tutor_dashboard_pages();
 	}
 
 	/**
@@ -5950,7 +5941,7 @@ class Utils {
 
 		if ( user_can( $instructor_id, tutor()->instructor_role ) ) {
 			$permitted_course_ids = tutils()->get_assigned_courses_ids_by_instructors();
-			$course_id            = tutils()->get_course_id_by_lesson( $lesson_id );
+			$course_id            = tutils()->get_course_id_by( 'lesson', $lesson_id );
 
 			if ( in_array( $course_id, $permitted_course_ids ) ) {
 				return true;
@@ -6560,21 +6551,13 @@ class Utils {
 		return false;
 	}
 
-	/**
-	 * @param int $course_id
-	 *
-	 * @return array
-	 * 
-	 * @since v1.6.9
-	 *
-	 * Get students email by course id
-	 */
-	public function get_student_emails_by_course_id( $course_id = 0 ) {
+	public function get_students_data_by_course_id( $course_id = 0, string $field_name ) {
+
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 
-		$student_emails = $wpdb->get_results( $wpdb->prepare(
-			"SELECT student.user_email
+		$student_data = $wpdb->get_results( $wpdb->prepare(
+			"SELECT student.{$field_name}
 			FROM   	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->users} student
 						    ON enrol.post_author = student.id
@@ -6587,9 +6570,20 @@ class Utils {
 			'completed'
 		) );
 
-		$email_array = array_column( $student_emails, 'user_email' );
+		return array_column( $student_data, $field_name );
+	}
 
-		return $email_array;
+	/**
+	 * @param int $course_id
+	 *
+	 * @return array
+	 * 
+	 * @since v1.6.9
+	 *
+	 * Get students email by course id
+	 */
+	public function get_student_emails_by_course_id( $course_id = 0 ) {
+		return $this->get_students_data_by_course_id( $course_id, 'user_email' );
 	}
 
 	/*
@@ -6746,6 +6740,7 @@ class Utils {
 					$object_id
 				) );
 				break;
+
 			case 'review' :
 			case 'qa_question' : 
 				$course_id = $wpdb->get_var( $wpdb->prepare(
@@ -6753,8 +6748,9 @@ class Utils {
 					FROM 	{$wpdb->comments}
 					WHERE 	comment_ID = %d;
 					",
-				$object_id
-			) );
+					$object_id
+				) );
+				break;
 		}
 
 		return $course_id;
@@ -7038,5 +7034,45 @@ class Utils {
 		$maximum_students = (int) $this->get_course_settings($course_id, 'maximum_students');
 	
 		return $maximum_students && $maximum_students <= $total_enrolled;
+	}
+
+	/**
+	 * @return boolean
+	 * 
+	 * @since v1.9.2
+	 * 
+	 * Check if current screen is under tutor dashboard
+	 */
+	public function is_tutor_dashboard() {
+
+		if(is_admin()) {
+			$screen = get_current_screen();
+			return is_object( $screen ) && $screen->parent_base == 'tutor';
+		}
+		
+		return false;
+	}
+
+	public function get_unique_slug($slug, $post_type=null, $num_assigned=false) {
+
+		global $wpdb;
+		$existing_slug = $wpdb->get_var($wpdb->prepare("SELECT post_name FROM {$wpdb->posts} WHERE post_name=%s" . ($post_type ? " AND post_type='{$post_type}' LIMIT 1" : ""), $slug));
+
+		if(!$existing_slug) {
+			return $slug;
+		}
+
+		if(!$num_assigned) {
+			$new_slug = $slug . '-' . 2;
+		} else {
+			$new_slug = explode('-', $slug);
+			$number = end( $new_slug ) + 1;
+			
+			array_pop($new_slug);
+
+			$new_slug = implode('-', $new_slug) . '-' . $number;
+		}
+
+		return $this->get_unique_slug($new_slug, $post_type, true);
 	}
 }

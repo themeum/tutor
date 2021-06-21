@@ -1,5 +1,22 @@
 # TutorLMS Changelog
 
+### 1.9.2 - June 21, 2021
+
+* New: Push notification add-on
+* New: Show a removable warning in WordPress admin dashboard if signup disabled
+* Update: Updated design in the forgot password page
+* Update: Enroll button text changed to 'Start Learning' for public courses 
+* Update: Quiz question field placeholder text change
+* Fix: Courses by other instructors now showing in course archives
+* Fix: Instructor rejected notice is visible forever
+* Fix: Last question in a quiz can be submitted without answering even if required
+* Fix: Texts after double quote not showing in quiz info and question input field on edit
+* Fix: Comma inside quiz title and description causes error in import/export
+* Fix: Assignment metadata not saving while creating an assignment
+* Fix: Some texts in email were not translatable
+* Fix: XSS vulnerability in announcement summary
+
+
 ### 1.9.1 - June 04, 2021
 
 * New: Enable/disable auto redirection to enrolled courses on auto order completion

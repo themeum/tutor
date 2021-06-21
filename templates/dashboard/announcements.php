@@ -53,7 +53,6 @@ $the_query = new WP_Query($args);
 //get courses
 $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
 $image_base = tutor()->url . '/assets/images/';
-$notify_checked = tutils()->get_option('email_to_students.new_announcement_posted');
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal">
