@@ -78,7 +78,34 @@
 		                        <?php
 	                        }
 
-							do_action( 'tutor_addon_list/single/after/required-plugins', $basName, $addon );
+							if(function_exists('TUTOR_PN') && $basName == TUTOR_PN()->basename) {
+
+								$required = array();
+								version_compare(PHP_VERSION, '7.2.5', '>=') ? 0 : $required[] = 'PHP 7.2.5 or greater is required';
+								!is_ssl() ? $required[] = 'Please install SSL certificate properly' : 0;
+						
+								foreach(array('curl', 'gmp', 'mbstring', 'openssl') as $ext) {
+									!extension_loaded( $ext ) ? $required[] = 'PHP extension <strong>' . $ext . '</strong> not found' : 0;
+								}
+						
+								if(!count($required)) {
+									// All required extensions are available
+									return;
+								}
+						
+								?>
+								<div class="required-plugin-cards">
+									<strong>Requirements</strong>
+									<ul style="list-style: disc; padding-left: 15px;">
+										<?php 
+											foreach($required as $req) {
+												echo '<li>' . $req . '</li>';
+											}
+										?>
+									</ul>
+								</div>
+								<?php
+							}
 	                        ?>
 
                             <div class="plugin-card-bottom">
