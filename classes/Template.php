@@ -304,6 +304,15 @@ class Template extends Tutor_Base {
 
 		if ($wp_query->is_page) {
 			$student_dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
+
+			global $sitepress;
+			if(isset($sitepress)){
+				$trid = apply_filters('wpml_element_trid', NULL, $student_dashboard_page_id, 'post_page');
+				$translations = apply_filters('wpml_get_element_translations', NULL, $trid, 'post_page');
+				$current_lang = apply_filters('wpml_current_language', NULL);
+				$student_dashboard_page_id = (int) $translations[$current_lang]->element_id;
+			}
+			
 			if ($student_dashboard_page_id === get_the_ID()) {
 				/**
 				 * Handle if logout URL
