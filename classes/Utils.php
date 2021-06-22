@@ -499,27 +499,11 @@ class Utils {
 		$instructor_id    = $this->get_user_id( $instructor_id );
 		$course_post_type = tutor()->course_post_type;
 
-		$query = $wpdb->get_results( $wpdb->prepare(
-			"SELECT ID,
-					post_author,
-					post_title,
-					post_name,
-					post_status,
-					menu_order
-			FROM 	{$wpdb->posts} 
-			WHERE 	post_author = %d
-					AND post_status IN ('publish', 'pending')
-					AND post_type = %s;
-			", 
-			$instructor_id, 
-			$course_post_type
-		) );
-
-		
 		global $current_user;
 		$courses = get_posts(array(
-			'post_type' => 'courses',
-			'author' => $current_user->ID,
+			'post_type' => $course_post_type,
+			'author' => $instructor_id,
+			'post_status' => array('publish', 'pending'),
 			'posts_per_page' => -1
 		));
 		
@@ -5761,20 +5745,19 @@ class Utils {
 	 *
 	 * Get course tags in array with child
 	 *
-	 * @since v.1.3.4
+	 * @since v.1.9.3
 	 */
-	public function get_course_tags( $parent = 0 ) {
+	public function get_course_tags( ) {
 		$args = apply_filters( 'tutor_get_course_tags_args', array(
 			'taxonomy'   => 'course-tag',
-			'hide_empty' => false,
-			'parent'     => $parent,
+			'hide_empty' => false
 		));
 
 		$terms = get_terms( $args );
 
 		$children = array();
 		foreach ( $terms as $term ) {
-			$term->children = $this->get_course_tags( $term->term_id );
+			$term->children = array();
 			$children[ $term->term_id ] = $term;
 		}
 
