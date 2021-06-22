@@ -45,6 +45,9 @@ class Assets{
 	public function admin_scripts(){
 		wp_enqueue_style('tutor-select2', tutor()->url.'assets/packages/select2/select2.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-admin', tutor()->url.'assets/css/tutor-admin.min.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-admin-v2-fonts', tutor()->url.'assets/css/fonts/lineawesome@1.3.0/css/line-awesome.min.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-admin-v2', tutor()->url.'assets/css/tutor-admin-v2.min.css', array(), tutor()->version);
+		wp_enqueue_style('admin-v2-markup', tutor()->url.'assets/css/admin-v2-markup.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-icon', tutor()->url.'assets/icons/css/tutor-icon.css', array(), tutor()->version);
 
 		/**
@@ -61,6 +64,7 @@ class Assets{
 		wp_enqueue_script('tutor-select2', tutor()->url.'assets/packages/select2/select2.full.min.js', array('jquery'), tutor()->version, true );
 		wp_enqueue_script( 'tutor-main', tutor()->url . 'assets/js/tutor.js', array( 'jquery', 'wp-i18n' ), tutor()->version, true );
 		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker', 'wp-i18n'), tutor()->version, true );
+		wp_enqueue_script('tutor-admin-v2', tutor()->url.'assets/js/tutor-admin-v2.js', array('jquery', 'wp-color-picker', 'wp-i18n'), tutor()->version, true );
 
 		$tutor_localize_data = $this->get_default_localized_data();
 

@@ -117,7 +117,7 @@ final class Tutor{
 		$this->assets = new Assets();
 		$this->admin = new Admin();
 		$this->ajax = new Ajax();
-		$this->options = new Options();
+		$this->options = new Options_V2();
 		$this->shortcode = new Shortcode();
 		$this->course = new Course();
 		$this->lesson = new Lesson();

@@ -87,7 +87,7 @@ class Admin{
 	}
 
 	public function tutor_page(){
-		$tutor_option = new Options();
+		$tutor_option = new Options_V2();
 		echo apply_filters('tutor/options/generated-html', $tutor_option->generate());
 	}
 
