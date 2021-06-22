@@ -92,7 +92,7 @@
                     $course_status = ($course->post_status == 'publish') ? __('Published', 'tutor') : $course->post_status; ?>
                     <tr>
                         <td>
-                            <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank"><?php echo $course->post_title; ?></a>
+                            <a href="<?php echo get_post_permalink($course->ID); ?>" target="_blank"><?php echo $course->post_title; ?></a>
                         </td>
                         <td><?php echo $enrolled; ?></td>
                         <td>
