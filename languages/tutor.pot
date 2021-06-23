@@ -4055,7 +4055,7 @@ msgstr ""
 msgid "Buy Now"
 msgstr ""
 
-#: views/pages/addons.php:79, views/pages/enable_disable_addons.php:113, views/pages/tutor-pro-addons.php:56
+#: views/pages/addons.php:79, views/pages/enable_disable_addons.php:110, views/pages/tutor-pro-addons.php:56
 msgid "Version"
 msgstr ""
 
