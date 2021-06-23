@@ -1,11 +1,9 @@
 # TutorLMS Changelog
 
-### 1.9.3 - June 29, 2021
+### 1.9.3 - June 23, 2021
 
-* New: WPML Compatibility for tutor course 
-* New: WPML Compatibility for frontend dashboard 
-* New: Course retake feature 
-* Fix: Deprecated Warnings in PHP 8
+* Update: Push Notification addon logo
+* Fix: Some addons not showing up on the addon list
 
 
 ### 1.9.2 - June 21, 2021
