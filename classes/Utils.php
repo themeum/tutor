@@ -6554,7 +6554,7 @@ class Utils {
 		return false;
 	}
 
-	public function get_students_data_by_course_id( $course_id = 0, string $field_name=null ) {
+	public function get_students_data_by_course_id( $course_id = 0, $field_name = '' ) {
 
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
