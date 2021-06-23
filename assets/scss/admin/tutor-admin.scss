@@ -1324,7 +1324,8 @@
   }
   
   .tutor-addons-list .plugin-icon {
-	height: 120px;
+	height: 120px !important;
+	width: auto !important;
   }
   
   .tutor-addons-list .plugin-card .desc {

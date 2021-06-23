@@ -88,23 +88,20 @@
 									!extension_loaded( $ext ) ? $required[] = 'PHP extension <strong>' . $ext . '</strong> not found' : 0;
 								}
 						
-								if(!count($required)) {
-									// All required extensions are available
-									return;
+								if(count( $required )) {
+									?>
+									<div class="required-plugin-cards">
+										<strong>Requirements</strong>
+										<ul style="list-style: disc; padding-left: 15px;">
+											<?php 
+												foreach($required as $req) {
+													echo '<li>' . $req . '</li>';
+												}
+											?>
+										</ul>
+									</div>
+									<?php
 								}
-						
-								?>
-								<div class="required-plugin-cards">
-									<strong>Requirements</strong>
-									<ul style="list-style: disc; padding-left: 15px;">
-										<?php 
-											foreach($required as $req) {
-												echo '<li>' . $req . '</li>';
-											}
-										?>
-									</ul>
-								</div>
-								<?php
 							}
 	                        ?>
 
