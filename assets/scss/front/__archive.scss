@@ -3521,7 +3521,8 @@ Tutor Media Upload
 /* End Tutor FrontEnd Course Builder*/
 
 .tutor-addons-list .plugin-icon {
-	height: 120px;
+	height: 120px !important;
+	width: auto !important;
 }
 .btn-switch {
 	display: inline-block;
