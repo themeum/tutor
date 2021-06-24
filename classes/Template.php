@@ -301,18 +301,10 @@ class Template extends Tutor_Base {
 
 	public function tutor_dashboard($template){
 		global $wp_query;
-
 		if ($wp_query->is_page) {
 			$student_dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
+			$student_dashboard_page_id = apply_filters( 'tutor_dashboard_page_id_filter', $student_dashboard_page_id );
 
-			global $sitepress;
-			if(isset($sitepress)){
-				$trid = apply_filters('wpml_element_trid', NULL, $student_dashboard_page_id, 'post_page');
-				$translations = apply_filters('wpml_get_element_translations', NULL, $trid, 'post_page');
-				$current_lang = apply_filters('wpml_current_language', NULL);
-				$student_dashboard_page_id = (int) $translations[$current_lang]->element_id;
-			}
-			
 			if ($student_dashboard_page_id === get_the_ID()) {
 				/**
 				 * Handle if logout URL
@@ -338,7 +330,11 @@ class Template extends Tutor_Base {
 					 * Load view page based on dashboard Endpoint
 					 */
 					if (is_user_logged_in()) {
-						$template = tutor_get_template( 'dashboard' );
+
+						global $wp;
+						$template = trim( str_replace( get_home_url(), '', home_url( $wp->request ) ), '/' ) ;
+						$template = tutor_get_template( $template );
+						
 						/**
 						 * Check page page permission
 						 *
