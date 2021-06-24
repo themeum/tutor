@@ -362,3 +362,37 @@
         }
     }
 }
+
+.tutor-instructor-rejection-notice{
+    width: 100%;
+    clear: both;
+    margin: 41px 0 0 0;
+    background: #FFF7F7;
+    padding: 16.5px;
+    border-radius: 6px;
+    border: 1px solid #FDD9D7;
+
+    span {
+        color: #C62828;
+        font-size: 16px;
+        font-weight: 400;
+
+        i {
+            color: #F44337;
+            font-size: 27px;
+            display: inline-block;
+            margin-right: 14px;
+        }
+    }
+
+    a{
+        float: right;
+        color: #F44337;
+        cursor: pointer;
+        font-weight: bold;
+
+        &:hover{
+            color: #e41304;
+        }
+    }
+}
