@@ -2764,6 +2764,19 @@ div[class*="tutor-course-col"] {
   margin-left: auto;
 }
 
+.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap, .tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a,
+.tutor-course-loop-price .tutor-public-course-start-learning,
+.tutor-course-loop-price .tutor-public-course-start-learning a {
+  color: var(--tutor-text-color);
+  font-weight: 400;
+}
+
+.tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap:hover, .tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a:hover,
+.tutor-course-loop-price .tutor-public-course-start-learning:hover,
+.tutor-course-loop-price .tutor-public-course-start-learning a:hover {
+  color: var(--tutor-primary-color);
+}
+
 .tutor-course-loop-price > .price .tutor-loop-cart-btn-wrap a.added {
   display: none;
 }
@@ -6308,7 +6321,8 @@ Tutor Media Upload
 
 /* End Tutor FrontEnd Course Builder*/
 .tutor-addons-list .plugin-icon {
-  height: 120px;
+  height: 120px !important;
+  width: auto !important;
 }
 
 .btn-switch {
@@ -9236,6 +9250,12 @@ label[for="tutor_withdraw_amount"] {
   color: #3f435b;
 }
 
+.quiz-attempt-answers-wrap .tutor-instructor-feedback-wrap {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+
 .quiz-attempt-answers-wrap table {
   border-collapse: collapse;
   border: none;
@@ -11584,6 +11604,40 @@ Content Drip (Pro)
   .tutor-instructor-filter .tutor-instructor-filter-result {
     width: 100%;
   }
+}
+
+.tutor-instructor-rejection-notice {
+  width: 100%;
+  clear: both;
+  margin: 41px 0 0 0;
+  background: #FFF7F7;
+  padding: 16.5px;
+  border-radius: 6px;
+  border: 1px solid #FDD9D7;
+}
+
+.tutor-instructor-rejection-notice span {
+  color: #C62828;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.tutor-instructor-rejection-notice span i {
+  color: #F44337;
+  font-size: 27px;
+  display: inline-block;
+  margin-right: 14px;
+}
+
+.tutor-instructor-rejection-notice a {
+  float: right;
+  color: #F44337;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tutor-instructor-rejection-notice a:hover {
+  color: #e41304;
 }
 
 .tutor-toast-parent {

@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) )
 
 class User {
 
+	private static $hide_registration_notice = false;
+
 	public function __construct() {
 		add_action('edit_user_profile', array($this, 'edit_user_profile'));
 		add_action('show_user_profile', array($this, 'edit_user_profile'), 10, 1);
@@ -22,7 +24,7 @@ class User {
 		// add_action('tutor_options_after_students', array($this, 'tutor_student_profile_layout'));
 
 		add_action( 'admin_notices', array( $this, 'show_registration_disabled' ) );
-		add_action( 'wp_loaded', array( $this, 'hide_notices' ) );
+		add_action( 'admin_init', array( $this, 'hide_notices' ) );
 	}
 
 	private $profile_layout = array(
@@ -139,13 +141,27 @@ class User {
 	public function hide_notices() {
 		if(is_admin() && isset( $_GET['tutor-hide-notice'] ) && $_GET['tutor-hide-notice']=='registration') {
 			tutils()->checking_nonce('get');
-			update_option( 'tutor_notice_hide_registration', true );
+
+			$home_url = get_home_url();
+			$parsed = parse_url($home_url);
+
+			$base_path = (is_array( $parsed ) && isset( $parsed['path'] )) ? $parsed['path'] : '/';
+			$base_path = rtrim($base_path, '/') . '/';
+
+			self::$hide_registration_notice = true;
+			setcookie('tutor_notice_hide_registration', 1, time() + (86400 * 30), $base_path);
 		}
 	}
 
 	public function show_registration_disabled() {
 
-		if( !tutils()->is_tutor_dashboard() || get_option( 'users_can_register' ) || get_option( 'tutor_notice_hide_registration' )) {
+		if( 
+				self::$hide_registration_notice ||
+				!tutils()->is_tutor_dashboard() || 
+				get_option( 'users_can_register' ) || 
+				isset( $_COOKIE['tutor_notice_hide_registration'] ) ||
+				!current_user_can( 'manage_options' )
+			) {
 			return;
 		}
 
