@@ -124,12 +124,8 @@ class Utils {
 	 */
 	public function get_pages() {
 
-		global $sitepress;
-		if (isset($sitepress)) {
-			$wpml_current_lang = apply_filters('wpml_current_language', NULL);
-			$wpml_default_lang = apply_filters('wpml_default_language', NULL);
-			$sitepress->switch_lang($wpml_default_lang);
-		}
+		do_action( 'tutor_utils/get_pages/before' );
+
 		$pages = array();
 		$wp_pages = get_pages();
 
@@ -138,9 +134,8 @@ class Utils {
 				$pages[$page->ID] = $page->post_title;
 			}
 		}
-		if (isset($sitepress)) {
-			$sitepress->switch_lang($wpml_current_lang);
-		}
+	
+		do_action( 'tutor_utils/get_pages/after' );
 
 		return $pages;
 	}
