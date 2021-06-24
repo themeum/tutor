@@ -168,26 +168,24 @@ do_action('tutor_dashboard/before/wrap');
         
                         if ($dashboard_page_name){
                             do_action('tutor_load_dashboard_template_before', $dashboard_page_name);
-                            /**
-                             * dashboard page slug added for tutor_zoom
-                             * 
-                             * @since 1.9.3
-                             */
-                            if( defined('TUTOR_ZOOM_VERSION') ) {
-                                switch ( $dashboard_page_name ) {
-                                    case "zoom/help" : 
-                                        $dashboard_page_name = 'zoom';
-                                        break;
-                                    case 'zoom/settings' : 
-                                        $dashboard_page_name = 'zoom';
-                                        break;
-                                    case 'zoom/set-api' : 
-                                        $dashboard_page_name = 'zoom';
-                                        break;   
-                                }
-                            }
 
-                            tutor_load_template("dashboard.".$dashboard_page_name);
+                            /**
+                             * Load dashboard template part from other location
+                             * 
+                             * this filter is basically added for adding templates from respective addons
+                             * 
+                             * @since version 1.9.3
+                             */
+                            $other_location = '';
+                            $from_other_location = apply_filters( 'load_dashboard_template_part_from_other_location', $other_location );
+                            
+                            if ( $from_other_location == '' ) {
+                                tutor_load_template("dashboard.".$dashboard_page_name);
+                            } else {
+                                //load template from other location full abspath
+                                include_once $from_other_location;
+                            }
+                            
                             do_action('tutor_load_dashboard_template_before', $dashboard_page_name);
                         } else {
                             tutor_load_template("dashboard.dashboard");
