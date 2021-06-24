@@ -332,8 +332,8 @@ class Template extends Tutor_Base {
 					if (is_user_logged_in()) {
 
 						global $wp;
-						$template = trim( str_replace( get_home_url(), '', home_url( $wp->request ) ), '/' ) ;
-						$template = tutor_get_template( $template );
+						$full_path = explode('/', trim( str_replace( get_home_url(), '', home_url( $wp->request ) ), '/' ) );
+						$template = tutor_get_template( end($full_path)=='create-course' ? implode('/', $full_path) : 'dashboard' );
 						
 						/**
 						 * Check page page permission
