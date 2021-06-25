@@ -4,6 +4,7 @@
 
 * New: WPML Compatibility Add-on
 * New: Course retake feature 
+* Fix: Lesson video duration not fetching for autofill url
 * Fix: Deprecated Warnings in PHP 8
 
 
