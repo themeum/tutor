@@ -245,6 +245,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 New: WPML Compatibility Add-on
 New: Course retake feature 
+Fix: Lesson video duration not fetching for autofill url
 Fix: Deprecated Warnings in PHP 8
 
 = 1.9.3 - June 23, 2021 =
