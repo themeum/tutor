@@ -2,13 +2,16 @@
 @package: Tutor LMS
 @author: themeum
  */
- :root {
+
+@import '../lib/mixins.scss';
+
+:root {
 	--tutor-primary-color: #1b52d8;
 	--tutor-primary-hover-color: #1b52a9;
 	--tutor-text-color: #4b5981;
 	--tutor-light-color: #b1b8c9;
 	--tutor-success-button-color: #86b223;
-  }
+}
   
   .ui-slider {
 	position: relative;
@@ -1111,7 +1114,7 @@
 	font-size: 16px;
   }
   
-  .tutor-button-primary {
+.tutor-button-primary {
 	background-color: var(--tutor-primary-color);
 	color: #ffffff;
 	display: inline-block;
@@ -1119,14 +1122,14 @@
 	font-size: 14px;
 	font-weight: 300;
 	border: none;
-	-webkit-box-shadow: none;
-			box-shadow: none;
 	cursor: pointer;
-  }
-  
-  .tutor-button-primary:hover {
-	background-color: #2446a6;
-  }
+
+	@include propertyWithPrefix(box-shadow, none);
+
+	&:hover {
+		background-color: #2446a6;
+	}
+}
   
   .tutor-status-approved-context,
   .tutor-button.button-success,

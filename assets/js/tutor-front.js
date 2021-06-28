@@ -2220,4 +2220,39 @@ jQuery(document).ready(function ($) {
             $(this).removeClass('is-opened');;
         });
     });
+
+    /**
+     * Retake course
+     * 
+     * @since v1.9.4
+     */
+    $('.tutor-course-retake-button').click(function(e) {
+        e.preventDefault();
+
+        var url = $(this).data('href');
+
+        var data = {
+            title: __('Override Previous Progress', 'tutor'),
+            description : __('Before continue, please decide whether to keep progress or reset.', 'tutor'),
+            buttons : {
+                reset: {
+                    title: __('Reset Data', 'tutor'),
+                    class: 'secondary',
+                    callback: function() {
+                        console.log('Reset');
+                    }
+                },
+                keep: {
+                    title: __('Keep Data', 'tutor'),
+                    class: 'primary',
+                    callback: function() {
+                        console.log('Keep')
+                        window.location.assign(url);
+                    }
+                }
+            } 
+        };
+
+        new window.tutor_component($, 'icon-gear', 40).popup(data);
+    });
 });

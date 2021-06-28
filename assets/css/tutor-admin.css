@@ -1119,9 +1119,12 @@ button.tutor-button-small i {
   font-size: 14px;
   font-weight: 300;
   border: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
   cursor: pointer;
+  box-shadow: none;
+  -o-box-shadow: none;
+  -ms-box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
 }
 
 .tutor-button-primary:hover {
