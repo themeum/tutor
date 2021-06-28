@@ -37,7 +37,7 @@ global $wp_query;
             $lesson_url = tutor_utils()->get_course_first_lesson();
             $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
             if ( $lesson_url ) { ?>
-                <a href="<?php echo $lesson_url; ?>" class="tutor-button tutor-success">
+                <a href="#" data-href="<?php echo $lesson_url; ?>" class="tutor-button tutor-success tutor-course-retake-button" data-course_id="<?php echo get_the_ID(); ?>">
                     <?php
                         if($completed_lessons){
                             _e( 'Retake This Course', 'tutor' );

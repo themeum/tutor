@@ -11640,6 +11640,83 @@ Content Drip (Pro)
   color: #e41304;
 }
 
+html.tutor-component-popup-opened, body.tutor-component-popup-opened {
+  overflow: hidden !important;
+}
+
+.tutor-component-popup-container {
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 9999999999;
+  background: rgba(0, 0, 0, 0.589);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.tutor-component-popup-container > div {
+  display: inline-block;
+  max-height: 100%;
+  width: 100%;
+  max-width: 690px;
+  background: white;
+  overflow: auto;
+  border-radius: 15px;
+  position: relative;
+  padding: 0;
+}
+
+.tutor-component-popup-container > div.tutor-component-popup-40 {
+  padding: 40px;
+}
+
+.tutor-component-popup-container > div img.tutor-pop-icon {
+  display: block;
+  margin: 0 auto;
+}
+
+.tutor-component-popup-container > div h3 {
+  margin: 7px 0;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  text-align: center;
+  color: #212327;
+}
+
+.tutor-component-popup-container > div .tutor-component-button-container {
+  text-align: center;
+}
+
+.tutor-component-popup-container > div .tutor-component-button-container button {
+  margin: 0 5px;
+}
+
 .tutor-toast-parent {
   position: fixed;
   right: 25px;

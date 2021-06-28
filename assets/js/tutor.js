@@ -11,6 +11,51 @@ function tutor_get_nonce_data(send_key_value) {
     return {[nonce_key]:nonce_value};
 }
 
+window.tutor_component = function($, icon, padding) {
+
+    var $this = this;
+    var element; 
+
+    this.popup_wrapper = function(contents) {
+        return '<div class="tutor-component-popup-container">\
+            <div class="tutor-component-popup-'+padding+'">\
+                <img class="tutor-pop-icon" src="'+window._tutorobject.tutor_url+'assets/images/'+icon+'.svg"/>\
+                ' + contents + '\
+                <div class="tutor-component-button-container"></div>\
+            </div>\
+        </div>';
+    }
+
+    this.close = function() {
+        element.fadeOut(function() {
+            element.remove();
+        });
+    }
+
+    this.popup = function(data) {
+        
+        var title = data.title ? '<h3>'+data.title+'</h3>' : '';
+        var description = data.description ? '<p>'+data.description+'</p>' : '';
+
+        var buttons = Object.keys(data.buttons || {}).map(function(key) {
+            var button = data.buttons[key];
+
+            return $('<button class="tutor-button tutor-button-'+button.class+'">'+button.title+'</button>').click(button.callback);
+        });
+
+        element = $($this.popup_wrapper( title + description ), padding);
+
+        // Append action button
+        for(var i=0; i<buttons.length; i++) {
+            element.find('.tutor-component-button-container').append(buttons[i]);
+        }
+        
+        $('body').append(element);
+    }
+
+    return {popup: this.popup};
+}
+
 jQuery(document).ready(function($){
     'use strict';
 
