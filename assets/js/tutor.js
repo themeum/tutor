@@ -1524,8 +1524,12 @@ jQuery(document).ready(function($){
 
       $(".tutor-dropdown").click(function(e){
         e.stopPropagation();
+        if ( $('.tutor-dropdown').hasClass('show') ) {
+            $('.tutor-dropdown').removeClass('show')
+        }
         $(this).addClass('show');
       });
+
     //announcement end
 
 
