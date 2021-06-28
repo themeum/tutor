@@ -163,9 +163,18 @@ jQuery(document).ready(function($){
         var $form = $(this);
         var data = $form.serializeObject();
         var $btn = $form.find('button[type="submit"]');
-
+        /**
+         * For providing support on the frontend
+         * 
+         * @since 1.9.4
+         */
+        var frontend_ajax;
+        if (_tutorobject.ajaxurl) {
+            frontend_ajax = _tutorobject.ajaxurl;
+        }
+        
         $.ajax({
-            url: ajaxurl,
+            url: frontend_ajax ? frontend_ajax : ajaxurl,
             type: 'POST',
             data: data,
             beforeSend: function () {
