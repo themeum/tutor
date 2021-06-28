@@ -4755,15 +4755,11 @@ msgstr ""
 msgid "What Will I Learn?"
 msgstr ""
 
-#: templates/single/course/course-enrolled-box.php:45
+#: templates/single/course/course-enrolled-box.php:42
 msgid "Start Course"
 msgstr ""
 
-#: templates/single/course/course-enrolled-box.php:43
-msgid "Retake This Course"
-msgstr ""
-
-#: templates/single/course/course-enrolled-box.php:67
+#: templates/single/course/course-enrolled-box.php:63
 msgid "You have been enrolled on %s."
 msgstr ""
 
