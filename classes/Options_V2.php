@@ -1,7 +1,8 @@
 <?php
+
 namespace Tutor;
 
-if ( ! defined( 'ABSPATH' ) )
+if (!defined('ABSPATH'))
 	exit;
 
 class Options_V2 {
@@ -17,25 +18,25 @@ class Options_V2 {
 		add_action('wp_ajax_tutor_option_save', array($this, 'tutor_option_save'));
 	}
 
-	private function get($key = null, $default = false){
+	private function get($key = null, $default = false) {
 		$option = $this->option;
-		if (empty($option) || ! is_array($option)){
+		if (empty($option) || !is_array($option)) {
 			return $default;
 		}
-		if ( ! $key){
+		if (!$key) {
 			return $option;
 		}
-		if (array_key_exists($key, $option)){
+		if (array_key_exists($key, $option)) {
 			return apply_filters($key, $option[$key]);
 		}
 		//Access array value via dot notation, such as option->get('value.subvalue')
-		if (strpos($key, '.')){
+		if (strpos($key, '.')) {
 			$option_key_array = explode('.', $key);
 			$new_option = $option;
-			foreach ($option_key_array as $dotKey){
-				if (isset($new_option[$dotKey])){
+			foreach ($option_key_array as $dotKey) {
+				if (isset($new_option[$dotKey])) {
 					$new_option = $new_option[$dotKey];
-				}else{
+				} else {
 					return $default;
 				}
 			}
@@ -45,10 +46,10 @@ class Options_V2 {
 		return $default;
 	}
 
-	public function tutor_option_save(){
+	public function tutor_option_save() {
 		tutils()->checking_nonce();
 
-		!current_user_can( 'manage_options' ) ? wp_send_json_error( ) : 0;
+		!current_user_can('manage_options') ? wp_send_json_error() : 0;
 
 		do_action('tutor_option_save_before');
 
@@ -60,18 +61,18 @@ class Options_V2 {
 		//re-sync settings
 		//init::tutor_activate();
 
-		wp_send_json_success( array('msg' => __('Option Updated', 'tutor') ) );
+		wp_send_json_success(array('msg' => __('Option Updated', 'tutor')));
 	}
 
-	public function options_attr(){
+	public function options_attr() {
 		$pages = tutor_utils()->get_pages();
 
 		//$course_base = tutor_utils()->course_archive_page_url();
-		$lesson_url = site_url().'/course/'.'sample-course/<code>lessons</code>/sample-lesson/';
+		$lesson_url = site_url() . '/course/' . 'sample-course/<code>lessons</code>/sample-lesson/';
 		$student_url = tutor_utils()->profile_url();
 		$attempts_allowed = array();
-		$attempts_allowed['unlimited'] = __('Unlimited' , 'tutor');
-		$attempts_allowed = array_merge($attempts_allowed, array_combine(range(1,20), range(1,20)));
+		$attempts_allowed['unlimited'] = __('Unlimited', 'tutor');
+		$attempts_allowed = array_merge($attempts_allowed, array_combine(range(1, 20), range(1, 20)));
 
 		$video_sources = array(
 			'html5' => __('HTML 5 (mp4)', 'tutor'),
@@ -94,12 +95,15 @@ class Options_V2 {
 			'basic' => array(
 				'label'     => __('Basic', 'tutor'),
 				'sections'    => array(
-					'general' => array(
+					array(
 						'label' => __('General', 'tutor'),
+						'slug' => 'general',
 						'desc' => __('General Settings', 'tutor'),
+						'icon' => __('earth', 'tutor'),
 						'blocks' => array(
-							'blank' => array(
+							array(
 								'label' => false,
+								'block_type' => 'uniform',
 								'fields' => array(
 									'tutor_dashboard_page_id' => array(
 										'type'          => 'select',
@@ -110,9 +114,10 @@ class Options_V2 {
 									),
 								)
 							),
-							'course' => array(
+							array(
 								'label' => __('Course', 'tutor'),
-								'block_type'=>'uniform',
+								'slug' => 'course',
+								'block_type' => 'uniform',
 								'fields' => array(
 									'student_must_login_to_view_course' => array(
 										'type'      => 'checkbox',
@@ -146,9 +151,10 @@ class Options_V2 {
 									),
 								),
 							),
-							'video' => array(
+							array(
 								'label' => __('Video', 'tutor'),
-								'block_type'=>'uniform',
+								'slug' => 'video',
+								'block_type' => 'uniform',
 								'fields' => array(
 									'supported_video_sources' => array(
 										'type'      => 'checkbox',
@@ -165,9 +171,10 @@ class Options_V2 {
 									),
 								),
 							),
-							'others' => array(
+							array(
 								'label' => __('Others', 'tutor'),
-								'block_type'=>'isolate',
+								'slug' => 'others',
+								'block_type' => 'isolate',
 								'fields' => array(
 									'lesson_permalink_base' => array(
 										'type'      => 'text',
@@ -184,9 +191,10 @@ class Options_V2 {
 									),
 								),
 							),
-							'instructor' => array(
+							array(
 								'label' => __('Instructor', 'tutor'),
-								'block_type'=>'uniform',
+								'slug' => 'instructor',
+								'block_type' => 'uniform',
 								'fields' => array(
 									'instructor_register_page' => array(
 										'type'      => 'select',
@@ -213,13 +221,16 @@ class Options_V2 {
 							),
 						),
 					),
-					'course' => array(
+					array(
 						'label' => __('Course', 'tutor'),
+						'slug' => 'course',
 						'desc' => __('Course Settings', 'tutor'),
+						'icon' => __('book-open', 'tutor'),
 						'blocks' => array(
-							'lesson' => array(
+							array(
 								'label' => __('Lesson', 'tutor'),
-								'block_type'=>'uniform',
+								'slug' => 'lesson',
+								'block_type' => 'uniform',
 								'fields' => array(
 									'autoload_next_course_content' => array(
 										'type'      => 'checkbox',
@@ -229,9 +240,10 @@ class Options_V2 {
 									),
 								),
 							),
-							'quiz' => array(
+							array(
 								'label' => __('Quiz', 'tutor'),
-								'block_type'=>'uniform',
+								'slug' => 'quiz',
+								'block_type' => 'uniform',
 								'fields' => array(
 									'quiz_time_limit' => array(
 										'type'      => 'group_fields',
@@ -291,13 +303,15 @@ class Options_V2 {
 							),
 						)
 					),
-					'monitization' => array(
+					array(
 						'label' => __('Monitization', 'tutor'),
+						'slug' => 'monitization',
 						'desc' => __('Monitization Settings', 'tutor'),
+						'icon' => __('discount-filled', 'tutor'),
 						'blocks' => array(
-							'blank' => array(
+							array(
 								'label' => false,
-								'block_type'=>'uniform',
+								'block_type' => 'uniform',
 								'fields' => array(
 									'autoload_next_course_content' => array(
 										'type'      => 'checkbox',
@@ -307,9 +321,10 @@ class Options_V2 {
 									),
 								),
 							),
-							'options' => array(
+							array(
 								'label' => false,
-								'block_type'=>'uniform',
+								'slug' => 'options',
+								'block_type' => 'uniform',
 								'fields' => array(
 									'statement_show_per_page' => array(
 										'type'      => 'number',
@@ -323,118 +338,127 @@ class Options_V2 {
 					),
 					'design' => array(
 						'label' => __('Design', 'tutor'),
+						'slug' => 'design',
 						'desc' => __('Design Settings', 'tutor'),
+						'icon' => __('design', 'tutor'),
 						'blocks' => array()
 					),
 					'advanced' => array(
 						'label' => __('Advanced', 'tutor'),
+						'slug' => 'advanced',
 						'desc' => __('Advanced Settings', 'tutor'),
+						'icon' => __('filter', 'tutor'),
 						'blocks' => array()
 					),
 					'email' => array(
 						'label' => __('Email', 'tutor'),
+						'slug' => 'email',
 						'desc' => __('Email Settings', 'tutor'),
+						'icon' => __('envelope', 'tutor'),
 						'blocks' => array()
 					),
 					'certificate' => array(
 						'label' => __('Certificate', 'tutor'),
+						'slug' => 'certificate',
 						'desc' => __('Certificate Settings', 'tutor'),
+						'icon' => __('certificate', 'tutor'),
 						'blocks' => array()
 					),
 					'gradebook' => array(
 						'label' => __('Gradebook', 'tutor'),
+						'slug' => 'gradebook',
 						'desc' => __('Gradebook Settings', 'tutor'),
+						'icon' => __('gradebook', 'tutor'),
 						'blocks' => array()
-					),
-				),
-			),
-			'tools' => array(
-				'label'     => __('Tools', 'tutor'),
-				'sections'    => array(
-					'status' => array(
-						'label' => __('Status', 'tutor'),
-						'desc' => __('Status Settings', 'tutor'),
-						'blocks' => array(
-							'block' => array(),
-						)
-					),
-					'import_export' => array(
-						'label' => __('Import/Export', 'tutor'),
-						'desc' => __('Import/Export Settings', 'tutor'),
-						'blocks' => array(
-							'block' => array(),
-						)
-					),
-					'tutor_pages' => array(
-						'label' => __('Tutor Pages', 'tutor'),
-						'desc' => __('Tutor Pages Settings', 'tutor'),
-						'blocks' => array(
-							'block' => array(),
-						)
-					),
-					'setup_wizard' => array(
-						'label' => __('Setup Wizard', 'tutor'),
-						'desc' => __('Setup Wizard Settings', 'tutor'),
-						'blocks' => array(
-							'block' => array(),
-						)
 					),
 				),
 			),
 			'addons' => array(
 				'label'     => __('Addons', 'tutor'),
 				'sections'    => array(
-					'zoom' => array(
+					array(
 						'label' => __('Zoom', 'tutor'),
+						'slug' => 'zoom',
 						'desc' => __('Zoom Settings', 'tutor'),
+						'icon' => __('zoom', 'tutor'),
 						'blocks' => array(
 							'block' => array(),
 						)
 					),
-					'google_classroom' => array(
+					array(
 						'label' => __('Google Classroom', 'tutor'),
+						'slug' => 'google_classroom',
 						'desc' => __('Google Classroom Settings', 'tutor'),
+						'icon' => __('classroom', 'tutor'),
 						'blocks' => array(
 							'block' => array(),
 						)
 					),
-					'buddypress' => array(
+					array(
 						'label' => __('Buddypress', 'tutor'),
+						'slug' => 'buddypress',
 						'desc' => __('Buddypress Settings', 'tutor'),
+						'icon' => __('buddypress', 'tutor'),
 						'blocks' => array(
 							'block' => array(),
 						)
 					),
-					'paid_memberships_pro' => array(
+					array(
 						'label' => __('Paid Memberships Pro', 'tutor'),
+						'slug' => 'paid_memberships_pro',
 						'desc' => __('Paid Memberships Pro Settings', 'tutor'),
+						'icon' => __('paid-membersip-pro', 'tutor'),
 						'blocks' => array(
 							'block' => array(),
 						)
 					),
 				),
-			)
+			),
+			'tools' => array(
+				'label'     => __('Tools', 'tutor'),
+				'sections'    => array(
+					array(
+						'label' => __('Status', 'tutor'),
+						'slug' => 'status',
+						'desc' => __('Status Settings', 'tutor'),
+						'icon' => __('chart', 'tutor'),
+						'blocks' => array(
+							'block' => array(),
+						)
+					),
+					array(
+						'label' => __('Import/Export', 'tutor'),
+						'slug' => 'import_export',
+						'desc' => __('Import/Export Settings', 'tutor'),
+						'icon' => __('import-export', 'tutor'),
+						'blocks' => array(
+							'block' => array(),
+						)
+					),
+					array(
+						'label' => __('Tutor Pages', 'tutor'),
+						'slug' => 'tutor_pages',
+						'desc' => __('Tutor Pages Settings', 'tutor'),
+						'icon' => __('buddypress', 'tutor'),
+						'blocks' => array(
+							'block' => array(),
+						)
+					),
+					array(
+						'label' => __('Setup Wizard', 'tutor'),
+						'slug' => 'setup_wizard',
+						'desc' => __('Setup Wizard Settings', 'tutor'),
+						'icon' => __('paid-membersip-pro', 'tutor'),
+						'blocks' => array(
+							'block' => array(),
+						)
+					),
+				),
+			),
 
 		);
 
-
-		$attrs = apply_filters('tutor/options/attr', $attr);
-		$extends = apply_filters('tutor/options/extend/attr', array());
-
-		if (tutils()->count($extends)){
-			foreach ($extends as $extend_key => $extend_option){
-				if (isset($attrs[$extend_key])&& tutils()->count($extend_option['sections']) ){
-					$sections = $attrs[$extend_key]['sections'];
-					$sections = array_merge($sections, $extend_option['sections']);
-					$attrs[$extend_key]['sections'] = $sections;
-				}
-			}
-		}
-echo '<pre>';
-// print_r($attrs);
-echo '</pre>';
-		return $attrs;
-
+		return json_decode(json_encode($attr), FALSE);
 	}
 
 	/**
@@ -444,22 +468,21 @@ echo '</pre>';
 	 *
 	 * Generate Option Field
 	 */
-	public function generate_field($field = array()){
+	public function generate_field($field = array()) {
 		ob_start();
-		include tutor()->path.'views/options/option_field.php';
+		include tutor()->path . 'views/options/option_field.php';
 		return ob_get_clean();
 	}
 
-	public function field_type($field = array()){
+	public function field_type($field = array()) {
 		ob_start();
-		include tutor()->path."views/options/field-types/{$field['type']}.php";
+		include tutor()->path . "views/options/field-types/{$field['type']}.php";
 		return ob_get_clean();
 	}
 
-	public function generate(){
+	public function generate() {
 		ob_start();
-		include tutor()->path.'views/options/options_generator.php';
+		include tutor()->path . 'views/options/options_generator.php';
 		return ob_get_clean();
 	}
-
 }
