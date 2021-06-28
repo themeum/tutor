@@ -185,6 +185,14 @@ class Assets{
 			wp_register_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
 			wp_enqueue_script( 'tutor-frontend');
 			wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
+			/**
+			 * Location data added for providing support on the frontend
+			 * 
+			 * for zoom
+			 * 
+			 * @since 1.9.4
+			 */
+			wp_localize_script('tutor-main', '_tutorobject', $localize_data);
 		}
 
 		/**
