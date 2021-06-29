@@ -1,6 +1,6 @@
 <div class="tutor-option-field-row">
-	<div class="tutor-option-field-label">
-		<label>Dashboard Page</label>
+	<div class="tutor-option-field-label">	
+		<label><?php echo $field->label;?></label>
 		<p class="desc">
 			This page will be used for student and instructor dashboard
 		</p>

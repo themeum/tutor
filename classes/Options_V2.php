@@ -313,16 +313,20 @@ class Options_V2 {
 								'label' => false,
 								'block_type' => 'uniform',
 								'fields' => array(
-									'autoload_next_course_content' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Enable / Disable', 'tutor'),
-										'label_title'   => __('Automatically load next course content.', 'tutor'),
-										'desc' => __('Enabling this feature will be load next course content automatically after finishing current video.', 'tutor'),
+									'monetize_by' => array(
+										'type'      => 'radio',
+										'label'      => __('Disable Monetization', 'tutor'),
+										'default'   => 'free',
+										'select_options'   => false,
+										'options'   => apply_filters('tutor_monetization_options', array(
+											'free'          =>  __('Disable Monetization', 'tutor'),
+										)),
+										'desc'  => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro',	'tutor'),
 									),
 								),
 							),
 							array(
-								'label' => false,
+								'label'      => __('Options', 'tutor'),
 								'slug' => 'options',
 								'block_type' => 'uniform',
 								'fields' => array(
@@ -483,6 +487,29 @@ class Options_V2 {
 	public function generate() {
 		ob_start();
 		include tutor()->path . 'views/options/options_generator.php';
+		return ob_get_clean();
+	}
+
+	/**
+	 * Block template
+	 *
+	 * @param  object $blocks
+	 * 
+	 * @return void
+	 */
+	public function get_active(int $index = null, string $page = null, $section_slug) {
+		if (isset($page) && $page == $section_slug) {
+			return 'active';
+		} else {
+			if ( !isset($page) && $index == 1) {
+				return 'active';
+			}
+		}
+	}
+
+	public function blocks($blocks = []) {
+		ob_start();
+		include tutor()->path . 'views/options/option_blocks.php';
 		return ob_get_clean();
 	}
 }

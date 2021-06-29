@@ -22,6 +22,11 @@ navTabLists.forEach((list) => {
 			// add active to the current content
 			const currentContent = document.querySelector(`#${dataTab}`);
 			currentContent.classList.add('active');
+
+			const url = new URL(window.location);
+			url.searchParams.set('tab_page',dataTab);
+			window.history.pushState({}, '', url);
+
 		}
 	});
 });

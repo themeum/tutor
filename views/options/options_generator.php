@@ -3,6 +3,7 @@
 /**
  * Options generator
  */
+$url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
 ?>
 
 <!-- .tutor-backend-wrap -->
@@ -24,30 +25,29 @@
 	<!-- .tutor-option-body -->
 	<div class="tutor-option-body">
 		<form class="tutor-option-form py-4 px-3">
-			<div class="tutor-option-tabs">
-				<!-- .tutor-option-nav -->
-				<ul class="tutor-option-nav">
-					<?php $i = 0;
-					foreach ($this->options_attr as $args) : ?>
+			<div class="tutor-option-tabs"><?php $i = 0;
+											foreach ($this->options_attr as $args) : ?>
+					<!-- .tutor-option-nav -->
+					<ul class="tutor-option-nav">
+
 						<li class="tutor-option-nav-item">
 							<h4><?= $args->label ?></h4>
 						</li>
-						<?php
-						foreach ($args->sections as $key => $section) :
-							$i += 1;
-							$icon = tutor()->url . 'assets/images/images-v2/icons/' . $section->slug . '.svg';
+						<?php foreach ($args->sections as $key => $section) :
+													$i += 1;
+													$icon = tutor()->url . 'assets/images/images-v2/icons/' . $section->slug . '.svg';
 						?>
 							<li class="tutor-option-nav-item">
 								<?php echo file_exists(tutor()->url . 'assets/images/images-v2/icons/' . $section->slug . '.svg'); ?>
-								<a href="#" data-tab="<?php echo $section->slug ?>" class="<?php echo $i == 1 ? 'active' : '' ?>">
+								<a data-tab="<?php echo $section->slug ?>" class="<?php echo $this->get_active($i, $url_page, $section->slug) ?>">
 									<img src="<?php echo $icon ?>" alt="general icon" />
 									<span><?= $section->label ?></span>
 								</a>
 							</li>
 						<?php endforeach; ?>
-				</ul>
-			<?php endforeach; ?>
-			<!-- end /.tutor-option-nav -->
+					</ul>
+				<?php endforeach; ?>
+				<!-- end /.tutor-option-nav -->
 			</div>
 			<!-- end /.tutor-option-tabs -->
 
@@ -61,53 +61,33 @@
 					<?php foreach ($args->sections as $key => $section) :
 						$i += 1; ?>
 
-						<div id="<?php echo $section->slug ?>" class="tutor-option-nav-page <?php echo $i == 1 ? 'active' : '' ?>">
+						<div id="<?php echo $section->slug ?>" class="tutor-option-nav-page <?php echo $this->get_active($i, $url_page, $section->slug) ?>">
 							<!-- .tutor-option-main-title -->
 							<div class="tutor-option-main-title">
 								<h2><?php echo $section->label ?></h2>
+
 								<a href="#">
 									<i class="las la-undo-alt"></i>
 									<?php _e('Reset to Default', 'tutor') ?>
 								</a>
+
 							</div>
+
 							<!-- end /.tutor-option-main-title -->
 							<?php foreach ($section->blocks as $blocks) : ?>
 
 								<?php if (empty($blocks->label)) : ?>
-									<!-- .tutor-option-single-item  -->
+
 									<div class="tutor-option-single-item">
-										<div class="item-wrapper">
-											<?php echo $this->generate_field() ?>
-										</div>
+
+										<?php echo $this->blocks($blocks) ?>
+
 									</div>
-									<!-- end /.tutor-option-single-item  -->
+
 								<?php else : ?>
 
-									<?php if ($blocks->block_type == 'uniform') : ?>
-										<!-- .tutor-option-single-item  -->
-										<div class="tutor-option-single-item">
-											<h4><?php echo $blocks->label??'' ?></h4>
-											<div class="item-wrapper">
-											<?php foreach ($blocks->fields as $field) : ?>
-												<?php echo $this->generate_field() ?>
-												<?php endforeach; ?>
-											</div>
-										</div>
-										<!-- end /.tutor-option-single-item  -->
+									<?php echo $this->blocks($blocks) ?>
 
-									<?php elseif ($blocks->block_type == 'isolate') : ?>
-										
-										<!-- .tutor-option-single-item  -->
-										<div class="tutor-option-single-item">
-											<h4><?php echo $blocks->label??'' ?></h4>
-											<?php foreach ($blocks->fields as $field) : ?>
-												<div class="item-wrapper">
-													<?php echo $this->generate_field() ?>
-												</div>
-											<?php endforeach; ?>
-										</div>
-										<!-- end /.tutor-option-single-item  -->
-									<?php endif; ?>
 								<?php endif; ?>
 
 
