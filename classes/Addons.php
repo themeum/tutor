@@ -99,8 +99,8 @@ class Addons {
 				'description'	=> 'Users will get push notification on specified events.'
 			),
 			'tutor-wpml'		=> array(
-				'name'			=> 'Tutor WPML',
-				'description'	=> 'WPML Compatibillity with Tutor LMS'
+				'name'			=> __('WPML Multilingual CMS', 'tutor'),
+				'description'	=> __('Create multilingual courses, lessons, dashboard and more for a global audience.', 'tutor')
 			)
 		);
 
