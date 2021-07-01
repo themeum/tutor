@@ -10647,6 +10647,11 @@ Content Drip (Pro)
   vertical-align: middle;
 }
 
+/* Fix select2 dropdown overlap issue for frontend course builder */
+body > span.select2-container.select2-container--open {
+  margin-top: 32px !important;
+}
+
 @media (min-width: 992px) {
   .tutor-option-tooltip.tutor-option-field {
     position: relative;

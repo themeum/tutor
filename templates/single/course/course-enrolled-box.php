@@ -39,11 +39,7 @@ global $wp_query;
             if ( $lesson_url ) { ?>
                 <a href="#" data-href="<?php echo $lesson_url; ?>" class="tutor-button tutor-success tutor-course-retake-button" data-course_id="<?php echo get_the_ID(); ?>">
                     <?php
-                        if($completed_lessons){
-                            _e( 'Retake This Course', 'tutor' );
-                        }else{
-                            _e( 'Start Course', 'tutor' );
-                        }
+                        _e( 'Start Course', 'tutor' );
                     ?>
                 </a>
             <?php }
