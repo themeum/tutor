@@ -101,6 +101,14 @@ msgstr ""
 msgid "Helps connect Google Classrooms with Tutor LMS courses, allowing you to use features like Classroom streams and files directly from the Tutor LMS course."
 msgstr ""
 
+#: classes/Addons.php:102
+msgid "WPML Multilingual CMS"
+msgstr ""
+
+#: classes/Addons.php:103
+msgid "Create multilingual courses, lessons, dashboard and more for a global audience."
+msgstr ""
+
 #: classes/Admin.php:49
 msgid "Pro"
 msgstr ""
@@ -4755,15 +4763,11 @@ msgstr ""
 msgid "What Will I Learn?"
 msgstr ""
 
-#: templates/single/course/course-enrolled-box.php:45
+#: templates/single/course/course-enrolled-box.php:42
 msgid "Start Course"
 msgstr ""
 
-#: templates/single/course/course-enrolled-box.php:43
-msgid "Retake This Course"
-msgstr ""
-
-#: templates/single/course/course-enrolled-box.php:67
+#: templates/single/course/course-enrolled-box.php:63
 msgid "You have been enrolled on %s."
 msgstr ""
 
