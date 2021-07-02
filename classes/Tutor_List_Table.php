@@ -1225,6 +1225,10 @@ class Tutor_List_Table {
 	 * @since 1.9.5
 	 */
 	protected function display_sorting_fields() {
+		$search_filter	= isset( $_GET['search'] ) ? sanitize_text_field( $_GET['search'] ) : '';
+		$course_id		= isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['course-id'] ) : '';
+		$date_filter	= isset( $_GET['date'] ) ? sanitize_text_field( $_GET['date'] ) : '';
+		$order_filter	= isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : '';
 		$which = 'top';
 		?>
 		<div class="tutor-sorting-bulk-action-wrapper" style="display: flex;

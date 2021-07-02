@@ -4471,10 +4471,12 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_quiz_attempts( $start = 0, $limit = 10, $search_term = '' ) {
+	public function get_quiz_attempts( $start = 0, $limit = 10, $search_filter, $course_filter, $date_filter, $order_filter ) {
 		global $wpdb;
 
-		$search_term   = '%' . $wpdb->esc_like( $search_term ) . '%';
+		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
+		$course_filter	= $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '' ;
+		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
 
 		$query = $wpdb->get_results( $wpdb->prepare(
 			"SELECT *
@@ -4485,13 +4487,15 @@ class Utils {
 							ON quiz_attempts.user_id = {$wpdb->users}.ID
 			WHERE 	attempt_status != %s
 					AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
-			ORDER 	BY quiz_attempts.attempt_id DESC 
+					{$course_filter}
+					{$date_filter}
+			ORDER 	BY quiz_attempts.attempt_id $order_filter 
 			LIMIT 	%d, %d;
 			",
 			'attempt_started',
-			$search_term,
-			$search_term,
-			$search_term,
+			$search_filter,
+			$search_filter,
+			$search_filter,
 			$start,
 			$limit
 		) );
