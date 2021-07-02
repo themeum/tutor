@@ -1144,10 +1144,13 @@ class Tutor_List_Table {
 	 *
 	 * @since 3.1.0
 	 */
-	public function display() {
+	public function display($enable_sorting_field_with_bulk_action = false) {
 		$singular = $this->_args['singular'];
-
-		$this->display_tablenav( 'top' );
+		if ( $enable_sorting_field_with_bulk_action ) {
+			$this->display_sorting_fields( );
+		} else {
+			$this->display_tablenav('top');
+		}
 
 		$this->screen->render_screen_reader_content( 'heading_list' );
 		?>
@@ -1158,7 +1161,7 @@ class Tutor_List_Table {
 			</tr>
 			</thead>
 
-			<tbody id="the-list"<?php
+			<tbody id="the-l ist"<?php
 			if ( $singular ) {
 				echo " data-wp-lists='list:$singular'";
 			} ?>>
@@ -1211,6 +1214,89 @@ class Tutor_List_Table {
 
 			<br class="clear" />
 		</div>
+		<?php
+	}
+
+	/**
+	 * Sorting fields added on tutor table
+	 * 
+	 * Course id | Search | Date | Order
+	 * 
+	 * @since 1.9.5
+	 */
+	protected function display_sorting_fields() {
+		$which = 'top';
+		?>
+		<div class="tutor-sorting-bulk-action-wrapper" style="display: flex;
+			justify-content: space-between;
+			align-items: flex-end;
+			padding: 0px 0px 30px 0px;">
+			<div class="tablenav <?php echo esc_attr( $which ); ?>">
+				<?php if ( $this->has_items() ): ?>
+					<div class="alignleft actions bulkactions">
+						<?php $this->bulk_actions( $which ); ?>
+					</div>
+				<?php endif;
+				$this->extra_tablenav( $which );
+
+				?>
+			</div>
+			
+			<div class="tutor-admin-search-box-container" style="margin:0px;">
+
+				<div>
+					<div class="menu-label"><?php _e('Courses', 'tutor'); ?></div>
+					<div>
+						<?php
+						//get courses
+						$courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
+						?>
+
+						<select class="tutor-report-category tutor-announcement-course-sorting">
+						
+							<option value=""><?php _e('All', 'tutor'); ?></option>
+						
+							<?php if ($courses) : ?>
+								<?php foreach ($courses as $course) : ?>
+									<option value="<?php echo esc_attr($course->ID) ?>" <?php selected($course_id, $course->ID, 'selected') ?>>
+										<?php echo $course->post_title; ?>
+									</option>
+								<?php endforeach; ?>
+							<?php else : ?>
+								<option value=""><?php _e('No course found', 'tutor'); ?></option>
+							<?php endif; ?>
+						</select>
+					</div>
+				</div>
+
+				<div>
+					<div class="menu-label"><?php _e('Sort By', 'tutor'); ?></div>
+					<div>
+						<select class="tutor-report-sort tutor-announcement-order-sorting">
+							<option <?php selected($order_filter, 'ASC'); ?>>ASC</option>
+							<option <?php selected($order_filter, 'DESC'); ?>>DESC</option>
+						</select>
+					</div>
+				</div>
+
+				<div>
+					<div class="menu-label"><?php _e('Date', 'tutor'); ?></div>
+					<div class="date-range-input">
+						<input type="text" class="tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off" />
+						<i class="tutor-icon-calendar"></i>
+					</div>
+				</div>
+
+				<div>
+					<div class="menu-label"><?php _e('Search', 'tutor'); ?></div>
+					<div style="position:relative;">
+						<input type="text" name="search" class="tutor-report-search tutor-announcement-search-field" value="<?php echo $search_filter; ?>" autocomplete="off" placeholder="<?php _e('Search', 'tutor'); ?>" />
+						<button class="tutor-report-search-btn tutor-announcement-search-sorting"><i class="tutor-icon-magnifying-glass-1"></i></button>
+					</div>
+				</div>
+				
+			</div>		
+		</div>		
 		<?php
 	}
 
