@@ -14,13 +14,13 @@ if (isset($_GET['sub_page'])){
  * 
  * @since 1.9.5
  */
-$search_filter	= $_GET['search'] ? sanitize_text_field( $_GET['search'] ) : '';
-$course_filter	= $_GET['course-id'] ? sanitize_text_field( $_GET['course-id'] ) : '';
-$date_filter	= $_GET['date'] ? sanitize_text_field( $_GET['date'] ) : '';
-$order_filter	= $_GET['order'] ? sanitize_text_field( $_GET['order'] ) : '';
+$search_filter	= isset( $_GET['search'] ) ? sanitize_text_field( $_GET['search'] ) : '';
+$course_filter	= isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['course-id'] ) : '';
+$date_filter	= isset( $_GET['date'] ) ? sanitize_text_field( $_GET['date'] ) : '';
+$order_filter	= isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : "ASC";
 
 $quiz_attempt 	= new \TUTOR\Quiz_Attempts_List();
-$quiz_attempt->prepare_items();
+$quiz_attempt->prepare_items( $search_filter, $course_filter, $date_filter, $order_filter );
 ?>
 
 <div class="wrap">

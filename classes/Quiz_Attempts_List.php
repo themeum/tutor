@@ -151,14 +151,10 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		}
 	}
 
-	function prepare_items() {
+	function prepare_items( $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '' ) {
 		global $wpdb;
 
 		$per_page = 20;
-		$search_term = '';
-		if (isset($_REQUEST['s'])){
-			$search_term = sanitize_text_field($_REQUEST['s']);
-		}
 
 		$columns = $this->get_columns();
 		$hidden = array();
@@ -172,10 +168,10 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		$total_items = 0;
 		$this->items = array();
 
-		if (current_user_can('administrator')) {
-			$total_items = tutor_utils()->get_total_quiz_attempts( $search_term );
-			$this->items = tutor_utils()->get_quiz_attempts( ( $current_page - 1 ) * $per_page, $per_page, $search_term );
-		}elseif (current_user_can('tutor_instructor')){
+		if ( current_user_can( 'administrator' ) ) {
+			$total_items = tutor_utils()->get_total_quiz_attempts( $search_filter );
+			$this->items = tutor_utils()->get_quiz_attempts( ( $current_page - 1 ) * $per_page, $per_page, $search_filter, $course_filter, $date_filter, $order_filter );
+		} elseif ( current_user_can( 'tutor_instructor' ) ){
 			/**
 			 * Instructors course specific quiz attempts
 			 */
@@ -191,7 +187,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			$get_course_ids = $wpdb->get_col("SELECT ID from {$wpdb->posts} where post_type = '{$course_post_type}' $custom_author_query ; ");
 
 			if (is_array($get_course_ids) && count($get_course_ids)){
-				$total_items = tutor_utils()->get_total_quiz_attempts_by_course_ids($get_course_ids, $search_term );
+				$total_items = tutor_utils()->get_total_quiz_attempts_by_course_ids($get_course_ids, $search_filter );
 				$this->items = tutor_utils()->get_quiz_attempts_by_course_ids(( $current_page - 1 ) * $per_page, $per_page, $get_course_ids, $search_term );
 			}
 
