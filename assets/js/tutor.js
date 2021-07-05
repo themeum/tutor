@@ -163,9 +163,9 @@ jQuery(document).ready(function($){
         var $form = $(this);
         var data = $form.serializeObject();
         var $btn = $form.find('button[type="submit"]');
-
+        
         $.ajax({
-            url: ajaxurl,
+            url: window._tutorobject.ajaxurl,
             type: 'POST',
             data: data,
             beforeSend: function () {
@@ -1515,8 +1515,12 @@ jQuery(document).ready(function($){
 
       $(".tutor-dropdown").click(function(e){
         e.stopPropagation();
+        if ( $('.tutor-dropdown').hasClass('show') ) {
+            $('.tutor-dropdown').removeClass('show')
+        }
         $(this).addClass('show');
       });
+
     //announcement end
 
 
@@ -1525,13 +1529,19 @@ jQuery(document).ready(function($){
     * @since v.1.9.0
     * Parse and show video duration on link paste in lesson video 
     */
-    $('body').on('paste', '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5', function(e) {
+    var video_url_input = '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5';
+    var autofill_url_timeout;
+    $('body').on('paste', video_url_input, function(e) {
+        e.stopImmediatePropagation();
 
         var root = $(this).closest('.lesson-modal-form-wrap').find('.tutor-option-field-video-duration');
         var duration_label = root.find('label');
         var is_wp_media = $(this).hasClass('video_source_wrap_html5') || $(this).hasClass('video_source_upload_wrap_html5');
-        var video_url = is_wp_media ? $(this).find('span').data('video_url') : e.originalEvent.clipboardData.getData('text');
-          
+        var autofill_url = $(this).data('autofill_url');
+        $(this).data('autofill_url', null);
+
+        var video_url = is_wp_media ? $(this).find('span').data('video_url') : (autofill_url || e.originalEvent.clipboardData.getData('text')); 
+        
         var toggle_loading = function(show) {
 
             if(!show) {
@@ -1624,6 +1634,19 @@ jQuery(document).ready(function($){
                 });
             }
         }
+    }).on('input', video_url_input, function() {
+
+        if(autofill_url_timeout) {
+            clearTimeout(autofill_url_timeout);
+        }
+
+        var $this = $(this);
+        autofill_url_timeout = setTimeout(function() {
+            var val = $this.val();
+            val = val ? val.trim() : '';
+            console.log('Trigger', val);
+            val ? $this.data('autofill_url', val).trigger('paste') : 0;
+        }, 700);
     });
 
    /**

@@ -94,6 +94,10 @@ class Addons {
 				'name'          => __('Google Classroom Integration', 'tutor'),
 				'description'   => __('Helps connect Google Classrooms with Tutor LMS courses, allowing you to use features like Classroom streams and files directly from the Tutor LMS course.', 'tutor'),
 			),
+			'push-notification' => array(
+				'name'			=> 'Push Notification',
+				'description'	=> 'Users will get push notification on specified events.'
+			)
 		);
 
 		return $addons;

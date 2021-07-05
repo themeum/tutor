@@ -34,11 +34,13 @@ class Assets{
 			'home_url'		=> $home_url,
 			'base_path'		=> $base_path,
 			'tutor_url' 	=> tutor()->url,
+			'tutor_pro_url' => function_exists('tutor_pro') ? tutor_pro()->url : null,
 			'nonce_key'     => tutor()->nonce,
 			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
+			'loading_icon_url' => get_admin_url() . 'images/loading.gif',
 			'placeholder_img_src' => tutor_placeholder_img_src(),
 			'enable_lesson_classic_editor' => get_tutor_option('enable_lesson_classic_editor'),
-			'loading_icon_url' => get_admin_url() . 'images/loading.gif',
+			'tutor_frontend_dashboard_url' => tutor_utils()->get_tutor_dashboard_page_permalink(),
 		);
 	}
 
@@ -185,6 +187,14 @@ class Assets{
 			wp_register_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
 			wp_enqueue_script( 'tutor-frontend');
 			wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
+			/**
+			 * Location data added for providing support on the frontend
+			 * 
+			 * for zoom
+			 * 
+			 * @since 1.9.4
+			 */
+			wp_localize_script('tutor-main', '_tutorobject', $localize_data);
 		}
 
 		/**

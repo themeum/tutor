@@ -175,11 +175,29 @@ do_action('tutor_dashboard/before/wrap');
                 <div class="tutor-col-9">
                     <div class="tutor-dashboard-content">
                         <?php
+        
                         if ($dashboard_page_name){
                             do_action('tutor_load_dashboard_template_before', $dashboard_page_name);
-                            tutor_load_template("dashboard.".$dashboard_page_name);
+
+                            /**
+                             * Load dashboard template part from other location
+                             * 
+                             * this filter is basically added for adding templates from respective addons
+                             * 
+                             * @since version 1.9.3
+                             */
+                            $other_location = '';
+                            $from_other_location = apply_filters( 'load_dashboard_template_part_from_other_location', $other_location );
+                            
+                            if ( $from_other_location == '' ) {
+                                tutor_load_template("dashboard.".$dashboard_page_name);
+                            } else {
+                                //load template from other location full abspath
+                                include_once $from_other_location;
+                            }
+                            
                             do_action('tutor_load_dashboard_template_before', $dashboard_page_name);
-                        }else{
+                        } else {
                             tutor_load_template("dashboard.dashboard");
                         }
                         ?>

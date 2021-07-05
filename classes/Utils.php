@@ -124,12 +124,8 @@ class Utils {
 	 */
 	public function get_pages() {
 
-		global $sitepress;
-		if (isset($sitepress)) {
-			$wpml_current_lang = apply_filters('wpml_current_language', NULL);
-			$wpml_default_lang = apply_filters('wpml_default_language', NULL);
-			$sitepress->switch_lang($wpml_default_lang);
-		}
+		do_action( 'tutor_utils/get_pages/before' );
+
 		$pages = array();
 		$wp_pages = get_pages();
 
@@ -138,9 +134,8 @@ class Utils {
 				$pages[$page->ID] = $page->post_title;
 			}
 		}
-		if (isset($sitepress)) {
-			$sitepress->switch_lang($wpml_current_lang);
-		}
+	
+		do_action( 'tutor_utils/get_pages/after' );
 
 		return $pages;
 	}
@@ -7084,13 +7079,34 @@ class Utils {
 	 * 
 	 * Check if current screen is under tutor dashboard
 	 */
-	public function is_tutor_dashboard() {
+	public function is_tutor_dashboard($subpage = null) {
 
-		if(is_admin()) {
+		// To Do: Add subpage check later
+
+		if(function_exists('is_admin') && is_admin()) {
 			$screen = get_current_screen();
 			return is_object( $screen ) && $screen->parent_base == 'tutor';
 		}
 		
+		return false;
+	}
+
+	/**
+	 * @return boolean
+	 * 
+	 * @since v1.9.4
+	 * 
+	 * Check if current screen tutor frontend dashboard
+	 */
+	public function is_tutor_frontend_dashboard($subpage = null) {
+
+		global $wp_query;
+		if ($wp_query->is_page) {
+			$dashboard_page = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
+
+			return $subpage ? $dashboard_page == $subpage : $dashboard_page;
+		}
+
 		return false;
 	}
 
