@@ -21,6 +21,7 @@ $order_filter	= isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) 
 
 $quiz_attempt 	= new \TUTOR\Quiz_Attempts_List();
 $quiz_attempt->prepare_items( $search_filter, $course_filter, $date_filter, $order_filter );
+
 ?>
 
 <div class="wrap">
