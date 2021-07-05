@@ -169,8 +169,10 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		$this->items = array();
 
 		if ( current_user_can( 'administrator' ) ) {
-			$total_items = tutor_utils()->get_total_quiz_attempts( $search_filter );
+			
 			$this->items = tutor_utils()->get_quiz_attempts( ( $current_page - 1 ) * $per_page, $per_page, $search_filter, $course_filter, $date_filter, $order_filter );
+			$total_items = is_array( $this->items ) ? count( $this->items ) : 0; 
+
 		} elseif ( current_user_can( 'tutor_instructor' ) ){
 			/**
 			 * Instructors course specific quiz attempts
