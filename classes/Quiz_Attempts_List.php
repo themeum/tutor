@@ -171,6 +171,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		if ( current_user_can( 'administrator' ) ) {
 			
 			$this->items = tutor_utils()->get_quiz_attempts( ( $current_page - 1 ) * $per_page, $per_page, $search_filter, $course_filter, $date_filter, $order_filter );
+
 			$total_items = is_array( $this->items ) ? count( $this->items ) : 0; 
 
 		} elseif ( current_user_can( 'tutor_instructor' ) ){
@@ -189,8 +190,10 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			$get_course_ids = $wpdb->get_col("SELECT ID from {$wpdb->posts} where post_type = '{$course_post_type}' $custom_author_query ; ");
 
 			if (is_array($get_course_ids) && count($get_course_ids)){
-				$total_items = tutor_utils()->get_total_quiz_attempts_by_course_ids($get_course_ids, $search_filter );
-				$this->items = tutor_utils()->get_quiz_attempts_by_course_ids(( $current_page - 1 ) * $per_page, $per_page, $get_course_ids, $search_term );
+
+				$this->items = tutor_utils()->get_quiz_attempts_by_course_ids(( $current_page - 1 ) * $per_page, $per_page, $get_course_ids, $search_filter, $course_filter, $date_filter, $order_filter );
+				
+				$total_items = is_array( $this->items ) ? count( $this->items ) : 0;
 			}
 
 		}

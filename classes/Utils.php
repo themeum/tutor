@@ -4434,6 +4434,15 @@ class Utils {
 	 * Total number of quiz attempts
 	 *
 	 * @since v.1.0.0
+	 * 
+	 * This method is not being in used
+	 * 
+	 * to get total number of attempt get_quiz_attempts method is enough 
+	 * 
+	 * this query is redundant and would be removed in future
+	 * 
+	 * @since 1.9.5
+	 *
 	 */
 	public function get_total_quiz_attempts( $search_term = '' ) {
 		global $wpdb;
@@ -4469,7 +4478,11 @@ class Utils {
 	 *
 	 * Get the all quiz attempts
 	 *
-	 * @since v.1.0.0
+	 * @since 1.0.0
+	 * 
+	 * Sorting paramas added 
+	 * 
+	 * @since 1.9.5
 	 */
 	public function get_quiz_attempts( $start = 0, $limit = 10, $search_filter, $course_filter, $date_filter, $order_filter ) {
 		global $wpdb;
@@ -4503,7 +4516,14 @@ class Utils {
 		return $query;
 	}
 
-	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_term = '' ) {
+	/**
+	 * Sorting params added on quiz attempt 
+	 * 
+	 * SQL query updated
+	 * 
+	 * @since 1.9.5
+	 */
+	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter, $course_filter, $date_filter, $order_filter ) {
 		global $wpdb;
 
 		$course_ids = array_map( function( $id ) {
@@ -4511,7 +4531,10 @@ class Utils {
 		}, $course_ids );
 
 		$course_ids_in = implode( ', ', $course_ids );
-		$search_term   = '%' . $wpdb->esc_like( $search_term ) . '%';
+
+		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
+		$course_filter	= $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '' ;
+		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
 
 		$query = $wpdb->get_results( $wpdb->prepare(
 			"SELECT * 
@@ -4523,13 +4546,15 @@ class Utils {
 			WHERE 	quiz_attempts.course_id IN (" . $course_ids_in . ")
 					AND attempt_status != %s
 					AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
-			ORDER 	BY quiz_attempts.attempt_id DESC
+					{$course_filter}
+					{$date_filter}
+			ORDER 	BY quiz_attempts.attempt_id $order_filter
 			LIMIT 	%d, %d;
 			",
 			'attempt_started',
-			$search_term,
-			$search_term,
-			$search_term,
+			$search_filter,
+			$search_filter,
+			$search_filter,
 			$start, 
 			$limit
 		) );
@@ -4537,6 +4562,15 @@ class Utils {
 		return $query;
 	}
 
+	/**
+	 * This method is not being in used
+	 * 
+	 * to get total number of attempt above method is enough  
+	 * 
+	 * this query is redundant and would be removed in future
+	 * 
+	 * @since 1.9.5
+	 */
 	public function get_total_quiz_attempts_by_course_ids( $course_ids = array(), $search_term = '' ) {
 		global $wpdb;
 		
