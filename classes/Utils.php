@@ -7041,13 +7041,34 @@ class Utils {
 	 * 
 	 * Check if current screen is under tutor dashboard
 	 */
-	public function is_tutor_dashboard() {
+	public function is_tutor_dashboard($subpage = null) {
 
-		if(is_admin()) {
+		// To Do: Add subpage check later
+
+		if(function_exists('is_admin') && is_admin()) {
 			$screen = get_current_screen();
 			return is_object( $screen ) && $screen->parent_base == 'tutor';
 		}
 		
+		return false;
+	}
+
+	/**
+	 * @return boolean
+	 * 
+	 * @since v1.9.4
+	 * 
+	 * Check if current screen tutor frontend dashboard
+	 */
+	public function is_tutor_frontend_dashboard($subpage = null) {
+
+		global $wp_query;
+		if ($wp_query->is_page) {
+			$dashboard_page = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
+
+			return $subpage ? $dashboard_page == $subpage : $dashboard_page;
+		}
+
 		return false;
 	}
 
