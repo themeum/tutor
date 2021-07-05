@@ -1,6 +1,6 @@
 # TutorLMS Changelog
 
-### 1.9.4 - June 28, 2021
+### 1.9.4 - July 05, 2021
 
 * New: WPML Compatibility Add-on
 * New: Field to add Tags in frontend course builder

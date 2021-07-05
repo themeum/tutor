@@ -352,7 +352,7 @@ Content Drip (Pro)
 }
 
 /* Fix select2 dropdown overlap issue for frontend course builder */
-body{
+body.has-tutor-frontend-course-builder{
 	&>span.select2-container.select2-container--open {
 		margin-top: 32px !important;
 	}
