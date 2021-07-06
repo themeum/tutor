@@ -11,6 +11,11 @@ if (!defined('ABSPATH'))
 
 global $post;
 
+add_filter( 'body_class', function( $classes = array() ) {
+    $classes[] = 'has-tutor-frontend-course-builder';
+    return $classes;
+} );
+
 get_tutor_header(true);
 do_action('tutor_load_template_before', 'dashboard.create-course', null);
 
