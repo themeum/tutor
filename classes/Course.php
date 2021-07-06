@@ -654,16 +654,16 @@ class Course extends Tutor_Base {
 		if ($saved_instructors){
 			$saved_instructors_ids = wp_list_pluck($saved_instructors, 'ID');
 			$instructor_not_in_ids = implode(',', $saved_instructors_ids);
-			$not_in_sql .= "AND ID NOT IN($instructor_not_in_ids) ";
+			$not_in_sql .= "AND user.ID NOT IN($instructor_not_in_ids) ";
 		}
 
 		$search_sql = '';
 		if ($search_terms){
-			$search_sql = "AND (user_login like '%{$search_terms}%' or user_nicename like '%{$search_terms}%' or display_name like '%{$search_terms}%') ";
+			$search_sql = "AND (user.user_login like '%{$search_terms}%' or user.user_nicename like '%{$search_terms}%' or user.display_name like '%{$search_terms}%') ";
 		}
 
-		$instructors = $wpdb->get_results("select ID, display_name from {$wpdb->users} 
-			INNER JOIN {$wpdb->usermeta} ON ID = user_id AND meta_key = '_tutor_instructor_status' AND meta_value = 'approved'
+		$instructors = $wpdb->get_results("SELECT user.ID, user.display_name from {$wpdb->users} user
+			INNER JOIN {$wpdb->usermeta} meta ON user.ID = meta.user_id AND meta.meta_key = '_tutor_instructor_status' AND meta.meta_value = 'approved'
 			WHERE 1=1 {$not_in_sql} {$search_sql} limit 10 ");
 
 		$output = '';
