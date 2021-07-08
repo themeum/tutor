@@ -4,14 +4,7 @@
  */
 
 @import '../lib/mixins.scss';
-
-:root {
-	--tutor-primary-color: #1b52d8;
-	--tutor-primary-hover-color: #1b52a9;
-	--tutor-text-color: #4b5981;
-	--tutor-light-color: #b1b8c9;
-	--tutor-success-button-color: #86b223;
-}
+@import '../lib/color.scss';
   
 .ui-slider {
 	position: relative;

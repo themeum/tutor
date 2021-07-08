@@ -72,6 +72,8 @@ class Assets{
 
 		$tutor_localize_data = apply_filters( 'tutor_localize_data', $tutor_localize_data );
 		wp_localize_script('tutor-admin', '_tutorobject', $tutor_localize_data);
+
+		wp_add_inline_style( 'tutor-admin', $this->load_color_palette() );
 	}
 
 	/**
@@ -197,6 +199,14 @@ class Assets{
 			wp_localize_script('tutor-main', '_tutorobject', $localize_data);
 		}
 
+		wp_add_inline_style( 'tutor-frontend', $this->load_color_palette() );
+
+		// Load date picker for announcement at frontend
+		wp_enqueue_script('jquery-ui-datepicker');
+	}
+
+	private function load_color_palette() {
+
 		/**
 		 * Default Color
 		 */
@@ -244,12 +254,8 @@ class Assets{
 		}
 
 		$tutor_css .= "}";
-		wp_add_inline_style( 'tutor-frontend', $tutor_css );
-		//END: Default Color
 
-
-		// Load date picker for announcement at frontend
-		wp_enqueue_script('jquery-ui-datepicker');
+		return $tutor_css;
 	}
 
 	/**
