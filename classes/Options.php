@@ -244,6 +244,12 @@ class Options {
                                     'strict'    =>  __('Strict Mode', 'tutor'),
                                 ),
                                 'desc'          => __('Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor'),
+							),
+                            'course_retake_feature' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Course Retake', 'tutor'),
+								'label_title'   => __('Enable', 'tutor'),
+								'desc' => __('Enabling this feature will allow students to reset course progress and start over.', 'tutor'),
 							)
 						),
 					),

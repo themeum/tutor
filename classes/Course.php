@@ -123,6 +123,12 @@ class Course extends Tutor_Base {
 		 * @since v1.9.0
 		 */
 		add_filter('tutor_course_restrict_new_entry', array($this, 'restrict_new_student_entry'));
+
+		/**
+		 * Reset course progress on retake
+		 * @since v1.9.5
+		 */
+		add_action( 'wp_ajax_tutor_reset_course_progress', array($this, 'tutor_reset_course_progress') );
 	}
 
 	public function restrict_new_student_entry($content) {
@@ -1313,4 +1319,17 @@ class Course extends Tutor_Base {
             tutils()->cancel_course_enrol($course_id, $user_id);
         }
     }
+
+	public function tutor_reset_course_progress() {
+		tutils()->checking_nonce();
+		$course_id = tutor_utils()->array_get('course_id', $_POST);
+
+		if(!$course_id || !is_numeric($course_id) || !tutor_utils()->is_enrolled( $course_id )) {
+			wp_send_json_error(array('message' => __('Invalid Course ID or Access Denied.', 'tutor')));
+			return;
+		}
+
+		tutor_utils()->delete_course_progress($course_id);
+		wp_send_json_success();
+	}
 }

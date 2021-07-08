@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.4 - July 06, 2021 =
+= 1.9.4 - July 08, 2021 =
 
 New: Zoom added to the Frontend dashboard
 New: Field to add Course Tags in Frontend course builder
