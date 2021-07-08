@@ -208,9 +208,9 @@ jQuery(document).ready(function($){
         var $form = $(this);
         var data = $form.serializeObject();
         var $btn = $form.find('button[type="submit"]');
-
+        
         $.ajax({
-            url: ajaxurl,
+            url: window._tutorobject.ajaxurl,
             type: 'POST',
             data: data,
             beforeSend: function () {
@@ -1560,8 +1560,12 @@ jQuery(document).ready(function($){
 
       $(".tutor-dropdown").click(function(e){
         e.stopPropagation();
+        if ( $('.tutor-dropdown').hasClass('show') ) {
+            $('.tutor-dropdown').removeClass('show')
+        }
         $(this).addClass('show');
       });
+
     //announcement end
 
 
