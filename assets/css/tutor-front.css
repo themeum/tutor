@@ -3082,11 +3082,7 @@ End Alert box css
   cursor: pointer;
 }
 
-.single_add_to_cart_button,
-a.tutor-button,
-.tutor-button,
-a.tutor-btn,
-.tutor-btn {
+.single_add_to_cart_button, .tutor-button, .tutor-btn {
   color: #fff;
   border: 1px solid var(--tutor-primary-button-color);
   background-color: var(--tutor-primary-button-color);
@@ -3106,73 +3102,17 @@ a.tutor-btn,
   -webkit-transition: 300ms;
   transition: 300ms;
   overflow: hidden;
+  white-space: nowrap;
+  text-decoration: none;
   vertical-align: top;
+  box-shadow: none;
+  -o-box-shadow: none;
+  -ms-box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
 }
 
-.single_add_to_cart_button i,
-a.tutor-button i,
-.tutor-button i,
-a.tutor-btn i,
-.tutor-btn i {
-  line-height: 19px;
-  margin-right: 7px;
-  font-size: 16px;
-}
-
-.single_add_to_cart_button.btn-sm,
-a.tutor-button.btn-sm,
-.tutor-button.btn-sm,
-a.tutor-btn.btn-sm,
-.tutor-btn.btn-sm {
-  padding: 9px 14px;
-  line-height: 19px;
-}
-
-a.tutor-button.bordered-button,
-.tutor-button.bordered-button,
-a.tutor-btn.bordered-btn,
-.tutor-btn.bordered-btn {
-  color: var(--tutor-primary-button-color);
-  border: 1px solid var(--tutor-primary-button-color);
-  background-color: transparent !important;
-}
-
-a.tutor-button.default-btn,
-.tutor-button.default-btn,
-a.tutor-btn.default-btn,
-.tutor-btn.default-btn {
-  color: #393c40;
-  border: 1px solid #b8babe;
-  background: var(--tutor-primary-button-color);
-}
-
-a.tutor-button.default-btn i,
-.tutor-button.default-btn i,
-a.tutor-btn.default-btn i,
-.tutor-btn.default-btn i {
-  color: #fff;
-}
-
-a.tutor-button.default-btn:hover,
-.tutor-button.default-btn:hover,
-a.tutor-btn.default-btn:hover,
-.tutor-btn.default-btn:hover {
-  background-color: var(--tutor-primary-button-color);
-  border-color: var(--tutor-primary-color);
-  color: #fff;
-}
-
-a.tutor-button.default-btn:hover i,
-.tutor-button.default-btn:hover i,
-a.tutor-btn.default-btn:hover i,
-.tutor-btn.default-btn:hover i {
-  color: #fff;
-}
-
-a.tutor-button:hover,
-.tutor-button:hover,
-a.tutor-btn:hover,
-.tutor-btn:hover {
+.single_add_to_cart_button:hover, .tutor-button:hover, .tutor-btn:hover {
   background-color: var(--tutor-primary-button-color);
   border-color: var(--tutor-primary-button-color);
   color: #fff;
@@ -3180,92 +3120,176 @@ a.tutor-btn:hover,
           filter: brightness(0.9);
 }
 
-a.tutor-button.bordered-button:hover,
-.tutor-button.bordered-button:hover,
-a.tutor-btn.bordered-btn:hover,
-.tutor-btn.bordered-btn:hover {
-  border: 1px solid var(--tutor-primary-button-color);
-  background-color: var(--tutor-primary-button-color) !important;
-  color: #fff !important;
+.single_add_to_cart_button:disabled, .single_add_to_cart_button[disabled], .single_add_to_cart_button:disabled:hover, .single_add_to_cart_button[disabled]:hover, .tutor-button:disabled, .tutor-button[disabled], .tutor-button:disabled:hover, .tutor-button[disabled]:hover, .tutor-btn:disabled, .tutor-btn[disabled], .tutor-btn:disabled:hover, .tutor-btn[disabled]:hover {
+  border: 0px !important;
+  background-color: #DCDCE1 !important;
+  color: #737787 !important;
+  cursor: default !important;
 }
 
-a.tutor-button.button-light,
-.tutor-button.button-light {
-  color: #b1b8c9;
-  background-color: #dae4e6;
-  border: 1px solid #dae4e6;
+.single_add_to_cart_button i, .tutor-button i, .tutor-btn i {
+  line-height: 19px;
+  margin-right: 7px;
+  font-size: 16px;
 }
 
-a.tutor-button.button-light:hover,
-.tutor-button.button-light:hover {
-  color: #939bae;
-  background-color: #e8eff1;
-  border: 1px solid #e8eff1;
+.single_add_to_cart_button span, .tutor-button span, .tutor-btn span {
+  font-size: 12px;
+  display: block;
 }
 
-.tutor-button.tutor-danger {
+.single_add_to_cart_button.btn-sm, .tutor-button.btn-sm, .tutor-btn.btn-sm {
+  padding: 9px 14px;
+  line-height: 19px;
+}
+
+.single_add_to_cart_button.tutor-button-small, .tutor-button.tutor-button-small, .tutor-btn.tutor-button-small {
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: 300;
+  border: none;
+}
+
+.single_add_to_cart_button.tutor-button-small i, .tutor-button.tutor-button-small i, .tutor-btn.tutor-button-small i {
+  font-size: 16px;
+}
+
+.single_add_to_cart_button.default-btn, .tutor-button.default-btn, .tutor-btn.default-btn {
+  color: #393c40;
+  border: 1px solid #b8babe;
+  background: var(--tutor-primary-button-color);
+}
+
+.single_add_to_cart_button.default-btn i, .tutor-button.default-btn i, .tutor-btn.default-btn i {
+  color: #fff;
+}
+
+.single_add_to_cart_button.default-btn:hover, .tutor-button.default-btn:hover, .tutor-btn.default-btn:hover {
+  background-color: var(--tutor-primary-button-color);
+  border-color: var(--tutor-primary-color);
+  color: #fff;
+}
+
+.single_add_to_cart_button.default-btn:hover i, .tutor-button.default-btn:hover i, .tutor-btn.default-btn:hover i {
+  color: #fff;
+}
+
+.single_add_to_cart_button.bordered-button, .single_add_to_cart_button.bordered-btn, .tutor-button.bordered-button, .tutor-button.bordered-btn, .tutor-btn.bordered-button, .tutor-btn.bordered-btn {
+  color: var(--tutor-primary-color);
+  border: 1px solid var(--tutor-primary-color);
+  background-color: transparent;
+}
+
+.single_add_to_cart_button.bordered-button:hover, .single_add_to_cart_button.bordered-btn:hover, .tutor-button.bordered-button:hover, .tutor-button.bordered-btn:hover, .tutor-btn.bordered-button:hover, .tutor-btn.bordered-btn:hover {
+  background-color: var(--tutor-primary-hover-color);
+  border-color: var(--tutor-primary-hover-color);
+  color: #fff;
+}
+
+.single_add_to_cart_button.tutor-button-primary, .tutor-button.tutor-button-primary, .tutor-btn.tutor-button-primary {
+  background-color: var(--tutor-primary-color);
+  color: #ffffff;
+  display: inline-block;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 300;
+  border: none;
+  cursor: pointer;
+  box-shadow: none;
+  -o-box-shadow: none;
+  -ms-box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.single_add_to_cart_button.tutor-button-primary:hover, .tutor-button.tutor-button-primary:hover, .tutor-btn.tutor-button-primary:hover {
+  background-color: #2446a6;
+}
+
+.single_add_to_cart_button.tutor-button-secondary, .tutor-button.tutor-button-secondary, .tutor-btn.tutor-button-secondary {
+  background-color: white;
+  color: var(--tutor-light-color);
+  border: 1px solid var(--tutor-light-color);
+}
+
+.single_add_to_cart_button.tutor-button-block, .tutor-button.tutor-button-block, .tutor-btn.tutor-button-block {
+  width: 100%;
+  text-align: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.single_add_to_cart_button.tutor-danger, .tutor-button.tutor-danger, .tutor-btn.tutor-danger {
   background-color: var(--tutor-danger-button-color);
   border-color: #e53935;
 }
 
-.tutor-button.tutor-danger:hover {
+.single_add_to_cart_button.tutor-danger:hover, .tutor-button.tutor-danger:hover, .tutor-btn.tutor-danger:hover {
   background-color: var(--tutor-danger-button-color);
   border-color: var(--tutor-danger-button-color);
   -webkit-filter: brightness(0.9);
           filter: brightness(0.9);
 }
 
-.tutor-button.tutor-success {
+.single_add_to_cart_button.tutor-success, .tutor-button.tutor-success, .tutor-btn.tutor-success {
   background: var(--tutor-success-button-color);
   border-color: var(--tutor-success-button-color);
 }
 
-.tutor-button.tutor-success:hover {
+.single_add_to_cart_button.tutor-success:hover, .tutor-button.tutor-success:hover, .tutor-btn.tutor-success:hover {
   background: var(--tutor-success-button-color);
   border-color: var(--tutor-success-button-color);
   -webkit-filter: brightness(0.9);
           filter: brightness(0.9);
 }
 
-.tutor-button.tutor-warning {
+.single_add_to_cart_button.tutor-warning, .tutor-button.tutor-warning, .tutor-btn.tutor-warning {
   background: var(--tutor-warning-button-color);
   border-color: var(--tutor-warning-button-color);
 }
 
-.tutor-button.tutor-warning:hover {
+.single_add_to_cart_button.tutor-warning:hover, .tutor-button.tutor-warning:hover, .tutor-btn.tutor-warning:hover {
   background: var(--tutor-warning-button-color);
   border-color: var(--tutor-warning-button-color);
   -webkit-filter: brightness(0.9);
           filter: brightness(0.9);
+}
+
+.single_add_to_cart_button.button-warning, .tutor-button.button-warning, .tutor-btn.button-warning {
+  background-color: #ffb36d;
+  color: #ffffff;
+}
+
+.single_add_to_cart_button.button-light, .tutor-button.button-light, .tutor-btn.button-light {
+  color: #b1b8c9;
+  background-color: #dae4e6;
+  border: 1px solid #dae4e6;
+}
+
+.single_add_to_cart_button.button-light:hover, .tutor-button.button-light:hover, .tutor-btn.button-light:hover {
+  color: #939bae;
+  background-color: #e8eff1;
+  border: 1px solid #e8eff1;
+}
+
+.single_add_to_cart_button .dashicons, .tutor-button .dashicons, .tutor-btn .dashicons {
+  border: 0;
+  line-height: inherit;
+  box-shadow: none !important;
+  -o-box-shadow: none !important;
+  -ms-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
 }
 
 .course-enrolled-nav-wrap {
   border-bottom: 1px solid #dedfe0;
   margin-bottom: 45px;
-}
-
-.tutor-button:disabled,
-.tutor-button[disabled],
-.tutor-button:disabled:hover,
-.tutor-button[disabled]:hover {
-  display: block;
-  border: 0px;
-  background-color: #DCDCE1;
-  color: #737787;
-  cursor: default;
-}
-
-.tutor-button span {
-  font-size: 12px;
-  display: block;
-}
-
-.tutor-button-block {
-  width: 100%;
-  text-align: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
 }
 
 .tutor-wrap {
@@ -3897,9 +3921,6 @@ Instructor
 
 .tutor-option-field select,
 .tutor-form-group select {
-  /*-webkit-appearance: none;*/
-  /*-moz-appearance: none;*/
-  /*appearance: none;*/
   padding: 2px 5px;
   height: 50px;
 }
@@ -3908,7 +3929,6 @@ Instructor
   text-align: right;
 }
 
-/*option field*/
 .tutor-option-field p.desc {
   margin: -10px 0 20px;
   font-size: 13px;
@@ -6838,7 +6858,6 @@ table.course-single-gradebooks a {
 }
 
 .tutor-dashboard-header .tutor-btn.bordered-btn {
-  background-color: transparent;
   text-transform: uppercase;
   font-weight: 400;
   border-radius: 2px;

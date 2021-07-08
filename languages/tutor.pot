@@ -3409,7 +3409,7 @@ msgstr ""
 msgid "Forgot Password?"
 msgstr ""
 
-#: templates/loop/course-continue.php:18
+#: templates/loop/course-continue.php:18, templates/single/course/course-enrolled-box.php:50
 msgid "Continue Course"
 msgstr ""
 
@@ -4755,11 +4755,15 @@ msgstr ""
 msgid "What Will I Learn?"
 msgstr ""
 
-#: templates/single/course/course-enrolled-box.php:42
+#: templates/single/course/course-enrolled-box.php:48
+msgid "Retake This Course"
+msgstr ""
+
+#: templates/single/course/course-enrolled-box.php:46
 msgid "Start Course"
 msgstr ""
 
-#: templates/single/course/course-enrolled-box.php:63
+#: templates/single/course/course-enrolled-box.php:73
 msgid "You have been enrolled on %s."
 msgstr ""
 
@@ -5334,18 +5338,34 @@ msgstr ""
 msgid "Assignment Update Failed"
 msgstr ""
 
-#: assets/js/tutor.js:177
+#: assets/js/tutor-front.js:2235
+msgid "Override Previous Progress"
+msgstr ""
+
+#: assets/js/tutor-front.js:2236
+msgid "Before continue, please decide whether to keep progress or reset."
+msgstr ""
+
+#: assets/js/tutor-front.js:2239
+msgid "Reset Data"
+msgstr ""
+
+#: assets/js/tutor-front.js:2246
+msgid "Keep Data"
+msgstr ""
+
+#: assets/js/tutor.js:222
 msgid "Success"
 msgstr ""
 
-#: assets/js/tutor.js:178
+#: assets/js/tutor.js:223
 msgid "Update Error"
 msgstr ""
 
-#: assets/js/tutor.js:178
+#: assets/js/tutor.js:223
 msgid "Meeting Update Failed"
 msgstr ""
 
-#: assets/js/tutor.js:555
+#: assets/js/tutor.js:600
 msgid "Quiz Update Failed"
 msgstr ""

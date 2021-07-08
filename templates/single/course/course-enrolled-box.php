@@ -40,7 +40,7 @@ global $wp_query;
             if ( $lesson_url ) { 
                 $button_class = 'tutor-button tutor-success' . ($completed_percent >= 100 ? ' tutor-course-retake-button' : '');
                 ?>
-                <a href="#" data-href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
+                <a href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
                     <?php
                         if($completed_percent <= 0){
                             _e( 'Start Course', 'tutor' );
