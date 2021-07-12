@@ -89,8 +89,6 @@
   }
   
   .ui-widget-header {
-	border: 1px solid #aaaaaa;
-	background: #cccccc;
 	color: #222222;
 	font-weight: bold;
   }
@@ -3397,8 +3395,8 @@
 	border: 1px solid #eeeeee;
 	display: none;
 	margin-top: 4px;
-	padding: 5px;
-	width: 180px;
+	padding:10px;
+	width: 260px;
   }
   
   .ui-datepicker a,
