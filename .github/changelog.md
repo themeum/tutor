@@ -5,7 +5,6 @@
 * New: Zoom added to the Frontend dashboard
 * New: Field to add Course Tags in Frontend course builder
 * Update: Design update in Zoom backend dashboard
-* Fix: Logical issue in Paid Membership pro integration addon
 * Fix: Lesson video duration were not fetched for autofill URL
 * Fix: Deprecated warnings in PHP 8
 
