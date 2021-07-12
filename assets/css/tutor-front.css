@@ -7898,6 +7898,10 @@ table.course-single-gradebooks a {
   content: "\e98b";
 }
 
+.tutor-dashboard-menu-zoom a:before {
+  content: "\e9b1";
+}
+
 .tutor-dashboard-content {
   padding-top: 30px;
 }
@@ -8222,8 +8226,8 @@ UI DatePicker
   border: 1px solid #eeeeee;
   display: none;
   margin-top: 4px;
-  padding: 5px;
-  width: 180px;
+  padding: 10px;
+  width: 260px;
 }
 
 .ui-datepicker a,
