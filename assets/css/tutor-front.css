@@ -10656,6 +10656,10 @@ body.has-tutor-frontend-course-builder > span.select2-container.select2-containe
   margin-top: 32px !important;
 }
 
+body.has-tutor-frontend-course-builder .select2-search__field {
+  min-width: 1em !important;
+}
+
 @media (min-width: 992px) {
   .tutor-option-tooltip.tutor-option-field {
     position: relative;

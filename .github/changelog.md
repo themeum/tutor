@@ -1,9 +1,10 @@
 # TutorLMS Changelog
 
-### 1.9.4 - July 06, 2021
+### 1.9.4 - July 12, 2021
 
 * New: Zoom added to the Frontend dashboard
 * New: Field to add Course Tags in Frontend course builder
+* Update: Design update in Zoom backend dashboard
 * Fix: Lesson video duration were not fetched for autofill URL
 * Fix: Deprecated warnings in PHP 8
 
