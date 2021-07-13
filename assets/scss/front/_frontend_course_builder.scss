@@ -356,4 +356,8 @@ body.has-tutor-frontend-course-builder{
 	&>span.select2-container.select2-container--open {
 		margin-top: 32px !important;
 	}
+
+	.select2-search__field {
+		min-width: 1em !important;
+	}
 }
