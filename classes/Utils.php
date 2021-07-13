@@ -247,11 +247,12 @@ class Utils {
 	 *
 	 * @since v.1.3.6
 	 */
-	public function has_pmpro() {
+	public function has_pmpro($check_monetization=false) {
 		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
 		$depends           = array( 'paid-memberships-pro/paid-memberships-pro.php' );
 		$has_pmpro         = count( array_intersect( $depends, $activated_plugins ) ) == count( $depends );
-		return $has_pmpro;
+
+		return $has_pmpro && (!$check_monetization || get_tutor_option('monetize_by') == 'pmpro' );
 	}
 
 	public function has_wcs(){
