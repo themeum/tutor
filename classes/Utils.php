@@ -1116,7 +1116,17 @@ class Utils {
 			$this->delete_quiz_attempt($attempt_ids);
 		}
 
+		// Delete Course completion row
+		$del_where = array(
+			'comment_agent' => 'TutorLMSPlugin', 
+			'user_id' => $user_id 
+		);
+		$wpdb->delete($wpdb->comments, $del_where);
+
+		// Delete other addon-wise stuffs by hook, specially assignment.
 		do_action( 'delete_tutor_course_progress', $course_id, $user_id );
+
+		// Respond finally
 		wp_send_json_success();
 	}
 
@@ -1626,10 +1636,7 @@ class Utils {
 	 * @updated v.1.4.9
 	 */
 	public function is_completed_course( $course_id = 0, $user_id = 0 ) {
-		if ( ! is_user_logged_in() ) {
-			return apply_filters( 'is_completed_course', false, $course_id, $user_id );
-		}
-
+		
 		global $wpdb;
 		$course_id = $this->get_post_id($course_id);
 		$user_id   = $this->get_user_id($user_id);
