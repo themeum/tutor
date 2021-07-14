@@ -4557,7 +4557,14 @@ class Utils {
 		$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
 	}
 
-	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_term = '', $user_id = null ) {
+	/**
+	 * Sorting params added on quiz attempt 
+	 * 
+	 * SQL query updated
+	 * 
+	 * @since 1.9.5
+	 */
+	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter, $course_filter, $date_filter, $order_filter, $user_id = null ) {
 		global $wpdb;
 
 		$course_ids = array_map( function( $id ) {
@@ -4577,9 +4584,10 @@ class Utils {
 							ON quiz_attempts.quiz_id = quiz.ID 
 					INNER JOIN {$wpdb->users}
 							ON quiz_attempts.user_id = {$wpdb->users}.ID 
+
 			WHERE 	quiz_attempts.course_id IN (" . $course_ids_in . ")
 					AND attempt_status != %s
-					AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
+					AND ( user_email LIKE %s OR display_name LIKE %s OR quiz.post_title LIKE %s )
 					{$course_filter}
 					{$date_filter}
 					" . ($user_id ? ' AND user_id=\''.esc_sql( $user_id ).'\''  : '') . "
