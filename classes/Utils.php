@@ -1094,6 +1094,34 @@ class Utils {
 
 	/**
 	 * @param int $course_id
+	 *
+	 * @return array|bool|null|object
+	 *
+	 * Delete course progress
+	 *
+	 * @since v.1.9.5
+	 */
+	public function delete_course_progress( $course_id = 0, $user_id = 0 ) {
+		global $wpdb;
+		$course_id = $this->get_post_id( $course_id );
+		$user_id   = $this->get_user_id( $user_id );
+
+		// Delete Quiz submissions
+		$attempts = $this->get_quiz_attempts_by_course_ids( 0, 999999999, array( $course_id ), '', $user_id);
+		if( is_array($attempts) ) {
+			$attempt_ids = array_map(function($attempt) {
+				return is_object($attempt) ? $attempt->attempt_id : 0;
+			}, $attempts);
+
+			$this->delete_quiz_attempt($attempt_ids);
+		}
+
+		do_action( 'delete_tutor_course_progress', $course_id, $user_id );
+		wp_send_json_success();
+	}
+
+	/**
+	 * @param int $course_id
 	 * @param int $user_id
 	 *
 	 * @return array|bool|null|object|void
@@ -4513,13 +4541,23 @@ class Utils {
 	}
 
 	/**
-	 * Sorting params added on quiz attempt 
+	 * Delete quizattempt for user
 	 * 
-	 * SQL query updated
-	 * 
-	 * @since 1.9.5
+	 * @since v1.9.5
 	 */
-	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter, $course_filter, $date_filter, $order_filter ) {
+	public function delete_quiz_attempt($attempt_ids) {
+		global $wpdb;
+
+		// Singlular to array
+		!is_array($attempt_ids) ? $attempt_ids = array($attempt_ids) : 0;
+		$attempt_ids = implode( ',',  $attempt_ids);
+
+		//Deleting attempt (comment), child attempt and attempt meta (comment meta)
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
+	}
+
+	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_term = '', $user_id = null ) {
 		global $wpdb;
 
 		$course_ids = array_map( function( $id ) {
@@ -4544,6 +4582,7 @@ class Utils {
 					AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
 					{$course_filter}
 					{$date_filter}
+					" . ($user_id ? ' AND user_id=\''.esc_sql( $user_id ).'\''  : '') . "
 			ORDER 	BY quiz_attempts.attempt_id $order_filter
 			LIMIT 	%d, %d;
 			",

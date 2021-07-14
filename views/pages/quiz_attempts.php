@@ -26,7 +26,7 @@ $quiz_attempt->prepare_items( $search_filter, $course_filter, $date_filter, $ord
 
 <div class="wrap">
 	<div class="quiz-attempts-title">
-		<?php _e('Quiz Attempts', 'tutor'); ?>
+		<h2><?php _e('Quiz Attempts', 'tutor'); ?></h2>
 	</div>
 
 	<form id="quiz_attempts-filter" method="get">

@@ -11,6 +11,51 @@ function tutor_get_nonce_data(send_key_value) {
     return {[nonce_key]:nonce_value};
 }
 
+window.tutor_component = function($, icon, padding) {
+
+    var $this = this;
+    var element; 
+
+    this.popup_wrapper = function(contents) {
+        return '<div class="tutor-component-popup-container">\
+            <div class="tutor-component-popup-'+padding+'">\
+                <img class="tutor-pop-icon" src="'+window._tutorobject.tutor_url+'assets/images/'+icon+'.svg"/>\
+                ' + contents + '\
+                <div class="tutor-component-button-container"></div>\
+            </div>\
+        </div>';
+    }
+
+    this.close = function() {
+        element.fadeOut(function() {
+            element.remove();
+        });
+    }
+
+    this.popup = function(data) {
+        
+        var title = data.title ? '<h3>'+data.title+'</h3>' : '';
+        var description = data.description ? '<p>'+data.description+'</p>' : '';
+
+        var buttons = Object.keys(data.buttons || {}).map(function(key) {
+            var button = data.buttons[key];
+
+            return $('<button class="tutor-button tutor-button-'+button.class+'">'+button.title+'</button>').click(button.callback);
+        });
+
+        element = $($this.popup_wrapper( title + description ), padding);
+
+        // Append action button
+        for(var i=0; i<buttons.length; i++) {
+            element.find('.tutor-component-button-container').append(buttons[i]);
+        }
+        
+        $('body').append(element);
+    }
+
+    return {popup: this.popup};
+}
+
 jQuery(document).ready(function($){
     'use strict';
 
@@ -131,7 +176,7 @@ jQuery(document).ready(function($){
         form_data.action = 'tutor_add_course_topic';
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : form_data,
             beforeSend: function () {
@@ -259,7 +304,7 @@ jQuery(document).ready(function($){
 
         var data = {topic_title: topic_title, topic_summery : topic_summery, topic_id : topics_id, action: 'tutor_update_topic'};
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : data,
             beforeSend: function () {
@@ -289,7 +334,7 @@ jQuery(document).ready(function($){
         var course_id = $('#post_ID').val();
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {lesson_id : lesson_id, topic_id : topic_id, course_id : course_id, action: 'tutor_load_edit_lesson_modal'},
             beforeSend: function () {
@@ -372,7 +417,7 @@ jQuery(document).ready(function($){
         var lesson_id = $that.attr('data-lesson-id');
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {lesson_id : lesson_id, action: 'tutor_delete_lesson_by_id'},
             beforeSend: function () {
@@ -449,7 +494,7 @@ jQuery(document).ready(function($){
 
             var quiz_id = $('#tutor_quiz_builder_quiz_id').val();
             $.ajax({
-                url : ajaxurl,
+                url : window._tutorobject.ajaxurl,
                 type : 'POST',
                 data : {quiz_title:quiz_title, quiz_description: quiz_description, quiz_id : quiz_id, topic_id : topic_id, action: 'tutor_quiz_builder_quiz_update'},
                 beforeSend: function () {
@@ -470,7 +515,7 @@ jQuery(document).ready(function($){
         }
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {quiz_title:quiz_title, quiz_description: quiz_description, course_id : course_id, topic_id : topic_id, action: 'tutor_create_quiz_and_load_modal'},
             beforeSend: function () {
@@ -505,7 +550,7 @@ jQuery(document).ready(function($){
         var course_id = $('#post_ID').val();
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {quiz_id : quiz_id, topic_id : topic_id, course_id : course_id, action: 'tutor_load_edit_quiz_modal'},
             beforeSend: function () {
@@ -543,7 +588,7 @@ jQuery(document).ready(function($){
         $formInput.action = 'tutor_quiz_modal_update_settings';
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : $formInput,
             beforeSend: function () {
@@ -575,7 +620,7 @@ jQuery(document).ready(function($){
         $formInput.action = 'tutor_quiz_modal_update_question';
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : $formInput,
             beforeSend: function () {
@@ -622,7 +667,7 @@ jQuery(document).ready(function($){
             questions[index] = question_id;
         });
 
-        $.ajax({url : ajaxurl, type : 'POST',
+        $.ajax({url : window._tutorobject.ajaxurl, type : 'POST',
             data : {sorted_question_ids : questions, action: 'tutor_quiz_question_sorting'},
         });
     }
@@ -647,7 +692,7 @@ jQuery(document).ready(function($){
         var $that = $(this);
         var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').attr('data-add-quiz-under');
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {quiz_for_post_id : quiz_for_post_id, action: 'tutor_load_quiz_builder_modal'},
             beforeSend: function () {
@@ -723,7 +768,7 @@ jQuery(document).ready(function($){
         }
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : params,
             beforeSend: function () {
@@ -750,7 +795,7 @@ jQuery(document).ready(function($){
         var question_id = $that.attr('data-question-id');
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {question_id : question_id, action: 'tutor_quiz_builder_question_delete'},
             beforeSend: function () {
@@ -776,7 +821,7 @@ jQuery(document).ready(function($){
         $formInput.action = 'tutor_quiz_add_question_answers';
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : $formInput,
             beforeSend: function () {
@@ -803,7 +848,7 @@ jQuery(document).ready(function($){
         var answer_id = $that.closest('.tutor-quiz-answer-wrap').attr('data-answer-id');
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {answer_id : answer_id, action : 'tutor_quiz_edit_question_answer'},
             beforeSend: function () {
@@ -833,7 +878,7 @@ jQuery(document).ready(function($){
         $formInput.action = 'tutor_save_quiz_answer_options';
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : $formInput,
             beforeSend: function () {
@@ -862,7 +907,7 @@ jQuery(document).ready(function($){
         $formInput.action = 'tutor_update_quiz_answer_options';
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : $formInput,
             beforeSend: function () {
@@ -889,7 +934,7 @@ jQuery(document).ready(function($){
         }
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {answer_id:answer_id, inputValue : inputValue, action : 'tutor_mark_answer_as_correct'},
         });
@@ -904,7 +949,7 @@ jQuery(document).ready(function($){
         var question_type = $('.tutor_select_value_holder').val();
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {question_id : question_id, question_type : question_type, action: 'tutor_quiz_builder_get_answers_by_question'},
             beforeSend: function () {
@@ -937,7 +982,7 @@ jQuery(document).ready(function($){
         var answer_id = $that.attr('data-answer-id');
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {answer_id : answer_id, action: 'tutor_quiz_builder_delete_answer'},
             beforeSend: function () {
@@ -963,7 +1008,7 @@ jQuery(document).ready(function($){
         var quiz_id = $that.attr('data-quiz-id');
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {quiz_id : quiz_id, action: 'tutor_delete_quiz_by_id'},
             beforeSend: function () {
@@ -998,7 +1043,7 @@ jQuery(document).ready(function($){
             answers[index] = answer_id;
         });
 
-        $.ajax({url : ajaxurl, type : 'POST',
+        $.ajax({url : window._tutorobject.ajaxurl, type : 'POST',
             data : {sorted_answer_ids : answers, action: 'tutor_quiz_answer_sorting'},
         });
     }
@@ -1135,7 +1180,7 @@ jQuery(document).ready(function($){
         var course_id = $('#post_ID').val();
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {course_id : course_id, action: 'tutor_load_instructors_modal'},
             beforeSend: function () {
@@ -1164,7 +1209,7 @@ jQuery(document).ready(function($){
             var course_id = $('#post_ID').val();
 
             $.ajax({
-                url : ajaxurl,
+                url : window._tutorobject.ajaxurl,
                 type : 'POST',
                 data : {course_id : course_id, search_terms : search_terms, action: 'tutor_load_instructors_modal'},
                 beforeSend: function () {
@@ -1195,7 +1240,7 @@ jQuery(document).ready(function($){
         data.action = 'tutor_add_instructors_to_course';
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : data,
             beforeSend: function () {
@@ -1221,7 +1266,7 @@ jQuery(document).ready(function($){
         var instructor_id = $that.closest('.added-instructor-item').attr('data-instructor-id');
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {course_id:course_id, instructor_id:instructor_id, action : 'detach_instructor_from_course'},
             success: function (data) {
