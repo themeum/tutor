@@ -1,7 +1,210 @@
-/**
-@package: Tutor LMS
-@author: themeum
- */
+/* Common libraries. This file will be loaded in both of admin and frontend main scss file once */
+/* Only reusable function, or code allowed here. No direct css please. */
+.single_add_to_cart_button, .tutor-button, .tutor-btn {
+  color: #fff;
+  border: 1px solid var(--tutor-primary-button-color);
+  background-color: var(--tutor-primary-button-color);
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 12px 20px;
+  border-radius: 4px;
+  text-transform: capitalize;
+  line-height: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+  overflow: hidden;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: top;
+  box-shadow: none;
+  -o-box-shadow: none;
+  -ms-box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.single_add_to_cart_button:hover, .tutor-button:hover, .tutor-btn:hover {
+  background-color: var(--tutor-primary-button-color);
+  border-color: var(--tutor-primary-button-color);
+  color: #fff;
+  -webkit-filter: brightness(0.9);
+          filter: brightness(0.9);
+}
+
+.single_add_to_cart_button:disabled, .single_add_to_cart_button[disabled], .single_add_to_cart_button:disabled:hover, .single_add_to_cart_button[disabled]:hover, .tutor-button:disabled, .tutor-button[disabled], .tutor-button:disabled:hover, .tutor-button[disabled]:hover, .tutor-btn:disabled, .tutor-btn[disabled], .tutor-btn:disabled:hover, .tutor-btn[disabled]:hover {
+  border: 0px !important;
+  background-color: #DCDCE1 !important;
+  color: #737787 !important;
+  cursor: default !important;
+}
+
+.single_add_to_cart_button i, .tutor-button i, .tutor-btn i {
+  line-height: 19px;
+  margin-right: 7px;
+  font-size: 16px;
+}
+
+.single_add_to_cart_button span, .tutor-button span, .tutor-btn span {
+  font-size: 12px;
+  display: block;
+}
+
+.single_add_to_cart_button.btn-sm, .tutor-button.btn-sm, .tutor-btn.btn-sm {
+  padding: 9px 14px;
+  line-height: 19px;
+}
+
+.single_add_to_cart_button.tutor-button-small, .tutor-button.tutor-button-small, .tutor-btn.tutor-button-small {
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: 300;
+  border: none;
+}
+
+.single_add_to_cart_button.tutor-button-small i, .tutor-button.tutor-button-small i, .tutor-btn.tutor-button-small i {
+  font-size: 16px;
+}
+
+.single_add_to_cart_button.default-btn, .tutor-button.default-btn, .tutor-btn.default-btn {
+  color: #393c40;
+  border: 1px solid #b8babe;
+  background: var(--tutor-primary-button-color);
+}
+
+.single_add_to_cart_button.default-btn i, .tutor-button.default-btn i, .tutor-btn.default-btn i {
+  color: #fff;
+}
+
+.single_add_to_cart_button.default-btn:hover, .tutor-button.default-btn:hover, .tutor-btn.default-btn:hover {
+  background-color: var(--tutor-primary-button-color);
+  border-color: var(--tutor-primary-color);
+  color: #fff;
+}
+
+.single_add_to_cart_button.default-btn:hover i, .tutor-button.default-btn:hover i, .tutor-btn.default-btn:hover i {
+  color: #fff;
+}
+
+.single_add_to_cart_button.bordered-button, .single_add_to_cart_button.bordered-btn, .tutor-button.bordered-button, .tutor-button.bordered-btn, .tutor-btn.bordered-button, .tutor-btn.bordered-btn {
+  color: var(--tutor-primary-color);
+  border: 1px solid var(--tutor-primary-color);
+  background-color: transparent;
+}
+
+.single_add_to_cart_button.bordered-button:hover, .single_add_to_cart_button.bordered-btn:hover, .tutor-button.bordered-button:hover, .tutor-button.bordered-btn:hover, .tutor-btn.bordered-button:hover, .tutor-btn.bordered-btn:hover {
+  background-color: var(--tutor-primary-hover-color);
+  border-color: var(--tutor-primary-hover-color);
+  color: #fff;
+}
+
+.single_add_to_cart_button.tutor-button-primary, .tutor-button.tutor-button-primary, .tutor-btn.tutor-button-primary {
+  background-color: var(--tutor-primary-color);
+  color: #ffffff;
+  display: inline-block;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 300;
+  border: none;
+  cursor: pointer;
+  box-shadow: none;
+  -o-box-shadow: none;
+  -ms-box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.single_add_to_cart_button.tutor-button-primary:hover, .tutor-button.tutor-button-primary:hover, .tutor-btn.tutor-button-primary:hover {
+  background-color: #2446a6;
+}
+
+.single_add_to_cart_button.tutor-button-secondary, .tutor-button.tutor-button-secondary, .tutor-btn.tutor-button-secondary {
+  background-color: white;
+  color: var(--tutor-light-color);
+  border: 1px solid var(--tutor-light-color);
+}
+
+.single_add_to_cart_button.tutor-button-block, .tutor-button.tutor-button-block, .tutor-btn.tutor-button-block {
+  width: 100%;
+  text-align: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.single_add_to_cart_button.tutor-danger, .tutor-button.tutor-danger, .tutor-btn.tutor-danger {
+  background-color: var(--tutor-danger-button-color);
+  border-color: #e53935;
+}
+
+.single_add_to_cart_button.tutor-danger:hover, .tutor-button.tutor-danger:hover, .tutor-btn.tutor-danger:hover {
+  background-color: var(--tutor-danger-button-color);
+  border-color: var(--tutor-danger-button-color);
+  -webkit-filter: brightness(0.9);
+          filter: brightness(0.9);
+}
+
+.single_add_to_cart_button.tutor-success, .tutor-button.tutor-success, .tutor-btn.tutor-success {
+  background: var(--tutor-success-button-color);
+  border-color: var(--tutor-success-button-color);
+}
+
+.single_add_to_cart_button.tutor-success:hover, .tutor-button.tutor-success:hover, .tutor-btn.tutor-success:hover {
+  background: var(--tutor-success-button-color);
+  border-color: var(--tutor-success-button-color);
+  -webkit-filter: brightness(0.9);
+          filter: brightness(0.9);
+}
+
+.single_add_to_cart_button.tutor-warning, .tutor-button.tutor-warning, .tutor-btn.tutor-warning {
+  background: var(--tutor-warning-button-color);
+  border-color: var(--tutor-warning-button-color);
+}
+
+.single_add_to_cart_button.tutor-warning:hover, .tutor-button.tutor-warning:hover, .tutor-btn.tutor-warning:hover {
+  background: var(--tutor-warning-button-color);
+  border-color: var(--tutor-warning-button-color);
+  -webkit-filter: brightness(0.9);
+          filter: brightness(0.9);
+}
+
+.single_add_to_cart_button.button-warning, .tutor-button.button-warning, .tutor-btn.button-warning {
+  background-color: #ffb36d;
+  color: #ffffff;
+}
+
+.single_add_to_cart_button.button-light, .tutor-button.button-light, .tutor-btn.button-light {
+  color: #b1b8c9;
+  background-color: #dae4e6;
+  border: 1px solid #dae4e6;
+}
+
+.single_add_to_cart_button.button-light:hover, .tutor-button.button-light:hover, .tutor-btn.button-light:hover {
+  color: #939bae;
+  background-color: #e8eff1;
+  border: 1px solid #e8eff1;
+}
+
+.single_add_to_cart_button .dashicons, .tutor-button .dashicons, .tutor-btn .dashicons {
+  border: 0;
+  line-height: inherit;
+  box-shadow: none !important;
+  -o-box-shadow: none !important;
+  -ms-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
 :root {
   --tutor-primary-color: #1B52D8;
   --tutor-primary-hover-color: #1b52a9;
@@ -79,6 +282,331 @@
   top: 0;
 }
 
+/* Only reusable function, or code allowed here. No direct css please. */
+.tutor-toast-parent {
+  position: fixed;
+  right: 25px;
+  bottom: 50px;
+  right: 50px;
+  left: auto;
+  max-height: 400px;
+  width: 350px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: transparent;
+  z-index: 99999999;
+}
+
+.tutor-toast-parent:empty {
+  display: none;
+}
+
+.tutor-toast-parent > div {
+  background: white;
+  padding: 10px;
+  margin: 15px;
+  border-radius: 15px;
+  -webkit-box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
+          box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
+  border: 1px solid #E8E8E8;
+  background: white;
+  border: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -o-align-content: center;
+  -ms-align-content: center;
+  -moz-align-content: center;
+  -webkit-align-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+}
+
+.tutor-toast-parent > div > div {
+  padding: 8px;
+}
+
+.tutor-toast-parent > div > div:nth-child(1), .tutor-toast-parent > div > div:nth-child(3) {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.tutor-toast-parent > div > div:nth-child(2) {
+  -webkit-box-flex: 1;
+          flex: 1;
+  -o-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+}
+
+.tutor-toast-parent > div img {
+  width: 100%;
+  height: auto;
+}
+
+.tutor-toast-parent > div b {
+  font-weight: 600;
+  display: block;
+}
+
+.tutor-toast-parent > div span {
+  color: #333333;
+}
+
+.tutor-toast-parent > div i {
+  cursor: pointer;
+  font-size: 14px;
+}
+
+body.rtl .tutor-toast-parent {
+  right: auto;
+  left: 50px;
+}
+
+/* Only reusable function, or code allowed here. No direct css please. */
+html.tutor-component-popup-opened, body.tutor-component-popup-opened {
+  overflow: hidden !important;
+}
+
+.tutor-component-popup-container {
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 9999999999;
+  background: rgba(0, 0, 0, 0.589);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.tutor-component-popup-container > div {
+  display: inline-block;
+  max-height: 100%;
+  width: 100%;
+  max-width: 690px;
+  background: white;
+  overflow: auto;
+  border-radius: 15px;
+  position: relative;
+  padding: 0;
+}
+
+.tutor-component-popup-container > div.tutor-component-popup-40 {
+  padding: 40px;
+}
+
+.tutor-component-popup-container > div img.tutor-pop-icon {
+  display: block;
+  margin: 0 auto;
+}
+
+.tutor-component-popup-container > div h3 {
+  margin: 7px 0;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  text-align: center;
+  color: #212327;
+}
+
+.tutor-component-popup-container > div .tutor-component-button-container {
+  text-align: center;
+}
+
+.tutor-component-popup-container > div .tutor-component-button-container button {
+  margin: 0 5px;
+}
+
+.ui-datepicker {
+  display: none;
+  margin-top: 4px;
+  padding: 10px;
+  width: 260px;
+  background: #FFFFFF;
+  border: 1px solid #E3E5EB;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.12);
+          box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+}
+
+.ui-datepicker table th span {
+  color: #B4B7C0;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.ui-datepicker .ui-datepicker-title .ui-datepicker-month, .ui-datepicker .ui-datepicker-title .ui-datepicker-year {
+  font-size: 20px;
+  font-weight: 500;
+  color: #212327;
+}
+
+.ui-datepicker .ui-datepicker-calendar {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.ui-datepicker .ui-datepicker-calendar .ui-state-default {
+  border: none;
+  background: none;
+}
+
+.ui-datepicker .ui-datepicker-calendar .ui-state-default.ui-state-highlight {
+  border-radius: 100% !important;
+  background-color: #E9EDFB !important;
+  color: #41454F !important;
+  border: none !important;
+  padding: 5px;
+}
+
+.ui-datepicker .ui-datepicker-calendar td {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% !important;
+  cursor: pointer;
+  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+  transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+}
+
+.ui-datepicker .ui-datepicker-calendar td:hover {
+  border-radius: 100% !important;
+  background-color: #E9EDFB !important;
+  color: #41454F !important;
+  border: none !important;
+}
+
+.ui-datepicker .ui-datepicker-calendar td a {
+  text-decoration: none;
+}
+
+.ui-datepicker .ui-datepicker-calendar th, .ui-datepicker .ui-datepicker-calendar td {
+  text-align: center;
+  padding: 0;
+}
+
+.ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
+  background-color: #fff;
+  cursor: default;
+}
+
+.ui-datepicker .ui-datepicker-current-day {
+  border-radius: 100% !important;
+  background-color: #3E64DE !important;
+}
+
+.ui-datepicker .ui-datepicker-current-day, .ui-datepicker .ui-datepicker-current-day a {
+  color: #fff !important;
+}
+
+.ui-datepicker .ui-datepicker-prev.ui-corner-all, .ui-datepicker .ui-datepicker-next.ui-corner-all {
+  color: #3E64DE;
+}
+
+.ui-datepicker .ui_tpicker_hour_slider, .ui-datepicker .ui_tpicker_minute_slider {
+  border: 1px solid !important;
+}
+
+.ui-datepicker a, .ui-datepicker a:hover {
+  text-decoration: none;
+}
+
+.ui-datepicker a:hover, .ui-datepicker td:hover a {
+  color: #2a6496;
+  -webkit-transition: color 0.1s ease-in-out;
+  transition: color 0.1s ease-in-out;
+}
+
+.ui-datepicker .ui-datepicker-header {
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.ui-datepicker .ui-datepicker-header .ui-datepicker-title {
+  font-weight: 700;
+}
+
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
+  cursor: default;
+  font-family: "tutor";
+  -webkit-font-smoothing: antialiased;
+  font-style: normal;
+  font-weight: normal;
+  height: 20px;
+  line-height: 1;
+  margin-top: 2px;
+  width: 30px;
+}
+
+.ui-datepicker .ui-datepicker-prev {
+  float: left;
+  text-align: left;
+}
+
+.ui-datepicker .ui-datepicker-prev:before {
+  content: "\e921";
+}
+
+.ui-datepicker .ui-datepicker-next {
+  float: right;
+  text-align: right;
+}
+
+.ui-datepicker .ui-datepicker-next:before {
+  content: "\e903";
+}
+
+.ui-datepicker .ui-icon {
+  display: none;
+}
+
+/**
+@package: Tutor LMS
+@author: themeum
+ */
+/* Only reusable function, or code allowed here. No direct css please. */
 /*----------------------------------
 	Component containers
 ----------------------------------*/
@@ -660,211 +1188,6 @@ p.course-empty-content {
   }
   
   */
-.single_add_to_cart_button, .tutor-button, .tutor-btn {
-  color: #fff;
-  border: 1px solid var(--tutor-primary-button-color);
-  background-color: var(--tutor-primary-button-color);
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  padding: 12px 20px;
-  border-radius: 4px;
-  text-transform: capitalize;
-  line-height: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  -webkit-transition: 300ms;
-  transition: 300ms;
-  overflow: hidden;
-  white-space: nowrap;
-  text-decoration: none;
-  vertical-align: top;
-  box-shadow: none;
-  -o-box-shadow: none;
-  -ms-box-shadow: none;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-}
-
-.single_add_to_cart_button:hover, .tutor-button:hover, .tutor-btn:hover {
-  background-color: var(--tutor-primary-button-color);
-  border-color: var(--tutor-primary-button-color);
-  color: #fff;
-  -webkit-filter: brightness(0.9);
-          filter: brightness(0.9);
-}
-
-.single_add_to_cart_button:disabled, .single_add_to_cart_button[disabled], .single_add_to_cart_button:disabled:hover, .single_add_to_cart_button[disabled]:hover, .tutor-button:disabled, .tutor-button[disabled], .tutor-button:disabled:hover, .tutor-button[disabled]:hover, .tutor-btn:disabled, .tutor-btn[disabled], .tutor-btn:disabled:hover, .tutor-btn[disabled]:hover {
-  border: 0px !important;
-  background-color: #DCDCE1 !important;
-  color: #737787 !important;
-  cursor: default !important;
-}
-
-.single_add_to_cart_button i, .tutor-button i, .tutor-btn i {
-  line-height: 19px;
-  margin-right: 7px;
-  font-size: 16px;
-}
-
-.single_add_to_cart_button span, .tutor-button span, .tutor-btn span {
-  font-size: 12px;
-  display: block;
-}
-
-.single_add_to_cart_button.btn-sm, .tutor-button.btn-sm, .tutor-btn.btn-sm {
-  padding: 9px 14px;
-  line-height: 19px;
-}
-
-.single_add_to_cart_button.tutor-button-small, .tutor-button.tutor-button-small, .tutor-btn.tutor-button-small {
-  padding: 5px 10px;
-  font-size: 14px;
-  font-weight: 300;
-  border: none;
-}
-
-.single_add_to_cart_button.tutor-button-small i, .tutor-button.tutor-button-small i, .tutor-btn.tutor-button-small i {
-  font-size: 16px;
-}
-
-.single_add_to_cart_button.default-btn, .tutor-button.default-btn, .tutor-btn.default-btn {
-  color: #393c40;
-  border: 1px solid #b8babe;
-  background: var(--tutor-primary-button-color);
-}
-
-.single_add_to_cart_button.default-btn i, .tutor-button.default-btn i, .tutor-btn.default-btn i {
-  color: #fff;
-}
-
-.single_add_to_cart_button.default-btn:hover, .tutor-button.default-btn:hover, .tutor-btn.default-btn:hover {
-  background-color: var(--tutor-primary-button-color);
-  border-color: var(--tutor-primary-color);
-  color: #fff;
-}
-
-.single_add_to_cart_button.default-btn:hover i, .tutor-button.default-btn:hover i, .tutor-btn.default-btn:hover i {
-  color: #fff;
-}
-
-.single_add_to_cart_button.bordered-button, .single_add_to_cart_button.bordered-btn, .tutor-button.bordered-button, .tutor-button.bordered-btn, .tutor-btn.bordered-button, .tutor-btn.bordered-btn {
-  color: var(--tutor-primary-color);
-  border: 1px solid var(--tutor-primary-color);
-  background-color: transparent;
-}
-
-.single_add_to_cart_button.bordered-button:hover, .single_add_to_cart_button.bordered-btn:hover, .tutor-button.bordered-button:hover, .tutor-button.bordered-btn:hover, .tutor-btn.bordered-button:hover, .tutor-btn.bordered-btn:hover {
-  background-color: var(--tutor-primary-hover-color);
-  border-color: var(--tutor-primary-hover-color);
-  color: #fff;
-}
-
-.single_add_to_cart_button.tutor-button-primary, .tutor-button.tutor-button-primary, .tutor-btn.tutor-button-primary {
-  background-color: var(--tutor-primary-color);
-  color: #ffffff;
-  display: inline-block;
-  border-radius: 2px;
-  font-size: 14px;
-  font-weight: 300;
-  border: none;
-  cursor: pointer;
-  box-shadow: none;
-  -o-box-shadow: none;
-  -ms-box-shadow: none;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-}
-
-.single_add_to_cart_button.tutor-button-primary:hover, .tutor-button.tutor-button-primary:hover, .tutor-btn.tutor-button-primary:hover {
-  background-color: #2446a6;
-}
-
-.single_add_to_cart_button.tutor-button-secondary, .tutor-button.tutor-button-secondary, .tutor-btn.tutor-button-secondary {
-  background-color: white;
-  color: var(--tutor-light-color);
-  border: 1px solid var(--tutor-light-color);
-}
-
-.single_add_to_cart_button.tutor-button-block, .tutor-button.tutor-button-block, .tutor-btn.tutor-button-block {
-  width: 100%;
-  text-align: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -o-justify-content: center;
-  -ms-justify-content: center;
-  -moz-justify-content: center;
-  -webkit-justify-content: center;
-}
-
-.single_add_to_cart_button.tutor-danger, .tutor-button.tutor-danger, .tutor-btn.tutor-danger {
-  background-color: var(--tutor-danger-button-color);
-  border-color: #e53935;
-}
-
-.single_add_to_cart_button.tutor-danger:hover, .tutor-button.tutor-danger:hover, .tutor-btn.tutor-danger:hover {
-  background-color: var(--tutor-danger-button-color);
-  border-color: var(--tutor-danger-button-color);
-  -webkit-filter: brightness(0.9);
-          filter: brightness(0.9);
-}
-
-.single_add_to_cart_button.tutor-success, .tutor-button.tutor-success, .tutor-btn.tutor-success {
-  background: var(--tutor-success-button-color);
-  border-color: var(--tutor-success-button-color);
-}
-
-.single_add_to_cart_button.tutor-success:hover, .tutor-button.tutor-success:hover, .tutor-btn.tutor-success:hover {
-  background: var(--tutor-success-button-color);
-  border-color: var(--tutor-success-button-color);
-  -webkit-filter: brightness(0.9);
-          filter: brightness(0.9);
-}
-
-.single_add_to_cart_button.tutor-warning, .tutor-button.tutor-warning, .tutor-btn.tutor-warning {
-  background: var(--tutor-warning-button-color);
-  border-color: var(--tutor-warning-button-color);
-}
-
-.single_add_to_cart_button.tutor-warning:hover, .tutor-button.tutor-warning:hover, .tutor-btn.tutor-warning:hover {
-  background: var(--tutor-warning-button-color);
-  border-color: var(--tutor-warning-button-color);
-  -webkit-filter: brightness(0.9);
-          filter: brightness(0.9);
-}
-
-.single_add_to_cart_button.button-warning, .tutor-button.button-warning, .tutor-btn.button-warning {
-  background-color: #ffb36d;
-  color: #ffffff;
-}
-
-.single_add_to_cart_button.button-light, .tutor-button.button-light, .tutor-btn.button-light {
-  color: #b1b8c9;
-  background-color: #dae4e6;
-  border: 1px solid #dae4e6;
-}
-
-.single_add_to_cart_button.button-light:hover, .tutor-button.button-light:hover, .tutor-btn.button-light:hover {
-  color: #939bae;
-  background-color: #e8eff1;
-  border: 1px solid #e8eff1;
-}
-
-.single_add_to_cart_button .dashicons, .tutor-button .dashicons, .tutor-btn .dashicons {
-  border: 0;
-  line-height: inherit;
-  box-shadow: none !important;
-  -o-box-shadow: none !important;
-  -ms-box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
-}
-
 .single_add_to_cart_button i,
 a.tutor-button i,
 .tutor-button i,
@@ -3484,172 +3807,6 @@ span.withdraw-method-label {
    *
    * http://docs.jquery.com/UI/Datepicker#theming
    */
-.ui-datepicker {
-  display: none;
-  margin-top: 4px;
-  padding: 10px;
-  width: 260px;
-  background: #FFFFFF;
-  border: 1px solid #E3E5EB;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  -webkit-box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.12);
-          box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.12);
-  border-radius: 6px;
-}
-
-.ui-datepicker table th span {
-  color: #B4B7C0;
-  font-weight: 400;
-  font-size: 13px;
-}
-
-.ui-datepicker-title .ui-datepicker-month,
-.ui-datepicker-title .ui-datepicker-year {
-  font-size: 20px;
-  font-weight: 500;
-  color: #212327;
-}
-
-.ui-datepicker-calendar .ui-state-default.ui-state-highlight {
-  border-radius: 100% !important;
-  background-color: #E9EDFB !important;
-  color: #41454F !important;
-  border: none !important;
-  padding: 5px;
-}
-
-.ui-datepicker .ui-datepicker-calendar td {
-  width: 30px;
-  height: 30px;
-  border-radius: 50% !important;
-}
-
-.ui-datepicker .ui-datepicker-calendar td:hover {
-  border-radius: 100% !important;
-  background-color: #E9EDFB !important;
-  color: #41454F !important;
-  border: none !important;
-}
-
-.ui-datepicker .ui-datepicker-current-day {
-  border-radius: 100% !important;
-  background-color: #3E64DE !important;
-  color: #fff !important;
-}
-
-.ui-datepicker .ui-datepicker-current-day a {
-  color: #fff !important;
-}
-
-.ui-datepicker .ui-datepicker-prev.ui-corner-all, .ui-datepicker .ui-datepicker-next.ui-corner-all {
-  color: #3E64DE;
-}
-
-.ui_tpicker_hour_slider, .ui_tpicker_minute_slider {
-  border: 1px solid !important;
-}
-
-.ui-datepicker a,
-.ui-datepicker a:hover {
-  text-decoration: none;
-}
-
-.ui-datepicker a:hover,
-.ui-datepicker td:hover a {
-  color: #2a6496;
-  -webkit-transition: color 0.1s ease-in-out;
-  transition: color 0.1s ease-in-out;
-}
-
-.ui-datepicker .ui-datepicker-header {
-  margin-bottom: 4px;
-  text-align: center;
-}
-
-.ui-datepicker .ui-datepicker-title {
-  font-weight: 700;
-}
-
-.ui-datepicker .ui-datepicker-prev,
-.ui-datepicker .ui-datepicker-next {
-  cursor: default;
-  font-family: "tutor";
-  -webkit-font-smoothing: antialiased;
-  font-style: normal;
-  font-weight: normal;
-  height: 20px;
-  line-height: 1;
-  margin-top: 2px;
-  width: 30px;
-}
-
-.ui-datepicker .ui-datepicker-prev {
-  float: left;
-  text-align: left;
-}
-
-.ui-datepicker .ui-datepicker-next {
-  float: right;
-  text-align: right;
-}
-
-.ui-datepicker .ui-datepicker-prev:before {
-  content: "\e921";
-}
-
-.ui-datepicker .ui-datepicker-next:before {
-  content: "\e903";
-}
-
-.ui-datepicker .ui-icon {
-  display: none;
-}
-
-.ui-datepicker .ui-datepicker-calendar {
-  table-layout: fixed;
-  width: 100%;
-}
-
-.ui-datepicker .ui-datepicker-calendar th,
-.ui-datepicker .ui-datepicker-calendar td {
-  text-align: center;
-  padding: 0;
-}
-
-.ui-datepicker .ui-datepicker-calendar td {
-  border-radius: 4px;
-  -webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
-  transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
-}
-
-.ui-datepicker .ui-datepicker-calendar td:hover {
-  background-color: #eee;
-  cursor: pointer;
-}
-
-.ui-datepicker .ui-datepicker-calendar td a {
-  text-decoration: none;
-}
-
-.ui-datepicker .ui-datepicker-current-day {
-  background-color: #4289cc;
-}
-
-.ui-datepicker .ui-datepicker-current-day a {
-  color: #fff;
-}
-
-.ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
-  background-color: #fff;
-  cursor: default;
-}
-
-.ui-datepicker-calendar .ui-state-default {
-  border: none;
-  background: none;
-}
-
 /** END Calender */
 /**
   * report.css
@@ -4946,99 +5103,3 @@ td:not(.detail):nth-last-child(3) {
 }
 
 /* /.report-course-list - end */
-.tutor-toast-parent {
-  position: fixed;
-  right: 25px;
-  bottom: 50px;
-  right: 50px;
-  left: auto;
-  max-height: 400px;
-  width: 350px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  background: transparent;
-  z-index: 99999999;
-}
-
-.tutor-toast-parent:empty {
-  display: none;
-}
-
-.tutor-toast-parent > div {
-  background: white;
-  padding: 10px;
-  margin: 15px;
-  border-radius: 15px;
-  -webkit-box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
-          box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
-  border: 1px solid #E8E8E8;
-  background: white;
-  border: none;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  display: -o-flex;
-  display: -ms-flex;
-  display: -moz-flex;
-  display: -webkit-flex;
-  -ms-flex-line-pack: center;
-      align-content: center;
-  -o-align-content: center;
-  -ms-align-content: center;
-  -moz-align-content: center;
-  -webkit-align-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -o-align-items: center;
-  -ms-align-items: center;
-  -moz-align-items: center;
-  -webkit-align-items: center;
-}
-
-.tutor-toast-parent > div > div {
-  padding: 8px;
-}
-
-.tutor-toast-parent > div > div:nth-child(1), .tutor-toast-parent > div > div:nth-child(3) {
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -o-justify-content: center;
-  -ms-justify-content: center;
-  -moz-justify-content: center;
-  -webkit-justify-content: center;
-}
-
-.tutor-toast-parent > div > div:nth-child(2) {
-  -webkit-box-flex: 1;
-          flex: 1;
-  -o-flex: 1;
-  -ms-flex: 1;
-  -moz-flex: 1;
-  -webkit-flex: 1;
-}
-
-.tutor-toast-parent > div img {
-  width: 100%;
-  height: auto;
-}
-
-.tutor-toast-parent > div b {
-  font-weight: 600;
-  display: block;
-}
-
-.tutor-toast-parent > div span {
-  color: #333333;
-}
-
-.tutor-toast-parent > div i {
-  cursor: pointer;
-  font-size: 14px;
-}
-
-body.rtl .tutor-toast-parent {
-  right: auto;
-  left: 50px;
-}
