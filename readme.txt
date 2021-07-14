@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.7.2
 Requires PHP: 7.0
-Stable tag: 1.9.4
+Stable tag: 1.9.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,10 +241,16 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.4 - July 08, 2021 =
+= 1.9.5 - July 18, 2021 =
+
+New: WPML compatibility addon
+Update: Button rearrangment in single course page
+
+= 1.9.4 - July 13, 2021 =
 
 New: Zoom added to the Frontend dashboard
 New: Field to add Course Tags in Frontend course builder
+Update: Design update in Zoom backend dashboard
 Fix: Lesson video duration were not fetched for autofill URL
 Fix: Deprecated warnings in PHP 8
 
