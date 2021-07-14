@@ -4498,7 +4498,7 @@ class Utils {
 					AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
 					{$course_filter}
 					{$date_filter}
-			ORDER 	BY quiz_attempts.attempt_id $order_filter 
+			ORDER 	BY quiz_attempts.attempt_ended_at $order_filter 
 			LIMIT 	%d, %d;
 			",
 			'attempt_started',
