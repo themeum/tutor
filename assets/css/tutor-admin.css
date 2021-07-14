@@ -93,8 +93,6 @@
 }
 
 .ui-widget-header {
-  border: 1px solid #aaaaaa;
-  background: #cccccc;
   color: #222222;
   font-weight: bold;
 }
@@ -3487,12 +3485,69 @@ span.withdraw-method-label {
    * http://docs.jquery.com/UI/Datepicker#theming
    */
 .ui-datepicker {
-  background-color: #fff;
-  border: 1px solid #eeeeee;
   display: none;
   margin-top: 4px;
+  padding: 10px;
+  width: 260px;
+  background: #FFFFFF;
+  border: 1px solid #E3E5EB;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.12);
+          box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+}
+
+.ui-datepicker table th span {
+  color: #B4B7C0;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.ui-datepicker-title .ui-datepicker-month,
+.ui-datepicker-title .ui-datepicker-year {
+  font-size: 20px;
+  font-weight: 500;
+  color: #212327;
+}
+
+.ui-datepicker-calendar .ui-state-default.ui-state-highlight {
+  border-radius: 100% !important;
+  background-color: #E9EDFB !important;
+  color: #41454F !important;
+  border: none !important;
   padding: 5px;
-  width: 180px;
+}
+
+.ui-datepicker .ui-datepicker-calendar td {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% !important;
+}
+
+.ui-datepicker .ui-datepicker-calendar td:hover {
+  border-radius: 100% !important;
+  background-color: #E9EDFB !important;
+  color: #41454F !important;
+  border: none !important;
+}
+
+.ui-datepicker .ui-datepicker-current-day {
+  border-radius: 100% !important;
+  background-color: #3E64DE !important;
+  color: #fff !important;
+}
+
+.ui-datepicker .ui-datepicker-current-day a {
+  color: #fff !important;
+}
+
+.ui-datepicker .ui-datepicker-prev.ui-corner-all, .ui-datepicker .ui-datepicker-next.ui-corner-all {
+  color: #3E64DE;
+}
+
+.ui_tpicker_hour_slider, .ui_tpicker_minute_slider {
+  border: 1px solid !important;
 }
 
 .ui-datepicker a,
@@ -3593,12 +3648,6 @@ span.withdraw-method-label {
 .ui-datepicker-calendar .ui-state-default {
   border: none;
   background: none;
-}
-
-.ui-datepicker-calendar .ui-state-default.ui-state-highlight {
-  background: #eeeeee;
-  padding: 3px;
-  display: block;
 }
 
 /** END Calender */
