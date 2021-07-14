@@ -1231,10 +1231,7 @@ class Tutor_List_Table {
 		$order_filter	= isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : '';
 		$which = 'top';
 		?>
-		<div class="tutor-sorting-bulk-action-wrapper" style="display: flex;
-			justify-content: space-between;
-			align-items: flex-end;
-			padding: 0px 0px 30px 0px;">
+		<div class="tutor-sorting-bulk-action-wrapper">
 			<div class="tablenav <?php echo esc_attr( $which ); ?>">
 				<?php if ( $this->has_items() ): ?>
 					<div class="alignleft actions bulkactions">
@@ -1291,7 +1288,7 @@ class Tutor_List_Table {
 					</div>
 				</div>
 
-				<div>
+				<div class="tutor-search-form-group">
 					<div class="menu-label"><?php _e('Search', 'tutor'); ?></div>
 					<div style="position:relative;">
 						<input type="text" name="search" class="tutor-report-search tutor-announcement-search-field" value="<?php echo $search_filter; ?>" autocomplete="off" placeholder="<?php _e('Search', 'tutor'); ?>" />

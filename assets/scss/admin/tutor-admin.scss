@@ -4008,7 +4008,7 @@
   }
   
   .tutor-admin-search-box-container > div:not(:last-child) {
-	  margin-right: 40px;
+	  margin-right: 30px;
   }
   
   .tutor-admin-search-box-container .tutor-report-search-btn {
@@ -4357,6 +4357,22 @@
 	  color: #3057d5;
   }
   
+  /**
+   * Quiz attempt page css
+   * @since 1.9.5
+  */
+  .tutor-sorting-bulk-action-wrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	padding: 0px 0px 30px 0px;	  
+  }
+  .tutor-sorting-bulk-action-wrapper .tutor-admin-search-box-container {
+	  width: 70%;
+  }
+  .tutor-admin-search-box-container .tutor-search-form-group {
+	  flex: 18% !important;
+  }
   @media (max-width: 991px) {
 	  .report-course-list-wrap .tutor-list-table th:nth-child(n + 7),
 	  .report-course-list-wrap .tutor-list-table td:nth-child(n + 7) {
