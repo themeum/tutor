@@ -4578,16 +4578,17 @@ class Utils {
 		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
 
 		$query = $wpdb->get_results( $wpdb->prepare(
-			"SELECT * 
-			FROM	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts 
-					INNER JOIN {$wpdb->posts} quiz
+			"SELECT quiz_attempts.*, users.*, quiz.*
+			FROM	{$wpdb->prefix}tutor_quiz_attempts AS quiz_attempts 
+					INNER JOIN {$wpdb->posts} AS quiz
 							ON quiz_attempts.quiz_id = quiz.ID 
-					INNER JOIN {$wpdb->users}
-							ON quiz_attempts.user_id = {$wpdb->users}.ID 
-
+					INNER JOIN {$wpdb->users} AS users
+							ON quiz_attempts.user_id = users.ID 
+					INNER JOIN {$wpdb->posts} AS course
+							ON course.ID = quiz_attempts.course_id 
 			WHERE 	quiz_attempts.course_id IN (" . $course_ids_in . ")
-					AND attempt_status != %s
-					AND ( user_email LIKE %s OR display_name LIKE %s OR quiz.post_title LIKE %s )
+					AND quiz_attempts.attempt_status != %s
+					AND ( users.user_email LIKE %s OR users.display_name LIKE %s OR quiz.post_title LIKE %s OR course.post_title LIKE %s )
 					{$course_filter}
 					{$date_filter}
 					" . ($user_id ? ' AND user_id=\''.esc_sql( $user_id ).'\''  : '') . "
@@ -4595,6 +4596,7 @@ class Utils {
 			LIMIT 	%d, %d;
 			",
 			'attempt_started',
+			$search_filter,
 			$search_filter,
 			$search_filter,
 			$search_filter,
