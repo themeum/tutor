@@ -40,10 +40,11 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 
 		$quiz_title = "<p><strong>{$item->display_name}</strong></p>";
 		$quiz_title .= "<p>{$item->user_email}</p>";
-
+		//@since 1.9.5 instead of showing time ago showing original date time 
 		if ($item->attempt_ended_at){
 			$ended_ago_time = human_time_diff(strtotime($item->attempt_ended_at), tutor_time()).__(' ago', 'tutor');
-			$quiz_title .= "<span>{$ended_ago_time}</span>";
+			$attempt_started_at = date_format(date_create($item->attempt_started_at), 'd M, Y, h:i a');
+			$quiz_title .= "<span>{$attempt_started_at}</span>";
 		}
 
 		//Return the title contents
@@ -143,11 +144,9 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			}
 
 			$attempt_ids = array_map('sanitize_text_field', $_GET['attempt']);
-			$attempt_ids = implode( ',', array_map( 'absint', $attempt_ids ) );
+			$attempt_ids = array_map( 'absint', $attempt_ids );
 
-			//Deleting attempt (comment), child attempt and attempt meta (comment meta)
-			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
-			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
+			tutor_utils()->delete_quiz_attempt( $attempt_ids );
 		}
 	}
 

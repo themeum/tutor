@@ -1,0 +1,7 @@
+/* Common libraries. This file will be loaded in both of admin and frontend main scss file once */
+@import './button.scss';
+@import './color.scss';
+@import "./ui-slider.scss";
+@import "./toast.scss";
+@import "./component.scss";
+@import "./ui-date-picker.scss";

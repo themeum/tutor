@@ -36,15 +36,9 @@ jQuery(document).ready(function ($) {
      * END jQuery UI Touch Punch
      */
 
-
-    /* $(document).on('change', '.tutor-course-filter-form', function (e) {
-        e.preventDefault();
-        $(this).closest('form').submit();
-    }); */
-
     const videoPlayer = {
-        ajaxurl: _tutorobject.ajaxurl,
-        nonce_key: _tutorobject.nonce_key,
+        ajaxurl: window._tutorobject.ajaxurl,
+        nonce_key: window._tutorobject.nonce_key,
         video_data: function () {
             const video_track_data = $('#tutor_video_tracking_information').val();
             return video_track_data ? JSON.parse(video_track_data) : {};
@@ -1256,7 +1250,7 @@ jQuery(document).ready(function ($) {
         form_data.lesson_content = content;
 
         $.ajax({
-            url: ajaxurl,
+            url: window._tutorobject.ajaxurl,
             type: 'POST',
             data: form_data,
             beforeSend: function () {
@@ -1372,7 +1366,7 @@ jQuery(document).ready(function ($) {
         var course_id = $('#post_ID').val();
 
         $.ajax({
-            url: ajaxurl,
+            url: window._tutorobject.ajaxurl,
             type: 'POST',
             data: { topic_id: topic_id, course_id: course_id, action: 'tutor_load_assignments_builder_modal' },
             beforeSend: function () {
@@ -1404,7 +1398,7 @@ jQuery(document).ready(function ($) {
         var course_id = $('#post_ID').val();
 
         $.ajax({
-            url: ajaxurl,
+            url: window._tutorobject.ajaxurl,
             type: 'POST',
             data: { assignment_id: assignment_id, topic_id: topic_id, course_id: course_id, action: 'tutor_load_assignments_builder_modal' },
             beforeSend: function () {
@@ -1446,7 +1440,7 @@ jQuery(document).ready(function ($) {
         form_data.assignment_content = content;
         
         $.ajax({
-            url: ajaxurl,
+            url: window._tutorobject.ajaxurl,
             type: 'POST',
             data: form_data,
             beforeSend: function () {
@@ -1685,7 +1679,7 @@ jQuery(document).ready(function ($) {
 
         $.ajax({
             type: 'POST',
-            url: ajaxurl,
+            url: window._tutorobject.ajaxurl,
             data: json_data,
             beforeSend: function () {
                 $('#tutor-bp-thread-wrap').html('');
@@ -2219,5 +2213,49 @@ jQuery(document).ready(function ($) {
         }).on('click', '.mobile-filter-popup', function(e) {
             $(this).removeClass('is-opened');;
         });
+    });
+
+    /**
+     * Retake course
+     * 
+     * @since v1.9.5
+     */
+    $('.tutor-course-retake-button').click(function(e) {
+        e.preventDefault();
+
+        var url = $(this).attr('href');
+        var course_id = $(this).data('course_id');
+
+        var data = {
+            title: __('Override Previous Progress', 'tutor'),
+            description : __('Before continue, please decide whether to keep progress or reset.', 'tutor'),
+            buttons : {
+                reset: {
+                    title: __('Reset Data', 'tutor'),
+                    class: 'secondary',
+                    callback: function() {
+                        $.ajax({
+                            url: window._tutorobject.ajaxurl,
+                            type: 'POST',
+                            data: {action: 'tutor_reset_course_progress', course_id: course_id},
+                            success: function(response) {
+                                if(response.success) {
+                                    window.location.assign(url);
+                                }
+                            }
+                        });
+                    }
+                },
+                keep: {
+                    title: __('Keep Data', 'tutor'),
+                    class: 'primary',
+                    callback: function() {
+                        window.location.assign(url);
+                    }
+                }
+            } 
+        };
+
+        new window.tutor_component($, 'icon-gear', 40).popup(data);
     });
 });

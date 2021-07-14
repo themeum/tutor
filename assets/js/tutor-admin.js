@@ -38,7 +38,7 @@ jQuery(document).ready(function($){
         var data = $form.serializeObject();
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : data,
             beforeSend: function () {
@@ -135,7 +135,7 @@ jQuery(document).ready(function($){
         form_data.lesson_content = content;
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : form_data,
             beforeSend: function () {
@@ -300,7 +300,7 @@ jQuery(document).ready(function($){
         var addonFieldName = $that.attr('name');
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {isEnable:isEnable, addonFieldName:addonFieldName, action : 'addon_enable_disable'},
             success: function (data) {
@@ -323,7 +323,7 @@ jQuery(document).ready(function($){
         formData.action = 'tutor_add_instructor';
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : formData,
             success: function (data) {
@@ -376,7 +376,7 @@ jQuery(document).ready(function($){
         json_data[nonce_key] = _tutorobject[nonce_key];
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : json_data,
             beforeSend: function () {
@@ -407,7 +407,7 @@ jQuery(document).ready(function($){
         var course_id = $('#post_ID').val();
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {topic_id : topic_id, course_id : course_id, action: 'tutor_load_assignments_builder_modal'},
             beforeSend: function () {
@@ -439,7 +439,7 @@ jQuery(document).ready(function($){
         var course_id = $('#post_ID').val();
 
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {assignment_id : assignment_id, topic_id : topic_id, course_id : course_id, action: 'tutor_load_assignments_builder_modal'},
             beforeSend: function () {
@@ -482,7 +482,7 @@ jQuery(document).ready(function($){
         form_data.assignment_content = content;
         
         $.ajax({
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : form_data,
             beforeSend: function () {
@@ -626,7 +626,7 @@ jQuery(document).ready(function($){
             return m;
         },
         ajax: {
-            url : ajaxurl,
+            url : window._tutorobject.ajaxurl,
             type : 'POST',
             dataType: 'json',
             delay:       1000,

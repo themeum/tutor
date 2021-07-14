@@ -36,13 +36,25 @@ global $wp_query;
         if ( $wp_query->query['post_type'] !== 'lesson') {
             $lesson_url = tutor_utils()->get_course_first_lesson();
             $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
-            if ( $lesson_url ) { ?>
-                <a href="<?php echo $lesson_url; ?>" class="tutor-button tutor-success">
+            $completed_percent = tutor_utils()->get_course_completed_percent();
+            $retake_course = $completed_percent >= 100 && tutor_utils()->get_option('course_retake_feature', false);
+
+            if ( $lesson_url ) { 
+                $button_class = 'tutor-button tutor-success' . ($retake_course ? ' tutor-course-retake-button' : '');
+                ?>
+                <a href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
                     <?php
-                        _e( 'Start Course', 'tutor' );
+                        if($completed_percent <= 0){
+                            _e( 'Start Course', 'tutor' );
+                        }else if($retake_course) {
+                            _e( 'Retake This Course', 'tutor' );
+                        } else {
+                            _e( 'Continue Course', 'tutor' );
+                        }
                     ?>
                 </a>
-            <?php }
+                <?php 
+            }
         }
         ?>
         <?php tutor_course_mark_complete_html(); ?>

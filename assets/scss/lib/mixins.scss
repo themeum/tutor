@@ -1,3 +1,5 @@
+/* Only reusable function, or code allowed here. No direct css please. */
+
 @mixin propertyWithPrefix($property, $value) {
     #{$property}         : $value;
     -o-#{$property}      : $value;

@@ -1,3 +1,5 @@
+@import "../lib/common.scss";
+
 @import "theme";
 @import "layout";
 @import "single_course";
@@ -25,5 +27,3 @@
 
 // Instructor list short code
 @import "_instructor";
-
-@import "../lib/toast.scss";
