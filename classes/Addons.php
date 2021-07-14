@@ -97,6 +97,10 @@ class Addons {
 			'push-notification' => array(
 				'name'			=> 'Push Notification',
 				'description'	=> 'Users will get push notification on specified events.'
+			),
+			'tutor-wpml'		=> array(
+				'name'			=> __('WPML Multilingual CMS', 'tutor'),
+				'description'	=> __('Create multilingual courses, lessons, dashboard and more for a global audience.', 'tutor')
 			)
 		);
 
