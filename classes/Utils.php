@@ -1107,7 +1107,8 @@ class Utils {
 		$user_id   = $this->get_user_id( $user_id );
 
 		// Delete Quiz submissions
-		$attempts = $this->get_quiz_attempts_by_course_ids( 0, 999999999, array( $course_id ), '', $user_id);
+		$attempts = $this->get_quiz_attempts_by_course_ids(  $start = 0, $limit = 99999999, $course_ids = array($course_id), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = $user_id );
+
 		if( is_array($attempts) ) {
 			$attempt_ids = array_map(function($attempt) {
 				return is_object($attempt) ? $attempt->attempt_id : 0;
