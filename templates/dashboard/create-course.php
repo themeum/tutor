@@ -82,15 +82,23 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                     <div class="tutor-dashboard-course-builder-wrap">
                         <!--since 1.8.0 alert message -->
                         <?php
-                        $instructor_can_publish = tutils()->get_option('instructor_can_publish_course');
-                        ?>
-                        <?php if (current_user_can('tutor_instructor') && !current_user_can('administrator')) : ?>
-                            <?php if (isset($_COOKIE['course_submit_for_review']) && !$instructor_can_publish) : ?>
+                            $user_id = get_current_user_id();
+                            $expires = get_user_meta( $user_id, 'tutor_frontend_course_message_expires', true );
+                            $message = get_user_meta( $user_id, 'tutor_frontend_course_action_message', true );
+
+                            if($message && $expires && $expires>time()) {
+                                ?>
                                 <div class="tutor-alert tutor-alert-info">
-                                    <?php _e('Your course has been submitted to the admin. It will be published once it has been reviewed by the admins.', 'tutor'); ?>
+                                    <?php echo $message; ?>
                                 </div>
-                            <?php endif; ?>
-                        <?php endif; ?>
+                                <?php
+                            }
+
+                            if($message || $expires) {
+                                delete_user_meta( $user_id, 'tutor_frontend_course_message_expires' );
+                                delete_user_meta( $user_id, 'tutor_frontend_course_action_message' );
+                            }
+                        ?>
                         <!--alert message end -->
                         <?php do_action('tutor/dashboard_course_builder_form_field_before'); ?>
 
