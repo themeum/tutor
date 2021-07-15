@@ -2,83 +2,14 @@
 @package: Tutor LMS
 @author: themeum
  */
- :root {
-	--tutor-primary-color: #1b52d8;
-	--tutor-primary-hover-color: #1b52a9;
-	--tutor-text-color: #4b5981;
-	--tutor-light-color: #b1b8c9;
-	--tutor-success-button-color: #86b223;
-  }
+
+@import '../lib/mixins.scss';
   
-  .ui-slider {
-	position: relative;
-	text-align: left;
-  }
   
-  .ui-slider .ui-slider-handle {
-	position: absolute;
-	z-index: 2;
-	width: 15px;
-	height: 15px;
-	cursor: default;
-	top: -6.5px;
-	cursor: pointer;
-  }
-  
-  .ui-slider .ui-slider-range {
-	position: absolute;
-	z-index: 1;
-	font-size: 0.7em;
-	display: block;
-	border: 0;
-	background-position: 0 0;
-  }
-  
-  .ui-slider-horizontal {
-	height: 0.8em;
-  }
-  
-  .ui-slider-horizontal .ui-slider-range {
-	top: 0;
-	height: 100%;
-  }
-  
-  .ui-slider-horizontal .ui-slider-range-min {
-	left: 0;
-  }
-  
-  .ui-slider-horizontal .ui-slider-range-max {
-	right: 0;
-  }
-  
-  .ui-slider-vertical {
-	width: 0.8em;
-	height: 100px;
-  }
-  
-  .ui-slider-vertical .ui-slider-handle {
-	left: -0.3em;
-	margin-left: 0;
-	margin-bottom: -0.6em;
-  }
-  
-  .ui-slider-vertical .ui-slider-range {
-	left: 0;
-	width: 100%;
-  }
-  
-  .ui-slider-vertical .ui-slider-range-min {
-	bottom: 0;
-  }
-  
-  .ui-slider-vertical .ui-slider-range-max {
-	top: 0;
-  }
-  
-  /*----------------------------------
-	  Component containers
-  ----------------------------------*/
-  .ui-widget-content {
+/*----------------------------------
+	Component containers
+----------------------------------*/
+.ui-widget-content {
 	border: 1px solid #aaaaaa;
 	background: #ffffff;
 	color: #222222;
@@ -89,15 +20,13 @@
   }
   
   .ui-widget-header {
-	border: 1px solid #aaaaaa;
-	background: #cccccc;
 	color: #222222;
 	font-weight: bold;
-  }
-  
-  .ui-widget-header a {
+
+	a {
 	color: #222222;
-  }
+	}
+}
   
   /* Interaction states
   ----------------------------------*/
@@ -124,35 +53,28 @@
 	position: relative;
 	display: inline-block;
 	margin-right: -1px;
-  }
-  
-  /*.tutor-option-nav-tabs li:after {*/
-  /*content: "|";*/
-  /*position: absolute;*/
-  /*top: 0;*/
-  /*right: -10px;*/
-  /*}*/
-  .tutor-option-nav-tabs li:last-child:after {
-	content: "";
-  }
-  
-  .tutor-option-nav-tabs li a {
-	display: block;
-	font-weight: bold;
-	text-decoration: none;
-	background: #fff;
-	padding: 5px 10px;
-	border: 1px solid #dddddd;
-  }
-  
-  .tutor-option-nav-tabs li.current a {
-	color: #333333;
-  }
-  
-  .tutor-option-nav-tabs li a:focus {
-	-webkit-box-shadow: none;
-			box-shadow: none;
-  }
+
+	&:last-child:after {
+		content: "";
+	}
+	
+	a {
+		display: block;
+		font-weight: bold;
+		text-decoration: none;
+		background: #fff;
+		padding: 5px 10px;
+		border: 1px solid #dddddd;
+		
+		&:focus {
+			@include propertyWithPrefix(box-shadow, none);
+		}
+	}
+	
+	.current a {
+		color: #333333;
+	}
+}
   
   /**
   Withdraw Methods Nav
@@ -661,28 +583,7 @@
   }
   
   */
-  .single_add_to_cart_button,
-  a.tutor-button,
-  .tutor-button,
-  a.tutor-btn,
-  .tutor-btn {
-	color: #fff;
-	border: 1px solid var(--tutor-primary-color);
-	background-color: var(--tutor-primary-color);
-	display: inline-block;
-	padding: 12px 18px;
-	border-radius: 4px;
-	text-transform: capitalize;
-	line-height: 20px;
-	font-size: 14px;
-	font-weight: 500;
-	cursor: pointer;
-	-webkit-transition: 300ms;
-	transition: 300ms;
-	overflow: hidden;
-	vertical-align: top;
-  }
-  
+
   .single_add_to_cart_button i,
   a.tutor-button i,
   .tutor-button i,
@@ -699,24 +600,6 @@
   a.tutor-btn.default-btn i,
   .tutor-btn.default-btn i {
 	color: var(--tutor-primary-color);
-  }
-  
-  a.tutor-button.bordered-button,
-  .tutor-button.bordered-button,
-  a.tutor-btn.bordered-btn,
-  .tutor-btn.bordered-btn {
-	color: var(--tutor-primary-color);
-	border: 1px solid var(--tutor-primary-color);
-	background-color: transparent;
-  }
-  
-  a.tutor-button:hover,
-  .tutor-button:hover,
-  a.tutor-btn:hover,
-  .tutor-btn:hover {
-	background-color: var(--tutor-primary-hover-color);
-	border-color: var(--tutor-primary-hover-color);
-	color: #fff;
   }
   
   a.tutor-button:hover i,
@@ -746,14 +629,6 @@
   
   .tutor-add-quiz-button-wrap > * + * {
 	margin-left: 15px;
-  }
-  
-  a.tutor-button.bordered-button:hover,
-  .tutor-button.bordered-button:hover,
-  a.tutor-btn.bordered-btn:hover,
-  .tutor-btn.bordered-btn:hover {
-	border: 1px solid var(--tutor-primary-color);
-	background-color: var(--tutor-primary-color);
   }
   
   .tutor-updating-message i {
@@ -1082,52 +957,6 @@
 	background-color: #eeeeee;
   }
   
-  a.tutor-button,
-  button.tutor-button {
-	white-space: nowrap;
-	padding: 10px 20px;
-	text-decoration: none;
-	/*margin-right: 20px;*/
-  }
-  
-  a.tutor-button-small,
-  button.tutor-button-small {
-	white-space: nowrap;
-	padding: 5px 10px;
-	text-decoration: none;
-  }
-  
-  .tutor-button-small,
-  a.tutor-button-small,
-  button.tutor-button-small {
-	font-size: 14px;
-	font-weight: 300;
-	border: none;
-  }
-  
-  .tutor-button-small i,
-  a.tutor-button-small i,
-  button.tutor-button-small i {
-	font-size: 16px;
-  }
-  
-  .tutor-button-primary {
-	background-color: var(--tutor-primary-color);
-	color: #ffffff;
-	display: inline-block;
-	border-radius: 2px;
-	font-size: 14px;
-	font-weight: 300;
-	border: none;
-	-webkit-box-shadow: none;
-			box-shadow: none;
-	cursor: pointer;
-  }
-  
-  .tutor-button-primary:hover {
-	background-color: #2446a6;
-  }
-  
   .tutor-status-approved-context,
   .tutor-button.button-success,
   .tutor-status-completed {
@@ -1142,24 +971,6 @@
 	background-color: #ff0000;
 	color: #ffffff;
 	border-radius: 2px;
-  }
-  
-  .tutor-button.button-warning {
-	background-color: #ffb36d;
-	color: #ffffff;
-  }
-  
-  .tutor-button {
-	border: 0;
-	-webkit-box-shadow: none !important;
-			box-shadow: none !important;
-  }
-  
-  .tutor-button .dashicons {
-	border: 0;
-	-webkit-box-shadow: none !important;
-			box-shadow: none !important;
-	line-height: inherit;
   }
   
   .tutor-status-approved-context,
@@ -3392,121 +3203,7 @@
    *
    * http://docs.jquery.com/UI/Datepicker#theming
    */
-  .ui-datepicker {
-	background-color: #fff;
-	border: 1px solid #eeeeee;
-	display: none;
-	margin-top: 4px;
-	padding: 5px;
-	width: 180px;
-  }
-  
-  .ui-datepicker a,
-  .ui-datepicker a:hover {
-	text-decoration: none;
-  }
-  
-  .ui-datepicker a:hover,
-  .ui-datepicker td:hover a {
-	color: #2a6496;
-	-webkit-transition: color 0.1s ease-in-out;
-	transition: color 0.1s ease-in-out;
-  }
-  
-  .ui-datepicker .ui-datepicker-header {
-	margin-bottom: 4px;
-	text-align: center;
-  }
-  
-  .ui-datepicker .ui-datepicker-title {
-	font-weight: 700;
-  }
-  
-  .ui-datepicker .ui-datepicker-prev,
-  .ui-datepicker .ui-datepicker-next {
-	cursor: default;
-	font-family: "tutor";
-	-webkit-font-smoothing: antialiased;
-	font-style: normal;
-	font-weight: normal;
-	height: 20px;
-	line-height: 1;
-	margin-top: 2px;
-	width: 30px;
-  }
-  
-  .ui-datepicker .ui-datepicker-prev {
-	float: left;
-	text-align: left;
-  }
-  
-  .ui-datepicker .ui-datepicker-next {
-	float: right;
-	text-align: right;
-  }
-  
-  .ui-datepicker .ui-datepicker-prev:before {
-	content: "\e921";
-  }
-  
-  .ui-datepicker .ui-datepicker-next:before {
-	content: "\e903";
-  }
-  
-  .ui-datepicker .ui-icon {
-	display: none;
-  }
-  
-  .ui-datepicker .ui-datepicker-calendar {
-	table-layout: fixed;
-	width: 100%;
-  }
-  
-  .ui-datepicker .ui-datepicker-calendar th,
-  .ui-datepicker .ui-datepicker-calendar td {
-	text-align: center;
-	padding: 0;
-  }
-  
-  .ui-datepicker .ui-datepicker-calendar td {
-	border-radius: 4px;
-	-webkit-transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
-	transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
-  }
-  
-  .ui-datepicker .ui-datepicker-calendar td:hover {
-	background-color: #eee;
-	cursor: pointer;
-  }
-  
-  .ui-datepicker .ui-datepicker-calendar td a {
-	text-decoration: none;
-  }
-  
-  .ui-datepicker .ui-datepicker-current-day {
-	background-color: #4289cc;
-  }
-  
-  .ui-datepicker .ui-datepicker-current-day a {
-	color: #fff;
-  }
-  
-  .ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
-	background-color: #fff;
-	cursor: default;
-  }
-  
-  .ui-datepicker-calendar .ui-state-default {
-	border: none;
-	background: none;
-  }
-  
-  .ui-datepicker-calendar .ui-state-default.ui-state-highlight {
-	background: #eeeeee;
-	padding: 3px;
-	display: block;
-  }
-  
+   
   /** END Calender */
   /**
   * report.css
