@@ -110,7 +110,7 @@
   display: inline-block;
   border-radius: 2px;
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 600;
   border: none;
   cursor: pointer;
   box-shadow: none;
@@ -203,6 +203,73 @@
   -ms-box-shadow: none !important;
   -moz-box-shadow: none !important;
   -webkit-box-shadow: none !important;
+}
+
+/* Only reusable function, or code allowed here. No direct css please. */
+.tutor-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+}
+
+.tutor-switch input {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+.tutor-switch input:checked + .slider {
+  background-color: #24A148;
+}
+
+.tutor-switch input:checked + .slider.tutor-switch-blue {
+  background-color: #3E64DE;
+}
+
+.tutor-switch input:checked + .slider::before {
+  transform: translateX(14px);
+  -o-transform: translateX(14px);
+  -ms-transform: translateX(14px);
+  -moz-transform: translateX(14px);
+  -webkit-transform: translateX(14px);
+}
+
+.tutor-switch input:focus + .slider {
+  -webkit-box-shadow: 0 0 1px #24A148;
+          box-shadow: 0 0 1px #24A148;
+}
+
+.tutor-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.tutor-switch .slider.round {
+  border-radius: 34px;
+}
+
+.tutor-switch .slider.round:before {
+  border-radius: 50%;
+}
+
+.tutor-switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
 }
 
 :root {
@@ -4628,7 +4695,7 @@ input[type="radio"]:checked
 }
 
 .tutor-admin-search-box-container > div:not(:last-child) {
-  margin-right: 40px;
+  margin-right: 30px;
 }
 
 .tutor-admin-search-box-container .tutor-report-search-btn {
@@ -5004,6 +5071,33 @@ td:not(.detail):nth-last-child(3) {
 .tutor-report-content a:focus,
 .report-student-profile .profile-table a:hover {
   color: #3057d5;
+}
+
+/**
+   * Quiz attempt page css
+   * @since 1.9.5
+  */
+.tutor-sorting-bulk-action-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  padding: 0px 0px 30px 0px;
+}
+
+.tutor-sorting-bulk-action-wrapper .tutor-admin-search-box-container {
+  width: 70%;
+}
+
+.tutor-admin-search-box-container .tutor-search-form-group {
+  -webkit-box-flex: 18% !important;
+      -ms-flex: 18% !important;
+          flex: 18% !important;
 }
 
 @media (max-width: 991px) {
