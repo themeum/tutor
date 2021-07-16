@@ -4584,7 +4584,9 @@ class Utils {
 
 		$course_ids_in = implode( ', ', $course_ids );
 
-		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
+		$search_filter  = $search_filter ? '%' . $wpdb->esc_like( $search_filter ) . '%' : '';
+		$search_filter = $search_filter ? "AND ( users.user_email LIKE {$search_filter} OR users.display_name LIKE {$search_filter} OR quiz.post_title LIKE {$search_filter} OR course.post_title LIKE {$search_filter} )" : '';
+
 		$course_filter	= $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '' ;
 		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
 
@@ -4599,7 +4601,7 @@ class Utils {
 							ON course.ID = quiz_attempts.course_id 
 			WHERE 	quiz_attempts.course_id IN (" . $course_ids_in . ")
 					AND quiz_attempts.attempt_status != %s
-					AND ( users.user_email LIKE %s OR users.display_name LIKE %s OR quiz.post_title LIKE %s OR course.post_title LIKE %s )
+					{$search_filter}
 					{$course_filter}
 					{$date_filter}
 					" . ($user_id ? ' AND user_id=\''.esc_sql( $user_id ).'\''  : '') . "
@@ -4607,10 +4609,6 @@ class Utils {
 			LIMIT 	%d, %d;
 			",
 			'attempt_started',
-			$search_filter,
-			$search_filter,
-			$search_filter,
-			$search_filter,
 			$start, 
 			$limit
 		) );
