@@ -1,0 +1,894 @@
+@font-face {
+	font-family: 'tutor-v2-icon-test';
+	src: url('../fonts/tutor-v2-icon-test.eot?z96rlv');
+	src: url('../fonts/tutor-v2-icon-test.eot?z96rlv#iefix') format('embedded-opentype'),
+		url('../fonts/tutor-v2-icon-test.ttf?z96rlv') format('truetype'),
+		url('../fonts/tutor-v2-icon-test.woff?z96rlv') format('woff'),
+		url('../fonts/tutor-v2-icon-test.svg?z96rlv#tutor-v2-icon-test') format('svg');
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+
+.tutor-v2-icon-test {
+	/* use !important to prevent issues with browser extensions that change fonts */
+	font-family: 'tutor-v2-icon-test' !important;
+	speak: never;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-ai-file:before {
+	content: '\e901';
+}
+.icon-archive-file:before {
+	content: '\e902';
+}
+.icon-audio-file:before {
+	content: '\e903';
+}
+.icon-avi-file:before {
+	content: '\e904';
+}
+.icon-compress-file:before {
+	content: '\e905';
+}
+.icon-css-file:before {
+	content: '\e906';
+}
+.icon-csv-file:before {
+	content: '\e907';
+}
+.icon-dbf-file:before {
+	content: '\e908';
+}
+.icon-doc-file:before {
+	content: '\e909';
+}
+.icon-document-file:before {
+	content: '\e90a';
+}
+.icon-dwg-file:before {
+	content: '\e90b';
+}
+.icon-exe-file:before {
+	content: '\e90c';
+}
+.icon-fla-file:before {
+	content: '\e90d';
+}
+.icon-html-file:before {
+	content: '\e90e';
+}
+.icon-image-file:before {
+	content: '\e90f';
+}
+.icon-iso-file:before {
+	content: '\e910';
+}
+.icon-jason-file-file:before {
+	content: '\e911';
+}
+.icon-javascript-file:before {
+	content: '\e912';
+}
+.icon-jpg-file:before {
+	content: '\e913';
+}
+.icon-mp3-file:before {
+	content: '\e914';
+}
+.icon-mp4-file:before {
+	content: '\e915';
+}
+.icon-pdf-file:before {
+	content: '\e916';
+}
+.icon-png-file:before {
+	content: '\e917';
+}
+.icon-ppt-file:before {
+	content: '\e918';
+}
+.icon-psd-file:before {
+	content: '\e919';
+}
+.icon-rtf-file:before {
+	content: '\e91a';
+}
+.icon-spreadsheet-file:before {
+	content: '\e91b';
+}
+.icon-svg-file:before {
+	content: '\e91c';
+}
+.icon-text-file:before {
+	content: '\e91d';
+}
+.icon-txt-file:before {
+	content: '\e91e';
+}
+.icon-video-file:before {
+	content: '\e91f';
+}
+.icon-xls-file:before {
+	content: '\e920';
+}
+.icon-xml-file:before {
+	content: '\e921';
+}
+.icon-zip-file:before {
+	content: '\e922';
+}
+.icon-action-line:before {
+	content: '\e900';
+}
+.icon-add-line-line:before {
+	content: '\e923';
+}
+.icon-add-photo-line:before {
+	content: '\e924';
+}
+.icon-artboard-line:before {
+	content: '\e925';
+}
+.icon-calender-line:before {
+	content: '\e926';
+}
+.icon-cart-line-line:before {
+	content: '\e927';
+}
+.icon-certificate-line .path1:before {
+	content: '\e928';
+	color: rgb(26, 27, 30);
+}
+.icon-certificate-line .path2:before {
+	content: '\e929';
+	margin-left: -1em;
+	color: rgb(26, 27, 30);
+}
+.icon-certificate-line .path3:before {
+	content: '\e92a';
+	margin-left: -1em;
+	color: rgb(33, 35, 39);
+}
+.icon-clipboard-line:before {
+	content: '\e92b';
+}
+.icon-clock-line:before {
+	content: '\e92c';
+}
+.icon-code-line:before {
+	content: '\e92d';
+}
+.icon-conversation-line:before {
+	content: '\e92e';
+}
+.icon-cup-line:before {
+	content: '\e92f';
+}
+.icon-default-line:before {
+	content: '\e930';
+}
+.icon-download-line:before {
+	content: '\e931';
+}
+.icon-drag-line:before {
+	content: '\e932';
+}
+.icon-emoji-line:before {
+	content: '\e933';
+}
+.icon-file-line:before {
+	content: '\e934';
+}
+.icon-gallery-line:before {
+	content: '\e935';
+}
+.icon-garbage-line:before {
+	content: '\e936';
+}
+.icon-glasses-line:before {
+	content: '\e937';
+}
+.icon-graduate-line:before {
+	content: '\e938';
+}
+.icon-grid-line:before {
+	content: '\e939';
+}
+.icon-group-line:before {
+	content: '\e93a';
+}
+.icon-home-line:before {
+	content: '\e93b';
+}
+.icon-icon-light-down-line:before {
+	content: '\e93c';
+}
+.icon-icon-light-left-line:before {
+	content: '\e93d';
+}
+.icon-icon-light-right-line:before {
+	content: '\e93e';
+}
+.icon-icon-light-up-line:before {
+	content: '\e93f';
+}
+.icon-interactive-line:before {
+	content: '\e940';
+}
+.icon-level-line:before {
+	content: '\e941';
+}
+.icon-line-cross-line:before {
+	content: '\e942';
+}
+.icon-magnifying-glass-line:before {
+	content: '\e943';
+}
+.icon-menu-line:before {
+	content: '\e944';
+}
+.icon-mortarboard-line:before {
+	content: '\e945';
+}
+.icon-next-line:before {
+	content: '\e946';
+}
+.icon-offer-line:before {
+	content: '\e947';
+}
+.icon-open-book-line:before {
+	content: '\e948';
+}
+.icon-pencil-line:before {
+	content: '\e949';
+}
+.icon-previous-line:before {
+	content: '\e94a';
+}
+.icon-professor-line:before {
+	content: '\e94b';
+}
+.icon-qa-line:before {
+	content: '\e94c';
+}
+.icon-receipt-line:before {
+	content: '\e94d';
+}
+.icon-refund-line:before {
+	content: '\e94e';
+}
+.icon-review-line:before {
+	content: '\e94f';
+}
+.icon-save-line:before {
+	content: '\e950';
+}
+.icon-search-file-line:before {
+	content: '\e951';
+}
+.icon-share-line:before {
+	content: '\e952';
+}
+.icon-spinner-line:before {
+	content: '\e953';
+}
+.icon-student-line-1:before {
+	content: '\e954';
+}
+.icon-student-line:before {
+	content: '\e955';
+}
+.icon-total-discount-line:before {
+	content: '\e956';
+}
+.icon-total-earning-line:before {
+	content: '\e957';
+}
+.icon-uoload-success-line:before {
+	content: '\e958';
+}
+.icon-update-line:before {
+	content: '\e959';
+}
+.icon-upload-file-line:before {
+	content: '\e95a';
+}
+.icon-upload-icon-line:before {
+	content: '\e95b';
+}
+.icon-upload-line:before {
+	content: '\e95c';
+}
+.icon-user-line:before {
+	content: '\e95d';
+}
+.icon-add-group-filled:before {
+	content: '\e95e';
+}
+.icon-add-image-filled:before {
+	content: '\e95f';
+}
+.icon-add-member-filled:before {
+	content: '\e960';
+}
+.icon-angle-double-left-filled:before {
+	content: '\e961';
+}
+.icon-angle-double-right-filled:before {
+	content: '\e962';
+}
+.icon-angle-down-filled:before {
+	content: '\e963';
+}
+.icon-angle-left-filled:before {
+	content: '\e964';
+}
+.icon-angle-right-filled:before {
+	content: '\e965';
+}
+.icon-angle-up-filled:before {
+	content: '\e966';
+}
+.icon-assesment-filled:before {
+	content: '\e967';
+}
+.icon-assignment-filled:before {
+	content: '\e968';
+}
+.icon-attach-filled:before {
+	content: '\e969';
+}
+.icon-audio-volume-filled:before {
+	content: '\e96a';
+}
+.icon-authorised-filled:before {
+	content: '\e96b';
+}
+.icon-award-filled:before {
+	content: '\e96c';
+}
+.icon-background-filled:before {
+	content: '\e96d';
+}
+.icon-book-open-filled:before {
+	content: '\e96e';
+}
+.icon-books-filled:before {
+	content: '\e96f';
+}
+.icon-box-open-filled:before {
+	content: '\e970';
+}
+.icon-browser-filled:before {
+	content: '\e971';
+}
+.icon-bullet-point-filled:before {
+	content: '\e972';
+}
+.icon-calender-bold-filled:before {
+	content: '\e973';
+}
+.icon-camera-filled:before {
+	content: '\e974';
+}
+.icon-cart-filled:before {
+	content: '\e975';
+}
+.icon-certificate-filled-1:before {
+	content: '\e976';
+}
+.icon-certificate-filled:before {
+	content: '\e977';
+}
+.icon-change-filled:before {
+	content: '\e978';
+}
+.icon-chart-filled:before {
+	content: '\e979';
+}
+.icon-circle-outline-cross-filled:before {
+	content: '\e97a';
+}
+.icon-circle-outline-info-filled:before {
+	content: '\e97b';
+}
+.icon-circle-outline-tick-filled:before {
+	content: '\e97c';
+}
+.icon-clock-fill-filled:before {
+	content: '\e97d';
+}
+.icon-coding-filled:before {
+	content: '\e97e';
+}
+.icon-coins-filled:before {
+	content: '\e97f';
+}
+.icon-college-graduation-filled:before {
+	content: '\e980';
+}
+.icon-comment-filled:before {
+	content: '\e981';
+}
+.icon-company-filled:before {
+	content: '\e982';
+}
+.icon-content-drip-filled:before {
+	content: '\e983';
+}
+.icon-copy-filled:before {
+	content: '\e984';
+}
+.icon-copy-text-filled .path1:before {
+	content: '\e985';
+	color: rgb(26, 27, 30);
+}
+.icon-copy-text-filled .path2:before {
+	content: '\e986';
+	margin-left: -1em;
+	color: rgb(26, 27, 30);
+}
+.icon-copy-text-filled .path3:before {
+	content: '\e987';
+	margin-left: -1em;
+	color: rgb(33, 35, 39);
+}
+.icon-copy-text-filled .path4:before {
+	content: '\e988';
+	margin-left: -1em;
+	color: rgb(33, 35, 39);
+}
+.icon-cross-cricle-filled:before {
+	content: '\e989';
+}
+.icon-cross-filled:before {
+	content: '\e98a';
+}
+.icon-crown-filled:before {
+	content: '\e98b';
+}
+.icon-customize-filled:before {
+	content: '\e98c';
+}
+.icon-dashboard-filled:before {
+	content: '\e98d';
+}
+.icon-delete-fill-filled:before {
+	content: '\e98e';
+}
+.icon-delete-stroke-filled:before {
+	content: '\e98f';
+}
+.icon-design-filled:before {
+	content: '\e990';
+}
+.icon-detail-link-filled:before {
+	content: '\e991';
+}
+.icon-discount-filled-filled:before {
+	content: '\e992';
+}
+.icon-discount-filled:before {
+	content: '\e993';
+}
+.icon-doc-add-filled:before {
+	content: '\e994';
+}
+.icon-document-alt-filled:before {
+	content: '\e995';
+}
+.icon-donate-filled:before {
+	content: '\e996';
+}
+.icon-door-open-filled:before {
+	content: '\e997';
+}
+.icon-down-filled:before {
+	content: '\e998';
+}
+.icon-download-filled:before {
+	content: '\e999';
+}
+.icon-drop-down-filled:before {
+	content: '\e99a';
+}
+.icon-drop-filled:before {
+	content: '\e99b';
+}
+.icon-duration-filled:before {
+	content: '\e99c';
+}
+.icon-earth-filled:before {
+	content: '\e99d';
+}
+.icon-edit-fill-filled:before {
+	content: '\e99e';
+}
+.icon-edit-filled:before {
+	content: '\e99f';
+}
+.icon-edit-option-filled:before {
+	content: '\e9a0';
+}
+.icon-editor-filled:before {
+	content: '\e9a1';
+}
+.icon-education-filled:before {
+	content: '\e9a2';
+}
+.icon-envelope-filled:before {
+	content: '\e9a3';
+}
+.icon-expired-filled:before {
+	content: '\e9a4';
+}
+.icon-eye-fill-filled:before {
+	content: '\e9a5';
+}
+.icon-eye-filled:before {
+	content: '\e9a6';
+}
+.icon-fav-full-filled:before {
+	content: '\e9a7';
+}
+.icon-fav-line-filled:before {
+	content: '\e9a8';
+}
+.icon-fill-gaps-filled:before {
+	content: '\e9a9';
+}
+.icon-filter-dollar-filled:before {
+	content: '\e9aa';
+}
+.icon-filter-filled:before {
+	content: '\e9ab';
+}
+.icon-folder-filled:before {
+	content: '\e9ac';
+}
+.icon-grade-filled:before {
+	content: '\e9ad';
+}
+.icon-gradebook-filled:before {
+	content: '\e9ae';
+}
+.icon-grid-fill-filled:before {
+	content: '\e9af';
+}
+.icon-grid-filled:before {
+	content: '\e9b0';
+}
+.icon-hand-holding-usd-filled:before {
+	content: '\e9b1';
+}
+.icon-heart-filled:before {
+	content: '\e9b2';
+}
+.icon-home-filled:before {
+	content: '\e9b3';
+}
+.icon-humnurger-filled:before {
+	content: '\e9b4';
+}
+.icon-idea-filled:before {
+	content: '\e9b5';
+}
+.icon-image-filled:before {
+	content: '\e9b6';
+}
+.icon-image-matching-filled:before {
+	content: '\e9b7';
+}
+.icon-image-portrait-filled:before {
+	content: '\e9b8';
+}
+.icon-img-add-filled:before {
+	content: '\e9b9';
+}
+.icon-import-export-filled:before {
+	content: '\e9ba';
+}
+.icon-import-filled:before {
+	content: '\e9bb';
+}
+.icon-in-progress-filled:before {
+	content: '\e9bc';
+}
+.icon-info-circle-filled:before {
+	content: '\e9bd';
+}
+.icon-info-filled:before {
+	content: '\e9be';
+}
+.icon-instructor-filled:before {
+	content: '\e9bf';
+}
+.icon-invisible-fill-filled:before {
+	content: '\e9c0';
+}
+.icon-invisible-filled:before {
+	content: '\e9c1';
+}
+.icon-landscape-filled:before {
+	content: '\e9c2';
+}
+.icon-layer-filled:before {
+	content: '\e9c3';
+}
+.icon-Line-1-filled:before {
+	content: '\e9c4';
+}
+.icon-link-filled:before {
+	content: '\e9c5';
+}
+.icon-list-filled:before {
+	content: '\e9c6';
+}
+.icon-lock-filled:before {
+	content: '\e9c7';
+}
+.icon-lock-stroke-filled:before {
+	content: '\e9c8';
+}
+.icon-man-user-filled:before {
+	content: '\e9c9';
+}
+.icon-manual-filled:before {
+	content: '\e9ca';
+}
+.icon-mark-cricle-filled:before {
+	content: '\e9cb';
+}
+.icon-mark-filled:before {
+	content: '\e9cc';
+}
+.icon-mark-unread-filled:before {
+	content: '\e9cd';
+}
+.icon-marks-achive-filled:before {
+	content: '\e9ce';
+}
+.icon-marks-total-filled:before {
+	content: '\e9cf';
+}
+.icon-matching-filled:before {
+	content: '\e9d0';
+}
+.icon-media-manager-filled:before {
+	content: '\e9d1';
+}
+.icon-meeting-filled:before {
+	content: '\e9d2';
+}
+.icon-microphone-filled:before {
+	content: '\e9d3';
+}
+.icon-minus-bold-filled:before {
+	content: '\e9d4';
+}
+.icon-minus-filled:before {
+	content: '\e9d5';
+}
+.icon-monthly-filled:before {
+	content: '\e9d6';
+}
+.icon-move-filled:before {
+	content: '\e9d7';
+}
+.icon-msg-archive-filled-1:before {
+	content: '\e9d8';
+}
+.icon-msg-archive-filled-2:before {
+	content: '\e9d9';
+}
+.icon-msg-archive-filled:before {
+	content: '\e9da';
+}
+.icon-msg-important-fill-filled:before {
+	content: '\e9db';
+}
+.icon-msg-important-filled:before {
+	content: '\e9dc';
+}
+.icon-msg-read-filled:before {
+	content: '\e9dd';
+}
+.icon-msg-unread-filled:before {
+	content: '\e9de';
+}
+.icon-multiple-choice-filled:before {
+	content: '\e9df';
+}
+.icon-notification-filled:before {
+	content: '\e9e0';
+}
+.icon-notification-line-filled:before {
+	content: '\e9e1';
+}
+.icon-open-ended-filled:before {
+	content: '\e9e2';
+}
+.icon-order-down-filled:before {
+	content: '\e9e3';
+}
+.icon-order-up-filled:before {
+	content: '\e9e4';
+}
+.icon-ordering-a-to-z-filled:before {
+	content: '\e9e5';
+}
+.icon-ordering-z-to-a-filled:before {
+	content: '\e9e6';
+}
+.icon-paste-filled:before {
+	content: '\e9e7';
+}
+.icon-play-outline-circle-filled:before {
+	content: '\e9e8';
+}
+.icon-plus-bold-filled:before {
+	content: '\e9e9';
+}
+.icon-plus-filled:before {
+	content: '\e9ea';
+}
+.icon-plus-square-filled:before {
+	content: '\e9eb';
+}
+.icon-portrait-filled:before {
+	content: '\e9ec';
+}
+.icon-print-filled:before {
+	content: '\e9ed';
+}
+.icon-purchase-filled:before {
+	content: '\e9ee';
+}
+.icon-puzzle-filled:before {
+	content: '\e9ef';
+}
+.icon-qr-code-filled:before {
+	content: '\e9f0';
+}
+.icon-question-filled:before {
+	content: '\e9f1';
+}
+.icon-question-mark-circle-filled:before {
+	content: '\e9f2';
+}
+.icon-quiz-attempt-filled:before {
+	content: '\e9f3';
+}
+.icon-quiz-filled-1:before {
+	content: '\e9f4';
+}
+.icon-quiz-filled:before {
+	content: '\e9f5';
+}
+.icon-recipt-filled:before {
+	content: '\e9f6';
+}
+.icon-redo-filled:before {
+	content: '\e9f7';
+}
+.icon-refresh-filled-1:before {
+	content: '\e9f8';
+}
+.icon-refresh-filled:before {
+	content: '\e9f9';
+}
+.icon-report-filled:before {
+	content: '\e9fa';
+}
+.icon-save-bold-filled:before {
+	content: '\e9fb';
+}
+.icon-search-filled:before {
+	content: '\e9fc';
+}
+.icon-send-filled:before {
+	content: '\e9fd';
+}
+.icon-settings-filled:before {
+	content: '\e9fe';
+}
+.icon-shape-filled:before {
+	content: '\e9ff';
+}
+.icon-share-filled:before {
+	content: '\ea00';
+}
+.icon-short-ans-filled:before {
+	content: '\ea01';
+}
+.icon-shorting-filled:before {
+	content: '\ea02';
+}
+.icon-signature-filled .path1:before {
+	content: '\ea03';
+	color: rgb(255, 255, 255);
+}
+.icon-signature-filled .path2:before {
+	content: '\ea04';
+	margin-left: -1em;
+	color: rgb(26, 27, 30);
+}
+.icon-signout-filled:before {
+	content: '\ea05';
+}
+.icon-space-filled:before {
+	content: '\ea06';
+}
+.icon-speaker-filled:before {
+	content: '\ea07';
+}
+.icon-star-full-filled:before {
+	content: '\ea08';
+}
+.icon-star-half-filled:before {
+	content: '\ea09';
+}
+.icon-star-line-filled:before {
+	content: '\ea0a';
+}
+.icon-stopwatch-filled:before {
+	content: '\ea0b';
+}
+.icon-style-filled:before {
+	content: '\ea0c';
+}
+.icon-undo-filled:before {
+	content: '\ea0d';
+}
+.icon-university-filled:before {
+	content: '\ea0e';
+}
+.icon-unlock-stroke-filled:before {
+	content: '\ea0f';
+}
+.icon-up-filled:before {
+	content: '\ea10';
+}
+.icon-user-graduate-filled:before {
+	content: '\ea11';
+}
+.icon-verify-filled:before {
+	content: '\ea12';
+}
+.icon-video-camera-filled:before {
+	content: '\ea13';
+}
+.icon-video-filled:before {
+	content: '\ea14';
+}
+.icon-wallet-filled:before {
+	content: '\ea15';
+}
+.icon-warning-filled-1:before {
+	content: '\ea16';
+}
+.icon-warning-filled:before {
+	content: '\ea17';
+}
+.icon-website-filled:before {
+	content: '\ea18';
+}
+.icon-yes-no-filled:before {
+	content: '\ea19';
+}
+.icon-zoom-in-filled:before {
+	content: '\ea1a';
+}
+.icon-zoom-out-filled:before {
+	content: '\ea1b';
+}
