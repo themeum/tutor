@@ -412,38 +412,6 @@ if (!function_exists('get_tutor_header')) {
 	}
 
 	/**
-	 * @param int $parent_id
-	 * @param array $level_categories
-	 *
-	 * Generate Courses categories for Paid Memberships Pro
-	 *
-	 * @since v.1.3.6
-	 */
-	if (!function_exists('generate_categories_for_pmpro')) {
-		function generate_categories_for_pmpro($parent_id = 0, $level_categories = array()) {
-			$args = array(
-				'taxonomy'   => 'course-category',
-				'parent'     => $parent_id,
-				'hide_empty' => false,
-			);
-			$cats = get_categories(apply_filters('course_categories_pmpro_args', $args));
-			if ($cats) {
-				foreach ($cats as $cat) {
-					$name = 'membershipcategory_' . $cat->term_id;
-					if (!empty($level_categories)) {
-						$checked = checked(in_array($cat->term_id, $level_categories), true, false);
-					} else {
-						$checked = '';
-					}
-					echo "<ul><li class=membershipcategory><input type=checkbox name={$name} id={$name} value=yes {$checked}><label for={$name}>{$cat->name}</label>";
-					generate_categories_for_pmpro($cat->term_id, $level_categories);
-					echo '</li></ul>';
-				}
-			}
-		}
-	}
-
-	/**
 	 * @param null $key
 	 * @param bool $default
 	 *
