@@ -1,9 +1,12 @@
 # TutorLMS Changelog
 
-### 1.9.5 - July 18, 2021
+### 1.9.5 - July 17, 2021
 
 * New: WPML compatibility addon
-* Update: Button rearrangment in single course page
+* New: Course retake feature
+* New: Quiz attempt filter in backend dashboard
+* Update: Paid Membership Pro Integration architecture
+* Fix: Assignment attachment not deleting from server when assignment is deleted
 
 
 ### 1.9.4 - July 13, 2021
