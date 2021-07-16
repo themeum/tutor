@@ -51,6 +51,7 @@ class Assets{
 		wp_enqueue_style('tutor-admin-v2', tutor()->url.'assets/css/tutor-admin-v2.min.css', array(), tutor()->version);
 		wp_enqueue_style('admin-v2-markup', tutor()->url.'assets/css/admin-v2-markup.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-icon', tutor()->url.'assets/icons/css/tutor-icon.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-v2-icon-test', tutor()->url.'assets/css/fonts/lineawesome@1.3.0/css/tutor-v2-icon-test.css', array(), tutor()->version);
 
 		/**
 		 * Scripts
