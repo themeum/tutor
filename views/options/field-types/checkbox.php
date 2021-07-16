@@ -1,5 +1,5 @@
 <?php
-if (empty($field['options'])){
+/* if (empty($field['options'])){
     $default = isset($field['default']) ? $field['default'] : '';
     $option_value = $this->get($field['field_key'], $default);
     $label_title = isset($field['label_title']) ? $field['label_title'] : $field['label'];
@@ -20,5 +20,9 @@ if (empty($field['options'])){
 		<br />
 		<?php
 	}
-}
-?>
+} */
+?><label class="tutor-form-toggle">
+	<span class="label-before"> Logged Only </span>
+	<input type="checkbox" class="tutor-form-toggle-input" />
+	<span class="tutor-form-toggle-control"></span>
+</label>
