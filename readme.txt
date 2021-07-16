@@ -3,7 +3,7 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 5.7.2
+Tested up to: 5.8.0
 Requires PHP: 7.0
 Stable tag: 1.9.5
 License: GPLv3
@@ -241,10 +241,13 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.5 - July 18, 2021 =
+= 1.9.5 - July 17, 2021 =
 
 New: WPML compatibility addon
-Update: Button rearrangment in single course page
+New: Course retake feature
+New: Quiz attempt filter in backend dashboard
+Update: Paid Membership Pro Integration architecture
+Fix: Assignment attachment not deleting from server when assignment is deleted
 
 = 1.9.4 - July 13, 2021 =
 
