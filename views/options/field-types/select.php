@@ -1,14 +1,19 @@
-<select name="tutor_option[<?php echo $field['field_key']; ?>]" class="tutor_select2">
-    <?php
-    if ( ! isset($field['select_options']) || $field['select_options'] !== false){
-        echo '<option value="-1">'.__('Select Option', 'tutor').'</option>';
-    }
-	if ( ! empty($field['options'])){
-		foreach ($field['options'] as $optionKey => $option){
-			?>
-			<option value="<?php echo $optionKey ?>" <?php selected($this->get($field['field_key']),  $optionKey) ?> ><?php echo $option ?></option>
+<div class="tutor-option-field-row">
+	<div class="tutor-option-field-label">
+		<label><?php echo $field['label']; ?></label>
+		<p class="desc"><?php echo $field['desc'] ?></p>
+	</div>
+	<div class="tutor-option-field-input">
+		<select name="tutor_option" class="tutor-form-select">
 			<?php
-		}
-	}
-	?>
-</select>
+			if (!empty($field['options'])) {
+				foreach ($field['options'] as $optionKey => $option) {
+			?>
+					<option value="<?php echo $optionKey ?>"><?php echo $option ?></option>
+			<?php
+				}
+			}
+			?>
+		</select>
+	</div>
+</div>

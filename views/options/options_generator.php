@@ -29,19 +29,19 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
                 $i = 0;
                 foreach ($this->options_attr as $args) : ?> <ul class="tutor-option-nav">
                         <li class="tutor-option-nav-item">
-                            <h4><?php echo $args->label ?></h4>
+                            <h4><?php echo $args['label'] ?></h4>
                         <li>
                             <?php
-                            $url_exist  = $this->url_exists($args->sections, $url_page);
-                            foreach ($args->sections as $key => $section) :
+                            $url_exist  = $this->url_exists($args['sections'], $url_page);
+                            foreach ($args['sections'] as $key => $section) :
                                 $i += 1;
-                                $icon      = tutor()->icon_dir . $section->slug . '.svg';
-                                $is_active = $this->get_active($i, $url_page, $section->slug, $url_exist) ? 'active' : null;
+                                $icon      = tutor()->icon_dir . $section['slug'] . '.svg';
+                                $is_active = $this->get_active($i, $url_page, $section['slug'], $url_exist) ? 'active' : null;
                             ?>
                         <li class="tutor-option-nav-item">
-                            <a data-tab="<?php echo $section->slug ?>" class="<?php echo $is_active ?>">
-                                <img src="<?php echo $icon ?>" alt="<?php echo $section->slug ?>-icon" />
-                                <span><?php echo $section->label ?></span>
+                            <a data-tab="<?php echo $section['slug'] ?>" class="<?php echo $is_active ?>">
+                                <img src="<?php echo $icon ?>" alt="<?php echo $section['slug'] ?>-icon" />
+                                <span><?php echo $section['label'] ?></span>
                             </a>
                         </li>
                     <?php
@@ -57,13 +57,13 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
 
                 $i = 0;
                 foreach ($this->options_attr as $args) :
-                    $url_exist = $this->url_exists($args->sections, $url_page);
-                    foreach ($args->sections as $key => $section) :
+                    $url_exist = $this->url_exists($args['sections'], $url_page);
+                    foreach ($args['sections'] as $key => $section) :
                         $i += 1;
-                        $is_active = $this->get_active($i, $url_page, $section->slug, $url_exist) ? 'active' : null; ?>
-                        <div id="<?php echo $section->slug ?>" class="tutor-option-nav-page <?php echo $is_active ?>">
+                        $is_active = $this->get_active($i, $url_page, $section['slug'], $url_exist) ? 'active' : null; ?>
+                        <div id="<?php echo $section['slug'] ?>" class="tutor-option-nav-page <?php echo $is_active ?>">
 
-                            <?php echo $this->template($section, $section->template); ?>
+                            <?php echo $this->template($section); ?>
 
                         </div>
                 <?php

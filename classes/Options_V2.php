@@ -112,7 +112,8 @@ class Options_V2 {
 								'label'      => false,
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'tutor_dashboard_page_id' => array(
+									array(
+										'key'    => 'tutor_dashboard_page_id',
 										'type'    => 'select',
 										'label'   => __('Dashboard Page', 'tutor'),
 										'default' => '0',
@@ -126,27 +127,31 @@ class Options_V2 {
 								'slug'       => 'course',
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'student_must_login_to_view_course' => array(
-										'type'        => 'checkbox',
+									array(
+										'key'        => 'student_must_login_to_view_course',
+										'type'        => 'toggle_switch',
 										'label'       => __('Course Visibility', 'tutor'),
 										'label_title' => __('Logged in only', 'tutor'),
 										'desc'        => __('Students must be logged in to view course', 'tutor'),
 									),
-									'course_archive_page'               => array(
+									array(
+										'key'    => 'course_archive_page',
 										'type'    => 'select',
 										'label'   => __('Course Archive Page', 'tutor'),
 										'default' => '0',
 										'options' => $pages,
 										'desc'    => __('This page will be used to list all the published courses.', 'tutor'),
 									),
-									'course_content_access_for_ia'      => array(
-										'type'        => 'checkbox',
-										'label'       => __('Enable / Disable', 'tutor'),
-										'label_title' => __('Course Content Access', 'tutor'),
+									array(
+										'key'        => 'course_content_access_for_ia',
+										'type'        => 'toggle_switch',
+										'label'       => __('Course Content Access', 'tutor'),
+										'label_title' => null,
 										'desc'        => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
 									),
-									'course_completion_process'         => array(
-										'type'           => 'radio',
+									array(
+										'key'           => 'course_completion_process',
+										'type'           => 'radio_vertical',
 										'label'          => __('Course Completion Process', 'tutor'),
 										'default'        => 'flexible',
 										'select_options' => false,
@@ -163,13 +168,16 @@ class Options_V2 {
 								'slug'       => 'video',
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'supported_video_sources' => array(
-										'type'    => 'checkbox',
+									array(
+										'key'    => 'supported_video_sources',
+										'type'    => 'checkbox_horizontal',
 										'label'   => __('Preferred Video Source', 'tutor'),
+										'label_title' => __('Preferred Video Source', 'tutor'),
 										'options' => $video_sources,
 										'desc'    => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
 									),
-									'default_video_source'    => array(
+									array(
+										'key'    => 'default_video_source',
 										'type'    => 'select',
 										'label'   => __('Default Video Source', 'tutor'),
 										'default' => '',
@@ -183,13 +191,15 @@ class Options_V2 {
 								'slug'       => 'others',
 								'block_type' => 'isolate',
 								'fields'     => array(
-									'lesson_permalink_base' => array(
+									array(
+										'key'    => 'lesson_permalink_base',
 										'type'    => 'text',
 										'label'   => __('Lesson Permalink Base', 'tutor'),
 										'default' => 'lessons',
 										'desc'    => $lesson_url,
 									),
-									'student_register_page' => array(
+									array(
+										'key'    => 'student_register_page',
 										'type'    => 'select',
 										'label'   => __('Student Registration Page', 'tutor'),
 										'default' => '0',
@@ -763,7 +773,7 @@ class Options_V2 {
 
 		);
 
-		return json_decode(json_encode($attr), FALSE);
+		return $attr;
 	}
 
 
@@ -782,7 +792,7 @@ class Options_V2 {
 
 		foreach ($dataArr as $section) {
 			$j += 1;
-			$is_active = isset($url_page) && $url_page === $section->slug ? true : (!isset($url_page) && $j === 1 ? true : false);
+			$is_active = isset($url_page) && $url_page === $section['slug'] ? true : (!isset($url_page) && $j === 1 ? true : false);
 
 			if ($is_active === true) {
 				$url_exist = true;
@@ -809,12 +819,12 @@ class Options_V2 {
 	 */
 	public function generate_field($field = array()) {
 		ob_start();
-		include tutor()->path . 'views/options/option_field.php';
+		include tutor()->path . "views/options/field-types/{$field['type']}.php";
 
 		return ob_get_clean();
 	}
 
-	public function field_type($field = array()) {
+	public function field_type($field = object) {
 		ob_start();
 		include tutor()->path . "views/options/field-types/{$field['type']}.php";
 
@@ -834,9 +844,9 @@ class Options_V2 {
 		return ob_get_clean();
 	}
 
-	public function template($section = object, $template_slug) {
+	public function template($section = object) {
 		ob_start();
-		include tutor()->path . "views/options/template/{$template_slug}.php";
+		include tutor()->path . "views/options/template/{$section['template']}.php";
 		return ob_get_clean();
 	}
 }
