@@ -5298,7 +5298,11 @@ msgstr ""
 msgid "Assignment Updated"
 msgstr ""
 
-#: assets/js/tutor-admin.js:664
+#: assets/js/tutor-admin.js:629
+msgid "Do you want to save without any category?"
+msgstr ""
+
+#: assets/js/tutor-admin.js:683
 msgid "Are you sure? it can not be undone."
 msgstr ""
 
@@ -5374,18 +5378,18 @@ msgstr ""
 msgid "Keep Data"
 msgstr ""
 
-#: assets/js/tutor.js:224
+#: assets/js/tutor.js:225
 msgid "Success"
 msgstr ""
 
-#: assets/js/tutor.js:225
+#: assets/js/tutor.js:226
 msgid "Update Error"
 msgstr ""
 
-#: assets/js/tutor.js:225
+#: assets/js/tutor.js:226
 msgid "Meeting Update Failed"
 msgstr ""
 
-#: assets/js/tutor.js:602
+#: assets/js/tutor.js:603
 msgid "Quiz Update Failed"
 msgstr ""

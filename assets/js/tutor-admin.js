@@ -613,6 +613,25 @@ jQuery(document).ready(function($){
         }
     });
 
+    // Require category selection
+    $(document).on('submit', '.pmpro_admin form', function(e) {
+        var form = $(this);
+
+        if(!form.find('input[name="tutor_action"]').length) {
+            // Level editor or tutor action not necessary
+            return;
+        }
+
+        if(
+            form.find('[name="tutor_pmpro_membership_model"]').val()=='category_wise_membership' && 
+            !form.find('.membership_course_categories input:checked').length) {
+
+            if(!confirm(__('Do you want to save without any category?', 'tutor'))) {
+                e.preventDefault();
+            }
+        }
+    });
+
     /**
      * Find user/student from select2
      * @since v.1.4.0
