@@ -102,7 +102,7 @@ class Ajax{
 
 		$rating = sanitize_text_field(tutor_utils()->avalue_dot('rating', $_POST));
 		$course_id = sanitize_text_field(tutor_utils()->avalue_dot('course_id', $_POST));
-		$review = wp_kses_post(tutor_utils()->avalue_dot('review', $_POST));
+		$review = sanitize_textarea_field(tutor_utils()->avalue_dot('review', $_POST));
 
 		!$rating ? $rating = 0 : 0;
 		$rating>5 ? $rating = 5 : 0;
@@ -122,7 +122,7 @@ class Ajax{
 
 		$review_ID = $previous_rating_id;
 		if ( $previous_rating_id){
-			$wpdb->update( $wpdb->comments, array('comment_content' => esc_sql( $review ) ),
+			$wpdb->update( $wpdb->comments, array('comment_content' =>  $review ),
 				array('comment_ID' => $previous_rating_id)
 			);
 
