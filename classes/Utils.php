@@ -683,35 +683,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_lesson_count_by_course( $course_id = 0 ) {
-		global $wpdb;
-
-		$course_id        = $this->get_post_id($course_id);
-		$lesson_post_type = tutor()->lesson_post_type;
-
-		$topicIDS = $wpdb->get_col( $wpdb->prepare(
-			"SELECT ID
-			FROM  	{$wpdb->posts}
-			WHERE 	post_type = %s
-					AND post_parent = %d;
-			",
-			'topics',
-			$course_id
-		) );
-
-		$lesson_count = 0;
-		if ( $this->count( $topicIDS ) ) {
-			$inIDS = implode( ",", $topicIDS );
-			$lesson_count = $wpdb->get_var( $wpdb->prepare(
-				"SELECT COUNT(ID)
-				FROM 	{$wpdb->posts}
-				WHERE 	post_parent IN({$inIDS})
-						AND post_type = %s;
-				",
-				$lesson_post_type
-			) );
-		}
-
-		return (int) $lesson_count;
+		return count( $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id ) );
 	}
 
 	/**
@@ -1119,16 +1091,20 @@ class Utils {
 
 		// Delete Course completion row
 		$del_where = array(
+			'user_id' => $user_id,
+			'comment_type' => 'course_completed',
 			'comment_agent' => 'TutorLMSPlugin', 
-			'user_id' => $user_id 
 		);
 		$wpdb->delete($wpdb->comments, $del_where);
 
+		// Delete Completed lesson count
+		$lesson_ids = $this->get_course_content_ids_by(tutor()->lesson_post_type, tutor()->course_post_type, $course_id);
+		foreach($lesson_ids as $id) {
+			delete_user_meta( $user_id, '_tutor_completed_lesson_id_'.$id );
+		}
+
 		// Delete other addon-wise stuffs by hook, specially assignment.
 		do_action( 'delete_tutor_course_progress', $course_id, $user_id );
-
-		// Respond finally
-		wp_send_json_success();
 	}
 
 	/**
@@ -7190,5 +7166,36 @@ class Utils {
 		}
 
 		return $this->get_unique_slug($new_slug, $post_type, true);
+	}
+
+	public function get_course_content_ids_by($content_type, $ancestor_type, $ancestor_id) {
+		global $wpdb; 
+		$ids = array();
+
+		switch($content_type) {
+
+			// Get lesson, quiz, assignment IDs
+			case tutor()->lesson_post_type : 
+			case 'tutor_quiz' :
+				switch($ancestor_type) {
+
+					// Get lesson, quiz, assignment IDs by course ID
+					case tutor()->course_post_type : 
+						$content_ids = $wpdb->get_col($wpdb->prepare(
+							"SELECT content.ID FROM {$wpdb->posts} course
+								INNER JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent 
+								INNER JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
+							WHERE course.ID=%d AND content.post_type=%s",
+							$ancestor_id,
+							$content_type
+						));
+
+						// Assign id array to the variable
+						is_array($content_ids) ? $ids=$content_ids : 0;
+						break 2;
+				}
+		}
+
+		return $ids;
 	}
 }

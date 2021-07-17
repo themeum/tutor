@@ -37,7 +37,7 @@ global $wp_query;
         if ($wp_query->query['post_type'] !== 'lesson') {
             $lesson_url = tutor_utils()->get_course_first_lesson();
             if ($lesson_url) { ?>
-                <a href="<?php echo $lesson_url; ?>" class="tutor-button tutor-success">
+                <a href="<?php echo $lesson_url; ?>" class="tutor-button tutor-button-primary">
                     <?php _e('Continue to lesson', 'tutor'); ?>
                 </a>
         <?php }
