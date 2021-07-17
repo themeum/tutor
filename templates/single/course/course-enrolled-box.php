@@ -41,7 +41,7 @@ global $wp_query;
             $retake_course = $is_completed_course || ($completed_percent >= 100 && tutor_utils()->get_option('course_retake_feature', false));
 
             if ( $lesson_url ) { 
-                $button_class = 'tutor-button tutor-success' . ($retake_course ? ' tutor-course-retake-button' : '');
+                $button_class = 'tutor-button tutor-button-primary' . ($retake_course ? ' tutor-course-retake-button' : '');
                 ?>
                 <a href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
                     <?php

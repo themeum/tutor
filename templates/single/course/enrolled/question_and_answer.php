@@ -50,7 +50,7 @@ if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
 
             <div class="tutor-form-group">
                 <a href="javascript:;" class="tutor_question_cancel tutor-button tutor-danger"><?php _e('Cancel', 'tutor'); ?></a>
-                <button type="submit" class="tutor-button tutor-success tutor_ask_question_btn" name="tutor_question_search_btn"><?php _e('Post Question', 'tutor'); ?> </button>
+                <button type="submit" class="tutor-button tutor-button-primary tutor_ask_question_btn" name="tutor_question_search_btn"><?php _e('Post Question', 'tutor'); ?> </button>
             </div>
         </form>
     </div>
@@ -120,7 +120,7 @@ if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
                     <div class="tutor_add_answer_row">
                         <div class="tutor_add_answer_wrap " data-question-id="<?php echo $question->comment_ID; ?>">
                             <div class="tutor_wp_editor_show_btn_wrap">
-                                <a href="javascript:;" class="tutor_wp_editor_show_btn tutor-button tutor-success"><?php _e('Add an answer', 'tutor'); ?></a>
+                                <a href="javascript:;" class="tutor_wp_editor_show_btn tutor-button tutor-button-primary"><?php _e('Add an answer', 'tutor'); ?></a>
                             </div>
                             <div class="tutor_wp_editor_wrap" style="display: none;">
                                 <form method="post" class="tutor-add-answer-form">
@@ -134,7 +134,7 @@ if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
 
                                     <div class="tutor-form-group">
                                         <a href="javascript:;" class="tutor_cancel_wp_editor tutor-button tutor-danger"><?php _e('Cancel', 'tutor'); ?></a>
-                                        <button type="submit" class="tutor-button tutor_add_answer_btn tutor-success" name="tutor_answer_search_btn">
+                                        <button type="submit" class="tutor-button tutor_add_answer_btn tutor-button-primary" name="tutor_answer_search_btn">
                                             <?php _e('Add Answer', 'tutor'); ?>
                                         </button>
                                     </div>

@@ -51,6 +51,8 @@ window.tutor_component = function($, icon, padding) {
         }
         
         $('body').append(element);
+
+        return element;
     }
 
     return {popup: this.popup};

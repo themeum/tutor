@@ -1330,6 +1330,6 @@ class Course extends Tutor_Base {
 		}
 
 		tutor_utils()->delete_course_progress($course_id);
-		wp_send_json_success();
+		wp_send_json_success(array('redirect_to' => tutor_utils()->get_course_first_lesson( $course_id ) ));
 	}
 }
