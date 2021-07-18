@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.5 - July 17, 2021 =
+= 1.9.5 - July 18, 2021 =
 
 New: WPML compatibility addon
 New: Course retake feature
