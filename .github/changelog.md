@@ -1,5 +1,10 @@
 # TutorLMS Changelog
 
+### 1.9.6 - August 02, 2021
+
+* Fix: Course retake button appear even disabled from dashboard
+
+
 ### 1.9.5 - July 18, 2021
 
 * New: WPML compatibility addon

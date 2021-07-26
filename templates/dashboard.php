@@ -81,8 +81,8 @@ do_action('tutor_dashboard/before/wrap');
                             ob_start();
                             if (tutils()->get_option('enable_become_instructor_btn')) {
                                 ?>
-                                    <a style="vertical-align:middle" class="tutor-btn bordered-btn" href="<?php echo esc_url(tutils()->instructor_register_url()); ?>">
-                                        <?php echo sprintf(__("%s Become an instructor", 'tutor'), '<i class="tutor-icon-man-user"></i> &nbsp;'); ?>
+                                    <a id="tutor-become-instructor-button" style="vertical-align:middle" class="tutor-btn bordered-btn" href="<?php echo esc_url(tutils()->instructor_register_url()); ?>">
+                                        <i class="tutor-icon-man-user"></i> &nbsp; <?php _e("Become an instructor", 'tutor'); ?>
                                     </a>
                                 <?php
                             }
@@ -92,7 +92,7 @@ do_action('tutor_dashboard/before/wrap');
                                 $course_type = tutor()->course_post_type;
                                 ?>
                                 <a class="tutor-btn bordered-btn" href="<?php echo apply_filters('frontend_course_create_url', admin_url("post-new.php?post_type=".tutor()->course_post_type)); ?>">
-                                    <?php echo sprintf(__('%s Add A New Course ', 'tutor'), '<i class="tutor-icon-checkbox-pen-outline"></i> &nbsp;'); ?>
+                                    <i class="tutor-icon-checkbox-pen-outline"></i> &nbsp; <?php _e('Add A New Course', 'tutor'); ?>
                                 </a>
                                 <?php
                             }
