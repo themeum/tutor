@@ -37,7 +37,7 @@ class Assets{
 			'tutor_pro_url' => function_exists('tutor_pro') ? tutor_pro()->url : null,
 			'nonce_key'     => tutor()->nonce,
 			tutor()->nonce  => wp_create_nonce( tutor()->nonce_action ),
-			'loading_icon_url' => get_admin_url() . 'images/loading.gif',
+			'loading_icon_url' => get_admin_url() . 'images/wpspin_light.gif',
 			'placeholder_img_src' => tutor_placeholder_img_src(),
 			'enable_lesson_classic_editor' => get_tutor_option('enable_lesson_classic_editor'),
 			'tutor_frontend_dashboard_url' => tutor_utils()->get_tutor_dashboard_page_permalink(),

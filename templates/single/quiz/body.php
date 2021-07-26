@@ -362,7 +362,7 @@ $quiz_answers = array();
                                     <div class="quiz-answer-footer-bar">
                                         <div class="quiz-footer-button">
                                             <button type="button" value="quiz_answer_submit" class="tutor-button
-                                        tutor-success tutor-quiz-answer-next-btn"><?php _e( 'Answer &amp; Next Question', 'tutor' ); ?></button>
+                                        tutor-button-primary tutor-quiz-answer-next-btn"><?php _e( 'Answer &amp; Next Question', 'tutor' ); ?></button>
                                         </div>
                                     </div>
 									<?php
@@ -370,7 +370,7 @@ $quiz_answers = array();
 									?>
                                     <div class="quiz-answer-footer-bar">
                                         <div class="quiz-footer-button">
-                                            <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-success"><?php
+                                            <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-button-primary"><?php
 												_e( 'Submit Quiz', 'tutor' ); ?></button>
                                         </div>
                                     </div>
@@ -388,7 +388,7 @@ $quiz_answers = array();
                         <div class="quiz-answer-footer-bar">
                             <div class="quiz-footer-button">
                                 <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button
-                                tutor-success"><?php _e( 'Submit Quiz', 'tutor' ); ?></button>
+                                tutor-button-primary"><?php _e( 'Submit Quiz', 'tutor' ); ?></button>
                             </div>
                         </div>
 					<?php } ?>

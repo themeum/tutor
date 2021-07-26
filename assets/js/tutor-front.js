@@ -2223,8 +2223,11 @@ jQuery(document).ready(function ($) {
     $('.tutor-course-retake-button').click(function(e) {
         e.preventDefault();
 
-        var url = $(this).attr('href');
-        var course_id = $(this).data('course_id');
+        var button = $(this);
+        var url = button.attr('href');
+        var course_id = button.data('course_id');
+
+        var popup;
 
         var data = {
             title: __('Override Previous Progress', 'tutor'),
@@ -2233,15 +2236,25 @@ jQuery(document).ready(function ($) {
                 reset: {
                     title: __('Reset Data', 'tutor'),
                     class: 'secondary',
+
                     callback: function() {
+
+                        var button = popup.find('.tutor-button-secondary');
+                        button.prop('disabled', true).append('<img style="margin-left: 7px" src="'+ window._tutorobject.loading_icon_url +'"/>');
+
                         $.ajax({
                             url: window._tutorobject.ajaxurl,
                             type: 'POST',
                             data: {action: 'tutor_reset_course_progress', course_id: course_id},
                             success: function(response) {
                                 if(response.success) {
-                                    window.location.assign(url);
+                                    window.location.assign(response.data.redirect_to);
+                                } else {
+                                    alert((response.data || {}).message || __('Something went wrong', 'tutor'));
                                 }
+                            },
+                            complete: function() {
+                                button.prop('disabled', false).find('img').remove();
                             }
                         });
                     }
@@ -2256,6 +2269,6 @@ jQuery(document).ready(function ($) {
             } 
         };
 
-        new window.tutor_component($, 'icon-gear', 40).popup(data);
+        popup = new window.tutor_component($, 'icon-gear', 40).popup(data);
     });
 });

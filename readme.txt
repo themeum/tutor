@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 5.8.0
+Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 1.9.5
+Stable tag: 1.9.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,7 +241,11 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.5 - July 17, 2021 =
+= 1.9.6 - August 02, 2021 =
+
+Fix: Course retake button appear even disabled from dashboard
+
+= 1.9.5 - July 18, 2021 =
 
 New: WPML compatibility addon
 New: Course retake feature

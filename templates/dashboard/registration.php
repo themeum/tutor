@@ -15,7 +15,7 @@
 
 <?php do_action('tutor_before_student_reg_form');?>
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" id="tutor-registration-from">
 
     <?php do_action('tutor_student_reg_form_start');?>
 

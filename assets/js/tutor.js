@@ -26,12 +26,6 @@ window.tutor_component = function($, icon, padding) {
         </div>';
     }
 
-    this.close = function() {
-        element.fadeOut(function() {
-            element.remove();
-        });
-    }
-
     this.popup = function(data) {
         
         var title = data.title ? '<h3>'+data.title+'</h3>' : '';
@@ -45,12 +39,21 @@ window.tutor_component = function($, icon, padding) {
 
         element = $($this.popup_wrapper( title + description ), padding);
 
+        // Assign close event
+        element.click(function() {
+            $(this).remove();
+        }).children().click(function(e) {
+            e.stopPropagation();
+        });
+
         // Append action button
         for(var i=0; i<buttons.length; i++) {
             element.find('.tutor-component-button-container').append(buttons[i]);
         }
         
         $('body').append(element);
+
+        return element;
     }
 
     return {popup: this.popup};
