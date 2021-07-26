@@ -5,7 +5,7 @@
  */
 ?>
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" id="tutor-instructor-application-form">
 	<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 	<input type="hidden" value="tutor_apply_instructor" name="tutor_action"/>
 

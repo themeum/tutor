@@ -1161,7 +1161,7 @@ class Tutor_List_Table {
 			</tr>
 			</thead>
 
-			<tbody id="the-l ist"<?php
+			<tbody id="the-list"<?php
 			if ( $singular ) {
 				echo " data-wp-lists='list:$singular'";
 			} ?>>

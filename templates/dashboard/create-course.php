@@ -108,7 +108,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                             </div>
                             <!--.tutor-course-builder-section-title-->
                             <div class="tutor-course-builder-section-content">
-                                <div class="tutor-frontend-builder-item-scope">
+                                <div id="tutor-frontend-course-title" class="tutor-frontend-builder-item-scope">
                                     <div class="tutor-form-group">
                                         <label class="tutor-builder-item-heading">
                                             <?php _e('Course Title', 'tutor'); ?>
