@@ -250,8 +250,9 @@ class Options_V2 {
 								'slug'       => 'lesson',
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'autoload_next_course_content' => array(
-										'type'        => 'checkbox',
+									array(
+										'key'        => 'autoload_next_course_content',
+										'type'        => 'toggle_switch',
 										'label'       => __('Enable / Disable', 'tutor'),
 										'label_title' => __('Automatically load next course content.', 'tutor'),
 										'desc'        => __('Enabling this feature will be load next course content automatically after finishing current video.', 'tutor'),
@@ -263,7 +264,8 @@ class Options_V2 {
 								'slug'       => 'quiz',
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'quiz_time_limit'        => array(
+									array(
+										'key'         => 'quiz_time_limit',
 										'type'         => 'group_fields',
 										'label'        => __('Time Limit', 'tutor'),
 										'desc'         => __('0 means unlimited time.', 'tutor'),
@@ -286,7 +288,8 @@ class Options_V2 {
 											),
 										),
 									),
-									'quiz_when_time_expires' => array(
+									array(
+										'key'           => 'quiz_when_time_expires',
 										'type'           => 'radio',
 										'label'          => __('When time expires', 'tutor'),
 										'default'        => 'minutes',
@@ -824,7 +827,7 @@ class Options_V2 {
 		return ob_get_clean();
 	}
 
-	public function field_type($field = object) {
+	public function field_type($field = array()) {
 		ob_start();
 		include tutor()->path . "views/options/field-types/{$field['type']}.php";
 
@@ -844,7 +847,7 @@ class Options_V2 {
 		return ob_get_clean();
 	}
 
-	public function template($section = object) {
+	public function template($section = array()) {
 		ob_start();
 		include tutor()->path . "views/options/template/{$section['template']}.php";
 		return ob_get_clean();
