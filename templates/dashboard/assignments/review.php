@@ -115,7 +115,7 @@ if ( $submitted_assignment){
             <div class="tutor-assignment-evaluate-row">
                 <div class="tutor-option-field-label"></div>
                 <div class="tutor-option-field">
-                    <button type="submit" class="tutor-button tutor-button-primary tutor-success"><?php _e('Evaluate this submission', 'tutor'); ?></button>
+                    <button type="submit" class="tutor-button tutor-button-primary"><?php _e('Evaluate this submission', 'tutor'); ?></button>
                 </div>
             </div>
         </form>

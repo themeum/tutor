@@ -198,7 +198,7 @@ if ($assignment_comment != false) {
 				}
 				?>
 				<div class="tutor-assignment-submit-btn-wrap">
-					<button type="submit" class="tutor-button tutor-success" id="tutor_assignment_submit_btn"> <?php _e('Submit Assignment', 'tutor');
+					<button type="submit" class="tutor-button tutor-button-primary" id="tutor_assignment_submit_btn"> <?php _e('Submit Assignment', 'tutor');
 																												?> </button>
 				</div>
 			</form>

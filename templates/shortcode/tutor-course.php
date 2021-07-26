@@ -16,7 +16,7 @@ if ($course_filter && count($supported_filters)) { ?>
 			<?php tutor_load_template('course-filter.filters'); ?>
 		</div>
 		<div>
-			<div class="<?php tutor_container_classes() ?> tutor-course-filter-loop-container" data-column_per_row="<?php echo $column_per_row; ?>" data-course_per_page="<?php echo $course_per_page; ?>"> <?php 
+			<div id="tutor-course-filter-loop-container" class="<?php tutor_container_classes() ?> tutor-course-filter-loop-container" data-column_per_row="<?php echo $column_per_row; ?>" data-course_per_page="<?php echo $course_per_page; ?>"> <?php 
 	}
 				if ( have_posts() ) :
 					/* Start the Loop */

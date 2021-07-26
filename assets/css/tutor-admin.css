@@ -517,6 +517,11 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   color: #212327;
 }
 
+.tutor-component-popup-container > div p {
+  margin: 5px 0 25px;
+  text-align: center;
+}
+
 .tutor-component-popup-container > div .tutor-component-button-container {
   text-align: center;
 }
