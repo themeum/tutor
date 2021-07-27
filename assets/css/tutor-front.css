@@ -11948,3 +11948,48 @@ body.has-tutor-frontend-course-builder .select2-search__field {
 .tutor-instructor-rejection-notice a:hover {
   color: #e41304;
 }
+
+.tutor-denied-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-column-gap: 80px;
+     -moz-column-gap: 80px;
+          column-gap: 80px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  max-width: 990px;
+  margin: auto;
+  padding: 60px 0 30px;
+}
+
+.tutor-denied-wrapper .tutor-denied-content-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  row-gap: 39px;
+}
+
+.tutor-denied-wrapper .tutor-denied-content-wrapper h2 {
+  font-size: 40px !important;
+  font-style: normal;
+  text-align: left;
+}
+
+@media screen and (max-width: 992px) {
+  .tutor-denied-wrapper {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    row-gap: 50px;
+  }
+}
