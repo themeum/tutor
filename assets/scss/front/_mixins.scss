@@ -24,3 +24,12 @@
     -moz-#{$property}   : -moz-#{$value};
     -webkit-#{$property}: -webkit-#{$value};
 }
+
+@mixin tutorDeniedStyle {
+    display: flex;
+    column-gap: 80px;
+    justify-content: center;
+    max-width: 990px;
+    margin: auto;
+
+}
