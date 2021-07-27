@@ -8,6 +8,10 @@
  *
  * @package TutorLMS/Templates
  * @version 1.4.3
+ * 
+ * Template content and design updated 
+ * 
+ * @version 1.9.6
  */
 
 if ( ! defined( 'ABSPATH' ) )
@@ -20,7 +24,7 @@ get_header();
 <?php do_action('tutor_lesson/single/before/wrap'); ?>
     <div <?php tutor_post_class(); ?>>
 
-        <div class="tutor-single-lesson-segment tutor-lessonrequired-enroll-wrap tutor-denied-wrapper">
+        <div class="tutor-denied-wrapper">
 
             <div class="image-wrapper">
                 <img src="<?php echo esc_url( tutor()->url.'assets/images/denied.png' )?>" alt="denied">
