@@ -341,27 +341,40 @@ jQuery(document).ready(function ($) {
                         var quiz_id = $('#tutor_quiz_id').val();
                         var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
                         var quiz_timeout_data = { quiz_id: quiz_id, action: 'tutor_quiz_timeout' };
-                  
+        
+                        var att = $("#tutor-quiz-time-expire-wrapper").attr('data-attempt-remaining');
+
+                        //disable buttons
+                        $(".tutor-quiz-answer-next-btn").attr('disabled', true);
+                        $(".tutor-quiz-submit-btn").attr('disabled', true);
+
+                        //add alert text
+                        $(".time-remaining span").css('color', '#F44337');
+                        
                         $.ajax({
                             url: _tutorobject.ajaxurl,
                             type: 'POST',
                             data: quiz_timeout_data,
                             success: function (data) {
+                                var alertDiv = "#tutor-quiz-time-expire-wrapper .tutor-alert";
+                                $(alertDiv).addClass('show');
+                                if ( att > 0 ) {
+                                    $(`${alertDiv} .text`).html(
+                                        `${__( 'Your time limit for this quiz has expired, please reattempt the quiz.', 'tutor' )}`
+                                    );                            
+                                } else {
+                                    $(alertDiv).addClass('tutor-alert-danger');
+                                    $("#tutor-start-quiz").hide();
+                                    $(`${alertDiv} .text`).html(
+                                        `${__( 'Unfortunately, you are out of time and quiz attempts. ', 'tutor' )}`
+                                    );
+                                }
                                 // console.log(data)
                                 // if (data.success) {
                                 //     window.location.reload();
                                 // }
                             },
                             complete: function () {
-                                var att = $("#tutor-quiz-time-expire-wrapper").attr('data-attempt-remaining');
-                                if ( att > 0 ) {
-                                    $("#tutor-quiz-time-expire-wrapper .expire-text").html(
-                                        `<div class="tutor-alert tutor-alert-warning">${__( 'Your time limit for this quiz has expired, please reattempt the quiz.', 'tutor' )}</div>`
-                                    );                            
-                                }
-                                $("#tutor-quiz-time-expire-wrapper .expire-text").html(
-                                    `<div class="tutor-alert tutor-alert-danger">${__( 'Unfortunately, you are out of time and quiz attempts. ', 'tutor' )}</div>`
-                                );
                                 //$('#tutor-quiz-body').html('');
                                 //window.location.reload();
                             }
@@ -659,8 +672,10 @@ jQuery(document).ready(function ($) {
         var validated = true;
         if ($questions_wrap.length) {
             $questions_wrap.each(function (index, question) {
-                !tutor_quiz_validation( $(question) ) ? validated = false : 0;
-                !feedback_response( $(question) ) ? validated = false : 0;
+                // !tutor_quiz_validation( $(question) ) ? validated = false : 0;
+                // !feedback_response( $(question) ) ? validated = false : 0;
+                validated = tutor_quiz_validation($(question));
+                validated = feedback_response($(question));
 
             });
         }

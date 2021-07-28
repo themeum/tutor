@@ -78,20 +78,22 @@ $quiz_answers = array();
 				?>
 
 				<div id="tutor-quiz-time-expire-wrapper" data-attempt-remaining="<?php esc_attr_e( $attempt_remaining );?>">
-					<div class="expire-text">
+					<div class="tutor-alert">
+						<div class="text">
 
-					</div>
-					<div class="expire-action">
-						<form id="tutor-start-quiz" method="post">
-							<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+						</div>
+						<div>
+							<form id="tutor-start-quiz" method="post">
+								<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
-							<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
-							<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
+								<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
+								<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
-							<button type="submit" class="tutor-button button-warning" name="start_quiz_btn" value="start_quiz">
-								<i class="icon-hourglass-1"></i> <?php _e( 'Reattempt', 'tutor' ); ?>
-							</button>
-						</form>
+								<button type="submit" class="tutor-button button-warning" name="start_quiz_btn" value="start_quiz">
+									<i class="icon-hourglass-1"></i> <?php _e( 'Reattempt', 'tutor' ); ?>
+								</button>
+							</form>
+						</div>
 					</div>
 				</div>
 
@@ -388,7 +390,7 @@ $quiz_answers = array();
 									?>
                                     <div class="quiz-answer-footer-bar">
                                         <div class="quiz-footer-button">
-                                            <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-button-primary"><?php
+                                            <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-button-primary tutor-quiz-submit-btn"><?php
 												_e( 'Submit Quiz', 'tutor' ); ?></button>
                                         </div>
                                     </div>
