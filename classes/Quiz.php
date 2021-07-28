@@ -466,9 +466,9 @@ class Quiz {
 
 		$quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
 
-		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
+		// if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+		// 	wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		// }
 
 		$attempt = tutor_utils()->is_started_quiz($quiz_id);
 

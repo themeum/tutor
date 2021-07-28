@@ -284,6 +284,7 @@ jQuery(document).ready(function ($) {
     /**
      * Quiz attempt
      */
+
     var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
     var attempt_settings = null;
     if ($tutor_quiz_time_update.length) {
@@ -322,7 +323,6 @@ jQuery(document).ready(function ($) {
                     clearInterval(tutor_quiz_interval);
                     countdown_human = "EXPIRED";
                     //Set the quiz attempt to timeout in ajax
-
                     if (_tutorobject.quiz_options.quiz_when_time_expires === 'autosubmit') {
                         /**
                          * Auto Submit
@@ -330,6 +330,7 @@ jQuery(document).ready(function ($) {
                         $('form#tutor-answering-quiz').submit();
 
                     } else if (_tutorobject.quiz_options.quiz_when_time_expires === 'autoabandon') {
+                       
                         /**
                          *
                          * @type {jQuery}
@@ -340,19 +341,29 @@ jQuery(document).ready(function ($) {
                         var quiz_id = $('#tutor_quiz_id').val();
                         var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
                         var quiz_timeout_data = { quiz_id: quiz_id, action: 'tutor_quiz_timeout' };
-
+                  
                         $.ajax({
                             url: _tutorobject.ajaxurl,
                             type: 'POST',
                             data: quiz_timeout_data,
                             success: function (data) {
-                                if (data.success) {
-                                    window.location.reload(true);
-                                }
+                                // console.log(data)
+                                // if (data.success) {
+                                //     window.location.reload();
+                                // }
                             },
                             complete: function () {
-                                $('#tutor-quiz-body').html('');
-                                window.location.reload(true);
+                                var att = $("#tutor-quiz-time-expire-wrapper").attr('data-attempt-remaining');
+                                if ( att > 0 ) {
+                                    $("#tutor-quiz-time-expire-wrapper .expire-text").html(
+                                        `<div class="tutor-alert tutor-alert-warning">${__( 'Your time limit for this quiz has expired, please reattempt the quiz.', 'tutor' )}</div>`
+                                    );                            
+                                }
+                                $("#tutor-quiz-time-expire-wrapper .expire-text").html(
+                                    `<div class="tutor-alert tutor-alert-danger">${__( 'Unfortunately, you are out of time and quiz attempts. ', 'tutor' )}</div>`
+                                );
+                                //$('#tutor-quiz-body').html('');
+                                //window.location.reload();
                             }
                         });
                     }
@@ -650,6 +661,7 @@ jQuery(document).ready(function ($) {
             $questions_wrap.each(function (index, question) {
                 !tutor_quiz_validation( $(question) ) ? validated = false : 0;
                 !feedback_response( $(question) ) ? validated = false : 0;
+
             });
         }
 
