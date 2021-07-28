@@ -5,25 +5,17 @@
     </div>
     <div class="tutor-option-field-input d-block">
         <div class="type-check d-block has-desc">
-            <div class="tutor-form-check">
-                <input type="radio" id="radio_x" class="tutor-form-check-input" name="radio_b" checked />
-                <label for="radio_x">
-                    Flexible
-                    <p class="desc">
-                        Allow instructors and admins to view the course content without enrolling
-                    </p>
-                </label>
-            </div>
-            <div class="tutor-form-check">
-                <input type="radio" id="radio_y" class="tutor-form-check-input" name="radio_b" />
-                <label for="radio_y">
-                    Strict Mode
-                    <p class="desc">
-                        Students have to complete, pass all the lessons and quizzes (if any) to mark a course as
-                        complete.
-                    </p>
-                </label>
-            </div>
+            <?php
+            foreach ($field['options'] as $key => $option) :
+            ?>
+                <div class="tutor-form-check">
+                    <input type="radio" id="radio_<?php echo $key ?>" class="tutor-form-check-input" name="radio_b" checked />
+                    <label for="radio_<?php echo $key ?>">
+                        <?php echo ucwords(str_replace('_', ' ', $key)); ?>
+                        <p class="desc"><?php echo $option ?></p>
+                    </label>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </div>

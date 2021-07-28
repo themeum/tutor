@@ -7,8 +7,8 @@
         <div class="type-check d-flex">
             <?php foreach ($field['options'] as $optionKey => $option) : ?>
                 <div class="tutor-form-check">
-                    <input type="checkbox" id="<?php $optionKey ?>" class="tutor-form-check-input" name="<?php $optionKey ?>" />
-                    <label for="<?php $optionKey ?>"> <?php echo $option; ?> </label>
+                    <input type="checkbox" id="check_<?php echo $optionKey ?>" class="tutor-form-check-input" name="<?php echo $optionKey ?>" />
+                    <label for="check_<?php echo $optionKey ?>"> <?php echo $option; ?> </label>
                 </div>
             <?php endforeach; ?>
         </div>

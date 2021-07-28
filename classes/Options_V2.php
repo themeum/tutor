@@ -251,11 +251,18 @@ class Options_V2 {
 								'block_type' => 'uniform',
 								'fields'     => array(
 									array(
+										'key'        => 'student_must_login_to_view_course',
+										'type'      => 'toggle_switch',
+										'label'     => __('Course Visibility', 'tutor'),
+										'label_title' => __('Logged in only', 'tutor'),
+										'desc'      => __('Students must be logged in to view course', 'tutor'),
+									),
+									'course_content_access_for_ia' => array(
 										'key'        => 'autoload_next_course_content',
-										'type'        => 'toggle_switch',
-										'label'       => __('Enable / Disable', 'tutor'),
-										'label_title' => __('Automatically load next course content.', 'tutor'),
-										'desc'        => __('Enabling this feature will be load next course content automatically after finishing current video.', 'tutor'),
+										'type'      => 'toggle_switch',
+										'label'     => __('Course Content Access', 'tutor'),
+										'label_title'   => __('', 'tutor'),
+										'desc' => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
 									),
 								),
 							),
@@ -290,24 +297,26 @@ class Options_V2 {
 									),
 									array(
 										'key'           => 'quiz_when_time_expires',
-										'type'           => 'radio',
+										'type'           => 'radio_vertical',
 										'label'          => __('When time expires', 'tutor'),
 										'default'        => 'minutes',
 										'select_options' => false,
 										'options'        => array(
-											'autosubmit'  => __('The current quiz answers are submitted automatically.', 'tutor'),
-											'graceperiod' => __('The current quiz answers are submitted by students.', 'tutor'),
-											'autoabandon' => __('Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor'),
+											'auto_submit'  => __('The current quiz answers are submitted automatically.', 'tutor'),
+											'grace_period' => __('The current quiz answers are submitted by students.', 'tutor'),
+											'auto_abandon' => __('Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor'),
 										),
 										'desc'           => __('Choose which action to follow when the quiz time expires.', 'tutor'),
 									),
-									'quiz_attempts_allowed'  => array(
+									array(
+										'key'    => 'quiz_attempts_allowed',
 										'type'    => 'number',
 										'label'   => __('Attempts allowed', 'tutor'),
 										'default' => '10',
 										'desc'    => __('The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor'),
 									),
-									'quiz_grade_method'      => array(
+									array(
+										'key'           => 'quiz_grade_method',
 										'type'           => 'select',
 										'label'          => __('Final grade calculation', 'tutor'),
 										'default'        => 'minutes',
@@ -335,9 +344,11 @@ class Options_V2 {
 								'label'      => false,
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'monetize_by' => array(
-										'type'           => 'radio',
+									array(
+										'key'           => 'monetize_by',
+										'type'           => 'toggle_switch',
 										'label'          => __('Disable Monetization', 'tutor'),
+										'label_title'          => __('', 'tutor'),
 										'default'        => 'free',
 										'select_options' => false,
 										'options'        => apply_filters('tutor_monetization_options', array(
@@ -352,7 +363,8 @@ class Options_V2 {
 								'slug'       => 'options',
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'statement_show_per_page' => array(
+									array(
+										'key'    => 'statement_show_per_page',
 										'type'    => 'number',
 										'label'   => __('Show Statement Per Page', 'tutor'),
 										'default' => '20',
@@ -374,22 +386,26 @@ class Options_V2 {
 								'slug'       => 'course',
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'courses_col_per_row' => array(
-										'type'      => 'slider',
+									array(
+										'key'      => 'courses_col_per_row',
+										'type'      => 'radio_horizontal',
 										'label'     => __('Column Per Row', 'tutor'),
 										'default'   => '4',
-										'options'   => array('min' => 1, 'max' => 6),
+										'options'   => array(1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four'),
 										'desc'      => __('Define how many column you want to use to display courses.', 'tutor'),
 									),
-									'course_archive_filter' => array(
-										'type'      => 'checkbox',
+									array(
+										'key'      => 'course_archive_filter',
+										'type'      => 'toggle_switch',
 										'label'     => __('Course Filter', 'tutor'),
-										'label_title'   => __('Enable', 'tutor'),
+										'label_title'   => __('', 'tutor'),
 										'desc' => __('Show sorting and filtering options on course archive page', 'tutor'),
 									),
-									'supported_course_filters' => array(
-										'type'      => 'checkbox',
+									array(
+										'key'      => 'supported_course_filters',
+										'type'      => 'checkbox_horizontal',
 										'label'     => __('Preferred Course Filters', 'tutor'),
+										'label_title' => __('', 'tutor'),
 										'options'	=> $course_filters,
 										'desc'      => __('Choose preferred filter options you\'d like to show in course archive page.', 'tutor'),
 									),
