@@ -4447,8 +4447,6 @@ class Utils {
 	 * 
 	 * to get total number of attempt get_quiz_attempts method is enough 
 	 * 
-	 * this query is redundant and would be removed in future
-	 * 
 	 * @since 1.9.5
 	 *
 	 */
@@ -4596,8 +4594,6 @@ class Utils {
 	 * This method is not being in used
 	 * 
 	 * to get total number of attempt above method is enough  
-	 * 
-	 * this query is redundant and would be removed in future
 	 * 
 	 * @since 1.9.5
 	 */

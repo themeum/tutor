@@ -345,9 +345,8 @@ class Template extends Tutor_Base {
 						$dashboard_page_item = tutor_utils()->array_get($query_var, $dashboard_pages);
 						$auth_cap = tutor_utils()->array_get('auth_cap', $dashboard_page_item);
 						if ($auth_cap && ! current_user_can($auth_cap) ){
-							wp_die(__('Permission Denied', 'tutor'));
+							$template = tutor_get_template( 'permission-denied' );
 						}
-
 					}else{
 						$template = tutor_get_template( 'login' );
 					}
