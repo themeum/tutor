@@ -453,7 +453,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 }
 
 .tutor-component-popup-container {
-  width: 100%;
+  width: calc(100% - 30px);
   height: 100%;
   padding: 15px;
   overflow: hidden;
@@ -490,8 +490,8 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 .tutor-component-popup-container > div {
   display: inline-block;
   max-height: 100%;
-  width: 100%;
-  max-width: 690px;
+  width: auto;
+  max-width: 100%;
   background: white;
   overflow: auto;
   border-radius: 15px;
@@ -515,6 +515,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   font-size: 30px;
   text-align: center;
   color: #212327;
+  line-height: 32px;
 }
 
 .tutor-component-popup-container > div p {
@@ -527,7 +528,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 }
 
 .tutor-component-popup-container > div .tutor-component-button-container button {
-  margin: 0 5px;
+  margin: 5px;
 }
 
 .ui-datepicker {
@@ -9888,6 +9889,7 @@ label[for="tutor_withdraw_amount"] {
   max-width: 35px;
 }
 
+/* Only reusable function, or code allowed here. No direct css please. */
 #tutor_profile_cover_photo_editor {
   height: 344px;
   position: relative;
@@ -10143,6 +10145,7 @@ label[for="tutor_withdraw_amount"] {
   display: none;
 }
 
+/* Only reusable function, or code allowed here. No direct css please. */
 .tutor-user-public-profile .photo-area {
   overflow: hidden;
   height: 414px;
@@ -11028,6 +11031,7 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   line-height: 30px;
 }
 
+/* Only reusable function, or code allowed here. No direct css please. */
 .tutor-frontend-dashboard-withdrawal h4 {
   margin-bottom: 25px;
 }
@@ -11949,4 +11953,70 @@ body.has-tutor-frontend-course-builder .select2-search__field {
 
 .tutor-instructor-rejection-notice a:hover {
   color: #e41304;
+}
+
+/* Only reusable function, or code allowed here. No direct css please. */
+.tutor-denied-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  -webkit-column-gap: 80px;
+     -moz-column-gap: 80px;
+          column-gap: 80px;
+  max-width: 990px;
+  margin: auto;
+  padding: 60px 0 30px;
+}
+
+.tutor-denied-wrapper .tutor-denied-content-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -o-flex-direction: column;
+  -ms-flex-direction: column;
+  -moz-flex-direction: column;
+  row-gap: 39px;
+}
+
+.tutor-denied-wrapper .tutor-denied-content-wrapper h2 {
+  font-size: 40px !important;
+  font-style: normal;
+  text-align: left;
+}
+
+@media screen and (max-width: 992px) {
+  .tutor-denied-wrapper {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+            flex-direction: column;
+    -o-flex-direction: column;
+    -ms-flex-direction: column;
+    -moz-flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -o-align-items: center;
+    -ms-align-items: center;
+    -moz-align-items: center;
+    -webkit-align-items: center;
+    row-gap: 50px;
+  }
 }

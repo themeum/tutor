@@ -6,7 +6,7 @@
         <input type="hidden" name="action" value="tutor_option_save" >
 
 		<?php
-		$options_attr = $this->options_attr;
+		$options_attr = $this->options_attr();
 
 		if (is_array($options_attr) && count($options_attr)){
 			$first_item = null;
