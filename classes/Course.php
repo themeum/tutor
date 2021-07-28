@@ -814,6 +814,7 @@ class Course extends Tutor_Base {
 				$productObj = wc_get_product($attached_product_id);
 				$productObj->set_price($course_price); // set product price
 				$productObj->set_regular_price($course_price); // set product regular price
+				$productObj->set_sold_individually(true);
 				$product_id = $productObj->save();
 				if($productObj->is_type('subscription')) {
 					update_post_meta( $attached_product_id, '_subscription_price', $course_price );
@@ -824,6 +825,7 @@ class Course extends Tutor_Base {
 				$productObj->set_status('publish');
 				$productObj->set_price($course_price); // set product price
 				$productObj->set_regular_price($course_price); // set product regular price
+				$productObj->set_sold_individually(true);
 
 				$product_id = $productObj->save();
 				if ($product_id) {

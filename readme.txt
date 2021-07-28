@@ -243,6 +243,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.9.6 - August 02, 2021 =
 
+Update: Set WooCommerce product as sold individually when created automatically from frontend course builder
 Fix: Course retake button appear even disabled from dashboard
 
 = 1.9.5 - July 18, 2021 =
