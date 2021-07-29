@@ -6,32 +6,28 @@ if ( ! defined( 'ABSPATH' ) )
 
 class Options {
 
-	public $option;
-	public $options_attr;
+	private $option;
 
 	public function __construct() {
-		$this->option = (array) maybe_unserialize(get_option('tutor_option'));
-		$this->options_attr = $this->options_attr();
-
 		//Saving option
 		add_action('wp_ajax_tutor_option_save', array($this, 'tutor_option_save'));
 	}
 
 	private function get($key = null, $default = false){
-		$option = $this->option;
-		if (empty($option) || ! is_array($option)){
+		!$this->option ? $this->option = (array) maybe_unserialize(get_option('tutor_option')) : 0;
+		if (empty($this->option) || ! is_array($this->option)){
 			return $default;
 		}
 		if ( ! $key){
-			return $option;
+			return $this->option;
 		}
-		if (array_key_exists($key, $option)){
-			return apply_filters($key, $option[$key]);
+		if (array_key_exists($key, $this->option)){
+			return apply_filters($key, $this->option[$key]);
 		}
 		//Access array value via dot notation, such as option->get('value.subvalue')
 		if (strpos($key, '.')){
 			$option_key_array = explode('.', $key);
-			$new_option = $option;
+			$new_option = $this->option;
 			foreach ($option_key_array as $dotKey){
 				if (isset($new_option[$dotKey])){
 					$new_option = $new_option[$dotKey];

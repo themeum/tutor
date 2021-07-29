@@ -356,11 +356,16 @@ jQuery(document).ready(function ($) {
                             type: 'POST',
                             data: quiz_timeout_data,
                             success: function (data) {
+
+                                var attemptAllowed = $("#tutor-quiz-time-expire-wrapper").data('attempt-allowed');
+                                var attemptRemaining = $("#tutor-quiz-time-expire-wrapper").data('attempt-remaining');
+
                                 var alertDiv = "#tutor-quiz-time-expire-wrapper .tutor-alert";
                                 $(alertDiv).addClass('show');
                                 if ( att > 0 ) {
                                     $(`${alertDiv} .text`).html(
-                                        `${__( 'Your time limit for this quiz has expired, please reattempt the quiz.', 'tutor' )}`
+                                        // `${__( 'Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining:, 'tutor' )}`
+                                        __( 'Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: '+ attemptRemaining+'/'+attemptAllowed, 'tutor' )
                                     );                            
                                 } else {
                                     $(alertDiv).addClass('tutor-alert-danger');

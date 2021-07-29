@@ -77,7 +77,7 @@ $quiz_answers = array();
 				}
 				?>
 
-				<div id="tutor-quiz-time-expire-wrapper" data-attempt-remaining="<?php esc_attr_e( $attempt_remaining );?>">
+				<div id="tutor-quiz-time-expire-wrapper" data-attempt-allowed="<?php esc_attr_e( $attempts_allowed );?>" data-attempt-remaining="<?php esc_attr_e( $attempt_remaining );?>">
 					<div class="tutor-alert">
 						<div class="text">
 

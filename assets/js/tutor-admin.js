@@ -680,9 +680,34 @@ jQuery(document).ready(function($){
      * @since v.1.4.0
      */
     $(document).on( 'click', 'table.enrolments .delete a',  function( e ){
-        if (! confirm(__('Are you sure? it can not be undone.', 'tutor'))) {
-            e.preventDefault();
-        }
+        e.preventDefault();
+
+        var url = $(this).attr('href');
+        var popup;
+
+        var data = {
+            title: __('Delete this enrolment', 'tutor'),
+            description : __('All of the course data like quiz attempts, assignment, lesson <br/>progress will be deleted if you delete this student\'s enrollment.', 'tutor'),
+            buttons : {
+                reset: {
+                    title: __('Cancel', 'tutor'),
+                    class: 'secondary',
+
+                    callback: function() {
+                        popup.remove();
+                    }
+                },
+                keep: {
+                    title: __('Yes, Delete This', 'tutor'),
+                    class: 'primary',
+                    callback: function() {
+                        window.location.replace(url);
+                    }
+                }
+            } 
+        };
+
+        popup = new window.tutor_component($, 'icon-trash', 40).popup(data);
     });
     
 
