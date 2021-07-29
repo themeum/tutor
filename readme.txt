@@ -245,14 +245,14 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 Update: Set WooCommerce product as sold individually when created automatically from frontend course builder
 Update: Enrolment requirement page design update
+Update: Registration disabled notification design update
 Fix: Course retake button appear even disabled from dashboard
 Fix: Pagination not appearing in quiz attempt
 Fix: Matching quiz layout CSS issue for long text
-Fix: Zoom auto recording is not saving 
 Fix: Student can submit the quiz even after time limit is expired
-Fix: Youtube video can't play for the 2nd time in lesson 
 Fix: Email event checkboxes not showing in dashboard if WPML add-on enabled
 Fix: Course progress not deleting on enrolment deletion
+Fix: Quiz not showing immediately after creating
 
 = 1.9.5 - July 18, 2021 =
 
