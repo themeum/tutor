@@ -1264,60 +1264,83 @@ Course question and answer
 	margin-bottom: 10px;
 	width: 250px;
 	background-color: #fff;
-
 	display: flex;
+
+	&.ui-sortable-placeholder {
+		background-color: transparent;
+	}
+
+	.answer-title {
+		flex: 1;
+	}
+	
+	.answer-sorting-bar {
+		cursor: pointer;
+	}
 }
-.question-type-ordering-item.ui-sortable-placeholder {
-	background-color: transparent;
-}
-.question-type-ordering-item .answer-title {
-	flex: 1;
-}
-.question-type-ordering-item .answer-sorting-bar {
-	cursor: pointer;
-}
+
 .quiz-answer-item-matching {
 	padding: 10px;
-
 	display: flex;
 	width: 25%;
 }
 
-.answer-type-matching
-	.quiz-answer-matching-items-wrap
-	.quiz-answer-item-matching {
-	display: inline-block;
-	max-width: none;
-	width: 25%;
-	padding: 0 10px;
-	vertical-align: top;
-}
-
-@media (max-width: 767px) {
-	.answer-type-matching
-		.quiz-answer-matching-items-wrap
+.answer-type-matching {
+	.quiz-answer-matching-items-wrap {
 		.quiz-answer-item-matching {
-		width: 50%;
+			display: inline-block;
+			max-width: none;
+			width: 25%;
+			padding: 0 10px;
+			vertical-align: top;
+
+			@media (max-width: 767px) {
+				width: 50%;
+			}
+
+			@media (max-width: 575px) {
+				width: 100%;
+			}
+		}
 	}
 }
-
-@media (max-width: 575px) {
-	.answer-type-matching
-		.quiz-answer-matching-items-wrap
-		.quiz-answer-item-matching {
-		width: 100%;
-	}
-}
-
+	
 .answer-type-matching .quiz-answer-matching-items-wrap {
 	margin: 0 -10px;
 }
 
 .quiz-answer-matching-droppable {
-	height: 48px;
-	min-width: 200px;
+	height: auto;
+	min-height: 48px;
+	width: 100%;
 	border: 1px dashed #d4dadb;
+
+	.drop-hover {
+		background-color: #eeeeee;
+		height: 100%;
+		width: 100%;
+		display: inline-block;
+		float: left;
+	}
+
+	.quiz-draggable-answer-item {
+		width: 100%;
+		max-width: 100%;
+	
+		.draggable-answer-icon {
+			margin-left: 15px;
+		}
+	
+		.draggable-answer-title {
+			flex: 1;
+			max-width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-break: break-all;
+		}
+	}
 }
+
 .quiz-draggable-answer-item {
 	padding: 10px 20px;
 	border: 1px solid #d4dadb;
@@ -1325,53 +1348,40 @@ Course question and answer
 	margin-bottom: 10px;
 	background-color: #fff;
 	display: inline-flex;
+
+	.quiz-draggable-rand-answers {
+		display: flex;
+		flex-wrap: wrap;
+		margin-bottom: 80px;
+	}
 }
-.quiz-draggable-answer-item .draggable-answer-title {
-	flex: 1;
-}
-.quiz-draggable-rand-answers {
-	display: flex;
-	flex-wrap: wrap;
-	margin-bottom: 80px;
-}
+
 .drop-hover {
 	display: none;
 }
-.quiz-answer-matching-droppable .drop-hover {
-	background-color: #eeeeee;
-	height: 100%;
-	width: 100%;
-	display: inline-block;
-	float: left;
-}
-.quiz-answer-matching-droppable .quiz-draggable-answer-item {
-	width: 100%;
-	max-width: 100%;
-}
-.quiz-draggable-answer-item .draggable-answer-icon {
-	margin-left: 15px;
-}
-.answer-type-image_matching .quiz-answer-item-matching {
-	/*display: inline-block;
-      width: 190px;
-      margin-right: 10px;*/
-	display: block;
-}
-.answer-type-image_matching .quiz-answer-matching-items-wrap {
-	display: flex;
 
-	flex-wrap: wrap;
-	margin-left: -10px;
-	margin-right: -10px;
-}
-.answer-type-image_matching .quiz-answer-matching-droppable {
-	width: 100%;
-	min-width: 100%;
-}
-.answer-type-image_matching img {
-	width: 100%;
-	height: auto;
-}
+.answer-type-image_matching {
+	.quiz-answer-item-matching {
+		display: block;
+	}
+	
+	.quiz-answer-matching-items-wrap {
+		display: flex;
+		flex-wrap: wrap;
+		margin-left: -10px;
+		margin-right: -10px;
+	}
+	
+	.quiz-answer-matching-droppable {
+		width: 100%;
+		min-width: 100%;
+	}
+
+	img {
+		width: 100%;
+		height: auto;
+	}
+} 
 
 .tutor-quiz-questions-pagination ul {
 	margin: 0;

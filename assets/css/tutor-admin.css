@@ -453,7 +453,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 }
 
 .tutor-component-popup-container {
-  width: 100%;
+  width: calc(100% - 30px);
   height: 100%;
   padding: 15px;
   overflow: hidden;
@@ -490,8 +490,8 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 .tutor-component-popup-container > div {
   display: inline-block;
   max-height: 100%;
-  width: 100%;
-  max-width: 690px;
+  width: auto;
+  max-width: 100%;
   background: white;
   overflow: auto;
   border-radius: 15px;
@@ -515,6 +515,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   font-size: 30px;
   text-align: center;
   color: #212327;
+  line-height: 32px;
 }
 
 .tutor-component-popup-container > div p {
@@ -527,7 +528,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 }
 
 .tutor-component-popup-container > div .tutor-component-button-container button {
-  margin: 0 5px;
+  margin: 5px;
 }
 
 .ui-datepicker {

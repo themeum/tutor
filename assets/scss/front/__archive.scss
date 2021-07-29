@@ -1,3 +1,5 @@
+@import "../lib/mixins";
+
 /* Course filter layout */
 .tutor-course-filter-wrapper{
 	overflow: auto;
@@ -3796,9 +3798,9 @@ table.course-single-gradebooks a {
 		display: none;
 	}
 	.tutor-alert.show {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
+		@include valueWithPrefix(display, flex);
+		@include propertyWithPrefix(justify-content, space-between);
+		@include propertyWithPrefix(align-items, center);
 	}
 }
 
