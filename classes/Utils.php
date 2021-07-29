@@ -7068,7 +7068,7 @@ class Utils {
 		!is_array($roles) ? $roles = array($roles) : 0;
 		
 		$user = get_userdata($user_id);
-		$role_list = is_array($user->roles) ? $user->roles : array();
+		$role_list = (is_object($user) && is_array($user->roles)) ? $user->roles : array();
 
 		$without_roles = array_diff($roles, $role_list);
 
