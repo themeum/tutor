@@ -550,6 +550,11 @@ jQuery(document).ready(function($){
         var $that = $(this);
         var quiz_id = $that.attr('data-quiz-id');
         var topic_id = $that.attr('data-topic-id');
+        if ( topic_id == undefined ) {
+            topic_id = $that.closest('.tutor-modal-wrap').attr('quiz-for-post-id');
+        }
+        
+        
         var course_id = $('#post_ID').val();
 
         $.ajax({
@@ -585,8 +590,10 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var quiz_id = $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id');
+        var current_topic_id = $("#current_topic_id_for_quiz").val();
 
         var $formInput = $('#quiz-builder-tab-settings :input, #quiz-builder-tab-advanced-options :input').serializeObject();
+        $formInput.topic_id = current_topic_id;
         $formInput.quiz_id = quiz_id;
         $formInput.action = 'tutor_quiz_modal_update_settings';
 
@@ -598,6 +605,9 @@ jQuery(document).ready(function($){
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
+                if ( data.success ) {
+                    $('#tutor-course-content-wrap').html(data.data.course_contents);
+                }
                 data.success ? 
                     tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success') : 
                     tutor_toast(__('Update Error', 'tutor'), __('Quiz Update Failed', 'tutor'), 'error');
@@ -621,7 +631,9 @@ jQuery(document).ready(function($){
         var $that = $(this);
         var $formInput = $('.quiz_question_form :input').serializeObject();
         $formInput.action = 'tutor_quiz_modal_update_question';
-
+        var topic_id = $that.closest('.tutor-modal-wrap').attr('quiz-for-post-id');
+        $formInput.topic_id = topic_id;
+   
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
@@ -694,10 +706,15 @@ jQuery(document).ready(function($){
 
         var $that = $(this);
         var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').attr('data-add-quiz-under');
+        var current_topic_id = $(this).data('topic-id');
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
-            data : {quiz_for_post_id : quiz_for_post_id, action: 'tutor_load_quiz_builder_modal'},
+            data : {
+                quiz_for_post_id : quiz_for_post_id, 
+                current_topic_id : current_topic_id,
+                action: 'tutor_load_quiz_builder_modal'
+            },
             beforeSend: function () {
                 $that.addClass('tutor-updating-message');
             },

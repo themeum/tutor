@@ -720,7 +720,8 @@ class Quiz {
 	public function tutor_load_edit_quiz_modal(){
 		tutils()->checking_nonce();
 
-		$quiz_id = sanitize_text_field($_POST['quiz_id']);
+		$quiz_id 	= sanitize_text_field ($_POST['quiz_id'] );
+		$topic_id 	= sanitize_text_field( $_POST['topic_id'] ); 
 		
 		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
@@ -1197,17 +1198,26 @@ class Quiz {
 	 */
 	public function tutor_quiz_modal_update_settings(){
 		tutils()->checking_nonce();
+		//while creating quiz if creating step is not follow then it may throw error that why check added
+		$quiz_id = ( isset( $_POST['quiz_id'] ) ) ? sanitize_text_field( $_POST['quiz_id'] ) : '' ;
+		$current_topic_id = sanitize_text_field( $_POST['topic_id'] );
+		$course_id = tutor_utils()->get_course_id_by('topic', sanitize_textarea_field( $current_topic_id ) );
 
-		$quiz_id = sanitize_text_field($_POST['quiz_id']);
-		$quiz_option = tutor_utils()->sanitize_array($_POST['quiz_option']);
+		$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] );
 				
-		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+		if( !tutils()->can_user_manage('quiz', $quiz_id) ) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		update_post_meta($quiz_id, 'tutor_quiz_option', $quiz_option);
 		do_action('tutor_quiz_settings_updated', $quiz_id);
-		wp_send_json_success();
+
+		//@since 1.9.6
+		ob_start();
+		include  tutor()->path.'views/metabox/course-contents.php';
+		$course_contents = ob_get_clean();
+
+		wp_send_json_success( array( 'course_contents' => $course_contents ) );
 	}
 
 
