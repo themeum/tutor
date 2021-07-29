@@ -164,7 +164,7 @@
                             <i class="tutor-icon-plus-square-button"></i>
                             <?php _e('Lesson', 'tutor'); ?>
                         </a>
-                        <a href="javascript:;" class="tutor-add-quiz-btn">
+                        <a href="javascript:;" class="tutor-add-quiz-btn" data-topic-id="<?php echo $topic->ID; ?>">
                             <i class="tutor-icon-plus-square-button"></i>
                             <?php _e('Quiz', 'tutor'); ?>
                         </a>
