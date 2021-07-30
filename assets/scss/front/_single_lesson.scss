@@ -1282,7 +1282,28 @@ Course question and answer
 .quiz-answer-item-matching {
 	padding: 10px;
 	display: flex;
-	width: 25%;
+	width: calc(25% - 20px);
+
+	@media (max-width: 767px) {
+		width: calc(50% - 20px);
+	}
+
+	@media (max-width: 575px) {
+		width: 50%;
+	}
+
+
+	@media(min-width: 992px) {
+		width: calc(50% - 20px);
+	}
+
+	@media(min-width: 1100px) {
+		width: calc(33.33% - 20px);
+	}
+
+	@media(min-width: 1920px) {
+		width: calc(25% - 20px);
+	}
 }
 
 .answer-type-matching {
@@ -1290,16 +1311,29 @@ Course question and answer
 		.quiz-answer-item-matching {
 			display: inline-block;
 			max-width: none;
-			width: 25%;
+			width: calc(25% - 20px);
 			padding: 0 10px;
 			vertical-align: top;
 
 			@media (max-width: 767px) {
-				width: 50%;
+				width: calc(50% - 20px);
 			}
 
 			@media (max-width: 575px) {
 				width: 100%;
+			}
+			
+			@media(min-width: 992px) {
+				width: calc(50% - 20px);
+			}
+
+			@media(min-width: 1300px) {
+				width: calc(33.33% - 20px);
+			}
+
+
+			@media(min-width: 1920px) {
+				width: calc(25% - 20px);
 			}
 		}
 	}
@@ -1314,6 +1348,10 @@ Course question and answer
 	min-height: 48px;
 	width: 100%;
 	border: 1px dashed #d4dadb;
+
+	&:not(:empty) {
+		border: 1px dashed #999999;
+	}
 
 	.drop-hover {
 		background-color: #eeeeee;
@@ -1337,9 +1375,13 @@ Course question and answer
 			max-width: 100%;
 			overflow: hidden;
 			text-overflow: ellipsis;
-			word-break: break-all;
+			max-height: 150px;
 		}
 	}
+}
+
+.draggable-answer-title {
+	word-break: break-word;
 }
 
 .quiz-draggable-answer-item {
@@ -1349,12 +1391,17 @@ Course question and answer
 	margin-bottom: 10px;
 	background-color: #fff;
 	display: inline-flex;
+	cursor: grab;
 
 	.quiz-draggable-rand-answers {
 		display: flex;
 		flex-wrap: wrap;
 		margin-bottom: 80px;
 	}
+}
+
+.quiz-draggable-rand-answers {
+	height: auto !important;
 }
 
 .drop-hover {
