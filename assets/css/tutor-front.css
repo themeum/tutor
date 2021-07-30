@@ -2779,26 +2779,74 @@ Course question and answer
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  width: 25%;
+  width: calc(25% - 20px);
+}
+
+@media (max-width: 767px) {
+  .quiz-answer-item-matching {
+    width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 575px) {
+  .quiz-answer-item-matching {
+    width: 50%;
+  }
+}
+
+@media (min-width: 992px) {
+  .quiz-answer-item-matching {
+    width: calc(50% - 20px);
+  }
+}
+
+@media (min-width: 1100px) {
+  .quiz-answer-item-matching {
+    width: calc(33.33% - 20px);
+  }
+}
+
+@media (min-width: 1920px) {
+  .quiz-answer-item-matching {
+    width: calc(25% - 20px);
+  }
 }
 
 .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching {
   display: inline-block;
   max-width: none;
-  width: 25%;
+  width: calc(25% - 20px);
   padding: 0 10px;
   vertical-align: top;
 }
 
 @media (max-width: 767px) {
   .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching {
-    width: 50%;
+    width: calc(50% - 20px);
   }
 }
 
 @media (max-width: 575px) {
   .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching {
     width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching {
+    width: calc(50% - 20px);
+  }
+}
+
+@media (min-width: 1300px) {
+  .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching {
+    width: calc(33.33% - 20px);
+  }
+}
+
+@media (min-width: 1920px) {
+  .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching {
+    width: calc(25% - 20px);
   }
 }
 
@@ -2811,6 +2859,10 @@ Course question and answer
   min-height: 48px;
   width: 100%;
   border: 1px dashed #d4dadb;
+}
+
+.quiz-answer-matching-droppable:not(:empty) {
+  border: 1px dashed #999999;
 }
 
 .quiz-answer-matching-droppable .drop-hover {
@@ -2838,7 +2890,11 @@ Course question and answer
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-all;
+  max-height: 150px;
+}
+
+.draggable-answer-title {
+  word-break: break-word;
 }
 
 .quiz-draggable-answer-item {
@@ -2850,6 +2906,8 @@ Course question and answer
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
+  cursor: -webkit-grab;
+  cursor: grab;
 }
 
 .quiz-draggable-answer-item .quiz-draggable-rand-answers {
@@ -2859,6 +2917,10 @@ Course question and answer
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   margin-bottom: 80px;
+}
+
+.quiz-draggable-rand-answers {
+  height: auto !important;
 }
 
 .drop-hover {
