@@ -2824,6 +2824,7 @@ Course question and answer
 .quiz-answer-matching-droppable .quiz-draggable-answer-item {
   width: 100%;
   max-width: 100%;
+  margin: 0;
 }
 
 .quiz-answer-matching-droppable .quiz-draggable-answer-item .draggable-answer-icon {
