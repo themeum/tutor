@@ -15,6 +15,10 @@ if (!$quiz) {
     die('No quiz found');
 }
 
+if ( $topic_id != '' ) {
+    echo '<input type="hidden" id="current_topic_id_for_quiz" value="'.sanitize_text_field( $_POST['topic_id'] ).'" />';
+}
+
 ?>
 
 <div class="tutor-quiz-builder-modal-contents">
