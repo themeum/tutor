@@ -186,7 +186,7 @@ class Assets{
 			 * translate js file
 			 * @since 1.9.0
 			*/
-			wp_register_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), time(), true );
+			wp_register_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
 			wp_enqueue_script( 'tutor-frontend');
 			wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
 			/**
