@@ -253,6 +253,8 @@ Fix: Student can submit the quiz even after time limit is expired
 Fix: Email event list checkboxes not showing in dashboard if WPML add-on enabled
 Fix: Course progress not deleting when enrolment is deleted
 Fix: Quiz not showing immediately after creating in course builder
+Fix: Lesson count showing 0 always in some places
+Fix: XSS vulnerability in student list in dashboard
 
 = 1.9.5 - July 18, 2021 =
 
