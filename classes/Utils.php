@@ -683,6 +683,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_lesson_count_by_course( $course_id = 0 ) {
+		$course_id = $this->get_post_id( $course_id );
 		return count( $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id ) );
 	}
 
