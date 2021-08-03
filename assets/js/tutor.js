@@ -17,13 +17,23 @@ window.tutor_component = function($, icon, padding) {
     var element; 
 
     this.popup_wrapper = function(contents) {
-        return '<div class="tutor-component-popup-container">\
-            <div class="tutor-component-popup-'+padding+'">\
-                <img class="tutor-pop-icon" src="'+window._tutorobject.tutor_url+'assets/images/'+icon+'.svg"/>\
-                ' + contents + '\
-                <div class="tutor-component-button-container"></div>\
-            </div>\
-        </div>';
+        if ( icon === '' ) {
+            return '<div class="tutor-component-popup-container">\
+                <div class="tutor-component-popup-'+padding+'">\
+                    ' + contents + '\
+                    <div class="tutor-component-button-container"></div>\
+                </div>\
+            </div>';            
+        }
+        else {
+            return '<div class="tutor-component-popup-container">\
+                <div class="tutor-component-popup-'+padding+'">\
+                    <img class="tutor-pop-icon" src="'+window._tutorobject.tutor_url+'assets/images/'+icon+'.svg"/>\
+                    ' + contents + '\
+                    <div class="tutor-component-button-container"></div>\
+                </div>\
+            </div>';
+        }
     }
 
     this.popup = function(data) {
@@ -33,8 +43,8 @@ window.tutor_component = function($, icon, padding) {
 
         var buttons = Object.keys(data.buttons || {}).map(function(key) {
             var button = data.buttons[key];
-
-            return $('<button class="tutor-button tutor-button-'+button.class+'">'+button.title+'</button>').click(button.callback);
+            var button_id = button.id == 'undefined' ? 'button' : button.id; 
+            return $('<button id="tutor-popup-'+button_id+'" class="tutor-button tutor-button-'+button.class+'">'+button.title+'</button>').click(button.callback);
         });
 
         element = $($this.popup_wrapper( title + description ), padding);

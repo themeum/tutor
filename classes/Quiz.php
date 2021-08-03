@@ -82,6 +82,13 @@ class Quiz {
          */
 		add_action('wp_ajax_tutor_render_quiz_content', array($this, 'tutor_render_quiz_content'));
 
+		/**
+		 * Quiz abandon action
+		 * 
+		 * @since 1.9.6
+		 */
+		add_action('wp_ajax_tutor_quiz_abandon', array($this, 'tutor_quiz_abandon'));
+
 		$this->prepare_allowed_html();
 	}
 
@@ -237,7 +244,42 @@ class Quiz {
 		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_answering_quiz_question' ){
 			return;
 		}
-		//Checking nonce
+		//submit quiz attempts
+		self::tutor_quiz_attemp_submit();
+
+		wp_redirect(get_the_permalink($attempt->quiz_id));
+		die();
+	}
+
+	/**
+	 * Quiz abandon submission handler
+	 * 
+	 * @return JSON response
+	 * 
+	 * @since 1.9.6
+	 */
+	public function tutor_quiz_abandon(){
+		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_answering_quiz_question' ){
+			return;
+		}
+		//submit quiz attempts
+		if ( self::tutor_quiz_attemp_submit() ) {
+			wp_send_json_success();
+		} else {
+			wp_send_json_error();
+		}
+	}
+
+	/**
+	 * This is  a unified method for handling normal quiz submit or abandon submit
+	 * 
+	 * It will handle ajax or normal form submit and can be used with different hooks
+	 * 
+	 * @return true | false
+	 * 
+	 * @since 1.9.6 
+	 */
+	public static function tutor_quiz_attemp_submit() {
 		tutor_utils()->checking_nonce();
 
 		$attempt_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('attempt_id', $_POST));
@@ -412,10 +454,9 @@ class Quiz {
             }
 
             do_action('tutor_quiz/attempt_ended', $attempt_id);
+			return true;
         }
-
-		wp_redirect(get_the_permalink($attempt->quiz_id));
-		die();
+		return false;
 	}
 
 
