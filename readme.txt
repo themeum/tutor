@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.6 - August 02, 2021 =
+= 1.9.6 - August 03, 2021 =
 
 Update: Set WooCommerce product as sold individually when created automatically from frontend course builder
 Update: Enrolment required page design update
