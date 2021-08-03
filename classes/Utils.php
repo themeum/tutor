@@ -5764,13 +5764,11 @@ class Utils {
 		$course_post_type = tutor()->course_post_type;
 
 		$get_assigned_courses_ids = $wpdb->get_col( $wpdb->prepare(
-			"SELECT 	meta_value
-			FROM		{$wpdb->usermeta}
-			WHERE 		meta_key = %s
-						AND user_id = %d
-			GROUP BY 	meta_value;
-			",
-			'_tutor_instructor_course_id',
+			"SELECT meta.meta_value 
+			FROM {$wpdb->usermeta} meta 
+				INNER JOIN {$wpdb->posts} course ON meta.meta_value=course.ID 
+				WHERE meta.meta_key = '_tutor_instructor_course_id' 
+					AND meta.user_id = %d GROUP BY meta_value",
 			$user_id
 		) );
 
