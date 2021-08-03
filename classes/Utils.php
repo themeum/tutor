@@ -4357,7 +4357,8 @@ class Utils {
 			"SELECT *
 			FROM 	{$wpdb->prefix}tutor_quiz_attempts
 			WHERE 	quiz_id = %d
-					AND user_id = %d;
+					AND user_id = %d
+					ORDER BY attempt_id  DESC 
 			",
 			$quiz_id,
 			$user_id
