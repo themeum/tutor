@@ -247,7 +247,7 @@ class Quiz {
 		//submit quiz attempts
 		self::tutor_quiz_attemp_submit();
 
-		wp_redirect(get_the_permalink($attempt->quiz_id));
+		wp_redirect(get_the_permalink());
 		die();
 	}
 
