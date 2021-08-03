@@ -11,7 +11,7 @@
  * @version 1.6.4
  */
 
-$per_page = 20;
+$per_page = 1;
 $current_page = max( 1, tutils()->array_get('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
 ?>
@@ -115,5 +115,5 @@ if ( $quiz_attempts_count ){
 		?>
     </div>
 <?php } else {
-	_e('You have not attempted for any quiz yet.', 'tutor');
+	_e('No quiz attempt yet.', 'tutor');
 } ?>
