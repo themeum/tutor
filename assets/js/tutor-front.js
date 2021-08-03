@@ -364,7 +364,6 @@ jQuery(document).ready(function ($) {
                                 $(alertDiv).addClass('show');
                                 if ( att > 0 ) {
                                     $(`${alertDiv} .text`).html(
-                                        // `${__( 'Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining:, 'tutor' )}`
                                         __( 'Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: '+ attemptRemaining+'/'+attemptAllowed, 'tutor' )
                                     );                            
                                 } else {
@@ -374,14 +373,10 @@ jQuery(document).ready(function ($) {
                                         `${__( 'Unfortunately, you are out of time and quiz attempts. ', 'tutor' )}`
                                     );
                                 }
-                                // console.log(data)
-                                // if (data.success) {
-                                //     window.location.reload();
-                                // }
+
                             },
                             complete: function () {
-                                //$('#tutor-quiz-body').html('');
-                                //window.location.reload();
+
                             }
                         });
                     }
@@ -2303,4 +2298,69 @@ jQuery(document).ready(function ($) {
 
         popup = new window.tutor_component($, 'icon-gear', 40).popup(data);
     });
+
+
+    //warn user before leave page if quiz is running
+    document.body.onclick = (event) => {
+        const target      = event.target;
+        const targetTag   = target.tagName 
+        const parentTag   = target.parentElement.tagName;
+
+        if ( $tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.html() != 'EXPIRED' ) {
+            if ( targetTag === 'A' || parentTag === 'A' ) {
+                event.preventDefault();
+                let popup;
+
+                let data = {
+                    title: __( 'Abandon Quiz?', 'tutor' ),
+                    description : __( 'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor' ),
+                    buttons : {
+                        reset: {
+                            title: __('Cancel', 'tutor'),
+                            class: 'secondary',
+        
+                            callback: function() {
+                                popup.remove();
+                            }
+                        },
+                        keep: {
+                            title: __( 'Leave', 'tutor' ),
+                            class: 'danger',
+                            callback: function() {
+
+                                var formData = $('form#tutor-answering-quiz').serialize()+'&action='+'tutor_quiz_abandon';
+                                $.ajax({
+                                    url: window._tutorobject.ajaxurl,
+                                    type: 'POST',
+                                    data: formData,
+                                    beforeSend: function() {
+                                       target.text = __( 'Leaving...', 'tutor' ); 
+                                    },
+                                    success: function(response) {
+                                        if(response.success) {
+                                            if ( target.href == undefined ) {
+                                                location.href = target.parentElement.href
+                                            } else {
+                                                location.href = target.href
+                                            }
+                                        } else {
+                                            alert( __( 'Something went wrong', 'tutor' ) );
+                                        }
+                                    },
+                                    error: function() {
+                                        alert( __( 'Something went wrong', 'tutor' ) );
+                                        popup.remove();
+                                    }
+                                });
+                            }
+                        }
+                    } 
+                };
+        
+                popup = new window.tutor_component($, '', 40).popup(data);
+            }
+        }
+
+    }
 });
+
