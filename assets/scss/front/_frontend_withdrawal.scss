@@ -1,12 +1,10 @@
 @import "../lib/mixins.scss";
 
-.tutor-frontend-dashboard-withdrawal h4 {
-    margin-bottom: 25px;
-}
-.withdraw-history-table-title h4 {
-    margin-top: 45px;
-}
 .tutor-frontend-dashboard-withdrawal {
+    h4 {
+        margin-bottom: 25px;
+    }
+
     .withdraw-page-current-balance {
         display: flex;
         align-items: center;
@@ -150,6 +148,11 @@
             }
         }  
 
+        label[for=tutor_withdraw_amount]{
+            margin-bottom: 7px;
+            display: block;
+        }
+
         .withdraw-form-field-amount{
             border: 1px solid #BABABA;
             border-radius:  6px;
@@ -158,6 +161,11 @@
             overflow: hidden;
             margin-bottom: 12px;
 
+            input[type='text']{
+                margin-bottom: 10px;
+                height: 45px;
+            }
+            
             &>span{
                 display: block;
                 text-align: center;
@@ -245,83 +253,94 @@
         }
     }
 
-    table.withdrawals-history{
-        border: 1px solid #DCDBDC;
-        box-sizing: border-box;
-        position: relative;
 
-        th{
-            background:  #F3F3F3;
+    .withdraw-history-table-wrap {
+        .withdraw-history-table-title h4 {
+            margin-top: 45px;
         }
 
-        th, td{
-            padding: 10px;
-            border:none;
-            font-weight: normal;
-            font-size: 13px;
-            text-align: left;
-            vertical-align: middle;
-
-            &{
-                border-bottom: 1px solid #DCDBDC;
-                border-collapse: collapse;
-            }
-
-            &:first-child{
-                padding: 10px 0 15px 15px;
-            }
-
-            &:last-child{
-                text-align: right;
-                padding-right: 15px;
-                width: 50px;
-            }
-            
-            &:nth-child(4){
-                width: 105px;
-            }
-        }
-        .withdraw-method-name {
-            line-height: 20px;
-            font-size: 15px;
-            display: block;
-        }
-        small {
-            font-size: 13px;
-        }
-    }
-
-    .tutor-status-text-container{
-        .tool-tip-container{
+        table.withdrawals-history{
+            border: 1px solid #DCDBDC;
+            box-sizing: border-box;
             position: relative;
-            display: inline-block;
-            height: 24px;
-            cursor: pointer;
-            
-            img{
-                display: inline-block !important;
-                width: 16px;
+
+            th{
+                background:  #F3F3F3;
             }
-        }
-    }
 
-    .tutor-status-text{
-        display: inline-block;
-        font-weight: bold;
-        font-size: 13px;
-        color: #FFFFFF;
-        background: gray;
-        border-radius: 2px;
-        padding: 3px 9px;
+            th, td{
+                padding: 10px;
+                border:none;
+                font-weight: normal;
+                font-size: 13px;
+                text-align: left;
+                vertical-align: middle;
 
-        &.status-approved{
-            background:  #24A148;
-        }
-        &.status-pending{
-            background:   #ED9700;
-        }
-        &.status-rejected{
-            background:  #F44337;;
+                &{
+                    border-bottom: 1px solid #DCDBDC;
+                    border-collapse: collapse;
+                }
+
+                &:first-child{
+                    padding: 10px 0 15px 15px;
+                }
+
+                &:last-child{
+                    text-align: right;
+                    padding-right: 15px;
+                    width: 50px;
+                }
+                
+                &:nth-child(4){
+                    width: 105px;
+                }
+            }
+
+            td 
+
+            .withdraw-method-name {
+                line-height: 20px;
+                font-size: 15px;
+                display: block;
+            }
+
+            small {
+                font-size: 13px;
+            }
+            
+            .tutor-status-text-container{
+                .tool-tip-container{
+                    position: relative;
+                    display: inline-block;
+                    height: 24px;
+                    cursor: pointer;
+                    
+                    img{
+                        display: inline-block !important;
+                        width: 16px;
+                    }
+                }
+            }
+
+            .tutor-status-text{
+                display: inline-block;
+                font-weight: bold;
+                font-size: 13px;
+                color: #FFFFFF;
+                background: gray;
+                border-radius: 2px;
+                padding: 3px 9px;
+
+                &.status-approved{
+                    background:  #24A148;
+                }
+                &.status-pending{
+                    background:   #ED9700;
+                }
+                &.status-rejected{
+                    background:  #F44337;;
+                }
+            }
         }
     }
 }

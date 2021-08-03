@@ -531,6 +531,50 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   margin: 5px;
 }
 
+.tutor-component-three-col-action {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  border: 1px solid #DCDBDC;
+  border-radius: 6px;
+  padding: 25px 35px 25px 30px;
+  margin-bottom: 15px;
+}
+
+.tutor-component-three-col-action > *:nth-of-type(1) {
+  margin-right: 15px;
+}
+
+.tutor-component-three-col-action > *:nth-of-type(2) {
+  -webkit-box-flex: 1;
+          flex: 1;
+  -o-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+}
+
+.tutor-component-three-col-action > *:nth-of-type(2) small {
+  font-size: 16px;
+}
+
+.tutor-component-three-col-action > *:nth-of-type(2) p {
+  font-size: 20px;
+  line-height: 26px;
+  margin: 0;
+}
+
 .ui-datepicker {
   display: none;
   margin-top: 4px;
@@ -8838,7 +8882,7 @@ table.tutor-dashboard-statement-table p.small-text {
 /**
 Withdraw Method
  */
-.withdraw-method-select-wrap {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -8847,7 +8891,7 @@ Withdraw Method
   margin: 0 -15px 40px;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
       flex-grow: 1;
@@ -8855,7 +8899,7 @@ Withdraw Method
   margin-bottom: 30px;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select label {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select label {
   display: block;
   padding: 20px;
   margin: 0;
@@ -8866,13 +8910,7 @@ Withdraw Method
   position: relative;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select input:checked + label {
-  border-color: var(--tutor-success-button-color);
-  -webkit-box-shadow: 0 0 0 1px var(--tutor-success-button-color);
-          box-shadow: 0 0 0 1px var(--tutor-success-button-color);
-}
-
-.withdraw-method-select-wrap .withdraw-method-select label:after {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select label:after {
   content: '\e90f';
   position: absolute;
   right: -1px;
@@ -8885,7 +8923,24 @@ Withdraw Method
   color: transparent;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select input:checked + label:after {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select label > p {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--tutor-primary-color);
+}
+
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select label span {
+  color: #B0B6C8;
+  font-weight: 400;
+}
+
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select input:checked + label {
+  border-color: var(--tutor-success-button-color);
+  -webkit-box-shadow: 0 0 0 1px var(--tutor-success-button-color);
+          box-shadow: 0 0 0 1px var(--tutor-success-button-color);
+}
+
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select input:checked + label:after {
   color: #fff;
   background: var(--tutor-success-button-color);
   border-color: var(--tutor-success-button-color);
@@ -8898,22 +8953,11 @@ Withdraw Method
   font-size: 13px;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select p {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select p {
   margin: 0;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select label > p {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--tutor-primary-color);
-}
-
-.withdraw-method-select-wrap .withdraw-method-select label span {
-  color: #B0B6C8;
-  font-weight: 400;
-}
-
-.withdraw-method-form {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -8922,7 +8966,7 @@ Withdraw Method
   margin: 0 -15px;
 }
 
-.withdraw-method-form > div {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form > div {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
       flex-grow: 1;
@@ -8931,18 +8975,23 @@ Withdraw Method
 }
 
 @media (max-width: 480px) {
-  .withdraw-method-form > div {
+  #tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form > div {
     width: 100%;
   }
 }
 
-.withdraw-method-form > div.withdraw-account-save-btn-wrap {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form > div.withdraw-account-save-btn-wrap {
   width: 100%;
 }
 
-.withdraw-form-field-amount input[type='text'],
-.withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]),
-.withdraw-method-forms-wrap .withdraw-method-form textarea {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]):focus, #tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form textarea:focus {
+  border-color: var(--tutor-primary-color);
+  outline: none;
+}
+
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form input[type='text'],
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form textarea,
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]) {
   border: 1px solid #DCDFE5;
   display: block;
   width: 100%;
@@ -8952,33 +9001,17 @@ Withdraw Method
   border-radius: 4px;
 }
 
-label[for="tutor_withdraw_amount"] {
-  margin-bottom: 7px;
-  display: block;
-}
-
-.withdraw-form-field-amount input[type='text'] {
-  margin-bottom: 10px;
-  height: 45px;
-}
-
-.withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]):focus,
-.withdraw-method-forms-wrap .withdraw-method-form textarea:focus {
-  border-color: var(--tutor-primary-color);
-  outline: none;
-}
-
-.withdraw-method-forms-wrap .withdraw-method-form textarea {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form textarea {
   min-height: 80px;
 }
 
-.withdraw-method-forms-wrap .withdraw-method-form label {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form label {
   color: #989EAF;
   margin-bottom: 8px;
   display: block;
 }
 
-.withdraw-method-forms-wrap .withdraw-method-form .withdraw-field-desc {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form .withdraw-field-desc {
   font-size: 12px;
   margin: 5px 0 0;
   font-style: italic;
@@ -9389,7 +9422,7 @@ label[for="tutor_withdraw_amount"] {
 
 .tutor-announcement-big-icon .tutor-icon-speaker {
   position: relative !important;
-  top: 30% !important;
+  top: 16% !important;
 }
 
 .tutor-announcement-detail-content {
@@ -11135,10 +11168,6 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   margin-bottom: 25px;
 }
 
-.withdraw-history-table-title h4 {
-  margin-top: 45px;
-}
-
 .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -11302,6 +11331,11 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   background: #F3F3F3;
 }
 
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap label[for=tutor_withdraw_amount] {
+  margin-bottom: 7px;
+  display: block;
+}
+
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount {
   border: 1px solid #BABABA;
   border-radius: 6px;
@@ -11309,6 +11343,11 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   height: 43px;
   overflow: hidden;
   margin-bottom: 12px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount input[type='text'] {
+  margin-bottom: 10px;
+  height: 45px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount > span {
@@ -11394,18 +11433,22 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   display: inline-block !important;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap .withdraw-history-table-title h4 {
+  margin-top: 45px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history {
   border: 1px solid #DCDBDC;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   position: relative;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th {
   background: #F3F3F3;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td {
   padding: 10px;
   border: none;
   font-weight: normal;
@@ -11414,48 +11457,48 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   vertical-align: middle;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td {
   border-bottom: 1px solid #DCDBDC;
   border-collapse: collapse;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:first-child, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:first-child {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th:first-child, .tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td:first-child {
   padding: 10px 0 15px 15px;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:last-child, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:last-child {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th:last-child, .tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td:last-child {
   text-align: right;
   padding-right: 15px;
   width: 50px;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:nth-child(4), .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:nth-child(4) {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th:nth-child(4), .tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td:nth-child(4) {
   width: 105px;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history .withdraw-method-name {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td .withdraw-method-name {
   line-height: 20px;
   font-size: 15px;
   display: block;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history small {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history small {
   font-size: 13px;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text-container .tool-tip-container {
   position: relative;
   display: inline-block;
   height: 24px;
   cursor: pointer;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container img {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text-container .tool-tip-container img {
   display: inline-block !important;
   width: 16px;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text {
   display: inline-block;
   font-weight: bold;
   font-size: 13px;
@@ -11465,15 +11508,15 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   padding: 3px 9px;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-approved {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text.status-approved {
   background: #24A148;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-pending {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text.status-pending {
   background: #ED9700;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-rejected {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text.status-rejected {
   background: #F44337;
 }
 
