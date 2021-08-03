@@ -2317,6 +2317,7 @@ jQuery(document).ready(function ($) {
                     buttons : {
                         keep: {
                             title: __( 'Yes, leave quiz', 'tutor' ),
+                            id: 'leave',
                             class: 'secondary',
                             callback: function() {
 
@@ -2326,7 +2327,7 @@ jQuery(document).ready(function ($) {
                                     type: 'POST',
                                     data: formData,
                                     beforeSend: function() {
-                                       target.text = __( 'Leaving...', 'tutor' ); 
+                                       document.querySelector("#tutor-popup-leave").innerHTML = __( 'Leaving...', 'tutor' ); 
                                     },
                                     success: function(response) {
                                         if(response.success) {
@@ -2348,6 +2349,7 @@ jQuery(document).ready(function ($) {
                         },
                         reset: {
                             title: __('Stay here', 'tutor'),
+                        
                             class: 'primary',
         
                             callback: function() {
