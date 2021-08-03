@@ -2315,17 +2315,9 @@ jQuery(document).ready(function ($) {
                     title: __( 'Abandon Quiz?', 'tutor' ),
                     description : __( 'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor' ),
                     buttons : {
-                        reset: {
-                            title: __('Cancel', 'tutor'),
-                            class: 'secondary',
-        
-                            callback: function() {
-                                popup.remove();
-                            }
-                        },
                         keep: {
-                            title: __( 'Leave', 'tutor' ),
-                            class: 'danger',
+                            title: __( 'Yes, leave quiz', 'tutor' ),
+                            class: 'secondary',
                             callback: function() {
 
                                 var formData = $('form#tutor-answering-quiz').serialize()+'&action='+'tutor_quiz_abandon';
@@ -2353,7 +2345,15 @@ jQuery(document).ready(function ($) {
                                     }
                                 });
                             }
-                        }
+                        },
+                        reset: {
+                            title: __('Stay here', 'tutor'),
+                            class: 'primary',
+        
+                            callback: function() {
+                                popup.remove();
+                            }
+                        },
                     } 
                 };
         
