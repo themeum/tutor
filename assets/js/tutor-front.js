@@ -2309,6 +2309,7 @@ jQuery(document).ready(function ($) {
         if ( $tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.html() != 'EXPIRED' ) {
             if ( targetTag === 'A' || parentTag === 'A' ) {
                 event.preventDefault();
+                event.stopImmediatePropagation();
                 let popup;
 
                 let data = {
