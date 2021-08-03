@@ -17,13 +17,23 @@ window.tutor_component = function($, icon, padding) {
     var element; 
 
     this.popup_wrapper = function(contents) {
-        return '<div class="tutor-component-popup-container">\
-            <div class="tutor-component-popup-'+padding+'">\
-                <img class="tutor-pop-icon" src="'+window._tutorobject.tutor_url+'assets/images/'+icon+'.svg"/>\
-                ' + contents + '\
-                <div class="tutor-component-button-container"></div>\
-            </div>\
-        </div>';
+        if ( icon === '' ) {
+            return '<div class="tutor-component-popup-container">\
+                <div class="tutor-component-popup-'+padding+'">\
+                    ' + contents + '\
+                    <div class="tutor-component-button-container"></div>\
+                </div>\
+            </div>';            
+        }
+        else {
+            return '<div class="tutor-component-popup-container">\
+                <div class="tutor-component-popup-'+padding+'">\
+                    <img class="tutor-pop-icon" src="'+window._tutorobject.tutor_url+'assets/images/'+icon+'.svg"/>\
+                    ' + contents + '\
+                    <div class="tutor-component-button-container"></div>\
+                </div>\
+            </div>';
+        }
     }
 
     this.popup = function(data) {
