@@ -1008,7 +1008,7 @@ jQuery(document).ready(function ($) {
      * @since v.1.2.0
      */
 
-    $(document).on('click', 'a.open-withdraw-form-btn, .close-withdraw-form-btn', function (e) {
+    $(document).on('click', '.open-withdraw-form-btn, .close-withdraw-form-btn', function (e) {
         e.preventDefault();
 
         if($(this).data('reload')=='yes'){

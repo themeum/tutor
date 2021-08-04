@@ -1,5 +1,9 @@
 @import "../lib/mixins.scss";
 
+#screen-meta-links+.tutor-user-registration-notice-wrapper {
+    margin-top: 45px;
+}
+
 .tutor-user-registration-notice {
     @include valueWithPrefix(display, flex);
     @include propertyWithPrefix(align-items, center);

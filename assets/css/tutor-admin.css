@@ -722,6 +722,10 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 }
 
 /* Only reusable function, or code allowed here. No direct css please. */
+#screen-meta-links + .tutor-user-registration-notice-wrapper {
+  margin-top: 45px;
+}
+
 .tutor-user-registration-notice {
   display: -webkit-box;
   display: -ms-flexbox;
