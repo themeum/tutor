@@ -181,6 +181,7 @@
 .single_add_to_cart_button.button-warning, .tutor-button.button-warning, .tutor-btn.button-warning {
   background-color: #ffb36d;
   color: #ffffff;
+  border: none;
 }
 
 .single_add_to_cart_button.button-light, .tutor-button.button-light, .tutor-btn.button-light {
