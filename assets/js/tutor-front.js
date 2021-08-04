@@ -2301,7 +2301,7 @@ jQuery(document).ready(function ($) {
 
 
     //warn user before leave page if quiz is running
-    document.body.onclick = (event) => {
+    document.body.addEventListener('click', function(event){
         const target      = event.target;
         const targetTag   = target.tagName 
         const parentTag   = target.parentElement.tagName;
@@ -2364,6 +2364,6 @@ jQuery(document).ready(function ($) {
             }
         }
 
-    }
+    });
 });
 
