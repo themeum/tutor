@@ -43,8 +43,8 @@ window.tutor_component = function($, icon, padding) {
 
         var buttons = Object.keys(data.buttons || {}).map(function(key) {
             var button = data.buttons[key];
-            var button_id = button.id == 'undefined' ? 'button' : button.id; 
-            return $('<button id="tutor-popup-'+button_id+'" class="tutor-button tutor-button-'+button.class+'">'+button.title+'</button>').click(button.callback);
+            var button_id = button.id ? 'tutor-popup-'+button.id : ''; 
+            return $('<button id="'+button_id+'" class="tutor-button tutor-button-'+button.class+'">'+button.title+'</button>').click(button.callback);
         });
 
         element = $($this.popup_wrapper( title + description ), padding);

@@ -241,9 +241,10 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.6 - August 03, 2021 =
+= 1.9.6 - August 04, 2021 =
 
 New: Popup alert message when students abandon a quiz
+New: Popup alert message when admin/instructor tries to delete an enrolment
 Update: Set WooCommerce product as sold individually when created automatically from frontend course builder
 Update: Enrolment required page design update
 Update: Notification design update for when WordPress registration is disabled
