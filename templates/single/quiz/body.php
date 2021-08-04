@@ -90,7 +90,7 @@ $quiz_answers = array();
 								<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
 								<button type="submit" class="tutor-button button-warning" name="start_quiz_btn" value="start_quiz">
-									<i class="icon-hourglass-1"></i> <?php _e( 'Reattempt', 'tutor' ); ?>
+									<?php _e( 'Reattempt', 'tutor' ); ?>
 								</button>
 							</form>
 						</div>
@@ -448,7 +448,7 @@ $quiz_answers = array();
                     <input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
                     <button type="submit" class="tutor-button" name="start_quiz_btn" value="start_quiz">
-                        <i class="icon-hourglass-1"></i> <?php _e( 'Start Quiz', 'tutor' ); ?>
+                        <?php _e( 'Start Quiz', 'tutor' ); ?>
                     </button>
                 </form>
             </div>
