@@ -2,6 +2,7 @@
 
 ### 1.9.6 - August 03, 2021
 
+* New: Popup alert message when students abandon a quiz
 * Update: Set WooCommerce product as sold individually when created automatically from frontend course builder
 * Update: Enrolment required page design update
 * Update: Notification design update for when WordPress registration is disabled
@@ -14,6 +15,7 @@
 * Fix: Quiz not showing immediately after creating in course builder
 * Fix: Lesson count shows 0 in enrolled courses on the frontend dashboard
 * Fix: XSS vulnerability in student list in the dashboard
+* Fix: The option “When time expires” fixed in Quiz settings
 
 
 ### 1.9.5 - July 18, 2021
