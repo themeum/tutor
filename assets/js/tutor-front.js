@@ -2350,9 +2350,8 @@ jQuery(document).ready(function ($) {
                         },
                         reset: {
                             title: __('Stay here', 'tutor'),
-                        
+                            id: 'reset',
                             class: 'primary',
-        
                             callback: function() {
                                 popup.remove();
                             }
