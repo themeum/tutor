@@ -1008,7 +1008,7 @@ jQuery(document).ready(function ($) {
      * @since v.1.2.0
      */
 
-    $(document).on('click', 'a.open-withdraw-form-btn, .close-withdraw-form-btn', function (e) {
+    $(document).on('click', '.open-withdraw-form-btn, .close-withdraw-form-btn', function (e) {
         e.preventDefault();
 
         if($(this).data('reload')=='yes'){
@@ -2301,7 +2301,7 @@ jQuery(document).ready(function ($) {
 
 
     //warn user before leave page if quiz is running
-    document.body.onclick = (event) => {
+    document.body.addEventListener('click', function(event){
         const target      = event.target;
         const targetTag   = target.tagName 
         const parentTag   = target.parentElement.tagName;
@@ -2363,6 +2363,6 @@ jQuery(document).ready(function ($) {
             }
         }
 
-    }
+    });
 });
 
