@@ -171,7 +171,7 @@ class User {
 
 		$hide_url = wp_nonce_url( add_query_arg( 'tutor-hide-notice', 'registration' ), tutor()->nonce_action, tutor()->nonce );
 		?>
-		<div class="wrap">
+		<div class="wrap tutor-user-registration-notice-wrapper">
 			<div class="tutor-user-registration-notice">
 				<div>
 					<img src="<?php echo tutor()->url; ?>assets/images/icon-info-round.svg"/>
