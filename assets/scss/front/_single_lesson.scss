@@ -1145,9 +1145,12 @@ Course question and answer
 }
 .quiz-attempt-single-question {
 	margin-bottom: 80px;
+
+	p.question-marks {
+		margin-bottom: 20px;
+	}
 }
-.fill-in-the-blank-field {
-}
+
 .fill-in-the-blank-field .fill-in-the-blank-text-input {
 	display: inline;
 	border-top: none;
