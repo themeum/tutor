@@ -29,7 +29,7 @@
 
 	foreach ($query_topics->posts as $topic){
 		?>
-        <div data-topic_id="<?php echo $topic->ID; ?>" class="tutor-topics-wrap">
+        <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap">
 
             <div class="tutor-topics-top">
                 <h4 class="tutor-topic-title">

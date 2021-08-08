@@ -1,5 +1,11 @@
 # TutorLMS Changelog
 
+### 1.9.7 - August 16, 2021
+
+* Fix: Topic title and description edit not working
+* Fix: Duplicate order statements in instructor profile
+
+
 ### 1.9.6 - August 04, 2021
 
 * New: Popup alert message when students abandon a quiz

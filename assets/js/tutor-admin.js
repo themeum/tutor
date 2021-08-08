@@ -101,7 +101,7 @@ jQuery(document).ready(function($){
         var topics = {};
         $('.tutor-topics-wrap').each(function(index, item){
             var $topic = $(this);
-            var topics_id = parseInt($(this).data('topic_id')); // parseInt($topic.attr('id').match(/\d+/)[0], 10);
+            var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
             var lessons = {};
 
             $topic.find('.course-content-item').each(function(lessonIndex, lessonItem){
