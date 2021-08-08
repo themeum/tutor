@@ -5281,6 +5281,55 @@ class Utils {
 			}
 		}
 
+
+		/**
+		 * Delete duplicated earning rows that were created due to not checking if already added while creating new.
+		 * 
+		 * @since v1.9.7
+		 */
+		if(!get_option( 'tutor_duplicated_earning_deleted', false )) {
+
+			// Get the duplicated order IDs
+			$del_rows = array();
+			$order_ids = $wpdb->get_col(
+				"SELECT order_id 
+				FROM (SELECT order_id, COUNT(order_id) AS cnt 
+						FROM {$wpdb->prefix}tutor_earnings 
+						GROUP BY order_id) t 
+				WHERE cnt>1"
+			);
+			
+			// Loop through order IDs
+			foreach($order_ids as $order_id) {
+
+				// Get earnings associated with the order ID
+				$earnings = $wpdb->get_results($wpdb->prepare(
+					"SELECT earning_id, course_id FROM {$wpdb->prefix}tutor_earnings
+					WHERE order_id=%d 
+					ORDER BY earning_id ASC", 
+					$order_id
+				));
+
+				$excluded_first = array();
+				foreach($earnings as $earning) {
+					if(!in_array($earning->course_id, $excluded_first)) {
+						// Exclude first course ID from deletion
+						$excluded_first[] = $earning->course_id;
+						continue;
+					}
+
+					$del_rows[] = $earning->earning_id;
+				}
+			}
+
+			if(count($del_rows)) {
+				$ids = implode(',', $del_rows);
+				$wpdb->query("DELETE FROM {$wpdb->prefix}tutor_earnings WHERE earning_id IN ({$ids})");
+			}
+			
+			update_option( 'tutor_duplicated_earning_deleted', true );
+		}
+
 		$query = $wpdb->get_results( $wpdb->prepare(
 			"SELECT 	earning_tbl.*,
 						course.post_title AS course_title
