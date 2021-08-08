@@ -114,8 +114,6 @@ switch ($sub_page){
 
 <div class="tutor-dashboard-item-group">
     <h4><?php _e('Statements', 'tutor'); ?></h4>
-
-
 <?php
 
 if ($statements->count) {
@@ -163,8 +161,15 @@ if ($statements->count) {
                         <p class="small-text"><strong><?php _e('Order ID'); ?> #<?php echo $statement->order_id; ?></strong></p>
 
                         <?php
-                        $order = new WC_Order($statement->order_id);
-                        echo '<div class="statement-address"> <strong>Purchaser</strong> <address>'.$order->get_formatted_billing_address().'</address></div>';
+                        $order = wc_get_order($statement->order_id);
+                        if($order && is_object($order)) {
+                            $billing_address = $order->get_formatted_billing_address();
+                            if($billing_address) {
+                                echo '<div class="statement-address">
+                                    <strong>' . __('Purchaser', 'tutor') . ': </strong> <address>' . $billing_address . '</address>
+                                </div>';
+                            }
+                        }
                         ?>
                     </td>
                     <td>
