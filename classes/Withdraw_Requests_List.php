@@ -94,7 +94,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 
 	function column_amount($item){
 		echo "<p>".tutor_utils()->tutor_price($item->amount)."</p>";
-		echo "<p><span class='withdraw-status withdraw-status-{$item->status}'>{$item->status}</span></p>";
+		echo "<p><span class='withdraw-status withdraw-status-{$item->status}'>".__( $item->status, 'tutor' )."</span></p>";
 	}
 
 	function get_columns(){

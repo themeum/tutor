@@ -422,7 +422,7 @@ jQuery(document).ready(function($){
     $(document).on('click', '.tutor-delete-lesson-btn', function(e){
         e.preventDefault();
 
-        if( ! confirm('Are you sure?')){
+        if( ! confirm( __( 'Are you sure?', 'tutor' ) )){
             return;
         }
 
@@ -453,7 +453,7 @@ jQuery(document).ready(function($){
     $(document).on('click', '.topic-delete-btn a', function(e){
         var topic_id = $(this).attr('data-topic-id');
 
-        if ( ! confirm('Are you sure to delete?')){
+        if ( ! confirm( __( 'Are you sure to delete?', 'tutor' ) )){
             e.preventDefault();
         }
     });
@@ -1030,7 +1030,7 @@ jQuery(document).ready(function($){
     $(document).on('click', '.tutor-delete-quiz-btn', function(e){
         e.preventDefault();
 
-        if( ! confirm('Are you sure?')){
+        if( ! confirm( __( 'Are you sure?', 'tutor' ) )){
             return;
         }
 
