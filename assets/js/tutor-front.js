@@ -1562,13 +1562,13 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: form_data,
             beforeSend: function () {
-                $('.tutor-dashboard-builder-draft-btn span').text('Saving...');
+                $('.tutor-dashboard-builder-draft-btn span').text( __( 'Saving...', 'tutor' ) );
             },
             success: function (data) {
 
             },
             complete: function () {
-                $('.tutor-dashboard-builder-draft-btn span').text('Save');
+                $('.tutor-dashboard-builder-draft-btn span').text( __( 'Save', 'tutor' ) );
             }
         });
     }

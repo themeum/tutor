@@ -41,9 +41,10 @@ class Question_Answers_List extends \Tutor_List_Table {
 			//'edit'      => sprintf('<a href="?page=%s&action=%s&instructor=%s">Edit</a>',$_REQUEST['page'],'edit',$item->comment_ID),
 			//'delete'    => sprintf('<a href="?page=%s&action=%s&instructor=%s">Delete</a>',$_REQUEST['page'],'delete',$item->comment_ID),
 		);
+		$answer_action_text = __( 'Answer', 'tutor' );
 
-		$actions['answer'] = sprintf('<a href="?page=%s&sub_page=%s&question_id=%s">Answer</a>',$_REQUEST['page'],'answer',$item->comment_ID);
-		//$actions['delete'] = sprintf('<a href="?page=%s&action=%s&question_id=%s">Delete</a>',$_REQUEST['page'],'delete',$item->comment_ID);
+		$actions['answer'] = sprintf('<a href="?page=%s&sub_page=%s&question_id=%s">'.$answer_action_text.'</a>',$_REQUEST['page'],'answer',$item->comment_ID);
+
 
 		//Return the title contents
 		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',

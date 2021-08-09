@@ -639,7 +639,7 @@ jQuery(document).ready(function($){
 
     $('#select2_search_user_ajax').select2({
         allowClear: true,
-        placeholder: "Search students",
+        placeholder: __( "Search students", 'tutor' ),
         minimumInputLength: '1',
         escapeMarkup: function( m ) {
             return m;

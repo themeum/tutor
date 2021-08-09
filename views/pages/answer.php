@@ -28,7 +28,7 @@ $question = tutor_utils()->get_qa_question($question_id);
 					wp_editor(null, 'answer', $settings);
 					?>
 
-                    <p class="desc"><?php _e('Write an answer here'); ?></p>
+                    <p class="desc"><?php _e( 'Write an answer here', 'tutor' ); ?></p>
                 </div>
 
                 <div class="tutor-option-field">
