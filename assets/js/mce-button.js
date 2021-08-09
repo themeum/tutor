@@ -9,12 +9,12 @@ jQuery(document).ready(function($){
     }
     tinymce.PluginManager.add('tutor_button', function( editor, url ) {
         editor.addButton( 'tutor_button', {
-            text: __('Tutor ShortCode', 'tutor'),
+            text: __( 'Tutor ShortCode' ),
             icon: false,
             type: 'menubutton',
             menu: [
                 {
-                    text: 'Student Registration Form',
+                    text: __( 'Student Registration Form' ),
                     onclick: function() {
                         editor.insertContent('[tutor_student_registration_form]');
                     }
@@ -25,7 +25,7 @@ jQuery(document).ready(function($){
                         editor.insertContent('[tutor_dashboard]');
                     }
                 },*/{
-                    text: 'Instructor Registration Form',
+                    text: __( 'Instructor Registration Form' ),
                     onclick: function() {
                         editor.insertContent('[tutor_instructor_registration_form]');
                     }
@@ -40,7 +40,7 @@ jQuery(document).ready(function($){
 
 
                 {
-                    text: 'Courses',
+                    text: __( 'Courses' ),
                     onclick: function() {
                         editor.windowManager.open( {
                             title: 'Courses Shortcode',
@@ -48,23 +48,23 @@ jQuery(document).ready(function($){
                                 {
                                     type: 'textbox',
                                     name: 'id',
-                                    label: 'Course id, seperate by (,) comma',
+                                    label: __( 'Course id, separate by (,) comma' ),
                                     value: ''
                                 },{
                                     type: 'textbox',
                                     name: 'exclude_ids',
-                                    label: 'Exclude Course IDS',
+                                    label: __( 'Exclude Course IDS' ),
                                     value: ''
                                 },
                                 {
                                     type: 'textbox',
                                     name: 'category',
-                                    label: 'Category IDS',
+                                    label: __( 'Category IDS' ),
                                     value: ''
                                 },
                                 {type: 'listbox',
                                     name: 'orderby',
-                                    label: 'Order By :',
+                                    label: __( 'Order By :' ),
                                     onselect: function(e) {
 
                                     },
@@ -79,7 +79,7 @@ jQuery(document).ready(function($){
                                 },
                                 {type: 'listbox',
                                     name: 'order',
-                                    label: 'Order :',
+                                    label: __( 'Order :' ),
                                     onselect: function(e) {
 
                                     },
@@ -91,7 +91,7 @@ jQuery(document).ready(function($){
                                 ,{
                                     type: 'textbox',
                                     name: 'count',
-                                    label: 'Count',
+                                    label: __( 'Count' ),
                                     value: '6',
                                 }
                             ],
