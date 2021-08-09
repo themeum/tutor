@@ -4,10 +4,12 @@ jQuery(document).ready(function($){
     /*========================================================================
      * Tutor WP Editor Button
      *======================================================================== */
-
+    function __(string) {
+        return string;
+    }
     tinymce.PluginManager.add('tutor_button', function( editor, url ) {
         editor.addButton( 'tutor_button', {
-            text: 'Tutor ShortCode',
+            text: __('Tutor ShortCode', 'tutor'),
             icon: false,
             type: 'menubutton',
             menu: [
