@@ -147,9 +147,9 @@ jQuery(document).ready(function($){
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use this media', 'tutor' )
             },
             multiple: false
         });
@@ -386,9 +386,9 @@ jQuery(document).ready(function($){
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use this media', 'tutor' )
             },
             multiple: false
         });
@@ -1167,9 +1167,9 @@ jQuery(document).ready(function($){
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use this media', 'tutor' )
             },
             multiple: false
         });
