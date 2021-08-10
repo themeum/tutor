@@ -186,9 +186,9 @@ jQuery(document).ready(function($){
 
         // Create a new media frame
         frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: __( 'Use this media', 'tutor' )
+                text: __( 'Upload media', 'tutor' )
             },
             library: { type: 'video' },
             multiple: false  // Set to true to allow multiple files to be selected
@@ -222,9 +222,9 @@ jQuery(document).ready(function($){
         }
         // Create a new media frame
         frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: __( 'Use this media', 'tutor' )
+                text: __( 'Upload media', 'tutor' )
             },
             multiple: true  // Set to true to allow multiple files to be selected
         });
@@ -264,9 +264,9 @@ jQuery(document).ready(function($){
             return;
         }
         frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: __( 'Use this media', 'tutor' )
+                text: __( 'Upload media', 'tutor' )
             },
             multiple: false
         });
@@ -521,9 +521,9 @@ jQuery(document).ready(function($){
 
         // Create a new media frame
         frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: __( 'Use this media', 'tutor' )
+                text: __( 'Upload media', 'tutor' )
             },
             multiple: false  // Set to true to allow multiple files to be selected
         });
@@ -565,9 +565,9 @@ jQuery(document).ready(function($){
 
         // Create a new media frame
         frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: __( 'Use this media', 'tutor')
+                text: __( 'Upload media', 'tutor')
             },
             multiple: false  // Set to true to allow multiple files to be selected
         });
