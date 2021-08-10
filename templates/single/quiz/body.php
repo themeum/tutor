@@ -37,6 +37,7 @@ $quiz_answers = array();
 
 		$hide_quiz_time_display = (bool) tutor_utils()->avalue_dot('hide_quiz_time_display', $quiz_attempt_info);
 		$hide_question_number_overview = (bool) tutor_utils()->avalue_dot('hide_question_number_overview', $quiz_attempt_info);
+		$show_previous_button = (bool) tutor_utils()->avalue_dot('show_previous_button', $quiz_attempt_info);
 
 		$remaining_time_secs = (strtotime($is_started_quiz->attempt_started_at) + $time_limit_seconds ) - strtotime($quiz_attempt_info['date_time_now']);
 
@@ -113,6 +114,7 @@ $quiz_answers = array();
 						}
 
 						$next_question = isset($questions[$question_i]) ? $questions[$question_i] : false;
+						$previous_question = $question_i>1 ? $questions[$question_i-1] : false;
 						?>
                         <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> data-quiz-feedback-mode="<?php echo $feedback_mode; ?>" >
 
@@ -377,25 +379,24 @@ $quiz_answers = array();
 
 							<?php
 							if ($question_layout_view !== 'question_below_each_other'){
-								if ($next_question){
-									?>
-                                    <div class="quiz-answer-footer-bar">
-                                        <div class="quiz-footer-button">
-                                            <button type="button" value="quiz_answer_submit" class="tutor-button
-                                        tutor-button-primary tutor-quiz-answer-next-btn"><?php _e( 'Answer &amp; Next Question', 'tutor' ); ?></button>
-                                        </div>
-                                    </div>
-									<?php
-								}else{
-									?>
-                                    <div class="quiz-answer-footer-bar">
-                                        <div class="quiz-footer-button">
-                                            <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-button-primary tutor-quiz-submit-btn"><?php
-												_e( 'Submit Quiz', 'tutor' ); ?></button>
-                                        </div>
-                                    </div>
-									<?php
-								}
+								?>
+								<div class="quiz-answer-footer-bar">
+									<div class="quiz-footer-button">
+										<?php
+											if($show_previous_button && $previous_question) {
+												?>
+												<button type="button" class="tutor-button tutor-button-outlined  tutor-quiz-answer-previous-btn">
+													<?php _e( 'Previous Question', 'tutor' ); ?>
+												</button>
+												<?php
+											}
+										?>
+										<button type="submit" class="tutor-button tutor-button-primary <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
+											<?php $next_question ? _e( 'Answer &amp; Next Question', 'tutor' ) : _e( 'Submit Quiz', 'tutor' ); ?>
+										</button>
+									</div>
+								</div>
+								<?php
 							}
 							?>
                         </div>
