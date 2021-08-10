@@ -1,4 +1,4 @@
-<div class="course-contents">
+<div id="<?php echo !is_admin() ? 'tutor-course-topics' : ''; ?>" class="course-contents">
 
     <div class="wp_editor_config_example" style="display: none;">
         <?php wp_editor('', 'tutor_editor_config'); ?>
