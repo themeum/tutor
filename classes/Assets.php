@@ -19,6 +19,13 @@ class Assets{
 		add_action( 'admin_head', array($this, 'tutor_add_mce_button'));
 		add_filter( 'get_the_generator_html', array($this, 'tutor_generator_tag'), 10, 2 );
 		add_filter( 'get_the_generator_xhtml', array($this, 'tutor_generator_tag'), 10, 2 );
+
+		/**
+		 * Add translation support for external tinyMCE button
+		 * 
+		 * @since 1.9.7
+		 */
+		add_filter( 'mce_external_languages', array( $this, 'tutor_tinymce_translate' ) );
 	}
 
 	private function get_default_localized_data() {
@@ -311,6 +318,16 @@ class Assets{
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path.'languages/' );
 		wp_set_script_translations( 'tutor-main', 'tutor', tutor()->path.'languages/' );
 		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path.'languages/' );
+	}
+
+	/**
+	 * Add translation support for external tinyMCE button
+	 * 
+	 * @since 1.9.7
+	 */
+	function tutor_tinymce_translate() {
+		$locales['tutor_button'] = tutor()->path.'includes/tinymce_translate.php';
+		return $locales;
 	}
 	
 }

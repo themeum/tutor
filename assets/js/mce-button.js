@@ -4,14 +4,19 @@ jQuery(document).ready(function($){
     /*========================================================================
      * Tutor WP Editor Button
      *======================================================================== */
+    /**
+     * editor.getLang translation support added
+     * 
+     * @since 1.9.7
+     */
     tinymce.PluginManager.add('tutor_button', function( editor, url ) {
         editor.addButton( 'tutor_button', {
-            text: 'Tutor ShortCode',
+            text: editor.getLang('tutor_button.tutor_shortcode'),
             icon: false,
             type: 'menubutton',
             menu: [
                 {
-                    text: 'Student Registration Form',
+                    text: editor.getLang('tutor_button.student_registration_form'),
                     onclick: function() {
                         editor.insertContent('[tutor_student_registration_form]');
                     }
@@ -22,7 +27,7 @@ jQuery(document).ready(function($){
                         editor.insertContent('[tutor_dashboard]');
                     }
                 },*/{
-                    text: 'Instructor Registration Form',
+                    text: editor.getLang('tutor_button.instructor_registration_form'),
                     onclick: function() {
                         editor.insertContent('[tutor_instructor_registration_form]');
                     }
@@ -37,31 +42,31 @@ jQuery(document).ready(function($){
 
 
                 {
-                    text: 'Courses',
+                    text: editor.getLang('tutor_button.courses'),
                     onclick: function() {
                         editor.windowManager.open( {
-                            title: 'Courses Shortcode',
+                            title: editor.getLang('tutor_button.courses_shortcode'),
                             body: [
                                 {
                                     type: 'textbox',
                                     name: 'id',
-                                    label: 'Course id, separate by (,) comma',
+                                    label: editor.getLang('tutor_button.courses_separate_by'),
                                     value: ''
                                 },{
                                     type: 'textbox',
                                     name: 'exclude_ids',
-                                    label: 'Exclude Course IDS',
+                                    label: editor.getLang('tutor_button.exclude_course_ids'),
                                     value: ''
                                 },
                                 {
                                     type: 'textbox',
                                     name: 'category',
-                                    label: 'Category IDS',
+                                    label: editor.getLang('tutor_button.category_ids'),
                                     value: ''
                                 },
                                 {type: 'listbox',
                                     name: 'orderby',
-                                    label: 'Order By :',
+                                    label: editor.getLang('tutor_button.order_by'),
                                     onselect: function(e) {
 
                                     },
@@ -76,7 +81,7 @@ jQuery(document).ready(function($){
                                 },
                                 {type: 'listbox',
                                     name: 'order',
-                                    label: 'Order :',
+                                    label: editor.getLang('tutor_button.order'),
                                     onselect: function(e) {
 
                                     },
@@ -88,7 +93,7 @@ jQuery(document).ready(function($){
                                 ,{
                                     type: 'textbox',
                                     name: 'count',
-                                    label: 'Count',
+                                    label: editor.getLang('tutor_button.count'),
                                     value: '6',
                                 }
                             ],
