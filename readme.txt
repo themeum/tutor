@@ -243,6 +243,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.9.7 - August 16, 2021 =
 
+New: Previous button for single quiz
 Fix: Topic title and description edit not working
 Fix: Duplicate order statements in instructor profile
 

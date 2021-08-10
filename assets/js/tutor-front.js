@@ -345,8 +345,7 @@ jQuery(document).ready(function ($) {
                         var att = $("#tutor-quiz-time-expire-wrapper").attr('data-attempt-remaining');
 
                         //disable buttons
-                        $(".tutor-quiz-answer-next-btn").attr('disabled', true);
-                        $(".tutor-quiz-submit-btn").attr('disabled', true);
+                        $(".tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn").prop('disabled', true);
 
                         //add alert text
                         $(".time-remaining span").css('color', '#F44337');
@@ -605,8 +604,14 @@ jQuery(document).ready(function ($) {
      * @since v.1.0.0
      */
 
-    $(document).on('click', '.tutor-quiz-answer-next-btn', function (e) {
+    $(document).on('click', '.tutor-quiz-answer-next-btn, .tutor-quiz-answer-previous-btn', function (e) {
         e.preventDefault();
+
+        // Show previous quiz if press previous button
+        if($(this).hasClass('tutor-quiz-answer-previous-btn')) {
+            $(this).closest('.quiz-attempt-single-question').hide().prev().show();
+            return;
+        }
 
         var $that = $(this);
         var $question_wrap = $that.closest('.quiz-attempt-single-question');
