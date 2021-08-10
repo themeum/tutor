@@ -47,7 +47,7 @@ do_action('tutor_quiz/single/before/top');
 			?>
             <li>
                 <strong><?php _e('Time', 'tutor'); ?> :</strong>
-				<?php echo $time_limit.' '.$time_type; ?>
+				<?php echo $time_limit.' '.sprintf( __( '%s', 'tutor' ), $time_type ); ?>
             </li>
 			<?php
 		}
