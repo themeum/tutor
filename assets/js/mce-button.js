@@ -4,17 +4,14 @@ jQuery(document).ready(function($){
     /*========================================================================
      * Tutor WP Editor Button
      *======================================================================== */
-    function __(string) {
-        return string;
-    }
     tinymce.PluginManager.add('tutor_button', function( editor, url ) {
         editor.addButton( 'tutor_button', {
-            text: __( 'Tutor ShortCode' ),
+            text: 'Tutor ShortCode',
             icon: false,
             type: 'menubutton',
             menu: [
                 {
-                    text: __( 'Student Registration Form' ),
+                    text: 'Student Registration Form',
                     onclick: function() {
                         editor.insertContent('[tutor_student_registration_form]');
                     }
@@ -25,7 +22,7 @@ jQuery(document).ready(function($){
                         editor.insertContent('[tutor_dashboard]');
                     }
                 },*/{
-                    text: __( 'Instructor Registration Form' ),
+                    text: 'Instructor Registration Form',
                     onclick: function() {
                         editor.insertContent('[tutor_instructor_registration_form]');
                     }
@@ -40,7 +37,7 @@ jQuery(document).ready(function($){
 
 
                 {
-                    text: __( 'Courses' ),
+                    text: 'Courses',
                     onclick: function() {
                         editor.windowManager.open( {
                             title: 'Courses Shortcode',
@@ -48,23 +45,23 @@ jQuery(document).ready(function($){
                                 {
                                     type: 'textbox',
                                     name: 'id',
-                                    label: __( 'Course id, separate by (,) comma' ),
+                                    label: 'Course id, separate by (,) comma',
                                     value: ''
                                 },{
                                     type: 'textbox',
                                     name: 'exclude_ids',
-                                    label: __( 'Exclude Course IDS' ),
+                                    label: 'Exclude Course IDS',
                                     value: ''
                                 },
                                 {
                                     type: 'textbox',
                                     name: 'category',
-                                    label: __( 'Category IDS' ),
+                                    label: 'Category IDS',
                                     value: ''
                                 },
                                 {type: 'listbox',
                                     name: 'orderby',
-                                    label: __( 'Order By :' ),
+                                    label: 'Order By :',
                                     onselect: function(e) {
 
                                     },
@@ -79,7 +76,7 @@ jQuery(document).ready(function($){
                                 },
                                 {type: 'listbox',
                                     name: 'order',
-                                    label: __( 'Order :' ),
+                                    label: 'Order :',
                                     onselect: function(e) {
 
                                     },
@@ -91,7 +88,7 @@ jQuery(document).ready(function($){
                                 ,{
                                     type: 'textbox',
                                     name: 'count',
-                                    label: __( 'Count' ),
+                                    label: 'Count',
                                     value: '6',
                                 }
                             ],
