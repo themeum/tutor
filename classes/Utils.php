@@ -2608,25 +2608,27 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_total_instructors( $search_term = '' ) {
+	public function get_total_instructors( $search_filter = '') {
 		global $wpdb;
 
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+		sanitize_text_field($search_filter);
+	
+		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 
 		$count = $wpdb->get_var( $wpdb->prepare(
-			"SELECT COUNT({$wpdb->users}.ID)
-			FROM 	{$wpdb->users} 
-					INNER JOIN {$wpdb->usermeta} 
-							ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id )
-			WHERE 	{$wpdb->usermeta}.meta_key = %s
-					AND ( {$wpdb->users}.display_name LIKE %s OR {$wpdb->users}.user_email LIKE %s );
+			"SELECT COUNT(user.ID)
+			FROM 	{$wpdb->users} as user
+					INNER JOIN {$wpdb->usermeta} as user_meta
+							ON ( user_meta.user_id = user.ID )
+		
+			WHERE 	user_meta.meta_key = %s
+					AND ( user.display_name LIKE %s OR user.user_email LIKE %s );
 			",
 			'_is_tutor_instructor',
-			$search_term,
-			$search_term
+			$search_filter,
+			$search_filter
 		) );
-
-		return (int) $count;
+		return $count;
 	}
 
 	/**
@@ -2640,10 +2642,18 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors( $start = 0, $limit = 10, $search_term = '', $status = null, $cat_ids = array() ) {
+	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array() ) {
 		global $wpdb;
 
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+		sanitize_text_field($search_filter);
+		sanitize_text_field($course_filter);
+		sanitize_text_field($date_filter);
+		sanitize_text_field($order_filter);
+
+		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
+		$course_filter	= $course_filter != '' ? " AND inst_status.meta_key = '_tutor_instructor_course_id' AND inst_status.meta_value = $course_filter " : '' ;
+		$date_filter	= $date_filter != '' ? " AND  DATE(user.user_registered) = '$date_filter' " : '' ;
+
 		$category_join = '';
 		$category_where = '';
 
@@ -2689,12 +2699,15 @@ class Utils {
 					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
 					{$status}
 					{$category_where}
-			ORDER BY user_meta.meta_value DESC 
+					{$course_filter}
+					{$date_filter}
+			ORDER BY user_meta.meta_value {$order_filter}
 			LIMIT 	%d, %d;
 			",
 			'_is_tutor_instructor',
-			$search_term,
-			$search_term,
+			$search_filter,
+			$search_filter,
+		
 			$start,
 			$limit
 		) );
