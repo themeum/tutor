@@ -1,5 +1,6 @@
 <?php if ($blocks['block_type'] == 'uniform') : ?>
-    <div class="tutor-option-single-item <?php echo $blocks['slug'] ?>">
+
+    <div class="tutor-option-single-item <?php echo !isset($blocks['class']) ? ($blocks['slug'] ?? null) : $blocks['class'] ?>">
         <?php echo $blocks['label'] ? '<h4>' . $blocks['label'] . '</h4>' : '' ?>
         <div class="item-wrapper">
             <?php
@@ -20,4 +21,5 @@
             </div>
         <?php endforeach; ?>
     </div>
+
 <?php endif; ?>

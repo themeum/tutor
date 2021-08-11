@@ -973,85 +973,140 @@ class Options_V2 {
 										'desc'        => __('Students must be logged in to view course', 'tutor'),
 									),
 								)
-							)
-						),
-						array(
-							'label'      => __('Select Certificate Template', 'tutor'),
-							'slug'       => 'select_certificate_template',
-							'block_type' => 'uniform',
-							'fields'     => array(
-								array(
-									'key'        => 'horizontal_template',
-									'type'        => 'toggle_switch_button_thumb',
-									'label'       => __('Horizontal Template', 'tutor'),
-									'label_title' => __('', 'tutor'),
-									'label_title' => array(
-										array(
-											'name' => 'certificate-template-horizontal-1',
-											'slug' => 'certificate-template-horizontal-1',
-											'thumb_url' => 'src="certificate-template/certificate-horizontal-1.jpg',
+							),
+							array(
+								'label'      => __('Select Certificate Template', 'tutor'),
+								'slug'       => 'select_certificate_template',
+								'class'       => 'certificate-template"',
+								'block_type' => 'uniform',
+								'fields'     => array(
+									array(
+										'key'        => 'horizontal_template',
+										'type'        => 'radio_thumbs_grid',
+										'label'       => __('Horizontal Template', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'options' => array(
+											array(
+												'title' => 'certificate-template-horizontal-1',
+												'slug' => 'certificate-template-horizontal-1',
+												'thumb_url' => 'certificate-template/certificate-horizontal-1.jpg',
+											),
+											array(
+												'title' => 'certificate-template-horizontal-2',
+												'slug' => 'certificate-template-horizontal-2',
+												'thumb_url' => 'certificate-template/certificate-horizontal-2.jpg',
+											),
+											array(
+												'title' => 'certificate-template-horizontal-3',
+												'slug' => 'certificate-template-horizontal-3',
+												'thumb_url' => 'certificate-template/certificate-horizontal-3.jpg',
+											),
+											array(
+												'title' => 'certificate-template-horizontal-4',
+												'slug' => 'certificate-template-horizontal-4',
+												'thumb_url' => 'certificate-template/certificate-horizontal-4.jpg',
+											),
+											array(
+												'title' => 'certificate-template-horizontal-5',
+												'slug' => 'certificate-template-horizontal-5',
+												'thumb_url' => 'certificate-template/certificate-horizontal-5.jpg',
+											),
+											array(
+												'title' => 'certificate-template-horizontal-6',
+												'slug' => 'certificate-template-horizontal-6',
+												'thumb_url' => 'certificate-template/certificate-horizontal-6.jpg',
+											),
+											array(
+												'title' => 'certificate-template-horizontal-7',
+												'slug' => 'certificate-template-horizontal-7',
+												'thumb_url' => 'certificate-template/certificate-horizontal-7.jpg',
+											),
 										),
-										array(
-											'name' => 'certificate-template-horizontal-2',
-											'slug' => 'certificate-template-horizontal-2',
-											'thumb_url' => 'src="certificate-template/certificate-horizontal-2.jpg',
-										),
-										array(
-											'name' => 'certificate-template-horizontal-3',
-											'slug' => 'certificate-template-horizontal-3',
-											'thumb_url' => 'src="certificate-template/certificate-horizontal-3.jpg',
-										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
 									),
-									'thumbs_url' => 'certificate-thumb/cetificate-thumb-4.jpg',
-									'desc'        => __('Students must be logged in to view course', 'tutor'),
-								),
-							)
+									array(
+										'key'        => 'vertical_template',
+										'type'        => 'radio_thumbs_grid',
+										'label'       => __('Vertical Template', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'options' => array(
+											array(
+												'title' => 'certificate-template-horizontal-1',
+												'slug' => 'certificate-template-horizontal-1',
+												'thumb_url' => 'certificate-template/certificate-vertical-1.jpg',
+											),
+											array(
+												'title' => 'certificate-template-horizontal-2',
+												'slug' => 'certificate-template-horizontal-2',
+												'thumb_url' => 'certificate-template/certificate-vertical-2.jpg',
+											),
+											array(
+												'title' => 'certificate-template-horizontal-3',
+												'slug' => 'certificate-template-horizontal-3',
+												'thumb_url' => 'certificate-template/certificate-vertical-3.jpg',
+											),
+											array(
+												'title' => 'certificate-template-horizontal-4',
+												'slug' => 'certificate-template-horizontal-4',
+												'thumb_url' => 'certificate-template/certificate-vertical-4.jpg',
+											),
+											array(
+												'title' => 'certificate-template-horizontal-5',
+												'slug' => 'certificate-template-horizontal-5',
+												'thumb_url' => 'certificate-template/certificate-vertical-5.jpg',
+											),
+											array(
+												'title' => 'certificate-template-horizontal-6',
+												'slug' => 'certificate-template-horizontal-6',
+												'thumb_url' => 'certificate-template/certificate-vertical-6.jpg',
+											),
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+								)
+							),
+
+							array(
+								'label'      => __('Select Certificate Template', 'tutor'),
+								'slug'       => 'select_certificate_template',
+								'class'       => 'certificate-settings"',
+								'block_type' => 'uniform',
+								'fields'     => array(
+									array(
+										'key'        => 'add_instructor_info',
+										'type'        => 'toggle_switch',
+										'label'       => __('Add Instructor Info', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'desc'        => __('Enable to add course instructor’s information on all generated certificates.', 'tutor'),
+									),
+									array(
+										'key'        => 'authorised_company_name',
+										'type'        => 'text',
+										'label'       => __('Authorised Company Name', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'desc'        => __('Add your eLearning company name below your authorized name to add credibility to the certificates.', 'tutor'),
+									),
+									array(
+										'key'      => 'signature',
+										'type'      => 'upload_half',
+										'label'     => __('Signature', 'tutor'),
+										'default'     => 'signature-demo.svg',
+										'desc'      => __('<p>
+											Size: <strong>200x40 pixels;</strong> File Support:
+											<strong>jpg, .jpeg or .png.</strong>
+										</p>', 'tutor'),
+									),
+									array(
+										'key'        => 'view_certificate',
+										'type'        => 'toggle_switch',
+										'label'       => __('View Certificate', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+								)
+							),
 						),
-					),
-				),
-			),
-			'addons' => array(
-				'label'    => __('Addons', 'tutor'),
-				'sections' => array(
-					array(
-						'label'  => __('Zoom', 'tutor'),
-						'slug'   => 'zoom',
-						'desc'   => __('Zoom Settings', 'tutor'),
-						'template'   => 'zoom',
-						'icon'   => __('zoom', 'tutor'),
-						'blocks' => array(
-							'block' => array(),
-						),
-					),
-					array(
-						'label'  => __('Google Classroom', 'tutor'),
-						'slug'   => 'google_classroom',
-						'desc'   => __('Google Classroom Settings', 'tutor'),
-						'template'   => 'google_classroom',
-						'icon'   => __('classroom', 'tutor'),
-						'blocks' => array(
-							'block' => array(),
-						),
-					),
-					array(
-						'label'  => __('Buddypress', 'tutor'),
-						'slug'   => 'buddypress',
-						'desc'   => __('Buddypress Settings', 'tutor'),
-						'template'   => 'buddypress',
-						'icon'   => __('buddypress', 'tutor'),
-						'blocks' => array(
-							'block' => array(),
-						),
-					),
-					array(
-						'label'  => __('Paid Memberships Pro', 'tutor'),
-						'slug'   => 'paid_memberships_pro',
-						'desc'   => __('Paid Memberships Pro Settings', 'tutor'),
-						'template'   => 'paid_memberships_pro',
-						'icon'   => __('paid-membersip-pro', 'tutor'),
-						'blocks' => array(
-							'block' => array(),
-						),
+
 					),
 				),
 			),
