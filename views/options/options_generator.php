@@ -41,7 +41,7 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
                         <li class="tutor-option-nav-item">
                             <a data-tab="<?php echo $section['slug'] ?>" class="<?php echo $is_active ?>">
                                 <img src="<?php echo $icon ?>" alt="<?php echo $section['slug'] ?>-icon" />
-                                <span><?php echo $section['label'] ?></span>
+                                <span class="nav-label"><?php echo $section['label'] ?></span>
                             </a>
                         </li>
                     <?php

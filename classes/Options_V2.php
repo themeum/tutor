@@ -387,11 +387,25 @@ class Options_V2 {
 								'block_type' => 'uniform',
 								'fields'     => array(
 									array(
+										'key'      => 'course_builder_page_logo',
+										'type'      => 'upload_full',
+										'label'     => __('Course Builder Page Logo', 'tutor'),
+										'desc'      => __('<p>
+											Size: <strong>200x40 pixels;</strong> File Support:
+											<strong>jpg, .jpeg or .png.</strong>
+										</p>', 'tutor'),
+									),
+									array(
 										'key'      => 'courses_col_per_row',
 										'type'      => 'radio_horizontal',
 										'label'     => __('Column Per Row', 'tutor'),
 										'default'   => '4',
-										'options'   => array(1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four'),
+										'options'   => array(
+											'one' => 'One',
+											'two' => 'Two',
+											'three' => 'Three',
+											'four' => 'Four'
+										),
 										'desc'      => __('Define how many column you want to use to display courses.', 'tutor'),
 									),
 									array(
@@ -416,177 +430,222 @@ class Options_V2 {
 								'slug'       => 'layout',
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'quiz_attempts_allowed'  => array(
-										'type'    => 'number',
-										'label'   => __('Attempts allowed', 'tutor'),
-										'default' => '10',
-										'desc'    => __('The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor'),
+									array(
+										'key'    => 'instructor_list_layout',
+										'type'    => 'group_radio',
+										'label'   => __('Instructor List Layout', 'tutor'),
+										'group_options' => array(
+											'vertical' => array(
+												'portrait' => array(
+													'title' => 'Portrait',
+													'image' => 'instructor-layout/intructor-portrait.svg',
+												),
+												'cover' => array(
+													'title' => 'Cover',
+													'image' => 'instructor-layout/instructor-cover.svg',
+												),
+												'minimal' => array(
+													'title' => 'Minimal',
+													'image' => 'instructor-layout/instructor-minimal.svg',
+												)
+											),
+											'horizontal' => array(
+												'horizontal_portrait' => array(
+													'title' => 'Minimal',
+													'image' => 'instructor-layout/instructor-horizontal-portrait.svg',
+												),
+												'horizontal_minimal' => array(
+													'title' => 'Minimal',
+													'image' => 'instructor-layout/instructor-horizontal-minimal.svg',
+												)
+											),
+										),
+										'desc'    => __('Content Needed Here...', 'tutor'),
+									),
+									array(
+										'key'    => 'public_profile_layout',
+										'type'    => 'group_radio_full_3',
+										'label'   => __('Public Profile Layout', 'tutor'),
+										'group_options' => array(
+											'modern' => array(
+												'title' => 'Modern',
+												'image' => 'profile-layout/profile-modern.svg',
+											),
+											'minimal' => array(
+												'title' => 'Minimal',
+												'image' => 'profile-layout/profile-minimal.svg',
+											),
+											'classic' => array(
+												'title' => 'Classic',
+												'image' => 'profile-layout/profile-classic.svg',
+											)
+										),
+										'desc'    => __('Content Needed Here...', 'tutor'),
 									),
 								),
 							),
 							array(
 								'label'      => __('Course Details', 'tutor'),
-								'slug'       => 'course-details', //enable_disable
-								'block_type' => 'uniform',
-								'fields_type' => 'checkgroup',
-								'fields'     => array(
-									'display_course_instructors' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Instructor Info', 'tutor'),
-										'label_title'   => __('Enable', 'tutor'),
-										'desc' => __('Show instructor bio on each page', 'tutor'),
+								'slug'       => 'course-details',
+								'block_type' => 'isolate',
+								'fields'    => array(
+									array(
+										'key'    => 'Public Profile Layout',
+										'type'    => 'checkgroup',
+										'label'   => __('Public Profile Layout', 'tutor'),
+										'group_options' => array(
+											array(
+												'key'      => 'display_course_instructors',
+												'type'      => 'toggle_single',
+												'label'     => __('Instructor Info', 'tutor'),
+												'label_title'   => __('Enable', 'tutor'),
+												'desc' => __('Show instructor bio on each page', 'tutor'),
+											),
+											array(
+												'key'      => 'enable_q_and_a_on_course',
+												'type'      => 'toggle_single',
+												'label'     => __('Question and Answer', 'tutor'),
+												'label_title' => __('Enable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Enabling this feature will add a Q&amp;A section on every course.',	'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_author',
+												'type'      => 'toggle_single',
+												'label'     => __('Author', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course author name from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_level',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Level', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course level from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_share',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Share', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course share option from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_duration',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Duration', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course duration from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_total_enrolled',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Total Enrolled', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course total enrolled from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_update_date',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Update Date', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course update date from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_progress_bar',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Progress Bar', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed completing progress bar from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_material',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Material', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course material from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_about',
+												'type'      => 'toggle_single',
+												'label'     => __('Course About', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course about from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_description',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Description', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course description from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_benefits',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Benefits', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course benefits from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_requirements',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Requirements', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course requirements from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_target_audience',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Target Audience', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course target audience from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_announcements',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Announcements', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course announcements from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'disable_course_review',
+												'type'      => 'toggle_single',
+												'label'     => __('Course Review', 'tutor'),
+												'label_title' => __('Disable', 'tutor'),
+												'default'   => '0',
+												'desc'      => __('Disabling this feature will be removed course review system from the course page.', 'tutor'),
+											),
+											array(
+												'key'      => 'supported_video_sources',
+												'type'      => 'toggle_single',
+												'label'     => __('Preferred Video Source', 'tutor'),
+												'options'	=> $video_sources,
+												'desc'      => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
+											),
+										),
+										'desc'    => __('Content Needed Here...', 'tutor'),
 									),
-									'enable_q_and_a_on_course' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Question and Answer', 'tutor'),
-										'label_title' => __('Enable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Enabling this feature will add a Q&amp;A section on every course.',	'tutor'),
-									),
-									'disable_course_author' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Author', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course author name from the course page.', 'tutor'),
-									),
-									'disable_course_level' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Level', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course level from the course page.', 'tutor'),
-									),
-									'disable_course_share' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Share', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course share option from the course page.', 'tutor'),
-									),
-									'disable_course_duration' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Duration', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course duration from the course page.', 'tutor'),
-									),
-									'disable_course_total_enrolled' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Total Enrolled', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course total enrolled from the course page.', 'tutor'),
-									),
-									'disable_course_update_date' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Update Date', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course update date from the course page.', 'tutor'),
-									),
-									'disable_course_progress_bar' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Progress Bar', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed completing progress bar from the course page.', 'tutor'),
-									),
-									'disable_course_material' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Material', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course material from the course page.', 'tutor'),
-									),
-									'disable_course_about' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course About', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course about from the course page.', 'tutor'),
-									),
-									'disable_course_description' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Description', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course description from the course page.', 'tutor'),
-									),
-									'disable_course_benefits' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Benefits', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course benefits from the course page.', 'tutor'),
-									),
-									'disable_course_requirements' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Requirements', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course requirements from the course page.', 'tutor'),
-									),
-									'disable_course_target_audience' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Target Audience', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course target audience from the course page.', 'tutor'),
-									),
-									'disable_course_announcements' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Announcements', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course announcements from the course page.', 'tutor'),
-									),
-									'disable_course_review' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Course Review', 'tutor'),
-										'label_title' => __('Disable', 'tutor'),
-										'default'   => '0',
-										'desc'      => __('Disabling this feature will be removed course review system from the course page.', 'tutor'),
-									),
-									'supported_video_sources' => array(
-										'type'      => 'checkbox',
-										'label'     => __('Preferred Video Source', 'tutor'),
-										'options'	=> $video_sources,
-										'desc'      => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
-									),
-									'default_video_source' => array(
+									array(
+										'key'      => 'default_video_source',
 										'type'      => 'select',
 										'label'     => __('Default Video Source', 'tutor'),
 										'default'   => '',
 										'options'   => $video_sources,
 										'desc'      => __('Choose video source to be selected by default.',	'tutor'),
-									),
-								),
-							),
-							array(
-								'label'      => __('Color', 'tutor'),
-								'slug'       => 'color',
-								'block_type' => 'uniform',
-								'fields'     => array(
-									'tutor_primary_color' => array(
-										'type'      => 'color',
-										'label'     => __('Primary Color', 'tutor'),
-										'default'   => '',
-									),
-									'tutor_primary_hover_color' => array(
-										'type'      => 'color',
-										'label'     => __('Primary Hover Color', 'tutor'),
-										'default'   => '',
-									),
-									'tutor_text_color' => array(
-										'type'      => 'color',
-										'label'     => __('Text color', 'tutor'),
-										'default'   => '',
-									),
-									'tutor_light_color' => array(
-										'type'      => 'color',
-										'label'     => __('Light color', 'tutor'),
-										'default'   => '',
 									),
 								),
 							),
@@ -604,12 +663,29 @@ class Options_V2 {
 								'slug'       => 'options',
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'pro_feature' => array(
-										'type'      => 'input',
-										'label'     => __('Pro Feature', 'tutor'),
-										'default'   => '4',
-										'options'   => array('min' => 1, 'max' => 6),
-										'desc'      => __('Define how many column you want to use to display courses.', 'tutor'),
+									array(
+										'key'      => 'login_error_message',
+										'type'      => 'toggle_switch',
+										'label'     => __('Error message for wrong login credentials', 'tutor'),
+										'label_title'     => __('', 'tutor'),
+										'default'   => 'Incorrect username or password.',
+										'desc'      => __('Login error message displayed when the user puts wrong login credentials.', 'tutor'),
+									),
+									array(
+										'key'      => 'hide_admin_bar_for_users',
+										'type'      => 'toggle_switch',
+										'label'     => __('Hide Frontend Admin Bar', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'default'   => '0',
+										'desc'      => __('Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user',	'tutor'),
+									),
+									array(
+										'key'      => 'enable_tutor_maintenance_mode',
+										'type'      => 'toggle_switch',
+										'label'     => __('Maintenance Mode', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'default'   => '0',
+										'desc'      => __('Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.',	'tutor'),
 									),
 								),
 							),
@@ -627,23 +703,51 @@ class Options_V2 {
 								'slug'       => 'course',
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'email_from_name' => array(
+									array(
+										'key'      => 'email_from_name',
 										'type'      => 'text',
 										'label'     => __('Name', 'tutor'),
 										'default'   => get_option('blogname'),
 										'desc'      => __('The name under which all the emails will be sent',	'tutor'),
 									),
-									'email_from_address' => array(
+									array(
+										'key'      => 'email_from_address',
 										'type'      => 'text',
 										'label'     => __('E-Mail Address', 'tutor'),
 										'default'   => get_option('admin_email'),
 										'desc'      => __('The E-Mail address from which all emails will be sent', 'tutor'),
 									),
-									'email_footer_text' => array(
+									array(
+										'key'      => 'email_footer_text',
 										'type'      => 'textarea',
 										'label'     => __('E-Mail Footer Text', 'tutor'),
 										'default'   => '',
 										'desc'      => __('The text to appear in E-Mail template footer', 'tutor'),
+									),
+									array(
+										'key'      => 'mailer_native_server_cron',
+										'type'      => 'group_textarea_code',
+										'label'     => __('Mailer Native Server Cron', 'tutor'),
+										'label_title'     => __('', 'tutor'),
+										'group_fields'   => array(
+											array(
+												'key'      => 'mailer_native_server_cron',
+												'type'      => 'toggle_switch',
+												'label'     => __('Mailer Native Server Cron', 'tutor'),
+												'label_title'     => __('', 'tutor'),
+												'default'   => 1,
+												'desc'      => __('If you use OS native cron, then disable it.', 'tutor'),
+											),
+											array(
+												'key'      => 'mailer_native_server',
+												'type'      => 'textarea_code',
+												'label'     => __('Mailer Native Server Cron', 'tutor'),
+												'label_title'     => __('', 'tutor'),
+												'default'   => 1,
+												'desc'      => __('If you use OS native cron, then disable it.', 'tutor'),
+											),
+										),
+										'desc'      => __('If you use OS native cron, then disable it.', 'tutor'),
 									),
 								),
 							),
@@ -651,29 +755,114 @@ class Options_V2 {
 								'label'      => __('E-Mail to Students', 'tutor'),
 								'slug'       => 'e_mail_to_students',
 								'block_type' => 'uniform',
-								'fields'     => array()
+								'fields'     => array(
+									array(
+										'key'        => 'course_enrolled',
+										'type'        => 'toggle_switch_button',
+										'label'       => __('Course Enrolled', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'buttons' => array(
+											'edit' => 'Edit button of course_enrolled'
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+									array(
+										'key'        => 'quiz_completed',
+										'type'        => 'toggle_switch_button',
+										'label'       => __('Quiz Completed', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'buttons' => array(
+											'edit' => 'Edit button of quiz_completed'
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+									array(
+										'key'        => 'completed_a_course',
+										'type'        => 'toggle_switch_button',
+										'label'       => __('Completed a Course', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'buttons' => array(
+											'edit' => 'Edit button of completed_a_course'
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+								)
 							),
 							array(
 								'label'      => __('E-Mail to Teachers', 'tutor'),
 								'slug'       => 'e_mail_to_teachers',
 								'block_type' => 'uniform',
-								'fields'     => array()
+								'fields'     => array(
+									array(
+										'key'        => 'a_student_enrolled_in_course',
+										'type'        => 'toggle_switch_button',
+										'label'       => __('A Student Enrolled in Course', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'buttons' => array(
+											'edit' => 'Edit button of a_student_enrolled_in_course'
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+									array(
+										'key'        => 'a_student_completed_course',
+										'type'        => 'toggle_switch_button',
+										'label'       => __('A Student Completed Course', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'buttons' => array(
+											'edit' => 'Edit button of a_student_completed_course'
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+									array(
+										'key'        => 'a_student_completed_lesson',
+										'type'        => 'toggle_switch_button',
+										'label'       => __('A Student Completed Lesson', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'buttons' => array(
+											'edit' => 'Edit button of a_student_completed_lesson'
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+								)
 							),
 							array(
 								'label'      => __('E-Mail to Admin', 'tutor'),
 								'slug'       => 'e_mail_to_admin',
 								'block_type' => 'uniform',
-								'fields'     => array()
+								'fields'     => array(
+									array(
+										'key'        => 'new_instructor_signup',
+										'type'        => 'toggle_switch_button',
+										'label'       => __('New Instructor Signup', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'buttons' => array(
+											'edit' => 'Edit button of new_instructor_signup'
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+									array(
+										'key'        => 'new_student_signup',
+										'type'        => 'toggle_switch_button',
+										'label'       => __('New Student Signup', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'buttons' => array(
+											'edit' => 'Edit button of new_student_signup'
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+									array(
+										'key'        => 'new_course_submitted_for_review',
+										'type'        => 'toggle_switch_button',
+										'label'       => __('New Course Submitted for Review', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'buttons' => array(
+											'edit' => 'Edit button of new_course_submitted_for_review'
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+								)
 							)
 						),
-					),
-					array(
-						'label'  => __('Certificate', 'tutor'),
-						'slug'   => 'certificate',
-						'desc'   => __('Certificate Settings', 'tutor'),
-						'template'   => 'certificate',
-						'icon'   => __('certificate', 'tutor'),
-						'blocks' => array(),
 					),
 					array(
 						'label'  => __('Gradebook', 'tutor'),
@@ -683,18 +872,140 @@ class Options_V2 {
 						'icon'   => __('gradebook', 'tutor'),
 						'blocks' => array(
 							array(
-								'label'      => __('E-Mail to Students', 'tutor'),
+								'label'      => __('', 'tutor'),
 								'slug'       => 'e_mail_to_students',
 								'block_type' => 'isolate',
 								'fields'     => array(
-									'email_from_address' => array(
-										'type'      => 'text',
-										'label'     => __('E-Mail Address', 'tutor'),
-										'default'   => get_option('admin_email'),
-										'desc'      => __('The E-Mail address from which all emails will be sent', 'tutor'),
+									array(
+										'key'        => 'use_points_instead_of_grades',
+										'type'        => 'toggle_switch',
+										'label'       => __('Use Points Instead of Grades', 'tutor'),
+										'default'	  => 0,
+										'label_title' => __('', 'tutor'),
+										'desc'        => __('Enable this option to use numerical points instead of letter grades.', 'tutor'),
+									),
+									array(
+										'key'        => 'show_highest_possible_points',
+										'type'        => 'toggle_switch',
+										'label'       => __('Show Highest Possible Points', 'tutor'),
+										'default'	  => 0,
+										'label_title' => __('', 'tutor'),
+										'desc'        => __('Display the highest possible points next to a student’s score such as 3.8/4.0', 'tutor'),
+									),
+									array(
+										'key'        => 'separator_between_scores',
+										'type'        => 'text',
+										'label'       => __('Separator Between Scores', 'tutor'),
+										'default'	  => 0,
+										'label_title' => __('', 'tutor'),
+										'desc'        => __('Input the separator text or symbol to display. Example: Insert / to display 3.8/4.0 or “out of” 3.8 out of 4.', 'tutor'),
+									),
+									array(
+										'key'        => 'grade_scale',
+										'type'        => 'text',
+										'label'       => __('Grade Scale', 'tutor'),
+										'default'	  => 0,
+										'label_title' => __('', 'tutor'),
+										'desc'        => __('Insert the grade point out of which the final results will be calculated.', 'tutor'),
 									),
 								)
 							),
+						),
+					),
+					array(
+						'label'  => __('Certificate', 'tutor'),
+						'slug'   => 'certificate',
+						'desc'   => __('Certificate Settings', 'tutor'),
+						'template'   => 'certificate',
+						'icon'   => __('certificate', 'tutor'),
+						'blocks' => array(
+							array(
+								'label'      => __('All Certificate', 'tutor'),
+								'slug'       => 'all-certificate',
+								'block_type' => 'uniform',
+								'fields'     => array(
+									array(
+										'key'        => 'new_instructor_signup',
+										'type'        => 'toggle_switch_button_thumb',
+										'label'       => __('New Instructor Signup', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'thumbs_url' => 'certificate-thumb/cetificate-thumb-1.jpg',
+										'buttons' => array(
+											'edit' => 'Edit button of new_course_submitted_for_review',
+											'delete' => 'Delete button of new_course_submitted_for_review',
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+									array(
+										'key'        => 'new_student_signup',
+										'type'        => 'toggle_switch_button_thumb',
+										'label'       => __('New Student Signup', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'thumbs_url' => 'certificate-thumb/cetificate-thumb-2.jpg',
+										'buttons' => array(
+											'edit' => 'Edit button of new_course_submitted_for_review',
+											'delete' => 'Delete button of new_course_submitted_for_review',
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+									array(
+										'key'        => 'new_course_submitted_for_review',
+										'type'        => 'toggle_switch_button_thumb',
+										'label'       => __('New Course Submitted for Review', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'thumbs_url' => 'certificate-thumb/cetificate-thumb-3.jpg',
+										'buttons' => array(
+											'edit' => 'Edit button of new_course_submitted_for_review',
+											'delete' => 'Delete button of new_course_submitted_for_review',
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+									array(
+										'key'        => 'master_procedural_maze_dungeon_generation',
+										'type'        => 'toggle_switch_button_thumb',
+										'label'       => __('Master Procedural Maze & Dungeon Generation', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'thumbs_url' => 'certificate-thumb/cetificate-thumb-4.jpg',
+										'buttons' => array(
+											'edit' => 'Edit button of new_course_submitted_for_review',
+											'delete' => 'Delete button of new_course_submitted_for_review',
+										),
+										'desc'        => __('Students must be logged in to view course', 'tutor'),
+									),
+								)
+							)
+						),
+						array(
+							'label'      => __('Select Certificate Template', 'tutor'),
+							'slug'       => 'select_certificate_template',
+							'block_type' => 'uniform',
+							'fields'     => array(
+								array(
+									'key'        => 'horizontal_template',
+									'type'        => 'toggle_switch_button_thumb',
+									'label'       => __('Horizontal Template', 'tutor'),
+									'label_title' => __('', 'tutor'),
+									'label_title' => array(
+										array(
+											'name' => 'certificate-template-horizontal-1',
+											'slug' => 'certificate-template-horizontal-1',
+											'thumb_url' => 'src="certificate-template/certificate-horizontal-1.jpg',
+										),
+										array(
+											'name' => 'certificate-template-horizontal-2',
+											'slug' => 'certificate-template-horizontal-2',
+											'thumb_url' => 'src="certificate-template/certificate-horizontal-2.jpg',
+										),
+										array(
+											'name' => 'certificate-template-horizontal-3',
+											'slug' => 'certificate-template-horizontal-3',
+											'thumb_url' => 'src="certificate-template/certificate-horizontal-3.jpg',
+										),
+									),
+									'thumbs_url' => 'certificate-thumb/cetificate-thumb-4.jpg',
+									'desc'        => __('Students must be logged in to view course', 'tutor'),
+								),
+							)
 						),
 					),
 				),

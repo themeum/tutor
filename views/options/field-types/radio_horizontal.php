@@ -6,11 +6,13 @@
 
     <div class="tutor-option-field-input">
         <div class="d-flex radio-thumbnail items-per-row">
-            <?php foreach ($field['options'] as $key => $option) : ?>
+            <?php
+            $i = 1;
+            foreach ($field['options'] as $key => $option) : ?>
                 <label for="items-per-row-<?php echo $key ?>" class="items-per-row-label">
-                    <input type="radio" name="items-per-row" id="items-per-row-<?php echo $key ?>">
+                    <input type="radio" name="items-<?php echo $key ?>" id="items-per-row-<?php echo $key ?>">
                     <span class="icon-wrapper icon-col">
-                        <?php echo str_repeat("<span></span>", $key); ?>
+                        <?php echo str_repeat("<span></span>", $i++); ?>
                     </span>
                     <span class="title"><?php echo $option ?></span>
                 </label>
