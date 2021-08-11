@@ -6,12 +6,23 @@
 
 ?>
 
-<?php 
-    if(!get_option( 'users_can_register', false )) {
-        echo '<p style="text-align:center">',__('Registration disabled. Please ask site admin to enable registration.', 'tutor'),'</p>';
-        return;
-    }
-?>
+<?php if(!get_option( 'users_can_register', false )) : ?>
+
+    <?php 
+        $args = array(
+            'image_path'    => tutor()->url.'assets/images/construction.png',
+            'title'         => 'Oooh! Access Denied',
+            'description'   => 'You do not have access to this area of the application. Please refer to your system  administrator.',
+            'button'        => array(
+                'text'      => 'Notify to Admin',
+                'url'       => '',
+                'class'     => 'tutor-button tutor-button-primary'
+            )
+        );
+        tutor_load_template('feature_disabled', $args); 
+    ?>
+
+<?php else:?>
 
 <?php do_action('tutor_before_instructor_reg_form');?>
 
@@ -23,14 +34,14 @@
     <input type="hidden" value="tutor_register_instructor" name="tutor_action"/>
 
     <?php
-    $errors = apply_filters('tutor_instructor_register_validation_errors', array());
-    if (is_array($errors) && count($errors)){
-        echo '<div class="tutor-alert-warning"><ul class="tutor-required-fields">';
-        foreach ($errors as $error_key => $error_value){
-            echo "<li>{$error_value}</li>";
+        $errors = apply_filters('tutor_instructor_register_validation_errors', array());
+        if (is_array($errors) && count($errors)){
+            echo '<div class="tutor-alert-warning"><ul class="tutor-required-fields">';
+            foreach ($errors as $error_key => $error_value){
+                echo "<li>{$error_value}</li>";
+            }
+            echo '</ul></div>';
         }
-        echo '</ul></div>';
-    }
     ?>
 
     <div class="tutor-form-row">
@@ -128,3 +139,5 @@
 </form>
 
 <?php do_action('tutor_after_instructor_reg_form');?>
+<?php endif; ?>
+
