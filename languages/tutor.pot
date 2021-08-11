@@ -2683,49 +2683,49 @@ msgstr ""
 msgid "Since WooCommerce is disabled, your monetized courses have been set to free. Please make sure to enable Tutor LMS monetization if you decide to re-enable WooCommerce."
 msgstr ""
 
-#: includes/tinymce_translate.php:15
+#: includes/tinymce_translate.php:17
 msgid "Tutor ShortCode"
 msgstr ""
 
-#: includes/tinymce_translate.php:16
+#: includes/tinymce_translate.php:18
 msgid "Student Registration Form"
 msgstr ""
 
-#: includes/tinymce_translate.php:17
+#: includes/tinymce_translate.php:19
 msgid "Instructor Registration Form"
 msgstr ""
 
-#: includes/tinymce_translate.php:18
+#: includes/tinymce_translate.php:20
 msgctxt "tinyMCE button courses"
 msgid "Courses"
 msgstr ""
 
-#: includes/tinymce_translate.php:19
+#: includes/tinymce_translate.php:21
 msgid "Courses Shortcode"
 msgstr ""
 
-#: includes/tinymce_translate.php:20
+#: includes/tinymce_translate.php:22
 msgid "Course id, separate by (,) comma"
 msgstr ""
 
-#: includes/tinymce_translate.php:21
+#: includes/tinymce_translate.php:23
 msgid "Exclude Course IDS"
 msgstr ""
 
-#: includes/tinymce_translate.php:22
+#: includes/tinymce_translate.php:24
 msgid "Category IDS"
 msgstr ""
 
-#: includes/tinymce_translate.php:23
+#: includes/tinymce_translate.php:25
 msgctxt "tinyMCE button order by"
 msgid "Order By :"
 msgstr ""
 
-#: includes/tinymce_translate.php:24
+#: includes/tinymce_translate.php:26
 msgid "Order :"
 msgstr ""
 
-#: includes/tinymce_translate.php:25
+#: includes/tinymce_translate.php:27
 msgid "Count"
 msgstr ""
 
@@ -5372,4 +5372,200 @@ msgstr ""
 
 #: templates/single/course/enrolled/question_and_answer.php:53
 msgid "Post Question"
+msgstr ""
+
+#: assets/js/tutor-admin.js:49
+msgid "Saved"
+msgstr ""
+
+#: assets/js/tutor-admin.js:50
+msgid "Request Error"
+msgstr ""
+
+#: assets/js/tutor-admin.js:50
+msgid "Could not save"
+msgstr ""
+
+#: assets/js/tutor-admin.js:152
+msgid "Lesson Updated"
+msgstr ""
+
+#: assets/js/tutor-admin.js:189
+msgid "Select or Upload Media Of Your Choice"
+msgstr ""
+
+#: assets/js/tutor-admin.js:191
+msgid "Upload media"
+msgstr ""
+
+#: assets/js/tutor-admin.js:499
+msgid "Assignment Updated"
+msgstr ""
+
+#: assets/js/tutor-admin.js:629
+msgid "Do you want to save without any category?"
+msgstr ""
+
+#: assets/js/tutor-admin.js:642
+msgid "tutor"
+msgstr ""
+
+#: assets/js/tutor-admin.js:689
+msgid "Delete this enrolment"
+msgstr ""
+
+#: assets/js/tutor-admin.js:690
+msgid "All of the course data like quiz attempts, assignment, lesson <br/>progress will be deleted if you delete this student\"
+msgstr ""
+
+#: assets/js/tutor-admin.js:693
+msgid "Cancel"
+msgstr ""
+
+#: assets/js/tutor-admin.js:701
+msgid "Yes, Delete This"
+msgstr ""
+
+#: assets/js/tutor-front.js:168
+msgid "Rating and review required"
+msgstr ""
+
+#: assets/js/tutor-front.js:373
+msgid "Unfortunately, you are out of time and quiz attempts. "
+msgstr ""
+
+#: assets/js/tutor-front.js:761
+msgid "Please select an option to answer"
+msgstr ""
+
+#: assets/js/tutor-front.js:766
+msgid "Please select at least one option to answer."
+msgstr ""
+
+#: assets/js/tutor-front.js:773
+msgid "The answer for this question is required"
+msgstr ""
+
+#: assets/js/tutor-front.js:795
+msgid "Please match all the items"
+msgstr ""
+
+#: assets/js/tutor-front.js:830
+msgid "Incorrect, Please try again"
+msgstr ""
+
+#: assets/js/tutor-front.js:845
+msgid "More answer for this question is required"
+msgstr ""
+
+#: assets/js/tutor-front.js:869
+msgid "Correct Answer"
+msgstr ""
+
+#: assets/js/tutor-front.js:1176
+msgid "Assignment answer can not be empty"
+msgstr ""
+
+#: assets/js/tutor-front.js:1198
+msgid "Select / Upload Media Of Your Chosen Persuasion"
+msgstr ""
+
+#: assets/js/tutor-front.js:1200
+msgid "Use media"
+msgstr ""
+
+#: assets/js/tutor-front.js:1294
+msgid "Done"
+msgstr ""
+
+#: assets/js/tutor-front.js:1297
+msgid "Failed"
+msgstr ""
+
+#: assets/js/tutor-front.js:1297
+msgid "Lesson Update Failed"
+msgstr ""
+
+#: assets/js/tutor-front.js:1487
+msgid "Assignment Update Failed"
+msgstr ""
+
+#: assets/js/tutor-front.js:1565
+msgid "Saving..."
+msgstr ""
+
+#: assets/js/tutor-front.js:1571
+msgid "Save"
+msgstr ""
+
+#: assets/js/tutor-front.js:2260
+msgid "Override Previous Progress"
+msgstr ""
+
+#: assets/js/tutor-front.js:2261
+msgid "Before continue, please decide whether to keep progress or reset."
+msgstr ""
+
+#: assets/js/tutor-front.js:2264
+msgid "Reset Data"
+msgstr ""
+
+#: assets/js/tutor-front.js:2280
+msgid "Something went wrong"
+msgstr ""
+
+#: assets/js/tutor-front.js:2290
+msgid "Keep Data"
+msgstr ""
+
+#: assets/js/tutor-front.js:2316
+msgid "Abandon Quiz?"
+msgstr ""
+
+#: assets/js/tutor-front.js:2317
+msgid "Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page."
+msgstr ""
+
+#: assets/js/tutor-front.js:2320
+msgid "Yes, leave quiz"
+msgstr ""
+
+#: assets/js/tutor-front.js:2331
+msgid "Leaving..."
+msgstr ""
+
+#: assets/js/tutor-front.js:2352
+msgid "Stay here"
+msgstr ""
+
+#: assets/js/tutor.js:150
+msgid "Select or Upload Media Of Your Chosen Persuasion"
+msgstr ""
+
+#: assets/js/tutor.js:152
+msgid "Use this media"
+msgstr ""
+
+#: assets/js/tutor.js:235
+msgid "Success"
+msgstr ""
+
+#: assets/js/tutor.js:236
+msgid "Update Error"
+msgstr ""
+
+#: assets/js/tutor.js:236
+msgid "Meeting Update Failed"
+msgstr ""
+
+#: assets/js/tutor.js:425
+msgid "Are you sure?"
+msgstr ""
+
+#: assets/js/tutor.js:456
+msgid "Are you sure to delete?"
+msgstr ""
+
+#: assets/js/tutor.js:623
+msgid "Quiz Update Failed"
 msgstr ""
