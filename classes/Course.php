@@ -129,6 +129,12 @@ class Course extends Tutor_Base {
 		 * @since v1.9.5
 		 */
 		add_action( 'wp_ajax_tutor_reset_course_progress', array($this, 'tutor_reset_course_progress') );
+	
+		/**
+		 * Popup for review
+		 * @since v1.9.7
+		 */
+		add_action( 'wp_footer', array($this, 'popup_review_form') );
 	}
 
 	public function restrict_new_student_entry($content) {
@@ -636,9 +642,23 @@ class Course extends Tutor_Base {
 
 		do_action('tutor_course_complete_after', $course_id, $user_id);
 
-		wp_redirect(get_the_permalink($course_id));
+		$permalink = get_the_permalink($course_id);
+
+		// Set temporary cookie to show review pop up
+		setcookie('tutor_course_review_popup_for_id', $course_id, 10, tutor()->basepath);
+		setcookie('tutor_course_review_popup_for_permalink', $permalink, 10, tutor()->basepath);
+
+		wp_redirect($permalink);
 	}
 
+	public function popup_review_form() {
+		if(!isset($_COOKIE['tutor_course_review_popup_for_permalink'])) {
+			return;
+		}
+
+		$course_id = $_COOKIE['tutor_course_review_popup_for_id'];
+		include  tutor()->path.'views/modal/review.php';
+	}
 	
 	public function tutor_load_instructors_modal(){
 		tutils()->checking_nonce();
