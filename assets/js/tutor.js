@@ -810,6 +810,7 @@ jQuery(document).ready(function($){
                 //Initializing Tutor Select
                 tutor_select().reInit();
                 enable_quiz_answer_sorting();
+                disableAddoption();
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -840,16 +841,16 @@ jQuery(document).ready(function($){
      * @since v.1.0.0
      */
 
-    $(document).on('click', '.add_question_answers_option', function(e){
+    $(document).on('click', '.add_question_answers_option:not(.disabled)', function(e){
         e.preventDefault();
 
         var $that = $(this);
         var question_id = $that.attr('data-question-id');
         
         var $formInput = $('.quiz_question_form :input').serializeObject();
+        
         $formInput.question_id = question_id;
         $formInput.action = 'tutor_quiz_add_question_answers';
-
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
@@ -859,6 +860,7 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 $('#tutor_quiz_question_answer_form').html(data.data.output);
+                disableAddoption();
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1095,13 +1097,15 @@ jQuery(document).ready(function($){
                         $that.closest('.tutor-select').find('.select-header .lead-option').html($html);
                         $that.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($that.attr('data-value')).trigger('change');
                         $that.closest('.tutor-select-options').hide();
+
+                        disableAddoption();
                     }else{
                         alert('Tutor Pro version required');
                     }
                 });
                 $(document).on('click', '.tutor-select .select-header', function(e){
                     e.preventDefault();
-
+                   
                     var $that = $(this);
                     $that.closest('.tutor-select').find('.tutor-select-options').slideToggle();
                 });
@@ -1819,4 +1823,42 @@ function tutor_toast(title, description, type) {
             });
         }
     }, 5000);
+}
+
+/**
+ * Add option disable when don't need to add an option
+ * 
+ * @since 1.9.7
+ */
+function disableAddoption() {
+    const selected_question_type      = document.querySelector(".tutor_select_value_holder").value;
+    const question_answer_form        = document.getElementById("tutor_quiz_question_answer_form");
+    const add_question_answer_option  = document.querySelector(".add_question_answers_option");
+
+    const addDisabledClass = (elem) => {
+        if ( !elem.classList.contains("disabled") ) {
+            elem.classList.add('disabled');
+        }
+    }
+
+    const removeDisabledClass = (elem) => {
+        if ( elem.classList.contains("disabled") ) {
+            elem.classList.remove('disabled');
+        }
+    }
+
+    //dont need add option for open_ended & short_answer
+    if ( selected_question_type === 'open_ended' || selected_question_type === 'short_answer' ) {
+        addDisabledClass(add_question_answer_option);
+    } else if ( selected_question_type === 'true_false' || selected_question_type === 'fill_in_the_blank' ) {
+        //if already have options then dont need to show add option
+        if ( question_answer_form.hasChildNodes() ) {
+            addDisabledClass(add_question_answer_option);
+        } else {
+            removeDisabledClass(add_question_answer_option);
+        }
+    } else {
+        //if other question type then remove disabled
+        removeDisabledClass(add_question_answer_option);
+    }
 }
