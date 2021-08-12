@@ -24,7 +24,7 @@ $rating = $isLoggedIn ? tutor_utils()->get_course_rating_by_user() : '';
 			?>
             <form method="post">
                 <input type="hidden" name="tutor_course_id" value="<?php echo get_the_ID(); ?>">
-                <div class="tutor-write-review-box">
+                <div class="tutor-write-review-box tutor-star-rating-container">
                     <div class="tutor-form-group">
 						<?php
 						tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($rating->rating));

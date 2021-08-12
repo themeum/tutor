@@ -38,10 +38,17 @@ if ( ! function_exists('tutor') ) {
 		$path = plugin_dir_path( TUTOR_FILE );
 		$hasPro = defined('TUTOR_PRO_VERSION');
 
+		// Prepare the basepath
+		$home_url = get_home_url();
+		$parsed = parse_url($home_url);
+		$base_path = (is_array( $parsed ) && isset( $parsed['path'] )) ? $parsed['path'] : '/';
+		$base_path = rtrim($base_path, '/') . '/';
+
 		$info = array(
 			'path'                  => $path,
 			'url'                   => plugin_dir_url( TUTOR_FILE ),
 			'basename'              => plugin_basename( TUTOR_FILE ),
+			'basepath'				=> $base_path,
 			'version'               => TUTOR_VERSION,
 			'nonce_action'          => 'tutor_nonce_action',
 			'nonce'                 => '_tutor_nonce',

@@ -243,9 +243,19 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.9.7 - August 16, 2021 =
 
+New: Filters for instructor list in the backend dashboard
 New: Previous button for single quiz
+New: Pop up for review after course completion
+Update: Disable "Add Option" button for True/False quiz
+Update: Redundant quiz demo link removed
+Update: Certificate generating Loading Icon
+Update: Registration Disable Access Denied Page design Update
+Update: Zoom API key check and save combined with single button
+Update: Meeting host dropdown made disabled since always single host is used
 Fix: Topic title and description edit not working
 Fix: Duplicate order statements in instructor profile
+Fix: Date Formats are not matched with Wordpress date format
+Fix: Translation issues
 
 = 1.9.6 - August 04, 2021 =
 

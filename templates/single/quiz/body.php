@@ -37,7 +37,7 @@ $quiz_answers = array();
 
 		$hide_quiz_time_display = (bool) tutor_utils()->avalue_dot('hide_quiz_time_display', $quiz_attempt_info);
 		$hide_question_number_overview = (bool) tutor_utils()->avalue_dot('hide_question_number_overview', $quiz_attempt_info);
-		$show_previous_button = (bool) tutor_utils()->avalue_dot('show_previous_button', $quiz_attempt_info);
+		$hide_previous_button = (bool) tutor_utils()->get_option('quiz_previous_button_disabled', false);
 
 		$remaining_time_secs = (strtotime($is_started_quiz->attempt_started_at) + $time_limit_seconds ) - strtotime($quiz_attempt_info['date_time_now']);
 
@@ -383,7 +383,7 @@ $quiz_answers = array();
 								<div class="quiz-answer-footer-bar">
 									<div class="quiz-footer-button">
 										<?php
-											if($show_previous_button && $previous_question) {
+											if(!$hide_previous_button && $previous_question) {
 												?>
 												<button type="button" class="tutor-button tutor-button-outlined  tutor-quiz-answer-previous-btn">
 													<?php _e( 'Previous Question', 'tutor' ); ?>

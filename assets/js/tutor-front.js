@@ -185,6 +185,9 @@ jQuery(document).ready(function ($) {
                 }
             });
         }
+    }).on('click', '.tutor_cancel_review_btn', function() {
+        // Hide the pop up review form on cancel click
+        $(this).closest('form').hide();
     });
 
     $(document).on('click', '.write-course-review-link-btn', function (e) {

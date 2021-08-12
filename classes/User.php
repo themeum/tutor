@@ -142,17 +142,11 @@ class User {
 		if(is_admin() && isset( $_GET['tutor-hide-notice'] ) && $_GET['tutor-hide-notice']=='registration') {
 			tutils()->checking_nonce('get');
 
-			$home_url = get_home_url();
-			$parsed = parse_url($home_url);
-
-			$base_path = (is_array( $parsed ) && isset( $parsed['path'] )) ? $parsed['path'] : '/';
-			$base_path = rtrim($base_path, '/') . '/';
-
 			if(isset($_GET['tutor-registration']) && $_GET['tutor-registration']==='enable') {
 				update_option( 'users_can_register', 1 );
 			} else {
 				self::$hide_registration_notice = true;
-				setcookie('tutor_notice_hide_registration', 1, time() + (86400 * 30), $base_path);
+				setcookie('tutor_notice_hide_registration', 1, time() + (86400 * 30), tutor()->basepath);
 			}
 		}
 	}

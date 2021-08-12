@@ -22,17 +22,10 @@ class Assets{
 	}
 
 	private function get_default_localized_data() {
-		
-		$home_url = get_home_url();
-		$parsed = parse_url($home_url);
-
-		$base_path = (is_array( $parsed ) && isset( $parsed['path'] )) ? $parsed['path'] : '/';
-		$base_path = rtrim($base_path, '/') . '/';
-
 		return array(
 			'ajaxurl'       => admin_url('admin-ajax.php'),
-			'home_url'		=> $home_url,
-			'base_path'		=> $base_path,
+			'home_url'		=> get_home_url(),
+			'base_path'		=> tutor()->basepath,
 			'tutor_url' 	=> tutor()->url,
 			'tutor_pro_url' => function_exists('tutor_pro') ? tutor_pro()->url : null,
 			'nonce_key'     => tutor()->nonce,

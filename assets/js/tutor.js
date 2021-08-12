@@ -16,24 +16,15 @@ window.tutor_component = function($, icon, padding) {
     var $this = this;
     var element; 
 
-    this.popup_wrapper = function(contents) {
-        if ( icon === '' ) {
-            return '<div class="tutor-component-popup-container">\
-                <div class="tutor-component-popup-'+padding+'">\
-                    ' + contents + '\
-                    <div class="tutor-component-button-container"></div>\
-                </div>\
-            </div>';            
-        }
-        else {
-            return '<div class="tutor-component-popup-container">\
-                <div class="tutor-component-popup-'+padding+'">\
-                    <img class="tutor-pop-icon" src="'+window._tutorobject.tutor_url+'assets/images/'+icon+'.svg"/>\
-                    ' + contents + '\
-                    <div class="tutor-component-button-container"></div>\
-                </div>\
-            </div>';
-        }
+    this.popup_wrapper = function(wrapper_tag) {
+        var img_tag = icon === '' ? '' : '<img class="tutor-pop-icon" src="'+window._tutorobject.tutor_url+'assets/images/'+icon+'.svg"/>';
+        
+        return '<'+wrapper_tag+' class="tutor-component-popup-container">\
+            <div class="tutor-component-popup-'+padding+'">\
+                <div class="tutor-component-content-container">'+img_tag+'</div>\
+                <div class="tutor-component-button-container"></div>\
+            </div>\
+        </'+wrapper_tag+'>';
     }
 
     this.popup = function(data) {
@@ -47,9 +38,16 @@ window.tutor_component = function($, icon, padding) {
             return $('<button id="'+button_id+'" class="tutor-button tutor-button-'+button.class+'">'+button.title+'</button>').click(button.callback);
         });
 
-        element = $($this.popup_wrapper( title + description ), padding);
+        element = $($this.popup_wrapper(data.wrapper_tag || 'div'));
+        var content_wrapper = element.find('.tutor-component-content-container');
 
-        // Assign close event
+        content_wrapper.append(title);
+        data.after_title ? content_wrapper.append(data.after_title) : 0;
+
+        content_wrapper.append(description);
+        data.after_description ? content_wrapper.append(data.after_description) : 0;
+
+        // Assign close event on click black overlay
         element.click(function() {
             $(this).remove();
         }).children().click(function(e) {
@@ -1819,4 +1817,47 @@ function tutor_toast(title, description, type) {
             });
         }
     }, 5000);
+}
+
+
+/**
+ * Set cookie 
+ * @param {cookie name} cname 
+ * @param {cookie value} cvalue 
+ * @param {expiry in milliseconds} expiry 
+ * 
+ * @since v1.9.7
+ */
+function tutor_set_cookie(cname, cvalue, expiry) {
+    var expires='';
+
+    if(expiry) {
+        var d = new Date();
+        d.setTime(d.getTime() + expiry);
+        var expires = "expires="+d.toUTCString()+';';
+    }
+    
+    document.cookie = cname + "=" + cvalue + ";" + expires + "path=" + window._tutorobject.base_path;
+}
+
+/**
+ * Get cookie
+ * @param {cookie name} cname 
+ * @returns mixed
+ * 
+ * @since v1.9.7
+ */
+function tutor_get_cookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }

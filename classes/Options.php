@@ -510,6 +510,13 @@ class Options {
 								'default'   => '10',
 								'desc'  => __('The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor'),
 							),
+							'quiz_previous_button_disabled' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Show Previous button', 'tutor'),
+								'label_title' => __('Disable', 'tutor'),
+								'default' => '0',
+								'desc'      => __('Show/hide previous button to make students able to change already choosen single question.', 'tutor'),
+							),
 							'quiz_grade_method' => array(
 								'type'      => 'select',
 								'label'      => __('Final grade calculation', 'tutor'),

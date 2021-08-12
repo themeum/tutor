@@ -319,19 +319,6 @@ if ( $topic_id != '' ) {
             </div>
 
             <div class="tutor-quiz-builder-group">
-                <div class="tutor-quiz-builder-row">
-                    <div class="tutor-quiz-builder-col auto-width">
-                        <label class="btn-switch">
-                            <input type="checkbox" value="1" name="quiz_option[show_previous_button]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'show_previous_button')); ?> />
-                            <div class="btn-slider btn-round"></div>
-                        </label>
-                        <span><?php _e('Show Previous button', 'tutor'); ?></span>
-                    </div>
-                </div>
-                <p class="help"><?php _e('Show/hide previous button to make students able to change already choosen single question.', 'tutor'); ?></p>
-            </div>
-
-            <div class="tutor-quiz-builder-group">
                 <h4><?php _e('Short answer characters limit', 'tutor'); ?></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
