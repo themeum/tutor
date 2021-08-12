@@ -131,8 +131,7 @@ $settings = maybe_unserialize($question->question_settings);
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
                         <div id="tuotr_question_options_for_quiz" class="quiz-modal-field-wrap">
-                            <div id="tutor_quiz_question_answers" data-question-id="<?php echo $question_id; ?>">
-								<?php
+                            <div id="tutor_quiz_question_answers" data-question-id="<?php echo $question_id; ?>"><?php
 
 								$answers = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = %d AND belongs_question_type = %s order by answer_order asc ;", $question_id, $question->question_type));
 								if (is_array($answers) && count($answers)){
@@ -188,12 +187,10 @@ $settings = maybe_unserialize($question->question_settings);
 										<?php
 									}
 								}
-								?>
-                            </div>
+								?></div>
 
 
                             <div id="tutor_quiz_question_answer_form"></div>
-
 
                             <a href="javascript:;" class="add_question_answers_option" data-question-id="<?php echo $question_id; ?>">
                                 <i class="tutor-icon-block tutor-icon-plus"></i>

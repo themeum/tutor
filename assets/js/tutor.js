@@ -1832,6 +1832,7 @@ function tutor_toast(title, description, type) {
  */
 function disableAddoption() {
     const selected_question_type      = document.querySelector(".tutor_select_value_holder").value;
+    const question_answers            = document.getElementById("tutor_quiz_question_answers");
     const question_answer_form        = document.getElementById("tutor_quiz_question_answer_form");
     const add_question_answer_option  = document.querySelector(".add_question_answers_option");
 
@@ -1852,7 +1853,7 @@ function disableAddoption() {
         addDisabledClass(add_question_answer_option);
     } else if ( selected_question_type === 'true_false' || selected_question_type === 'fill_in_the_blank' ) {
         //if already have options then dont need to show add option
-        if ( question_answer_form.hasChildNodes() ) {
+        if ( question_answer_form.hasChildNodes() || question_answers.hasChildNodes() ) {
             addDisabledClass(add_question_answer_option);
         } else {
             removeDisabledClass(add_question_answer_option);
