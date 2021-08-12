@@ -117,6 +117,7 @@ class Options_V2 {
 										'type'    => 'select',
 										'label'   => __('Dashboard Page', 'tutor'),
 										'default' => '0',
+
 										'options' => $pages,
 										'desc'    => __('This page will be used for student and instructor dashboard', 'tutor'),
 									),
@@ -139,6 +140,7 @@ class Options_V2 {
 										'type'    => 'select',
 										'label'   => __('Course Archive Page', 'tutor'),
 										'default' => '0',
+
 										'options' => $pages,
 										'desc'    => __('This page will be used to list all the published courses.', 'tutor'),
 									),
@@ -154,6 +156,7 @@ class Options_V2 {
 										'type'           => 'radio_vertical',
 										'label'          => __('Course Completion Process', 'tutor'),
 										'default'        => 'flexible',
+
 										'select_options' => false,
 										'options'        => array(
 											'flexible' => __('Flexible', 'tutor'),
@@ -181,6 +184,7 @@ class Options_V2 {
 										'type'    => 'select',
 										'label'   => __('Default Video Source', 'tutor'),
 										'default' => '',
+
 										'options' => $video_sources,
 										'desc'    => __('Choose video source to be selected by default.', 'tutor'),
 									),
@@ -196,6 +200,7 @@ class Options_V2 {
 										'type'    => 'text',
 										'label'   => __('Lesson Permalink Base', 'tutor'),
 										'default' => 'lessons',
+
 										'desc'    => $lesson_url,
 									),
 									array(
@@ -203,6 +208,7 @@ class Options_V2 {
 										'type'    => 'select',
 										'label'   => __('Student Registration Page', 'tutor'),
 										'default' => '0',
+
 										'options' => $pages,
 										'desc'    => __('Choose the page for student registration page', 'tutor'),
 									),
@@ -217,6 +223,7 @@ class Options_V2 {
 										'type'    => 'select',
 										'label'   => __('Instructor Registration Page', 'tutor'),
 										'default' => '0',
+
 										'options' => $pages,
 										'desc'    => __('This page will be used to sign up new instructors.', 'tutor'),
 									),
@@ -225,6 +232,7 @@ class Options_V2 {
 										'label'       => __('Allow Instructors Publishing Courses', 'tutor'),
 										'label_title' => __('Enable', 'tutor'),
 										'default'     => '0',
+
 										'desc'        => __('Enable instructors to publish the course directly. If disabled, admins will be able to review course content before publishing.', 'tutor'),
 									),
 									'enable_become_instructor_btn'  => array(
@@ -232,6 +240,7 @@ class Options_V2 {
 										'label'       => __('Become Instructor Button', 'tutor'),
 										'label_title' => __('Enable', 'tutor'),
 										'default'     => '0',
+
 										'desc'        => __('Uncheck this option to hide the button from student dashboard.', 'tutor'),
 									),
 								),
@@ -280,10 +289,12 @@ class Options_V2 {
 											'value' => array(
 												'type'    => 'text',
 												'default' => '0',
+
 											),
 											'time'  => array(
 												'type'           => 'select',
 												'default'        => 'minutes',
+
 												'select_options' => false,
 												'options'        => array(
 													'weeks'   => __('Weeks', 'tutor'),
@@ -300,6 +311,7 @@ class Options_V2 {
 										'type'           => 'radio_vertical',
 										'label'          => __('When time expires', 'tutor'),
 										'default'        => 'minutes',
+
 										'select_options' => false,
 										'options'        => array(
 											'auto_submit'  => __('The current quiz answers are submitted automatically.', 'tutor'),
@@ -313,6 +325,7 @@ class Options_V2 {
 										'type'    => 'number',
 										'label'   => __('Attempts allowed', 'tutor'),
 										'default' => '10',
+
 										'desc'    => __('The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor'),
 									),
 									array(
@@ -320,6 +333,7 @@ class Options_V2 {
 										'type'           => 'select',
 										'label'          => __('Final grade calculation', 'tutor'),
 										'default'        => 'minutes',
+
 										'select_options' => false,
 										'options'        => array(
 											'highest_grade' => __('Highest Grade', 'tutor'),
@@ -350,6 +364,7 @@ class Options_V2 {
 										'label'          => __('Disable Monetization', 'tutor'),
 										'label_title'          => __('', 'tutor'),
 										'default'        => 'free',
+
 										'select_options' => false,
 										'options'        => apply_filters('tutor_monetization_options', array(
 											'free' => __('Disable Monetization', 'tutor'),
@@ -368,6 +383,7 @@ class Options_V2 {
 										'type'    => 'number',
 										'label'   => __('Show Statement Per Page', 'tutor'),
 										'default' => '20',
+
 										'desc'    => __('Define the number of statements to show.', 'tutor'),
 									),
 								),
@@ -400,6 +416,7 @@ class Options_V2 {
 										'type'      => 'radio_horizontal',
 										'label'     => __('Column Per Row', 'tutor'),
 										'default'   => '4',
+
 										'options'   => array(
 											'one' => 'One',
 											'two' => 'Two',
@@ -507,6 +524,7 @@ class Options_V2 {
 												'label'     => __('Question and Answer', 'tutor'),
 												'label_title' => __('Enable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Enabling this feature will add a Q&amp;A section on every course.',	'tutor'),
 											),
 											array(
@@ -515,6 +533,7 @@ class Options_V2 {
 												'label'     => __('Author', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course author name from the course page.', 'tutor'),
 											),
 											array(
@@ -523,6 +542,7 @@ class Options_V2 {
 												'label'     => __('Course Level', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course level from the course page.', 'tutor'),
 											),
 											array(
@@ -531,6 +551,7 @@ class Options_V2 {
 												'label'     => __('Course Share', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course share option from the course page.', 'tutor'),
 											),
 											array(
@@ -539,6 +560,7 @@ class Options_V2 {
 												'label'     => __('Course Duration', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course duration from the course page.', 'tutor'),
 											),
 											array(
@@ -547,6 +569,7 @@ class Options_V2 {
 												'label'     => __('Course Total Enrolled', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course total enrolled from the course page.', 'tutor'),
 											),
 											array(
@@ -555,6 +578,7 @@ class Options_V2 {
 												'label'     => __('Course Update Date', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course update date from the course page.', 'tutor'),
 											),
 											array(
@@ -563,6 +587,7 @@ class Options_V2 {
 												'label'     => __('Course Progress Bar', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed completing progress bar from the course page.', 'tutor'),
 											),
 											array(
@@ -571,6 +596,7 @@ class Options_V2 {
 												'label'     => __('Course Material', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course material from the course page.', 'tutor'),
 											),
 											array(
@@ -579,6 +605,7 @@ class Options_V2 {
 												'label'     => __('Course About', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course about from the course page.', 'tutor'),
 											),
 											array(
@@ -587,6 +614,7 @@ class Options_V2 {
 												'label'     => __('Course Description', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course description from the course page.', 'tutor'),
 											),
 											array(
@@ -595,6 +623,7 @@ class Options_V2 {
 												'label'     => __('Course Benefits', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course benefits from the course page.', 'tutor'),
 											),
 											array(
@@ -603,6 +632,7 @@ class Options_V2 {
 												'label'     => __('Course Requirements', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course requirements from the course page.', 'tutor'),
 											),
 											array(
@@ -611,6 +641,7 @@ class Options_V2 {
 												'label'     => __('Course Target Audience', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course target audience from the course page.', 'tutor'),
 											),
 											array(
@@ -619,6 +650,7 @@ class Options_V2 {
 												'label'     => __('Course Announcements', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course announcements from the course page.', 'tutor'),
 											),
 											array(
@@ -627,6 +659,7 @@ class Options_V2 {
 												'label'     => __('Course Review', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
+
 												'desc'      => __('Disabling this feature will be removed course review system from the course page.', 'tutor'),
 											),
 											array(
@@ -644,6 +677,7 @@ class Options_V2 {
 										'type'      => 'select',
 										'label'     => __('Default Video Source', 'tutor'),
 										'default'   => '',
+
 										'options'   => $video_sources,
 										'desc'      => __('Choose video source to be selected by default.',	'tutor'),
 									),
@@ -669,6 +703,7 @@ class Options_V2 {
 										'label'     => __('Error message for wrong login credentials', 'tutor'),
 										'label_title'     => __('', 'tutor'),
 										'default'   => 'Incorrect username or password.',
+
 										'desc'      => __('Login error message displayed when the user puts wrong login credentials.', 'tutor'),
 									),
 									array(
@@ -677,6 +712,7 @@ class Options_V2 {
 										'label'     => __('Hide Frontend Admin Bar', 'tutor'),
 										'label_title' => __('', 'tutor'),
 										'default'   => '0',
+
 										'desc'      => __('Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user',	'tutor'),
 									),
 									array(
@@ -685,6 +721,7 @@ class Options_V2 {
 										'label'     => __('Maintenance Mode', 'tutor'),
 										'label_title' => __('', 'tutor'),
 										'default'   => '0',
+
 										'desc'      => __('Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.',	'tutor'),
 									),
 								),
@@ -708,6 +745,7 @@ class Options_V2 {
 										'type'      => 'text',
 										'label'     => __('Name', 'tutor'),
 										'default'   => get_option('blogname'),
+
 										'desc'      => __('The name under which all the emails will be sent',	'tutor'),
 									),
 									array(
@@ -715,6 +753,7 @@ class Options_V2 {
 										'type'      => 'text',
 										'label'     => __('E-Mail Address', 'tutor'),
 										'default'   => get_option('admin_email'),
+
 										'desc'      => __('The E-Mail address from which all emails will be sent', 'tutor'),
 									),
 									array(
@@ -722,6 +761,7 @@ class Options_V2 {
 										'type'      => 'textarea',
 										'label'     => __('E-Mail Footer Text', 'tutor'),
 										'default'   => '',
+
 										'desc'      => __('The text to appear in E-Mail template footer', 'tutor'),
 									),
 									array(
@@ -736,6 +776,7 @@ class Options_V2 {
 												'label'     => __('Mailer Native Server Cron', 'tutor'),
 												'label_title'     => __('', 'tutor'),
 												'default'   => 1,
+
 												'desc'      => __('If you use OS native cron, then disable it.', 'tutor'),
 											),
 											array(
@@ -744,6 +785,7 @@ class Options_V2 {
 												'label'     => __('Mailer Native Server Cron', 'tutor'),
 												'label_title'     => __('', 'tutor'),
 												'default'   => 1,
+
 												'desc'      => __('If you use OS native cron, then disable it.', 'tutor'),
 											),
 										),
@@ -881,6 +923,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __('Use Points Instead of Grades', 'tutor'),
 										'default'	  => 0,
+
 										'label_title' => __('', 'tutor'),
 										'desc'        => __('Enable this option to use numerical points instead of letter grades.', 'tutor'),
 									),
@@ -889,6 +932,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __('Show Highest Possible Points', 'tutor'),
 										'default'	  => 0,
+
 										'label_title' => __('', 'tutor'),
 										'desc'        => __('Display the highest possible points next to a student’s score such as 3.8/4.0', 'tutor'),
 									),
@@ -897,6 +941,7 @@ class Options_V2 {
 										'type'        => 'text',
 										'label'       => __('Separator Between Scores', 'tutor'),
 										'default'	  => 0,
+
 										'label_title' => __('', 'tutor'),
 										'desc'        => __('Input the separator text or symbol to display. Example: Insert / to display 3.8/4.0 or “out of” 3.8 out of 4.', 'tutor'),
 									),
@@ -905,6 +950,7 @@ class Options_V2 {
 										'type'        => 'text',
 										'label'       => __('Grade Scale', 'tutor'),
 										'default'	  => 0,
+
 										'label_title' => __('', 'tutor'),
 										'desc'        => __('Insert the grade point out of which the final results will be calculated.', 'tutor'),
 									),
@@ -1091,6 +1137,7 @@ class Options_V2 {
 										'type'      => 'upload_half',
 										'label'     => __('Signature', 'tutor'),
 										'default'     => 'signature-demo.svg',
+
 										'desc'      => __('<p>
 											Size: <strong>200x40 pixels;</strong> File Support:
 											<strong>jpg, .jpeg or .png.</strong>
@@ -1120,7 +1167,234 @@ class Options_V2 {
 						'template'   => 'status',
 						'icon'   => __('chart', 'tutor'),
 						'blocks' => array(
-							'block' => array(),
+							array(
+								'label'      => __('WordPress environment', 'tutor'),
+								'slug'       => 'wordpress_environment',
+								'block_type' => 'column',
+								'fieldset'     => array(
+									array(
+										array(
+											'key'        => 'home_url',
+											'type'        => 'info_row',
+											'label'       => __('Home URL', 'tutor'),
+											'status' => 'default',
+											'default' => home_url(),
+
+										),
+									),
+									array(
+										array(
+											'key'        => 'wordpress_version',
+											'type'        => 'info_col',
+											'label'       => __('WordPress version', 'tutor'),
+											'status' => 'default',
+											'default' => get_bloginfo('version'),
+
+										),
+										array(
+											'key'        => 'wordpress_multisite',
+											'type'        => 'info_col',
+											'label'       => __('WordPress multisite', 'tutor'),
+											'status' => is_multisite() ? 'success' : 'default',
+											'default' => is_multisite() ? '✓' : '-',
+
+										),
+										array(
+											'key'        => 'wordpress_debug_mode',
+											'type'        => 'info_col',
+											'label'       => __('WordPress debug mode', 'tutor'),
+											'status' => (defined('WP_DEBUG') && true === WP_DEBUG) ? 'success' : 'default',
+											'default' => (defined('WP_DEBUG') && true === WP_DEBUG) ? '✓' : '-',
+
+										),
+										array(
+											'key'        => 'language',
+											'type'        => 'info_col',
+											'label'       => __('Language', 'tutor'),
+											'status' => 'default',
+											'default' => get_locale(),
+
+										),
+									),
+									array(
+										array(
+											'key'        => 'site_url',
+											'type'        => 'info_row',
+											'label'       => __('Site URL', 'tutor'),
+											'status' => 'default',
+											'default' => site_url(),
+
+										),
+									),
+									array(
+										array(
+											'key'        => 'tutor_version',
+											'type'        => 'info_col',
+											'label'       => __('Tutor version', 'tutor'),
+											'status' => 'success',
+											'default' => tutor()->version,
+
+										),
+										array(
+											'key'        => 'wordpress_memory_limit',
+											'type'        => 'info_col',
+											'label'       => __('WordPress memory limit', 'tutor'),
+											'status' => WP_MEMORY_LIMIT ? 'success' : 'default',
+											'default' => WP_MEMORY_LIMIT ?? '-',
+
+										),
+										array(
+											'key'        => 'wordpress_corn',
+											'type'        => 'info_col',
+											'label'       => __('WordPress corn', 'tutor'),
+											'status' => !empty(_get_cron_array()) ? 'success' : 'default',
+											'default' => (defined('DISABLE_WP_CRON')) ? '✓' : '-',
+
+										),
+										array(
+											'key'        => 'external_object_cache',
+											'type'        => 'info_col',
+											'label'       => __('External object cache', 'tutor'),
+											'status' => 'default',
+											'default' => (defined('WP_CACHE')) ? '✓' : '-',
+
+										),
+									),
+								),
+							),
+							array(
+								'label'      => __('Server environment', 'tutor'),
+								'slug'       => 'server_environment',
+								'block_type' => 'column',
+								'fieldset'     => array(
+									array(
+										array(
+											'key'        => 'server_info',
+											'type'        => 'info_col',
+											'label'       => __('Server info', 'tutor'),
+											'status' => 'default',
+											'default' => ucwords($_SERVER['SERVER_SOFTWARE']),
+
+										),
+										array(
+											'key'        => 'php_version',
+											'type'        => 'info_col',
+											'label'       => __('PHP version', 'tutor'),
+											'status' => 'default',
+											'default' => phpversion(),
+
+										),
+										array(
+											'key'        => 'php_post_max_size',
+											'type'        => 'info_col',
+											'label'       => __('PHP post max size', 'tutor'),
+											'status' => 'default',
+											'default' => ini_get('post_max_size'),
+
+										),
+										array(
+											'key'        => 'php_time_limit',
+											'type'        => 'info_col',
+											'label'       => __('PHP time limit', 'tutor'),
+											'status' => 'default',
+											'default' => ini_get('max_execution_time'),
+
+										),
+										array(
+											'key'        => 'max_input_vars',
+											'type'        => 'info_col',
+											'label'       => __('max input vars', 'tutor'),
+											'status' => 'default',
+											'default' => ini_get('max_input_vars'),
+
+										),
+										array(
+											'key'        => 'curl_version',
+											'type'        => 'info_col',
+											'label'       => __('cURL version', 'tutor'),
+											'status' => 'default',
+											'default' => curl_version()['host'] . ', ' . curl_version()['version'],
+
+										),
+										array(
+											'key'        => 'wordpress_debug_mode',
+											'type'        => 'info_col',
+											'label'       => __('WordPress debug mode', 'tutor'),
+											'status' => 'default',
+											'default' => 'http://www.yourwebsite.com',
+
+										),
+										array(
+											'key'        => 'language',
+											'type'        => 'info_col',
+											'label'       => __('Language', 'tutor'),
+											'status' => 'default',
+											'default' => 'http://www.yourwebsite.com',
+
+										),
+										array(
+											'key'        => 'WordPress debug mode',
+											'type'        => 'info_col',
+											'label'       => __('WordPress debug mode', 'tutor'),
+											'status' => 'default',
+											'default' => 'http://www.yourwebsite.com',
+
+										),
+									),
+									array(
+										array(
+											'key'        => 'site_url',
+											'type'        => 'info_row',
+											'label'       => __('Site URL', 'tutor'),
+											'status' => 'default',
+											'default' => 'http://www.yourwebsite.com',
+
+										),
+									),
+									array(
+										array(
+											'key'        => 'tutor_version',
+											'type'        => 'info_col',
+											'label'       => __('Tutor version', 'tutor'),
+											'status' => 'default',
+											'default' => '1.7.8',
+
+										),
+										array(
+											'key'        => 'wordpress_memory_limit',
+											'type'        => 'info_col',
+											'label'       => __('WordPress memory limit', 'tutor'),
+											'status' => 'default',
+											'default' => '1GB',
+
+										),
+										array(
+											'key'        => 'wordpress_corn',
+											'type'        => 'info_col',
+											'label'       => __('WordPress corn', 'tutor'),
+											'status' => 'default',
+											'default' => '✓',
+
+										),
+										array(
+											'key'        => 'external_object_cache',
+											'type'        => 'info_col',
+											'label'       => __('External object cache', 'tutor'),
+											'status' => 'default',
+											'default' => 'http://www.yourwebsite.com',
+
+										),
+										array(
+											'key'        => 'WordPress debug mode',
+											'type'        => 'info_col',
+											'label'       => __('WordPress debug mode', 'tutor'),
+											'status' => 'default',
+											'default' => 'http://www.yourwebsite.com',
+
+										),
+									),
+								),
+							),
 						),
 					),
 					array(
@@ -1129,13 +1403,11 @@ class Options_V2 {
 						'desc'   => __('Import/Export Settings', 'tutor'),
 						'template'   => 'import_export',
 						'icon'   => __('import-export', 'tutor'),
-						'blocks' => array(
-							'block' => array(),
-						),
+						'blocks' => array(),
 					),
 					array(
 						'label'  => __('Tutor Pages', 'tutor'),
-						'slug'   => 'tutor_pages',
+						'slug'   => 'tutor-pages',
 						'desc'   => __('Tutor Pages Settings', 'tutor'),
 						'template'   => 'tutor_pages',
 						'icon'   => __('buddypress', 'tutor'),
