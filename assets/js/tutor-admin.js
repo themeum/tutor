@@ -636,11 +636,16 @@ jQuery(document).ready(function($){
      * Find user/student from select2
      * @since v.1.4.0
      */
-
     $('#select2_search_user_ajax').select2({
         allowClear: true,
+
+        minimumInputLength: 1,
         placeholder: __( "Search students", 'tutor' ),
-        minimumInputLength: '1',
+        language: {
+            inputTooShort: function() {
+                return __( 'Please add 1 or more character', 'tutor' );
+            },
+        },
         escapeMarkup: function( m ) {
             return m;
         },
