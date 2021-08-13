@@ -93,8 +93,13 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 	}
 
 	function column_amount($item){
+		$available_status = array(
+			'pending'	=> __( 'pending', 'tutor' ),
+			'approved'	=> __( 'approved', 'tutor' ),
+			'rejected'	=> __( 'rejected', 'tutor' ),
+		);
 		echo "<p>".tutor_utils()->tutor_price($item->amount)."</p>";
-		echo "<p><span class='withdraw-status withdraw-status-{$item->status}'>".__( $item->status, 'tutor' )."</span></p>";
+		echo "<p><span class='withdraw-status withdraw-status-{$item->status}'>".__( isset( $available_status[$item->status] ) ? $available_status[$item->status] : $item->status, 'tutor' )."</span></p>";
 	}
 
 	function get_columns(){

@@ -1350,10 +1350,10 @@ jQuery(document).ready(function($){
         }
     });
     $(document).on('lesson_modal_loaded', function(e, obj){
-        $('.tutor-lesson-modal-wrap .modal-title h1').html('Lesson');
+        $('.tutor-lesson-modal-wrap .modal-title h1').html(__( 'Lesson', 'tutor' ));
     });
     $(document).on('assignment_modal_loaded', function(e, obj){
-        $('.tutor-lesson-modal-wrap .modal-title h1').html('Assignment');
+        $('.tutor-lesson-modal-wrap .modal-title h1').html(__( 'Assignment', 'tutor' ));
     });
 
     /**

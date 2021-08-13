@@ -41,13 +41,21 @@ do_action('tutor_quiz/single/before/top');
 			<?php
 		}
 
-		$time_limit = tutor_utils()->get_quiz_option(get_the_ID(), 'time_limit.time_value');
-		if ($time_limit){
-			$time_type = tutor_utils()->get_quiz_option(get_the_ID(), 'time_limit.time_type');
+			$time_limit = tutor_utils()->get_quiz_option(get_the_ID(), 'time_limit.time_value');
+			if ($time_limit){
+				$time_type 	= tutor_utils()->get_quiz_option(get_the_ID(), 'time_limit.time_type');
+
+				$available_time_type = array(
+					'seconds'	=> __( 'seconds', 'tutor' ),
+					'minutes'	=> __( 'minutes', 'tutor' ),
+					'hours'		=> __( 'hours', 'tutor' ),
+					'days'		=> __( 'days', 'tutor' ),
+					'weeks'		=> __( 'weeks', 'tutor' ),
+				);
 			?>
             <li>
                 <strong><?php _e('Time', 'tutor'); ?> :</strong>
-				<?php echo $time_limit.' '.sprintf( __( '%s', 'tutor' ), $time_type ); ?>
+				<?php echo $time_limit.' '.sprintf( __( '%s', 'tutor' ), isset( $available_time_type[$time_type] ) ? $available_time_type[$time_type] : $time_type ); ?>
             </li>
 			<?php
 		}
