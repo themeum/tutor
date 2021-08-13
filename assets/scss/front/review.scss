@@ -1,4 +1,19 @@
 .tutor-course-review-popup-form{
+
+    .tutor-star-rating-group{
+        color: #C0C3CB;
+
+        i {
+            margin: 0 6px;
+        }
+    }
+
+    .tutor-stars{
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 40px;
+    }
+
     textarea {
         background: white;
         border: 1px solid #C0C3CB;

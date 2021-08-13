@@ -44,9 +44,13 @@ if ( ! function_exists('tutor') ) {
 		$base_path = (is_array( $parsed ) && isset( $parsed['path'] )) ? $parsed['path'] : '/';
 		$base_path = rtrim($base_path, '/') . '/';
 
+		// Get current URL
+		$current_url = $home_url . '/' . substr($_SERVER['REQUEST_URI'], strlen($base_path));
+
 		$info = array(
 			'path'                  => $path,
 			'url'                   => plugin_dir_url( TUTOR_FILE ),
+			'current_url'			=> $current_url,
 			'basename'              => plugin_basename( TUTOR_FILE ),
 			'basepath'				=> $base_path,
 			'version'               => TUTOR_VERSION,
