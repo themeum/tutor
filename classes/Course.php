@@ -644,20 +644,34 @@ class Course extends Tutor_Base {
 
 		$permalink = get_the_permalink($course_id);
 
-		// Set temporary cookie to show review pop up
-		setcookie('tutor_course_review_popup_for_id', $course_id, 10, tutor()->basepath);
-		setcookie('tutor_course_review_popup_for_permalink', $permalink, 10, tutor()->basepath);
-
+		// Set temporary identifier to show review pop up
+		$rating = tutor_utils()->get_course_rating_by_user($course_id, $user_id);
+		if(!$rating || (empty($rating->rating) && empty($rating->review))) {
+			update_option( 'tutor_course_complete_popup_'.$user_id, array(
+				'course_id' => $course_id,
+				'course_url' => $permalink,
+				'expires' => time()+10
+			));
+		}
+		
 		wp_redirect($permalink);
 	}
 
 	public function popup_review_form() {
-		if(!isset($_COOKIE['tutor_course_review_popup_for_permalink'])) {
-			return;
-		}
+		if(is_user_logged_in()) {
+			$key = 'tutor_course_complete_popup_' . get_current_user_id();
+			$popup = get_option( $key );
 
-		$course_id = $_COOKIE['tutor_course_review_popup_for_id'];
-		include  tutor()->path.'views/modal/review.php';
+			if(is_array($popup)) {
+
+				if($popup['expires']>time()) {
+					$course_id = $popup['course_id'];
+					include tutor()->path.'views/modal/review.php';
+				}
+
+				delete_option($key);
+			}
+		}
 	}
 	
 	public function tutor_load_instructors_modal(){

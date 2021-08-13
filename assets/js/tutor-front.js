@@ -135,18 +135,18 @@ jQuery(document).ready(function ($) {
     /**
      * Hover tutor rating and set value
      */
-    $(document).on('mouseover', '.tutor-write-review-box .tutor-star-rating-group i', function () {
+    $(document).on('mouseover', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
         toggle_star_($(this));
     });
 
-    $(document).on('click', '.tutor-write-review-box .tutor-star-rating-group i', function () {
+    $(document).on('click', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
         var rating = $(this).attr('data-rating-value');
         $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
         
         toggle_star_($(this));
     });
 
-    $(document).on('mouseout', '.tutor-write-review-box .tutor-star-rating-group', function(){
+    $(document).on('mouseout', '.tutor-star-rating-container .tutor-star-rating-group', function(){
         var value = $(this).find('input[name="tutor_rating_gen_input"]').val();
         var rating = parseInt(value);
         
