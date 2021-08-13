@@ -13,11 +13,13 @@ class Options_V2 {
 	public $option;
 	public $status;
 	public $options_attr;
+	public $options_tools;
 
 	public function __construct() {
 		$this->option       = (array) maybe_unserialize(get_option('tutor_option'));
 		$this->status = $this->status();
 		$this->options_attr = $this->options_attr();
+		$this->options_tools = $this->options_tools();
 		//Saving option
 		add_action('wp_ajax_tutor_option_save', array($this, 'tutor_option_save'));
 	}
@@ -72,6 +74,291 @@ class Options_V2 {
 		//init::tutor_activate();
 
 		wp_send_json_success(array('msg' => __('Option Updated', 'tutor')));
+	}
+
+	public function options_tools() {
+		$pages = tutor_utils()->get_pages();
+
+		//$course_base = tutor_utils()->course_archive_page_url();
+		$lesson_url                    = site_url() . '/course/' . 'sample-course/<code>lessons</code>/sample-lesson/';
+		$student_url                   = tutor_utils()->profile_url();
+		$attempts_allowed              = array();
+		$attempts_allowed['unlimited'] = __('Unlimited', 'tutor');
+		$attempts_allowed              = array_merge($attempts_allowed, array_combine(range(1, 20), range(1, 20)));
+
+		$video_sources = array(
+			'html5'        => __('HTML 5 (mp4)', 'tutor'),
+			'external_url' => __('External URL', 'tutor'),
+			'youtube'      => __('Youtube', 'tutor'),
+			'vimeo'        => __('Vimeo', 'tutor'),
+			'embedded'     => __('Embedded', 'tutor'),
+		);
+
+		$course_filters = array(
+			'search'           => __('Keyword Search', 'tutor'),
+			'category'         => __('Category', 'tutor'),
+			'tag'              => __('Tag', 'tutor'),
+			'difficulty_level' => __('Difficulty Level', 'tutor'),
+			'price_type'       => __('Price Type', 'tutor'),
+		);
+
+		$attr = array(
+			'tools'  => array(
+				'label'    => __('Tools', 'tutor'),
+				'sections' => array(
+					array(
+						'label'  => __('Status', 'tutor'),
+						'slug'   => 'status',
+						'desc'   => __('Status Settings', 'tutor'),
+						'template'   => 'status',
+						'icon'   => __('chart', 'tutor'),
+						'blocks' => array(
+							array(
+								'label'      => __('WordPress environment', 'tutor'),
+								'slug'       => 'wordpress_environment',
+								'block_type' => 'column',
+								'fieldset'     => array(
+									array(
+										array(
+											'key'        => 'home_url',
+											'type'        => 'info_row',
+											'label'       => __('Home URL', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('home_url'),
+										),
+									),
+									array(
+										array(
+											'key'        => 'wordpress_version',
+											'type'        => 'info_col',
+											'label'       => __('WordPress version', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('wordpress_version'),
+
+										),
+										array(
+											'key'        => 'wordpress_multisite',
+											'type'        => 'info_col',
+											'label'       => __('WordPress multisite', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('wordpress_multisite'),
+
+										),
+										array(
+											'key'        => 'wordpress_debug_mode',
+											'type'        => 'info_col',
+											'label'       => __('WordPress debug mode', 'tutor'),
+											'status' => (defined('WP_DEBUG') && true === WP_DEBUG) ? 'success' : 'default',
+											'default' => $this->status('wordpress_debug_mode'),
+
+										),
+										array(
+											'key'        => 'language',
+											'type'        => 'info_col',
+											'label'       => __('Language', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('language'),
+
+										),
+									),
+									array(
+										array(
+											'key'        => 'site_url',
+											'type'        => 'info_row',
+											'label'       => __('Site URL', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('site_url'),
+
+										),
+									),
+									array(
+										array(
+											'key'        => 'tutor_version',
+											'type'        => 'info_col',
+											'label'       => __('Tutor version', 'tutor'),
+											'status' => 'success',
+											'default' => $this->status('tutor_version'),
+
+										),
+										array(
+											'key'        => 'wordpress_memory_limit',
+											'type'        => 'info_col',
+											'label'       => __('WordPress memory limit', 'tutor'),
+											'status' => 'success',
+											'default' => $this->status('wordpress_memory_limit'),
+
+										),
+										array(
+											'key'        => 'wordpress_cron',
+											'type'        => 'info_col',
+											'label'       => __('WordPress corn', 'tutor'),
+											'status' => !empty(_get_cron_array()) ? 'success' : 'default',
+											'default' => $this->status('wordpress_cron'),
+
+										),
+										array(
+											'key'        => 'external_object_cache',
+											'type'        => 'info_col',
+											'label'       => __('External object cache', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('external_object_cache'),
+
+										),
+									),
+								),
+							),
+							array(
+								'label'      => __('Server environment', 'tutor'),
+								'slug'       => 'server_environment',
+								'block_type' => 'column',
+								'fieldset'     => array(
+									array(
+										array(
+											'key'        => 'server_info',
+											'type'        => 'info_col',
+											'label'       => __('Server info', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('server_info'),
+
+										),
+										array(
+											'key'        => 'php_version',
+											'type'        => 'info_col',
+											'label'       => __('PHP version', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('php_version'),
+
+										),
+										array(
+											'key'        => 'php_post_max_size',
+											'type'        => 'info_col',
+											'label'       => __('PHP post max size', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('php_post_max_size'),
+
+										),
+										array(
+											'key'        => 'php_time_limit',
+											'type'        => 'info_col',
+											'label'       => __('PHP time limit', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('php_time_limit'),
+
+										),
+										array(
+											'key'        => 'curl_version',
+											'type'        => 'info_col',
+											'label'       => __('cURL version', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('curl_version'),
+
+										),
+										array(
+											'key'        => 'wordpress_debug_mode',
+											'type'        => 'info_col',
+											'label'       => __('WordPress debug mode', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('wordpress_debug_mode'),
+
+										),
+										array(
+											'key'        => 'language',
+											'type'        => 'info_col',
+											'label'       => __('Language', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('language'),
+
+										),
+										array(
+											'key'        => 'wordpress_debug_mode',
+											'type'        => 'info_col',
+											'label'       => __('WordPress debug mode', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('wordpress_debug_mode'),
+
+										),
+									),
+									array(
+										array(
+											'key'        => 'site_url',
+											'type'        => 'info_row',
+											'label'       => __('Site URL', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('site_url'),
+
+										),
+									),
+									array(
+										array(
+											'key'        => 'tutor_version',
+											'type'        => 'info_col',
+											'label'       => __('Tutor version', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('tutor_version'),
+
+										),
+										array(
+											'key'        => 'wordpress_memory_limit',
+											'type'        => 'info_col',
+											'label'       => __('WordPress memory limit', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('wordpress_memory_limit'),
+
+										),
+										array(
+											'key'        => 'wordpress_cron',
+											'type'        => 'info_col',
+											'label'       => __('WordPress corn', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('wordpress_cron'),
+
+										),
+										array(
+											'key'        => 'external_object_cache',
+											'type'        => 'info_col',
+											'label'       => __('External object cache', 'tutor'),
+											'status' => 'default',
+											'default' => $this->status('external_object_cache'),
+
+										),
+									),
+								),
+							),
+						),
+					),
+					array(
+						'label'  => __('Import/Export', 'tutor'),
+						'slug'   => 'import_export',
+						'desc'   => __('Import/Export Settings', 'tutor'),
+						'template'   => 'import_export',
+						'icon'   => __('import-export', 'tutor'),
+						'blocks' => array(),
+					),
+					array(
+						'label'  => __('Tutor Pages', 'tutor'),
+						'slug'   => 'tutor-pages',
+						'desc'   => __('Tutor Pages Settings', 'tutor'),
+						'template'   => 'tutor_pages',
+						'icon'   => __('buddypress', 'tutor'),
+						'blocks' => array(
+							'block' => array(),
+						),
+					),
+					array(
+						'label'  => __('Setup Wizard', 'tutor'),
+						'slug'   => 'setup_wizard',
+						'desc'   => __('Setup Wizard Settings', 'tutor'),
+						'template'   => 'setup_wizard',
+						'icon'   => __('paid-membersip-pro', 'tutor'),
+						'blocks' => array(
+							'block' => array(),
+						),
+					),
+				),
+			),
+		);
+
+		return $attr;
 	}
 
 	public function options_attr() {
@@ -1159,260 +1446,6 @@ class Options_V2 {
 					),
 				),
 			),
-			'tools'  => array(
-				'label'    => __('Tools', 'tutor'),
-				'sections' => array(
-					array(
-						'label'  => __('Status', 'tutor'),
-						'slug'   => 'status',
-						'desc'   => __('Status Settings', 'tutor'),
-						'template'   => 'status',
-						'icon'   => __('chart', 'tutor'),
-						'blocks' => array(
-							array(
-								'label'      => __('WordPress environment', 'tutor'),
-								'slug'       => 'wordpress_environment',
-								'block_type' => 'column',
-								'fieldset'     => array(
-									array(
-										array(
-											'key'        => 'home_url',
-											'type'        => 'info_row',
-											'label'       => __('Home URL', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('home_url'),
-										),
-									),
-									array(
-										array(
-											'key'        => 'wordpress_version',
-											'type'        => 'info_col',
-											'label'       => __('WordPress version', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('wordpress_version'),
-
-										),
-										array(
-											'key'        => 'wordpress_multisite',
-											'type'        => 'info_col',
-											'label'       => __('WordPress multisite', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('wordpress_multisite'),
-
-										),
-										array(
-											'key'        => 'wordpress_debug_mode',
-											'type'        => 'info_col',
-											'label'       => __('WordPress debug mode', 'tutor'),
-											'status' => (defined('WP_DEBUG') && true === WP_DEBUG) ? 'success' : 'default',
-											'default' => $this->status('wordpress_debug_mode'),
-
-										),
-										array(
-											'key'        => 'language',
-											'type'        => 'info_col',
-											'label'       => __('Language', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('language'),
-
-										),
-									),
-									array(
-										array(
-											'key'        => 'site_url',
-											'type'        => 'info_row',
-											'label'       => __('Site URL', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('site_url'),
-
-										),
-									),
-									array(
-										array(
-											'key'        => 'tutor_version',
-											'type'        => 'info_col',
-											'label'       => __('Tutor version', 'tutor'),
-											'status' => 'success',
-											'default' => $this->status('tutor_version'),
-
-										),
-										array(
-											'key'        => 'wordpress_memory_limit',
-											'type'        => 'info_col',
-											'label'       => __('WordPress memory limit', 'tutor'),
-											'status' => 'success',
-											'default' => $this->status('wordpress_memory_limit'),
-
-										),
-										array(
-											'key'        => 'wordpress_cron',
-											'type'        => 'info_col',
-											'label'       => __('WordPress corn', 'tutor'),
-											'status' => !empty(_get_cron_array()) ? 'success' : 'default',
-											'default' => $this->status('wordpress_cron'),
-
-										),
-										array(
-											'key'        => 'external_object_cache',
-											'type'        => 'info_col',
-											'label'       => __('External object cache', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('external_object_cache'),
-
-										),
-									),
-								),
-							),
-							array(
-								'label'      => __('Server environment', 'tutor'),
-								'slug'       => 'server_environment',
-								'block_type' => 'column',
-								'fieldset'     => array(
-									array(
-										array(
-											'key'        => 'server_info',
-											'type'        => 'info_col',
-											'label'       => __('Server info', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('server_info'),
-
-										),
-										array(
-											'key'        => 'php_version',
-											'type'        => 'info_col',
-											'label'       => __('PHP version', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('php_version'),
-
-										),
-										array(
-											'key'        => 'php_post_max_size',
-											'type'        => 'info_col',
-											'label'       => __('PHP post max size', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('php_post_max_size'),
-
-										),
-										array(
-											'key'        => 'php_time_limit',
-											'type'        => 'info_col',
-											'label'       => __('PHP time limit', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('php_time_limit'),
-
-										),
-										array(
-											'key'        => 'curl_version',
-											'type'        => 'info_col',
-											'label'       => __('cURL version', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('curl_version'),
-
-										),
-										array(
-											'key'        => 'wordpress_debug_mode',
-											'type'        => 'info_col',
-											'label'       => __('WordPress debug mode', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('wordpress_debug_mode'),
-
-										),
-										array(
-											'key'        => 'language',
-											'type'        => 'info_col',
-											'label'       => __('Language', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('language'),
-
-										),
-										array(
-											'key'        => 'wordpress_debug_mode',
-											'type'        => 'info_col',
-											'label'       => __('WordPress debug mode', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('wordpress_debug_mode'),
-
-										),
-									),
-									array(
-										array(
-											'key'        => 'site_url',
-											'type'        => 'info_row',
-											'label'       => __('Site URL', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('site_url'),
-
-										),
-									),
-									array(
-										array(
-											'key'        => 'tutor_version',
-											'type'        => 'info_col',
-											'label'       => __('Tutor version', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('tutor_version'),
-
-										),
-										array(
-											'key'        => 'wordpress_memory_limit',
-											'type'        => 'info_col',
-											'label'       => __('WordPress memory limit', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('wordpress_memory_limit'),
-
-										),
-										array(
-											'key'        => 'wordpress_cron',
-											'type'        => 'info_col',
-											'label'       => __('WordPress corn', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('wordpress_cron'),
-
-										),
-										array(
-											'key'        => 'external_object_cache',
-											'type'        => 'info_col',
-											'label'       => __('External object cache', 'tutor'),
-											'status' => 'default',
-											'default' => $this->status('external_object_cache'),
-
-										),
-									),
-								),
-							),
-						),
-					),
-					array(
-						'label'  => __('Import/Export', 'tutor'),
-						'slug'   => 'import_export',
-						'desc'   => __('Import/Export Settings', 'tutor'),
-						'template'   => 'import_export',
-						'icon'   => __('import-export', 'tutor'),
-						'blocks' => array(),
-					),
-					array(
-						'label'  => __('Tutor Pages', 'tutor'),
-						'slug'   => 'tutor-pages',
-						'desc'   => __('Tutor Pages Settings', 'tutor'),
-						'template'   => 'tutor_pages',
-						'icon'   => __('buddypress', 'tutor'),
-						'blocks' => array(
-							'block' => array(),
-						),
-					),
-					array(
-						'label'  => __('Setup Wizard', 'tutor'),
-						'slug'   => 'setup_wizard',
-						'desc'   => __('Setup Wizard Settings', 'tutor'),
-						'template'   => 'setup_wizard',
-						'icon'   => __('paid-membersip-pro', 'tutor'),
-						'blocks' => array(
-							'block' => array(),
-						),
-					),
-				),
-			),
-
 		);
 
 		return $attr;
@@ -1571,6 +1604,13 @@ class Options_V2 {
 	public function generate() {
 		ob_start();
 		include tutor()->path . 'views/options/options_generator.php';
+
+		return ob_get_clean();
+	}
+
+	public function tools() {
+		ob_start();
+		include tutor()->path . 'views/options/options_tools.php';
 
 		return ob_get_clean();
 	}
