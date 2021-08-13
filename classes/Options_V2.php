@@ -83,7 +83,6 @@ class Options_V2 {
 		$attempts_allowed              = array();
 		$attempts_allowed['unlimited'] = __('Unlimited', 'tutor');
 		$attempts_allowed              = array_merge($attempts_allowed, array_combine(range(1, 20), range(1, 20)));
-		$environment  = tutor_admin()->get_environment_info();
 
 		$video_sources = array(
 			'html5'        => __('HTML 5 (mp4)', 'tutor'),
@@ -1458,7 +1457,8 @@ class Options_V2 {
 		$data = array();
 		$data[null] = 'null';
 
-		$environment  = tutor_admin()->get_environment_info();
+		// $environment  = tutor_admin()->get_environment_info();
+		$environment      = Admin::get_environment_info();
 
 		$data['home_url'] = $environment['home_url'] ?? null;
 

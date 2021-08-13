@@ -79,12 +79,6 @@ if ( ! function_exists('tutor_utils') ) {
 	}
 }
 
-if ( ! function_exists('tutor_admin') ) {
-	function tutor_admin() {
-		return new \TUTOR\Admin();
-	}
-}
-
 /**
  * @return \TUTOR\Utils
  *
