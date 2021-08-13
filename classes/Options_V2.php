@@ -2,6 +2,8 @@
 
 namespace Tutor;
 
+use TUTOR\Admin;
+
 if (!defined('ABSPATH')) {
 	exit;
 }
@@ -9,12 +11,13 @@ if (!defined('ABSPATH')) {
 class Options_V2 {
 
 	public $option;
+	public $status;
 	public $options_attr;
 
 	public function __construct() {
 		$this->option       = (array) maybe_unserialize(get_option('tutor_option'));
+		$this->status = $this->status();
 		$this->options_attr = $this->options_attr();
-
 		//Saving option
 		add_action('wp_ajax_tutor_option_save', array($this, 'tutor_option_save'));
 	}
@@ -80,6 +83,7 @@ class Options_V2 {
 		$attempts_allowed              = array();
 		$attempts_allowed['unlimited'] = __('Unlimited', 'tutor');
 		$attempts_allowed              = array_merge($attempts_allowed, array_combine(range(1, 20), range(1, 20)));
+		$environment  = tutor_admin()->get_environment_info();
 
 		$video_sources = array(
 			'html5'        => __('HTML 5 (mp4)', 'tutor'),
@@ -117,7 +121,6 @@ class Options_V2 {
 										'type'    => 'select',
 										'label'   => __('Dashboard Page', 'tutor'),
 										'default' => '0',
-
 										'options' => $pages,
 										'desc'    => __('This page will be used for student and instructor dashboard', 'tutor'),
 									),
@@ -1178,8 +1181,7 @@ class Options_V2 {
 											'type'        => 'info_row',
 											'label'       => __('Home URL', 'tutor'),
 											'status' => 'default',
-											'default' => home_url(),
-
+											'default' => $this->status('home_url'),
 										),
 									),
 									array(
@@ -1188,15 +1190,15 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('WordPress version', 'tutor'),
 											'status' => 'default',
-											'default' => get_bloginfo('version'),
+											'default' => $this->status('wordpress_version'),
 
 										),
 										array(
 											'key'        => 'wordpress_multisite',
 											'type'        => 'info_col',
 											'label'       => __('WordPress multisite', 'tutor'),
-											'status' => is_multisite() ? 'success' : 'default',
-											'default' => is_multisite() ? '✓' : '-',
+											'status' => 'default',
+											'default' => $this->status('wordpress_multisite'),
 
 										),
 										array(
@@ -1204,7 +1206,7 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('WordPress debug mode', 'tutor'),
 											'status' => (defined('WP_DEBUG') && true === WP_DEBUG) ? 'success' : 'default',
-											'default' => (defined('WP_DEBUG') && true === WP_DEBUG) ? '✓' : '-',
+											'default' => $this->status('wordpress_debug_mode'),
 
 										),
 										array(
@@ -1212,7 +1214,7 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('Language', 'tutor'),
 											'status' => 'default',
-											'default' => get_locale(),
+											'default' => $this->status('language'),
 
 										),
 									),
@@ -1222,7 +1224,7 @@ class Options_V2 {
 											'type'        => 'info_row',
 											'label'       => __('Site URL', 'tutor'),
 											'status' => 'default',
-											'default' => site_url(),
+											'default' => $this->status('site_url'),
 
 										),
 									),
@@ -1232,23 +1234,23 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('Tutor version', 'tutor'),
 											'status' => 'success',
-											'default' => tutor()->version,
+											'default' => $this->status('tutor_version'),
 
 										),
 										array(
 											'key'        => 'wordpress_memory_limit',
 											'type'        => 'info_col',
 											'label'       => __('WordPress memory limit', 'tutor'),
-											'status' => WP_MEMORY_LIMIT ? 'success' : 'default',
-											'default' => WP_MEMORY_LIMIT ?? '-',
+											'status' => 'success',
+											'default' => $this->status('wordpress_memory_limit'),
 
 										),
 										array(
-											'key'        => 'wordpress_corn',
+											'key'        => 'wordpress_cron',
 											'type'        => 'info_col',
 											'label'       => __('WordPress corn', 'tutor'),
 											'status' => !empty(_get_cron_array()) ? 'success' : 'default',
-											'default' => (defined('DISABLE_WP_CRON')) ? '✓' : '-',
+											'default' => $this->status('wordpress_cron'),
 
 										),
 										array(
@@ -1256,7 +1258,7 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('External object cache', 'tutor'),
 											'status' => 'default',
-											'default' => (defined('WP_CACHE')) ? '✓' : '-',
+											'default' => $this->status('external_object_cache'),
 
 										),
 									),
@@ -1273,7 +1275,7 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('Server info', 'tutor'),
 											'status' => 'default',
-											'default' => ucwords($_SERVER['SERVER_SOFTWARE']),
+											'default' => $this->status('server_info'),
 
 										),
 										array(
@@ -1281,7 +1283,7 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('PHP version', 'tutor'),
 											'status' => 'default',
-											'default' => phpversion(),
+											'default' => $this->status('php_version'),
 
 										),
 										array(
@@ -1289,7 +1291,7 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('PHP post max size', 'tutor'),
 											'status' => 'default',
-											'default' => ini_get('post_max_size'),
+											'default' => $this->status('php_post_max_size'),
 
 										),
 										array(
@@ -1297,15 +1299,7 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('PHP time limit', 'tutor'),
 											'status' => 'default',
-											'default' => ini_get('max_execution_time'),
-
-										),
-										array(
-											'key'        => 'max_input_vars',
-											'type'        => 'info_col',
-											'label'       => __('max input vars', 'tutor'),
-											'status' => 'default',
-											'default' => ini_get('max_input_vars'),
+											'default' => $this->status('php_time_limit'),
 
 										),
 										array(
@@ -1313,7 +1307,7 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('cURL version', 'tutor'),
 											'status' => 'default',
-											'default' => curl_version()['host'] . ', ' . curl_version()['version'],
+											'default' => $this->status('curl_version'),
 
 										),
 										array(
@@ -1321,7 +1315,7 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('WordPress debug mode', 'tutor'),
 											'status' => 'default',
-											'default' => 'http://www.yourwebsite.com',
+											'default' => $this->status('wordpress_debug_mode'),
 
 										),
 										array(
@@ -1329,15 +1323,15 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('Language', 'tutor'),
 											'status' => 'default',
-											'default' => 'http://www.yourwebsite.com',
+											'default' => $this->status('language'),
 
 										),
 										array(
-											'key'        => 'WordPress debug mode',
+											'key'        => 'wordpress_debug_mode',
 											'type'        => 'info_col',
 											'label'       => __('WordPress debug mode', 'tutor'),
 											'status' => 'default',
-											'default' => 'http://www.yourwebsite.com',
+											'default' => $this->status('wordpress_debug_mode'),
 
 										),
 									),
@@ -1347,7 +1341,7 @@ class Options_V2 {
 											'type'        => 'info_row',
 											'label'       => __('Site URL', 'tutor'),
 											'status' => 'default',
-											'default' => 'http://www.yourwebsite.com',
+											'default' => $this->status('site_url'),
 
 										),
 									),
@@ -1357,7 +1351,7 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('Tutor version', 'tutor'),
 											'status' => 'default',
-											'default' => '1.7.8',
+											'default' => $this->status('tutor_version'),
 
 										),
 										array(
@@ -1365,15 +1359,15 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('WordPress memory limit', 'tutor'),
 											'status' => 'default',
-											'default' => '1GB',
+											'default' => $this->status('wordpress_memory_limit'),
 
 										),
 										array(
-											'key'        => 'wordpress_corn',
+											'key'        => 'wordpress_cron',
 											'type'        => 'info_col',
 											'label'       => __('WordPress corn', 'tutor'),
 											'status' => 'default',
-											'default' => '✓',
+											'default' => $this->status('wordpress_cron'),
 
 										),
 										array(
@@ -1381,15 +1375,7 @@ class Options_V2 {
 											'type'        => 'info_col',
 											'label'       => __('External object cache', 'tutor'),
 											'status' => 'default',
-											'default' => 'http://www.yourwebsite.com',
-
-										),
-										array(
-											'key'        => 'WordPress debug mode',
-											'type'        => 'info_col',
-											'label'       => __('WordPress debug mode', 'tutor'),
-											'status' => 'default',
-											'default' => 'http://www.yourwebsite.com',
+											'default' => $this->status('external_object_cache'),
 
 										),
 									),
@@ -1467,6 +1453,100 @@ class Options_V2 {
 		return $is_active;
 	}
 
+	public function status($type = '') {
+		ob_start();
+		$data = array();
+		$data[null] = 'null';
+
+		$environment  = tutor_admin()->get_environment_info();
+
+		$data['home_url'] = $environment['home_url'] ?? null;
+
+		$data['site_url'] = $environment['site_url'] ?? null;
+
+		$latest_version = get_transient('tutor_system_status_wp_version_check');
+
+		if (false === $latest_version) {
+			$version_check = wp_remote_get('https://api.wordpress.org/core/version-check/1.7/');
+			$api_response  = json_decode(wp_remote_retrieve_body($version_check), true);
+
+			$latest_version = ($api_response && isset($api_response['offers'], $api_response['offers'][0], $api_response['offers'][0]['version']))
+				? $api_response['offers'][0]['version']
+				: $environment['wp_version'];
+			set_transient('tutor_system_status_wp_version_check', $latest_version, DAY_IN_SECONDS);
+		}
+
+		$data['wordpress_version'] = (version_compare($environment['wp_version'], $latest_version, '<'))
+			? sprintf(esc_html__('%1$s - There is a newer version of WordPress available (%2$s)', 'tutor'), esc_html($environment['wp_version']), esc_html($latest_version))
+			: esc_html($environment['wp_version']);
+
+		$data['tutor_version'] = esc_html($environment['version']);
+
+		$data['wordpress_multisite'] = $environment['wp_multisite']  ? '✓' : '-';
+
+		$data['wordpress_debug_mode'] = $environment['wp_debug_mode']  ? '✓' : '-';
+
+		$data['language'] = esc_html($environment['language']);
+
+		$data['wordpress_memory_limit'] = ($environment['wp_memory_limit'] < 67108864)
+			? sprintf(esc_html__('%1$s - We recommend setting memory to at least 64MB. See: %2$s', 'tutor'), esc_html(size_format($environment['wp_memory_limit'])), '<a href="https://codex.wordpress.org/Editing_wp-config.php#Increasing_memory_allocated_to_PHP" target="_blank">' . esc_html__('Increasing memory allocated to PHP', 'tutor') . '</a>')
+			: esc_html(size_format($environment['wp_memory_limit']));
+
+		$data['wordpress_cron'] = $environment['wp_cron']  ? '✓' : '-';
+
+		$data['external_object_cache'] = $environment['external_object_cache']  ? '✓' : '-';
+
+		$data['server_info'] = $environment['server_info'] ?? null;
+
+		$data['php_version'] = (version_compare($environment['php_version'], '7.2', '>='))
+			? esc_html($environment['php_version'])
+			: ((version_compare($environment['php_version'], '5.6', '<'))
+				? __('Tutor will run under this version of PHP, however, it has reached end of life. We recommend using PHP version 7.2 or above for greater performance and security.', 'tutor')
+				: __('We recommend using PHP version 7.2 or above for greater performance and security.', 'tutor'));
+
+
+		$data['php_post_max_size'] = esc_html(size_format($environment['php_post_max_size'])) ?? null;
+
+		$data['php_time_limit'] = esc_html($environment['php_max_execution_time']) ?? null;
+
+		$data['php_max_input_vars'] = esc_html($environment['php_max_input_vars']) ?? null;
+
+		$data['curl_version'] = esc_html($environment['curl_version']) ?? null;
+
+		$data['suhosin_installed'] = $environment['suhosin_installed'] ? '✓' : '-';
+
+		$data['max_upload_size'] = esc_html(size_format($environment['max_upload_size'])) ?? null;
+
+		$data['mysql_version'] = (version_compare($environment['mysql_version'], '5.6', '<') && !strstr($environment['mysql_version_string'], 'MariaDB'))
+			? sprintf(esc_html__('%1$s - We recommend a minimum MySQL version of 5.6. See: %2$s', 'tutor'), esc_html($environment['mysql_version_string']), '<a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__('WordPress requirements', 'tutor') . '</a>')
+			: esc_html($environment['mysql_version_string']);
+
+		$data['default_timezone_is_utc'] = ('UTC' !== $environment['default_timezone'])
+			? sprintf(esc_html__('Default timezone is %s - it should be UTC', 'tutor'), esc_html($environment['default_timezone']))
+			: '-';
+
+		$data['fsockopen_curl'] = $environment['fsockopen_or_curl_enabled']
+			? '✓'
+			: esc_html__('Your server does not have fsockopen or cURL enabled - PayPal IPN and other scripts which communicate with other servers will not work. Contact your hosting provider.', 'tutor');
+
+		$data['dom_document'] = $environment['domdocument_enabled']
+			? '✓'
+			: sprintf(esc_html__('Your server does not have the %s class enabled - HTML/Multipart emails, and also some extensions, will not work without DOMDocument.', 'tutor'), '<a href="https://php.net/manual/en/class.domdocument.php">DOMDocument</a>');
+
+		$data['gzip'] = ($environment['gzip_enabled'])
+			? '✓'
+			: sprintf(esc_html__('Your server does not support the %s function - this is required to use the GeoIP database from MaxMind.', 'tutor'), '<a href="https://php.net/manual/en/zlib.installation.php">gzopen</a>');
+
+		$data['multibyte_string'] = ($environment['mbstring_enabled'])
+			? '✓'
+			: sprintf(esc_html__('Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it.', 'tutor'), '<a href="https://php.net/manual/en/mbstring.installation.php">mbstring</a>');
+
+
+		if (!null == $type) {
+			return $data[$type];
+		}
+		return $data[null];
+	}
 	/**
 	 * @param array $field
 	 *
