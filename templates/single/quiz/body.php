@@ -50,7 +50,7 @@ $quiz_answers = array();
 			if ( ! $hide_quiz_time_display){
 				?>
                 <div class="time-remaining">
-					<?php _e('Time remaining : '); ?> <span id="tutor-quiz-time-update" data-attempt-settings="<?php echo esc_attr(json_encode($is_started_quiz)) ?>" data-attempt-meta="<?php echo esc_attr(json_encode($quiz_attempt_info)) ?>"><?php echo $remaining_time_context; ?></span>
+					<?php _e( 'Time remaining : ', 'tutor' ); ?> <span id="tutor-quiz-time-update" data-attempt-settings="<?php echo esc_attr(json_encode($is_started_quiz)) ?>" data-attempt-meta="<?php echo esc_attr(json_encode($quiz_attempt_info)) ?>"><?php echo $remaining_time_context; ?></span>
                 </div>
 			<?php } ?>
         </div>
