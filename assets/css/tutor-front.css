@@ -755,7 +755,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
           animation: anim 1s linear 0s infinite;
 }
 
-.tutor-dot-loader .dot-2 {
+.tutor-dot-loader.dot-2 {
   -webkit-animation: anim 1s linear 0.25s infinite;
           animation: anim 1s linear 0.25s infinite;
 }

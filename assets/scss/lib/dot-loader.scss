@@ -4,6 +4,7 @@ $warning: var(--tutor-warning-button-color);
 $danger: var(--tutor-danger-button-color);
 $success: var(--tutor-success-button-color);
 
+
     .tutor-dot-loader {
         display: flex;
         align-items: center;
@@ -20,7 +21,7 @@ $success: var(--tutor-success-button-color);
             animation: anim 1s linear 0s infinite;
         }
       
-        .dot-2 {
+        &.dot-2 {
             animation: anim 1s linear 0.25s infinite;
         }
       
@@ -53,21 +54,24 @@ $success: var(--tutor-success-button-color);
             top: 0;
             }
         }
+
+        &>span {
+            background-color: $default;
+        }
+
+        &.loader-primary>span {
+            background-color: $primary;
+        }  
+        &.loader-warning>span {
+            background-color: $warning;
+        }  
+        &.loader-danger>span {
+            background-color: $danger;
+        }  
+        &.loader-success>span {
+            background-color: $success;
+        }  
     }
 
 
-.tutor-dot-loader>span {
-    background-color: $default;
-}
-.tutor-dot-loader.loader-primary>span {
-    background-color: $primary;
-}  
-.tutor-dot-loader.loader-warning>span {
-    background-color: $warning;
-}  
-.tutor-dot-loader.loader-danger>span {
-    background-color: $danger;
-}  
-.tutor-dot-loader.loader-success>span {
-    background-color: $success;
-}  
+
