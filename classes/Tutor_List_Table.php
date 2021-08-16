@@ -389,7 +389,7 @@ class Tutor_List_Table {
 			';
 		$options = '';
 		foreach($orders as $order){
-			$options .= '<option value="'.$order.'" '.selected($selected,$order,false).'> '.$order.' </option>';
+			$options .= '<option value="'.$order.'" '.selected($selected,$order,false).'> '.__( $order, 'tutor' ).' </option>';
 		}		
 		$content = str_replace('OPTION_PLACEHOLDER', $options, $markup);
 		echo $content;		

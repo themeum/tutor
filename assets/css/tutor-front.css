@@ -729,6 +729,103 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   display: none;
 }
 
+.tutor-dot-loader {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.tutor-dot-loader span {
+  width: 10px;
+  height: 10px;
+  display: block;
+  border-radius: 50%;
+  position: relative;
+  margin: 0 5px;
+}
+
+.tutor-dot-loader .dot-1 {
+  -webkit-animation: anim 1s linear 0s infinite;
+          animation: anim 1s linear 0s infinite;
+}
+
+.tutor-dot-loader .dot-2 {
+  -webkit-animation: anim 1s linear 0.25s infinite;
+          animation: anim 1s linear 0.25s infinite;
+}
+
+.tutor-dot-loader .dot-3 {
+  -webkit-animation: anim 1s linear 0.50s infinite;
+          animation: anim 1s linear 0.50s infinite;
+}
+
+.tutor-dot-loader .dot-4 {
+  -webkit-animation: anim 1s linear 0.75s infinite;
+          animation: anim 1s linear 0.75s infinite;
+}
+
+@-webkit-keyframes anim {
+  0% {
+    top: 0;
+  }
+  25% {
+    top: 5px;
+  }
+  50% {
+    top: 10px;
+  }
+  75% {
+    top: 5px;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+@keyframes anim {
+  0% {
+    top: 0;
+  }
+  25% {
+    top: 5px;
+  }
+  50% {
+    top: 10px;
+  }
+  75% {
+    top: 5px;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+.tutor-dot-loader > span {
+  background-color: #fff;
+}
+
+.tutor-dot-loader.loader-primary > span {
+  background-color: var(--tutor-primary-button-color);
+}
+
+.tutor-dot-loader.loader-warning > span {
+  background-color: var(--tutor-warning-button-color);
+}
+
+.tutor-dot-loader.loader-danger > span {
+  background-color: var(--tutor-danger-button-color);
+}
+
+.tutor-dot-loader.loader-success > span {
+  background-color: var(--tutor-success-button-color);
+}
+
 /* Only reusable function, or code allowed here. No direct css please. */
 #tutor-course-topics {
   position: relative;
@@ -866,6 +963,20 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   -ms-flex: 1;
   -moz-flex: 1;
   -webkit-flex: 1;
+}
+
+/**
+ * Add option disabled
+ * @since 1.9.7
+*/
+.add_question_answers_option.disabled {
+  color: #AAAEB5 !important;
+  cursor: none !important;
+  pointer-events: none !important;
+}
+
+.add_question_answers_option.disabled i {
+  background-color: #AAAEB5 !important;
 }
 
 body {
@@ -12259,6 +12370,61 @@ body.has-tutor-frontend-course-builder .select2-search__field {
 }
 
 /* Only reusable function, or code allowed here. No direct css please. */
+.tutor-disabled-wrapper {
+  max-width: 444px;
+  padding: 60px 0 30px;
+  margin: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.tutor-disabled-wrapper .tutor-disabled-content-wrapper {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -o-flex-direction: column;
+  -ms-flex-direction: column;
+  -moz-flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  text-align: center;
+}
+
+.tutor-disabled-wrapper .tutor-disabled-content-wrapper img {
+  margin-bottom: 30px;
+}
+
+.tutor-disabled-wrapper .tutor-disabled-content-wrapper p {
+  margin-bottom: 38px;
+}
+
+.tutor-disabled-wrapper .tutor-disabled-content-wrapper h3 {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.tutor-disabled-wrapper .tutor-disabled-content-wrapper p {
+  font-size: 15px;
+  font-weight: 400;
+}
+
 .tutor-denied-wrapper {
   display: -webkit-box;
   display: -ms-flexbox;

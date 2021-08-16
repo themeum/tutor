@@ -1203,9 +1203,9 @@ jQuery(document).ready(function ($) {
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select / Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use media', 'tutor' )
             },
             library: { type: 'video' },
             multiple: false  // Set to true to allow multiple files to be selected
@@ -1336,9 +1336,9 @@ jQuery(document).ready(function ($) {
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select / Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use media', 'tutor' )
             },
             multiple: true  // Set to true to allow multiple files to be selected
         });
@@ -1520,9 +1520,9 @@ jQuery(document).ready(function ($) {
 
         // Create a new media frame
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select / Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use media', 'tutor' )
             },
             multiple: false  // Set to true to allow multiple files to be selected
         });
@@ -1570,13 +1570,13 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: form_data,
             beforeSend: function () {
-                $('.tutor-dashboard-builder-draft-btn span').text('Saving...');
+                $('.tutor-dashboard-builder-draft-btn span').text( __( 'Saving...', 'tutor' ) );
             },
             success: function (data) {
 
             },
             complete: function () {
-                $('.tutor-dashboard-builder-draft-btn span').text('Save');
+                $('.tutor-dashboard-builder-draft-btn span').text( __( 'Save', 'tutor' ) );
             }
         });
     }

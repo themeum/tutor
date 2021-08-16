@@ -66,6 +66,15 @@ window.tutor_component = function($, icon, padding) {
 
     return {popup: this.popup};
 }
+window.tutorDotLoader = (loaderType) => {
+    return `    
+    <div class="tutor-dot-loader ${loaderType ? loaderType: ''}">
+        <span class="dot dot-1"></span>
+        <span class="dot dot-2"></span>
+        <span class="dot dot-3"></span>
+        <span class="dot dot-4"></span>
+    </div>`;
+}
 
 jQuery(document).ready(function($){
     'use strict';
@@ -145,9 +154,9 @@ jQuery(document).ready(function($){
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use this media', 'tutor' )
             },
             multiple: false
         });
@@ -384,9 +393,9 @@ jQuery(document).ready(function($){
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use this media', 'tutor' )
             },
             multiple: false
         });
@@ -420,7 +429,7 @@ jQuery(document).ready(function($){
     $(document).on('click', '.tutor-delete-lesson-btn', function(e){
         e.preventDefault();
 
-        if( ! confirm('Are you sure?')){
+        if( ! confirm( __( 'Are you sure?', 'tutor' ) )){
             return;
         }
 
@@ -451,7 +460,7 @@ jQuery(document).ready(function($){
     $(document).on('click', '.topic-delete-btn a', function(e){
         var topic_id = $(this).attr('data-topic-id');
 
-        if ( ! confirm('Are you sure to delete?')){
+        if ( ! confirm( __( 'Are you sure to delete?', 'tutor' ) )){
             e.preventDefault();
         }
     });
@@ -808,6 +817,7 @@ jQuery(document).ready(function($){
                 //Initializing Tutor Select
                 tutor_select().reInit();
                 enable_quiz_answer_sorting();
+                disableAddoption();
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -838,16 +848,16 @@ jQuery(document).ready(function($){
      * @since v.1.0.0
      */
 
-    $(document).on('click', '.add_question_answers_option', function(e){
+    $(document).on('click', '.add_question_answers_option:not(.disabled)', function(e){
         e.preventDefault();
 
         var $that = $(this);
         var question_id = $that.attr('data-question-id');
         
         var $formInput = $('.quiz_question_form :input').serializeObject();
+        
         $formInput.question_id = question_id;
         $formInput.action = 'tutor_quiz_add_question_answers';
-
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
@@ -857,6 +867,7 @@ jQuery(document).ready(function($){
             },
             success: function (data) {
                 $('#tutor_quiz_question_answer_form').html(data.data.output);
+                disableAddoption();
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -1028,7 +1039,7 @@ jQuery(document).ready(function($){
     $(document).on('click', '.tutor-delete-quiz-btn', function(e){
         e.preventDefault();
 
-        if( ! confirm('Are you sure?')){
+        if( ! confirm( __( 'Are you sure?', 'tutor' ) )){
             return;
         }
 
@@ -1093,13 +1104,15 @@ jQuery(document).ready(function($){
                         $that.closest('.tutor-select').find('.select-header .lead-option').html($html);
                         $that.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($that.attr('data-value')).trigger('change');
                         $that.closest('.tutor-select-options').hide();
+
+                        disableAddoption();
                     }else{
                         alert('Tutor Pro version required');
                     }
                 });
                 $(document).on('click', '.tutor-select .select-header', function(e){
                     e.preventDefault();
-
+                   
                     var $that = $(this);
                     $that.closest('.tutor-select').find('.tutor-select-options').slideToggle();
                 });
@@ -1165,9 +1178,9 @@ jQuery(document).ready(function($){
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use this media', 'tutor' )
             },
             multiple: false
         });
@@ -1335,10 +1348,10 @@ jQuery(document).ready(function($){
         }
     });
     $(document).on('lesson_modal_loaded', function(e, obj){
-        $('.tutor-lesson-modal-wrap .modal-title h1').html('Lesson');
+        $('.tutor-lesson-modal-wrap .modal-title h1').html(__( 'Lesson', 'tutor' ));
     });
     $(document).on('assignment_modal_loaded', function(e, obj){
-        $('.tutor-lesson-modal-wrap .modal-title h1').html('Assignment');
+        $('.tutor-lesson-modal-wrap .modal-title h1').html(__( 'Assignment', 'tutor' ));
     });
 
     /**
@@ -1819,45 +1832,41 @@ function tutor_toast(title, description, type) {
     }, 5000);
 }
 
-
 /**
- * Set cookie 
- * @param {cookie name} cname 
- * @param {cookie value} cvalue 
- * @param {expiry in milliseconds} expiry 
+ * Add option disable when don't need to add an option
  * 
- * @since v1.9.7
+ * @since 1.9.7
  */
-function tutor_set_cookie(cname, cvalue, expiry) {
-    var expires='';
+function disableAddoption() {
+    const selected_question_type      = document.querySelector(".tutor_select_value_holder").value;
+    const question_answers            = document.getElementById("tutor_quiz_question_answers");
+    const question_answer_form        = document.getElementById("tutor_quiz_question_answer_form");
+    const add_question_answer_option  = document.querySelector(".add_question_answers_option");
 
-    if(expiry) {
-        var d = new Date();
-        d.setTime(d.getTime() + expiry);
-        var expires = "expires="+d.toUTCString()+';';
-    }
-    
-    document.cookie = cname + "=" + cvalue + ";" + expires + "path=" + window._tutorobject.base_path;
-}
-
-/**
- * Get cookie
- * @param {cookie name} cname 
- * @returns mixed
- * 
- * @since v1.9.7
- */
-function tutor_get_cookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
+    const addDisabledClass = (elem) => {
+        if ( !elem.classList.contains("disabled") ) {
+            elem.classList.add('disabled');
         }
     }
-    return "";
+
+    const removeDisabledClass = (elem) => {
+        if ( elem.classList.contains("disabled") ) {
+            elem.classList.remove('disabled');
+        }
+    }
+
+    //dont need add option for open_ended & short_answer
+    if ( selected_question_type === 'open_ended' || selected_question_type === 'short_answer' ) {
+        addDisabledClass(add_question_answer_option);
+    } else if ( selected_question_type === 'true_false' || selected_question_type === 'fill_in_the_blank' ) {
+        //if already have options then dont need to show add option
+        if ( question_answer_form.hasChildNodes() || question_answers.hasChildNodes() ) {
+            addDisabledClass(add_question_answer_option);
+        } else {
+            removeDisabledClass(add_question_answer_option);
+        }
+    } else {
+        //if other question type then remove disabled
+        removeDisabledClass(add_question_answer_option);
+    }
 }

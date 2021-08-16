@@ -55,7 +55,7 @@
         <div class="modal-content-body">
 
             <div class="search-bar">
-                <input type="text" class="tutor-modal-search-input" placeholder="<?php _e('Search instructors...'); ?>">
+                <input type="text" class="tutor-modal-search-input" placeholder="<?php _e( 'Search instructors...', 'tutor' ); ?>">
             </div>
         </div>
         <div class="modal-container"></div>

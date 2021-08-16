@@ -61,10 +61,13 @@ class Options {
 
 	public function options_attr(){
 		$pages = tutor_utils()->get_pages();
-
+		$current_user = wp_get_current_user();
 		//$course_base = tutor_utils()->course_archive_page_url();
-		$lesson_url = site_url().'/course/'.'sample-course/<code>lessons</code>/sample-lesson/';
-		$student_url = tutor_utils()->profile_url();
+		$lesson_sample_url_text = __( "/course/sample-course/<code>lessons</code>/sample-lesson/", 'tutor' );
+		$lesson_url 			= site_url().$lesson_sample_url_text;
+
+		$student_url = site_url().'/'._x( 'profile', 'tutor student profile', 'tutor' ).'/'.$current_user->display_name ; 
+
 		$attempts_allowed = array();
 		$attempts_allowed['unlimited'] = __('Unlimited' , 'tutor');
 		$attempts_allowed = array_merge($attempts_allowed, array_combine(range(1,20), range(1,20)));
