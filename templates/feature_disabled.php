@@ -34,13 +34,13 @@ if ( ! defined( 'ABSPATH' ) )
         <div>
             <?php if( isset( $title ) && $title !== '' ): ?>
                 <h3>
-                    <?php _e( $title, 'tutor' ); ?>
+                    <?php echo $title; ?>
                 </h3>
             <?php endif;?>
 
             <?php if( isset( $description ) && $description !== '' ): ?>
                 <p>
-                    <?php _e( $description, 'tutor' ); ?>
+                    <?php echo $description; ?>
                 </p>
             <?php endif;?>
         </div>
@@ -48,7 +48,7 @@ if ( ! defined( 'ABSPATH' ) )
         <div>
             <?php if ( isset( $button ) && count( $button) ): ?>
                 <a href="<?php echo esc_url( $button['url'] );?>" class="<?php esc_attr_e( $button['class'] );?>">
-                    <?php _e( $button['text'], 'tutor' );?>
+                    <?php echo $button['text']; ?>
                 </a>
             <?php endif;?>
         </div>
