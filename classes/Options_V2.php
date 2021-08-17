@@ -66,14 +66,15 @@ class Options_V2 {
 
 		$option = (array) tutils()->array_get('tutor_option', $_POST, array());
 		$option = apply_filters('tutor_option_input', $option);
-		update_option('tutor_option', $option);
+		print_r($option);
+		// update_option('tutor_option', $option);
 
 		do_action('tutor_option_save_after');
 
 		//re-sync settings
 		//init::tutor_activate();
 
-		wp_send_json_success(array('msg' => __('Option Updated', 'tutor')));
+		// wp_send_json_success(array('msg' => __('Option Updated', 'tutor')));
 	}
 
 	public function options_tools() {
@@ -517,17 +518,17 @@ class Options_V2 {
 										'desc'    => __('This page will be used to sign up new instructors.', 'tutor'),
 									),
 									'instructor_can_publish_course' => array(
-										'type'        => 'checkbox',
+										'type'        => 'toggle_switch',
 										'label'       => __('Allow Instructors Publishing Courses', 'tutor'),
-										'label_title' => __('Enable', 'tutor'),
+										'label_title' => __('', 'tutor'),
 										'default'     => '0',
 
 										'desc'        => __('Enable instructors to publish the course directly. If disabled, admins will be able to review course content before publishing.', 'tutor'),
 									),
 									'enable_become_instructor_btn'  => array(
-										'type'        => 'checkbox',
+										'type'        => 'toggle_switch',
 										'label'       => __('Become Instructor Button', 'tutor'),
-										'label_title' => __('Enable', 'tutor'),
+										'label_title' => __('', 'tutor'),
 										'default'     => '0',
 
 										'desc'        => __('Uncheck this option to hide the button from student dashboard.', 'tutor'),
