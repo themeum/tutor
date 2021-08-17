@@ -686,3 +686,44 @@ if (!function_exists('get_tutor_header')) {
 			return false;
 		}
 	}
+
+	/**
+	 * Require wp_date form return js date format 
+	 * 
+	 * this is helpfull for date picker
+	 * 
+	 * @return string
+	 * 
+	 * @since 1.9.7
+	 */
+	if ( !function_exists( 'tutor_js_date_format_against_wp' ) ) {
+		function tutor_js_date_format_against_wp() {
+			$wp_date_format = get_option( 'date_format' );
+			$default_format = 'yy-mm-dd';
+
+			$formats = array(
+				'Y-m-d' 	=> 'yy-mm-dd',
+				'm/d/Y' 	=> 'mm-dd-yy',
+				'd/m/Y' 	=> 'dd-mm-yy',
+				'F j, Y'	=> 'MM dd, yy'
+			);
+			return isset( $formats[$wp_date_format] ) ? $formats[$wp_date_format] : $default; 
+		}
+	}
+
+	/**
+	 * Convert date to desire format
+	 *
+	 * @param $format string
+	 *
+	 * @param $date string
+	 *
+	 * @return string ( date )
+	*/
+	if ( !function_exists( 'tutor_get_formated_date' ) ) {
+		function tutor_get_formated_date( string $require_format, string $user_date) {
+			return date($require_format, strtotime($user_date));
+		}
+	}
+
+	

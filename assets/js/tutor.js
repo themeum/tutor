@@ -69,11 +69,35 @@ window.tutor_component = function($, icon, padding) {
     return {popup: this.popup};
 }
 
+window.tutor_date_picker = () => {
+    if (jQuery.datepicker){
+        var format = _tutorobject.wp_date_format;
+        if ( !format ) {
+            format = "yy-mm-dd";
+        }
+        $( ".tutor_date_picker" ).datepicker({"dateFormat" : format});
+    }
+}
+
 jQuery(document).ready(function($){
     'use strict';
 
     const { __, _x, _n, _nx } = wp.i18n;
-
+    /**
+     * Global date_picker selector 
+     * 
+     * @since 1.9.7
+     */
+    function load_date_picker() {
+        if (jQuery.datepicker){
+            var format = _tutorobject.wp_date_format;
+            if ( !format ) {
+                format = "yy-mm-dd";
+            }
+            $( ".tutor_date_picker" ).datepicker({"dateFormat" : format});
+        }
+    };
+    load_date_picker();
     /**
      * Slider bar
      */
@@ -1332,9 +1356,7 @@ jQuery(document).ready(function($){
                 dropdownCssClass:'increasezindex'
             });
         }
-        if (jQuery.datepicker){
-            $( ".tutor_date_picker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
-        }
+        load_date_picker();
     });
     $(document).on('lesson_modal_loaded', function(e, obj){
         $('.tutor-lesson-modal-wrap .modal-title h1').html('Lesson');
@@ -1556,9 +1578,9 @@ jQuery(document).ready(function($){
         }
     })
     //sorting 
-    if (jQuery.datepicker){
-        $( "#tutor-announcement-datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
-    }
+    // if (jQuery.datepicker){
+    //     $( "#tutor-announcement-datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
+    // }
     function urlPrams(type, val){
         var url = new URL(window.location.href);
         var search_params = url.searchParams;
