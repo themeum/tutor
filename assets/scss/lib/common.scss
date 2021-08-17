@@ -6,3 +6,18 @@
 @import "./toast.scss";
 @import "./component.scss";
 @import "./ui-date-picker.scss";
+@import "./dot-loader.scss";
+@import "./course-builder.scss";
+
+/**
+ * Add option disabled
+ * @since 1.9.7
+*/
+.add_question_answers_option.disabled {
+    i {
+        background-color: #AAAEB5 !important;
+    }
+    color: #AAAEB5 !important;
+    cursor: none !important;
+    pointer-events: none !important;
+}

@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 1.9.6
+Stable tag: 1.9.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,25 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.9.7 - August 18, 2021 =
+
+New: Filters for instructor list in the backend dashboard
+New: Previous button for single quiz
+New: Pop up for review after course completion
+Update: Disable "Add Option" button for True/False quiz
+Update: Redundant quiz demo link removed
+Update: Certificate generating Loading Icon
+Update: Registration Disable Access Denied Page design Update
+Update: Zoom API key check and save combined with single button
+Update: Meeting host dropdown made disabled since always single host is used
+Update: Certificate generating loading icon
+Fix: Topic title and description edit not working
+Fix: Duplicate order statements in instructor profile
+Fix: Date Formats are not matched with Wordpress date format
+Fix: Translation issues
+Fix: PHP error in content drip addon
+Fix: Header footer conflict with Oxygen Tutor LMS integration
 
 = 1.9.6 - August 04, 2021 =
 

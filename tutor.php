@@ -4,7 +4,7 @@ Plugin Name: Tutor LMS
 Plugin URI: https://www.themeum.com/product/tutor-lms/
 Description: Tutor is a complete solution for creating a Learning Management System in WordPress way. It can help you to create small to large scale online education site very conveniently. Power features like report, certificate, course preview, private file sharing make Tutor a robust plugin for any educational institutes.
 Author: Themeum
-Version: 1.9.6
+Version: 1.9.7
 Author URI: https://themeum.com
 Requires at least: 4.5
 Tested up to: 5.7
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) )
 /**
  * Defined the tutor main file
  */
-define( 'TUTOR_VERSION', '1.9.6' );
+define( 'TUTOR_VERSION', '1.9.7' );
 define( 'TUTOR_FILE', __FILE__ );
 
 /**
@@ -38,10 +38,21 @@ if ( ! function_exists('tutor') ) {
 		$path = plugin_dir_path( TUTOR_FILE );
 		$hasPro = defined('TUTOR_PRO_VERSION');
 
+		// Prepare the basepath
+		$home_url = get_home_url();
+		$parsed = parse_url($home_url);
+		$base_path = (is_array( $parsed ) && isset( $parsed['path'] )) ? $parsed['path'] : '/';
+		$base_path = rtrim($base_path, '/') . '/';
+
+		// Get current URL
+		$current_url = $home_url . '/' . substr($_SERVER['REQUEST_URI'], strlen($base_path));
+
 		$info = array(
 			'path'                  => $path,
 			'url'                   => plugin_dir_url( TUTOR_FILE ),
+			'current_url'			=> $current_url,
 			'basename'              => plugin_basename( TUTOR_FILE ),
+			'basepath'				=> $base_path,
 			'version'               => TUTOR_VERSION,
 			'nonce_action'          => 'tutor_nonce_action',
 			'nonce'                 => '_tutor_nonce',

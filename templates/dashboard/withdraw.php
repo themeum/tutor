@@ -145,7 +145,9 @@ else if(function_exists('edd_currency_symbol')){
                                 </div>
                                 <div class="inline-image-text">
                                     <img src="<?php echo $image_base; ?>info-icon-question.svg" />
-                                    <span>Minimum withdraw amount is <?php echo strip_tags($formatted_min_withdraw_amount); ?></span>
+                                    <span>
+                                        <?php echo __( 'Minimum withdraw amount is', 'tutor' ).' '.strip_tags($formatted_min_withdraw_amount); ?>
+                                    </span>
                                 </div>
                             </div>
 

@@ -1,0 +1,77 @@
+$default: #fff;
+$primary: var(--tutor-primary-button-color);
+$warning: var(--tutor-warning-button-color);
+$danger: var(--tutor-danger-button-color);
+$success: var(--tutor-success-button-color);
+
+
+    .tutor-dot-loader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        span {
+            width: 10px;
+            height: 10px;
+            display: block;
+            border-radius: 50%;
+            position: relative;
+            margin: 0 5px;
+        }
+        .dot-1 {
+            animation: anim 1s linear 0s infinite;
+        }
+      
+        &.dot-2 {
+            animation: anim 1s linear 0.25s infinite;
+        }
+      
+        .dot-3 {
+            animation: anim 1s linear 0.50s infinite;
+        }
+      
+        .dot-4 {
+            animation: anim 1s linear 0.75s infinite;
+        }
+
+        @keyframes anim {
+            0% {
+            top: 0;
+            }
+    
+            25% {
+                top: 5px
+            }
+        
+            50% {
+            top: 10px;
+            }
+    
+            75% {
+                top: 5px;
+            }
+        
+            100% {
+            top: 0;
+            }
+        }
+
+        &>span {
+            background-color: $default;
+        }
+
+        &.loader-primary>span {
+            background-color: $primary;
+        }  
+        &.loader-warning>span {
+            background-color: $warning;
+        }  
+        &.loader-danger>span {
+            background-color: $danger;
+        }  
+        &.loader-success>span {
+            background-color: $success;
+        }  
+    }
+
+
+

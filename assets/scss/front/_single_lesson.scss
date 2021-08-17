@@ -2,6 +2,8 @@
 /* Single Lesson  */
 /************************       */
 
+@import '../lib/mixins.scss';
+
 /*lesson list*/
 .tutor-single-lesson-button-group,
 .tutor-topics-lesson-list .tutor-topics-in-single-lesson {
@@ -767,25 +769,22 @@ ul.tutor-required-fields {
 
 .tutor-star-rating-group {
 	color: #f4c150;
-	/*margin-top: 20px;*/
 	display: inline-block;
 	text-align: left;
+	i {
+		margin-right: 4px;
+		cursor: pointer;
+	}
 }
-.tutor-star-rating-group i {
-	/*cursor: pointer;*/
-	margin-right: 4px;
-}
+
 .tutor-write-review-box .tutor-star-rating-group {
 	@media (max-width: 546px) {
 		font-size: 26px;
 		display: block;
 		text-align: center;
 	}
-	i {
-		margin-right: 4px;
-		cursor: pointer;
-	}
 }
+
 .tutor-queston-and-answer-wrap {
 	margin: 20px 0;
 }
@@ -800,19 +799,24 @@ ul.tutor-required-fields {
 }
 .tutor-question-search-form {
 	flex: 0 0 75%;
+	
+	form {
+		display: flex;
+	}
+	
+	input[type="text"] {
+		max-width: 60%;
+	}
 }
-.tutor-question-search-form form {
-	display: flex;
-}
-.tutor-question-search-form input[type="text"] {
-	max-width: 60%;
-}
+
 .tutor-add-question-wrap {
 	margin: 20px 0;
+	
+	.tutor-form-group {
+		margin-bottom: 10px;
+	}
 }
-.tutor-add-question-wrap .tutor-form-group {
-	margin-bottom: 10px;
-}
+
 .tutor_question_cancel {
 	margin-right: 5px;
 }
@@ -824,29 +828,35 @@ ul.tutor-required-fields {
 	animation: spin 1s steps(8) infinite;
 	display: inline-block;
 }
-.loading-lesson .tutor-lesson-video-wrap:before {
-	font-family: "tutor";
-	content: "\e91d";
-	-webkit-animation: spin 2s infinite linear;
-	animation: spin 2s infinite linear;
-	display: inline-block;
-	z-index: 9;
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	font-size: 50px;
-	margin-left: -25px;
-	margin-top: -12px;
-}
-.loading-lesson .tutor-lesson-video-wrap:after {
-	position: absolute;
-	content: "";
-	top: 0;
-	left: 0;
-	background: rgba(255, 255, 255, 0.8);
-	width: 100%;
-	height: 100%;
-}
+
+.loading-lesson {
+	.tutor-lesson-video-wrap{
+		&:before {
+			font-family: "tutor";
+			content: "\e91d";
+			-webkit-animation: spin 2s infinite linear;
+			animation: spin 2s infinite linear;
+			display: inline-block;
+			z-index: 9;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			font-size: 50px;
+			margin-left: -25px;
+			margin-top: -12px;
+		}
+
+		&:after {
+			position: absolute;
+			content: "";
+			top: 0;
+			left: 0;
+			background: rgba(255, 255, 255, 0.8);
+			width: 100%;
+			height: 100%;
+		}
+	}
+} 
 
 .tutor-lesson-video-wrap {
 	position: relative;
@@ -1457,22 +1467,35 @@ Course question and answer
 	margin: 0;
 	padding: 0;
 	list-style: none;
-}
-.tutor-quiz-questions-pagination ul li {
-	display: inline-block;
-}
-.tutor-quiz-questions-pagination ul li a {
-	background-color: var(--tutor-primary-color);
-	padding: 7px 13px;
-	display: block;
-	border-radius: 50%;
-	margin-right: 10px;
-	color: #ffffff;
-	//font-size: var(--tutor-text-size);
-}
-.tutor-quiz-questions-pagination ul li a:hover,
-.tutor-quiz-questions-pagination ul li a.active {
-	background-color: var(--tutor-primary-color);
+
+	li {
+		display: inline-block;
+
+		a {
+			border: 1px solid var(--tutor-primary-color);
+			padding: 7px 13px;
+			display: block;
+			border-radius: 50%;
+			margin-right: 10px;
+			color: var(--tutor-primary-color);
+			font-weight: bold;
+			font-size: 15px;
+			width: 30px;
+			height: 30px;
+			@include valueWithPrefix(display, flex);
+			@include propertyWithPrefix(align-items, center);
+			@include propertyWithPrefix(justify-content, center);
+			
+			&:hover, &.active {
+				background-color: var(--tutor-primary-color);
+				color: white;
+
+				&:hover {
+					opacity: .8;
+				}
+			}
+		}
+	}
 }
 
 .quiz-image-answering-wrap {
