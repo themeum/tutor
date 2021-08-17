@@ -1093,6 +1093,7 @@ class Utils {
 		// Delete Course completion row
 		$del_where = array(
 			'user_id' => $user_id,
+			'comment_post_ID' => $course_id,
 			'comment_type' => 'course_completed',
 			'comment_agent' => 'TutorLMSPlugin', 
 		);
@@ -5297,6 +5298,7 @@ class Utils {
 
 		/**
 		 * Delete duplicated earning rows that were created due to not checking if already added while creating new.
+		 * New entries will check before insert.
 		 * 
 		 * @since v1.9.7
 		 */
@@ -5311,17 +5313,13 @@ class Utils {
 						GROUP BY order_id) t 
 				WHERE cnt>1"
 			);
-			
-			// Loop through order IDs
-			foreach($order_ids as $order_id) {
 
-				// Get earnings associated with the order ID
-				$earnings = $wpdb->get_results($wpdb->prepare(
+			if(is_array($order_ids) && count($order_ids)) {
+				$order_ids_string = implode(',', $order_ids);
+				$earnings = $wpdb->get_results(
 					"SELECT earning_id, course_id FROM {$wpdb->prefix}tutor_earnings
-					WHERE order_id=%d 
-					ORDER BY earning_id ASC", 
-					$order_id
-				));
+					WHERE order_id IN ({$order_ids_string}) 
+					ORDER BY earning_id ASC");
 
 				$excluded_first = array();
 				foreach($earnings as $earning) {

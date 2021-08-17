@@ -11,11 +11,11 @@
     <?php 
         $args = array(
             'image_path'    => tutor()->url.'assets/images/construction.png',
-            'title'         => 'Oooh! Access Denied',
-            'description'   => 'You do not have access to this area of the application. Please refer to your system  administrator.',
+            'title'         => __('Oooh! Access Denied', 'tutor'),
+            'description'   => __('You do not have access to this area of the application. Please refer to your system  administrator.', 'tutor'),
             'button'        => array(
-                'text'      => 'Notify to Admin',
-                'url'       => '',
+                'text'      => __('Go to Home', 'tutor'),
+                'url'       => get_home_url(),
                 'class'     => 'tutor-button tutor-button-primary'
             )
         );

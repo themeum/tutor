@@ -22,6 +22,12 @@
     $active_course_count = $enrolled_course_count - $completed_course_count;
     $active_course_count<0 ? $active_course_count=0 : 0;
     
+    $status_translations = array(
+        'publish' => __('Published', 'tutor'),
+        'pending' => __('Pending', 'tutor'),
+        'trash' => __('Trash', 'tutor')
+    );
+
 	?>
 
     <div class="tutor-dashboard-info-cards">
@@ -88,14 +94,14 @@
 				<?php
 				foreach ($instructor_course as $course){
                     $enrolled = tutor_utils()->count_enrolled_users_by_course($course->ID);
-                    $course_status = ($course->post_status == 'publish') ? __('Published', 'tutor') : $course->post_status; ?>
+                    $course_status = isset($status_translations[$course->post_status]) ? $status_translations[$course->post_status] : __($course->post_status, 'tutor'); ?>
                     <tr>
                         <td>
                             <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank"><?php echo $course->post_title; ?></a>
                         </td>
                         <td><?php echo $enrolled; ?></td>
                         <td>
-                            <small class="label-course-status label-course-<?php echo $course->post_status; ?>"> <?php _e($course_status, 'tutor'); ?></small>
+                            <small class="label-course-status label-course-<?php echo $course->post_status; ?>"> <?php echo $course_status; ?></small>
                         </td>
                     </tr>
 					<?php
