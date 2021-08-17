@@ -19,8 +19,8 @@ $current_page       = max(1, tutor_utils()->avalue_dot('current_page', $_GET));
 $offset             = ($current_page - 1) * $per_page;
 
 $course_id          = isset($_GET['course-id']) ? sanitize_text_field($_GET['course-id']) : '';
-$order_filter       = isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'DESC';
-$date_filter        = isset($_GET['date']) ? sanitize_text_field($_GET['date']) : '';
+$order_filter       = isset($_GET['order']) ? $_GET['order'] : 'DESC';
+$date_filter        = isset($_GET['date']) ?  $_GET['date'] : '';
 
 $current_user       = get_current_user_id();
 $assignments        = tutor_utils()->get_assignments_by_instructor(null,  compact('course_id', 'order_filter', 'date_filter', 'per_page', 'offset'));
@@ -57,7 +57,7 @@ $courses            = (current_user_can('administrator')) ? tutils()->get_course
     </div>
     <div class="tutor-form-group tutor-announcement-datepicker">
         <label><?php _e('Create Date', 'tutor'); ?></label>
-        <input type="text" class="tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off" />
+        <input type="text" class="tutor_date_picker tutor-announcement-date-sorting"  value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" autocomplete="off" />
         <i class="tutor-icon-calendar"></i>
     </div>
 </div>

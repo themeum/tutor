@@ -4497,6 +4497,7 @@ class Utils {
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 		$course_filter	= $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '' ;
+		$date_filter	= $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
 		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
 
 		$query = $wpdb->get_results( $wpdb->prepare(
@@ -4564,6 +4565,7 @@ class Utils {
 		$search_filter = $search_filter ? "AND ( users.user_email LIKE {$search_filter} OR users.display_name LIKE {$search_filter} OR quiz.post_title LIKE {$search_filter} OR course.post_title LIKE {$search_filter} )" : '';
 
 		$course_filter	= $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '' ;
+		$date_filter	= $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
 		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
 
 		$query = $wpdb->get_results( $wpdb->prepare(
@@ -5898,6 +5900,7 @@ class Utils {
 				$in_course_ids = $course_id;
 			}
 			if ( ! empty( $date_filter ) ) {
+				$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
 				$date_query = " AND DATE(post_date) = '{$date_filter}'";
 			}
 			if ( ! empty( $order_filter ) ) {
