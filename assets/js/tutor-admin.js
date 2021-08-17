@@ -101,7 +101,7 @@ jQuery(document).ready(function($){
         var topics = {};
         $('.tutor-topics-wrap').each(function(index, item){
             var $topic = $(this);
-            var topics_id = parseInt($(this).data('topic_id')); // parseInt($topic.attr('id').match(/\d+/)[0], 10);
+            var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
             var lessons = {};
 
             $topic.find('.course-content-item').each(function(lessonIndex, lessonItem){
@@ -186,9 +186,9 @@ jQuery(document).ready(function($){
 
         // Create a new media frame
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Upload media', 'tutor' )
             },
             library: { type: 'video' },
             multiple: false  // Set to true to allow multiple files to be selected
@@ -222,9 +222,9 @@ jQuery(document).ready(function($){
         }
         // Create a new media frame
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Upload media', 'tutor' )
             },
             multiple: true  // Set to true to allow multiple files to be selected
         });
@@ -264,9 +264,9 @@ jQuery(document).ready(function($){
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Upload media', 'tutor' )
             },
             multiple: false
         });
@@ -521,9 +521,9 @@ jQuery(document).ready(function($){
 
         // Create a new media frame
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Upload media', 'tutor' )
             },
             multiple: false  // Set to true to allow multiple files to be selected
         });
@@ -565,9 +565,9 @@ jQuery(document).ready(function($){
 
         // Create a new media frame
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Upload media', 'tutor')
             },
             multiple: false  // Set to true to allow multiple files to be selected
         });
@@ -636,11 +636,16 @@ jQuery(document).ready(function($){
      * Find user/student from select2
      * @since v.1.4.0
      */
-
     $('#select2_search_user_ajax').select2({
         allowClear: true,
-        placeholder: "Search students",
-        minimumInputLength: '1',
+
+        minimumInputLength: 1,
+        placeholder: __( "Search students", 'tutor' ),
+        language: {
+            inputTooShort: function() {
+                return __( 'Please add 1 or more character', 'tutor' );
+            },
+        },
         escapeMarkup: function( m ) {
             return m;
         },

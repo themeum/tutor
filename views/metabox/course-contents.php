@@ -1,4 +1,4 @@
-<div class="course-contents">
+<div id="<?php echo !is_admin() ? 'tutor-course-topics' : ''; ?>" class="course-contents">
 
     <div class="wp_editor_config_example" style="display: none;">
         <?php wp_editor('', 'tutor_editor_config'); ?>
@@ -29,7 +29,7 @@
 
 	foreach ($query_topics->posts as $topic){
 		?>
-        <div data-topic_id="<?php echo $topic->ID; ?>" class="tutor-topics-wrap">
+        <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap">
 
             <div class="tutor-topics-top">
                 <h4 class="tutor-topic-title">

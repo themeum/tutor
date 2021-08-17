@@ -10,9 +10,18 @@ if ( is_string( $sub_page ) && in_array($sub_page, $allowed_sub_pages)){
 		return;
 	}
 }
+/**
+ * Quiz attempt filters added
+ * 
+ * @since 1.9.7
+ */
+$search_filter	= isset( $_GET['search'] ) ? $_GET['search'] : '';
+$course_filter	= isset( $_GET['course-id'] ) ? $_GET['course-id'] : '';
+$date_filter	= isset( $_GET['date'] ) ? $_GET['date'] : '';
+$order_filter	= isset( $_GET['order'] ) ? $_GET['order'] : "ASC";
 
 $instructorList = new \TUTOR\Instructors_List();
-$instructorList->prepare_items();
+$instructorList->prepare_items($search_filter, $course_filter, $date_filter,$order_filter);
 ?>
 
 
@@ -32,7 +41,8 @@ $instructorList->prepare_items();
     <form id="students-filter" method="get">
         <input type="hidden" name="page" value="<?php echo \TUTOR\Instructors_List::INSTRUCTOR_LIST_PAGE; ?>" />
 		<?php
-		$instructorList->search_box(__('Search', 'tutor'), 'instructors');
-		$instructorList->display(); ?>
+			//$instructorList->search_box(__('Search', 'tutor'), 'instructors');
+			$instructorList->display($enable_sorting_field_with_bulk_action = true); 
+		?>
     </form>
 </div>

@@ -97,12 +97,6 @@
         background-color: var(--tutor-primary-color);
         color: #ffffff;
         display: inline-block;
-        border-radius: 2px;
-        font-size: 14px;
-        font-weight: 600;
-        border: none;
-        cursor: pointer;
-    
         @include propertyWithPrefix(box-shadow, none);
     
         &:hover {
@@ -114,6 +108,19 @@
 		background-color: white;
 		color: var(--tutor-light-color);
         border: 1px solid var(--tutor-light-color);
+    }
+
+
+	&.tutor-button-outlined {
+		background-color: white;
+		color: var(--tutor-primary-color);
+        border: 1px solid var(--tutor-primary-color);
+
+        &:hover {
+            background-color: var(--tutor-primary-color);
+            color: white;
+            border: 1px solid var(--tutor-primary-color);
+        }
     }
 
     &.tutor-button-block {

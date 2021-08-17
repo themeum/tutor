@@ -189,7 +189,7 @@ if ( $topic_id != '' ) {
                                     <span class="radio-icon"></span>
                                     <div class="tutor-quiz-feedback-mode-option">
                                         <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Retry Mode', 'tutor'); ?></h4>
-                                        <p class="tutor-quiz-feedback-option-subtitle"><?php _e('Unlimited attempts on each question.', 'tutor'); ?> <a href="#"> <?php _e('Live Demo', 'tutor'); ?></a></p>
+                                        <p class="tutor-quiz-feedback-option-subtitle"><?php _e('Unlimited attempts on each question.', 'tutor'); ?></p>
                                     </div>
                                 </label>
                             </div>
@@ -199,7 +199,7 @@ if ( $topic_id != '' ) {
                                     <span class="radio-icon"></span>
                                     <div class="tutor-quiz-feedback-mode-option">
                                         <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Reveal Mode', 'tutor'); ?></h4>
-                                        <p class="tutor-quiz-feedback-option-subtitle"><?php _e('Show result after the attempt.', 'tutor'); ?> <a href="#"><?php _e('Live Demo', 'tutor'); ?></a></p>
+                                        <p class="tutor-quiz-feedback-option-subtitle"><?php _e('Show result after the attempt.', 'tutor'); ?></p>
                                     </div>
                                 </label>
                             </div>

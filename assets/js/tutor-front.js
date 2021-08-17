@@ -135,18 +135,18 @@ jQuery(document).ready(function ($) {
     /**
      * Hover tutor rating and set value
      */
-    $(document).on('mouseover', '.tutor-write-review-box .tutor-star-rating-group i', function () {
+    $(document).on('mouseover', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
         toggle_star_($(this));
     });
 
-    $(document).on('click', '.tutor-write-review-box .tutor-star-rating-group i', function () {
+    $(document).on('click', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
         var rating = $(this).attr('data-rating-value');
         $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
         
         toggle_star_($(this));
     });
 
-    $(document).on('mouseout', '.tutor-write-review-box .tutor-star-rating-group', function(){
+    $(document).on('mouseout', '.tutor-star-rating-container .tutor-star-rating-group', function(){
         var value = $(this).find('input[name="tutor_rating_gen_input"]').val();
         var rating = parseInt(value);
         
@@ -185,6 +185,9 @@ jQuery(document).ready(function ($) {
                 }
             });
         }
+    }).on('click', '.tutor_cancel_review_btn', function() {
+        // Hide the pop up review form on cancel click
+        $(this).closest('form').hide();
     });
 
     $(document).on('click', '.write-course-review-link-btn', function (e) {
@@ -345,8 +348,7 @@ jQuery(document).ready(function ($) {
                         var att = $("#tutor-quiz-time-expire-wrapper").attr('data-attempt-remaining');
 
                         //disable buttons
-                        $(".tutor-quiz-answer-next-btn").attr('disabled', true);
-                        $(".tutor-quiz-submit-btn").attr('disabled', true);
+                        $(".tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn").prop('disabled', true);
 
                         //add alert text
                         $(".time-remaining span").css('color', '#F44337');
@@ -605,8 +607,14 @@ jQuery(document).ready(function ($) {
      * @since v.1.0.0
      */
 
-    $(document).on('click', '.tutor-quiz-answer-next-btn', function (e) {
+    $(document).on('click', '.tutor-quiz-answer-next-btn, .tutor-quiz-answer-previous-btn', function (e) {
         e.preventDefault();
+
+        // Show previous quiz if press previous button
+        if($(this).hasClass('tutor-quiz-answer-previous-btn')) {
+            $(this).closest('.quiz-attempt-single-question').hide().prev().show();
+            return;
+        }
 
         var $that = $(this);
         var $question_wrap = $that.closest('.quiz-attempt-single-question');
@@ -1195,9 +1203,9 @@ jQuery(document).ready(function ($) {
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select / Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use media', 'tutor' )
             },
             library: { type: 'video' },
             multiple: false  // Set to true to allow multiple files to be selected
@@ -1328,9 +1336,9 @@ jQuery(document).ready(function ($) {
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select / Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use media', 'tutor' )
             },
             multiple: true  // Set to true to allow multiple files to be selected
         });
@@ -1512,9 +1520,9 @@ jQuery(document).ready(function ($) {
 
         // Create a new media frame
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select / Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use media', 'tutor' )
             },
             multiple: false  // Set to true to allow multiple files to be selected
         });
@@ -1562,13 +1570,13 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: form_data,
             beforeSend: function () {
-                $('.tutor-dashboard-builder-draft-btn span').text('Saving...');
+                $('.tutor-dashboard-builder-draft-btn span').text( __( 'Saving...', 'tutor' ) );
             },
             success: function (data) {
 
             },
             complete: function () {
-                $('.tutor-dashboard-builder-draft-btn span').text('Save');
+                $('.tutor-dashboard-builder-draft-btn span').text( __( 'Save', 'tutor' ) );
             }
         });
     }
