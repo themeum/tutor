@@ -1284,7 +1284,7 @@ class Tutor_List_Table {
 				<div>
 					<div class="menu-label"><?php _e('Date', 'tutor'); ?></div>
 					<div class="date-range-input">
-						<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off" />
+						<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" placeholder="<?php _e( get_option( 'date_format' ) , 'tutor' );?>" value="<?php echo $date_filter; ?>" autocomplete="off" />
 						<i class="tutor-icon-calendar"></i>
 					</div>
 				</div>
