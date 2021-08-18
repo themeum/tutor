@@ -62,14 +62,14 @@ class Options_V2 {
 
 		!current_user_can('manage_options') ? wp_send_json_error() : 0;
 
-		do_action('tutor_option_save_before');
+		// do_action('tutor_option_save_before');
 
 		$option = (array) tutils()->array_get('tutor_option', $_POST, array());
-		$option = apply_filters('tutor_option_input', $option);
+		//$option = apply_filters('tutor_option_input', $option);
 		print_r($option);
 		// update_option('tutor_option', $option);
 
-		do_action('tutor_option_save_after');
+		// do_action('tutor_option_save_after');
 
 		//re-sync settings
 		//init::tutor_activate();
@@ -103,7 +103,7 @@ class Options_V2 {
 			'price_type'       => __('Price Type', 'tutor'),
 		);
 
-		$attr = array(
+		$attr_tools = array(
 			'tools'  => array(
 				'label'    => __('Tools', 'tutor'),
 				'sections' => array(
@@ -359,7 +359,7 @@ class Options_V2 {
 			),
 		);
 
-		return $attr;
+		return $attr_tools;
 	}
 
 	public function options_attr() {
@@ -422,7 +422,7 @@ class Options_V2 {
 										'key'        => 'student_must_login_to_view_course',
 										'type'        => 'toggle_switch',
 										'label'       => __('Course Visibility', 'tutor'),
-										'label_title' => __('Logged in only', 'tutor'),
+										'label_title' => __('Logged Only', 'tutor'),
 										'desc'        => __('Students must be logged in to view course', 'tutor'),
 									),
 									array(
@@ -438,7 +438,7 @@ class Options_V2 {
 										'key'        => 'course_content_access_for_ia',
 										'type'        => 'toggle_switch',
 										'label'       => __('Course Content Access', 'tutor'),
-										'label_title' => null,
+										'label_title' => __('', 'tutor'),
 										'desc'        => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
 									),
 									array(
@@ -806,6 +806,7 @@ class Options_V2 {
 												'type'      => 'toggle_single',
 												'label'     => __('Instructor Info', 'tutor'),
 												'label_title'   => __('Enable', 'tutor'),
+												'default'   => '0',
 												'desc' => __('Show instructor bio on each page', 'tutor'),
 											),
 											array(
@@ -814,7 +815,6 @@ class Options_V2 {
 												'label'     => __('Question and Answer', 'tutor'),
 												'label_title' => __('Enable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Enabling this feature will add a Q&amp;A section on every course.',	'tutor'),
 											),
 											array(
@@ -823,7 +823,6 @@ class Options_V2 {
 												'label'     => __('Author', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course author name from the course page.', 'tutor'),
 											),
 											array(
@@ -832,7 +831,6 @@ class Options_V2 {
 												'label'     => __('Course Level', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course level from the course page.', 'tutor'),
 											),
 											array(
@@ -841,7 +839,6 @@ class Options_V2 {
 												'label'     => __('Course Share', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course share option from the course page.', 'tutor'),
 											),
 											array(
@@ -850,7 +847,6 @@ class Options_V2 {
 												'label'     => __('Course Duration', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course duration from the course page.', 'tutor'),
 											),
 											array(
@@ -859,7 +855,6 @@ class Options_V2 {
 												'label'     => __('Course Total Enrolled', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course total enrolled from the course page.', 'tutor'),
 											),
 											array(
@@ -868,7 +863,6 @@ class Options_V2 {
 												'label'     => __('Course Update Date', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course update date from the course page.', 'tutor'),
 											),
 											array(
@@ -877,7 +871,6 @@ class Options_V2 {
 												'label'     => __('Course Progress Bar', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed completing progress bar from the course page.', 'tutor'),
 											),
 											array(
@@ -886,7 +879,6 @@ class Options_V2 {
 												'label'     => __('Course Material', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course material from the course page.', 'tutor'),
 											),
 											array(
@@ -895,7 +887,6 @@ class Options_V2 {
 												'label'     => __('Course About', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course about from the course page.', 'tutor'),
 											),
 											array(
@@ -904,7 +895,6 @@ class Options_V2 {
 												'label'     => __('Course Description', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course description from the course page.', 'tutor'),
 											),
 											array(
@@ -913,7 +903,6 @@ class Options_V2 {
 												'label'     => __('Course Benefits', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course benefits from the course page.', 'tutor'),
 											),
 											array(
@@ -922,7 +911,6 @@ class Options_V2 {
 												'label'     => __('Course Requirements', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course requirements from the course page.', 'tutor'),
 											),
 											array(
@@ -931,7 +919,6 @@ class Options_V2 {
 												'label'     => __('Course Target Audience', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course target audience from the course page.', 'tutor'),
 											),
 											array(
@@ -940,7 +927,6 @@ class Options_V2 {
 												'label'     => __('Course Announcements', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course announcements from the course page.', 'tutor'),
 											),
 											array(
@@ -949,18 +935,18 @@ class Options_V2 {
 												'label'     => __('Course Review', 'tutor'),
 												'label_title' => __('Disable', 'tutor'),
 												'default'   => '0',
-
 												'desc'      => __('Disabling this feature will be removed course review system from the course page.', 'tutor'),
-											),
-											array(
-												'key'      => 'supported_video_sources',
-												'type'      => 'toggle_single',
-												'label'     => __('Preferred Video Source', 'tutor'),
-												'options'	=> $video_sources,
-												'desc'      => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
 											),
 										),
 										'desc'    => __('Content Needed Here...', 'tutor'),
+									),
+									array(
+										'key'      => 'supported_video_sources',
+										'type'      => 'select',
+										'label'     => __('Preferred Video Source', 'tutor'),
+										'options'	=> $video_sources,
+										'default'   => '0',
+										'desc'      => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
 									),
 									array(
 										'key'      => 'default_video_source',
