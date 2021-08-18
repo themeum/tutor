@@ -2653,6 +2653,11 @@ class Utils {
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 		$course_filter	= $course_filter != '' ? " AND inst_status.meta_key = '_tutor_instructor_course_id' AND inst_status.meta_value = $course_filter " : '' ;
+
+		if ( '' != $date_filter ) {
+			$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
+		}
+		
 		$date_filter	= $date_filter != '' ? " AND  DATE(user.user_registered) = '$date_filter' " : '' ;
 
 		$category_join = '';
