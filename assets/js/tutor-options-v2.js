@@ -2,7 +2,6 @@ jQuery(document).ready(function ($) {
   "use strict";
 
   $("#save_tutor_option").click(function (e) {
-    console.log("not working");
     e.preventDefault();
     $("#tutor-option-form").submit();
   });
