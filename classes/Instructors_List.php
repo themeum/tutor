@@ -30,6 +30,8 @@ class Instructors_List extends \Tutor_List_Table {
 			case 'user_email':
 			case 'display_name':
 				return $item->$column_name;
+			case 'registration_date':
+				return esc_html( date( get_option( 'date_format'), strtotime($item->user_registered ) ) );
 			default:
 				return print_r($item,true); //Show the whole array for troubleshooting purposes
 		}
@@ -115,6 +117,7 @@ class Instructors_List extends \Tutor_List_Table {
 			'user_email'        		=> __('E-Mail', 'tutor'),
 			'total_course'      		=> __('Total Course', 'tutor'),
 			'instructor_commission' 	=> __('Instructor Commission', 'tutor'),
+			'registration_date' 		=> __('Date', 'tutor'),
 			'status'            		=> __('Status', 'tutor'),
 		);
 		return $columns;
