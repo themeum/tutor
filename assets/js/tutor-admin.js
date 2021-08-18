@@ -2,6 +2,7 @@ jQuery(document).ready(function($){
     'use strict';
 
     const { __, _x, _n, _nx } = wp.i18n;
+    const search_student_placeholder = __( 'Search students', 'tutor' );
     /**
      * Color Picker
      * @since v.1.2.21
@@ -640,7 +641,7 @@ jQuery(document).ready(function($){
         allowClear: true,
 
         minimumInputLength: 1,
-        placeholder: __( "Search students", 'tutor' ),
+        placeholder: search_student_placeholder,
         language: {
             inputTooShort: function() {
                 return __( 'Please add 1 or more character', 'tutor' );

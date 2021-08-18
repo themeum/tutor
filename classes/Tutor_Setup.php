@@ -193,12 +193,19 @@ if ( ! defined( 'ABSPATH' ) )
                                         break;
                                         
                                         case 'slider':
+                                            $available_times = array(
+                                                'seconds'   => __( 'seconds' , 'tutor' ),
+                                                'minutes'   => __( 'minutes' , 'tutor' ),
+                                                'hours'     => __( 'hours' , 'tutor' ),
+                                                'days'      => __( 'days' , 'tutor' ),
+                                                'weeks'     => __( 'weeks' , 'tutor' ),
+                                            );
                                             $html .= '<div class="limit-slider">';
                                                 if (isset($field['time'])) {
                                                     $html .= '<input type="range" name="'.$key.'[value]" min="'.(isset($field['min']) ? $field['min'] : 0).'" max="'.(isset($field['max']) ? $field['max'] : 60).'" step="1" value="'.(isset($options[$key]['value']) ? $options[$key]['value'] : '').'"  class="range-input"/>';
                                                     $html .= '<input type="hidden" name="'.$key.'[time]" value="'.(isset($options[$key]['time']) ? $options[$key]['time'] : __( 'minutes', 'tutor' )).'"  class="range-input"/>';
                                                     $html .= '<span class=""><span class="range-value">'.(isset($options[$key]['value']) ? $options[$key]['value'] : '').'</span>';
-                                                    $html .= isset($options[$key]['time']) ? $options[$key]['time'] : '';
+                                                    $html .= isset($options[$key]['time']) ? $available_times[$options[$key]['time']] : '';
                                                     $html .= '</span>';
                                                 } else {
                                                     $html .= '<input type="range" name="'.$key.'" min="'.(isset($field['min']) ? $field['min'] : "").'" max="'.(isset($field['max']) ? $field['max'] : 30 ).'" step="1" value="'.(isset($options[$key]) ? $options[$key] : '').'"  class="range-input"/>';
