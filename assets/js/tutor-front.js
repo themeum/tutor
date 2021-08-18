@@ -181,6 +181,13 @@ jQuery(document).ready(function ($) {
                     var review_id = data.data.review_id;
                     var review = data.data.review;
                     $('.tutor-review-' + review_id + ' .review-content').html(review);
+                    
+                    // Show thank you
+                    new window.tutor_component($, 'icon-rating', 40).popup({
+                        title: __('Thank You for Rating Us!', 'tutor'),
+                        description : __('Your rating will now be visible in the course page', 'tutor'),
+                    });
+
                     location.reload();
                 }
             });

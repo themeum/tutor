@@ -385,8 +385,8 @@ $quiz_answers = array();
 										<?php
 											if(!$hide_previous_button && $previous_question) {
 												?>
-												<button type="button" class="tutor-button tutor-button-outlined  tutor-quiz-answer-previous-btn">
-													<?php _e( 'Previous Question', 'tutor' ); ?>
+												<button type="button" class="tutor-button tutor-button-outlined tutor-button-outlined-transparent tutor-quiz-answer-previous-btn">
+													<?php _e( 'Back', 'tutor' ); ?>
 												</button>
 												<?php
 											}
