@@ -180,9 +180,11 @@ $settings = maybe_unserialize($question->question_settings);
                                                 <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
                                             </div>
 
-                                            <div class="tutor-quiz-answer-trash-wrap">
-                                                <a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>"><i class="tutor-icon-garbage"></i> </a>
-                                            </div>
+                                            <?php if ( $question->question_type !== 'true_false' ){ ?>
+                                                <div class="tutor-quiz-answer-trash-wrap">
+                                                    <a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>"><i class="tutor-icon-garbage"></i> </a>
+                                                </div>
+                                            <?php } ?>
                                         </div>
 										<?php
 									}

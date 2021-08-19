@@ -201,7 +201,7 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:62, classes/Ajax.php:115, classes/Ajax.php:179, classes/Ajax.php:237, classes/Ajax.php:290, classes/Ajax.php:332, classes/Ajax.php:353, classes/Ajax.php:451, classes/Ajax.php:522, classes/Course.php:417, classes/Course.php:452, classes/Course.php:686, classes/Course.php:737, classes/Course.php:774, classes/Course.php:787, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:147, classes/Quiz.php:548, classes/Quiz.php:638, classes/Quiz.php:684, classes/Quiz.php:728, classes/Quiz.php:768, classes/Quiz.php:791, classes/Quiz.php:887, classes/Quiz.php:910, classes/Quiz.php:931, classes/Quiz.php:1042, classes/Quiz.php:1087, classes/Quiz.php:1165, classes/Quiz.php:1225, classes/Quiz.php:1250, classes/Q_and_A.php:71
+#: classes/Ajax.php:62, classes/Ajax.php:115, classes/Ajax.php:179, classes/Ajax.php:237, classes/Ajax.php:290, classes/Ajax.php:332, classes/Ajax.php:353, classes/Ajax.php:451, classes/Ajax.php:522, classes/Course.php:417, classes/Course.php:452, classes/Course.php:688, classes/Course.php:739, classes/Course.php:776, classes/Course.php:789, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:147, classes/Quiz.php:548, classes/Quiz.php:638, classes/Quiz.php:684, classes/Quiz.php:728, classes/Quiz.php:768, classes/Quiz.php:791, classes/Quiz.php:887, classes/Quiz.php:910, classes/Quiz.php:931, classes/Quiz.php:1042, classes/Quiz.php:1087, classes/Quiz.php:1168, classes/Quiz.php:1228, classes/Quiz.php:1253, classes/Q_and_A.php:71
 msgid "Access Denied"
 msgstr ""
 
@@ -293,7 +293,7 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: classes/Course.php:182, classes/Course.php:1318, views/options/options_generator.php:2
+#: classes/Course.php:182, classes/Course.php:1320, views/options/options_generator.php:2
 msgid "Tutor Settings"
 msgstr ""
 
@@ -321,35 +321,35 @@ msgstr ""
 msgid "Please Sign-In"
 msgstr ""
 
-#: classes/Course.php:719
+#: classes/Course.php:721
 msgid "<p>No instructor available or you have already added maximum instructors</p>"
 msgstr ""
 
-#: classes/Course.php:724
+#: classes/Course.php:726
 msgid "To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s"
 msgstr ""
 
-#: classes/Course.php:1153
+#: classes/Course.php:1155
 msgid "complete all lessons to mark this course as complete"
 msgstr ""
 
-#: classes/Course.php:1190
+#: classes/Course.php:1192
 msgid "You have to pass %s quizzes to complete this course."
 msgstr ""
 
-#: classes/Course.php:1297
+#: classes/Course.php:1299
 msgid "Make This Course Public"
 msgstr ""
 
-#: classes/Course.php:1299
+#: classes/Course.php:1301
 msgid "No enrollment required."
 msgstr ""
 
-#: classes/Course.php:1307
+#: classes/Course.php:1309
 msgid "Disable Q&A"
 msgstr ""
 
-#: classes/Course.php:1364
+#: classes/Course.php:1366
 msgid "Invalid Course ID or Access Denied."
 msgstr ""
 
@@ -1191,7 +1191,7 @@ msgid "Show Previous button"
 msgstr ""
 
 #: classes/Options.php:521
-msgid "Show/hide previous button to make students able to change already choosen single question."
+msgid "Choose whether to show or hide previous button for single question."
 msgstr ""
 
 #: classes/Options.php:525
@@ -1888,7 +1888,7 @@ msgstr ""
 msgid "Mark as correct"
 msgstr ""
 
-#: classes/Quiz.php:1282
+#: classes/Quiz.php:1285
 msgid "Access Denied."
 msgstr ""
 
@@ -3293,7 +3293,7 @@ msgstr ""
 msgid "You are going to delete this course, it can't be undone"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:72, templates/dashboard/withdraw.php:155, views/modal/add_quiz.php:58, views/modal/add_quiz.php:74, views/modal/add_quiz.php:91, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:133, views/modal/question_form.php:219, views/modal/review.php:19, views/pages/announcements.php:246, views/pages/announcements.php:328, templates/dashboard/announcements/create.php:53, templates/dashboard/announcements/details.php:29, templates/dashboard/announcements/update.php:52, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
+#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:72, templates/dashboard/withdraw.php:155, views/modal/add_quiz.php:58, views/modal/add_quiz.php:74, views/modal/add_quiz.php:91, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:133, views/modal/question_form.php:221, views/modal/review.php:19, views/pages/announcements.php:246, views/pages/announcements.php:328, templates/dashboard/announcements/create.php:53, templates/dashboard/announcements/details.php:29, templates/dashboard/announcements/update.php:52, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
 msgid "Cancel"
 msgstr ""
 
@@ -4199,11 +4199,11 @@ msgstr ""
 msgid "Make sure you’re saving the answers in the right order. Students will have to match this order."
 msgstr ""
 
-#: views/modal/question_form.php:197
+#: views/modal/question_form.php:199
 msgid "Add An Option"
 msgstr ""
 
-#: views/modal/question_form.php:216
+#: views/modal/question_form.php:218
 msgid "Save &amp; Continue"
 msgstr ""
 
