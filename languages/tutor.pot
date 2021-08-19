@@ -3891,7 +3891,7 @@ msgstr ""
 msgid "Save &amp; Next"
 msgstr ""
 
-#: views/modal/add_quiz.php:69, views/modal/add_quiz.php:86, views/modal/edit_quiz.php:129, views/modal/edit_quiz.php:256, views/modal/edit_quiz.php:343, views/modal/question_form.php:11, templates/dashboard/assignments/review.php:34, templates/dashboard/assignments/submitted.php:21
+#: views/modal/add_quiz.php:69, views/modal/add_quiz.php:86, views/modal/edit_quiz.php:129, views/modal/edit_quiz.php:256, views/modal/edit_quiz.php:343, views/modal/question_form.php:11, templates/dashboard/assignments/review.php:34, templates/dashboard/assignments/submitted.php:21, templates/single/quiz/body.php:389
 msgid "Back"
 msgstr ""
 
@@ -5103,10 +5103,6 @@ msgstr ""
 msgid "characters remaining"
 msgstr ""
 
-#: templates/single/quiz/body.php:389
-msgid "Previous Question"
-msgstr ""
-
 #: templates/single/quiz/body.php:395
 msgid "Answer &amp; Next Question"
 msgstr ""
@@ -5526,111 +5522,119 @@ msgstr ""
 msgid "Rating and review required"
 msgstr ""
 
-#: assets/js/tutor-front.js:375
+#: assets/js/tutor-front.js:187
+msgid "Thank You for Rating Us!"
+msgstr ""
+
+#: assets/js/tutor-front.js:188
+msgid "Your rating will now be visible in the course page"
+msgstr ""
+
+#: assets/js/tutor-front.js:382
 msgid "Unfortunately, you are out of time and quiz attempts. "
 msgstr ""
 
-#: assets/js/tutor-front.js:769
+#: assets/js/tutor-front.js:776
 msgid "Please select an option to answer"
 msgstr ""
 
-#: assets/js/tutor-front.js:774
+#: assets/js/tutor-front.js:781
 msgid "Please select at least one option to answer."
 msgstr ""
 
-#: assets/js/tutor-front.js:781
+#: assets/js/tutor-front.js:788
 msgid "The answer for this question is required"
 msgstr ""
 
-#: assets/js/tutor-front.js:803
+#: assets/js/tutor-front.js:810
 msgid "Please match all the items"
 msgstr ""
 
-#: assets/js/tutor-front.js:838
+#: assets/js/tutor-front.js:845
 msgid "Incorrect, Please try again"
 msgstr ""
 
-#: assets/js/tutor-front.js:853
+#: assets/js/tutor-front.js:860
 msgid "More answer for this question is required"
 msgstr ""
 
-#: assets/js/tutor-front.js:877
+#: assets/js/tutor-front.js:884
 msgid "Correct Answer"
 msgstr ""
 
-#: assets/js/tutor-front.js:1184
+#: assets/js/tutor-front.js:1191
 msgid "Assignment answer can not be empty"
 msgstr ""
 
-#: assets/js/tutor-front.js:1206
+#: assets/js/tutor-front.js:1213
 msgid "Select / Upload Media Of Your Chosen Persuasion"
 msgstr ""
 
-#: assets/js/tutor-front.js:1208
+#: assets/js/tutor-front.js:1215
 msgid "Use media"
 msgstr ""
 
-#: assets/js/tutor-front.js:1302
+#: assets/js/tutor-front.js:1309
 msgid "Done"
 msgstr ""
 
-#: assets/js/tutor-front.js:1305
+#: assets/js/tutor-front.js:1312
 msgid "Failed"
 msgstr ""
 
-#: assets/js/tutor-front.js:1305
+#: assets/js/tutor-front.js:1312
 msgid "Lesson Update Failed"
 msgstr ""
 
-#: assets/js/tutor-front.js:1495
+#: assets/js/tutor-front.js:1502
 msgid "Assignment Update Failed"
 msgstr ""
 
-#: assets/js/tutor-front.js:1573
+#: assets/js/tutor-front.js:1580
 msgid "Saving..."
 msgstr ""
 
-#: assets/js/tutor-front.js:1579
+#: assets/js/tutor-front.js:1586
 msgid "Save"
 msgstr ""
 
-#: assets/js/tutor-front.js:2268
+#: assets/js/tutor-front.js:2275
 msgid "Override Previous Progress"
 msgstr ""
 
-#: assets/js/tutor-front.js:2269
+#: assets/js/tutor-front.js:2276
 msgid "Before continue, please decide whether to keep progress or reset."
 msgstr ""
 
-#: assets/js/tutor-front.js:2272
+#: assets/js/tutor-front.js:2279
 msgid "Reset Data"
 msgstr ""
 
-#: assets/js/tutor-front.js:2288
+#: assets/js/tutor-front.js:2295
 msgid "Something went wrong"
 msgstr ""
 
-#: assets/js/tutor-front.js:2298
+#: assets/js/tutor-front.js:2305
 msgid "Keep Data"
 msgstr ""
 
-#: assets/js/tutor-front.js:2324
+#: assets/js/tutor-front.js:2331
 msgid "Abandon Quiz?"
 msgstr ""
 
-#: assets/js/tutor-front.js:2325
+#: assets/js/tutor-front.js:2332
 msgid "Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page."
 msgstr ""
 
-#: assets/js/tutor-front.js:2328
+#: assets/js/tutor-front.js:2335
 msgid "Yes, leave quiz"
 msgstr ""
 
-#: assets/js/tutor-front.js:2339
+#: assets/js/tutor-front.js:2346
 msgid "Leaving..."
 msgstr ""
 
-#: assets/js/tutor-front.js:2360
+#: assets/js/tutor-front.js:2367
 msgid "Stay here"
 msgstr ""
 
