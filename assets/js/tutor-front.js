@@ -184,11 +184,13 @@ jQuery(document).ready(function ($) {
                     
                     // Show thank you
                     new window.tutor_component($, 'icon-rating', 40).popup({
-                        title: __('Thank You for Rating Us!', 'tutor'),
+                        title: __('Thank You for Rating This Course!', 'tutor'),
                         description : __('Your rating will now be visible in the course page', 'tutor'),
                     });
 
-                    location.reload();
+                    setTimeout(function(){
+                        location.reload();
+                    }, 3000);
                 }
             });
         }
