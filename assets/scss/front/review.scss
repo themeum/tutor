@@ -2,9 +2,13 @@
 
     .tutor-star-rating-group{
         color: #C0C3CB;
-
-        i {
+        
+        i{
             margin: 0 6px;
+
+            &.tutor-icon-star-full{
+                color: #ED9700;
+            }
         }
     }
 
