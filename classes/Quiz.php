@@ -1137,15 +1137,18 @@ class Quiz {
 							<?php
 						}
 						?>
-                        <span class="tutor-quiz-answer-edit">
-                            <a href="javascript:;"><i class="tutor-icon-pencil"></i> </a>
-                        </span>
+						<?php if( "true_false" != $question_type ):?>
+							<span class="tutor-quiz-answer-edit">
+								<a href="javascript:;"><i class="tutor-icon-pencil"></i> </a>
+							</span>
+						<?php endif;?>
                         <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
                     </div>
-
-                    <div class="tutor-quiz-answer-trash-wrap">
-                        <a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>"><i class="tutor-icon-garbage"></i> </a>
-                    </div>
+					<?php if( "true_false" != $question_type ):?>
+						<div class="tutor-quiz-answer-trash-wrap">
+							<a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>"><i class="tutor-icon-garbage"></i> </a>
+						</div>
+					<?php endif;?>
                 </div>
 				<?php
 			}
