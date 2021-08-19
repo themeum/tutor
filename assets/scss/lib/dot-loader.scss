@@ -4,11 +4,16 @@ $warning: var(--tutor-warning-button-color);
 $danger: var(--tutor-danger-button-color);
 $success: var(--tutor-success-button-color);
 
-
+    .dot-loader-button.active {
+        background-color: var(--tutor-primary-hover-color);
+        border-color: var(--tutor-primary-hover-color);
+        color: #fff !important;
+    }
     .tutor-dot-loader {
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 5px 0;
         span {
             width: 10px;
             height: 10px;
@@ -43,11 +48,11 @@ $success: var(--tutor-success-button-color);
             }
         
             50% {
-            top: 10px;
+            top: 0px;
             }
     
             75% {
-                top: 5px;
+                top: -5px;
             }
         
             100% {
