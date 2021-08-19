@@ -1,6 +1,6 @@
 # TutorLMS Changelog
 
-### 1.9.7 - August 18, 2021
+### 1.9.7 - August 19, 2021
 
 * New: Filters for instructor list in the backend dashboard
 * New: Previous button for single quiz
@@ -11,7 +11,6 @@
 * Update: Registration Disable Access Denied Page design Update
 * Update: Zoom API key check and save combined with single button
 * Update: Meeting host dropdown made disabled since always single host is used
-* Update: Certificate generating loading icon
 * Fix: Topic title and description edit not working
 * Fix: Duplicate order statements in instructor profile
 * Fix: Date Formats are not matched with Wordpress date format

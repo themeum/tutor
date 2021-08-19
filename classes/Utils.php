@@ -4557,11 +4557,14 @@ class Utils {
 
 		// Singlular to array
 		!is_array($attempt_ids) ? $attempt_ids = array($attempt_ids) : 0;
-		$attempt_ids = implode( ',',  $attempt_ids);
 
-		//Deleting attempt (comment), child attempt and attempt meta (comment meta)
-		$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
-		$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
+		if(count($attempt_ids)) {
+			$attempt_ids = implode( ',',  $attempt_ids);
+
+			//Deleting attempt (comment), child attempt and attempt meta (comment meta)
+			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
+			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
+		}
 	}
 
 	/**
