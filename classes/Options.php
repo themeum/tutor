@@ -518,7 +518,7 @@ class Options {
 								'label'     => __('Show Previous button', 'tutor'),
 								'label_title' => __('Disable', 'tutor'),
 								'default' => '0',
-								'desc'      => __('Show/hide previous button to make students able to change already choosen single question.', 'tutor'),
+								'desc'      => __('Choose whether to show or hide previous button for single question.', 'tutor'),
 							),
 							'quiz_grade_method' => array(
 								'type'      => 'select',
