@@ -30,8 +30,7 @@
             <?php foreach ($blocks['fieldset'] as $fieldset) : ?>
                 <div class="item-wrapper">
                     <?php foreach ($fieldset as $field) : ?>
-                        <?php echo $this->generate_field($field);
-                        ?>
+                        <?php echo $this->generate_field($field); ?>
                     <?php endforeach; ?>
                 </div>
             <?php endforeach; ?>

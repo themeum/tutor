@@ -430,7 +430,6 @@ class Options_V2 {
 										'type'    => 'select',
 										'label'   => __('Course Archive Page', 'tutor'),
 										'default' => '0',
-
 										'options' => $pages,
 										'desc'    => __('This page will be used to list all the published courses.', 'tutor'),
 									),
@@ -486,6 +485,34 @@ class Options_V2 {
 								'block_type' => 'isolate',
 								'fields'     => array(
 									array(
+										'key'      => 'attachment_open_mode',
+										'type'      => 'radio_horizontal_full',
+										'label'     => __('Attachment Open Mode', 'tutor'),
+										'default'   => '4',
+										'options'   => array(
+											'one' => 'One',
+											'two' => 'Two',
+											'three' => 'Three',
+											'four' => 'Four'
+										),
+										'desc'      => __('Define how many column you want to use to display courses.', 'tutor'),
+									),
+									array(
+										'key'        => 'enable_lesson_classic_editor',
+										'type'        => 'toggle_switch',
+										'label'       => __('Enable Classic Editor Support', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'desc'        => __('Enable classic editor to get full support of any editor/page builder.', 'tutor'),
+									),
+									array(
+										'key'      => 'enable_course_marketplace',
+										'type'      => 'toggle_switch',
+										'label'     => __('Enable Marketplace', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'default' => '0',
+										'desc'      => __('Allow multiple instructors to upload their courses.',	'tutor'),
+									),
+									array(
 										'key'    => 'lesson_permalink_base',
 										'type'    => 'text',
 										'label'   => __('Lesson Permalink Base', 'tutor'),
@@ -509,15 +536,16 @@ class Options_V2 {
 								'slug'       => 'instructor',
 								'block_type' => 'uniform',
 								'fields'     => array(
-									'instructor_register_page'      => array(
+									array(
+										'key'    => 'instructor_register_page',
 										'type'    => 'select',
 										'label'   => __('Instructor Registration Page', 'tutor'),
 										'default' => '0',
-
 										'options' => $pages,
 										'desc'    => __('This page will be used to sign up new instructors.', 'tutor'),
 									),
-									'instructor_can_publish_course' => array(
+									array(
+										'key'        => 'instructor_can_publish_course',
 										'type'        => 'toggle_switch',
 										'label'       => __('Allow Instructors Publishing Courses', 'tutor'),
 										'label_title' => __('', 'tutor'),
@@ -525,7 +553,8 @@ class Options_V2 {
 
 										'desc'        => __('Enable instructors to publish the course directly. If disabled, admins will be able to review course content before publishing.', 'tutor'),
 									),
-									'enable_become_instructor_btn'  => array(
+									array(
+										'key'        => 'enable_become_instructor_btn',
 										'type'        => 'toggle_switch',
 										'label'       => __('Become Instructor Button', 'tutor'),
 										'label_title' => __('', 'tutor'),
@@ -549,6 +578,17 @@ class Options_V2 {
 								'slug'       => 'lesson',
 								'block_type' => 'uniform',
 								'fields'     => array(
+									array(
+										'key'      => 'enable_video_player',
+										'type'      => 'radio_horizontal_full',
+										'label'     => __('Enable Video Player', 'tutor'),
+										'default'   => '4',
+										'options'   => array(
+											'youtube' => 'YouTube',
+											'vimeo' => 'Vimeo',
+										),
+										'desc'      => __('Define how many column you want to use to display courses.', 'tutor'),
+									),
 									array(
 										'key'        => 'student_must_login_to_view_course',
 										'type'      => 'toggle_switch',
@@ -620,10 +660,9 @@ class Options_V2 {
 									),
 									array(
 										'key'           => 'quiz_grade_method',
-										'type'           => 'select',
+										'type'           => 'radio_horizontal_full',
 										'label'          => __('Final grade calculation', 'tutor'),
 										'default'        => 'minutes',
-
 										'select_options' => false,
 										'options'        => array(
 											'highest_grade' => __('Highest Grade', 'tutor'),
@@ -632,6 +671,13 @@ class Options_V2 {
 											'last_attempt'  => __('Last Attempt', 'tutor'),
 										),
 										'desc'           => __('When multiple attempts are allowed, which method should be used to calculate a student\'s final grade for the quiz.', 'tutor'),
+									),
+									array(
+										'key'        => 'course_content_access_for_ia',
+										'type'        => 'toggle_switch',
+										'label'       => __('Course Content Access', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'desc'        => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
 									),
 								),
 							),
@@ -654,7 +700,6 @@ class Options_V2 {
 										'label'          => __('Disable Monetization', 'tutor'),
 										'label_title'          => __('', 'tutor'),
 										'default'        => 'free',
-
 										'select_options' => false,
 										'options'        => apply_filters('tutor_monetization_options', array(
 											'free' => __('Disable Monetization', 'tutor'),
@@ -669,12 +714,124 @@ class Options_V2 {
 								'block_type' => 'uniform',
 								'fields'     => array(
 									array(
+										'key'      => 'select_e_commerce_engine',
+										'type'      => 'select',
+										'label'     => __('Select eCommerce Engine', 'tutor'),
+										'options'	=> $video_sources,
+										'default'   => '0',
+										'desc'      => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
+									),
+									array(
+										'key'           => 'enable_guest_mode',
+										'type'           => 'toggle_switch',
+										'label'          => __('Enable Guest Mode', 'tutor'),
+										'label_title'    => __('', 'tutor'),
+										'default'        => 'free',
+										'desc'           => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor'),
+									),
+									array(
+										'key'           => 'sharing_percentage',
+										'type'           => 'double_input',
+										'label'          => __('Sharing Percentage', 'tutor'),
+										'label_title'    => __('', 'tutor'),
+										'default'        => '',
+										'fields'        => array(
+											array(
+												'key' => 'instructor_takes',
+												'title' => 'Instructor Takes',
+												'value' => 10,
+											),
+											array(
+												'key' => 'admin_takes',
+												'title' => 'Admin Takes',
+												'value' => 100,
+											),
+										),
+										'desc'           => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor'),
+									),
+									array(
+										'key'           => 'enable_revenue_sharing',
+										'type'           => 'toggle_switch',
+										'label'          => __('Enable Revenue Sharing', 'tutor'),
+										'label_title'    => __('', 'tutor'),
+										'default'        => 'free',
+										'desc'           => __('Content description', 'tutor'),
+									),
+									array(
 										'key'    => 'statement_show_per_page',
 										'type'    => 'number',
 										'label'   => __('Show Statement Per Page', 'tutor'),
 										'default' => '20',
 
 										'desc'    => __('Define the number of statements to show.', 'tutor'),
+									),
+								),
+							),
+							array(
+								'label'      => __('Fees', 'tutor'),
+								'slug'       => 'fees',
+								'block_type' => 'uniform',
+								'fields'     => array(
+									array(
+										'key'           => 'deduct_fees',
+										'type'           => 'toggle_switch',
+										'label'          => __('Deduct Fees', 'tutor'),
+										'label_title'    => __('', 'tutor'),
+										'default'        => 'free',
+										'desc'           => __('content goes here', 'tutor'),
+									),
+									array(
+										'key'           => 'fee_description',
+										'type'           => 'textarea',
+										'label'          => __('Fee Description', 'tutor'),
+										'label_title'    => __('', 'tutor'),
+										'default'        => 'free',
+										'desc'           => __('content goes here', 'tutor'),
+									),
+									array(
+										'key'           => 'fee_amount_type',
+										'type'           => 'select_number',
+										'label'          => __('Fee Amount & Type', 'tutor'),
+										'label_title'    => __('', 'tutor'),
+										'default'        => 'free',
+										'desc'           => __('content goes here', 'tutor'),
+									),
+								),
+							),
+							array(
+								'label'      => __('Withdraw', 'tutor'),
+								'slug'       => 'withdraw',
+								'block_type' => 'uniform',
+								'fields'     => array(
+									array(
+										'key'      => 'min_withdraw_amount',
+										'type'      => 'number',
+										'label'     => __('Minimum Withdraw Amount', 'tutor'),
+										'default'   => '80',
+										'desc'      => __('Instructors should earn equal or above this amount to make a withdraw request.',	'tutor'),
+									),
+									array(
+										'key'      => 'minimum_days_for_balance_to_be_available',
+										'type'      => 'number',
+										'label'     => __('Minimum Days for Balance to be Available', 'tutor'),
+										'default'   => '80',
+										'desc'      => __('Instructors should earn equal or above this amount to make a withdraw request.',	'tutor'),
+									),
+									array(
+										'key'      => 'enable_withdraw_method',
+										'type'      => 'checkbox_horizontal',
+										'label'     => __('Enable withdraw method', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'options'	=> $course_filters,
+										'desc'      => __('Choose preferred filter options you\'d like to show in course archive page.', 'tutor'),
+									),
+									array(
+										'key'           => 'bank_instructions',
+										'type'           => 'toggle_switch',
+										'label'          => __('Bank Instructions', 'tutor'),
+										'label_title'    => __('', 'tutor'),
+										'default'        => 'free',
+										'desc'           => __('content goes here', 'tutor'),
 									),
 								),
 							),
@@ -757,12 +914,12 @@ class Options_V2 {
 												)
 											),
 											'horizontal' => array(
-												'horizontal_portrait' => array(
-													'title' => 'Minimal',
+												'portrait' => array(
+													'title' => 'Horizontal Portrait',
 													'image' => 'instructor-layout/instructor-horizontal-portrait.svg',
 												),
-												'horizontal_minimal' => array(
-													'title' => 'Minimal',
+												'minimal' => array(
+													'title' => 'Horizontal Minimal',
 													'image' => 'instructor-layout/instructor-horizontal-minimal.svg',
 												)
 											),
