@@ -622,6 +622,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 .ui-datepicker .ui-datepicker-calendar {
   table-layout: fixed;
   width: 100%;
+  border: 0px !important;
 }
 
 .ui-datepicker .ui-datepicker-calendar .ui-state-default {
@@ -657,9 +658,14 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   text-decoration: none;
 }
 
+.ui-datepicker .ui-datepicker-calendar tbody {
+  border: 0px !important;
+}
+
 .ui-datepicker .ui-datepicker-calendar th, .ui-datepicker .ui-datepicker-calendar td {
   text-align: center;
   padding: 0;
+  border: 0px !important;
 }
 
 .ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
