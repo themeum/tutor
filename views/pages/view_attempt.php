@@ -87,7 +87,7 @@ $user = get_userdata($user_id);
                     <h5><?php echo __('Result', 'tutor'); ?></h5>
                     <h4>
                         <?php
-
+                        $marks_earned_text = __( "Marks earned", 'tutor' );
                         if ($attempt->attempt_status === 'review_required'){
                             $output = '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
                         }else {
@@ -102,7 +102,7 @@ $user = get_userdata($user_id);
                             }
 
                             $output .= __( $attempt->earned_marks." out of ".$attempt->total_marks, 'tutor' );
-                            $output .= "<span>,".__(  "Marks earned ($earned_percentage%)", 'tutor')."</span>";
+                            $output .= "<span>, $marks_earned_text ($earned_percentage%)</span>";
                         }
                         echo $output;
                         ?>

@@ -622,6 +622,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 .ui-datepicker .ui-datepicker-calendar {
   table-layout: fixed;
   width: 100%;
+  border: 0px !important;
 }
 
 .ui-datepicker .ui-datepicker-calendar .ui-state-default {
@@ -657,9 +658,14 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   text-decoration: none;
 }
 
+.ui-datepicker .ui-datepicker-calendar tbody {
+  border: 0px !important;
+}
+
 .ui-datepicker .ui-datepicker-calendar th, .ui-datepicker .ui-datepicker-calendar td {
   text-align: center;
   padding: 0;
+  border: 0px !important;
 }
 
 .ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
@@ -737,6 +743,12 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   display: none;
 }
 
+.dot-loader-button.active {
+  background-color: var(--tutor-primary-hover-color);
+  border-color: var(--tutor-primary-hover-color);
+  color: #fff !important;
+}
+
 .tutor-dot-loader {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -747,6 +759,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  padding: 5px 0;
 }
 
 .tutor-dot-loader span {
@@ -786,10 +799,10 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
     top: 5px;
   }
   50% {
-    top: 10px;
+    top: 0px;
   }
   75% {
-    top: 5px;
+    top: -5px;
   }
   100% {
     top: 0;
@@ -804,10 +817,10 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
     top: 5px;
   }
   50% {
-    top: 10px;
+    top: 0px;
   }
   75% {
-    top: 5px;
+    top: -5px;
   }
   100% {
     top: 0;
