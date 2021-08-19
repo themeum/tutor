@@ -5,13 +5,13 @@
     </div>
     <div class="tutor-option-field-input">
         <div class="radio-thumbnail has-title instructor-list">
-            <?php foreach ($field['group_options'] as $key => $options) : ?>
-                <div class="<?php echo $key; ?>">
-                    <div class="layout-label"><?php echo ucwords($key) ?></div>
+            <?php foreach ($field['group_options'] as $optkey => $options) : ?>
+                <div class="<?php echo $optkey; ?>">
+                    <div class="layout-label"><?php echo ucwords($optkey) ?></div>
                     <div class="fields-wrapper">
                         <?php foreach ($options as $key => $option) : ?>
-                            <label for="<?php echo $key ?>">
-                                <input type="radio" name="instructor-list-layout" id="<?php echo $key ?>" checked="">
+                            <label for="<?php echo $optkey . '_' . $key ?>">
+                                <input type="radio" name="instructor-list-layout" id="<?php echo $optkey . '_' . $key ?>" checked="">
                                 <span class="icon-wrapper">
                                     <img src="<?php echo tutor()->url ?>assets/images/images-v2/<?php echo $option['image']; ?>" alt="">
                                 </span>
