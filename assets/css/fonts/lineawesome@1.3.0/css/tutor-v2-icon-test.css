@@ -1,3 +1,14 @@
+/* @font-face {
+	font-family: 'tutor-v2-icon-test';
+	src: url('../../tutor-v2-test/font/tutor-v2-icon-test.eot?z96rlv');
+	src: url('../../tutor-v2-test/font/tutor-v2-icon-test.eot?z96rlv#iefix') format('embedded-opentype'),
+		url('../../tutor-v2-test/font/tutor-v2-icon-test.ttf?z96rlv') format('truetype'),
+		url('../../tutor-v2-test/font/tutor-v2-icon-test.woff?z96rlv') format('woff'),
+		url('../../tutor-v2-test/font/tutor-v2-icon-test.svg?z96rlv#tutor-v2-icon-test') format('svg');
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+} */
 @font-face {
 	font-family: 'tutor-v2-icon-test';
 	src: url('../fonts/tutor-v2-icon-test.eot?z96rlv');
