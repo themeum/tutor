@@ -1826,7 +1826,6 @@ jQuery(document).ready(function ($) {
 
         var form_data = $that.serializeObject();
         form_data.action = 'tutor_user_login';
-        console.log(form_data)
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',

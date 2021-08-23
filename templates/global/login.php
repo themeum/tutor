@@ -25,7 +25,6 @@ if ( ! defined( 'ABSPATH' ) )
 	$query_args = array(
 		'redirect_to' => $current_url
 	);
-	//$register_url = add_query_arg ('redirect_to', $current_url, $register_page);
 	/**
 	 * Get current course to make user auto enroll
 	 * 
