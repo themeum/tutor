@@ -24,6 +24,10 @@
 @import "_instructor_registration";
 @import "_frontend_withdrawal";
 @import "_tooltip";
+@import "./review.scss";
 
 // Instructor list short code
 @import "_instructor";
+
+//Any kind of denied (permission, unathurized, not found)
+@import "_denied"

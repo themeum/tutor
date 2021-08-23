@@ -129,6 +129,12 @@ class Course extends Tutor_Base {
 		 * @since v1.9.5
 		 */
 		add_action( 'wp_ajax_tutor_reset_course_progress', array($this, 'tutor_reset_course_progress') );
+	
+		/**
+		 * Popup for review
+		 * @since v1.9.7
+		 */
+		add_action( 'wp_footer', array($this, 'popup_review_form') );
 	}
 
 	public function restrict_new_student_entry($content) {
@@ -499,7 +505,7 @@ class Course extends Tutor_Base {
 					echo '<span class="tutor-label-success">'.$price.'</span>';
 				}
 			}else{
-				echo apply_filters('tutor-loop-default-price', 'free');
+				echo apply_filters('tutor-loop-default-price', __( 'free', 'tutor' ));
 			}
 		}
 	}
@@ -636,9 +642,39 @@ class Course extends Tutor_Base {
 
 		do_action('tutor_course_complete_after', $course_id, $user_id);
 
-		wp_redirect(get_the_permalink($course_id));
+		$permalink = get_the_permalink($course_id);
+
+		// Set temporary identifier to show review pop up
+		if(!get_tutor_option( 'disable_course_review' )) {
+			$rating = tutor_utils()->get_course_rating_by_user($course_id, $user_id);
+			if(!$rating || (empty($rating->rating) && empty($rating->review))) {
+				update_option( 'tutor_course_complete_popup_'.$user_id, array(
+					'course_id' => $course_id,
+					'course_url' => $permalink,
+					'expires' => time()+10
+				));
+			}
+		}
+		
+		wp_redirect($permalink);
 	}
 
+	public function popup_review_form() {
+		if(is_user_logged_in()) {
+			$key = 'tutor_course_complete_popup_' . get_current_user_id();
+			$popup = get_option( $key );
+
+			if(is_array($popup)) {
+
+				if($popup['expires']>time()) {
+					$course_id = $popup['course_id'];
+					include tutor()->path.'views/modal/review.php';
+				}
+
+				delete_option($key);
+			}
+		}
+	}
 	
 	public function tutor_load_instructors_modal(){
 		tutils()->checking_nonce();
@@ -814,6 +850,7 @@ class Course extends Tutor_Base {
 				$productObj = wc_get_product($attached_product_id);
 				$productObj->set_price($course_price); // set product price
 				$productObj->set_regular_price($course_price); // set product regular price
+				$productObj->set_sold_individually(true);
 				$product_id = $productObj->save();
 				if($productObj->is_type('subscription')) {
 					update_post_meta( $attached_product_id, '_subscription_price', $course_price );
@@ -824,6 +861,7 @@ class Course extends Tutor_Base {
 				$productObj->set_status('publish');
 				$productObj->set_price($course_price); // set product price
 				$productObj->set_regular_price($course_price); // set product regular price
+				$productObj->set_sold_individually(true);
 
 				$product_id = $productObj->save();
 				if ($product_id) {

@@ -1,0 +1,57 @@
+@import '../lib/mixins.scss';
+
+.tutor-disabled-wrapper {
+    max-width: 444px;
+    padding: 60px 0 30px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    
+    @include propertyWithPrefix(justify-content, center);
+    .tutor-disabled-content-wrapper {
+        @include propertyWithPrefix(flex-direction, column);
+        @include propertyWithPrefix(align-items, center);
+        text-align: center;
+        img {
+            margin-bottom: 30px;
+        }
+        p {
+            margin-bottom: 38px;
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: 500;
+        }
+        p {
+            font-size: 15px;
+            font-weight: 400;
+        }
+    }
+}
+
+.tutor-denied-wrapper {
+    @include valueWithPrefix(display, flex);
+    @include propertyWithPrefix(justify-content, center);
+    column-gap: 80px;
+    max-width: 990px;
+    margin: auto;
+    padding: 60px 0 30px;
+
+    .tutor-denied-content-wrapper {
+        @include valueWithPrefix(display, flex);
+        @include propertyWithPrefix(flex-direction, column);
+        row-gap: 39px;
+
+        h2 {
+            font-size: 40px !important;
+            font-style: normal;
+            text-align: left;
+        }
+    }
+
+    @media screen and (max-width:992px) {
+        @include propertyWithPrefix(flex-direction, column);
+        @include propertyWithPrefix(align-items, center);
+        row-gap: 50px;
+    }
+}

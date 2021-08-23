@@ -683,6 +683,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_lesson_count_by_course( $course_id = 0 ) {
+		$course_id = $this->get_post_id( $course_id );
 		return count( $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id ) );
 	}
 
@@ -1092,6 +1093,7 @@ class Utils {
 		// Delete Course completion row
 		$del_where = array(
 			'user_id' => $user_id,
+			'comment_post_ID' => $course_id,
 			'comment_type' => 'course_completed',
 			'comment_agent' => 'TutorLMSPlugin', 
 		);
@@ -2607,25 +2609,27 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_total_instructors( $search_term = '' ) {
+	public function get_total_instructors( $search_filter = '') {
 		global $wpdb;
 
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+		sanitize_text_field($search_filter);
+	
+		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 
 		$count = $wpdb->get_var( $wpdb->prepare(
-			"SELECT COUNT({$wpdb->users}.ID)
-			FROM 	{$wpdb->users} 
-					INNER JOIN {$wpdb->usermeta} 
-							ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id )
-			WHERE 	{$wpdb->usermeta}.meta_key = %s
-					AND ( {$wpdb->users}.display_name LIKE %s OR {$wpdb->users}.user_email LIKE %s );
+			"SELECT COUNT(user.ID)
+			FROM 	{$wpdb->users} as user
+					INNER JOIN {$wpdb->usermeta} as user_meta
+							ON ( user_meta.user_id = user.ID )
+		
+			WHERE 	user_meta.meta_key = %s
+					AND ( user.display_name LIKE %s OR user.user_email LIKE %s );
 			",
 			'_is_tutor_instructor',
-			$search_term,
-			$search_term
+			$search_filter,
+			$search_filter
 		) );
-
-		return (int) $count;
+		return $count;
 	}
 
 	/**
@@ -2639,10 +2643,23 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors( $start = 0, $limit = 10, $search_term = '', $status = null, $cat_ids = array() ) {
+	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array() ) {
 		global $wpdb;
 
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+		sanitize_text_field($search_filter);
+		sanitize_text_field($course_filter);
+		sanitize_text_field($date_filter);
+		sanitize_text_field($order_filter);
+
+		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
+		$course_filter	= $course_filter != '' ? " AND inst_status.meta_key = '_tutor_instructor_course_id' AND inst_status.meta_value = $course_filter " : '' ;
+
+		if ( '' != $date_filter ) {
+			$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
+		}
+		
+		$date_filter	= $date_filter != '' ? " AND  DATE(user.user_registered) = '$date_filter' " : '' ;
+
 		$category_join = '';
 		$category_where = '';
 
@@ -2688,12 +2705,15 @@ class Utils {
 					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
 					{$status}
 					{$category_where}
-			ORDER BY user_meta.meta_value DESC 
+					{$course_filter}
+					{$date_filter}
+			ORDER BY user_meta.meta_value {$order_filter}
 			LIMIT 	%d, %d;
 			",
 			'_is_tutor_instructor',
-			$search_term,
-			$search_term,
+			$search_filter,
+			$search_filter,
+		
 			$start,
 			$limit
 		) );
@@ -4356,7 +4376,8 @@ class Utils {
 			"SELECT *
 			FROM 	{$wpdb->prefix}tutor_quiz_attempts
 			WHERE 	quiz_id = %d
-					AND user_id = %d;
+					AND user_id = %d
+					ORDER BY attempt_id  DESC 
 			",
 			$quiz_id,
 			$user_id
@@ -4447,8 +4468,6 @@ class Utils {
 	 * 
 	 * to get total number of attempt get_quiz_attempts method is enough 
 	 * 
-	 * this query is redundant and would be removed in future
-	 * 
 	 * @since 1.9.5
 	 *
 	 */
@@ -4497,6 +4516,7 @@ class Utils {
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 		$course_filter	= $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '' ;
+		$date_filter	= $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
 		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
 
 		$query = $wpdb->get_results( $wpdb->prepare(
@@ -4537,11 +4557,14 @@ class Utils {
 
 		// Singlular to array
 		!is_array($attempt_ids) ? $attempt_ids = array($attempt_ids) : 0;
-		$attempt_ids = implode( ',',  $attempt_ids);
 
-		//Deleting attempt (comment), child attempt and attempt meta (comment meta)
-		$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
-		$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
+		if(count($attempt_ids)) {
+			$attempt_ids = implode( ',',  $attempt_ids);
+
+			//Deleting attempt (comment), child attempt and attempt meta (comment meta)
+			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_id IN($attempt_ids)" );
+			$wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id IN($attempt_ids)" );
+		}
 	}
 
 	/**
@@ -4564,6 +4587,7 @@ class Utils {
 		$search_filter = $search_filter ? "AND ( users.user_email LIKE {$search_filter} OR users.display_name LIKE {$search_filter} OR quiz.post_title LIKE {$search_filter} OR course.post_title LIKE {$search_filter} )" : '';
 
 		$course_filter	= $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '' ;
+		$date_filter	= $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
 		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
 
 		$query = $wpdb->get_results( $wpdb->prepare(
@@ -4596,8 +4620,6 @@ class Utils {
 	 * This method is not being in used
 	 * 
 	 * to get total number of attempt above method is enough  
-	 * 
-	 * this query is redundant and would be removed in future
 	 * 
 	 * @since 1.9.5
 	 */
@@ -5283,6 +5305,52 @@ class Utils {
 			}
 		}
 
+
+		/**
+		 * Delete duplicated earning rows that were created due to not checking if already added while creating new.
+		 * New entries will check before insert.
+		 * 
+		 * @since v1.9.7
+		 */
+		if(!get_option( 'tutor_duplicated_earning_deleted', false )) {
+
+			// Get the duplicated order IDs
+			$del_rows = array();
+			$order_ids = $wpdb->get_col(
+				"SELECT order_id 
+				FROM (SELECT order_id, COUNT(order_id) AS cnt 
+						FROM {$wpdb->prefix}tutor_earnings 
+						GROUP BY order_id) t 
+				WHERE cnt>1"
+			);
+
+			if(is_array($order_ids) && count($order_ids)) {
+				$order_ids_string = implode(',', $order_ids);
+				$earnings = $wpdb->get_results(
+					"SELECT earning_id, course_id FROM {$wpdb->prefix}tutor_earnings
+					WHERE order_id IN ({$order_ids_string}) 
+					ORDER BY earning_id ASC");
+
+				$excluded_first = array();
+				foreach($earnings as $earning) {
+					if(!in_array($earning->course_id, $excluded_first)) {
+						// Exclude first course ID from deletion
+						$excluded_first[] = $earning->course_id;
+						continue;
+					}
+
+					$del_rows[] = $earning->earning_id;
+				}
+			}
+
+			if(count($del_rows)) {
+				$ids = implode(',', $del_rows);
+				$wpdb->query("DELETE FROM {$wpdb->prefix}tutor_earnings WHERE earning_id IN ({$ids})");
+			}
+			
+			update_option( 'tutor_duplicated_earning_deleted', true );
+		}
+
 		$query = $wpdb->get_results( $wpdb->prepare(
 			"SELECT 	earning_tbl.*,
 						course.post_title AS course_title
@@ -5766,13 +5834,11 @@ class Utils {
 		$course_post_type = tutor()->course_post_type;
 
 		$get_assigned_courses_ids = $wpdb->get_col( $wpdb->prepare(
-			"SELECT 	meta_value
-			FROM		{$wpdb->usermeta}
-			WHERE 		meta_key = %s
-						AND user_id = %d
-			GROUP BY 	meta_value;
-			",
-			'_tutor_instructor_course_id',
+			"SELECT meta.meta_value 
+			FROM {$wpdb->usermeta} meta 
+				INNER JOIN {$wpdb->posts} course ON meta.meta_value=course.ID 
+				WHERE meta.meta_key = '_tutor_instructor_course_id' 
+					AND meta.user_id = %d GROUP BY meta_value",
 			$user_id
 		) );
 
@@ -5902,6 +5968,7 @@ class Utils {
 				$in_course_ids = $course_id;
 			}
 			if ( ! empty( $date_filter ) ) {
+				$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
 				$date_query = " AND DATE(post_date) = '{$date_filter}'";
 			}
 			if ( ! empty( $order_filter ) ) {
@@ -7072,7 +7139,7 @@ class Utils {
 		!is_array($roles) ? $roles = array($roles) : 0;
 		
 		$user = get_userdata($user_id);
-		$role_list = is_array($user->roles) ? $user->roles : array();
+		$role_list = (is_object($user) && is_array($user->roles)) ? $user->roles : array();
 
 		$without_roles = array_diff($roles, $role_list);
 

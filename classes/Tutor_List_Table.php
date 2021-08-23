@@ -389,7 +389,7 @@ class Tutor_List_Table {
 			';
 		$options = '';
 		foreach($orders as $order){
-			$options .= '<option value="'.$order.'" '.selected($selected,$order,false).'> '.$order.' </option>';
+			$options .= '<option value="'.$order.'" '.selected($selected,$order,false).'> '.__( $order, 'tutor' ).' </option>';
 		}		
 		$content = str_replace('OPTION_PLACEHOLDER', $options, $markup);
 		echo $content;		
@@ -401,10 +401,11 @@ class Tutor_List_Table {
 	 */
 
 	public function sorting_date($selected = ''){
+		$placeholder = __( get_option( 'date_format' ), 'tutor' );
 		$markup = '
 			<div class="alignright assignment-date-box">
 				<label>'.__('Date', 'tutor').'</label>
-				<input type="" id="tutor_assignment_calender" class=" tutor-assignment-date-sorting" value="'.$selected.'">
+				<input type="" class="tutor_date_picker tutor-assignment-date-sorting" placeholder="'.$placeholder.'" value="'.$selected.'">
 				<i class="tutor-icon-calendar"></i>
 			</div>
 			';		
@@ -1283,7 +1284,7 @@ class Tutor_List_Table {
 				<div>
 					<div class="menu-label"><?php _e('Date', 'tutor'); ?></div>
 					<div class="date-range-input">
-						<input type="text" class="tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off" />
+						<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" placeholder="<?php _e( get_option( 'date_format' ) , 'tutor' );?>" value="<?php echo $date_filter; ?>" autocomplete="off" />
 						<i class="tutor-icon-calendar"></i>
 					</div>
 				</div>

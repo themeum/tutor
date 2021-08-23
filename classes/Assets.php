@@ -19,20 +19,20 @@ class Assets{
 		add_action( 'admin_head', array($this, 'tutor_add_mce_button'));
 		add_filter( 'get_the_generator_html', array($this, 'tutor_generator_tag'), 10, 2 );
 		add_filter( 'get_the_generator_xhtml', array($this, 'tutor_generator_tag'), 10, 2 );
+
+		/**
+		 * Add translation support for external tinyMCE button
+		 * 
+		 * @since 1.9.7
+		 */
+		add_filter( 'mce_external_languages', array( $this, 'tutor_tinymce_translate' ) );
 	}
 
 	private function get_default_localized_data() {
-		
-		$home_url = get_home_url();
-		$parsed = parse_url($home_url);
-
-		$base_path = (is_array( $parsed ) && isset( $parsed['path'] )) ? $parsed['path'] : '/';
-		$base_path = rtrim($base_path, '/') . '/';
-
 		return array(
 			'ajaxurl'       => admin_url('admin-ajax.php'),
-			'home_url'		=> $home_url,
-			'base_path'		=> $base_path,
+			'home_url'		=> get_home_url(),
+			'base_path'		=> tutor()->basepath,
 			'tutor_url' 	=> tutor()->url,
 			'tutor_pro_url' => function_exists('tutor_pro') ? tutor_pro()->url : null,
 			'nonce_key'     => tutor()->nonce,
@@ -41,6 +41,7 @@ class Assets{
 			'placeholder_img_src' => tutor_placeholder_img_src(),
 			'enable_lesson_classic_editor' => get_tutor_option('enable_lesson_classic_editor'),
 			'tutor_frontend_dashboard_url' => tutor_utils()->get_tutor_dashboard_page_permalink(),
+			'wp_date_format' => tutor_js_date_format_against_wp()
 		);
 	}
 
@@ -316,6 +317,16 @@ class Assets{
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path.'languages/' );
 		wp_set_script_translations( 'tutor-main', 'tutor', tutor()->path.'languages/' );
 		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path.'languages/' );
+	}
+
+	/**
+	 * Add translation support for external tinyMCE button
+	 * 
+	 * @since 1.9.7
+	 */
+	function tutor_tinymce_translate() {
+		$locales['tutor_button'] = tutor()->path.'includes/tinymce_translate.php';
+		return $locales;
 	}
 	
 }

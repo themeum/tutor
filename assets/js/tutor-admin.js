@@ -2,6 +2,7 @@ jQuery(document).ready(function($){
     'use strict';
 
     const { __, _x, _n, _nx } = wp.i18n;
+    const search_student_placeholder = __( 'Search students', 'tutor' );
     /**
      * Color Picker
      * @since v.1.2.21
@@ -101,7 +102,7 @@ jQuery(document).ready(function($){
         var topics = {};
         $('.tutor-topics-wrap').each(function(index, item){
             var $topic = $(this);
-            var topics_id = parseInt($(this).data('topic_id')); // parseInt($topic.attr('id').match(/\d+/)[0], 10);
+            var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
             var lessons = {};
 
             $topic.find('.course-content-item').each(function(lessonIndex, lessonItem){
@@ -186,9 +187,9 @@ jQuery(document).ready(function($){
 
         // Create a new media frame
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Upload media', 'tutor' )
             },
             library: { type: 'video' },
             multiple: false  // Set to true to allow multiple files to be selected
@@ -222,9 +223,9 @@ jQuery(document).ready(function($){
         }
         // Create a new media frame
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Upload media', 'tutor' )
             },
             multiple: true  // Set to true to allow multiple files to be selected
         });
@@ -264,9 +265,9 @@ jQuery(document).ready(function($){
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Upload media', 'tutor' )
             },
             multiple: false
         });
@@ -521,9 +522,9 @@ jQuery(document).ready(function($){
 
         // Create a new media frame
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Upload media', 'tutor' )
             },
             multiple: false  // Set to true to allow multiple files to be selected
         });
@@ -565,9 +566,9 @@ jQuery(document).ready(function($){
 
         // Create a new media frame
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Upload media', 'tutor')
             },
             multiple: false  // Set to true to allow multiple files to be selected
         });
@@ -636,11 +637,16 @@ jQuery(document).ready(function($){
      * Find user/student from select2
      * @since v.1.4.0
      */
-
     $('#select2_search_user_ajax').select2({
         allowClear: true,
-        placeholder: "Search students",
-        minimumInputLength: '1',
+
+        minimumInputLength: 1,
+        placeholder: search_student_placeholder,
+        language: {
+            inputTooShort: function() {
+                return __( 'Please add 1 or more character', 'tutor' );
+            },
+        },
         escapeMarkup: function( m ) {
             return m;
         },
@@ -680,9 +686,34 @@ jQuery(document).ready(function($){
      * @since v.1.4.0
      */
     $(document).on( 'click', 'table.enrolments .delete a',  function( e ){
-        if (! confirm(__('Are you sure? it can not be undone.', 'tutor'))) {
-            e.preventDefault();
-        }
+        e.preventDefault();
+
+        var url = $(this).attr('href');
+        var popup;
+
+        var data = {
+            title: __('Delete this enrolment', 'tutor'),
+            description : __('All of the course data like quiz attempts, assignment, lesson <br/>progress will be deleted if you delete this student\'s enrollment.', 'tutor'),
+            buttons : {
+                reset: {
+                    title: __('Cancel', 'tutor'),
+                    class: 'secondary',
+
+                    callback: function() {
+                        popup.remove();
+                    }
+                },
+                keep: {
+                    title: __('Yes, Delete This', 'tutor'),
+                    class: 'primary',
+                    callback: function() {
+                        window.location.replace(url);
+                    }
+                }
+            } 
+        };
+
+        popup = new window.tutor_component($, 'icon-trash', 40).popup(data);
     });
     
 

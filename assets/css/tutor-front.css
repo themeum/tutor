@@ -108,11 +108,6 @@
   background-color: var(--tutor-primary-color);
   color: #ffffff;
   display: inline-block;
-  border-radius: 2px;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
   box-shadow: none;
   -o-box-shadow: none;
   -ms-box-shadow: none;
@@ -128,6 +123,28 @@
   background-color: white;
   color: var(--tutor-light-color);
   border: 1px solid var(--tutor-light-color);
+}
+
+.single_add_to_cart_button.tutor-button-outlined, .tutor-button.tutor-button-outlined, .tutor-btn.tutor-button-outlined {
+  background-color: white;
+  color: var(--tutor-primary-color);
+  border: 1px solid var(--tutor-primary-color);
+}
+
+.single_add_to_cart_button.tutor-button-outlined:hover, .tutor-button.tutor-button-outlined:hover, .tutor-btn.tutor-button-outlined:hover {
+  background-color: var(--tutor-primary-color);
+  color: white;
+  border: 1px solid var(--tutor-primary-color);
+}
+
+.single_add_to_cart_button.tutor-button-outlined.tutor-button-outlined-transparent, .tutor-button.tutor-button-outlined.tutor-button-outlined-transparent, .tutor-btn.tutor-button-outlined.tutor-button-outlined-transparent {
+  background-color: transparent;
+}
+
+.single_add_to_cart_button.tutor-button-outlined.tutor-button-outlined-transparent:hover, .tutor-button.tutor-button-outlined.tutor-button-outlined-transparent:hover, .tutor-btn.tutor-button-outlined.tutor-button-outlined-transparent:hover {
+  background-color: #E3E6EB;
+  color: #757C8E;
+  border-color: #E3E6EB;
 }
 
 .single_add_to_cart_button.tutor-button-block, .tutor-button.tutor-button-block, .tutor-btn.tutor-button-block {
@@ -181,6 +198,7 @@
 .single_add_to_cart_button.button-warning, .tutor-button.button-warning, .tutor-btn.button-warning {
   background-color: #ffb36d;
   color: #ffffff;
+  border: none;
 }
 
 .single_add_to_cart_button.button-light, .tutor-button.button-light, .tutor-btn.button-light {
@@ -453,8 +471,6 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 }
 
 .tutor-component-popup-container {
-  width: 100%;
-  height: 100%;
   padding: 15px;
   overflow: hidden;
   position: fixed;
@@ -490,8 +506,8 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 .tutor-component-popup-container > div {
   display: inline-block;
   max-height: 100%;
-  width: 100%;
-  max-width: 690px;
+  width: auto;
+  max-width: 100%;
   background: white;
   overflow: auto;
   border-radius: 15px;
@@ -509,17 +525,20 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 }
 
 .tutor-component-popup-container > div h3 {
-  margin: 7px 0;
+  margin: 7px 0 30px 0;
   font-style: normal;
   font-weight: normal;
   font-size: 30px;
   text-align: center;
   color: #212327;
+  line-height: 32px;
 }
 
 .tutor-component-popup-container > div p {
-  margin: 5px 0 25px;
+  margin: 5px 0 30px;
   text-align: center;
+  max-width: 560px;
+  word-wrap: break-word;
 }
 
 .tutor-component-popup-container > div .tutor-component-button-container {
@@ -527,7 +546,51 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 }
 
 .tutor-component-popup-container > div .tutor-component-button-container button {
-  margin: 0 5px;
+  margin: 5px;
+}
+
+.tutor-component-three-col-action {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  border: 1px solid #DCDBDC;
+  border-radius: 6px;
+  padding: 25px 35px 25px 30px;
+  margin-bottom: 15px;
+}
+
+.tutor-component-three-col-action > *:first-child {
+  margin-right: 15px;
+}
+
+.tutor-component-three-col-action > div:nth-child(2) {
+  -webkit-box-flex: 1;
+          flex: 1;
+  -o-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+}
+
+.tutor-component-three-col-action > div:nth-child(2) small {
+  font-size: 16px;
+}
+
+.tutor-component-three-col-action > div:nth-child(2) p {
+  font-size: 20px;
+  line-height: 26px;
+  margin: 0;
 }
 
 .ui-datepicker {
@@ -559,6 +622,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 .ui-datepicker .ui-datepicker-calendar {
   table-layout: fixed;
   width: 100%;
+  border: 0px !important;
 }
 
 .ui-datepicker .ui-datepicker-calendar .ui-state-default {
@@ -594,9 +658,14 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   text-decoration: none;
 }
 
+.ui-datepicker .ui-datepicker-calendar tbody {
+  border: 0px !important;
+}
+
 .ui-datepicker .ui-datepicker-calendar th, .ui-datepicker .ui-datepicker-calendar td {
   text-align: center;
   padding: 0;
+  border: 0px !important;
 }
 
 .ui-datepicker .ui-datepicker-calendar .ui-datepicker-unselectable:hover {
@@ -672,6 +741,263 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 
 .ui-datepicker .ui-icon {
   display: none;
+}
+
+.dot-loader-button.active {
+  background-color: var(--tutor-primary-hover-color);
+  border-color: var(--tutor-primary-hover-color);
+  color: #fff !important;
+}
+
+.tutor-dot-loader {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: 5px 0;
+}
+
+.tutor-dot-loader span {
+  width: 10px;
+  height: 10px;
+  display: block;
+  border-radius: 50%;
+  position: relative;
+  margin: 0 5px;
+}
+
+.tutor-dot-loader .dot-1 {
+  -webkit-animation: anim 1s linear 0s infinite;
+          animation: anim 1s linear 0s infinite;
+}
+
+.tutor-dot-loader .dot-2 {
+  -webkit-animation: anim 1s linear 0.25s infinite;
+          animation: anim 1s linear 0.25s infinite;
+}
+
+.tutor-dot-loader .dot-3 {
+  -webkit-animation: anim 1s linear 0.50s infinite;
+          animation: anim 1s linear 0.50s infinite;
+}
+
+.tutor-dot-loader .dot-4 {
+  -webkit-animation: anim 1s linear 0.75s infinite;
+          animation: anim 1s linear 0.75s infinite;
+}
+
+@-webkit-keyframes anim {
+  0% {
+    top: 0;
+  }
+  25% {
+    top: 5px;
+  }
+  50% {
+    top: 0px;
+  }
+  75% {
+    top: -5px;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+@keyframes anim {
+  0% {
+    top: 0;
+  }
+  25% {
+    top: 5px;
+  }
+  50% {
+    top: 0px;
+  }
+  75% {
+    top: -5px;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+.tutor-dot-loader > span {
+  background-color: #fff;
+}
+
+.tutor-dot-loader.loader-primary > span {
+  background-color: var(--tutor-primary-button-color);
+}
+
+.tutor-dot-loader.loader-warning > span {
+  background-color: var(--tutor-warning-button-color);
+}
+
+.tutor-dot-loader.loader-danger > span {
+  background-color: var(--tutor-danger-button-color);
+}
+
+.tutor-dot-loader.loader-success > span {
+  background-color: var(--tutor-success-button-color);
+}
+
+/* Only reusable function, or code allowed here. No direct css please. */
+#tutor-course-topics {
+  position: relative;
+}
+
+#tutor-course-topics .tutor-course-builder-header.has-postbox-header {
+  top: -56px;
+  right: 96px;
+}
+
+#tutor-course-topics .postbox-header h2 {
+  padding: 15px;
+  line-height: 30px;
+  display: block;
+}
+
+#tutor-course-topics .postbox-header h2:before {
+  content: "\e936";
+  color: var(--tutor-primary-color);
+  font-family: "tutor" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin-right: 10px;
+}
+
+#tutor-course-topics .inside {
+  padding: 0;
+  margin: 0;
+}
+
+#tutor-course-topics a {
+  text-decoration: none;
+}
+
+#tutor-course-topics a:focus {
+  box-shadow: none;
+  -o-box-shadow: none;
+  -ms-box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+#tutor-course-topics .tutor-quiz-builder-modal-tabs-notice a {
+  color: #a4a4a4;
+  text-decoration: underline;
+}
+
+#tutor-course-topics .toggle-indicator:before {
+  margin-top: 20px;
+}
+
+#tutor-course-topics .tutor-topics-wrap {
+  border-bottom: 1px solid #f6f8fa;
+  padding-bottom: 0;
+  margin: 0;
+}
+
+#tutor-course-topics .drop-lessons p {
+  margin: 0;
+}
+
+#tutor-course-topics .course-content-item:hover {
+  background-color: #ebeef0;
+}
+
+#tutor-course-topics .tutor-lessons {
+  padding-left: 0;
+}
+
+#tutor-course-topics .tutor-lessons.ui-sortable {
+  min-height: 20px;
+}
+
+#tutor-course-topics .tutor-lesson-top {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  font-size: 14px;
+}
+
+#tutor-course-topics .tutor-lesson-top, #tutor-course-topics .tutor-lesson-top i {
+  font-size: 15px;
+}
+
+#tutor-course-topics .tutor-lesson-top i.tutor-icon-pencil {
+  margin: 0 10px;
+}
+
+#tutor-course-topics .tutor-lesson-top i.tutor-icon-move {
+  margin-right: 10px;
+  cursor: ns-resize;
+}
+
+#tutor-course-topics .tutor-lesson-top a {
+  color: #393c40;
+}
+
+#tutor-course-topics .tutor-lesson-top a.tutor-updating-message i {
+  display: none;
+}
+
+#tutor-course-topics .tutor-lesson-top .open-tutor-quiz-modal i {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.rtl #tutor-course-topics .tutor-lesson-top i.tutor-icon-move {
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+.rtl #tutor-course-topics .tutor-lesson-top .open-tutor-quiz-modal i {
+  margin-right: 0;
+  margin-left: 5px;
+}
+
+#tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal,
+.tutor-quiz .open-tutor-quiz-modal,
+.course-content-item .open-tutor-assignment-modal,
+.course-content-item .tutor-zoom-meeting-modal-open-btn {
+  -webkit-box-flex: 1;
+          flex: 1;
+  -o-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+}
+
+/**
+ * Add option disabled
+ * @since 1.9.7
+*/
+.add_question_answers_option.disabled {
+  color: #AAAEB5 !important;
+  cursor: none !important;
+  pointer-events: none !important;
+}
+
+.add_question_answers_option.disabled i {
+  background-color: #AAAEB5 !important;
 }
 
 body {
@@ -1328,6 +1654,7 @@ table.course-single-gradebooks .datetime {
 /* ***********************      */
 /* Single Lesson  */
 /************************       */
+/* Only reusable function, or code allowed here. No direct css please. */
 /*lesson list*/
 .tutor-single-lesson-button-group,
 .tutor-topics-lesson-list .tutor-topics-in-single-lesson {
@@ -1406,13 +1733,25 @@ table.course-single-gradebooks .datetime {
 
 .tutor-single-lesson-button-group .tutor-single-lesson-button a,
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a {
-  padding: 14px 100px 14px 17px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  padding: 14px 100px 14px 17px;
   color: var(--tutor-text-color);
   position: relative;
   border-top: 1px solid #e8eff1;
+  text-decoration: none;
 }
 
 .tutor-single-lesson-button-group .tutor-single-lesson-button:first-child a {
@@ -1429,14 +1768,38 @@ table.course-single-gradebooks .datetime {
   padding: 0;
 }
 
+.tutor-topics-in-single-lesson.tutor-topic-active .tutor-topics-title button i::before {
+  content: "\e910";
+}
+
 .tutor-topics-in-single-lesson .tutor-single-lesson-items a span {
   margin: 0;
   display: inline;
   color: var(--tutor-text-color);
+  text-decoration: none;
 }
 
 .tutor-topics-in-single-lesson .tutor-topics-title {
   position: relative;
+}
+
+.tutor-topics-in-single-lesson .tutor-topics-title h3 {
+  margin: 0;
+  padding: 10px 37px 10px 17px;
+  font-size: 16px;
+  color: var(--tutor-primary-color);
+  font-weight: 500;
+  cursor: pointer;
+  line-height: 30px;
+}
+
+.tutor-topics-in-single-lesson .tutor-topics-title h3 i {
+  font-size: 10px;
+  margin-left: 6px;
+}
+
+.tutor-topics-in-single-lesson .tutor-topics-title h3 i:hover {
+  color: var(--tutor-primary-color);
 }
 
 .tutor-topics-in-single-lesson .tutor-topics-title button {
@@ -1452,23 +1815,6 @@ table.course-single-gradebooks .datetime {
   color: var(--tutor-text-color);
 }
 
-.tutor-topics-in-single-lesson.tutor-topic-active .tutor-topics-title button i::before {
-  content: "\e910";
-}
-
-.tutor-topics-in-single-lesson .tutor-topics-title h3 {
-  margin: 0;
-  padding: 10px 37px 10px 17px;
-  font-size: 16px;
-  color: var(--tutor-primary-color);
-  font-weight: 500;
-}
-
-.tutor-topics-in-single-lesson .tutor-topics-title h3 {
-  cursor: pointer;
-  line-height: 30px;
-}
-
 span.toggle-information-icon {
   background: #ccc;
   color: #fff;
@@ -1482,11 +1828,6 @@ span.toggle-information-icon {
   margin-left: 10px;
 }
 
-.tutor-topics-in-single-lesson .tutor-topics-title h3 i {
-  font-size: 10px;
-  margin-left: 6px;
-}
-
 .tutor-topics-in-single-lesson .tutor-topics-tutor-loop-rating-wraptitle h3 i {
   font-size: 10px;
   vertical-align: middle;
@@ -1496,10 +1837,6 @@ span.toggle-information-icon {
   -webkit-transition: 300ms;
   transition: 300ms;
   cursor: pointer;
-}
-
-.tutor-topics-in-single-lesson .tutor-topics-title h3 i:hover {
-  color: var(--tutor-primary-color);
 }
 
 .tutor-single-lesson-button-group .tutor-single-lesson-button a > i:first-child,
@@ -1573,8 +1910,7 @@ span.toggle-information-icon {
   padding-right: 15px;
 }
 
-.tutor-single-page-top-bar .tutor-single-lesson-segment form,
-.tutor-single-page-top-bar .tutor-single-lesson-segment {
+.tutor-single-page-top-bar .tutor-single-lesson-segment, .tutor-single-page-top-bar .tutor-single-lesson-segment form {
   margin-bottom: 0;
 }
 
@@ -1583,10 +1919,7 @@ span.toggle-information-icon {
   vertical-align: middle;
   display: inline-block;
   overflow: hidden;
-}
-
-.tutor-single-page-top-bar a i {
-  float: left;
+  text-decoration: none;
 }
 
 @media (max-width: 546px) {
@@ -1595,17 +1928,19 @@ span.toggle-information-icon {
   }
 }
 
-.tutor-topbar-home-btn i {
-  margin-right: 7px;
+.tutor-single-page-top-bar a:hover {
+  color: #ffffff;
 }
 
-.tutor-topbar-home-btn {
-  margin-left: 20px;
+.tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i {
+  font-size: 20px;
+  display: block;
+  padding: 25px 0;
 }
 
-@media screen and (max-width: 546px) {
-  .tutor-topbar-home-btn {
-    margin-left: 10px;
+@media only screen and (max-width: 546px) {
+  .tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i {
+    font-size: 19px;
   }
 }
 
@@ -1626,16 +1961,6 @@ span.toggle-information-icon {
   padding-top: 2px;
 }
 
-.tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button:hover {
-  color: #fff;
-  background: var(--tutor-primary-hover-color);
-  border-color: var(--tutor-primary-hover-color);
-}
-
-.tutor-single-page-top-bar a:hover {
-  color: #ffffff;
-}
-
 .tutor-single-page-top-bar .tutor-topbar-content-title-wrap {
   text-align: center;
   white-space: nowrap;
@@ -1644,6 +1969,32 @@ span.toggle-information-icon {
   -webkit-box-flex: 999999;
       -ms-flex-positive: 999999;
           flex-grow: 999999;
+}
+
+.tutor-single-page-top-bar .tutor-topbar-content-title-wrap i {
+  vertical-align: middle;
+  line-height: 1;
+  margin-right: 3px;
+}
+
+.tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button:hover {
+  color: #fff;
+  background: var(--tutor-primary-hover-color);
+  border-color: var(--tutor-primary-hover-color);
+}
+
+.tutor-topbar-home-btn {
+  margin-left: 20px;
+}
+
+@media screen and (max-width: 546px) {
+  .tutor-topbar-home-btn {
+    margin-left: 10px;
+  }
+}
+
+.tutor-topbar-home-btn i {
+  margin-right: 7px;
 }
 
 .tutor-single-page-top-bar .tutor-hide-sidebar-bar {
@@ -1672,12 +2023,6 @@ span.toggle-information-icon {
     padding: 7px 12px;
     font-size: 14px;
   }
-}
-
-.tutor-single-page-top-bar .tutor-topbar-content-title-wrap i {
-  vertical-align: middle;
-  line-height: 1;
-  margin-right: 3px;
 }
 
 .tutor-lesson-content-area,
@@ -1710,18 +2055,6 @@ span.toggle-information-icon {
 @media only screen and (max-width: 546px) {
   .tutor-lesson-sidebar-hide-bar {
     padding: 0 10px;
-  }
-}
-
-.tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i {
-  font-size: 20px;
-  display: block;
-  padding: 25px 0;
-}
-
-@media only screen and (max-width: 546px) {
-  .tutor-single-page-top-bar a.tutor-lesson-sidebar-hide-bar i {
-    font-size: 19px;
   }
 }
 
@@ -2176,14 +2509,13 @@ ul.tutor-required-fields {
 
 .tutor-star-rating-group {
   color: #f4c150;
-  /*margin-top: 20px;*/
   display: inline-block;
   text-align: left;
 }
 
 .tutor-star-rating-group i {
-  /*cursor: pointer;*/
   margin-right: 4px;
+  cursor: pointer;
 }
 
 @media (max-width: 546px) {
@@ -2192,11 +2524,6 @@ ul.tutor-required-fields {
     display: block;
     text-align: center;
   }
-}
-
-.tutor-write-review-box .tutor-star-rating-group i {
-  margin-right: 4px;
-  cursor: pointer;
 }
 
 .tutor-queston-and-answer-wrap {
@@ -2456,6 +2783,7 @@ Course question and answer
 .tutor-quiz-header h5 a {
   color: var(--tutor-text-color);
   font-weight: 500;
+  text-decoration: none;
 }
 
 .tutor-quiz-header .tutor-quiz-meta {
@@ -2596,6 +2924,10 @@ Course question and answer
 
 .quiz-attempt-single-question {
   margin-bottom: 80px;
+}
+
+.quiz-attempt-single-question p.question-marks {
+  margin-bottom: 20px;
 }
 
 .fill-in-the-blank-field .fill-in-the-blank-text-input {
@@ -2778,20 +3110,50 @@ Course question and answer
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  width: 25%;
+  width: calc(25% - 20px);
+}
+
+@media (max-width: 767px) {
+  .quiz-answer-item-matching {
+    width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 575px) {
+  .quiz-answer-item-matching {
+    width: 50%;
+  }
+}
+
+@media (min-width: 992px) {
+  .quiz-answer-item-matching {
+    width: calc(50% - 20px);
+  }
+}
+
+@media (min-width: 1100px) {
+  .quiz-answer-item-matching {
+    width: calc(33.33% - 20px);
+  }
+}
+
+@media (min-width: 1920px) {
+  .quiz-answer-item-matching {
+    width: calc(25% - 20px);
+  }
 }
 
 .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching {
   display: inline-block;
   max-width: none;
-  width: 25%;
+  width: calc(25% - 20px);
   padding: 0 10px;
   vertical-align: top;
 }
 
 @media (max-width: 767px) {
   .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching {
-    width: 50%;
+    width: calc(50% - 20px);
   }
 }
 
@@ -2801,44 +3163,37 @@ Course question and answer
   }
 }
 
+@media (min-width: 992px) {
+  .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching {
+    width: calc(50% - 20px);
+  }
+}
+
+@media (min-width: 1300px) {
+  .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching {
+    width: calc(33.33% - 20px);
+  }
+}
+
+@media (min-width: 1920px) {
+  .answer-type-matching .quiz-answer-matching-items-wrap .quiz-answer-item-matching {
+    width: calc(25% - 20px);
+  }
+}
+
 .answer-type-matching .quiz-answer-matching-items-wrap {
   margin: 0 -10px;
 }
 
 .quiz-answer-matching-droppable {
-  height: 48px;
-  min-width: 200px;
+  height: auto;
+  min-height: 48px;
+  width: 100%;
   border: 1px dashed #d4dadb;
 }
 
-.quiz-draggable-answer-item {
-  padding: 10px 20px;
-  border: 1px solid #d4dadb;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  background-color: #fff;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-}
-
-.quiz-draggable-answer-item .draggable-answer-title {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-}
-
-.quiz-draggable-rand-answers {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  margin-bottom: 80px;
-}
-
-.drop-hover {
-  display: none;
+.quiz-answer-matching-droppable:not(:empty) {
+  border: 1px dashed #999999;
 }
 
 .quiz-answer-matching-droppable .drop-hover {
@@ -2852,16 +3207,58 @@ Course question and answer
 .quiz-answer-matching-droppable .quiz-draggable-answer-item {
   width: 100%;
   max-width: 100%;
+  margin: 0;
 }
 
-.quiz-draggable-answer-item .draggable-answer-icon {
+.quiz-answer-matching-droppable .quiz-draggable-answer-item .draggable-answer-icon {
   margin-left: 15px;
 }
 
+.quiz-answer-matching-droppable .quiz-draggable-answer-item .draggable-answer-title {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 150px;
+}
+
+.draggable-answer-title {
+  word-break: break-word;
+}
+
+.quiz-draggable-answer-item {
+  padding: 10px 20px;
+  border: 1px solid #d4dadb;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.quiz-draggable-answer-item .quiz-draggable-rand-answers {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin-bottom: 80px;
+}
+
+.quiz-draggable-rand-answers {
+  height: auto !important;
+}
+
+.drop-hover {
+  display: none;
+}
+
 .answer-type-image_matching .quiz-answer-item-matching {
-  /*display: inline-block;
-      width: 190px;
-      margin-right: 10px;*/
   display: block;
 }
 
@@ -2896,17 +3293,46 @@ Course question and answer
 }
 
 .tutor-quiz-questions-pagination ul li a {
-  background-color: var(--tutor-primary-color);
+  border: 1px solid var(--tutor-primary-color);
   padding: 7px 13px;
   display: block;
   border-radius: 50%;
   margin-right: 10px;
-  color: #ffffff;
+  color: var(--tutor-primary-color);
+  font-weight: bold;
+  font-size: 15px;
+  width: 30px;
+  height: 30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
 }
 
-.tutor-quiz-questions-pagination ul li a:hover,
-.tutor-quiz-questions-pagination ul li a.active {
+.tutor-quiz-questions-pagination ul li a:hover, .tutor-quiz-questions-pagination ul li a.active {
   background-color: var(--tutor-primary-color);
+  color: white;
+}
+
+.tutor-quiz-questions-pagination ul li a:hover:hover, .tutor-quiz-questions-pagination ul li a.active:hover {
+  opacity: .8;
 }
 
 .quiz-image-answering-wrap {
@@ -2970,6 +3396,7 @@ Course question and answer
   color: var(--tutor-primary-color);
 }
 
+/* Only reusable function, or code allowed here. No direct css please. */
 /* Course filter layout */
 .tutor-course-filter-wrapper {
   overflow: auto;
@@ -5091,16 +5518,6 @@ button.tm-close.tutor-icon-line-cross:hover {
 * Course adding page
 * Course Builder
 */
-#tutor-course-topics a {
-  text-decoration: none;
-}
-
-#tutor-course-topics .tutor-topics-wrap {
-  border-bottom: 1px solid #f6f8fa;
-  padding-bottom: 0;
-  margin: 0;
-}
-
 .tutor-untopics-lessons .course-content-item,
 .course-contents .course-content-item {
   padding: 10px 12px 10px 25px;
@@ -5158,67 +5575,12 @@ button.tm-close.tutor-icon-line-cross:hover {
   color: red;
 }
 
-.tutor-lessons.ui-sortable {
-  min-height: 20px;
-}
-
-#tutor-course-topics .drop-lessons p {
-  margin: 0;
-}
-
-#tutor-course-topics .course-content-item:hover {
-  background-color: #ebeef0;
-}
-
-#tutor-course-topics .tutor-lessons {
-  padding-left: 0;
-}
-
-#tutor-course-topics .tutor-lesson-top,
-#tutor-course-topics .tutor-lesson-top i {
-  font-size: 15px;
-}
-
-#tutor-course-topics .tutor-lesson-top .open-tutor-quiz-modal i {
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 5px;
-}
-
-#tutor-course-topics .tutor-lesson-top {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 #tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal,
 .tutor-quiz .open-tutor-quiz-modal,
 .course-content-item .open-tutor-assignment-modal {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
-}
-
-#tutor-course-topics .tutor-lesson-top i.tutor-icon-move {
-  margin-right: 10px;
-  cursor: ns-resize;
-}
-
-.rtl #tutor-course-topics .tutor-lesson-top i.tutor-icon-move {
-  margin-right: 0;
-  margin-left: 10px;
-}
-
-#tutor-course-topics .tutor-lesson-top i.tutor-icon-pencil {
-  margin: 0 10px;
-}
-
-#tutor-course-topics .tutor-lesson-top a {
-  color: #393c40;
-}
-
-#tutor-course-topics .tutor-lesson-top a.tutor-updating-message i {
-  display: none;
 }
 
 .course-move-handle {
@@ -5361,24 +5723,6 @@ p.course-empty-content {
   width: 12px;
   height: 12px;
   font-size: 12px;
-}
-
-#tutor-course-topics {
-  position: relative;
-}
-
-#tutor-course-topics .inside {
-  padding: 0;
-  margin: 0;
-}
-
-#tutor-course-topics a:focus {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-
-#tutor-course-topics .toggle-indicator:before {
-  margin-top: 20px;
 }
 
 .tutor-topics-wrap:nth-child(2n) {
@@ -7229,6 +7573,41 @@ table.course-single-gradebooks a {
 /**
 * END Oxygen Integration CSS
  */
+/**
+ * @since 1.9.6
+*/
+#tutor-quiz-time-expire-wrapper {
+  margin-bottom: 40px;
+}
+
+#tutor-quiz-time-expire-wrapper .tutor-alert {
+  display: none;
+}
+
+#tutor-quiz-time-expire-wrapper .tutor-alert.show {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -o-justify-content: space-between;
+  -ms-justify-content: space-between;
+  -moz-justify-content: space-between;
+  -webkit-justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+}
+
 .tutor-forgot-password-form, .tutor-reset-password-form {
   max-width: 520px;
   padding: 15px;
@@ -8186,40 +8565,11 @@ table.course-single-gradebooks a {
   border-right: 1px solid #dcdfe5;
 }
 
-.tutor-dashboard-permalinks li a:hover {
-  background-color: #edf0f9;
+.tutor-dashboard-permalinks a, .tutor-dashboard-permalinks a:hover, .tutor-dashboard-permalinks a:active, .tutor-dashboard-permalinks a:focus {
+  text-decoration: none;
 }
 
-.tutor-dashboard-permalinks li.active a {
-  background-color: var(--tutor-primary-color);
-  color: #ffffff;
-}
-
-.tutor-dashboard-permalinks li.active a:hover {
-  background-color: var(--tutor-primary-hover-color);
-}
-
-@media (max-width: 991px) {
-  .tutor-dashboard-student .tutor-col-3,
-  .tutor-dashboard-student .tutor-col-9 {
-    -webkit-box-flex: 0;
-        -ms-flex: 0 0 100%;
-            flex: 0 0 100%;
-    max-width: 100%;
-  }
-  .profile-completion-warning-details {
-    margin-bottom: 10px;
-  }
-}
-
-.tutor-dashboard-permalinks a {
-  display: block;
-  color: var(--tutor-text-color);
-  padding: 10px 20px;
-  line-height: 28px;
-}
-
-.tutor-dashboard-permalinks a:before {
+.tutor-dashboard-permalinks a::before {
   content: "\e968";
   font-family: "tutor" !important;
   speak: none;
@@ -8244,10 +8594,43 @@ table.course-single-gradebooks a {
   color: var(--tutor-primary-hover-color);
 }
 
+.tutor-dashboard-permalinks li a {
+  display: block;
+  color: var(--tutor-text-color);
+  padding: 10px 20px;
+  line-height: 28px;
+}
+
+.tutor-dashboard-permalinks li a:hover {
+  background-color: #edf0f9;
+}
+
+.tutor-dashboard-permalinks li.active a {
+  background-color: var(--tutor-primary-color);
+  color: #ffffff;
+}
+
+.tutor-dashboard-permalinks li.active a:hover {
+  background-color: var(--tutor-primary-hover-color);
+}
+
 .tutor-dashboard-permalinks li.active a:before {
   opacity: 1;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   color: #fff;
+}
+
+@media (max-width: 991px) {
+  .tutor-dashboard-student .tutor-col-3,
+  .tutor-dashboard-student .tutor-col-9 {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .profile-completion-warning-details {
+    margin-bottom: 10px;
+  }
 }
 
 .tutor-dashboard-menu-bio a:before,
@@ -8736,7 +9119,7 @@ table.tutor-dashboard-statement-table p.small-text {
 /**
 Withdraw Method
  */
-.withdraw-method-select-wrap {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -8745,7 +9128,7 @@ Withdraw Method
   margin: 0 -15px 40px;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
       flex-grow: 1;
@@ -8753,7 +9136,7 @@ Withdraw Method
   margin-bottom: 30px;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select label {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select label {
   display: block;
   padding: 20px;
   margin: 0;
@@ -8764,13 +9147,7 @@ Withdraw Method
   position: relative;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select input:checked + label {
-  border-color: var(--tutor-success-button-color);
-  -webkit-box-shadow: 0 0 0 1px var(--tutor-success-button-color);
-          box-shadow: 0 0 0 1px var(--tutor-success-button-color);
-}
-
-.withdraw-method-select-wrap .withdraw-method-select label:after {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select label:after {
   content: '\e90f';
   position: absolute;
   right: -1px;
@@ -8783,7 +9160,24 @@ Withdraw Method
   color: transparent;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select input:checked + label:after {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select label > p {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--tutor-primary-color);
+}
+
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select label span {
+  color: #B0B6C8;
+  font-weight: 400;
+}
+
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select input:checked + label {
+  border-color: var(--tutor-success-button-color);
+  -webkit-box-shadow: 0 0 0 1px var(--tutor-success-button-color);
+          box-shadow: 0 0 0 1px var(--tutor-success-button-color);
+}
+
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select input:checked + label:after {
   color: #fff;
   background: var(--tutor-success-button-color);
   border-color: var(--tutor-success-button-color);
@@ -8796,22 +9190,11 @@ Withdraw Method
   font-size: 13px;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select p {
+#tutor-withdraw-account-set-form .withdraw-method-select-wrap .withdraw-method-select p {
   margin: 0;
 }
 
-.withdraw-method-select-wrap .withdraw-method-select label > p {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--tutor-primary-color);
-}
-
-.withdraw-method-select-wrap .withdraw-method-select label span {
-  color: #B0B6C8;
-  font-weight: 400;
-}
-
-.withdraw-method-form {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -8820,7 +9203,7 @@ Withdraw Method
   margin: 0 -15px;
 }
 
-.withdraw-method-form > div {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form > div {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
       flex-grow: 1;
@@ -8829,18 +9212,23 @@ Withdraw Method
 }
 
 @media (max-width: 480px) {
-  .withdraw-method-form > div {
+  #tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form > div {
     width: 100%;
   }
 }
 
-.withdraw-method-form > div.withdraw-account-save-btn-wrap {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form > div.withdraw-account-save-btn-wrap {
   width: 100%;
 }
 
-.withdraw-form-field-amount input[type='text'],
-.withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]),
-.withdraw-method-forms-wrap .withdraw-method-form textarea {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]):focus, #tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form textarea:focus {
+  border-color: var(--tutor-primary-color);
+  outline: none;
+}
+
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form input[type='text'],
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form textarea,
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]) {
   border: 1px solid #DCDFE5;
   display: block;
   width: 100%;
@@ -8850,33 +9238,17 @@ Withdraw Method
   border-radius: 4px;
 }
 
-label[for="tutor_withdraw_amount"] {
-  margin-bottom: 7px;
-  display: block;
-}
-
-.withdraw-form-field-amount input[type='text'] {
-  margin-bottom: 10px;
-  height: 45px;
-}
-
-.withdraw-method-forms-wrap .withdraw-method-form input:not([type="submit"]):not([type="radio"]):not([type="checkbox"]):focus,
-.withdraw-method-forms-wrap .withdraw-method-form textarea:focus {
-  border-color: var(--tutor-primary-color);
-  outline: none;
-}
-
-.withdraw-method-forms-wrap .withdraw-method-form textarea {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form textarea {
   min-height: 80px;
 }
 
-.withdraw-method-forms-wrap .withdraw-method-form label {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form label {
   color: #989EAF;
   margin-bottom: 8px;
   display: block;
 }
 
-.withdraw-method-forms-wrap .withdraw-method-form .withdraw-field-desc {
+#tutor-withdraw-account-set-form .withdraw-method-forms-wrap .withdraw-method-form .withdraw-field-desc {
   font-size: 12px;
   margin: 5px 0 0;
   font-style: italic;
@@ -9271,11 +9643,8 @@ label[for="tutor_withdraw_amount"] {
   padding: 45px 70px !important;
 }
 
-.balance-info .tutor-announcement-big-icon {
-  margin-right: 10px;
-}
-
 .tutor-announcement-big-icon {
+  margin-right: 10px;
   font-size: 32px;
   width: 76px;
   height: 76px;
@@ -9283,11 +9652,27 @@ label[for="tutor_withdraw_amount"] {
   background: #e9edfb;
   text-align: center;
   color: #3e64de;
-}
-
-.tutor-announcement-big-icon .tutor-icon-speaker {
-  position: relative !important;
-  top: 30% !important;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
 }
 
 .tutor-announcement-detail-content {
@@ -9886,6 +10271,7 @@ label[for="tutor_withdraw_amount"] {
   max-width: 35px;
 }
 
+/* Only reusable function, or code allowed here. No direct css please. */
 #tutor_profile_cover_photo_editor {
   height: 344px;
   position: relative;
@@ -10141,6 +10527,7 @@ label[for="tutor_withdraw_amount"] {
   display: none;
 }
 
+/* Only reusable function, or code allowed here. No direct css please. */
 .tutor-user-public-profile .photo-area {
   overflow: hidden;
   height: 414px;
@@ -11026,12 +11413,9 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   line-height: 30px;
 }
 
+/* Only reusable function, or code allowed here. No direct css please. */
 .tutor-frontend-dashboard-withdrawal h4 {
   margin-bottom: 25px;
-}
-
-.withdraw-history-table-title h4 {
-  margin-top: 45px;
 }
 
 .tutor-frontend-dashboard-withdrawal .withdraw-page-current-balance {
@@ -11197,6 +11581,11 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   background: #F3F3F3;
 }
 
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap label[for=tutor_withdraw_amount] {
+  margin-bottom: 7px;
+  display: block;
+}
+
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount {
   border: 1px solid #BABABA;
   border-radius: 6px;
@@ -11204,6 +11593,11 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   height: 43px;
   overflow: hidden;
   margin-bottom: 12px;
+}
+
+.tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount input[type='text'] {
+  margin-bottom: 10px;
+  height: 45px;
 }
 
 .tutor-frontend-dashboard-withdrawal .tutor-earning-withdraw-form-wrap .withdraw-form-field-amount > span {
@@ -11289,18 +11683,22 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   display: inline-block !important;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap .withdraw-history-table-title h4 {
+  margin-top: 45px;
+}
+
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history {
   border: 1px solid #DCDBDC;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   position: relative;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th {
   background: #F3F3F3;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td {
   padding: 10px;
   border: none;
   font-weight: normal;
@@ -11309,48 +11707,48 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   vertical-align: middle;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th, .tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td {
   border-bottom: 1px solid #DCDBDC;
   border-collapse: collapse;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:first-child, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:first-child {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th:first-child, .tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td:first-child {
   padding: 10px 0 15px 15px;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:last-child, .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:last-child {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th:last-child, .tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td:last-child {
   text-align: right;
   padding-right: 15px;
   width: 50px;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history th:nth-child(4), .tutor-frontend-dashboard-withdrawal table.withdrawals-history td:nth-child(4) {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history th:nth-child(4), .tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td:nth-child(4) {
   width: 105px;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history .withdraw-method-name {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history td .withdraw-method-name {
   line-height: 20px;
   font-size: 15px;
   display: block;
 }
 
-.tutor-frontend-dashboard-withdrawal table.withdrawals-history small {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history small {
   font-size: 13px;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text-container .tool-tip-container {
   position: relative;
   display: inline-block;
   height: 24px;
   cursor: pointer;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text-container .tool-tip-container img {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text-container .tool-tip-container img {
   display: inline-block !important;
   width: 16px;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text {
   display: inline-block;
   font-weight: bold;
   font-size: 13px;
@@ -11360,15 +11758,15 @@ body.has-tutor-frontend-course-builder .select2-search__field {
   padding: 3px 9px;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-approved {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text.status-approved {
   background: #24A148;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-pending {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text.status-pending {
   background: #ED9700;
 }
 
-.tutor-frontend-dashboard-withdrawal .tutor-status-text.status-rejected {
+.tutor-frontend-dashboard-withdrawal .withdraw-history-table-wrap table.withdrawals-history .tutor-status-text.status-rejected {
   background: #F44337;
 }
 
@@ -11574,6 +11972,53 @@ body.has-tutor-frontend-course-builder .select2-search__field {
 .tutor-tooltip-inside .tooltip.tip-right:after {
   left: -20px;
   border-color: transparent #373739 transparent transparent;
+}
+
+.tutor-course-review-popup-form .tutor-star-rating-group {
+  color: #C0C3CB;
+}
+
+.tutor-course-review-popup-form .tutor-star-rating-group i {
+  margin: 0 6px;
+}
+
+.tutor-course-review-popup-form .tutor-star-rating-group i.tutor-icon-star-full {
+  color: #ED9700;
+}
+
+.tutor-course-review-popup-form .tutor-stars {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 40px;
+}
+
+.tutor-course-review-popup-form textarea {
+  background: white;
+  border: 1px solid #C0C3CB;
+  border-radius: 6px;
+  width: 100%;
+  height: 108px;
+  padding: 15px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 24px;
+  color: #757C8E;
+  resize: none;
+}
+
+.tutor-course-review-popup-form textarea, .tutor-course-review-popup-form textarea:focus {
+  outline: none;
+  box-shadow: none;
+  -o-box-shadow: none;
+  -ms-box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.tutor-course-review-popup-form textarea:focus {
+  color: #50545f;
+  border: 1px solid #a0a2a8;
 }
 
 .tutor-instructor-list, .tutor-instructor-list:focus, .tutor-instructor-list:active {
@@ -11947,4 +12392,125 @@ body.has-tutor-frontend-course-builder .select2-search__field {
 
 .tutor-instructor-rejection-notice a:hover {
   color: #e41304;
+}
+
+/* Only reusable function, or code allowed here. No direct css please. */
+.tutor-disabled-wrapper {
+  max-width: 444px;
+  padding: 60px 0 30px;
+  margin: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.tutor-disabled-wrapper .tutor-disabled-content-wrapper {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -o-flex-direction: column;
+  -ms-flex-direction: column;
+  -moz-flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  text-align: center;
+}
+
+.tutor-disabled-wrapper .tutor-disabled-content-wrapper img {
+  margin-bottom: 30px;
+}
+
+.tutor-disabled-wrapper .tutor-disabled-content-wrapper p {
+  margin-bottom: 38px;
+}
+
+.tutor-disabled-wrapper .tutor-disabled-content-wrapper h3 {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.tutor-disabled-wrapper .tutor-disabled-content-wrapper p {
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.tutor-denied-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  -webkit-column-gap: 80px;
+     -moz-column-gap: 80px;
+          column-gap: 80px;
+  max-width: 990px;
+  margin: auto;
+  padding: 60px 0 30px;
+}
+
+.tutor-denied-wrapper .tutor-denied-content-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -o-flex-direction: column;
+  -ms-flex-direction: column;
+  -moz-flex-direction: column;
+  row-gap: 39px;
+}
+
+.tutor-denied-wrapper .tutor-denied-content-wrapper h2 {
+  font-size: 40px !important;
+  font-style: normal;
+  text-align: left;
+}
+
+@media screen and (max-width: 992px) {
+  .tutor-denied-wrapper {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+            flex-direction: column;
+    -o-flex-direction: column;
+    -ms-flex-direction: column;
+    -moz-flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -o-align-items: center;
+    -ms-align-items: center;
+    -moz-align-items: center;
+    -webkit-align-items: center;
+    row-gap: 50px;
+  }
 }

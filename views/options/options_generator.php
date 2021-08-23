@@ -27,7 +27,7 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
             <div class="tutor-option-tabs">
                 <?php
                 $i = 0;
-                foreach ($this->options_attr as $args) : ?> <ul class="tutor-option-nav">
+                foreach ($this->options_attr() as $args) : ?> <ul class="tutor-option-nav">
                         <li class="tutor-option-nav-item">
                             <h4><?php echo $args['label'] ?></h4>
                         <li>

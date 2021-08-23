@@ -142,14 +142,12 @@ class User {
 		if(is_admin() && isset( $_GET['tutor-hide-notice'] ) && $_GET['tutor-hide-notice']=='registration') {
 			tutils()->checking_nonce('get');
 
-			$home_url = get_home_url();
-			$parsed = parse_url($home_url);
-
-			$base_path = (is_array( $parsed ) && isset( $parsed['path'] )) ? $parsed['path'] : '/';
-			$base_path = rtrim($base_path, '/') . '/';
-
-			self::$hide_registration_notice = true;
-			setcookie('tutor_notice_hide_registration', 1, time() + (86400 * 30), $base_path);
+			if(isset($_GET['tutor-registration']) && $_GET['tutor-registration']==='enable') {
+				update_option( 'users_can_register', 1 );
+			} else {
+				self::$hide_registration_notice = true;
+				setcookie('tutor_notice_hide_registration', 1, time() + (86400 * 30), tutor()->basepath);
+			}
 		}
 	}
 
@@ -165,10 +163,22 @@ class User {
 			return;
 		}
 
+		$hide_url = wp_nonce_url( add_query_arg( 'tutor-hide-notice', 'registration' ), tutor()->nonce_action, tutor()->nonce );
 		?>
-		<div class="notice notice-warning" style="position:relative;">
-			<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'tutor-hide-notice', 'registration' ), tutor()->nonce_action, tutor()->nonce ) ); ?>" class="notice-dismiss" style="position:relative;float:right;padding:9px 0px 9px 9px 9px;text-decoration:none;"></a>
-			<p><?php _e('User registration is disabled. New students and instructors will not be able to register for now.', 'tutor'); ?></p>
+		<div class="wrap tutor-user-registration-notice-wrapper">
+			<div class="tutor-user-registration-notice">
+				<div>
+					<img src="<?php echo tutor()->url; ?>assets/images/icon-info-round.svg"/>
+				</div>
+				<div>
+					<?php _e('As membership is turned off, students and instructors will not be able to sign up. <strong>Press Enable</strong> or go to <strong>Settings > General > Membership</strong> and enable "Anyone can register".'); ?>
+				</div>
+				<div>
+					<a href="<?php echo esc_url( add_query_arg( 'tutor-registration', 'enable', $hide_url ) ); ?>"><?php _e('Enable', 'tutor'); ?></a>
+					<hr/>
+					<a href="<?php echo esc_url( $hide_url ); ?>"><?php _e('Dismiss', 'tutor'); ?></a>
+				</div>
+			</div>
 		</div>
 		<?php
 	}

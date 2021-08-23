@@ -30,6 +30,8 @@ class Instructors_List extends \Tutor_List_Table {
 			case 'user_email':
 			case 'display_name':
 				return $item->$column_name;
+			case 'registration_date':
+				return esc_html( date( get_option( 'date_format'), strtotime($item->user_registered ) ) );
 			default:
 				return print_r($item,true); //Show the whole array for troubleshooting purposes
 		}
@@ -110,11 +112,12 @@ class Instructors_List extends \Tutor_List_Table {
 
 	function get_columns(){
 		$columns = array(
-			//'cb'                		=> '<input type="checkbox" />', //Render a checkbox instead of text
+			'cb'                		=> '<input type="checkbox" />', //Render a checkbox instead of text
 			'display_name'      		=> __('Name', 'tutor'),
 			'user_email'        		=> __('E-Mail', 'tutor'),
 			'total_course'      		=> __('Total Course', 'tutor'),
 			'instructor_commission' 	=> __('Instructor Commission', 'tutor'),
+			'registration_date' 		=> __('Date', 'tutor'),
 			'status'            		=> __('Status', 'tutor'),
 		);
 		return $columns;
@@ -129,7 +132,7 @@ class Instructors_List extends \Tutor_List_Table {
 
 	function get_bulk_actions() {
 		$actions = array(
-			//'delete'    => 'Delete'
+			'delete'    => 'Delete'
 		);
 		return $actions;
 	}
@@ -164,29 +167,47 @@ class Instructors_List extends \Tutor_List_Table {
 		}
 
 		//Detect when a bulk action is being triggered...
-		if( 'delete'===$this->current_action() ) {
-			wp_die('Items deleted (or they would be if we had items to delete)!');
+		if( 'delete'=== $this->current_action() ) {
+			
+			$delete_instructors = $_GET['instructor'];
+			if ( count($delete_instructors) ) {
+				foreach( $delete_instructors as $instructor ) {
+					do_action( 'tutor_insctructor_before_delete', $instructor);
+
+					wp_delete_user($instructor);
+
+					do_action( 'tutor_insctructor_after_delete', $instructor);
+
+				}
+			}
 		}
 	}
 
-	function prepare_items() {
+	/**
+	 * Filter support added
+	 * 
+	 * @param optional
+	 * 
+	 * @since 1.9.7
+	 */
+	function prepare_items($search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '') {
 		$per_page = 20;
 
-		$search_term = '';
-		if (isset($_REQUEST['s'])){
-			$search_term = sanitize_text_field($_REQUEST['s']);
-		}
+		// $search_term = '';
+		// if (isset($_REQUEST['s'])){
+		// 	$search_term = sanitize_text_field($_REQUEST['s']);
+		// }
 
 		$columns = $this->get_columns();
 		$hidden = array();
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array($columns, $hidden, $sortable);
-
+		$this->process_bulk_action();
 		$current_page = $this->get_pagenum();
 
-		$total_items = tutor_utils()->get_total_instructors($search_term);
-		$this->items = tutor_utils()->get_instructors(($current_page-1)*$per_page, $per_page, $search_term);
+		$total_items = tutor_utils()->get_total_instructors($search_filter);
+		$this->items = tutor_utils()->get_instructors(($current_page-1)*$per_page, $per_page, $search_filter, $course_filter, $date_filter,$order_filter, $status = null, $cat_ids = array() );
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,

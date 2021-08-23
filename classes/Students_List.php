@@ -10,6 +10,8 @@ if ( ! class_exists( 'Tutor_List_Table' ) ) {
 
 class Students_List extends \Tutor_List_Table {
 
+	const STUDENTS_LIST_PAGE = 'tutor-students';
+
 	function __construct() {
 		global $status, $page;
 

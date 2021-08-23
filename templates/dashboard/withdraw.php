@@ -42,29 +42,31 @@ else if(function_exists('edd_currency_symbol')){
 <div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal">
     <h4><?php echo __('Withdrawal', 'tutor'); ?></h4>
 
-    <div class="withdraw-page-current-balance">
-        <div class="balance-info">
-            <img src="<?php echo $image_base; ?>wallet.svg" />
-            <div>
-                <small><?php _e('Current Balance', 'tutor'); ?></small>
-                <p>
-                    <?php
-                    if ($is_balance_sufficient) {
-                        echo sprintf(__('You currently have %s %s %s ready to withdraw', 'tutor'), "<strong class='available_balance'>", $balance_formatted, '</strong>');
-                    } else {
-                        echo sprintf(__('You currently have %s %s %s and this is insufficient balance to withdraw', 'tutor'), "<strong class='available_balance'>", $balance_formatted, '</strong>');
-                    }
-                    ?>
-                </p>
-            </div>
+    <div class="tutor-component-three-col-action">
+        <img src="<?php echo $image_base; ?>wallet.svg" />
+        
+        <div>
+            <small><?php _e('Current Balance', 'tutor'); ?></small>
+            <p>
+                <?php
+                if ($is_balance_sufficient) {
+                    echo sprintf(__('You currently have %s %s %s ready to withdraw', 'tutor'), "<strong class='available_balance'>", $balance_formatted, '</strong>');
+                } else {
+                    echo sprintf(__('You currently have %s %s %s and this is insufficient balance to withdraw', 'tutor'), "<strong class='available_balance'>", $balance_formatted, '</strong>');
+                }
+                ?>
+            </p>
         </div>
-        <div class="make-withdraw">
-            <?php
-            if ($is_balance_sufficient && $withdraw_method_name) { ?>
-                <a class="open-withdraw-form-btn" href="javascript:;"><?php _e('Withdrawal Request', 'tutor'); ?></a> <?php
+
+        <?php
+            if ($is_balance_sufficient && $withdraw_method_name) { 
+                ?>
+                <button class="tutor-button tutor-button-primary open-withdraw-form-btn">
+                    <?php _e('Withdrawal Request', 'tutor'); ?>
+                </button> 
+                <?php
             }
-            ?>
-        </div>
+        ?>
     </div>
 
     <div class="current-withdraw-account-wrap withdrawal-preference inline-image-text">
@@ -139,11 +141,13 @@ else if(function_exists('edd_currency_symbol')){
                                     <span>
                                         <span><?php echo $currency_symbol; ?></span>
                                     </span>
-                                    <input type="number" min="<?php echo esc_attr($min_withdraw); ?>" name="tutor_withdraw_amount" step=".01" required>
+                                    <input type="number" min="<?php echo esc_attr($min_withdraw); ?>" name="tutor_withdraw_amount" id="tutor_withdraw_amount" step=".01" required>
                                 </div>
                                 <div class="inline-image-text">
                                     <img src="<?php echo $image_base; ?>info-icon-question.svg" />
-                                    <span>Minimum withdraw amount is <?php echo strip_tags($formatted_min_withdraw_amount); ?></span>
+                                    <span>
+                                        <?php echo __( 'Minimum withdraw amount is', 'tutor' ).' '.strip_tags($formatted_min_withdraw_amount); ?>
+                                    </span>
                                 </div>
                             </div>
 
