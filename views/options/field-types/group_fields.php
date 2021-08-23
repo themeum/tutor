@@ -1,20 +1,26 @@
 <?php
-if ( ! isset($field['group_fields']) || ! is_array($field['group_fields']) || ! count($field['group_fields']) ){
+if (!isset($field['group_fields']) || !is_array($field['group_fields']) || !count($field['group_fields'])) {
 	return;
 }
 ?>
-<div class="tutor-option-gorup-fields-wrap">
-	<?php
-	foreach ($field['group_fields'] as $groupFieldKey => $group_field){
-		$input_name = "tutor_option[{$field['field_key']}][{$groupFieldKey}]";
-		$default_value = isset($group_field['default']) ? $group_field['default'] : false;
-		$input_value = $this->get($field['field_key'].'.'.$groupFieldKey, $default_value);
-		$label = tutor_utils()->avalue_dot('label', $group_field);
-		?>
-		<div class="tutor-option-group-field">
-			<?php include tutor()->path."views/options/field-types/groups/{$group_field['type']}.php"; ?>
+<div class="tutor-option-field-row">
+	<div class="tutor-option-field-label">
+		<label><?php echo $field['label']; ?></label>
+		<p class="desc"><?php echo $field['desc'] ?></p>
+	</div>
+	<div class="tutor-option-field-input">
+		<div class="d-flex input-select">
+			<?php
+			foreach ($field['group_fields'] as $groupFieldKey => $group_field) {
+				$input_name = "tutor_option[{$field['key']}][{$groupFieldKey}]";
+				$default_value = isset($group_field['default']) ? $group_field['default'] : false;
+				$input_value = $this->get($field['key'] . '.' . $groupFieldKey, $default_value);
+				$label = tutor_utils()->avalue_dot('label', $group_field);
+			?>
+				<?php include tutor()->path . "views/options/field-types/groups/{$group_field['type']}.php"; ?>
+			<?php
+			}
+			?>
 		</div>
-		<?php
-	}
-	?>
+	</div>
 </div>

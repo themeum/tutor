@@ -28,7 +28,7 @@ jQuery(document).ready(function($){
         window.history.pushState('obj', '', $(this).attr('href'));
     });
 
-    $('#save_tutor_option').click(function (e) {
+    /* $('#save_tutor_option').click(function (e) {
         e.preventDefault();
         $(this).closest('form').submit();
     });
@@ -46,15 +46,15 @@ jQuery(document).ready(function($){
                 $form.find('.button').addClass('tutor-updating-message');
             },
             success: function (data) {
-                data.success ? 
-                    tutor_toast(__('Saved', 'tutor'), $form.data('toast_success_message'), 'success') : 
+                data.success ?
+                    tutor_toast(__('Saved', 'tutor'), $form.data('toast_success_message'), 'success') :
                     tutor_toast(__('Request Error', 'tutor'), __('Could not save', 'tutor'), 'error');
             },
             complete: function () {
                 $form.find('.button').removeClass('tutor-updating-message');
             }
         });
-    });
+    }); */
 
     /**
      * Withdraw nav tabs
@@ -365,7 +365,7 @@ jQuery(document).ready(function($){
         var $that = $(this);
         var action = $that.attr('data-action');
         var instructor_id = $that.attr('data-instructor-id');
-        
+
         var prompt_message = $that.attr('data-prompt-message');
         if(prompt_message && !confirm(prompt_message)){
             // Avoid Accidental CLick
@@ -478,10 +478,10 @@ jQuery(document).ready(function($){
         } else {
             content = $('#'+inputid).val();
         }
-        
+
         var form_data = $(this).closest('form').serializeObject();
         form_data.assignment_content = content;
-        
+
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
@@ -496,7 +496,7 @@ jQuery(document).ready(function($){
 
                     //Close the modal
                     $('.tutor-lesson-modal-wrap').removeClass('show');
-                    
+
                     tutor_toast(__('Assignment Updated', 'tutor'), $that.data('toast_success_message'), 'success');
                 }
             },
@@ -624,7 +624,7 @@ jQuery(document).ready(function($){
         }
 
         if(
-            form.find('[name="tutor_pmpro_membership_model"]').val()=='category_wise_membership' && 
+            form.find('[name="tutor_pmpro_membership_model"]').val()=='category_wise_membership' &&
             !form.find('.membership_course_categories input:checked').length) {
 
             if(!confirm(__('Do you want to save without any category?', 'tutor'))) {
@@ -715,11 +715,11 @@ jQuery(document).ready(function($){
 
         popup = new window.tutor_component($, 'icon-trash', 40).popup(data);
     });
-    
+
 
     /**
      * Show hide is course public checkbox (backend dashboard editor)
-     * 
+     *
      * @since  v.1.7.2
     */
     var price_type = $('#tutor-attach-product [name="tutor_course_price_type"]');
@@ -733,12 +733,12 @@ jQuery(document).ready(function($){
                 $('#_tutor_is_course_public_meta_checkbox')[method]();
             }
         }).trigger('change');
-    }    
-    
-    
+    }
+
+
     /**
      * Focus selected instructor layout in setting page
-     * 
+     *
      * @since  v.1.7.5
     */
     $(document).on('click', '.instructor-layout-template', function(){
@@ -747,10 +747,10 @@ jQuery(document).ready(function($){
     });
 
 
-    
+
     /**
      * Programmatically open preview link. For some reason it's not working normally.
-     * 
+     *
      * @since  v.1.7.9
     */
    $('#preview-action a.preview').click(function(e) {
@@ -763,6 +763,6 @@ jQuery(document).ready(function($){
    });
 
 
-   
+
 });
 
