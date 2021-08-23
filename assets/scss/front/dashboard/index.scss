@@ -1,0 +1,8 @@
+.tutor-dashboard {
+    @import './header.scss';
+    @import './sidebar.scss';
+
+    .tutor-dashboard-content {
+        @import './pages/q-and-a.scss';
+    }
+}
