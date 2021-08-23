@@ -12,7 +12,7 @@
  */
 
 $is_by_short_code = isset($is_shortcode) && $is_shortcode===true;
-if(!$is_by_short_code) {
+if(!$is_by_short_code && !defined( 'OTLMS_VERSION' )) {
     get_header();
 }
 
@@ -210,6 +210,6 @@ do_action('tutor_dashboard/before/wrap');
 <?php do_action('tutor_dashboard/after/wrap'); ?>
 
 <?php
-if(!$is_by_short_code) {
+if(!$is_by_short_code && !defined( 'OTLMS_VERSION' )) {
     get_footer();
 }

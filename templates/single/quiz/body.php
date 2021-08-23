@@ -37,6 +37,7 @@ $quiz_answers = array();
 
 		$hide_quiz_time_display = (bool) tutor_utils()->avalue_dot('hide_quiz_time_display', $quiz_attempt_info);
 		$hide_question_number_overview = (bool) tutor_utils()->avalue_dot('hide_question_number_overview', $quiz_attempt_info);
+		$hide_previous_button = (bool) tutor_utils()->get_option('quiz_previous_button_disabled', false);
 
 		$remaining_time_secs = (strtotime($is_started_quiz->attempt_started_at) + $time_limit_seconds ) - strtotime($quiz_attempt_info['date_time_now']);
 
@@ -49,7 +50,7 @@ $quiz_answers = array();
 			if ( ! $hide_quiz_time_display){
 				?>
                 <div class="time-remaining">
-					<?php _e('Time remaining : '); ?> <span id="tutor-quiz-time-update" data-attempt-settings="<?php echo esc_attr(json_encode($is_started_quiz)) ?>" data-attempt-meta="<?php echo esc_attr(json_encode($quiz_attempt_info)) ?>"><?php echo $remaining_time_context; ?></span>
+					<?php _e( 'Time remaining : ', 'tutor' ); ?> <span id="tutor-quiz-time-update" data-attempt-settings="<?php echo esc_attr(json_encode($is_started_quiz)) ?>" data-attempt-meta="<?php echo esc_attr(json_encode($quiz_attempt_info)) ?>"><?php echo $remaining_time_context; ?></span>
                 </div>
 			<?php } ?>
         </div>
@@ -77,6 +78,26 @@ $quiz_answers = array();
 				}
 				?>
 
+				<div id="tutor-quiz-time-expire-wrapper" data-attempt-allowed="<?php esc_attr_e( $attempts_allowed );?>" data-attempt-remaining="<?php esc_attr_e( $attempt_remaining );?>">
+					<div class="tutor-alert">
+						<div class="text">
+
+						</div>
+						<div>
+							<form id="tutor-start-quiz" method="post">
+								<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+
+								<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
+								<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
+
+								<button type="submit" class="tutor-button button-warning" name="start_quiz_btn" value="start_quiz">
+									<?php _e( 'Reattempt', 'tutor' ); ?>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+
                 <form id="tutor-answering-quiz" method="post">
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                     <input type="hidden" value="<?php echo $is_started_quiz->attempt_id; ?>" name="attempt_id"/>
@@ -93,6 +114,7 @@ $quiz_answers = array();
 						}
 
 						$next_question = isset($questions[$question_i]) ? $questions[$question_i] : false;
+						$previous_question = $question_i>1 ? $questions[$question_i-1] : false;
 						?>
                         <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> data-quiz-feedback-mode="<?php echo $feedback_mode; ?>" >
 
@@ -357,25 +379,24 @@ $quiz_answers = array();
 
 							<?php
 							if ($question_layout_view !== 'question_below_each_other'){
-								if ($next_question){
-									?>
-                                    <div class="quiz-answer-footer-bar">
-                                        <div class="quiz-footer-button">
-                                            <button type="button" value="quiz_answer_submit" class="tutor-button
-                                        tutor-button-primary tutor-quiz-answer-next-btn"><?php _e( 'Answer &amp; Next Question', 'tutor' ); ?></button>
-                                        </div>
-                                    </div>
-									<?php
-								}else{
-									?>
-                                    <div class="quiz-answer-footer-bar">
-                                        <div class="quiz-footer-button">
-                                            <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button tutor-button-primary"><?php
-												_e( 'Submit Quiz', 'tutor' ); ?></button>
-                                        </div>
-                                    </div>
-									<?php
-								}
+								?>
+								<div class="quiz-answer-footer-bar">
+									<div class="quiz-footer-button">
+										<?php
+											if(!$hide_previous_button && $previous_question) {
+												?>
+												<button type="button" class="tutor-button tutor-button-outlined tutor-button-outlined-transparent tutor-quiz-answer-previous-btn">
+													<?php _e( 'Back', 'tutor' ); ?>
+												</button>
+												<?php
+											}
+										?>
+										<button type="submit" class="tutor-button tutor-button-primary <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
+											<?php $next_question ? _e( 'Answer &amp; Next Question', 'tutor' ) : _e( 'Submit Quiz', 'tutor' ); ?>
+										</button>
+									</div>
+								</div>
+								<?php
 							}
 							?>
                         </div>
@@ -416,6 +437,7 @@ $quiz_answers = array();
 			<?php
 		}
 	}else{
+
 		if ($attempt_remaining > 0 || $attempts_allowed == 0) {
 			do_action('tuotr_quiz/start_form/before', $quiz_id);
 			?>
@@ -427,7 +449,7 @@ $quiz_answers = array();
                     <input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
                     <button type="submit" class="tutor-button" name="start_quiz_btn" value="start_quiz">
-                        <i class="icon-hourglass-1"></i> <?php _e( 'Start Quiz', 'tutor' ); ?>
+                        <?php _e( 'Start Quiz', 'tutor' ); ?>
                     </button>
                 </form>
             </div>

@@ -340,6 +340,25 @@ class WooCommerce extends Tutor_Base {
 			$user_id = $wpdb->get_var($wpdb->prepare("SELECT post_author FROM {$wpdb->posts} WHERE ID = %d ", $course_id));
 			$order_status = $wpdb->get_var($wpdb->prepare("SELECT post_status from {$wpdb->posts} where ID = %d ", $order_id));
 
+			/**
+			 * Return here if already added this product from this order
+			 * @since v1.9.7
+			 */
+			$exist_count = (int)$wpdb->get_var($wpdb->prepare(
+				"SELECT COUNT(earning_id) 
+				FROM {$wpdb->prefix}tutor_earnings 
+				WHERE course_id=%d 
+					AND order_id=%d 
+					AND user_id=%d",
+				$course_id,
+				$order_id,
+				$user_id
+			));
+
+			if($exist_count>0) {
+				return;
+			}
+
 			$total_price = $item->get_total();
 
 			$fees_deduct_data = array();

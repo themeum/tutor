@@ -6,7 +6,7 @@
 ?>
 
 <form method="post" id="tutor_update_review_form">
-	<div class="tutor-write-review-box">
+	<div class="tutor-write-review-box tutor-star-rating-container">
 		<div class="tutor-form-group">
 			<?php
 			tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($rating->rating));

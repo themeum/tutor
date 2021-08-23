@@ -55,22 +55,20 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
 $image_base = tutor()->url . '/assets/images/';
 ?>
 
-<div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal">
+<div class="tutor-dashboard-content-inner">
     <h4><?php echo __('Announcement', 'tutor'); ?></h4>
     <!--notice-->
-    <div class="withdraw-page-current-balance new-announcement-wrap">
-        <div class="balance-info new-announcement-content">
-            <div class="tutor-announcement-big-icon">
-                <i class="tutor-icon-speaker"></i>
-            </div>
-            <div>
-                <small><?php _e('Create Announcement', 'tutor'); ?></small>
-                <p>
-                    <strong>
-                        <?php _e('Notify all students of your course', 'tutor'); ?>
-                    </strong>
-                </p>
-            </div>
+    <div class="tutor-component-three-col-action new-announcement-wrap">
+        <div class="tutor-announcement-big-icon">
+            <i class="tutor-icon-speaker"></i>
+        </div>
+        <div>
+            <small><?php _e('Create Announcement', 'tutor'); ?></small>
+            <p>
+                <strong>
+                    <?php _e('Notify all students of your course', 'tutor'); ?>
+                </strong>
+            </p>
         </div>
         <div class="new-announcement-button">
             <button type="button" class="tutor-btn tutor-announcement-add-new">
@@ -79,7 +77,6 @@ $image_base = tutor()->url . '/assets/images/';
         </div>
     </div>
     <!--notice end-->
-
 </div>
 <!--sorting-->
 <div class="tutor-dashboard-announcement-sorting-wrap">
@@ -113,7 +110,7 @@ $image_base = tutor()->url . '/assets/images/';
 
     <div class="tutor-form-group tutor-announcement-datepicker">
         <label><?php _e('Date', 'tutor'); ?></label>
-        <input type="text" class="tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off" />
+        <input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter; ?>" autocomplete="off" />
         <i class="tutor-icon-calendar"></i>
     </div>
 </div>

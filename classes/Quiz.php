@@ -82,6 +82,13 @@ class Quiz {
          */
 		add_action('wp_ajax_tutor_render_quiz_content', array($this, 'tutor_render_quiz_content'));
 
+		/**
+		 * Quiz abandon action
+		 * 
+		 * @since 1.9.6
+		 */
+		add_action('wp_ajax_tutor_quiz_abandon', array($this, 'tutor_quiz_abandon'));
+
 		$this->prepare_allowed_html();
 	}
 
@@ -237,7 +244,42 @@ class Quiz {
 		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_answering_quiz_question' ){
 			return;
 		}
-		//Checking nonce
+		//submit quiz attempts
+		self::tutor_quiz_attemp_submit();
+
+		wp_redirect(get_the_permalink());
+		die();
+	}
+
+	/**
+	 * Quiz abandon submission handler
+	 * 
+	 * @return JSON response
+	 * 
+	 * @since 1.9.6
+	 */
+	public function tutor_quiz_abandon(){
+		if ( tutils()->array_get('tutor_action', $_POST) !== 'tutor_answering_quiz_question' ){
+			return;
+		}
+		//submit quiz attempts
+		if ( self::tutor_quiz_attemp_submit() ) {
+			wp_send_json_success();
+		} else {
+			wp_send_json_error();
+		}
+	}
+
+	/**
+	 * This is  a unified method for handling normal quiz submit or abandon submit
+	 * 
+	 * It will handle ajax or normal form submit and can be used with different hooks
+	 * 
+	 * @return true | false
+	 * 
+	 * @since 1.9.6 
+	 */
+	public static function tutor_quiz_attemp_submit() {
 		tutor_utils()->checking_nonce();
 
 		$attempt_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('attempt_id', $_POST));
@@ -412,10 +454,9 @@ class Quiz {
             }
 
             do_action('tutor_quiz/attempt_ended', $attempt_id);
+			return true;
         }
-
-		wp_redirect(get_the_permalink($attempt->quiz_id));
-		die();
+		return false;
 	}
 
 
@@ -466,9 +507,9 @@ class Quiz {
 
 		$quiz_id = (int) sanitize_text_field($_POST['quiz_id']);
 
-		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
+		// if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+		// 	wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		// }
 
 		$attempt = tutor_utils()->is_started_quiz($quiz_id);
 
@@ -720,7 +761,8 @@ class Quiz {
 	public function tutor_load_edit_quiz_modal(){
 		tutils()->checking_nonce();
 
-		$quiz_id = sanitize_text_field($_POST['quiz_id']);
+		$quiz_id 	= sanitize_text_field ($_POST['quiz_id'] );
+		$topic_id 	= sanitize_text_field( $_POST['topic_id'] ); 
 		
 		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
@@ -1095,15 +1137,18 @@ class Quiz {
 							<?php
 						}
 						?>
-                        <span class="tutor-quiz-answer-edit">
-                            <a href="javascript:;"><i class="tutor-icon-pencil"></i> </a>
-                        </span>
+						<?php if( "true_false" != $question_type ):?>
+							<span class="tutor-quiz-answer-edit">
+								<a href="javascript:;"><i class="tutor-icon-pencil"></i> </a>
+							</span>
+						<?php endif;?>
                         <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
                     </div>
-
-                    <div class="tutor-quiz-answer-trash-wrap">
-                        <a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>"><i class="tutor-icon-garbage"></i> </a>
-                    </div>
+					<?php if( "true_false" != $question_type ):?>
+						<div class="tutor-quiz-answer-trash-wrap">
+							<a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>"><i class="tutor-icon-garbage"></i> </a>
+						</div>
+					<?php endif;?>
                 </div>
 				<?php
 			}
@@ -1197,17 +1242,26 @@ class Quiz {
 	 */
 	public function tutor_quiz_modal_update_settings(){
 		tutils()->checking_nonce();
+		//while creating quiz if creating step is not follow then it may throw error that why check added
+		$quiz_id = ( isset( $_POST['quiz_id'] ) ) ? sanitize_text_field( $_POST['quiz_id'] ) : '' ;
+		$current_topic_id = sanitize_text_field( $_POST['topic_id'] );
+		$course_id = tutor_utils()->get_course_id_by('topic', sanitize_textarea_field( $current_topic_id ) );
 
-		$quiz_id = sanitize_text_field($_POST['quiz_id']);
-		$quiz_option = tutor_utils()->sanitize_array($_POST['quiz_option']);
+		$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] );
 				
-		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
+		if( !tutils()->can_user_manage('quiz', $quiz_id) ) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
 		update_post_meta($quiz_id, 'tutor_quiz_option', $quiz_option);
 		do_action('tutor_quiz_settings_updated', $quiz_id);
-		wp_send_json_success();
+
+		//@since 1.9.6
+		ob_start();
+		include  tutor()->path.'views/metabox/course-contents.php';
+		$course_contents = ob_get_clean();
+
+		wp_send_json_success( array( 'course_contents' => $course_contents ) );
 	}
 
 

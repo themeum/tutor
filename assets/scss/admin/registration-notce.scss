@@ -1,0 +1,79 @@
+@import "../lib/mixins.scss";
+
+#screen-meta-links+.tutor-user-registration-notice-wrapper {
+    margin-top: 45px;
+}
+
+.tutor-user-registration-notice {
+    @include valueWithPrefix(display, flex);
+    @include propertyWithPrefix(align-items, center);
+    background: white;
+    border: 1px solid #CDCFD5;
+    box-sizing: border-box;
+    border-radius: 6px;
+    width: 100%;
+    overflow: hidden;
+    margin: 11px 0 15px;
+
+    &>div{
+        &:first-child {
+            img {
+                margin: 16px;
+            }
+        }
+
+        &:nth-child(2){
+            @include propertyWithPrefix(flex, 1);
+            padding: 20px 0;
+            color: #676a72;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 15px;
+            strong{
+                color: black;
+            }
+        }
+
+        &:last-child {
+            border-left: 1px solid #CDCFD5;
+            margin-left: 20px;
+            @include valueWithPrefix(display, flex);
+            @include propertyWithPrefix(flex-direction, column);
+            @include propertyWithPrefix(align-self, stretch);
+            @include propertyWithPrefix(justify-content, space-around);
+            
+            a{
+                display: block;
+                width: calc(100% - 40px);
+                height: 100%;
+                padding: 0 20px;
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 15px;
+                text-align: center;
+                color: #757C8E;
+                @include valueWithPrefix(display, flex);
+                @include propertyWithPrefix(align-items, center);
+
+                &:hover {
+                    color: #3E64DE;
+                    background: #F3F3F5;;
+                }
+
+                &, &:hover, &:focus, &:active {
+                    outline: 0 !important;
+                    box-shadow: none;
+                }
+            }
+            
+            hr{
+                display: block;
+                border: none;
+                height: 0;
+                width: 100%;
+                margin: 0;
+                border-top: 1px solid #CDCFD5;
+            }
+        }
+    }
+}

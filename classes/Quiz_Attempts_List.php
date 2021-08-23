@@ -89,8 +89,8 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
             $pass_mark_percent = tutor_utils()->get_quiz_option($item->quiz_id, 'passing_grade', 0);
             $earned_percentage = $item->earned_marks > 0 ? (number_format(($item->earned_marks * 100) / $item->total_marks)) : 0;
 
-            $output = $item->earned_marks . " out of {$item->total_marks} <br />";
-            $output .= "({$earned_percentage}%) pass ({$pass_mark_percent}%) <br />";
+            $output = $item->earned_marks .__( ' out of ', 'tutor' ). " {$item->total_marks} <br />";
+            $output .= "({$earned_percentage}%) ".__( ' pass ', 'tutor' )." ({$pass_mark_percent}%) <br />";
 
             if ($earned_percentage >= $pass_mark_percent) {
                 $output .= '<span class="result-pass">' . __('Pass', 'tutor') . '</span>';
@@ -171,7 +171,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			
 			$this->items = tutor_utils()->get_quiz_attempts( ( $current_page - 1 ) * $per_page, $per_page, $search_filter, $course_filter, $date_filter, $order_filter );
 
-			$total_items = is_array( $this->items ) ? count( $this->items ) : 0; 
+			$total_items = tutor_utils()->get_total_quiz_attempts(); 
 
 		} elseif ( current_user_can( 'tutor_instructor' ) ){
 			/**
@@ -192,7 +192,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 
 				$this->items = tutor_utils()->get_quiz_attempts_by_course_ids(( $current_page - 1 ) * $per_page, $per_page, $get_course_ids, $search_filter, $course_filter, $date_filter, $order_filter );
 				
-				$total_items = is_array( $this->items ) ? count( $this->items ) : 0;
+				$total_items = tutor_utils()->get_total_quiz_attempts_by_course_ids($get_course_ids);
 			}
 
 		}

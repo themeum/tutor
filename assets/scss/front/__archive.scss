@@ -1,3 +1,5 @@
+@import "../lib/mixins";
+
 /* Course filter layout */
 .tutor-course-filter-wrapper{
 	overflow: auto;
@@ -1941,15 +1943,6 @@ button.tm-close.tutor-icon-line-cross:hover {
 * Course adding page
 * Course Builder
 */
-#tutor-course-topics a {
-	text-decoration: none;
-}
-#tutor-course-topics .tutor-topics-wrap {
-	border-bottom: 1px solid #f6f8fa;
-	padding-bottom: 0;
-	margin: 0;
-}
-
 .tutor-untopics-lessons .course-content-item,
 .course-contents .course-content-item {
 	padding: 10px 12px 10px 25px;
@@ -1985,53 +1978,10 @@ button.tm-close.tutor-icon-line-cross:hover {
 	}
 }
 
-.tutor-lessons.ui-sortable {
-	min-height: 20px;
-}
-#tutor-course-topics .drop-lessons p {
-	margin: 0;
-}
-#tutor-course-topics .course-content-item:hover {
-	background-color: #ebeef0;
-}
-#tutor-course-topics .tutor-lessons {
-	padding-left: 0;
-}
-#tutor-course-topics .tutor-lesson-top,
-#tutor-course-topics .tutor-lesson-top i {
-	font-size: 15px;
-}
-#tutor-course-topics .tutor-lesson-top .open-tutor-quiz-modal i {
-	display: inline-block;
-	vertical-align: middle;
-	margin-right: 5px;
-}
-#tutor-course-topics .tutor-lesson-top {
-	display: flex;
-	//font-size: var(--tutor-text-size);
-}
 #tutor-course-topics .tutor-lesson-top .open-tutor-lesson-modal,
 .tutor-quiz .open-tutor-quiz-modal,
 .course-content-item .open-tutor-assignment-modal {
 	flex: 1;
-}
-#tutor-course-topics .tutor-lesson-top i.tutor-icon-move {
-	margin-right: 10px;
-	cursor: ns-resize;
-}
-.rtl #tutor-course-topics .tutor-lesson-top i.tutor-icon-move {
-	margin-right: 0;
-	margin-left: 10px;
-}
-#tutor-course-topics .tutor-lesson-top i.tutor-icon-pencil {
-	margin: 0 10px;
-}
-#tutor-course-topics .tutor-lesson-top a {
-	color: #393c40;
-}
-
-#tutor-course-topics .tutor-lesson-top a.tutor-updating-message i {
-	display: none;
 }
 
 .course-move-handle {
@@ -2150,19 +2100,6 @@ p.course-empty-content {
 	font-size: 12px;
 }
 
-#tutor-course-topics {
-	position: relative;
-}
-#tutor-course-topics .inside {
-	padding: 0;
-	margin: 0;
-}
-#tutor-course-topics a:focus {
-	box-shadow: none;
-}
-#tutor-course-topics .toggle-indicator:before {
-	margin-top: 20px;
-}
 .tutor-topics-wrap:nth-child(2n) {
 	background: #f6f8fa;
 }
@@ -3786,3 +3723,19 @@ table.course-single-gradebooks a {
 /**
 * END Oxygen Integration CSS
  */
+
+/**
+ * @since 1.9.6
+*/ 
+#tutor-quiz-time-expire-wrapper {
+	margin-bottom: 40px;
+	.tutor-alert {
+		display: none;
+	}
+	.tutor-alert.show {
+		@include valueWithPrefix(display, flex);
+		@include propertyWithPrefix(justify-content, space-between);
+		@include propertyWithPrefix(align-items, center);
+	}
+}
+

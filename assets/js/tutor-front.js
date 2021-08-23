@@ -135,18 +135,18 @@ jQuery(document).ready(function ($) {
     /**
      * Hover tutor rating and set value
      */
-    $(document).on('mouseover', '.tutor-write-review-box .tutor-star-rating-group i', function () {
+    $(document).on('mouseover', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
         toggle_star_($(this));
     });
 
-    $(document).on('click', '.tutor-write-review-box .tutor-star-rating-group i', function () {
+    $(document).on('click', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
         var rating = $(this).attr('data-rating-value');
         $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
         
         toggle_star_($(this));
     });
 
-    $(document).on('mouseout', '.tutor-write-review-box .tutor-star-rating-group', function(){
+    $(document).on('mouseout', '.tutor-star-rating-container .tutor-star-rating-group', function(){
         var value = $(this).find('input[name="tutor_rating_gen_input"]').val();
         var rating = parseInt(value);
         
@@ -181,10 +181,22 @@ jQuery(document).ready(function ($) {
                     var review_id = data.data.review_id;
                     var review = data.data.review;
                     $('.tutor-review-' + review_id + ' .review-content').html(review);
-                    location.reload();
+                    
+                    // Show thank you
+                    new window.tutor_component($, 'icon-rating', 40).popup({
+                        title: __('Thank You for Rating This Course!', 'tutor'),
+                        description : __('Your rating will now be visible in the course page', 'tutor'),
+                    });
+
+                    setTimeout(function(){
+                        location.reload();
+                    }, 3000);
                 }
             });
         }
+    }).on('click', '.tutor_cancel_review_btn', function() {
+        // Hide the pop up review form on cancel click
+        $(this).closest('form').hide();
     });
 
     $(document).on('click', '.write-course-review-link-btn', function (e) {
@@ -284,6 +296,7 @@ jQuery(document).ready(function ($) {
     /**
      * Quiz attempt
      */
+
     var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
     var attempt_settings = null;
     if ($tutor_quiz_time_update.length) {
@@ -322,7 +335,6 @@ jQuery(document).ready(function ($) {
                     clearInterval(tutor_quiz_interval);
                     countdown_human = "EXPIRED";
                     //Set the quiz attempt to timeout in ajax
-
                     if (_tutorobject.quiz_options.quiz_when_time_expires === 'autosubmit') {
                         /**
                          * Auto Submit
@@ -330,6 +342,7 @@ jQuery(document).ready(function ($) {
                         $('form#tutor-answering-quiz').submit();
 
                     } else if (_tutorobject.quiz_options.quiz_when_time_expires === 'autoabandon') {
+                       
                         /**
                          *
                          * @type {jQuery}
@@ -340,19 +353,41 @@ jQuery(document).ready(function ($) {
                         var quiz_id = $('#tutor_quiz_id').val();
                         var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
                         var quiz_timeout_data = { quiz_id: quiz_id, action: 'tutor_quiz_timeout' };
+        
+                        var att = $("#tutor-quiz-time-expire-wrapper").attr('data-attempt-remaining');
 
+                        //disable buttons
+                        $(".tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn").prop('disabled', true);
+
+                        //add alert text
+                        $(".time-remaining span").css('color', '#F44337');
+                        
                         $.ajax({
                             url: _tutorobject.ajaxurl,
                             type: 'POST',
                             data: quiz_timeout_data,
                             success: function (data) {
-                                if (data.success) {
-                                    window.location.reload(true);
+
+                                var attemptAllowed = $("#tutor-quiz-time-expire-wrapper").data('attempt-allowed');
+                                var attemptRemaining = $("#tutor-quiz-time-expire-wrapper").data('attempt-remaining');
+
+                                var alertDiv = "#tutor-quiz-time-expire-wrapper .tutor-alert";
+                                $(alertDiv).addClass('show');
+                                if ( att > 0 ) {
+                                    $(`${alertDiv} .text`).html(
+                                        __( 'Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: '+ attemptRemaining+'/'+attemptAllowed, 'tutor' )
+                                    );                            
+                                } else {
+                                    $(alertDiv).addClass('tutor-alert-danger');
+                                    $("#tutor-start-quiz").hide();
+                                    $(`${alertDiv} .text`).html(
+                                        `${__( 'Unfortunately, you are out of time and quiz attempts. ', 'tutor' )}`
+                                    );
                                 }
+
                             },
                             complete: function () {
-                                $('#tutor-quiz-body').html('');
-                                window.location.reload(true);
+
                             }
                         });
                     }
@@ -581,8 +616,14 @@ jQuery(document).ready(function ($) {
      * @since v.1.0.0
      */
 
-    $(document).on('click', '.tutor-quiz-answer-next-btn', function (e) {
+    $(document).on('click', '.tutor-quiz-answer-next-btn, .tutor-quiz-answer-previous-btn', function (e) {
         e.preventDefault();
+
+        // Show previous quiz if press previous button
+        if($(this).hasClass('tutor-quiz-answer-previous-btn')) {
+            $(this).closest('.quiz-attempt-single-question').hide().prev().show();
+            return;
+        }
 
         var $that = $(this);
         var $question_wrap = $that.closest('.quiz-attempt-single-question');
@@ -648,8 +689,11 @@ jQuery(document).ready(function ($) {
         var validated = true;
         if ($questions_wrap.length) {
             $questions_wrap.each(function (index, question) {
-                !tutor_quiz_validation( $(question) ) ? validated = false : 0;
-                !feedback_response( $(question) ) ? validated = false : 0;
+                // !tutor_quiz_validation( $(question) ) ? validated = false : 0;
+                // !feedback_response( $(question) ) ? validated = false : 0;
+                validated = tutor_quiz_validation($(question));
+                validated = feedback_response($(question));
+
             });
         }
 
@@ -981,7 +1025,7 @@ jQuery(document).ready(function ($) {
      * @since v.1.2.0
      */
 
-    $(document).on('click', 'a.open-withdraw-form-btn, .close-withdraw-form-btn', function (e) {
+    $(document).on('click', '.open-withdraw-form-btn, .close-withdraw-form-btn', function (e) {
         e.preventDefault();
 
         if($(this).data('reload')=='yes'){
@@ -1168,9 +1212,9 @@ jQuery(document).ready(function ($) {
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select / Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use media', 'tutor' )
             },
             library: { type: 'video' },
             multiple: false  // Set to true to allow multiple files to be selected
@@ -1301,9 +1345,9 @@ jQuery(document).ready(function ($) {
             return;
         }
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select / Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use media', 'tutor' )
             },
             multiple: true  // Set to true to allow multiple files to be selected
         });
@@ -1485,9 +1529,9 @@ jQuery(document).ready(function ($) {
 
         // Create a new media frame
         frame = wp.media({
-            title: 'Select or Upload Media Of Your Chosen Persuasion',
+            title: __( 'Select / Upload Media Of Your Chosen Persuasion', 'tutor' ),
             button: {
-                text: 'Use this media'
+                text: __( 'Use media', 'tutor' )
             },
             multiple: false  // Set to true to allow multiple files to be selected
         });
@@ -1535,13 +1579,13 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: form_data,
             beforeSend: function () {
-                $('.tutor-dashboard-builder-draft-btn span').text('Saving...');
+                $('.tutor-dashboard-builder-draft-btn span').text( __( 'Saving...', 'tutor' ) );
             },
             success: function (data) {
 
             },
             complete: function () {
-                $('.tutor-dashboard-builder-draft-btn span').text('Save');
+                $('.tutor-dashboard-builder-draft-btn span').text( __( 'Save', 'tutor' ) );
             }
         });
     }
@@ -2271,4 +2315,71 @@ jQuery(document).ready(function ($) {
 
         popup = new window.tutor_component($, 'icon-gear', 40).popup(data);
     });
+
+
+    //warn user before leave page if quiz is running
+    document.body.addEventListener('click', function(event){
+        const target      = event.target;
+        const targetTag   = target.tagName 
+        const parentTag   = target.parentElement.tagName;
+
+        if ( $tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.html() != 'EXPIRED' ) {
+            if ( targetTag === 'A' || parentTag === 'A' ) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                let popup;
+
+                let data = {
+                    title: __( 'Abandon Quiz?', 'tutor' ),
+                    description : __( 'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor' ),
+                    buttons : {
+                        keep: {
+                            title: __( 'Yes, leave quiz', 'tutor' ),
+                            id: 'leave',
+                            class: 'secondary',
+                            callback: function() {
+
+                                var formData = $('form#tutor-answering-quiz').serialize()+'&action='+'tutor_quiz_abandon';
+                                $.ajax({
+                                    url: window._tutorobject.ajaxurl,
+                                    type: 'POST',
+                                    data: formData,
+                                    beforeSend: function() {
+                                       document.querySelector("#tutor-popup-leave").innerHTML = __( 'Leaving...', 'tutor' ); 
+                                    },
+                                    success: function(response) {
+                                        if(response.success) {
+                                            if ( target.href == undefined ) {
+                                                location.href = target.parentElement.href
+                                            } else {
+                                                location.href = target.href
+                                            }
+                                        } else {
+                                            alert( __( 'Something went wrong', 'tutor' ) );
+                                        }
+                                    },
+                                    error: function() {
+                                        alert( __( 'Something went wrong', 'tutor' ) );
+                                        popup.remove();
+                                    }
+                                });
+                            }
+                        },
+                        reset: {
+                            title: __('Stay here', 'tutor'),
+                            id: 'reset',
+                            class: 'primary',
+                            callback: function() {
+                                popup.remove();
+                            }
+                        },
+                    } 
+                };
+        
+                popup = new window.tutor_component($, '', 40).popup(data);
+            }
+        }
+
+    });
 });
+

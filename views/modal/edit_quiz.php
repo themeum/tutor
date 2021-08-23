@@ -15,6 +15,10 @@ if (!$quiz) {
     die('No quiz found');
 }
 
+if ( $topic_id != '' ) {
+    echo '<input type="hidden" id="current_topic_id_for_quiz" value="'.sanitize_text_field( $_POST['topic_id'] ).'" />';
+}
+
 ?>
 
 <div class="tutor-quiz-builder-modal-contents">
@@ -185,7 +189,7 @@ if (!$quiz) {
                                     <span class="radio-icon"></span>
                                     <div class="tutor-quiz-feedback-mode-option">
                                         <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Retry Mode', 'tutor'); ?></h4>
-                                        <p class="tutor-quiz-feedback-option-subtitle"><?php _e('Unlimited attempts on each question.', 'tutor'); ?> <a href="#"> <?php _e('Live Demo', 'tutor'); ?></a></p>
+                                        <p class="tutor-quiz-feedback-option-subtitle"><?php _e('Unlimited attempts on each question.', 'tutor'); ?></p>
                                     </div>
                                 </label>
                             </div>
@@ -195,7 +199,7 @@ if (!$quiz) {
                                     <span class="radio-icon"></span>
                                     <div class="tutor-quiz-feedback-mode-option">
                                         <h4 class="tutor-quiz-feedback-option-option-title"><?php _e('Reveal Mode', 'tutor'); ?></h4>
-                                        <p class="tutor-quiz-feedback-option-subtitle"><?php _e('Show result after the attempt.', 'tutor'); ?> <a href="#"><?php _e('Live Demo', 'tutor'); ?></a></p>
+                                        <p class="tutor-quiz-feedback-option-subtitle"><?php _e('Show result after the attempt.', 'tutor'); ?></p>
                                     </div>
                                 </label>
                             </div>

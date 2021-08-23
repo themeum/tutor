@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 1.9.6
+Stable tag: 1.9.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,9 +241,41 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.6 - August 02, 2021 =
+= 1.9.7 - August 19, 2021 =
 
-Fix: Course retake button appear even disabled from dashboard
+New: Filters for instructor list in the backend dashboard
+New: Previous button for a single quiz (default enabled from settings)
+New: Pop up for review after course completion
+Update: "Add Option" button for the "True/False" quiz is disabled by default
+Update: Redundant demo link for quizzes are removed 
+Update: Improved loading icon while generating a certificate
+Update: New "Go home" button added for "Access Denied Page" when registration is disabled
+Update: Zoom API key check and save actions combined
+Update: Meeting host dropdown disabled
+Fix: Course topic title and description editing issue
+Fix: Duplicate order statements in earning section of instructor profile
+Fix: Date Formats of Tutor LMS were not matched with the set WordPress date format
+Fix: Translations issues for several internal texts
+Fix: PHP error for content drip addon while trying to fetch property post_type of non-object
+Fix: Header footer shown twice while using Oxygen Tutor LMS integration
+
+= 1.9.6 - August 04, 2021 =
+
+New: Popup alert message when students abandon a quiz
+New: Popup alert message when admin/instructor tries to delete an enrolment
+Update: Set WooCommerce product as sold individually when created automatically from frontend course builder
+Update: Enrolment required page design update
+Update: Notification design update for when WordPress registration is disabled
+Fix: Course retake button appears even if disabled from dashboard
+Fix: Pagination not appearing in quiz attempt
+Fix: Matching quiz layout CSS issue for long text
+Fix: Student can submit the quiz even after time limit is expired
+Fix: Email event list checkboxes not showing in dashboard if WPML add-on enabled
+Fix: Course progress not deleting when enrolment is deleted
+Fix: Quiz not showing immediately after creating in course builder
+Fix: Lesson count shows 0 in enrolled courses on the frontend dashboard
+Fix: XSS vulnerability in student list in the dashboard
+Fix: The option “When time expires” fixed in Quiz settings
 
 = 1.9.5 - July 18, 2021 =
 

@@ -6,32 +6,28 @@ if ( ! defined( 'ABSPATH' ) )
 
 class Options {
 
-	public $option;
-	public $options_attr;
+	private $option;
 
 	public function __construct() {
-		$this->option = (array) maybe_unserialize(get_option('tutor_option'));
-		$this->options_attr = $this->options_attr();
-
 		//Saving option
 		add_action('wp_ajax_tutor_option_save', array($this, 'tutor_option_save'));
 	}
 
 	private function get($key = null, $default = false){
-		$option = $this->option;
-		if (empty($option) || ! is_array($option)){
+		!$this->option ? $this->option = (array) maybe_unserialize(get_option('tutor_option')) : 0;
+		if (empty($this->option) || ! is_array($this->option)){
 			return $default;
 		}
 		if ( ! $key){
-			return $option;
+			return $this->option;
 		}
-		if (array_key_exists($key, $option)){
-			return apply_filters($key, $option[$key]);
+		if (array_key_exists($key, $this->option)){
+			return apply_filters($key, $this->option[$key]);
 		}
 		//Access array value via dot notation, such as option->get('value.subvalue')
 		if (strpos($key, '.')){
 			$option_key_array = explode('.', $key);
-			$new_option = $option;
+			$new_option = $this->option;
 			foreach ($option_key_array as $dotKey){
 				if (isset($new_option[$dotKey])){
 					$new_option = $new_option[$dotKey];
@@ -65,10 +61,13 @@ class Options {
 
 	public function options_attr(){
 		$pages = tutor_utils()->get_pages();
-
+		$current_user = wp_get_current_user();
 		//$course_base = tutor_utils()->course_archive_page_url();
-		$lesson_url = site_url().'/course/'.'sample-course/<code>lessons</code>/sample-lesson/';
-		$student_url = tutor_utils()->profile_url();
+		$lesson_sample_url_text = __( "/course/sample-course/<code>lessons</code>/sample-lesson/", 'tutor' );
+		$lesson_url 			= site_url().$lesson_sample_url_text;
+
+		$student_url = site_url().'/'._x( 'profile', 'tutor student profile', 'tutor' ).'/'.$current_user->display_name ; 
+
 		$attempts_allowed = array();
 		$attempts_allowed['unlimited'] = __('Unlimited' , 'tutor');
 		$attempts_allowed = array_merge($attempts_allowed, array_combine(range(1,20), range(1,20)));
@@ -513,6 +512,13 @@ class Options {
 								'label'      => __('Attempts allowed', 'tutor'),
 								'default'   => '10',
 								'desc'  => __('The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor'),
+							),
+							'quiz_previous_button_disabled' => array(
+								'type'      => 'checkbox',
+								'label'     => __('Show Previous button', 'tutor'),
+								'label_title' => __('Disable', 'tutor'),
+								'default' => '0',
+								'desc'      => __('Choose whether to show or hide previous button for single question.', 'tutor'),
 							),
 							'quiz_grade_method' => array(
 								'type'      => 'select',

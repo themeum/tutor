@@ -25,7 +25,17 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
 
 <?php
 if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
-    tutor_load_template('permission-denied');
+    $args = array(
+        'headline' => __( 'Permission Denied', 'tutor' ),
+        'message' =>  __( 'You don\'t have the right to edit this course', 'tutor' ),
+        'description' => __('Please make sure you are logged in to correct account', 'tutor'),
+        'button' => array(
+            'url' => get_permalink( $course_id ),
+            'text' =>  __( 'View Course', 'tutor' )
+        )
+    );
+
+    tutor_load_template('permission-denied', $args);
     return;
 }
 ?>

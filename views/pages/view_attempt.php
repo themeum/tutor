@@ -60,7 +60,7 @@ $user = get_userdata($user_id);
                     <h4>
                         <?php
                         $status = ucwords(str_replace('quiz_', '', $attempt->attempt_status));
-                        echo $status;
+                            esc_html_e( $status, 'tutor' );
                         ?>
                     </h4>
                 </div>
@@ -87,7 +87,7 @@ $user = get_userdata($user_id);
                     <h5><?php echo __('Result', 'tutor'); ?></h5>
                     <h4>
                         <?php
-
+                        $marks_earned_text = __( "Marks earned", 'tutor' );
                         if ($attempt->attempt_status === 'review_required'){
                             $output = '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
                         }else {
@@ -101,8 +101,8 @@ $user = get_userdata($user_id);
                                 $output .= '<span class="result-fail">' . __('Fail', 'tutor') . '</span>';
                             }
 
-                            $output .= "" . $attempt->earned_marks . " out of {$attempt->total_marks}";
-                            $output .= "<span>, Marks earned ({$earned_percentage}%)</span>";
+                            $output .= __( $attempt->earned_marks." out of ".$attempt->total_marks, 'tutor' );
+                            $output .= "<span>, $marks_earned_text ($earned_percentage%)</span>";
                         }
                         echo $output;
                         ?>
