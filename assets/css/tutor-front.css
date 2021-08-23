@@ -7619,6 +7619,47 @@ table.course-single-gradebooks a {
   /* Only reusable function, or code allowed here. No direct css please. */
 }
 
+.tutor-dashboard table.tutor-dashboard-table {
+  background: white;
+  border: 1px solid #CDCFD5;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-collapse: collapse;
+}
+
+.tutor-dashboard table.tutor-dashboard-table td, .tutor-dashboard table.tutor-dashboard-table th {
+  border: 1px solid #CDCFD5;
+  padding: 7px;
+}
+
+.tutor-dashboard table.tutor-dashboard-table thead tr {
+  background: #EFF1F7;
+}
+
+.tutor-dashboard table.tutor-dashboard-table thead tr th {
+  text-align: left;
+}
+
+.tutor-dashboard table.tutor-dashboard-table thead tr th:first-child th:first-child {
+  border-top-left-radius: 6px;
+}
+
+.tutor-dashboard table.tutor-dashboard-table thead tr th:first-child th:last-child {
+  border-top-right-radius: 6px;
+}
+
+.tutor-dashboard table.tutor-dashboard-table tbody tr:nth-child(even) {
+  background: #EFF1F7;
+}
+
+.tutor-dashboard table.tutor-dashboard-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 6px;
+}
+
+.tutor-dashboard table.tutor-dashboard-table tbody tr:last-child th:last-child {
+  border-bottom-right-radius: 6px;
+}
+
 .tutor-dashboard .tutor-dashboard-header {
   display: -webkit-box;
   display: -ms-flexbox;
