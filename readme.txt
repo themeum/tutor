@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 1.9.7
+Stable tag: 1.9.8
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,22 +241,27 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
+= 1.9.8 - September 01, 2021 =
+
+Fix: Instructor shortcode not working
+Fix: Undefined variable $default
+
 = 1.9.7 - August 19, 2021 =
 
 New: Filters for instructor list in the backend dashboard
 New: Previous button for a single quiz (default enabled from settings)
 New: Pop up for review after course completion
-Update: "Add Option" button for "True/False" quiz is disabled by default
+Update: "Add Option" button for the "True/False" quiz is disabled by default
 Update: Redundant demo link for quizzes are removed 
-Update: Improved loading Icon while generating certificate
-Update: New "Go to home" button added for "Access Denied Page" for registration disable 
-Update: Zoom API key check and save combined
-Update: Meeting host dropdown made disabled since the always single host is used
+Update: Improved loading icon while generating a certificate
+Update: New "Go home" button added for "Access Denied Page" when registration is disabled
+Update: Zoom API key check and save actions combined
+Update: Meeting host dropdown disabled
 Fix: Course topic title and description editing issue
 Fix: Duplicate order statements in earning section of instructor profile
-Fix: Date Formats of Tutor LMS were not matched with set WordPress date format
+Fix: Date Formats of Tutor LMS were not matched with the set WordPress date format
 Fix: Translations issues for several internal texts
-Fix: PHP error for content drip add-on while trying to fetch property post_type of non-object
+Fix: PHP error for content drip addon while trying to fetch property post_type of non-object
 Fix: Header footer shown twice while using Oxygen Tutor LMS integration
 
 = 1.9.6 - August 04, 2021 =
