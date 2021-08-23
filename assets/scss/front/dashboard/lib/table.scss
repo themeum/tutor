@@ -1,0 +1,47 @@
+table.tutor-dashboard-table {
+    background: white;
+    border: 1px solid #CDCFD5;
+    box-sizing: border-box;
+    border-collapse: collapse;
+
+    td, th {
+        border: 1px solid #CDCFD5;
+        padding: 7px;
+    }
+
+    thead {
+        tr{
+            background: #EFF1F7;
+            th {
+                text-align: left;
+
+                &:first-child {
+                    th:first-child {
+                        border-top-left-radius: 6px;
+                    }
+                    th:last-child {
+                        border-top-right-radius: 6px;
+                    }
+                }
+            }
+        }
+    }
+
+    tbody {
+        tr{
+            &:nth-child(even) {
+                background: #EFF1F7;
+            }
+
+            
+            &:last-child {
+                td:first-child {
+                    border-bottom-left-radius: 6px;
+                }
+                th:last-child {
+                    border-bottom-right-radius: 6px;
+                }
+            }
+        }
+    }
+}
