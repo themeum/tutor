@@ -1,5 +1,11 @@
 # TutorLMS Changelog
 
+### 1.9.8 - September 01, 2021
+
+* Fix: Instructor shortcode not working
+* Fix: Undefined variable $default
+
+
 ### 1.9.7 - August 19, 2021
 
 * New: Filters for instructor list in the backend dashboard
