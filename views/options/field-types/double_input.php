@@ -1,8 +1,6 @@
 <div class="tutor-option-field-row">
-    <div class="tutor-option-field-label">
-        <h5 class="label">Sharing Percentage</h5>
-        <p class="desc">This page will be used for student and instructor dashboard</p>
-    </div>
+<?php include tutor()->path . "views/options/template/field_heading.php";?>
+
     <div class="tutor-option-field-input">
         <div class="d-flex flex-column double-input">
             <label for="revenue-instructor" class="revenue-percentage">

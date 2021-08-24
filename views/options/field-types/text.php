@@ -5,10 +5,8 @@ if ($value != '0' && !$value && isset($field['default'])) {
 }
 ?>
 <div class="tutor-option-field-row">
-	<div class="tutor-option-field-label">
-		<label><?php echo $field['label']; ?></label>
-		<p class="desc"><?php echo $field['desc'] ?></p>
-	</div>
+<?php include tutor()->path . "views/options/template/field_heading.php";?>
+
 	<div class="tutor-option-field-input">
 		<input type="text" name="tutor_option[<?php echo $field['key']; ?>]" class="tutor-form-control" placeholder='Please write your "<?php echo $field['label']; ?>"' value="<?php echo $value ?? null ?>" />
 	</div>

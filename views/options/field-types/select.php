@@ -1,8 +1,6 @@
 <div class="tutor-option-field-row">
-	<div class="tutor-option-field-label">
-		<label><?php echo $field['label']; ?></label>
-		<p class="desc"><?php echo $field['desc'] ?></p>
-	</div>
+<?php include tutor()->path . "views/options/template/field_heading.php";?>
+
 	<div class="tutor-option-field-input">
 		<select name="tutor_option[<?php echo $field['key']; ?>]" class="tutor-form-select">
 			<?php

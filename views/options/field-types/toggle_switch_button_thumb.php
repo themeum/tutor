@@ -2,10 +2,8 @@
     <div class="certificate-thumb">
         <img src="<?php echo tutor()->url ?>assets/images/images-v2/<?php echo $field['thumbs_url'] ?>" alt="">
     </div>
-    <div class="tutor-option-field-label">
-        <label><?php echo $field['label'] ?> </label>
-        <p class="desc">Categorey: Design, Illustration</p>
-    </div>
+    <?php include tutor()->path . "views/options/template/field_heading.php";?>
+
     <div class="tutor-option-field-input d-flex has-btn-after">
         <label class="tutor-form-toggle">
             <input type="checkbox" class="tutor-form-toggle-input" checked="">
