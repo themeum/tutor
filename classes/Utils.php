@@ -703,20 +703,12 @@ class Utils {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
 
-		$completed_lesson_ids = $wpdb->get_col( $wpdb->prepare(
-			"SELECT post_id
-			FROM	{$wpdb->postmeta}
-			WHERE	meta_key = %s
-					AND meta_value = %d;
-			",
-			'_tutor_course_id_for_lesson',
-			$course_id
-		) );
-
+		$lesson_ids = $this->get_course_content_ids_by( tutor()->lesson_post_type, tutor()->course_post_type, $course_id );
+		
 		$count = 0;
-		if ( is_array( $completed_lesson_ids ) && count( $completed_lesson_ids) ) {
+		if ( count( $lesson_ids) ) {
 			$completed_lesson_meta_ids = array();
-			foreach ( $completed_lesson_ids as $lesson_id ) {
+			foreach ( $lesson_ids as $lesson_id ) {
 				$completed_lesson_meta_ids[] = '_tutor_completed_lesson_id_' . $lesson_id;
 			}
 			$in_ids = implode( "','", $completed_lesson_meta_ids );
@@ -1215,7 +1207,7 @@ class Utils {
 	 */
 	public function get_course_id_by_lesson( $lesson_id = 0 ) {
 		$lesson_id = $this->get_post_id( $lesson_id );
-		$course_id = get_post_meta( $lesson_id, '_tutor_course_id_for_lesson', true );
+		$course_id = tutor_utils()->get_course_id_by('lesson', $lesson_id);
 
 		if ( ! $course_id ) {
 			$course_id = $this->get_course_id_by_content( $lesson_id );
@@ -5668,9 +5660,13 @@ class Utils {
 		return "<span class='label-order-status label-status-{$status}'>$status_name</span>";
 	}
 
+	/**
+	 * Depricated since v1.9.8 
+	 * This function is redundant and will be removed later
+	 */
 	public function get_course_id_by_assignment( $assignment_id = 0 ) {
 		$assignment_id = $this->get_post_id( $assignment_id );
-		return get_post_meta( $assignment_id, '_tutor_course_id_for_assignments', true );
+		return $this->get_course_id_by('assignment', $assignment_id);
 	}
 
 	/**
@@ -5787,6 +5783,10 @@ class Utils {
 		return $submitted_info;
 	}
 
+	/**
+	 * Depricated since v1.9.8
+	 * It is redundant and will be removed later
+	 */
 	public function get_total_assignments() {
 		global $wpdb;
 
@@ -5803,6 +5803,10 @@ class Utils {
 		return (int) $count;
 	}
 
+	/**
+	 * Depricated since v1.9.8
+	 * It is redundant and will be removed later
+	 */
 	public function get_assignments() {
 		global $wpdb;
 
@@ -7235,15 +7239,20 @@ class Utils {
 		return $this->get_unique_slug($new_slug, $post_type, true);
 	}
 
-	public function get_course_content_ids_by($content_type, $ancestor_type, $ancestor_id) {
+	public function get_course_content_ids_by($content_type, $ancestor_type, $ancestor_ids) {
 		global $wpdb; 
 		$ids = array();
+
+		// Convert single id to array
+		!is_array($ancestor_ids) ? $ancestor_ids=array($ancestor_ids) : 0;
+		$ancestor_ids = implode(',', $ancestor_ids);
 
 		switch($content_type) {
 
 			// Get lesson, quiz, assignment IDs
 			case tutor()->lesson_post_type : 
 			case 'tutor_quiz' :
+			case 'tutor_assignments' : 
 				switch($ancestor_type) {
 
 					// Get lesson, quiz, assignment IDs by course ID
@@ -7252,8 +7261,7 @@ class Utils {
 							"SELECT content.ID FROM {$wpdb->posts} course
 								INNER JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent 
 								INNER JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
-							WHERE course.ID=%d AND content.post_type=%s",
-							$ancestor_id,
+							WHERE course.ID IN ({$ancestor_ids}) AND content.post_type=%s",
 							$content_type
 						));
 
