@@ -11,7 +11,7 @@
             <option value=""><?php _e('Select a course', 'tutor'); ?></option>
 
 	        <?php
-            $course_id = get_post_meta(get_the_ID(), '_tutor_course_id_for_lesson', true);
+            $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID());
 	        foreach ($courses as $course){
 		        echo "<option value='{$course->ID}' ".selected($course->ID, $course_id)." >{$course->post_title}</option>";
 	        }

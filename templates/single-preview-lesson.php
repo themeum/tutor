@@ -56,9 +56,9 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
                 $course = tutor_utils()->get_course_by_quiz(get_the_ID());
                 $course_id = $course->ID;
             }elseif($post->post_type === 'tutor_assignments'){
-                $course_id = get_post_meta($post->ID, '_tutor_course_id_for_assignments', true);
+                $course_id = tutor_utils()->get_course_id_by('assignment', $post->ID);
             } else{
-                $course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
+                $course_id = tutor_utils()->get_course_id_by('lesson', $post->ID);
             }
         ?>
 
@@ -189,7 +189,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
         <div class="tutor-single-page-top-bar">
             <div class="tutor-topbar-item tutor-hide-sidebar-bar">
                 <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-angle-left"></i> </a>
-			    <?php $course_id = get_post_meta(get_the_ID(), '_tutor_course_id_for_lesson', true); ?>
+			    <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
                 <a href="<?php echo get_the_permalink($course_id); ?>" class="tutor-topbar-home-btn">
                     <i class="tutor-icon-home"></i> <?php echo __('Go to Course Home', 'tutor') ; ?>
                 </a>
