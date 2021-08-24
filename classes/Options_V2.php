@@ -64,10 +64,18 @@ class Options_V2 {
 		//!current_user_can('manage_options') ? wp_send_json_error() : 0;
 
 		$attr = $this->options_attr();
-		foreach ($attr as $attributes) {
-			
+		$dataAr = array();
+		foreach ($attr as $block) {
+			$dataAr['block'] = $block['label'];
+			foreach ($block['sections'] as $section) {
+				$dataAr['section'][] = $section['blocks'];
+
+				// foreach ($sections as $blocks) {
+				// 	$dataAr['section'][$blocks] = $blocks;
+				// }
+			}
 		}
-		wp_send_json_success($attr);
+		wp_send_json_success($dataAr);
 	}
 
 	public function tutor_option_save() {
