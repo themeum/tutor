@@ -156,10 +156,13 @@ class Assets {
 		 */
 		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version);
 
-
+		// V2
+		wp_enqueue_style('tutor-admin-v2', tutor()->url . 'assets/css/tutor-admin-v2.min.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-v2-icon-test', tutor()->url . 'assets/css/fonts/lineawesome@1.3.0/css/tutor-v2-icon-test.css', array(), tutor()->version);
 		//Plyr
 		wp_enqueue_style('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), tutor()->version);
 		wp_enqueue_script('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array('jquery'), tutor()->version, true);
+		wp_enqueue_script('tutor-admin-v2', tutor()->url . 'assets/js/tutor-admin-v2.js', array('jquery', 'wp-color-picker', 'wp-i18n'), tutor()->version, true);
 
 		//Social Share
 		wp_enqueue_script('tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array('jquery'), tutor()->version, true);
