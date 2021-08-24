@@ -183,7 +183,7 @@ jQuery(document).ready(function ($) {
                     $('.tutor-review-' + review_id + ' .review-content').html(review);
                     
                     // Show thank you
-                    new window.tutor_component($, 'icon-rating', 40).popup({
+                    new window.tutor_popup($, 'icon-rating', 40).popup({
                         title: __('Thank You for Rating This Course!', 'tutor'),
                         description : __('Your rating will now be visible in the course page', 'tutor'),
                     });
@@ -2313,7 +2313,7 @@ jQuery(document).ready(function ($) {
             } 
         };
 
-        popup = new window.tutor_component($, 'icon-gear', 40).popup(data);
+        popup = new window.tutor_popup($, 'icon-gear', 40).popup(data);
     });
 
 
@@ -2376,10 +2376,8 @@ jQuery(document).ready(function ($) {
                     } 
                 };
         
-                popup = new window.tutor_component($, '', 40).popup(data);
+                popup = new window.tutor_popup($, '', 40).popup(data);
             }
         }
-
     });
 });
-
