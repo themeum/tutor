@@ -15,7 +15,7 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         <div class="search-field">
             <div class="tutor-input-group tutor-form-control-has-icon">
                 <span class="las la-search tutor-input-group-icon"></span>
-                <input type="search" class="tutor-form-control" placeholder="<?php _e('Search', 'tutor'); ?>" />
+                <input type="search" id="search_settings" class="tutor-form-control" placeholder="<?php _e('Search', 'tutor'); ?>" />
             </div>
         </div>
         <div class="save-button">
@@ -80,9 +80,9 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         </form>
     </div>
 
-    <div class="tutor-notification" style="position: fixed;bottom:40px;z-index:999;visibility:hidden;transition:all .5s;">
+    <div class="tutor-notification tutor-is-success">
         <div class="tutor-notification-icon">
-            <i class="far fa-question-circle"></i>
+            <i class="fas fa-check"></i>
         </div>
         <div class="tutor-notification-content">
             <h5>Successful</h5>
@@ -93,3 +93,16 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         </button>
     </div>
 </section>
+<style>
+    .tutor-notification {
+        position: fixed;
+        bottom: 40px;
+        z-index: 999;
+        visibility: hidden;
+        transition: all .3s;
+    }
+
+    .tutor-notification.show {
+        visibility: visible;
+    }
+</style>

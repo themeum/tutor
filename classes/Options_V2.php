@@ -22,6 +22,7 @@ class Options_V2 {
 		$this->options_tools = $this->options_tools();
 		//Saving option
 		add_action('wp_ajax_tutor_option_save', array($this, 'tutor_option_save'));
+		add_action('wp_ajax_tutor_option_search', array($this, 'tutor_option_search'));
 	}
 
 	private function get($key = null, $default = false) {
@@ -55,6 +56,18 @@ class Options_V2 {
 		}
 
 		return $default;
+	}
+
+	public function tutor_option_search() {
+		tutils()->checking_nonce();
+
+		!current_user_can('manage_options') ? wp_send_json_error() : 0;
+
+
+		$keyword = (array) tutils()->array_get('', $_POST, array());
+
+		// wp_send_json_success(array('msg' => __('Option Updated', 'tutor'), 'return' => $option));
+		wp_send_json_success($keyword);
 	}
 
 	public function tutor_option_save() {
@@ -469,15 +482,6 @@ class Options_V2 {
 										'options' => $video_sources,
 										'desc' => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
 									),
-									array(
-										'key' => 'default_video_source',
-										'type' => 'select',
-										'label' => __('Default Video Source', 'tutor'),
-										'default' => '',
-
-										'options' => $video_sources,
-										'desc' => __('Choose video source to be selected by default.', 'tutor'),
-									),
 								),
 							),
 							array(
@@ -581,7 +585,7 @@ class Options_V2 {
 								'fields' => array(
 									array(
 										'key' => 'enable_video_player',
-										'type' => 'radio_horizontal_full',
+										'type' => 'checkbox_horizontal_full',
 										'label' => __('Enable Video Player', 'tutor'),
 										'default' => '4',
 										'options' => array(
@@ -1110,9 +1114,8 @@ class Options_V2 {
 										'key' => 'default_video_source',
 										'type' => 'select',
 										'label' => __('Default Video Source', 'tutor'),
-										'default' => '',
-
 										'options' => $video_sources,
+										'default' => '0',
 										'desc' => __('Choose video source to be selected by default.', 'tutor'),
 									),
 								),
