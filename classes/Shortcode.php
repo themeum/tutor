@@ -161,8 +161,8 @@ class Shortcode {
 		$limit = (int)sanitize_text_field(tutils()->array_get('count', $atts, 9));
 		$page = $current_page - 1;
 
-		$instructors = tutor_utils()->get_instructors($limit*$page, $limit, $keyword, 'approved', $cat_ids);
-		$next_instructors = tutor_utils()->get_instructors($limit*$current_page, $limit, $keyword, 'approved', $cat_ids);
+		$instructors = tutor_utils()->get_instructors($limit*$page, $limit, $keyword, '', '', '', 'approved', $cat_ids);
+		$next_instructors = tutor_utils()->get_instructors($limit*$current_page, $limit, $keyword, '', '', '', 'approved', $cat_ids);
 
 		$previous_page = $page>0 ? $current_page-1 : null;
 		$next_page = (is_array($next_instructors) && count($next_instructors)>0) ? $current_page+1 : null;
