@@ -9,8 +9,8 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
 
 ?>
 <!-- .tutor-backend-wrap -->
-<section class="tutor-backend-wrap">
-    <header class="tutor-option-header px-3 py-2">
+<section class="tutor-backend-wrap" style="padding-top: 60px;">
+    <header class="tutor-option-header px-3 py-2" style="position: fixed;right:0;z-index:99;width:calc(100% - 160px);top:32px;">
         <div class="title"><?php _e('Settings', 'tutor'); ?></div>
         <div class="search-field">
             <div class="tutor-input-group tutor-form-control-has-icon">
@@ -28,15 +28,17 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
             <div class="tutor-option-tabs">
                 <?php
                 $i = 0;
+
                 foreach ($this->options_attr() as $args) : ?> <ul class="tutor-option-nav">
                         <li class="tutor-option-nav-item">
                             <h4><?php echo $args['label'] ?></h4>
                         <li>
                             <?php
-                            $url_exist  = $this->url_exists($args['sections'], $url_page);
+                            $url_exist = $this->url_exists($args['sections'], $url_page);
+
                             foreach ($args['sections'] as $key => $section) :
                                 $i += 1;
-                                $icon      = tutor()->icon_dir . $section['slug'] . '.svg';
+                                $icon = tutor()->icon_dir . $section['slug'] . '.svg';
                                 $is_active = $this->get_active($i, $url_page, $section['slug'], $url_exist) ? 'active' : null;
                             ?>
                         <li class="tutor-option-nav-item">
@@ -57,8 +59,10 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
                 <?php
 
                 $i = 0;
+
                 foreach ($this->options_attr as $args) :
                     $url_exist = $this->url_exists($args['sections'], $url_page);
+
                     foreach ($args['sections'] as $key => $section) :
                         $i += 1;
                         $is_active = $this->get_active($i, $url_page, $section['slug'], $url_exist) ? 'active' : null; ?>
@@ -74,5 +78,18 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
             </div>
             <!-- end /.tutor-option-tab-pages -->
         </form>
+    </div>
+
+    <div class="tutor-notification" style="position: fixed;bottom:40px;z-index:999;visibility:hidden;transition:all .5s;">
+        <div class="tutor-notification-icon">
+            <i class="far fa-question-circle"></i>
+        </div>
+        <div class="tutor-notification-content">
+            <h5>Successful</h5>
+            <p>Your file was uploaded</p>
+        </div>
+        <button class="tutor-notification-close">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
 </section>

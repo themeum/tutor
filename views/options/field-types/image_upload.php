@@ -1,7 +1,6 @@
 <div class="tutor-option-field-row d-block">
-    <div class="tutor-option-field-label">
-        <label><?php echo $field['label']; ?></label>
-    </div>
+<?php include tutor()->path . "views/options/template/field_heading.php";?>
+
     <div class="tutor-option-field-input image-previewer">
         <div class="d-flex logo-upload">
             <div class="logo-preview">
