@@ -15,18 +15,18 @@ class Assets {
 		 * register translateable function to load
 		 * handled script with text domain attached to
 		 * @since 1.9.0
-		*/
-		add_action('wp_enqueue_scripts', array($this, 'tutor_script_text_domain'),100);
-		add_action( 'admin_head', array($this, 'tutor_add_mce_button'));
-		add_filter( 'get_the_generator_html', array($this, 'tutor_generator_tag'), 10, 2 );
-		add_filter( 'get_the_generator_xhtml', array($this, 'tutor_generator_tag'), 10, 2 );
+		 */
+		add_action('wp_enqueue_scripts', array($this, 'tutor_script_text_domain'), 100);
+		add_action('admin_head', array($this, 'tutor_add_mce_button'));
+		add_filter('get_the_generator_html', array($this, 'tutor_generator_tag'), 10, 2);
+		add_filter('get_the_generator_xhtml', array($this, 'tutor_generator_tag'), 10, 2);
 
 		/**
 		 * Add translation support for external tinyMCE button
-		 * 
+		 *
 		 * @since 1.9.7
 		 */
-		add_filter( 'mce_external_languages', array( $this, 'tutor_tinymce_translate' ) );
+		add_filter('mce_external_languages', array($this, 'tutor_tinymce_translate'));
 	}
 
 	private function get_default_localized_data() {
@@ -36,7 +36,7 @@ class Assets {
 
 		$base_path = (is_array($parsed) && isset($parsed['path'])) ? $parsed['path'] : '/';
 		$base_path = rtrim($base_path, '/') . '/';
-		
+
 		return array(
 			'ajaxurl'       => admin_url('admin-ajax.php'),
 			'home_url'		=> get_home_url(),
@@ -87,6 +87,7 @@ class Assets {
 
 		$tutor_localize_data = apply_filters('tutor_localize_data', $tutor_localize_data);
 		wp_localize_script('tutor-admin', '_tutorobject', $tutor_localize_data);
+		wp_localize_script('tutor-options-v2', 'v2_search', array('nonce' => wp_create_nonce('v2_search_script')));
 
 		wp_add_inline_style('tutor-admin', $this->load_color_palette());
 	}
@@ -330,12 +331,11 @@ class Assets {
 
 	/**
 	 * Add translation support for external tinyMCE button
-	 * 
+	 *
 	 * @since 1.9.7
 	 */
 	function tutor_tinymce_translate() {
-		$locales['tutor_button'] = tutor()->path.'includes/tinymce_translate.php';
+		$locales['tutor_button'] = tutor()->path . 'includes/tinymce_translate.php';
 		return $locales;
 	}
-	
 }

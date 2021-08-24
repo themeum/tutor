@@ -19,7 +19,6 @@ jQuery(document).ready(function ($) {
 
     var $form = $(this);
     var data = $form.serializeObject();
-    console.log(data);
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
@@ -35,16 +34,19 @@ jQuery(document).ready(function ($) {
 
   $("#search_settings").on("keyup", function (e) {
     e.preventDefault();
-    var keyword = this.value;
+    var searchKey = this.value;
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
-      data: keyword,
-      beforeSend: function () {},
-      success: function (data) {
-        console.log(data);
+      data: {
+        action: "tutor_option_search",
+        keyword: searchKey,
       },
-      complete: function () {},
+      // beforeSend: function () {},
+      success: function (data) {
+        // console.log("working");
+      },
+      // complete: function () {},
     });
   });
 });

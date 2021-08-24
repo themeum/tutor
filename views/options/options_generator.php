@@ -16,6 +16,41 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
             <div class="tutor-input-group tutor-form-control-has-icon">
                 <span class="las la-search tutor-input-group-icon"></span>
                 <input type="search" id="search_settings" class="tutor-form-control" placeholder="<?php _e('Search', 'tutor'); ?>" />
+                <div class="search_result">
+                    <a href="#">
+                        <div class="search_result_title">
+                            <i class="las la-search"></i>
+                            <span>Result results one</span>
+                        </div>
+                        <div class="search_navigation">
+                            <span>General</span>
+                            <i class="las la-angle-right"></i>
+                            <span>Instructor</span>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="search_result_title">
+                            <i class="las la-search"></i>
+                            <span>Result results tow</span>
+                        </div>
+                        <div class="search_navigation">
+                            <span>Design</span>
+                            <i class="las la-angle-right"></i>
+                            <span>Instructor</span>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="search_result_title">
+                            <i class="las la-search"></i>
+                            <span>Result results three</span>
+                        </div>
+                        <div class="search_navigation">
+                            <span>General</span>
+                            <i class="las la-angle-right"></i>
+                            <span>Instructor</span>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="save-button">
@@ -94,6 +129,59 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
     </div>
 </section>
 <style>
+    .search_result {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-shadow: 0 0 3px #ddd;
+        width: 100%;
+        position: absolute;
+        top: calc(100% + 5px);
+        background-color: #fff;
+        font-size: 16px;
+    }
+
+    .search_result_title {
+        display: flex;
+        vertical-align: middle;
+    }
+
+    .search_result_title span {
+        line-height: 20px;
+    }
+
+    .search_result a {
+        padding: 12px;
+        display: flex;
+        width: 100%;
+        color: #555;
+        text-decoration: none;
+        transition: all .3s;
+        vertical-align: middle;
+        justify-content: space-between;
+    }
+
+
+    .search_result .search_result_title i {
+        padding-right: 10px;
+        font-size: 20px;
+    }
+
+    .search_result a:hover {
+        background-color: rgba(0, 0, 0, .03);
+    }
+
+    .search_navigation {
+        display: flex;
+        align-items: center;
+        vertical-align: middle;
+        font-size: 12px;
+    }
+
+    .search_navigation i {
+        padding: 0 5px;
+        font-size: 12px;
+    }
+
     .tutor-notification {
         position: fixed;
         bottom: 40px;

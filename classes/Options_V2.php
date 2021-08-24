@@ -61,13 +61,13 @@ class Options_V2 {
 	public function tutor_option_search() {
 		tutils()->checking_nonce();
 
-		!current_user_can('manage_options') ? wp_send_json_error() : 0;
+		//!current_user_can('manage_options') ? wp_send_json_error() : 0;
 
-
-		$keyword = (array) tutils()->array_get('', $_POST, array());
-
-		// wp_send_json_success(array('msg' => __('Option Updated', 'tutor'), 'return' => $option));
-		wp_send_json_success($keyword);
+		$attr = $this->options_attr();
+		foreach ($attr as $attributes) {
+			
+		}
+		wp_send_json_success($attr);
 	}
 
 	public function tutor_option_save() {
