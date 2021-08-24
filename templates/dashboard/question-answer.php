@@ -19,7 +19,7 @@ $questions = tutils()->get_qa_questions($offset,  $per_page);
 
 if (tutils()->count($questions)) {
 ?>
-    <div class="tutor-dashboard-info-table-wrap">
+    <div class="tutor-dashboard-info-table-wrap tutor-dashboard-q-and-a">
         <table class="tutor-dashboard-info-table">
             <tr>
                 <th><?php _e('Question', 'tutor'); ?></th>

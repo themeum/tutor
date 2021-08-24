@@ -713,7 +713,7 @@ jQuery(document).ready(function($){
             } 
         };
 
-        popup = new window.tutor_component($, 'icon-trash', 40).popup(data);
+        popup = new window.tutor_popup($, 'icon-trash', 40).popup(data);
     });
 
 
