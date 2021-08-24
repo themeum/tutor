@@ -11,14 +11,14 @@ jQuery(document).ready(function ($) {
 
     var $form = $(this);
     var data = $form.serializeObject();
-
+    console.log(data);
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: data,
       beforeSend: function () {},
       success: function (data) {
-        console.log(data);
+        // console.log(data.data);
       },
       complete: function () {},
     });

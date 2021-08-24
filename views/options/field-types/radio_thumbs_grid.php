@@ -1,7 +1,6 @@
 <div class="tutor-option-field-row d-block">
-    <div class="tutor-option-field-label">
-        <h5 class="label"><?php echo $field['label'] ?></h5>
-    </div>
+<?php include tutor()->path . "views/options/template/field_heading.php";?>
+
     <div class="tutor-option-field-input">
         <div class="radio-thumbnail horizontal">
             <?php

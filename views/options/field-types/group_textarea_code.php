@@ -1,8 +1,6 @@
 <div class="tutor-option-field-row input-field-code">
-    <div class="tutor-option-field-label">
-        <label>Mailer Native Server Cron</label>
-        <p class="desc">If you use OS native cron, then disable it.</p>
-    </div>
+<?php include tutor()->path . "views/options/template/field_heading.php";?>
+
     <div class="tutor-option-field-input">
         <label class="tutor-form-toggle">
             <input type="checkbox" class="tutor-form-toggle-input" checked="">
