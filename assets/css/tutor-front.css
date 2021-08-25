@@ -7724,6 +7724,7 @@ table.course-single-gradebooks a {
 }
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks a::before {
+  content: "\e968";
   font-family: "tutor" !important;
   speak: none;
   font-style: normal;
