@@ -6,6 +6,8 @@
     @import './sidebar.scss';
 
     .tutor-dashboard-content {
+        padding-top: 30px;
+
         &>h3:first-child {
             font-style: normal;
             font-weight: 500;
@@ -14,5 +16,6 @@
         }
 
         @import './pages/q-and-a.scss';
+        @import './pages/dashboard.scss';
     }
 }
