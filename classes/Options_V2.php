@@ -58,24 +58,41 @@ class Options_V2 {
 		return $default;
 	}
 
+
+
 	public function tutor_option_search() {
 		tutils()->checking_nonce();
 
 		//!current_user_can('manage_options') ? wp_send_json_error() : 0;
+		$keyword = strtolower($_POST['keyword']);
 
 		$attr = $this->options_attr();
 		$dataAr = array();
 		foreach ($attr as $block) {
 			$dataAr['block'] = $block['label'];
-			foreach ($block['sections'] as $section) {
-				$dataAr['section'][] = $section['blocks'];
-
-				// foreach ($sections as $blocks) {
-				// 	$dataAr['section'][$blocks] = $blocks;
-				// }
+			foreach ($block['sections'] as $sections) {
+				foreach ($sections['blocks'] as $blocks) {
+					foreach ($blocks['fields'] as $fields) {
+						$dataAr['fields'][] = $fields;
+					}
+				}
 			}
 		}
-		wp_send_json_success($dataAr);
+
+
+		$columns = array_column($dataAr['fields'], 'label');
+
+
+		foreach ($columns as $index => $string) {
+			if (strpos(strtoupper($string), strtoupper($keyword)) !== FALSE) {
+				$matches[$index] = $string;
+			}
+		}
+		if (!empty($matches)) {
+			wp_send_json_success($matches);
+		} else {
+			wp_send_json_success(['data' => array()]);
+		}
 	}
 
 	public function tutor_option_save() {
