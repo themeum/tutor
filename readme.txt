@@ -245,6 +245,8 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 Fix: Instructor shortcode not working
 Fix: Undefined variable $default
+Fix: Assignment URL in duplicated course redirect to original
+Fix: PMPro addon duplicated levels in single course page
 
 = 1.9.7 - August 19, 2021 =
 

@@ -94,7 +94,7 @@ class Rewrite_Rules extends Tutor_Base {
 
 		if (is_object($post) && $post->post_type == $this->lesson_post_type) {
 			//Lesson Permalink
-			$course_id = get_post_meta($post->ID, '_tutor_course_id_for_lesson', true);
+			$course_id = tutor_utils()->get_course_id_by('lesson', $post->ID);
 
 			if ($course_id) {
 				$course = $wpdb->get_row($wpdb->prepare("SELECT post_name from {$wpdb->posts} where ID = %d ", $course_id));
