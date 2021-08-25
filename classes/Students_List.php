@@ -28,6 +28,9 @@ class Students_List extends \Tutor_List_Table {
 			case 'user_email':
 			case 'display_name':
 				return $item->$column_name;
+			case 'course_taken':
+				$course_taken = tutor_utils()->get_enrolled_courses_ids_by_user($item->ID);
+				return is_array( $course_taken ) ? count( $course_taken) : 0;
 			default:
 				return print_r( $item, true ); //Show the whole array for troubleshooting purposes
 		}
@@ -62,6 +65,7 @@ class Students_List extends \Tutor_List_Table {
 			'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
 			'display_name'      => __('Name', 'tutor'),
 			'user_email'        => __('E-Mail', 'tutor'),
+			'course_taken'		=> __( 'Course Taken', 'tutor' ),
 			'completed_course'  => __('Completed Course', 'tutor'),
 		);
 		return $columns;
