@@ -138,6 +138,14 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         top: calc(100% + 5px);
         background-color: #fff;
         font-size: 16px;
+        transition: all .3s;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .search_result.show {
+        visibility: visible;
+        opacity: 1;
     }
 
     .search_result_title {
@@ -149,11 +157,12 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         line-height: 20px;
     }
 
+    .no_item,
     .search_result a {
         padding: 12px;
         display: flex;
         width: 100%;
-        color: #555;
+        color: #777;
         text-decoration: none;
         transition: all .3s;
         vertical-align: middle;
