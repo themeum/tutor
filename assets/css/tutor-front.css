@@ -7880,6 +7880,13 @@ table.course-single-gradebooks a {
   content: "\e9b1";
 }
 
+.tutor-dashboard .tutor-dashboard-content > h3:first-child {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  color: #212327;
+}
+
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */
