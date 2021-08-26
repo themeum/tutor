@@ -7233,7 +7233,13 @@ class Utils {
 		if ($wp_query->is_page) {
 			$dashboard_page = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
 
-			return $subpage ? $dashboard_page == $subpage : $dashboard_page;
+			if($subpage && $dashboard_page == $subpage) {
+				return true;
+			}
+
+			if($wp_query->queried_object && $wp_query->queried_object->ID) {
+				return $wp_query->queried_object->ID == tutor_utils()->get_option('tutor_dashboard_page_id');
+			}
 		}
 
 		return false;
