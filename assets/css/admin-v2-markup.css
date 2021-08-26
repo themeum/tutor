@@ -1213,17 +1213,20 @@ li.tutor-option-nav-item h4 {
   height: 20px;
 }
 
-.search-popup-opener {
+.search-popup-opener, .search_result {
   background: #ffffff;
   border: 1px solid #cdcfd5;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  -webkit-box-shadow: 0px 6px 20px #1c3168;
-          box-shadow: 0px 6px 20px #1c3168;
+  -webkit-box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
+          box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
   border-radius: 6px;
   position: absolute;
+  width: 100%;
+  top: calc(100% - 0px);
   margin-top: 6px;
   z-index: 4;
+  font-size: 16px;
+  max-height: 448px;
+  overflow-y: auto;
   -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
   opacity: 0;
@@ -1232,7 +1235,7 @@ li.tutor-option-nav-item h4 {
           transform: translateY(3px);
 }
 
-.search-popup-opener.visible {
+.search-popup-opener.visible, .search-popup-opener.show, .search_result.visible, .search_result.show {
   opacity: 1;
   visibility: visible;
   -webkit-transform: translateY(0px);
@@ -1454,7 +1457,7 @@ li.tutor-option-nav-item h4 {
   position: relative;
 }
 
-.tutor-backend-settings-page .search-field w input[type="search" i]::-webkit-search-cancel-button {
+.tutor-backend-settings-page .search-field input[type="search" i]::-webkit-search-cancel-button {
   cursor: pointer;
 }
 
