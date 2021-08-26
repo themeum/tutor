@@ -7618,103 +7618,6 @@ table.course-single-gradebooks a {
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */
-.tutor-dashboard-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  padding-bottom: 30px;
-  border-bottom: 1px solid #dcdfe5;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-}
-
-.tutor-dashboard-header .tutor-btn.bordered-btn {
-  text-transform: uppercase;
-  font-weight: 400;
-  border-radius: 2px;
-}
-
-.tutor-dashboard-header .tutor-btn.bordered-btn i {
-  font-size: 20px;
-}
-
-.tutor-dashboard-header .tutor-star-rating-group {
-  margin-right: 3px;
-}
-
-.tutor-dashboard-header-avatar img {
-  display: block;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-}
-
-.tutor-dashboard-header-info {
-  -webkit-box-flex: 1;
-  -ms-flex-positive: 1;
-      flex-grow: 1;
-  padding-left: 24px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-
-.tutor-dashboard-header-button {
-  padding-top: 15px;
-}
-
-.tutor-dashboard-header-display-name h4 {
-  font-size: 30px;
-  margin-top: 0px;
-  margin-bottom: 10px;
-  line-height: 34px;
-}
-
-.tutor-dashboard-header-stats {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  line-height: 25px;
-}
-
-.tutor-dashboard-header-stats > div:not(:first-child) {
-  margin-left: 30px;
-}
-
-.tutor-dashboard-social-icons {
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.tutor-dashboard-social-icons h4 {
-  margin: 0 10px 0 0;
-  font-size: var(--tutor-text-size);
-  line-height: 25px;
-}
-
-.tutor-dashboard-social-icons a {
-  display: inline-block;
-  font-size: 12px;
-  padding: 0 5px;
-  line-height: 25px;
-  color: #393c40;
-  -webkit-transition: 300ms;
-  transition: 300ms;
-}
-
-.tutor-dashboard-social-icons a:hover {
-  color: var(--tutor-primary-color);
-}
-
-/* End dashboard header */
 /* Dashboard profile completion warning */
 .tutor-profile-completion-warning {
   display: -webkit-box;
@@ -7893,137 +7796,8 @@ table.course-single-gradebooks a {
   background-color: var(--tutor-success-button-color);
 }
 
-/**
- * Tutor Dashboard Review
- */
-.tutor-dashboard-single-review {
-  border: 1px solid #dcdfe5;
-  border-radius: 4px;
-  margin-bottom: 30px;
-}
-
-.tutor-dashboard-review-heading {
-  padding: 10px 20px;
-  border-bottom: 1px solid #dcdfe5;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.individual-dashboard-review-body {
-  padding: 10px 20px;
-}
-
-.tutor-dashboard-review-title {
-  font-size: 18px;
-  -webkit-box-flex: 1;
-  -ms-flex-positive: 1;
-      flex-grow: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 300;
-}
-
-.tutor-dashboard-review-title a {
-  font-weight: 500;
-  color: var(--tutor-primary-color);
-}
-
-.tutor-dashboard-review-title a:hover {
-  color: var(--tutor-primary-hover-color);
-}
-
-.tutor-dashboard-review-links {
-  white-space: nowrap;
-  font-weight: 400;
-}
-
-.tutor-dashboard-review-links a {
-  color: #8c94a8;
-  margin-left: 10px;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  font-size: 14px;
-}
-
-.tutor-dashboard-review-links a i {
-  line-height: inherit;
-  font-size: 14px;
-  margin-right: 5px;
-}
-
-.individual-dashboard-review-body .review-meta {
-  font-size: 85%;
-  margin: 0;
-  color: #8c94a8;
-}
-
-.individual-star-rating-wrap {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.tutor-edit-review-modal-wrap .modal-close-wrap a.modal-close-btn {
-  color: #222222;
-  background: none;
-  font-size: 20px;
-  top: 8px;
-}
-
 .tutor-modal-wrap form {
   margin-bottom: 20px;
-}
-
-/* dashboard content */
-.tutor-dashboard-info-cards {
-  margin: 0 -15px 15px;
-  padding: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  list-style: none;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-}
-
-.tutor-dashboard-info-cards .tutor-dashboard-info-card {
-  padding: 15px;
-  min-width: 33.333%;
-}
-
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p {
-  margin: 0;
-  padding: 15px 25px;
-  background: #282c36;
-  color: #ffffff;
-  border-radius: 4px;
-}
-
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p span.tutor-dashboard-info-val {
-  display: block;
-  font-weight: 700;
-  font-size: 30px;
-  line-height: 1.618;
-}
-
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p span span {
-  display: inline-block;
-}
-
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p > * {
-  vertical-align: middle;
 }
 
 /* dashboard quiz attempts */
@@ -8048,18 +7822,30 @@ table.course-single-gradebooks a {
   margin-right: 7px;
 }
 
-.tutor-dashboard-content .tutor-quiz-attempt-history tr th,
-.tutor-dashboard-content .tutor-quiz-attempt-history tr td {
+.tutor-dashboard-content .tutor-quiz-attempt-history.single-quiz-page table {
+  margin-bottom: 30px;
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr th, .tutor-dashboard-content .tutor-quiz-attempt-history table tr td {
   vertical-align: middle;
   border: none;
 }
 
-.tutor-dashboard-content .tutor-quiz-attempt-history tr td:first-child {
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr td:first-child {
   padding: 15px 13px !important;
 }
 
-.tutor-dashboard-content .tutor-quiz-attempt-history table span.result-fail,
-.tutor-dashboard-content .tutor-quiz-attempt-history table span.result-pass {
+.tutor-dashboard-content .tutor-quiz-attempt-history table a {
+  color: var(--tutor-primary-color);
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table span.result-fail, .tutor-dashboard-content .tutor-quiz-attempt-history table span.result-pass {
   width: auto;
   height: auto;
   line-height: 19px;
@@ -8216,24 +8002,6 @@ table.course-single-gradebooks a {
 .single-quiz-page.tutor-quiz-attempt-history table td .student-meta {
   display: inline-block;
   margin-top: 5px;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table {
-  margin-bottom: 30px;
-}
-
-.tutor-dashboard-content .tutor-quiz-attempt-history table a {
-  color: var(--tutor-primary-color);
-  font-weight: 700;
-  line-height: 24px;
-}
-
-.tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
-  color: var(--tutor-primary-hover-color);
-}
-
-.tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
-  color: var(--tutor-primary-color);
 }
 
 .tutor-dashboard-item-group {
@@ -8433,51 +8201,6 @@ table.course-single-gradebooks a {
 }
 
 /* end dashboard content*/
-/*  dashboard profile*/
-.tutor-dashboard-profile .tutor-dashboard-profile-item {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.tutor-dashboard-profile .tutor-dashboard-profile-item .heading {
-  min-width: 190px;
-}
-
-@media (max-width: 480px) {
-  .tutor-dashboard-profile .tutor-dashboard-profile-item {
-    -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
-  }
-  .tutor-dashboard-profile .tutor-dashboard-profile-item .heading {
-    min-width: 100%;
-    width: 100%;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-}
-
-.tutor-dashboard-profile .tutor-dashboard-profile-item .content {
-  -webkit-box-flex: 1;
-  -ms-flex-positive: 1;
-      flex-grow: 1;
-}
-
-.tutor-dashboard-profile .tutor-dashboard-profile-item .content small {
-  font-size: inherit;
-  font-style: italic;
-  /*color: #999;*/
-}
-
-.tutor-dashboard-profile .tutor-dashboard-profile-item .content small a {
-  color: var(--tutor-primary-color);
-}
-
-.tutor-dashboard-profile .tutor-dashboard-profile-item .content small a:hover {
-  color: var(--tutor-primary-hover-color);
-}
-
-/* end dashboard profile*/
 .tutor-dashboard-avater img {
   width: 70px;
   height: 70px;
@@ -8499,127 +8222,6 @@ table.course-single-gradebooks a {
   font-weight: 400;
 }
 
-.tutor-dashboard-inline-links {
-  margin-bottom: 30px;
-}
-
-.tutor-dashboard-inline-links ul {
-  margin: 0;
-  padding: 0;
-  border-bottom: 1px solid #dfe1e5;
-}
-
-.tutor-dashboard-inline-links ul li {
-  display: inline-block;
-}
-
-.tutor-dashboard-inline-links ul li a {
-  display: block;
-  padding: 5px 10px;
-  color: var(--tutor-primary-color);
-  margin-bottom: -1px;
-  line-height: 40px;
-}
-
-.tutor-dashboard-inline-links ul li a:hover {
-  color: var(--tutor-primary-color);
-}
-
-.tutor-dashboard-inline-links ul li a:hover,
-.tutor-dashboard-inline-links ul li.active a {
-  color: var(--tutor-primary-color);
-  border-bottom: 1px solid var(--tutor-primary-color);
-  padding-bottom: 4px;
-}
-
-.tutor-dashboard-student-meta ul li:first-child {
-  margin-left: 0;
-}
-
-@media (max-width: 767px) {
-  .tutor-dashboard-student-meta ul {
-    display: block;
-    border: none;
-    padding: 0;
-  }
-  .tutor-dashboard-student-meta ul li {
-    display: inline-block;
-    color: var(--tutor-text-color);
-    margin: 5px;
-    border: 1px solid #dddddd;
-    padding: 5px 10px;
-    border-radius: 4px;
-  }
-}
-
-.tutor-dashboard-student-meta ul li strong {
-  display: block;
-  color: var(--tutor-light-color);
-  font-weight: 400;
-}
-
-.tutor-dashboard-permalinks {
-  list-style: none;
-  margin: 0px 0 20px;
-  padding: 20px 0;
-  border-right: 1px solid #dcdfe5;
-}
-
-.tutor-dashboard-permalinks a, .tutor-dashboard-permalinks a:hover, .tutor-dashboard-permalinks a:active, .tutor-dashboard-permalinks a:focus {
-  text-decoration: none;
-}
-
-.tutor-dashboard-permalinks a::before {
-  content: "\e968";
-  font-family: "tutor" !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: inherit;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  margin-right: 15px;
-  vertical-align: middle;
-  color: var(--tutor-primary-color);
-  opacity: 0.6;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
-  font-size: 17px;
-}
-
-.tutor-dashboard-permalinks a:hover::before {
-  opacity: 1;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-  color: var(--tutor-primary-hover-color);
-}
-
-.tutor-dashboard-permalinks li a {
-  display: block;
-  color: var(--tutor-text-color);
-  padding: 10px 20px;
-  line-height: 28px;
-}
-
-.tutor-dashboard-permalinks li a:hover {
-  background-color: #edf0f9;
-}
-
-.tutor-dashboard-permalinks li.active a {
-  background-color: var(--tutor-primary-color);
-  color: #ffffff;
-}
-
-.tutor-dashboard-permalinks li.active a:hover {
-  background-color: var(--tutor-primary-hover-color);
-}
-
-.tutor-dashboard-permalinks li.active a:before {
-  opacity: 1;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-  color: #fff;
-}
-
 @media (max-width: 991px) {
   .tutor-dashboard-student .tutor-col-3,
   .tutor-dashboard-student .tutor-col-9 {
@@ -8631,76 +8233,6 @@ table.course-single-gradebooks a {
   .profile-completion-warning-details {
     margin-bottom: 10px;
   }
-}
-
-.tutor-dashboard-menu-bio a:before,
-.tutor-dashboard-menu-my-profile a:before {
-  content: "\e963";
-}
-
-.tutor-dashboard-menu-enrolled-courses a:before {
-  content: "\e969";
-}
-
-.tutor-dashboard-menu-courses_taken a:before,
-.tutor-dashboard-menu-my-courses a:before {
-  content: "\e965";
-}
-
-.tutor-dashboard-menu-announcements a:before {
-  content: "\e93f";
-}
-
-.tutor-dashboard-menu-wishlist a:before {
-  content: "\e908";
-}
-
-.tutor-dashboard-menu-reviews a:before {
-  content: "\e917";
-}
-
-.tutor-dashboard-menu-my-quiz-attempts a:before {
-  content: "\e9ab";
-}
-
-.tutor-dashboard-menu-quiz-attempts a:before {
-  content: "\e91f";
-}
-
-.tutor-dashboard-menu-question-answer a:before {
-  content: "\e948";
-}
-
-.tutor-dashboard-menu-earning a:before {
-  content: "\e96b";
-}
-
-.tutor-dashboard-menu-withdraw a:before {
-  content: "\e960";
-}
-
-.tutor-dashboard-menu-settings a:before {
-  content: "\e961";
-}
-
-.tutor-dashboard-menu-logout a:before {
-  content: "\e962";
-}
-
-.tutor-dashboard-menu-purchase_history a:before {
-  content: "\e964";
-}
-
-.tutor-dashboard-menu-assignments a:before {
-  content: "\e98b";
-}
-
-.tutor-dashboard-menu-zoom a:before {
-  content: "\e9b1";
-}
-
-.tutor-dashboard-content {
-  padding-top: 30px;
 }
 
 .quiz-attempts-title,
@@ -8741,6 +8273,10 @@ table.course-single-gradebooks a {
 .report-top-sub-menu a:hover {
   background: #edf0f9;
   color: #333;
+}
+
+.report-top-sub-menu a:hover, .report-top-sub-menu a:active, .report-top-sub-menu a:focus {
+  outline: none;
 }
 
 .report-top-sub-menu a.active {

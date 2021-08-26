@@ -240,7 +240,7 @@ class Lesson extends Tutor_Base {
 			$uri_base = trailingslashit(site_url());
 
 			$sample_course = "sample-course";
-			$is_course = get_post_meta(get_the_ID(), '_tutor_course_id_for_lesson', true);
+			$is_course = tutor_utils()->get_course_id_by('lesson', get_the_ID());
 			if ($is_course){
 				$course = get_post($is_course);
 				if ($course){
@@ -282,7 +282,7 @@ class Lesson extends Tutor_Base {
 	public function custom_lesson_column($column, $post_id ){
 		if ($column === 'course'){
 
-			$course_id = get_post_meta($post_id, '_tutor_course_id_for_lesson', true);
+			$course_id = tutor_utils()->get_course_id_by('lesson', $post_id);
 			if ($course_id){
 				echo '<a href="'.admin_url('post.php?post='.$course_id.'&action=edit').'">'.get_the_title($course_id).'</a>';
 			}

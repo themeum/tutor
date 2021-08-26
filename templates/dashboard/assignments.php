@@ -83,7 +83,7 @@ if ($assignments->count) { ?>
 
                 foreach ($assignments->results as $item) {
                     $max_mark = tutor_utils()->get_assignment_option($item->ID, 'total_mark');
-                    $course_id = tutor_utils()->get_course_id_by_assignment($item->ID);
+                    $course_id = tutor_utils()->get_course_id_by('assignment', $item->ID);
                     $comment_count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d", $item->ID));
                     // @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish
                 ?>

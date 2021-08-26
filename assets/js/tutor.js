@@ -11,7 +11,7 @@ function tutor_get_nonce_data(send_key_value) {
     return {[nonce_key]:nonce_value};
 }
 
-window.tutor_component = function($, icon, padding) {
+window.tutor_popup = function($, icon, padding) {
 
     var $this = this;
     var element; 
