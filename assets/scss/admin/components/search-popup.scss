@@ -1,19 +1,24 @@
-.search-popup-opener {
+.search-popup-opener, .search_result {
     background: #ffffff;
     border: 1px solid #cdcfd5;
-    box-sizing: border-box;
-    box-shadow: 0px 6px 20px rgba(28, 49, 104, 10%);
+    box-shadow: 0px 6px 20px rgba(28, 49, 104, .1);
     border-radius: 6px;
     position: absolute;
+    width: 100%;
+    top: calc(100% - 0px);
     margin-top: 6px;
     z-index: 4;
+    font-size: 16px;
+
+    max-height: 448px;
+    overflow-y: auto;
 
     transition: 0.3s ease;
     opacity: 0;
     visibility: hidden;
     transform: translateY(3px);
 
-    &.visible {
+    &.visible, &.show{
         opacity: 1;
         visibility: visible;
         transform: translateY(0px);
