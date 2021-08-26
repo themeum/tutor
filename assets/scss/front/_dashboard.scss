@@ -166,74 +166,7 @@
 		}
 	}
 }
-/**
- * Tutor Dashboard Review
- */
 
-.tutor-dashboard-single-review {
-	border: 1px solid #dcdfe5;
-	border-radius: 4px;
-	margin-bottom: 30px;
-}
-.tutor-dashboard-review-heading {
-	padding: 10px 20px;
-	border-bottom: 1px solid #dcdfe5;
-	display: flex;
-	align-items: center;
-}
-.individual-dashboard-review-body {
-	padding: 10px 20px;
-}
-
-.tutor-dashboard-review-title {
-	font-size: 18px;
-	-webkit-box-flex: 1;
-
-	flex-grow: 1;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	font-weight: 300;
-}
-.tutor-dashboard-review-title a {
-	font-weight: 500;
-	color: var(--tutor-primary-color);
-}
-.tutor-dashboard-review-title a:hover {
-	color: var(--tutor-primary-hover-color);
-}
-
-.tutor-dashboard-review-links {
-	white-space: nowrap;
-	font-weight: 400;
-}
-.tutor-dashboard-review-links a {
-	color: #8c94a8;
-	margin-left: 10px;
-	display: inline-flex;
-	align-items: center;
-	font-size: 14px;
-}
-.tutor-dashboard-review-links a i {
-	line-height: inherit;
-	font-size: 14px;
-	margin-right: 5px;
-}
-.individual-dashboard-review-body .review-meta {
-	font-size: 85%;
-	margin: 0;
-	color: #8c94a8;
-}
-.individual-star-rating-wrap {
-	display: flex;
-	align-items: center;
-}
-.tutor-edit-review-modal-wrap .modal-close-wrap a.modal-close-btn {
-	color: #222222;
-	background: none;
-	font-size: 20px;
-	top: 8px;
-}
 .tutor-modal-wrap form {
 	margin-bottom: 20px;
 }
@@ -589,49 +522,6 @@
 }
 
 /* end dashboard content*/
-
-/*  dashboard profile*/
-
-.tutor-dashboard-profile .tutor-dashboard-profile-item {
-	display: flex;
-}
-
-.tutor-dashboard-profile .tutor-dashboard-profile-item .heading {
-	min-width: 190px;
-}
-
-@media (max-width: 480px) {
-	.tutor-dashboard-profile .tutor-dashboard-profile-item {
-		flex-wrap: wrap;
-	}
-	.tutor-dashboard-profile .tutor-dashboard-profile-item .heading {
-		min-width: 100%;
-		width: 100%;
-		font-weight: 700;
-		margin-bottom: 6px;
-	}
-}
-
-.tutor-dashboard-profile .tutor-dashboard-profile-item .content {
-	-webkit-box-flex: 1;
-
-	flex-grow: 1;
-}
-
-.tutor-dashboard-profile .tutor-dashboard-profile-item .content small {
-	font-size: inherit;
-	font-style: italic;
-	/*color: #999;*/
-}
-
-.tutor-dashboard-profile .tutor-dashboard-profile-item .content small a {
-	color: var(--tutor-primary-color);
-}
-.tutor-dashboard-profile .tutor-dashboard-profile-item .content small a:hover {
-	color: var(--tutor-primary-hover-color);
-}
-
-/* end dashboard profile*/
 
 .tutor-dashboard-avater img {
 	width: 70px;
