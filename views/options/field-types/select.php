@@ -1,6 +1,5 @@
 <div class="tutor-option-field-row">
-<?php include tutor()->path . "views/options/template/field_heading.php";?>
-
+	<?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 	<div class="tutor-option-field-input">
 		<select name="tutor_option[<?php echo $field['key']; ?>]" class="tutor-form-select">
 			<?php
@@ -10,7 +9,7 @@
 			if (!empty($field['options'])) {
 				foreach ($field['options'] as $optionKey => $option) {
 			?>
-					<option value="<?php echo $optionKey ?>" <?php selected($this->get($field['key']),  $optionKey) ?>><?php echo $option ?></option>
+					<option value="<?php echo $optionKey ?>" <?php selected($this->get($field['key']),  $optionKey) ?>><?php echo esc_html__($option); ?></option>
 			<?php
 				}
 			}

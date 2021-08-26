@@ -15,7 +15,42 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         <div class="search-field">
             <div class="tutor-input-group tutor-form-control-has-icon">
                 <span class="las la-search tutor-input-group-icon"></span>
-                <input type="search" class="tutor-form-control" placeholder="<?php _e('Search', 'tutor'); ?>" />
+                <input type="search" autofocus id="search_settings" class="tutor-form-control" placeholder="<?php _e('Search', 'tutor'); ?>" />
+                <div class="search_result">
+                    <a href="#">
+                        <div class="search_result_title">
+                            <i class="las la-search"></i>
+                            <span>Result results one</span>
+                        </div>
+                        <div class="search_navigation">
+                            <span>General</span>
+                            <i class="las la-angle-right"></i>
+                            <span>Instructor</span>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="search_result_title">
+                            <i class="las la-search"></i>
+                            <span>Result results tow</span>
+                        </div>
+                        <div class="search_navigation">
+                            <span>Design</span>
+                            <i class="las la-angle-right"></i>
+                            <span>Instructor</span>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="search_result_title">
+                            <i class="las la-search"></i>
+                            <span>Result results three</span>
+                        </div>
+                        <div class="search_navigation">
+                            <span>General</span>
+                            <i class="las la-angle-right"></i>
+                            <span>Instructor</span>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="save-button">
@@ -80,9 +115,9 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         </form>
     </div>
 
-    <div class="tutor-notification" style="position: fixed;bottom:40px;z-index:999;visibility:hidden;transition:all .5s;">
+    <div class="tutor-notification tutor-is-success">
         <div class="tutor-notification-icon">
-            <i class="far fa-question-circle"></i>
+            <i class="fas fa-check"></i>
         </div>
         <div class="tutor-notification-content">
             <h5>Successful</h5>
@@ -93,3 +128,78 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         </button>
     </div>
 </section>
+<style>
+    .search_result {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-shadow: 0 0 3px #ddd;
+        width: 100%;
+        position: absolute;
+        top: calc(100% + 5px);
+        background-color: #fff;
+        font-size: 16px;
+        transition: all .3s;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .search_result.show {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .search_result_title {
+        display: flex;
+        vertical-align: middle;
+    }
+
+    .search_result_title span {
+        line-height: 20px;
+    }
+
+    .no_item,
+    .search_result a {
+        padding: 12px;
+        display: flex;
+        width: 100%;
+        color: #777;
+        text-decoration: none;
+        transition: all .3s;
+        vertical-align: middle;
+        justify-content: space-between;
+    }
+
+
+    .search_result .search_result_title i {
+        padding-right: 10px;
+        font-size: 20px;
+    }
+
+    .search_result a:hover {
+        background-color: rgba(0, 0, 0, .03);
+    }
+
+    .search_navigation {
+        display: flex;
+        align-items: center;
+        vertical-align: middle;
+        font-size: 12px;
+    }
+
+    .search_navigation i {
+        padding: 0 5px;
+        font-size: 12px;
+    }
+
+    .tutor-notification {
+        position: fixed;
+        bottom: 40px;
+        z-index: 999;
+        visibility: hidden;
+        transition: all .3s;
+    }
+
+    .tutor-notification.show {
+        visibility: visible;
+    }
+</style>
