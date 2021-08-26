@@ -1,0 +1,131 @@
+.tutor-backend-settings-page {
+    // Toggle/Switch
+    .tutor-form-toggle {
+        span[class^="label-"] {
+            @include getTypography(15px, 400, 160%);
+            color: $text-primary;
+            &.label-before {
+                margin-right: 5px;
+            }
+        }
+
+        input {
+            ~ .tutor-form-toggle-control {
+                background-color: #cdcfd5;
+                &::before {
+                    box-shadow: 0px 2px 4px rgba(0, 0, 0, 17%);
+                }
+            }
+            &:checked ~ .tutor-form-toggle-control {
+                background-color: $brand-wordpress;
+            }
+        }
+    }
+
+    // Input, Textarea, Select etc.
+    input[type="radio"] {
+        background-size: 120%;
+    }
+    input[type="checkbox"] {
+        background-size: 70%;
+    }
+    input[type="checkbox"]:checked,
+    input[type="radio"]:checked {
+        border-color: $brand-wordpress;
+        background-color: $brand-wordpress;
+    }
+    .tutor-form-check {
+        label {
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1;
+            text-align: left;
+            color: #353535;
+            > .desc {
+                @include getTypography(13px, 400, 138%);
+                color: $text-subsued;
+            }
+        }
+        &.has-desc {
+            align-items: flex-start;
+            label {
+                font-size: 15px;
+            }
+            &:not(:last-child) {
+                margin-bottom: 30px;
+            }
+            .desc {
+                margin-top: 5px;
+            }
+        }
+        &:not(.has-desc) label {
+            i {
+                font-size: 20px;
+                margin-right: 3px;
+            }
+        }
+    }
+
+    input.tutor-form-control {
+        padding: 0 15px;
+        &[type="number"] {
+            padding: 0px 5px;
+            text-align: center;
+            max-width: 90px;
+            min-width: 90px;
+            height: 40px;
+        }
+    }
+
+    textarea.tutor-form-control {
+        resize: vertical;
+        min-height: 80px;
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.62;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .tutor-form-radio {
+        label {
+            font-size: 15px;
+        }
+        .desc {
+            margin-top: 5px;
+        }
+    }
+
+    select.tutor-form-select {
+        min-width: 137px;
+        padding: 0 40px 0 20px;
+    }
+
+    select.tutor-form-select,
+    input.tutor-form-control,
+    textarea.tutor-form-control,
+    textarea.tutor-form-control:read-only {
+        @include getTypography(16px, 400, 162%);
+        border-color: #bababa;
+
+        &::placeholder {
+            color: #757c8e;
+        }
+
+        &:focus {
+            border-color: $brand-wordpress;
+        }
+    }
+
+    select.tutor-form-select,
+    input.tutor-form-control {
+        height: 40px;
+        line-height: 1;
+    }
+
+    .tutor-form-check-input {
+        width: 20px;
+        height: 20px;
+    }
+}

@@ -1,0 +1,72 @@
+// Media Query Mixins ( phone-576, tablet-768, desktop-992, desktop-lg-1200 )
+
+// @include breakpoint-min(tablet) { ... }
+@mixin breakpoint-min($size) {
+	@if $size == phone {
+		@media (min-width: 576px) {
+			@content;
+		}
+	} @else if $size == tablet {
+		@media (min-width: 768px) {
+			@content;
+		}
+	} @else if $size == desktop {
+		@media (min-width: 992px) {
+			@content;
+		}
+	} @else if $size == desktop-lg {
+		@media (min-width: 1200px) {
+			@content;
+		}
+	} @else {
+		@media (min-width: #{$size}px) {
+			@content;
+		}
+	}
+}
+
+// @include breakpoint-max(tablet) { ... }
+@mixin breakpoint-max($size) {
+	@if $size == phone {
+		@media (max-width: 575.98px) {
+			@content;
+		}
+	} @else if $size == tablet {
+		@media (max-width: 767.98px) {
+			@content;
+		}
+	} @else if $size == desktop {
+		@media (max-width: 991.98px) {
+			@content;
+		}
+	} @else if $size == desktop-lg {
+		@media (max-width: 1199.98px) {
+			@content;
+		}
+	} @else {
+		@media (max-width: #{$size}px) {
+			@content;
+		}
+	}
+}
+
+// @include breakpoint-minmax(tablet, desktop) { ... }
+@mixin breakpoint-minmax($sizemin, $sizemax) {
+	@if ($sizemin == phone and $sizemax == tablet) {
+		@media (min-width: 576px) and (max-width: 767.98px) {
+			@content;
+		}
+	} @else if ($sizemin == tablet and $sizemax == desktop) {
+		@media (min-width: 768px) and (max-width: 991.98px) {
+			@content;
+		}
+	} @else if ($sizemin == desktop and $sizemax == desktop-lg) {
+		@media (min-width: 992px) and (max-width: 1199.98px) {
+			@content;
+		}
+	} @else {
+		@media (min-width: #{$sizemin}px) and (max-width: #{$sizemax}px) {
+			@content;
+		}
+	}
+}
