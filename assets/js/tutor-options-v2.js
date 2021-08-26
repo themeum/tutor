@@ -1,9 +1,9 @@
 jQuery(document).ready(function ($) {
   "use strict";
 
-  $(window).on("click", function (e) {
-    $(".tutor-notification, .search_result").removeClass("show");
-  });
+  // $(window).on("click", function (e) {
+  //   $(".tutor-notification, .search_result").removeClass("show");
+  // });
   $(document).keyup(function (e) {
     if (e.key === "Escape") {
       // escape key maps to keycode `27`
@@ -122,8 +122,19 @@ jQuery(document).ready(function ($) {
         output = "";
         // console.log("working");
       },
-      // complete: function () {},
+      complete: function () {
+
+        navigationTrigger();
+
+      },
+      
     });
+
+
+
+    
+
+
   });
 
   // $(document)
@@ -149,3 +160,48 @@ jQuery(document).ready(function ($) {
   //   window.history.pushState("obj", "", $(this).attr("href"));
   // });
 });
+
+
+/**
+ * Search suggestion navigation
+ */
+function navigationTrigger(){
+   const suggestionLinks = document.querySelectorAll(".search-field .search_result a");
+   const navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
+   const navPages = document.querySelectorAll('.tutor-option-nav-page');
+
+   suggestionLinks.forEach((link) => {
+     link.addEventListener('click', (e) => {
+        const dataTab = e.target.closest('[data-tab]').dataset.tab;
+        console.log(dataTab);
+        if (dataTab) {
+          // remove active from other buttons
+          navTabItems.forEach((item) => {
+            item.classList.remove('active');
+            if (e.target.dataset.tab) {
+              e.target.classList.add('active');
+            } else {
+              e.target.parentElement.classList.add('active');
+            }
+          });
+          // hide other tab contents
+          navPages.forEach((content) => {
+            content.classList.remove('active');
+          });
+          // add active to the current content
+          const currentContent = document.querySelector(`#${dataTab}`);
+          currentContent.classList.add('active');
+
+          // History push
+          const url = new URL(window.location);
+          url.searchParams.set('tab_page',dataTab);
+          window.history.pushState({}, '', url);
+        }
+
+        // Reset + Hide Suggestion box
+        document.querySelector('.search_result').classList.remove('show');
+        document.querySelector('.search-field input[type="search"]').value = '';
+
+     })
+   })
+}

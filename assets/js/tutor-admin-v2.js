@@ -32,9 +32,16 @@ navTabLists.forEach((list) => {
 			// add active to the current content
 			const currentContent = document.querySelector(`#${dataTab}`);
 			currentContent.classList.add('active');
+
+			// History push
+			const url = new URL(window.location);
+			url.searchParams.set('tab_page',dataTab);
+			window.history.pushState({}, '', url);
 		}
 	});
 });
+
+
 
 /**
  * Toggle disable input fields
@@ -288,3 +295,6 @@ searchInput.addEventListener('input', (e) => {
 		searchPopupOpener.classList.remove('visible');
 	}
 }); */
+
+
+
