@@ -173,17 +173,15 @@ function navigationTrigger(){
    suggestionLinks.forEach((link) => {
      link.addEventListener('click', (e) => {
         const dataTab = e.target.closest('[data-tab]').dataset.tab;
-        console.log(dataTab);
         if (dataTab) {
           // remove active from other buttons
           navTabItems.forEach((item) => {
             item.classList.remove('active');
-            if (e.target.dataset.tab) {
-              e.target.classList.add('active');
-            } else {
-              e.target.parentElement.classList.add('active');
-            }
           });
+
+          // add active to the current nav item
+          document.querySelector(`.tutor-option-tabs [data-tab=${dataTab}]`).classList.add('active');
+
           // hide other tab contents
           navPages.forEach((content) => {
             content.classList.remove('active');
@@ -201,7 +199,6 @@ function navigationTrigger(){
         // Reset + Hide Suggestion box
         document.querySelector('.search_result').classList.remove('show');
         document.querySelector('.search-field input[type="search"]').value = '';
-
      })
    })
 }
