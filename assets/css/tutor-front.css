@@ -7724,6 +7724,7 @@ table.course-single-gradebooks a {
 }
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks a::before {
+  content: "\e968";
   font-family: "tutor" !important;
   speak: none;
   font-style: normal;
@@ -7837,6 +7838,50 @@ table.course-single-gradebooks a {
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.tutor-dashboard-menu-zoom a:before {
   content: "\e9b1";
+}
+
+.tutor-dashboard .tutor-dashboard-content {
+  padding-top: 30px;
+  /* dashboard content */
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards {
+  margin: 0 -15px 15px;
+  padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  list-style: none;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card {
+  padding: 15px;
+  min-width: 33.333%;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p {
+  margin: 0;
+  padding: 15px 25px;
+  background: #282c36;
+  color: #ffffff;
+  border-radius: 4px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p span.tutor-dashboard-info-val {
+  display: block;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.618;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p span span {
+  display: inline-block;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p span > * {
+  vertical-align: middle;
 }
 
 /* *********************** */
@@ -8113,46 +8158,6 @@ table.course-single-gradebooks a {
   margin-bottom: 20px;
 }
 
-/* dashboard content */
-.tutor-dashboard-info-cards {
-  margin: 0 -15px 15px;
-  padding: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  list-style: none;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-}
-
-.tutor-dashboard-info-cards .tutor-dashboard-info-card {
-  padding: 15px;
-  min-width: 33.333%;
-}
-
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p {
-  margin: 0;
-  padding: 15px 25px;
-  background: #282c36;
-  color: #ffffff;
-  border-radius: 4px;
-}
-
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p span.tutor-dashboard-info-val {
-  display: block;
-  font-weight: 700;
-  font-size: 30px;
-  line-height: 1.618;
-}
-
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p span span {
-  display: inline-block;
-}
-
-.tutor-dashboard-info-cards .tutor-dashboard-info-card p > * {
-  vertical-align: middle;
-}
-
 /* dashboard quiz attempts */
 .tutor-dashboard-content {
   margin-bottom: 60px;
@@ -8175,18 +8180,30 @@ table.course-single-gradebooks a {
   margin-right: 7px;
 }
 
-.tutor-dashboard-content .tutor-quiz-attempt-history tr th,
-.tutor-dashboard-content .tutor-quiz-attempt-history tr td {
+.tutor-dashboard-content .tutor-quiz-attempt-history.single-quiz-page table {
+  margin-bottom: 30px;
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr th, .tutor-dashboard-content .tutor-quiz-attempt-history table tr td {
   vertical-align: middle;
   border: none;
 }
 
-.tutor-dashboard-content .tutor-quiz-attempt-history tr td:first-child {
+.tutor-dashboard-content .tutor-quiz-attempt-history table tr td:first-child {
   padding: 15px 13px !important;
 }
 
-.tutor-dashboard-content .tutor-quiz-attempt-history table span.result-fail,
-.tutor-dashboard-content .tutor-quiz-attempt-history table span.result-pass {
+.tutor-dashboard-content .tutor-quiz-attempt-history table a {
+  color: var(--tutor-primary-color);
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
+.tutor-dashboard-content .tutor-quiz-attempt-history table span.result-fail, .tutor-dashboard-content .tutor-quiz-attempt-history table span.result-pass {
   width: auto;
   height: auto;
   line-height: 19px;
@@ -8343,24 +8360,6 @@ table.course-single-gradebooks a {
 .single-quiz-page.tutor-quiz-attempt-history table td .student-meta {
   display: inline-block;
   margin-top: 5px;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table {
-  margin-bottom: 30px;
-}
-
-.tutor-dashboard-content .tutor-quiz-attempt-history table a {
-  color: var(--tutor-primary-color);
-  font-weight: 700;
-  line-height: 24px;
-}
-
-.tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
-  color: var(--tutor-primary-hover-color);
-}
-
-.tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
-  color: var(--tutor-primary-color);
 }
 
 .tutor-dashboard-item-group {
@@ -8670,10 +8669,6 @@ table.course-single-gradebooks a {
   .profile-completion-warning-details {
     margin-bottom: 10px;
   }
-}
-
-.tutor-dashboard-content {
-  padding-top: 30px;
 }
 
 .quiz-attempts-title,
