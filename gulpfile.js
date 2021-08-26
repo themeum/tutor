@@ -30,6 +30,8 @@ var scss_blueprints = {
 	tutor_front_min: {src: "assets/scss/front/main.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
 	tutor_admin: {src: "assets/scss/admin/main.scss", mode: 'expanded', destination: 'tutor-admin.css'},
 	tutor_admin_min: {src: "assets/scss/admin/main.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
+	tutor_front_dashboard: {src: "assets/scss/front/dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
+	tutor_front_dashboard_min: {src: "assets/scss/front/dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
 };
 
 var task_keys = Object.keys(scss_blueprints);
