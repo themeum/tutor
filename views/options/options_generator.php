@@ -16,7 +16,7 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
             <div class="tutor-input-group tutor-form-control-has-icon">
                 <span class="las la-search tutor-input-group-icon"></span>
                 <input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php _e('Search', 'tutor'); ?>" />
-                <div class="search_result">
+                <div class="search-popup-opener search_result">
                     <a href="#">
                         <div class="search_result_title">
                             <i class="las la-search"></i>
@@ -129,25 +129,6 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
     </div>
 </section>
 <style>
-    .search_result {
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        box-shadow: 0 0 3px #ddd;
-        width: 100%;
-        position: absolute;
-        top: calc(100% + 5px);
-        background-color: #fff;
-        font-size: 16px;
-        transition: all .3s;
-        opacity: 0;
-        visibility: hidden;
-    }
-
-    .search_result.show {
-        visibility: visible;
-        opacity: 1;
-    }
-
     .search_result_title {
         display: flex;
         vertical-align: middle;
@@ -161,7 +142,16 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         cursor: pointer;
     }
 
-    .no_item,
+    .no_item {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+    }
+
+    .no_item svg {
+        margin-right: 7px;
+    }
+
     .search_result a {
         padding: 12px;
         display: flex;
