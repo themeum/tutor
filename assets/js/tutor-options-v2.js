@@ -50,22 +50,20 @@ jQuery(document).ready(function ($) {
     return splitStr.join(" ");
   }
 
-  function view_item(text) {
-    return (
-      `<a href="#">
-          <div class="search_result_title">
-              <i class="las la-search"></i>
-              <span>` +
-      text +
-      `</span>
-          </div>
-          <div class="search_navigation">
-              <span>General</span>
-              <i class="las la-angle-right"></i>
-              <span>Instructor</span>
-          </div>
-      </a>`
-    );
+  function view_item(text, section, block) {
+    var output = "";
+    output += `<a href="#">`;
+    output += `<div class="search_result_title">`;
+    output += `<i class="las la-search"></i>`;
+    output += `<span>` + text + `</span>`;
+    output += `</div>`;
+    output += `<div class="search_navigation">`;
+    output += `<span>` + section + `</span>`;
+    output += block ? `<i class="las la-angle-right"></i>` : ``;
+    output += `<span>` + block + `</span>`;
+    output += `</div>`;
+    output += `</a>`;
+    return output;
   }
 
   $("#search_settings").on("keyup", function (e) {
@@ -82,26 +80,37 @@ jQuery(document).ready(function ($) {
       success: function (data) {
         var output = "",
           wrapped_item = "",
+          notfound = true,
+          item_text = "",
+          section_label = "",
+          block_label = "",
           matchedText = "",
           searchKeyRegex = "",
-          result = data.data;
-        Object.values(result).forEach(function (item, index, arr) {
-          if (item.length !== 0) {
-            searchKeyRegex = new RegExp(searchKey, "ig");
-            matchedText = item.match(searchKeyRegex)[0];
+          result = data.data.fields;
+        // console.log(result);
 
-            wrapped_item = item.replace(
+        Object.values(result).forEach(function (item, index, arr) {
+          item_text = item.label;
+          section_label = item.section_label;
+          block_label = item.block_label;
+          searchKeyRegex = new RegExp(searchKey, "ig");
+          // console.log(item_text.match(searchKeyRegex));
+          matchedText = item_text.match(searchKeyRegex)?.[0];
+
+          if (matchedText) {
+            wrapped_item = item_text.replace(
               searchKeyRegex,
               "<span style='color: #222;font-weight:600'>" +
                 matchedText +
                 "</span>"
             );
-            output += view_item(wrapped_item);
-          } else {
-            output += `<div class="no_item">No item found</div>`;
+            output += view_item(wrapped_item, section_label, block_label);
+            notfound = false;
           }
         });
-
+        if (notfound) {
+          output += `<div class="no_item">No item found</div>`;
+        }
         $(".search_result").html(output).addClass("show");
         output = "";
         // console.log("working");
