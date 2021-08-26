@@ -50,9 +50,9 @@ jQuery(document).ready(function ($) {
     return splitStr.join(" ");
   }
 
-  function view_item(text, section, block) {
+  function view_item(text, section_slug, section, block) {
     var output = "";
-    output += `<a href="#">`;
+    output += `<a data-tab="` + section_slug + `">`;
     output += `<div class="search_result_title">`;
     output += `<i class="las la-search"></i>`;
     output += `<span>` + text + `</span>`;
@@ -82,6 +82,7 @@ jQuery(document).ready(function ($) {
           wrapped_item = "",
           notfound = true,
           item_text = "",
+          section_slug = "",
           section_label = "",
           block_label = "",
           matchedText = "",
@@ -91,6 +92,7 @@ jQuery(document).ready(function ($) {
 
         Object.values(result).forEach(function (item, index, arr) {
           item_text = item.label;
+          section_slug = item.section_slug;
           section_label = item.section_label;
           block_label = item.block_label;
           searchKeyRegex = new RegExp(searchKey, "ig");
@@ -104,7 +106,12 @@ jQuery(document).ready(function ($) {
                 matchedText +
                 "</span>"
             );
-            output += view_item(wrapped_item, section_label, block_label);
+            output += view_item(
+              wrapped_item,
+              section_slug,
+              section_label,
+              block_label
+            );
             notfound = false;
           }
         });
@@ -118,4 +125,27 @@ jQuery(document).ready(function ($) {
       // complete: function () {},
     });
   });
+
+  // $(document)
+  //   .off("click", ".search_result a")
+  //   .on("click", ".search_result a", function () {
+  //     var tab_page_id = $(this).attr("data-tab");
+  //     $(".option-nav-item").removeClass("current");
+  //     $(this).closest("li").addClass("current");
+  //     // $(".tutor-option-nav-page").hide();
+  //     $(tab_page_id).addClass("current-page").show();
+  //     console.log(tab_page_id);
+
+  //     window.history.pushState("obj", "", $(this).attr("href"));
+  //   });
+
+  // $('.tutor-option-nav-tabs li a').click(function(e){
+  // e.preventDefault();
+  //   var tab_page_id = $(this).attr("data-tab");
+  //   $(".option-nav-item").removeClass("current");
+  //   $(this).closest("li").addClass("current");
+  //   $(".tutor-option-nav-page").hide();
+  //   $(tab_page_id).addClass("current-page").show();
+  //   window.history.pushState("obj", "", $(this).attr("href"));
+  // });
 });
