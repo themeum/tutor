@@ -7976,6 +7976,38 @@ table.course-single-gradebooks a {
   content: "\e9b1";
 }
 
+.tutor-dashboard .tutor-dashboard-inline-links {
+  margin-bottom: 30px;
+}
+
+.tutor-dashboard .tutor-dashboard-inline-links ul {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid #dfe1e5;
+}
+
+.tutor-dashboard .tutor-dashboard-inline-links ul li {
+  display: inline-block;
+}
+
+.tutor-dashboard .tutor-dashboard-inline-links ul li a {
+  display: block;
+  padding: 5px 10px;
+  color: var(--tutor-primary-color);
+  margin-bottom: -1px;
+  line-height: 40px;
+}
+
+.tutor-dashboard .tutor-dashboard-inline-links ul li a:hover {
+  color: var(--tutor-primary-color);
+}
+
+.tutor-dashboard .tutor-dashboard-inline-links ul li.active a, .tutor-dashboard .tutor-dashboard-inline-links ul li a:hover {
+  color: var(--tutor-primary-color);
+  border-bottom: 1px solid var(--tutor-primary-color);
+  padding-bottom: 4px;
+}
+
 .tutor-dashboard .tutor-dashboard-content {
   padding-top: 30px;
   /* dashboard content */
@@ -8801,39 +8833,6 @@ table.course-single-gradebooks a {
   font-weight: 400;
 }
 
-.tutor-dashboard-inline-links {
-  margin-bottom: 30px;
-}
-
-.tutor-dashboard-inline-links ul {
-  margin: 0;
-  padding: 0;
-  border-bottom: 1px solid #dfe1e5;
-}
-
-.tutor-dashboard-inline-links ul li {
-  display: inline-block;
-}
-
-.tutor-dashboard-inline-links ul li a {
-  display: block;
-  padding: 5px 10px;
-  color: var(--tutor-primary-color);
-  margin-bottom: -1px;
-  line-height: 40px;
-}
-
-.tutor-dashboard-inline-links ul li a:hover {
-  color: var(--tutor-primary-color);
-}
-
-.tutor-dashboard-inline-links ul li a:hover,
-.tutor-dashboard-inline-links ul li.active a {
-  color: var(--tutor-primary-color);
-  border-bottom: 1px solid var(--tutor-primary-color);
-  padding-bottom: 4px;
-}
-
 @media (max-width: 991px) {
   .tutor-dashboard-student .tutor-col-3,
   .tutor-dashboard-student .tutor-col-9 {
@@ -8885,6 +8884,10 @@ table.course-single-gradebooks a {
 .report-top-sub-menu a:hover {
   background: #edf0f9;
   color: #333;
+}
+
+.report-top-sub-menu a:hover, .report-top-sub-menu a:active, .report-top-sub-menu a:focus {
+  outline: none;
 }
 
 .report-top-sub-menu a.active {

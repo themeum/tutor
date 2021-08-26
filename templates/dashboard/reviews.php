@@ -11,7 +11,10 @@
  * @version 1.4.3
  */
 
-$reviews = tutor_utils()->get_reviews_by_user();
+$reviews = tutor_utils()->get_reviews_by_user(0, 0, 150, true);
+$review_count = $reviews->count;
+$reviews = $reviews->results;
+$received_count = tutor_utils()->get_reviews_by_instructor(0, 0, 0)->count;
 ?>
 
 <div class="tutor-dashboard-content-inner">
@@ -21,9 +24,8 @@ $reviews = tutor_utils()->get_reviews_by_user();
 		?>
         <div class="tutor-dashboard-inline-links">
             <ul>
-                <li class="active"> <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); ?>"> <?php _e('Given', 'tutor'); ?></a> </li>
-                <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/received-reviews'); ?>"> <?php _e('Received', 'tutor');
-                ?></a> </li>
+                <li class="active"> <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); ?>"> <?php _e('Given', 'tutor'); ?> (<?php echo $review_count; ?>)</a> </li>
+                <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/received-reviews'); ?>"> <?php _e('Received', 'tutor'); ?> (<?php echo $received_count; ?>)</a> </li>
             </ul>
         </div>
 	<?php } ?>
