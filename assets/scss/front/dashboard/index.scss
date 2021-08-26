@@ -3,6 +3,9 @@
     @import './sidebar.scss';
 
     .tutor-dashboard-content {
+        padding-top: 30px;
+        
         @import './pages/q-and-a.scss';
+        @import './pages/dashboard.scss';
     }
 }
