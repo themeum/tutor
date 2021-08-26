@@ -157,6 +157,10 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         line-height: 20px;
     }
 
+    .search_result a {
+        cursor: pointer;
+    }
+
     .no_item,
     .search_result a {
         padding: 12px;
