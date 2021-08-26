@@ -1,0 +1,36 @@
+/* earning cards. Currently same as dashboard, in later version it will be updated separately */
+
+.tutor-dashboard-earning-info-cards {
+	margin: 0 -15px 15px;
+	padding: 0;
+	display: flex;
+	list-style: none;
+	flex-wrap: wrap;
+	.tutor-dashboard-info-card {
+		padding: 15px;
+		min-width: 33.333%;
+		p {
+			margin: 0;
+			padding: 15px 25px;
+			background: #282c36;
+			color: #ffffff;
+			border-radius: 4px;
+			span {
+				&.tutor-dashboard-info-val {
+					display: block;
+					font-weight: 700;
+					font-size: 30px;
+					line-height: 1.618;
+				}
+
+				span {
+					display: inline-block;
+				}
+			
+				&>* {
+					vertical-align: middle;
+				}
+			}
+		}
+	}
+}

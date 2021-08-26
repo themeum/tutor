@@ -56,7 +56,7 @@ if ( ! $earning_sum){
 		</ul>
 	</div>
 
-    <div class="tutor-dashboard-info-cards">
+    <div class="tutor-dashboard-earning-info-cards">
         <div class="tutor-dashboard-info-card">
             <p>
                 <span> <?php _e('My Balance', 'tutor'); ?> </span>
