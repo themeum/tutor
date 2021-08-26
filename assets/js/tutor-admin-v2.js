@@ -14,6 +14,7 @@ const navPages = document.querySelectorAll('.tutor-option-nav-page');
 navTabLists.forEach((list) => {
 	list.addEventListener('click', (e) => {
 		const dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
+		console.log(dataTab);
 		if (dataTab) {
 			// remove active from other buttons
 			navTabItems.forEach((item) => {
@@ -277,7 +278,7 @@ window.addEventListener('resize', toolTipOnWindowResize);
  * Search Suggestion box
  */
 
-const searchInput = document.querySelector('.search-field input[type=search]');
+/* const searchInput = document.querySelector('.search-field input[type=search]');
 const searchPopupOpener = document.querySelector('.search-popup-opener');
 
 searchInput.addEventListener('input', (e) => {
@@ -286,4 +287,4 @@ searchInput.addEventListener('input', (e) => {
 	} else {
 		searchPopupOpener.classList.remove('visible');
 	}
-});
+}); */
