@@ -74,7 +74,7 @@ $bio = nl2br(strip_tags(get_user_meta($uid,'_tutor_profile_bio',true)));
             <div class="heading">
                 <span><?php _e('Bio', 'tutor'); ?></span>
             </div>
-            <div class="content">
+            <div class="content bio">
                 <p><?php echo $bio ? $bio : '________'; ?>&nbsp;</p>
             </div>
         </div>

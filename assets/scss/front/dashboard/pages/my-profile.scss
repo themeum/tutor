@@ -1,14 +1,19 @@
+@import '../../../lib/mixins.scss';
 
 .tutor-dashboard-profile {
 	.tutor-dashboard-profile-item {
-		display: flex;
+		@include valueWithPrefix(display, flex);
 
 		.heading {
 			min-width: 190px;
+			font-style: normal;
+			font-weight: normal;
+			font-size: 16px;
+			color: #5B616F;
 		}
 
 		@media (max-width: 480px) {
-			flex-wrap: wrap;
+			@include propertyWithPrefix(flex-wrap, wrap);
 			
 			.heading {
 				min-width: 100%;
@@ -19,9 +24,18 @@
 		}
 
 		.content {
-			-webkit-box-flex: 1;
-			flex-grow: 1;
-			
+			@include propertyWithPrefix(flex, 1);
+			@include propertyWithPrefix(flex-grow, 1);
+			font-style: normal;
+			font-weight: 500;
+			font-size: 16px;
+			color: #212327;
+
+			&.bio{
+				font-weight: normal;
+				color: #5B616F;	
+			}
+
 			small {
 				font-size: inherit;
 				font-style: italic;
