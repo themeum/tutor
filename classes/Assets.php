@@ -202,6 +202,14 @@ class Assets{
 
 		wp_add_inline_style( 'tutor-frontend', $this->load_color_palette() );
 
+		/**
+		 * Load frontend dashboard style
+		 * @since v1.9.8
+		 */
+		if(tutor_utils()->is_tutor_frontend_dashboard()) {
+			wp_enqueue_style('tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', tutor()->version);
+		}
+
 		// Load date picker for announcement at frontend
 		wp_enqueue_script('jquery-ui-datepicker');
 	}
