@@ -7617,19 +7617,27 @@ table.course-single-gradebooks a {
 
 .tutor-dashboard {
   /* Only reusable function, or code allowed here. No direct css please. */
+  /* Only reusable function, or code allowed here. No direct css please. */
 }
 
 .tutor-dashboard table.tutor-dashboard-table {
-  background: white;
-  border: 1px solid #CDCFD5;
+  background: #CDCFD5;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border-collapse: collapse;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #CDCFD5;
 }
 
 .tutor-dashboard table.tutor-dashboard-table td, .tutor-dashboard table.tutor-dashboard-table th {
-  border: 1px solid #CDCFD5;
-  padding: 7px;
+  padding: 15px;
+  border: none;
+}
+
+.tutor-dashboard table.tutor-dashboard-table tr {
+  border-top: 1px solid #CDCFD5;
+  border-bottom: 1px solid #CDCFD5;
 }
 
 .tutor-dashboard table.tutor-dashboard-table thead tr {
@@ -7638,26 +7646,113 @@ table.course-single-gradebooks a {
 
 .tutor-dashboard table.tutor-dashboard-table thead tr th {
   text-align: left;
-}
-
-.tutor-dashboard table.tutor-dashboard-table thead tr th:first-child th:first-child {
-  border-top-left-radius: 6px;
-}
-
-.tutor-dashboard table.tutor-dashboard-table thead tr th:first-child th:last-child {
-  border-top-right-radius: 6px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 18px;
+  color: #5B616F;
 }
 
 .tutor-dashboard table.tutor-dashboard-table tbody tr:nth-child(even) {
-  background: #EFF1F7;
+  background: #fafcff;
 }
 
-.tutor-dashboard table.tutor-dashboard-table tbody tr:last-child td:first-child {
-  border-bottom-left-radius: 6px;
+.tutor-dashboard table.tutor-dashboard-table tbody tr:nth-child(odd) {
+  background: white;
 }
 
-.tutor-dashboard table.tutor-dashboard-table tbody tr:last-child th:last-child {
-  border-bottom-right-radius: 6px;
+.tutor-dashboard .tutor-dashboard-info-cards {
+  overflow: auto;
+  margin: 0 -15px;
+}
+
+.tutor-dashboard .tutor-dashboard-info-cards .tutor-dashboard-info-card {
+  background: white;
+  border: 1px solid #CDCFD5;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 6px;
+  margin: 15px;
+  padding: 25px 0;
+  float: left;
+  width: calc(33.333% - 30px);
+}
+
+.tutor-dashboard .tutor-dashboard-info-cards .tutor-dashboard-info-card p {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -o-flex-direction: column;
+  -ms-flex-direction: column;
+  -moz-flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  margin: 0;
+}
+
+.tutor-dashboard .tutor-dashboard-info-cards .tutor-dashboard-info-card p > span {
+  font-style: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tutor-dashboard .tutor-dashboard-info-cards .tutor-dashboard-info-card p > span:nth-child(2) {
+  font-weight: bold;
+  font-size: 30px;
+  color: #212327;
+}
+
+.tutor-dashboard .tutor-dashboard-info-cards .tutor-dashboard-info-card p > span:nth-child(3) {
+  font-size: 15px;
+  color: #5B616F;
+}
+
+.tutor-dashboard .tutor-dashboard-info-cards .tutor-dashboard-info-card p .tutor-round-icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #E9EDFB;
+}
+
+.tutor-dashboard .tutor-dashboard-info-cards .tutor-dashboard-info-card p .tutor-round-icon > * {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .tutor-dashboard .tutor-dashboard-header {
@@ -7884,53 +7979,52 @@ table.course-single-gradebooks a {
 .tutor-dashboard .tutor-dashboard-content {
   padding-top: 30px;
   /* dashboard content */
+  /* .tutor-dashboard-info-cards {
+	margin: 0 -15px 15px;
+	padding: 0;
+	display: flex;
+	list-style: none;
+	flex-wrap: wrap;
+	.tutor-dashboard-info-card {
+		padding: 15px;
+		min-width: 33.333%;
+		p {
+			margin: 0;
+			padding: 15px 25px;
+			background: #282c36;
+			color: #ffffff;
+			border-radius: 4px;
+			span {
+				&.tutor-dashboard-info-val {
+					display: block;
+					font-weight: 700;
+					font-size: 30px;
+					line-height: 1.618;
+				}
+
+				span {
+					display: inline-block;
+				}
+			
+				&>* {
+					vertical-align: middle;
+				}
+			}
+		}
+	}
+} */
   /* earning cards. Currently same as dashboard, in later version it will be updated separately */
 }
 
-.tutor-dashboard .tutor-dashboard-content > h3:first-child {
+.tutor-dashboard .tutor-dashboard-content > h3 {
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
   color: #212327;
 }
 
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards {
-  margin: 0 -15px 15px;
-  padding: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  list-style: none;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card {
-  padding: 15px;
-  min-width: 33.333%;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p {
-  margin: 0;
-  padding: 15px 25px;
-  background: #282c36;
-  color: #ffffff;
-  border-radius: 4px;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p span.tutor-dashboard-info-val {
-  display: block;
-  font-weight: 700;
-  font-size: 30px;
-  line-height: 1.618;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p span span {
-  display: inline-block;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p span > * {
-  vertical-align: middle;
+.tutor-dashboard .tutor-dashboard-content > h3 + .tutor-dashboard-content-inner {
+  margin-bottom: 30px;
 }
 
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-earning-info-cards {
