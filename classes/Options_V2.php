@@ -69,20 +69,37 @@ class Options_V2 {
 		$attr = $this->options_attr();
 		$dataAr = array();
 		foreach ($attr as $block) {
-			$dataAr['block'] = $block['label'];
 			foreach ($block['sections'] as $sections) {
 				foreach ($sections['blocks'] as $blocks) {
 					foreach ($blocks['fields'] as $fields) {
+						$fields['section_label'] = $sections['label'];
+						$fields['section_slug'] = $sections['slug'];
+						$fields['block_label'] = $blocks['label'];
+						// array_push($fields, $fields['block_label']);
+						// echo '<pre>';
+						// print_r($fields);
+						// echo '</pre>';
+						// // $dataAr['fields'][] = array_push($fields);
+						// foreach ($fields as $field) {
+						// 	echo '<pre>';
+						// 	print_r($field);
+						// 	echo '</pre>';
+						// 	// $field['block_label'] = $blocks['label'];
+						// 	// array_push($field, $field['block_label']);
+						// }
+
 						$dataAr['fields'][] = $fields;
 					}
 				}
 			}
 		}
 
-
+		// echo '<pre>';
+		// print_r($dataAr);
+		// echo '</pre>';
+		wp_send_json_success($dataAr);
+		/*
 		$columns = array_column($dataAr['fields'], 'label');
-
-
 		foreach ($columns as $index => $string) {
 			if (strpos(strtoupper($string), strtoupper($keyword)) !== FALSE) {
 				$matches[$index] = $string;
@@ -92,7 +109,7 @@ class Options_V2 {
 			wp_send_json_success($matches);
 		} else {
 			wp_send_json_success(['data' => array()]);
-		}
+		} */
 	}
 
 	public function tutor_option_save() {
