@@ -7,6 +7,7 @@
     // Common Wrapper Sections
     @import './header.scss';
     @import './sidebar.scss';
+    @import './utilities/inline-link.scss';
 
     // Dashboard page content specific declarations
     .tutor-dashboard-content {
@@ -23,8 +24,6 @@
             }
         }
 
-        @import './pages/q-and-a.scss';
-        
         @import './pages/dashboard.scss';
         @import './pages/my-profile.scss';
         @import './pages/review.scss';
