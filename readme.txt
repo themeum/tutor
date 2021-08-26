@@ -243,8 +243,12 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 1.9.8 - September 01, 2021 =
 
+New: Show total given and received review count in frontend dashboard
 Fix: Instructor shortcode not working
 Fix: Undefined variable $default
+Fix: Assignment URL in duplicated course redirect to original
+Fix: PMPro addon duplicated levels in single course page
+Fix: Zoom meeting countdown texts translation not translatable
 
 = 1.9.7 - August 19, 2021 =
 

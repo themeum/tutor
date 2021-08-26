@@ -1,0 +1,16 @@
+.tutor-dashboard {
+    @import './header.scss';
+    @import './sidebar.scss';
+    @import './utilities/inline-link.scss';
+
+    .tutor-dashboard-content {
+        padding-top: 30px;
+        
+        @import './pages/dashboard.scss';
+        @import './pages/my-profile.scss';
+        @import './pages/review.scss';
+        @import './pages/q-and-a.scss';
+        @import './pages/earning.scss';
+        @import './pages/report.scss';
+    }
+}

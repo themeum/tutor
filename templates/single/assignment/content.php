@@ -26,7 +26,7 @@ if ($assignment_comment != false) {
 <div class="tutor-single-page-top-bar">
 	<div class="tutor-topbar-item tutor-hide-sidebar-bar">
 		<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-angle-left"></i> </a>
-		<?php $course_id = get_post_meta(get_the_ID(), '_tutor_course_id_for_assignments', true); ?>
+		<?php $course_id = tutor_utils()->get_course_id_by('assignment', get_the_ID()); ?>
 		<a href="<?php echo get_the_permalink($course_id); ?>" class="tutor-topbar-home-btn">
 			<i class="tutor-icon-home"></i> <?php echo __('Go to Course Home', 'tutor'); ?>
 		</a>
