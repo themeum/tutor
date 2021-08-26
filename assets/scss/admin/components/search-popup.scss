@@ -1,0 +1,21 @@
+.search-popup-opener {
+    background: #ffffff;
+    border: 1px solid #cdcfd5;
+    box-sizing: border-box;
+    box-shadow: 0px 6px 20px rgba(28, 49, 104, 10%);
+    border-radius: 6px;
+    position: absolute;
+    margin-top: 6px;
+    z-index: 4;
+
+    transition: 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(3px);
+
+    &.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0px);
+    }
+}

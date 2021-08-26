@@ -1,0 +1,140 @@
+.tutor-backend-settings-page.email-manage-page {
+	// height: 100vh;
+	background: $bg-white;
+	color: $text-primary;
+	.header-wrapper {
+		background: $bg-white;
+		border-bottom: 1px solid #cdcfd5;
+
+		.prev-page {
+			font-size: 24px;
+			color: inherit;
+		}
+	}
+	.header-main {
+		.header-left {
+			> .subtitle {
+				color: $text-subsued;
+			}
+		}
+		@include breakpoint-min(820) {
+			.header-right {
+				margin-top: 10px;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+		}
+
+		.header-right {
+			.tutor-is-default {
+				color: $text-title;
+				padding: 7px 13px;
+				[class^='tutor-v2-icon'] {
+					font-size: 22px;
+					color: #757c8e;
+				}
+				&:hover {
+					[class^='tutor-v2-icon'] {
+						color: inherit;
+					}
+				}
+			}
+		}
+	}
+
+	.main-content-wrapper {
+		> div {
+			padding: 30px;
+		}
+		// height: 100%;
+		@include breakpoint-min(desktop) {
+			&.d-grid {
+				grid-template-columns: var(--col) calc(100% - var(--col));
+			}
+		}
+
+		@include breakpoint-min(desktop-lg) {
+			> div {
+				padding: 60px 70px;
+			}
+		}
+	}
+
+	.main-content {
+		color: $text-subsued;
+		.title {
+			color: $text-primary;
+		}
+		.subtitle {
+			span {
+				color: $text-primary;
+			}
+		}
+		.tutor-form-label {
+			color: $text-subsued;
+		}
+		select.tutor-form-select,
+		input.tutor-form-control,
+		textarea.tutor-form-control {
+			&::placeholder {
+				color: #757c8e;
+			}
+		}
+		&.content-right {
+			background: #e3e6eb;
+		}
+		&.content-left {
+			background: #efefef;
+			border-right: 1px solid #cdcfd5;
+		}
+
+		.content-form {
+			padding-right: 35px;
+
+			.tutor-form-control,
+			.tutor-form-select {
+				height: 48px;
+			}
+			.has-tooltip {
+				margin-right: -25px;
+				.tooltip-wrap {
+					left: 8px;
+				}
+			}
+		}
+		.tooltip-wrap {
+			.tooltip-txt {
+				padding: 14px 16px;
+				text-align: left;
+			}
+			.tooltip-left,
+			.tooltip-right {
+				top: -18px;
+				&::after {
+					top: 30px;
+				}
+			}
+		}
+		.code-preview {
+			display: block;
+			background: #efefef;
+			padding: 7px 8px;
+			textarea.tutor-form-control:read-only {
+				font-family: 'Monaco', 'Lucida Console', monospace;
+				font-size: 12px;
+				font-weight: 400;
+				line-height: 140%;
+				letter-spacing: -0.2px;
+				height: 605px;
+				max-height: 605px;
+				padding: 3px 6px;
+				color: $text-primary;
+				border-color: #d8d8d8;
+				background-color: #f8f8f8;
+				&:focus {
+					border-color: $brand-wordpress;
+				}
+			}
+		}
+	}
+}
