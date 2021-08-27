@@ -53,7 +53,7 @@ do_action('tutor_dashboard/before/wrap');
                     </div>
                     <div class="tutor-dashboard-header-info">
                         <div class="tutor-dashboard-header-display-name">
-                            <h4><?php _e('Howdy,', 'tutor'); ?> <strong><?php echo $user->display_name; ?></strong> </h4>
+                            <h4><strong><?php echo $user->display_name; ?></strong> </h4>
                         </div>
                         <?php $instructor_rating = tutor_utils()->get_instructor_ratings($user->ID); ?>
                         <?php

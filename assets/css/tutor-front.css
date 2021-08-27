@@ -2831,69 +2831,6 @@ Course question and answer
   }
 }
 
-@media (max-width: 1199.98px) {
-  .tutor-quiz-attempt-history {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-.tutor-quiz-attempt-history-title {
-  font-size: 18px;
-  color: var(--tutor-light-color);
-  line-height: 23px;
-  font-weight: 500;
-  margin-bottom: 15px;
-  margin-top: 70px;
-}
-
-.tutor-quiz-attempt-history table {
-  border-collapse: collapse;
-  border-radius: 4px;
-  margin-bottom: 0;
-}
-
-.tutor-quiz-attempt-history th {
-  font-weight: 400;
-}
-
-.tutor-quiz-attempt-history table,
-.tutor-quiz-attempt-history th,
-.tutor-quiz-attempt-history td {
-  border: 1px solid #e8eff1;
-  padding: 10px !important;
-}
-
-.tutor-quiz-attempt-history table span.result-fail,
-.tutor-quiz-attempt-history table span.result-pass {
-  display: inline-block;
-  color: #fff;
-  border-radius: 2px;
-  width: 47px;
-  height: 26px;
-  line-height: 26px;
-  text-align: center;
-}
-
-.tutor-quiz-attempt-history table span.result-fail {
-  background: #df3247;
-}
-
-.tutor-quiz-attempt-history table span.result-pass {
-  background: var(--tutor-success-button-color);
-}
-
-.tutor-quiz-attempt-history table span.result-review-required {
-  background: #f5b30d;
-  padding: 3px 5px;
-  color: #fff;
-  border-radius: 2px;
-  text-align: center;
-  font-size: 90%;
-}
-
 /*.attempt-reviewed-text {*/
 /*color: #777;*/
 /*font-size: 12px;*/
@@ -7615,6 +7552,100 @@ table.course-single-gradebooks a {
   padding: 15px !important;
 }
 
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table thead tr {
+  background-color: #fafbfc;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table tr {
+  border: 0;
+  background-color: #fff;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table tr:first-child {
+  background-color: #fafbfc;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table th, .tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td {
+  border: 1px solid #dcdfe5 !important;
+  vertical-align: middle;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table th:first-child, .tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td:first-child {
+  width: 62%;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table th:nth-child(2), .tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table th:nth-child(4), .tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td:nth-child(2), .tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td:nth-child(4) {
+  width: 11%;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table th:nth-child(3), .tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table th:nth-child(5), .tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table th:nth-child(6), .tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td:nth-child(3), .tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td:nth-child(5), .tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td:nth-child(6) {
+  width: 9%;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table th {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.14;
+  color: #8792b2;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table th:nth-child(n + 3) {
+  text-align: center;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td {
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  color: #4b5981;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td:nth-child(n + 3) {
+  font-weight: 500;
+  text-align: center;
+  padding-left: 3px !important;
+  padding-right: 3px !important;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td:last-child {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td a {
+  font-weight: 500;
+  color: #4b5981;
+  text-decoration: underline;
+  word-break: initial;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td .course a {
+  font-weight: 600;
+  line-height: 1.29;
+  color: #4b5981;
+  text-decoration: none;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td .course-meta {
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td .course-meta span:nth-child(2) {
+  margin: 0 17px;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td .student {
+  font-weight: 600;
+  line-height: 1.29;
+  color: #4b5981;
+}
+
+.tutor-single-lesson-wrap .single-quiz-page.tutor-quiz-attempt-history table td .student-meta {
+  display: inline-block;
+  margin-top: 5px;
+}
+
 /* *********************** */
 /* Tutor Dashboard */
 /* *********************** */
@@ -8072,15 +8103,6 @@ table.course-single-gradebooks a {
   .profile-completion-warning-details {
     margin-bottom: 10px;
   }
-}
-
-.quiz-attempts-title,
-.tutor-quiz-attempt-history-title {
-  font-size: 22px;
-  font-weight: 600;
-  line-height: 1.27;
-  color: #4b5981;
-  margin-bottom: 31px;
 }
 
 /** Earning Report */
@@ -9134,15 +9156,6 @@ Withdraw Method
           justify-content: space-between;
 }
 
-.tutor-quiz-attempt-history td:last-child {
-  text-align: center;
-}
-
-.tutor-quiz-attempt-history td:last-child a {
-  display: block;
-  padding: 10px;
-}
-
 .attempt-review-title {
   font-size: 18px;
   color: var(--tutor-text-size);
@@ -9900,100 +9913,6 @@ Withdraw Method
 
 #tutor_profile_cover_photo_editor #tutor_photo_dialogue_box {
   display: none;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table thead tr {
-  background-color: #fafbfc;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table tr {
-  border: 0;
-  background-color: #fff;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table tr:first-child {
-  background-color: #fafbfc;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table th, .single-quiz-page.tutor-quiz-attempt-history table td {
-  border: 1px solid #dcdfe5 !important;
-  vertical-align: middle;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table th:first-child, .single-quiz-page.tutor-quiz-attempt-history table td:first-child {
-  width: 62%;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(2), .single-quiz-page.tutor-quiz-attempt-history table th:nth-child(4), .single-quiz-page.tutor-quiz-attempt-history table td:nth-child(2), .single-quiz-page.tutor-quiz-attempt-history table td:nth-child(4) {
-  width: 11%;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(3), .single-quiz-page.tutor-quiz-attempt-history table th:nth-child(5), .single-quiz-page.tutor-quiz-attempt-history table th:nth-child(6), .single-quiz-page.tutor-quiz-attempt-history table td:nth-child(3), .single-quiz-page.tutor-quiz-attempt-history table td:nth-child(5), .single-quiz-page.tutor-quiz-attempt-history table td:nth-child(6) {
-  width: 9%;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table th {
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.14;
-  color: #8792b2;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table th:nth-child(n + 3) {
-  text-align: center;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table td {
-  background-color: #fff;
-  font-size: 14px;
-  font-weight: 400;
-  color: #4b5981;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table td:nth-child(n + 3) {
-  font-weight: 500;
-  text-align: center;
-  padding-left: 3px !important;
-  padding-right: 3px !important;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table td:last-child {
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table td a {
-  font-weight: 500;
-  color: #4b5981;
-  text-decoration: underline;
-  word-break: initial;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table td .course a {
-  font-weight: 600;
-  line-height: 1.29;
-  color: #4b5981;
-  text-decoration: none;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table td .course-meta {
-  display: inline-block;
-  margin-top: 5px;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table td .course-meta span:nth-child(2) {
-  margin: 0 17px;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table td .student {
-  font-weight: 600;
-  line-height: 1.29;
-  color: #4b5981;
-}
-
-.single-quiz-page.tutor-quiz-attempt-history table td .student-meta {
-  display: inline-block;
-  margin-top: 5px;
 }
 
 /* Only reusable function, or code allowed here. No direct css please. */
