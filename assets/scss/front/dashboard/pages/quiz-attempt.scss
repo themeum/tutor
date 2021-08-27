@@ -1,14 +1,29 @@
 .tutor-quiz-attempt-history {
 
     table {
+        background: 1px solid #dcdfe5;
+        border-collapse: collapse;
+
         tr {
+            th {
+                background: #fafbfc;
+            }
+
             th, td {
                 vertical-align: middle;
-                border: none;
+                border: 1px solid #dcdfe5;
             }
 
             td:first-child {
                 padding: 15px 13px !important;
+            }
+
+            td:last-child {
+                text-align: center;
+                a {
+                    display: block;
+                    padding: 10px;
+                }
             }
         }
 
