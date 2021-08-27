@@ -14,7 +14,6 @@ const navPages = document.querySelectorAll('.tutor-option-nav-page');
 navTabLists.forEach((list) => {
 	list.addEventListener('click', (e) => {
 		const dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
-		console.log(dataTab);
 		if (dataTab) {
 			// remove active from other buttons
 			navTabItems.forEach((item) => {
