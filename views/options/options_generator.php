@@ -14,7 +14,7 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         <div class="title"><?php _e('Settings', 'tutor'); ?></div>
         <div class="search-field">
             <div class="tutor-input-group tutor-form-control-has-icon">
-                <span class="las la-search tutor-input-group-icon"></span>
+                <span class="tutor-input-group-icon"></span>
                 <input type="search" autofocus id="search_settings" class="tutor-form-control" placeholder="<?php _e('Search', 'tutor'); ?>" />
                 <div class="search-popup-opener search_result">
                     <a href="#">
@@ -129,63 +129,6 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
     </div>
 </section>
 <style>
-    
-    .search_result_title {
-        display: flex;
-        vertical-align: middle;
-    }
-
-    .search_result_title span {
-        line-height: 20px;
-    }
-
-    .search_result a {
-        cursor: pointer;
-    }
-
-    .no_item{
-        display: flex;
-        align-items: center;
-        padding: 15px 20px;
-    }
-
-    .no_item svg{
-        margin-right: 7px;
-    }
-
-    .search_result a {
-        padding: 12px;
-        display: flex;
-        width: 100%;
-        color: #777;
-        text-decoration: none;
-        transition: all .3s;
-        vertical-align: middle;
-        justify-content: space-between;
-    }
-
-
-    .search_result .search_result_title i {
-        padding-right: 10px;
-        font-size: 20px;
-    }
-
-    .search_result a:hover {
-        background-color: rgba(0, 0, 0, .03);
-    }
-
-    .search_navigation {
-        display: flex;
-        align-items: center;
-        vertical-align: middle;
-        font-size: 12px;
-    }
-
-    .search_navigation i {
-        padding: 0 5px;
-        font-size: 12px;
-    }
-
     .tutor-notification {
         position: fixed;
         bottom: 40px;

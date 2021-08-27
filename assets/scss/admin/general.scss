@@ -65,6 +65,11 @@
         .tutor-input-group-icon {
             height: 40px;
             line-height: 40px;
+
+            background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M14.9899 7.81818C11.0291 7.81818 7.81818 11.0291 7.81818 14.9899C7.81818 18.9508 11.0291 22.1617 14.9899 22.1617C18.9508 22.1617 22.1617 18.9508 22.1617 14.9899C22.1617 11.0291 18.9508 7.81818 14.9899 7.81818ZM6 14.9899C6 10.0249 10.0249 6 14.9899 6C19.9549 6 23.9798 10.0249 23.9798 14.9899C23.9798 19.9549 19.9549 23.9798 14.9899 23.9798C10.0249 23.9798 6 19.9549 6 14.9899Z' fill='%239CA0AC'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M20.0543 20.0541C20.4094 19.6991 20.985 19.6991 21.34 20.0541L25.7339 24.4481C26.089 24.8031 26.089 25.3787 25.7339 25.7337C25.3789 26.0888 24.8033 26.0888 24.4483 25.7337L20.0543 21.3398C19.6993 20.9848 19.6993 20.4092 20.0543 20.0541Z' fill='%239CA0AC'/%3E%3C/svg%3E%0A");
+
+            background-repeat: no-repeat;
+            background-position: center;
         }
     }
     .save-button {

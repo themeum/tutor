@@ -39,6 +39,18 @@ jQuery(document).ready(function ($) {
   </svg>
   `;
 
+  const svgMagnifyingGlass = `<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M10.3056 5.375C7.58249 5.375 5.375 7.58249 5.375 10.3056C5.375 13.0286 7.58249 15.2361 10.3056 15.2361C13.0286 15.2361 15.2361 13.0286 15.2361 10.3056C15.2361 7.58249 13.0286 5.375 10.3056 5.375ZM4.125 10.3056C4.125 6.89214 6.89214 4.125 10.3056 4.125C13.719 4.125 16.4861 6.89214 16.4861 10.3056C16.4861 13.719 13.719 16.4861 10.3056 16.4861C6.89214 16.4861 4.125 13.719 4.125 10.3056Z" fill="#9CA0AC"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7874 13.7872C14.0314 13.5431 14.4272 13.5431 14.6712 13.7872L17.6921 16.8081C17.9362 17.0521 17.9362 17.4479 17.6921 17.6919C17.448 17.936 17.0523 17.936 16.8082 17.6919L13.7874 14.6711C13.5433 14.427 13.5433 14.0313 13.7874 13.7872Z" fill="#9CA0AC"/>
+  </svg>
+  `;
+  
+  const svgAngleRight = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M7.842 12.633C7.80402 12.6702 7.7592 12.6998 7.71 12.72C7.65839 12.7401 7.60341 12.7503 7.548 12.75C7.49655 12.7496 7.44563 12.7395 7.398 12.72C7.34843 12.7005 7.30347 12.6709 7.266 12.633L6.88201 12.252C6.84384 12.2138 6.81284 12.1691 6.79051 12.12C6.76739 12.0694 6.75367 12.015 6.75001 11.9595C6.74971 11.9045 6.75832 11.8498 6.77551 11.7975C6.79308 11.7477 6.82181 11.7025 6.85951 11.6655L9.53249 9.00001L6.86701 6.33453C6.82576 6.29904 6.79427 6.2536 6.77551 6.20253C6.75832 6.15026 6.74971 6.09555 6.75001 6.04053C6.75367 5.98502 6.76739 5.93064 6.79051 5.88003C6.81284 5.8309 6.84384 5.78619 6.88201 5.74803L7.263 5.36704C7.30047 5.32916 7.34543 5.29953 7.395 5.28004C7.44263 5.26056 7.49355 5.25038 7.545 5.25004C7.60142 5.24931 7.65745 5.2595 7.71 5.28004C7.7592 5.30025 7.80402 5.3298 7.842 5.36704L11.181 8.70752C11.2233 8.74442 11.2579 8.78926 11.283 8.83951C11.3077 8.88941 11.3206 8.94433 11.3206 9.00001C11.3206 9.05569 11.3077 9.11062 11.283 9.16051C11.2579 9.21076 11.2233 9.25561 11.181 9.29251L7.842 12.633Z" fill="#B4B7C0"/>
+  </svg>
+  
+  `;
+
   function titleCase(str) {
     var splitStr = str.toLowerCase().split(" ");
     for (var i = 0; i < splitStr.length; i++) {
@@ -52,18 +64,19 @@ jQuery(document).ready(function ($) {
   }
 
   function view_item(text, section_slug, section, block) {
-    var output = "";
-    output += `<a data-tab="` + section_slug + `">`;
-    output += `<div class="search_result_title">`;
-    output += `<i class="las la-search"></i>`;
-    output += `<span>` + text + `</span>`;
-    output += `</div>`;
-    output += `<div class="search_navigation">`;
-    output += `<span>` + section + `</span>`;
-    output += block ? `<i class="las la-angle-right"></i>` : ``;
-    output += `<span>` + block + `</span>`;
-    output += `</div>`;
-    output += `</a>`;
+    var output = `
+      <a data-tab="${section_slug}">
+        <div class="search_result_title">
+          ${svgMagnifyingGlass}
+          <span class="text-regular-caption">${text}</span>
+        </div>
+        <div class="search_navigation">
+          <span class="text-regular-small">${section}</span>
+            ${block && svgAngleRight}
+          <span>${block}</span>
+        </div>
+      </a>
+    `
     return output;
   }
 
@@ -101,13 +114,10 @@ jQuery(document).ready(function ($) {
             searchKeyRegex = new RegExp(searchKey, "ig");
             // console.log(item_text.match(searchKeyRegex));
             matchedText = item_text.match(searchKeyRegex)?.[0];
-  
+
             if (matchedText) {
               wrapped_item = item_text.replace(
-                searchKeyRegex,
-                "<span style='color: #222;font-weight:600'>" +
-                  matchedText +
-                  "</span>"
+                searchKeyRegex, `<span style='color: #212327; font-weight:500'>${matchedText}</span>`
               );
               output += view_item(
                 wrapped_item,
@@ -119,20 +129,16 @@ jQuery(document).ready(function ($) {
             }
           });
           if (notfound) {
-            output += `<div class="no_item"> ${svgWarningIcon} No item found</div>`;
+            output += `<div class="no_item"> ${svgWarningIcon} No Results Found</div>`;
           }
           $(".search_result").html(output).addClass("show");
           output = "";
           // console.log("working");
         },
         complete: function () {
-  
-          navigationTrigger();
-  
+          navigationTrigger();  
         },
-        
       });
-      
     }else{
       document.querySelector('.search-popup-opener').classList.remove("show");
     }
@@ -141,10 +147,10 @@ jQuery(document).ready(function ($) {
 
 
 /**
- * Search suggestion navigation
+ * Search suggestion, navigation trigger
  */
 function navigationTrigger(){
-   const suggestionLinks = document.querySelectorAll(".search-field .search_result a");
+   const suggestionLinks = document.querySelectorAll(".search-field .search-popup-opener a");
    const navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
    const navPages = document.querySelectorAll('.tutor-option-nav-page');
 
@@ -174,7 +180,7 @@ function navigationTrigger(){
         }
 
         // Reset + Hide Suggestion box
-        document.querySelector('.search_result').classList.remove('show');
+        document.querySelector('.search-popup-opener').classList.remove('show');
         document.querySelector('.search-field input[type="search"]').value = '';
      })
    })
