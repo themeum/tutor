@@ -3,7 +3,7 @@
 .tutor-dashboard-profile {
 	.tutor-dashboard-profile-item {
 		@include valueWithPrefix(display, flex);
-		margin-bottom: 15px;
+		margin: 10px 0 20px;
 
 		.heading {
 			min-width: 190px;

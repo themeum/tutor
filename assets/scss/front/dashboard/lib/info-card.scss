@@ -28,6 +28,10 @@ $card_gap: 15px;
                 overflow: hidden;
                 text-overflow: ellipsis;
 
+                &:nth-child(1) {
+                    margin-bottom: 20px;
+                }
+
                 &:nth-child(2) {
                     font-weight: bold;
                     font-size: 30px;
