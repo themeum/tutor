@@ -673,7 +673,6 @@ li.tutor-option-nav-item h4 {
   background: #212327;
   color: #ffffff;
   padding: 10px 15px;
-  text-align: center;
   border-radius: 10px;
   z-index: 1;
   opacity: 0;
@@ -1225,7 +1224,7 @@ li.tutor-option-nav-item h4 {
   margin-top: 6px;
   z-index: 4;
   font-size: 16px;
-  max-height: 448px;
+  max-height: 495px;
   overflow-y: auto;
   -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
@@ -1240,6 +1239,96 @@ li.tutor-option-nav-item h4 {
   visibility: visible;
   -webkit-transform: translateY(0px);
           transform: translateY(0px);
+}
+
+.search-popup-opener .search_result_title, .search_result .search_result_title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.search-popup-opener .search_result_title > svg, .search_result .search_result_title > svg {
+  margin-right: 4px;
+}
+
+.search-popup-opener a, .search_result a {
+  cursor: pointer;
+  padding: 8.5px 24px 8.5px 19px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  color: #757C8E;
+  text-decoration: none;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  vertical-align: middle;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.search-popup-opener a:hover, .search_result a:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.search-popup-opener .no_item, .search_result .no_item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 15px 20px;
+}
+
+.search-popup-opener .no_item svg, .search_result .no_item svg {
+  margin-right: 7px;
+}
+
+.search-popup-opener .search_result_title i, .search_result .search_result_title i {
+  padding-right: 10px;
+  font-size: 20px;
+}
+
+.search-popup-opener .search_navigation, .search_result .search_navigation {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  vertical-align: middle;
+  font-size: 12px;
+}
+
+.search-popup-opener .search_navigation .icon, .search_result .search_navigation .icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.search-popup-opener .search_navigation i, .search_result .search_navigation i {
+  padding: 0 5px;
+  font-size: 12px;
+}
+
+.search-popup-opener .nav-track, .search_result .nav-track {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.search-popup-opener .nav-track span:not(:first-child), .search_result .nav-track span:not(:first-child) {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .tutor-backend-settings-page.email-manage-page {
@@ -1489,6 +1578,9 @@ li.tutor-option-nav-item h4 {
 .tutor-option-header .tutor-input-group .tutor-input-group-icon {
   height: 40px;
   line-height: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M14.9899 7.81818C11.0291 7.81818 7.81818 11.0291 7.81818 14.9899C7.81818 18.9508 11.0291 22.1617 14.9899 22.1617C18.9508 22.1617 22.1617 18.9508 22.1617 14.9899C22.1617 11.0291 18.9508 7.81818 14.9899 7.81818ZM6 14.9899C6 10.0249 10.0249 6 14.9899 6C19.9549 6 23.9798 10.0249 23.9798 14.9899C23.9798 19.9549 19.9549 23.9798 14.9899 23.9798C10.0249 23.9798 6 19.9549 6 14.9899Z' fill='%239CA0AC'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M20.0543 20.0541C20.4094 19.6991 20.985 19.6991 21.34 20.0541L25.7339 24.4481C26.089 24.8031 26.089 25.3787 25.7339 25.7337C25.3789 26.0888 24.8033 26.0888 24.4483 25.7337L20.0543 21.3398C19.6993 20.9848 19.6993 20.4092 20.0543 20.0541Z' fill='%239CA0AC'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+  background-position: 10px center;
 }
 
 .tutor-option-header .save-button .tutor-btn {
