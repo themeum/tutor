@@ -1,4 +1,6 @@
-<div class="tutor-option-field-row">
+<?php $field_id = 'field_' . $field['key'];
+?>
+<div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
     <div class="tutor-option-field-label has-tooltip">
         <label>Course Enrolled</label>
         <div class="tooltip-wrap tooltip-icon">

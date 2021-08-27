@@ -1,4 +1,6 @@
-<div class="tutor-option-field-row d-block">
+<?php $field_id = 'field_' . $field['key'];
+?>
+<div class="tutor-option-field-row d-block" id="<?php echo $field_id; ?>">
     <div class="tutor-option-field-label">
         <label><?php echo $field['label'] ?></label>
     </div>

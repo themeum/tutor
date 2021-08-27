@@ -1,4 +1,7 @@
-<div class="tutor-option-field-row col-1x145">
+<?php $field_id = 'field_' . $field['key'];
+?>
+<div class="tutor-option-field-row col-1x145"id="<?php echo $field_id; ?>"
+>
     <div class="tutor-option-field-label">
         <h5 class="label">Signature</h5>
         <p class="desc">Upload a signature that will be printed on the certificate.</p>
