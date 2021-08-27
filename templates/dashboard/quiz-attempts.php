@@ -15,9 +15,8 @@ $per_page = 20;
 $current_page = max( 1, tutils()->array_get('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
 ?>
-    <div class="quiz-attempts-title">
-        <?php _e('Quiz Attempts', 'tutor'); ?>
-    </div>
+
+<h3><?php _e('Quiz Attempts', 'tutor'); ?></h3>
 <?php
 $course_id = tutor_utils()->get_assigned_courses_ids_by_instructors();
 $quiz_attempts = tutor_utils()->get_quiz_attempts_by_course_ids($offset, $per_page, $course_id);
@@ -25,7 +24,7 @@ $quiz_attempts_count = tutor_utils()->get_total_quiz_attempts_by_course_ids($cou
 
 if ( $quiz_attempts_count ){
 	?>
-    <div class="tutor-quiz-attempt-history">
+    <div class="tutor-dashboard-content tutor-quiz-attempt-history">
         <table class="tutor-table">
             <tr>
                 <th><?php _e('Course Info', 'tutor'); ?></th>

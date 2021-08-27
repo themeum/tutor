@@ -1,7 +1,7 @@
 .tutor-dashboard {
     @import './header.scss';
     @import './sidebar.scss';
-    @import './utilities/inline-link.scss';
+    @import './lib/inline-link.scss';
 
     .tutor-dashboard-content {
         padding-top: 30px;

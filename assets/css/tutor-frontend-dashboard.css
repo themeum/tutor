@@ -467,13 +467,31 @@
   vertical-align: middle;
 }
 
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table {
+  background: 1px solid #dcdfe5;
+  border-collapse: collapse;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr th {
+  background: #fafbfc;
+}
+
 .tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr th, .tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr td {
   vertical-align: middle;
-  border: none;
+  border: 1px solid #dcdfe5;
 }
 
 .tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:first-child {
   padding: 15px 13px !important;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:last-child {
+  text-align: center;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:last-child a {
+  display: block;
+  padding: 10px;
 }
 
 .tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table a {

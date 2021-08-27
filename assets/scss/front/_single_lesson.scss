@@ -1068,65 +1068,6 @@ Course question and answer
 	} 
 }
 
-
-@media (max-width: 1199.98px) {
-	.tutor-quiz-attempt-history {
-		display: block;
-		width: 100%;
-		overflow-x: auto;
-		-webkit-overflow-scrolling: touch;
-	}
-}
-.tutor-quiz-attempt-history-title {
-	font-size: 18px;
-	color: var(--tutor-light-color);
-	line-height: 23px;
-	font-weight: 500;
-	margin-bottom: 15px;
-	margin-top: 70px;
-}
-
-.tutor-quiz-attempt-history table {
-	border-collapse: collapse;
-	border-radius: 4px;
-	margin-bottom: 0;
-}
-.tutor-quiz-attempt-history th {
-	font-weight: 400;
-}
-.tutor-quiz-attempt-history table,
-.tutor-quiz-attempt-history th,
-.tutor-quiz-attempt-history td {
-	border: 1px solid #e8eff1;
-	padding: 10px !important;
-}
-
-.tutor-quiz-attempt-history table span.result-fail,
-.tutor-quiz-attempt-history table span.result-pass {
-	display: inline-block;
-	color: #fff;
-	border-radius: 2px;
-	width: 47px;
-	height: 26px;
-	line-height: 26px;
-	text-align: center;
-}
-.tutor-quiz-attempt-history table span.result-fail {
-	background: #df3247;
-}
-
-.tutor-quiz-attempt-history table span.result-pass {
-	background: var(--tutor-success-button-color);
-}
-.tutor-quiz-attempt-history table span.result-review-required {
-	background: #f5b30d;
-	padding: 3px 5px;
-	color: #fff;
-	border-radius: 2px;
-	text-align: center;
-	font-size: 90%;
-}
-
 /*.attempt-reviewed-text {*/
 /*color: #777;*/
 /*font-size: 12px;*/

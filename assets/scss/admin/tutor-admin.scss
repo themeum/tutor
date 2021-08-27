@@ -2692,15 +2692,6 @@
   /***************************
    * Quiz attempts table
    **************************/
-  .tutor-quiz-attempt-history td:last-child {
-	text-align: center;
-  }
-  
-  .tutor-quiz-attempt-history td:last-child a {
-	display: block;
-	padding: 10px;
-  }
-  
   .attempt-review-title {
 	font-size: 18px;
 	color: var(--tutor-text-size);
