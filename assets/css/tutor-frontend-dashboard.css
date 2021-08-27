@@ -647,3 +647,30 @@
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-earning-info-cards .tutor-dashboard-info-card p span > * {
   vertical-align: middle;
 }
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-quiz-attempt-history .attempt-date {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: #212327;
+  display: block;
+  white-space: nowrap;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-quiz-attempt-history .attempt-date + a {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #212327;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-quiz-attempt-history .attempt-date + a:hover {
+  color: var(--tutor-primary-color);
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-quiz-attempt-history td:nth-child(2), .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-quiz-attempt-history td:nth-child(3), .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-quiz-attempt-history td:nth-child(4), .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-quiz-attempt-history td:nth-child(5), .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-quiz-attempt-history td:nth-child(6) {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  color: #212327;
+}
