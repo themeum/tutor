@@ -25,7 +25,7 @@ $quiz_attempt->prepare_items( $search_filter, $course_filter, $date_filter, $ord
 ?>
 
 <div class="wrap">
-	<div class="quiz-attempts-title">
+	<div>
 		<h2><?php _e('Quiz Attempts', 'tutor'); ?></h2>
 	</div>
 
