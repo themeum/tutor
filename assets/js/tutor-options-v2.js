@@ -196,9 +196,14 @@ function navigationTrigger() {
 function highlightSearchedItem(dataKey){
   console.log(dataKey);
   const targetEl = document.querySelector(`#${dataKey} .tutor-option-field-label label`);
+  const scrollTargetEl = document.querySelector(`#${dataKey}`).parentNode.parentNode;
+  console.dir(scrollTargetEl);
 
   targetEl.classList.add('isHighlighted');
   setTimeout(() => {
     targetEl.classList.remove('isHighlighted');
-  }, 6000)
+  }, 6000);
+
+  scrollTargetEl.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+
 }
