@@ -71,8 +71,7 @@ jQuery(document).ready(function ($) {
         </div>
         <div class="search_navigation">
           <span class="text-regular-small">${section}</span>
-            ${block && svgAngleRight}
-          <span>${block}</span>
+            ${block ? `${svgAngleRight} <span>${block}</span>` : ''}
         </div>
       </a>
     `
