@@ -1,0 +1,39 @@
+
+.tutor-dashboard-profile {
+	.tutor-dashboard-profile-item {
+		display: flex;
+
+		.heading {
+			min-width: 190px;
+		}
+
+		@media (max-width: 480px) {
+			flex-wrap: wrap;
+			
+			.heading {
+				min-width: 100%;
+				width: 100%;
+				font-weight: 700;
+				margin-bottom: 6px;
+			}
+		}
+
+		.content {
+			-webkit-box-flex: 1;
+			flex-grow: 1;
+			
+			small {
+				font-size: inherit;
+				font-style: italic;
+				
+				a {
+					color: var(--tutor-primary-color);
+					
+					&:hover {
+						color: var(--tutor-primary-hover-color);
+					}
+				}
+			}
+		}
+	}
+} 
