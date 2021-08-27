@@ -254,7 +254,7 @@ jQuery(document).ready(function($){
         var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             data.timezone = timezone;
         var $btn = $form.find('button[type="submit"]');
-       
+        
         $.ajax({
             url: window._tutorobject.ajaxurl,
             type: 'POST',
