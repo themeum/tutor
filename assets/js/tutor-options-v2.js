@@ -204,6 +204,6 @@ function highlightSearchedItem(dataKey){
     targetEl.classList.remove('isHighlighted');
   }, 6000);
 
-  scrollTargetEl.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+  scrollTargetEl.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
 
 }
