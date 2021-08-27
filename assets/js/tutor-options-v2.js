@@ -97,7 +97,6 @@ jQuery(document).ready(function ($) {
             matchedText = "",
             searchKeyRegex = "",
             result = data.data.fields;
-          console.log(result);
 
           Object.values(result).forEach(function (item, index, arr) {
             item_text = item.label;
