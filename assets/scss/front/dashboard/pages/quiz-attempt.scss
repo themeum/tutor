@@ -1,0 +1,35 @@
+.tutor-quiz-attempt-history {
+
+    table {
+        tr {
+            th, td {
+                vertical-align: middle;
+                border: none;
+            }
+
+            td:first-child {
+                padding: 15px 13px !important;
+            }
+        }
+
+        a {
+            color: var(--tutor-primary-color);
+            font-weight: 700;
+            line-height: 24px;
+            
+            &:hover {
+                color: var(--tutor-primary-hover-color);
+            }
+        }
+
+        span {
+            &.result-fail, &.result-pass {
+                width: auto;
+                height: auto;
+                line-height: 19px;
+                padding: 0 6.5px;
+                margin-right: 4px;
+            }
+        }
+    }
+}

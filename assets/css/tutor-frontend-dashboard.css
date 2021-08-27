@@ -466,3 +466,30 @@
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-earning-info-cards .tutor-dashboard-info-card p span > * {
   vertical-align: middle;
 }
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr th, .tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr td {
+  vertical-align: middle;
+  border: none;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:first-child {
+  padding: 15px 13px !important;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table a {
+  color: var(--tutor-primary-color);
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table span.result-fail, .tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table span.result-pass {
+  width: auto;
+  height: auto;
+  line-height: 19px;
+  padding: 0 6.5px;
+  margin-right: 4px;
+}
