@@ -67,10 +67,23 @@
         align-items: center;
         vertical-align: middle;
         font-size: 12px;
+        .icon{
+            display: flex;
+            align-items: center;
+        }
     }
 
     .search_navigation i {
         padding: 0 5px;
         font-size: 12px;
+    }
+
+
+
+    .nav-track {
+        display: flex;
+            span:not(:first-child) {
+            display: flex;
+        }
     }
 }

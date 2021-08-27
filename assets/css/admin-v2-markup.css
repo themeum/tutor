@@ -1305,9 +1305,30 @@ li.tutor-option-nav-item h4 {
   font-size: 12px;
 }
 
+.search-popup-opener .search_navigation .icon, .search_result .search_navigation .icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
 .search-popup-opener .search_navigation i, .search_result .search_navigation i {
   padding: 0 5px;
   font-size: 12px;
+}
+
+.search-popup-opener .nav-track, .search_result .nav-track {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.search-popup-opener .nav-track span:not(:first-child), .search_result .nav-track span:not(:first-child) {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .tutor-backend-settings-page.email-manage-page {
