@@ -254,7 +254,7 @@ jQuery(document).ready(function($){
         var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             data.timezone = timezone;
         var $btn = $form.find('button[type="submit"]');
-        
+       
         $.ajax({
             url: window._tutorobject.ajaxurl,
             type: 'POST',
@@ -278,39 +278,6 @@ jQuery(document).ready(function($){
                 } else {
                     location.reload();
                 }
-            },
-            complete: function () {
-                $btn.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
-    /**
-     * Synchronize zoom meeting
-     * 
-     * @since 1.9.8
-     */
-     $('#zoom_meeting_sync_form').on('submit', function (e) {
-        e.preventDefault();
-        var $form = $(this);
-        var data = $form.serializeObject();
-        var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            data.timezone = timezone;
-        var $btn = $form.find('button[type="submit"]');
-        
-        $.ajax({
-            url: window._tutorobject.ajaxurl,
-            type: 'POST',
-            data: data,
-            beforeSend: function () {
-                $btn.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                console.log(data)
-                data.success ?
-                    tutor_toast(__('Success', 'tutor'), $btn.data('toast_success_message'), 'success'):
-                    tutor_toast(__('Update Error', 'tutor'), __('Synchronize failed', 'tutor'), 'error');
-                $("#zoom_meeting_sync_form").remove();
             },
             complete: function () {
                 $btn.removeClass('tutor-updating-message');
