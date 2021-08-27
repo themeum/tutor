@@ -196,14 +196,14 @@ function navigationTrigger() {
 function highlightSearchedItem(dataKey){
   console.log(dataKey);
   const targetEl = document.querySelector(`#${dataKey} .tutor-option-field-label label`);
-  const scrollTargetEl = document.querySelector(`#${dataKey}`).parentNode.parentNode;
-  console.dir(scrollTargetEl);
+  const scrollTargetEl = document.querySelector(`#${dataKey}`).parentNode.querySelector(":first-child");
+  console.log(scrollTargetEl);
 
   targetEl.classList.add('isHighlighted');
   setTimeout(() => {
     targetEl.classList.remove('isHighlighted');
   }, 6000);
 
-  scrollTargetEl.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+  scrollTargetEl.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
 
 }
