@@ -130,6 +130,7 @@ jQuery(document).ready(function ($) {
           // console.log("working");
         },
         complete: function () {
+          // Active navigation element
           navigationTrigger();
         },
       });
@@ -152,6 +153,7 @@ function navigationTrigger() {
   suggestionLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
       const dataTab = e.target.closest("[data-tab]").dataset.tab;
+      const dataKey = e.target.closest("[data-key]").dataset.key;
       if (dataTab) {
         // remove active from other buttons
         navTabItems.forEach((item) => {
@@ -180,6 +182,23 @@ function navigationTrigger() {
       // Reset + Hide Suggestion box
       document.querySelector(".search-popup-opener").classList.remove("show");
       document.querySelector('.search-field input[type="search"]').value = "";
+
+      // Highlight selected element
+      highlightSearchedItem(dataKey);
     });
   });
+}
+
+
+/**
+ * Highlight items form search suggestion
+ */
+function highlightSearchedItem(dataKey){
+  console.log(dataKey);
+  const targetEl = document.querySelector(`#${dataKey} .tutor-option-field-label label`);
+
+  targetEl.classList.add('isHighlighted');
+  setTimeout(() => {
+    targetEl.classList.remove('isHighlighted');
+  }, 6000)
 }
