@@ -1,8 +1,10 @@
-<div class="tutor-option-field-row">
+<?php $field_id = 'field_' . $field['key'];
+?>
+<div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
     <div class="certificate-thumb">
         <img src="<?php echo tutor()->url ?>assets/images/images-v2/<?php echo $field['thumbs_url'] ?>" alt="">
     </div>
-    <?php include tutor()->path . "views/options/template/field_heading.php";?>
+    <?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 
     <div class="tutor-option-field-input d-flex has-btn-after">
         <label class="tutor-form-toggle">

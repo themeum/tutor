@@ -50,9 +50,10 @@ jQuery(document).ready(function ($) {
     return splitStr.join(" ");
   }
 
-  function view_item(text, section_slug, section, block) {
+  function view_item(text, section_slug, section, block, field_key) {
     var output = "";
-    output += `<a data-tab="` + section_slug + `">`;
+    output +=
+      `<a data-tab="` + section_slug + `" data-key="field_` + field_key + `">`;
     output += `<div class="search_result_title">`;
     output += `<i class="las la-search"></i>`;
     output += `<span>` + text + `</span>`;
@@ -89,6 +90,7 @@ jQuery(document).ready(function ($) {
             block_label = "",
             matchedText = "",
             searchKeyRegex = "",
+            field_key = "",
             result = data.data.fields;
           // console.log(result);
 
@@ -97,6 +99,7 @@ jQuery(document).ready(function ($) {
             section_slug = item.section_slug;
             section_label = item.section_label;
             block_label = item.block_label;
+            field_key = item.key;
             searchKeyRegex = new RegExp(searchKey, "ig");
             // console.log(item_text.match(searchKeyRegex));
             matchedText = item_text.match(searchKeyRegex)?.[0];
@@ -112,7 +115,8 @@ jQuery(document).ready(function ($) {
                 wrapped_item,
                 section_slug,
                 section_label,
-                block_label
+                block_label,
+                field_key
               );
               notfound = false;
             }

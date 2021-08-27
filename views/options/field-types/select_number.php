@@ -1,5 +1,7 @@
-<div class="tutor-option-field-row">
-<?php include tutor()->path . "views/options/template/field_heading.php";?>
+<?php $field_id = 'field_' . $field['key'];
+?>
+<div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
+    <?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 
     <div class="tutor-option-field-input d-flex justify-content-end">
         <select class="tutor-form-select" disabled="">
