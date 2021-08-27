@@ -4,7 +4,6 @@ jQuery(document).ready(function ($) {
   $(window).on("click", function (e) {
     $(".tutor-notification, .search_result").removeClass("show");
   });
-  
 
   $(".tutor-notification-close").click(function (e) {
     $(".tutor-notification").removeClass("show");
@@ -83,7 +82,7 @@ jQuery(document).ready(function ($) {
   $("#search_settings").on("input", function (e) {
     e.preventDefault();
 
-    if(e.target.value){
+    if (e.target.value) {
       var searchKey = this.value;
       $.ajax({
         url: window._tutorobject.ajaxurl,
@@ -105,7 +104,7 @@ jQuery(document).ready(function ($) {
             searchKeyRegex = "",
             result = data.data.fields;
           // console.log(result);
-  
+
           Object.values(result).forEach(function (item, index, arr) {
             item_text = item.label;
             section_slug = item.section_slug;
@@ -144,7 +143,6 @@ jQuery(document).ready(function ($) {
     }
   });
 });
-
 
 /**
  * Search suggestion, navigation trigger
