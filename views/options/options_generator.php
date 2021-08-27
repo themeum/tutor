@@ -129,6 +129,8 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
     </div>
 </section>
 <style>
+    .isHighlighted {}
+
     .tutor-notification {
         position: fixed;
         bottom: 40px;
