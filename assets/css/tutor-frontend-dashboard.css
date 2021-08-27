@@ -37,7 +37,7 @@
 }
 
 .tutor-dashboard table.tutor-dashboard-table tbody tr:nth-child(even) {
-  background: #fafcff;
+  background: #f8f8f8;
 }
 
 .tutor-dashboard table.tutor-dashboard-table tbody tr:nth-child(odd) {
@@ -90,6 +90,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.tutor-dashboard .tutor-dashboard-info-cards .tutor-dashboard-info-card p > span:nth-child(1) {
+  margin-bottom: 20px;
 }
 
 .tutor-dashboard .tutor-dashboard-info-cards .tutor-dashboard-info-card p > span:nth-child(2) {
@@ -456,7 +460,7 @@
   display: -ms-flex;
   display: -moz-flex;
   display: -webkit-flex;
-  margin-bottom: 15px;
+  margin: 10px 0 20px;
 }
 
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile .tutor-dashboard-profile-item .heading {
