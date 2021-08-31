@@ -254,6 +254,7 @@ Fix: Assignment URL in duplicated course redirect to original
 Fix: PMPro addon duplicated levels in single course page
 Fix: Zoom meeting countdown texts translation not translatable
 Fix: Zoom Pagination
+Fix: Tutor certificate font spacing issue on chrome
 Fix: Removing a product from Cart or clicking a product URL takes students to Shop Page when customers expect users should land on Course Page
 
 = 1.9.7 - August 19, 2021 =
