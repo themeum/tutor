@@ -1838,10 +1838,11 @@ jQuery(document).ready(function ($) {
                     location.assign(response.data.redirect);
                     location.reload();
                 } else {
+                    var error_message = response.data || __('Invalid username or password!', 'tutor');
                     if ($form_wrapper.find('.tutor-alert').length) {
-                        $form_wrapper.find('.tutor-alert').html(response.data);
+                        $form_wrapper.find('.tutor-alert').html(error_message);
                     } else {
-                        $form_wrapper.prepend('<div class="tutor-alert tutor-alert-warning">' + response.data + '</div>');
+                        $form_wrapper.prepend('<div class="tutor-alert tutor-alert-warning">' + error_message + '</div>');
                     }
                 }
             },
