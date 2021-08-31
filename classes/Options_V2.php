@@ -652,7 +652,6 @@ class Options_V2 {
 											'time' => array(
 												'type' => 'select',
 												'default' => 'minutes',
-
 												'select_options' => false,
 												'options' => array(
 													'weeks' => __('Weeks', 'tutor'),
@@ -764,15 +763,17 @@ class Options_V2 {
 										'label_title' => __('', 'tutor'),
 										'default' => '',
 										'fields' => array(
-											array(
-												'key' => 'instructor_takes',
+											'instructor_takes' => array(
+												'id' => 'revenue-instructor',
+												'type' => 'ratio',
 												'title' => 'Instructor Takes',
-												'value' => 10,
+												'default' => 10,
 											),
-											array(
-												'key' => 'admin_takes',
+											'admin_takes' => array(
+												'id' => 'revenue-admin',
+												'type' => 'ratio',
 												'title' => 'Admin Takes',
-												'value' => 100,
+												'default' => 100,
 											),
 										),
 										'desc' => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor'),
@@ -818,11 +819,28 @@ class Options_V2 {
 									),
 									array(
 										'key' => 'fee_amount_type',
-										'type' => 'select_number',
+										'type' => 'group_fields',
 										'label' => __('Fee Amount & Type', 'tutor'),
-										'label_title' => __('', 'tutor'),
-										'default' => 'free',
 										'desc' => __('content goes here', 'tutor'),
+										'group_fields' => array(
+											'time' => array(
+												'type' => 'select',
+												'default' => 'minutes',
+												'select_options' => false,
+												'options' => array(
+													'weeks' => __('Weeks', 'tutor'),
+													'days' => __('Days', 'tutor'),
+													'hours' => __('Hours', 'tutor'),
+													'minutes' => __('Minutes', 'tutor'),
+													'seconds' => __('Seconds', 'tutor'),
+												),
+											),
+											'value' => array(
+												'type' => 'text',
+												'default' => '0',
+
+											),
+										),
 									),
 								),
 							),
@@ -959,6 +977,10 @@ class Options_V2 {
 										'type' => 'group_radio_full_3',
 										'label' => __('Public Profile Layout', 'tutor'),
 										'group_options' => array(
+											'private' => array(
+												'title' => 'Private',
+												'image' => 'profile-layout/profile-private.svg',
+											),
 											'modern' => array(
 												'title' => 'Modern',
 												'image' => 'profile-layout/profile-modern.svg',
