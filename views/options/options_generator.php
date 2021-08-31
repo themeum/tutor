@@ -19,7 +19,7 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
                 <div class="search-popup-opener search_result">
                     <a href="#">
                         <div class="search_result_title">
-                            <i class="las la-search"></i>
+                            <i class="las la-search"></i>›
                             <span>Result results one</span>
                         </div>
                         <div class="search_navigation">
