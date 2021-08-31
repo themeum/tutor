@@ -10,9 +10,9 @@ if (!empty($field['options'])) {
             <div class="type-check d-flex">
                 <?php foreach ($field['options'] as $optionKey => $option) : ?>
                     <div class="tutor-form-check">
-                        <input type="checkbox" id="check_<?php echo $optionKey ?>" name="tutor_option[<?php echo $field['key'] ?>][<?php echo $optionKey ?>]" value="1" <?php checked($this->get($field['key'] . '.' . $optionKey), '1') ?> class="tutor-form-check-input" />
+                        <input type="checkbox" id="check_<?php echo $optionKey ?>_<?php echo $field['key'] ?>" name="tutor_option[<?php echo $field['key'] ?>][<?php echo $optionKey ?>]" value="1" <?php checked($this->get($field['key'] . '.' . $optionKey), '1') ?> class="tutor-form-check-input" />
 
-                        <label for="check_<?php echo $optionKey ?>"> <?php echo $option; ?> </label>
+                        <label for="check_<?php echo $optionKey ?>_<?php echo $field['key'] ?>"> <?php echo $option; ?> </label>
                     </div>
                 <?php endforeach; ?>
             </div>
