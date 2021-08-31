@@ -146,6 +146,7 @@ class Options_V2 {
 							array(
 								'label' => __('WordPress environment', 'tutor'),
 								'slug' => 'wordpress_environment',
+								'classes' => 'wordpress_environment',
 								'block_type' => 'column',
 								'fieldset' => array(
 									array(
@@ -443,6 +444,29 @@ class Options_V2 {
 								),
 							),
 							array(
+								'label' => __('Video', 'tutor'),
+								'slug' => 'video',
+								'block_type' => 'uniform',
+								'fields' => array(
+									array(
+										'key' => 'supported_video_sources',
+										'type' => 'checkbox_horizontal',
+										'label' => __('Preferred Video Source', 'tutor'),
+										'label_title' => __('Preferred Video Source', 'tutor'),
+										'options' => $video_sources,
+										'desc' => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
+									),
+									array(
+										'key' => 'default_video_source',
+										'type' => 'select',
+										'label' => __('Default Video Source', 'tutor'),
+										'options' => $video_sources,
+										'default' => '0',
+										'desc' => __('Choose video source to be selected by default.', 'tutor'),
+									),
+								),
+							),
+							array(
 								'label' => __('Course', 'tutor'),
 								'slug' => 'course',
 								'block_type' => 'uniform',
@@ -480,21 +504,6 @@ class Options_V2 {
 											'strict' => __('Strict Mode', 'tutor'),
 										),
 										'desc' => __('Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor'),
-									),
-								),
-							),
-							array(
-								'label' => __('Video', 'tutor'),
-								'slug' => 'video',
-								'block_type' => 'uniform',
-								'fields' => array(
-									array(
-										'key' => 'supported_video_sources',
-										'type' => 'checkbox_horizontal',
-										'label' => __('Preferred Video Source', 'tutor'),
-										'label_title' => __('Preferred Video Source', 'tutor'),
-										'options' => $video_sources,
-										'desc' => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
 									),
 								),
 							),
@@ -1115,22 +1124,6 @@ class Options_V2 {
 											),
 										),
 										'desc' => __('Content Needed Here...', 'tutor'),
-									),
-									array(
-										'key' => 'supported_video_sources',
-										'type' => 'select',
-										'label' => __('Preferred Video Source', 'tutor'),
-										'options' => $video_sources,
-										'default' => '0',
-										'desc' => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
-									),
-									array(
-										'key' => 'default_video_source',
-										'type' => 'select',
-										'label' => __('Default Video Source', 'tutor'),
-										'options' => $video_sources,
-										'default' => '0',
-										'desc' => __('Choose video source to be selected by default.', 'tutor'),
 									),
 								),
 							),
