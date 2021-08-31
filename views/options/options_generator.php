@@ -133,11 +133,16 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         position: fixed;
         bottom: 40px;
         z-index: 999;
+        opacity: 0;
         visibility: hidden;
-        transition: all .3s;
     }
 
     .tutor-notification.show {
+        opacity: 1;
         visibility: visible;
+    }
+
+    .tutor-notification .tutor-notification-close{
+        transition: unset;
     }
 </style>
