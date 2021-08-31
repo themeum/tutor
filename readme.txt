@@ -244,11 +244,18 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 = 1.9.8 - September 01, 2021 =
 
 New: Show total given and received review count in frontend dashboard
+New: Report in frontend dashboard
+New: Course approve/reject notification to isntructor (email)
+New: Automatic enroll after user register/login on enroll button click
+Update: Course taken column in student list 
 Fix: Instructor shortcode not working
 Fix: Undefined variable $default
 Fix: Assignment URL in duplicated course redirect to original
 Fix: PMPro addon duplicated levels in single course page
 Fix: Zoom meeting countdown texts translation not translatable
+Fix: Zoom Pagination
+Fix: Tutor certificate font spacing issue on chrome
+Fix: Removing a product from Cart or clicking a product URL takes students to Shop Page when customers expect users should land on Course Page
 
 = 1.9.7 - August 19, 2021 =
 
