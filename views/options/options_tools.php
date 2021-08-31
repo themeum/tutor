@@ -9,7 +9,7 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
 
 ?>
 <!-- .tutor-backend-wrap -->
-<section class="tutor-backend-wrap">
+<section class="tutor-backend-settings-page">
     <header class="tutor-option-header px-3 py-2">
         <div class="title"><?php _e('Tools', 'tutor'); ?></div>
         <div class="search-field">
