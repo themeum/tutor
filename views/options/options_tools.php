@@ -15,7 +15,7 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
         <div class="search-field">
             <div class="tutor-input-group tutor-form-control-has-icon">
                 <span class="tutor-input-group-icon"></span>
-                <input type="search" class="tutor-form-control" placeholder="<?php _e('Search', 'tutor'); ?>" />
+                <input type="search" autocomplete="off" class="tutor-form-control" placeholder="<?php _e('Search', 'tutor'); ?>" />
             </div>
         </div>
     </header>
