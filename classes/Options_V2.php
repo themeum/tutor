@@ -1275,6 +1275,16 @@ class Options_V2 {
 										'desc' => __('Students must be logged in to view course', 'tutor'),
 									),
 									array(
+										'key' => 'course_enrolle',
+										'type' => 'toggle_switch_button',
+										'label' => __('Course Enrolle', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'buttons' => array(
+											'edit' => 'Edit button of course_enrolled',
+										),
+										'desc' => __('Students must be logged in to view course', 'tutor'),
+									),
+									array(
 										'key' => 'quiz_completed',
 										'type' => 'toggle_switch_button',
 										'label' => __('Quiz Completed', 'tutor'),

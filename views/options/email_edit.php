@@ -1,6 +1,28 @@
+<?php
+$email_back_url = add_query_arg(
+    array('page' => 'tutor_settings', 'tab_page' => 'email'),
+    admin_url('admin.php')
+);
+
+foreach ($this->options_attr() as $sections) :
+    foreach ($sections as $section) :
+        if (is_array($section)) {
+            foreach ($section as $blocks) :
+                foreach ($blocks['blocks'] as $blocks) :
+                    // foreach ($blocks['fields'] as $fields) :
+                    echo '<pre>';
+                    print_r($blocks);
+                    echo '</pre>';
+                // endforeach;
+                endforeach;
+            endforeach;
+        }
+    endforeach;
+endforeach;
+?>
 <section class="tutor-backend-settings-page email-manage-page" style="margin-left: 185px-">
     <header class="header-wrapper tutor-px-30 tutor-py-25">
-        <a href="/index.html" class="prev-page d-inline-flex align-items-center">
+        <a href="<?php echo $email_back_url ?>" class="prev-page d-inline-flex align-items-center">
             <span class="tutor-v2-icon-test icon-previous-line"></span>
             <span class="text-regular-caption">Back</span>
         </a>
