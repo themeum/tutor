@@ -1,4 +1,9 @@
-<?php $field_id = 'field_' . $field['key'];
+<?php
+$field_id = 'field_' . $field['key'];
+$email_edit_url = add_query_arg(
+    array('page' => 'tutor_settings', 'tab_page' => 'email', 'edit' => $field['key']),
+    admin_url('admin.php')
+);
 ?>
 <div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
     <div class="tutor-option-field-label has-tooltip">
@@ -12,6 +17,6 @@
             <input type="checkbox" class="tutor-form-toggle-input" checked="">
             <span class="tutor-form-toggle-control"></span>
         </label>
-        <button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs">Edit</button>
+        <a class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs" href="<?php echo $email_edit_url ?>">Edit</a>
     </div>
 </div>

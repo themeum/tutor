@@ -176,7 +176,9 @@ function navigationTrigger() {
         // History push
         const url = new URL(window.location);
         url.searchParams.set("tab_page", dataTab);
-        window.history.pushState({}, "", url);
+        console.log(url);
+        // window.history.pushState({}, "", url);
+        window.history.replaceState({}, "", url);
       }
 
       // Reset + Hide Suggestion box
@@ -189,21 +191,26 @@ function navigationTrigger() {
   });
 }
 
-
 /**
  * Highlight items form search suggestion
  */
-function highlightSearchedItem(dataKey){
-  console.log(dataKey);
-  const targetEl = document.querySelector(`#${dataKey} .tutor-option-field-label label`);
-  const scrollTargetEl = document.querySelector(`#${dataKey}`).parentNode.querySelector(":first-child");
+function highlightSearchedItem(dataKey) {
+  const targetEl = document.querySelector(
+    `#${dataKey} .tutor-option-field-label label`
+  );
+  const scrollTargetEl = document
+    .querySelector(`#${dataKey}`)
+    .parentNode.querySelector(":first-child");
   console.log(scrollTargetEl);
 
-  targetEl.classList.add('isHighlighted');
+  targetEl.classList.add("isHighlighted");
   setTimeout(() => {
-    targetEl.classList.remove('isHighlighted');
+    targetEl.classList.remove("isHighlighted");
   }, 6000);
 
-  scrollTargetEl.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-
+  scrollTargetEl.scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+    inline: "nearest",
+  });
 }
