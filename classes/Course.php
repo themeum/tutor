@@ -135,6 +135,13 @@ class Course extends Tutor_Base {
 		 * @since v1.9.7
 		 */
 		add_action( 'wp_footer', array($this, 'popup_review_form') );
+
+		/**
+		 * Do enroll after login if guest take enroll attempt
+		 * 
+		 * @since 1.9.8
+		 */
+		add_action(  'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 1 );
 	}
 
 	public function restrict_new_student_entry($content) {
@@ -1369,5 +1376,23 @@ class Course extends Tutor_Base {
 
 		tutor_utils()->delete_course_progress($course_id);
 		wp_send_json_success(array('redirect_to' => tutor_utils()->get_course_first_lesson( $course_id ) ));
+	}
+
+	/**
+	 * Do enroll if guest attempt to enroll and course is free
+	 * 
+	 * @param $course_id
+	 * 
+	 * @since 1.9.8
+	 */
+	public function enroll_after_login_if_attempt( $course_id ) {
+		$course_id = sanitize_text_field( $course_id );
+		if ( $course_id ) {
+			$is_purchasable = tutor_utils()->is_course_purchasable($course_id);
+			if ( !$is_purchasable ) {
+				tutor_utils()->do_enroll($course_id);
+				do_action( 'guest_attempt_after_enrollment', $course_id );
+			}
+		}
 	}
 }

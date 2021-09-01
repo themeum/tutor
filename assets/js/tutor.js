@@ -251,6 +251,8 @@ jQuery(document).ready(function($){
         e.preventDefault();
         var $form = $(this);
         var data = $form.serializeObject();
+        var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            data.timezone = timezone;
         var $btn = $form.find('button[type="submit"]');
         
         $.ajax({

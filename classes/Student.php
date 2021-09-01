@@ -103,7 +103,8 @@ class Student {
 			}
 
 			do_action('tutor_after_student_signup', $user_id);
-
+			//since 1.9.8 do enroll if guest attempt to enroll
+			do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'] );
 			//Redirect page
 			$redirect_page = tutils()->array_get('redirect_to', $_REQUEST);
 			if ( ! $redirect_page){

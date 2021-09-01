@@ -7,8 +7,9 @@
 @import "_archive";
 @import "user_login";
 
+@import './course/index.scss';
+
 //dashboard
-@import './dashboard/index.scss';
 @import "dashboard";
 @import "_dashboard_delete_popup";
 @import "_dashboard_withdraw_method";
