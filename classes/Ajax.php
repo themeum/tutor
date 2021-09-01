@@ -418,9 +418,14 @@ class Ajax{
 				
 				wp_send_json_error( $message );
 			} else {
+				//since 1.9.8 do enroll if guest attempt to enroll
+				do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'] );
+				
 				wp_send_json_success([
 					'redirect' => apply_filters('tutor_login_redirect_url', $redirect_to)
 				]);
+
+
 			}
 		} catch ( \Exception $e ) {
 			wp_send_json_error( apply_filters( 'login_errors', $e->getMessage()) );

@@ -18,6 +18,7 @@ $current_page = max( 1, tutor_utils()->avalue_dot('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
 
 $reviews = tutor_utils()->get_reviews_by_instructor(get_current_user_id(), $offset, $per_page);
+$given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
 ?>
 
     <div class="tutor-dashboard-content-inner">
@@ -26,8 +27,8 @@ $reviews = tutor_utils()->get_reviews_by_instructor(get_current_user_id(), $offs
 			?>
             <div class="tutor-dashboard-inline-links">
                 <ul>
-                    <li> <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); ?>"> <?php _e('Given', 'tutor'); ?></a> </li>
-                    <li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/received-reviews'); ?>"> <?php _e('Received', 'tutor'); ?></a> </li>
+                    <li> <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); ?>"> <?php _e('Given', 'tutor'); ?> (<?php echo $given_count; ?>)</a> </li>
+                    <li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/received-reviews'); ?>"> <?php _e('Received', 'tutor'); ?> (<?php echo $reviews->count; ?>)</a> </li>
                 </ul>
             </div>
 		<?php } ?>
