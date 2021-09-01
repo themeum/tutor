@@ -570,7 +570,7 @@ class WooCommerce extends Tutor_Base {
 
 			global $wpdb; 
 			$table 			= $wpdb->base_prefix . 'postmeta';
-			$post_id 		= $wpdb->get_var( "SELECT post_id FROM $table WHERE meta_key = '_tutor_course_product_id' AND meta_value = $woo_product_id ");
+			$post_id 		= $wpdb->get_var($wpdb->prepare("SELECT post_id FROM {$table} WHERE meta_key = '_tutor_course_product_id' AND meta_value = %d ", $woo_product_id));
 
 			if( $post_id ) {
 				$data =  get_post_permalink( $post_id );

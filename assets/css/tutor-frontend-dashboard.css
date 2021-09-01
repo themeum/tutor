@@ -468,6 +468,7 @@
   vertical-align: middle;
 }
 
+<<<<<<< HEAD
 .tutor-dashboard .tutor-dashboard-content .tutor-analytics-info-cards {
   overflow: auto;
   margin: 0 -15px;
@@ -564,4 +565,49 @@
   display: inline-block;
   max-width: 100%;
   max-height: 100%;
+=======
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table {
+  background: 1px solid #dcdfe5;
+  border-collapse: collapse;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr th {
+  background: #fafbfc;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr th, .tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr td {
+  vertical-align: middle;
+  border: 1px solid #dcdfe5;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:first-child {
+  padding: 15px 13px !important;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:last-child {
+  text-align: center;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table tr td:last-child a {
+  display: block;
+  padding: 10px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table a {
+  color: var(--tutor-primary-color);
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table a:hover {
+  color: var(--tutor-primary-hover-color);
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table span.result-fail, .tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table span.result-pass {
+  width: auto;
+  height: auto;
+  line-height: 19px;
+  padding: 0 6.5px;
+  margin-right: 4px;
+>>>>>>> 59935c4bd420d235c2d02b69fbe11a880b05767e
 }
