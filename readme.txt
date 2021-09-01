@@ -255,6 +255,7 @@ Fix: Countdown timer translation issue for Zoom meetings
 Fix: Expired values showing up as pagination values for the Zoom meeting list
 Fix: Font spacing and custom font issue for generated Tutor certificates on chrome browser.
 Fix: Removing or clicking a product from the cart, took users to the WooCommerce shop instead of the course page
+Fix: Start quiz button now disables after clicking on it
 
 = 1.9.7 - August 19, 2021 =
 
