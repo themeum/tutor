@@ -3535,7 +3535,7 @@ msgstr ""
 msgid "Total Submits"
 msgstr ""
 
-#: templates/dashboard/assignments.php:93, templates/dashboard/reviews.php:53, templates/dashboard/reviews/received-reviews.php:57
+#: templates/dashboard/assignments.php:93, templates/dashboard/reviews.php:59, templates/dashboard/reviews/given-reviews.php:53
 msgid "Course: "
 msgstr ""
 
@@ -3759,7 +3759,7 @@ msgstr ""
 msgid "Not Found"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:91, templates/dashboard/reviews.php:37, templates/dashboard/assignments/review.php:19, templates/dashboard/reviews/received-reviews.php:78
+#: templates/dashboard/my-courses.php:91, templates/dashboard/reviews.php:80, templates/dashboard/assignments/review.php:19, templates/dashboard/reviews/given-reviews.php:37
 msgid "Sorry, but you are looking for something that isn't here."
 msgstr ""
 
@@ -3903,24 +3903,20 @@ msgstr ""
 msgid "Go to Home"
 msgstr ""
 
-#: templates/dashboard/reviews.php:27, templates/dashboard/reviews/received-reviews.php:30
-msgid "Given"
-msgstr ""
-
-#: templates/dashboard/reviews.php:28, templates/dashboard/reviews/received-reviews.php:31
+#: templates/dashboard/reviews.php:30, templates/dashboard/reviews/given-reviews.php:27
 msgid "Received"
 msgstr ""
 
-#: templates/dashboard/reviews.php:59
-msgid "Edit Feedback"
+#: templates/dashboard/reviews.php:32, templates/dashboard/reviews/given-reviews.php:28
+msgid "Given"
 msgstr ""
 
-#: templates/dashboard/reviews.php:67, templates/profile/reviews_wrote.php:49, views/pages/answer.php:54, views/pages/answer.php:94, templates/dashboard/question-answer/answers.php:24, templates/dashboard/question-answer/answers.php:52, templates/dashboard/reviews/received-reviews.php:65, templates/single/course/reviews.php:93, templates/single/lesson/sidebar_question_and_answer.php:54, templates/single/lesson/sidebar_question_and_answer.php:83, templates/single/course/enrolled/question_and_answer.php:75, templates/single/course/enrolled/question_and_answer.php:104
+#: templates/dashboard/reviews.php:46
+msgid "Showing results %d to %d out of %d"
+msgstr ""
+
+#: templates/dashboard/reviews.php:67, templates/profile/reviews_wrote.php:49, views/pages/answer.php:54, views/pages/answer.php:94, templates/dashboard/question-answer/answers.php:24, templates/dashboard/question-answer/answers.php:52, templates/dashboard/reviews/given-reviews.php:67, templates/single/course/reviews.php:93, templates/single/lesson/sidebar_question_and_answer.php:54, templates/single/lesson/sidebar_question_and_answer.php:83, templates/single/course/enrolled/question_and_answer.php:75, templates/single/course/enrolled/question_and_answer.php:104
 msgid "%s ago"
-msgstr ""
-
-#: templates/dashboard/reviews.php:85
-msgid "Edit Review"
 msgstr ""
 
 #: templates/dashboard/wishlist.php:42
@@ -5205,8 +5201,12 @@ msgstr ""
 msgid "Update Review"
 msgstr ""
 
-#: templates/dashboard/reviews/received-reviews.php:44
-msgid "Showing results %d to %d out of %d"
+#: templates/dashboard/reviews/given-reviews.php:59
+msgid "Edit Feedback"
+msgstr ""
+
+#: templates/dashboard/reviews/given-reviews.php:85
+msgid "Edit Review"
 msgstr ""
 
 #: templates/dashboard/settings/nav-bar.php:16, templates/dashboard/settings/reset-password.php:17, templates/dashboard/settings/reset-password.php:75
