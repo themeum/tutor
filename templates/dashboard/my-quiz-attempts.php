@@ -22,13 +22,12 @@ if(isset($_GET['view_quiz_attempt_id']) && get_tutor_option('tutor_quiz_student_
 $previous_attempts = tutor_utils()->get_all_quiz_attempts_by_user();
 $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 ?>
-    <div class="quiz-attempts-title">
-        <?php _e('My Quiz Attempts', 'tutor'); ?>
-    </div>
+
+<h3><?php _e('My Quiz Attempts', 'tutor'); ?></h3>
 <?php
 if ($attempted_count){
     ?>
-    <div class="tutor-quiz-attempt-history ">
+    <div class="tutor-dashboard-content tutor-quiz-attempt-history ">
         <table class="tutor-table">
             <tr>
                 <th><?php _e('Course Info', 'tutor'); ?></th>

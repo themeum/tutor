@@ -1,7 +1,7 @@
 .tutor-dashboard {
     @import './header.scss';
     @import './sidebar.scss';
-    @import './utilities/inline-link.scss';
+    @import './lib/inline-link.scss';
 
     .tutor-dashboard-content {
         padding-top: 30px;
@@ -12,5 +12,6 @@
         @import './pages/q-and-a.scss';
         @import './pages/earning.scss';
         @import './pages/report.scss';
+        @import './pages/quiz-attempt.scss';
     }
 }
