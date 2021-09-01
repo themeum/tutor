@@ -707,7 +707,7 @@ if (!function_exists('get_tutor_header')) {
 				'd/m/Y' 	=> 'dd-mm-yy',
 				'F j, Y'	=> 'MM dd, yy'
 			);
-			return isset( $formats[$wp_date_format] ) ? $formats[$wp_date_format] : $default; 
+			return isset( $formats[$wp_date_format] ) ? $formats[$wp_date_format] : $default_format; 
 		}
 	}
 
