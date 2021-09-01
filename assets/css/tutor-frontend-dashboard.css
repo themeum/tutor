@@ -259,6 +259,7 @@
   padding-top: 30px;
   /* dashboard content */
   /* earning cards. Currently same as dashboard, in later version it will be updated separately */
+  /* Only reusable function, or code allowed here. No direct css please. */
 }
 
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards {
@@ -465,4 +466,102 @@
 
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-earning-info-cards .tutor-dashboard-info-card p span > * {
   vertical-align: middle;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-analytics-info-cards {
+  overflow: auto;
+  margin: 0 -15px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-analytics-info-cards .tutor-dashboard-info-card {
+  background: white;
+  border: 1px solid #CDCFD5;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 6px;
+  margin: 15px;
+  padding: 25px 0;
+  float: left;
+  width: calc(33.333% - 30px);
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-analytics-info-cards .tutor-dashboard-info-card p {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -o-flex-direction: column;
+  -ms-flex-direction: column;
+  -moz-flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  margin: 0;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-analytics-info-cards .tutor-dashboard-info-card p > span {
+  font-style: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-analytics-info-cards .tutor-dashboard-info-card p > span:nth-child(1) {
+  margin-bottom: 20px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-analytics-info-cards .tutor-dashboard-info-card p > span:nth-child(2) {
+  font-weight: bold;
+  font-size: 30px;
+  color: #212327;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-analytics-info-cards .tutor-dashboard-info-card p > span:nth-child(3) {
+  font-size: 15px;
+  color: #5B616F;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-analytics-info-cards .tutor-dashboard-info-card p .tutor-round-icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #E9EDFB;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-analytics-info-cards .tutor-dashboard-info-card p .tutor-round-icon > * {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
 }
