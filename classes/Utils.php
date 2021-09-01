@@ -3078,11 +3078,11 @@ class Utils {
 	 *
 	 * @return array|null|object
 	 *
-	 * Get reviews by a user
+	 * Get reviews by a user (Given by the user)
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = 150 ) {
+	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = 150, $get_object = false ) {
 		$user_id = $this->get_user_id( $user_id );
 		global $wpdb;
 
@@ -3115,6 +3115,29 @@ class Utils {
 			$limit
 		) );
 
+
+		if($get_object) {
+			$count = (int)$wpdb->get_var( $wpdb->prepare(
+				"SELECT COUNT({$wpdb->comments}.comment_ID)
+				FROM 	{$wpdb->comments}
+						INNER JOIN {$wpdb->commentmeta} 
+								ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
+						INNER  JOIN {$wpdb->users}
+								ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+				WHERE 	{$wpdb->comments}.user_id = %d 
+						AND comment_type = %s
+						AND meta_key = %s",
+				$user_id,
+				'tutor_course_rating',
+				'tutor_rating'
+			) );
+
+			return (object)array(
+				'count' => $count, 
+				'results' => $reviews
+			);
+		}
+
 		return $reviews;
 	}
 
@@ -3125,7 +3148,7 @@ class Utils {
 	 *
 	 * @return array|null|object
 	 *
-	 * Get reviews by instructor
+	 * Get reviews by instructor (Received by the instructor)
 	 *
 	 * @since v.1.4.0
 	 */
@@ -7210,7 +7233,13 @@ class Utils {
 		if ($wp_query->is_page) {
 			$dashboard_page = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
 
-			return $subpage ? $dashboard_page == $subpage : $dashboard_page;
+			if($subpage && $dashboard_page == $subpage) {
+				return true;
+			}
+
+			if($wp_query->queried_object && $wp_query->queried_object->ID) {
+				return $wp_query->queried_object->ID == tutor_utils()->get_option('tutor_dashboard_page_id');
+			}
 		}
 
 		return false;

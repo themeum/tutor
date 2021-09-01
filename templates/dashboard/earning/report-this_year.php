@@ -28,7 +28,7 @@ if ( ! $earning_sum){
 	return;
 }
 ?>
-    <div class="tutor-dashboard-info-cards">
+    <div class="tutor-dashboard-earning-info-cards">
         <div class="tutor-dashboard-info-card" title="<?php _e('All time', 'tutor'); ?>">
             <p>
                 <span> <?php _e('My Earning', 'tutor'); ?> </span>
