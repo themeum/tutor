@@ -3840,8 +3840,7 @@ span.withdraw-method-label {
   color: var(--tutor-primary-color);
 }
 
-.tutor-quiz-attempt-info-row .attempt-view-bottom,
-.tutor-quiz-attempt-info-row .attempt-view-top {
+.tutor-quiz-attempt-info-row .attempt-view-bottom, .tutor-quiz-attempt-info-row .attempt-view-top {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3850,8 +3849,7 @@ span.withdraw-method-label {
   justify-content: space-between;
 }
 
-.tutor-quiz-attempt-info-row .attempt-view-bottom .attempt-info-col,
-.tutor-quiz-attempt-info-row .attempt-view-top .attempt-info-col {
+.tutor-quiz-attempt-info-row .attempt-view-bottom .attempt-info-col, .tutor-quiz-attempt-info-row .attempt-view-top .attempt-info-col {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -3861,14 +3859,52 @@ span.withdraw-method-label {
   max-width: 30%;
 }
 
+.tutor-quiz-attempt-info-row .attempt-view-top {
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #dcdfe5;
+}
+
+.tutor-quiz-attempt-info-row .attempt-view-bottom {
+  margin-bottom: 60px;
+}
+
 .tutor-quiz-attempt-info-row .attempt-view-bottom .attempt-info-col {
   -webkit-box-align: start;
   -ms-flex-align: start;
   align-items: flex-start;
 }
 
-.tutor-quiz-attempt-info-row .attempt-info-content span.result-pass,
-.tutor-quiz-attempt-info-row .attempt-info-content span.result-fail {
+.tutor-quiz-attempt-info-row .attempt-user-details {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tutor-quiz-attempt-info-row .attempt-user-details .attempt-user-avatar {
+  padding-right: 20px;
+}
+
+.tutor-quiz-attempt-info-row .attempt-user-details .attempt-user-avatar img {
+  display: block;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+
+.tutor-quiz-attempt-info-row .attempt-user-details .attempt-info-content h4 {
+  font-size: 18px;
+}
+
+.tutor-quiz-attempt-info-row .attempt-info-content span.result-pass, .tutor-quiz-attempt-info-row .attempt-info-content span.result-fail {
   background: #df3247;
   font-size: 14px;
   font-weight: 400;
@@ -3882,8 +3918,7 @@ span.withdraw-method-label {
   background: var(--tutor-success-button-color);
 }
 
-.tutor-quiz-attempt-info-row .attempt-info-content h4,
-.tutor-quiz-attempt-info-row .attempt-info-content h5 {
+.tutor-quiz-attempt-info-row .attempt-info-content h4, .tutor-quiz-attempt-info-row .attempt-info-content h5 {
   font-size: 14px;
   line-height: 25px;
   margin: 0;
@@ -3891,45 +3926,10 @@ span.withdraw-method-label {
   font-weight: 400;
 }
 
-.tutor-quiz-attempt-info-row .attempt-info-content h4 a,
-.tutor-quiz-attempt-info-row .attempt-info-content h4 {
+.tutor-quiz-attempt-info-row .attempt-info-content h4, .tutor-quiz-attempt-info-row .attempt-info-content h4 a {
   font-weight: 700;
   color: var(--tutor-text-color);
   margin-top: 7px;
-}
-
-.tutor-quiz-attempt-info-row .attempt-view-top {
-  padding-bottom: 30px;
-  margin-bottom: 30px;
-  border-bottom: 1px solid #dcdfe5;
-}
-
-.tutor-quiz-attempt-info-row .attempt-view-bottom {
-  margin-bottom: 60px;
-}
-
-.attempt-user-details {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.attempt-user-details .attempt-user-avatar {
-  padding-right: 20px;
-}
-
-.attempt-user-details .attempt-user-avatar img {
-  display: block;
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-}
-
-.attempt-user-details .attempt-info-content h4 {
-  font-size: 18px;
 }
 
 .attempt-review-notice-wrap {
