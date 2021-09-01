@@ -82,7 +82,12 @@ class WooCommerce extends Tutor_Base {
 		 * enrollment complete
 		 * @since 1.9.0
 		*/			
-		add_action( 'woocommerce_thankyou', array($this, 'redirect_to_enrolled_courses') );			
+		add_action( 'woocommerce_thankyou', array($this, 'redirect_to_enrolled_courses') );	
+		
+		/**
+		 * Change woo commerce cart product link if it is tutor product
+		 */
+		add_filter( 'woocommerce_cart_item_permalink', array( $this, 'tutor_update_product_url' ), 10, 2 );
 	}
 
 	public function notice_before_option() {
@@ -549,6 +554,29 @@ class WooCommerce extends Tutor_Base {
 		        wp_safe_redirect( $url );
 		        exit;
 		    }
+	}
+
+	/**
+	 * Change product url on cart page if product is tutor course
+	 * 
+	 * @since 1.9.8
+	 */
+	function tutor_update_product_url( $permalink, $cart_item ) {
+
+		$woo_product_id = $cart_item['product_id']; 
+		$product_meta 	= get_post_meta( $woo_product_id );
+
+		if( isset( $product_meta['_tutor_product'] ) && $product_meta['_tutor_product'][0] ) {
+
+			global $wpdb; 
+			$table 			= $wpdb->base_prefix . 'postmeta';
+			$post_id 		= $wpdb->get_var($wpdb->prepare("SELECT post_id FROM {$table} WHERE meta_key = '_tutor_course_product_id' AND meta_value = %d ", $woo_product_id));
+
+			if( $post_id ) {
+				$data =  get_post_permalink( $post_id );
+				return $data; 
+			}
+		}
 	}
 }
 
