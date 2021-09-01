@@ -22,8 +22,21 @@ if ( ! defined( 'ABSPATH' ) )
     <?php
     $current_url = tutils()->get_current_url();
     $register_page = tutor_utils()->student_register_url();
-	$register_url = add_query_arg ('redirect_to', $current_url, $register_page);
-
+	$query_args = array(
+		'redirect_to' => $current_url
+	);
+	/**
+	 * Get current course to make user auto enroll
+	 * 
+	 * @since 1.9.8
+	 */
+	global $post;
+	$course_id = '';
+	if ( isset( $post->post_type ) && $post->post_type == tutor()->course_post_type ) {
+		$course_id = sanitize_text_field( $post->ID );
+		$query_args[ 'id' ] = $course_id;
+	}
+	$register_url = add_query_arg ( $query_args, $register_page );
 	//redirect_to
     $args = array(
 	    'echo'                      => true,
@@ -57,7 +70,7 @@ if ( ! defined( 'ABSPATH' ) )
 	?>
 
 	<form name="<?php echo $args['form_id']?>" id="<?php echo $args['form_id']?>" method="post">
-
+		<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo esc_html( $course_id );?>">
 	<?php do_action("tutor_login_form_start");?>
 
 	<?php echo $nonce_field;?>
@@ -106,7 +119,7 @@ if ( ! defined( 'ABSPATH' ) )
 			if(get_option( 'users_can_register', false )) {
 				?>
 				<p class="tutor-form-register-wrap">
-					<a href="<?php echo esc_url($register_url)?>">
+					<a href="<?php echo esc_url( $register_url );?>">
 						<?php echo esc_html($args['label_create_new_account']);?>
 					</a>
 				</p>
