@@ -34,8 +34,11 @@ navTabLists.forEach((list) => {
 
 			// History push
 			const url = new URL(window.location);
-			url.searchParams.set('tab_page',dataTab);
-			window.history.pushState({}, '', url);
+
+			const params = new URLSearchParams({ page: "tutor_settings", tab_page: dataTab });
+			const pushUrl = `${url.origin + url.pathname}?${params.toString()}`;
+
+			window.history.pushState({}, '', pushUrl);
 		}
 	});
 });
