@@ -2134,6 +2134,12 @@ class Utils {
 		$user_id = $this->get_user_id( $user_id );
 		$title = __( 'Course Enrolled', 'tutor')." &ndash; ".date( get_option('date_format') ) .' @ '.date(get_option('time_format') ) ;
 
+		if ( $course_id && $user_id ) {
+			if ( $this->is_enrolled( $course_id, $user_id ) ) {
+				return ;
+			}
+		}
+
 		$enrolment_status = 'completed';
 
 		if ( $this->is_course_purchasable( $course_id ) ) {
