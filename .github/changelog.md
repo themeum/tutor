@@ -1,5 +1,10 @@
 # TutorLMS Changelog
 
+### 1.9.9 - September 13, 2021
+
+* New: Analytics page for instructor in frontend dashboard
+
+
 ### 1.9.8 - September 02, 2021
 
 * New: Review counts (given and received) in the dashboard review section's tabs
