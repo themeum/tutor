@@ -1,0 +1,38 @@
+//Backend Alert utlity .alert-#{$variable}{...}
+$variations: (
+	'primary' $primary-30 $primary-100 $primary-50 $brand-wordpress,
+	'success' $success-30 $success-100 $success-50 $design-success,
+	'warning' $warning-30 $warning-100 $warning-50 $design-warning,
+	'danger' $danger-30 $danger-100 $danger-50 $design-danger
+);
+@each $suffix, $bgColor, $txtColor, $border, $icon in $variations {
+	.tutor-backend-alert.alert-#{$suffix} {
+		background: #{$bgColor};
+		color: #{$txtColor};
+		border: 1px solid #{$border};
+		> .alert-icon {
+			color: #{$icon};
+		}
+	}
+}
+
+// Tutor backend alert
+.tutor-backend-alert {
+	@extend .text-regular-caption;
+
+	display: flex;
+	align-items: center;
+	border-radius: 6px;
+	padding: 9px 12px;
+	background: $bg-white;
+	color: $text-title;
+
+	> .alert-icon {
+		font-size: 40px;
+		margin-right: 6px;
+	}
+
+	&:not(:last-child) {
+		margin-bottom: 12px;
+	}
+}

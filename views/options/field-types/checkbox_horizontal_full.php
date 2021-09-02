@@ -1,8 +1,9 @@
 <?php
 $default = isset($field['default']) ? $field['default'] : '';
 $option_value = $this->get($field['key'], $default);
+$field_id = 'field_' . $field['key'];
 ?>
-<div class="tutor-option-field-row d-block">
+<div class="tutor-option-field-row d-block" id="<?php echo $field_id; ?>">
     <?php include tutor()->path . "views/options/template/field_heading.php"; ?>
     <div class="tutor-option-field-input">
         <div class="type-check d-flex">

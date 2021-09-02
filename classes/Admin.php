@@ -65,7 +65,7 @@ class Admin {
 
 		add_submenu_page('tutor', __('Tags', 'tutor'), __('Tags', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type=' . $course_post_type, null);
 
-		add_submenu_page('tutor', __('Students', 'tutor'), __('Students', 'tutor'), 'manage_tutor', Students_List::STUDENTS_LIST_PAGE, array($this, 'tutor_students') );
+		add_submenu_page('tutor', __('Students', 'tutor'), __('Students', 'tutor'), 'manage_tutor', Students_List::STUDENTS_LIST_PAGE, array($this, 'tutor_students'));
 
 		if ($enable_course_marketplace) {
 			add_submenu_page('tutor', __('Instructors', 'tutor'), __('Instructors', 'tutor'), 'manage_tutor', Instructors_List::INSTRUCTOR_LIST_PAGE, array($this, 'tutor_instructors'));

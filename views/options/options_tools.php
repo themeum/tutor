@@ -9,13 +9,13 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : null;
 
 ?>
 <!-- .tutor-backend-wrap -->
-<section class="tutor-backend-wrap">
+<section class="tutor-backend-settings-page">
     <header class="tutor-option-header px-3 py-2">
         <div class="title"><?php _e('Tools', 'tutor'); ?></div>
         <div class="search-field">
             <div class="tutor-input-group tutor-form-control-has-icon">
-                <span class="las la-search tutor-input-group-icon"></span>
-                <input type="search" class="tutor-form-control" placeholder="<?php _e('Search', 'tutor'); ?>" />
+                <span class="tutor-input-group-icon"></span>
+                <input type="search" autocomplete="off" class="tutor-form-control" placeholder="<?php _e('Search', 'tutor'); ?>" />
             </div>
         </div>
     </header>

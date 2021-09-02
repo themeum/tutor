@@ -4,7 +4,7 @@ if (!isset($field['group_fields']) || !is_array($field['group_fields']) || !coun
 }
 ?>
 <div class="tutor-option-field-row">
-<?php include tutor()->path . "views/options/template/field_heading.php";?>
+	<?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 
 	<div class="tutor-option-field-input">
 		<div class="d-flex input-select">

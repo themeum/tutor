@@ -1,7 +1,8 @@
 <?php
 if (!empty($field['group_options'])) {
+    $field_id = 'field_' . $field['key'];
 ?>
-    <div class="tutor-option-field-input">
+    <div class="tutor-option-field-input" id="<?php echo $field_id; ?>">
         <div class="type-toggle-grid">
             <?php foreach ($field['group_options'] as $key => $option) :
                 $default = $option['default'] ?? '';
