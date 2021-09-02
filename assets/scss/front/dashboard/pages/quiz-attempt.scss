@@ -1,50 +1,30 @@
-.tutor-quiz-attempt-history {
+.tutor-dashboard-quiz-attempt-history {
+    .attempt-date{
+        font-style: normal;
+        font-weight: normal;
+        font-size: 13px;
+        color: #212327;
+        display: block;
+        white-space: nowrap;
+    }
 
-    table {
-        background: 1px solid #dcdfe5;
-        border-collapse: collapse;
+    .attempt-date+a {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        color: #212327;
 
-        tr {
-            th {
-                background: #fafbfc;
-            }
-
-            th, td {
-                vertical-align: middle;
-                border: 1px solid #dcdfe5;
-            }
-
-            td:first-child {
-                padding: 15px 13px !important;
-            }
-
-            td:last-child {
-                text-align: center;
-                a {
-                    display: block;
-                    padding: 10px;
-                }
-            }
-        }
-
-        a {
+        &:hover {
             color: var(--tutor-primary-color);
-            font-weight: 700;
-            line-height: 24px;
-            
-            &:hover {
-                color: var(--tutor-primary-hover-color);
-            }
         }
+    }
 
-        span {
-            &.result-fail, &.result-pass {
-                width: auto;
-                height: auto;
-                line-height: 19px;
-                padding: 0 6.5px;
-                margin-right: 4px;
-            }
+    td{
+        &:nth-child(2), &:nth-child(3), &:nth-child(4), &:nth-child(5), &:nth-child(6) {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 15px;
+            color: #212327;
         }
     }
 }

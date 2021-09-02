@@ -104,25 +104,25 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
 
 <div class="tutor-quiz-attempt-review-wrap">
     <div class="attempt-answers-header">
-        <div class="attempt-header-quiz"><?php echo __('Quiz:','tutor')." <a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></div>
         <div class="attempt-header-course"><?php echo __('Course:','tutor')." <a href='" .get_permalink($attempt_data->course_id)."'>".get_the_title($attempt_data->course_id)."</a>"; ?></div>
+        <div class="attempt-header-quiz"><?php echo "<a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></div>
     </div>
         
-    <table class="wp-list-table">
+    <table class="tutor-dashboard-table">
+        <thead>
+            <tr>
+                <th><?php _e('Date', 'tutor'); ?></th>
+                <th><?php _e('Question', 'tutor'); ?></th>
+                <th><?php _e('Total Marks', 'tutor'); ?></th>
+                <th><?php _e('Pass Marks', 'tutor'); ?></th>
+                <th><?php _e('Correct', 'tutor'); ?></th>
+                <th><?php _e('Incorrect', 'tutor'); ?></th>
+                <th><?php _e('Earned Marks', 'tutor'); ?></th>
+                <th><?php _e('Result', 'tutor'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
         <tr>
-            <th><?php _e('#', 'tutor'); ?></th>
-            <th><?php _e('Attempts Date', 'tutor'); ?></th>
-            <th><?php _e('Questions', 'tutor'); ?></th>
-            <th><?php _e('Total Marks', 'tutor'); ?></th>
-            <th><?php _e('Pass Marks', 'tutor'); ?></th>
-            <th><?php _e('Correct', 'tutor'); ?></th>
-            <th><?php _e('Incorrect', 'tutor'); ?></th>
-            <th><?php _e('Earned Marks', 'tutor'); ?></th>
-            <th><?php _e('Results', 'tutor'); ?></th>
-        </tr>
-        
-        <tr>
-            <td><?php echo $attempt_data->attempt_id; ?></td>
             <td>
                 <?php
                     echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
@@ -166,13 +166,14 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
             <td>
                 <?php 
                     if ($earned_percentage >= $pass_mark_percent){
-                        echo '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
+                        echo '<span class="tutor-badge tutor-bg-success tutor-m-5">'.__('Pass', 'tutor').'</span>';
                     }else{
-                        echo '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+                        echo '<span class="tutor-badge tutor-bg-danger tutor-m-5">'.__('Fail', 'tutor').'</span>';
                     }
                 ?>
             </td>
         </tr>
+        </tbody>
     </table>
 </div>
 
@@ -203,15 +204,18 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                 <div class="attempt-header-quiz"><?php _e('Quiz Overview', 'tutor'); ?></div>
             </div>
 
-            <table class="wp-list-table">
-                <tr>
-                    <th><?php _e('No.', 'tutor'); ?></th>
-                    <th><?php _e('Type', 'tutor'); ?></th>
-                    <th><?php _e('Question', 'tutor'); ?></th>
-                    <th><?php _e('Given Answers', 'tutor'); ?></th>
-                    <th><?php _e('Correct Answers', 'tutor'); ?></th>
-                    <th><?php _e('Correct/Incorrect', 'tutor'); ?></th>
-                </tr>
+            <table class="tutor-dashboard-table">
+                <thead>
+                    <tr>
+                        <th><?php _e('No.', 'tutor'); ?></th>
+                        <th><?php _e('Type', 'tutor'); ?></th>
+                        <th><?php _e('Question', 'tutor'); ?></th>
+                        <th><?php _e('Given Answers', 'tutor'); ?></th>
+                        <th><?php _e('Correct Answers', 'tutor'); ?></th>
+                        <th><?php _e('Answer', 'tutor'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
                 <?php
                 $answer_i = 0;
                 foreach ($answers as $answer){
@@ -367,16 +371,16 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                             <?php
 
                             if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-                                echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
+                                echo '<span class="tutor-badge tutor-bg-success tutor-m-5">'.__('Correct', 'tutor').'</span>';
                             } else {
                                 if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
                                     if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
-                                        echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
+                                        echo '<span class="tutor-badge tutor-bg-danger tutor-m-5">'.__('Wrong', 'tutor').'</span>';
                                     } else {
-                                        echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
+                                        echo '<span class="tutor-badge tutor-bg-warning tutor-m-5">'.__('Pending', 'tutor').'</span>';
                                     }
 								} else {
-                                    echo '<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
+                                    echo '<span class="tutor-badge tutor-bg-danger tutor-m-5">'.__('Wrong', 'tutor').'</span>';
                                 }
                             }
                             ?>
@@ -386,6 +390,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
                     <?php
                 }
                 ?>
+                </tbody>
             </table>
         </div>
 

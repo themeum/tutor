@@ -27,16 +27,21 @@ $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 <?php
 if ($attempted_count){
     ?>
-    <div class="tutor-dashboard-content tutor-quiz-attempt-history ">
-        <table class="tutor-table">
-            <tr>
-                <th><?php _e('Course Info', 'tutor'); ?></th>
-                <th><?php _e('Correct Answer', 'tutor'); ?></th>
-                <th><?php _e('Incorrect Answer', 'tutor'); ?></th>
-                <th><?php _e('Earned Marks', 'tutor'); ?></th>
-                <th><?php _e('Result', 'tutor'); ?></th>
-                <?php do_action('tutor_quiz/my_attempts/table/thead/col'); ?>
-            </tr>
+    <div class="tutor-dashboard-quiz-attempt-history ">
+        <table class="tutor-dashboard-table">
+            <thead>
+                <tr>
+                    <th><?php _e('Quiz Info', 'tutor'); ?></th>
+                    <th><?php _e('Question', 'tutor'); ?></th>
+                    <th><?php _e('Total Marks', 'tutor'); ?></th>
+                    <th><?php _e('Correct Answer', 'tutor'); ?></th>
+                    <th><?php _e('Incorrect Answer', 'tutor'); ?></th>
+                    <th><?php _e('Earned Marks', 'tutor'); ?></th>
+                    <th><?php _e('Result', 'tutor'); ?></th>
+                    <?php do_action('tutor_quiz/my_attempts/table/thead/col'); ?>
+                </tr>
+            </thead>
+            <tbody>
             <?php
             foreach ( $previous_attempts as $attempt){
                 $attempt_action = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts/attempts-details/?attempt_id='.$attempt->attempt_id);
@@ -46,14 +51,18 @@ if ($attempted_count){
                 ?>
                 <tr>
                     <td>
-                        <div class="course">
-                            <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank"><?php echo get_the_title($attempt->course_id); ?></a>
-                        </div>
-                        <div class="course-meta">
-                            <span><?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?></span>
-                            <span><?php _e('Question: ','tutor'); ?><strong><?php echo count($answers); ?></strong></span>
-                            <span><?php _e('Total Marks: ','tutor'); ?><strong><?php echo $attempt->total_marks; ?></strong></span>
-                        </div>
+                        <span class="attempt-date">
+                            <?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?>
+                        </span>
+                        <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank">
+                            <?php echo get_the_title($attempt->course_id); ?>
+                        </a>
+                    </td>
+                    <td>
+                        <?php echo count($answers);?>
+                    </td>
+                    <td>
+                        <?php echo $attempt->total_marks;?>
                     </td>
                     <td>
                         <?php
@@ -83,9 +92,9 @@ if ($attempted_count){
                     <td>
                         <?php
                             if ($attempt->attempt_status === 'review_required'){
-                                echo '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
+                                echo '<span class="tutor-badge tutor-bg-warning">' . __('Pending', 'tutor') . '</span>';
                             }else{
-                                echo $earned_percentage >= $passing_grade ? '<span class="result-pass">'.__('Pass', 'tutor').'</span>' : '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+                                echo $earned_percentage >= $passing_grade ? '<span class="tutor-badge tutor-bg-success">'.__('Pass', 'tutor').'</span>' : '<span class="tutor-badge tutor-bg-danger">'.__('Fail', 'tutor').'</span>';
                             }
                         ?>
                     </td>
@@ -94,7 +103,7 @@ if ($attempted_count){
                 <?php
             }
             ?>
-
+            </tbody>
         </table>
     </div>
 
