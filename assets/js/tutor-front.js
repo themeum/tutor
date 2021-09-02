@@ -2380,4 +2380,9 @@ jQuery(document).ready(function ($) {
             }
         }
     });
+
+    /* Disable start quiz button  */
+    $('body').on('submit', 'form#tutor-start-quiz', function() {
+        $(this).find('button').prop('disabled', true);
+    });
 });
