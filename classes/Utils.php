@@ -1861,7 +1861,7 @@ class Utils {
 		global $wpdb;
 		$user_id = $this->get_user_id( $user_id );
 		$course_ids = $wpdb->get_col( $wpdb->prepare(
-			"SELECT post_parent
+			"SELECT DISTINCT post_parent
 			FROM 	{$wpdb->posts}
 			WHERE 	post_type = %s
 					AND post_status = %s

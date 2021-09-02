@@ -244,7 +244,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 = 1.9.8 - September 02, 2021 =
 
 New: Review counts (given and received) in the dashboard review section's tabs
-New: Approval/rejection email to instructors for their submitted courses.
+New: Publish email notification to instructors for their submitted courses
 New: Auto-enrollment after registering from the "Enroll Now" button
 New: Enrolled course count in a separate column in the Student's list
 Fix: Shortcode to show instructor list not working issue
