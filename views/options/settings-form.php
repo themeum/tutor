@@ -15,11 +15,11 @@
 <!-- .tutor-backend-wrap -->
 <section class="tutor-backend-settings-page" style="padding-top: 60px;">
 		<header class="tutor-option-header px-3 py-2" style="position: fixed;right:0;z-index:99;width:calc(100% - 160px);top:32px;">
-			<div class="title"><?php _e( 'Settings', 'tutor' ); ?></div>
+			<div class="title"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 			<div class="search-field">
 				<div class="tutor-input-group tutor-form-control-has-icon">
 					<span class="tutor-input-group-icon"></span>
-					<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php _e( 'Search', 'tutor' ); ?>" />
+					<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search', 'tutor' ); ?>" />
 					<div class="search-popup-opener search_result">
 						<a href="#">
 							<div class="search_result_title">

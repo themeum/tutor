@@ -1,4 +1,15 @@
 <?php
+/**
+ * Options for TutorLMS
+ *
+ * @since v.2.0
+ *
+ * @author Themeum
+ * @url https://themeum.com
+ *
+ * @package TutorLMS/Certificate
+ * @version 2.0
+ */
 
 namespace Tutor;
 
@@ -1824,5 +1835,63 @@ class Options_V2 {
 		ob_start();
 		include tutor()->path . "views/options/template/{$section['template']}.php";
 		return ob_get_clean();
+	}
+
+	/**
+	 * Definition of get_all_fields
+	 *
+	 * @return array
+	 */
+	public function get_all_fields() {
+		foreach ( $this->options_attr() as $sections ) :
+			foreach ( $sections as $section ) :
+				if ( is_array( $section ) ) :
+					foreach ( $section as $blocks ) :
+						foreach ( $blocks['blocks'] as $blocks ) :
+							foreach ( $blocks['fields'] as $field ) :
+								$field['block'] = $blocks['label'];
+								$fields[]       = $field;
+							endforeach;
+						endforeach;
+					endforeach;
+				endif;
+			endforeach;
+		endforeach;
+		return $fields;
+	}
+
+
+	/**
+	 * Definition of get_field_by_key
+	 *
+	 * @param  mixed $key
+	 * @return array
+	 */
+	public function get_field_by_key( $key = '' ) {
+		$fields = $this->get_all_fields();
+
+		foreach ( $fields as $field ) :
+			if ( isset( $field['key'] ) && $field['key'] === $key ) :
+				return $field;
+			endif;
+		endforeach;
+	}
+
+
+	/**
+	 * Definition of get_field_by_type
+	 *
+	 * @param  mixed $type
+	 * @return array
+	 */
+	public function get_field_by_type( $type = '' ) {
+		$fields = $this->get_all_fields();
+
+		foreach ( $fields as $field ) :
+			if ( isset( $field['type'] ) && $field['type'] === $type ) :
+				$all_fields[] = $field;
+			endif;
+		endforeach;
+		return $all_fields;
 	}
 }
