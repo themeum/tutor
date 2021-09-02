@@ -1601,3 +1601,20 @@ if ( ! function_exists('tutor_login_form_popup')) {
         return $output;
     }
 }
+
+/**
+ * Load custom template from any given file
+ * 
+ * Pass parameter as wish
+ * 
+ * @since 1.9.8
+ */
+if ( ! function_exists('tutor_load_template_from_custom_path')) {
+    function tutor_load_template_from_custom_path( $template = null, $data ) {
+        do_action('tutor_load_template_from_custom_path_before', $template, $data);
+        if ( file_exists($template) ) {
+            include_once $template;
+        }
+        do_action('tutor_load_template_from_custom_path_after', $template, $data);
+    }
+}
