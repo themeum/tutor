@@ -25,7 +25,8 @@ $quiz_attempts_count = tutor_utils()->get_total_quiz_attempts_by_course_ids($cou
 if ( $quiz_attempts_count ){
 	?>
     <div class="tutor-dashboard-content tutor-quiz-attempt-history">
-        <table class="tutor-table">
+        <table class="tutor-dashboard-table">
+            <thead>
             <tr>
                 <th><?php _e('Course Info', 'tutor'); ?></th>
                 <th><?php _e('Student', 'tutor'); ?></th>
@@ -36,6 +37,8 @@ if ( $quiz_attempts_count ){
                 <th></th>
                 <?php do_action('tutor_quiz/student_attempts/table/thead/col'); ?>
             </tr>
+            </thead>
+            <tbody>
 			<?php
 			foreach ( $quiz_attempts as $attempt){
 				$attempt_action = tutor_utils()->get_tutor_dashboard_page_permalink('quiz-attempts/quiz-reviews/?attempt_id='.$attempt->attempt_id);
@@ -102,6 +105,7 @@ if ( $quiz_attempts_count ){
 				<?php
 			}
 			?>
+            </tbody>
         </table>
     </div>
     <div class="tutor-pagination">

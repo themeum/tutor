@@ -2749,21 +2749,15 @@ li.tutor-option-nav-item h4 {
 .tutor-option-field-label .isHighlighted::before {
   content: "";
   position: absolute;
-  inset: 0 -7px;
+  inset: 1px -6px;
   background: #fce7c7;
+  border: 1px solid #f5ba63;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border-radius: 3px;
   z-index: -1;
-  animation: blinkingBackground 1s infinite;
 }
-@keyframes blinkingBackground{
-  0%		{ background-color: #fce7c7;}
-  25%		{ background-color: #ffffff;}
-  50%		{ background-color: #fce7c7;}
-  75%		{ background-color: #ffffff;}
-  100%	{ background-color: #fce7c7;}
-}
+
 .tutor-option-field-label {
   float: unset;
   width: unset;

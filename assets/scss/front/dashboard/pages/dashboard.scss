@@ -1,34 +1,45 @@
 /* dashboard content */
-.tutor-dashboard-info-cards {
-	margin: 0 -15px 15px;
-	padding: 0;
-	display: flex;
-	list-style: none;
-	flex-wrap: wrap;
-	.tutor-dashboard-info-card {
-		padding: 15px;
-		min-width: 33.333%;
-		p {
-			margin: 0;
-			padding: 15px 25px;
-			background: #282c36;
-			color: #ffffff;
-			border-radius: 4px;
-			span {
-				&.tutor-dashboard-info-val {
-					display: block;
-					font-weight: 700;
-					font-size: 30px;
-					line-height: 1.618;
-				}
+.tutor-view-all-course {
+	float: right;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 15px;
+	color: #5B616F;
+	cursor: pointer;
+	text-decoration: none;
+	
+	&:hover {
+		color: var(--tutor-primary-color);
+		text-decoration: underline;
+	}
+}
 
-				span {
-					display: inline-block;
+.tutor-popular-course-table {
+	td{
+		&:first-child {
+			a{
+				font-style: normal;
+				font-weight: 500;
+				font-size: 16px;
+				color: #212327;
+
+				&:hover {
+					color: var(--tutor-primary-color);
 				}
-			
-				&>* {
-					vertical-align: middle;
-				}
+			}
+		}
+
+		&:nth-child(2){
+			font-size: 15px;
+		}
+
+		&:last-child{
+			span{
+				font-style: normal;
+				font-weight: normal;
+				font-size: 16px;
+				line-height: 26px;
+				color: #5B616F;
 			}
 		}
 	}
