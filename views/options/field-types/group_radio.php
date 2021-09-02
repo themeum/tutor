@@ -1,7 +1,9 @@
+<?php $field_id = 'field_' . $field['key'];
+?>
 <div class="tutor-option-field-row d-block">
     <?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 
-    <div class="tutor-option-field-input">
+    <div class="tutor-option-field-input" id="<?php echo $field_id; ?>">
         <div class="radio-thumbnail has-title instructor-list">
             <?php
             if (!empty($field['group_options'])) :

@@ -69,30 +69,19 @@ class Options_V2 {
 		$attr = $this->options_attr();
 		$dataAr = array();
 		foreach ($attr as $block) {
-			$dataAr['block'] = $block['label'];
 			foreach ($block['sections'] as $sections) {
 				foreach ($sections['blocks'] as $blocks) {
 					foreach ($blocks['fields'] as $fields) {
+						$fields['section_label'] = $sections['label'];
+						$fields['section_slug'] = $sections['slug'];
+						$fields['block_label'] = $blocks['label'];
 						$dataAr['fields'][] = $fields;
 					}
 				}
 			}
 		}
 
-
-		$columns = array_column($dataAr['fields'], 'label');
-
-
-		foreach ($columns as $index => $string) {
-			if (strpos(strtoupper($string), strtoupper($keyword)) !== FALSE) {
-				$matches[$index] = $string;
-			}
-		}
-		if (!empty($matches)) {
-			wp_send_json_success($matches);
-		} else {
-			wp_send_json_success(['data' => array()]);
-		}
+		wp_send_json_success($dataAr);
 	}
 
 	public function tutor_option_save() {
@@ -157,6 +146,7 @@ class Options_V2 {
 							array(
 								'label' => __('WordPress environment', 'tutor'),
 								'slug' => 'wordpress_environment',
+								'classes' => 'wordpress_environment',
 								'block_type' => 'column',
 								'fieldset' => array(
 									array(
@@ -454,6 +444,29 @@ class Options_V2 {
 								),
 							),
 							array(
+								'label' => __('Video', 'tutor'),
+								'slug' => 'video',
+								'block_type' => 'uniform',
+								'fields' => array(
+									array(
+										'key' => 'supported_video_sources',
+										'type' => 'checkbox_horizontal',
+										'label' => __('Preferred Video Source', 'tutor'),
+										'label_title' => __('Preferred Video Source', 'tutor'),
+										'options' => $video_sources,
+										'desc' => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
+									),
+									array(
+										'key' => 'default_video_source',
+										'type' => 'select',
+										'label' => __('Default Video Source', 'tutor'),
+										'options' => $video_sources,
+										'default' => '0',
+										'desc' => __('Choose video source to be selected by default.', 'tutor'),
+									),
+								),
+							),
+							array(
 								'label' => __('Course', 'tutor'),
 								'slug' => 'course',
 								'block_type' => 'uniform',
@@ -491,21 +504,6 @@ class Options_V2 {
 											'strict' => __('Strict Mode', 'tutor'),
 										),
 										'desc' => __('Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor'),
-									),
-								),
-							),
-							array(
-								'label' => __('Video', 'tutor'),
-								'slug' => 'video',
-								'block_type' => 'uniform',
-								'fields' => array(
-									array(
-										'key' => 'supported_video_sources',
-										'type' => 'checkbox_horizontal',
-										'label' => __('Preferred Video Source', 'tutor'),
-										'label_title' => __('Preferred Video Source', 'tutor'),
-										'options' => $video_sources,
-										'desc' => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
 									),
 								),
 							),
@@ -654,7 +652,6 @@ class Options_V2 {
 											'time' => array(
 												'type' => 'select',
 												'default' => 'minutes',
-
 												'select_options' => false,
 												'options' => array(
 													'weeks' => __('Weeks', 'tutor'),
@@ -766,15 +763,17 @@ class Options_V2 {
 										'label_title' => __('', 'tutor'),
 										'default' => '',
 										'fields' => array(
-											array(
-												'key' => 'instructor_takes',
+											'instructor_takes' => array(
+												'id' => 'revenue-instructor',
+												'type' => 'ratio',
 												'title' => 'Instructor Takes',
-												'value' => 10,
+												'default' => 10,
 											),
-											array(
-												'key' => 'admin_takes',
+											'admin_takes' => array(
+												'id' => 'revenue-admin',
+												'type' => 'ratio',
 												'title' => 'Admin Takes',
-												'value' => 100,
+												'default' => 100,
 											),
 										),
 										'desc' => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor'),
@@ -820,11 +819,28 @@ class Options_V2 {
 									),
 									array(
 										'key' => 'fee_amount_type',
-										'type' => 'select_number',
+										'type' => 'group_fields',
 										'label' => __('Fee Amount & Type', 'tutor'),
-										'label_title' => __('', 'tutor'),
-										'default' => 'free',
 										'desc' => __('content goes here', 'tutor'),
+										'group_fields' => array(
+											'time' => array(
+												'type' => 'select',
+												'default' => 'minutes',
+												'select_options' => false,
+												'options' => array(
+													'weeks' => __('Weeks', 'tutor'),
+													'days' => __('Days', 'tutor'),
+													'hours' => __('Hours', 'tutor'),
+													'minutes' => __('Minutes', 'tutor'),
+													'seconds' => __('Seconds', 'tutor'),
+												),
+											),
+											'value' => array(
+												'type' => 'text',
+												'default' => '0',
+
+											),
+										),
 									),
 								),
 							),
@@ -961,6 +977,10 @@ class Options_V2 {
 										'type' => 'group_radio_full_3',
 										'label' => __('Public Profile Layout', 'tutor'),
 										'group_options' => array(
+											'private' => array(
+												'title' => 'Private',
+												'image' => 'profile-layout/profile-private.svg',
+											),
 											'modern' => array(
 												'title' => 'Modern',
 												'image' => 'profile-layout/profile-modern.svg',
@@ -1127,22 +1147,6 @@ class Options_V2 {
 										),
 										'desc' => __('Content Needed Here...', 'tutor'),
 									),
-									array(
-										'key' => 'supported_video_sources',
-										'type' => 'select',
-										'label' => __('Preferred Video Source', 'tutor'),
-										'options' => $video_sources,
-										'default' => '0',
-										'desc' => __('Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor'),
-									),
-									array(
-										'key' => 'default_video_source',
-										'type' => 'select',
-										'label' => __('Default Video Source', 'tutor'),
-										'options' => $video_sources,
-										'default' => '0',
-										'desc' => __('Choose video source to be selected by default.', 'tutor'),
-									),
 								),
 							),
 						),
@@ -1264,6 +1268,16 @@ class Options_V2 {
 										'key' => 'course_enrolled',
 										'type' => 'toggle_switch_button',
 										'label' => __('Course Enrolled', 'tutor'),
+										'label_title' => __('', 'tutor'),
+										'buttons' => array(
+											'edit' => 'Edit button of course_enrolled',
+										),
+										'desc' => __('Students must be logged in to view course', 'tutor'),
+									),
+									array(
+										'key' => 'course_enrolle',
+										'type' => 'toggle_switch_button',
+										'label' => __('Course Enrolle', 'tutor'),
 										'label_title' => __('', 'tutor'),
 										'buttons' => array(
 											'edit' => 'Edit button of course_enrolled',
