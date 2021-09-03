@@ -1,5 +1,89 @@
 @import "../lib/mixins.scss";
 
+.course-settings-tabs-container {
+	@include valueWithPrefix(display, flex);
+	
+	.settings-tabs-navs-wrap{
+		@include propertyWithPrefix(flex, 0 0 200px);
+		background: #F5F5F5;
+	}
+
+	.settings-tabs-container{
+		padding: 1em;
+		@include propertyWithPrefix(flex, 1);
+	}
+}
+
+.settings-tabs-navs-wrap {
+	.settings-tabs-navs{
+		margin: 0;
+		list-style: none;
+
+		li{
+			margin: 0;
+			
+			a {
+				display: block;
+				padding-top: 10px;
+				padding-bottom: 10px;
+				padding-left: 15px;
+				padding-right: 15px;
+				color: #23282d;
+				text-decoration: none;
+				background: #F5F5F5;
+				text-transform: capitalize;
+				border-bottom: 1px solid #e5e5e5;
+				border-left: 3px solid transparent;
+
+				&:focus{
+					box-shadow: none;
+				}
+			}
+			
+			&.active {
+				a {
+					background-color: #ffffff;
+					border-bottom: 1px solid #e5e5e5;
+					color: var(--tutor-primary-color);
+					border-left: 3px solid var(--tutor-primary-color);
+				}
+			} 
+			
+			&:last-child a{
+				border-bottom: none;
+			}
+		}
+	}
+} 
+
+#tutor-metabox-course-settings-tabs {
+	background-color: #fff;
+	border: 1px solid #e5e5e5;
+	margin: 1em 0;
+
+    .settings-tabs-heading{
+        padding: 1em;
+        border-bottom: 1px solid #e5e5e5;
+
+        h3{
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.4;
+        }
+    }
+
+    .tutor-field-radio {
+        p{
+            margin-top: 0;
+        }
+    } 
+}
+
+.inside #tutor-metabox-course-settings-tabs{
+	border: 0;
+	margin: 0;
+}
+
 #tutor-course-topics {
 	position: relative;
 
