@@ -848,6 +848,101 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 }
 
 /* Only reusable function, or code allowed here. No direct css please. */
+.course-settings-tabs-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+}
+
+.course-settings-tabs-container .settings-tabs-navs-wrap {
+  -webkit-box-flex: 0;
+          flex: 0 0 200px;
+  -o-flex: 0 0 200px;
+  -ms-flex: 0 0 200px;
+  -moz-flex: 0 0 200px;
+  -webkit-flex: 0 0 200px;
+  background: #F5F5F5;
+}
+
+.course-settings-tabs-container .settings-tabs-container {
+  padding: 1em;
+  -webkit-box-flex: 1;
+          flex: 1;
+  -o-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+}
+
+.settings-tabs-navs-wrap .settings-tabs-navs {
+  margin: 0;
+  list-style: none;
+}
+
+.settings-tabs-navs-wrap .settings-tabs-navs li {
+  margin: 0;
+}
+
+.settings-tabs-navs-wrap .settings-tabs-navs li a {
+  display: block;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: #23282d;
+  text-decoration: none;
+  background: #F5F5F5;
+  text-transform: capitalize;
+  border-bottom: 1px solid #e5e5e5;
+  border-left: 3px solid transparent;
+}
+
+.settings-tabs-navs-wrap .settings-tabs-navs li a:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.settings-tabs-navs-wrap .settings-tabs-navs li.active a {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  color: var(--tutor-primary-color);
+  border-left: 3px solid var(--tutor-primary-color);
+}
+
+.settings-tabs-navs-wrap .settings-tabs-navs li:last-child a {
+  border-bottom: none;
+}
+
+#tutor-metabox-course-settings-tabs {
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  margin: 1em 0;
+}
+
+#tutor-metabox-course-settings-tabs .settings-tabs-heading {
+  padding: 1em;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+#tutor-metabox-course-settings-tabs .settings-tabs-heading h3 {
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+#tutor-metabox-course-settings-tabs .tutor-field-radio p {
+  margin-top: 0;
+}
+
+.inside #tutor-metabox-course-settings-tabs {
+  border: 0;
+  margin: 0;
+}
+
 #tutor-course-topics {
   position: relative;
 }
@@ -4097,93 +4192,6 @@ span.withdraw-method-label {
   speak: none;
   margin: 0 8px 0 -2px;
   vertical-align: top;
-}
-
-/**
-  Course Settings Tabs
-   */
-#tutor-metabox-course-settings-tabs {
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  margin: 1em 0;
-}
-
-.inside #tutor-metabox-course-settings-tabs {
-  border: 0;
-  margin: 0;
-}
-
-.settings-tabs-heading {
-  padding: 1em;
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.settings-tabs-heading h3 {
-  font-size: 14px;
-  margin: 0;
-  line-height: 1.4;
-}
-
-.course-settings-tabs-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.course-settings-tabs-container .settings-tabs-navs-wrap {
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 200px;
-  flex: 0 0 200px;
-  background: #f5f5f5;
-}
-
-.settings-tabs-navs-wrap .settings-tabs-navs {
-  margin: 0;
-}
-
-.settings-tabs-navs-wrap .settings-tabs-navs li {
-  margin: 0;
-}
-
-.settings-tabs-navs-wrap .settings-tabs-navs li a {
-  display: block;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 15px;
-  padding-right: 15px;
-  color: #23282d;
-  text-decoration: none;
-  background: #f5f5f5;
-  text-transform: capitalize;
-  border-bottom: 1px solid #e5e5e5;
-  border-left: 3px solid transparent;
-}
-
-.settings-tabs-navs-wrap .settings-tabs-navs li:last-child a {
-  border-bottom: none;
-}
-
-.settings-tabs-navs-wrap .settings-tabs-navs li a:focus {
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-
-.settings-tabs-navs-wrap .settings-tabs-navs li.active a {
-  background-color: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
-  color: var(--tutor-primary-color);
-  border-left: 3px solid var(--tutor-primary-color);
-}
-
-.course-settings-tabs-container .settings-tabs-container {
-  padding: 1em;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-
-.tutor-field-radio p {
-  margin-top: 0;
 }
 
 /**
