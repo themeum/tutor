@@ -1,6 +1,59 @@
 jQuery(document).ready(function ($) {
   "use strict";
 
+  let image_uploader = document.querySelectorAll(".image_upload_button");
+  // let image_input = document.getElementById("image_url_field");
+
+  for (let i = 0; i < image_uploader.length; ++i) {
+    image_uploader[i].onclick = function (e) {
+      e.preventDefault();
+      let image_input = image_uploader[i]
+        .closest(".image-previewer")
+        .querySelector(".image_url_field");
+      let upload_previewer = image_uploader[i]
+        .closest(".image-previewer")
+        .querySelector(".upload_previewer");
+
+      var image_frame = wp.media({
+        title: "Upload Image",
+        library: {
+          type: "image",
+        },
+        multiple: false,
+        frame: "post",
+        state: "insert",
+      });
+      image_frame.open();
+
+      image_frame.on("select", function (e) {
+        console.log("image size");
+        console.log(image.state().get("selection").first().toJSON());
+
+        var image_url = image_frame.state().get("selection").first().toJSON().url;
+
+        upload_previewer.src = image_input.value = image_url;
+      });
+
+      image_frame.on("insert", function (selection) {
+        var state = image_frame.state();
+        selection = selection || state.get("selection");
+        if (!selection) return;
+        // We set multiple to false so only get one image from the uploader
+        var attachment = selection.first();
+        var display = state.display(attachment).toJSON(); // <-- additional properties
+        attachment = attachment.toJSON();
+        // Do something with attachment.id and/or attachment.url here
+        var image_url = attachment.sizes[display.size].url;
+
+        upload_previewer.src = image_input.value = image_url;
+      });
+    };
+  }
+
+  $(".delete-btn").click(function () {
+    image_input.val("");
+  });
+
   $(window).on("click", function (e) {
     $(".tutor-notification, .search_result").removeClass("show");
   });
@@ -176,7 +229,7 @@ function navigationTrigger() {
         // History push
         const url = new URL(window.location);
         url.searchParams.set("tab_page", dataTab);
-        console.log(url);
+        // console.log(url);
         // window.history.pushState({}, "", url);
         window.history.replaceState({}, "", url);
       }
@@ -201,7 +254,7 @@ function highlightSearchedItem(dataKey) {
   const scrollTargetEl = document
     .querySelector(`#${dataKey}`)
     .parentNode.querySelector(":first-child");
-  console.log(scrollTargetEl);
+  // console.log(scrollTargetEl);
 
   targetEl.classList.add("isHighlighted");
   setTimeout(() => {

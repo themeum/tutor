@@ -71,14 +71,19 @@ class Options_V2 {
 
 
 
+	/**
+	 * tutor_option_search
+	 *
+	 * @return array
+	 */
 	public function tutor_option_search() {
 		tutils()->checking_nonce();
 
 		// !current_user_can('manage_options') ? wp_send_json_error() : 0;
-		$keyword = strtolower( $_POST['keyword'] );
+		// $keyword = strtolower( $_POST['keyword'] );
 
-		$attr   = $this->options_attr();
-		$dataAr = array();
+		$attr    = $this->options_attr();
+		$data_array = array();
 		foreach ( $attr as $block ) {
 			foreach ( $block['sections'] as $sections ) {
 				foreach ( $sections['blocks'] as $blocks ) {
@@ -86,15 +91,20 @@ class Options_V2 {
 						$fields['section_label'] = $sections['label'];
 						$fields['section_slug']  = $sections['slug'];
 						$fields['block_label']   = $blocks['label'];
-						$dataAr['fields'][]      = $fields;
+						$data_array['fields'][]     = $fields;
 					}
 				}
 			}
 		}
 
-		wp_send_json_success( $dataAr );
+		wp_send_json_success( $data_array );
 	}
 
+	/**
+	 * Function tutor_option_save
+	 *
+	 * @return JSON
+	 */
 	public function tutor_option_save() {
 		tutils()->checking_nonce();
 
@@ -103,6 +113,7 @@ class Options_V2 {
 		do_action( 'tutor_option_save_before' );
 
 		$option = (array) tutils()->array_get( 'tutor_option', $_POST, array() );
+
 		$option = apply_filters( 'tutor_option_input', $option );
 
 		update_option( 'tutor_option', $option );
@@ -117,6 +128,11 @@ class Options_V2 {
 		wp_send_json_success( $option );
 	}
 
+	/**
+	 * Function options_tools
+	 *
+	 * @return void
+	 */
 	public function options_tools() {
 		$pages = tutor_utils()->get_pages();
 
@@ -910,14 +926,12 @@ class Options_V2 {
 								'block_type' => 'uniform',
 								'fields'     => array(
 									array(
-										'key'   => 'course_builder_page_logo',
-										'type'  => 'upload_full',
-										'label' => __( 'Course Builder Page Logo', 'tutor' ),
-										'desc'  => __(
-											'<p>
-											Size: <strong>200x40 pixels;</strong> File Support:
-											<strong>jpg, .jpeg or .png.</strong>
-										</p>',
+										'key'     => 'course_builder_page_logo',
+										'type'    => 'upload_full',
+										'label'   => __( 'Course Builder Page Logo', 'tutor' ),
+										'default' => tutor()->icon_dir . 'tutor-logo-course-builder.svg',
+										'desc'    => __(
+											'<p>Size: <strong>200x40 pixels;</strong> File Support:<strong>jpg, .jpeg or .png.</strong></p>',
 											'tutor'
 										),
 									),
@@ -1629,8 +1643,7 @@ class Options_V2 {
 										'key'     => 'signature',
 										'type'    => 'upload_half',
 										'label'   => __( 'Signature', 'tutor' ),
-										'default' => 'signature-demo.svg',
-
+										'default' => tutor()->icon_dir . 'tutor-logo-course-builder.svg',
 										'desc'    => __(
 											'<p>
 											Size: <strong>200x40 pixels;</strong> File Support:
