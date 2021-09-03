@@ -5,14 +5,13 @@ jQuery(document).ready(function ($) {
   // let image_input = document.getElementById("image_url_field");
 
   for (let i = 0; i < image_uploader.length; ++i) {
+    let image_upload_wrap = image_uploader[i].closest(".image-previewer");
+    let input_file = image_upload_wrap.querySelector(".input_file");
+    let upload_preview = image_upload_wrap.querySelector(".upload_preview");
+    let image_delete = image_upload_wrap.querySelector(".delete-btn");
+
     image_uploader[i].onclick = function (e) {
       e.preventDefault();
-      let image_input = image_uploader[i]
-        .closest(".image-previewer")
-        .querySelector(".image_url_field");
-      let upload_previewer = image_uploader[i]
-        .closest(".image-previewer")
-        .querySelector(".upload_previewer");
 
       var image_frame = wp.media({
         title: "Upload Image",
@@ -23,16 +22,17 @@ jQuery(document).ready(function ($) {
         frame: "post",
         state: "insert",
       });
+
       image_frame.open();
 
-      image_frame.on("select", function (e) {
+      /* image_frame.on("select", function (e) {
         console.log("image size");
         console.log(image.state().get("selection").first().toJSON());
 
         var image_url = image_frame.state().get("selection").first().toJSON().url;
 
         upload_previewer.src = image_input.value = image_url;
-      });
+      }); */
 
       image_frame.on("insert", function (selection) {
         var state = image_frame.state();
@@ -45,14 +45,14 @@ jQuery(document).ready(function ($) {
         // Do something with attachment.id and/or attachment.url here
         var image_url = attachment.sizes[display.size].url;
 
-        upload_previewer.src = image_input.value = image_url;
+        upload_preview.src = input_file.value = image_url;
       });
     };
-  }
 
-  $(".delete-btn").click(function () {
-    image_input.val("");
-  });
+    image_delete.onclick = function () {
+      input_file.value = "";
+    };
+  }
 
   $(window).on("click", function (e) {
     $(".tutor-notification, .search_result").removeClass("show");
