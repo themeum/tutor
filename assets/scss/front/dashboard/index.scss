@@ -5,11 +5,15 @@
     @import './lib/info-card.scss';
 
     // Common Wrapper Sections
-    @import './header.scss';
-    @import './sidebar.scss';
+    // Libraries to use in all frontend dashboard pages
+    @import './lib/dropdown-action.scss';
     @import './lib/inline-link.scss';
 
-    // Dashboard page content specific declarations
+    // Frontend dashboard wrapper header, sidebar etc.
+    @import './header.scss';
+    @import './sidebar.scss';
+
+    // Individual dashboard pages
     .tutor-dashboard-content {
         padding-top: 30px;
 
