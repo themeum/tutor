@@ -8,7 +8,7 @@ wp_enqueue_media();
 ?>
 
 <table class="form-table">
-
+	<?php do_action('tutor_backend_profile_fields_before'); ?>
 	<tr class="user-description-wrap">
 		<th><label for="description"><?php _e('Job Title'); ?></label></th>
 		<td>
@@ -52,6 +52,6 @@ wp_enqueue_media();
 			<input type="hidden" name="tutor_action" value="tutor_profile_update_by_wp">
 		</td>
 	</tr>
-
+	<?php do_action('tutor_backend_profile_fields_after'); ?>
 </table>
 
