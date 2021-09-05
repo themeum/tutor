@@ -348,10 +348,10 @@ class Assets{
 		if(is_admin()) {
 			$screen = get_current_screen();
 			if(is_object($screen) && $screen->base=='post' && $screen->id=='courses') {
-				$to_add[] = $course_builder . ($screen->is_block_editor ? ' tutor-screen-course-builder-gutenberg ' : '');
+				$to_add[] = $course_builder . ' tutor-screen-course-builder-' . ($screen->is_block_editor ? ' gutenberg' : 'classic') . ' ';
 			}
 		} else if(tutor_utils()->is_tutor_frontend_dashboard('create-course')) {
-			$to_add[] = $course_builder . 'tutor-screen-course-builder-frontend ';
+			$to_add[] = $course_builder . ' tutor-screen-course-builder-frontend ';
 		}
 
 		is_array($classes) ? $classes=array_merge($classes, $to_add) : $classes.=implode('', $to_add);
