@@ -4,6 +4,47 @@ body.tutor-screen-course-builder {
 
     $body: &;
     
+
+    .builder-course-thumbnail-upload-wrap {
+        & > div {
+            font-size: var(--tutor-text-size);
+            line-height: 25px;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .button-transparent {
+            float: right;
+            background: transparent !important;
+            &:hover {
+                background: var(--tutor-primary-color) !important;
+            }
+        }
+    }
+
+    .builder-course-thumbnail-img-src {
+        position: relative;
+        
+        .tutor-course-thumbnail-delete-btn {
+            font-size: 10px;
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            color: #e53935;
+            -webkit-transition: 300ms;
+            transition: 300ms;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            background: #fff;
+            text-align: center;
+            i {
+                line-height: 20px;
+            }
+        }
+    }
+
     @import './segments/video.scss';
     @import './segments/setting.scss';
     @import './segments/instructor.scss';

@@ -368,64 +368,6 @@
 	content: "\e93c";
   }
   
-  /**
-  End Metabox Heading
-   */
-  /**
-  Video MetaBox
-   */
-  
-  .button-transparent {
-	background: transparent !important;
-  }
-  
-  .button-transparent:hover {
-	background: var(--tutor-primary-color) !important;
-  }
-  
-  .builder-course-thumbnail-upload-wrap .button-transparent {
-	float: right;
-  }
-  
-  /** END Video metabox */
-  .builder-course-thumbnail-img-src {
-	position: relative;
-  }
-  
-  .builder-course-thumbnail-img-src .tutor-course-thumbnail-delete-btn {
-	position: absolute;
-	top: 12px;
-	left: 15px;
-	color: #e53935;
-	-webkit-transition: 300ms;
-	transition: 300ms;
-	text-decoration: none;
-  }
-  
-  .video-metabox-source-html5-poster .tutor-row {
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-ms-flex-wrap: wrap;
-		flex-wrap: wrap;
-	-webkit-box-pack: justify;
-		-ms-flex-pack: justify;
-			justify-content: space-between;
-	-webkit-box-align: center;
-		-ms-flex-align: center;
-			align-items: center;
-  }
-  
-  .video-metabox-source-html5-poster .tutor-row .tutor-col-5 {
-	width: 38%;
-  }
-  
-  .video-metabox-source-html5-poster .tutor-col-7 {
-	width: 62%;
-  }
-  
-  .video-metabox-source-html5-poster
-  .tutor-row
   .tutor-course-thumbnail-upload-btn {
 	margin: 10px 0;
   }
