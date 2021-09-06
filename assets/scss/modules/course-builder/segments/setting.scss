@@ -96,6 +96,9 @@
             padding: 1em;
             background: white;
             @include propertyWithPrefix(flex, 1);
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+            overflow: hidden;
         }
     }
 }
