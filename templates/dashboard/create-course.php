@@ -173,23 +173,19 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                         <label class="tutor-builder-item-heading">
                                             <?php _e('Course Price', 'tutor'); ?>
                                         </label>
-                                        <div class="tutor-row tutor-align-items-center">
-                                            <div class="tutor-col-auto">
-                                                <label for="tutor_course_price_type_pro" class="tutor-styled-radio">
-                                                    <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?>>
-                                                    <span></span>
-                                                    <div class="tutor-form-group">
-                                                        <span class="tutor-input-prepand"><?php echo $currency_symbol; ?></span>
-                                                        <input type="text" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>">
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div class="tutor-col-auto">
-                                                <label class="tutor-styled-radio">
-                                                    <input type="radio" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?>>
-                                                    <span><?php _e('Free', "tutor") ?></span>
-                                                </label>
-                                            </div>
+                                        <div class="field-container">
+                                            <label for="tutor_course_price_type_pro" class="tutor-styled-radio">
+                                                <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?>>
+                                                <span></span>
+                                                <div class="tutor-form-group">
+                                                    <span class="tutor-input-prepand"><?php echo $currency_symbol; ?></span>
+                                                    <input type="text" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Price', 'tutor'); ?>">
+                                                </div>
+                                            </label>
+                                            <label class="tutor-styled-radio">
+                                                <input type="radio" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?>>
+                                                <span><?php _e('Free', "tutor") ?></span>
+                                            </label>
                                         </div>
                                     </div>
                                 <?php do_action('tutor/frontend_course_edit/after/price', $post) ?>

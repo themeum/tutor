@@ -247,12 +247,30 @@
 }
 
 .tutor-frontend-builder-course-price{
+	color: #212327;
+
 	.tutor-form-group input{
 		margin-bottom: 0;
 	}
 	.tutor-styled-radio{
 		display: flex;
 		align-items: center;
+	}
+
+	.field-container{
+		@include valueWithPrefix(display, flex);
+		@include propertyWithPrefix(align-items, center);
+
+		input[name=course_price] {
+			width: 110px;
+		}
+
+		&>label {
+			@include valueWithPrefix(display, inline-flex);
+			&:first-child{
+				margin-right: 25px;
+			}
+		}
 	}
 }
 

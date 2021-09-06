@@ -1108,6 +1108,9 @@ body.tutor-screen-course-builder #tutor-metabox-course-settings-tabs .course-set
   -ms-flex: 1;
   -moz-flex: 1;
   -webkit-flex: 1;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  overflow: hidden;
 }
 
 body.tutor-screen-course-builder .tutor-course-available-instructors {
@@ -1994,6 +1997,10 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-cou
   font-weight: 600;
 }
 
+body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-frontend-builder-course-price {
+  color: #212327;
+}
+
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-frontend-builder-course-price .tutor-form-group input {
   margin-bottom: 0;
 }
@@ -2005,6 +2012,41 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-fro
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-frontend-builder-course-price .field-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+}
+
+body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-frontend-builder-course-price .field-container input[name=course_price] {
+  width: 110px;
+}
+
+body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-frontend-builder-course-price .field-container > label {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  display: -o-inline-flex;
+  display: -ms-inline-flex;
+  display: -moz-inline-flex;
+  display: -webkit-inline-flex;
+}
+
+body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-frontend-builder-course-price .field-container > label:first-child {
+  margin-right: 25px;
 }
 
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-course-builder-btn-group {
