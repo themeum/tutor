@@ -27,24 +27,16 @@
 	.tutor-course-builder-section-title{
 		h3 {
 			font-size: 20px;
-			font-weight: 700;
-			color: #1d1f37;
 			position: relative;
 			overflow: hidden;
 			z-index: 1;
 			margin: 0 0 25px;
 			cursor: pointer;
-
-			&::after {
-				content: "";
-				position: absolute;
-				top: 50%;
-				left: 0;
-				width: 100%;
-				height: 1px;
-				background: var(--tutor-primary-color);
-				z-index: -1;
-			}
+			border-bottom: 1px solid #C0C3CB;
+			font-style: normal;
+			font-weight: bold;
+			color: #41454F;
+			padding-bottom: 20px;
 
 			span, i{
 				float: left;
