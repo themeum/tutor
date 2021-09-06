@@ -2596,54 +2596,6 @@ Tutor Media Upload
 #End Quiz Modal
 */
 
-/* Start Tutor FrontEnd Course Builder*/
-
-.tutor-frontend-builder-item-scope {
-	margin-bottom: 30px;
-}
-
-.tutor-frontend-builder-item-scope:last-child {
-	margin-bottom: 0;
-}
-
-.tutor-builder-item-heading {
-	//font-size: var(--tutor-text-size);
-	font-weight: 500;
-	line-height: 21px;
-	margin-bottom: 10px;
-	display: block;
-}
-
-.builder-course-thumbnail-upload-wrap > div {
-	font-size: var(--tutor-text-size);
-	line-height: 25px;
-	margin-bottom: 20px;
-	font-weight: 400;
-}
-
-.builder-course-thumbnail-img-src {
-	position: relative;
-}
-
-.builder-course-thumbnail-img-src .tutor-course-thumbnail-delete-btn {
-	font-size: 10px;
-	position: absolute;
-	top: -4px;
-	left: -4px;
-	color: #e53935;
-	-webkit-transition: 300ms;
-	transition: 300ms;
-	border-radius: 50%;
-	width: 20px;
-	height: 20px;
-	line-height: 20px;
-	background: #fff;
-	text-align: center;
-	i {
-		line-height: 20px;
-	}
-}
-
 .tutor-addons-list .plugin-icon {
 	height: 120px !important;
 	width: auto !important;
@@ -2741,13 +2693,6 @@ Video MetaBox
 	border-radius: 3px;
 }
 
-.builder-course-thumbnail-upload-wrap .button-transparent {
-	float: right;
-	background: transparent !important;
-	&:hover {
-		background: var(--tutor-primary-color) !important;
-	}
-}
 .no-memberhsip-msg-wrap p {
 	margin: 0;
 }
