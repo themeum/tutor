@@ -106,6 +106,17 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
     </div>
 </div>
 
+<div class="tutor-frontend-builder-item-scope">
+    <div class="tutor-form-group">
+        <label>
+            <?php _e('Choose a tag', 'tutor'); ?>
+        </label>
+        <div class="tutor-form-field-course-tags">
+            <?php echo tutor_course_tags_dropdown($course_id, array('classes' => 'tutor_select2')); ?>
+        </div>
+    </div>
+</div>
+
 <input type="hidden" name="_tutor_course_additional_data_edit" value="true" />
 
 <?php do_action('tutor_course_metabox_after_additional_data'); ?>
