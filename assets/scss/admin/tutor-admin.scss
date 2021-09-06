@@ -345,33 +345,7 @@
   /**
   Meta Box Heading
    */
-  #tutor-instructors h2 {
-	padding: 15px;
-	line-height: 30px;
-  }
-  
-  #tutor-instructors h2:before {
-	color: var(--tutor-primary-color);
-	font-family: "tutor" !important;
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	margin-right: 10px;
-  }
-  
-  #tutor-instructors h2:before {
-	content: "\e93c";
-  }
-  
-  .tutor-course-thumbnail-upload-btn {
-	margin: 10px 0;
-  }
-  
+
   .tutor-status-context {
 	padding: 5px 10px;
 	margin: 5px 0;
