@@ -255,11 +255,22 @@ class Course extends Tutor_Base {
 	 * @since v.1.3.4
 	 */
 	public function register_meta_box_in_frontend(){
+		global $post;
+		
 		do_action('tutor_course_builder_metabox_before', get_the_ID());
+
         course_builder_section_wrap($this->video_metabox($echo = false), __( 'Video', 'tutor' ) );
+		do_action('tutor/frontend_course_edit/after/video', $post);
+		
         course_builder_section_wrap($this->course_meta_box($echo = false), __( 'Course Builder', 'tutor' ) );
+		do_action('tutor/frontend_course_edit/after/course_builder', $post);
+
         course_builder_section_wrap($this->instructors_metabox($echo = false), __( 'Instructors', 'tutor' ) );
+		do_action('tutor/frontend_course_edit/after/instructors', $post);
+
         course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), __( 'Additional Data', 'tutor' ) );
+		do_action('tutor/frontend_course_edit/after/additional_data', $post);
+
 		do_action('tutor_course_builder_metabox_after', get_the_ID());
 	}
 

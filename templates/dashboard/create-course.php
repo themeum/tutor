@@ -44,6 +44,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 <form action="" id="tutor-frontend-course-builder" method="post" enctype="multipart/form-data">
     <?php wp_nonce_field(tutor()->nonce_action, tutor()->nonce); ?>
 
+    <!-- Sticky header with course action buttons -->
     <header class="tutor-dashboard-builder-header">
         <div class="tutor-container tutor-fluid">
             <div class="tutor-row tutor-align-items-center">
@@ -80,8 +81,9 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
             </div>
         </div>
     </header>
-    <div class="tutor-frontend-course-builder-section">
 
+    <!-- Course builder body -->
+    <div class="tutor-frontend-course-builder-section">
         <div class="tutor-container">
             <div class="tutor-row">
                 <div class="tutor-col-8">
@@ -90,6 +92,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                     <input type="hidden" name="post_ID" id="post_ID" value="<?php echo get_the_ID(); ?>">
 
                     <div class="tutor-dashboard-course-builder-wrap">
+                        
                         <!--since 1.8.0 alert message -->
                         <?php
                             $user_id = get_current_user_id();
@@ -110,14 +113,17 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                             }
                         ?>
                         <!--alert message end -->
+
                         <?php do_action('tutor/dashboard_course_builder_form_field_before'); ?>
 
                         <div class="tutor-course-builder-section tutor-course-builder-info">
                             <div class="tutor-course-builder-section-title">
                                 <h3><i class="tutor-icon-down"></i><span><?php esc_html_e('Course Info', 'tutor'); ?></span></h3>
                             </div>
-                            <!--.tutor-course-builder-section-title-->
+                            
                             <div class="tutor-course-builder-section-content">
+
+                                <!-- Course title -->
                                 <div id="tutor-frontend-course-title" class="tutor-frontend-builder-item-scope">
                                     <div class="tutor-form-group">
                                         <label class="tutor-builder-item-heading">
@@ -126,8 +132,9 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                         <input type="text" name="title" value="<?php echo get_the_title(); ?>" placeholder="<?php _e('ex. Learn photoshop CS6 from scratch', 'tutor'); ?>">
                                     </div>
                                 </div>
-                                <!--.tutor-frontend-builder-item-scope-->
-
+                                <?php do_action('tutor/frontend_course_edit/after/title', $post) ?>
+                                
+                                <!-- Course description -->
                                 <div class="tutor-frontend-builder-item-scope">
                                     <div class="tutor-form-group">
                                         <label> <?php _e('Description', 'tutor'); ?></label>
@@ -142,36 +149,20 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                         ?>
                                     </div>
                                 </div>
-                                <!--.tutor-frontend-builder-item-scope-->
-
                                 <?php do_action('tutor/frontend_course_edit/after/description', $post) ?>
 
+                                <!-- Course category -->
                                 <div class="tutor-frontend-builder-item-scope">
                                     <div class="tutor-form-group">
                                         <label>
                                             <?php _e('Choose a category', 'tutor'); ?>
                                         </label>
                                         <div class="tutor-form-field-course-categories">
-                                            <?php //echo tutor_course_categories_checkbox($course_id);
-                                            echo tutor_course_categories_dropdown($course_id, array('classes' => 'tutor_select2'));
-                                            ?>
+                                            <?php echo tutor_course_categories_dropdown($course_id, array('classes' => 'tutor_select2')); ?>
                                         </div>
                                     </div>
                                 </div>
-
-
-                                <div class="tutor-frontend-builder-item-scope">
-                                    <div class="tutor-form-group">
-                                        <label>
-                                            <?php _e('Choose a tag', 'tutor'); ?>
-                                        </label>
-                                        <div class="tutor-form-field-course-tags">
-                                            <?php //echo tutor_course_tags_checkbox($course_id);
-                                            echo tutor_course_tags_dropdown($course_id, array('classes' => 'tutor_select2'));
-                                            ?>
-                                        </div>
-                                    </div>
-                                </div>
+                                <?php do_action('tutor/frontend_course_edit/after/category', $post) ?>
 
                                 <?php
                                 $monetize_by = tutils()->get_option('monetize_by');
@@ -181,6 +172,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 
                                     $_tutor_course_price_type = tutils()->price_type();
                                 ?>
+                                <!-- Course price -->
                                     <div class="tutor-frontend-builder-item-scope tutor-frontend-builder-course-price">
                                         <label class="tutor-builder-item-heading">
                                             <?php _e('Course Price', 'tutor'); ?>
@@ -204,9 +196,10 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                             </div>
                                         </div>
                                     </div>
-                                    <!--.tutor-frontend-builder-item-scope-->
+                                <?php do_action('tutor/frontend_course_edit/after/price', $post) ?>
                                 <?php } ?>
 
+                                <!-- Course thumbnail -->
                                 <div class="tutor-frontend-builder-item-scope">
                                     <div class="tutor-form-group">
                                         <label>
@@ -243,6 +236,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                         </div>
                                     </div>
                                 </div>
+                                <?php do_action('tutor/frontend_course_edit/after/thumbnail', $post); ?>
                             </div>
                         </div>
 
@@ -263,7 +257,8 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         </div>
                     </div>
                 </div>
-                <!--.tutor-col-8-->
+                
+                <!-- Course builder tips right sidebar -->
                 <div class="tutor-col-4">
                     <div class="tutor-course-builder-upload-tips">
                         <h3 class="tutor-course-builder-tips-title"><i class="tutor-icon-light-bulb"></i><?php _e('Course Upload Tips', 'tutor') ?></h3>
@@ -278,9 +273,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         </ul>
                     </div>
                 </div>
-                <!--.tutor-col-4-->
             </div>
-            <!--.tutor-row-->
         </div>
     </div>
 </form>
