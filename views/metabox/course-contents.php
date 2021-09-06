@@ -82,8 +82,7 @@
 
             <div class="tutor-topics-body" style="display: <?php echo $current_topic_id == $topic->ID ? 'block' : 'none'; ?>;">
 
-                <div class="tutor-lessons">
-					<?php
+                <div class="tutor-lessons"><?php
                     // Below function doesn't work somehow because of using WP_Query in ajax call. Will be removed in future.
 					// $lessons = tutor_utils()->get_course_contents_by_topic($topic->ID, -1); 
                     
@@ -152,8 +151,7 @@
 							<?php
 						}
 					}
-					?>
-                </div>
+                ?></div>
 
                 <div class="tutor_add_quiz_wrap" data-add-quiz-under="<?php echo $topic->ID; ?>">
                     <div class="tutor-add-cotnents-btn-group tutor-add-quiz-button-wrap">
@@ -186,8 +184,7 @@
         <div class="tutor-untopics-lessons tutor-course-builder-content-container">
             <h3><?php _e( 'Un-assigned lessons' ); ?></h3>
 
-            <div class="tutor-lessons ">
-				<?php
+            <div class="tutor-lessons "><?php
 				foreach ( $query_lesson as $lesson ) {
 					if ( ! in_array( $lesson->ID, $attached_lesson_ids ) ) {
 
@@ -234,8 +231,7 @@
 
 					}
 				}
-				?>
-            </div>
+            ?></div>
         </div>
 	<?php }
 ?>
