@@ -198,6 +198,23 @@
 	}
 }
 
+#wp-course_description-editor-container {
+	border-radius: 6px;
+	overflow: hidden;
+	border: 1px solid #C0C3CB;
+
+	.mce-top-part {
+		&::before{
+			box-shadow: none;
+		}
+
+		div.mce-toolbar-grp {
+			background: #EFF1F7;
+			border-bottom: none;
+		}
+	}
+}
+
 .tutor-frontend-course-builder-section{
 	padding: 113px 0 45px;
 	background-color: #ffffff;
@@ -210,6 +227,10 @@
 			max-width: 100%;
 			flex: 0 0 100%;
 		}
+	}
+
+	input[type=text] {
+		border-radius: 6px;
 	}
 }
 

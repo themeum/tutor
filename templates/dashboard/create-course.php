@@ -132,13 +132,14 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                 <!-- Course description -->
                                 <div class="tutor-frontend-builder-item-scope">
                                     <div class="tutor-form-group">
-                                        <label> <?php _e('Description', 'tutor'); ?></label>
+                                        <label class="tutor-builder-item-heading"> <?php _e('Description', 'tutor'); ?></label>
                                         <?php
                                         $editor_settings = array(
                                             'media_buttons' => false,
                                             'quicktags'     => false,
                                             'editor_height' => 150,
-                                            'textarea_name' => 'content'
+                                            'textarea_name' => 'content',
+                                            'tinymce'       => array('statusbar' => false)
                                         );
                                         wp_editor($post->post_content, 'course_description', $editor_settings);
                                         ?>
@@ -149,7 +150,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                 <!-- Course category -->
                                 <div class="tutor-frontend-builder-item-scope">
                                     <div class="tutor-form-group">
-                                        <label>
+                                        <label class="tutor-builder-item-heading">
                                             <?php _e('Choose a category', 'tutor'); ?>
                                         </label>
                                         <div class="tutor-form-field-course-categories">
@@ -197,7 +198,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                 <!-- Course thumbnail -->
                                 <div class="tutor-frontend-builder-item-scope">
                                     <div class="tutor-form-group">
-                                        <label>
+                                        <label class="tutor-builder-item-heading">
                                             <?php _e('Course Thumbnail', 'tutor'); ?>
                                         </label>
                                         <div class="tutor-form-field tutor-form-field-course-thumbnail tutor-thumbnail-wrap">
@@ -205,7 +206,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                                 <div class="tutor-col-5">
                                                     <div class="builder-course-thumbnail-img-src">
                                                         <?php
-                                                        $builder_course_img_src = tutor()->url . 'assets/images/placeholder-course.jpg';
+                                                        $builder_course_img_src = tutor()->url . 'assets/images/placeholder.svg';
                                                         $_thumbnail_url = get_the_post_thumbnail_url($course_id);
                                                         $post_thumbnail_id = get_post_thumbnail_id($course_id);
 
@@ -223,7 +224,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                                     <div class="builder-course-thumbnail-upload-wrap">
                                                         <div><?php echo sprintf(__("Important Guideline: %1\$s 700x430 pixels %2\$s %3\$s File Support: %1\$s jpg, .jpeg,. gif, or .png %2\$s no text on the image.", "tutor"), "<strong>", "</strong>", "<br>") ?></div>
                                                         <input type="hidden" id="tutor_course_thumbnail_id" name="tutor_course_thumbnail_id" value="<?php echo $post_thumbnail_id; ?>">
-                                                        <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button"><?php _e('Upload Image', 'tutor'); ?></a>
+                                                        <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button"><?php _e('Upload Image', 'tutor'); ?></a>
                                                     </div>
                                                 </div>
                                             </div>
