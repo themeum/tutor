@@ -1,8 +1,10 @@
 /* Course settings module */
 #tutor-metabox-course-settings-tabs {
     background-color: #fff;
-    border: 1px solid #e5e5e5;
     margin: 1em 0;
+    border: 1px solid #CDCFD5;
+    box-sizing: border-box;
+    border-radius: 6px;
 
     @at-root{
         #{$body}:not(.tutor-screen-course-builder-frontend) {
@@ -34,44 +36,57 @@
         
         .settings-tabs-navs-wrap{
             @include propertyWithPrefix(flex, 0 0 200px);
-            background: #F5F5F5;
+            background: #EFF1F7;            
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+            overflow: hidden;
 
-            .settings-tabs-navs{
+            ul.settings-tabs-navs{
                 margin: 0;
                 list-style: none;
+                padding: 0;
 
                 li{
                     margin: 0;
                     
                     a {
                         display: block;
-                        padding-top: 10px;
-                        padding-bottom: 10px;
-                        padding-left: 15px;
-                        padding-right: 15px;
+                        padding: 13px 9px;
                         color: #23282d;
                         text-decoration: none;
-                        background: #F5F5F5;
                         text-transform: capitalize;
-                        border-bottom: 1px solid #e5e5e5;
                         border-left: 3px solid transparent;
 
                         &:focus{
                             box-shadow: none;
                         }
+
+                        &, i {
+                            font-style: normal;
+                            font-weight: 500;
+                            font-size: 15px;
+                            color: #41454F;
+                            line-height: initial;
+                            vertical-align: middle;
+                        }
+
+                        i{
+                            font-size: 17px;
+                            margin-right: 3px;
+                        }
                     }
                     
                     &.active {
                         a {
-                            background-color: #ffffff;
-                            border-bottom: 1px solid #e5e5e5;
-                            color: var(--tutor-primary-color);
+                            background-color: white;
                             border-left: 3px solid var(--tutor-primary-color);
                         }
                     } 
                     
-                    &:last-child a{
-                        border-bottom: none;
+                    &:not(.active):not(:last-child) {
+                        a{
+                            border-bottom: 1px solid #e5e5e5;
+                        }
                     }
                 }
             }
@@ -79,6 +94,7 @@
 
         .settings-tabs-container{
             padding: 1em;
+            background: white;
             @include propertyWithPrefix(flex, 1);
         }
     }
