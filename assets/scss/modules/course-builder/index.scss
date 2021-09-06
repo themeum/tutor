@@ -1,0 +1,17 @@
+@import "../lib/mixins.scss";
+
+body.tutor-screen-course-builder {
+
+    $body: &;
+    
+    @import './segments/video.scss';
+    @import './segments/setting.scss';
+    @import './segments/instructor.scss';
+    @import './segments/attachment.scss';
+    @import './segments/topic-content.scss';
+
+    /* Screen specific declarations (Frontend editor) */
+    &.tutor-screen-course-builder-frontend{
+        @import './frontend.scss';
+    }
+}
