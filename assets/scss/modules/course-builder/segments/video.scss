@@ -65,6 +65,21 @@
                     }
                 }
             }
+
+            .tutor-row {
+                @include valueWithPrefix(display, flex);
+                @include propertyWithPrefix(flex-wrap, wrap);
+                @include propertyWithPrefix(justify-content, space-between);
+                @include propertyWithPrefix(align-items, center);
+            
+                .tutor-col-5 {
+                    width: 38%;
+                }
+                
+                .tutor-col-7 {
+                    width: 62%;
+                }
+            }
         }
     }
 }
