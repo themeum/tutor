@@ -1235,6 +1235,26 @@ body.tutor-screen-course-builder .tutor-course-available-instructors .added-inst
   opacity: 1;
 }
 
+body.tutor-screen-course-builder #tutor-instructors h2 {
+  padding: 15px;
+  line-height: 30px;
+}
+
+body.tutor-screen-course-builder #tutor-instructors h2:before {
+  content: "\e93c";
+  color: var(--tutor-primary-color);
+  font-family: "tutor" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin-right: 10px;
+}
+
 body.tutor-screen-course-builder .tutor-course-builder-attachments {
   display: -webkit-box;
   display: -ms-flexbox;
