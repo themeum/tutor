@@ -24,6 +24,21 @@
 .tutor-course-builder-section {
 	margin-bottom: 60px;
 
+	.tutor-frontend-builder-item-scope {
+		margin-bottom: 30px;
+		
+		&:last-child {
+			margin-bottom: 0;
+		}
+	
+		.tutor-builder-item-heading {
+			font-weight: 500;
+			line-height: 21px;
+			margin-bottom: 10px;
+			display: block;
+		}
+	}
+	
 	.tutor-course-builder-section-title{
 		h3 {
 			font-size: 20px;
