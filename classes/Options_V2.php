@@ -635,7 +635,7 @@ class Options_V2 {
 								'fields'     => array(
 									array(
 										'key'     => 'enable_video_player',
-										'type'    => 'checkbox_horizontal_full',
+										'type'    => 'checkbox-horizontal-full',
 										'label'   => __( 'Enable Video Player', 'tutor' ),
 										'default' => array(
 											'youtube' => 'on',
