@@ -1,5 +1,11 @@
 // Type - Radio Thumbnail
 .radio-thumbnail {
+	label {
+		cursor: pointer;
+		img {
+			max-width: 100%;
+		}
+	}
 	.icon-wrapper {
 		position: relative;
 		display: inline-flex;

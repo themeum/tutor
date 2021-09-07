@@ -1,5 +1,11 @@
 // Utility/Helpers
 
+@mixin appearNone {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+
 // Masonry Grid
 @mixin masonryGrid($colCount, $colGap, $rowGap) {
 	columns: $colCount;
