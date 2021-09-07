@@ -26,7 +26,15 @@ class Assets {
 		 *
 		 * @since 1.9.7
 		 */
-		add_filter('mce_external_languages', array($this, 'tutor_tinymce_translate'));
+		add_filter( 'mce_external_languages', array( $this, 'tutor_tinymce_translate' ) );
+
+		/**
+		 * Identifier class to body tag
+		 * 
+		 * @since v1.9.9
+		 */
+		add_filter( 'body_class', array($this, 'add_identifier_class_to_body') );
+		add_filter( 'admin_body_class', array($this, 'add_identifier_class_to_body') );
 	}
 
 	private function get_default_localized_data() {
@@ -348,5 +356,24 @@ class Assets {
 	function tutor_tinymce_translate() {
 		$locales['tutor_button'] = tutor()->path . 'includes/tinymce_translate.php';
 		return $locales;
+	}
+	
+	public function add_identifier_class_to_body($classes) {
+		$course_builder = ' tutor-screen-course-builder ';
+		$to_add = array();
+
+		// Add course editor identifier class
+		if(is_admin()) {
+			$screen = get_current_screen();
+			if(is_object($screen) && $screen->base=='post' && $screen->id=='courses') {
+				$to_add[] = $course_builder . ' tutor-screen-course-builder-' . ($screen->is_block_editor ? ' gutenberg' : 'classic') . ' ';
+			}
+		} else if(tutor_utils()->is_tutor_frontend_dashboard('create-course')) {
+			$to_add[] = $course_builder . ' tutor-screen-course-builder-frontend ';
+		}
+
+		is_array($classes) ? $classes=array_merge($classes, $to_add) : $classes.=implode('', $to_add);
+
+		return $classes;
 	}
 }

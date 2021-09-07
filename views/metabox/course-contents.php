@@ -1,4 +1,4 @@
-<div id="<?php echo !is_admin() ? 'tutor-course-topics' : ''; ?>" class="course-contents">
+<div id="<?php echo !is_admin() ? 'tutor-course-topics' : ''; ?>" class="course-contents tutor-course-builder-content-container">
 
     <div class="wp_editor_config_example" style="display: none;">
         <?php wp_editor('', 'tutor_editor_config'); ?>
@@ -183,7 +183,7 @@
 <?php 
 	if ( count( $query_lesson ) > count( $attached_lesson_ids ) ) {
 		?>
-        <div class="tutor-untopics-lessons">
+        <div class="tutor-untopics-lessons tutor-course-builder-content-container">
             <h3><?php _e( 'Un-assigned lessons' ); ?></h3>
 
             <div class="tutor-lessons ">
@@ -225,7 +225,7 @@
 							$lesson->ID; ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>"><?php echo stripslashes($lesson->post_title); ?> </a>
+                                    <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo is_object($topic) ? $topic->ID : ''; ?>"><?php echo stripslashes($lesson->post_title); ?> </a>
                                     <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
