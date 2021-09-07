@@ -1,19 +1,26 @@
 # TutorLMS Changelog
 
+### 1.9.9 - September 13, 2021
+
+* New: Analytics page for instructor in frontend dashboard
+
+
 ### 1.9.8 - September 02, 2021
 
-New: Review counts (given and received) in the dashboard review section's tabs
-New: Approval/rejection email to instructors for their submitted courses.
-New: Auto-enrollment after registering from the "Enroll Now" button
-New: Enrolled course count in a separate column in the Student's list
-Fix: Shortcode to show instructor list not working issue
-Fix: PHP error generating from undefined variable $default
-Fix: Assignment of duplicate courses redirecting to the original course assignment issue
-Fix: Showing same levels multiple times in single course page for Paid Membership Pro addon
-Fix: Countdown timer translation issue for Zoom meetings
-Fix: Expired values showing up as pagination values for the Zoom meeting list
-Fix: Font spacing and custom font issue for generated Tutor certificates on chrome browser.
-Fix: Removing or clicking a product from the cart, took users to the WooCommerce shop instead of the course page
+* New: Review counts (given and received) in the dashboard review section's tabs
+* New: Approval email notification to instructors for their submitted courses
+* New: Auto-enrollment after registering from the "Enroll Now" button
+* New: Enrolled course count in a separate column in the Student's list
+* Fix: Shortcode to show instructor list not working issue
+* Fix: PHP error generating from undefined variable $default
+* Fix: Assignment of duplicate courses redirecting to the original course assignment issue
+* Fix: Showing same levels multiple times in single course page for Paid Membership Pro addon
+* Fix: Countdown timer translation issue for Zoom meetings
+* Fix: Expired values showing up as pagination values for the Zoom meeting list
+* Fix: Font spacing and custom font issue for generated Tutor certificates on chrome browser.
+* Fix: Removing or clicking a product from the cart, took users to the WooCommerce shop instead of the course page
+* Fix: "Start Quiz" button now disabled after once clicked
+* Fix: Full site membership for Paid Membership Pro does not implement on uncategorized courses
 
 
 ### 1.9.7 - August 19, 2021

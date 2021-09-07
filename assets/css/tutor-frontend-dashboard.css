@@ -2,6 +2,88 @@
   /* Only reusable function, or code allowed here. No direct css please. */
 }
 
+.tutor-dashboard .tutor-dropdown-menu {
+  min-width: 140px;
+  background: #353535;
+  color: white;
+  width: 100%;
+  position: absolute;
+  top: 40px;
+  right: -13px;
+  display: none;
+  border-radius: 5px;
+  padding: 0;
+  margin: 0;
+}
+
+.tutor-dashboard .tutor-dropdown-menu:before {
+  content: "";
+  position: absolute;
+  right: 10px;
+  background: linear-gradient(-45deg, transparent 50%, black 50%);
+  height: 10px;
+  width: 10px;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  top: -4px;
+}
+
+.tutor-dashboard .tutor-dropdown-menu li {
+  list-style: none !important;
+  padding: 5px 15px 5px 15px;
+  cursor: pointer;
+}
+
+.tutor-dashboard .tutor-dropdown-menu li:first-child {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.tutor-dashboard .tutor-dropdown-menu li:last-child {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.tutor-dashboard .tutor-dropdown-menu li:hover {
+  background-color: #6b6b6b;
+}
+
+.tutor-dashboard .tutor-dropdown-menu li i {
+  padding-right: 4px;
+}
+
+.tutor-dashboard .tutor-dashboard-inline-links {
+  margin-bottom: 30px;
+}
+
+.tutor-dashboard .tutor-dashboard-inline-links ul {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid #dfe1e5;
+}
+
+.tutor-dashboard .tutor-dashboard-inline-links ul li {
+  display: inline-block;
+}
+
+.tutor-dashboard .tutor-dashboard-inline-links ul li a {
+  display: block;
+  padding: 5px 10px;
+  color: var(--tutor-primary-color);
+  margin-bottom: -1px;
+  line-height: 40px;
+}
+
+.tutor-dashboard .tutor-dashboard-inline-links ul li a:hover {
+  color: var(--tutor-primary-color);
+}
+
+.tutor-dashboard .tutor-dashboard-inline-links ul li.active a, .tutor-dashboard .tutor-dashboard-inline-links ul li a:hover {
+  color: var(--tutor-primary-color);
+  border-bottom: 1px solid var(--tutor-primary-color);
+  padding-bottom: 4px;
+}
+
 .tutor-dashboard .tutor-dashboard-header {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -221,38 +303,6 @@
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.tutor-dashboard-menu-zoom a:before {
   content: "\e9b1";
-}
-
-.tutor-dashboard .tutor-dashboard-inline-links {
-  margin-bottom: 30px;
-}
-
-.tutor-dashboard .tutor-dashboard-inline-links ul {
-  margin: 0;
-  padding: 0;
-  border-bottom: 1px solid #dfe1e5;
-}
-
-.tutor-dashboard .tutor-dashboard-inline-links ul li {
-  display: inline-block;
-}
-
-.tutor-dashboard .tutor-dashboard-inline-links ul li a {
-  display: block;
-  padding: 5px 10px;
-  color: var(--tutor-primary-color);
-  margin-bottom: -1px;
-  line-height: 40px;
-}
-
-.tutor-dashboard .tutor-dashboard-inline-links ul li a:hover {
-  color: var(--tutor-primary-color);
-}
-
-.tutor-dashboard .tutor-dashboard-inline-links ul li.active a, .tutor-dashboard .tutor-dashboard-inline-links ul li a:hover {
-  color: var(--tutor-primary-color);
-  border-bottom: 1px solid var(--tutor-primary-color);
-  padding-bottom: 4px;
 }
 
 .tutor-dashboard .tutor-dashboard-content {
