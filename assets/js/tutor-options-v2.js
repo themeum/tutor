@@ -1,3 +1,6 @@
+// Tutor v2 icons
+const { angleRight, magnifyingGlass, warning } = tutorIconsV2;
+
 jQuery(document).ready(function ($) {
   "use strict";
 
@@ -110,7 +113,7 @@ jQuery(document).ready(function ($) {
     var output = `
       <a data-tab="${section_slug}" data-key="field_${field_key}">
         <div class="search_result_title">
-          ${svgMagnifyingGlass}
+          ${magnifyingGlass}
           <span class="text-regular-caption">${text}</span>
         </div>
         <div class="search_navigation">
@@ -121,76 +124,70 @@ jQuery(document).ready(function ($) {
         </div>
       </a>`;
 
-    return output;
-  }
+		return output;
+	}
 
-  $("#search_settings").on("input", function (e) {
-    e.preventDefault();
+	$('#search_settings').on('input', function (e) {
+		e.preventDefault();
 
-    if (e.target.value) {
-      var searchKey = this.value;
-      $.ajax({
-        url: window._tutorobject.ajaxurl,
-        type: "POST",
-        data: {
-          action: "tutor_option_search",
-          keyword: searchKey,
-        },
-        // beforeSend: function () {},
-        success: function (data) {
-          var output = "",
-            wrapped_item = "",
-            notfound = true,
-            item_text = "",
-            section_slug = "",
-            section_label = "",
-            block_label = "",
-            matchedText = "",
-            searchKeyRegex = "",
-            field_key = "",
-            result = data.data.fields;
+		if (e.target.value) {
+			var searchKey = this.value;
+			$.ajax({
+				url: window._tutorobject.ajaxurl,
+				type: 'POST',
+				data: {
+					action: 'tutor_option_search',
+					keyword: searchKey,
+				},
+				// beforeSend: function () {},
+				success: function (data) {
+					var output = '',
+						wrapped_item = '',
+						notfound = true,
+						item_text = '',
+						section_slug = '',
+						section_label = '',
+						block_label = '',
+						matchedText = '',
+						searchKeyRegex = '',
+						field_key = '',
+						result = data.data.fields;
 
-          Object.values(result).forEach(function (item, index, arr) {
-            item_text = item.label;
-            section_slug = item.section_slug;
-            section_label = item.section_label;
-            block_label = item.block_label;
-            field_key = item.key;
-            searchKeyRegex = new RegExp(searchKey, "ig");
-            // console.log(item_text.match(searchKeyRegex));
-            matchedText = item_text.match(searchKeyRegex)?.[0];
+					Object.values(result).forEach(function (item, index, arr) {
+						item_text = item.label;
+						section_slug = item.section_slug;
+						section_label = item.section_label;
+						block_label = item.block_label;
+						field_key = item.key;
+						searchKeyRegex = new RegExp(searchKey, 'ig');
+						// console.log(item_text.match(searchKeyRegex));
+						matchedText = item_text.match(searchKeyRegex)?.[0];
 
-            if (matchedText) {
-              wrapped_item = item_text.replace(
-                searchKeyRegex,
-                `<span style='color: #212327; font-weight:500'>${matchedText}</span>`
-              );
-              output += view_item(
-                wrapped_item,
-                section_slug,
-                section_label,
-                block_label,
-                field_key
-              );
-              notfound = false;
-            }
-          });
-          if (notfound) {
-            output += `<div class="no_item"> ${svgWarningIcon} No Results Found</div>`;
-          }
-          $(".search_result").html(output).addClass("show");
-          output = "";
-          // console.log("working");
-        },
-        complete: function () {
-          // Active navigation element
-          navigationTrigger();
-        },
-      });
-    } else {
-      document.querySelector(".search-popup-opener").classList.remove("show");
-    }
-  });
+						if (matchedText) {
+							wrapped_item = item_text.replace(
+								searchKeyRegex,
+								`<span style='color: #212327; font-weight:500'>${matchedText}</span>`
+							);
+							output += view_item(wrapped_item, section_slug, section_label, block_label, field_key);
+							notfound = false;
+						}
+					});
+					if (notfound) {
+						output += `<div class="no_item"> ${warning} No Results Found</div>`;
+					}
+					$('.search_result').html(output).addClass('show');
+					output = '';
+					// console.log("working");
+				},
+				complete: function () {
+					// Active navigation element
+					navigationTrigger();
+				},
+			});
+		} else {
+			document.querySelector('.search-popup-opener').classList.remove('show');
+		}
+	});
 });
 
 /**

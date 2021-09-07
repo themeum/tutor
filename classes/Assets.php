@@ -84,6 +84,7 @@ class Assets {
 		wp_enqueue_script('tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array('jquery'), tutor()->version, true);
 		wp_enqueue_script('tutor-main', tutor()->url . 'assets/js/tutor.js', array('jquery', 'wp-i18n'), tutor()->version, true);
 		wp_enqueue_script('tutor-admin', tutor()->url . 'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker', 'wp-i18n'), tutor()->version, true);
+		wp_enqueue_script('tutor-icons', tutor()->url . 'assets/js/tutor-icons-v2.js', array('jquery'), tutor()->version, true);
 		wp_enqueue_script('tutor-admin-v2', tutor()->url . 'assets/js/tutor-admin-v2.js', array('jquery', 'wp-color-picker', 'wp-i18n'), tutor()->version, true);
 		wp_enqueue_script('tutor-options-v2', tutor()->url . 'assets/js/tutor-options-v2.js', array('jquery'), tutor()->version, true);
 
