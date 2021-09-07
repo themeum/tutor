@@ -1359,6 +1359,10 @@ body.tutor-screen-course-builder #tutor-course-content-wrap .tutor-metabox-add-t
   height: 120px;
 }
 
+body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) .tutor-metabox-add-topics, body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) .tutor-topics-edit-form {
+  padding: 0 15px;
+}
+
 body.tutor-screen-course-builder .tutor-course-builder-header {
   line-height: 50px;
   position: absolute;
@@ -1790,6 +1794,7 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-cou
   margin-top: -15px;
   text-align: right;
   font-size: 12px;
+  position: static;
 }
 
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-course-builder-section .tutor-course-builder-header a {
