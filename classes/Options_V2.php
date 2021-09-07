@@ -82,7 +82,7 @@ class Options_V2 {
 		// !current_user_can('manage_options') ? wp_send_json_error() : 0;
 		// $keyword = strtolower( $_POST['keyword'] );
 
-		$attr    = $this->options_attr();
+		$attr       = $this->options_attr();
 		$data_array = array();
 		foreach ( $attr as $block ) {
 			foreach ( $block['sections'] as $sections ) {
@@ -91,7 +91,7 @@ class Options_V2 {
 						$fields['section_label'] = $sections['label'];
 						$fields['section_slug']  = $sections['slug'];
 						$fields['block_label']   = $blocks['label'];
-						$data_array['fields'][]     = $fields;
+						$data_array['fields'][]  = $fields;
 					}
 				}
 			}
@@ -637,7 +637,10 @@ class Options_V2 {
 										'key'     => 'enable_video_player',
 										'type'    => 'checkbox_horizontal_full',
 										'label'   => __( 'Enable Video Player', 'tutor' ),
-										'default' => '4',
+										'default' => array(
+											'youtube' => 'on',
+											'vimeo'   => 'off',
+										),
 										'options' => array(
 											'youtube' => '<i class="lab la-youtube"></i> YouTube',
 											'vimeo'   => '<i class="lab la-vimeo"></i> Vimeo',
