@@ -1,0 +1,23 @@
+.tutor-avatar {
+  height: 90px;
+  width: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  img {
+    height: 100%;
+    width: 100%;
+    display: block;
+  }
+  &.tutor-is-lg {
+    width: 120px;
+    height: 120px;
+  }
+  &.tutor-is-sm {
+    width: 60px;
+    height: 60px;
+  }
+  &.tutor-is-xs {
+    width: 40px;
+    height: 40px;
+  }
+}

@@ -1972,16 +1972,15 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-fro
   }
 }
 
-<<<<<<< HEAD
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-frontend-course-builder-section input[type=text] {
   border-radius: 6px;
-=======
+}
+
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-metabox-add-topics, body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-topics-edit-form {
   background: #f1f1f1;
   border: 1px solid #dcdfe5;
   margin-top: 25px;
   padding: 20px;
->>>>>>> jk
 }
 
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-course-level-meta {
