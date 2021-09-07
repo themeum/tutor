@@ -1,32 +1,34 @@
-@import "./reset";
-@import "./variables";
+@import './reset';
+@import './variables';
 
 // Utils
-@import "./utils/typography.scss";
-@import "./utils/svg-icons-static.scss";
-@import "./utils/svg-icons-dynamic.scss";
-@import "./utils/spinner.scss";
-@import "./utils/mixins.scss";
-@import "./utils/breakpoint.scss";
+@import './utils/typography.scss';
+@import './utils/colors.scss';
+@import './utils/svg-icons-static.scss';
+@import './utils/svg-icons-dynamic.scss';
+@import './utils/spinner.scss';
+@import './utils/mixins.scss';
+@import './utils/breakpoint.scss';
 
 // Components
-@import "./components/button.scss";
-@import "./components/nav-tab.scss";
-@import "./components/custom-input-field.scss";
-@import "./components/tooltip.scss";
-@import "./components/popup-menu.scss";
-@import "./components/alert.scss";
-@import "./components/form-elements.scss";
-@import "./components/search-popup.scss";
+@import './components/button.scss';
+@import './components/nav-tab.scss';
+@import './components/custom-input-field.scss';
+@import './components/tooltip.scss';
+@import './components/popup-menu.scss';
+@import './components/alert.scss';
+@import './components/form-elements.scss';
+@import './components/search-popup.scss';
+@import './components/color-preset.scss';
 
 // Pages
-@import "./custom-pages/email-manage.scss";
+@import './custom-pages/email-manage.scss';
 
 // Main Style
-@import "./general";
+@import './general';
 
 // Conditional Style
-@import "./conditionals/conditionals.scss";
+@import './conditionals/conditionals.scss';
 
 // WP conflict override
-@import "./conflict-override/conflict-override.scss";
+@import './conflict-override/conflict-override.scss';
