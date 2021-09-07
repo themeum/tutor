@@ -32,22 +32,22 @@
     }
 }
 
-// Course topics
-#tutor-course-content-wrap {
-    position: relative;
-
-    // Backend style
-    .tutor-course-builder-header{
-        line-height: 50px;
-        position: absolute;
-        top: -69px;
-        right: 40px;
-        
-        &.has-postbox-header {
-            top: -56px;
-            right: 96px;
-        }
+// Backend style
+.tutor-course-builder-header{
+    line-height: 50px;
+    position: absolute;
+    top: -69px;
+    right: 40px;
+    
+    &.has-postbox-header {
+        top: -56px;
+        right: 96px;
     }
+}
+
+// Course topics
+#tutor-course-content-wrap, #tutor-course-topics {
+    position: relative;
 
     .postbox-header {
         h2 {
@@ -70,8 +70,8 @@
                 margin-right: 10px;
             }
         }
-        
     }
+    
     .inside {
         padding: 0;
         margin: 0;
