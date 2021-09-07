@@ -8,7 +8,7 @@ if (get_the_ID())
 
 ?>
 <div class="tutor-lesson-attachments-metabox">
-	<div class="tutor-added-attachments-wrap tutor-course-builder-attachements is-lesson">
+	<div class="tutor-added-attachments-wrap tutor-course-builder-attachments is-lesson">
 		<?php
 		$attachments = tutor_utils()->get_attachments($post->ID);
 		if ( is_array($attachments) && count($attachments)) {

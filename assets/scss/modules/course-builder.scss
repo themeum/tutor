@@ -9,34 +9,6 @@
         right: 96px;
     }
 
-    .postbox-header {
-        h2 {
-            padding: 15px;
-	        line-height: 30px;
-            display: block;
-
-            &:before {
-                content: "\e936";
-                color: var(--tutor-primary-color);
-                font-family: "tutor" !important;
-                speak: none;
-                font-style: normal;
-                font-weight: normal;
-                font-variant: normal;
-                text-transform: none;
-                line-height: 1;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                margin-right: 10px;
-            }
-        }
-        
-    }
-    .inside {
-        padding: 0;
-        margin: 0;
-    }
-
     // Common style
     a {
         text-decoration: none;
