@@ -124,70 +124,76 @@ jQuery(document).ready(function ($) {
         </div>
       </a>`;
 
-		return output;
-	}
+    return output;
+  }
 
-	$('#search_settings').on('input', function (e) {
-		e.preventDefault();
+  $("#search_settings").on("input", function (e) {
+    e.preventDefault();
 
-		if (e.target.value) {
-			var searchKey = this.value;
-			$.ajax({
-				url: window._tutorobject.ajaxurl,
-				type: 'POST',
-				data: {
-					action: 'tutor_option_search',
-					keyword: searchKey,
-				},
-				// beforeSend: function () {},
-				success: function (data) {
-					var output = '',
-						wrapped_item = '',
-						notfound = true,
-						item_text = '',
-						section_slug = '',
-						section_label = '',
-						block_label = '',
-						matchedText = '',
-						searchKeyRegex = '',
-						field_key = '',
-						result = data.data.fields;
+    if (e.target.value) {
+      var searchKey = this.value;
+      $.ajax({
+        url: window._tutorobject.ajaxurl,
+        type: "POST",
+        data: {
+          action: "tutor_option_search",
+          keyword: searchKey,
+        },
+        // beforeSend: function () {},
+        success: function (data) {
+          var output = "",
+            wrapped_item = "",
+            notfound = true,
+            item_text = "",
+            section_slug = "",
+            section_label = "",
+            block_label = "",
+            matchedText = "",
+            searchKeyRegex = "",
+            field_key = "",
+            result = data.data.fields;
 
-					Object.values(result).forEach(function (item, index, arr) {
-						item_text = item.label;
-						section_slug = item.section_slug;
-						section_label = item.section_label;
-						block_label = item.block_label;
-						field_key = item.key;
-						searchKeyRegex = new RegExp(searchKey, 'ig');
-						// console.log(item_text.match(searchKeyRegex));
-						matchedText = item_text.match(searchKeyRegex)?.[0];
+          Object.values(result).forEach(function (item, index, arr) {
+            item_text = item.label;
+            section_slug = item.section_slug;
+            section_label = item.section_label;
+            block_label = item.block_label;
+            field_key = item.key;
+            searchKeyRegex = new RegExp(searchKey, "ig");
+            // console.log(item_text.match(searchKeyRegex));
+            matchedText = item_text.match(searchKeyRegex)?.[0];
 
-						if (matchedText) {
-							wrapped_item = item_text.replace(
-								searchKeyRegex,
-								`<span style='color: #212327; font-weight:500'>${matchedText}</span>`
-							);
-							output += view_item(wrapped_item, section_slug, section_label, block_label, field_key);
-							notfound = false;
-						}
-					});
-					if (notfound) {
-						output += `<div class="no_item"> ${warning} No Results Found</div>`;
-					}
-					$('.search_result').html(output).addClass('show');
-					output = '';
-					// console.log("working");
-				},
-				complete: function () {
-					// Active navigation element
-					navigationTrigger();
-				},
-			});
-		} else {
-			document.querySelector('.search-popup-opener').classList.remove('show');
-		}
-	});
+            if (matchedText) {
+              wrapped_item = item_text.replace(
+                searchKeyRegex,
+                `<span style='color: #212327; font-weight:500'>${matchedText}</span>`
+              );
+              output += view_item(
+                wrapped_item,
+                section_slug,
+                section_label,
+                block_label,
+                field_key
+              );
+              notfound = false;
+            }
+          });
+          if (notfound) {
+            output += `<div class="no_item"> ${warning} No Results Found</div>`;
+          }
+          $(".search_result").html(output).addClass("show");
+          output = "";
+          // console.log("working");
+        },
+        complete: function () {
+          // Active navigation element
+          navigationTrigger();
+        },
+      });
+    } else {
+      document.querySelector(".search-popup-opener").classList.remove("show");
+    }
+  });
 });
 
 /**
@@ -264,3 +270,46 @@ function highlightSearchedItem(dataKey) {
     inline: "nearest",
   });
 }
+
+/**
+ * Email Manage template - live Preview
+ */
+
+const emailManagePageInputs = document.querySelectorAll(
+  '.email-manage-page input[type="file"], .email-manage-page input[type="text"], .email-manage-page textarea'
+);
+
+const dataSourceEls = document.querySelectorAll(
+  ".email-manage-page [data-source]"
+);
+
+emailManagePageInputs.forEach((input) => {
+  input.addEventListener("input", (e) => {
+    const { name, value } = e.target;
+
+    if (e.target.files) {
+      const file = e.target.files[0];
+      console.dir(e.target.files[0]);
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        document
+          .querySelector('img[data-source="email-title-logo"]')
+          .setAttribute("src", this.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    const dataSourceEl = document.querySelector(
+      `.email-manage-page [data-source=${name}]`
+    );
+
+    if (dataSourceEl) {
+      if (dataSourceEl.href) {
+        dataSourceEl.href = value;
+      } else {
+        dataSourceEl.innerHTML = value;
+      }
+    }
+  });
+});
