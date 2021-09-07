@@ -1876,16 +1876,31 @@ class Utils {
 	}
 
 	/**
+	 * Get total enrolled students by course id
+	 * 
 	 * @param int $course_id
 	 *
+	 * @param $period string | optional added since 1.9.9
+	 * 
 	 * @return int
-	 *
-	 * Get the total enrolled users at course
+	 * 
+	 * @since 1.9.9
 	 */
-	public function count_enrolled_users_by_course( $course_id = 0 ) {
+	public function count_enrolled_users_by_course( $course_id = 0 , $period = '') {
 		global $wpdb;
 
 		$course_id = $this->get_post_id( $course_id );
+		//set period wise query
+		$period_filter = '';
+		if ( 'today' === $period ) {
+			$period_filter = "AND DATE(post_date) = CURDATE()";
+		} 
+		if ( 'monthly' === $period ) {
+			$period_filter = "AND MONTH(post_date) = MONTH(CURDATE()) ";
+		}
+		if ( 'yearly' === $period ) {
+			$period_filter = "AND YEAR(post_date) = YEAR(CURDATE()) ";
+		}
 
 		$course_ids = $wpdb->get_var($wpdb->prepare(
 			"SELECT COUNT(ID) 
@@ -1893,6 +1908,7 @@ class Utils {
 			WHERE 	post_type = %s
 					AND post_status = %s
 					AND post_parent = %d;
+					{$period_filter}
 			",
 			'tutor_enrolled',
 			'completed',
@@ -3198,13 +3214,16 @@ class Utils {
 						{$wpdb->comments}.comment_content, 
 						{$wpdb->comments}.user_id, 
 						{$wpdb->commentmeta}.meta_value AS rating,
-						{$wpdb->users}.display_name 
+						{$wpdb->users}.display_name,
+						{$wpdb->posts}.post_title as course_title
 			
 				FROM 	{$wpdb->comments}
 						INNER JOIN {$wpdb->commentmeta} 
 								ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id 
 						INNER JOIN {$wpdb->users}
 								ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+						INNER JOIN {$wpdb->posts}
+								ON {$wpdb->posts}.ID = {$wpdb->comments}.comment_post_ID
 				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids}) 
 						AND comment_type = %s
 						AND meta_key = %s
