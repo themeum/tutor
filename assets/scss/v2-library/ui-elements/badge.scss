@@ -1,0 +1,77 @@
+.tutor-badge {
+  @extend .d-inline-block;
+  padding: 0 8px;
+  line-height: 21px;
+  font-size: 13px;
+  color: var(--tutor-white);
+  border-radius: 2px;
+  font-weight: 700;
+  box-sizing: border-box;
+}
+
+.tutor-badge-square {
+  @extend .tutor-badge;
+  line-height: 22px;
+  padding: 5px;
+  min-width: 32px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.tutor-profile-badge {
+  @extend .d-flex;
+  @extend .align-items-center;
+  box-sizing: border-box;
+  img {
+    @extend .d-block;
+    height: auto;
+    max-width: 50px;
+  }
+  .tutor-profile-badge-content {
+    padding-left: 20px;
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: 400;
+    color: var(--tutor-text-hints);
+    h5 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 34px;
+      font-weight: 400;
+      color: var(--tutor-text-primary);
+    }
+  }
+}
+
+.tutor-floating-badge {
+  @extend .d-inline-block;
+  @extend .tutor-bg-danger;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  line-height: 15px;
+  min-width: 16px;
+  font-size: 11px;
+  border-radius: 100px;
+  transform: translateX(-50%) translateY(-50%);
+  padding: 1px 3px 0;
+  box-sizing: border-box;
+  color: #ffffff;
+  font-weight: 700;
+  text-align: center;
+}
+.tutor-btn-circle {
+  .tutor-floating-badge {
+    transform: translateX(-14px) translateY(-2px);
+  }
+  &.tutor-is-xs .tutor-floating-badge{
+    transform: translateX(-10px) translateY(-2px);
+  }
+  &.tutor-is-sm .tutor-floating-badge{
+    transform: translateX(-12px) translateY(-2px);
+  }
+  &.tutor-is-lg .tutor-floating-badge{
+    transform: translateX(-18px) translateY(-2px);
+  }
+}

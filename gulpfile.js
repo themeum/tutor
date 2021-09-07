@@ -28,10 +28,16 @@ var prefixerOptions = {
 var scss_blueprints = {
 	tutor_front : {src: "assets/scss/front/main.scss", mode: 'expanded', destination: 'tutor-front.css'},
 	tutor_front_min: {src: "assets/scss/front/main.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
+	
 	tutor_admin: {src: "assets/scss/admin/main.scss", mode: 'expanded', destination: 'tutor-admin.css'},
 	tutor_admin_min: {src: "assets/scss/admin/main.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
+	
+	tutor_v2: {src: "assets/scss/v2-library/index.scss", mode: 'expanded', destination: 'tutor-v2.css'},
+	tutor_v2_min: {src: "assets/scss/v2-library/index.scss", mode: 'compressed', destination: 'tutor-v2.min.css'},
+	
 	tutor_admin_v2_markup: {src: "assets/scss/admin/admin-v2-markup.scss", mode: 'expanded', destination: 'admin-v2-markup.css'},
 	tutor_admin_v2_markup_min: {src: "assets/scss/admin/admin-v2-markup.scss", mode: 'compressed', destination: 'admin-v2-markup.min.css'},
+	
 	tutor_front_dashboard: {src: "assets/scss/front/dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
 	tutor_front_dashboard_min: {src: "assets/scss/front/dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
 };
