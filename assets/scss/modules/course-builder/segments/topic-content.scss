@@ -29,6 +29,13 @@
             }
         }
 
+        @at-root {
+            #{$body}:not(.tutor-screen-course-builder-frontend)  {
+                .tutor-metabox-add-topics, .tutor-topics-edit-form {
+                    padding: 0 15px;
+                }
+            }
+        }
     }
 }
 
