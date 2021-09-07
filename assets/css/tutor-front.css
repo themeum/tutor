@@ -1359,20 +1359,20 @@ body.tutor-screen-course-builder #tutor-course-content-wrap .tutor-metabox-add-t
   height: 120px;
 }
 
-body.tutor-screen-course-builder #tutor-course-content-wrap {
-  position: relative;
-}
-
-body.tutor-screen-course-builder #tutor-course-content-wrap .tutor-course-builder-header {
+body.tutor-screen-course-builder .tutor-course-builder-header {
   line-height: 50px;
   position: absolute;
   top: -69px;
   right: 40px;
 }
 
-body.tutor-screen-course-builder #tutor-course-content-wrap .tutor-course-builder-header.has-postbox-header {
+body.tutor-screen-course-builder .tutor-course-builder-header.has-postbox-header {
   top: -56px;
   right: 96px;
+}
+
+body.tutor-screen-course-builder #tutor-course-content-wrap {
+  position: relative;
 }
 
 body.tutor-screen-course-builder #tutor-course-content-wrap .postbox-header h2 {
