@@ -1,14 +1,11 @@
 const path = require( 'path' );
-const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const TerserPlugin = require( 'terser-webpack-plugin' );
 const CssMinimizerPlugin = require( 'css-minimizer-webpack-plugin' );
 const { CleanWebpackPlugin } = require( 'clean-webpack-plugin' );
 
 // JS Directory path.
-const EDITOR_JS_DIR = path.resolve( __dirname, 'assets/editor/src/js' );
-const EDITOR_BUILD_DIR = path.resolve( __dirname, 'assets/editor/dist' );
-const FRONT_JS_DIR = path.resolve( __dirname, 'assets/front/src/js' );
-const FRONT_BUILD_DIR = path.resolve( __dirname, 'assets/front/dist' );
+const JS_DIR = path.resolve( __dirname, 'assets/react/src/js' );
+const BUILD_DIR = path.resolve( __dirname, 'assets/js' );
 
 const reactRoot = path.resolve(__dirname, 'assets/editor/src/js');
 const nodeModules = path.resolve(__dirname, 'node_modules');
@@ -16,40 +13,24 @@ const nodeModules = path.resolve(__dirname, 'node_modules');
 module.exports = ( env, options ) => {
 
 	const mode = options.mode || 'development';
-	const extPrefix = ( mode === 'production' ) ? '.min' : '';
-
+	
 	const config = {
 		mode,
 		module: {
 			rules: [
 				{
 					test: /\.js$/,
-					include: [ EDITOR_JS_DIR, FRONT_JS_DIR ],
+					include: [ JS_DIR ],
 					exclude: /node_modules/,
 					use: 'babel-loader'
-				},
-				{
-					test: /\.(sa|sc|c)ss$/,
-					use: [
-						MiniCssExtractPlugin.loader,
-						'css-loader',
-						'sass-loader',
-					],
-				},
+				}
 			]
 		},
 		plugins: [
 			new CleanWebpackPlugin( {
 				cleanStaleWebpackAssets: ( mode === 'production' ) // Automatically remove all unused webpack assets on rebuild, when set to true in production.
-			} ),
-			new MiniCssExtractPlugin( {
-				filename: `[name]${extPrefix}.css`,
-			} ),
+			} )
 		],
-		externals: {
-			'@wordpress/api-fetch': ['wp', 'apiFetch'],
-			'@wordpress/i18n': ['wp', 'i18n'],
-		},
 		devtool: 'source-map'
 	}
 
@@ -62,7 +43,7 @@ module.exports = ( env, options ) => {
 					terserOptions: {},
 					minify: ( file ) => {
 						const uglifyJsOptions = {
-							sourceMap: true
+							sourceMap: false
 						};
 						return require( 'uglify-js' ).minify( file, uglifyJsOptions );
 					},
@@ -74,30 +55,24 @@ module.exports = ( env, options ) => {
 
 	var configEditor = Object.assign({}, config, {
 		name: "configEditor",
-		entry: [
-			'./assets/editor/src/js/main.js',
-			'./assets/editor/src/scss/main.scss'
-		],
+		entry: {
+			'tutor'				: './assets/react/tutor.js',
+			'tutor-front'		: './assets/react/tutor-front.js',
+			'tutor-admin'		: './assets/react/tutor-admin.js',
+			'tutor-setup'		: './assets/react/tutor-setup.js',
+			'mce-button'		: './assets/react/mce-button.js',
+			'gutenberg_blocks'	: './assets/react/gutenberg_blocks.js',
+			'Chart.bundle.min'	: './assets/react/Chart.bundle.min.js',
+		},
         resolve: {
-            modules: [reactRoot, nodeModules]
+            modules: [reactRoot, nodeModules],
+			extensions: ['*', '.js', '.jsx']
         },
 		output: {
-			path: path.resolve( __dirname, EDITOR_BUILD_DIR ),
-			filename: `[name]${extPrefix}.js`,
+			path: path.resolve( __dirname, BUILD_DIR ),
+			filename: `[name].js`,
 		},
 	});
 
-	var configFront = Object.assign({}, config, {
-		name: "configFront",
-		entry: [
-			'./assets/front/src/js/main.js',
-			'./assets/front/src/scss/main.scss'
-		],
-		output: {
-			path: path.resolve( __dirname, FRONT_BUILD_DIR ),
-			filename: `[name]${extPrefix}.js`,
-		},
-	});
-
-	return [ configEditor, configFront ];
+	return [ configEditor ];
 }
