@@ -60,6 +60,7 @@ if ( ! function_exists( 'tutor' ) ) {
 			'path'                 => $path,
 			'url'                  => plugin_dir_url( TUTOR_FILE ),
 			'icon_dir'             => plugin_dir_url( TUTOR_FILE ) . 'assets/images/images-v2/icons/',
+			'v2_img_dir'           => plugin_dir_url( TUTOR_FILE ) . 'assets/images/images-v2/',
 			'current_url'          => $current_url,
 			'basename'             => plugin_basename( TUTOR_FILE ),
 			'basepath'             => $base_path,

@@ -17,11 +17,17 @@
 				color: $text-subsued;
 			}
 		}
+
 		@include breakpoint-min(820) {
 			.header-right {
-				margin-top: 10px;
 				flex-wrap: wrap;
 				justify-content: center;
+			}
+		}
+
+		@include breakpoint-max(650) {
+			.header-right {
+				margin-top: 20px;
 			}
 		}
 
@@ -43,7 +49,7 @@
 	}
 
 	.main-content-wrapper {
-		> div {
+		> .main-content {
 			padding: 30px;
 		}
 		// height: 100%;
@@ -53,9 +59,12 @@
 			}
 		}
 
-		@include breakpoint-min(desktop-lg) {
-			> div {
-				padding: 60px 70px;
+		@include breakpoint-min(1400) {
+			> .main-content {
+				padding: 60px 74px;
+			}
+			.content-right {
+				padding: 60px 105px;
 			}
 		}
 	}
@@ -80,17 +89,17 @@
 				color: #757c8e;
 			}
 		}
+
 		&.content-right {
-			background: #e3e6eb;
+			background: $bg-gray-10;
 		}
+
 		&.content-left {
-			background: #efefef;
+			background: #e4e5eb;
 			border-right: 1px solid #cdcfd5;
 		}
 
 		.content-form {
-			padding-right: 35px;
-
 			.tutor-form-control,
 			.tutor-form-select {
 				height: 48px;
@@ -102,6 +111,7 @@
 				}
 			}
 		}
+
 		.tooltip-wrap {
 			.tooltip-txt {
 				padding: 14px 16px;
@@ -115,6 +125,7 @@
 				}
 			}
 		}
+
 		.code-preview {
 			display: block;
 			background: #efefef;
@@ -133,6 +144,46 @@
 				background-color: #f8f8f8;
 				&:focus {
 					border-color: $brand-wordpress;
+				}
+			}
+		}
+	}
+
+	.tutor-option-single-item {
+		.item-wrapper {
+			border: 1px solid $stroke-gray;
+			padding: 18px 19px;
+		}
+		&.item-logoupload {
+		}
+		&.item-email-action {
+			grid-template-columns: repeat(2, auto);
+			grid-auto-flow: unset;
+			.item-wrapper {
+				border: 1px solid $stroke-light-20;
+			}
+		}
+	}
+	.tutor-option-field-input .logo-upload {
+		border: none;
+	}
+
+	.template-preview {
+		background: #ffffff;
+		box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.05);
+		border-radius: 10px;
+
+		.template-header {
+			border-bottom: 1px solid $stroke-light-20;
+		}
+		.template-body {
+			background-position: top right;
+			background-repeat: no-repeat;
+
+			.qna-message-answered {
+				> .d-flex {
+					border-top: 1px solid $stroke-light-20;
+					border-bottom: 1px solid $stroke-light-20;
 				}
 			}
 		}

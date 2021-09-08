@@ -61,7 +61,7 @@
 					border-color: transparent;
 					color: inherit;
 					&:not(.tutor-no-hover):hover {
-						background-color: transparent;
+						background-color: var(--tutor-bg-grey-light);
 						color: $brand-wordpress;
 						border-color: transparent;
 					}
