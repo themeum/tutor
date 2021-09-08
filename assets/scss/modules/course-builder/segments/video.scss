@@ -1,0 +1,85 @@
+
+.tutor-video-upload-wrap {
+    .video_source_wrap_html5 {
+        width: 100%;
+
+        .video-metabox-source-html5-upload {
+            background-color: #fff;
+            text-align: center;
+            padding: 40px 20px;
+            border: 1px solid #dcdfe5;
+            border-radius: 3px;
+            
+            p {
+                margin-bottom: 5px;
+            }
+            
+            .video-upload-icon {
+                i {
+                    font-size: 50px;
+                    color: var(--tutor-primary-color);
+                }
+            }
+        
+            .video_source_upload_wrap_html5 {
+                margin-top: 10px;
+            }
+        } 
+        
+        .video-metabox-source-html5-poster {
+            padding-top: 20px;
+
+            .html5-video-poster {
+                height: 100px;
+                display: flex;
+                align-items: center;
+
+                img {
+                    height: 100%;
+                    width: auto;
+                }
+
+                .tutor-builder-course-video-poster-text {
+                    text-align: left;
+                    padding-left: 20px;
+
+                    @at-root{
+                        #{$body}.rtl {
+                            .html5-video-poster .tutor-builder-course-video-poster-text {
+                                padding-left: 0;
+                                padding-right: 20px;
+                            }
+                        }
+                    }
+                    
+                    h5 {
+                        font-size: 14px;
+                        font-weight: 700;
+                        margin: 0 0 6px;
+                        line-height: 1;
+                    }
+
+                    span {
+                        font-size: 14px;
+                        font-weight: 400;
+                    }
+                }
+            }
+
+            .tutor-row {
+                @include valueWithPrefix(display, flex);
+                @include propertyWithPrefix(flex-wrap, wrap);
+                @include propertyWithPrefix(justify-content, space-between);
+                @include propertyWithPrefix(align-items, center);
+            
+                .tutor-col-5 {
+                    width: 38%;
+                }
+                
+                .tutor-col-7 {
+                    width: 62%;
+                }
+            }
+        }
+    }
+}

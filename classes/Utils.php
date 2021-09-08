@@ -1861,7 +1861,7 @@ class Utils {
 		global $wpdb;
 		$user_id = $this->get_user_id( $user_id );
 		$course_ids = $wpdb->get_col( $wpdb->prepare(
-			"SELECT post_parent
+			"SELECT DISTINCT post_parent
 			FROM 	{$wpdb->posts}
 			WHERE 	post_type = %s
 					AND post_status = %s
@@ -2133,6 +2133,12 @@ class Utils {
 		do_action( 'tutor_before_enroll', $course_id );
 		$user_id = $this->get_user_id( $user_id );
 		$title = __( 'Course Enrolled', 'tutor')." &ndash; ".date( get_option('date_format') ) .' @ '.date(get_option('time_format') ) ;
+
+		if ( $course_id && $user_id ) {
+			if ( $this->is_enrolled( $course_id, $user_id ) ) {
+				return ;
+			}
+		}
 
 		$enrolment_status = 'completed';
 
