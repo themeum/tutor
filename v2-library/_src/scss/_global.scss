@@ -1,0 +1,8 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  // docz
+  [data-testid] textarea,
+  [data-testid] {
+    font-family: 'Roboto', sans-serif;
+  }
+}

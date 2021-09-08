@@ -32,8 +32,8 @@ var scss_blueprints = {
 	tutor_admin: {src: "assets/scss/admin/main.scss", mode: 'expanded', destination: 'tutor-admin.css'},
 	tutor_admin_min: {src: "assets/scss/admin/main.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
 	
-	tutor_v2: {src: "assets/scss/v2-library/index.scss", mode: 'expanded', destination: 'tutor-v2.css'},
-	tutor_v2_min: {src: "assets/scss/v2-library/index.scss", mode: 'compressed', destination: 'tutor-v2.min.css'},
+	tutor_v2: {src: "v2-library/_src/scss/main.scss", mode: 'expanded', destination: 'tutor-v2.css'},
+	tutor_v2_min: {src: "v2-library/_src/scss/main.scss", mode: 'compressed', destination: 'tutor-v2.min.css'},
 	
 	tutor_admin_v2_markup: {src: "assets/scss/admin/admin-v2-markup.scss", mode: 'expanded', destination: 'admin-v2-markup.css'},
 	tutor_admin_v2_markup_min: {src: "assets/scss/admin/admin-v2-markup.scss", mode: 'compressed', destination: 'admin-v2-markup.min.css'},
@@ -126,6 +126,7 @@ function i18n_makepot(callback, target_dir) {
 
 gulp.task("watch", function () {
 	gulp.watch("assets/scss/**/*.scss", gulp.series(...task_keys));
+	gulp.watch("v2-library/_src/scss/**/*.scss", gulp.series(...task_keys));
 });
 
 gulp.task('makepot', function () {

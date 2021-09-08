@@ -1,0 +1,169 @@
+---
+name: Notifications
+route: /mdx-css/notifications
+menu: CSS Components
+---
+
+import { Playground } from 'docz';
+import "../../bundle/main.min.css";
+import "../../bundle/fonts/lineawesome@1.3.0/css/line-awesome.css";
+import "../docz-essential.css";
+
+# Notifications
+
+```** Replace "className" with "class" while using with html```
+
+<Playground>
+    <div className="tutor-notification">
+        <div className="tutor-notification-icon">
+            <i class="far fa-question-circle"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Successful</h5>
+            <p>Your file was uploaded</p>
+        </div>
+    </div>
+</Playground>
+
+## Standard styles
+
+<Playground>
+    <div className="tutor-notification tutor-mb-15">
+        <div className="tutor-notification-icon">
+            <i class="far fa-question-circle"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Successful</h5>
+            <p>Your file was uploaded</p>
+        </div>
+    </div>
+    <div className="tutor-notification tutor-is-success tutor-mb-15">
+        <div className="tutor-notification-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Successful</h5>
+            <p>Your file was uploaded</p>
+        </div>
+    </div>
+    <div className="tutor-notification tutor-is-danger tutor-mb-15">
+        <div className="tutor-notification-icon">
+            <i class="fas fa-times"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Server error!</h5>
+            <p>Your file was uploaded</p>
+        </div>
+        <button className="tutor-notification-close">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div className="tutor-notification tutor-is-warning">
+        <div className="tutor-notification-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Pending Submission</h5>
+            <p>Your file was uploaded</p>
+        </div>
+        <button className="tutor-notification-close">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</Playground>
+
+## Dark Styles
+
+<Playground>
+    <div className="tutor-notification tutor-bg-dark tutor-mb-15">
+        <div className="tutor-notification-icon">
+            <i class="far fa-question-circle"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Successful</h5>
+            <p>Your file was uploaded</p>
+        </div>
+    </div>
+    <div className="tutor-notification tutor-bg-dark tutor-is-success tutor-mb-15">
+        <div className="tutor-notification-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Successful</h5>
+            <p>Your file was uploaded</p>
+        </div>
+    </div>
+    <div className="tutor-notification tutor-bg-dark tutor-is-danger tutor-mb-15">
+        <div className="tutor-notification-icon">
+            <i class="fas fa-times"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Server error!</h5>
+            <p>Your file was uploaded</p>
+        </div>
+        <button className="tutor-notification-close">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div className="tutor-notification tutor-bg-dark tutor-is-warning">
+        <div className="tutor-notification-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Pending Submission</h5>
+            <p>Your file was uploaded</p>
+        </div>
+        <button className="tutor-notification-close">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</Playground>
+
+## Fill Style
+
+<Playground>
+    <div className="tutor-notification tutor-bg-primary tutor-mb-15">
+        <div className="tutor-notification-icon">
+            <i class="far fa-question-circle"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Successful</h5>
+            <p>Your file was uploaded</p>
+        </div>
+    </div>
+    <div className="tutor-notification tutor-bg-success tutor-mb-15">
+        <div className="tutor-notification-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Successful</h5>
+            <p>Your file was uploaded</p>
+        </div>
+    </div>
+    <div className="tutor-notification tutor-bg-danger tutor-mb-15">
+        <div className="tutor-notification-icon">
+            <i class="fas fa-times"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Server error!</h5>
+            <p>Your file was uploaded</p>
+        </div>
+        <button className="tutor-notification-close">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div className="tutor-notification tutor-bg-warning">
+        <div className="tutor-notification-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div className="tutor-notification-content">
+            <h5>Pending Submission</h5>
+            <p>Your file was uploaded</p>
+        </div>
+        <button className="tutor-notification-close">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</Playground>

@@ -1,14 +1,6 @@
-body {
-    font-family: 'Roboto', sans-serif;
-    // docz
-    [data-testid] textarea,
-    [data-testid] {
-    font-family: 'Roboto', sans-serif;
-    }
-}
-
 // core modules
 @import "./core/variables";
+@import "./_global";
 @import "./core/typography";
 @import "./core/general-utility";
 @import "./core/utility";

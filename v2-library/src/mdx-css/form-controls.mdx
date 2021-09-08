@@ -1,0 +1,137 @@
+---
+name: Forms controls
+route: /mdx-css/form-controls
+menu: CSS Components
+---
+
+import { Playground } from 'docz';
+import "../../bundle/main.min.css";
+import "../../bundle/fonts/lineawesome@1.3.0/css/line-awesome.css";
+import "../docz-essential.css";
+
+
+# Forms
+
+## Form Control
+
+## *Standard Input*
+<Playground>
+    <label className="tutor-form-label">Lesson Name</label>
+    <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+</Playground>
+
+## *Textarea*
+<Playground>
+    <label className="tutor-form-label">Lesson Name</label>
+    <textarea placeholder="Placeholder" className="tutor-form-control"></textarea>
+</Playground>
+
+## *Control Style*
+<Playground>
+    <input type="text" class="tutor-form-control tutor-is-primary tutor-mb-15" placeholder="Placeholder" />
+    <input type="text" class="tutor-form-control tutor-is-success tutor-mb-15" placeholder="Placeholder" />
+    <input type="text" class="tutor-form-control tutor-is-warning tutor-mb-15" placeholder="Placeholder" />
+    <input type="text" class="tutor-form-control tutor-is-danger tutor-mb-15" placeholder="Placeholder" />
+</Playground>
+
+## *With Border*
+<Playground>
+    <div class="tutor-input-group tutor-form-control-has-border">
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+    </div>
+</Playground>
+
+## *With Icons*
+<Playground>
+    <div class="tutor-input-group tutor-form-control-has-icon tutor-mb-15">
+        <span class="las la-microphone tutor-input-group-icon"></span>
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+    </div>
+
+
+    <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
+      <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+      <span class="las la-calendar-alt tutor-input-group-icon-right"></span>
+    </div>
+
+    <div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right tutor-mb-15">
+        <span class="las la-search tutor-input-group-icon"></span>
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+        <span class="las la-braille tutor-input-group-icon-right"></span>
+    </div>
+</Playground>
+
+## *With Icons & Border*
+
+<Playground>
+    <div class="tutor-input-group tutor-form-control-has-icon-right tutor-form-control-has-border tutor-mb-15">
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+        <span class="las la-book tutor-input-group-icon-right"></span>
+    </div>
+    <div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-border tutor-mb-15">
+        <span class="las la-microphone tutor-input-group-icon"></span>
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+    </div>
+    <div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right tutor-form-control-has-border tutor-mb-15">
+        <span class="las la-book tutor-input-group-icon"></span>
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+        <span class="las la-braille tutor-input-group-icon-right"></span>
+    </div>
+</Playground>
+
+
+## *Icon Color*
+
+<Playground>
+    <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
+        <span class="las la-book tutor-input-group-icon-right tutor-text-dark"></span>
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+    </div>
+    <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
+        <span class="las la-stopwatch tutor-input-group-icon-right tutor-text-success"></span>
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+    </div>
+    <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+        <span class="las la-calendar-alt tutor-input-group-icon-right tutor-text-warning"></span>
+    </div>
+    <div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right tutor-mb-15">
+        <span class="las la-book tutor-input-group-icon tutor-text-hints"></span>
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+        <span class="las la-braille tutor-input-group-icon-right tutor-text-danger"></span>
+    </div>
+</Playground>
+
+## *With Validation / Info text*
+
+<Playground>
+    <div className="tutor-input-group tutor-mb-15">
+        <input type="text" className="tutor-form-control tutor-mb-10" placeholder="Installing linux on local machine"/>
+        <p className="tutor-input-feedback tutor-has-icon">
+            <i className="far fa-question-circle tutor-input-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
+        </p>
+    </div>
+    <div class="tutor-input-group tutor-form-control-has-icon tutor-is-primary tutor-mb-15">
+        <span class="las la-microphone tutor-input-group-icon"></span>
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+        <p class="tutor-input-feedback tutor-has-icon"><i class="las la-poo tutor-input-feedback-icon"></i> Looks good!</p>
+    </div>
+    <div class="tutor-input-group tutor-form-control-has-icon tutor-is-success tutor-mb-15">
+        <span class="las la-microphone tutor-input-group-icon"></span>
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+        <p class="tutor-input-feedback tutor-has-icon"><i class="las la-check tutor-input-feedback-icon"></i> Looks good!</p>
+    </div>
+    <div class="tutor-input-group tutor-form-control-has-icon-right tutor-is-warning tutor-mb-15">
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+        <span class="las la-calendar-alt tutor-input-group-icon-right"></span>
+        <p class="tutor-input-feedback tutor-has-icon"><i class="las la-exclamation-circle tutor-input-feedback-icon"></i> Please provide a valid input</p>
+    </div>
+    <div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right tutor-is-danger tutor-mb-15">
+        <span class="las la-search tutor-input-group-icon"></span>
+        <input type="text" class="tutor-form-control" placeholder="Placeholder" />
+        <span class="las la-braille tutor-input-group-icon-right"></span>
+        <p class="tutor-input-feedback tutor-has-icon">
+            <i class="las la-skull-crossbones tutor-input-feedback-icon"></i> Please provide a valid input
+        </p>
+    </div>
+</Playground>

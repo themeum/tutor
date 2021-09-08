@@ -17,3 +17,4 @@ assets/css/tutor-front.min.css.map
 *.mo
 /test
 .history
+.docz
