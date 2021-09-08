@@ -1,15 +1,6 @@
 @import url(./vendors/bootstrap-grid.css);
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
-body {
-  font-family: 'Roboto', sans-serif;
-}
-
-body [data-testid] textarea,
-body [data-testid] {
-  font-family: 'Roboto', sans-serif;
-}
-
 :root {
   --tutor-primary: #3E64DE;
   --tutor-primary-hover: #395BCA;
@@ -40,6 +31,15 @@ body [data-testid] {
   --tutor-bg-grey-light: rgba(243, 243, 243, 0.3);
   --tutor-bg-dark-grey: #656565;
   --tutor-bg-black: #000000;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+body [data-testid] textarea,
+body [data-testid] {
+  font-family: 'Roboto', sans-serif;
 }
 
 .tutor-h1,
