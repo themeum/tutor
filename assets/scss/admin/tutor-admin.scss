@@ -259,11 +259,6 @@
 	color: #cccccc;
   }
   
-  .rtl .tutor-course-builder-header {
-	right: auto;
-	left: 40px;
-  }
-  
   .single_add_to_cart_button i,
   a.tutor-button i,
   .tutor-button i,
@@ -345,91 +340,7 @@
   /**
   Meta Box Heading
    */
-  #tutor-instructors h2 {
-	padding: 15px;
-	line-height: 30px;
-  }
-  
-  #tutor-instructors h2:before {
-	color: var(--tutor-primary-color);
-	font-family: "tutor" !important;
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	margin-right: 10px;
-  }
-  
-  #tutor-instructors h2:before {
-	content: "\e93c";
-  }
-  
-  /**
-  End Metabox Heading
-   */
-  /**
-  Video MetaBox
-   */
-  
-  .button-transparent {
-	background: transparent !important;
-  }
-  
-  .button-transparent:hover {
-	background: var(--tutor-primary-color) !important;
-  }
-  
-  .builder-course-thumbnail-upload-wrap .button-transparent {
-	float: right;
-  }
-  
-  /** END Video metabox */
-  .builder-course-thumbnail-img-src {
-	position: relative;
-  }
-  
-  .builder-course-thumbnail-img-src .tutor-course-thumbnail-delete-btn {
-	position: absolute;
-	top: 12px;
-	left: 15px;
-	color: #e53935;
-	-webkit-transition: 300ms;
-	transition: 300ms;
-	text-decoration: none;
-  }
-  
-  .video-metabox-source-html5-poster .tutor-row {
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-ms-flex-wrap: wrap;
-		flex-wrap: wrap;
-	-webkit-box-pack: justify;
-		-ms-flex-pack: justify;
-			justify-content: space-between;
-	-webkit-box-align: center;
-		-ms-flex-align: center;
-			align-items: center;
-  }
-  
-  .video-metabox-source-html5-poster .tutor-row .tutor-col-5 {
-	width: 38%;
-  }
-  
-  .video-metabox-source-html5-poster .tutor-col-7 {
-	width: 62%;
-  }
-  
-  .video-metabox-source-html5-poster
-  .tutor-row
-  .tutor-course-thumbnail-upload-btn {
-	margin: 10px 0;
-  }
-  
+
   .tutor-status-context {
 	padding: 5px 10px;
 	margin: 5px 0;

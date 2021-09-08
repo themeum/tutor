@@ -1,4 +1,4 @@
-<div id="<?php echo !is_admin() ? 'tutor-course-topics' : ''; ?>" class="course-contents tutor-course-builder-content-container">
+<div class="course-contents tutor-course-builder-content-container">
 
     <div class="wp_editor_config_example" style="display: none;">
         <?php wp_editor('', 'tutor_editor_config'); ?>
@@ -74,7 +74,9 @@
 								<?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
                             </p>
 
-                            <button type="button" class="button button-primary tutor-topics-edit-button"><i class="tutor-icon-pencil"></i> <?php _e('Update Topic', 'tutor'); ?></button>
+                            <button type="button" class="tutor-button tutor-topics-edit-button">
+                                <i class="tutor-icon-pencil"></i> <?php _e('Update Topic', 'tutor'); ?>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -82,8 +84,7 @@
 
             <div class="tutor-topics-body" style="display: <?php echo $current_topic_id == $topic->ID ? 'block' : 'none'; ?>;">
 
-                <div class="tutor-lessons">
-					<?php
+                <div class="tutor-lessons"><?php
                     // Below function doesn't work somehow because of using WP_Query in ajax call. Will be removed in future.
 					// $lessons = tutor_utils()->get_course_contents_by_topic($topic->ID, -1); 
                     
@@ -152,8 +153,7 @@
 							<?php
 						}
 					}
-					?>
-                </div>
+                ?></div>
 
                 <div class="tutor_add_quiz_wrap" data-add-quiz-under="<?php echo $topic->ID; ?>">
                     <div class="tutor-add-cotnents-btn-group tutor-add-quiz-button-wrap">
@@ -186,8 +186,7 @@
         <div class="tutor-untopics-lessons tutor-course-builder-content-container">
             <h3><?php _e( 'Un-assigned lessons' ); ?></h3>
 
-            <div class="tutor-lessons ">
-				<?php
+            <div class="tutor-lessons "><?php
 				foreach ( $query_lesson as $lesson ) {
 					if ( ! in_array( $lesson->ID, $attached_lesson_ids ) ) {
 
@@ -234,8 +233,7 @@
 
 					}
 				}
-				?>
-            </div>
+            ?></div>
         </div>
 	<?php }
 ?>
