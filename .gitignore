@@ -20,3 +20,4 @@ assets/css/tutor-front.min.css.map
 *.po~
 *.mo
 /test
+.docz
