@@ -503,6 +503,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Course Visibility', 'tutor' ),
 										'label_title' => __( 'Logged Only', 'tutor' ),
+										'default'     => 'off',
 										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
 									),
 									array(
@@ -557,6 +558,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Enable Classic Editor Support', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
+										'default'     => 'off',
 										'desc'        => __( 'Enable classic editor to get full support of any editor/page builder.', 'tutor' ),
 									),
 									array(
@@ -564,7 +566,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Enable Marketplace', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'off',
 										'desc'        => __( 'Allow multiple instructors to upload their courses.', 'tutor' ),
 									),
 									array(
@@ -604,8 +606,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Allow Instructors Publishing Courses', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default'     => '0',
-
+										'default'     => 'off',
 										'desc'        => __( 'Enable instructors to publish the course directly. If disabled, admins will be able to review course content before publishing.', 'tutor' ),
 									),
 									array(
@@ -613,8 +614,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Become Instructor Button', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default'     => '0',
-
+										'default'     => 'off',
 										'desc'        => __( 'Uncheck this option to hide the button from student dashboard.', 'tutor' ),
 									),
 								),
@@ -652,6 +652,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Course Visibility', 'tutor' ),
 										'label_title' => __( 'Logged in only', 'tutor' ),
+										'default'     => 'off',
 										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
 									),
 									'course_content_access_for_ia' => array(
@@ -659,6 +660,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Course Content Access', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
+										'default'     => 'off',
 										'desc'        => __( 'Allow instructors and admins to view the course content without enrolling', 'tutor' ),
 									),
 								),
@@ -734,6 +736,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Course Content Access', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
+										'default'     => 'off',
 										'desc'        => __( 'Allow instructors and admins to view the course content without enrolling', 'tutor' ),
 									),
 								),
@@ -756,7 +759,7 @@ class Options_V2 {
 										'type'           => 'toggle_switch',
 										'label'          => __( 'Disable Monetization', 'tutor' ),
 										'label_title'    => __( '', 'tutor' ),
-										'default'        => 'free',
+										'default' => 'off',
 										'select_options' => false,
 										'options'        => apply_filters(
 											'tutor_monetization_options',
@@ -786,7 +789,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Enable Guest Mode', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default'     => 'free',
+										'default' => 'off',
 										'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
 									),
 									array(
@@ -816,7 +819,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Enable Revenue Sharing', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default'     => 'free',
+										'default' => 'off',
 										'desc'        => __( 'Content description', 'tutor' ),
 									),
 									array(
@@ -839,7 +842,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Deduct Fees', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default'     => 'free',
+										'default' => 'off',
 										'desc'        => __( 'content goes here', 'tutor' ),
 									),
 									array(
@@ -909,7 +912,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Bank Instructions', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default'     => 'free',
+										'default' => 'off',
 										'desc'        => __( 'content goes here', 'tutor' ),
 									),
 								),
@@ -957,6 +960,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Course Filter', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
+										'default' => 'off',
 										'desc'        => __( 'Show sorting and filtering options on course archive page', 'tutor' ),
 									),
 									array(
@@ -1202,8 +1206,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Error message for wrong login credentials', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default'     => 'Incorrect username or password.',
-
+										'default' => 'off',
 										'desc'        => __( 'Login error message displayed when the user puts wrong login credentials.', 'tutor' ),
 									),
 									array(
@@ -1211,8 +1214,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Hide Frontend Admin Bar', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default'     => '0',
-
+										'default' => 'off',
 										'desc'        => __( 'Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user', 'tutor' ),
 									),
 									array(
@@ -1220,8 +1222,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Maintenance Mode', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default'     => '0',
-
+										'default' => 'off',
 										'desc'        => __( 'Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.', 'tutor' ),
 									),
 								),
@@ -1275,8 +1276,7 @@ class Options_V2 {
 												'type'    => 'toggle_switch',
 												'label'   => __( 'Mailer Native Server Cron', 'tutor' ),
 												'label_title' => __( '', 'tutor' ),
-												'default' => 1,
-
+												'default' => 'off',
 												'desc'    => __( 'If you use OS native cron, then disable it.', 'tutor' ),
 											),
 											array(
@@ -1284,8 +1284,7 @@ class Options_V2 {
 												'type'    => 'textarea_code',
 												'label'   => __( 'Mailer Native Server Cron', 'tutor' ),
 												'label_title' => __( '', 'tutor' ),
-												'default' => 1,
-
+												'default' => 'off',
 												'desc'    => __( 'If you use OS native cron, then disable it.', 'tutor' ),
 											),
 										),
@@ -1432,8 +1431,7 @@ class Options_V2 {
 										'key'         => 'use_points_instead_of_grades',
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Use Points Instead of Grades', 'tutor' ),
-										'default'     => 0,
-
+										'default'     => 'off',
 										'label_title' => __( '', 'tutor' ),
 										'desc'        => __( 'Enable this option to use numerical points instead of letter grades.', 'tutor' ),
 									),
@@ -1441,8 +1439,7 @@ class Options_V2 {
 										'key'         => 'show_highest_possible_points',
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Show Highest Possible Points', 'tutor' ),
-										'default'     => 0,
-
+										'default'     => 'off',
 										'label_title' => __( '', 'tutor' ),
 										'desc'        => __( 'Display the highest possible points next to a student’s score such as 3.8/4.0', 'tutor' ),
 									),
@@ -1451,7 +1448,6 @@ class Options_V2 {
 										'type'        => 'text',
 										'label'       => __( 'Separator Between Scores', 'tutor' ),
 										'default'     => 0,
-
 										'label_title' => __( '', 'tutor' ),
 										'desc'        => __( 'Input the separator text or symbol to display. Example: Insert / to display 3.8/4.0 or “out of” 3.8 out of 4.', 'tutor' ),
 									),
@@ -1460,7 +1456,6 @@ class Options_V2 {
 										'type'        => 'text',
 										'label'       => __( 'Grade Scale', 'tutor' ),
 										'default'     => 0,
-
 										'label_title' => __( '', 'tutor' ),
 										'desc'        => __( 'Insert the grade point out of which the final results will be calculated.', 'tutor' ),
 									),
@@ -1633,6 +1628,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Add Instructor Info', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
+										'default'     => 'off',
 										'desc'        => __( 'Enable to add course instructor’s information on all generated certificates.', 'tutor' ),
 									),
 									array(
@@ -1660,6 +1656,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'View Certificate', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
+										'default'     => 'off',
 										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
 									),
 								),
