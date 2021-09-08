@@ -193,7 +193,11 @@ echo '</select>';
 			</header>
 
 			<!-- Email .template-preview -->
-			<div class="template-preview"><div style="
+			<div class="template-preview">
+				<?php
+					  $this->tutor_load_email_template( 'to_student_course_completed' );
+				?>
+				<div style="
 					background: #ffffff;
 					box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.05);
 					border-radius: 10px;
