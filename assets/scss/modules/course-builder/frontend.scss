@@ -8,22 +8,35 @@
     }
 }
 
-.tutor-dashboard-course-builder-wrap{
-	.tutor-option-field, .tutor-form-group {
-		textarea {
-			height: 100px;
-		}
+.tutor-option-field, .tutor-form-group {
+	textarea {
+		height: 100px;
 	}
+}
 
-	.tutor-form-row {
-		margin-top: 20px;
-		margin-bottom: 20px;
-	}
-} 
+.tutor-form-row {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
 
 .tutor-course-builder-section {
 	margin-bottom: 60px;
 
+	.tutor-frontend-builder-item-scope {
+		margin-bottom: 30px;
+		
+		&:last-child {
+			margin-bottom: 0;
+		}
+	
+		.tutor-builder-item-heading {
+			font-weight: 500;
+			line-height: 21px;
+			margin-bottom: 10px;
+			display: block;
+		}
+	}
+	
 	.tutor-course-builder-section-title{
 		h3 {
 			font-size: 20px;
@@ -72,6 +85,7 @@
 		margin-top: -15px;
 		text-align: right;
 		font-size: 12px;
+		position: static;
 		
 		a {
 			color: #393c40;
@@ -206,12 +220,21 @@
 	}
 }
 
+.tutor-metabox-add-topics, .tutor-topics-edit-form {
+	background: #f1f1f1;
+	border: 1px solid #dcdfe5;
+	margin-top: 25px;
+	padding: 20px;
+}
+
 /*
  * Course Level Meta
  */
 
- .tutor-course-level-meta {
-	display: flex;
+.tutor-course-level-meta {
+	@include valueWithPrefix(display, flex);
+	@include propertyWithPrefix(justify-content, space-between);
+	
 	label{
 		margin: 0 40px 0 0;
 		font-weight: 600;
