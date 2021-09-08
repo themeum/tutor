@@ -156,6 +156,7 @@ gulp.task("copy", function () {
 			"./**/*.*",
 			"!./build/**",
 			"!./assets/**/*.map",
+			"!./assets/react/**",
 			"!./assets/scss/**",
 			"!./assets/.sass-cache",
 			"!./node_modules/**",
@@ -168,6 +169,7 @@ gulp.task("copy", function () {
 			"!./LICENSE.txt",
 			"!./package.json",
 			"!./package-lock.json",
+			"!./*.lock",
 		])
 		.pipe(gulp.dest("build/tutor/"));
 });
