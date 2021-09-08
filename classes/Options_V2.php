@@ -759,7 +759,7 @@ class Options_V2 {
 										'type'           => 'toggle_switch',
 										'label'          => __( 'Disable Monetization', 'tutor' ),
 										'label_title'    => __( '', 'tutor' ),
-										'default' => 'off',
+										'default'        => 'off',
 										'select_options' => false,
 										'options'        => apply_filters(
 											'tutor_monetization_options',
@@ -789,7 +789,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Enable Guest Mode', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default' => 'off',
+										'default'     => 'off',
 										'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
 									),
 									array(
@@ -819,7 +819,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Enable Revenue Sharing', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default' => 'off',
+										'default'     => 'off',
 										'desc'        => __( 'Content description', 'tutor' ),
 									),
 									array(
@@ -842,7 +842,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Deduct Fees', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default' => 'off',
+										'default'     => 'off',
 										'desc'        => __( 'content goes here', 'tutor' ),
 									),
 									array(
@@ -912,7 +912,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Bank Instructions', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default' => 'off',
+										'default'     => 'off',
 										'desc'        => __( 'content goes here', 'tutor' ),
 									),
 								),
@@ -960,7 +960,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Course Filter', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default' => 'off',
+										'default'     => 'off',
 										'desc'        => __( 'Show sorting and filtering options on course archive page', 'tutor' ),
 									),
 									array(
@@ -1206,7 +1206,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Error message for wrong login credentials', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default' => 'off',
+										'default'     => 'off',
 										'desc'        => __( 'Login error message displayed when the user puts wrong login credentials.', 'tutor' ),
 									),
 									array(
@@ -1214,7 +1214,7 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Hide Frontend Admin Bar', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default' => 'off',
+										'default'     => 'off',
 										'desc'        => __( 'Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user', 'tutor' ),
 									),
 									array(
@@ -1222,194 +1222,8 @@ class Options_V2 {
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Maintenance Mode', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
-										'default' => 'off',
+										'default'     => 'off',
 										'desc'        => __( 'Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.', 'tutor' ),
-									),
-								),
-							),
-						),
-					),
-					array(
-						'label'    => __( 'Email', 'tutor' ),
-						'slug'     => 'email',
-						'desc'     => __( 'Email Settings', 'tutor' ),
-						'template' => 'basic',
-						'icon'     => __( 'envelope', 'tutor' ),
-						'blocks'   => array(
-							array(
-								'label'      => __( 'Course', 'tutor' ),
-								'slug'       => 'course',
-								'block_type' => 'uniform',
-								'fields'     => array(
-									array(
-										'key'     => 'email_from_name',
-										'type'    => 'text',
-										'label'   => __( 'Name', 'tutor' ),
-										'default' => get_option( 'blogname' ),
-
-										'desc'    => __( 'The name under which all the emails will be sent', 'tutor' ),
-									),
-									array(
-										'key'     => 'email_from_address',
-										'type'    => 'text',
-										'label'   => __( 'E-Mail Address', 'tutor' ),
-										'default' => get_option( 'admin_email' ),
-
-										'desc'    => __( 'The E-Mail address from which all emails will be sent', 'tutor' ),
-									),
-									array(
-										'key'     => 'email_footer_text',
-										'type'    => 'textarea',
-										'label'   => __( 'E-Mail Footer Text', 'tutor' ),
-										'default' => '',
-
-										'desc'    => __( 'The text to appear in E-Mail template footer', 'tutor' ),
-									),
-									array(
-										'key'          => 'mailer_native_server_cron',
-										'type'         => 'group_textarea_code',
-										'label'        => __( 'Mailer Native Server Cron', 'tutor' ),
-										'label_title'  => __( '', 'tutor' ),
-										'group_fields' => array(
-											array(
-												'key'     => 'mailer_native_server_cron',
-												'type'    => 'toggle_switch',
-												'label'   => __( 'Mailer Native Server Cron', 'tutor' ),
-												'label_title' => __( '', 'tutor' ),
-												'default' => 'off',
-												'desc'    => __( 'If you use OS native cron, then disable it.', 'tutor' ),
-											),
-											array(
-												'key'     => 'mailer_native_server',
-												'type'    => 'textarea_code',
-												'label'   => __( 'Mailer Native Server Cron', 'tutor' ),
-												'label_title' => __( '', 'tutor' ),
-												'default' => 'off',
-												'desc'    => __( 'If you use OS native cron, then disable it.', 'tutor' ),
-											),
-										),
-										'desc'         => __( 'If you use OS native cron, then disable it.', 'tutor' ),
-									),
-								),
-							),
-							array(
-								'label'      => __( 'E-Mail to Students', 'tutor' ),
-								'slug'       => 'e_mail_to_students',
-								'block_type' => 'uniform',
-								'fields'     => array(
-									array(
-										'key'         => 'course_enrolled',
-										'type'        => 'toggle_switch_button',
-										'label'       => __( 'Course Enrolled', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'buttons'     => array(
-											'edit' => 'Edit button of course_enrolled',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									array(
-										'key'         => 'course_enrolle',
-										'type'        => 'toggle_switch_button',
-										'label'       => __( 'Course Enrolle', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'buttons'     => array(
-											'edit' => 'Edit button of course_enrolled',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									array(
-										'key'         => 'quiz_completed',
-										'type'        => 'toggle_switch_button',
-										'label'       => __( 'Quiz Completed', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'buttons'     => array(
-											'edit' => 'Edit button of quiz_completed',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									array(
-										'key'         => 'completed_a_course',
-										'type'        => 'toggle_switch_button',
-										'label'       => __( 'Completed a Course', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'buttons'     => array(
-											'edit' => 'Edit button of completed_a_course',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-								),
-							),
-							array(
-								'label'      => __( 'E-Mail to Teachers', 'tutor' ),
-								'slug'       => 'e_mail_to_teachers',
-								'block_type' => 'uniform',
-								'fields'     => array(
-									array(
-										'key'         => 'a_student_enrolled_in_course',
-										'type'        => 'toggle_switch_button',
-										'label'       => __( 'A Student Enrolled in Course', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'buttons'     => array(
-											'edit' => 'Edit button of a_student_enrolled_in_course',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									array(
-										'key'         => 'a_student_completed_course',
-										'type'        => 'toggle_switch_button',
-										'label'       => __( 'A Student Completed Course', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'buttons'     => array(
-											'edit' => 'Edit button of a_student_completed_course',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									array(
-										'key'         => 'a_student_completed_lesson',
-										'type'        => 'toggle_switch_button',
-										'label'       => __( 'A Student Completed Lesson', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'buttons'     => array(
-											'edit' => 'Edit button of a_student_completed_lesson',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-								),
-							),
-							array(
-								'label'      => __( 'E-Mail to Admin', 'tutor' ),
-								'slug'       => 'e_mail_to_admin',
-								'block_type' => 'uniform',
-								'fields'     => array(
-									array(
-										'key'         => 'new_instructor_signup',
-										'type'        => 'toggle_switch_button',
-										'label'       => __( 'New Instructor Signup', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'buttons'     => array(
-											'edit' => 'Edit button of new_instructor_signup',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									array(
-										'key'         => 'new_student_signup',
-										'type'        => 'toggle_switch_button',
-										'label'       => __( 'New Student Signup', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'buttons'     => array(
-											'edit' => 'Edit button of new_student_signup',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									array(
-										'key'         => 'new_course_submitted_for_review',
-										'type'        => 'toggle_switch_button',
-										'label'       => __( 'New Course Submitted for Review', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'buttons'     => array(
-											'edit' => 'Edit button of new_course_submitted_for_review',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
 									),
 								),
 							),
@@ -1667,8 +1481,27 @@ class Options_V2 {
 				),
 			),
 		);
+		$attrs   = apply_filters( 'tutor/options/attr', $attr );
+		$extends = apply_filters( 'tutor/options/extend/attr', array() );
 
-		return $attr;
+		if ( tutils()->count( $extends ) ) {
+			// $attrs_array = array_merge( $attrs, $extends );//
+			foreach ( $extends as $extend_key => $extend_option ) {
+				if ( isset( $attrs[ $extend_key ] ) && tutils()->count( $extend_option['sections'] ) ) {
+					$sections                         = $attrs[ $extend_key ]['sections'];
+					$sections                         = array_merge( $sections, $extend_option['sections'] );
+					$attrs[ $extend_key ]['sections'] = $sections;
+				}
+			}
+			echo '<pre>';
+			print_r( $attrs );
+			echo '</pre>';
+		}
+		// foreach ( $attrs_array as $extend_key => $extend_option ) {
+
+		// }
+
+		// return $attrs;
 	}
 
 	/**
