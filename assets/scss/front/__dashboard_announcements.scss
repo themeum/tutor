@@ -3,6 +3,7 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	
 	p {
 		margin: 0;
 	}
@@ -97,62 +98,24 @@
 	position: relative;
 	cursor: pointer;
     margin-left: 20px;
+
     .tutor-icon-action {
 		padding: 5px 10px;
 		margin-right: -10px;
+
         &:hover {
             background: #f3f3f3;
             border-radius: 50%;
         }
     }
+
+	&.show {
+		.tutor-dropdown-menu {
+			display: block !important;
+		}
+	}
 }
-.tutor-dropdown.show .tutor-dropdown-menu {
-	display: block !important;
-}
-.tutor-dropdown-menu:before {
-	content: "";
-	position: absolute;
-	right: 10px;
-	background: -webkit-linear-gradient(135deg, transparent 50%, black 50%);
-	background: linear-gradient(-45deg, transparent 50%, black 50%);
-	height: 10px;
-	width: 10px;
-	-webkit-transform: rotate(45deg);
-	transform: rotate(45deg);
-	top: -4px;
-}
-.tutor-dropdown-menu {
-	min-width: 140px;
-	background: #353535;
-	color: white;
-	width: 100%;
-    position: absolute;
-    top: 40px;
-	right: -13px;
-	display: none;
-	border-radius: 5px;
-    padding: 0;
-    margin: 0;
-}
-.tutor-dropdown-menu li {
-	list-style: none !important;
-	padding: 5px 15px 5px 15px;
-    cursor: pointer;
-    &:first-child {
-        border-top-left-radius: 6px;
-        border-top-right-radius: 6px;
-    }
-    &:last-child {
-        border-bottom-left-radius: 6px;
-        border-bottom-right-radius: 6px;
-    }
-}
-.tutor-dropdown-menu li:hover {
-	background-color: #6b6b6b;
-}
-.tutor-dropdwown-menu li i {
-	padding-right: 4px;
-}
+
 .tutor-announcements-update-form .tutor-option-field-row input[type="text"],
 .tutor-announcements-update-form textarea,
 .tutor-announcements-form .tutor-option-field-row input[type="text"],
@@ -210,20 +173,23 @@
 
 .tutor-announcement-detail-content {
 	margin-top: 35px;
+
+	h3 {
+		font-size: 24px;
+		font-weight: bold;
+		color: #161616;
+	}
+	
+	p {
+		font-style: normal;
+		font-weight: normal;
+		font-size: 16px;
+		color: #7a7a7a;
+		margin-top: 15px;
+		margin-bottom: 10px;
+	}
 }
-.tutor-announcement-detail-content h3 {
-	font-size: 24px;
-	font-weight: bold;
-	color: #161616;
-}
-.tutor-announcement-detail-content p {
-	font-style: normal;
-	font-weight: normal;
-	font-size: 16px;
-	color: #7a7a7a;
-	margin-top: 15px;
-    margin-bottom: 10px;
-}
+
 .tutor-detail-course-content-wrap {
 	background-color: #f3f3f3;
 }
