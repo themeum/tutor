@@ -39,6 +39,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 <form action="" id="tutor-frontend-course-builder" method="post" enctype="multipart/form-data">
     <?php wp_nonce_field(tutor()->nonce_action, tutor()->nonce); ?>
 
+    <!-- Sticky header with course action buttons -->
     <header class="tutor-dashboard-builder-header">
         <div class="tutor-container tutor-fluid">
             <div class="tutor-row tutor-align-items-center">
@@ -75,8 +76,9 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
             </div>
         </div>
     </header>
-    <div class="tutor-frontend-course-builder-section">
 
+    <!-- Course builder body -->
+    <div class="tutor-frontend-course-builder-section">
         <div class="tutor-container">
             <div class="tutor-row">
                 <div class="tutor-col-8">
@@ -236,6 +238,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 
                                     </div>
                                 </div>
+                                <?php do_action('tutor/frontend_course_edit/after/thumbnail', $post); ?>
                             </div>
                         </div>
                     </div>
@@ -256,7 +259,8 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         </div>
                     </div>
                 </div>
-                <!--.tutor-col-8-->
+                
+                <!-- Course builder tips right sidebar -->
                 <div class="tutor-col-4">
                     <div class="tutor-course-builder-upload-tips">
                         <h3 class="tutor-course-builder-tips-title"><i class="tutor-icon-light-bulb"></i><?php _e('Course Upload Tips', 'tutor') ?></h3>
@@ -271,9 +275,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         </ul>
                     </div>
                 </div>
-                <!--.tutor-col-4-->
             </div>
-            <!--.tutor-row-->
         </div>
     </div>
 </form>
