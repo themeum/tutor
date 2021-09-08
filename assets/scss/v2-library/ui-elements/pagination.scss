@@ -1,0 +1,32 @@
+.tutor-pagination {
+  @extend .d-flex;
+  @extend .align-items-center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 24px;
+  a {
+    @extend .d-flex;
+    @extend .align-items-center;
+    @extend .justify-content-center;
+    font-size: 16px;
+    height: 40px;
+    width: 40px;
+    border: 1px solid var(--tutor-border-color);
+    text-decoration: none;
+    margin: 0 5px;
+    border-radius: 4px;
+    color: var(--tutor-text-primary);
+    transition: 200ms;
+    &:hover {
+      color: var(--tutor-primary);
+      border-color: var(--tutor-primary);
+    }
+  }
+  span {
+    @extend .d-block;
+    padding: 0 5px;
+  }
+}

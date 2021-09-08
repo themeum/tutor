@@ -5,17 +5,6 @@ $current_tab = tutils()->array_get('settings_tab', $_GET);
 ?>
 
 <div id="tutor-metabox-course-settings-tabs" class="tutor-course-settings-tabs">
-
-	<?php
-	if ( ! $this->is_gutenberg_enable){
-		?>
-        <div class="settings-tabs-heading">
-            <h3><?php _e('Course Settings', 'tutor'); ?></h3>
-        </div>
-		<?php
-	}
-	?>
-
     <div class="course-settings-tabs-container">
         <div class="settings-tabs-navs-wrap">
             <ul class="settings-tabs-navs">

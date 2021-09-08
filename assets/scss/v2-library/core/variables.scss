@@ -1,0 +1,98 @@
+// @ scss vars
+
+$z-index-modal: 99999;
+
+
+// common
+
+$black: #000000;
+$white: #ffffff;
+
+
+// general
+
+$primary: #3E64DE;
+$primary-dark: #28408E;
+$primary-hover: #395BCA;
+$primary-lighter: #E9EDFB;
+
+$danger: #F44337;
+$danger-hover: #E53935;
+$danger-dark: #C62828;
+
+$success: #24A148;
+$success-hover: #007A38;
+$success-dark: #075A2A;
+
+$warning: #ED9700;
+$warning-hover: #E08E00;
+$warning-dark: #B87400;
+
+// text
+
+$text-primary: #161616;
+$text-title: #353535;
+$text-subtitle: #525252;
+$text-hints: #7A7A7A;
+
+// background
+
+$bg-grey: #F3F3F3;
+$bg-dark-grey: #656565;
+$bg-dark: #262626;
+$bg-black: $black;
+$bg-dark-notification: #353535;
+
+// disabled
+$disabled-bg: #E8E8E8;
+$disabled-color: $text-hints;
+
+// border color
+
+$border: #BABABA;
+$border-alt: #DCDBDC;
+
+
+
+
+:root {
+  --tutor-primary: #{$primary};
+  --tutor-primary-hover: #{$primary-hover};
+  --tutor-primary-dark: #{$primary-dark};
+  --tutor-primary-lighter: #{$primary-lighter};
+
+  --tutor-danger: #{$danger};
+  --tutor-danger-hover: #{$danger-hover};
+  --tutor-danger-dark: #{$danger-dark};
+
+  --tutor-success: #{$success};
+  --tutor-success-hover: #{$success-hover};
+  --tutor-success-dark: #{$success-dark};
+
+  --tutor-warning: #{$warning};
+  --tutor-warning-hover: #{$warning-hover};
+  --tutor-warning-dark: #{$warning-dark};
+
+  --tutor-white: #{$white};
+  --tutor-black: #{$black};
+
+  --tutor-border-color: #{$border};
+  --tutor-border-color-alt: #{$border-alt};
+
+  --tutor-text-primary: #{$text-primary};
+  --tutor-text-title: #{$text-title};
+  --tutor-text-subtitle: #{$text-subtitle};
+  --tutor-text-hints: #{$text-hints};
+
+
+  --tutor-disabled-bg: #{$disabled-bg};
+  --tutor-disabled-color: #{$disabled-color};
+
+  --tutor-bg-dark-notification: #{$bg-dark-notification};
+  --tutor-bg-dark: #{$bg-dark};
+  --tutor-bg-grey: #{$bg-grey};
+  --tutor-bg-grey-light: #{rgba($bg-grey, .30)};
+  --tutor-bg-dark-grey: #{$bg-dark-grey};
+  --tutor-bg-black: #{$bg-black};
+
+}

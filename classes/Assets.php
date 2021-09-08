@@ -65,8 +65,8 @@ class Assets {
 		wp_enqueue_style('tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-admin-v2-fonts', tutor()->url . 'assets/css/fonts/lineawesome@1.3.0/css/line-awesome.min.css', array(), tutor()->version);
-		wp_enqueue_style('tutor-admin-v2', tutor()->url . 'assets/css/tutor-admin-v2.min.css', array(), tutor()->version);
-		wp_enqueue_style('admin-v2-markup', tutor()->url . 'assets/css/admin-v2-markup.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.min.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-v2-admin-markup', tutor()->url . 'assets/css/admin-v2-markup.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-v2-icon-test', tutor()->url . 'assets/css/fonts/lineawesome@1.3.0/css/tutor-v2-icon-test.css', array(), tutor()->version);
 
@@ -166,8 +166,8 @@ class Assets {
 		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version);
 
 		// V2
-		wp_enqueue_style('tutor-admin-v2', tutor()->url . 'assets/css/tutor-admin-v2.min.css', array(), tutor()->version);
-		wp_enqueue_style('tutor-v2-icon-test', tutor()->url . 'assets/css/fonts/lineawesome@1.3.0/css/tutor-v2-icon-test.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.min.css', array(), tutor()->version);
+		
 		//Plyr
 		wp_enqueue_style('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), tutor()->version);
 		wp_enqueue_script('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array('jquery'), tutor()->version, true);
