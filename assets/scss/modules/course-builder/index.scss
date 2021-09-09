@@ -4,7 +4,7 @@ body.tutor-screen-course-builder {
 
     $body: &;
     
-
+    // Reusable thumbnail wrapper
     .builder-course-thumbnail-upload-wrap {
         & > div {
             font-size: var(--tutor-text-size);
@@ -45,6 +45,7 @@ body.tutor-screen-course-builder {
         }
     }
 
+    // Course segments
     @import './segments/video.scss';
     @import './segments/setting.scss';
     @import './segments/instructor.scss';
@@ -54,5 +55,9 @@ body.tutor-screen-course-builder {
     /* Screen specific declarations (Frontend editor) */
     &.tutor-screen-course-builder-frontend{
         @import './frontend.scss';
+    }
+
+    &:not(.tutor-screen-course-builder-frontend) {
+        @import './backend.scss';
     }
 }
