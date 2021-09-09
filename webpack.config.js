@@ -53,10 +53,10 @@ module.exports = ( env, options ) => {
 	var configEditor = Object.assign({}, config, {
 		name: 'configEditor',
 		entry: {
-			'tutor'				: './assets/react/tutor.js',
-			'tutor-front'		: './assets/react/tutor-front.js',
-			'tutor-admin'		: './assets/react/tutor-admin.js',
-			'tutor-setup'		: './assets/react/tutor-setup.js',
+			'tutor-front'		    : './assets/react/front/tutor-front.js',
+			'tutor-admin'		    : './assets/react/admin/tutor-admin.js',
+			'tutor-course-builder'	: './assets/react/course-builder/index.js',
+			'tutor-setup'		    : './assets/react/admin/tutor-setup.js',
         },
         resolve: {
             modules: [ reactRoot, nodeModules ],

@@ -1,3 +1,5 @@
+import '../lib/common';
+
 jQuery(document).ready(function($){
     'use strict';
 
