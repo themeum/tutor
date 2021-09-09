@@ -176,6 +176,8 @@ gulp.task("copy", function () {
 			"!./package.json",
 			"!./package-lock.json",
 			"!./*.lock",
+			"!./*.js",
+			"!./*.json",
 		])
 		.pipe(gulp.dest("build/tutor/"));
 });
