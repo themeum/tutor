@@ -57,6 +57,7 @@ for(let task in scss_blueprints) {
 
 var added_texts = [];
 const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/ig;
+const js_files = ['tutor-front', 'tutor-admin', 'tutor-course-builder', 'tutor-setup'].map(f=>'assets/js/'+f+'.js:1').join(', ');
 function i18n_makepot(callback, target_dir) {
 
 	const parent_dir = target_dir || __dirname;
@@ -105,7 +106,7 @@ function i18n_makepot(callback, target_dir) {
 
 					added_texts.push(text);
 					translation_texts+= 
-						'\n#: ' + (full_path.replace(__dirname+'/', '')) + ':' + (i+1) 
+						'\n#: ' + js_files 
 						+ '\nmsgid "'+text
 						+'"\nmsgstr ""' 
 						+ '\n'; 
