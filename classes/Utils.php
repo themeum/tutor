@@ -2802,7 +2802,7 @@ class Utils {
 		$count = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(enrollment.ID)
 			FROM 	{$wpdb->posts} enrollment 
-					LEFT  JOIN {$wpdb->posts} course
+					INNER  JOIN {$wpdb->posts} course
 							ON enrollment.post_parent=course.ID
 			WHERE 	course.post_author = %d
 					AND course.post_type = %s
@@ -2819,6 +2819,129 @@ class Utils {
 		) );
 
 		return (int) $count;
+	}
+
+	/**
+	 * Get all students by instructor_id
+	 * 
+	 * @param $instructor_id int | required
+	 * 
+	 * @param $offset int | required
+	 * 
+	 * @param $limit int | required
+	 * 
+	 * @param $search string | optional
+	 * 
+	 * @param $course_id int | optional
+	 * 
+	 * @param $date string | optional
+	 * 
+	 * @return array
+	 * 
+	 * @since 1.9.9
+	 */
+	public function get_students_by_instructor( int $instructor_id, int $offset, int $limit, $search_filter = '', $course_id = '', $date_filter = '', $order_by = '', $order = '' ): array {
+		global $wpdb;
+		$instructor_id 	= sanitize_text_field( $instructor_id );
+		$limit 	 		= sanitize_text_field( $limit );
+		$offset  		= sanitize_text_field( $offset );
+		$course_id 		= sanitize_text_field( $course_id );
+		$date_filter 	= sanitize_text_field( $date_filter );
+		$search_filter 	= sanitize_text_field( $search_filter );
+
+		$order_by    	= 'user.ID';
+		if ( 'registration_date' === $order_by ) {
+			$order_by = 'enrollment.post_date';
+		} else if ( 'course_taken' ===  $order_by ) {
+			$order_by = 'course_taken';
+		} else {
+			$order_by = 'user.ID';
+		}
+
+		$order 	 = sanitize_text_field( $order );
+
+		if ( '' !== $date_filter ) {
+			$date_filter = \tutor_get_formated_date( 'Y-m-d', $date_filter );
+		}
+
+		$course_post_type = tutor()->course_post_type;
+
+		$search_query = '%' . $wpdb->esc_like( $search_filter ) . '%';
+		$course_query = '';
+		$date_query   = '';
+
+		if ( $course_id ) {
+			$course_query = " AND course.ID = $course_id ";
+		}
+		if ( '' !== $date_filter ) {
+			$date_query = " AND DATE(enrollment.post_date) = CAST( '$date_filter' AS DATE ) ";
+		}
+
+		$students = $wpdb->get_results( $wpdb->prepare(
+			"SELECT COUNT(enrollment.post_author) AS course_taken, user.*, (SELECT post_date FROM {$wpdb->posts} WHERE post_author = user.ID LIMIT 1) AS enroll_date
+				FROM 	{$wpdb->posts} enrollment 
+					INNER  JOIN {$wpdb->posts} AS course
+							ON enrollment.post_parent=course.ID
+					INNER  JOIN {$wpdb->users} AS user
+							ON user.ID = enrollment.post_author
+				WHERE 	course.post_author = %d
+					AND course.post_type = %s
+					AND course.post_status = %s
+					AND enrollment.post_type = %s
+					AND enrollment.post_status = %s
+					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s )
+					{$course_query}
+					{$date_query}
+				GROUP BY enrollment.post_author
+				ORDER BY {$order_by} {$order}
+				LIMIT %d, %d
+			",
+			$instructor_id,
+			$course_post_type,
+			'publish',
+			'tutor_enrolled',
+			'completed',
+			$search_query,
+			$search_query,
+			$search_query,
+			$search_query,
+			$offset,
+			$limit
+		) );
+		$total_students = $wpdb->get_results( $wpdb->prepare(
+			"SELECT COUNT(enrollment.post_author) AS course_taken, user.*, enrollment.post_date AS enroll_date
+				FROM 	{$wpdb->posts} enrollment 
+					INNER  JOIN {$wpdb->posts} AS course
+							ON enrollment.post_parent=course.ID
+					INNER  JOIN {$wpdb->users} AS user
+							ON user.ID = enrollment.post_author
+				WHERE 	course.post_author = %d
+					AND course.post_type = %s
+					AND course.post_status = %s
+					AND enrollment.post_type = %s
+					AND enrollment.post_status = %s
+					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s )
+					{$course_query}
+					{$date_query}
+				GROUP BY enrollment.post_author
+				ORDER BY {$order_by} {$order}
+				
+			",
+			$instructor_id,
+			$course_post_type,
+			'publish',
+			'tutor_enrolled',
+			'completed',
+			$search_query,
+			$search_query,
+			$search_query,
+			$search_query,
+		) );
+
+		return array(
+			'students'		 => $students,
+			'total_students' => count($total_students)
+		);
 	}
 
 	/**
