@@ -18,7 +18,7 @@ do_action('tutor_course/single/before/content');
 global $post;
 ?>
 
-    <div class="tutor-single-course-segment  tutor-course-content-wrap">
+    <div class="tutor-single-course-segment tutor-course-content-wrap">
 		<?php
 		if ( ! empty(get_the_content())){
 			?>
