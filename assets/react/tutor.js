@@ -1,3 +1,9 @@
+import React from 'react';
+import './test/test.js';
+
+const ssss=<span>dfsfdgdfgsdfsd</span>
+console.log(ssss);
+
 function tutor_get_nonce_data(send_key_value) {
 
     var nonce_data = window._tutorobject || {};
