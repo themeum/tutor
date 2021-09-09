@@ -1,12 +1,14 @@
 .DS_Store
 node_modules/
+/vendor/
+.phpcs.cache
+.phpunit.result.cache
+php-errors.log
 ehthumbs.db
 Thumbs.db
 .npm
 .idea/
 .vscode/
-package-lock.json
-yarn.lock
 .sass-cache
 assets/css/tutor-front.css.map
 assets/css/tutor-front.min.css.map
@@ -18,3 +20,4 @@ assets/css/tutor-front.min.css.map
 /test
 .history
 .docz
+*.lock
