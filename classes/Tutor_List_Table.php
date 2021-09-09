@@ -402,10 +402,12 @@ class Tutor_List_Table {
 
 	public function sorting_date($selected = ''){
 		$placeholder = __( get_option( 'date_format' ), 'tutor' );
+		$date_filter = sanitize_text_field( tutor_utils()->array_get('date', $_GET, '') );
+		$date_input  = '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : '';
 		$markup = '
 			<div class="alignright assignment-date-box">
 				<label>'.__('Date', 'tutor').'</label>
-				<input type="" class="tutor_date_picker tutor-assignment-date-sorting" placeholder="'.$placeholder.'" value="'.$selected.'">
+				<input type="" class="tutor_date_picker tutor-assignment-date-sorting" placeholder="'.$placeholder.'" value="'. $date_input .'">
 				<i class="tutor-icon-calendar"></i>
 			</div>
 			';		
@@ -1284,7 +1286,7 @@ class Tutor_List_Table {
 				<div>
 					<div class="menu-label"><?php _e('Date', 'tutor'); ?></div>
 					<div class="date-range-input">
-						<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" placeholder="<?php _e( get_option( 'date_format' ) , 'tutor' );?>" value="<?php echo $date_filter; ?>" autocomplete="off" />
+						<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" placeholder="<?php _e( get_option( 'date_format' ) , 'tutor' );?>" value="<?php echo '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" autocomplete="off" />
 						<i class="tutor-icon-calendar"></i>
 					</div>
 				</div>

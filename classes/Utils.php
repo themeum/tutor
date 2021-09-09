@@ -6644,6 +6644,7 @@ class Utils {
 	public function user_profile_completion( $user_id = 0 ) {
 		$user_id    = $this->get_user_id( $user_id );
 		$instructor = $this->is_instructor( $user_id );
+		$instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
 
 		$required_fields = apply_filters( 'tutor_profile_required_fields', array(
 			'first_name' 				  => __( 'First Name', 'tutor' ),
@@ -6652,7 +6653,7 @@ class Utils {
 			'_tutor_withdraw_method_data' => __( 'Withdraw Method', 'tutor' ),
 		));
 
-		if ( ! $instructor && array_key_exists( "_tutor_withdraw_method_data", $required_fields ) ) {
+		if ( 'approved' !== $instructor_status && array_key_exists( "_tutor_withdraw_method_data", $required_fields ) ) {
 			unset( $required_fields[ '_tutor_withdraw_method_data' ] );
 		}
 
