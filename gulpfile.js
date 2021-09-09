@@ -26,12 +26,17 @@ var prefixerOptions = {
 };
 
 var scss_blueprints = {
-	tutor_front : {src: "assets/scss/front/main.scss", mode: 'expanded', destination: 'tutor-front.css'},
-	tutor_front_min: {src: "assets/scss/front/main.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
-	tutor_admin: {src: "assets/scss/admin/main.scss", mode: 'expanded', destination: 'tutor-admin.css'},
-	tutor_admin_min: {src: "assets/scss/admin/main.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
-	tutor_front_dashboard: {src: "assets/scss/front/dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
-	tutor_front_dashboard_min: {src: "assets/scss/front/dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
+	tutor_front : {src: "assets/scss/front/index.scss", mode: 'expanded', destination: 'tutor-front.css'},
+	tutor_front_min: {src: "assets/scss/front/index.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
+
+	tutor_admin: {src: "assets/scss/admin/index.scss", mode: 'expanded', destination: 'tutor-admin.css'},
+	tutor_admin_min: {src: "assets/scss/admin/index.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
+
+	tutor_course_builder: {src: "assets/scss/course-builder/index.scss", mode: 'expanded', destination: 'tutor-course-builder.css'},
+	tutor_course_builder_min: {src: "assets/scss/course-builder/index.scss", mode: 'compressed', destination: 'tutor-course-builder.min.css'},
+
+	tutor_front_dashboard: {src: "assets/scss/dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
+	tutor_front_dashboard_min: {src: "assets/scss/dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
 };
 
 var task_keys = Object.keys(scss_blueprints);
@@ -60,7 +65,7 @@ function i18n_makepot(callback, target_dir) {
 	// Loop through JS files inside js directory
 	fs.readdirSync(parent_dir).forEach( function(file_name) {
 
-		if(file_name=='node_modules') {
+		if(file_name=='node_modules' || file_name.indexOf('.')===0) {
 			return;
 		}
 
