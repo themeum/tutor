@@ -4566,7 +4566,8 @@ div[class*="tutor-course-col"] {
   margin: 0;
 }
 
-.tutor-course-loop .tutor-course-header a, .tutor-course-loop .tutor-course-header a img {
+.tutor-course-loop .tutor-course-header a,
+.tutor-course-loop .tutor-course-header a img {
   display: block;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
@@ -4627,7 +4628,8 @@ div[class*="tutor-course-col"] {
   margin-right: 4px;
 }
 
-.tutor-course-loop-meta > div i, .tutor-course-loop-meta > div span {
+.tutor-course-loop-meta > div i,
+.tutor-course-loop-meta > div span {
   vertical-align: middle;
 }
 
@@ -5845,6 +5847,7 @@ Instructor
 .tutor-pagination-wrap span {
   padding: 3px;
   display: inline-block;
+  text-decoration: none;
 }
 
 .tutor-pagination-wrap a:hover,
