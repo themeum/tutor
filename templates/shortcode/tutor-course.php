@@ -4,7 +4,7 @@
  * @package TutorLMS/Templates
  * @version 1.4.3
  */
-
+$the_query = $GLOBALS['the_custom_query'];
 $column_per_row = $GLOBALS['tutor_shortcode_arg']['column_per_row'];
 $course_per_page = $GLOBALS['tutor_shortcode_arg']['course_per_page'];
 $course_filter = $GLOBALS['tutor_shortcode_arg']['include_course_filter']===null ? (bool) tutor_utils()->get_option('course_archive_filter', false) : $GLOBALS['tutor_shortcode_arg']['include_course_filter'];
@@ -18,12 +18,12 @@ if ($course_filter && count($supported_filters)) { ?>
 		<div>
 			<div id="tutor-course-filter-loop-container" class="<?php tutor_container_classes() ?> tutor-course-filter-loop-container" data-column_per_row="<?php echo $column_per_row; ?>" data-course_per_page="<?php echo $course_per_page; ?>"> <?php 
 	}
-				if ( have_posts() ) :
+				if ( $the_query->have_posts() ) :
 					/* Start the Loop */
 				
 					tutor_course_loop_start();
 				
-					while ( have_posts() ) : the_post();
+					while ( $the_query->have_posts() ) : $the_query->the_post();
 						/**
 						 * @hook tutor_course/archive/before_loop_course
 						 * @type action
@@ -51,3 +51,19 @@ if ($course_filter && count($supported_filters)) { ?>
 	</div>
 <?php } 
 ?>
+<?php do_action('tutor_course/archive/pagination/before');  ?>
+
+<div class="tutor-pagination-wrap">
+	<?php
+	$big = 999999999; // need an unlikely integer
+
+	echo paginate_links( array(
+		'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+		'format' => '?paged=%#%',
+		'current' => max( 1, get_query_var('paged') ),
+		'total' => $the_query->max_num_pages
+	) );
+	?>
+</div>
+
+<?php do_action('tutor_course/archive/pagination/after');  ?>
