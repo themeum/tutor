@@ -68,10 +68,11 @@
 					<?php
 					$i            = 0;
 					$options_attr = $this->options_attr();
-					echo '<pre>';
+					/*
+					 echo '<pre>';
 					print_r( $options_attr );
 					echo '</pre>';
-					die;
+					die; */
 
 
 					foreach ( $options_attr as $args ) :
@@ -84,15 +85,18 @@
 							<li>
 								<?php
 								$url_exist = $this->url_exists( $args['sections'], $url_page );
-
+								// echo '<pre>';
+								// print_r($args['sections']);
+								// echo '</pre>';
 								foreach ( $args['sections'] as $key => $section ) :
+
 									$i        += 1;
-									$icon      = tutor()->icon_dir . $section['slug'] . '.svg';
-									$is_active = $this->get_active( $i, $url_page, $section['slug'], $url_exist ) ? 'active' : null;
+									$icon      = tutor()->icon_dir . $key . '.svg';
+									$is_active = $this->get_active( $i, $url_page, $key, $url_exist ) ? 'active' : null;
 									?>
 							<li class="tutor-option-nav-item">
-								<a data-tab="<?php echo $section['slug']; ?>" class="<?php echo $is_active; ?>">
-									<img src="<?php echo $icon; ?>" alt="<?php echo $section['slug']; ?>-icon" />
+								<a data-tab="<?php echo $key; ?>" class="<?php echo $is_active; ?>">
+									<img src="<?php echo $icon; ?>" alt="<?php echo $key; ?>-icon" />
 									<span class="nav-label"><?php echo $section['label']; ?></span>
 								</a>
 							</li>
@@ -108,7 +112,7 @@
 				<!-- end /.tutor-option-tabs -->
 				<div class="tutor-option-tab-pages">
 					<?php
-					/*
+
 					$i = 0;
 
 					foreach ( $this->options_attr as $args ) :
@@ -126,7 +130,7 @@
 							<?php
 						endforeach;
 					endforeach;
-					*/
+
 					?>
 				</div>
 				<!-- end /.tutor-option-tab-pages -->
