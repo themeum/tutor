@@ -6,7 +6,6 @@
   "scripts": {
     "build": "npm run js-build && gulp build",
     "css-watch": "gulp watch",
-    "eslint": "eslint assets/react/*.js",
     "js-build": "webpack --mode=production",
     "js-watch": "webpack --mode=production --watch",
     "watch": "npm run build && concurrently \"npm run css-watch\" \"npm run js-watch\""
