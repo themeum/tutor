@@ -11,7 +11,7 @@ namespace TUTOR;
 class Email {
 
 	public function __construct() {
-		add_filter( 'tutor/options/attr', array( $this, 'add_options' ), 10 ); // Priority index is important. Content Drip uses 11.
+		// add_filter( 'tutor/options/attrs_added', array( $this, 'add_options' ), 10 ); // Priority index is important. Content Drip uses 11.
 
 		if ( ! function_exists( 'tutor_pro' ) ) {
 			add_action( 'tutor_options_before_email_notification', array( $this, 'no_pro_message' ) );
@@ -19,10 +19,10 @@ class Email {
 	}
 
 	public function add_options( $attr ) {
-		$attr['email_notification'] = array(
+		$attr['basic'] = array(
 			'label'    => __( 'Email', 'tutor' ),
 			'sections' => array(
-				array(
+				'email' => array(
 					'label'    => __( 'Email', 'tutor' ),
 					'slug'     => 'email',
 					'desc'     => __( 'Email Settings', 'tutor' ),
