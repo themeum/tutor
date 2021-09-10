@@ -2982,6 +2982,63 @@ class Utils {
 	}
 
 	/**
+	 * Get total number of completed assignment
+	 * 
+	 * @param $course_id int | required
+	 * 
+	 * @param $student | required
+	 * 
+	 * @since 1.9.9
+	 */
+	public function get_completed_assignment(int $course_id, int $student_id): int {
+		global $wpdb;
+		$course_id 	= sanitize_text_field( $course_id );
+		$student_id = sanitize_text_field( $student_id );
+		$count = $wpdb->get_var($wpdb->prepare(
+			"SELECT COUNT(ID) FROM wp_posts
+				INNER JOIN wp_comments c ON c.comment_post_ID = wp_posts.ID  AND c.user_id = %d AND c.comment_approved = %s
+				WHERE post_parent IN (SELECT ID FROM wp_posts WHERE post_type = %s AND post_parent = %d AND post_status = %s)
+					AND post_type =%s 
+					AND post_status = %s
+			",
+			$student_id,
+			'submitted',
+			'topics',
+			$course_id,
+			'publish',
+			'tutor_assignments',
+			'publish'
+		));
+		return (int) $count;
+	}
+	/**
+	 * Get total number of completed quiz
+	 * 
+	 * @param $course_id int | required
+	 * 
+	 * @param $student | required
+	 * 
+	 * @since 1.9.9
+	 */
+	public function get_completed_quiz(int $course_id, int $student_id): int {
+		global $wpdb;
+		$course_id 	= sanitize_text_field( $course_id );
+		$student_id = sanitize_text_field( $student_id );
+		$count = $wpdb->get_var($wpdb->prepare(
+			"SELECT COUNT(DISTINCT quiz_id) AS total 
+				FROM {$wpdb->prefix}tutor_quiz_attempts 
+				WHERE course_id = %d 
+				AND user_id = %d
+				AND attempt_status = %s
+			",
+			$course_id,
+			$student_id,
+			'attempt_ended'
+		));
+		return (int) $count;
+	}
+
+	/**
 	 * @param float $input
 	 *
 	 * @return float|string
