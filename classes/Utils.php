@@ -2945,6 +2945,43 @@ class Utils {
 	}
 
 	/**
+	 * Get all course for a give student & instructor id
+	 * 
+	 * @param $student_id int | required
+	 * 
+	 * @param $instructor_id int | required
+	 * 
+	 * @return array
+	 * 
+	 * @since 1.9.9
+	 */
+	public function get_courses_by_student_instructor_id (int $student_id, int $instructor_id): array {
+		global $wpdb;
+		$course_post_type = tutor()->course_post_type;
+		$students = $wpdb->get_results( $wpdb->prepare(
+			"SELECT course.*
+				FROM 	{$wpdb->posts} enrollment 
+					INNER  JOIN {$wpdb->posts} AS course
+							ON enrollment.post_parent=course.ID
+				WHERE 	course.post_author = %d
+					AND course.post_type = %s
+					AND course.post_status = %s
+					AND enrollment.post_type = %s
+					AND enrollment.post_status = %s
+					AND enrollment.post_author = %d
+				ORDER BY course.post_date DESC
+			",
+			$instructor_id,
+			$course_post_type,
+			'publish',
+			'tutor_enrolled',
+			'completed',
+			$student_id
+		) );
+		return $students;
+	}
+
+	/**
 	 * @param float $input
 	 *
 	 * @return float|string
