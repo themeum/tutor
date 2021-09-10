@@ -66,9 +66,16 @@
 				<input type="hidden" name="action" value="tutor_option_save">
 				<div class="tutor-option-tabs">
 					<?php
-					$i = 0;
+					$i            = 0;
+					$options_attr = $this->options_attr();
+					echo '<pre>';
+					print_r( $options_attr );
+					echo '</pre>';
+					die;
 
-					foreach ( $this->options_attr() as $args ) :
+
+					foreach ( $options_attr as $args ) :
+
 
 						?>
 					 <ul class="tutor-option-nav">
@@ -101,7 +108,7 @@
 				<!-- end /.tutor-option-tabs -->
 				<div class="tutor-option-tab-pages">
 					<?php
-
+					/*
 					$i = 0;
 
 					foreach ( $this->options_attr as $args ) :
@@ -119,6 +126,7 @@
 							<?php
 						endforeach;
 					endforeach;
+					*/
 					?>
 				</div>
 				<!-- end /.tutor-option-tab-pages -->

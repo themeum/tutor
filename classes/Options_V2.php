@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Options for TutorLMS
  *
@@ -21,13 +22,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Options_V2 {
 
+
 	public $option;
 	public $status;
 	public $options_attr;
 	public $options_tools;
 
 	public function __construct() {
-		$this->option        = (array) maybe_unserialize( get_option( 'tutor_option' ) );
+		 $this->option       = (array) maybe_unserialize( get_option( 'tutor_option' ) );
 		$this->status        = $this->status();
 		$this->options_attr  = $this->options_attr();
 		$this->options_tools = $this->options_tools();
@@ -77,7 +79,7 @@ class Options_V2 {
 	 * @return array
 	 */
 	public function tutor_option_search() {
-		tutils()->checking_nonce();
+		 tutils()->checking_nonce();
 
 		// !current_user_can('manage_options') ? wp_send_json_error() : 0;
 		// $keyword = strtolower( $_POST['keyword'] );
@@ -449,7 +451,7 @@ class Options_V2 {
 			'basic' => array(
 				'label'    => __( 'Basic', 'tutor' ),
 				'sections' => array(
-					array(
+					'general'      => array(
 						'label'    => __( 'General', 'tutor' ),
 						'slug'     => 'general',
 						'desc'     => __( 'General Settings', 'tutor' ),
@@ -621,7 +623,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'course'       => array(
 						'label'    => __( 'Course', 'tutor' ),
 						'slug'     => 'course',
 						'desc'     => __( 'Course Settings', 'tutor' ),
@@ -743,7 +745,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'monitization' => array(
 						'label'    => __( 'Monitization', 'tutor' ),
 						'slug'     => 'monitization',
 						'desc'     => __( 'Monitization Settings', 'tutor' ),
@@ -919,7 +921,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'design'       => array(
 						'label'    => __( 'Design', 'tutor' ),
 						'slug'     => 'design',
 						'desc'     => __( 'Design Settings', 'tutor' ),
@@ -1189,7 +1191,71 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'email'        => array(
+						'label'    => __( 'Email', 'tutor' ),
+						'slug'     => 'email',
+						'desc'     => __( 'Email Settings', 'tutor' ),
+						'template' => 'basic',
+						'icon'     => __( 'envelope', 'tutor' ),
+						'blocks'   => array(
+							array(
+								'label'      => __( 'Course', 'tutor' ),
+								'slug'       => 'course',
+								'block_type' => 'uniform',
+								'fields'     => array(
+									array(
+										'key'     => 'email_from_name',
+										'type'    => 'text',
+										'label'   => __( 'Name', 'tutor' ),
+										'default' => get_option( 'blogname' ),
+										'desc'    => __( 'The name under which all the emails will be sent', 'tutor' ),
+									),
+									array(
+										'key'     => 'email_from_address',
+										'type'    => 'text',
+										'label'   => __( 'E-Mail Address', 'tutor' ),
+										'default' => get_option( 'admin_email' ),
+
+										'desc'    => __( 'The E-Mail address from which all emails will be sent', 'tutor' ),
+									),
+									array(
+										'key'     => 'email_footer_text',
+										'type'    => 'textarea',
+										'label'   => __( 'E-Mail Footer Text', 'tutor' ),
+										'default' => '',
+
+										'desc'    => __( 'The text to appear in E-Mail template footer', 'tutor' ),
+									),
+									array(
+										'key'          => 'mailer_native_server_cron',
+										'type'         => 'group_textarea_code',
+										'label'        => __( 'Mailer Native Server Cron', 'tutor' ),
+										'label_title'  => __( '', 'tutor' ),
+										'group_fields' => array(
+											array(
+												'key'     => 'mailer_native_server_cron',
+												'type'    => 'toggle_switch',
+												'label'   => __( 'Mailer Native Server Cron', 'tutor' ),
+												'label_title' => __( '', 'tutor' ),
+												'default' => 'off',
+												'desc'    => __( 'If you use OS native cron, then disable it.', 'tutor' ),
+											),
+											array(
+												'key'     => 'mailer_native_server',
+												'type'    => 'textarea_code',
+												'label'   => __( 'Mailer Native Server Cron', 'tutor' ),
+												'label_title' => __( '', 'tutor' ),
+												'default' => 'off',
+												'desc'    => __( 'If you use OS native cron, then disable it.', 'tutor' ),
+											),
+										),
+										'desc'         => __( 'If you use OS native cron, then disable it.', 'tutor' ),
+									),
+								),
+							),
+						),
+					),
+					'advanced'     => array(
 						'label'    => __( 'Advanced', 'tutor' ),
 						'slug'     => 'advanced',
 						'desc'     => __( 'Advanced Settings', 'tutor' ),
@@ -1229,7 +1295,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'gradebook'    => array(
 						'label'    => __( 'Gradebook', 'tutor' ),
 						'slug'     => 'gradebook',
 						'desc'     => __( 'Gradebook Settings', 'tutor' ),
@@ -1277,7 +1343,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'certificate'  => array(
 						'label'    => __( 'Certificate', 'tutor' ),
 						'slug'     => 'certificate',
 						'desc'     => __( 'Certificate Settings', 'tutor' ),
@@ -1484,24 +1550,18 @@ class Options_V2 {
 		$attrs   = apply_filters( 'tutor/options/attr', $attr );
 		$extends = apply_filters( 'tutor/options/extend/attr', array() );
 
-		if ( tutils()->count( $extends ) ) {
-			// $attrs_array = array_merge( $attrs, $extends );//
-			foreach ( $extends as $extend_key => $extend_option ) {
-				if ( isset( $attrs[ $extend_key ] ) && tutils()->count( $extend_option['sections'] ) ) {
-					$sections                         = $attrs[ $extend_key ]['sections'];
-					$sections                         = array_merge( $sections, $extend_option['sections'] );
-					$attrs[ $extend_key ]['sections'] = $sections;
+		if (tutils()->count($extends)){
+			foreach ($extends as $extend_key => $extend_option){
+				if (isset($attrs[$extend_key])&& tutils()->count($extend_option['sections']) ){
+					$sections = $attrs[$extend_key]['sections'];
+					$sections = array_merge($sections, $extend_option['sections']);
+					$attrs[$extend_key]['sections'] = $sections;
 				}
 			}
-			echo '<pre>';
-			print_r( $attrs );
-			echo '</pre>';
 		}
-		// foreach ( $attrs_array as $extend_key => $extend_option ) {
 
-		// }
+		return $extends;
 
-		// return $attrs;
 	}
 
 	/**
@@ -1701,7 +1761,7 @@ class Options_V2 {
 						endforeach;
 					endforeach;
 				endif;
-			endforeach;
+			  endforeach;
 		endforeach;
 		return $fields;
 	}
