@@ -79,7 +79,7 @@ function i18n_makepot(callback, target_dir) {
 		}
 
 		// Make sure only js extension file to process
-		if(stat.isFile() && path.extname(file_name)=='.js')
+		if(stat.isFile() && path.extname(file_name)=='.js' && full_path.indexOf('assets/react')>-1)
 		{
 			var codes = fs.readFileSync(full_path).toString();
 			var lines = codes.split('\n');
@@ -168,13 +168,10 @@ gulp.task("copy", function () {
 			"!./node_modules/**",
 			"!./**/*.zip",
 			"!.github",
-			"!./gulpfile.js",
 			"!./readme.md",
 			"!.DS_Store",
 			"!./**/.DS_Store",
 			"!./LICENSE.txt",
-			"!./package.json",
-			"!./package-lock.json",
 			"!./*.lock",
 			"!./*.js",
 			"!./*.json",
