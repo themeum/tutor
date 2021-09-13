@@ -18,9 +18,24 @@
 /*}*/
 
 .doc-mb-20 {
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 /*.tutor-form-check {*/
 /*    margin-bottom: 10px;*/
 /*}*/
+
+[data-testid='main-container'] h1 {
+	margin: 30px 0;
+}
+
+[data-testid='main-container'] h2 {
+	margin: 30px 0 20px 0;
+}
+
+code {
+	font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+	font-size: 0.875em;
+	color: #d63384;
+	word-wrap: break-word;
+}
