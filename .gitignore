@@ -9,9 +9,10 @@ Thumbs.db
 .npm
 .idea/
 .vscode/
+package-lock.json
 .sass-cache
-assets/css/tutor-front.css.map
-assets/css/tutor-front.min.css.map
+assets/css/*.map
+assets/js/*.map
 .prettierignore
 *.zip
 *.po

@@ -1,3 +1,5 @@
+import '../lib/common';
+
 jQuery.fn.serializeObject = function()
 {
    var values = {};
