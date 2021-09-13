@@ -1481,8 +1481,9 @@ class Options_V2 {
 				),
 			),
 		);
-		$attrs   = apply_filters( 'tutor/options/attr', $attr );
-		$extends = apply_filters( 'tutor/options/extend/attr', array() );
+		// $attrs   = apply_filters( 'tutor/options/attr', $attr );
+		/*
+		 $extends = apply_filters( 'tutor/options/extend/attr', array() );
 
 		if ( tutils()->count( $extends ) ) {
 			// $attrs_array = array_merge( $attrs, $extends );//
@@ -1493,15 +1494,9 @@ class Options_V2 {
 					$attrs[ $extend_key ]['sections'] = $sections;
 				}
 			}
-			echo '<pre>';
-			print_r( $attrs );
-			echo '</pre>';
-		}
-		// foreach ( $attrs_array as $extend_key => $extend_option ) {
+		} */
 
-		// }
-
-		// return $attrs;
+		return $attr;
 	}
 
 	/**
