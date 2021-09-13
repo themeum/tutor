@@ -14,6 +14,26 @@ a {
   text-decoration: none;
 }
 
+.d-grid {
+  display: grid;
+}
+
+.d-grid.grid-col-1x1 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.d-grid.grid-col-1x2 {
+  grid-template-columns: 1fr 2fr;
+}
+
+.d-grid.grid-col-1x3 {
+  grid-template-columns: 1fr 3fr;
+}
+
+.d-grid.grid-col-1x4 {
+  grid-template-columns: 1fr 4fr;
+}
+
 .text-thin-h1 {
   font-weight: 100;
   font-size: 80px;
@@ -433,26 +453,6 @@ a {
   color: #41454f;
 }
 
-.d-grid {
-  display: grid;
-}
-
-.d-grid.grid-col-1x1 {
-  grid-template-columns: 1fr 1fr;
-}
-
-.d-grid.grid-col-1x2 {
-  grid-template-columns: 1fr 2fr;
-}
-
-.d-grid.grid-col-1x3 {
-  grid-template-columns: 1fr 3fr;
-}
-
-.d-grid.grid-col-1x4 {
-  grid-template-columns: 1fr 4fr;
-}
-
 .tutor-backend-settings-page .tutor-btn {
   cursor: pointer;
   border-radius: 6px;
@@ -645,10 +645,6 @@ li.tutor-option-nav-item h4 {
   cursor: pointer;
 }
 
-.radio-thumbnail label img {
-  max-width: 100%;
-}
-
 .radio-thumbnail .icon-wrapper {
   position: relative;
   display: -webkit-inline-box;
@@ -832,10 +828,8 @@ li.tutor-option-nav-item h4 {
   z-index: 1;
   opacity: 0;
   visibility: hidden;
-  -webkit-filter: blur(2px);
-          filter: blur(2px);
-  -webkit-transition: 0.25s ease-in;
-  transition: 0.25s ease-in;
+  -webkit-transition: 200ms ease-in;
+  transition: 200ms ease-in;
 }
 
 .tooltip-wrap .tooltip-txt::after {
@@ -1611,233 +1605,8 @@ li.tutor-option-nav-item h4 {
   border: none;
 }
 
-.tutor-backend-settings-page.email-manage-page {
-  background: #ffffff;
-  color: #212327;
-}
-
-.tutor-backend-settings-page.email-manage-page .header-wrapper {
-  background: #ffffff;
-  border-bottom: 1px solid #cdcfd5;
-}
-
-.tutor-backend-settings-page.email-manage-page .header-wrapper .prev-page {
-  font-size: 24px;
-  color: inherit;
-}
-
-.tutor-backend-settings-page.email-manage-page .header-main .header-left > .subtitle {
-  color: #5b616f;
-}
-
-@media (min-width: 820px) {
-  .tutor-backend-settings-page.email-manage-page .header-main .header-right {
-    -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-  }
-}
-
-@media (max-width: 650px) {
-  .tutor-backend-settings-page.email-manage-page .header-main .header-right {
-    margin-top: 20px;
-  }
-}
-
-.tutor-backend-settings-page.email-manage-page .header-main .header-right .tutor-is-default {
-  color: #41454f;
-  padding: 7px 13px;
-}
-
-.tutor-backend-settings-page.email-manage-page .header-main .header-right .tutor-is-default [class^='tutor-v2-icon'] {
-  font-size: 22px;
-  color: #757c8e;
-}
-
-.tutor-backend-settings-page.email-manage-page .header-main .header-right .tutor-is-default:hover [class^='tutor-v2-icon'] {
-  color: inherit;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content-wrapper > .main-content {
-  padding: 30px;
-}
-
-@media (min-width: 992px) {
-  .tutor-backend-settings-page.email-manage-page .main-content-wrapper.d-grid {
-    grid-template-columns: var(--col) calc(100% - var(--col));
-  }
-}
-
-@media (min-width: 1400px) {
-  .tutor-backend-settings-page.email-manage-page .main-content-wrapper > .main-content {
-    padding: 60px 74px;
-  }
-  .tutor-backend-settings-page.email-manage-page .main-content-wrapper .content-right {
-    padding: 60px 105px;
-  }
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content {
-  color: #5b616f;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .title {
-  color: #212327;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .subtitle span {
-  color: #212327;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .tutor-form-label {
-  color: #5b616f;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content select.tutor-form-select::-webkit-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content input.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content textarea.tutor-form-control::-webkit-input-placeholder {
-  color: #757c8e;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content select.tutor-form-select::-moz-placeholder, .tutor-backend-settings-page.email-manage-page .main-content input.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page.email-manage-page .main-content textarea.tutor-form-control::-moz-placeholder {
-  color: #757c8e;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content select.tutor-form-select:-ms-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content input.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content textarea.tutor-form-control:-ms-input-placeholder {
-  color: #757c8e;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content select.tutor-form-select::-ms-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content input.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content textarea.tutor-form-control::-ms-input-placeholder {
-  color: #757c8e;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content select.tutor-form-select::placeholder,
-.tutor-backend-settings-page.email-manage-page .main-content input.tutor-form-control::placeholder,
-.tutor-backend-settings-page.email-manage-page .main-content textarea.tutor-form-control::placeholder {
-  color: #757c8e;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content.content-right {
-  background: #eff1f6;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content.content-left {
-  background: #e4e5eb;
-  border-right: 1px solid #cdcfd5;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .content-form .tutor-form-control,
-.tutor-backend-settings-page.email-manage-page .main-content .content-form .tutor-form-select {
-  height: 48px;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .content-form .has-tooltip {
-  margin-right: -25px;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .content-form .has-tooltip .tooltip-wrap {
-  left: 8px;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .tooltip-wrap .tooltip-txt {
-  padding: 14px 16px;
-  text-align: left;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .tooltip-wrap .tooltip-left,
-.tutor-backend-settings-page.email-manage-page .main-content .tooltip-wrap .tooltip-right {
-  top: -18px;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .tooltip-wrap .tooltip-left::after,
-.tutor-backend-settings-page.email-manage-page .main-content .tooltip-wrap .tooltip-right::after {
-  top: 30px;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .code-preview {
-  display: block;
-  background: #efefef;
-  padding: 7px 8px;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .code-preview textarea.tutor-form-control:-moz-read-only {
-  font-family: 'Monaco', 'Lucida Console', monospace;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 140%;
-  letter-spacing: -0.2px;
-  height: 605px;
-  max-height: 605px;
-  padding: 3px 6px;
-  color: #212327;
-  border-color: #d8d8d8;
-  background-color: #f8f8f8;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .code-preview textarea.tutor-form-control:read-only {
-  font-family: 'Monaco', 'Lucida Console', monospace;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 140%;
-  letter-spacing: -0.2px;
-  height: 605px;
-  max-height: 605px;
-  padding: 3px 6px;
-  color: #212327;
-  border-color: #d8d8d8;
-  background-color: #f8f8f8;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .code-preview textarea.tutor-form-control:-moz-read-only:focus {
-  border-color: #1973aa;
-}
-
-.tutor-backend-settings-page.email-manage-page .main-content .code-preview textarea.tutor-form-control:read-only:focus {
-  border-color: #1973aa;
-}
-
-.tutor-backend-settings-page.email-manage-page .tutor-option-single-item .item-wrapper {
-  border: 1px solid #c0c3cb;
-  padding: 18px 19px;
-}
-
-.tutor-backend-settings-page.email-manage-page .tutor-option-single-item.item-email-action {
-  grid-template-columns: repeat(2, auto);
-  grid-auto-flow: unset;
-}
-
-.tutor-backend-settings-page.email-manage-page .tutor-option-single-item.item-email-action .item-wrapper {
-  border: 1px solid #e0e2ea;
-}
-
-.tutor-backend-settings-page.email-manage-page .tutor-option-field-input .logo-upload {
-  border: none;
-}
-
-.tutor-backend-settings-page.email-manage-page .template-preview {
-  background: #ffffff;
-  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.05);
-          box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
-}
-
-.tutor-backend-settings-page.email-manage-page .template-preview .template-header {
-  border-bottom: 1px solid #e0e2ea;
-}
-
-.tutor-backend-settings-page.email-manage-page .template-preview .template-body {
-  background-position: top right;
-  background-repeat: no-repeat;
-}
-
-.tutor-backend-settings-page.email-manage-page .template-preview .template-body .qna-message-answered > .d-flex {
-  border-top: 1px solid #e0e2ea;
-  border-bottom: 1px solid #e0e2ea;
-}
-
 .tutor-backend-settings-page {
   color: #5b616f;
-  background: #efefef;
 }
 
 .tutor-backend-settings-page .tutor-option-header,
@@ -1869,7 +1638,7 @@ li.tutor-option-nav-item h4 {
   position: relative;
 }
 
-.tutor-backend-settings-page .search-field w input[type='search' i]::-webkit-search-cancel-button {
+.tutor-backend-settings-page .search-field input[type='search' i]::-webkit-search-cancel-button {
   cursor: pointer;
 }
 
@@ -2614,6 +2383,10 @@ li.tutor-option-nav-item h4 {
   border-radius: 6px;
 }
 
+.tutor-option-field-input .public-profile .icon-wrapper img {
+  max-width: 100%;
+}
+
 .tutor-option-field-input .layout-label {
   font-size: 15px;
   font-weight: 400;
@@ -2670,7 +2443,12 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-field-input .type-toggle-grid > .toggle-item .tutor-form-toggle-control {
-  margin-right: 5px;
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+.tutor-option-field-input .type-toggle-grid > .toggle-item .tooltip-wrap.tooltip-icon {
+  margin-left: 5px;
 }
 
 .tutor-option-field-input.has-btn-after {
@@ -2955,6 +2733,230 @@ li.tutor-option-nav-item h4 {
 .tutor-option-nav-page.tutor-pages .btn-wrap.regenerate-pages {
   padding-top: 16px;
   margin-bottom: 18px;
+}
+
+.tutor-backend-settings-page.email-manage-page {
+  background: #ffffff;
+  color: #212327;
+}
+
+.tutor-backend-settings-page.email-manage-page .header-wrapper {
+  background: #ffffff;
+  border-bottom: 1px solid #cdcfd5;
+}
+
+.tutor-backend-settings-page.email-manage-page .header-wrapper .prev-page {
+  font-size: 24px;
+  color: inherit;
+}
+
+.tutor-backend-settings-page.email-manage-page .header-main .header-left > .subtitle {
+  color: #5b616f;
+}
+
+@media (min-width: 820px) {
+  .tutor-backend-settings-page.email-manage-page .header-main .header-right {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+}
+
+@media (max-width: 650px) {
+  .tutor-backend-settings-page.email-manage-page .header-main .header-right {
+    margin-top: 20px;
+  }
+}
+
+.tutor-backend-settings-page.email-manage-page .header-main .header-right .tutor-is-default {
+  color: #41454f;
+  padding: 7px 13px;
+}
+
+.tutor-backend-settings-page.email-manage-page .header-main .header-right .tutor-is-default [class^='tutor-v2-icon'] {
+  font-size: 22px;
+  color: #757c8e;
+}
+
+.tutor-backend-settings-page.email-manage-page .header-main .header-right .tutor-is-default:hover [class^='tutor-v2-icon'] {
+  color: inherit;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content-wrapper > .main-content {
+  padding: 30px;
+}
+
+@media (min-width: 992px) {
+  .tutor-backend-settings-page.email-manage-page .main-content-wrapper.d-grid {
+    grid-template-columns: var(--col) calc(100% - var(--col));
+  }
+}
+
+@media (min-width: 1400px) {
+  .tutor-backend-settings-page.email-manage-page .main-content-wrapper > .main-content {
+    padding: 60px 74px;
+  }
+  .tutor-backend-settings-page.email-manage-page .main-content-wrapper .content-right {
+    padding: 60px 105px;
+  }
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content {
+  color: #5b616f;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .title {
+  color: #212327;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .subtitle span {
+  color: #212327;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .tutor-form-label {
+  color: #5b616f;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content select.tutor-form-select::-webkit-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content input.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content textarea.tutor-form-control::-webkit-input-placeholder {
+  color: #757c8e;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content select.tutor-form-select::-moz-placeholder, .tutor-backend-settings-page.email-manage-page .main-content input.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page.email-manage-page .main-content textarea.tutor-form-control::-moz-placeholder {
+  color: #757c8e;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content select.tutor-form-select:-ms-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content input.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content textarea.tutor-form-control:-ms-input-placeholder {
+  color: #757c8e;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content select.tutor-form-select::-ms-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content input.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page.email-manage-page .main-content textarea.tutor-form-control::-ms-input-placeholder {
+  color: #757c8e;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content select.tutor-form-select::placeholder,
+.tutor-backend-settings-page.email-manage-page .main-content input.tutor-form-control::placeholder,
+.tutor-backend-settings-page.email-manage-page .main-content textarea.tutor-form-control::placeholder {
+  color: #757c8e;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content.content-right {
+  background: #eff1f6;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content.content-left {
+  background: #e4e5eb;
+  border-right: 1px solid #cdcfd5;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .content-form .tutor-form-control,
+.tutor-backend-settings-page.email-manage-page .main-content .content-form .tutor-form-select {
+  height: 48px;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .content-form .has-tooltip {
+  margin-right: -25px;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .content-form .has-tooltip .tooltip-wrap {
+  left: 8px;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .tooltip-wrap .tooltip-txt {
+  padding: 14px 16px;
+  text-align: left;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .tooltip-wrap .tooltip-left,
+.tutor-backend-settings-page.email-manage-page .main-content .tooltip-wrap .tooltip-right {
+  top: -18px;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .tooltip-wrap .tooltip-left::after,
+.tutor-backend-settings-page.email-manage-page .main-content .tooltip-wrap .tooltip-right::after {
+  top: 30px;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .code-preview {
+  display: block;
+  background: #efefef;
+  padding: 7px 8px;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .code-preview textarea.tutor-form-control:-moz-read-only {
+  font-family: 'Monaco', 'Lucida Console', monospace;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 140%;
+  letter-spacing: -0.2px;
+  height: 605px;
+  max-height: 605px;
+  padding: 3px 6px;
+  color: #212327;
+  border-color: #d8d8d8;
+  background-color: #f8f8f8;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .code-preview textarea.tutor-form-control:read-only {
+  font-family: 'Monaco', 'Lucida Console', monospace;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 140%;
+  letter-spacing: -0.2px;
+  height: 605px;
+  max-height: 605px;
+  padding: 3px 6px;
+  color: #212327;
+  border-color: #d8d8d8;
+  background-color: #f8f8f8;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .code-preview textarea.tutor-form-control:-moz-read-only:focus {
+  border-color: #1973aa;
+}
+
+.tutor-backend-settings-page.email-manage-page .main-content .code-preview textarea.tutor-form-control:read-only:focus {
+  border-color: #1973aa;
+}
+
+.tutor-backend-settings-page.email-manage-page .tutor-option-single-item .item-wrapper {
+  border: 1px solid #c0c3cb;
+  padding: 18px 19px;
+}
+
+.tutor-backend-settings-page.email-manage-page .tutor-option-single-item.item-email-action {
+  grid-template-columns: repeat(2, auto);
+  grid-auto-flow: unset;
+}
+
+.tutor-backend-settings-page.email-manage-page .tutor-option-single-item.item-email-action .item-wrapper {
+  border: 1px solid #e0e2ea;
+}
+
+.tutor-backend-settings-page.email-manage-page .tutor-option-field-input .logo-upload {
+  border: none;
+}
+
+.tutor-backend-settings-page.email-manage-page .template-preview {
+  background: #ffffff;
+  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.05);
+          box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+.tutor-backend-settings-page.email-manage-page .template-preview .template-header {
+  border-bottom: 1px solid #e0e2ea;
+}
+
+.tutor-backend-settings-page.email-manage-page .template-preview .template-body {
+  background-position: top right;
+  background-repeat: no-repeat;
+}
+
+.tutor-backend-settings-page.email-manage-page .template-preview .template-body .qna-message-answered > .d-flex {
+  border-top: 1px solid #e0e2ea;
+  border-bottom: 1px solid #e0e2ea;
 }
 
 .monitization-fees.is-disable .tutor-option-field-row:nth-child(2), .monitization-fees.is-disable .tutor-option-field-row:nth-child(3) {

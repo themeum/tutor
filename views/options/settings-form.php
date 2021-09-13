@@ -18,7 +18,7 @@
 			<div class="title"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 			<div class="search-field">
 				<div class="tutor-input-group tutor-form-control-has-icon">
-					<span class="tutor-input-group-icon"></span>
+					<span class="tutor-input-group-icon tutor-v2-icon-test icon-search-filled"></span>
 					<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search', 'tutor' ); ?>" />
 					<div class="search-popup-opener search_result">
 						<a href="#">
