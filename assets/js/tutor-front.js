@@ -663,7 +663,7 @@ jQuery(document).ready(function ($) {
                         $('.quiz-attempt-single-question').hide();
                          $nextQuestion.show();
                     }, 
-                    500);  
+                    800);  
                 } else {
                     $('.quiz-attempt-single-question').hide();
                      $nextQuestion.show();
@@ -891,7 +891,9 @@ jQuery(document).ready(function ($) {
                     }
 
                     if (isTrue && !checked) {
+                        $input.attr('disabled','disabled');
                         validatedTrue = false;
+                        goNext = true;
                     }
                 }
             });
