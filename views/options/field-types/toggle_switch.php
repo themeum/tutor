@@ -8,7 +8,6 @@
 
 $default      = isset( $field['default'] ) ? $field['default'] : 'off';
 $option_value = $this->get( $field['key'], $default );
-var_dump( $option_value );
 $field_id = 'field_' . $field['key'];
 ?>
 <div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
