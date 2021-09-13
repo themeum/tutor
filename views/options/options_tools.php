@@ -31,14 +31,15 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 							<h4><?php echo $args['label']; ?></h4>
 						<li>
 							<?php
+							$no_page = false;
 							foreach ( $args['sections'] as $key => $section ) :
-								$icon      = tutor()->icon_dir . $section['slug'] . '.svg';
+								$icon      = $section['icon'];
 								$is_active = $sub_page === $section['slug'] ? 'active' : null;
 								$page_url  = 'tutor-setup' === $section['slug'] ? add_query_arg( 'page', $section['slug'], admin_url( 'admin.php' ) ) : add_query_arg( 'sub_page', $section['slug'], admin_url( 'admin.php?page=tutor-tools-v2' ) );
 								?>
 								<li class="tutor-option-nav-item">
 									<a href="<?php echo $page_url; ?>" class="<?php echo $is_active; ?>">
-										<img src="<?php echo $icon; ?>" alt="<?php echo $section['slug']; ?>-icon" />
+                                        <span class="nav-icon tutor-v2-icon-test <?php echo $icon; ?>"></span>
 										<span class="nav-label"><?php echo $section['label']; ?></span>
 									</a>
 								</li>

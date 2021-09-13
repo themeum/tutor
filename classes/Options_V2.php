@@ -178,6 +178,7 @@ class Options_V2 {
 					'status'        => array(
 						'label'    => __( 'Status', 'tutor' ),
 						'slug'     => 'status',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Status Settings', 'tutor' ),
 						'template' => 'status',
 						'icon'     => __( 'chart', 'tutor' ),
@@ -399,6 +400,7 @@ class Options_V2 {
 					'import_export' => array(
 						'label'    => __( 'Import/Export', 'tutor' ),
 						'slug'     => 'import_export',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Import/Export Settings', 'tutor' ),
 						'template' => 'import_export',
 						'icon'     => __( 'import-export', 'tutor' ),
@@ -407,6 +409,7 @@ class Options_V2 {
 					'tutor_pages'   => array(
 						'label'    => __( 'Tutor Pages', 'tutor' ),
 						'slug'     => 'tutor_pages',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Tutor Pages Settings', 'tutor' ),
 						'template' => 'tutor_pages',
 						'icon'     => __( 'buddypress', 'tutor' ),
@@ -417,6 +420,7 @@ class Options_V2 {
 					'tutor-setup'   => array(
 						'label'    => __( 'Setup Wizard', 'tutor' ),
 						'slug'     => 'tutor-setup',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Setup Wizard Settings', 'tutor' ),
 						'template' => 'tutor-setup',
 						'icon'     => __( 'paid-membersip-pro', 'tutor' ),
