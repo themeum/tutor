@@ -3,34 +3,34 @@
 .tutor-h3,
 .tutor-h4,
 .tutor-h5,
-.tutor-h6{
-  color: var(--tutor-text-dark);
-  margin: 0;
-  line-height: 1.2;
+.tutor-h6 {
+	color: var(--tutor-text-dark);
+	margin: 0;
+	line-height: 1.2;
 }
 
 .tutor-h1 {
-  font-size: 80px;
+	font-size: 80px;
 }
 
 .tutor-h2 {
-  font-size: 60px;
+	font-size: 60px;
 }
 
 .tutor-h3 {
-  font-size: 40px;
+	font-size: 40px;
 }
 
 .tutor-h4 {
-  font-size: 30px;
+	font-size: 30px;
 }
 
 .tutor-h5 {
-  font-size: 24px;
+	font-size: 24px;
 }
 
 .tutor-h6 {
-  font-size: 20px;
+	font-size: 20px;
 }
 
 .tutor-text,
@@ -39,26 +39,24 @@
 .tutor-text-caption,
 .tutor-text-sm,
 .tutor-text-xs,
-.tutor-text-xxs,{
-  color: var(--tutor-text-subtitle);
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.625;
+.tutor-text-xxs {
+	color: var(--tutor-text-subtitle);
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.625;
 }
-
 
 .tutor-text-sm,
 .tutor-text-caption {
-  font-size: 15px;
+	font-size: 15px;
 }
 
-
 .tutor-text-xs {
-  font-size: 13px;
-  line-height: 1.615;
+	font-size: 13px;
+	line-height: 1.615;
 }
 
 .tutor-text-xxs {
-  font-size: 11px;
-  line-height: 1.455;
+	font-size: 11px;
+	line-height: 1.455;
 }

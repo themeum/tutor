@@ -1,0 +1,291 @@
+.tutor-ui-table-responsive {
+	position: relative;
+	overflow-x: auto;
+}
+
+table.tutor-ui-table {
+	// Table utility classes
+	.inline-flex-center {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.v-align-top {
+		vertical-align: top;
+	}
+	.v-align-middle {
+		vertical-align: middle;
+	}
+
+	// Table Structure
+	$radius: 6px;
+	border-collapse: separate;
+	border-spacing: 0;
+	min-width: 350px;
+	width: 100%;
+
+	tr:first-child {
+		/* top-left border-radius */
+		th:first-child {
+			border-top-left-radius: $radius;
+		}
+		/* top-right border-radius */
+		th:last-child {
+			border-top-right-radius: $radius;
+		}
+	}
+
+	tr:last-child {
+		/* bottom-left border-radius */
+		td:first-child {
+			border-bottom-left-radius: $radius;
+		}
+		/* bottom-right border-radius */
+		td:last-child {
+			border-bottom-right-radius: $radius;
+		}
+	}
+
+	tr {
+		&:last-child td {
+			border-bottom: 1px solid #cdcfd5;
+		}
+		&:nth-child(even) td {
+			background-color: rgba(239, 241, 247, 0.3);
+		}
+	}
+
+	th,
+	td {
+		border-top: 1px solid #cdcfd5;
+
+		// min-width: calc(100% / var(--column-count));
+
+		&:first-child {
+			border-left: 1px solid #cdcfd5;
+			padding-left: 20px;
+		}
+
+		&:last-child {
+			border-right: 1px solid #cdcfd5;
+			padding-right: 20px;
+		}
+	}
+
+	th {
+		background: #eff1f7;
+		text-align: left;
+		padding: 15px 10px;
+	}
+
+	td {
+		padding: 17px 10px;
+	}
+
+	.tutor-shrink {
+		width: 1px;
+		white-space: nowrap;
+	}
+
+	// Table Variations
+	&.table-courses {
+		th,
+		td {
+			&:nth-child(1) {
+				width: 53.8%;
+			}
+		}
+	}
+
+	&.table-popular-courses {
+		th,
+		td {
+			&:nth-child(1) {
+				width: 60.6%;
+			}
+		}
+	}
+
+	&.table-reviews {
+		th,
+		td {
+			@extend .v-align-top;
+			&:nth-child(1) {
+				width: 26.8%;
+			}
+			&:nth-child(3) {
+				width: 53.3%;
+			}
+		}
+	}
+
+	&.table-all-courses {
+		th,
+		td {
+			@extend .v-align-middle;
+			&:nth-child(1) {
+				width: 50.6%;
+			}
+		}
+	}
+
+	&.table-students {
+		th,
+		td {
+			&:nth-child(1) {
+				width: 43.6%;
+			}
+		}
+	}
+
+	&.table-course-overview {
+		th,
+		td {
+			&:first-child {
+				@extend .v-align-top;
+			}
+			&:last-child {
+				width: fit-content;
+				text-align: right;
+			}
+			&:nth-last-child(2) {
+				padding-left: 0px;
+				padding-right: 0px;
+			}
+			&:nth-child(1) {
+				width: 16.2%;
+			}
+			&:nth-child(2) {
+				width: 55%;
+			}
+		}
+	}
+}
+
+// Table Content Styles
+table.tutor-ui-table {
+	.td-tutor-rating {
+		.tutor-rating-stars {
+			align-items: flex-start;
+			> span {
+				margin-right: 0;
+			}
+		}
+		.tutor-rating-text {
+			@include getTypography(400, 16px, 162%);
+			padding-left: 1px;
+		}
+	}
+
+	.td-course {
+		@media (min-width: 1400px) {
+			padding-right: 13%;
+		}
+		a {
+			color: inherit;
+			text-decoration: none;
+		}
+		.course-meta {
+			margin-top: 5px;
+
+			span:not(:last-child) {
+				margin-right: 10px;
+			}
+		}
+	}
+
+	.td-action-btns {
+		.btn-outline {
+			&.tutor-btn {
+				@extend .color-text-hints;
+				@extend .text-btn-small;
+				display: inline-block;
+				border: 1px solid $stroke-gray;
+				box-sizing: border-box;
+				border-radius: 6px;
+				text-decoration: none;
+				background: transparent;
+				padding: 8px 10px;
+				transition: 200ms ease;
+
+				&:hover {
+					color: $brand-wordpress;
+					border-color: $brand-wordpress;
+				}
+			}
+		}
+
+		> a:not(:last-child) {
+			margin-right: 13px;
+		}
+
+		.btn-text {
+			@extend .color-text-hints;
+			font-size: 24px;
+			text-decoration: none;
+			display: flex;
+			&:hover {
+				color: $brand-wordpress;
+			}
+		}
+	}
+
+	.td-feedback {
+		.review-text {
+			@include getTypography(500, 16px, 169%);
+		}
+		.review-text {
+			margin-top: 11px;
+		}
+
+		.course-name {
+			margin-top: 15px;
+		}
+	}
+
+	.td-avatar {
+		@extend .inline-flex-center;
+		img {
+			width: 34px;
+			height: 34px;
+			border-radius: 50%;
+			margin-right: 14px;
+		}
+	}
+
+	.td-statement-info {
+		.tutor-badge-label {
+			margin-right: 14px;
+		}
+
+		.meta-data-2 {
+			margin-top: 8px;
+		}
+		.meta-data-3 {
+			margin-top: 6px;
+			> span {
+				margin-right: 20px;
+			}
+		}
+	}
+
+	.td-progress {
+		.progress-bar {
+			position: relative;
+			width: 50px;
+			height: 4px;
+			background: #e3e5eb;
+			border-radius: 2px;
+			overflow: hidden;
+			.progress-value {
+				background: #3e64de;
+				position: absolute;
+				width: var(--progress-value);
+				height: 100%;
+			}
+		}
+		.progress-text {
+			margin-left: 10px;
+		}
+	}
+}
