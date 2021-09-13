@@ -53,7 +53,17 @@ $tutor_pages = tutils()->tutor_pages();
 	</div>
 </div>
 <div class="btn-wrap regenerate-pages">
-	<button class="tutor-btn tutor-is-sm">Re-Generate Tutor Pages</button>
+
+	<form action="" method="post">
+		<?php
+		tutor_action_field( 'regenerate_tutor_pages' );
+		tutor_nonce_field();
+		?>
+		<p>
+			<button class="tutor-btn tutor-is-sm" type="submit"><?php esc_html_e( 'Re-Generate Tutor Pages', 'tutor' ); ?></button>
+		</p>
+	</form>
+
 </div><br>
 <div class="tutor-backend-alert alert-primary">
 	<span class="alert-icon tutor-v2-icon-test icon-warning-filled"></span>
