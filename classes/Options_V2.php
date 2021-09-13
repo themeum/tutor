@@ -31,7 +31,8 @@ class Options_V2 {
 		$this->status        = $this->status();
 		$this->options_attr  = $this->options_attr();
 		$this->options_tools = $this->options_tools();
-		// Saving option
+		$this->get_param_val = $this->get_param_val( '' );
+		// Saving option.
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
 		add_action( 'wp_ajax_tutor_option_search', array( $this, 'tutor_option_search' ) );
 	}
@@ -67,6 +68,17 @@ class Options_V2 {
 		}
 
 		return $default;
+	}
+
+
+	/**
+	 * Funcation to get params val
+	 *
+	 * @param  mixed $param
+	 * @return void
+	 */
+	public function get_param_val( $param = '' ) {
+		return isset( $_GET[ $param ] ) ? $_GET[ $param ] : null;
 	}
 
 
@@ -163,14 +175,14 @@ class Options_V2 {
 			'tools' => array(
 				'label'    => __( 'Tools', 'tutor' ),
 				'sections' => array(
-					array(
+					'status'        => array(
 						'label'    => __( 'Status', 'tutor' ),
 						'slug'     => 'status',
 						'desc'     => __( 'Status Settings', 'tutor' ),
 						'template' => 'status',
 						'icon'     => __( 'chart', 'tutor' ),
 						'blocks'   => array(
-							array(
+							'wordpress_environment'   => array(
 								'label'      => __( 'WordPress environment', 'tutor' ),
 								'slug'       => 'wordpress_environment',
 								'classes'    => 'wordpress_environment',
@@ -265,7 +277,7 @@ class Options_V2 {
 									),
 								),
 							),
-							array(
+							'server_environment'   => array(
 								'label'      => __( 'Server environment', 'tutor' ),
 								'slug'       => 'server_environment',
 								'block_type' => 'column',
@@ -384,7 +396,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'import_export' => array(
 						'label'    => __( 'Import/Export', 'tutor' ),
 						'slug'     => 'import_export',
 						'desc'     => __( 'Import/Export Settings', 'tutor' ),
@@ -392,9 +404,9 @@ class Options_V2 {
 						'icon'     => __( 'import-export', 'tutor' ),
 						'blocks'   => array(),
 					),
-					array(
+					'tutor_pages'   => array(
 						'label'    => __( 'Tutor Pages', 'tutor' ),
-						'slug'     => 'tutor-pages',
+						'slug'     => 'tutor_pages',
 						'desc'     => __( 'Tutor Pages Settings', 'tutor' ),
 						'template' => 'tutor_pages',
 						'icon'     => __( 'buddypress', 'tutor' ),
@@ -402,11 +414,11 @@ class Options_V2 {
 							'block' => array(),
 						),
 					),
-					array(
+					'tutor-setup'   => array(
 						'label'    => __( 'Setup Wizard', 'tutor' ),
-						'slug'     => 'setup_wizard',
+						'slug'     => 'tutor-setup',
 						'desc'     => __( 'Setup Wizard Settings', 'tutor' ),
-						'template' => 'setup_wizard',
+						'template' => 'tutor-setup',
 						'icon'     => __( 'paid-membersip-pro', 'tutor' ),
 						'blocks'   => array(
 							'block' => array(),
