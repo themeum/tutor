@@ -1,4 +1,4 @@
-import '../../v2-library/_src/js/main';
+import '../../../v2-library/_src/js/main';
 
 function tutor_get_nonce_data(send_key_value) {
 
@@ -210,15 +210,11 @@ jQuery(document).ready(function($){
      * Quiz Builder
      */
 
-    $(document).on('click', '.create_new_topic_btn', function (e) {
-        e.preventDefault();
-        $('.tutor-metabox-add-topics').slideToggle();
-    });
-
     $(document).on('click', '#tutor-add-topic-btn', function (e) {
         e.preventDefault();
         var $that = $(this);
-        var form_data = $that.closest('.tutor-metabox-add-topics').find('input, textarea').serializeObject();
+        var container = $that.closest('.tutor-metabox-add-topics');
+        var form_data = container.find('input, textarea').serializeObject();
         form_data.action = 'tutor_add_course_topic';
 
         $.ajax({
@@ -231,10 +227,10 @@ jQuery(document).ready(function($){
             success: function (data) {
                 if (data.success){
                     $('#tutor-course-content-wrap').html(data.data.course_contents);
-                    $that.closest('.tutor-metabox-add-topics').find('input[type!="hidden"], textarea').each(function () {
+                    container.find('input[type!="hidden"], textarea').each(function () {
                         $(this).val('');
                     });
-                    $that.closest('.tutor-metabox-add-topics').slideUp();
+                    container.removeClass('tutor-is-active');
                     enable_sorting_topic_lesson();
                 }
             },
@@ -337,16 +333,10 @@ jQuery(document).ready(function($){
         $(this).closest('.tutor-topics-top').find('.topic-inner-title').html($(this).val());
     });
 
-    $(document).on('click', '.topic-edit-icon', function (e) {
-        e.preventDefault();
-        $(this).closest('.tutor-topics-top').find('.tutor-topics-edit-form').slideToggle();
-    });
-
     $(document).on('click', '.tutor-topics-edit-button', function(e){
         e.preventDefault();
         var $button = $(this);
-        var $topic = $button.closest('.tutor-topics-wrap');
-        var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
+        var topics_id = $button.closest('.tutor-topics-wrap').find('[name="topic_id"]').val();;
         var topic_title = $button.closest('.tutor-topics-wrap').find('[name="topic_title"]').val();
         var topic_summery = $button.closest('.tutor-topics-wrap').find('[name="topic_summery"]').val();
 
@@ -361,7 +351,7 @@ jQuery(document).ready(function($){
             success: function (data) {
                 if (data.success){
                     $button.closest('.tutor-topics-wrap').find('span.topic-inner-title').text(topic_title);
-                    $button.closest('.tutor-topics-wrap').find('.tutor-topics-edit-form').slideUp();
+                    $button.closest('.tutor-modal').removeClass('tutor-is-active');
                 }
             },
             complete: function () {

@@ -1,75 +1,17 @@
 const path = require( 'path' );
-const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const TerserPlugin = require( 'terser-webpack-plugin' );
 const CssMinimizerPlugin = require( 'css-minimizer-webpack-plugin' );
-const { CleanWebpackPlugin } = require( 'clean-webpack-plugin' );
-
-// JS Directory path.
-const JS_DIR = path.resolve( __dirname, 'assets/react' );
-const BUILD_DIR = path.resolve( __dirname, 'assets/js' );
-
-const reactRoot = path.resolve( __dirname, 'assets/react' );
-const nodeModules = path.resolve( __dirname, 'node_modules' );
 
 module.exports = ( env, options ) => {
 
 	const mode = options.mode || 'development';
-	const extPrefix = ( 'production' === mode ) ? '.min' : '';
-
-    if(typeof env=='object' && env.docz) {
-        return {
-            mode: 'development',
-            devtool: 'source-map',
-            entry: [
-              './v2-library/_src/js/main.js',
-              './v2-library/_src/scss/main.scss'
-            ],
-            output: {
-                path: path.resolve(__dirname+'/v2-library', 'bundle'),
-                filename: "[name].min.js",
-            },
-            module: {
-              rules: [
-                {
-                  test: /\.(sa|sc|c)ss$/,
-                  use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'sass-loader',
-                  ],
-                },
-              ]
-            },
-            plugins: [
-              new MiniCssExtractPlugin({
-                filename: '[name].min.css'
-              }),
-            ],
-            optimization: {
-              minimize: true,
-              minimizer: [
-                new TerserPlugin({
-                  terserOptions: {},
-                  minify: (file) => {
-                    const uglifyJsOptions = {
-                      sourceMap: true
-                    };
-                    return require("uglify-js").minify(file, uglifyJsOptions);
-                  },
-                }),
-                new CssMinimizerPlugin()
-              ],
-            }
-        }
-    }
-
+	
 	const config = {
 		mode,
 		module: {
 			rules: [
 				{
 					test: /\.js$/,
-					include: [ JS_DIR ],
 					exclude: /node_modules/,
 					use: 'babel-loader',
 				}
@@ -100,16 +42,13 @@ module.exports = ( env, options ) => {
 	var configEditor = Object.assign({}, config, {
 		name: 'configEditor',
 		entry: {
-			'tutor'				: './assets/react/tutor.js',
-			'tutor-front'		: './assets/react/tutor-front.js',
-			'tutor-admin'		: './assets/react/tutor-admin.js',
-			'tutor-setup'		: './assets/react/tutor-setup.js',
-        },
-        resolve: {
-            modules: [ reactRoot, nodeModules ],
+			'tutor-front'		    : './assets/react/front/tutor-front.js',
+			'tutor-admin'		    : './assets/react/admin/tutor-admin.js',
+			'tutor-course-builder'	: './assets/react/course-builder/index.js',
+			'tutor-setup'		    : './assets/react/admin/tutor-setup.js',
         },
 		output: {
-			path: path.resolve( __dirname, BUILD_DIR ),
+			path: path.resolve( __dirname, path.resolve( __dirname, 'assets/js' ) ),
 			filename: `[name].js`,
 		},
 	});
