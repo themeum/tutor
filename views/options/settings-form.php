@@ -68,16 +68,8 @@
 					<?php
 					$i            = 0;
 					$options_attr = $this->options_attr();
-					/*
-					 echo '<pre>';
-					print_r( $options_attr );
-					echo '</pre>';
-					die; */
-
 
 					foreach ( $options_attr as $args ) :
-
-
 						?>
 					 <ul class="tutor-option-nav">
 							<li class="tutor-option-nav-item">
@@ -85,9 +77,6 @@
 							<li>
 								<?php
 								$url_exist = $this->url_exists( $args['sections'], $url_page );
-								// echo '<pre>';
-								// print_r($args['sections']);
-								// echo '</pre>';
 								foreach ( $args['sections'] as $key => $section ) :
 
 									$i        += 1;

@@ -506,7 +506,7 @@ class Options_V2 {
 						'template' => 'basic',
 						'icon'     => __( 'envelope', 'tutor' ),
 						'blocks'   => array(
-							array(
+							'course' => array(
 								'label'      => __( 'Course', 'tutor' ),
 								'slug'       => 'course',
 								'block_type' => 'uniform',
@@ -1367,7 +1367,7 @@ class Options_V2 {
 						$sections         = $attrs[ $extend_key ]['sections'];
 						$existing_section = $sections[ $section_key ]['blocks'];
 						if ( isset( $attrs[ $extend_key ] ) ) {
-							$attrs[ $extend_key ]['sections']['blocks'][ $section_key ] = array_merge( $existing_section, $extended_blocks );
+							$attrs[ $extend_key ]['sections'][ $section_key ] = array_merge( $existing_section, $extended_blocks );
 						}
 					}
 				}
