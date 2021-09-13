@@ -21,6 +21,97 @@ example: ```"<button data-tutor-modal-target="YOUR_MODAL_ID" className="tutor-bt
 Use ```"data-tutor-modal-close=true"``` to close a modal. <br/>
 example: ```"<button data-tutor-modal-close='true' className="tutor-btn">Cancel</button>"```
 
+## Modal - Sticky header and footer
+Use `className="tutor-modal modal-sticky-header-footer"`
+
+<Playground>
+    <button data-tutor-modal-target="modal-sticky-1" className="tutor-btn">Open modal</button>
+
+    <div id="modal-sticky-1" className="tutor-modal modal-sticky-header-footer">
+       <span className="tutor-modal-overlay"></span>
+        
+        <div className="tutor-modal-root">
+            <div className="tutor-modal-inner">
+                <div className="tutor-modal-header">
+                    <h3 className="tutor-modal-title">Add Lesson</h3>
+                    <button data-tutor-modal-close className="tutor-modal-close">
+                        <span className="las la-times"></span>
+                    </button>
+                </div>
+                <div className="tutor-modal-body-alt">
+                    <div className="tutor-mb-30">
+                        <label className="tutor-form-label">Lesson Name</label>
+                        <div className="tutor-input-group tutor-mb-15">
+                            <input type="text" className="tutor-form-control tutor-mb-10" placeholder="Installing linux on local machine"/>
+                            <p className="tutor-input-feedback tutor-has-icon">
+                                <i className="far fa-question-circle tutor-input-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="tutor-mb-30">
+                        <label className="tutor-form-label">Lesson Summary</label>
+                        <div className="tutor-input-group tutor-mb-15">
+                            <textarea className="tutor-form-control tutor-mb-10" placeholder="Lesson Summary"></textarea>
+                            <p className="tutor-input-feedback tutor-has-icon">
+                                <i className="far fa-question-circle tutor-input-feedback-icon"></i> The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div className="tutor-form-check tutor-mb-15">
+                            <input id="course_privew_check" type="checkbox" className="tutor-form-check-input" name="course_privew_check" />
+                            <label htmlFor="course_privew_check">Enable Course Preview</label>
+                        </div>
+                        <p className="tutor-input-feedback tutor-has-icon">
+                            <i className="far fa-question-circle tutor-input-feedback-icon"></i> If checked, any users/guest can view this lesson without enroll course
+                        </p>
+                    </div>
+                    
+                    <div className="tutor-mb-30">
+                        <label className="tutor-form-label">Lesson Name</label>
+                        <div className="tutor-input-group tutor-mb-15">
+                            <input type="text" className="tutor-form-control tutor-mb-10" placeholder="Installing linux on local machine"/>
+                            <p className="tutor-input-feedback tutor-has-icon">
+                                <i className="far fa-question-circle tutor-input-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="tutor-mb-30">
+                        <label className="tutor-form-label">Lesson Summary</label>
+                        <div className="tutor-input-group tutor-mb-15">
+                            <textarea className="tutor-form-control tutor-mb-10" placeholder="Lesson Summary"></textarea>
+                            <p className="tutor-input-feedback tutor-has-icon">
+                                <i className="far fa-question-circle tutor-input-feedback-icon"></i> The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div className="tutor-form-check tutor-mb-15">
+                            <input id="course_privew_check" type="checkbox" className="tutor-form-check-input" name="course_privew_check" />
+                            <label htmlFor="course_privew_check">Enable Course Preview</label>
+                        </div>
+                        <p className="tutor-input-feedback tutor-has-icon">
+                            <i className="far fa-question-circle tutor-input-feedback-icon"></i> If checked, any users/guest can view this lesson without enroll course
+                        </p>
+                    </div>
+                </div>
+                <div className="tutor-modal-footer">
+                    <div className="row">
+                        <div className="col">
+                            <button className="tutor-btn tutor-is-primary">Update Lesson</button>
+                        </div>
+                        <div className="col-auto">
+                            <button data-tutor-modal-close className="tutor-btn tutor-is-default">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Playground>
+
 ## Basic Modal
 
 <Playground>
