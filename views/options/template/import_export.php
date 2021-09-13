@@ -10,8 +10,8 @@
     <div class="item-wrapper">
         <div class="tutor-option-field-row">
             <div class="tutor-option-field-label">
-                <p class="typo-20-400-150">Current Settings</p>
-                <p class="typo-13-500-162">
+                <p class="text-regular-h6">Current Settings</p>
+                <p class="text-medium-small">
                     <span style="font-weight: 500">Last Update: </span>20 July, 2020, 12:47 pm
                 </p>
             </div>
@@ -22,17 +22,17 @@
     </div>
 </div>
 
-<div class="tutor-option-single-item settings-history">
+<div class="tutor-option-single-item item-variation-table settings-history">
     <h4>Settings History</h4>
     <div class="item-wrapper">
         <div class="tutor-option-field-row">
             <div class="tutor-option-field-label">
-                <p class="typo-13-400-138">Date</p>
+                <p>Date</p>
             </div>
         </div>
         <div class="tutor-option-field-row">
             <div class="tutor-option-field-label">
-                <p class="typo-13-400-162">20 July, 2020, 12:47 pm</p>
+                <p class="text-medium-small">20 July, 2020, 12:47 pm</p>
             </div>
             <div class="tutor-option-field-input">
                 <button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs">Apply</button>
@@ -44,13 +44,13 @@
                         <li>
                             <a href="#">
                                 <span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
-                                <span class="label">Download</span>
+                                <span>Download</span>
                             </a>
                         </li>
                         <li>
                             <a href="#">
                                 <span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
-                                <span class="label">Delete</span>
+                                <span>Delete</span>
                             </a>
                         </li>
                     </ul>
@@ -59,7 +59,7 @@
         </div>
         <div class="tutor-option-field-row">
             <div class="tutor-option-field-label">
-                <p class="typo-13-400-162">20 July, 2020, 12:47 pm</p>
+                <p class="text-medium-small">20 July, 2020, 12:47 pm</p>
             </div>
             <div class="tutor-option-field-input">
                 <button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs">Apply</button>
@@ -71,13 +71,13 @@
                         <li>
                             <a href="#">
                                 <span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
-                                <span class="label">Download</span>
+                                <span>Download</span>
                             </a>
                         </li>
                         <li>
                             <a href="#">
                                 <span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
-                                <span class="label">Delete</span>
+                                <span>Delete</span>
                             </a>
                         </li>
                     </ul>
@@ -86,7 +86,7 @@
         </div>
         <div class="tutor-option-field-row">
             <div class="tutor-option-field-label">
-                <p class="typo-13-400-162">20 July, 2020, 12:47 pm</p>
+                <p class="text-medium-small">20 July, 2020, 12:47 pm</p>
             </div>
             <div class="tutor-option-field-input">
                 <button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs">Apply</button>
@@ -98,13 +98,13 @@
                         <li>
                             <a href="#">
                                 <span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
-                                <span class="label">Download</span>
+                                <span>Download</span>
                             </a>
                         </li>
                         <li>
                             <a href="#">
                                 <span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
-                                <span class="label">Delete</span>
+                                <span>Delete</span>
                             </a>
                         </li>
                     </ul>
@@ -114,7 +114,7 @@
     </div>
 </div>
 
-<div class="tutor-option-single-item import-setting">
+<div class="tutor-option-single-item item-variation-dragndrop import-setting">
     <h4>Import Settings</h4>
     <div class="item-wrapper">
         <div class="tutor-option-field-row d-block">
@@ -142,11 +142,10 @@
     <div class="item-wrapper">
         <div class="tutor-option-field-row">
             <div class="tutor-option-field-label">
-                <p class="typo-20-400-150"> Reset Everything to Default</p>
-                <p class="typo-13-500-162">
+                <p class="text-regular-h6"> Reset Everything to Default</p>
+                <p class="text-medium-small">
                     <span style="font-weight: 500">Reset subtitle
-                    </span>
-                </p>
+                </span></p>
             </div>
             <div class="tutor-option-field-input">
                 <button class="tutor-btn tutor-is-outline tutor-is-sm">Reset All Settings</button>
