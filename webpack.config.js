@@ -40,7 +40,7 @@ module.exports = ( env, options ) => {
 				terserOptions: {},
 				minify: (file) => {
 					const uglifyJsOptions = {
-					sourceMap: false
+					sourceMap: true
 					};
 					return require("uglify-js").minify(file, uglifyJsOptions);
 				},
