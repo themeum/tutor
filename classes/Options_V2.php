@@ -35,6 +35,7 @@ class Options_V2 {
 		// Saving option.
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
 		add_action( 'wp_ajax_tutor_option_search', array( $this, 'tutor_option_search' ) );
+		add_action( 'wp_ajax_tutor_export_settings', array( $this, 'tutor_export_settings' ) );
 	}
 
 	private function get( $key = null, $default = false ) {
@@ -112,6 +113,10 @@ class Options_V2 {
 		wp_send_json_success( $data_array );
 	}
 
+	public function tutor_export_settings() {
+		wp_send_json_success( (array) maybe_unserialize( get_option( 'tutor_option' ) ) );
+	}
+
 	/**
 	 * Function tutor_option_save
 	 *
@@ -183,7 +188,7 @@ class Options_V2 {
 						'template' => 'status',
 						'icon'     => 'icon-chart-filled',
 						'blocks'   => array(
-							'wordpress_environment'   => array(
+							'wordpress_environment' => array(
 								'label'      => __( 'WordPress environment', 'tutor' ),
 								'slug'       => 'wordpress_environment',
 								'classes'    => 'wordpress_environment',
@@ -278,7 +283,7 @@ class Options_V2 {
 									),
 								),
 							),
-							'server_environment'   => array(
+							'server_environment'    => array(
 								'label'      => __( 'Server environment', 'tutor' ),
 								'slug'       => 'server_environment',
 								'block_type' => 'column',
