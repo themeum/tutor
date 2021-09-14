@@ -1,0 +1,82 @@
+// Toggle Disable -> Monitization > Monitization fees
+.monitization-fees.is-disable {
+	.tutor-option-field-row {
+		&:nth-child(2),
+		&:nth-child(3) {
+			position: relative;
+			cursor: not-allowed;
+			&:before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+				background: rgba(255, 255, 255, 0.55);
+			}
+			textarea,
+			select,
+			input {
+				&:disabled {
+					cursor: not-allowed;
+				}
+			}
+		}
+	}
+}
+
+// Warning -> Monitization > Sharing Percentage
+.revenue-percentage {
+	input.warning {
+		border-color: var(--tutor-danger) !important;
+		box-shadow: 0 0 0 3px lighten(red, 45) !important;
+	}
+}
+
+// Image Preview -> Design + Certificate > Logo and Signature Upload
+.tutor-option-field-input.image-previewer {
+	img {
+		&::before {
+			// content: '⚠️ \2000 Select an image';
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: #eff1f7;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			@include svg-image-uppoad;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+	}
+
+	.preview-loading {
+		position: absolute;
+		inset: 0;
+		background: #f3f3f3;
+		border-radius: 3px;
+
+		@include spinner(#1a73aa, #e8e8e8);
+	}
+
+	.preview-loading {
+		display: none;
+	}
+	.preview-loading.is-loading {
+		display: block;
+	}
+
+	.delete-btn {
+		visibility: hidden;
+	}
+
+	&.is-selected {
+		.delete-btn {
+			visibility: visible;
+		}
+		img {
+			&::before {
+				visibility: hidden;
+			}
+		}
+	}
+}
