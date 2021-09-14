@@ -101,9 +101,6 @@ class Assets {
 	public function frontend_scripts() {
 		global $post, $wp_query;
 
-		$is_script_debug = tutor_utils()->is_script_debug();
-		$suffix = $is_script_debug ? '' : '.min';
-
 		/**
 		 * We checked wp_enqueue_editor() in condition because it conflicting with Divi Builder
 		 * condition updated @since v.1.7.4
@@ -162,7 +159,7 @@ class Assets {
 		}
 		//End: chart data
 		if (tutor_utils()->get_option('load_tutor_css')){
-			wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front{$suffix}.css", array(), tutor()->version);
+			wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front.min.css", array(), tutor()->version);
 		}
 		
 		/**
@@ -231,7 +228,7 @@ class Assets {
 		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.min.css', array(), tutor()->version);
 
 		// Fonts
-		wp_enqueue_style('tutor-lineawesome-fonts', tutor()->url . 'assets/css/fonts/lineawesome@1.3.0/css/line-awesome.min.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-lineawesome-fonts', tutor()->url . 'assets/icons/lineawesome@1.3.0/css/line-awesome.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'assets/icons/tutor-v2-icon/css/tutor-v2-icon-test.css', array(), tutor()->version);
 		

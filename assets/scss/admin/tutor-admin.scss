@@ -990,21 +990,6 @@
 	float: right;
   }
   
-  .modal-container .modal-classic-btn-wrap {
-	position: absolute;
-	right: 45px;
-	top: 20px;
-  }
-  
-  .rtl .modal-container .modal-classic-btn-wrap {
-	left: 20px;
-	right: auto;
-  }
-  
-  .modal-container .modal-classic-btn-wrap .tutor-classic-editor-btn {
-	color: var(--tutor-primary-color);
-  }
-  
   /** Tutor Quiz Modal Form */
   /*notice*/
   .tutor-quiz-builder-modal-tabs-notice {

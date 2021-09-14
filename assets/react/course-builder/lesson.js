@@ -22,12 +22,34 @@
             });
         }
     }
+
+
+    window.tutor_sorting_topics_and_lesson=function(){
+        var topics = {};
+        $('.tutor-topics-wrap').each(function(index, item){
+            var $topic = $(this);
+            var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
+            var lessons = {};
+
+            $topic.find('.course-content-item').each(function(lessonIndex, lessonItem){
+                var $lesson = $(this);
+                var lesson_id = parseInt($lesson.attr('id').match(/\d+/)[0], 10);
+
+                lessons[lessonIndex] = lesson_id;
+            });
+            topics[index] = { 'topic_id' : topics_id, 'lesson_ids' : lessons };
+        });
+        $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
+    }
+
 })(window.jQuery);
 
 
 window.jQuery(document).ready(function($){
     
     const { __, _x, _n, _nx } = wp.i18n;
+    
+    enable_sorting_topic_lesson();
     
     /**
      * Open Lesson Modal

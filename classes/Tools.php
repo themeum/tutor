@@ -83,8 +83,9 @@ class Tools {
 
 	public function check_if_maintenance(){
 		if ( ! is_admin() && ! $this->is_wplogin()) {
-			$maintenance_mode = (bool) get_tutor_option( 'enable_tutor_maintenance_mode' );
-			if ( ! $maintenance_mode){
+			$option = get_tutor_option( 'enable_tutor_maintenance_mode' );
+			$maintenance_mode = (bool) $option;
+			if ( ! $maintenance_mode || $maintenance_mode=='off' ){
 				return;
 			}
 
