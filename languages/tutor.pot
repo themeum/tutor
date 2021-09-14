@@ -205,7 +205,7 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:62, classes/Ajax.php:115, classes/Ajax.php:179, classes/Ajax.php:237, classes/Ajax.php:290, classes/Ajax.php:332, classes/Ajax.php:353, classes/Ajax.php:456, classes/Ajax.php:527, classes/Course.php:435, classes/Course.php:470, classes/Course.php:706, classes/Course.php:757, classes/Course.php:794, classes/Course.php:807, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:147, classes/Quiz.php:548, classes/Quiz.php:638, classes/Quiz.php:684, classes/Quiz.php:728, classes/Quiz.php:768, classes/Quiz.php:791, classes/Quiz.php:887, classes/Quiz.php:910, classes/Quiz.php:931, classes/Quiz.php:1042, classes/Quiz.php:1087, classes/Quiz.php:1168, classes/Quiz.php:1228, classes/Quiz.php:1253, classes/Q_and_A.php:71
+#: classes/Ajax.php:62, classes/Ajax.php:115, classes/Ajax.php:179, classes/Ajax.php:237, classes/Ajax.php:290, classes/Ajax.php:332, classes/Ajax.php:353, classes/Ajax.php:456, classes/Ajax.php:527, classes/Course.php:435, classes/Course.php:470, classes/Course.php:707, classes/Course.php:758, classes/Course.php:795, classes/Course.php:808, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:147, classes/Quiz.php:548, classes/Quiz.php:638, classes/Quiz.php:684, classes/Quiz.php:728, classes/Quiz.php:768, classes/Quiz.php:791, classes/Quiz.php:887, classes/Quiz.php:910, classes/Quiz.php:931, classes/Quiz.php:1042, classes/Quiz.php:1087, classes/Quiz.php:1168, classes/Quiz.php:1228, classes/Quiz.php:1253, classes/Q_and_A.php:71
 msgid "Access Denied"
 msgstr ""
 
@@ -297,7 +297,7 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: classes/Course.php:189, classes/Course.php:1338
+#: classes/Course.php:189, classes/Course.php:1339
 msgid "Tutor Settings"
 msgstr ""
 
@@ -325,35 +325,35 @@ msgstr ""
 msgid "Please Sign-In"
 msgstr ""
 
-#: classes/Course.php:739
+#: classes/Course.php:740
 msgid "<p>No instructor available or you have already added maximum instructors</p>"
 msgstr ""
 
-#: classes/Course.php:744
+#: classes/Course.php:745
 msgid "To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s"
 msgstr ""
 
-#: classes/Course.php:1173
+#: classes/Course.php:1174
 msgid "complete all lessons to mark this course as complete"
 msgstr ""
 
-#: classes/Course.php:1210
+#: classes/Course.php:1211
 msgid "You have to pass %s quizzes to complete this course."
 msgstr ""
 
-#: classes/Course.php:1317
+#: classes/Course.php:1318
 msgid "Make This Course Public"
 msgstr ""
 
-#: classes/Course.php:1319
+#: classes/Course.php:1320
 msgid "No enrollment required."
 msgstr ""
 
-#: classes/Course.php:1327
+#: classes/Course.php:1328
 msgid "Disable Q&A"
 msgstr ""
 
-#: classes/Course.php:1384
+#: classes/Course.php:1385
 msgid "Invalid Course ID or Access Denied."
 msgstr ""
 
@@ -649,7 +649,7 @@ msgstr ""
 msgid "Instructor Commission"
 msgstr ""
 
-#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:407, classes/Tutor_List_Table.php:1285, templates/dashboard/announcements.php:112, templates/dashboard/announcements.php:122, templates/dashboard/purchase_history.php:24, views/pages/announcements.php:94, views/pages/announcements.php:113, templates/dashboard/assignments/submitted.php:71, templates/dashboard/my-quiz-attempts/attempts-details.php:114
+#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:112, templates/dashboard/announcements.php:122, templates/dashboard/purchase_history.php:24, views/pages/announcements.php:94, views/pages/announcements.php:113, templates/dashboard/assignments/submitted.php:71, templates/dashboard/my-quiz-attempts/attempts-details.php:114
 msgid "Date"
 msgstr ""
 
@@ -1122,7 +1122,7 @@ msgstr ""
 msgid "Lesson settings will be here"
 msgstr ""
 
-#: classes/Options.php:435, views/modal/edit-lesson.php:12
+#: classes/Options.php:435
 msgid "Classic Editor"
 msgstr ""
 
@@ -1554,7 +1554,7 @@ msgstr ""
 msgid "buddypress"
 msgstr ""
 
-#: classes/Options_V2.php:418, classes/Tools.php:112
+#: classes/Options_V2.php:418, classes/Tools.php:113
 msgid "Setup Wizard"
 msgstr ""
 
@@ -1970,7 +1970,7 @@ msgstr ""
 msgid "View Course"
 msgstr ""
 
-#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1250, templates/student-public-profile.php:98, templates/student-public-profile.php:159, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, views/pages/announcements.php:59, templates/single/course/instructors.php:72
+#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/student-public-profile.php:98, templates/student-public-profile.php:159, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, views/pages/announcements.php:59, templates/single/course/instructors.php:72
 msgid "Courses"
 msgstr ""
 
@@ -2511,23 +2511,23 @@ msgstr ""
 msgid "Add Product"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:360, classes/Tutor_List_Table.php:1259, templates/dashboard/announcements.php:89, templates/dashboard/assignments.php:38, views/pages/announcements.php:68
+#: classes/Tutor_List_Table.php:360, classes/Tutor_List_Table.php:1261, templates/dashboard/announcements.php:89, templates/dashboard/assignments.php:38, views/pages/announcements.php:68
 msgid "All"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:384, classes/Tutor_List_Table.php:1275, templates/dashboard/announcements.php:104, templates/dashboard/assignments.php:52, views/pages/announcements.php:84
+#: classes/Tutor_List_Table.php:384, classes/Tutor_List_Table.php:1277, templates/dashboard/announcements.php:104, templates/dashboard/assignments.php:52, views/pages/announcements.php:84
 msgid "Sort By"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:505
+#: classes/Tutor_List_Table.php:507
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1268, templates/dashboard/announcements.php:98, templates/dashboard/assignments.php:47, views/pages/announcements.php:77, templates/dashboard/announcements/create.php:29, templates/dashboard/announcements/update.php:30
+#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:98, templates/dashboard/assignments.php:47, views/pages/announcements.php:77, templates/dashboard/announcements/create.php:29, templates/dashboard/announcements/update.php:30
 msgid "No course found"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1293, classes/Tutor_List_Table.php:1295, views/options/options_tools.php:19, views/options/settings-form.php:22, views/pages/announcements.php:51, views/pages/question_answer.php:23, views/pages/students.php:13, views/pages/withdraw_requests.php:13
+#: classes/Tutor_List_Table.php:1295, classes/Tutor_List_Table.php:1297, views/options/options_tools.php:19, views/options/settings-form.php:22, views/pages/announcements.php:51, views/pages/question_answer.php:23, views/pages/students.php:13, views/pages/withdraw_requests.php:13
 msgid "Search"
 msgstr ""
 
@@ -3051,19 +3051,19 @@ msgstr ""
 msgid "Completed"
 msgstr ""
 
-#: classes/Utils.php:6649, templates/dashboard/my-profile.php:34, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:95, templates/dashboard/settings/profile.php:97
+#: classes/Utils.php:6650, templates/dashboard/my-profile.php:34, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:95, templates/dashboard/settings/profile.php:97
 msgid "First Name"
 msgstr ""
 
-#: classes/Utils.php:6650, templates/dashboard/my-profile.php:42, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:104, templates/dashboard/settings/profile.php:106
+#: classes/Utils.php:6651, templates/dashboard/my-profile.php:42, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:104, templates/dashboard/settings/profile.php:106
 msgid "Last Name"
 msgstr ""
 
-#: classes/Utils.php:6651
+#: classes/Utils.php:6652
 msgid "Profile Photo"
 msgstr ""
 
-#: classes/Utils.php:6652
+#: classes/Utils.php:6653
 msgid "Withdraw Method"
 msgstr ""
 
@@ -4076,11 +4076,11 @@ msgstr ""
 msgid "Start Learning "
 msgstr ""
 
-#: templates/loop/meta.php:36, templates/single/course/lead-info.php:62, templates/single/course/enrolled/lead-info.php:62
+#: templates/loop/meta.php:39, templates/single/course/lead-info.php:62, templates/single/course/enrolled/lead-info.php:62
 msgid "by"
 msgstr ""
 
-#: templates/loop/meta.php:45
+#: templates/loop/meta.php:48
 msgid "In"
 msgstr ""
 
@@ -4366,31 +4366,31 @@ msgstr ""
 msgid "Need any Help? Please visit our %s and %s."
 msgstr ""
 
-#: views/modal/edit-lesson.php:24
+#: views/modal/edit-lesson.php:12
 msgid "Lesson Name"
 msgstr ""
 
-#: views/modal/edit-lesson.php:29
+#: views/modal/edit-lesson.php:17
 msgid "Lesson titles are displayed publicly wherever required."
 msgstr ""
 
-#: views/modal/edit-lesson.php:36
+#: views/modal/edit-lesson.php:24
 msgid "Lesson Content"
 msgstr ""
 
-#: views/modal/edit-lesson.php:43, views/metabox/segments/topic-form-modal.php:30
+#: views/modal/edit-lesson.php:31, views/metabox/segments/topic-form-modal.php:30
 msgid "The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name."
 msgstr ""
 
-#: views/modal/edit-lesson.php:50
+#: views/modal/edit-lesson.php:38
 msgid "Feature Image"
 msgstr ""
 
-#: views/modal/edit-lesson.php:57
+#: views/modal/edit-lesson.php:45
 msgid "Upload Feature Image"
 msgstr ""
 
-#: views/modal/edit-lesson.php:62
+#: views/modal/edit-lesson.php:50
 msgid "Update Feature Image"
 msgstr ""
 
@@ -5847,10 +5847,6 @@ msgid "Upload media"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Assignment Updated"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Do you want to save without any category?"
 msgstr ""
 
@@ -5872,6 +5868,10 @@ msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Yes, Delete This"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Assignment Updated"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
@@ -5940,18 +5940,6 @@ msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Use media"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Done"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Failed"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Assignment Update Failed"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
