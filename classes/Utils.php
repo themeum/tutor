@@ -2873,7 +2873,7 @@ class Utils {
 			$course_query = " AND course.ID = $course_id ";
 		}
 		if ( '' !== $date_filter ) {
-			$date_query = " AND DATE(enrollment.post_date) = CAST( '$date_filter' AS DATE ) ";
+			$date_query = " AND DATE(user.user_registered) = CAST( '$date_filter' AS DATE ) ";
 		}
 
 		$students = $wpdb->get_results( $wpdb->prepare(
@@ -2888,9 +2888,10 @@ class Utils {
 					AND course.post_status = %s
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
-					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s )
 					{$course_query}
 					{$date_query}
+					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s )
+
 				GROUP BY enrollment.post_author
 				ORDER BY {$order_by} {$order}
 				LIMIT %d, %d
