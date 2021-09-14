@@ -28,7 +28,7 @@ class Course extends Tutor_Base {
 
 		//Frontend Action
 		add_action('template_redirect', array($this, 'enroll_now'));
-		add_action('template_redirect', array($this, 'mark_course_complete'));
+		add_action('init', array($this, 'mark_course_complete'));
 
 		//Modal Perform
 		add_action('wp_ajax_tutor_load_instructors_modal', array($this, 'tutor_load_instructors_modal'));
@@ -675,6 +675,7 @@ class Course extends Tutor_Base {
 		}
 		
 		wp_redirect($permalink);
+		exit;
 	}
 
 	public function popup_review_form() {

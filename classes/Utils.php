@@ -6644,6 +6644,7 @@ class Utils {
 	public function user_profile_completion( $user_id = 0 ) {
 		$user_id    = $this->get_user_id( $user_id );
 		$instructor = $this->is_instructor( $user_id );
+		$instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
 
 		$required_fields = apply_filters( 'tutor_profile_required_fields', array(
 			'first_name' 				  => __( 'First Name', 'tutor' ),
@@ -6652,7 +6653,7 @@ class Utils {
 			'_tutor_withdraw_method_data' => __( 'Withdraw Method', 'tutor' ),
 		));
 
-		if ( ! $instructor && array_key_exists( "_tutor_withdraw_method_data", $required_fields ) ) {
+		if ( 'approved' !== $instructor_status && array_key_exists( "_tutor_withdraw_method_data", $required_fields ) ) {
 			unset( $required_fields[ '_tutor_withdraw_method_data' ] );
 		}
 
@@ -7307,5 +7308,32 @@ class Utils {
 		}
 
 		return $ids;
+	}
+
+	/**
+	 * Custom Pagination for Tutor Shortcode
+	 * 
+	 * @param int $total_num_pages
+	 * 
+	 * @return void
+	 */
+	public function tutor_custom_pagination( $total_num_pages = 1 ) {
+
+		do_action( 'tutor_course/archive/pagination/before' ); ?>
+		
+		<div class="tutor-pagination-wrap">
+		<?php
+			$big = 999999999; // need an unlikely integer
+		
+			echo paginate_links( array(
+				'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+				'format' => '?paged=%#%',
+				'current' => max( 1, get_query_var( 'paged' ) ),
+				'total' => $total_num_pages
+			) );
+		?>
+		</div>
+		
+		<?php do_action( 'tutor_course/archive/pagination/after' );
 	}
 }
