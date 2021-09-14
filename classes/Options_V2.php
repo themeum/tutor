@@ -181,7 +181,7 @@ class Options_V2 {
 						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Status Settings', 'tutor' ),
 						'template' => 'status',
-						'icon'     => __( 'chart', 'tutor' ),
+						'icon'     => 'icon-chart-filled',
 						'blocks'   => array(
 							'wordpress_environment'   => array(
 								'label'      => __( 'WordPress environment', 'tutor' ),
@@ -403,7 +403,7 @@ class Options_V2 {
 						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Import/Export Settings', 'tutor' ),
 						'template' => 'import_export',
-						'icon'     => __( 'import-export', 'tutor' ),
+						'icon'     => 'icon-import-export-filled',
 						'blocks'   => array(),
 					),
 					'tutor_pages'   => array(
@@ -412,7 +412,7 @@ class Options_V2 {
 						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Tutor Pages Settings', 'tutor' ),
 						'template' => 'tutor_pages',
-						'icon'     => __( 'buddypress', 'tutor' ),
+						'icon'     => 'icon-review-line',
 						'blocks'   => array(
 							'block' => array(),
 						),
@@ -423,7 +423,7 @@ class Options_V2 {
 						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Setup Wizard Settings', 'tutor' ),
 						'template' => 'tutor-setup',
-						'icon'     => __( 'paid-membersip-pro', 'tutor' ),
+						'icon'     => 'icon-earth-filled',
 						'blocks'   => array(
 							'block' => array(),
 						),
