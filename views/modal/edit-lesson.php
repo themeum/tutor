@@ -20,20 +20,30 @@
 
 	    <?php do_action('tutor_lesson_edit_modal_form_before', $post); ?>
 
-        <div class="tutor-option-field-row">
-            <div class="tutor-option-field tutor-lesson-modal-title-wrap">
-                <input type="text" name="lesson_title" value="<?php echo stripslashes($post->post_title); ?>" placeholder="<?php _e('Lesson title', 'tutor'); ?>">
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label"><?php _e('Lesson Name', 'tutor'); ?></label>
+            <div class="tutor-input-group tutor-mb-15">
+                <input type="text" name="lesson_title" class="tutor-form-control tutor-mb-10" value="<?php echo stripslashes($post->post_title); ?>"/>
+                <p class="tutor-input-feedback tutor-has-icon">
+                    <i class="far fa-question-circle tutor-input-feedback-icon"></i>
+                    <?php _e('Lesson titles are displayed publicly wherever required.', 'tutor'); ?>
+                </p>
             </div>
         </div>
 
-        <div class="tutor-option-field-row">
-            <div class="tutor-option-field">
-				<?php
+        
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label"><?php _e('Lesson Content', 'tutor'); ?></label>
+            <div class="tutor-input-group tutor-mb-15">
+                <?php
                 wp_editor(stripslashes($post->post_content), 'tutor_lesson_modal_editor', array( 'editor_height' => 150));
 				?>
+                <p class="tutor-input-feedback tutor-has-icon">
+                    <i class="far fa-question-circle tutor-input-feedback-icon"></i>
+                    <?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
+                </p>
             </div>
         </div>
-
 
         <div class="tutor-option-field-row">
             <div class="tutor-option-field-label">
@@ -69,11 +79,5 @@
 
         <?php do_action('tutor_lesson_edit_modal_form_after', $post); ?>
 
-    </div>
-
-    <div class="modal-footer">
-        <button type="button" class="tutor-btn active update_lesson_modal_btn" data-toast_success_message="<?php _e('Lesson Updated', 'tutor'); ?>">
-            <?php _e('Update Lesson', 'tutor'); ?>
-        </button>
     </div>
 </form>

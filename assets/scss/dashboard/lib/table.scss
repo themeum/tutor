@@ -1,0 +1,46 @@
+$border_color: #CDCFD5;
+
+table.tutor-dashboard-table {
+    background: $border_color;
+    box-sizing: border-box;
+    border-collapse: collapse;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid $border_color;
+
+    td, th {
+        padding: 15px;
+        border: none;
+    }
+
+    tr {
+        border-top: 1px solid $border_color;
+        border-bottom: 1px solid $border_color;
+    }
+
+    thead {
+        tr{
+            background: #EFF1F7;
+            th {
+                text-align: left;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 13px;
+                line-height: 18px;
+                color: #5B616F;
+            }
+        }
+    }
+
+    tbody {
+        tr{
+            &:nth-child(even) {
+                background: #f8f8f8;
+            }
+
+            &:nth-child(odd) {
+                background: white;
+            }
+        }
+    }
+}

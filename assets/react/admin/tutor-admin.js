@@ -1,3 +1,5 @@
+import '../lib/common';
+
 jQuery(document).ready(function($){
     'use strict';
 
@@ -71,32 +73,6 @@ jQuery(document).ready(function($){
      * End Withdraw nav tabs
      */
 
-    /**
-     * Don't move it to anywhere?
-     */
-    function enable_sorting_topic_lesson(){
-        if (jQuery().sortable) {
-            $(".course-contents").sortable({
-                handle: ".course-move-handle",
-                start: function (e, ui) {
-                    ui.placeholder.css('visibility', 'visible');
-                },
-                stop: function (e, ui) {
-                    tutor_sorting_topics_and_lesson();
-                },
-            });
-            $(".tutor-lessons:not(.drop-lessons)").sortable({
-                connectWith: ".tutor-lessons",
-                items: "div.course-content-item",
-                start: function (e, ui) {
-                    ui.placeholder.css('visibility', 'visible');
-                },
-                stop: function (e, ui) {
-                    tutor_sorting_topics_and_lesson();
-                },
-            });
-        }
-    }
     enable_sorting_topic_lesson();
     function tutor_sorting_topics_and_lesson(){
         var topics = {};
@@ -115,49 +91,6 @@ jQuery(document).ready(function($){
         });
         $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
     }
-
-    /**
-     * Lesson Update or Create Modal
-     */
-    $(document).on( 'click', '.update_lesson_modal_btn',  function( event ){
-        event.preventDefault();
-
-        var $that = $(this);
-        var content;
-        var inputid = 'tutor_lesson_modal_editor';
-        var editor = tinyMCE.get(inputid);
-        if (editor) {
-            content = editor.getContent();
-        } else {
-            content = $('#'+inputid).val();
-        }
-
-        var form_data = $(this).closest('form').serializeObject();
-        form_data.lesson_content = content;
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : form_data,
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success){
-                    $('#tutor-course-content-wrap').html(data.data.course_contents);
-                    enable_sorting_topic_lesson();
-
-                    //Close the modal
-                    $('.tutor-lesson-modal-wrap').removeClass('show');
-
-                    tutor_toast(__('Lesson Updated', 'tutor'), $that.data('toast_success_message'), 'success');
-                }
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
 
     /**
      * Lesson Video

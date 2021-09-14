@@ -131,13 +131,6 @@ class Options {
 								'default' => '0',
 								'desc'      => __('If your theme has its own styling, then you can turn it off to load CSS from the plugin directory', 'tutor'),
 							),
-							'load_tutor_js' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Load Tutor JavaScript', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
-								'default' => '0',
-								'desc'      => __('If you have put required script in your theme javascript file, then you can turn it off to load JavaScript from the plugin directory', 'tutor'),
-							),
 							'student_must_login_to_view_course' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Course Visibility', 'tutor'),

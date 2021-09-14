@@ -1,3 +1,4 @@
+import '../lib/common';
 
 jQuery(document).ready(function ($) {
     'use strict';
@@ -1229,33 +1230,6 @@ jQuery(document).ready(function ($) {
     });
 
 
-    /**
-     * Course and lesson sorting
-     */
-
-    function enable_sorting_topic_lesson() {
-        if (jQuery().sortable) {
-            $(".course-contents").sortable({
-                handle: ".course-move-handle",
-                start: function (e, ui) {
-                    ui.placeholder.css('visibility', 'visible');
-                },
-                stop: function (e, ui) {
-                    tutor_sorting_topics_and_lesson();
-                },
-            });
-            $(".tutor-lessons:not(.drop-lessons)").sortable({
-                connectWith: ".tutor-lessons",
-                items: "div.course-content-item",
-                start: function (e, ui) {
-                    ui.placeholder.css('visibility', 'visible');
-                },
-                stop: function (e, ui) {
-                    tutor_sorting_topics_and_lesson();
-                },
-            });
-        }
-    }
     enable_sorting_topic_lesson();
     function tutor_sorting_topics_and_lesson() {
         var topics = {};
@@ -1274,54 +1248,6 @@ jQuery(document).ready(function ($) {
         });
         $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
     }
-
-    /**
-     * Lesson Update or Create Modal
-     */
-    $(document).on('click', '.update_lesson_modal_btn', function (event) {
-        event.preventDefault();
-
-        var $that = $(this);
-        var content;
-        var editor = tinyMCE.get('tutor_lesson_modal_editor');
-        if (editor) {
-            content = editor.getContent();
-        } else {
-            content = $('#' + inputid).val();
-        }
-
-        var form_data = $(this).closest('form').serializeObject();
-        form_data.lesson_content = content;
-
-        $.ajax({
-            url: window._tutorobject.ajaxurl,
-            type: 'POST',
-            data: form_data,
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success) {
-                    $('#tutor-course-content-wrap').html(data.data.course_contents);
-                    enable_sorting_topic_lesson();
-
-                    //Close the modal
-                    $('.tutor-lesson-modal-wrap').removeClass('show');
-                    
-                    tutor_toast(__('Done', 'tutor'), $that.data('toast_success_message'), 'success');
-                }
-                else {
-                    tutor_toast(__('Failed', 'tutor'), __('Lesson Update Failed', 'tutor'), 'error');
-                }
-            },
-            error: function() {
-                tutor_toast(__('Failed', 'tutor'), __('Lesson Update Failed', 'tutor'), 'error');
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
 
     /**
      * END: Tutor Course builder JS

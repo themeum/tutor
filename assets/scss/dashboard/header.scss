@@ -1,4 +1,4 @@
-@import '../../lib/mixins.scss';
+@import '../lib/mixins.scss';
 
 .tutor-dashboard-header {
     @include valueWithPrefix(display, flex);

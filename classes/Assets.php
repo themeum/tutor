@@ -8,18 +8,33 @@ if (!defined('ABSPATH'))
 class Assets {
 
 	public function __construct() {
+		/**
+		 * Front and backend script enqueue
+		 */
 		add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
-		add_action('admin_enqueue_scripts', array($this, 'tutor_script_text_domain'), 100);
 		add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
+
+		/**
+		 * Common scripts loading
+		 */
+		add_action('admin_enqueue_scripts', array($this, 'common_scripts'));
+		add_action('wp_enqueue_scripts', array($this, 'common_scripts'));
+
+		/**
+		 * Text domain loading
+		 */
+		add_action('admin_enqueue_scripts', array($this, 'tutor_script_text_domain'), 100);
+		add_action('wp_enqueue_scripts', array($this, 'tutor_script_text_domain'), 100);
+		add_filter('tutor_localize_data', array($this, 'modify_localize_data') );
+
 		/**
 		 * register translateable function to load
 		 * handled script with text domain attached to
 		 * @since 1.9.0
-		 */
-		add_action('wp_enqueue_scripts', array($this, 'tutor_script_text_domain'), 100);
-		add_action('admin_head', array($this, 'tutor_add_mce_button'));
-		add_filter('get_the_generator_html', array($this, 'tutor_generator_tag'), 10, 2);
-		add_filter('get_the_generator_xhtml', array($this, 'tutor_generator_tag'), 10, 2);
+		*/
+		add_action( 'admin_head', array($this, 'tutor_add_mce_button'));
+		add_filter( 'get_the_generator_html', array($this, 'tutor_generator_tag'), 10, 2 );
+		add_filter( 'get_the_generator_xhtml', array($this, 'tutor_generator_tag'), 10, 2 );
 
 		/**
 		 * Add translation support for external tinyMCE button
@@ -46,18 +61,18 @@ class Assets {
 		$base_path = rtrim($base_path, '/') . '/';
 
 		return array(
-			'ajaxurl'       => admin_url('admin-ajax.php'),
-			'home_url'		=> get_home_url(),
-			'base_path'		=> tutor()->basepath,
-			'tutor_url' 	=> tutor()->url,
-			'tutor_pro_url' => function_exists('tutor_pro') ? tutor_pro()->url : null,
-			'nonce_key'     => tutor()->nonce,
-			tutor()->nonce  => wp_create_nonce(tutor()->nonce_action),
-			'loading_icon_url' => get_admin_url() . 'images/wpspin_light.gif',
-			'placeholder_img_src' => tutor_placeholder_img_src(),
-			'enable_lesson_classic_editor' => get_tutor_option('enable_lesson_classic_editor'),
-			'tutor_frontend_dashboard_url' => tutor_utils()->get_tutor_dashboard_page_permalink(),
-			'wp_date_format' => tutor_js_date_format_against_wp()
+			'ajaxurl'       				=> admin_url('admin-ajax.php'),
+			'home_url'						=> get_home_url(),
+			'base_path'						=> tutor()->basepath,
+			'tutor_url' 					=> tutor()->url,
+			'tutor_pro_url' 				=> function_exists('tutor_pro') ? tutor_pro()->url : null,
+			'nonce_key'     				=> tutor()->nonce,
+			tutor()->nonce  				=> wp_create_nonce( tutor()->nonce_action ),
+			'loading_icon_url' 				=> get_admin_url() . 'images/wpspin_light.gif',
+			'placeholder_img_src' 			=> tutor_placeholder_img_src(),
+			'enable_lesson_classic_editor' 	=> get_tutor_option('enable_lesson_classic_editor'),
+			'tutor_frontend_dashboard_url' 	=> tutor_utils()->get_tutor_dashboard_page_permalink(),
+			'wp_date_format' 				=> tutor_js_date_format_against_wp()
 		);
 	}
 
@@ -84,24 +99,8 @@ class Assets {
 		wp_enqueue_script('jquery-ui-slider');
 		wp_enqueue_script('jquery-ui-datepicker');
 
-		wp_enqueue_script('tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array('jquery'), tutor()->version, true);
-		wp_enqueue_script('tutor-main', tutor()->url . 'assets/js/tutor.js', array('jquery', 'wp-i18n'), tutor()->version, true);
-		wp_enqueue_script('tutor-admin', tutor()->url . 'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker', 'wp-i18n'), tutor()->version, true);
-		wp_enqueue_script('tutor-icons', tutor()->url . 'assets/js/tutor-icons-v2.js', array('jquery'), tutor()->version, true);
-		wp_enqueue_script('tutor-admin-v2', tutor()->url . 'assets/js/tutor-admin-v2.js', array('jquery', 'wp-color-picker', 'wp-i18n'), tutor()->version, true);
-		wp_enqueue_script('tutor-options-v2', tutor()->url . 'assets/js/tutor-options-v2.js', array('jquery'), tutor()->version, true);
-
-		$tutor_localize_data = $this->get_default_localized_data();
-
-		if (!empty($_GET['taxonomy']) && ($_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag')) {
-			$tutor_localize_data['open_tutor_admin_menu'] = true;
-		}
-
-		$tutor_localize_data = apply_filters('tutor_localize_data', $tutor_localize_data);
-		wp_localize_script('tutor-admin', '_tutorobject', $tutor_localize_data);
-		wp_localize_script('tutor-options-v2', 'v2_search', array('nonce' => wp_create_nonce('v2_search_script')));
-
-		wp_add_inline_style('tutor-admin', $this->load_color_palette());
+		wp_enqueue_script('tutor-select2', tutor()->url.'assets/packages/select2/select2.full.min.js', array('jquery'), tutor()->version, true );
+		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker', 'wp-i18n'), tutor()->version, true );
 	}
 
 	/**
@@ -139,26 +138,6 @@ class Assets {
 			wp_enqueue_media();
 		}
 
-		//$options = tutor_utils()->get_option();
-		$localize_data = $this->get_default_localized_data();
-
-		if (!empty($post->post_type) && $post->post_type === 'tutor_quiz') {
-			$single_quiz_options = (array) tutor_utils()->get_quiz_option($post->ID);
-			$saved_quiz_options = array(
-				'quiz_when_time_expires' => tutils()->get_option('quiz_when_time_expires'),
-			);
-
-			$quiz_options = array_merge($single_quiz_options, $saved_quiz_options);
-
-			$previous_attempts = tutor_utils()->quiz_attempts();
-
-			if ($previous_attempts && count($previous_attempts)) {
-				$quiz_options['quiz_auto_start'] = 0;
-			}
-
-			$localize_data['quiz_options'] = $quiz_options;
-		}
-
 		/**
 		 * Enabling Sorting, draggable, droppable...
 		 */
@@ -179,17 +158,6 @@ class Assets {
 		//Social Share
 		wp_enqueue_script('tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array('jquery'), tutor()->version, true);
 
-		//Including player assets if video exists
-		if (tutor_utils()->has_video_in_single()) {
-			$localize_data['post_id'] = get_the_ID();
-			$localize_data['best_watch_time'] = 0;
-
-			$best_watch_time = tutor_utils()->get_lesson_reading_info(get_the_ID(), 0, 'video_best_watched_time');
-			if ($best_watch_time > 0) {
-				$localize_data['best_watch_time'] = $best_watch_time;
-			}
-		}
-
 		/**
 		 * Chart Data
 		 */
@@ -205,32 +173,17 @@ class Assets {
 			}
 		}
 		//End: chart data
-
-		$localize_data = apply_filters('tutor_localize_data', $localize_data);
-		if (tutor_utils()->get_option('load_tutor_css')) {
-			wp_enqueue_style('tutor-frontend', tutor()->url . "assets/css/tutor-front{$suffix}.css", array(), tutor()->version);
+		if (tutor_utils()->get_option('load_tutor_css')){
+			wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front{$suffix}.css", array(), tutor()->version);
 		}
-		if (tutor_utils()->get_option('load_tutor_js')) {
-			wp_enqueue_script('tutor-main', tutor()->url . 'assets/js/tutor.js', array('jquery', 'wp-i18n'), tutor()->version, true);
-			/**
-			 * dependency wp-i18n added for
-			 * translate js file
-			 * @since 1.9.0
-			 */
-			wp_register_script('tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array('jquery', 'wp-i18n'), tutor()->version, true);
-			wp_enqueue_script('tutor-frontend');
-			wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
-			/**
-			 * Location data added for providing support on the frontend
-			 *
-			 * for zoom
-			 *
-			 * @since 1.9.4
-			 */
-			wp_localize_script('tutor-main', '_tutorobject', $localize_data);
-		}
-
-		wp_add_inline_style('tutor-frontend', $this->load_color_palette());
+		
+		/**
+		 * dependency wp-i18n added for 
+		 * translate js file
+		 * @since 1.9.0
+		*/
+		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
+		
 
 		/**
 		 * Load frontend dashboard style
@@ -242,6 +195,64 @@ class Assets {
 
 		// Load date picker for announcement at frontend
 		wp_enqueue_script('jquery-ui-datepicker');
+	}
+
+	public function modify_localize_data($localize_data) {
+		if(is_admin()) {
+			if ( ! empty($_GET['taxonomy']) && ( $_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag') ){
+				$localize_data['open_tutor_admin_menu'] = true;
+			}
+		} else {
+
+			// Assign quiz option
+			if ( ! empty($post->post_type) && $post->post_type === 'tutor_quiz'){
+				$single_quiz_options = (array) tutor_utils()->get_quiz_option($post->ID);
+				$saved_quiz_options = array(
+					'quiz_when_time_expires' => tutils()->get_option('quiz_when_time_expires'),
+				);
+	
+				$quiz_options = array_merge($single_quiz_options, $saved_quiz_options);
+	
+				$previous_attempts = tutor_utils()->quiz_attempts();
+	
+				if ($previous_attempts && count($previous_attempts)) {
+					$quiz_options['quiz_auto_start'] = 0;
+				}
+				
+				$localize_data['quiz_options'] = $quiz_options;
+			}
+
+			//Including player assets if video exists
+			if (tutor_utils()->has_video_in_single()) {
+				$localize_data['post_id'] = get_the_ID();
+				$localize_data['best_watch_time'] = 0;
+
+				$best_watch_time = tutor_utils()->get_lesson_reading_info(get_the_ID(), 0, 'video_best_watched_time');
+				if ($best_watch_time > 0){
+					$localize_data['best_watch_time'] = $best_watch_time;
+				}
+			}
+		}
+
+		return $localize_data;
+	}
+
+	public function common_scripts() {
+		// Load course builder resources
+		if($this->get_course_builder_screen()) {
+			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
+			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), tutor()->version );
+		}
+
+		// Localize scripts
+		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
+		wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
+		wp_localize_script('tutor-admin', '_tutorobject', $localize_data);
+		wp_localize_script('tutor-course-builder', '_tutorobject', $localize_data);
+
+		// Inline styles
+		wp_add_inline_style('tutor-frontend', $this->load_color_palette() );
+		wp_add_inline_style('tutor-admin', $this->load_color_palette() );
 	}
 
 	private function load_color_palette() {
@@ -347,9 +358,9 @@ class Assets {
 	 * @since 1.9.0
 	 */
 	function tutor_script_text_domain() {
-		wp_set_script_translations('tutor-frontend', 'tutor', tutor()->path . 'languages/');
-		wp_set_script_translations('tutor-main', 'tutor', tutor()->path . 'languages/');
-		wp_set_script_translations('tutor-admin', 'tutor', tutor()->path . 'languages/');
+		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path.'languages/' );
+		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path.'languages/' );
+		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path.'languages/' );
 	}
 
 	/**
@@ -361,19 +372,29 @@ class Assets {
 		$locales['tutor_button'] = tutor()->path . 'includes/tinymce_translate.php';
 		return $locales;
 	}
-	
-	public function add_identifier_class_to_body($classes) {
-		$course_builder = ' tutor-screen-course-builder ';
-		$to_add = array();
+
+	private function get_course_builder_screen() {
 
 		// Add course editor identifier class
 		if(is_admin()) {
 			$screen = get_current_screen();
 			if(is_object($screen) && $screen->base=='post' && $screen->id=='courses') {
-				$to_add[] = $course_builder . ' tutor-screen-course-builder-' . ($screen->is_block_editor ? ' gutenberg' : 'classic') . ' ';
+				return $screen->is_block_editor ? 'gutenberg' : 'classic';
 			}
 		} else if(tutor_utils()->is_tutor_frontend_dashboard('create-course')) {
-			$to_add[] = $course_builder . ' tutor-screen-course-builder-frontend ';
+			return 'frontend';
+		}
+
+		return null;
+	}
+	
+	public function add_identifier_class_to_body($classes) {
+		$course_builder_screen = $this->get_course_builder_screen();
+		$to_add = array();
+
+		// Add course editor identifier class
+		if($course_builder_screen) {
+			$to_add[] = ' tutor-screen-course-builder tutor-screen-course-builder-' . $course_builder_screen . ' ';
 		}
 
 		is_array($classes) ? $classes=array_merge($classes, $to_add) : $classes.=implode('', $to_add);
