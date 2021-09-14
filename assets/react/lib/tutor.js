@@ -361,45 +361,6 @@ jQuery(document).ready(function($){
     });
 
     /**
-     * Update Lesson Modal
-     */
-    $(document).on('click', '.open-tutor-lesson-modal', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var lesson_id = $that.attr('data-lesson-id');
-        var topic_id = $that.attr('data-topic-id');
-        var course_id = $('#post_ID').val();
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : {lesson_id : lesson_id, topic_id : topic_id, course_id : course_id, action: 'tutor_load_edit_lesson_modal'},
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
-                $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id}).addClass('show');
-
-                var tinymceConfig = tinyMCEPreInit.mceInit.tutor_editor_config;
-                if ( ! tinymceConfig){
-                    tinymceConfig = tinyMCEPreInit.mceInit.course_description;
-                }
-                tinymce.init(tinymceConfig);
-                tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_lesson_modal_editor' );
-                tinyMCE.execCommand('mceAddEditor', false, "tutor_lesson_modal_editor");
-
-                $(document).trigger('lesson_modal_loaded', {lesson_id : lesson_id, topic_id : topic_id, course_id : course_id});
-            },
-            complete: function () {
-                quicktags({id : "tutor_lesson_modal_editor"});
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
-    /**
      * Lesson upload thumbnail
      */
     $(document).on( 'click', '.lesson_thumbnail_upload_btn',  function( event ){
@@ -470,34 +431,6 @@ jQuery(document).ready(function($){
                 $that.removeClass('tutor-updating-message');
             }
         });
-    });
-
-    /**
-     * Confirmation for deleting Topic
-     */
-    $(document).on('click', '.topic-delete-btn a', function(e){
-        var topic_id = $(this).attr('data-topic-id');
-
-        if ( ! confirm( __( 'Are you sure to delete?', 'tutor' ) )){
-            e.preventDefault();
-        }
-    });
-
-    $(document).on('click', '.tutor-expand-all-topic', function (e) {
-        e.preventDefault();
-        $('.tutor-topics-body').slideDown();
-        $('.expand-collapse-wrap i').removeClass('tutor-icon-light-down').addClass('tutor-icon-light-up');
-    });
-    $(document).on('click', '.tutor-collapse-all-topic', function (e) {
-        e.preventDefault();
-        $('.tutor-topics-body').slideUp();
-        $('.expand-collapse-wrap i').removeClass('tutor-icon-light-up').addClass('tutor-icon-light-down');
-    });
-    $(document).on('click', '.topic-inner-title, .expand-collapse-wrap', function (e) {
-        e.preventDefault();
-        var $that = $(this);
-        $that.closest('.tutor-topics-wrap').find('.tutor-topics-body').slideToggle();
-        $that.closest('.tutor-topics-wrap').find('.expand-collapse-wrap i').toggleClass('tutor-icon-light-down tutor-icon-light-up');
     });
 
     /**
@@ -1363,13 +1296,7 @@ jQuery(document).ready(function($){
         }
         load_date_picker();
     });
-    $(document).on('lesson_modal_loaded', function(e, obj){
-        $('.tutor-lesson-modal-wrap .modal-title h1').html(__( 'Lesson', 'tutor' ));
-    });
-    $(document).on('assignment_modal_loaded', function(e, obj){
-        $('.tutor-lesson-modal-wrap .modal-title h1').html(__( 'Assignment', 'tutor' ));
-    });
-
+    
     /**
      * Tutor number validation
      *
@@ -1804,7 +1731,7 @@ jQuery.fn.serializeObject = function()
    return values;
 };
 
-function tutor_toast(title, description, type) {
+window.tutor_toast=function(title, description, type) {
     var tutor_ob = window._tutorobject || {};
     var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 

@@ -50,21 +50,37 @@
         </div>
     </div>
 
-    <div class="tutor-modal-wrap tutor-lesson-modal-wrap">
-        <div class="tutor-modal-content">
-            <div class="modal-header">
-                <div class="modal-title">
-                    <h1><?php esc_html_e('Lesson', 'tutor') ?></h1>
+    <div class="tutor-modal modal-sticky-header-footer tutor-lesson-modal-wrap">
+        <span class="tutor-modal-overlay"></span>
+        <div class="tutor-modal-root">
+            <div class="tutor-modal-inner">
+                <div class="tutor-modal-header">
+                    <h3 class="tutor-modal-title">
+                        <?php _e('Lesson', 'tutor'); ?>
+                        <button data-tutor-modal-close className="tutor-modal-close">
+                            <span className="las la-times"></span>
+                        </button>
+                    </h3>
                 </div>
-
-                <div class="lesson-modal-close-wrap">
-                    <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i></a>
+                <div class="tutor-modal-body-alt modal-container"></div>
+                <div class="tutor-modal-footer">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="tutor-btn update_lesson_modal_btn">
+                                <?php _e('Update Lesson', 'tutor'); ?>
+                            </button>
+                        </div>
+                        <div class="col-auto">
+                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
+                                <?php _e('Cancel', 'tutor'); ?>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-container"></div>
         </div>
     </div>
-
+    
     <div class="tutor-modal-wrap tutor-assignment-builder-modal-wrap">
         <div class="tutor-modal-content">
             <div class="modal-header">
