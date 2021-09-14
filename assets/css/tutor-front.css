@@ -5309,16 +5309,6 @@ Quiz Modal
   line-height: 30px;
 }
 
-.modal-container .modal-classic-btn-wrap {
-  position: absolute;
-  right: 45px;
-  top: 14px;
-}
-
-.modal-container .modal-classic-btn-wrap a {
-  color: var(--tutor-primary-color);
-}
-
 .tutor-modal-wrap .modal-header h1::before,
 .tutor-modal-wrap .modal-header h1::after {
   display: none;

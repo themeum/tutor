@@ -4,6 +4,53 @@ const CssMinimizerPlugin = require( 'css-minimizer-webpack-plugin' );
 
 module.exports = ( env, options ) => {
 
+	if(env=='docz') {
+		return {
+			mode: 'development',
+			devtool: 'source-map',
+			entry: [
+			'./_src/js/main.js',
+			'./_src/scss/main.scss'
+			],
+			output: {
+				path: path.resolve(__dirname, 'bundle'),
+				filename: "[name].min.js",
+			},
+			module: {
+			rules: [
+				{
+				test: /\.(sa|sc|c)ss$/,
+				use: [
+					MiniCssExtractPlugin.loader,
+					'css-loader',
+					'sass-loader',
+				],
+				},
+			]
+			},
+			plugins: [
+			new MiniCssExtractPlugin({
+				filename: '[name].min.css'
+			}),
+			],
+			optimization: {
+			minimize: true,
+			minimizer: [
+				new TerserPlugin({
+				terserOptions: {},
+				minify: (file) => {
+					const uglifyJsOptions = {
+					sourceMap: false
+					};
+					return require("uglify-js").minify(file, uglifyJsOptions);
+				},
+				}),
+				new CssMinimizerPlugin()
+			],
+			}
+		}
+	}
+
 	const mode = options.mode || 'development';
 	
 	const config = {
@@ -29,7 +76,7 @@ module.exports = ( env, options ) => {
 					terserOptions: {},
 					minify: ( file ) => {
 						const uglifyJsOptions = {
-							sourceMap: true,
+							sourceMap: false,
 						};
 						return require( 'uglify-js' ).minify( file, uglifyJsOptions );
 					},
