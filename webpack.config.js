@@ -9,11 +9,11 @@ module.exports = ( env, options ) => {
 			mode: 'development',
 			devtool: 'source-map',
 			entry: [
-			'./_src/js/main.js',
-			'./_src/scss/main.scss'
+			'./v2-library/_src/js/main.js',
+			'./v2-library/_src/scss/main.scss'
 			],
 			output: {
-				path: path.resolve(__dirname, 'bundle'),
+				path: path.resolve(__dirname+'/v2-library', 'bundle'),
 				filename: "[name].min.js",
 			},
 			module: {
@@ -90,9 +90,9 @@ module.exports = ( env, options ) => {
 		name: 'configEditor',
 		entry: {
 			'tutor-front'		    : './assets/react/front/tutor-front.js',
-			'tutor-admin'		    : './assets/react/admin/tutor-admin.js',
+			'tutor-admin'		    : './assets/react/admin-dashboard/tutor-admin.js',
 			'tutor-course-builder'	: './assets/react/course-builder/index.js',
-			'tutor-setup'		    : './assets/react/admin/tutor-setup.js',
+			'tutor-setup'		    : './assets/react/admin-dashboard/tutor-setup.js',
         },
 		output: {
 			path: path.resolve( __dirname, path.resolve( __dirname, 'assets/js' ) ),
