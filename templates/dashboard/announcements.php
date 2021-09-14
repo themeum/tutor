@@ -110,7 +110,7 @@ $image_base = tutor()->url . '/assets/images/';
 
     <div class="tutor-form-group tutor-announcement-datepicker">
         <label><?php _e('Date', 'tutor'); ?></label>
-        <input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" autocomplete="off" />
+        <input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
         <i class="tutor-icon-calendar"></i>
     </div>
 </div>
