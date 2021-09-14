@@ -33,12 +33,10 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 							<?php
 							$no_page    = false;
 							$first_item = array_key_first( $args['sections'] );
-							echo '<pre>';
-							print_r( $first_item );
-							echo '</pre>';
+							$item_exist = in_array( $sub_page, array_keys( $args['sections'] ) );
 							foreach ( $args['sections'] as $key => $section ) :
 								$icon      = $section['icon'];
-								$is_active = ( $sub_page === $section['slug'] || $first_item === $section['slug'] ) ? 'active' : null;
+								$is_active = $sub_page === $section['slug'] ? 'active' : ( empty( $sub_page ) && $first_item === $section['slug'] ? 'active' : '' );
 								$page_url  = 'tutor-setup' === $section['slug'] ? add_query_arg( 'page', $section['slug'], admin_url( 'admin.php' ) ) : add_query_arg( 'sub_page', $section['slug'], admin_url( 'admin.php?page=tutor-tools-v2' ) );
 								?>
 								<li class="tutor-option-nav-item">
@@ -59,8 +57,12 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 			<!-- end /.tutor-option-tabs -->
 			<div class="tutor-option-tab-pages">
 				<?php
-				echo $this->template( $this->options_tools['tools']['sections'][ $sub_page ] );
-
+				 $sub_page = ! empty( $sub_page ) ? $sub_page : $first_item;
+				if ( true === $item_exist ) {
+					echo $this->template( $this->options_tools['tools']['sections'][ $sub_page ] );
+				} else {
+					echo 'The subpage you are looking for is invalid';
+				}
 
 
 				/*
