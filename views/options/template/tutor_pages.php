@@ -66,5 +66,5 @@ $tutor_pages = tutils()->tutor_pages();
 </div><br>
 <div class="tutor-backend-alert alert-primary">
 	<span class="alert-icon tutor-v2-icon-test icon-warning-filled"></span>
-	<span class="alert-content">Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.</span>
+	<span class="alert-content"><?php echo esc_html( 'Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.', 'tutor' ); ?></span>
 </div>
