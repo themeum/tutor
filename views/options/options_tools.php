@@ -31,15 +31,19 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 							<h4><?php echo $args['label']; ?></h4>
 						<li>
 							<?php
-							$no_page = false;
+							$no_page    = false;
+							$first_item = array_key_first( $args['sections'] );
+							echo '<pre>';
+							print_r( $first_item );
+							echo '</pre>';
 							foreach ( $args['sections'] as $key => $section ) :
 								$icon      = $section['icon'];
-								$is_active = $sub_page === $section['slug'] ? 'active' : null;
+								$is_active = ( $sub_page === $section['slug'] || $first_item === $section['slug'] ) ? 'active' : null;
 								$page_url  = 'tutor-setup' === $section['slug'] ? add_query_arg( 'page', $section['slug'], admin_url( 'admin.php' ) ) : add_query_arg( 'sub_page', $section['slug'], admin_url( 'admin.php?page=tutor-tools-v2' ) );
 								?>
 								<li class="tutor-option-nav-item">
 									<a href="<?php echo $page_url; ?>" class="<?php echo $is_active; ?>">
-                                        <span class="nav-icon tutor-v2-icon-test <?php echo $icon; ?>"></span>
+										<span class="nav-icon tutor-v2-icon-test <?php echo $icon; ?>"></span>
 										<span class="nav-label"><?php echo $section['label']; ?></span>
 									</a>
 								</li>
