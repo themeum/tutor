@@ -35,7 +35,7 @@ $tutor_pages = tutils()->tutor_pages();
 
 				if ( $page['page_exists'] ) {
 					$edit_url = admin_url( "post.php?post={$page_id}&action=edit" );
-					echo "<a href='{$edit_url}' target='_blank' class='icon-link'><span class=' tutor-v2-icon-test icon-detail-link-filled'>ew</span></a>";
+					echo "<a href='{$edit_url}' target='_blank' class='icon-link'><span class=' tutor-v2-icon-test icon-detail-link-filled'></span></a>";
 				}
 					echo '</p>';
 				?>
@@ -53,7 +53,6 @@ $tutor_pages = tutils()->tutor_pages();
 	</div>
 </div>
 <div class="btn-wrap regenerate-pages">
-
 	<form action="" method="post">
 		<?php
 		tutor_action_field( 'regenerate_tutor_pages' );
