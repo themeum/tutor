@@ -2935,7 +2935,7 @@ class Utils {
 			$search_query,
 			$search_query,
 			$search_query,
-			$search_query,
+			$search_query
 		) );
 
 		return array(
