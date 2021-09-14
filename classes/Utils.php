@@ -2467,7 +2467,6 @@ class Utils {
 			'create-course'     => array( 'title' => __( 'Create Course', 'tutor'), 'show_ui' => false, 'auth_cap' => tutor()->instructor_role ),
 			'my-courses'        => array( 'title' => __( 'My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'announcements'     => array( 'title' => __( 'Announcements', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
-			'earning'           => array( 'title' => __( 'Earnings', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'withdraw'          => array( 'title' => __( 'Withdrawals', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'quiz-attempts'     => array( 'title' => __( 'Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'question-answer'   => array( 'title' => __( 'Question & Answer', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
