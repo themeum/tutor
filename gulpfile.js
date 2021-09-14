@@ -30,17 +30,17 @@ var scss_blueprints = {
 	tutor_front: {src: "assets/scss/front/index.scss", mode: 'expanded', destination: 'tutor-front.css'},
 	tutor_front_min: {src: "assets/scss/front/index.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
 	
-	tutor_admin: {src: "assets/scss/admin/index.scss", mode: 'expanded', destination: 'tutor-admin.css'},
-	tutor_admin_min: {src: "assets/scss/admin/index.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
+	tutor_admin: {src: "assets/scss/admin-dashboard/index.scss", mode: 'expanded', destination: 'tutor-admin.css'},
+	tutor_admin_min: {src: "assets/scss/admin-dashboard/index.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
 	
-	tutor_setup: {src: "assets/scss/admin/tutor-setup.scss", mode: 'expanded', destination: 'tutor-setup.css'},
-	tutor_setup_min: {src: "assets/scss/admin/tutor-setup.scss", mode: 'compressed', destination: 'tutor-setup.min.css'},
+	tutor_setup: {src: "assets/scss/admin-dashboard/tutor-setup.scss", mode: 'expanded', destination: 'tutor-setup.css'},
+	tutor_setup_min: {src: "assets/scss/admin-dashboard/tutor-setup.scss", mode: 'compressed', destination: 'tutor-setup.min.css'},
 
 	tutor_v2: {src: "v2-library/_src/scss/main.scss", mode: 'expanded', destination: 'tutor-v2.css'},
 	tutor_v2_min: {src: "v2-library/_src/scss/main.scss", mode: 'compressed', destination: 'tutor-v2.min.css'},
 	
-	tutor_front_dashboard: {src: "assets/scss/dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
-	tutor_front_dashboard_min: {src: "assets/scss/dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
+	tutor_front_dashboard: {src: "assets/scss/frontend-dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
+	tutor_front_dashboard_min: {src: "assets/scss/frontend-dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
 
 	tutor_course_builder: {src: "assets/scss/course-builder/index.scss", mode: 'expanded', destination: 'tutor-course-builder.css'},
 	tutor_course_builder_min: {src: "assets/scss/course-builder/index.scss", mode: 'compressed', destination: 'tutor-course-builder.min.css'},
