@@ -54,12 +54,12 @@
 			?>
 
 			<div class="date-range-input">
-				<input type="text" name="date_range_from" class="tutor_date_picker" value="<?php echo $date_range_from; ?>" autocomplete="off" placeholder="<?php echo __( get_option( 'date_format' ), 'tutor' ); ?>" />
+				<input type="text" name="date_range_from" class="tutor_date_picker" value="<?php echo '' !== $date_range_from ? tutor_get_formated_date( get_option( 'date_format' ), $date_range_from ) : ''; ?>" autocomplete="off" placeholder="<?php echo __( get_option( 'date_format' ), 'tutor' ); ?>" />
 				<i class="tutor-icon-calendar"></i>
 			</div>
 
 			<div class="date-range-input">
-				<input type="text" name="date_range_to" class="tutor_date_picker" value="<?php echo $date_range_to; ?>" autocomplete="off" placeholder="<?php echo __( get_option( 'date_format' ), 'tutor' ); ?>" />
+				<input type="text" name="date_range_to" class="tutor_date_picker" value="<?php echo '' !== $date_range_to ? tutor_get_formated_date( get_option( 'date_format' ), $date_range_to ) : ''; ?>" autocomplete="off" placeholder="<?php echo __( get_option( 'date_format' ), 'tutor' ); ?>" />
 				<i class="tutor-icon-calendar"></i>
 			</div>
 
