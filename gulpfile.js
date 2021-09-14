@@ -36,12 +36,6 @@ var scss_blueprints = {
 	tutor_v2: {src: "v2-library/_src/scss/main.scss", mode: 'expanded', destination: 'tutor-v2.css'},
 	tutor_v2_min: {src: "v2-library/_src/scss/main.scss", mode: 'compressed', destination: 'tutor-v2.min.css'},
 	
-	// tutor_admin_v2_markup: {src: "assets/scss/admin/admin-v2-markup.scss", mode: 'expanded', destination: 'admin-v2-markup.css'},
-	// tutor_admin_v2_markup_min: {src: "assets/scss/admin/admin-v2-markup.scss", mode: 'compressed', destination: 'admin-v2-markup.min.css'},
-	
-	tutor_admin_v2_markup: {src:  "assets/v2/scss/admin/admin-v2-markup.scss", mode: 'expanded', destination: 'admin-v2-markup.css'},
-	tutor_admin_v2_markup_min: {src: "assets/v2/scss/admin/admin-v2-markup.scss", mode: 'compressed', destination: 'admin-v2-markup.min.css'},
-	
 	tutor_front_dashboard: {src: "assets/scss/dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
 	tutor_front_dashboard_min: {src: "assets/scss/dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
 

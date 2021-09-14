@@ -1,4 +1,6 @@
 import '../lib/common';
+import './segments/image-preview';
+import './segments/options';
 
 jQuery(document).ready(function($){
     'use strict';
