@@ -31,13 +31,16 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 							<h4><?php echo $args['label']; ?></h4>
 						<li>
 							<?php
-							$no_page    = false;
-							$first_item = array_key_first( $args['sections'] );
-							$item_exist = in_array( $sub_page, array_keys( $args['sections'] ) );
+							$no_page     = false;
+							$first_item  = array_key_first( $args['sections'] );
+							$target_page = ! empty( $sub_page ) ? $sub_page : $first_item;
+							$item_exist  = in_array( $sub_page, array_keys( $args['sections'] ) );
 							foreach ( $args['sections'] as $key => $section ) :
 								$icon      = $section['icon'];
-								$is_active = $sub_page === $section['slug'] ? 'active' : ( empty( $sub_page ) && $first_item === $section['slug'] ? 'active' : '' );
-								$page_url  = 'tutor-setup' === $section['slug'] ? add_query_arg( 'page', $section['slug'], admin_url( 'admin.php' ) ) : add_query_arg( 'sub_page', $section['slug'], admin_url( 'admin.php?page=tutor-tools-v2' ) );
+								$is_active = $target_page === $section['slug'] ? 'active' : null;
+								$page_url  = 'tutor-setup' === $section['slug']
+												? add_query_arg( 'page', $section['slug'], admin_url( 'admin.php' ) )
+												: add_query_arg( 'sub_page', $section['slug'], admin_url( 'admin.php?page=tutor-tools-v2' ) );
 								?>
 								<li class="tutor-option-nav-item">
 									<a href="<?php echo $page_url; ?>" class="<?php echo $is_active; ?>">
@@ -57,37 +60,16 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 			<!-- end /.tutor-option-tabs -->
 			<div class="tutor-option-tab-pages">
 				<?php
-				 $sub_page = ! empty( $sub_page ) ? $sub_page : $first_item;
-				if ( true === $item_exist ) {
-					echo $this->template( $this->options_tools['tools']['sections'][ $sub_page ] );
+				if ( $target_page === $first_item || true === $item_exist ) {
+					echo $this->template( $this->options_tools['tools']['sections'][ $target_page ] );
 				} else {
-					echo 'The subpage you are looking for is invalid';
+					echo '<div class="tutor-option-main-title">
+                            <h2>Error!</h2>
+                        </div>
+                        <div class="tutor-option-single-item">
+                            <h4>The subpage you are looking for is invalid</h4>
+                        </div>';
 				}
-
-
-				/*
-				 if ( $tools_section['slug'] === $sub_page ) {
-					?>
-					<div id="<?php echo esc_attr( $section['slug'] ); ?>" class="tutor-option-nav-page active">
-					<div class="tutor-option-main-title">
-						<h2><?php echo esc_html( $tools_section['label'] ); ?></h2>
-					</div>
-
-						<?php
-						if ( $tools_section['blocks'] ) {
-							foreach ( $tools_section['blocks'] as $blocks ) :
-								if ( empty( $blocks['label'] ) ) :
-									?>
-							<div class="tutor-option-single-item">
-									<?php echo $this->blocks( $blocks ); ?>
-							</div>
-								<?php else : ?>
-									<?php echo $this->blocks( $blocks ); ?>
-						<?php endif; ?>
-							<?php endforeach; ?>
-						<?php } ?>
-				</div>
-				<?php }; */
 				?>
 			</div>
 			<!-- end /.tutor-option-tab-pages -->
