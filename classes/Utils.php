@@ -7545,4 +7545,31 @@ class Utils {
 
 		return $ids;
 	}
+
+	/**
+	 * Custom Pagination for Tutor Shortcode
+	 * 
+	 * @param int $total_num_pages
+	 * 
+	 * @return void
+	 */
+	public function tutor_custom_pagination( $total_num_pages = 1 ) {
+
+		do_action( 'tutor_course/archive/pagination/before' ); ?>
+		
+		<div class="tutor-pagination-wrap">
+		<?php
+			$big = 999999999; // need an unlikely integer
+		
+			echo paginate_links( array(
+				'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+				'format' => '?paged=%#%',
+				'current' => max( 1, get_query_var( 'paged' ) ),
+				'total' => $total_num_pages
+			) );
+		?>
+		</div>
+		
+		<?php do_action( 'tutor_course/archive/pagination/after' );
+	}
 }

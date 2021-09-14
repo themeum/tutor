@@ -9729,6 +9729,27 @@ Withdraw Method
   margin-right: 5px;
 }
 
+.quiz-view-attempts-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.quiz-view-attempts-wrapper .back-to-quiz-btn {
+  margin-left: 10px;
+  color: #ffffff !important;
+}
+
 .quiz-attempt-answers-wrap {
   background: #fff;
   margin: 0 0 1.5em;

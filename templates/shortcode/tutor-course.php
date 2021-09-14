@@ -9,8 +9,9 @@ $column_per_row = $GLOBALS['tutor_shortcode_arg']['column_per_row'];
 $course_per_page = $GLOBALS['tutor_shortcode_arg']['course_per_page'];
 $course_filter = $GLOBALS['tutor_shortcode_arg']['include_course_filter']===null ? (bool) tutor_utils()->get_option('course_archive_filter', false) : $GLOBALS['tutor_shortcode_arg']['include_course_filter'];
 $supported_filters = tutor_utils()->get_option('supported_course_filters', array());
+$show_pagination = $GLOBALS['tutor_shortcode_arg']['show_pagination'];
 
-if ($course_filter && count($supported_filters)) { ?>
+if ( $course_filter && count( $supported_filters ) ) { ?>
 	<div class="tutor-course-filter-wrapper">
 		<div class="tutor-course-filter-container">
 			<?php tutor_load_template('course-filter.filters'); ?>
@@ -44,26 +45,14 @@ if ($course_filter && count($supported_filters)) { ?>
 					tutor_course_loop_end();
 				
 				endif;
+				if ( 'on' === $show_pagination ) {
+					tutor_utils()->tutor_custom_pagination( $the_query->max_num_pages );
+				}
 
 if ($course_filter && count($supported_filters)) { ?>
 			</div><!-- .wrap -->
 		</div>
 	</div>
-<?php } 
+<?php }
+
 ?>
-<?php do_action('tutor_course/archive/pagination/before');  ?>
-
-<div class="tutor-pagination-wrap">
-	<?php
-	$big = 999999999; // need an unlikely integer
-
-	echo paginate_links( array(
-		'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-		'format' => '?paged=%#%',
-		'current' => max( 1, get_query_var('paged') ),
-		'total' => $the_query->max_num_pages
-	) );
-	?>
-</div>
-
-<?php do_action('tutor_course/archive/pagination/after');  ?>

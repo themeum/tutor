@@ -663,7 +663,7 @@ jQuery(document).ready(function ($) {
                         $('.quiz-attempt-single-question').hide();
                          $nextQuestion.show();
                     }, 
-                    500);  
+                    800);  
                 } else {
                     $('.quiz-attempt-single-question').hide();
                      $nextQuestion.show();
@@ -891,7 +891,9 @@ jQuery(document).ready(function ($) {
                     }
 
                     if (isTrue && !checked) {
+                        $input.attr('disabled','disabled');
                         validatedTrue = false;
+                        goNext = true;
                     }
                 }
             });
@@ -2385,4 +2387,12 @@ jQuery(document).ready(function ($) {
     $('body').on('submit', 'form#tutor-start-quiz', function() {
         $(this).find('button').prop('disabled', true);
     });
+
+    /** Disable typing on datePicker field */
+    $('.hasDatepicker, .tutor_date_picker').keydown( function( e ) {
+        if ( e.keyCode !== 8 && e.keyCode !== 46 ) {
+            e.preventDefault();
+        }
+    });
+
 });
