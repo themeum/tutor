@@ -2467,7 +2467,6 @@ class Utils {
 			'create-course'     => array( 'title' => __( 'Create Course', 'tutor'), 'show_ui' => false, 'auth_cap' => tutor()->instructor_role ),
 			'my-courses'        => array( 'title' => __( 'My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'announcements'     => array( 'title' => __( 'Announcements', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
-			'earning'           => array( 'title' => __( 'Earnings', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'withdraw'          => array( 'title' => __( 'Withdrawals', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'quiz-attempts'     => array( 'title' => __( 'Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'question-answer'   => array( 'title' => __( 'Question & Answer', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
@@ -2935,7 +2934,7 @@ class Utils {
 			$search_query,
 			$search_query,
 			$search_query,
-			$search_query,
+			$search_query
 		) );
 
 		return array(
@@ -7572,5 +7571,32 @@ class Utils {
 		}
 
 		return $ids;
+	}
+
+	/**
+	 * Custom Pagination for Tutor Shortcode
+	 * 
+	 * @param int $total_num_pages
+	 * 
+	 * @return void
+	 */
+	public function tutor_custom_pagination( $total_num_pages = 1 ) {
+
+		do_action( 'tutor_course/archive/pagination/before' ); ?>
+		
+		<div class="tutor-pagination-wrap">
+		<?php
+			$big = 999999999; // need an unlikely integer
+		
+			echo paginate_links( array(
+				'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+				'format' => '?paged=%#%',
+				'current' => max( 1, get_query_var( 'paged' ) ),
+				'total' => $total_num_pages
+			) );
+		?>
+		</div>
+		
+		<?php do_action( 'tutor_course/archive/pagination/after' );
 	}
 }

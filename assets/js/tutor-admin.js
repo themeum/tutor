@@ -762,7 +762,12 @@ jQuery(document).ready(function($){
         }
    });
 
-
+    /** Disable typing on datePicker field */
+    $('.hasDatepicker, .tutor_date_picker').keydown( function( e ) {
+        if ( e.keyCode !== 8 && e.keyCode !== 46 ) {
+            e.preventDefault();
+        }
+    });
    
 });
 

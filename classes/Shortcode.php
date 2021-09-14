@@ -149,7 +149,8 @@ class Shortcode {
 		$GLOBALS['tutor_shortcode_arg'] = array(
 			'include_course_filter' => isset($atts['course_filter']) ? $atts['course_filter'] === 'on' : null,
 			'column_per_row' => isset($atts['column_per_row']) ? $atts['column_per_row'] : null,
-			'course_per_page' => $a['posts_per_page']
+			'course_per_page' => $a['posts_per_page'],
+			'show_pagination' => isset( $atts['show_pagination'] ) ? $atts['show_pagination'] : 'off',
 		);
 
 		tutor_load_template('shortcode.tutor-course');
