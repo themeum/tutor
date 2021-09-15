@@ -5,13 +5,6 @@
 	<span class="alert-icon tutor-v2-icon-test icon-warning-filled"></span>
 	<span class="alert-content">Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.</span>
 </div>
-<?php
-		$option = (array) maybe_unserialize( get_option( 'tutor_option' ) );
-
-echo '<pre>';
-print_r( json_encode( $option ) );
-echo '</pre>';
-?>
 <div class="tutor-option-single-item">
 	<h4>Export</h4>
 	<div class="item-wrapper">
@@ -138,7 +131,7 @@ echo '</pre>';
 				</div>
 			</div>
 			<div class="tutor-option-field-input">
-				<button class="tutor-btn tutor-is-sm">Update Settings</button>
+				<button class="tutor-btn tutor-is-sm" id="import_options">Update Settings</button>
 			</div>
 		</div>
 	</div>

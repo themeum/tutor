@@ -36,6 +36,7 @@ class Options_V2 {
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
 		add_action( 'wp_ajax_tutor_option_search', array( $this, 'tutor_option_search' ) );
 		add_action( 'wp_ajax_tutor_export_settings', array( $this, 'tutor_export_settings' ) );
+		add_action( 'wp_ajax_tutor_import_settings', array( $this, 'tutor_import_settings' ) );
 	}
 
 	private function get( $key = null, $default = false ) {
@@ -115,6 +116,12 @@ class Options_V2 {
 
 	public function tutor_export_settings() {
 		wp_send_json_success( (array) maybe_unserialize( get_option( 'tutor_option' ) ) );
+	}
+
+	public function tutor_import_settings() {
+		echo '<pre>';
+		print_r($_FILES);
+		echo '</pre>';;
 	}
 
 	/**
