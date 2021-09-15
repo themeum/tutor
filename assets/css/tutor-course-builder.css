@@ -847,6 +847,10 @@ body.tutor-screen-course-builder .tutor-add-quiz-button-wrap a {
   color: #2756d1;
 }
 
+body.tutor-screen-course-builder .tutor-modal.tutor-lesson-modal-wrap #wp-tutor_lesson_modal_editor-wrap {
+  width: 100%;
+}
+
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend {
   /*
  * Course Level Meta
