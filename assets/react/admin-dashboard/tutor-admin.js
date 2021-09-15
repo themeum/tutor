@@ -75,21 +75,6 @@ jQuery(document).ready(function($){
      * End Withdraw nav tabs
      */
 
-    /**
-     * Lesson Video
-     */
-    $(document).on('change', '.tutor_lesson_video_source', function(e){
-        var selector = $(this).val();
-        $('[class^="video_source_wrap"]').hide();
-        $('.video_source_wrap_'+selector).show();
-
-        if (selector === 'html5'){
-            $('.tutor-video-poster-field').show();
-        } else{
-            $('.tutor-video-poster-field').hide();
-        }
-    });
-
     $(document).on( 'click', '.video_source_wrap_html5 .video_upload_btn',  function( event ){
         event.preventDefault();
 

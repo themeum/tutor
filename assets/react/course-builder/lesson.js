@@ -118,6 +118,10 @@ window.jQuery(document).ready(function($){
         frame.open();
     });
 
+    // Video source 
+    $(document).on('change', '.tutor_lesson_video_source', function(e){
+        $(this).nextAll().hide().filter('.video_source_wrap_'+$(this).val()).show();
+    });
 
     // Update lesson
     $(document).on( 'click', '.update_lesson_modal_btn',  function( event ){

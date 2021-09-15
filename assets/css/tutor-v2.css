@@ -9177,6 +9177,7 @@ select.tutor-form-select:focus {
 }
 
 .tutor-modal .tutor-modal-root .tutor-modal-inner {
+  width: 100%;
   background: #ffffff;
   border-radius: 20px;
 }

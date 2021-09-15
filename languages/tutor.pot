@@ -4266,7 +4266,11 @@ msgstr ""
 msgid "Attachment"
 msgstr ""
 
-#: views/metabox/lesson-attachments-metabox.php:31
+#: views/metabox/lesson-attachments-metabox.php:28
+msgid "Size"
+msgstr ""
+
+#: views/metabox/lesson-attachments-metabox.php:37
 msgid "Upload Attachment"
 msgstr ""
 
