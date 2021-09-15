@@ -5642,42 +5642,42 @@ msgstr ""
 msgid "Stay here"
 msgstr ""
 
-#: assets/js/tutor.js:181
+#: assets/js/tutor.js:188
 msgid "Select or Upload Media Of Your Chosen Persuasion"
 msgstr ""
 
-#: assets/js/tutor.js:183
+#: assets/js/tutor.js:190
 msgid "Use this media"
 msgstr ""
 
-#: assets/js/tutor.js:268
+#: assets/js/tutor.js:275
 msgid "Success"
 msgstr ""
 
-#: assets/js/tutor.js:269
+#: assets/js/tutor.js:276
 msgid "Update Error"
 msgstr ""
 
-#: assets/js/tutor.js:269
+#: assets/js/tutor.js:276
 msgid "Meeting Update Failed"
 msgstr ""
 
-#: assets/js/tutor.js:458
+#: assets/js/tutor.js:465
 msgid "Are you sure?"
 msgstr ""
 
-#: assets/js/tutor.js:489
+#: assets/js/tutor.js:496
 msgid "Are you sure to delete?"
 msgstr ""
 
-#: assets/js/tutor.js:656
+#: assets/js/tutor.js:663
 msgid "Quiz Update Failed"
 msgstr ""
 
-#: assets/js/tutor.js:1375
+#: assets/js/tutor.js:1382
 msgid "Lesson"
 msgstr ""
 
-#: assets/js/tutor.js:1378
+#: assets/js/tutor.js:1385
 msgid "Assignment"
 msgstr ""
