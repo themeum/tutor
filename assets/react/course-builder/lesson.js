@@ -94,7 +94,7 @@ window.jQuery(document).ready(function($){
     /**
      * Lesson upload thumbnail
      */
-     $(document).on( 'click', '.lesson_thumbnail_upload_btn',  function( event ){
+    $(document).on( 'click', '.lesson_thumbnail_upload_btn',  function( event ){
         event.preventDefault();
         var $that = $(this);
         var frame;
@@ -111,12 +111,13 @@ window.jQuery(document).ready(function($){
         });
         frame.on( 'select', function() {
             var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.tutor-thumbnail-wrap').find('img.upload_preview').attr('src', attachment.url);
-            $that.closest('.tutor-thumbnail-wrap').find('input[name="_lesson_thumbnail_id"]').val(attachment.id);
-            $that.closest('.tutor-thumbnail-wrap').find('.delete-btn').show();
+            $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('<img src="'+attachment.url+'" alt="" /><a href="javascript:;" class="tutor-lesson-thumbnail-delete-btn"><i class="tutor-icon-line-cross"></i></a>');
+            $that.closest('.tutor-thumbnail-wrap').find('input').val(attachment.id);
+            $('.tutor-lesson-thumbnail-delete-btn').show();
         });
         frame.open();
     });
+
 
     // Update lesson
     $(document).on( 'click', '.update_lesson_modal_btn',  function( event ){
