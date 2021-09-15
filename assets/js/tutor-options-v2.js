@@ -312,38 +312,6 @@ emailManagePageInputs.forEach((input) => {
   });
 });
 
-async function postData(url = "", data = {}) {
-  // Default options are marked with *
-  const response = await fetch(url, {
-    method: "POST", // *GET, POST, PUT, DELETE, etc.
-    mode: "cors", // no-cors, *cors, same-origin
-    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: "same-origin", // include, *same-origin, omit
-    headers: {
-      "Content-Type": "application/json",
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    redirect: "follow", // manual, *follow, error
-    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    body: JSON.stringify(data), // body data type must match "Content-Type" header
-  });
-  console.log(response.json());
-  return response.json(); // parses JSON response into native JavaScript objects
-}
-
-/* document.querySelector("#export_settings").onclick = (e) => {
-  e.preventDefault();
-  postData(_tutorobject.ajaxurl, {
-    data: {
-      action: "tutor_export_settings",
-      nonce_key: _tutorobject.nonce_key,
-    },
-  }).then((data) => {
-    console.log(data); // JSON data parsed by `data.json()` call
-  });
-};
- */
-
 document.querySelector("#export_settings").onclick = (e) => {
   e.preventDefault();
   fetch(_tutorobject.ajaxurl, {
@@ -364,11 +332,39 @@ document.querySelector("#export_settings").onclick = (e) => {
       });
 
       let url = URL.createObjectURL(file);
+      var timeStamp = Date.now();
       let element = document.createElement("a");
       element.setAttribute("href", url);
-      element.setAttribute("download", "tutor_options");
+      element.setAttribute("download", "tutor_options_" + timeStamp);
       element.click();
-      document.body.removeChild(element);
+      // document.body.removeChild(element);
     })
     .catch((err) => console.log(err));
+};
+
+document.querySelector("#import_options").onclick = function () {
+  var files = document.querySelector("#drag-drop-input").files;
+  if (files.length <= 0) {
+    return false;
+  }
+  var fr = new FileReader();
+  fr.readAsText(files.item(0));
+
+  fr.onload = function (e) {
+    var result = e.target.result;
+    var formatted = JSON.stringify(result, null, 0);
+    /* start */
+    var formData = new FormData();
+    formData.append("action", "tutor_import_settings");
+    formData.append("nonce", _tutorobject._tutor_nonce);
+    formData.append("data", formatted);
+
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      // console.log(formatted);
+    };
+    xhttp.open("POST", _tutorobject.ajaxurl, true);
+    xhttp.send(formData);
+    /* start */
+  };
 };
