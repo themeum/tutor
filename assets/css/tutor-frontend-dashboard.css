@@ -305,6 +305,10 @@
   content: "\e9b1";
 }
 
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.tutor-dashboard-menu-analytics a:before {
+  content: "\e9b2";
+}
+
 .tutor-dashboard .tutor-dashboard-content {
   padding-top: 30px;
   /* dashboard content */
