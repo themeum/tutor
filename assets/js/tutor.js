@@ -105,6 +105,12 @@ jQuery(document).ready(function($){
         }
     };
     load_date_picker();
+     /** Disable typing on datePicker field */
+     jQuery('.hasDatepicker, .tutor_date_picker').keydown( function( e ) {
+        if ( e.keyCode !== 8 && e.keyCode !== 46 ) {
+            e.preventDefault();
+        }
+    });
     /**
      * Slider bar
      */
