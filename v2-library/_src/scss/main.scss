@@ -1,3 +1,7 @@
+// vendors
+@import './vendors/bootstrap-grid';
+
+
 // core modules
 @import './core/variables';
 @import './_global';
@@ -18,9 +22,6 @@
 
 // ui components
 @import './ui-components/index';
-
-// vendors
-@import './vendors/bootstrap-grid';
 
 // fontawesome
 // @todo: remove fontawesome after getting actual icons
