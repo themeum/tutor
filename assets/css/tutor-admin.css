@@ -4055,13 +4055,13 @@ li.tutor-option-nav-item h4 {
   visibility: hidden;
 }
 
-.tutor-option-field-label {
+.tutor-option-tab-pages .tutor-option-field-label {
   float: unset;
   width: unset;
 }
 
-.tutor-option-field-input input[type='radio']:checked:before,
-.tutor-option-field-input input[type='checkbox']:checked:before {
+.tutor-option-tab-pages .tutor-option-field-input input[type='radio']:checked:before,
+.tutor-option-tab-pages .tutor-option-field-input input[type='checkbox']:checked:before {
   display: none;
 }
 
