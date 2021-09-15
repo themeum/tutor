@@ -355,12 +355,11 @@ document.querySelector("#export_settings").onclick = (e) => {
     },
     body: new URLSearchParams({
       action: "tutor_export_settings",
-      post_title: "hola como estas",
     }),
   })
     .then((response) => response.json())
     .then((response) => {
-      const file = new Blob([JSON.stringify(response, null, 2)], {
+      const file = new Blob([JSON.stringify(response)], {
         type: "application/json",
       });
 
