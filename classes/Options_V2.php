@@ -37,6 +37,7 @@ class Options_V2 {
 		add_action( 'wp_ajax_tutor_option_search', array( $this, 'tutor_option_search' ) );
 		add_action( 'wp_ajax_tutor_export_settings', array( $this, 'tutor_export_settings' ) );
 		add_action( 'wp_ajax_tutor_import_settings', array( $this, 'tutor_import_settings' ) );
+
 	}
 
 	private function get( $key = null, $default = false ) {
@@ -119,9 +120,16 @@ class Options_V2 {
 	}
 
 	public function tutor_import_settings() {
-		echo '<pre>';
-		print_r($_FILES);
-		echo '</pre>';;
+
+		// Step B: In our file that handles the request, verify the nonce.
+		$nonce = $_REQUEST['nonce'];
+		if ( ! wp_verify_nonce( $nonce, 'tutor_import_settings' ) ) {
+			die( __( 'Security check', 'textdomain' ) );
+		} else {
+			echo '<pre>';
+			print_r($_REQUEST);
+			echo '</pre>';
+		}
 	}
 
 	/**

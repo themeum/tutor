@@ -21,7 +21,7 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 		</div>
 	</header>
 	<div class="tutor-option-body">
-		<form class="tutor-option-form py-4 px-3">
+		<div class="tutor-option-form py-4 px-3">
 			<div class="tutor-option-tabs">
 				<?php
 				foreach ( $this->options_tools as $args ) :
@@ -73,6 +73,6 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 				?>
 			</div>
 			<!-- end /.tutor-option-tab-pages -->
-		</form>
+			</div>
 	</div>
 </section>

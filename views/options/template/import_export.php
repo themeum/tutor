@@ -5,6 +5,30 @@
 	<span class="alert-icon tutor-v2-icon-test icon-warning-filled"></span>
 	<span class="alert-content">Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.</span>
 </div>
+
+<div class="tutor-option-single-item item-variation-dragndrop import-setting">
+	<h4>Import Settings</h4>
+	<div class="item-wrapper">
+		<div class="tutor-option-field-row d-block">
+			<div class="tutor-option-field-label">
+				<div class="drag-drop-zone ">
+					<span class="icon tutor-v2-icon-test icon-upload-icon-line"></span>
+					<div class="title">Drag &amp; Drop your JSON File here </div>
+					<div class="subtitle"><span>File Format:</span> .json <br> Or</div>
+					<label for="drag-drop-input" class="tutor-btn tutor-is-sm">
+						<input type="file" name="drag-drop-input" id="drag-drop-input" accept="">
+						<span>Browse File</span>
+					</label>
+					<span class="file-info"></span>
+				</div>
+			</div>
+			<div class="tutor-option-field-input">
+				<button class="tutor-btn tutor-is-sm" id="import_options">Update Settings</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="tutor-option-single-item">
 	<h4>Export</h4>
 	<div class="item-wrapper">
@@ -114,28 +138,6 @@
 	</div>
 </div>
 
-<div class="tutor-option-single-item item-variation-dragndrop import-setting">
-	<h4>Import Settings</h4>
-	<div class="item-wrapper">
-		<div class="tutor-option-field-row d-block">
-			<div class="tutor-option-field-label">
-				<div class="drag-drop-zone ">
-					<span class="icon tutor-v2-icon-test icon-upload-icon-line"></span>
-					<div class="title">Drag &amp; Drop your JSON File here </div>
-					<div class="subtitle"><span>File Format:</span> .json <br> Or</div>
-					<label for="drag-drop-input" class="tutor-btn tutor-is-sm">
-						<input type="file" name="drag-drop-input" id="drag-drop-input" accept="">
-						<span>Browse File</span>
-					</label>
-					<span class="file-info"></span>
-				</div>
-			</div>
-			<div class="tutor-option-field-input">
-				<button class="tutor-btn tutor-is-sm" id="import_options">Update Settings</button>
-			</div>
-		</div>
-	</div>
-</div>
 
 <div class="tutor-option-single-item">
 	<h4>Reset Settings</h4>
