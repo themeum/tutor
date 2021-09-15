@@ -50,15 +50,16 @@
                 </h4>
 
                 <?php 
-                    tutor_load_template_from_custom_path(tutor()->path.'/views/metabox/segments/topic-form-modal.php', array(
-                        'wrapper_id' => 'tutor-topics-edit-id-' . $topic->ID,
-                        'topic_id' => $topic->ID,
-                        'course_id' => $course_id,
-                        'title' => $topic->post_title,
-                        'summary' => $topic->post_content,
+                    tutor_load_template_from_custom_path(tutor()->path.'/views/modal/topic-form.php', array(
+                        'modal_title'   => __('Update Topic', 'tutor'),
+                        'wrapper_id'    => 'tutor-topics-edit-id-' . $topic->ID,
+                        'topic_id'      => $topic->ID,
+                        'course_id'     => $course_id,
+                        'title'         => $topic->post_title,
+                        'summary'       => $topic->post_content,
                         'wrapper_class' => 'tutor-topics-edit-form',
-                        'button_text' => __('Update Topic', 'tutor'),
-                        'button_class' => 'tutor-topics-edit-button'
+                        'button_text'   => __('Update Topic', 'tutor'),
+                        'button_class'  => 'tutor-topics-edit-button'
                     ), false); 
                 ?>
             </div>

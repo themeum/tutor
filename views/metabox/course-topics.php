@@ -26,13 +26,14 @@
     </div>
 
     <?php 
-        tutor_load_template_from_custom_path(tutor()->path.'/views/metabox/segments/topic-form-modal.php', array(
-            'wrapper_id' => 'tutor-modal-add-topic',
-            'topic_id' => null,
-            'course_id' => $course_id,
+        tutor_load_template_from_custom_path(tutor()->path.'/views/modal/topic-form.php', array(
+            'modal_title'   => __('Add Topic', 'tutor'),
+            'wrapper_id'    => 'tutor-modal-add-topic',
+            'topic_id'      => null,
+            'course_id'     => $course_id,
             'wrapper_class' => 'tutor-metabox-add-topics',
-            'button_text' => __('Add Topic', 'tutor'),
-            'button_id' => 'tutor-add-topic-btn'
+            'button_text'   => __('Add Topic', 'tutor'),
+            'button_id'     => 'tutor-add-topic-btn'
         ), false); 
     ?>
 

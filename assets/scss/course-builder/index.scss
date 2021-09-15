@@ -52,6 +52,13 @@ body.tutor-screen-course-builder {
     @import './segments/attachment.scss';
     @import './segments/topic-content.scss';
 
+    // LQA Modals
+    .tutor-modal {
+        &.tutor-lesson-modal-wrap {
+            @import './modal/lesson.scss';
+        }
+    }
+
     /* Screen specific declarations (Frontend editor) */
     &.tutor-screen-course-builder-frontend{
         @import './frontend.scss';
