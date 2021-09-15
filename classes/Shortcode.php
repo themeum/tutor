@@ -113,7 +113,7 @@ class Shortcode {
 
 			'orderby'       => 'ID',
 			'order'         => 'DESC',
-			'count'     	=> 3,
+			'count'     	=> 6,
 			'paged'			=> get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1,
 		), $atts);
 
