@@ -7,7 +7,7 @@ export default function ({ children }) {
         <HelmetProvider>
             <Helmet>
                 <title>Hello World</title>
-                <script src={withPrefix('/bundle/main.min.js')} type="text/javascript" />
+                <script src={withPrefix('/v2-library/bundle/main.min.js')} type="text/javascript" />
             </Helmet>
             <div className="wrapper-x">{ children }</div>
         </HelmetProvider>
