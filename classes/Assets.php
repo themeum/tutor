@@ -9,16 +9,20 @@ class Assets {
 
 	public function __construct() {
 		/**
+		 * Common scripts loading
+		 */
+		add_action('admin_enqueue_scripts', array($this, 'common_scripts'));
+		add_action('wp_enqueue_scripts', array($this, 'common_scripts'));
+
+		/**
 		 * Front and backend script enqueue
 		 */
 		add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
 		add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
 
-		/**
-		 * Common scripts loading
-		 */
-		add_action('admin_enqueue_scripts', array($this, 'common_scripts'));
-		add_action('wp_enqueue_scripts', array($this, 'common_scripts'));
+
+		add_action('admin_enqueue_scripts', array($this, 'load_meta_data'));
+		add_action('wp_enqueue_scripts', array($this, 'load_meta_data'));
 
 		/**
 		 * Text domain loading
@@ -234,7 +238,9 @@ class Assets {
 			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
 			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), tutor()->version );
 		}
+	}
 
+	public function load_meta_data() {
 		// Localize scripts
 		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 		wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);

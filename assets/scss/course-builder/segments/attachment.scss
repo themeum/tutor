@@ -3,9 +3,7 @@
 .tutor-course-builder-attachments{
     @include valueWithPrefix(display, flex);
     @include propertyWithPrefix(flex-wrap, wrap);
-    margin-left: -25px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    @include propertyWithPrefix(box-sizing, border-box);
 
     &:empty {
         display: none;

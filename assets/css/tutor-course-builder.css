@@ -418,9 +418,11 @@ body.tutor-screen-course-builder .tutor-course-builder-attachments {
   -ms-flex-wrap: wrap;
   -moz-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
-  margin-left: -25px;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 body.tutor-screen-course-builder .tutor-course-builder-attachments:empty {
