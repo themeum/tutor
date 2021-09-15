@@ -2467,7 +2467,6 @@ class Utils {
 			'create-course'     => array( 'title' => __( 'Create Course', 'tutor'), 'show_ui' => false, 'auth_cap' => tutor()->instructor_role ),
 			'my-courses'        => array( 'title' => __( 'My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'announcements'     => array( 'title' => __( 'Announcements', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
-			'earning'           => array( 'title' => __( 'Earnings', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'withdraw'          => array( 'title' => __( 'Withdrawals', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'quiz-attempts'     => array( 'title' => __( 'Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'question-answer'   => array( 'title' => __( 'Question & Answer', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
@@ -2874,7 +2873,7 @@ class Utils {
 			$course_query = " AND course.ID = $course_id ";
 		}
 		if ( '' !== $date_filter ) {
-			$date_query = " AND DATE(enrollment.post_date) = CAST( '$date_filter' AS DATE ) ";
+			$date_query = " AND DATE(user.user_registered) = CAST( '$date_filter' AS DATE ) ";
 		}
 
 		$students = $wpdb->get_results( $wpdb->prepare(
@@ -2889,9 +2888,10 @@ class Utils {
 					AND course.post_status = %s
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
-					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s )
 					{$course_query}
 					{$date_query}
+					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s )
+
 				GROUP BY enrollment.post_author
 				ORDER BY {$order_by} {$order}
 				LIMIT %d, %d
@@ -2935,7 +2935,7 @@ class Utils {
 			$search_query,
 			$search_query,
 			$search_query,
-			$search_query,
+			$search_query
 		) );
 
 		return array(
@@ -3390,10 +3390,34 @@ class Utils {
 	 * Get reviews by instructor (Received by the instructor)
 	 *
 	 * @since v.1.4.0
+	 * 
+	 * @param $course_id optional
+	 * 
+	 * @param $date_filter optional
+	 * 
+	 * Course id & date filter is sorting with specific course and date
+	 * 
+	 * @since 1.9.9
 	 */
-	public function get_reviews_by_instructor( $instructor_id = 0, $offset = 0, $limit = 150 ) {
-		$instructor_id = $this->get_user_id( $instructor_id );
+	public function get_reviews_by_instructor( $instructor_id = 0, $offset = 0, $limit = 150, $course_id = '', $date_filter = '' ) {
 		global $wpdb;
+		$instructor_id 	= sanitize_text_field( $instructor_id );
+		$offset 		= sanitize_text_field( $offset );
+		$limit 			= sanitize_text_field( $limit );
+		$course_id 		= sanitize_text_field( $course_id );
+		$date_filter 	= sanitize_text_field( $date_filter );
+		$instructor_id 	= $this->get_user_id( $instructor_id );
+
+		$course_query 	= '';
+		$date_query     = '';
+
+		if ( '' !== $course_id ) {
+			$course_query = " AND {$wpdb->comments}.comment_post_ID = {$course_id} ";
+		} 
+		if ( '' !== $date_filter ) {
+			$date_filter	= \tutor_get_formated_date( 'Y-m-d', $date_filter);
+			$date_query 	= " AND DATE({$wpdb->comments}.comment_date) = CAST( '$date_filter' AS DATE ) ";
+		} 
 
 		$results = array(
 			'count'     => 0,
@@ -3415,7 +3439,9 @@ class Utils {
 								ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
 				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids}) 
 						AND comment_type = %s
-						AND meta_key = %s;
+						AND meta_key = %s
+						{$course_query}
+						{$date_query}
 				",
 				'tutor_course_rating',
 				'tutor_rating'
@@ -3444,6 +3470,8 @@ class Utils {
 				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids}) 
 						AND comment_type = %s
 						AND meta_key = %s
+						{$course_query}
+						{$date_query}
 				ORDER BY comment_ID DESC
 				LIMIT %d, %d;
 				",
