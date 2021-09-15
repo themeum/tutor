@@ -152,19 +152,6 @@ jQuery(document).ready(function($){
         return $('<span><i class="tutor-icon-' + $(originalOption).data('icon') + '"></i> ' + icon.text + '</span>');
     }
 
-    $(document).on('change', '.tutor_lesson_video_source', function(e){
-        var $that = $(this);
-        var selector = $(this).val();
-
-        if (selector){
-            $('.video-metabox-source-input-wrap').show();
-        }else{
-            $('.video-metabox-source-input-wrap').hide();
-        }
-        $that.closest('.tutor-option-field').find('.video-metabox-source-item').hide();
-        $that.closest('.tutor-option-field').find('.video_source_wrap_'+selector).show();
-    });
-
     /**
      * Course Builder
      *

@@ -6,9 +6,9 @@ window.jQuery(document).ready(function($){
     
     const { __, _x, _n, _nx } = wp.i18n;
     
-    $(document).on('click', 'a.tutor-delete-attachment', function(e){
+    $(document).on('click', '.tutor-attachment-cards .tutor-delete-attachment', function(e){
         e.preventDefault();
-        $(this).closest('.tutor-added-attachment').remove();
+        $(this).closest('[data-attachment_id]').remove();
     });
 
     $(document).on('click', '.tutorUploadAttachmentBtn', function(e){
@@ -37,8 +37,22 @@ window.jQuery(document).ready(function($){
                 for (var i=0; i < attachments.length; i++){
                     var attachment = attachments[i];
 
-                    var inputHtml = '<div class="tutor-added-attachment"><i class="tutor-icon-archive"></i> <a href="javascript:;" class="tutor-delete-attachment tutor-icon-line-cross"></a> <span> <a href="'+attachment.url+'">'+attachment.filename+'</a> </span><input type="hidden" name="tutor_attachments[]" value="'+attachment.id+'"></div>';
-                    $that.closest('.tutor-lesson-attachments-metabox').find('.tutor-added-attachments-wrap').append(inputHtml);
+                    console.log(attachment);
+
+                    var inputHtml = `<div data-attachment_id="${attachment.id}">
+                        <div>
+                            <a href="${attachment.url}" target="_blank">
+                                ${attachment.filename}
+                            </a>
+                            <input type="hidden" name="tutor_attachments[]" value="${attachment.id}">
+                        </div>
+                        <div>
+                            <span class="filesize">${__('Size', 'tutor')}: ${attachment.filesizeHumanReadable}</span>
+                            <span class="tutor-delete-attachment tutor-icon-line-cross"></span>
+                        </div>
+                    </div>`;
+                    
+                    $that.closest('.tutor-lesson-attachments-metabox').find('.tutor-attachment-cards').append(inputHtml);
                 }
             }
         });
