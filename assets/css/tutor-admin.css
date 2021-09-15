@@ -2174,45 +2174,45 @@ li.tutor-option-nav-item h4 {
   margin-bottom: 12px;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle span[class^='label-'] {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-toggle span[class^='label-'] {
   font-size: 15px;
   font-weight: 400;
   line-height: 160%;
   color: #212327;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle span[class^='label-'].label-before {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-toggle span[class^='label-'].label-before {
   margin-right: 5px;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle input ~ .tutor-form-toggle-control {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-toggle input ~ .tutor-form-toggle-control {
   background-color: #cdcfd5;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle input ~ .tutor-form-toggle-control::before {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-toggle input ~ .tutor-form-toggle-control::before {
   -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
           box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
 }
 
-.tutor-backend-settings-page .tutor-form-toggle input:checked ~ .tutor-form-toggle-control {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-toggle input:checked ~ .tutor-form-toggle-control {
   background-color: #1973aa;
 }
 
-.tutor-backend-settings-page input[type='radio'] {
+.tutor-backend-settings-page .tutor-option-field-row input[type='radio'] {
   background-size: 120%;
 }
 
-.tutor-backend-settings-page input[type='checkbox'] {
+.tutor-backend-settings-page .tutor-option-field-row input[type='checkbox'] {
   background-size: 70%;
 }
 
-.tutor-backend-settings-page input[type='checkbox']:checked,
-.tutor-backend-settings-page input[type='radio']:checked {
+.tutor-backend-settings-page .tutor-option-field-row input[type='checkbox']:checked,
+.tutor-backend-settings-page .tutor-option-field-row input[type='radio']:checked {
   border-color: #1973aa;
   background-color: #1973aa;
 }
 
-.tutor-backend-settings-page .tutor-form-check label {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check label {
   font-size: 15px;
   font-weight: 500;
   line-height: 1;
@@ -2220,41 +2220,41 @@ li.tutor-option-nav-item h4 {
   color: #353535;
 }
 
-.tutor-backend-settings-page .tutor-form-check label > .desc {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check label > .desc {
   font-size: 13px;
   font-weight: 400;
   line-height: 138%;
   color: #5b616f;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check.has-desc {
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc label {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check.has-desc label {
   font-size: 15px;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc:not(:last-child) {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check.has-desc:not(:last-child) {
   margin-bottom: 30px;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc .desc {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check.has-desc .desc {
   margin-top: 5px;
 }
 
-.tutor-backend-settings-page .tutor-form-check:not(.has-desc) label i {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check:not(.has-desc) label i {
   font-size: 20px;
   margin-right: 3px;
 }
 
-.tutor-backend-settings-page input.tutor-form-control {
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control {
   padding: 0 15px;
 }
 
-.tutor-backend-settings-page input.tutor-form-control[type='number'] {
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control[type='number'] {
   padding: 0px 5px;
   text-align: center;
   max-width: 90px;
@@ -2262,7 +2262,7 @@ li.tutor-option-nav-item h4 {
   height: 40px;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control {
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control {
   resize: vertical;
   min-height: 80px;
   font-family: inherit;
@@ -2273,81 +2273,81 @@ li.tutor-option-nav-item h4 {
   padding-bottom: 10px;
 }
 
-.tutor-backend-settings-page .tutor-form-radio label {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-radio label {
   font-size: 15px;
 }
 
-.tutor-backend-settings-page .tutor-form-radio .desc {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-radio .desc {
   margin-top: 5px;
 }
 
-.tutor-backend-settings-page select.tutor-form-select {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select {
   min-width: 137px;
   padding: 0 40px 0 20px;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control:-moz-read-only {
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:-moz-read-only {
   font-size: 16px;
   font-weight: 400;
   line-height: 162%;
   border-color: #bababa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select,
-.tutor-backend-settings-page input.tutor-form-control,
-.tutor-backend-settings-page textarea.tutor-form-control,
-.tutor-backend-settings-page textarea.tutor-form-control:read-only {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select,
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only {
   font-size: 16px;
   font-weight: 400;
   line-height: 162%;
   border-color: #bababa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::-webkit-input-placeholder, .tutor-backend-settings-page input.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only::-webkit-input-placeholder {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select::-webkit-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only::-webkit-input-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::-moz-placeholder, .tutor-backend-settings-page input.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page textarea.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only::-moz-placeholder {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select::-moz-placeholder, .tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only::-moz-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select:-ms-input-placeholder, .tutor-backend-settings-page input.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only:-ms-input-placeholder {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select:-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only:-ms-input-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::-ms-input-placeholder, .tutor-backend-settings-page input.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only::-ms-input-placeholder {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select::-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only::-ms-input-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control:-moz-read-only::placeholder {
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:-moz-read-only::placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::placeholder,
-.tutor-backend-settings-page input.tutor-form-control::placeholder,
-.tutor-backend-settings-page textarea.tutor-form-control::placeholder,
-.tutor-backend-settings-page textarea.tutor-form-control:read-only::placeholder {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select::placeholder,
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control::placeholder,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control::placeholder,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only::placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control:-moz-read-only:focus {
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:-moz-read-only:focus {
   border-color: #1973aa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select:focus,
-.tutor-backend-settings-page input.tutor-form-control:focus,
-.tutor-backend-settings-page textarea.tutor-form-control:focus,
-.tutor-backend-settings-page textarea.tutor-form-control:read-only:focus {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select:focus,
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control:focus,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:focus,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only:focus {
   border-color: #1973aa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select,
-.tutor-backend-settings-page input.tutor-form-control {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select,
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control {
   height: 40px;
   line-height: 1;
 }
 
-.tutor-backend-settings-page .tutor-form-check-input {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check-input {
   width: 20px;
   height: 20px;
 }
