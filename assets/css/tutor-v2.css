@@ -10148,3 +10148,7 @@ table.tutor-ui-table .td-progress .progress-bar .progress-value {
 table.tutor-ui-table .td-progress .progress-text {
   margin-left: 10px;
 }
+
+body {
+  color: #000;
+}
