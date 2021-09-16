@@ -36,6 +36,7 @@ class Options_V2 {
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
 		add_action( 'wp_ajax_tutor_option_search', array( $this, 'tutor_option_search' ) );
 		add_action( 'wp_ajax_tutor_export_settings', array( $this, 'tutor_export_settings' ) );
+		add_action( 'wp_ajax_tutor_export_single_settings', array( $this, 'tutor_export_single_settings' ) );
 		add_action( 'wp_ajax_tutor_import_settings', array( $this, 'tutor_import_settings' ) );
 
 	}
@@ -119,15 +120,49 @@ class Options_V2 {
 		wp_send_json_success( (array) maybe_unserialize( get_option( 'tutor_option' ) ) );
 	}
 
+	public function tutor_export_single_settings() {
+		$tutor_option_data = get_option( 'tutor_option_data' );
+		$export_id         = $this->get_request_data( 'export_id' );
+
+		wp_send_json_success( $tutor_option_data[ $export_id ] );
+
+	}
+
+	public function get_request_data( $var ) {
+		return isset( $_REQUEST[ $var ] ) ? $_REQUEST[ $var ] : null;
+	}
+
+	/**
+	 * tutor_import_settings
+	 *
+	 * @return JSON
+	 */
 	public function tutor_import_settings() {
 		tutor_utils()->checking_nonce();
 
-		$data = $_REQUEST['data'];
-		$data = str_replace('\"','"',$data);
-		$option_data = json_decode($data, true);
+		$request = $this->get_request_data( 'tutor_options' );
+		$time    = $this->get_request_data( 'time' );
+		$request = json_decode( str_replace( '\"', '"', $request ), true );
 
-		wp_send_json_success($option_data);
+		$save_import_data['datetime']          = $time;
+		$save_import_data['datetype']          = 'imported';
+		$save_import_data['tutor_option_data'] = $request['data'];
+
+		$import_data[ $time ] = $save_import_data;
+
+		$get_option_data = get_option( 'tutor_option_data' );
+
+		$update_option = array_merge( $get_option_data, $import_data );
+		// $update_option = array();
+
+		update_option( 'tutor_option_data', $update_option );
+
+		$get_final_data = get_option( 'tutor_option_data' );
+
+		wp_send_json_success( $get_final_data );
+
 	}
+
 
 	/**
 	 * Function tutor_option_save
