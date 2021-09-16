@@ -131,7 +131,7 @@ class Quiz {
 		tutils()->checking_nonce();
 
 		ob_start();
-		include  tutor()->path.'views/modal/quiz-form.php';
+		include  tutor()->path.'views/modal/add_quiz.php';
 		$output = ob_get_clean();
 
 		wp_send_json_success(array('output' => $output));
@@ -651,7 +651,7 @@ class Quiz {
 		do_action('tutor_initial_quiz_created', $quiz_id);
 
 		ob_start();
-		include  tutor()->path.'views/modal/quiz-form.php';
+		include  tutor()->path.'views/modal/edit_quiz.php';
 		$output = ob_get_clean();
 
 		ob_start();
@@ -769,7 +769,7 @@ class Quiz {
 		}
 		
 		ob_start();
-		include  tutor()->path.'views/modal/quiz-form.php';
+		include  tutor()->path.'views/modal/edit_quiz.php';
 		$output = ob_get_clean();
 
 		wp_send_json_success(array('output' => $output));

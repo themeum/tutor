@@ -157,7 +157,7 @@ msgstr ""
 msgid "Add-ons"
 msgstr ""
 
-#: classes/Admin.php:88, classes/Admin.php:88, classes/Admin.php:468, classes/Utils.php:2485, templates/dashboard/settings.php:8, views/modal/add_quiz.php:24, views/modal/edit_quiz.php:35, views/options/settings-form.php:18, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings/education.php:7, templates/dashboard/settings/skill.php:8
+#: classes/Admin.php:88, classes/Admin.php:88, classes/Admin.php:468, classes/Utils.php:2485, templates/dashboard/settings.php:8, views/metabox/course-topics.php:64, views/modal/edit_quiz.php:35, views/options/settings-form.php:18, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings/education.php:7, templates/dashboard/settings/skill.php:8
 msgid "Settings"
 msgstr ""
 
@@ -1146,7 +1146,7 @@ msgstr ""
 msgid "Youtube API Key"
 msgstr ""
 
-#: classes/Options.php:462, classes/Options.php:465, classes/Options_V2.php:681, classes/Quiz_Attempts_List.php:114, classes/Tutor_Setup.php:563, views/metabox/course-contents.php:150, views/metabox/course-topics.php:44, views/pages/view_attempt.php:39, templates/single/quiz/top.php:24
+#: classes/Options.php:462, classes/Options.php:465, classes/Options_V2.php:681, classes/Quiz_Attempts_List.php:114, classes/Tutor_Setup.php:563, views/metabox/course-contents.php:150, views/metabox/course-topics.php:46, views/pages/view_attempt.php:39, templates/single/quiz/top.php:24
 msgid "Quiz"
 msgstr ""
 
@@ -1614,7 +1614,7 @@ msgstr ""
 msgid "book-open"
 msgstr ""
 
-#: classes/Options_V2.php:644, views/metabox/course-contents.php:146, views/metabox/course-topics.php:60
+#: classes/Options_V2.php:644, views/metabox/course-contents.php:146, views/metabox/course-topics.php:102
 msgid "Lesson"
 msgstr ""
 
@@ -2265,7 +2265,7 @@ msgstr ""
 msgid "View Assignment"
 msgstr ""
 
-#: classes/Post_types.php:287, views/metabox/course-topics.php:89
+#: classes/Post_types.php:287, views/metabox/course-topics.php:131
 msgid "Assignments"
 msgstr ""
 
@@ -2339,7 +2339,7 @@ msgstr ""
 msgid "Answer"
 msgstr ""
 
-#: classes/Question_Answers_List.php:73, classes/Quiz.php:800, templates/dashboard/my-quiz-attempts.php:35, templates/dashboard/question-answer.php:26, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:212, templates/dashboard/quiz-attempts/quiz-reviews.php:227
+#: classes/Question_Answers_List.php:73, classes/Quiz.php:800, templates/dashboard/my-quiz-attempts.php:35, templates/dashboard/question-answer.php:26, views/metabox/course-topics.php:60, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:212, templates/dashboard/quiz-attempts/quiz-reviews.php:227
 msgid "Question"
 msgstr ""
 
@@ -2783,7 +2783,7 @@ msgstr ""
 msgid "Skip This Step"
 msgstr ""
 
-#: classes/Tutor_Setup.php:623, classes/Tutor_Setup.php:730, templates/shortcode/tutor-instructor.php:48, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:130
+#: classes/Tutor_Setup.php:623, classes/Tutor_Setup.php:730, templates/shortcode/tutor-instructor.php:48, views/modal/edit_quiz.php:130
 msgid "Next"
 msgstr ""
 
@@ -3780,7 +3780,7 @@ msgstr ""
 msgid "You are going to delete this course, it can't be undone"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/metabox/course-topics.php:76, views/modal/add_quiz.php:58, views/modal/add_quiz.php:74, views/modal/add_quiz.php:91, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:133, views/modal/question_form.php:221, views/modal/review.php:19, views/modal/topic-form.php:46, views/pages/announcements.php:246, views/pages/announcements.php:328, templates/dashboard/announcements/create.php:53, templates/dashboard/announcements/details.php:29, templates/dashboard/announcements/update.php:52, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
+#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/metabox/course-topics.php:87, views/metabox/course-topics.php:118, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:133, views/modal/question_form.php:221, views/modal/review.php:19, views/modal/topic-form.php:46, views/pages/announcements.php:246, views/pages/announcements.php:328, templates/dashboard/announcements/create.php:53, templates/dashboard/announcements/details.php:29, templates/dashboard/announcements/update.php:52, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
 msgid "Cancel"
 msgstr ""
 
@@ -3808,7 +3808,7 @@ msgstr ""
 msgid "You have not attempted any quiz yet"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:34, views/modal/add_quiz.php:18, views/modal/edit_quiz.php:29
+#: templates/dashboard/my-quiz-attempts.php:34, views/metabox/course-topics.php:56, views/modal/edit_quiz.php:29
 msgid "Quiz Info"
 msgstr ""
 
@@ -4238,11 +4238,19 @@ msgstr ""
 msgid "Add Topic"
 msgstr ""
 
-#: views/metabox/course-topics.php:71
+#: views/metabox/course-topics.php:78, views/modal/edit_quiz.php:129, views/modal/edit_quiz.php:256, views/modal/edit_quiz.php:343, views/modal/question_form.php:11, templates/dashboard/assignments/review.php:34, templates/dashboard/assignments/submitted.php:21, templates/single/quiz/body.php:389
+msgid "Back"
+msgstr ""
+
+#: views/metabox/course-topics.php:81
+msgid "Save & Next"
+msgstr ""
+
+#: views/metabox/course-topics.php:113
 msgid "Update Lesson"
 msgstr ""
 
-#: views/metabox/course-topics.php:103
+#: views/metabox/course-topics.php:145
 msgid "Zoom Meeting"
 msgstr ""
 
@@ -4350,38 +4358,6 @@ msgstr ""
 msgid "Second"
 msgstr ""
 
-#: views/modal/add_quiz.php:21, views/modal/edit_quiz.php:32, templates/dashboard/quiz-attempts/quiz-reviews.php:103, templates/single/quiz/top.php:38
-msgid "Questions"
-msgstr ""
-
-#: views/modal/add_quiz.php:27, views/modal/edit_quiz.php:38
-msgid "Advanced Options"
-msgstr ""
-
-#: views/modal/add_quiz.php:40, views/modal/edit_quiz.php:49
-msgid "Type your quiz title here"
-msgstr ""
-
-#: views/modal/add_quiz.php:55, views/modal/edit_quiz.php:68
-msgid "Save &amp; Next"
-msgstr ""
-
-#: views/modal/add_quiz.php:69, views/modal/add_quiz.php:86, views/modal/edit_quiz.php:129, views/modal/edit_quiz.php:256, views/modal/edit_quiz.php:343, views/modal/question_form.php:11, templates/dashboard/assignments/review.php:34, templates/dashboard/assignments/submitted.php:21, templates/single/quiz/body.php:389
-msgid "Back"
-msgstr ""
-
-#: views/modal/add_quiz.php:108, views/modal/edit_quiz.php:357
-msgid "Knowledge Base"
-msgstr ""
-
-#: views/modal/add_quiz.php:110, views/modal/edit_quiz.php:359
-msgid "Documentation"
-msgstr ""
-
-#: views/modal/add_quiz.php:111, views/modal/edit_quiz.php:360
-msgid "Need any Help? Please visit our %s and %s."
-msgstr ""
-
 #: views/modal/edit-lesson.php:12
 msgid "Lesson Name"
 msgstr ""
@@ -4404,6 +4380,22 @@ msgstr ""
 
 #: views/modal/edit-lesson.php:42
 msgid "Update Feature Image"
+msgstr ""
+
+#: views/modal/edit_quiz.php:32, templates/dashboard/quiz-attempts/quiz-reviews.php:103, templates/single/quiz/top.php:38
+msgid "Questions"
+msgstr ""
+
+#: views/modal/edit_quiz.php:38
+msgid "Advanced Options"
+msgstr ""
+
+#: views/modal/edit_quiz.php:49
+msgid "Type your quiz title here"
+msgstr ""
+
+#: views/modal/edit_quiz.php:68
+msgid "Save &amp; Next"
 msgstr ""
 
 #: views/modal/edit_quiz.php:121
@@ -4548,6 +4540,18 @@ msgstr ""
 
 #: views/modal/edit_quiz.php:338
 msgid "Students will place the answer in the Open-Ended/Essay question type within this character limit."
+msgstr ""
+
+#: views/modal/edit_quiz.php:357
+msgid "Knowledge Base"
+msgstr ""
+
+#: views/modal/edit_quiz.php:359
+msgid "Documentation"
+msgstr ""
+
+#: views/modal/edit_quiz.php:360
+msgid "Need any Help? Please visit our %s and %s."
 msgstr ""
 
 #: views/modal/question_answer_edit_form.php:3, views/modal/question_answer_form.php:3

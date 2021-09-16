@@ -5,8 +5,8 @@
             <div class="tutor-modal-header">
                 <h3 class="tutor-modal-title">
                     <?php echo $data['modal_title']; ?>
-                    <button data-tutor-modal-close className="tutor-modal-close">
-                        <span className="las la-times"></span>
+                    <button data-tutor-modal-close class="tutor-modal-close">
+                        <span class="las la-times"></span>
                     </button>
                 </h3>
             </div>
