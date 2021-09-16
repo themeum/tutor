@@ -37,7 +37,7 @@
         ), false); 
     ?>
 
-    <div class="tutor-modal modal-sticky-header-footer tutor-quiz-builder-modal-wrap">
+    <div class="tutor-modal modal-sticky-header-footer tutor-quiz-builder-modal-wrap" data-target="quiz-builder-tab-quiz-info">
         <span class="tutor-modal-overlay"></span>
         <div class="tutor-modal-root">
             <div class="tutor-modal-inner">
@@ -56,7 +56,7 @@
                             <span><?php _e('Quiz Info', 'tutor'); ?></span>
                             <button class="tutor-modal-step-btn">1</button>
                         </li>
-                        <li class="tutor-is-completed">
+                        <li>
                             <span><?php _e('Question', 'tutor'); ?></span>
                             <button class="tutor-modal-step-btn">2</button>
                         </li>
