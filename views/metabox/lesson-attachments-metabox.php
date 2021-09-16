@@ -10,14 +10,14 @@ if (get_the_ID())
 
 <div class="tutor-mb-30">
 	<label class="tutor-form-label"><?php _e('Attachment', 'tutor'); ?></label>
-	<div class="tutor-input-group tutor-mb-15 tutor-lesson-attachments-metabox">
-		<div class="tutor-attachment-cards attachment-type-2 tutor-course-builder-attachments is-lesson">
+	<div class="tutor-input-group tutor-mb-15 tutor-attachments-metabox">
+		<div class="tutor-attachment-cards tutor-course-builder-attachments is-lesson">
 			<?php 
 			$attachments = tutor_utils()->get_attachments($post->ID);
 			if ( is_array($attachments) && count($attachments)) {
 				foreach ( $attachments as $attachment ) {
 					?>
-					<div data-attachment_id="<?php echo $post->ID; ?>">
+					<div data-attachment_id="<?php echo $attachment->id; ?>">
 						<div>
 							<a href="<?php echo $attachment->url; ?>" target="_blank">
 								<?php echo $attachment->title; ?>
@@ -34,6 +34,6 @@ if (get_the_ID())
 			?>
 		</div>
 
-		<button type="button" data-attachment-style="attachment-style-2" class="tutor-btn tutorUploadAttachmentBtn bordered-btn"><?php _e('Upload Attachment', 'tutor'); ?></button>
+		<button type="button" class="tutor-btn tutorUploadAttachmentBtn bordered-btn"><?php _e('Upload Attachment', 'tutor'); ?></button>
 	</div>
 </div>
