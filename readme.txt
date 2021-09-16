@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.9 - September 15, 2021 =
+= 1.9.9 - September 16, 2021 =
 
 New: Advanced analytics for instructors in the Frontend Dashboard
 New: Download option of reports for the instructors in CSV format
