@@ -120,16 +120,13 @@ class Options_V2 {
 	}
 
 	public function tutor_import_settings() {
+		tutor_utils()->checking_nonce();
 
-		// Step B: In our file that handles the request, verify the nonce.
-		$nonce = $_REQUEST['nonce'];
-		if ( ! wp_verify_nonce( $nonce, 'tutor_import_settings' ) ) {
-			die( __( 'Security check', 'textdomain' ) );
-		} else {
-			echo '<pre>';
-			print_r($_REQUEST);
-			echo '</pre>';
-		}
+		$data = $_REQUEST['data'];
+		$data = str_replace('\"','"',$data);
+		$option_data = json_decode($data, true);
+
+		wp_send_json_success($option_data);
 	}
 
 	/**
