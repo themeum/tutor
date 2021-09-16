@@ -7575,17 +7575,6 @@ class Utils {
 	}
 
 	/**
-	 * Sanitize settings options
-	 */
-	public function tutor_sanitize_settings_options( $input ) {
-		if ( ! empty( $_POST['tutor_option'][$input] ) ) {
-			return sanitize_text_field( $_POST['tutor_option'][$input] );
-		}
-
-		return '';
-	}
-
-	/**
 	 * Custom Pagination for Tutor Shortcode
 	 * 
 	 * @param int $total_num_pages

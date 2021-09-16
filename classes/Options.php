@@ -41,6 +41,17 @@ class Options {
 		return $default;
 	}
 
+	/**
+	 * Sanitize settings options
+	 */
+	public function tutor_sanitize_settings_options( $input ) {
+		if ( ! empty( $_POST['tutor_option'][$input] ) ) {
+			return sanitize_text_field( $_POST['tutor_option'][$input] );
+		}
+
+		return '';
+	}
+
 	public function tutor_option_save(){
 		tutils()->checking_nonce();
 
@@ -52,20 +63,17 @@ class Options {
 		
 		foreach ( $option as $key => $value ) {
 			if ( 'login_error_message' === $key ) {
-				$option['login_error_message'] = tutor_utils()->tutor_sanitize_settings_options( 'login_error_message' );
+				$option['login_error_message'] = $this->tutor_sanitize_settings_options( 'login_error_message' );
 			} elseif ( 'lesson_permalink_base' === $key ) {
-				$option['lesson_permalink_base'] = tutor_utils()->tutor_sanitize_settings_options( 'lesson_permalink_base' );
+				$option['lesson_permalink_base'] = $this->tutor_sanitize_settings_options( 'lesson_permalink_base' );
 			} elseif ( 'lesson_video_duration_youtube_api_key' === $key ) {
-				$option['lesson_video_duration_youtube_api_key'] = tutor_utils()->tutor_sanitize_settings_options( 'lesson_video_duration_youtube_api_key' );
+				$option['lesson_video_duration_youtube_api_key'] = $this->tutor_sanitize_settings_options( 'lesson_video_duration_youtube_api_key' );
 			} elseif ( 'email_from_name' === $key ) {
-				$option['email_from_name'] = tutor_utils()->tutor_sanitize_settings_options( 'email_from_name' );
+				$option['email_from_name'] = $this->tutor_sanitize_settings_options( 'email_from_name' );
 			} elseif ( 'email_from_address' === $key ) {
-				$option['email_from_address'] = tutor_utils()->tutor_sanitize_settings_options( 'email_from_address' );
+				$option['email_from_address'] = $this->tutor_sanitize_settings_options( 'email_from_address' );
 			}
 		}
-		
-		echo '<pre>';
-		print_r(  $option );
 		
 		$option = apply_filters('tutor_option_input', $option);
 		
