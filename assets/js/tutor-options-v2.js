@@ -332,10 +332,12 @@ document.querySelector("#export_settings").onclick = (e) => {
       });
 
       let url = URL.createObjectURL(file);
-      var timeStamp = Date.now();
       let element = document.createElement("a");
       element.setAttribute("href", url);
-      element.setAttribute("download", "tutor_options_" + timeStamp);
+      element.setAttribute(
+        "download",
+        "tutor_options_" + _tutorobject.tutor_time_now
+      );
       element.click();
       // document.body.removeChild(element);
     })
@@ -351,20 +353,52 @@ document.querySelector("#import_options").onclick = function () {
   fr.readAsText(files.item(0));
 
   fr.onload = function (e) {
-    var result = e.target.result;
-    var formatted = JSON.stringify(result, null, 0);
     /* start */
+    var tutor_options = e.target.result;
     var formData = new FormData();
     formData.append("action", "tutor_import_settings");
     formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-    formData.append("data", result);
+    formData.append("time", Date.now());
+    formData.append("tutor_options", tutor_options);
 
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function () {
-      // console.log(formatted);
+      // console.log(JSON.stringify(JSON.parse(tutor_options)));
     };
     xhttp.open("POST", _tutorobject.ajaxurl, true);
     xhttp.send(formData);
     /* start */
   };
 };
+
+const export_settings = document.querySelectorAll(".export_single_settings");
+for (let i = 0; i < export_settings.length; i++) {
+  export_settings[i].onclick = function () {
+    let export_id = export_settings[i].dataset.id;
+
+    var formData = new FormData();
+    formData.append("action", "tutor_export_single_settings");
+    formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+    formData.append("time", Date.now());
+    formData.append("export_id", export_id);
+
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      // console.log(JSON.stringify(JSON.parse(tutor_options)));
+    };
+    xhttp.open("POST", _tutorobject.ajaxurl, true);
+    xhttp.send(formData);
+    xhttp.onreadystatechange = function () {
+      let dataJSON = xhttp.responseText;
+
+      const fileToSave = new Blob([JSON.stringify(dataJSON)], {
+        type: "application/json",
+      });
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(fileToSave);
+      a.download = "fileName";
+      a.click();
+    };
+  };
+}

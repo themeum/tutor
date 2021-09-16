@@ -54,9 +54,11 @@
 				<p>Date</p>
 			</div>
 		</div>
+		<?php if ( $tutor_options = get_option( 'tutor_option_data' ) ) : ?>
+			<?php foreach ( $tutor_options as $key => $option_data ) : ?>
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<p class="text-medium-small">20 July, 2020, 12:47 pm</p>
+				<p class="text-medium-small"><?php echo date( 'j M, Y, g:i a', $option_data['datetime'] ); ?> </p>
 			</div>
 			<div class="tutor-option-field-input">
 				<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs">Apply</button>
@@ -66,7 +68,7 @@
 					</button>
 					<ul class="popup-menu">
 						<li>
-							<a href="#">
+							<a class="export_single_settings" data-id="<?php echo $key; ?>">
 								<span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
 								<span>Download</span>
 							</a>
@@ -81,60 +83,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="tutor-option-field-row">
-			<div class="tutor-option-field-label">
-				<p class="text-medium-small">20 July, 2020, 12:47 pm</p>
-			</div>
-			<div class="tutor-option-field-input">
-				<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs">Apply</button>
-				<div class="popup-opener">
-					<button type="button" class="popup-btn">
-						<span class="toggle-icon"></span>
-					</button>
-					<ul class="popup-menu">
-						<li>
-							<a href="#">
-								<span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
-								<span>Download</span>
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								<span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
-								<span>Delete</span>
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="tutor-option-field-row">
-			<div class="tutor-option-field-label">
-				<p class="text-medium-small">20 July, 2020, 12:47 pm</p>
-			</div>
-			<div class="tutor-option-field-input">
-				<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs">Apply</button>
-				<div class="popup-opener">
-					<button type="button" class="popup-btn">
-						<span class="toggle-icon"></span>
-					</button>
-					<ul class="popup-menu">
-						<li>
-							<a href="#">
-								<span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
-								<span>Download</span>
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								<span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
-								<span>Delete</span>
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
+		<?php endforeach; ?>
+		<?php endif; ?>
+
 	</div>
 </div>
 
