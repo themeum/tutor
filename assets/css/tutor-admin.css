@@ -989,13 +989,6 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   border-top: 1px solid #CDCFD5;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-}
-
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -1003,6 +996,13 @@ body {
 
 a {
   text-decoration: none;
+}
+
+.tutor-backend-settings-page * {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .d-grid {
@@ -1121,8 +1121,8 @@ a {
   line-height: 150%;
 }
 
-.text-regular-body, .tutor-option-nav-item h4,
-.tutor-option-single-item h4 {
+.text-regular-body, .tutor-backend-settings-page .tutor-option-nav-item h4,
+.tutor-backend-settings-page .tutor-option-single-item h4 {
   font-weight: 400;
   font-size: 16px;
   line-height: 162%;
@@ -1134,7 +1134,7 @@ a {
   line-height: 160%;
 }
 
-.text-regular-small, .text-body, .tutor-backend-settings-page, .tooltip-wrap .tooltip-txt, .item-wrapper > .color-picker-wrapper label.color-picker-input .picker-value, .tutor-option-field-label .desc, .tutor-option-nav-page .certificate-settings .tutor-option-field-label .desc {
+.text-regular-small, .text-body, .tutor-backend-settings-page, .tooltip-wrap .tooltip-txt, .item-wrapper > .color-picker-wrapper label.color-picker-input .picker-value, .tutor-option-nav-page .tutor-option-field-label .desc, .tutor-option-nav-page .certificate-settings .tutor-option-field-label .desc {
   font-weight: 400;
   font-size: 13px;
   line-height: 138%;
@@ -1170,7 +1170,7 @@ a {
   line-height: 123%;
 }
 
-.text-medium-h5, .tutor-option-main-title h2 {
+.text-medium-h5, .tutor-backend-settings-page .tutor-option-main-title h2 {
   font-weight: 500;
   font-size: 24px;
   line-height: 142%;
@@ -1182,8 +1182,8 @@ a {
   line-height: 140%;
 }
 
-.text-medium-body, .tutor-option-field-label label,
-.tutor-option-field-label .label, .tutor-option-nav-page.import-export .popup-opener li {
+.text-medium-body, .tutor-option-nav-page .tutor-option-field-label label,
+.tutor-option-nav-page .tutor-option-field-label .label, .tutor-option-nav-page.import-export .popup-opener li {
   font-weight: 500;
   font-size: 16px;
   line-height: 162%;
@@ -2174,45 +2174,45 @@ li.tutor-option-nav-item h4 {
   margin-bottom: 12px;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle span[class^='label-'] {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-toggle span[class^='label-'] {
   font-size: 15px;
   font-weight: 400;
   line-height: 160%;
   color: #212327;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle span[class^='label-'].label-before {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-toggle span[class^='label-'].label-before {
   margin-right: 5px;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle input ~ .tutor-form-toggle-control {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-toggle input ~ .tutor-form-toggle-control {
   background-color: #cdcfd5;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle input ~ .tutor-form-toggle-control::before {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-toggle input ~ .tutor-form-toggle-control::before {
   -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
           box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
 }
 
-.tutor-backend-settings-page .tutor-form-toggle input:checked ~ .tutor-form-toggle-control {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-toggle input:checked ~ .tutor-form-toggle-control {
   background-color: #1973aa;
 }
 
-.tutor-backend-settings-page input[type='radio'] {
+.tutor-backend-settings-page .tutor-option-field-row input[type='radio'] {
   background-size: 120%;
 }
 
-.tutor-backend-settings-page input[type='checkbox'] {
+.tutor-backend-settings-page .tutor-option-field-row input[type='checkbox'] {
   background-size: 70%;
 }
 
-.tutor-backend-settings-page input[type='checkbox']:checked,
-.tutor-backend-settings-page input[type='radio']:checked {
+.tutor-backend-settings-page .tutor-option-field-row input[type='checkbox']:checked,
+.tutor-backend-settings-page .tutor-option-field-row input[type='radio']:checked {
   border-color: #1973aa;
   background-color: #1973aa;
 }
 
-.tutor-backend-settings-page .tutor-form-check label {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check label {
   font-size: 15px;
   font-weight: 500;
   line-height: 1;
@@ -2220,41 +2220,41 @@ li.tutor-option-nav-item h4 {
   color: #353535;
 }
 
-.tutor-backend-settings-page .tutor-form-check label > .desc {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check label > .desc {
   font-size: 13px;
   font-weight: 400;
   line-height: 138%;
   color: #5b616f;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check.has-desc {
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc label {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check.has-desc label {
   font-size: 15px;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc:not(:last-child) {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check.has-desc:not(:last-child) {
   margin-bottom: 30px;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc .desc {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check.has-desc .desc {
   margin-top: 5px;
 }
 
-.tutor-backend-settings-page .tutor-form-check:not(.has-desc) label i {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check:not(.has-desc) label i {
   font-size: 20px;
   margin-right: 3px;
 }
 
-.tutor-backend-settings-page input.tutor-form-control {
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control {
   padding: 0 15px;
 }
 
-.tutor-backend-settings-page input.tutor-form-control[type='number'] {
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control[type='number'] {
   padding: 0px 5px;
   text-align: center;
   max-width: 90px;
@@ -2262,7 +2262,7 @@ li.tutor-option-nav-item h4 {
   height: 40px;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control {
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control {
   resize: vertical;
   min-height: 80px;
   font-family: inherit;
@@ -2273,81 +2273,81 @@ li.tutor-option-nav-item h4 {
   padding-bottom: 10px;
 }
 
-.tutor-backend-settings-page .tutor-form-radio label {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-radio label {
   font-size: 15px;
 }
 
-.tutor-backend-settings-page .tutor-form-radio .desc {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-radio .desc {
   margin-top: 5px;
 }
 
-.tutor-backend-settings-page select.tutor-form-select {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select {
   min-width: 137px;
   padding: 0 40px 0 20px;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control:-moz-read-only {
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:-moz-read-only {
   font-size: 16px;
   font-weight: 400;
   line-height: 162%;
   border-color: #bababa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select,
-.tutor-backend-settings-page input.tutor-form-control,
-.tutor-backend-settings-page textarea.tutor-form-control,
-.tutor-backend-settings-page textarea.tutor-form-control:read-only {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select,
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only {
   font-size: 16px;
   font-weight: 400;
   line-height: 162%;
   border-color: #bababa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::-webkit-input-placeholder, .tutor-backend-settings-page input.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only::-webkit-input-placeholder {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select::-webkit-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only::-webkit-input-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::-moz-placeholder, .tutor-backend-settings-page input.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page textarea.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only::-moz-placeholder {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select::-moz-placeholder, .tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only::-moz-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select:-ms-input-placeholder, .tutor-backend-settings-page input.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only:-ms-input-placeholder {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select:-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only:-ms-input-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::-ms-input-placeholder, .tutor-backend-settings-page input.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only::-ms-input-placeholder {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select::-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only::-ms-input-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control:-moz-read-only::placeholder {
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:-moz-read-only::placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::placeholder,
-.tutor-backend-settings-page input.tutor-form-control::placeholder,
-.tutor-backend-settings-page textarea.tutor-form-control::placeholder,
-.tutor-backend-settings-page textarea.tutor-form-control:read-only::placeholder {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select::placeholder,
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control::placeholder,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control::placeholder,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only::placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control:-moz-read-only:focus {
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:-moz-read-only:focus {
   border-color: #1973aa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select:focus,
-.tutor-backend-settings-page input.tutor-form-control:focus,
-.tutor-backend-settings-page textarea.tutor-form-control:focus,
-.tutor-backend-settings-page textarea.tutor-form-control:read-only:focus {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select:focus,
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control:focus,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:focus,
+.tutor-backend-settings-page .tutor-option-field-row textarea.tutor-form-control:read-only:focus {
   border-color: #1973aa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select,
-.tutor-backend-settings-page input.tutor-form-control {
+.tutor-backend-settings-page .tutor-option-field-row select.tutor-form-select,
+.tutor-backend-settings-page .tutor-option-field-row input.tutor-form-control {
   height: 40px;
   line-height: 1;
 }
 
-.tutor-backend-settings-page .tutor-form-check-input {
+.tutor-backend-settings-page .tutor-option-field-row .tutor-form-check-input {
   width: 20px;
   height: 20px;
 }
@@ -2633,7 +2633,7 @@ li.tutor-option-nav-item h4 {
   cursor: pointer;
 }
 
-.tutor-option-header {
+.tutor-backend-settings-page .tutor-option-header {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -2641,44 +2641,44 @@ li.tutor-option-nav-item h4 {
   background: #ffffff;
 }
 
-.tutor-option-header > div:nth-child(3) {
+.tutor-backend-settings-page .tutor-option-header > div:nth-child(3) {
   justify-self: flex-end;
 }
 
-.tutor-option-header .title {
+.tutor-backend-settings-page .tutor-option-header .title {
   font-weight: 500;
   font-size: 24px;
   line-height: 34px;
   color: #212327;
 }
 
-.tutor-option-header .tutor-input-group .tutor-form-control {
+.tutor-backend-settings-page .tutor-option-header .tutor-input-group .tutor-form-control {
   border: 1px solid #bababa;
   border-radius: 6px;
   height: 40px;
 }
 
-.tutor-option-header .tutor-input-group .tutor-input-group-icon {
+.tutor-backend-settings-page .tutor-option-header .tutor-input-group .tutor-input-group-icon {
   height: 40px;
   line-height: 40px;
 }
 
-.tutor-option-header .save-button .tutor-btn {
+.tutor-backend-settings-page .tutor-option-header .save-button .tutor-btn {
   padding: 7px 24.3px;
 }
 
-.tutor-option-body {
+.tutor-backend-settings-page .tutor-option-body {
   position: relative;
   z-index: 1;
   overflow-y: hidden;
 }
 
-.tutor-option-nav-item h4,
-.tutor-option-single-item h4 {
+.tutor-backend-settings-page .tutor-option-nav-item h4,
+.tutor-backend-settings-page .tutor-option-single-item h4 {
   color: #5b616f;
 }
 
-.tutor-option-main-title {
+.tutor-backend-settings-page .tutor-option-main-title {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2691,11 +2691,11 @@ li.tutor-option-nav-item h4 {
   margin-bottom: 15px;
 }
 
-.tutor-option-main-title h2 {
+.tutor-backend-settings-page .tutor-option-main-title h2 {
   color: #212327;
 }
 
-.tutor-option-main-title a {
+.tutor-backend-settings-page .tutor-option-main-title a {
   font-weight: 500;
   font-size: 15px;
   line-height: 1.6;
@@ -2709,7 +2709,7 @@ li.tutor-option-nav-item h4 {
           align-items: center;
 }
 
-.tutor-option-main-title a i {
+.tutor-backend-settings-page .tutor-option-main-title a i {
   margin-right: 5px;
   font-size: 17px;
 }
@@ -3167,13 +3167,13 @@ li.tutor-option-nav-item h4 {
           box-shadow: 0 0 0 3px var(--tutor-primary-lighter);
 }
 
-.tutor-option-field-label label,
-.tutor-option-field-label .label {
+.tutor-option-nav-page .tutor-option-field-label label,
+.tutor-option-nav-page .tutor-option-field-label .label {
   color: #212327;
   display: block;
 }
 
-.tutor-option-field-label em {
+.tutor-option-nav-page .tutor-option-field-label em {
   background: #dcdbdc;
   mix-blend-mode: multiply;
   border-radius: 3px;
@@ -3182,11 +3182,11 @@ li.tutor-option-nav-item h4 {
   font-style: normal;
 }
 
-.tutor-option-field-label .desc {
+.tutor-option-nav-page .tutor-option-field-label .desc {
   margin-top: 5px;
 }
 
-.tutor-option-field-label.has-tooltip {
+.tutor-option-nav-page .tutor-option-field-label.has-tooltip {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3195,27 +3195,27 @@ li.tutor-option-nav-item h4 {
           align-items: center;
 }
 
-.tutor-option-field-input.d-flex {
+.tutor-option-nav-page .tutor-option-field-input.d-flex {
   text-align: left;
 }
 
-.tutor-option-field-input.d-flex .tutor-form-check:not(:last-child) {
+.tutor-option-nav-page .tutor-option-field-input.d-flex .tutor-form-check:not(:last-child) {
   margin-right: 30px;
 }
 
-.tutor-option-field-input.d-flex, .tutor-option-field-input.d-block {
+.tutor-option-nav-page .tutor-option-field-input.d-flex, .tutor-option-nav-page .tutor-option-field-input.d-block {
   margin-top: 20px;
 }
 
-.tutor-option-field-input.d-flex input.tutor-form-control {
+.tutor-option-nav-page .tutor-option-field-input.d-flex input.tutor-form-control {
   min-width: 90px;
 }
 
-.tutor-option-field-input.d-flex.justify-content-end [class^='tutor-form-']:first-child {
+.tutor-option-nav-page .tutor-option-field-input.d-flex.justify-content-end [class^='tutor-form-']:first-child {
   margin-right: 15px;
 }
 
-.tutor-option-field-input .double-input label {
+.tutor-option-nav-page .tutor-option-field-input .double-input label {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3227,29 +3227,29 @@ li.tutor-option-nav-item h4 {
           justify-content: flex-end;
 }
 
-.tutor-option-field-input .double-input label span {
+.tutor-option-nav-page .tutor-option-field-input .double-input label span {
   margin-right: 10px;
 }
 
-.tutor-option-field-input .double-input label:not(:last-child) {
+.tutor-option-nav-page .tutor-option-field-input .double-input label:not(:last-child) {
   margin-bottom: 14px;
 }
 
-.tutor-option-field-input .double-input .tutor-form-control {
+.tutor-option-nav-page .tutor-option-field-input .double-input .tutor-form-control {
   margin-right: 0;
 }
 
-.tutor-option-field-input .double-input .revenue-percentage {
+.tutor-option-nav-page .tutor-option-field-input .double-input .revenue-percentage {
   position: relative;
   padding-right: 24px;
 }
 
-.tutor-option-field-input .double-input .revenue-percentage .tutor-form-control {
+.tutor-option-nav-page .tutor-option-field-input .double-input .revenue-percentage .tutor-form-control {
   min-width: 70px;
   max-width: 70px;
 }
 
-.tutor-option-field-input .double-input .revenue-percentage:before {
+.tutor-option-nav-page .tutor-option-field-input .double-input .revenue-percentage:before {
   content: '';
   position: absolute;
   width: 24px;
@@ -3258,7 +3258,7 @@ li.tutor-option-nav-item h4 {
   background: #dcdbdc;
 }
 
-.tutor-option-field-input .double-input .revenue-percentage:first-child:after {
+.tutor-option-nav-page .tutor-option-field-input .double-input .revenue-percentage:first-child:after {
   content: '';
   position: absolute;
   width: 1px;
@@ -3268,14 +3268,14 @@ li.tutor-option-nav-item h4 {
   background: #dcdbdc;
 }
 
-.tutor-option-field-input .logo-upload input[type='file'] {
+.tutor-option-nav-page .tutor-option-field-input .logo-upload input[type='file'] {
   -moz-appearance: none;
        appearance: none;
   -webkit-appearance: none;
   display: none;
 }
 
-.tutor-option-field-input .logo-upload {
+.tutor-option-nav-page .tutor-option-field-input .logo-upload {
   margin-top: 12px;
   background: #ffffff;
   border: 1px solid #bababa;
@@ -3286,7 +3286,7 @@ li.tutor-option-nav-item h4 {
           align-items: center;
 }
 
-.tutor-option-field-input .logo-upload span.delete-btn {
+.tutor-option-nav-page .tutor-option-field-input .logo-upload span.delete-btn {
   display: inline-block;
   position: absolute;
   width: 24px;
@@ -3301,11 +3301,11 @@ li.tutor-option-nav-item h4 {
   right: -12px;
 }
 
-.tutor-option-field-input .logo-upload span.delete-btn:hover {
+.tutor-option-nav-page .tutor-option-field-input .logo-upload span.delete-btn:hover {
   background-color: #f2281a;
 }
 
-.tutor-option-field-input .logo-upload .logo-preview {
+.tutor-option-nav-page .tutor-option-field-input .logo-upload .logo-preview {
   background: #eff1f7;
   border: 2px solid #eff1f7;
   border-radius: 3px;
@@ -3324,7 +3324,7 @@ li.tutor-option-nav-item h4 {
           justify-content: center;
 }
 
-.tutor-option-field-input .logo-upload .logo-preview img {
+.tutor-option-nav-page .tutor-option-field-input .logo-upload .logo-preview img {
   width: 100%;
   height: 100%;
   -o-object-fit: contain;
@@ -3332,36 +3332,36 @@ li.tutor-option-nav-item h4 {
   padding: 10px 25px;
 }
 
-.tutor-option-field-input .logo-upload .logo-upload-wrap {
+.tutor-option-nav-page .tutor-option-field-input .logo-upload .logo-upload-wrap {
   color: #161616;
   font-size: 15px;
   font-weight: 400;
   line-height: 160%;
 }
 
-.tutor-option-field-input .logo-upload .logo-upload-wrap p {
+.tutor-option-nav-page .tutor-option-field-input .logo-upload .logo-upload-wrap p {
   margin-bottom: 12px;
 }
 
-.tutor-option-field-input .instructor-list > .vertical,
-.tutor-option-field-input .instructor-list .horizontal {
+.tutor-option-nav-page .tutor-option-field-input .instructor-list > .vertical,
+.tutor-option-nav-page .tutor-option-field-input .instructor-list .horizontal {
   display: grid;
   grid-template-columns: 1fr 2fr;
   grid-gap: 20px;
 }
 
-.tutor-option-field-input .instructor-list > .vertical:not(:first-child),
-.tutor-option-field-input .instructor-list .horizontal:not(:first-child) {
+.tutor-option-nav-page .tutor-option-field-input .instructor-list > .vertical:not(:first-child),
+.tutor-option-nav-page .tutor-option-field-input .instructor-list .horizontal:not(:first-child) {
   margin-top: 36px;
 }
 
-.tutor-option-field-input .instructor-list .fields-wrapper {
+.tutor-option-nav-page .tutor-option-field-input .instructor-list .fields-wrapper {
   display: grid;
   grid-auto-flow: column;
   grid-gap: 30px;
 }
 
-.tutor-option-field-input .public-profile {
+.tutor-option-nav-page .tutor-option-field-input .public-profile {
   --imgWidth: 168px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--imgWidth), 1fr));
@@ -3369,16 +3369,16 @@ li.tutor-option-nav-item h4 {
   justify-items: flex-start;
 }
 
-.tutor-option-field-input .instructor-list .icon-wrapper img,
-.tutor-option-field-input .public-profile .icon-wrapper img {
+.tutor-option-nav-page .tutor-option-field-input .instructor-list .icon-wrapper img,
+.tutor-option-nav-page .tutor-option-field-input .public-profile .icon-wrapper img {
   border-radius: 6px;
 }
 
-.tutor-option-field-input .public-profile .icon-wrapper img {
+.tutor-option-nav-page .tutor-option-field-input .public-profile .icon-wrapper img {
   max-width: 100%;
 }
 
-.tutor-option-field-input .layout-label {
+.tutor-option-nav-page .tutor-option-field-input .layout-label {
   font-size: 15px;
   font-weight: 400;
   line-height: 160%;
