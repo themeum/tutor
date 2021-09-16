@@ -25,10 +25,6 @@
                 <?php
                 wp_editor(stripslashes($post->post_content), 'tutor_lesson_modal_editor', array( 'editor_height' => 150));
 				?>
-                <p class="tutor-input-feedback tutor-has-icon">
-                    <i class="far fa-question-circle tutor-input-feedback-icon"></i>
-                    <?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
-                </p>
             </div>
         </div>
 

@@ -4244,10 +4244,6 @@ li.tutor-option-nav-item h4 {
   margin-bottom: 15px;
 }
 
-.tutor-lesson-attachments-metabox {
-  margin-top: 30px;
-}
-
 .tutor-option-field-label label {
   display: block;
   font-weight: 600;
@@ -5055,15 +5051,6 @@ input:checked + .btn-slider:before {
   float: right;
 }
 
-/** Tutor Quiz Modal Form */
-/*notice*/
-.tutor-quiz-builder-modal-tabs-notice {
-  background: #d8d8d8;
-  line-height: 20px;
-  padding: 10px 30px;
-  color: #a4a4a4;
-}
-
 /*end notice*/
 /* .tutor-quiz-builder-group */
 .tutor-quiz-builder-group {
@@ -5794,14 +5781,6 @@ span.filled_dash_unser {
   width: 100%;
 }
 
-.lesson-modal-form-wrap .assignment-modal-field-row,
-.lesson-modal-form-wrap .tutor-lesson-attachments-metabox,
-.lesson-modal-form-wrap .tutor-option-field-row {
-  padding: 10px 0;
-  /*margin-bottom: 20px;
-	  border-bottom: none;*/
-}
-
 .lesson-modal-form-wrap .tutor-option-field-row:last-child {
   border-bottom: none;
 }
@@ -5846,10 +5825,6 @@ span.filled_dash_unser {
 
 .lesson-modal-form-wrap .tutor-option-field-row select {
   height: 40px;
-}
-
-.lesson-modal-form-wrap .tutor-lesson-attachments-metabox {
-  margin-top: 0;
 }
 
 .assignment-modal-form-wrap,

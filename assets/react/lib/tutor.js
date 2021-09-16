@@ -459,6 +459,7 @@ jQuery(document).ready(function($){
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
+                $('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
                 $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('quiz-for-post-id', topic_id).addClass('show');
 

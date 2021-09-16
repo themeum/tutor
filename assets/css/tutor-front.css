@@ -5485,19 +5485,6 @@ Quiz Modal
   float: right;
 }
 
-/** Tutor Quiz Modal Form */
-.tutor-quiz-builder-modal-tabs-notice {
-  background: #d8d8d8;
-  line-height: 20px;
-  padding: 10px 30px;
-  color: #a4a4a4;
-}
-
-.tutor-quiz-builder-modal-tabs-notice a {
-  color: #a4a4a4;
-  text-decoration: underline;
-}
-
 /* .tutor-quiz-builder-group */
 .tutor-quiz-builder-group {
   margin-bottom: 25px;

@@ -45,66 +45,8 @@ body.tutor-screen-course-builder {
         }
     }
 
-    // Attachment style
-    .tutor-attachment-cards {
-
-        &, &>div{
-            width: 100%;
-        }
-
-        &>div{
-            padding: 10px 20px;
-            margin-bottom: 15px;
-            background: #FFFFFF;
-            border: 1px solid #C0C3CB;
-            box-sizing: border-box;
-            border-radius: 6px;
-            @include valueWithPrefix(display, flex);
-            @include propertyWithPrefix(align-items, center);
-        }
-        
-        &.attachment-type-2 {
-            &>div>div {
-                &:first-child {
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    margin-right: 25px;
-                    @include propertyWithPrefix(flex, 1);
-
-                    a{
-                        font-style: normal;
-                        font-weight: normal;
-                        font-size: 16px;
-                        color: #41454F;
-
-                        &:hover {
-                            color: #0e0e0f;
-                        }
-                    }
-                }
-
-                span.filesize {
-                    font-style: normal;
-                    font-weight: normal;
-                    font-size: 13px;
-                    margin-right: 20px;
-                    color: #5B616F;
-                }
-
-                span.tutor-delete-attachment {
-                    font-size: 12px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    color: #1A1B1E;
-
-                    &:hover{
-                        color: black;
-                    }
-                }
-            }
-        }
-    }
+    // Course common libs
+    @import './lib/attachment.scss';
 
     // Course segments
     @import './segments/video.scss';
