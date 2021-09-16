@@ -356,8 +356,8 @@ document.querySelector("#import_options").onclick = function () {
     /* start */
     var formData = new FormData();
     formData.append("action", "tutor_import_settings");
-    formData.append("nonce", _tutorobject._tutor_nonce);
-    formData.append("data", formatted);
+    formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+    formData.append("data", result);
 
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function () {
