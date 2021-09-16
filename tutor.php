@@ -7,7 +7,7 @@ Author: Themeum
 Version: 1.9.9
 Author URI: https://themeum.com
 Requires at least: 4.5
-Tested up to: 5.7
+Tested up to: 5.8
 License: GPLv2 or later
 Text Domain: tutor
 */
