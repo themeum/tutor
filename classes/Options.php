@@ -49,7 +49,26 @@ class Options {
 		do_action('tutor_option_save_before');
 
 		$option = (array)tutils()->array_get('tutor_option', $_POST, array());
+		
+		foreach ( $option as $key => $value ) {
+			if ( 'login_error_message' === $key ) {
+				$option['login_error_message'] = tutor_utils()->tutor_sanitize_settings_options( 'login_error_message' );
+			} elseif ( 'lesson_permalink_base' === $key ) {
+				$option['lesson_permalink_base'] = tutor_utils()->tutor_sanitize_settings_options( 'lesson_permalink_base' );
+			} elseif ( 'lesson_video_duration_youtube_api_key' === $key ) {
+				$option['lesson_video_duration_youtube_api_key'] = tutor_utils()->tutor_sanitize_settings_options( 'lesson_video_duration_youtube_api_key' );
+			} elseif ( 'email_from_name' === $key ) {
+				$option['email_from_name'] = tutor_utils()->tutor_sanitize_settings_options( 'email_from_name' );
+			} elseif ( 'email_from_address' === $key ) {
+				$option['email_from_address'] = tutor_utils()->tutor_sanitize_settings_options( 'email_from_address' );
+			}
+		}
+		
+		echo '<pre>';
+		print_r(  $option );
+		
 		$option = apply_filters('tutor_option_input', $option);
+		
 		update_option('tutor_option', $option);
 
 		do_action('tutor_option_save_after');

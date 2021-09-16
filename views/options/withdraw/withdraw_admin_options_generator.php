@@ -15,7 +15,7 @@ $withdraw_methods = $this->withdraw_methods;
 		<?php
 		foreach ($withdraw_methods as $method_id => $method) {
 			?>
-			<li><a href="javascript:;" data-target-id="withdraw-method-<?php echo $method_id; ?>-form"> <?php echo $method['method_name'] ?> </a> </li>
+			<li><a href="javascript:;" data-target-id="withdraw-method-<?php esc_attr_e( $method_id ); ?>-form"> <?php esc_html_e( $method['method_name'] ); ?> </a> </li>
 			<?php
 		}
 		?>
@@ -31,16 +31,16 @@ $withdraw_methods = $this->withdraw_methods;
 		$is_enable = tutor_utils()->avalue_dot($method_id.".enabled", $this->get_options);
 		?>
 
-		<div id="withdraw-method-<?php echo $method_id; ?>-form" class="withdraw-method-form-wrap" style="display: <?php echo $method_i ==1? 'block' : 'none'; ?>;">
+		<div id="withdraw-method-<?php esc_attr_e( $method_id ); ?>-form" class="withdraw-method-form-wrap" style="display: <?php esc_attr_e( $method_i ) == 1 ? 'block' : 'none'; ?>;">
 
 			<div class="tutor-option-field-row">
 				<div class="tutor-option-field-label">
-					<label for=""><?php _e('Enable/Disable', 'tutor'); ?></label>
+					<label for=""><?php esc_html_e('Enable/Disable', 'tutor'); ?></label>
 				</div>
 				<div class="tutor-option-field">
 					<label>
-						<input type="checkbox" name="tutor_withdraw_options[<?php echo $method_id; ?>][enabled]" value="1" <?php checked('1', $is_enable) ?> >
-						<?php _e('Enable ', 'tutor'); ?> <?php echo $method['method_name'] ?>
+						<input type="checkbox" name="tutor_withdraw_options[<?php esc_attr_e( $method_id ); ?>][enabled]" value="1" <?php checked('1', $is_enable) ?> >
+						<?php esc_html_e('Enable ', 'tutor'); ?> <?php esc_html_e( $method['method_name'] ); ?>
 					</label>
 				</div>
 			</div>
@@ -58,7 +58,7 @@ $withdraw_methods = $this->withdraw_methods;
 						if (isset($field['label'])){
 							?>
 							<div class="tutor-option-field-label">
-								<label for=""><?php echo $field['label']; ?></label>
+								<label for=""><?php esc_html_e( $field['label'] ); ?></label>
 							</div>
 							<?php
 						}
@@ -68,7 +68,7 @@ $withdraw_methods = $this->withdraw_methods;
 							include tutor()->path."views/options/withdraw/{$field['type']}.php";
 
 							if (isset($field['desc'])){
-								echo "<p class='desc'>{$field['desc']}</p>";
+								echo '<p class="desc">' . esc_html( $field['desc'] ) . '</p>';
 							}
 							?>
 						</div>
