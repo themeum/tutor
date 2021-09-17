@@ -11,7 +11,7 @@
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row d-block">
 			<div class="tutor-option-field-label">
-				<div class="drag-drop-zone ">
+				<div class="drag-drop-zone">
 					<span class="icon tutor-v2-icon-test icon-upload-icon-line"></span>
 					<div class="title">Drag &amp; Drop your JSON File here </div>
 					<div class="subtitle"><span>File Format:</span> .json <br> Or</div>
@@ -54,7 +54,7 @@
 				<p>Date</p>
 			</div>
 		</div>
-		<?php if ( $tutor_options = get_option( 'tutor_option_data' ) ) : ?>
+		<?php if ( $tutor_options = get_option( 'tutor_settings_log', array() ) ) : ?>
 			<?php foreach ( $tutor_options as $key => $option_data ) : ?>
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
@@ -74,7 +74,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="#">
+							<a class="delete_single_settings" data-id="<?php echo $key; ?>">
 								<span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
 								<span>Delete</span>
 							</a>
@@ -84,6 +84,12 @@
 			</div>
 		</div>
 		<?php endforeach; ?>
+		<?php else : ?>
+			<div class="tutor-option-field-row">
+				<div class="tutor-option-field-label">
+					<p class="text-medium-small"><?php echo __( 'No settings data found.', 'tutor' ); ?></p>
+				</div>
+			</div>
 		<?php endif; ?>
 
 	</div>
