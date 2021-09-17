@@ -1234,45 +1234,6 @@ jQuery(document).ready(function ($) {
      */
 
     /**
-     * Attachment in forntend course builder
-     * @since v.1.3.4
-     */
-    $(document).on('click', 'a.tutor-delete-attachment', function (e) {
-        e.preventDefault();
-        $(this).closest('.tutor-added-attachment').remove();
-    });
-    $(document).on('click', '.tutorUploadAttachmentBtn', function (e) {
-        e.preventDefault();
-
-        var $that = $(this);
-        var frame;
-        if (frame) {
-            frame.open();
-            return;
-        }
-        frame = wp.media({
-            title: __( 'Select / Upload Media Of Your Chosen Persuasion', 'tutor' ),
-            button: {
-                text: __( 'Use media', 'tutor' )
-            },
-            multiple: true  // Set to true to allow multiple files to be selected
-        });
-        frame.on('select', function () {
-            var attachments = frame.state().get('selection').toJSON();
-            if (attachments.length) {
-                for (var i = 0; i < attachments.length; i++) {
-                    var attachment = attachments[i];
-
-                    var inputHtml = '<div class="tutor-added-attachment"><i class="tutor-icon-archive"></i><a href="javascript:;" class="tutor-delete-attachment tutor-icon-line-cross"></a> <span> <a href="' + attachment.url + '">' + attachment.filename + '</a> </span> <input type="hidden" name="tutor_attachments[]" value="' + attachment.id + '"></div>';
-                    $that.closest('.tutor-lesson-attachments-metabox').find('.tutor-added-attachments-wrap').append(inputHtml);
-                }
-            }
-        });
-        frame.open();
-    });
-
-
-    /**
      * Single Assignment Upload Button
      * @since v.1.3.4
      */

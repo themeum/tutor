@@ -91,6 +91,38 @@ window.jQuery(document).ready(function($){
         });
     });
 
+    /**
+     * Lesson upload thumbnail
+     */
+    $(document).on( 'click', '.lesson_thumbnail_upload_btn',  function( event ){
+        event.preventDefault();
+        var $that = $(this);
+        var frame;
+        if ( frame ) {
+            frame.open();
+            return;
+        }
+        frame = wp.media({
+            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
+            button: {
+                text: __( 'Use this media', 'tutor' )
+            },
+            multiple: false
+        });
+        frame.on( 'select', function() {
+            var attachment = frame.state().get('selection').first().toJSON();
+            $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('<img src="'+attachment.url+'" alt="" /><a href="javascript:;" class="tutor-lesson-thumbnail-delete-btn"><i class="tutor-icon-line-cross"></i></a>');
+            $that.closest('.tutor-thumbnail-wrap').find('input').val(attachment.id);
+            $('.tutor-lesson-thumbnail-delete-btn').show();
+        });
+        frame.open();
+    });
+
+    // Video source 
+    $(document).on('change', '.tutor_lesson_video_source', function(e){
+        $(this).nextAll().hide().filter('.video_source_wrap_'+$(this).val()).show();
+    });
+
     // Update lesson
     $(document).on( 'click', '.update_lesson_modal_btn',  function( event ){
         event.preventDefault();

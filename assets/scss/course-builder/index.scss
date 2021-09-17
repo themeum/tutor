@@ -45,12 +45,22 @@ body.tutor-screen-course-builder {
         }
     }
 
+    // Course common libs
+    @import './lib/attachment.scss';
+
     // Course segments
     @import './segments/video.scss';
     @import './segments/setting.scss';
     @import './segments/instructor.scss';
     @import './segments/attachment.scss';
     @import './segments/topic-content.scss';
+
+    // LQA Modals
+    .tutor-modal {
+        &.tutor-lesson-modal-wrap {
+            @import './modal/lesson.scss';
+        }
+    }
 
     /* Screen specific declarations (Frontend editor) */
     &.tutor-screen-course-builder-frontend{

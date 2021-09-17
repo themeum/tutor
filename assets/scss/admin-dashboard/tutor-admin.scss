@@ -176,10 +176,6 @@
 	margin-bottom: 15px;
   }
   
-  .tutor-lesson-attachments-metabox {
-	margin-top: 30px;
-  }
-  
   .tutor-option-field-label label {
 	display: block;
 	font-weight: 600;
@@ -990,15 +986,6 @@
 	float: right;
   }
   
-  /** Tutor Quiz Modal Form */
-  /*notice*/
-  .tutor-quiz-builder-modal-tabs-notice {
-	background: #d8d8d8;
-	line-height: 20px;
-	padding: 10px 30px;
-	color: #a4a4a4;
-  }
-  
   /*end notice*/
   /* .tutor-quiz-builder-group */
   .tutor-quiz-builder-group {
@@ -1727,83 +1714,12 @@
 	margin-left: 6px;
   }
   
-  /**
-  Lesson Edit Modal
-   */
-  .lesson-modal-form-wrap .lesson-modal-field-row {
-	padding: 10px 0;
-  }
-  
   .lesson-modal-field.tutor-lesson-modal-title-wrap {
 	width: 95%;
   }
   
   .tutor-lesson-modal-title-wrap input {
 	width: 100%;
-  }
-  
-  .lesson-modal-form-wrap .assignment-modal-field-row,
-  .lesson-modal-form-wrap .tutor-lesson-attachments-metabox,
-  .lesson-modal-form-wrap .tutor-option-field-row {
-	padding: 10px 0;
-	/*margin-bottom: 20px;
-	  border-bottom: none;*/
-  }
-  
-  .lesson-modal-form-wrap .tutor-option-field-row:last-child {
-	border-bottom: none;
-  }
-  
-  .lesson-modal-form-wrap .tutor-option-field-row textarea,
-  .lesson-modal-form-wrap .tutor-option-field-row input[type="text"],
-  .lesson-modal-form-wrap .tutor-option-field-row input[type="email"],
-  .lesson-modal-form-wrap .tutor-option-field-row input[type="number"],
-  .lesson-modal-form-wrap .tutor-option-field-row input[type="password"] {
-	line-height: 40px;
-	padding: 5px 0;
-	text-indent: 15px;
-	background: #fff;
-	display: inline-block;
-	border: 1px solid #dedede;
-	border-radius: 3px;
-	-webkit-box-shadow: none;
-			box-shadow: none;
-	height: 40px;
-	margin: 0;
-	width: 100%;
-	color: #393c40;
-	font-size: 14px;
-	-webkit-transition: 300ms;
-	transition: 300ms;
-  }
-  
-  .lesson-modal-form-wrap .tutor-option-field-row textarea {
-	line-height: 26px;
-	min-height: 150px;
-	text-indent: 0;
-	padding: 15px;
-  }
-  
-  .lesson-modal-form-wrap .tutor-option-field-row textarea:focus,
-  .lesson-modal-form-wrap .tutor-option-field-row input[type="text"]:focus,
-  .lesson-modal-form-wrap .tutor-option-field-row input[type="email"]:focus,
-  .lesson-modal-form-wrap .tutor-option-field-row input[type="number"]:focus,
-  .lesson-modal-form-wrap .tutor-option-field-row input[type="password"]:focus {
-	border-color: var(--tutor-primary-color);
-  }
-  
-  .lesson-modal-form-wrap .tutor-option-field-row select {
-	height: 40px;
-  }
-  
-  .lesson-modal-form-wrap .tutor-lesson-attachments-metabox {
-	margin-top: 0;
-  }
-  
-  .assignment-modal-form-wrap,
-  .lesson-modal-form-wrap {
-	padding: 20px;
-	padding-bottom: 48px;
   }
   
   .tutor-lesson-modal-wrap .modal-footer {
@@ -2306,18 +2222,6 @@
 	speak: none;
 	margin: 0 8px 0 -2px;
 	vertical-align: top;
-  }
-  
-  /**
-  Content Drip (Pro)
-   */
-  .lesson-modal-form-wrap .lesson-content-drip-wrap {
-	padding: 10px;
-	border: 1px solid #e4e4e4;
-  }
-  
-  .lesson-modal-form-wrap .lesson-content-drip-wrap h3 {
-	margin: 0 0 10px 0;
   }
   
   .select2-dropdown.increasezindex {

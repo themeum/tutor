@@ -2,13 +2,15 @@
 .tutor-video-upload-wrap {
     .video_source_wrap_html5 {
         width: 100%;
+        background: white;
+        border: 2px dashed #BDCAF1;
+        box-sizing: border-box;
+        border-radius: 6px;
 
         .video-metabox-source-html5-upload {
             background-color: #fff;
             text-align: center;
             padding: 40px 20px;
-            border: 1px solid #dcdfe5;
-            border-radius: 3px;
             
             p {
                 margin-bottom: 5px;
@@ -16,7 +18,7 @@
             
             .video-upload-icon {
                 i {
-                    font-size: 50px;
+                    font-size: 67px;
                     color: var(--tutor-primary-color);
                 }
             }
