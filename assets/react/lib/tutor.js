@@ -103,8 +103,9 @@ jQuery(document).ready(function($){
             }
             $( ".tutor_date_picker" ).datepicker({"dateFormat" : format});
         }
+        
         /** Disable typing on datePicker field */
-        $('.hasDatepicker, .tutor_date_picker').keydown( function( e ) {
+        $(document).on('keydown', '.hasDatepicker, .tutor_date_picker', function( e ) {
             if ( e.keyCode !== 8 ) {
                 e.preventDefault();
             }

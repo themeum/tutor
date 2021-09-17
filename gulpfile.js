@@ -26,12 +26,17 @@ var prefixerOptions = {
 };
 
 var scss_blueprints = {
-	tutor_front : {src: "assets/scss/front/main.scss", mode: 'expanded', destination: 'tutor-front.css'},
-	tutor_front_min: {src: "assets/scss/front/main.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
-	tutor_admin: {src: "assets/scss/admin/main.scss", mode: 'expanded', destination: 'tutor-admin.css'},
-	tutor_admin_min: {src: "assets/scss/admin/main.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
-	tutor_front_dashboard: {src: "assets/scss/front/dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
-	tutor_front_dashboard_min: {src: "assets/scss/front/dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
+	tutor_front : {src: "assets/scss/front/index.scss", mode: 'expanded', destination: 'tutor-front.css'},
+	tutor_front_min: {src: "assets/scss/front/index.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
+
+	tutor_admin: {src: "assets/scss/admin/index.scss", mode: 'expanded', destination: 'tutor-admin.css'},
+	tutor_admin_min: {src: "assets/scss/admin/index.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
+
+	tutor_course_builder: {src: "assets/scss/course-builder/index.scss", mode: 'expanded', destination: 'tutor-course-builder.css'},
+	tutor_course_builder_min: {src: "assets/scss/course-builder/index.scss", mode: 'compressed', destination: 'tutor-course-builder.min.css'},
+
+	tutor_front_dashboard: {src: "assets/scss/dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
+	tutor_front_dashboard_min: {src: "assets/scss/dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
 };
 
 var task_keys = Object.keys(scss_blueprints);
@@ -52,6 +57,7 @@ for(let task in scss_blueprints) {
 
 var added_texts = [];
 const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/ig;
+const js_files = ['tutor-front', 'tutor-admin', 'tutor-course-builder', 'tutor-setup'].map(f=>'assets/js/'+f+'.js:1').join(', ');
 function i18n_makepot(callback, target_dir) {
 
 	const parent_dir = target_dir || __dirname;
@@ -60,7 +66,7 @@ function i18n_makepot(callback, target_dir) {
 	// Loop through JS files inside js directory
 	fs.readdirSync(parent_dir).forEach( function(file_name) {
 
-		if(file_name=='node_modules') {
+		if(file_name=='node_modules' || file_name.indexOf('.')===0) {
 			return;
 		}
 
@@ -73,7 +79,7 @@ function i18n_makepot(callback, target_dir) {
 		}
 
 		// Make sure only js extension file to process
-		if(stat.isFile() && path.extname(file_name)=='.js')
+		if(stat.isFile() && path.extname(file_name)=='.js' && full_path.indexOf('assets/react')>-1)
 		{
 			var codes = fs.readFileSync(full_path).toString();
 			var lines = codes.split('\n');
@@ -100,7 +106,7 @@ function i18n_makepot(callback, target_dir) {
 
 					added_texts.push(text);
 					translation_texts+= 
-						'\n#: ' + (full_path.replace(__dirname+'/', '')) + ':' + (i+1) 
+						'\n#: ' + js_files 
 						+ '\nmsgid "'+text
 						+'"\nmsgstr ""' 
 						+ '\n'; 
@@ -156,18 +162,19 @@ gulp.task("copy", function () {
 			"./**/*.*",
 			"!./build/**",
 			"!./assets/**/*.map",
+			"!./assets/react/**",
 			"!./assets/scss/**",
 			"!./assets/.sass-cache",
 			"!./node_modules/**",
 			"!./**/*.zip",
 			"!.github",
-			"!./gulpfile.js",
 			"!./readme.md",
 			"!.DS_Store",
 			"!./**/.DS_Store",
 			"!./LICENSE.txt",
-			"!./package.json",
-			"!./package-lock.json",
+			"!./*.lock",
+			"!./*.js",
+			"!./*.json",
 		])
 		.pipe(gulp.dest("build/tutor/"));
 });

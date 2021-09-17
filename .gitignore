@@ -1,5 +1,9 @@
 .DS_Store
 node_modules/
+/vendor/
+.phpcs.cache
+.phpunit.result.cache
+php-errors.log
 ehthumbs.db
 Thumbs.db
 .npm
