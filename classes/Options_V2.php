@@ -146,18 +146,18 @@ class Options_V2 {
 
 		$save_import_data['datetime']          = $time;
 		$save_import_data['datetype']          = 'imported';
-		$save_import_data['tutor_option_data'] = $request['data'];
+		$save_import_data['dataset'] = $request['data'];
 
 		$import_data[ $time ] = $save_import_data;
 
-		$get_option_data = get_option( 'tutor_option_data' );
+		$get_option_data = get_option( 'tutor_settings_log' );
 
 		$update_option = array_merge( $get_option_data, $import_data );
 		// $update_option = array();
 
-		update_option( 'tutor_option_data', $update_option );
+		update_option( 'tutor_settings_log', $update_option );
 
-		$get_final_data = get_option( 'tutor_option_data' );
+		$get_final_data = get_option( 'tutor_settings_log' );
 
 		wp_send_json_success( $get_final_data );
 
