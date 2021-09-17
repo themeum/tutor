@@ -51,7 +51,6 @@ var scss_blueprints = {
 
 
 var task_keys = Object.keys(scss_blueprints);
-task_keys.push('v2_lib_scss');
 
 for(let task in scss_blueprints) {
 	
@@ -66,15 +65,6 @@ for(let task in scss_blueprints) {
 			.pipe(gulp.dest(blueprint.dest_path || "assets/css"));
 	});
 }
-
-gulp.task('v2_lib_scss', function () {
-	return gulp.src('v2-library/_src/scss/main.scss')
-		.pipe(plumber({errorHandler: onError}))
-		.pipe(sass({outputStyle: 'compressed'}))
-		.pipe(prefix(prefixerOptions))
-		.pipe(rename('main.min.css'))
-		.pipe(gulp.dest("v2-library/bundle"));
-});
 
 var added_texts = [];
 const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/ig;
