@@ -4796,7 +4796,7 @@ class Utils {
 	 * 
 	 * @since 1.9.5
 	 */
-	public function get_quiz_attempts( $start = 0, $limit = 10, $search_filter, $course_filter, $date_filter, $order_filter ) {
+	public function get_quiz_attempts( $start = 0, $limit = 10, $search_filter='', $course_filter='', $date_filter='', $order_filter='' ) {
 		global $wpdb;
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';

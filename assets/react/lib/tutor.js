@@ -1,4 +1,4 @@
-function tutor_get_nonce_data(send_key_value) {
+window.tutor_get_nonce_data=function(send_key_value) {
 
     var nonce_data = window._tutorobject || {};
     var nonce_key = nonce_data.nonce_key || '';
@@ -1820,7 +1820,7 @@ jQuery.fn.serializeObject = function()
    return values;
 };
 
-function tutor_toast(title, description, type) {
+window.tutor_toast=function(title, description, type) {
     var tutor_ob = window._tutorobject || {};
     var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
@@ -1869,7 +1869,7 @@ function tutor_toast(title, description, type) {
  * 
  * @since 1.9.7
  */
-function disableAddoption() {
+window.disableAddoption=function() {
     const selected_question_type      = document.querySelector(".tutor_select_value_holder").value;
     const question_answers            = document.getElementById("tutor_quiz_question_answers");
     const question_answer_form        = document.getElementById("tutor_quiz_question_answer_form");
