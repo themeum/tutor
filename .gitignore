@@ -6,13 +6,14 @@ Thumbs.db
 .idea/
 .vscode/
 package-lock.json
-yarn.lock
 .sass-cache
-assets/css/tutor-front.css.map
-assets/css/tutor-front.min.css.map
+assets/**/*.map
 .prettierignore
 *.zip
 *.po
 *.po~
 *.mo
 /test
+.history
+.docz
+*.lock
