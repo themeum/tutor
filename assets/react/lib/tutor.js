@@ -524,7 +524,7 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-        var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').attr('data-add-quiz-under');
+        var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').data('topic_id');
         var current_topic_id = $(this).data('topic-id');
         $.ajax({
             url : window._tutorobject.ajaxurl,
