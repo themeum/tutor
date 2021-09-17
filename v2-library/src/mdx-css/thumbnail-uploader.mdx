@@ -1,0 +1,76 @@
+---
+name: Thumbnail Uploader
+route: /mdx-css/thumbnail-uploader
+menu: UI Components
+---
+
+import { Playground } from 'docz';
+import '../../bundle/main.min.css';
+import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-icon-test.css';
+import '../docz-essential.css';
+
+
+# Thumbnail Uploader
+
+## Thumbnail Uploader
+
+<Playground>
+	<div className="tutor-option-field-row d-block">
+		<div className="tutor-option-field-label">
+			<h5 className="text-medium-caption">Upload Image</h5>
+		</div>
+		<div className="tutor-option-field-input image-previewer">
+			<div className="d-flex logo-upload">
+				<div className="logo-preview">
+					<span className="preview-loading"></span>
+					<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-lms-footer-logo.svg" alt="course builder logo" />
+					{/* <img src="" alt="" /> */}
+					<span className="delete-btn"></span>
+				</div>
+				<div className="logo-upload-wrap">
+					<p className="text-regular-body">
+						Size: <strong className="text-medium-body">200x40 pixels;</strong> File Support:
+						<strong className="text-medium-body">jpg, .jpeg or .png.</strong>
+					</p>
+					<label htmlFor="builder-logo-upload" className="tutor-btn tutor-is-sm">
+						<input type="file" name="builder-logo-upload" id="builder-logo-upload" accept=".jpg, .jpeg, .png, .svg"/>
+						<span className="tutor-btn-icon tutor-v2-icon-test icon-image-filled"></span>
+						<span>Upload Image</span>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+</Playground>
+
+## Demo 2
+<Playground>
+	<div className="tutor-option-single-item item-logoupload">
+		<h4>Title Logo</h4>
+		<div className="item-wrapper">
+			<div className="tutor-option-field-row d-block">
+				<div className="tutor-option-field-input image-previewer is-selected mt-0">
+					<div className="d-flex logo-upload mt-0 p-0">
+						<div className="logo-preview">
+							<span className="preview-loading"></span>
+							<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-lms-footer-logo.svg" alt="course builder logo" />
+							<span className="delete-btn"></span>
+						</div>
+						<div className="logo-upload-wrap">
+							<p>
+								Size: <strong>200x40 pixels;</strong> File Support:
+								<strong>jpg, .jpeg or .png.</strong>
+							</p>
+							<label htmlFor="builder-logo-upload" className="tutor-btn tutor-is-sm tutor-is-outline">
+								<input type="file" name="email-title-logo" id="builder-logo-upload" accept=".jpg, .jpeg, .png, .svg" />
+								<span className="tutor-btn-icon tutor-v2-icon-test icon-image-filled"></span>
+								<span>Upload Image</span>
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</Playground>
+
