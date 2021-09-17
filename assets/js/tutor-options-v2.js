@@ -270,6 +270,22 @@ function highlightSearchedItem(dataKey) {
 }
 
 /**
+ * Function to download json file
+ * @param {json} response
+ * @param {string} fileName
+ */
+function json_download(response, fileName) {
+  const fileToSave = new Blob([response], {
+    type: "application/json",
+  });
+  const el = document.createElement("a");
+  el.href = URL.createObjectURL(fileToSave);
+  el.download = fileName;
+  el.click();
+  // document.body.removeChild(el);
+}
+
+/**
  * Email Manage template - live Preview
  */
 
@@ -327,19 +343,8 @@ document.querySelector("#export_settings").onclick = (e) => {
   })
     .then((response) => response.json())
     .then((response) => {
-      const file = new Blob([JSON.stringify(response)], {
-        type: "application/json",
-      });
-
-      let url = URL.createObjectURL(file);
-      let element = document.createElement("a");
-      element.setAttribute("href", url);
-      element.setAttribute(
-        "download",
-        "tutor_options_" + _tutorobject.tutor_time_now
-      );
-      element.click();
-      // document.body.removeChild(element);
+      let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
+      json_download(response, fileName);
     })
     .catch((err) => console.log(err));
 };
@@ -374,6 +379,7 @@ document.querySelector("#import_options").onclick = function () {
 const export_settings = document.querySelectorAll(".export_single_settings");
 for (let i = 0; i < export_settings.length; i++) {
   export_settings[i].onclick = function () {
+    console.log("click");
     let export_id = export_settings[i].dataset.id;
 
     var formData = new FormData();
@@ -383,22 +389,14 @@ for (let i = 0; i < export_settings.length; i++) {
     formData.append("export_id", export_id);
 
     const xhttp = new XMLHttpRequest();
-    xhttp.onload = function () {
-      // console.log(JSON.stringify(JSON.parse(tutor_options)));
-    };
     xhttp.open("POST", _tutorobject.ajaxurl, true);
     xhttp.send(formData);
+
     xhttp.onreadystatechange = function () {
-      let dataJSON = xhttp.responseText;
-
-      const fileToSave = new Blob([JSON.stringify(dataJSON)], {
-        type: "application/json",
-      });
-
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(fileToSave);
-      a.download = "fileName";
-      a.click();
+      if (xhttp.readyState === 4) {
+        let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
+        json_download(xhttp.response, fileName);
+      }
     };
   };
 }
