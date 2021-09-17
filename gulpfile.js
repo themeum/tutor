@@ -52,7 +52,6 @@ var task_keys = Object.keys(scss_blueprints);
 for(let task in scss_blueprints) {
 	
 	let blueprint = scss_blueprints[task];
-	// console.log(blueprint);
 	
 	gulp.task(task, function () {
 		return gulp.src(blueprint.src)
@@ -60,7 +59,7 @@ for(let task in scss_blueprints) {
 			.pipe(sass({outputStyle: blueprint.mode}))
 			.pipe(prefix(prefixerOptions))
 			.pipe(rename(blueprint.destination))
-			.pipe(gulp.dest("assets/css"));
+			.pipe(gulp.dest(blueprint.dest_path || "assets/css"));
 	});
 }
 

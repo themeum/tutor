@@ -1779,9 +1779,7 @@ Lesson Edit Modal
 .lesson-modal-close-wrap a:hover {
     color: red;
 }
-.lesson-modal-form-wrap .lesson-modal-field-row {
-    padding: 10px 0;
-}
+
 .lesson-modal-field.tutor-lesson-modal-title-wrap {
     width: 95%;
 }
@@ -1801,15 +1799,7 @@ Lesson Edit Modal
 .tutor-lesson-modal-title-wrap input {
     width: 100%;
 }
-.lesson-modal-form-wrap .tutor-option-field-row {
-    padding: 10px 0;
-}
-.lesson-modal-form-wrap .tutor-option-field-row:last-child {
-    border-bottom: none;
-}
-.lesson-modal-form-wrap {
-    /*padding-bottom: 48px;*/
-}
+
 .tutor-lesson-modal-wrap .modal-footer {
     padding: 10px 20px;
     background-color: #fff;
