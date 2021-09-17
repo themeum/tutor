@@ -1,6 +1,6 @@
 import '../../../v2-library/_src/js/main';
 
-function tutor_get_nonce_data(send_key_value) {
+window.tutor_get_nonce_data=function(send_key_value) {
 
     var nonce_data = window._tutorobject || {};
     var nonce_key = nonce_data.nonce_key || '';
@@ -151,19 +151,6 @@ jQuery(document).ready(function($){
         var originalOption = icon.element;
         return $('<span><i class="tutor-icon-' + $(originalOption).data('icon') + '"></i> ' + icon.text + '</span>');
     }
-
-    $(document).on('change', '.tutor_lesson_video_source', function(e){
-        var $that = $(this);
-        var selector = $(this).val();
-
-        if (selector){
-            $('.video-metabox-source-input-wrap').show();
-        }else{
-            $('.video-metabox-source-input-wrap').hide();
-        }
-        $that.closest('.tutor-option-field').find('.video-metabox-source-item').hide();
-        $that.closest('.tutor-option-field').find('.video_source_wrap_'+selector).show();
-    });
 
     /**
      * Course Builder
@@ -327,33 +314,6 @@ jQuery(document).ready(function($){
     });
 
     /**
-     * Lesson upload thumbnail
-     */
-    $(document).on( 'click', '.lesson_thumbnail_upload_btn',  function( event ){
-        event.preventDefault();
-        var $that = $(this);
-        var frame;
-        if ( frame ) {
-            frame.open();
-            return;
-        }
-        frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ),
-            button: {
-                text: __( 'Use this media', 'tutor' )
-            },
-            multiple: false
-        });
-        frame.on( 'select', function() {
-            var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('<img src="'+attachment.url+'" alt="" /><a href="javascript:;" class="tutor-lesson-thumbnail-delete-btn"><i class="tutor-icon-line-cross"></i></a>');
-            $that.closest('.tutor-thumbnail-wrap').find('input').val(attachment.id);
-            $('.tutor-lesson-thumbnail-delete-btn').show();
-        });
-        frame.open();
-    });
-
-    /**
      * Lesson Feature Image Delete
      * @since v.1.5.6
      */
@@ -400,82 +360,6 @@ jQuery(document).ready(function($){
     });
 
     /**
-     * Create new quiz
-     */
-
-    $(document).on('click', '.quiz-modal-btn-first-step', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var $quizTitle = $('[name="quiz_title"]');
-        var quiz_title = $quizTitle.val();
-        var quiz_description = $('[name="quiz_description"]').val();
-
-        if ( ! quiz_title){
-            $quizTitle.closest('.tutor-quiz-builder-group').find('.quiz_form_msg').html('Please enter quiz title');
-            return;
-        }else{
-            $quizTitle.closest('.tutor-quiz-builder-group').find('.quiz_form_msg').html('');
-        }
-
-        var course_id = $('#post_ID').val();
-        var topic_id = $that.closest('.tutor-modal-wrap').attr('quiz-for-post-id');
-
-        if ($('#tutor_quiz_builder_quiz_id').length) {
-            /**
-             *
-             * @type {jQuery}
-             *
-             * if quiz id exists, we are sending it to update quiz
-             */
-
-            var quiz_id = $('#tutor_quiz_builder_quiz_id').val();
-            $.ajax({
-                url : window._tutorobject.ajaxurl,
-                type : 'POST',
-                data : {quiz_title:quiz_title, quiz_description: quiz_description, quiz_id : quiz_id, topic_id : topic_id, action: 'tutor_quiz_builder_quiz_update'},
-                beforeSend: function () {
-                    $that.addClass('tutor-updating-message');
-                },
-                success: function (data) {
-                    $('#tutor-quiz-'+quiz_id).html(data.data.output_quiz_row);
-                    $('#tutor-quiz-modal-tab-items-wrap a[href="#quiz-builder-tab-questions"]').trigger('click');
-
-                    tutor_slider_init();
-                },
-                complete: function () {
-                    $that.removeClass('tutor-updating-message');
-                }
-            });
-
-            return;
-        }
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : {quiz_title:quiz_title, quiz_description: quiz_description, course_id : course_id, topic_id : topic_id, action: 'tutor_create_quiz_and_load_modal'},
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
-                $('#tutor-topics-'+topic_id+' .tutor-lessons').append(data.data.output_quiz_row);
-                $('#tutor-quiz-modal-tab-items-wrap a[href="#quiz-builder-tab-questions"]').trigger('click');
-
-                tutor_slider_init();
-
-                $(document).trigger('quiz_modal_loaded', {topic_id : topic_id, course_id : course_id});
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-
-    });
-
-
-    /**
      * Ope modal for edit quiz
      */
     $(document).on('click', '.open-tutor-quiz-modal', function(e){
@@ -499,6 +383,7 @@ jQuery(document).ready(function($){
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
+                $('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
                 $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('quiz-for-post-id', topic_id).addClass('show');
 
@@ -639,7 +524,7 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-        var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').attr('data-add-quiz-under');
+        var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').data('topic_id');
         var current_topic_id = $(this).data('topic-id');
         $.ajax({
             url : window._tutorobject.ajaxurl,
@@ -653,6 +538,7 @@ jQuery(document).ready(function($){
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
+                $('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
                 $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-quiz-builder-modal-wrap').attr('quiz-for-post-id', quiz_for_post_id).addClass('show');
             },

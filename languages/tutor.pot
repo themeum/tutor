@@ -157,7 +157,7 @@ msgstr ""
 msgid "Add-ons"
 msgstr ""
 
-#: classes/Admin.php:88, classes/Admin.php:88, classes/Admin.php:468, classes/Utils.php:2485, templates/dashboard/settings.php:8, views/modal/add_quiz.php:24, views/modal/edit_quiz.php:35, views/options/settings-form.php:18, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings/education.php:7, templates/dashboard/settings/skill.php:8
+#: classes/Admin.php:88, classes/Admin.php:88, classes/Admin.php:468, classes/Utils.php:2485, templates/dashboard/settings.php:8, views/metabox/course-topics.php:64, views/options/settings-form.php:18, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings/education.php:7, templates/dashboard/settings/skill.php:8
 msgid "Settings"
 msgstr ""
 
@@ -1146,7 +1146,7 @@ msgstr ""
 msgid "Youtube API Key"
 msgstr ""
 
-#: classes/Options.php:462, classes/Options.php:465, classes/Options_V2.php:681, classes/Quiz_Attempts_List.php:114, classes/Tutor_Setup.php:563, views/metabox/course-contents.php:149, views/metabox/course-topics.php:43, views/pages/view_attempt.php:39, templates/single/quiz/top.php:24
+#: classes/Options.php:462, classes/Options.php:465, classes/Options_V2.php:681, classes/Quiz_Attempts_List.php:114, classes/Tutor_Setup.php:563, views/metabox/course-contents.php:150, views/metabox/course-topics.php:46, views/pages/view_attempt.php:39, templates/single/quiz/top.php:24
 msgid "Quiz"
 msgstr ""
 
@@ -1154,7 +1154,7 @@ msgstr ""
 msgid "The values you set here define the default values that are used in the settings form when you create a new quiz."
 msgstr ""
 
-#: classes/Options.php:470, classes/Options_V2.php:688, classes/Tutor_Setup.php:432, views/modal/edit_quiz.php:144
+#: classes/Options.php:470, classes/Options_V2.php:688, classes/Tutor_Setup.php:432, views/modal/edit_quiz.php:106
 msgid "Time Limit"
 msgstr ""
 
@@ -1162,23 +1162,23 @@ msgstr ""
 msgid "0 means unlimited time."
 msgstr ""
 
-#: classes/Options.php:482, classes/Options_V2.php:701, classes/Options_V2.php:879, views/modal/edit_quiz.php:156
+#: classes/Options.php:482, classes/Options_V2.php:701, classes/Options_V2.php:879, views/modal/edit_quiz.php:118
 msgid "Weeks"
 msgstr ""
 
-#: classes/Options.php:483, classes/Options_V2.php:702, classes/Options_V2.php:880, views/modal/edit_quiz.php:155
+#: classes/Options.php:483, classes/Options_V2.php:702, classes/Options_V2.php:880, views/modal/edit_quiz.php:117
 msgid "Days"
 msgstr ""
 
-#: classes/Options.php:484, classes/Options_V2.php:703, classes/Options_V2.php:881, views/modal/edit_quiz.php:154
+#: classes/Options.php:484, classes/Options_V2.php:703, classes/Options_V2.php:881, views/modal/edit_quiz.php:116
 msgid "Hours"
 msgstr ""
 
-#: classes/Options.php:485, classes/Options_V2.php:704, classes/Options_V2.php:882, views/modal/edit_quiz.php:153
+#: classes/Options.php:485, classes/Options_V2.php:704, classes/Options_V2.php:882, views/modal/edit_quiz.php:115
 msgid "Minutes"
 msgstr ""
 
-#: classes/Options.php:486, classes/Options_V2.php:705, classes/Options_V2.php:883, views/modal/edit_quiz.php:152
+#: classes/Options.php:486, classes/Options_V2.php:705, classes/Options_V2.php:883, views/modal/edit_quiz.php:114
 msgid "Seconds"
 msgstr ""
 
@@ -1614,7 +1614,7 @@ msgstr ""
 msgid "book-open"
 msgstr ""
 
-#: classes/Options_V2.php:644, views/metabox/course-contents.php:145, views/metabox/course-topics.php:59
+#: classes/Options_V2.php:644, views/metabox/course-contents.php:146, views/metabox/course-topics.php:102
 msgid "Lesson"
 msgstr ""
 
@@ -2265,7 +2265,7 @@ msgstr ""
 msgid "View Assignment"
 msgstr ""
 
-#: classes/Post_types.php:287, views/metabox/course-topics.php:88
+#: classes/Post_types.php:287, views/metabox/course-topics.php:131
 msgid "Assignments"
 msgstr ""
 
@@ -2339,7 +2339,7 @@ msgstr ""
 msgid "Answer"
 msgstr ""
 
-#: classes/Question_Answers_List.php:73, classes/Quiz.php:800, templates/dashboard/my-quiz-attempts.php:35, templates/dashboard/question-answer.php:26, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:212, templates/dashboard/quiz-attempts/quiz-reviews.php:227
+#: classes/Question_Answers_List.php:73, classes/Quiz.php:800, templates/dashboard/my-quiz-attempts.php:35, templates/dashboard/question-answer.php:26, views/metabox/course-topics.php:60, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:212, templates/dashboard/quiz-attempts/quiz-reviews.php:227
 msgid "Question"
 msgstr ""
 
@@ -2351,7 +2351,7 @@ msgstr ""
 msgid "Quiz has been timeout already"
 msgstr ""
 
-#: classes/Quiz.php:663, classes/Quiz.php:746, views/metabox/course-contents.php:90, views/metabox/course-contents.php:180
+#: classes/Quiz.php:663, classes/Quiz.php:746, views/metabox/course-contents.php:91, views/metabox/course-contents.php:181
 msgid "QUIZ"
 msgstr ""
 
@@ -2647,7 +2647,7 @@ msgstr ""
 msgid "What message to display when the quiz time expires?"
 msgstr ""
 
-#: classes/Tutor_Setup.php:447, views/modal/edit_quiz.php:211, templates/single/quiz/top.php:65
+#: classes/Tutor_Setup.php:447, views/modal/edit_quiz.php:173, templates/single/quiz/top.php:65
 msgid "Attempts Allowed"
 msgstr ""
 
@@ -2783,7 +2783,7 @@ msgstr ""
 msgid "Skip This Step"
 msgstr ""
 
-#: classes/Tutor_Setup.php:623, classes/Tutor_Setup.php:730, templates/shortcode/tutor-instructor.php:48, views/modal/add_quiz.php:71, views/modal/add_quiz.php:88, views/modal/edit_quiz.php:130
+#: classes/Tutor_Setup.php:623, classes/Tutor_Setup.php:730, templates/shortcode/tutor-instructor.php:48, views/modal/add_quiz.php:52, views/modal/add_quiz.php:69, views/modal/edit_quiz.php:92
 msgid "Next"
 msgstr ""
 
@@ -3532,7 +3532,7 @@ msgstr ""
 msgid "Please make sure you are logged in to correct account"
 msgstr ""
 
-#: templates/dashboard/create-course.php:55, views/modal/edit_quiz.php:257, views/modal/edit_quiz.php:344
+#: templates/dashboard/create-course.php:55, views/modal/edit_quiz.php:219, views/modal/edit_quiz.php:305
 msgid "Save"
 msgstr ""
 
@@ -3592,7 +3592,7 @@ msgstr ""
 msgid "Important Guideline: %1$s 700x430 pixels %2$s %3$s File Support: %1$s jpg, .jpeg,. gif, or .png %2$s no text on the image."
 msgstr ""
 
-#: templates/dashboard/create-course.php:234, views/metabox/video-metabox.php:106, views/modal/question_answer_edit_form.php:214, views/modal/question_answer_edit_form.php:177, views/modal/question_answer_edit_form.php:124, views/modal/question_answer_edit_form.php:34, views/modal/question_answer_form.php:230, views/modal/question_answer_form.php:201, views/modal/question_answer_form.php:157, views/modal/question_answer_form.php:48
+#: templates/dashboard/create-course.php:234, views/metabox/video-metabox.php:96, views/modal/question_answer_edit_form.php:214, views/modal/question_answer_edit_form.php:177, views/modal/question_answer_edit_form.php:124, views/modal/question_answer_edit_form.php:34, views/modal/question_answer_form.php:230, views/modal/question_answer_form.php:201, views/modal/question_answer_form.php:157, views/modal/question_answer_form.php:48
 msgid "Upload Image"
 msgstr ""
 
@@ -3780,7 +3780,7 @@ msgstr ""
 msgid "You are going to delete this course, it can't be undone"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/metabox/course-topics.php:75, views/modal/add_quiz.php:58, views/modal/add_quiz.php:74, views/modal/add_quiz.php:91, views/modal/edit_quiz.php:71, views/modal/edit_quiz.php:133, views/modal/question_form.php:221, views/modal/review.php:19, views/pages/announcements.php:246, views/pages/announcements.php:328, templates/dashboard/announcements/create.php:53, templates/dashboard/announcements/details.php:29, templates/dashboard/announcements/update.php:52, templates/single/lesson/sidebar_question_and_answer.php:115, views/metabox/segments/topic-form-modal.php:46, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
+#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/metabox/course-topics.php:87, views/metabox/course-topics.php:118, views/modal/add_quiz.php:38, views/modal/add_quiz.php:55, views/modal/add_quiz.php:72, views/modal/edit_quiz.php:95, views/modal/question_form.php:221, views/modal/review.php:19, views/modal/topic-form.php:46, views/pages/announcements.php:246, views/pages/announcements.php:328, templates/dashboard/announcements/create.php:53, templates/dashboard/announcements/details.php:29, templates/dashboard/announcements/update.php:52, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
 msgid "Cancel"
 msgstr ""
 
@@ -3808,7 +3808,7 @@ msgstr ""
 msgid "You have not attempted any quiz yet"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:34, views/modal/add_quiz.php:18, views/modal/edit_quiz.php:29
+#: templates/dashboard/my-quiz-attempts.php:34, views/metabox/course-topics.php:56
 msgid "Quiz Info"
 msgstr ""
 
@@ -4164,15 +4164,15 @@ msgstr ""
 msgid "Total Course Duration"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:28, views/metabox/video-metabox.php:152
+#: views/metabox/course-additional-data.php:28
 msgid "HH"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:32, views/metabox/video-metabox.php:157
+#: views/metabox/course-additional-data.php:32
 msgid "MM"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:37, views/metabox/video-metabox.php:162
+#: views/metabox/course-additional-data.php:37
 msgid "SS"
 msgstr ""
 
@@ -4218,7 +4218,7 @@ msgstr ""
 msgid "Delete Topic"
 msgstr ""
 
-#: views/metabox/course-contents.php:60
+#: views/metabox/course-contents.php:54, views/metabox/course-contents.php:61
 msgid "Update Topic"
 msgstr ""
 
@@ -4234,15 +4234,23 @@ msgstr ""
 msgid "Add new topic"
 msgstr ""
 
-#: views/metabox/course-topics.php:34, views/metabox/segments/topic-form-modal.php:7
+#: views/metabox/course-topics.php:30, views/metabox/course-topics.php:35
 msgid "Add Topic"
 msgstr ""
 
-#: views/metabox/course-topics.php:70
+#: views/metabox/course-topics.php:78, views/modal/add_quiz.php:50, views/modal/add_quiz.php:67, views/modal/edit_quiz.php:91, views/modal/edit_quiz.php:218, views/modal/edit_quiz.php:304, views/modal/question_form.php:11, templates/dashboard/assignments/review.php:34, templates/dashboard/assignments/submitted.php:21, templates/single/quiz/body.php:389
+msgid "Back"
+msgstr ""
+
+#: views/metabox/course-topics.php:81
+msgid "Save & Next"
+msgstr ""
+
+#: views/metabox/course-topics.php:113
 msgid "Update Lesson"
 msgstr ""
 
-#: views/metabox/course-topics.php:102
+#: views/metabox/course-topics.php:145
 msgid "Zoom Meeting"
 msgstr ""
 
@@ -4262,7 +4270,15 @@ msgstr ""
 msgid "Add Instructors"
 msgstr ""
 
+#: views/metabox/lesson-attachments-metabox.php:12
+msgid "Attachment"
+msgstr ""
+
 #: views/metabox/lesson-attachments-metabox.php:28
+msgid "Size"
+msgstr ""
+
+#: views/metabox/lesson-attachments-metabox.php:37
 msgid "Upload Attachment"
 msgstr ""
 
@@ -4282,88 +4298,72 @@ msgstr ""
 msgid "Upload"
 msgstr ""
 
-#: views/metabox/video-metabox.php:41
+#: views/metabox/video-metabox.php:40
 msgid "Video Source"
 msgstr ""
 
-#: views/metabox/video-metabox.php:39
+#: views/metabox/video-metabox.php:38
 msgid "Course Intro Video"
 msgstr ""
 
-#: views/metabox/video-metabox.php:50
+#: views/metabox/video-metabox.php:47
 msgid "Select Video Source"
 msgstr ""
 
-#: views/metabox/video-metabox.php:61
-msgid "Select your preferred video type."
-msgstr ""
-
-#: views/metabox/video-metabox.php:74
+#: views/metabox/video-metabox.php:64
 msgid "Upload Video"
 msgstr ""
 
-#: views/metabox/video-metabox.php:76
+#: views/metabox/video-metabox.php:66
 msgid "Media ID"
 msgstr ""
 
-#: views/metabox/video-metabox.php:97
+#: views/metabox/video-metabox.php:87
 msgid "Video Poster"
 msgstr ""
 
-#: views/metabox/video-metabox.php:98
+#: views/metabox/video-metabox.php:88
 msgid "Thumb Size: 700x430 pixels. File Support: jpg, jpeg, or png"
 msgstr ""
 
-#: views/metabox/video-metabox.php:119
+#: views/metabox/video-metabox.php:106
 msgid "External Video URL"
 msgstr ""
 
-#: views/metabox/video-metabox.php:124
+#: views/metabox/video-metabox.php:110
 msgid "YouTube Video URL"
 msgstr ""
 
-#: views/metabox/video-metabox.php:127
+#: views/metabox/video-metabox.php:114
 msgid "Vimeo Video URL"
 msgstr ""
 
-#: views/metabox/video-metabox.php:130
+#: views/metabox/video-metabox.php:118
 msgid "Place your embedded code here"
 msgstr ""
 
-#: views/metabox/video-metabox.php:145
+#: views/metabox/video-metabox.php:127
 msgid "Video playback time"
 msgstr ""
 
-#: views/modal/add_quiz.php:21, views/modal/edit_quiz.php:32, templates/dashboard/quiz-attempts/quiz-reviews.php:103, templates/single/quiz/top.php:38
-msgid "Questions"
+#: views/metabox/video-metabox.php:133
+msgid "Hour"
 msgstr ""
 
-#: views/modal/add_quiz.php:27, views/modal/edit_quiz.php:38
-msgid "Advanced Options"
+#: views/metabox/video-metabox.php:137
+msgid "Minute"
 msgstr ""
 
-#: views/modal/add_quiz.php:40, views/modal/edit_quiz.php:49
+#: views/metabox/video-metabox.php:141
+msgid "Second"
+msgstr ""
+
+#: views/modal/add_quiz.php:20, views/modal/edit_quiz.php:28
 msgid "Type your quiz title here"
 msgstr ""
 
-#: views/modal/add_quiz.php:55, views/modal/edit_quiz.php:68
+#: views/modal/add_quiz.php:35
 msgid "Save &amp; Next"
-msgstr ""
-
-#: views/modal/add_quiz.php:69, views/modal/add_quiz.php:86, views/modal/edit_quiz.php:129, views/modal/edit_quiz.php:256, views/modal/edit_quiz.php:343, views/modal/question_form.php:11, templates/dashboard/assignments/review.php:34, templates/dashboard/assignments/submitted.php:21, templates/single/quiz/body.php:389
-msgid "Back"
-msgstr ""
-
-#: views/modal/add_quiz.php:108, views/modal/edit_quiz.php:357
-msgid "Knowledge Base"
-msgstr ""
-
-#: views/modal/add_quiz.php:110, views/modal/edit_quiz.php:359
-msgid "Documentation"
-msgstr ""
-
-#: views/modal/add_quiz.php:111, views/modal/edit_quiz.php:360
-msgid "Need any Help? Please visit our %s and %s."
 msgstr ""
 
 #: views/modal/edit-lesson.php:12
@@ -4374,167 +4374,167 @@ msgstr ""
 msgid "Lesson titles are displayed publicly wherever required."
 msgstr ""
 
-#: views/modal/edit-lesson.php:24
+#: views/modal/edit-lesson.php:23
 msgid "Lesson Content"
 msgstr ""
 
-#: views/modal/edit-lesson.php:31, views/metabox/segments/topic-form-modal.php:30
-msgid "The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name."
-msgstr ""
-
-#: views/modal/edit-lesson.php:38
+#: views/modal/edit-lesson.php:32
 msgid "Feature Image"
 msgstr ""
 
-#: views/modal/edit-lesson.php:45
+#: views/modal/edit-lesson.php:37
 msgid "Upload Feature Image"
 msgstr ""
 
-#: views/modal/edit-lesson.php:50
+#: views/modal/edit-lesson.php:42
 msgid "Update Feature Image"
 msgstr ""
 
-#: views/modal/edit_quiz.php:121
+#: views/modal/edit_quiz.php:26
+msgid "Quiz Title"
+msgstr ""
+
+#: views/modal/edit_quiz.php:83
 msgid "Add Question"
 msgstr ""
 
-#: views/modal/edit_quiz.php:164
+#: views/modal/edit_quiz.php:126
 msgid "Hide quiz time - display"
 msgstr ""
 
-#: views/modal/edit_quiz.php:167
+#: views/modal/edit_quiz.php:129
 msgid "Time limit for this quiz. 0 means no time limit."
 msgstr ""
 
-#: views/modal/edit_quiz.php:171
+#: views/modal/edit_quiz.php:133
 msgid "Quiz Feedback Mode"
 msgstr ""
 
-#: views/modal/edit_quiz.php:173
+#: views/modal/edit_quiz.php:135
 msgid "Pick the quiz system\"s behaviour on choice based questions"
 msgstr ""
 
-#: views/modal/edit_quiz.php:181
+#: views/modal/edit_quiz.php:143
 msgid "Default"
 msgstr ""
 
-#: views/modal/edit_quiz.php:182
+#: views/modal/edit_quiz.php:144
 msgid "Answers shown after quiz is finished"
 msgstr ""
 
-#: views/modal/edit_quiz.php:191
+#: views/modal/edit_quiz.php:153
 msgid "Retry Mode"
 msgstr ""
 
-#: views/modal/edit_quiz.php:192
+#: views/modal/edit_quiz.php:154
 msgid "Unlimited attempts on each question."
 msgstr ""
 
-#: views/modal/edit_quiz.php:201
+#: views/modal/edit_quiz.php:163
 msgid "Reveal Mode"
 msgstr ""
 
-#: views/modal/edit_quiz.php:202
+#: views/modal/edit_quiz.php:164
 msgid "Show result after the attempt."
 msgstr ""
 
-#: views/modal/edit_quiz.php:211, views/modal/question_form.php:110
+#: views/modal/edit_quiz.php:173, views/modal/question_form.php:110
 msgid "Optional"
 msgstr ""
 
-#: views/modal/edit_quiz.php:226
+#: views/modal/edit_quiz.php:188
 msgid "Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit"
 msgstr ""
 
-#: views/modal/edit_quiz.php:230
+#: views/modal/edit_quiz.php:192
 msgid "Passing Grade (%)"
 msgstr ""
 
-#: views/modal/edit_quiz.php:236
+#: views/modal/edit_quiz.php:198
 msgid "Set the passing percentage for this quiz"
 msgstr ""
 
-#: views/modal/edit_quiz.php:240
+#: views/modal/edit_quiz.php:202
 msgid "Max questions allowed to answer"
 msgstr ""
 
-#: views/modal/edit_quiz.php:246
+#: views/modal/edit_quiz.php:208
 msgid "This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer."
 msgstr ""
 
-#: views/modal/edit_quiz.php:257, views/modal/edit_quiz.php:344
+#: views/modal/edit_quiz.php:219, views/modal/edit_quiz.php:305
 msgid "Saved"
 msgstr ""
 
-#: views/modal/edit_quiz.php:274
+#: views/modal/edit_quiz.php:235
 msgid "Quiz Auto Start"
 msgstr ""
 
-#: views/modal/edit_quiz.php:277
+#: views/modal/edit_quiz.php:238
 msgid "If you enable this option, the quiz will start automatically after the page is loaded."
 msgstr ""
 
-#: views/modal/edit_quiz.php:283
+#: views/modal/edit_quiz.php:244
 msgid "Question Layout"
 msgstr ""
 
-#: views/modal/edit_quiz.php:286
+#: views/modal/edit_quiz.php:247
 msgid "Set question layout view"
 msgstr ""
 
-#: views/modal/edit_quiz.php:287
+#: views/modal/edit_quiz.php:248
 msgid "Single Question"
 msgstr ""
 
-#: views/modal/edit_quiz.php:288
+#: views/modal/edit_quiz.php:249
 msgid "Question Pagination"
 msgstr ""
 
-#: views/modal/edit_quiz.php:289
+#: views/modal/edit_quiz.php:250
 msgid "Question below each other"
 msgstr ""
 
-#: views/modal/edit_quiz.php:294
+#: views/modal/edit_quiz.php:255
 msgid "Questions Order"
 msgstr ""
 
-#: views/modal/edit_quiz.php:297
+#: views/modal/edit_quiz.php:258
 msgid "Random"
 msgstr ""
 
-#: views/modal/edit_quiz.php:298
+#: views/modal/edit_quiz.php:259
 msgid "Sorting"
 msgstr ""
 
-#: views/modal/edit_quiz.php:300
+#: views/modal/edit_quiz.php:261
 msgid "Ascending"
 msgstr ""
 
-#: views/modal/edit_quiz.php:301
+#: views/modal/edit_quiz.php:262
 msgid "Descending"
 msgstr ""
 
-#: views/modal/edit_quiz.php:315
+#: views/modal/edit_quiz.php:276
 msgid "Hide question number"
 msgstr ""
 
-#: views/modal/edit_quiz.php:318
+#: views/modal/edit_quiz.php:279
 msgid "Show/hide question number during attempt."
 msgstr ""
 
-#: views/modal/edit_quiz.php:322
+#: views/modal/edit_quiz.php:283
 msgid "Short answer characters limit"
 msgstr ""
 
-#: views/modal/edit_quiz.php:328
+#: views/modal/edit_quiz.php:289
 msgid "Student will place answer in short answer question type within this characters limit."
 msgstr ""
 
-#: views/modal/edit_quiz.php:332
+#: views/modal/edit_quiz.php:293
 msgid "Open-Ended/Essay questions answer character limit"
 msgstr ""
 
-#: views/modal/edit_quiz.php:338
+#: views/modal/edit_quiz.php:299
 msgid "Students will place the answer in the Open-Ended/Essay question type within this character limit."
 msgstr ""
 
@@ -4684,6 +4684,22 @@ msgstr ""
 
 #: views/modal/review.php:22
 msgid "Submit"
+msgstr ""
+
+#: views/modal/topic-form.php:15
+msgid "Topic Name"
+msgstr ""
+
+#: views/modal/topic-form.php:20
+msgid "Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments."
+msgstr ""
+
+#: views/modal/topic-form.php:25
+msgid "Topic Summary"
+msgstr ""
+
+#: views/modal/topic-form.php:30
+msgid "The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name."
 msgstr ""
 
 #: views/options/settings-form.php:61
@@ -5190,6 +5206,10 @@ msgstr ""
 msgid "Attempts Date"
 msgstr ""
 
+#: templates/dashboard/quiz-attempts/quiz-reviews.php:103, templates/single/quiz/top.php:38
+msgid "Questions"
+msgstr ""
+
 #: templates/dashboard/quiz-attempts/quiz-reviews.php:109
 msgid "Results"
 msgstr ""
@@ -5602,18 +5622,6 @@ msgstr ""
 msgid "Passing Grade"
 msgstr ""
 
-#: views/metabox/segments/topic-form-modal.php:15
-msgid "Topic Name"
-msgstr ""
-
-#: views/metabox/segments/topic-form-modal.php:20
-msgid "Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments."
-msgstr ""
-
-#: views/metabox/segments/topic-form-modal.php:25
-msgid "Topic Summary"
-msgstr ""
-
 #: views/options/field-types/radio.php:5, views/options/field-types/select.php:9, views/metabox/course/field-types/select.php:4, views/options/field-types/groups/select.php:4, views/metabox/course/field-types/groups/select.php:5
 msgid "Select Option"
 msgstr ""
@@ -5875,6 +5883,18 @@ msgid "Assignment Updated"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Size"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Select or Upload Media Of Your Chosen Persuasion"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Use this media"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Success"
 msgstr ""
 
@@ -5992,14 +6012,6 @@ msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Stay here"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Select or Upload Media Of Your Chosen Persuasion"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Use this media"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1

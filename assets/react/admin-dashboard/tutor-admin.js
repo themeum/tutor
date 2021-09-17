@@ -75,21 +75,6 @@ jQuery(document).ready(function($){
      * End Withdraw nav tabs
      */
 
-    /**
-     * Lesson Video
-     */
-    $(document).on('change', '.tutor_lesson_video_source', function(e){
-        var selector = $(this).val();
-        $('[class^="video_source_wrap"]').hide();
-        $('.video_source_wrap_'+selector).show();
-
-        if (selector === 'html5'){
-            $('.tutor-video-poster-field').show();
-        } else{
-            $('.tutor-video-poster-field').hide();
-        }
-    });
-
     $(document).on( 'click', '.video_source_wrap_html5 .video_upload_btn',  function( event ){
         event.preventDefault();
 
@@ -117,46 +102,6 @@ jQuery(document).ready(function($){
             var attachment = frame.state().get('selection').first().toJSON();
             $that.closest('.video_source_wrap_html5').find('span.video_media_id').data('video_url', attachment.url).text(attachment.id).trigger('paste').closest('p').show();
             $that.closest('.video_source_wrap_html5').find('input.input_source_video_id').val(attachment.id);
-        });
-        // Finally, open the modal on click
-        frame.open();
-    });
-
-    $(document).on('click', 'a.tutor-delete-attachment', function(e){
-        e.preventDefault();
-        $(this).closest('.tutor-added-attachment').remove();
-    });
-
-    $(document).on('click', '.tutorUploadAttachmentBtn', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var frame;
-        // If the media frame already exists, reopen it.
-        if ( frame ) {
-            frame.open();
-            return;
-        }
-        // Create a new media frame
-        frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
-            button: {
-                text: __( 'Upload media', 'tutor' )
-            },
-            multiple: true  // Set to true to allow multiple files to be selected
-        });
-        // When an image is selected in the media frame...
-        frame.on( 'select', function() {
-            // Get media attachment details from the frame state
-            var attachments = frame.state().get('selection').toJSON();
-            if (attachments.length){
-                for (var i=0; i < attachments.length; i++){
-                    var attachment = attachments[i];
-
-                    var inputHtml = '<div class="tutor-added-attachment"><i class="tutor-icon-archive"></i> <a href="javascript:;" class="tutor-delete-attachment tutor-icon-line-cross"></a> <span> <a href="'+attachment.url+'">'+attachment.filename+'</a> </span><input type="hidden" name="tutor_attachments[]" value="'+attachment.id+'"></div>';
-                    $that.closest('.tutor-lesson-attachments-metabox').find('.tutor-added-attachments-wrap').append(inputHtml);
-                }
-            }
         });
         // Finally, open the modal on click
         frame.open();

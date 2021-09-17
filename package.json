@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run js-build && gulp build",
+    "docz-build" : "webpack --env=docz && docz build",
     "css-watch": "gulp watch",
     "js-build": "webpack --mode=production",
     "js-watch": "webpack --mode=production --watch",
