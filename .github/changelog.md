@@ -1,5 +1,10 @@
 # TutorLMS Changelog
 
+### 1.9.10 - October 03, 2021
+
+* New: Event Calendar
+
+
 ### 1.9.9 - September 16, 2021
 
 * New: Advanced analytics for instructors in the Frontend Dashboard
@@ -12,6 +17,7 @@
 * Fix: On reveal mode for Quiz, user couldn't go forward if the answer was wrong
 * Fix: User can type characters in the date field
 * Fix: View Quiz Attempts URL show nothing when clicked
+
 
 ### 1.9.8 - September 02, 2021
 
