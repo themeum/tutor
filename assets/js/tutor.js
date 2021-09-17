@@ -103,8 +103,15 @@ jQuery(document).ready(function($){
             }
             $( ".tutor_date_picker" ).datepicker({"dateFormat" : format});
         }
+        /** Disable typing on datePicker field */
+        $('.hasDatepicker, .tutor_date_picker').keydown( function( e ) {
+            if ( e.keyCode !== 8 ) {
+                e.preventDefault();
+            }
+        });
     };
     load_date_picker();
+     
     /**
      * Slider bar
      */

@@ -241,11 +241,12 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.9 - September 13, 2021 =
+= 1.9.9 - September 16, 2021 =
 
 New: Advanced analytics for instructors in the Frontend Dashboard
 New: Download option of reports for the instructors in CSV format
 New: Pagination settings for Tutor shortcodes added
+Update: Security enhancements
 Fix: Withdrawal message shown for students/non-approved instructors
 Fix: Disabling total enrolled number issue in the course page
 Fix: Date picker format not applying issue for all the places in Tutor LMS
