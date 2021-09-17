@@ -1,7 +1,6 @@
 "use strict";
 // Tutor v2 icons
 const { angleRight, magnifyingGlass, warning } = tutorIconsV2;
-
 jQuery(document).ready(function ($) {
   "use strict";
 
@@ -328,6 +327,48 @@ emailManagePageInputs.forEach((input) => {
   });
 });
 
+function tutor_option_history_load(history_data) {
+  var dataset = JSON.parse(history_data).data;
+  // for (const [key, value] of Object.entries(dataset)) {
+  Object.entries(dataset).forEach(([key, value]) => {
+    let d = new Date(value.datetime);
+    console.log(`${key}: ${value.datetime}`);
+  });
+}
+/* console.log(dataset);
+  dataset.forEach(() => {
+    console.log("element");
+  }); */
+
+/* var output = "";
+  output = `<div class="tutor-option-field-row">
+            <div class="tutor-option-field-label">
+              <p class="text-medium-small">17 Sep, 2021, 5:42 pm </p>
+            </div>
+            <div class="tutor-option-field-input">
+              <button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs">Apply</button>
+              <div class="popup-opener">
+                <button type="button" class="popup-btn">
+                  <span class="toggle-icon"></span>
+                </button>
+                <ul class="popup-menu">
+                  <li>
+                    <a class="export_single_settings" data-id="tutor-imported-1631900541">
+                      <span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
+                      <span>Download</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="delete_single_settings" data-id="tutor-imported-1631900541">
+                      <span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
+                      <span>Delete</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>`; */
+
 document.querySelector("#export_settings").onclick = (e) => {
   e.preventDefault();
   fetch(_tutorobject.ajaxurl, {
@@ -363,7 +404,7 @@ document.querySelector("#import_options").onclick = function () {
     var formData = new FormData();
     formData.append("action", "tutor_import_settings");
     formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-    formData.append("time", Date.now());
+    formData.append("time", _tutorobject.tutor_time_now);
     formData.append("tutor_options", tutor_options);
 
     const xhttp = new XMLHttpRequest();
@@ -372,6 +413,12 @@ document.querySelector("#import_options").onclick = function () {
     };
     xhttp.open("POST", _tutorobject.ajaxurl, true);
     xhttp.send(formData);
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4) {
+        // console.log(xhttp.responseText);
+        tutor_option_history_load(xhttp.responseText);
+      }
+    };
     /* start */
   };
 };
@@ -381,7 +428,7 @@ for (let i = 0; i < export_settings.length; i++) {
   export_settings[i].onclick = function () {
     console.log("click");
     let export_id = export_settings[i].dataset.id;
-
+    console.log(export_id);
     var formData = new FormData();
     formData.append("action", "tutor_export_single_settings");
     formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
@@ -394,9 +441,30 @@ for (let i = 0; i < export_settings.length; i++) {
 
     xhttp.onreadystatechange = function () {
       if (xhttp.readyState === 4) {
-        let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
+        // let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
+        let fileName = export_id;
         json_download(xhttp.response, fileName);
       }
     };
+  };
+}
+
+const noticeMessage = document.querySelector(".tutor-notification");
+const delete_settings = document.querySelectorAll(".delete_single_settings");
+for (let i = 0; i < delete_settings.length; i++) {
+  delete_settings[i].onclick = function () {
+    console.log("click");
+    let delete_id = delete_settings[i].dataset.id;
+    console.log(delete_id);
+    var formData = new FormData();
+    formData.append("action", "tutor_delete_single_settings");
+    formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+    formData.append("time", Date.now());
+    formData.append("delete_id", delete_id);
+
+    noticeMessage.classList.add("show");
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("POST", _tutorobject.ajaxurl, true);
+    xhttp.send(formData);
   };
 }
