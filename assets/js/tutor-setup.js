@@ -1,1 +1,2254 @@
-(()=>{var o={12:()=>{!function(){"use strict";document.addEventListener("click",function(t){var e="data-tutor-modal-target",o="data-tutor-modal-close";(t.target.hasAttribute(e)||t.target.closest("[".concat(e,"]")))&&(t.preventDefault(),e=(t.target.hasAttribute(e)?t.target:t.target.closest("[".concat(e,"]"))).getAttribute(e),(e=document.getElementById(e))&&e.classList.add("tutor-is-active")),(t.target.hasAttribute(o)||t.target.classList.contains("tutor-modal-overlay")||t.target.closest("[".concat(o,"]")))&&(t.preventDefault(),document.querySelectorAll(".tutor-modal.tutor-is-active").forEach(function(t){t.classList.remove("tutor-is-active")}))})}(),function(){var t=document.querySelectorAll(".tutor-thumbnail-uploader"),o=document.querySelectorAll(".tutor-thumbnail-uploader img"),e=document.querySelectorAll(".tutor-thumbnail-uploader input[type=file]"),a=document.querySelectorAll(".tutor-thumbnail-uploader .delete-btn");e&&a&&(document.addEventListener("DOMContentLoaded",function(){t.forEach(function(e){o.forEach(function(t){t.getAttribute("src")?t.closest(".image-previewer").classList.add("is-selected"):e.classList.remove("is-selected"),console.log(t)})})}),e.forEach(function(i){i.addEventListener("change",function(t){var e=this.files[0],o=i.closest(".image-previewer"),a=o.querySelector("img"),n=o.querySelector(".preview-loading");e&&(n.classList.add("is-loading"),r(e,a),o.classList.add("is-selected"),setTimeout(function(){n.classList.remove("is-loading")},200))})}),a.forEach(function(t){t.addEventListener("click",function(t){var e=this.closest(".image-previewer");e.querySelector("img").setAttribute("src",""),e.classList.remove("is-selected")})}));var r=function(t,e){var o=new FileReader;o.onload=function(){e.setAttribute("src",this.result)},o.readAsDataURL(t)}}()}},a={};function n(t){var e=a[t];if(void 0!==e)return e.exports;e=a[t]={exports:{}};return o[t](e,e.exports,n),e.exports}(()=>{"use strict";n(12);function b(t){return(b="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(t)}function g(t,e){return function(t){if(Array.isArray(t))return t}(t)||function(t,e){var o=null==t?null:"undefined"!=typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(null!=o){var a,n,i=[],r=!0,s=!1;try{for(o=o.call(t);!(r=(a=o.next()).done)&&(i.push(a.value),!e||i.length!==e);r=!0);}catch(t){s=!0,n=t}finally{try{r||null==o.return||o.return()}finally{if(s)throw n}}return i}}(t,e)||function(t,e){if(t){if("string"==typeof t)return a(t,e);var o=Object.prototype.toString.call(t).slice(8,-1);return"Map"===(o="Object"===o&&t.constructor?t.constructor.name:o)||"Set"===o?Array.from(t):"Arguments"===o||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(o)?a(t,e):void 0}}(t,e)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function a(t,e){(null==e||e>t.length)&&(e=t.length);for(var o=0,a=new Array(e);o<e;o++)a[o]=t[o];return a}function q(){function t(t){t.classList.contains("disabled")||t.classList.add("disabled")}function e(t){t.classList.contains("disabled")&&t.classList.remove("disabled")}var o=document.querySelector(".tutor_select_value_holder").value,a=document.getElementById("tutor_quiz_question_answers"),n=document.getElementById("tutor_quiz_question_answer_form"),i=document.querySelector(".add_question_answers_option");("open_ended"===o||"short_answer"===o||("true_false"===o||"fill_in_the_blank"===o)&&(n.hasChildNodes()||a.hasChildNodes())?t:e)(i)}window.tutor_get_nonce_data=function(t){var e=window._tutorobject||{},o=e.nonce_key||"",e=e[o]||"";return t?{key:o,value:e}:(t=e,(e=o)in(o={})?Object.defineProperty(o,e,{value:t,enumerable:!0,configurable:!0,writable:!0}):o[e]=t,o)},window.tutor_popup=function(r,o,a){var s,u=this;return this.popup_wrapper=function(t){var e=""===o?"":'<img class="tutor-pop-icon" src="'+window._tutorobject.tutor_url+"assets/images/"+o+'.svg"/>';return"<"+t+' class="tutor-component-popup-container">            <div class="tutor-component-popup-'+a+'">                <div class="tutor-component-content-container">'+e+'</div>                <div class="tutor-component-button-container"></div>            </div>        </'+t+">"},this.popup=function(o){var t=o.title?"<h3>"+o.title+"</h3>":"",e=o.description?"<p>"+o.description+"</p>":"",a=Object.keys(o.buttons||{}).map(function(t){var e=o.buttons[t],t=e.id?"tutor-popup-"+e.id:"";return r('<button id="'+t+'" class="tutor-button tutor-button-'+e.class+'">'+e.title+"</button>").click(e.callback)}),n=(s=r(u.popup_wrapper(o.wrapper_tag||"div"))).find(".tutor-component-content-container");n.append(t),o.after_title&&n.append(o.after_title),n.append(e),o.after_description&&n.append(o.after_description),s.click(function(){r(this).remove()}).children().click(function(t){t.stopPropagation()});for(var i=0;i<a.length;i++)s.find(".tutor-component-button-container").append(a[i]);return r("body").append(s),s},{popup:this.popup}},window.tutorDotLoader=function(t){return'    \n    <div class="tutor-dot-loader '.concat(t||"",'">\n        <span class="dot dot-1"></span>\n        <span class="dot dot-2"></span>\n        <span class="dot dot-3"></span>\n        <span class="dot dot-4"></span>\n    </div>')},window.tutor_date_picker=function(){var t;jQuery.datepicker&&(t=_tutorobject.wp_date_format||"yy-mm-dd",$(".tutor_date_picker").datepicker({dateFormat:t}))},jQuery(document).ready(function(l){var t=wp.i18n,n=t.__;t._x,t._n,t._nx;function o(){var t;jQuery.datepicker&&(t=_tutorobject.wp_date_format||"yy-mm-dd",l(".tutor_date_picker").datepicker({dateFormat:t}))}function i(){l(".tutor-field-slider").each(function(){var t=l(this),o=t.closest(".tutor-field-type-slider").find('input[type="hidden"]'),a=t.closest(".tutor-field-type-slider").find(".tutor-field-type-slider-value"),e=parseFloat(t.closest(".tutor-field-type-slider").attr("data-min")),n=parseFloat(t.closest(".tutor-field-type-slider").attr("data-max"));t.slider({range:"max",min:e,max:n,value:o.val(),slide:function(t,e){a.text(e.value),o.val(e.value)}})})}function e(t){var e=t.element;return l('<span><i class="tutor-icon-'+l(e).data("icon")+'"></i> '+t.text+"</span>")}function r(){var i={};l(".tutor-topics-wrap").each(function(t,e){var o=l(this),a=parseInt(o.attr("id").match(/\d+/)[0],10),n={};o.find(".course-content-item").each(function(t,e){var o=l(this),o=parseInt(o.attr("id").match(/\d+/)[0],10);n[t]=o}),i[t]={topic_id:a,lesson_ids:n}}),l("#tutor_topics_lessons_sorting").val(JSON.stringify(i))}function s(){return{init:function(){l(document).on("click",".tutor-select .tutor-select-option",function(t){t.preventDefault();var e=l(this);"true"!==e.attr("data-is-pro")?(t=e.html().trim(),e.closest(".tutor-select").find(".select-header .lead-option").html(t),e.closest(".tutor-select").find(".select-header input.tutor_select_value_holder").val(e.attr("data-value")).trigger("change"),e.closest(".tutor-select-options").hide(),q()):alert("Tutor Pro version required")}),l(document).on("click",".tutor-select .select-header",function(t){t.preventDefault(),l(this).closest(".tutor-select").find(".tutor-select-options").slideToggle()}),this.setValue(),this.hideOnOutSideClick()},setValue:function(){l(".tutor-select").each(function(){var t=l(this).find(".tutor-select-option");t.length&&t.each(function(){var t,e=l(this);"selected"===e.attr("data-selected")&&(t=e.html().trim(),e.closest(".tutor-select").find(".select-header .lead-option").html(t),e.closest(".tutor-select").find(".select-header input.tutor_select_value_holder").val(e.attr("data-value")))})})},hideOnOutSideClick:function(){l(document).mouseup(function(t){var e=l(".tutor-select-options");l(t.target).closest(".select-header").length||e.is(t.target)||0!==e.has(t.target).length||e.hide()})},reInit:function(){this.setValue()}}}o(),i(),jQuery().select2&&l(".videosource_select2").select2({width:"100%",templateSelection:e,templateResult:e,allowHtml:!0}),l(document).on("click",".tutor-course-thumbnail-upload-btn",function(t){t.preventDefault();var e,o=l(this);e||(e=wp.media({title:n("Select or Upload Media Of Your Chosen Persuasion","tutor"),button:{text:n("Use this media","tutor")},multiple:!1})).on("select",function(){var t=e.state().get("selection").first().toJSON();o.closest(".tutor-thumbnail-wrap").find(".thumbnail-img").attr("src",t.url),o.closest(".tutor-thumbnail-wrap").find("input").val(t.id),l(".tutor-course-thumbnail-delete-btn").show()}),e.open()}),l(document).on("click",".tutor-course-thumbnail-delete-btn",function(t){t.preventDefault();var e=l(this),t=e.closest(".tutor-thumbnail-wrap").find(".thumbnail-img").attr("data-placeholder-src");e.closest(".tutor-thumbnail-wrap").find(".thumbnail-img").attr("src",t),e.closest(".tutor-thumbnail-wrap").find("input").val(""),l(".tutor-course-thumbnail-delete-btn").hide()}),l(".tutor-zoom-meeting-modal-wrap").on("submit",".tutor-meeting-modal-form",function(t){t.preventDefault();var e=l(this),o=e.serializeObject(),t=Intl.DateTimeFormat().resolvedOptions().timeZone;o.timezone=t;var a=e.find('button[type="submit"]');l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:o,beforeSend:function(){a.addClass("tutor-updating-message")},success:function(t){t.success?tutor_toast(n("Success","tutor"),a.data("toast_success_message"),"success"):tutor_toast(n("Update Error","tutor"),n("Meeting Update Failed","tutor"),"error"),t.course_contents?(l(t.selector).html(t.course_contents),"#tutor-course-content-wrap"==t.selector&&jQuery().sortable&&(l(".course-contents").sortable({handle:".course-move-handle",start:function(t,e){e.placeholder.css("visibility","visible")},stop:function(t,e){r()}}),l(".tutor-lessons:not(.drop-lessons)").sortable({connectWith:".tutor-lessons",items:"div.course-content-item",start:function(t,e){e.placeholder.css("visibility","visible")},stop:function(t,e){r()}})),l(".tutor-zoom-meeting-modal-wrap").removeClass("show")):location.reload()},complete:function(){a.removeClass("tutor-updating-message")}})}),l(document).on("change keyup",".course-edit-topic-title-input",function(t){t.preventDefault(),l(this).closest(".tutor-topics-top").find(".topic-inner-title").html(l(this).val())}),l(document).on("click",".tutor-topics-edit-button",function(t){t.preventDefault();var e=l(this),o=e.closest(".tutor-topics-wrap").find('[name="topic_id"]').val(),a=e.closest(".tutor-topics-wrap").find('[name="topic_title"]').val(),t=e.closest(".tutor-topics-wrap").find('[name="topic_summery"]').val();l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{topic_title:a,topic_summery:t,topic_id:o,action:"tutor_update_topic"},beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){t.success&&(e.closest(".tutor-topics-wrap").find("span.topic-inner-title").text(a),e.closest(".tutor-modal").removeClass("tutor-is-active"))},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("click",".tutor-lesson-thumbnail-delete-btn",function(t){t.preventDefault();t=l(this);t.closest(".tutor-thumbnail-wrap").find("._lesson_thumbnail_id").val(""),t.closest(".tutor-thumbnail-wrap").find(".thumbnail-img").html(""),t.hide()}),l(document).on("click",".tutor-delete-lesson-btn",function(t){var e;t.preventDefault(),confirm(n("Are you sure?","tutor"))&&(t=(e=l(this)).attr("data-lesson-id"),l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{lesson_id:t,action:"tutor_delete_lesson_by_id"},beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){t.success&&e.closest(".course-content-item").remove()},complete:function(){e.removeClass("tutor-updating-message")}}))}),l(document).on("click",".open-tutor-quiz-modal",function(t){t.preventDefault();var e=l(this),o=e.attr("data-quiz-id"),a=e.attr("data-topic-id");null==a&&(a=e.closest(".tutor-modal-wrap").attr("quiz-for-post-id"));var n=l("#post_ID").val();l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{quiz_id:o,topic_id:a,course_id:n,action:"tutor_load_edit_quiz_modal"},beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){l(".tutor-quiz-builder-modal-wrap").addClass("tutor-is-active"),l(".tutor-quiz-builder-modal-wrap .modal-container").html(t.data.output),l(".tutor-quiz-builder-modal-wrap").attr("data-quiz-id",o).attr("quiz-for-post-id",a).addClass("show"),e.attr("data-back-to-tab")&&(t=e.attr("data-back-to-tab"),l('#tutor-quiz-modal-tab-items-wrap a[href="'+t+'"]').trigger("click")),l(document).trigger("quiz_modal_loaded",{quiz_id:o,topic_id:a,course_id:n}),i(),jQuery().sortable&&l(".quiz-builder-questions-wrap").sortable({handle:".question-sorting",start:function(t,e){e.placeholder.css("visibility","visible")},stop:function(t,e){var a;a={},l(".quiz-builder-question-wrap").each(function(t,e){var o=l(this),o=parseInt(o.attr("data-question-id"),10);a[t]=o}),l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{sorted_question_ids:a,action:"tutor_quiz_question_sorting"}})}})},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("click",".quiz-modal-settings-save-btn",function(t){t.preventDefault();var e=l(this),o=l(".tutor-quiz-builder-modal-wrap").attr("data-quiz-id"),a=l("#current_topic_id_for_quiz").val(),t=l("#quiz-builder-tab-settings :input, #quiz-builder-tab-advanced-options :input").serializeObject();t.topic_id=a,t.quiz_id=o,t.action="tutor_quiz_modal_update_settings",l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:t,beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){t.success&&l("#tutor-course-content-wrap").html(t.data.course_contents),t.success?tutor_toast(n("Success","tutor"),e.data("toast_success_message"),"success"):tutor_toast(n("Update Error","tutor"),n("Quiz Update Failed","tutor"),"error")},complete:function(){e.removeClass("tutor-updating-message"),"modal_close"===e.attr("data-action")&&l(".tutor-modal-wrap").removeClass("show")}})}),l(document).on("click",".quiz-modal-question-save-btn",function(t){t.preventDefault();var e=l(this),o=l(".quiz_question_form :input").serializeObject();o.action="tutor_quiz_modal_update_question";t=e.closest(".tutor-modal-wrap").attr("quiz-for-post-id");o.topic_id=t,l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:o,beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){t.success?e.closest(".tutor-quiz-builder-modal-contents").find(".open-tutor-quiz-modal").trigger("click"):void 0!==t.data&&l("#quiz_validation_msg_wrap").html(t.data.validation_msg)},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("click",".modal-close-btn",function(t){t.preventDefault(),l(".tutor-modal-wrap").removeClass("show")}),l(document).on("keyup",function(t){27===t.keyCode&&l(".tutor-modal-wrap").removeClass("show")}),l(document).on("click",".tutor-add-quiz-btn",function(t){t.preventDefault();var e=l(this),o=l(this).closest(".tutor_add_quiz_wrap").data("topic_id"),t=l(this).data("topic-id");l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{quiz_for_post_id:o,current_topic_id:t,action:"tutor_load_quiz_builder_modal"},beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){l(".tutor-quiz-builder-modal-wrap").addClass("tutor-is-active"),l(".tutor-quiz-builder-modal-wrap .modal-container").html(t.data.output),l(".tutor-quiz-builder-modal-wrap").attr("quiz-for-post-id",o).addClass("show")},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("click",".tutor-quiz-modal-tab-item",function(t){t.preventDefault();var e=l(this),o=l('[name="quiz_title"]');o.val()?(o.closest(".tutor-quiz-builder-form-row").find(".quiz_form_msg").html(""),t=e.attr("href"),l(".quiz-builder-tab-container").hide(),l(t).show(),l("a.tutor-quiz-modal-tab-item").removeClass("active"),e.addClass("active")):o.closest(".tutor-quiz-builder-form-row").find(".quiz_form_msg").html('<p class="quiz-form-warning">Please save the quiz first</p>')}),l(document).on("click",".quiz-modal-btn-next, .quiz-modal-btn-back",function(t){t.preventDefault();t=l(this).attr("href");l('#tutor-quiz-modal-tab-items-wrap a[href="'+t+'"]').trigger("click")}),l(document).on("click",".quiz-modal-tab-navigation-btn.quiz-modal-btn-cancel",function(t){t.preventDefault(),l(".tutor-modal-wrap").removeClass("show")}),l(document).on("click",".tutor-quiz-open-question-form",function(t){t.preventDefault();var e=l(this),o=l("#tutor_quiz_builder_quiz_id").val(),a=l("#post_ID").val(),t=e.attr("data-question-id"),a={quiz_id:o,course_id:a,action:"tutor_quiz_builder_get_question_form"};t&&(a.question_id=t),l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:a,beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){l(".tutor-quiz-builder-modal-contents").html(t.data.output),s().reInit(),jQuery().sortable&&l("#tutor_quiz_question_answers").sortable({handle:".tutor-quiz-answer-sort-icon",start:function(t,e){e.placeholder.css("visibility","visible")},stop:function(t,e){var a;a={},l(".tutor-quiz-answer-wrap").each(function(t,e){var o=l(this),o=parseInt(o.attr("data-answer-id"),10);a[t]=o}),l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{sorted_answer_ids:a,action:"tutor_quiz_answer_sorting"}})}}),q()},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("click",".tutor-quiz-question-trash",function(t){t.preventDefault();var e=l(this),t=e.attr("data-question-id");l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{question_id:t,action:"tutor_quiz_builder_question_delete"},beforeSend:function(){e.closest(".quiz-builder-question-wrap").remove()}})}),l(document).on("click",".add_question_answers_option:not(.disabled)",function(t){t.preventDefault();var e=l(this),o=e.attr("data-question-id"),t=l(".quiz_question_form :input").serializeObject();t.question_id=o,t.action="tutor_quiz_add_question_answers",l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:t,beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){l("#tutor_quiz_question_answer_form").html(t.data.output),q()},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("click",".tutor-quiz-answer-edit a",function(t){t.preventDefault();var e=l(this),t=e.closest(".tutor-quiz-answer-wrap").attr("data-answer-id");l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{answer_id:t,action:"tutor_quiz_edit_question_answer"},beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){l("#tutor_quiz_question_answer_form").html(t.data.output)},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("click","#quiz-answer-save-btn",function(t){t.preventDefault();var e=l(this),t=l(".quiz_question_form :input").serializeObject();t.action="tutor_save_quiz_answer_options",l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:t,beforeSend:function(){l("#quiz_validation_msg_wrap").html(""),e.addClass("tutor-updating-message")},success:function(t){l("#tutor_quiz_question_answers").trigger("refresh")},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("click","#quiz-answer-edit-btn",function(t){t.preventDefault();var e=l(this),t=l(".quiz_question_form :input").serializeObject();t.action="tutor_update_quiz_answer_options",l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:t,beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){l("#tutor_quiz_question_answers").trigger("refresh")},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("change",".tutor-quiz-answers-mark-correct-wrap input",function(t){t.preventDefault();var e=l(this),o=e.val(),t=1;e.prop("checked")||(t=0),l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{answer_id:o,inputValue:t,action:"tutor_mark_answer_as_correct"}})}),l(document).on("refresh","#tutor_quiz_question_answers",function(t){t.preventDefault();var e=l(this),o=e.attr("data-question-id"),t=l(".tutor_select_value_holder").val();l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{question_id:o,question_type:t,action:"tutor_quiz_builder_get_answers_by_question"},beforeSend:function(){e.addClass("tutor-updating-message"),l("#tutor_quiz_question_answer_form").html("")},success:function(t){t.success&&e.html(t.data.output)},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("click",".tutor-quiz-answer-trash-wrap a.answer-trash-btn",function(t){t.preventDefault();var e=l(this),t=e.attr("data-answer-id");l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{answer_id:t,action:"tutor_quiz_builder_delete_answer"},beforeSend:function(){e.closest(".tutor-quiz-answer-wrap").remove()}})}),l(document).on("click",".tutor-delete-quiz-btn",function(t){var e;t.preventDefault(),confirm(n("Are you sure?","tutor"))&&(t=(e=l(this)).attr("data-quiz-id"),l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{quiz_id:t,action:"tutor_delete_quiz_by_id"},beforeSend:function(){e.closest(".course-content-item").remove()}}))}),s().init(),l(document).on("change","input.tutor_select_value_holder",function(t){l(this);l(".add_question_answers_option").trigger("click"),l("#tutor_quiz_question_answers").trigger("refresh")}),l(document).on("click",".tutor-media-upload-btn",function(t){t.preventDefault();var e,o=l(this);e||(e=wp.media({title:n("Select or Upload Media Of Your Chosen Persuasion","tutor"),button:{text:n("Use this media","tutor")},multiple:!1})).on("select",function(){var t=e.state().get("selection").first().toJSON();o.html('<img src="'+t.url+'" alt="" />'),o.closest(".tutor-media-upload-wrap").find("input").val(t.id)}),e.open()}),l(document).on("click",".tutor-media-upload-trash",function(t){t.preventDefault();t=l(this);t.closest(".tutor-media-upload-wrap").find(".tutor-media-upload-btn").html('<i class="tutor-icon-image1"></i>'),t.closest(".tutor-media-upload-wrap").find("input").val("")});var a,u=(a=0,function(t,e){clearTimeout(a),a=setTimeout(t,e)});l(document).on("click",".tutor-add-instructor-btn",function(t){t.preventDefault();var e=l(this),t=l("#post_ID").val();l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{course_id:t,action:"tutor_load_instructors_modal"},beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){t.success&&(l(".tutor-instructors-modal-wrap .modal-container").html(t.data.output),l(".tutor-instructors-modal-wrap").addClass("show"))},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("change keyup",".tutor-instructors-modal-wrap .tutor-modal-search-input",function(t){t.preventDefault();var o=l(this),a=l(".tutor-modal-wrap");u(function(){var t=o.val(),e=l("#post_ID").val();l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{course_id:e,search_terms:t,action:"tutor_load_instructors_modal"},beforeSend:function(){a.addClass("loading")},success:function(t){t.success&&(l(".tutor-instructors-modal-wrap .modal-container").html(t.data.output),l(".tutor-instructors-modal-wrap").addClass("show"))},complete:function(){a.removeClass("loading")}})},1e3)}),l(document).on("click",".add_instructor_to_course_btn",function(t){t.preventDefault();var e=l(this),o=l(".tutor-modal-wrap"),t=l("#post_ID").val(),o=o.find("input").serializeObject();o.course_id=t,o.action="tutor_add_instructors_to_course",l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:o,beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){t.success&&(l(".tutor-course-available-instructors").html(t.data.output),l(".tutor-modal-wrap").removeClass("show"))},complete:function(){e.removeClass("tutor-updating-message")}})}),l(document).on("click",".tutor-instructor-delete-btn",function(t){t.preventDefault();var e=l(this),o=l("#post_ID").val(),t=e.closest(".added-instructor-item").attr("data-instructor-id");l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{course_id:o,instructor_id:t,action:"detach_instructor_from_course"},success:function(t){t.success&&e.closest(".added-instructor-item").remove()}})}),l(document).on("click",".settings-tabs-navs li",function(t){t.preventDefault();var e=l(this),o=e.find("a").attr("data-target"),t=e.find("a").attr("href");e.addClass("active").siblings("li.active").removeClass("active"),l(".settings-tab-wrap").removeClass("active").hide(),l(o).addClass("active").show(),window.history.pushState({},"",t)}),l(document).on("lesson_modal_loaded quiz_modal_loaded assignment_modal_loaded",function(t,e){jQuery().select2&&l(".select2_multiselect").select2({dropdownCssClass:"increasezindex"}),o()}),l(document).on("keyup change",".tutor-number-validation",function(t){var e=l(this),o=parseInt(e.val()),a=parseInt(e.attr("data-min")),n=parseInt(e.attr("data-max"));o<a?e.val(a):n<o&&e.val(n)}),l(document).on("click",".tutor-instructor-feedback",function(t){t.preventDefault();var e=l(this);l.ajax({url:window.ajaxurl||_tutorobject.ajaxurl,type:"POST",data:{attempts_id:e.data("attemptid"),feedback:l(".tutor-instructor-feedback-content").val(),action:"tutor_instructor_feedback"},beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){t.success&&(e.closest(".course-content-item").remove(),tutor_toast(n("Success","tutor"),e.data("toast_success_message"),"success"))},complete:function(){e.removeClass("tutor-updating-message")}})});var c=l(".tutor-announcement-add-new"),d=l(".tutor-announcement-edit"),p=l(".tutor-announcement-delete"),m=l(".tutor-announcement-details"),t=l(".tutor-announcement-close-btn"),f=l(".tutor-accouncement-create-modal"),v=l(".tutor-accouncement-update-modal"),h=l(".tutor-accouncement-details-modal");function _(t,e){var o=new URL(window.location.href),a=o.searchParams;return a.set(t,e),o.search=a.toString(),a.set("paged",1),o.search=a.toString(),o.toString()}l(c).click(function(){f.addClass("show"),l("#tutor-annoucement-backend-create-modal").addClass("show")}),l(m).click(function(){var t=l(this).attr("announcement-date"),e=l(this).attr("announcement-id"),o=l(this).attr("course-id"),a=l(this).attr("course-name"),n=l(this).attr("announcement-title"),i=l(this).attr("announcement-summary");l(".tutor-announcement-detail-content").html("<h3>".concat(n,"</h3><p>").concat(i,"</p>")),l(".tutor-announcement-detail-course-info p").html("".concat(a)),l(".tutor-announcement-detail-date-info p").html("".concat(t)),l("#tutor-announcement-edit-from-detail").attr("announcement-id",e),l("#tutor-announcement-edit-from-detail").attr("course-id",o),l("#tutor-announcement-edit-from-detail").attr("announcement-title",n),l("#tutor-announcement-edit-from-detail").attr("announcement-summary",i),l("#tutor-announcement-delete-from-detail").attr("announcement-id",e),h.addClass("show")}),l(d).click(function(){h&&h.removeClass("show");var t=l(this).attr("announcement-id"),e=l(this).attr("course-id"),o=l(this).attr("announcement-title"),a=l(this).attr("announcement-summary");l("#tutor-announcement-course-id").val(e),l("#announcement_id").val(t),l("#tutor-announcement-title").val(o),l("#tutor-announcement-summary").val(a),v.addClass("show")}),l(t).click(function(){f.removeClass("show"),v.removeClass("show"),h.removeClass("show"),l("#tutor-annoucement-backend-create-modal").removeClass("show")}),l(".tutor-announcements-form").on("submit",function(t){t.preventDefault();var e=l(this).find('button[type="submit"]'),t=l(".tutor-announcements-form").serialize()+"&action=tutor_announcement_create&action_type=create";l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:t,beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){if(l(".tutor-alert").remove(),"success"==t.status&&location.reload(),"validation_error"==t.status){l(".tutor-announcements-create-alert").append('<div class="tutor-alert alert-warning"></div>');for(var e=0,o=Object.entries(t.message);e<o.length;e++){var a=g(o[e],2),a=(a[0],a[1]);l(".tutor-announcements-create-alert .tutor-alert").append("<li>".concat(a,"</li>"))}}"fail"==t.status&&l(".tutor-announcements-create-alert").html("<li>".concat(t.message,"</li>"))},error:function(t){console.log(t)}})}),l(".tutor-announcements-update-form").on("submit",function(t){t.preventDefault();var e=l(this).find('button[type="submit"]'),t=l(".tutor-announcements-update-form").serialize()+"&action=tutor_announcement_create&action_type=update";l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:t,beforeSend:function(){e.addClass("tutor-updating-message")},success:function(t){if(l(".tutor-alert").remove(),"success"==t.status&&location.reload(),"validation_error"==t.status){l(".tutor-announcements-update-alert").append('<div class="tutor-alert alert-warning"></div>');for(var e=0,o=Object.entries(t.message);e<o.length;e++){var a=g(o[e],2),a=(a[0],a[1]);l(".tutor-announcements-update-alert > .tutor-alert").append("<li>".concat(a,"</li>"))}}"fail"==t.status&&l(".tutor-announcements-create-alert").html("<li>".concat(t.message,"</li>"))},error:function(){}})}),l(p).click(function(){var t=l(this).attr("announcement-id"),e=l("#tutor-announcement-tr-"+t);confirm("Do you want to delete?")&&l.ajax({url:window._tutorobject.ajaxurl,type:"POST",data:{action:"tutor_announcement_delete",announcement_id:t},beforeSend:function(){},success:function(t){e.remove(),h.length&&h.removeClass("show"),"fail"==t.status&&console.log(t.message)},error:function(){}})}),l(".tutor-announcement-course-sorting").on("change",function(t){window.location=_("course-id",l(this).val())}),l(".tutor-announcement-order-sorting").on("change",function(t){window.location=_("order",l(this).val())}),l(".tutor-announcement-date-sorting").on("change",function(t){window.location=_("date",l(this).val())}),l(".tutor-announcement-search-sorting").on("click",function(t){window.location=_("search",l(".tutor-announcement-search-field").val())}),l(document).click(function(){l(".tutor-dropdown").removeClass("show")}),l(".tutor-dropdown").click(function(t){t.stopPropagation(),l(".tutor-dropdown").hasClass("show")&&l(".tutor-dropdown").removeClass("show"),l(this).addClass("show")});var w,p=".video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5";l("body").on("paste",p,function(t){t.stopImmediatePropagation();var r=l(this).closest(".lesson-modal-form-wrap").find(".tutor-option-field-video-duration"),e=r.find("label"),o=l(this).hasClass("video_source_wrap_html5")||l(this).hasClass("video_source_upload_wrap_html5"),a=l(this).data("autofill_url");l(this).data("autofill_url",null);function n(t){t?0==e.find("img").length&&e.append(' <img src="'+window._tutorobject.loading_icon_url+'" style="display:inline-block"/>'):e.find("img").remove()}function i(t){for(var e=Math.floor(t/3600),o=Math.floor((t-3600*e)/60),t=Math.round(t-3600*e-60*o),a=[e=e<10?"0"+e:e,o=o<10?"0"+o:o,t=t<10?"0"+t:t],n=r.find("input"),i=0;i<3;i++)n.eq(i).val(a[i])}var s,u,c,t=o?l(this).find("span").data("video_url"):a||t.originalEvent.clipboardData.getData("text");o||l(this).parent().hasClass("video_source_wrap_external_url")?((s=document.createElement("video")).addEventListener("loadedmetadata",function(){i(s.duration),n(!1)}),n(!0),s.src=t):l(this).parent().hasClass("video_source_wrap_vimeo")?(u=(c=t.match(/^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/))?c[5]:null)&&(n(!0),l.getJSON("http://vimeo.com/api/v2/video/"+u+"/json",function(t){Array.isArray(t)&&t[0]&&void 0!==t[0].duration&&i(t[0].duration),n(!1)})):l(this).parent().hasClass("video_source_wrap_youtube")&&(u=!(!(c=t.match(/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/))||11!=c[7].length)&&c[7],c=l(this).data("youtube_api_key"),u&&c&&(c="https://www.googleapis.com/youtube/v3/videos?id="+u+"&key="+c+"&part=contentDetails",n(!0),l.getJSON(c,function(t){"object"==b(t)&&t.items&&t.items[0]&&t.items[0].contentDetails&&t.items[0].contentDetails.duration&&i(function(t){t=(t=t.match(/PT(\d+H)?(\d+M)?(\d+S)?/)).slice(1).map(function(t){if(null!=t)return t.replace(/\D/,"")});return 3600*(parseInt(t[0])||0)+60*(parseInt(t[1])||0)+(parseInt(t[2])||0)}(t.items[0].contentDetails.duration)),n(!1)})))}).on("input",p,function(){w&&clearTimeout(w);var e=l(this);w=setTimeout(function(){var t=(t=e.val())?t.trim():"";console.log("Trigger",t),t&&e.data("autofill_url",t).trigger("paste")},700)}),l(".tutor-form-submit-through-ajax").submit(function(t){t.preventDefault();var e=l(this),o=l(this).attr("action")||window.location.href,a=l(this).attr("method")||"GET",t=l(this).serializeObject();e.find("button").addClass("tutor-updating-message"),l.ajax({url:o,type:a,data:t,success:function(){tutor_toast(n("Success","tutor"),e.data("toast_success_message"),"success")},complete:function(){e.find("button").removeClass("tutor-updating-message")}})}),l.ajaxSetup({data:tutor_get_nonce_data()})}),jQuery.fn.serializeObject=function(){var t={},e=this.serializeArray();return jQuery.each(e,function(){t[this.name]?(t[this.name].push||(t[this.name]=[t[this.name]]),t[this.name].push(this.value||"")):t[this.name]=this.value||""}),t},window.tutor_toast=function(t,e,o){var a=((window._tutorobject||{}).tutor_url||"")+"assets/images/";jQuery(".tutor-toast-parent").length||jQuery("body").append('<div class="tutor-toast-parent"></div>');var n=jQuery('        <div>            <div>                <img src="'+{success:a+"icon-check.svg",error:a+"icon-cross.svg"}[o]+'"/>            </div>            <div>                <div>                    <b>'+t+"</b>                    <span>"+e+'</span>                </div>            </div>            <div>                <i class="tutor-toast-close tutor-icon-line-cross"></i>            </div>        </div>');n.find(".tutor-toast-close").click(function(){n.remove()}),jQuery(".tutor-toast-parent").append(n),setTimeout(function(){n&&n.fadeOut("fast",function(){jQuery(this).remove()})},5e3)},jQuery.fn.serializeObject=function(){var t={},e=this.serializeArray();return jQuery.each(e,function(){t[this.name]?(t[this.name].push||(t[this.name]=[t[this.name]]),t[this.name].push(this.value||"")):t[this.name]=this.value||""}),t},jQuery(document).ready(function(a){var t=window.location.href;if(0<t.indexOf("#")){a(".tutor-wizard-container > div").removeClass("active"),a(".tutor-wizard-container > div.tutor-setup-wizard-settings").addClass("active");t=t.split("#");if(t[1]){var e=a(".tutor-setup-title li."+t[1]).index();a(".tutor-setup-title li").removeClass("current"),a(".tutor-setup-content li").removeClass("active");for(var o=0;o<=e;o++)a(".tutor-setup-title li").eq(o).addClass("active"),e==o&&(a(".tutor-setup-title li").eq(o).addClass("current"),a(".tutor-setup-content li").eq(o).addClass("active"))}t=a("input[name='enable_course_marketplace'").val();i(t||0)}function n(t){var e=t.parent().parent();t.prop("checked")?(e.find(".label-on").addClass("active"),e.find(".label-off").removeClass("active")):(e.find(".label-on").removeClass("active"),e.find(".label-off").addClass("active"))}function i(t){1==t?(a(".tutor-show-hide").addClass("active"),a(".tutor-setup-title li.instructor").removeClass("hide-this"),a(".tutor-setup-content li").eq(a(".tutor-setup-title li.instructor")).removeClass("hide-this")):(a(".tutor-show-hide").removeClass("active"),a(".tutor-setup-title li.instructor").addClass("hide-this"),a(".tutor-setup-content li").eq(a(".tutor-setup-title li.instructor")).addClass("hide-this"))}function r(){var t;a(".tutor-setup-title li.instructor").hasClass("hide-this")?(a(".tutor-steps").html(5),2<(t=a(".tutor-setup-title li.current").index())&&a(".tutor-setup-content li.active .tutor-steps-current").html(t)):(a(".tutor-steps").html(6),a(".tutor-setup-content li").each(function(){a(this).find(".tutor-steps-current").html(a(this).index()+1)}))}a(".tutor-setup-title li").on("click",function(t){t.preventDefault();var e=a(this).closest("li").index();a(".tutor-setup-title li").removeClass("active current"),a(".tutor-setup-title li").eq(e).addClass("active current"),a(".tutor-setup-content li").removeClass("active"),a(".tutor-setup-content li").eq(e).addClass("active"),window.location.hash=a("ul.tutor-setup-title li").eq(e).data("url");for(var o=0;o<=e;o++)a(".tutor-setup-title li").eq(o).addClass("active")}),a(".tutor-boarding-next, .tutor-boarding-skip").on("click",function(t){t.preventDefault(),a(".tutor-setup-wizard-boarding").removeClass("active"),a(".tutor-setup-wizard-type").addClass("active")}),a(".tutor-type-next, .tutor-type-skip").on("click",function(t){t.preventDefault(),a(".tutor-setup-wizard-type").removeClass("active"),a(".tutor-setup-wizard-settings").addClass("active"),a(".tutor-setup-title li").eq(0).addClass("active"),window.location.hash="general",i(a("input[name='enable_course_marketplace_setup']:checked").val())}),a("input[type=radio][name=enable_course_marketplace_setup]").change(function(){"0"==this.value?(a("input[name=enable_course_marketplace]").val(""),a("input[name=enable_tutor_earning]").val("")):"1"==this.value&&(a("input[name=enable_course_marketplace]").val("1"),a("input[name=enable_tutor_earning]").val("1"))}),a(".tutor-setup-previous").on("click",function(t){t.preventDefault();t=a(this).closest("li").index();a("ul.tutor-setup-title li").eq(t).removeClass("active"),0<t&&t==a(".tutor-setup-title li.instructor").index()+1&&a(".tutor-setup-title li.instructor").hasClass("hide-this")&&(t-=1),0<t?(a("ul.tutor-setup-title li").eq(t-1).addClass("active"),a("ul.tutor-setup-content li").removeClass("active").eq(t-1).addClass("active"),a("ul.tutor-setup-title li").removeClass("current").eq(t-1).addClass("current"),window.location.hash=a("ul.tutor-setup-title li").eq(t-1).data("url")):(a(".tutor-setup-wizard-settings").removeClass("active"),a(".tutor-setup-wizard-type").addClass("active"),window.location.hash=""),r()}),a(".tutor-setup-type-previous").on("click",function(t){a(".tutor-setup-wizard-type").removeClass("active"),a(".tutor-setup-wizard-boarding").addClass("active")}),a(".tutor-setup-skip, .tutor-setup-next").on("click",function(t){t.preventDefault();t=a(this).closest("li").index()+1;t==a(".tutor-setup-title li.instructor").index()&&a(".tutor-setup-title li.instructor").hasClass("hide-this")&&(t+=1),a("ul.tutor-setup-title li").eq(t).addClass("active"),a("ul.tutor-setup-content li").removeClass("active").eq(t).addClass("active"),a("ul.tutor-setup-title li").removeClass("current").eq(t).addClass("current"),window.location.hash=a("ul.tutor-setup-title li").eq(t).data("url"),r()}),a(".tutor-boarding-next, .tutor-boarding-skip").on("click",function(t){t.preventDefault(),a(".tutor-setup-wizard-boarding").removeClass("active"),a(".tutor-setup-wizard-type").addClass("active")}),a(".tutor-boarding").slick({speed:1e3,centerMode:!0,centerPadding:"19.5%",slidesToShow:1,arrows:!1,dots:!0,responsive:[{breakpoint:768,settings:{arrows:!1,centerMode:!0,centerPadding:"50px",slidesToShow:1}},{breakpoint:480,settings:{arrows:!1,centerMode:!0,centerPadding:"30px",slidesToShow:1}}]}),a(".tutor-redirect").on("click",function(t){var e=a(this);t.preventDefault();t=a("#tutor-setup-form").serializeObject();a.ajax({url:_tutorobject.ajaxurl,type:"POST",data:t,success:function(t){t.success&&(window.location=e.data("url"))}})}),a(".tutor-reset-section").on("click",function(t){a(this).closest("li").find("input").val(function(){switch(this.type){case"text":return this.defaultValue;case"checkbox":case"radio":this.checked=this.defaultChecked;break;case"range":var t=a(this).closest(".limit-slider");if(!t.find(".range-input").hasClass("double-range-slider"))return t.find(".range-value").html(this.defaultValue),this.defaultValue;t.find(".range-value-1").html(this.defaultValue+"%"),a(".range-value-data-1").val(this.defaultValue),t.find(".range-value-2").html(100-this.defaultValue+"%"),a(".range-value-data-2").val(100-this.defaultValue);break;case"hidden":return this.value}})}),a(".tooltip-btn").on("click",function(t){t.preventDefault(),a(this).toggleClass("active")}),a(".input-switchbox").each(function(){n(a(this))}),a(".input-switchbox").click(function(){n(a(this))}),a(".selected").on("click",function(){a(".options-container").toggleClass("active")}),a(".option").each(function(){a(this).on("click",function(){a(".selected").html(a(this).find("label").html()),a(".options-container").removeClass("active")})}),a(".range-input").on("change mousemove",function(t){var e=a(this).val();a(this).parent().parent().find(".range-value").text(e)}),a(".double-range-slider").on("change mousemove",function(){var t=a(this).closest(".settings");t.find(".range-value-1").text(a(this).val()+"%"),t.find('input[name="earning_instructor_commission"]').val(a(this).val()),t.find(".range-value-2").text(100-a(this).val()+"%"),t.find('input[name="earning_admin_commission"]').val(100-a(this).val())}),a("#attempts-allowed-1").on("click",function(t){a("#attempts-allowed-numer").prop("disabled",!0)&&(a(this).parent().parent().parent().addClass("active"),a("#attempts-allowed-numer").prop("disabled",!1))}),a("#attempts-allowed-2").on("click",function(t){a("#attempts-allowed-2").is(":checked")&&(a(this).parent().parent().parent().removeClass("active"),a("#attempts-allowed-numer").prop("disabled",!0))}),a(".wizard-type-item").on("click",function(t){i(a(this).find("input").val())}),r(),a("input[name='attempts-allowed']").on("change",function(t){"unlimited"==a(this).filter(":checked").val()?a("input[name='quiz_attempts_allowed']").val(0):a("input[name='quiz_attempts_allowed']").val(a("input[name='attempts-allowed-number").val())}),a("input[name='attempts-allowed-number']").on("change",function(t){a("input[name='quiz_attempts_allowed']").val(a(this).val())}),a("input[name='attempts-allowed-number']").on("focus",function(t){a("input[name='attempts-allowed'][value='single']").attr("checked",!0)})})})()})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./assets/react/lib/common.js":
+/*!************************************!*\
+  !*** ./assets/react/lib/common.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _tutor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tutor */ "./assets/react/lib/tutor.js");
+
+
+/***/ }),
+
+/***/ "./assets/react/lib/tutor.js":
+/*!***********************************!*\
+  !*** ./assets/react/lib/tutor.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _v2_library_src_js_main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../v2-library/_src/js/main */ "./v2-library/_src/js/main.js");
+/* harmony import */ var _v2_library_src_js_main__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_v2_library_src_js_main__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+window.tutor_get_nonce_data = function (send_key_value) {
+  var nonce_data = window._tutorobject || {};
+  var nonce_key = nonce_data.nonce_key || '';
+  var nonce_value = nonce_data[nonce_key] || '';
+
+  if (send_key_value) {
+    return {
+      key: nonce_key,
+      value: nonce_value
+    };
+  }
+
+  return _defineProperty({}, nonce_key, nonce_value);
+};
+
+window.tutor_popup = function ($, icon, padding) {
+  var $this = this;
+  var element;
+
+  this.popup_wrapper = function (wrapper_tag) {
+    var img_tag = icon === '' ? '' : '<img class="tutor-pop-icon" src="' + window._tutorobject.tutor_url + 'assets/images/' + icon + '.svg"/>';
+    return '<' + wrapper_tag + ' class="tutor-component-popup-container">\
+            <div class="tutor-component-popup-' + padding + '">\
+                <div class="tutor-component-content-container">' + img_tag + '</div>\
+                <div class="tutor-component-button-container"></div>\
+            </div>\
+        </' + wrapper_tag + '>';
+  };
+
+  this.popup = function (data) {
+    var title = data.title ? '<h3>' + data.title + '</h3>' : '';
+    var description = data.description ? '<p>' + data.description + '</p>' : '';
+    var buttons = Object.keys(data.buttons || {}).map(function (key) {
+      var button = data.buttons[key];
+      var button_id = button.id ? 'tutor-popup-' + button.id : '';
+      return $('<button id="' + button_id + '" class="tutor-button tutor-button-' + button["class"] + '">' + button.title + '</button>').click(button.callback);
+    });
+    element = $($this.popup_wrapper(data.wrapper_tag || 'div'));
+    var content_wrapper = element.find('.tutor-component-content-container');
+    content_wrapper.append(title);
+    data.after_title ? content_wrapper.append(data.after_title) : 0;
+    content_wrapper.append(description);
+    data.after_description ? content_wrapper.append(data.after_description) : 0; // Assign close event on click black overlay
+
+    element.click(function () {
+      $(this).remove();
+    }).children().click(function (e) {
+      e.stopPropagation();
+    }); // Append action button
+
+    for (var i = 0; i < buttons.length; i++) {
+      element.find('.tutor-component-button-container').append(buttons[i]);
+    }
+
+    $('body').append(element);
+    return element;
+  };
+
+  return {
+    popup: this.popup
+  };
+};
+
+window.tutorDotLoader = function (loaderType) {
+  return "    \n    <div class=\"tutor-dot-loader ".concat(loaderType ? loaderType : '', "\">\n        <span class=\"dot dot-1\"></span>\n        <span class=\"dot dot-2\"></span>\n        <span class=\"dot dot-3\"></span>\n        <span class=\"dot dot-4\"></span>\n    </div>");
+};
+
+window.tutor_date_picker = function () {
+  if (jQuery.datepicker) {
+    var format = _tutorobject.wp_date_format;
+
+    if (!format) {
+      format = "yy-mm-dd";
+    }
+
+    $(".tutor_date_picker").datepicker({
+      "dateFormat": format
+    });
+  }
+};
+
+jQuery(document).ready(function ($) {
+  'use strict';
+
+  var _wp$i18n = wp.i18n,
+      __ = _wp$i18n.__,
+      _x = _wp$i18n._x,
+      _n = _wp$i18n._n,
+      _nx = _wp$i18n._nx;
+  /**
+   * Global date_picker selector 
+   * 
+   * @since 1.9.7
+   */
+
+  function load_date_picker() {
+    if (jQuery.datepicker) {
+      var format = _tutorobject.wp_date_format;
+
+      if (!format) {
+        format = "yy-mm-dd";
+      }
+
+      $(".tutor_date_picker").datepicker({
+        "dateFormat": format
+      });
+    }
+  }
+
+  ;
+  load_date_picker();
+  /**
+   * Slider bar
+   */
+
+  function tutor_slider_init() {
+    $('.tutor-field-slider').each(function () {
+      var $slider = $(this);
+      var $input = $slider.closest('.tutor-field-type-slider').find('input[type="hidden"]');
+      var $showVal = $slider.closest('.tutor-field-type-slider').find('.tutor-field-type-slider-value');
+      var min = parseFloat($slider.closest('.tutor-field-type-slider').attr('data-min'));
+      var max = parseFloat($slider.closest('.tutor-field-type-slider').attr('data-max'));
+      $slider.slider({
+        range: "max",
+        min: min,
+        max: max,
+        value: $input.val(),
+        slide: function slide(event, ui) {
+          $showVal.text(ui.value);
+          $input.val(ui.value);
+        }
+      });
+    });
+  }
+
+  tutor_slider_init();
+  /**
+   * Video source tabs
+   */
+
+  if (jQuery().select2) {
+    $('.videosource_select2').select2({
+      width: "100%",
+      templateSelection: iformat,
+      templateResult: iformat,
+      allowHtml: true
+    });
+  } //videosource_select2
+
+
+  function iformat(icon) {
+    var originalOption = icon.element;
+    return $('<span><i class="tutor-icon-' + $(originalOption).data('icon') + '"></i> ' + icon.text + '</span>');
+  }
+  /**
+   * Course Builder
+   *
+   * @since v.1.3.4
+   */
+
+
+  $(document).on('click', '.tutor-course-thumbnail-upload-btn', function (event) {
+    event.preventDefault();
+    var $that = $(this);
+    var frame;
+
+    if (frame) {
+      frame.open();
+      return;
+    }
+
+    frame = wp.media({
+      title: __('Select or Upload Media Of Your Chosen Persuasion', 'tutor'),
+      button: {
+        text: __('Use this media', 'tutor')
+      },
+      multiple: false
+    });
+    frame.on('select', function () {
+      var attachment = frame.state().get('selection').first().toJSON();
+      $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('src', attachment.url);
+      $that.closest('.tutor-thumbnail-wrap').find('input').val(attachment.id);
+      $('.tutor-course-thumbnail-delete-btn').show();
+    });
+    frame.open();
+  }); //Delete Thumbnail
+
+  $(document).on('click', '.tutor-course-thumbnail-delete-btn', function (event) {
+    event.preventDefault();
+    var $that = $(this);
+    var placeholder_src = $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('data-placeholder-src');
+    $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('src', placeholder_src);
+    $that.closest('.tutor-thumbnail-wrap').find('input').val('');
+    $('.tutor-course-thumbnail-delete-btn').hide();
+  });
+  /**
+   * Zoom Meeting js
+   * here for support enable_sorting_topic_lesson function
+   * @since 1.7.1
+   */
+
+  $('.tutor-zoom-meeting-modal-wrap').on('submit', '.tutor-meeting-modal-form', function (e) {
+    e.preventDefault();
+    var $form = $(this);
+    var data = $form.serializeObject();
+    var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    data.timezone = timezone;
+    var $btn = $form.find('button[type="submit"]');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: data,
+      beforeSend: function beforeSend() {
+        $btn.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        data.success ? tutor_toast(__('Success', 'tutor'), $btn.data('toast_success_message'), 'success') : tutor_toast(__('Update Error', 'tutor'), __('Meeting Update Failed', 'tutor'), 'error');
+
+        if (data.course_contents) {
+          $(data.selector).html(data.course_contents);
+
+          if (data.selector == '#tutor-course-content-wrap') {
+            enable_sorting_topic_lesson();
+          } //Close the modal
+
+
+          $('.tutor-zoom-meeting-modal-wrap').removeClass('show');
+        } else {
+          location.reload();
+        }
+      },
+      complete: function complete() {
+        $btn.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Resorting...
+   */
+
+  function enable_sorting_topic_lesson() {
+    if (jQuery().sortable) {
+      $(".course-contents").sortable({
+        handle: ".course-move-handle",
+        start: function start(e, ui) {
+          ui.placeholder.css('visibility', 'visible');
+        },
+        stop: function stop(e, ui) {
+          tutor_sorting_topics_and_lesson();
+        }
+      });
+      $(".tutor-lessons:not(.drop-lessons)").sortable({
+        connectWith: ".tutor-lessons",
+        items: "div.course-content-item",
+        start: function start(e, ui) {
+          ui.placeholder.css('visibility', 'visible');
+        },
+        stop: function stop(e, ui) {
+          tutor_sorting_topics_and_lesson();
+        }
+      });
+    }
+  }
+
+  function tutor_sorting_topics_and_lesson() {
+    var topics = {};
+    $('.tutor-topics-wrap').each(function (index, item) {
+      var $topic = $(this);
+      var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
+      var lessons = {};
+      $topic.find('.course-content-item').each(function (lessonIndex, lessonItem) {
+        var $lesson = $(this);
+        var lesson_id = parseInt($lesson.attr('id').match(/\d+/)[0], 10);
+        lessons[lessonIndex] = lesson_id;
+      });
+      topics[index] = {
+        'topic_id': topics_id,
+        'lesson_ids': lessons
+      };
+    });
+    $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
+  }
+
+  $(document).on('change keyup', '.course-edit-topic-title-input', function (e) {
+    e.preventDefault();
+    $(this).closest('.tutor-topics-top').find('.topic-inner-title').html($(this).val());
+  });
+  $(document).on('click', '.tutor-topics-edit-button', function (e) {
+    e.preventDefault();
+    var $button = $(this);
+    var topics_id = $button.closest('.tutor-topics-wrap').find('[name="topic_id"]').val();
+    ;
+    var topic_title = $button.closest('.tutor-topics-wrap').find('[name="topic_title"]').val();
+    var topic_summery = $button.closest('.tutor-topics-wrap').find('[name="topic_summery"]').val();
+    var data = {
+      topic_title: topic_title,
+      topic_summery: topic_summery,
+      topic_id: topics_id,
+      action: 'tutor_update_topic'
+    };
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: data,
+      beforeSend: function beforeSend() {
+        $button.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $button.closest('.tutor-topics-wrap').find('span.topic-inner-title').text(topic_title);
+          $button.closest('.tutor-modal').removeClass('tutor-is-active');
+        }
+      },
+      complete: function complete() {
+        $button.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Lesson Feature Image Delete
+   * @since v.1.5.6
+   */
+
+  $(document).on('click', '.tutor-lesson-thumbnail-delete-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    $that.closest('.tutor-thumbnail-wrap').find('._lesson_thumbnail_id').val('');
+    $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('');
+    $that.hide();
+  });
+  /**
+   * Delete Lesson from course builder
+   */
+
+  $(document).on('click', '.tutor-delete-lesson-btn', function (e) {
+    e.preventDefault();
+
+    if (!confirm(__('Are you sure?', 'tutor'))) {
+      return;
+    }
+
+    var $that = $(this);
+    var lesson_id = $that.attr('data-lesson-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        lesson_id: lesson_id,
+        action: 'tutor_delete_lesson_by_id'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $that.closest('.course-content-item').remove();
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Ope modal for edit quiz
+   */
+
+  $(document).on('click', '.open-tutor-quiz-modal', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var quiz_id = $that.attr('data-quiz-id');
+    var topic_id = $that.attr('data-topic-id');
+
+    if (topic_id == undefined) {
+      topic_id = $that.closest('.tutor-modal-wrap').attr('quiz-for-post-id');
+    }
+
+    var course_id = $('#post_ID').val();
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        quiz_id: quiz_id,
+        topic_id: topic_id,
+        course_id: course_id,
+        action: 'tutor_load_edit_quiz_modal'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
+        $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
+        $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('quiz-for-post-id', topic_id).addClass('show'); //Back to question Tab if exists
+
+        if ($that.attr('data-back-to-tab')) {
+          var tabSelector = $that.attr('data-back-to-tab');
+          $('#tutor-quiz-modal-tab-items-wrap a[href="' + tabSelector + '"]').trigger('click');
+        }
+
+        $(document).trigger('quiz_modal_loaded', {
+          quiz_id: quiz_id,
+          topic_id: topic_id,
+          course_id: course_id
+        });
+        tutor_slider_init();
+        enable_quiz_questions_sorting();
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  $(document).on('click', '.quiz-modal-settings-save-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var quiz_id = $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id');
+    var current_topic_id = $("#current_topic_id_for_quiz").val();
+    var $formInput = $('#quiz-builder-tab-settings :input, #quiz-builder-tab-advanced-options :input').serializeObject();
+    $formInput.topic_id = current_topic_id;
+    $formInput.quiz_id = quiz_id;
+    $formInput.action = 'tutor_quiz_modal_update_settings';
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: $formInput,
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $('#tutor-course-content-wrap').html(data.data.course_contents);
+        }
+
+        data.success ? tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success') : tutor_toast(__('Update Error', 'tutor'), __('Quiz Update Failed', 'tutor'), 'error');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+
+        if ($that.attr('data-action') === 'modal_close') {
+          $('.tutor-modal-wrap').removeClass('show');
+        }
+      }
+    });
+  });
+  /**
+   * Quiz Question edit save and continue
+   */
+
+  $(document).on('click', '.quiz-modal-question-save-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var $formInput = $('.quiz_question_form :input').serializeObject();
+    $formInput.action = 'tutor_quiz_modal_update_question';
+    var topic_id = $that.closest('.tutor-modal-wrap').attr('quiz-for-post-id');
+    $formInput.topic_id = topic_id;
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: $formInput,
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success) {
+          //ReOpen questions
+          $that.closest('.tutor-quiz-builder-modal-contents').find('.open-tutor-quiz-modal').trigger('click');
+        } else {
+          if (typeof data.data !== 'undefined') {
+            $('#quiz_validation_msg_wrap').html(data.data.validation_msg);
+          }
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Sort quiz questions
+   */
+
+  function enable_quiz_questions_sorting() {
+    if (jQuery().sortable) {
+      $(".quiz-builder-questions-wrap").sortable({
+        handle: ".question-sorting",
+        start: function start(e, ui) {
+          ui.placeholder.css('visibility', 'visible');
+        },
+        stop: function stop(e, ui) {
+          tutor_save_sorting_quiz_questions_order();
+        }
+      });
+    }
+  }
+
+  function tutor_save_sorting_quiz_questions_order() {
+    var questions = {};
+    $('.quiz-builder-question-wrap').each(function (index, item) {
+      var $question = $(this);
+      var question_id = parseInt($question.attr('data-question-id'), 10);
+      questions[index] = question_id;
+    });
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        sorted_question_ids: questions,
+        action: 'tutor_quiz_question_sorting'
+      }
+    });
+  }
+  /**
+   * Quiz Modal
+   */
+
+
+  $(document).on('click', '.modal-close-btn', function (e) {
+    e.preventDefault();
+    $('.tutor-modal-wrap').removeClass('show');
+  });
+  $(document).on('keyup', function (e) {
+    if (e.keyCode === 27) {
+      $('.tutor-modal-wrap').removeClass('show');
+    }
+  });
+  $(document).on('click', '.tutor-add-quiz-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var quiz_for_post_id = $(this).closest('.tutor_add_quiz_wrap').data('topic_id');
+    var current_topic_id = $(this).data('topic-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        quiz_for_post_id: quiz_for_post_id,
+        current_topic_id: current_topic_id,
+        action: 'tutor_load_quiz_builder_modal'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
+        $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
+        $('.tutor-quiz-builder-modal-wrap').attr('quiz-for-post-id', quiz_for_post_id).addClass('show');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Quiz Builder Modal Tabs
+   */
+
+  $(document).on('click', '.tutor-quiz-modal-tab-item', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var $quizTitle = $('[name="quiz_title"]');
+    var quiz_title = $quizTitle.val();
+
+    if (!quiz_title) {
+      $quizTitle.closest('.tutor-quiz-builder-form-row').find('.quiz_form_msg').html('<p class="quiz-form-warning">Please save the quiz' + ' first</p>');
+      return;
+    } else {
+      $quizTitle.closest('.tutor-quiz-builder-form-row').find('.quiz_form_msg').html('');
+    }
+
+    var tabSelector = $that.attr('href');
+    $('.quiz-builder-tab-container').hide();
+    $(tabSelector).show();
+    $('a.tutor-quiz-modal-tab-item').removeClass('active');
+    $that.addClass('active');
+  }); //Next Prev Tab
+
+  $(document).on('click', '.quiz-modal-btn-next, .quiz-modal-btn-back', function (e) {
+    e.preventDefault();
+    var tabSelector = $(this).attr('href');
+    $('#tutor-quiz-modal-tab-items-wrap a[href="' + tabSelector + '"]').trigger('click');
+  });
+  $(document).on('click', '.quiz-modal-tab-navigation-btn.quiz-modal-btn-cancel', function (e) {
+    e.preventDefault();
+    $('.tutor-modal-wrap').removeClass('show');
+  });
+  /**
+   * Add Question to quiz modal
+   */
+
+  $(document).on('click', '.tutor-quiz-open-question-form', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var quiz_id = $('#tutor_quiz_builder_quiz_id').val();
+    var course_id = $('#post_ID').val();
+    var question_id = $that.attr('data-question-id');
+    var params = {
+      quiz_id: quiz_id,
+      course_id: course_id,
+      action: 'tutor_quiz_builder_get_question_form'
+    };
+
+    if (question_id) {
+      params.question_id = question_id;
+    }
+
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: params,
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $('.tutor-quiz-builder-modal-contents').html(data.data.output); //Initializing Tutor Select
+
+        tutor_select().reInit();
+        enable_quiz_answer_sorting();
+        disableAddoption();
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  $(document).on('click', '.tutor-quiz-question-trash', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var question_id = $that.attr('data-question-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        question_id: question_id,
+        action: 'tutor_quiz_builder_question_delete'
+      },
+      beforeSend: function beforeSend() {
+        $that.closest('.quiz-builder-question-wrap').remove();
+      }
+    });
+  });
+  /**
+   * Get question answers option form to save multiple/single/true-false options
+   *
+   * @since v.1.0.0
+   */
+
+  $(document).on('click', '.add_question_answers_option:not(.disabled)', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var question_id = $that.attr('data-question-id');
+    var $formInput = $('.quiz_question_form :input').serializeObject();
+    $formInput.question_id = question_id;
+    $formInput.action = 'tutor_quiz_add_question_answers';
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: $formInput,
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $('#tutor_quiz_question_answer_form').html(data.data.output);
+        disableAddoption();
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Get question answers option edit form
+   *
+   * @since v.1.0.0
+   */
+
+  $(document).on('click', '.tutor-quiz-answer-edit a', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var answer_id = $that.closest('.tutor-quiz-answer-wrap').attr('data-answer-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        answer_id: answer_id,
+        action: 'tutor_quiz_edit_question_answer'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $('#tutor_quiz_question_answer_form').html(data.data.output);
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Saving question answers options
+   * Student should select the right answer at quiz attempts
+   *
+   * @since v.1.0.0
+   */
+
+  $(document).on('click', '#quiz-answer-save-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var $formInput = $('.quiz_question_form :input').serializeObject();
+    $formInput.action = 'tutor_save_quiz_answer_options';
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: $formInput,
+      beforeSend: function beforeSend() {
+        $('#quiz_validation_msg_wrap').html("");
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $('#tutor_quiz_question_answers').trigger('refresh');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Updating Answer
+   *
+   * @since v.1.0.0
+   */
+
+  $(document).on('click', '#quiz-answer-edit-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var $formInput = $('.quiz_question_form :input').serializeObject();
+    $formInput.action = 'tutor_update_quiz_answer_options';
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: $formInput,
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $('#tutor_quiz_question_answers').trigger('refresh');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  $(document).on('change', '.tutor-quiz-answers-mark-correct-wrap input', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var answer_id = $that.val();
+    var inputValue = 1;
+
+    if (!$that.prop('checked')) {
+      inputValue = 0;
+    }
+
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        answer_id: answer_id,
+        inputValue: inputValue,
+        action: 'tutor_mark_answer_as_correct'
+      }
+    });
+  });
+  $(document).on('refresh', '#tutor_quiz_question_answers', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var question_id = $that.attr('data-question-id');
+    var question_type = $('.tutor_select_value_holder').val();
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        question_id: question_id,
+        question_type: question_type,
+        action: 'tutor_quiz_builder_get_answers_by_question'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+        $('#tutor_quiz_question_answer_form').html('');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $that.html(data.data.output);
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Delete answer for a question in quiz builder
+   *
+   * @since v.1.0.0
+   */
+
+  $(document).on('click', '.tutor-quiz-answer-trash-wrap a.answer-trash-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var answer_id = $that.attr('data-answer-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        answer_id: answer_id,
+        action: 'tutor_quiz_builder_delete_answer'
+      },
+      beforeSend: function beforeSend() {
+        $that.closest('.tutor-quiz-answer-wrap').remove();
+      }
+    });
+  });
+  /**
+   * Delete Quiz
+   * @since v.1.0.0
+   */
+
+  $(document).on('click', '.tutor-delete-quiz-btn', function (e) {
+    e.preventDefault();
+
+    if (!confirm(__('Are you sure?', 'tutor'))) {
+      return;
+    }
+
+    var $that = $(this);
+    var quiz_id = $that.attr('data-quiz-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        quiz_id: quiz_id,
+        action: 'tutor_delete_quiz_by_id'
+      },
+      beforeSend: function beforeSend() {
+        $that.closest('.course-content-item').remove();
+      }
+    });
+  });
+  /**
+   * Save answer sorting placement
+   *
+   * @since v.1.0.0
+   */
+
+  function enable_quiz_answer_sorting() {
+    if (jQuery().sortable) {
+      $("#tutor_quiz_question_answers").sortable({
+        handle: ".tutor-quiz-answer-sort-icon",
+        start: function start(e, ui) {
+          ui.placeholder.css('visibility', 'visible');
+        },
+        stop: function stop(e, ui) {
+          tutor_save_sorting_quiz_answer_order();
+        }
+      });
+    }
+  }
+
+  function tutor_save_sorting_quiz_answer_order() {
+    var answers = {};
+    $('.tutor-quiz-answer-wrap').each(function (index, item) {
+      var $answer = $(this);
+      var answer_id = parseInt($answer.attr('data-answer-id'), 10);
+      answers[index] = answer_id;
+    });
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        sorted_answer_ids: answers,
+        action: 'tutor_quiz_answer_sorting'
+      }
+    });
+  }
+  /**
+   * Tutor Custom Select
+   */
+
+
+  function tutor_select() {
+    var obj = {
+      init: function init() {
+        $(document).on('click', '.tutor-select .tutor-select-option', function (e) {
+          e.preventDefault();
+          var $that = $(this);
+
+          if ($that.attr('data-is-pro') !== 'true') {
+            var $html = $that.html().trim();
+            $that.closest('.tutor-select').find('.select-header .lead-option').html($html);
+            $that.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($that.attr('data-value')).trigger('change');
+            $that.closest('.tutor-select-options').hide();
+            disableAddoption();
+          } else {
+            alert('Tutor Pro version required');
+          }
+        });
+        $(document).on('click', '.tutor-select .select-header', function (e) {
+          e.preventDefault();
+          var $that = $(this);
+          $that.closest('.tutor-select').find('.tutor-select-options').slideToggle();
+        });
+        this.setValue();
+        this.hideOnOutSideClick();
+      },
+      setValue: function setValue() {
+        $('.tutor-select').each(function () {
+          var $that = $(this);
+          var $option = $that.find('.tutor-select-option');
+
+          if ($option.length) {
+            $option.each(function () {
+              var $thisOption = $(this);
+
+              if ($thisOption.attr('data-selected') === 'selected') {
+                var $html = $thisOption.html().trim();
+                $thisOption.closest('.tutor-select').find('.select-header .lead-option').html($html);
+                $thisOption.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($thisOption.attr('data-value'));
+              }
+            });
+          }
+        });
+      },
+      hideOnOutSideClick: function hideOnOutSideClick() {
+        $(document).mouseup(function (e) {
+          var $option_wrap = $(".tutor-select-options");
+
+          if (!$(e.target).closest('.select-header').length && !$option_wrap.is(e.target) && $option_wrap.has(e.target).length === 0) {
+            $option_wrap.hide();
+          }
+        });
+      },
+      reInit: function reInit() {
+        this.setValue();
+      }
+    };
+    return obj;
+  }
+
+  tutor_select().init();
+  /**
+   * If change question type from quiz builder question
+   *
+   * @since v.1.0.0
+   */
+
+  $(document).on('change', 'input.tutor_select_value_holder', function (e) {
+    var $that = $(this); //$('#tutor_quiz_question_answer_form').html('');
+
+    $('.add_question_answers_option').trigger('click');
+    $('#tutor_quiz_question_answers').trigger('refresh');
+  });
+  $(document).on('click', '.tutor-media-upload-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var frame;
+
+    if (frame) {
+      frame.open();
+      return;
+    }
+
+    frame = wp.media({
+      title: __('Select or Upload Media Of Your Chosen Persuasion', 'tutor'),
+      button: {
+        text: __('Use this media', 'tutor')
+      },
+      multiple: false
+    });
+    frame.on('select', function () {
+      var attachment = frame.state().get('selection').first().toJSON();
+      $that.html('<img src="' + attachment.url + '" alt="" />');
+      $that.closest('.tutor-media-upload-wrap').find('input').val(attachment.id);
+    });
+    frame.open();
+  });
+  $(document).on('click', '.tutor-media-upload-trash', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    $that.closest('.tutor-media-upload-wrap').find('.tutor-media-upload-btn').html('<i class="tutor-icon-image1"></i>');
+    $that.closest('.tutor-media-upload-wrap').find('input').val('');
+  });
+  /**
+   * Delay Function
+   */
+
+  var tutor_delay = function () {
+    var timer = 0;
+    return function (callback, ms) {
+      clearTimeout(timer);
+      timer = setTimeout(callback, ms);
+    };
+  }();
+  /**
+   * Add instructor modal
+   */
+
+
+  $(document).on('click', '.tutor-add-instructor-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var course_id = $('#post_ID').val();
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        course_id: course_id,
+        action: 'tutor_load_instructors_modal'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $('.tutor-instructors-modal-wrap .modal-container').html(data.data.output);
+          $('.tutor-instructors-modal-wrap').addClass('show');
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  $(document).on('change keyup', '.tutor-instructors-modal-wrap .tutor-modal-search-input', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var $modal = $('.tutor-modal-wrap');
+    tutor_delay(function () {
+      var search_terms = $that.val();
+      var course_id = $('#post_ID').val();
+      $.ajax({
+        url: window._tutorobject.ajaxurl,
+        type: 'POST',
+        data: {
+          course_id: course_id,
+          search_terms: search_terms,
+          action: 'tutor_load_instructors_modal'
+        },
+        beforeSend: function beforeSend() {
+          $modal.addClass('loading');
+        },
+        success: function success(data) {
+          if (data.success) {
+            $('.tutor-instructors-modal-wrap .modal-container').html(data.data.output);
+            $('.tutor-instructors-modal-wrap').addClass('show');
+          }
+        },
+        complete: function complete() {
+          $modal.removeClass('loading');
+        }
+      });
+    }, 1000);
+  });
+  $(document).on('click', '.add_instructor_to_course_btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var $modal = $('.tutor-modal-wrap');
+    var course_id = $('#post_ID').val();
+    var data = $modal.find('input').serializeObject();
+    data.course_id = course_id;
+    data.action = 'tutor_add_instructors_to_course';
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: data,
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $('.tutor-course-available-instructors').html(data.data.output);
+          $('.tutor-modal-wrap').removeClass('show');
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  $(document).on('click', '.tutor-instructor-delete-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var course_id = $('#post_ID').val();
+    var instructor_id = $that.closest('.added-instructor-item').attr('data-instructor-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        course_id: course_id,
+        instructor_id: instructor_id,
+        action: 'detach_instructor_from_course'
+      },
+      success: function success(data) {
+        if (data.success) {
+          $that.closest('.added-instructor-item').remove();
+        }
+      }
+    });
+  });
+  $(document).on('click', '.settings-tabs-navs li', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var data_target = $that.find('a').attr('data-target');
+    var url = $that.find('a').attr('href');
+    $that.addClass('active').siblings('li.active').removeClass('active');
+    $('.settings-tab-wrap').removeClass('active').hide();
+    $(data_target).addClass('active').show();
+    window.history.pushState({}, '', url);
+  });
+  /**
+   * Re init required
+   * Modal Loaded...
+   */
+
+  $(document).on('lesson_modal_loaded quiz_modal_loaded assignment_modal_loaded', function (e, obj) {
+    if (jQuery().select2) {
+      $('.select2_multiselect').select2({
+        dropdownCssClass: 'increasezindex'
+      });
+    }
+
+    load_date_picker();
+  });
+  /**
+   * Tutor number validation
+   *
+   * @since v.1.6.3
+   */
+
+  $(document).on('keyup change', '.tutor-number-validation', function (e) {
+    var input = $(this);
+    var val = parseInt(input.val());
+    var min = parseInt(input.attr('data-min'));
+    var max = parseInt(input.attr('data-max'));
+
+    if (val < min) {
+      input.val(min);
+    } else if (val > max) {
+      input.val(max);
+    }
+  });
+  /*
+  * @since v.1.6.4
+  * Quiz Attempts Instructor Feedback 
+  */
+
+  $(document).on('click', '.tutor-instructor-feedback', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    $.ajax({
+      url: window.ajaxurl || _tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        attempts_id: $that.data('attemptid'),
+        feedback: $('.tutor-instructor-feedback-content').val(),
+        action: 'tutor_instructor_feedback'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $that.closest('.course-content-item').remove();
+          tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Since 1.7.9
+   * Announcements scripts
+   */
+
+  var add_new_button = $(".tutor-announcement-add-new");
+  var update_button = $(".tutor-announcement-edit");
+  var delete_button = $(".tutor-announcement-delete");
+  var details_button = $(".tutor-announcement-details");
+  var close_button = $(".tutor-announcement-close-btn");
+  var create_modal = $(".tutor-accouncement-create-modal");
+  var update_modal = $(".tutor-accouncement-update-modal");
+  var details_modal = $(".tutor-accouncement-details-modal"); //open create modal
+
+  $(add_new_button).click(function () {
+    create_modal.addClass("show");
+    $("#tutor-annoucement-backend-create-modal").addClass('show');
+  });
+  $(details_button).click(function () {
+    var announcement_date = $(this).attr('announcement-date');
+    var announcement_id = $(this).attr('announcement-id');
+    var course_id = $(this).attr('course-id');
+    var course_name = $(this).attr('course-name');
+    var announcement_title = $(this).attr('announcement-title');
+    var announcement_summary = $(this).attr('announcement-summary');
+    $(".tutor-announcement-detail-content").html("<h3>".concat(announcement_title, "</h3><p>").concat(announcement_summary, "</p>"));
+    $(".tutor-announcement-detail-course-info p").html("".concat(course_name));
+    $(".tutor-announcement-detail-date-info p").html("".concat(announcement_date)); //set attr on edit button
+
+    $("#tutor-announcement-edit-from-detail").attr('announcement-id', announcement_id);
+    $("#tutor-announcement-edit-from-detail").attr('course-id', course_id);
+    $("#tutor-announcement-edit-from-detail").attr('announcement-title', announcement_title);
+    $("#tutor-announcement-edit-from-detail").attr('announcement-summary', announcement_summary);
+    $("#tutor-announcement-delete-from-detail").attr('announcement-id', announcement_id);
+    details_modal.addClass("show");
+  }); //open update modal
+
+  $(update_button).click(function () {
+    if (details_modal) {
+      details_modal.removeClass('show');
+    }
+
+    var announcement_id = $(this).attr('announcement-id');
+    var course_id = $(this).attr('course-id');
+    var announcement_title = $(this).attr('announcement-title');
+    var announcement_summary = $(this).attr('announcement-summary');
+    $("#tutor-announcement-course-id").val(course_id);
+    $("#announcement_id").val(announcement_id);
+    $("#tutor-announcement-title").val(announcement_title);
+    $("#tutor-announcement-summary").val(announcement_summary);
+    update_modal.addClass("show");
+  }); //close create and update modal
+
+  $(close_button).click(function () {
+    create_modal.removeClass("show");
+    update_modal.removeClass("show");
+    details_modal.removeClass("show");
+    $("#tutor-annoucement-backend-create-modal").removeClass('show');
+  }); //create announcement
+
+  $(".tutor-announcements-form").on('submit', function (e) {
+    e.preventDefault();
+    var $btn = $(this).find('button[type="submit"]');
+    var formData = $(".tutor-announcements-form").serialize() + '&action=tutor_announcement_create' + '&action_type=create';
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: formData,
+      beforeSend: function beforeSend() {
+        $btn.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $(".tutor-alert").remove();
+
+        if (data.status == "success") {
+          location.reload();
+        }
+
+        if (data.status == "validation_error") {
+          $(".tutor-announcements-create-alert").append("<div class=\"tutor-alert alert-warning\"></div>");
+
+          for (var _i = 0, _Object$entries = Object.entries(data.message); _i < _Object$entries.length; _i++) {
+            var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+                key = _Object$entries$_i[0],
+                value = _Object$entries$_i[1];
+
+            $(".tutor-announcements-create-alert .tutor-alert").append("<li>".concat(value, "</li>"));
+          }
+        }
+
+        if (data.status == "fail") {
+          $(".tutor-announcements-create-alert").html("<li>".concat(data.message, "</li>"));
+        }
+      },
+      error: function error(data) {
+        console.log(data);
+      }
+    });
+  }); //update announcement
+
+  $(".tutor-announcements-update-form").on('submit', function (e) {
+    e.preventDefault();
+    var $btn = $(this).find('button[type="submit"]');
+    var formData = $(".tutor-announcements-update-form").serialize() + '&action=tutor_announcement_create' + '&action_type=update';
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: formData,
+      beforeSend: function beforeSend() {
+        $btn.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $(".tutor-alert").remove();
+
+        if (data.status == "success") {
+          location.reload();
+        }
+
+        if (data.status == "validation_error") {
+          $(".tutor-announcements-update-alert").append("<div class=\"tutor-alert alert-warning\"></div>");
+
+          for (var _i2 = 0, _Object$entries2 = Object.entries(data.message); _i2 < _Object$entries2.length; _i2++) {
+            var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i2], 2),
+                key = _Object$entries2$_i[0],
+                value = _Object$entries2$_i[1];
+
+            $(".tutor-announcements-update-alert > .tutor-alert").append("<li>".concat(value, "</li>"));
+          }
+        }
+
+        if (data.status == "fail") {
+          $(".tutor-announcements-create-alert").html("<li>".concat(data.message, "</li>"));
+        }
+      },
+      error: function error() {}
+    });
+  });
+  $(delete_button).click(function () {
+    var announcement_id = $(this).attr('announcement-id');
+    var whichtr = $("#tutor-announcement-tr-" + announcement_id);
+
+    if (confirm("Do you want to delete?")) {
+      $.ajax({
+        url: window._tutorobject.ajaxurl,
+        type: 'POST',
+        data: {
+          action: 'tutor_announcement_delete',
+          announcement_id: announcement_id
+        },
+        beforeSend: function beforeSend() {},
+        success: function success(data) {
+          whichtr.remove();
+
+          if (details_modal.length) {
+            details_modal.removeClass('show');
+          }
+
+          if (data.status == "fail") {
+            console.log(data.message);
+          }
+        },
+        error: function error() {}
+      });
+    }
+  }); //sorting 
+  // if (jQuery.datepicker){
+  //     $( "#tutor-announcement-datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
+  // }
+
+  function urlPrams(type, val) {
+    var url = new URL(window.location.href);
+    var search_params = url.searchParams;
+    search_params.set(type, val);
+    url.search = search_params.toString();
+    search_params.set('paged', 1);
+    url.search = search_params.toString();
+    return url.toString();
+  }
+
+  $('.tutor-announcement-course-sorting').on('change', function (e) {
+    window.location = urlPrams('course-id', $(this).val());
+  });
+  $('.tutor-announcement-order-sorting').on('change', function (e) {
+    window.location = urlPrams('order', $(this).val());
+  });
+  $('.tutor-announcement-date-sorting').on('change', function (e) {
+    window.location = urlPrams('date', $(this).val());
+  });
+  $('.tutor-announcement-search-sorting').on('click', function (e) {
+    window.location = urlPrams('search', $(".tutor-announcement-search-field").val());
+  }); //dropdown toggle
+
+  $(document).click(function () {
+    $(".tutor-dropdown").removeClass('show');
+  });
+  $(".tutor-dropdown").click(function (e) {
+    e.stopPropagation();
+
+    if ($('.tutor-dropdown').hasClass('show')) {
+      $('.tutor-dropdown').removeClass('show');
+    }
+
+    $(this).addClass('show');
+  }); //announcement end
+
+  /**
+   * @since v.1.9.0
+   * Parse and show video duration on link paste in lesson video 
+   */
+
+  var video_url_input = '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5';
+  var autofill_url_timeout;
+  $('body').on('paste', video_url_input, function (e) {
+    e.stopImmediatePropagation();
+    var root = $(this).closest('.lesson-modal-form-wrap').find('.tutor-option-field-video-duration');
+    var duration_label = root.find('label');
+    var is_wp_media = $(this).hasClass('video_source_wrap_html5') || $(this).hasClass('video_source_upload_wrap_html5');
+    var autofill_url = $(this).data('autofill_url');
+    $(this).data('autofill_url', null);
+    var video_url = is_wp_media ? $(this).find('span').data('video_url') : autofill_url || e.originalEvent.clipboardData.getData('text');
+
+    var toggle_loading = function toggle_loading(show) {
+      if (!show) {
+        duration_label.find('img').remove();
+        return;
+      } // Show loading icon
+
+
+      if (duration_label.find('img').length == 0) {
+        duration_label.append(' <img src="' + window._tutorobject.loading_icon_url + '" style="display:inline-block"/>');
+      }
+    };
+
+    var set_duration = function set_duration(sec_num) {
+      var hours = Math.floor(sec_num / 3600);
+      var minutes = Math.floor((sec_num - hours * 3600) / 60);
+      var seconds = Math.round(sec_num - hours * 3600 - minutes * 60);
+
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+
+      var fragments = [hours, minutes, seconds];
+      var time_fields = root.find('input');
+
+      for (var i = 0; i < 3; i++) {
+        time_fields.eq(i).val(fragments[i]);
+      }
+    };
+
+    var yt_to_seconds = function yt_to_seconds(duration) {
+      var match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+      match = match.slice(1).map(function (x) {
+        if (x != null) {
+          return x.replace(/\D/, '');
+        }
+      });
+      var hours = parseInt(match[0]) || 0;
+      var minutes = parseInt(match[1]) || 0;
+      var seconds = parseInt(match[2]) || 0;
+      return hours * 3600 + minutes * 60 + seconds;
+    };
+
+    if (is_wp_media || $(this).parent().hasClass('video_source_wrap_external_url')) {
+      var player = document.createElement('video');
+      player.addEventListener('loadedmetadata', function () {
+        set_duration(player.duration);
+        toggle_loading(false);
+      });
+      toggle_loading(true);
+      player.src = video_url;
+    } else if ($(this).parent().hasClass('video_source_wrap_vimeo')) {
+      var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+      var match = video_url.match(regExp);
+      var video_id = match ? match[5] : null;
+
+      if (video_id) {
+        toggle_loading(true);
+        $.getJSON('http://vimeo.com/api/v2/video/' + video_id + '/json', function (data) {
+          if (Array.isArray(data) && data[0] && data[0].duration !== undefined) {
+            set_duration(data[0].duration);
+          }
+
+          toggle_loading(false);
+        });
+      }
+    } else if ($(this).parent().hasClass('video_source_wrap_youtube')) {
+      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      var match = video_url.match(regExp);
+      var video_id = match && match[7].length == 11 ? match[7] : false;
+      var api_key = $(this).data('youtube_api_key');
+
+      if (video_id && api_key) {
+        var result_url = 'https://www.googleapis.com/youtube/v3/videos?id=' + video_id + '&key=' + api_key + '&part=contentDetails';
+        toggle_loading(true);
+        $.getJSON(result_url, function (data) {
+          if (_typeof(data) == 'object' && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.duration) {
+            set_duration(yt_to_seconds(data.items[0].contentDetails.duration));
+          }
+
+          toggle_loading(false);
+        });
+      }
+    }
+  }).on('input', video_url_input, function () {
+    if (autofill_url_timeout) {
+      clearTimeout(autofill_url_timeout);
+    }
+
+    var $this = $(this);
+    autofill_url_timeout = setTimeout(function () {
+      var val = $this.val();
+      val = val ? val.trim() : '';
+      console.log('Trigger', val);
+      val ? $this.data('autofill_url', val).trigger('paste') : 0;
+    }, 700);
+  });
+  /**
+   * @since v.1.8.6
+   * SUbmit form through ajax
+   */
+
+  $('.tutor-form-submit-through-ajax').submit(function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var url = $(this).attr('action') || window.location.href;
+    var type = $(this).attr('method') || 'GET';
+    var data = $(this).serializeObject();
+    $that.find('button').addClass('tutor-updating-message');
+    $.ajax({
+      url: url,
+      type: type,
+      data: data,
+      success: function success() {
+        tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
+      },
+      complete: function complete() {
+        $that.find('button').removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /*
+  * @since v.1.7.9
+  * Send wp nonce to every ajax request
+  */
+
+  $.ajaxSetup({
+    data: tutor_get_nonce_data()
+  });
+});
+
+jQuery.fn.serializeObject = function () {
+  var values = {};
+  var array = this.serializeArray();
+  jQuery.each(array, function () {
+    if (values[this.name]) {
+      if (!values[this.name].push) {
+        values[this.name] = [values[this.name]];
+      }
+
+      values[this.name].push(this.value || '');
+    } else {
+      values[this.name] = this.value || '';
+    }
+  });
+  return values;
+};
+
+window.tutor_toast = function (title, description, type) {
+  var tutor_ob = window._tutorobject || {};
+  var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
+
+  if (!jQuery('.tutor-toast-parent').length) {
+    jQuery('body').append('<div class="tutor-toast-parent"></div>');
+  }
+
+  var icons = {
+    success: asset + 'icon-check.svg',
+    error: asset + 'icon-cross.svg'
+  };
+  var content = jQuery('\
+        <div>\
+            <div>\
+                <img src="' + icons[type] + '"/>\
+            </div>\
+            <div>\
+                <div>\
+                    <b>' + title + '</b>\
+                    <span>' + description + '</span>\
+                </div>\
+            </div>\
+            <div>\
+                <i class="tutor-toast-close tutor-icon-line-cross"></i>\
+            </div>\
+        </div>');
+  content.find('.tutor-toast-close').click(function () {
+    content.remove();
+  });
+  jQuery('.tutor-toast-parent').append(content);
+  setTimeout(function () {
+    if (content) {
+      content.fadeOut('fast', function () {
+        jQuery(this).remove();
+      });
+    }
+  }, 5000);
+};
+/**
+ * Add option disable when don't need to add an option
+ * 
+ * @since 1.9.7
+ */
+
+
+function disableAddoption() {
+  var selected_question_type = document.querySelector(".tutor_select_value_holder").value;
+  var question_answers = document.getElementById("tutor_quiz_question_answers");
+  var question_answer_form = document.getElementById("tutor_quiz_question_answer_form");
+  var add_question_answer_option = document.querySelector(".add_question_answers_option");
+
+  var addDisabledClass = function addDisabledClass(elem) {
+    if (!elem.classList.contains("disabled")) {
+      elem.classList.add('disabled');
+    }
+  };
+
+  var removeDisabledClass = function removeDisabledClass(elem) {
+    if (elem.classList.contains("disabled")) {
+      elem.classList.remove('disabled');
+    }
+  }; //dont need add option for open_ended & short_answer
+
+
+  if (selected_question_type === 'open_ended' || selected_question_type === 'short_answer') {
+    addDisabledClass(add_question_answer_option);
+  } else if (selected_question_type === 'true_false' || selected_question_type === 'fill_in_the_blank') {
+    //if already have options then dont need to show add option
+    if (question_answer_form.hasChildNodes() || question_answers.hasChildNodes()) {
+      addDisabledClass(add_question_answer_option);
+    } else {
+      removeDisabledClass(add_question_answer_option);
+    }
+  } else {
+    //if other question type then remove disabled
+    removeDisabledClass(add_question_answer_option);
+  }
+}
+
+/***/ }),
+
+/***/ "./v2-library/_src/js/main.js":
+/*!************************************!*\
+  !*** ./v2-library/_src/js/main.js ***!
+  \************************************/
+/***/ (() => {
+
+(function () {
+  'use strict'; // modal
+
+  tutorModal();
+})();
+
+function tutorModal() {
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-modal-target';
+    var closeAttr = 'data-tutor-modal-close';
+    var overlay = 'tutor-modal-overlay';
+
+    if (e.target.hasAttribute(attr) || e.target.closest("[".concat(attr, "]"))) {
+      e.preventDefault();
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      var modal = document.getElementById(id);
+
+      if (modal) {
+        modal.classList.add('tutor-is-active');
+      }
+    }
+
+    if (e.target.hasAttribute(closeAttr) || e.target.classList.contains(overlay) || e.target.closest("[".concat(closeAttr, "]"))) {
+      e.preventDefault();
+
+      var _modal = document.querySelectorAll('.tutor-modal.tutor-is-active');
+
+      _modal.forEach(function (m) {
+        m.classList.remove('tutor-is-active');
+      });
+    }
+  }); // open
+  // const modalButton = document.querySelectorAll("[data-tutor-modal-target]");
+  // modalButton.forEach(b => {
+  //     const id = b.getAttribute("data-tutor-modal-target");
+  //     const modal = document.getElementById(id);
+  //     if (modal) {
+  //         b.addEventListener("click", e => {
+  //             e.preventDefault();
+  //             modal.classList.add("tutor-is-active");
+  //         })
+  //     }
+  // })
+  // close
+  // const close = document.querySelectorAll("[data-tutor-modal-close], .tutor-modal-overlay");
+  // close.forEach(c => {
+  //     c.addEventListener("click", e => {
+  //         e.preventDefault();
+  //         const modal = document.querySelectorAll(".tutor-modal.tutor-is-active");
+  //         modal.forEach(m => {
+  //             m.classList.remove("tutor-is-active");
+  //         })
+  //     })
+  // })
+}
+
+(function thumbnailUploadPreview() {
+  /**
+   * Image Preview : Logo and Signature Upload
+   * Selector -> .tutor-option-field-input.image-previewer
+   */
+  var imgPreviewers = document.querySelectorAll('.tutor-thumbnail-uploader');
+  var imgPreviews = document.querySelectorAll('.tutor-thumbnail-uploader img');
+  var imgPrevInputs = document.querySelectorAll('.tutor-thumbnail-uploader input[type=file]');
+  var imgPrevDelBtns = document.querySelectorAll('.tutor-thumbnail-uploader .delete-btn');
+
+  if (imgPrevInputs && imgPrevDelBtns) {
+    // Checking Img Src when document loads
+    document.addEventListener('DOMContentLoaded', function () {
+      imgPreviewers.forEach(function (previewer) {
+        imgPreviews.forEach(function (img) {
+          if (img.getAttribute('src')) {
+            img.closest('.image-previewer').classList.add('is-selected');
+          } else {
+            previewer.classList.remove('is-selected');
+          }
+
+          console.log(img);
+        });
+      });
+    }); // Updating Image Preview
+
+    imgPrevInputs.forEach(function (input) {
+      input.addEventListener('change', function (e) {
+        var file = this.files[0];
+        var parentEl = input.closest('.image-previewer');
+        var targetImg = parentEl.querySelector('img');
+        var prevLoader = parentEl.querySelector('.preview-loading');
+
+        if (file) {
+          prevLoader.classList.add('is-loading');
+          getImageAsDataURL(file, targetImg);
+          parentEl.classList.add('is-selected');
+          setTimeout(function () {
+            prevLoader.classList.remove('is-loading');
+          }, 200);
+        }
+      });
+    }); // Deleting Image Preview
+
+    imgPrevDelBtns.forEach(function (delBtn) {
+      delBtn.addEventListener('click', function (e) {
+        var parentEl = this.closest('.image-previewer');
+        var targetImg = parentEl.querySelector('img');
+        targetImg.setAttribute('src', '');
+        parentEl.classList.remove('is-selected');
+      });
+    });
+  } // Get Image file as Data URL
+
+
+  var getImageAsDataURL = function getImageAsDataURL(file, imgSrc) {
+    var reader = new FileReader();
+
+    reader.onload = function () {
+      imgSrc.setAttribute('src', this.result);
+    };
+
+    reader.readAsDataURL(file);
+  };
+})();
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+/*!*****************************************************!*\
+  !*** ./assets/react/admin-dashboard/tutor-setup.js ***!
+  \*****************************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _lib_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/common */ "./assets/react/lib/common.js");
+
+
+jQuery.fn.serializeObject = function () {
+  var values = {};
+  var array = this.serializeArray();
+  jQuery.each(array, function () {
+    if (values[this.name]) {
+      if (!values[this.name].push) {
+        values[this.name] = [values[this.name]];
+      }
+
+      values[this.name].push(this.value || '');
+    } else {
+      values[this.name] = this.value || '';
+    }
+  });
+  return values;
+};
+
+jQuery(document).ready(function ($) {
+  "use strict";
+
+  var url = window.location.href;
+
+  if (url.indexOf('#') > 0) {
+    $(".tutor-wizard-container > div").removeClass("active");
+    $(".tutor-wizard-container > div.tutor-setup-wizard-settings").addClass("active");
+    var split_data = url.split("#");
+
+    if (split_data[1]) {
+      var _length = $(".tutor-setup-title li." + split_data[1]).index();
+
+      $(".tutor-setup-title li").removeClass("current");
+      $(".tutor-setup-content li").removeClass("active");
+
+      for (var index = 0; index <= _length; index++) {
+        $(".tutor-setup-title li").eq(index).addClass('active');
+
+        if (_length == index) {
+          $(".tutor-setup-title li").eq(index).addClass("current");
+          $(".tutor-setup-content li").eq(index).addClass("active");
+        }
+      }
+    }
+
+    var enable = $("input[name='enable_course_marketplace'").val();
+    showHide(enable ? enable : 0);
+  }
+
+  $(".tutor-setup-title li").on("click", function (e) {
+    e.preventDefault();
+
+    var _length = $(this).closest("li").index();
+
+    $(".tutor-setup-title li").removeClass("active current");
+    $(".tutor-setup-title li").eq(_length).addClass("active current");
+    $(".tutor-setup-content li").removeClass("active");
+    $(".tutor-setup-content li").eq(_length).addClass("active");
+    window.location.hash = $("ul.tutor-setup-title li").eq(_length).data("url");
+
+    for (var _index2 = 0; _index2 <= _length; _index2++) {
+      $(".tutor-setup-title li").eq(_index2).addClass('active');
+    }
+  });
+  /* ---------------------
+  * Wizard Skip
+  * ---------------------- */
+
+  $(".tutor-boarding-next, .tutor-boarding-skip").on("click", function (e) {
+    e.preventDefault();
+    $(".tutor-setup-wizard-boarding").removeClass("active");
+    $(".tutor-setup-wizard-type").addClass("active");
+  });
+  $(".tutor-type-next, .tutor-type-skip").on("click", function (e) {
+    e.preventDefault();
+    $(".tutor-setup-wizard-type").removeClass("active");
+    $(".tutor-setup-wizard-settings").addClass("active");
+    $('.tutor-setup-title li').eq(0).addClass('active');
+    window.location.hash = "general";
+    showHide($("input[name='enable_course_marketplace_setup']:checked").val());
+  });
+  /* ---------------------
+  * Marketplace Type
+  * ---------------------- */
+
+  $("input[type=radio][name=enable_course_marketplace_setup]").change(function () {
+    if (this.value == "0") {
+      $("input[name=enable_course_marketplace]").val("");
+      $("input[name=enable_tutor_earning]").val("");
+    } else if (this.value == "1") {
+      $("input[name=enable_course_marketplace]").val("1");
+      $("input[name=enable_tutor_earning]").val("1");
+    }
+  });
+  /* ---------------------
+  * Wizard Action
+  * ---------------------- */
+
+  $(".tutor-setup-previous").on("click", function (e) {
+    e.preventDefault();
+
+    var _index = $(this).closest("li").index();
+
+    $("ul.tutor-setup-title li").eq(_index).removeClass("active");
+
+    if (_index > 0 && _index == $('.tutor-setup-title li.instructor').index() + 1 && $('.tutor-setup-title li.instructor').hasClass('hide-this')) {
+      _index = _index - 1;
+    }
+
+    if (_index > 0) {
+      $("ul.tutor-setup-title li").eq(_index - 1).addClass("active");
+      $("ul.tutor-setup-content li").removeClass("active").eq(_index - 1).addClass("active");
+      $("ul.tutor-setup-title li").removeClass("current").eq(_index - 1).addClass("current");
+      window.location.hash = $("ul.tutor-setup-title li").eq(_index - 1).data('url');
+    } else {
+      $('.tutor-setup-wizard-settings').removeClass('active');
+      $('.tutor-setup-wizard-type').addClass('active');
+      window.location.hash = '';
+    }
+
+    setpSet();
+  });
+  $('.tutor-setup-type-previous').on("click", function (e) {
+    $('.tutor-setup-wizard-type').removeClass('active');
+    $('.tutor-setup-wizard-boarding').addClass('active');
+  });
+  $(".tutor-setup-skip, .tutor-setup-next").on("click", function (e) {
+    e.preventDefault();
+
+    var _index = $(this).closest("li").index() + 1;
+
+    if (_index == $('.tutor-setup-title li.instructor').index() && $('.tutor-setup-title li.instructor').hasClass('hide-this')) {
+      _index = _index + 1;
+    }
+
+    $("ul.tutor-setup-title li").eq(_index).addClass("active");
+    $("ul.tutor-setup-content li").removeClass("active").eq(_index).addClass("active");
+    $("ul.tutor-setup-title li").removeClass("current").eq(_index).addClass("current");
+    window.location.hash = $("ul.tutor-setup-title li").eq(_index).data("url");
+    setpSet();
+  });
+  /* ---------------------
+  * Wizard Skip
+  * ---------------------- */
+
+  $(".tutor-boarding-next, .tutor-boarding-skip").on("click", function (e) {
+    e.preventDefault();
+    $(".tutor-setup-wizard-boarding").removeClass("active");
+    $(".tutor-setup-wizard-type").addClass("active");
+  });
+  /* ---------------------
+  * Wizard Slick Slider
+  * ---------------------- */
+
+  $(".tutor-boarding").slick({
+    speed: 1000,
+    centerMode: true,
+    centerPadding: "19.5%",
+    slidesToShow: 1,
+    arrows: false,
+    dots: true,
+    responsive: [{
+      breakpoint: 768,
+      settings: {
+        arrows: false,
+        centerMode: true,
+        centerPadding: "50px",
+        slidesToShow: 1
+      }
+    }, {
+      breakpoint: 480,
+      settings: {
+        arrows: false,
+        centerMode: true,
+        centerPadding: "30px",
+        slidesToShow: 1
+      }
+    }]
+  });
+  /* ---------------------
+  * Form Submit and Redirect after Finished
+  * ---------------------- */
+
+  $(".tutor-redirect").on("click", function (e) {
+    var that = $(this);
+    e.preventDefault();
+    var formData = $("#tutor-setup-form").serializeObject();
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: "POST",
+      data: formData,
+      success: function success(data) {
+        if (data.success) {
+          window.location = that.data("url");
+        }
+      }
+    });
+  });
+  /* ---------------------
+  * Reset Section
+  * ---------------------- */
+
+  $(".tutor-reset-section").on("click", function (e) {
+    $(this).closest("li").find("input").val(function () {
+      switch (this.type) {
+        case "text":
+          return this.defaultValue;
+          break;
+
+        case "checkbox":
+        case "radio":
+          this.checked = this.defaultChecked;
+          break;
+
+        case "range":
+          var rangeval = $(this).closest(".limit-slider");
+
+          if (rangeval.find(".range-input").hasClass("double-range-slider")) {
+            rangeval.find(".range-value-1").html(this.defaultValue + "%");
+            $(".range-value-data-1").val(this.defaultValue);
+            rangeval.find(".range-value-2").html(100 - this.defaultValue + "%");
+            $(".range-value-data-2").val(100 - this.defaultValue);
+          } else {
+            rangeval.find(".range-value").html(this.defaultValue);
+            return this.defaultValue;
+          }
+
+          break;
+
+        case "hidden":
+          return this.value;
+          break;
+      }
+    });
+  });
+  /* ---------------------
+  * Wizard Tooltip
+  * ---------------------- */
+
+  $(".tooltip-btn").on("click", function (e) {
+    e.preventDefault();
+    $(this).toggleClass("active");
+  });
+  /* ---------------------
+  * on/of emphasizing after input check click
+  * ---------------------- */
+
+  $(".input-switchbox").each(function () {
+    inputCheckEmphasizing($(this));
+  });
+
+  function inputCheckEmphasizing(th) {
+    var checkboxRoot = th.parent().parent();
+
+    if (th.prop("checked")) {
+      checkboxRoot.find(".label-on").addClass("active");
+      checkboxRoot.find(".label-off").removeClass("active");
+    } else {
+      checkboxRoot.find(".label-on").removeClass("active");
+      checkboxRoot.find(".label-off").addClass("active");
+    }
+  }
+
+  $(".input-switchbox").click(function () {
+    inputCheckEmphasizing($(this));
+  });
+  /* ---------------------
+  * Select Option
+  * ---------------------- */
+
+  $(".selected").on("click", function () {
+    $(".options-container").toggleClass("active");
+  });
+  $(".option").each(function () {
+    $(this).on("click", function () {
+      $(".selected").html($(this).find("label").html());
+      $(".options-container").removeClass("active");
+    });
+  });
+  /* ---------------------
+  * Time Limit sliders
+  * ---------------------- */
+
+  $(".range-input").on("change mousemove", function (e) {
+    var rangeInput = $(this).val();
+    var rangeValue = $(this).parent().parent().find(".range-value");
+    rangeValue.text(rangeInput);
+  });
+  $(".double-range-slider").on("change mousemove", function () {
+    var selector = $(this).closest(".settings");
+    selector.find(".range-value-1").text($(this).val() + "%");
+    selector.find('input[name="earning_instructor_commission"]').val($(this).val());
+    selector.find(".range-value-2").text(100 - $(this).val() + "%");
+    selector.find('input[name="earning_admin_commission"]').val(100 - $(this).val());
+  });
+  $("#attempts-allowed-1").on("click", function (e) {
+    if ($("#attempts-allowed-numer").prop("disabled", true)) {
+      $(this).parent().parent().parent().addClass("active");
+      $("#attempts-allowed-numer").prop("disabled", false);
+    }
+  });
+  $("#attempts-allowed-2").on("click", function (e) {
+    if ($("#attempts-allowed-2").is(":checked")) {
+      $(this).parent().parent().parent().removeClass("active");
+      $("#attempts-allowed-numer").prop("disabled", true);
+    }
+  });
+  $('.wizard-type-item').on('click', function (e) {
+    showHide($(this).find('input').val());
+  });
+
+  function showHide(val) {
+    if (val == 1) {
+      $('.tutor-show-hide').addClass('active');
+      $('.tutor-setup-title li.instructor').removeClass('hide-this');
+      $('.tutor-setup-content li').eq($('.tutor-setup-title li.instructor')).removeClass('hide-this');
+    } else {
+      $('.tutor-show-hide').removeClass('active');
+      $('.tutor-setup-title li.instructor').addClass('hide-this');
+      $('.tutor-setup-content li').eq($('.tutor-setup-title li.instructor')).addClass('hide-this');
+    }
+  }
+
+  setpSet();
+
+  function setpSet() {
+    if ($('.tutor-setup-title li.instructor').hasClass('hide-this')) {
+      $('.tutor-steps').html(5);
+
+      var _index = $('.tutor-setup-title li.current').index();
+
+      if (_index > 2) {
+        $('.tutor-setup-content li.active .tutor-steps-current').html(_index);
+      }
+    } else {
+      $('.tutor-steps').html(6);
+      $(".tutor-setup-content li").each(function () {
+        $(this).find('.tutor-steps-current').html($(this).index() + 1);
+      });
+    }
+  }
+  /* ---------------------
+  * Attempt Allowed
+  * ---------------------- */
+
+
+  $("input[name='attempts-allowed']").on('change', function (e) {
+    var _val = $(this).filter(':checked').val();
+
+    if (_val == 'unlimited') {
+      $("input[name='quiz_attempts_allowed']").val(0);
+    } else {
+      $("input[name='quiz_attempts_allowed']").val($("input[name='attempts-allowed-number").val());
+    }
+  });
+  $("input[name='attempts-allowed-number']").on('change', function (e) {
+    $("input[name='quiz_attempts_allowed']").val($(this).val());
+  });
+  $("input[name='attempts-allowed-number']").on('focus', function (e) {
+    $("input[name='attempts-allowed'][value='single']").attr('checked', true);
+  });
+});
+})();
+
+/******/ })()
+;
+//# sourceMappingURL=tutor-setup.js.map
