@@ -35,6 +35,8 @@ class Options_V2 {
 		// Saving option.
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
 		add_action( 'wp_ajax_tutor_option_search', array( $this, 'tutor_option_search' ) );
+		add_action( 'wp_ajax_tutor_export_settings', array( $this, 'tutor_export_settings' ) );
+		add_action( 'wp_ajax_tutor_import_settings', array( $this, 'tutor_import_settings' ) );
 	}
 
 	private function get( $key = null, $default = false ) {
@@ -112,6 +114,16 @@ class Options_V2 {
 		wp_send_json_success( $data_array );
 	}
 
+	public function tutor_export_settings() {
+		wp_send_json_success( (array) maybe_unserialize( get_option( 'tutor_option' ) ) );
+	}
+
+	public function tutor_import_settings() {
+		echo '<pre>';
+		print_r($_FILES);
+		echo '</pre>';;
+	}
+
 	/**
 	 * Function tutor_option_save
 	 *
@@ -178,11 +190,12 @@ class Options_V2 {
 					'status'        => array(
 						'label'    => __( 'Status', 'tutor' ),
 						'slug'     => 'status',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Status Settings', 'tutor' ),
 						'template' => 'status',
-						'icon'     => __( 'chart', 'tutor' ),
+						'icon'     => 'icon-chart-filled',
 						'blocks'   => array(
-							'wordpress_environment'   => array(
+							'wordpress_environment' => array(
 								'label'      => __( 'WordPress environment', 'tutor' ),
 								'slug'       => 'wordpress_environment',
 								'classes'    => 'wordpress_environment',
@@ -277,7 +290,7 @@ class Options_V2 {
 									),
 								),
 							),
-							'server_environment'   => array(
+							'server_environment'    => array(
 								'label'      => __( 'Server environment', 'tutor' ),
 								'slug'       => 'server_environment',
 								'block_type' => 'column',
@@ -399,17 +412,19 @@ class Options_V2 {
 					'import_export' => array(
 						'label'    => __( 'Import/Export', 'tutor' ),
 						'slug'     => 'import_export',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Import/Export Settings', 'tutor' ),
 						'template' => 'import_export',
-						'icon'     => __( 'import-export', 'tutor' ),
+						'icon'     => 'icon-import-export-filled',
 						'blocks'   => array(),
 					),
 					'tutor_pages'   => array(
 						'label'    => __( 'Tutor Pages', 'tutor' ),
 						'slug'     => 'tutor_pages',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Tutor Pages Settings', 'tutor' ),
 						'template' => 'tutor_pages',
-						'icon'     => __( 'buddypress', 'tutor' ),
+						'icon'     => 'icon-review-line',
 						'blocks'   => array(
 							'block' => array(),
 						),
@@ -417,9 +432,10 @@ class Options_V2 {
 					'tutor-setup'   => array(
 						'label'    => __( 'Setup Wizard', 'tutor' ),
 						'slug'     => 'tutor-setup',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Setup Wizard Settings', 'tutor' ),
 						'template' => 'tutor-setup',
-						'icon'     => __( 'paid-membersip-pro', 'tutor' ),
+						'icon'     => 'icon-earth-filled',
 						'blocks'   => array(
 							'block' => array(),
 						),
