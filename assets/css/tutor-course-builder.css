@@ -1266,15 +1266,6 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-cou
       flex-wrap: wrap;
 }
 
-body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .lesson-modal-form-wrap .lesson-content-drip-wrap {
-  padding: 10px;
-  border: 1px solid #e4e4e4;
-}
-
-body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .lesson-modal-form-wrap .lesson-content-drip-wrap h3 {
-  margin: 0 0 10px 0;
-}
-
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .select2-dropdown.increasezindex {
   z-index: 9999999999999;
 }

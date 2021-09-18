@@ -44,6 +44,9 @@ var scss_blueprints = {
 
 	tutor_course_builder: {src: "assets/scss/course-builder/index.scss", mode: 'expanded', destination: 'tutor-course-builder.css'},
 	tutor_course_builder_min: {src: "assets/scss/course-builder/index.scss", mode: 'compressed', destination: 'tutor-course-builder.min.css'},
+
+	v2_scss:{src: "v2-library/_src/scss/main.scss", mode: 'compressed', destination: 'main.min.css', dest_path: 'v2-library/bundle'},
+	v2_scss:{src: "v2-library/_src/scss/main.scss", mode: 'compressed', destination: 'main.min.css', dest_path: '.docz/static/v2-library/bundle'}
 };
 
 
@@ -52,7 +55,6 @@ var task_keys = Object.keys(scss_blueprints);
 for(let task in scss_blueprints) {
 	
 	let blueprint = scss_blueprints[task];
-	// console.log(blueprint);
 	
 	gulp.task(task, function () {
 		return gulp.src(blueprint.src)
@@ -60,7 +62,7 @@ for(let task in scss_blueprints) {
 			.pipe(sass({outputStyle: blueprint.mode}))
 			.pipe(prefix(prefixerOptions))
 			.pipe(rename(blueprint.destination))
-			.pipe(gulp.dest("assets/css"));
+			.pipe(gulp.dest(blueprint.dest_path || "assets/css"));
 	});
 }
 
