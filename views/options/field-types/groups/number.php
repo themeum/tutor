@@ -1,7 +1,7 @@
 
-<input type="number" name="<?php echo $input_name; ?>" value="<?php echo $input_value; ?>" >
+<input type="number" name="<?php esc_attr_e( $input_name ); ?>" value="<?php esc_attr_e( $input_value ); ?>" >
 <?php
-if ($label){
-    echo "<p>{$label}</p>";
-}
+if ( $label ) {
+    echo '<p>' . esc_html_e( $label ) . '</p>';
+} 
 ?>

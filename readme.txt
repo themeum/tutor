@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 1.9.9
+Stable tag: 1.9.10
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,11 +241,16 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.9 - September 13, 2021 =
+= 1.9.10 - October 03, 2021 =
+
+New: Event Calendar
+
+= 1.9.9 - September 16, 2021 =
 
 New: Advanced analytics for instructors in the Frontend Dashboard
 New: Download option of reports for the instructors in CSV format
 New: Pagination settings for Tutor shortcodes added
+Update: Security enhancements
 Fix: Withdrawal message shown for students/non-approved instructors
 Fix: Disabling total enrolled number issue in the course page
 Fix: Date picker format not applying issue for all the places in Tutor LMS
