@@ -12,33 +12,33 @@ const tutorIconsV2 = {
 const { angleRight, magnifyingGlass, warning } = tutorIconsV2;
 
 jQuery(document).ready(function ($) {
-	'use strict';
+  "use strict";
 
-	let image_uploader = document.querySelectorAll('.image_upload_button');
-	// let image_input = document.getElementById("image_url_field");
+  let image_uploader = document.querySelectorAll(".image_upload_button");
+  // let image_input = document.getElementById("image_url_field");
 
-	for (let i = 0; i < image_uploader.length; ++i) {
-		let image_upload_wrap = image_uploader[i].closest('.image-previewer');
-		let input_file = image_upload_wrap.querySelector('.input_file');
-		let upload_preview = image_upload_wrap.querySelector('.upload_preview');
-		let image_delete = image_upload_wrap.querySelector('.delete-btn');
+  for (let i = 0; i < image_uploader.length; ++i) {
+    let image_upload_wrap = image_uploader[i].closest(".image-previewer");
+    let input_file = image_upload_wrap.querySelector(".input_file");
+    let upload_preview = image_upload_wrap.querySelector(".upload_preview");
+    let image_delete = image_upload_wrap.querySelector(".delete-btn");
 
-		image_uploader[i].onclick = function (e) {
-			e.preventDefault();
+    image_uploader[i].onclick = function (e) {
+      e.preventDefault();
 
-			var image_frame = wp.media({
-				title: 'Upload Image',
-				library: {
-					type: 'image',
-				},
-				multiple: false,
-				frame: 'post',
-				state: 'insert',
-			});
+      var image_frame = wp.media({
+        title: "Upload Image",
+        library: {
+          type: "image",
+        },
+        multiple: false,
+        frame: "post",
+        state: "insert",
+      });
 
-			image_frame.open();
+      image_frame.open();
 
-			/* image_frame.on("select", function (e) {
+      /* image_frame.on("select", function (e) {
         console.log("image size");
         console.log(image.state().get("selection").first().toJSON());
 
@@ -47,74 +47,75 @@ jQuery(document).ready(function ($) {
         upload_previewer.src = image_input.value = image_url;
       }); */
 
-			image_frame.on('insert', function (selection) {
-				var state = image_frame.state();
-				selection = selection || state.get('selection');
-				if (!selection) return;
-				// We set multiple to false so only get one image from the uploader
-				var attachment = selection.first();
-				var display = state.display(attachment).toJSON(); // <-- additional properties
-				attachment = attachment.toJSON();
-				// Do something with attachment.id and/or attachment.url here
-				var image_url = attachment.sizes[display.size].url;
+      image_frame.on("insert", function (selection) {
+        var state = image_frame.state();
+        selection = selection || state.get("selection");
+        if (!selection) return;
+        // We set multiple to false so only get one image from the uploader
+        var attachment = selection.first();
+        var display = state.display(attachment).toJSON(); // <-- additional properties
+        attachment = attachment.toJSON();
+        // Do something with attachment.id and/or attachment.url here
+        var image_url = attachment.sizes[display.size].url;
 
-				upload_preview.src = input_file.value = image_url;
-			});
-		};
+        upload_preview.src = input_file.value = image_url;
+      });
+    };
 
-		image_delete.onclick = function () {
-			input_file.value = '';
-		};
-	}
+    image_delete.onclick = function () {
+      input_file.value = "";
+    };
+  }
 
-	$(window).on('click', function (e) {
-		$('.tutor-notification, .search_result').removeClass('show');
-	});
+  $(window).on("click", function (e) {
+    $(".tutor-notification, .search_result").removeClass("show");
+  });
 
-	$('.tutor-notification-close').click(function (e) {
-		$('.tutor-notification').removeClass('show');
-	});
+  $(".tutor-notification-close").click(function (e) {
+    $(".tutor-notification").removeClass("show");
+  });
 
-	$('#save_tutor_option').click(function (e) {
-		e.preventDefault();
-		$('#tutor-option-form').submit();
-	});
+  $("#save_tutor_option").click(function (e) {
+    e.preventDefault();
+    $("#tutor-option-form").submit();
+  });
 
-	$('#tutor-option-form').submit(function (e) {
-		e.preventDefault();
+  $("#tutor-option-form").submit(function (e) {
+    e.preventDefault();
 
-		var $form = $(this);
-		var data = $form.serializeObject();
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: data,
-			beforeSend: function () {},
-			success: function (data) {
-				$('.tutor-notification').addClass('show');
-				setTimeout(() => {
-					$('.tutor-notification').removeClass('show');
-				}, 4000);
-			},
-			complete: function () {},
-		});
-	});
+    var $form = $(this);
+    var data = $form.serializeObject();
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: "POST",
+      data: data,
+      beforeSend: function () {},
+      success: function (data) {
+        $(".tutor-notification").addClass("show");
+        setTimeout(() => {
+          $(".tutor-notification").removeClass("show");
+        }, 4000);
+      },
+      complete: function () {},
+    });
+  });
 
-	function titleCase(str) {
-		var splitStr = str.toLowerCase().split(' ');
-		for (var i = 0; i < splitStr.length; i++) {
-			// You do not need to check if i is larger than splitStr length, as your for does that for you
-			// Assign it back to the array
-			splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-		}
-		// Directly return the joined string
-		return splitStr.join(' ');
-	}
+  function titleCase(str) {
+    var splitStr = str.toLowerCase().split(" ");
+    for (var i = 0; i < splitStr.length; i++) {
+      // You do not need to check if i is larger than splitStr length, as your for does that for you
+      // Assign it back to the array
+      splitStr[i] =
+        splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    // Directly return the joined string
+    return splitStr.join(" ");
+  }
 
-	function view_item(text, section_slug, section, block, field_key) {
-		var navTrack = block ? `${angleRight} ${block}` : '';
+  function view_item(text, section_slug, section, block, field_key) {
+    var navTrack = block ? `${angleRight} ${block}` : "";
 
-		var output = `
+    var output = `
       <a data-tab="${section_slug}" data-key="field_${field_key}">
         <div class="search_result_title">
           ${magnifyingGlass}
@@ -204,65 +205,77 @@ jQuery(document).ready(function ($) {
  * Search suggestion, navigation trigger
  */
 function navigationTrigger() {
-	const suggestionLinks = document.querySelectorAll('.search-field .search-popup-opener a');
-	const navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
-	const navPages = document.querySelectorAll('.tutor-option-nav-page');
+  const suggestionLinks = document.querySelectorAll(
+    ".search-field .search-popup-opener a"
+  );
+  const navTabItems = document.querySelectorAll("li.tutor-option-nav-item a");
+  const navPages = document.querySelectorAll(".tutor-option-nav-page");
 
-	suggestionLinks.forEach((link) => {
-		link.addEventListener('click', (e) => {
-			const dataTab = e.target.closest('[data-tab]').dataset.tab;
-			const dataKey = e.target.closest('[data-key]').dataset.key;
-			if (dataTab) {
-				// remove active from other buttons
-				navTabItems.forEach((item) => {
-					item.classList.remove('active');
-				});
-				// add active to the current nav item
-				document.querySelector(`.tutor-option-tabs [data-tab=${dataTab}]`).classList.add('active');
+  suggestionLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const dataTab = e.target.closest("[data-tab]").dataset.tab;
+      const dataKey = e.target.closest("[data-key]").dataset.key;
+      if (dataTab) {
+        // remove active from other buttons
+        navTabItems.forEach((item) => {
+          item.classList.remove("active");
+        });
+        // add active to the current nav item
+        document
+          .querySelector(`.tutor-option-tabs [data-tab=${dataTab}]`)
+          .classList.add("active");
 
-				// hide other tab contents
-				navPages.forEach((content) => {
-					content.classList.remove('active');
-				});
-				// add active to the current content
-				document.querySelector(`.tutor-option-tab-pages #${dataTab}`).classList.add('active');
+        // hide other tab contents
+        navPages.forEach((content) => {
+          content.classList.remove("active");
+        });
+        // add active to the current content
+        document
+          .querySelector(`.tutor-option-tab-pages #${dataTab}`)
+          .classList.add("active");
 
-				// History push
-				const url = new URL(window.location);
-				url.searchParams.set('tab_page', dataTab);
-				window.history.pushState({}, '', url);
-			}
+        // History push
+        const url = new URL(window.location);
+        url.searchParams.set("tab_page", dataTab);
+        window.history.pushState({}, "", url);
+      }
 
-			// Reset + Hide Suggestion box
-			document.querySelector('.search-popup-opener').classList.remove('show');
-			document.querySelector('.search-field input[type="search"]').value = '';
+      // Reset + Hide Suggestion box
+      document.querySelector(".search-popup-opener").classList.remove("show");
+      document.querySelector('.search-field input[type="search"]').value = "";
 
-			// Highlight selected element
-			highlightSearchedItem(dataKey);
-		});
-	});
+      // Highlight selected element
+      highlightSearchedItem(dataKey);
+    });
+  });
 }
 
 /**
  * Highlight items form search suggestion
  */
 function highlightSearchedItem(dataKey) {
-	const target = document.querySelector(`#${dataKey}`);
-	const targetEl = target && target.querySelector(`.tutor-option-field-label label`);
-	const scrollTargetEl = target && target.parentNode.querySelector('.tutor-option-field-row');
+  const target = document.querySelector(`#${dataKey}`);
+  const targetEl =
+    target && target.querySelector(`.tutor-option-field-label label`);
+  const scrollTargetEl =
+    target && target.parentNode.querySelector(".tutor-option-field-row");
 
-	console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
+  console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
 
-	if (scrollTargetEl) {
-		targetEl.classList.add('isHighlighted');
-		setTimeout(() => {
-			targetEl.classList.remove('isHighlighted');
-		}, 6000);
+  if (scrollTargetEl) {
+    targetEl.classList.add("isHighlighted");
+    setTimeout(() => {
+      targetEl.classList.remove("isHighlighted");
+    }, 6000);
 
-		scrollTargetEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-	} else {
-		console.warn(`scrollTargetEl Not found!`);
-	}
+    scrollTargetEl.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest",
+    });
+  } else {
+    console.warn(`scrollTargetEl Not found!`);
+  }
 }
 
 /**
@@ -307,3 +320,64 @@ emailManagePageInputs.forEach((input) => {
     }
   });
 });
+
+async function postData(url = "", data = {}) {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    mode: "cors", // no-cors, *cors, same-origin
+    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: "same-origin", // include, *same-origin, omit
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: "follow", // manual, *follow, error
+    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    body: JSON.stringify(data), // body data type must match "Content-Type" header
+  });
+  console.log(response.json());
+  return response.json(); // parses JSON response into native JavaScript objects
+}
+
+/* document.querySelector("#export_settings").onclick = (e) => {
+  e.preventDefault();
+  postData(_tutorobject.ajaxurl, {
+    data: {
+      action: "tutor_export_settings",
+      nonce_key: _tutorobject.nonce_key,
+    },
+  }).then((data) => {
+    console.log(data); // JSON data parsed by `data.json()` call
+  });
+};
+ */
+
+document.querySelector("#export_settings").onclick = (e) => {
+  e.preventDefault();
+  fetch(_tutorobject.ajaxurl, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Cache-Control": "no-cache",
+    },
+    body: new URLSearchParams({
+      action: "tutor_export_settings",
+    }),
+  })
+    .then((response) => response.json())
+    .then((response) => {
+      const file = new Blob([JSON.stringify(response)], {
+        type: "application/json",
+      });
+
+      let url = URL.createObjectURL(file);
+      let element = document.createElement("a");
+      element.setAttribute("href", url);
+      element.setAttribute("download", "tutor_options");
+      element.click();
+      document.body.removeChild(element);
+    })
+    .catch((err) => console.log(err));
+};
