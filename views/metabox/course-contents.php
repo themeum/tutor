@@ -136,7 +136,7 @@
 					}
                 ?></div>
 
-                <div class="tutor_add_quiz_wrap" data-add-quiz-under="<?php echo $topic->ID; ?>">
+                <div class="tutor_add_quiz_wrap" data-topic_id="<?php echo $topic->ID; ?>">
                     <div class="tutor-add-cotnents-btn-group tutor-add-quiz-button-wrap">
 
 	                    <?php do_action('tutor_course_builder_before_btn_group', $topic->ID); ?>

@@ -77,7 +77,7 @@
                                 <button type="button" class="tutor-btn tutor-is-default">
                                     <?php _e('Back', 'tutor'); ?>
                                 </button>
-                                <button type="button" class="tutor-btn tutor-is-primary">
+                                <button type="button" data-action="next" class="tutor-btn tutor-is-primary">
                                     <?php _e('Save & Next', 'tutor'); ?>
                                 </button>
                             </div>
