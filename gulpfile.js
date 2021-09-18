@@ -209,8 +209,7 @@ exports.build = gulp.series(
 	"makepot",
 	i18n_makepot,
 	"copy",
-	"make-zip",
-	"clean-build"
+	"make-zip"
 );
 exports.sass = gulp.series(...task_keys);
 exports.default = gulp.series(...task_keys, "watch");

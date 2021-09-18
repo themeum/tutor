@@ -105,8 +105,16 @@ jQuery(document).ready(function($){
             }
             $( ".tutor_date_picker" ).datepicker({"dateFormat" : format});
         }
+        
+        /** Disable typing on datePicker field */
+        $(document).on('keydown', '.hasDatepicker, .tutor_date_picker', function( e ) {
+            if ( e.keyCode !== 8 ) {
+                e.preventDefault();
+            }
+        });
     };
     load_date_picker();
+     
     /**
      * Slider bar
      */
@@ -1632,7 +1640,7 @@ window.tutor_toast=function(title, description, type) {
  * 
  * @since 1.9.7
  */
-function disableAddoption() {
+window.disableAddoption=function() {
     const selected_question_type      = document.querySelector(".tutor_select_value_holder").value;
     const question_answers            = document.getElementById("tutor_quiz_question_answers");
     const question_answer_form        = document.getElementById("tutor_quiz_question_answer_form");

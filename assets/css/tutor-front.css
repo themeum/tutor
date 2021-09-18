@@ -6627,14 +6627,16 @@ table.course-single-gradebooks a {
 }
 
 .tutor-course-filter-wrapper > div:first-child .tutor-course-search-field {
-  border: 1px solid #BABABA;
+  border: 1px solid #bababa;
   border-radius: 6px;
   overflow: hidden;
   padding: 0 6px;
   height: auto;
 }
 
-.tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input, .tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input:focus, .tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input:active {
+.tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input,
+.tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input:focus,
+.tutor-course-filter-wrapper > div:first-child .tutor-course-search-field input:active {
   border: none;
   outline: 0;
   padding: 0;
@@ -6642,14 +6644,14 @@ table.course-single-gradebooks a {
   width: calc(100% - 24px);
   font-weight: normal;
   font-size: 16px;
-  color: #7A7A7A;
+  color: #7a7a7a;
   height: 35px;
 }
 
 .tutor-course-filter-wrapper > div:first-child .tutor-course-search-field i {
   font-size: 17px;
   cursor: pointer;
-  color: #3E64DE;
+  color: #3e64de;
 }
 
 .tutor-course-filter-wrapper > div:first-child h4 {
@@ -6672,9 +6674,9 @@ table.course-single-gradebooks a {
   float: right;
 }
 
-.tutor-course-filter-wrapper > div:last-child select[name=tutor_course_filter] {
-  border: 1px solid #7A7A7A;
-  color: #7A7A7A;
+.tutor-course-filter-wrapper > div:last-child select[name="tutor_course_filter"] {
+  border: 1px solid #7a7a7a;
+  color: #7a7a7a;
   padding: 3px 4px;
   font-size: 16px;
   border-radius: 6px;
@@ -6688,7 +6690,7 @@ table.course-single-gradebooks a {
 
 .tutor-course-filter-wrapper .tutor-clear-all-filter > a {
   height: 21px;
-  background: #E8E8E8;
+  background: #e8e8e8;
   border-radius: 22px;
   line-height: 21px;
   text-align: center;
@@ -6741,9 +6743,9 @@ table.course-single-gradebooks a {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   font-weight: 600;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;

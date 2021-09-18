@@ -1610,7 +1610,7 @@ if ( ! function_exists('tutor_login_form_popup')) {
  * @since 1.9.8
  */
 if ( ! function_exists('tutor_load_template_from_custom_path')) {
-    function tutor_load_template_from_custom_path( $template = null, $data, $once=true ) {
+    function tutor_load_template_from_custom_path( $template = null, $data=array(), $once=true ) {
         do_action('tutor_load_template_from_custom_path_before', $template, $data);
         if ( file_exists($template) ) {
             if($once) {
