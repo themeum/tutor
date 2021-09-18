@@ -21,11 +21,8 @@ module.exports = ( env, options ) => {
 	};
 
 	if ( 'production' === mode ) {
-		config.devtool = false;
-		config.optimization = {
-			minimize: true,
-			minimizer: [
-				new TerserPlugin({
+		var minimizer = env!='build' ? 
+			new TerserPlugin({
 					terserOptions: {},
 					minify: ( file ) => {
 						const uglifyJsOptions = {
@@ -33,25 +30,52 @@ module.exports = ( env, options ) => {
 						};
 						return require( 'uglify-js' ).minify( file, uglifyJsOptions );
 					},
-				}),
+				}) :
+			new TerserPlugin({
+				terserOptions: {},
+				minify: ( file ) => {
+					const uglifyJsOptions = {
+						sourceMap: false,
+					};
+					return require( 'uglify-js' ).minify( file, uglifyJsOptions );
+				},
+			});
+
+		config.devtool = false;
+		config.optimization = {
+			minimize: true,
+			minimizer: [
+				minimizer,
 				new CssMinimizerPlugin(),
-			],
+			]
 		};
 	}
 
-	var configEditor = Object.assign({}, config, {
-		name: 'configEditor',
-		entry: {
-			'tutor-front'		    : './assets/react/front/tutor-front.js',
-			'tutor-admin'		    : './assets/react/admin/tutor-admin.js',
-			'tutor-course-builder'	: './assets/react/course-builder/index.js',
-			'tutor-setup'		    : './assets/react/admin/tutor-setup.js',
-        },
-		output: {
-			path: path.resolve( __dirname, path.resolve( __dirname, 'assets/js' ) ),
-			filename: `[name].js`,
-		},
-	});
+	var react_blueprints = [
+		{
+			dest_path: './assets/js',
+			src_files: {
+				'tutor-front'		    : './assets/react/front/tutor-front.js',
+				'tutor-admin'		    : './assets/react/admin-dashboard/tutor-admin.js',
+				'tutor-course-builder'	: './assets/react/course-builder/index.js',
+				'tutor-setup'		    : './assets/react/admin-dashboard/tutor-setup.js',
+			}
+		}
+	];
 
-	return [ configEditor ];
+	var configEditors = [];
+	for(let i=0; i<react_blueprints.length; i++) {
+		let {src_files, dest_path} = react_blueprints[i];
+
+		configEditors.push(Object.assign({}, config, {
+			name: 'configEditor',
+			entry: src_files,
+			output: {
+				path: path.resolve(dest_path),
+				filename: `[name].js`,
+			},
+		}))
+	}
+
+	return [ ...configEditors ];
 };

@@ -1,18 +1,14 @@
 {
   "name": "tutor",
-  "version": "1.9.10",
-  "description": "<img src=\".github/tutor-github.png\" alt=\"TutorLMS\" width=\"100%\">",
+  "version": "1.9.9",
+  "description": "<img src='.github/tutor-github.png' alt='TutorLMS' width='100%'>",
   "main": "index.js",
   "scripts": {
-    "build": "npm run js-build && gulp build",
+    "build": "webpack --env=build --mode=production && _GULP_ENV='build' gulp build",
+    "build-dev": "webpack --mode=development && gulp build",
     "css-watch": "gulp watch",
-    "js-build": "webpack --mode=production",
-    "js-watch": "webpack --mode=production --watch",
-    "watch": "npm run build && concurrently \"npm run css-watch\" \"npm run js-watch\""
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/themeum/tutor.git"
+    "js-watch": "webpack --watch --mode=development",
+    "watch": "npm run build-dev && concurrently \"npm run css-watch\" \"npm run js-watch\""
   },
   "keywords": [
     "lms",
@@ -33,7 +29,8 @@
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^3.0.0",
-    "css-loader": "^5.0.1",
+    "concurrently": "^5.3.0",
+    "css-loader": "^5.0.2",
     "css-minimizer-webpack-plugin": "^1.2.0",
     "eslint": "^7.18.0",
     "eslint-config-wordpress": "^2.0.0",
@@ -54,19 +51,23 @@
     "path": "^0.12.7",
     "po2json": "^0.4.5",
     "sass-loader": "^10.1.1",
-    "uglify-js": "^3.12.5",
-    "webpack": "^5.16.0",
-    "webpack-cli": "^4.4.0"
+    "uglify-js": "^3.12.8",
+    "webpack": "^5.22.0",
+    "webpack-cli": "^4.5.0"
   },
   "dependencies": {
     "@wordpress/media-utils": "^2.1.1",
     "axios": "^0.21.1",
+    "choices.js": "^9.0.1",
     "classnames": "^2.3.1",
     "concurrently": "^6.2.1",
     "deepcopy": "^2.1.0",
+    "docz": "^2.3.1",
+    "fs-extra": "^10.0.0",
     "immutability-helper": "^3.1.1",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.2.2",
+    "prop-types": "^15.7.2",
     "react": "^16.11.0",
     "react-color": "^2.19.3",
     "react-dnd": "^14.0.2",
