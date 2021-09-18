@@ -1,5 +1,6 @@
 var gulp = require("gulp"),
 	sass = require("gulp-sass"),
+	sourcemaps = require('gulp-sourcemaps'),
 	rename = require("gulp-rename"),
 	prefix = require("gulp-autoprefixer"),
 	plumber = require("gulp-plumber"),
@@ -10,6 +11,7 @@ var gulp = require("gulp"),
 	fs = require('fs'),
 	path = require('path'),
 	build_name = 'tutor-' + require('./package.json').version + '.zip';
+
 
 var onError = function (err) {
 	notify.onError({
@@ -26,17 +28,20 @@ var prefixerOptions = {
 };
 
 var scss_blueprints = {
-	tutor_front : {src: "assets/scss/front/index.scss", mode: 'expanded', destination: 'tutor-front.css'},
+	tutor_front: {src: "assets/scss/front/index.scss", mode: 'expanded', destination: 'tutor-front.css'},
 	tutor_front_min: {src: "assets/scss/front/index.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
+	
+	tutor_admin: {src: "assets/scss/admin-dashboard/index.scss", mode: 'expanded', destination: 'tutor-admin.css'},
+	tutor_admin_min: {src: "assets/scss/admin-dashboard/index.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
+	
+	tutor_setup: {src: "assets/scss/admin-dashboard/tutor-setup.scss", mode: 'expanded', destination: 'tutor-setup.css'},
+	tutor_setup_min: {src: "assets/scss/admin-dashboard/tutor-setup.scss", mode: 'compressed', destination: 'tutor-setup.min.css'},
 
-	tutor_admin: {src: "assets/scss/admin/index.scss", mode: 'expanded', destination: 'tutor-admin.css'},
-	tutor_admin_min: {src: "assets/scss/admin/index.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
+	tutor_front_dashboard: {src: "assets/scss/frontend-dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
+	tutor_front_dashboard_min: {src: "assets/scss/frontend-dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
 
 	tutor_course_builder: {src: "assets/scss/course-builder/index.scss", mode: 'expanded', destination: 'tutor-course-builder.css'},
 	tutor_course_builder_min: {src: "assets/scss/course-builder/index.scss", mode: 'compressed', destination: 'tutor-course-builder.min.css'},
-
-	tutor_front_dashboard: {src: "assets/scss/dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
-	tutor_front_dashboard_min: {src: "assets/scss/dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
 };
 
 var task_keys = Object.keys(scss_blueprints);
@@ -48,10 +53,12 @@ for(let task in scss_blueprints) {
 	gulp.task(task, function () {
 		return gulp.src(blueprint.src)
 			.pipe(plumber({errorHandler: onError}))
+			.pipe(sourcemaps.init({loadMaps: true, largeFile:true}))
 			.pipe(sass({outputStyle: blueprint.mode}))
 			.pipe(prefix(prefixerOptions))
 			.pipe(rename(blueprint.destination))
-			.pipe(gulp.dest("assets/css"));
+			.pipe(sourcemaps.write('.', {addComment: process.env._GULP_ENV!='build'}))
+			.pipe(gulp.dest(blueprint.dest_path || "assets/css"));
 	});
 }
 
@@ -123,7 +130,7 @@ function i18n_makepot(callback, target_dir) {
 }
 
 gulp.task("watch", function () {
-	gulp.watch("assets/scss/**/*.scss", gulp.series(...task_keys));
+	gulp.watch("./**/*.scss", gulp.series(...task_keys));
 });
 
 gulp.task('makepot', function () {
@@ -166,6 +173,8 @@ gulp.task("copy", function () {
 			"!./assets/scss/**",
 			"!./assets/.sass-cache",
 			"!./node_modules/**",
+			"!./v2-library/**",
+			"!./.docz/**",
 			"!./**/*.zip",
 			"!.github",
 			"!./readme.md",

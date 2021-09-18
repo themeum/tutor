@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap");
+
 :root {
   --initial: #fff;
   --primary-text: #81878f;
@@ -17,8 +18,7 @@
 * {
   margin: 0;
   padding: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 a:hover,
@@ -92,8 +92,7 @@ ul.tutor-setup-content li.active {
 
 .tutor-setup-content {
   border-radius: 3px;
-  -webkit-box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
-          box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
+  box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
   background-color: #ffffff;
 }
 
@@ -129,7 +128,6 @@ ul.tutor-setup-content li.active {
 .tutor-setup-title li {
   position: relative;
 }
-
 .tutor-setup-title li:hover {
   cursor: pointer;
 }
@@ -145,21 +143,11 @@ ul.tutor-setup-content li.active {
   right: -45px;
   background: #d6d8df;
   border-radius: 50%;
-  -webkit-transition: -webkit-box-shadow 0.2s linear;
-  transition: -webkit-box-shadow 0.2s linear;
   transition: box-shadow 0.2s linear;
-  transition: box-shadow 0.2s linear, -webkit-box-shadow 0.2s linear;
-  -webkit-box-shadow: inset 0px 0px 0px 5px #f8f9fa;
-          box-shadow: inset 0px 0px 0px 5px #f8f9fa;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  box-shadow: inset 0px 0px 0px 5px #f8f9fa;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  align-items: center;
+  justify-content: center;
 }
 
 .tutor-setup-title li.active:before {
@@ -171,8 +159,7 @@ ul.tutor-setup-content li.active {
   background-repeat: no-repeat;
   background-position: center;
   background-color: var(--primary-btn);
-  -webkit-box-shadow: inset 0px 0px 0px 5px transparent;
-          box-shadow: inset 0px 0px 0px 5px transparent;
+  box-shadow: inset 0px 0px 0px 5px transparent;
 }
 
 .tutor-setup-title li:after {
@@ -183,21 +170,15 @@ ul.tutor-setup-content li.active {
   border-bottom: 13px solid transparent;
   top: calc(50% - 13px);
   right: calc(0% - 96px);
-  -webkit-filter: drop-shadow(-2px 0px 2px rgba(219, 215, 215, 0.45));
-          filter: drop-shadow(-2px 0px 2px rgba(219, 215, 215, 0.45));
-  -webkit-transform: translateX(3px) scale(0.7);
-          transform: translateX(3px) scale(0.7);
+  filter: drop-shadow(-2px 0px 2px rgba(219, 215, 215, 0.45));
+  transform: translateX(3px) scale(0.7);
   opacity: 0;
-  -webkit-transition: -webkit-transform 0.1s linear;
-  transition: -webkit-transform 0.1s linear;
   transition: transform 0.1s linear;
-  transition: transform 0.1s linear, -webkit-transform 0.1s linear;
 }
 
 .tutor-setup-title li.current:after {
   opacity: 1;
-  -webkit-transform: translateX(0px) scale(1);
-          transform: translateX(0px) scale(1);
+  transform: translateX(0px) scale(1);
 }
 
 .tutor-setup-wizard-settings.active {
@@ -266,9 +247,7 @@ ul.tutor-setup-content li.active {
 }
 
 .align-center {
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
 }
 
 .tutor-setup-content-footer.footer {
@@ -305,11 +284,9 @@ ul.tutor-setup-content li.active {
   text-align: center;
   color: var(--secondary-text);
 }
-
 .tutor-setup-content-heading.greetings .content p {
   color: var(--primary-text);
 }
-
 /* Lesson Permalink Input */
 .tutor-setting input[type="text"].lesson-permalink,
 .tutor-setting textarea.lesson-message {
@@ -329,34 +306,6 @@ ul.tutor-setup-content li.active {
 
 .tutor-setting input[type="text"].lesson-permalink {
   margin-top: -10px;
-}
-
-.tutor-setting input[type="text"].lesson-permalink::-webkit-input-placeholder, .tutor-setting textarea.lesson-message::-webkit-input-placeholder {
-  color: var(--primary-text);
-  font-weight: 300;
-  font-family: "Lato", sans-serif;
-  font-size: 13px;
-}
-
-.tutor-setting input[type="text"].lesson-permalink::-moz-placeholder, .tutor-setting textarea.lesson-message::-moz-placeholder {
-  color: var(--primary-text);
-  font-weight: 300;
-  font-family: "Lato", sans-serif;
-  font-size: 13px;
-}
-
-.tutor-setting input[type="text"].lesson-permalink:-ms-input-placeholder, .tutor-setting textarea.lesson-message:-ms-input-placeholder {
-  color: var(--primary-text);
-  font-weight: 300;
-  font-family: "Lato", sans-serif;
-  font-size: 13px;
-}
-
-.tutor-setting input[type="text"].lesson-permalink::-ms-input-placeholder, .tutor-setting textarea.lesson-message::-ms-input-placeholder {
-  color: var(--primary-text);
-  font-weight: 300;
-  font-family: "Lato", sans-serif;
-  font-size: 13px;
 }
 
 .tutor-setting input[type="text"].lesson-permalink::placeholder,
@@ -405,6 +354,7 @@ ul.tutor-setup-content li.active {
 /**
  * Tooltip Styles
  */
+
 /* Add this attribute to the element that needs a tooltip */
 [data-tooltip] {
   position: relative;
@@ -445,8 +395,7 @@ ul.tutor-setup-content li.active {
   position: absolute;
   bottom: 130%;
   left: 50%;
-  -webkit-transform: translateX(10%);
-          transform: translateX(10%);
+  transform: translateX(10%);
   border-top: 5px solid #cfcfcf;
   border-right: 5px solid transparent;
   border-left: 5px solid transparent;
@@ -457,9 +406,7 @@ ul.tutor-setup-content li.active {
 
 [data-tooltip]:before,
 [data-tooltip]:after {
-  -webkit-transform: translateY(15px);
-          transform: translateY(15px);
-  -webkit-transition: 0.2s ease;
+  transform: translateY(15px);
   transition: 0.2s ease;
 }
 
@@ -469,8 +416,7 @@ ul.tutor-setup-content li.active {
 .active[data-tooltip]:after {
   visibility: visible;
   opacity: 1;
-  -webkit-transform: translateY(0px);
-          transform: translateY(0px);
+  transform: translateY(0px);
 }
 
 /* ********************* */
@@ -525,7 +471,6 @@ ul.tutor-setup-content li.active {
   border: 8px solid transparent;
   border-radius: 3px;
   background: #ffff;
-  -webkit-transition: 0.2s linear;
   transition: 0.2s linear;
 }
 
@@ -536,7 +481,6 @@ ul.tutor-setup-content li.active {
   border-radius: 2px;
   border: solid 1px #d6dce3;
   background-color: #f0f3f6;
-  -webkit-transition: 0.2s ease-in-out;
   transition: 0.2s ease-in-out;
 }
 
@@ -558,8 +502,7 @@ ul.tutor-setup-content li.active {
 /* checked css */
 input[type="radio"].course:checked + .span {
   color: white;
-  -webkit-box-shadow: 0 0 0 1px #d6dce3;
-          box-shadow: 0 0 0 1px #d6dce3;
+  box-shadow: 0 0 0 1px #d6dce3;
 }
 
 input[type="radio"].course:checked + .span span {
@@ -580,10 +523,8 @@ input[type="radio"].course:checked + .span span {
   top: 0px;
   left: 0px;
   cursor: pointer;
-  -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
-
 .course-per-page span.radio-icon:before,
 .course-setting-wrapper .ecommerce .radio-icon:before,
 .settings .time-expires .radio-icon:before {
@@ -596,9 +537,7 @@ input[type="radio"].course:checked + .span span {
   border-radius: 50%;
   background: #3057d5;
   background: #f1f3f7;
-  -webkit-transform: scale(0);
-          transform: scale(0);
-  -webkit-transition: all 0.2s ease-in-out;
+  transform: scale(0);
   transition: all 0.2s ease-in-out;
 }
 
@@ -613,8 +552,7 @@ input[type="radio"].course:checked + .span span {
 .course-setting-wrapper .ecommerce .radio-input:checked + .radio-icon:before,
 .settings .time-expires input[type="radio"]:checked + .radio-icon:before {
   background: #f0f3f6;
-  -webkit-transform: scale(0.4);
-          transform: scale(0.4);
+  transform: scale(0.4);
 }
 
 .course-setting-wrapper .ecommerce .radio-icon,
@@ -757,7 +695,6 @@ input[type="checkbox"].switch_1 {
   position: relative;
   cursor: pointer;
   outline: none;
-  -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
 
@@ -771,14 +708,11 @@ input[type="checkbox"].switch_1:after {
   width: 25.72px;
   height: 25.72px;
   border-radius: 50%;
-  -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
-          box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
   background-color: #ffffff;
-  -webkit-transform: scale(0.7);
-          transform: scale(0.7);
+  transform: scale(0.7);
   left: 0px;
   top: -1px;
-  -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
 
@@ -791,8 +725,6 @@ input[type="checkbox"].switch_1:checked:after {
 }
 
 .input-switchbox {
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
   display: inline-flex;
   cursor: pointer;
 }
@@ -811,7 +743,6 @@ input[type="checkbox"].input-switchbox {
   background-color: #e2e7eb;
   cursor: pointer;
   outline: none;
-  -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
 
@@ -830,14 +761,11 @@ input[type="checkbox"].input-switchbox {
   width: 25.72px;
   height: 25.72px;
   border-radius: 50%;
-  -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
-          box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
   background-color: #ffffff;
-  -webkit-transform: scale(0.7);
-          transform: scale(0.7);
+  transform: scale(0.7);
   left: 0;
   top: calc(50% - 13px);
-  -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
 
@@ -902,7 +830,6 @@ input[type="checkbox"].input-switchbox:checked ~ .switchbox-icon {
   cursor: pointer;
   outline: none;
 }
-
 .tutor-type-next {
   margin-left: 10px;
   border: none;
@@ -917,29 +844,23 @@ button.next svg {
 
 button.previous svg {
   margin-right: 10px;
-  -webkit-transition: 200ms;
   transition: 200ms;
 }
-
 button.next svg {
-  -webkit-transition: 200ms;
   transition: 200ms;
   margin-left: 10px;
 }
 
 button.previous:hover svg {
-  -webkit-transform: translateX(-4px) rotate(180deg);
-          transform: translateX(-4px) rotate(180deg);
+  transform: translateX(-4px) rotate(180deg);
 }
 
 button.next:hover svg {
-  -webkit-transform: translateX(4px);
-          transform: translateX(4px);
+  transform: translateX(4px);
 }
 
 .animated-btn:hover span {
-  -webkit-transform: translateX(8px);
-          transform: translateX(8px);
+  transform: translateX(8px);
 }
 
 .animated-btn svg {
@@ -964,13 +885,11 @@ button.next:hover svg {
 }
 
 .previous.animated-btn svg {
-  -webkit-transform: rotate(180deg);
-          transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .previous.animated-btn svg path {
   fill: var(--primary-btn);
-  -webkit-transition: 200ms;
   transition: 200ms;
 }
 
@@ -989,7 +908,6 @@ button[class^="tutor-setup-"] {
   text-transform: capitalize;
   text-align: center;
   color: var(--tertiary-btn);
-  -webkit-transition: 200ms;
   transition: 200ms;
   outline: none;
 }
@@ -1026,14 +944,9 @@ button.tutor-setup-skip:hover {
 
 /* Grade Calculation Dropdwon */
 .select-box {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   width: 400px;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   position: relative;
 }
 
@@ -1041,7 +954,6 @@ button.tutor-setup-skip:hover {
   max-height: 66px;
   width: calc(100% - 12px);
   opacity: 0;
-  -webkit-transition: all 0.4s;
   transition: all 0.4s;
   overflow: hidden;
   border-radius: 5px;
@@ -1050,9 +962,7 @@ button.tutor-setup-skip:hover {
   position: absolute;
   top: 68px;
   z-index: 99;
-  -webkit-box-ordinal-group: 2;
-      -ms-flex-order: 1;
-          order: 1;
+  order: 1;
 }
 
 .selected {
@@ -1064,9 +974,8 @@ button.tutor-setup-skip:hover {
   border-radius: 5px;
   border: solid 1px #dcdfe5;
   background-color: #ffffff;
-  -webkit-box-ordinal-group: 1;
-      -ms-flex-order: 0;
-          order: 0;
+
+  order: 0;
 }
 
 .selected::after {
@@ -1075,12 +984,8 @@ button.tutor-setup-skip:hover {
   position: absolute;
   right: 15px;
   top: 50%;
-  -webkit-transform: translateY(-50%);
-          transform: translateY(-50%);
-  -webkit-transition: -webkit-transform 0.5s;
-  transition: -webkit-transform 0.5s;
+  transform: translateY(-50%);
   transition: transform 0.5s;
-  transition: transform 0.5s, -webkit-transform 0.5s;
 }
 
 .selected h3,
@@ -1108,8 +1013,7 @@ button.tutor-setup-skip:hover {
 }
 
 .select-box .options-container.active + .selected::after {
-  -webkit-transform: translateY(-50%) rotateX(180deg);
-          transform: translateY(-50%) rotateX(180deg);
+  transform: translateY(-50%) rotateX(180deg);
 }
 
 .select-box .options-container.active + .selected {
@@ -1146,20 +1050,18 @@ button.tutor-setup-skip:hover {
 .option.selected {
   display: block;
 } */
+
 .selected,
 .select-box .option {
   padding: 10px 15px;
   cursor: pointer;
 }
-
 .select-box .option:hover {
   background: #dcdfe5;
 }
-
 .select-box label {
   cursor: pointer;
 }
-
 .select-box .option .radio {
   display: none;
 }
@@ -1171,13 +1073,9 @@ button.tutor-setup-skip:hover {
   grid-gap: 30px;
   place-content: flex-start;
 }
-
 .limit-slider-has-parent {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
 }
-
 .tutor-setting .limit-slider > strong:last-child,
 .tutor-setting .limit-slider > span:last-child {
   margin-left: 32px;
@@ -1197,20 +1095,12 @@ button.tutor-setup-skip:hover {
   margin-right: 4px;
   font-weight: 600;
 }
-
 .course-setting-wrapper .settings .limit-slider {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   grid-gap: 30px;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  align-items: center;
+  justify-content: space-between;
 }
-
 /* Time Limit */
 .limit-slider input[type="range"].range-input {
   outline: none;
@@ -1226,17 +1116,13 @@ button.tutor-setup-skip:hover {
   background-repeat: repeat-x;
   background-size: contain;
   background-position: center;
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
+  flex-grow: 1;
 }
-
 .limit-slider .range-value {
   margin-right: 5px;
   min-width: 15px;
   display: inline-block;
 }
-
 /* For Chrome (-webkit-slider-thumb) */
 input[type="range"].range-input::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -1247,8 +1133,7 @@ input[type="range"].range-input::-webkit-slider-thumb {
   cursor: pointer;
   background-color: #cbcfd3;
   border: 6px solid white;
-  -webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.28);
-          box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.28);
+  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.28);
 }
 
 /* For Mozilla (-moz-range-track and -moz-range-thumb) */
@@ -1285,8 +1170,7 @@ input[type="range"].range-input::-moz-range-thumb {
   height: 6px;
   border-radius: 8px;
   background-color: var(--primary-btn);
-  -webkit-box-shadow: inset 0 0 0 1px rgba(47, 87, 213, 0.15);
-          box-shadow: inset 0 0 0 1px rgba(47, 87, 213, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(47, 87, 213, 0.15);
 }
 
 .limit-slider.column-1 input[type="range"]::-webkit-slider-thumb {
@@ -1298,8 +1182,7 @@ input[type="range"].range-input::-moz-range-thumb {
   cursor: pointer;
   background-color: #cbcfd3;
   border: 5.5px solid #fff;
-  -webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.28);
-          box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.28);
+  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.28);
 }
 
 .limit-slider.column-1 input[type="range"]::-moz-range-track {
@@ -1357,8 +1240,7 @@ input[type="range"].range-input::-moz-range-thumb {
   position: absolute;
   left: 0;
   top: 50%;
-  -webkit-transform: translateY(-50%);
-          transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 .limit-slider .commision-data .data:last-child h5:before {
@@ -1430,7 +1312,6 @@ input.checkbox {
   display: inline-block;
   position: relative;
   top: 4px;
-  -webkit-transition: 0.2s ease-in-out;
   transition: 0.2s ease-in-out;
 }
 
@@ -1448,19 +1329,11 @@ input.checkbox {
   position: absolute;
   width: 100%;
   height: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-transform: scale(1.5);
-          transform: scale(1.5);
+  justify-content: center;
+  align-items: center;
+  transform: scale(1.5);
   opacity: 0;
-  -webkit-transition: 0.2s ease-in-out;
   transition: 0.2s ease-in-out;
   margin: -1px 1px;
 }
@@ -1475,8 +1348,7 @@ input.checkbox {
 }
 
 .checkbox-wrapper input.checkbox:checked + .check-icon:before {
-  -webkit-transform: scale(1.2);
-          transform: scale(1.2);
+  transform: scale(1.2);
   opacity: 1;
 }
 
@@ -1497,7 +1369,6 @@ input.checkbox {
   background-color: #f0f3f6;
   display: block;
   cursor: pointer;
-  -webkit-transition: 0.1s ease-in-out;
   transition: 0.1s ease-in-out;
 }
 
@@ -1511,8 +1382,7 @@ input.checkbox {
 }
 
 .checkbox-wrapper input.payment:checked + .check-icon:before {
-  -webkit-transform: scale(1);
-          transform: scale(1);
+  transform: scale(1);
 }
 
 .checkbox-wrapper .payment-setting .check-icon {
@@ -1523,9 +1393,7 @@ input.checkbox {
 .checkbox-wrapper .payment-setting .check-icon {
   opacity: 0;
   opacity: 0;
-  -webkit-transform: scale(1.1);
-          transform: scale(1.1);
-  -webkit-transition: 0.3s ease-in-out;
+  transform: scale(1.1);
   transition: 0.3s ease-in-out;
   position: absolute;
   z-index: 1;
@@ -1536,8 +1404,7 @@ input.checkbox {
 }
 
 .checkbox-wrapper .payment-setting .check-icon:before {
-  -webkit-transform: scale(1);
-          transform: scale(1);
+  transform: scale(1);
   margin: -1px 0px;
 }
 
@@ -1550,11 +1417,9 @@ input.checkbox {
   margin-top: 16px;
   word-break: break-word;
 }
-
 .payment-setting img {
   margin: 0 auto;
 }
-
 /* ******* Tutor Setup Wizard Boarding (Slick Slider) */
 .tutor-setup-wizard-boarding {
   text-align: center;
@@ -1585,8 +1450,7 @@ input.checkbox {
 
 .wizard-boarding-body .slide-thumb img {
   border-radius: 3px;
-  -webkit-box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
-          box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
+  box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
   background-color: #ffffff;
   width: 100%;
 }
@@ -1612,33 +1476,27 @@ input.checkbox {
   outline: none;
   cursor: move;
   opacity: 1;
-  -webkit-transition: 0.8s;
   transition: 0.8s;
   margin: 0 15px;
 }
 
 .wizard-boarding-body .slick-slide:not(.slick-active) {
   opacity: 0.3;
-  -webkit-transition: 0.8s;
   transition: 0.8s;
 }
 
 .wizard-boarding-body .slick-slide .slide-title,
 .wizard-boarding-body .slick-slide.slide-subtitle {
   opacity: 1;
-  -webkit-filter: blur(0px);
-          filter: blur(0px);
-  -webkit-transition: 0.5s;
+  filter: blur(0px);
   transition: 0.5s;
 }
 
 .wizard-boarding-body .slick-slide:not(.slick-active) .slide-title,
 .wizard-boarding-body .slick-slide:not(.slick-active) .slide-subtitle {
   opacity: 0;
-  -webkit-transition: 0.5s;
   transition: 0.5s;
-  -webkit-filter: blur(5px);
-          filter: blur(5px);
+  filter: blur(5px);
 }
 
 .wizard-boarding-body ul.slick-dots {
@@ -1649,15 +1507,9 @@ input.checkbox {
   left: 50%;
   margin-left: calc(-244px / 2);
   bottom: calc(150px + 6px);
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
   display: flex !important;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  align-items: center;
+  justify-content: center;
 }
 
 .wizard-boarding-body ul.slick-dots li,
@@ -1680,15 +1532,12 @@ input.checkbox {
   background: #c6c9d2;
   border: 4px solid transparent;
   padding: 0;
-  -webkit-transform: scale(0.5715);
-          transform: scale(0.5715);
-  -webkit-transition: 0.3s ease;
+  transform: scale(0.5715);
   transition: 0.3s ease;
 }
 
 .wizard-boarding-body ul.slick-dots li.slick-active button {
-  -webkit-transform: scale(1);
-          transform: scale(1);
+  transform: scale(1);
   background: #3057d5;
 }
 
@@ -1773,11 +1622,9 @@ input.checkbox {
   /* height: 352px; */
   border: 2px solid transparent;
   border-radius: 3px;
-  -webkit-box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
-          box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
+  box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
   background-color: #ffffff;
   padding-bottom: 40px;
-  -webkit-transition: 0.2s ease;
   transition: 0.2s ease;
 }
 
@@ -1810,8 +1657,7 @@ input.checkbox {
 
 .wizard-type-body .wizard-type-item input {
   -webkit-appearance: none;
-  -moz-appearance: none;
-       appearance: none;
+  appearance: none;
   width: 24px;
   height: 24px;
   position: absolute;
@@ -1831,10 +1677,8 @@ input.checkbox {
   position: absolute;
   margin: 15px 0 0 15px;
   border-radius: 50%;
-  -webkit-transform: scale(0.835);
-          transform: scale(0.835);
+  transform: scale(0.835);
   z-index: 1;
-  -webkit-transition: 0.1s ease;
   transition: 0.1s ease;
 }
 
@@ -1842,31 +1686,21 @@ input.checkbox {
   content: "";
   width: 100%;
   height: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-transform: scale(2);
-          transform: scale(2);
+  align-items: center;
+  justify-content: center;
+  transform: scale(2);
   margin: -1px 0 0 0px;
-  -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
 }
 
 .wizard-type-body .wizard-type-item input:checked + .icon {
   border: 8px solid #3057d5;
-  -webkit-transform: scale(1);
-          transform: scale(1);
+  transform: scale(1);
 }
 
 .wizard-type-body .wizard-type-item input:checked + .icon:before {
-  -webkit-transform: scale(1.2);
-          transform: scale(1.2);
+  transform: scale(1.2);
 }
 
 .wizard-type-body .wizard-type-item input:checked ~ label {
@@ -1877,19 +1711,15 @@ input.checkbox {
 .settings .time-expires {
   display: grid;
   grid-template-columns: auto 1fr;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  align-items: flex-start;
   grid-gap: 10px;
   margin-bottom: 10px;
   cursor: pointer;
 }
-
 .settings .time-expires .radio-icon {
   position: relative;
   display: inline-block;
 }
-
 .settings .time-expires input[type="radio"] {
   display: none;
 }
@@ -1899,6 +1729,7 @@ input.checkbox {
   .tutor-setup-wizard-boarding {
     padding: 40px 0px 70px 0px;
   }
+
   .wizard-boarding-body .slide-subtitle {
     padding: 0 4px;
   }
@@ -1908,41 +1739,53 @@ input.checkbox {
   .tutor-setting .title br {
     display: none;
   }
+
   .tutor-setting .title .tooltip-btn {
     margin-left: 5px;
   }
+
   .wizard-boarding-header {
     grid-gap: 25px;
   }
+
   .wizard-boarding-body {
     margin-top: 30px;
   }
+
   .wizard-boarding-body ul.slick-dots {
     bottom: calc(150px - 18px);
   }
+
   .wizard-boarding-footer {
     margin-top: 70px;
   }
+
   .wizard-type-header {
     padding: 0 10px;
   }
+
   .wizard-type-body {
     grid-gap: 30px;
   }
+
   .tutor-setup-wrapper {
     grid-template-columns: 1fr 10fr;
     grid-gap: 46px;
   }
+
   .tutor-setup-title li:after {
     right: calc(0% - 46px);
   }
+
   .tutor-setup-title:before {
     right: -22px;
   }
+
   .tutor-setup-title li:first-child:before,
   .tutor-setup-title li:before {
     right: -30px;
   }
+
   .tutor-setup-content-heading.greetings .content {
     padding: 55px 20px 73px 20px;
   }
@@ -1952,50 +1795,50 @@ input.checkbox {
   .wizard-boarding-body .slick-slide {
     margin: 0 5px;
   }
+
   .tutor-setup-wrapper {
     grid-template-columns: auto;
     grid-gap: 0;
     margin-top: 20px;
   }
+
   .tutor-setup-content-heading.heading,
   .active .tutor-setup-content-heading.heading {
     grid-template-columns: 1fr auto auto;
   }
+
   [class^="tutor-setup-content-"] {
     padding: 20px;
   }
+
   .tutor-setup-content .tutor-setting {
     grid-template-columns: 1fr 3fr 1fr;
     grid-gap: 10px;
   }
+
   .tutor-setup-content .tutor-setting:nth-child(-n + 4) .content {
     padding: 0;
   }
+
   .tutor-setup-content .tutor-setting.course-setting-wrapper {
     grid-template-columns: 1fr 4fr;
     grid-gap: 20px;
   }
+
   .tutor-setup-title {
     overflow-x: scroll;
     width: 100%;
     padding-bottom: 65px;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
+
   .tutor-setup-title li {
     margin: 0 20px;
   }
+
   .tutor-setup-title:before {
     top: auto;
     bottom: 45px;
@@ -2005,10 +1848,12 @@ input.checkbox {
     border: none;
     border-bottom: solid 1px #e3e3e3;
   }
+
   .tutor-setup-content {
     margin-top: -5px;
     z-index: 99;
   }
+
   .tutor-setup-title li:after {
     right: auto;
     top: auto;
@@ -2019,31 +1864,33 @@ input.checkbox {
     border-right: 13px solid transparent;
     border-bottom: 13px solid #fff;
     border-left: 13px solid transparent;
-    -webkit-transform: translate(0px, 5px) scale(1);
-            transform: translate(0px, 5px) scale(1);
+    transform: translate(0px, 5px) scale(1);
   }
+
   .tutor-setup-title li.active:after {
-    -webkit-transform: translate(0px) scale(1);
-            transform: translate(0px) scale(1);
+    transform: translate(0px) scale(1);
   }
+
   .tutor-setup-title li:before {
     top: auto;
     right: auto;
     left: 50%;
-    -webkit-transform: translateX(-50%);
-            transform: translateX(-50%);
+    transform: translateX(-50%);
     bottom: -28px;
   }
+
   .wizard-type-header .title,
   .wizard-boarding-header div {
     font-size: 4.5vw;
   }
+
   .wizard-boarding-body .slide-title,
   .wizard-boarding-footer,
   .wizard-boarding-footer a,
   .tutor-type-skip {
     font-size: 3vw;
   }
+
   .wizard-boarding-body .slide-subtitle,
   .wizard-type-header .subtitle {
     font-size: 2.6vw;
@@ -2055,12 +1902,15 @@ input.checkbox {
     padding-bottom: 70px;
     margin-bottom: 0 !important;
   }
+
   .wizard-boarding-body .slide-title {
     margin-top: 0px;
   }
+
   .wizard-boarding-body ul.slick-dots {
     bottom: 0;
   }
+
   .wizard-boarding-body .slide-thumb {
     margin-bottom: 15px;
   }
@@ -2070,13 +1920,16 @@ input.checkbox {
   .wizard-type-body {
     grid-template-columns: auto;
   }
+
   .tutor-setup-content-heading.heading > div:nth-child(1) {
     font-size: 3.5vw;
   }
+
   .course-per-page span.label-text,
   .course-per-page input[type="number"].attempts {
     font-size: 3vw;
   }
+
   .tutor-setting .title,
   .selected h3,
   .select-box label h3,
@@ -2085,18 +1938,7 @@ input.checkbox {
   button[class^="tutor-setup-"] {
     font-size: 2.5vw;
   }
-  .tutor-setting input[type="text"].lesson-permalink::-webkit-input-placeholder, .tutor-setting textarea.lesson-message::-webkit-input-placeholder {
-    font-size: 2vw;
-  }
-  .tutor-setting input[type="text"].lesson-permalink::-moz-placeholder, .tutor-setting textarea.lesson-message::-moz-placeholder {
-    font-size: 2vw;
-  }
-  .tutor-setting input[type="text"].lesson-permalink:-ms-input-placeholder, .tutor-setting textarea.lesson-message:-ms-input-placeholder {
-    font-size: 2vw;
-  }
-  .tutor-setting input[type="text"].lesson-permalink::-ms-input-placeholder, .tutor-setting textarea.lesson-message::-ms-input-placeholder {
-    font-size: 2vw;
-  }
+
   .tutor-wrapper-boarding,
   .selected h5,
   .select-box label h5,
@@ -2108,73 +1950,90 @@ input.checkbox {
   .tutor-setting .limit-slider .commision-data .data h5 {
     font-size: 2vw;
   }
+
   label.switch-label {
     font-size: 1.7vw;
   }
+
   .tutor-setting .course-per-row {
     grid-template-rows: repeat(2, auto);
     grid-template-columns: repeat(2, 0.3fr);
     place-items: center flex-start;
   }
+
   .tutor-setup-content {
     overflow-x: scroll;
   }
+
   .switchbox-wrapper,
   input[type="checkbox"].input-switchbox,
   .switchbox-wrapper span.switchbox-icon {
     height: 18px;
     width: 30px;
   }
+
   input[type="checkbox"].input-switchbox {
     border-radius: 18px;
   }
+
   .switchbox-wrapper span.switchbox-icon {
     width: 18px;
   }
+
   input[type="checkbox"].input-switchbox:checked ~ .switchbox-icon {
     left: calc(100% - 17.732px);
   }
+
   .switchbox-wrapper span.switchbox-icon {
     top: calc(50% - 9px);
   }
+
   .select-box {
     width: calc(100% - 50px);
   }
+
   .selected,
   .select-box .options-container {
     width: 100%;
   }
+
   .tutor-setting .content .course-per-page.attempts-allowed {
     grid-template-columns: repeat(2, auto);
   }
+
   .checkbox-wrapper .check-icon.square:before,
   .checkbox-wrapper .payment-setting .check-icon:before {
     margin: 0;
   }
+
   .checkbox-wrapper .payment-setting label,
   .payment-setting input.payment {
     width: 80px;
     height: 80px;
   }
+
   .checkbox-wrapper .payment-setting h4 {
     margin-top: 6px;
   }
+
   .tutor-setup-content-footer.footer {
     padding: 20px;
   }
+
   .checkbox-wrapper .check-icon.square {
     width: 15px;
     height: 15px;
   }
+
   .course-per-page span.radio-icon,
   .course-setting-wrapper .ecommerce .radio-icon,
   .course-setting-wrapper input.radio-input {
     width: 16px;
     height: 16px;
   }
+
   .checkbox-wrapper .payment-setting .check-icon {
-    -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
 }
 
@@ -2184,10 +2043,12 @@ input.checkbox {
     width: 50px;
     height: 50px;
   }
+
   .checkbox-wrapper .payment-setting label img {
     max-width: 20px;
     margin: 0 auto;
   }
+
   .checkbox-wrapper .payment-setting h4 {
     margin-top: 0;
   }
@@ -2196,27 +2057,21 @@ input.checkbox {
 .slick-slider li:hover {
   cursor: ew-resize;
 }
-
 .slick-slider li.slick-current:hover {
   cursor: pointer;
 }
-
 .tutor-show-hide {
   display: none !important;
 }
-
 .tutor-show-hide.active {
   display: grid !important;
 }
-
 .hide-this {
   display: none;
 }
-
-.tutor-unlimited-value {
+.tutor-unlimited-value{
   margin-left: 90px;
 }
-
-input[name='quiz_attempts_allowed'] {
+input[name='quiz_attempts_allowed']{
   color: var(--secondary-text);
 }
