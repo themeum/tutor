@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, { useRef} from "react";
 // import Choices from "choices.js";
 // import "choices.js/public/assets/styles/base.min.css";
 // import "choices.js/public/assets/styles/choices.min.css";
@@ -9,13 +9,13 @@ export default function () {
     const elem2 = useRef(null);
 
 
-    useEffect(() => {
-        // console.log("mounted", elem)
-        //
-        // new Choices(elem.current);
-        // new Choices(elem2.current);
+    // useEffect(() => {
+    //     console.log("mounted", elem)
+        
+    //     new Choices(elem.current);
+    //     new Choices(elem2.current);
 
-    }, [])
+    // }, [])
 
     return (
         <div>
