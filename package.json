@@ -4,13 +4,12 @@
   "description": "<img src='.github/tutor-github.png' alt='TutorLMS' width='100%'>",
   "main": "index.js",
   "scripts": {
-    "build": "npm run js-build && gulp build",
-    "docz-build" : "webpack --env=docz && docz build",
+    "build": "webpack --env=build --mode=production && _GULP_ENV='build' gulp build",
+    "build-dev": "webpack --mode=development && gulp build",
     "css-watch": "gulp watch",
-    "js-build": "webpack --mode=production",
-    "js-watch": "webpack --mode=production --watch",
-    "docz-watch": "node doczcp.js && concurrently \"webpack --env=docz --watch\" \"docz dev\"",
-    "watch": "npm run build && concurrently \"npm run css-watch\" \"npm run js-watch\" \"npm run docz-watch\""
+    "js-watch": "webpack --watch --mode=development",
+    "docz-init": "docz build && node doczcp.js",
+    "watch": "npm run build-dev && concurrently \"npm run css-watch\" \"npm run js-watch\" \"docz dev\""
   },
   "keywords": [
     "lms",
@@ -49,7 +48,6 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-wp-pot": "^2.4.3",
     "gulp-zip": "^5.0.2",
-    "mini-css-extract-plugin": "^1.3.7",
     "node-sass": "^5.0.0",
     "path": "^0.12.7",
     "po2json": "^0.4.5",

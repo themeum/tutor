@@ -1,56 +1,8 @@
 const path = require( 'path' );
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require( 'terser-webpack-plugin' );
 const CssMinimizerPlugin = require( 'css-minimizer-webpack-plugin' );
 
 module.exports = ( env, options ) => {
-
-	if(env=='docz') {
-		return {
-			mode: 'development',
-			devtool: 'source-map',
-			entry: [
-			'./v2-library/_src/js/main.js',
-			'./v2-library/_src/scss/main.scss'
-			],
-			output: {
-				path: path.resolve(__dirname+'/v2-library', 'bundle'),
-				filename: "[name].min.js",
-			},
-			module: {
-			rules: [
-				{
-				test: /\.(sa|sc|c)ss$/,
-				use: [
-					MiniCssExtractPlugin.loader,
-					'css-loader',
-					'sass-loader',
-				],
-				},
-			]
-			},
-			plugins: [
-			new MiniCssExtractPlugin({
-				filename: '[name].min.css'
-			}),
-			],
-			optimization: {
-			minimize: true,
-			minimizer: [
-				new TerserPlugin({
-				terserOptions: {},
-				minify: (file) => {
-					const uglifyJsOptions = {
-					sourceMap: true
-					};
-					return require("uglify-js").minify(file, uglifyJsOptions);
-				},
-				}),
-				new CssMinimizerPlugin()
-			],
-			}
-		}
-	}
 
 	const mode = options.mode || 'development';
 	
@@ -69,37 +21,73 @@ module.exports = ( env, options ) => {
 	};
 
 	if ( 'production' === mode ) {
+		var minimizer = env!='build' ? 
+			new TerserPlugin({
+					terserOptions: {},
+					minify: ( file ) => {
+						const uglifyJsOptions = {
+							sourceMap: true,
+						};
+						return require( 'uglify-js' ).minify( file, uglifyJsOptions );
+					},
+				}) :
+			new TerserPlugin({
+				terserOptions: {},
+				minify: ( file ) => {
+					const uglifyJsOptions = {
+						sourceMap: false,
+					};
+					return require( 'uglify-js' ).minify( file, uglifyJsOptions );
+				},
+			});
+
 		config.devtool = false;
 		config.optimization = {
 			minimize: true,
 			minimizer: [
-				new TerserPlugin({
-					terserOptions: {},
-					minify: ( file ) => {
-						const uglifyJsOptions = {
-							sourceMap: false,
-						};
-						return require( 'uglify-js' ).minify( file, uglifyJsOptions );
-					},
-				}),
+				minimizer,
 				new CssMinimizerPlugin(),
-			],
+			]
 		};
 	}
 
-	var configEditor = Object.assign({}, config, {
-		name: 'configEditor',
-		entry: {
-			'tutor-front'		    : './assets/react/front/tutor-front.js',
-			'tutor-admin'		    : './assets/react/admin-dashboard/tutor-admin.js',
-			'tutor-course-builder'	: './assets/react/course-builder/index.js',
-			'tutor-setup'		    : './assets/react/admin-dashboard/tutor-setup.js',
-        },
-		output: {
-			path: path.resolve( __dirname, path.resolve( __dirname, 'assets/js' ) ),
-			filename: `[name].js`,
+	var react_blueprints = [
+		{
+			dest_path: './assets/js',
+			src_files: {
+				'tutor-front'		    : './assets/react/front/tutor-front.js',
+				'tutor-admin'		    : './assets/react/admin-dashboard/tutor-admin.js',
+				'tutor-course-builder'	: './assets/react/course-builder/index.js',
+				'tutor-setup'		    : './assets/react/admin-dashboard/tutor-setup.js',
+			}
 		},
-	});
+		{
+			dest_path: './v2-library/bundle',
+			src_files: {
+				'main.min'	: './v2-library/_src/js/main.js',
+			}
+		},
+		{
+			dest_path: './.docz/static/v2-library/bundle',
+			src_files: {
+				'main.min'	: './v2-library/_src/js/main.js',
+			}
+		}
+	];
 
-	return [ configEditor ];
+	var configEditors = [];
+	for(let i=0; i<react_blueprints.length; i++) {
+		let {src_files, dest_path} = react_blueprints[i];
+
+		configEditors.push(Object.assign({}, config, {
+			name: 'configEditor',
+			entry: src_files,
+			output: {
+				path: path.resolve(dest_path),
+				filename: `[name].js`,
+			},
+		}))
+	}
+
+	return [ ...configEditors ];
 };

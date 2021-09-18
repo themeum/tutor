@@ -1,5 +1,6 @@
 var gulp = require("gulp"),
 	sass = require("gulp-sass"),
+	sourcemaps = require('gulp-sourcemaps'),
 	rename = require("gulp-rename"),
 	prefix = require("gulp-autoprefixer"),
 	plumber = require("gulp-plumber"),
@@ -46,7 +47,7 @@ var scss_blueprints = {
 	tutor_course_builder_min: {src: "assets/scss/course-builder/index.scss", mode: 'compressed', destination: 'tutor-course-builder.min.css'},
 
 	v2_scss:{src: "v2-library/_src/scss/main.scss", mode: 'compressed', destination: 'main.min.css', dest_path: 'v2-library/bundle'},
-	v2_scss:{src: "v2-library/_src/scss/main.scss", mode: 'compressed', destination: 'main.min.css', dest_path: '.docz/static/v2-library/bundle'}
+	v2_scss_docz:{src: "v2-library/_src/scss/main.scss", mode: 'compressed', destination: 'main.min.css', dest_path: '.docz/static/v2-library/bundle'}
 };
 
 
@@ -59,9 +60,11 @@ for(let task in scss_blueprints) {
 	gulp.task(task, function () {
 		return gulp.src(blueprint.src)
 			.pipe(plumber({errorHandler: onError}))
+			.pipe(sourcemaps.init({loadMaps: true, largeFile:true}))
 			.pipe(sass({outputStyle: blueprint.mode}))
 			.pipe(prefix(prefixerOptions))
 			.pipe(rename(blueprint.destination))
+			.pipe(sourcemaps.write('.', {addComment: process.env._GULP_ENV!='build'}))
 			.pipe(gulp.dest(blueprint.dest_path || "assets/css"));
 	});
 }
@@ -134,8 +137,7 @@ function i18n_makepot(callback, target_dir) {
 }
 
 gulp.task("watch", function () {
-	gulp.watch("assets/scss/**/*.scss", gulp.series(...task_keys));
-	gulp.watch("v2-library/_src/scss/**/*.scss", gulp.series(...task_keys));
+	gulp.watch("./**/*.scss", gulp.series(...task_keys));
 });
 
 gulp.task('makepot', function () {
@@ -179,6 +181,7 @@ gulp.task("copy", function () {
 			"!./assets/.sass-cache",
 			"!./node_modules/**",
 			"!./v2-library/**",
+			"!./.docz/**",
 			"!./**/*.zip",
 			"!.github",
 			"!./readme.md",
