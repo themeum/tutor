@@ -65,7 +65,12 @@ window.jQuery(document).ready(function($){
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
-            data : {lesson_id : lesson_id, topic_id : topic_id, course_id : course_id, action: 'tutor_load_edit_lesson_modal'},
+            data : {
+                lesson_id : lesson_id, 
+                topic_id : topic_id, 
+                course_id : course_id, 
+                action: 'tutor_load_edit_lesson_modal'
+            },
             beforeSend: function () {
                 $that.addClass('tutor-updating-message');
             },
