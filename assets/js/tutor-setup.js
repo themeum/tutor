@@ -1642,7 +1642,13 @@ jQuery(document).ready(function ($) {
     var search_params = url.searchParams;
     search_params.set(type, val);
     url.search = search_params.toString();
-    search_params.set('current_page', 1);
+
+    if (_tutorobject.is_admin) {
+      search_params.set('paged', 1);
+    } else {
+      search_params.set('current_page', 1);
+    }
+
     url.search = search_params.toString();
     return url.toString();
   }
