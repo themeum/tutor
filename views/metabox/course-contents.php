@@ -83,19 +83,11 @@
 
 						if ($lesson->post_type === 'tutor_quiz'){
 							$quiz = $lesson;
-							?>
-                            <div id="tutor-quiz-<?php echo $quiz->ID; ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $topic->ID; ?>">
-                                <div class="tutor-lesson-top">
-                                    <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                        <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo stripslashes($quiz->post_title); ?>
-                                    </a>
-                                    <?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz->ID); ?>
-                                    <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
-                                </div>
-                            </div>
-
-							<?php
+                            tutor_load_template_from_custom_path(tutor()->path.'/views/modal/quiz-list-single.php', array(
+                                'quiz_id' => $quiz->ID,
+                                'topic_id' => $topic->ID,
+                                'quiz_title' => $quiz->post_title,
+                            ), false);
 						}elseif($lesson->post_type === 'tutor_assignments'){
 							?>
                             <div id="tutor-assignment-<?php echo $lesson->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo
@@ -173,19 +165,11 @@
 
 						if ($lesson->post_type === 'tutor_quiz'){
 							$quiz = $lesson;
-							?>
-                            <div id="tutor-quiz-<?php echo $quiz->ID; ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $topic->ID; ?>">
-                                <div class="tutor-lesson-top">
-                                    <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                        <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo stripslashes($quiz->post_title); ?>
-                                    </a>
-                                    <?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz->ID); ?>
-                                    <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
-                                </div>
-                            </div>
-
-							<?php
+                            tutor_load_template_from_custom_path(tutor()->path.'/views/modal/quiz-list-single.php', array(
+                                'quiz_id' => $quiz->ID,
+                                'topic_id' => $topic->ID,
+                                'quiz_title' => $quiz->post_title,
+                            ), false);
 						}elseif($lesson->post_type === 'tutor_assignments'){
 							?>
                             <div id="tutor-assignment-<?php echo $lesson->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo
