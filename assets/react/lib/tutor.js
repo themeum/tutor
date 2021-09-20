@@ -1609,7 +1609,7 @@ jQuery(document).ready(function($){
         
         url.search = search_params.toString();
         
-        search_params.set('paged', 1);
+        search_params.set('current_page', 1);
         url.search = search_params.toString();
 
         return url.toString();
