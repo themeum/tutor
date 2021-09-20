@@ -198,7 +198,7 @@ jQuery(document).ready(function($){
                     var errors = data.data.errors;
                     if (errors && Object.keys(errors).length){
                         $.each(data.data.errors, function( index, value ) {
-                            if (isObject(value)){
+                            if (value && typeof value === 'object' && value.constructor === Object){
                                 $.each(value, function( key, value1 ) {
                                     errorMsg += '<p class="tutor-required-fields">'+value1[0]+'</p>';
                                 });
@@ -248,77 +248,6 @@ jQuery(document).ready(function($){
                 location.reload(true);
             },
             complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
-    function isObject (value) {
-        return value && typeof value === 'object' && value.constructor === Object;
-    }
-
-    /**
-     * Tutor Assignments JS
-     * @since v.1.3.3
-     */
-    $(document).on('click', '.tutor-create-assignments-btn', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var topic_id = $(this).attr('data-topic-id');
-        var course_id = $('#post_ID').val();
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : {topic_id : topic_id, course_id : course_id, action: 'tutor_load_assignments_builder_modal'},
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
-                $('.tutor-lesson-modal-wrap').attr('data-topic-id', topic_id).addClass('show');
-
-                $(document).trigger('assignment_modal_loaded', {topic_id : topic_id, course_id : course_id});
-
-                tinymce.init(tinyMCEPreInit.mceInit.tutor_editor_config);
-                tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_assignments_modal_editor' );
-                tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
-            },
-            complete: function () {
-                quicktags({id : "tutor_assignments_modal_editor"});
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
-    $(document).on('click', '.open-tutor-assignment-modal', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var assignment_id = $that.attr('data-assignment-id');
-        var topic_id = $that.attr('data-topic-id');
-        var course_id = $('#post_ID').val();
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : {assignment_id : assignment_id, topic_id : topic_id, course_id : course_id, action: 'tutor_load_assignments_builder_modal'},
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
-                $('.tutor-lesson-modal-wrap').attr({'data-assignment-id' : assignment_id, 'data-topic-id':topic_id}).addClass('show');
-
-                $(document).trigger('assignment_modal_loaded', {assignment_id : assignment_id, topic_id : topic_id, course_id : course_id});
-
-                tinymce.init(tinyMCEPreInit.mceInit.tutor_editor_config);
-                tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_assignments_modal_editor' );
-                tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
-            },
-            complete: function () {
-                quicktags({id : "tutor_assignments_modal_editor"});
                 $that.removeClass('tutor-updating-message');
             }
         });

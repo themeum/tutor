@@ -9,7 +9,8 @@
     "css-watch": "gulp watch",
     "js-watch": "webpack --watch --mode=development",
     "docz-init": "docz build && node doczcp.js",
-    "watch": "npm run build-dev && concurrently \"npm run css-watch\" \"npm run js-watch\" \"docz dev\""
+    "docz-watch": "docz dev",
+    "watch": "npm run build-dev && concurrently \"npm run css-watch\" \"npm run js-watch\" \"npm run docz-watch\""
   },
   "keywords": [
     "lms",
