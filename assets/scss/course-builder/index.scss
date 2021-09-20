@@ -60,6 +60,10 @@ body.tutor-screen-course-builder {
         &.tutor-lesson-modal-wrap {
             @import './modal/lesson.scss';
         }
+
+        &.tutor-quiz-builder-modal-wrap{
+            @import './modal/quiz.scss';
+        }
     }
 
     /* Screen specific declarations (Frontend editor) */

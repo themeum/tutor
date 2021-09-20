@@ -5418,25 +5418,6 @@ Quiz Modal
   border-radius: 3px;
 }
 
-.quiz-modal-btn-next,
-.quiz-modal-btn-next:focus,
-.quiz-modal-btn-first-step,
-.quiz-modal-btn-first-step:focus,
-.quiz-modal-question-save-btn,
-.quiz-modal-question-save-btn:focus,
-.quiz-modal-settings-save-btn,
-.quiz-modal-settings-save-btn:focus {
-  background-color: var(--tutor-primary-color);
-  color: #ffffff;
-}
-
-.quiz-modal-btn-next:hover,
-.quiz-modal-btn-first-step:hover,
-.quiz-modal-question-save-btn:hover,
-.quiz-modal-settings-save-btn:hover {
-  color: #ffffff;
-}
-
 .quiz-modal-btn-cancel,
 .quiz-modal-btn-back {
   color: #4b5981;
@@ -5787,22 +5768,6 @@ i.tutor-icon-block.tutor-icon-plus {
 
 .create-lesson-in-topic-btn i.tutor-icon-block.tutor-icon-plus {
   background-color: var(--tutor-primary-color);
-}
-
-a.back-to-quiz-questions-btn {
-  font-size: 16px;
-  font-weight: 300;
-  color: #393c40;
-  margin-bottom: 10px;
-  display: block;
-}
-
-a.back-to-quiz-questions-btn.tutor-updating-message i {
-  display: none;
-}
-
-.modal-container .quiz-questions-form {
-  padding: 20px;
 }
 
 #quiz-builder-tab-advanced-options .tutor-quiz-builder-form-cols-row .quiz-form-field-col:first-child {

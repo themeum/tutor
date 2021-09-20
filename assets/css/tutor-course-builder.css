@@ -899,6 +899,33 @@ body.tutor-screen-course-builder .tutor-modal.tutor-lesson-modal-wrap #wp-tutor_
   width: 100%;
 }
 
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap[data-target=quiz-builder-tab-quiz-info] .modal-container > div:not(#quiz-builder-tab-quiz-info),
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap[data-target=quiz-builder-tab-questions] .modal-container > div:not(#quiz-builder-tab-questions):not(#tutor-quiz-question-wrapper),
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap[data-target=quiz-builder-tab-settings] .modal-container > div:not(#quiz-builder-tab-settings),
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap[data-target=quiz-builder-tab-quiz-info] .tutor-modal-footer button[data-action=back] {
+  display: none !important;
+}
+
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap a.back-to-quiz-questions-btn {
+  font-size: 16px;
+  font-weight: 300;
+  color: #393c40;
+  margin-bottom: 10px;
+  display: block;
+}
+
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap.tutor-has-question-from .tutor-modal-footer .row > div:not(:last-child) {
+  display: none !important;
+}
+
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap.tutor-has-question-from .tutor-modal-footer .row > div:last-child {
+  text-align: center;
+}
+
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap:not(.tutor-has-question-from) .tutor-modal-footer .row > div:last-child {
+  display: none;
+}
+
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend {
   /*
  * Course Level Meta

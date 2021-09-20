@@ -1,0 +1,35 @@
+&[data-target=quiz-builder-tab-quiz-info] .modal-container>div:not(#quiz-builder-tab-quiz-info),
+&[data-target=quiz-builder-tab-questions] .modal-container>div:not(#quiz-builder-tab-questions):not(#tutor-quiz-question-wrapper),
+&[data-target=quiz-builder-tab-settings] .modal-container>div:not(#quiz-builder-tab-settings),
+&[data-target=quiz-builder-tab-quiz-info] .tutor-modal-footer button[data-action=back] {
+    display: none !important;
+}
+
+a.back-to-quiz-questions-btn {
+	font-size: 16px;
+	font-weight: 300;
+	color: #393c40;
+	margin-bottom: 10px;
+	display: block;
+}
+
+// Show hide add to question button based on screen
+&.tutor-has-question-from {
+    .tutor-modal-footer .row>div{
+        &:not(:last-child) {
+            display: none !important;
+        }
+
+        &:last-child {
+            text-align: center;
+        }
+    }
+}
+
+&:not(.tutor-has-question-from) {
+    .tutor-modal-footer .row>div{
+        &:last-child {
+            display: none;
+        }
+    }
+}

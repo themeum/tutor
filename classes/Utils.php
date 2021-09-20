@@ -4168,13 +4168,9 @@ class Utils {
 			ORDER BY question_order ASC
 			",
 			$quiz_id
-		) );
+		));
 
-		if ( is_array( $questions ) && count( $questions ) ) {
-			return $questions;
-		}
-
-		return false;
+		return ( is_array( $questions ) && count( $questions ) ) ? $questions : false;
 	}
 
 	/**

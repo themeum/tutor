@@ -52,15 +52,15 @@
                 
                 <div class="tutor-modal-steps">
                     <ul>
-                        <li class="tutor-is-completed">
+                        <li class="tutor-is-completed" data-tab="quiz-builder-tab-quiz-info">
                             <span><?php _e('Quiz Info', 'tutor'); ?></span>
                             <button class="tutor-modal-step-btn">1</button>
                         </li>
-                        <li>
+                        <li data-tab="quiz-builder-tab-questions">
                             <span><?php _e('Question', 'tutor'); ?></span>
                             <button class="tutor-modal-step-btn">2</button>
                         </li>
-                        <li>
+                        <li data-tab="quiz-builder-tab-settings">
                             <span><?php _e('Settings', 'tutor'); ?></span>
                             <button class="tutor-modal-step-btn">4</button>
                         </li>
@@ -74,7 +74,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="tutor-btn-group">
-                                <button type="button" class="tutor-btn tutor-is-default">
+                                <button type="button" data-action="back" class="tutor-btn tutor-is-default">
                                     <?php _e('Back', 'tutor'); ?>
                                 </button>
                                 <button type="button" data-action="next" class="tutor-btn tutor-is-primary">
@@ -86,6 +86,11 @@
                             <button data-tutor-modal-close class="tutor-btn tutor-is-default">
                                 <?php _e('Cancel', 'tutor'); ?>
                             </button>
+                        </div>
+                        <div class="col">
+                            <buttn class="tutor-btn tutor-is-xs quiz-modal-question-save-btn">
+                                <?php _e('Add To Questions', 'tutor'); ?>
+                            </a>
                         </div>
                     </div>
                 </div>
