@@ -13,7 +13,7 @@
             <div class="tutor-input-group tutor-mb-15">
                 <input type="text" name="lesson_title" class="tutor-form-control tutor-mb-10" value="<?php echo stripslashes($post->post_title); ?>"/>
                 <p class="tutor-input-feedback tutor-has-icon">
-                    <i class="far fa-question-circle tutor-input-feedback-icon"></i>
+                    <i class="tutor-v2-icon-test icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
                     <?php _e('Lesson titles are displayed publicly wherever required.', 'tutor'); ?>
                 </p>
             </div>
@@ -28,25 +28,43 @@
             </div>
         </div>
 
+
         <div class="tutor-mb-30">
             <label class="tutor-form-label"><?php _e('Feature Image', 'tutor'); ?></label>
             <div class="tutor-input-group tutor-mb-15">
-                <div class="tutor-thumbnail-wrap ">
-                    <p class="thumbnail-img tutor-lesson-edit-feature-img">
-                        <?php
-                        $thumbnail_upload_text = __('Upload Feature Image', 'tutor');
-                        $lesson_thumbnail_id = '';
-                        if (has_post_thumbnail($post->ID)){
-                            $lesson_thumbnail_id = get_post_meta($post->ID, '_thumbnail_id', true);
-                            echo get_the_post_thumbnail($post->ID);
-                            $thumbnail_upload_text = __('Update Feature Image', 'tutor');
-                        }
-                        ?>
-                        <a href="javascript:;" class="tutor-lesson-thumbnail-delete-btn" style="display: <?php echo $lesson_thumbnail_id ? 'block':'none'; ?>;"><i class="tutor-icon-line-cross"></i></a>
-                    </p>
-
-                    <input type="hidden" class="_lesson_thumbnail_id" name="_lesson_thumbnail_id" value="<?php echo $lesson_thumbnail_id; ?>">
-                    <button type="button" class="lesson_thumbnail_upload_btn tutor-btn bordered-btn"><?php echo $thumbnail_upload_text; ?></button>
+                <div class="tutor-thumbnail-uploader">
+                    <div class="thumbnail-wrapper d-flex align-items-center tutor-mt-10 tutor-p-15">
+                            <div class="thumbnail-preview image-previewer">
+                            <span class="preview-loading"></span>
+                            <?php 
+                                $thumbnail_upload_text = __('Upload Feature Image', 'tutor');
+                                $lesson_thumbnail_id = '';
+                                $lesson_thumbnail_url = '';
+                                if (has_post_thumbnail($post->ID)){
+                                    $lesson_thumbnail_id = get_post_meta($post->ID, '_thumbnail_id', true);
+                                    $lesson_thumbnail_url = get_the_post_thumbnail_url($post->ID);
+                                }
+                            ?>
+                            <input type="hidden" class="_lesson_thumbnail_id" name="_lesson_thumbnail_id" value="<?php echo $lesson_thumbnail_id; ?>">
+                            <img src="<?php echo $lesson_thumbnail_url; ?>" alt="course builder logo"/>
+                            <span class="delete-btn" style="<?php echo !$lesson_thumbnail_url ? 'display:none' : ''; ?>"></span>
+                        </div>
+                        <div class="thumbnail-input">
+                            <p class="text-regular-body color-text-subsued">
+                                <strong class="text-medium-body">Size: 700x430 pixels;</strong>
+                                <br />
+                                File Support:
+                                <strong class="text-medium-body">
+                                jpg, .jpeg,. gif, or .png.
+                                </strong>
+                            </p>
+                            
+                            <button class="tutor-btn tutor-is-sm tutor-mt-15 lesson_thumbnail_upload_btn">
+                                <span class="tutor-btn-icon tutor-v2-icon-test icon-image-filled"></span>
+                                <span>Upload Image</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

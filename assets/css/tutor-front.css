@@ -5161,16 +5161,6 @@ Lesson Edit Modal
   height: auto;
 }
 
-a.tutor-lesson-thumbnail-delete-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: red;
-  background: #fff;
-  padding: 3px 5px;
-  border-radius: 5px;
-}
-
 .tutor-get-pro-text {
   color: #e02424;
 }

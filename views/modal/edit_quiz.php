@@ -39,54 +39,27 @@
                                     echo $type['icon'] . ' ' . $type['name'];
                                 ?>
                             </div>
-                            <div class="popup-opener">
+                            <div class="tutor-popup-opener">
                                 <button type="button" class="popup-btn">
-                                    <i class="fas fa-ellipsis-v"></i>
+                                    <span class="toggle-icon"></span>
                                 </button>
                                 <ul class="popup-menu">
                                     <li>
-                                        <a href="#">
-                                            <span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
-                                            <span>Download</span>
+                                        <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
+                                            <span class="icon tutor-v2-icon-test icon-edit-filled color-design-white"></span>
+                                            <span class="text-regular-body color-text-white"><?php _e('Edit', 'tutor'); ?></span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
-                                            <span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
-                                            <span>Delete</span>
+                                        <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
+                                            <span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+                                            <span class="text-regular-body color-text-white"><?php _e('Delete', 'tutor'); ?></span>
                                         </a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-
-                    <!-- <div class="quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
-                        <div class="quiz-builder-question">
-                            <span class="question-sorting">
-                                <i class="tutor-icon-move"></i>
-                            </span>
-
-                            <span class="question-title"><?php echo stripslashes($question->question_title); ?></span>
-
-                            <span class="question-icon">
-                                <?php
-                                $type = tutor_utils()->get_question_types($question->question_type);
-                                echo $type['icon'] . ' ' . $type['name'];
-                                ?>
-                            </span>
-
-                            <span class="question-edit-icon">
-                                <button href="javascript:;" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
-                                    <i class="tutor-icon-pencil"></i> 
-                                </button>
-                            </span>
-                        </div>
-
-                        <div class="quiz-builder-qustion-trash">
-                            <a href="javascript:;" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>"><i class="tutor-icon-garbage"></i> </a>
-                        </div>
-                    </div> -->
                     <?php
                 }
             }

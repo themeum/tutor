@@ -1,3 +1,5 @@
+@import '../../../../assets/scss/lib/mixins.scss';
+
 .tutor-modal {
 	position: fixed;
 	top: 0;
@@ -35,6 +37,25 @@
 			color: white;
 			background: none;
 			border: none;
+		}
+	}
+
+	&.modal-sticky-header-footer {
+		.tutor-modal-header {
+			@include valueWithPrefix(display, flex);
+			@include propertyWithPrefix(align-items, center);
+			@include propertyWithPrefix(justify-content, space-between);
+			border-bottom: 1px solid $stroke-light-30;
+		}
+	
+		.tutor-modal-body-alt {
+			min-height: 300px;
+			max-height: calc(100vh - 15em);
+			overflow-y: auto;
+		}
+	
+		.tutor-modal-footer {
+			border-top: 1px solid $stroke-light-30;
 		}
 	}
 
@@ -105,6 +126,7 @@
 
 	.tutor-modal-header {
 		padding: 24px 30px;
+
 		.tutor-modal-title {
 			margin: 0;
 			font-size: 20px;
@@ -403,24 +425,5 @@
 				color: var(--tutor-primary-hover);
 			}
 		}
-	}
-}
-
-.tutor-modal.modal-sticky-header-footer {
-	.tutor-modal-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		border-bottom: 1px solid $stroke-light-30;
-	}
-
-	.tutor-modal-body-alt {
-		min-height: 300px;
-		max-height: calc(100vh - 15em);
-		overflow-y: auto;
-	}
-
-	.tutor-modal-footer {
-		border-top: 1px solid $stroke-light-30;
 	}
 }

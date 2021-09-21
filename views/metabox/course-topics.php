@@ -44,10 +44,10 @@
                 <div class="tutor-modal-header">
                     <h3 class="tutor-modal-title">
                         <?php _e('Quiz', 'tutor'); ?>
-                        <button data-tutor-modal-close class="tutor-modal-close">
-                            <span class="las la-times"></span>
-                        </button>
                     </h3>
+                    <button data-tutor-modal-close class="tutor-modal-close">
+                        <span class="las la-times"></span>
+                    </button>
                 </div>
                 
                 <div class="tutor-modal-steps">
@@ -105,10 +105,10 @@
                 <div class="tutor-modal-header">
                     <h3 class="tutor-modal-title">
                         <?php _e('Lesson', 'tutor'); ?>
-                        <button data-tutor-modal-close class="tutor-modal-close">
-                            <span class="las la-times"></span>
-                        </button>
                     </h3>
+                    <button data-tutor-modal-close class="tutor-modal-close">
+                        <span class="las la-times"></span>
+                    </button>
                 </div>
                 <div class="tutor-modal-body-alt modal-container"></div>
                 <div class="tutor-modal-footer">
@@ -136,10 +136,10 @@
                 <div class="tutor-modal-header">
                     <h3 class="tutor-modal-title">
                         <?php _e('Assignment', 'tutor'); ?>
-                        <button data-tutor-modal-close class="tutor-modal-close">
-                            <span class="las la-times"></span>
-                        </button>
                     </h3>
+                    <button data-tutor-modal-close class="tutor-modal-close">
+                        <span class="las la-times"></span>
+                    </button>
                 </div>
                 <div class="tutor-modal-body-alt modal-container">
 

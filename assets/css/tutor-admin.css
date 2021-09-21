@@ -2568,16 +2568,6 @@ span.filled_dash_unser {
   height: auto;
 }
 
-a.tutor-lesson-thumbnail-delete-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: red;
-  background: #fff;
-  padding: 3px 5px;
-  border-radius: 5px;
-}
-
 .tutor-get-pro-text {
   color: #e02424;
 }
@@ -7363,6 +7353,7 @@ li.tutor-option-nav-item h4 {
   inset: 0;
   background: #f3f3f3;
   border-radius: 3px;
+  display: none;
 }
 
 .tutor-option-field-input.image-previewer .preview-loading::before {
@@ -7395,10 +7386,6 @@ li.tutor-option-nav-item h4 {
     -webkit-transform: rotate(360deg);
             transform: rotate(360deg);
   }
-}
-
-.tutor-option-field-input.image-previewer .preview-loading {
-  display: none;
 }
 
 .tutor-option-field-input.image-previewer .preview-loading.is-loading {
