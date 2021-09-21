@@ -8,6 +8,7 @@
 
 <div class="tutor-option-single-item item-variation-dragndrop import-setting">
 	<h4>Import Settings</h4>
+
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row d-block">
 			<div class="tutor-option-field-label">
@@ -48,7 +49,7 @@
 
 <div class="tutor-option-single-item item-variation-table settings-history">
 	<h4>Settings History</h4>
-	<div class="item-wrapper">
+	<div class="item-wrapper history_data">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
 				<p>Date</p>
@@ -56,34 +57,41 @@
 		</div>
 		<?php if ( $tutor_options = get_option( 'tutor_settings_log', array() ) ) : ?>
 			<?php foreach ( $tutor_options as $key => $option_data ) : ?>
-		<div class="tutor-option-field-row">
-			<div class="tutor-option-field-label">
-				<p class="text-medium-small"><?php echo date( 'j M, Y, g:i a', $option_data['datetime'] ); ?> </p>
-			</div>
-			<div class="tutor-option-field-input">
-				<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs">Apply</button>
-				<div class="popup-opener">
-					<button type="button" class="popup-btn">
-						<span class="toggle-icon"></span>
-					</button>
-					<ul class="popup-menu">
-						<li>
-							<a class="export_single_settings" data-id="<?php echo $key; ?>">
-								<span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
-								<span>Download</span>
-							</a>
-						</li>
-						<li>
-							<a class="delete_single_settings" data-id="<?php echo $key; ?>">
-								<span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
-								<span>Delete</span>
-							</a>
-						</li>
-					</ul>
+				<?php
+				// echo '<pre>';
+				// print_r( $option_data );
+				// echo '</pre>';
+				// $datatypeClass = $option_data['datatype'] == 'imported' ? ' label-success' : ' label-primary';
+				?>
+				<div class="tutor-option-field-row">
+					<div class="tutor-option-field-label">
+						<p class="text-medium-small"><?php echo esc_html( $option_data['history_date'] ); ?>
+						<span className="tutor-badge-label<?php // echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
+					</div>
+					<div class="tutor-option-field-input">
+						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="<?php echo $key; ?>">Apply</button>
+						<div class="popup-opener">
+							<button type="button" class="popup-btn">
+								<span class="toggle-icon"></span>
+							</button>
+							<ul class="popup-menu">
+								<li>
+									<a class="export_single_settings" data-id="<?php echo $key; ?>">
+										<span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
+										<span>Download</span>
+									</a>
+								</li>
+								<li>
+									<a class="delete_single_settings" data-id="<?php echo $key; ?>">
+										<span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
+										<span>Delete</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
-		<?php endforeach; ?>
+			<?php endforeach; ?>
 		<?php else : ?>
 			<div class="tutor-option-field-row">
 				<div class="tutor-option-field-label">
@@ -91,7 +99,6 @@
 				</div>
 			</div>
 		<?php endif; ?>
-
 	</div>
 </div>
 
@@ -107,7 +114,7 @@
 				</span></p>
 			</div>
 			<div class="tutor-option-field-input">
-				<button class="tutor-btn tutor-is-outline tutor-is-sm">Reset All Settings</button>
+				<button class="tutor-btn tutor-is-outline tutor-is-sm" id="reset_options">Reset All Settings</button>
 			</div>
 		</div>
 	</div>
