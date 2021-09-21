@@ -1836,11 +1836,13 @@ __webpack_require__.r(__webpack_exports__);
 
 (function popupMenuToggle() {
   /**
-   * Popup Menu Toggle tutor-popup-opener
+   * Popup Menu Toggle .tutor-popup-opener
    */
-  var popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
-  var popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
-  /* if (popupToggleBtns && popupMenus) {
+
+  /*
+  const popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
+  const popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
+  	 if (popupToggleBtns && popupMenus) {
   	popupToggleBtns.forEach((btn) => {
   		btn.addEventListener('click', (e) => {
   			const popupClosest = e.target.closest('.tutor-popup-opener').querySelector('.popup-menu');
@@ -1862,29 +1864,25 @@ __webpack_require__.r(__webpack_exports__);
   		}
   	});
   } */
-
   document.addEventListener('click', function (e) {
     var attr = 'data-tutor-popup-target';
+    console.log(e);
 
     if (e.target.hasAttribute(attr)) {
       e.preventDefault();
       var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
-
-      var _popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
-
-      _popupMenus.forEach(function (popupMenu) {
-        popupMenu.classList.remove('visible');
-      });
-
       var popupMenu = document.getElementById(id);
 
-      if (popupMenu) {
-        popupMenu.classList.toggle('visible');
+      if (popupMenu.classList.contains('visible')) {
+        popupMenu.classList.remove('visible');
+      } else {
+        document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach(function (popupMenu) {
+          popupMenu.classList.remove('visible');
+        });
+        popupMenu.classList.add('visible');
       }
     } else {
-      var _popupMenus2 = document.querySelectorAll('.tutor-popup-opener .popup-menu');
-
-      _popupMenus2.forEach(function (popupMenu) {
+      document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach(function (popupMenu) {
         popupMenu.classList.remove('visible');
       });
     }
