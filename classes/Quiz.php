@@ -657,7 +657,7 @@ class Quiz {
 		
 		// Generate quiz list to show under topic as sub list
 		ob_start();
-		tutor_load_template_from_custom_path(tutor()->path.'/views/modal/quiz-list-single.php', array(
+		tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/quiz-list-single.php', array(
 			'quiz_id' => $quiz_id,
 			'topic_id' => $topic_id,
 			'quiz_title' => $quiz_title,

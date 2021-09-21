@@ -1326,9 +1326,9 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_attachments( $post_id = 0 ) {
+	public function get_attachments( $post_id = 0, $meta_key='_tutor_attachments' ) {
 		$post_id         = $this->get_post_id( $post_id );
-		$attachments     = maybe_unserialize( get_post_meta( $post_id, '_tutor_attachments', true ) );
+		$attachments     = maybe_unserialize( get_post_meta( $post_id, $meta_key, true ) );
 		$attachments_arr = array();
 
 		$font_icons = apply_filters( 'tutor_file_types_icon', array(

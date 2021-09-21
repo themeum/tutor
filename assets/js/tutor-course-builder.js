@@ -12,7 +12,42 @@ window.jQuery(document).ready(function ($) {
       __ = _wp$i18n.__,
       _x = _wp$i18n._x,
       _n = _wp$i18n._n,
-      _nx = _wp$i18n._nx;
+      _nx = _wp$i18n._nx; // Create/edit assignment opener
+
+  $(document).on('click', '.open-tutor-assignment-modal, .tutor-create-assignments-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var assignment_id = $that.hasClass('tutor-create-assignments-btn') ? 0 : $that.attr('data-assignment-id');
+    var topic_id = $that.closest('.tutor-topics-wrap').data('topic-id');
+    var course_id = $('#post_ID').val();
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        assignment_id: assignment_id,
+        topic_id: topic_id,
+        course_id: course_id,
+        action: 'tutor_load_assignments_builder_modal'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $('.tutor-assignment-modal-wrap .modal-container').html(data.data.output);
+        $('.tutor-assignment-modal-wrap').addClass('tutor-is-active');
+        $(document).trigger('assignment_modal_loaded');
+        tinymce.init(tinyMCEPreInit.mceInit.course_description);
+        tinymce.execCommand('mceRemoveEditor', false, 'tutor_assignments_modal_editor');
+        tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
+      },
+      complete: function complete() {
+        quicktags({
+          id: "tutor_assignments_modal_editor"
+        });
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
   /**
    * Update Assignment Data
    */
@@ -30,7 +65,7 @@ window.jQuery(document).ready(function ($) {
       content = $('#' + inputid).val();
     }
 
-    var form_data = $(this).closest('form').serializeObject();
+    var form_data = $(this).closest('.tutor-modal').find('form.tutor_assignment_modal_form').serializeObject();
     form_data.assignment_content = content;
     $.ajax({
       url: window._tutorobject.ajaxurl,
@@ -44,8 +79,8 @@ window.jQuery(document).ready(function ($) {
           $('#tutor-course-content-wrap').html(data.data.course_contents);
           enable_sorting_topic_lesson(); //Close the modal
 
-          $('.tutor-lesson-modal-wrap').removeClass('show');
-          tutor_toast(__('Assignment Updated', 'tutor'), $that.data('toast_success_message'), 'success');
+          $('.tutor-assignment-modal-wrap').removeClass('tutor-is-active');
+          tutor_toast(__('Success', 'tutor'), __('Assignment Updated', 'tutor'), 'success');
         }
       },
       complete: function complete() {
@@ -76,6 +111,7 @@ window.jQuery(document).ready(function ($) {
   $(document).on('click', '.tutorUploadAttachmentBtn', function (e) {
     e.preventDefault();
     var $that = $(this);
+    var name = $that.data('name');
     var frame; // If the media frame already exists, reopen it.
 
     if (frame) {
@@ -100,8 +136,8 @@ window.jQuery(document).ready(function ($) {
       if (attachments.length) {
         for (var i = 0; i < attachments.length; i++) {
           var attachment = attachments[i];
-          var inputHtml = "<div data-attachment_id=\"".concat(attachment.id, "\">\n                        <div>\n                            <a href=\"").concat(attachment.url, "\" target=\"_blank\">\n                                ").concat(attachment.filename, "\n                            </a>\n                            <input type=\"hidden\" name=\"tutor_attachments[]\" value=\"").concat(attachment.id, "\">\n                        </div>\n                        <div>\n                            <span class=\"filesize\">").concat(__('Size', 'tutor'), ": ").concat(attachment.filesizeHumanReadable, "</span>\n                            <span class=\"tutor-delete-attachment tutor-icon-line-cross\"></span>\n                        </div>\n                    </div>");
-          $that.closest('.tutor-attachments-metabox').find('.tutor-attachment-cards').append(inputHtml);
+          var inputHtml = "<div data-attachment_id=\"".concat(attachment.id, "\">\n                        <div>\n                            <a href=\"").concat(attachment.url, "\" target=\"_blank\">\n                                ").concat(attachment.filename, "\n                            </a>\n                            <input type=\"hidden\" name=\"").concat(name, "\" value=\"").concat(attachment.id, "\">\n                        </div>\n                        <div>\n                            <span class=\"filesize\">\n                                ").concat(__('Size', 'tutor'), ": ").concat(attachment.filesizeHumanReadable, "\n                            </span>\n                            <span class=\"tutor-delete-attachment tutor-icon-line-cross\"></span>\n                        </div>\n                    </div>");
+          $that.parent().find('.tutor-attachment-cards').append(inputHtml);
         }
       }
     }); // Finally, open the modal on click
@@ -308,6 +344,45 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+/**
+ * Add option disable when don't need to add an option
+ * 
+ * @since 1.9.7
+ */
+var disableAddoption = function disableAddoption() {
+  var selected_question_type = document.querySelector(".tutor_select_value_holder").value;
+  var question_answers = document.getElementById("tutor_quiz_question_answers");
+  var question_answer_form = document.getElementById("tutor_quiz_question_answer_form");
+  var add_question_answer_option = document.querySelector(".add_question_answers_option");
+
+  var addDisabledClass = function addDisabledClass(elem) {
+    if (!elem.classList.contains("disabled")) {
+      elem.classList.add('disabled');
+    }
+  };
+
+  var removeDisabledClass = function removeDisabledClass(elem) {
+    if (elem.classList.contains("disabled")) {
+      elem.classList.remove('disabled');
+    }
+  }; //dont need add option for open_ended & short_answer
+
+
+  if (selected_question_type === 'open_ended' || selected_question_type === 'short_answer') {
+    addDisabledClass(add_question_answer_option);
+  } else if (selected_question_type === 'true_false' || selected_question_type === 'fill_in_the_blank') {
+    //if already have options then dont need to show add option
+    if (question_answer_form.hasChildNodes() || question_answers.hasChildNodes()) {
+      addDisabledClass(add_question_answer_option);
+    } else {
+      removeDisabledClass(add_question_answer_option);
+    }
+  } else {
+    //if other question type then remove disabled
+    removeDisabledClass(add_question_answer_option);
+  }
+};
+
 window.jQuery(document).ready(function ($) {
   var __ = wp.i18n.__; // TAB switching
 
@@ -425,44 +500,75 @@ window.jQuery(document).ready(function ($) {
     });
   }
 
-  tutor_slider_init(); // Add quiz opener
+  function tutor_select() {
+    var obj = {
+      init: function init() {
+        $(document).on('click', '.question-type-select .tutor-select-option', function (e) {
+          e.preventDefault();
+          var $that = $(this);
 
-  $(document).on('click', '.tutor-add-quiz-btn', function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var modal = $('.tutor-modal.tutor-quiz-builder-modal-wrap');
-    var current_topic_id = $(this).data('topic-id');
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: {
-        topic_id: current_topic_id,
-        action: 'tutor_load_quiz_builder_modal'
+          if ($that.attr('data-is-pro') !== 'true') {
+            var $html = $that.html().trim();
+            $that.closest('.question-type-select').find('.select-header .lead-option').html($html);
+            $that.closest('.question-type-select').find('.select-header input.tutor_select_value_holder').val($that.attr('data-value')).trigger('change');
+            $that.closest('.tutor-select-options').hide();
+            disableAddoption();
+          } else {
+            alert('Tutor Pro version required');
+          }
+        });
+        $(document).on('click', '.question-type-select .select-header', function (e) {
+          e.preventDefault();
+          var $that = $(this);
+          $that.closest('.question-type-select').find('.tutor-select-options').slideToggle();
+        });
+        this.setValue();
+        this.hideOnOutSideClick();
       },
-      beforeSend: function beforeSend() {
-        $that.addClass('tutor-updating-message');
-      },
-      success: function success(data) {
-        $('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
-        $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
-        modal.removeClass('tutor-has-question-from'); // Go to first tab
+      setValue: function setValue() {
+        $('.question-type-select').each(function () {
+          var $that = $(this);
+          var $option = $that.find('.tutor-select-option');
 
-        step_switch(modal, false, true);
-        step_switch(modal, false, true);
+          if ($option.length) {
+            $option.each(function () {
+              var $thisOption = $(this);
+
+              if ($thisOption.attr('data-selected') === 'selected') {
+                var $html = $thisOption.html().trim();
+                $thisOption.closest('.question-type-select').find('.select-header .lead-option').html($html);
+                $thisOption.closest('.question-type-select').find('.select-header input.tutor_select_value_holder').val($thisOption.attr('data-value'));
+              }
+            });
+          }
+        });
       },
-      complete: function complete() {
-        $that.removeClass('tutor-updating-message');
+      hideOnOutSideClick: function hideOnOutSideClick() {
+        $(document).mouseup(function (e) {
+          var $option_wrap = $(".tutor-select-options");
+
+          if (!$(e.target).closest('.select-header').length && !$option_wrap.is(e.target) && $option_wrap.has(e.target).length === 0) {
+            $option_wrap.hide();
+          }
+        });
+      },
+      reInit: function reInit() {
+        this.setValue();
       }
-    });
-  }); // Edit quiz opener
+    };
+    return obj;
+  }
 
-  $(document).on('click', '.open-tutor-quiz-modal, .back-to-quiz-questions-btn', function (e) {
+  tutor_select().init();
+  tutor_slider_init(); // Create/Edit quiz opener
+
+  $(document).on('click', '.tutor-add-quiz-btn, .open-tutor-quiz-modal, .back-to-quiz-questions-btn', function (e) {
     e.preventDefault();
     var $that = $(this);
     var step_1 = $(this).hasClass('open-tutor-quiz-modal');
     var modal = $('.tutor-modal.tutor-quiz-builder-modal-wrap');
-    var quiz_id = $that.attr('data-quiz-id');
-    var topic_id = $that.attr('data-topic-id');
+    var quiz_id = $that.hasClass('tutor-add-quiz-btn') ? 0 : $that.attr('data-quiz-id');
+    var topic_id = $that.closest('.tutor-topics-wrap').data('topic-id');
     var course_id = $('#post_ID').val();
     $.ajax({
       url: window._tutorobject.ajaxurl,
@@ -632,7 +738,7 @@ window.jQuery(document).ready(function ($) {
     e.preventDefault();
     var $that = $(this);
     var question_id = $that.attr('data-question-id');
-    var $formInput = $('.quiz_question_form :input').serializeObject();
+    var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
     $formInput.question_id = question_id;
     $formInput.action = 'tutor_quiz_add_question_answers';
     $.ajax({
@@ -659,7 +765,7 @@ window.jQuery(document).ready(function ($) {
     e.preventDefault();
     var $that = $(this);
     var modal = $that.closest('.tutor-modal');
-    var $formInput = $('.quiz_question_form :input').serializeObject();
+    var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
     $formInput.action = 'tutor_quiz_modal_update_question';
     $.ajax({
       url: window._tutorobject.ajaxurl,
@@ -684,6 +790,44 @@ window.jQuery(document).ready(function ($) {
         }, 2000);
       }
     });
+  }); // Quiz question answer refresh
+
+  $(document).on('refresh', '#tutor_quiz_question_answers', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var question_id = $that.attr('data-question-id');
+    var question_type = $('.tutor_select_value_holder').val();
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        question_id: question_id,
+        question_type: question_type,
+        action: 'tutor_quiz_builder_get_answers_by_question'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+        $('#tutor_quiz_question_answer_form').html('');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $that.html(data.data.output);
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * If change question type from quiz builder question
+   *
+   * @since v.1.0.0
+   */
+
+  $(document).on('change', 'input.tutor_select_value_holder', function (e) {
+    $('.add_question_answers_option').trigger('click');
+    $('#tutor_quiz_question_answers').trigger('refresh');
   });
 });
 
