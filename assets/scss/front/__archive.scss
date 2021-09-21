@@ -2265,16 +2265,6 @@ i.tutor-icon-block.tutor-icon-plus {
     background-color: var(--tutor-primary-color);
 }
 
-#quiz-builder-tab-advanced-options
-    .tutor-quiz-builder-form-cols-row
-    .quiz-form-field-col:first-child {
-    flex: 0 0 150px;
-}
-
-.quiz-builder-question-wrap {
-    display: flex;
-    margin-bottom: 15px;
-}
 .quiz-builder-question {
     flex: 1;
     display: flex;

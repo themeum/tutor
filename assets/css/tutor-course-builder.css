@@ -1017,6 +1017,29 @@ body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap #tut
   padding: 15px 30px;
 }
 
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap .quiz-builder-question-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  margin-bottom: 15px;
+}
+
+body.tutor-screen-course-builder .tutor-modal.tutor-assignment-modal-wrap .tutor-input-group {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-flow: column;
+  -o-flex-flow: column;
+  -ms-flex-flow: column;
+}
+
+body.tutor-screen-course-builder .tutor-modal.tutor-assignment-modal-wrap .tutor-input-group input:not([name=assignment_title]) {
+  max-width: 135px;
+}
+
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend {
   /*
  * Course Level Meta

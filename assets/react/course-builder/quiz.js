@@ -97,8 +97,13 @@ window.jQuery(document).ready(function($){
             questions[index] = question_id;
         });
 
-        $.ajax({url : window._tutorobject.ajaxurl, type : 'POST',
-            data : {sorted_question_ids : questions, action: 'tutor_quiz_question_sorting'},
+        $.ajax({
+            url : window._tutorobject.ajaxurl, 
+            type : 'POST',
+            data : {
+                sorted_question_ids : questions, 
+                action: 'tutor_quiz_question_sorting'
+            },
         });
     }
 
@@ -323,6 +328,8 @@ window.jQuery(document).ready(function($){
 
                     tutor_slider_init();
                     step_switch(modal, true);
+
+                enable_quiz_questions_sorting();
                 },
                 complete: function () {
                     btn.removeClass('tutor-updating-message');

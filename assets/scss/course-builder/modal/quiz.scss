@@ -107,3 +107,8 @@ a.back-to-quiz-questions-btn {
     margin: 0px -30px;
     padding: 15px 30px;
 }
+
+.quiz-builder-question-wrap {
+    @include valueWithPrefix(display, flex);
+	margin-bottom: 15px;
+}

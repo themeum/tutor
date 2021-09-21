@@ -27,7 +27,41 @@
             if ($questions) {
                 foreach ($questions as $question) {
                     ?>
-                    <div class="quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
+                    <div class="tutor-quiz-item tutor-mb-15 quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
+                        <div class="tutor-quiz-item-label">
+                            <span class="tutor-quiz-item-draggable fas fa-bars question-sorting"></span>
+                            <h6 class="tutor-quiz-item-name"><?php echo stripslashes($question->question_title); ?></h6>
+                        </div>
+                        <div class="tutor-quiz-item-action align-items-center">
+                            <div class="tutor-quiz-item-type">
+                                <?php
+                                    $type = tutor_utils()->get_question_types($question->question_type);
+                                    echo $type['icon'] . ' ' . $type['name'];
+                                ?>
+                            </div>
+                            <div class="popup-opener">
+                                <button type="button" class="popup-btn">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="popup-menu">
+                                    <li>
+                                        <a href="#">
+                                            <span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
+                                            <span>Download</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
+                                            <span>Delete</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
                         <div class="quiz-builder-question">
                             <span class="question-sorting">
                                 <i class="tutor-icon-move"></i>
@@ -52,7 +86,7 @@
                         <div class="quiz-builder-qustion-trash">
                             <a href="javascript:;" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>"><i class="tutor-icon-garbage"></i> </a>
                         </div>
-                    </div>
+                    </div> -->
                     <?php
                 }
             }
@@ -60,7 +94,7 @@
         </div>
 
         <div class="tutor-quiz-builder-form-row">
-            <a href="javascript:;" class="tutor-quiz-open-question-form tutor-btn tutor-is-outline tutor-is-xs">
+            <a href="javascript:;" class="tutor-quiz-open-question-form tutor-btn tutor-is-outline tutor-is-sm">
                 <i class="tutor-icon-add-line"></i>
                 <?php _e('Add Question', 'tutor'); ?>
             </a>
@@ -181,5 +215,81 @@
             <?php do_action('tutor_quiz_edit_modal_settings_tab_after', $quiz) ?>
 
         </div>
+    </div>
+</div>
+
+<div id="quiz-builder-tab-advanced-options" class="quiz-builder-tab-container">
+    <div class="tutor-quiz-builder-group">
+        <div class="tutor-quiz-builder-row">
+            <div class="tutor-quiz-builder-col auto-width">
+                <label class="btn-switch">
+                    <input type="checkbox" value="1" name="quiz_option[quiz_auto_start]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'quiz_auto_start')); ?> />
+                    <div class="btn-slider btn-round"></div>
+                </label>
+                <span><?php _e('Quiz Auto Start', 'tutor'); ?></span>
+            </div>
+        </div>
+        <p class="help"><?php _e('If you enable this option, the quiz will start automatically after the page is loaded.', 'tutor'); ?></p>
+    </div>
+
+    <div class="tutor-quiz-builder-group">
+        <div class="tutor-quiz-builder-row">
+            <div class="tutor-quiz-builder-col auto-width">
+                <h4><?php _e('Question Layout', 'tutor'); ?></h4>
+
+                <select name="quiz_option[question_layout_view]">
+                    <option value=""><?php _e('Set question layout view', 'tutor'); ?></option>
+                    <option value="single_question" <?php selected('single_question', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Single Question', 'tutor'); ?> </option>
+                    <option value="question_pagination" <?php selected('question_pagination', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Question Pagination', 'tutor'); ?> </option>
+                    <option value="question_below_each_other" <?php selected('question_below_each_other', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Question below each other', 'tutor'); ?> </option>
+                </select>
+            </div>
+
+            <div class="tutor-quiz-builder-col auto-width">
+                <h4><?php _e('Questions Order', 'tutor'); ?></h4>
+
+                <select name="quiz_option[questions_order]">
+                    <option value="rand" <?php selected('rand', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Random', 'tutor'); ?> </option>
+                    <option value="sorting" <?php selected('sorting', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Sorting', 'tutor'); ?> </option>
+
+                    <option value="asc" <?php selected('asc', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Ascending', 'tutor'); ?> </option>
+                    <option value="desc" <?php selected('desc', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Descending', 'tutor'); ?> </option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="tutor-quiz-builder-group">
+        <div class="tutor-quiz-builder-row">
+            <div class="tutor-quiz-builder-col auto-width">
+                <label class="btn-switch">
+                    <input type="checkbox" value="1" name="quiz_option[hide_question_number_overview]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_question_number_overview')); ?> />
+                    <div class="btn-slider btn-round"></div>
+                </label>
+                <span><?php _e('Hide question number', 'tutor'); ?></span>
+            </div>
+        </div>
+        <p class="help"><?php _e('Show/hide question number during attempt.', 'tutor'); ?></p>
+    </div>
+
+    <div class="tutor-quiz-builder-group">
+        <h4><?php _e('Short answer characters limit', 'tutor'); ?></h4>
+        <div class="tutor-quiz-builder-row">
+            <div class="tutor-quiz-builder-col">
+                <input type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'short_answer_characters_limit', 200); ?>">
+            </div>
+        </div>
+        <p class="help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor'); ?></p>
+    </div>
+
+    <div class="tutor-quiz-builder-group">
+        <h4><?php _e('Open-Ended/Essay questions answer character limit', 'tutor'); ?></h4>
+        <div class="tutor-quiz-builder-row">
+            <div class="tutor-quiz-builder-col">
+                <input type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'open_ended_answer_characters_limit', 500); ?>">
+            </div>
+        </div>
+        <p class="help"><?php _e('Students will place the answer in the Open-Ended/Essay question type within this character limit.', 'tutor'); ?></p>
     </div>
 </div>
