@@ -7600,4 +7600,39 @@ class Utils {
 		
 		<?php do_action( 'tutor_course/archive/pagination/after' );
 	}
+
+	/**
+	 * Get all courses along with topics & course materials for current student
+	 * 
+	 * @since 1.9.10
+	 * 
+	 * @return array
+	 */
+	public function course_with_materials(): array {
+		$user_id = get_current_user_id();
+		$enrolled_courses = $this->get_enrolled_courses_by_user( $user_id );
+
+		if ( false === $enrolled_courses ) {
+			return false;
+		}
+		$data = [];
+		foreach ( $enrolled_courses->posts as $key => $course ) {
+			//push courses
+			array_push($data, ['course' => array('title' => $course->post_title)]);
+			$topics = $this->get_topics( $course->ID );
+
+			if ( !is_null( $topics) || count( $topics->posts ) ) {
+				foreach ( $topics->posts as $topic_key => $topic ) {
+					$materials = $this->get_course_contents_by_topic( $topic->ID, -1 );
+					if ( count( $materials->posts ) || !is_null( $materials->posts ) ) {
+						$topic->materials = $materials->posts;
+					}
+					//push topics
+					array_push( $data[$key]['course'],  ['topics' => $topic] );
+				}
+			}
+
+		}
+		return $data;
+	}
 }
