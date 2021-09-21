@@ -172,11 +172,16 @@ class Options_V2 {
 			}
 		}
 
+		update_option('tutor_option', $attr_default);
+
 		wp_send_json_success( $attr_default );
 	}
 
 
 	public function tutor_import_settings() {
+		echo '<pre>';
+		print_r($_REQUEST);
+		echo '</pre>';die;
 		tutor_utils()->checking_nonce();
 		$request = $this->get_request_data( 'tutor_options' );
 
@@ -642,7 +647,10 @@ class Options_V2 {
 										'type'        => 'checkbox_horizontal',
 										'label'       => __( 'Preferred Video Source', 'tutor' ),
 										'label_title' => __( 'Preferred Video Source', 'tutor' ),
-										'default'     => '0',
+										'default'     => array(
+											'external_url'=> true,
+											'html5'=>true
+										),
 										'options'     => $video_sources,
 										'desc'        => __( 'Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor' ),
 									),
