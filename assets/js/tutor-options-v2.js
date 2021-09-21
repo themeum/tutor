@@ -357,7 +357,6 @@ emailManagePageInputs.forEach((input) => {
 });
 
 function tutor_option_history_load(history_data) {
-  // console.log(history_data);
   var dataset = JSON.parse(history_data).data;
   var output = "";
   if (0 !== dataset.length) {
@@ -439,7 +438,7 @@ const reset_default_options = () => {
 };
 
 const import_history_data = () => {
-  const import_options = element("#import_options"); //document.querySelector("#import_options");
+  const import_options = element("#import_options");
   if (import_options) {
     import_options.onclick = function () {
       var files = element("#drag-drop-input").files;
@@ -456,14 +455,12 @@ const import_history_data = () => {
         formData.append("time", time_now());
         formData.append("tutor_options", tutor_options);
 
-        console.log(tutor_options);
-
         const xhttp = new XMLHttpRequest();
         xhttp.open("POST", _tutorobject.ajaxurl);
         xhttp.send(formData);
         xhttp.onreadystatechange = function () {
           if (xhttp.readyState === 4) {
-            // tutor_option_history_load(xhttp.responseText);
+            tutor_option_history_load(xhttp.responseText);
             delete_history_data();
             import_history_data();
             setTimeout(function () {

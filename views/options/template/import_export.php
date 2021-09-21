@@ -57,16 +57,10 @@
 		</div>
 		<?php if ( $tutor_options = get_option( 'tutor_settings_log', array() ) ) : ?>
 			<?php foreach ( $tutor_options as $key => $option_data ) : ?>
-				<?php
-				// echo '<pre>';
-				// print_r( $option_data );
-				// echo '</pre>';
-				// $datatypeClass = $option_data['datatype'] == 'imported' ? ' label-success' : ' label-primary';
-				?>
 				<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
 						<p class="text-medium-small"><?php echo esc_html( $option_data['history_date'] ); ?>
-						<span className="tutor-badge-label<?php // echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
+						<span className="tutor-badge-label<?php echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="<?php echo $key; ?>">Apply</button>
