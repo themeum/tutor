@@ -4838,6 +4838,10 @@ body [data-testid] {
   font-family: 'Roboto', sans-serif;
 }
 
+.w-100pc {
+  width: 100%;
+}
+
 .tutor-h1,
 .tutor-h2,
 .tutor-h3,

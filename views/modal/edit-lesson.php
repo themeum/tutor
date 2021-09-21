@@ -70,11 +70,10 @@
         </div>
 
 		<?php
-		include tutor()->path.'views/metabox/video-metabox.php';
-		include tutor()->path.'views/metabox/lesson-attachments-metabox.php';
+            include tutor()->path.'views/metabox/video-metabox.php';
+            include tutor()->path.'views/metabox/lesson-attachments-metabox.php';
 		?>
 
         <?php do_action('tutor_lesson_edit_modal_form_after', $post); ?>
-
     </div>
 </form>
