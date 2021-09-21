@@ -13,14 +13,18 @@ import '../docz-essential.css';
 
 `** Replace "className" with "class" while using with html`
 
+#### Open a Popup menu
+
+Use `"data-tutor-popup-target=MENU_ID"` to open a menu.<br/>
+
 ## Popup/Popover menu
 
 <Playground>
 	<div class="tutor-popup-opener">
-		<button type="button" class="popup-btn">
+		<button type="button" class="popup-btn" data-tutor-popup-target="popup-menu-1">
 			<span class="toggle-icon"></span>
 		</button>
-		<ul class="popup-menu">
+		<ul id="popup-menu-1" class="popup-menu">
 			<li>
 				<a href="#">
 					<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
