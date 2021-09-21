@@ -1175,15 +1175,22 @@ __webpack_require__.r(__webpack_exports__);
     if (e.target.hasAttribute(attr)) {
       e.preventDefault();
       var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+
+      var _popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
+
+      _popupMenus.forEach(function (popupMenu) {
+        popupMenu.classList.remove('visible');
+      });
+
       var popupMenu = document.getElementById(id);
 
       if (popupMenu) {
         popupMenu.classList.toggle('visible');
       }
     } else {
-      var _popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
+      var _popupMenus2 = document.querySelectorAll('.tutor-popup-opener .popup-menu');
 
-      _popupMenus.forEach(function (popupMenu) {
+      _popupMenus2.forEach(function (popupMenu) {
         popupMenu.classList.remove('visible');
       });
     }
