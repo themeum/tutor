@@ -54,15 +54,12 @@
 		inset: 0;
 		background: #f3f3f3;
 		border-radius: 3px;
-
-		@include spinner(#1a73aa, #e8e8e8);
-	}
-
-	.preview-loading {
 		display: none;
-	}
-	.preview-loading.is-loading {
-		display: block;
+		@include spinner(#1a73aa, #e8e8e8);
+
+		&.is-loading {
+			display: block;
+		}
 	}
 
 	.delete-btn {

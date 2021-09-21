@@ -949,18 +949,6 @@ jQuery(document).ready(function ($) {
     });
   });
   /**
-   * Lesson Feature Image Delete
-   * @since v.1.5.6
-   */
-
-  $(document).on('click', '.tutor-lesson-thumbnail-delete-btn', function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    $that.closest('.tutor-thumbnail-wrap').find('._lesson_thumbnail_id').val('');
-    $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('');
-    $that.hide();
-  });
-  /**
    * Delete Lesson from course builder
    */
 

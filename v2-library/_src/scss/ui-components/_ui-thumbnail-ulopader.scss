@@ -19,13 +19,16 @@
 		height: 98px;
 		width: var(--width);
 		height: calc(var(--width) / 1.775);
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		@include valueWithPrefix(display, flex);
+		@include propertyWithPrefix(align-items, center);
+		@include propertyWithPrefix(justify-content, center);
 
 		img {
-			width: 100%;
-			height: 100%;
+			width: auto;
+			height: auto;
+			max-width: 100%;
+			max-height: 100%;
+			
 			&::before {
 				// content: '⚠️ \2000 Select an image';
 				content: '';

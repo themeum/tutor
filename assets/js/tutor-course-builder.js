@@ -281,11 +281,26 @@ window.jQuery(document).ready(function ($) {
     });
     frame.on('select', function () {
       var attachment = frame.state().get('selection').first().toJSON();
-      $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').html('<img src="' + attachment.url + '" alt="" /><a href="javascript:;" class="tutor-lesson-thumbnail-delete-btn"><i class="tutor-icon-line-cross"></i></a>');
-      $that.closest('.tutor-thumbnail-wrap').find('input').val(attachment.id);
+      var wrapper = $that.closest('.tutor-thumbnail-uploader');
+      wrapper.find('img').attr('src', attachment.url);
+      wrapper.find('input[name="_lesson_thumbnail_id"]').val(attachment.id);
+      wrapper.find('.delete-btn').show();
       $('.tutor-lesson-thumbnail-delete-btn').show();
     });
     frame.open();
+  });
+  /**
+   * Lesson Feature Image Delete
+   * @since v.1.5.6
+   */
+
+  $(document).on('click', '.tutor-lesson-modal-wrap .tutor-thumbnail-uploader .delete-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var wrapper = $that.closest('.tutor-thumbnail-uploader');
+    wrapper.find('[name="_lesson_thumbnail_id"]').val('');
+    wrapper.find('img').attr('src', '');
+    $that.hide();
   }); // Video source 
 
   $(document).on('change', '.tutor_lesson_video_source', function (e) {
