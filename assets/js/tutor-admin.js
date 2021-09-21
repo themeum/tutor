@@ -1940,29 +1940,48 @@ __webpack_require__.r(__webpack_exports__);
    */
   var popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
   var popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
+  /* if (popupToggleBtns && popupMenus) {
+  	popupToggleBtns.forEach((btn) => {
+  		btn.addEventListener('click', (e) => {
+  			const popupClosest = e.target.closest('.tutor-popup-opener').querySelector('.popup-menu');
+  			popupClosest.classList.toggle('visible');
+  				popupMenus.forEach((popupMenu) => {
+  				if (popupMenu !== popupClosest) {
+  					popupMenu.classList.remove('visible');
+  				}
+  			});
+  		});
+  	});
+  		document.addEventListener('click', (e) => {
+  		if (!e.target.matches('.tutor-popup-opener .popup-btn')) {
+  			popupMenus.forEach((popupMenu) => {
+  				if (popupMenu.classList.contains('visible')) {
+  					popupMenu.classList.remove('visible');
+  				}
+  			});
+  		}
+  	});
+  } */
 
-  if (popupToggleBtns && popupMenus) {
-    popupToggleBtns.forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        var popupClosest = e.target.closest('.tutor-popup-opener').querySelector('.popup-menu');
-        popupClosest.classList.toggle('visible');
-        popupMenus.forEach(function (popupMenu) {
-          if (popupMenu !== popupClosest) {
-            popupMenu.classList.remove('visible');
-          }
-        });
-      });
-    });
-    window.addEventListener('click', function (e) {
-      if (!e.target.matches('.tutor-popup-opener .popup-btn')) {
-        popupMenus.forEach(function (popupMenu) {
-          if (popupMenu.classList.contains('visible')) {
-            popupMenu.classList.remove('visible');
-          }
-        });
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-popup-target';
+
+    if (e.target.hasAttribute(attr)) {
+      e.preventDefault();
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      var popupMenu = document.getElementById(id);
+
+      if (popupMenu) {
+        popupMenu.classList.toggle('visible');
       }
-    });
-  }
+    } else {
+      var _popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
+
+      _popupMenus.forEach(function (popupMenu) {
+        popupMenu.classList.remove('visible');
+      });
+    }
+  });
 })();
 
 /***/ }),
