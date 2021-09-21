@@ -7308,4 +7308,25 @@ class Utils {
 
 		return $ids;
 	}
+
+	/**
+     * @return array
+     *
+     * Sanitize array key abd values recursively
+     *
+     * @since v2.0.0
+     */
+    public function sanitize_recursively( $array ) {
+        $new_array = array();
+        foreach($array as $key => $value) {
+            $key = is_numeric( $key ) ? $key : sanitize_text_field( $key );
+            if(is_array( $value )) {
+                $new_array[$key] = $this->sanitize_recursively( $value );
+                continue;
+            }
+            // Leave numeric as it is
+            $new_array[$key] = is_numeric( $value ) ? $value : sanitize_text_field( $value );
+        }
+        return $array;
+    }
 }
