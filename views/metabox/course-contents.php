@@ -29,7 +29,7 @@
 
 	foreach ($query_topics->posts as $topic){
 		?>
-        <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap">
+        <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap" data-topic-id="<?php echo $topic->ID; ?>">
             <div class="tutor-topics-top">
                 <h4 class="tutor-topic-title">
                     <i class="tutor-icon-move course-move-handle"></i>
@@ -83,7 +83,7 @@
 
 						if ($lesson->post_type === 'tutor_quiz'){
 							$quiz = $lesson;
-                            tutor_load_template_from_custom_path(tutor()->path.'/views/modal/quiz-list-single.php', array(
+                            tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/quiz-list-single.php', array(
                                 'quiz_id' => $quiz->ID,
                                 'topic_id' => $topic->ID,
                                 'quiz_title' => $quiz->post_title,
@@ -165,7 +165,7 @@
 
 						if ($lesson->post_type === 'tutor_quiz'){
 							$quiz = $lesson;
-                            tutor_load_template_from_custom_path(tutor()->path.'/views/modal/quiz-list-single.php', array(
+                            tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/quiz-list-single.php', array(
                                 'quiz_id' => $quiz->ID,
                                 'topic_id' => $topic->ID,
                                 'quiz_title' => $quiz->post_title,

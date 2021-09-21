@@ -43,9 +43,9 @@
                             </span>
 
                             <span class="question-edit-icon">
-                                <a href="javascript:;" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
-                                <i class="tutor-icon-pencil"></i> 
-                            </a>
+                                <button href="javascript:;" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
+                                    <i class="tutor-icon-pencil"></i> 
+                                </button>
                             </span>
                         </div>
 
@@ -60,7 +60,7 @@
         </div>
 
         <div class="tutor-quiz-builder-form-row">
-            <a href="javascript:;" class="tutor-quiz-add-question-btn tutor-quiz-open-question-form">
+            <a href="javascript:;" class="tutor-quiz-open-question-form tutor-btn tutor-is-outline tutor-is-xs">
                 <i class="tutor-icon-add-line"></i>
                 <?php _e('Add Question', 'tutor'); ?>
             </a>

@@ -425,7 +425,7 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-        var $formInput = $('.quiz_question_form :input').serializeObject();
+        var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
         $formInput.action = 'tutor_save_quiz_answer_options';
 
         $.ajax({
@@ -454,7 +454,7 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var $that = $(this);
-        var $formInput = $('.quiz_question_form :input').serializeObject();
+        var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
         $formInput.action = 'tutor_update_quiz_answer_options';
 
         $.ajax({
@@ -488,33 +488,6 @@ jQuery(document).ready(function($){
             url : window._tutorobject.ajaxurl,
             type : 'POST',
             data : {answer_id:answer_id, inputValue : inputValue, action : 'tutor_mark_answer_as_correct'},
-        });
-    });
-
-
-    $(document).on('refresh', '#tutor_quiz_question_answers', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var question_id = $that.attr('data-question-id');
-        var question_type = $('.tutor_select_value_holder').val();
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : {question_id : question_id, question_type : question_type, action: 'tutor_quiz_builder_get_answers_by_question'},
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-                $('#tutor_quiz_question_answer_form').html('');
-            },
-            success: function (data) {
-                if (data.success){
-                    $that.html(data.data.output);
-                }
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
         });
     });
 
@@ -566,86 +539,6 @@ jQuery(document).ready(function($){
                 $that.closest('.course-content-item').remove();
             }
         });
-    });
-
-    /**
-     * Tutor Custom Select
-     */
-
-    function tutor_select(){
-        var obj = {
-            init : function(){
-                $(document).on('click', '.tutor-select .tutor-select-option', function(e){
-                    e.preventDefault();
-
-                    var $that = $(this);
-                    if ($that.attr('data-is-pro') !== 'true') {
-                        var $html = $that.html().trim();
-                        $that.closest('.tutor-select').find('.select-header .lead-option').html($html);
-                        $that.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($that.attr('data-value')).trigger('change');
-                        $that.closest('.tutor-select-options').hide();
-
-                        disableAddoption();
-                    }else{
-                        alert('Tutor Pro version required');
-                    }
-                });
-                $(document).on('click', '.tutor-select .select-header', function(e){
-                    e.preventDefault();
-                   
-                    var $that = $(this);
-                    $that.closest('.tutor-select').find('.tutor-select-options').slideToggle();
-                });
-
-                this.setValue();
-                this.hideOnOutSideClick();
-            },
-            setValue : function(){
-                $('.tutor-select').each(function(){
-                    var $that = $(this);
-                    var $option = $that.find('.tutor-select-option');
-
-                    if ($option.length){
-                        $option.each(function(){
-                            var $thisOption = $(this);
-
-                            if ($thisOption.attr('data-selected') === 'selected'){
-                                var $html = $thisOption.html().trim();
-                                $thisOption.closest('.tutor-select').find('.select-header .lead-option').html($html);
-                                $thisOption.closest('.tutor-select').find('.select-header input.tutor_select_value_holder').val($thisOption.attr('data-value'));
-                            }
-                        });
-                    }
-                });
-            },
-            hideOnOutSideClick : function(){
-                $(document).mouseup(function(e) {
-                    var $option_wrap = $(".tutor-select-options");
-                    if ( ! $(e.target).closest('.select-header').length && !$option_wrap.is(e.target) && $option_wrap.has(e.target).length === 0) {
-                        $option_wrap.hide();
-                    }
-                });
-            },
-            reInit : function(){
-                this.setValue();
-            }
-        };
-
-        return obj;
-    }
-    tutor_select().init();
-
-
-    /**
-     * If change question type from quiz builder question
-     *
-     * @since v.1.0.0
-     */
-    $(document).on('change', 'input.tutor_select_value_holder', function(e) {
-        var $that = $(this);
-        //$('#tutor_quiz_question_answer_form').html('');
-        $('.add_question_answers_option').trigger('click');
-        $('#tutor_quiz_question_answers').trigger('refresh');
     });
 
     $(document).on('click', '.tutor-media-upload-btn', function(e){
@@ -1302,43 +1195,4 @@ window.tutor_toast=function(title, description, type) {
             });
         }
     }, 5000);
-}
-
-/**
- * Add option disable when don't need to add an option
- * 
- * @since 1.9.7
- */
-window.disableAddoption=function() {
-    const selected_question_type      = document.querySelector(".tutor_select_value_holder").value;
-    const question_answers            = document.getElementById("tutor_quiz_question_answers");
-    const question_answer_form        = document.getElementById("tutor_quiz_question_answer_form");
-    const add_question_answer_option  = document.querySelector(".add_question_answers_option");
-
-    const addDisabledClass = (elem) => {
-        if ( !elem.classList.contains("disabled") ) {
-            elem.classList.add('disabled');
-        }
-    }
-
-    const removeDisabledClass = (elem) => {
-        if ( elem.classList.contains("disabled") ) {
-            elem.classList.remove('disabled');
-        }
-    }
-
-    //dont need add option for open_ended & short_answer
-    if ( selected_question_type === 'open_ended' || selected_question_type === 'short_answer' ) {
-        addDisabledClass(add_question_answer_option);
-    } else if ( selected_question_type === 'true_false' || selected_question_type === 'fill_in_the_blank' ) {
-        //if already have options then dont need to show add option
-        if ( question_answer_form.hasChildNodes() || question_answers.hasChildNodes() ) {
-            addDisabledClass(add_question_answer_option);
-        } else {
-            removeDisabledClass(add_question_answer_option);
-        }
-    } else {
-        //if other question type then remove disabled
-        removeDisabledClass(add_question_answer_option);
-    }
 }

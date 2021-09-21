@@ -57,6 +57,10 @@ body.tutor-screen-course-builder {
 
     // LQA Modals
     .tutor-modal {
+        .wp-editor-wrap {
+            width: 100%;
+        }
+        
         &.tutor-lesson-modal-wrap {
             @import './modal/lesson.scss';
         }
