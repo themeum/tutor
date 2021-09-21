@@ -23,7 +23,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _v2_library_src_js_main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../v2-library/_src/js/main */ "./v2-library/_src/js/main.js");
-/* harmony import */ var _v2_library_src_js_main__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_v2_library_src_js_main__WEBPACK_IMPORTED_MODULE_0__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -1131,63 +1130,66 @@ window.tutor_toast = function (title, description, type) {
 /*!************************************!*\
   !*** ./v2-library/_src/js/main.js ***!
   \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _tutorModal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tutorModal */ "./v2-library/_src/js/tutorModal.js");
+/* harmony import */ var _tutorModal__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_tutorModal__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _thumbnailUploadPreview__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./thumbnailUploadPreview */ "./v2-library/_src/js/thumbnailUploadPreview.js");
+/* harmony import */ var _thumbnailUploadPreview__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_thumbnailUploadPreview__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _popupMenu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./popupMenu */ "./v2-library/_src/js/popupMenu.js");
+/* harmony import */ var _popupMenu__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_popupMenu__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+
+/***/ }),
+
+/***/ "./v2-library/_src/js/popupMenu.js":
+/*!*****************************************!*\
+  !*** ./v2-library/_src/js/popupMenu.js ***!
+  \*****************************************/
 /***/ (() => {
 
-(function () {
-  'use strict'; // modal
+(function popupMenuToggle() {
+  /**
+   * Popup Menu Toggle tutor-popup-opener
+   */
+  var popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
+  var popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
 
-  tutorModal();
+  if (popupToggleBtns && popupMenus) {
+    popupToggleBtns.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        var popupClosest = e.target.closest('.tutor-popup-opener').querySelector('.popup-menu');
+        popupClosest.classList.toggle('visible');
+        popupMenus.forEach(function (popupMenu) {
+          if (popupMenu !== popupClosest) {
+            popupMenu.classList.remove('visible');
+          }
+        });
+      });
+    });
+    window.addEventListener('click', function (e) {
+      if (!e.target.matches('.tutor-popup-opener .popup-btn')) {
+        popupMenus.forEach(function (popupMenu) {
+          if (popupMenu.classList.contains('visible')) {
+            popupMenu.classList.remove('visible');
+          }
+        });
+      }
+    });
+  }
 })();
 
-function tutorModal() {
-  document.addEventListener('click', function (e) {
-    var attr = 'data-tutor-modal-target';
-    var closeAttr = 'data-tutor-modal-close';
-    var overlay = 'tutor-modal-overlay';
+/***/ }),
 
-    if (e.target.hasAttribute(attr) || e.target.closest("[".concat(attr, "]"))) {
-      e.preventDefault();
-      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
-      var modal = document.getElementById(id);
-
-      if (modal) {
-        modal.classList.add('tutor-is-active');
-      }
-    }
-
-    if (e.target.hasAttribute(closeAttr) || e.target.classList.contains(overlay) || e.target.closest("[".concat(closeAttr, "]"))) {
-      e.preventDefault();
-
-      var _modal = document.querySelectorAll('.tutor-modal.tutor-is-active');
-
-      _modal.forEach(function (m) {
-        m.classList.remove('tutor-is-active');
-      });
-    }
-  }); // open
-  // const modalButton = document.querySelectorAll("[data-tutor-modal-target]");
-  // modalButton.forEach(b => {
-  //     const id = b.getAttribute("data-tutor-modal-target");
-  //     const modal = document.getElementById(id);
-  //     if (modal) {
-  //         b.addEventListener("click", e => {
-  //             e.preventDefault();
-  //             modal.classList.add("tutor-is-active");
-  //         })
-  //     }
-  // })
-  // close
-  // const close = document.querySelectorAll("[data-tutor-modal-close], .tutor-modal-overlay");
-  // close.forEach(c => {
-  //     c.addEventListener("click", e => {
-  //         e.preventDefault();
-  //         const modal = document.querySelectorAll(".tutor-modal.tutor-is-active");
-  //         modal.forEach(m => {
-  //             m.classList.remove("tutor-is-active");
-  //         })
-  //     })
-  // })
-}
+/***/ "./v2-library/_src/js/thumbnailUploadPreview.js":
+/*!******************************************************!*\
+  !*** ./v2-library/_src/js/thumbnailUploadPreview.js ***!
+  \******************************************************/
+/***/ (() => {
 
 (function thumbnailUploadPreview() {
   /**
@@ -1254,6 +1256,70 @@ function tutorModal() {
     reader.readAsDataURL(file);
   };
 })();
+
+/***/ }),
+
+/***/ "./v2-library/_src/js/tutorModal.js":
+/*!******************************************!*\
+  !*** ./v2-library/_src/js/tutorModal.js ***!
+  \******************************************/
+/***/ (() => {
+
+(function () {
+  'use strict'; // modal
+
+  tutorModal();
+})();
+
+function tutorModal() {
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-modal-target';
+    var closeAttr = 'data-tutor-modal-close';
+    var overlay = 'tutor-modal-overlay';
+
+    if (e.target.hasAttribute(attr) || e.target.closest("[".concat(attr, "]"))) {
+      e.preventDefault();
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      var modal = document.getElementById(id);
+
+      if (modal) {
+        modal.classList.add('tutor-is-active');
+      }
+    }
+
+    if (e.target.hasAttribute(closeAttr) || e.target.classList.contains(overlay) || e.target.closest("[".concat(closeAttr, "]"))) {
+      e.preventDefault();
+
+      var _modal = document.querySelectorAll('.tutor-modal.tutor-is-active');
+
+      _modal.forEach(function (m) {
+        m.classList.remove('tutor-is-active');
+      });
+    }
+  }); // open
+  // const modalButton = document.querySelectorAll("[data-tutor-modal-target]");
+  // modalButton.forEach(b => {
+  //     const id = b.getAttribute("data-tutor-modal-target");
+  //     const modal = document.getElementById(id);
+  //     if (modal) {
+  //         b.addEventListener("click", e => {
+  //             e.preventDefault();
+  //             modal.classList.add("tutor-is-active");
+  //         })
+  //     }
+  // })
+  // close
+  // const close = document.querySelectorAll("[data-tutor-modal-close], .tutor-modal-overlay");
+  // close.forEach(c => {
+  //     c.addEventListener("click", e => {
+  //         e.preventDefault();
+  //         const modal = document.querySelectorAll(".tutor-modal.tutor-is-active");
+  //         modal.forEach(m => {
+  //             m.classList.remove("tutor-is-active");
+  //         })
+  //     })
+  // })
+}
 
 /***/ })
 
