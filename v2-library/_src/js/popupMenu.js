@@ -39,6 +39,11 @@
 				? e.target.getAttribute(attr)
 				: e.target.closest(`[${attr}]`).getAttribute(attr);
 
+			const popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
+			popupMenus.forEach((popupMenu) => {
+				popupMenu.classList.remove('visible');
+			});
+
 			const popupMenu = document.getElementById(id);
 
 			if (popupMenu) {
