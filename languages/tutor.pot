@@ -2319,7 +2319,7 @@ msgstr ""
 msgid "Preview course"
 msgstr ""
 
-#: classes/Question_Answers_List.php:44, classes/Question_Answers_List.php:76, classes/Quiz.php:1079, templates/dashboard/question-answer.php:29, views/modal/question_form.php:146, views/pages/answer.php:11, templates/dashboard/my-quiz-attempts/attempts-details.php:215, templates/dashboard/question-answer/answers.php:13
+#: classes/Question_Answers_List.php:44, classes/Question_Answers_List.php:76, classes/Quiz.php:1079, templates/dashboard/question-answer.php:29, views/modal/question_form.php:145, views/pages/answer.php:11, templates/dashboard/my-quiz-attempts/attempts-details.php:215, templates/dashboard/question-answer/answers.php:13
 msgid "Answer"
 msgstr ""
 
@@ -2359,7 +2359,7 @@ msgstr ""
 msgid "Make sure you’re saving the answers in the right order. Students will have to match this order exactly."
 msgstr ""
 
-#: classes/Quiz.php:1101, classes/Quiz.php:1095, views/modal/question_form.php:170, views/modal/question_form.php:163, views/pages/view_attempt.php:342, templates/dashboard/quiz-attempts/quiz-reviews.php:400
+#: classes/Quiz.php:1101, classes/Quiz.php:1095, views/modal/question_form.php:169, views/modal/question_form.php:162, views/pages/view_attempt.php:342, templates/dashboard/quiz-attempts/quiz-reviews.php:400
 msgid "Mark as correct"
 msgstr ""
 
@@ -3544,7 +3544,7 @@ msgstr ""
 msgid "ex. Learn photoshop CS6 from scratch"
 msgstr ""
 
-#: templates/dashboard/create-course.php:157, views/modal/question_form.php:110, templates/single/assignment/content.php:134, templates/single/course/course-content.php:26
+#: templates/dashboard/create-course.php:157, views/modal/question_form.php:100, templates/single/assignment/content.php:134, templates/single/course/course-content.php:26
 msgid "Description"
 msgstr ""
 
@@ -4230,7 +4230,7 @@ msgstr ""
 msgid "Add Topic"
 msgstr ""
 
-#: views/metabox/course-topics.php:78, views/modal/advanced-tab-backup-dont-use.php:79, views/modal/question_form.php:10, templates/dashboard/assignments/review.php:34, templates/dashboard/assignments/submitted.php:21, templates/single/quiz/body.php:389
+#: views/metabox/course-topics.php:78, views/modal/advanced-tab-backup-dont-use.php:79, views/modal/question_form.php:9, templates/dashboard/assignments/review.php:34, templates/dashboard/assignments/submitted.php:21, templates/single/quiz/body.php:389
 msgid "Back"
 msgstr ""
 
@@ -4510,7 +4510,7 @@ msgstr ""
 msgid "Show result after the attempt."
 msgstr ""
 
-#: views/modal/edit_quiz.php:143, views/modal/question_form.php:110
+#: views/modal/edit_quiz.php:143, views/modal/question_form.php:100
 msgid "Optional"
 msgstr ""
 
@@ -4610,51 +4610,51 @@ msgstr ""
 msgid "Save Answer"
 msgstr ""
 
-#: views/modal/question_form.php:19
+#: views/modal/question_form.php:16
 msgid "Write your question here"
 msgstr ""
 
-#: views/modal/question_form.php:22
+#: views/modal/question_form.php:18
 msgid "Type your question here"
 msgstr ""
 
-#: views/modal/question_form.php:28
-msgid "Question Type"
+#: views/modal/question_form.php:23
+msgid "Select your question type"
 msgstr ""
 
-#: views/modal/question_form.php:55
+#: views/modal/question_form.php:51
 msgid "Pro version required"
 msgstr ""
 
-#: views/modal/question_form.php:75
+#: views/modal/question_form.php:66
 msgid "Answer Required"
 msgstr ""
 
-#: views/modal/question_form.php:82
+#: views/modal/question_form.php:72
 msgid "Randomize"
 msgstr ""
 
-#: views/modal/question_form.php:88
+#: views/modal/question_form.php:83
 msgid "Point(s) for this answer"
 msgstr ""
 
-#: views/modal/question_form.php:91
+#: views/modal/question_form.php:87
 msgid "set the mark ex. 10"
 msgstr ""
 
-#: views/modal/question_form.php:104
+#: views/modal/question_form.php:92
 msgid "Display Points"
 msgstr ""
 
-#: views/modal/question_form.php:123
+#: views/modal/question_form.php:114
 msgid "Input options for the question and select the correct answer."
 msgstr ""
 
-#: views/modal/question_form.php:126
+#: views/modal/question_form.php:117
 msgid "Make sure you’re saving the answers in the right order. Students will have to match this order."
 msgstr ""
 
-#: views/modal/question_form.php:199
+#: views/modal/question_form.php:198
 msgid "Add An Option"
 msgstr ""
 
@@ -5899,6 +5899,14 @@ msgid "Are you sure to delete?"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Update Error"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Meeting Update Failed"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Rating and review required"
 msgstr ""
 
@@ -6004,14 +6012,6 @@ msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Stay here"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Update Error"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Meeting Update Failed"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1

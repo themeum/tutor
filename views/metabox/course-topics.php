@@ -161,18 +161,6 @@
             </div>
         </div>
     </div>
-    
-    <div class="tutor-modal-wrap tutor-zoom-meeting-modal-wrap">
-        <div class="tutor-modal-content">
-            <div class="modal-header">
-                <div class="modal-title">
-                    <h1><?php _e('Zoom Meeting', 'tutor'); ?></h1>
-                </div>
-                <div class="modal-close-wrap">
-                    <a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i> </a>
-                </div>
-            </div>
-            <div class="modal-container"></div>
-        </div>
-    </div>
+
+    <?php do_action('course-topic/after/modal_wrappers'); ?>
 </div>

@@ -662,6 +662,7 @@ window.jQuery(document).ready(function ($) {
           });
           tutor_slider_init();
           step_switch(modal, true);
+          enable_quiz_questions_sorting();
         },
         complete: function complete() {
           btn.removeClass('tutor-updating-message');
