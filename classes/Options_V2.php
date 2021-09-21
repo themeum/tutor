@@ -134,7 +134,7 @@ class Options_V2 {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 		$apply_id           = $this->get_request_data( 'apply_id' );
 
-		update_option( 'tutor_settings_log', $tutor_settings_log[ $apply_id ] );
+		update_option( 'tutor_option', $tutor_settings_log[ $apply_id ]['dataset'] );
 
 		wp_send_json_success( $tutor_settings_log[ $apply_id ] );
 	}
@@ -177,7 +177,6 @@ class Options_V2 {
 
 
 	public function tutor_import_settings() {
-
 		tutor_utils()->checking_nonce();
 		$request = $this->get_request_data( 'tutor_options' );
 
@@ -191,25 +190,37 @@ class Options_V2 {
 
 		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
 
+		// update_option( 'tutor_settings_log', array() );
 		$get_option_data = get_option( 'tutor_settings_log' );
 
-		if ( isset( $get_option_data ) && null !== $save_import_data['dataset'] ) {
+		if ( ! empty( $get_option_data ) && null !== $save_import_data['dataset'] ) {
 
 			$update_option = array_merge( $get_option_data, $import_data );
 
 			$update_option = tutils()->sanitize_recursively( $update_option );
 
 			// $update_option = array();
-			update_option( 'tutor_settings_log', $update_option );
+			if ( ! empty( $update_option ) ) {
+				update_option( 'tutor_settings_log', $update_option );
+			}
 
-			update_option( 'tutor_option', $save_import_data['dataset'] );
+			if ( ! empty( $save_import_data ) ) {
+				update_option( 'tutor_option', $save_import_data['dataset'] );
+			}
 
 			$get_final_data = get_option( 'tutor_settings_log' );
 
 		} else {
-			$get_final_data = get_option( 'tutor_settings_log' );
+			if ( ! empty( $import_data ) ) {
+				update_option( 'tutor_settings_log', $import_data );
+			}
 
+			if ( ! empty( $save_import_data ) ) {
+				update_option( 'tutor_option', $save_import_data['dataset'] );
+			}
+			$get_final_data = get_option( 'tutor_settings_log' );
 		}
+
 		wp_send_json_success( $get_final_data );
 	}
 
@@ -239,9 +250,14 @@ class Options_V2 {
 		$save_import_data['datatype']             = 'saved';
 		$save_import_data['dataset']              = $option;
 		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
+		$update_option                            = array();
+		$get_option_data                          = get_option( 'tutor_settings_log', array() );
 
-		$get_option_data = get_option( 'tutor_settings_log' );
-		$update_option   = array_merge( $get_option_data, $import_data );
+		if ( ! empty( $get_option_data ) ) {
+			$update_option = array_merge( $get_option_data, $import_data );
+		} else {
+			$update_option = array_merge( $import_data );
+		}
 
 		update_option( 'tutor_settings_log', $update_option );
 
@@ -250,7 +266,7 @@ class Options_V2 {
 		do_action( 'tutor_option_save_after' );
 
 		// wp_send_json_success(array('msg' => __('Option Updated', 'tutor'), 'return' => $option));
-		wp_send_json_success( $option );
+		wp_send_json_success( $update_option );
 	}
 
 	/**
