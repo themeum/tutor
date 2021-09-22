@@ -74,6 +74,7 @@ do_action('tutor_dashboard/before/wrap');
 
                     <div class="tutor-dashboard-header-button">
                         <?php
+                        do_action( 'tutor_dashboard/before_header_button' );
                         if(current_user_can(tutor()->instructor_role)){
                             $course_type = tutor()->course_post_type;
                             ?>
