@@ -1,0 +1,567 @@
+---
+name: UI Table
+route: /mdx-css/ui-table
+menu: UI Components
+---
+
+import { Playground } from 'docz';
+import '../../bundle/main.min.css';
+import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-icon-test.css';
+import '../docz-essential.css';
+
+# UI Table variations
+`** Replace "className" with "class" while using with html`
+
+## Most Popular Courses
+
+<Playground>
+	<div className="tutor-ui-table-responsive">
+		<table className="tutor-ui-table table-popular-courses">
+			<thead>
+				<tr>
+					<th>
+						<span className="text-regular-small color-text-subsued">Course Name</span>
+					</th>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Total Enrolled</span>
+							<span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+						</div>
+					</th>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Rating</span>
+							<span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<div className="td-course text-medium-body color-text-primary">
+							<a href="#">Graphic Design Bootcamp: Advanced Training Using Adobe CCas</a>
+						</div>
+					</td>
+					<td>
+						<span className="text-medium-caption color-text-primary">10</span>
+					</td>
+					<td>
+						<div className="td-tutor-rating text-regular-body color-text-subsued">
+							<div className="tutor-ratings">
+								<div className="tutor-rating-stars">
+									<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+									<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+									<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+									<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+									<span className="tutor-v2-icon-test icon-star-line-filled"></span>
+								</div>
+								<div className="tutor-rating-text">4.5</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div className="td-course text-medium-body color-text-primary">
+							<a href="#">Graphic Design Bootcamp: Advanced Training Using Adobe CCas</a>
+						</div>
+					</td>
+					<td>
+						<span className="text-medium-caption color-text-primary">10</span>
+					</td>
+					<td>
+						<div className="td-tutor-rating text-regular-body color-text-subsued">
+							<div className="tutor-ratings">
+								<div className="tutor-rating-stars">
+									<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+									<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+									<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+									<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+									<span className="tutor-v2-icon-test icon-star-line-filled"></span>
+								</div>
+								<div className="tutor-rating-text">4.5</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Playground>
+
+## Reviews
+
+<Playground>
+	<div className="tutor-ui-table-responsive">
+		<table className="tutor-ui-table table-reviews">
+			<thead>
+				<tr>
+					<th>
+						<span className="text-regular-small color-text-subsued">Student</span>
+					</th>
+					<th>
+						<span className="text-regular-small color-text-subsued">Date</span>
+					</th>
+					<th>
+						<span className="text-regular-small color-text-subsued">Feedback</span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<div className="td-avatar">
+							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
+							<p className="text-medium-body color-text-primary">Arnol James</p>
+						</div>
+					</td>
+					<td>
+						<span className="text-medium-caption color-text-primary">20 July, 2020, <br/> 12:47 pm</span>
+					</td>
+					<td>
+						<div className="td-feedback">
+							<div className="td-tutor-rating text-regular-body color-text-subsued">
+								<div className="tutor-ratings">
+									<div className="tutor-rating-stars">
+										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+										<span className="tutor-v2-icon-test icon-star-line-filled"></span>
+									</div>
+									<div className="tutor-rating-text">4.5</div>
+								</div>
+							</div>
+							<p className="review-text color-text-subsued">
+								This guy is effing genious. I love his sense of humor. He is really good. This guy is effing genious. I
+								love his sense of humor. He is really good. This guy is effing genious. I love his sense of humor. He is
+								really good.
+							</p>
+							<p className="course-name text-medium-small color-text-title">
+								<strong>Course: </strong>Write PHP Like a Pro: Build a PHP MVC Framework From Scratch
+							</p>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div className="td-avatar">
+							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
+							<p className="text-medium-body color-text-primary">Arnol James</p>
+						</div>
+					</td>
+					<td>
+						<span className="text-medium-caption color-text-primary">20 July, 2020, <br/> 12:47 pm</span>
+					</td>
+					<td>
+						<div className="td-feedback">
+							<div className="td-tutor-rating text-regular-body color-text-subsued">
+								<div className="tutor-ratings">
+									<div className="tutor-rating-stars">
+										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
+										<span className="tutor-v2-icon-test icon-star-line-filled"></span>
+									</div>
+									<div className="tutor-rating-text">4.5</div>
+								</div>
+							</div>
+							<p className="review-text color-text-subsued">
+								This guy is effing genious. I love his sense of humor. He is really good. This guy is effing genious. I
+								love his sense of humor. He is really good. This guy is effing genious. I love his sense of humor. He is
+								really good.
+							</p>
+							<p className="course-name text-medium-small color-text-title">
+								<strong>Course: </strong>Write PHP Like a Pro: Build a PHP MVC Framework From Scratch
+							</p>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Playground>
+
+## All Courses
+
+<Playground>
+	<div className="tutor-ui-table-responsive">
+		<table className="tutor-ui-table table-all-courses">
+			<thead>
+				<tr>
+					<th>
+						<span className="text-regular-small color-text-subsued">Statement Info</span>
+					</th>
+					<th>
+						<span className="text-regular-small color-text-subsued">Price (%)</span>
+					</th>
+					<th>
+						<span className="text-regular-small color-text-subsued">Commission (%)</span>
+					</th>
+					<th>
+						<span className="text-regular-small color-text-subsued">Fees</span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<div className="td-statement-info">
+							<div className="meta-data-1 inline-flex-center">
+								<span className="tutor-badge-label label-success">Completed</span>
+								<span className="text-regular-small color-text-primary">20 July, 2020, 12:47 pm</span>
+							</div>
+							<p className="meta-data-2 text-medium-body color-text-primary">Machine Learning 101 with Scikit-learn</p>
+							<div className="meta-data-3 inline-flex-center text-regular-small color-text-title">
+								<span>Order Id: #D798987</span>
+								<div className="inline-flex-center">
+									<span>Purchaser: Arnold James</span>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<span className="text-medium-caption color-text-primary">
+							$17.00 <br />
+							<span className="text-regular-small color-text-hints">As per 20%</span>
+						</span>
+					</td>
+					<td>
+						<span className="text-medium-caption color-text-primary">
+							$17.00 <br />
+							<span className="text-regular-small color-text-hints">As per 20%</span>
+						</span>
+					</td>
+					<td>
+						<span className="text-medium-caption color-text-primary">
+							$17.00 <br />
+							<span className="text-regular-small color-text-hints">Maintenance Fees</span>
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div className="td-statement-info">
+							<div className="meta-data-1 inline-flex-center">
+								<span className="tutor-badge-label label-onhold">On hold</span>
+								<span className="text-regular-small color-text-primary">20 July, 2020, 12:47 pm</span>
+							</div>
+							<p className="meta-data-2 text-medium-body color-text-primary">Machine Learning 101 with Scikit-learn</p>
+							<div className="meta-data-3 inline-flex-center text-regular-small color-text-title">
+								<span>Order Id: #D798987</span>
+								<div className="inline-flex-center">
+									<span>Purchaser: Arnold James</span>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<span className="text-medium-caption color-text-primary">
+							$17.00 <br />
+							<span className="text-regular-small color-text-hints">As per 20%</span>
+						</span>
+					</td>
+					<td>
+						<span className="text-medium-caption color-text-primary">
+							$17.00 <br />
+							<span className="text-regular-small color-text-hints">As per 20%</span>
+						</span>
+					</td>
+					<td>
+						<span className="text-medium-caption color-text-primary">
+							$17.00 <br />
+							<span className="text-regular-small color-text-hints">Maintenance Fees</span>
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Playground>
+
+## Courses
+
+<Playground>
+	<div className="tutor-ui-table-responsive">
+		<table className="tutor-ui-table table-popular-courses">
+			<thead>
+				<tr>
+					<th>
+						<span className="text-regular-small color-text-subsued">Course Name</span>
+					</th>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Total Enrolled</span>
+							<span className="tutor-v2-icon-test icon-order-down-filled"></span>
+						</div>
+					</th>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Rating</span>
+							<span className="tutor-v2-icon-test icon-order-down-filled"></span>
+						</div>
+					</th>
+					<th className="tutor-shrink"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<div className="color-text-primary td-course text-medium-body">
+							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
+							<div className="course-meta">
+								<span className="color-text-subsued text-regular-caption">
+									Lesson: <strong className="text-medium-caption">36</strong>
+								</span>
+								<span className="color-text-subsued text-regular-caption">
+									Assigment: <strong className="text-medium-caption">14</strong>
+								</span>
+								<span className="color-text-subsued text-regular-caption">
+									Quiz: <strong className="text-medium-caption">11</strong>
+								</span>
+							</div>
+						</div>
+					</td>
+					<td>
+						<span className="color-text-primary text-medium-caption">713</span>
+					</td>
+					<td>
+						<span className="color-text-primary text-medium-caption">$31,221</span>
+					</td>
+					<td>
+						<div className="inline-flex-center td-action-btns">
+							<a href="#" className="btn-outline tutor-btn">
+								Details
+							</a>
+							<a href="#" className="btn-text">
+								<span className="tutor-v2-icon-test icon-detail-link-filled"></span>
+							</a>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div className="color-text-primary td-course text-medium-body">
+							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
+							<div className="course-meta">
+								<span className="color-text-subsued text-regular-caption">
+									Lesson: <strong className="text-medium-caption">36</strong>
+								</span>
+								<span className="color-text-subsued text-regular-caption">
+									Assigment: <strong className="text-medium-caption">14</strong>
+								</span>
+								<span className="color-text-subsued text-regular-caption">
+									Quiz: <strong className="text-medium-caption">11</strong>
+								</span>
+							</div>
+						</div>
+					</td>
+					<td>
+						<span className="color-text-primary text-medium-caption">713</span>
+					</td>
+					<td>
+						<span className="color-text-primary text-medium-caption">$31,221</span>
+					</td>
+					<td>
+						<div className="inline-flex-center td-action-btns">
+							<a href="#" className="btn-outline tutor-btn">
+								Details
+							</a>
+							<a href="#" className="btn-text">
+								<span className="tutor-v2-icon-test icon-detail-link-filled"></span>
+							</a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Playground>
+
+## Students
+
+<Playground>
+	<div className="tutor-ui-table-responsive">
+		<table className="tutor-ui-table table-students">
+			<thead>
+				<tr>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Student</span>
+							<span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+						</div>
+					</th>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Registration Date</span>
+							<span className="tutor-v2-icon-test icon-order-down-filled"></span>
+						</div>
+					</th>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Course Taklen</span>
+							<span className="tutor-v2-icon-test icon-order-down-filled"></span>
+						</div>
+					</th>
+					<th className="tutor-shrink"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<div className="td-avatar">
+							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
+							<div>
+								<p className="color-text-primary text-medium-body">Arnol James</p>
+								<p className="color-text-title text-regular-small">armand.lubowitz@gmail.com</p>
+							</div>
+						</div>
+					</td>
+					<td>
+						<span className="color-text-primary text-regular-caption">20 July, 2020</span>
+					</td>
+					<td>
+						<span className="color-text-primary text-medium-caption">14</span>
+					</td>
+					<td>
+						<div className="inline-flex-center td-action-btns">
+							<a href="#" className="btn-outline tutor-btn">
+								Details
+							</a>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div className="td-avatar">
+							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
+							<div>
+								<p className="color-text-primary text-medium-body">Arnol James</p>
+								<p className="color-text-title text-regular-small">armand.lubowitz@gmail.com</p>
+							</div>
+						</div>
+					</td>
+					<td>
+						<span className="color-text-primary text-regular-caption">20 July, 2020</span>
+					</td>
+					<td>
+						<span className="color-text-primary text-medium-caption">14</span>
+					</td>
+					<td>
+						<div className="inline-flex-center td-action-btns">
+							<a href="#" className="btn-outline tutor-btn">
+								Details
+							</a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Playground>
+
+## Courses Overview
+
+<Playground>
+	<div className="tutor-ui-table-responsive">
+		<table className="tutor-ui-table table-course-overview">
+			<thead>
+				<tr>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Date</span>
+							<span className="tutor-v2-icon-test icon-order-down-filled"></span>
+						</div>
+					</th>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Course</span>
+						</div>
+					</th>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Progress</span>
+						</div>
+					</th>
+					<th className="tutor-shrink"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<span className="text-regular-caption color-text-primary">20 July, 2020</span>
+					</td>
+					<td>
+						<div className="td-course text-medium-body color-text-primary">
+							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
+							<div className="course-meta">
+								<span className="color-text-subsued text-regular-caption">
+									Lesson: <strong className="text-medium-caption">10/36</strong>
+								</span>
+								<span className="color-text-subsued text-regular-caption">
+									Assigment: <strong className="text-medium-caption">14/20</strong>
+								</span>
+								<span className="color-text-subsued text-regular-caption">
+									Quiz: <strong className="text-medium-caption">1/9</strong>
+								</span>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div className="td-progress inline-flex-center">
+							<div className="progress-bar" style={{"--progress-value": "50%"}}>
+								<div className="progress-value"></div>
+							</div>
+							<div className="progress-text text-medium-caption color-text-primary">50%</div>
+						</div>
+					</td>
+					<td>
+						<div className="td-action-btns inline-flex-center">
+							<a href="#" className="tutor-btn btn-outline">
+								View Progress
+							</a>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span className="text-regular-caption color-text-primary">20 July, 2020</span>
+					</td>
+					<td>
+						<div className="td-course text-medium-body color-text-primary">
+							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
+							<div className="course-meta">
+								<span className="color-text-subsued text-regular-caption">
+									Lesson: <strong className="text-medium-caption">10/36</strong>
+								</span>
+								<span className="color-text-subsued text-regular-caption">
+									Assigment: <strong className="text-medium-caption">14/20</strong>
+								</span>
+								<span className="color-text-subsued text-regular-caption">
+									Quiz: <strong className="text-medium-caption">1/9</strong>
+								</span>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div className="td-progress inline-flex-center">
+							<div className="progress-bar" style={{"--progress-value": "35%"}}>
+								<div className="progress-value"></div>
+							</div>
+							<div className="progress-text text-medium-caption color-text-primary">35%</div>
+						</div>
+					</td>
+					<td>
+						<div className="td-action-btns inline-flex-center">
+							<a href="#" className="tutor-btn btn-outline">
+								View Progress
+							</a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Playground>

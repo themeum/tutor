@@ -93,11 +93,39 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         $message = get_user_meta( $user_id, 'tutor_frontend_course_action_message', true );
 
                         if($message && $expires && $expires>time()) {
-                            ?>
-                            <div class="tutor-alert tutor-alert-info">
-                                <?php echo $message; ?>
-                            </div>
-                            <?php
+                            $show_modal = $message['show_modal'];
+                            $message = $message['message'];
+
+                            if(!$show_modal) {
+                                ?>
+                                <div class="tutor-alert tutor-alert-info">
+                                    <?php echo $message; ?>
+                                </div>
+                                <?php
+                            }
+                            else {
+                                ?>
+                                <div id="modal-course-save-feedback" class="tutor-modal tutor-is-active">
+                                    <span class="tutor-modal-overlay"></span>
+                                    <button data-tutor-modal-close class="tutor-modal-close">
+                                        <span class="las la-times"></span>
+                                    </button>
+                                    <div class="tutor-modal-root">
+                                        <div class="tutor-modal-inner">
+                                            <div class="tutor-modal-body tutor-text-center">
+                                                <div class="tutor-modal-icon">
+                                                    <img src="<?php echo tutor()->url; ?>/assets/images/icon-cup.svg" alt="" />
+                                                </div>
+                                                <div class="tutor-modal-text-wrap">
+                                                    <h3 class="tutor-modal-title"><?php _e('Thank You!', 'tutor'); ?></h3>
+                                                    <p><?php echo $message; ?></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php
+                            }
                         }
 
                         if($message || $expires) {

@@ -33,9 +33,18 @@ class Options_V2 {
 		$this->status        = $this->status();
 		$this->options_attr  = $this->options_attr();
 		$this->options_tools = $this->options_tools();
-		// Saving option
+		$this->get_param_val = $this->get_param_val( '' );
+		// Saving option.
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
+		add_action( 'wp_ajax_tutor_option_default_save', array( $this, 'tutor_option_default_save' ) );
 		add_action( 'wp_ajax_tutor_option_search', array( $this, 'tutor_option_search' ) );
+		add_action( 'wp_ajax_tutor_export_settings', array( $this, 'tutor_export_settings' ) );
+		add_action( 'wp_ajax_tutor_export_single_settings', array( $this, 'tutor_export_single_settings' ) );
+		add_action( 'wp_ajax_tutor_delete_single_settings', array( $this, 'tutor_delete_single_settings' ) );
+		add_action( 'wp_ajax_tutor_import_settings', array( $this, 'tutor_import_settings' ) );
+		add_action( 'wp_ajax_tutor_apply_settings', array( $this, 'tutor_apply_settings' ) );
+		add_action( 'wp_ajax_load_saved_data', array( $this, 'load_saved_data' ) );
+
 	}
 
 	private function get( $key = null, $default = false ) {
@@ -72,6 +81,17 @@ class Options_V2 {
 	}
 
 
+	/**
+	 * Funcation to get params val
+	 *
+	 * @param  mixed $param
+	 * @return void
+	 */
+	public function get_param_val( $param = '' ) {
+		return isset( $_GET[ $param ] ) ? $_GET[ $param ] : null;
+	}
+
+
 
 	/**
 	 * tutor_option_search
@@ -102,6 +122,122 @@ class Options_V2 {
 		wp_send_json_success( $data_array );
 	}
 
+	public function tutor_export_settings() {
+		wp_send_json_success( (array) maybe_unserialize( get_option( 'tutor_option' ) ) );
+	}
+
+	public function tutor_export_single_settings() {
+		$tutor_settings_log = get_option( 'tutor_settings_log' );
+		$export_id          = $this->get_request_data( 'export_id' );
+		wp_send_json_success( $tutor_settings_log[ $export_id ] );
+	}
+
+
+	public function tutor_apply_settings() {
+		$tutor_settings_log = get_option( 'tutor_settings_log' );
+		$apply_id           = $this->get_request_data( 'apply_id' );
+
+		update_option( 'tutor_option', $tutor_settings_log[ $apply_id ]['dataset'] );
+
+		wp_send_json_success( $tutor_settings_log[ $apply_id ] );
+	}
+
+	public function tutor_delete_single_settings() {
+		$tutor_settings_log = get_option( 'tutor_settings_log' );
+		$delete_id          = $this->get_request_data( 'delete_id' );
+		unset( $tutor_settings_log[ $delete_id ] );
+
+		update_option( 'tutor_settings_log', $tutor_settings_log );
+
+		wp_send_json_success( $tutor_settings_log );
+	}
+
+	public function get_request_data( $var ) {
+		return isset( $_REQUEST[ $var ] ) ? $_REQUEST[ $var ] : null;
+	}
+
+	/**
+	 * tutor_default_settings
+	 *
+	 * @return JSON
+	 */
+	public function tutor_default_settings() {
+		$attr = $this->options_attr();
+		foreach ( $attr as $sections ) {
+			foreach ( $sections['sections'] as $section ) {
+				foreach ( $section['blocks'] as $blocks ) {
+					foreach ( $blocks['fields'] as $field ) {
+						if ( isset( $field['default'] ) ) {
+							$attr_default[ $field['key'] ] = $field['default'];
+						}
+					}
+				}
+			}
+		}
+
+		update_option( 'tutor_option', $attr_default );
+
+		wp_send_json_success( $attr_default );
+	}
+
+
+	public function load_saved_data() {
+		tutor_utils()->checking_nonce();
+		wp_send_json_success( get_option( 'tutor_settings_log' ));
+	}
+
+
+	public function tutor_import_settings() {
+		tutor_utils()->checking_nonce();
+		$request = $this->get_request_data( 'tutor_options' );
+
+		$time    = $this->get_request_data( 'time' );
+		$request = json_decode( str_replace( '\"', '"', $request ), true );
+
+		$save_import_data['datetime']     = $time;
+		$save_import_data['history_date'] = date( 'j M, Y, g:i a', $time );
+		$save_import_data['datatype']     = 'imported';
+		$save_import_data['dataset']      = $request['data'];
+
+		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
+
+		// update_option( 'tutor_settings_log', array() );
+		$get_option_data = get_option( 'tutor_settings_log' );
+		if ( empty( $get_option_data ) ) {
+			$get_option_data = array();
+		}
+		if ( ! empty( $get_option_data ) && null !== $save_import_data['dataset'] ) {
+
+			$update_option = array_merge( $get_option_data, $import_data );
+
+			$update_option = tutils()->sanitize_recursively( $update_option );
+
+			// $update_option = array();
+			if ( ! empty( $update_option ) ) {
+				update_option( 'tutor_settings_log', $update_option );
+			}
+
+			if ( ! empty( $save_import_data ) ) {
+				update_option( 'tutor_option', $save_import_data['dataset'] );
+			}
+
+			$get_final_data = get_option( 'tutor_settings_log' );
+
+		} else {
+			if ( ! empty( $import_data ) ) {
+				update_option( 'tutor_settings_log', $import_data );
+			}
+
+			if ( ! empty( $save_import_data ) ) {
+				update_option( 'tutor_option', $save_import_data['dataset'] );
+			}
+			$get_final_data = get_option( 'tutor_settings_log' );
+		}
+
+		wp_send_json_success( $get_final_data );
+	}
+
+
 	/**
 	 * Function tutor_option_save
 	 *
@@ -116,18 +252,51 @@ class Options_V2 {
 
 		$option = (array) tutils()->array_get( 'tutor_option', $_POST, array() );
 
+		$option = tutils()->sanitize_recursively( $option );
+
 		$option = apply_filters( 'tutor_option_input', $option );
+
+		// $request = $this->get_request_data( 'tutor_options' );
+		$time                                     = strtotime( 'now' ) + ( 6 * 60 * 60 );
+		$save_import_data['datetime']             = $time;
+		$save_import_data['history_date']         = date( 'j M, Y, g:i a', $time );
+		$save_import_data['datatype']             = 'saved';
+		$save_import_data['dataset']              = $option;
+		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
+		$update_option                            = array();
+		$get_option_data                          = get_option( 'tutor_settings_log', array() );
+
+		if ( ! empty( $get_option_data ) ) {
+			$update_option = array_merge( $get_option_data, $import_data );
+		} else {
+			$update_option = array_merge( $import_data );
+		}
+
+		update_option( 'tutor_settings_log', $update_option );
 
 		update_option( 'tutor_option', $option );
 
 		do_action( 'tutor_option_save_after' );
 
-		// re-sync settings
-
-		// init::tutor_activate();
-
 		// wp_send_json_success(array('msg' => __('Option Updated', 'tutor'), 'return' => $option));
-		wp_send_json_success( $option );
+		wp_send_json_success( $update_option );
+	}
+
+	/**
+	 * Function tutor_option_save
+	 *
+	 * @return JSON
+	 */
+	public function tutor_option_default_save() {
+		tutils()->checking_nonce();
+
+		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+
+		$default_options = tutils()->sanitize_recursively( $this->tutor_default_settings() );
+
+		update_option( 'tutor_option', $default_options );
+
+		wp_send_json_success( $default_options );
 	}
 
 	/**
@@ -165,14 +334,15 @@ class Options_V2 {
 			'tools' => array(
 				'label'    => __( 'Tools', 'tutor' ),
 				'sections' => array(
-					array(
+					'status'        => array(
 						'label'    => __( 'Status', 'tutor' ),
 						'slug'     => 'status',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Status Settings', 'tutor' ),
 						'template' => 'status',
-						'icon'     => __( 'chart', 'tutor' ),
+						'icon'     => 'icon-chart-filled',
 						'blocks'   => array(
-							array(
+							'wordpress_environment' => array(
 								'label'      => __( 'WordPress environment', 'tutor' ),
 								'slug'       => 'wordpress_environment',
 								'classes'    => 'wordpress_environment',
@@ -267,7 +437,7 @@ class Options_V2 {
 									),
 								),
 							),
-							array(
+							'server_environment'    => array(
 								'label'      => __( 'Server environment', 'tutor' ),
 								'slug'       => 'server_environment',
 								'block_type' => 'column',
@@ -386,30 +556,33 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'import_export' => array(
 						'label'    => __( 'Import/Export', 'tutor' ),
 						'slug'     => 'import_export',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Import/Export Settings', 'tutor' ),
 						'template' => 'import_export',
-						'icon'     => __( 'import-export', 'tutor' ),
+						'icon'     => 'icon-import-export-filled',
 						'blocks'   => array(),
 					),
-					array(
+					'tutor_pages'   => array(
 						'label'    => __( 'Tutor Pages', 'tutor' ),
-						'slug'     => 'tutor-pages',
+						'slug'     => 'tutor_pages',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Tutor Pages Settings', 'tutor' ),
 						'template' => 'tutor_pages',
-						'icon'     => __( 'buddypress', 'tutor' ),
+						'icon'     => 'icon-review-line',
 						'blocks'   => array(
 							'block' => array(),
 						),
 					),
-					array(
+					'tutor-setup'   => array(
 						'label'    => __( 'Setup Wizard', 'tutor' ),
-						'slug'     => 'setup_wizard',
+						'slug'     => 'tutor-setup',
+						'icon'     => 'icon-chart-filled',
 						'desc'     => __( 'Setup Wizard Settings', 'tutor' ),
-						'template' => 'setup_wizard',
-						'icon'     => __( 'paid-membersip-pro', 'tutor' ),
+						'template' => 'tutor-setup',
+						'icon'     => 'icon-earth-filled',
 						'blocks'   => array(
 							'block' => array(),
 						),
@@ -594,6 +767,10 @@ class Options_V2 {
 										'type'        => 'checkbox_horizontal',
 										'label'       => __( 'Preferred Video Source', 'tutor' ),
 										'label_title' => __( 'Preferred Video Source', 'tutor' ),
+										'default'     => array(
+											'external_url' => true,
+											'html5'        => true,
+										),
 										'options'     => $video_sources,
 										'desc'        => __( 'Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor' ),
 									),
@@ -632,6 +809,7 @@ class Options_V2 {
 										'key'         => 'course_content_access_for_ia',
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Course Content Access', 'tutor' ),
+										'default'     => 'off',
 										'label_title' => __( '', 'tutor' ),
 										'desc'        => __( 'Allow instructors and admins to view the course content without enrolling', 'tutor' ),
 									),

@@ -1,0 +1,99 @@
+---
+name: Modal elements
+route: /mdx-css/modal-elements
+menu: CSS Components
+---
+
+import { Playground } from 'docz';
+import "../../bundle/main.min.css";
+import "../../bundle/fonts/lineawesome@1.3.0/css/line-awesome.css";
+import "../docz-essential.css";
+
+# Modal Elements
+
+
+## Steps
+<Playground>
+    <div className="tutor-modal-steps">
+        <ul>
+            <li className="tutor-is-completed">
+                <span>Quiz Info</span>
+                <button className="tutor-modal-step-btn">1</button>
+            </li>
+            <li className="tutor-is-completed">
+                <span>Question</span>
+                <button className="tutor-modal-step-btn">2</button>
+            </li>
+            <li className="tutor-is-completed">
+                <span>Opt</span>
+                <button className="tutor-modal-step-btn">3</button>
+            </li>
+            <li>
+                <span>Settings</span>
+                <button className="tutor-modal-step-btn">4</button>
+            </li>
+        </ul>
+    </div>
+</Playground>
+
+## Attachment
+
+<Playground>
+    <div className="tutor-attachment tutor-mb-5">
+        <h6 className="tutor-attachment-name">
+            <span>My assignment.zip My assignment.zip My assignment.zip My assignment.zip My assignment.zip My assignment.zip My assignment.zip My assignment.zip My assignment.zip My assignment.zip My assignment.zip My assignment.zip My assignment.zip</span>
+        </h6>
+        <div className="tutor-attachment-right">
+            <span className="tutor-attachment-size">Size: 15.56 KB</span>
+            <button className="tutor-attachment-delete">
+                <span className="fas fa-times"></span>
+            </button>
+        </div>
+    </div>
+    <div className="tutor-attachment tutor-mb-20">
+        <h6 className="tutor-attachment-name">
+            <span>My assignment.zip</span>
+        </h6>
+        <div className="tutor-attachment-right">
+            <span className="tutor-attachment-size">Size: 15.56 KB</span>
+            <button className="tutor-attachment-delete">
+                <span className="fas fa-times"></span>
+            </button>
+        </div>
+    </div>
+</Playground>
+
+## Question
+
+<Playground>
+    <div className="tutor-quiz-item tutor-mb-15" draggable>
+        <div className="tutor-quiz-item-label">
+            <span className="tutor-quiz-item-draggable fas fa-bars"></span>
+            <h6 className="tutor-quiz-item-name">Popular Uses Of The Internet?</h6>
+        </div>
+        <div className="tutor-quiz-item-action">
+            <div className="tutor-quiz-item-type">
+                <img src="https://i.imgur.com/jDf13Ml.jpg" alt=""/>
+                True or False
+            </div>
+            <button>
+                <i className="fas fa-ellipsis-v"></i>
+            </button>
+        </div>
+    </div>
+    <div className="tutor-quiz-item tutor-mb-15" draggable>
+        <div className="tutor-quiz-item-label">
+            <span className="tutor-quiz-item-draggable fas fa-bars"></span>
+            <h6 className="tutor-quiz-item-name">Uniquely pursue interdependent metrics via process-centric e-commerce. Energistically whiteboard.</h6>
+        </div>
+        <div className="tutor-quiz-item-action">
+            <div className="tutor-quiz-item-type">
+                <img src="https://i.imgur.com/Zl39u6F.jpg" alt=""/>
+                Sorting
+            </div>
+            <button>
+                <i className="fas fa-ellipsis-v"></i>
+            </button>
+        </div>
+    </div>
+</Playground>

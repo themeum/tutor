@@ -15,10 +15,13 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
     <?php
     $course_duration = get_tutor_course_duration_context();
     $course_students = tutor_utils()->count_enrolled_users_by_course();
+    $disable_total_enrolled = (int) tutor_utils()->get_option( 'disable_course_total_enrolled' );
     ?>
+    <?php if ( ! $disable_total_enrolled ) : ?>
     <div class="tutor-single-loop-meta">
         <i class='tutor-icon-user'></i><span><?php echo $course_students; ?></span>
     </div>
+    <?php endif; ?>
     <?php
     if(!empty($course_duration)) { ?>
         <div class="tutor-single-loop-meta">

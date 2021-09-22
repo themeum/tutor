@@ -1035,7 +1035,7 @@ function tutor_single_course_add_to_cart($echo = true){
     $output = '';
 
     $template = tutor_utils()->is_course_fully_booked(null) ? 'closed-enrollment' : 'add-to-cart';
-    
+
     tutor_load_template( 'single.course.'.$template );
     $output .= apply_filters( 'tutor_course/single/'.$template, ob_get_clean() );
 
@@ -1604,16 +1604,21 @@ if ( ! function_exists('tutor_login_form_popup')) {
 
 /**
  * Load custom template from any given file
- * 
+ *
  * Pass parameter as wish
- * 
+ *
  * @since 1.9.8
  */
 if ( ! function_exists('tutor_load_template_from_custom_path')) {
-    function tutor_load_template_from_custom_path( $template = null, $data ) {
+    function tutor_load_template_from_custom_path( $template = null, $data=array(), $once=true ) {
         do_action('tutor_load_template_from_custom_path_before', $template, $data);
         if ( file_exists($template) ) {
-            include_once $template;
+            if($once) {
+                include_once $template;
+            }
+            else {
+                include $template;
+            }
         }
         do_action('tutor_load_template_from_custom_path_after', $template, $data);
     }

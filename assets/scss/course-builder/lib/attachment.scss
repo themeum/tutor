@@ -1,0 +1,75 @@
+// Attachment style
+.tutor-attachment-cards {
+
+    &, &>div{
+        width: 100%;
+    }
+
+    &>div{
+        padding: 10px 20px;
+        margin-bottom: 15px;
+        background: #FFFFFF;
+        border: 1px solid #C0C3CB;
+        box-sizing: border-box;
+        border-radius: 6px;
+        @include valueWithPrefix(display, flex);
+        @include propertyWithPrefix(align-items, center);
+    }
+
+    span.filesize {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 13px;
+        margin-right: 20px;
+        color: #5B616F;
+        display: block;
+    }
+
+    span.tutor-delete-attachment {
+        @include valueWithPrefix(display, inline-flex);
+        @include propertyWithPrefix(align-items, center);
+        @include propertyWithPrefix(justify-content, center);
+        background: transparent;
+        border-radius: 50%;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    &.del-hover-circle {
+        span.tutor-delete-attachment{
+            width: 50px;
+            height: 50px;
+            font-size: 17px;
+
+            &:hover{
+                background: #EFF1F7;
+            }
+        }
+    }
+
+    &>div>div {
+        &:first-child {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 25px;
+            @include propertyWithPrefix(flex, 1);
+
+            a{
+                font-style: normal;
+                font-weight: normal;
+                font-size: 16px;
+                color: #41454F;
+
+                &:hover {
+                    color: #0e0e0f;
+                }
+            }
+        }
+
+        &:last-child{
+            @include valueWithPrefix(display, flex);
+            @include propertyWithPrefix(align-items, center);
+        }
+    }
+}
