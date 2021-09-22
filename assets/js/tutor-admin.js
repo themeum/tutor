@@ -1866,7 +1866,6 @@ __webpack_require__.r(__webpack_exports__);
   } */
   document.addEventListener('click', function (e) {
     var attr = 'data-tutor-popup-target';
-    console.log(e);
 
     if (e.target.hasAttribute(attr)) {
       e.preventDefault();
