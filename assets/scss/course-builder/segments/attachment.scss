@@ -1,0 +1,18 @@
+// Course attachment styles
+.tutor-course-builder-attachments{
+    @include valueWithPrefix(display, flex);
+    @include propertyWithPrefix(flex-wrap, wrap);
+    @include propertyWithPrefix(box-sizing, border-box);
+
+    &:empty {
+        display: none;
+    }
+
+    &, * {
+        &, &:focus, &:active, &:hover {
+            text-decoration: none;
+            outline: none;
+        }
+    }
+}
+

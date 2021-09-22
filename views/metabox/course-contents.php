@@ -29,15 +29,14 @@
 
 	foreach ($query_topics->posts as $topic){
 		?>
-        <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap">
-
+        <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap" data-topic-id="<?php echo $topic->ID; ?>">
             <div class="tutor-topics-top">
                 <h4 class="tutor-topic-title">
                     <i class="tutor-icon-move course-move-handle"></i>
                     <span class="topic-inner-title"><?php echo stripslashes($topic->post_title); ?></span>
 
-                    <span class="tutor-topic-inline-edit-btn">
-                        <i class="tutor-icon-pencil topic-edit-icon"></i>
+                    <span class="tutor-topic-inline-edit-btn ">
+                        <i class="tutor-icon-pencil topic-edit-icon" data-tutor-modal-target="tutor-topics-edit-id-<?php echo $topic->ID; ?>"></i>
                     </span>
                     <span class="topic-delete-btn">
                         <a href="<?php echo wp_nonce_url(admin_url('admin.php?action=tutor_delete_topic&topic_id='.$topic->ID), tutor()->nonce_action, tutor()->nonce); ?>" title="<?php _e('Delete Topic', 'tutor'); ?>" data-topic-id="<?php echo $topic->ID; ?>">
@@ -50,38 +49,20 @@
                     </span>
                 </h4>
 
-                <div class="tutor-topics-edit-form" style="display: none;">
-                    <div class="tutor-option-field-row">
-                        <div class="tutor-option-field-label">
-                            <label for=""><?php _e('Topic Name', 'tutor'); ?></label>
-                        </div>
-                        <div class="tutor-option-field">
-                            <input type="text" name="topic_title" class="course-edit-topic-title-input" value="<?php echo stripslashes($topic->post_title); ?>">
-
-                            <p class="desc">
-								<?php _e('Topic title will be publicly show where required, you can call it as a section also in course', 'tutor'); ?>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="tutor-option-field-row">
-                        <div class="tutor-option-field-label">
-                            <label for=""><?php _e('Topic Summary', 'tutor'); ?></label>
-                        </div>
-                        <div class="tutor-option-field">
-                            <textarea name="topic_summery"><?php echo $topic->post_content; ?></textarea>
-                            <p class="desc">
-								<?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
-                            </p>
-
-                            <button type="button" class="tutor-button tutor-topics-edit-button">
-                                <i class="tutor-icon-pencil"></i> <?php _e('Update Topic', 'tutor'); ?>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <?php 
+                    tutor_load_template_from_custom_path(tutor()->path.'/views/modal/topic-form.php', array(
+                        'modal_title'   => __('Update Topic', 'tutor'),
+                        'wrapper_id'    => 'tutor-topics-edit-id-' . $topic->ID,
+                        'topic_id'      => $topic->ID,
+                        'course_id'     => $course_id,
+                        'title'         => $topic->post_title,
+                        'summary'       => $topic->post_content,
+                        'wrapper_class' => 'tutor-topics-edit-form',
+                        'button_text'   => __('Update Topic', 'tutor'),
+                        'button_class'  => 'tutor-topics-edit-button'
+                    ), false); 
+                ?>
             </div>
-
             <div class="tutor-topics-body" style="display: <?php echo $current_topic_id == $topic->ID ? 'block' : 'none'; ?>;">
 
                 <div class="tutor-lessons"><?php
@@ -102,19 +83,11 @@
 
 						if ($lesson->post_type === 'tutor_quiz'){
 							$quiz = $lesson;
-							?>
-                            <div id="tutor-quiz-<?php echo $quiz->ID; ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $topic->ID; ?>">
-                                <div class="tutor-lesson-top">
-                                    <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                        <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo stripslashes($quiz->post_title); ?>
-                                    </a>
-                                    <?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz->ID); ?>
-                                    <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
-                                </div>
-                            </div>
-
-							<?php
+                            tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/quiz-list-single.php', array(
+                                'quiz_id' => $quiz->ID,
+                                'topic_id' => $topic->ID,
+                                'quiz_title' => $quiz->post_title,
+                            ), false);
 						}elseif($lesson->post_type === 'tutor_assignments'){
 							?>
                             <div id="tutor-assignment-<?php echo $lesson->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo
@@ -155,7 +128,7 @@
 					}
                 ?></div>
 
-                <div class="tutor_add_quiz_wrap" data-add-quiz-under="<?php echo $topic->ID; ?>">
+                <div class="tutor_add_quiz_wrap" data-topic_id="<?php echo $topic->ID; ?>">
                     <div class="tutor-add-cotnents-btn-group tutor-add-quiz-button-wrap">
 
 	                    <?php do_action('tutor_course_builder_before_btn_group', $topic->ID); ?>
@@ -192,19 +165,11 @@
 
 						if ($lesson->post_type === 'tutor_quiz'){
 							$quiz = $lesson;
-							?>
-                            <div id="tutor-quiz-<?php echo $quiz->ID; ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $topic->ID; ?>">
-                                <div class="tutor-lesson-top">
-                                    <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                        <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo stripslashes($quiz->post_title); ?>
-                                    </a>
-                                    <?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz->ID); ?>
-                                    <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
-                                </div>
-                            </div>
-
-							<?php
+                            tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/quiz-list-single.php', array(
+                                'quiz_id' => $quiz->ID,
+                                'topic_id' => $topic->ID,
+                                'quiz_title' => $quiz->post_title,
+                            ), false);
 						}elseif($lesson->post_type === 'tutor_assignments'){
 							?>
                             <div id="tutor-assignment-<?php echo $lesson->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo

@@ -31,40 +31,30 @@ $default_source = tutor_utils()->get_option('default_video_source', null);
 
 ?>
 
-<div class="tutor-option-field-row">
-    <div class="tutor-option-field-label">
-        <label for="">
-            <?php
-            if ($post->post_type === tutor()->course_post_type){
-                _e('Course Intro Video', 'tutor');
-            }else{
-                _e('Video Source', 'tutor');
-            }
-            ?>
-        </label>
-    </div>
-
-    <div class="tutor-option-field tutor-video-upload-wrap">
-
-        <select name="video[source]" class="tutor_lesson_video_source videosource_select2">
-            <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
-            <?php
-                foreach($video_sources as $value=>$source){
-                    if(in_array($value, $supported_sources)){
-                        echo '<option value="'.$value.'" '.selected($value, $videoSource).'  data-icon="'.$source['icon'].'" >'.$source['title'].'</option>';
+<div class="tutor-mb-30">
+    <label class="tutor-form-label">
+        <?php
+        if ($post->post_type === tutor()->course_post_type){
+            _e('Course Intro Video', 'tutor');
+        }else{
+            _e('Video Source', 'tutor');
+        }
+        ?>
+    </label>
+    <div class="tutor-input-group tutor-mb-15">
+        <div class="tutor-video-upload-wrap container-fluid g-0">
+            <select name="video[source]" class="tutor-form-select tutor_lesson_video_source tutor-form-select">
+                <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
+                <?php
+                    foreach($video_sources as $value=>$source){
+                        if(in_array($value, $supported_sources)){
+                            echo '<option value="'.$value.'" '.selected($value, $videoSource).'  data-icon="'.$source['icon'].'" >'.$source['title'].'</option>';
+                        }
                     }
-                }
-            ?>
-        </select>
-
-        <p class="desc">
-            <?php _e('Select your preferred video type.', 'tutor'); ?>
-        </p>
-
-        <div class="video-metabox-source-input-wrap" style="display: <?php echo ! $videoSource ? 'none' : 'block'; ?>;">
-
-            <div class="video-metabox-source-item video_source_wrap_html5" style="display: <?php echo $videoSource === 'html5' ? 'block' : 'none'; ?>;">
-
+                ?>
+            </select>
+            
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_html5" style="display: <?php echo $videoSource === 'html5' ? 'block' : 'none'; ?>;">
                 <div class="video-metabox-source-html5-upload">
                     <p class="video-upload-icon"><i class="tutor-icon-upload"></i></p>
                     <p><strong><?php _e('Upload Your Video'); ?></strong></p>
@@ -112,59 +102,46 @@ $default_source = tutor_utils()->get_option('default_video_source', null);
                 </div>
             </div>
 
-
-            <div class="video-metabox-source-item video_source_wrap_external_url" style="display: <?php echo $videoSource === 'external_url' ? 'block' :
-                'none'; ?>;">
-                <input type="text" name="video[source_external_url]" value="<?php echo tutor_utils()->avalue_dot('source_external_url', $video);
-                ?>" placeholder="<?php _e('External Video URL', 'tutor'); ?>">
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_external_url" style="display: <?php echo $videoSource === 'external_url' ? 'block' : 'none'; ?>;">
+                <input class="tutor-form-control" type="text" name="video[source_external_url]" value="<?php echo tutor_utils()->avalue_dot('source_external_url', $video); ?>" placeholder="<?php _e('External Video URL', 'tutor'); ?>">
             </div>
 
-            <div class="video-metabox-source-item video_source_wrap_youtube" style="display: <?php echo $videoSource === 'youtube' ? 'block' :
-                'none'; ?>;">
-                <input type="text" name="video[source_youtube]" value="<?php echo tutor_utils()->avalue_dot('source_youtube', $video); ?>" placeholder="<?php _e('YouTube Video URL', 'tutor'); ?>" data-youtube_api_key="<?php echo tutils()->get_option('lesson_video_duration_youtube_api_key', ''); ?>">
-            </div>
-            <div class="video-metabox-source-item video_source_wrap_vimeo" style="display: <?php echo $videoSource === 'vimeo' ? 'block' : 'none'; ?>;">
-                <input type="text" name="video[source_vimeo]" value="<?php echo tutor_utils()->avalue_dot('source_vimeo', $video); ?>" placeholder="<?php _e('Vimeo Video URL', 'tutor'); ?>">
-            </div>
-            <div class="video-metabox-source-item video_source_wrap_embedded" style="display: <?php echo $videoSource === 'embedded' ? 'block' : 'none'; ?>;">
-                <textarea name="video[source_embedded]" placeholder="<?php _e('Place your embedded code here', 'tutor'); ?>"><?php echo tutor_utils()
-                        ->avalue_dot
-                        ('source_embedded', $video);
-                    ?></textarea>
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_youtube" style="display: <?php echo $videoSource === 'youtube' ? 'block' : 'none'; ?>;">
+                <input class="tutor-form-control" type="text" name="video[source_youtube]" value="<?php echo tutor_utils()->avalue_dot('source_youtube', $video); ?>" placeholder="<?php _e('YouTube Video URL', 'tutor'); ?>" data-youtube_api_key="<?php echo tutils()->get_option('lesson_video_duration_youtube_api_key', ''); ?>">
             </div>
 
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_vimeo" style="display: <?php echo $videoSource === 'vimeo' ? 'block' : 'none'; ?>;">
+                <input class="tutor-form-control" type="text" name="video[source_vimeo]" value="<?php echo tutor_utils()->avalue_dot('source_vimeo', $video); ?>" placeholder="<?php _e('Vimeo Video URL', 'tutor'); ?>">
+            </div>
+
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_embedded" style="display: <?php echo $videoSource === 'embedded' ? 'block' : 'none'; ?>;">
+                <textarea class="tutor-form-control" name="video[source_embedded]" placeholder="<?php _e('Place your embedded code here', 'tutor'); ?>"><?php echo tutor_utils()->avalue_dot('source_embedded', $video);?></textarea>
+            </div>
         </div>
-
     </div>
 </div>
 <?php
     if ( $post->post_type !== tutor()->course_post_type){
         ?>
-            <div class="tutor-option-field-row tutor-option-field-video-duration">
-                <div class="tutor-option-field-label">
-                    <label for=""><?php _e('Video playback time', 'tutor'); ?></label>
-                </div>
-                <div class="tutor-option-field">
-                    <div class="tutor-option-gorup-fields-wrap">
-                        <div class="tutor-lesson-video-runtime">
-                            <div class="tutor-option-group-field">
-                                <input type="number" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]">
-                                <p class="desc"><?php _e('HH', 'tutor'); ?></p>
-                            </div>
-
-                            <div class="tutor-option-group-field">
-                                <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]">
-                                <p class="desc"><?php _e('MM', 'tutor'); ?></p>
-                            </div>
-
-                            <div class="tutor-option-group-field">
-                                <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]">
-                                <p class="desc"><?php _e('SS', 'tutor'); ?></p>
-                            </div>
-                        </div>
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label"><?php _e('Video playback time', 'tutor'); ?></label>
+            <div class="tutor-input-group tutor-mb-15 tutor-option-field-video-duration">
+                <div class="row">
+                    <div class="col-4">
+                        <input class="tutor-form-control" type="number" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]">
+                        <span><?php _e('Hour', 'tutor'); ?></span>
+                    </div>
+                    <div class="col-4">
+                        <input class="tutor-form-control" type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]">
+                        <span><?php _e('Minute', 'tutor'); ?></span>
+                    </div>
+                    <div class="col-4">
+                        <input class="tutor-form-control" type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]">
+                        <span><?php _e('Second', 'tutor'); ?></span>
                     </div>
                 </div>
             </div>
+        </div>
         <?php 
     }
 ?>

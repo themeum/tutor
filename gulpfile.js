@@ -1,5 +1,6 @@
 var gulp = require("gulp"),
 	sass = require("gulp-sass"),
+	sourcemaps = require('gulp-sourcemaps'),
 	rename = require("gulp-rename"),
 	prefix = require("gulp-autoprefixer"),
 	plumber = require("gulp-plumber"),
@@ -27,23 +28,26 @@ var prefixerOptions = {
 };
 
 var scss_blueprints = {
-	tutor_front : {src: "assets/scss/front/main.scss", mode: 'expanded', destination: 'tutor-front.css'},
-	tutor_front_min: {src: "assets/scss/front/main.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
+	tutor_front: {src: "assets/scss/front/index.scss", mode: 'expanded', destination: 'tutor-front.css'},
+	tutor_front_min: {src: "assets/scss/front/index.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
 	
-	tutor_admin: {src: "assets/scss/admin/main.scss", mode: 'expanded', destination: 'tutor-admin.css'},
-	tutor_admin_min: {src: "assets/scss/admin/main.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
+	tutor_admin: {src: "assets/scss/admin-dashboard/index.scss", mode: 'expanded', destination: 'tutor-admin.css'},
+	tutor_admin_min: {src: "assets/scss/admin-dashboard/index.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
 	
-	tutor_v2: {src: "assets/scss/v2-library/index.scss", mode: 'expanded', destination: 'tutor-v2.css'},
-	tutor_v2_min: {src: "assets/scss/v2-library/index.scss", mode: 'compressed', destination: 'tutor-v2.min.css'},
+	tutor_setup: {src: "assets/scss/admin-dashboard/tutor-setup.scss", mode: 'expanded', destination: 'tutor-setup.css'},
+	tutor_setup_min: {src: "assets/scss/admin-dashboard/tutor-setup.scss", mode: 'compressed', destination: 'tutor-setup.min.css'},
+
+	tutor_v2: {src: "v2-library/_src/scss/main.scss", mode: 'expanded', destination: 'tutor-v2.css'},
+	tutor_v2_min: {src: "v2-library/_src/scss/main.scss", mode: 'compressed', destination: 'tutor-v2.min.css'},
 	
-	// tutor_admin_v2_markup: {src: "assets/scss/admin/admin-v2-markup.scss", mode: 'expanded', destination: 'admin-v2-markup.css'},
-	// tutor_admin_v2_markup_min: {src: "assets/scss/admin/admin-v2-markup.scss", mode: 'compressed', destination: 'admin-v2-markup.min.css'},
-	
-	tutor_admin_v2_markup: {src:  "assets/v2/scss/admin/admin-v2-markup.scss", mode: 'expanded', destination: 'admin-v2-markup.css'},
-	tutor_admin_v2_markup_min: {src: "assets/v2/scss/admin/admin-v2-markup.scss", mode: 'compressed', destination: 'admin-v2-markup.min.css'},
-	
-	tutor_front_dashboard: {src: "assets/scss/front/dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
-	tutor_front_dashboard_min: {src: "assets/scss/front/dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
+	tutor_front_dashboard: {src: "assets/scss/frontend-dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
+	tutor_front_dashboard_min: {src: "assets/scss/frontend-dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
+
+	tutor_course_builder: {src: "assets/scss/course-builder/index.scss", mode: 'expanded', destination: 'tutor-course-builder.css'},
+	tutor_course_builder_min: {src: "assets/scss/course-builder/index.scss", mode: 'compressed', destination: 'tutor-course-builder.min.css'},
+
+	v2_scss:{src: "v2-library/_src/scss/main.scss", mode: 'compressed', destination: 'main.min.css', dest_path: 'v2-library/bundle'},
+	v2_scss_docz:{src: "v2-library/_src/scss/main.scss", mode: 'compressed', destination: 'main.min.css', dest_path: '.docz/static/v2-library/bundle'}
 };
 
 
@@ -52,20 +56,22 @@ var task_keys = Object.keys(scss_blueprints);
 for(let task in scss_blueprints) {
 	
 	let blueprint = scss_blueprints[task];
-	// console.log(blueprint);
 	
 	gulp.task(task, function () {
 		return gulp.src(blueprint.src)
 			.pipe(plumber({errorHandler: onError}))
+			.pipe(sourcemaps.init({loadMaps: true, largeFile:true}))
 			.pipe(sass({outputStyle: blueprint.mode}))
 			.pipe(prefix(prefixerOptions))
 			.pipe(rename(blueprint.destination))
-			.pipe(gulp.dest("assets/css"));
+			.pipe(sourcemaps.write('.', {addComment: process.env._GULP_ENV!='build'}))
+			.pipe(gulp.dest(blueprint.dest_path || "assets/css"));
 	});
 }
 
 var added_texts = [];
 const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/ig;
+const js_files = ['tutor-front', 'tutor-admin', 'tutor-course-builder', 'tutor-setup'].map(f=>'assets/js/'+f+'.js:1').join(', ');
 function i18n_makepot(callback, target_dir) {
 
 	const parent_dir = target_dir || __dirname;
@@ -74,7 +80,7 @@ function i18n_makepot(callback, target_dir) {
 	// Loop through JS files inside js directory
 	fs.readdirSync(parent_dir).forEach( function(file_name) {
 
-		if(file_name=='node_modules') {
+		if(file_name=='node_modules' || file_name.indexOf('.')===0) {
 			return;
 		}
 
@@ -87,7 +93,7 @@ function i18n_makepot(callback, target_dir) {
 		}
 
 		// Make sure only js extension file to process
-		if(stat.isFile() && path.extname(file_name)=='.js')
+		if(stat.isFile() && path.extname(file_name)=='.js' && full_path.indexOf('assets/react')>-1)
 		{
 			var codes = fs.readFileSync(full_path).toString();
 			var lines = codes.split('\n');
@@ -114,7 +120,7 @@ function i18n_makepot(callback, target_dir) {
 
 					added_texts.push(text);
 					translation_texts+= 
-						'\n#: ' + (full_path.replace(__dirname+'/', '')) + ':' + (i+1) 
+						'\n#: ' + js_files 
 						+ '\nmsgid "'+text
 						+'"\nmsgstr ""' 
 						+ '\n'; 
@@ -131,7 +137,7 @@ function i18n_makepot(callback, target_dir) {
 }
 
 gulp.task("watch", function () {
-	gulp.watch("assets/**/*.scss", gulp.series(...task_keys));
+	gulp.watch("./**/*.scss", gulp.series(...task_keys));
 });
 
 gulp.task('makepot', function () {
@@ -170,18 +176,21 @@ gulp.task("copy", function () {
 			"./**/*.*",
 			"!./build/**",
 			"!./assets/**/*.map",
+			"!./assets/react/**",
 			"!./assets/scss/**",
 			"!./assets/.sass-cache",
 			"!./node_modules/**",
+			"!./v2-library/**",
+			"!./.docz/**",
 			"!./**/*.zip",
 			"!.github",
-			"!./gulpfile.js",
 			"!./readme.md",
 			"!.DS_Store",
 			"!./**/.DS_Store",
 			"!./LICENSE.txt",
-			"!./package.json",
-			"!./package-lock.json",
+			"!./*.lock",
+			"!./*.js",
+			"!./*.json",
 		])
 		.pipe(gulp.dest("build/tutor/"));
 });
@@ -200,8 +209,7 @@ exports.build = gulp.series(
 	"makepot",
 	i18n_makepot,
 	"copy",
-	"make-zip",
-	"clean-build"
+	"make-zip"
 );
 exports.sass = gulp.series(...task_keys);
 exports.default = gulp.series(...task_keys, "watch");

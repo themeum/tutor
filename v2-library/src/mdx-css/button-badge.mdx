@@ -1,0 +1,68 @@
+---
+name: Button & Icon badges
+route: /mdx-css/button-badges
+menu: CSS Components
+---
+
+import {Playground} from "docz";
+import "../../bundle/main.min.css";
+import "../../bundle/fonts/lineawesome@1.3.0/css/line-awesome.css";
+import "../docz-essential.css";
+
+
+
+<Playground>
+    <div className="tutor-btn-group">
+        <button class="tutor-btn">Button Fill<span className="tutor-floating-badge">9</span></button>
+        <button class="tutor-btn tutor-is-outline">Button Outline<span className="tutor-floating-badge">99+</span></button>
+    </div>
+</Playground>
+
+### More examples
+
+<Playground>
+    <div className="tutor-btn-group">
+        <button className="tutor-btn-square">B<span className="tutor-floating-badge">9</span></button>
+        <button className="tutor-btn-square tutor-is-outline">B<span className="tutor-floating-badge">99+</span></button>
+        <button className="tutor-btn-circle">B<span className="tutor-floating-badge">9</span></button>
+        <button className="tutor-btn-circle tutor-is-outline">B<span className="tutor-floating-badge">99+</span></button>
+        <button className="tutor-btn-circle tutor-is-sm">B<span className="tutor-floating-badge">9</span></button>
+        <button className="tutor-btn-circle tutor-is-outline tutor-is-xs">B<span className="tutor-floating-badge">9</span></button>
+    </div>
+</Playground>
+
+
+## Not a button (!)
+
+<Playground>
+    <div className="tutor-btn-group">
+        <span className="tutor-btn-square tutor-is-xs">
+            <i className="fas fa-bell"></i>
+            <span className="tutor-floating-badge">9</span>
+        </span>
+        <span className="tutor-btn-square tutor-is-sm">
+            <i className="fas fa-bell"></i>
+        </span>
+        <span className="tutor-btn-square tutor-is-default">
+            <i className="fas fa-bell"></i>
+            <span className="tutor-floating-badge">9</span>
+        </span>
+        <span className="tutor-btn-square tutor-is-lg">
+            <i className="fas fa-bell"></i>
+        </span>
+        <span className="tutor-btn-circle tutor-is-xs">
+            <i className="fas fa-bell"></i>
+            <span className="tutor-floating-badge">9</span>
+        </span>
+        <span className="tutor-btn-circle tutor-is-sm">
+            <i className="fas fa-bell"></i>
+        </span>
+        <span className="tutor-btn-circle tutor-is-default">
+            <i className="fas fa-bell"></i>
+            <span className="tutor-floating-badge">9</span>
+        </span>
+        <span className="tutor-btn-circle tutor-is-lg">
+            <i className="fas fa-bell"></i>
+        </span>
+    </div>
+</Playground>
