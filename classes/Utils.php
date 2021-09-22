@@ -7613,7 +7613,7 @@ class Utils {
 		$enrolled_courses = $this->get_enrolled_courses_by_user( $user_id );
 
 		if ( false === $enrolled_courses ) {
-			return false;
+			return [];
 		}
 		$data = [];
 		foreach ( $enrolled_courses->posts as $key => $course ) {
