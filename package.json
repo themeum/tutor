@@ -83,6 +83,7 @@
     "reduce-reducers": "^1.0.4",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "terser-webpack-plugin": "^5.2.4",
     "webpack-dev-server": "^4.1.1"
   }
 }

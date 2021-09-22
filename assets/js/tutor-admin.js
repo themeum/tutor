@@ -204,35 +204,38 @@ if (copyBtn && codeTexarea) {
  */
 
 
-var popupToggleBtns = document.querySelectorAll('.popup-opener .popup-btn');
-var popupMenus = document.querySelectorAll('.popup-opener .popup-menu');
+var popupToggle = function popupToggle() {
+  var popupToggleBtns = document.querySelectorAll('.popup-opener .popup-btn');
+  var popupMenus = document.querySelectorAll('.popup-opener .popup-menu');
 
-if (popupToggleBtns && popupMenus) {
-  popupToggleBtns.forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      var popupClosest = e.target.closest('.popup-opener').querySelector('.popup-menu');
-      popupClosest.classList.toggle('visible');
-      popupMenus.forEach(function (popupMenu) {
-        if (popupMenu !== popupClosest) {
-          popupMenu.classList.remove('visible');
-        }
+  if (popupToggleBtns && popupMenus) {
+    popupToggleBtns.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        var popupClosest = e.target.closest('.popup-opener').querySelector('.popup-menu');
+        popupClosest.classList.toggle('visible');
+        popupMenus.forEach(function (popupMenu) {
+          if (popupMenu !== popupClosest) {
+            popupMenu.classList.remove('visible');
+          }
+        });
       });
     });
-  });
-  window.addEventListener('click', function (e) {
-    if (!e.target.matches('.popup-opener .popup-btn')) {
-      popupMenus.forEach(function (popupMenu) {
-        if (popupMenu.classList.contains('visible')) {
-          popupMenu.classList.remove('visible');
-        }
-      });
-    }
-  });
-}
+    window.addEventListener('click', function (e) {
+      if (!e.target.matches('.popup-opener .popup-btn')) {
+        popupMenus.forEach(function (popupMenu) {
+          if (popupMenu.classList.contains('visible')) {
+            popupMenu.classList.remove('visible');
+          }
+        });
+      }
+    });
+  }
+};
+
+popupToggle();
 /**
  * Drag and Drop files -> Import/Export > .import-setting
  */
-
 
 var dropZoneInputs = document.querySelectorAll('.drag-drop-zone input[type=file]');
 dropZoneInputs.forEach(function (inputEl) {
@@ -308,6 +311,379 @@ searchInput.addEventListener('input', (e) => {
 		searchPopupOpener.classList.remove('visible');
 	}
 }); */
+
+/***/ }),
+
+/***/ "./assets/react/admin-dashboard/segments/import-export.js":
+/*!****************************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/import-export.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _popupToggle__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./popupToggle */ "./assets/react/admin-dashboard/segments/popupToggle.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+var notice_message = function notice_message() {
+  var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+  var noticeElement = element(".tutor-notification");
+  noticeElement.classList.add("show");
+
+  if (message) {
+    noticeElement.querySelector(".tutor-notification-content p").innerText = message;
+  }
+
+  setTimeout(function () {
+    noticeElement.classList.remove("show");
+  }, 4000);
+};
+
+var element = function element(selector) {
+  return document.querySelector(selector);
+};
+
+var elements = function elements(selector) {
+  return document.querySelectorAll(selector);
+};
+
+document.addEventListener("readystatechange", function (event) {
+  if (event.target.readyState === "interactive") {
+    export_settings_all();
+  }
+
+  if (event.target.readyState === "complete") {
+    delete_history_data();
+    import_history_data();
+    export_single_settings();
+    reset_default_options();
+    apply_single_settings(); // load_saved_data();
+    // setInterval(function () {
+    //   console.log("working");
+    // }, 10000);
+  }
+});
+/**
+ * Highlight items form search suggestion
+ */
+
+function highlightSearchedItem(dataKey) {
+  var target = document.querySelector("#".concat(dataKey));
+  var targetEl = target && target.querySelector(".tutor-option-field-label label");
+  var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row");
+  console.log("target -> ".concat(target, " scrollTarget -> ").concat(scrollTargetEl));
+
+  if (scrollTargetEl) {
+    targetEl.classList.add("isHighlighted");
+    setTimeout(function () {
+      targetEl.classList.remove("isHighlighted");
+    }, 6000);
+    scrollTargetEl.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest"
+    });
+  } else {
+    console.warn("scrollTargetEl Not found!");
+  }
+}
+/**
+ * Function to download json file
+ * @param {json} response
+ * @param {string} fileName
+ */
+
+
+function json_download(response, fileName) {
+  var fileToSave = new Blob([response], {
+    type: "application/json"
+  });
+  var el = document.createElement("a");
+  el.href = URL.createObjectURL(fileToSave);
+  el.download = fileName;
+  el.click();
+}
+/**
+ * Email Manage template - live Preview
+ */
+
+
+var emailManagePageInputs = document.querySelectorAll('.email-manage-page input[type="file"], .email-manage-page input[type="text"], .email-manage-page textarea');
+var dataSourceEls = document.querySelectorAll(".email-manage-page [data-source]");
+emailManagePageInputs.forEach(function (input) {
+  input.addEventListener("input", function (e) {
+    var _e$target = e.target,
+        name = _e$target.name,
+        value = _e$target.value;
+
+    if (e.target.files) {
+      var file = e.target.files[0];
+      console.dir(e.target.files[0]);
+      var reader = new FileReader();
+
+      reader.onload = function () {
+        document.querySelector('img[data-source="email-title-logo"]').setAttribute("src", this.result);
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    var dataSourceEl = document.querySelector(".email-manage-page [data-source=".concat(name, "]"));
+
+    if (dataSourceEl) {
+      if (dataSourceEl.href) {
+        dataSourceEl.href = value;
+      } else {
+        dataSourceEl.innerHTML = value;
+      }
+    }
+  });
+});
+
+var load_saved_data = function load_saved_data() {
+  var formData = new FormData();
+  formData.append("action", "load_saved_data");
+  formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", _tutorobject.ajaxurl, true);
+  xhttp.send(formData);
+
+  xhttp.onreadystatechange = function () {
+    if (xhttp.readyState === 4) {
+      tutor_option_history_load(xhttp.response);
+    }
+  };
+};
+
+function tutor_option_history_load(history_data) {
+  var dataset = JSON.parse(history_data).data;
+  var output = "";
+
+  if (0 !== dataset.length) {
+    Object.entries(dataset).forEach(function (_ref) {
+      var _ref2 = _slicedToArray(_ref, 2),
+          key = _ref2[0],
+          value = _ref2[1];
+
+      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span className=\"tutor-badge-label label-success\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"popup-opener\"><button type=\"button\" class=\"popup-btn\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"icon tutor-v2-icon-test icon-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"icon tutor-v2-icon-test icon-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
+    });
+  } else {
+    output += "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p class=\"text-medium-small\">No settings data found.</p></div></div>";
+  }
+
+  var heading = "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p>Date</p></div></div>";
+  element(".history_data").innerHTML = heading + output;
+  export_single_settings();
+  (0,_popupToggle__WEBPACK_IMPORTED_MODULE_0__["default"])();
+  apply_single_settings();
+}
+/* import and list dom */
+
+
+var export_settings_all = function export_settings_all() {
+  var export_settings = element("#export_settings"); //document.querySelector("#export_settings");
+
+  if (export_settings) {
+    export_settings.onclick = function (e) {
+      e.preventDefault();
+      fetch(_tutorobject.ajaxurl, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Cache-Control": "no-cache"
+        },
+        body: new URLSearchParams({
+          action: "tutor_export_settings"
+        })
+      }).then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        var fileName = "tutor_options_" + time_now();
+        json_download(JSON.stringify(response), fileName);
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    };
+  }
+};
+/**
+ *
+ * @returns time by second
+ */
+
+
+var time_now = function time_now() {
+  return Math.ceil(Date.now() / 1000) + 6 * 60 * 60;
+};
+
+var reset_default_options = function reset_default_options() {
+  var reset_options = element("#reset_options");
+
+  if (reset_options) {
+    reset_options.onclick = function () {
+      var formData = new FormData();
+      formData.append("action", "tutor_option_default_save");
+      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", _tutorobject.ajaxurl, true);
+      xhttp.send(formData);
+
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4) {
+          setTimeout(function () {
+            notice_message("Reset all settings to default successfully!");
+          }, 200);
+        }
+      };
+    };
+  }
+};
+
+var import_history_data = function import_history_data() {
+  var import_options = element("#import_options");
+
+  if (import_options) {
+    import_options.onclick = function () {
+      var files = element("#drag-drop-input").files;
+
+      if (files.length <= 0) {
+        return false;
+      }
+
+      var fr = new FileReader();
+      fr.readAsText(files.item(0));
+
+      fr.onload = function (e) {
+        var tutor_options = e.target.result;
+        var formData = new FormData();
+        formData.append("action", "tutor_import_settings");
+        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+        formData.append("time", time_now());
+        formData.append("tutor_options", tutor_options);
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", _tutorobject.ajaxurl);
+        xhttp.send(formData);
+
+        xhttp.onreadystatechange = function () {
+          if (xhttp.readyState === 4) {
+            tutor_option_history_load(xhttp.responseText);
+            delete_history_data();
+            import_history_data();
+            setTimeout(function () {
+              notice_message("Data imported successfully!");
+            }, 200);
+          }
+        };
+      };
+    };
+  }
+};
+
+var export_single_settings = function export_single_settings() {
+  var single_settings = elements(".export_single_settings");
+
+  var _loop = function _loop(i) {
+    single_settings[i].onclick = function () {
+      var export_id = single_settings[i].dataset.id;
+      var formData = new FormData();
+      formData.append("action", "tutor_export_single_settings");
+      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+      formData.append("time", Date.now());
+      formData.append("export_id", export_id);
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", _tutorobject.ajaxurl, true);
+      xhttp.send(formData);
+
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4) {
+          console.log(xhttp.response); // let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
+
+          var fileName = export_id;
+          json_download(xhttp.response, fileName);
+        }
+      };
+    };
+  };
+
+  for (var i = 0; i < single_settings.length; i++) {
+    _loop(i);
+  }
+};
+
+var apply_single_settings = function apply_single_settings() {
+  var apply_settings = elements(".apply_settings");
+
+  var _loop2 = function _loop2(i) {
+    apply_settings[i].onclick = function () {
+      var apply_id = apply_settings[i].dataset.id;
+      var formData = new FormData();
+      formData.append("action", "tutor_apply_settings");
+      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+      formData.append("apply_id", apply_id);
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", _tutorobject.ajaxurl, true);
+      xhttp.send(formData);
+
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4) {
+          notice_message("Applied settings successfully!");
+          console.log(xhttp.response);
+        }
+      };
+    };
+  };
+
+  for (var i = 0; i < apply_settings.length; i++) {
+    _loop2(i);
+  }
+};
+
+var delete_history_data = function delete_history_data() {
+  var noticeMessage = element(".tutor-notification");
+  var delete_settings = elements(".delete_single_settings");
+
+  var _loop3 = function _loop3(i) {
+    delete_settings[i].onclick = function () {
+      var delete_id = delete_settings[i].dataset.id;
+      var formData = new FormData();
+      formData.append("action", "tutor_delete_single_settings");
+      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+      formData.append("time", Date.now());
+      formData.append("delete_id", delete_id);
+      noticeMessage.classList.add("show");
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", _tutorobject.ajaxurl, true);
+      xhttp.send(formData);
+
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4) {
+          tutor_option_history_load(xhttp.responseText);
+          delete_history_data();
+          setTimeout(function () {
+            notice_message("Data deleted successfully!");
+          }, 200);
+        }
+      };
+    };
+  };
+
+  for (var i = 0; i < delete_settings.length; i++) {
+    _loop3(i);
+  }
+};
 
 /***/ }),
 
@@ -692,6 +1068,52 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
+
+/***/ }),
+
+/***/ "./assets/react/admin-dashboard/segments/popupToggle.js":
+/*!**************************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/popupToggle.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/**
+ * Popup Menu Toggle -> Import/Export > .settings-history
+ */
+var popupToggle = function popupToggle() {
+  var popupToggleBtns = document.querySelectorAll(".popup-opener .popup-btn");
+  var popupMenus = document.querySelectorAll(".popup-opener .popup-menu");
+
+  if (popupToggleBtns && popupMenus) {
+    popupToggleBtns.forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        var popupClosest = e.target.closest(".popup-opener").querySelector(".popup-menu");
+        popupClosest.classList.toggle("visible");
+        popupMenus.forEach(function (popupMenu) {
+          if (popupMenu !== popupClosest) {
+            popupMenu.classList.remove("visible");
+          }
+        });
+      });
+    });
+    window.addEventListener("click", function (e) {
+      if (!e.target.matches(".popup-opener .popup-btn")) {
+        popupMenus.forEach(function (popupMenu) {
+          if (popupMenu.classList.contains("visible")) {
+            popupMenu.classList.remove("visible");
+          }
+        });
+      }
+    });
+  }
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (popupToggle);
 
 /***/ }),
 
@@ -2044,13 +2466,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_segments_image_preview__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 
 
 
+
 jQuery(document).ready(function ($) {
-  'use strict';
+  "use strict";
 
   var _wp$i18n = wp.i18n,
       __ = _wp$i18n.__,
@@ -2058,7 +2482,7 @@ jQuery(document).ready(function ($) {
       _n = _wp$i18n._n,
       _nx = _wp$i18n._nx;
 
-  var search_student_placeholder = __('Search students', 'tutor');
+  var search_student_placeholder = __("Search students", "tutor");
   /**
    * Color Picker
    * @since v.1.2.21
@@ -2066,46 +2490,46 @@ jQuery(document).ready(function ($) {
 
 
   if (jQuery().wpColorPicker) {
-    $('.tutor_colorpicker').wpColorPicker();
+    $(".tutor_colorpicker").wpColorPicker();
   }
 
   if (jQuery().select2) {
-    $('.tutor_select2').select2();
+    $(".tutor_select2").select2();
   }
   /**
    * Option Settings Nav Tab
    */
 
 
-  $('.tutor-option-nav-tabs li a').click(function (e) {
+  $(".tutor-option-nav-tabs li a").click(function (e) {
     e.preventDefault();
-    var tab_page_id = $(this).attr('data-tab');
-    $('.option-nav-item').removeClass('current');
-    $(this).closest('li').addClass('current');
-    $('.tutor-option-nav-page').hide();
-    $(tab_page_id).addClass('current-page').show();
-    window.history.pushState('obj', '', $(this).attr('href'));
+    var tab_page_id = $(this).attr("data-tab");
+    $(".option-nav-item").removeClass("current");
+    $(this).closest("li").addClass("current");
+    $(".tutor-option-nav-page").hide();
+    $(tab_page_id).addClass("current-page").show();
+    window.history.pushState("obj", "", $(this).attr("href"));
   });
-  $('#save_tutor_option').click(function (e) {
+  $("#save_tutor_option").click(function (e) {
     e.preventDefault();
-    $(this).closest('form').submit();
+    $(this).closest("form").submit();
   });
-  $('#tutor-option-form').submit(function (e) {
+  $("#tutor-option-form").submit(function (e) {
     e.preventDefault();
     var $form = $(this);
     var data = $form.serializeObject();
     $.ajax({
       url: window._tutorobject.ajaxurl,
-      type: 'POST',
+      type: "POST",
       data: data,
       beforeSend: function beforeSend() {
-        $form.find('.button').addClass('tutor-updating-message');
+        $form.find(".button").addClass("tutor-updating-message");
       },
       success: function success(data) {
-        data.success ? tutor_toast(__('Saved', 'tutor'), $form.data('toast_success_message'), 'success') : tutor_toast(__('Request Error', 'tutor'), __('Could not save', 'tutor'), 'error');
+        data.success ? tutor_toast(__("Saved", "tutor"), $form.data("toast_success_message"), "success") : tutor_toast(__("Request Error", "tutor"), __("Could not save", "tutor"), "error");
       },
       complete: function complete() {
-        $form.find('.button').removeClass('tutor-updating-message');
+        $form.find(".button").removeClass("tutor-updating-message");
       }
     });
   });
@@ -2114,17 +2538,17 @@ jQuery(document).ready(function ($) {
    * @since v.1.1.2
    */
 
-  $(document).on('click', '.withdraw-method-nav li a', function (e) {
+  $(document).on("click", ".withdraw-method-nav li a", function (e) {
     e.preventDefault();
-    var tab_page_id = $(this).attr('data-target-id');
-    $('.withdraw-method-form-wrap').hide();
-    $('#' + tab_page_id).show();
+    var tab_page_id = $(this).attr("data-target-id");
+    $(".withdraw-method-form-wrap").hide();
+    $("#" + tab_page_id).show();
   });
   /**
    * End Withdraw nav tabs
    */
 
-  $(document).on('click', '.video_source_wrap_html5 .video_upload_btn', function (event) {
+  $(document).on("click", ".video_source_wrap_html5 .video_upload_btn", function (event) {
     event.preventDefault();
     var $that = $(this);
     var frame; // If the media frame already exists, reopen it.
@@ -2136,22 +2560,22 @@ jQuery(document).ready(function ($) {
 
 
     frame = wp.media({
-      title: __('Select or Upload Media Of Your Choice', 'tutor'),
+      title: __("Select or Upload Media Of Your Choice", "tutor"),
       button: {
-        text: __('Upload media', 'tutor')
+        text: __("Upload media", "tutor")
       },
       library: {
-        type: 'video'
+        type: "video"
       },
       multiple: false // Set to true to allow multiple files to be selected
 
     }); // When an image is selected in the media frame...
 
-    frame.on('select', function () {
+    frame.on("select", function () {
       // Get media attachment details from the frame state
-      var attachment = frame.state().get('selection').first().toJSON();
-      $that.closest('.video_source_wrap_html5').find('span.video_media_id').data('video_url', attachment.url).text(attachment.id).trigger('paste').closest('p').show();
-      $that.closest('.video_source_wrap_html5').find('input.input_source_video_id').val(attachment.id);
+      var attachment = frame.state().get("selection").first().toJSON();
+      $that.closest(".video_source_wrap_html5").find("span.video_media_id").data("video_url", attachment.url).text(attachment.id).trigger("paste").closest("p").show();
+      $that.closest(".video_source_wrap_html5").find("input.input_source_video_id").val(attachment.id);
     }); // Finally, open the modal on click
 
     frame.open();
@@ -2161,12 +2585,12 @@ jQuery(document).ready(function ($) {
    */
 
   if (_tutorobject.open_tutor_admin_menu) {
-    var $adminMenu = $('#adminmenu');
-    $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').addClass('wp-has-current-submenu');
-    $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').find('a.wp-has-submenu').removeClass('wp-has-current-submenu').addClass('wp-has-current-submenu');
+    var $adminMenu = $("#adminmenu");
+    $adminMenu.find('[href="admin.php?page=tutor"]').closest("li.wp-has-submenu").addClass("wp-has-current-submenu");
+    $adminMenu.find('[href="admin.php?page=tutor"]').closest("li.wp-has-submenu").find("a.wp-has-submenu").removeClass("wp-has-current-submenu").addClass("wp-has-current-submenu");
   }
 
-  $(document).on('click', '.tutor-option-media-upload-btn', function (e) {
+  $(document).on("click", ".tutor-option-media-upload-btn", function (e) {
     e.preventDefault();
     var $that = $(this);
     var frame;
@@ -2177,17 +2601,17 @@ jQuery(document).ready(function ($) {
     }
 
     frame = wp.media({
-      title: __('Select or Upload Media Of Your Choice', 'tutor'),
+      title: __("Select or Upload Media Of Your Choice", "tutor"),
       button: {
-        text: __('Upload media', 'tutor')
+        text: __("Upload media", "tutor")
       },
       multiple: false
     });
-    frame.on('select', function () {
-      var attachment = frame.state().get('selection').first().toJSON();
-      $that.closest('.option-media-wrap').find('.option-media-preview').html('<img src="' + attachment.url + '" alt="" />');
-      $that.closest('.option-media-wrap').find('input').val(attachment.id);
-      $that.closest('.option-media-wrap').find('.tutor-media-option-trash-btn').show();
+    frame.on("select", function () {
+      var attachment = frame.state().get("selection").first().toJSON();
+      $that.closest(".option-media-wrap").find(".option-media-preview").html('<img src="' + attachment.url + '" alt="" />');
+      $that.closest(".option-media-wrap").find("input").val(attachment.id);
+      $that.closest(".option-media-wrap").find(".tutor-media-option-trash-btn").show();
     });
     frame.open();
   });
@@ -2196,24 +2620,24 @@ jQuery(document).ready(function ($) {
    * @since v.1.4.3
    */
 
-  $(document).on('click', '.tutor-media-option-trash-btn', function (e) {
+  $(document).on("click", ".tutor-media-option-trash-btn", function (e) {
     e.preventDefault();
     var $that = $(this);
-    $that.closest('.option-media-wrap').find('img').remove();
-    $that.closest('.option-media-wrap').find('input').val('');
-    $that.closest('.option-media-wrap').find('.tutor-media-option-trash-btn').hide();
+    $that.closest(".option-media-wrap").find("img").remove();
+    $that.closest(".option-media-wrap").find("input").val("");
+    $that.closest(".option-media-wrap").find(".tutor-media-option-trash-btn").hide();
   });
-  $(document).on('change', '.tutor_addons_list_item', function (e) {
+  $(document).on("change", ".tutor_addons_list_item", function (e) {
     var $that = $(this);
-    var isEnable = $that.prop('checked') ? 1 : 0;
-    var addonFieldName = $that.attr('name');
+    var isEnable = $that.prop("checked") ? 1 : 0;
+    var addonFieldName = $that.attr("name");
     $.ajax({
       url: window._tutorobject.ajaxurl,
-      type: 'POST',
+      type: "POST",
       data: {
         isEnable: isEnable,
         addonFieldName: addonFieldName,
-        action: 'addon_enable_disable'
+        action: "addon_enable_disable"
       },
       success: function success(data) {
         if (data.success) {//Success
@@ -2226,34 +2650,34 @@ jQuery(document).ready(function ($) {
    * @since v.1.0.3
    */
 
-  $(document).on('submit', '#new-instructor-form', function (e) {
+  $(document).on("submit", "#new-instructor-form", function (e) {
     e.preventDefault();
     var $that = $(this);
     var formData = $that.serializeObject();
-    formData.action = 'tutor_add_instructor';
+    formData.action = "tutor_add_instructor";
     $.ajax({
       url: window._tutorobject.ajaxurl,
-      type: 'POST',
+      type: "POST",
       data: formData,
       success: function success(data) {
         if (data.success) {
           $that.trigger("reset");
-          $('#form-response').html('<p class="tutor-status-approved-context">' + data.data.msg + '</p>');
+          $("#form-response").html('<p class="tutor-status-approved-context">' + data.data.msg + "</p>");
         } else {
-          var errorMsg = '';
+          var errorMsg = "";
           var errors = data.data.errors;
 
           if (errors && Object.keys(errors).length) {
             $.each(data.data.errors, function (index, value) {
-              if (value && _typeof(value) === 'object' && value.constructor === Object) {
+              if (value && _typeof(value) === "object" && value.constructor === Object) {
                 $.each(value, function (key, value1) {
-                  errorMsg += '<p class="tutor-required-fields">' + value1[0] + '</p>';
+                  errorMsg += '<p class="tutor-required-fields">' + value1[0] + "</p>";
                 });
               } else {
-                errorMsg += '<p class="tutor-required-fields">' + value + '</p>';
+                errorMsg += '<p class="tutor-required-fields">' + value + "</p>";
               }
             });
-            $('#form-response').html(errorMsg);
+            $("#form-response").html(errorMsg);
           }
         }
       }
@@ -2264,12 +2688,12 @@ jQuery(document).ready(function ($) {
    * @since v.1.5.3
    */
 
-  $(document).on('click', 'a.instructor-action', function (e) {
+  $(document).on("click", "a.instructor-action", function (e) {
     e.preventDefault();
     var $that = $(this);
-    var action = $that.attr('data-action');
-    var instructor_id = $that.attr('data-instructor-id');
-    var prompt_message = $that.attr('data-prompt-message');
+    var action = $that.attr("data-action");
+    var instructor_id = $that.attr("data-instructor-id");
+    var prompt_message = $that.attr("data-prompt-message");
 
     if (prompt_message && !confirm(prompt_message)) {
       // Avoid Accidental CLick
@@ -2280,21 +2704,21 @@ jQuery(document).ready(function ($) {
     var json_data = {
       instructor_id: instructor_id,
       action_name: action,
-      action: 'instructor_approval_action'
+      action: "instructor_approval_action"
     };
     json_data[nonce_key] = _tutorobject[nonce_key];
     $.ajax({
       url: window._tutorobject.ajaxurl,
-      type: 'POST',
+      type: "POST",
       data: json_data,
       beforeSend: function beforeSend() {
-        $that.addClass('tutor-updating-message');
+        $that.addClass("tutor-updating-message");
       },
       success: function success(data) {
         location.reload(true);
       },
       complete: function complete() {
-        $that.removeClass('tutor-updating-message');
+        $that.removeClass("tutor-updating-message");
       }
     });
   });
@@ -2302,7 +2726,7 @@ jQuery(document).ready(function ($) {
    * Add Assignment
    */
 
-  $(document).on('click', '.add-assignment-attachments', function (event) {
+  $(document).on("click", ".add-assignment-attachments", function (event) {
     event.preventDefault();
     var $that = $(this);
     var frame; // If the media frame already exists, reopen it.
@@ -2314,34 +2738,34 @@ jQuery(document).ready(function ($) {
 
 
     frame = wp.media({
-      title: __('Select or Upload Media Of Your Choice', 'tutor'),
+      title: __("Select or Upload Media Of Your Choice", "tutor"),
       button: {
-        text: __('Upload media', 'tutor')
+        text: __("Upload media", "tutor")
       },
       multiple: false // Set to true to allow multiple files to be selected
 
     }); // When an image is selected in the media frame...
 
-    frame.on('select', function () {
+    frame.on("select", function () {
       // Get media attachment details from the frame state
-      var attachment = frame.state().get('selection').first().toJSON();
+      var attachment = frame.state().get("selection").first().toJSON();
       var field_markup = '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">' + attachment.filename + '</p><input type="hidden" name="tutor_assignment_attachments[]" value="' + attachment.id + '"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
-      $('#assignment-attached-file').append(field_markup);
-      $that.closest('.video_source_wrap_html5').find('input').val(attachment.id);
+      $("#assignment-attached-file").append(field_markup);
+      $that.closest(".video_source_wrap_html5").find("input").val(attachment.id);
     }); // Finally, open the modal on click
 
     frame.open();
   });
-  $(document).on('click', '.remove-assignment-attachment-a', function (event) {
+  $(document).on("click", ".remove-assignment-attachment-a", function (event) {
     event.preventDefault();
-    $(this).closest('.tutor-individual-attachment-file').remove();
+    $(this).closest(".tutor-individual-attachment-file").remove();
   });
   /**
    * Used for backend profile photo upload.
    */
   //tutor_video_poster_upload_btn
 
-  $(document).on('click', '.tutor_video_poster_upload_btn', function (event) {
+  $(document).on("click", ".tutor_video_poster_upload_btn", function (event) {
     event.preventDefault();
     var $that = $(this);
     var frame; // If the media frame already exists, reopen it.
@@ -2353,19 +2777,19 @@ jQuery(document).ready(function ($) {
 
 
     frame = wp.media({
-      title: __('Select or Upload Media Of Your Choice', 'tutor'),
+      title: __("Select or Upload Media Of Your Choice", "tutor"),
       button: {
-        text: __('Upload media', 'tutor')
+        text: __("Upload media", "tutor")
       },
       multiple: false // Set to true to allow multiple files to be selected
 
     }); // When an image is selected in the media frame...
 
-    frame.on('select', function () {
+    frame.on("select", function () {
       // Get media attachment details from the frame state
-      var attachment = frame.state().get('selection').first().toJSON();
-      $that.closest('.tutor-video-poster-wrap').find('.video-poster-img').html('<img src="' + attachment.sizes.thumbnail.url + '" alt="" />');
-      $that.closest('.tutor-video-poster-wrap').find('input').val(attachment.id);
+      var attachment = frame.state().get("selection").first().toJSON();
+      $that.closest(".tutor-video-poster-wrap").find(".video-poster-img").html('<img src="' + attachment.sizes.thumbnail.url + '" alt="" />');
+      $that.closest(".tutor-video-poster-wrap").find("input").val(attachment.id);
     }); // Finally, open the modal on click
 
     frame.open();
@@ -2375,28 +2799,28 @@ jQuery(document).ready(function ($) {
    * @since v.1.3.6
    */
 
-  $(document).on('change', '#tutor_pmpro_membership_model_select', function (e) {
+  $(document).on("change", "#tutor_pmpro_membership_model_select", function (e) {
     e.preventDefault();
     var $that = $(this);
 
-    if ($that.val() === 'category_wise_membership') {
-      $('.membership_course_categories').show();
+    if ($that.val() === "category_wise_membership") {
+      $(".membership_course_categories").show();
     } else {
-      $('.membership_course_categories').hide();
+      $(".membership_course_categories").hide();
     }
   });
-  $(document).on('change', '#tutor_pmpro_membership_model_select', function (e) {
+  $(document).on("change", "#tutor_pmpro_membership_model_select", function (e) {
     e.preventDefault();
     var $that = $(this);
 
-    if ($that.val() === 'category_wise_membership') {
-      $('.membership_course_categories').show();
+    if ($that.val() === "category_wise_membership") {
+      $(".membership_course_categories").show();
     } else {
-      $('.membership_course_categories').hide();
+      $(".membership_course_categories").hide();
     }
   }); // Require category selection
 
-  $(document).on('submit', '.pmpro_admin form', function (e) {
+  $(document).on("submit", ".pmpro_admin form", function (e) {
     var form = $(this);
 
     if (!form.find('input[name="tutor_action"]').length) {
@@ -2404,8 +2828,8 @@ jQuery(document).ready(function ($) {
       return;
     }
 
-    if (form.find('[name="tutor_pmpro_membership_model"]').val() == 'category_wise_membership' && !form.find('.membership_course_categories input:checked').length) {
-      if (!confirm(__('Do you want to save without any category?', 'tutor'))) {
+    if (form.find('[name="tutor_pmpro_membership_model"]').val() == "category_wise_membership" && !form.find(".membership_course_categories input:checked").length) {
+      if (!confirm(__("Do you want to save without any category?", "tutor"))) {
         e.preventDefault();
       }
     }
@@ -2415,13 +2839,13 @@ jQuery(document).ready(function ($) {
    * @since v.1.4.0
    */
 
-  $('#select2_search_user_ajax').select2({
+  $("#select2_search_user_ajax").select2({
     allowClear: true,
     minimumInputLength: 1,
     placeholder: search_student_placeholder,
     language: {
       inputTooShort: function inputTooShort() {
-        return __('Please add 1 or more character', 'tutor');
+        return __("Please add 1 or more character", "tutor");
       }
     },
     escapeMarkup: function escapeMarkup(m) {
@@ -2429,13 +2853,13 @@ jQuery(document).ready(function ($) {
     },
     ajax: {
       url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      dataType: 'json',
+      type: "POST",
+      dataType: "json",
       delay: 1000,
       data: function data(params) {
         return {
           term: params.term,
-          action: 'tutor_json_search_students'
+          action: "tutor_json_search_students"
         };
       },
       processResults: function processResults(data) {
@@ -2463,73 +2887,73 @@ jQuery(document).ready(function ($) {
    * @since v.1.4.0
    */
 
-  $(document).on('click', 'table.enrolments .delete a', function (e) {
+  $(document).on("click", "table.enrolments .delete a", function (e) {
     e.preventDefault();
-    var url = $(this).attr('href');
+    var url = $(this).attr("href");
     var popup;
     var data = {
-      title: __('Delete this enrolment', 'tutor'),
-      description: __('All of the course data like quiz attempts, assignment, lesson <br/>progress will be deleted if you delete this student\'s enrollment.', 'tutor'),
+      title: __("Delete this enrolment", "tutor"),
+      description: __("All of the course data like quiz attempts, assignment, lesson <br/>progress will be deleted if you delete this student's enrollment.", "tutor"),
       buttons: {
         reset: {
-          title: __('Cancel', 'tutor'),
-          "class": 'secondary',
+          title: __("Cancel", "tutor"),
+          "class": "secondary",
           callback: function callback() {
             popup.remove();
           }
         },
         keep: {
-          title: __('Yes, Delete This', 'tutor'),
-          "class": 'primary',
+          title: __("Yes, Delete This", "tutor"),
+          "class": "primary",
           callback: function callback() {
             window.location.replace(url);
           }
         }
       }
     };
-    popup = new window.tutor_popup($, 'icon-trash', 40).popup(data);
+    popup = new window.tutor_popup($, "icon-trash", 40).popup(data);
   });
   /**
    * Show hide is course public checkbox (backend dashboard editor)
-   * 
+   *
    * @since  v.1.7.2
-  */
+   */
 
   var price_type = $('#tutor-attach-product [name="tutor_course_price_type"]');
 
   if (price_type.length == 0) {
-    $('#_tutor_is_course_public_meta_checkbox').show();
+    $("#_tutor_is_course_public_meta_checkbox").show();
   } else {
     price_type.change(function () {
-      if ($(this).prop('checked')) {
-        var method = $(this).val() == 'paid' ? 'hide' : 'show';
-        $('#_tutor_is_course_public_meta_checkbox')[method]();
+      if ($(this).prop("checked")) {
+        var method = $(this).val() == "paid" ? "hide" : "show";
+        $("#_tutor_is_course_public_meta_checkbox")[method]();
       }
-    }).trigger('change');
+    }).trigger("change");
   }
   /**
    * Focus selected instructor layout in setting page
-   * 
+   *
    * @since  v.1.7.5
-  */
+   */
 
 
-  $(document).on('click', '.instructor-layout-template', function () {
-    $('.instructor-layout-template').removeClass('selected-template');
-    $(this).addClass('selected-template');
+  $(document).on("click", ".instructor-layout-template", function () {
+    $(".instructor-layout-template").removeClass("selected-template");
+    $(this).addClass("selected-template");
   });
   /**
    * Programmatically open preview link. For some reason it's not working normally.
-   * 
+   *
    * @since  v.1.7.9
-  */
+   */
 
-  $('#preview-action a.preview').click(function (e) {
-    var href = $(this).attr('href');
+  $("#preview-action a.preview").click(function (e) {
+    var href = $(this).attr("href");
 
     if (href) {
       e.preventDefault();
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     }
   });
 });
