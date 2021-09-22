@@ -534,6 +534,7 @@ const apply_single_settings = () => {
 
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
+          notice_message("Applied settings successfully!");
           console.log(xhttp.response);
         }
       };
