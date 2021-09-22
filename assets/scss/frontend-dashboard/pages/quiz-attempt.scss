@@ -1,0 +1,50 @@
+.tutor-quiz-attempt-history {
+
+    table {
+        background: 1px solid #dcdfe5;
+        border-collapse: collapse;
+
+        tr {
+            th {
+                background: #fafbfc;
+            }
+
+            th, td {
+                vertical-align: middle;
+                border: 1px solid #dcdfe5;
+            }
+
+            td:first-child {
+                padding: 15px 13px !important;
+            }
+
+            td:last-child {
+                text-align: center;
+                a {
+                    display: block;
+                    padding: 10px;
+                }
+            }
+        }
+
+        a {
+            color: var(--tutor-primary-color);
+            font-weight: 700;
+            line-height: 24px;
+            
+            &:hover {
+                color: var(--tutor-primary-hover-color);
+            }
+        }
+
+        span {
+            &.result-fail, &.result-pass {
+                width: auto;
+                height: auto;
+                line-height: 19px;
+                padding: 0 6.5px;
+                margin-right: 4px;
+            }
+        }
+    }
+}

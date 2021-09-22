@@ -1,0 +1,114 @@
+&[data-target=quiz-builder-tab-quiz-info] .modal-container>div:not(#quiz-builder-tab-quiz-info),
+&[data-target=quiz-builder-tab-questions] .modal-container>div:not(#quiz-builder-tab-questions):not(#tutor-quiz-question-wrapper),
+&[data-target=quiz-builder-tab-settings] .modal-container>div:not(#quiz-builder-tab-settings),
+&[data-target=quiz-builder-tab-quiz-info] .tutor-modal-footer button[data-action=back] {
+    display: none !important;
+}
+
+a.back-to-quiz-questions-btn {
+	font-size: 16px;
+	font-weight: 300;
+	color: #393c40;
+	margin-bottom: 10px;
+	display: block;
+}
+
+// Show hide add to question button based on screen
+&.tutor-has-question-from {
+    .tutor-modal-footer .row>div{
+        &:not(:last-child) {
+            display: none !important;
+        }
+
+        &:last-child {
+            text-align: center;
+        }
+    }
+
+    .modal-container{
+        padding-bottom: 0;
+    }
+}
+
+&:not(.tutor-has-question-from) {
+    .tutor-modal-footer .row>div{
+        &:last-child {
+            display: none;
+        }
+    }
+}
+
+.question-type-select{
+
+    position: relative;
+
+    .select-header {
+        border: 1px solid #dedede;
+        margin: 0;
+        padding: 10px;
+        width: 100%;
+        box-shadow: none;
+        background-color: #fff;
+        @include valueWithPrefix(display, flex);
+        cursor: pointer;
+        box-sizing: border-box;
+        border-radius: 3px;
+        
+        .lead-option {
+            @include valueWithPrefix(flex, 1);
+            
+            .question-type-pro {
+                display: none;
+            }
+        }
+        
+        .select-dropdown {
+            line-height: 22px;
+        }
+    }
+    
+    .tutor-select-options {
+        border: 1px solid #dedede;
+        background-color: #fff;
+        padding: 22px 10px 8px;
+        width: 581px;
+        position: absolute;
+        font-size: 0;
+        z-index: 9;
+
+        display: flex;
+
+        flex-wrap: wrap;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
+        top: 55px;
+        border-radius: 3px;
+        
+        .tutor-select-option {
+            width: calc(33.3333% - 22px);
+            display: inline-block;
+            padding: 9px;
+            cursor: pointer;
+            position: relative;
+            box-sizing: border-box;
+            margin: 0 11px 15px;
+            border: 1px solid #e2e2e2;
+            border-radius: 3px;
+            font-size: 13px;
+            
+            &:hover {
+                border-color: var(--tutor-primary-color);
+            }
+        }
+    }
+}
+
+#tutor-answer-builder {
+    background: #E3E5EB;
+    margin: 0px -30px;
+    padding: 15px 30px;
+}
+
+.quiz-builder-question-wrap {
+    @include valueWithPrefix(display, flex);
+	margin-bottom: 15px;
+}

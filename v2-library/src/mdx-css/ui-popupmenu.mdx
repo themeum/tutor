@@ -1,0 +1,63 @@
+---
+name: Popup Menu
+route: /mdx-css/ui-popupmenu
+menu: UI Components
+---
+
+import { Playground } from 'docz';
+import '../../bundle/main.min.css';
+import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-icon-test.css';
+import '../docz-essential.css';
+
+# Popup/Popover menu
+
+`** Replace "className" with "class" while using with html`
+
+#### Open a Popup menu
+
+Use `"data-tutor-popup-target=MENU_ID"` to open a menu.<br/>
+
+## Popup/Popover menu
+
+<Playground>
+	<div style={{display:'flex', gap: '10px'}}>
+		<div className="tutor-popup-opener">
+			<button type="button" className="popup-btn" data-tutor-popup-target="popup-menu-1">
+				<span className="toggle-icon"></span>
+			</button>
+			<ul id="popup-menu-1" className="popup-menu">
+				<li>
+					<a href="#">
+						<span className="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+						<span className="text-regular-body color-text-white">Download</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<span className="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+						<span className="text-regular-body color-text-white">Delete</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div className="tutor-popup-opener">
+			<button type="button" className="popup-btn" data-tutor-popup-target="popup-menu-2">
+				<span className="toggle-icon"></span>
+			</button>
+			<ul id="popup-menu-2" className="popup-menu">
+				<li>
+					<a href="#">
+						<span className="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+						<span className="text-regular-body color-text-white">Download</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<span className="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+						<span className="text-regular-body color-text-white">Delete</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</Playground>

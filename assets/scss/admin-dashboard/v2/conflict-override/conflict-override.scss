@@ -1,0 +1,14 @@
+.tutor-option-tab-pages {
+	.tutor-option-field-label {
+		float: unset;
+		width: unset;
+	}
+	.tutor-option-field-input {
+		input[type='radio']:checked:before,
+		input[type='checkbox']:checked:before {
+			display: none;
+		}
+	}
+}
+
+

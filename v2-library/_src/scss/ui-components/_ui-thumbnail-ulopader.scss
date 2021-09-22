@@ -1,0 +1,114 @@
+.tutor-thumbnail-uploader {
+	.thumbnail-wrapper {
+		/* design/white */
+		background: $bg-white;
+		/* stroke/gray40 */
+		border: 1px solid $stroke-gray;
+		box-sizing: border-box;
+		border-radius: 6px;
+	}
+
+	.thumbnail-preview {
+		--width: 235px;
+		background: #eff1f7;
+		border: 2px solid #eff1f7;
+		border-radius: 3px;
+		position: relative;
+		margin-right: 28px;
+		width: 268px;
+		height: 98px;
+		width: var(--width);
+		height: calc(var(--width) / 1.775);
+		@include valueWithPrefix(display, flex);
+		@include propertyWithPrefix(align-items, center);
+		@include propertyWithPrefix(justify-content, center);
+
+		img {
+			width: auto;
+			height: auto;
+			max-width: 100%;
+			max-height: 100%;
+			
+			&::before {
+				// content: '⚠️ \2000 Select an image';
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: #eff1f7;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				@include svg-image-uppoad;
+				background-repeat: no-repeat;
+				background-position: center;
+			}
+		}
+
+		span.delete-btn {
+			display: inline-block;
+			position: absolute;
+			width: 24px;
+			height: 24px;
+			border-radius: 50%;
+			@include svg-delete-icon;
+			background-color: $design-danger;
+			background-repeat: no-repeat;
+			background-position: 50%;
+			cursor: pointer;
+			top: -12px;
+			right: -12px;
+
+			&:hover {
+				background-color: darken($color: $design-danger, $amount: 6);
+			}
+		}
+
+		// .preview-loading {
+		// 	position: absolute;
+		// 	inset: 0;
+		// 	background: #f3f3f3;
+		// 	border-radius: 3px;
+
+		// 	@include spinner(#1a73aa, #e8e8e8);
+		// }
+
+		// .preview-loading {
+		// 	display: none;
+		// }
+		// .preview-loading.is-loading {
+		// 	display: block;
+		// }
+
+		// .delete-btn {
+		// 	visibility: hidden;
+		// }
+
+		// .is-selected {
+		// 	.delete-btn {
+		// 		visibility: visible;
+		// 	}
+		// 	img {
+		// 		&::before {
+		// 			visibility: hidden;
+		// 		}
+		// 	}
+		// }
+	} // end .thumbnail-preview
+
+	.thumbnail-input {
+		input[type='file'] {
+			@include appearNone;
+			display: none;
+		}
+
+		.tutor-btn {
+			cursor: pointer;
+			border-radius: 6px;
+			padding: 6px 14px;
+
+			> .tutor-btn-icon {
+				font-size: 24px;
+			}
+		}
+	}
+} // end .tutor-thumbnail-uploader
