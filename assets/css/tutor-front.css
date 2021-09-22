@@ -302,71 +302,6 @@
   --tutor-text-size: 16px;
 }
 
-.ui-slider {
-  position: relative;
-  text-align: left;
-}
-
-.ui-slider .ui-slider-handle {
-  position: absolute;
-  z-index: 2;
-  width: 15px;
-  height: 15px;
-  cursor: default;
-  top: -6.5px;
-  cursor: pointer;
-}
-
-.ui-slider .ui-slider-range {
-  position: absolute;
-  z-index: 1;
-  font-size: 0.7em;
-  display: block;
-  border: 0;
-  background-position: 0 0;
-}
-
-.ui-slider-horizontal {
-  height: 0.8em;
-}
-
-.ui-slider-horizontal .ui-slider-range {
-  top: 0;
-  height: 100%;
-}
-
-.ui-slider-horizontal .ui-slider-range-min {
-  left: 0;
-}
-
-.ui-slider-horizontal .ui-slider-range-max {
-  right: 0;
-}
-
-.ui-slider-vertical {
-  width: 0.8em;
-  height: 100px;
-}
-
-.ui-slider-vertical .ui-slider-handle {
-  left: -0.3em;
-  margin-left: 0;
-  margin-bottom: -0.6em;
-}
-
-.ui-slider-vertical .ui-slider-range {
-  left: 0;
-  width: 100%;
-}
-
-.ui-slider-vertical .ui-slider-range-min {
-  bottom: 0;
-}
-
-.ui-slider-vertical .ui-slider-range-max {
-  top: 0;
-}
-
 /* Only reusable function, or code allowed here. No direct css please. */
 .tutor-toast-parent {
   position: fixed;
@@ -845,6 +780,132 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 
 .tutor-dot-loader.loader-success > span {
   background-color: var(--tutor-success-button-color);
+}
+
+.ui-slider {
+  position: relative;
+  text-align: left;
+}
+
+.ui-slider .ui-slider-handle {
+  position: absolute;
+  z-index: 2;
+  width: 15px;
+  height: 15px;
+  cursor: default;
+  top: -6px;
+  cursor: pointer;
+}
+
+.ui-slider .ui-slider-range {
+  position: absolute;
+  z-index: 1;
+  font-size: 0.7em;
+  display: block;
+  border: 0;
+  background-position: 0 0;
+}
+
+.ui-slider-horizontal {
+  height: 0.8em;
+}
+
+.ui-slider-horizontal .ui-slider-range {
+  top: 0;
+  height: 100%;
+}
+
+.ui-slider-horizontal .ui-slider-range-min {
+  left: 0;
+}
+
+.ui-slider-horizontal .ui-slider-range-max {
+  right: 0;
+}
+
+.ui-slider-vertical {
+  width: 0.8em;
+  height: 100px;
+}
+
+.ui-slider-vertical .ui-slider-handle {
+  left: -0.3em;
+  margin-left: 0;
+  margin-bottom: -0.6em;
+}
+
+.ui-slider-vertical .ui-slider-range {
+  left: 0;
+  width: 100%;
+}
+
+.ui-slider-vertical .ui-slider-range-min {
+  bottom: 0;
+}
+
+.ui-slider-vertical .ui-slider-range-max {
+  top: 0;
+}
+
+.tutor-field-type-slider {
+  background-color: #fff;
+  border: 1px solid #C0C3CB;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  color: #333;
+  padding: 20px 70px 24px 15px;
+  margin: 0 10px 0 0;
+  height: 46px;
+  width: 100%;
+  display: block;
+  position: relative;
+  border-radius: 6px;
+}
+
+.tutor-field-type-slider .ui-widget-header {
+  background: #dedede;
+  border-radius: 4px;
+}
+
+.tutor-field-type-slider .ui-widget-content {
+  background-color: var(--tutor-primary-color);
+  border: none;
+  height: 4px;
+  border-radius: 4px;
+}
+
+.tutor-field-type-slider .ui-widget-content .ui-state-default {
+  background-color: white;
+  border: 4px solid var(--tutor-primary-color);
+  border-radius: 50%;
+}
+
+.tutor-field-type-slider .tutor-field-type-slider-value {
+  font-size: 16px;
+  font-weight: 600;
+  background: var(--tutor-primary-color);
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  margin: 0;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  line-height: 34px;
+  width: 43px;
+  text-align: center;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.tutor-field-type-slider .tutor-field-type-slider-value:before {
+  content: "";
+  position: absolute;
+  border: 7px solid transparent;
+  top: 50%;
+  border-right-color: var(--tutor-primary-color);
+  right: 100%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 /**
@@ -5721,61 +5782,6 @@ i.tutor-icon-block.tutor-icon-plus {
   font-size: 20px;
   color: rgba(57, 60, 64, 0.4);
   line-height: 44px;
-}
-
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider {
-  border: 1px solid #dedede;
-  padding: 20px 70px 20px 10px;
-  background-color: #ffffff;
-  position: relative;
-  border-radius: 4px;
-}
-
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-content {
-  background: var(--tutor-primary-color);
-  border: none;
-  height: 4px;
-  border-radius: 4px;
-}
-
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-header {
-  background: #dedede;
-  border-radius: 4px;
-}
-
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-content .ui-state-default {
-  background: var(--tutor-primary-color);
-  border: 1px solid var(--tutor-primary-color);
-  border-radius: 50%;
-  margin-top: -2px;
-}
-
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider .tutor-field-type-slider-value {
-  font-size: 16px;
-  font-weight: 600;
-  background: var(--tutor-primary-color);
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  margin: 0;
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
-  line-height: 34px;
-  width: 43px;
-  text-align: center;
-  border-radius: 4px;
-  color: #fff;
-}
-
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider .tutor-field-type-slider-value:before {
-  content: "";
-  position: absolute;
-  border: 7px solid transparent;
-  top: 50%;
-  border-right-color: var(--tutor-primary-color);
-  right: 100%;
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
 }
 
 .tutor-quiz-answer-wrap {

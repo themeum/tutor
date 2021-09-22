@@ -1015,6 +1015,18 @@ body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap .que
   border-color: var(--tutor-primary-color);
 }
 
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap #quiz-builder-tab-settings .tutor-input-group {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-flow: column;
+  -o-flex-flow: column;
+  -ms-flex-flow: column;
+}
+
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap #quiz-builder-tab-settings .tutor-input-group input:not([name=assignment_title]) {
+  max-width: 135px;
+}
+
 body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap #tutor-answer-builder {
   background: #E3E5EB;
   margin: 0px -30px;
