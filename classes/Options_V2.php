@@ -1554,9 +1554,7 @@ class Options_V2 {
 
 		if ( tutils()->count( $addons ) ) {
 
-			echo '<pre>';
-			print_r( $addons );
-			echo '</pre>';
+			pr($addons);
 			die;
 		}
 
