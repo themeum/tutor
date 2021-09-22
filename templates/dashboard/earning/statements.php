@@ -45,7 +45,7 @@ $complete_status = "'".implode("','", $complete_status)."'";
 $statements = false;
 
 //Pagination Variable
-$per_page = tutor_utils()->get_option('statement_show_per_page', 20);
+$per_page = 1;//tutor_utils()->get_option('statement_show_per_page', 20);
 $current_page = max( 1, tutor_utils()->avalue_dot('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
 

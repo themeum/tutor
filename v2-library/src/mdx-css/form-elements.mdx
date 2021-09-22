@@ -1,0 +1,183 @@
+---
+name: Forms elements
+route: /mdx-css/form-elements
+menu: CSS Components
+---
+
+import { Playground } from 'docz';
+import "../../bundle/main.min.css";
+import "../../bundle/fonts/lineawesome@1.3.0/css/line-awesome.css";
+import "../docz-essential.css";
+
+
+# Forms
+
+## Select
+
+<Playground>
+    <select class="tutor-form-select">
+        <option selected="">Choose an option</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+</Playground>
+
+### *Select Arrow Colors*
+
+<Playground>
+    <select class="tutor-form-select tutor-select-icon-primary tutor-mb-15">
+        <option selected="">Choose an option</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+    <select class="tutor-form-select tutor-select-icon-success tutor-mb-15">
+        <option selected="">Choose an option</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+    <select class="tutor-form-select tutor-select-icon-warning tutor-mb-15">
+        <option selected="">Choose an option</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+    <select class="tutor-form-select tutor-select-icon-danger">
+        <option selected="">Choose an option</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+</Playground>
+
+### *Select Size*
+<Playground>
+    <select class="tutor-form-select tutor-form-control-lg tutor-mb-15">
+        <option selected="">Choose an option</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+    <select class="tutor-form-select tutor-mb-15">
+        <option selected="">Choose an option</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+    <select class="tutor-form-select tutor-form-control-sm tutor-mb-15">
+        <option selected="">Choose an option</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+</Playground>
+
+## Checkbox
+
+<Playground>
+    <div className="tutor-mb-15">
+        <input type="checkbox" class="tutor-form-check-input" />
+    </div>
+    <div className="tutor-mb-15">
+        <input type="checkbox" class="tutor-form-check-input tutor-form-check-square" />
+    </div>
+    <div>
+        <input type="checkbox" class="tutor-form-check-input tutor-form-check-circle" />
+    </div>
+
+</Playground>
+
+### *With label*
+<Playground>
+    <div class="tutor-form-check tutor-mb-15">
+        <input id="item_a" type="checkbox" class="tutor-form-check-input tutor-form-check-square" name="checkx" />
+        <label for="item_a">Select Option</label>
+    </div>
+    <div class="tutor-form-check tutor-mb-15">
+        <input id="item_b" type="checkbox" class="tutor-form-check-input" name="checkx" />
+        <label for="item_b">Select Option</label>
+    </div>
+    <div class="tutor-form-check">
+        <input id="item_c" type="checkbox" class="tutor-form-check-input tutor-form-check-circle" name="checkx" />
+        <label for="item_c">Select Option</label>
+    </div>
+</Playground>
+
+## Radio
+
+<Playground>
+    <div className="tutor-mb-5">
+        <input type="radio" class="tutor-form-check-input" name="radio_a" />
+    </div>
+    <div className="tutor-mb-5">
+        <input type="radio" class="tutor-form-check-input" name="radio_a" />
+    </div>
+    <div>
+        <input type="radio" class="tutor-form-check-input" name="radio_a" />
+    </div>
+</Playground>
+
+### *With label*
+
+<Playground>
+    <div class="tutor-form-check tutor-mb-15">
+        <input type="radio" id="radio_x" class="tutor-form-check-input" name="radio_b" />
+        <label for="radio_x">Option A</label>
+    </div>
+    <div class="tutor-form-check tutor-mb-15">
+        <input type="radio" id="radio_y" class="tutor-form-check-input" name="radio_b" />
+        <label for="radio_y">Option B</label>
+    </div>
+    <div class="tutor-form-check">
+        <input type="radio" id="radio_z" class="tutor-form-check-input" name="radio_b" />
+        <label for="radio_z">Option C</label>
+    </div>
+</Playground>
+
+### *With Content*
+
+<Playground>
+    <label className="tutor-radio-select tutor-mb-10" form="radio_aa">
+        <input className="tutor-form-check-input" type="radio" name="radio_aa" id="radio_aa"/>
+        <div className="tutor-radio-select-content">
+            <span className="tutor-radio-select-title">Retry Mode</span>
+            Unlimited attempts on each question. <a href="#">Live Demo</a>
+        </div>
+    </label>
+    <label className="tutor-radio-select tutor-mb-10" form="radio_aa">
+        <input className="tutor-form-check-input" type="radio" name="radio_aa" id="radio_aa"/>
+        <div className="tutor-radio-select-content">
+            <span className="tutor-radio-select-title">Retry Mode</span>
+            Unlimited attempts on each question. <a href="#">Live Demo</a>
+        </div>
+    </label>
+    <label className="tutor-radio-select" form="radio_aa">
+        <input className="tutor-form-check-input" type="radio" name="radio_aa" id="radio_aa"/>
+        <div className="tutor-radio-select-content">
+            <span className="tutor-radio-select-title">Retry Mode</span>
+            Unlimited attempts on each question. <a href="#">Live Demo</a>
+        </div>
+    </label>
+</Playground>
+
+## Toggle
+
+<Playground>
+    <label class="tutor-form-toggle">
+        <input type="checkbox" class="tutor-form-toggle-input" />
+        <span class="tutor-form-toggle-control"></span>
+    </label>
+</Playground>
+
+### *With label*
+use *`".tutor-form-toggle-checked"`* & *`".tutor-form-toggle-unchecked"`* classes to fade label color based on switch condition.
+<Playground>
+    <label class="tutor-form-toggle">
+        <input type="checkbox" class="tutor-form-toggle-input" />
+        <span class="tutor-form-toggle-label tutor-form-toggle-checked">On</span>
+        <span class="tutor-form-toggle-control"></span>
+        <span class="tutor-form-toggle-label tutor-form-toggle-unchecked">Off</span>
+    </label>
+</Playground>

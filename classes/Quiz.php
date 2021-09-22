@@ -40,8 +40,6 @@ class Quiz {
 	public function __construct() {
 		
 		add_action('save_post_tutor_quiz', array($this, 'save_quiz_meta'));
-
-		add_action('wp_ajax_tutor_load_quiz_builder_modal', array($this, 'tutor_load_quiz_builder_modal'));
 		add_action('wp_ajax_remove_quiz_from_post', array($this, 'remove_quiz_from_post'));
 
 		add_action('wp_ajax_tutor_quiz_timeout', array($this, 'tutor_quiz_timeout'));
@@ -59,10 +57,9 @@ class Quiz {
 		 * New Design Quiz
 		 */
 
-		add_action('wp_ajax_tutor_create_quiz_and_load_modal', array($this, 'tutor_create_quiz_and_load_modal'));
+		add_action('wp_ajax_tutor_quiz_save', array($this, 'tutor_quiz_save'));
 		add_action('wp_ajax_tutor_delete_quiz_by_id', array($this, 'tutor_delete_quiz_by_id'));
-		add_action('wp_ajax_tutor_quiz_builder_quiz_update', array($this, 'tutor_quiz_builder_quiz_update'));
-		add_action('wp_ajax_tutor_load_edit_quiz_modal', array($this, 'tutor_load_edit_quiz_modal'));
+		add_action('wp_ajax_tutor_load_quiz_builder_modal', array($this, 'tutor_load_quiz_builder_modal'), 10, 0);
 		add_action('wp_ajax_tutor_quiz_builder_get_question_form', array($this, 'tutor_quiz_builder_get_question_form'));
 		add_action('wp_ajax_tutor_quiz_modal_update_question', array($this, 'tutor_quiz_modal_update_question'));
 		add_action('wp_ajax_tutor_quiz_builder_question_delete', array($this, 'tutor_quiz_builder_question_delete'));
@@ -75,7 +72,6 @@ class Quiz {
 		add_action('wp_ajax_tutor_quiz_question_sorting', array($this, 'tutor_quiz_question_sorting'));
 		add_action('wp_ajax_tutor_quiz_answer_sorting', array($this, 'tutor_quiz_answer_sorting'));
 		add_action('wp_ajax_tutor_mark_answer_as_correct', array($this, 'tutor_mark_answer_as_correct'));
-		add_action('wp_ajax_tutor_quiz_modal_update_settings', array($this, 'tutor_quiz_modal_update_settings'));
 
 		/**
          * Frontend Stuff
@@ -123,20 +119,7 @@ class Quiz {
 			update_post_meta($post_ID, 'tutor_quiz_option', $quiz_option);
 		}
 	}
-
-	/**
-	 * Tutor Quiz Builder Modal
-	 */
-	public function tutor_load_quiz_builder_modal(){
-		tutils()->checking_nonce();
-
-		ob_start();
-		include  tutor()->path.'views/modal/add_quiz.php';
-		$output = ob_get_clean();
-
-		wp_send_json_success(array('output' => $output));
-	}
-
+	
 	public function remove_quiz_from_post(){
 		tutils()->checking_nonce();
 
@@ -624,21 +607,30 @@ class Quiz {
 
 
 	/**
-	 * New Design Quiz
+	 * Save quiz into database and send html response
 	 */
-	public function tutor_create_quiz_and_load_modal(){
+	public function tutor_quiz_save(){
+
 		tutils()->checking_nonce();
 
+		// Prepare args
 		$topic_id           = sanitize_text_field($_POST['topic_id']);
+		$ex_quiz_id         = isset($_POST['quiz_id']) ? sanitize_text_field($_POST['quiz_id']) : 0;
 		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
 		$quiz_description   = wp_kses( $_POST['quiz_description'], $this->allowed_html );
 		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id);
 
+		// Check edit privilege
 		if(!tutils()->can_user_manage('topic', $topic_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor'), 'data'=>$_POST) );
+			wp_send_json_error( array(
+				'message'=>__('Access Denied', 'tutor'), 
+				'data'=>$_POST
+			));
 		}
 
+		// Prepare quiz data to save in database
 		$post_arr = array(
+			'ID'			=> $ex_quiz_id,
 			'post_type'     => 'tutor_quiz',
 			'post_title'    => $quiz_title,
 			'post_content'  => $quiz_description,
@@ -647,28 +639,35 @@ class Quiz {
 			'post_parent'   => $topic_id,
 			'menu_order'    => $next_order_id,
 		);
+
+		// Insert quiz and run hook
 		$quiz_id = wp_insert_post( $post_arr );
-		do_action('tutor_initial_quiz_created', $quiz_id);
+		do_action(($ex_quiz_id ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created'), $quiz_id);
 
-		ob_start();
-		include  tutor()->path.'views/modal/edit_quiz.php';
-		$output = ob_get_clean();
+		// Now save quiz settings
+		$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] );
+		update_post_meta($quiz_id, 'tutor_quiz_option', $quiz_option);
+		do_action('tutor_quiz_settings_updated', $quiz_id);
 
+		// Generate quiz modal to show in modal
+		$output = $this->tutor_load_quiz_builder_modal(array(
+			'topic_id'=> $topic_id, 
+			'quiz_id'=>$quiz_id
+		), true);
+		
+		// Generate quiz list to show under topic as sub list
 		ob_start();
-		?>
-        <div id="tutor-quiz-<?php echo $quiz_id; ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $quiz_id; ?>">
-            <div class="tutor-lesson-top">
-                <i class="tutor-icon-move"></i>
-                <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
-				?>"> <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo stripslashes($quiz_title); ?> </a>
-				<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
-                <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
-            </div>
-        </div>
-		<?php
+		tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/quiz-list-single.php', array(
+			'quiz_id' => $quiz_id,
+			'topic_id' => $topic_id,
+			'quiz_title' => $quiz_title,
+		), false);
 		$output_quiz_row = ob_get_clean();
 
-		wp_send_json_success(array('output' => $output, 'output_quiz_row' => $output_quiz_row));
+		wp_send_json_success(array(
+			'output' => $output, 
+			'output_quiz_row' => $output_quiz_row
+		));
 	}
 
 	public function tutor_delete_quiz_by_id(){
@@ -712,57 +711,17 @@ class Quiz {
     }
 
 	/**
-	 * Update Quiz from quiz builder modal
+	 * Load quiz Modal on add/edit click
 	 *
 	 * @since v.1.0.0
 	 */
-	public function tutor_quiz_builder_quiz_update(){
+	public function tutor_load_quiz_builder_modal($params=array(), $ret=false){
 		tutils()->checking_nonce();
 
-		$quiz_id         	= sanitize_text_field($_POST['quiz_id']);
-		$topic_id         	= sanitize_text_field($_POST['topic_id']);
-		$quiz_title         = sanitize_text_field($_POST['quiz_title']);
-		$quiz_description   = wp_kses( $_POST['quiz_description'], $this->allowed_html );
-
-		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
-
-		$post_arr = array(
-			'ID'    => $quiz_id,
-			'post_title'    => $quiz_title,
-			'post_content'  => $quiz_description,
-
-		);
-		$quiz_id = wp_update_post( $post_arr );
-
-		do_action('tutor_quiz_updated', $quiz_id);
-
-		ob_start();
-		?>
-        <div class="tutor-lesson-top">
-            <i class="tutor-icon-move"></i>
-            <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id;
-			?>"> <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo stripslashes($quiz_title); ?> </a>
-			<?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz_id); ?>
-            <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
-        </div>
-		<?php
-		$output_quiz_row = ob_get_clean();
-
-		wp_send_json_success(array('output_quiz_row' => $output_quiz_row));
-	}
-
-	/**
-	 * Load quiz Modal for edit quiz
-	 *
-	 * @since v.1.0.0
-	 */
-	public function tutor_load_edit_quiz_modal(){
-		tutils()->checking_nonce();
-
-		$quiz_id 	= sanitize_text_field ($_POST['quiz_id'] );
-		$topic_id 	= sanitize_text_field( $_POST['topic_id'] ); 
+		$data 		= array_merge($_POST, $params);
+		$quiz_id 	= isset($data['quiz_id']) ? sanitize_text_field ($data['quiz_id']) : 0;
+		$topic_id 	= sanitize_text_field( $data['topic_id'] ); 
+		$quiz 		= $quiz_id ? get_post($quiz_id) : null;
 		
 		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
@@ -771,6 +730,10 @@ class Quiz {
 		ob_start();
 		include  tutor()->path.'views/modal/edit_quiz.php';
 		$output = ob_get_clean();
+
+		if($ret) {
+			return $output;
+		}
 
 		wp_send_json_success(array('output' => $output));
 	}
@@ -785,6 +748,7 @@ class Quiz {
 
 		global $wpdb;
 		$quiz_id = sanitize_text_field($_POST['quiz_id']);
+		$topic_id = sanitize_text_field( $_POST['topic_id'] );
 		$question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
 
 		if(!tutils()->can_user_manage('quiz', $quiz_id)) {
@@ -809,7 +773,9 @@ class Quiz {
 			$question_id = $wpdb->insert_id;
 		}
 
-		$question = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_questions where question_id = %d ", $question_id));
+		$question = $wpdb->get_row($wpdb->prepare(
+			"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions 
+			WHERE question_id = %d ", $question_id));
 
 		ob_start();
 		include  tutor()->path.'views/modal/question_form.php';
@@ -1234,36 +1200,6 @@ class Quiz {
 	    }
 	    $wpdb->update($wpdb->prefix.'tutor_quiz_question_answers', array('is_correct' => esc_sql( $inputValue ) ), array('answer_id' => esc_sql( $answer_id ) ));
     }
-
-	/**
-	 * Update quiz settings from modal
-	 *
-	 * @since : v.1.0.0
-	 */
-	public function tutor_quiz_modal_update_settings(){
-		tutils()->checking_nonce();
-		//while creating quiz if creating step is not follow then it may throw error that why check added
-		$quiz_id = ( isset( $_POST['quiz_id'] ) ) ? sanitize_text_field( $_POST['quiz_id'] ) : '' ;
-		$current_topic_id = sanitize_text_field( $_POST['topic_id'] );
-		$course_id = tutor_utils()->get_course_id_by('topic', sanitize_textarea_field( $current_topic_id ) );
-
-		$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] );
-				
-		if( !tutils()->can_user_manage('quiz', $quiz_id) ) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
-
-		update_post_meta($quiz_id, 'tutor_quiz_option', $quiz_option);
-		do_action('tutor_quiz_settings_updated', $quiz_id);
-
-		//@since 1.9.6
-		ob_start();
-		include  tutor()->path.'views/metabox/course-contents.php';
-		$course_contents = ob_get_clean();
-
-		wp_send_json_success( array( 'course_contents' => $course_contents ) );
-	}
-
 
 	//=========================//
     // Front end stuffs

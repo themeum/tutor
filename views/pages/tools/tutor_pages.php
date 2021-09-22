@@ -39,7 +39,7 @@ $tutor_pages = tutils()->tutor_pages();
 					echo "</p>";
 					?>
                 </td>
-                
+
                 <td>
                     <?php
                     if ( ! $page_id ){

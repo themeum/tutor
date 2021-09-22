@@ -114,6 +114,7 @@ class Shortcode {
 			'orderby'       => 'ID',
 			'order'         => 'DESC',
 			'count'     	=> 6,
+			'paged'			=> get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1,
 		), $atts);
 
 		if (!empty($a['id'])) {
@@ -140,18 +141,21 @@ class Shortcode {
 		$a['posts_per_page'] = (int) $a['count'];
 
 		wp_reset_query();
-		query_posts($a);
+		$the_query = new \WP_Query( $a );
 		ob_start();
+
+		$GLOBALS['the_custom_query'] = $the_query;
 
 		$GLOBALS['tutor_shortcode_arg'] = array(
 			'include_course_filter' => isset($atts['course_filter']) ? $atts['course_filter'] === 'on' : null,
 			'column_per_row' => isset($atts['column_per_row']) ? $atts['column_per_row'] : null,
-			'course_per_page' => $a['posts_per_page']
+			'course_per_page' => $a['posts_per_page'],
+			'show_pagination' => isset( $atts['show_pagination'] ) ? $atts['show_pagination'] : 'off',
 		);
 
 		tutor_load_template('shortcode.tutor-course');
 		$output = ob_get_clean();
-		wp_reset_query();
+		wp_reset_postdata();
 
 		return $output;
 	}

@@ -10,6 +10,6 @@ $field_id = 'field_' . $field['key'];
 	<?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 
 	<div class="tutor-option-field-input">
-		<input type="text" name="tutor_option[<?php echo $field['key']; ?>]" class="tutor-form-control" placeholder='Please write your "<?php echo $field['label']; ?>"' value="<?php echo $value ?? null ?>" />
+		<input type="text" name="tutor_option[<?php echo $field['key']; ?>]" class="tutor-form-control" placeholder='Please write your "<?php echo $field['label']; ?>"' value="<?php echo isset($value) ? $value : ''; ?>" />
 	</div>
 </div>

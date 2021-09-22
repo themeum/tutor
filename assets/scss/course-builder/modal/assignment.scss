@@ -1,0 +1,9 @@
+.tutor-input-group{
+    @include propertyWithPrefix(flex-flow, column);
+    
+    input{
+        &:not([name=assignment_title]) {
+            max-width: 135px;
+        }
+    }
+}
