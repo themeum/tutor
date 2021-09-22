@@ -262,11 +262,16 @@ document.addEventListener("readystatechange", (event) => {
     export_settings_all();
   }
   if (event.target.readyState === "complete") {
+    delete_history_data();
     import_history_data();
     export_single_settings();
-    delete_history_data();
     reset_default_options();
     apply_single_settings();
+
+    // load_saved_data();
+    // setInterval(function () {
+    //   console.log("working");
+    // }, 10000);
   }
 });
 
@@ -355,6 +360,20 @@ emailManagePageInputs.forEach((input) => {
     }
   });
 });
+
+const load_saved_data = () => {
+  var formData = new FormData();
+  formData.append("action", "load_saved_data");
+  formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("POST", _tutorobject.ajaxurl, true);
+  xhttp.send(formData);
+  xhttp.onreadystatechange = function () {
+    if (xhttp.readyState === 4) {
+      tutor_option_history_load(xhttp.response);
+    }
+  };
+};
 
 function tutor_option_history_load(history_data) {
   var dataset = JSON.parse(history_data).data;
@@ -454,7 +473,6 @@ const import_history_data = () => {
         formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
         formData.append("time", time_now());
         formData.append("tutor_options", tutor_options);
-
         const xhttp = new XMLHttpRequest();
         xhttp.open("POST", _tutorobject.ajaxurl);
         xhttp.send(formData);
