@@ -1,17 +1,4 @@
-<?php
-    $classname = '';
-    if(version_compare(get_bloginfo('version'),'5.5', '>=')) {
-        $classname = 'has-postbox-header';
-        echo '<style> #tutor-course-topics .toggle-indicator:before { margin-top: 0; } </style>';
-    }
-?>
-
 <div id="tutor-course-content-builder-root">
-    <div class="tutor-course-builder-header <?php echo $classname; ?>">
-        <a href="javascript:;" class="tutor-expand-all-topic"><?php _e('Expand all', 'tutor'); ?></a> |
-        <a href="javascript:;" class="tutor-collapse-all-topic"><?php _e('Collapse all', 'tutor'); ?></a>
-    </div>
-
     <?php $course_id = get_the_ID(); ?>
     <div id="tutor-course-content-wrap">
         <?php
@@ -31,7 +18,7 @@
             'wrapper_id'    => 'tutor-modal-add-topic',
             'topic_id'      => null,
             'course_id'     => $course_id,
-            'wrapper_class' => 'tutor-metabox-add-topics',
+            'wrapper_class' => '',
             'button_text'   => __('Add Topic', 'tutor'),
             'button_id'     => 'tutor-add-topic-btn'
         ), false); 

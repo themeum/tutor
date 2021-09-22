@@ -1,11 +1,13 @@
 (function popupMenuToggle() {
 	/**
-	 * Popup Menu Toggle tutor-popup-opener
+	 * Popup Menu Toggle .tutor-popup-opener
 	 */
+
+	/*
 	const popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
 	const popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
 
-	/* if (popupToggleBtns && popupMenus) {
+	 if (popupToggleBtns && popupMenus) {
 		popupToggleBtns.forEach((btn) => {
 			btn.addEventListener('click', (e) => {
 				const popupClosest = e.target.closest('.tutor-popup-opener').querySelector('.popup-menu');
@@ -39,19 +41,18 @@
 				? e.target.getAttribute(attr)
 				: e.target.closest(`[${attr}]`).getAttribute(attr);
 
-			const popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
-			popupMenus.forEach((popupMenu) => {
-				popupMenu.classList.remove('visible');
-			});
-
 			const popupMenu = document.getElementById(id);
 
-			if (popupMenu) {
-				popupMenu.classList.toggle('visible');
+			if (popupMenu.classList.contains('visible')) {
+				popupMenu.classList.remove('visible');
+			} else {
+				document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach((popupMenu) => {
+					popupMenu.classList.remove('visible');
+				});
+				popupMenu.classList.add('visible');
 			}
 		} else {
-			const popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
-			popupMenus.forEach((popupMenu) => {
+			document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach((popupMenu) => {
 				popupMenu.classList.remove('visible');
 			});
 		}

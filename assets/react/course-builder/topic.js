@@ -1,9 +1,11 @@
 window.jQuery(document).ready(function($){
 
+    const {__} = wp.i18n;
+
     $(document).on('click', '#tutor-add-topic-btn', function (e) {
         e.preventDefault();
         var $that = $(this);
-        var container = $that.closest('.tutor-metabox-add-topics');
+        var container = $that.closest('.tutor-modal');
         var form_data = container.find('input, textarea').serializeObject();
         form_data.action = 'tutor_add_course_topic';
 
@@ -33,30 +35,43 @@ window.jQuery(document).ready(function($){
     /**
      * Confirmation for deleting Topic
      */
-     $(document).on('click', '.topic-delete-btn a', function(e){
-        var topic_id = $(this).attr('data-topic-id');
+     $(document).on('click', '.tutor-topics-wrap .tutor-icon-garbage', function(e){
+        var container = $(this).closest('.tutor-topics-wrap');
+        var topic_id = container.attr('data-topic-id');
 
         if ( ! confirm( __( 'Are you sure to delete?', 'tutor' ) )){
-            e.preventDefault();
+            return;
         }
-    });
 
-    $(document).on('click', '.tutor-expand-all-topic', function (e) {
-        e.preventDefault();
-        $('.tutor-topics-body').slideDown();
-        $('.expand-collapse-wrap i').removeClass('tutor-icon-light-down').addClass('tutor-icon-light-up');
-    });
+        container.fadeOut('fast');
 
-    $(document).on('click', '.tutor-collapse-all-topic', function (e) {
-        e.preventDefault();
-        $('.tutor-topics-body').slideUp();
-        $('.expand-collapse-wrap i').removeClass('tutor-icon-light-up').addClass('tutor-icon-light-down');
+        $.ajax({
+            url: window._tutorobject.ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'tutor_delete_topic',
+                topic_id
+            },
+            success: function(data) {
+                // To Do: Load updated topic list here
+                if(data.success) {
+                    container.remove();
+                } else {
+                    container.fadeIn('fast');
+                    alert((data.data || {}).msg || __('Something Went Wrong', 'tutor'));
+                }
+            }, 
+            error: function() {
+                container.fadeIn('fast');
+            }
+        })
     });
 
     $(document).on('click', '.topic-inner-title, .expand-collapse-wrap', function (e) {
         e.preventDefault();
-        var $that = $(this);
-        $that.closest('.tutor-topics-wrap').find('.tutor-topics-body').slideToggle();
-        $that.closest('.tutor-topics-wrap').find('.expand-collapse-wrap i').toggleClass('tutor-icon-light-down tutor-icon-light-up');
+        
+        var wrapper = $(this).closest('.tutor-topics-wrap');
+        wrapper.find('.tutor-topics-body').slideToggle();
+        wrapper.find('.expand-collapse-wrap').toggleClass('is-expanded').find('i').toggleClass('tutor-icon-light-down tutor-icon-light-up');
     });
 });

@@ -704,7 +704,64 @@ document.addEventListener('DOMContentLoaded', function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tutor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tutor */ "./assets/react/lib/tutor.js");
+/* harmony import */ var _media_chooser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./media-chooser */ "./assets/react/lib/media-chooser.js");
+/* harmony import */ var _media_chooser__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_media_chooser__WEBPACK_IMPORTED_MODULE_1__);
 
+
+
+/***/ }),
+
+/***/ "./assets/react/lib/media-chooser.js":
+/*!*******************************************!*\
+  !*** ./assets/react/lib/media-chooser.js ***!
+  \*******************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = window.wp.i18n.__;
+  /**
+   * Lesson upload thumbnail
+   */
+
+  $(document).on('click', '.tutor-thumbnail-uploader .tutor-thumbnail-upload-button', function (event) {
+    event.preventDefault();
+    var wrapper = $(this).closest('.tutor-thumbnail-uploader');
+    var frame;
+
+    if (frame) {
+      frame.open();
+      return;
+    }
+
+    frame = wp.media({
+      title: wrapper.data('media-heading'),
+      button: {
+        text: wrapper.data('button-text')
+      },
+      multiple: false
+    });
+    frame.on('select', function () {
+      var attachment = frame.state().get('selection').first().toJSON();
+      wrapper.find('img').attr('src', attachment.url);
+      wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val(attachment.id);
+      wrapper.find('.delete-btn').show();
+    });
+    frame.open();
+  });
+  /**
+   * Lesson Feature Image Delete
+   * @since v.1.5.6
+   */
+
+  $(document).on('click', '.tutor-thumbnail-uploader .delete-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var wrapper = $that.closest('.tutor-thumbnail-uploader');
+    wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val('');
+    wrapper.find('img').attr('src', '');
+    $that.hide();
+  });
+});
 
 /***/ }),
 
@@ -717,8 +774,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _v2_library_src_js_main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../v2-library/_src/js/main */ "./v2-library/_src/js/main.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1596,126 +1651,6 @@ jQuery(document).ready(function ($) {
   }); //announcement end
 
   /**
-   * @since v.1.9.0
-   * Parse and show video duration on link paste in lesson video 
-   */
-
-  var video_url_input = '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5';
-  var autofill_url_timeout;
-  $('body').on('paste', video_url_input, function (e) {
-    e.stopImmediatePropagation();
-    var root = $(this).closest('.lesson-modal-form-wrap').find('.tutor-option-field-video-duration');
-    var duration_label = root.find('label');
-    var is_wp_media = $(this).hasClass('video_source_wrap_html5') || $(this).hasClass('video_source_upload_wrap_html5');
-    var autofill_url = $(this).data('autofill_url');
-    $(this).data('autofill_url', null);
-    var video_url = is_wp_media ? $(this).find('span').data('video_url') : autofill_url || e.originalEvent.clipboardData.getData('text');
-
-    var toggle_loading = function toggle_loading(show) {
-      if (!show) {
-        duration_label.find('img').remove();
-        return;
-      } // Show loading icon
-
-
-      if (duration_label.find('img').length == 0) {
-        duration_label.append(' <img src="' + window._tutorobject.loading_icon_url + '" style="display:inline-block"/>');
-      }
-    };
-
-    var set_duration = function set_duration(sec_num) {
-      var hours = Math.floor(sec_num / 3600);
-      var minutes = Math.floor((sec_num - hours * 3600) / 60);
-      var seconds = Math.round(sec_num - hours * 3600 - minutes * 60);
-
-      if (hours < 10) {
-        hours = "0" + hours;
-      }
-
-      if (minutes < 10) {
-        minutes = "0" + minutes;
-      }
-
-      if (seconds < 10) {
-        seconds = "0" + seconds;
-      }
-
-      var fragments = [hours, minutes, seconds];
-      var time_fields = root.find('input');
-
-      for (var i = 0; i < 3; i++) {
-        time_fields.eq(i).val(fragments[i]);
-      }
-    };
-
-    var yt_to_seconds = function yt_to_seconds(duration) {
-      var match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-      match = match.slice(1).map(function (x) {
-        if (x != null) {
-          return x.replace(/\D/, '');
-        }
-      });
-      var hours = parseInt(match[0]) || 0;
-      var minutes = parseInt(match[1]) || 0;
-      var seconds = parseInt(match[2]) || 0;
-      return hours * 3600 + minutes * 60 + seconds;
-    };
-
-    if (is_wp_media || $(this).parent().hasClass('video_source_wrap_external_url')) {
-      var player = document.createElement('video');
-      player.addEventListener('loadedmetadata', function () {
-        set_duration(player.duration);
-        toggle_loading(false);
-      });
-      toggle_loading(true);
-      player.src = video_url;
-    } else if ($(this).parent().hasClass('video_source_wrap_vimeo')) {
-      var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
-      var match = video_url.match(regExp);
-      var video_id = match ? match[5] : null;
-
-      if (video_id) {
-        toggle_loading(true);
-        $.getJSON('http://vimeo.com/api/v2/video/' + video_id + '/json', function (data) {
-          if (Array.isArray(data) && data[0] && data[0].duration !== undefined) {
-            set_duration(data[0].duration);
-          }
-
-          toggle_loading(false);
-        });
-      }
-    } else if ($(this).parent().hasClass('video_source_wrap_youtube')) {
-      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-      var match = video_url.match(regExp);
-      var video_id = match && match[7].length == 11 ? match[7] : false;
-      var api_key = $(this).data('youtube_api_key');
-
-      if (video_id && api_key) {
-        var result_url = 'https://www.googleapis.com/youtube/v3/videos?id=' + video_id + '&key=' + api_key + '&part=contentDetails';
-        toggle_loading(true);
-        $.getJSON(result_url, function (data) {
-          if (_typeof(data) == 'object' && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.duration) {
-            set_duration(yt_to_seconds(data.items[0].contentDetails.duration));
-          }
-
-          toggle_loading(false);
-        });
-      }
-    }
-  }).on('input', video_url_input, function () {
-    if (autofill_url_timeout) {
-      clearTimeout(autofill_url_timeout);
-    }
-
-    var $this = $(this);
-    autofill_url_timeout = setTimeout(function () {
-      var val = $this.val();
-      val = val ? val.trim() : '';
-      console.log('Trigger', val);
-      val ? $this.data('autofill_url', val).trigger('paste') : 0;
-    }, 700);
-  });
-  /**
    * @since v.1.8.6
    * SUbmit form through ajax
    */
@@ -1836,11 +1771,13 @@ __webpack_require__.r(__webpack_exports__);
 
 (function popupMenuToggle() {
   /**
-   * Popup Menu Toggle tutor-popup-opener
+   * Popup Menu Toggle .tutor-popup-opener
    */
-  var popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
-  var popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
-  /* if (popupToggleBtns && popupMenus) {
+
+  /*
+  const popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
+  const popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
+  	 if (popupToggleBtns && popupMenus) {
   	popupToggleBtns.forEach((btn) => {
   		btn.addEventListener('click', (e) => {
   			const popupClosest = e.target.closest('.tutor-popup-opener').querySelector('.popup-menu');
@@ -1862,29 +1799,24 @@ __webpack_require__.r(__webpack_exports__);
   		}
   	});
   } */
-
   document.addEventListener('click', function (e) {
     var attr = 'data-tutor-popup-target';
 
     if (e.target.hasAttribute(attr)) {
       e.preventDefault();
       var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
-
-      var _popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
-
-      _popupMenus.forEach(function (popupMenu) {
-        popupMenu.classList.remove('visible');
-      });
-
       var popupMenu = document.getElementById(id);
 
-      if (popupMenu) {
-        popupMenu.classList.toggle('visible');
+      if (popupMenu.classList.contains('visible')) {
+        popupMenu.classList.remove('visible');
+      } else {
+        document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach(function (popupMenu) {
+          popupMenu.classList.remove('visible');
+        });
+        popupMenu.classList.add('visible');
       }
     } else {
-      var _popupMenus2 = document.querySelectorAll('.tutor-popup-opener .popup-menu');
-
-      _popupMenus2.forEach(function (popupMenu) {
+      document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach(function (popupMenu) {
         popupMenu.classList.remove('visible');
       });
     }

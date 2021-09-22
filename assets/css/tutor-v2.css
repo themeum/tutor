@@ -7968,6 +7968,12 @@ body [data-testid] {
   z-index: -1;
 }
 
+.tutor-modal .tutor-modal-close {
+  font-size: 28px;
+  background: none;
+  border: none;
+}
+
 .tutor-modal:not(.modal-sticky-header-footer) .tutor-modal-close {
   position: fixed;
   right: 30px;
@@ -8003,6 +8009,14 @@ body [data-testid] {
   border-bottom: 1px solid #cdcfd5;
 }
 
+.tutor-modal.modal-sticky-header-footer .tutor-modal-close {
+  font-size: 28px;
+  background: none;
+  border: none;
+  padding: 0;
+  color: #3f3f3f;
+}
+
 .tutor-modal.modal-sticky-header-footer .tutor-modal-body-alt {
   min-height: 300px;
   max-height: calc(100vh - 15em);
@@ -8011,12 +8025,6 @@ body [data-testid] {
 
 .tutor-modal.modal-sticky-header-footer .tutor-modal-footer {
   border-top: 1px solid #cdcfd5;
-}
-
-.tutor-modal .tutor-modal-close {
-  font-size: 28px;
-  background: none;
-  border: none;
 }
 
 .tutor-modal .tutor-modal-root {
@@ -10169,6 +10177,10 @@ table.tutor-ui-table .td-progress .progress-bar .progress-value {
 
 table.tutor-ui-table .td-progress .progress-text {
   margin-left: 10px;
+}
+
+.tutor-thumbnail-uploader {
+  width: 100%;
 }
 
 .tutor-thumbnail-uploader .thumbnail-wrapper {

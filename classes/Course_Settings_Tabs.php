@@ -60,11 +60,9 @@ class Course_Settings_Tabs{
 
     public function display_frontend() {
         ?>
-        <div id="tutor-frontend-course-title" class="tutor-frontend-builder-item-scope">
-            <div class="tutor-form-group">
-                <label class="tutor-builder-item-heading">
-                    <?php _e('Course Settings', 'tutor'); ?>
-                </label>
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label"><?php _e('Course Settings', 'tutor'); ?></label>
+            <div class="tutor-input-group tutor-mb-15">
                 <?php $this->display(); ?>
             </div>
         </div>

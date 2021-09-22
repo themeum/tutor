@@ -154,6 +154,8 @@ window.jQuery(document).ready(function ($) {
   \***********************************************/
 /***/ (() => {
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 (function ($) {
   window.enable_sorting_topic_lesson = function () {
     if (jQuery().sortable) {
@@ -257,50 +259,6 @@ window.jQuery(document).ready(function ($) {
         $that.removeClass('tutor-updating-message');
       }
     });
-  });
-  /**
-   * Lesson upload thumbnail
-   */
-
-  $(document).on('click', '.lesson_thumbnail_upload_btn', function (event) {
-    event.preventDefault();
-    var $that = $(this);
-    var frame;
-
-    if (frame) {
-      frame.open();
-      return;
-    }
-
-    frame = wp.media({
-      title: __('Select or Upload Media Of Your Chosen Persuasion', 'tutor'),
-      button: {
-        text: __('Use this media', 'tutor')
-      },
-      multiple: false
-    });
-    frame.on('select', function () {
-      var attachment = frame.state().get('selection').first().toJSON();
-      var wrapper = $that.closest('.tutor-thumbnail-uploader');
-      wrapper.find('img').attr('src', attachment.url);
-      wrapper.find('input[name="_lesson_thumbnail_id"]').val(attachment.id);
-      wrapper.find('.delete-btn').show();
-      $('.tutor-lesson-thumbnail-delete-btn').show();
-    });
-    frame.open();
-  });
-  /**
-   * Lesson Feature Image Delete
-   * @since v.1.5.6
-   */
-
-  $(document).on('click', '.tutor-lesson-modal-wrap .tutor-thumbnail-uploader .delete-btn', function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var wrapper = $that.closest('.tutor-thumbnail-uploader');
-    wrapper.find('[name="_lesson_thumbnail_id"]').val('');
-    wrapper.find('img').attr('src', '');
-    $that.hide();
   }); // Video source 
 
   $(document).on('change', '.tutor_lesson_video_source', function (e) {
@@ -342,6 +300,126 @@ window.jQuery(document).ready(function ($) {
         $that.removeClass('tutor-updating-message');
       }
     });
+  });
+  /**
+   * @since v.1.9.0
+   * Parse and show video duration on link paste in lesson video 
+   */
+
+  var video_url_input = '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5';
+  var autofill_url_timeout;
+  $('body').on('paste', video_url_input, function (e) {
+    e.stopImmediatePropagation();
+    var root = $(this).closest('.tutor-lesson-modal-wrap').find('.tutor-option-field-video-duration');
+    var duration_label = root.find('label');
+    var is_wp_media = $(this).hasClass('video_source_wrap_html5') || $(this).hasClass('video_source_upload_wrap_html5');
+    var autofill_url = $(this).data('autofill_url');
+    $(this).data('autofill_url', null);
+    var video_url = is_wp_media ? $(this).find('span').data('video_url') : autofill_url || e.originalEvent.clipboardData.getData('text');
+
+    var toggle_loading = function toggle_loading(show) {
+      if (!show) {
+        duration_label.find('img').remove();
+        return;
+      } // Show loading icon
+
+
+      if (duration_label.find('img').length == 0) {
+        duration_label.append(' <img src="' + window._tutorobject.loading_icon_url + '" style="display:inline-block"/>');
+      }
+    };
+
+    var set_duration = function set_duration(sec_num) {
+      var hours = Math.floor(sec_num / 3600);
+      var minutes = Math.floor((sec_num - hours * 3600) / 60);
+      var seconds = Math.round(sec_num - hours * 3600 - minutes * 60);
+
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+
+      var fragments = [hours, minutes, seconds];
+      var time_fields = root.find('input');
+
+      for (var i = 0; i < 3; i++) {
+        time_fields.eq(i).val(fragments[i]);
+      }
+    };
+
+    var yt_to_seconds = function yt_to_seconds(duration) {
+      var match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+      match = match.slice(1).map(function (x) {
+        if (x != null) {
+          return x.replace(/\D/, '');
+        }
+      });
+      var hours = parseInt(match[0]) || 0;
+      var minutes = parseInt(match[1]) || 0;
+      var seconds = parseInt(match[2]) || 0;
+      return hours * 3600 + minutes * 60 + seconds;
+    };
+
+    if (is_wp_media || $(this).parent().hasClass('video_source_wrap_external_url')) {
+      var player = document.createElement('video');
+      player.addEventListener('loadedmetadata', function () {
+        set_duration(player.duration);
+        toggle_loading(false);
+      });
+      toggle_loading(true);
+      player.src = video_url;
+    } else if ($(this).parent().hasClass('video_source_wrap_vimeo')) {
+      var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+      var match = video_url.match(regExp);
+      var video_id = match ? match[5] : null;
+
+      if (video_id) {
+        toggle_loading(true);
+        $.getJSON('http://vimeo.com/api/v2/video/' + video_id + '/json', function (data) {
+          if (Array.isArray(data) && data[0] && data[0].duration !== undefined) {
+            set_duration(data[0].duration);
+          }
+
+          toggle_loading(false);
+        });
+      }
+    } else if ($(this).parent().hasClass('video_source_wrap_youtube')) {
+      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      var match = video_url.match(regExp);
+      var video_id = match && match[7].length == 11 ? match[7] : false;
+      var api_key = $(this).data('youtube_api_key');
+
+      if (video_id && api_key) {
+        var result_url = 'https://www.googleapis.com/youtube/v3/videos?id=' + video_id + '&key=' + api_key + '&part=contentDetails';
+        toggle_loading(true);
+        $.getJSON(result_url, function (data) {
+          if (_typeof(data) == 'object' && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.duration) {
+            set_duration(yt_to_seconds(data.items[0].contentDetails.duration));
+          }
+
+          toggle_loading(false);
+        });
+      }
+    }
+  }).on('input', video_url_input, function () {
+    if (autofill_url_timeout) {
+      clearTimeout(autofill_url_timeout);
+    }
+
+    var $this = $(this);
+    autofill_url_timeout = setTimeout(function () {
+      var val = $this.val();
+      val = val ? val.trim() : '';
+      console.log('Trigger', val);
+      val ? $this.data('autofill_url', val).trigger('paste') : 0;
+    }, 700);
   });
 });
 
@@ -856,10 +934,11 @@ window.jQuery(document).ready(function ($) {
 /***/ (() => {
 
 window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
   $(document).on('click', '#tutor-add-topic-btn', function (e) {
     e.preventDefault();
     var $that = $(this);
-    var container = $that.closest('.tutor-metabox-add-topics');
+    var container = $that.closest('.tutor-modal');
     var form_data = container.find('input, textarea').serializeObject();
     form_data.action = 'tutor_add_course_topic';
     $.ajax({
@@ -888,28 +967,41 @@ window.jQuery(document).ready(function ($) {
    * Confirmation for deleting Topic
    */
 
-  $(document).on('click', '.topic-delete-btn a', function (e) {
-    var topic_id = $(this).attr('data-topic-id');
+  $(document).on('click', '.tutor-topics-wrap .tutor-icon-garbage', function (e) {
+    var container = $(this).closest('.tutor-topics-wrap');
+    var topic_id = container.attr('data-topic-id');
 
     if (!confirm(__('Are you sure to delete?', 'tutor'))) {
-      e.preventDefault();
+      return;
     }
-  });
-  $(document).on('click', '.tutor-expand-all-topic', function (e) {
-    e.preventDefault();
-    $('.tutor-topics-body').slideDown();
-    $('.expand-collapse-wrap i').removeClass('tutor-icon-light-down').addClass('tutor-icon-light-up');
-  });
-  $(document).on('click', '.tutor-collapse-all-topic', function (e) {
-    e.preventDefault();
-    $('.tutor-topics-body').slideUp();
-    $('.expand-collapse-wrap i').removeClass('tutor-icon-light-up').addClass('tutor-icon-light-down');
+
+    container.fadeOut('fast');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        action: 'tutor_delete_topic',
+        topic_id: topic_id
+      },
+      success: function success(data) {
+        // To Do: Load updated topic list here
+        if (data.success) {
+          container.remove();
+        } else {
+          container.fadeIn('fast');
+          alert((data.data || {}).msg || __('Something Went Wrong', 'tutor'));
+        }
+      },
+      error: function error() {
+        container.fadeIn('fast');
+      }
+    });
   });
   $(document).on('click', '.topic-inner-title, .expand-collapse-wrap', function (e) {
     e.preventDefault();
-    var $that = $(this);
-    $that.closest('.tutor-topics-wrap').find('.tutor-topics-body').slideToggle();
-    $that.closest('.tutor-topics-wrap').find('.expand-collapse-wrap i').toggleClass('tutor-icon-light-down tutor-icon-light-up');
+    var wrapper = $(this).closest('.tutor-topics-wrap');
+    wrapper.find('.tutor-topics-body').slideToggle();
+    wrapper.find('.expand-collapse-wrap').toggleClass('is-expanded').find('i').toggleClass('tutor-icon-light-down tutor-icon-light-up');
   });
 });
 
