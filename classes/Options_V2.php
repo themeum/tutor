@@ -41,6 +41,7 @@ class Options_V2 {
 		add_action( 'wp_ajax_tutor_delete_single_settings', array( $this, 'tutor_delete_single_settings' ) );
 		add_action( 'wp_ajax_tutor_import_settings', array( $this, 'tutor_import_settings' ) );
 		add_action( 'wp_ajax_tutor_apply_settings', array( $this, 'tutor_apply_settings' ) );
+		add_action( 'wp_ajax_load_saved_data', array( $this, 'load_saved_data' ) );
 
 	}
 
@@ -172,16 +173,19 @@ class Options_V2 {
 			}
 		}
 
-		update_option('tutor_option', $attr_default);
+		update_option( 'tutor_option', $attr_default );
 
 		wp_send_json_success( $attr_default );
 	}
 
 
+	public function load_saved_data() {
+		tutor_utils()->checking_nonce();
+		wp_send_json_success( get_option( 'tutor_settings_log' ));
+	}
+
+
 	public function tutor_import_settings() {
-		echo '<pre>';
-		print_r($_REQUEST);
-		echo '</pre>';die;
 		tutor_utils()->checking_nonce();
 		$request = $this->get_request_data( 'tutor_options' );
 
@@ -197,7 +201,9 @@ class Options_V2 {
 
 		// update_option( 'tutor_settings_log', array() );
 		$get_option_data = get_option( 'tutor_settings_log' );
-
+		if ( empty( $get_option_data ) ) {
+			$get_option_data = array();
+		}
 		if ( ! empty( $get_option_data ) && null !== $save_import_data['dataset'] ) {
 
 			$update_option = array_merge( $get_option_data, $import_data );
@@ -648,8 +654,8 @@ class Options_V2 {
 										'label'       => __( 'Preferred Video Source', 'tutor' ),
 										'label_title' => __( 'Preferred Video Source', 'tutor' ),
 										'default'     => array(
-											'external_url'=> true,
-											'html5'=>true
+											'external_url' => true,
+											'html5'        => true,
 										),
 										'options'     => $video_sources,
 										'desc'        => __( 'Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor' ),
