@@ -8,7 +8,7 @@
             <input type="text" name="quiz_title" class="tutor-form-control tutor-mb-10" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo $quiz ? htmlspecialchars( stripslashes($quiz->post_title) ) : ''; ?>"/>
         </div>
     </div>
-    <div class="tutor-mb-30">
+    <div>
         <label class="tutor-form-label"><?php _e('Summary', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
             <textarea name="quiz_description" class="tutor-form-control tutor-mb-10" rows="5"><?php echo $quiz ? stripslashes($quiz->post_content) : ''; ?></textarea>
@@ -165,7 +165,7 @@
         </div>
     </div>
 
-    <div class="tutor-mb-30">
+    <div>
         <label class="tutor-form-label"><?php _e('Max questions allowed to answer', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
             <input type="number" class="tutor-form-control tutor-mb-10" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>"/>

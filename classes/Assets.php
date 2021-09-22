@@ -225,14 +225,14 @@ class Assets {
 
 	public function common_scripts() {
 
-		// Common css library
-		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.min.css', array(), tutor()->version);
-
 		// Fonts
 		wp_enqueue_style('tutor-lineawesome-fonts', tutor()->url . 'assets/icons/lineawesome@1.3.0/css/line-awesome.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'assets/icons/tutor-v2-icon/css/tutor-v2-icon-test.css', array(), tutor()->version);
 		
+		// Common css library
+		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.min.css', array(), tutor()->version);
+
 		// Load course builder resources
 		if($this->get_course_builder_screen()) {
 			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );

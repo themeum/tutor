@@ -20,23 +20,44 @@ Use `"data-tutor-popup-target=MENU_ID"` to open a menu.<br/>
 ## Popup/Popover menu
 
 <Playground>
-	<div class="tutor-popup-opener">
-		<button type="button" class="popup-btn" data-tutor-popup-target="popup-menu-1">
-			<span class="toggle-icon"></span>
-		</button>
-		<ul id="popup-menu-1" class="popup-menu">
-			<li>
-				<a href="#">
-					<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
-					<span class="text-regular-body color-text-white">Download</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
-					<span class="text-regular-body color-text-white">Delete</span>
-				</a>
-			</li>
-		</ul>
+	<div style={{display:'flex', gap: '10px'}}>
+		<div className="tutor-popup-opener">
+			<button type="button" className="popup-btn" data-tutor-popup-target="popup-menu-1">
+				<span className="toggle-icon"></span>
+			</button>
+			<ul id="popup-menu-1" className="popup-menu">
+				<li>
+					<a href="#">
+						<span className="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+						<span className="text-regular-body color-text-white">Download</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<span className="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+						<span className="text-regular-body color-text-white">Delete</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div className="tutor-popup-opener">
+			<button type="button" className="popup-btn" data-tutor-popup-target="popup-menu-2">
+				<span className="toggle-icon"></span>
+			</button>
+			<ul id="popup-menu-2" className="popup-menu">
+				<li>
+					<a href="#">
+						<span className="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+						<span className="text-regular-body color-text-white">Download</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<span className="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+						<span className="text-regular-body color-text-white">Delete</span>
+					</a>
+				</li>
+			</ul>
+		</div>
 	</div>
 </Playground>
