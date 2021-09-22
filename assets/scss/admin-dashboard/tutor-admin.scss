@@ -117,8 +117,7 @@
   .tutor-option-field-row input[type="email"],
   .tutor-option-field-row input[type="number"],
   .tutor-option-field-row input[type="password"],
-  .tutor-option-field-row textarea,
-  .tutor-option-field-row .tutor-field-type-slider {
+  .tutor-option-field-row textarea {
 	background-color: #fff;
 	border: 1px solid #ddd;
 	border-radius: 3px;
@@ -137,8 +136,7 @@
   .tutor_lesson_modal_form .tutor-option-field-row input[type="email"],
   .tutor_lesson_modal_form .tutor-option-field-row input[type="number"],
   .tutor_lesson_modal_form .tutor-option-field-row input[type="password"],
-  .tutor_lesson_modal_form .tutor-option-field-row textarea,
-  .tutor_lesson_modal_form .tutor-option-field-row .tutor-field-type-slider {
+  .tutor_lesson_modal_form .tutor-option-field-row textarea {
 	width: 100%;
 	display: block;
   }
@@ -227,7 +225,6 @@
   .tutor-option-group-field input[type="number"],
   .tutor-option-group-field input[type="password"],
   .tutor-option-group-field textarea,
-  .tutor-option-group-field .tutor-field-type-slider,
   .tutor-option-group-field select {
 	width: 100px;
 	margin-right: 5px;
@@ -1251,67 +1248,6 @@
 	font-size: 20px;
 	color: rgba(57, 60, 64, 0.4);
 	line-height: 44px;
-  }
-  
-  .tutor-quiz-builder-modal-wrap .tutor-field-type-slider {
-	border: 1px solid #dedede;
-	padding: 20px 70px 20px 10px;
-	background-color: #ffffff;
-	position: relative;
-	border-radius: 4px;
-  }
-  
-  .tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-content {
-	background-color: var(--tutor-primary-color);
-	border: none;
-	height: 4px;
-	border-radius: 4px;
-  }
-  
-  .tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-header {
-	background: #dedede;
-	border-radius: 4px;
-  }
-  
-  .tutor-quiz-builder-modal-wrap
-  .tutor-field-type-slider
-  .ui-widget-content
-  .ui-state-default {
-	background-color: var(--tutor-primary-color);
-	border: 1px solid var(--tutor-primary-color);
-	border-radius: 50%;
-  }
-  
-  .tutor-quiz-builder-modal-wrap
-  .tutor-field-type-slider
-  .tutor-field-type-slider-value {
-	font-size: 16px;
-	font-weight: 600;
-	background: var(--tutor-primary-color);
-	position: absolute;
-	right: 5px;
-	top: 50%;
-	margin: 0;
-	-webkit-transform: translateY(-50%);
-	transform: translateY(-50%);
-	line-height: 34px;
-	width: 43px;
-	text-align: center;
-	border-radius: 4px;
-	color: #fff;
-  }
-  
-  .tutor-quiz-builder-modal-wrap
-  .tutor-field-type-slider
-  .tutor-field-type-slider-value:before {
-	content: "";
-	position: absolute;
-	border: 7px solid transparent;
-	top: 50%;
-	border-right-color: var(--tutor-primary-color);
-	right: 100%;
-	-webkit-transform: translateY(-50%);
-	transform: translateY(-50%);
   }
   
   .tutor-quiz-answer-wrap {
