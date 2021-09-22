@@ -34,7 +34,6 @@
 
 	document.addEventListener('click', (e) => {
 		const attr = 'data-tutor-popup-target';
-		console.log(e);
 
 		if (e.target.hasAttribute(attr)) {
 			e.preventDefault();
