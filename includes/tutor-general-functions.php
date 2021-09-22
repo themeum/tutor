@@ -276,7 +276,7 @@ if (!function_exists('tutor_course_tags_checkbox')) {
  */
 if ( ! function_exists('__tutor_generate_categories_checkbox')){
 	function __tutor_generate_categories_checkbox($post_ID = 0, $categories=array(), $args = array()){
-		
+
 		$output = '';
 		$input_name = tutor_utils()->array_get('name', $args);
 
@@ -295,7 +295,7 @@ if ( ! function_exists('__tutor_generate_categories_checkbox')){
 			}
 			$output .= "</ul>";
 		}
-		
+
 		return $output;
 
 	}
@@ -688,12 +688,12 @@ if (!function_exists('get_tutor_header')) {
 	}
 
 	/**
-	 * Require wp_date form return js date format 
-	 * 
+	 * Require wp_date form return js date format
+	 *
 	 * this is helpfull for date picker
-	 * 
+	 *
 	 * @return string
-	 * 
+	 *
 	 * @since 1.9.7
 	 */
 	if ( !function_exists( 'tutor_js_date_format_against_wp' ) ) {
@@ -707,7 +707,7 @@ if (!function_exists('get_tutor_header')) {
 				'd/m/Y' 	=> 'dd-mm-yy',
 				'F j, Y'	=> 'MM dd, yy'
 			);
-			return isset( $formats[$wp_date_format] ) ? $formats[$wp_date_format] : $default_format; 
+			return isset( $formats[$wp_date_format] ) ? $formats[$wp_date_format] : $default_format;
 		}
 	}
 
@@ -726,4 +726,33 @@ if (!function_exists('get_tutor_header')) {
 		}
 	}
 
-	
+
+
+
+	/**
+	 * Function to print_r
+	 *
+	 * @param  mixed $var
+	 * @return void
+	 */
+	if ( ! function_exists( 'pr' ) ) {
+		function pr( $var ) {
+			echo '<pre>' . print_r( $var ) . '</pre>';
+		}
+	}
+
+	/**
+	 * Function to var_dump
+	 *
+	 * @param  mixed $var
+	 * @return void
+	 */
+	if ( ! function_exists( 'pr' ) ) {
+		function vr( $var ) {
+			echo '<pre>' . var_dump( $var ) . '</pre>';
+		}
+	}
+
+
+
+

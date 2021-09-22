@@ -69,7 +69,7 @@
 				$i = 0;
 
 				foreach ( $this->options_attr() as $args ) :
-
+					pr( $args );
 					?>
 					<ul class="tutor-option-nav">
 						<li class="tutor-option-nav-item">
