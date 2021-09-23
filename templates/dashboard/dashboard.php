@@ -86,12 +86,14 @@
 
 <?php
 $instructor_course = tutor_utils()->get_courses_for_instructors(get_current_user_id());
+
 if(count($instructor_course)) {
     $course_badges = array(
         'publish' => 'success',
         'pending' => 'warning',
         'trash' => 'danger'
     );
+
     ?>
         <h3>
             <?php _e('Most Popular Courses', 'tutor'); ?>
@@ -135,5 +137,6 @@ if(count($instructor_course)) {
                 </tbody>
             </table>
         </div>
-    </div>
-<?php } ?>
+        <?php 
+    } 
+?>

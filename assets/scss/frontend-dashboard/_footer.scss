@@ -7,10 +7,13 @@
     background: white;
     padding: 20px;
     box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
+    z-index: 9999999;
 
     @media (min-width: 768px) {
-        display: none;
+        display: none !important;
+    }
 
+    @media (max-width: 767px) {
         @at-root{
             .tutor-screen-frontend-dashboard{
                 padding-bottom: 90px;
