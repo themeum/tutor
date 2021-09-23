@@ -8,7 +8,7 @@
 
 $default      = isset( $field['default'] ) ? $field['default'] : 'off';
 $option_value = $this->get( $field['key'], $default );
-$field_id = 'field_' . $field['key'];
+$field_id     = 'field_' . $field['key'];
 ?>
 <div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
 	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
