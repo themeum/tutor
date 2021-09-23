@@ -393,6 +393,10 @@ class Assets {
 			$to_add[] = ' tutor-screen-course-builder tutor-screen-course-builder-' . $course_builder_screen . ' ';
 		}
 
+		if(!$course_builder_screen && tutor_utils()->is_tutor_frontend_dashboard()) {
+			$to_add[] = 'tutor-screen-frontend-dashboard';
+		}
+
 		is_array($classes) ? $classes=array_merge($classes, $to_add) : $classes.=implode('', $to_add);
 
 		return $classes;

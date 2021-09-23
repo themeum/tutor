@@ -1,0 +1,57 @@
+#tutor-dashboard-footer-mobile {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    padding: 20px;
+    box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
+
+    @media (min-width: 768px) {
+        display: none;
+
+        @at-root{
+            .tutor-screen-frontend-dashboard{
+                padding-bottom: 90px;
+            }
+        }
+    }
+
+    &>div>div>a{
+        text-align: center;
+        border-bottom: 5px solid transparent;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 13px;
+        color: #757C8E;
+        
+        &:hover{
+            color: var(--tutor-primary-color);
+        }
+
+        &.active{
+            border-bottom: 5px solid var(--tutor-primary-color);
+        }
+
+        &, &:hover, &:active, &:focus{
+            text-decoration: none;
+            outline: none;
+            box-shadow: none;
+            border: none;
+        }
+
+        i{
+            font-size: 21px;
+        }
+
+        span{
+            display: block;
+            padding: 7px;
+        }
+    }
+}

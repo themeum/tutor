@@ -36,13 +36,13 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 ?>
 
 <?php do_action('tutor/dashboard_course_builder_before'); ?>
-<form action="" id="tutor-frontend-course-builder" method="post" enctype="multipart/form-data">
+<form action="" id="tutor-frontend-course-builder" method="post" enctype="multipart/form-data" class="tutor-grid">
     <?php wp_nonce_field(tutor()->nonce_action, tutor()->nonce); ?>
 
     <!-- Sticky header with course action buttons -->
     <header class="tutor-dashboard-builder-header">
         <div class="tutor-container tutor-fluid">
-            <div class="tutor-row tutor-align-items-center">
+            <div class="tutor-row align-items-center">
                 <div class="tutor-col-auto">
                     <div class="tutor-dashboard-builder-header-left">
                         <div class="tutor-dashboard-builder-logo">

@@ -1,6 +1,27 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./assets/react/front/dashboard.js":
+/*!*****************************************!*\
+  !*** ./assets/react/front/dashboard.js ***!
+  \*****************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  $('.tutor-dashboard .tutor-dashboard-menu-toggler').click(function () {
+    var el = $('.tutor-dashboard-left-menu');
+    el.closest('.tutor-dashboard').toggleClass('is-sidebar-expanded');
+
+    if (el.css('display') !== 'none') {
+      el.get(0).scrollIntoView({
+        block: 'start'
+      });
+    }
+  });
+});
+
+/***/ }),
+
 /***/ "./assets/react/lib/common.js":
 /*!************************************!*\
   !*** ./assets/react/lib/common.js ***!
@@ -1346,6 +1367,9 @@ var __webpack_exports__ = {};
   \*******************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/common */ "./assets/react/lib/common.js");
+/* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard */ "./assets/react/front/dashboard.js");
+/* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dashboard__WEBPACK_IMPORTED_MODULE_1__);
+
 
 jQuery(document).ready(function ($) {
   'use strict';
