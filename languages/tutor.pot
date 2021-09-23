@@ -1954,7 +1954,7 @@ msgstr ""
 msgid "View Course"
 msgstr ""
 
-#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/student-public-profile.php:98, templates/student-public-profile.php:159, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, views/pages/announcements.php:59, templates/single/course/instructors.php:72
+#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/dashboard.php:227, templates/student-public-profile.php:98, templates/student-public-profile.php:159, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, views/pages/announcements.php:59, templates/single/course/instructors.php:72
 msgid "Courses"
 msgstr ""
 
@@ -2455,7 +2455,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: classes/Tutor.php:521, classes/Utils.php:2456, templates/dashboard/dashboard.php:9
+#: classes/Tutor.php:521, classes/Utils.php:2456, templates/dashboard.php:227, templates/dashboard/dashboard.php:9
 msgid "Dashboard"
 msgstr ""
 
@@ -2859,7 +2859,7 @@ msgstr ""
 msgid "Nonce not matched"
 msgstr ""
 
-#: classes/Utils.php:1283
+#: classes/Utils.php:1283, templates/dashboard.php:231
 msgid "Q&A"
 msgstr ""
 
@@ -3364,24 +3364,28 @@ msgstr ""
 msgid "Topic not found for given ID"
 msgstr ""
 
-#: templates/dashboard.php:69
+#: templates/dashboard.php:70
 msgid "%d Ratings"
 msgstr ""
 
-#: templates/dashboard.php:92
+#: templates/dashboard.php:93
 msgid "Become an instructor"
 msgstr ""
 
-#: templates/dashboard.php:111
+#: templates/dashboard.php:112
 msgid "Your Application is pending from"
 msgstr ""
 
-#: templates/dashboard.php:102
+#: templates/dashboard.php:103
 msgid "Add A New Course"
 msgstr ""
 
-#: templates/dashboard.php:136
+#: templates/dashboard.php:137
 msgid "Your application to become an instructor was rejected on"
+msgstr ""
+
+#: templates/dashboard.php:235
+msgid "Menu"
 msgstr ""
 
 #: templates/instructor-setting.php:28
