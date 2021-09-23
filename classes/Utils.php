@@ -7500,8 +7500,8 @@ class Utils {
 		if ($wp_query->is_page) {
 			$dashboard_page = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
 
-			if($subpage && $dashboard_page == $subpage) {
-				return true;
+			if($subpage) {
+				return $dashboard_page == $subpage;
 			}
 
 			if($wp_query->queried_object && $wp_query->queried_object->ID) {

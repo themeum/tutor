@@ -24,7 +24,7 @@ $fields_by_type = $this->get_field_by_type( 'toggle_switch_button' );
 $user           = wp_get_current_user();
 
 ?>
-<section class="tutor-backend-settings-page email-manage-page" style="margin-left: 185px-">
+<section class="tutor-backend-settings-page email-manage-page tutor-grid" style="margin-left: 185px-">
 	<header class="header-wrapper tutor-px-30 tutor-py-25">
 		<a href="<?php echo esc_url( $email_back_url ); ?>" class="prev-page d-inline-flex align-items-center">
 			<span class="tutor-v2-icon-test icon-previous-line"></span>

@@ -31,7 +31,7 @@ $default_source = tutor_utils()->get_option('default_video_source', null);
 
 ?>
 
-<div class="tutor-mb-30">
+<div class="tutor-mb-30 tutor-grid">
     <label class="tutor-form-label">
         <?php
         if ($post->post_type === tutor()->course_post_type){
@@ -70,7 +70,7 @@ $default_source = tutor_utils()->get_option('default_video_source', null);
 
                 <div class="video-metabox-source-html5-poster">
                     <div class="tutor-form-field tutor-form-field-course-thumbnail tutor-thumbnail-wrap">
-                        <div class="tutor-row tutor-align-items-center">
+                        <div class="tutor-row align-items-center">
                             <div class="tutor-col">
                                 <div class="builder-course-thumbnail-img-src html5-video-poster">
                                     <?php

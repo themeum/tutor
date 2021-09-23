@@ -1,4 +1,4 @@
-<div id="tutor-course-content-builder-root">
+<div id="tutor-course-content-builder-root" class="tutor-grid">
     <?php $course_id = get_the_ID(); ?>
     <div id="tutor-course-content-wrap">
         <?php
