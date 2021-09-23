@@ -11,6 +11,7 @@
  * @version 2.0
  */
 
+$url_page = $_GET['tab_page'];
 ?>
 <!-- .tutor-backend-wrap -->
 <section class="tutor-backend-settings-page" style="padding-top: 60px;">
@@ -66,29 +67,23 @@
 			<input type="hidden" name="action" value="tutor_option_save">
 			<div class="tutor-option-tabs">
 				<?php
-				$i = 0;
-
+				// pr( $this->options_attr() );
 				foreach ( $this->options_attr() as $args ) :
-					pr( $args );
 					?>
 					<ul class="tutor-option-nav">
 						<li class="tutor-option-nav-item">
 							<h4><?php echo $args['label']; ?></h4>
 						<li>
 							<?php
-							$url_exist = $this->url_exists( $args['sections'], $url_page );
-
 							foreach ( $args['sections'] as $key => $section ) :
-								$i        += 1;
-								$icon      = tutor()->icon_dir . $section['slug'] . '.svg';
-								$is_active = $this->get_active( $i, $url_page, $section['slug'], $url_exist ) ? 'active' : null;
+								 $icon = tutor()->icon_dir . $key . '.svg';
 								?>
-						<li class="tutor-option-nav-item">
-							<a data-tab="<?php echo $section['slug']; ?>" class="<?php echo $is_active; ?>">
-								<img src="<?php echo $icon; ?>" alt="<?php echo $section['slug']; ?>-icon" />
-								<span class="nav-label"><?php echo $section['label']; ?></span>
-							</a>
-						</li>
+								<li class="tutor-option-nav-item">
+									<a data-tab="<?php echo $key; ?>" class="<?php // echo $is_active; ?>">
+										<img src="<?php echo $icon; ?>" alt="<?php echo $key; ?>-icon" />
+										<span class="nav-label"><?php echo $section['label']; ?></span>
+									</a>
+								</li>
 								<?php
 							endforeach;
 							?>
@@ -101,17 +96,14 @@
 			<!-- end /.tutor-option-tabs -->
 			<div class="tutor-option-tab-pages">
 				<?php
-
-				$i = 0;
-
-				foreach ( $this->options_attr as $args ) :
-					$url_exist = $this->url_exists( $args['sections'], $url_page );
+				foreach ( $this->options_attr as $key => $args ) :
+					// $url_exist = $this->url_exists( $args['sections'], $url_page );
+					// pr( $args['sections'] );
 
 					foreach ( $args['sections'] as $key => $section ) :
-						$i        += 1;
-						$is_active = $this->get_active( $i, $url_page, $section['slug'], $url_exist ) ? 'active' : null;
+						// $is_active = $this->get_active( $i, $url_page, $section['slug'], $url_exist ) ? 'active' : null;
 						?>
-						<div id="<?php echo $section['slug']; ?>" class="tutor-option-nav-page <?php echo $is_active; ?>">
+						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page active <?php // echo $is_active; ?>">
 
 							<?php echo $this->template( $section ); ?>
 
