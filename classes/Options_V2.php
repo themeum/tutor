@@ -183,7 +183,7 @@ class Options_V2 {
 
 	public function load_saved_data() {
 		tutor_utils()->checking_nonce();
-		wp_send_json_success( get_option( 'tutor_settings_log' ));
+		wp_send_json_success( get_option( 'tutor_settings_log' ) );
 	}
 
 
@@ -1527,36 +1527,67 @@ class Options_V2 {
 						'desc'     => __( 'Certificate Settings', 'tutor' ),
 						'template' => 'certificate',
 						'icon'     => __( 'certificate', 'tutor' ),
-						'blocks'   => array(),
-
+						'blocks'   => array(
+							array(
+								'label'      => __( 'Options', 'tutor' ),
+								'slug'       => 'options',
+								'block_type' => 'uniform',
+								'fields'     => array(
+									array(
+										'key'         => 'login_error_message',
+										'type'        => 'toggle_switch',
+										'label'       => __( 'Error message for wrong login credentials', 'tutor' ),
+										'label_title' => __( '', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Login error message displayed when the user puts wrong login credentials.', 'tutor' ),
+									),
+									array(
+										'key'         => 'hide_admin_bar_for_users',
+										'type'        => 'toggle_switch',
+										'label'       => __( 'Hide Frontend Admin Bar', 'tutor' ),
+										'label_title' => __( '', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user', 'tutor' ),
+									),
+									array(
+										'key'         => 'enable_tutor_maintenance_mode',
+										'type'        => 'toggle_switch',
+										'label'       => __( 'Maintenance Mode', 'tutor' ),
+										'label_title' => __( '', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.', 'tutor' ),
+									),
+								),
+							),
+						),
 					),
 				),
 			),
 		);
 		$attrs   = apply_filters( 'tutor/options/attr', $attr );
 		$extends = apply_filters( 'tutor/options/extend/attr', array() );
-		$addons  = apply_filters( 'tutor/options/addons/attr', array() );
+		// $addons  = apply_filters( 'tutor/options/addons/attr', array() );
 
 		if ( tutils()->count( $extends ) ) {
 			foreach ( $extends as $section_key => $extended_sections ) {
+
 				if ( array_key_exists( 'pro_feature', $extended_sections ) ) {
 					unset( $extended_sections['pro_feature'] );
 					foreach ( $extended_sections as $extend_key => $extended_blocks ) {
 						$sections         = $attrs[ $extend_key ]['sections'];
-						$existing_section = $sections[ $section_key ]['blocks'];
-						if ( isset( $attrs[ $extend_key ] ) ) {
-							$attrs[ $extend_key ]['sections'][ $section_key ] = array_merge( $existing_section, $extended_blocks );
-						}
+						$existing_section = $sections[ $section_key ];
+						$attrs[ $extend_key ]['sections'][ $section_key ]['blocks'] = array_merge( $existing_section['blocks'], $extended_blocks );
+
 					}
 				}
+				// pr( array( $section_key => $extended_sections ) );
 			}
 		}
 
-		if ( tutils()->count( $addons ) ) {
-
-			pr($addons);
-			die;
-		}
+		// if ( tutils()->count( $addons ) ) {
+		// pr( $addons );
+		// die;
+		// }
 
 		return $attrs;
 
@@ -1574,9 +1605,10 @@ class Options_V2 {
 		$is_active = false;
 		$j         = 0;
 
-		foreach ( $dataArr as $section ) {
+		foreach ( $dataArr as $key => $section ) {
+			// pr($section);
 			$j        += 1;
-			$is_active = isset( $url_page ) && $url_page === $section['slug'] ? true : ( ! isset( $url_page ) && $j === 1 ? true : false );
+			$is_active = isset( $url_page ) && $url_page === $section[ $key ] ? true : ( ! isset( $url_page ) && $j === 1 ? true : false );
 
 			if ( $is_active === true ) {
 				$url_exist = true;
