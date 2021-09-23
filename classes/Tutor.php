@@ -231,15 +231,17 @@ final class Tutor{
 	/**
 	 * Do some task during plugin activation
 	 */
-	public static function tutor_activate(){
-		$version = get_option('tutor_version');
-		if ( ! function_exists('tutor_time')){
-			include tutor()->path.'includes/tutor-general-functions.php';
+	public static function tutor_activate() {
+		$version = get_option( 'tutor_version' );
+		if ( ! function_exists( 'tutor_time' ) ) {
+			include tutor()->path . 'includes/tutor-general-functions.php';
 		}
+
+		// Create Database
+		self::create_database();
+
 		//Save Option
-		if ( ! $version ){
-			//Create Database
-			self::create_database();
+		if ( ! $version ) {
 
 			$options = self::default_options();
 			update_option('tutor_option', $options);
@@ -253,22 +255,22 @@ final class Tutor{
 		}
 
 		//Set Schedule
-		if (! wp_next_scheduled ( 'tutor_once_in_day_run_schedule' )) {
-			wp_schedule_event(tutor_time(), 'twicedaily', 'tutor_once_in_day_run_schedule');
+		if ( ! wp_next_scheduled ( 'tutor_once_in_day_run_schedule' ) ) {
+			wp_schedule_event( tutor_time(), 'twicedaily', 'tutor_once_in_day_run_schedule' );
 		}
 
 		/**
 		 * Backward Compatibility for version < 1.2.0
 		 */
-		if (version_compare(get_option('tutor_version'), '1.2.0', '<')){
+		if ( version_compare( get_option( 'tutor_version' ), '1.2.0', '<' ) ) {
 			/**
 			 * Creating New Database
 			 */
 			self::create_withdraw_database();
 			//Update the tutor version
-			update_option('tutor_version', '1.2.0');
+			update_option( 'tutor_version', '1.2.0' );
 			//Rewrite Flush
-			update_option('required_rewrite_flush', tutor_time());
+			update_option( 'required_rewrite_flush', tutor_time() );
 		}
 
 		/**
