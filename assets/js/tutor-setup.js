@@ -1124,23 +1124,178 @@ window.tutor_toast = function (title, description, type) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tutorModal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tutorModal */ "./v2-library/_src/js/tutorModal.js");
 /* harmony import */ var _tutorModal__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_tutorModal__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _thumbnailUploadPreview__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./thumbnailUploadPreview */ "./v2-library/_src/js/thumbnailUploadPreview.js");
-/* harmony import */ var _thumbnailUploadPreview__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_thumbnailUploadPreview__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _popupMenu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./popupMenu */ "./v2-library/_src/js/popupMenu.js");
-/* harmony import */ var _popupMenu__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_popupMenu__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _tutorThumbnailPreview__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tutorThumbnailPreview */ "./v2-library/_src/js/tutorThumbnailPreview.js");
+/* harmony import */ var _tutorThumbnailPreview__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_tutorThumbnailPreview__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _tutorPopupMenu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tutorPopupMenu */ "./v2-library/_src/js/tutorPopupMenu.js");
+/* harmony import */ var _tutorPopupMenu__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_tutorPopupMenu__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _tutorOffcanvas__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tutorOffcanvas */ "./v2-library/_src/js/tutorOffcanvas.js");
+/* harmony import */ var _tutorOffcanvas__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_tutorOffcanvas__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _tutorNotificationTab__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./tutorNotificationTab */ "./v2-library/_src/js/tutorNotificationTab.js");
+/* harmony import */ var _tutorNotificationTab__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_tutorNotificationTab__WEBPACK_IMPORTED_MODULE_4__);
+
+
 
 
 
 
 /***/ }),
 
-/***/ "./v2-library/_src/js/popupMenu.js":
-/*!*****************************************!*\
-  !*** ./v2-library/_src/js/popupMenu.js ***!
-  \*****************************************/
+/***/ "./v2-library/_src/js/tutorModal.js":
+/*!******************************************!*\
+  !*** ./v2-library/_src/js/tutorModal.js ***!
+  \******************************************/
 /***/ (() => {
 
-(function popupMenuToggle() {
+(function () {
+  'use strict'; // modal
+
+  tutorModal();
+})();
+
+function tutorModal() {
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-modal-target';
+    var closeAttr = 'data-tutor-modal-close';
+    var overlay = 'tutor-modal-overlay';
+
+    if (e.target.hasAttribute(attr) || e.target.closest("[".concat(attr, "]"))) {
+      e.preventDefault();
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      var modal = document.getElementById(id);
+
+      if (modal) {
+        modal.classList.add('tutor-is-active');
+      }
+    }
+
+    if (e.target.hasAttribute(closeAttr) || e.target.classList.contains(overlay) || e.target.closest("[".concat(closeAttr, "]"))) {
+      e.preventDefault();
+
+      var _modal = document.querySelectorAll('.tutor-modal.tutor-is-active');
+
+      _modal.forEach(function (m) {
+        m.classList.remove('tutor-is-active');
+      });
+    }
+  }); // open
+  // const modalButton = document.querySelectorAll("[data-tutor-modal-target]");
+  // modalButton.forEach(b => {
+  //     const id = b.getAttribute("data-tutor-modal-target");
+  //     const modal = document.getElementById(id);
+  //     if (modal) {
+  //         b.addEventListener("click", e => {
+  //             e.preventDefault();
+  //             modal.classList.add("tutor-is-active");
+  //         })
+  //     }
+  // })
+  // close
+  // const close = document.querySelectorAll("[data-tutor-modal-close], .tutor-modal-overlay");
+  // close.forEach(c => {
+  //     c.addEventListener("click", e => {
+  //         e.preventDefault();
+  //         const modal = document.querySelectorAll(".tutor-modal.tutor-is-active");
+  //         modal.forEach(m => {
+  //             m.classList.remove("tutor-is-active");
+  //         })
+  //     })
+  // })
+}
+
+/***/ }),
+
+/***/ "./v2-library/_src/js/tutorNotificationTab.js":
+/*!****************************************************!*\
+  !*** ./v2-library/_src/js/tutorNotificationTab.js ***!
+  \****************************************************/
+/***/ (() => {
+
+/**
+ * Tutor Notification Tab
+ */
+(function tutorNotificationTab() {
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-notification-tab-target';
+    var tabItems = document.querySelectorAll('.tab-header-item, .tab-body-item');
+    var activeItems = document.querySelectorAll('.tab-header-item.is-active, .tab-body-item.is-active'); // Opening Offcanvas
+
+    if (e.target.hasAttribute(attr)) {
+      e.preventDefault();
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      activeItems.forEach(function (m) {
+        m.classList.remove('is-active');
+      });
+      var tabBodyItem = document.getElementById(id);
+
+      if (tabBodyItem) {
+        activeItems.forEach(function (m) {
+          m.classList.remove('is-active');
+        });
+        tabBodyItem.classList.add('is-active');
+      }
+
+      console.log(tabHeaderItem);
+      console.log('getA', e.target.getAttribute(attr), 'clo', e.target.closest("[".concat(attr, "]")).getAttribute(attr));
+    }
+  });
+})();
+
+/***/ }),
+
+/***/ "./v2-library/_src/js/tutorOffcanvas.js":
+/*!**********************************************!*\
+  !*** ./v2-library/_src/js/tutorOffcanvas.js ***!
+  \**********************************************/
+/***/ (() => {
+
+/**
+ * Tutor Off Canvas
+ */
+(function tutorOffCanvas() {
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-offcanvas-target';
+    var closeAttr = 'data-tutor-offcanvas-close';
+    var backdrop = 'tutor-offcanvas-backdrop'; // Opening Offcanvas
+
+    if (e.target.hasAttribute(attr)) {
+      e.preventDefault();
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      var offcanvas = document.getElementById(id);
+
+      if (offcanvas) {
+        offcanvas.classList.add('is-active');
+      }
+    } // Closing Offcanvas
+
+
+    if (e.target.hasAttribute(closeAttr) || e.target.classList.contains(backdrop) || e.target.closest("[".concat(closeAttr, "]"))) {
+      e.preventDefault();
+      var activeOffcanvas = document.querySelectorAll('.tutor-offcanvas.is-active');
+      activeOffcanvas.forEach(function (m) {
+        m.classList.remove('is-active');
+      });
+    }
+  }); // Closing Offcanvas on esc key
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      var activeOffcanvas = document.querySelectorAll('.tutor-offcanvas.is-active');
+      activeOffcanvas.forEach(function (m) {
+        m.classList.remove('is-active');
+      });
+    }
+  });
+})();
+
+/***/ }),
+
+/***/ "./v2-library/_src/js/tutorPopupMenu.js":
+/*!**********************************************!*\
+  !*** ./v2-library/_src/js/tutorPopupMenu.js ***!
+  \**********************************************/
+/***/ (() => {
+
+(function tutorPopupMenu() {
   /**
    * Popup Menu Toggle .tutor-popup-opener
    */
@@ -1196,10 +1351,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./v2-library/_src/js/thumbnailUploadPreview.js":
-/*!******************************************************!*\
-  !*** ./v2-library/_src/js/thumbnailUploadPreview.js ***!
-  \******************************************************/
+/***/ "./v2-library/_src/js/tutorThumbnailPreview.js":
+/*!*****************************************************!*\
+  !*** ./v2-library/_src/js/tutorThumbnailPreview.js ***!
+  \*****************************************************/
 /***/ (() => {
 
 (function thumbnailUploadPreview() {
@@ -1267,70 +1422,6 @@ __webpack_require__.r(__webpack_exports__);
     reader.readAsDataURL(file);
   };
 })();
-
-/***/ }),
-
-/***/ "./v2-library/_src/js/tutorModal.js":
-/*!******************************************!*\
-  !*** ./v2-library/_src/js/tutorModal.js ***!
-  \******************************************/
-/***/ (() => {
-
-(function () {
-  'use strict'; // modal
-
-  tutorModal();
-})();
-
-function tutorModal() {
-  document.addEventListener('click', function (e) {
-    var attr = 'data-tutor-modal-target';
-    var closeAttr = 'data-tutor-modal-close';
-    var overlay = 'tutor-modal-overlay';
-
-    if (e.target.hasAttribute(attr) || e.target.closest("[".concat(attr, "]"))) {
-      e.preventDefault();
-      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
-      var modal = document.getElementById(id);
-
-      if (modal) {
-        modal.classList.add('tutor-is-active');
-      }
-    }
-
-    if (e.target.hasAttribute(closeAttr) || e.target.classList.contains(overlay) || e.target.closest("[".concat(closeAttr, "]"))) {
-      e.preventDefault();
-
-      var _modal = document.querySelectorAll('.tutor-modal.tutor-is-active');
-
-      _modal.forEach(function (m) {
-        m.classList.remove('tutor-is-active');
-      });
-    }
-  }); // open
-  // const modalButton = document.querySelectorAll("[data-tutor-modal-target]");
-  // modalButton.forEach(b => {
-  //     const id = b.getAttribute("data-tutor-modal-target");
-  //     const modal = document.getElementById(id);
-  //     if (modal) {
-  //         b.addEventListener("click", e => {
-  //             e.preventDefault();
-  //             modal.classList.add("tutor-is-active");
-  //         })
-  //     }
-  // })
-  // close
-  // const close = document.querySelectorAll("[data-tutor-modal-close], .tutor-modal-overlay");
-  // close.forEach(c => {
-  //     c.addEventListener("click", e => {
-  //         e.preventDefault();
-  //         const modal = document.querySelectorAll(".tutor-modal.tutor-is-active");
-  //         modal.forEach(m => {
-  //             m.classList.remove("tutor-is-active");
-  //         })
-  //     })
-  // })
-}
 
 /***/ })
 

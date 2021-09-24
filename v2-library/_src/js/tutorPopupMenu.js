@@ -1,4 +1,4 @@
-(function popupMenuToggle() {
+(function tutorPopupMenu() {
 	/**
 	 * Popup Menu Toggle .tutor-popup-opener
 	 */
