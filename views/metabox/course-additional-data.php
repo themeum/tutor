@@ -51,11 +51,10 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
             <?php _e('Benefits of the course', 'tutor'); ?>
         </label>
 	</div>
-	<div class="tutor-option-field tutor-option-tooltip">
+	<div class="tutor-option-field tutor-input-tooltip">
 		<textarea name="course_benefits" rows="2"><?php echo $benefits; ?></textarea>
 		<p class="desc">
-			<?php _e('List the knowledge and skills that students will learn after completing this course. (One per line)
-', 'tutor'); ?>
+			<?php _e('List the knowledge and skills that students will learn after completing this course. (One per line)', 'tutor'); ?>
 		</p>
 	</div>
 </div>
@@ -66,7 +65,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 			<?php _e('Requirements/Instructions', 'tutor'); ?> <br />
         </label>
     </div>
-    <div class="tutor-option-field tutor-option-tooltip">
+    <div class="tutor-option-field tutor-input-tooltip">
         <textarea name="course_requirements" rows="2"><?php echo $requirements; ?></textarea>
 
         <p class="desc">
@@ -81,7 +80,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 			<?php _e('Targeted Audience', 'tutor'); ?> <br />
         </label>
     </div>
-    <div class="tutor-option-field tutor-option-tooltip">
+    <div class="tutor-option-field tutor-input-tooltip">
         <textarea name="course_target_audience" rows="2"><?php echo $target_audience; ?></textarea>
 
         <p class="desc">
@@ -97,7 +96,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 			<?php _e('Materials Included', 'tutor'); ?> <br />
         </label>
     </div>
-    <div class="tutor-option-field tutor-option-tooltip">
+    <div class="tutor-option-field tutor-input-tooltip">
         <textarea name="course_material_includes" rows="2"><?php echo $material_includes; ?></textarea>
 
         <p class="desc">
@@ -106,14 +105,11 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
     </div>
 </div>
 
-<div class="tutor-frontend-builder-item-scope">
-    <div class="tutor-form-group">
-        <label>
-            <?php _e('Choose a tag', 'tutor'); ?>
-        </label>
-        <div class="tutor-form-field-course-tags">
-            <?php echo tutor_course_tags_dropdown($course_id, array('classes' => 'tutor_select2')); ?>
-        </div>
+
+<div class="tutor-mb-30">
+    <label class="tutor-form-label"><?php _e('Choose a tag', 'tutor'); ?></label>
+    <div class="tutor-input-group tutor-mb-15">
+        <?php echo tutor_course_tags_dropdown($course_id, array('classes' => 'tutor_select2')); ?>
     </div>
 </div>
 

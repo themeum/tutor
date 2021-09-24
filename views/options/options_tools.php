@@ -10,7 +10,7 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 
 ?>
 <!-- .tutor-backend-wrap -->
-<section class="tutor-backend-settings-page">
+<section class="tutor-backend-settings-page tutor-grid">
 	<header class="tutor-option-header px-3 py-2">
 		<div class="title"><?php _e( 'Tools', 'tutor' ); ?></div>
 		<div class="search-field">
@@ -21,7 +21,7 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 		</div>
 	</header>
 	<div class="tutor-option-body">
-		<form class="tutor-option-form py-4 px-3">
+		<div class="tutor-option-form py-4 px-3">
 			<div class="tutor-option-tabs">
 				<?php
 				foreach ( $this->options_tools as $args ) :
@@ -73,6 +73,39 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 				?>
 			</div>
 			<!-- end /.tutor-option-tab-pages -->
-		</form>
+			</div>
+	</div>
+	<div class="tutor-notification tutor-is-success">
+		<div class="tutor-notification-icon">
+			<i class="fas fa-check"></i>
+		</div>
+		<div class="tutor-notification-content">
+			<h5>Successful</h5>
+			<p>Your file was uploaded</p>
+		</div>
+		<button class="tutor-notification-close">
+			<i class="fas fa-times"></i>
+		</button>
 	</div>
 </section>
+
+<style>
+	.isHighlighted {}
+
+	.tutor-notification {
+		position: fixed;
+		bottom: 40px;
+		z-index: 999;
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	.tutor-notification.show {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	.tutor-notification .tutor-notification-close{
+		transition: unset;
+	}
+</style>

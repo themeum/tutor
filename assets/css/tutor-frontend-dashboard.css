@@ -85,25 +85,6 @@
 }
 
 .tutor-dashboard .tutor-dashboard-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  display: -o-flex;
-  display: -ms-flex;
-  display: -moz-flex;
-  display: -webkit-flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -o-align-items: center;
-  -ms-align-items: center;
-  -moz-align-items: center;
-  -webkit-align-items: center;
-  flex-wrap: wrap;
-  -o-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  -moz-flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
   padding-bottom: 30px;
   border-bottom: 1px solid #dcdfe5;
 }
@@ -123,9 +104,11 @@
 }
 
 .tutor-dashboard .tutor-dashboard-header .tutor-dashboard-header-avatar img {
-  display: block;
-  width: 150px;
-  height: 150px;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
   border-radius: 50%;
 }
 
@@ -147,10 +130,11 @@
 }
 
 .tutor-dashboard .tutor-dashboard-header .tutor-dashboard-header-info .tutor-dashboard-header-display-name h4 {
+  margin: 0;
+  font-style: normal;
+  font-weight: 500;
   font-size: 30px;
-  margin-top: 0px;
-  margin-bottom: 10px;
-  line-height: 34px;
+  color: #212327;
 }
 
 .tutor-dashboard .tutor-dashboard-header .tutor-dashboard-header-info .tutor-dashboard-header-stats {
@@ -217,7 +201,9 @@
   display: block;
   color: var(--tutor-text-color);
   padding: 10px 20px;
-  line-height: 28px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: normal;
 }
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li a:hover {
@@ -227,6 +213,8 @@
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a {
   background-color: var(--tutor-primary-color);
   color: #ffffff;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
 }
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a:hover {
@@ -307,6 +295,84 @@
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.tutor-dashboard-menu-analytics a:before {
   content: "\e9b2";
+}
+
+@media (max-width: 767px) {
+  .tutor-dashboard:not(.is-sidebar-expanded) .tutor-dashboard-left-menu {
+    display: none;
+  }
+}
+
+.tutor-dashboard.is-sidebar-expanded ul.tutor-dashboard-permalinks {
+  border-right: none !important;
+}
+
+.tutor-dashboard.is-sidebar-expanded ul.tutor-dashboard-permalinks li.active a {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile {
+  display: block;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  padding: 20px;
+  -webkit-box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
+          box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
+  z-index: 9999999;
+}
+
+@media (min-width: 768px) {
+  .tutor-dashboard #tutor-dashboard-footer-mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .tutor-screen-frontend-dashboard {
+    padding-bottom: 90px;
+  }
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a {
+  text-align: center;
+  border-bottom: 5px solid transparent;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: #757C8E;
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a:hover {
+  color: var(--tutor-primary-color);
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a.active {
+  border-bottom: 5px solid var(--tutor-primary-color);
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a, .tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a:hover, .tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a:active, .tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a:focus {
+  text-decoration: none;
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border: none;
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a i {
+  font-size: 21px;
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a span {
+  display: block;
+  padding: 7px;
 }
 
 .tutor-dashboard .tutor-dashboard-content {

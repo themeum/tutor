@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Options for TutorLMS
  *
@@ -21,22 +22,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Options_V2 {
 
+
 	public $option;
 	public $status;
 	public $options_attr;
 	public $options_tools;
 
 	public function __construct() {
-		$this->option        = (array) maybe_unserialize( get_option( 'tutor_option' ) );
+		 $this->option       = (array) maybe_unserialize( get_option( 'tutor_option' ) );
 		$this->status        = $this->status();
 		$this->options_attr  = $this->options_attr();
 		$this->options_tools = $this->options_tools();
 		$this->get_param_val = $this->get_param_val( '' );
 		// Saving option.
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
+		add_action( 'wp_ajax_tutor_option_default_save', array( $this, 'tutor_option_default_save' ) );
 		add_action( 'wp_ajax_tutor_option_search', array( $this, 'tutor_option_search' ) );
 		add_action( 'wp_ajax_tutor_export_settings', array( $this, 'tutor_export_settings' ) );
+		add_action( 'wp_ajax_tutor_export_single_settings', array( $this, 'tutor_export_single_settings' ) );
+		add_action( 'wp_ajax_tutor_delete_single_settings', array( $this, 'tutor_delete_single_settings' ) );
 		add_action( 'wp_ajax_tutor_import_settings', array( $this, 'tutor_import_settings' ) );
+		add_action( 'wp_ajax_tutor_apply_settings', array( $this, 'tutor_apply_settings' ) );
+		add_action( 'wp_ajax_load_saved_data', array( $this, 'load_saved_data' ) );
+
 	}
 
 	private function get( $key = null, $default = false ) {
@@ -91,7 +99,7 @@ class Options_V2 {
 	 * @return array
 	 */
 	public function tutor_option_search() {
-		tutils()->checking_nonce();
+		 tutils()->checking_nonce();
 
 		// !current_user_can('manage_options') ? wp_send_json_error() : 0;
 		// $keyword = strtolower( $_POST['keyword'] );
@@ -118,11 +126,117 @@ class Options_V2 {
 		wp_send_json_success( (array) maybe_unserialize( get_option( 'tutor_option' ) ) );
 	}
 
-	public function tutor_import_settings() {
-		echo '<pre>';
-		print_r($_FILES);
-		echo '</pre>';;
+	public function tutor_export_single_settings() {
+		$tutor_settings_log = get_option( 'tutor_settings_log' );
+		$export_id          = $this->get_request_data( 'export_id' );
+		wp_send_json_success( $tutor_settings_log[ $export_id ] );
 	}
+
+
+	public function tutor_apply_settings() {
+		$tutor_settings_log = get_option( 'tutor_settings_log' );
+		$apply_id           = $this->get_request_data( 'apply_id' );
+
+		update_option( 'tutor_option', $tutor_settings_log[ $apply_id ]['dataset'] );
+
+		wp_send_json_success( $tutor_settings_log[ $apply_id ] );
+	}
+
+	public function tutor_delete_single_settings() {
+		$tutor_settings_log = get_option( 'tutor_settings_log' );
+		$delete_id          = $this->get_request_data( 'delete_id' );
+		unset( $tutor_settings_log[ $delete_id ] );
+
+		update_option( 'tutor_settings_log', $tutor_settings_log );
+
+		wp_send_json_success( $tutor_settings_log );
+	}
+
+	public function get_request_data( $var ) {
+		return isset( $_REQUEST[ $var ] ) ? $_REQUEST[ $var ] : null;
+	}
+
+	/**
+	 * tutor_default_settings
+	 *
+	 * @return JSON
+	 */
+	public function tutor_default_settings() {
+		$attr = $this->options_attr();
+		foreach ( $attr as $sections ) {
+			foreach ( $sections['sections'] as $section ) {
+				foreach ( $section['blocks'] as $blocks ) {
+					foreach ( $blocks['fields'] as $field ) {
+						if ( isset( $field['default'] ) ) {
+							$attr_default[ $field['key'] ] = $field['default'];
+						}
+					}
+				}
+			}
+		}
+
+		update_option( 'tutor_option', $attr_default );
+
+		wp_send_json_success( $attr_default );
+	}
+
+
+	public function load_saved_data() {
+		tutor_utils()->checking_nonce();
+		wp_send_json_success( get_option( 'tutor_settings_log' ) );
+	}
+
+
+	public function tutor_import_settings() {
+		tutor_utils()->checking_nonce();
+		$request = $this->get_request_data( 'tutor_options' );
+
+		$time    = $this->get_request_data( 'time' );
+		$request = json_decode( str_replace( '\"', '"', $request ), true );
+
+		$save_import_data['datetime']     = $time;
+		$save_import_data['history_date'] = date( 'j M, Y, g:i a', $time );
+		$save_import_data['datatype']     = 'imported';
+		$save_import_data['dataset']      = $request['data'];
+
+		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
+
+		// update_option( 'tutor_settings_log', array() );
+		$get_option_data = get_option( 'tutor_settings_log' );
+		if ( empty( $get_option_data ) ) {
+			$get_option_data = array();
+		}
+		if ( ! empty( $get_option_data ) && null !== $save_import_data['dataset'] ) {
+
+			$update_option = array_merge( $get_option_data, $import_data );
+
+			$update_option = tutils()->sanitize_recursively( $update_option );
+
+			// $update_option = array();
+			if ( ! empty( $update_option ) ) {
+				update_option( 'tutor_settings_log', $update_option );
+			}
+
+			if ( ! empty( $save_import_data ) ) {
+				update_option( 'tutor_option', $save_import_data['dataset'] );
+			}
+
+			$get_final_data = get_option( 'tutor_settings_log' );
+
+		} else {
+			if ( ! empty( $import_data ) ) {
+				update_option( 'tutor_settings_log', $import_data );
+			}
+
+			if ( ! empty( $save_import_data ) ) {
+				update_option( 'tutor_option', $save_import_data['dataset'] );
+			}
+			$get_final_data = get_option( 'tutor_settings_log' );
+		}
+
+		wp_send_json_success( $get_final_data );
+	}
+
 
 	/**
 	 * Function tutor_option_save
@@ -138,18 +252,51 @@ class Options_V2 {
 
 		$option = (array) tutils()->array_get( 'tutor_option', $_POST, array() );
 
+		$option = tutils()->sanitize_recursively( $option );
+
 		$option = apply_filters( 'tutor_option_input', $option );
+
+		// $request = $this->get_request_data( 'tutor_options' );
+		$time                                     = strtotime( 'now' ) + ( 6 * 60 * 60 );
+		$save_import_data['datetime']             = $time;
+		$save_import_data['history_date']         = date( 'j M, Y, g:i a', $time );
+		$save_import_data['datatype']             = 'saved';
+		$save_import_data['dataset']              = $option;
+		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
+		$update_option                            = array();
+		$get_option_data                          = get_option( 'tutor_settings_log', array() );
+
+		if ( ! empty( $get_option_data ) ) {
+			$update_option = array_merge( $get_option_data, $import_data );
+		} else {
+			$update_option = array_merge( $import_data );
+		}
+
+		update_option( 'tutor_settings_log', $update_option );
 
 		update_option( 'tutor_option', $option );
 
 		do_action( 'tutor_option_save_after' );
 
-		// re-sync settings
-
-		// init::tutor_activate();
-
 		// wp_send_json_success(array('msg' => __('Option Updated', 'tutor'), 'return' => $option));
-		wp_send_json_success( $option );
+		wp_send_json_success( $update_option );
+	}
+
+	/**
+	 * Function tutor_option_save
+	 *
+	 * @return JSON
+	 */
+	public function tutor_option_default_save() {
+		tutils()->checking_nonce();
+
+		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+
+		$default_options = tutils()->sanitize_recursively( $this->tutor_default_settings() );
+
+		update_option( 'tutor_option', $default_options );
+
+		wp_send_json_success( $default_options );
 	}
 
 	/**
@@ -477,7 +624,119 @@ class Options_V2 {
 			'basic' => array(
 				'label'    => __( 'Basic', 'tutor' ),
 				'sections' => array(
-					array(
+					'gradebook'          => array(
+						'label'    => __( 'Gradebook', 'tutor' ),
+						'slug'     => 'gradebook',
+						'desc'     => __( 'Gradebook Settings', 'tutor' ),
+						'template' => 'gradebook',
+						'icon'     => __( 'gradebook', 'tutor' ),
+						'blocks'   => array(
+							'email_to_student' => array(
+								'label'      => __( '', 'tutor' ),
+								'slug'       => 'e_mail_to_students',
+								'block_type' => 'isolate',
+								'fields'     => array(
+									array(
+										'key'         => 'use_points_instead_of_grades',
+										'type'        => 'toggle_switch',
+										'label'       => __( 'Use Points Instead of Grades', 'tutor' ),
+										'default'     => 'off',
+										'label_title' => __( '', 'tutor' ),
+										'desc'        => __( 'Enable this option to use numerical points instead of letter grades.', 'tutor' ),
+									),
+									array(
+										'key'         => 'show_highest_possible_points',
+										'type'        => 'toggle_switch',
+										'label'       => __( 'Show Highest Possible Points', 'tutor' ),
+										'default'     => 'off',
+										'label_title' => __( '', 'tutor' ),
+										'desc'        => __( 'Display the highest possible points next to a student’s score such as 3.8/4.0', 'tutor' ),
+									),
+									array(
+										'key'         => 'separator_between_scores',
+										'type'        => 'text',
+										'label'       => __( 'Separator Between Scores', 'tutor' ),
+										'default'     => 0,
+										'label_title' => __( '', 'tutor' ),
+										'desc'        => __( 'Input the separator text or symbol to display. Example: Insert / to display 3.8/4.0 or “out of” 3.8 out of 4.', 'tutor' ),
+									),
+									array(
+										'key'         => 'grade_scale',
+										'type'        => 'text',
+										'label'       => __( 'Grade Scale', 'tutor' ),
+										'default'     => 0,
+										'label_title' => __( '', 'tutor' ),
+										'desc'        => __( 'Insert the grade point out of which the final results will be calculated.', 'tutor' ),
+									),
+								),
+							),
+						),
+					),
+					'email_notification' => array(
+						'label'    => __( 'Email', 'tutor' ),
+						'slug'     => 'email',
+						'desc'     => __( 'Email Settings', 'tutor' ),
+						'template' => 'basic',
+						'icon'     => __( 'envelope', 'tutor' ),
+						'blocks'   => array(
+							'course' => array(
+								'label'      => __( 'Course', 'tutor' ),
+								'slug'       => 'course',
+								'block_type' => 'uniform',
+								'fields'     => array(
+									array(
+										'key'     => 'email_from_name',
+										'type'    => 'text',
+										'label'   => __( 'Name', 'tutor' ),
+										'default' => get_option( 'blogname' ),
+										'desc'    => __( 'The name under which all the emails will be sent', 'tutor' ),
+									),
+									array(
+										'key'     => 'email_from_address',
+										'type'    => 'text',
+										'label'   => __( 'E-Mail Address', 'tutor' ),
+										'default' => get_option( 'admin_email' ),
+
+										'desc'    => __( 'The E-Mail address from which all emails will be sent', 'tutor' ),
+									),
+									array(
+										'key'     => 'email_footer_text',
+										'type'    => 'textarea',
+										'label'   => __( 'E-Mail Footer Text', 'tutor' ),
+										'default' => '',
+
+										'desc'    => __( 'The text to appear in E-Mail template footer', 'tutor' ),
+									),
+									array(
+										'key'          => 'mailer_native_server_cron',
+										'type'         => 'group_textarea_code',
+										'label'        => __( 'Mailer Native Server Cron', 'tutor' ),
+										'label_title'  => __( '', 'tutor' ),
+										'group_fields' => array(
+											array(
+												'key'     => 'mailer_native_server_cron',
+												'type'    => 'toggle_switch',
+												'label'   => __( 'Mailer Native Server Cron', 'tutor' ),
+												'label_title' => __( '', 'tutor' ),
+												'default' => 'off',
+												'desc'    => __( 'If you use OS native cron, then disable it.', 'tutor' ),
+											),
+											array(
+												'key'     => 'mailer_native_server',
+												'type'    => 'textarea_code',
+												'label'   => __( 'Mailer Native Server Cron', 'tutor' ),
+												'label_title' => __( '', 'tutor' ),
+												'default' => 'off',
+												'desc'    => __( 'If you use OS native cron, then disable it.', 'tutor' ),
+											),
+										),
+										'desc'         => __( 'If you use OS native cron, then disable it.', 'tutor' ),
+									),
+								),
+							),
+						),
+					),
+					'general'            => array(
 						'label'    => __( 'General', 'tutor' ),
 						'slug'     => 'general',
 						'desc'     => __( 'General Settings', 'tutor' ),
@@ -508,6 +767,10 @@ class Options_V2 {
 										'type'        => 'checkbox_horizontal',
 										'label'       => __( 'Preferred Video Source', 'tutor' ),
 										'label_title' => __( 'Preferred Video Source', 'tutor' ),
+										'default'     => array(
+											'external_url' => true,
+											'html5'        => true,
+										),
 										'options'     => $video_sources,
 										'desc'        => __( 'Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor' ),
 									),
@@ -546,6 +809,7 @@ class Options_V2 {
 										'key'         => 'course_content_access_for_ia',
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Course Content Access', 'tutor' ),
+										'default'     => 'off',
 										'label_title' => __( '', 'tutor' ),
 										'desc'        => __( 'Allow instructors and admins to view the course content without enrolling', 'tutor' ),
 									),
@@ -649,7 +913,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'course'             => array(
 						'label'    => __( 'Course', 'tutor' ),
 						'slug'     => 'course',
 						'desc'     => __( 'Course Settings', 'tutor' ),
@@ -771,7 +1035,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'monitization'       => array(
 						'label'    => __( 'Monitization', 'tutor' ),
 						'slug'     => 'monitization',
 						'desc'     => __( 'Monitization Settings', 'tutor' ),
@@ -947,7 +1211,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'design'             => array(
 						'label'    => __( 'Design', 'tutor' ),
 						'slug'     => 'design',
 						'desc'     => __( 'Design Settings', 'tutor' ),
@@ -1217,7 +1481,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'advanced'           => array(
 						'label'    => __( 'Advanced', 'tutor' ),
 						'slug'     => 'advanced',
 						'desc'     => __( 'Advanced Settings', 'tutor' ),
@@ -1257,55 +1521,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
-						'label'    => __( 'Gradebook', 'tutor' ),
-						'slug'     => 'gradebook',
-						'desc'     => __( 'Gradebook Settings', 'tutor' ),
-						'template' => 'gradebook',
-						'icon'     => __( 'gradebook', 'tutor' ),
-						'blocks'   => array(
-							array(
-								'label'      => __( '', 'tutor' ),
-								'slug'       => 'e_mail_to_students',
-								'block_type' => 'isolate',
-								'fields'     => array(
-									array(
-										'key'         => 'use_points_instead_of_grades',
-										'type'        => 'toggle_switch',
-										'label'       => __( 'Use Points Instead of Grades', 'tutor' ),
-										'default'     => 'off',
-										'label_title' => __( '', 'tutor' ),
-										'desc'        => __( 'Enable this option to use numerical points instead of letter grades.', 'tutor' ),
-									),
-									array(
-										'key'         => 'show_highest_possible_points',
-										'type'        => 'toggle_switch',
-										'label'       => __( 'Show Highest Possible Points', 'tutor' ),
-										'default'     => 'off',
-										'label_title' => __( '', 'tutor' ),
-										'desc'        => __( 'Display the highest possible points next to a student’s score such as 3.8/4.0', 'tutor' ),
-									),
-									array(
-										'key'         => 'separator_between_scores',
-										'type'        => 'text',
-										'label'       => __( 'Separator Between Scores', 'tutor' ),
-										'default'     => 0,
-										'label_title' => __( '', 'tutor' ),
-										'desc'        => __( 'Input the separator text or symbol to display. Example: Insert / to display 3.8/4.0 or “out of” 3.8 out of 4.', 'tutor' ),
-									),
-									array(
-										'key'         => 'grade_scale',
-										'type'        => 'text',
-										'label'       => __( 'Grade Scale', 'tutor' ),
-										'default'     => 0,
-										'label_title' => __( '', 'tutor' ),
-										'desc'        => __( 'Insert the grade point out of which the final results will be calculated.', 'tutor' ),
-									),
-								),
-							),
-						),
-					),
-					array(
+					'tutor_certificate'  => array(
 						'label'    => __( 'Certificate', 'tutor' ),
 						'slug'     => 'certificate',
 						'desc'     => __( 'Certificate Settings', 'tutor' ),
@@ -1313,218 +1529,68 @@ class Options_V2 {
 						'icon'     => __( 'certificate', 'tutor' ),
 						'blocks'   => array(
 							array(
-								'label'      => __( 'All Certificate', 'tutor' ),
-								'slug'       => 'all-certificate',
+								'label'      => __( 'Options', 'tutor' ),
+								'slug'       => 'options',
 								'block_type' => 'uniform',
 								'fields'     => array(
 									array(
-										'key'         => 'new_instructor_signup',
-										'type'        => 'toggle_switch_button_thumb',
-										'label'       => __( 'New Instructor Signup', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'thumbs_url'  => 'certificate-thumb/cetificate-thumb-1.jpg',
-										'buttons'     => array(
-											'edit'   => 'Edit button of new_course_submitted_for_review',
-											'delete' => 'Delete button of new_course_submitted_for_review',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									array(
-										'key'         => 'new_student_signup',
-										'type'        => 'toggle_switch_button_thumb',
-										'label'       => __( 'New Student Signup', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'thumbs_url'  => 'certificate-thumb/cetificate-thumb-2.jpg',
-										'buttons'     => array(
-											'edit'   => 'Edit button of new_course_submitted_for_review',
-											'delete' => 'Delete button of new_course_submitted_for_review',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									array(
-										'key'         => 'new_course_submitted_for_review',
-										'type'        => 'toggle_switch_button_thumb',
-										'label'       => __( 'New Course Submitted for Review', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'thumbs_url'  => 'certificate-thumb/cetificate-thumb-3.jpg',
-										'buttons'     => array(
-											'edit'   => 'Edit button of new_course_submitted_for_review',
-											'delete' => 'Delete button of new_course_submitted_for_review',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									array(
-										'key'         => 'master_procedural_maze_dungeon_generation',
-										'type'        => 'toggle_switch_button_thumb',
-										'label'       => __( 'Master Procedural Maze & Dungeon Generation', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'thumbs_url'  => 'certificate-thumb/cetificate-thumb-4.jpg',
-										'buttons'     => array(
-											'edit'   => 'Edit button of new_course_submitted_for_review',
-											'delete' => 'Delete button of new_course_submitted_for_review',
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-								),
-							),
-							array(
-								'label'      => __( 'Select Certificate Template', 'tutor' ),
-								'slug'       => 'select_certificate_template',
-								'class'      => 'certificate-template"',
-								'block_type' => 'uniform',
-								'fields'     => array(
-									array(
-										'key'         => 'horizontal_template',
-										'type'        => 'radio_thumbs_grid',
-										'label'       => __( 'Horizontal Template', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'options'     => array(
-											array(
-												'title' => 'certificate-template-horizontal-1',
-												'slug'  => 'certificate-template-horizontal-1',
-												'thumb_url' => 'certificate-template/certificate-horizontal-1.jpg',
-											),
-											array(
-												'title' => 'certificate-template-horizontal-2',
-												'slug'  => 'certificate-template-horizontal-2',
-												'thumb_url' => 'certificate-template/certificate-horizontal-2.jpg',
-											),
-											array(
-												'title' => 'certificate-template-horizontal-3',
-												'slug'  => 'certificate-template-horizontal-3',
-												'thumb_url' => 'certificate-template/certificate-horizontal-3.jpg',
-											),
-											array(
-												'title' => 'certificate-template-horizontal-4',
-												'slug'  => 'certificate-template-horizontal-4',
-												'thumb_url' => 'certificate-template/certificate-horizontal-4.jpg',
-											),
-											array(
-												'title' => 'certificate-template-horizontal-5',
-												'slug'  => 'certificate-template-horizontal-5',
-												'thumb_url' => 'certificate-template/certificate-horizontal-5.jpg',
-											),
-											array(
-												'title' => 'certificate-template-horizontal-6',
-												'slug'  => 'certificate-template-horizontal-6',
-												'thumb_url' => 'certificate-template/certificate-horizontal-6.jpg',
-											),
-											array(
-												'title' => 'certificate-template-horizontal-7',
-												'slug'  => 'certificate-template-horizontal-7',
-												'thumb_url' => 'certificate-template/certificate-horizontal-7.jpg',
-											),
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									array(
-										'key'         => 'vertical_template',
-										'type'        => 'radio_thumbs_grid',
-										'label'       => __( 'Vertical Template', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'options'     => array(
-											array(
-												'title' => 'certificate-template-horizontal-1',
-												'slug'  => 'certificate-template-horizontal-1',
-												'thumb_url' => 'certificate-template/certificate-vertical-1.jpg',
-											),
-											array(
-												'title' => 'certificate-template-horizontal-2',
-												'slug'  => 'certificate-template-horizontal-2',
-												'thumb_url' => 'certificate-template/certificate-vertical-2.jpg',
-											),
-											array(
-												'title' => 'certificate-template-horizontal-3',
-												'slug'  => 'certificate-template-horizontal-3',
-												'thumb_url' => 'certificate-template/certificate-vertical-3.jpg',
-											),
-											array(
-												'title' => 'certificate-template-horizontal-4',
-												'slug'  => 'certificate-template-horizontal-4',
-												'thumb_url' => 'certificate-template/certificate-vertical-4.jpg',
-											),
-											array(
-												'title' => 'certificate-template-horizontal-5',
-												'slug'  => 'certificate-template-horizontal-5',
-												'thumb_url' => 'certificate-template/certificate-vertical-5.jpg',
-											),
-											array(
-												'title' => 'certificate-template-horizontal-6',
-												'slug'  => 'certificate-template-horizontal-6',
-												'thumb_url' => 'certificate-template/certificate-vertical-6.jpg',
-											),
-										),
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-								),
-							),
-
-							array(
-								'label'      => __( 'Select Certificate Template', 'tutor' ),
-								'slug'       => 'select_certificate_template',
-								'class'      => 'certificate-settings"',
-								'block_type' => 'uniform',
-								'fields'     => array(
-									array(
-										'key'         => 'add_instructor_info',
+										'key'         => 'login_error_message',
 										'type'        => 'toggle_switch',
-										'label'       => __( 'Add Instructor Info', 'tutor' ),
+										'label'       => __( 'Error message for wrong login credentials', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
 										'default'     => 'off',
-										'desc'        => __( 'Enable to add course instructor’s information on all generated certificates.', 'tutor' ),
+										'desc'        => __( 'Login error message displayed when the user puts wrong login credentials.', 'tutor' ),
 									),
 									array(
-										'key'         => 'authorised_company_name',
-										'type'        => 'text',
-										'label'       => __( 'Authorised Company Name', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'desc'        => __( 'Add your eLearning company name below your authorized name to add credibility to the certificates.', 'tutor' ),
-									),
-									array(
-										'key'     => 'signature',
-										'type'    => 'upload_half',
-										'label'   => __( 'Signature', 'tutor' ),
-										'default' => tutor()->icon_dir . 'tutor-logo-course-builder.svg',
-										'desc'    => __(
-											'<p>
-											Size: <strong>200x40 pixels;</strong> File Support:
-											<strong>jpg, .jpeg or .png.</strong>
-										</p>',
-											'tutor'
-										),
-									),
-									array(
-										'key'         => 'view_certificate',
+										'key'         => 'hide_admin_bar_for_users',
 										'type'        => 'toggle_switch',
-										'label'       => __( 'View Certificate', 'tutor' ),
+										'label'       => __( 'Hide Frontend Admin Bar', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
 										'default'     => 'off',
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
+										'desc'        => __( 'Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user', 'tutor' ),
+									),
+									array(
+										'key'         => 'enable_tutor_maintenance_mode',
+										'type'        => 'toggle_switch',
+										'label'       => __( 'Maintenance Mode', 'tutor' ),
+										'label_title' => __( '', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.', 'tutor' ),
 									),
 								),
 							),
 						),
-
 					),
 				),
 			),
 		);
-		// $attrs   = apply_filters( 'tutor/options/attr', $attr );
-		/*
-		 $extends = apply_filters( 'tutor/options/extend/attr', array() );
+		$attrs   = apply_filters( 'tutor/options/attr', $attr );
+		$extends = apply_filters( 'tutor/options/extend/attr', array() );
+		// $addons  = apply_filters( 'tutor/options/addons/attr', array() );
 
 		if ( tutils()->count( $extends ) ) {
-			// $attrs_array = array_merge( $attrs, $extends );//
-			foreach ( $extends as $extend_key => $extend_option ) {
-				if ( isset( $attrs[ $extend_key ] ) && tutils()->count( $extend_option['sections'] ) ) {
-					$sections                         = $attrs[ $extend_key ]['sections'];
-					$sections                         = array_merge( $sections, $extend_option['sections'] );
-					$attrs[ $extend_key ]['sections'] = $sections;
-				}
-			}
-		} */
+			foreach ( $extends as $section_key => $extended_sections ) {
 
-		return $attr;
+				if ( array_key_exists( 'pro_feature', $extended_sections ) ) {
+					unset( $extended_sections['pro_feature'] );
+					foreach ( $extended_sections as $extend_key => $extended_blocks ) {
+						$sections         = $attrs[ $extend_key ]['sections'];
+						$existing_section = $sections[ $section_key ];
+						$attrs[ $extend_key ]['sections'][ $section_key ]['blocks'] = array_merge( $existing_section['blocks'], $extended_blocks );
+
+					}
+				}
+				// pr( array( $section_key => $extended_sections ) );
+			}
+		}
+
+		// if ( tutils()->count( $addons ) ) {
+		// pr( $addons );
+		// die;
+		// }
+
+		return $attrs;
+
 	}
 
 	/**
@@ -1539,9 +1605,10 @@ class Options_V2 {
 		$is_active = false;
 		$j         = 0;
 
-		foreach ( $dataArr as $section ) {
+		foreach ( $dataArr as $key => $section ) {
+			// pr($section);
 			$j        += 1;
-			$is_active = isset( $url_page ) && $url_page === $section['slug'] ? true : ( ! isset( $url_page ) && $j === 1 ? true : false );
+			$is_active = isset( $url_page ) && $url_page === $section[ $key ] ? true : ( ! isset( $url_page ) && $j === 1 ? true : false );
 
 			if ( $is_active === true ) {
 				$url_exist = true;
@@ -1724,7 +1791,7 @@ class Options_V2 {
 						endforeach;
 					endforeach;
 				endif;
-			endforeach;
+			  endforeach;
 		endforeach;
 		return $fields;
 	}

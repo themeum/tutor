@@ -4,7 +4,7 @@ $current_tab = tutils()->array_get('settings_tab', $_GET);
 
 ?>
 
-<div id="tutor-metabox-course-settings-tabs" class="tutor-course-settings-tabs">
+<div id="tutor-metabox-course-settings-tabs" class="tutor-course-settings-tabs tutor-grid">
     <div class="course-settings-tabs-container">
         <div class="settings-tabs-navs-wrap">
             <ul class="settings-tabs-navs">
