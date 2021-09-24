@@ -23,13 +23,11 @@
 
 		> * {
 			pointer-events: none;
-			font-size: 20px;
 		}
 
-		&:hover,
-		&:focus {
+		&:focus-visible {
 			// box-shadow: 0 0 0 2px rgba(33, 35, 39, .17);
-			box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
+			box-shadow: 0 0 0 2px var(--tutor-primary);
 		}
 
 		.toggle-icon {

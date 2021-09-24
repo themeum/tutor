@@ -1,3 +1,5 @@
 import './tutorModal';
-import './thumbnailUploadPreview';
-import './popupMenu';
+import './tutorThumbnailPreview';
+import './tutorPopupMenu';
+import './tutorOffcanvas';
+import './tutorNotificationTab';

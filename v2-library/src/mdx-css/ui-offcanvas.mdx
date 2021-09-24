@@ -1,0 +1,126 @@
+---
+name: Off Canvas
+route: /mdx-css/ui-offcanvas
+menu: UI Components
+---
+
+import { Playground } from 'docz';
+import '../../bundle/main.min.css';
+import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css';
+import '../docz-essential.css';
+
+# Off Canvas
+
+`** Replace "className" with "class" while using with html`
+
+#### Open Off Canvas
+
+Use `"data-tutor-offcanvas-target=MENU_ID"` to open a menu.<br/>
+Use `tutor-offcanvas-*` - `left/right/top/bottom` to open offcanvas accordingly<br/>
+
+## Off Canvas
+
+<Playground>
+	<button
+		type="button"
+		className="tutor-btn-circle tutor-is-default btn-offcanvas-open"
+		data-tutor-offcanvas-target="offcanvas-target-1"
+	>
+		<span className="icon ttr-notification-filled"></span>
+		<span className="tutor-floating-badge">9</span>
+	</button>{' '}
+	<div id="offcanvas-target-1" className="tutor-offcanvas tutor-offcanvas-right tutor-offcanvas-notification is-active">
+		<div className="tutor-offcanvas-backdrop"></div>
+		<div className="tutor-offcanvas-main">
+			<div className="tutor-offcanvas-header">
+				<div className="heading text-medium-h5 color-text-primary">Notification</div>
+				<div className="action-buttons">
+					<div className="tutor-popup-opener">
+						<button type="button" className="popup-btn" data-tutor-popup-target="popup-menu-2">
+							<i class="ttr-action-line"></i>
+						</button>
+						<ul id="popup-menu-2" className="popup-menu">
+							<li>
+								<a href="#">
+									<span className="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+									<span className="text-regular-body color-text-white">Download</span>
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span className="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+									<span className="text-regular-body color-text-white">Delete</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<button
+						type="button"
+						className="btn-offcanvas-close color-design-grey"
+						data-tutor-offcanvas-close
+						aria-label="Close"
+					>
+						<i class="ttr-line-cross-line"></i>
+					</button>
+				</div>
+			</div>
+			<div className="tutor-offcanvas-body">
+				<div className="tutor-notification-tab">
+					<div className="tab-header d-flex">
+						<div className="tab-header-item is-active" data-tutor-notification-tab-target="tab-item-target-1">
+							<span className="color-text-primary text-regular-caption"> Student </span>
+						</div>
+						<div className="tab-header-item" data-tutor-notification-tab-target="tab-item-target-2">
+							<span className="color-text-primary text-regular-caption"> Instructor </span>
+						</div>
+					</div>
+					<div className="tab-body">
+						<div className="tab-body-item is-active" id="tab-item-target-1">
+							<div className="tutor-notification-element">
+								<div className="element-icon">
+									<span class="ttr-speaker-filled"></span>
+								</div>
+								<div className="element-content">
+									<div class="header">
+										<span class="title text-medium-small">Announcements</span>
+										<span class="meta">
+											<span class="time text-regular-small color-text-hints">19 Aug, 21</span>
+											<span class="dot"></span>
+										</span>
+									</div>
+									<div class="message text-medium-caption color-text-primary ">
+										Isaac Morgan <span className="color-text-hints">posted an announcement</span> “Review lecture on the
+										22nd February” <span className="color-text-hints">on your course</span> User Experience Design
+										Essentials
+									</div>
+								</div>
+							</div>
+						</div>
+						{''}
+						<div className="tab-body-item" id="tab-item-target-2">
+							<div className="tutor-notification-element">
+								<div className="element-icon">
+									<span class="ttr-puzzle-filled"></span>
+								</div>
+								<div className="element-content">
+									<div class="header">
+										<span class="title text-medium-small">Quiz</span>
+										<span class="meta">
+											<span class="time text-regular-small color-text-hints">20 Sept, 21</span>
+											<span class="dot"></span>
+										</span>
+									</div>
+									<div class="message text-medium-caption color-text-primary ">
+										David Hart<span className="color-text-hints">posted a question on your course</span> Advanced PHP:
+										How to become a PHP Expert in a month 22nd February”{' '}
+										<span className="color-text-hints">on your course</span> User Experience Design Essentials
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</Playground>
