@@ -4,22 +4,23 @@
     $levels = tutor_utils()->course_levels();
     $course_level = get_post_meta($course_id, '_tutor_course_level', true);
 ?>
-<div class="tutor-option-field-row">
-    <div class="tutor-option-field-label">
+<div class="row">
+    <div class="col-4">
         <label for="">
             <?php _e('Difficulty Level', 'tutor'); ?> <br />
         </label>
     </div>
-    <div class="tutor-option-field tutor-course-level-meta">
-        <?php
-        foreach ($levels as $level_key => $level){
-            ?>
-            <label> <input type="radio" name="course_level" value="<?php echo $level_key; ?>" <?php ($course_level ? checked($level_key,
-                    $course_level) : $level_key === 'intermediate') ? checked(1, 1): ''; ?> > <?php
-                echo
-                $level; ?> </label>
+    <div class="col-8">
+        <select name="course_level" class="tutor-form-select">
             <?php
-        }
-        ?>
+            foreach ($levels as $level_key => $level){
+                ?>
+                    <option value="<?php echo $level_key; ?>" <?php ($course_level ? selected($level_key, $course_level) : $level_key === 'intermediate') ? selected(1, 1): ''; ?>> 
+                        <?php echo $level; ?>
+                    </option>
+                <?php
+            }
+            ?>
+        </select>
     </div>
 </div>

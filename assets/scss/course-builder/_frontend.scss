@@ -22,6 +22,10 @@
 .tutor-course-builder-section {
 	margin-bottom: 60px;
 
+	input[type=text], input[type=number], textarea, .wp-editor-wrap{
+		width: 100%;
+	}
+
 	.tutor-frontend-builder-item-scope {
 		margin-bottom: 30px;
 		
@@ -72,25 +76,6 @@
 	.course-empty-content {
 		margin: 15px 0;
 	}
-
-	.tutor-course-builder-header{
-		margin-top: -15px;
-		text-align: right;
-		font-size: 12px;
-		position: static;
-		
-		a {
-			color: #393c40;
-			
-			&:first-child {
-				padding-right: 7px;
-			}
-			
-			&:last-child {
-				padding-left: 7px;
-			}
-		}
-	} 
 }
 
 .tutor-dashboard-builder-header{
@@ -231,12 +216,6 @@
 	input[type=text] {
 		border-radius: 6px;
 	}
-}
-
-.tutor-metabox-add-topics, .tutor-topics-edit-form {
-	border: 1px solid #dcdfe5;
-	margin-top: 25px;
-	padding: 20px;
 }
 
 /*

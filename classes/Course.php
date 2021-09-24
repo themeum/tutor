@@ -23,7 +23,7 @@ class Course extends Tutor_Base {
 		add_filter( "manage_{$this->course_post_type}_posts_columns", array($this, 'add_column'), 10,1 );
 		add_action( "manage_{$this->course_post_type}_posts_custom_column" , array($this, 'custom_lesson_column'), 10, 2 );
 
-		add_action('admin_action_tutor_delete_topic', array($this, 'tutor_delete_topic'));
+		add_action('wp_ajax_tutor_delete_topic', array($this, 'tutor_delete_topic'));
 		add_action('admin_action_tutor_delete_announcement', array($this, 'tutor_delete_announcement'));
 
 		//Frontend Action
@@ -532,25 +532,22 @@ class Course extends Tutor_Base {
 	public function tutor_delete_topic(){
 
 		tutils()->checking_nonce('get'); 
-		
-		!isset($_GET['topic_id']) ? exit() : 0;
 
 		global $wpdb;
+		$topic_id = sanitize_text_field(!empty($_POST['topic_id']) ? $_POST['topic_id'] : '');
 
-		$topic_id = (int) sanitize_text_field($_GET['topic_id']);
-		$wpdb->update(
-			$wpdb->posts,
-			array('post_parent' => 0),
-			array('post_parent' => $topic_id)
-		);
+		if(!$topic_id || !is_numeric($topic_id) || !tutor_utils()->can_user_manage('topic', $topic_id)) {
+			wp_send_json_error(array('msg' => 'Access Forbidden'));
+		}
 
-		$wpdb->delete(
-			$wpdb->postmeta,
-			array('post_id' => $topic_id)
-		);
+		// Set contents under the topic orphan
+		$wpdb->update($wpdb->posts, array('post_parent' => 0), array('post_parent' => $topic_id));
 
+		// Then delete the topic from database
+		$wpdb->delete($wpdb->postmeta, array('post_id' => $topic_id));
 		wp_delete_post($topic_id);
-		wp_safe_redirect(wp_get_referer());
+
+		wp_send_json_success();
 	}
 
 	public function tutor_delete_announcement(){

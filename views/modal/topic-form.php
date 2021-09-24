@@ -21,7 +21,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="tutor-mb-30">
+                <div>
                     <label class="tutor-form-label"><?php _e('Topic Summary', 'tutor'); ?></label>
                     <div class="tutor-input-group tutor-mb-15">
                         <textarea name="topic_summery" class="tutor-form-control tutor-mb-10"><?php echo !empty($data['summary']) ? $data['summary'] : ''; ?></textarea>

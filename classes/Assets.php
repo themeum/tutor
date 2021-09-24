@@ -49,7 +49,7 @@ class Assets {
 
 		/**
 		 * Identifier class to body tag
-		 * 
+		 *
 		 * @since v1.9.9
 		 */
 		add_filter( 'body_class', array($this, 'add_identifier_class_to_body') );
@@ -83,7 +83,6 @@ class Assets {
 	public function admin_scripts() {
 		wp_enqueue_style('tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), tutor()->version);
-		
 		/**
 		 * Scripts
 		 */
@@ -143,7 +142,7 @@ class Assets {
 		//Plyr
 		wp_enqueue_style('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), tutor()->version);
 		wp_enqueue_script('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array('jquery'), tutor()->version, true);
-		
+
 		//Social Share
 		wp_enqueue_script('tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array('jquery'), tutor()->version, true);
 
@@ -161,15 +160,15 @@ class Assets {
 				wp_enqueue_script('jquery-ui-datepicker');
 			}
 		}
-		
+
 		/**
-		 * dependency wp-i18n added for 
+		 * dependency wp-i18n added for
 		 * translate js file
 		 * @since 1.9.0
 		 */
 		wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front.min.css", array(), tutor()->version);
 		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
-		
+
 
 		/**
 		 * Load frontend dashboard style
@@ -196,15 +195,15 @@ class Assets {
 				$saved_quiz_options = array(
 					'quiz_when_time_expires' => tutils()->get_option('quiz_when_time_expires'),
 				);
-	
+
 				$quiz_options = array_merge($single_quiz_options, $saved_quiz_options);
-	
+
 				$previous_attempts = tutor_utils()->quiz_attempts();
-	
+
 				if ($previous_attempts && count($previous_attempts)) {
 					$quiz_options['quiz_auto_start'] = 0;
 				}
-				
+
 				$localize_data['quiz_options'] = $quiz_options;
 			}
 
@@ -225,14 +224,14 @@ class Assets {
 
 	public function common_scripts() {
 
-		// Common css library
-		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.min.css', array(), tutor()->version);
-
 		// Fonts
 		wp_enqueue_style('tutor-lineawesome-fonts', tutor()->url . 'assets/icons/lineawesome@1.3.0/css/line-awesome.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'assets/icons/tutor-v2-icon/css/tutor-v2-icon-test.css', array(), tutor()->version);
 		
+		// Common css library
+		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.min.css', array(), tutor()->version);
+
 		// Load course builder resources
 		if($this->get_course_builder_screen()) {
 			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
@@ -384,7 +383,7 @@ class Assets {
 
 		return null;
 	}
-	
+
 	public function add_identifier_class_to_body($classes) {
 		$course_builder_screen = $this->get_course_builder_screen();
 		$to_add = array();
@@ -392,6 +391,10 @@ class Assets {
 		// Add course editor identifier class
 		if($course_builder_screen) {
 			$to_add[] = ' tutor-screen-course-builder tutor-screen-course-builder-' . $course_builder_screen . ' ';
+		}
+
+		if(!$course_builder_screen && tutor_utils()->is_tutor_frontend_dashboard()) {
+			$to_add[] = 'tutor-screen-frontend-dashboard';
 		}
 
 		is_array($classes) ? $classes=array_merge($classes, $to_add) : $classes.=implode('', $to_add);

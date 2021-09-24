@@ -1,6 +1,4 @@
-<?php
-
-if ( $blocks['block_type'] == 'uniform' ) : ?>
+<?php if ( $blocks['block_type'] == 'uniform' ) : ?>
 
 	<div class="tutor-option-single-item <?php echo ! isset( $blocks['class'] ) ? ( $blocks['slug'] ?? null ) : $blocks['class']; ?>">
 		<?php echo $blocks['label'] ? '<h4>' . $blocks['label'] . '</h4>' : ''; ?>
@@ -26,7 +24,7 @@ if ( $blocks['block_type'] == 'uniform' ) : ?>
 
 <?php elseif ( $blocks['block_type'] == 'column' ) : ?>
 
-	<div class="tutor-option-single-item item-variation-grid <?php echo $blocks['slug']; ?>">
+	<div class="tutor-option-single-item <?php echo $blocks['slug']; ?>">
 		<?php echo $blocks['label'] ? '<h4>' . $blocks['label'] . '</h4>' : ''; ?>
 		<div class="item-grid">
 			<?php foreach ( $blocks['fieldset'] as $fieldset ) : ?>

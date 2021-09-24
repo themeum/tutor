@@ -1,9 +1,6 @@
 @import '../lib/mixins.scss';
 
 .tutor-dashboard-header {
-    @include valueWithPrefix(display, flex);
-    @include propertyWithPrefix(align-items, center);
-    @include propertyWithPrefix(flex-wrap, wrap);
 	padding-bottom: 30px;
 	border-bottom: 1px solid #dcdfe5;
 
@@ -22,9 +19,11 @@
 
     .tutor-dashboard-header-avatar {
         img {
-            display: block;
-            width: 150px;
-            height: 150px;
+            display: inline-block;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
             border-radius: 50%;
         }
     } 
@@ -38,10 +37,11 @@
 
         .tutor-dashboard-header-display-name {
             h4 {
+                margin: 0;
+                font-style: normal;
+                font-weight: 500;
                 font-size: 30px;
-                margin-top: 0px;
-                margin-bottom: 10px;
-                line-height: 34px;
+                color: #212327;
             }
         } 
 

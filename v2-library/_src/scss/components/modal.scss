@@ -28,6 +28,12 @@
 		z-index: -1;
 	}
 
+	.tutor-modal-close {
+		font-size: 28px;
+		background: none;
+		border: none;
+	}
+	
 	&:not(.modal-sticky-header-footer) {
 		.tutor-modal-close {
 			position: fixed;
@@ -48,6 +54,14 @@
 			border-bottom: 1px solid $stroke-light-30;
 		}
 	
+		.tutor-modal-close {
+			font-size: 28px;
+			background: none;
+			border: none;
+			padding: 0;
+			color: rgb(63, 63, 63);
+		}
+
 		.tutor-modal-body-alt {
 			min-height: 300px;
 			max-height: calc(100vh - 15em);
@@ -59,11 +73,6 @@
 		}
 	}
 
-	.tutor-modal-close {
-		font-size: 28px;
-		background: none;
-		border: none;
-	}
 
 	.tutor-modal-root {
 		background: transparent;

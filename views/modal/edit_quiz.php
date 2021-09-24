@@ -8,10 +8,10 @@
             <input type="text" name="quiz_title" class="tutor-form-control tutor-mb-10" placeholder="<?php _e('Type your quiz title here', 'tutor'); ?>" value="<?php echo $quiz ? htmlspecialchars( stripslashes($quiz->post_title) ) : ''; ?>"/>
         </div>
     </div>
-    <div class="tutor-mb-30">
-        <label class="tutor-form-label">Lesson Summary</label>
+    <div>
+        <label class="tutor-form-label"><?php _e('Summary', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
-            <textarea name="quiz_description" class="tutor-form-control tutor-mb-10" placeholder="Lesson Summary" rows="5"><?php echo $quiz ? stripslashes($quiz->post_content) : ''; ?></textarea>
+            <textarea name="quiz_description" class="tutor-form-control tutor-mb-10" rows="5"><?php echo $quiz ? stripslashes($quiz->post_content) : ''; ?></textarea>
         </div>
     </div>
     <?php do_action('tutor_quiz_edit_modal_info_tab_after', $quiz) ?>
@@ -137,44 +137,43 @@
         </div>
     </div>
     
-    <div class="tutor-quiz-builder-group">
-        <h4><?php _e('Attempts Allowed', 'tutor'); ?> <span>(<?php _e('Optional', 'tutor'); ?>)</span></h4>
-        <div class="tutor-quiz-builder-row">
-            <div class="tutor-quiz-builder-col">
-                <?php
+    <div class="tutor-mb-30">
+        <label class="tutor-form-label"><?php _e('Attempts Allowed', 'tutor'); ?></label>
+        <div class="tutor-input-group tutor-mb-15">
+            <?php
                 $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
                 $attempts_allowed = (int) tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
-                ?>
-
-                <div class="tutor-field-type-slider" data-min="0" data-max="20">
-                    <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
-                    <div class="tutor-field-slider"></div>
-                    <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
-                </div>
+            ?>
+            <div class="tutor-field-type-slider" data-min="0" data-max="20">
+                <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
+                <div class="tutor-field-slider"></div>
+                <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
             </div>
+            <p class="tutor-input-feedback">
+                <?php _e('Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit', 'tutor'); ?>
+            </p>
         </div>
-        <p class="help"><?php _e('Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit', 'tutor'); ?></p>
-    </div> <!-- .tutor-quiz-builder-group -->
+    </div>
 
-    <div class="tutor-quiz-builder-group">
-        <h4><?php _e('Passing Grade (%)', 'tutor'); ?></h4>
-        <div class="tutor-quiz-builder-row">
-            <div class="tutor-quiz-builder-col">
-                <input type="number" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10">
-            </div>
+    <div class="tutor-mb-30">
+        <label class="tutor-form-label"><?php _e('Passing Grade (%)', 'tutor'); ?></label>
+        <div class="tutor-input-group tutor-mb-15">
+            <input type="number" class="tutor-form-control tutor-mb-10" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10"/>
+            <p class="tutor-input-feedback">
+                <?php _e('Set the passing percentage for this quiz', 'tutor'); ?>
+            </p>
         </div>
-        <p class="help"><?php _e('Set the passing percentage for this quiz', 'tutor'); ?></p>
-    </div> <!-- .tutor-quiz-builder-group -->
+    </div>
 
-    <div class="tutor-quiz-builder-group">
-        <h4><?php _e('Max questions allowed to answer', 'tutor'); ?></h4>
-        <div class="tutor-quiz-builder-row">
-            <div class="tutor-quiz-builder-col">
-                <input type="number" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>">
-            </div>
+    <div>
+        <label class="tutor-form-label"><?php _e('Max questions allowed to answer', 'tutor'); ?></label>
+        <div class="tutor-input-group tutor-mb-15">
+            <input type="number" class="tutor-form-control tutor-mb-10" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>"/>
+            <p class="tutor-input-feedback">
+                <?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?>
+            </p>
         </div>
-        <p class="help"><?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?></p>
-    </div> <!-- .tutor-quiz-builder-group -->
+    </div>
 
     <?php do_action('tutor_quiz_edit_modal_settings_tab_after', $quiz) ?>
 </div>

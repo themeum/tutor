@@ -102,6 +102,18 @@ a.back-to-quiz-questions-btn {
     }
 }
 
+#quiz-builder-tab-settings{
+    .tutor-input-group{
+        @include propertyWithPrefix(flex-flow, column);
+        
+        input{
+            &:not([name=assignment_title]) {
+                max-width: 135px;
+            }
+        }
+    }
+}
+
 #tutor-answer-builder {
     background: #E3E5EB;
     margin: 0px -30px;

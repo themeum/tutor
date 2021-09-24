@@ -302,71 +302,6 @@
   --tutor-text-size: 16px;
 }
 
-.ui-slider {
-  position: relative;
-  text-align: left;
-}
-
-.ui-slider .ui-slider-handle {
-  position: absolute;
-  z-index: 2;
-  width: 15px;
-  height: 15px;
-  cursor: default;
-  top: -6.5px;
-  cursor: pointer;
-}
-
-.ui-slider .ui-slider-range {
-  position: absolute;
-  z-index: 1;
-  font-size: 0.7em;
-  display: block;
-  border: 0;
-  background-position: 0 0;
-}
-
-.ui-slider-horizontal {
-  height: 0.8em;
-}
-
-.ui-slider-horizontal .ui-slider-range {
-  top: 0;
-  height: 100%;
-}
-
-.ui-slider-horizontal .ui-slider-range-min {
-  left: 0;
-}
-
-.ui-slider-horizontal .ui-slider-range-max {
-  right: 0;
-}
-
-.ui-slider-vertical {
-  width: 0.8em;
-  height: 100px;
-}
-
-.ui-slider-vertical .ui-slider-handle {
-  left: -0.3em;
-  margin-left: 0;
-  margin-bottom: -0.6em;
-}
-
-.ui-slider-vertical .ui-slider-range {
-  left: 0;
-  width: 100%;
-}
-
-.ui-slider-vertical .ui-slider-range-min {
-  bottom: 0;
-}
-
-.ui-slider-vertical .ui-slider-range-max {
-  top: 0;
-}
-
 /* Only reusable function, or code allowed here. No direct css please. */
 .tutor-toast-parent {
   position: fixed;
@@ -845,6 +780,196 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 
 .tutor-dot-loader.loader-success > span {
   background-color: var(--tutor-success-button-color);
+}
+
+.ui-slider {
+  position: relative;
+  text-align: left;
+}
+
+.ui-slider .ui-slider-handle {
+  position: absolute;
+  z-index: 2;
+  width: 15px;
+  height: 15px;
+  cursor: default;
+  top: -6px;
+  cursor: pointer;
+}
+
+.ui-slider .ui-slider-range {
+  position: absolute;
+  z-index: 1;
+  font-size: 0.7em;
+  display: block;
+  border: 0;
+  background-position: 0 0;
+}
+
+.ui-slider-horizontal {
+  height: 0.8em;
+}
+
+.ui-slider-horizontal .ui-slider-range {
+  top: 0;
+  height: 100%;
+}
+
+.ui-slider-horizontal .ui-slider-range-min {
+  left: 0;
+}
+
+.ui-slider-horizontal .ui-slider-range-max {
+  right: 0;
+}
+
+.ui-slider-vertical {
+  width: 0.8em;
+  height: 100px;
+}
+
+.ui-slider-vertical .ui-slider-handle {
+  left: -0.3em;
+  margin-left: 0;
+  margin-bottom: -0.6em;
+}
+
+.ui-slider-vertical .ui-slider-range {
+  left: 0;
+  width: 100%;
+}
+
+.ui-slider-vertical .ui-slider-range-min {
+  bottom: 0;
+}
+
+.ui-slider-vertical .ui-slider-range-max {
+  top: 0;
+}
+
+.tutor-field-type-slider {
+  background-color: #fff;
+  border: 1px solid #C0C3CB;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  color: #333;
+  padding: 20px 70px 24px 15px;
+  margin: 0 10px 0 0;
+  height: 46px;
+  width: 100%;
+  display: block;
+  position: relative;
+  border-radius: 6px;
+}
+
+.tutor-field-type-slider .ui-widget-header {
+  background: #dedede;
+  border-radius: 4px;
+}
+
+.tutor-field-type-slider .ui-widget-content {
+  background-color: var(--tutor-primary-color);
+  border: none;
+  height: 4px;
+  border-radius: 4px;
+}
+
+.tutor-field-type-slider .ui-widget-content .ui-state-default {
+  background-color: white;
+  border: 4px solid var(--tutor-primary-color);
+  border-radius: 50%;
+}
+
+.tutor-field-type-slider .tutor-field-type-slider-value {
+  font-size: 16px;
+  font-weight: 600;
+  background: var(--tutor-primary-color);
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  margin: 0;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  line-height: 34px;
+  width: 43px;
+  text-align: center;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.tutor-field-type-slider .tutor-field-type-slider-value:before {
+  content: "";
+  position: absolute;
+  border: 7px solid transparent;
+  top: 50%;
+  border-right-color: var(--tutor-primary-color);
+  right: 100%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.tutor-input-tooltip {
+  position: relative;
+}
+
+@media (min-width: 992px) {
+  .tutor-input-tooltip p.desc {
+    position: absolute;
+    left: calc(100% + 16px);
+    background: #2A344F;
+    width: auto;
+    max-width: 160px;
+    padding: 10px 13px;
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: 300ms;
+    transition: 300ms;
+    z-index: 98;
+    color: #fff;
+    border-radius: 12px;
+    font-size: 12px;
+    font-style: normal;
+    margin: 0;
+  }
+  .tutor-input-tooltip p.desc::before {
+    content: url("data:image/svg+xml,%3Csvg width='14' height='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 8.139C5.339 5.482 8.671 2.903 9.998.403c1.99-3.75 5.481 21.94 1.567 16.037C8.955 12.505 5.1 9.738 0 8.139z' fill='%232A344F' fill-rule='evenodd'/%3E%3C/svg%3E");
+    position: absolute;
+    left: -10px;
+    top: 16px;
+  }
+  .tutor-input-tooltip:hover p.desc {
+    opacity: 1;
+    visibility: visible;
+  }
+  .tutor-input-tooltip input:focus + p.desc, .tutor-input-tooltip textarea:focus + p.desc {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Only reusable function, or code allowed here. No direct css please. */
+.tutor-flex-center {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
 }
 
 /**
@@ -5723,61 +5848,6 @@ i.tutor-icon-block.tutor-icon-plus {
   line-height: 44px;
 }
 
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider {
-  border: 1px solid #dedede;
-  padding: 20px 70px 20px 10px;
-  background-color: #ffffff;
-  position: relative;
-  border-radius: 4px;
-}
-
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-content {
-  background: var(--tutor-primary-color);
-  border: none;
-  height: 4px;
-  border-radius: 4px;
-}
-
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-header {
-  background: #dedede;
-  border-radius: 4px;
-}
-
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider .ui-widget-content .ui-state-default {
-  background: var(--tutor-primary-color);
-  border: 1px solid var(--tutor-primary-color);
-  border-radius: 50%;
-  margin-top: -2px;
-}
-
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider .tutor-field-type-slider-value {
-  font-size: 16px;
-  font-weight: 600;
-  background: var(--tutor-primary-color);
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  margin: 0;
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
-  line-height: 34px;
-  width: 43px;
-  text-align: center;
-  border-radius: 4px;
-  color: #fff;
-}
-
-.tutor-quiz-builder-modal-wrap .tutor-field-type-slider .tutor-field-type-slider-value:before {
-  content: "";
-  position: absolute;
-  border: 7px solid transparent;
-  top: 50%;
-  border-right-color: var(--tutor-primary-color);
-  right: 100%;
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-
 .tutor-quiz-answer-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -9266,44 +9336,6 @@ Withdraw Method
   .tutor-user-public-profile .tutor-user-profile-sidebar, .tutor-user-public-profile .tutor-user-profile-content {
     width: 100%;
     float: none;
-  }
-}
-
-@media (min-width: 992px) {
-  .tutor-option-tooltip.tutor-option-field {
-    position: relative;
-  }
-  .tutor-option-tooltip.tutor-option-field p.desc {
-    position: absolute;
-    left: calc(100% + 16px);
-    background: #2A344F;
-    width: 160px;
-    padding: 10px 13px;
-    opacity: 0;
-    visibility: hidden;
-    -webkit-transition: 300ms;
-    transition: 300ms;
-    z-index: 98;
-    top: 10px;
-    color: #fff;
-    border-radius: 12px;
-    font-size: 12px;
-    font-style: normal;
-  }
-  .tutor-option-tooltip.tutor-option-field p.desc::before {
-    content: url("data:image/svg+xml,%3Csvg width='14' height='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 8.139C5.339 5.482 8.671 2.903 9.998.403c1.99-3.75 5.481 21.94 1.567 16.037C8.955 12.505 5.1 9.738 0 8.139z' fill='%232A344F' fill-rule='evenodd'/%3E%3C/svg%3E");
-    position: absolute;
-    left: -10px;
-    top: 16px;
-  }
-  .tutor-option-tooltip.tutor-option-field:hover p.desc {
-    opacity: 1;
-    visibility: visible;
-  }
-  .tutor-option-tooltip.tutor-option-field input:focus + p.desc,
-  .tutor-option-tooltip.tutor-option-field textarea:focus + p.desc {
-    opacity: 1;
-    visibility: visible;
   }
 }
 

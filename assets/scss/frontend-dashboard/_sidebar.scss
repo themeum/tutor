@@ -44,8 +44,10 @@
                 display: block;
                 color: var(--tutor-text-color);
                 padding: 10px 20px;
-                line-height: 28px;
-                
+                font-size: 16px;
+                font-style: normal;
+                font-weight: normal;
+
                 &:hover {
                     background-color: #edf0f9;
                 }
@@ -54,6 +56,8 @@
             &.active a {
                 background-color: var(--tutor-primary-color);
                 color: #ffffff;
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
                 
                 &:hover {
                     background-color: var(--tutor-primary-hover-color);
@@ -132,6 +136,25 @@
             &.tutor-dashboard-menu-analytics a:before {
                 content:"\e9b2";
             }
+        }
+    }
+}
+
+&:not(.is-sidebar-expanded) {
+    .tutor-dashboard-left-menu {
+        @media(max-width: 767px) {
+            display: none;
+        }
+    }
+}
+
+&.is-sidebar-expanded {
+    ul.tutor-dashboard-permalinks {
+        border-right: none !important;
+
+        li.active a{
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
         }
     }
 }
