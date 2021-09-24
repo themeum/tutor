@@ -741,6 +741,12 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 
 
 
+if ( ! function_exists( 'get_response' ) ) {
+	function get_response( $param ) {
+		return isset( $_REQUEST[ $param ] ) ? esc_attr( $_REQUEST[ $param ] ) : null;
+	}
+}
+
 if ( ! function_exists( 'pr' ) ) {
 	/**
 	 * Function to print_r

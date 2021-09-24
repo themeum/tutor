@@ -1796,6 +1796,17 @@ class Options_V2 {
 		return $fields;
 	}
 
+	/**
+	 * Definition of tutor_load_email_template
+	 *
+	 * @return array
+	 */
+	public function tutor_load_email_template( $template ) {
+		// ob_start();
+		include tutor_pro()->path . "templates/email/{$template}.php";
+		// return ob_get_clean();
+	}
+
 
 	/**
 	 * Definition of get_field_by_key
