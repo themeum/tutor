@@ -1151,26 +1151,20 @@ function tutorModal() {
 (function tutorNotificationTab() {
   document.addEventListener('click', function (e) {
     var attr = 'data-tutor-notification-tab-target';
-    var tabItems = document.querySelectorAll('.tab-header-item, .tab-body-item');
-    var activeItems = document.querySelectorAll('.tab-header-item.is-active, .tab-body-item.is-active'); // Opening Offcanvas
+    var activeItems = document.querySelectorAll('.tab-header-item.is-active, .tab-body-item.is-active');
 
     if (e.target.hasAttribute(attr)) {
       e.preventDefault();
       var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
-      activeItems.forEach(function (m) {
-        m.classList.remove('is-active');
-      });
       var tabBodyItem = document.getElementById(id);
 
-      if (tabBodyItem) {
+      if (e.target.hasAttribute(attr) && tabBodyItem) {
         activeItems.forEach(function (m) {
           m.classList.remove('is-active');
         });
+        e.target.classList.add('is-active');
         tabBodyItem.classList.add('is-active');
       }
-
-      console.log(tabHeaderItem);
-      console.log('getA', e.target.getAttribute(attr), 'clo', e.target.closest("[".concat(attr, "]")).getAttribute(attr));
     }
   });
 })();

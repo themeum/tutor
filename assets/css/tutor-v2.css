@@ -10469,6 +10469,8 @@ table.tutor-ui-table .td-progress .progress-text {
   height: 100vh;
   z-index: 1040;
   background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
 }
 
 .tutor-offcanvas .tutor-offcanvas-main {
@@ -10477,10 +10479,11 @@ table.tutor-ui-table .td-progress .progress-text {
   background: #fff;
   -webkit-box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
           box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
-  -webkit-transition: -webkit-transform 300ms ease-in-out;
-  transition: -webkit-transform 300ms ease-in-out;
-  transition: transform 300ms ease-in-out;
-  transition: transform 300ms ease-in-out, -webkit-transform 300ms ease-in-out;
+  padding: 20px 0;
+  -webkit-transition: 400ms ease-in-out;
+  transition: 400ms ease-in-out;
+  opacity: 0;
+  visibility: hidden;
 }
 
 .tutor-offcanvas.tutor-offcanvas-right .tutor-offcanvas-main {
@@ -10530,12 +10533,18 @@ table.tutor-ui-table .td-progress .progress-text {
 }
 
 .tutor-offcanvas.is-active .tutor-offcanvas-main {
+  opacity: 1;
+  visibility: visible;
   -webkit-transform: none;
           transform: none;
 }
 
+.tutor-offcanvas.is-active .tutor-offcanvas-backdrop {
+  opacity: 1;
+  visibility: visible;
+}
+
 .tutor-offcanvas-notification .tutor-offcanvas-header {
-  padding: 20px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -10545,6 +10554,7 @@ table.tutor-ui-table .td-progress .progress-text {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  margin: 10px 0;
 }
 
 .tutor-offcanvas-notification .tutor-offcanvas-header .action-buttons {
@@ -10584,8 +10594,9 @@ table.tutor-ui-table .td-progress .progress-text {
   display: flex;
 }
 
+.tutor-offcanvas-notification .tutor-offcanvas-header,
 .tutor-offcanvas-notification .tutor-offcanvas-body {
-  padding: 20px;
+  padding: 0 20px;
 }
 
 .tutor-notification-tab .tab-header {
@@ -10602,12 +10613,37 @@ table.tutor-ui-table .td-progress .progress-text {
   border-bottom: 1px solid #cdcfd5;
 }
 
+.tutor-notification-tab .tab-header-item {
+  cursor: pointer;
+  position: relative;
+}
+
+.tutor-notification-tab .tab-header-item > * {
+  pointer-events: none;
+}
+
 .tutor-notification-tab .tab-header-item span {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding: 5px;
-  pointer-events: none;
+  padding: 10px;
+}
+
+.tutor-notification-tab .tab-header-item:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  border-bottom: 2px solid #3e64de;
+  -webkit-transform: scaleY(0);
+          transform: scaleY(0);
+  -webkit-transition: 300ms ease-in;
+  transition: 300ms ease-in;
+}
+
+.tutor-notification-tab .tab-header-item.is-active:before {
+  -webkit-transform: scaleY(1);
+          transform: scaleY(1);
 }
 
 .tutor-notification-tab .tab-body-item {
@@ -10618,14 +10654,67 @@ table.tutor-ui-table .td-progress .progress-text {
   display: block;
 }
 
-.tutor-notification-tab .tutor-notification-element {
+.tutor-notification-element .element-icon .element-primary {
+  background: #3e64de;
+}
+
+.tutor-notification-element .element-content .header .element-primary {
+  color: #3e64de;
+}
+
+.tutor-notification-element .element-icon .element-success {
+  background: #24a148;
+}
+
+.tutor-notification-element .element-content .header .element-success {
+  color: #24a148;
+}
+
+.tutor-notification-element .element-icon .element-warning {
+  background: #e08e00;
+}
+
+.tutor-notification-element .element-content .header .element-warning {
+  color: #e08e00;
+}
+
+.tutor-notification-element .element-icon .element-danger {
+  background: #e53935;
+}
+
+.tutor-notification-element .element-content .header .element-danger {
+  color: #e53935;
+}
+
+.tutor-notification-element {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   gap: 10px;
+  padding-top: 20px;
+  padding-bottom: 15px;
 }
 
-.tutor-notification-tab .tutor-notification-element .element-content .header {
+.tutor-notification-element .element-icon {
+  color: #fff;
+}
+
+.tutor-notification-element .element-icon [class^='element-'] {
+  width: 24px;
+  height: 24px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border-radius: 50%;
+}
+
+.tutor-notification-element .element-content .header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -10633,6 +10722,61 @@ table.tutor-ui-table .td-progress .progress-text {
       -ms-flex-pack: justify;
           justify-content: space-between;
   margin-bottom: 10px;
+}
+
+.tutor-notification-element .element-content .header .meta {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
+}
+
+.tutor-notification-element .element-content .header .meta .dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  /* design/brand */
+  background: #3e64de;
+  /* color/primary/fill/40 */
+  -webkit-box-shadow: 0 0 0 2px #e9edfb;
+          box-shadow: 0 0 0 2px #e9edfb;
+  position: relative;
+}
+
+.tutor-notification-element .element-content .header .meta .dot:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  -webkit-animation: pulse-animation 2s infinite;
+          animation: pulse-animation 2s infinite;
+  z-index: -1;
+}
+
+@-webkit-keyframes pulse-animation {
+  0% {
+    -webkit-box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 6px rgba(0, 0, 0, 0);
+            box-shadow: 0 0 0 6px rgba(0, 0, 0, 0);
+  }
+}
+
+@keyframes pulse-animation {
+  0% {
+    -webkit-box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 6px rgba(0, 0, 0, 0);
+            box-shadow: 0 0 0 6px rgba(0, 0, 0, 0);
+  }
 }
 
 /*# sourceMappingURL=tutor-v2.css.map */
