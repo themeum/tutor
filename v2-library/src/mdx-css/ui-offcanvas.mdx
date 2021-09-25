@@ -31,7 +31,7 @@ Use `data-tutor-notification-tab-target="TAB_ITEM_ID"` for individual notificati
 		<span className="icon ttr-notification-filled"></span>
 		<span className="tutor-floating-badge">9</span>
 	</button>{' '}
-	<div id="offcanvas-target-1" className="tutor-offcanvas tutor-offcanvas-right tutor-offcanvas-notification is-active">
+	<div id="offcanvas-target-1" className="tutor-offcanvas tutor-offcanvas-right">
 		<div className="tutor-offcanvas-backdrop"></div>
 		<div className="tutor-offcanvas-main">
 			<div className="tutor-offcanvas-header">
@@ -66,6 +66,7 @@ Use `data-tutor-notification-tab-target="TAB_ITEM_ID"` for individual notificati
 					</button>
 				</div>
 			</div>
+			{/* end /.tutor-offcanvas-header */}
 			<div className="tutor-offcanvas-body">
 				<div className="tutor-notification-tab">
 					<div className="tab-header d-flex">
@@ -76,6 +77,7 @@ Use `data-tutor-notification-tab-target="TAB_ITEM_ID"` for individual notificati
 							<span className="color-text-primary text-regular-caption"> Instructor </span>
 						</div>
 					</div>
+					{/* end /.tab-header */}
 					<div className="tab-body">
 						<div className="tab-body-item is-active" id="tab-item-target-1">
 							<div className="tutor-notification-element">
@@ -99,6 +101,7 @@ Use `data-tutor-notification-tab-target="TAB_ITEM_ID"` for individual notificati
 									</div>
 								</div>
 							</div>
+							{/* end /.tutor-notification-element */}
 							<div className="tutor-notification-element">
 								<div className="element-icon">
 									<span class="element-warning">
@@ -120,8 +123,9 @@ Use `data-tutor-notification-tab-target="TAB_ITEM_ID"` for individual notificati
 									</div>
 								</div>
 							</div>
+							{/* end /.tutor-notification-element */}
 						</div>
-						{''}
+						{/* end /.tab-body-item */}
 						<div className="tab-body-item" id="tab-item-target-2">
 							<div className="tutor-notification-element">
 								<div className="element-icon">
@@ -144,6 +148,7 @@ Use `data-tutor-notification-tab-target="TAB_ITEM_ID"` for individual notificati
 									</div>
 								</div>
 							</div>
+							{/* end /.tutor-notification-element */}
 							<div className="tutor-notification-element">
 								<div className="element-icon">
 									<span class="element-danger">
@@ -165,10 +170,17 @@ Use `data-tutor-notification-tab-target="TAB_ITEM_ID"` for individual notificati
 									</div>
 								</div>
 							</div>
+							{/* end /.tutor-notification-element */}
 						</div>
+						{/* end /.tab-body-item */}
 					</div>
+					{/* end /.tab-body */}
 				</div>
+				{/* end /.tutor-notification-tab */}
 			</div>
+			{/* end /.tutor-offcanvas-body */}
 		</div>
+		{/* end /.tutor-offcanvas-main */}
 	</div>
+	{/* end /#offcanvas-target-1 */}
 </Playground>
