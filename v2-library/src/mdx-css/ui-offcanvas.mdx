@@ -15,10 +15,12 @@ import '../docz-essential.css';
 
 #### Open Off Canvas
 
-Use `"data-tutor-offcanvas-target=MENU_ID"` to open a menu.<br/>
+Use `data-tutor-offcanvas-target="MENU_ID"` to open a menu.<br/>
 Use `tutor-offcanvas-*` - `left/right/top/bottom` to open offcanvas accordingly<br/>
 
 ## Off Canvas
+
+Use `data-tutor-notification-tab-target="TAB_ITEM_ID"` for individual notification tab item
 
 <Playground>
 	<button
@@ -78,13 +80,36 @@ Use `tutor-offcanvas-*` - `left/right/top/bottom` to open offcanvas accordingly<
 						<div className="tab-body-item is-active" id="tab-item-target-1">
 							<div className="tutor-notification-element">
 								<div className="element-icon">
-									<span class="ttr-speaker-filled"></span>
+									<span class="element-primary">
+										<span class="ttr-speaker-filled"></span>
+									</span>
 								</div>
 								<div className="element-content">
 									<div class="header">
-										<span class="title text-medium-small">Announcements</span>
+										<span class="text-medium-small element-primary">Announcements</span>
 										<span class="meta">
 											<span class="time text-regular-small color-text-hints">19 Aug, 21</span>
+											<span class="dot"></span>
+										</span>
+									</div>
+									<div class="message text-medium-caption color-text-primary ">
+										Isaac Morgan <span className="color-text-hints">posted an announcement</span> “Review lecture on the
+										22nd February” <span className="color-text-hints">on your course</span> User Experience Design
+										Essentials
+									</div>
+								</div>
+							</div>
+							<div className="tutor-notification-element">
+								<div className="element-icon">
+									<span class="element-warning">
+										<span class="ttr-quiz-1-filled"></span>
+									</span>
+								</div>
+								<div className="element-content">
+									<div class="header">
+										<span class="text-medium-small element-warning">Q&A</span>
+										<span class="meta">
+											<span class="time text-regular-small color-text-hints">19 Aug, 22</span>
 											<span class="dot"></span>
 										</span>
 									</div>
@@ -100,17 +125,40 @@ Use `tutor-offcanvas-*` - `left/right/top/bottom` to open offcanvas accordingly<
 						<div className="tab-body-item" id="tab-item-target-2">
 							<div className="tutor-notification-element">
 								<div className="element-icon">
-									<span class="ttr-puzzle-filled"></span>
+									<span class="element-success">
+										<span class="ttr-puzzle-filled"></span>
+									</span>
 								</div>
 								<div className="element-content">
 									<div class="header">
-										<span class="title text-medium-small">Quiz</span>
+										<span class="text-medium-small element-success">Quiz</span>
 										<span class="meta">
-											<span class="time text-regular-small color-text-hints">20 Sept, 21</span>
+											<span class="time text-regular-small color-text-hints">20 Sept, 20</span>
 											<span class="dot"></span>
 										</span>
 									</div>
 									<div class="message text-medium-caption color-text-primary ">
+										David Hart<span className="color-text-hints">posted a question on your course</span> Advanced PHP:
+										How to become a PHP Expert in a month 22nd February”{' '}
+										<span className="color-text-hints">on your course</span> User Experience Design Essentials
+									</div>
+								</div>
+							</div>
+							<div className="tutor-notification-element">
+								<div className="element-icon">
+									<span class="element-danger">
+										<span class="ttr-puzzle-filled"></span>
+									</span>
+								</div>
+								<div className="element-content">
+									<div class="header">
+										<span class="text-medium-small element-danger">Quiz</span>
+										<span class="meta">
+											<span class="time text-regular-small color-text-hints">20 Sept, 20</span>
+											<span class="dot"></span>
+										</span>
+									</div>
+									<div class="message text-medium-caption color-text-primary">
 										David Hart<span className="color-text-hints">posted a question on your course</span> Advanced PHP:
 										How to become a PHP Expert in a month 22nd February”{' '}
 										<span className="color-text-hints">on your course</span> User Experience Design Essentials
