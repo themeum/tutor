@@ -19,13 +19,6 @@
 }
 
 .tutor-offcanvas {
-	position: fixed;
-	inset: 0;
-	z-index: 1000;
-	opacity: 0;
-	visibility: hidden;
-	transition: 300ms;
-
 	.tutor-offcanvas-backdrop {
 		position: fixed;
 		inset: 0;
@@ -35,6 +28,7 @@
 		background-color: rgba(0, 0, 0, 0.5);
 		opacity: 0;
 		visibility: hidden;
+		transition: 300ms;
 	}
 
 	.tutor-offcanvas-main {
@@ -43,7 +37,8 @@
 		background: #fff;
 		box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
 		padding: 20px 0;
-		transition: 400ms ease-in-out;
+		transition: 300ms ease-in-out;
+		// transition-delay: 200ms;
 		opacity: 0;
 		visibility: hidden;
 	}
@@ -109,9 +104,7 @@
 			visibility: visible;
 		}
 	}
-}
 
-.tutor-offcanvas-notification {
 	.tutor-offcanvas-header {
 		display: flex;
 		align-items: center;
