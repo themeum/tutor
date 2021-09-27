@@ -25,13 +25,12 @@ class Options_V2 {
 
 	public $option;
 	public $status;
-	public $options_attr;
+	private $setting_fields;
 	public $options_tools;
 
 	public function __construct() {
 		 $this->option       = (array) maybe_unserialize( get_option( 'tutor_option' ) );
 		$this->status        = $this->status();
-		$this->options_attr  = $this->options_attr();
 		$this->options_tools = $this->options_tools();
 		
 		// Saving option.
@@ -580,7 +579,10 @@ class Options_V2 {
 		return $attr_tools;
 	}
 
-	public function options_attr() {
+	public function get_setting_fields() {
+		
+		if($this)
+
 		$pages = tutor_utils()->get_pages();
 
 		// $course_base = tutor_utils()->course_archive_page_url();
