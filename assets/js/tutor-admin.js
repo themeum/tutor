@@ -2583,6 +2583,7 @@ jQuery(document).ready(function ($) {
     e.preventDefault();
     var $form = $(this);
     var data = $form.serializeObject();
+    console.log(data);
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
