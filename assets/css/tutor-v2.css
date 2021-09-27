@@ -10458,7 +10458,7 @@ table.tutor-ui-table .td-progress .progress-text {
   width: 100vw;
   height: 100vh;
   z-index: 1040;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.25);
   opacity: 0;
   visibility: hidden;
   -webkit-transition: 300ms;
@@ -10586,9 +10586,13 @@ table.tutor-ui-table .td-progress .progress-text {
   display: flex;
 }
 
+.tutor-offcanvas .tutor-offcanvas-main {
+  --padding: 20px;
+}
+
 .tutor-offcanvas .tutor-offcanvas-header,
 .tutor-offcanvas .tutor-offcanvas-body {
-  padding: 0 20px;
+  padding: 0 var(--padding);
 }
 
 .tutor-notification-tab .tab-header {
@@ -10599,8 +10603,8 @@ table.tutor-ui-table .td-progress .progress-text {
   content: '';
   bottom: 0;
   position: absolute;
-  left: -20px;
-  width: calc(100% + 40px);
+  left: calc(-1 * var(--padding));
+  width: calc(100% + calc(2 * var(--padding)));
   /* stroke/light30 */
   border-bottom: 1px solid #cdcfd5;
 }
@@ -10638,6 +10642,18 @@ table.tutor-ui-table .td-progress .progress-text {
           transform: scaleY(1);
 }
 
+.tutor-notification-tab .tab-body {
+  min-width: 100%;
+  width: calc(100% + var(--padding));
+  max-height: 100vh;
+  overflow-y: auto;
+  padding-right: var(--padding);
+  --scrollbarBG: rgba(205, 207, 213, 0.5);
+  --thumbBG: #3e64de;
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+
 .tutor-notification-tab .tab-body-item {
   display: none;
 }
@@ -10646,35 +10662,48 @@ table.tutor-ui-table .td-progress .progress-text {
   display: block;
 }
 
-.tutor-notification-element .element-icon .element-primary {
+.tutor-notification-tab .tab-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tutor-notification-tab .tab-body::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+
+.tutor-notification-tab .tab-body::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+  border-radius: 40px;
+}
+
+.tutor-notification-element:not(.notification-read) .element-icon .element-primary {
   background: #3e64de;
 }
 
-.tutor-notification-element .element-content .header .element-primary {
+.tutor-notification-element:not(.notification-read) .element-content .header .element-primary {
   color: #3e64de;
 }
 
-.tutor-notification-element .element-icon .element-success {
+.tutor-notification-element:not(.notification-read) .element-icon .element-success {
   background: #24a148;
 }
 
-.tutor-notification-element .element-content .header .element-success {
+.tutor-notification-element:not(.notification-read) .element-content .header .element-success {
   color: #24a148;
 }
 
-.tutor-notification-element .element-icon .element-warning {
+.tutor-notification-element:not(.notification-read) .element-icon .element-warning {
   background: #e08e00;
 }
 
-.tutor-notification-element .element-content .header .element-warning {
+.tutor-notification-element:not(.notification-read) .element-content .header .element-warning {
   color: #e08e00;
 }
 
-.tutor-notification-element .element-icon .element-danger {
+.tutor-notification-element:not(.notification-read) .element-icon .element-danger {
   background: #e53935;
 }
 
-.tutor-notification-element .element-content .header .element-danger {
+.tutor-notification-element:not(.notification-read) .element-content .header .element-danger {
   color: #e53935;
 }
 
@@ -10704,6 +10733,7 @@ table.tutor-ui-table .td-progress .progress-text {
       -ms-flex-pack: center;
           justify-content: center;
   border-radius: 50%;
+  background: #9ca0ac;
 }
 
 .tutor-notification-element .element-content .header {
@@ -10769,6 +10799,23 @@ table.tutor-ui-table .td-progress .progress-text {
     -webkit-box-shadow: 0 0 0 6px rgba(0, 0, 0, 0);
             box-shadow: 0 0 0 6px rgba(0, 0, 0, 0);
   }
+}
+
+.tutor-notification-element .element-content .header [class^='element-'] {
+  color: #41454f;
+}
+
+.tutor-notification-element .element-content .message .color-text-hints, .tutor-notification-element .element-content .message table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn, table.tutor-ui-table .td-action-btns .tutor-notification-element .element-content .message .btn-outline.tutor-btn, .tutor-notification-element .element-content .message table.tutor-ui-table .td-action-btns .btn-text, table.tutor-ui-table .td-action-btns .tutor-notification-element .element-content .message .btn-text {
+  font-weight: 300;
+}
+
+.tutor-notification-element.notification-read .element-content .header .meta .dot {
+  display: none;
+}
+
+.tutor-notification-element.notification-read .element-content .message,
+.tutor-notification-element.notification-read .element-content .message > * {
+  color: #727889;
 }
 
 /*# sourceMappingURL=tutor-v2.css.map */
