@@ -1524,14 +1524,6 @@ class Options_V2 {
 										'default'     => 'off',
 										'desc'        => __( 'Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user', 'tutor' ),
 									),
-									array(
-										'key'         => 'enable_tutor_maintenance_mode',
-										'type'        => 'toggle_switch',
-										'label'       => __( 'Maintenance Mode', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.', 'tutor' ),
-									),
 								),
 							),
 						),
@@ -1769,6 +1761,17 @@ class Options_V2 {
 			  endforeach;
 		endforeach;
 		return $fields;
+	}
+
+	/**
+	 * Definition of tutor_load_email_template
+	 *
+	 * @return array
+	 */
+	public function tutor_load_email_template( $template ) {
+		// ob_start();
+		include tutor_pro()->path . "templates/email/{$template}.php";
+		// return ob_get_clean();
 	}
 
 

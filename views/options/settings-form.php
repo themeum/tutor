@@ -66,52 +66,43 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : '';
 		<form class="tutor-option-form py-4 px-3" id="tutor-option-form">
 			<input type="hidden" name="action" value="tutor_option_save">
 			<div class="tutor-option-tabs">
-				<?php
-				// pr( $this->options_attr() );
-				foreach ( $this->options_attr() as $args ) :
-					?>
-					<ul class="tutor-option-nav">
-						<li class="tutor-option-nav-item">
-							<h4><?php echo $args['label']; ?></h4>
-						<li>
-							<?php
-							foreach ( $args['sections'] as $key => $section ) :
-								 $icon = tutor()->icon_dir . $key . '.svg';
-								?>
-								<li class="tutor-option-nav-item">
-									<a data-tab="<?php echo $key; ?>" class="<?php // echo $is_active; ?>">
-										<img src="<?php echo $icon; ?>" alt="<?php echo $key; ?>-icon" />
-										<span class="nav-label"><?php echo $section['label']; ?></span>
-									</a>
-								</li>
-								<?php
-							endforeach;
-							?>
-					</ul>
+				<ul class="tutor-option-nav">
 					<?php
-				endforeach;
-				?>
-				<!-- end /.tutor-option-nav -->
+					foreach ( $this->options_attr() as $args ) {
+						$first_key = array_key_first( $args['sections'] );
+						foreach ( $args['sections'] as $key => $section ) {
+							$icon       = tutor()->icon_dir . $key . '.svg';
+							$tab_page   = get_response( 'tab_page' );
+							$is_current = ( ! isset( $tab_page ) && esc_attr( $first_key ) === esc_attr( $key ) ) || esc_attr( $tab_page ) === esc_attr( $key ) ? esc_attr( ' active' ) : null;
+							?>
+						<li class="tutor-option-nav-item">
+							<a data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $is_current ); ?>">
+								<img src="<?php echo esc_attr( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>-icon" />
+								<span class="nav-label"><?php echo esc_html( $section['label'] ); ?></span>
+							</a>
+						</li>
+							<?php
+						}
+					}
+					?>
+				</ul>
 			</div>
 			<!-- end /.tutor-option-tabs -->
 			<div class="tutor-option-tab-pages">
 				<?php
-				foreach ( $this->options_attr as $key => $args ) :
-					// $url_exist = $this->url_exists( $args['sections'], $url_page );
-					// pr( $args['sections'] );
-
-					foreach ( $args['sections'] as $key => $section ) :
-						// $is_active = $this->get_active( $i, $url_page, $section['slug'], $url_exist ) ? 'active' : null;
+				foreach ( $this->options_attr as $key => $args ) {
+					foreach ( $args['sections'] as $key => $section ) {
+						$tab_page   = get_response( 'tab_page' );
+						$is_current = ( ! isset( $tab_page ) && esc_attr( $first_key ) === esc_attr( $key ) ) || esc_attr( $tab_page ) === esc_attr( $key ) ? esc_attr( ' active' ) : null;
 						?>
-						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page active <?php // echo $is_active; ?>">
-
+						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $is_current ); ?>">
 							<?php echo $this->template( $section ); ?>
-
 						</div>
 						<?php
-					endforeach;
-				endforeach;
+					}
+				}
 				?>
+
 			</div>
 			<!-- end /.tutor-option-tab-pages -->
 		</form>
