@@ -1,35 +1,66 @@
-/* dashboard content */
-.tutor-dashboard-info-cards {
-	margin: 0 -15px 15px;
-	padding: 0;
-	display: flex;
-	list-style: none;
-	flex-wrap: wrap;
-	.tutor-dashboard-info-card {
-		padding: 15px;
-		min-width: 33.333%;
-		p {
-			margin: 0;
-			padding: 15px 25px;
-			background: #282c36;
-			color: #ffffff;
-			border-radius: 4px;
-			span {
-				&.tutor-dashboard-info-val {
-					display: block;
-					font-weight: 700;
-					font-size: 30px;
-					line-height: 1.618;
-				}
+@import '../../lib/mixins.scss';
 
-				span {
-					display: inline-block;
-				}
-			
-				&>* {
-					vertical-align: middle;
-				}
-			}
-		}
+.tutor-dashboard-cards-container {
+    &>div {
+
+        p{
+            @include valueWithPrefix(display, flex);
+            @include propertyWithPrefix(flex-direction, column);
+            @include propertyWithPrefix(align-items, center);
+            margin: 0;
+			background: white;
+			border: 1px solid hsl(225, 9%, 82%);
+			border-radius: 6px;
+			margin-bottom: 24px;
+			padding: 30px 0;
+
+            &>span {
+                font-style: normal;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                &:nth-child(1) {
+                    margin-bottom: 20px;
+                }
+
+                &:nth-child(2) {
+                    font-weight: bold;
+                    font-size: 30px;
+                    color: #212327;
+                }
+
+                &:nth-child(3) {
+                    font-size: 15px;
+                    color: #5B616F;
+                }
+            }
+
+            .tutor-round-icon {
+                @include valueWithPrefix(display, flex);
+                @include propertyWithPrefix(align-items, center);
+                @include propertyWithPrefix(justify-content, center);
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                overflow: hidden;
+                background: #E9EDFB;
+
+                &>*{
+                    display: inline-block;
+                    max-width: 100%;
+                    max-height: 100%;
+                }
+            }
+        }
+    }
+}
+
+.popular-courses-heading-dashboard {
+	a {
+		font-style: normal;
+		font-weight: 500;
+		font-size: 15px;
+		color: #5B616F;	
 	}
 }
