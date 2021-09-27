@@ -37,6 +37,11 @@ jQuery(document).ready(function($) {
     window.history.pushState("obj", "", $(this).attr("href"));
   });
 
+  $(".tutor-form-toggle-input").on("change", function(e) {
+    var toggleInput = $(this).siblings("input");
+    $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
+  });
+
   $("#save_tutor_option").click(function(e) {
     e.preventDefault();
     $(this)
