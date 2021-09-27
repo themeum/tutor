@@ -11,7 +11,7 @@
  * @version 2.0
  */
 
-$url_page = $_GET['tab_page'];
+$url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : '';
 ?>
 <!-- .tutor-backend-wrap -->
 <section class="tutor-backend-settings-page tutor-grid" style="padding-top: 60px;">

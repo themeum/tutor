@@ -47,6 +47,8 @@
                 font-size: 16px;
                 font-style: normal;
                 font-weight: normal;
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
 
                 &:hover {
                     background-color: #edf0f9;
@@ -56,8 +58,6 @@
             &.active a {
                 background-color: var(--tutor-primary-color);
                 color: #ffffff;
-                border-top-left-radius: 6px;
-                border-bottom-left-radius: 6px;
                 
                 &:hover {
                     background-color: var(--tutor-primary-hover-color);

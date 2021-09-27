@@ -60,5 +60,9 @@
 
     .tutor-dashboard-header-button {
         padding-top: 15px;
+
+        @media (min-width:768px) {
+            text-align: right;
+        }
     }
 }

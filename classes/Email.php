@@ -57,31 +57,6 @@ class Email {
 
 									'desc'    => __( 'The text to appear in E-Mail template footer', 'tutor' ),
 								),
-								array(
-									'key'          => 'mailer_native_server_cron',
-									'type'         => 'group_textarea_code',
-									'label'        => __( 'Mailer Native Server Cron', 'tutor' ),
-									'label_title'  => __( '', 'tutor' ),
-									'group_fields' => array(
-										array(
-											'key'         => 'mailer_native_server_cron',
-											'type'        => 'toggle_switch',
-											'label'       => __( 'Mailer Native Server Cron', 'tutor' ),
-											'label_title' => __( '', 'tutor' ),
-											'default'     => 'off',
-											'desc'        => __( 'If you use OS native cron, then disable it.', 'tutor' ),
-										),
-										array(
-											'key'         => 'mailer_native_server',
-											'type'        => 'textarea_code',
-											'label'       => __( 'Mailer Native Server Cron', 'tutor' ),
-											'label_title' => __( '', 'tutor' ),
-											'default'     => 'off',
-											'desc'        => __( 'If you use OS native cron, then disable it.', 'tutor' ),
-										),
-									),
-									'desc'         => __( 'If you use OS native cron, then disable it.', 'tutor' ),
-								),
 							),
 						),
 					),
