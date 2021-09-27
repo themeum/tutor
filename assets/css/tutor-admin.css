@@ -7504,6 +7504,26 @@ li.tutor-option-nav-item h4 {
   visibility: hidden;
 }
 
+.tutor-option-field-label .isHighlighted {
+  position: relative;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  z-index: 1;
+}
+
+.tutor-option-field-label .isHighlighted::before {
+  content: "";
+  position: absolute;
+  inset: 1px -6px;
+  background: #fce7c7;
+  border: 1px solid #f5ba63;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 3px;
+  z-index: -1;
+}
+
 .tutor-option-tab-pages .tutor-option-field-label {
   float: unset;
   width: unset;

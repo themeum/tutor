@@ -8,10 +8,12 @@
 $url_page = isset( $_GET['tab_page'] ) ? $_GET['tab_page'] : null;
 
 if ( isset( $_GET['tab_page'] ) && 'email' === $_GET['tab_page'] && isset( $_GET['edit'] ) ) {
-	include tutor()->path . 'views/options/email-edit.php';
+	include tutor_pro()->path . 'addons/tutor-email/views/pages/email-edit.php';
 } else {
 	include tutor()->path . 'views/options/settings-form.php';
-} ?>
+}
+
+?>
 <style>
 	.isHighlighted {}
 

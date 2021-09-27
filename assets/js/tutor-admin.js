@@ -322,7 +322,8 @@ searchInput.addEventListener('input', (e) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _popupToggle__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./popupToggle */ "./assets/react/admin-dashboard/segments/popupToggle.js");
+/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib */ "./assets/react/admin-dashboard/segments/lib.js");
+/* harmony import */ var _popupToggle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./popupToggle */ "./assets/react/admin-dashboard/segments/popupToggle.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -336,28 +337,6 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
-
-var notice_message = function notice_message() {
-  var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-  var noticeElement = element(".tutor-notification");
-  noticeElement.classList.add("show");
-
-  if (message) {
-    noticeElement.querySelector(".tutor-notification-content p").innerText = message;
-  }
-
-  setTimeout(function () {
-    noticeElement.classList.remove("show");
-  }, 4000);
-};
-
-var element = function element(selector) {
-  return document.querySelector(selector);
-};
-
-var elements = function elements(selector) {
-  return document.querySelectorAll(selector);
-};
 
 document.addEventListener("readystatechange", function (event) {
   if (event.target.readyState === "interactive") {
@@ -398,22 +377,6 @@ function highlightSearchedItem(dataKey) {
   } else {
     console.warn("scrollTargetEl Not found!");
   }
-}
-/**
- * Function to download json file
- * @param {json} response
- * @param {string} fileName
- */
-
-
-function json_download(response, fileName) {
-  var fileToSave = new Blob([response], {
-    type: "application/json"
-  });
-  var el = document.createElement("a");
-  el.href = URL.createObjectURL(fileToSave);
-  el.download = fileName;
-  el.click();
 }
 /**
  * Email Manage template - live Preview
@@ -484,16 +447,16 @@ function tutor_option_history_load(history_data) {
   }
 
   var heading = "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p>Date</p></div></div>";
-  element(".history_data").innerHTML = heading + output;
+  (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)(".history_data").innerHTML = heading + output;
   export_single_settings();
-  (0,_popupToggle__WEBPACK_IMPORTED_MODULE_0__["default"])();
+  (0,_popupToggle__WEBPACK_IMPORTED_MODULE_1__["default"])();
   apply_single_settings();
 }
 /* import and list dom */
 
 
 var export_settings_all = function export_settings_all() {
-  var export_settings = element("#export_settings"); //document.querySelector("#export_settings");
+  var export_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#export_settings"); //document.querySelector("#export_settings");
 
   if (export_settings) {
     export_settings.onclick = function (e) {
@@ -512,7 +475,7 @@ var export_settings_all = function export_settings_all() {
         return response.json();
       }).then(function (response) {
         var fileName = "tutor_options_" + time_now();
-        json_download(JSON.stringify(response), fileName);
+        (0,_lib__WEBPACK_IMPORTED_MODULE_0__.json_download)(JSON.stringify(response), fileName);
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -530,7 +493,7 @@ var time_now = function time_now() {
 };
 
 var reset_default_options = function reset_default_options() {
-  var reset_options = element("#reset_options");
+  var reset_options = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#reset_options");
 
   if (reset_options) {
     reset_options.onclick = function () {
@@ -544,7 +507,7 @@ var reset_default_options = function reset_default_options() {
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
           setTimeout(function () {
-            notice_message("Reset all settings to default successfully!");
+            (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Reset all settings to default successfully!");
           }, 200);
         }
       };
@@ -553,11 +516,11 @@ var reset_default_options = function reset_default_options() {
 };
 
 var import_history_data = function import_history_data() {
-  var import_options = element("#import_options");
+  var import_options = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#import_options");
 
   if (import_options) {
     import_options.onclick = function () {
-      var files = element("#drag-drop-input").files;
+      var files = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#drag-drop-input").files;
 
       if (files.length <= 0) {
         return false;
@@ -583,7 +546,7 @@ var import_history_data = function import_history_data() {
             delete_history_data();
             import_history_data();
             setTimeout(function () {
-              notice_message("Data imported successfully!");
+              (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Data imported successfully!");
             }, 200);
           }
         };
@@ -593,7 +556,7 @@ var import_history_data = function import_history_data() {
 };
 
 var export_single_settings = function export_single_settings() {
-  var single_settings = elements(".export_single_settings");
+  var single_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".export_single_settings");
 
   var _loop = function _loop(i) {
     single_settings[i].onclick = function () {
@@ -612,7 +575,7 @@ var export_single_settings = function export_single_settings() {
           console.log(xhttp.response); // let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
 
           var fileName = export_id;
-          json_download(xhttp.response, fileName);
+          (0,_lib__WEBPACK_IMPORTED_MODULE_0__.json_download)(xhttp.response, fileName);
         }
       };
     };
@@ -624,7 +587,7 @@ var export_single_settings = function export_single_settings() {
 };
 
 var apply_single_settings = function apply_single_settings() {
-  var apply_settings = elements(".apply_settings");
+  var apply_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".apply_settings");
 
   var _loop2 = function _loop2(i) {
     apply_settings[i].onclick = function () {
@@ -639,7 +602,7 @@ var apply_single_settings = function apply_single_settings() {
 
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
-          notice_message("Applied settings successfully!");
+          (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Applied settings successfully!");
           console.log(xhttp.response);
         }
       };
@@ -652,8 +615,8 @@ var apply_single_settings = function apply_single_settings() {
 };
 
 var delete_history_data = function delete_history_data() {
-  var noticeMessage = element(".tutor-notification");
-  var delete_settings = elements(".delete_single_settings");
+  var noticeMessage = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)(".tutor-notification");
+  var delete_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".delete_single_settings");
 
   var _loop3 = function _loop3(i) {
     delete_settings[i].onclick = function () {
@@ -673,7 +636,7 @@ var delete_history_data = function delete_history_data() {
           tutor_option_history_load(xhttp.responseText);
           delete_history_data();
           setTimeout(function () {
-            notice_message("Data deleted successfully!");
+            (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Data deleted successfully!");
           }, 200);
         }
       };
@@ -684,6 +647,62 @@ var delete_history_data = function delete_history_data() {
     _loop3(i);
   }
 };
+
+/***/ }),
+
+/***/ "./assets/react/admin-dashboard/segments/lib.js":
+/*!******************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/lib.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "element": () => (/* binding */ element),
+/* harmony export */   "elements": () => (/* binding */ elements),
+/* harmony export */   "notice_message": () => (/* binding */ notice_message),
+/* harmony export */   "json_download": () => (/* binding */ json_download)
+/* harmony export */ });
+var element = function element(selector) {
+  return document.querySelector(selector);
+};
+
+var elements = function elements(selector) {
+  return document.querySelectorAll(selector);
+};
+
+var notice_message = function notice_message() {
+  var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+  var noticeElement = element(".tutor-notification");
+  noticeElement.classList.add("show");
+
+  if (message) {
+    noticeElement.querySelector(".tutor-notification-content p").innerText = message;
+  }
+
+  setTimeout(function () {
+    noticeElement.classList.remove("show");
+  }, 4000);
+};
+/**
+ * Function to download json file
+ * @param {json} response
+ * @param {string} fileName
+ */
+
+
+var json_download = function json_download(response, fileName) {
+  var fileToSave = new Blob([response], {
+    type: "application/json"
+  });
+  var el = document.createElement("a");
+  el.href = URL.createObjectURL(fileToSave);
+  el.download = fileName;
+  el.click();
+};
+
+
 
 /***/ }),
 
