@@ -12,6 +12,7 @@
  */
 
 $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : '';
+$option_fields = $data['setting_fields'];
 ?>
 <!-- .tutor-backend-wrap -->
 <section class="tutor-backend-settings-page tutor-grid" style="padding-top: 60px;">
@@ -68,8 +69,8 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : '';
 			<div class="tutor-option-tabs">
 				<ul class="tutor-option-nav">
 					<?php
-					foreach ( $this->options_attr() as $args ) {
-						$first_key = array_key_first( $args['sections'] );
+					foreach ( $option_fields as $args ) {
+						$first_key = array_keys( $args['sections'] )[0];
 						foreach ( $args['sections'] as $key => $section ) {
 							$icon       = tutor()->icon_dir . $key . '.svg';
 							$tab_page   = get_response( 'tab_page' );
@@ -90,7 +91,7 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : '';
 			<!-- end /.tutor-option-tabs -->
 			<div class="tutor-option-tab-pages">
 				<?php
-				foreach ( $this->options_attr as $key => $args ) {
+				foreach ( $option_fields as $key => $args ) {
 					foreach ( $args['sections'] as $key => $section ) {
 						$tab_page   = get_response( 'tab_page' );
 						$is_current = ( ! isset( $tab_page ) && esc_attr( $first_key ) === esc_attr( $key ) ) || esc_attr( $tab_page ) === esc_attr( $key ) ? esc_attr( ' active' ) : null;
@@ -121,3 +122,25 @@ $url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : '';
 		</button>
 	</div>
 </section>
+
+
+<style>
+	.isHighlighted {}
+
+	.tutor-notification {
+		position: fixed;
+		bottom: 40px;
+		z-index: 999;
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	.tutor-notification.show {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	.tutor-notification .tutor-notification-close{
+		transition: unset;
+	}
+</style>

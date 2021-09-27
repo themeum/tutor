@@ -33,7 +33,7 @@ class Options_V2 {
 		$this->status        = $this->status();
 		$this->options_attr  = $this->options_attr();
 		$this->options_tools = $this->options_tools();
-		$this->get_param_val = $this->get_param_val( '' );
+		
 		// Saving option.
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
 		add_action( 'wp_ajax_tutor_option_default_save', array( $this, 'tutor_option_default_save' ) );
@@ -44,7 +44,6 @@ class Options_V2 {
 		add_action( 'wp_ajax_tutor_import_settings', array( $this, 'tutor_import_settings' ) );
 		add_action( 'wp_ajax_tutor_apply_settings', array( $this, 'tutor_apply_settings' ) );
 		add_action( 'wp_ajax_load_saved_data', array( $this, 'load_saved_data' ) );
-
 	}
 
 	private function get( $key = null, $default = false ) {
@@ -79,19 +78,6 @@ class Options_V2 {
 
 		return $default;
 	}
-
-
-	/**
-	 * Funcation to get params val
-	 *
-	 * @param  mixed $param
-	 * @return void
-	 */
-	public function get_param_val( $param = '' ) {
-		return isset( $_GET[ $param ] ) ? $_GET[ $param ] : null;
-	}
-
-
 
 	/**
 	 * tutor_option_search
@@ -1709,7 +1695,7 @@ class Options_V2 {
 		return ob_get_clean();
 	}
 
-	public function generate() {
+	public function generate_settings() {
 		ob_start();
 		include tutor()->path . 'views/options/options_generator.php';
 
@@ -1721,7 +1707,7 @@ class Options_V2 {
 	 *
 	 * @return void
 	 */
-	public function tools() {
+	public function generate_tools() {
 		ob_start();
 		include tutor()->path . 'views/options/options_tools.php';
 
