@@ -858,7 +858,7 @@ document.addEventListener('DOMContentLoaded', function () {
             output += "<div class=\"no_item\"> ".concat(warning, " No Results Found</div>");
           }
 
-          $(".search_result").html(output).addClass("show");
+          $(".search_result").html(output).addClass("visible");
           output = ""; // console.log("working");
         },
         complete: function complete() {
@@ -867,7 +867,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     } else {
-      document.querySelector(".search-popup-opener").classList.remove("show");
+      document.querySelector(".search-popup-opener").classList.remove("visible");
     }
   });
   /**
@@ -903,7 +903,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } // Reset + Hide Suggestion box
 
 
-        document.querySelector(".search-popup-opener").classList.remove("show");
+        document.querySelector(".search-popup-opener").classList.remove("visible");
         document.querySelector('.search-field input[type="search"]').value = ""; // Highlight selected element
 
         highlightSearchedItem(dataKey);
@@ -1302,8 +1302,8 @@ jQuery(document).ready(function ($) {
       _n = _wp$i18n._n,
       _nx = _wp$i18n._nx;
   /**
-   * Global date_picker selector 
-   * 
+   * Global date_picker selector
+   *
    * @since 1.9.7
    */
 
@@ -1839,7 +1839,7 @@ jQuery(document).ready(function ($) {
   });
   /*
   * @since v.1.6.4
-  * Quiz Attempts Instructor Feedback 
+  * Quiz Attempts Instructor Feedback
   */
 
   $(document).on('click', '.tutor-instructor-feedback', function (e) {
@@ -2031,7 +2031,7 @@ jQuery(document).ready(function ($) {
         error: function error() {}
       });
     }
-  }); //sorting 
+  }); //sorting
   // if (jQuery.datepicker){
   //     $( "#tutor-announcement-datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
   // }
@@ -2073,6 +2073,129 @@ jQuery(document).ready(function ($) {
   }); //announcement end
 
   /**
+<<<<<<< HEAD
+=======
+   * @since v.1.9.0
+   * Parse and show video duration on link paste in lesson video
+   */
+
+  var video_url_input = '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5';
+  var autofill_url_timeout;
+  $('body').on('paste', video_url_input, function (e) {
+    e.stopImmediatePropagation();
+    var root = $(this).closest('.lesson-modal-form-wrap').find('.tutor-option-field-video-duration');
+    var duration_label = root.find('label');
+    var is_wp_media = $(this).hasClass('video_source_wrap_html5') || $(this).hasClass('video_source_upload_wrap_html5');
+    var autofill_url = $(this).data('autofill_url');
+    $(this).data('autofill_url', null);
+    var video_url = is_wp_media ? $(this).find('span').data('video_url') : autofill_url || e.originalEvent.clipboardData.getData('text');
+
+    var toggle_loading = function toggle_loading(show) {
+      if (!show) {
+        duration_label.find('img').remove();
+        return;
+      } // Show loading icon
+
+
+      if (duration_label.find('img').length == 0) {
+        duration_label.append(' <img src="' + window._tutorobject.loading_icon_url + '" style="display:inline-block"/>');
+      }
+    };
+
+    var set_duration = function set_duration(sec_num) {
+      var hours = Math.floor(sec_num / 3600);
+      var minutes = Math.floor((sec_num - hours * 3600) / 60);
+      var seconds = Math.round(sec_num - hours * 3600 - minutes * 60);
+
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+
+      var fragments = [hours, minutes, seconds];
+      var time_fields = root.find('input');
+
+      for (var i = 0; i < 3; i++) {
+        time_fields.eq(i).val(fragments[i]);
+      }
+    };
+
+    var yt_to_seconds = function yt_to_seconds(duration) {
+      var match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+      match = match.slice(1).map(function (x) {
+        if (x != null) {
+          return x.replace(/\D/, '');
+        }
+      });
+      var hours = parseInt(match[0]) || 0;
+      var minutes = parseInt(match[1]) || 0;
+      var seconds = parseInt(match[2]) || 0;
+      return hours * 3600 + minutes * 60 + seconds;
+    };
+
+    if (is_wp_media || $(this).parent().hasClass('video_source_wrap_external_url')) {
+      var player = document.createElement('video');
+      player.addEventListener('loadedmetadata', function () {
+        set_duration(player.duration);
+        toggle_loading(false);
+      });
+      toggle_loading(true);
+      player.src = video_url;
+    } else if ($(this).parent().hasClass('video_source_wrap_vimeo')) {
+      var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+      var match = video_url.match(regExp);
+      var video_id = match ? match[5] : null;
+
+      if (video_id) {
+        toggle_loading(true);
+        $.getJSON('http://vimeo.com/api/v2/video/' + video_id + '/json', function (data) {
+          if (Array.isArray(data) && data[0] && data[0].duration !== undefined) {
+            set_duration(data[0].duration);
+          }
+
+          toggle_loading(false);
+        });
+      }
+    } else if ($(this).parent().hasClass('video_source_wrap_youtube')) {
+      var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      var match = video_url.match(regExp);
+      var video_id = match && match[7].length == 11 ? match[7] : false;
+      var api_key = $(this).data('youtube_api_key');
+
+      if (video_id && api_key) {
+        var result_url = 'https://www.googleapis.com/youtube/v3/videos?id=' + video_id + '&key=' + api_key + '&part=contentDetails';
+        toggle_loading(true);
+        $.getJSON(result_url, function (data) {
+          if (_typeof(data) == 'object' && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.duration) {
+            set_duration(yt_to_seconds(data.items[0].contentDetails.duration));
+          }
+
+          toggle_loading(false);
+        });
+      }
+    }
+  }).on('input', video_url_input, function () {
+    if (autofill_url_timeout) {
+      clearTimeout(autofill_url_timeout);
+    }
+
+    var $this = $(this);
+    autofill_url_timeout = setTimeout(function () {
+      var val = $this.val();
+      val = val ? val.trim() : '';
+      console.log('Trigger', val);
+      val ? $this.data('autofill_url', val).trigger('paste') : 0;
+    }, 700);
+  });
+  /**
+>>>>>>> settings
    * @since v.1.8.6
    * SUbmit form through ajax
    */
@@ -2389,7 +2512,7 @@ function tutorModal() {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -2403,14 +2526,14 @@ function tutorModal() {
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -2423,7 +2546,7 @@ function tutorModal() {
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -2435,12 +2558,12 @@ function tutorModal() {
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -2451,7 +2574,7 @@ function tutorModal() {
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
@@ -2510,6 +2633,10 @@ jQuery(document).ready(function ($) {
     $(tab_page_id).addClass("current-page").show();
     window.history.pushState("obj", "", $(this).attr("href"));
   });
+  $(".tutor-form-toggle-input").on("change", function (e) {
+    var toggleInput = $(this).siblings("input");
+    $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
+  });
   $("#save_tutor_option").click(function (e) {
     e.preventDefault();
     $(this).closest("form").submit();
@@ -2518,6 +2645,7 @@ jQuery(document).ready(function ($) {
     e.preventDefault();
     var $form = $(this);
     var data = $form.serializeObject();
+    console.log(data);
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",

@@ -157,7 +157,7 @@ msgstr ""
 msgid "Add-ons"
 msgstr ""
 
-#: classes/Admin.php:88, classes/Admin.php:88, classes/Admin.php:468, classes/Utils.php:2484, templates/dashboard/settings.php:8, views/metabox/course-topics.php:51, views/options/settings-form.php:19, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings/education.php:7, templates/dashboard/settings/skill.php:8
+#: classes/Admin.php:88, classes/Admin.php:88, classes/Admin.php:468, classes/Utils.php:2484, templates/dashboard/settings.php:8, views/metabox/course-topics.php:64, views/options/settings-form.php:19, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings/education.php:7, templates/dashboard/settings/skill.php:8
 msgid "Settings"
 msgstr ""
 
@@ -181,7 +181,7 @@ msgstr ""
 msgid "Tutor Pages"
 msgstr ""
 
-#: classes/Admin.php:152, classes/Instructors_List.php:121, classes/Options_V2.php:338, templates/dashboard/dashboard.php:110, templates/dashboard/purchase_history.php:23, templates/dashboard/withdraw.php:186, views/pages/view_attempt.php:59, views/pages/tools/tutor_pages.php:13
+#: classes/Admin.php:152, classes/Instructors_List.php:121, classes/Options_V2.php:338, templates/dashboard/dashboard.php:108, templates/dashboard/purchase_history.php:23, templates/dashboard/withdraw.php:186, views/pages/view_attempt.php:59, views/pages/tools/tutor_pages.php:13
 msgid "Status"
 msgstr ""
 
@@ -357,7 +357,7 @@ msgstr ""
 msgid "Invalid Course ID or Access Denied."
 msgstr ""
 
-#: classes/Course_Settings_Tabs.php:24, classes/Course_Settings_Tabs.php:64, classes/Options.php:230, classes/Options_V2.php:919, classes/Tutor_Setup.php:400
+#: classes/Course_Settings_Tabs.php:24, classes/Course_Settings_Tabs.php:66, classes/Options.php:230, classes/Options_V2.php:919, classes/Tutor_Setup.php:400
 msgid "Course Settings"
 msgstr ""
 
@@ -485,7 +485,7 @@ msgstr ""
 msgid "Mailer Native Server Cron"
 msgstr ""
 
-#: classes/Email.php:64, classes/Email.php:70, classes/Email.php:78, classes/Options_V2.php:635, classes/Options_V2.php:644, classes/Options_V2.php:652, classes/Options_V2.php:660, classes/Options_V2.php:668, classes/Options_V2.php:714, classes/Options_V2.php:720, classes/Options_V2.php:728, classes/Options_V2.php:813, classes/Options_V2.php:852, classes/Options_V2.php:860, classes/Options_V2.php:900, classes/Options_V2.php:908, classes/Options_V2.php:954, classes/Options_V2.php:1030, classes/Options_V2.php:1053, classes/Options_V2.php:1083, classes/Options_V2.php:1091, classes/Options_V2.php:1113, classes/Options_V2.php:1136, classes/Options_V2.php:1144, classes/Options_V2.php:1198, classes/Options_V2.php:1206, classes/Options_V2.php:1254, classes/Options_V2.php:1262, classes/Options_V2.php:1500, classes/Options_V2.php:1508, classes/Options_V2.php:1516, classes/Options_V2.php:1540, classes/Options_V2.php:1548, classes/Options_V2.php:1556
+#: classes/Email.php:64, classes/Email.php:70, classes/Email.php:78, classes/Options_V2.php:635, classes/Options_V2.php:644, classes/Options_V2.php:652, classes/Options_V2.php:660, classes/Options_V2.php:668, classes/Options_V2.php:714, classes/Options_V2.php:720, classes/Options_V2.php:728, classes/Options_V2.php:813, classes/Options_V2.php:852, classes/Options_V2.php:860, classes/Options_V2.php:900, classes/Options_V2.php:908, classes/Options_V2.php:954, classes/Options_V2.php:1030, classes/Options_V2.php:1053, classes/Options_V2.php:1083, classes/Options_V2.php:1091, classes/Options_V2.php:1113, classes/Options_V2.php:1136, classes/Options_V2.php:1144, classes/Options_V2.php:1198, classes/Options_V2.php:1206, classes/Options_V2.php:1254, classes/Options_V2.php:1262, classes/Options_V2.php:1500, classes/Options_V2.php:1508, classes/Options_V2.php:1516, classes/Options_V2.php:1540, classes/Options_V2.php:1548
 msgid ""
 msgstr ""
 
@@ -822,11 +822,11 @@ msgstr ""
 msgid "Number of items you would like displayed \"per page\" in the pagination"
 msgstr ""
 
-#: classes/Options.php:203, classes/Options_V2.php:1515, classes/Options_V2.php:1555
+#: classes/Options.php:203, classes/Options_V2.php:1515
 msgid "Maintenance Mode"
 msgstr ""
 
-#: classes/Options.php:206, classes/Options_V2.php:1518, classes/Options_V2.php:1558
+#: classes/Options.php:206, classes/Options_V2.php:1518
 msgid "Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible."
 msgstr ""
 
@@ -1146,7 +1146,7 @@ msgstr ""
 msgid "Youtube API Key"
 msgstr ""
 
-#: classes/Options.php:489, classes/Options.php:492, classes/Options_V2.php:961, classes/Quiz_Attempts_List.php:114, classes/Tutor_Setup.php:563, views/metabox/course-contents.php:137, views/metabox/course-topics.php:33, views/pages/view_attempt.php:39, templates/single/quiz/top.php:24
+#: classes/Options.php:489, classes/Options.php:492, classes/Options_V2.php:961, classes/Quiz_Attempts_List.php:114, classes/Tutor_Setup.php:563, views/metabox/course-contents.php:142, views/metabox/course-topics.php:46, views/pages/view_attempt.php:39, templates/single/quiz/top.php:24
 msgid "Quiz"
 msgstr ""
 
@@ -1638,7 +1638,7 @@ msgstr ""
 msgid "book-open"
 msgstr ""
 
-#: classes/Options_V2.php:924, views/metabox/course-contents.php:132, views/metabox/course-topics.php:94
+#: classes/Options_V2.php:924, views/metabox/course-contents.php:138, views/metabox/course-topics.php:107
 msgid "Lesson"
 msgstr ""
 
@@ -1795,57 +1795,57 @@ msgid "certificate"
 msgstr ""
 
 #. translators: %1$s: Current version, %2$s: New version
-#: classes/Options_V2.php:1654, views/pages/tools/status.php:48
+#: classes/Options_V2.php:1646, views/pages/tools/status.php:48
 msgid "%1$s - There is a newer version of WordPress available (%2$s)"
 msgstr ""
 
 #. translators: %1$s: Memory limit, %2$s: Docs link.
-#: classes/Options_V2.php:1666, views/pages/tools/status.php:74
+#: classes/Options_V2.php:1658, views/pages/tools/status.php:74
 msgid "%1$s - We recommend setting memory to at least 64MB. See: %2$s"
 msgstr ""
 
-#: classes/Options_V2.php:1666, views/pages/tools/status.php:74
+#: classes/Options_V2.php:1658, views/pages/tools/status.php:74
 msgid "Increasing memory allocated to PHP"
 msgstr ""
 
-#: classes/Options_V2.php:1678, views/pages/tools/status.php:147
+#: classes/Options_V2.php:1670, views/pages/tools/status.php:147
 msgid "Tutor will run under this version of PHP, however, it has reached end of life. We recommend using PHP version 7.2 or above for greater performance and security."
 msgstr ""
 
-#: classes/Options_V2.php:1679, views/pages/tools/status.php:149
+#: classes/Options_V2.php:1671, views/pages/tools/status.php:149
 msgid "We recommend using PHP version 7.2 or above for greater performance and security."
 msgstr ""
 
 #. translators: %1$s: MySQL version, %2$s: Recommended MySQL version.
-#: classes/Options_V2.php:1694, views/pages/tools/status.php:197
+#: classes/Options_V2.php:1686, views/pages/tools/status.php:197
 msgid "%1$s - We recommend a minimum MySQL version of 5.6. See: %2$s"
 msgstr ""
 
-#: classes/Options_V2.php:1694, views/pages/tools/status.php:197
+#: classes/Options_V2.php:1686, views/pages/tools/status.php:197
 msgid "WordPress requirements"
 msgstr ""
 
 #. translators: %s: default timezone..
-#: classes/Options_V2.php:1698, views/pages/tools/status.php:217
+#: classes/Options_V2.php:1690, views/pages/tools/status.php:217
 msgid "Default timezone is %s - it should be UTC"
 msgstr ""
 
-#: classes/Options_V2.php:1703, views/pages/tools/status.php:232
+#: classes/Options_V2.php:1695, views/pages/tools/status.php:232
 msgid "Your server does not have fsockopen or cURL enabled - PayPal IPN and other scripts which communicate with other servers will not work. Contact your hosting provider."
 msgstr ""
 
 #. translators: %s: classname and link.
-#: classes/Options_V2.php:1707, views/pages/tools/status.php:246
+#: classes/Options_V2.php:1699, views/pages/tools/status.php:246
 msgid "Your server does not have the %s class enabled - HTML/Multipart emails, and also some extensions, will not work without DOMDocument."
 msgstr ""
 
 #. translators: %s: classname and link.
-#: classes/Options_V2.php:1711, views/pages/tools/status.php:260
+#: classes/Options_V2.php:1703, views/pages/tools/status.php:260
 msgid "Your server does not support the %s function - this is required to use the GeoIP database from MaxMind."
 msgstr ""
 
 #. translators: %s: classname and link.
-#: classes/Options_V2.php:1715, views/pages/tools/status.php:274
+#: classes/Options_V2.php:1707, views/pages/tools/status.php:274
 msgid "Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it."
 msgstr ""
 
