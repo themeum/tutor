@@ -25,7 +25,7 @@
 		width: 100vw;
 		height: 100vh;
 		z-index: 1040;
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: rgba(0, 0, 0, 0.25);
 		opacity: 0;
 		visibility: hidden;
 		transition: 300ms;
@@ -140,9 +140,13 @@
 		}
 	}
 
+	.tutor-offcanvas-main {
+		--padding: 20px;
+	}
+
 	.tutor-offcanvas-header,
 	.tutor-offcanvas-body {
-		padding: 0 20px;
+		padding: 0 var(--padding);
 	}
 }
 
@@ -154,8 +158,8 @@
 			content: '';
 			bottom: 0;
 			position: absolute;
-			left: -20px;
-			width: calc(100% + 40px);
+			left: calc(-1 * var(--padding));
+			width: calc(100% + calc(2 * var(--padding)));
 			/* stroke/light30 */
 			border-bottom: 1px solid #cdcfd5;
 		}
@@ -188,11 +192,31 @@
 		}
 	}
 	.tab-body {
+		min-width: 100%;
+		width: calc(100% + var(--padding));
+		max-height: 100vh;
+		overflow-y: auto;
+		padding-right: var(--padding);
 		&-item {
 			display: none;
 			&.is-active {
 				display: block;
 			}
+		}
+
+		--scrollbarBG: rgba(205, 207, 213, 0.5);
+		--thumbBG: #3e64de;
+		scrollbar-width: thin;
+		scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+		&::-webkit-scrollbar {
+			width: 4px;
+		}
+		&::-webkit-scrollbar-track {
+			background: var(--scrollbarBG);
+		}
+		&::-webkit-scrollbar-thumb {
+			background-color: var(--thumbBG);
+			border-radius: 40px;
 		}
 	}
 }
@@ -201,14 +225,16 @@
 $variations: ('primary' $color-brand, 'success' $color-success, 'warning' $warning-90, 'danger' $danger-90);
 @each $prefix, $color in $variations {
 	.tutor-notification-element {
-		.element-icon {
-			.element-#{$prefix} {
-				background: #{$color};
+		&:not(.notification-read) {
+			.element-icon {
+				.element-#{$prefix} {
+					background: #{$color};
+				}
 			}
-		}
-		.element-content .header {
-			.element-#{$prefix} {
-				color: #{$color};
+			.element-content .header {
+				.element-#{$prefix} {
+					color: #{$color};
+				}
 			}
 		}
 	}
@@ -222,6 +248,7 @@ $variations: ('primary' $color-brand, 'success' $color-success, 'warning' $warni
 
 	.element-icon {
 		color: #fff;
+
 		[class^='element-'] {
 			width: 24px;
 			height: 24px;
@@ -229,13 +256,16 @@ $variations: ('primary' $color-brand, 'success' $color-success, 'warning' $warni
 			align-items: center;
 			justify-content: center;
 			border-radius: 50%;
+			background: $black-40;
 		}
 	}
+
 	.element-content {
 		.header {
 			display: flex;
 			justify-content: space-between;
 			margin-bottom: 10px;
+
 			.meta {
 				display: flex;
 				align-items: center;
@@ -269,6 +299,30 @@ $variations: ('primary' $color-brand, 'success' $color-success, 'warning' $warni
 						box-shadow: 0 0 0 6px rgba(0, 0, 0, 0);
 					}
 				}
+			}
+
+			[class^='element-'] {
+				color: $text-title;
+			}
+		}
+
+		.message {
+			.color-text-hints {
+				font-weight: 300;
+			}
+		}
+	}
+
+	&.notification-read {
+		.element-content {
+			.header {
+				.meta .dot {
+					display: none;
+				}
+			}
+			.message,
+			.message > * {
+				color: $black-50;
 			}
 		}
 	}
