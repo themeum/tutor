@@ -902,16 +902,8 @@ class Options_V2 {
 										),
 										'desc'    => __( 'Define how many column you want to use to display courses.', 'tutor' ),
 									),
-									array(
-										'key'         => 'student_must_login_to_view_course',
-										'type'        => 'toggle_switch',
-										'label'       => __( 'Course Visibility', 'tutor' ),
-										'label_title' => __( 'Logged in only', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-									),
-									'course_content_access_for_ia' => array(
-										'key'         => 'autoload_next_course_content',
+									'course_content_access_for_students' => array(
+										'key'         => 'course_content_access_for_students',
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Course Content Access', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
@@ -985,14 +977,6 @@ class Options_V2 {
 											'last_attempt' => __( 'Last Attempt', 'tutor' ),
 										),
 										'desc'           => __( 'When multiple attempts are allowed, which method should be used to calculate a student\'s final grade for the quiz.', 'tutor' ),
-									),
-									array(
-										'key'         => 'course_content_access_for_ia',
-										'type'        => 'toggle_switch',
-										'label'       => __( 'Course Content Access', 'tutor' ),
-										'label_title' => __( '', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Allow instructors and admins to view the course content without enrolling', 'tutor' ),
 									),
 								),
 							),
@@ -1497,7 +1481,7 @@ class Options_V2 {
 								'block_type' => 'uniform',
 								'fields'     => array(
 									array(
-										'key'         => 'login_error_message',
+										'key'         => 'login_error_messages',
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Error message for wrong login credentials', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
@@ -1505,7 +1489,7 @@ class Options_V2 {
 										'desc'        => __( 'Login error message displayed when the user puts wrong login credentials.', 'tutor' ),
 									),
 									array(
-										'key'         => 'hide_admin_bar_for_users',
+										'key'         => 'bar_for_users',
 										'type'        => 'toggle_switch',
 										'label'       => __( 'Hide Frontend Admin Bar', 'tutor' ),
 										'label_title' => __( '', 'tutor' ),
