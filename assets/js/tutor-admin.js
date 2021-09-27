@@ -858,7 +858,7 @@ document.addEventListener('DOMContentLoaded', function () {
             output += "<div class=\"no_item\"> ".concat(warning, " No Results Found</div>");
           }
 
-          $(".search_result").html(output).addClass("visible");
+          $(".search_result").html(output).addClass("show");
           output = ""; // console.log("working");
         },
         complete: function complete() {
@@ -867,7 +867,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     } else {
-      document.querySelector(".search-popup-opener").classList.remove("visible");
+      document.querySelector(".search-popup-opener").classList.remove("show");
     }
   });
   /**
@@ -1247,8 +1247,8 @@ jQuery(document).ready(function ($) {
       _n = _wp$i18n._n,
       _nx = _wp$i18n._nx;
   /**
-   * Global date_picker selector
-   *
+   * Global date_picker selector 
+   * 
    * @since 1.9.7
    */
 
@@ -1784,7 +1784,7 @@ jQuery(document).ready(function ($) {
   });
   /*
   * @since v.1.6.4
-  * Quiz Attempts Instructor Feedback
+  * Quiz Attempts Instructor Feedback 
   */
 
   $(document).on('click', '.tutor-instructor-feedback', function (e) {
@@ -1976,7 +1976,7 @@ jQuery(document).ready(function ($) {
         error: function error() {}
       });
     }
-  }); //sorting
+  }); //sorting 
   // if (jQuery.datepicker){
   //     $( "#tutor-announcement-datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
   // }
@@ -2019,7 +2019,7 @@ jQuery(document).ready(function ($) {
 
   /**
    * @since v.1.9.0
-   * Parse and show video duration on link paste in lesson video
+   * Parse and show video duration on link paste in lesson video 
    */
 
   var video_url_input = '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5';
@@ -2454,7 +2454,7 @@ function tutorModal() {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/
+/******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -2468,14 +2468,14 @@ function tutorModal() {
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/
+/******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
+/******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -2488,7 +2488,7 @@ function tutorModal() {
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -2500,12 +2500,12 @@ function tutorModal() {
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -2516,7 +2516,7 @@ function tutorModal() {
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
