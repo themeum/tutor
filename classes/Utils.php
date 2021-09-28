@@ -5226,8 +5226,15 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function most_popular_courses( $limit = 10 ) {
+	public function most_popular_courses( $limit = 10, $user_id = '' ) {
 		global $wpdb;
+		$limit 		= sanitize_text_field( $limit );
+		$user_id 	= sanitize_text_field( $user_id );
+
+		$author_query = '';
+		if ( '' !== $user_id ) {
+			$author_query = "AND course.post_author = $user_id";
+		}
 
 		$courses = $wpdb->get_results( $wpdb->prepare(
 			"SELECT COUNT(enrolled.ID) AS total_enrolled,
@@ -5238,6 +5245,7 @@ class Utils {
 							ON enrolled.post_parent = course.ID 
 			WHERE 	enrolled.post_type = %s
 					AND enrolled.post_status = %s
+					{$author_query}
 			GROUP BY course_id
 			ORDER BY total_enrolled DESC
 			LIMIT 0, %d;
