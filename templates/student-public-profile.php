@@ -24,6 +24,14 @@ $user_id = $get_user->ID;
 $is_instructor = tutor_utils()->is_instructor($user_id);
 
 $profile_layout = tutor_utils()->get_option(($is_instructor ? 'instructor' : 'student').'_public_profile_layout', 'pp-circle');
+
+if($profile_layout=='private') {
+    // Disable profile access then
+    wp_redirect(get_home_url());
+    exit;
+}
+
+// Set layout for non instructor
 !$is_instructor ? $profile_layout='pp-circle' : 0; // For now
 
 $tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
@@ -163,20 +171,6 @@ get_header();
                                 });
 
                                 tutor_load_template('profile.courses_taken'); 
-                            ?>
-
-                            <?php 
-                                /* if(tutor_utils()->get_option('show_courses_completed_by_student')){
-                                    echo '<h3>',__('Course Completed', 'tutor'),'</h3>';
-                                    tutor_load_template('profile.enrolled_course');
-                                } */
-                            ?>
-
-                            <?php 
-                                /* if(tutor_utils()->get_option('students_own_review_show_at_profile')){
-                                    echo '<h3>',__('Reviews Wrote', 'tutor'),'</h3>';
-                                    tutor_load_template('profile.reviews_wrote');
-                                } */
                             ?>
                         <?php
                     }

@@ -15,7 +15,14 @@ if ( ! defined( 'ABSPATH' ) )
 
 $disable_default_player_vimeo = tutor_utils()->get_option('disable_default_player_vimeo');
 $video_info = tutor_utils()->get_video_info();
-$video_id = tutor_utils()->get_vimeo_video_id(tutor_utils()->avalue_dot('source_vimeo', $video_info));
+
+$video_url = tutor_utils()->avalue_dot('source_vimeo', $video_info);
+$video_id = '';
+if ( preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $video_url, $match ) ) {
+    if ( isset( $match[3] ) ) {
+        $video_id = $match[3];
+    }
+}
 
 do_action('tutor_lesson/single/before/video/vimeo');
 ?>

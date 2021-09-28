@@ -1,6 +1,6 @@
 <?php
 $value = $this->get($field['key']);
-if ($value != '0' && !$value && isset($field['default'])) {
+if (empty($value) && isset($field['default'])) {
 	$value = $field['default'];
 }
 $field_id = 'field_' . $field['key'];
@@ -10,6 +10,6 @@ $field_id = 'field_' . $field['key'];
 	<?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 
 	<div class="tutor-option-field-input">
-		<input type="text" name="tutor_option[<?php echo $field['key']; ?>]" class="tutor-form-control" placeholder='Please write your "<?php echo $field['label']; ?>"' value="<?php echo isset($value) ? $value : ''; ?>" />
+		<input type="text" name="tutor_option[<?php echo $field['key']; ?>]" class="tutor-form-control" value="<?php echo isset($value) ? $value : ''; ?>" />
 	</div>
 </div>

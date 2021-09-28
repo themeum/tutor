@@ -2090,24 +2090,6 @@ class Utils {
 	}
 
 	/**
-	 * @param string $url
-	 *
-	 * @return bool
-	 *
-	 * Get the vimeo video id from URL
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_vimeo_video_id( $url = '' ) {
-		if ( preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $url, $match ) ) {
-			if ( isset( $match[3] ) ) {
-				return $match[3];
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * @param int $post_id
 	 *
 	 * Mark lesson complete
@@ -5076,7 +5058,7 @@ class Utils {
 		);
 
 		$show_enrolled_course      = tutor_utils()->get_option( 'show_courses_completed_by_student' );
-		$enable_show_reviews_wrote = tutor_utils()->get_option( 'students_own_review_show_at_profile' );
+		$enable_show_reviews_wrote = tutor_utils()->get_option( 'students_own_review_show_at_profile', true );
 
 		if ( $show_enrolled_course ) {
 			$permalinks['enrolled_course'] = __( 'Enrolled Course', 'tutor' );

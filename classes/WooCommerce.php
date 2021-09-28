@@ -554,10 +554,11 @@ class WooCommerce extends Tutor_Base {
 			return;
 		}
 
-			// get woo order details
-			$order         = wc_get_order( $order_id );
-			$tutor_product = false;
-			$url           = tutor_utils()->tutor_dashboard_url() . 'enrolled-courses/';
+		// get woo order details
+		$order         = wc_get_order( $order_id );
+		$tutor_product = false;
+		$url           = tutor_utils()->tutor_dashboard_url() . 'enrolled-courses/';
+		
 		foreach ( $order->get_items() as $item ) {
 			$product_id = $item->get_product_id();
 			// check if product associated with tutor course
@@ -566,7 +567,8 @@ class WooCommerce extends Tutor_Base {
 				$tutor_product = true;
 			}
 		}
-			// if tutor product & order status completed
+		
+		// if tutor product & order status completed
 		if ( $order->has_status( 'completed' ) && $tutor_product ) {
 			wp_safe_redirect( $url );
 			exit;

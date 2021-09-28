@@ -22,24 +22,7 @@ class Tools {
          */
 		add_filter('tutor_tool_pages', array($this, 'tutor_tool_pages_add_wizard'));
 		add_action('admin_init', array($this, 'redirect_to_wizard_page'));
-		add_filter('login_errors', array($this, 'login_error_message'));
 	}
-
-	/**
-	 * Custom Login Error Message
-	 * @since v.1.6.0
-	 */
-	public function login_error_message($error) {
-		$error_message = get_tutor_option('login_error_message');
-		if($error_message){
-			$pos = strpos($error, 'incorrect');
-			if (is_int($pos)) {
-				$error = $error_message;
-			}
-		}
-		return $error;
-	}
-
 
 	/**
 	 * Re-Generate Tutor Missing Pages
@@ -85,7 +68,7 @@ class Tools {
 		if ( ! is_admin() && ! $this->is_wplogin()) {
 			$mode = get_tutor_option( 'enable_tutor_maintenance_mode' );
 			$maintenance_mode = (bool) $mode;
-			if ( ! $maintenance_mode || $mode=='off' ){
+			if ( !$maintenance_mode || $mode=='off' ){
 				return;
 			}
 

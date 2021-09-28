@@ -23,12 +23,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Options_V2 {
 
 
-	public $option;
+	private $options;
 	private $setting_fields;
 	
 	public function __construct() {
-		 $this->option       = (array) maybe_unserialize( get_option( 'tutor_option' ) );
-		 
 		// Saving option.
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
 		add_action( 'wp_ajax_tutor_option_default_save', array( $this, 'tutor_option_default_save' ) );
@@ -42,7 +40,13 @@ class Options_V2 {
 	}
 
 	private function get( $key = null, $default = false ) {
-		$option = $this->option;
+
+		if(!$this->options) {
+			// Get if already not prepared
+			$this->options = (array) maybe_unserialize( get_option( 'tutor_option' ) );
+		}
+
+		$option = $this->options;
 
 		if ( empty( $option ) || ! is_array( $option ) ) {
 			return $default;
@@ -301,14 +305,6 @@ class Options_V2 {
 		$attempts_allowed['unlimited'] = __( 'Unlimited', 'tutor' );
 		$attempts_allowed              = array_merge( $attempts_allowed, array_combine( range( 1, 20 ), range( 1, 20 ) ) );
 
-		$video_sources = array(
-			'html5'        => __( 'HTML 5 (mp4)', 'tutor' ),
-			'external_url' => __( 'External URL', 'tutor' ),
-			'youtube'      => __( 'Youtube', 'tutor' ),
-			'vimeo'        => __( 'Vimeo', 'tutor' ),
-			'embedded'     => __( 'Embedded', 'tutor' ),
-		);
-
 		$course_filters = array(
 			'search'           => __( 'Keyword Search', 'tutor' ),
 			'category'         => __( 'Category', 'tutor' ),
@@ -340,101 +336,10 @@ class Options_V2 {
 						),
 					),
 					array(
-						'label'      => __( 'Video', 'tutor' ),
-						'slug'       => 'video',
-						'block_type' => 'uniform',
-						'fields'     => array(
-							array(
-								'key'         => 'supported_video_sources',
-								'type'        => 'checkbox_horizontal',
-								'label'       => __( 'Preferred Video Source', 'tutor' ),
-								'label_title' => __( 'Preferred Video Source', 'tutor' ),
-								'default'     => array(
-									'external_url' => true,
-									'html5'        => true,
-								),
-								'options'     => $video_sources,
-								'desc'        => __( 'Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor' ),
-							),
-							array(
-								'key'     => 'default_video_source',
-								'type'    => 'select',
-								'label'   => __( 'Default Video Source', 'tutor' ),
-								'options' => $video_sources,
-								'default' => '0',
-								'desc'    => __( 'Choose video source to be selected by default.', 'tutor' ),
-							),
-						),
-					),
-					array(
-						'label'      => __( 'Course', 'tutor' ),
-						'slug'       => 'course',
-						'block_type' => 'uniform',
-						'fields'     => array(
-							array(
-								'key'         => 'student_must_login_to_view_course',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Course Visibility', 'tutor' ),
-								'label_title' => __( 'Logged Only', 'tutor' ),
-								'default'     => 'off',
-								'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-							),
-							array(
-								'key'     => 'course_archive_page',
-								'type'    => 'select',
-								'label'   => __( 'Course Archive Page', 'tutor' ),
-								'default' => '0',
-								'options' => $pages,
-								'desc'    => __( 'This page will be used to list all the published courses.', 'tutor' ),
-							),
-							array(
-								'key'         => 'course_content_access_for_ia',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Course Content Access', 'tutor' ),
-								'default'     => 'off',
-								'label_title' => __( '', 'tutor' ),
-								'desc'        => __( 'Allow instructors and admins to view the course content without enrolling', 'tutor' ),
-							),
-							array(
-								'key'            => 'course_completion_process',
-								'type'           => 'radio_vertical',
-								'label'          => __( 'Course Completion Process', 'tutor' ),
-								'default'        => 'flexible',
-								'select_options' => false,
-								'options'        => array(
-									'flexible' => __( 'Flexible', 'tutor' ),
-									'strict'   => __( 'Strict Mode', 'tutor' ),
-								),
-								'desc'           => __( 'Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor' ),
-							),
-						),
-					),
-					array(
 						'label'      => __( 'Others', 'tutor' ),
 						'slug'       => 'others',
 						'block_type' => 'isolate',
 						'fields'     => array(
-							array(
-								'key'     => 'attachment_open_mode',
-								'type'    => 'radio_horizontal_full',
-								'label'   => __( 'Attachment Open Mode', 'tutor' ),
-								'default' => '4',
-								'options' => array(
-									'one'   => 'One',
-									'two'   => 'Two',
-									'three' => 'Three',
-									'four'  => 'Four',
-								),
-								'desc'    => __( 'Choose how you want users to view attached files.', 'tutor' ),
-							),
-							array(
-								'key'         => 'enable_lesson_classic_editor',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Enable Classic Editor Support', 'tutor' ),
-								'label_title' => __( '', 'tutor' ),
-								'default'     => 'off',
-								'desc'        => __( 'Enable classic editor to get full support of any editor/page builder.', 'tutor' ),
-							),
 							array(
 								'key'         => 'enable_course_marketplace',
 								'type'        => 'toggle_switch',
@@ -444,21 +349,11 @@ class Options_V2 {
 								'desc'        => __( 'Allow multiple instructors to upload their courses.', 'tutor' ),
 							),
 							array(
-								'key'     => 'lesson_permalink_base',
-								'type'    => 'text',
-								'label'   => __( 'Lesson Permalink Base', 'tutor' ),
-								'default' => 'lessons',
-
-								'desc'    => $lesson_url,
-							),
-							array(
-								'key'     => 'student_register_page',
-								'type'    => 'select',
-								'label'   => __( 'Student Registration Page', 'tutor' ),
-								'default' => '0',
-
-								'options' => $pages,
-								'desc'    => __( 'Choose the page for student registration page', 'tutor' ),
+								'key'     => 'pagination_per_page',
+								'type'    => 'number',
+								'label'   => __('Pagination', 'tutor'),
+								'default' => '20',
+								'desc'    => __('Number of items you would like displayed "per page" in the pagination', 'tutor'),
 							),
 						),
 					),
@@ -467,14 +362,6 @@ class Options_V2 {
 						'slug'       => 'instructor',
 						'block_type' => 'uniform',
 						'fields'     => array(
-							array(
-								'key'     => 'instructor_register_page',
-								'type'    => 'select',
-								'label'   => __( 'Instructor Registration Page', 'tutor' ),
-								'default' => '0',
-								'options' => $pages,
-								'desc'    => __( 'This page will be used to sign up new instructors.', 'tutor' ),
-							),
 							array(
 								'key'         => 'instructor_can_publish_course',
 								'type'        => 'toggle_switch',
@@ -502,36 +389,81 @@ class Options_V2 {
 				'template' => 'basic',
 				'icon'     => __( 'book-open', 'tutor' ),
 				'blocks'   => array(
+					'block_course' => array(
+						'label'      => '',
+						'slug'       => 'course',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'         => 'student_must_login_to_view_course',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Course Visibility', 'tutor' ),
+								'label_title' => __( 'Logged Only', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
+							),
+							array(
+								'key'         => 'course_content_access_for_ia',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Course Content Access', 'tutor' ),
+								'default'     => 'off',
+								'label_title' => __( '', 'tutor' ),
+								'desc'        => __( 'Allow instructors and admins to view the course content without enrolling', 'tutor' ),
+							),
+							array(
+								'key'         => 'enable_spotlight_mode',
+								'type'        => 'toggle_switch',
+								'label'       => __('Spotlight mode', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __( '', 'tutor' ),
+								'desc'        => __('This will hide the header and the footer and enable spotlight (full screen) mode when students view lessons.',	'tutor'),
+							),
+							array(
+								'key'            => 'course_completion_process',
+								'type'           => 'radio_vertical',
+								'label'          => __( 'Course Completion Process', 'tutor' ),
+								'default'        => 'flexible',
+								'select_options' => false,
+								'options'        => array(
+									'flexible' => __( 'Flexible', 'tutor' ),
+									'strict'   => __( 'Strict Mode', 'tutor' ),
+								),
+								'desc'           => __( 'Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor' ),
+							),
+							array(
+								'key'         => 'course_retake_feature',
+								'type'        => 'toggle_switch',
+								'label'       => __('Course Retake', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __( '', 'tutor' ),
+								'desc'        => __('Enabling this feature will allow students to reset course progress and start over.', 'tutor'),
+							),
+						),
+					),
 					array(
 						'label'      => __( 'Lesson', 'tutor' ),
 						'slug'       => 'lesson',
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'     => 'enable_video_player',
-								'type'    => 'checkbox-horizontal-full',
-								'label'   => __( 'Enable Video Player', 'tutor' ),
-								'default' => array(
-									'youtube' => 'on',
-									'vimeo'   => 'off',
-								),
-								'options' => array(
-									'youtube' => '<i class="lab la-youtube"></i> YouTube',
-									'vimeo'   => '<i class="lab la-vimeo"></i> Vimeo',
-								),
-								'desc'    => __( 'Define how many column you want to use to display courses.', 'tutor' ),
-							),
-							'course_content_access_for_students' => array(
-								'key'         => 'course_content_access_for_students',
+								'key'         => 'enable_lesson_classic_editor',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Course Content Access', 'tutor' ),
+								'label'       => __( 'Classic Editor for Lesson', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'Allow instructors and admins to view the course content without enrolling', 'tutor' ),
+								'desc'        => __( 'Enable classic editor to edit lesson.', 'tutor' ),
+							),
+							array(
+								'key'         => 'autoload_next_course_content',
+								'type'        => 'toggle_switch',
+								'label'       => __('Automatically load next course content.', 'tutor'),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __('Enabling this feature will be load next course content automatically after finishing current video.', 'tutor'),
 							),
 						),
 					),
-					array(
+					'block_quiz' => array(
 						'label'      => __( 'Quiz', 'tutor' ),
 						'slug'       => 'quiz',
 						'block_type' => 'uniform',
@@ -578,16 +510,22 @@ class Options_V2 {
 							array(
 								'key'     => 'quiz_attempts_allowed',
 								'type'    => 'number',
-								'label'   => __( 'Attempts allowed', 'tutor' ),
+								'label'   => __( 'Quiz Attempts allowed', 'tutor' ),
 								'default' => '10',
-
 								'desc'    => __( 'The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor' ),
 							),
 							array(
+								'key'     => 'quiz_previous_button_disabled',
+								'type'    => 'toggle_switch',
+								'label'   => __('Hide Quiz Previous Button', 'tutor'),
+								'default' => 'off',
+								'desc'    => __('Choose whether to show or hide previous button for single question.', 'tutor'),
+							),
+							array(
 								'key'            => 'quiz_grade_method',
-								'type'           => 'radio_horizontal_full',
+								'type'           => 'select',
 								'label'          => __( 'Final grade calculation', 'tutor' ),
-								'default'        => 'minutes',
+								'default'        => 'highest_grade',
 								'select_options' => false,
 								'options'        => array(
 									'highest_grade' => __( 'Highest Grade', 'tutor' ),
@@ -597,6 +535,27 @@ class Options_V2 {
 								),
 								'desc'           => __( 'When multiple attempts are allowed, which method should be used to calculate a student\'s final grade for the quiz.', 'tutor' ),
 							),
+						),
+					),
+					array(
+						'label'      => __( 'Video', 'tutor' ),
+						'slug'       => 'video',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'         => 'supported_video_sources',
+								'type'        => 'checkbox_vertical',
+								'label'       => __( 'Preferred Video Source', 'tutor' ),
+								'label_title' => __( 'Preferred Video Source', 'tutor' ),
+								'options'     => array(
+									'html5'        => __( 'HTML 5 (mp4)', 'tutor' ),
+									'external_url' => __( 'External URL', 'tutor' ),
+									'youtube'      => __( 'Youtube', 'tutor' ),
+									'vimeo'        => __( 'Vimeo', 'tutor' ),
+									'embedded'     => __( 'Embedded', 'tutor' ),
+								),
+								'desc'        => __( 'Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor' ),
+							)
 						),
 					),
 				),
@@ -613,20 +572,14 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'            => 'monetize_by',
+								'key'            => 'enable_tutor_monetization',
 								'type'           => 'toggle_switch',
-								'label'          => __( 'Disable Monetization', 'tutor' ),
+								'label'          => __( 'Enable Monetization', 'tutor' ),
 								'label_title'    => __( '', 'tutor' ),
-								'default'        => 'off',
-								'select_options' => false,
-								'options'        => apply_filters(
-									'tutor_monetization_options',
-									array(
-										'free' => __( 'Disable Monetization', 'tutor' ),
-									)
-								),
-								'desc'           => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
+								'default'        => 'on',
+								'desc'           => __( 'Enable monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
 							),
+							
 						),
 					),
 					array(
@@ -635,12 +588,15 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'     => 'select_e_commerce_engine',
+								'key'     => 'monetize_by',
 								'type'    => 'select',
 								'label'   => __( 'Select eCommerce Engine', 'tutor' ),
-								'options' => $video_sources,
-								'default' => '0',
-								'desc'    => __( 'Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor' ),
+								'select_options' => false,
+								'options' => apply_filters('tutor_monetization_options', array(
+									'free' =>  __('Disable Monetization', 'tutor'),
+								)),
+								'default' => 'free',
+								'desc'    => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro',	'tutor'),
 							),
 							array(
 								'key'         => 'enable_guest_mode',
@@ -803,15 +759,21 @@ class Options_V2 {
 								'key'     => 'courses_col_per_row',
 								'type'    => 'radio_horizontal',
 								'label'   => __( 'Column Per Row', 'tutor' ),
-								'default' => 'four',
-
+								'default' => '4',
 								'options' => array(
-									'one'   => 'One',
-									'two'   => 'Two',
-									'three' => 'Three',
-									'four'  => 'Four',
+									'1'   => 'One',
+									'2'   => 'Two',
+									'3'   => 'Three',
+									'4'   => 'Four'
 								),
 								'desc'    => __( 'Define how many column you want to use to display courses.', 'tutor' ),
+							),
+							array(
+								'key'     => 'courses_per_page',
+								'type'    => 'number',
+								'label'   => __('Courses Per Page', 'tutor'),
+								'default' => '12',
+								'desc'    => __('Define how many courses you want to show per page', 'tutor'),
 							),
 							array(
 								'key'         => 'course_archive_filter',
@@ -832,6 +794,50 @@ class Options_V2 {
 						),
 					),
 					array(
+						'label'      => __( 'Student Profile', 'tutor' ),
+						'slug'       => 'student_profile',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'students_own_review_show_at_profile',
+								'type'    => 'toggle_switch',
+								'label'   => __('Show reviews on profile', 'tutor'),
+								'default' => 'on',
+								'desc'    => __('Enabling this will show the reviews written by each student on their profile', 'tutor')."<br />" .$student_url,
+							),
+							array(
+								'key'     => 'show_courses_completed_by_student',
+								'type'    => 'toggle_switch',
+								'label'   => __('Show completed courses', 'tutor'),
+								'default' => 'on',
+								'desc'    => __('Completed courses will be shown on student profiles. <br/> For example, you can see this link-',	'tutor').$student_url,
+							),
+						)
+					),
+					array(
+						'label'      => __( 'Video Player', 'tutor' ),
+						'slug'       => 'video_player',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'         => 'disable_default_player_youtube',
+								'type'        => 'toggle_switch',
+								'label'       => __('Use Tutor Player for YouTube', 'tutor'),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __('Enable this option to use Tutor LMS video player.', 'tutor'),
+							),
+							array(
+								'key'         => 'disable_default_player_vimeo',
+								'type'        => 'toggle_switch',
+								'label'       => __('Use Tutor Player for Vimeo', 'tutor'),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __('Enable this option to use Tutor LMS video player.', 'tutor'),
+							),
+						)
+					),
+					array(
 						'label'      => __( 'Layout', 'tutor' ),
 						'slug'       => 'layout',
 						'block_type' => 'uniform',
@@ -842,25 +848,25 @@ class Options_V2 {
 								'label'         => __( 'Instructor List Layout', 'tutor' ),
 								'group_options' => array(
 									'vertical'   => array(
-										'portrait' => array(
+										'pp-top-full' => array(
 											'title' => 'Portrait',
 											'image' => 'instructor-layout/intructor-portrait.svg',
 										),
-										'cover'    => array(
+										'pp-cp'    => array(
 											'title' => 'Cover',
 											'image' => 'instructor-layout/instructor-cover.svg',
 										),
-										'minimal'  => array(
+										'pp-top-left'  => array(
 											'title' => 'Minimal',
 											'image' => 'instructor-layout/instructor-minimal.svg',
 										),
 									),
 									'horizontal' => array(
-										'portrait' => array(
+										'pp-left-full' => array(
 											'title' => 'Horizontal Portrait',
 											'image' => 'instructor-layout/instructor-horizontal-portrait.svg',
 										),
-										'minimal'  => array(
+										'pp-left-middle'  => array(
 											'title' => 'Horizontal Minimal',
 											'image' => 'instructor-layout/instructor-horizontal-minimal.svg',
 										),
@@ -877,20 +883,20 @@ class Options_V2 {
 										'title' => 'Private',
 										'image' => 'profile-layout/profile-private.svg',
 									),
-									'modern'  => array(
+									'pp-circle'  => array(
 										'title' => 'Modern',
 										'image' => 'profile-layout/profile-modern.svg',
 									),
-									'minimal' => array(
+									'pp-rectangle' => array(
 										'title' => 'Minimal',
 										'image' => 'profile-layout/profile-minimal.svg',
 									),
-									'classic' => array(
+									'no-cp' => array(
 										'title' => 'Classic',
 										'image' => 'profile-layout/profile-classic.svg',
 									),
 								),
-								'desc'          => __( 'Content Needed Here...', 'tutor' ),
+								'desc' => __( 'Content Needed Here...', 'tutor' ),
 							),
 						),
 					),
@@ -908,40 +914,38 @@ class Options_V2 {
 										'key'     => 'display_course_instructors',
 										'type'    => 'toggle_single',
 										'label'   => __( 'Instructor Info', 'tutor' ),
-										'label_title' => __( 'Enable', 'tutor' ),
-										'default' => '0',
+										'default' => 'on',
 										'desc'    => __( 'Show instructor bio on each page', 'tutor' ),
 									),
 									array(
 										'key'     => 'enable_q_and_a_on_course',
 										'type'    => 'toggle_single',
 										'label'   => __( 'Question and Answer', 'tutor' ),
-										'label_title' => __( 'Enable', 'tutor' ),
-										'default' => '0',
+										'default' => 'on',
 										'desc'    => __( 'Enabling this feature will add a Q&amp;A section on every course.', 'tutor' ),
 									),
 									array(
 										'key'     => 'disable_course_author',
 										'type'    => 'toggle_single',
-										'label'   => __( 'Author', 'tutor' ),
+										'label'   => __( 'Disable Author', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default' => '0',
+										'default' => 'off',
 										'desc'    => __( 'Disabling this feature will be removed course author name from the course page.', 'tutor' ),
 									),
 									array(
 										'key'     => 'disable_course_level',
 										'type'    => 'toggle_single',
-										'label'   => __( 'Course Level', 'tutor' ),
+										'label'   => __( 'Disable Course Level', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default' => '0',
+										'default' => 'off',
 										'desc'    => __( 'Disabling this feature will be removed course level from the course page.', 'tutor' ),
 									),
 									array(
 										'key'     => 'disable_course_share',
 										'type'    => 'toggle_single',
-										'label'   => __( 'Course Share', 'tutor' ),
+										'label'   => __( 'Disbale Course Share', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default' => '0',
+										'default' => 'off',
 										'desc'    => __( 'Disabling this feature will be removed course share option from the course page.', 'tutor' ),
 									),
 									array(
@@ -1055,17 +1059,86 @@ class Options_V2 {
 				'icon'     => __( 'filter', 'tutor' ),
 				'blocks'   => array(
 					array(
+						'label'      => __( 'Course', 'tutor' ),
+						'slug'       => 'options',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'         => 'enable_gutenberg_course_edit',
+								'type'        => 'toggle_switch',
+								'label'       => __('Gutenberg Editor', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __( '', 'tutor' ),
+								'desc'        => __('Use Gutenberg editor on course description area.', 'tutor'),
+							),
+							array(
+								'key'         => 'hide_course_from_shop_page',
+								'type'        => 'toggle_switch',
+								'label'       => __('Hide course products from shop page', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __( '', 'tutor' ),
+								'desc'        => __('Enabling this feature will remove course products from the shop page.', 'tutor'),
+							),
+							array(
+								'key'     => 'course_archive_page',
+								'type'    => 'select',
+								'label'   => __( 'Course Archive Page', 'tutor' ),
+								'default' => '0',
+								'options' => $pages,
+								'desc'    => __( 'This page will be used to list all the published courses.', 'tutor' ),
+							),
+							array(
+								'key'     => 'instructor_register_page',
+								'type'    => 'select',
+								'label'   => __( 'Instructor Registration Page', 'tutor' ),
+								'default' => '0',
+								'options' => $pages,
+								'desc'    => __( 'This page will be used to sign up new instructors.', 'tutor' ),
+							),
+							array(
+								'key'     => 'student_register_page',
+								'type'    => 'select',
+								'label'   => __( 'Student Registration Page', 'tutor' ),
+								'default' => '0',
+								'options' => $pages,
+								'desc'    => __( 'Choose the page for student registration page', 'tutor' ),
+							),
+							array(
+								'key'     => 'lesson_permalink_base',
+								'type'    => 'text',
+								'label'   => __( 'Lesson Permalink Base', 'tutor' ),
+								'default' => 'lessons',
+								'desc'    => $lesson_url,
+							),
+							array(
+								'key'     => 'lesson_video_duration_youtube_api_key',
+								'type'    => 'text',
+								'label'   => __('Youtube API Key', 'tutor'),
+								'default' => '',
+								'desc'    => __('To get dynamic video duration from Youtube, you need to set API key first', 'tutor'),
+							),
+						)
+					),
+					array(
 						'label'      => __( 'Options', 'tutor' ),
 						'slug'       => 'options',
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'         => 'login_error_message',
+								'key'         => 'enable_profile_completion',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Error message for wrong login credentials', 'tutor' ),
+								'label'       => __('Profile Completion', 'tutor'),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'Login error message displayed when the user puts wrong login credentials.', 'tutor' ),
+								'desc'        => __('Enabling this feature will show a notification bar to students and instructors to complete their profile information',	'tutor'),
+							),
+							array(
+								'key'         => 'disable_tutor_native_login',
+								'type'        => 'toggle_switch',
+								'label'       => __('Disbale Tutor Login', 'tutor'),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'on',
+								'desc'        => __('Disable to use the default WordPress login page',	'tutor'),
 							),
 							array(
 								'key'         => 'hide_admin_bar_for_users',
@@ -1076,12 +1149,28 @@ class Options_V2 {
 								'desc'        => __( 'Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user', 'tutor' ),
 							),
 							array(
-								'key'         => 'enable_tutor_maintenance_mode',
+								'key'         => 'delete_on_uninstall',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Maintenance Mode', 'tutor' ),
+								'label'       => __('Erase upon uninstallation', 'tutor'),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.', 'tutor' ),
+								'desc'        => __('Delete all data during uninstallation', 'tutor'),
+							),
+							array(
+								'key'         => 'hide_admin_bar_for_users',
+								'type'        => 'toggle_switch',
+								'label'       => __('Hide Frontend Admin Bar', 'tutor'),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __('Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user',	'tutor'),
+							),
+							array(
+								'key'         => 'enable_tutor_maintenance_mode',
+								'type'        => 'toggle_switch',
+								'label'       => __('Maintenance Mode', 'tutor'),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __('Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.',	'tutor'),
 							),
 						),
 					),
@@ -1089,18 +1178,8 @@ class Options_V2 {
 			),
 		);
 		$attrs   = apply_filters( 'tutor/options/attr', $attr );
-		$extends = apply_filters( 'tutor/options/extend/attr', array() );
+		$attrs = apply_filters( 'tutor/options/extend/attr', $attr );
 		
-		/* if ( tutils()->count( $extends ) ) {
-			foreach ( $extends as $section_key => $extended_sections ) {
-				foreach ( $extended_sections as $extend_key => $extended_blocks ) {
-					$sections         = $attrs[ $extend_key ]['sections'];
-					$existing_section = $sections[ $section_key ];
-					$attrs[ $extend_key ]['sections'][ $section_key ]['blocks'] = array_merge( $existing_section['blocks'], $extended_blocks );
-				}
-			}
-		} */
-
 		// Store in property to avoid repetitive execution
 		$this->setting_fields = $attrs;
 
