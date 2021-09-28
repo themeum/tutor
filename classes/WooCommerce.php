@@ -22,7 +22,7 @@ class WooCommerce extends Tutor_Base {
 
 		// Add option settings
 		add_filter( 'tutor_monetization_options', array( $this, 'tutor_monetization_options' ) );
-		add_filter( 'tutor/options/attr', array( $this, 'add_options' ) );
+		// add_filter( 'tutor/options/attr', array( $this, 'add_options' ) );
 
 		$monetize_by = tutils()->get_option( 'monetize_by' );
 		if ( $monetize_by !== 'wc' ) {
@@ -285,7 +285,7 @@ class WooCommerce extends Tutor_Base {
 	 * Add option for WooCommerce settings
 	 */
 	public function add_options( $attr ) {
-		$attr['basic']['sections']['woocommerce'] = array(
+		$attr['woocommerce'] = array(
 			'label'    => 'WooCommerce',
 			'slug'     => 'woocommerce',
 			'desc'     => 'WooCommerce Settings',
@@ -304,33 +304,6 @@ class WooCommerce extends Tutor_Base {
 							'label'       => __( 'Enable add to cart feature for guest users', 'tutor-pro' ),
 							'label_title' => '',
 							'desc'        => __( 'Authorised name will be printed under signature.', 'tutor-pro' ),
-						),
-
-					),
-				),
-			),
-		);
-
-		$attrX['woocommerce'] = array(
-			'label'    => __( 'WooCommerce', 'tutor' ),
-
-			'sections' => array(
-				'general' => array(
-					'label'  => __( 'General', 'tutor' ),
-					'desc'   => __( 'WooCommerce Settings', 'tutor' ),
-					'fields' => array(
-						/*
-						'enable_course_sell_by_woocommerce' => array(
-							'type'      => 'checkbox',
-							'label'     => __('Enable / Disable', 'tutor'),
-							'label_title'   => __('Enable WooComerce to sell course', 'tutor'),
-							'desc'      => __('By integrating WooCommerce, you can sell your course',	'tutor'),
-						),*/
-						'enable_guest_course_cart' => array(
-							'type'        => 'checkbox',
-							'label'       => __( 'Enable / Disable', 'tutor' ),
-							'label_title' => __( 'Enable add to cart feature for guest users', 'tutor' ),
-							'desc'        => __( 'Enabling this will let an unregistered user purchase any course from the Course Details page. Head over to Documentation to know how to configure this setting.', 'tutor' ),
 						),
 					),
 				),
