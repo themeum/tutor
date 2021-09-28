@@ -11,8 +11,7 @@
  * @version 2.0
  */
 
-$url_page = isset($_GET['tab_page']) ? $_GET['tab_page'] : '';
-$option_fields = $data['setting_fields'];
+$tab_page   = tutor_utils()->array_get('tab_page', $_REQUEST, 'general');
 ?>
 <!-- .tutor-backend-wrap -->
 <section class="tutor-backend-settings-page tutor-grid" style="padding-top: 60px;">
@@ -69,41 +68,35 @@ $option_fields = $data['setting_fields'];
 			<div class="tutor-option-tabs">
 				<ul class="tutor-option-nav">
 					<?php
-					foreach ( $option_fields as $args ) {
-						$first_key = array_keys( $args['sections'] )[0];
-						foreach ( $args['sections'] as $key => $section ) {
-							$icon       = tutor()->icon_dir . $key . '.svg';
-							$tab_page   = get_response( 'tab_page' );
-							$is_current = ( ! isset( $tab_page ) && esc_attr( $first_key ) === esc_attr( $key ) ) || esc_attr( $tab_page ) === esc_attr( $key ) ? esc_attr( ' active' ) : null;
-							?>
+					foreach ( $option_fields as $key => $section ) {
+						$icon = tutor()->icon_dir . $key . '.svg';
+						$active_class = $tab_page == $key ? esc_attr( ' active' ) : '';
+						?>
 						<li class="tutor-option-nav-item">
-							<a data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $is_current ); ?>">
+							<a data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
 								<img src="<?php echo esc_attr( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>-icon" />
 								<span class="nav-label"><?php echo esc_html( $section['label'] ); ?></span>
 							</a>
 						</li>
-							<?php
-						}
+						<?php
 					}
 					?>
 				</ul>
 			</div>
 			<!-- end /.tutor-option-tabs -->
+
 			<div class="tutor-option-tab-pages">
 				<?php
-				foreach ( $option_fields as $key => $args ) {
-					foreach ( $args['sections'] as $key => $section ) {
-						$tab_page   = get_response( 'tab_page' );
-						$is_current = ( ! isset( $tab_page ) && esc_attr( $first_key ) === esc_attr( $key ) ) || esc_attr( $tab_page ) === esc_attr( $key ) ? esc_attr( ' active' ) : null;
-						?>
-						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $is_current ); ?>">
-							<?php echo $this->template( $section ); ?>
-						</div>
-						<?php
-					}
+
+				foreach ( $option_fields as $key => $section ) {
+					$active_class = $tab_page == $key ? esc_attr( ' active' ) : '';
+					?>
+					<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
+						<?php echo $this->template( $section ); ?>
+					</div>
+					<?php
 				}
 				?>
-
 			</div>
 			<!-- end /.tutor-option-tab-pages -->
 		</form>

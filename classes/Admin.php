@@ -97,14 +97,12 @@ class Admin {
 
 	public function tutor_tools_v2() {
 		tutor_load_template_from_custom_path(tutor()->path . '/views/options/settings.php', array(
-			'tools_fields' => (new Options_V2)->get_tools_fields()
+			'tools_fields' => (new Tools_V2)->get_tools_fields()
 		));
 	}
 
 	public function tutor_settings_page_content() {
-		tutor_load_template_from_custom_path(tutor()->path . '/views/options/settings.php', array(
-			'setting_fields' => (new Options_V2)->get_setting_fields()
-		));
+		(new Options_V2)->load_settings_page();
 	}
 
 	public function tutor_students() {

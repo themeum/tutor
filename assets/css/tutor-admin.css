@@ -4988,14 +4988,18 @@ li.tutor-option-nav-item a.active img {
           filter: sepia(1) hue-rotate(169deg) contrast(2) brightness(0.6);
 }
 
-li.tutor-option-nav-item a.active > *,
-li.tutor-option-nav-item a:hover > * {
+li.tutor-option-nav-item a.active > *, li.tutor-option-nav-item a:hover > * {
   color: #1973aa;
 }
 
 li.tutor-option-nav-item a > * {
   -webkit-transition: 0.2s linear;
   transition: 0.2s linear;
+}
+
+li.tutor-option-nav-item a img {
+  max-width: 30px;
+  overflow: hidden;
 }
 
 li.tutor-option-nav-item a,

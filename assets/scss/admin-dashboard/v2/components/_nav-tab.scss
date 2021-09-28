@@ -81,12 +81,16 @@ li.tutor-option-nav-item {
 				filter: sepia(1) hue-rotate(169deg) contrast(2) brightness(0.6);
 			}
 		}
-		&.active > *,
-		&:hover > * {
+		&.active > *, &:hover > * {
 			color: $brand-wordpress;
 		}
 		> * {
 			transition: 0.2s linear;
+		}
+
+		img{
+			max-width: 30px;
+			overflow: hidden;
 		}
 	}
 
