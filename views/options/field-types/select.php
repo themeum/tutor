@@ -11,7 +11,7 @@
 			if (!empty($field['options'])) {
 				foreach ($field['options'] as $optionKey => $option) {
 			?>
-					<option value="<?php echo $optionKey ?>" <?php selected($this->get($field['key']),  $optionKey) ?>><?php echo esc_html__($option); ?></option>
+					<option value="<?php echo $optionKey ?>" <?php selected($this->get($field['key'], (isset($field['default']) ? $field['default'] : null)),  $optionKey) ?>><?php echo esc_html__($option); ?></option>
 			<?php
 				}
 			}
