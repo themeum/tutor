@@ -47,49 +47,6 @@ function highlightSearchedItem(dataKey) {
   }
 }
 
-/**
- * Email Manage template - live Preview
- */
-
-const emailManagePageInputs = document.querySelectorAll(
-  '.email-manage-page input[type="file"], .email-manage-page input[type="text"], .email-manage-page textarea'
-);
-
-const dataSourceEls = document.querySelectorAll(
-  ".email-manage-page [data-source]"
-);
-
-emailManagePageInputs.forEach((input) => {
-  input.addEventListener("input", (e) => {
-    const { name, value } = e.target;
-
-    if (e.target.files) {
-      const file = e.target.files[0];
-      console.dir(e.target.files[0]);
-
-      const reader = new FileReader();
-      reader.onload = function() {
-        document
-          .querySelector('img[data-source="email-title-logo"]')
-          .setAttribute("src", this.result);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    const dataSourceEl = document.querySelector(
-      `.email-manage-page [data-source=${name}]`
-    );
-
-    if (dataSourceEl) {
-      if (dataSourceEl.href) {
-        dataSourceEl.href = value;
-      } else {
-        dataSourceEl.innerHTML = value;
-      }
-    }
-  });
-});
-
 const load_saved_data = () => {
   var formData = new FormData();
   formData.append("action", "load_saved_data");
