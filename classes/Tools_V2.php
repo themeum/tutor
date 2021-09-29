@@ -226,12 +226,17 @@ class Tools_V2 {
 		wp_send_json_success( $default_options );
 	}
 
+	public function load_tools_page() {
+		$tools_fields = $this->get_tools_fields();
+		include tutor()->path . '/views/options/tools.php';
+	}
+
 	/**
 	 * Function options_tools
 	 *
 	 * @return void
 	 */
-	public function get_tools_fields() {
+	private function get_tools_fields() {
 
         if($this->tools_fields) {
             // Return fields if already prepared
