@@ -2,11 +2,6 @@
 $default = isset($field['default']) ? $field['default'] : '';
 $option_value = $this->get($field['key'], $default);
 $field_id = 'field_' . $field['key'];
-$email_edit_url = add_query_arg(
-    array('page' => 'tutor_settings', 'tab_page' => 'email', 'edit' => $field['key']),
-    admin_url('admin.php')
-);
-
 $tooltip_desc = !empty($field['desc']) ? $field['desc'] : null;
 ?>
 <div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
@@ -28,6 +23,18 @@ $tooltip_desc = !empty($field['desc']) ? $field['desc'] : null;
             <input type="checkbox" name="tutor_option[<?php echo $field['key']; ?>]" value="on" <?php $option_value ? checked($option_value[1], 'on') : '' ?> class="tutor-form-toggle-input">
             <span class="tutor-form-toggle-control"></span>
         </label>
-        <a class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs" href="<?php echo $email_edit_url ?>">Edit</a>
+        <?php 
+            if(isset( $field['buttons'] )) {
+                foreach($field['buttons'] as $key => $button) {
+                    if($button['type']=='anchor') {
+                        ?>
+                            <a class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs" href="<?php echo $button['url'] ?>">
+                                <?php echo $button['text']; ?>
+                            </a>
+                        <?php
+                    } 
+                }
+            }
+        ?>
     </div>
 </div>
