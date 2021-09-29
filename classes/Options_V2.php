@@ -285,8 +285,13 @@ class Options_V2 {
 	}
 
 	public function load_settings_page() {
-		$option_fields = $this->get_setting_fields();
-		include tutor()->path . '/views/options/settings.php';
+		extract($this->get_setting_fields());
+		
+		if(!$template_path) {
+			$template_path = tutor()->path . '/views/options/settings.php';
+		} 
+
+		include $template_path;
 	}
 
 	private function get_setting_fields() {
@@ -1179,9 +1184,29 @@ class Options_V2 {
 		);
 
 		$attrs = apply_filters( 'tutor/options/extend/attr', apply_filters( 'tutor/options/attr', $attr ) );
-		
-		// Store in property to avoid repetitive execution
-		$this->setting_fields = $attrs;
+	
+		// Get the active tab
+		$tab_page   = tutor_utils()->array_get('tab_page', $_REQUEST, 'general');
+		$tab_data = null;
+		$template = null;
+
+		foreach ( $attrs as $key => $section ) {
+			if($tab_page == $key) {
+				if(isset($section['template_path']) && $section['template_path']) {
+					$template = $section['template_path'];
+					$tab_data = $section;
+				}
+				break;
+			}
+		}
+
+		// Store in runtime cache
+		$this->setting_fields = array(
+			'option_fields' => $attrs,
+			'active_tab' => $tab_page,
+			'active_tab_data' => $tab_data,
+			'template_path' => $template
+		);
 
 		return $this->setting_fields;
 	}
@@ -1203,13 +1228,6 @@ class Options_V2 {
 	public function field_type( $field = array() ) {
 		ob_start();
 		include tutor()->path . "views/options/field-types/{$field['type']}.php";
-
-		return ob_get_clean();
-	}
-
-	public function generate_settings() {
-		ob_start();
-		include tutor()->path . 'views/options/options_generator.php';
 
 		return ob_get_clean();
 	}

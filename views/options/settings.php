@@ -11,7 +11,6 @@
  * @version 2.0
  */
 
-$tab_page   = tutor_utils()->array_get('tab_page', $_REQUEST, 'general');
 ?>
 <!-- .tutor-backend-wrap -->
 <section class="tutor-backend-settings-page tutor-grid" style="padding-top: 60px;">
@@ -70,7 +69,7 @@ $tab_page   = tutor_utils()->array_get('tab_page', $_REQUEST, 'general');
 					<?php
 					foreach ( $option_fields as $key => $section ) {
 						$icon = tutor()->icon_dir . $key . '.svg';
-						$active_class = $tab_page == $key ? esc_attr( ' active' ) : '';
+						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
 						?>
 						<li class="tutor-option-nav-item">
 							<a data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
@@ -89,7 +88,7 @@ $tab_page   = tutor_utils()->array_get('tab_page', $_REQUEST, 'general');
 				<?php
 
 				foreach ( $option_fields as $key => $section ) {
-					$active_class = $tab_page == $key ? esc_attr( ' active' ) : '';
+					$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
 					?>
 					<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
 						<?php echo $this->template( $section ); ?>
