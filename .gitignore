@@ -22,4 +22,5 @@ assets/**/*.map
 *.mo
 .history
 *.lock
+*.log
 *.map
