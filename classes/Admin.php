@@ -96,9 +96,7 @@ class Admin {
 	}
 
 	public function tutor_tools_v2() {
-		tutor_load_template_from_custom_path(tutor()->path . '/views/options/settings.php', array(
-			'tools_fields' => (new Tools_V2)->get_tools_fields()
-		));
+		(new Tools_V2)->load_tools_page();
 	}
 
 	public function tutor_settings_page_content() {
