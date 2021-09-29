@@ -138,7 +138,6 @@ final class Tutor{
 		$this->dashboard = new Dashboard();
 		$this->form_handler = new FormHandler();
 		$this->frontend = new Frontend();
-		$this->email = new Email();
 		$this->rest_api = new RestAPI();
 		$this->setup = new Tutor_Setup();
 		$this->private_course_access = new Private_Course_Access();

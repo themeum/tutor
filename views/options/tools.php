@@ -6,7 +6,7 @@
  * @param object $this
  */
 
-$sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
+$sub_page = esc_attr( tutor_utils()->array_get( 'sub_page', $_GET, '' ) );
 
 ?>
 <!-- .tutor-backend-wrap -->
@@ -32,7 +32,7 @@ $sub_page = esc_attr( $this->get_param_val( 'sub_page' ) );
 						<li>
 							<?php
 							$no_page     = false;
-							$first_item  = array_key_first( $args['sections'] );
+							$first_item  = array_keys( $args['sections'] )[0];
 							$target_page = ! empty( $sub_page ) ? $sub_page : $first_item;
 							$item_exist  = in_array( $sub_page, array_keys( $args['sections'] ) );
 							foreach ( $args['sections'] as $key => $section ) :

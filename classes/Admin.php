@@ -85,7 +85,7 @@ class Admin {
 
 		do_action('tutor_admin_register');
 
-		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_page'));
+		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_settings_page_content'));
 
 		add_submenu_page('tutor', __('Tools', 'tutor'), __('Tools', 'tutor'), 'manage_tutor', 'tutor-tools', array($this, 'tutor_tools'));
 		add_submenu_page('tutor', __('Tools v2', 'tutor'), __('Tools v2', 'tutor'), 'manage_tutor', 'tutor-tools-v2', array($this, 'tutor_tools_v2'));
@@ -96,12 +96,13 @@ class Admin {
 	}
 
 	public function tutor_tools_v2() {
-		$tutor_option = new Options_V2();
-		echo apply_filters('tutor/options/generated-html', $tutor_option->tools());
+		tutor_load_template_from_custom_path(tutor()->path . '/views/options/settings.php', array(
+			'tools_fields' => (new Tools_V2)->get_tools_fields()
+		));
 	}
-	public function tutor_page() {
-		$tutor_option = new Options_V2();
-		echo apply_filters('tutor/options/generated-html', $tutor_option->generate());
+
+	public function tutor_settings_page_content() {
+		(new Options_V2)->load_settings_page();
 	}
 
 	public function tutor_students() {
