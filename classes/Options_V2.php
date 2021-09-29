@@ -1177,8 +1177,8 @@ class Options_V2 {
 				),
 			),
 		);
-		$attrs   = apply_filters( 'tutor/options/attr', $attr );
-		$attrs = apply_filters( 'tutor/options/extend/attr', $attr );
+
+		$attrs = apply_filters( 'tutor/options/extend/attr', apply_filters( 'tutor/options/attr', $attr ) );
 		
 		// Store in property to avoid repetitive execution
 		$this->setting_fields = $attrs;
