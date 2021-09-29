@@ -72,7 +72,7 @@
 						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
 						?>
 						<li class="tutor-option-nav-item">
-							<a data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
+							<a data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
 								<img src="<?php echo esc_attr( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>-icon" />
 								<span class="nav-label"><?php echo esc_html( $section['label'] ); ?></span>
 							</a>
@@ -86,15 +86,14 @@
 
 			<div class="tutor-option-tab-pages">
 				<?php
-
-				foreach ( $option_fields as $key => $section ) {
-					$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
-					?>
-					<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
-						<?php echo $this->template( $section ); ?>
-					</div>
-					<?php
-				}
+					foreach ( $option_fields as $key => $section ) {
+						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
+						?>
+						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
+							<?php echo $this->template( $section ); ?>
+						</div>
+						<?php
+					}
 				?>
 			</div>
 			<!-- end /.tutor-option-tab-pages -->

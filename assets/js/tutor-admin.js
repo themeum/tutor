@@ -23,6 +23,7 @@ var navPages = document.querySelectorAll('.tutor-option-nav-page');
 navTabLists.forEach(function (list) {
   list.addEventListener('click', function (e) {
     var dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
+    var pageSlug = e.target.parentElement.dataset.page || e.target.dataset.page;
 
     if (dataTab) {
       // remove active from other buttons
@@ -45,7 +46,7 @@ navTabLists.forEach(function (list) {
 
       var url = new URL(window.location);
       var params = new URLSearchParams({
-        page: "tutor_settings",
+        page: pageSlug,
         tab_page: dataTab
       });
       var pushUrl = "".concat(url.origin + url.pathname, "?").concat(params.toString());

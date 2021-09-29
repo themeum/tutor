@@ -14,6 +14,8 @@ const navPages = document.querySelectorAll('.tutor-option-nav-page');
 navTabLists.forEach((list) => {
 	list.addEventListener('click', (e) => {
 		const dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
+		const pageSlug = e.target.parentElement.dataset.page || e.target.dataset.page;
+
 		if (dataTab) {
 			// remove active from other buttons
 			navTabItems.forEach((item) => {
@@ -35,7 +37,7 @@ navTabLists.forEach((list) => {
 			// History push
 			const url = new URL(window.location);
 
-			const params = new URLSearchParams({ page: "tutor_settings", tab_page: dataTab });
+			const params = new URLSearchParams({ page: pageSlug, tab_page: dataTab });
 			const pushUrl = `${url.origin + url.pathname}?${params.toString()}`;
 
 			window.history.pushState({}, '', pushUrl);
