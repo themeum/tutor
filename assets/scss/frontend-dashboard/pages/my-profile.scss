@@ -1,39 +1,27 @@
 
-.tutor-dashboard-profile {
-	.tutor-dashboard-profile-item {
-		display: flex;
+.tutor-dashboard-profile-data{
 
-		.heading {
-			min-width: 190px;
-		}
+	&>div{
+		margin-bottom: 30px;
 
-		@media (max-width: 480px) {
-			flex-wrap: wrap;
-			
-			.heading {
-				min-width: 100%;
-				width: 100%;
-				font-weight: 700;
-				margin-bottom: 6px;
+		&>div{
+			&:first-child{
+				font-style: normal;
+				font-weight: normal;
+				font-size: 16px;
+				color: #5B616F;
+			}
+
+			&:last-child{
+				font-style: normal;
+				font-weight: 500;
+				font-size: 16px;
+				color: #212327;
 			}
 		}
 
-		.content {
-			-webkit-box-flex: 1;
-			flex-grow: 1;
-			
-			small {
-				font-size: inherit;
-				font-style: italic;
-				
-				a {
-					color: var(--tutor-primary-color);
-					
-					&:hover {
-						color: var(--tutor-primary-hover-color);
-					}
-				}
-			}
+		p{
+			margin: 0;
 		}
 	}
 } 

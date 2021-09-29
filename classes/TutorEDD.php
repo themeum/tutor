@@ -18,7 +18,6 @@ class TutorEDD extends Tutor_Base {
 
 		//Add Tutor Option
 		add_filter('tutor_monetization_options', array($this, 'tutor_monetization_options'));
-		//add_filter('tutor/options/attr', array($this, 'add_options'));
 
 		$monetize_by = tutils()->get_option('monetize_by');
 
@@ -55,34 +54,6 @@ class TutorEDD extends Tutor_Base {
 		</div>
 		<?php
 		echo ob_get_clean();
-	}
-
-	/**
-	 * @param $attr
-	 *
-	 * @return mixed
-	 *
-	 * Add Option for tutor
-	 */
-	public function add_options($attr) {
-		$attr['tutor_edd'] = array(
-			'label' => __('EDD', 'tutor-edd'),
-
-			'sections'    => array(
-				'general' => array(
-					'label' => __('General', 'tutor-edd'),
-					'desc' => __('Tutor Course Attachments Settings', 'tutor-edd'),
-					'fields' => array(
-						'enable_tutor_edd' => array(
-							'type'          => 'checkbox',
-							'label'         => __('Enable EDD', 'tutor'),
-							'desc'          => __('This will enable sell your product via EDD',	'tutor'),
-						),
-					),
-				),
-			),
-		);
-		return $attr;
 	}
 
 	/**
