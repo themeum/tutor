@@ -165,12 +165,10 @@ class Options_V2 {
 		wp_send_json_success( $attr_default );
 	}
 
-
 	public function load_saved_data() {
 		tutor_utils()->checking_nonce();
 		wp_send_json_success( get_option( 'tutor_settings_log' ) );
 	}
-
 
 	public function tutor_import_settings() {
 		tutor_utils()->checking_nonce();
@@ -577,17 +575,16 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'            => 'enable_tutor_monetization',
+								'key'            => 'enable_tutor_earning',
 								'type'           => 'toggle_switch',
 								'label'          => __( 'Enable Monetization', 'tutor' ),
 								'label_title'    => __( '', 'tutor' ),
-								'default'        => 'on',
+								'default'        => 'off',
 								'desc'           => __( 'Enable monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
 							),
-							
 						),
 					),
-					array(
+					'block_options' => array(
 						'label'      => __( 'Options', 'tutor' ),
 						'slug'       => 'options',
 						'block_type' => 'uniform',
@@ -604,34 +601,26 @@ class Options_V2 {
 								'desc'    => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro',	'tutor'),
 							),
 							array(
-								'key'         => 'enable_guest_mode',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Enable Guest Mode', 'tutor' ),
-								'label_title' => __( '', 'tutor' ),
-								'default'     => 'off',
-								'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
-							),
-							array(
 								'key'         => 'sharing_percentage',
 								'type'        => 'double_input',
 								'label'       => __( 'Sharing Percentage', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => '',
 								'fields'      => array(
-									'instructor_takes' => array(
+									'earning_instructor_commission' => array(
 										'id'      => 'revenue-instructor',
 										'type'    => 'ratio',
 										'title'   => 'Instructor Takes',
-										'default' => 10,
+										'default' => 0,
 									),
-									'admin_takes' => array(
+									'earning_admin_commission' => array(
 										'id'      => 'revenue-admin',
 										'type'    => 'ratio',
 										'title'   => 'Admin Takes',
 										'default' => 100,
 									),
 								),
-								'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
+								'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce', 'tutor' ),
 							),
 							array(
 								'key'         => 'enable_revenue_sharing',
@@ -657,43 +646,36 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'         => 'deduct_fees',
+								'key'         => 'enable_fees_deducting',
 								'type'        => 'toggle_switch',
 								'label'       => __( 'Deduct Fees', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'content goes here', 'tutor' ),
+								'desc'        => __('Fees are charged from the entire sales amount. The remaining amount will be divided among admin and instructors.',	'tutor'),
 							),
 							array(
-								'key'         => 'fee_description',
-								'type'        => 'textarea',
+								'key'         => 'fees_name',
+								'type'        => 'text',
 								'label'       => __( 'Fee Description', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'free',
-								'desc'        => __( 'content goes here', 'tutor' ),
 							),
 							array(
 								'key'          => 'fee_amount_type',
 								'type'         => 'group_fields',
 								'label'        => __( 'Fee Amount & Type', 'tutor' ),
-								'desc'         => __( 'content goes here', 'tutor' ),
 								'group_fields' => array(
-									'time'  => array(
+									'fees_type'  => array(
 										'type'    => 'select',
 										'default' => 'minutes',
-										'select_options' => false,
 										'options' => array(
-											'weeks' => __( 'Weeks', 'tutor' ),
-											'days' => __( 'Days', 'tutor' ),
-											'hours' => __( 'Hours', 'tutor' ),
-											'minutes' => __( 'Minutes', 'tutor' ),
-											'seconds' => __( 'Seconds', 'tutor' ),
+											'percent'     =>  __('Percent', 'tutor'),
+											'fixed'      =>  __('Fixed', 'tutor'),
 										),
 									),
-									'value' => array(
-										'type'    => 'text',
+									'fees_amount' => array(
+										'type'    => 'number',
 										'default' => '0',
-
 									),
 								),
 							),
@@ -707,7 +689,7 @@ class Options_V2 {
 							array(
 								'key'     => 'min_withdraw_amount',
 								'type'    => 'number',
-								'label'   => __( 'Minimum Withdraw Amount', 'tutor' ),
+								'label'   => __( 'Minimum Withdrawal Amount', 'tutor' ),
 								'default' => '80',
 								'desc'    => __( 'Instructors should earn equal or above this amount to make a withdraw request.', 'tutor' ),
 							),
@@ -1232,18 +1214,6 @@ class Options_V2 {
 		return ob_get_clean();
 	}
 
-	/**
-	 * tools
-	 *
-	 * @return void
-	 */
-	public function generate_tools() {
-		ob_start();
-		include tutor()->path . 'views/options/options_tools.php';
-
-		return ob_get_clean();
-	}
-
 	public function blocks( $blocks = array() ) {
 		ob_start();
 		include tutor()->path . 'views/options/option_blocks.php';
@@ -1254,74 +1224,5 @@ class Options_V2 {
 		ob_start();
 		include tutor()->path . "views/options/template/{$section['template']}.php";
 		return ob_get_clean();
-	}
-
-	/**
-	 * Definition of get_all_fields
-	 *
-	 * @return array
-	 */
-	public function get_all_fields() {
-		foreach ( $this->options_attr() as $sections ) :
-			foreach ( $sections as $section ) :
-				if ( is_array( $section ) ) :
-					foreach ( $section as $blocks ) :
-						foreach ( $blocks['blocks'] as $blocks ) :
-							foreach ( $blocks['fields'] as $field ) :
-								$field['block'] = $blocks['label'];
-								$fields[]       = $field;
-							endforeach;
-						endforeach;
-					endforeach;
-				endif;
-			  endforeach;
-		endforeach;
-		return $fields;
-	}
-
-	/**
-	 * Definition of tutor_load_email_template
-	 *
-	 * @return array
-	 */
-	public function tutor_load_email_template( $template ) {
-		// ob_start();
-		include tutor_pro()->path . "templates/email/{$template}.php";
-		// return ob_get_clean();
-	}
-
-
-	/**
-	 * Definition of get_field_by_key
-	 *
-	 * @param  mixed $key
-	 * @return array
-	 */
-	public function get_field_by_key( $key = '' ) {
-		$fields = $this->get_all_fields();
-
-		foreach ( $fields as $field ) :
-			if ( isset( $field['key'] ) && $field['key'] === $key ) :
-				return $field;
-			endif;
-		endforeach;
-	}
-
-
-	/**
-	 * Definition of get_field_by_type
-	 *
-	 * @param  mixed $type
-	 * @return array
-	 */
-	public function get_field_by_type( $type = '' ) {
-		$fields = $this->get_all_fields();
-
-		foreach ( $fields as $field ) :
-			if ( isset( $field['type'] ) && $field['type'] === $type ) :
-				$all_fields[] = $field;
-			endif;
-		endforeach;
-		return $all_fields;
 	}
 }

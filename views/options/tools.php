@@ -6,8 +6,6 @@
  * @param object $this
  */
 
-$sub_page = esc_attr( tutor_utils()->array_get( 'sub_page', $_GET, '' ) );
-
 ?>
 <!-- .tutor-backend-wrap -->
 <section class="tutor-backend-settings-page tutor-grid">
@@ -23,57 +21,40 @@ $sub_page = esc_attr( tutor_utils()->array_get( 'sub_page', $_GET, '' ) );
 	<div class="tutor-option-body">
 		<div class="tutor-option-form py-4 px-3">
 			<div class="tutor-option-tabs">
-				<?php
-				foreach ( $this->options_tools as $args ) :
-					?>
-				 <ul class="tutor-option-nav">
-						<li class="tutor-option-nav-item">
-							<h4><?php echo $args['label']; ?></h4>
-						<li>
-							<?php
-							$no_page     = false;
-							$first_item  = array_keys( $args['sections'] )[0];
-							$target_page = ! empty( $sub_page ) ? $sub_page : $first_item;
-							$item_exist  = in_array( $sub_page, array_keys( $args['sections'] ) );
-							foreach ( $args['sections'] as $key => $section ) :
-								$icon      = $section['icon'];
-								$is_active = $target_page === $section['slug'] ? 'active' : null;
-								$page_url  = 'tutor-setup' === $section['slug']
-												? add_query_arg( 'page', $section['slug'], admin_url( 'admin.php' ) )
-												: add_query_arg( 'sub_page', $section['slug'], admin_url( 'admin.php?page=tutor-tools-v2' ) );
-								?>
-								<li class="tutor-option-nav-item">
-									<a href="<?php echo $page_url; ?>" class="<?php echo $is_active; ?>">
-										<span class="nav-icon tutor-v2-icon-test <?php echo $icon; ?>"></span>
-										<span class="nav-label"><?php echo $section['label']; ?></span>
-									</a>
-								</li>
-								<?php
-							endforeach;
-							?>
-					</ul>
+				<ul class="tutor-option-nav" data-page="<?php esc_attr_e( $_GET['page'] ); ?>">
 					<?php
-				endforeach;
-				?>
+						foreach ( $tools_fields as $key => $section ) {
+							$icon = tutor()->icon_dir . $key . '.svg';
+							$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
+							?>
+							<li class="tutor-option-nav-item">
+								<a data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
+									<img src="<?php echo esc_attr( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>-icon" />
+									<span class="nav-label"><?php echo esc_html( $section['label'] ); ?></span>
+								</a>
+							</li>
+							<?php
+						}
+					?>
+				</ul>
 				<!-- end /.tutor-option-nav -->
 			</div>
+
 			<!-- end /.tutor-option-tabs -->
 			<div class="tutor-option-tab-pages">
 				<?php
-				if ( $target_page === $first_item || true === $item_exist ) {
-					echo $this->template( $this->options_tools['tools']['sections'][ $target_page ] );
-				} else {
-					echo '<div class="tutor-option-main-title">
-                            <h2>Error!</h2>
-                        </div>
-                        <div class="tutor-option-single-item">
-                            <h4>The subpage you are looking for is invalid</h4>
-                        </div>';
-				}
+					foreach ( $tools_fields as $key => $section ) {
+						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
+						?>
+						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
+							<?php echo $this->template( $section ); ?>
+						</div>
+						<?php
+					}
 				?>
 			</div>
-			<!-- end /.tutor-option-tab-pages -->
-			</div>
+		<!-- end /.tutor-option-tab-pages -->
+		</div>
 	</div>
 	<div class="tutor-notification tutor-is-success">
 		<div class="tutor-notification-icon">
