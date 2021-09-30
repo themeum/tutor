@@ -62,9 +62,7 @@ class Options {
 		$option = (array)tutils()->array_get('tutor_option', $_POST, array());
 		
 		foreach ( $option as $key => $value ) {
-			if ( 'login_error_message' === $key ) {
-				$option['login_error_message'] = $this->tutor_sanitize_settings_options( 'login_error_message' );
-			} elseif ( 'lesson_permalink_base' === $key ) {
+			if ( 'lesson_permalink_base' === $key ) {
 				$option['lesson_permalink_base'] = $this->tutor_sanitize_settings_options( 'lesson_permalink_base' );
 			} elseif ( 'lesson_video_duration_youtube_api_key' === $key ) {
 				$option['lesson_video_duration_youtube_api_key'] = $this->tutor_sanitize_settings_options( 'lesson_video_duration_youtube_api_key' );

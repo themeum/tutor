@@ -737,10 +737,6 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	}
 }
 
-
-
-
-
 if ( ! function_exists( 'pr' ) ) {
 	/**
 	 * Function to print_r

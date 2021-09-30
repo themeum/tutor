@@ -3,6 +3,7 @@
     // Libraries to use in all frontend dashboard pages
     @import './lib/dropdown-action.scss';
     @import './lib/inline-link.scss';
+    @import './lib/table.scss';
 
     // Frontend dashboard wrapper header, sidebar etc.
     @import './header.scss';
@@ -12,12 +13,19 @@
     // Individual dashboard pages
     .tutor-dashboard-content {
         padding-top: 30px;
+
+        &>h3, &>h4 {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 24px;
+            color: #212327;
+            margin: 0 0 20px 0;
+        }
         
         @import './pages/dashboard.scss';
         @import './pages/my-profile.scss';
         @import './pages/review.scss';
         @import './pages/q-and-a.scss';
-        @import './pages/earning.scss';
         @import './pages/quiz-attempt.scss';
     }
 }

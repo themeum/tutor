@@ -1,5 +1,5 @@
 // Toggle Disable -> Monitization > Monitization fees
-.monitization-fees.is-disable {
+.monetization-fees.is-disable {
 	.tutor-option-field-row {
 		&:nth-child(2),
 		&:nth-child(3) {
@@ -76,4 +76,23 @@
 			}
 		}
 	}
+}
+
+// Highlight items form search suggestion
+.tutor-option-field-label {
+    .isHighlighted{
+        position: relative;
+        display: inline-flex;
+        z-index: 1;
+        &::before{
+            content:"";
+            position: absolute;
+            inset: 1px -6px;
+            background: $warning-50;
+            border: 1px solid $warning-70;
+            box-sizing: border-box;
+            border-radius: 3px;
+            z-index: -1;
+        }
+    }
 }

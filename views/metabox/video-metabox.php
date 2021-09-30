@@ -25,10 +25,6 @@ $video_sources = array(
 
 $supported_sources = tutor_utils()->get_option('supported_video_sources', $video_sources);
 $supported_sources = array_keys($supported_sources);
-
-$default_source = tutor_utils()->get_option('default_video_source', null);
-(!$videoSource && $default_source && in_array($default_source, $supported_sources)) ? $videoSource=$default_source : 0;
-
 ?>
 
 <div class="tutor-mb-30 tutor-grid">

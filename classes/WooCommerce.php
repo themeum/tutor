@@ -18,17 +18,16 @@ class WooCommerce extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'tutor_options_before_woocommerce', array( $this, 'notice_before_option' ) );
-
 		// Add option settings
 		add_filter( 'tutor_monetization_options', array( $this, 'tutor_monetization_options' ) );
-		add_filter( 'tutor/options/attr', array( $this, 'add_options' ) );
-
+		
 		$monetize_by = tutils()->get_option( 'monetize_by' );
 		if ( $monetize_by !== 'wc' ) {
 			return;
 		}
-
+		
+		add_filter( 'tutor/options/attr', array( $this, 'add_options' ) );
+		
 		/**
 		 * Is Course Purchasable
 		 */
@@ -92,31 +91,6 @@ class WooCommerce extends Tutor_Base {
 		 * Change woo commerce cart product link if it is tutor product
 		 */
 		add_filter( 'woocommerce_cart_item_permalink', array( $this, 'tutor_update_product_url' ), 10, 2 );
-	}
-
-	public function notice_before_option() {
-		$has_wc = tutor_utils()->has_wc();
-		if ( $has_wc ) {
-			return;
-		}
-
-		ob_start();
-		?>
-		<div class="tutor-notice-warning">
-			<p>
-				<?php
-				_e(
-					' Seems like you don’t have WooCommerce plugin installed on your site. In order to use this functionality, you need to have the
-                WooCommerce plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling
-                courses with Tutor.',
-					'tutor'
-				);
-				?>
-			</p>
-			<p><?php _e( 'This notice will disappear after activating <strong>WooCommerce</strong>', 'tutor' ); ?></p>
-		</div>
-		<?php
-		echo ob_get_clean();
 	}
 
 	public function is_course_purchasable( $bool, $course_id ) {
@@ -285,56 +259,13 @@ class WooCommerce extends Tutor_Base {
 	 * Add option for WooCommerce settings
 	 */
 	public function add_options( $attr ) {
-		$attr['basic']['sections']['woocommerce'] = array(
-			'label'    => 'WooCommerce',
-			'slug'     => 'woocommerce',
-			'desc'     => 'WooCommerce Settings',
-			'template' => 'basic',
-			'icon'     => 'gradebook',
-			'blocks'   => array(
-				'woo_commerce_settings' => array(
-					'label'      => __( 'WooCommerce Settings', 'tutor' ),
-					'slug'       => 'woo_commerce_settings',
-					'block_type' => 'uniform',
-					'fields'     => array(
-						'enable_guest_course_cart' => array(
-							'key'         => 'enable_guest_course_cart',
-							'type'        => 'toggle_switch',
-							'default'     => 'off',
-							'label'       => __( 'Enable add to cart feature for guest users', 'tutor-pro' ),
-							'label_title' => '',
-							'desc'        => __( 'Authorised name will be printed under signature.', 'tutor-pro' ),
-						),
-
-					),
-				),
-			),
-		);
-
-		$attrX['woocommerce'] = array(
-			'label'    => __( 'WooCommerce', 'tutor' ),
-
-			'sections' => array(
-				'general' => array(
-					'label'  => __( 'General', 'tutor' ),
-					'desc'   => __( 'WooCommerce Settings', 'tutor' ),
-					'fields' => array(
-						/*
-						'enable_course_sell_by_woocommerce' => array(
-							'type'      => 'checkbox',
-							'label'     => __('Enable / Disable', 'tutor'),
-							'label_title'   => __('Enable WooComerce to sell course', 'tutor'),
-							'desc'      => __('By integrating WooCommerce, you can sell your course',	'tutor'),
-						),*/
-						'enable_guest_course_cart' => array(
-							'type'        => 'checkbox',
-							'label'       => __( 'Enable / Disable', 'tutor' ),
-							'label_title' => __( 'Enable add to cart feature for guest users', 'tutor' ),
-							'desc'        => __( 'Enabling this will let an unregistered user purchase any course from the Course Details page. Head over to Documentation to know how to configure this setting.', 'tutor' ),
-						),
-					),
-				),
-			),
+		$attr['monetization']['blocks']['block_options']['fields'][] = array(
+			'key'         => 'enable_guest_course_cart',
+			'type'        => 'toggle_switch',
+			'label'       => __( 'Enable add to cart feature for guest users', 'tutor-pro' ),
+			'label_title' => __( '', 'tutor' ),
+			'default'     => 'off',
+			'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
 		);
 
 		return $attr;
@@ -581,10 +512,11 @@ class WooCommerce extends Tutor_Base {
 			return;
 		}
 
-			// get woo order details
-			$order         = wc_get_order( $order_id );
-			$tutor_product = false;
-			$url           = tutor_utils()->tutor_dashboard_url() . 'enrolled-courses/';
+		// get woo order details
+		$order         = wc_get_order( $order_id );
+		$tutor_product = false;
+		$url           = tutor_utils()->tutor_dashboard_url() . 'enrolled-courses/';
+		
 		foreach ( $order->get_items() as $item ) {
 			$product_id = $item->get_product_id();
 			// check if product associated with tutor course
@@ -593,7 +525,8 @@ class WooCommerce extends Tutor_Base {
 				$tutor_product = true;
 			}
 		}
-			// if tutor product & order status completed
+		
+		// if tutor product & order status completed
 		if ( $order->has_status( 'completed' ) && $tutor_product ) {
 			wp_safe_redirect( $url );
 			exit;
