@@ -336,3 +336,12 @@ $variations: (
 		}
 	}
 }
+
+.tutor-notification-element-empty {
+	display: grid;
+	place-items: center;
+	text-align: center;
+	.element-content {
+		max-width: 250px;
+	}
+}
