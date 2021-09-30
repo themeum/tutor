@@ -194,7 +194,8 @@
 	.tab-body {
 		min-width: 100%;
 		width: calc(100% + var(--padding));
-		max-height: 100vh;
+		min-height: 200px;
+		max-height: calc(100vmin - 120px);
 		overflow-y: auto;
 		padding-right: var(--padding);
 		&-item {
@@ -222,13 +223,21 @@
 }
 
 // Notification Elements
-$variations: ('primary' $color-brand, 'success' $color-success, 'warning' $warning-90, 'danger' $danger-90);
-@each $prefix, $color in $variations {
+$variations: (
+	'primary' $color-brand $primary-40,
+	'success' $color-success $success-40,
+	'warning' $color-warning $warning-40,
+	'danger' $danger-90 $danger-40,
+	'purple' #9b4ab4 #faebff,
+	// 'default' $design-white $black-30
+);
+@each $prefix, $color, $bgColor in $variations {
 	.tutor-notification-element {
 		&:not(.notification-read) {
 			.element-icon {
 				.element-#{$prefix} {
-					background: #{$color};
+					color: #{$color};
+					background: #{$bgColor};
 				}
 			}
 			.element-content .header {
@@ -286,7 +295,7 @@ $variations: ('primary' $color-brand, 'success' $color-success, 'warning' $warni
 						position: absolute;
 						inset: 0;
 						border-radius: 50%;
-						animation: pulse-animation 2s infinite;
+						// animation: pulse-animation 2s infinite;
 						z-index: -1;
 					}
 				}
