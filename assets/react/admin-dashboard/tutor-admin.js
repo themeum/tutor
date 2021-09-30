@@ -42,12 +42,6 @@ jQuery(document).ready(function($) {
     $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
   });
 
-  $("#save_tutor_option").click(function(e) {
-    e.preventDefault();
-    $(this)
-      .closest("form")
-      .submit();
-  });
   $("#tutor-option-form").submit(function(e) {
     e.preventDefault();
 

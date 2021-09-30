@@ -563,9 +563,9 @@ class Options_V2 {
 					),
 				),
 			),
-			'monitization'       => array(
+			'monetization'       => array(
 				'label'    => __( 'Monitization', 'tutor' ),
-				'slug'     => 'monitization',
+				'slug'     => 'monetization',
 				'desc'     => __( 'Monitization Settings', 'tutor' ),
 				'template' => 'basic',
 				'icon'     => __( 'discount-filled', 'tutor' ),
@@ -727,21 +727,11 @@ class Options_V2 {
 				'template' => 'design',
 				'icon'     => __( 'design', 'tutor' ),
 				'blocks'   => array(
-					array(
+					'block_course' => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
 						'block_type' => 'uniform',
 						'fields'     => array(
-							array(
-								'key'     => 'course_builder_page_logo',
-								'type'    => 'upload_full',
-								'label'   => __( 'Course Builder Page Logo', 'tutor' ),
-								'default' => tutor()->icon_dir . 'tutor-logo-course-builder.svg',
-								'desc'    => __(
-									'<p>Size: <strong>200x40 pixels;</strong> File Support:<strong>jpg, .jpeg or .png.</strong></p>',
-									'tutor'
-								),
-							),
 							array(
 								'key'     => 'courses_col_per_row',
 								'type'    => 'radio_horizontal',

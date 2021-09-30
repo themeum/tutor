@@ -56,11 +56,11 @@ navTabLists.forEach(function (list) {
 });
 /**
  * Toggle disable input fields
- * Selecetor -> .tutor-option-single-item.monitization-fees
+ * Selecetor -> .tutor-option-single-item.monetization-fees
  */
 
-var moniFees = document.querySelector('.monitization-fees');
-var feesToggle = document.querySelector('.monitization-fees input[name=deduct-fees]');
+var moniFees = document.querySelector('.monetization-fees');
+var feesToggle = document.querySelector('.monetization-fees input[name=deduct-fees]');
 
 if (moniFees && feesToggle) {
   window.addEventListener('load', function () {
@@ -2476,10 +2476,6 @@ jQuery(document).ready(function ($) {
   $(".tutor-form-toggle-input").on("change", function (e) {
     var toggleInput = $(this).siblings("input");
     $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
-  });
-  $("#save_tutor_option").click(function (e) {
-    e.preventDefault();
-    $(this).closest("form").submit();
   });
   $("#tutor-option-form").submit(function (e) {
     e.preventDefault();

@@ -7406,12 +7406,12 @@ li.tutor-option-nav-item h4 {
   border-bottom: 1px solid #e0e2ea;
 }
 
-.monitization-fees.is-disable .tutor-option-field-row:nth-child(2), .monitization-fees.is-disable .tutor-option-field-row:nth-child(3) {
+.monetization-fees.is-disable .tutor-option-field-row:nth-child(2), .monetization-fees.is-disable .tutor-option-field-row:nth-child(3) {
   position: relative;
   cursor: not-allowed;
 }
 
-.monitization-fees.is-disable .tutor-option-field-row:nth-child(2):before, .monitization-fees.is-disable .tutor-option-field-row:nth-child(3):before {
+.monetization-fees.is-disable .tutor-option-field-row:nth-child(2):before, .monetization-fees.is-disable .tutor-option-field-row:nth-child(3):before {
   content: '';
   position: absolute;
   inset: 0;
@@ -7419,11 +7419,11 @@ li.tutor-option-nav-item h4 {
   background: rgba(255, 255, 255, 0.55);
 }
 
-.monitization-fees.is-disable .tutor-option-field-row:nth-child(2) textarea:disabled,
-.monitization-fees.is-disable .tutor-option-field-row:nth-child(2) select:disabled,
-.monitization-fees.is-disable .tutor-option-field-row:nth-child(2) input:disabled, .monitization-fees.is-disable .tutor-option-field-row:nth-child(3) textarea:disabled,
-.monitization-fees.is-disable .tutor-option-field-row:nth-child(3) select:disabled,
-.monitization-fees.is-disable .tutor-option-field-row:nth-child(3) input:disabled {
+.monetization-fees.is-disable .tutor-option-field-row:nth-child(2) textarea:disabled,
+.monetization-fees.is-disable .tutor-option-field-row:nth-child(2) select:disabled,
+.monetization-fees.is-disable .tutor-option-field-row:nth-child(2) input:disabled, .monetization-fees.is-disable .tutor-option-field-row:nth-child(3) textarea:disabled,
+.monetization-fees.is-disable .tutor-option-field-row:nth-child(3) select:disabled,
+.monetization-fees.is-disable .tutor-option-field-row:nth-child(3) input:disabled {
   cursor: not-allowed;
 }
 
