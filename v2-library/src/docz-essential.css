@@ -33,6 +33,14 @@
 	margin: 30px 0 20px 0;
 }
 
+[data-testid='main-container'] h3 {
+	margin: 25px 0 15px 0;
+}
+
+[data-testid='main-container'] h4 {
+	margin: 20px 0 10px 0;
+}
+
 code {
 	font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 	font-size: 0.875em;

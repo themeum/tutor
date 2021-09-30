@@ -10645,7 +10645,8 @@ table.tutor-ui-table .td-progress .progress-text {
 .tutor-notification-tab .tab-body {
   min-width: 100%;
   width: calc(100% + var(--padding));
-  max-height: 100vh;
+  min-height: 200px;
+  max-height: calc(100vmin - 120px);
   overflow-y: auto;
   padding-right: var(--padding);
   --scrollbarBG: rgba(205, 207, 213, 0.5);
@@ -10676,7 +10677,8 @@ table.tutor-ui-table .td-progress .progress-text {
 }
 
 .tutor-notification-element:not(.notification-read) .element-icon .element-primary {
-  background: #3e64de;
+  color: #3e64de;
+  background: #e9edfb;
 }
 
 .tutor-notification-element:not(.notification-read) .element-content .header .element-primary {
@@ -10684,7 +10686,8 @@ table.tutor-ui-table .td-progress .progress-text {
 }
 
 .tutor-notification-element:not(.notification-read) .element-icon .element-success {
-  background: #24a148;
+  color: #24a148;
+  background: #e5f5eb;
 }
 
 .tutor-notification-element:not(.notification-read) .element-content .header .element-success {
@@ -10692,19 +10695,30 @@ table.tutor-ui-table .td-progress .progress-text {
 }
 
 .tutor-notification-element:not(.notification-read) .element-icon .element-warning {
-  background: #e08e00;
+  color: #ed9700;
+  background: #fdf4e3;
 }
 
 .tutor-notification-element:not(.notification-read) .element-content .header .element-warning {
-  color: #e08e00;
+  color: #ed9700;
 }
 
 .tutor-notification-element:not(.notification-read) .element-icon .element-danger {
-  background: #e53935;
+  color: #e53935;
+  background: #feeceb;
 }
 
 .tutor-notification-element:not(.notification-read) .element-content .header .element-danger {
   color: #e53935;
+}
+
+.tutor-notification-element:not(.notification-read) .element-icon .element-purple {
+  color: #9b4ab4;
+  background: #faebff;
+}
+
+.tutor-notification-element:not(.notification-read) .element-content .header .element-purple {
+  color: #9b4ab4;
 }
 
 .tutor-notification-element {
@@ -10774,8 +10788,6 @@ table.tutor-ui-table .td-progress .progress-text {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  -webkit-animation: pulse-animation 2s infinite;
-          animation: pulse-animation 2s infinite;
   z-index: -1;
 }
 
