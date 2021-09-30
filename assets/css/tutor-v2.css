@@ -10830,4 +10830,14 @@ table.tutor-ui-table .td-progress .progress-text {
   color: #727889;
 }
 
+.tutor-notification-element-empty {
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.tutor-notification-element-empty .element-content {
+  max-width: 250px;
+}
+
 /*# sourceMappingURL=tutor-v2.css.map */
