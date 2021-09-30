@@ -13,7 +13,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: tutor.php:62, classes/Tutor.php:426
+#: tutor.php:62, classes/Tutor.php:428
 msgid "Tutor Instructor"
 msgstr ""
 
@@ -698,7 +698,7 @@ msgstr ""
 msgid "Price Type"
 msgstr ""
 
-#: classes/Options.php:128, classes/Utils.php:6772
+#: classes/Options.php:128, classes/Utils.php:6780
 msgid "Dashboard Page"
 msgstr ""
 
@@ -1226,7 +1226,7 @@ msgstr ""
 msgid "Allow multiple instructors to upload their courses."
 msgstr ""
 
-#: classes/Options.php:576, classes/Utils.php:6773
+#: classes/Options.php:576, classes/Utils.php:6781
 msgid "Instructor Registration Page"
 msgstr ""
 
@@ -1254,7 +1254,7 @@ msgstr ""
 msgid "Student Profile settings"
 msgstr ""
 
-#: classes/Options.php:608, classes/Utils.php:6774
+#: classes/Options.php:608, classes/Utils.php:6782
 msgid "Student Registration Page"
 msgstr ""
 
@@ -1976,15 +1976,15 @@ msgstr ""
 msgid "Setup Wizard"
 msgstr ""
 
-#: classes/Tutor.php:521, classes/Utils.php:2456, templates/dashboard/dashboard.php:9
+#: classes/Tutor.php:523, classes/Utils.php:2456, templates/dashboard/dashboard.php:9
 msgid "Dashboard"
 msgstr ""
 
-#: classes/Tutor.php:530
+#: classes/Tutor.php:532
 msgid "Student Registration"
 msgstr ""
 
-#: classes/Tutor.php:539
+#: classes/Tutor.php:541
 msgid "Instructor Registration"
 msgstr ""
 
@@ -2520,51 +2520,51 @@ msgstr ""
 msgid "Reviews Written"
 msgstr ""
 
-#: classes/Utils.php:5368
+#: classes/Utils.php:5376
 msgid "Website URL"
 msgstr ""
 
-#: classes/Utils.php:5373
+#: classes/Utils.php:5381
 msgid "Github URL"
 msgstr ""
 
-#: classes/Utils.php:5378
+#: classes/Utils.php:5386
 msgid "Facebook URL"
 msgstr ""
 
-#: classes/Utils.php:5383
+#: classes/Utils.php:5391
 msgid "Twitter URL"
 msgstr ""
 
-#: classes/Utils.php:5388
+#: classes/Utils.php:5396
 msgid "Linkedin URL"
 msgstr ""
 
-#: classes/Utils.php:6737
+#: classes/Utils.php:6745
 msgid "Not Taken"
 msgstr ""
 
-#: classes/Utils.php:6735
+#: classes/Utils.php:6743
 msgid "In Progress"
 msgstr ""
 
-#: classes/Utils.php:6731
+#: classes/Utils.php:6739
 msgid "Completed"
 msgstr ""
 
-#: classes/Utils.php:6914, templates/dashboard/my-profile.php:34, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:95, templates/dashboard/settings/profile.php:97
+#: classes/Utils.php:6922, templates/dashboard/my-profile.php:34, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:95, templates/dashboard/settings/profile.php:97
 msgid "First Name"
 msgstr ""
 
-#: classes/Utils.php:6915, templates/dashboard/my-profile.php:42, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:104, templates/dashboard/settings/profile.php:106
+#: classes/Utils.php:6923, templates/dashboard/my-profile.php:42, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:104, templates/dashboard/settings/profile.php:106
 msgid "Last Name"
 msgstr ""
 
-#: classes/Utils.php:6916
+#: classes/Utils.php:6924
 msgid "Profile Photo"
 msgstr ""
 
-#: classes/Utils.php:6917
+#: classes/Utils.php:6925
 msgid "Withdraw Method"
 msgstr ""
 
@@ -2893,19 +2893,19 @@ msgstr ""
 msgid "%d Ratings"
 msgstr ""
 
-#: templates/dashboard.php:85, templates/dashboard/index.php:88
+#: templates/dashboard.php:86, templates/dashboard/index.php:89
 msgid "Become an instructor"
 msgstr ""
 
-#: templates/dashboard.php:104
+#: templates/dashboard.php:105
 msgid "Your Application is pending from"
 msgstr ""
 
-#: templates/dashboard.php:95, templates/dashboard/index.php:81
+#: templates/dashboard.php:96, templates/dashboard/index.php:82
 msgid "Add A New Course"
 msgstr ""
 
-#: templates/dashboard.php:126
+#: templates/dashboard.php:127
 msgid "Your application to become an instructor was rejected on"
 msgstr ""
 
