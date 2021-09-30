@@ -49,10 +49,10 @@ navTabLists.forEach((list) => {
 
 /**
  * Toggle disable input fields
- * Selecetor -> .tutor-option-single-item.monitization-fees
+ * Selecetor -> .tutor-option-single-item.monetization-fees
  */
-const moniFees = document.querySelector('.monitization-fees');
-const feesToggle = document.querySelector('.monitization-fees input[name=deduct-fees]');
+const moniFees = document.querySelector('.monetization-fees');
+const feesToggle = document.querySelector('.monetization-fees input[name=deduct-fees]');
 
 if (moniFees && feesToggle) {
 	window.addEventListener('load', () => toggleDisableClass(feesToggle, moniFees));
