@@ -100,7 +100,7 @@ do_action('tutor_dashboard/before/wrap');
                                         $course_type = tutor()->course_post_type;
                                         ?>
                                         <a class="tutor-btn tutor-is-outline" href="<?php echo apply_filters('frontend_course_create_url', admin_url("post-new.php?post_type=".tutor()->course_post_type)); ?>">
-                                            <i class="tutor-icon-plus-square-button"></i> <?php _e('Add A New Course', 'tutor'); ?>
+                                            <i class="tutor-icon-plus-square-button"></i> <?php _e('Create Course', 'tutor'); ?>
                                         </a>
                                         <?php
                                     }

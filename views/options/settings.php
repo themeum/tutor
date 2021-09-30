@@ -11,7 +11,6 @@
  * @version 2.0
  */
 
-$url_page = $_GET['tab_page'];
 ?>
 <!-- .tutor-backend-wrap -->
 <section class="tutor-backend-settings-page tutor-grid" style="padding-top: 60px;">
@@ -66,51 +65,35 @@ $url_page = $_GET['tab_page'];
 		<form class="tutor-option-form py-4 px-3" id="tutor-option-form">
 			<input type="hidden" name="action" value="tutor_option_save">
 			<div class="tutor-option-tabs">
-				<?php
-				// pr( $this->options_attr() );
-				foreach ( $this->options_attr() as $args ) :
-					?>
-					<ul class="tutor-option-nav">
-						<li class="tutor-option-nav-item">
-							<h4><?php echo $args['label']; ?></h4>
-						<li>
-							<?php
-							foreach ( $args['sections'] as $key => $section ) :
-								 $icon = tutor()->icon_dir . $key . '.svg';
-								?>
-								<li class="tutor-option-nav-item">
-									<a data-tab="<?php echo $key; ?>" class="<?php // echo $is_active; ?>">
-										<img src="<?php echo $icon; ?>" alt="<?php echo $key; ?>-icon" />
-										<span class="nav-label"><?php echo $section['label']; ?></span>
-									</a>
-								</li>
-								<?php
-							endforeach;
-							?>
-					</ul>
+				<ul class="tutor-option-nav">
 					<?php
-				endforeach;
-				?>
-				<!-- end /.tutor-option-nav -->
+					foreach ( $option_fields as $key => $section ) {
+						$icon = tutor()->icon_dir . $key . '.svg';
+						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
+						?>
+						<li class="tutor-option-nav-item">
+							<a data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
+								<img src="<?php echo esc_attr( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>-icon" />
+								<span class="nav-label"><?php echo esc_html( $section['label'] ); ?></span>
+							</a>
+						</li>
+						<?php
+					}
+					?>
+				</ul>
 			</div>
 			<!-- end /.tutor-option-tabs -->
+
 			<div class="tutor-option-tab-pages">
 				<?php
-				foreach ( $this->options_attr as $key => $args ) :
-					// $url_exist = $this->url_exists( $args['sections'], $url_page );
-					// pr( $args['sections'] );
-
-					foreach ( $args['sections'] as $key => $section ) :
-						// $is_active = $this->get_active( $i, $url_page, $section['slug'], $url_exist ) ? 'active' : null;
+					foreach ( $option_fields as $key => $section ) {
+						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
 						?>
-						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page active <?php // echo $is_active; ?>">
-
+						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
 							<?php echo $this->template( $section ); ?>
-
 						</div>
 						<?php
-					endforeach;
-				endforeach;
+					}
 				?>
 			</div>
 			<!-- end /.tutor-option-tab-pages -->
@@ -130,3 +113,25 @@ $url_page = $_GET['tab_page'];
 		</button>
 	</div>
 </section>
+
+
+<style>
+	.isHighlighted {}
+
+	.tutor-notification {
+		position: fixed;
+		bottom: 40px;
+		z-index: 999;
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	.tutor-notification.show {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	.tutor-notification .tutor-notification-close{
+		transition: unset;
+	}
+</style>

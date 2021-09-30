@@ -1,23 +1,5 @@
+import { element, elements, notice_message, json_download } from "./lib";
 import popupToggle from "./popupToggle";
-const notice_message = (message = "") => {
-  let noticeElement = element(".tutor-notification");
-  noticeElement.classList.add("show");
-  if (message) {
-    noticeElement.querySelector(
-      ".tutor-notification-content p"
-    ).innerText = message;
-  }
-  setTimeout(() => {
-    noticeElement.classList.remove("show");
-  }, 4000);
-};
-
-const element = (selector) => {
-  return document.querySelector(selector);
-};
-const elements = (selector) => {
-  return document.querySelectorAll(selector);
-};
 
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "interactive") {
@@ -64,64 +46,6 @@ function highlightSearchedItem(dataKey) {
     console.warn(`scrollTargetEl Not found!`);
   }
 }
-
-/**
- * Function to download json file
- * @param {json} response
- * @param {string} fileName
- */
-function json_download(response, fileName) {
-  const fileToSave = new Blob([response], {
-    type: "application/json",
-  });
-  const el = document.createElement("a");
-  el.href = URL.createObjectURL(fileToSave);
-  el.download = fileName;
-  el.click();
-}
-
-/**
- * Email Manage template - live Preview
- */
-
-const emailManagePageInputs = document.querySelectorAll(
-  '.email-manage-page input[type="file"], .email-manage-page input[type="text"], .email-manage-page textarea'
-);
-
-const dataSourceEls = document.querySelectorAll(
-  ".email-manage-page [data-source]"
-);
-
-emailManagePageInputs.forEach((input) => {
-  input.addEventListener("input", (e) => {
-    const { name, value } = e.target;
-
-    if (e.target.files) {
-      const file = e.target.files[0];
-      console.dir(e.target.files[0]);
-
-      const reader = new FileReader();
-      reader.onload = function() {
-        document
-          .querySelector('img[data-source="email-title-logo"]')
-          .setAttribute("src", this.result);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    const dataSourceEl = document.querySelector(
-      `.email-manage-page [data-source=${name}]`
-    );
-
-    if (dataSourceEl) {
-      if (dataSourceEl.href) {
-        dataSourceEl.href = value;
-      } else {
-        dataSourceEl.innerHTML = value;
-      }
-    }
-  });
-});
 
 const load_saved_data = () => {
   var formData = new FormData();

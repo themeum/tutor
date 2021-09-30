@@ -84,6 +84,47 @@
   padding-bottom: 4px;
 }
 
+.tutor-dashboard table.tutor-dashboard-table {
+  background: #CDCFD5;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-collapse: collapse;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #CDCFD5;
+}
+
+.tutor-dashboard table.tutor-dashboard-table td, .tutor-dashboard table.tutor-dashboard-table th {
+  padding: 15px;
+  border: none;
+}
+
+.tutor-dashboard table.tutor-dashboard-table tr {
+  border-top: 1px solid #CDCFD5;
+  border-bottom: 1px solid #CDCFD5;
+}
+
+.tutor-dashboard table.tutor-dashboard-table thead tr {
+  background: #EFF1F7;
+}
+
+.tutor-dashboard table.tutor-dashboard-table thead tr th {
+  text-align: left;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 18px;
+  color: #5B616F;
+}
+
+.tutor-dashboard table.tutor-dashboard-table tbody tr:nth-child(even) {
+  background: #f8f8f8;
+}
+
+.tutor-dashboard table.tutor-dashboard-table tbody tr:nth-child(odd) {
+  background: white;
+}
+
 .tutor-dashboard .tutor-dashboard-header {
   padding-bottom: 30px;
   border-bottom: 1px solid #dcdfe5;
@@ -161,6 +202,12 @@
   padding-top: 15px;
 }
 
+@media (min-width: 768px) {
+  .tutor-dashboard .tutor-dashboard-header .tutor-dashboard-header-button {
+    text-align: right;
+  }
+}
+
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks {
   list-style: none;
   margin: 0px 0 20px;
@@ -204,6 +251,8 @@
   font-size: 16px;
   font-style: normal;
   font-weight: normal;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
 }
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li a:hover {
@@ -213,8 +262,6 @@
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a {
   background-color: var(--tutor-primary-color);
   color: #ffffff;
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
 }
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a:hover {
@@ -377,89 +424,130 @@
 
 .tutor-dashboard .tutor-dashboard-content {
   padding-top: 30px;
-  /* dashboard content */
-  /* earning cards. Currently same as dashboard, in later version it will be updated separately */
+  /* Only reusable function, or code allowed here. No direct css please. */
 }
 
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards {
-  margin: 0 -15px 15px;
-  padding: 0;
+.tutor-dashboard .tutor-dashboard-content > h3, .tutor-dashboard .tutor-dashboard-content > h4 {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  color: #212327;
+  margin: 0 0 20px 0;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-cards-container > div p {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  list-style: none;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card {
-  padding: 15px;
-  min-width: 33.333%;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p {
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -o-flex-direction: column;
+  -ms-flex-direction: column;
+  -moz-flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
   margin: 0;
-  padding: 15px 25px;
-  background: #282c36;
-  color: #ffffff;
-  border-radius: 4px;
+  background: white;
+  border: 1px solid #cdcfd5;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  padding: 30px 0;
 }
 
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p span.tutor-dashboard-info-val {
-  display: block;
-  font-weight: 700;
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-cards-container > div p > span {
+  font-style: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-cards-container > div p > span:nth-child(1) {
+  margin-bottom: 20px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-cards-container > div p > span:nth-child(2) {
+  font-weight: bold;
   font-size: 30px;
-  line-height: 1.618;
+  color: #212327;
 }
 
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p span span {
-  display: inline-block;
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-cards-container > div p > span:nth-child(3) {
+  font-size: 15px;
+  color: #5B616F;
 }
 
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-info-cards .tutor-dashboard-info-card p span > * {
-  vertical-align: middle;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile .tutor-dashboard-profile-item {
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-cards-container > div p .tutor-round-icon {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #E9EDFB;
 }
 
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile .tutor-dashboard-profile-item .heading {
-  min-width: 190px;
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-cards-container > div p .tutor-round-icon > * {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
 }
 
-@media (max-width: 480px) {
-  .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile .tutor-dashboard-profile-item {
-    -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
-  }
-  .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile .tutor-dashboard-profile-item .heading {
-    min-width: 100%;
-    width: 100%;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
+.tutor-dashboard .tutor-dashboard-content .popular-courses-heading-dashboard a {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  color: #5B616F;
 }
 
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile .tutor-dashboard-profile-item .content {
-  -webkit-box-flex: 1;
-  -ms-flex-positive: 1;
-      flex-grow: 1;
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile-data > div {
+  margin-bottom: 30px;
 }
 
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile .tutor-dashboard-profile-item .content small {
-  font-size: inherit;
-  font-style: italic;
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile-data > div > div:first-child {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  color: #5B616F;
 }
 
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile .tutor-dashboard-profile-item .content small a {
-  color: var(--tutor-primary-color);
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile-data > div > div:last-child {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #212327;
 }
 
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile .tutor-dashboard-profile-item .content small a:hover {
-  color: var(--tutor-primary-hover-color);
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile-data > div p {
+  margin: 0;
 }
 
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-single-review {
@@ -546,45 +634,6 @@
   background: none;
   font-size: 20px;
   top: 8px;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-earning-info-cards {
-  margin: 0 -15px 15px;
-  padding: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  list-style: none;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-earning-info-cards .tutor-dashboard-info-card {
-  padding: 15px;
-  min-width: 33.333%;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-earning-info-cards .tutor-dashboard-info-card p {
-  margin: 0;
-  padding: 15px 25px;
-  background: #282c36;
-  color: #ffffff;
-  border-radius: 4px;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-earning-info-cards .tutor-dashboard-info-card p span.tutor-dashboard-info-val {
-  display: block;
-  font-weight: 700;
-  font-size: 30px;
-  line-height: 1.618;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-earning-info-cards .tutor-dashboard-info-card p span span {
-  display: inline-block;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-earning-info-cards .tutor-dashboard-info-card p span > * {
-  vertical-align: middle;
 }
 
 .tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-history table {

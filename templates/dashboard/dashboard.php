@@ -31,22 +31,22 @@
     $icon_base = tutor()->url . 'assets/images/images-v2/icons/';
 	?>
 
-    <div class="tutor-dashboard-info-cards">
-        <div class="tutor-dashboard-info-card">
+    <div class="row tutor-dashboard-cards-container">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
             <p>
                 <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>book-open.svg"/></span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($enrolled_course_count); ?></span>
                 <span><?php _e('Enrolled Courses', 'tutor'); ?></span>
             </p>
         </div>
-        <div class="tutor-dashboard-info-card">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
             <p>
                 <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>graduation-cap.svg"/></span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($active_course_count); ?></span>
                 <span><?php _e('Active Courses', 'tutor'); ?></span>
             </p>
         </div>
-        <div class="tutor-dashboard-info-card">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
             <p>
                 <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>award.svg"/></span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($completed_course_count); ?></span>
@@ -57,21 +57,21 @@
 		<?php
 		if(current_user_can(tutor()->instructor_role)) :
 			?>
-            <div class="tutor-dashboard-info-card">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                 <p>
                     <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>graduated-user.svg"/></span>
                     <span class="tutor-dashboard-info-val"><?php echo esc_html($total_students); ?></span>
                     <span><?php _e('Total Students', 'tutor'); ?></span>
                 </p>
             </div>
-            <div class="tutor-dashboard-info-card">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                 <p>
                     <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>open-box.svg"/></span>
                     <span class="tutor-dashboard-info-val"><?php echo esc_html(count($my_courses)); ?></span>
                     <span><?php _e('Total Courses', 'tutor'); ?></span>
                 </p>
             </div>
-            <div class="tutor-dashboard-info-card">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                 <p>
                     <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>coins.svg"/></span>
                     <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></span>
@@ -95,9 +95,9 @@ if(count($instructor_course)) {
     );
 
     ?>
-        <h3>
-            <?php _e('Most Popular Courses', 'tutor'); ?>
-            <a class="tutor-view-all-course" href="<?php echo tutor_utils()->tutor_dashboard_url('my-courses'); ?>">
+        <h3 class="popular-courses-heading-dashboard">
+            <?php _e('Popular Courses', 'tutor'); ?>
+            <a style="float:right" class="tutor-view-all-course" href="<?php echo tutor_utils()->tutor_dashboard_url('my-courses'); ?>">
                 <?php _e('View All', 'tutor'); ?>
             </a>
         </h3>
@@ -121,11 +121,17 @@ if(count($instructor_course)) {
                     ?>
                     <tr>
                         <td>
-                            <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank"><?php echo $course->post_title; ?></a>
+                            <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank">
+                                <?php echo $course->post_title; ?>
+                            </a>
                         </td>
-                        <td><?php echo $enrolled; ?></td>
                         <td>
-                            <small class="tutor-badge tutor-bg-<?php echo $course_badge; ?> tutor-m-5"> <?php echo $course_status; ?></small>
+                            <?php echo $enrolled; ?>
+                        </td>
+                        <td>
+                            <small class="tutor-badge tutor-bg-<?php echo $course_badge; ?> tutor-m-5"> 
+                                <?php echo $course_status; ?>
+                            </small>
                         </td>
                         <td>
                             <?php tutor_utils()->star_rating_generator($course_rating->rating_avg); ?> <span><?php echo $course_rating->rating_avg; ?></span>

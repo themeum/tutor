@@ -14,9 +14,8 @@ if (!isset($field['group_fields']) || !is_array($field['group_fields']) || !coun
 				$default_value = isset($group_field['default']) ? $group_field['default'] : false;
 				$input_value = $this->get($field['key'] . '.' . $groupFieldKey, $default_value);
 				$label = tutor_utils()->avalue_dot('label', $group_field);
-			?>
-				<?php include tutor()->path . "views/options/field-types/groups/{$group_field['type']}.php"; ?>
-			<?php
+				
+				include tutor()->path . "views/options/field-types/groups/{$group_field['type']}.php";
 			}
 			?>
 		</div>
