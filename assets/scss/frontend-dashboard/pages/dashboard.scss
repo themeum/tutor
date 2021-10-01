@@ -14,25 +14,42 @@
 			margin-bottom: 24px;
 			padding: 30px 0;
 
+            @media (max-width: 575px) {
+                @include propertyWithPrefix(flex-flow, row);
+                padding: 10px;
+            }
+
             &>span {
                 font-style: normal;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-
-                &:nth-child(1) {
-                    margin-bottom: 20px;
-                }
-
+                
                 &:nth-child(2) {
-                    font-weight: bold;
-                    font-size: 30px;
-                    color: #212327;
+                    padding: 0 5px;
+                    @media (max-width: 575px) {
+                        display: none;
+                    }
                 }
 
                 &:nth-child(3) {
                     font-size: 15px;
                     color: #5B616F;
+                }
+
+                &:nth-child(2), &:nth-child(4) {
+                    font-weight: bold;
+                    font-size: 30px;
+                    padding: 10px 0;
+                    color: #212327;
+                }
+
+                &:nth-child(4) {
+                    flex: 1;
+                    text-align: right;
+                    @media (min-width: 576px) {
+                        display: none;
+                    }
                 }
             }
 

@@ -7,84 +7,69 @@
 ?>
 
 <div class="tutor-dashboard-content-inner">
-
     <div class="tutor-dashboard-inline-links">
         <?php
             tutor_load_template('dashboard.settings.nav-bar', ['active_setting_nav'=>'reset_password']);
         ?>
     </div>
 
-    <h3><?php _e('Reset Password', 'tutor') ?></h3>
+    <?php
+    $success_msg = tutor_utils()->get_flash_msg('success');
+    if ($success_msg){
+        ?>
+        <div class="tutor-success-msg">
+            <?php echo $success_msg; ?>
+        </div>
+        <?php
+    }
+    ?>
 
-    <div class="tutor-reset-password-form-wrap">
+    <form action="" method="post" enctype="multipart/form-data">
+        <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+        <input type="hidden" value="tutor_reset_password" name="tutor_action" />
 
-		<?php
-		$success_msg = tutor_utils()->get_flash_msg('success');
-		if ($success_msg){
-			?>
-            <div class="tutor-success-msg">
-				<?php echo $success_msg; ?>
+        <?php
+        $errors = apply_filters('tutor_reset_password_validation_errors', array());
+        if (is_array($errors) && count($errors)){
+            echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
+            foreach ($errors as $error_key => $error_value){
+                echo "<li>{$error_value}</li>";
+            }
+            echo '</ul></div>';
+        }
+        ?>
+
+        <?php do_action('tutor_reset_password_input_before') ?>
+
+        <div class="row">
+            <div class="col-12 col-sm-8 col-md-12 col-lg-7 tutor-mb-30">
+                <label> <?php _e('Current Password', 'tutor'); ?> </label>
+                <input class="tutor-form-control" type="password" name="previous_password">
             </div>
-			<?php
-		}
-		?>
-
-
-        <form action="" method="post" enctype="multipart/form-data">
-			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-            <input type="hidden" value="tutor_reset_password" name="tutor_action" />
-
-			<?php
-			$errors = apply_filters('tutor_reset_password_validation_errors', array());
-			if (is_array($errors) && count($errors)){
-				echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
-				foreach ($errors as $error_key => $error_value){
-					echo "<li>{$error_value}</li>";
-				}
-				echo '</ul></div>';
-			}
-			?>
-
-			<?php do_action('tutor_reset_password_input_before') ?>
-
-            <div class="tutor-form-row">
-                <div class="tutor-form-col-12">
-                    <div class="tutor-form-group">
-                        <label> <?php _e('Current Password', 'tutor'); ?> </label>
-                        <input type="password" name="previous_password">
-                    </div>
-                </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12 col-sm-8 col-md-12 col-lg-7 tutor-mb-30">
+                <label><?php _e('New Password', 'tutor'); ?></label>
+                <input class="tutor-form-control" type="password" name="new_password">
             </div>
-            <div class="tutor-form-row">
-                <div class="tutor-form-col-6">
-                    <div class="tutor-form-group">
-                        <label><?php _e('New Password', 'tutor'); ?></label>
-                        <input type="password" name="new_password">
-                    </div>
-                </div>
-                <div class="tutor-form-col-6">
-                    <div class="tutor-form-group">
-                        <label><?php _e('Confirm New Password', 'tutor'); ?></label>
-                        <input type="password" name="confirm_new_password">
-                    </div>
-                </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12 col-sm-8 col-md-12 col-lg-7 tutor-mb-30">
+                <label><?php _e('Re-type New Password', 'tutor'); ?></label>
+                <input class="tutor-form-control" type="password" name="confirm_new_password">
             </div>
+        </div>
+        
+        <?php do_action('tutor_reset_password_input_after') ?>
 
-            <div class="tutor-form-group">
-                <label>&nbsp;</label>
-                <button type="submit" class="tutor-button" name="tutor_password_reset_btn"><?php _e('Reset Password', 'tutor'); ?></button>
+        <div class="row">
+            <div class="col-12">
+                <button type="submit" class="tutor-button">
+                    <?php _e('Reset Password', 'tutor'); ?>
+                </button>
             </div>
-
-			<?php do_action('tutor_reset_password_input_after') ?>
-
-        </form>
-
-    </div>
-
-
-
+        </div>
+    </form>
 </div>
-
-
-
-
