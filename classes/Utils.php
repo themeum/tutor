@@ -5343,27 +5343,27 @@ class Utils {
 	public function tutor_user_social_icons() {
 		$icons = array(
 			'_tutor_profile_website'  => array(
-				'label'        => __('Website URL', 'tutor'),
+				'label'        => __('Website', 'tutor'),
 				'placeholder'  => 'https://example.com/',
 				'icon_classes' => 'tutor-icon-earth'
 			),
 			'_tutor_profile_github'  => array(
-				'label'        => __('Github URL', 'tutor'),
+				'label'        => __('Github', 'tutor'),
 				'placeholder'  => 'https://github.com/username',
 				'icon_classes' => 'tutor-icon-github-logo'
 			),
 			'_tutor_profile_facebook'  => array(
-				'label'        => __('Facebook URL', 'tutor'),
+				'label'        => __('Facebook', 'tutor'),
 				'placeholder'  => 'https://facebook.com/username',
 				'icon_classes' => 'tutor-icon-facebook'
 			),
 			'_tutor_profile_twitter'  => array(
-				'label'        => __('Twitter URL', 'tutor'),
+				'label'        => __('Twitter', 'tutor'),
 				'placeholder'  => 'https://twitter.com/username',
 				'icon_classes' => 'tutor-icon-twitter'
 			),
 			'_tutor_profile_linkedin'  => array(
-				'label'        => __('Linkedin URL', 'tutor'),
+				'label'        => __('Linkedin', 'tutor'),
 				'placeholder'  => 'https://linkedin.com/username',
 				'icon_classes' => 'tutor-icon-linkedin'
 			),

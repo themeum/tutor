@@ -1,0 +1,18 @@
+.tutor-dashboard-setting-social{
+    .tutor-social-field {
+        &>div:first-child {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 15px;
+            color: #5B616F;
+            padding-top: 5px;
+            padding-bottom: 5px;
+
+            i{
+                color: #1A1B1E;
+                display: inline-block;
+                width: 20px;
+            }
+        }
+    }
+}

@@ -12,10 +12,13 @@
 			a {
 				display: block;
 				padding: 5px 10px;
-				color: var(--tutor-primary-color);
 				margin-bottom: -1px;
 				line-height: 40px;
-				
+				font-style: normal;
+				font-weight: normal;
+				font-size: 15px;
+				color: #212327;
+
 				&:hover {
 					color: var(--tutor-primary-color);
 				}
@@ -23,9 +26,17 @@
 
 			&.active a, a:hover {
 				color: var(--tutor-primary-color);
-				border-bottom: 1px solid var(--tutor-primary-color);
+				border-bottom: 2px solid var(--tutor-primary-color);
 				padding-bottom: 4px;
 			}
 		}
+	}
+
+	&>h3{
+		font-style: normal;
+		font-weight: 500;
+		font-size: 20px;
+		color: #212327;
+		margin-top: 30px;
 	}
 }
