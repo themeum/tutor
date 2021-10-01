@@ -9,8 +9,13 @@ if (!empty($field['options'])) {
         <div class="tutor-option-field-input">
             <div class="type-check d-block">
                 <?php foreach ($field['options'] as $optionKey => $option) : ?>
+                    <?php 
+                        $saved_data = $this->get($field['key'], array());
+                        !is_array($saved_data) ? $saved_data = array() : 0;
+                        $_checked = in_array($optionKey, $saved_data) ? 'checked="checked"' : ''; 
+                    ?>
                     <div class="tutor-form-check">
-                        <input type="checkbox" id="check_<?php echo $optionKey ?>_<?php echo $field['key'] ?>" name="tutor_option[<?php echo $field['key'] ?>][<?php echo $optionKey ?>]" value="1" <?php checked($this->get($field['key'] . '.' . $optionKey), '1') ?> class="tutor-form-check-input" />
+                        <input type="checkbox" id="check_<?php echo $optionKey ?>_<?php echo $field['key'] ?>" name="tutor_option[<?php echo $field['key'] ?>]" value="<?php echo $optionKey; ?>" <?php echo $_checked; ?> class="tutor-form-check-input" />
 
                         <label for="check_<?php echo $optionKey ?>_<?php echo $field['key'] ?>"> <?php echo $option; ?> </label>
                     </div>
