@@ -2932,23 +2932,23 @@ msgstr ""
 msgid "We will use this email address to send the money to your Paypal account"
 msgstr ""
 
-#: classes/Withdraw.php:178
+#: classes/Withdraw.php:176
 msgid "Withdrawal account information saved successfully!"
 msgstr ""
 
-#: classes/Withdraw.php:205
+#: classes/Withdraw.php:198
 msgid "Please save withdraw method "
 msgstr ""
 
-#: classes/Withdraw.php:210
+#: classes/Withdraw.php:203
 msgid "Minimum withdrawal amount is %s %s %s "
 msgstr ""
 
-#: classes/Withdraw.php:215
+#: classes/Withdraw.php:208
 msgid "Insufficient balance."
 msgstr ""
 
-#: classes/Withdraw.php:248
+#: classes/Withdraw.php:241
 msgid "Withdrawal Request Sent!"
 msgstr ""
 
@@ -4930,15 +4930,15 @@ msgstr ""
 msgid "Social Profile Link"
 msgstr ""
 
-#: templates/dashboard/settings/withdraw-settings.php:13
+#: templates/dashboard/settings/withdraw-settings.php:18
 msgid "Select a withdraw method"
 msgstr ""
 
-#: templates/dashboard/settings/withdraw-settings.php:41
+#: templates/dashboard/settings/withdraw-settings.php:43
 msgid "Min withdraw"
 msgstr ""
 
-#: templates/dashboard/settings/withdraw-settings.php:112
+#: templates/dashboard/settings/withdraw-settings.php:113
 msgid "Save Withdrawal Account"
 msgstr ""
 
