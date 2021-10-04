@@ -43,7 +43,7 @@ $user = wp_get_current_user();
         <div class="row">
             <div class="col-12">
                 <button type="submit" class="tutor-button">
-                    <?php _e('Update', 'tutor'); ?>
+                    <?php _e('Update Profile', 'tutor'); ?>
                 </button>
             </div>
         </div>
