@@ -237,7 +237,7 @@ $variations: (
 			.element-icon {
 				.element-#{$prefix} {
 					color: #{$color};
-					background: #{$bgColor};
+					// background: #{$bgColor};
 				}
 			}
 			.element-content .header {
@@ -256,16 +256,19 @@ $variations: (
 	padding-bottom: 15px;
 
 	.element-icon {
-		color: #fff;
+		// color: #fff;
+		color: $text-hints;
 
 		[class^='element-'] {
-			width: 24px;
-			height: 24px;
+			width: 26px;
+			height: 26px;
+			font-size: 26px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			border-radius: 50%;
-			background: $black-40;
+			// background: $black-40;
+			background: transparent;
 		}
 	}
 

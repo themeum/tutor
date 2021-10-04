@@ -10678,7 +10678,6 @@ table.tutor-ui-table .td-progress .progress-text {
 
 .tutor-notification-element:not(.notification-read) .element-icon .element-primary {
   color: #3e64de;
-  background: #e9edfb;
 }
 
 .tutor-notification-element:not(.notification-read) .element-content .header .element-primary {
@@ -10687,7 +10686,6 @@ table.tutor-ui-table .td-progress .progress-text {
 
 .tutor-notification-element:not(.notification-read) .element-icon .element-success {
   color: #24a148;
-  background: #e5f5eb;
 }
 
 .tutor-notification-element:not(.notification-read) .element-content .header .element-success {
@@ -10696,7 +10694,6 @@ table.tutor-ui-table .td-progress .progress-text {
 
 .tutor-notification-element:not(.notification-read) .element-icon .element-warning {
   color: #ed9700;
-  background: #fdf4e3;
 }
 
 .tutor-notification-element:not(.notification-read) .element-content .header .element-warning {
@@ -10705,7 +10702,6 @@ table.tutor-ui-table .td-progress .progress-text {
 
 .tutor-notification-element:not(.notification-read) .element-icon .element-danger {
   color: #e53935;
-  background: #feeceb;
 }
 
 .tutor-notification-element:not(.notification-read) .element-content .header .element-danger {
@@ -10714,7 +10710,6 @@ table.tutor-ui-table .td-progress .progress-text {
 
 .tutor-notification-element:not(.notification-read) .element-icon .element-purple {
   color: #9b4ab4;
-  background: #faebff;
 }
 
 .tutor-notification-element:not(.notification-read) .element-content .header .element-purple {
@@ -10731,12 +10726,13 @@ table.tutor-ui-table .td-progress .progress-text {
 }
 
 .tutor-notification-element .element-icon {
-  color: #fff;
+  color: #757c8e;
 }
 
 .tutor-notification-element .element-icon [class^='element-'] {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
+  font-size: 26px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -10747,7 +10743,7 @@ table.tutor-ui-table .td-progress .progress-text {
       -ms-flex-pack: center;
           justify-content: center;
   border-radius: 50%;
-  background: #9ca0ac;
+  background: transparent;
 }
 
 .tutor-notification-element .element-content .header {

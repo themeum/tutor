@@ -1247,7 +1247,8 @@ function tutorModal() {
   document.addEventListener('click', function (e) {
     var attr = 'data-tutor-offcanvas-target';
     var closeAttr = 'data-tutor-offcanvas-close';
-    var backdrop = 'tutor-offcanvas-backdrop'; // Opening Offcanvas
+    var backdrop = 'tutor-offcanvas-backdrop';
+    console.log(e.target); // Opening Offcanvas
 
     if (e.target.hasAttribute(attr)) {
       e.preventDefault();
