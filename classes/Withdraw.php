@@ -15,48 +15,35 @@ if ( ! defined( 'ABSPATH' ) )
 
 class Withdraw {
 
-	public $available_withdraw_methods;
-	public $get_options;
 	public $withdraw_methods;
 
 	public function __construct() {
-		$this->get_options = $this->get_options();
-		$this->withdraw_methods = $this->withdraw_methods();
-		$this->available_withdraw_methods = $this->available_withdraw_methods();
-
-		add_action('tutor_options_tutor_withdraw_withdraw_methods_before', array($this, 'withdraw_admin_options'));
-		add_action('tutor_option_save_after', array($this, 'withdraw_option_save'));
-
 		add_action('wp_ajax_tutor_save_withdraw_account', array($this, 'tutor_save_withdraw_account'));
 		add_action('wp_ajax_tutor_make_an_withdraw', array($this, 'tutor_make_an_withdraw'));
-	}
 
-	public function withdraw_methods(){
+		add_filter( 'tutor_withdrawal_methods_all', array($this, 'withdraw_methods_all') );		
+		add_filter( 'tutor_withdrawal_methods_available', array($this, 'withdraw_methods_available') );		
+	}
+	
+	public function withdraw_methods_all(){
+
+		$this->migrate_withdrawal_method_data();
+		
 		$methods = array(
 			'bank_transfer_withdraw' => array(
 				'method_name'  => __('Bank Transfer', 'tutor'),
 				'image' => tutor()->url . 'assets/images/payment-bank.png',
 				'desc'  => __('Get your payment directly into your bank account', 'tutor'),
 
-				'admin_form_fields'           => array(
-					'instruction' => array(
-						'type'      => 'textarea',
-						'label'     => __('Instruction', 'tutor'),
-						'desc'     => __('Write instruction for the instructor to fill bank information', 'tutor'),
-					),
-				),
-
 				'form_fields'           => array(
 					'account_name' => array(
 						'type'      => 'text',
 						'label'     => __('Account Name', 'tutor'),
 					),
-
 					'account_number' => array(
 						'type'      => 'text',
 						'label'      => __('Account Number', 'tutor'),
 					),
-
 					'bank_name' => array(
 						'type'      => 'text',
 						'label'     => __('Bank Name', 'tutor'),
@@ -97,12 +84,42 @@ class Withdraw {
 
 				),
 			),
-
 		);
 
-		$withdraw_methods = apply_filters('tutor_withdraw_methods', $methods);
+		return apply_filters('tutor_withdraw_methods', $methods);
+	}
 
-		return $withdraw_methods;
+	private function migrate_withdrawal_method_data() {
+		$old_data = get_option('tutor_withdraw_options', null);
+
+		if(!$old_data) {
+			// Return if already migrated
+			return;
+		}
+
+		$withdraw_options = (array) maybe_unserialize($old_data);
+		$new_methods_array = array();
+
+		foreach($withdraw_options as $key => $option) {
+			if(is_array($option)) {
+
+				// Set enable state
+				if(isset($option['enabled'])) {
+					$option['enabled'] ? $new_methods_array[]=$key : 0;
+				}
+
+				// Set instruction
+				if(isset($option['instruction'])) {
+					tutor_utils()->update_option('tutor_' . $key . '_instruction', $option['instruction']);
+				}
+			}
+		}
+
+		// Update new
+		tutor_utils()->update_option('tutor_withdrawal_methods', $new_methods_array);
+
+		// Delete old
+		delete_option( 'tutor_withdraw_options' );
 	}
 
 	/**
@@ -110,43 +127,18 @@ class Withdraw {
 	 *
 	 * Return only enabled methods
 	 */
-	public function available_withdraw_methods(){
-		$withdraw_options = $this->get_options();
-		$methods = $this->withdraw_methods();
+	public function withdraw_methods_available(){
+		$methods = $this->withdraw_methods_all();
+		$withdraw_options = tutor_utils()->get_option('tutor_withdrawal_methods', array());
 
 		foreach ($methods as $method_id => $method){
-			$is_enable = (bool) tutor_utils()->avalue_dot($method_id.".enabled", $withdraw_options);
-
-			if ( ! $is_enable){
+			if(!in_array($method_id, $withdraw_options)){
+				// Remove the unavailable methods from array
 				unset($methods[$method_id]);
 			}
 		}
 
 		return $methods;
-	}
-
-	public function get_options(){
-		return (array) maybe_unserialize(get_option('tutor_withdraw_options'));
-	}
-
-	public function withdraw_admin_options(){
-		include tutor()->path.'views/options/withdraw/withdraw_admin_options_generator.php';
-	}
-
-
-	/**
-	 * Save Withdraw method
-	 *
-	 * @since v.1.2.0
-	 */
-	public function withdraw_option_save(){
-		do_action('tutor_withdraw_options_save_before');
-
-		$option = (array) isset($_POST['tutor_withdraw_options']) ? $_POST['tutor_withdraw_options'] : array();
-		$option = apply_filters('tutor_withdraw_options_input', $option);
-		update_option('tutor_withdraw_options', $option);
-
-		do_action('tutor_withdraw_options_save_after');
 	}
 
 	/**
@@ -160,15 +152,13 @@ class Withdraw {
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
-		$post = $_POST;
-
-		$method = tutor_utils()->avalue_dot('tutor_selected_withdraw_method', $post);
+		$method = sanitize_text_field( tutor_utils()->avalue_dot('tutor_selected_withdraw_method', $_POST) );
 		if ( ! $method){
 			wp_send_json_error();
 		}
 
-		$method_data = tutor_utils()->avalue_dot("withdraw_method_field.".$method, $post);
-		$available_withdraw_method = tutor_withdrawal_methods();
+		$method_data = tutor_utils()->avalue_dot("withdraw_method_field.".$method, $_POST);
+		$available_withdraw_method = $this->withdraw_methods_all();
 
 		if (tutor_utils()->count($method_data)){
 			$saved_data = array();
@@ -193,13 +183,8 @@ class Withdraw {
 		//Checking nonce
 		tutor_utils()->checking_nonce();
 
-		do_action('tutor_withdraw_before');
-
-
 		$user_id = get_current_user_id();
-		$post = $_POST;
-
-		$withdraw_amount = sanitize_text_field(tutor_utils()->avalue_dot('tutor_withdraw_amount', $post));
+		$withdraw_amount = sanitize_text_field(tutor_utils()->avalue_dot('tutor_withdraw_amount', $_POST));
 
 		$earning_sum = tutor_utils()->get_earning_sum();
 		$min_withdraw = tutor_utils()->get_option('min_withdraw_amount');
@@ -256,7 +241,4 @@ class Withdraw {
 		$withdraw_successfull_msg = apply_filters('tutor_withdraw_successful_msg', __('Withdrawal Request Sent!', 'tutor'));
 		wp_send_json_success(array('msg' => $withdraw_successfull_msg, 'available_balance' => $new_available_balance ));
 	}
-
-
-
 }

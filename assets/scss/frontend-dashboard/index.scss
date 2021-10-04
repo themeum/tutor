@@ -4,6 +4,7 @@
     @import './lib/dropdown-action.scss';
     @import './lib/inline-link.scss';
     @import './lib/table.scss';
+    @import './lib/phone-number-field.scss';
 
     // Frontend dashboard wrapper header, sidebar etc.
     @import './header.scss';
@@ -27,5 +28,6 @@
         @import './pages/review.scss';
         @import './pages/q-and-a.scss';
         @import './pages/quiz-attempt.scss';
+        @import './pages/setting.scss';
     }
 }

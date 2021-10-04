@@ -2498,17 +2498,6 @@ jQuery(document).ready(function ($) {
     });
   });
   /**
-   * Withdraw nav tabs
-   * @since v.1.1.2
-   */
-
-  $(document).on("click", ".withdraw-method-nav li a", function (e) {
-    e.preventDefault();
-    var tab_page_id = $(this).attr("data-target-id");
-    $(".withdraw-method-form-wrap").hide();
-    $("#" + tab_page_id).show();
-  });
-  /**
    * End Withdraw nav tabs
    */
 

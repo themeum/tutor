@@ -299,22 +299,15 @@ class Options_V2 {
 			return $this->setting_fields;
 		}
 
-		$pages = tutor_utils()->get_pages();
+		$pages 	      = tutor_utils()->get_pages();
+		$lesson_url   = site_url() . '/course/' . 'sample-course/<code>lessons</code>/sample-lesson/';
+		$student_url  = tutor_utils()->profile_url();
 
-		// $course_base = tutor_utils()->course_archive_page_url();
-		$lesson_url                    = site_url() . '/course/' . 'sample-course/<code>lessons</code>/sample-lesson/';
-		$student_url                   = tutor_utils()->profile_url();
-		$attempts_allowed              = array();
-		$attempts_allowed['unlimited'] = __( 'Unlimited', 'tutor' );
-		$attempts_allowed              = array_merge( $attempts_allowed, array_combine( range( 1, 20 ), range( 1, 20 ) ) );
-
-		$course_filters = array(
-			'search'           => __( 'Keyword Search', 'tutor' ),
-			'category'         => __( 'Category', 'tutor' ),
-			'tag'              => __( 'Tag', 'tutor' ),
-			'difficulty_level' => __( 'Difficulty Level', 'tutor' ),
-			'price_type'       => __( 'Price Type', 'tutor' ),
-		);
+		$methods_array = array();
+		$withdrawl_methods = apply_filters( 'tutor_withdrawal_methods_all', array() );
+		foreach($withdrawl_methods as $key => $method) {
+			$methods_array[$key] = $method['method_name'];
+		}
 
 		$attr = array(
 			'general' => array(
@@ -701,20 +694,18 @@ class Options_V2 {
 								'desc'    => __( 'Instructors should earn equal or above this amount to make a withdraw request.', 'tutor' ),
 							),
 							array(
-								'key'         => 'enable_withdraw_method',
+								'key'         => 'tutor_withdrawal_methods',
 								'type'        => 'checkbox_horizontal',
 								'label'       => __( 'Enable withdraw method', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
-								'options'     => $course_filters,
+								'options'     => $methods_array,
 								'desc'        => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
 							),
 							array(
-								'key'         => 'bank_instructions',
-								'type'        => 'toggle_switch',
+								'key'         => 'tutor_bank_transfer_withdraw_instruction',
+								'type'        => 'textarea',
 								'label'       => __( 'Bank Instructions', 'tutor' ),
-								'label_title' => __( '', 'tutor' ),
-								'default'     => 'off',
-								'desc'        => __( 'content goes here', 'tutor' ),
+								'desc'        => __( 'Write instruction for the instructor to fill bank information', 'tutor' ),
 							),
 						),
 					),
@@ -765,7 +756,13 @@ class Options_V2 {
 								'type'        => 'checkbox_horizontal',
 								'label'       => __( 'Preferred Course Filters', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
-								'options'     => $course_filters,
+								'options'     => array(
+									'search'           => __( 'Keyword Search', 'tutor' ),
+									'category'         => __( 'Category', 'tutor' ),
+									'tag'              => __( 'Tag', 'tutor' ),
+									'difficulty_level' => __( 'Difficulty Level', 'tutor' ),
+									'price_type'       => __( 'Price Type', 'tutor' ),
+								),
 								'desc'        => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
 							),
 						),

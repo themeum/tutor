@@ -5,9 +5,27 @@
 /*!*****************************************!*\
   !*** ./assets/react/front/dashboard.js ***!
   \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _dashboard_mobile_nav__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dashboard/mobile-nav */ "./assets/react/front/dashboard/mobile-nav.js");
+/* harmony import */ var _dashboard_mobile_nav__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_dashboard_mobile_nav__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard/withdrawal */ "./assets/react/front/dashboard/withdrawal.js");
+/* harmony import */ var _dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+/***/ }),
+
+/***/ "./assets/react/front/dashboard/mobile-nav.js":
+/*!****************************************************!*\
+  !*** ./assets/react/front/dashboard/mobile-nav.js ***!
+  \****************************************************/
 /***/ (() => {
 
-window.jQuery(document).ready(function ($) {
+document.addEventListener('DOMContentLoaded', function () {
+  // Toggle menu in mobile view
   $('.tutor-dashboard .tutor-dashboard-menu-toggler').click(function () {
     var el = $('.tutor-dashboard-left-menu');
     el.closest('.tutor-dashboard').toggleClass('is-sidebar-expanded');
@@ -17,6 +35,30 @@ window.jQuery(document).ready(function ($) {
         block: 'start'
       });
     }
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/front/dashboard/withdrawal.js":
+/*!****************************************************!*\
+  !*** ./assets/react/front/dashboard/withdrawal.js ***!
+  \****************************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var $ = window.jQuery;
+  /**
+   * Withdraw Form Tab/Toggle
+   *
+   * @since v.1.1.2
+   */
+
+  $('.tutor-dashboard-setting-withdraw input[name="tutor_selected_withdraw_method"]').on('change', function (e) {
+    var $that = $(this);
+    var form = $that.closest('form');
+    form.find('.withdraw-method-form').hide();
+    form.find('.withdraw-method-form').hide().filter('[data-withdraw-form="' + $that.val() + '"]').show();
   });
 });
 
@@ -1453,7 +1495,6 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/common */ "./assets/react/lib/common.js");
 /* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard */ "./assets/react/front/dashboard.js");
-/* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dashboard__WEBPACK_IMPORTED_MODULE_1__);
 
 
 jQuery(document).ready(function ($) {
@@ -2444,30 +2485,11 @@ jQuery(document).ready(function ($) {
     });
   }
   /**
-   * Withdraw Form Tab/Toggle
-   *
-   * @since v.1.1.2
-   */
-
-
-  $(".withdraw-method-select-input").on('change', function (e) {
-    var $that = $(this);
-    $('.withdraw-method-form').hide();
-    $('#withdraw-method-form-' + $that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
-  });
-  $('.withdraw-method-select-input').each(function () {
-    var $that = $(this);
-
-    if ($that.is(":checked")) {
-      $('.withdraw-method-form').hide();
-      $('#withdraw-method-form-' + $that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
-    }
-  });
-  /**
    * Setting account for withdraw earning
    *
    * @since v.1.2.0
    */
+
 
   $(document).on('submit', '#tutor-withdraw-account-set-form', function (e) {
     e.preventDefault();
