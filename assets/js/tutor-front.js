@@ -5,9 +5,26 @@
 /*!*****************************************!*\
   !*** ./assets/react/front/dashboard.js ***!
   \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _dashboard_mobile_nav__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dashboard/mobile-nav */ "./assets/react/front/dashboard/mobile-nav.js");
+/* harmony import */ var _dashboard_mobile_nav__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_dashboard_mobile_nav__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard/withdrawal */ "./assets/react/front/dashboard/withdrawal.js");
+/* harmony import */ var _dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+/***/ }),
+
+/***/ "./assets/react/front/dashboard/mobile-nav.js":
+/*!****************************************************!*\
+  !*** ./assets/react/front/dashboard/mobile-nav.js ***!
+  \****************************************************/
 /***/ (() => {
 
-window.jQuery(document).ready(function ($) {
+document.addEventListener('DOMContentLoaded', function () {
   // Toggle menu in mobile view
   $('.tutor-dashboard .tutor-dashboard-menu-toggler').click(function () {
     var el = $('.tutor-dashboard-left-menu');
@@ -18,57 +35,31 @@ window.jQuery(document).ready(function ($) {
         block: 'start'
       });
     }
-  }); // Register International phone number picker
-
-  var telInput = $("#phone"),
-      errorMsg = $("#error-msg"),
-      validMsg = $("#valid-msg"); // initialise plugin
-
-  telInput.intlTelInput({
-    allowExtensions: true,
-    formatOnDisplay: true,
-    autoFormat: true,
-    autoHideDialCode: true,
-    autoPlaceholder: true,
-    defaultCountry: "auto",
-    ipinfoToken: "yolo",
-    nationalMode: false,
-    numberType: "MOBILE",
-    //onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
-    preferredCountries: ['sa', 'ae', 'qa', 'om', 'bh', 'kw', 'ma'],
-    preventInvalidNumbers: true,
-    separateDialCode: true,
-    initialCountry: "auto",
-    geoIpLookup: function geoIpLookup(callback) {
-      $.get("http://ipinfo.io", function () {}, "jsonp").always(function (resp) {
-        var countryCode = resp && resp.country ? resp.country : "";
-        callback(countryCode);
-      });
-    },
-    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.9/js/utils.js"
   });
+});
 
-  var reset = function reset() {
-    telInput.removeClass("error");
-    errorMsg.addClass("hide");
-    validMsg.addClass("hide");
-  }; // on blur: validate
+/***/ }),
 
+/***/ "./assets/react/front/dashboard/withdrawal.js":
+/*!****************************************************!*\
+  !*** ./assets/react/front/dashboard/withdrawal.js ***!
+  \****************************************************/
+/***/ (() => {
 
-  telInput.blur(function () {
-    reset();
+document.addEventListener('DOMContentLoaded', function () {
+  var $ = window.jQuery;
+  /**
+   * Withdraw Form Tab/Toggle
+   *
+   * @since v.1.1.2
+   */
 
-    if ($.trim(telInput.val())) {
-      if (telInput.intlTelInput("isValidNumber")) {
-        validMsg.removeClass("hide");
-      } else {
-        telInput.addClass("error");
-        errorMsg.removeClass("hide");
-      }
-    }
-  }); // on keyup / change flag: reset
-
-  telInput.on("keyup change", reset);
+  $('.tutor-dashboard-setting-withdraw input[name="tutor_selected_withdraw_method"]').on('change', function (e) {
+    var $that = $(this);
+    var form = $that.closest('form');
+    form.find('.withdraw-method-form').hide();
+    form.find('.withdraw-method-form').hide().filter('[data-withdraw-form="' + $that.val() + '"]').show();
+  });
 });
 
 /***/ }),
@@ -1504,7 +1495,6 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/common */ "./assets/react/lib/common.js");
 /* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard */ "./assets/react/front/dashboard.js");
-/* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dashboard__WEBPACK_IMPORTED_MODULE_1__);
 
 
 jQuery(document).ready(function ($) {
@@ -2495,30 +2485,11 @@ jQuery(document).ready(function ($) {
     });
   }
   /**
-   * Withdraw Form Tab/Toggle
-   *
-   * @since v.1.1.2
-   */
-
-
-  $(".withdraw-method-select-input").on('change', function (e) {
-    var $that = $(this);
-    $('.withdraw-method-form').hide();
-    $('#withdraw-method-form-' + $that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
-  });
-  $('.withdraw-method-select-input').each(function () {
-    var $that = $(this);
-
-    if ($that.is(":checked")) {
-      $('.withdraw-method-form').hide();
-      $('#withdraw-method-form-' + $that.closest('.withdraw-method-select').attr('data-withdraw-method')).show();
-    }
-  });
-  /**
    * Setting account for withdraw earning
    *
    * @since v.1.2.0
    */
+
 
   $(document).on('submit', '#tutor-withdraw-account-set-form', function (e) {
     e.preventDefault();

@@ -131,8 +131,6 @@ class Withdraw {
 		$methods = $this->withdraw_methods_all();
 		$withdraw_options = tutor_utils()->get_option('tutor_withdrawal_methods', array());
 
-		var_dump($methods, $withdraw_options);
-
 		foreach ($methods as $method_id => $method){
 			if(!in_array($method_id, $withdraw_options)){
 				// Remove the unavailable methods from array
@@ -154,15 +152,13 @@ class Withdraw {
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
-		$post = $_POST;
-
-		$method = tutor_utils()->avalue_dot('tutor_selected_withdraw_method', $post);
+		$method = sanitize_text_field( tutor_utils()->avalue_dot('tutor_selected_withdraw_method', $_POST) );
 		if ( ! $method){
 			wp_send_json_error();
 		}
 
-		$method_data = tutor_utils()->avalue_dot("withdraw_method_field.".$method, $post);
-		$available_withdraw_method = tutor_withdrawal_methods();
+		$method_data = tutor_utils()->avalue_dot("withdraw_method_field.".$method, $_POST);
+		$available_withdraw_method = $this->withdraw_methods_all();
 
 		if (tutor_utils()->count($method_data)){
 			$saved_data = array();
@@ -187,13 +183,8 @@ class Withdraw {
 		//Checking nonce
 		tutor_utils()->checking_nonce();
 
-		do_action('tutor_withdraw_before');
-
-
 		$user_id = get_current_user_id();
-		$post = $_POST;
-
-		$withdraw_amount = sanitize_text_field(tutor_utils()->avalue_dot('tutor_withdraw_amount', $post));
+		$withdraw_amount = sanitize_text_field(tutor_utils()->avalue_dot('tutor_withdraw_amount', $_POST));
 
 		$earning_sum = tutor_utils()->get_earning_sum();
 		$min_withdraw = tutor_utils()->get_option('min_withdraw_amount');
@@ -250,7 +241,4 @@ class Withdraw {
 		$withdraw_successfull_msg = apply_filters('tutor_withdraw_successful_msg', __('Withdrawal Request Sent!', 'tutor'));
 		wp_send_json_success(array('msg' => $withdraw_successfull_msg, 'available_balance' => $new_available_balance ));
 	}
-
-
-
 }
