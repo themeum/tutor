@@ -241,9 +241,12 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.10 - October 03, 2021 =
+= 1.9.10 - October 04, 2021 =
 
 New: Event Calendar
+New: Notifications
+Fix: Date Picker not working issue in frontend Announcement Tab
+Fix: CSV Download button disabled for empty reports
 
 = 1.9.9 - September 16, 2021 =
 
