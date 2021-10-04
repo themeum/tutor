@@ -7,6 +7,8 @@
 		const closeAttr = 'data-tutor-offcanvas-close';
 		const backdrop = 'tutor-offcanvas-backdrop';
 
+		console.log(e.target);
+
 		// Opening Offcanvas
 		if (e.target.hasAttribute(attr)) {
 			e.preventDefault();
