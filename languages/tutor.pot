@@ -3830,15 +3830,23 @@ msgstr ""
 msgid "On"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:29, templates/shortcode/instructor-filter.php:59
+#: templates/shortcode/instructor-filter.php:29
+msgid "Filters"
+msgstr ""
+
+#: templates/shortcode/instructor-filter.php:35
+msgid "Clear"
+msgstr ""
+
+#: templates/shortcode/instructor-filter.php:43, templates/shortcode/instructor-filter.php:73
 msgid "Clear All"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:42, templates/shortcode/instructor-filter.php:49
+#: templates/shortcode/instructor-filter.php:56, templates/shortcode/instructor-filter.php:63
 msgid "Search any instructor..."
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:67
+#: templates/shortcode/instructor-filter.php:81
 msgid "Apply Filter"
 msgstr ""
 

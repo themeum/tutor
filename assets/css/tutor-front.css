@@ -9859,12 +9859,13 @@ Withdraw Method
   outline: none;
   cursor: pointer;
   text-decoration: none !important;
-  background: #FFFFFF;
-  border: 1px solid #DCDBDC;
+  background: #ffffff;
+  border: 1px solid #dcdbdc;
   border-radius: 6px;
 }
 
-.tutor-instructor-list .tutor-instructor-profile-photo, .tutor-instructor-list .tutor-instructor-cover-photo {
+.tutor-instructor-list .tutor-instructor-profile-photo,
+.tutor-instructor-list .tutor-instructor-cover-photo {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -9908,7 +9909,7 @@ Withdraw Method
 }
 
 .tutor-instructor-list .tutor-instructor-rating .rating-total-meta {
-  color: #7A7A7A;
+  color: #7a7a7a;
 }
 
 .tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-cover-photo {
@@ -9921,7 +9922,9 @@ Withdraw Method
   margin: -31px 15px 0;
 }
 
-.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-rating {
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-name,
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-course-count,
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-rating {
   padding: 0 15px;
 }
 
@@ -9935,7 +9938,9 @@ Withdraw Method
   height: 160px;
 }
 
-.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-rating {
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-name,
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-course-count,
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-rating {
   padding: 0 15px;
 }
 
@@ -9963,7 +9968,11 @@ Withdraw Method
   position: absolute;
 }
 
-.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-rating, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-name,
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-course-count,
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-rating, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-name,
+.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-course-count,
+.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
   margin-left: 118px;
   white-space: nowrap;
   overflow: hidden;
@@ -10000,11 +10009,11 @@ Withdraw Method
 
 .tutor-instructor-filter > div {
   float: left;
-  padding: 0 15px;
+  padding: 0 5px;
 }
 
 .tutor-instructor-filter > div:first-child {
-  width: 220px;
+  width: 230px;
 }
 
 @media (min-width: 768px) {
@@ -10016,7 +10025,7 @@ Withdraw Method
 
 .tutor-instructor-filter .tutor-instructor-filter-result .keyword-field {
   padding: 5px;
-  border: 1px solid #BABABA;
+  border: 1px solid #bababa;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border-radius: 6px;
@@ -10025,10 +10034,11 @@ Withdraw Method
 
 .tutor-instructor-filter .tutor-instructor-filter-result .keyword-field i {
   padding: 0 5px;
-  color: #3E64DE;
+  color: #3e64de;
 }
 
-.tutor-instructor-filter .tutor-instructor-filter-result .keyword-field i, .tutor-instructor-filter .tutor-instructor-filter-result .keyword-field input {
+.tutor-instructor-filter .tutor-instructor-filter-result .keyword-field i,
+.tutor-instructor-filter .tutor-instructor-filter-result .keyword-field input {
   font-size: 16px;
 }
 
@@ -10069,7 +10079,8 @@ Withdraw Method
   }
 }
 
-.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup, .tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div {
+.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup,
+.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div {
   position: fixed;
   left: 0;
   bottom: 0;
@@ -10150,7 +10161,7 @@ Withdraw Method
 .tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup .expand-instructor-filter {
   width: 60px;
   height: 6px;
-  background: #C4C4C4;
+  background: #c4c4c4;
   border-radius: 50px;
   margin: 0 auto;
   cursor: ns-resize;
@@ -10171,7 +10182,7 @@ Withdraw Method
   font-weight: normal;
   font-size: 16px;
   line-height: 26px;
-  color: #7A7A7A;
+  color: #7a7a7a;
 }
 
 .tutor-instructor-filter .tutor-category-text > span:nth-of-type(2) i {
@@ -10180,7 +10191,8 @@ Withdraw Method
 }
 
 @media (max-width: 767px) {
-  .tutor-instructor-filter .tutor-instructor-filter-sidebar, .tutor-instructor-filter .filter-pc {
+  .tutor-instructor-filter .tutor-instructor-filter-sidebar,
+  .tutor-instructor-filter .filter-pc {
     display: none;
   }
 }
@@ -10198,20 +10210,20 @@ Withdraw Method
   width: 100%;
   clear: both;
   margin: 41px 0 0 0;
-  background: #FFF7F7;
+  background: #fff7f7;
   padding: 16.5px;
   border-radius: 6px;
-  border: 1px solid #FDD9D7;
+  border: 1px solid #fdd9d7;
 }
 
 .tutor-instructor-rejection-notice span {
-  color: #C62828;
+  color: #c62828;
   font-size: 16px;
   font-weight: 400;
 }
 
 .tutor-instructor-rejection-notice span i {
-  color: #F44337;
+  color: #f44337;
   font-size: 27px;
   display: inline-block;
   margin-right: 14px;
@@ -10219,13 +10231,91 @@ Withdraw Method
 
 .tutor-instructor-rejection-notice a {
   float: right;
-  color: #F44337;
+  color: #f44337;
   cursor: pointer;
   font-weight: bold;
 }
 
 .tutor-instructor-rejection-notice a:hover {
   color: #e41304;
+}
+
+/*
+Instructor customize filters styles
+*/
+.tutor-instructor-filter * {
+  margin: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-column-gap: 0;
+     -moz-column-gap: 0;
+          column-gap: 0;
+  margin-bottom: 48px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-filters {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-column-gap: 6px;
+     -moz-column-gap: 6px;
+          column-gap: 6px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-filters i {
+  color: #3e64de !important;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-filters span {
+  color: #212327;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-customize-clear {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-column-gap: 6px;
+     -moz-column-gap: 6px;
+          column-gap: 6px;
+  cursor: pointer;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-customize-clear i {
+  font-size: 10px;
+  color: #1a1b1e;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-customize-clear span {
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 26px;
+  color: #757c8e;
 }
 
 /* Only reusable function, or code allowed here. No direct css please. */
