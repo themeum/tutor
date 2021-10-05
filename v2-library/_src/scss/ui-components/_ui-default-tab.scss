@@ -1,0 +1,31 @@
+//Tutor Notification Tab
+.tutor-default-tab {
+	.tab-header {
+		position: relative;
+		gap: 20px;
+
+		&-item {
+			cursor: pointer;
+			position: relative;
+			> * {
+				pointer-events: none;
+			}
+
+			&.is-active {
+				color: $design-brand;
+				&:before {
+					transform: scaleY(1);
+				}
+			}
+		}
+	}
+
+	.tab-body {
+		&-item {
+			display: none;
+			&.is-active {
+				display: block;
+			}
+		}
+	}
+}

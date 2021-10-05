@@ -112,6 +112,11 @@
 		justify-content: space-between;
 		margin: 10px 0;
 
+		button {
+			margin: 0;
+			padding: 0;
+		}
+
 		.action-buttons {
 			display: flex;
 			align-items: center;

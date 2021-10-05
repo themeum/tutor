@@ -1067,11 +1067,46 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tutorOffcanvas__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_tutorOffcanvas__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _tutorNotificationTab__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./tutorNotificationTab */ "./v2-library/_src/js/tutorNotificationTab.js");
 /* harmony import */ var _tutorNotificationTab__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_tutorNotificationTab__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _tutorDefaultTab__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tutorDefaultTab */ "./v2-library/_src/js/tutorDefaultTab.js");
+/* harmony import */ var _tutorDefaultTab__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_tutorDefaultTab__WEBPACK_IMPORTED_MODULE_5__);
 
 
 
 
 
+
+
+/***/ }),
+
+/***/ "./v2-library/_src/js/tutorDefaultTab.js":
+/*!***********************************************!*\
+  !*** ./v2-library/_src/js/tutorDefaultTab.js ***!
+  \***********************************************/
+/***/ (() => {
+
+/**
+ * Tutor Default Tab
+ */
+(function tutorDefaultTab() {
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-tab-target';
+    var activeItems = document.querySelectorAll('.tab-header-item.is-active, .tab-body-item.is-active');
+
+    if (e.target.hasAttribute(attr)) {
+      e.preventDefault();
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      var tabBodyItem = document.getElementById(id);
+
+      if (e.target.hasAttribute(attr) && tabBodyItem) {
+        activeItems.forEach(function (m) {
+          m.classList.remove('is-active');
+        });
+        e.target.classList.add('is-active');
+        tabBodyItem.classList.add('is-active');
+      }
+    }
+  });
+})();
 
 /***/ }),
 
@@ -1184,8 +1219,7 @@ function tutorModal() {
   document.addEventListener('click', function (e) {
     var attr = 'data-tutor-offcanvas-target';
     var closeAttr = 'data-tutor-offcanvas-close';
-    var backdrop = 'tutor-offcanvas-backdrop';
-    console.log(e.target); // Opening Offcanvas
+    var backdrop = 'tutor-offcanvas-backdrop'; // Opening Offcanvas
 
     if (e.target.hasAttribute(attr)) {
       e.preventDefault();
