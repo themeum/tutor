@@ -22,12 +22,23 @@
         }
     ?>>
     <div class="tutor-instructor-filter-sidebar">
+        <div class="tutor-instructor-customize-wrapper">
+            <div class="tutor-instructor-filters">
+                <i class="ttr ttr-customize-filled"></i>
+                <span class="text-medium-h5">
+                    <?php _e( 'Filters', 'tutor' );?>
+                </span>
+            </div>
+            <div class="tutor-instructor-customize-clear clear-instructor-filter">
+                <i class="tutor-icon-line-cross"></i>
+                <span className="text-thin-body">
+                    <?php _e( 'Clear', 'tutor' );?>
+                </span>
+            </div>
+        </div>
         <div>
             <div class="tutor-category-text">
                 <span>Category</span>
-                <span class="clear-instructor-filter">
-                    <i class="tutor-icon-line-cross"></i> <span><?php _e('Clear All', 'tutor'); ?></span>
-                </span>
             </div>
             <br/>
         </div>
