@@ -10298,6 +10298,11 @@ table.tutor-ui-table .td-progress .progress-text {
   padding: 0;
 }
 
+.tutor-popup-opener button {
+  margin: 0;
+  padding: 0;
+}
+
 .tutor-popup-opener .popup-btn {
   display: inline-block;
   outline: none;
@@ -10547,6 +10552,11 @@ table.tutor-ui-table .td-progress .progress-text {
       -ms-flex-pack: justify;
           justify-content: space-between;
   margin: 10px 0;
+}
+
+.tutor-offcanvas .tutor-offcanvas-header button {
+  margin: 0;
+  padding: 0;
 }
 
 .tutor-offcanvas .tutor-offcanvas-header .action-buttons {
@@ -10834,6 +10844,111 @@ table.tutor-ui-table .td-progress .progress-text {
 
 .tutor-notification-element-empty .element-content {
   max-width: 250px;
+}
+
+.tutor-default-tab .tab-header {
+  position: relative;
+  gap: 20px;
+}
+
+.tutor-default-tab .tab-header-item {
+  cursor: pointer;
+  position: relative;
+}
+
+.tutor-default-tab .tab-header-item > * {
+  pointer-events: none;
+}
+
+.tutor-default-tab .tab-header-item.is-active {
+  color: #3e64de;
+}
+
+.tutor-default-tab .tab-header-item.is-active:before {
+  -webkit-transform: scaleY(1);
+          transform: scaleY(1);
+}
+
+.tutor-default-tab .tab-body-item {
+  display: none;
+}
+
+.tutor-default-tab .tab-body-item.is-active {
+  display: block;
+}
+
+.tutor-certificate-template-tab .tab-header {
+  margin-bottom: 32px;
+}
+
+.tutor-certificate-template-tab .tab-header-item {
+  color: #9ca0ac;
+}
+
+.tutor-certificate-template-tab .tab-header-item .item-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 7px;
+}
+
+.tutor-certificate-template-tab .tab-header-item .item-wrapper .icon {
+  font-size: 24px;
+}
+
+.tutor-certificate-template-tab .tab-header-item.is-active {
+  color: #3e64de;
+}
+
+.tutor-certificate-template {
+  display: grid;
+  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+  max-width: 740px;
+  margin: auto;
+}
+
+.tutor-certificate-template.template-landscape {
+  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+}
+
+.tutor-certificate-template.template-portrait {
+  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+}
+
+.tutor-certificate-template label.template-item {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.tutor-certificate-template label.template-item img {
+  max-width: 100%;
+}
+
+.tutor-certificate-template label.template-item span.icon-wrapper {
+  -webkit-box-shadow: 0 0 0 1px #eff1f6;
+          box-shadow: 0 0 0 1px #eff1f6;
+  border-radius: 6px;
+  -webkit-transition: -webkit-box-shadow 200ms ease;
+  transition: -webkit-box-shadow 200ms ease;
+  transition: box-shadow 200ms ease;
+  transition: box-shadow 200ms ease, -webkit-box-shadow 200ms ease;
+}
+
+.tutor-certificate-template label.template-item input[type='radio'] {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+.tutor-certificate-template label.template-item input[type='radio']:checked + .icon-wrapper {
+  -webkit-box-shadow: 0 0 0 2px #3e64de;
+          box-shadow: 0 0 0 2px #3e64de;
 }
 
 /*# sourceMappingURL=tutor-v2.css.map */

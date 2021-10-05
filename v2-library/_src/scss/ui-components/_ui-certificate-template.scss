@@ -1,0 +1,60 @@
+// Tutor Certificate Template Tab
+.tutor-certificate-template-tab {
+	.tab-header {
+		margin-bottom: 32px;
+	}
+
+	.tab-header-item {
+		color: $black-40;
+		.item-wrapper {
+			display: flex;
+			align-items: center;
+			gap: 7px;
+
+			.icon {
+				font-size: 24px;
+			}
+		}
+		&.is-active {
+			color: $text-brand;
+		}
+	}
+}
+
+.tutor-certificate-template {
+	display: grid;
+	gap: 25px;
+	grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+	max-width: 740px;
+	margin: auto;
+
+	&.template-landscape {
+		grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+	}
+
+	&.template-portrait {
+		grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+	}
+
+	label.template-item {
+		display: inline-flex;
+		cursor: pointer;
+		img {
+			max-width: 100%;
+		}
+		span.icon-wrapper {
+			box-shadow: 0 0 0 1px #eff1f6;
+			border-radius: 6px;
+			transition: box-shadow 200ms ease;
+		}
+
+		input[type='radio'] {
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			&:checked + .icon-wrapper {
+				box-shadow: 0 0 0 2px #3e64de;
+			}
+		}
+	}
+}
