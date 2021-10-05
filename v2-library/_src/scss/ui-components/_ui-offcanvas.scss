@@ -3,6 +3,7 @@
 	border: none;
 	background: transparent;
 	outline: none;
+
 	&:focus-visible {
 		box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
 	}
@@ -319,8 +320,8 @@ $variations: (
 		}
 
 		.message {
-			.color-text-hints {
-				font-weight: 300;
+			span {
+				font-weight: 400;
 			}
 		}
 	}

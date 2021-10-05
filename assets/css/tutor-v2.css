@@ -10813,8 +10813,8 @@ table.tutor-ui-table .td-progress .progress-text {
   color: #41454f;
 }
 
-.tutor-notification-element .element-content .message .color-text-hints, .tutor-notification-element .element-content .message table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn, table.tutor-ui-table .td-action-btns .tutor-notification-element .element-content .message .btn-outline.tutor-btn, .tutor-notification-element .element-content .message table.tutor-ui-table .td-action-btns .btn-text, table.tutor-ui-table .td-action-btns .tutor-notification-element .element-content .message .btn-text {
-  font-weight: 300;
+.tutor-notification-element .element-content .message span {
+  font-weight: 400;
 }
 
 .tutor-notification-element.notification-read .element-content .header .meta .dot {
