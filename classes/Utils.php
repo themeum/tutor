@@ -248,11 +248,16 @@ class Utils {
 	 * @since v.1.3.6
 	 */
 	public function has_pmpro($check_monetization=false) {
-		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
-		$depends           = array( 'paid-memberships-pro/paid-memberships-pro.php' );
-		$has_pmpro         = count( array_intersect( $depends, $activated_plugins ) ) == count( $depends );
-
+		$has_pmpro = $this->is_plugin_active('paid-memberships-pro/paid-memberships-pro.php');
 		return $has_pmpro && (!$check_monetization || get_tutor_option('monetize_by') == 'pmpro' );
+	}
+
+	public function is_plugin_active($plugin_path) {
+		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+		$depends           = is_array($plugin_path) ? $plugin_path : array( $plugin_path );
+		$has_plugin        = count( array_intersect( $depends, $activated_plugins ) ) == count( $depends );
+	
+		return $has_plugin;
 	}
 
 	public function has_wcs(){

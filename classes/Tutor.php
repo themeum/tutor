@@ -103,10 +103,6 @@ final class Tutor{
 		/**
 		 * Loading Autoloader
 		 */
-
-		if ( function_exists( '__autoload' ) ) {
-			spl_autoload_register( '__autoload' );
-		}
 		spl_autoload_register(array($this, 'loader'));
 
 		do_action('tutor_before_load');
