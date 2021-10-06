@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.10 - October 04, 2021 =
+= 1.9.10 - October 06, 2021 =
 
 New: Event Calendar
 New: Notifications
