@@ -181,8 +181,10 @@ class Assets{
 		wp_enqueue_script('jquery-ui-datepicker');
 	}
 
-	public function modify_localize_data($localize_data) {
-		if(is_admin()) {
+	public function modify_localize_data( $localize_data ) {
+		global $post;
+		
+		if ( is_admin() ) {
 			if ( ! empty($_GET['taxonomy']) && ( $_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag') ){
 				$localize_data['open_tutor_admin_menu'] = true;
 			}
