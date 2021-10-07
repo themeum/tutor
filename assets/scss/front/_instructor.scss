@@ -1,9 +1,18 @@
-@import "../../../v2-library/_src/scss/utility/variables";
 
 @mixin flexWithAlignJustify($align, $justify, $gap) {
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  -o-display: flex;
   display: flex;
+  -webkit-box-align: $align;
+  -ms-flex-align: $align;
   align-items: $align;
+  -webkit-box-pack: $justify;
+  -ms-flex-pack: $justify;
   justify-content: $justify;
+  -webkit-column-gap: $gap;
+  -moz-column-gap: $gap;
   column-gap: $gap;
 }
 
@@ -338,7 +347,8 @@
     }
   }
 
-  .tutor-category-text {
+  .tutor-category-text,
+  .tutor-instructor-rating-title {
     & > span {
       &:nth-of-type(1) {
         font-style: normal;
@@ -421,7 +431,6 @@ Instructor customize filters styles
 */
 .tutor-instructor-filter {
   * {
-    margin: 0;
     box-sizing: border-box;
   }
   .tutor-instructor-filter-sidebar {
@@ -431,8 +440,8 @@ Instructor customize filters styles
       .tutor-instructor-filters {
         @include flexWithAlignJustify(center, flex-start, 6px);
         i {
-          color: #3e64de !important;
-          font-size: 24px;
+          @extend .color-text-brand;
+          font-size: 30px;
           font-weight: 500;
         }
         span {
@@ -452,6 +461,38 @@ Instructor customize filters styles
           line-height: 26px;
           color: $text-hints;
         }
+      }
+    }
+    .tutor-instructor-rating-range-wrapper {
+      @include flexWithAlignJustify(flex-start, space-between , 0);
+      
+      .tutor-instructor-ratings {
+        margin-top: 23px;
+        i {
+          font-size: 22px;
+          color: $black-20;
+          cursor: pointer;
+        }
+        i.active {
+          color: $warning-main;
+        }
+      }
+      span {
+        margin-top: 23px;
+      }
+    }
+
+    .tutor-instructor-category-show-more {
+      margin: 17px 0 33px 0;
+     
+      .text-medium-caption {
+        @include flexWithAlignJustify(center, flex-start, 6px);
+        cursor: pointer;
+      }
+      i {
+        font-size: 22px;
+        color: $primary-main;
+        @extend .color-text-title;
       }
     }
   }

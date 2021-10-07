@@ -9855,6 +9855,275 @@ Withdraw Method
   border: 1px solid #a0a2a8;
 }
 
+.text-thin-h1 {
+  font-weight: 100;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-thin-h2 {
+  font-weight: 100;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-thin-h3 {
+  font-weight: 100;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-thin-h4 {
+  font-weight: 100;
+  font-size: 30px;
+  line-height: 133%;
+}
+
+.text-thin-h5 {
+  font-weight: 100;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-thin-h6 {
+  font-weight: 100;
+  font-size: 20px;
+  line-height: 150%;
+}
+
+.text-thin-body {
+  font-weight: 100;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-thin-caption {
+  font-weight: 100;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-thin-small {
+  font-weight: 100;
+  font-size: 13px;
+  line-height: 138%;
+}
+
+.text-thin-tiny {
+  font-weight: 100;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-regular-h1 {
+  font-weight: 400;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-regular-h2 {
+  font-weight: 400;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-regular-h3 {
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-regular-h4 {
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 133%;
+}
+
+.text-regular-h5 {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-regular-h6 {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 150%;
+}
+
+.text-regular-body {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-regular-caption {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-regular-small, .text-body {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 138%;
+}
+
+.text-regular-tiny {
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-medium-h1 {
+  font-weight: 500;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-medium-h2 {
+  font-weight: 500;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-medium-h3 {
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-medium-h4 {
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 123%;
+}
+
+.text-medium-h5 {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-medium-h6 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 140%;
+}
+
+.text-medium-body {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-medium-caption {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-medium-small {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 162%;
+}
+
+.text-medium-tiny {
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-bold-h1 {
+  font-weight: 700;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-bold-h2 {
+  font-weight: 700;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-bold-h3 {
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-bold-h4 {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 123%;
+}
+
+.text-bold-h5 {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-bold-h6 {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 150%;
+}
+
+.text-bold-body {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-bold-caption {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-bold-small {
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 162%;
+}
+
+.text-bold-tiny {
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-btn-xlarge {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 178%;
+}
+
+.text-btn-large {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 200%;
+}
+
+.text-btn-medium {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-btn-small {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 123%;
+}
+
+.text-body {
+  font-family: 'SF Pro Display', sans-serif;
+  font-style: normal;
+}
+
 .tutor-instructor-list, .tutor-instructor-list:focus, .tutor-instructor-list:active {
   outline: none;
   cursor: pointer;
@@ -10167,7 +10436,8 @@ Withdraw Method
   cursor: ns-resize;
 }
 
-.tutor-instructor-filter .tutor-category-text > span:nth-of-type(1) {
+.tutor-instructor-filter .tutor-category-text > span:nth-of-type(1),
+.tutor-instructor-filter .tutor-instructor-rating-title > span:nth-of-type(1) {
   font-style: normal;
   font-weight: bold;
   font-size: 16px;
@@ -10175,7 +10445,8 @@ Withdraw Method
   color: #353535;
 }
 
-.tutor-instructor-filter .tutor-category-text > span:nth-of-type(2) {
+.tutor-instructor-filter .tutor-category-text > span:nth-of-type(2),
+.tutor-instructor-filter .tutor-instructor-rating-title > span:nth-of-type(2) {
   cursor: pointer;
   float: right;
   font-style: normal;
@@ -10185,7 +10456,8 @@ Withdraw Method
   color: #7a7a7a;
 }
 
-.tutor-instructor-filter .tutor-category-text > span:nth-of-type(2) i {
+.tutor-instructor-filter .tutor-category-text > span:nth-of-type(2) i,
+.tutor-instructor-filter .tutor-instructor-rating-title > span:nth-of-type(2) i {
   font-size: 10px;
   margin-right: 5px;
 }
@@ -10244,45 +10516,50 @@ Withdraw Method
 Instructor customize filters styles
 */
 .tutor-instructor-filter * {
-  margin: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper {
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  -o-display: flex;
   display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-between;
+  -ms-flex-pack: space-between;
+  justify-content: space-between;
   -webkit-column-gap: 0;
-     -moz-column-gap: 0;
-          column-gap: 0;
+  -moz-column-gap: 0;
+  column-gap: 0;
   margin-bottom: 48px;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-filters {
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  -o-display: flex;
   display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
   -webkit-column-gap: 6px;
-     -moz-column-gap: 6px;
-          column-gap: 6px;
+  -moz-column-gap: 6px;
+  column-gap: 6px;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-filters i {
-  color: #3e64de !important;
-  font-size: 24px;
+  color: #3e64de;
+  font-size: 30px;
   font-weight: 500;
 }
 
@@ -10291,18 +10568,21 @@ Instructor customize filters styles
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-customize-clear {
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  -o-display: flex;
   display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
   -webkit-column-gap: 6px;
-     -moz-column-gap: 6px;
-          column-gap: 6px;
+  -moz-column-gap: 6px;
+  column-gap: 6px;
   cursor: pointer;
 }
 
@@ -10316,6 +10596,71 @@ Instructor customize filters styles
   font-size: 16px;
   line-height: 26px;
   color: #757c8e;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper {
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  -o-display: flex;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: space-between;
+  -ms-flex-pack: space-between;
+  justify-content: space-between;
+  -webkit-column-gap: 0;
+  -moz-column-gap: 0;
+  column-gap: 0;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper .tutor-instructor-ratings {
+  margin-top: 23px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper .tutor-instructor-ratings i {
+  font-size: 22px;
+  color: #c0c3cb;
+  cursor: pointer;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper .tutor-instructor-ratings i.active {
+  color: #ed9700;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper span {
+  margin-top: 23px;
+  color: #5b616f;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more {
+  margin: 17px 0 33px 0;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more .text-medium-caption {
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  -o-display: flex;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
+  -webkit-column-gap: 6px;
+  -moz-column-gap: 6px;
+  column-gap: 6px;
+  cursor: pointer;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more i {
+  font-size: 22px;
+  color: #3e64de;
 }
 
 /* Only reusable function, or code allowed here. No direct css please. */

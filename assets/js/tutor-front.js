@@ -24,15 +24,15 @@ __webpack_require__.r(__webpack_exports__);
   \****************************************************/
 /***/ (() => {
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   // Toggle menu in mobile view
-  $('.tutor-dashboard .tutor-dashboard-menu-toggler').click(function () {
-    var el = $('.tutor-dashboard-left-menu');
-    el.closest('.tutor-dashboard').toggleClass('is-sidebar-expanded');
+  $(".tutor-dashboard .tutor-dashboard-menu-toggler").click(function () {
+    var el = $(".tutor-dashboard-left-menu");
+    el.closest(".tutor-dashboard").toggleClass("is-sidebar-expanded");
 
-    if (el.css('display') !== 'none') {
+    if (el.css("display") !== "none") {
       el.get(0).scrollIntoView({
-        block: 'start'
+        block: "start"
       });
     }
   });
@@ -1496,6 +1496,12 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/common */ "./assets/react/lib/common.js");
 /* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard */ "./assets/react/front/dashboard.js");
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 
 
 jQuery(document).ready(function ($) {
@@ -3355,6 +3361,9 @@ jQuery(document).ready(function ($) {
       });
       cat_ids.length ? cat_parent.append('<span data-cat_id="0">Clear All</span>') : 0;
       run_instructor_filter($(this).attr('name'), cat_ids);
+    }).on('click', '.tutor-instructor-ratings i', function (e) {
+      var rating = e.target.dataset.value;
+      run_instructor_filter('rating_filter', rating);
     }).on('click', '.selected-cate-list [data-cat_id]', function () {
       var id = $(this).data('cat_id');
       var inputs = root.find('.mobile-filter-popup [type="checkbox"]');
@@ -3418,10 +3427,113 @@ jQuery(document).ready(function ($) {
     });
   });
   /**
-   * Retake course
+   * Load more categories instructor list
    * 
-   * @since v1.9.5
+   * @package Instructor List
+   * @sice v2.0.0
    */
+
+  document.querySelector(".tutor-instructor-category-show-more > .text-medium-caption").onclick = function (e) {
+    var term_id = e.target.closest(".text-medium-caption").dataset.id;
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        action: 'show_more',
+        term_id: term_id
+      },
+      success: function success(response) {
+        console.log(response);
+
+        if (response.success && response.data.categories.length) {
+          document.querySelector(".tutor-instructor-category-show-more").style.display = "block";
+
+          var _iterator = _createForOfIteratorHelper(response.data.categories),
+              _step;
+
+          try {
+            for (_iterator.s(); !(_step = _iterator.n()).done;) {
+              var res = _step.value;
+              var wrapper = $(".tutor-instructor-categories-wrapper .course-category-filter");
+              document.querySelector(".tutor-instructor-categories-wrapper .text-medium-caption").dataset.id = res.term_id;
+              wrapper.append("<div class=\"tutor-form-check tutor-mb-25\">\n                                <input\n                                    id=\"item-a\"\n                                    type=\"checkbox\"\n                                    class=\"tutor-form-check-input tutor-form-check-square\"\n                                    name=\"category\"\n                                    value=\"".concat(res.term_id, "\"/>\n                                <label for=\"item-a\">\n                                    ").concat(res.name, "\n                                </label>\n                            </div>\n                            "));
+            }
+          } catch (err) {
+            _iterator.e(err);
+          } finally {
+            _iterator.f();
+          }
+        }
+
+        if (false === response.data.show_more) {
+          document.querySelector(".tutor-instructor-category-show-more").style.display = "none";
+        }
+      },
+      complete: function complete() {},
+      error: function error(err) {
+        alert(err);
+      }
+    });
+  };
+  /**
+   * Show start active as per click
+   * 
+   * @since v2.0.0
+   */
+
+
+  var stars = document.querySelectorAll(".tutor-instructor-ratings i");
+  var rating_range = document.querySelector(".tutor-instructor-rating-filter");
+
+  var _iterator2 = _createForOfIteratorHelper(stars),
+      _step2;
+
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var star = _step2.value;
+
+      star.onclick = function (e) {
+        //remove active if has
+        var _iterator3 = _createForOfIteratorHelper(stars),
+            _step3;
+
+        try {
+          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+            var _star = _step3.value;
+
+            if (_star.classList.contains('active')) {
+              _star.classList.remove('active');
+            }
+          } //show stars active as click
+
+        } catch (err) {
+          _iterator3.e(err);
+        } finally {
+          _iterator3.f();
+        }
+
+        var length = e.target.dataset.value;
+
+        for (var i = 0; i < length; i++) {
+          stars[i].classList.add('active');
+          stars[i].classList.remove('ttr-star-line-filled');
+          stars[i].classList.add('ttr-star-full-filled');
+        }
+
+        rating_range.innerHTML = "0.0 - ".concat(length, ".0");
+      };
+    }
+    /**
+     * Retake course
+     * 
+     * @since v1.9.5
+     */
+
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
 
   $('.tutor-course-retake-button').click(function (e) {
     e.preventDefault();
