@@ -7648,4 +7648,28 @@ class Utils {
 		}
 		return $data;
 	}
+
+	public function get_course_duration($course_id, $return_array, $texts = array('h'=>'hr', 'm'=>'min', 's'=>'sec')) {
+		$duration = maybe_unserialize(get_post_meta($course_id, '_course_duration', true));
+		$durationHours = tutor_utils()->avalue_dot('hours', $duration);
+		$durationMinutes = tutor_utils()->avalue_dot('minutes', $duration);
+		$durationSeconds = tutor_utils()->avalue_dot('seconds', $duration);
+
+		if($return_array) {
+			return array(
+				'duration' => $duration,
+				'durationHours' => $durationHours,
+				'durationMinutes' => $durationMinutes,
+				'durationSeconds' => $durationSeconds,
+			);
+		}
+
+		if(!$durationHours && !$durationMinutes && !$durationSeconds) {
+			return '';
+		}
+
+		return $durationHours . $texts['h'] . ' ' .
+				$durationMinutes . $texts['m'] . ' ' .
+				$durationSeconds . $texts['s'];
+	}
 }
