@@ -650,7 +650,7 @@ msgstr ""
 msgid "Keyword Search"
 msgstr ""
 
-#: classes/Options.php:110, classes/Options_V2.php:761, templates/course-filter/filters.php:33
+#: classes/Options.php:110, classes/Options_V2.php:761, templates/course-filter/filters.php:33, templates/shortcode/instructor-filter.php:50
 msgid "Category"
 msgstr ""
 
@@ -3830,23 +3830,31 @@ msgstr ""
 msgid "On"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:29
+#: templates/shortcode/instructor-filter.php:36
 msgid "Filters"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:35
+#: templates/shortcode/instructor-filter.php:42
 msgid "Clear"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:43, templates/shortcode/instructor-filter.php:73
-msgid "Clear All"
+#: templates/shortcode/instructor-filter.php:63
+msgid "Show More"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:56, templates/shortcode/instructor-filter.php:63
+#: templates/shortcode/instructor-filter.php:72
+msgid "Ratings"
+msgstr ""
+
+#: templates/shortcode/instructor-filter.php:86, templates/shortcode/instructor-filter.php:96
 msgid "Search any instructor..."
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:81
+#: templates/shortcode/instructor-filter.php:106
+msgid "Clear All"
+msgstr ""
+
+#: templates/shortcode/instructor-filter.php:114
 msgid "Apply Filter"
 msgstr ""
 

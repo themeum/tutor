@@ -31,6 +31,14 @@ class Shortcode {
 		add_action('tutor_options_after_instructors', array($this, 'tutor_instructor_layout'));
 		add_action( 'wp_ajax_load_filtered_instructor', array($this, 'load_filtered_instructor') );
 		add_action( 'wp_ajax_nopriv_load_filtered_instructor', array($this, 'load_filtered_instructor') );
+
+		/**
+		 * Load more categories 
+		 * 
+		 * @since 2.0.0
+		 */
+		add_action( 'wp_ajax_show_more', array( $this, 'show_more' ) );
+		add_action( 'wp_ajax_nopriv_show_more', array( $this, 'show_more' ) );
 	}
 
 	/**
@@ -164,9 +172,9 @@ class Shortcode {
 
 		$limit = (int)sanitize_text_field(tutils()->array_get('count', $atts, 9));
 		$page = $current_page - 1;
-
-		$instructors = tutor_utils()->get_instructors($limit*$page, $limit, $keyword, '', '', '', 'approved', $cat_ids);
-		$next_instructors = tutor_utils()->get_instructors($limit*$current_page, $limit, $keyword, '', '', '', 'approved', $cat_ids);
+		$rating_filter 	= isset( $_POST['rating_filter'] ) ? $_POST['rating_filter'] : '';
+		$instructors = tutor_utils()->get_instructors($limit*$page, $limit, $keyword, '', '', '', 'approved', $cat_ids, $rating_filter);
+		$next_instructors = tutor_utils()->get_instructors($limit*$current_page, $limit, $keyword, '', '', '', 'approved', $cat_ids, $rating_filter);
 
 		$previous_page = $page>0 ? $current_page-1 : null;
 		$next_page = (is_array($next_instructors) && count($next_instructors)>0) ? $current_page+1 : null;
@@ -195,7 +203,7 @@ class Shortcode {
 	 * Shortcode for getting instructors
 	 */
 	public function tutor_instructor_list($atts) {
-
+		global $wpdb;
 		!is_array( $atts ) ? $atts = array() : 0;
 
 		$current_page = (int)tutor_utils()->array_get('instructor-page', $_GET, 1);
@@ -212,11 +220,25 @@ class Shortcode {
 		$content = ob_get_clean();
 
 		if($show_filter) {
-			
-			$course_cats = get_terms( array(
-				'taxonomy' => 'course-category',
-				'hide_empty' => true,
-				'childless' => true
+			$limit 				= 2;
+			$course_taxonomy 	= 'course-category';
+			// $course_cats = get_terms( array(
+			// 	'order_by'		=> 'term_id',
+			// 	'order'			=> 'DESC',
+			// 	'taxonomy' 		=> 'course-category',
+			// 	//'hide_empty' 	=> true,
+			// 	'childless' 	=> true,
+			// 	'number'		=> $limit
+			// ) );
+			$course_cats = $wpdb->get_results( $wpdb->prepare(
+				" SElECT * FROM {$wpdb->terms} AS term
+					INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
+						ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
+					ORDER BY term.term_id DESC
+					LIMIT %d
+				",
+				$course_taxonomy,
+				$limit
 			) );
 
 			$attributes = $payload;
@@ -237,6 +259,56 @@ class Shortcode {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Load more categories
+	 * handle ajax request
+	 * 
+	 * @package Instructor List
+	 * @return string
+	 * @since v2.0.0
+	 */
+	public function show_more() {
+		global $wpdb;
+		$term_id 			= (int) sanitize_text_field( $_POST['term_id'] );
+		$limit 				= 2;
+		$course_taxonomy 	= "course-category";
+
+		$remaining_categories = $wpdb->get_var( $wpdb->prepare(
+			" SElECT COUNT(*) AS total FROM {$wpdb->terms} AS term
+					INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
+						ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
+				WHERE term.term_id < %d
+				ORDER BY term.term_id DESC
+			",
+			$course_taxonomy,
+			$term_id
+		) );
+
+		$add_categories = $wpdb->get_results( $wpdb->prepare(
+			" SElECT * FROM {$wpdb->terms} term
+					INNER JOIN {$wpdb->term_taxonomy} as taxonomy
+						ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
+				WHERE term.term_id < %d
+				ORDER BY term.term_id DESC
+				LIMIT %d
+			",
+			$course_taxonomy,
+			$term_id,
+			$limit
+		) );
+		$show_more = false;
+		if ( $remaining_categories > $limit ) {
+			$show_more 	= true;
+		}
+		$response 	= array(
+			'categories'	=> $add_categories,
+			'show_more'		=> $show_more,
+			'remaining'		=> $remaining_categories
+		);
+		wp_send_json_success( $response );
+		exit;
 	}
 
 	public function load_filtered_instructor() {

@@ -1888,6 +1888,10 @@ jQuery(document).ready(function ($) {
 
             run_instructor_filter($(this).attr('name'), cat_ids);
         })
+        .on('click', '.tutor-instructor-ratings i', function(e) {
+            const rating = e.target.dataset.value;
+            run_instructor_filter('rating_filter', rating);
+        })
         .on('click', '.selected-cate-list [data-cat_id]', function() {
 
             var id = $(this).data('cat_id');
@@ -1984,6 +1988,81 @@ jQuery(document).ready(function ($) {
             $(this).removeClass('is-opened');;
         });
     });
+
+    /**
+     * Load more categories instructor list
+     * 
+     * @package Instructor List
+     * @sice v2.0.0
+     */
+    document.querySelector(".tutor-instructor-category-show-more > .text-medium-caption").onclick = (e) => {
+        let term_id = e.target.closest(".text-medium-caption").dataset.id;
+        
+        $.ajax({
+            url: window._tutorobject.ajaxurl,
+            type: 'POST',
+            data: {action: 'show_more', term_id: term_id},
+            success: function(response) {
+                console.log(response);
+                if (response.success && response.data.categories.length) {
+                    document.querySelector(".tutor-instructor-category-show-more").style.display = "block";
+                    for (let res of response.data.categories) {
+                        const wrapper = $(".tutor-instructor-categories-wrapper .course-category-filter");
+                        document.querySelector(".tutor-instructor-categories-wrapper .text-medium-caption").dataset.id = res.term_id;
+                        wrapper.append(
+                            `<div class="tutor-form-check tutor-mb-25">
+                                <input
+                                    id="item-a"
+                                    type="checkbox"
+                                    class="tutor-form-check-input tutor-form-check-square"
+                                    name="category"
+                                    value="${res.term_id}"/>
+                                <label for="item-a">
+                                    ${res.name}
+                                </label>
+                            </div>
+                            `
+                        );
+                    }
+                }
+                if (false === response.data.show_more) {
+                    document.querySelector(".tutor-instructor-category-show-more").style.display = "none";
+                }
+            },
+            complete: function() {
+                
+            },
+            error: function(err) {
+                alert(err)
+            }
+        });
+    }
+
+    /**
+     * Show start active as per click
+     * 
+     * @since v2.0.0
+     */
+    const stars = document.querySelectorAll(".tutor-instructor-ratings i");
+    const rating_range = document.querySelector(".tutor-instructor-rating-filter"); 
+    for(let star of stars) {
+        star.onclick = (e) => {
+            //remove active if has
+            for (let star of stars) {
+                if (star.classList.contains('active')) {
+                    star.classList.remove('active');
+                }
+            }
+            //show stars active as click
+            const length = e.target.dataset.value;
+            for (let i = 0; i < length; i++) {
+                stars[i].classList.add('active');
+                stars[i].classList.remove('ttr-star-line-filled');
+                stars[i].classList.add('ttr-star-full-filled');
+            }
+            rating_range.innerHTML = `0.0 - ${length}.0`;
+        }
+    }
 
     /**
      * Retake course
