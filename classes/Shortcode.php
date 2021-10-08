@@ -173,8 +173,21 @@ class Shortcode {
 		$limit = (int)sanitize_text_field(tutils()->array_get('count', $atts, 9));
 		$page = $current_page - 1;
 		$rating_filter 	= isset( $_POST['rating_filter'] ) ? $_POST['rating_filter'] : '';
-		$instructors = tutor_utils()->get_instructors($limit*$page, $limit, $keyword, '', '', '', 'approved', $cat_ids, $rating_filter);
-		$next_instructors = tutor_utils()->get_instructors($limit*$current_page, $limit, $keyword, '', '', '', 'approved', $cat_ids, $rating_filter);
+		/**
+		 * Short by Relevant | New | Popular
+		 * 
+		 * @since v2.0.0
+		 */
+		$short_by 		= '' ;
+		if ( isset( $_POST['short_by'] ) && $_POST['short_by'] === 'new' ) {
+			$short_by = 'new';
+		} else if ( isset( $_POST['short_by'] ) && $_POST['short_by'] === 'popular' ) {
+			$short_by = 'popular';
+		} else {
+			$short_by = 'ASC';
+		}
+		$instructors = tutor_utils()->get_instructors($limit*$page, $limit, $keyword, '', '', $short_by, 'approved', $cat_ids, $rating_filter);
+		$next_instructors = tutor_utils()->get_instructors($limit*$current_page, $limit, $keyword, '', '', $short_by, 'approved', $cat_ids, $rating_filter);
 
 		$previous_page = $page>0 ? $current_page-1 : null;
 		$next_page = (is_array($next_instructors) && count($next_instructors)>0) ? $current_page+1 : null;
@@ -222,14 +235,6 @@ class Shortcode {
 		if($show_filter) {
 			$limit 				= 2;
 			$course_taxonomy 	= 'course-category';
-			// $course_cats = get_terms( array(
-			// 	'order_by'		=> 'term_id',
-			// 	'order'			=> 'DESC',
-			// 	'taxonomy' 		=> 'course-category',
-			// 	//'hide_empty' 	=> true,
-			// 	'childless' 	=> true,
-			// 	'number'		=> $limit
-			// ) );
 			$course_cats = $wpdb->get_results( $wpdb->prepare(
 				" SElECT * FROM {$wpdb->terms} AS term
 					INNER JOIN {$wpdb->term_taxonomy} AS taxonomy

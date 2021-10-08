@@ -1,25 +1,11 @@
 <?php 
-    ob_start();
     $category_id        = '';
     $total_categories   = isset( $categories ) && is_array( $categories ) && count($categories) ? : 0; 
-    foreach($categories as $category) {
-        $category_id    = $category->term_id;
-        ?>
-        <div class="tutor-form-check tutor-mb-25">
-            <input
-                id="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>"
-                type="checkbox"
-                class="tutor-form-check-input tutor-form-check-square"
-                name="category"
-                value="<?php esc_attr_e( $category->term_id );?>"/>
-            <label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>">
-                 <?php esc_html_e( $category->name );?>
-            </label>
-        </div>
-        <?php
-    }
-
-    $category_list = ob_get_clean();
+    $short_by = array(
+        'relevant'      => __( 'Relevant', 'tutor' ), 
+        'new'           => __( 'New', 'tutor' ), 
+        'popular'       => __( 'Popular', 'tutor' ), 
+    );
 ?>
 
 <div class="tutor-instructor-filter" 
@@ -53,7 +39,24 @@
                 <br/>
             </div>
             <div class="course-category-filter">
-                <?php echo $category_list; ?>
+                <?php 
+                    foreach($categories as $category) {
+                        $category_id    = $category->term_id;
+                        ?>
+                        <div class="tutor-form-check tutor-mb-25">
+                            <input
+                                id="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>"
+                                type="checkbox"
+                                class="tutor-form-check-input tutor-form-check-square"
+                                name="category"
+                                value="<?php esc_attr_e( $category->term_id );?>"/>
+                            <label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>">
+                                 <?php esc_html_e( $category->name );?>
+                            </label>
+                        </div>
+                        <?php
+                    }
+                ?>
             </div>
             <?php if ( $total_categories ): ?>
                 <div class="tutor-instructor-category-show-more">
@@ -89,8 +92,19 @@
                 <input type="text" name="keyword" placeholder="<?php _e('Search any instructor...', 'tutor'); ?>"/>
             </div>
         </div>
-        <div class="tutor-instructor-short-relevant">
-
+        <div class="tutor-instructor-relevant-short-wrapper tutor-mb-30">
+            <div class="tutor-instructor-form-group">
+                <label for="tutor-instructor-relevant-sort">
+                    <?php _e( 'Short by', 'tutor-pro' ); ?>
+                </label>
+                <select class="" id="tutor-instructor-relevant-sort">
+                    <?php foreach( $short_by as $k => $v ): ?>
+                        <option value="<?php esc_attr_e( $k ); ?>">
+                            <?php echo $v; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
         </div>
         <div class="filter-mobile">
             <div class="mobile-filter-container">
@@ -110,7 +124,24 @@
                         </span>
                     </div>
                     <div>
-                        <?php echo $category_list; ?>
+                    <?php 
+                    foreach($categories as $category) {
+                        $category_id    = $category->term_id;
+                        ?>
+                        <div class="tutor-form-check tutor-mb-25">
+                            <input
+                                id="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>"
+                                type="checkbox"
+                                class="tutor-form-check-input tutor-form-check-square"
+                                name="category"
+                                value="<?php esc_attr_e( $category->term_id );?>"/>
+                            <label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>">
+                                 <?php esc_html_e( $category->name );?>
+                            </label>
+                        </div>
+                        <?php
+                    }
+                ?>
                     </div>
                     <div>
                         <button class="tutor-btn btn-sm">

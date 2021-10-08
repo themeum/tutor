@@ -1892,6 +1892,10 @@ jQuery(document).ready(function ($) {
             const rating = e.target.dataset.value;
             run_instructor_filter('rating_filter', rating);
         })
+        .on('change', "#tutor-instructor-relevant-sort", function(e) {
+            const short_by = e.target.value;
+            run_instructor_filter('short_by', short_by);
+        })
         .on('click', '.selected-cate-list [data-cat_id]', function() {
 
             var id = $(this).data('cat_id');
