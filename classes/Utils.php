@@ -2697,7 +2697,7 @@ class Utils {
 		}
 
 		$instructors = $wpdb->get_results( $wpdb->prepare(
-			"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date, Avg(cmeta.meta_value) AS rating
+			"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating
 			FROM 	{$wpdb->users} user
 					INNER JOIN {$wpdb->usermeta} user_meta
 							ON ( user.ID = user_meta.user_id )
