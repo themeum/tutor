@@ -10179,6 +10179,62 @@ table.tutor-ui-table .td-progress .progress-text {
   margin-left: 10px;
 }
 
+table.tutor-ui-table {
+  /*
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
+}
+
+@media only screen and (max-width: 991px), (min-device-width: 768px) and (max-device-width: 1024px) {
+  table.tutor-ui-table {
+    /* Force table to not be like tables anymore */
+    /* Hide table headers (but not display: none;, for accessibility) */
+    /*
+		Label the data
+	You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+		*/
+  }
+  table.tutor-ui-table table,
+  table.tutor-ui-table thead,
+  table.tutor-ui-table tbody,
+  table.tutor-ui-table th,
+  table.tutor-ui-table td,
+  table.tutor-ui-table tr {
+    display: block;
+  }
+  table.tutor-ui-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  table.tutor-ui-table tr {
+    margin: 0 0 1rem 0;
+  }
+  table.tutor-ui-table tr:nth-child(odd) {
+    background: #ccc;
+  }
+  table.tutor-ui-table td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+  }
+  table.tutor-ui-table td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+  table.tutor-ui-table td:before {
+    content: attr(data-th);
+  }
+}
+
 .tutor-thumbnail-uploader {
   width: 100%;
 }
@@ -10934,12 +10990,22 @@ table.tutor-ui-table .td-progress .progress-text {
   max-height: 944px;
 }
 
+.tutor-certificate-template .template-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+
 .tutor-certificate-template label.template-radio-field {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
   cursor: pointer;
   position: relative;
+  border-radius: 6px;
 }
 
 .tutor-certificate-template label.template-radio-field img {
@@ -10947,6 +11013,7 @@ table.tutor-ui-table .td-progress .progress-text {
 }
 
 .tutor-certificate-template label.template-radio-field input[type='radio'] {
+  display: none;
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -11068,11 +11135,12 @@ table.tutor-ui-table .td-progress .progress-text {
 
 .tutor-certificate-template .template-load-more {
   position: absolute;
-  width: 100%;
+  width: calc(100% + 6px);
   height: 185px;
-  bottom: 0;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(1.31%, rgba(255, 255, 255, 0.0001)), color-stop(15.41%, rgba(255, 255, 255, 0.74)), color-stop(38.83%, rgba(255, 255, 255, 0.92)), to(#ffffff));
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.0001) 1.31%, rgba(255, 255, 255, 0.74) 15.41%, rgba(255, 255, 255, 0.92) 38.83%, #ffffff 100%);
+  bottom: -5px;
+  left: -3px;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(1.31%, rgba(255, 255, 255, 0.0001)), color-stop(15.41%, rgba(255, 255, 255, 0.74)), color-stop(38.83%, rgba(255, 255, 255, 0.92)), to(#fff));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.0001) 1.31%, rgba(255, 255, 255, 0.74) 15.41%, rgba(255, 255, 255, 0.92) 38.83%, #fff 100%);
   text-align: center;
   display: grid;
   place-content: center;

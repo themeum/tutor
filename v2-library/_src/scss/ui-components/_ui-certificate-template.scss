@@ -61,16 +61,23 @@
 	// 	background: rgba(236, 111, 173, 16%);
 	// }
 
+	.template-item {
+		display: flex;
+		align-items: flex-start;
+	}
+
 	label.template-radio-field {
 		display: inline-flex;
 		cursor: pointer;
 		position: relative;
+		border-radius: 6px;
 
 		img {
 			max-width: 100%;
 		}
 
 		input[type='radio'] {
+			display: none;
 			appearance: none;
 			-moz-appearance: none;
 			-webkit-appearance: none;
@@ -169,15 +176,16 @@
 
 	.template-load-more {
 		position: absolute;
-		width: 100%;
+		width: calc(100% + 6px);
 		height: 185px;
-		bottom: 0;
+		bottom: -5px;
+		left: -3px;
 		background: linear-gradient(
 			180deg,
 			rgba(255, 255, 255, 0.0001) 1.31%,
 			rgba(255, 255, 255, 0.74) 15.41%,
 			rgba(255, 255, 255, 0.92) 38.83%,
-			#ffffff 100%
+			#fff 100%
 		);
 		text-align: center;
 		display: grid;
