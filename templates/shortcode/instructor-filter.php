@@ -7,12 +7,12 @@
         ?>
         <div class="tutor-form-check tutor-mb-25">
             <input
-                id="item-a"
+                id="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>"
                 type="checkbox"
                 class="tutor-form-check-input tutor-form-check-square"
                 name="category"
                 value="<?php esc_attr_e( $category->term_id );?>"/>
-            <label for="item-a text-title text-medium-caption">
+            <label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>">
                  <?php esc_html_e( $category->name );?>
             </label>
         </div>
