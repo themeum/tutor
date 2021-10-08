@@ -166,7 +166,7 @@ class Assets {
 		 * translate js file
 		 * @since 1.9.0
 		 */
-		wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front.min.css", array(), tutor()->version);
+		wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front.min.css", array(), time());
 		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
 
 

@@ -440,10 +440,14 @@ Instructor customize filters styles
       .tutor-instructor-filters {
         @include flexWithAlignJustify(center, flex-start, 6px);
         i {
-          @extend .color-text-brand;
-          font-size: 30px;
+          transform: scale(2);
           font-weight: 500;
-        }
+          -webkit-transform: scale(2);
+          -moz-transform: scale(2);
+          -ms-transform: scale(2);
+          -o-transform: scale(2);
+          margin-right: 10px;
+}
       }
       .tutor-instructor-customize-clear {
         @include flexWithAlignJustify(center, flex-start, 6px);
@@ -464,11 +468,11 @@ Instructor customize filters styles
       .tutor-instructor-ratings {
         margin-top: 23px;
         i {
-          font-size: 22px;
-          cursor: pointer;
+            cursor: pointer;
+            font-size: 22px;
         }
         i.active {
-          @extend .color-design-warning;
+          color: #ED9700;
         }
       }
       span {
@@ -484,9 +488,17 @@ Instructor customize filters styles
         cursor: pointer;
       }
       i {
-        font-size: 22px;
-        @extend .color-text-title;
-      }
+        transform: scale(1.5);
+        -webkit-transform: scale(1.5);
+        -moz-transform: scale(1.5);
+        -ms-transform: scale(1.5);
+        -o-transform: scale(1.5);
+}
+    }
+  }
+  .tutor-instructor-relevant-short-wrapper {
+    & select {
+      border: none !important;
     }
   }
 }
