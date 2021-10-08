@@ -32,7 +32,7 @@
         <div class="tutor-instructor-customize-wrapper">
             <div class="tutor-instructor-filters">
                 <i class="ttr ttr-customize-filled"></i>
-                <span class="text-medium-h5">
+                <span class="text-medium-h5 text-primary">
                     <?php _e( 'Filters', 'tutor' );?>
                 </span>
             </div>
