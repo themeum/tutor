@@ -10180,12 +10180,13 @@ table.tutor-ui-table .td-progress .progress-text {
 }
 
 table.tutor-ui-table {
+  /* stroke/light30 */
   /*
 	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
 	*/
 }
 
-@media only screen and (max-width: 991px), (min-device-width: 768px) and (max-device-width: 1024px) {
+@media only screen and (max-width: 991px), (min-device-width: 992px) and (max-device-width: 1024px) {
   table.tutor-ui-table {
     /* Force table to not be like tables anymore */
     /* Hide table headers (but not display: none;, for accessibility) */
@@ -10207,31 +10208,68 @@ table.tutor-ui-table {
     top: -9999px;
     left: -9999px;
   }
-  table.tutor-ui-table tr {
-    margin: 0 0 1rem 0;
+  table.tutor-ui-table tr:last-child td:last-child {
+    border-bottom: 1px solid #cdcfd5 !important;
   }
-  table.tutor-ui-table tr:nth-child(odd) {
-    background: #ccc;
+  table.tutor-ui-table tr:first-child td:first-child {
+    border-top-left-radius: 6px !important;
+    border-top-right-radius: 6px !important;
+  }
+  table.tutor-ui-table tr:last-child td:last-child {
+    border-bottom-left-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+  }
+  table.tutor-ui-table tr:nth-child(odd) td:nth-child(odd) {
+    background: #fff;
+  }
+  table.tutor-ui-table tr:nth-child(odd) td:nth-child(even) {
+    background: rgba(239, 241, 247, 0.3);
+  }
+  table.tutor-ui-table tr:nth-child(even) td:nth-child(even) {
+    background: #fff;
+  }
+  table.tutor-ui-table tr:nth-child(even) td:nth-child(odd) {
+    background: rgba(239, 241, 247, 0.3);
   }
   table.tutor-ui-table td {
     /* Behave  like a "row" */
-    border: none;
-    border-bottom: 1px solid #eee;
+    border: none !important;
+    border-radius: 0 !important;
     position: relative;
-    padding-left: 50%;
+    padding: 7px 10px;
+    padding-left: 50% !important;
+    width: unset !important;
+    text-align: left !important;
+    border-top: 1px solid #cdcfd5 !important;
+    border-left: 1px solid #cdcfd5 !important;
+    border-right: 1px solid #cdcfd5 !important;
   }
   table.tutor-ui-table td:before {
     /* Now like a table header */
     position: absolute;
     /* Top/left values mimic padding */
     top: 0;
-    left: 6px;
+    left: 0;
     width: 45%;
+    padding-left: 20px;
     padding-right: 10px;
     white-space: nowrap;
   }
   table.tutor-ui-table td:before {
     content: attr(data-th);
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 138%;
+    /* identical to box height, or 138% */
+    /* text/subsued */
+    color: #5b616f;
   }
 }
 
