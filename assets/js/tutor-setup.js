@@ -9,8 +9,11 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _tutor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tutor */ "./assets/react/lib/tutor.js");
-/* harmony import */ var _tutor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_tutor__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utilities */ "./assets/react/lib/utilities.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_utilities__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _tutor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tutor */ "./assets/react/lib/tutor.js");
+/* harmony import */ var _tutor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_tutor__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 /***/ }),
@@ -1929,6 +1932,32 @@ window.disableAddoption = function () {
     removeDisabledClass(add_question_answer_option);
   }
 };
+
+/***/ }),
+
+/***/ "./assets/react/lib/utilities.js":
+/*!***************************************!*\
+  !*** ./assets/react/lib/utilities.js ***!
+  \***************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+  $(document).on('click', '.tutor-copy-text', function (e) {
+    // Prevent default action
+    e.stopImmediatePropagation();
+    e.preventDefault(); // Get the text
+
+    var text = $(this).data('text'); // Create input to place texts in
+
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val(text).select();
+    document.execCommand("copy");
+    $temp.remove();
+    tutor_toast(__('Copied!', 'tutor'), text, 'success');
+  });
+});
 
 /***/ })
 
