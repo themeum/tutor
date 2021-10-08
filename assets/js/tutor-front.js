@@ -3386,6 +3386,46 @@ jQuery(document).ready(function ($) {
       var root = $(this).closest('.tutor-instructor-filter');
       root.find('input[type="checkbox"]').prop('checked', false);
       root.find('[name="keyword"]').val('');
+      var stars = document.querySelectorAll(".tutor-instructor-ratings i"); //remove star selection
+
+      var _iterator = _createForOfIteratorHelper(stars),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var star = _step.value;
+
+          var _iterator2 = _createForOfIteratorHelper(stars),
+              _step2;
+
+          try {
+            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+              var _star = _step2.value;
+
+              if (_star.classList.contains('active')) {
+                _star.classList.remove('active');
+              }
+
+              if (_star.classList.contains('ttr-star-full-filled')) {
+                _star.classList.remove('ttr-star-full-filled');
+
+                _star.classList.add('ttr-star-line-filled');
+              }
+            }
+          } catch (err) {
+            _iterator2.e(err);
+          } finally {
+            _iterator2.f();
+          }
+
+          rating_range.innerHTML = "";
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
       run_instructor_filter();
     }).on('click', '.mobile-filter-container i', function () {
       // Open mobile screen filter
@@ -3448,20 +3488,20 @@ jQuery(document).ready(function ($) {
         if (response.success && response.data.categories.length) {
           document.querySelector(".tutor-instructor-category-show-more").style.display = "block";
 
-          var _iterator = _createForOfIteratorHelper(response.data.categories),
-              _step;
+          var _iterator3 = _createForOfIteratorHelper(response.data.categories),
+              _step3;
 
           try {
-            for (_iterator.s(); !(_step = _iterator.n()).done;) {
-              var res = _step.value;
+            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+              var res = _step3.value;
               var wrapper = $(".tutor-instructor-categories-wrapper .course-category-filter");
               document.querySelector(".tutor-instructor-categories-wrapper .text-medium-caption").dataset.id = res.term_id;
               wrapper.append("<div class=\"tutor-form-check tutor-mb-25\">\n                                <input\n                                    id=\"item-a\"\n                                    type=\"checkbox\"\n                                    class=\"tutor-form-check-input tutor-form-check-square\"\n                                    name=\"category\"\n                                    value=\"".concat(res.term_id, "\"/>\n                                <label for=\"item-a\">\n                                    ").concat(res.name, "\n                                </label>\n                            </div>\n                            "));
             }
           } catch (err) {
-            _iterator.e(err);
+            _iterator3.e(err);
           } finally {
-            _iterator.f();
+            _iterator3.f();
           }
         }
 
@@ -3485,31 +3525,31 @@ jQuery(document).ready(function ($) {
   var stars = document.querySelectorAll(".tutor-instructor-ratings i");
   var rating_range = document.querySelector(".tutor-instructor-rating-filter");
 
-  var _iterator2 = _createForOfIteratorHelper(stars),
-      _step2;
+  var _iterator4 = _createForOfIteratorHelper(stars),
+      _step4;
 
   try {
-    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-      var star = _step2.value;
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+      var star = _step4.value;
 
       star.onclick = function (e) {
         //remove active if has
-        var _iterator3 = _createForOfIteratorHelper(stars),
-            _step3;
+        var _iterator5 = _createForOfIteratorHelper(stars),
+            _step5;
 
         try {
-          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-            var _star = _step3.value;
+          for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+            var _star2 = _step5.value;
 
-            if (_star.classList.contains('active')) {
-              _star.classList.remove('active');
+            if (_star2.classList.contains('active')) {
+              _star2.classList.remove('active');
             }
           } //show stars active as click
 
         } catch (err) {
-          _iterator3.e(err);
+          _iterator5.e(err);
         } finally {
-          _iterator3.f();
+          _iterator5.f();
         }
 
         var length = e.target.dataset.value;
@@ -3530,9 +3570,9 @@ jQuery(document).ready(function ($) {
      */
 
   } catch (err) {
-    _iterator2.e(err);
+    _iterator4.e(err);
   } finally {
-    _iterator2.f();
+    _iterator4.f();
   }
 
   $('.tutor-course-retake-button').click(function (e) {

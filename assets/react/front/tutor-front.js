@@ -1929,7 +1929,20 @@ jQuery(document).ready(function ($) {
             root.find('input[type="checkbox"]').prop('checked', false);
 
             root.find('[name="keyword"]').val('');
-            
+            const stars = document.querySelectorAll(".tutor-instructor-ratings i");
+            //remove star selection
+            for(let star of stars) {
+                for (let star of stars) {
+                    if (star.classList.contains('active')) {
+                        star.classList.remove('active');
+                    }
+                    if (star.classList.contains('ttr-star-full-filled')) {
+                        star.classList.remove('ttr-star-full-filled');
+                        star.classList.add('ttr-star-line-filled');
+                    }
+                }
+                rating_range.innerHTML = ``;
+            }
             run_instructor_filter();
         })
         .on('click', '.mobile-filter-container i', function () {
