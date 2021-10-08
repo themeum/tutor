@@ -2696,6 +2696,21 @@ class Utils {
 			$rating_having 	= " HAVING rating >= 0 AND rating <= {$rating} ";
 		}
 
+		/**
+		 * Handle Short by Relevant | New | Popular & Order Shorting
+		 * from instructor list backend
+		 * 
+		 * @since v2.0.0
+		 */
+		$order_query = '';
+		if ( 'new' === $order_filter ) {
+			$order_query = " ORDER BY user_meta.meta_value DESC ";
+		} else if ( 'popular' === $order_filter ) {
+			$order_query = " ORDER BY rating DESC ";
+		} else {
+			$order_query = " ORDER BY user_meta.meta_value {$order_filter} ";
+		}
+
 		$instructors = $wpdb->get_results( $wpdb->prepare(
 			"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating
 			FROM 	{$wpdb->users} user
@@ -2719,13 +2734,12 @@ class Utils {
 					{$date_filter}
 			GROUP BY user.ID
 			{$rating_having}
-			ORDER BY user_meta.meta_value {$order_filter}
+			{$order_query}
 			LIMIT 	%d, %d;
 			",
 			'_is_tutor_instructor',
 			$search_filter,
 			$search_filter,
-
 			$start,
 			$limit
 		) );

@@ -3364,6 +3364,9 @@ jQuery(document).ready(function ($) {
     }).on('click', '.tutor-instructor-ratings i', function (e) {
       var rating = e.target.dataset.value;
       run_instructor_filter('rating_filter', rating);
+    }).on('change', "#tutor-instructor-relevant-sort", function (e) {
+      var short_by = e.target.value;
+      run_instructor_filter('short_by', short_by);
     }).on('click', '.selected-cate-list [data-cat_id]', function () {
       var id = $(this).data('cat_id');
       var inputs = root.find('.mobile-filter-popup [type="checkbox"]');
