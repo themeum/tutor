@@ -1,3 +1,4 @@
+@import "../../../v2-library/_src/scss/utility/colors";
 
 @mixin flexWithAlignJustify($align, $justify, $gap) {
   -webkit-display: flex;
@@ -27,7 +28,12 @@
     border: 1px solid #dcdbdc;
     border-radius: 6px;
   }
-
+  .tutor-star-rating-group {
+    i {
+      font-size: 16px !important;
+      @extend .color-design-warning;
+    }
+  }
   .tutor-instructor-profile-photo,
   .tutor-instructor-cover-photo {
     background-size: cover;
@@ -42,10 +48,7 @@
   }
 
   .tutor-instructor-name {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 24px;
-    color: #161616;
+
     margin: 0;
   }
 
@@ -470,9 +473,10 @@ Instructor customize filters styles
         i {
             cursor: pointer;
             font-size: 22px;
+            color: #C0C3CB;
         }
         i.active {
-          color: #ED9700;
+          @extend .color-design-warning;
         }
       }
       span {
