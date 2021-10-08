@@ -17,14 +17,14 @@
     <div class="tutor-instructor-filter-sidebar">
         <div class="tutor-instructor-customize-wrapper">
             <div class="tutor-instructor-filters">
-                <i class="ttr ttr-customize-filled"></i>
+                <i class="ttr ttr-customize-filled text-brand"></i>
                 <span class="text-medium-h5 text-primary">
                     <?php _e( 'Filters', 'tutor' );?>
                 </span>
             </div>
             <div class="tutor-instructor-customize-clear clear-instructor-filter">
-                <i class="tutor-icon-line-cross"></i>
-                <span className="text-thin-body">
+                <i class="tutor-icon-line-cross design-dark"></i>
+                <span className="text-hints text-regular-body">
                     <?php _e( 'Clear', 'tutor' );?>
                 </span>
             </div>
@@ -32,7 +32,7 @@
         <div class="tutor-instructor-categories-wrapper">
             <div>
                 <div class="tutor-category-text">
-                    <span>
+                    <span class="text-title">
                         <?php _e( 'Category', 'tutor' );?>
                     </span>
                 </div>
@@ -71,7 +71,7 @@
         </div>
         <div class="tutor-instructor-ratings-wrapper">
             <div class="tutor-instructor-rating-title">
-                <span>
+                <span class="text-title">
                     <?php _e( 'Ratings', 'tutor' ); ?>
                 </span>
             </div>
@@ -94,10 +94,10 @@
         </div>
         <div class="tutor-instructor-relevant-short-wrapper tutor-mb-30">
             <div class="tutor-instructor-form-group">
-                <label for="tutor-instructor-relevant-sort">
+                <label for="tutor-instructor-relevant-sort" class="text-hints text-regular-body">
                     <?php _e( 'Short by', 'tutor-pro' ); ?>
                 </label>
-                <select class="" id="tutor-instructor-relevant-sort">
+                <select class="text-title  text-regular-body" id="tutor-instructor-relevant-sort">
                     <?php foreach( $short_by as $k => $v ): ?>
                         <option value="<?php esc_attr_e( $k ); ?>">
                             <?php echo $v; ?>

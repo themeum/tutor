@@ -2638,7 +2638,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating ) {
+	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '' ) {
 		global $wpdb;
 
 		$search_filter 	=  sanitize_text_field($search_filter);

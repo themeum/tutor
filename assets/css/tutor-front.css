@@ -9855,275 +9855,6 @@ Withdraw Method
   border: 1px solid #a0a2a8;
 }
 
-.text-thin-h1 {
-  font-weight: 100;
-  font-size: 80px;
-  line-height: 101%;
-}
-
-.text-thin-h2 {
-  font-weight: 100;
-  font-size: 60px;
-  line-height: 117%;
-}
-
-.text-thin-h3 {
-  font-weight: 100;
-  font-size: 40px;
-  line-height: 120%;
-}
-
-.text-thin-h4 {
-  font-weight: 100;
-  font-size: 30px;
-  line-height: 133%;
-}
-
-.text-thin-h5 {
-  font-weight: 100;
-  font-size: 24px;
-  line-height: 142%;
-}
-
-.text-thin-h6 {
-  font-weight: 100;
-  font-size: 20px;
-  line-height: 150%;
-}
-
-.text-thin-body {
-  font-weight: 100;
-  font-size: 16px;
-  line-height: 162%;
-}
-
-.text-thin-caption {
-  font-weight: 100;
-  font-size: 15px;
-  line-height: 160%;
-}
-
-.text-thin-small {
-  font-weight: 100;
-  font-size: 13px;
-  line-height: 138%;
-}
-
-.text-thin-tiny {
-  font-weight: 100;
-  font-size: 11px;
-  line-height: 145%;
-}
-
-.text-regular-h1 {
-  font-weight: 400;
-  font-size: 80px;
-  line-height: 101%;
-}
-
-.text-regular-h2 {
-  font-weight: 400;
-  font-size: 60px;
-  line-height: 117%;
-}
-
-.text-regular-h3 {
-  font-weight: 400;
-  font-size: 40px;
-  line-height: 120%;
-}
-
-.text-regular-h4 {
-  font-weight: 400;
-  font-size: 30px;
-  line-height: 133%;
-}
-
-.text-regular-h5 {
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 142%;
-}
-
-.text-regular-h6 {
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 150%;
-}
-
-.text-regular-body {
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 162%;
-}
-
-.text-regular-caption {
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 160%;
-}
-
-.text-regular-small, .text-body {
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 138%;
-}
-
-.text-regular-tiny {
-  font-weight: 400;
-  font-size: 11px;
-  line-height: 145%;
-}
-
-.text-medium-h1 {
-  font-weight: 500;
-  font-size: 80px;
-  line-height: 101%;
-}
-
-.text-medium-h2 {
-  font-weight: 500;
-  font-size: 60px;
-  line-height: 117%;
-}
-
-.text-medium-h3 {
-  font-weight: 500;
-  font-size: 40px;
-  line-height: 120%;
-}
-
-.text-medium-h4 {
-  font-weight: 500;
-  font-size: 30px;
-  line-height: 123%;
-}
-
-.text-medium-h5 {
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 142%;
-}
-
-.text-medium-h6 {
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 140%;
-}
-
-.text-medium-body {
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 162%;
-}
-
-.text-medium-caption {
-  font-weight: 500;
-  font-size: 15px;
-  line-height: 160%;
-}
-
-.text-medium-small {
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 162%;
-}
-
-.text-medium-tiny {
-  font-weight: 500;
-  font-size: 11px;
-  line-height: 145%;
-}
-
-.text-bold-h1 {
-  font-weight: 700;
-  font-size: 80px;
-  line-height: 101%;
-}
-
-.text-bold-h2 {
-  font-weight: 700;
-  font-size: 60px;
-  line-height: 117%;
-}
-
-.text-bold-h3 {
-  font-weight: 700;
-  font-size: 40px;
-  line-height: 120%;
-}
-
-.text-bold-h4 {
-  font-weight: 700;
-  font-size: 30px;
-  line-height: 123%;
-}
-
-.text-bold-h5 {
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 142%;
-}
-
-.text-bold-h6 {
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 150%;
-}
-
-.text-bold-body {
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 162%;
-}
-
-.text-bold-caption {
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 160%;
-}
-
-.text-bold-small {
-  font-weight: 700;
-  font-size: 13px;
-  line-height: 162%;
-}
-
-.text-bold-tiny {
-  font-weight: 700;
-  font-size: 11px;
-  line-height: 145%;
-}
-
-.text-btn-xlarge {
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 178%;
-}
-
-.text-btn-large {
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 200%;
-}
-
-.text-btn-medium {
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 160%;
-}
-
-.text-btn-small {
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 123%;
-}
-
-.text-body {
-  font-family: 'SF Pro Display', sans-serif;
-  font-style: normal;
-}
-
 .tutor-instructor-list, .tutor-instructor-list:focus, .tutor-instructor-list:active {
   outline: none;
   cursor: pointer;
@@ -10558,13 +10289,13 @@ Instructor customize filters styles
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-filters i {
-  color: #3e64de;
-  font-size: 30px;
+  transform: scale(2);
   font-weight: 500;
-}
-
-.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-filters span {
-  color: #212327;
+  -webkit-transform: scale(2);
+  -moz-transform: scale(2);
+  -ms-transform: scale(2);
+  -o-transform: scale(2);
+  margin-right: 10px;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-customize-clear {
@@ -10588,14 +10319,12 @@ Instructor customize filters styles
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-customize-clear i {
   font-size: 10px;
-  color: #1a1b1e;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-customize-clear span {
   font-weight: normal;
   font-size: 16px;
   line-height: 26px;
-  color: #757c8e;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper {
@@ -10621,18 +10350,16 @@ Instructor customize filters styles
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper .tutor-instructor-ratings i {
-  font-size: 22px;
-  color: #c0c3cb;
   cursor: pointer;
+  font-size: 22px;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper .tutor-instructor-ratings i.active {
-  color: #ed9700;
+  color: #ED9700;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper span {
   margin-top: 23px;
-  color: #5b616f;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more {
@@ -10659,8 +10386,15 @@ Instructor customize filters styles
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more i {
-  font-size: 22px;
-  color: #3e64de;
+  transform: scale(1.5);
+  -webkit-transform: scale(1.5);
+  -moz-transform: scale(1.5);
+  -ms-transform: scale(1.5);
+  -o-transform: scale(1.5);
+}
+
+.tutor-instructor-filter .tutor-instructor-relevant-short-wrapper select {
+  border: none !important;
 }
 
 /* Only reusable function, or code allowed here. No direct css please. */
