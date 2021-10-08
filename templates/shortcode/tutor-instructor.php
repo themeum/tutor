@@ -21,7 +21,7 @@
                             ?>
                         </div>
                     </div>
-                    <h4 class="tutor-instructor-name"><?php echo $instructor->display_name; ?></h4>
+                    <h4 class="tutor-instructor-name"><?php echo $instructor->display_name ?></h4>
                     <div class="tutor-instructor-course-count">
                         <span><?php echo $course_count; ?></span>
                         <span><?php $course_count>1 ? _e('Courses', 'tutor') : _e('Course', 'tutor'); ?></span>
