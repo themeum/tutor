@@ -8,6 +8,9 @@ window.jQuery(document).ready(function ($) {
     $(this).addClass('is-active').siblings().removeClass('is-active');
     $('#' + $(this).data('tutor-tab-target')).show().siblings().hide();
   });
+  $('.').click(function () {
+    $(this).siblings().filter('tutor-certificate-collapsible');
+  });
 });
 /******/ })()
 ;
