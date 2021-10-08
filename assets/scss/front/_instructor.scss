@@ -444,22 +444,17 @@ Instructor customize filters styles
           font-size: 30px;
           font-weight: 500;
         }
-        span {
-          color: $black-main;
-        }
       }
       .tutor-instructor-customize-clear {
         @include flexWithAlignJustify(center, flex-start, 6px);
         cursor: pointer;
         i {
           font-size: 10px;
-          color: $black-90;
         }
         span {
           font-weight: normal;
           font-size: 16px;
           line-height: 26px;
-          color: $text-hints;
         }
       }
     }
@@ -470,11 +465,10 @@ Instructor customize filters styles
         margin-top: 23px;
         i {
           font-size: 22px;
-          color: $black-20;
           cursor: pointer;
         }
         i.active {
-          color: $warning-main;
+          @extend .color-design-warning;
         }
       }
       span {
@@ -491,7 +485,6 @@ Instructor customize filters styles
       }
       i {
         font-size: 22px;
-        color: $primary-main;
         @extend .color-text-title;
       }
     }

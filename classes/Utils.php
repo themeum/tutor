@@ -2696,6 +2696,13 @@ class Utils {
 					INNER JOIN {$wpdb->usermeta} inst_status
 							ON ( user.ID = inst_status.user_id )
 					{$category_join}
+					LEFT JOIN wp_usermeta umeta
+						ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
+					LEFT JOIN wp_comments c
+						ON c.comment_post_ID = umeta.meta_value
+					LEFT JOIN wp_commentmeta cmeta
+						ON cmeta.comment_id = c.comment_ID
+						AND cmeta.meta_key = 'tutor_rating'
 			WHERE 	user_meta.meta_key = %s
 					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
 					{$status}

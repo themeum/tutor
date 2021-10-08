@@ -1996,8 +1996,7 @@ jQuery(document).ready(function ($) {
      * @sice v2.0.0
      */
     document.querySelector(".tutor-instructor-category-show-more > .text-medium-caption").onclick = (e) => {
-        let term_id = e.target.closest(".text-medium-caption").dataset.id;
-        
+        let term_id = e.target.parentNode.dataset.id;
         $.ajax({
             url: window._tutorobject.ajaxurl,
             type: 'POST',
