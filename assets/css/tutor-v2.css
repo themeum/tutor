@@ -10179,6 +10179,100 @@ table.tutor-ui-table .td-progress .progress-text {
   margin-left: 10px;
 }
 
+table.tutor-ui-table {
+  /* stroke/light30 */
+  /*
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
+}
+
+@media only screen and (max-width: 991px), (min-device-width: 992px) and (max-device-width: 1024px) {
+  table.tutor-ui-table {
+    /* Force table to not be like tables anymore */
+    /* Hide table headers (but not display: none;, for accessibility) */
+    /*
+		Label the data
+	You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+		*/
+  }
+  table.tutor-ui-table table,
+  table.tutor-ui-table thead,
+  table.tutor-ui-table tbody,
+  table.tutor-ui-table th,
+  table.tutor-ui-table td,
+  table.tutor-ui-table tr {
+    display: block;
+  }
+  table.tutor-ui-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  table.tutor-ui-table tr:last-child td:last-child {
+    border-bottom: 1px solid #cdcfd5 !important;
+  }
+  table.tutor-ui-table tr:first-child td:first-child {
+    border-top-left-radius: 6px !important;
+    border-top-right-radius: 6px !important;
+  }
+  table.tutor-ui-table tr:last-child td:last-child {
+    border-bottom-left-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+  }
+  table.tutor-ui-table tr:nth-child(odd) td:nth-child(odd) {
+    background: #fff;
+  }
+  table.tutor-ui-table tr:nth-child(odd) td:nth-child(even) {
+    background: rgba(239, 241, 247, 0.3);
+  }
+  table.tutor-ui-table tr:nth-child(even) td:nth-child(even) {
+    background: #fff;
+  }
+  table.tutor-ui-table tr:nth-child(even) td:nth-child(odd) {
+    background: rgba(239, 241, 247, 0.3);
+  }
+  table.tutor-ui-table td {
+    /* Behave  like a "row" */
+    border: none !important;
+    border-radius: 0 !important;
+    position: relative;
+    padding: 7px 10px;
+    padding-left: 50% !important;
+    width: unset !important;
+    text-align: left !important;
+    border-top: 1px solid #cdcfd5 !important;
+    border-left: 1px solid #cdcfd5 !important;
+    border-right: 1px solid #cdcfd5 !important;
+  }
+  table.tutor-ui-table td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 0;
+    left: 0;
+    width: 45%;
+    padding-left: 20px;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+  table.tutor-ui-table td:before {
+    content: attr(data-th);
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 138%;
+    /* identical to box height, or 138% */
+    /* text/subsued */
+    color: #5b616f;
+  }
+}
+
 .tutor-thumbnail-uploader {
   width: 100%;
 }
@@ -10927,6 +11021,20 @@ table.tutor-ui-table .td-progress .progress-text {
   display: grid;
   gap: 25px;
   grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+  grid-template-rows: -webkit-min-content;
+  grid-template-rows: min-content;
+  position: relative;
+  min-height: 580px;
+  max-height: 944px;
+}
+
+.tutor-certificate-template .template-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
 }
 
 .tutor-certificate-template label.template-radio-field {
@@ -10935,6 +11043,7 @@ table.tutor-ui-table .td-progress .progress-text {
   display: inline-flex;
   cursor: pointer;
   position: relative;
+  border-radius: 6px;
 }
 
 .tutor-certificate-template label.template-radio-field img {
@@ -10942,6 +11051,7 @@ table.tutor-ui-table .td-progress .progress-text {
 }
 
 .tutor-certificate-template label.template-radio-field input[type='radio'] {
+  display: none;
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -11061,17 +11171,34 @@ table.tutor-ui-table .td-progress .progress-text {
           transform: translateY(0);
 }
 
-.tutor-certificate-template .template-item {
-  position: relative;
+.tutor-certificate-template .template-load-more {
+  position: absolute;
+  width: calc(100% + 6px);
+  height: 185px;
+  bottom: -5px;
+  left: -3px;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(1.31%, rgba(255, 255, 255, 0.0001)), color-stop(15.41%, rgba(255, 255, 255, 0.74)), color-stop(38.83%, rgba(255, 255, 255, 0.92)), to(#fff));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.0001) 1.31%, rgba(255, 255, 255, 0.74) 15.41%, rgba(255, 255, 255, 0.92) 38.83%, #fff 100%);
+  text-align: center;
+  display: grid;
+  place-content: center;
+}
+
+.tutor-certificate-template .template-load-more .load-more-btn {
+  border: none;
+  background: transparent;
+  outline: none;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  gap: 5px;
+}
+
+.tutor-certificate-template .template-load-more .load-more-btn span {
+  font-size: 20px;
 }
 
 /*# sourceMappingURL=tutor-v2.css.map */

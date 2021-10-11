@@ -15,97 +15,141 @@ Use `data-tutor-tab-target="MENU_ID"` to open a menu.<br/>
 `** Replace "className" with "class" while using with html`
 
 <Playground>
-	<div>
-		<div className="tutor-default-tab tutor-certificate-template-tab">
-			<div className="tab-header d-flex justify-content-center">
-				<div className="tab-header-item is-active" data-tutor-tab-target="tab-target-certificate-1">
-					<div className="item-wrapper color-black-30 d-flex align-items-center">
-						<span className="icon ttr-landscape-filled"></span>
-						<span className="title text-btn-medium">Landscape</span>
-					</div>
-				</div>
-				<div className="tab-header-item" data-tutor-tab-target="tab-target-certificate-2">
-					<div className="item-wrapper color-black-30 d-flex align-items-center">
-						<span className="icon ttr-portrait-filled"></span>
-						<span className="title text-btn-medium">Portrait</span>
-					</div>
+	<div className="tutor-default-tab tutor-certificate-template-tab">
+		<div className="tab-header d-flex justify-content-center">
+			<div className="tab-header-item is-active" data-tutor-tab-target="tab-target-certificate-1">
+				<div className="item-wrapper color-black-30 d-flex align-items-center">
+					<span className="icon ttr-landscape-filled"></span>
+					<span className="title text-btn-medium">Landscape</span>
 				</div>
 			</div>
-			{/* end /.tab-header */}
-			<div className="tab-body">
-				<div className="tab-body-item is-active" id="tab-target-certificate-1">
-					<div className="tutor-certificate-template template-landscape">
-						<div className="template-item">
-							<label className="template-radio-field" for="certificate-landscape-1">
-								<input type="radio" name="certificate-landscape" id="certificate-landscape-1" />
-								<span className="icon-wrapper">
-									<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
-								</span>
-								<div className="template-item-overlay">
-									<button className="tutor-btn tutor-is-xs">Use This</button>
-									<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
-								</div>
-							</label>
-						</div>
-						<div className="template-item">
-							<label className="template-radio-field" for="certificate-landscape-2">
-								<input type="radio" name="certificate-landscape" id="certificate-landscape-2" checked />
-								<span className="icon-wrapper">
-									<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
-								</span>
-								<div className="template-item-overlay">
-									<button className="tutor-btn tutor-is-xs">Use This</button>
-									<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
-								</div>
-							</label>
-						</div>
-						<div className="template-item">
-							<label className="template-radio-field" for="certificate-landscape-3">
-								<input type="radio" name="certificate-landscape" id="certificate-landscape-3" />
-								<span className="icon-wrapper">
-									<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
-								</span>
-								<div className="template-item-overlay">
-									<button className="tutor-btn tutor-is-xs">Use This</button>
-									<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
-								</div>
-							</label>
-						</div>
-					</div>
+			<div className="tab-header-item" data-tutor-tab-target="tab-target-certificate-2">
+				<div className="item-wrapper color-black-30 d-flex align-items-center">
+					<span className="icon ttr-portrait-filled"></span>
+					<span className="title text-btn-medium">Portrait</span>
 				</div>
-				{/* end /.tab-body-item */}
-				<div className="tab-body-item" id="tab-target-certificate-2">
-					<div className="tutor-certificate-template template-portrait">
-						<div className="template-item">
-							<label className="template-radio-field" for="certificate-portrait-1">
-								<input type="radio" name="certificate-portrait" id="certificate-portrait-1" checked />
-								<span className="icon-wrapper">
-									<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
-								</span>
-								<div className="template-item-overlay">
-									<button className="tutor-btn tutor-is-xs">Use This</button>
-									<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
-								</div>
-							</label>
-						</div>
-						<div className="template-item">
-							<label className="template-radio-field" for="certificate-portrait-2">
-								<input type="radio" name="certificate-portrait" id="certificate-portrait-2" />
-								<span className="icon-wrapper">
-									<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
-								</span>
-								<div className="template-item-overlay">
-									<button className="tutor-btn tutor-is-xs">Use This</button>
-									<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
-								</div>
-							</label>
-						</div>
-					</div>
-				</div>
-				{/* end /.tab-body-item */}
 			</div>
-			{/* end /.tab-body */}
 		</div>
-		{/* end /.tutor-notification-tab */}
+		{/* end /.tab-header */}
+		<div className="tab-body">
+			<div className="tab-body-item is-active" id="tab-target-certificate-1">
+				<div className="tutor-certificate-template template-landscape">
+					<div className="template-item">
+						<label className="template-radio-field" for="certificate-landscape-1">
+							<input type="radio" name="certificate-landscape" id="certificate-landscape-1" />
+							<span className="icon-wrapper">
+								<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
+							</span>
+							<div className="template-item-overlay">
+								<button className="tutor-btn tutor-is-xs">Use This</button>
+								<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
+							</div>
+						</label>
+					</div>
+					<div className="template-item">
+						<label className="template-radio-field" for="certificate-landscape-2">
+							<input type="radio" name="certificate-landscape" id="certificate-landscape-2" checked />
+							<span className="icon-wrapper">
+								<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
+							</span>
+							<div className="template-item-overlay">
+								<button className="tutor-btn tutor-is-xs">Use This</button>
+								<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
+							</div>
+						</label>
+					</div>
+					<div className="template-item">
+						<label className="template-radio-field" for="certificate-landscape-3">
+							<input type="radio" name="certificate-landscape" id="certificate-landscape-3" />
+							<span className="icon-wrapper">
+								<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
+							</span>
+							<div className="template-item-overlay">
+								<button className="tutor-btn tutor-is-xs">Use This</button>
+								<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
+							</div>
+						</label>
+					</div>
+					<div className="template-item">
+						<label className="template-radio-field" for="certificate-landscape-4">
+							<input type="radio" name="certificate-landscape" id="certificate-landscape-4" />
+							<span className="icon-wrapper">
+								<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
+							</span>
+							<div className="template-item-overlay">
+								<button className="tutor-btn tutor-is-xs">Use This</button>
+								<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
+							</div>
+						</label>
+					</div>
+					<div className="template-item">
+						<label className="template-radio-field" for="certificate-landscape-5">
+							<input type="radio" name="certificate-landscape" id="certificate-landscape-5" />
+							<span className="icon-wrapper">
+								<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
+							</span>
+							<div className="template-item-overlay">
+								<button className="tutor-btn tutor-is-xs">Use This</button>
+								<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
+							</div>
+						</label>
+					</div>
+					<div className="template-item">
+						<label className="template-radio-field" for="certificate-landscape-6">
+							<input type="radio" name="certificate-landscape" id="certificate-landscape-6" />
+							<span className="icon-wrapper">
+								<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
+							</span>
+							<div className="template-item-overlay">
+								<button className="tutor-btn tutor-is-xs">Use This</button>
+								<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
+							</div>
+						</label>
+					</div>
+					<div className="template-load-more">
+						<button className="load-more-btn color-text-primary text-medium-body">
+							<span className="ttr-plus-filled color-design-brand"></span> Show More
+						</button>
+					</div>
+				</div>
+			</div>
+			{/* end /.tab-body-item */}
+			<div className="tab-body-item" id="tab-target-certificate-2">
+				<div className="tutor-certificate-template template-portrait">
+					<div className="template-item">
+						<label className="template-radio-field" for="certificate-portrait-1">
+							<input type="radio" name="certificate-portrait" id="certificate-portrait-1" checked />
+							<span className="icon-wrapper">
+								<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
+							</span>
+							<div className="template-item-overlay">
+								<button className="tutor-btn tutor-is-xs">Use This</button>
+								<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
+							</div>
+						</label>
+					</div>
+					<div className="template-item">
+						<label className="template-radio-field" for="certificate-portrait-2">
+							<input type="radio" name="certificate-portrait" id="certificate-portrait-2" />
+							<span className="icon-wrapper">
+								<img src="https://www.themeum.com/wp-content/uploads/2020/11/tutor-marketplace1x.png" alt="" />
+							</span>
+							<div className="template-item-overlay">
+								<button className="tutor-btn tutor-is-xs">Use This</button>
+								<button className="tutor-btn tutor-is-xs tutor-is-outline">Preview</button>
+							</div>
+						</label>
+					</div>
+					<div className="template-load-more">
+						<button className="load-more-btn color-text-primary text-medium-body">
+							<span className="ttr-plus-filled color-design-brand"></span> Show More
+						</button>
+					</div>
+				</div>
+			</div>
+			{/* end /.tab-body-item */}
+		</div>
+		{/* end /.tab-body */}
 	</div>
+	{/* end /.tutor-notification-tab */}
 </Playground>
