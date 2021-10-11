@@ -1,4 +1,5 @@
 @import "../../../v2-library/_src/scss/utility/colors";
+@import "../../../v2-library/_src/scss/utility/typography";
 
 @mixin flexWithAlignJustify($align, $justify, $gap) {
   -webkit-display: flex;
@@ -47,24 +48,23 @@
     height: 60px;
   }
 
-  .tutor-instructor-name {
-
+  h4.tutor-instructor-name {
+    @extend .color-text-primary;
+    @extend .text-medium-h5;
     margin: 0;
   }
-
   .tutor-instructor-course-count {
     margin-bottom: 10px;
-    & > span {
-      font-style: normal;
-      font-weight: 500;
-      font-size: 15px;
-      color: #161616;
-
-      &:last-child {
-        color: #808080;
-      }
+    font-size: 15px !important;
+    font-weight: 500;
+    .tutor-ins-course-count {
+      color: #212327 !important
+    }
+    .tutor-ins-course-text {
+      color: #757C8E !important;
     }
   }
+
 
   .tutor-instructor-rating {
     * {
@@ -126,6 +126,9 @@
       display: none;
     }
     padding: 15px;
+    .tutor-instructor-profile-photo {
+      margin-left: 22px;
+    }
   }
 
   &.tutor-instructor-list-pp-left-full,
@@ -140,6 +143,7 @@
       width: 102px;
       top: 0px;
       position: absolute;
+      
     }
 
     .tutor-instructor-name,
@@ -348,6 +352,24 @@
         cursor: ns-resize;
       }
     }
+    .tutor-courses.pp-left-middle {
+      > div {
+        display: flex;
+        align-items: center;
+        column-gap: 30px;
+        border: 1px solid #CDCFD5;
+        box-sizing: border-box;
+        border-radius: 6px;
+        padding: 30px;
+      }
+      .tutor-instructor-profile-photo img {
+        border-radius: 100%;
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        -ms-border-radius: 100%;
+        -o-border-radius: 100%;
+}
+    }
   }
 
   .tutor-category-text,
@@ -435,6 +457,18 @@ Instructor customize filters styles
 .tutor-instructor-filter {
   * {
     box-sizing: border-box;
+  }
+  .tutor-instructor-list-pp-left-full {
+    .tutor-instructor-profile-photo {
+      height: 100%;
+    }
+  }
+  .course-category-filter {
+    .tutor-form-check {
+      label.text-medium-caption {
+        @extend .text-medium-caption;
+      }
+    }
   }
   .tutor-instructor-filter-sidebar {
     .tutor-instructor-customize-wrapper {

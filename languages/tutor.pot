@@ -605,7 +605,7 @@ msgstr ""
 msgid "Couldn't create lesson."
 msgstr ""
 
-#: classes/Lesson.php:271, classes/Options.php:224, classes/Options_V2.php:382, classes/Options_V2.php:722, classes/Options_V2.php:1036, classes/Question_Answers_List.php:75, classes/Quiz_Attempts_List.php:115, classes/Tutor_Setup.php:562, templates/student-public-profile.php:106, templates/dashboard/question-answer.php:28, templates/shortcode/tutor-instructor.php:27, views/pages/view_attempt.php:73, templates/dashboard/announcements/details.php:19, templates/dashboard/assignments/review.php:44, templates/dashboard/assignments/submitted.php:30, templates/single/quiz/top.php:27
+#: classes/Lesson.php:271, classes/Options.php:224, classes/Options_V2.php:382, classes/Options_V2.php:722, classes/Options_V2.php:1036, classes/Question_Answers_List.php:75, classes/Quiz_Attempts_List.php:115, classes/Tutor_Setup.php:562, templates/student-public-profile.php:106, templates/dashboard/question-answer.php:28, templates/shortcode/tutor-instructor.php:40, templates/shortcode/tutor-instructor.php:28, views/pages/view_attempt.php:73, templates/dashboard/announcements/details.php:19, templates/dashboard/assignments/review.php:44, templates/dashboard/assignments/submitted.php:30, templates/single/quiz/top.php:27
 msgid "Course"
 msgstr ""
 
@@ -666,7 +666,7 @@ msgstr ""
 msgid "Price Type"
 msgstr ""
 
-#: classes/Options.php:126, classes/Options_V2.php:327, classes/Utils.php:6757
+#: classes/Options.php:126, classes/Options_V2.php:327, classes/Utils.php:6781
 msgid "Dashboard Page"
 msgstr ""
 
@@ -1194,7 +1194,7 @@ msgstr ""
 msgid "Allow multiple instructors to upload their courses."
 msgstr ""
 
-#: classes/Options.php:574, classes/Options_V2.php:1067, classes/Utils.php:6758
+#: classes/Options.php:574, classes/Options_V2.php:1067, classes/Utils.php:6782
 msgid "Instructor Registration Page"
 msgstr ""
 
@@ -1222,7 +1222,7 @@ msgstr ""
 msgid "Student Profile settings"
 msgstr ""
 
-#: classes/Options.php:606, classes/Options_V2.php:1075, classes/Utils.php:6759
+#: classes/Options.php:606, classes/Options_V2.php:1075, classes/Utils.php:6783
 msgid "Student Registration Page"
 msgstr ""
 
@@ -1667,7 +1667,7 @@ msgstr ""
 msgid "View Course"
 msgstr ""
 
-#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/dashboard.php:227, templates/student-public-profile.php:106, templates/student-public-profile.php:167, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, views/pages/announcements.php:59, templates/single/course/instructors.php:72
+#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/dashboard.php:227, templates/student-public-profile.php:106, templates/student-public-profile.php:167, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:40, templates/shortcode/tutor-instructor.php:28, views/pages/announcements.php:59, templates/single/course/instructors.php:72
 msgid "Courses"
 msgstr ""
 
@@ -2592,7 +2592,7 @@ msgstr ""
 msgid "EXPLORE ADDONS"
 msgstr ""
 
-#: classes/Tutor_Setup.php:615, classes/Tutor_Setup.php:726, templates/shortcode/tutor-instructor.php:47
+#: classes/Tutor_Setup.php:615, classes/Tutor_Setup.php:726, templates/shortcode/tutor-instructor.php:59
 msgid "Previous"
 msgstr ""
 
@@ -2600,7 +2600,7 @@ msgstr ""
 msgid "Skip This Step"
 msgstr ""
 
-#: classes/Tutor_Setup.php:623, classes/Tutor_Setup.php:730, templates/shortcode/tutor-instructor.php:48
+#: classes/Tutor_Setup.php:623, classes/Tutor_Setup.php:730, templates/shortcode/tutor-instructor.php:60
 msgid "Next"
 msgstr ""
 
@@ -2764,119 +2764,119 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: classes/Utils.php:4202
+#: classes/Utils.php:4226
 msgid "True/False"
 msgstr ""
 
-#: classes/Utils.php:4203
+#: classes/Utils.php:4227
 msgid "Single Choice"
 msgstr ""
 
-#: classes/Utils.php:4204
+#: classes/Utils.php:4228
 msgid "Multiple Choice"
 msgstr ""
 
-#: classes/Utils.php:4205
+#: classes/Utils.php:4229
 msgid "Open Ended/Essay"
 msgstr ""
 
-#: classes/Utils.php:4206
+#: classes/Utils.php:4230
 msgid "Fill In The Blanks"
 msgstr ""
 
-#: classes/Utils.php:4207
+#: classes/Utils.php:4231
 msgid "Short Answer"
 msgstr ""
 
-#: classes/Utils.php:4208
+#: classes/Utils.php:4232
 msgid "Matching"
 msgstr ""
 
-#: classes/Utils.php:4209
+#: classes/Utils.php:4233
 msgid "Image Matching"
 msgstr ""
 
-#: classes/Utils.php:4210
+#: classes/Utils.php:4234
 msgid "Image Answering"
 msgstr ""
 
-#: classes/Utils.php:4211
+#: classes/Utils.php:4235
 msgid "Ordering"
 msgstr ""
 
-#: classes/Utils.php:5038
+#: classes/Utils.php:5062
 msgid "All Levels"
 msgstr ""
 
-#: classes/Utils.php:5039, templates/course-filter/filters.php:4
+#: classes/Utils.php:5063, templates/course-filter/filters.php:4
 msgid "Beginner"
 msgstr ""
 
-#: classes/Utils.php:5040, templates/course-filter/filters.php:5
+#: classes/Utils.php:5064, templates/course-filter/filters.php:5
 msgid "Intermediate"
 msgstr ""
 
-#: classes/Utils.php:5041, templates/course-filter/filters.php:6
+#: classes/Utils.php:5065, templates/course-filter/filters.php:6
 msgid "Expert"
 msgstr ""
 
-#: classes/Utils.php:5064
+#: classes/Utils.php:5088
 msgid "Courses Taken"
 msgstr ""
 
-#: classes/Utils.php:5071
+#: classes/Utils.php:5095
 msgid "Enrolled Course"
 msgstr ""
 
-#: classes/Utils.php:5075
+#: classes/Utils.php:5099
 msgid "Reviews Written"
 msgstr ""
 
-#: classes/Utils.php:5353
+#: classes/Utils.php:5377
 msgid "Website"
 msgstr ""
 
-#: classes/Utils.php:5358
+#: classes/Utils.php:5382
 msgid "Github"
 msgstr ""
 
-#: classes/Utils.php:5363
+#: classes/Utils.php:5387
 msgid "Facebook"
 msgstr ""
 
-#: classes/Utils.php:5368
+#: classes/Utils.php:5392
 msgid "Twitter"
 msgstr ""
 
-#: classes/Utils.php:5373
+#: classes/Utils.php:5397
 msgid "Linkedin"
 msgstr ""
 
-#: classes/Utils.php:6722
+#: classes/Utils.php:6746
 msgid "Not Taken"
 msgstr ""
 
-#: classes/Utils.php:6720
+#: classes/Utils.php:6744
 msgid "In Progress"
 msgstr ""
 
-#: classes/Utils.php:6716
+#: classes/Utils.php:6740
 msgid "Completed"
 msgstr ""
 
-#: classes/Utils.php:6899, templates/dashboard/my-profile.php:22, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:122, templates/dashboard/settings/profile.php:123
+#: classes/Utils.php:6923, templates/dashboard/my-profile.php:22, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:122, templates/dashboard/settings/profile.php:123
 msgid "First Name"
 msgstr ""
 
-#: classes/Utils.php:6900, templates/dashboard/my-profile.php:23, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:129, templates/dashboard/settings/profile.php:130
+#: classes/Utils.php:6924, templates/dashboard/my-profile.php:23, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:129, templates/dashboard/settings/profile.php:130
 msgid "Last Name"
 msgstr ""
 
-#: classes/Utils.php:6901
+#: classes/Utils.php:6925
 msgid "Profile Photo"
 msgstr ""
 
-#: classes/Utils.php:6902
+#: classes/Utils.php:6926
 msgid "Withdraw Method"
 msgstr ""
 
@@ -3830,6 +3830,18 @@ msgstr ""
 msgid "On"
 msgstr ""
 
+#: templates/shortcode/instructor-filter.php:15
+msgid "Relevant"
+msgstr ""
+
+#: templates/shortcode/instructor-filter.php:16
+msgid "New"
+msgstr ""
+
+#: templates/shortcode/instructor-filter.php:17
+msgid "Popular"
+msgstr ""
+
 #: templates/shortcode/instructor-filter.php:36
 msgid "Filters"
 msgstr ""
@@ -3838,28 +3850,28 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:63
+#: templates/shortcode/instructor-filter.php:80
 msgid "Show More"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:72
+#: templates/shortcode/instructor-filter.php:89
 msgid "Ratings"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:89, templates/shortcode/instructor-filter.php:99
+#: templates/shortcode/instructor-filter.php:106, templates/shortcode/instructor-filter.php:127
 msgid "Search any instructor..."
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:109
+#: templates/shortcode/instructor-filter.php:137
 msgid "Clear All"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:117
+#: templates/shortcode/instructor-filter.php:162
 msgid "Apply Filter"
 msgstr ""
 
-#: templates/shortcode/tutor-instructor.php:35
-msgid "No Instructor Found"
+#: templates/shortcode/tutor-instructor.php:47
+msgid "No instructor found"
 msgstr ""
 
 #: templates/template-part/form-retrieve-password.php:18
