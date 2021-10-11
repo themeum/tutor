@@ -91,7 +91,6 @@ window.tutor_date_picker = () => {
 
 jQuery(document).ready(function($){
     'use strict';
-
     const { __, _x, _n, _nx } = wp.i18n;
     /**
      * Global date_picker selector 
@@ -834,13 +833,17 @@ jQuery(document).ready(function($){
     //     $( "#tutor-announcement-datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
     // }
     function urlPrams(type, val){
+    
         var url = new URL(window.location.href);
         var search_params = url.searchParams;
         search_params.set(type, val);
         
         url.search = search_params.toString();
-        
-        search_params.set('paged', 1);
+        if ( _tutorobject.is_admin ) {
+            search_params.set('paged', 1)
+        } else {
+            search_params.set('current_page', 1);
+        }
         url.search = search_params.toString();
 
         return url.toString();
