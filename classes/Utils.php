@@ -248,18 +248,29 @@ class Utils {
 	 * @since v.1.3.6
 	 */
 	public function has_pmpro($check_monetization=false) {
-		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
-		$depends           = array( 'paid-memberships-pro/paid-memberships-pro.php' );
-		$has_pmpro         = count( array_intersect( $depends, $activated_plugins ) ) == count( $depends );
-
+		$has_pmpro = $this->is_plugin_active('paid-memberships-pro/paid-memberships-pro.php');
 		return $has_pmpro && (!$check_monetization || get_tutor_option('monetize_by') == 'pmpro' );
 	}
 
-	public function has_wcs(){
+	public function is_plugin_active($plugin_path) {
 		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
-		$depends           = array( 'woocommerce-subscriptions/woocommerce-subscriptions.php' );
-		$has_wcs           = count( array_intersect( $depends, $activated_plugins ) ) == count( $depends );
+		$depends           = is_array($plugin_path) ? $plugin_path : array( $plugin_path );
+		$has_plugin        = count( array_intersect( $depends, $activated_plugins ) ) == count( $depends );
+	
+		return $has_plugin;
+	}
+
+	public function has_wcs(){
+		$has_wcs = $this->is_plugin_active('woocommerce-subscriptions/woocommerce-subscriptions.php');
 		return $has_wcs;
+	}
+
+	public function is_addon_enabled($basename) {
+		if($this->is_plugin_active('tutor-pro/tutor-pro.php')) {
+			$addonConfig = $this->get_addon_config($basename);
+			
+			return (bool) $this->avalue_dot('is_enable', $addonConfig);
+		}
 	}
 
 	/**
@@ -5204,8 +5215,15 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function most_popular_courses( $limit = 10 ) {
+	public function most_popular_courses( $limit = 10, $user_id = '' ) {
 		global $wpdb;
+		$limit 		= sanitize_text_field( $limit );
+		$user_id 	= sanitize_text_field( $user_id );
+
+		$author_query = '';
+		if ( '' !== $user_id ) {
+			$author_query = "AND course.post_author = $user_id";
+		}
 
 		$courses = $wpdb->get_results( $wpdb->prepare(
 			"SELECT COUNT(enrolled.ID) AS total_enrolled,
@@ -5216,6 +5234,7 @@ class Utils {
 							ON enrolled.post_parent = course.ID
 			WHERE 	enrolled.post_type = %s
 					AND enrolled.post_status = %s
+					{$author_query}
 			GROUP BY course_id
 			ORDER BY total_enrolled DESC
 			LIMIT 0, %d;
@@ -7597,5 +7616,64 @@ class Utils {
 		</div>
 
 		<?php do_action( 'tutor_course/archive/pagination/after' );
+	}
+
+	/**
+	 * Get all courses along with topics & course materials for current student
+	 * 
+	 * @since 1.9.10
+	 * 
+	 * @return array
+	 */
+	public function course_with_materials(): array {
+		$user_id = get_current_user_id();
+		$enrolled_courses = $this->get_enrolled_courses_by_user( $user_id );
+
+		if ( false === $enrolled_courses ) {
+			return [];
+		}
+		$data = [];
+		foreach ( $enrolled_courses->posts as $key => $course ) {
+			//push courses
+			array_push($data, ['course' => array('title' => $course->post_title)]);
+			$topics = $this->get_topics( $course->ID );
+
+			if ( !is_null( $topics) || count( $topics->posts ) ) {
+				foreach ( $topics->posts as $topic_key => $topic ) {
+					$materials = $this->get_course_contents_by_topic( $topic->ID, -1 );
+					if ( count( $materials->posts ) || !is_null( $materials->posts ) ) {
+						$topic->materials = $materials->posts;
+					}
+					//push topics
+					array_push( $data[$key]['course'],  ['topics' => $topic] );
+				}
+			}
+
+		}
+		return $data;
+	}
+
+	public function get_course_duration($course_id, $return_array, $texts = array('h'=>'hr', 'm'=>'min', 's'=>'sec')) {
+		$duration = maybe_unserialize(get_post_meta($course_id, '_course_duration', true));
+		$durationHours = tutor_utils()->avalue_dot('hours', $duration);
+		$durationMinutes = tutor_utils()->avalue_dot('minutes', $duration);
+		$durationSeconds = tutor_utils()->avalue_dot('seconds', $duration);
+
+		if($return_array) {
+			return array(
+				'duration' => $duration,
+				'durationHours' => $durationHours,
+				'durationMinutes' => $durationMinutes,
+				'durationSeconds' => $durationSeconds,
+			);
+		}
+
+		if(!$durationHours && !$durationMinutes && !$durationSeconds) {
+			return '';
+		}
+
+		return $durationHours . $texts['h'] . ' ' .
+				$durationMinutes . $texts['m'] . ' ' .
+				$durationSeconds . $texts['s'];
 	}
 }

@@ -75,6 +75,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tutor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tutor */ "./assets/react/lib/tutor.js");
 /* harmony import */ var _media_chooser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./media-chooser */ "./assets/react/lib/media-chooser.js");
 /* harmony import */ var _media_chooser__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_media_chooser__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utilities */ "./assets/react/lib/utilities.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utilities__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 
@@ -988,7 +991,13 @@ jQuery(document).ready(function ($) {
     var search_params = url.searchParams;
     search_params.set(type, val);
     url.search = search_params.toString();
-    search_params.set('paged', 1);
+
+    if (_tutorobject.is_admin) {
+      search_params.set('paged', 1);
+    } else {
+      search_params.set('current_page', 1);
+    }
+
     url.search = search_params.toString();
     return url.toString();
   }
@@ -1109,6 +1118,32 @@ window.tutor_toast = function (title, description, type) {
     }
   }, 5000);
 };
+
+/***/ }),
+
+/***/ "./assets/react/lib/utilities.js":
+/*!***************************************!*\
+  !*** ./assets/react/lib/utilities.js ***!
+  \***************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+  $(document).on('click', '.tutor-copy-text', function (e) {
+    // Prevent default action
+    e.stopImmediatePropagation();
+    e.preventDefault(); // Get the text
+
+    var text = $(this).data('text'); // Create input to place texts in
+
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val(text).select();
+    document.execCommand("copy");
+    $temp.remove();
+    tutor_toast(__('Copied!', 'tutor'), text, 'success');
+  });
+});
 
 /***/ }),
 
@@ -3039,23 +3074,6 @@ jQuery(document).ready(function ($) {
   $('.tutor-dropbtn').click(function () {
     var $content = $(this).parent().find(".tutor-dropdown-content");
     $content.slideToggle(100);
-  }); //$(document).on('click', '.tutor-copy-link', function (e) {
-
-  $('.tutor-copy-link').click(function (e) {
-    var $btn = $(this);
-    var copy = '<i class="tutor-icon-copy"></i> Copy Link';
-    var copied = '<i class="tutor-icon-mark"></i> Copied';
-    var dummy = document.createElement('input'),
-        text = window.location.href;
-    document.body.appendChild(dummy);
-    dummy.value = text;
-    dummy.select();
-    document.execCommand('copy');
-    document.body.removeChild(dummy);
-    $btn.html(copied);
-    setTimeout(function () {
-      $btn.html(copy);
-    }, 2500);
   });
   $(document).on('click', function (e) {
     var container = $(".tutor-dropdown");

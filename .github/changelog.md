@@ -1,8 +1,16 @@
 # TutorLMS Changelog
 
-### 1.9.10 - October 03, 2021
+### 1.9.11 - October 11, 2021
+
+* New: Certificate Builder Plugin Integration
+
+
+### 1.9.10 - October 06, 2021
 
 * New: Event Calendar
+* New: Notifications
+* Fix: Date Picker not working issue in frontend Announcement Tab
+* Fix: CSV Download button disabled for empty reports
 
 
 ### 1.9.9 - September 16, 2021

@@ -1,15 +1,14 @@
-
 #tutor-course-content-builder-root {
     position: relative;
-
     // Course topics
-    #tutor-course-content-wrap, #tutor-course-topics {
+    #tutor-course-content-wrap,
+    #tutor-course-topics {
         position: relative;
 
         // Common style
         a {
             text-decoration: none;
-            &:focus{
+            &:focus {
                 @include propertyWithPrefix(box-shadow, none);
             }
         }
@@ -148,18 +147,18 @@
                 }
             }
         }
-        
+
         .drop-lessons {
             p {
                 margin: 0;
             }
-        } 
+        }
 
         .tutor-lessons {
             padding-left: 0;
             margin-bottom: 20px;
-            
-            &:empty{
+
+            &:empty {
                 display: none;
             }
 
@@ -168,25 +167,26 @@
             }
         }
 
-        .tutor-lesson-top{
+        .tutor-lesson-top {
             @include valueWithPrefix(display, flex);
             font-size: 14px;
 
-            &, i {
+            &,
+            i {
                 font-size: 15px;
             }
 
-            i{
+            i {
                 &.tutor-icon-pencil {
                     margin: 0 10px;
                 }
-                
+
                 &.tutor-icon-move {
                     margin-right: 10px;
                     cursor: grab;
                     line-height: unset;
 
-                    &:active{
+                    &:active {
                         cursor: grabbing;
                     }
                 }
@@ -194,11 +194,11 @@
 
             a {
                 color: #393c40;
-                &.tutor-updating-message{
+                &.tutor-updating-message {
                     i {
                         display: none;
                     }
-                } 
+                }
 
                 &:nth-child(2) {
                     @include propertyWithPrefix(flex, 1);
@@ -211,10 +211,10 @@
                     vertical-align: middle;
                     margin-right: 5px;
                 }
-            } 
+            }
         }
 
-        @at-root{
+        @at-root {
             #{$body}.rtl {
                 #tutor-course-content-wrap .tutor-lesson-top {
                     i.tutor-icon-move {
@@ -227,7 +227,7 @@
                             margin-right: 0;
                             margin-left: 5px;
                         }
-                    } 
+                    }
                 }
             }
         }
@@ -243,11 +243,11 @@
         padding: 20px;
         margin: 0 -1px -1px;
         background-color: #fbfbfb;
-    
+
         h3 {
             font-weight: 300;
         }
-        
+
         .tutor-lessons {
             padding-left: 0 !important;
         }
