@@ -1,10 +1,8 @@
 <?php
 $course_id = get_the_ID();
 
-$duration = maybe_unserialize(get_post_meta($course_id, '_course_duration', true));
-$durationHours = tutor_utils()->avalue_dot('hours', $duration);
-$durationMinutes = tutor_utils()->avalue_dot('minutes', $duration);
-$durationSeconds = tutor_utils()->avalue_dot('seconds', $duration);
+// Extract: $duration, $durationHours, $durationMinutes, $durationSeconds
+extract(tutor_utils()->get_course_duration($course_id, true));
 
 $benefits = get_post_meta($course_id, '_tutor_course_benefits', true);
 $requirements = get_post_meta($course_id, '_tutor_course_requirements', true);
