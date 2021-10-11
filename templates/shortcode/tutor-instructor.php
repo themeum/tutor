@@ -1,4 +1,4 @@
-<div class="tutor-courses tutor-courses-loop-wrap tutor-courses-layout-<?php esc_attr_e( $column_count.' '.$layout ); ?>">
+<div class="tutor-courses tutor-courses-loop-wrap tutor-courses-layout-<?php esc_attr_e( $column_count . ' ' . $layout ); ?>">
 	<?php if ( count( $instructors ) ) : ?>
 		<?php
 		foreach ( $instructors as $instructor ) :
@@ -31,13 +31,15 @@
 			</div>
 			<?php else : ?>
 			<div  class="tutor-course-col-<?php esc_html_e( $column_count ); ?>">
-				<div class="tutor-instructor-profile-photo">
-					<img src="<?php echo esc_url( get_avatar_url( $instructor->ID ) ); ?> alt="instructor-image">
-				</div>
-				<div class="tutor-instructor-content">
-					<h4 class="tutor-instructor-name"><?php esc_html_e( $instructor->display_name ); ?></h4>
-					<span class="tutor-ins-course-count"><?php esc_html_e( $course_count ); ?></span>
-					<span class="tutor-ins-course-text"><?php $course_count > 1 ? esc_html_e( 'Courses', 'tutor' ) : esc_html_e( 'Course', 'tutor' ); ?></span>
+				<div class="tutor-instructor-left-middle">
+					<div class="tutor-instructor-profile-photo">
+						<img src="<?php echo esc_url( get_avatar_url( $instructor->ID ) ); ?> alt="instructor-image">
+					</div>
+					<div class="tutor-instructor-content">
+						<h4 class="tutor-instructor-name"><?php esc_html_e( $instructor->display_name ); ?></h4>
+						<span class="tutor-ins-course-count"><?php esc_html_e( $course_count ); ?></span>
+						<span class="tutor-ins-course-text"><?php $course_count > 1 ? esc_html_e( 'Courses', 'tutor' ) : esc_html_e( 'Course', 'tutor' ); ?></span>
+					</div>
 				</div>
 			</div>
 			<?php endif; ?>
