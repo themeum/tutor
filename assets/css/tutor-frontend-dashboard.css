@@ -1974,11 +1974,7 @@
   display: block;
   color: var(--tutor-text-color);
   padding: 10px 20px;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: normal;
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
+  line-height: 28px;
 }
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li a:hover {
@@ -1994,10 +1990,103 @@
   background-color: var(--tutor-primary-hover-color);
 }
 
-.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a:before {
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li a {
+  display: block;
+  color: var(--tutor-text-color);
+  padding: 10px 20px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: normal;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li a:hover {
+  background-color: #edf0f9;
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.active a {
+  background-color: var(--tutor-primary-color);
+  color: #ffffff;
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.active a:hover {
+  background-color: var(--tutor-primary-hover-color);
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.active a:before {
   opacity: 1;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   color: #fff;
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-bio a:before, .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-my-profile a:before {
+  content: "\e963";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-enrolled-courses a:before {
+  content: "\e969";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-courses_taken a:before,
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-my-courses a:before {
+  content: "\e965";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-announcements a:before {
+  content: "\e93f";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-wishlist a:before {
+  content: "\e908";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-reviews a:before {
+  content: "\e917";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-my-quiz-attempts a:before {
+  content: "\e9ab";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-quiz-attempts a:before {
+  content: "\e91f";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-question-answer a:before {
+  content: "\e948";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-earning a:before {
+  content: "\e96b";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-withdraw a:before {
+  content: "\e960";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-settings a:before {
+  content: "\e961";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-logout a:before {
+  content: "\e962";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-purchase_history a:before {
+  content: "\e964";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-assignments a:before {
+  content: "\e98b";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-zoom a:before {
+  content: "\e9b1";
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-analytics a:before {
+  content: "\e9b2";
 }
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.tutor-dashboard-menu-bio a:before,
@@ -2072,6 +2161,84 @@
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.tutor-dashboard-menu-calendar a:before {
   content: "\e9b3";
+}
+
+@media (max-width: 767px) {
+  .tutor-dashboard .tutor-dashboard-left-menu:not(.is-sidebar-expanded) .tutor-dashboard-left-menu {
+    display: none;
+  }
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu.is-sidebar-expanded ul.tutor-dashboard-permalinks {
+  border-right: none !important;
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu.is-sidebar-expanded ul.tutor-dashboard-permalinks li.active a {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile {
+  display: block;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  padding: 20px;
+  -webkit-box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
+          box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
+  z-index: 9999999;
+}
+
+@media (min-width: 768px) {
+  .tutor-dashboard #tutor-dashboard-footer-mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .tutor-screen-frontend-dashboard {
+    padding-bottom: 90px;
+  }
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a {
+  text-align: center;
+  border-bottom: 5px solid transparent;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: #757C8E;
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a:hover {
+  color: var(--tutor-primary-color);
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a.active {
+  border-bottom: 5px solid var(--tutor-primary-color);
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a, .tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a:hover, .tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a:active, .tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a:focus {
+  text-decoration: none;
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border: none;
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a i {
+  font-size: 21px;
+}
+
+.tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a span {
+  display: block;
+  padding: 7px;
 }
 
 .tutor-dashboard .tutor-dashboard-content {
