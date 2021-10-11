@@ -9883,7 +9883,7 @@ Withdraw Method
   color: #f44337;
 }
 
-.color-text-primary {
+.color-text-primary, .tutor-instructor-list h4.tutor-instructor-name {
   color: #212327;
 }
 
@@ -10003,6 +10003,275 @@ Withdraw Method
   color: #41454f;
 }
 
+.text-thin-h1 {
+  font-weight: 100;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-thin-h2 {
+  font-weight: 100;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-thin-h3 {
+  font-weight: 100;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-thin-h4 {
+  font-weight: 100;
+  font-size: 30px;
+  line-height: 133%;
+}
+
+.text-thin-h5 {
+  font-weight: 100;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-thin-h6 {
+  font-weight: 100;
+  font-size: 20px;
+  line-height: 150%;
+}
+
+.text-thin-body {
+  font-weight: 100;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-thin-caption {
+  font-weight: 100;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-thin-small {
+  font-weight: 100;
+  font-size: 13px;
+  line-height: 138%;
+}
+
+.text-thin-tiny {
+  font-weight: 100;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-regular-h1 {
+  font-weight: 400;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-regular-h2 {
+  font-weight: 400;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-regular-h3 {
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-regular-h4 {
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 133%;
+}
+
+.text-regular-h5 {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-regular-h6 {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 150%;
+}
+
+.text-regular-body {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-regular-caption {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-regular-small, .text-body {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 138%;
+}
+
+.text-regular-tiny {
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-medium-h1 {
+  font-weight: 500;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-medium-h2 {
+  font-weight: 500;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-medium-h3 {
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-medium-h4 {
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 123%;
+}
+
+.text-medium-h5, .tutor-instructor-list h4.tutor-instructor-name {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-medium-h6 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 140%;
+}
+
+.text-medium-body {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-medium-caption, .tutor-instructor-filter .course-category-filter .tutor-form-check label.text-medium-caption {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-medium-small {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 162%;
+}
+
+.text-medium-tiny {
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-bold-h1 {
+  font-weight: 700;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-bold-h2 {
+  font-weight: 700;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-bold-h3 {
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-bold-h4 {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 123%;
+}
+
+.text-bold-h5 {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-bold-h6 {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 150%;
+}
+
+.text-bold-body {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-bold-caption {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-bold-small {
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 162%;
+}
+
+.text-bold-tiny {
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-btn-xlarge {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 178%;
+}
+
+.text-btn-large {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 200%;
+}
+
+.text-btn-medium {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-btn-small {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 123%;
+}
+
+.text-body {
+  font-family: 'SF Pro Display', sans-serif;
+  font-style: normal;
+}
+
 .tutor-instructor-list, .tutor-instructor-list:focus, .tutor-instructor-list:active {
   outline: none;
   cursor: pointer;
@@ -10029,23 +10298,22 @@ Withdraw Method
   height: 60px;
 }
 
-.tutor-instructor-list .tutor-instructor-name {
+.tutor-instructor-list h4.tutor-instructor-name {
   margin: 0;
 }
 
 .tutor-instructor-list .tutor-instructor-course-count {
   margin-bottom: 10px;
-}
-
-.tutor-instructor-list .tutor-instructor-course-count > span {
-  font-style: normal;
+  font-size: 15px !important;
   font-weight: 500;
-  font-size: 15px;
-  color: #161616;
 }
 
-.tutor-instructor-list .tutor-instructor-course-count > span:last-child {
-  color: #808080;
+.tutor-instructor-list .tutor-instructor-course-count .tutor-ins-course-count {
+  color: #212327 !important;
+}
+
+.tutor-instructor-list .tutor-instructor-course-count .tutor-ins-course-text {
+  color: #757C8E !important;
 }
 
 .tutor-instructor-list .tutor-instructor-rating * {
@@ -10102,6 +10370,10 @@ Withdraw Method
 
 .tutor-instructor-list.tutor-instructor-list-pp-top-left .tutor-instructor-cover-photo {
   display: none;
+}
+
+.tutor-instructor-list.tutor-instructor-list-pp-top-left .tutor-instructor-profile-photo {
+  margin-left: 22px;
 }
 
 .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-cover-photo, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-cover-photo {
@@ -10315,6 +10587,31 @@ Withdraw Method
   cursor: ns-resize;
 }
 
+.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle > div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-column-gap: 30px;
+     -moz-column-gap: 30px;
+          column-gap: 30px;
+  border: 1px solid #CDCFD5;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 6px;
+  padding: 30px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-profile-photo img {
+  border-radius: 100%;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
+}
+
 .tutor-instructor-filter .tutor-category-text > span:nth-of-type(1),
 .tutor-instructor-filter .tutor-instructor-rating-title > span:nth-of-type(1) {
   font-style: normal;
@@ -10397,6 +10694,10 @@ Instructor customize filters styles
 .tutor-instructor-filter * {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+}
+
+.tutor-instructor-filter .tutor-instructor-list-pp-left-full .tutor-instructor-profile-photo {
+  height: 100%;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper {
@@ -10511,7 +10812,7 @@ Instructor customize filters styles
   margin: 17px 0 33px 0;
 }
 
-.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more .text-medium-caption {
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more .text-medium-caption, .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more .course-category-filter .tutor-form-check label.text-medium-caption, .tutor-instructor-filter .course-category-filter .tutor-form-check .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more label.text-medium-caption {
   -webkit-display: flex;
   -moz-display: flex;
   -ms-display: flex;
