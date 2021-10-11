@@ -172,7 +172,7 @@ class Shortcode {
 
 		return $output;
 	}
-	
+
 	private function prepare_instructor_list( $current_page, $atts, $cat_ids = array(), $keyword = '' ) {
 
 		$limit         = (int) sanitize_text_field( tutils()->array_get( 'count', $atts, 9 ) );
@@ -238,7 +238,7 @@ class Shortcode {
 		$content = ob_get_clean();
 
 		if ( $show_filter ) {
-			$limit           = 4;
+			$limit           = 8;
 			$course_taxonomy = 'course-category';
 			$course_cats     = $wpdb->get_results(
 				$wpdb->prepare(
@@ -295,8 +295,9 @@ class Shortcode {
 	 */
 	public function show_more() {
 		global $wpdb;
-		$term_id         = (int) sanitize_text_field( $_POST['term_id'] );
-		$limit           = 4;
+		tutor_utils()->checking_nonce();
+		$term_id         = isset( $_POST['term_id'] ) ? sanitize_text_field( $_POST['term_id'] ) : 0;
+		$limit           = 8;
 		$course_taxonomy = 'course-category';
 
 		$remaining_categories = $wpdb->get_var(
@@ -339,6 +340,9 @@ class Shortcode {
 		exit;
 	}
 
+	/**
+	 * Filter instructor
+	 */
 	public function load_filtered_instructor() {
 		tutor_utils()->checking_nonce();
 

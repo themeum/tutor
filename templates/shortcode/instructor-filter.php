@@ -6,10 +6,10 @@
  * @package Instructor list
  */
 
-$category_id        = '';
-$total_categories   = isset( $all_cats ) ? $all_cats : 0;
-$categories         = isset( $categories ) ? $categories : array();
-$limit            = 4;
+$category_id      = '';
+$total_categories = isset( $all_cats ) ? $all_cats : 0;
+$categories       = isset( $categories ) ? $categories : array();
+$limit            = 8;
 $show_more        = false;
 $short_by         = array(
 	'relevant' => __( 'Relevant', 'tutor' ),
@@ -52,7 +52,7 @@ if ( $total_categories && $total_categories > $limit ) {
 				</div>
 				<br/>
 			</div>
-			<div class="course-category-filter <?php esc_attr_e( $show_more ? 'tutor-instructor-plus' : ''); ?>">
+			<div class="course-category-filter <?php esc_attr_e( $show_more ? 'tutor-instructor-plus tutor-show-more-blur' : '' ); ?>">
 				<?php
 				foreach ( $categories as $category ) {
 					$category_id = $category->term_id;
@@ -63,7 +63,7 @@ if ( $total_categories && $total_categories > $limit ) {
 								type="checkbox"
 								class="tutor-form-check-input tutor-form-check-square"
 								name="category"
-								value="<?php esc_attr_e( $category->term_id ); ?>"/>
+								value="<?php esc_attr_e( $category_id ); ?>"/>
 							<label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>" class="color-text-title text-medium-caption">
 							 <?php esc_html_e( $category->name ); ?>
 							</label>
@@ -78,6 +78,7 @@ if ( $total_categories && $total_categories > $limit ) {
 						<i class="ttr ttr-plus-bold-filled color-text-brand"></i>
 						<span class="text-subsued text-medium-caption">
 							<?php esc_html_e( 'Show More', 'tutor' ); ?>
+							<span class="tutor-show-more-loading"></span>
 						</span>
 					</div>
 				</div>
@@ -137,6 +138,7 @@ if ( $total_categories && $total_categories > $limit ) {
 							<i class="tutor-icon-line-cross"></i> <span><?php esc_html_e( 'Clear All', 'tutor' ); ?></span>
 						</span>
 					</div>
+
 					<div>
 					<?php
 					foreach ( $categories as $category ) {
@@ -156,7 +158,19 @@ if ( $total_categories && $total_categories > $limit ) {
 						<?php
 					}
 					?>
+					<?php if ( $show_more ) : ?>
+						<div class="tutor-instructor-category-show-more tutor-mb-25">
+							<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
+								<i class="ttr ttr-plus-bold-filled color-text-brand"></i>
+								<span class="text-subsued text-medium-caption">
+									<?php esc_html_e( 'Show More', 'tutor' ); ?>
+									<span class="tutor-show-more-loading"></span>
+								</span>
+							</div>
+						</div>
+					<?php endif; ?>
 					</div>
+
 					<div>
 						<button class="tutor-btn btn-sm">
 							<?php esc_html_e( 'Apply Filter', 'tutor' ); ?>

@@ -10439,7 +10439,6 @@ Withdraw Method
   .tutor-instructor-filter > div:last-child {
     padding: 0 51px;
     width: calc(100% - 250px);
-    border-left: 1px solid #E3E6EB;
   }
 }
 
@@ -10709,6 +10708,10 @@ Instructor customize filters styles
   border-top: 1px solid #E3E6EB;
 }
 
+.tutor-instructor-filter .tutor-instructor-filter-sidebar {
+  border-right: 1px solid #E3E6EB;
+}
+
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper {
   -webkit-display: flex;
   -moz-display: flex;
@@ -10816,6 +10819,7 @@ Instructor customize filters styles
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper span {
   margin-top: 23px;
+  padding-right: 21px;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more {
@@ -10851,6 +10855,20 @@ Instructor customize filters styles
 
 .tutor-instructor-filter .tutor-instructor-relevant-short-wrapper select {
   border: none !important;
+}
+
+.tutor-instructor-filter .tutor-show-more-blur {
+  position: relative;
+}
+
+.tutor-instructor-filter .tutor-show-more-blur::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 87px;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(1.31%, rgba(255, 255, 255, 0)), color-stop(15.41%, rgba(255, 255, 255, 0)), to(#FFFFFF));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #FFFFFF 100%);
 }
 
 /* Only reusable function, or code allowed here. No direct css please. */

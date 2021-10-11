@@ -2012,18 +2012,22 @@ jQuery(document).ready(function ($) {
      * @sice v2.0.0
      */
     document.querySelector(".tutor-instructor-category-show-more > .text-medium-caption").onclick = (e) => {
+        alert('ok');
         let term_id = e.target.parentNode.dataset.id;
         $.ajax({
             url: window._tutorobject.ajaxurl,
             type: 'POST',
             data: {action: 'show_more', term_id: term_id},
+            beforeSend: function() {
+                document.querySelector(".tutor-show-more-loading").innerHTML = `<img src='${window._tutorobject.loading_icon_url}'>`;
+            },
             success: function(response) {
-                console.log(response);
+                console.log(response)
                 if (response.success && response.data.categories.length) {
                     document.querySelector(".tutor-instructor-category-show-more").style.display = "block";
                     for (let res of response.data.categories) {
                         const wrapper = $(".tutor-instructor-categories-wrapper .course-category-filter");
-                        document.querySelector(".tutor-instructor-categories-wrapper .text-medium-caption").dataset.id = res.term_id;
+                        document.querySelector(".tutor-instructor-category-show-more .text-medium-caption").dataset.id = res.term_id;
                         wrapper.append(
                             `<div class="tutor-form-check tutor-mb-25">
                                 <input
@@ -2042,10 +2046,13 @@ jQuery(document).ready(function ($) {
                 }
                 if (false === response.data.show_more) {
                     document.querySelector(".tutor-instructor-category-show-more").style.display = "none";
+                    if (document.querySelector(".course-category-filter").classList.contains('tutor-show-more-blur')) {
+                        document.querySelector(".course-category-filter").classList.remove("tutor-show-more-blur");
+                    }
                 }
             },
             complete: function() {
-                
+                document.querySelector(".tutor-show-more-loading").innerHTML = ``;
             },
             error: function(err) {
                 alert(err)
