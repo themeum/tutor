@@ -26,6 +26,7 @@ __webpack_require__.r(__webpack_exports__);
 
 document.addEventListener("DOMContentLoaded", function () {
   // Toggle menu in mobile view
+  var $ = window.jQuery;
   $(".tutor-dashboard .tutor-dashboard-menu-toggler").click(function () {
     var el = $(".tutor-dashboard-left-menu");
     el.closest(".tutor-dashboard").toggleClass("is-sidebar-expanded");
@@ -3462,6 +3463,7 @@ jQuery(document).ready(function ($) {
    */
 
   document.querySelector(".tutor-instructor-category-show-more > .text-medium-caption").onclick = function (e) {
+    alert('ok');
     var term_id = e.target.parentNode.dataset.id;
     $.ajax({
       url: window._tutorobject.ajaxurl,
@@ -3469,6 +3471,9 @@ jQuery(document).ready(function ($) {
       data: {
         action: 'show_more',
         term_id: term_id
+      },
+      beforeSend: function beforeSend() {
+        document.querySelector(".tutor-show-more-loading").innerHTML = "<img src='".concat(window._tutorobject.loading_icon_url, "'>");
       },
       success: function success(response) {
         console.log(response);
@@ -3483,7 +3488,7 @@ jQuery(document).ready(function ($) {
             for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
               var res = _step2.value;
               var wrapper = $(".tutor-instructor-categories-wrapper .course-category-filter");
-              document.querySelector(".tutor-instructor-categories-wrapper .text-medium-caption").dataset.id = res.term_id;
+              document.querySelector(".tutor-instructor-category-show-more .text-medium-caption").dataset.id = res.term_id;
               wrapper.append("<div class=\"tutor-form-check tutor-mb-25\">\n                                <input\n                                    id=\"item-a\"\n                                    type=\"checkbox\"\n                                    class=\"tutor-form-check-input tutor-form-check-square\"\n                                    name=\"category\"\n                                    value=\"".concat(res.term_id, "\"/>\n                                <label for=\"item-a\">\n                                    ").concat(res.name, "\n                                </label>\n                            </div>\n                            "));
             }
           } catch (err) {
@@ -3495,9 +3500,15 @@ jQuery(document).ready(function ($) {
 
         if (false === response.data.show_more) {
           document.querySelector(".tutor-instructor-category-show-more").style.display = "none";
+
+          if (document.querySelector(".course-category-filter").classList.contains('tutor-show-more-blur')) {
+            document.querySelector(".course-category-filter").classList.remove("tutor-show-more-blur");
+          }
         }
       },
-      complete: function complete() {},
+      complete: function complete() {
+        document.querySelector(".tutor-show-more-loading").innerHTML = "";
+      },
       error: function error(err) {
         alert(err);
       }
