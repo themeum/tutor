@@ -36,14 +36,11 @@ class RestAPI {
 	private $authorObj;
 
 	private $ratingObj;
-
+	
 	public function __construct() {
 
 		$this->path = plugin_dir_path(TUTOR_FILE);
-		//autoloading clases
-		if (function_exists('__autoload')) {
-			spl_autoload_register('__autoload');
-		}
+		
 		spl_autoload_register(array($this, 'loader'));
 
 
