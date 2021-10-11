@@ -261,10 +261,16 @@ class Utils {
 	}
 
 	public function has_wcs(){
-		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
-		$depends           = array( 'woocommerce-subscriptions/woocommerce-subscriptions.php' );
-		$has_wcs           = count( array_intersect( $depends, $activated_plugins ) ) == count( $depends );
+		$has_wcs = $this->is_plugin_active('woocommerce-subscriptions/woocommerce-subscriptions.php');
 		return $has_wcs;
+	}
+
+	public function is_addon_enabled($basename) {
+		if($this->is_plugin_active('tutor-pro/tutor-pro.php')) {
+			$addonConfig = $this->get_addon_config($basename);
+			
+			return (bool) $this->avalue_dot('is_enable', $addonConfig);
+		}
 	}
 
 	/**
