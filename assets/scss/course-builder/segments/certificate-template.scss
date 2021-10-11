@@ -1,0 +1,218 @@
+// Tutor Certificate Template Tab
+.tutor-certificate-template-tab {
+	max-width: 735px;
+	margin: auto;
+	display: grid;
+
+	.tab-header {
+		justify-self: center;
+		gap: 15px;
+		margin-bottom: 32px;
+		/* color/primary/fill/30 */
+		background: #f6f8fd;
+		border-radius: 5px;
+		padding: 4px;
+
+		&.d-flex {
+			@include valueWithPrefix(display, flex);
+		}
+	}
+
+	.tab-header-item {
+		color: #9ca0ac;
+		font-weight: 500;
+		font-size: 15px;
+		line-height: 160%;
+		/* identical to box height, or 160% */
+		padding: 4px 20px;
+		border-radius: 5px;
+		transition: 200ms linear;
+
+		.item-wrapper {
+			display: flex;
+			align-items: center;
+			gap: 7px;
+
+			.icon {
+				font-size: 24px;
+			}
+		}
+
+		&.is-active {
+			color: #3e64de;
+			background-color: white;
+			box-shadow: 0px 1px 2px rgba(2, 11, 83, 0.2);
+		}
+
+		&:not(.is-active) {
+			img {
+				@include propertyWithPrefix(filter, grayscale(100%));
+				opacity: 0.55;
+			}
+		}
+	}
+} // end /.tutor-certificate-template-tab
+
+.tutor-certificate-template {
+	display: grid;
+	gap: 25px;
+	grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+	grid-template-rows: min-content;
+	position: relative;
+	min-height: 580px;
+	max-height: 944px;
+
+	// &.template-landscape {
+	// 	min-height: 580px;
+	// 	background: rgba(236, 111, 173, 26%);
+	// }
+
+	// &.template-portrait {
+	// 	min-height: 944px;
+	// 	background: rgba(236, 111, 173, 16%);
+	// }
+
+	.tutor-certificate-collapsible {
+		display: none;
+	}
+
+	label.template-radio-field {
+		display: inline-flex;
+		cursor: pointer;
+		position: relative;
+
+		img {
+			max-width: 100%;
+		}
+
+		input[type='radio'] {
+			display: none;
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+
+			&:checked + .icon-wrapper {
+				box-shadow: 0 0 0 2px #3e64de;
+				&::before {
+					opacity: 1;
+					transform: scale(1);
+				}
+			}
+		}
+
+		span.icon-wrapper {
+			box-shadow: 0 0 0 1px #eff1f6;
+			border-radius: 6px;
+			transition: box-shadow 200ms ease;
+			position: relative;
+
+			&::before {
+				content: '';
+				position: absolute;
+				width: 28px;
+				height: 28px;
+				background-size: 25px;
+				background-repeat: no-repeat;
+				background-position: left 2px center;
+				background-image: url("data:image/svg+xml,%3Csvg width='25' height='25' viewBox='0 0 25 25' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.42318 12.9161C6.3686 12.8593 6.32513 12.7929 6.29503 12.7201C6.23499 12.558 6.23499 12.3797 6.29503 12.2175C6.32453 12.1445 6.36807 12.0779 6.42318 12.0215L7.33283 11.1496C7.38636 11.0869 7.45336 11.0371 7.52883 11.0038C7.60148 10.971 7.68026 10.9538 7.76001 10.9536C7.84642 10.9519 7.93217 10.9691 8.01129 11.0038C8.0895 11.0386 8.16031 11.0881 8.21985 11.1496L10.9639 13.8986L16.8539 8.00855C16.9119 7.94744 16.981 7.89797 17.0575 7.8628C17.1368 7.82861 17.2224 7.81149 17.3088 7.81255C17.3898 7.813 17.4698 7.83071 17.5435 7.8645C17.6171 7.8983 17.6827 7.94741 17.7359 8.00855L18.6456 8.89306C18.7007 8.9494 18.7442 9.01598 18.7737 9.08906C18.8338 9.25121 18.8338 9.42949 18.7737 9.59163C18.7436 9.66439 18.7002 9.73087 18.6456 9.78763L11.4061 16.9894C11.3522 17.0523 11.2853 17.1029 11.2101 17.1377C11.0492 17.2041 10.8685 17.2041 10.7076 17.1377C10.6323 17.1029 10.5655 17.0523 10.5116 16.9894L6.42318 12.9161Z' fill='white'/%3E%3C/svg%3E%0A");
+				/* text/brand */
+				background-color: #3e64de;
+				border-radius: 50%;
+				right: -15px;
+				top: -15px;
+				z-index: 1;
+				opacity: 0;
+				transform: scale(1.15);
+				transition: 200ms linear;
+			}
+		}
+
+		.template-item-overlay {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+			gap: 17px;
+			position: absolute;
+			inset: 0;
+
+			background: rgba(255, 255, 255, 0.6);
+			/* stroke/light20 */
+			backdrop-filter: blur(30px);
+			/* Note: backdrop-filter has minimal browser support */
+
+			border-radius: 6px;
+			visibility: hidden;
+			opacity: 0;
+			transition: 200ms linear;
+
+			.tutor-btn {
+				border-radius: 6px;
+				&.tutor-is-outline {
+					background: transparent;
+					color: var(--tutor-primary);
+
+					&:hover {
+						background-color: var(--tutor-primary-hover);
+						border-color: var(--tutor-primary-hover);
+						color: var(--tutor-white);
+					}
+				}
+				opacity: 0;
+				transform: translateY(10px);
+				transition: 200ms linear;
+
+				&:nth-child(1) {
+					transition-delay: 100ms;
+				}
+				&:nth-child(2) {
+					transition-delay: 130ms;
+				}
+			}
+		}
+
+		&:hover {
+			.template-item-overlay {
+				visibility: visible;
+				opacity: 1;
+				.tutor-btn {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+		}
+	}
+
+	.template-load-more {
+		position: absolute;
+		width: 100%;
+		height: 185px;
+		bottom: 0;
+		background: linear-gradient(
+			180deg,
+			rgba(255, 255, 255, 0.0001) 1.31%,
+			rgba(255, 255, 255, 0.74) 15.41%,
+			rgba(255, 255, 255, 0.92) 38.83%,
+			#ffffff 100%
+		);
+		text-align: center;
+		display: grid;
+		place-content: center;
+
+		.load-more-btn {
+			border: none;
+			background: transparent;
+			outline: none;
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			span {
+				font-size: 20px;
+			}
+		}
+
+
+
+
+	}
+} // end /.tutor-certificate-template
