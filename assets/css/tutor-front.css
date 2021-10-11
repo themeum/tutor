@@ -9883,7 +9883,7 @@ Withdraw Method
   color: #f44337;
 }
 
-.color-text-primary, .tutor-instructor-list h4.tutor-instructor-name {
+.color-text-primary, .tutor-instructor-list h4.tutor-instructor-name, .tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle h4 {
   color: #212327;
 }
 
@@ -10147,7 +10147,7 @@ Withdraw Method
   line-height: 123%;
 }
 
-.text-medium-h5, .tutor-instructor-list h4.tutor-instructor-name {
+.text-medium-h5, .tutor-instructor-list h4.tutor-instructor-name, .tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle h4 {
   font-weight: 500;
   font-size: 24px;
   line-height: 142%;
@@ -10302,17 +10302,17 @@ Withdraw Method
   margin: 0;
 }
 
-.tutor-instructor-list .tutor-instructor-course-count {
+.tutor-instructor-list .tutor-instructor-course-count, .tutor-instructor-list .tutor-instructor-left-middle .tutor-instructor-content {
   margin-bottom: 10px;
   font-size: 15px !important;
   font-weight: 500;
 }
 
-.tutor-instructor-list .tutor-instructor-course-count .tutor-ins-course-count {
+.tutor-instructor-list .tutor-instructor-course-count .tutor-ins-course-count, .tutor-instructor-list .tutor-instructor-left-middle .tutor-instructor-content .tutor-ins-course-count {
   color: #212327 !important;
 }
 
-.tutor-instructor-list .tutor-instructor-course-count .tutor-ins-course-text {
+.tutor-instructor-list .tutor-instructor-course-count .tutor-ins-course-text, .tutor-instructor-list .tutor-instructor-left-middle .tutor-instructor-content .tutor-ins-course-text {
   color: #757C8E !important;
 }
 
@@ -10429,7 +10429,6 @@ Withdraw Method
 
 .tutor-instructor-filter > div {
   float: left;
-  padding: 0 5px;
 }
 
 .tutor-instructor-filter > div:first-child {
@@ -10438,8 +10437,9 @@ Withdraw Method
 
 @media (min-width: 768px) {
   .tutor-instructor-filter > div:last-child {
-    padding: 0 15px;
+    padding: 0 51px;
     width: calc(100% - 250px);
+    border-left: 1px solid #E3E6EB;
   }
 }
 
@@ -10587,21 +10587,25 @@ Withdraw Method
   cursor: ns-resize;
 }
 
-.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle > div {
+.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-column-gap: 30px;
-     -moz-column-gap: 30px;
-          column-gap: 30px;
+  -moz-column-gap: 30px;
+  column-gap: 30px;
   border: 1px solid #CDCFD5;
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   border-radius: 6px;
-  padding: 30px;
+  padding: 30px 20px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle h4 {
+  margin: 0;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-profile-photo img {
@@ -10700,6 +10704,11 @@ Instructor customize filters styles
   height: 100%;
 }
 
+.tutor-instructor-filter .tutor-instructor-ratings-wrapper {
+  padding-top: 33px;
+  border-top: 1px solid #E3E6EB;
+}
+
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper {
   -webkit-display: flex;
   -moz-display: flex;
@@ -10748,6 +10757,7 @@ Instructor customize filters styles
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-customize-clear {
+  padding-right: 22px;
   -webkit-display: flex;
   -moz-display: flex;
   -ms-display: flex;
