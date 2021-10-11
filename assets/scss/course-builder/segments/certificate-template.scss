@@ -75,7 +75,7 @@
 	.tutor-certificate-collapsible {
 		display: none;
 	}
-	
+
 	label.template-radio-field {
 		display: inline-flex;
 		cursor: pointer;
@@ -86,6 +86,7 @@
 		}
 
 		input[type='radio'] {
+			display: none;
 			appearance: none;
 			-moz-appearance: none;
 			-webkit-appearance: none;

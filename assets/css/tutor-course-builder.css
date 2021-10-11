@@ -971,6 +971,7 @@ body.tutor-screen-course-builder .tutor-certificate-template label.template-radi
 }
 
 body.tutor-screen-course-builder .tutor-certificate-template label.template-radio-field input[type='radio'] {
+  display: none;
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -1544,5 +1545,3 @@ body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #tut
   margin: 0;
   padding: 15px;
 }
-
-/*# sourceMappingURL=tutor-course-builder.css.map */
