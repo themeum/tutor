@@ -9255,6 +9255,8 @@ Withdraw Method
 
 .tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-rating-container .rating-digits {
   color: white;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-rating-container .rating-total-meta {
