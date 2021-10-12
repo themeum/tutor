@@ -724,18 +724,33 @@ if ( ! function_exists( 'pr' ) ) {
 	}
 }
 
-if ( ! function_exists( 'vr' ) ) {
+if ( ! function_exists( 'vd' ) ) {
 	/**
 	 * Function to var_dump
 	 *
 	 * @param  array $var .
 	 * @return array
 	 */
-	function vr( $var ) {
+	function vd( $var ) {
 		$template = PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg' ? '<pre class="pr">%s</pre>' : "\n%s\n\n";
 		printf( $template, trim( var_dump( $var, true ) ) );
 
 		return $var;
+	}
+}
+
+
+
+if ( ! function_exists( 'get_request' ) ) {
+	/**
+	 * Function to get_request
+	 *
+	 * @param  array $var .
+	 * @return array
+	 */
+	function get_request( $var ) {
+		return isset( $_REQUEST[ $var ] ) ? sanitize_text_field( $_REQUEST[ $var ] ) : false;
+
 	}
 }
 

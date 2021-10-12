@@ -1513,25 +1513,6 @@ jQuery(document).ready(function ($) {
         $content.slideToggle(100);
     })
 
-
-    //$(document).on('click', '.tutor-copy-link', function (e) {
-    $('.tutor-copy-link').click(function (e) {
-        var $btn = $(this);
-        var copy = '<i class="tutor-icon-copy"></i> Copy Link';
-        var copied = '<i class="tutor-icon-mark"></i> Copied';
-        var dummy = document.createElement('input'),
-            text = window.location.href;
-        document.body.appendChild(dummy);
-        dummy.value = text;
-        dummy.select();
-        document.execCommand('copy');
-        document.body.removeChild(dummy);
-        $btn.html(copied);
-        setTimeout(function () {
-            $btn.html(copy);
-        }, 2500);
-    });
-    
     $(document).on('click', function (e) {
         var container = $(".tutor-dropdown");
         var $content = container.find('.tutor-dropdown-content');
@@ -1540,7 +1521,6 @@ jQuery(document).ready(function ($) {
             $content.slideUp(100);
         }
     });
-
 
     /**
      * Tutor ajax login

@@ -21,143 +21,147 @@ table.tutor-ui-table {
 	$radius: 6px;
 	border-collapse: separate;
 	border-spacing: 0;
-	min-width: 350px;
 	width: 100%;
-	max-width: 825px;
+	// max-width: 825px;
 
-	tr:first-child {
-		/* top-left border-radius */
-		th:first-child {
-			border-top-left-radius: $radius;
-		}
-		/* top-right border-radius */
-		th:last-child {
-			border-top-right-radius: $radius;
-		}
-	}
-
-	tr:last-child {
-		/* bottom-left border-radius */
-		td:first-child {
-			border-bottom-left-radius: $radius;
-		}
-		/* bottom-right border-radius */
-		td:last-child {
-			border-bottom-right-radius: $radius;
-		}
-	}
-
-	tr {
-		&:last-child td {
-			border-bottom: 1px solid #cdcfd5;
-		}
-		&:nth-child(even) td {
-			background-color: rgba(239, 241, 247, 0.3);
-		}
-	}
-
-	th,
-	td {
-		border-top: 1px solid #cdcfd5;
-
-		// min-width: calc(100% / var(--column-count));
-
-		&:first-child {
-			border-left: 1px solid #cdcfd5;
-			padding-left: 20px;
-		}
-
-		&:last-child {
-			border-right: 1px solid #cdcfd5;
-			padding-right: 20px;
-		}
-	}
-
-	th {
-		background: #eff1f7;
-		text-align: left;
-		padding: 15px 10px;
-	}
-
-	td {
-		padding: 17px 10px;
-	}
-
-	.tutor-shrink {
-		width: 1px;
-		white-space: nowrap;
-	}
-
-	// Table Variations
-	&.table-courses {
-		th,
-		td {
-			&:nth-child(1) {
-				width: 53.8%;
+	@include breakpoint-min(desktop) {
+		tr:first-child {
+			/* top-left border-radius */
+			th:first-child {
+				border-top-left-radius: $radius;
+			}
+			/* top-right border-radius */
+			th:last-child {
+				border-top-right-radius: $radius;
 			}
 		}
-	}
 
-	&.table-popular-courses {
-		th,
-		td {
-			&:nth-child(1) {
-				width: 60.6%;
+		tr:last-child {
+			/* bottom-left border-radius */
+			td:first-child {
+				border-bottom-left-radius: $radius;
+			}
+			/* bottom-right border-radius */
+			td:last-child {
+				border-bottom-right-radius: $radius;
 			}
 		}
-	}
 
-	&.table-reviews {
-		th,
-		td {
-			@extend .v-align-top;
-			&:nth-child(1) {
-				width: 26.8%;
+		tr {
+			&:last-child td {
+				border-bottom: 1px solid #cdcfd5;
 			}
-			&:nth-child(3) {
-				width: 53.3%;
+			&:nth-child(even) td {
+				background-color: rgba(239, 241, 247, 0.3);
 			}
 		}
-	}
 
-	&.table-all-courses {
 		th,
 		td {
-			@extend .v-align-middle;
-			&:nth-child(1) {
-				width: 50.6%;
-			}
-		}
-	}
+			border-top: 1px solid #cdcfd5;
 
-	&.table-students {
-		th,
-		td {
-			&:nth-child(1) {
-				width: 43.6%;
-			}
-		}
-	}
+			// min-width: calc(100% / var(--column-count));
 
-	&.table-course-overview {
-		th,
-		td {
 			&:first-child {
-				@extend .v-align-top;
+				border-left: 1px solid #cdcfd5;
+				padding-left: 20px;
 			}
+
 			&:last-child {
-				width: fit-content;
-				text-align: right;
+				border-right: 1px solid #cdcfd5;
+				padding-right: 20px;
 			}
-			&:nth-last-child(2) {
-				padding-left: 0px;
-				padding-right: 0px;
+		}
+
+		th {
+			background: rgba(239, 241, 247, 0.8);
+			text-align: left;
+			padding: 15px 10px;
+		}
+
+		td {
+			padding: 17px 10px;
+		}
+
+		.tutor-shrink {
+			width: 1px;
+			white-space: nowrap;
+		}
+
+		// Table Variations
+		&.table-courses {
+			th,
+			td {
+				&:nth-child(1) {
+					width: 53.8%;
+				}
 			}
-			&:nth-child(1) {
-				width: 16.2%;
+		}
+
+		&.table-popular-courses {
+			th,
+			td {
+				&:nth-child(1) {
+					width: 60.6%;
+				}
 			}
-			&:nth-child(2) {
-				width: 55%;
+		}
+
+		&.table-reviews {
+			th,
+			td {
+				// @extend .v-align-top;
+				vertical-align: top;
+				&:nth-child(1) {
+					width: 26.8%;
+				}
+				&:nth-child(3) {
+					width: 53.3%;
+				}
+			}
+		}
+
+		&.table-all-courses {
+			th,
+			td {
+				// @extend .v-align-middle;
+				vertical-align: middle;
+				&:nth-child(1) {
+					width: 50.6%;
+				}
+			}
+		}
+
+		&.table-students {
+			th,
+			td {
+				&:nth-child(1) {
+					width: 43.6%;
+				}
+			}
+		}
+
+		&.table-course-overview {
+			th,
+			td {
+				&:first-child {
+					// @extend .v-align-top;
+					vertical-align: top;
+				}
+				&:last-child {
+					width: fit-content;
+					text-align: right;
+				}
+				&:nth-last-child(2) {
+					padding-left: 0px;
+					padding-right: 0px;
+				}
+				&:nth-child(1) {
+					width: 16.2%;
+				}
+				&:nth-child(2) {
+					width: 55%;
+				}
 			}
 		}
 	}
@@ -287,6 +291,105 @@ table.tutor-ui-table {
 		}
 		.progress-text {
 			margin-left: 10px;
+		}
+	}
+}
+
+table.tutor-ui-table {
+	/*
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
+	@media only screen and (max-width: 991px), (min-device-width: 992px) and (max-device-width: 1024px) {
+		/* Force table to not be like tables anymore */
+		table,
+		thead,
+		tbody,
+		th,
+		td,
+		tr {
+			display: block;
+		}
+
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr {
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+
+		tr {
+			&:not(:last-child) {
+				margin-bottom: 22px;
+			}
+			td {
+				word-break: break-word;
+				&:last-child {
+					border-bottom: 1px solid #cdcfd5;
+					border-bottom-left-radius: 6px;
+					border-bottom-right-radius: 6px;
+				}
+				&:first-child {
+					border-top-left-radius: 6px;
+					border-top-right-radius: 6px;
+				}
+
+				&:nth-child(odd) {
+					background: rgb(255, 255, 255);
+				}
+
+				&:nth-child(even) {
+					background: rgba(239, 241, 247, 0.3);
+				}
+			}
+		}
+
+		td {
+			/* Behave  like a "row" */
+			border: none;
+			border-radius: 0;
+			position: relative;
+			padding: 10px;
+
+			width: unset;
+			text-align: left;
+
+			border-top: 1px solid #cdcfd5;
+			border-left: 1px solid #cdcfd5;
+			border-right: 1px solid #cdcfd5;
+
+			display: flex;
+
+			&.column-fullwidth {
+				padding: 15px 20px;
+			}
+
+			&:not(.column-fullwidth) {
+				padding-left: 40%;
+
+				&:before {
+					/* Now like a table header */
+					position: absolute;
+					/* Top/left values mimic padding */
+					top: 0;
+					left: 0;
+					width: 35%;
+					padding-left: 20px;
+					padding-right: 10px;
+					white-space: nowrap;
+
+					/* Label the data You could also use a data-* attribute and content for this. That way "bloats" the HTML,this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow. */
+
+					content: attr(data-th);
+					height: 100%;
+					display: flex;
+					align-items: center;
+
+					font-weight: 400;
+					font-size: 13px;
+					line-height: 138%;
+					color: $text-subsued;
+				}
+			}
 		}
 	}
 }

@@ -165,7 +165,7 @@ $the_query = new WP_Query($args);
 
     echo paginate_links(array(
         'base'      => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
-        'format'    => '?paged=%#%',
+        'format'    => '?current_page=%#%',
         'current'   => $paged,
         'total'     => $the_query->max_num_pages
     ));
