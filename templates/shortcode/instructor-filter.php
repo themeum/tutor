@@ -130,7 +130,8 @@ if ( $total_categories && $total_categories > $limit ) {
 				<i class="tutor-icon-filter-tool-black-shape"></i>
 			</div>
 			<div class="mobile-filter-popup">
-				<div>
+
+				<div class="tutor-instructor-categories-wrapper" style="overflow-y: auto;">
 					<div class="tutor-category-text">
 						<div class="expand-instructor-filter"></div>
 						<span>Category</span>
@@ -139,38 +140,37 @@ if ( $total_categories && $total_categories > $limit ) {
 						</span>
 					</div>
 
-					<div>
-					<?php
-					foreach ( $categories as $category ) {
-						$category_id = $category->term_id;
-						?>
-						<div class="tutor-form-check tutor-mb-25">
-							<input
-								id="tutor-instructor-checkbox-id-<?php esc_attr_e( $category_id ); ?>"
-								type="checkbox"
-								class="tutor-form-check-input tutor-form-check-square"
-								name="category"
-								value="<?php esc_attr_e( $category->term_id ); ?>"/>
-							<label for="tutor-instructor-checkbox-id-<?php esc_attr_e( $category_id ); ?>">
-								 <?php esc_html_e( $category->name ); ?>
-							</label>
-						</div>
+					<div class="course-category-filter">
 						<?php
-					}
-					?>
-					<?php if ( $show_more ) : ?>
-						<div class="tutor-instructor-category-show-more tutor-mb-25">
-							<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
-								<i class="ttr ttr-plus-bold-filled color-text-brand"></i>
-								<span class="text-subsued text-medium-caption">
-									<?php esc_html_e( 'Show More', 'tutor' ); ?>
-									<span class="tutor-show-more-loading"></span>
-								</span>
+						foreach ( $categories as $category ) {
+							$category_id = $category->term_id;
+							?>
+							<div class="tutor-form-check tutor-mb-25">
+								<input
+									id="tutor-instructor-checkbox-id-<?php esc_attr_e( $category_id ); ?>"
+									type="checkbox"
+									class="tutor-form-check-input tutor-form-check-square"
+									name="category"
+									value="<?php esc_attr_e( $category->term_id ); ?>"/>
+								<label for="tutor-instructor-checkbox-id-<?php esc_attr_e( $category_id ); ?>">
+									<?php esc_html_e( $category->name ); ?>
+								</label>
 							</div>
-						</div>
-					<?php endif; ?>
+							<?php
+						}
+						?>
 					</div>
-
+					<?php if ( $show_more ) : ?>
+					<div class="tutor-instructor-category-show-more tutor-mb-25">
+						<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
+							<i class="ttr ttr-plus-bold-filled color-text-brand"></i>
+							<span class="text-subsued text-medium-caption">
+								<?php esc_html_e( 'Show More', 'tutor' ); ?>
+								<span class="tutor-show-more-loading"></span>
+							</span>
+						</div>
+					</div>
+					<?php endif; ?>
 					<div>
 						<button class="tutor-btn btn-sm">
 							<?php esc_html_e( 'Apply Filter', 'tutor' ); ?>
