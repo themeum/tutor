@@ -157,9 +157,8 @@ class Assets{
 			}
 		}
 		//End: chart data
-		if (tutor_utils()->get_option('load_tutor_css')){
-			wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front{$suffix}.css", array(), tutor()->version);
-		}
+		
+		wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front{$suffix}.css", array(), tutor()->version);
 		
 		/**
 		 * dependency wp-i18n added for 
