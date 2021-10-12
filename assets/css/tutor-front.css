@@ -10498,6 +10498,12 @@ Withdraw Method
   }
 }
 
+.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup .tutor-instructor-category-show-more {
+  position: absolute;
+  top: 80%;
+  left: 15px;
+}
+
 .tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup,
 .tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div {
   position: fixed;
@@ -10520,15 +10526,25 @@ Withdraw Method
   background: white;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  height: 70%;
+  height: 80%;
   overflow: hidden;
 }
 
-.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div > div:first-child, .tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div > div:last-child {
+.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div > div:first-child {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
+  padding: 18px;
+  background: white;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div > div:last-child {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 91%;
   padding: 18px;
   background: white;
 }

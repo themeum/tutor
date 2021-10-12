@@ -605,7 +605,7 @@ msgstr ""
 msgid "Couldn't create lesson."
 msgstr ""
 
-#: classes/Lesson.php:271, classes/Options.php:224, classes/Options_V2.php:382, classes/Options_V2.php:722, classes/Options_V2.php:1036, classes/Question_Answers_List.php:75, classes/Quiz_Attempts_List.php:115, classes/Tutor_Setup.php:562, templates/student-public-profile.php:106, templates/dashboard/question-answer.php:28, templates/shortcode/tutor-instructor.php:40, templates/shortcode/tutor-instructor.php:28, views/pages/view_attempt.php:73, templates/dashboard/announcements/details.php:19, templates/dashboard/assignments/review.php:44, templates/dashboard/assignments/submitted.php:30, templates/single/quiz/top.php:27
+#: classes/Lesson.php:271, classes/Options.php:224, classes/Options_V2.php:382, classes/Options_V2.php:722, classes/Options_V2.php:1036, classes/Question_Answers_List.php:75, classes/Quiz_Attempts_List.php:115, classes/Tutor_Setup.php:562, templates/student-public-profile.php:106, templates/dashboard/question-answer.php:28, templates/shortcode/tutor-instructor.php:41, templates/shortcode/tutor-instructor.php:28, views/pages/view_attempt.php:73, templates/dashboard/announcements/details.php:19, templates/dashboard/assignments/review.php:44, templates/dashboard/assignments/submitted.php:30, templates/single/quiz/top.php:27
 msgid "Course"
 msgstr ""
 
@@ -1667,7 +1667,7 @@ msgstr ""
 msgid "View Course"
 msgstr ""
 
-#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/dashboard.php:227, templates/student-public-profile.php:106, templates/student-public-profile.php:167, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:40, templates/shortcode/tutor-instructor.php:28, views/pages/announcements.php:59, templates/single/course/instructors.php:72
+#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/dashboard.php:227, templates/student-public-profile.php:106, templates/student-public-profile.php:167, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:41, templates/shortcode/tutor-instructor.php:28, views/pages/announcements.php:59, templates/single/course/instructors.php:72
 msgid "Courses"
 msgstr ""
 
@@ -2592,7 +2592,7 @@ msgstr ""
 msgid "EXPLORE ADDONS"
 msgstr ""
 
-#: classes/Tutor_Setup.php:615, classes/Tutor_Setup.php:726, templates/shortcode/tutor-instructor.php:59
+#: classes/Tutor_Setup.php:615, classes/Tutor_Setup.php:726, templates/shortcode/tutor-instructor.php:61
 msgid "Previous"
 msgstr ""
 
@@ -2600,7 +2600,7 @@ msgstr ""
 msgid "Skip This Step"
 msgstr ""
 
-#: classes/Tutor_Setup.php:623, classes/Tutor_Setup.php:730, templates/shortcode/tutor-instructor.php:60
+#: classes/Tutor_Setup.php:623, classes/Tutor_Setup.php:730, templates/shortcode/tutor-instructor.php:62
 msgid "Next"
 msgstr ""
 
@@ -3850,27 +3850,27 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:80
+#: templates/shortcode/instructor-filter.php:80, templates/shortcode/instructor-filter.php:169
 msgid "Show More"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:89
+#: templates/shortcode/instructor-filter.php:90
 msgid "Ratings"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:106, templates/shortcode/instructor-filter.php:127
+#: templates/shortcode/instructor-filter.php:107, templates/shortcode/instructor-filter.php:128
 msgid "Search any instructor..."
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:137
+#: templates/shortcode/instructor-filter.php:140
 msgid "Clear All"
 msgstr ""
 
-#: templates/shortcode/instructor-filter.php:162
+#: templates/shortcode/instructor-filter.php:177
 msgid "Apply Filter"
 msgstr ""
 
-#: templates/shortcode/tutor-instructor.php:47
+#: templates/shortcode/tutor-instructor.php:49
 msgid "No instructor found"
 msgstr ""
 

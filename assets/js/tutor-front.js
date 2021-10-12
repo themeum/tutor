@@ -3452,74 +3452,65 @@ jQuery(document).ready(function ($) {
       e.stopImmediatePropagation();
     }).on('click', '.mobile-filter-popup', function (e) {
       $(this).removeClass('is-opened');
-      ;
+    }).on('click', '.tutor-instructor-category-show-more > .text-medium-caption', function (e) {
+      var term_id = e.target.parentNode.dataset.id;
+      console.log(e.target.tagName);
+      console.log(term_id);
+      $.ajax({
+        url: window._tutorobject.ajaxurl,
+        type: 'POST',
+        data: {
+          action: 'show_more',
+          term_id: term_id
+        },
+        beforeSend: function beforeSend() {
+          $(".tutor-show-more-loading").html("<img src='".concat(window._tutorobject.loading_icon_url, "'>"));
+        },
+        success: function success(response) {
+          console.log(response);
+
+          if (response.success && response.data.categories.length) {
+            $(".tutor-instructor-category-show-more").css("display", "block");
+
+            var _iterator2 = _createForOfIteratorHelper(response.data.categories),
+                _step2;
+
+            try {
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                var res = _step2.value;
+                var wrapper = $(".tutor-instructor-categories-wrapper .course-category-filter");
+                $(".tutor-instructor-category-show-more .text-medium-caption").attr('data-id', res.term_id);
+                wrapper.append("<div class=\"tutor-form-check tutor-mb-25\">\n                                    <input\n                                        id=\"item-a\"\n                                        type=\"checkbox\"\n                                        class=\"tutor-form-check-input tutor-form-check-square\"\n                                        name=\"category\"\n                                        value=\"".concat(res.term_id, "\"/>\n                                    <label for=\"item-a\">\n                                        ").concat(res.name, "\n                                    </label>\n                                </div>\n                                "));
+              }
+            } catch (err) {
+              _iterator2.e(err);
+            } finally {
+              _iterator2.f();
+            }
+          }
+
+          if (false === response.data.show_more) {
+            $(".tutor-instructor-category-show-more").css("display", "none");
+
+            if (document.querySelector(".course-category-filter").classList.contains('tutor-show-more-blur')) {
+              document.querySelector(".course-category-filter").classList.remove("tutor-show-more-blur");
+            }
+          }
+        },
+        complete: function complete() {
+          $(".tutor-show-more-loading").html("");
+        },
+        error: function error(err) {
+          alert(err);
+        }
+      });
     });
   });
-  /**
-   * Load more categories instructor list
-   * 
-   * @package Instructor List
-   * @sice v2.0.0
-   */
-
-  document.querySelector(".tutor-instructor-category-show-more > .text-medium-caption").onclick = function (e) {
-    alert('ok');
-    var term_id = e.target.parentNode.dataset.id;
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: {
-        action: 'show_more',
-        term_id: term_id
-      },
-      beforeSend: function beforeSend() {
-        document.querySelector(".tutor-show-more-loading").innerHTML = "<img src='".concat(window._tutorobject.loading_icon_url, "'>");
-      },
-      success: function success(response) {
-        console.log(response);
-
-        if (response.success && response.data.categories.length) {
-          document.querySelector(".tutor-instructor-category-show-more").style.display = "block";
-
-          var _iterator2 = _createForOfIteratorHelper(response.data.categories),
-              _step2;
-
-          try {
-            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-              var res = _step2.value;
-              var wrapper = $(".tutor-instructor-categories-wrapper .course-category-filter");
-              document.querySelector(".tutor-instructor-category-show-more .text-medium-caption").dataset.id = res.term_id;
-              wrapper.append("<div class=\"tutor-form-check tutor-mb-25\">\n                                <input\n                                    id=\"item-a\"\n                                    type=\"checkbox\"\n                                    class=\"tutor-form-check-input tutor-form-check-square\"\n                                    name=\"category\"\n                                    value=\"".concat(res.term_id, "\"/>\n                                <label for=\"item-a\">\n                                    ").concat(res.name, "\n                                </label>\n                            </div>\n                            "));
-            }
-          } catch (err) {
-            _iterator2.e(err);
-          } finally {
-            _iterator2.f();
-          }
-        }
-
-        if (false === response.data.show_more) {
-          document.querySelector(".tutor-instructor-category-show-more").style.display = "none";
-
-          if (document.querySelector(".course-category-filter").classList.contains('tutor-show-more-blur')) {
-            document.querySelector(".course-category-filter").classList.remove("tutor-show-more-blur");
-          }
-        }
-      },
-      complete: function complete() {
-        document.querySelector(".tutor-show-more-loading").innerHTML = "";
-      },
-      error: function error(err) {
-        alert(err);
-      }
-    });
-  };
   /**
    * Show start active as per click
    * 
    * @since v2.0.0
    */
-
 
   var stars = document.querySelectorAll(".tutor-instructor-ratings i");
   var rating_range = document.querySelector(".tutor-instructor-rating-filter");
