@@ -181,7 +181,7 @@ class Utils {
 				$student_id
 			) );
 
-			if ($user) {
+			if ( $user ) {
 				$user_name = $user->user_nicename;
 			}
 
