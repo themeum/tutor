@@ -28,6 +28,12 @@ class Rewrite_Rules extends Tutor_Base {
 		$vars[] = 'tutor_dashboard_page';
 		$vars[] = 'tutor_dashboard_sub_page';
 
+		/**
+		 * If public_profile_layout is not private then
+		 * add rewrite rules
+		 *
+		 * @since v2.0.0
+		 */
 		$enable_public_profile = tutor_utils()->get_option( 'public_profile_layout' );
 		if ( 'private' !== $enable_public_profile ) {
 			$vars[] = 'tutor_student_username';
