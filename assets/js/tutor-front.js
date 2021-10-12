@@ -65,6 +65,276 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 
+/***/ "./assets/react/front/pages/instructor-list-filter.js":
+/*!************************************************************!*\
+  !*** ./assets/react/front/pages/instructor-list-filter.js ***!
+  \************************************************************/
+/***/ (() => {
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+jQuery(document).ready(function ($) {
+  /**
+   * 
+   * Instructor list filter
+   * 
+   * @since  v.1.8.4
+  */
+  // Get values on course category selection
+  $('.tutor-instructor-filter').each(function () {
+    var root = $(this);
+    var filter_args = {};
+    var time_out;
+
+    function run_instructor_filter(name, value, page_number) {
+      // Prepare http payload
+      var result_container = root.find('.filter-result-container');
+      var html_cache = result_container.html();
+      var attributes = root.data();
+      attributes.current_page = page_number || 1;
+      name ? filter_args[name] = value : filter_args = {};
+      filter_args.attributes = attributes;
+      filter_args.action = 'load_filtered_instructor'; // Show loading icon
+
+      result_container.html('<div style="text-align:center"><img src="' + window._tutorobject.loading_icon_url + '"/></div>');
+      $.ajax({
+        url: window._tutorobject.ajaxurl,
+        data: filter_args,
+        type: 'POST',
+        success: function success(r) {
+          result_container.html(r);
+        },
+        error: function error() {
+          result_container.html(html_cache);
+          tutor_toast('Failed', 'Request Error', 'error');
+        }
+      });
+    }
+
+    root.on('change', '.course-category-filter [type="checkbox"]', function () {
+      var values = {};
+      $(this).closest('.course-category-filter').find('input:checked').each(function () {
+        values[$(this).val()] = $(this).parent().text();
+      }); // Show selected cat list
+
+      var cat_parent = root.find('.selected-cate-list').empty();
+      var cat_ids = Object.keys(values);
+      cat_ids.forEach(function (value) {
+        cat_parent.append('<span>' + values[value] + ' <span class="tutor-icon-line-cross" data-cat_id="' + value + '"></span></span>');
+      });
+      cat_ids.length ? cat_parent.append('<span data-cat_id="0">Clear All</span>') : 0;
+      run_instructor_filter($(this).attr('name'), cat_ids);
+    }).on('click', '.tutor-instructor-ratings i', function (e) {
+      var rating = e.target.dataset.value;
+      run_instructor_filter('rating_filter', rating);
+    }).on('change', "#tutor-instructor-relevant-sort", function (e) {
+      var short_by = e.target.value;
+      run_instructor_filter('short_by', short_by);
+    }).on('click', '.selected-cate-list [data-cat_id]', function () {
+      var id = $(this).data('cat_id');
+      var inputs = root.find('.mobile-filter-popup [type="checkbox"]');
+      id ? inputs = inputs.filter('[value="' + id + '"]') : 0;
+      inputs.prop('checked', false).trigger('change');
+    }).on('input', '.filter-pc [name="keyword"]', function () {
+      // Get values on search keyword change
+      var val = $(this).val();
+      time_out ? window.clearTimeout(time_out) : 0;
+      time_out = window.setTimeout(function () {
+        run_instructor_filter('keyword', val);
+        time_out = null;
+      }, 500);
+    }).on('click', '[data-page_number]', function (e) {
+      // On pagination click
+      e.preventDefault();
+      run_instructor_filter(null, null, $(this).data('page_number'));
+    }).on('click', '.clear-instructor-filter', function () {
+      // Clear filter
+      var root = $(this).closest('.tutor-instructor-filter');
+      root.find('input[type="checkbox"]').prop('checked', false);
+      root.find('[name="keyword"]').val('');
+      var stars = document.querySelectorAll(".tutor-instructor-ratings i"); //remove star selection
+
+      var _iterator = _createForOfIteratorHelper(stars),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var star = _step.value;
+
+          if (star.classList.contains('active')) {
+            star.classList.remove('active');
+          }
+
+          if (star.classList.contains('ttr-star-full-filled')) {
+            star.classList.remove('ttr-star-full-filled');
+            star.classList.add('ttr-star-line-filled');
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      rating_range.innerHTML = "";
+      run_instructor_filter();
+    }).on('click', '.mobile-filter-container i', function () {
+      // Open mobile screen filter
+      $(this).parent().next().addClass('is-opened');
+    }).on('click', '.mobile-filter-popup button', function () {
+      $('.mobile-filter-popup [type="checkbox"]').trigger('change'); // Close mobile screen filter
+
+      $(this).closest('.mobile-filter-popup').removeClass('is-opened');
+    }).on('input', '.filter-mobile [name="keyword"]', function () {
+      // Sync keyword with two screen
+      root.find('.filter-pc [name="keyword"]').val($(this).val()).trigger('input');
+    }).on('change', '.mobile-filter-popup [type="checkbox"]', function (e) {
+      if (e.originalEvent) {
+        return;
+      } // Sync category with two screen
+
+
+      var name = $(this).attr('name');
+      var val = $(this).val();
+      var checked = $(this).prop('checked');
+      root.find('.course-category-filter [name="' + name + '"]').filter('[value="' + val + '"]').prop('checked', checked).trigger('change');
+    }).on('mousedown touchstart', '.expand-instructor-filter', function (e) {
+      var window_height = $(window).height();
+      var el = root.find('.mobile-filter-popup>div');
+      var el_top = window_height - el.height();
+      var plus = ((e.originalEvent.touches || [])[0] || e).clientY - el_top;
+      root.on('mousemove touchmove', function (e) {
+        var y = ((e.originalEvent.touches || [])[0] || e).clientY;
+        var height = window_height - y + plus;
+        height > 200 && height <= window_height ? el.css('height', height + 'px') : 0;
+      });
+    }).on('mouseup touchend', function () {
+      root.off('mousemove touchmove');
+    }).on('click', '.mobile-filter-popup>div', function (e) {
+      e.stopImmediatePropagation();
+    }).on('click', '.mobile-filter-popup', function (e) {
+      $(this).removeClass('is-opened');
+    }).on('click', '.tutor-instructor-category-show-more > .text-medium-caption', function (e) {
+      //show more @since v2.0.0
+      var term_id = e.target.parentNode.dataset.id;
+      console.log(e.target.tagName);
+      console.log(term_id);
+      $.ajax({
+        url: window._tutorobject.ajaxurl,
+        type: 'POST',
+        data: {
+          action: 'show_more',
+          term_id: term_id
+        },
+        beforeSend: function beforeSend() {
+          $(".tutor-show-more-loading").html("<img src='".concat(window._tutorobject.loading_icon_url, "'>"));
+        },
+        success: function success(response) {
+          console.log(response);
+
+          if (response.success && response.data.categories.length) {
+            $(".tutor-instructor-category-show-more").css("display", "block");
+
+            var _iterator2 = _createForOfIteratorHelper(response.data.categories),
+                _step2;
+
+            try {
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                var res = _step2.value;
+                var wrapper = $(".tutor-instructor-categories-wrapper .course-category-filter");
+                $(".tutor-instructor-category-show-more .text-medium-caption").attr('data-id', res.term_id);
+                wrapper.append("<div class=\"tutor-form-check tutor-mb-25\">\n                                    <input\n                                        id=\"item-a\"\n                                        type=\"checkbox\"\n                                        class=\"tutor-form-check-input tutor-form-check-square\"\n                                        name=\"category\"\n                                        value=\"".concat(res.term_id, "\"/>\n                                    <label for=\"item-a\">\n                                        ").concat(res.name, "\n                                    </label>\n                                </div>\n                                "));
+              }
+            } catch (err) {
+              _iterator2.e(err);
+            } finally {
+              _iterator2.f();
+            }
+          }
+
+          if (false === response.data.show_more) {
+            $(".tutor-instructor-category-show-more").css("display", "none");
+
+            if (document.querySelector(".course-category-filter").classList.contains('tutor-show-more-blur')) {
+              document.querySelector(".course-category-filter").classList.remove("tutor-show-more-blur");
+            }
+          }
+        },
+        complete: function complete() {
+          $(".tutor-show-more-loading").html("");
+        },
+        error: function error(err) {
+          alert(err);
+        }
+      });
+    });
+  });
+  /**
+   * Show start active as per click
+   * 
+   * @since v2.0.0
+   */
+
+  var stars = document.querySelectorAll(".tutor-instructor-ratings i");
+  var rating_range = document.querySelector(".tutor-instructor-rating-filter");
+
+  var _iterator3 = _createForOfIteratorHelper(stars),
+      _step3;
+
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var star = _step3.value;
+
+      star.onclick = function (e) {
+        //remove active if has
+        var _iterator4 = _createForOfIteratorHelper(stars),
+            _step4;
+
+        try {
+          for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+            var _star = _step4.value;
+
+            if (_star.classList.contains('active')) {
+              _star.classList.remove('active');
+            }
+
+            if (_star.classList.contains('ttr-star-full-filled')) {
+              _star.classList.remove('ttr-star-full-filled');
+
+              _star.classList.add('ttr-star-line-filled');
+            }
+          } //show stars active as click
+
+        } catch (err) {
+          _iterator4.e(err);
+        } finally {
+          _iterator4.f();
+        }
+
+        var length = e.target.dataset.value;
+
+        for (var i = 0; i < length; i++) {
+          stars[i].classList.add('active');
+          stars[i].classList.remove('ttr-star-line-filled');
+          stars[i].classList.add('ttr-star-full-filled');
+        }
+
+        rating_range.innerHTML = "0.0 - ".concat(length, ".0");
+      };
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+});
+
+/***/ }),
+
 /***/ "./assets/react/lib/common.js":
 /*!************************************!*\
   !*** ./assets/react/lib/common.js ***!
@@ -1497,11 +1767,8 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/common */ "./assets/react/lib/common.js");
 /* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard */ "./assets/react/front/dashboard.js");
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+/* harmony import */ var _pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/instructor-list-filter */ "./assets/react/front/pages/instructor-list-filter.js");
+/* harmony import */ var _pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
@@ -3312,264 +3579,10 @@ jQuery(document).ready(function ($) {
   var photo_editor = $('#tutor_profile_cover_photo_editor');
   photo_editor.length > 0 ? new PhotoEditor(photo_editor).initialize() : 0;
   /**
+   * Retake course
    * 
-   * Instructor list filter
-   * 
-   * @since  v.1.8.4
-  */
-  // Get values on course category selection
-
-  $('.tutor-instructor-filter').each(function () {
-    var root = $(this);
-    var filter_args = {};
-    var time_out;
-
-    function run_instructor_filter(name, value, page_number) {
-      // Prepare http payload
-      var result_container = root.find('.filter-result-container');
-      var html_cache = result_container.html();
-      var attributes = root.data();
-      attributes.current_page = page_number || 1;
-      name ? filter_args[name] = value : filter_args = {};
-      filter_args.attributes = attributes;
-      filter_args.action = 'load_filtered_instructor'; // Show loading icon
-
-      result_container.html('<div style="text-align:center"><img src="' + window._tutorobject.loading_icon_url + '"/></div>');
-      $.ajax({
-        url: window._tutorobject.ajaxurl,
-        data: filter_args,
-        type: 'POST',
-        success: function success(r) {
-          result_container.html(r);
-        },
-        error: function error() {
-          result_container.html(html_cache);
-          tutor_toast('Failed', 'Request Error', 'error');
-        }
-      });
-    }
-
-    root.on('change', '.course-category-filter [type="checkbox"]', function () {
-      var values = {};
-      $(this).closest('.course-category-filter').find('input:checked').each(function () {
-        values[$(this).val()] = $(this).parent().text();
-      }); // Show selected cat list
-
-      var cat_parent = root.find('.selected-cate-list').empty();
-      var cat_ids = Object.keys(values);
-      cat_ids.forEach(function (value) {
-        cat_parent.append('<span>' + values[value] + ' <span class="tutor-icon-line-cross" data-cat_id="' + value + '"></span></span>');
-      });
-      cat_ids.length ? cat_parent.append('<span data-cat_id="0">Clear All</span>') : 0;
-      run_instructor_filter($(this).attr('name'), cat_ids);
-    }).on('click', '.tutor-instructor-ratings i', function (e) {
-      var rating = e.target.dataset.value;
-      run_instructor_filter('rating_filter', rating);
-    }).on('change', "#tutor-instructor-relevant-sort", function (e) {
-      var short_by = e.target.value;
-      run_instructor_filter('short_by', short_by);
-    }).on('click', '.selected-cate-list [data-cat_id]', function () {
-      var id = $(this).data('cat_id');
-      var inputs = root.find('.mobile-filter-popup [type="checkbox"]');
-      id ? inputs = inputs.filter('[value="' + id + '"]') : 0;
-      inputs.prop('checked', false).trigger('change');
-    }).on('input', '.filter-pc [name="keyword"]', function () {
-      // Get values on search keyword change
-      var val = $(this).val();
-      time_out ? window.clearTimeout(time_out) : 0;
-      time_out = window.setTimeout(function () {
-        run_instructor_filter('keyword', val);
-        time_out = null;
-      }, 500);
-    }).on('click', '[data-page_number]', function (e) {
-      // On pagination click
-      e.preventDefault();
-      run_instructor_filter(null, null, $(this).data('page_number'));
-    }).on('click', '.clear-instructor-filter', function () {
-      // Clear filter
-      var root = $(this).closest('.tutor-instructor-filter');
-      root.find('input[type="checkbox"]').prop('checked', false);
-      root.find('[name="keyword"]').val('');
-      var stars = document.querySelectorAll(".tutor-instructor-ratings i"); //remove star selection
-
-      var _iterator = _createForOfIteratorHelper(stars),
-          _step;
-
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var star = _step.value;
-
-          if (star.classList.contains('active')) {
-            star.classList.remove('active');
-          }
-
-          if (star.classList.contains('ttr-star-full-filled')) {
-            star.classList.remove('ttr-star-full-filled');
-            star.classList.add('ttr-star-line-filled');
-          }
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-
-      rating_range.innerHTML = "";
-      run_instructor_filter();
-    }).on('click', '.mobile-filter-container i', function () {
-      // Open mobile screen filter
-      $(this).parent().next().addClass('is-opened');
-    }).on('click', '.mobile-filter-popup button', function () {
-      $('.mobile-filter-popup [type="checkbox"]').trigger('change'); // Close mobile screen filter
-
-      $(this).closest('.mobile-filter-popup').removeClass('is-opened');
-    }).on('input', '.filter-mobile [name="keyword"]', function () {
-      // Sync keyword with two screen
-      root.find('.filter-pc [name="keyword"]').val($(this).val()).trigger('input');
-    }).on('change', '.mobile-filter-popup [type="checkbox"]', function (e) {
-      if (e.originalEvent) {
-        return;
-      } // Sync category with two screen
-
-
-      var name = $(this).attr('name');
-      var val = $(this).val();
-      var checked = $(this).prop('checked');
-      root.find('.course-category-filter [name="' + name + '"]').filter('[value="' + val + '"]').prop('checked', checked).trigger('change');
-    }).on('mousedown touchstart', '.expand-instructor-filter', function (e) {
-      var window_height = $(window).height();
-      var el = root.find('.mobile-filter-popup>div');
-      var el_top = window_height - el.height();
-      var plus = ((e.originalEvent.touches || [])[0] || e).clientY - el_top;
-      root.on('mousemove touchmove', function (e) {
-        var y = ((e.originalEvent.touches || [])[0] || e).clientY;
-        var height = window_height - y + plus;
-        height > 200 && height <= window_height ? el.css('height', height + 'px') : 0;
-      });
-    }).on('mouseup touchend', function () {
-      root.off('mousemove touchmove');
-    }).on('click', '.mobile-filter-popup>div', function (e) {
-      e.stopImmediatePropagation();
-    }).on('click', '.mobile-filter-popup', function (e) {
-      $(this).removeClass('is-opened');
-    }).on('click', '.tutor-instructor-category-show-more > .text-medium-caption', function (e) {
-      var term_id = e.target.parentNode.dataset.id;
-      console.log(e.target.tagName);
-      console.log(term_id);
-      $.ajax({
-        url: window._tutorobject.ajaxurl,
-        type: 'POST',
-        data: {
-          action: 'show_more',
-          term_id: term_id
-        },
-        beforeSend: function beforeSend() {
-          $(".tutor-show-more-loading").html("<img src='".concat(window._tutorobject.loading_icon_url, "'>"));
-        },
-        success: function success(response) {
-          console.log(response);
-
-          if (response.success && response.data.categories.length) {
-            $(".tutor-instructor-category-show-more").css("display", "block");
-
-            var _iterator2 = _createForOfIteratorHelper(response.data.categories),
-                _step2;
-
-            try {
-              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-                var res = _step2.value;
-                var wrapper = $(".tutor-instructor-categories-wrapper .course-category-filter");
-                $(".tutor-instructor-category-show-more .text-medium-caption").attr('data-id', res.term_id);
-                wrapper.append("<div class=\"tutor-form-check tutor-mb-25\">\n                                    <input\n                                        id=\"item-a\"\n                                        type=\"checkbox\"\n                                        class=\"tutor-form-check-input tutor-form-check-square\"\n                                        name=\"category\"\n                                        value=\"".concat(res.term_id, "\"/>\n                                    <label for=\"item-a\">\n                                        ").concat(res.name, "\n                                    </label>\n                                </div>\n                                "));
-              }
-            } catch (err) {
-              _iterator2.e(err);
-            } finally {
-              _iterator2.f();
-            }
-          }
-
-          if (false === response.data.show_more) {
-            $(".tutor-instructor-category-show-more").css("display", "none");
-
-            if (document.querySelector(".course-category-filter").classList.contains('tutor-show-more-blur')) {
-              document.querySelector(".course-category-filter").classList.remove("tutor-show-more-blur");
-            }
-          }
-        },
-        complete: function complete() {
-          $(".tutor-show-more-loading").html("");
-        },
-        error: function error(err) {
-          alert(err);
-        }
-      });
-    });
-  });
-  /**
-   * Show start active as per click
-   * 
-   * @since v2.0.0
+   * @since v1.9.5
    */
-
-  var stars = document.querySelectorAll(".tutor-instructor-ratings i");
-  var rating_range = document.querySelector(".tutor-instructor-rating-filter");
-
-  var _iterator3 = _createForOfIteratorHelper(stars),
-      _step3;
-
-  try {
-    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-      var star = _step3.value;
-
-      star.onclick = function (e) {
-        //remove active if has
-        var _iterator4 = _createForOfIteratorHelper(stars),
-            _step4;
-
-        try {
-          for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-            var _star = _step4.value;
-
-            if (_star.classList.contains('active')) {
-              _star.classList.remove('active');
-            }
-
-            if (_star.classList.contains('ttr-star-full-filled')) {
-              _star.classList.remove('ttr-star-full-filled');
-
-              _star.classList.add('ttr-star-line-filled');
-            }
-          } //show stars active as click
-
-        } catch (err) {
-          _iterator4.e(err);
-        } finally {
-          _iterator4.f();
-        }
-
-        var length = e.target.dataset.value;
-
-        for (var i = 0; i < length; i++) {
-          stars[i].classList.add('active');
-          stars[i].classList.remove('ttr-star-line-filled');
-          stars[i].classList.add('ttr-star-full-filled');
-        }
-
-        rating_range.innerHTML = "0.0 - ".concat(length, ".0");
-      };
-    }
-    /**
-     * Retake course
-     * 
-     * @since v1.9.5
-     */
-
-  } catch (err) {
-    _iterator3.e(err);
-  } finally {
-    _iterator3.f();
-  }
 
   $('.tutor-course-retake-button').click(function (e) {
     e.preventDefault();
