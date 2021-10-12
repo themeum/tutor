@@ -17,14 +17,19 @@ class Rewrite_Rules extends Tutor_Base {
 		add_filter('post_type_link', array($this, 'change_lesson_single_url'), 1, 2);
 	}
 
-	public function tutor_register_query_vars($vars) {
+	/**
+	 * Prepare query vars
+	 *
+	 * @param sting $vars url structure.
+	 */
+	public function tutor_register_query_vars( $vars ) {
 		$vars[] = 'course_subpage';
 		$vars[] = 'lesson_video';
 		$vars[] = 'tutor_dashboard_page';
 		$vars[] = 'tutor_dashboard_sub_page';
 
-		$enable_public_profile = tutor_utils()->get_option('enable_public_profile');
-		if ($enable_public_profile) {
+		$enable_public_profile = tutor_utils()->get_option( 'public_profile_layout' );
+		if ( 'private' !== $enable_public_profile ) {
 			$vars[] = 'tutor_student_username';
 		}
 
