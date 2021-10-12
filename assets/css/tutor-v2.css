@@ -9907,9 +9907,7 @@ select.tutor-form-select:focus {
 table.tutor-ui-table {
   border-collapse: separate;
   border-spacing: 0;
-  min-width: 350px;
   width: 100%;
-  max-width: 825px;
 }
 
 table.tutor-ui-table .inline-flex-center, table.tutor-ui-table .td-avatar {
@@ -9924,135 +9922,123 @@ table.tutor-ui-table .inline-flex-center, table.tutor-ui-table .td-avatar {
           justify-content: center;
 }
 
-table.tutor-ui-table .v-align-top, table.tutor-ui-table.table-reviews th,
-table.tutor-ui-table.table-reviews td, table.tutor-ui-table.table-course-overview th:first-child,
-table.tutor-ui-table.table-course-overview td:first-child {
+table.tutor-ui-table .v-align-top {
   vertical-align: top;
 }
 
-table.tutor-ui-table .v-align-middle, table.tutor-ui-table.table-all-courses th,
-table.tutor-ui-table.table-all-courses td {
+table.tutor-ui-table .v-align-middle {
   vertical-align: middle;
 }
 
-table.tutor-ui-table tr:first-child {
-  /* top-left border-radius */
-  /* top-right border-radius */
-}
-
-table.tutor-ui-table tr:first-child th:first-child {
-  border-top-left-radius: 6px;
-}
-
-table.tutor-ui-table tr:first-child th:last-child {
-  border-top-right-radius: 6px;
-}
-
-table.tutor-ui-table tr:last-child {
-  /* bottom-left border-radius */
-  /* bottom-right border-radius */
-}
-
-table.tutor-ui-table tr:last-child td:first-child {
-  border-bottom-left-radius: 6px;
-}
-
-table.tutor-ui-table tr:last-child td:last-child {
-  border-bottom-right-radius: 6px;
-}
-
-table.tutor-ui-table tr:last-child td {
-  border-bottom: 1px solid #cdcfd5;
-}
-
-table.tutor-ui-table tr:nth-child(even) td {
-  background-color: rgba(239, 241, 247, 0.3);
-}
-
-table.tutor-ui-table th,
-table.tutor-ui-table td {
-  border-top: 1px solid #cdcfd5;
-}
-
-table.tutor-ui-table th:first-child,
-table.tutor-ui-table td:first-child {
-  border-left: 1px solid #cdcfd5;
-  padding-left: 20px;
-}
-
-table.tutor-ui-table th:last-child,
-table.tutor-ui-table td:last-child {
-  border-right: 1px solid #cdcfd5;
-  padding-right: 20px;
-}
-
-table.tutor-ui-table th {
-  background: #eff1f7;
-  text-align: left;
-  padding: 15px 10px;
-}
-
-table.tutor-ui-table td {
-  padding: 17px 10px;
-}
-
-table.tutor-ui-table .tutor-shrink {
-  width: 1px;
-  white-space: nowrap;
-}
-
-table.tutor-ui-table.table-courses th:nth-child(1),
-table.tutor-ui-table.table-courses td:nth-child(1) {
-  width: 53.8%;
-}
-
-table.tutor-ui-table.table-popular-courses th:nth-child(1),
-table.tutor-ui-table.table-popular-courses td:nth-child(1) {
-  width: 60.6%;
-}
-
-table.tutor-ui-table.table-reviews th:nth-child(1),
-table.tutor-ui-table.table-reviews td:nth-child(1) {
-  width: 26.8%;
-}
-
-table.tutor-ui-table.table-reviews th:nth-child(3),
-table.tutor-ui-table.table-reviews td:nth-child(3) {
-  width: 53.3%;
-}
-
-table.tutor-ui-table.table-all-courses th:nth-child(1),
-table.tutor-ui-table.table-all-courses td:nth-child(1) {
-  width: 50.6%;
-}
-
-table.tutor-ui-table.table-students th:nth-child(1),
-table.tutor-ui-table.table-students td:nth-child(1) {
-  width: 43.6%;
-}
-
-table.tutor-ui-table.table-course-overview th:last-child,
-table.tutor-ui-table.table-course-overview td:last-child {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  text-align: right;
-}
-
-table.tutor-ui-table.table-course-overview th:nth-last-child(2),
-table.tutor-ui-table.table-course-overview td:nth-last-child(2) {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
-table.tutor-ui-table.table-course-overview th:nth-child(1),
-table.tutor-ui-table.table-course-overview td:nth-child(1) {
-  width: 16.2%;
-}
-
-table.tutor-ui-table.table-course-overview th:nth-child(2),
-table.tutor-ui-table.table-course-overview td:nth-child(2) {
-  width: 55%;
+@media (min-width: 992px) {
+  table.tutor-ui-table tr:first-child {
+    /* top-left border-radius */
+    /* top-right border-radius */
+  }
+  table.tutor-ui-table tr:first-child th:first-child {
+    border-top-left-radius: 6px;
+  }
+  table.tutor-ui-table tr:first-child th:last-child {
+    border-top-right-radius: 6px;
+  }
+  table.tutor-ui-table tr:last-child {
+    /* bottom-left border-radius */
+    /* bottom-right border-radius */
+  }
+  table.tutor-ui-table tr:last-child td:first-child {
+    border-bottom-left-radius: 6px;
+  }
+  table.tutor-ui-table tr:last-child td:last-child {
+    border-bottom-right-radius: 6px;
+  }
+  table.tutor-ui-table tr:last-child td {
+    border-bottom: 1px solid #cdcfd5;
+  }
+  table.tutor-ui-table tr:nth-child(even) td {
+    background-color: rgba(239, 241, 247, 0.3);
+  }
+  table.tutor-ui-table th,
+  table.tutor-ui-table td {
+    border-top: 1px solid #cdcfd5;
+  }
+  table.tutor-ui-table th:first-child,
+  table.tutor-ui-table td:first-child {
+    border-left: 1px solid #cdcfd5;
+    padding-left: 20px;
+  }
+  table.tutor-ui-table th:last-child,
+  table.tutor-ui-table td:last-child {
+    border-right: 1px solid #cdcfd5;
+    padding-right: 20px;
+  }
+  table.tutor-ui-table th {
+    background: rgba(239, 241, 247, 0.8);
+    text-align: left;
+    padding: 15px 10px;
+  }
+  table.tutor-ui-table td {
+    padding: 17px 10px;
+  }
+  table.tutor-ui-table .tutor-shrink {
+    width: 1px;
+    white-space: nowrap;
+  }
+  table.tutor-ui-table.table-courses th:nth-child(1),
+  table.tutor-ui-table.table-courses td:nth-child(1) {
+    width: 53.8%;
+  }
+  table.tutor-ui-table.table-popular-courses th:nth-child(1),
+  table.tutor-ui-table.table-popular-courses td:nth-child(1) {
+    width: 60.6%;
+  }
+  table.tutor-ui-table.table-reviews th,
+  table.tutor-ui-table.table-reviews td {
+    vertical-align: top;
+  }
+  table.tutor-ui-table.table-reviews th:nth-child(1),
+  table.tutor-ui-table.table-reviews td:nth-child(1) {
+    width: 26.8%;
+  }
+  table.tutor-ui-table.table-reviews th:nth-child(3),
+  table.tutor-ui-table.table-reviews td:nth-child(3) {
+    width: 53.3%;
+  }
+  table.tutor-ui-table.table-all-courses th,
+  table.tutor-ui-table.table-all-courses td {
+    vertical-align: middle;
+  }
+  table.tutor-ui-table.table-all-courses th:nth-child(1),
+  table.tutor-ui-table.table-all-courses td:nth-child(1) {
+    width: 50.6%;
+  }
+  table.tutor-ui-table.table-students th:nth-child(1),
+  table.tutor-ui-table.table-students td:nth-child(1) {
+    width: 43.6%;
+  }
+  table.tutor-ui-table.table-course-overview th:first-child,
+  table.tutor-ui-table.table-course-overview td:first-child {
+    vertical-align: top;
+  }
+  table.tutor-ui-table.table-course-overview th:last-child,
+  table.tutor-ui-table.table-course-overview td:last-child {
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    text-align: right;
+  }
+  table.tutor-ui-table.table-course-overview th:nth-last-child(2),
+  table.tutor-ui-table.table-course-overview td:nth-last-child(2) {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  table.tutor-ui-table.table-course-overview th:nth-child(1),
+  table.tutor-ui-table.table-course-overview td:nth-child(1) {
+    width: 16.2%;
+  }
+  table.tutor-ui-table.table-course-overview th:nth-child(2),
+  table.tutor-ui-table.table-course-overview td:nth-child(2) {
+    width: 55%;
+  }
 }
 
 table.tutor-ui-table .td-tutor-rating .tutor-rating-stars {
@@ -10183,7 +10169,6 @@ table.tutor-ui-table .td-progress .progress-text {
 }
 
 table.tutor-ui-table {
-  /* stroke/light30 */
   /*
 	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
 	*/
@@ -10193,10 +10178,6 @@ table.tutor-ui-table {
   table.tutor-ui-table {
     /* Force table to not be like tables anymore */
     /* Hide table headers (but not display: none;, for accessibility) */
-    /*
-		Label the data
-	You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
-		*/
   }
   table.tutor-ui-table table,
   table.tutor-ui-table thead,
@@ -10211,54 +10192,59 @@ table.tutor-ui-table {
     top: -9999px;
     left: -9999px;
   }
-  table.tutor-ui-table tr:last-child td:last-child {
-    border-bottom: 1px solid #cdcfd5 !important;
+  table.tutor-ui-table tr:not(:last-child) {
+    margin-bottom: 22px;
   }
-  table.tutor-ui-table tr:first-child td:first-child {
-    border-top-left-radius: 6px !important;
-    border-top-right-radius: 6px !important;
+  table.tutor-ui-table tr td {
+    word-break: break-word;
   }
-  table.tutor-ui-table tr:last-child td:last-child {
-    border-bottom-left-radius: 6px !important;
-    border-bottom-right-radius: 6px !important;
+  table.tutor-ui-table tr td:last-child {
+    border-bottom: 1px solid #cdcfd5;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
-  table.tutor-ui-table tr:nth-child(odd) td:nth-child(odd) {
-    background: #fff;
+  table.tutor-ui-table tr td:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
   }
-  table.tutor-ui-table tr:nth-child(odd) td:nth-child(even) {
-    background: rgba(239, 241, 247, 0.3);
+  table.tutor-ui-table tr td:nth-child(odd) {
+    background: white;
   }
-  table.tutor-ui-table tr:nth-child(even) td:nth-child(even) {
-    background: #fff;
-  }
-  table.tutor-ui-table tr:nth-child(even) td:nth-child(odd) {
+  table.tutor-ui-table tr td:nth-child(even) {
     background: rgba(239, 241, 247, 0.3);
   }
   table.tutor-ui-table td {
     /* Behave  like a "row" */
-    border: none !important;
-    border-radius: 0 !important;
+    border: none;
+    border-radius: 0;
     position: relative;
-    padding: 7px 10px;
-    padding-left: 50% !important;
-    width: unset !important;
-    text-align: left !important;
-    border-top: 1px solid #cdcfd5 !important;
-    border-left: 1px solid #cdcfd5 !important;
-    border-right: 1px solid #cdcfd5 !important;
+    padding: 10px;
+    width: unset;
+    text-align: left;
+    border-top: 1px solid #cdcfd5;
+    border-left: 1px solid #cdcfd5;
+    border-right: 1px solid #cdcfd5;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
   }
-  table.tutor-ui-table td:before {
+  table.tutor-ui-table td.column-fullwidth {
+    padding: 15px 20px;
+  }
+  table.tutor-ui-table td:not(.column-fullwidth) {
+    padding-left: 40%;
+  }
+  table.tutor-ui-table td:not(.column-fullwidth):before {
     /* Now like a table header */
     position: absolute;
     /* Top/left values mimic padding */
     top: 0;
     left: 0;
-    width: 45%;
+    width: 35%;
     padding-left: 20px;
     padding-right: 10px;
     white-space: nowrap;
-  }
-  table.tutor-ui-table td:before {
+    /* Label the data You could also use a data-* attribute and content for this. That way "bloats" the HTML,this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow. */
     content: attr(data-th);
     height: 100%;
     display: -webkit-box;
@@ -10270,8 +10256,6 @@ table.tutor-ui-table {
     font-weight: 400;
     font-size: 13px;
     line-height: 138%;
-    /* identical to box height, or 138% */
-    /* text/subsued */
     color: #5b616f;
   }
 }
