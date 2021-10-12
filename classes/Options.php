@@ -149,13 +149,6 @@ class Options {
 								'default' => '0',
 								'desc'      => __('Disable to use the default WordPress login page',	'tutor'),
 							),
-							'load_tutor_css' => array(
-								'type'      => 'checkbox',
-								'label'     => __('Load Tutor CSS', 'tutor'),
-								'label_title' => __('Enable', 'tutor'),
-								'default' => '0',
-								'desc'      => __('If your theme has its own styling, then you can turn it off to load CSS from the plugin directory', 'tutor'),
-							),
 							'student_must_login_to_view_course' => array(
 								'type'      => 'checkbox',
 								'label'     => __('Course Visibility', 'tutor'),
