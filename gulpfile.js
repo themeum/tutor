@@ -181,6 +181,7 @@ gulp.task("copy", function () {
 			"!./assets/.sass-cache",
 			"!./node_modules/**",
 			"!./v2-library/**",
+			"!./test/**",
 			"!./.docz/**",
 			"!./**/*.zip",
 			"!.github",
