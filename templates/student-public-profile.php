@@ -23,8 +23,8 @@ if ( ! is_object( $get_user ) || ! property_exists( $get_user, 'ID' ) ) {
 $user_id       = $get_user->ID;
 $is_instructor = tutor_utils()->is_instructor( $user_id );
 
-$profile_layout = tutor_utils()->get_option( ( $is_instructor ? 'instructor' : 'student' ) . '_public_profile_layout', 'pp-circle' );
-
+$profile_layout = tutor_utils()->get_option( 'public_profile_layout', 'private' );
+echo $profile_layout;
 if ( 'private' === $profile_layout ) {
 	// Disable profile access then.
 	wp_redirect( get_home_url() );
