@@ -58,7 +58,7 @@ if ( $is_instructor ) {
 
 			<?php
 			echo " <span class='rating-digits'>{$instructor_rating->rating_avg}</span> ";
-			echo " <span class='rating-total-meta'>({$instructor_rating->rating_count})</span> ";
+			echo " <span class='rating-total-meta text-hints text-regular-caption'>({$instructor_rating->rating_count})</span> ";
 			?>
 			</div>
 		</div>

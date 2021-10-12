@@ -1,6 +1,22 @@
 @import "../lib/mixins.scss";
+@import "../../../v2-library/_src/scss/utility/colors";
 
 .tutor-user-public-profile{
+    &.tutor-user-public-profile-no-cp {
+        .profile-name {
+            span {
+                color: #5b616f !important;
+                font-weight: 400;
+            }
+        }
+    }
+    &.tutor-user-public-profile-pp-circle, &.tutor-user-public-profile-pp-rectangle {
+        .profile-name {
+            span {
+                font-weight: 300;
+            }
+        }
+    }
     .photo-area{
         overflow: hidden;
         height: 414px;
@@ -11,7 +27,7 @@
             border-radius: 6px;
             overflow: hidden;
             &>div:first-child{
-                height: 375px;
+                height: 352px;
                 background-position: center center;
                 background-repeat: no-repeat;
                 background-size: cover;
@@ -57,13 +73,13 @@
 
                 &>span{
                     font-style: normal;
-                    font-weight: 500;
                     font-size: 15px;
-                    color: #757575;
+                    color: #fff;
                     margin-right: 10px;
 
                     &>span{
                         color:white;
+                        font-weight: 500;
                     }
                 }
             }
@@ -220,7 +236,11 @@
     }
 
     @media (max-width:767px){
-
+        .profile-name {
+            span {
+              color: #757575 !important;
+            }
+        }
         .content-for-mobile{
             display: block;
             margin: 22px 0 0 0;
@@ -336,17 +356,21 @@
         float: left;
         margin-bottom: 30px;
 
-        &>h3{
+        h3{
             font-style: normal;
             font-weight: normal;
-            font-size: 24px;
+            font-size: 24px !important;
             line-height: 34px;
-            color: #161616;
             margin-top: 20px;
-
+            @extend .color-text-primary;
             &:first-child{
                 margin-top: 0;
             }
+        }
+        p {
+            @extend .color-text-subsued;
+            font-size: 16px;
+            line-height: 28px;
         }
     }
 
