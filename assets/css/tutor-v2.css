@@ -9904,7 +9904,9 @@ select.tutor-form-select:focus {
 table.tutor-ui-table {
   border-collapse: separate;
   border-spacing: 0;
+  min-width: 300px;
   width: 100%;
+  overflow-x: auto;
 }
 
 table.tutor-ui-table .inline-flex-center, table.tutor-ui-table .td-avatar {
@@ -11183,6 +11185,131 @@ table.tutor-ui-table {
 
 .tutor-certificate-template .template-load-more .load-more-btn span {
   font-size: 20px;
+}
+
+.tutor-password-strength-checker {
+  margin-top: 20px;
+  position: relative;
+}
+
+.tutor-password-strength-checker .tutor-password-field {
+  text-align: left;
+}
+
+.tutor-password-strength-checker .tutor-password-field .field-label {
+  color: #5b616f;
+}
+
+.tutor-password-strength-checker .tutor-password-field .field-group,
+.tutor-password-strength-checker .tutor-password-field .tutor-input-group {
+  position: relative;
+}
+
+.tutor-password-strength-checker .tutor-password-field input.password-checker {
+  -webkit-transition: border-color 0.3s;
+  transition: border-color 0.3s;
+}
+
+.tutor-password-strength-checker .show-hide-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  width: 30px;
+  height: 30px;
+  background-size: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M7.70941 24C7.89169 24.3172 8.14035 24.7327 8.45342 25.2175C9.2055 26.382 10.3194 27.9309 11.7662 29.4741C14.687 32.5897 18.7868 35.5 23.875 35.5C28.9632 35.5 33.063 32.5897 35.9838 29.4741C37.4306 27.9309 38.5445 26.382 39.2966 25.2175C39.6096 24.7327 39.8583 24.3172 40.0406 24C39.8583 23.6828 39.6096 23.2673 39.2966 22.7825C38.5445 21.618 37.4306 20.0691 35.9838 18.5259C33.063 15.4103 28.9632 12.5 23.875 12.5C18.7868 12.5 14.687 15.4103 11.7662 18.5259C10.3194 20.0691 9.2055 21.618 8.45342 22.7825C8.14035 23.2673 7.89169 23.6828 7.70941 24ZM41.75 24C43.0916 23.3292 43.0914 23.3287 43.0911 23.3281L43.0904 23.3267L43.0886 23.3231L43.0831 23.3123L43.065 23.2769C43.0497 23.2472 43.0281 23.2054 43 23.1524C42.944 23.0465 42.8625 22.8955 42.7558 22.706C42.5427 22.3272 42.2287 21.7929 41.8167 21.155C40.9946 19.882 39.7726 18.1809 38.1724 16.4741C34.9995 13.0897 30.1618 9.5 23.875 9.5C17.5882 9.5 12.7505 13.0897 9.57757 16.4741C7.97744 18.1809 6.75544 19.882 5.9333 21.155C5.5213 21.7929 5.20726 22.3272 4.99415 22.706C4.88754 22.8955 4.80601 23.0465 4.74996 23.1524C4.72193 23.2054 4.70025 23.2472 4.68497 23.2769L4.66685 23.3123L4.6614 23.3231L4.65889 23.3281C4.65861 23.3287 4.65836 23.3292 6 24L4.65836 23.3292C4.44721 23.7515 4.44721 24.2485 4.65836 24.6708L6 24C4.65836 24.6708 4.65861 24.6713 4.65889 24.6719L4.6614 24.6769L4.66685 24.6877L4.68497 24.7231C4.70025 24.7529 4.72193 24.7946 4.74996 24.8476C4.80601 24.9535 4.88754 25.1045 4.99415 25.294C5.20726 25.6729 5.5213 26.2071 5.9333 26.845C6.75544 28.118 7.97744 29.8191 9.57757 31.5259C12.7505 34.9103 17.5882 38.5 23.875 38.5C30.1618 38.5 34.9995 34.9103 38.1724 31.5259C39.7726 29.8191 40.9946 28.118 41.8167 26.845C42.2287 26.2071 42.5427 25.6729 42.7558 25.294C42.8625 25.1045 42.944 24.9535 43 24.8476C43.0281 24.7946 43.0497 24.7529 43.065 24.7231L43.0831 24.6877L43.0886 24.6769L43.0904 24.6733L43.0911 24.6719C43.0914 24.6713 43.0916 24.6708 41.75 24ZM41.75 24L43.0916 24.6708C43.3028 24.2485 43.3028 23.7515 43.0916 23.3292L41.75 24Z' fill='%23212327'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M23.875 20.625C22.011 20.625 20.5 22.136 20.5 24C20.5 25.864 22.011 27.375 23.875 27.375C25.739 27.375 27.25 25.864 27.25 24C27.25 22.136 25.739 20.625 23.875 20.625ZM17.5 24C17.5 20.4792 20.3542 17.625 23.875 17.625C27.3958 17.625 30.25 20.4792 30.25 24C30.25 27.5208 27.3958 30.375 23.875 30.375C20.3542 30.375 17.5 27.5208 17.5 24Z' fill='%23212327'/%3E%3C/svg%3E");
+}
+
+.tutor-password-strength-checker .show-hide-btn.hide-btn {
+  background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M23.9965 13.1362C23.0202 13.1339 22.047 13.2452 21.0964 13.4677C20.2898 13.6565 19.4828 13.1556 19.294 12.349C19.1052 11.5424 19.6061 10.7354 20.4127 10.5466C21.5891 10.2713 22.7935 10.1335 24.0018 10.1362C30.0093 10.1369 34.6277 13.5671 37.6511 16.7921C39.1767 18.4194 40.3415 20.0409 41.1251 21.2543C41.5179 21.8624 41.8173 22.3718 42.0206 22.7332C42.1223 22.9141 42.2002 23.0582 42.2537 23.1594C42.2805 23.2101 42.3013 23.2501 42.316 23.2786L42.3334 23.3127L42.3387 23.3231L42.3411 23.328C42.3414 23.3285 42.3416 23.3291 41 23.9999L42.3416 23.3291C42.5592 23.7642 42.5522 24.2779 42.3229 24.707C41.3355 26.5541 40.158 28.2931 38.8096 29.8956C38.2762 30.5295 37.3299 30.611 36.6961 30.0776C36.0622 29.5442 35.9807 28.598 36.5141 27.9641C37.5555 26.7265 38.4836 25.3986 39.2875 23.9963C39.117 23.7011 38.889 23.3215 38.605 22.8818C37.8914 21.777 36.8347 20.3076 35.4625 18.844C32.6908 15.8875 28.8098 13.1362 24 13.1362L23.9965 13.1362ZM13.9096 13.6277C14.5069 13.1717 15.3493 13.2279 15.8807 13.7592L21.7784 19.6569C21.7819 19.6604 21.7854 19.6639 21.7889 19.6674L28.3324 26.2109C28.3359 26.2145 28.3395 26.218 28.343 26.2216L34.2407 32.1192C34.5467 32.4252 34.7056 32.8486 34.6766 33.2804C34.6476 33.7122 34.4335 34.1105 34.0893 34.3728C31.1929 36.5806 27.666 37.8038 24.0245 37.8633L24 37.8635C17.9916 37.8635 13.3726 34.4329 10.3489 31.2076C8.82332 29.5803 7.6585 27.9588 6.87488 26.7455C6.48215 26.1374 6.18271 25.628 5.97939 25.2665C5.87767 25.0857 5.79984 24.9416 5.74625 24.8403C5.71945 24.7897 5.6987 24.7497 5.68404 24.7212L5.66662 24.6871L5.66134 24.6766L5.65889 24.6718C5.65861 24.6712 5.65836 24.6707 7 23.9999L5.65836 24.6707C5.44039 24.2348 5.44782 23.7201 5.67827 23.2906C7.70177 19.5196 10.5083 16.225 13.9096 13.6277ZM8.71331 24.0048C8.88371 24.2999 9.11149 24.6789 9.395 25.1179C10.1086 26.2228 11.1653 27.6921 12.5375 29.1558C15.3068 32.1098 19.1836 34.8588 23.9878 34.8635C26.404 34.8219 28.7586 34.1587 30.8297 32.9509L27.1742 29.2954C26.9214 29.456 26.6567 29.5982 26.3818 29.7207C25.6291 30.0561 24.8165 30.2364 23.9926 30.2509C23.1687 30.2655 22.3503 30.1139 21.5862 29.8053C20.8221 29.4967 20.128 29.0373 19.5453 28.4546C18.9626 27.8719 18.5032 27.1778 18.1946 26.4137C17.886 25.6496 17.7344 24.8312 17.7489 24.0073C17.7635 23.1833 17.9438 22.3708 18.2792 21.6181C18.4017 21.3432 18.5439 21.0784 18.7044 20.8256L14.7099 16.8311C12.3103 18.8548 10.2806 21.2821 8.71331 24.0048ZM20.933 23.0542C20.817 23.3767 20.7545 23.7165 20.7485 24.0602C20.741 24.4813 20.8185 24.8996 20.9763 25.2902C21.134 25.6807 21.3688 26.0354 21.6666 26.3333C21.9644 26.6311 22.3192 26.8659 22.7097 27.0236C23.1003 27.1814 23.5186 27.2588 23.9397 27.2514C24.2834 27.2453 24.6232 27.1828 24.9457 27.0669L20.933 23.0542Z' fill='black'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.93934 5.93934C6.52513 5.35355 7.47487 5.35355 8.06066 5.93934L42.0607 39.9393C42.6464 40.5251 42.6464 41.4749 42.0607 42.0607C41.4749 42.6464 40.5251 42.6464 39.9393 42.0607L5.93934 8.06066C5.35355 7.47487 5.35355 6.52513 5.93934 5.93934Z' fill='black'/%3E%3C/svg%3E%0A");
+}
+
+.tutor-passowrd-strength-hint {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-top: 7px;
+}
+
+.tutor-passowrd-strength-hint .indicator {
+  height: 10px;
+  margin: 10px 0;
+  gap: 25px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  display: none;
+}
+
+.tutor-passowrd-strength-hint .indicator span {
+  position: relative;
+  height: 2px;
+  width: 72px;
+  background: lightgrey;
+  border-radius: 5px;
+}
+
+.tutor-passowrd-strength-hint .indicator span.active:before {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.tutor-passowrd-strength-hint .indicator span.weak:before {
+  background-color: #f44337;
+}
+
+.tutor-passowrd-strength-hint .indicator span.medium:before {
+  background-color: #ed9700;
+}
+
+.tutor-passowrd-strength-hint .indicator span.strong:before {
+  background-color: #24a148;
+}
+
+.tutor-passowrd-strength-hint .indicator span:nth-child(2) {
+  margin: 0 3px;
+}
+
+.tutor-passowrd-strength-hint .text {
+  display: none;
+  text-align: right;
+  text-transform: capitalize;
+}
+
+.tutor-passowrd-strength-hint .text.weak {
+  color: #f44337;
+}
+
+.tutor-passowrd-strength-hint .text.medium {
+  color: #ed9700;
+}
+
+.tutor-passowrd-strength-hint .text.strong {
+  color: #24a148;
 }
 
 /*# sourceMappingURL=tutor-v2.css.map */

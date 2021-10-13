@@ -162,7 +162,6 @@ class Assets {
 				wp_enqueue_script('jquery-ui-datepicker');
 			}
 		}
-
 		/**
 		 * dependency wp-i18n added for
 		 * translate js file
