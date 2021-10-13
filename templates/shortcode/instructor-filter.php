@@ -102,9 +102,9 @@ if ( $total_categories && $total_categories > $limit ) {
 	</div>
 	<div class="tutor-instructor-filter-result">
 		<div class="filter-pc">
-			<div class="keyword-field">
-				<i class="tutor-icon-magnifying-glass-1"></i>
-				<input type="text" name="keyword" placeholder="<?php _e( 'Search any instructor...', 'tutor' ); ?>"/>
+			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right tutor-mb-25">
+				<span class="las la-search tutor-input-group-icon"></span>
+				<input type="text" class="tutor-form-control" name="keyword" placeholder="<?php esc_html_e( 'Search any instructor...', 'tutor' ); ?>" />
 			</div>
 		</div>
 		<div class="tutor-instructor-relevant-short-wrapper tutor-mb-30">
@@ -125,7 +125,7 @@ if ( $total_categories && $total_categories > $limit ) {
 			<div class="mobile-filter-container">
 				<div class="keyword-field mobile-screen">
 					<i class="tutor-icon-magnifying-glass-1"></i>
-					<input type="text" name="keyword" placeholder="<?php _e( 'Search any instructor...', 'tutor' ); ?>"/>
+					<input type="text" class="p-10" name="keyword" placeholder="<?php _e( 'Search any instructor...', 'tutor' ); ?>"/>
 				</div>
 				<i class="tutor-icon-filter-tool-black-shape"></i>
 			</div>
