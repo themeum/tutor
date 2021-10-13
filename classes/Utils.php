@@ -5392,16 +5392,6 @@ class Utils {
 	 */
 	public function tutor_user_social_icons() {
 		$icons = array(
-			'_tutor_profile_website'  => array(
-				'label'        => __('Website', 'tutor'),
-				'placeholder'  => 'https://example.com/',
-				'icon_classes' => 'tutor-icon-earth'
-			),
-			'_tutor_profile_github'  => array(
-				'label'        => __('Github', 'tutor'),
-				'placeholder'  => 'https://github.com/username',
-				'icon_classes' => 'tutor-icon-github-logo'
-			),
 			'_tutor_profile_facebook'  => array(
 				'label'        => __('Facebook', 'tutor'),
 				'placeholder'  => 'https://facebook.com/username',
@@ -5416,6 +5406,16 @@ class Utils {
 				'label'        => __('Linkedin', 'tutor'),
 				'placeholder'  => 'https://linkedin.com/username',
 				'icon_classes' => 'tutor-icon-linkedin'
+			),
+			'_tutor_profile_website'  => array(
+				'label'        => __('Website', 'tutor'),
+				'placeholder'  => 'https://example.com/',
+				'icon_classes' => 'tutor-icon-earth'
+			),
+			'_tutor_profile_github'  => array(
+				'label'        => __('Github', 'tutor'),
+				'placeholder'  => 'https://github.com/username',
+				'icon_classes' => 'tutor-icon-github-logo'
 			),
 		);
 
