@@ -1,394 +1,412 @@
 @import "../lib/mixins.scss";
 @import "../../../v2-library/_src/scss/utility/colors";
 
-.tutor-user-public-profile{
-    &.tutor-user-public-profile-no-cp {
-        .profile-name {
-            span {
-                color: #5b616f !important;
-                font-weight: 400;
-            }
-        }
+.tutor-user-public-profile {
+  &.tutor-user-public-profile-no-cp {
+    .profile-name {
+      padding-left: 60px;
+      span {
+        color: #5b616f !important;
+        font-weight: 400;
+      }
     }
-    &.tutor-user-public-profile-pp-circle, &.tutor-user-public-profile-pp-rectangle {
-        .profile-name {
-            span {
-                font-weight: 300;
-            }
-        }
+    .profile-pic {
+      border-radius: 50%;
+      height: 200px;
+      width: 200px;
+      border: none !important;
     }
-    .photo-area{
-        overflow: hidden;
-        height: 414px;
+    .tutor-rating-container {
+        padding-left: 80px;
         margin-top: 30px;
+    }
+  }
+  &.tutor-user-public-profile-pp-circle {
+    .profile-name {
+      padding-left: 63px;
+      padding-bottom: 50px;
+      span {
+        font-weight: 300;
+      }
+    }
+    .profile-pic {
+      border-radius: 50%;
+      height: 200px;
+      width: 200px;
+    }
+  }
+  &.tutor-user-public-profile-pp-rectangle {
+    .profile-name {
+      padding-left: 23px;
+      span {
+        font-weight: 300;
+      }
+    }
+    .profile-pic {
+      border-radius: 10px;
+      height: 275px;
+      width: 235px;
+    }
+  }
+  .photo-area {
+    overflow: hidden;
+    height: 414px;
+    margin-top: 30px;
 
-        .cover-area{
-            position: relative;
-            border-radius: 6px;
-            overflow: hidden;
-            &>div:first-child{
-                height: 352px;
-                background-position: center center;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
+    .cover-area {
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      & > div:first-child {
+        height: 352px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
 
-            &>div:last-child{
-                position: absolute;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                height: 70%;
-                background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
-            }
-        }
-
-        .pp-area{
-            position: relative;
-            top: -111px;
-            padding-left: 49px;
-            @include valueWithPrefix(display, flex);
-            @include propertyWithPrefix(align-items, center);
-            
-            .profile-pic{
-                background-position: center center;
-                background-repeat: no-repeat;
-                background-size: cover;
-                display: inline-block;
-                border: 8px solid white;
-            }
-            
-            .profile-name{
-                padding-left: 23px;
-                padding-bottom: 30px;
-
-                h3{
-                    font-style: normal;
-                    font-weight: 600;
-                    font-size: 40px;
-                    line-height: 48px;
-                    color: #FFFFFF;
-                    margin: 0;
-                }
-
-                &>span{
-                    font-style: normal;
-                    font-size: 15px;
-                    color: #fff;
-                    margin-right: 10px;
-
-                    &>span{
-                        color:white;
-                        font-weight: 500;
-                    }
-                }
-            }
-            
-            .profile-rating-media{
-                text-align: right;    
-                padding-right: 30px;
-                padding-bottom: 20px;
-                @include propertyWithPrefix(flex, 1);
-
-                .tutor-rating-container{
-                    font-size: 16px;
-
-                    .rating-digits{
-                        color: white;
-                        font-size: 16px;
-                        font-weight: 500;
-                    }
-
-                    .rating-total-meta{
-                        color: #757575;;
-                    }
-                }
-
-            }
-
-            .tutor-social-container{
-                margin-top: 15px;
-                text-align: right;
-
-                a{
-                    display: inline-block;
-                    margin-left: 20px;
-                    color: whitesmoke;
-                    cursor: pointer;
-                    text-decoration: none;
-                    font-size: 16px;
-
-                    &:hover{
-                        color: white;
-                    }
-                }
-            }
-        }
-    }    
-
-
-    // Layout specific styles
-    &.tutor-user-public-profile-pp-circle{
-        .profile-pic{
-            border-radius: 50%;
-            height: 153px;
-            width: 153px;
-        }
+      & > div:last-child {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 70%;
+        background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+      }
     }
 
-    &.tutor-user-public-profile-pp-rectangle{
-        .photo-area{
-            overflow: initial;
-    
-            .profile-pic{
-                border-radius: 10px;
-                height: 200px;
-                width: 153px;
-            }
+    .pp-area {
+      position: relative;
+      top: -141px;
+      padding-left: 49px;
+      @include valueWithPrefix(display, flex);
+      @include propertyWithPrefix(align-items, center);
 
-            .profile-name, .profile-rating-media{
-                padding-bottom: 75px;
-            }
-        }  
-        
-        .tutor-user-profile-sidebar{
-            margin-top: 79px;
-        }
-    }
-    
-    &.tutor-user-public-profile-no-cp{
+      .profile-pic {
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: inline-block;
+        border: 8px solid white;
+      }
 
-        .photo-area{
-            height: auto;
-        }
-
-        .cover-area{
-            display: none;
+      .profile-name {
+        h3 {
+          font-style: normal;
+          font-weight: 600;
+          font-size: 40px;
+          line-height: 48px;
+          color: #ffffff;
+          margin: 0;
         }
 
-        .pp-area{
-            top: 0;
+        & > span {
+          font-style: normal;
+          font-size: 15px;
+          color: #fff;
+          margin-right: 10px;
+
+          & > span {
+            color: white;
+            font-weight: 500;
+          }
         }
+      }
 
-        .profile-pic{
-            border-radius: 50%;
-            height: 153px;
-            width: 153px;
-        }
+      .profile-rating-media {
+        text-align: right;
+        padding-right: 30px;
+        padding-bottom: 20px;
+        @include propertyWithPrefix(flex, 1);
 
-        .profile-name{
-            padding-top: 49px;
-            h3{
-                color: #161616 !important;
-            }
+        .tutor-rating-container {
+          font-size: 16px;
 
-            &>span>span{
-                color: black !important;
-            }
-        }
-
-        .profile-rating-media{
-            position: absolute;
-            left: 226px;
-            top: 15px;
-
-            .rating-digits{
-                color: #161616 !important;
-            }
-        }
-
-        .tutor-rating-container{
-            text-align: left;
-        }
-        
-        .tutor-social-container{
-            text-align: left !important;
-            margin-top: 5px !important;
-
-            a{
-                margin-left: 0 !important;
-                margin-right: 20px;
-                color: #757575 !important;
-                
-                &:hover{
-                    color: #161616 !important;
-                }
-            }
-        }
-
-        .profile-rating-media{
-            width: calc(100% - 157px);
-
-        }
-
-        .tutor-social-container{
-            position: absolute;
-            right: 36px;
-            left: auto;
-        }
-    }
-
-    @media(min-width:768px){
-        .content-for-mobile{
-            display: none;
-        }
-        .content-for-desktop{
-            display: block;
-        }
-    }
-
-    @media (max-width:767px){
-        .profile-name {
-            span {
-              color: #757575 !important;
-            }
-        }
-        .content-for-mobile{
-            display: block;
-            margin: 22px 0 0 0;
-            padding: 0 !important;
-        }
-        .content-for-desktop{
-            display: none;
-        }
-
-        &.tutor-user-public-profile-pp-circle, &.tutor-user-public-profile-no-cp, &.tutor-user-public-profile-pp-rectangle{
-            .photo-area{
-                height: auto;
-                .cover-area>div:first-child{
-                    height: 220px;
-                }
-            }
-
-            .pp-area{
-                padding-left: 0 !important;
-                top: -82px !important;
-                @include propertyWithPrefix(flex-wrap, wrap);
-                @include propertyWithPrefix(justify-content, center);
-            }
-
-            .profile-name, .profile-rating-media{
-                width: 100% !important;
-                text-align: center!important;
-            }
-
-            .profile-name>span>span{
-                color: black !important;
-            }
-
-            .profile-name>span:nth-of-type(2)>span{
-                color: #C4C4C4 !important;
-            }
-
-            .profile-name h3{
-                color: #161616 !important;
-                font-size: 30px !important;
-            }
-
-            .rating-digits{
-                color: #161616 !important;
-            }
-        }
-
-        &.tutor-user-public-profile-pp-rectangle{
-            .pp-area{
-                top: -98px !important;
-            }
-            .profile-pic{
-                height: 160px !important;
-                width: 153px !important;
-            }
-        }
-
-        &.tutor-user-public-profile-no-cp{
-            .pp-area, .profile-rating-media, .tutor-social-container, .ratings{
-                position: static !important;
-                top:0 !important;
-                text-align: center !important;
-            }
-
-            .profile-name{
-                padding: 0 !important;
-            }
-        }
-
-        .tutor-social-container {
-            margin: 15px 0 0 0 !important;
-            a{
-                color: #7A7A7A !important;
-            }
-        }
-
-        .profile-name{
-            padding: 0 !important;
-        }
-
-        &.tutor-user-public-profile-pp-circle, &.tutor-user-public-profile-pp-rectangle{
-            .pp-area{
-                margin-top: -83px !important;
-                position: relative !important;
-                top: 0 !important;
-            }
-        }
-
-        .tutor-user-profile-sidebar{
-            margin-top:0 !important;
-        }
-
-        &.tutor-user-public-profile-no-cp{
-            .pp-area{
-                @include propertyWithPrefix(justify-content, left !important);
-
-                *{
-                    text-align: left !important;
-                }
-            }
-        }
-    }
-      
-    // Content container
-    .tutor-user-profile-sidebar{
-        padding: 15px;
-        width: 223px;
-        float: left;
-    }
-  
-    .tutor-user-profile-content{
-        width: calc(100% - 228px);
-        float: left;
-        margin-bottom: 30px;
-
-        h3{
-            font-style: normal;
-            font-weight: normal;
-            font-size: 24px !important;
-            line-height: 34px;
-            margin-top: 20px;
-            @extend .color-text-primary;
-            &:first-child{
-                margin-top: 0;
-            }
-        }
-        p {
-            @extend .color-text-subsued;
+          .rating-digits {
+            color: white;
             font-size: 16px;
-            line-height: 28px;
+            font-weight: 500;
+          }
+
+          .rating-total-meta {
+            color: #757575;
+          }
         }
+      }
+
+      .tutor-social-container {
+        margin-top: 15px;
+        text-align: right;
+
+        a {
+          display: inline-block;
+          margin-left: 20px;
+          color: whitesmoke;
+          cursor: pointer;
+          text-decoration: none;
+          font-size: 16px;
+
+          &:hover {
+            color: white;
+          }
+        }
+      }
+    }
+  }
+
+  // Layout specific styles
+
+  &.tutor-user-public-profile-pp-rectangle {
+    .photo-area {
+      overflow: initial;
+      .profile-name,
+      .profile-rating-media {
+        padding-bottom: 137px;
+      }
     }
 
-    @media(max-width:800px){
-        &.tutor-user-public-profile-no-cp{
-            .pp-area{
-            padding-left: 0 !important;
-            }
-            .profile-rating-media{
-                left: 178px !important;
-            }
-        }
-        
-        .tutor-user-profile-sidebar, .tutor-user-profile-content{
-            width: 100%;
-            float: none;
-        }
+    .tutor-user-profile-sidebar {
+      margin-top: 79px;
     }
+  }
+
+  &.tutor-user-public-profile-no-cp {
+    .photo-area {
+      height: auto;
+    }
+
+    .cover-area {
+      display: none;
+    }
+
+    .pp-area {
+      top: 0;
+    }
+
+    .profile-name {
+      padding-top: 40px;
+      h3 {
+        color: #161616 !important;
+      }
+
+      & > span > span {
+        color: black !important;
+      }
+    }
+
+    .profile-rating-media {
+      position: absolute;
+      left: 226px;
+      top: 15px;
+
+      .rating-digits {
+        color: #161616 !important;
+      }
+    }
+
+    .tutor-rating-container {
+      text-align: left;
+    }
+
+    .tutor-social-container {
+      text-align: left !important;
+      margin-top: 5px !important;
+
+      a {
+        margin-left: 0 !important;
+        margin-right: 20px;
+        color: #757575 !important;
+
+        &:hover {
+          color: #161616 !important;
+        }
+      }
+    }
+
+    .profile-rating-media {
+      width: calc(100% - 157px);
+    }
+
+    .tutor-social-container {
+      position: absolute;
+      right: 36px;
+      left: auto;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .content-for-mobile {
+      display: none;
+    }
+    .content-for-desktop {
+      display: block;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .profile-name {
+      span {
+        color: #757575 !important;
+      }
+    }
+    .content-for-mobile {
+      display: block;
+      margin: 22px 0 0 0;
+      padding: 0 !important;
+    }
+    .content-for-desktop {
+      display: none;
+    }
+
+    &.tutor-user-public-profile-pp-circle,
+    &.tutor-user-public-profile-no-cp,
+    &.tutor-user-public-profile-pp-rectangle {
+      .photo-area {
+        height: auto;
+        .cover-area > div:first-child {
+          height: 220px;
+        }
+      }
+
+      .pp-area {
+        padding-left: 0 !important;
+        top: -82px !important;
+        @include propertyWithPrefix(flex-wrap, wrap);
+        @include propertyWithPrefix(justify-content, center);
+      }
+
+      .profile-name,
+      .profile-rating-media {
+        width: 100% !important;
+        text-align: center !important;
+      }
+
+      .profile-name > span > span {
+        color: black !important;
+      }
+
+      .profile-name > span:nth-of-type(2) > span {
+        color: #c4c4c4 !important;
+      }
+
+      .profile-name h3 {
+        color: #161616 !important;
+        font-size: 30px !important;
+      }
+
+      .rating-digits {
+        color: #161616 !important;
+      }
+    }
+
+    &.tutor-user-public-profile-pp-rectangle {
+      .pp-area {
+        top: -98px !important;
+      }
+      .profile-pic {
+        height: 160px !important;
+        width: 153px !important;
+      }
+    }
+
+    &.tutor-user-public-profile-no-cp {
+      .pp-area,
+      .profile-rating-media,
+      .tutor-social-container,
+      .ratings {
+        position: static !important;
+        top: 0 !important;
+        text-align: center !important;
+      }
+
+      .profile-name {
+        padding: 0 !important;
+      }
+    }
+
+    .tutor-social-container {
+      margin: 15px 0 0 0 !important;
+      a {
+        color: #7a7a7a !important;
+      }
+    }
+
+    .profile-name {
+      padding: 0 !important;
+    }
+
+    &.tutor-user-public-profile-pp-circle,
+    &.tutor-user-public-profile-pp-rectangle {
+      .pp-area {
+        margin-top: -83px !important;
+        position: relative !important;
+        top: 0 !important;
+      }
+    }
+
+    .tutor-user-profile-sidebar {
+      margin-top: 0 !important;
+    }
+
+    &.tutor-user-public-profile-no-cp {
+      .pp-area {
+        @include propertyWithPrefix(justify-content, left !important);
+
+        * {
+          text-align: left !important;
+        }
+      }
+    }
+  }
+
+  // Content container
+  .tutor-user-profile-sidebar {
+    padding: 15px;
+    width: 278px;
+    float: left;
+  }
+
+  .tutor-user-profile-content {
+    width: calc(100% - 278px);
+    float: right;
+    margin-bottom: 30px;
+    padding-left: 30px;
+
+    h3 {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 24px !important;
+      line-height: 34px;
+      margin-top: 20px;
+      @extend .color-text-primary;
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+    p {
+      @extend .color-text-subsued;
+      font-size: 16px;
+      line-height: 28px;
+    }
+  }
+
+  @media (max-width: 800px) {
+    &.tutor-user-public-profile-no-cp {
+      .pp-area {
+        padding-left: 0 !important;
+      }
+      .profile-rating-media {
+        left: 178px !important;
+      }
+      .tutor-rating-container {
+          padding-left: 0px;
+      }
+    }
+
+    .tutor-user-profile-sidebar,
+    .tutor-user-profile-content {
+      width: 100%;
+      float: none;
+      padding: 10px 0;
+    }
+  }
 }
