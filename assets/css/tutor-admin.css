@@ -7515,4 +7515,86 @@ li.tutor-option-nav-item h4 {
   display: none;
 }
 
+.tutor-all-addons-list {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.tutor-all-addons-list .addons-header {
+  position: absolute;
+  width: calc(100% + 20px);
+  right: 0;
+  top: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background: #fff;
+  padding: 13px 30px;
+}
+
+.tutor-all-addons-list .addons-header h3.addons-heading {
+  color: #212327;
+  font-size: 24px;
+  font-weight: 400;
+  font-style: normal;
+  margin: 0;
+}
+
+.tutor-all-addons-list .addons-header .tutor-tabbed-nav ul {
+  width: 250px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+
+.tutor-all-addons-list .addons-header .tutor-tabbed-nav ul li a {
+  color: #5b616f;
+  font-size: 14px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 26px;
+}
+
+.tutor-all-addons-list .addons-header .tutor-tabbed-nav ul li.active a {
+  color: #1973aa;
+}
+
+.tutor-all-addons-list .addons-header .tutor-tabbed-nav ul li.active a span {
+  color: #5b616f;
+}
+
+.tutor-all-addons-list .tutor-addons-filter {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  margin-top: 35px;
+  margin-right: 50px;
+}
+
 /*# sourceMappingURL=tutor-admin.css.map */

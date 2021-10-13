@@ -4442,7 +4442,7 @@ msgstr ""
 msgid "Buy Now"
 msgstr ""
 
-#: views/pages/addons.php:79, views/pages/enable_disable_addons.php:110, views/pages/tutor-pro-addons.php:56
+#: views/pages/addons.php:79, views/pages/tutor-pro-addons.php:56, views/pages/__enable_disable_addons.php:110
 msgid "Version"
 msgstr ""
 
@@ -4498,12 +4498,20 @@ msgstr ""
 msgid "on"
 msgstr ""
 
-#: views/pages/enable_disable_addons.php:3
+#: views/pages/enable_disable_addons.php:4, views/pages/__enable_disable_addons.php:3
 msgid "Addons List"
 msgstr ""
 
-#: views/pages/enable_disable_addons.php:74
-msgid "Required Plugin(s)"
+#: views/pages/enable_disable_addons.php:8
+msgid "All "
+msgstr ""
+
+#: views/pages/enable_disable_addons.php:9
+msgid "Active "
+msgstr ""
+
+#: views/pages/enable_disable_addons.php:10
+msgid "Deactive "
 msgstr ""
 
 #: views/pages/get-pro.php:2
@@ -4612,6 +4620,10 @@ msgstr ""
 
 #: views/pages/view_attempt.php:365, templates/dashboard/quiz-attempts/quiz-reviews.php:420
 msgid "Updated"
+msgstr ""
+
+#: views/pages/__enable_disable_addons.php:74
+msgid "Required Plugin(s)"
 msgstr ""
 
 #: templates/dashboard/assignments/review.php:125
