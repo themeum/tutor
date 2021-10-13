@@ -9145,13 +9145,54 @@ Withdraw Method
   color: #41454f;
 }
 
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name {
+  padding-left: 60px;
+}
+
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name span {
   color: #5b616f !important;
   font-weight: 400;
 }
 
-.tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name span, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name span {
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-pic {
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+  border: none !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-rating-container {
+  padding-left: 80px;
+  margin-top: 30px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name {
+  padding-left: 63px;
+  padding-bottom: 50px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name span {
   font-weight: 300;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-pic {
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name {
+  padding-left: 23px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name span {
+  font-weight: 300;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-pic {
+  border-radius: 10px;
+  height: 275px;
+  width: 235px;
 }
 
 .tutor-user-public-profile .photo-area {
@@ -9185,7 +9226,7 @@ Withdraw Method
 
 .tutor-user-public-profile .photo-area .pp-area {
   position: relative;
-  top: -111px;
+  top: -141px;
   padding-left: 49px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -9211,17 +9252,12 @@ Withdraw Method
   border: 8px solid white;
 }
 
-.tutor-user-public-profile .photo-area .pp-area .profile-name {
-  padding-left: 23px;
-  padding-bottom: 30px;
-}
-
 .tutor-user-public-profile .photo-area .pp-area .profile-name h3 {
   font-style: normal;
   font-weight: 600;
   font-size: 40px;
   line-height: 48px;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 0;
 }
 
@@ -9281,24 +9317,13 @@ Withdraw Method
   color: white;
 }
 
-.tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-pic {
-  border-radius: 50%;
-  height: 153px;
-  width: 153px;
-}
-
 .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area {
   overflow: initial;
 }
 
-.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-pic {
-  border-radius: 10px;
-  height: 200px;
-  width: 153px;
-}
-
-.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-rating-media {
-  padding-bottom: 75px;
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-name,
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-rating-media {
+  padding-bottom: 137px;
 }
 
 .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .tutor-user-profile-sidebar {
@@ -9317,14 +9342,8 @@ Withdraw Method
   top: 0;
 }
 
-.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-pic {
-  border-radius: 50%;
-  height: 153px;
-  width: 153px;
-}
-
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name {
-  padding-top: 49px;
+  padding-top: 40px;
 }
 
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name h3 {
@@ -9417,7 +9436,10 @@ Withdraw Method
     -moz-justify-content: center;
     -webkit-justify-content: center;
   }
-  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-rating-media {
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name,
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name,
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name,
+  .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-rating-media {
     width: 100% !important;
     text-align: center !important;
   }
@@ -9425,7 +9447,7 @@ Withdraw Method
     color: black !important;
   }
   .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name > span:nth-of-type(2) > span, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name > span:nth-of-type(2) > span, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name > span:nth-of-type(2) > span {
-    color: #C4C4C4 !important;
+    color: #c4c4c4 !important;
   }
   .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name h3, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name h3, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name h3 {
     color: #161616 !important;
@@ -9441,7 +9463,10 @@ Withdraw Method
     height: 160px !important;
     width: 153px !important;
   }
-  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container, .tutor-user-public-profile.tutor-user-public-profile-no-cp .ratings {
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area,
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media,
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container,
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .ratings {
     position: static !important;
     top: 0 !important;
     text-align: center !important;
@@ -9453,7 +9478,7 @@ Withdraw Method
     margin: 15px 0 0 0 !important;
   }
   .tutor-user-public-profile .tutor-social-container a {
-    color: #7A7A7A !important;
+    color: #7a7a7a !important;
   }
   .tutor-user-public-profile .profile-name {
     padding: 0 !important;
@@ -9482,14 +9507,15 @@ Withdraw Method
 
 .tutor-user-public-profile .tutor-user-profile-sidebar {
   padding: 15px;
-  width: 223px;
+  width: 278px;
   float: left;
 }
 
 .tutor-user-public-profile .tutor-user-profile-content {
-  width: calc(100% - 228px);
-  float: left;
+  width: calc(100% - 278px);
+  float: right;
   margin-bottom: 30px;
+  padding-left: 30px;
 }
 
 .tutor-user-public-profile .tutor-user-profile-content h3 {
@@ -9516,9 +9542,14 @@ Withdraw Method
   .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media {
     left: 178px !important;
   }
-  .tutor-user-public-profile .tutor-user-profile-sidebar, .tutor-user-public-profile .tutor-user-profile-content {
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-rating-container {
+    padding-left: 0px;
+  }
+  .tutor-user-public-profile .tutor-user-profile-sidebar,
+  .tutor-user-public-profile .tutor-user-profile-content {
     width: 100%;
     float: none;
+    padding: 10px 0;
   }
 }
 
