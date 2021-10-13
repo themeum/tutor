@@ -17,8 +17,14 @@
       border: none !important;
     }
     .tutor-rating-container {
-        padding-left: 80px;
-        margin-top: 30px;
+      padding-left: 80px;
+      margin-top: 30px;
+    }
+    .pp-area {
+      top: -141px;
+    }
+    .tutor-social-container {
+      top: 110px;
     }
   }
   &.tutor-user-public-profile-pp-circle {
@@ -34,6 +40,12 @@
       height: 200px;
       width: 200px;
     }
+    .pp-area {
+      top: -147px;
+    }
+    .tutor-social-container {
+      margin-top: 2px;
+    }
   }
   &.tutor-user-public-profile-pp-rectangle {
     .profile-name {
@@ -46,6 +58,9 @@
       border-radius: 10px;
       height: 275px;
       width: 235px;
+    }
+    .tutor-social-container {
+      margin-top: 12px;
     }
   }
   .photo-area {
@@ -76,8 +91,8 @@
 
     .pp-area {
       position: relative;
-      top: -141px;
       padding-left: 49px;
+      top: -141px;
       @include valueWithPrefix(display, flex);
       @include propertyWithPrefix(align-items, center);
 
@@ -134,7 +149,6 @@
       }
 
       .tutor-social-container {
-        margin-top: 12px;
         text-align: right;
 
         a {
@@ -214,7 +228,7 @@
       a {
         margin-left: 0 !important;
         margin-right: 20px;
-        color: #41454F !important;
+        color: #41454f !important;
 
         &:hover {
           color: #161616 !important;
@@ -326,7 +340,7 @@
     .tutor-social-container {
       margin: 15px 0 0 0 !important;
       a {
-        color: #41454F !important;
+        color: #41454f !important;
       }
     }
 
@@ -398,7 +412,7 @@
         left: 178px !important;
       }
       .tutor-rating-container {
-          padding-left: 0px;
+        padding-left: 0px;
       }
     }
 

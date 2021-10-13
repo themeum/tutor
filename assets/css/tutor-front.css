@@ -9166,6 +9166,14 @@ Withdraw Method
   margin-top: 30px;
 }
 
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area {
+  top: -141px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container {
+  top: 110px;
+}
+
 .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name {
   padding-left: 63px;
   padding-bottom: 50px;
@@ -9181,6 +9189,14 @@ Withdraw Method
   width: 200px;
 }
 
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .pp-area {
+  top: -147px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .tutor-social-container {
+  margin-top: 2px;
+}
+
 .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name {
   padding-left: 23px;
 }
@@ -9193,6 +9209,10 @@ Withdraw Method
   border-radius: 10px;
   height: 275px;
   width: 235px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .tutor-social-container {
+  margin-top: 12px;
 }
 
 .tutor-user-public-profile .photo-area {
@@ -9226,8 +9246,8 @@ Withdraw Method
 
 .tutor-user-public-profile .photo-area .pp-area {
   position: relative;
-  top: -141px;
   padding-left: 49px;
+  top: -141px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -9300,7 +9320,6 @@ Withdraw Method
 }
 
 .tutor-user-public-profile .photo-area .pp-area .tutor-social-container {
-  margin-top: 12px;
   text-align: right;
 }
 
@@ -9376,7 +9395,7 @@ Withdraw Method
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container a {
   margin-left: 0 !important;
   margin-right: 20px;
-  color: #41454F !important;
+  color: #41454f !important;
 }
 
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container a:hover {
@@ -9478,7 +9497,7 @@ Withdraw Method
     margin: 15px 0 0 0 !important;
   }
   .tutor-user-public-profile .tutor-social-container a {
-    color: #41454F !important;
+    color: #41454f !important;
   }
   .tutor-user-public-profile .profile-name {
     padding: 0 !important;
