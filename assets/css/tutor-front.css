@@ -9300,17 +9300,17 @@ Withdraw Method
 }
 
 .tutor-user-public-profile .photo-area .pp-area .tutor-social-container {
-  margin-top: 15px;
+  margin-top: 12px;
   text-align: right;
 }
 
 .tutor-user-public-profile .photo-area .pp-area .tutor-social-container a {
   display: inline-block;
-  margin-left: 20px;
+  margin-left: 15px;
   color: whitesmoke;
   cursor: pointer;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .tutor-user-public-profile .photo-area .pp-area .tutor-social-container a:hover {
@@ -9376,7 +9376,7 @@ Withdraw Method
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container a {
   margin-left: 0 !important;
   margin-right: 20px;
-  color: #757575 !important;
+  color: #41454F !important;
 }
 
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container a:hover {
@@ -9478,7 +9478,7 @@ Withdraw Method
     margin: 15px 0 0 0 !important;
   }
   .tutor-user-public-profile .tutor-social-container a {
-    color: #7a7a7a !important;
+    color: #41454F !important;
   }
   .tutor-user-public-profile .profile-name {
     padding: 0 !important;
