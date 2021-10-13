@@ -21,8 +21,10 @@ table.tutor-ui-table {
 	$radius: 6px;
 	border-collapse: separate;
 	border-spacing: 0;
+	min-width: 300px;
 	width: 100%;
 	// max-width: 825px;
+	overflow-x: auto;
 
 	@include breakpoint-min(desktop) {
 		tr:first-child {
