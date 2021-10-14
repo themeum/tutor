@@ -1659,7 +1659,7 @@ msgstr ""
 msgid "View Course"
 msgstr ""
 
-#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/dashboard.php:227, templates/student-public-profile.php:106, templates/student-public-profile.php:167, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, views/pages/announcements.php:59, templates/single/course/instructors.php:72
+#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/dashboard.php:228, templates/student-public-profile.php:106, templates/student-public-profile.php:167, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, views/pages/announcements.php:59, templates/single/course/instructors.php:72
 msgid "Courses"
 msgstr ""
 
@@ -2300,7 +2300,7 @@ msgstr ""
 msgid "Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it."
 msgstr ""
 
-#: classes/Tutor.php:518, classes/Utils.php:2449, templates/dashboard.php:227, templates/dashboard/dashboard.php:9
+#: classes/Tutor.php:518, classes/Utils.php:2449, templates/dashboard.php:228, templates/dashboard/dashboard.php:9
 msgid "Dashboard"
 msgstr ""
 
@@ -2688,7 +2688,7 @@ msgstr ""
 msgid "Nonce not matched"
 msgstr ""
 
-#: classes/Utils.php:1294, templates/dashboard.php:231
+#: classes/Utils.php:1294, templates/dashboard.php:232
 msgid "Q&A"
 msgstr ""
 
@@ -2720,7 +2720,7 @@ msgstr ""
 msgid "Purchase History"
 msgstr ""
 
-#: classes/Utils.php:2460, templates/dashboard.php:103
+#: classes/Utils.php:2460, templates/dashboard.php:104
 msgid "Create Course"
 msgstr ""
 
@@ -3166,19 +3166,19 @@ msgstr ""
 msgid "%d Ratings"
 msgstr ""
 
-#: templates/dashboard.php:93
+#: templates/dashboard.php:94
 msgid "Become an instructor"
 msgstr ""
 
-#: templates/dashboard.php:112
+#: templates/dashboard.php:113
 msgid "Your Application is pending from"
 msgstr ""
 
-#: templates/dashboard.php:137
+#: templates/dashboard.php:138
 msgid "Your application to become an instructor was rejected on"
 msgstr ""
 
-#: templates/dashboard.php:235
+#: templates/dashboard.php:236
 msgid "Menu"
 msgstr ""
 
