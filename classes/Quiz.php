@@ -284,6 +284,7 @@ class Quiz {
 
 		$attempt_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('attempt_id', $_POST));
 		$attempt = tutor_utils()->get_attempt($attempt_id);
+		$course_id = tutor_utils()->get_course_by_quiz($attempt->quiz_id)->ID;
 
 		$attempt_answers = isset($_POST['attempt']) ? $_POST['attempt'] : false;
 		if ( ! is_user_logged_in()){
@@ -453,7 +454,7 @@ class Quiz {
 			    $wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_info, array('attempt_id' => $attempt_id));
             }
 
-            do_action('tutor_quiz/attempt_ended', $attempt_id);
+            do_action('tutor_quiz/attempt_ended', $attempt_id, $course_id, $user_id);
 			return true;
         }
 		return false;
@@ -548,11 +549,16 @@ class Quiz {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
-		$attempt_answer = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE attempt_answer_id = %d ", $attempt_answer_id));
+		$attempt_answer = $wpdb->get_row($wpdb->prepare(
+			"SELECT * FROM {$wpdb->prefix}tutor_quiz_attempt_answers 
+			WHERE attempt_answer_id = %d ", 
+			$attempt_answer_id
+		));
 
 		$attempt = tutor_utils()->get_attempt($attempt_id);
 		$question = tutils()->get_quiz_question_by_id($attempt_answer->question_id);
-
+		$course_id = $attempt->course_id;
+		$student_id = $attempt->user_id;
 		$previous_ans =  $attempt_answer->is_correct;
 
 		do_action('tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as);
@@ -610,6 +616,7 @@ class Quiz {
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));			
 		}
 		do_action('tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as);
+		do_action('tutor_quiz/answer/review/after', $attempt_answer_id, $course_id, $student_id);
 
 		if (wp_doing_ajax())
 		{
