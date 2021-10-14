@@ -10,7 +10,8 @@ import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-icon-test.css';
 import '../docz-essential.css';
 
 # UI Table variations
-`** Replace "className" with "class" while using with html`
+`** Replace "className" with "class" while using with html` <br />
+`** Add the th content to the tds as data-th="TH_CONTENT" `
 
 ## Most Popular Courses
 
@@ -38,7 +39,7 @@ import '../docz-essential.css';
 			</thead>
 			<tbody>
 				<tr>
-					<td data-th="Course Name">
+					<td data-th="Course Name" className="column-fullwidth">
 						<div className="td-course text-medium-body color-text-primary">
 							<a href="#">Graphic Design Bootcamp: Advanced Training Using Adobe CCas</a>
 						</div>
@@ -62,7 +63,7 @@ import '../docz-essential.css';
 					</td>
 				</tr>
 				<tr>
-					<td data-th="Course Name">
+					<td data-th="Course Name" className="column-fullwidth">
 						<div className="td-course text-medium-body color-text-primary">
 							<a href="#">Graphic Design Bootcamp: Advanced Training Using Adobe CCas</a>
 						</div>
@@ -90,7 +91,7 @@ import '../docz-essential.css';
 	</div>
 </Playground>
 
-## Reviews
+## Reviews List
 
 <Playground>
 	<div className="tutor-ui-table-responsive">
@@ -110,7 +111,7 @@ import '../docz-essential.css';
 			</thead>
 			<tbody>
 				<tr>
-					<td data-th="Student">
+					<td data-th="Student" className="column-fullwidth">
 						<div className="td-avatar">
 							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
 							<p className="text-medium-body color-text-primary">Arnol James</p>
@@ -145,7 +146,7 @@ import '../docz-essential.css';
 					</td>
 				</tr>
 				<tr>
-					<td data-th="Student">
+					<td data-th="Student" className="column-fullwidth">
 						<div className="td-avatar">
 							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
 							<p className="text-medium-body color-text-primary">Arnol James</p>
@@ -178,6 +179,59 @@ import '../docz-essential.css';
 							</p>
 						</div>
 					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Playground>
+
+## My Quiz Attempts
+
+<Playground>
+	<div className="tutor-ui-table-responsive">
+		<table className="tutor-ui-table my-quiz-attempts">
+			<thead>
+				<tr>
+					<th><span className="text-regular-small color-text-subsued">Quiz Info</span></th>
+					<th><span className="text-regular-small color-text-subsued">Question</span></th>
+					<th><span className="text-regular-small color-text-subsued">Total Marks</span></th>
+					<th><span className="text-regular-small color-text-subsued">Correct Answer</span></th>
+					<th><span className="text-regular-small color-text-subsued">Incorrect Answer</span></th>
+					<th><span className="text-regular-small color-text-subsued">Earned Marks</span></th>
+					<th><span className="text-regular-small color-text-subsued">Result</span></th>
+					<th className="tutor-shrink"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td data-th="Quiz Info" className="column-fullwidth">
+						<div className="td-statement-info">
+							<span className="text-regular-small color-text-primary">20 July, 2020, 12:47 pm</span>
+							<p className="text-medium-body color-text-primary">Machine Learning 101 with Scikit-learn</p>
+						</div>
+					</td>
+					<td data-th="Question"><span class="text-medium-caption color-text-primary">25</span></td>
+					<td data-th="Total Marks"><span class="text-medium-caption color-text-primary">50</span></td>
+					<td data-th="Total Marks"><span class="text-medium-caption color-text-primary">8</span></td>
+					<td data-th="Total Marks"><span class="text-medium-caption color-text-primary">17</span></td>
+					<td data-th="Total Marks"><span class="text-medium-caption color-text-primary">17(40%)</span></td>
+					<td data-th="Result"><span class="tutor-badge-label label-danger">Fail</span></td>
+					<td data-th="URL"><div class="inline-flex-center td-action-btns"><a href="#" class="btn-outline tutor-btn">Details</a></div></td>
+				</tr>
+				<tr>
+					<td data-th="Quiz Info" className="column-fullwidth">
+						<div className="td-statement-info">
+							<span className="text-regular-small color-text-primary">20 July, 2020, 12:47 pm</span>
+							<p className="text-medium-body color-text-primary">Machine Learning 101 with Scikit-learn</p>
+						</div>
+					</td>
+					<td data-th="Question"><span class="text-medium-caption color-text-primary">25</span></td>
+					<td data-th="Total Marks"><span class="text-medium-caption color-text-primary">50</span></td>
+					<td data-th="Total Marks"><span class="text-medium-caption color-text-primary">8</span></td>
+					<td data-th="Total Marks"><span class="text-medium-caption color-text-primary">17</span></td>
+					<td data-th="Total Marks"><span class="text-medium-caption color-text-primary">17(40%)</span></td>
+					<td data-th="Result"><span class="tutor-badge-label label-warning">Pending</span></td>
+					<td data-th="URL"><div class="inline-flex-center td-action-btns"><a href="#" class="btn-outline tutor-btn">Details</a></div></td>
 				</tr>
 			</tbody>
 		</table>
@@ -207,7 +261,7 @@ import '../docz-essential.css';
 			</thead>
 			<tbody>
 				<tr>
-					<td data-th="Statement Info">
+					<td data-th="Statement Info" className="column-fullwidth">
 						<div className="td-statement-info">
 							<div className="meta-data-1 inline-flex-center">
 								<span className="tutor-badge-label label-success">Completed</span>
@@ -242,7 +296,7 @@ import '../docz-essential.css';
 					</td>
 				</tr>
 				<tr>
-					<td data-th="Statement Info">
+					<td data-th="Statement Info" className="column-fullwidth">
 						<div className="td-statement-info">
 							<div className="meta-data-1 inline-flex-center">
 								<span className="tutor-badge-label label-success">Completed</span>
@@ -281,7 +335,7 @@ import '../docz-essential.css';
 	</div>
 </Playground>
 
-## Courses
+## Course List
 
 <Playground>
 	<div className="tutor-ui-table-responsive">
@@ -308,7 +362,7 @@ import '../docz-essential.css';
 			</thead>
 			<tbody>
 				<tr>
-					<td data-th="Course Name">
+					<td data-th="Course Name" className="column-fullwidth">
 						<div className="color-text-primary td-course text-medium-body">
 							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
 							<div className="course-meta">
@@ -342,7 +396,7 @@ import '../docz-essential.css';
 					</td>
 				</tr>
 				<tr>
-					<td data-th="Course Name">
+					<td data-th="Course Name" className="column-fullwidth">
 						<div className="color-text-primary td-course text-medium-body">
 							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
 							<div className="course-meta">
