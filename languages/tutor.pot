@@ -5254,7 +5254,7 @@ msgstr ""
 msgid "Select Option"
 msgstr ""
 
-#: views/options/template/basic.php:5, views/options/template/certificate.php:5, views/options/template/design.php:4
+#: views/options/template/basic.php:5, views/options/template/certificate.php:5, views/options/template/design.php:4, views/options/template/notifications.php:4
 msgid "Reset to Default"
 msgstr ""
 
