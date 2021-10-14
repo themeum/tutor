@@ -80,6 +80,7 @@ do_action('tutor_dashboard/before/wrap');
                             <div class="col-12 col-md-7">
                                 <div class="tutor-dashboard-header-button">
                                     <?php
+                                    do_action( 'tutor_dashboard/before_header_button' );
                                     $instructor_status = tutor_utils()->instructor_status();
                                     $instructor_status = is_string($instructor_status) ? strtolower($instructor_status) : '';
                                     $rejected_on = get_user_meta($user->ID , '_is_tutor_instructor_rejected', true);

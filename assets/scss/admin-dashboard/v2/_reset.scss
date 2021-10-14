@@ -1,14 +1,21 @@
 // Reset Browser Default
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
+
 body {
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 a {
-	text-decoration: none;
+    text-decoration: none;
+}
+
+.tutor-backend-settings-page {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 }
