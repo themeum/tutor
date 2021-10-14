@@ -7533,6 +7533,10 @@ li.tutor-option-nav-item h4 {
   margin: 0;
 }
 
+#tutor_notifications .tutor-option-single-item .item-wrapper .tutor-option-field-row .type-check .tutor-form-check input[type="checkbox"]:checked::before {
+  content: "";
+}
+
 #tutor_notifications .tutor-option-single-item .item-wrapper .tutor-option-field-row .type-check .tutor-form-check:not(:last-child) {
   margin-right: 22px;
 }
