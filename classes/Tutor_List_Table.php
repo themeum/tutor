@@ -4,13 +4,11 @@
  * User: themeum
  * Date: 24/9/18
  * Time: 12:03 PM
- *
- * @package Tutor List Table
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+
+if ( ! defined( 'ABSPATH' ) )
 	exit;
-}
 
 /**
  * Base class for displaying a list of items in an ajaxified HTML table.
