@@ -91,7 +91,7 @@
 								if ( count( $required ) ) {
 									?>
 									<div class="required-plugin-cards">
-										<strong>Requirements</strong>
+										<strong><?php _e('WebPush Notification Requirements', 'tutor'); ?></strong>
 										<ul style="list-style: disc; padding-left: 15px;">
 											<?php 
 												foreach ( $required as $req ) {
