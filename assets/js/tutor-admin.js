@@ -2098,6 +2098,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tutorNotificationTab__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_tutorNotificationTab__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _tutorDefaultTab__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tutorDefaultTab */ "./v2-library/_src/js/tutorDefaultTab.js");
 /* harmony import */ var _tutorDefaultTab__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_tutorDefaultTab__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _tutorPasswordStrengthChecker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./tutorPasswordStrengthChecker */ "./v2-library/_src/js/tutorPasswordStrengthChecker.js");
+/* harmony import */ var _tutorPasswordStrengthChecker__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_tutorPasswordStrengthChecker__WEBPACK_IMPORTED_MODULE_6__);
+
 
 
 
@@ -2278,6 +2281,88 @@ function tutorModal() {
       });
     }
   });
+})();
+
+/***/ }),
+
+/***/ "./v2-library/_src/js/tutorPasswordStrengthChecker.js":
+/*!************************************************************!*\
+  !*** ./v2-library/_src/js/tutorPasswordStrengthChecker.js ***!
+  \************************************************************/
+/***/ (() => {
+
+/**
+ * Tutor Password Strength Checker
+ */
+(function tutorPasswordStrengthChecker() {
+  var passwordCheckerInput = document.querySelector('.tutor-password-field input.password-checker');
+  var indicator = document.querySelector('.tutor-passowrd-strength-hint .indicator');
+  var weak = document.querySelector('.tutor-passowrd-strength-hint .weak');
+  var medium = document.querySelector('.tutor-passowrd-strength-hint .medium');
+  var strong = document.querySelector('.tutor-passowrd-strength-hint .strong');
+  var text = document.querySelector('.tutor-passowrd-strength-hint .text');
+  var showBtn = document.querySelector('.tutor-password-field .show-hide-btn');
+  var regExpWeak = /[a-z]/;
+  var regExpMedium = /\d+/;
+  var regExpStrong = /.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/;
+
+  if (passwordCheckerInput) {
+    passwordCheckerInput.addEventListener('input', function (e) {
+      var input = e.target;
+
+      if (input.value != '') {
+        indicator.style.display = 'flex';
+        if (input.value.length <= 3 && (input.value.match(regExpWeak) || input.value.match(regExpMedium) || input.value.match(regExpStrong))) no = 1;
+        if (input.value.length >= 6 && (input.value.match(regExpWeak) && input.value.match(regExpMedium) || input.value.match(regExpMedium) && input.value.match(regExpStrong) || input.value.match(regExpWeak) && input.value.match(regExpStrong))) no = 2;
+        if (input.value.length >= 6 && input.value.match(regExpWeak) && input.value.match(regExpMedium) && input.value.match(regExpStrong)) no = 3;
+
+        if (no == 1) {
+          weak.classList.add('active');
+          text.style.display = 'block';
+          text.textContent = 'week';
+          text.classList.add('weak');
+        }
+
+        if (no == 2) {
+          medium.classList.add('active');
+          text.textContent = 'medium';
+          text.classList.add('medium');
+        } else {
+          medium.classList.remove('active');
+          text.classList.remove('medium');
+        }
+
+        if (no == 3) {
+          weak.classList.add('active');
+          medium.classList.add('active');
+          strong.classList.add('active');
+          text.textContent = 'strong';
+          text.classList.add('strong');
+        } else {
+          strong.classList.remove('active');
+          text.classList.remove('strong');
+        }
+
+        showBtn.style.display = 'block';
+
+        showBtn.onclick = function () {
+          if (input.type == 'password') {
+            input.type = 'text';
+            showBtn.style.color = '#23ad5c';
+            showBtn.classList.add('hide-btn');
+          } else {
+            input.type = 'password';
+            showBtn.style.color = '#000';
+            showBtn.classList.remove('hide-btn');
+          }
+        };
+      } else {
+        indicator.style.display = 'none';
+        text.style.display = 'none';
+        showBtn.style.display = 'none';
+      }
+    });
+  }
 })();
 
 /***/ }),
