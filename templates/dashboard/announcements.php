@@ -81,9 +81,9 @@ $image_base = tutor()->url . '/assets/images/';
 
 
 <!--Filter-->
-<div class="row tutor-mb-30">
+<div class="tutor-row tutor-mb-30">
     <div class="tutor-col-12 tutor-col-lg-6">
-        <label class="d-block">
+        <label class="tutor-d-block">
             <?php _e('Courses', 'tutor'); ?>
         </label>
         <select class="tutor-form-select tutor-announcement-course-sorting">
@@ -103,7 +103,7 @@ $image_base = tutor()->url . '/assets/images/';
     </div>
 
     <div class="tutor-col-6 tutor-col-lg-3">
-        <label class="d-block"><?php _e('Sort By', 'tutor'); ?></label>
+        <label class="tutor-d-block"><?php _e('Sort By', 'tutor'); ?></label>
         <select class="tutor-form-select tutor-announcement-order-sorting">
             <option <?php selected($order_filter, 'ASC'); ?>><?php _e('ASC', 'tutor'); ?></option>
             <option <?php selected($order_filter, 'DESC'); ?>><?php _e('DESC', 'tutor'); ?></option>
@@ -111,7 +111,7 @@ $image_base = tutor()->url . '/assets/images/';
     </div>
 
     <div class="tutor-col-6 tutor-col-lg-3 tutor-announcement-datepicker">
-        <label class="d-block"><?php _e('Date', 'tutor'); ?></label>
+        <label class="tutor-d-block"><?php _e('Date', 'tutor'); ?></label>
         <input type="text" class="tutor-form-control tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
         <i class="tutor-icon-calendar"></i>
     </div>

@@ -1,8 +1,8 @@
-<div class="tutor-option-field-row d-block">
+<div class="tutor-option-field-row tutor-d-block">
 <?php include tutor()->path . "views/options/template/field_heading.php";?>
 
     <div class="tutor-option-field-input image-previewer">
-        <div class="d-flex logo-upload">
+        <div class="tutor-d-flex logo-upload">
             <div class="logo-preview">
                 <span class="preview-loading"></span>
                 <img src="https://tutor.test/wp-content/plugins/tutor/assets/images/images-v2/icons/tutor-logo-course-builder.svg" alt="course builder logo">
