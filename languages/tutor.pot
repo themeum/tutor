@@ -209,7 +209,7 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:62, classes/Ajax.php:115, classes/Ajax.php:179, classes/Ajax.php:237, classes/Ajax.php:290, classes/Ajax.php:332, classes/Ajax.php:353, classes/Ajax.php:456, classes/Ajax.php:527, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:531, classes/Quiz.php:626, classes/Quiz.php:683, classes/Quiz.php:727, classes/Quiz.php:755, classes/Quiz.php:853, classes/Quiz.php:876, classes/Quiz.php:897, classes/Quiz.php:1008, classes/Quiz.php:1053, classes/Quiz.php:1134, classes/Quiz.php:1194, classes/Q_and_A.php:71
+#: classes/Ajax.php:62, classes/Ajax.php:115, classes/Ajax.php:179, classes/Ajax.php:237, classes/Ajax.php:290, classes/Ajax.php:332, classes/Ajax.php:353, classes/Ajax.php:456, classes/Ajax.php:527, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1141, classes/Quiz.php:1201, classes/Q_and_A.php:71
 msgid "Access Denied"
 msgstr ""
 
@@ -1663,6 +1663,10 @@ msgstr ""
 msgid "View Course"
 msgstr ""
 
+#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/dashboard.php:228, templates/student-public-profile.php:106, templates/student-public-profile.php:167, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, views/pages/announcements.php:59, templates/single/course/instructors.php:72
+msgid "Courses"
+msgstr ""
+
 #: classes/Post_types.php:50
 msgid "Search Courses"
 msgstr ""
@@ -2024,11 +2028,11 @@ msgstr ""
 msgid "Preview course"
 msgstr ""
 
-#: classes/Question_Answers_List.php:44, classes/Question_Answers_List.php:76, classes/Quiz.php:1079, templates/dashboard/question-answer.php:29, views/modal/question_form.php:145, views/pages/answer.php:11, templates/dashboard/my-quiz-attempts/attempts-details.php:215, templates/dashboard/question-answer/answers.php:13
+#: classes/Question_Answers_List.php:44, classes/Question_Answers_List.php:76, classes/Quiz.php:1086, templates/dashboard/question-answer.php:29, views/modal/question_form.php:145, views/pages/answer.php:11, templates/dashboard/my-quiz-attempts/attempts-details.php:215, templates/dashboard/question-answer/answers.php:13
 msgid "Answer"
 msgstr ""
 
-#: classes/Question_Answers_List.php:73, classes/Quiz.php:764, templates/dashboard/my-quiz-attempts.php:35, templates/dashboard/question-answer.php:26, views/metabox/course-topics.php:47, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:212, templates/dashboard/quiz-attempts/quiz-reviews.php:227
+#: classes/Question_Answers_List.php:73, classes/Quiz.php:771, templates/dashboard/my-quiz-attempts.php:35, templates/dashboard/question-answer.php:26, views/metabox/course-topics.php:47, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:212, templates/dashboard/quiz-attempts/quiz-reviews.php:227
 msgid "Question"
 msgstr ""
 
@@ -2036,39 +2040,39 @@ msgstr ""
 msgid "Student"
 msgstr ""
 
-#: classes/Quiz.php:513
+#: classes/Quiz.php:514
 msgid "Quiz has been timeout already"
 msgstr ""
 
-#: classes/Quiz.php:836
+#: classes/Quiz.php:843
 msgid "Please make sure you have added more than one option and saved them"
 msgstr ""
 
-#: classes/Quiz.php:832
+#: classes/Quiz.php:839
 msgid "Please select the correct answer"
 msgstr ""
 
-#: classes/Quiz.php:945, views/modal/question_answer_form.php:21
+#: classes/Quiz.php:952, views/modal/question_answer_form.php:21
 msgid "True"
 msgstr ""
 
-#: classes/Quiz.php:952, views/modal/question_answer_form.php:25
+#: classes/Quiz.php:959, views/modal/question_answer_form.php:25
 msgid "False"
 msgstr ""
 
-#: classes/Quiz.php:1063
+#: classes/Quiz.php:1070
 msgid "Answer options &amp; mark correct"
 msgstr ""
 
-#: classes/Quiz.php:1066
+#: classes/Quiz.php:1073
 msgid "Make sure you’re saving the answers in the right order. Students will have to match this order exactly."
 msgstr ""
 
-#: classes/Quiz.php:1101, classes/Quiz.php:1095, views/modal/question_form.php:169, views/modal/question_form.php:162, views/pages/view_attempt.php:342, templates/dashboard/quiz-attempts/quiz-reviews.php:400
+#: classes/Quiz.php:1108, classes/Quiz.php:1102, views/modal/question_form.php:169, views/modal/question_form.php:162, views/pages/view_attempt.php:342, templates/dashboard/quiz-attempts/quiz-reviews.php:400
 msgid "Mark as correct"
 msgstr ""
 
-#: classes/Quiz.php:1221
+#: classes/Quiz.php:1228
 msgid "Access Denied."
 msgstr ""
 
@@ -2300,7 +2304,7 @@ msgstr ""
 msgid "Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it."
 msgstr ""
 
-#: classes/Tutor.php:518, classes/Utils.php:2449, templates/dashboard.php:227, templates/dashboard/dashboard.php:9
+#: classes/Tutor.php:518, classes/Utils.php:2449, templates/dashboard.php:228, templates/dashboard/dashboard.php:9
 msgid "Dashboard"
 msgstr ""
 
@@ -2688,7 +2692,7 @@ msgstr ""
 msgid "Nonce not matched"
 msgstr ""
 
-#: classes/Utils.php:1294, templates/dashboard.php:231
+#: classes/Utils.php:1294, templates/dashboard.php:232
 msgid "Q&A"
 msgstr ""
 
@@ -2720,7 +2724,7 @@ msgstr ""
 msgid "Purchase History"
 msgstr ""
 
-#: classes/Utils.php:2460, templates/dashboard.php:103
+#: classes/Utils.php:2460, templates/dashboard.php:104
 msgid "Create Course"
 msgstr ""
 
@@ -3166,19 +3170,19 @@ msgstr ""
 msgid "%d Ratings"
 msgstr ""
 
-#: templates/dashboard.php:93
+#: templates/dashboard.php:94
 msgid "Become an instructor"
 msgstr ""
 
-#: templates/dashboard.php:112
+#: templates/dashboard.php:113
 msgid "Your Application is pending from"
 msgstr ""
 
-#: templates/dashboard.php:137
+#: templates/dashboard.php:138
 msgid "Your application to become an instructor was rejected on"
 msgstr ""
 
-#: templates/dashboard.php:235
+#: templates/dashboard.php:236
 msgid "Menu"
 msgstr ""
 
@@ -4934,7 +4938,7 @@ msgstr ""
 msgid "The display name is shown in all public fields, such as the author name, instructor name, student name, and name that will be printed on the certificate."
 msgstr ""
 
-#: templates/dashboard/settings/profile.php:189, templates/dashboard/settings/social-profile.php:50
+#: templates/dashboard/settings/profile.php:188, templates/dashboard/settings/social-profile.php:48
 msgid "Update Profile"
 msgstr ""
 
@@ -5290,7 +5294,7 @@ msgstr ""
 msgid "Select Option"
 msgstr ""
 
-#: views/options/template/basic.php:5, views/options/template/certificate.php:5, views/options/template/design.php:4
+#: views/options/template/basic.php:5, views/options/template/certificate.php:5, views/options/template/design.php:4, views/options/template/notifications.php:4
 msgid "Reset to Default"
 msgstr ""
 
