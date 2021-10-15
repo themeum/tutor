@@ -78,7 +78,8 @@ class Assets {
 			'tutor_frontend_dashboard_url' 	=> tutor_utils()->get_tutor_dashboard_page_permalink(),
 			'wp_date_format' 				=> tutor_js_date_format_against_wp(),
 			'is_admin'						=> is_admin(),
-			'is_admin_bar_showing'			=> is_admin_bar_showing()
+			'is_admin_bar_showing'			=> is_admin_bar_showing(),
+			'addons_data'					=> tutor_utils()->prepare_addons_data()
 		);
 	}
 

@@ -2,6 +2,8 @@ import "../lib/common";
 import "./segments/image-preview";
 import "./segments/options";
 import "./segments/import-export";
+// import "./segments/addonlist-data";
+import "./segments/addonlist";
 
 jQuery(document).ready(function($) {
   "use strict";

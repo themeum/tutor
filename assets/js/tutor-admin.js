@@ -1,6 +1,202 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./assets/react/admin-dashboard/segments/addonlist-data.js":
+/*!*****************************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/addonlist-data.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "addonData": () => (/* binding */ addonData)
+/* harmony export */ });
+var addonData = [{
+  title: 'BuddyBoss',
+  url: 'http://demo.com',
+  author: 'Themeum',
+  description: 'Discuss about course and share your knowledge with your friends.',
+  isActive: true,
+  isSubscribed: false,
+  version: '1.7.0'
+}, {
+  title: 'Content Drip',
+  url: 'http://demo.com',
+  author: 'Themeum',
+  description: 'Discuss about course and share your knowledge with your friends.',
+  isActive: false,
+  isSubscribed: false,
+  version: '1.7.0'
+}, {
+  title: 'Restrict Content Pro',
+  url: 'http://demo.com',
+  author: 'Themeum',
+  description: 'Discuss about course and share your knowledge with your friends.',
+  isActive: false,
+  isSubscribed: false,
+  version: '1.7.0'
+}, {
+  title: 'Assignments',
+  url: 'http://demo.com',
+  author: 'Themeum',
+  description: 'Discuss about course and share your knowledge with your friends.',
+  isActive: false,
+  isSubscribed: true,
+  version: '1.7.0'
+}, {
+  title: 'Certificate',
+  url: 'http://demo.com',
+  author: 'Themeum',
+  description: 'Discuss about course and share your knowledge with your friends.',
+  isActive: false,
+  isSubscribed: false,
+  version: '1.7.0'
+}, {
+  title: 'Gradebook',
+  url: 'http://demo.com',
+  author: 'Themeum',
+  description: 'Discuss about course and share your knowledge with your friends.',
+  isActive: false,
+  isSubscribed: false,
+  version: '1.7.0'
+}, {
+  title: 'BuddyPress',
+  url: 'http://demo.com',
+  author: 'Themeum',
+  description: 'Discuss about course and share your knowledge with your friends.',
+  isActive: true,
+  isSubscribed: false,
+  version: '1.7.0'
+}, {
+  title: 'Paid Memberships Pro',
+  url: 'http://demo.com',
+  author: 'Themeum',
+  description: 'Discuss about course and share your knowledge with your friends.',
+  isActive: false,
+  isSubscribed: false,
+  version: '1.7.0'
+}];
+
+/***/ }),
+
+/***/ "./assets/react/admin-dashboard/segments/addonlist.js":
+/*!************************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/addonlist.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _addonlist_data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./addonlist-data */ "./assets/react/admin-dashboard/segments/addonlist-data.js");
+/**
+ * Addon Filter and Search
+ */
+var selectFilterOption = document.querySelector('.tutor-addons-list-select-filter select.tutor-form-select');
+var searchField = document.querySelector('.tutor-addons-list-select-filter input[type="search"]');
+var searchBtn = document.querySelector('.tutor-addons-list-select-filter .search-btn');
+var tabFilterBtns = document.querySelectorAll('.tutor-addons-list-header .filter-btns .filter-btn');
+var addonsListWrapper = document.querySelector('.tutor-addons-list-items');
+var addonsListCards = document.querySelectorAll('.tutor-addons-card');
+
+var addonsData = _tutorobject.addons_data;
+window.addEventListener('DOMContentLoaded', function () {
+  addonsData.forEach(function (item) {
+    var name = item.name,
+        thumb_url = item.thumb_url,
+        description = item.description,
+        is_enabled = item.is_enabled,
+        version = item.version;
+    var isChecked = is_enabled && 'checked';
+    var author = 'Themeum';
+    var url = 'https://www.themeum.com';
+    var isSubscribed = false;
+    addonsListWrapper.innerHTML += "\n         <div class=\"tutor-addons-card ".concat(isSubscribed ? 'not-subscribed' : '', "\" ").concat(is_enabled ? 'data-addon-active' : '', ">\n             <div class=\"card-body tutor-px-30 tutor-py-40\">\n                 <div class=\"addon-logo\">\n                 <img src=\"").concat(thumb_url, "\" alt=\"").concat(name, "\" />\n                     \n                 </div>\n                 <div class=\"addon-title tutor-mt-20\">\n                     <h5 class=\"text-medium-h5 color-text-primary\">").concat(name, "</h5>\n                     <p class=\"text-medium-small color-text-hints tutor-mt-5\">\n                         By <a href=\"").concat(url, "\" class=\"color-brand-wordpress\">").concat(author, "</a>\n                     </p>\n                 </div>\n                 <div class=\"addon-des text-regular-body color-text-subsued tutor-mt-20\">\n                     <p>").concat(description, "</p>\n                 </div>\n             </div>\n             <div\n                 class=\"\n                     card-footer\n                     tutor-px-30 tutor-py-25\n                     d-flex\n                     justify-content-between\n                     align-items-center\n                 \"\n             >\n                 <div class=\"addon-toggle\">\n                     ").concat(isSubscribed ? "\n                             <p class=\"color-text-hints text-medium-small\">Required Plugin(s)</p>\n                             <p class=\"color-text-primary text-medium-caption tutor-mt-2\">\n                                 Woocommerce Subscription\n                             </p>" : "\n                             <label class=\"tutor-form-toggle\">\n                                 <input type=\"checkbox\" class=\"tutor-form-toggle-input\" ".concat(isChecked, " />\n                                 <span class=\"tutor-form-toggle-control\"></span>\n                                 <span class=\"tutor-form-toggle-label color-text-primary tutor-ml-5\">Active</span>\n                             </label>"), "\n                     \n                 </div>\n                 <div class=\"addon-version text-medium-small color-text-hints\">\n                     Version : <span class=\"text-bold-small color-text-primary\">").concat(version, "</span>\n                 </div>\n             </div>\n         </div>");
+  });
+}); // Header Tab Filter
+
+tabFilterBtns.forEach(function (btn) {
+  btn.addEventListener('click', function (e) {
+    tabFilterBtns.forEach(function (otherBtn) {
+      otherBtn.classList.remove('is-active');
+    });
+    btn.classList.add('is-active');
+    var dataAttr = btn.getAttribute('data-tab-filter-target');
+    toggleAddonCards(dataAttr);
+  });
+}); // Filter Selected types
+
+selectFilterOption.addEventListener('change', function (e) {
+  var selectValue = e.target.value;
+  toggleAddonCards(selectValue);
+});
+
+var toggleAddonCards = function toggleAddonCards(value) {
+  switch (value) {
+    case 'active':
+      document.querySelectorAll('.tutor-addons-list-items .tutor-addons-card').forEach(function (item) {
+        item.style.display = 'none';
+      });
+      document.querySelectorAll('.tutor-addons-list-items [data-addon-active]').forEach(function (item) {
+        item.style.display = 'block';
+      });
+      break;
+
+    case 'deactive':
+      document.querySelectorAll('.tutor-addons-list-items .tutor-addons-card').forEach(function (item) {
+        if (!item.hasAttribute('data-addon-active')) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      break;
+
+    case 'all':
+      document.querySelectorAll('.tutor-addons-list-items .tutor-addons-card').forEach(function (item) {
+        item.style.display = 'block';
+      });
+      break;
+  }
+};
+
+window.addEventListener('load', function () {
+  var addonsListCheckboxs = document.querySelectorAll('.tutor-addons-card input[type=checkbox]');
+  addonsListCheckboxs.forEach(function (inputEl) {
+    inputEl.addEventListener('change', function (e) {
+      if (e.target.checked) {
+        e.target.closest('.tutor-addons-card').setAttribute('data-addon-active', '');
+      } else {
+        e.target.closest('.tutor-addons-card').removeAttribute('data-addon-active');
+      }
+    });
+  });
+  searchBtn.addEventListener('click', function () {
+    if (searchField.value) {
+      var cardTitles = Array.from(document.querySelectorAll('.tutor-addons-card .addon-title h5')).map(function (x) {
+        return x.innerText;
+      }); // console.log(searchField.value, cardTitles, cardTitles.includes(searchField.value));
+
+      /**
+       * Filter array items based on search criteria (query)
+       */
+
+      var filterItems = function filterItems(arr, query) {
+        return arr.filter(function (el) {
+          return el.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+        });
+      }; // console.log(filterItems(cardTitles, searchField.value));
+
+
+      console.log(filterItems(Array.from(_addonlist_data__WEBPACK_IMPORTED_MODULE_0__.addonData).map(function (x) {
+        return x.title;
+      }), searchField.value));
+    }
+  });
+});
+
+/***/ }),
+
 /***/ "./assets/react/admin-dashboard/segments/image-preview.js":
 /*!****************************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/image-preview.js ***!
@@ -2585,10 +2781,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
+/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 
 
+
+ // import "./segments/addonlist-data";
 
 
 jQuery(document).ready(function ($) {
