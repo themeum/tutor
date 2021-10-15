@@ -1412,13 +1412,13 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-das
   }
 }
 
-body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-dashboard-builder-header .tutor-button {
+body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-dashboard-builder-header .tutor-btn {
   white-space: nowrap;
   margin-left: auto;
 }
 
 @media (max-width: 991px) {
-  body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-dashboard-builder-header .tutor-button {
+  body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-dashboard-builder-header .tutor-btn {
     padding: 6px 10px;
   }
 }

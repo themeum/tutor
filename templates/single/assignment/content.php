@@ -198,7 +198,7 @@ if ($assignment_comment != false) {
 				}
 				?>
 				<div class="tutor-assignment-submit-btn-wrap">
-					<button type="submit" class="tutor-button tutor-button-primary" id="tutor_assignment_submit_btn"> <?php _e('Submit Assignment', 'tutor');
+					<button type="submit" class="tutor-btn" id="tutor_assignment_submit_btn"> <?php _e('Submit Assignment', 'tutor');
 																												?> </button>
 				</div>
 			</form>
@@ -295,7 +295,7 @@ if ($assignment_comment != false) {
 					<?php wp_nonce_field(tutor()->nonce_action, tutor()->nonce); ?>
 					<input type="hidden" value="tutor_assignment_start_submit" name="tutor_action" />
 					<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
-					<button type="submit" class="tutor-button" id="tutor_assignment_start_btn" <?php if ($time_duration['value'] != 0) { if ($now > $remaining_time) {echo "disabled"; } } ?>>
+					<button type="submit" class="tutor-btn" id="tutor_assignment_start_btn" <?php if ($time_duration['value'] != 0) { if ($now > $remaining_time) {echo "disabled"; } } ?>>
 						<?php _e('Submit assignment', 'tutor'); ?>
 					</button>
 				</form>

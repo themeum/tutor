@@ -133,7 +133,7 @@ msgstr ""
 msgid "Instructors"
 msgstr ""
 
-#: classes/Admin.php:74, classes/Admin.php:74, classes/Utils.php:1295, classes/Utils.php:2462, templates/dashboard/announcements.php:126, views/pages/announcements.php:104, views/pages/announcements.php:114
+#: classes/Admin.php:74, classes/Admin.php:74, classes/Utils.php:1295, classes/Utils.php:2462, templates/dashboard/announcements.php:130, views/pages/announcements.php:104, views/pages/announcements.php:114
 msgid "Announcements"
 msgstr ""
 
@@ -581,7 +581,7 @@ msgstr ""
 msgid "Instructor Commission"
 msgstr ""
 
-#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:114, templates/dashboard/announcements.php:125, templates/dashboard/purchase_history.php:24, views/pages/announcements.php:94, views/pages/announcements.php:113, templates/dashboard/assignments/submitted.php:71, templates/dashboard/my-quiz-attempts/attempts-details.php:114
+#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:114, templates/dashboard/announcements.php:125, templates/dashboard/announcements.php:147, templates/dashboard/purchase_history.php:24, views/pages/announcements.php:94, views/pages/announcements.php:113, templates/dashboard/assignments/submitted.php:71, templates/dashboard/my-quiz-attempts/attempts-details.php:114
 msgid "Date"
 msgstr ""
 
@@ -2952,7 +2952,7 @@ msgstr ""
 msgid "Are you Sure? It can not be undone."
 msgstr ""
 
-#: classes/Withdraw_Requests_List.php:63, templates/dashboard/announcements.php:159, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:43, views/modal/edit_quiz.php:55, views/pages/announcements.php:142, templates/dashboard/announcements/details.php:32, templates/dashboard/settings/profile.php:95, views/options/field-types/media.php:30
+#: classes/Withdraw_Requests_List.php:63, templates/dashboard/announcements.php:172, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:43, views/modal/edit_quiz.php:55, views/pages/announcements.php:142, templates/dashboard/announcements/details.php:32, templates/dashboard/settings/profile.php:95, views/options/field-types/media.php:30
 msgid "Delete"
 msgstr ""
 
@@ -3238,7 +3238,7 @@ msgstr ""
 msgid "Level"
 msgstr ""
 
-#: templates/dashboard/announcements.php:59
+#: templates/dashboard/announcements.php:59, templates/dashboard/announcements.php:150
 msgid "Announcement"
 msgstr ""
 
@@ -3262,15 +3262,11 @@ msgstr ""
 msgid "DESC"
 msgstr ""
 
-#: templates/dashboard/announcements.php:170, views/pages/announcements.php:152
-msgid "Announcements not found"
-msgstr ""
-
-#: templates/dashboard/announcements.php:147, templates/dashboard/assignments.php:99, templates/dashboard/quiz-attempts.php:102, templates/dashboard/assignments/submitted.php:91, templates/single/quiz/previous-attempts.php:79
+#: templates/dashboard/announcements.php:160, templates/dashboard/assignments.php:99, templates/dashboard/quiz-attempts.php:102, templates/dashboard/assignments/submitted.php:91, templates/single/quiz/previous-attempts.php:79
 msgid "Details"
 msgstr ""
 
-#: templates/dashboard/announcements.php:155, templates/dashboard/my-courses.php:75, views/modal/edit_quiz.php:49, views/pages/announcements.php:139, templates/dashboard/announcements/details.php:33
+#: templates/dashboard/announcements.php:168, templates/dashboard/my-courses.php:75, views/modal/edit_quiz.php:49, views/pages/announcements.php:139, templates/dashboard/announcements/details.php:33
 msgid "Edit"
 msgstr ""
 
@@ -4456,6 +4452,10 @@ msgstr ""
 
 #: views/pages/announcements.php:106
 msgid "Add new"
+msgstr ""
+
+#: views/pages/announcements.php:152
+msgid "Announcements not found"
 msgstr ""
 
 #: views/pages/announcements.php:181, templates/dashboard/announcements/create.php:6

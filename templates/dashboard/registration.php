@@ -15,7 +15,7 @@
             'button'        => array(
                 'text'      => __('Go to Home', 'tutor'),
                 'url'       => get_home_url(),
-                'class'     => 'tutor-button tutor-button-primary'
+                'class'     => 'tutor-btn'
             )
         );
         tutor_load_template('feature_disabled', $args); 
@@ -129,7 +129,7 @@
         <div class="tutor-form-row">
             <div class="tutor-form-col-12">
                 <div class="tutor-form-group tutor-reg-form-btn-wrap">
-                    <button type="submit" name="tutor_register_student_btn" value="register" class="tutor-button"><?php _e('Register', 'tutor'); ?></button>
+                    <button type="submit" name="tutor_register_student_btn" value="register" class="tutor-btn"><?php _e('Register', 'tutor'); ?></button>
                 </div>
             </div>
         </div>

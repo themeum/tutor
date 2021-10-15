@@ -27,7 +27,7 @@ $supported_sources = tutor_utils()->get_option('supported_video_sources', $video
 $supported_sources = array_keys($supported_sources);
 ?>
 
-<div class="tutor-mb-30 tutor-grid">
+<div class="tutor-mb-30">
     <label class="tutor-form-label">
         <?php
         if ($post->post_type === tutor()->course_post_type){
@@ -57,7 +57,7 @@ $supported_sources = array_keys($supported_sources);
                     <p><?php _e('File Format: '); ?> .mp4</p>
 
                     <div class="video_source_upload_wrap_html5">
-                        <a href="javascript:;" class="video_upload_btn tutor-button bordered-button"><?php _e('Upload Video', 'tutor'); ?></a>
+                        <a href="javascript:;" class="video_upload_btn tutor-btn tutor-is-outline"><?php _e('Upload Video', 'tutor'); ?></a>
                         <input type="hidden" class="input_source_video_id" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
                         <p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e('Media ID', 'tutor'); ?>: <span class="video_media_id"><?php echo $sourceVideoID; ?></span></p>
                     </div>
@@ -88,8 +88,7 @@ $supported_sources = array_keys($supported_sources);
                             <div class="tutor-col-auto">
                                 <div class="builder-course-thumbnail-upload-wrap">
                                     <input type="hidden" id="tutor_course_thumbnail_id" name="video[poster]" value="<?php echo $poster; ?>">
-                                    <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button
-                                    button-transparent"><i class="tutor-icon-photo-add"></i> <?php _e('Upload Image', 'tutor'); ?></a>
+                                    <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-btn tutor-is-outline button-transparent"><i class="tutor-icon-photo-add"></i> <?php _e('Upload Image', 'tutor'); ?></a>
                                 </div>
                             </div>
                         </div>

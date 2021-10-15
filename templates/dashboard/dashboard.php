@@ -108,46 +108,64 @@ if(count($instructor_course)) {
             </a>
         </h3>
         <div class="tutor-dashboard-content-inner">
-            <table class="tutor-dashboard-table tutor-popular-course-table">
-                <thead>
-                    <tr>
-                        <th><?php _e('Course Name', 'tutor'); ?></th>
-                        <th><?php _e('Enrolled', 'tutor'); ?></th>
-                        <th><?php _e('Status', 'tutor'); ?></th>
-                        <th><?php _e('Rating', 'tutor'); ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php
-                foreach ($instructor_course as $course){
-                    $enrolled = tutor_utils()->count_enrolled_users_by_course($course->ID);
-                    $course_status = isset($status_translations[$course->post_status]) ? $status_translations[$course->post_status] : __($course->post_status, 'tutor');
-                    $course_rating = tutor_utils()->get_course_rating($course->ID);
-                    $course_badge =  isset($course_badges[$course->post_status]) ? $course_badges[$course->post_status] : 'dark';
-                    ?>
-                    <tr>
-                        <td>
-                            <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank">
-                                <?php echo $course->post_title; ?>
-                            </a>
-                        </td>
-                        <td>
-                            <?php echo $enrolled; ?>
-                        </td>
-                        <td>
-                            <small class="tutor-badge tutor-bg-<?php echo $course_badge; ?> tutor-m-5"> 
-                                <?php echo $course_status; ?>
-                            </small>
-                        </td>
-                        <td>
-                            <?php tutor_utils()->star_rating_generator($course_rating->rating_avg); ?> <span><?php echo $course_rating->rating_avg; ?></span>
-                        </td>
-                    </tr>
-                    <?php
-                }
-                ?>
-                </tbody>
-            </table>
+            <div class="tutor-ui-table-responsive">
+                <table class="tutor-ui-table table-popular-courses">
+                    <thead>
+                        <tr>
+                            <th>
+                                <span class="text-regular-small color-text-subsued">
+                                    <?php _e('Course Name', 'tutor'); ?>
+                                </span>
+                            </th>
+                            <th>
+                                <div class="inline-flex-center color-text-subsued">
+                                    <span class="text-regular-small"><?php _e('Enrolled', 'tutor'); ?></span>
+                                    <span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="inline-flex-center color-text-subsued">
+                                    <span class="text-regular-small"><?php _e('Rating', 'tutor'); ?></span>
+                                    <span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($instructor_course as $course){
+                            $enrolled = tutor_utils()->count_enrolled_users_by_course($course->ID);
+                            $course_status = isset($status_translations[$course->post_status]) ? $status_translations[$course->post_status] : __($course->post_status, 'tutor');
+                            $course_rating = tutor_utils()->get_course_rating($course->ID);
+                            $course_badge =  isset($course_badges[$course->post_status]) ? $course_badges[$course->post_status] : 'dark';
+                            
+                            ?>
+                            <tr>
+                                <td data-th="<?php _e('Course Name', 'tutor'); ?>" class="column-fullwidth">
+                                    <div class="td-course text-medium-body color-text-primary">
+                                        <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank">
+                                            <?php echo $course->post_title; ?>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td data-th="<?php _e('Enrolled', 'tutor'); ?>">
+                                    <span class="text-medium-caption color-text-primary">
+                                        <?php echo $enrolled; ?>
+                                    </span>
+                                    <span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                                </td>
+                                <td data-th="<?php _e('Rating', 'tutor'); ?>">
+                                    <div class="td-tutor-rating text-regular-body color-text-subsued">
+                                        <?php tutor_utils()->star_rating_generator($course_rating->rating_avg); ?> <span><?php echo $course_rating->rating_avg; ?></span>
+                                    </div>
+                                    <span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                                </td>
+                            </tr>
+                            <?php
+                        } ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <?php 
     } 

@@ -90,7 +90,7 @@ $quiz_answers = array();
 								<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
 								<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
-								<button type="submit" class="tutor-button button-warning" name="start_quiz_btn" value="start_quiz">
+								<button type="submit" class="tutor-btn tutor-is-warning" name="start_quiz_btn" value="start_quiz">
 									<?php _e( 'Reattempt', 'tutor' ); ?>
 								</button>
 							</form>
@@ -385,13 +385,13 @@ $quiz_answers = array();
 										<?php
 											if(!$hide_previous_button && $previous_question) {
 												?>
-												<button type="button" class="tutor-button tutor-button-outlined tutor-button-outlined-transparent tutor-quiz-answer-previous-btn">
+												<button type="button" class="tutor-btn tutor-is-outline tutor-button-outlined-transparent tutor-quiz-answer-previous-btn">
 													<?php _e( 'Back', 'tutor' ); ?>
 												</button>
 												<?php
 											}
 										?>
-										<button type="submit" class="tutor-button tutor-button-primary <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
+										<button type="submit" class="tutor-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
 											<?php $next_question ? _e( 'Answer &amp; Next Question', 'tutor' ) : _e( 'Submit Quiz', 'tutor' ); ?>
 										</button>
 									</div>
@@ -408,8 +408,7 @@ $quiz_answers = array();
 						?>
                         <div class="quiz-answer-footer-bar">
                             <div class="quiz-footer-button">
-                                <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-button
-                                tutor-button-primary"><?php _e( 'Submit Quiz', 'tutor' ); ?></button>
+                                <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-btn"><?php _e( 'Submit Quiz', 'tutor' ); ?></button>
                             </div>
                         </div>
 					<?php } ?>
@@ -428,7 +427,7 @@ $quiz_answers = array();
                     <input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
                     <input type="hidden" value="tutor_finish_quiz_attempt" name="tutor_action"/>
 
-                    <button type="submit" class="tutor-button" name="finish_quiz_btn" value="finish_quiz">
+                    <button type="submit" class="tutor-btn" name="finish_quiz_btn" value="finish_quiz">
                         <i class="icon-floppy"></i> <?php _e( 'Finish', 'tutor' ); ?>
                     </button>
                 </form>
@@ -448,7 +447,7 @@ $quiz_answers = array();
                     <input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
                     <input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
-                    <button type="submit" class="tutor-button" name="start_quiz_btn" value="start_quiz">
+                    <button type="submit" class="tutor-btn" name="start_quiz_btn" value="start_quiz">
                         <?php _e( 'Start Quiz', 'tutor' ); ?>
                     </button>
                 </form>

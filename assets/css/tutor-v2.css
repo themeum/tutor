@@ -9912,6 +9912,10 @@ table.tutor-ui-table {
   overflow-x: auto;
 }
 
+table.tutor-ui-table, table.tutor-ui-table tr, table.tutor-ui-table th, table.tutor-ui-table td {
+  border: none;
+}
+
 table.tutor-ui-table .inline-flex-center, table.tutor-ui-table .td-avatar {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
