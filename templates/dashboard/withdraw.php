@@ -61,7 +61,7 @@ else if(function_exists('edd_currency_symbol')){
         <?php
             if ($is_balance_sufficient && $withdraw_method_name) { 
                 ?>
-                <button class="tutor-button tutor-button-primary open-withdraw-form-btn">
+                <button class="tutor-btn open-withdraw-form-btn">
                     <?php _e('Withdrawal Request', 'tutor'); ?>
                 </button> 
                 <?php

@@ -4,6 +4,10 @@
 }
 
 table.tutor-ui-table {
+	&, tr, th, td {
+		border: none;
+	}
+	
 	// Table utility classes
 	.inline-flex-center {
 		display: inline-flex;

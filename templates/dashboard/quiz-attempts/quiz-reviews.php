@@ -417,6 +417,6 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
     </div>
     <div class="tutor-instructor-feedback-wrap">
         <textarea class="tutor-instructor-feedback-content" style="width:100%; height: 100px;"><?php echo get_post_meta($attempt_id, 'instructor_feedback', true); ?></textarea>
-        <a class="tutor-button tutor-button-primary tutor-instructor-feedback" data-attemptid="<?php echo $attempt_id; ?>" data-toast_success_message="<?php _e('Updated', 'tutor'); ?>"><?php _e('Update', 'tutor'); ?></a>
+        <a class="tutor-btn tutor-instructor-feedback" data-attemptid="<?php echo $attempt_id; ?>" data-toast_success_message="<?php _e('Updated', 'tutor'); ?>"><?php _e('Update', 'tutor'); ?></a>
     </div>
 </div>

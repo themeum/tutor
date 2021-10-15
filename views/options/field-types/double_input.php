@@ -7,7 +7,7 @@ if (!isset($field['fields']) || !is_array($field['fields']) || !count($field['fi
     <?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 
     <div class="tutor-option-field-input">
-        <div class="d-flex flex-column double-input">
+        <div class="tutor-d-flex tutor-flex-column double-input">
             <?php
             foreach ($field['fields'] as $groupFieldKey => $group_field) {
                 $input_name = "tutor_option[{$field['key']}][{$groupFieldKey}]";
