@@ -8,7 +8,7 @@
 
 ?>
 <!-- .tutor-backend-wrap -->
-<section class="tutor-backend-settings-page tutor-grid">
+<section class="tutor-backend-settings-page">
 	<header class="tutor-option-header px-3 py-2">
 		<div class="title"><?php _e( 'Tools', 'tutor' ); ?></div>
 		<div class="search-field">

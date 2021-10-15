@@ -15,10 +15,10 @@
             </div>
 
             <div class="tutor-component-button-container">
-                <button type="button" class="tutor-button tutor-button-secondary tutor_cancel_review_btn">
+                <button type="button" class="tutor-btn tutor-is-default tutor_cancel_review_btn">
                     <?php _e('Cancel', 'tutor'); ?>
                 </button>
-                <button type="submit" class="tutor-button tutor-button-primary tutor_submit_review_btn">
+                <button type="submit" class="tutor-btn tutor_submit_review_btn">
                     <?php _e('Submit', 'tutor'); ?>
                 </button>
             </div>        

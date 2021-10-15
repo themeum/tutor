@@ -111,7 +111,7 @@ if ( ! defined( 'ABSPATH' ) )
 		<?php do_action("tutor_login_form_end");?>
 
 		<p class="login-submit">
-			<input type="submit" name="wp-submit" id="<?php echo esc_attr( $args['id_submit'] )?>" class="tutor-button" value="<?php echo esc_attr( $args['label_log_in'] )?>" />
+			<input type="submit" name="wp-submit" id="<?php echo esc_attr( $args['id_submit'] )?>" class="tutor-btn" value="<?php echo esc_attr( $args['label_log_in'] )?>" />
 			<input type="hidden" name="redirect_to" value="<?php echo esc_url( $args['redirect'] )?>" />
 		</p>
 		

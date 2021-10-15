@@ -42,7 +42,7 @@ $is_instructor = tutor_utils()->is_instructor();
 do_action('tutor_dashboard/before/wrap');
 ?>
 
-<div class="tutor-wrap tutor-dashboard tutor-dashboard-student tutor-grid">
+<div class="tutor-wrap tutor-dashboard tutor-dashboard-student">
     <div class="tutor-container">
 
         <!-- Head Part -->

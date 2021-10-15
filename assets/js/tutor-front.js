@@ -26,8 +26,8 @@ __webpack_require__.r(__webpack_exports__);
 
 document.addEventListener('DOMContentLoaded', function () {
   // Toggle menu in mobile view
-  $('.tutor-dashboard .tutor-dashboard-menu-toggler').click(function () {
-    var el = $('.tutor-dashboard-left-menu');
+  jQuery('.tutor-dashboard .tutor-dashboard-menu-toggler').click(function () {
+    var el = jQuery('.tutor-dashboard-left-menu');
     el.closest('.tutor-dashboard').toggleClass('is-sidebar-expanded');
 
     if (el.css('display') !== 'none') {
@@ -197,7 +197,7 @@ window.tutor_popup = function ($, icon, padding) {
     var buttons = Object.keys(data.buttons || {}).map(function (key) {
       var button = data.buttons[key];
       var button_id = button.id ? 'tutor-popup-' + button.id : '';
-      return $('<button id="' + button_id + '" class="tutor-button tutor-button-' + button["class"] + '">' + button.title + '</button>').click(button.callback);
+      return $('<button id="' + button_id + '" class="' + button["class"] + '">' + button.title + '</button>').click(button.callback);
     });
     element = $($this.popup_wrapper(data.wrapper_tag || 'div'));
     var content_wrapper = element.find('.tutor-component-content-container');
@@ -3572,7 +3572,7 @@ jQuery(document).ready(function ($) {
       buttons: {
         reset: {
           title: __('Reset Data', 'tutor'),
-          "class": 'secondary',
+          "class": 'tutor-btn tutor-is-outline tutor-is-default',
           callback: function callback() {
             var button = popup.find('.tutor-button-secondary');
             button.prop('disabled', true).append('<img style="margin-left: 7px" src="' + window._tutorobject.loading_icon_url + '"/>');
@@ -3598,7 +3598,7 @@ jQuery(document).ready(function ($) {
         },
         keep: {
           title: __('Keep Data', 'tutor'),
-          "class": 'primary',
+          "class": 'tutor-btn',
           callback: function callback() {
             window.location.assign(url);
           }
@@ -3625,7 +3625,7 @@ jQuery(document).ready(function ($) {
             keep: {
               title: __('Yes, leave quiz', 'tutor'),
               id: 'leave',
-              "class": 'secondary',
+              "class": 'tutor-btn tutor-is-outline tutor-is-default',
               callback: function callback() {
                 var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
                 $.ajax({
@@ -3656,7 +3656,7 @@ jQuery(document).ready(function ($) {
             reset: {
               title: __('Stay here', 'tutor'),
               id: 'reset',
-              "class": 'primary',
+              "class": 'tutor-btn',
               callback: function callback() {
                 popup.remove();
               }
