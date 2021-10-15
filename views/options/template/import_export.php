@@ -10,7 +10,7 @@
 	<h4>Import Settings</h4>
 
 	<div class="item-wrapper">
-		<div class="tutor-option-field-row d-block">
+		<div class="tutor-option-field-row tutor-d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
 					<span class="icon tutor-v2-icon-test icon-upload-icon-line"></span>

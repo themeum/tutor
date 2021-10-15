@@ -35,13 +35,13 @@
                 </div>
             </div>
             <div class="tutor-modal-footer">
-                <div class="row">
+                <div class="tutor-row">
                     <div class="col">
                         <button type="button" class="tutor-btn <?php echo !empty($data['button_class']) ? $data['button_class'] : ''; ?>" id="<?php echo !empty($data['button_id']) ? $data['button_id'] : ''; ?>">
                             <?php echo $data['button_text']; ?>
                         </button>
                     </div>
-                    <div class="col-auto">
+                    <div class="tutor-col-auto">
                         <button data-tutor-modal-close class="tutor-btn tutor-is-default">
                             <?php _e('Cancel', 'tutor'); ?>
                         </button>

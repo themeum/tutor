@@ -116,15 +116,15 @@ $public_display = array_unique( $public_display );
 
         <?php do_action('tutor_profile_edit_input_before'); ?>
 
-        <div class="row">
-            <div class="col-12 col-sm-6 col-md-12 col-lg-6 tutor-mb-30">
+        <div class="tutor-row">
+            <div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
                 <label>
                     <?php _e('First Name', 'tutor'); ?>
                     <input class="tutor-form-control" type="text" name="first_name" value="<?php echo $user->first_name; ?>" placeholder="<?php _e('First Name', 'tutor'); ?>">
                 </label>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-12 col-lg-6 tutor-mb-30">
+            <div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
                 <label>
                     <?php _e('Last Name', 'tutor'); ?>
                     <input class="tutor-form-control" type="text" name="last_name" value="<?php echo $user->last_name; ?>" placeholder="<?php _e('Last Name', 'tutor'); ?>">
@@ -132,15 +132,15 @@ $public_display = array_unique( $public_display );
             </div>
         </div>
         
-        <div class="row">
-            <div class="col-12 col-sm-6 col-md-12 col-lg-6 tutor-mb-30">
+        <div class="tutor-row">
+            <div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
                 <label>
                     <?php _e('User Name', 'tutor'); ?>
                     <input class="tutor-form-control" type="text" disabled="disabled" value="<?php echo $user->user_login; ?>">
                 </label>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-12 col-lg-6 tutor-mb-30">
+            <div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
                 <label>
                     <?php _e('Phone Number', 'tutor'); ?>
                     <input class="tutor-form-control" type="tel" name="phone_number" value="<?php echo get_user_meta($user->ID,'phone_number',true); ?>" placeholder="<?php _e('Phone Number', 'tutor'); ?>">
@@ -148,8 +148,8 @@ $public_display = array_unique( $public_display );
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 tutor-mb-30">
+        <div class="tutor-row">
+            <div class="tutor-col-12 tutor-mb-30">
                 <label>
                     <?php _e('Bio', 'tutor'); ?>
                     <textarea class="tutor-form-control" name="tutor_profile_bio"><?php echo strip_tags(get_user_meta($user->ID,'_tutor_profile_bio',true)); ?></textarea>
@@ -157,8 +157,8 @@ $public_display = array_unique( $public_display );
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 col-sm-6 col-md-12 col-lg-6 tutor-mb-30">
+        <div class="tutor-row">
+            <div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
                 <label>
                     <?php _e( 'Display name publicly as', 'tutor' ); ?>
 
@@ -182,8 +182,8 @@ $public_display = array_unique( $public_display );
 
         <?php do_action('tutor_profile_edit_input_after'); ?>
 
-        <div class="row">
-            <div class="col-12">
+        <div class="tutor-row">
+            <div class="tutor-col-12">
                 <button type="submit" class="tutor-button">
                     <?php _e('Update Profile', 'tutor'); ?>
                 </button>

@@ -32,7 +32,7 @@ if ( ! is_array($reviews) || ! count($reviews)){
     <div class="tutor-course-reviews-wrap">
         <div class="tutor-course-student-rating-wrap">
             <div class="course-avg-rating-wrap">
-                <div class="tutor-row align-items-center">
+                <div class="tutor-row tutor-align-items-center">
                     <div class="tutor-col-auto">
                         <p class="course-avg-rating">
 							<?php
