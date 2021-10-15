@@ -2872,6 +2872,14 @@ msgstr ""
 msgid "Withdraw Method"
 msgstr ""
 
+#: classes/Utils.php:7724
+msgid "PHP 7.2.5 or greater is required"
+msgstr ""
+
+#: classes/Utils.php:7725
+msgid "Please install SSL certificate properly"
+msgstr ""
+
 #: classes/Withdraw.php:34
 msgid "Bank Transfer"
 msgstr ""
@@ -4442,7 +4450,7 @@ msgstr ""
 msgid "Buy Now"
 msgstr ""
 
-#: views/pages/addons.php:79, views/pages/enable_disable_addons.php:109, views/pages/tutor-pro-addons.php:56, views/pages/__enable_disable_addons.php:110
+#: views/pages/addons.php:79, views/pages/tutor-pro-addons.php:56, views/pages/__enable_disable_addons.php:110
 msgid "Version"
 msgstr ""
 
@@ -4496,18 +4504,6 @@ msgstr ""
 
 #: views/pages/answer.php:64
 msgid "on"
-msgstr ""
-
-#: views/pages/enable_disable_addons.php:3, views/pages/__enable_disable_addons.php:3
-msgid "Addons List"
-msgstr ""
-
-#: views/pages/enable_disable_addons.php:73, views/pages/__enable_disable_addons.php:74
-msgid "Required Plugin(s)"
-msgstr ""
-
-#: views/pages/enable_disable_addons.php:93
-msgid "WebPush Notification Requirements"
 msgstr ""
 
 #: views/pages/get-pro.php:2
@@ -4616,6 +4612,14 @@ msgstr ""
 
 #: views/pages/view_attempt.php:365, templates/dashboard/quiz-attempts/quiz-reviews.php:420
 msgid "Updated"
+msgstr ""
+
+#: views/pages/__enable_disable_addons.php:3
+msgid "Addons List"
+msgstr ""
+
+#: views/pages/__enable_disable_addons.php:74
+msgid "Required Plugin(s)"
 msgstr ""
 
 #: templates/dashboard/assignments/review.php:125
