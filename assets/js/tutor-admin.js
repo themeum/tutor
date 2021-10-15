@@ -1335,7 +1335,7 @@ window.tutor_popup = function ($, icon, padding) {
     var buttons = Object.keys(data.buttons || {}).map(function (key) {
       var button = data.buttons[key];
       var button_id = button.id ? 'tutor-popup-' + button.id : '';
-      return $('<button id="' + button_id + '" class="tutor-button tutor-button-' + button["class"] + '">' + button.title + '</button>').click(button.callback);
+      return $('<button id="' + button_id + '" class="' + button["class"] + '">' + button.title + '</button>').click(button.callback);
     });
     element = $($this.popup_wrapper(data.wrapper_tag || 'div'));
     var content_wrapper = element.find('.tutor-component-content-container');
@@ -31720,14 +31720,14 @@ jQuery(document).ready(function ($) {
       buttons: {
         reset: {
           title: __("Cancel", "tutor"),
-          "class": "secondary",
+          "class": "tutor-btn tutor-is-outline tutor-is-default",
           callback: function callback() {
             popup.remove();
           }
         },
         keep: {
           title: __("Yes, Delete This", "tutor"),
-          "class": "primary",
+          "class": "tutor-btn",
           callback: function callback() {
             window.location.replace(url);
           }

@@ -69,6 +69,21 @@ for(let task in scss_blueprints) {
 	});
 }
 
+// Add task to add tutor prefix to v2 scss
+gulp.task('v2_tutor_prefix', function (resolve) {
+	var exp = path.resolve(__dirname+'/assets/css/tutor-v2.css');
+	var min = path.resolve(__dirname+'/assets/css/tutor-v2.min.css');
+	
+	[exp, min].forEach(css=> {
+		var string = fs.readFileSync(css).toString();
+		string = string.replace(/.tutor-prefix ./g, '.tutor-');
+		fs.writeFileSync(css, string);
+	});
+
+	resolve();
+});
+task_keys.push('v2_tutor_prefix');
+
 var added_texts = [];
 const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/ig;
 const js_files = ['tutor-front', 'tutor-admin', 'tutor-course-builder', 'tutor-setup'].map(f=>'assets/js/'+f+'.js:1').join(', ');

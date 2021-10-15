@@ -537,7 +537,7 @@ jQuery(document).ready(function($) {
       buttons: {
         reset: {
           title: __("Cancel", "tutor"),
-          class: "secondary",
+          class: "tutor-btn tutor-is-outline tutor-is-default",
 
           callback: function() {
             popup.remove();
@@ -545,7 +545,7 @@ jQuery(document).ready(function($) {
         },
         keep: {
           title: __("Yes, Delete This", "tutor"),
-          class: "primary",
+          class: "tutor-btn",
           callback: function() {
             window.location.replace(url);
           },

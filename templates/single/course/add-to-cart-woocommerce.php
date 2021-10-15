@@ -16,7 +16,7 @@ if ($product) {
             if(tutor_utils()->is_course_added_to_cart($product_id, true)){
                 ?>
                     <a href="<?php echo wc_get_cart_url(); ?>">
-                        <button class="tutor-button"><?php _e('View Cart', 'tutor'); ?></button>
+                        <button class="tutor-btn"><?php _e('View Cart', 'tutor'); ?></button>
                     </a>
                 <?php
             }
@@ -28,7 +28,7 @@ if ($product) {
 
                     <?php do_action( 'tutor_before_add_to_cart_button' ); ?>
 
-                    <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button tutor-button alt"> <i class="tutor-icon-shopping-cart"></i> <?php echo esc_html( $product->single_add_to_cart_text() ); ?>
+                    <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="tutor-btn"> <i class="tutor-icon-shopping-cart"></i> <?php echo esc_html( $product->single_add_to_cart_text() ); ?>
                     </button>
 
                     <?php do_action( 'tutor_after_add_to_cart_button' ); ?>

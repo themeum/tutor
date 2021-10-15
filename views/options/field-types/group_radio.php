@@ -1,6 +1,14 @@
-<?php $field_id = 'field_' . $field['key'];
+<?php 
+/**
+ * Radio Group Settings
+ *
+ * @since v2.0.0
+ * @package Radio
+ */
+
+$field_id = 'field_' . $field['key'];
 ?>
-<div class="tutor-option-field-row d-block">
+<div class="tutor-option-field-row tutor-d-block">
     <?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 
     <div class="tutor-option-field-input" id="<?php echo $field_id; ?>">
@@ -16,7 +24,7 @@
                                 $field_key = $optkey . '_' . $optionKey;
                             ?>
                                 <label for="<?php echo $optkey . '_' . $optionKey ?>">
-                                    <input type="radio" name="tutor_option[<?php echo $field['key']; ?>]" id="<?php echo $optkey . '_' . $optionKey ?>" <?php checked($option_value,  $field_key) ?> value="<?php echo $field_key ?>" />
+                                    <input type="radio" name="tutor_option[<?php echo $field['key']; ?>]" id="<?php echo $optkey . '_' . $optionKey ?>" <?php checked($option_value,  $field_key) ?> value="<?php echo $optionKey ?>" />
                                     <span class="icon-wrapper">
                                         <img src="<?php echo tutor()->url ?>assets/images/images-v2/<?php echo $option['image']; ?>" alt="">
                                     </span>

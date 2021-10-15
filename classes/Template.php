@@ -414,7 +414,7 @@ class Template extends Tutor_Base {
 	 */
 	public function student_public_profile($template){
 		global $wp_query;
-
+		$query_var 	= $wp_query->query_vars;
 		if ( ! empty($wp_query->query['tutor_student_username'])){
 			$template = tutor_get_template( 'student-public-profile' );
 		}

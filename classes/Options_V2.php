@@ -373,7 +373,7 @@ class Options_V2 {
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
 								'desc'        => __( 'Uncheck this option to hide the button from student dashboard.', 'tutor' ),
-							),
+							)
 						),
 					),
 				),
@@ -861,11 +861,11 @@ class Options_V2 {
 										'title' => 'Modern',
 										'image' => 'profile-layout/profile-modern.svg',
 									),
-									'pp-rectangle' => array(
+									'no-cp' => array(
 										'title' => 'Minimal',
 										'image' => 'profile-layout/profile-minimal.svg',
 									),
-									'no-cp' => array(
+									'pp-rectangle' => array(
 										'title' => 'Classic',
 										'image' => 'profile-layout/profile-classic.svg',
 									),
