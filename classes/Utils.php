@@ -181,7 +181,7 @@ class Utils {
 				$student_id
 			) );
 
-			if ($user) {
+			if ( $user ) {
 				$user_name = $user->user_nicename;
 			}
 
@@ -2649,13 +2649,14 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array() ) {
+	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '' ) {
 		global $wpdb;
 
-		sanitize_text_field($search_filter);
-		sanitize_text_field($course_filter);
-		sanitize_text_field($date_filter);
-		sanitize_text_field($order_filter);
+		$search_filter 	=  sanitize_text_field($search_filter);
+		$course_filter 	= sanitize_text_field($course_filter);
+		$date_filter 	= sanitize_text_field($date_filter);
+		$order_filter 	= sanitize_text_field($order_filter);
+		$rating 		= sanitize_text_field($rating);
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 		$course_filter	= $course_filter != '' ? " AND inst_status.meta_key = '_tutor_instructor_course_id' AND inst_status.meta_value = $course_filter " : '' ;
@@ -2699,27 +2700,57 @@ class Utils {
 			$category_where = " AND term.term_id IN ({$cat_ids})";
 		}
 
+		//rating wise sorting @since v2.0.0 
+		$rating 		= isset($_POST['rating_filter'] ) ? $rating : '';
+		$rating_having 	= '';
+		if ( '' !== $rating ) {
+			$rating_having 	= " HAVING rating >= 0 AND rating <= {$rating} ";
+		}
+
+		/**
+		 * Handle Short by Relevant | New | Popular & Order Shorting
+		 * from instructor list backend
+		 * 
+		 * @since v2.0.0
+		 */
+		$order_query = '';
+		if ( 'new' === $order_filter ) {
+			$order_query = " ORDER BY user_meta.meta_value DESC ";
+		} else if ( 'popular' === $order_filter ) {
+			$order_query = " ORDER BY rating DESC ";
+		} else {
+			$order_query = " ORDER BY user_meta.meta_value {$order_filter} ";
+		}
+
 		$instructors = $wpdb->get_results( $wpdb->prepare(
-			"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date
+			"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating
 			FROM 	{$wpdb->users} user
 					INNER JOIN {$wpdb->usermeta} user_meta
 							ON ( user.ID = user_meta.user_id )
 					INNER JOIN {$wpdb->usermeta} inst_status
 							ON ( user.ID = inst_status.user_id )
 					{$category_join}
+					LEFT JOIN wp_usermeta AS umeta
+						ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
+					LEFT JOIN wp_comments AS c
+						ON c.comment_post_ID = umeta.meta_value
+					LEFT JOIN wp_commentmeta AS cmeta
+						ON cmeta.comment_id = c.comment_ID
+						AND cmeta.meta_key = 'tutor_rating'
 			WHERE 	user_meta.meta_key = %s
 					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
 					{$status}
 					{$category_where}
 					{$course_filter}
 					{$date_filter}
-			ORDER BY user_meta.meta_value {$order_filter}
+			GROUP BY user.ID
+			{$rating_having}
+			{$order_query}
 			LIMIT 	%d, %d;
 			",
 			'_is_tutor_instructor',
 			$search_filter,
 			$search_filter,
-
 			$start,
 			$limit
 		) );
@@ -5361,16 +5392,6 @@ class Utils {
 	 */
 	public function tutor_user_social_icons() {
 		$icons = array(
-			'_tutor_profile_website'  => array(
-				'label'        => __('Website', 'tutor'),
-				'placeholder'  => 'https://example.com/',
-				'icon_classes' => 'tutor-icon-earth'
-			),
-			'_tutor_profile_github'  => array(
-				'label'        => __('Github', 'tutor'),
-				'placeholder'  => 'https://github.com/username',
-				'icon_classes' => 'tutor-icon-github-logo'
-			),
 			'_tutor_profile_facebook'  => array(
 				'label'        => __('Facebook', 'tutor'),
 				'placeholder'  => 'https://facebook.com/username',
@@ -5385,6 +5406,16 @@ class Utils {
 				'label'        => __('Linkedin', 'tutor'),
 				'placeholder'  => 'https://linkedin.com/username',
 				'icon_classes' => 'tutor-icon-linkedin'
+			),
+			'_tutor_profile_website'  => array(
+				'label'        => __('Website', 'tutor'),
+				'placeholder'  => 'https://example.com/',
+				'icon_classes' => 'tutor-icon-earth'
+			),
+			'_tutor_profile_github'  => array(
+				'label'        => __('Github', 'tutor'),
+				'placeholder'  => 'https://github.com/username',
+				'icon_classes' => 'tutor-icon-github-logo'
 			),
 		);
 

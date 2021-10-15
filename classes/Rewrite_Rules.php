@@ -17,22 +17,37 @@ class Rewrite_Rules extends Tutor_Base {
 		add_filter('post_type_link', array($this, 'change_lesson_single_url'), 1, 2);
 	}
 
-	public function tutor_register_query_vars($vars) {
+	/**
+	 * Prepare query vars
+	 *
+	 * @param sting $vars url structure.
+	 */
+	public function tutor_register_query_vars( $vars ) {
 		$vars[] = 'course_subpage';
 		$vars[] = 'lesson_video';
 		$vars[] = 'tutor_dashboard_page';
 		$vars[] = 'tutor_dashboard_sub_page';
 
-		$enable_public_profile = tutor_utils()->get_option('enable_public_profile');
-		if ($enable_public_profile) {
+		/**
+		 * If public_profile_layout is not private then
+		 * add rewrite rules
+		 *
+		 * @since v2.0.0
+		 */
+		$enable_public_profile = tutor_utils()->get_option( 'public_profile_layout' );
+		if ( 'private' !== $enable_public_profile ) {
 			$vars[] = 'tutor_student_username';
-			$vars[] = 'profile_sub_page';
 		}
 
 		return $vars;
 	}
 
-	public function add_rewrite_rules($wp_rewrite) {
+	/**
+	 * Tutor rewrite rules
+	 *
+	 * @param string $wp_rewrite get the rewrite rule.
+	 */
+	public function add_rewrite_rules( $wp_rewrite ) {
 		$new_rules = array(
 			//Lesson Permalink
 			$this->course_post_type . "/(.+?)/{$this->lesson_base_permalink}/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&name=" . $wp_rewrite->preg_index(2),
@@ -46,7 +61,6 @@ class Rewrite_Rules extends Tutor_Base {
 			//Private Video URL
 			"video-url/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=" . $wp_rewrite->preg_index(1),
 			//Student Public Profile URL
-			"profile/(.+?)/(.+?)/?$" => "index.php?tutor_student_username=" . $wp_rewrite->preg_index(1) . "&profile_sub_page=" . $wp_rewrite->preg_index(2),
 			"profile/(.+?)/?$" => "index.php?tutor_student_username=" . $wp_rewrite->preg_index(1),
 		);
 

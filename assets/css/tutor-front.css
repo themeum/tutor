@@ -748,6 +748,158 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   -webkit-justify-content: center;
 }
 
+.color-brand-wordpress {
+  color: #1973aa;
+}
+
+.color-brand-wordpress-hover {
+  color: #166494;
+}
+
+.color-white {
+  color: #ffffff;
+}
+
+.color-brand {
+  color: #3e64de;
+}
+
+.color-success {
+  color: #24a148;
+}
+
+.color-warning {
+  color: #ed9700;
+}
+
+.color-error {
+  color: #f44337;
+}
+
+.color-text-primary, .tutor-user-public-profile .tutor-user-profile-content h3, .tutor-instructor-list h4.tutor-instructor-name, .tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle h4 {
+  color: #212327;
+}
+
+.color-text-title {
+  color: #41454f;
+}
+
+.color-text-subsued, .tutor-user-public-profile .tutor-user-profile-content p {
+  color: #5b616f;
+}
+
+.color-text-hints {
+  color: #757c8e;
+}
+
+.color-text-white {
+  color: #ffffff;
+}
+
+.color-text-brand {
+  color: #3e64de;
+}
+
+.color-text-success {
+  color: #24a148;
+}
+
+.color-text-warning {
+  color: #ed9700;
+}
+
+.color-text-error {
+  color: #f44337;
+}
+
+.color-design-dark {
+  color: #1a1b1e;
+}
+
+.color-design-grey {
+  color: #41454f;
+}
+
+.color-design-white {
+  color: #ffffff;
+}
+
+.color-design-brand {
+  color: #3e64de;
+}
+
+.color-design-success {
+  color: #24a148;
+}
+
+.color-design-warning, .tutor-instructor-list .tutor-star-rating-group i, .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper .tutor-instructor-ratings i.active {
+  color: #ed9700;
+}
+
+.color-design-danger {
+  color: #f44337;
+}
+
+.color-stroke-light-10 {
+  color: #eff1f6;
+}
+
+.color-stroke-light-20 {
+  color: #e0e2ea;
+}
+
+.color-stroke-light-30 {
+  color: #cdcfd5;
+}
+
+.color-stroke-gray {
+  color: #c0c3cb;
+}
+
+.color-stroke-blue {
+  color: #3e64de;
+}
+
+.color-stroke-danger {
+  color: #f44337;
+}
+
+.color-stroke-success {
+  color: #24a148;
+}
+
+.color-bg-brand {
+  color: #3e64de;
+}
+
+.color-bg-white {
+  color: #ffffff;
+}
+
+.color-bg-gray-20 {
+  color: #e3e5eb;
+}
+
+.color-bg-gray-10 {
+  color: #eff1f6;
+}
+
+.color-bg-dark-10 {
+  color: #212327;
+}
+
+.color-bg-dark-20 {
+  color: #31343b;
+}
+
+.color-bg-dark-30 {
+  color: #41454f;
+}
+
+.tutor-star-rating-group i.tutor-icon-star-full {
+  color: #ED9700 !important;
+}
+
 /**
  * Add option disabled
  * @since 1.9.7
@@ -8463,6 +8615,224 @@ Withdraw Method
 }
 
 /* Only reusable function, or code allowed here. No direct css please. */
+.color-brand-wordpress {
+  color: #1973aa;
+}
+
+.color-brand-wordpress-hover {
+  color: #166494;
+}
+
+.color-white {
+  color: #ffffff;
+}
+
+.color-brand {
+  color: #3e64de;
+}
+
+.color-success {
+  color: #24a148;
+}
+
+.color-warning {
+  color: #ed9700;
+}
+
+.color-error {
+  color: #f44337;
+}
+
+.color-text-primary, .tutor-user-public-profile .tutor-user-profile-content h3, .tutor-instructor-list h4.tutor-instructor-name, .tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle h4 {
+  color: #212327;
+}
+
+.color-text-title {
+  color: #41454f;
+}
+
+.color-text-subsued, .tutor-user-public-profile .tutor-user-profile-content p {
+  color: #5b616f;
+}
+
+.color-text-hints {
+  color: #757c8e;
+}
+
+.color-text-white {
+  color: #ffffff;
+}
+
+.color-text-brand {
+  color: #3e64de;
+}
+
+.color-text-success {
+  color: #24a148;
+}
+
+.color-text-warning {
+  color: #ed9700;
+}
+
+.color-text-error {
+  color: #f44337;
+}
+
+.color-design-dark {
+  color: #1a1b1e;
+}
+
+.color-design-grey {
+  color: #41454f;
+}
+
+.color-design-white {
+  color: #ffffff;
+}
+
+.color-design-brand {
+  color: #3e64de;
+}
+
+.color-design-success {
+  color: #24a148;
+}
+
+.color-design-warning, .tutor-instructor-list .tutor-star-rating-group i, .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper .tutor-instructor-ratings i.active {
+  color: #ed9700;
+}
+
+.color-design-danger {
+  color: #f44337;
+}
+
+.color-stroke-light-10 {
+  color: #eff1f6;
+}
+
+.color-stroke-light-20 {
+  color: #e0e2ea;
+}
+
+.color-stroke-light-30 {
+  color: #cdcfd5;
+}
+
+.color-stroke-gray {
+  color: #c0c3cb;
+}
+
+.color-stroke-blue {
+  color: #3e64de;
+}
+
+.color-stroke-danger {
+  color: #f44337;
+}
+
+.color-stroke-success {
+  color: #24a148;
+}
+
+.color-bg-brand {
+  color: #3e64de;
+}
+
+.color-bg-white {
+  color: #ffffff;
+}
+
+.color-bg-gray-20 {
+  color: #e3e5eb;
+}
+
+.color-bg-gray-10 {
+  color: #eff1f6;
+}
+
+.color-bg-dark-10 {
+  color: #212327;
+}
+
+.color-bg-dark-20 {
+  color: #31343b;
+}
+
+.color-bg-dark-30 {
+  color: #41454f;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name {
+  padding-left: 60px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name span {
+  color: #5b616f !important;
+  font-weight: 400;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-pic {
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+  border: none !important;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-rating-container {
+  padding-left: 80px;
+  margin-top: 30px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area {
+  top: -141px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container {
+  top: 110px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name {
+  padding-left: 63px;
+  padding-bottom: 50px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name span {
+  font-weight: 300;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-pic {
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .pp-area {
+  top: -147px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-circle .tutor-social-container {
+  margin-top: 2px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name {
+  padding-left: 23px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name span {
+  font-weight: 300;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-pic {
+  border-radius: 10px;
+  height: 275px;
+  width: 235px;
+}
+
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .tutor-social-container {
+  margin-top: 12px;
+}
+
 .tutor-user-public-profile .photo-area {
   overflow: hidden;
   height: 414px;
@@ -8476,7 +8846,7 @@ Withdraw Method
 }
 
 .tutor-user-public-profile .photo-area .cover-area > div:first-child {
-  height: 375px;
+  height: 352px;
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -8494,8 +8864,8 @@ Withdraw Method
 
 .tutor-user-public-profile .photo-area .pp-area {
   position: relative;
-  top: -111px;
   padding-left: 49px;
+  top: -141px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -8520,30 +8890,25 @@ Withdraw Method
   border: 8px solid white;
 }
 
-.tutor-user-public-profile .photo-area .pp-area .profile-name {
-  padding-left: 23px;
-  padding-bottom: 30px;
-}
-
 .tutor-user-public-profile .photo-area .pp-area .profile-name h3 {
   font-style: normal;
   font-weight: 600;
   font-size: 40px;
   line-height: 48px;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 0;
 }
 
 .tutor-user-public-profile .photo-area .pp-area .profile-name > span {
   font-style: normal;
-  font-weight: 500;
   font-size: 15px;
-  color: #757575;
+  color: #fff;
   margin-right: 10px;
 }
 
 .tutor-user-public-profile .photo-area .pp-area .profile-name > span > span {
   color: white;
+  font-weight: 500;
 }
 
 .tutor-user-public-profile .photo-area .pp-area .profile-rating-media {
@@ -8564,6 +8929,8 @@ Withdraw Method
 
 .tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-rating-container .rating-digits {
   color: white;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .tutor-user-public-profile .photo-area .pp-area .profile-rating-media .tutor-rating-container .rating-total-meta {
@@ -8571,41 +8938,29 @@ Withdraw Method
 }
 
 .tutor-user-public-profile .photo-area .pp-area .tutor-social-container {
-  margin-top: 15px;
   text-align: right;
 }
 
 .tutor-user-public-profile .photo-area .pp-area .tutor-social-container a {
   display: inline-block;
-  margin-left: 20px;
+  margin-left: 15px;
   color: whitesmoke;
   cursor: pointer;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .tutor-user-public-profile .photo-area .pp-area .tutor-social-container a:hover {
   color: white;
 }
 
-.tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-pic {
-  border-radius: 50%;
-  height: 153px;
-  width: 153px;
-}
-
 .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area {
   overflow: initial;
 }
 
-.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-pic {
-  border-radius: 10px;
-  height: 200px;
-  width: 153px;
-}
-
-.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-rating-media {
-  padding-bottom: 75px;
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-name,
+.tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .photo-area .profile-rating-media {
+  padding-bottom: 137px;
 }
 
 .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .tutor-user-profile-sidebar {
@@ -8624,14 +8979,8 @@ Withdraw Method
   top: 0;
 }
 
-.tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-pic {
-  border-radius: 50%;
-  height: 153px;
-  width: 153px;
-}
-
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name {
-  padding-top: 49px;
+  padding-top: 40px;
 }
 
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name h3 {
@@ -8664,7 +9013,7 @@ Withdraw Method
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container a {
   margin-left: 0 !important;
   margin-right: 20px;
-  color: #757575 !important;
+  color: #41454f !important;
 }
 
 .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container a:hover {
@@ -8691,6 +9040,9 @@ Withdraw Method
 }
 
 @media (max-width: 767px) {
+  .tutor-user-public-profile .profile-name span {
+    color: #757575 !important;
+  }
   .tutor-user-public-profile .content-for-mobile {
     display: block;
     margin: 22px 0 0 0;
@@ -8721,7 +9073,10 @@ Withdraw Method
     -moz-justify-content: center;
     -webkit-justify-content: center;
   }
-  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-rating-media {
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name,
+  .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name,
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name,
+  .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-rating-media {
     width: 100% !important;
     text-align: center !important;
   }
@@ -8729,7 +9084,7 @@ Withdraw Method
     color: black !important;
   }
   .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name > span:nth-of-type(2) > span, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name > span:nth-of-type(2) > span, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name > span:nth-of-type(2) > span {
-    color: #C4C4C4 !important;
+    color: #c4c4c4 !important;
   }
   .tutor-user-public-profile.tutor-user-public-profile-pp-circle .profile-name h3, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-name h3, .tutor-user-public-profile.tutor-user-public-profile-pp-rectangle .profile-name h3 {
     color: #161616 !important;
@@ -8745,7 +9100,10 @@ Withdraw Method
     height: 160px !important;
     width: 153px !important;
   }
-  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area, .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media, .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container, .tutor-user-public-profile.tutor-user-public-profile-no-cp .ratings {
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .pp-area,
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media,
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-social-container,
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .ratings {
     position: static !important;
     top: 0 !important;
     text-align: center !important;
@@ -8757,7 +9115,7 @@ Withdraw Method
     margin: 15px 0 0 0 !important;
   }
   .tutor-user-public-profile .tutor-social-container a {
-    color: #7A7A7A !important;
+    color: #41454f !important;
   }
   .tutor-user-public-profile .profile-name {
     padding: 0 !important;
@@ -8786,27 +9144,32 @@ Withdraw Method
 
 .tutor-user-public-profile .tutor-user-profile-sidebar {
   padding: 15px;
-  width: 223px;
+  width: 278px;
   float: left;
 }
 
 .tutor-user-public-profile .tutor-user-profile-content {
-  width: calc(100% - 228px);
-  float: left;
+  width: calc(100% - 278px);
+  float: right;
   margin-bottom: 30px;
+  padding-left: 30px;
 }
 
-.tutor-user-public-profile .tutor-user-profile-content > h3 {
+.tutor-user-public-profile .tutor-user-profile-content h3 {
   font-style: normal;
   font-weight: normal;
-  font-size: 24px;
+  font-size: 24px !important;
   line-height: 34px;
-  color: #161616;
   margin-top: 20px;
 }
 
-.tutor-user-public-profile .tutor-user-profile-content > h3:first-child {
+.tutor-user-public-profile .tutor-user-profile-content h3:first-child {
   margin-top: 0;
+}
+
+.tutor-user-public-profile .tutor-user-profile-content p {
+  font-size: 16px;
+  line-height: 28px;
 }
 
 @media (max-width: 800px) {
@@ -8816,9 +9179,14 @@ Withdraw Method
   .tutor-user-public-profile.tutor-user-public-profile-no-cp .profile-rating-media {
     left: 178px !important;
   }
-  .tutor-user-public-profile .tutor-user-profile-sidebar, .tutor-user-public-profile .tutor-user-profile-content {
+  .tutor-user-public-profile.tutor-user-public-profile-no-cp .tutor-rating-container {
+    padding-left: 0px;
+  }
+  .tutor-user-public-profile .tutor-user-profile-sidebar,
+  .tutor-user-public-profile .tutor-user-profile-content {
     width: 100%;
     float: none;
+    padding: 10px 0;
   }
 }
 
@@ -9473,16 +9841,438 @@ Withdraw Method
   border: 1px solid #a0a2a8;
 }
 
+.color-brand-wordpress {
+  color: #1973aa;
+}
+
+.color-brand-wordpress-hover {
+  color: #166494;
+}
+
+.color-white {
+  color: #ffffff;
+}
+
+.color-brand {
+  color: #3e64de;
+}
+
+.color-success {
+  color: #24a148;
+}
+
+.color-warning {
+  color: #ed9700;
+}
+
+.color-error {
+  color: #f44337;
+}
+
+.color-text-primary, .tutor-user-public-profile .tutor-user-profile-content h3, .tutor-instructor-list h4.tutor-instructor-name, .tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle h4 {
+  color: #212327;
+}
+
+.color-text-title {
+  color: #41454f;
+}
+
+.color-text-subsued, .tutor-user-public-profile .tutor-user-profile-content p {
+  color: #5b616f;
+}
+
+.color-text-hints {
+  color: #757c8e;
+}
+
+.color-text-white {
+  color: #ffffff;
+}
+
+.color-text-brand {
+  color: #3e64de;
+}
+
+.color-text-success {
+  color: #24a148;
+}
+
+.color-text-warning {
+  color: #ed9700;
+}
+
+.color-text-error {
+  color: #f44337;
+}
+
+.color-design-dark {
+  color: #1a1b1e;
+}
+
+.color-design-grey {
+  color: #41454f;
+}
+
+.color-design-white {
+  color: #ffffff;
+}
+
+.color-design-brand {
+  color: #3e64de;
+}
+
+.color-design-success {
+  color: #24a148;
+}
+
+.color-design-warning, .tutor-instructor-list .tutor-star-rating-group i, .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper .tutor-instructor-ratings i.active {
+  color: #ed9700;
+}
+
+.color-design-danger {
+  color: #f44337;
+}
+
+.color-stroke-light-10 {
+  color: #eff1f6;
+}
+
+.color-stroke-light-20 {
+  color: #e0e2ea;
+}
+
+.color-stroke-light-30 {
+  color: #cdcfd5;
+}
+
+.color-stroke-gray {
+  color: #c0c3cb;
+}
+
+.color-stroke-blue {
+  color: #3e64de;
+}
+
+.color-stroke-danger {
+  color: #f44337;
+}
+
+.color-stroke-success {
+  color: #24a148;
+}
+
+.color-bg-brand {
+  color: #3e64de;
+}
+
+.color-bg-white {
+  color: #ffffff;
+}
+
+.color-bg-gray-20 {
+  color: #e3e5eb;
+}
+
+.color-bg-gray-10 {
+  color: #eff1f6;
+}
+
+.color-bg-dark-10 {
+  color: #212327;
+}
+
+.color-bg-dark-20 {
+  color: #31343b;
+}
+
+.color-bg-dark-30 {
+  color: #41454f;
+}
+
+.text-thin-h1 {
+  font-weight: 100;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-thin-h2 {
+  font-weight: 100;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-thin-h3 {
+  font-weight: 100;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-thin-h4 {
+  font-weight: 100;
+  font-size: 30px;
+  line-height: 133%;
+}
+
+.text-thin-h5 {
+  font-weight: 100;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-thin-h6 {
+  font-weight: 100;
+  font-size: 20px;
+  line-height: 150%;
+}
+
+.text-thin-body {
+  font-weight: 100;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-thin-caption {
+  font-weight: 100;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-thin-small {
+  font-weight: 100;
+  font-size: 13px;
+  line-height: 138%;
+}
+
+.text-thin-tiny {
+  font-weight: 100;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-regular-h1 {
+  font-weight: 400;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-regular-h2 {
+  font-weight: 400;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-regular-h3 {
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-regular-h4 {
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 133%;
+}
+
+.text-regular-h5 {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-regular-h6 {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 150%;
+}
+
+.text-regular-body {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-regular-caption {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-regular-small, .text-body {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 138%;
+}
+
+.text-regular-tiny {
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-medium-h1 {
+  font-weight: 500;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-medium-h2 {
+  font-weight: 500;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-medium-h3 {
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-medium-h4 {
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 123%;
+}
+
+.text-medium-h5, .tutor-instructor-list h4.tutor-instructor-name, .tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle h4 {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-medium-h6 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 140%;
+}
+
+.text-medium-body {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-medium-caption, .tutor-instructor-filter .course-category-filter .tutor-form-check label.text-medium-caption {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-medium-small {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 162%;
+}
+
+.text-medium-tiny {
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-bold-h1 {
+  font-weight: 700;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-bold-h2 {
+  font-weight: 700;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-bold-h3 {
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-bold-h4 {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 123%;
+}
+
+.text-bold-h5 {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-bold-h6 {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 150%;
+}
+
+.text-bold-body {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 162%;
+}
+
+.text-bold-caption {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-bold-small {
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 162%;
+}
+
+.text-bold-tiny {
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 145%;
+}
+
+.text-btn-xlarge {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 178%;
+}
+
+.text-btn-large {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 200%;
+}
+
+.text-btn-medium {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 160%;
+}
+
+.text-btn-small {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 123%;
+}
+
+.text-body {
+  font-family: 'SF Pro Display', sans-serif;
+  font-style: normal;
+}
+
 .tutor-instructor-list, .tutor-instructor-list:focus, .tutor-instructor-list:active {
   outline: none;
   cursor: pointer;
   text-decoration: none !important;
-  background: #FFFFFF;
-  border: 1px solid #DCDBDC;
+  background: #ffffff;
+  border: 1px solid #dcdbdc;
   border-radius: 6px;
 }
 
-.tutor-instructor-list .tutor-instructor-profile-photo, .tutor-instructor-list .tutor-instructor-cover-photo {
+.tutor-instructor-list .tutor-star-rating-group i {
+  font-size: 16px !important;
+}
+
+.tutor-instructor-list .tutor-instructor-profile-photo,
+.tutor-instructor-list .tutor-instructor-cover-photo {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -9494,27 +10284,22 @@ Withdraw Method
   height: 60px;
 }
 
-.tutor-instructor-list .tutor-instructor-name {
-  font-style: normal;
-  font-weight: 500;
-  font-size: 24px;
-  color: #161616;
+.tutor-instructor-list h4.tutor-instructor-name {
   margin: 0;
 }
 
-.tutor-instructor-list .tutor-instructor-course-count {
+.tutor-instructor-list .tutor-instructor-course-count, .tutor-instructor-list .tutor-instructor-left-middle .tutor-instructor-content {
   margin-bottom: 10px;
-}
-
-.tutor-instructor-list .tutor-instructor-course-count > span {
-  font-style: normal;
+  font-size: 15px !important;
   font-weight: 500;
-  font-size: 15px;
-  color: #161616;
 }
 
-.tutor-instructor-list .tutor-instructor-course-count > span:last-child {
-  color: #808080;
+.tutor-instructor-list .tutor-instructor-course-count .tutor-ins-course-count, .tutor-instructor-list .tutor-instructor-left-middle .tutor-instructor-content .tutor-ins-course-count {
+  color: #212327 !important;
+}
+
+.tutor-instructor-list .tutor-instructor-course-count .tutor-ins-course-text, .tutor-instructor-list .tutor-instructor-left-middle .tutor-instructor-content .tutor-ins-course-text {
+  color: #757C8E !important;
 }
 
 .tutor-instructor-list .tutor-instructor-rating * {
@@ -9526,7 +10311,7 @@ Withdraw Method
 }
 
 .tutor-instructor-list .tutor-instructor-rating .rating-total-meta {
-  color: #7A7A7A;
+  color: #7a7a7a;
 }
 
 .tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-cover-photo {
@@ -9539,7 +10324,9 @@ Withdraw Method
   margin: -31px 15px 0;
 }
 
-.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-rating {
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-name,
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-course-count,
+.tutor-instructor-list.tutor-instructor-list-pp-cp .tutor-instructor-rating {
   padding: 0 15px;
 }
 
@@ -9553,7 +10340,9 @@ Withdraw Method
   height: 160px;
 }
 
-.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-rating {
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-name,
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-course-count,
+.tutor-instructor-list.tutor-instructor-list-pp-top-full .tutor-instructor-rating {
   padding: 0 15px;
 }
 
@@ -9569,6 +10358,10 @@ Withdraw Method
   display: none;
 }
 
+.tutor-instructor-list.tutor-instructor-list-pp-top-left .tutor-instructor-profile-photo {
+  margin-left: 22px;
+}
+
 .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-cover-photo, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-cover-photo {
   display: none;
 }
@@ -9581,7 +10374,11 @@ Withdraw Method
   position: absolute;
 }
 
-.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-rating, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-name, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-course-count, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-name,
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-course-count,
+.tutor-instructor-list.tutor-instructor-list-pp-left-full .tutor-instructor-rating, .tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-name,
+.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-course-count,
+.tutor-instructor-list.tutor-instructor-list-pp-left-middle .tutor-instructor-rating {
   margin-left: 118px;
   white-space: nowrap;
   overflow: hidden;
@@ -9618,23 +10415,22 @@ Withdraw Method
 
 .tutor-instructor-filter > div {
   float: left;
-  padding: 0 15px;
 }
 
 .tutor-instructor-filter > div:first-child {
-  width: 220px;
+  width: 230px;
 }
 
 @media (min-width: 768px) {
   .tutor-instructor-filter > div:last-child {
-    padding: 0 15px;
+    padding: 0 51px;
     width: calc(100% - 250px);
   }
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-result .keyword-field {
   padding: 5px;
-  border: 1px solid #BABABA;
+  border: 1px solid #bababa;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border-radius: 6px;
@@ -9643,10 +10439,11 @@ Withdraw Method
 
 .tutor-instructor-filter .tutor-instructor-filter-result .keyword-field i {
   padding: 0 5px;
-  color: #3E64DE;
+  color: #3e64de;
 }
 
-.tutor-instructor-filter .tutor-instructor-filter-result .keyword-field i, .tutor-instructor-filter .tutor-instructor-filter-result .keyword-field input {
+.tutor-instructor-filter .tutor-instructor-filter-result .keyword-field i,
+.tutor-instructor-filter .tutor-instructor-filter-result .keyword-field input {
   font-size: 16px;
 }
 
@@ -9687,7 +10484,14 @@ Withdraw Method
   }
 }
 
-.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup, .tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div {
+.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup .tutor-instructor-category-show-more {
+  position: absolute;
+  top: 80%;
+  left: 15px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup,
+.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div {
   position: fixed;
   left: 0;
   bottom: 0;
@@ -9708,15 +10512,25 @@ Withdraw Method
   background: white;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  height: 70%;
+  height: 80%;
   overflow: hidden;
 }
 
-.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div > div:first-child, .tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div > div:last-child {
+.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div > div:first-child {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
+  padding: 18px;
+  background: white;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup > div > div:last-child {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 91%;
   padding: 18px;
   background: white;
 }
@@ -9768,13 +10582,43 @@ Withdraw Method
 .tutor-instructor-filter .tutor-instructor-filter-result .mobile-filter-popup .expand-instructor-filter {
   width: 60px;
   height: 6px;
-  background: #C4C4C4;
+  background: #c4c4c4;
   border-radius: 50px;
   margin: 0 auto;
   cursor: ns-resize;
 }
 
-.tutor-instructor-filter .tutor-category-text > span:nth-of-type(1) {
+.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-column-gap: 30px;
+  -moz-column-gap: 30px;
+  column-gap: 30px;
+  border: 1px solid #CDCFD5;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 6px;
+  padding: 30px 20px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle h4 {
+  margin: 0;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-profile-photo img {
+  border-radius: 100%;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
+}
+
+.tutor-instructor-filter .tutor-category-text > span:nth-of-type(1),
+.tutor-instructor-filter .tutor-instructor-rating-title > span:nth-of-type(1) {
   font-style: normal;
   font-weight: bold;
   font-size: 16px;
@@ -9782,23 +10626,26 @@ Withdraw Method
   color: #353535;
 }
 
-.tutor-instructor-filter .tutor-category-text > span:nth-of-type(2) {
+.tutor-instructor-filter .tutor-category-text > span:nth-of-type(2),
+.tutor-instructor-filter .tutor-instructor-rating-title > span:nth-of-type(2) {
   cursor: pointer;
   float: right;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
   line-height: 26px;
-  color: #7A7A7A;
+  color: #7a7a7a;
 }
 
-.tutor-instructor-filter .tutor-category-text > span:nth-of-type(2) i {
+.tutor-instructor-filter .tutor-category-text > span:nth-of-type(2) i,
+.tutor-instructor-filter .tutor-instructor-rating-title > span:nth-of-type(2) i {
   font-size: 10px;
   margin-right: 5px;
 }
 
 @media (max-width: 767px) {
-  .tutor-instructor-filter .tutor-instructor-filter-sidebar, .tutor-instructor-filter .filter-pc {
+  .tutor-instructor-filter .tutor-instructor-filter-sidebar,
+  .tutor-instructor-filter .filter-pc {
     display: none;
   }
 }
@@ -9816,20 +10663,20 @@ Withdraw Method
   width: 100%;
   clear: both;
   margin: 41px 0 0 0;
-  background: #FFF7F7;
+  background: #fff7f7;
   padding: 16.5px;
   border-radius: 6px;
-  border: 1px solid #FDD9D7;
+  border: 1px solid #fdd9d7;
 }
 
 .tutor-instructor-rejection-notice span {
-  color: #C62828;
+  color: #c62828;
   font-size: 16px;
   font-weight: 400;
 }
 
 .tutor-instructor-rejection-notice span i {
-  color: #F44337;
+  color: #f44337;
   font-size: 27px;
   display: inline-block;
   margin-right: 14px;
@@ -9837,13 +10684,193 @@ Withdraw Method
 
 .tutor-instructor-rejection-notice a {
   float: right;
-  color: #F44337;
+  color: #f44337;
   cursor: pointer;
   font-weight: bold;
 }
 
 .tutor-instructor-rejection-notice a:hover {
   color: #e41304;
+}
+
+/*
+Instructor customize filters styles
+*/
+.tutor-instructor-filter * {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.tutor-instructor-filter .tutor-instructor-list-pp-left-full .tutor-instructor-profile-photo {
+  height: 100%;
+}
+
+.tutor-instructor-filter .tutor-instructor-ratings-wrapper {
+  padding-top: 33px;
+  border-top: 1px solid #E3E6EB;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar {
+  border-right: 1px solid #E3E6EB;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper {
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  -o-display: flex;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: space-between;
+  -ms-flex-pack: space-between;
+  justify-content: space-between;
+  -webkit-column-gap: 0;
+  -moz-column-gap: 0;
+  column-gap: 0;
+  margin-bottom: 48px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-filters {
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  -o-display: flex;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
+  -webkit-column-gap: 6px;
+  -moz-column-gap: 6px;
+  column-gap: 6px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-filters i {
+  transform: scale(2);
+  font-weight: 500;
+  -webkit-transform: scale(2);
+  -moz-transform: scale(2);
+  -ms-transform: scale(2);
+  -o-transform: scale(2);
+  margin-right: 10px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-customize-clear {
+  padding-right: 22px;
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  -o-display: flex;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
+  -webkit-column-gap: 6px;
+  -moz-column-gap: 6px;
+  column-gap: 6px;
+  cursor: pointer;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-customize-clear i {
+  font-size: 10px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-customize-wrapper .tutor-instructor-customize-clear span {
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper {
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  -o-display: flex;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: space-between;
+  -ms-flex-pack: space-between;
+  justify-content: space-between;
+  -webkit-column-gap: 0;
+  -moz-column-gap: 0;
+  column-gap: 0;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper .tutor-instructor-ratings {
+  margin-top: 23px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper .tutor-instructor-ratings i {
+  cursor: pointer;
+  font-size: 22px;
+  color: #C0C3CB;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-rating-range-wrapper span {
+  margin-top: 23px;
+  padding-right: 21px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more {
+  margin: 17px 0 33px 0;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more .text-medium-caption, .tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more .course-category-filter .tutor-form-check label.text-medium-caption, .tutor-instructor-filter .course-category-filter .tutor-form-check .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more label.text-medium-caption {
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  -o-display: flex;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
+  -webkit-column-gap: 6px;
+  -moz-column-gap: 6px;
+  column-gap: 6px;
+  cursor: pointer;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-sidebar .tutor-instructor-category-show-more i {
+  transform: scale(1.5);
+  -webkit-transform: scale(1.5);
+  -moz-transform: scale(1.5);
+  -ms-transform: scale(1.5);
+  -o-transform: scale(1.5);
+}
+
+.tutor-instructor-filter .tutor-instructor-relevant-short-wrapper select {
+  border: none !important;
+}
+
+.tutor-instructor-filter .tutor-show-more-blur {
+  position: relative;
+}
+
+.tutor-instructor-filter .tutor-show-more-blur::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 87px;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(1.31%, rgba(255, 255, 255, 0)), color-stop(15.41%, rgba(255, 255, 255, 0)), to(#FFFFFF));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #FFFFFF 100%);
 }
 
 /* Only reusable function, or code allowed here. No direct css please. */

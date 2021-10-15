@@ -167,8 +167,8 @@ class Assets {
 		 * translate js file
 		 * @since 1.9.0
 		 */
-		wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front.min.css", array(), tutor()->version);
-		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
+		wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front.min.css", array(), time());
+		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), time(), true );
 
 
 		/**
@@ -230,7 +230,7 @@ class Assets {
 		// Fonts
 		wp_enqueue_style('tutor-lineawesome-fonts', tutor()->url . 'assets/icons/lineawesome@1.3.0/css/line-awesome.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version);
-		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'assets/icons/tutor-v2-icon/css/tutor-v2-icon-test.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'assets/icons/tutor-v2-icon/css/tutor-iconpack.css', array(), tutor()->version);
 		
 		// Common css library
 		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.min.css', array(), tutor()->version);
