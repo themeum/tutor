@@ -78,13 +78,15 @@ $image_base = tutor()->url . '/assets/images/';
     </div>
     <!--notice end-->
 </div>
-<!--sorting-->
-<div class="tutor-dashboard-announcement-sorting-wrap">
-    <div class="tutor-form-group">
-        <label for="">
+
+
+<!--Filter-->
+<div class="row tutor-mb-30">
+    <div class="tutor-col-12 tutor-col-lg-6">
+        <label class="d-block">
             <?php _e('Courses', 'tutor'); ?>
         </label>
-        <select class="tutor-report-category tutor-announcement-course-sorting ignore-nice-select">
+        <select class="tutor-form-select tutor-announcement-course-sorting">
            
             <option value=""><?php _e('All', 'tutor'); ?></option>
         
@@ -100,21 +102,22 @@ $image_base = tutor()->url . '/assets/images/';
         </select>
     </div>
 
-    <div class="tutor-form-group">
-        <label><?php _e('Sort By', 'tutor'); ?></label>
-        <select class="tutor-announcement-order-sorting ignore-nice-select">
+    <div class="tutor-col-6 tutor-col-lg-3">
+        <label class="d-block"><?php _e('Sort By', 'tutor'); ?></label>
+        <select class="tutor-form-select tutor-announcement-order-sorting">
             <option <?php selected($order_filter, 'ASC'); ?>><?php _e('ASC', 'tutor'); ?></option>
             <option <?php selected($order_filter, 'DESC'); ?>><?php _e('DESC', 'tutor'); ?></option>
         </select>
     </div>
 
-    <div class="tutor-form-group tutor-announcement-datepicker">
-        <label><?php _e('Date', 'tutor'); ?></label>
-        <input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
+    <div class="tutor-col-6 tutor-col-lg-3 tutor-announcement-datepicker">
+        <label class="d-block"><?php _e('Date', 'tutor'); ?></label>
+        <input type="text" class="tutor-form-control tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
         <i class="tutor-icon-calendar"></i>
     </div>
 </div>
-<!--sorting end-->
+<!--Filter end-->
+
 <div class="tutor-announcement-table-wrap">
     <table class="tutor-dashboard-announcement-table" width="100%">
         <thead>

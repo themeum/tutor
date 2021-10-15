@@ -133,7 +133,7 @@ msgstr ""
 msgid "Instructors"
 msgstr ""
 
-#: classes/Admin.php:74, classes/Admin.php:74, classes/Utils.php:1295, classes/Utils.php:2462, templates/dashboard/announcements.php:123, views/pages/announcements.php:104, views/pages/announcements.php:114
+#: classes/Admin.php:74, classes/Admin.php:74, classes/Utils.php:1295, classes/Utils.php:2462, templates/dashboard/announcements.php:126, views/pages/announcements.php:104, views/pages/announcements.php:114
 msgid "Announcements"
 msgstr ""
 
@@ -581,7 +581,7 @@ msgstr ""
 msgid "Instructor Commission"
 msgstr ""
 
-#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:112, templates/dashboard/announcements.php:122, templates/dashboard/purchase_history.php:24, views/pages/announcements.php:94, views/pages/announcements.php:113, templates/dashboard/assignments/submitted.php:71, templates/dashboard/my-quiz-attempts/attempts-details.php:114
+#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:114, templates/dashboard/announcements.php:125, templates/dashboard/purchase_history.php:24, views/pages/announcements.php:94, views/pages/announcements.php:113, templates/dashboard/assignments/submitted.php:71, templates/dashboard/my-quiz-attempts/attempts-details.php:114
 msgid "Date"
 msgstr ""
 
@@ -1659,7 +1659,7 @@ msgstr ""
 msgid "View Course"
 msgstr ""
 
-#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/dashboard.php:228, templates/student-public-profile.php:106, templates/student-public-profile.php:167, templates/dashboard/announcements.php:85, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, views/pages/announcements.php:59, templates/single/course/instructors.php:72
+#: classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/dashboard.php:228, templates/student-public-profile.php:106, templates/student-public-profile.php:167, templates/dashboard/announcements.php:87, templates/dashboard/assignments.php:34, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:27, views/pages/announcements.php:59, templates/single/course/instructors.php:72
 msgid "Courses"
 msgstr ""
 
@@ -2320,11 +2320,11 @@ msgstr ""
 msgid "Add Product"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:360, classes/Tutor_List_Table.php:1261, templates/dashboard/announcements.php:89, templates/dashboard/assignments.php:38, views/pages/announcements.php:68
+#: classes/Tutor_List_Table.php:360, classes/Tutor_List_Table.php:1261, templates/dashboard/announcements.php:91, templates/dashboard/assignments.php:38, views/pages/announcements.php:68
 msgid "All"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:384, classes/Tutor_List_Table.php:1277, templates/dashboard/announcements.php:104, templates/dashboard/assignments.php:52, views/pages/announcements.php:84
+#: classes/Tutor_List_Table.php:384, classes/Tutor_List_Table.php:1277, templates/dashboard/announcements.php:106, templates/dashboard/assignments.php:52, views/pages/announcements.php:84
 msgid "Sort By"
 msgstr ""
 
@@ -2332,7 +2332,7 @@ msgstr ""
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:98, templates/dashboard/assignments.php:47, views/pages/announcements.php:77, templates/dashboard/announcements/create.php:29, templates/dashboard/announcements/update.php:30
+#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:100, templates/dashboard/assignments.php:47, views/pages/announcements.php:77, templates/dashboard/announcements/create.php:29, templates/dashboard/announcements/update.php:30
 msgid "No course found"
 msgstr ""
 
@@ -2952,7 +2952,7 @@ msgstr ""
 msgid "Are you Sure? It can not be undone."
 msgstr ""
 
-#: classes/Withdraw_Requests_List.php:63, templates/dashboard/announcements.php:156, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:43, views/modal/edit_quiz.php:55, views/pages/announcements.php:142, templates/dashboard/announcements/details.php:32, templates/dashboard/settings/profile.php:95, views/options/field-types/media.php:30
+#: classes/Withdraw_Requests_List.php:63, templates/dashboard/announcements.php:159, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:43, views/modal/edit_quiz.php:55, views/pages/announcements.php:142, templates/dashboard/announcements/details.php:32, templates/dashboard/settings/profile.php:95, views/options/field-types/media.php:30
 msgid "Delete"
 msgstr ""
 
@@ -3254,23 +3254,23 @@ msgstr ""
 msgid "Add New Announcement"
 msgstr ""
 
-#: templates/dashboard/announcements.php:106, templates/dashboard/assignments.php:54
+#: templates/dashboard/announcements.php:108, templates/dashboard/assignments.php:54
 msgid "ASC"
 msgstr ""
 
-#: templates/dashboard/announcements.php:107, templates/dashboard/assignments.php:55
+#: templates/dashboard/announcements.php:109, templates/dashboard/assignments.php:55
 msgid "DESC"
 msgstr ""
 
-#: templates/dashboard/announcements.php:167, views/pages/announcements.php:152
+#: templates/dashboard/announcements.php:170, views/pages/announcements.php:152
 msgid "Announcements not found"
 msgstr ""
 
-#: templates/dashboard/announcements.php:144, templates/dashboard/assignments.php:99, templates/dashboard/quiz-attempts.php:102, templates/dashboard/assignments/submitted.php:91, templates/single/quiz/previous-attempts.php:79
+#: templates/dashboard/announcements.php:147, templates/dashboard/assignments.php:99, templates/dashboard/quiz-attempts.php:102, templates/dashboard/assignments/submitted.php:91, templates/single/quiz/previous-attempts.php:79
 msgid "Details"
 msgstr ""
 
-#: templates/dashboard/announcements.php:152, templates/dashboard/my-courses.php:75, views/modal/edit_quiz.php:49, views/pages/announcements.php:139, templates/dashboard/announcements/details.php:33
+#: templates/dashboard/announcements.php:155, templates/dashboard/my-courses.php:75, views/modal/edit_quiz.php:49, views/pages/announcements.php:139, templates/dashboard/announcements/details.php:33
 msgid "Edit"
 msgstr ""
 
@@ -4504,6 +4504,10 @@ msgstr ""
 
 #: views/pages/enable_disable_addons.php:74
 msgid "Required Plugin(s)"
+msgstr ""
+
+#: views/pages/enable_disable_addons.php:94
+msgid "WebPush Notification Requirements"
 msgstr ""
 
 #: views/pages/get-pro.php:2
