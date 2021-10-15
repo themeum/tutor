@@ -85,7 +85,12 @@ if ( ! class_exists('\TUTOR\Utils') ) {
 
 if ( ! function_exists('tutor_utils') ) {
 	function tutor_utils() {
-		return new \TUTOR\Utils();
+		if(!isset($GLOBALS['tutor_utils_object'])) {
+			// Use runtime cache
+			$GLOBALS['tutor_utils_object'] = new \TUTOR\Utils();
+		}
+		
+		return $GLOBALS['tutor_utils_object'];
 	}
 }
 
