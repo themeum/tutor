@@ -2872,11 +2872,11 @@ msgstr ""
 msgid "Withdraw Method"
 msgstr ""
 
-#: classes/Utils.php:7755
+#: classes/Utils.php:7760
 msgid "PHP 7.2.5 or greater is required"
 msgstr ""
 
-#: classes/Utils.php:7756
+#: classes/Utils.php:7761
 msgid "Please install SSL certificate properly"
 msgstr ""
 

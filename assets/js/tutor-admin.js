@@ -320,30 +320,21 @@ var Header = function Header() {
   var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
       setAllAddons = _useAddonsUpdate.setAllAddons;
 
-  console.log(allAddons);
   var filterBtns = ['all', 'active', 'deactive'];
 
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('all'),
       _useState2 = _slicedToArray(_useState, 2),
-      isActive = _useState2[0],
-      setIsActive = _useState2[1];
-
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
-    active: 'all'
-  }),
-      _useState4 = _slicedToArray(_useState3, 2),
-      activeTab = _useState4[0],
-      setActiveTab = _useState4[1];
+      activeTab = _useState2[0],
+      setActiveTab = _useState2[1];
 
   var handleFilterBtnClick = function handleFilterBtnClick(value) {
-    console.log(value);
-
     switch (value) {
       case 'active':
         var active = allAddons.filter(function (item) {
           return item.is_enabled;
         }); // setAllAddons(active);
 
+        setActiveTab(value);
         console.log(value, active);
         break;
 
@@ -353,12 +344,14 @@ var Header = function Header() {
         }); // setAllAddons(deactive);
 
         console.log(value, deactive);
+        setActiveTab(value);
         break;
 
       case 'all':
         var all = allAddons; // setAllAddons(all);
 
         console.log(value, all);
+        setActiveTab(value);
         break;
     }
   };
@@ -372,7 +365,7 @@ var Header = function Header() {
   }, filterBtns.map(function (btn, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
       type: "button",
-      className: "filter-btn",
+      className: "filter-btn ".concat(btn === activeTab ? 'is-active' : ''),
       "data-tab-filter-target": btn,
       key: index // onClick={() => handleFilterBtnClick(btn)}
       ,
