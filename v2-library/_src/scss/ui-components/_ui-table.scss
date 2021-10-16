@@ -298,98 +298,100 @@ table.tutor-ui-table {
 }
 
 table.tutor-ui-table {
-	/*
-	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
-	*/
-	@media only screen and (max-width: 991px), (min-device-width: 992px) and (max-device-width: 1024px) {
-		/* Force table to not be like tables anymore */
-		table,
-		thead,
-		tbody,
-		th,
-		td,
-		tr {
-			display: block;
-		}
-
-		/* Hide table headers (but not display: none;, for accessibility) */
-		thead tr {
-			position: absolute;
-			top: -9999px;
-			left: -9999px;
-		}
-
-		tr {
-			&:not(:last-child) {
-				margin-bottom: 22px;
+	&.tutor-ui-table-responsive {
+		/*
+		Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+		*/
+		@media only screen and (max-width: 991px), (min-device-width: 992px) and (max-device-width: 1024px) {
+			/* Force table to not be like tables anymore */
+			table,
+			thead,
+			tbody,
+			th,
+			td,
+			tr {
+				display: block;
 			}
+
+			/* Hide table headers (but not display: none;, for accessibility) */
+			thead tr {
+				position: absolute;
+				top: -9999px;
+				left: -9999px;
+			}
+
+			tr {
+				&:not(:last-child) {
+					margin-bottom: 22px;
+				}
+				td {
+					word-break: break-word;
+					&:last-child {
+						border-bottom: 1px solid #cdcfd5;
+						border-bottom-left-radius: 6px;
+						border-bottom-right-radius: 6px;
+					}
+					&:first-child {
+						border-top-left-radius: 6px;
+						border-top-right-radius: 6px;
+					}
+
+					&:nth-child(odd) {
+						background: rgb(255, 255, 255);
+					}
+
+					&:nth-child(even) {
+						background: rgba(239, 241, 247, 0.3);
+					}
+				}
+			}
+
 			td {
-				word-break: break-word;
-				&:last-child {
-					border-bottom: 1px solid #cdcfd5;
-					border-bottom-left-radius: 6px;
-					border-bottom-right-radius: 6px;
+				/* Behave  like a "row" */
+				border: none;
+				border-radius: 0;
+				position: relative;
+				padding: 10px;
+
+				width: unset;
+				text-align: left;
+
+				border-top: 1px solid #cdcfd5;
+				border-left: 1px solid #cdcfd5;
+				border-right: 1px solid #cdcfd5;
+
+				display: flex;
+
+				&.column-fullwidth {
+					padding: 15px 20px;
 				}
-				&:first-child {
-					border-top-left-radius: 6px;
-					border-top-right-radius: 6px;
-				}
 
-				&:nth-child(odd) {
-					background: rgb(255, 255, 255);
-				}
+				&:not(.column-fullwidth) {
+					padding-left: 40%;
 
-				&:nth-child(even) {
-					background: rgba(239, 241, 247, 0.3);
-				}
-			}
-		}
+					&:before {
+						/* Now like a table header */
+						position: absolute;
+						/* Top/left values mimic padding */
+						top: 0;
+						left: 0;
+						width: 35%;
+						padding-left: 20px;
+						padding-right: 10px;
+						white-space: nowrap;
 
-		td {
-			/* Behave  like a "row" */
-			border: none;
-			border-radius: 0;
-			position: relative;
-			padding: 10px;
+						/* Label the data You could also use a data-* attribute and content for this. That way "bloats" the HTML,this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow. */
 
-			width: unset;
-			text-align: left;
+						content: attr(data-th);
+						height: 100%;
+						display: flex;
+						align-items: center;
 
-			border-top: 1px solid #cdcfd5;
-			border-left: 1px solid #cdcfd5;
-			border-right: 1px solid #cdcfd5;
-
-			display: flex;
-
-			&.column-fullwidth {
-				padding: 15px 20px;
-			}
-
-			&:not(.column-fullwidth) {
-				padding-left: 40%;
-
-				&:before {
-					/* Now like a table header */
-					position: absolute;
-					/* Top/left values mimic padding */
-					top: 0;
-					left: 0;
-					width: 35%;
-					padding-left: 20px;
-					padding-right: 10px;
-					white-space: nowrap;
-
-					/* Label the data You could also use a data-* attribute and content for this. That way "bloats" the HTML,this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow. */
-
-					content: attr(data-th);
-					height: 100%;
-					display: flex;
-					align-items: center;
-
-					font-weight: 400;
-					font-size: 13px;
-					line-height: 138%;
-					color: $text-subsued;
+						font-weight: 400;
+						font-size: 13px;
+						line-height: 138%;
+						color: $text-subsued;
+					}
 				}
 			}
 		}
