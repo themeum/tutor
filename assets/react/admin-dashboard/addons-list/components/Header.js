@@ -4,35 +4,28 @@ import { useAddons, useAddonsUpdate } from '../context/AddonsContext';
 const Header = () => {
 	const allAddons = useAddons();
 	const { setAllAddons } = useAddonsUpdate();
-
-	console.log(allAddons);
-
 	const filterBtns = ['all', 'active', 'deactive'];
-
-	const [isActive, setIsActive] = useState(false);
-
-	const [activeTab, setActiveTab] = useState({
-		active: 'all',
-	});
+	const [activeTab, setActiveTab] = useState('all');
 
 	const handleFilterBtnClick = (value) => {
-		console.log(value);
-
 		switch (value) {
 			case 'active':
 				const active = allAddons.filter((item) => item.is_enabled);
 				// setAllAddons(active);
+				setActiveTab(value);
 				console.log(value, active);
 				break;
 			case 'deactive':
 				const deactive = allAddons.filter((item) => item.is_enabled !== true);
 				// setAllAddons(deactive);
 				console.log(value, deactive);
+				setActiveTab(value);
 				break;
 			case 'all':
 				const all = allAddons;
 				// setAllAddons(all);
 				console.log(value, all);
+				setActiveTab(value);
 				break;
 		}
 	};
@@ -45,7 +38,7 @@ const Header = () => {
 					return (
 						<button
 							type="button"
-							className={`filter-btn`}
+							className={`filter-btn ${btn === activeTab ? 'is-active' : ''}`}
 							data-tab-filter-target={btn}
 							key={index}
 							// onClick={() => handleFilterBtnClick(btn)}
