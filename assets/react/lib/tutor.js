@@ -665,20 +665,12 @@ jQuery(document).ready(function($){
      * Since 1.7.9
      * Announcements scripts
      */
-    var add_new_button = $(".tutor-announcement-add-new");
-    var update_button = $(".tutor-announcement-edit");
     var delete_button = $(".tutor-announcement-delete");
     var details_button = $(".tutor-announcement-details");
     var close_button = $(".tutor-announcement-close-btn");
-    var create_modal = $(".tutor-accouncement-create-modal");
     var update_modal = $(".tutor-accouncement-update-modal");
     var details_modal = $(".tutor-accouncement-details-modal");
-    //open create modal
-    $(add_new_button).click(function(){
-      create_modal.addClass("show");
-      $("#tutor-annoucement-backend-create-modal").addClass('show');
-    })
-
+    
     $(details_button).click(function(){
         var announcement_date = $(this).attr('announcement-date');
         var announcement_id = $(this).attr('announcement-id');
@@ -699,24 +691,6 @@ jQuery(document).ready(function($){
         details_modal.addClass("show");
     })
 
-    //open update modal
-    $(update_button).click(function(){
-        if(details_modal){
-            details_modal.removeClass('show');
-        }
-        var announcement_id = $(this).attr('announcement-id');
-        var course_id = $(this).attr('course-id');
-        var announcement_title = $(this).attr('announcement-title');
-        var announcement_summary = $(this).attr('announcement-summary');
-
-        $("#tutor-announcement-course-id").val(course_id);
-        $("#announcement_id").val(announcement_id);
-        $("#tutor-announcement-title").val(announcement_title);
-        $("#tutor-announcement-summary").val(announcement_summary);
-        
-        update_modal.addClass("show");
-    })
-
     //close create and update modal
     $(close_button).click(function(){
         create_modal.removeClass("show");
@@ -729,7 +703,7 @@ jQuery(document).ready(function($){
     $(".tutor-announcements-form").on('submit',function(e){
         e.preventDefault();
         var $btn = $(this).find('button[type="submit"]');
-        var formData = $(".tutor-announcements-form").serialize() + '&action=tutor_announcement_create' + '&action_type=create';
+        var formData = $btn.closest(".tutor-announcements-form").serialize();
         
         $.ajax({
             url : window._tutorobject.ajaxurl,
@@ -740,29 +714,21 @@ jQuery(document).ready(function($){
             },
             success: function(data) {
                 
-                $(".tutor-alert").remove();
-                
-                if(data.status=="success") {
-                    location.reload();
+                if(!data.success) {
+                    const {message=__('Something Went Wrong!', 'tutor')} = data.data || {};
+                    tutor_toast(__('Error!', 'tutor'), message, 'error');
+                    return;
                 }
-
-                if(data.status=="validation_error"){
-                    $(".tutor-announcements-create-alert").append(`<div class="tutor-alert alert-warning"></div>`);
-                    for(let [key,value] of Object.entries(data.message)){
-                        
-                        $(".tutor-announcements-create-alert .tutor-alert").append(`<li>${value}</li>`);
-                    }
-                }                
-                if(data.status=="fail"){
-                    
-                    $(".tutor-announcements-create-alert").html(`<li>${data.message}</li>`);
                 
-                }            
+                location.reload();         
+            },
+            complete:function() {
+                $btn.removeClass('tutor-updating-message');
             },
             error: function(data){
-                console.log(data);
+                tutor_toast(__('Something Went Wrong!', 'tutor'));
             }
-        })
+        });
     })
     //update announcement
     $(".tutor-announcements-update-form").on('submit',function(e){

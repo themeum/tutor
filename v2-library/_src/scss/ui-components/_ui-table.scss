@@ -7,6 +7,9 @@ table.tutor-ui-table {
 	&, tr, th, td {
 		border: none;
 	}
+
+	border-radius: 6px;
+	overflow: hidden;
 	
 	// Table utility classes
 	.inline-flex-center {
