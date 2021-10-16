@@ -1077,18 +1077,6 @@ window.jQuery(document).ready(function ($) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _v2_library_src_js_main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../v2-library/_src/js/main */ "./v2-library/_src/js/main.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -1747,171 +1735,6 @@ jQuery(document).ready(function ($) {
         $that.removeClass('tutor-updating-message');
       }
     });
-  });
-  /**
-   * Since 1.7.9
-   * Announcements scripts
-   */
-
-  var delete_button = $(".tutor-announcement-delete");
-  var details_button = $(".tutor-announcement-details");
-  var close_button = $(".tutor-announcement-close-btn");
-  var update_modal = $(".tutor-accouncement-update-modal");
-  var details_modal = $(".tutor-accouncement-details-modal");
-  $(details_button).click(function () {
-    var announcement_date = $(this).attr('announcement-date');
-    var announcement_id = $(this).attr('announcement-id');
-    var course_id = $(this).attr('course-id');
-    var course_name = $(this).attr('course-name');
-    var announcement_title = $(this).attr('announcement-title');
-    var announcement_summary = $(this).attr('announcement-summary');
-    $(".tutor-announcement-detail-content").html("<h3>".concat(announcement_title, "</h3><p>").concat(announcement_summary, "</p>"));
-    $(".tutor-announcement-detail-course-info p").html("".concat(course_name));
-    $(".tutor-announcement-detail-date-info p").html("".concat(announcement_date)); //set attr on edit button
-
-    $("#tutor-announcement-edit-from-detail").attr('announcement-id', announcement_id);
-    $("#tutor-announcement-edit-from-detail").attr('course-id', course_id);
-    $("#tutor-announcement-edit-from-detail").attr('announcement-title', announcement_title);
-    $("#tutor-announcement-edit-from-detail").attr('announcement-summary', announcement_summary);
-    $("#tutor-announcement-delete-from-detail").attr('announcement-id', announcement_id);
-    details_modal.addClass("show");
-  }); //close create and update modal
-
-  $(close_button).click(function () {
-    create_modal.removeClass("show");
-    update_modal.removeClass("show");
-    details_modal.removeClass("show");
-    $("#tutor-annoucement-backend-create-modal").removeClass('show');
-  }); //create announcement
-
-  $(".tutor-announcements-form").on('submit', function (e) {
-    e.preventDefault();
-    var $btn = $(this).find('button[type="submit"]');
-    var formData = $btn.closest(".tutor-announcements-form").serialize();
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: formData,
-      beforeSend: function beforeSend() {
-        $btn.addClass('tutor-updating-message');
-      },
-      success: function success(data) {
-        if (!data.success) {
-          var _ref2 = data.data || {},
-              _ref2$message = _ref2.message,
-              message = _ref2$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref2$message;
-
-          tutor_toast(__('Error!', 'tutor'), message, 'error');
-          return;
-        }
-
-        location.reload();
-      },
-      complete: function complete() {
-        $btn.removeClass('tutor-updating-message');
-      },
-      error: function error(data) {
-        tutor_toast(__('Something Went Wrong!', 'tutor'));
-      }
-    });
-  }); //update announcement
-
-  $(".tutor-announcements-update-form").on('submit', function (e) {
-    e.preventDefault();
-    var $btn = $(this).find('button[type="submit"]');
-    var formData = $(".tutor-announcements-update-form").serialize() + '&action=tutor_announcement_create' + '&action_type=update';
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: formData,
-      beforeSend: function beforeSend() {
-        $btn.addClass('tutor-updating-message');
-      },
-      success: function success(data) {
-        $(".tutor-alert").remove();
-
-        if (data.status == "success") {
-          location.reload();
-        }
-
-        if (data.status == "validation_error") {
-          $(".tutor-announcements-update-alert").append("<div class=\"tutor-alert alert-warning\"></div>");
-
-          for (var _i = 0, _Object$entries = Object.entries(data.message); _i < _Object$entries.length; _i++) {
-            var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
-                key = _Object$entries$_i[0],
-                value = _Object$entries$_i[1];
-
-            $(".tutor-announcements-update-alert > .tutor-alert").append("<li>".concat(value, "</li>"));
-          }
-        }
-
-        if (data.status == "fail") {
-          $(".tutor-announcements-create-alert").html("<li>".concat(data.message, "</li>"));
-        }
-      },
-      error: function error() {}
-    });
-  });
-  $(delete_button).click(function () {
-    var announcement_id = $(this).attr('announcement-id');
-    var whichtr = $("#tutor-announcement-tr-" + announcement_id);
-
-    if (confirm("Do you want to delete?")) {
-      $.ajax({
-        url: window._tutorobject.ajaxurl,
-        type: 'POST',
-        data: {
-          action: 'tutor_announcement_delete',
-          announcement_id: announcement_id
-        },
-        beforeSend: function beforeSend() {},
-        success: function success(data) {
-          whichtr.remove();
-
-          if (details_modal.length) {
-            details_modal.removeClass('show');
-          }
-
-          if (data.status == "fail") {
-            console.log(data.message);
-          }
-        },
-        error: function error() {}
-      });
-    }
-  }); //sorting 
-  // if (jQuery.datepicker){
-  //     $( "#tutor-announcement-datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
-  // }
-
-  function urlPrams(type, val) {
-    var url = new URL(window.location.href);
-    var search_params = url.searchParams;
-    search_params.set(type, val);
-    url.search = search_params.toString();
-
-    if (_tutorobject.is_admin) {
-      search_params.set('paged', 1);
-    } else {
-      search_params.set('current_page', 1);
-    }
-
-    url.search = search_params.toString();
-    return url.toString();
-  }
-
-  $('.tutor-announcement-course-sorting').on('change', function (e) {
-    window.location = urlPrams('course-id', $(this).val());
-  });
-  $('.tutor-announcement-order-sorting').on('change', function (e) {
-    window.location = urlPrams('order', $(this).val());
-  });
-  $('.tutor-announcement-date-sorting').on('change', function (e) {
-    window.location = urlPrams('date', $(this).val());
-  });
-  $('.tutor-announcement-search-sorting').on('click', function (e) {
-    window.location = urlPrams('search', $(".tutor-announcement-search-field").val());
   }); //dropdown toggle
 
   $(document).click(function () {
@@ -1925,8 +1748,7 @@ jQuery(document).ready(function ($) {
     }
 
     $(this).addClass('show');
-  }); //announcement end
-
+  });
   /**
    * @since v.1.8.6
    * SUbmit form through ajax
@@ -2046,6 +1868,109 @@ window.jQuery(document).ready(function ($) {
 
 /***/ }),
 
+/***/ "./assets/react/modules/announcement.js":
+/*!**********************************************!*\
+  !*** ./assets/react/modules/announcement.js ***!
+  \**********************************************/
+/***/ (() => {
+
+function urlPrams(type, val) {
+  var url = new URL(window.location.href);
+  var search_params = url.searchParams;
+  search_params.set(type, val);
+  url.search = search_params.toString();
+
+  if (_tutorobject.is_admin) {
+    search_params.set('paged', 1);
+  } else {
+    search_params.set('current_page', 1);
+  }
+
+  url.search = search_params.toString();
+  return url.toString();
+}
+
+window.jQuery(document).ready(function ($) {
+  var __ = window.wp.i18n.__; //create announcement
+
+  $(".tutor-announcements-form").on('submit', function (e) {
+    e.preventDefault();
+    var $btn = $(this).find('button[type="submit"]');
+    var formData = $btn.closest(".tutor-announcements-form").serialize();
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: formData,
+      beforeSend: function beforeSend() {
+        $btn.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (!data.success) {
+          var _ref = data.data || {},
+              _ref$message = _ref.message,
+              message = _ref$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref$message;
+
+          tutor_toast(__('Error!', 'tutor'), message, 'error');
+          return;
+        }
+
+        location.reload();
+      },
+      complete: function complete() {
+        $btn.removeClass('tutor-updating-message');
+      },
+      error: function error(data) {
+        tutor_toast(__('Something Went Wrong!', 'tutor'));
+      }
+    });
+  }); // Delete announcement
+
+  $('.tutor-announcement-delete').click(function () {
+    var announcement_id = $(this).data('announcement-id');
+    var whichtr = $("#" + $(this).data('target-announcement-row-id'));
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        action: 'tutor_announcement_delete',
+        announcement_id: announcement_id
+      },
+      beforeSend: function beforeSend() {},
+      success: function success(data) {
+        var _ref2 = data.data || {},
+            _ref2$message = _ref2.message,
+            message = _ref2$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref2$message;
+
+        if (data.success) {
+          whichtr.remove();
+          tutor_toast('Success!', message, 'success');
+          return;
+        } else {
+          tutor_toast('Error!', message, 'error');
+        }
+      },
+      error: function error() {
+        tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
+      }
+    });
+  }); // Announcement filter
+
+  $('.tutor-announcement-course-sorting').on('change', function (e) {
+    window.location = urlPrams('course-id', $(this).val());
+  });
+  $('.tutor-announcement-order-sorting').on('change', function (e) {
+    window.location = urlPrams('order', $(this).val());
+  });
+  $('.tutor-announcement-date-sorting').on('change', function (e) {
+    window.location = urlPrams('date', $(this).val());
+  });
+  $('.tutor-announcement-search-sorting').on('click', function (e) {
+    window.location = urlPrams('search', $(".tutor-announcement-search-field").val());
+  });
+});
+
+/***/ }),
+
 /***/ "./v2-library/_src/js/main.js":
 /*!************************************!*\
   !*** ./v2-library/_src/js/main.js ***!
@@ -2127,7 +2052,6 @@ function tutorModal() {
     var attr = 'data-tutor-modal-target';
     var closeAttr = 'data-tutor-modal-close';
     var overlay = 'tutor-modal-overlay';
-    console.log('Clickedd');
 
     if (e.target.hasAttribute(attr) || e.target.closest("[".concat(attr, "]"))) {
       e.preventDefault();
@@ -2555,7 +2479,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_4__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 
 
 

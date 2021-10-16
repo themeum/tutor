@@ -516,17 +516,9 @@ class Ajax{
 
         $delete = wp_delete_post($announcement_id);
         if ($delete) {
-            $response = array(
-                'status'    => 'success',
-                'message'   => __('Announcement deleted successfully','tutor')
-            );
-            wp_send_json($response);
-        } else {
-            $response = array(
-                'status'    => 'fail',
-                'message'   => __('Announcement delete failed','tutor')
-            );      
-            wp_send_json($response);     
+            wp_send_json_success(array('message'  => __('Announcement deleted successfully', 'tutor')));
         }
+		 
+		wp_send_json_error(array('message' => __('Announcement delete failed','tutor'))); 
     }
 }
