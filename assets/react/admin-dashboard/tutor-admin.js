@@ -3,6 +3,8 @@ import "./segments/image-preview";
 import "./segments/options";
 import "./segments/import-export";
 
+import '../modules/announcement';
+
 jQuery(document).ready(function($) {
   "use strict";
 
