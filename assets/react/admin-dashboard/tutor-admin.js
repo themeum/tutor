@@ -2,6 +2,7 @@ import "../lib/common";
 import "./segments/image-preview";
 import "./segments/options";
 import "./segments/import-export";
+import "../lib/filter";
 
 jQuery(document).ready(function($) {
   "use strict";
@@ -57,16 +58,8 @@ jQuery(document).ready(function($) {
       },
       success: function(data) {
         data.success
-          ? tutor_toast(
-              __("Saved", "tutor"),
-              $form.data("toast_success_message"),
-              "success"
-            )
-          : tutor_toast(
-              __("Request Error", "tutor"),
-              __("Could not save", "tutor"),
-              "error"
-            );
+          ? tutor_toast(__("Saved", "tutor"), $form.data("toast_success_message"), "success")
+          : tutor_toast(__("Request Error", "tutor"), __("Could not save", "tutor"), "error");
       },
       complete: function() {
         $form.find(".button").removeClass("tutor-updating-message");
@@ -78,55 +71,51 @@ jQuery(document).ready(function($) {
    * End Withdraw nav tabs
    */
 
-  $(document).on(
-    "click",
-    ".video_source_wrap_html5 .video_upload_btn",
-    function(event) {
-      event.preventDefault();
+  $(document).on("click", ".video_source_wrap_html5 .video_upload_btn", function(event) {
+    event.preventDefault();
 
-      var $that = $(this);
-      var frame;
-      // If the media frame already exists, reopen it.
-      if (frame) {
-        frame.open();
-        return;
-      }
-
-      // Create a new media frame
-      frame = wp.media({
-        title: __("Select or Upload Media Of Your Choice", "tutor"),
-        button: {
-          text: __("Upload media", "tutor"),
-        },
-        library: { type: "video" },
-        multiple: false, // Set to true to allow multiple files to be selected
-      });
-
-      // When an image is selected in the media frame...
-      frame.on("select", function() {
-        // Get media attachment details from the frame state
-        var attachment = frame
-          .state()
-          .get("selection")
-          .first()
-          .toJSON();
-        $that
-          .closest(".video_source_wrap_html5")
-          .find("span.video_media_id")
-          .data("video_url", attachment.url)
-          .text(attachment.id)
-          .trigger("paste")
-          .closest("p")
-          .show();
-        $that
-          .closest(".video_source_wrap_html5")
-          .find("input.input_source_video_id")
-          .val(attachment.id);
-      });
-      // Finally, open the modal on click
+    var $that = $(this);
+    var frame;
+    // If the media frame already exists, reopen it.
+    if (frame) {
       frame.open();
+      return;
     }
-  );
+
+    // Create a new media frame
+    frame = wp.media({
+      title: __("Select or Upload Media Of Your Choice", "tutor"),
+      button: {
+        text: __("Upload media", "tutor"),
+      },
+      library: { type: "video" },
+      multiple: false, // Set to true to allow multiple files to be selected
+    });
+
+    // When an image is selected in the media frame...
+    frame.on("select", function() {
+      // Get media attachment details from the frame state
+      var attachment = frame
+        .state()
+        .get("selection")
+        .first()
+        .toJSON();
+      $that
+        .closest(".video_source_wrap_html5")
+        .find("span.video_media_id")
+        .data("video_url", attachment.url)
+        .text(attachment.id)
+        .trigger("paste")
+        .closest("p")
+        .show();
+      $that
+        .closest(".video_source_wrap_html5")
+        .find("input.input_source_video_id")
+        .val(attachment.id);
+    });
+    // Finally, open the modal on click
+    frame.open();
+  });
 
   /**
    * Open Sidebar Menu
@@ -245,27 +234,19 @@ jQuery(document).ready(function($) {
       success: function(data) {
         if (data.success) {
           $that.trigger("reset");
-          $("#form-response").html(
-            '<p class="tutor-status-approved-context">' + data.data.msg + "</p>"
-          );
+          $("#form-response").html('<p class="tutor-status-approved-context">' + data.data.msg + "</p>");
         } else {
           var errorMsg = "";
 
           var errors = data.data.errors;
           if (errors && Object.keys(errors).length) {
             $.each(data.data.errors, function(index, value) {
-              if (
-                value &&
-                typeof value === "object" &&
-                value.constructor === Object
-              ) {
+              if (value && typeof value === "object" && value.constructor === Object) {
                 $.each(value, function(key, value1) {
-                  errorMsg +=
-                    '<p class="tutor-required-fields">' + value1[0] + "</p>";
+                  errorMsg += '<p class="tutor-required-fields">' + value1[0] + "</p>";
                 });
               } else {
-                errorMsg +=
-                  '<p class="tutor-required-fields">' + value + "</p>";
+                errorMsg += '<p class="tutor-required-fields">' + value + "</p>";
               }
             });
             $("#form-response").html(errorMsg);
@@ -458,8 +439,7 @@ jQuery(document).ready(function($) {
     }
 
     if (
-      form.find('[name="tutor_pmpro_membership_model"]').val() ==
-        "category_wise_membership" &&
+      form.find('[name="tutor_pmpro_membership_model"]').val() == "category_wise_membership" &&
       !form.find(".membership_course_categories input:checked").length
     ) {
       if (!confirm(__("Do you want to save without any category?", "tutor"))) {
@@ -529,7 +509,7 @@ jQuery(document).ready(function($) {
       title: __("Delete this enrolment", "tutor"),
       description: __(
         "All of the course data like quiz attempts, assignment, lesson <br/>progress will be deleted if you delete this student's enrollment.",
-        "tutor"
+        "tutor",
       ),
       buttons: {
         reset: {
