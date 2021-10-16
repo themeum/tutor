@@ -1014,6 +1014,112 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./assets/react/lib/filter.js":
+/*!************************************!*\
+  !*** ./assets/react/lib/filter.js ***!
+  \************************************/
+/***/ (() => {
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+/**
+ * On click add filter value on the url
+ * and refresh page
+ *
+ * Handle bulk action
+ *
+ * @package Filter / sorting
+ * @since v2.0.0
+ */
+window.onload = function () {
+  document.getElementById("tutor-backend-filter-course").onchange = function (e) {
+    window.location = urlPrams("course-id", e.target.value);
+  };
+
+  document.getElementById("tutor-backend-filter-order").onchange = function (e) {
+    window.location = urlPrams("order", e.target.value);
+  };
+
+  document.getElementById("tutor-backend-filter-date").onchange = function (e) {
+    window.location = urlPrams("date", e.target.value);
+  };
+
+  document.getElementById("tutor-admin-search-filter-form").onsubmit = function (e) {
+    e.preventDefault();
+    var search = document.getElementById("tutor-backend-filter-search").value;
+    window.location = urlPrams("search", search);
+  };
+  /**
+   * Onsubmit bulk form handle ajax request then reload page
+   */
+
+
+  var bulkForm = document.getElementById("tutor-admin-bulk-action-form");
+
+  bulkForm.onsubmit = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      var formData, post, response;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              e.preventDefault();
+              formData = new FormData(bulkForm);
+              formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+              _context.prev = 3;
+              _context.next = 6;
+              return fetch(window._tutorobject.ajaxurl, {
+                method: "POST",
+                body: formData
+              });
+
+            case 6:
+              post = _context.sent;
+              _context.next = 9;
+              return post.json();
+
+            case 9:
+              response = _context.sent;
+              console.log(response);
+              _context.next = 16;
+              break;
+
+            case 13:
+              _context.prev = 13;
+              _context.t0 = _context["catch"](3);
+              alert(_context.t0);
+
+            case 16:
+              console.log(formData.get("bulk-action"));
+
+            case 17:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[3, 13]]);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+
+  function urlPrams(type, val) {
+    var url = new URL(window.location.href);
+    var search_params = url.searchParams;
+    search_params.set(type, val);
+    url.search = search_params.toString();
+    search_params.set("paged", 1);
+    url.search = search_params.toString();
+    return url.toString();
+  }
+};
+
+/***/ }),
+
 /***/ "./assets/react/lib/media-chooser.js":
 /*!*******************************************!*\
   !*** ./assets/react/lib/media-chooser.js ***!
@@ -2585,7 +2691,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
+/* harmony import */ var _lib_filter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/filter */ "./assets/react/lib/filter.js");
+/* harmony import */ var _lib_filter__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_lib_filter__WEBPACK_IMPORTED_MODULE_4__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 
 
 
