@@ -36,7 +36,7 @@
             </div>
             <div class="tutor-modal-footer">
                 <div class="tutor-row">
-                    <div class="col">
+                    <div class="tutor-col">
                         <button type="button" class="tutor-btn <?php echo !empty($data['button_class']) ? $data['button_class'] : ''; ?>" id="<?php echo !empty($data['button_id']) ? $data['button_id'] : ''; ?>">
                             <?php echo $data['button_text']; ?>
                         </button>

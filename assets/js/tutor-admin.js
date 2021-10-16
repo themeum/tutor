@@ -1753,19 +1753,11 @@ jQuery(document).ready(function ($) {
    * Announcements scripts
    */
 
-  var add_new_button = $(".tutor-announcement-add-new");
-  var update_button = $(".tutor-announcement-edit");
   var delete_button = $(".tutor-announcement-delete");
   var details_button = $(".tutor-announcement-details");
   var close_button = $(".tutor-announcement-close-btn");
-  var create_modal = $(".tutor-accouncement-create-modal");
   var update_modal = $(".tutor-accouncement-update-modal");
-  var details_modal = $(".tutor-accouncement-details-modal"); //open create modal
-
-  $(add_new_button).click(function () {
-    create_modal.addClass("show");
-    $("#tutor-annoucement-backend-create-modal").addClass('show');
-  });
+  var details_modal = $(".tutor-accouncement-details-modal");
   $(details_button).click(function () {
     var announcement_date = $(this).attr('announcement-date');
     var announcement_id = $(this).attr('announcement-id');
@@ -1783,22 +1775,6 @@ jQuery(document).ready(function ($) {
     $("#tutor-announcement-edit-from-detail").attr('announcement-summary', announcement_summary);
     $("#tutor-announcement-delete-from-detail").attr('announcement-id', announcement_id);
     details_modal.addClass("show");
-  }); //open update modal
-
-  $(update_button).click(function () {
-    if (details_modal) {
-      details_modal.removeClass('show');
-    }
-
-    var announcement_id = $(this).attr('announcement-id');
-    var course_id = $(this).attr('course-id');
-    var announcement_title = $(this).attr('announcement-title');
-    var announcement_summary = $(this).attr('announcement-summary');
-    $("#tutor-announcement-course-id").val(course_id);
-    $("#announcement_id").val(announcement_id);
-    $("#tutor-announcement-title").val(announcement_title);
-    $("#tutor-announcement-summary").val(announcement_summary);
-    update_modal.addClass("show");
   }); //close create and update modal
 
   $(close_button).click(function () {
@@ -1811,7 +1787,7 @@ jQuery(document).ready(function ($) {
   $(".tutor-announcements-form").on('submit', function (e) {
     e.preventDefault();
     var $btn = $(this).find('button[type="submit"]');
-    var formData = $(".tutor-announcements-form").serialize() + '&action=tutor_announcement_create' + '&action_type=create';
+    var formData = $btn.closest(".tutor-announcements-form").serialize();
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: 'POST',
@@ -1820,30 +1796,22 @@ jQuery(document).ready(function ($) {
         $btn.addClass('tutor-updating-message');
       },
       success: function success(data) {
-        $(".tutor-alert").remove();
+        if (!data.success) {
+          var _ref2 = data.data || {},
+              _ref2$message = _ref2.message,
+              message = _ref2$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref2$message;
 
-        if (data.status == "success") {
-          location.reload();
+          tutor_toast(__('Error!', 'tutor'), message, 'error');
+          return;
         }
 
-        if (data.status == "validation_error") {
-          $(".tutor-announcements-create-alert").append("<div class=\"tutor-alert alert-warning\"></div>");
-
-          for (var _i = 0, _Object$entries = Object.entries(data.message); _i < _Object$entries.length; _i++) {
-            var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
-                key = _Object$entries$_i[0],
-                value = _Object$entries$_i[1];
-
-            $(".tutor-announcements-create-alert .tutor-alert").append("<li>".concat(value, "</li>"));
-          }
-        }
-
-        if (data.status == "fail") {
-          $(".tutor-announcements-create-alert").html("<li>".concat(data.message, "</li>"));
-        }
+        location.reload();
+      },
+      complete: function complete() {
+        $btn.removeClass('tutor-updating-message');
       },
       error: function error(data) {
-        console.log(data);
+        tutor_toast(__('Something Went Wrong!', 'tutor'));
       }
     });
   }); //update announcement
@@ -1869,10 +1837,10 @@ jQuery(document).ready(function ($) {
         if (data.status == "validation_error") {
           $(".tutor-announcements-update-alert").append("<div class=\"tutor-alert alert-warning\"></div>");
 
-          for (var _i2 = 0, _Object$entries2 = Object.entries(data.message); _i2 < _Object$entries2.length; _i2++) {
-            var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i2], 2),
-                key = _Object$entries2$_i[0],
-                value = _Object$entries2$_i[1];
+          for (var _i = 0, _Object$entries = Object.entries(data.message); _i < _Object$entries.length; _i++) {
+            var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+                key = _Object$entries$_i[0],
+                value = _Object$entries$_i[1];
 
             $(".tutor-announcements-update-alert > .tutor-alert").append("<li>".concat(value, "</li>"));
           }
@@ -2159,11 +2127,13 @@ function tutorModal() {
     var attr = 'data-tutor-modal-target';
     var closeAttr = 'data-tutor-modal-close';
     var overlay = 'tutor-modal-overlay';
+    console.log('Clickedd');
 
     if (e.target.hasAttribute(attr) || e.target.closest("[".concat(attr, "]"))) {
       e.preventDefault();
       var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
       var modal = document.getElementById(id);
+      console.log(modal);
 
       if (modal) {
         modal.classList.add('tutor-is-active');

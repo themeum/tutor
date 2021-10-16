@@ -10,6 +10,18 @@
   /*# sourceMappingURL=bootstrap-grid.css.map */
 }
 
+.tutor-bg-white {
+  background-color: #ffffff;
+}
+
+.tutor-bg-light {
+  background-color: #fdfdfd;
+}
+
+.tutor-text-nowrap {
+  white-space: nowrap;
+}
+
 .tutor-container,
 .tutor-container-fluid,
 .tutor-container-xxl,
@@ -9905,6 +9917,8 @@ select.tutor-form-select:focus {
 }
 
 table.tutor-ui-table {
+  border-radius: 6px;
+  overflow: hidden;
   border-collapse: separate;
   border-spacing: 0;
   min-width: 300px;

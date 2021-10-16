@@ -11,12 +11,15 @@ function tutorModal() {
 		const closeAttr = 'data-tutor-modal-close';
 		const overlay = 'tutor-modal-overlay';
 
+		console.log('Clickedd');
+
 		if (e.target.hasAttribute(attr) || e.target.closest(`[${attr}]`)) {
 			e.preventDefault();
 			const id = e.target.hasAttribute(attr)
 				? e.target.getAttribute(attr)
 				: e.target.closest(`[${attr}]`).getAttribute(attr);
 			const modal = document.getElementById(id);
+			console.log(modal)
 			if (modal) {
 				modal.classList.add('tutor-is-active');
 			}

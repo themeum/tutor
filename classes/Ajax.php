@@ -438,20 +438,14 @@ class Ajax{
 	 * @since  v.1.7.9
 	 */
 	public function create_or_update_annoucement() {   
-        //prepare alert message
-        $create_success_msg = __("Announcement created successfully",'tutor');
-        $update_success_msg = __("Announcement updated successfully",'tutor');
-        $create_fail_msg = __("Announcement creation failed",'tutor');
-        $update_fail_msg = __("Announcement update failed",'tutor');
-
-        $error = array();
-        $response = array();
 		tutils()->checking_nonce();
-
+		
+        $error = array();
 		$course_id = sanitize_text_field($_POST['tutor_announcement_course']);
 		$announcement_title = sanitize_text_field($_POST['tutor_announcement_title']);
 		$announcement_summary = sanitize_textarea_field($_POST['tutor_announcement_summary']);
 		
+		// Check if user can manage this announcment
 		if(!tutils()->can_user_manage('course', $course_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
@@ -484,35 +478,28 @@ class Ajax{
 
         }
 
+		// If validation fails
         if (count($error)>0) {
-            $response['status']     = 'validation_error';
-            $response['message']    = $error;
-            wp_send_json($response);
-        } else {
-            //insert or update post
-            $post_id = wp_insert_post($form_data);
-            if ($post_id > 0) {
-				$announcement = get_post($post_id);
-				$action_type = sanitize_textarea_field($_POST['action_type']);
-                $response['status'] = 'success';
-                //set reponse message as per action type
-                $response['message'] = ($action_type == 'create') ? $create_success_msg : $update_success_msg;
-
-				do_action('tutor_announcements/after/save', $post_id, $announcement, $action_type );
-                
-                wp_send_json($response);
-            } else {
-                //failure message
-                $response['status']     = 'fail';
-                if($_POST['action_type'] == 'create'){
-                    $response['message'] = $create_fail_msg;
-                }
-                if($_POST['action_type'] == 'update'){
-                    $response['message'] = $update_fail_msg;
-                }
-                wp_send_json($response);
-            }
-        }
+            wp_send_json_error(array(
+				'message' => __('All fields required!', 'tutor'),
+				'fields' => $error
+			));
+        } 
+		
+		
+		//insert or update post
+		$post_id = wp_insert_post($form_data);
+		if ($post_id > 0) {
+			$announcement = get_post($post_id);
+			$action_type = sanitize_textarea_field($_POST['action_type']);
+			
+			do_action('tutor_announcements/after/save', $post_id, $announcement, $action_type );
+			
+			$resp_message = $action_type == 'create' ? __("Announcement created successfully", 'tutor') : __("Announcement updated successfully",'tutor');
+			wp_send_json_success(array('message' => $resp_message));
+		} 
+		
+		wp_send_json_error( array('message' => __('Something Went Wrong!', 'tutor')) );
     }
 
 	/**
