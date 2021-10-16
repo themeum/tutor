@@ -1391,7 +1391,7 @@ class Tutor_List_Table {
 			$attributes = "class='$classes' $data";
 
 			if ( 'cb' === $column_name ) {
-				echo '<th scope="row" class="check-column">';
+				echo '<th scope="tutor-bs-row" class="check-column">';
 				echo $this->column_cb( $item );
 				echo '</th>';
 			} elseif ( method_exists( $this, '_column_' . $column_name ) ) {

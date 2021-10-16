@@ -17,7 +17,7 @@ $tooltip_desc = ! empty( $field['desc'] ) ? $field['desc'] : null;
 		}
 		?>
 	</div>
-	<div class="tutor-option-field-input d-flex has-btn-after">
+	<div class="tutor-option-field-input tutor-bs-d-flex has-btn-after">
 		<label class="tutor-form-toggle">
 			<input type="hidden" name="tutor_option[<?php echo $field['key']; ?>]" value="off">
 			<input type="checkbox" name="tutor_option[<?php echo $field['key']; ?>]" value="on" <?php $option_value ? checked( $option_value[1], 'on' ) : ''; ?> class="tutor-form-toggle-input">

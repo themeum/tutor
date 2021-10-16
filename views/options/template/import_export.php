@@ -10,7 +10,7 @@
 	<h4>Import Settings</h4>
 
 	<div class="item-wrapper">
-		<div class="tutor-option-field-row d-block">
+		<div class="tutor-option-field-row tutor-bs-d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
 					<span class="icon tutor-v2-icon-test icon-upload-icon-line"></span>
@@ -60,7 +60,7 @@
 				<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
 						<p class="text-medium-small"><?php echo esc_html( $option_data['history_date'] ); ?>
-						<span className="tutor-badge-label<?php echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
+						<span class="tutor-badge-label<?php echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="<?php echo $key; ?>">Apply</button>

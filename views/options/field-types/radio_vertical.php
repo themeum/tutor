@@ -1,11 +1,11 @@
 <?php $field_id = 'field_' . $field['key'];
  ?>
-<div class="tutor-option-field-row d-block" id="<?php echo $field_id; ?>"
+<div class="tutor-option-field-row tutor-bs-d-block" id="<?php echo $field_id; ?>"
 >
     <?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 
-    <div class="tutor-option-field-input d-block">
-        <div class="type-check d-block has-desc">
+    <div class="tutor-option-field-input tutor-bs-d-block">
+        <div class="type-check tutor-bs-d-block has-desc">
             <?php
             if (!empty($field['options'])) :
                 foreach ($field['options'] as $optionKey => $option) :
