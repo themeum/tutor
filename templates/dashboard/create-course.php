@@ -36,14 +36,14 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 ?>
 
 <?php do_action('tutor/dashboard_course_builder_before'); ?>
-<form action="" id="tutor-frontend-course-builder" method="post" enctype="multipart/form-data" class="tutor-grid">
+<form action="" id="tutor-frontend-course-builder" method="post" enctype="multipart/form-data">
     <?php wp_nonce_field(tutor()->nonce_action, tutor()->nonce); ?>
 
     <!-- Sticky header with course action buttons -->
     <header class="tutor-dashboard-builder-header">
-        <div class="tutor-container tutor-fluid">
-            <div class="tutor-row align-items-center">
-                <div class="tutor-col-auto">
+        <div class="tutor-bs-container-fluid">
+            <div class="tutor-bs-row tutor-bs-align-items-center">
+                <div class="tutor-bs-col-auto">
                     <div class="tutor-dashboard-builder-header-left">
                         <div class="tutor-dashboard-builder-logo">
                             <?php $tutor_course_builder_logo_src = apply_filters('tutor_course_builder_logo_src', tutor()->url . 'assets/images/tutor-logo.png'); ?>
@@ -56,17 +56,17 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         </button>
                     </div>
                 </div>
-                <div class="tutor-col-auto">
+                <div class="tutor-bs-col">
                     <div class="tutor-dashboard-builder-header-right">
                         <a href="<?php the_permalink($course_id); ?>" target="_blank"><i class="tutor-icon-glasses"></i><?php _e('Preview', 'tutor'); ?></a>
                         <?php
                         if ($can_publish_course) {
                         ?>
-                            <button class="tutor-button" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
+                            <button class="tutor-btn" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
                         <?php
                         } else {
                         ?>
-                            <button class="tutor-button" type="submit" name="course_submit_btn" value="submit_for_review"><?php _e('Submit for Review', 'tutor'); ?></button>
+                            <button class="tutor-btn" type="submit" name="course_submit_btn" value="submit_for_review"><?php _e('Submit for Review', 'tutor'); ?></button>
                         <?php
                         }
                         ?>
@@ -79,9 +79,9 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 
     <!-- Course builder body -->
     <div class="tutor-frontend-course-builder-section">
-        <div class="tutor-container">
-            <div class="tutor-row">
-                <div class="tutor-col-8">
+        <div class="tutor-bs-container">
+            <div class="tutor-bs-row">
+                <div class="tutor-bs-col-8">
                     <input type="hidden" value="tutor_add_course_builder" name="tutor_action" />
                     <input type="hidden" name="course_ID" id="course_ID" value="<?php echo get_the_ID(); ?>">
                     <input type="hidden" name="post_ID" id="post_ID" value="<?php echo get_the_ID(); ?>">
@@ -193,8 +193,8 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                         <div class="tutor-mb-30">
                                             <label class="tutor-form-label"><?php _e('Course Price', 'tutor'); ?></label>
                                             <div class="tutor-input-group tutor-mb-15">
-                                                <div class="row">
-                                                    <div class="col-4">
+                                                <div class="tutor-bs-row">
+                                                    <div class="tutor-bs-col-4">
                                                         <label for="tutor_course_price_type_pro" class="tutor-styled-radio">
                                                             <input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?>>
                                                             <span></span>
@@ -204,7 +204,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                                             </div>
                                                         </label>
                                                     </div>
-                                                    <div class="col-4">
+                                                    <div class="tutor-bs-col-4">
                                                         <label class="tutor-styled-radio">
                                                             <input type="radio" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?>>
                                                             <span><?php _e('Free', "tutor") ?></span>
@@ -221,7 +221,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                 <label class="tutor-form-label"><?php _e('Course Thumbnail', 'tutor'); ?></label>
                                 <div class="tutor-input-group tutor-mb-15">
                                     <div class="tutor-thumbnail-uploader">
-                                        <div class="thumbnail-wrapper d-flex align-items-center tutor-mt-10 tutor-p-15">
+                                        <div class="thumbnail-wrapper tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-10 tutor-p-15">
                                             <div class="thumbnail-preview image-previewer">
                                                 <span class="preview-loading"></span>
                                                 <?php 
@@ -261,11 +261,11 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         <div class="tutor-form-col-12">
                             <div class="tutor-form-group">
                                 <div class="tutor-form-field tutor-course-builder-btn-group">
-                                    <button type="submit" class="tutor-button" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save course as draft', 'tutor'); ?></button>
+                                    <button type="submit" class="tutor-btn" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save course as draft', 'tutor'); ?></button>
                                     <?php if ($can_publish_course) { ?>
-                                        <button class="tutor-button tutor-button-primary" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
+                                        <button class="tutor-btn" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
                                     <?php } else { ?>
-                                        <button class="tutor-button tutor-button-primary" type="submit" name="course_submit_btn" value="submit_for_review"><?php _e('Submit for Review', 'tutor'); ?></button>
+                                        <button class="tutor-btn" type="submit" name="course_submit_btn" value="submit_for_review"><?php _e('Submit for Review', 'tutor'); ?></button>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -274,7 +274,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                 </div>
                 
                 <!-- Course builder tips right sidebar -->
-                <div class="tutor-col-4">
+                <div class="tutor-bs-col-4">
                     <div class="tutor-course-builder-upload-tips">
                         <h3 class="tutor-course-builder-tips-title"><i class="tutor-icon-light-bulb"></i><?php _e('Course Upload Tips', 'tutor') ?></h3>
                         <ul>

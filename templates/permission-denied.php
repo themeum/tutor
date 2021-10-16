@@ -55,7 +55,7 @@ get_header();
                     );
                 }
             ?>
-            <a href="<?php echo $button['url']; ?>" class="tutor-button">
+            <a href="<?php echo $button['url']; ?>" class="tutor-btn">
                 <?php echo $button['text']; ?>
             </a>
         </div>

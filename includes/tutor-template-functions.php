@@ -335,7 +335,7 @@ if ( ! function_exists('tutor_container_classes')) {
 
         $classes = apply_filters( 'tutor_container_classes', array(
             'tutor-wrap tutor-courses-wrap',
-            'tutor-container'
+            'tutor-bs-container'
         ) );
 
         $class = implode( ' ', $classes );

@@ -1,5 +1,6 @@
 // vendors
-.tutor-grid {
+.tutor-prefix {
+	@import './vendors/custom.scss';
 	@import './vendors/bootstrap-grid';
 }
 

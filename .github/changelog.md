@@ -6,6 +6,7 @@
 * Update: Gradebook data generates automatically
 * Update: Generate gradebook button removed
 * Fix: Gradebook data not deleting on course retake
+* Fix: XSS vulnerability in registration page
 
 
 ### 1.9.10 - October 06, 2021

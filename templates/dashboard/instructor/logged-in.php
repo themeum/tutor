@@ -58,7 +58,7 @@ if ($is_instructor) {
                     </p>
                 </div>
 
-                <a class="tutor-button" href="<?php echo esc_url(tutor_utils()->tutor_dashboard_url()) ?>">
+                <a class="tutor-btn" href="<?php echo esc_url(tutor_utils()->tutor_dashboard_url()) ?>">
                     <?php _e('Go to Dashboard', 'tutor'); ?>
                 </a>
             </div>

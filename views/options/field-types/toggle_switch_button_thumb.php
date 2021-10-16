@@ -6,7 +6,7 @@
     </div>
     <?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 
-    <div class="tutor-option-field-input d-flex has-btn-after">
+    <div class="tutor-option-field-input tutor-bs-d-flex has-btn-after">
         <label class="tutor-form-toggle">
             <input type="checkbox" class="tutor-form-toggle-input" checked="">
             <span class="tutor-form-toggle-control"></span>

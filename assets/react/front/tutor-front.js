@@ -1826,7 +1826,7 @@ jQuery(document).ready(function ($) {
             buttons : {
                 reset: {
                     title: __('Reset Data', 'tutor'),
-                    class: 'secondary',
+                    class: 'tutor-btn tutor-is-outline tutor-is-default',
 
                     callback: function() {
 
@@ -1852,7 +1852,7 @@ jQuery(document).ready(function ($) {
                 },
                 keep: {
                     title: __('Keep Data', 'tutor'),
-                    class: 'primary',
+                    class: 'tutor-btn',
                     callback: function() {
                         window.location.assign(url);
                     }
@@ -1883,7 +1883,7 @@ jQuery(document).ready(function ($) {
                         keep: {
                             title: __( 'Yes, leave quiz', 'tutor' ),
                             id: 'leave',
-                            class: 'secondary',
+                            class: 'tutor-btn tutor-is-outline tutor-is-default',
                             callback: function() {
 
                                 var formData = $('form#tutor-answering-quiz').serialize()+'&action='+'tutor_quiz_abandon';
@@ -1915,7 +1915,7 @@ jQuery(document).ready(function ($) {
                         reset: {
                             title: __('Stay here', 'tutor'),
                             id: 'reset',
-                            class: 'primary',
+                            class: 'tutor-btn',
                             callback: function() {
                                 popup.remove();
                             }

@@ -104,7 +104,7 @@
 		}
 	}
 
-	.tutor-button{
+	.tutor-btn{
 		white-space: nowrap;
 		margin-left: auto;
 
@@ -114,9 +114,8 @@
 	}
 
 	.tutor-dashboard-builder-header-left{
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
+		@include valueWithPrefix(display, flex);
+		@include propertyWithPrefix(align-items, center);
 
 		.tutor-dashboard-builder-logo{
 			padding:0 25px;
@@ -160,7 +159,8 @@
 	.tutor-dashboard-builder-header-right{
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: right;
+		
 		a{
 			color: var(--tutor-text-color);
 			font-weight: 500;

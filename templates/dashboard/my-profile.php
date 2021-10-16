@@ -33,11 +33,11 @@ $profile_data = array(
     <?php 
         foreach($profile_data as $data) {
             ?>
-            <div class="row">
-                <div class="col-12 col-sm-5 col-md-4">
+            <div class="tutor-bs-row">
+                <div class="tutor-bs-col-12 tutor-bs-col-sm-5 tutor-bs-col-md-4">
                     <span><?php echo $data[0]; ?></span>
                 </div>
-                <div class="col-12 col-sm-7 col-md-8">
+                <div class="tutor-bs-col-12 tutor-bs-col-sm-7 tutor-bs-col-md-8">
                     <p><?php echo $data[1]; ?></p>
                 </div>
             </div>
