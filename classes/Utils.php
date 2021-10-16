@@ -7746,7 +7746,12 @@ class Utils {
                     }
                 }
 
-               //$plugins_data[$base_name]['plugins_required'] = $plugins_required;
+				$depended_plugins = array();
+				foreach ( $plugins_required as $required_plugin ) {
+					array_push( $depended_plugins, $required_plugin );
+				}
+
+               $plugins_data[$base_name]['plugins_required'] = $depended_plugins;
 
                 // Check if it's notifications.
                 if ( function_exists( 'tutor_notifications' ) && $base_name == tutor_notifications()->basename ) {
