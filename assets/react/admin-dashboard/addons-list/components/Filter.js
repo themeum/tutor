@@ -6,7 +6,7 @@ const Filter = () => {
             <div className="tutor-addons-list-select-filter d-flex justify-content-end align-items-center tutor-mt-5">
                 <div className="filter-custom-field d-flex">
                     <select name="filter-select" className="tutor-form-select">
-                        <option value="all" selected>All</option>
+                        <option value="all">All</option>
                         <option value="active">Active</option>
                         <option value="deactive">Deactive</option>
                     </select>

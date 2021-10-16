@@ -18,9 +18,14 @@ class Ajax{
 		add_action('wp_ajax_nopriv_tutor_course_add_to_wishlist', array($this, 'tutor_course_add_to_wishlist'));
 
 		/**
+		 * Get all addons
+		 */
+		add_action( 'wp_ajax_tutor_get_all_addons', array( $this, 'tutor_get_all_addons' ) );
+
+		/**
 		 * Addon Enable Disable Control
 		 */
-		add_action('wp_ajax_addon_enable_disable', array($this, 'addon_enable_disable'));
+		add_action( 'wp_ajax_addon_enable_disable', array( $this, 'addon_enable_disable' ) );
 
 		/**
 		 * Update Rating/review
@@ -280,6 +285,21 @@ class Ajax{
 			wp_send_json_success(array('status' => 'added', 'msg' => __('Course added to wish list', 'tutor')));
 		}
 	}
+
+	/**
+     * Get all notifications
+     */
+    public function tutor_get_all_addons() {
+        
+        // Check and verify the request.
+        tutor_utils()->checking_nonce();
+
+        // All good, let's proceed.
+        $all_addons = tutor_utils()->prepare_addons_data();
+        wp_send_json_success( array(
+            'addons' => $all_addons,
+        ) );
+    }
 
 	/**
 	 * Method for enable / disable addons

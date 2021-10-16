@@ -26,6 +26,99 @@ window.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 
+/***/ "./assets/react/admin-dashboard/addons-list/components/AddonCard.js":
+/*!**************************************************************************!*\
+  !*** ./assets/react/admin-dashboard/addons-list/components/AddonCard.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+var AddonCard = function AddonCard(_ref) {
+  var addon = _ref.addon;
+  //let isChecked = addon.is_enabled && true;
+  var author = 'Themeum';
+  var url = 'https://www.themeum.com';
+  var isSubscribed = false;
+
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(addon.is_enabled),
+      _useState2 = _slicedToArray(_useState, 2),
+      isChecked = _useState2[0],
+      setIsChecked = _useState2[1];
+
+  var handleOnChange = function handleOnChange(event) {
+    var value = event.target.checked;
+    setIsChecked(value);
+  };
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "tutor-addons-card ".concat(isSubscribed ? 'not-subscribed' : '')
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "card-body tutor-px-30 tutor-py-40"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "addon-logo"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
+    src: addon.thumb_url,
+    alt: addon.name
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "addon-title tutor-mt-20"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", {
+    className: "text-medium-h5 color-text-primary"
+  }, addon.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+    className: "text-medium-small color-text-hints tutor-mt-5"
+  }, "By ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
+    href: url,
+    className: "color-brand-wordpress"
+  }, author))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "addon-des text-regular-body color-text-subsued tutor-mt-20"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, addon.description))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: " card-footer tutor-px-30 tutor-py-25 d-flex justify-content-between align-items-center "
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "addon-toggle"
+  }, isSubscribed ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+    className: "color-text-hints text-medium-small"
+  }, "Required Plugin(s)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+    className: "color-text-primary text-medium-caption tutor-mt-2"
+  }, "Woocommerce Subscription")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", {
+    className: "tutor-form-toggle"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+    type: "checkbox",
+    className: "tutor-form-toggle-input",
+    checked: isChecked,
+    onChange: handleOnChange
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+    className: "tutor-form-toggle-control"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+    className: "tutor-form-toggle-label color-text-primary tutor-ml-5"
+  }, "Active")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "addon-version text-medium-small color-text-hints"
+  }, "Version : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+    className: "text-bold-small color-text-primary"
+  }, addon.version))));
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonCard);
+
+/***/ }),
+
 /***/ "./assets/react/admin-dashboard/addons-list/components/AddonsList.js":
 /*!***************************************************************************!*\
   !*** ./assets/react/admin-dashboard/addons-list/components/AddonsList.js ***!
@@ -38,49 +131,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
+/* harmony import */ var _AddonCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AddonCard */ "./assets/react/admin-dashboard/addons-list/components/AddonCard.js");
+
+
 
 
 var AddonsList = function AddonsList() {
+  var allAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddons)();
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    classNameName: "tutor-addons-list-items"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-card"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "card-body tutor-px-30 tutor-py-40"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "addon-logo"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
-    src: "",
-    alt: ""
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "addon-title tutor-mt-20"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", {
-    className: "text-medium-h5 color-text-primary"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-    className: "text-medium-small color-text-hints tutor-mt-5"
-  }, "By ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
-    href: "",
-    className: "color-brand-wordpress"
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "addon-des text-regular-body color-text-subsued tutor-mt-20"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: " card-footer tutor-px-30 tutor-py-25 d-flex justify-content-between align-items-center "
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "addon-toggle"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", {
-    className: "tutor-form-toggle"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
-    type: "checkbox",
-    className: "tutor-form-toggle-input"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "tutor-form-toggle-control"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "tutor-form-toggle-label color-text-primary tutor-ml-5"
-  }, "Active"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "addon-version text-medium-small color-text-hints"
-  }, "Version : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "text-bold-small color-text-primary"
-  })))));
+    className: "tutor-addons-list-items"
+  }, allAddons.map(function (addon, index) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      addon: addon,
+      key: index
+    });
+  }));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonsList);
@@ -102,15 +168,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Header */ "./assets/react/admin-dashboard/addons-list/components/Header.js");
 /* harmony import */ var _Filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Filter */ "./assets/react/admin-dashboard/addons-list/components/Filter.js");
 /* harmony import */ var _AddonsList__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AddonsList */ "./assets/react/admin-dashboard/addons-list/components/AddonsList.js");
+/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
+
 
 
 
 
 
 var App = function App() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("main", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_context_AddonsContext__WEBPACK_IMPORTED_MODULE_4__.AddonsContextProvider, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("main", {
     className: "tutor-backend-settings-addons-list tutor-dashboard-page"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Header__WEBPACK_IMPORTED_MODULE_1__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Filter__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonsList__WEBPACK_IMPORTED_MODULE_3__["default"], null));
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Header__WEBPACK_IMPORTED_MODULE_1__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Filter__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonsList__WEBPACK_IMPORTED_MODULE_3__["default"], null)));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
@@ -142,8 +210,7 @@ var Filter = function Filter() {
     name: "filter-select",
     className: "tutor-form-select"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
-    value: "all",
-    selected: true
+    value: "all"
   }, "All"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
     value: "active"
   }, "Active"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
@@ -205,6 +272,137 @@ var Header = function Header() {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
+
+/***/ }),
+
+/***/ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js":
+/*!***************************************************************************!*\
+  !*** ./assets/react/admin-dashboard/addons-list/context/AddonsContext.js ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "useAddons": () => (/* binding */ useAddons),
+/* harmony export */   "useAddonsUpdate": () => (/* binding */ useAddonsUpdate),
+/* harmony export */   "AddonsContextProvider": () => (/* binding */ AddonsContextProvider)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+ // Custom contexts.
+
+var AddonsContext = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)();
+var AddonsUpdateContext = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)();
+/**
+ * Custom hook useAddons
+ * @returns AddonsContext
+ */
+
+var useAddons = function useAddons() {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(AddonsContext);
+};
+/**
+ * Custom hook useAddonsUpdate
+ * @returns AddonsUpdateContext
+ */
+
+var useAddonsUpdate = function useAddonsUpdate() {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(AddonsUpdateContext);
+};
+/**
+ * Addons Context Provider
+ * @param {*} props 
+ * @returns All ContextProviders with children
+ */
+
+var AddonsContextProvider = function AddonsContextProvider(props) {
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([_tutorobject.addons_data]),
+      _useState2 = _slicedToArray(_useState, 2),
+      allAddons = _useState2[0],
+      setAllAddons = _useState2[1]; // Render the component with initial data at on mount.
+
+
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    var fetchAddons = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var formData, addons, response, data;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                formData = new FormData();
+                formData.set('action', 'tutor_get_all_addons');
+                formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+                _context.prev = 3;
+                _context.next = 6;
+                return fetch(_tutorobject.ajaxurl, {
+                  method: 'POST',
+                  body: formData
+                });
+
+              case 6:
+                addons = _context.sent;
+
+                if (!addons.ok) {
+                  _context.next = 13;
+                  break;
+                }
+
+                _context.next = 10;
+                return addons.json();
+
+              case 10:
+                response = _context.sent;
+                data = response.data.addons;
+
+                if (data && data.length) {
+                  setAllAddons(data);
+                }
+
+              case 13:
+                _context.next = 18;
+                break;
+
+              case 15:
+                _context.prev = 15;
+                _context.t0 = _context["catch"](3);
+                console.log(_context.t0);
+
+              case 18:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[3, 15]]);
+      }));
+
+      return function fetchAddons() {
+        return _ref.apply(this, arguments);
+      };
+    }();
+
+    fetchAddons();
+  }, []);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsContext.Provider, {
+    value: allAddons
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsUpdateContext.Provider, null, props.children));
+};
 
 /***/ }),
 
