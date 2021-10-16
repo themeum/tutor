@@ -1,6 +1,4 @@
-
 @import './reset';
-@import './variables';
 
 // Utils
 @import './utils/index';
@@ -12,7 +10,7 @@
 @import './general';
 
 // Pages
-@import './custom-pages/email-manage.scss';
+@import './custom-pages/index';
 
 // Conditional Style
 @import './conditionals/conditionals.scss';

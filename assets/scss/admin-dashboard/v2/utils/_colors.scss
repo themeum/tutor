@@ -1,17 +1,17 @@
-@import '../variables';
+@import './variables';
 
 $colorUtils: (
 	// Backend Dashboard
-	'brand-wordpress' $brand-wordpress,
+		'brand-wordpress' $brand-wordpress,
 	'brand-wordpress-hover' $brand-wordpress-hover,
 	// Common Colors
-	'white' #ffffff,
+		'white' #ffffff,
 	'brand' $primary-main,
 	'success' $success-main,
 	'warning' $warning-main,
 	'error' $danger-main,
 	// Text Colors
-	'text-primary' $black-main,
+		'text-primary' $black-main,
 	'text-title' $black-70,
 	'text-subsued' $black-60,
 	'text-hints' $text-hints,
@@ -21,7 +21,7 @@ $colorUtils: (
 	'text-warning' $text-warning,
 	'text-error' $text-error,
 	// Design Colors
-	'design-dark' $black-90,
+		'design-dark' $black-90,
 	'design-grey' $black-70,
 	'design-white' $color-white,
 	'design-brand' $color-brand,
@@ -29,7 +29,7 @@ $colorUtils: (
 	'design-warning' $color-warning,
 	'design-danger' $color-error,
 	// Strokes
-	'stroke-light-10' $stroke-light-10,
+		'stroke-light-10' $stroke-light-10,
 	'stroke-light-20' $stroke-light-20,
 	'stroke-light-30' $stroke-light-30,
 	'stroke-gray' $stroke-gray,
@@ -37,7 +37,7 @@ $colorUtils: (
 	'stroke-danger' $stroke-danger,
 	'stroke-success' $stroke-success,
 	// Backgrounds
-	'bg-brand' $color-brand,
+		'bg-brand' $color-brand,
 	'bg-white' $color-white,
 	'bg-gray-20' $bg-gray-20,
 	'bg-gray-10' $bg-gray-10,

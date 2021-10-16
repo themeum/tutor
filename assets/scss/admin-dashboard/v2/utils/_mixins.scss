@@ -27,6 +27,12 @@
 	}
 }
 
+// @include responsiveGrid(**px, **fr);
+@mixin responsiveGrid($min, $max) {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax($min, $max));
+}
+
 // Dashed border -> width, gap, colors(optional)
 @mixin getDashedBorder($width: 2px, $gap: 15px, $color1: orange, $color2: $color1, $color3: $color1, $color4: $color1) {
 	--borderWidth: #{$width};

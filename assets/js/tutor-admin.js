@@ -64,13 +64,25 @@ var AddonCard = function AddonCard(_ref) {
       isChecked = _useState2[0],
       setIsChecked = _useState2[1];
 
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(isChecked),
+      _useState4 = _slicedToArray(_useState3, 2),
+      isDataAddonActive = _useState4[0],
+      setIsDataAddonActive = _useState4[1];
+
   var handleOnChange = function handleOnChange(event) {
     var value = event.target.checked;
     setIsChecked(value);
+    setIsDataAddonActive(!isChecked); // console.log('adding data-addon-active');
   };
 
+  var requiredPlugins = addon.depend_plugins,
+      plugins = addon.plugins_required,
+      extensions = addon.ext_required; // console.log(addon);
+  // console.log(plugins, extensions);
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-card ".concat(isSubscribed ? 'not-subscribed' : '')
+    className: "tutor-addons-card ".concat(requiredPlugins || extensions ? 'not-subscribed' : ''),
+    "data-addon-active": isDataAddonActive
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "card-body tutor-px-30 tutor-py-40"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
@@ -84,16 +96,20 @@ var AddonCard = function AddonCard(_ref) {
     className: "text-medium-h5 color-text-primary"
   }, addon.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
     className: "text-medium-small color-text-hints tutor-mt-5"
-  }, "By ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
+  }, "By", ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
     href: url,
     className: "color-brand-wordpress"
   }, author))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "addon-des text-regular-body color-text-subsued tutor-mt-20"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, addon.description))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: " card-footer tutor-px-30 tutor-py-25 d-flex justify-content-between align-items-center "
+    className: " card-footer tutor-px-30 tutor-py-25 d-flex justify-content-between align-items-center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "addon-toggle"
-  }, isSubscribed ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+  }, extensions ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+    className: "color-text-hints text-medium-small"
+  }, "Required Extension(s)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+    className: "color-text-primary text-medium-caption tutor-mt-2"
+  }, "Woocommerce Subscription")) : requiredPlugins ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
     className: "color-text-hints text-medium-small"
   }, "Required Plugin(s)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
     className: "color-text-primary text-medium-caption tutor-mt-2"
@@ -139,8 +155,9 @@ __webpack_require__.r(__webpack_exports__);
 
 var AddonsList = function AddonsList() {
   var allAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddons)();
+  console.log(allAddons);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-list-items"
+    className: "tutor-addons-list-items tutor-mt-40"
   }, allAddons.map(function (addon, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
       addon: addon,
@@ -176,9 +193,47 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var App = function App() {
+  var allAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_4__.useAddons)();
+
+  var handleSelectFilter = function handleSelectFilter(e) {
+    console.log(e.target.value);
+  };
+
+  var handleFilterBtnClick = function handleFilterBtnClick(value) {
+    console.log(value, allAddons);
+
+    switch (value) {
+      case 'active':
+        console.log(allAddons.filter(function (item) {
+          return item.is_enabled;
+        }));
+        console.log(value);
+        break;
+
+      case 'deactive':
+        console.log(allAddons.filter(function (item) {
+          return item.is_enabled !== true;
+        }));
+        console.log(value);
+        break;
+
+      case 'all':
+        console.log(allAddons);
+        console.log(value);
+        break;
+    } // console.log('clicked', btn);
+
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_context_AddonsContext__WEBPACK_IMPORTED_MODULE_4__.AddonsContextProvider, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("main", {
     className: "tutor-backend-settings-addons-list tutor-dashboard-page"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Header__WEBPACK_IMPORTED_MODULE_1__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Filter__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonsList__WEBPACK_IMPORTED_MODULE_3__["default"], null)));
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Header__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    handleFilterBtnClick: handleFilterBtnClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "tutor-addons-list-body tutor-p-30"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Filter__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    handleSelectFilter: handleSelectFilter
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonsList__WEBPACK_IMPORTED_MODULE_3__["default"], null))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
@@ -199,16 +254,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 
-var Filter = function Filter() {
+var Filter = function Filter(_ref) {
+  var handleSelectFilter = _ref.handleSelectFilter;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-list-body tutor-p-30"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "tutor-addons-list-select-filter d-flex justify-content-end align-items-center tutor-mt-5"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "filter-custom-field d-flex"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("select", {
     name: "filter-select",
-    className: "tutor-form-select"
+    className: "tutor-form-select",
+    onChange: function onChange(e) {
+      return handleSelectFilter(e);
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
     value: "all"
   }, "All"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
@@ -222,7 +279,7 @@ var Filter = function Filter() {
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
     type: "button",
     className: "search-btn tutor-btn tutor-is-sm tutor-is-outline"
-  }, "Filter")));
+  }, "Filter"));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Filter);
@@ -241,34 +298,91 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
 
 
 var Header = function Header() {
+  var allAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddons)();
+
+  var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
+      setAllAddons = _useAddonsUpdate.setAllAddons;
+
+  console.log(allAddons);
+  var filterBtns = ['all', 'active', 'deactive'];
+
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      isActive = _useState2[0],
+      setIsActive = _useState2[1];
+
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    active: 'all'
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      activeTab = _useState4[0],
+      setActiveTab = _useState4[1];
+
+  var handleFilterBtnClick = function handleFilterBtnClick(value) {
+    console.log(value);
+
+    switch (value) {
+      case 'active':
+        var active = allAddons.filter(function (item) {
+          return item.is_enabled;
+        }); // setAllAddons(active);
+
+        console.log(value, active);
+        break;
+
+      case 'deactive':
+        var deactive = allAddons.filter(function (item) {
+          return item.is_enabled !== true;
+        }); // setAllAddons(deactive);
+
+        console.log(value, deactive);
+        break;
+
+      case 'all':
+        var all = allAddons; // setAllAddons(all);
+
+        console.log(value, all);
+        break;
+    }
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", {
     className: "tutor-addons-list-header d-flex justify-content-between align-items-center tutor-px-30 tutor-py-20"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "title text-medium-h5 color-text-primary mb-md-0 mb-3"
   }, "Addons List"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "filter-btns text-regular-body color-text-subsued"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-    type: "button",
-    className: "filter-btn is-active",
-    "data-tab-filter-target": "all"
-  }, "All ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "item-count"
-  }, "(220)")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-    type: "button",
-    className: "filter-btn",
-    "data-tab-filter-target": "active"
-  }, "Active", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "item-count"
-  }, "(12)")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-    type: "button",
-    className: "filter-btn",
-    "data-tab-filter-target": "deactive"
-  }, "Deactive ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "item-count"
-  }, "(5)"))));
+  }, filterBtns.map(function (btn, index) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+      type: "button",
+      className: "filter-btn",
+      "data-tab-filter-target": btn,
+      key: index // onClick={() => handleFilterBtnClick(btn)}
+      ,
+      onClick: function onClick() {
+        return handleFilterBtnClick(btn);
+      }
+    }, btn, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+      className: "item-count"
+    }, "(220)"));
+  })));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
@@ -327,7 +441,7 @@ var useAddonsUpdate = function useAddonsUpdate() {
 };
 /**
  * Addons Context Provider
- * @param {*} props 
+ * @param {*} props
  * @returns All ContextProviders with children
  */
 
@@ -401,7 +515,11 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsContext.Provider, {
     value: allAddons
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsUpdateContext.Provider, null, props.children));
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsUpdateContext.Provider, {
+    value: {
+      setAllAddons: setAllAddons
+    }
+  }, props.children));
 };
 
 /***/ }),
