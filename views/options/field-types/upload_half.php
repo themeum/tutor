@@ -3,7 +3,7 @@ $default      = isset( $field['default'] ) ? $field['default'] : '';
 $option_value = $this->get( $field['key'], $default );
 $field_id     = 'field_' . $field['key'];
 ?>
-<div class="tutor-option-field-row tutor-col-1x145"id="<?php echo $field_id; ?>"
+<div class="tutor-option-field-row tutor-bs-col-1x145"id="<?php echo $field_id; ?>"
 >
 	<div class="tutor-option-field-label">
 		<h5 class="label"><?php echo __( $field['label'], 'tutor' ); ?></h5>

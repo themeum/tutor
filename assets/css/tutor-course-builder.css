@@ -1427,12 +1427,17 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-das
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
 }
 
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left .tutor-dashboard-builder-logo {

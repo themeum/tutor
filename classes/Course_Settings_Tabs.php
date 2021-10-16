@@ -74,17 +74,17 @@ class Course_Settings_Tabs{
             foreach ($fields as $field_key => $field){
                 $type = tutils()->array_get('type', $field);
                 ?>
-                <div class="tutor-row">
+                <div class="tutor-bs-row">
                     <?php
                     if (!empty($field['label'])){
                         ?>
-                        <div class="tutor-col-4">
+                        <div class="tutor-bs-col-4">
                             <label for=""><?php echo $field['label']; ?></label>
                         </div>
                         <?php
                     }
                     ?>
-                    <div class="tutor-col-8">
+                    <div class="tutor-bs-col-8">
                         <?php
                         $field['field_key'] = $field_key;
                         $this->field_type($field);

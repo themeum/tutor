@@ -41,22 +41,22 @@
 
         <?php do_action('tutor_reset_password_input_before') ?>
 
-        <div class="tutor-row">
-            <div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-7 tutor-mb-30">
+        <div class="tutor-bs-row">
+            <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
                 <label> <?php _e('Current Password', 'tutor'); ?> </label>
                 <input class="tutor-form-control" type="password" name="previous_password">
             </div>
         </div>
         
-        <div class="tutor-row">
-            <div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-7 tutor-mb-30">
+        <div class="tutor-bs-row">
+            <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
                 <label><?php _e('New Password', 'tutor'); ?></label>
                 <input class="tutor-form-control" type="password" name="new_password">
             </div>
         </div>
         
-        <div class="tutor-row">
-            <div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-7 tutor-mb-30">
+        <div class="tutor-bs-row">
+            <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
                 <label><?php _e('Re-type New Password', 'tutor'); ?></label>
                 <input class="tutor-form-control" type="password" name="confirm_new_password">
             </div>
@@ -64,8 +64,8 @@
         
         <?php do_action('tutor_reset_password_input_after') ?>
 
-        <div class="tutor-row">
-            <div class="tutor-col-12">
+        <div class="tutor-bs-row">
+            <div class="tutor-bs-col-12">
                 <button type="submit" class="tutor-btn">
                     <?php _e('Reset Password', 'tutor'); ?>
                 </button>
