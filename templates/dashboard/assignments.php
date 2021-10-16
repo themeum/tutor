@@ -29,8 +29,8 @@ $courses            = (current_user_can('administrator')) ? tutils()->get_course
 ?>
 
 <div class="row">
-    <div class="tutor-col-12 tutor-col-lg-6">
-        <label class="tutor-d-block">
+    <div class="tutor-bs-col-12 tutor-bs-col-lg-6">
+        <label class="tutor-bs-d-block">
             <?php _e('Courses', 'tutor'); ?>
         </label>
         <select class="tutor-form-select tutor-announcement-course-sorting">

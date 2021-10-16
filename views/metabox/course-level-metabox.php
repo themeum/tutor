@@ -4,13 +4,13 @@
     $levels = tutor_utils()->course_levels();
     $course_level = get_post_meta($course_id, '_tutor_course_level', true);
 ?>
-<div class="tutor-row">
-    <div class="tutor-col-4">
+<div class="tutor-bs-row">
+    <div class="tutor-bs-col-4">
         <label for="">
             <?php _e('Difficulty Level', 'tutor'); ?> <br />
         </label>
     </div>
-    <div class="tutor-col-8">
+    <div class="tutor-bs-col-8">
         <select name="course_level" class="tutor-form-select">
             <?php
             foreach ($levels as $level_key => $level){

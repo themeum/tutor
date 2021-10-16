@@ -61,15 +61,15 @@ function tutor_announcement_modal($id, $title, $courses, $announcement=null) {
                 </div>
 
                 <div class="tutor-modal-footer">
-                    <div class="tutor-row">
-                        <div class="tutor-col">
+                    <div class="tutor-bs-row">
+                        <div class="tutor-bs-col">
                             <div class="tutor-btn-group">
                                 <button type="submit" data-action="next" class="tutor-btn tutor-is-primary">
                                     <?php _e('Publish', 'tutor'); ?>
                                 </button>
                             </div>
                         </div>
-                        <div class="tutor-col-auto">
+                        <div class="tutor-bs-col-auto">
                             <button type="button" data-action="back" class="tutor-btn tutor-is-default">
                                 <?php _e('Cancel', 'tutor'); ?>
                             </button>
@@ -88,7 +88,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
 
 <?php if(count($announcements)): ?>
     <div class="tutor-ui-table-responsive">
-        <table class="tutor-ui-table tutor-bg-white">
+        <table class="tutor-ui-table tutor-bs-bg-white">
             <thead>
                 <tr>
                     <th class="tutor-shrink">
@@ -114,7 +114,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                         $update_modal_id = 'tutor_announcement_' . $announcement->ID;
                     ?>
                     <tr id="tutor-announcement-tr-<?php echo $announcement->ID; ?>">
-                        <td data-th="<?php _e('Date', 'tutor'); ?>" class="tutor-text-nowrap">
+                        <td data-th="<?php _e('Date', 'tutor'); ?>" class="tutor-bs-text-nowrap">
                             <?php echo $date_format; ?>
                         </td>
                         <td data-th="<?php _e('Announcement', 'tutor'); ?>" class="column-fullwidth">
@@ -123,7 +123,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                                 <p><?php echo $course ? $course->post_title : ''; ?></p>
                             </div>
                         </td>
-                        <td data-th="<?php _e('Action', 'tutor'); ?>" class="tutor-text-nowrap">
+                        <td data-th="<?php _e('Action', 'tutor'); ?>" class="tutor-bs-text-nowrap">
                             <button type="button" 
                                 course-name="<?php echo esc_attr($course->post_title) ?>" 
                                 announcement-date="<?php echo esc_attr($date_format) ?>" 
@@ -134,7 +134,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                                 class="tutor-btn tutor-is-default tutor-is-xs tutor-announcement-details">
                                 <?php _e('Details', 'tutor'); ?>
                             </button>
-                            <div class="tutor-d-inline-block">
+                            <div class="tutor-bs-d-inline-block">
                                 <i class="tutor-icon-action"></i>
                                 <ul class="tutor-dropdown-menu">
                                     <li data-tutor-modal-target="tutor_announcement_new">

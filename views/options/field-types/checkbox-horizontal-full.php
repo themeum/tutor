@@ -10,10 +10,10 @@ $default      = isset( $field['default'] ) ? $field['default'] : '';
 $option_value = $this->get( $field['key'], $default );
 $field_id     = 'field_' . $field['key'];
 ?>
-<div class="tutor-option-field-row tutor-d-block" id="<?php echo esc_url( $field_id ); ?>">
+<div class="tutor-option-field-row tutor-bs-d-block" id="<?php echo esc_url( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
 	<div class="tutor-option-field-input">
-		<div class="type-check tutor-d-flex">
+		<div class="type-check tutor-bs-d-flex">
 			<?php
 			foreach ( $field['options'] as $key => $option ) :
 				$field_id    = 'radio_id_' . $key;

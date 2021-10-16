@@ -3,7 +3,7 @@
 <div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
     <?php include tutor()->path . "views/options/template/field_heading.php"; ?>
 
-    <div class="tutor-option-field-input tutor-d-flex tutor-justify-content-end">
+    <div class="tutor-option-field-input tutor-bs-d-flex tutor-justify-content-end">
         <select class="tutor-form-select" disabled="">
             <option selected="">Select your Fee type</option>
             <option value="1">percent</option>
