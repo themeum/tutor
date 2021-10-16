@@ -44,7 +44,7 @@ do_action( 'tutor_before_reset_password_form' ); ?>
 	<div class="tutor-form-row">
 		<div class="tutor-form-col-12">
 			<div class="tutor-form-group">
-				<button type="submit" class="tutor-button tutor-button-primary" value="<?php esc_attr_e( 'Reset password', 'tutor' ); ?>"><?php
+				<button type="submit" class="tutor-btn" value="<?php esc_attr_e( 'Reset password', 'tutor' ); ?>"><?php
 					esc_html_e( 'Reset password', 'tutor' ); ?></button>
 			</div>
 		</div>

@@ -78,13 +78,15 @@ $image_base = tutor()->url . '/assets/images/';
     </div>
     <!--notice end-->
 </div>
-<!--sorting-->
-<div class="tutor-dashboard-announcement-sorting-wrap">
-    <div class="tutor-form-group">
-        <label for="">
+
+
+<!--Filter-->
+<div class="tutor-row tutor-mb-30">
+    <div class="tutor-col-12 tutor-col-lg-6">
+        <label class="tutor-d-block">
             <?php _e('Courses', 'tutor'); ?>
         </label>
-        <select class="tutor-report-category tutor-announcement-course-sorting ignore-nice-select">
+        <select class="tutor-form-select tutor-announcement-course-sorting">
            
             <option value=""><?php _e('All', 'tutor'); ?></option>
         
@@ -100,47 +102,69 @@ $image_base = tutor()->url . '/assets/images/';
         </select>
     </div>
 
-    <div class="tutor-form-group">
-        <label><?php _e('Sort By', 'tutor'); ?></label>
-        <select class="tutor-announcement-order-sorting ignore-nice-select">
+    <div class="tutor-col-6 tutor-col-lg-3">
+        <label class="tutor-d-block"><?php _e('Sort By', 'tutor'); ?></label>
+        <select class="tutor-form-select tutor-announcement-order-sorting">
             <option <?php selected($order_filter, 'ASC'); ?>><?php _e('ASC', 'tutor'); ?></option>
             <option <?php selected($order_filter, 'DESC'); ?>><?php _e('DESC', 'tutor'); ?></option>
         </select>
     </div>
 
-    <div class="tutor-form-group tutor-announcement-datepicker">
-        <label><?php _e('Date', 'tutor'); ?></label>
-        <input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
+    <div class="tutor-col-6 tutor-col-lg-3 tutor-announcement-datepicker">
+        <label class="tutor-d-block"><?php _e('Date', 'tutor'); ?></label>
+        <input type="text" class="tutor-form-control tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
         <i class="tutor-icon-calendar"></i>
     </div>
 </div>
-<!--sorting end-->
-<div class="tutor-announcement-table-wrap">
-    <table class="tutor-dashboard-announcement-table" width="100%">
+<!--Filter end-->
+
+<div class="tutor-ui-table-responsive">
+    <table class="tutor-ui-table">
         <thead>
             <tr>
-                <th style="width:24%"><?php _e('Date', 'tutor'); ?></th>
-                <th style="text-align:left"><?php _e('Announcements', 'tutor'); ?></th>
+                <th>
+                    <span class="text-regular-small color-text-subsued">
+                            <?php _e('Date', 'tutor'); ?>
+                    </span>
+                </th>
+                <th>
+                    <div class="inline-flex-center color-text-subsued">
+                        <span class="text-regular-small"><?php _e('Announcements', 'tutor'); ?></span>
+                        <span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                    </div>
+                </th>
+                <th class="tutor-shrink"></th>
             </tr>
         </thead>
         <tbody>
             <?php if ($the_query->have_posts()) : ?>
                 <?php foreach ($the_query->posts as $post) : ?>
                     <?php
-                    $course = get_post($post->post_parent);
-                    $dateObj = date_create($post->post_date);
-                    $date_format = date_format($dateObj, 'j M, Y,<\b\r>h:i a'); 
+                        $course = get_post($post->post_parent);
+                        $dateObj = date_create($post->post_date);
+                        $date_format = date_format($dateObj, 'j M, Y, h:i a'); 
                     ?>
                     <tr id="tutor-announcement-tr-<?php echo $post->ID; ?>">
-                        <td class="tutor-announcement-date"><?php echo $date_format; ?></td>
-                        <td class="tutor-announcement-content-wrap">
+                        <td data-th="<?php _e('Date', 'tutor'); ?>" class="column-fullwidth tutor-announcement-date">
+                            <?php echo $date_format; ?>
+                        </td>
+                        <td data-th="<?php _e('Announcement', 'tutor'); ?>" class="tutor-announcement-content-wrap">
                             <div class="tutor-announcement-content">
                                 <h4><?php echo esc_html($post->post_title); ?></h4>
                                 <p><?php echo $course ? $course->post_title : ''; ?></p>
                             </div>
+                        </td>
+                        <td data-th="<?php _e('Action', 'tutor'); ?>">
                             <div class="tutor-announcement-buttons">
                                 <li>
-                                    <button type="button" course-name="<?php echo esc_attr($course->post_title) ?>" announcement-date="<?php echo esc_attr($date_format) ?>" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo esc_attr($post->post_content); ?>" course-id="<?php echo esc_attr($post->post_parent); ?>" announcement-id="<?php echo esc_attr($post->ID); ?>" class="tutor-btn bordered-btn tutor-announcement-details">
+                                    <button type="button" 
+                                            course-name="<?php echo esc_attr($course->post_title) ?>" 
+                                            announcement-date="<?php echo esc_attr($date_format) ?>" 
+                                            announcement-title="<?php echo esc_attr($post->post_title); ?>" 
+                                            announcement-summary="<?php echo esc_attr($post->post_content); ?>" 
+                                            course-id="<?php echo esc_attr($post->post_parent); ?>" 
+                                            announcement-id="<?php echo esc_attr($post->ID); ?>" 
+                                            class="tutor-btn tutor-is-default tutor-is-xs tutor-announcement-details">
                                         <?php _e('Details', 'tutor'); ?>
                                     </button>
                                 </li>
@@ -161,16 +185,9 @@ $image_base = tutor()->url . '/assets/images/';
                         </td>
                     </tr>
                 <?php endforeach; ?>
-            <?php else : ?>
-                <tr>
-                    <td colspan="2">
-                        <?php _e('Announcements not found', 'tutor'); ?>
-                    </td>
-                </tr>
             <?php endif; ?>
         </tbody>
     </table>
-
 </div>
 
 <!--pagination-->

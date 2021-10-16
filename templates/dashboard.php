@@ -42,19 +42,19 @@ $is_instructor = tutor_utils()->is_instructor();
 do_action('tutor_dashboard/before/wrap');
 ?>
 
-<div class="tutor-wrap tutor-dashboard tutor-dashboard-student tutor-grid">
-    <div class="container">
+<div class="tutor-wrap tutor-dashboard tutor-dashboard-student">
+    <div class="tutor-container">
 
         <!-- Head Part -->
-        <div class="row">
-            <div class="col-12">
-                <div class="row align-items-center tutor-dashboard-header">
-                    <div class="col-4 col-sm-3 col-md-2 tutor-flex-center tutor-dashboard-header-avatar">
+        <div class="tutor-row">
+            <div class="tutor-col-12">
+                <div class="tutor-row tutor-align-items-center tutor-dashboard-header">
+                    <div class="tutor-col-4 tutor-col-sm-3 tutor-col-md-2 tutor-flex-center tutor-dashboard-header-avatar">
                         <img src="<?php echo get_avatar_url($user_id, array('size' => 150)); ?>" />
                     </div>
-                    <div class="col-8 col-sm-9 col-md-10">
-                        <div class="row align-items-center">
-                            <div class="col-12 col-md-5">
+                    <div class="tutor-col-8 tutor-col-sm-9 tutor-col-md-10">
+                        <div class="tutor-row tutor-align-items-center">
+                            <div class="tutor-col-12 tutor-col-md-5">
                                 <div class="tutor-dashboard-header-display-name">
                                     <h4><strong><?php echo $user->display_name; ?></strong> </h4>
                                 </div>
@@ -77,9 +77,10 @@ do_action('tutor_dashboard/before/wrap');
                                     } 
                                 ?>
                             </div>
-                            <div class="col-12 col-md-7">
+                            <div class="tutor-col-12 tutor-col-md-7">
                                 <div class="tutor-dashboard-header-button">
                                     <?php
+                                    do_action( 'tutor_dashboard/before_header_button' );
                                     $instructor_status = tutor_utils()->instructor_status();
                                     $instructor_status = is_string($instructor_status) ? strtolower($instructor_status) : '';
                                     $rejected_on = get_user_meta($user->ID , '_is_tutor_instructor_rejected', true);
@@ -129,7 +130,7 @@ do_action('tutor_dashboard/before/wrap');
                                 get_user_meta( get_current_user_id(), 'tutor_instructor_show_rejection_message', true )
                             ) {
                             ?>
-                            <div class="col-12 tutor-instructor-rejection-notice">
+                            <div class="tutor-col-12 tutor-instructor-rejection-notice">
                                 <?php 
                                     $on = date('d F, Y', $rejected_on);
                                     echo '<span>
@@ -144,14 +145,14 @@ do_action('tutor_dashboard/before/wrap');
                     ?>
                 </div>
             </div>
-            <div class="col-12">
+            <div class="tutor-col-12">
                 <?php do_action('tutor_dashboard/notification_area'); ?>
             </div>
         </div>
 
         <!-- Sidebar and Content Part -->
-        <div class="row">
-            <div class="col-12 col-md-4 col-lg-3 tutor-dashboard-left-menu">
+        <div class="tutor-row">
+            <div class="tutor-col-12 tutor-col-md-4 tutor-col-lg-3 tutor-dashboard-left-menu">
                 <ul class="tutor-dashboard-permalinks">
                     <?php
                     $dashboard_pages = tutils()->tutor_dashboard_nav_ui_items();
@@ -186,7 +187,7 @@ do_action('tutor_dashboard/before/wrap');
                 </ul>
             </div>
 
-            <div class="col-12 col-md-8 col-lg-9">
+            <div class="tutor-col-12 tutor-col-md-8 tutor-col-lg-9">
                 <div class="tutor-dashboard-content">
                     <?php
     
@@ -220,17 +221,17 @@ do_action('tutor_dashboard/before/wrap');
         </div>
     </div>
     <div id="tutor-dashboard-footer-mobile">
-        <div class="container">
-            <div class="row">
-                <a class="col-4 <?php ?>" href="<?php echo tutor_utils()->tutor_dashboard_url( $is_instructor ? '' : 'my-courses' ); ?>">
+        <div class="tutor-container">
+            <div class="tutor-row">
+                <a class="tutor-col-4 <?php ?>" href="<?php echo tutor_utils()->tutor_dashboard_url( $is_instructor ? '' : 'my-courses' ); ?>">
                     <i class="fas fa-bars"></i>
                     <span><?php $is_instructor ? _e('Dashboard', 'tutor') : _e('Courses', 'tutor'); ?></span>
                 </a>
-                <a class="col-4" href="<?php echo tutor_utils()->tutor_dashboard_url( $is_instructor ? 'question-answer' : 'my-quiz-attempts' ); ?>">
+                <a class="tutor-col-4" href="<?php echo tutor_utils()->tutor_dashboard_url( $is_instructor ? 'question-answer' : 'my-quiz-attempts' ); ?>">
                     <i class="fas fa-bars"></i>
                     <span><?php $is_instructor ? _e('Q&A', 'tutor') : _e('Quiz Attempts'. 'tutor'); ?></span>
                 </a>
-                <a class="col-4 tutor-dashboard-menu-toggler" href="#">
+                <a class="tutor-col-4 tutor-dashboard-menu-toggler" href="#">
                     <i class="fas fa-bars"></i>
                     <span><?php _e('Menu', 'tutor'); ?></span>
                 </a>

@@ -34,7 +34,7 @@ $rating = $isLoggedIn ? tutor_utils()->get_course_rating_by_user() : '';
                         <textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo stripslashes($rating->review); ?></textarea>
                     </div>
                     <div class="tutor-form-group">
-                        <button type="submit" class="tutor_submit_review_btn tutor-button tutor-button-primary"><?php _e('Submit Review', 'tutor'); ?></button>
+                        <button type="submit" class="tutor_submit_review_btn tutor-btn"><?php _e('Submit Review', 'tutor'); ?></button>
                     </div>
                 </div>
             </form>
