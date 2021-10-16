@@ -906,7 +906,7 @@ body.tutor-screen-course-builder .tutor-certificate-template-tab .tab-header-ite
   font-weight: 500;
   font-size: 15px;
   line-height: 160%;
-  /* identical to box height, or 160% */
+  cursor: pointer;
   padding: 4px 20px;
   border-radius: 5px;
   -webkit-transition: 200ms linear;
@@ -950,8 +950,8 @@ body.tutor-screen-course-builder .tutor-certificate-template {
   grid-template-rows: -webkit-min-content;
   grid-template-rows: min-content;
   position: relative;
-  min-height: 580px;
-  max-height: 944px;
+  /* min-height: 580px;
+	max-height: 944px; */
 }
 
 body.tutor-screen-course-builder .tutor-certificate-template .tutor-certificate-collapsible {
@@ -1019,6 +1019,10 @@ body.tutor-screen-course-builder .tutor-certificate-template label.template-radi
           transform: scale(1.15);
   -webkit-transition: 200ms linear;
   transition: 200ms linear;
+}
+
+body.tutor-screen-course-builder .tutor-certificate-template label.template-radio-field span.icon-wrapper img {
+  border-radius: 6px;
 }
 
 body.tutor-screen-course-builder .tutor-certificate-template label.template-radio-field .template-item-overlay {
