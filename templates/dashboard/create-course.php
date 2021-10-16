@@ -41,9 +41,9 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 
     <!-- Sticky header with course action buttons -->
     <header class="tutor-dashboard-builder-header">
-        <div class="tutor-bs-container tutor-fluid">
+        <div class="tutor-bs-container-fluid">
             <div class="tutor-bs-row tutor-bs-align-items-center">
-                <div class="tutor-bs-col">
+                <div class="tutor-bs-col-auto">
                     <div class="tutor-dashboard-builder-header-left">
                         <div class="tutor-dashboard-builder-logo">
                             <?php $tutor_course_builder_logo_src = apply_filters('tutor_course_builder_logo_src', tutor()->url . 'assets/images/tutor-logo.png'); ?>
@@ -56,7 +56,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         </button>
                     </div>
                 </div>
-                <div class="tutor-bs-col-auto">
+                <div class="tutor-bs-col">
                     <div class="tutor-dashboard-builder-header-right">
                         <a href="<?php the_permalink($course_id); ?>" target="_blank"><i class="tutor-icon-glasses"></i><?php _e('Preview', 'tutor'); ?></a>
                         <?php

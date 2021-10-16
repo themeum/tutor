@@ -23,7 +23,7 @@
 		font-weight: 500;
 		font-size: 15px;
 		line-height: 160%;
-		/* identical to box height, or 160% */
+		cursor: pointer;
 		padding: 4px 20px;
 		border-radius: 5px;
 		transition: 200ms linear;
@@ -59,8 +59,8 @@
 	grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
 	grid-template-rows: min-content;
 	position: relative;
-	min-height: 580px;
-	max-height: 944px;
+	/* min-height: 580px;
+	max-height: 944px; */
 
 	// &.template-landscape {
 	// 	min-height: 580px;
@@ -124,6 +124,10 @@
 				opacity: 0;
 				transform: scale(1.15);
 				transition: 200ms linear;
+			}
+
+			img {
+				border-radius: 6px;
 			}
 		}
 
