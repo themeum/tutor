@@ -80,7 +80,7 @@ $tutor_pages = tutils()->tutor_pages();
         tutor_nonce_field(); ?>
 
         <p>
-            <button class="tutor-button tutor-button-primary" type="submit"><?php _e('Re-Generate Tutor Pages','tutor'); ?></button>
+            <button class="tutor-btn" type="submit"><?php _e('Re-Generate Tutor Pages','tutor'); ?></button>
         </p>
     </form>
 

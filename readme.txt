@@ -241,9 +241,13 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.11 - October 11, 2021 =
+= 1.9.11 - October 18, 2021 =
 
 New: Certificate Builder Plugin Integration
+Update: Gradebook data generates automatically
+Update: Generate gradebook button removed
+Fix: Gradebook data not deleting on course retake
+Fix: XSS vulnerability in registration page
 
 = 1.9.10 - October 06, 2021 =
 

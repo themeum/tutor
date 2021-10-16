@@ -28,12 +28,12 @@ $courses            = (current_user_can('administrator')) ? tutils()->get_course
 
 ?>
 
-<div class="tutor-dashboard-announcement-sorting-wrap">
-    <div class="tutor-form-group">
-        <label for="">
+<div class="row">
+    <div class="tutor-col-12 tutor-col-lg-6">
+        <label class="tutor-d-block">
             <?php _e('Courses', 'tutor'); ?>
         </label>
-        <select class="tutor-report-category tutor-announcement-course-sorting ignore-nice-select">
+        <select class="tutor-form-select tutor-announcement-course-sorting">
 
             <option value=""><?php _e('All', 'tutor'); ?></option>
 
@@ -50,7 +50,7 @@ $courses            = (current_user_can('administrator')) ? tutils()->get_course
     </div>
     <div class="tutor-form-group">
         <label><?php _e('Sort By', 'tutor'); ?></label>
-        <select class="tutor-announcement-order-sorting ignore-nice-select">
+        <select class="tutor-form-select tutor-announcement-order-sorting">
             <option <?php selected($order_filter, 'ASC'); ?>><?php _e('ASC', 'tutor'); ?></option>
             <option <?php selected($order_filter, 'DESC'); ?>><?php _e('DESC', 'tutor'); ?></option>
         </select>

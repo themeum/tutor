@@ -1,229 +1,5 @@
 /* Common libraries. This file will be loaded in both of admin and frontend main scss file once */
 /* Only reusable function, or code allowed here. No direct css please. */
-.single_add_to_cart_button, .tutor-button, .tutor-btn {
-  color: #fff;
-  border: 1px solid var(--tutor-primary-button-color);
-  background-color: var(--tutor-primary-button-color);
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  padding: 12px 20px;
-  border-radius: 4px;
-  text-transform: capitalize;
-  line-height: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  -webkit-transition: 300ms;
-  transition: 300ms;
-  overflow: hidden;
-  white-space: nowrap;
-  text-decoration: none;
-  vertical-align: top;
-  box-shadow: none;
-  -o-box-shadow: none;
-  -ms-box-shadow: none;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-}
-
-.single_add_to_cart_button:hover, .tutor-button:hover, .tutor-btn:hover {
-  background-color: var(--tutor-primary-button-color);
-  border-color: var(--tutor-primary-button-color);
-  color: #fff;
-  -webkit-filter: brightness(0.9);
-          filter: brightness(0.9);
-}
-
-.single_add_to_cart_button:disabled, .single_add_to_cart_button[disabled], .single_add_to_cart_button:disabled:hover, .single_add_to_cart_button[disabled]:hover, .tutor-button:disabled, .tutor-button[disabled], .tutor-button:disabled:hover, .tutor-button[disabled]:hover, .tutor-btn:disabled, .tutor-btn[disabled], .tutor-btn:disabled:hover, .tutor-btn[disabled]:hover {
-  border: 0px !important;
-  background-color: #DCDCE1 !important;
-  color: #737787 !important;
-  cursor: default !important;
-}
-
-.single_add_to_cart_button i, .tutor-button i, .tutor-btn i {
-  line-height: 19px;
-  margin-right: 7px;
-  font-size: 16px;
-}
-
-.single_add_to_cart_button span, .tutor-button span, .tutor-btn span {
-  font-size: 12px;
-  display: block;
-}
-
-.single_add_to_cart_button.btn-sm, .tutor-button.btn-sm, .tutor-btn.btn-sm {
-  padding: 9px 14px;
-  line-height: 19px;
-}
-
-.single_add_to_cart_button.tutor-button-small, .tutor-button.tutor-button-small, .tutor-btn.tutor-button-small {
-  padding: 5px 10px;
-  font-size: 14px;
-  font-weight: 300;
-  border: none;
-}
-
-.single_add_to_cart_button.tutor-button-small i, .tutor-button.tutor-button-small i, .tutor-btn.tutor-button-small i {
-  font-size: 16px;
-}
-
-.single_add_to_cart_button.default-btn, .tutor-button.default-btn, .tutor-btn.default-btn {
-  color: #393c40;
-  border: 1px solid #b8babe;
-  background: var(--tutor-primary-button-color);
-}
-
-.single_add_to_cart_button.default-btn i, .tutor-button.default-btn i, .tutor-btn.default-btn i {
-  color: #fff;
-}
-
-.single_add_to_cart_button.default-btn:hover, .tutor-button.default-btn:hover, .tutor-btn.default-btn:hover {
-  background-color: var(--tutor-primary-button-color);
-  border-color: var(--tutor-primary-color);
-  color: #fff;
-}
-
-.single_add_to_cart_button.default-btn:hover i, .tutor-button.default-btn:hover i, .tutor-btn.default-btn:hover i {
-  color: #fff;
-}
-
-.single_add_to_cart_button.bordered-button, .single_add_to_cart_button.bordered-btn, .tutor-button.bordered-button, .tutor-button.bordered-btn, .tutor-btn.bordered-button, .tutor-btn.bordered-btn {
-  color: var(--tutor-primary-color);
-  border: 1px solid var(--tutor-primary-color);
-  background-color: transparent;
-}
-
-.single_add_to_cart_button.bordered-button:hover, .single_add_to_cart_button.bordered-btn:hover, .tutor-button.bordered-button:hover, .tutor-button.bordered-btn:hover, .tutor-btn.bordered-button:hover, .tutor-btn.bordered-btn:hover {
-  background-color: var(--tutor-primary-hover-color);
-  border-color: var(--tutor-primary-hover-color);
-  color: #fff;
-}
-
-.single_add_to_cart_button.tutor-button-primary, .tutor-button.tutor-button-primary, .tutor-btn.tutor-button-primary {
-  background-color: var(--tutor-primary-color);
-  color: #ffffff;
-  display: inline-block;
-  box-shadow: none;
-  -o-box-shadow: none;
-  -ms-box-shadow: none;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-}
-
-.single_add_to_cart_button.tutor-button-primary:hover, .tutor-button.tutor-button-primary:hover, .tutor-btn.tutor-button-primary:hover {
-  background-color: #2446a6;
-}
-
-.single_add_to_cart_button.tutor-button-secondary, .tutor-button.tutor-button-secondary, .tutor-btn.tutor-button-secondary {
-  background-color: white;
-  color: var(--tutor-light-color);
-  border: 1px solid var(--tutor-light-color);
-}
-
-.single_add_to_cart_button.tutor-button-outlined, .tutor-button.tutor-button-outlined, .tutor-btn.tutor-button-outlined {
-  background-color: white;
-  color: var(--tutor-primary-color);
-  border: 1px solid var(--tutor-primary-color);
-}
-
-.single_add_to_cart_button.tutor-button-outlined:hover, .tutor-button.tutor-button-outlined:hover, .tutor-btn.tutor-button-outlined:hover {
-  background-color: var(--tutor-primary-color);
-  color: white;
-  border: 1px solid var(--tutor-primary-color);
-}
-
-.single_add_to_cart_button.tutor-button-outlined.tutor-button-outlined-transparent, .tutor-button.tutor-button-outlined.tutor-button-outlined-transparent, .tutor-btn.tutor-button-outlined.tutor-button-outlined-transparent {
-  background-color: transparent;
-}
-
-.single_add_to_cart_button.tutor-button-outlined.tutor-button-outlined-transparent:hover, .tutor-button.tutor-button-outlined.tutor-button-outlined-transparent:hover, .tutor-btn.tutor-button-outlined.tutor-button-outlined-transparent:hover {
-  background-color: #E3E6EB;
-  color: #757C8E;
-  border-color: #E3E6EB;
-}
-
-.single_add_to_cart_button.tutor-button-block, .tutor-button.tutor-button-block, .tutor-btn.tutor-button-block {
-  width: 100%;
-  text-align: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -o-justify-content: center;
-  -ms-justify-content: center;
-  -moz-justify-content: center;
-  -webkit-justify-content: center;
-}
-
-.single_add_to_cart_button.tutor-danger, .tutor-button.tutor-danger, .tutor-btn.tutor-danger {
-  background-color: var(--tutor-danger-button-color);
-  border-color: #e53935;
-}
-
-.single_add_to_cart_button.tutor-danger:hover, .tutor-button.tutor-danger:hover, .tutor-btn.tutor-danger:hover {
-  background-color: var(--tutor-danger-button-color);
-  border-color: var(--tutor-danger-button-color);
-  -webkit-filter: brightness(0.9);
-          filter: brightness(0.9);
-}
-
-.single_add_to_cart_button.tutor-success, .tutor-button.tutor-success, .tutor-btn.tutor-success {
-  background: var(--tutor-success-button-color);
-  border-color: var(--tutor-success-button-color);
-}
-
-.single_add_to_cart_button.tutor-success:hover, .tutor-button.tutor-success:hover, .tutor-btn.tutor-success:hover {
-  background: var(--tutor-success-button-color);
-  border-color: var(--tutor-success-button-color);
-  -webkit-filter: brightness(0.9);
-          filter: brightness(0.9);
-}
-
-.single_add_to_cart_button.tutor-warning, .tutor-button.tutor-warning, .tutor-btn.tutor-warning {
-  background: var(--tutor-warning-button-color);
-  border-color: var(--tutor-warning-button-color);
-}
-
-.single_add_to_cart_button.tutor-warning:hover, .tutor-button.tutor-warning:hover, .tutor-btn.tutor-warning:hover {
-  background: var(--tutor-warning-button-color);
-  border-color: var(--tutor-warning-button-color);
-  -webkit-filter: brightness(0.9);
-          filter: brightness(0.9);
-}
-
-.single_add_to_cart_button.button-warning, .tutor-button.button-warning, .tutor-btn.button-warning {
-  background-color: #ffb36d;
-  color: #ffffff;
-  border: none;
-}
-
-.single_add_to_cart_button.button-light, .tutor-button.button-light, .tutor-btn.button-light {
-  color: #b1b8c9;
-  background-color: #dae4e6;
-  border: 1px solid #dae4e6;
-}
-
-.single_add_to_cart_button.button-light:hover, .tutor-button.button-light:hover, .tutor-btn.button-light:hover {
-  color: #939bae;
-  background-color: #e8eff1;
-  border: 1px solid #e8eff1;
-}
-
-.single_add_to_cart_button .dashicons, .tutor-button .dashicons, .tutor-btn .dashicons {
-  border: 0;
-  line-height: inherit;
-  box-shadow: none !important;
-  -o-box-shadow: none !important;
-  -ms-box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
-}
-
-/* Only reusable function, or code allowed here. No direct css please. */
 .tutor-switch {
   position: relative;
   display: inline-block;
@@ -970,6 +746,158 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   -ms-justify-content: center;
   -moz-justify-content: center;
   -webkit-justify-content: center;
+}
+
+.color-brand-wordpress {
+  color: #1973aa;
+}
+
+.color-brand-wordpress-hover {
+  color: #166494;
+}
+
+.color-white {
+  color: #ffffff;
+}
+
+.color-brand {
+  color: #3e64de;
+}
+
+.color-success {
+  color: #24a148;
+}
+
+.color-warning {
+  color: #ed9700;
+}
+
+.color-error {
+  color: #f44337;
+}
+
+.color-text-primary {
+  color: #212327;
+}
+
+.color-text-title {
+  color: #41454f;
+}
+
+.color-text-subsued {
+  color: #5b616f;
+}
+
+.color-text-hints {
+  color: #757c8e;
+}
+
+.color-text-white {
+  color: #ffffff;
+}
+
+.color-text-brand {
+  color: #3e64de;
+}
+
+.color-text-success {
+  color: #24a148;
+}
+
+.color-text-warning {
+  color: #ed9700;
+}
+
+.color-text-error {
+  color: #f44337;
+}
+
+.color-design-dark {
+  color: #1a1b1e;
+}
+
+.color-design-grey {
+  color: #41454f;
+}
+
+.color-design-white {
+  color: #ffffff;
+}
+
+.color-design-brand {
+  color: #3e64de;
+}
+
+.color-design-success {
+  color: #24a148;
+}
+
+.color-design-warning {
+  color: #ed9700;
+}
+
+.color-design-danger {
+  color: #f44337;
+}
+
+.color-stroke-light-10 {
+  color: #eff1f6;
+}
+
+.color-stroke-light-20 {
+  color: #e0e2ea;
+}
+
+.color-stroke-light-30 {
+  color: #cdcfd5;
+}
+
+.color-stroke-gray {
+  color: #c0c3cb;
+}
+
+.color-stroke-blue {
+  color: #3e64de;
+}
+
+.color-stroke-danger {
+  color: #f44337;
+}
+
+.color-stroke-success {
+  color: #24a148;
+}
+
+.color-bg-brand {
+  color: #3e64de;
+}
+
+.color-bg-white {
+  color: #ffffff;
+}
+
+.color-bg-gray-20 {
+  color: #e3e5eb;
+}
+
+.color-bg-gray-10 {
+  color: #eff1f6;
+}
+
+.color-bg-dark-10 {
+  color: #212327;
+}
+
+.color-bg-dark-20 {
+  color: #31343b;
+}
+
+.color-bg-dark-30 {
+  color: #41454f;
+}
+
+.tutor-star-rating-group i.tutor-icon-star-full {
+  color: #ED9700 !important;
 }
 
 /**
@@ -4337,20 +4265,24 @@ table.tutor-table p {
 }
 
 /* /.report-course-list - end */
-* {
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
 
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 a {
   text-decoration: none;
+}
+
+.tutor-backend-settings-page * {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .d-grid {
@@ -6062,7 +5994,7 @@ li.tutor-option-nav-item h4 {
   position: relative;
 }
 
-.tutor-backend-settings-page .search-field input[type='search' i]::-webkit-search-cancel-button {
+.tutor-backend-settings-page .search-field input[type="search" i]::-webkit-search-cancel-button {
   cursor: pointer;
 }
 
@@ -6174,7 +6106,7 @@ li.tutor-option-nav-item h4 {
   }
 }
 
-.tutor-option-single-item.email-settings [name='email-settings-textarea'] {
+.tutor-option-single-item.email-settings [name="email-settings-textarea"] {
   min-height: 130px;
 }
 
@@ -6201,7 +6133,7 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-single-item.item-variation-table .tutor-option-field-row:first-child::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -12px -16px -1px -16px;
   z-index: -1;
@@ -6268,7 +6200,7 @@ li.tutor-option-nav-item h4 {
   font-weight: 600;
 }
 
-.tutor-option-single-item.item-variation-grid .tutor-option-field-row [class^='tutor-text'].success {
+.tutor-option-single-item.item-variation-grid .tutor-option-field-row [class^="tutor-text"].success {
   color: #24a148;
 }
 
@@ -6305,7 +6237,7 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-single-item.item-variation-dragndrop .drag-drop-zone.dragover::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -6386,7 +6318,7 @@ li.tutor-option-nav-item h4 {
   border-color: #dbe2f9;
 }
 
-.tutor-option-single-item.item-variation-dragndrop .drag-drop-zone input[type='file']#drag-drop-input {
+.tutor-option-single-item.item-variation-dragndrop .drag-drop-zone input[type="file"]#drag-drop-input {
   -moz-appearance: none;
        appearance: none;
   -webkit-appearance: none;
@@ -6448,7 +6380,7 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-field-row.has-bg:before {
-  content: '';
+  content: "";
   --width: 50px;
   position: absolute;
   width: calc(100% + var(--width));
@@ -6501,7 +6433,7 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-field-row.double-input .tutor-option-field-input .revenue-percentage:before {
-  content: '';
+  content: "";
   position: absolute;
   width: 24px;
   height: 1px;
@@ -6510,7 +6442,7 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-field-row.double-input .tutor-option-field-input .revenue-percentage:first-child:after {
-  content: '';
+  content: "";
   position: absolute;
   width: 1px;
   height: 54px;
@@ -6519,12 +6451,12 @@ li.tutor-option-nav-item h4 {
   background: #dcdbdc;
 }
 
-.tutor-option-field-row[class*='col-'] .tutor-option-field-label {
+.tutor-option-field-row[class*="col-"] .tutor-option-field-label {
   -ms-flex-item-align: start;
       align-self: start;
 }
 
-.tutor-option-field-row[class*='col-'] .tutor-option-field-input {
+.tutor-option-field-row[class*="col-"] .tutor-option-field-input {
   justify-self: unset;
 }
 
@@ -6644,7 +6576,7 @@ li.tutor-option-nav-item h4 {
   min-width: 90px;
 }
 
-.tutor-option-field-input.d-flex.justify-content-end [class^='tutor-form-']:first-child {
+.tutor-option-field-input.d-flex.justify-content-end [class^="tutor-form-"]:first-child {
   margin-right: 15px;
 }
 
@@ -6683,7 +6615,7 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-field-input .double-input .revenue-percentage:before {
-  content: '';
+  content: "";
   position: absolute;
   width: 24px;
   height: 1px;
@@ -6692,7 +6624,7 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-field-input .double-input .revenue-percentage:first-child:after {
-  content: '';
+  content: "";
   position: absolute;
   width: 1px;
   height: 54px;
@@ -6701,7 +6633,7 @@ li.tutor-option-nav-item h4 {
   background: #dcdbdc;
 }
 
-.tutor-option-field-input .logo-upload input[type='file'] {
+.tutor-option-field-input .logo-upload input[type="file"] {
   -moz-appearance: none;
        appearance: none;
   -webkit-appearance: none;
@@ -6836,7 +6768,7 @@ li.tutor-option-nav-item h4 {
   margin-top: 5px;
 }
 
-.tutor-option-field-input .d-flex.input-select > [class^='tutor-form-']:not(:last-child) {
+.tutor-option-field-input .d-flex.input-select > [class^="tutor-form-"]:not(:last-child) {
   margin-right: 15px;
 }
 
@@ -6963,7 +6895,7 @@ li.tutor-option-nav-item h4 {
 
 .tutor-option-nav-page .all-certificate .certificate-thumb:before {
   position: absolute;
-  content: '';
+  content: "";
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='18' viewBox='0 0 24 18' fill='none'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M12 0.75C6.54545 0.75 1.85455 4.13182 0 8.93182C1.85455 13.7318 6.54545 17.1136 12 17.1136C17.4545 17.1136 22.1455 13.7318 24 8.93182C22.1455 4.13182 17.4545 0.75 12 0.75ZM12.0007 14.3863C8.94617 14.3863 6.54617 11.9863 6.54617 8.93177C6.54617 5.87723 8.94617 3.47723 12.0007 3.47723C15.0553 3.47723 17.4553 5.87723 17.4553 8.93177C17.4553 11.9863 15.0553 14.3863 12.0007 14.3863ZM8.72754 8.93195C8.72754 7.0774 10.1457 5.65922 12.0003 5.65922C13.8548 5.65922 15.273 7.0774 15.273 8.93195C15.273 10.7865 13.8548 12.2047 12.0003 12.2047C10.1457 12.2047 8.72754 10.7865 8.72754 8.93195Z' fill='white'/%3e%3c/svg%3e");
   background-position: center;
   background-repeat: no-repeat;
@@ -7015,7 +6947,7 @@ li.tutor-option-nav-item h4 {
   cursor: pointer;
 }
 
-.tutor-option-nav-page .certificate-template .radio-thumbnail input[type='radio']:checked ~ .icon-wrapper img {
+.tutor-option-nav-page .certificate-template .radio-thumbnail input[type="radio"]:checked ~ .icon-wrapper img {
   -webkit-box-shadow: 0 0 0 1px #1973aa;
           box-shadow: 0 0 0 1px #1973aa;
 }
@@ -7088,7 +7020,7 @@ li.tutor-option-nav-item h4 {
   margin-top: 24px;
 }
 
-.tutor-option-nav-page .certificate-settings .tutor-btn input[type='file'] {
+.tutor-option-nav-page .certificate-settings .tutor-btn input[type="file"] {
   -moz-appearance: none;
        appearance: none;
   -webkit-appearance: none;
@@ -7513,6 +7445,32 @@ li.tutor-option-nav-item h4 {
 .tutor-option-tab-pages .tutor-option-field-input input[type='radio']:checked:before,
 .tutor-option-tab-pages .tutor-option-field-input input[type='checkbox']:checked:before {
   display: none;
+}
+
+#tutor_notifications .tutor-option-field-input .type-check.d-flex .tutor-form-check:not(:last-child) {
+  margin-right: 21px;
+}
+
+#tutor_notifications .tutor-option-single-item .item-title {
+  display: grid;
+  grid-template-columns: auto 34%;
+  gap: 10px;
+}
+
+#tutor_notifications .tutor-option-single-item .item-wrapper .tutor-option-field-row .tutor-option-field-label h5.label {
+  margin: 0;
+}
+
+#tutor_notifications .tutor-option-single-item .item-wrapper .tutor-option-field-row .type-check .tutor-form-check input[type="checkbox"]:checked::before {
+  content: "";
+}
+
+#tutor_notifications .tutor-option-single-item .item-wrapper .tutor-option-field-row .type-check .tutor-form-check:not(:last-child) {
+  margin-right: 22px;
+}
+
+#tutor_notifications .tutor-option-single-item:not(:last-child) {
+  margin-bottom: 34px;
 }
 
 /*# sourceMappingURL=tutor-admin.css.map */
