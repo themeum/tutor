@@ -28,8 +28,6 @@ export const useAddonsUpdate = () => {
 export const AddonsContextProvider = (props) => {
 	const [allAddons, setAllAddons] = useState([]);
 	const [activeTab, setActiveTab] = useState('all');
-	const [isChecked, setIsChecked] = useState(true);
-	const [isDataAddonActive, setIsDataAddonActive] = useState(isChecked);
 
 	// Render the component with initial data at on mount.
 	useEffect(() => {
@@ -61,13 +59,12 @@ export const AddonsContextProvider = (props) => {
 	}, [activeTab]);
 
 	const handleOnChange = (event, addonName) => {
-		let value = event.target.checked;
-			setIsChecked(!value);
+		let value = event.target.checked ? 1 : 0;
 
 		const toggleAddonStatus = async () => {
 			const formData = new FormData();
 			formData.set('action', 'addon_enable_disable');
-			formData.set('isEnable', isChecked);
+			formData.set('isEnable', value);
 			formData.set('addonFieldName', addonName);
 			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
 
@@ -97,7 +94,6 @@ export const AddonsContextProvider = (props) => {
 			setActiveTab('active');
 		} else if ( 'deactive' === btn ) {
 			setActiveTab('deactive');
-
 		} else if ('all' === btn) {
 			setActiveTab('all');
 		} else if ('required' === btn) {
@@ -107,7 +103,7 @@ export const AddonsContextProvider = (props) => {
 
 	return (
 		<AddonsContext.Provider value={allAddons}>
-			<AddonsUpdateContext.Provider value={{ activeTab, getAddonsData, setActiveTab, setAllAddons }}>
+			<AddonsUpdateContext.Provider value={{ activeTab, getAddonsData, setActiveTab, setAllAddons, handleOnChange }}>
 				{props.children}
 			</AddonsUpdateContext.Provider>
 		</AddonsContext.Provider>

@@ -1,56 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { useAddonsUpdate } from '../context/AddonsContext';
 
 const AddonCard = ({addon}) => {
-	const [isChecked, setIsChecked] = useState(addon.is_enabled);
-	const [isDataAddonActive, setIsDataAddonActive] = useState(isChecked);
 	const author = 'Themeum';
 	const url = 'https://www.themeum.com';
-	const { setAllAddons } = useAddonsUpdate();
-
-	// console.log('before Checked', isChecked);
-
-	const handleOnChange = (event, addonName) => {
-		let value = event.target.checked;
-		console.log('before Checked', isChecked, 'check',value);
-		//setIsChecked(value);
-		//setIsDataAddonActive(!isChecked);
-
-		//console.log(' after set Checked', isChecked, 'check',value);
-
-		const toggleAddonStatus = async () => {
-			const formData = new FormData();
-			formData.set('action', 'addon_enable_disable');
-			formData.set('isEnable', value);
-			formData.set('addonFieldName', addonName);
-			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-
-			try {
-				const addons = await fetch(_tutorobject.ajaxurl, {
-					method: 'POST',
-					body: formData,
-				});
-
-				if (addons.ok) {
-					const response = await addons.json();
-					const data = response.data.addons;
-
-					if (data && data.length) {
-						//setAllAddons(data);
-					}
-				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		toggleAddonStatus();
-	}
+	const { handleOnChange } = useAddonsUpdate();
 
 	return (
-		<div
-			className={`tutor-addons-card ${addon.depend_plugins || addon.ext_required ? 'not-subscribed' : ''}`}
-			data-addon-active={isDataAddonActive}
-		>
+		<div className={`tutor-addons-card ${addon.depend_plugins || addon.ext_required ? 'not-subscribed' : ''}`}>
 			<div className="card-body tutor-px-30 tutor-py-40">
 				<div className="addon-logo">
 					<img src={addon.thumb_url} alt={addon.name} />
@@ -92,8 +49,8 @@ const AddonCard = ({addon}) => {
 									type="checkbox"
 									className="tutor-form-toggle-input"
 									name={addon.basename}
-									checked={isChecked}
-									onChange={(event) => {handleOnChange( event, addon.basename )}}
+									checked={addon.is_enabled}
+									onChange={(event) => handleOnChange(event, addon.basename)}
 								/>
 								<span className="tutor-form-toggle-control"></span>
 								<span className="tutor-form-toggle-label color-text-primary tutor-ml-5">Active</span>

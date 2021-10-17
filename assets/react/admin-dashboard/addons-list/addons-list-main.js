@@ -8,7 +8,10 @@ window.addEventListener( 'DOMContentLoaded', () => {
         const element = (
             <App></App>
         );
-        ReactDOM.render( element, document.getElementById( 'tutor-addons-list-wrapper' ) ); 
+        const addonWrapper = document.getElementById( 'tutor-addons-list-wrapper' );
+        if (null !== addonWrapper) {
+            ReactDOM.render( element, addonWrapper ); 
+        }
     } 
     tutorAddonsList();
 } );
