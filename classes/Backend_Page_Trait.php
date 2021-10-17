@@ -32,7 +32,7 @@ trait Backend_Page_Trait {
 	 */
 	public function bulk_action_default(): array {
 		return array(
-			'value'  => 'bulk action',
+			'value'  => '',
 			'option' => __( 'Bulk Action', 'tutor-pro' ),
 		);
 	}

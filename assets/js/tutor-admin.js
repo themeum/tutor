@@ -1062,13 +1062,6 @@ window.onload = function () {
     e.preventDefault();
     var search = document.getElementById("tutor-backend-filter-search").value;
     window.location = urlPrams("search", search);
-  }; //onclick bulk action button show confirm popup
-
-
-  var bulkActionButton = document.getElementById('tutor-confirm-bulk-action');
-
-  bulkActionButton.onclick = function () {
-    document.getElementById("tutor-admin-bulk-action-form").submit();
   };
   /**
    * Onsubmit bulk form handle ajax request then reload page
@@ -1079,7 +1072,7 @@ window.onload = function () {
 
   bulkForm.onsubmit = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-      var formData, bulkIds, bulkFields, _iterator, _step, field, post, response;
+      var formData, bulkIds, bulkFields, _iterator, _step, field, post;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -1107,61 +1100,61 @@ window.onload = function () {
 
               formData.set("bulk-ids", bulkIds);
               formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-
-              if (!(formData.get('bulk-action') === 'bulk action')) {
-                _context.next = 11;
-                break;
-              }
-
-              alert(__('Please select an action', 'tutor'));
-              return _context.abrupt("return");
-
-            case 11:
-              _context.prev = 11;
-              _context.next = 14;
+              _context.prev = 8;
+              _context.next = 11;
               return fetch(window._tutorobject.ajaxurl, {
                 method: "POST",
                 body: formData
               });
 
-            case 14:
+            case 11:
               post = _context.sent;
-              _context.next = 17;
-              return post.json();
 
-            case 17:
-              response = _context.sent;
-
-              if (response.success) {
+              if (post.ok) {
                 location.reload();
               }
 
-              _context.next = 24;
+              _context.next = 18;
               break;
 
-            case 21:
-              _context.prev = 21;
-              _context.t0 = _context["catch"](11);
+            case 15:
+              _context.prev = 15;
+              _context.t0 = _context["catch"](8);
               alert(_context.t0);
 
-            case 24:
+            case 18:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[11, 21]]);
+      }, _callee, null, [[8, 15]]);
     }));
 
     return function (_x2) {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+   * onclick bulk action button show confirm popup
+   * on click confirm button submit bulk form
+   */
+
+
+  var bulkActionButton = document.getElementById("tutor-confirm-bulk-action");
+
+  bulkActionButton.onclick = function () {
+    var input = document.createElement("input");
+    input.type = "submit";
+    bulkForm.appendChild(input);
+    input.click();
+    input.remove();
+  };
 
   function urlPrams(type, val) {
     var url = new URL(window.location.href);
     var params = url.searchParams;
     params.set(type, val);
-    params.set('paged', 1);
+    params.set("paged", 1);
     return url;
   }
   /**

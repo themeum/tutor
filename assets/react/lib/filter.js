@@ -25,12 +25,6 @@ window.onload = () => {
     window.location = urlPrams("search", search);
   };
 
-  //onclick bulk action button show confirm popup
-  const bulkActionButton = document.getElementById('tutor-confirm-bulk-action');
-  bulkActionButton.onclick = () => {
-    document.getElementById("tutor-admin-bulk-action-form").submit();
-  };
-
   /**
    * Onsubmit bulk form handle ajax request then reload page
    */
@@ -46,21 +40,13 @@ window.onload = () => {
       }
     }
     formData.set("bulk-ids", bulkIds);
-    formData.set(
-      window.tutor_get_nonce_data(true).key,
-      window.tutor_get_nonce_data(true).value
-    );
-    if (formData.get('bulk-action') === 'bulk action') {
-      alert(__('Please select an action', 'tutor'));
-      return;
-    }
+    formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
     try {
       const post = await fetch(window._tutorobject.ajaxurl, {
         method: "POST",
         body: formData,
       });
-      const response = await post.json();
-      if (response.success) {
+      if (post.ok) {
         location.reload();
       }
     } catch (error) {
@@ -68,11 +54,24 @@ window.onload = () => {
     }
   };
 
+  /**
+   * onclick bulk action button show confirm popup
+   * on click confirm button submit bulk form
+   */
+  const bulkActionButton = document.getElementById("tutor-confirm-bulk-action");
+  bulkActionButton.onclick = () => {
+    const input = document.createElement("input");
+    input.type = "submit";
+    bulkForm.appendChild(input);
+    input.click();
+    input.remove();
+  };
+
   function urlPrams(type, val) {
     const url = new URL(window.location.href);
     const params = url.searchParams;
     params.set(type, val);
-    params.set('paged', 1);
+    params.set("paged", 1);
     return url;
   }
 

@@ -5,7 +5,7 @@
 				<form action="" method="post" id="tutor-admin-bulk-action-form">
 					<input type="hidden" name="action" value="<?php esc_html_e( $data['ajax_action'] ); ?>">
 					<div class="tutor-bulk-action-group">
-						<select name="bulk-action" id="tutor-admin-bulk-action">
+						<select name="bulk-action" id="tutor-admin-bulk-action" required>
 							<?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
 								<option value="<?php esc_attr_e( $v['value'] ); ?>">
 									<?php esc_html_e( $v['option'] ); ?>
