@@ -18,7 +18,11 @@ __webpack_require__.r(__webpack_exports__);
 window.addEventListener('DOMContentLoaded', function () {
   function tutorAddonsList() {
     var element = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_App__WEBPACK_IMPORTED_MODULE_2__["default"], null);
-    react_dom__WEBPACK_IMPORTED_MODULE_1__.render(element, document.getElementById('tutor-addons-list-wrapper'));
+    var addonWrapper = document.getElementById('tutor-addons-list-wrapper');
+
+    if (null !== addonWrapper) {
+      react_dom__WEBPACK_IMPORTED_MODULE_1__.render(element, addonWrapper);
+    }
   }
 
   tutorAddonsList();
@@ -39,116 +43,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 
 
 
 var AddonCard = function AddonCard(_ref) {
   var addon = _ref.addon;
-
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(addon.is_enabled),
-      _useState2 = _slicedToArray(_useState, 2),
-      isChecked = _useState2[0],
-      setIsChecked = _useState2[1];
-
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(isChecked),
-      _useState4 = _slicedToArray(_useState3, 2),
-      isDataAddonActive = _useState4[0],
-      setIsDataAddonActive = _useState4[1];
-
   var author = 'Themeum';
   var url = 'https://www.themeum.com';
 
   var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
-      setAllAddons = _useAddonsUpdate.setAllAddons; // console.log('before Checked', isChecked);
-
-
-  var handleOnChange = function handleOnChange(event, addonName) {
-    var value = event.target.checked;
-    console.log('before Checked', isChecked, 'check', value); //setIsChecked(value);
-    //setIsDataAddonActive(!isChecked);
-    //console.log(' after set Checked', isChecked, 'check',value);
-
-    var toggleAddonStatus = /*#__PURE__*/function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        var formData, addons, response, data;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                formData = new FormData();
-                formData.set('action', 'addon_enable_disable');
-                formData.set('isEnable', value);
-                formData.set('addonFieldName', addonName);
-                formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                _context.prev = 5;
-                _context.next = 8;
-                return fetch(_tutorobject.ajaxurl, {
-                  method: 'POST',
-                  body: formData
-                });
-
-              case 8:
-                addons = _context.sent;
-
-                if (!addons.ok) {
-                  _context.next = 15;
-                  break;
-                }
-
-                _context.next = 12;
-                return addons.json();
-
-              case 12:
-                response = _context.sent;
-                data = response.data.addons;
-
-                if (data && data.length) {//setAllAddons(data);
-                }
-
-              case 15:
-                _context.next = 20;
-                break;
-
-              case 17:
-                _context.prev = 17;
-                _context.t0 = _context["catch"](5);
-                console.log(_context.t0);
-
-              case 20:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, null, [[5, 17]]);
-      }));
-
-      return function toggleAddonStatus() {
-        return _ref2.apply(this, arguments);
-      };
-    }();
-
-    toggleAddonStatus();
-  };
+      handleOnChange = _useAddonsUpdate.handleOnChange;
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-card ".concat(addon.depend_plugins || addon.ext_required ? 'not-subscribed' : ''),
-    "data-addon-active": isDataAddonActive
+    className: "tutor-addons-card ".concat(addon.depend_plugins || addon.ext_required ? 'not-subscribed' : '')
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "card-body tutor-px-30 tutor-py-40"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
@@ -191,9 +98,9 @@ var AddonCard = function AddonCard(_ref) {
     type: "checkbox",
     className: "tutor-form-toggle-input",
     name: addon.basename,
-    checked: isChecked,
+    checked: addon.is_enabled,
     onChange: function onChange(event) {
-      handleOnChange(event, addon.basename);
+      return handleOnChange(event, addon.basename);
     }
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
     className: "tutor-form-toggle-control"
@@ -379,11 +286,36 @@ __webpack_require__.r(__webpack_exports__);
 
 var Header = function Header() {
   var filterBtns = ['all', 'active', 'deactive', 'required'];
+  var allAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddons)();
 
   var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
       activeTab = _useAddonsUpdate.activeTab,
       getAddonsData = _useAddonsUpdate.getAddonsData;
 
+  var activeAddonCount = 0;
+  var deactiveAddons = 0;
+  var requiredAddons = 0;
+  allAddons.forEach(function (addon) {
+    if (true === addon.is_enabled) {
+      activeAddonCount++;
+    }
+
+    return activeAddonCount;
+  });
+  allAddons.forEach(function (addon) {
+    if (true !== addon.is_enabled) {
+      deactiveAddons++;
+    }
+
+    return deactiveAddons;
+  });
+  allAddons.forEach(function (addon) {
+    if (addon.plugins_required.length > 0) {
+      requiredAddons++;
+    }
+
+    return requiredAddons;
+  });
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", {
     className: "tutor-addons-list-header d-flex justify-content-between align-items-center tutor-px-30 tutor-py-20"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
@@ -394,14 +326,13 @@ var Header = function Header() {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
       type: "button",
       className: "filter-btn ".concat(btn === activeTab ? 'is-active' : ''),
-      "data-tab-filter-target": btn,
       key: index,
       onClick: function onClick() {
         return getAddonsData(btn);
       }
     }, btn, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
       className: "item-count"
-    }, "(220)"));
+    }, "(", 'active' === btn ? activeAddonCount : 'deactive' === btn ? deactiveAddons : 'required' === btn ? requiredAddons : allAddons.length, ")"));
   })));
 };
 
@@ -474,17 +405,7 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('all'),
       _useState4 = _slicedToArray(_useState3, 2),
       activeTab = _useState4[0],
-      setActiveTab = _useState4[1];
-
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
-      _useState6 = _slicedToArray(_useState5, 2),
-      isChecked = _useState6[0],
-      setIsChecked = _useState6[1];
-
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(isChecked),
-      _useState8 = _slicedToArray(_useState7, 2),
-      isDataAddonActive = _useState8[0],
-      setIsDataAddonActive = _useState8[1]; // Render the component with initial data at on mount.
+      setActiveTab = _useState4[1]; // Render the component with initial data at on mount.
 
 
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
@@ -551,8 +472,7 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
   }, [activeTab]);
 
   var handleOnChange = function handleOnChange(event, addonName) {
-    var value = event.target.checked;
-    setIsChecked(!value);
+    var value = event.target.checked ? 1 : 0;
 
     var toggleAddonStatus = /*#__PURE__*/function () {
       var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
@@ -563,7 +483,7 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
               case 0:
                 formData = new FormData();
                 formData.set('action', 'addon_enable_disable');
-                formData.set('isEnable', isChecked);
+                formData.set('isEnable', value);
                 formData.set('addonFieldName', addonName);
                 formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
                 _context2.prev = 5;
@@ -636,7 +556,8 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
       activeTab: activeTab,
       getAddonsData: getAddonsData,
       setActiveTab: setActiveTab,
-      setAllAddons: setAllAddons
+      setAllAddons: setAllAddons,
+      handleOnChange: handleOnChange
     }
   }, props.children));
 };

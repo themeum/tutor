@@ -287,6 +287,75 @@ class Ajax{
 	}
 
 	/**
+     * Prepare addons data
+     */
+    public function prepare_addons_data() {
+        $addons = apply_filters( 'tutor_addons_lists_config', array() );
+        $plugins_data = $addons;
+
+        if ( is_array( $addons ) && count( $addons ) ) {
+            foreach ( $addons as $base_name => $addon ) {
+                $addon_config = tutor_utils()->get_addon_config( $base_name );
+                $is_enabled = (bool) tutor_utils()->avalue_dot( 'is_enable', $addon_config );
+
+                $plugins_data[$base_name]['is_enabled'] = $is_enabled;
+
+                $thumbnail_url =  tutor()->url . 'assets/images/tutor-plugin.png';
+                if ( file_exists( $addon['path'] . 'assets/images/thumbnail.png' ) ) {
+                    $thumbnail_url = $addon['url'] . 'assets/images/thumbnail.png';
+                } elseif ( file_exists( $addon['path'] . 'assets/images/thumbnail.jpg' ) ) {
+                    $thumbnail_url = $addon['url'] . 'assets/images/thumbnail.jpg';
+                } elseif ( file_exists( $addon['path'] . 'assets/images/thumbnail.svg' ) ) {
+                    $thumbnail_url = $addon['url'] . 'assets/images/thumbnail.svg';
+                }
+
+                $plugins_data[$base_name]['thumb_url'] = $thumbnail_url;
+
+                /**
+                 * Checking if there any dependant plugin exists
+                 */
+                $depends = tutils()->array_get( 'depend_plugins', $addon );
+                $plugins_required = array();
+                if ( tutils()->count( $depends ) ) {
+                    foreach ( $depends as $plugin_base => $plugin_name ) {
+                        if ( ! is_plugin_active( $plugin_base ) ) {
+                            $plugins_required[ $plugin_base ] = $plugin_name;
+                        }
+                    }
+                }
+
+				$depended_plugins = array();
+				foreach ( $plugins_required as $required_plugin ) {
+					array_push( $depended_plugins, $required_plugin );
+				}
+
+               $plugins_data[$base_name]['plugins_required'] = $depended_plugins;
+
+                // Check if it's notifications.
+                if ( function_exists( 'tutor_notifications' ) && $base_name == tutor_notifications()->basename ) {
+
+                    $required = array();
+                    version_compare( PHP_VERSION, '7.2.5', '>=' ) ? 0 : $required[] = __( 'PHP 7.2.5 or greater is required', 'tutor' );
+                    ! is_ssl() ? $required[] = __( 'Please install SSL certificate properly', 'tutor' ) : 0;
+            
+                    foreach ( array( 'curl', 'gmp', 'mbstring', 'openssl' ) as $ext ) {
+                        ! extension_loaded( $ext ) ? $required[] = 'PHP extension <strong>' . $ext . '</strong> not found' : 0;
+                    }
+            
+                    $plugins_data[$base_name]['ext_required'] = $required;
+                }
+            }
+        }
+
+		$prepared_addons = array();
+		foreach ( $plugins_data as $tutor_addon ) {
+			array_push( $prepared_addons, $tutor_addon );
+		}
+
+        return $prepared_addons;
+    }
+
+	/**
      * Get all notifications
      */
     public function tutor_get_all_addons() {
@@ -295,7 +364,7 @@ class Ajax{
         tutor_utils()->checking_nonce();
 
         // All good, let's proceed.
-        $all_addons = tutor_utils()->prepare_addons_data();
+        $all_addons = $this->prepare_addons_data();
 		$active_addons = array();
 		$deactive_addons = array();
 		$required_addons = array();
@@ -348,7 +417,7 @@ class Ajax{
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message'=> __( 'Access Denied', 'tutor' ) ) );
 		}
-		$all_addons = tutor_utils()->prepare_addons_data();
+		$all_addons = $this->prepare_addons_data();
 		$addonsConfig = maybe_unserialize( get_option( 'tutor_addons_config' ) );
 
 		$isEnable = (bool) sanitize_text_field( tutor_utils()->avalue_dot( 'isEnable', $_POST ) );

@@ -1,9 +1,33 @@
 import React from 'react';
-import { useAddonsUpdate } from '../context/AddonsContext';
+import { useAddons, useAddonsUpdate } from '../context/AddonsContext';
 
 const Header = () => {
 	const filterBtns = ['all', 'active', 'deactive', 'required'];
+	const allAddons = useAddons();
 	const { activeTab, getAddonsData } = useAddonsUpdate();
+
+	let activeAddonCount = 0;
+	let deactiveAddons = 0;
+	let requiredAddons = 0;
+	allAddons.forEach(addon => {
+		if (true === addon.is_enabled) {
+			activeAddonCount++;
+		}
+
+		return activeAddonCount;
+	})
+	allAddons.forEach(addon => {
+		if (true !== addon.is_enabled) {
+			deactiveAddons++;
+		}
+		return deactiveAddons;
+	})
+	allAddons.forEach(addon => {
+		if (addon.plugins_required.length > 0 ) {
+			requiredAddons++;
+		}
+		return requiredAddons;
+	})
 
 	return (
 		<header className="tutor-addons-list-header d-flex justify-content-between align-items-center tutor-px-30 tutor-py-20">
@@ -14,11 +38,10 @@ const Header = () => {
 						<button
 							type="button"
 							className={`filter-btn ${btn === activeTab ? 'is-active' : ''}`}
-							data-tab-filter-target={btn}
 							key={index}
 							onClick={() => getAddonsData(btn)}
 						>
-							{btn} <span className="item-count">(220)</span>
+							{btn} <span className="item-count">({'active' === btn ? activeAddonCount : 'deactive' === btn ? deactiveAddons : 'required' === btn ? requiredAddons : allAddons.length })</span>
 						</button>
 					);
 				})}
