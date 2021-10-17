@@ -26,13 +26,17 @@ export const useAddonsUpdate = () => {
  * @returns All ContextProviders with children
  */
 export const AddonsContextProvider = (props) => {
-	const [allAddons, setAllAddons] = useState([_tutorobject.addons_data]);
+	const [allAddons, setAllAddons] = useState([]);
+	const [activeTab, setActiveTab] = useState('all');
+	const [isChecked, setIsChecked] = useState(true);
+	const [isDataAddonActive, setIsDataAddonActive] = useState(isChecked);
 
 	// Render the component with initial data at on mount.
 	useEffect(() => {
 		const fetchAddons = async () => {
 			const formData = new FormData();
 			formData.set('action', 'tutor_get_all_addons');
+			formData.set('btn', activeTab);
 			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
 
 			try {
@@ -54,11 +58,58 @@ export const AddonsContextProvider = (props) => {
 			}
 		};
 		fetchAddons();
-	}, []);
+	}, [activeTab]);
+
+	const handleOnChange = (event, addonName) => {
+		let value = event.target.checked;
+			setIsChecked(!value);
+
+		const toggleAddonStatus = async () => {
+			const formData = new FormData();
+			formData.set('action', 'addon_enable_disable');
+			formData.set('isEnable', isChecked);
+			formData.set('addonFieldName', addonName);
+			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+
+			try {
+				const addons = await fetch(_tutorobject.ajaxurl, {
+					method: 'POST',
+					body: formData,
+				});
+
+				if (addons.ok) {
+					const response = await addons.json();
+					const data = response.data.addons;
+
+					if (data && data.length) {
+						setAllAddons(data);
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		toggleAddonStatus();
+	};
+
+	const getAddonsData = (btn) => {
+		if ('active' === btn) {
+			setActiveTab('active');
+		} else if ( 'deactive' === btn ) {
+			setActiveTab('deactive');
+
+		} else if ('all' === btn) {
+			setActiveTab('all');
+		} else if ('required' === btn) {
+			setActiveTab('required');
+		}
+	}
 
 	return (
 		<AddonsContext.Provider value={allAddons}>
-			<AddonsUpdateContext.Provider value={{ setAllAddons }}>{props.children}</AddonsUpdateContext.Provider>
+			<AddonsUpdateContext.Provider value={{ activeTab, getAddonsData, setActiveTab, setAllAddons }}>
+				{props.children}
+			</AddonsUpdateContext.Provider>
 		</AddonsContext.Provider>
 	);
 };

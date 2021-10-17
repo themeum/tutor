@@ -31,8 +31,8 @@
     $icon_base = tutor()->url . 'assets/images/images-v2/icons/';
 	?>
 
-    <div class="tutor-row tutor-dashboard-cards-container">
-        <div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-6 tutor-col-lg-4">
+    <div class="tutor-bs-row tutor-dashboard-cards-container">
+        <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
             <p>
                 <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>book-open.svg"/></span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($enrolled_course_count); ?></span>
@@ -40,7 +40,7 @@
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($enrolled_course_count); ?></span>
             </p>
         </div>
-        <div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-6 tutor-col-lg-4">
+        <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
             <p>
                 <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>graduation-cap.svg"/></span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($active_course_count); ?></span>
@@ -48,7 +48,7 @@
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($active_course_count); ?></span>
             </p>
         </div>
-        <div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-6 tutor-col-lg-4">
+        <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
             <p>
                 <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>award.svg"/></span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($completed_course_count); ?></span>
@@ -60,7 +60,7 @@
 		<?php
 		if(current_user_can(tutor()->instructor_role)) :
 			?>
-            <div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-6 tutor-col-lg-4">
+            <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
                 <p>
                     <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>graduated-user.svg"/></span>
                     <span class="tutor-dashboard-info-val"><?php echo esc_html($total_students); ?></span>
@@ -68,7 +68,7 @@
                     <span class="tutor-dashboard-info-val"><?php echo esc_html($total_students); ?></span>
                 </p>
             </div>
-            <div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-6 tutor-col-lg-4">
+            <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
                 <p>
                     <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>open-box.svg"/></span>
                     <span class="tutor-dashboard-info-val"><?php echo esc_html(count($my_courses)); ?></span>
@@ -76,7 +76,7 @@
                     <span class="tutor-dashboard-info-val"><?php echo esc_html(count($my_courses)); ?></span>
                 </p>
             </div>
-            <div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-6 tutor-col-lg-4">
+            <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
                 <p>
                     <span class="tutor-round-icon"><img src="<?php echo $icon_base; ?>coins.svg"/></span>
                     <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></span>
@@ -108,64 +108,62 @@ if(count($instructor_course)) {
             </a>
         </h3>
         <div class="tutor-dashboard-content-inner">
-            <div class="tutor-ui-table-responsive">
-                <table class="tutor-ui-table table-popular-courses">
-                    <thead>
+            <table class="tutor-ui-table table-popular-courses">
+                <thead>
+                    <tr>
+                        <th>
+                            <span class="text-regular-small color-text-subsued">
+                                <?php _e('Course Name', 'tutor'); ?>
+                            </span>
+                        </th>
+                        <th>
+                            <div class="inline-flex-center color-text-subsued">
+                                <span class="text-regular-small"><?php _e('Enrolled', 'tutor'); ?></span>
+                                <span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="inline-flex-center color-text-subsued">
+                                <span class="text-regular-small"><?php _e('Rating', 'tutor'); ?></span>
+                                <span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($instructor_course as $course){
+                        $enrolled = tutor_utils()->count_enrolled_users_by_course($course->ID);
+                        $course_status = isset($status_translations[$course->post_status]) ? $status_translations[$course->post_status] : __($course->post_status, 'tutor');
+                        $course_rating = tutor_utils()->get_course_rating($course->ID);
+                        $course_badge =  isset($course_badges[$course->post_status]) ? $course_badges[$course->post_status] : 'dark';
+                        
+                        ?>
                         <tr>
-                            <th>
-                                <span class="text-regular-small color-text-subsued">
-                                    <?php _e('Course Name', 'tutor'); ?>
+                            <td data-th="<?php _e('Course Name', 'tutor'); ?>" class="column-fullwidth">
+                                <div class="td-course text-medium-body color-text-primary">
+                                    <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank">
+                                        <?php echo $course->post_title; ?>
+                                    </a>
+                                </div>
+                            </td>
+                            <td data-th="<?php _e('Enrolled', 'tutor'); ?>">
+                                <span class="text-medium-caption color-text-primary">
+                                    <?php echo $enrolled; ?>
                                 </span>
-                            </th>
-                            <th>
-                                <div class="inline-flex-center color-text-subsued">
-                                    <span class="text-regular-small"><?php _e('Enrolled', 'tutor'); ?></span>
-                                    <span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                                <span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                            </td>
+                            <td data-th="<?php _e('Rating', 'tutor'); ?>">
+                                <div class="td-tutor-rating text-regular-body color-text-subsued">
+                                    <?php tutor_utils()->star_rating_generator($course_rating->rating_avg); ?> <span><?php echo $course_rating->rating_avg; ?></span>
                                 </div>
-                            </th>
-                            <th>
-                                <div class="inline-flex-center color-text-subsued">
-                                    <span class="text-regular-small"><?php _e('Rating', 'tutor'); ?></span>
-                                    <span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
-                                </div>
-                            </th>
+                                <span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
                         <?php
-                        foreach ($instructor_course as $course){
-                            $enrolled = tutor_utils()->count_enrolled_users_by_course($course->ID);
-                            $course_status = isset($status_translations[$course->post_status]) ? $status_translations[$course->post_status] : __($course->post_status, 'tutor');
-                            $course_rating = tutor_utils()->get_course_rating($course->ID);
-                            $course_badge =  isset($course_badges[$course->post_status]) ? $course_badges[$course->post_status] : 'dark';
-                            
-                            ?>
-                            <tr>
-                                <td data-th="<?php _e('Course Name', 'tutor'); ?>" class="column-fullwidth">
-                                    <div class="td-course text-medium-body color-text-primary">
-                                        <a href="<?php echo get_the_permalink($course->ID); ?>" target="_blank">
-                                            <?php echo $course->post_title; ?>
-                                        </a>
-                                    </div>
-                                </td>
-                                <td data-th="<?php _e('Enrolled', 'tutor'); ?>">
-                                    <span class="text-medium-caption color-text-primary">
-                                        <?php echo $enrolled; ?>
-                                    </span>
-                                    <span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
-                                </td>
-                                <td data-th="<?php _e('Rating', 'tutor'); ?>">
-                                    <div class="td-tutor-rating text-regular-body color-text-subsued">
-                                        <?php tutor_utils()->star_rating_generator($course_rating->rating_avg); ?> <span><?php echo $course_rating->rating_avg; ?></span>
-                                    </div>
-                                    <span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
-                                </td>
-                            </tr>
-                            <?php
-                        } ?>
-                    </tbody>
-                </table>
-            </div>
+                    } ?>
+                </tbody>
+            </table>
         </div>
         <?php 
     } 

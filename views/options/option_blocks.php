@@ -26,7 +26,7 @@
 
 	<div class="tutor-option-single-item">
 		<div class="item-title">
-			<div class="tutor-d-flex">
+			<div class="tutor-bs-d-flex">
 				<h4><?php echo $blocks['label']; ?></h4>
 				<div class="tooltip-wrap tooltip-icon">
 					<span class="tooltip-txt tooltip-right"><?php echo $blocks['tooltip']; ?></span>

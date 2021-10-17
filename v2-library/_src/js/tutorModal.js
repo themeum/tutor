@@ -17,6 +17,7 @@ function tutorModal() {
 				? e.target.getAttribute(attr)
 				: e.target.closest(`[${attr}]`).getAttribute(attr);
 			const modal = document.getElementById(id);
+			console.log(modal)
 			if (modal) {
 				modal.classList.add('tutor-is-active');
 			}

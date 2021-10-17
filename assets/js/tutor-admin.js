@@ -38,6 +38,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -52,12 +57,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var AddonCard = function AddonCard(_ref) {
   var addon = _ref.addon;
-  //let isChecked = addon.is_enabled && true;
-  var author = 'Themeum';
-  var url = 'https://www.themeum.com';
-  var isSubscribed = false;
 
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(addon.is_enabled),
       _useState2 = _slicedToArray(_useState, 2),
@@ -69,19 +71,83 @@ var AddonCard = function AddonCard(_ref) {
       isDataAddonActive = _useState4[0],
       setIsDataAddonActive = _useState4[1];
 
-  var handleOnChange = function handleOnChange(event) {
+  var author = 'Themeum';
+  var url = 'https://www.themeum.com';
+
+  var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
+      setAllAddons = _useAddonsUpdate.setAllAddons; // console.log('before Checked', isChecked);
+
+
+  var handleOnChange = function handleOnChange(event, addonName) {
     var value = event.target.checked;
-    setIsChecked(value);
-    setIsDataAddonActive(!isChecked); // console.log('adding data-addon-active');
+    console.log('before Checked', isChecked, 'check', value); //setIsChecked(value);
+    //setIsDataAddonActive(!isChecked);
+    //console.log(' after set Checked', isChecked, 'check',value);
+
+    var toggleAddonStatus = /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var formData, addons, response, data;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                formData = new FormData();
+                formData.set('action', 'addon_enable_disable');
+                formData.set('isEnable', value);
+                formData.set('addonFieldName', addonName);
+                formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+                _context.prev = 5;
+                _context.next = 8;
+                return fetch(_tutorobject.ajaxurl, {
+                  method: 'POST',
+                  body: formData
+                });
+
+              case 8:
+                addons = _context.sent;
+
+                if (!addons.ok) {
+                  _context.next = 15;
+                  break;
+                }
+
+                _context.next = 12;
+                return addons.json();
+
+              case 12:
+                response = _context.sent;
+                data = response.data.addons;
+
+                if (data && data.length) {//setAllAddons(data);
+                }
+
+              case 15:
+                _context.next = 20;
+                break;
+
+              case 17:
+                _context.prev = 17;
+                _context.t0 = _context["catch"](5);
+                console.log(_context.t0);
+
+              case 20:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[5, 17]]);
+      }));
+
+      return function toggleAddonStatus() {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+
+    toggleAddonStatus();
   };
 
-  var requiredPlugins = addon.depend_plugins,
-      plugins = addon.plugins_required,
-      extensions = addon.ext_required; // console.log(addon);
-  // console.log(plugins, extensions);
-
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-card ".concat(requiredPlugins || extensions ? 'not-subscribed' : ''),
+    className: "tutor-addons-card ".concat(addon.depend_plugins || addon.ext_required ? 'not-subscribed' : ''),
     "data-addon-active": isDataAddonActive
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "card-body tutor-px-30 tutor-py-40"
@@ -105,11 +171,17 @@ var AddonCard = function AddonCard(_ref) {
     className: " card-footer tutor-px-30 tutor-py-25 d-flex justify-content-between align-items-center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "addon-toggle"
-  }, extensions ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+  }, addon.ext_required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
     className: "color-text-hints text-medium-small"
-  }, "Required Extension(s)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-    className: "color-text-primary text-medium-caption tutor-mt-2"
-  }, "Woocommerce Subscription")) : requiredPlugins ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+  }, "Required Extension(s)"), addon.ext_required.map(function (extension, index) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+      className: "color-text-primary text-medium-caption tutor-mt-2",
+      key: index,
+      dangerouslySetInnerHTML: {
+        __html: extension
+      }
+    });
+  })) : addon.depend_plugins ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
     className: "color-text-hints text-medium-small"
   }, "Required Plugin(s)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
     className: "color-text-primary text-medium-caption tutor-mt-2"
@@ -118,8 +190,11 @@ var AddonCard = function AddonCard(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
     type: "checkbox",
     className: "tutor-form-toggle-input",
+    name: addon.basename,
     checked: isChecked,
-    onChange: handleOnChange
+    onChange: function onChange(event) {
+      handleOnChange(event, addon.basename);
+    }
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
     className: "tutor-form-toggle-control"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
@@ -299,62 +374,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 
 
 
 var Header = function Header() {
-  var allAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddons)();
+  var filterBtns = ['all', 'active', 'deactive', 'required'];
 
   var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
-      setAllAddons = _useAddonsUpdate.setAllAddons;
-
-  var filterBtns = ['all', 'active', 'deactive'];
-
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('all'),
-      _useState2 = _slicedToArray(_useState, 2),
-      activeTab = _useState2[0],
-      setActiveTab = _useState2[1];
-
-  var handleFilterBtnClick = function handleFilterBtnClick(value) {
-    switch (value) {
-      case 'active':
-        var active = allAddons.filter(function (item) {
-          return item.is_enabled;
-        }); // setAllAddons(active);
-
-        setActiveTab(value);
-        console.log(value, active);
-        break;
-
-      case 'deactive':
-        var deactive = allAddons.filter(function (item) {
-          return item.is_enabled !== true;
-        }); // setAllAddons(deactive);
-
-        console.log(value, deactive);
-        setActiveTab(value);
-        break;
-
-      case 'all':
-        var all = allAddons; // setAllAddons(all);
-
-        console.log(value, all);
-        setActiveTab(value);
-        break;
-    }
-  };
+      activeTab = _useAddonsUpdate.activeTab,
+      getAddonsData = _useAddonsUpdate.getAddonsData;
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", {
     className: "tutor-addons-list-header d-flex justify-content-between align-items-center tutor-px-30 tutor-py-20"
@@ -367,10 +395,9 @@ var Header = function Header() {
       type: "button",
       className: "filter-btn ".concat(btn === activeTab ? 'is-active' : ''),
       "data-tab-filter-target": btn,
-      key: index // onClick={() => handleFilterBtnClick(btn)}
-      ,
+      key: index,
       onClick: function onClick() {
-        return handleFilterBtnClick(btn);
+        return getAddonsData(btn);
       }
     }, btn, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
       className: "item-count"
@@ -439,10 +466,25 @@ var useAddonsUpdate = function useAddonsUpdate() {
  */
 
 var AddonsContextProvider = function AddonsContextProvider(props) {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([_tutorobject.addons_data]),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
       _useState2 = _slicedToArray(_useState, 2),
       allAddons = _useState2[0],
-      setAllAddons = _useState2[1]; // Render the component with initial data at on mount.
+      setAllAddons = _useState2[1];
+
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('all'),
+      _useState4 = _slicedToArray(_useState3, 2),
+      activeTab = _useState4[0],
+      setActiveTab = _useState4[1];
+
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
+      _useState6 = _slicedToArray(_useState5, 2),
+      isChecked = _useState6[0],
+      setIsChecked = _useState6[1];
+
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(isChecked),
+      _useState8 = _slicedToArray(_useState7, 2),
+      isDataAddonActive = _useState8[0],
+      setIsDataAddonActive = _useState8[1]; // Render the component with initial data at on mount.
 
 
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
@@ -455,26 +497,27 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
               case 0:
                 formData = new FormData();
                 formData.set('action', 'tutor_get_all_addons');
+                formData.set('btn', activeTab);
                 formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                _context.prev = 3;
-                _context.next = 6;
+                _context.prev = 4;
+                _context.next = 7;
                 return fetch(_tutorobject.ajaxurl, {
                   method: 'POST',
                   body: formData
                 });
 
-              case 6:
+              case 7:
                 addons = _context.sent;
 
                 if (!addons.ok) {
-                  _context.next = 13;
+                  _context.next = 14;
                   break;
                 }
 
-                _context.next = 10;
+                _context.next = 11;
                 return addons.json();
 
-              case 10:
+              case 11:
                 response = _context.sent;
                 data = response.data.addons;
 
@@ -482,21 +525,21 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
                   setAllAddons(data);
                 }
 
-              case 13:
-                _context.next = 18;
+              case 14:
+                _context.next = 19;
                 break;
 
-              case 15:
-                _context.prev = 15;
-                _context.t0 = _context["catch"](3);
+              case 16:
+                _context.prev = 16;
+                _context.t0 = _context["catch"](4);
                 console.log(_context.t0);
 
-              case 18:
+              case 19:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[3, 15]]);
+        }, _callee, null, [[4, 16]]);
       }));
 
       return function fetchAddons() {
@@ -505,11 +548,94 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
     }();
 
     fetchAddons();
-  }, []);
+  }, [activeTab]);
+
+  var handleOnChange = function handleOnChange(event, addonName) {
+    var value = event.target.checked;
+    setIsChecked(!value);
+
+    var toggleAddonStatus = /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+        var formData, addons, response, data;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                formData = new FormData();
+                formData.set('action', 'addon_enable_disable');
+                formData.set('isEnable', isChecked);
+                formData.set('addonFieldName', addonName);
+                formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+                _context2.prev = 5;
+                _context2.next = 8;
+                return fetch(_tutorobject.ajaxurl, {
+                  method: 'POST',
+                  body: formData
+                });
+
+              case 8:
+                addons = _context2.sent;
+
+                if (!addons.ok) {
+                  _context2.next = 15;
+                  break;
+                }
+
+                _context2.next = 12;
+                return addons.json();
+
+              case 12:
+                response = _context2.sent;
+                data = response.data.addons;
+
+                if (data && data.length) {
+                  setAllAddons(data);
+                }
+
+              case 15:
+                _context2.next = 20;
+                break;
+
+              case 17:
+                _context2.prev = 17;
+                _context2.t0 = _context2["catch"](5);
+                console.log(_context2.t0);
+
+              case 20:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[5, 17]]);
+      }));
+
+      return function toggleAddonStatus() {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+
+    toggleAddonStatus();
+  };
+
+  var getAddonsData = function getAddonsData(btn) {
+    if ('active' === btn) {
+      setActiveTab('active');
+    } else if ('deactive' === btn) {
+      setActiveTab('deactive');
+    } else if ('all' === btn) {
+      setActiveTab('all');
+    } else if ('required' === btn) {
+      setActiveTab('required');
+    }
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsContext.Provider, {
     value: allAddons
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsUpdateContext.Provider, {
     value: {
+      activeTab: activeTab,
+      getAddonsData: getAddonsData,
+      setActiveTab: setActiveTab,
       setAllAddons: setAllAddons
     }
   }, props.children));
@@ -1593,18 +1719,6 @@ window.jQuery(document).ready(function ($) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _v2_library_src_js_main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../v2-library/_src/js/main */ "./v2-library/_src/js/main.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -2263,203 +2377,6 @@ jQuery(document).ready(function ($) {
         $that.removeClass('tutor-updating-message');
       }
     });
-  });
-  /**
-   * Since 1.7.9
-   * Announcements scripts
-   */
-
-  var add_new_button = $(".tutor-announcement-add-new");
-  var update_button = $(".tutor-announcement-edit");
-  var delete_button = $(".tutor-announcement-delete");
-  var details_button = $(".tutor-announcement-details");
-  var close_button = $(".tutor-announcement-close-btn");
-  var create_modal = $(".tutor-accouncement-create-modal");
-  var update_modal = $(".tutor-accouncement-update-modal");
-  var details_modal = $(".tutor-accouncement-details-modal"); //open create modal
-
-  $(add_new_button).click(function () {
-    create_modal.addClass("show");
-    $("#tutor-annoucement-backend-create-modal").addClass('show');
-  });
-  $(details_button).click(function () {
-    var announcement_date = $(this).attr('announcement-date');
-    var announcement_id = $(this).attr('announcement-id');
-    var course_id = $(this).attr('course-id');
-    var course_name = $(this).attr('course-name');
-    var announcement_title = $(this).attr('announcement-title');
-    var announcement_summary = $(this).attr('announcement-summary');
-    $(".tutor-announcement-detail-content").html("<h3>".concat(announcement_title, "</h3><p>").concat(announcement_summary, "</p>"));
-    $(".tutor-announcement-detail-course-info p").html("".concat(course_name));
-    $(".tutor-announcement-detail-date-info p").html("".concat(announcement_date)); //set attr on edit button
-
-    $("#tutor-announcement-edit-from-detail").attr('announcement-id', announcement_id);
-    $("#tutor-announcement-edit-from-detail").attr('course-id', course_id);
-    $("#tutor-announcement-edit-from-detail").attr('announcement-title', announcement_title);
-    $("#tutor-announcement-edit-from-detail").attr('announcement-summary', announcement_summary);
-    $("#tutor-announcement-delete-from-detail").attr('announcement-id', announcement_id);
-    details_modal.addClass("show");
-  }); //open update modal
-
-  $(update_button).click(function () {
-    if (details_modal) {
-      details_modal.removeClass('show');
-    }
-
-    var announcement_id = $(this).attr('announcement-id');
-    var course_id = $(this).attr('course-id');
-    var announcement_title = $(this).attr('announcement-title');
-    var announcement_summary = $(this).attr('announcement-summary');
-    $("#tutor-announcement-course-id").val(course_id);
-    $("#announcement_id").val(announcement_id);
-    $("#tutor-announcement-title").val(announcement_title);
-    $("#tutor-announcement-summary").val(announcement_summary);
-    update_modal.addClass("show");
-  }); //close create and update modal
-
-  $(close_button).click(function () {
-    create_modal.removeClass("show");
-    update_modal.removeClass("show");
-    details_modal.removeClass("show");
-    $("#tutor-annoucement-backend-create-modal").removeClass('show');
-  }); //create announcement
-
-  $(".tutor-announcements-form").on('submit', function (e) {
-    e.preventDefault();
-    var $btn = $(this).find('button[type="submit"]');
-    var formData = $(".tutor-announcements-form").serialize() + '&action=tutor_announcement_create' + '&action_type=create';
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: formData,
-      beforeSend: function beforeSend() {
-        $btn.addClass('tutor-updating-message');
-      },
-      success: function success(data) {
-        $(".tutor-alert").remove();
-
-        if (data.status == "success") {
-          location.reload();
-        }
-
-        if (data.status == "validation_error") {
-          $(".tutor-announcements-create-alert").append("<div class=\"tutor-alert alert-warning\"></div>");
-
-          for (var _i = 0, _Object$entries = Object.entries(data.message); _i < _Object$entries.length; _i++) {
-            var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
-                key = _Object$entries$_i[0],
-                value = _Object$entries$_i[1];
-
-            $(".tutor-announcements-create-alert .tutor-alert").append("<li>".concat(value, "</li>"));
-          }
-        }
-
-        if (data.status == "fail") {
-          $(".tutor-announcements-create-alert").html("<li>".concat(data.message, "</li>"));
-        }
-      },
-      error: function error(data) {
-        console.log(data);
-      }
-    });
-  }); //update announcement
-
-  $(".tutor-announcements-update-form").on('submit', function (e) {
-    e.preventDefault();
-    var $btn = $(this).find('button[type="submit"]');
-    var formData = $(".tutor-announcements-update-form").serialize() + '&action=tutor_announcement_create' + '&action_type=update';
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: formData,
-      beforeSend: function beforeSend() {
-        $btn.addClass('tutor-updating-message');
-      },
-      success: function success(data) {
-        $(".tutor-alert").remove();
-
-        if (data.status == "success") {
-          location.reload();
-        }
-
-        if (data.status == "validation_error") {
-          $(".tutor-announcements-update-alert").append("<div class=\"tutor-alert alert-warning\"></div>");
-
-          for (var _i2 = 0, _Object$entries2 = Object.entries(data.message); _i2 < _Object$entries2.length; _i2++) {
-            var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i2], 2),
-                key = _Object$entries2$_i[0],
-                value = _Object$entries2$_i[1];
-
-            $(".tutor-announcements-update-alert > .tutor-alert").append("<li>".concat(value, "</li>"));
-          }
-        }
-
-        if (data.status == "fail") {
-          $(".tutor-announcements-create-alert").html("<li>".concat(data.message, "</li>"));
-        }
-      },
-      error: function error() {}
-    });
-  });
-  $(delete_button).click(function () {
-    var announcement_id = $(this).attr('announcement-id');
-    var whichtr = $("#tutor-announcement-tr-" + announcement_id);
-
-    if (confirm("Do you want to delete?")) {
-      $.ajax({
-        url: window._tutorobject.ajaxurl,
-        type: 'POST',
-        data: {
-          action: 'tutor_announcement_delete',
-          announcement_id: announcement_id
-        },
-        beforeSend: function beforeSend() {},
-        success: function success(data) {
-          whichtr.remove();
-
-          if (details_modal.length) {
-            details_modal.removeClass('show');
-          }
-
-          if (data.status == "fail") {
-            console.log(data.message);
-          }
-        },
-        error: function error() {}
-      });
-    }
-  }); //sorting 
-  // if (jQuery.datepicker){
-  //     $( "#tutor-announcement-datepicker" ).datepicker({"dateFormat" : 'yy-mm-dd'});
-  // }
-
-  function urlPrams(type, val) {
-    var url = new URL(window.location.href);
-    var search_params = url.searchParams;
-    search_params.set(type, val);
-    url.search = search_params.toString();
-
-    if (_tutorobject.is_admin) {
-      search_params.set('paged', 1);
-    } else {
-      search_params.set('current_page', 1);
-    }
-
-    url.search = search_params.toString();
-    return url.toString();
-  }
-
-  $('.tutor-announcement-course-sorting').on('change', function (e) {
-    window.location = urlPrams('course-id', $(this).val());
-  });
-  $('.tutor-announcement-order-sorting').on('change', function (e) {
-    window.location = urlPrams('order', $(this).val());
-  });
-  $('.tutor-announcement-date-sorting').on('change', function (e) {
-    window.location = urlPrams('date', $(this).val());
-  });
-  $('.tutor-announcement-search-sorting').on('click', function (e) {
-    window.location = urlPrams('search', $(".tutor-announcement-search-field").val());
   }); //dropdown toggle
 
   $(document).click(function () {
@@ -2473,8 +2390,7 @@ jQuery(document).ready(function ($) {
     }
 
     $(this).addClass('show');
-  }); //announcement end
-
+  });
   /**
    * @since v.1.8.6
    * SUbmit form through ajax
@@ -2594,6 +2510,109 @@ window.jQuery(document).ready(function ($) {
 
 /***/ }),
 
+/***/ "./assets/react/modules/announcement.js":
+/*!**********************************************!*\
+  !*** ./assets/react/modules/announcement.js ***!
+  \**********************************************/
+/***/ (() => {
+
+function urlPrams(type, val) {
+  var url = new URL(window.location.href);
+  var search_params = url.searchParams;
+  search_params.set(type, val);
+  url.search = search_params.toString();
+
+  if (_tutorobject.is_admin) {
+    search_params.set('paged', 1);
+  } else {
+    search_params.set('current_page', 1);
+  }
+
+  url.search = search_params.toString();
+  return url.toString();
+}
+
+window.jQuery(document).ready(function ($) {
+  var __ = window.wp.i18n.__; //create announcement
+
+  $(".tutor-announcements-form").on('submit', function (e) {
+    e.preventDefault();
+    var $btn = $(this).find('button[type="submit"]');
+    var formData = $btn.closest(".tutor-announcements-form").serialize();
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: formData,
+      beforeSend: function beforeSend() {
+        $btn.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (!data.success) {
+          var _ref = data.data || {},
+              _ref$message = _ref.message,
+              message = _ref$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref$message;
+
+          tutor_toast(__('Error!', 'tutor'), message, 'error');
+          return;
+        }
+
+        location.reload();
+      },
+      complete: function complete() {
+        $btn.removeClass('tutor-updating-message');
+      },
+      error: function error(data) {
+        tutor_toast(__('Something Went Wrong!', 'tutor'));
+      }
+    });
+  }); // Delete announcement
+
+  $('.tutor-announcement-delete').click(function () {
+    var announcement_id = $(this).data('announcement-id');
+    var whichtr = $("#" + $(this).data('target-announcement-row-id'));
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        action: 'tutor_announcement_delete',
+        announcement_id: announcement_id
+      },
+      beforeSend: function beforeSend() {},
+      success: function success(data) {
+        var _ref2 = data.data || {},
+            _ref2$message = _ref2.message,
+            message = _ref2$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref2$message;
+
+        if (data.success) {
+          whichtr.remove();
+          tutor_toast('Success!', message, 'success');
+          return;
+        } else {
+          tutor_toast('Error!', message, 'error');
+        }
+      },
+      error: function error() {
+        tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
+      }
+    });
+  }); // Announcement filter
+
+  $('.tutor-announcement-course-sorting').on('change', function (e) {
+    window.location = urlPrams('course-id', $(this).val());
+  });
+  $('.tutor-announcement-order-sorting').on('change', function (e) {
+    window.location = urlPrams('order', $(this).val());
+  });
+  $('.tutor-announcement-date-sorting').on('change', function (e) {
+    window.location = urlPrams('date', $(this).val());
+  });
+  $('.tutor-announcement-search-sorting').on('click', function (e) {
+    window.location = urlPrams('search', $(".tutor-announcement-search-field").val());
+  });
+});
+
+/***/ }),
+
 /***/ "./v2-library/_src/js/main.js":
 /*!************************************!*\
   !*** ./v2-library/_src/js/main.js ***!
@@ -2680,6 +2699,7 @@ function tutorModal() {
       e.preventDefault();
       var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
       var modal = document.getElementById(id);
+      console.log(modal);
 
       if (modal) {
         modal.classList.add('tutor-is-active');
@@ -31606,6 +31626,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
 /* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_5__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 
@@ -31613,6 +31635,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
  // import "./segments/addonlist-data";
 //import "./segments/addonlist";
+
 
 
 jQuery(document).ready(function ($) {
@@ -31758,25 +31781,26 @@ jQuery(document).ready(function ($) {
     $that.closest(".option-media-wrap").find("img").remove();
     $that.closest(".option-media-wrap").find("input").val("");
     $that.closest(".option-media-wrap").find(".tutor-media-option-trash-btn").hide();
-  });
-  $(document).on("change", ".tutor_addons_list_item", function (e) {
-    var $that = $(this);
-    var isEnable = $that.prop("checked") ? 1 : 0;
-    var addonFieldName = $that.attr("name");
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      data: {
-        isEnable: isEnable,
-        addonFieldName: addonFieldName,
-        action: "addon_enable_disable"
-      },
-      success: function success(data) {
-        if (data.success) {//Success
-        }
-      }
-    });
-  });
+  }); // $(document).on("change", ".tutor-form-toggle-input", function(e) {
+  //   var $that = $(this);
+  //   var isEnable = $that.prop("checked") ? 1 : 0;
+  //   var addonFieldName = $that.attr("name");
+  //   $.ajax({
+  //     url: window._tutorobject.ajaxurl,
+  //     type: "POST",
+  //     data: {
+  //       isEnable: isEnable,
+  //       addonFieldName: addonFieldName,
+  //       action: "addon_enable_disable",
+  //     },
+  //     success: function(data) {
+  //       if (data.success) {
+  //         //Success
+  //       }
+  //     },
+  //   });
+  // });
+
   /**
    * Add instructor
    * @since v.1.0.3

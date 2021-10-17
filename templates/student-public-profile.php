@@ -79,7 +79,7 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 <?php do_action( 'tutor_student/before/wrap' ); ?>
 
 	<div <?php tutor_post_class( 'tutor-full-width-student-profile tutor-page-wrap tutor-user-public-profile tutor-user-public-profile-' . $profile_layout ); ?>>
-		<div class="tutor-container photo-area">
+		<div class="tutor-bs-container photo-area">
 			<div class="cover-area">
 				<div style="background-image:url(<?php echo tutor_utils()->get_cover_photo_url( $user_id ); ?>)"></div>
 				<div></div>
@@ -151,7 +151,7 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 		</div>
 
 		
-		<div class="tutor-container" style="overflow:auto">
+		<div class="tutor-bs-container" style="overflow:auto">
 			<div class="tutor-user-profile-sidebar">
 				<?php // tutor_load_template('profile.badge', ['profile_badges'=>(new )]); ?>
 			</div>

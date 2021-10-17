@@ -32,8 +32,8 @@ if ( ! is_array($reviews) || ! count($reviews)){
     <div class="tutor-course-reviews-wrap">
         <div class="tutor-course-student-rating-wrap">
             <div class="course-avg-rating-wrap">
-                <div class="tutor-row tutor-align-items-center">
-                    <div class="tutor-col-auto">
+                <div class="tutor-bs-row tutor-bs-align-items-center">
+                    <div class="tutor-bs-col-auto">
                         <p class="course-avg-rating">
 							<?php
 							$rating = tutor_utils()->get_course_rating();
@@ -46,7 +46,7 @@ if ( ! is_array($reviews) || ! count($reviews)){
                         <p class="tutor-course-avg-rating-total">Total <span><?php echo $rating->rating_count;?></span> Ratings</p>
 
                     </div>
-                    <div class="tutor-col">
+                    <div class="tutor-bs-col">
                         <div class="course-ratings-count-meter-wrap">
 							<?php
 							foreach ($rating->count_by_value as $key => $value){

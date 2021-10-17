@@ -58,8 +58,8 @@
                 </div>
 
                 <div class="tutor-modal-footer">
-                    <div class="tutor-row">
-                        <div class="col">
+                    <div class="tutor-bs-row">
+                        <div class="tutor-bs-col">
                             <div class="tutor-btn-group">
                                 <button type="button" data-action="back" class="tutor-btn tutor-is-default">
                                     <?php _e('Back', 'tutor'); ?>
@@ -69,12 +69,12 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="tutor-col-auto">
+                        <div class="tutor-bs-col-auto">
                             <button data-tutor-modal-close class="tutor-btn tutor-is-default">
                                 <?php _e('Cancel', 'tutor'); ?>
                             </button>
                         </div>
-                        <div class="col">
+                        <div class="tutor-bs-col">
                             <buttn class="tutor-btn tutor-is-xs quiz-modal-question-save-btn">
                                 <?php _e('Add To Questions', 'tutor'); ?>
                             </a>
@@ -99,13 +99,13 @@
                 </div>
                 <div class="tutor-modal-body-alt modal-container"></div>
                 <div class="tutor-modal-footer">
-                    <div class="tutor-row">
-                        <div class="col">
+                    <div class="tutor-bs-row">
+                        <div class="tutor-bs-col">
                             <button type="button" class="tutor-btn update_lesson_modal_btn">
                                 <?php _e('Update Lesson', 'tutor'); ?>
                             </button>
                         </div>
-                        <div class="tutor-col-auto">
+                        <div class="tutor-bs-col-auto">
                             <button data-tutor-modal-close class="tutor-btn tutor-is-default">
                                 <?php _e('Cancel', 'tutor'); ?>
                             </button>
@@ -132,13 +132,13 @@
 
                 </div>
                 <div class="tutor-modal-footer">
-                    <div class="tutor-row">
-                        <div class="col">
+                    <div class="tutor-bs-row">
+                        <div class="tutor-bs-col">
                             <button type="button" class="tutor-btn update_assignment_modal_btn">
                                 <?php _e('Update Assignment', 'tutor'); ?>
                             </button>
                         </div>
-                        <div class="tutor-col-auto">
+                        <div class="tutor-bs-col-auto">
                             <button data-tutor-modal-close class="tutor-btn tutor-is-default">
                                 <?php _e('Cancel', 'tutor'); ?>
                             </button>

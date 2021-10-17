@@ -17,9 +17,9 @@ do_action('tutor_course/single/instructor/before/wrap');
 ?>
 
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
-    <div class="tutor-container">
-        <div class="tutor-row">
-            <div class="tutor-col-8 tutor-col-md-100">
+    <div class="tutor-bs-container">
+        <div class="tutor-bs-row">
+            <div class="tutor-bs-col-8 tutor-bs-col-md-100">
                 <?php do_action('tutor_course/single/instructor/before/inner-wrap'); ?>
                 <?php tutor_course_lead_info(); ?>
                 <?php tutor_course_content(); ?>
@@ -30,7 +30,7 @@ do_action('tutor_course/single/instructor/before/wrap');
                 <?php tutor_course_target_reviews_html(); ?>
 		        <?php do_action('tutor_course/single/instructor/after/inner-wrap'); ?>
             </div>
-            <div class="tutor-col-4">
+            <div class="tutor-bs-col-4">
                 <div class="tutor-single-course-sidebar">
                     <?php do_action('tutor_course/single/instructor/before/sidebar'); ?>
                     <?php tutor_course_enroll_box(); ?>

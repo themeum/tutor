@@ -9,7 +9,7 @@ global $post; ?>
 
 <h3><?php _e('Wishlist', 'tutor'); ?></h3>
 <div class="tutor-dashboard-content-inner">
-    <div class="tutor-row">
+    <div class="tutor-bs-row">
 
 	<?php
 	$wishlists = tutor_utils()->get_wishlist();
@@ -40,7 +40,7 @@ global $post; ?>
 
 	else:
         $msg = __('You do not have any course on the wishlist yet.', 'tutor');
-        echo "<div class=\"tutor-col\">{$msg}</div>";
+        echo "<div class=\"tutor-bs-col\">{$msg}</div>";
 	endif;
 
 	?>
