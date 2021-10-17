@@ -47,3 +47,7 @@ code {
 	color: #d63384;
 	word-wrap: break-word;
 }
+
+[data-testid='main-container'] {
+	max-width: 1700px !important;
+}
