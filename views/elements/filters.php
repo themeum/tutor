@@ -12,7 +12,7 @@
 								</option>
 							<?php endforeach; ?>
 						</select>
-						<button type="submit" class="tutor-btn">
+						<button type="button" id="tutor-admin-bulk-action-btn" class="tutor-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
 							<?php esc_html_e( 'Apply', 'tutor' ); ?>
 						</button>
 					</div>
@@ -80,3 +80,6 @@
 		<?php endif; ?>
 	</div>
 <?php endif; ?>
+<?php 
+	tutor_load_template_from_custom_path( esc_url( tutor()->path . 'views/elements/bulk-confirm-popup.php' ) );
+?>

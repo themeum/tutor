@@ -1062,6 +1062,13 @@ window.onload = function () {
     e.preventDefault();
     var search = document.getElementById("tutor-backend-filter-search").value;
     window.location = urlPrams("search", search);
+  }; //onclick bulk action button show confirm popup
+
+
+  var bulkActionButton = document.getElementById('tutor-confirm-bulk-action');
+
+  bulkActionButton.onclick = function () {
+    document.getElementById("tutor-admin-bulk-action-form").submit();
   };
   /**
    * Onsubmit bulk form handle ajax request then reload page

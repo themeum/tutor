@@ -25,6 +25,12 @@ window.onload = () => {
     window.location = urlPrams("search", search);
   };
 
+  //onclick bulk action button show confirm popup
+  const bulkActionButton = document.getElementById('tutor-confirm-bulk-action');
+  bulkActionButton.onclick = () => {
+    document.getElementById("tutor-admin-bulk-action-form").submit();
+  };
+
   /**
    * Onsubmit bulk form handle ajax request then reload page
    */
