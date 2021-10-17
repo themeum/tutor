@@ -581,7 +581,7 @@ msgstr ""
 msgid "Instructor Commission"
 msgstr ""
 
-#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, views/fragments/announcement-list.php:160, views/fragments/announcement-list.php:185, views/pages/announcements.php:94, templates/dashboard/assignments/submitted.php:71, templates/dashboard/my-quiz-attempts/attempts-details.php:114
+#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, views/elements/filters.php:67, views/fragments/announcement-list.php:160, views/fragments/announcement-list.php:185, views/pages/announcements.php:94, templates/dashboard/assignments/submitted.php:71, templates/dashboard/my-quiz-attempts/attempts-details.php:114
 msgid "Date"
 msgstr ""
 
@@ -605,7 +605,7 @@ msgstr ""
 msgid "Couldn't create lesson."
 msgstr ""
 
-#: classes/Lesson.php:271, classes/Options.php:217, classes/Options_V2.php:382, classes/Options_V2.php:722, classes/Options_V2.php:1036, classes/Question_Answers_List.php:75, classes/Quiz_Attempts_List.php:115, classes/Tutor_Setup.php:562, templates/student-public-profile.php:106, templates/dashboard/question-answer.php:28, templates/shortcode/tutor-instructor.php:41, templates/shortcode/tutor-instructor.php:28, views/pages/view_attempt.php:73, templates/dashboard/announcements/details.php:19, templates/dashboard/assignments/review.php:44, templates/dashboard/assignments/submitted.php:30, templates/single/quiz/top.php:27
+#: classes/Lesson.php:271, classes/Options.php:217, classes/Options_V2.php:382, classes/Options_V2.php:722, classes/Options_V2.php:1036, classes/Question_Answers_List.php:75, classes/Quiz_Attempts_List.php:115, classes/Tutor_Setup.php:562, templates/student-public-profile.php:106, templates/dashboard/question-answer.php:28, templates/shortcode/tutor-instructor.php:41, templates/shortcode/tutor-instructor.php:28, views/elements/filters.php:35, views/elements/search-filter.php:28, views/pages/view_attempt.php:73, templates/dashboard/announcements/details.php:19, templates/dashboard/assignments/review.php:44, templates/dashboard/assignments/submitted.php:30, templates/single/quiz/top.php:27
 msgid "Course"
 msgstr ""
 
@@ -2032,7 +2032,7 @@ msgstr ""
 msgid "Question"
 msgstr ""
 
-#: classes/Question_Answers_List.php:74, templates/student-public-profile.php:111, templates/dashboard/question-answer.php:27, templates/dashboard/quiz-attempts.php:32, templates/dashboard/assignments/review.php:50, templates/dashboard/assignments/submitted.php:72
+#: classes/Question_Answers_List.php:74, templates/student-public-profile.php:111, templates/dashboard/question-answer.php:27, templates/dashboard/quiz-attempts.php:32, views/elements/search-filter.php:31, templates/dashboard/assignments/review.php:50, templates/dashboard/assignments/submitted.php:72
 msgid "Student"
 msgstr ""
 
@@ -2324,7 +2324,7 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:384, classes/Tutor_List_Table.php:1277, templates/dashboard/announcements.php:108, templates/dashboard/assignments.php:52, views/pages/announcements.php:84
+#: classes/Tutor_List_Table.php:384, classes/Tutor_List_Table.php:1277, templates/dashboard/announcements.php:108, templates/dashboard/assignments.php:52, views/elements/filters.php:54, views/pages/announcements.php:84
 msgid "Sort By"
 msgstr ""
 
@@ -2332,11 +2332,11 @@ msgstr ""
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:102, templates/dashboard/assignments.php:47, views/fragments/announcement-list.php:43, views/pages/announcements.php:77
+#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:102, templates/dashboard/assignments.php:47, views/elements/filters.php:48, views/fragments/announcement-list.php:43, views/pages/announcements.php:77
 msgid "No course found"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1295, classes/Tutor_List_Table.php:1297, views/options/settings.php:22, views/options/tools.php:17, views/pages/announcements.php:51, views/pages/question_answer.php:23, views/pages/students.php:13, views/pages/withdraw_requests.php:13
+#: classes/Tutor_List_Table.php:1295, classes/Tutor_List_Table.php:1297, views/elements/filters.php:74, views/options/settings.php:22, views/options/tools.php:17, views/pages/announcements.php:51, views/pages/question_answer.php:23, views/pages/students.php:13, views/pages/withdraw_requests.php:13
 msgid "Search"
 msgstr ""
 
@@ -3254,11 +3254,11 @@ msgstr ""
 msgid "Add New Announcement"
 msgstr ""
 
-#: templates/dashboard/announcements.php:110, templates/dashboard/assignments.php:54
+#: templates/dashboard/announcements.php:110, templates/dashboard/assignments.php:54, views/elements/filters.php:61
 msgid "ASC"
 msgstr ""
 
-#: templates/dashboard/announcements.php:111, templates/dashboard/assignments.php:55
+#: templates/dashboard/announcements.php:111, templates/dashboard/assignments.php:55, views/elements/filters.php:58
 msgid "DESC"
 msgstr ""
 
@@ -3438,7 +3438,7 @@ msgstr ""
 msgid "Rating"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:16, templates/dashboard/enrolled-courses/active-courses.php:15, templates/dashboard/enrolled-courses/completed-courses.php:15
+#: templates/dashboard/enrolled-courses.php:16, views/elements/filters.php:40, templates/dashboard/enrolled-courses/active-courses.php:15, templates/dashboard/enrolled-courses/completed-courses.php:15
 msgid "All Courses"
 msgstr ""
 
@@ -3880,6 +3880,18 @@ msgstr ""
 
 #: templates/template-part/retrieve-password.php:28
 msgid "Username or email"
+msgstr ""
+
+#: views/elements/bulk-confirm-popup.php:15
+msgid "Are you sure?"
+msgstr ""
+
+#: views/elements/bulk-confirm-popup.php:29
+msgid "Yes, I'am Sure"
+msgstr ""
+
+#: views/elements/filters.php:16, views/elements/search-filter.php:16, views/elements/search-filter.php:36
+msgid "Apply"
 msgstr ""
 
 #: views/fragments/announcement-list.php:49
@@ -5540,6 +5552,10 @@ msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Stay here"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Please select an action"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
