@@ -6419,7 +6419,7 @@ class Utils {
 	 * Get total Enrolments
 	 * @since v.1.4.0
 	 */
-	public function get_total_enrolments( $search_term = '', $course_id = '', $date = '', $status) {
+	public function get_total_enrolments( $status, $search_term = '', $course_id = '', $date = '' ) {
 		global $wpdb;
 		$status      = sanitize_text_field( $status );
 		$course_id   = sanitize_text_field( $course_id );
@@ -6474,7 +6474,7 @@ class Utils {
 		return (int) $count;
 	}
 
-	public function get_enrolments( $start = 0, $limit = 10, $search_term = '', $course_id = '', $date = '',  $order = 'DESC', $status ) {
+	public function get_enrolments($status, $start = 0, $limit = 10, $search_term = '', $course_id = '', $date = '',  $order = 'DESC' ) {
 		global $wpdb;
 		$status      = sanitize_text_field( $status );
 		$course_id   = sanitize_text_field( $course_id );
