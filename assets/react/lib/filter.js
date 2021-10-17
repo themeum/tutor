@@ -7,6 +7,8 @@
  * @package Filter / sorting
  * @since v2.0.0
  */
+const { __, _x, _n, _nx } = wp.i18n;
+
 window.onload = () => {
   document.getElementById("tutor-backend-filter-course").onchange = (e) => {
     window.location = urlPrams("course-id", e.target.value);
@@ -42,29 +44,30 @@ window.onload = () => {
       window.tutor_get_nonce_data(true).key,
       window.tutor_get_nonce_data(true).value
     );
+    if (formData.get('bulk-action') === 'bulk action') {
+      alert(__('Please select an action', 'tutor'));
+      return;
+    }
     try {
       const post = await fetch(window._tutorobject.ajaxurl, {
         method: "POST",
         body: formData,
       });
       const response = await post.json();
-      console.log(response);
+      if (response.success) {
+        location.reload();
+      }
     } catch (error) {
       alert(error);
     }
   };
 
   function urlPrams(type, val) {
-    var url = new URL(window.location.href);
-    var search_params = url.searchParams;
-    search_params.set(type, val);
-
-    url.search = search_params.toString();
-
-    search_params.set("paged", 1);
-    url.search = search_params.toString();
-
-    return url.toString();
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+    params.set(type, val);
+    params.set('paged', 1);
+    return url;
   }
 
   /**

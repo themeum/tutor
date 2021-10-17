@@ -1039,6 +1039,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  * @package Filter / sorting
  * @since v2.0.0
  */
+var _wp$i18n = wp.i18n,
+    __ = _wp$i18n.__,
+    _x = _wp$i18n._x,
+    _n = _wp$i18n._n,
+    _nx = _wp$i18n._nx;
+
 window.onload = function () {
   document.getElementById("tutor-backend-filter-course").onchange = function (e) {
     window.location = urlPrams("course-id", e.target.value);
@@ -1094,50 +1100,62 @@ window.onload = function () {
 
               formData.set("bulk-ids", bulkIds);
               formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-              _context.prev = 8;
-              _context.next = 11;
+
+              if (!(formData.get('bulk-action') === 'bulk action')) {
+                _context.next = 11;
+                break;
+              }
+
+              alert(__('Please select an action', 'tutor'));
+              return _context.abrupt("return");
+
+            case 11:
+              _context.prev = 11;
+              _context.next = 14;
               return fetch(window._tutorobject.ajaxurl, {
                 method: "POST",
                 body: formData
               });
 
-            case 11:
+            case 14:
               post = _context.sent;
-              _context.next = 14;
+              _context.next = 17;
               return post.json();
 
-            case 14:
+            case 17:
               response = _context.sent;
-              console.log(response);
-              _context.next = 21;
+
+              if (response.success) {
+                location.reload();
+              }
+
+              _context.next = 24;
               break;
 
-            case 18:
-              _context.prev = 18;
-              _context.t0 = _context["catch"](8);
+            case 21:
+              _context.prev = 21;
+              _context.t0 = _context["catch"](11);
               alert(_context.t0);
 
-            case 21:
+            case 24:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[8, 18]]);
+      }, _callee, null, [[11, 21]]);
     }));
 
-    return function (_x) {
+    return function (_x2) {
       return _ref.apply(this, arguments);
     };
   }();
 
   function urlPrams(type, val) {
     var url = new URL(window.location.href);
-    var search_params = url.searchParams;
-    search_params.set(type, val);
-    url.search = search_params.toString();
-    search_params.set("paged", 1);
-    url.search = search_params.toString();
-    return url.toString();
+    var params = url.searchParams;
+    params.set(type, val);
+    params.set('paged', 1);
+    return url;
   }
   /**
    * Select all bulk checkboxes
