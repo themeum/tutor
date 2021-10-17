@@ -30,7 +30,18 @@ window.onload = () => {
   bulkForm.onsubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(bulkForm);
-    formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+    const bulkIds = [];
+    const bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
+    for (let field of bulkFields) {
+      if (field.checked) {
+        bulkIds.push(field.value);
+      }
+    }
+    formData.set("bulk-ids", bulkIds);
+    formData.set(
+      window.tutor_get_nonce_data(true).key,
+      window.tutor_get_nonce_data(true).value
+    );
     try {
       const post = await fetch(window._tutorobject.ajaxurl, {
         method: "POST",
@@ -41,7 +52,6 @@ window.onload = () => {
     } catch (error) {
       alert(error);
     }
-    console.log(formData.get("bulk-action"));
   };
 
   function urlPrams(type, val) {
@@ -56,4 +66,21 @@ window.onload = () => {
 
     return url.toString();
   }
+
+  /**
+   * Select all bulk checkboxes
+   *
+   * @since v2.0.0
+   */
+  const selectAll = document.querySelector("#tutor-bulk-checkbox-all");
+  selectAll.addEventListener("click", () => {
+    const checkboxes = document.querySelectorAll(".tutor-bulk-checkbox");
+    checkboxes.forEach((item) => {
+      if (selectAll.checked) {
+        item.checked = true;
+      } else {
+        item.checked = false;
+      }
+    });
+  });
 };

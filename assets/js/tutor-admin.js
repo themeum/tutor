@@ -1020,6 +1020,12 @@ __webpack_require__.r(__webpack_exports__);
   \************************************/
 /***/ (() => {
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -1060,46 +1066,63 @@ window.onload = function () {
 
   bulkForm.onsubmit = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-      var formData, post, response;
+      var formData, bulkIds, bulkFields, _iterator, _step, field, post, response;
+
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               e.preventDefault();
               formData = new FormData(bulkForm);
+              bulkIds = [];
+              bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
+              _iterator = _createForOfIteratorHelper(bulkFields);
+
+              try {
+                for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                  field = _step.value;
+
+                  if (field.checked) {
+                    bulkIds.push(field.value);
+                  }
+                }
+              } catch (err) {
+                _iterator.e(err);
+              } finally {
+                _iterator.f();
+              }
+
+              formData.set("bulk-ids", bulkIds);
               formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-              _context.prev = 3;
-              _context.next = 6;
+              _context.prev = 8;
+              _context.next = 11;
               return fetch(window._tutorobject.ajaxurl, {
                 method: "POST",
                 body: formData
               });
 
-            case 6:
+            case 11:
               post = _context.sent;
-              _context.next = 9;
+              _context.next = 14;
               return post.json();
 
-            case 9:
+            case 14:
               response = _context.sent;
               console.log(response);
-              _context.next = 16;
+              _context.next = 21;
               break;
 
-            case 13:
-              _context.prev = 13;
-              _context.t0 = _context["catch"](3);
+            case 18:
+              _context.prev = 18;
+              _context.t0 = _context["catch"](8);
               alert(_context.t0);
 
-            case 16:
-              console.log(formData.get("bulk-action"));
-
-            case 17:
+            case 21:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[3, 13]]);
+      }, _callee, null, [[8, 18]]);
     }));
 
     return function (_x) {
@@ -1116,6 +1139,24 @@ window.onload = function () {
     url.search = search_params.toString();
     return url.toString();
   }
+  /**
+   * Select all bulk checkboxes
+   *
+   * @since v2.0.0
+   */
+
+
+  var selectAll = document.querySelector("#tutor-bulk-checkbox-all");
+  selectAll.addEventListener("click", function () {
+    var checkboxes = document.querySelectorAll(".tutor-bulk-checkbox");
+    checkboxes.forEach(function (item) {
+      if (selectAll.checked) {
+        item.checked = true;
+      } else {
+        item.checked = false;
+      }
+    });
+  });
 };
 
 /***/ }),
