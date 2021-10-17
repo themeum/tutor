@@ -11,7 +11,7 @@
 				'base'    => str_replace( $big, '%#%', esc_url( admin_url( $big ) . 'admin.php?paged=%#%' ) ),
 				'format'  => '?paged=%#%',
 				'current' => $paged,
-				'total'   => $data['total_items'] / $per_page,
+				'total'   => ceil( $data['total_items'] / $per_page ),
 			)
 		);
 	?>
