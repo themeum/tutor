@@ -1,6 +1,6 @@
 <?php $field_id = 'field_' . $field['key']; ?>
 
-<div class="tutor-option-field-row tutor-d-block" id="<?php echo $field_id; ?>"
+<div class="tutor-option-field-row tutor-bs-d-block" id="<?php echo $field_id; ?>"
 >
 <?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
 

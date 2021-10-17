@@ -30,7 +30,7 @@
         <label class="tutor-form-label"><?php _e('Feature Image', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
             <div class="tutor-thumbnail-uploader" data-media-heading="<?php _e('Select or Upload Media Of Your Chosen Persuasion', 'tutor'); ?>" data-button-text="<?php _e( 'Use this media', 'tutor' )?>">
-                <div class="thumbnail-wrapper tutor-d-flex tutor-align-items-center tutor-mt-10 tutor-p-15">
+                <div class="thumbnail-wrapper tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-10 tutor-p-15">
                         <div class="thumbnail-preview image-previewer">
                         <span class="preview-loading"></span>
                         <?php 

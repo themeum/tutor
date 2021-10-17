@@ -1,30 +1,54 @@
-import React, { Fragment, useState } from 'react';
+import React, {useState} from 'react';
+import { useAddonsUpdate } from '../context/AddonsContext';
 
-const AddonCard = ({ addon }) => {
-	//let isChecked = addon.is_enabled && true;
-	const author = 'Themeum';
-	const url = 'https://www.themeum.com';
-	const isSubscribed = false;
-
+const AddonCard = ({addon}) => {
 	const [isChecked, setIsChecked] = useState(addon.is_enabled);
 	const [isDataAddonActive, setIsDataAddonActive] = useState(isChecked);
+	const author = 'Themeum';
+	const url = 'https://www.themeum.com';
+	const { setAllAddons } = useAddonsUpdate();
 
-	const handleOnChange = (event) => {
-		const value = event.target.checked;
-		setIsChecked(value);
-		setIsDataAddonActive(!isChecked);
+	// console.log('before Checked', isChecked);
 
-		// console.log('adding data-addon-active');
-	};
+	const handleOnChange = (event, addonName) => {
+		let value = event.target.checked;
+		console.log('before Checked', isChecked, 'check',value);
+		//setIsChecked(value);
+		//setIsDataAddonActive(!isChecked);
 
-	const { depend_plugins: requiredPlugins, plugins_required: plugins, ext_required: extensions } = addon;
+		//console.log(' after set Checked', isChecked, 'check',value);
 
-	// console.log(addon);
-	// console.log(plugins, extensions);
+		const toggleAddonStatus = async () => {
+			const formData = new FormData();
+			formData.set('action', 'addon_enable_disable');
+			formData.set('isEnable', value);
+			formData.set('addonFieldName', addonName);
+			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+
+			try {
+				const addons = await fetch(_tutorobject.ajaxurl, {
+					method: 'POST',
+					body: formData,
+				});
+
+				if (addons.ok) {
+					const response = await addons.json();
+					const data = response.data.addons;
+
+					if (data && data.length) {
+						//setAllAddons(data);
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		toggleAddonStatus();
+	}
 
 	return (
 		<div
-			className={`tutor-addons-card ${requiredPlugins || extensions ? 'not-subscribed' : ''}`}
+			className={`tutor-addons-card ${addon.depend_plugins || addon.ext_required ? 'not-subscribed' : ''}`}
 			data-addon-active={isDataAddonActive}
 		>
 			<div className="card-body tutor-px-30 tutor-py-40">
@@ -46,12 +70,17 @@ const AddonCard = ({ addon }) => {
 			</div>
 			<div className=" card-footer tutor-px-30 tutor-py-25 d-flex justify-content-between align-items-center">
 				<div className="addon-toggle">
-					{extensions ? (
+					{addon.ext_required ? (
 						<>
 							<p className="color-text-hints text-medium-small">Required Extension(s)</p>
-							<p className="color-text-primary text-medium-caption tutor-mt-2">Woocommerce Subscription</p>
+							{
+								addon.ext_required.map( (extension, index) => {
+									return <p className="color-text-primary text-medium-caption tutor-mt-2" key={index} dangerouslySetInnerHTML={{ __html:extension}} />
+								})
+							}
+							
 						</>
-					) : requiredPlugins ? (
+					) : addon.depend_plugins ? (
 						<>
 							<p className="color-text-hints text-medium-small">Required Plugin(s)</p>
 							<p className="color-text-primary text-medium-caption tutor-mt-2">Woocommerce Subscription</p>
@@ -62,8 +91,9 @@ const AddonCard = ({ addon }) => {
 								<input
 									type="checkbox"
 									className="tutor-form-toggle-input"
+									name={addon.basename}
 									checked={isChecked}
-									onChange={handleOnChange}
+									onChange={(event) => {handleOnChange( event, addon.basename )}}
 								/>
 								<span className="tutor-form-toggle-control"></span>
 								<span className="tutor-form-toggle-label color-text-primary tutor-ml-5">Active</span>

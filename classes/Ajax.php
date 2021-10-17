@@ -296,9 +296,42 @@ class Ajax{
 
         // All good, let's proceed.
         $all_addons = tutor_utils()->prepare_addons_data();
-        wp_send_json_success( array(
-            'addons' => $all_addons,
-        ) );
+		$active_addons = array();
+		$deactive_addons = array();
+		$required_addons = array();
+
+		if ( 'all' === $_POST['btn'] ) {
+			wp_send_json_success( array(
+				'addons' => $all_addons,
+			) );
+		} elseif ( 'active' === $_POST['btn'] ) {
+			foreach ( $all_addons as $addon ) {
+				if ( true === $addon['is_enabled'] ) {
+					array_push( $active_addons, $addon );
+				}
+			}
+			wp_send_json_success( array(
+				'addons' => $active_addons,
+			) );
+		} elseif ( 'deactive' === $_POST['btn'] ) {
+			foreach ( $all_addons as $addon ) {
+				if ( false === $addon['is_enabled'] ) {
+					array_push( $deactive_addons, $addon );
+				}
+			}
+			wp_send_json_success( array(
+				'addons' => $deactive_addons,
+			) );
+		} elseif ( 'required' === $_POST['btn'] ) {
+			foreach ( $all_addons as $addon ) {
+				if ( isset( $addon['depend_plugins'] ) || count( $addon['required_plugins'] ) > 0 || count( $addon['ext_required'] ) > 0 ) {
+					array_push( $required_addons, $addon );
+				}
+			}
+			wp_send_json_success( array(
+				'addons' => $required_addons,
+			) );
+		}
     }
 
 	/**
@@ -306,36 +339,46 @@ class Ajax{
 	 */
 	public function addon_enable_disable(){
 
-		if(!current_user_can( 'manage_options' )) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		// echo '<pre>';
+		// print_r( $_POST );
+		// echo '</pre>';
+
+		// die();
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message'=> __( 'Access Denied', 'tutor' ) ) );
 		}
+		$all_addons = tutor_utils()->prepare_addons_data();
+		$addonsConfig = maybe_unserialize( get_option( 'tutor_addons_config' ) );
 
-		$addonsConfig = maybe_unserialize(get_option('tutor_addons_config'));
+		$isEnable = (bool) sanitize_text_field( tutor_utils()->avalue_dot( 'isEnable', $_POST ) );
+		$addonFieldName = sanitize_text_field( tutor_utils()->avalue_dot( 'addonFieldName', $_POST ) );
 
-		$isEnable = (bool) sanitize_text_field(tutor_utils()->avalue_dot('isEnable', $_POST));
-		$addonFieldName = sanitize_text_field(tutor_utils()->avalue_dot('addonFieldName', $_POST));
+		do_action( 'tutor_addon_before_enable_disable' );
+		if ( $isEnable ) {
+			do_action( "tutor_addon_before_enable_{$addonFieldName}" );
+			do_action( 'tutor_addon_before_enable', $addonFieldName );
+			$addonsConfig[ $addonFieldName ]['is_enable'] = 1;
+			update_option( 'tutor_addons_config', $addonsConfig );
 
-		do_action('tutor_addon_before_enable_disable');
-		if ($isEnable){
-			do_action("tutor_addon_before_enable_{$addonFieldName}");
-			do_action('tutor_addon_before_enable', $addonFieldName);
-			$addonsConfig[$addonFieldName]['is_enable'] = 1;
-			update_option('tutor_addons_config', $addonsConfig);
+			do_action( 'tutor_addon_after_enable', $addonFieldName );
+			do_action( "tutor_addon_after_enable_{$addonFieldName}" );
+			wp_send_json_success( array(
+				'addons' => $all_addons,
+			) );
+		} else {
+			do_action( "tutor_addon_before_disable_{$addonFieldName}" );
+			do_action( 'tutor_addon_before_disable', $addonFieldName );
+			$addonsConfig[ $addonFieldName ]['is_enable'] = 0;
+			update_option( 'tutor_addons_config', $addonsConfig );
 
-			do_action('tutor_addon_after_enable', $addonFieldName);
-			do_action("tutor_addon_after_enable_{$addonFieldName}");
-		}else{
-			do_action("tutor_addon_before_disable_{$addonFieldName}");
-			do_action('tutor_addon_before_disable', $addonFieldName);
-			$addonsConfig[$addonFieldName]['is_enable'] = 0;
-			update_option('tutor_addons_config', $addonsConfig);
-
-			do_action('tutor_addon_after_disable', $addonFieldName);
-			do_action("tutor_addon_after_disable_{$addonFieldName}");
+			do_action( 'tutor_addon_after_disable', $addonFieldName );
+			do_action( "tutor_addon_after_disable_{$addonFieldName}" );
+			wp_send_json_success( array(
+				'addons' => $all_addons,
+			) );
 		}
-
-		do_action('tutor_addon_after_enable_disable');
-		wp_send_json_success();
+		do_action( 'tutor_addon_after_enable_disable' );
 	}
 
 	/**
@@ -458,20 +501,14 @@ class Ajax{
 	 * @since  v.1.7.9
 	 */
 	public function create_or_update_annoucement() {   
-        //prepare alert message
-        $create_success_msg = __("Announcement created successfully",'tutor');
-        $update_success_msg = __("Announcement updated successfully",'tutor');
-        $create_fail_msg = __("Announcement creation failed",'tutor');
-        $update_fail_msg = __("Announcement update failed",'tutor');
-
-        $error = array();
-        $response = array();
 		tutils()->checking_nonce();
-
+		
+        $error = array();
 		$course_id = sanitize_text_field($_POST['tutor_announcement_course']);
 		$announcement_title = sanitize_text_field($_POST['tutor_announcement_title']);
 		$announcement_summary = sanitize_textarea_field($_POST['tutor_announcement_summary']);
 		
+		// Check if user can manage this announcment
 		if(!tutils()->can_user_manage('course', $course_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
@@ -504,35 +541,28 @@ class Ajax{
 
         }
 
+		// If validation fails
         if (count($error)>0) {
-            $response['status']     = 'validation_error';
-            $response['message']    = $error;
-            wp_send_json($response);
-        } else {
-            //insert or update post
-            $post_id = wp_insert_post($form_data);
-            if ($post_id > 0) {
-				$announcement = get_post($post_id);
-				$action_type = sanitize_textarea_field($_POST['action_type']);
-                $response['status'] = 'success';
-                //set reponse message as per action type
-                $response['message'] = ($action_type == 'create') ? $create_success_msg : $update_success_msg;
-
-				do_action('tutor_announcements/after/save', $post_id, $announcement, $action_type );
-                
-                wp_send_json($response);
-            } else {
-                //failure message
-                $response['status']     = 'fail';
-                if($_POST['action_type'] == 'create'){
-                    $response['message'] = $create_fail_msg;
-                }
-                if($_POST['action_type'] == 'update'){
-                    $response['message'] = $update_fail_msg;
-                }
-                wp_send_json($response);
-            }
-        }
+            wp_send_json_error(array(
+				'message' => __('All fields required!', 'tutor'),
+				'fields' => $error
+			));
+        } 
+		
+		
+		//insert or update post
+		$post_id = wp_insert_post($form_data);
+		if ($post_id > 0) {
+			$announcement = get_post($post_id);
+			$action_type = sanitize_textarea_field($_POST['action_type']);
+			
+			do_action('tutor_announcements/after/save', $post_id, $announcement, $action_type );
+			
+			$resp_message = $action_type == 'create' ? __("Announcement created successfully", 'tutor') : __("Announcement updated successfully",'tutor');
+			wp_send_json_success(array('message' => $resp_message));
+		} 
+		
+		wp_send_json_error( array('message' => __('Something Went Wrong!', 'tutor')) );
     }
 
 	/**
@@ -549,17 +579,9 @@ class Ajax{
 
         $delete = wp_delete_post($announcement_id);
         if ($delete) {
-            $response = array(
-                'status'    => 'success',
-                'message'   => __('Announcement deleted successfully','tutor')
-            );
-            wp_send_json($response);
-        } else {
-            $response = array(
-                'status'    => 'fail',
-                'message'   => __('Announcement delete failed','tutor')
-            );      
-            wp_send_json($response);     
+            wp_send_json_success(array('message'  => __('Announcement deleted successfully', 'tutor')));
         }
+		 
+		wp_send_json_error(array('message' => __('Announcement delete failed','tutor'))); 
     }
 }

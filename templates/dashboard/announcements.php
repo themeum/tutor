@@ -53,6 +53,8 @@ $the_query = new WP_Query($args);
 //get courses
 $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
 $image_base = tutor()->url . '/assets/images/';
+
+
 ?>
 
 <div class="tutor-dashboard-content-inner">
@@ -71,7 +73,7 @@ $image_base = tutor()->url . '/assets/images/';
             </p>
         </div>
         <div class="new-announcement-button">
-            <button type="button" class="tutor-btn tutor-announcement-add-new">
+            <button type="button" class="tutor-btn" data-tutor-modal-target="tutor_announcement_new">
                 <?php _e('Add New Announcement', 'tutor'); ?>
             </button>
         </div>
@@ -81,9 +83,9 @@ $image_base = tutor()->url . '/assets/images/';
 
 
 <!--Filter-->
-<div class="tutor-row tutor-mb-30">
-    <div class="tutor-col-12 tutor-col-lg-6">
-        <label class="tutor-d-block">
+<div class="tutor-bs-row tutor-mb-30">
+    <div class="tutor-bs-col-12 tutor-bs-col-lg-6">
+        <label class="tutor-bs-d-block">
             <?php _e('Courses', 'tutor'); ?>
         </label>
         <select class="tutor-form-select tutor-announcement-course-sorting">
@@ -102,93 +104,29 @@ $image_base = tutor()->url . '/assets/images/';
         </select>
     </div>
 
-    <div class="tutor-col-6 tutor-col-lg-3">
-        <label class="tutor-d-block"><?php _e('Sort By', 'tutor'); ?></label>
+    <div class="tutor-bs-col-6 tutor-bs-col-lg-3">
+        <label class="tutor-bs-d-block"><?php _e('Sort By', 'tutor'); ?></label>
         <select class="tutor-form-select tutor-announcement-order-sorting">
             <option <?php selected($order_filter, 'ASC'); ?>><?php _e('ASC', 'tutor'); ?></option>
             <option <?php selected($order_filter, 'DESC'); ?>><?php _e('DESC', 'tutor'); ?></option>
         </select>
     </div>
 
-    <div class="tutor-col-6 tutor-col-lg-3 tutor-announcement-datepicker">
-        <label class="tutor-d-block"><?php _e('Date', 'tutor'); ?></label>
+    <div class="tutor-bs-col-6 tutor-bs-col-lg-3 tutor-announcement-datepicker">
+        <label class="tutor-bs-d-block"><?php _e('Date', 'tutor'); ?></label>
         <input type="text" class="tutor-form-control tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
         <i class="tutor-icon-calendar"></i>
     </div>
 </div>
 <!--Filter end-->
 
-<div class="tutor-ui-table-responsive">
-    <table class="tutor-ui-table">
-        <thead>
-            <tr>
-                <th>
-                    <span class="text-regular-small color-text-subsued">
-                            <?php _e('Date', 'tutor'); ?>
-                    </span>
-                </th>
-                <th>
-                    <div class="inline-flex-center color-text-subsued">
-                        <span class="text-regular-small"><?php _e('Announcements', 'tutor'); ?></span>
-                        <span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
-                    </div>
-                </th>
-                <th class="tutor-shrink"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if ($the_query->have_posts()) : ?>
-                <?php foreach ($the_query->posts as $post) : ?>
-                    <?php
-                        $course = get_post($post->post_parent);
-                        $dateObj = date_create($post->post_date);
-                        $date_format = date_format($dateObj, 'j M, Y, h:i a'); 
-                    ?>
-                    <tr id="tutor-announcement-tr-<?php echo $post->ID; ?>">
-                        <td data-th="<?php _e('Date', 'tutor'); ?>" class="column-fullwidth tutor-announcement-date">
-                            <?php echo $date_format; ?>
-                        </td>
-                        <td data-th="<?php _e('Announcement', 'tutor'); ?>" class="tutor-announcement-content-wrap">
-                            <div class="tutor-announcement-content">
-                                <h4><?php echo esc_html($post->post_title); ?></h4>
-                                <p><?php echo $course ? $course->post_title : ''; ?></p>
-                            </div>
-                        </td>
-                        <td data-th="<?php _e('Action', 'tutor'); ?>">
-                            <div class="tutor-announcement-buttons">
-                                <li>
-                                    <button type="button" 
-                                            course-name="<?php echo esc_attr($course->post_title) ?>" 
-                                            announcement-date="<?php echo esc_attr($date_format) ?>" 
-                                            announcement-title="<?php echo esc_attr($post->post_title); ?>" 
-                                            announcement-summary="<?php echo esc_attr($post->post_content); ?>" 
-                                            course-id="<?php echo esc_attr($post->post_parent); ?>" 
-                                            announcement-id="<?php echo esc_attr($post->ID); ?>" 
-                                            class="tutor-btn tutor-is-default tutor-is-xs tutor-announcement-details">
-                                        <?php _e('Details', 'tutor'); ?>
-                                    </button>
-                                </li>
-                                <li class="tutor-dropdown">
-                                    <i class="tutor-icon-action"></i>
-                                    <ul class="tutor-dropdown-menu">
-                                        <li announcement-title="<?php echo $post->post_title; ?>" announcement-summary="<?php echo $post->post_content; ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-announcement-edit">
-                                            <i class="tutor-icon-pencil"></i>
-                                            <?php _e('Edit', 'tutor'); ?>
-                                        </li>
-                                        <li class="tutor-announcement-delete" announcement-id="<?php echo $post->ID; ?>">
-                                            <i class="tutor-icon-garbage"></i>
-                                            <?php _e('Delete', 'tutor'); ?>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </div>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </tbody>
-    </table>
-</div>
+<?php 
+    $announcements = $the_query->have_posts() ? $the_query->posts : array();
+
+    tutor_load_template_from_custom_path(tutor()->path . '/views/fragments/announcement-list.php', array(
+        'announcements' => is_array( $announcements ) ? $announcements : array()
+    ));
+?>
 
 <!--pagination-->
 <div class="tutor-pagination">
@@ -207,7 +145,5 @@ $image_base = tutor()->url . '/assets/images/';
 <!--pagination end-->
 
 <?php
-include 'announcements/create.php';
-include 'announcements/update.php';
 include 'announcements/details.php';
 ?>

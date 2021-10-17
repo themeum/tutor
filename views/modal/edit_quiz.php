@@ -31,7 +31,7 @@
                         <span class="tutor-quiz-item-draggable fas fa-bars question-sorting"></span>
                         <h6 class="tutor-quiz-item-name"><?php echo stripslashes($question->question_title); ?></h6>
                     </div>
-                    <div class="tutor-quiz-item-action tutor-align-items-center">
+                    <div class="tutor-quiz-item-action tutor-bs-align-items-center">
                         <div class="tutor-quiz-item-type">
                             <?php
                                 $type = tutor_utils()->get_question_types($question->question_type);
@@ -77,11 +77,11 @@
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Time Limit', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
-            <div class="tutor-row tutor-align-items-center">
-                <div class="tutor-col-sm-4 tutor-col-md-3">
+            <div class="tutor-bs-row tutor-bs-align-items-center">
+                <div class="tutor-bs-col-sm-4 tutor-bs-col-md-3">
                     <input type="text" class="tutor-form-control" name="quiz_option[time_limit][time_value]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ?>">
                 </div>
-                <div class="tutor-col-sm-5 tutor-col-md-4">
+                <div class="tutor-bs-col-sm-5 tutor-bs-col-md-4">
                     <?php $limit_time_type = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_type', 'minutes') ?>
                     <select name="quiz_option[time_limit][time_type]" class="tutor-form-select">
                         <option value="seconds" <?php selected('seconds', $limit_time_type); ?>><?php _e('Seconds', 'tutor'); ?></option>
@@ -91,7 +91,7 @@
                         <option value="weeks" <?php selected('weeks', $limit_time_type); ?>><?php _e('Weeks', 'tutor'); ?></option>
                     </select>
                 </div>
-                <div class="tutor-col-sm-12 tutor-col-md-5">
+                <div class="tutor-bs-col-sm-12 tutor-bs-col-md-5">
                     <label class="tutor-form-toggle">
                         <input type="checkbox" class="tutor-form-toggle-input" value="1" name="quiz_option[hide_quiz_time_display]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_quiz_time_display')); ?> />
                         <span class="tutor-form-toggle-control"></span> <?php _e('Hide quiz time - display', 'tutor'); ?>
