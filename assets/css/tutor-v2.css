@@ -11593,7 +11593,28 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   color: #24a148;
 }
 
-<<<<<<< HEAD
+.tutor-settings-pass-field .tutor-input-group .validation-icon {
+  position: absolute;
+  right: 6px;
+  top: 0;
+  height: 100%;
+  font-size: 30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tutor-settings-pass-field .tutor-input-group .valid-btn {
+  color: #24a148;
+}
+
+.tutor-settings-pass-field .tutor-input-group .invalid-btn {
+  color: #f44337;
+}
+
 .tutor-attachment-cards, .tutor-attachment-cards > div {
   width: 100%;
 }
@@ -11705,28 +11726,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   -ms-align-items: center;
   -moz-align-items: center;
   -webkit-align-items: center;
-=======
-.tutor-settings-pass-field .tutor-input-group .validation-icon {
-  position: absolute;
-  right: 6px;
-  top: 0;
-  height: 100%;
-  font-size: 30px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.tutor-settings-pass-field .tutor-input-group .valid-btn {
-  color: #24a148;
-}
-
-.tutor-settings-pass-field .tutor-input-group .invalid-btn {
-  color: #f44337;
->>>>>>> b76b988e869e8fed167eeddfb747369ca1e25e3a
 }
 
 /*# sourceMappingURL=tutor-v2.css.map */

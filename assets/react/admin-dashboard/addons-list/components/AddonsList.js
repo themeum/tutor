@@ -3,14 +3,18 @@ import { useAddons } from '../context/AddonsContext';
 import AddonCard from './AddonCard';
 
 const AddonsList = () => {
-	const {allAddons} = useAddons();
-
-
+	const { allAddons, loading } = useAddons();
 	return (
-		<div className="tutor-addons-list-items tutor-mt-40">
-			{allAddons.map((addon, index) => {
-				return <AddonCard addon={addon} key={index} />;
-			})}
+		<div className="tutor-addons-list-items tutor-mt-30">
+			{allAddons.length ? (
+				allAddons.map((addon, index) => {
+					return <AddonCard addon={addon} key={index} />;
+				})
+			) : loading ? (
+				<p>Loading...</p>
+			) : (
+				<p>Empty</p>
+			)}
 		</div>
 	);
 };
