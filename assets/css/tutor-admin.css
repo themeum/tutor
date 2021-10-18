@@ -7361,6 +7361,10 @@ li.tutor-option-nav-item h4 {
   border-bottom: 1px solid #e0e2ea;
 }
 
+#tutor-addons-list-wrapper {
+  margin-left: -20px;
+}
+
 .tutor-addons-list-header {
   height: 60px;
   background: #ffffff;
@@ -7392,7 +7396,7 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-addons-list-header .filter-btns button.filter-btn:before {
-  content: '';
+  content: "";
   position: absolute;
   width: 100%;
   height: 3px;

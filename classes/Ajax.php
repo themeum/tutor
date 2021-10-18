@@ -365,59 +365,21 @@ class Ajax{
 
         // All good, let's proceed.
         $all_addons = $this->prepare_addons_data();
-		$active_addons = array();
-		$deactive_addons = array();
-		$required_addons = array();
-
-		if ( 'all' === $_POST['btn'] ) {
-			wp_send_json_success( array(
-				'addons' => $all_addons,
-			) );
-		} elseif ( 'active' === $_POST['btn'] ) {
-			foreach ( $all_addons as $addon ) {
-				if ( true === $addon['is_enabled'] ) {
-					array_push( $active_addons, $addon );
-				}
-			}
-			wp_send_json_success( array(
-				'addons' => $active_addons,
-			) );
-		} elseif ( 'deactive' === $_POST['btn'] ) {
-			foreach ( $all_addons as $addon ) {
-				if ( false === $addon['is_enabled'] ) {
-					array_push( $deactive_addons, $addon );
-				}
-			}
-			wp_send_json_success( array(
-				'addons' => $deactive_addons,
-			) );
-		} elseif ( 'required' === $_POST['btn'] ) {
-			foreach ( $all_addons as $addon ) {
-				if ( isset( $addon['depend_plugins'] ) || count( $addon['required_plugins'] ) > 0 || count( $addon['ext_required'] ) > 0 ) {
-					array_push( $required_addons, $addon );
-				}
-			}
-			wp_send_json_success( array(
-				'addons' => $required_addons,
-			) );
-		}
+		
+		wp_send_json_success( array(
+			'addons' => $all_addons,
+		) );
     }
 
 	/**
 	 * Method for enable / disable addons
 	 */
-	public function addon_enable_disable(){
-
-		// echo '<pre>';
-		// print_r( $_POST );
-		// echo '</pre>';
-
-		// die();
+	public function addon_enable_disable() {
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message'=> __( 'Access Denied', 'tutor' ) ) );
 		}
-		$all_addons = $this->prepare_addons_data();
+
 		$addonsConfig = maybe_unserialize( get_option( 'tutor_addons_config' ) );
 
 		$isEnable = (bool) sanitize_text_field( tutor_utils()->avalue_dot( 'isEnable', $_POST ) );
@@ -432,9 +394,6 @@ class Ajax{
 
 			do_action( 'tutor_addon_after_enable', $addonFieldName );
 			do_action( "tutor_addon_after_enable_{$addonFieldName}" );
-			wp_send_json_success( array(
-				'addons' => $all_addons,
-			) );
 		} else {
 			do_action( "tutor_addon_before_disable_{$addonFieldName}" );
 			do_action( 'tutor_addon_before_disable', $addonFieldName );
@@ -443,9 +402,6 @@ class Ajax{
 
 			do_action( 'tutor_addon_after_disable', $addonFieldName );
 			do_action( "tutor_addon_after_disable_{$addonFieldName}" );
-			wp_send_json_success( array(
-				'addons' => $all_addons,
-			) );
 		}
 		do_action( 'tutor_addon_after_enable_disable' );
 	}

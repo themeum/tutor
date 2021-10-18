@@ -3,9 +3,8 @@ import { useAddons } from '../context/AddonsContext';
 import AddonCard from './AddonCard';
 
 const AddonsList = () => {
-	const allAddons = useAddons();
+	const {allAddons} = useAddons();
 
-	console.log(allAddons);
 
 	return (
 		<div className="tutor-addons-list-items tutor-mt-40">

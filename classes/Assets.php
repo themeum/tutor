@@ -13,7 +13,6 @@ class Assets {
 		 */
 		add_action('admin_enqueue_scripts', array($this, 'common_scripts'));
 		add_action('wp_enqueue_scripts', array($this, 'common_scripts'));
-
 		/**
 		 * Front and backend script enqueue
 		 */
@@ -57,7 +56,6 @@ class Assets {
 	}
 
 	private function get_default_localized_data() {
-
 		$home_url = get_home_url();
 		$parsed = parse_url($home_url);
 
@@ -79,7 +77,6 @@ class Assets {
 			'wp_date_format' 				=> tutor_js_date_format_against_wp(),
 			'is_admin'						=> is_admin(),
 			'is_admin_bar_showing'			=> is_admin_bar_showing(),
-			//'addons_data'					=> tutor_utils()->prepare_addons_data()
 		);
 	}
 

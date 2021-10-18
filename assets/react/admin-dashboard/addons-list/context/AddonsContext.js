@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 // Custom contexts.
 const AddonsContext = createContext();
@@ -28,60 +28,93 @@ export const useAddonsUpdate = () => {
 export const AddonsContextProvider = (props) => {
 	const [allAddons, setAllAddons] = useState([]);
 	const [activeTab, setActiveTab] = useState('all');
+	const initialRenderRef = useRef(false);
+	const allAddonsRef = useRef(null);
+	const [addons, setAddons] = useState([]);
+
+
+	const fetchAddons = async () => {
+		const formData = new FormData();
+		formData.set('action', 'tutor_get_all_addons');
+		formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+
+		try {
+			const addons = await fetch(_tutorobject.ajaxurl, {
+				method: 'POST',
+				body: formData,
+			});
+
+			if (addons.ok) {
+				const response = await addons.json();
+				const data = response.data.addons;
+				if (data && data.length) {
+					setAllAddons(data);
+					allAddonsRef.current = data;
+				}
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	// Render the component with initial data at on mount.
 	useEffect(() => {
-		const fetchAddons = async () => {
-			const formData = new FormData();
-			formData.set('action', 'tutor_get_all_addons');
-			formData.set('btn', activeTab);
-			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-
-			try {
-				const addons = await fetch(_tutorobject.ajaxurl, {
-					method: 'POST',
-					body: formData,
-				});
-
-				if (addons.ok) {
-					const response = await addons.json();
-					const data = response.data.addons;
-
-					if (data && data.length) {
-						setAllAddons(data);
-					}
-				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
 		fetchAddons();
-	}, [activeTab]);
+	}, []);
 
-	const handleOnChange = (event, addonName) => {
-		let value = event.target.checked ? 1 : 0;
+	useEffect(() => {
+		if (initialRenderRef.current) {
+			if (activeTab === 'all') {
+				setAllAddons(allAddonsRef.current);
+			} else {
+				const activeAddons = allAddonsRef.current.filter(addon => {
+					if (activeTab === 'active') return addon.is_enabled;
+					else if (activeTab === 'deactive') return !addon.is_enabled;
+					else if (activeTab === 'required') return addon?.depend_plugins;
+				});
+				setAllAddons(activeAddons)
+			}
+		}
+		else if (!initialRenderRef.current) initialRenderRef.current = true;
+	}, [activeTab])
 
+	useEffect(() => {
+		setAddons(allAddonsRef.current)
+	})
+
+	const handleOnChange = (event, addonBaseName) => {
+		const {checked} = event.target;
+		const updatedAddonList = allAddonsRef.current.map(addon => {
+			if (addon.basename === addonBaseName) return {...addon, is_enabled: checked};
+			return addon;
+		})
+
+		if (activeTab === 'active') {
+			const activeAddons = updatedAddonList.filter((updatedAddon) => updatedAddon.is_enabled);
+			setAllAddons(activeAddons);
+		} else if (activeTab === 'deactive') {
+			const deActiveAddons = updatedAddonList.filter((updatedAddon) => !updatedAddon.is_enabled);
+			setAllAddons(deActiveAddons);
+		} else if (activeTab === 'required') {
+			const requiredAddons = updatedAddonList.filter((updatedAddon) => updatedAddon?.depend_plugins);
+			setAllAddons(requiredAddons);
+		} else if (activeTab === 'all') {
+			setAllAddons(updatedAddonList)
+		}
+		allAddonsRef.current = updatedAddonList;
+		
 		const toggleAddonStatus = async () => {
 			const formData = new FormData();
 			formData.set('action', 'addon_enable_disable');
-			formData.set('isEnable', value);
-			formData.set('addonFieldName', addonName);
+			formData.set('isEnable', Number(checked));
+			formData.set('addonFieldName', addonBaseName);
 			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
 
 			try {
-				const addons = await fetch(_tutorobject.ajaxurl, {
+				await fetch(_tutorobject.ajaxurl, {
 					method: 'POST',
 					body: formData,
 				});
-
-				if (addons.ok) {
-					const response = await addons.json();
-					const data = response.data.addons;
-
-					if (data && data.length) {
-						setAllAddons(data);
-					}
-				}
 			} catch (error) {
 				console.log(error);
 			}
@@ -90,19 +123,29 @@ export const AddonsContextProvider = (props) => {
 	};
 
 	const getAddonsData = (btn) => {
-		if ('active' === btn) {
-			setActiveTab('active');
-		} else if ( 'deactive' === btn ) {
-			setActiveTab('deactive');
-		} else if ('all' === btn) {
-			setActiveTab('all');
-		} else if ('required' === btn) {
-			setActiveTab('required');
+		
+		switch (btn) {
+			case 'active':
+				setActiveTab('active');
+				break;
+			case 'deactive':
+				setActiveTab('deactive');
+				break;
+			case 'required':
+				setActiveTab('required');
+				break;
+			case 'all':
+				setActiveTab('all');
+				break;
+		
+			default:
+				setActiveTab('all')
+				break;
 		}
 	}
 
 	return (
-		<AddonsContext.Provider value={allAddons}>
+		<AddonsContext.Provider value={{allAddons, addonList: addons}}>
 			<AddonsUpdateContext.Provider value={{ activeTab, getAddonsData, setActiveTab, setAllAddons, handleOnChange }}>
 				{props.children}
 			</AddonsUpdateContext.Provider>

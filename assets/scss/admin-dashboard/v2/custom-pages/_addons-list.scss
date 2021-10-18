@@ -1,123 +1,126 @@
-.tutor-backend-settings-addons-list {
+#tutor-addons-list-wrapper {
+    margin-left: -20px;
 }
+// .tutor-backend-settings-addons-list {
+// }
 
 .tutor-addons-list-header {
-	height: 60px;
-	background: #ffffff;
-	.filter-btns {
-		display: flex;
-		gap: 30px;
-		button.filter-btn {
-			background: transparent;
-			outline: none;
-			border: none;
-			font: inherit;
-			color: inherit;
-			position: relative;
-			text-transform: capitalize;
-			> * {
-				pointer-events: none;
-			}
-			.item-count {
-				color: $text-subsued;
-			}
-			&:before {
-				content: '';
-				position: absolute;
-				width: 100%;
-				height: 3px;
-				background: $brand-wordpress;
-				bottom: calc(0% - 17px);
-				transition: transform 200ms linear;
-				transform: scaleY(0);
-				transform-origin: bottom;
-			}
+    height: 60px;
+    background: #ffffff;
+    .filter-btns {
+        display: flex;
+        gap: 30px;
+        button.filter-btn {
+            background: transparent;
+            outline: none;
+            border: none;
+            font: inherit;
+            color: inherit;
+            position: relative;
+            text-transform: capitalize;
+            > * {
+                pointer-events: none;
+            }
+            .item-count {
+                color: $text-subsued;
+            }
+            &:before {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 3px;
+                background: $brand-wordpress;
+                bottom: calc(0% - 17px);
+                transition: transform 200ms linear;
+                transform: scaleY(0);
+                transform-origin: bottom;
+            }
 
-			&.is-active {
-				color: $brand-wordpress;
-				&:before {
-					transform: scaleY(1);
-				}
-			}
-		}
-	}
+            &.is-active {
+                color: $brand-wordpress;
+                &:before {
+                    transform: scaleY(1);
+                }
+            }
+        }
+    }
 }
 
 .tutor-addons-list-body {
-	background: #efefef;
+    background: #efefef;
 }
 
 .tutor-addons-list-select-filter {
-	gap: 15px;
-	.filter-custom-field {
-		@include breakpoint-min(mobile) {
-			min-width: 450px;
-		}
+    gap: 15px;
+    .filter-custom-field {
+        @include breakpoint-min(mobile) {
+            min-width: 450px;
+        }
 
-		select.tutor-form-select {
-			border-top-right-radius: 0px;
-			border-bottom-right-radius: 0px;
-			width: 140px;
-		}
-		input.tutor-form-control {
-			border-left: none !important;
-			border-top-left-radius: 0px !important;
-			border-bottom-left-radius: 0px !important;
-			margin-left: -1px;
-			&:focus {
-				box-shadow: -1px 0 0 0 $brand-wordpress;
-			}
-		}
-	}
+        select.tutor-form-select {
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 0px;
+            width: 140px;
+        }
+        input.tutor-form-control {
+            border-left: none !important;
+            border-top-left-radius: 0px !important;
+            border-bottom-left-radius: 0px !important;
+            margin-left: -1px;
+            &:focus {
+                box-shadow: -1px 0 0 0 $brand-wordpress;
+            }
+        }
+    }
 }
 
 .tutor-addons-list-items {
-	@include breakpoint-min(1600) {
-		@include responsiveGrid(350px, 390px);
-	}
-	@include responsiveGrid(330px, 1fr);
-	gap: 40px;
+    @include breakpoint-min(1600) {
+        @include responsiveGrid(350px, 390px);
+    }
+    @include responsiveGrid(330px, 1fr);
+    gap: 40px;
 
-	// @include masonryGrid(4, 40px, 40px);
-	// column-width: 390px;
+    // @include masonryGrid(4, 40px, 40px);
+    // column-width: 390px;
 }
 .tutor-addons-card {
-	background: #ffffff;
-	border-radius: 6px;
-	display: grid;
+    background: #ffffff;
+    border-radius: 6px;
+    display: grid;
 
-	.card-body {
-		.addon-logo > img {
-			max-width: 100%;
-			width: 80px;
-			height: 80px;
-			border-radius: 50%;
-		}
-	}
-	.card-footer {
-		background: rgba(239, 241, 247, 0.4);
-		/* stroke/light20 */
-		border-top: 1px solid #e0e2ea;
-	}
-	&.not-subscribed {
-		.card-footer {
-			background: rgba(252, 231, 199, 0.3);
+    .card-body {
+        .addon-logo > img {
+            max-width: 100%;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+    }
+    .card-footer {
+        background: rgba(239, 241, 247, 0.4);
+        /* stroke/light20 */
+        border-top: 1px solid #e0e2ea;
+    }
+    &.not-subscribed {
+        .card-footer {
+            background: rgba(252, 231, 199, 0.3);
 
-			/* color/warning/fill/60 */
-			border-top: 1px solid #f9d093;
-		}
-	}
+            /* color/warning/fill/60 */
+            border-top: 1px solid #f9d093;
+        }
+    }
 }
 
 .tutor-addons-empty {
-	background: #fff;
-	border-radius: 6px;
-	text-align: center;
-	grid-area: 1/-1;
-	max-width: 500px;
-	margin: 0 auto;
+    background: #fff;
+    border-radius: 6px;
+    text-align: center;
+    grid-area: 1/-1;
+    max-width: 500px;
+    margin: 0 auto;
 
-	> * {
-		max-width: 100%;
-	}
+    > * {
+        max-width: 100%;
+    }
 }
