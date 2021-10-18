@@ -566,3 +566,30 @@ table.tutor-ui-table {
 		}
 	} // end Table Responsive Styles
 }
+
+
+table.tutor-ui-table-no-border {
+	&, td, th {
+		border: none;
+	}
+
+	td, th {
+		padding: 0;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+
+	&.tutor-is-lefty {
+		td:not(:last-child) {
+			padding-right: 15px;
+		}
+	}
+
+	&.tutor-is-flexible {
+		width: auto;
+	}
+
+	&:not(.tutor-is-flexible) {
+		width: 100%;
+	}
+}

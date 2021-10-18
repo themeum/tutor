@@ -194,7 +194,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                     </td>
                     <td data-th="<?php _e('Action', 'tutor'); ?>">
                         <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-                            <button class="tutor-btn tutor-is-default tutor-is-xs tutor-mr-10 tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
+                            <button class="tutor-btn tutor-is-default tutor-is-xs tutor-mr-10"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
                                 <?php _e('Details', 'tutor'); ?>
                             </button>
                             

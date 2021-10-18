@@ -45,9 +45,6 @@ body.tutor-screen-course-builder {
         }
     }
 
-    // Course common libs
-    @import './lib/attachment.scss';
-
     // Course segments
     @import './segments/video.scss';
     @import './segments/setting.scss';
