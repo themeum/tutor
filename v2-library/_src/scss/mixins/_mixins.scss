@@ -44,3 +44,19 @@
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax($min, $max));
 }
+
+.d-grid {
+	display: grid;
+	&.grid-col-1x1 {
+		grid-template-columns: 1fr 1fr;
+	}
+	&.grid-col-1x2 {
+		grid-template-columns: 1fr 2fr;
+	}
+	&.grid-col-1x3 {
+		grid-template-columns: 1fr 3fr;
+	}
+	&.grid-col-1x4 {
+		grid-template-columns: 1fr 4fr;
+	}
+}

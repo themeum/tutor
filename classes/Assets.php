@@ -228,7 +228,7 @@ class Assets {
 	public function common_scripts() {
 
 		// Fonts
-		wp_enqueue_style('tutor-lineawesome-fonts', tutor()->url . 'assets/icons/lineawesome@1.3.0/css/line-awesome.min.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-lineawesome-fonts', tutor()->url . 'v2-library/bundle/fonts/lineawesome@1.3.0/css/line-awesome.min.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version);
 		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'v2-library/bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css', array(), tutor()->version);
 		
