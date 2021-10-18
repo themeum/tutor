@@ -7773,6 +7773,26 @@ body [data-testid] {
   font-style: normal;
 }
 
+.d-grid {
+  display: grid;
+}
+
+.d-grid.grid-col-1x1 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.d-grid.grid-col-1x2 {
+  grid-template-columns: 1fr 2fr;
+}
+
+.d-grid.grid-col-1x3 {
+  grid-template-columns: 1fr 3fr;
+}
+
+.d-grid.grid-col-1x4 {
+  grid-template-columns: 1fr 4fr;
+}
+
 .tutor-notification {
   border: 1px solid var(--tutor-border-color);
   padding: 18px 23px;
