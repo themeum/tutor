@@ -12,17 +12,19 @@ import '../docz-essential.css';
 # UI Table - WP Dashboard
 
 `** Replace "className" with "class" while using with html` <br />
-`** Add the th content to the tds as data-th="TH_CONTENT" `
+`** Add the th content to the tds as data-th="TH_CONTENT"`
 
 ## Course Listing UI
 
 <Playground>
-	<div className="tutor-ui-table-responsive-">
+	<div className="tutor-ui-table-wrapper">
 		<table className="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle">
 			<thead>
 				<tr>
 					<th>
-						<div className="d-flex"><input type="checkbox" className="tutor-form-check-input" /></div>
+						<div className="d-flex">
+							<input type="checkbox" className="tutor-form-check-input" />
+						</div>
 					</th>
 					<th>
 						<div className="text-regular-small color-text-subsued">Date</div>
@@ -50,15 +52,19 @@ import '../docz-essential.css';
 			</thead>
 			<tbody>
 				<tr>
-					<td data-th="Checkbox"><div className="td-checkbox d-flex "><input type="checkbox" className="tutor-form-check-input" /></div></td>
-					<td data-th="Date"> 
-						<div className="text-regular-caption color-text-primary">20 July, 2020, <br /> 12:47 pm</div>
+					<td data-th="Checkbox">
+						<div className="td-checkbox d-flex ">
+							<input type="checkbox" className="tutor-form-check-input" />
+						</div>
 					</td>
-					<td data-th="Course Name">
+					<td data-th="Date">
+						<div className="td-datetime text-regular-caption color-text-primary">
+							20 July, 2020, <br /> 12:47 pm
+						</div>
+					</td>
+					<td data-th="Course Name" className="column-fullwidth">
 						<div className="td-course color-text-primary text-medium-body">
-							<a href="#">
-								The Complete Drawing MasterclassName: From Beginner to Advanced
-							</a>
+							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
 							<div className="course-meta">
 								<span className="color-text-hints text-medium-small">
 									Topic: <strong className="color-text-primary">12</strong>
@@ -77,9 +83,9 @@ import '../docz-essential.css';
 					</td>
 					<td data-th="Author">
 						<div className="td-avatar">
-							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar"/>
+							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
 							<p className="text-medium-body color-text-primary">Arnol James</p>
-							<a href="#" className="btn-text color-design-dark">
+							<a href="#" className="btn-text btn-detail-link color-design-dark">
 								<span className="tutor-v2-icon-test icon-detail-link-filled"></span>
 							</a>
 						</div>
@@ -87,17 +93,15 @@ import '../docz-essential.css';
 					<td data-th="Course Categories">
 						<div className="text-regular-caption color-text-primary">Design, Illustration</div>
 					</td>
-					<td data-th="Student"><div className="text-regular-caption color-text-primary">7,821</div></td>
-					<td data-th="Price"><div className="text-regular-caption color-text-primary">$129.00</div></td>
+					<td data-th="Student">
+						<div className="text-regular-caption color-text-primary">7,821</div>
+					</td>
+					<td data-th="Price">
+						<div className="text-regular-caption color-text-primary">$129.00</div>
+					</td>
 					<td data-th="Actions">
 						<div className="inline-flex-center td-action-btns">
-							{/* <select className="tutor-form-select">
-								<option selected="">Choose an option</option>
-								<option value="1">One</option>
-								<option value="2">Two</option>
-								<option value="3">Three</option>
-							</select> */}
-							<div className="tutor-form-select-with-icon select-default select-primary select-success- select-danger- select-warning-">
+							<div className="tutor-form-select-with-icon select-default- select-primary select-success- select-danger- select-warning-">
 								<select title="Please select a color">
 									<option value="Red">Red</option>
 									<option value="Blue">Blue</option>
@@ -106,592 +110,118 @@ import '../docz-essential.css';
 								<i className="icon1 ttr-eye-fill-filled"></i>
 								<i className="icon2 ttr-angle-down-filled"></i>
 							</div>
-							<a href="#" className="btn-outline tutor-btn">Details</a>
-							<button className="btn-icon"><span className="ttr-delete-stroke-filled"></span></button>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</Playground>
-
-## Reviews List
-
-<Playground>
-	<div className="tutor-ui-table-responsive">
-		<table className="tutor-ui-table table-reviews">
-			<thead>
-				<tr>
-					<th>
-						<span className="text-regular-small color-text-subsued">Student</span>
-					</th>
-					<th>
-						<span className="text-regular-small color-text-subsued">Date</span>
-					</th>
-					<th>
-						<span className="text-regular-small color-text-subsued">Feedback</span>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td data-th="Student" className="column-fullwidth">
-						<div className="td-avatar">
-							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
-							<p className="text-medium-body color-text-primary">Arnol James</p>
-						</div>
-					</td>
-					<td data-th="Date">
-						<span className="text-medium-caption color-text-primary">20 July, 2020, <br/> 12:47 pm</span>
-					</td>
-					<td data-th="Feedback">
-						<div className="td-feedback">
-							<div className="td-tutor-rating text-regular-body color-text-subsued">
-								<div className="tutor-ratings">
-									<div className="tutor-rating-stars">
-										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
-										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
-										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
-										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
-										<span className="tutor-v2-icon-test icon-star-line-filled"></span>
-									</div>
-									<div className="tutor-rating-text">4.5</div>
-								</div>
-							</div>
-							<p className="review-text color-text-subsued">
-								This guy is effing genious. I love his sense of humor. He is really good. This guy is effing genious. I
-								love his sense of humor. He is really good. This guy is effing genious. I love his sense of humor. He is
-								really good.
-							</p>
-							<p className="course-name text-medium-small color-text-title">
-								<strong>Course: </strong>Write PHP Like a Pro: Build a PHP MVC Framework From Scratch
-							</p>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td data-th="Student" className="column-fullwidth">
-						<div className="td-avatar">
-							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
-							<p className="text-medium-body color-text-primary">Arnol James</p>
-						</div>
-					</td>
-					<td data-th="Date">
-						<span className="text-medium-caption color-text-primary">20 July, 2020, <br/> 12:47 pm</span>
-					</td>
-					<td data-th="Feedback">
-						<div className="td-feedback">
-							<div className="td-tutor-rating text-regular-body color-text-subsued">
-								<div className="tutor-ratings">
-									<div className="tutor-rating-stars">
-										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
-										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
-										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
-										<span className="tutor-v2-icon-test icon-star-full-filled"></span>
-										<span className="tutor-v2-icon-test icon-star-line-filled"></span>
-									</div>
-									<div className="tutor-rating-text">4.5</div>
-								</div>
-							</div>
-							<p className="review-text color-text-subsued">
-								This guy is effing genious. I love his sense of humor. He is really good. This guy is effing genious. I
-								love his sense of humor. He is really good. This guy is effing genious. I love his sense of humor. He is
-								really good.
-							</p>
-							<p className="course-name text-medium-small color-text-title">
-								<strong>Course: </strong>Write PHP Like a Pro: Build a PHP MVC Framework From Scratch
-							</p>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</Playground>
-
-## My Quiz Attempts
-
-<Playground>
-	<div className="tutor-ui-table-responsive">
-		<table className="tutor-ui-table my-quiz-attempts">
-			<thead>
-				<tr>
-					<th><span className="text-regular-small color-text-subsued">Quiz Info</span></th>
-					<th><span className="text-regular-small color-text-subsued">Question</span></th>
-					<th><span className="text-regular-small color-text-subsued">Total Marks</span></th>
-					<th><span className="text-regular-small color-text-subsued">Correct Answer</span></th>
-					<th><span className="text-regular-small color-text-subsued">Incorrect Answer</span></th>
-					<th><span className="text-regular-small color-text-subsued">Earned Marks</span></th>
-					<th><span className="text-regular-small color-text-subsued">Result</span></th>
-					<th className="tutor-shrink"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td data-th="Quiz Info" className="column-fullwidth">
-						<div className="td-statement-info">
-							<span className="text-regular-small color-text-primary">20 July, 2020, 12:47 pm</span>
-							<p className="text-medium-body color-text-primary">Machine Learning 101 with Scikit-learn</p>
-						</div>
-					</td>
-					<td data-th="Question"><span className="text-medium-caption color-text-primary">25</span></td>
-					<td data-th="Total Marks"><span className="text-medium-caption color-text-primary">50</span></td>
-					<td data-th="Total Marks"><span className="text-medium-caption color-text-primary">8</span></td>
-					<td data-th="Total Marks"><span className="text-medium-caption color-text-primary">17</span></td>
-					<td data-th="Total Marks"><span className="text-medium-caption color-text-primary">17(40%)</span></td>
-					<td data-th="Result"><span className="tutor-badge-label label-danger">Fail</span></td>
-					<td data-th="URL"><div className="inline-flex-center td-action-btns"><a href="#" className="btn-outline tutor-btn">Details</a></div></td>
-				</tr>
-				<tr>
-					<td data-th="Quiz Info" className="column-fullwidth">
-						<div className="td-statement-info">
-							<span className="text-regular-small color-text-primary">20 July, 2020, 12:47 pm</span>
-							<p className="text-medium-body color-text-primary">Machine Learning 101 with Scikit-learn</p>
-						</div>
-					</td>
-					<td data-th="Question"><span className="text-medium-caption color-text-primary">25</span></td>
-					<td data-th="Total Marks"><span className="text-medium-caption color-text-primary">50</span></td>
-					<td data-th="Total Marks"><span className="text-medium-caption color-text-primary">8</span></td>
-					<td data-th="Total Marks"><span className="text-medium-caption color-text-primary">17</span></td>
-					<td data-th="Total Marks"><span className="text-medium-caption color-text-primary">17(40%)</span></td>
-					<td data-th="Result"><span className="tutor-badge-label label-warning">Pending</span></td>
-					<td data-th="URL"><div className="inline-flex-center td-action-btns"><a href="#" className="btn-outline tutor-btn">Details</a></div></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</Playground>
-
-
-## Assignment
-
-<Playground>
-	<div className="tutor-ui-table-responsive">
-		<table className="tutor-ui-table table-assignment">
-			<thead>
-				<tr>
-					<th>
-						<span className="text-regular-small color-text-subsued">Assignment Name</span>
-					</th>
-					<th>
-						<div className="inline-flex-center color-text-subsued">
-							<span className="text-regular-small">Total Marks</span>
-						</div>
-					</th>
-					<th>
-						<div className="inline-flex-center color-text-subsued">
-							<span className="text-regular-small">Total Submit</span>
-						</div>
-					</th>
-					<th className="tutor-shrink"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td data-th="Course Name" className="column-fullwidth">
-						<div className="color-text-primary td-course text-medium-body">
-							<a href="#">Be more friendly with social media</a>
-							<div className="course-meta">
-								<span className="color-text-subsued text-regular-caption">
-									<strong className="text-medium-caption">Course: </strong>Write PHP Like a Pro: Build a PHP MVC Framework From Scratch
-								</span>
-							</div>
-						</div>
-					</td>
-					<td data-th="Total Enrolled">
-						<span className="color-text-primary text-medium-caption">10</span>
-					</td>
-					<td data-th="Rating">
-						<span className="color-text-primary text-medium-caption">32</span>
-					</td>
-					<td data-th="URL">
-						<div className="inline-flex-center td-action-btns">
 							<a href="#" className="btn-outline tutor-btn">
-								Details
+								Edit
 							</a>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</Playground>
-
-## All Courses
-
-<Playground>
-	<div className="tutor-ui-table-responsive">
-		<table className="tutor-ui-table table-all-courses">
-			<thead>
-				<tr>
-					<th>
-						<span className="text-regular-small color-text-subsued">Statement Info</span>
-					</th>
-					<th>
-						<span className="text-regular-small color-text-subsued">Price (%)</span>
-					</th>
-					<th>
-						<span className="text-regular-small color-text-subsued">Commission (%)</span>
-					</th>
-					<th>
-						<span className="text-regular-small color-text-subsued">Fees</span>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td data-th="Statement Info" className="column-fullwidth">
-						<div className="td-statement-info">
-							<div className="meta-data-1 inline-flex-center">
-								<span className="tutor-badge-label label-success">Completed</span>
-								<span className="text-regular-small color-text-primary">20 July, 2020, 12:47 pm</span>
-							</div>
-							<p className="meta-data-2 text-medium-body color-text-primary">Machine Learning 101 with Scikit-learn</p>
-							<div className="meta-data-3 inline-flex-center text-regular-small color-text-title">
-								<span>Order Id: #D798987</span>
-								<div className="inline-flex-center">
-									<span>Purchaser: Arnold James</span>
-								</div>
+							<button className="btn-delete">
+								<span className="ttr-delete-stroke-filled"></span>
+							</button>
+							<div className="tutor-popup-opener">
+								<button type="button" className="popup-btn" data-tutor-popup-target="table-dashboard-course-list-1">
+									<span className="toggle-icon"></span>
+								</button>
+								<ul id="table-dashboard-course-list-1" className="popup-menu">
+									<li>
+										<a href="#">
+											<span className="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+											<span className="text-regular-body color-text-white">Download</span>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span className="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+											<span className="text-regular-body color-text-white">Delete</span>
+										</a>
+									</li>
+								</ul>
 							</div>
 						</div>
 					</td>
-					<td data-th="Price (%)">
-						<span className="text-medium-caption color-text-primary">
-							$17.00 <br />
-							<span className="text-regular-small color-text-hints">As per 20%</span>
-						</span>
-					</td>
-					<td data-th="Commission (%)">
-						<span className="text-medium-caption color-text-primary">
-							$17.00 <br />
-							<span className="text-regular-small color-text-hints">As per 20%</span>
-						</span>
-					</td>
-					<td data-th="Fees">
-						<span className="text-medium-caption color-text-primary">
-							$17.00 <br />
-							<span className="text-regular-small color-text-hints">Maintenance Fees</span>
-						</span>
-					</td>
 				</tr>
 				<tr>
-					<td data-th="Statement Info" className="column-fullwidth">
-						<div className="td-statement-info">
-							<div className="meta-data-1 inline-flex-center">
-								<span className="tutor-badge-label label-success">Completed</span>
-								<span className="text-regular-small color-text-primary">20 July, 2020, 12:47 pm</span>
-							</div>
-							<p className="meta-data-2 text-medium-body color-text-primary">Machine Learning 101 with Scikit-learn</p>
-							<div className="meta-data-3 inline-flex-center text-regular-small color-text-title">
-								<span>Order Id: #D798987</span>
-								<div className="inline-flex-center">
-									<span>Purchaser: Arnold James</span>
-								</div>
-							</div>
+					<td data-th="Checkbox">
+						<div className="td-checkbox d-flex ">
+							<input type="checkbox" className="tutor-form-check-input" />
 						</div>
 					</td>
-					<td data-th="Price (%)">
-						<span className="text-medium-caption color-text-primary">
-							$17.00 <br />
-							<span className="text-regular-small color-text-hints">As per 20%</span>
-						</span>
-					</td>
-					<td data-th="Commission (%)">
-						<span className="text-medium-caption color-text-primary">
-							$17.00 <br />
-							<span className="text-regular-small color-text-hints">As per 20%</span>
-						</span>
-					</td>
-					<td data-th="Fees">
-						<span className="text-medium-caption color-text-primary">
-							$17.00 <br />
-							<span className="text-regular-small color-text-hints">Maintenance Fees</span>
-						</span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</Playground>
-
-## Course List
-
-<Playground>
-	<div className="tutor-ui-table-responsive">
-		<table className="tutor-ui-table table-popular-courses">
-			<thead>
-				<tr>
-					<th>
-						<span className="text-regular-small color-text-subsued">Course Name</span>
-					</th>
-					<th>
-						<div className="inline-flex-center color-text-subsued">
-							<span className="text-regular-small">Total Enrolled</span>
-							<span className="tutor-v2-icon-test icon-order-down-filled"></span>
+					<td data-th="Date">
+						<div className="td-datetime text-regular-caption color-text-primary">
+							20 July, 2020, <br /> 12:47 pm
 						</div>
-					</th>
-					<th>
-						<div className="inline-flex-center color-text-subsued">
-							<span className="text-regular-small">Rating</span>
-							<span className="tutor-v2-icon-test icon-order-down-filled"></span>
-						</div>
-					</th>
-					<th className="tutor-shrink"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td data-th="Course Name" className="column-fullwidth">
-						<div className="color-text-primary td-course text-medium-body">
+					</td>
+					<td data-th="Course Name">
+						<div className="td-course color-text-primary text-medium-body">
 							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
 							<div className="course-meta">
-								<span className="color-text-subsued text-regular-caption">
-									Lesson: <strong className="text-medium-caption">36</strong>
+								<span className="color-text-hints text-medium-small">
+									Topic: <strong className="color-text-primary">12</strong>
 								</span>
-								<span className="color-text-subsued text-regular-caption">
-									Assigment: <strong className="text-medium-caption">14</strong>
+								<span className="color-text-hints text-medium-small">
+									Lesson: <strong className="color-text-primary">36</strong>
 								</span>
-								<span className="color-text-subsued text-regular-caption">
-									Quiz: <strong className="text-medium-caption">11</strong>
+								<span className="color-text-hints text-medium-small">
+									Quiz: <strong className="color-text-primary">05</strong>
+								</span>
+								<span className="color-text-hints text-medium-small">
+									Assigment: <strong className="color-text-primary">03</strong>
 								</span>
 							</div>
 						</div>
 					</td>
-					<td data-th="Total Enrolled">
-						<span className="color-text-primary text-medium-caption">713</span>
-					</td>
-					<td data-th="Rating">
-						<span className="color-text-primary text-medium-caption">$31,221</span>
-					</td>
-					<td data-th="URL">
-						<div className="inline-flex-center td-action-btns">
-							<a href="#" className="btn-outline tutor-btn">
-								Details
-							</a>
-							<a href="#" className="btn-text">
+					<td data-th="Author">
+						<div className="td-avatar">
+							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
+							<p className="text-medium-body color-text-primary">Arnol James</p>
+							<a href="#" className="btn-text btn-detail-link color-design-dark">
 								<span className="tutor-v2-icon-test icon-detail-link-filled"></span>
 							</a>
 						</div>
 					</td>
-				</tr>
-				<tr>
-					<td data-th="Course Name" className="column-fullwidth">
-						<div className="color-text-primary td-course text-medium-body">
-							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
-							<div className="course-meta">
-								<span className="color-text-subsued text-regular-caption">
-									Lesson: <strong className="text-medium-caption">36</strong>
-								</span>
-								<span className="color-text-subsued text-regular-caption">
-									Assigment: <strong className="text-medium-caption">14</strong>
-								</span>
-								<span className="color-text-subsued text-regular-caption">
-									Quiz: <strong className="text-medium-caption">11</strong>
-								</span>
-							</div>
-						</div>
+					<td data-th="Course Categories">
+						<div className="text-regular-caption color-text-primary">Design, Illustration</div>
 					</td>
-					<td data-th="Total Enrolled">
-						<span className="color-text-primary text-medium-caption">713</span>
-					</td>
-					<td data-th="Rating">
-						<span className="color-text-primary text-medium-caption">$31,221</span>
-					</td>
-					<td data-th="URL">
-						<div className="inline-flex-center td-action-btns">
-							<a href="#" className="btn-outline tutor-btn">
-								Details
-							</a>
-							<a href="#" className="btn-text">
-								<span className="tutor-v2-icon-test icon-detail-link-filled"></span>
-							</a>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</Playground>
-
-## Students
-
-<Playground>
-	<div className="tutor-ui-table-responsive">
-		<table className="tutor-ui-table table-students">
-			<thead>
-				<tr>
-					<th>
-						<div className="inline-flex-center color-text-subsued">
-							<span className="text-regular-small">Student</span>
-							<span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
-						</div>
-					</th>
-					<th>
-						<div className="inline-flex-center color-text-subsued">
-							<span className="text-regular-small">Registration Date</span>
-							<span className="tutor-v2-icon-test icon-order-down-filled"></span>
-						</div>
-					</th>
-					<th>
-						<div className="inline-flex-center color-text-subsued">
-							<span className="text-regular-small">Course Taklen</span>
-							<span className="tutor-v2-icon-test icon-order-down-filled"></span>
-						</div>
-					</th>
-					<th className="tutor-shrink"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
 					<td data-th="Student">
-						<div className="td-avatar">
-							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
-							<div>
-								<p className="color-text-primary text-medium-body">Arnol James</p>
-								<p className="color-text-title text-regular-small">armand.lubowitz@gmail.com</p>
-							</div>
-						</div>
+						<div className="text-regular-caption color-text-primary">7,821</div>
 					</td>
-					<td data-th="Registration Date">
-						<span className="color-text-primary text-regular-caption">20 July, 2020</span>
+					<td data-th="Price">
+						<div className="text-regular-caption color-text-primary">$129.00</div>
 					</td>
-					<td data-th="Course Taklen">
-						<span className="color-text-primary text-medium-caption">14</span>
-					</td>
-					<td data-th="URL">
+					<td data-th="Actions">
 						<div className="inline-flex-center td-action-btns">
+							<div className="tutor-form-select-with-icon select-default- select-primary- select-success select-danger- select-warning-">
+								<select title="Please select a color">
+									<option value="Red">Red</option>
+									<option value="Blue">Blue</option>
+									<option value="Blue">Yellow</option>
+								</select>
+								<i className="icon1 ttr-eye-fill-filled"></i>
+								<i className="icon2 ttr-angle-down-filled"></i>
+							</div>
 							<a href="#" className="btn-outline tutor-btn">
-								Details
+								Edit
 							</a>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td data-th="Student">
-						<div className="td-avatar">
-							<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="student avatar" />
-							<div>
-								<p className="color-text-primary text-medium-body">Arnol James</p>
-								<p className="color-text-title text-regular-small">armand.lubowitz@gmail.com</p>
+							<button className="btn-delete">
+								<span className="ttr-delete-stroke-filled"></span>
+							</button>
+							<div className="tutor-popup-opener">
+								<button type="button" className="popup-btn" data-tutor-popup-target="table-dashboard-course-list-2">
+									<span className="toggle-icon"></span>
+								</button>
+								<ul id="table-dashboard-course-list-2" className="popup-menu">
+									<li>
+										<a href="#">
+											<span className="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+											<span className="text-regular-body color-text-white">Download</span>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span className="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+											<span className="text-regular-body color-text-white">Delete</span>
+										</a>
+									</li>
+								</ul>
 							</div>
-						</div>
-					</td>
-					<td data-th="Registration Date">
-						<span className="color-text-primary text-regular-caption">20 July, 2020</span>
-					</td>
-					<td data-th="Course Taklen">
-						<span className="color-text-primary text-medium-caption">14</span>
-					</td>
-					<td data-th="URL">
-						<div className="inline-flex-center td-action-btns">
-							<a href="#" className="btn-outline tutor-btn">
-								Details
-							</a>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</Playground>
-
-## Courses Overview
-
-<Playground>
-	<div className="tutor-ui-table-responsive">
-		<table className="tutor-ui-table table-course-overview">
-			<thead>
-				<tr>
-					<th>
-						<div className="inline-flex-center color-text-subsued">
-							<span className="text-regular-small">Date</span>
-							<span className="tutor-v2-icon-test icon-order-down-filled"></span>
-						</div>
-					</th>
-					<th>
-						<div className="inline-flex-center color-text-subsued">
-							<span className="text-regular-small">Course</span>
-						</div>
-					</th>
-					<th>
-						<div className="inline-flex-center color-text-subsued">
-							<span className="text-regular-small">Progress</span>
-						</div>
-					</th>
-					<th className="tutor-shrink"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td data-th="Data">
-						<span className="text-regular-caption color-text-primary">20 July, 2020</span>
-					</td>
-					<td data-th="Course">
-						<div className="td-course text-medium-body color-text-primary">
-							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
-							<div className="course-meta">
-								<span className="color-text-subsued text-regular-caption">
-									Lesson: <strong className="text-medium-caption">10/36</strong>
-								</span>
-								<span className="color-text-subsued text-regular-caption">
-									Assigment: <strong className="text-medium-caption">14/20</strong>
-								</span>
-								<span className="color-text-subsued text-regular-caption">
-									Quiz: <strong className="text-medium-caption">1/9</strong>
-								</span>
-							</div>
-						</div>
-					</td>
-					<td data-th="Progress">
-						<div className="td-progress inline-flex-center">
-							<div className="progress-bar" style={{"--progress-value": "50%"}}>
-								<div className="progress-value"></div>
-							</div>
-							<div className="progress-text text-medium-caption color-text-primary">50%</div>
-						</div>
-					</td>
-					<td data-th="URL">
-						<div className="td-action-btns inline-flex-center">
-							<a href="#" className="tutor-btn btn-outline">
-								View Progress
-							</a>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td data-th="Data">
-						<span className="text-regular-caption color-text-primary">20 July, 2020</span>
-					</td>
-					<td data-th="Course">
-						<div className="td-course text-medium-body color-text-primary">
-							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
-							<div className="course-meta">
-								<span className="color-text-subsued text-regular-caption">
-									Lesson: <strong className="text-medium-caption">10/36</strong>
-								</span>
-								<span className="color-text-subsued text-regular-caption">
-									Assigment: <strong className="text-medium-caption">14/20</strong>
-								</span>
-								<span className="color-text-subsued text-regular-caption">
-									Quiz: <strong className="text-medium-caption">1/9</strong>
-								</span>
-							</div>
-						</div>
-					</td>
-					<td data-th="Progress">
-						<div className="td-progress inline-flex-center">
-							<div className="progress-bar" style={{"--progress-value": "50%"}}>
-								<div className="progress-value"></div>
-							</div>
-							<div className="progress-text text-medium-caption color-text-primary">50%</div>
-						</div>
-					</td>
-					<td data-th="URL">
-						<div className="td-action-btns inline-flex-center">
-							<a href="#" className="tutor-btn btn-outline">
-								View Progress
-							</a>
 						</div>
 					</td>
 				</tr>
