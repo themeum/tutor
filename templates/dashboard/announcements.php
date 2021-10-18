@@ -143,7 +143,3 @@ $image_base = tutor()->url . '/assets/images/';
     ?>
 </div>
 <!--pagination end-->
-
-<?php
-include 'announcements/details.php';
-?>

@@ -28,7 +28,7 @@ $courses            = (current_user_can('administrator')) ? tutils()->get_course
 
 ?>
 
-<div class="row">
+<div class="tutor-bs-row">
     <div class="tutor-bs-col-12 tutor-bs-col-lg-6">
         <label class="tutor-bs-d-block">
             <?php _e('Courses', 'tutor'); ?>
@@ -48,22 +48,22 @@ $courses            = (current_user_can('administrator')) ? tutils()->get_course
             <?php endif; ?>
         </select>
     </div>
-    <div class="tutor-form-group">
-        <label><?php _e('Sort By', 'tutor'); ?></label>
+    <div class="tutor-bs-col-6 tutor-bs-col-lg-3">
+        <label class="tutor-bs-d-block"><?php _e('Sort By', 'tutor'); ?></label>
         <select class="tutor-form-select tutor-announcement-order-sorting">
             <option <?php selected($order_filter, 'ASC'); ?>><?php _e('ASC', 'tutor'); ?></option>
             <option <?php selected($order_filter, 'DESC'); ?>><?php _e('DESC', 'tutor'); ?></option>
         </select>
     </div>
-    <div class="tutor-form-group tutor-announcement-datepicker">
+    <div class="tutor-bs-col-6 tutor-bs-col-lg-3 tutor-announcement-datepicker">
         <label><?php _e('Create Date', 'tutor'); ?></label>
-        <input type="text" class="tutor_date_picker tutor-announcement-date-sorting"  value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
+        <input type="text" class="tutor-form-control tutor_date_picker tutor-announcement-date-sorting"  value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
         <i class="tutor-icon-calendar"></i>
     </div>
 </div>
+<br/>
 
 <?php
-
 if ($assignments->count) { ?>
 
     <div class="tutor-announcement-table-wrap">
