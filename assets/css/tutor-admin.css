@@ -7006,8 +7006,8 @@ li.tutor-option-nav-item h4 {
   left: 50%;
   width: 20px;
   height: 20px;
-  margin-top: -10px;
-  margin-left: -10px;
+  margin-top: calc(-1 * 20px / 2);
+  margin-left: calc(-1 * 20px / 2);
   border-radius: 50%;
   border: 2px solid #eee;
   border-top-color: #1973aa;
@@ -7268,8 +7268,19 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-addons-list-header {
-  height: 60px;
   background: #ffffff;
+}
+
+@media (min-width: 992px) {
+  .tutor-addons-list-header {
+    height: 60px;
+  }
+}
+
+@media (max-width: 991px) {
+  .tutor-addons-list-header {
+    margin-bottom: -3px;
+  }
 }
 
 .tutor-addons-list-header .filter-btns {
@@ -7392,6 +7403,10 @@ li.tutor-option-nav-item h4 {
   }
 }
 
+.tutor-addons-list-items.is-less-items {
+  grid-template-columns: repeat(auto-fit, minmax(350px, 390px));
+}
+
 .tutor-addons-card {
   background: #ffffff;
   border-radius: 6px;
@@ -7415,6 +7430,43 @@ li.tutor-option-nav-item h4 {
   background: rgba(252, 231, 199, 0.3);
   /* color/warning/fill/60 */
   border-top: 1px solid #f9d093;
+}
+
+.tutor-addons-card.empty-state {
+  text-align: center;
+  grid-area: 1 / -1;
+  height: 250px;
+}
+
+.tutor-addons-loading {
+  position: relative;
+  width: 100%;
+  height: 200px;
+}
+
+.tutor-addons-loading::before {
+  content: '';
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  margin-top: calc(-1 * 30px / 2);
+  margin-left: calc(-1 * 30px / 2);
+  border-radius: 50%;
+  border: 2px solid #d2dbf5;
+  border-top-color: #1973aa;
+  -webkit-animation: spinner 0.8s linear infinite;
+          animation: spinner 0.8s linear infinite;
+}
+
+@keyframes spinner {
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
 }
 
 .tutor-addons-empty {
@@ -7493,8 +7545,8 @@ li.tutor-option-nav-item h4 {
   left: 50%;
   width: 20px;
   height: 20px;
-  margin-top: -10px;
-  margin-left: -10px;
+  margin-top: calc(-1 * 20px / 2);
+  margin-left: calc(-1 * 20px / 2);
   border-radius: 50%;
   border: 2px solid #e8e8e8;
   border-top-color: #1a73aa;

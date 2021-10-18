@@ -101,11 +101,11 @@ msgstr ""
 msgid "Helps connect Google Classrooms with Tutor LMS courses, allowing you to use features like Classroom streams and files directly from the Tutor LMS course."
 msgstr ""
 
-#: classes/Addons.php:102
+#: classes/Addons.php:106
 msgid "WPML Multilingual CMS"
 msgstr ""
 
-#: classes/Addons.php:103
+#: classes/Addons.php:107
 msgid "Create multilingual courses, lessons, dashboard and more for a global audience."
 msgstr ""
 
@@ -205,7 +205,7 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:67, classes/Ajax.php:120, classes/Ajax.php:184, classes/Ajax.php:242, classes/Ajax.php:380, classes/Ajax.php:420, classes/Ajax.php:441, classes/Ajax.php:538, classes/Ajax.php:602, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1141, classes/Quiz.php:1201, classes/Q_and_A.php:71
+#: classes/Ajax.php:67, classes/Ajax.php:120, classes/Ajax.php:184, classes/Ajax.php:242, classes/Ajax.php:382, classes/Ajax.php:422, classes/Ajax.php:443, classes/Ajax.php:540, classes/Ajax.php:604, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1141, classes/Quiz.php:1201, classes/Q_and_A.php:71
 msgid "Access Denied"
 msgstr ""
 
@@ -245,47 +245,47 @@ msgstr ""
 msgid "Please install SSL certificate properly"
 msgstr ""
 
-#: classes/Ajax.php:484, classes/Ajax.php:488
+#: classes/Ajax.php:486, classes/Ajax.php:490
 msgid "ERROR:"
 msgstr ""
 
-#: classes/Ajax.php:488
+#: classes/Ajax.php:490
 msgid "Username is required."
 msgstr ""
 
-#: classes/Ajax.php:556
+#: classes/Ajax.php:558
 msgid "Course name required"
 msgstr ""
 
-#: classes/Ajax.php:561
+#: classes/Ajax.php:563
 msgid "Announcement title required"
 msgstr ""
 
-#: classes/Ajax.php:565
+#: classes/Ajax.php:567
 msgid "Announcement summary required"
 msgstr ""
 
-#: classes/Ajax.php:572
+#: classes/Ajax.php:574
 msgid "All fields required!"
 msgstr ""
 
-#: classes/Ajax.php:586
+#: classes/Ajax.php:588
 msgid "Announcement created successfully"
 msgstr ""
 
-#: classes/Ajax.php:586
+#: classes/Ajax.php:588
 msgid "Announcement updated successfully"
 msgstr ""
 
-#: classes/Ajax.php:590
+#: classes/Ajax.php:592
 msgid "Something Went Wrong!"
 msgstr ""
 
-#: classes/Ajax.php:607
+#: classes/Ajax.php:609
 msgid "Announcement deleted successfully"
 msgstr ""
 
-#: classes/Ajax.php:610
+#: classes/Ajax.php:612
 msgid "Announcement delete failed"
 msgstr ""
 
