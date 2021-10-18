@@ -25,6 +25,12 @@ document.addEventListener("DOMContentLoaded", function() {
     let image_upload_wrap = image_uploader[i].closest(".image-previewer");
     let input_file = image_upload_wrap.querySelector(".input_file");
     let upload_preview = image_upload_wrap.querySelector(".upload_preview");
+    let email_title_logo = document.querySelector(
+      '[data-source="email-title-logo"]'
+    );
+    // document.querySelector(
+    //   "[data-source='email-title-logo']"
+    // );
     let image_delete = image_upload_wrap.querySelector(".delete-btn");
 
     image_uploader[i].onclick = function(e) {
@@ -63,11 +69,13 @@ document.addEventListener("DOMContentLoaded", function() {
         var image_url = attachment.sizes[display.size].url;
 
         upload_preview.src = input_file.value = image_url;
+        email_title_logo.src = input_file.value = image_url;
       });
     };
 
     image_delete.onclick = function() {
       input_file.value = "";
+      email_title_logo.src = "https://via.placeholder.com/108x26?text=Upload";
     };
   }
 
@@ -284,7 +292,6 @@ document.addEventListener("DOMContentLoaded", function() {
       console.warn(`scrollTargetEl Not found!`);
     }
   }
-
 
   var exporter = document.querySelector("#export_settings");
   !exporter

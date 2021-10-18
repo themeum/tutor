@@ -1302,6 +1302,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var image_upload_wrap = image_uploader[i].closest(".image-previewer");
     var input_file = image_upload_wrap.querySelector(".input_file");
     var upload_preview = image_upload_wrap.querySelector(".upload_preview");
+    var email_title_logo = document.querySelector('[data-source="email-title-logo"]'); // document.querySelector(
+    //   "[data-source='email-title-logo']"
+    // );
+
     var image_delete = image_upload_wrap.querySelector(".delete-btn");
 
     image_uploader[i].onclick = function (e) {
@@ -1335,11 +1339,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var image_url = attachment.sizes[display.size].url;
         upload_preview.src = input_file.value = image_url;
+        email_title_logo.src = input_file.value = image_url;
       });
     };
 
     image_delete.onclick = function () {
       input_file.value = "";
+      email_title_logo.src = "https://via.placeholder.com/108x26?text=Upload";
     };
   };
 
