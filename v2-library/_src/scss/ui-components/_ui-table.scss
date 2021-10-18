@@ -104,7 +104,7 @@ table.tutor-ui-table {
 
 		tr {
 			&:last-child td {
-				border-bottom: 1px solid #cdcfd5;
+				border-bottom: 1px solid $stroke-light-30;
 			}
 			&:nth-child(even) td {
 				background-color: rgba(239, 241, 247, 0.3);
@@ -113,17 +113,17 @@ table.tutor-ui-table {
 
 		th,
 		td {
-			border-top: 1px solid #cdcfd5;
+			border-top: 1px solid $stroke-light-30;
 
 			// min-width: calc(100% / var(--column-count));
 
 			&:first-child {
-				border-left: 1px solid #cdcfd5;
+				border-left: 1px solid $stroke-light-30;
 				padding-left: 20px;
 			}
 
 			&:last-child {
-				border-right: 1px solid #cdcfd5;
+				border-right: 1px solid $stroke-light-30;
 				padding-right: 20px;
 			}
 		}
@@ -496,7 +496,7 @@ table.tutor-ui-table {
 				td {
 					word-break: break-word;
 					&:last-child {
-						border-bottom: 1px solid #cdcfd5;
+						border-bottom: 1px solid $stroke-light-30;
 						border-bottom-left-radius: 6px;
 						border-bottom-right-radius: 6px;
 					}
@@ -525,9 +525,9 @@ table.tutor-ui-table {
 				width: unset;
 				text-align: left;
 
-				border-top: 1px solid #cdcfd5;
-				border-left: 1px solid #cdcfd5;
-				border-right: 1px solid #cdcfd5;
+				border-top: 1px solid $stroke-light-30;
+				border-left: 1px solid $stroke-light-30;
+				border-right: 1px solid $stroke-light-30;
 
 				display: flex;
 

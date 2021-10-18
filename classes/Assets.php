@@ -83,8 +83,8 @@ class Assets {
 	}
 
 	public function admin_scripts() {
-		wp_enqueue_style('tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), tutor()->version);
-		wp_enqueue_style('tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), TUTOR_VERSION);
+		wp_enqueue_style('tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), TUTOR_VERSION);
 		/**
 		 * Scripts
 		 */
@@ -96,8 +96,8 @@ class Assets {
 		wp_enqueue_script('jquery-ui-slider');
 		wp_enqueue_script('jquery-ui-datepicker');
 
-		wp_enqueue_script('tutor-select2', tutor()->url.'assets/packages/select2/select2.full.min.js', array('jquery'), tutor()->version, true );
-		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker', 'wp-i18n'), tutor()->version, true );
+		wp_enqueue_script('tutor-select2', tutor()->url.'assets/packages/select2/select2.full.min.js', array('jquery'), TUTOR_VERSION, true );
+		wp_enqueue_script('tutor-admin', tutor()->url.'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker', 'wp-i18n'), TUTOR_VERSION, true );
 	}
 
 	/**
@@ -139,14 +139,14 @@ class Assets {
 		/**
 		 * Tutor Icon
 		 */
-		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), TUTOR_VERSION);
 
 		//Plyr
-		wp_enqueue_style('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), tutor()->version);
-		wp_enqueue_script('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array('jquery'), tutor()->version, true);
+		wp_enqueue_style('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), TUTOR_VERSION);
+		wp_enqueue_script('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array('jquery'), TUTOR_VERSION, true);
 
 		//Social Share
-		wp_enqueue_script('tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array('jquery'), tutor()->version, true);
+		wp_enqueue_script('tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array('jquery'), TUTOR_VERSION, true);
 
 		/**
 		 * Chart Data
@@ -154,11 +154,11 @@ class Assets {
 		if (!empty($wp_query->query_vars['tutor_dashboard_page'])) {
 			wp_enqueue_script('jquery-ui-slider');
 
-			wp_enqueue_style('tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), tutor()->version);
-			wp_enqueue_script('tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array('jquery'), tutor()->version, true);
+			wp_enqueue_style('tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), TUTOR_VERSION);
+			wp_enqueue_script('tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array('jquery'), TUTOR_VERSION, true);
 
 			if ($wp_query->query_vars['tutor_dashboard_page'] === 'earning') {
-				wp_enqueue_script('tutor-front-chart-js', tutor()->url . 'assets/js/Chart.bundle.min.js', array(), tutor()->version);
+				wp_enqueue_script('tutor-front-chart-js', tutor()->url . 'assets/js/Chart.bundle.min.js', array(), TUTOR_VERSION);
 				wp_enqueue_script('jquery-ui-datepicker');
 			}
 		}
@@ -167,8 +167,8 @@ class Assets {
 		 * translate js file
 		 * @since 1.9.0
 		 */
-		wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front.min.css", array(), tutor()->version);
-		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
+		wp_enqueue_style('tutor-frontend', tutor()->url."assets/css/tutor-front.min.css", array(), TUTOR_VERSION);
+		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n'), TUTOR_VERSION, true );
 
 
 		/**
@@ -176,7 +176,7 @@ class Assets {
 		 * @since v1.9.8
 		 */
 		if(tutor_utils()->is_tutor_frontend_dashboard()) {
-			wp_enqueue_style('tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', tutor()->version);
+			wp_enqueue_style('tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', TUTOR_VERSION);
 		}
 
 		// Load date picker for announcement at frontend
@@ -228,17 +228,17 @@ class Assets {
 	public function common_scripts() {
 
 		// Fonts
-		wp_enqueue_style('tutor-lineawesome-fonts', tutor()->url . 'v2-library/bundle/fonts/lineawesome@1.3.0/css/line-awesome.min.css', array(), tutor()->version);
-		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version);
-		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'v2-library/bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-lineawesome-fonts', tutor()->url . 'v2-library/bundle/fonts/lineawesome@1.3.0/css/line-awesome.min.css', array(), TUTOR_VERSION);
+		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), TUTOR_VERSION);
+		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'v2-library/bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css', array(), TUTOR_VERSION);
 		
 		// Common css library
-		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.min.css', array(), tutor()->version);
+		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.min.css', array(), TUTOR_VERSION);
 
 		// Load course builder resources
 		if($this->get_course_builder_screen()) {
-			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array( 'jquery', 'wp-i18n'), tutor()->version, true );
-			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), tutor()->version );
+			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array( 'jquery', 'wp-i18n'), TUTOR_VERSION, true );
+			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), TUTOR_VERSION );
 		}
 	}
 

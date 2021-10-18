@@ -44,6 +44,10 @@ if ( ! function_exists( 'tutor' ) ) {
 	 * @return object
 	 */
 	function tutor() {
+		if(isset($GLOBALS['tutor_plugin_info'])) {
+			return $GLOBALS['tutor_plugin_info'];
+		}
+
 		$path    = plugin_dir_path( TUTOR_FILE );
 		$has_pro = defined( 'TUTOR_PRO_VERSION' );
 
@@ -75,7 +79,8 @@ if ( ! function_exists( 'tutor' ) ) {
 			'has_pro'              => apply_filters( 'tutor_has_pro', $has_pro ),
 		);
 
-		return (object) $info;
+		$GLOBALS['tutor_plugin_info'] = (object) $info;
+		return $GLOBALS['tutor_plugin_info'];
 	}
 }
 

@@ -4,7 +4,7 @@
 	color: $text-primary;
 	.header-wrapper {
 		background: $bg-white;
-		border-bottom: 1px solid #cdcfd5;
+		border-bottom: 1px solid $stroke-light-30;
 
 		.prev-page {
 			font-size: 24px;
@@ -96,7 +96,7 @@
 
 		&.content-left {
 			background: #e4e5eb;
-			border-right: 1px solid #cdcfd5;
+			border-right: 1px solid $stroke-light-30;
 		}
 
 		.content-form {

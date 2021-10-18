@@ -8,7 +8,7 @@
     @include valueWithPrefix(display, flex);
     @include propertyWithPrefix(align-items, center);
     background: white;
-    border: 1px solid #CDCFD5;
+    border: 1px solid $stroke-light-30;
     box-sizing: border-box;
     border-radius: 6px;
     width: 100%;
@@ -35,7 +35,7 @@
         }
 
         &:last-child {
-            border-left: 1px solid #CDCFD5;
+            border-left: 1px solid $stroke-light-30;
             margin-left: 20px;
             @include valueWithPrefix(display, flex);
             @include propertyWithPrefix(flex-direction, column);
@@ -72,7 +72,7 @@
                 height: 0;
                 width: 100%;
                 margin: 0;
-                border-top: 1px solid #CDCFD5;
+                border-top: 1px solid $stroke-light-30;
             }
         }
     }

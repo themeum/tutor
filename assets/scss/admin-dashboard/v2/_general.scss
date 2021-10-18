@@ -159,10 +159,10 @@
           position: absolute;
           inset: -12px -16px -1px -16px;
           z-index: -1;
-          background: #eff1f7;
+          background: $black-05;
           border-radius: 6px 6px 0 0;
           opacity: 0.8;
-          border: 1px solid #cdcfd5;
+          border: 1px solid $stroke-light-30;
         }
       }
     }
@@ -191,7 +191,7 @@
     .tutor-option-field-row {
       padding-top: 8px;
       padding-bottom: 8px;
-      border-color: #cdcfd5;
+      border-color: $stroke-light-30;
       > div:nth-child(2) {
         font-weight: 600;
       }
@@ -205,8 +205,8 @@
 
   &.item-variation-dragndrop {
     .item-wrapper {
-      background: #eff1f7;
-      border: 1px solid #cdcfd5;
+      background: $black-05;
+      border: 1px solid $stroke-light-30;
       padding: 28px;
       padding-bottom: 25px;
     }
@@ -600,8 +600,8 @@
     }
 
     .logo-preview {
-      background: #eff1f7;
-      border: 2px solid #eff1f7;
+      background: $black-05;
+      border: 2px solid $black-05;
       border-radius: 3px;
       position: relative;
       margin-right: 38px;
@@ -951,7 +951,7 @@
       --padding: 13px;
       &:not(:last-child) {
         padding-bottom: var(--padding);
-        border-color: #cdcfd5;
+        border-color: $stroke-light-30;
       }
       &:not(:first-child) {
         padding-top: var(--padding);
@@ -994,7 +994,7 @@
 .loading-spinner {
   position: absolute;
   inset: 0;
-  background: #eff1f6;
+  background: $bg-gray-10;
   border-radius: 3px;
   z-index: 10;
 
