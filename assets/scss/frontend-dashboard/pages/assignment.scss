@@ -16,13 +16,13 @@
                     font-weight: 500;
                     font-size: 16px;
                     line-height: 26px;
-                    color: #212327;
+                    color: $black-main;
                 }
             }
         }
     }
     .tutor-dashboard-assignment-review-area{
-        background: #EFF1F6;
+        background: $bg-gray-10;
         padding: 25px;
         font-weight: 400;
         margin-bottom: 40px;
@@ -47,14 +47,14 @@
             font-size: 20px;
             margin: 0;
             margin-bottom: 20px;
-            color: #212327;
+            color: $black-main;
         }
 
         label {
             font-style: normal;
             font-weight: normal;
             font-size: 15px;
-            color: #5B616F;
+            color: $black-60;
         }
 
         [type=number] {
@@ -64,14 +64,14 @@
             font-style: normal;
             font-weight: 500;
             font-size: 20px;
-            color: #212327;
+            color: $black-main;
             
             &+p {
                 display: inline-block !important;
                 font-style: italic;
                 font-weight: normal;
                 font-size: 15px;
-                color: #5B616F;
+                color: $black-60;
             }
         }
     }

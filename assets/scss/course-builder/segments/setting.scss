@@ -1,7 +1,7 @@
 /* Course settings module */
 #tutor-metabox-course-settings-tabs {
     background-color: #fff;
-    border: 1px solid #CDCFD5;
+    border: 1px solid $stroke-light-30;
     box-sizing: border-box;
     border-radius: 6px;
 
@@ -35,7 +35,7 @@
         
         .settings-tabs-navs-wrap{
             @include propertyWithPrefix(flex, 0 0 200px);
-            background: #EFF1F7;            
+            background: $black-05;            
             border-top-left-radius: 6px;
             border-bottom-left-radius: 6px;
             overflow: hidden;

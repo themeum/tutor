@@ -58,7 +58,7 @@
     font-size: 15px !important;
     font-weight: 500;
     .tutor-ins-course-count {
-      color: #212327 !important
+      color: $black-main !important
     }
     .tutor-ins-course-text {
       color: #757C8E !important;
@@ -371,7 +371,7 @@
         -webkit-column-gap: 30px;
         -moz-column-gap: 30px;
                 column-gap: 30px;
-        border: 1px solid #CDCFD5;
+        border: 1px solid $stroke-light-30;
         -webkit-box-sizing: border-box;
                 box-sizing: border-box;
         border-radius: 6px;

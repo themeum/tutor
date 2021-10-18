@@ -21,7 +21,7 @@
         font-weight: normal;
         font-size: 13px;
         margin-right: 20px;
-        color: #5B616F;
+        color: $black-60;
         display: block;
     }
 
@@ -39,7 +39,7 @@
         font-size: 30px;
 
         &:hover{
-            background: #EFF1F7;
+            background: $black-05;
         }
     }
 
