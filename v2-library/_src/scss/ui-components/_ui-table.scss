@@ -284,9 +284,17 @@ table.tutor-ui-table {
 				padding: 8px 10px;
 				transition: 200ms ease;
 
-				&:hover {
+				&:hover,
+				&.tutor-brand {
 					color: $brand-wordpress;
 					border-color: $brand-wordpress;
+				}
+
+				&.tutor-danger {
+					&:hover {
+						color: $text-error;
+						border-color: $text-error;
+					}
 				}
 			}
 		}
