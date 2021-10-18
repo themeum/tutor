@@ -6445,9 +6445,11 @@ class Utils {
 			$status = 'completed';
 		} else if ( 'cancelled' === $status) {
 			$status = 'cancel';
+		} else {
+			$status = '';
 		}
 		$status_query = '';
-		if ( 'all' != $status ) {
+		if ( '' !== $status ) {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
@@ -6500,9 +6502,11 @@ class Utils {
 			$status = 'completed';
 		} else if ( 'cancelled' === $status) {
 			$status = 'cancel';
+		} else {
+			$status = '';
 		}
 		$status_query = '';
-		if ( 'all' !== $status ) {
+		if ( '' !== $status ) {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
