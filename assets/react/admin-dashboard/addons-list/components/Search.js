@@ -44,7 +44,7 @@ const Search = () => {
 			<button type="button" className="search-btn tutor-btn tutor-is-sm tutor-is-outline">
 				Filter
 			</button> */}
-			<div className="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right">
+			<div className="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-">
 				<span className="ttr-search-filled tutor-input-group-icon"></span>
 				<input
 					type="search"

@@ -145,6 +145,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
 /* harmony import */ var _AddonCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AddonCard */ "./assets/react/admin-dashboard/addons-list/components/AddonCard.js");
+/* harmony import */ var _images_empty_state_svg__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../images/empty-state.svg */ "./assets/images/empty-state.svg");
+
 
 
 
@@ -155,13 +157,24 @@ var AddonsList = function AddonsList() {
       loading = _useAddons.loading;
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-list-items tutor-mt-30"
+    className: "tutor-addons-list-items tutor-mt-30 ".concat(allAddons.length < 3 ? 'is-less-items' : '')
   }, allAddons.length ? allAddons.map(function (addon, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
       addon: addon,
       key: index
     });
-  }) : loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Loading...") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Empty"));
+  }) : loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "tutor-addons-loading"
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "tutor-addons-card empty-state tutor-py-20"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "text-medium-caption tutor-mb-20"
+  }, "Nothing Found!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
+    src: _images_empty_state_svg__WEBPACK_IMPORTED_MODULE_3__["default"],
+    alt: "empty state illustration"
+  }))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonsList);
@@ -235,14 +248,14 @@ var Header = function Header() {
     return sum + Number(!addon.is_enabled);
   }, 0);
   var requiredCount = addonList === null || addonList === void 0 ? void 0 : addonList.reduce(function (sum, addon) {
-    return sum + Number(addon.hasOwnProperty("depend_plugins") || 0);
+    return sum + Number(addon.hasOwnProperty('depend_plugins') || 0);
   }, 0);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", {
-    className: "tutor-addons-list-header d-flex justify-content-between align-items-center tutor-px-30 tutor-py-20"
+    className: "tutor-addons-list-header tutor-bs-d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "title text-medium-h5 color-text-primary mb-md-0 mb-3"
+    className: "title text-medium-h5 color-text-primary tutor-bs-mb-lg-0 tutor-bs-mb-3"
   }, "Addons List"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "filter-btns text-regular-body color-text-subsued"
+    className: "filter-btns text-regular-body color-text-subsued "
   }, filterBtns.map(function (btn, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
       type: "button",
@@ -251,7 +264,7 @@ var Header = function Header() {
       onClick: function onClick() {
         return getTabStatus(btn);
       }
-    }, btn, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+    }, btn, ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
       className: "item-count"
     }, "(", 'active' === btn ? activeCount : 'deactive' === btn ? deactiveCount : 'required' === btn ? requiredCount : addonList === null || addonList === void 0 ? void 0 : addonList.length, ")"));
   })));
@@ -324,7 +337,7 @@ var Search = function Search() {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "tutor-addons-list-select-filter d-flex justify-content-end align-items-center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right"
+    className: "tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
     className: "ttr-search-filled tutor-input-group-icon"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
@@ -3038,6 +3051,21 @@ function tutorModal() {
     reader.readAsDataURL(file);
   };
 })();
+
+/***/ }),
+
+/***/ "./assets/images/empty-state.svg":
+/*!***************************************!*\
+  !*** ./assets/images/empty-state.svg ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "images/50c03ef16622ccc1f8229b8c2afff92a-empty-state.svg");
 
 /***/ }),
 
@@ -31596,6 +31624,18 @@ if (false) {} else {
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
@@ -31610,6 +31650,26 @@ if (false) {} else {
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript)
+/******/ 				scriptUrl = document.currentScript.src
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) scriptUrl = scripts[scripts.length - 1].src
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
 /************************************************************************/

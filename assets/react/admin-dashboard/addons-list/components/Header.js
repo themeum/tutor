@@ -3,16 +3,16 @@ import { useAddons, useAddonsUpdate } from '../context/AddonsContext';
 
 const Header = () => {
 	const filterBtns = ['all', 'active', 'deactive', 'required'];
-	const {addonList} = useAddons();
+	const { addonList } = useAddons();
 	const { activeTab, getTabStatus } = useAddonsUpdate();
 	const activeCount = addonList?.reduce((sum, addon) => sum + Number(addon.is_enabled), 0);
 	const deactiveCount = addonList?.reduce((sum, addon) => sum + Number(!addon.is_enabled), 0);
-	const requiredCount = addonList?.reduce((sum, addon) => sum + Number(addon.hasOwnProperty("depend_plugins") || 0), 0);
+	const requiredCount = addonList?.reduce((sum, addon) => sum + Number(addon.hasOwnProperty('depend_plugins') || 0), 0);
 
 	return (
-		<header className="tutor-addons-list-header d-flex justify-content-between align-items-center tutor-px-30 tutor-py-20">
-			<div className="title text-medium-h5 color-text-primary mb-md-0 mb-3">Addons List</div>
-			<div className="filter-btns text-regular-body color-text-subsued">
+		<header className="tutor-addons-list-header tutor-bs-d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20">
+			<div className="title text-medium-h5 color-text-primary tutor-bs-mb-lg-0 tutor-bs-mb-3">Addons List</div>
+			<div className="filter-btns text-regular-body color-text-subsued ">
 				{filterBtns.map((btn, index) => {
 					return (
 						<button
@@ -21,7 +21,18 @@ const Header = () => {
 							key={index}
 							onClick={() => getTabStatus(btn)}
 						>
-							{btn} <span className="item-count">({'active' === btn ? activeCount : 'deactive' === btn ? deactiveCount : 'required' === btn ? requiredCount : addonList?.length })</span>
+							{btn}{' '}
+							<span className="item-count">
+								(
+								{'active' === btn
+									? activeCount
+									: 'deactive' === btn
+									? deactiveCount
+									: 'required' === btn
+									? requiredCount
+									: addonList?.length}
+								)
+							</span>
 						</button>
 					);
 				})}

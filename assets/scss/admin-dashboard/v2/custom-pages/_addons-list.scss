@@ -5,7 +5,13 @@
 // }
 
 .tutor-addons-list-header {
-	height: 60px;
+	@include breakpoint-min(992) {
+		height: 60px;
+	}
+	@include breakpoint-max(991) {
+		margin-bottom: -3px;
+	}
+
 	background: #ffffff;
 	.filter-btns {
 		display: flex;
@@ -104,6 +110,10 @@
 
 	// @include masonryGrid(4, 40px, 40px);
 	// column-width: 390px;
+
+	&.is-less-items {
+		grid-template-columns: repeat(auto-fit, minmax(350px, 390px));
+	}
 }
 .tutor-addons-card {
 	background: #ffffff;
@@ -131,6 +141,19 @@
 			border-top: 1px solid #f9d093;
 		}
 	}
+
+	&.empty-state {
+		text-align: center;
+		grid-area: 1 / -1;
+		height: 250px;
+	}
+}
+
+.tutor-addons-loading {
+	position: relative;
+	@include spinner($brand-wordpress, $primary-50, 30px);
+	width: 100%;
+	height: 200px;
 }
 
 .tutor-addons-empty {
