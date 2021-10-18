@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use TUTOR\Announcements;
 $announcement_obj = new Announcements();
 
-$per_page = 3;
+$per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? $_GET['paged'] : 1;
 
 $order_filter  = ( isset( $_GET['order'] ) && strtolower( $_GET['order'] ) == 'asc' ) ? 'ASC' : 'DESC';
