@@ -1,0 +1,78 @@
+// Assignments list
+
+// Assignment submission list
+
+// Review Assignment Page
+.tutor-dashboard-assignment-review{
+    .tutor-assignment-review-header {
+        table td{
+            &:first-child {
+
+            }
+
+            &:last-child {
+                &, a {
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 16px;
+                    line-height: 26px;
+                    color: #212327;
+                }
+            }
+        }
+    }
+    .tutor-dashboard-assignment-review-area{
+        background: #EFF1F6;
+        padding: 25px;
+        font-weight: 400;
+        margin-bottom: 40px;
+        border: 1px solid #E3E6EB;
+        box-sizing: border-box;
+        border-radius: 6px;
+
+        h4, h5 {
+            font-size: 16px;
+            line-height: 23px;
+            font-weight: 700;
+            color: var(--tutor-text-color);
+        }
+        
+        h5 {
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 20px;
+            margin: 0;
+            margin-bottom: 20px;
+            color: #212327;
+        }
+
+        label {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 15px;
+            color: #5B616F;
+        }
+
+        [type=number] {
+            max-width: 100px !important;
+            display: inline-block;
+            margin-right: 10px;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 20px;
+            color: #212327;
+            
+            &+p {
+                display: inline-block !important;
+                font-style: italic;
+                font-weight: normal;
+                font-size: 15px;
+                color: #5B616F;
+            }
+        }
+    }
+}

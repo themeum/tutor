@@ -2505,4 +2505,68 @@
   width: 20px;
 }
 
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-assignment-review-header table td:last-child, .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-assignment-review-header table td:last-child a {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 26px;
+  color: #212327;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-dashboard-assignment-review-area {
+  background: #EFF1F6;
+  padding: 25px;
+  font-weight: 400;
+  margin-bottom: 40px;
+  border: 1px solid #E3E6EB;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 6px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-dashboard-assignment-review-area h4, .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-dashboard-assignment-review-area h5 {
+  font-size: 16px;
+  line-height: 23px;
+  font-weight: 700;
+  color: var(--tutor-text-color);
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-dashboard-assignment-review-area h5 {
+  margin-bottom: 15px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-dashboard-assignment-review-area h3 {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  margin: 0;
+  margin-bottom: 20px;
+  color: #212327;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-dashboard-assignment-review-area label {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: #5B616F;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-dashboard-assignment-review-area [type=number] {
+  max-width: 100px !important;
+  display: inline-block;
+  margin-right: 10px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  color: #212327;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-dashboard-assignment-review-area [type=number] + p {
+  display: inline-block !important;
+  font-style: italic;
+  font-weight: normal;
+  font-size: 15px;
+  color: #5B616F;
+}
+
 /*# sourceMappingURL=tutor-frontend-dashboard.css.map */
