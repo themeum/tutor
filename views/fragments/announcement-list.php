@@ -153,7 +153,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
 
 <!-- Now Load The View -->
 <?php if(count($announcements)): ?>
-    <table class="tutor-ui-table tutor-bs-bg-white">
+    <table class="tutor-ui-table tutor-ui-table-responsive tutor-bs-bg-white">
         <thead>
             <tr>
                 <th class="tutor-shrink">
