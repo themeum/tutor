@@ -1052,23 +1052,53 @@ var _wp$i18n = wp.i18n,
     _nx = _wp$i18n._nx;
 
 window.onload = function () {
-  document.getElementById("tutor-backend-filter-course").onchange = function (e) {
-    window.location = urlPrams("course-id", e.target.value);
-  };
+  var filterCourse = document.getElementById("tutor-backend-filter-course");
 
-  document.getElementById("tutor-backend-filter-order").onchange = function (e) {
-    window.location = urlPrams("order", e.target.value);
-  };
+  if (filterCourse) {
+    filterCourse.onchange = function (e) {
+      window.location = urlPrams("course-id", e.target.value);
+    };
+  }
 
-  document.getElementById("tutor-backend-filter-date").onchange = function (e) {
-    window.location = urlPrams("date", e.target.value);
-  };
+  var filterOrder = document.getElementById("tutor-backend-filter-order");
 
-  document.getElementById("tutor-admin-search-filter-form").onsubmit = function (e) {
-    e.preventDefault();
-    var search = document.getElementById("tutor-backend-filter-search").value;
-    window.location = urlPrams("search", search);
-  };
+  if (filterOrder) {
+    filterOrder.onchange = function (e) {
+      window.location = urlPrams("order", e.target.value);
+    };
+  }
+
+  var filterDate = document.getElementById("tutor-backend-filter-date");
+
+  if (filterDate) {
+    filterDate.onchange = function (e) {
+      window.location = urlPrams("date", e.target.value);
+    };
+  }
+
+  var filterSearch = document.getElementById("tutor-admin-search-filter-form");
+
+  if (filterSearch) {
+    filterSearch.onsubmit = function (e) {
+      e.preventDefault();
+      var search = document.getElementById("tutor-backend-filter-search").value;
+      window.location = urlPrams("search", search);
+    };
+  } // document.getElementById("tutor-backend-filter-course").onchange = (e) => {
+  //   window.location = urlPrams("course-id", e.target.value);
+  // };
+  // document.getElementById("tutor-backend-filter-order").onchange = (e) => {
+  //   window.location = urlPrams("order", e.target.value);
+  // };
+  // document.getElementById("tutor-backend-filter-date").onchange = (e) => {
+  //   window.location = urlPrams("date", e.target.value);
+  // };
+  // document.getElementById("tutor-admin-search-filter-form").onsubmit = (e) => {
+  //   e.preventDefault();
+  //   const search = document.getElementById("tutor-backend-filter-search").value;
+  //   window.location = urlPrams("search", search);
+  // };
+
   /**
    * Onsubmit bulk form handle ajax request then reload page
    */
@@ -1076,70 +1106,72 @@ window.onload = function () {
 
   var bulkForm = document.getElementById("tutor-admin-bulk-action-form");
 
-  bulkForm.onsubmit = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-      var formData, bulkIds, bulkFields, _iterator, _step, field, post;
+  if (bulkForm) {
+    bulkForm.onsubmit = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+        var formData, bulkIds, bulkFields, _iterator, _step, field, post;
 
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              e.preventDefault();
-              formData = new FormData(bulkForm);
-              bulkIds = [];
-              bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
-              _iterator = _createForOfIteratorHelper(bulkFields);
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                e.preventDefault();
+                formData = new FormData(bulkForm);
+                bulkIds = [];
+                bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
+                _iterator = _createForOfIteratorHelper(bulkFields);
 
-              try {
-                for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                  field = _step.value;
+                try {
+                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                    field = _step.value;
 
-                  if (field.checked) {
-                    bulkIds.push(field.value);
+                    if (field.checked) {
+                      bulkIds.push(field.value);
+                    }
                   }
+                } catch (err) {
+                  _iterator.e(err);
+                } finally {
+                  _iterator.f();
                 }
-              } catch (err) {
-                _iterator.e(err);
-              } finally {
-                _iterator.f();
-              }
 
-              formData.set("bulk-ids", bulkIds);
-              formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-              _context.prev = 8;
-              _context.next = 11;
-              return fetch(window._tutorobject.ajaxurl, {
-                method: "POST",
-                body: formData
-              });
+                formData.set("bulk-ids", bulkIds);
+                formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+                _context.prev = 8;
+                _context.next = 11;
+                return fetch(window._tutorobject.ajaxurl, {
+                  method: "POST",
+                  body: formData
+                });
 
-            case 11:
-              post = _context.sent;
+              case 11:
+                post = _context.sent;
 
-              if (post.ok) {
-                location.reload();
-              }
+                if (post.ok) {
+                  location.reload();
+                }
 
-              _context.next = 18;
-              break;
+                _context.next = 18;
+                break;
 
-            case 15:
-              _context.prev = 15;
-              _context.t0 = _context["catch"](8);
-              alert(_context.t0);
+              case 15:
+                _context.prev = 15;
+                _context.t0 = _context["catch"](8);
+                alert(_context.t0);
 
-            case 18:
-            case "end":
-              return _context.stop();
+              case 18:
+              case "end":
+                return _context.stop();
+            }
           }
-        }
-      }, _callee, null, [[8, 15]]);
-    }));
+        }, _callee, null, [[8, 15]]);
+      }));
 
-    return function (_x2) {
-      return _ref.apply(this, arguments);
-    };
-  }();
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }();
+  }
   /**
    * onclick bulk action button show confirm popup
    * on click confirm button submit bulk form
@@ -1148,13 +1180,15 @@ window.onload = function () {
 
   var bulkActionButton = document.getElementById("tutor-confirm-bulk-action");
 
-  bulkActionButton.onclick = function () {
-    var input = document.createElement("input");
-    input.type = "submit";
-    bulkForm.appendChild(input);
-    input.click();
-    input.remove();
-  };
+  if (bulkActionButton) {
+    bulkActionButton.onclick = function () {
+      var input = document.createElement("input");
+      input.type = "submit";
+      bulkForm.appendChild(input);
+      input.click();
+      input.remove();
+    };
+  }
 
   function urlPrams(type, val) {
     var url = new URL(window.location.href);
@@ -1171,16 +1205,19 @@ window.onload = function () {
 
 
   var selectAll = document.querySelector("#tutor-bulk-checkbox-all");
-  selectAll.addEventListener("click", function () {
-    var checkboxes = document.querySelectorAll(".tutor-bulk-checkbox");
-    checkboxes.forEach(function (item) {
-      if (selectAll.checked) {
-        item.checked = true;
-      } else {
-        item.checked = false;
-      }
+
+  if (selectAll) {
+    selectAll.addEventListener("click", function () {
+      var checkboxes = document.querySelectorAll(".tutor-bulk-checkbox");
+      checkboxes.forEach(function (item) {
+        if (selectAll.checked) {
+          item.checked = true;
+        } else {
+          item.checked = false;
+        }
+      });
     });
-  });
+  }
 };
 
 /***/ }),
