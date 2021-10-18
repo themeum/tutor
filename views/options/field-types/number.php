@@ -1,5 +1,6 @@
 <?php
 $value = $this->get($field['key']);
+print_r( $value);
 if ( isset($field['default']) && empty($value) ) {
 	$value = $field['default'];
 }

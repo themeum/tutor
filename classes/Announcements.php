@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Announcements class for handling logics
  */
-
 class Announcements {
 	/**
 	 * Trait for utilities
