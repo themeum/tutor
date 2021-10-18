@@ -151,6 +151,7 @@ $announcements = $data['announcements'];
 $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
 ?>
 
+<!-- Now Load The View -->
 <?php if(count($announcements)): ?>
     <table class="tutor-ui-table tutor-bs-bg-white">
         <thead>
@@ -229,7 +230,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
         </tbody>
     </table>
 <?php else: ?>
-    <span>No Announcment</span>
+    <span><?php _e('No Announcment', 'tutor'); ?></span>
 <?php endif; ?>
 
 <?php 
