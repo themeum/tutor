@@ -76,7 +76,7 @@ gulp.task('v2_tutor_prefix', function (resolve) {
 	
 	[exp, min].forEach(css=> {
 		var string = fs.readFileSync(css).toString();
-		string = string.replace(/.tutor-prefix ./g, '.tutor-bs-');
+		string = string.replace(/\.tutor\-prefix \./g, '.tutor-bs-');
 		fs.writeFileSync(css, string);
 	});
 
