@@ -13,7 +13,7 @@ const debounce = (fn, delay = 500) => {
 	};
 };
 
-const Filter = () => {
+const Search = () => {
 	const { filterAddons } = useAddonsUpdate();
 	const [search, setSearch] = useState('');
 	const setDebouncedSearch = useCallback(
@@ -58,4 +58,4 @@ const Filter = () => {
 	);
 };
 
-export default Filter;
+export default Search;

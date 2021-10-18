@@ -124,7 +124,7 @@ var AddonCard = function AddonCard(_ref) {
     className: "addon-version text-medium-small color-text-hints"
   }, "Version : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
     className: "text-bold-small color-text-primary"
-  }, addon.version))));
+  }, addon.tutor_version))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonCard);
@@ -181,7 +181,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Header */ "./assets/react/admin-dashboard/addons-list/components/Header.js");
-/* harmony import */ var _Filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Filter */ "./assets/react/admin-dashboard/addons-list/components/Filter.js");
+/* harmony import */ var _Search__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Search */ "./assets/react/admin-dashboard/addons-list/components/Search.js");
 /* harmony import */ var _AddonsList__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AddonsList */ "./assets/react/admin-dashboard/addons-list/components/AddonsList.js");
 /* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
 
@@ -191,43 +191,79 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var App = function App() {
-  // console.log(useAddons())
-  // const {allAddons = []} = useAddons();
-  // const handleSelectFilter = (e) => {
-  // 	console.log(e.target.value);
-  // };
-  // const handleFilterBtnClick = (value) => {
-  // 	console.log(value, allAddons);
-  // 	switch (value) {
-  // 		case 'active':
-  // 			console.log(allAddons.filter((item) => item.is_enabled));
-  // 			console.log(value);
-  // 			break;
-  // 		case 'deactive':
-  // 			console.log(allAddons.filter((item) => item.is_enabled !== true));
-  // 			console.log(value);
-  // 			break;
-  // 		case 'all':
-  // 			console.log(allAddons);
-  // 			console.log(value);
-  // 			break;
-  // 	}
-  // 	// console.log('clicked', btn);
-  // };
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_context_AddonsContext__WEBPACK_IMPORTED_MODULE_4__.AddonsContextProvider, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("main", {
     className: "tutor-backend-settings-addons-list tutor-dashboard-page"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Header__WEBPACK_IMPORTED_MODULE_1__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "tutor-addons-list-body tutor-p-30"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Filter__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonsList__WEBPACK_IMPORTED_MODULE_3__["default"], null))));
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Search__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonsList__WEBPACK_IMPORTED_MODULE_3__["default"], null))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
 
 /***/ }),
 
-/***/ "./assets/react/admin-dashboard/addons-list/components/Filter.js":
+/***/ "./assets/react/admin-dashboard/addons-list/components/Header.js":
 /*!***********************************************************************!*\
-  !*** ./assets/react/admin-dashboard/addons-list/components/Filter.js ***!
+  !*** ./assets/react/admin-dashboard/addons-list/components/Header.js ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
+
+
+
+var Header = function Header() {
+  var filterBtns = ['all', 'active', 'deactive', 'required'];
+
+  var _useAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddons)(),
+      addonList = _useAddons.addonList;
+
+  var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
+      activeTab = _useAddonsUpdate.activeTab,
+      getTabStatus = _useAddonsUpdate.getTabStatus;
+
+  var activeCount = addonList === null || addonList === void 0 ? void 0 : addonList.reduce(function (sum, addon) {
+    return sum + Number(addon.is_enabled);
+  }, 0);
+  var deactiveCount = addonList === null || addonList === void 0 ? void 0 : addonList.reduce(function (sum, addon) {
+    return sum + Number(!addon.is_enabled);
+  }, 0);
+  var requiredCount = addonList === null || addonList === void 0 ? void 0 : addonList.reduce(function (sum, addon) {
+    return sum + Number(addon.hasOwnProperty("depend_plugins") || 0);
+  }, 0);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", {
+    className: "tutor-addons-list-header d-flex justify-content-between align-items-center tutor-px-30 tutor-py-20"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "title text-medium-h5 color-text-primary mb-md-0 mb-3"
+  }, "Addons List"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "filter-btns text-regular-body color-text-subsued"
+  }, filterBtns.map(function (btn, index) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+      type: "button",
+      className: "filter-btn ".concat(btn === activeTab ? 'is-active' : ''),
+      key: index,
+      onClick: function onClick() {
+        return getTabStatus(btn);
+      }
+    }, btn, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+      className: "item-count"
+    }, "(", 'active' === btn ? activeCount : 'deactive' === btn ? deactiveCount : 'required' === btn ? requiredCount : addonList === null || addonList === void 0 ? void 0 : addonList.length, ")"));
+  })));
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
+
+/***/ }),
+
+/***/ "./assets/react/admin-dashboard/addons-list/components/Search.js":
+/*!***********************************************************************!*\
+  !*** ./assets/react/admin-dashboard/addons-list/components/Search.js ***!
   \***********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -266,7 +302,7 @@ var debounce = function debounce(fn) {
   };
 };
 
-var Filter = function Filter() {
+var Search = function Search() {
   var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
       filterAddons = _useAddonsUpdate.filterAddons;
 
@@ -300,66 +336,7 @@ var Filter = function Filter() {
   })));
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Filter);
-
-/***/ }),
-
-/***/ "./assets/react/admin-dashboard/addons-list/components/Header.js":
-/*!***********************************************************************!*\
-  !*** ./assets/react/admin-dashboard/addons-list/components/Header.js ***!
-  \***********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
-
-
-
-var Header = function Header() {
-  var filterBtns = ['all', 'active', 'deactive', 'required'];
-
-  var _useAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddons)(),
-      addonList = _useAddons.addonList;
-
-  var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
-      activeTab = _useAddonsUpdate.activeTab,
-      getAddonsData = _useAddonsUpdate.getAddonsData;
-
-  var activeCount = addonList === null || addonList === void 0 ? void 0 : addonList.reduce(function (sum, addon) {
-    return sum + Number(addon.is_enabled);
-  }, 0);
-  var deactiveCount = addonList === null || addonList === void 0 ? void 0 : addonList.reduce(function (sum, addon) {
-    return sum + Number(!addon.is_enabled);
-  }, 0);
-  var requiredCount = addonList === null || addonList === void 0 ? void 0 : addonList.reduce(function (sum, addon) {
-    return sum + Number(addon.hasOwnProperty("depend_plugins") || 0);
-  }, 0);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", {
-    className: "tutor-addons-list-header d-flex justify-content-between align-items-center tutor-px-30 tutor-py-20"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "title text-medium-h5 color-text-primary mb-md-0 mb-3"
-  }, "Addons List"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "filter-btns text-regular-body color-text-subsued"
-  }, filterBtns.map(function (btn, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-      type: "button",
-      className: "filter-btn ".concat(btn === activeTab ? 'is-active' : ''),
-      key: index,
-      onClick: function onClick() {
-        return getAddonsData(btn);
-      }
-    }, btn, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-      className: "item-count"
-    }, "(", 'active' === btn ? activeCount : 'deactive' === btn ? deactiveCount : 'required' === btn ? requiredCount : addonList === null || addonList === void 0 ? void 0 : addonList.length, ")"));
-  })));
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Search);
 
 /***/ }),
 
@@ -605,7 +582,7 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
     toggleAddonStatus();
   };
 
-  var getAddonsData = function getAddonsData(btn) {
+  var getTabStatus = function getTabStatus(btn) {
     switch (btn) {
       case 'active':
         setActiveTab('active');
@@ -651,7 +628,7 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsUpdateContext.Provider, {
     value: {
       activeTab: activeTab,
-      getAddonsData: getAddonsData,
+      getTabStatus: getTabStatus,
       setActiveTab: setActiveTab,
       setAllAddons: setAllAddons,
       handleOnChange: handleOnChange,
