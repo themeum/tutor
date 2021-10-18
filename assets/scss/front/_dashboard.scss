@@ -283,82 +283,6 @@
 	color: var(--tutor-primary-color);
 }
 
-.tutor-dashboard-assignment-review {
-	background: rgba(220, 223, 229, 0.14);
-	border: 1px solid #dcdfe5;
-	padding: 25px;
-	//font-size: var(--tutor-text-size);
-	font-weight: 400;
-	border-radius: 4px;
-	margin-bottom: 40px;
-}
-
-.tutor-dashboard-assignment-review h5,
-.tutor-dashboard-assignment-review h4 {
-	font-size: 16px;
-	line-height: 23px;
-	font-weight: 700;
-	color: var(--tutor-text-color);
-}
-.tutor-dashboard-assignment-review h5 {
-	//font-size: var(--tutor-text-size);
-	margin-bottom: 15px;
-}
-
-.tutor-dashboard-assignment-files {
-	display: flex;
-	flex-wrap: wrap;
-	margin: -9px;
-}
-
-.tutor-dashboard-assignment-files .uploaded-files {
-	background-color: #fff;
-	border: 1px solid #dcdfe5;
-	border-radius: 4px;
-	margin: 9px;
-	transition: 300ms;
-}
-
-.tutor-dashboard-assignment-files .uploaded-files:hover {
-	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-}
-
-.tutor-dashboard-assignment-files .uploaded-files a i {
-	margin-right: 12px;
-	color: #606c8f;
-	float: left;
-	font-size: 28px;
-	line-height: 28px;
-}
-
-.tutor-dashboard-assignment-files .uploaded-files a {
-	color: var(--tutor-primary-color);
-	display: block;
-	overflow: hidden;
-	line-height: 28px;
-	padding: 15px 17px;
-}
-.tutor-dashboard-assignment-files .uploaded-files a:hover {
-	color: var(--tutor-primary-hover-color);
-}
-
-.tutor-assignment-evaluate-row {
-	display: flex;
-}
-
-.tutor-assignment-evaluate-row .tutor-option-field-label {
-	flex: 0 0 135px;
-}
-
-.tutor-assignment-evaluate-row .tutor-option-field {
-	flex-grow: 1;
-}
-
-.tutor-assignment-evaluate-row .tutor-option-field-label label {
-	display: block;
-	padding-top: 12px;
-}
-
 .tutor-option-field-label label br {
 	display: none;
 }
@@ -366,32 +290,6 @@
 .tutor-option-field-label label p {
 	margin: 0;
 	display: inline-block;
-}
-
-.tutor-assignment-evaluate-row textarea,
-.tutor-assignment-evaluate-row .tutor-option-field input {
-	border: 1px solid #dcdfe5;
-	height: 50px;
-	padding: 0 15px;
-	border-radius: 4px;
-	width: 100px;
-	background-color: #fff;
-}
-
-.tutor-assignment-evaluate-row textarea {
-	height: 165px;
-	width: 100%;
-}
-
-.tutor-assignment-evaluate-row {
-	margin-bottom: 60px;
-}
-
-.tutor-assignment-evaluate-row p.desc {
-	margin-bottom: 0;
-	margin-top: 6px;
-	//font-size: var(--tutor-text-size);
-	font-style: italic;
 }
 
 /* end dashboard content*/

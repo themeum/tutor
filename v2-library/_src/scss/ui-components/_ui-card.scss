@@ -25,25 +25,21 @@
         display: block;
     }
 
-    span.tutor-delete-attachment {
+    span.ttr {
         @include valueWithPrefix(display, inline-flex);
         @include propertyWithPrefix(align-items, center);
         @include propertyWithPrefix(justify-content, center);
         background: transparent;
         border-radius: 50%;
-        font-size: 12px;
+        font-size: 30px;
         cursor: pointer;
-    }
 
-    &.del-hover-circle {
-        span.tutor-delete-attachment{
-            width: 50px;
-            height: 50px;
-            font-size: 17px;
+        width: 40px;
+        height: 40px;
+        font-size: 30px;
 
-            &:hover{
-                background: #EFF1F7;
-            }
+        &:hover{
+            background: #EFF1F7;
         }
     }
 

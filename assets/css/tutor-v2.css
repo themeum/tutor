@@ -1,7 +1,7 @@
 @charset "UTF-8";
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
-.tutor-bs-
+.tutor-prefix {
   /*!
  * Bootstrap Grid v5.0.0-beta1 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
@@ -1407,11 +1407,11 @@
   display: inline !important;
 }
 
-.tutor-bs-d-inline-block, .tutor-bs-tutor-form-toggle input ~ .tutor-form-toggle-control, .tutor-form-toggle .tutor-bs-nput ~ .tutor-form-toggle-control, .tutor-bs-tutor-badge, .tutor-bs-tutor-badge-square, .tutor-bs-tutor-floating-badge, .tutor-bs-tutor-tag-list li, .tutor-tag-list .tutor-bs-i {
+.tutor-bs-d-inline-block, .tutor-bs-tutor-form-toggle input ~ .tutor-form-toggle-control, .tutor-form-toggle .tutor-prefix input ~ .tutor-form-toggle-control, .tutor-bs-tutor-badge, .tutor-bs-tutor-badge-square, .tutor-bs-tutor-floating-badge, .tutor-bs-tutor-tag-list li, .tutor-tag-list .tutor-prefix li {
   display: inline-block !important;
 }
 
-.tutor-bs-d-block, .tutor-bs-tutor-form-label, .tutor-bs-nput.tutor-form-control, .tutor-bs-extarea.tutor-form-control, .tutor-bs-elect.tutor-form-select, .tutor-bs-tutor-profile-badge img, .tutor-profile-badge .tutor-bs-mg, .tutor-bs-tutor-tag-list li a, .tutor-tag-list li .tutor-bs-, .tutor-bs-tutor-pagination span, .tutor-pagination .tutor-bs-pan {
+.tutor-bs-d-block, .tutor-bs-tutor-form-label, .tutor-prefix input.tutor-form-control, .tutor-prefix textarea.tutor-form-control, .tutor-prefix select.tutor-form-select, .tutor-bs-tutor-profile-badge img, .tutor-profile-badge .tutor-prefix img, .tutor-bs-tutor-tag-list li a, .tutor-tag-list li .tutor-prefix a, .tutor-bs-tutor-pagination span, .tutor-pagination .tutor-prefix span {
   display: block !important;
 }
 
@@ -1431,7 +1431,7 @@
   display: table-cell !important;
 }
 
-.tutor-bs-d-flex, .tutor-bs-tutor-instructor-card, .tutor-bs-tutor-instructor-card .tutor-name, .tutor-instructor-card .tutor-bs-tutor-name, .tutor-bs-tutor-text-card.tutor-is-vertical, .tutor-bs-tutor-btn.tutor-is-fullwidth, .tutor-bs-tutor-btn.tutor-is-block, .tutor-bs-tutor-btn.tutor-is-icon-btn .tutor-btn-icon, .tutor-btn.tutor-is-icon-btn .tutor-bs-tutor-btn-icon, .tutor-bs-tutor-input-group, .tutor-bs-tutor-form-check, .tutor-bs-tutor-profile-badge, .tutor-bs-tutor-pagination, .tutor-bs-tutor-pagination a, .tutor-pagination .tutor-bs- {
+.tutor-bs-d-flex, .tutor-bs-tutor-instructor-card, .tutor-bs-tutor-instructor-card .tutor-name, .tutor-instructor-card .tutor-bs-tutor-name, .tutor-bs-tutor-text-card.tutor-is-vertical, .tutor-bs-tutor-btn.tutor-is-fullwidth, .tutor-bs-tutor-btn.tutor-is-block, .tutor-bs-tutor-btn.tutor-is-icon-btn .tutor-btn-icon, .tutor-btn.tutor-is-icon-btn .tutor-bs-tutor-btn-icon, .tutor-bs-tutor-input-group, .tutor-bs-tutor-form-check, .tutor-bs-tutor-profile-badge, .tutor-bs-tutor-pagination, .tutor-bs-tutor-pagination a, .tutor-pagination .tutor-prefix a {
   display: -webkit-box !important;
   display: -ms-flexbox !important;
   display: flex !important;
@@ -1444,7 +1444,7 @@
   display: inline-flex !important;
 }
 
-.tutor-bs-d-none, .tutor-bs-tutor-form-toggle input, .tutor-form-toggle .tutor-bs-nput {
+.tutor-bs-d-none, .tutor-bs-tutor-form-toggle input, .tutor-form-toggle .tutor-prefix input {
   display: none !important;
 }
 
@@ -1532,7 +1532,7 @@
 }
 
 .tutor-bs-justify-content-center, .tutor-bs-tutor-btn, .tutor-bs-tutor-btn.tutor-is-icon-btn .tutor-btn-icon, .tutor-btn.tutor-is-icon-btn .tutor-bs-tutor-btn-icon, .tutor-bs-tutor-btn-circle, .tutor-bs-tutor-text-card .tutor-card-icon, .tutor-text-card .tutor-bs-tutor-card-icon,
-.tutor-bs-tutor-btn-square, .tutor-bs-tutor-pagination a, .tutor-pagination .tutor-bs- {
+.tutor-bs-tutor-btn-square, .tutor-bs-tutor-pagination a, .tutor-pagination .tutor-prefix a {
   -webkit-box-pack: center !important;
       -ms-flex-pack: center !important;
           justify-content: center !important;
@@ -1568,7 +1568,7 @@
 }
 
 .tutor-bs-align-items-center, .tutor-bs-tutor-instructor-card, .tutor-bs-tutor-instructor-card .tutor-name, .tutor-instructor-card .tutor-bs-tutor-name, .tutor-bs-tutor-text-card.tutor-is-vertical, .tutor-bs-tutor-btn, .tutor-bs-tutor-btn.tutor-is-icon-btn .tutor-btn-icon, .tutor-btn.tutor-is-icon-btn .tutor-bs-tutor-btn-icon, .tutor-bs-tutor-btn-circle, .tutor-bs-tutor-text-card .tutor-card-icon, .tutor-text-card .tutor-bs-tutor-card-icon,
-.tutor-bs-tutor-btn-square, .tutor-bs-tutor-form-check, .tutor-bs-tutor-form-toggle, .tutor-bs-tutor-profile-badge, .tutor-bs-tutor-ratings, .tutor-bs-tutor-ratings .tutor-rating-stars, .tutor-ratings .tutor-bs-tutor-rating-stars, .tutor-bs-tutor-pagination, .tutor-bs-tutor-pagination a, .tutor-pagination .tutor-bs- {
+.tutor-bs-tutor-btn-square, .tutor-bs-tutor-form-check, .tutor-bs-tutor-form-toggle, .tutor-bs-tutor-profile-badge, .tutor-bs-tutor-ratings, .tutor-bs-tutor-ratings .tutor-rating-stars, .tutor-ratings .tutor-bs-tutor-rating-stars, .tutor-bs-tutor-pagination, .tutor-bs-tutor-pagination a, .tutor-pagination .tutor-prefix a {
   -webkit-box-align: center !important;
       -ms-flex-align: center !important;
           align-items: center !important;
@@ -10277,9 +10277,14 @@ table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn {
   transition: 200ms ease;
 }
 
-table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn:hover {
+table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn:hover, table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn.tutor-brand {
   color: #1973aa;
   border-color: #1973aa;
+}
+
+table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn.tutor-danger:hover {
+  color: #f44337;
+  border-color: #f44337;
 }
 
 table.tutor-ui-table .td-action-btns .btn-text {
@@ -10511,6 +10516,28 @@ table.tutor-ui-table.tutor-ui-table-responsive {
     line-height: 138%;
     color: #5b616f;
   }
+}
+
+table.tutor-ui-table-no-border, table.tutor-ui-table-no-border td, table.tutor-ui-table-no-border th {
+  border: none;
+}
+
+table.tutor-ui-table-no-border td, table.tutor-ui-table-no-border th {
+  padding: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+table.tutor-ui-table-no-border.tutor-is-lefty td:not(:last-child) {
+  padding-right: 15px;
+}
+
+table.tutor-ui-table-no-border.tutor-is-flexible {
+  width: auto;
+}
+
+table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
+  width: 100%;
 }
 
 .tutor-thumbnail-uploader {
@@ -11566,6 +11593,119 @@ table.tutor-ui-table.tutor-ui-table-responsive {
   color: #24a148;
 }
 
+<<<<<<< HEAD
+.tutor-attachment-cards, .tutor-attachment-cards > div {
+  width: 100%;
+}
+
+.tutor-attachment-cards > div {
+  padding: 10px 20px;
+  margin-bottom: 15px;
+  background: #FFFFFF;
+  border: 1px solid #C0C3CB;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 6px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+}
+
+.tutor-attachment-cards span.filesize {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  margin-right: 20px;
+  color: #5B616F;
+  display: block;
+}
+
+.tutor-attachment-cards span.ttr {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  display: -o-inline-flex;
+  display: -ms-inline-flex;
+  display: -moz-inline-flex;
+  display: -webkit-inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  background: transparent;
+  border-radius: 50%;
+  font-size: 30px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  font-size: 30px;
+}
+
+.tutor-attachment-cards span.ttr:hover {
+  background: #EFF1F7;
+}
+
+.tutor-attachment-cards > div > div:first-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 25px;
+  -webkit-box-flex: 1;
+          flex: 1;
+  -o-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+}
+
+.tutor-attachment-cards > div > div:first-child a {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  color: #41454F;
+}
+
+.tutor-attachment-cards > div > div:first-child a:hover {
+  color: #0e0e0f;
+}
+
+.tutor-attachment-cards > div > div:last-child {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+=======
 .tutor-settings-pass-field .tutor-input-group .validation-icon {
   position: absolute;
   right: 6px;
@@ -11586,6 +11726,7 @@ table.tutor-ui-table.tutor-ui-table-responsive {
 
 .tutor-settings-pass-field .tutor-input-group .invalid-btn {
   color: #f44337;
+>>>>>>> b76b988e869e8fed167eeddfb747369ca1e25e3a
 }
 
 /*# sourceMappingURL=tutor-v2.css.map */
