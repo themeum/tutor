@@ -91,7 +91,7 @@ var AddonCard = function AddonCard(_ref) {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
     className: "tutor-form-toggle-control"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "tutor-form-toggle-label color-text-primary tutor-ml-5"
+    className: "tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5"
   }, "Active")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
     className: "color-text-hints text-medium-small"
   }, "Required Extension(s)"), addon.ext_required.map(function (extension, index) {
@@ -119,7 +119,7 @@ var AddonCard = function AddonCard(_ref) {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
     className: "tutor-form-toggle-control"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "tutor-form-toggle-label color-text-primary tutor-ml-5"
+    className: "tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5"
   }, "Active")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "addon-version text-medium-small color-text-hints"
   }, "Version : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
@@ -151,16 +151,17 @@ __webpack_require__.r(__webpack_exports__);
 
 var AddonsList = function AddonsList() {
   var _useAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddons)(),
-      allAddons = _useAddons.allAddons;
+      allAddons = _useAddons.allAddons,
+      loading = _useAddons.loading;
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-list-items tutor-mt-40"
-  }, allAddons.map(function (addon, index) {
+    className: "tutor-addons-list-items tutor-mt-30"
+  }, allAddons.length ? allAddons.map(function (addon, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
       addon: addon,
       key: index
     });
-  }));
+  }) : loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Loading...") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Empty"));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonsList);
@@ -236,34 +237,67 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
-var Filter = function Filter(_ref) {
-  var handleSelectFilter = _ref.handleSelectFilter;
+
+
+var debounce = function debounce(fn) {
+  var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
+  var timer = null;
+  return function () {
+    var context = this,
+        args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      fn.apply(context, args);
+    }, delay);
+  };
+};
+
+var Filter = function Filter() {
+  var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
+      filterAddons = _useAddonsUpdate.filterAddons;
+
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+      _useState2 = _slicedToArray(_useState, 2),
+      search = _useState2[0],
+      setSearch = _useState2[1];
+
+  var setDebouncedSearch = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(debounce(function (value) {
+    filterAddons(value);
+  }), []);
+
+  var handleChange = function handleChange(e) {
+    var value = e.target.value;
+    setSearch(value);
+    setDebouncedSearch(value);
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-list-select-filter d-flex justify-content-end align-items-center tutor-mt-5"
+    className: "tutor-addons-list-select-filter d-flex justify-content-end align-items-center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "filter-custom-field d-flex"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("select", {
-    name: "filter-select",
-    className: "tutor-form-select",
-    onChange: function onChange(e) {
-      return handleSelectFilter(e);
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
-    value: "all"
-  }, "All"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
-    value: "active"
-  }, "Active"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
-    value: "deactive"
-  }, "Deactive")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+    className: "tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+    className: "ttr-search-filled tutor-input-group-icon"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
     type: "search",
-    className: "filter-search tutor-form-control",
-    placeholder: "Search by name"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-    type: "button",
-    className: "search-btn tutor-btn tutor-is-sm tutor-is-outline"
-  }, "Filter"));
+    className: "tutor-form-control",
+    placeholder: "Search\u2026",
+    value: search,
+    onChange: handleChange
+  })));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Filter);
@@ -392,23 +426,28 @@ var useAddonsUpdate = function useAddonsUpdate() {
  */
 
 var AddonsContextProvider = function AddonsContextProvider(props) {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
       _useState2 = _slicedToArray(_useState, 2),
-      allAddons = _useState2[0],
-      setAllAddons = _useState2[1];
+      loading = _useState2[0],
+      setLoding = _useState2[1];
 
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('all'),
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
       _useState4 = _slicedToArray(_useState3, 2),
-      activeTab = _useState4[0],
-      setActiveTab = _useState4[1];
+      allAddons = _useState4[0],
+      setAllAddons = _useState4[1];
+
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('all'),
+      _useState6 = _slicedToArray(_useState5, 2),
+      activeTab = _useState6[0],
+      setActiveTab = _useState6[1];
 
   var initialRenderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
   var allAddonsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
 
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-      _useState6 = _slicedToArray(_useState5, 2),
-      addons = _useState6[0],
-      setAddons = _useState6[1];
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+      _useState8 = _slicedToArray(_useState7, 2),
+      addons = _useState8[0],
+      setAddons = _useState8[1];
 
   var fetchAddons = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
@@ -446,18 +485,20 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
               if (data && data.length) {
                 setAllAddons(data);
                 allAddonsRef.current = data;
+                setLoding(false);
               }
 
             case 13:
-              _context.next = 18;
+              _context.next = 19;
               break;
 
             case 15:
               _context.prev = 15;
               _context.t0 = _context["catch"](3);
               console.log(_context.t0);
+              setLoding(false);
 
-            case 18:
+            case 19:
             case "end":
               return _context.stop();
           }
@@ -588,10 +629,24 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
     }
   };
 
+  var filterAddons = function filterAddons() {
+    var searchValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+    if (searchValue.trim()) {
+      var filteredAddons = allAddonsRef.current.filter(function (addon) {
+        return addon.name.toLowerCase().includes(searchValue.toLowerCase());
+      });
+      setAllAddons(filteredAddons);
+    } else {
+      setAllAddons(allAddonsRef.current);
+    }
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsContext.Provider, {
     value: {
       allAddons: allAddons,
-      addonList: addons
+      addonList: addons,
+      loading: loading
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsUpdateContext.Provider, {
     value: {
@@ -599,7 +654,8 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
       getAddonsData: getAddonsData,
       setActiveTab: setActiveTab,
       setAllAddons: setAllAddons,
-      handleOnChange: handleOnChange
+      handleOnChange: handleOnChange,
+      filterAddons: filterAddons
     }
   }, props.children));
 };
