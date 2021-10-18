@@ -133,11 +133,7 @@ msgstr ""
 msgid "Instructors"
 msgstr ""
 
-<<<<<<< HEAD
-#: classes/Admin.php:74, classes/Admin.php:74, classes/Utils.php:1295, classes/Utils.php:2462, views/fragments/announcement-list.php:165, views/pages/announcements.php:104
-=======
 #: classes/Admin.php:74, classes/Admin.php:74, classes/Utils.php:1295, classes/Utils.php:2462, views/fragments/announcement-list.php:166, views/pages/announcements.php:104
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
 msgid "Announcements"
 msgstr ""
 
@@ -209,7 +205,7 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:67, classes/Ajax.php:120, classes/Ajax.php:184, classes/Ajax.php:242, classes/Ajax.php:418, classes/Ajax.php:464, classes/Ajax.php:485, classes/Ajax.php:582, classes/Ajax.php:646, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1141, classes/Quiz.php:1201, classes/Q_and_A.php:71
+#: classes/Ajax.php:67, classes/Ajax.php:120, classes/Ajax.php:184, classes/Ajax.php:242, classes/Ajax.php:380, classes/Ajax.php:420, classes/Ajax.php:441, classes/Ajax.php:538, classes/Ajax.php:602, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1141, classes/Quiz.php:1201, classes/Q_and_A.php:71
 msgid "Access Denied"
 msgstr ""
 
@@ -249,55 +245,47 @@ msgstr ""
 msgid "Please install SSL certificate properly"
 msgstr ""
 
-#: classes/Ajax.php:528, classes/Ajax.php:532
+#: classes/Ajax.php:484, classes/Ajax.php:488
 msgid "ERROR:"
 msgstr ""
 
-#: classes/Ajax.php:532
+#: classes/Ajax.php:488
 msgid "Username is required."
 msgstr ""
 
-#: classes/Ajax.php:600
+#: classes/Ajax.php:556
 msgid "Course name required"
 msgstr ""
 
-#: classes/Ajax.php:605
+#: classes/Ajax.php:561
 msgid "Announcement title required"
 msgstr ""
 
-#: classes/Ajax.php:609
+#: classes/Ajax.php:565
 msgid "Announcement summary required"
 msgstr ""
 
-#: classes/Ajax.php:616
+#: classes/Ajax.php:572
 msgid "All fields required!"
 msgstr ""
 
-#: classes/Ajax.php:630
+#: classes/Ajax.php:586
 msgid "Announcement created successfully"
 msgstr ""
 
-#: classes/Ajax.php:630
+#: classes/Ajax.php:586
 msgid "Announcement updated successfully"
 msgstr ""
 
-#: classes/Ajax.php:634
+#: classes/Ajax.php:590
 msgid "Something Went Wrong!"
 msgstr ""
 
-<<<<<<< HEAD
-#: classes/Ajax.php:651
+#: classes/Ajax.php:607
 msgid "Announcement deleted successfully"
 msgstr ""
 
-#: classes/Ajax.php:654
-=======
-#: classes/Ajax.php:519
-msgid "Announcement deleted successfully"
-msgstr ""
-
-#: classes/Ajax.php:522
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
+#: classes/Ajax.php:610
 msgid "Announcement delete failed"
 msgstr ""
 
@@ -601,11 +589,7 @@ msgstr ""
 msgid "Instructor Commission"
 msgstr ""
 
-<<<<<<< HEAD
-#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, views/fragments/announcement-list.php:160, views/fragments/announcement-list.php:185, views/pages/announcements.php:94, templates/dashboard/assignments/submitted.php:71, templates/dashboard/my-quiz-attempts/attempts-details.php:114
-=======
 #: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, views/fragments/announcement-list.php:161, views/fragments/announcement-list.php:186, views/pages/announcements.php:94, templates/dashboard/assignments/submitted.php:71, templates/dashboard/assignments/submitted.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:114
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
 msgid "Date"
 msgstr ""
 
@@ -2976,11 +2960,7 @@ msgstr ""
 msgid "Are you Sure? It can not be undone."
 msgstr ""
 
-<<<<<<< HEAD
-#: classes/Withdraw_Requests_List.php:63, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:43, views/fragments/announcement-list.php:214, views/modal/edit_quiz.php:55, templates/dashboard/announcements/details.php:32, templates/dashboard/settings/profile.php:96, views/options/field-types/media.php:30
-=======
 #: classes/Withdraw_Requests_List.php:63, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:43, views/fragments/announcement-list.php:215, views/modal/edit_quiz.php:55, templates/dashboard/settings/profile.php:96, views/options/field-types/media.php:30
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
 msgid "Delete"
 msgstr ""
 
@@ -3266,11 +3246,7 @@ msgstr ""
 msgid "Level"
 msgstr ""
 
-<<<<<<< HEAD
-#: templates/dashboard/announcements.php:61, views/fragments/announcement-list.php:188
-=======
 #: templates/dashboard/announcements.php:61, views/fragments/announcement-list.php:189
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
 msgid "Announcement"
 msgstr ""
 
@@ -3298,17 +3274,8 @@ msgstr ""
 msgid "Create Date"
 msgstr ""
 
-<<<<<<< HEAD
-#: templates/dashboard/assignments.php:122
-msgid "No assignment available"
-msgstr ""
-
-#: templates/dashboard/assignments.php:73, templates/dashboard/dashboard.php:116, templates/dashboard/dashboard.php:143
-msgid "Course Name"
-=======
 #: templates/dashboard/assignments.php:73
 msgid "Assignment Name"
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
 msgstr ""
 
 #: templates/dashboard/assignments.php:78, templates/dashboard/my-quiz-attempts.php:36, templates/dashboard/my-quiz-attempts/attempts-details.php:116, templates/dashboard/quiz-attempts/quiz-reviews.php:104
@@ -3319,11 +3286,7 @@ msgstr ""
 msgid "Total Submit"
 msgstr ""
 
-<<<<<<< HEAD
-#: templates/dashboard/assignments.php:99, templates/dashboard/quiz-attempts.php:102, views/fragments/announcement-list.php:197, templates/dashboard/assignments/submitted.php:91, templates/single/quiz/previous-attempts.php:79
-=======
 #: templates/dashboard/assignments.php:125, templates/dashboard/quiz-attempts.php:102, views/fragments/announcement-list.php:198, templates/dashboard/assignments/submitted.php:111, templates/single/quiz/previous-attempts.php:79
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
 msgid "Details"
 msgstr ""
 
@@ -3467,13 +3430,10 @@ msgstr ""
 msgid "View All"
 msgstr ""
 
-<<<<<<< HEAD
-=======
 #: templates/dashboard/dashboard.php:116, templates/dashboard/dashboard.php:143
 msgid "Course Name"
 msgstr ""
 
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
 #: templates/dashboard/dashboard.php:121, templates/dashboard/dashboard.php:150
 msgid "Enrolled"
 msgstr ""
@@ -3526,11 +3486,7 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-<<<<<<< HEAD
-#: templates/dashboard/my-courses.php:75, views/fragments/announcement-list.php:208, views/modal/edit_quiz.php:49, templates/dashboard/announcements/details.php:33
-=======
 #: templates/dashboard/my-courses.php:75, views/fragments/announcement-list.php:209, views/modal/edit_quiz.php:49
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
 msgid "Edit"
 msgstr ""
 
@@ -3542,11 +3498,7 @@ msgstr ""
 msgid "You are going to delete this course, it can't be undone"
 msgstr ""
 
-<<<<<<< HEAD
-#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/fragments/announcement-list.php:74, views/fragments/announcement-list.php:137, views/metabox/course-topics.php:74, views/metabox/course-topics.php:110, views/metabox/course-topics.php:143, views/modal/review.php:19, views/modal/topic-form.php:46, templates/dashboard/announcements/details.php:29, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
-=======
 #: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/fragments/announcement-list.php:74, views/fragments/announcement-list.php:137, views/metabox/course-topics.php:74, views/metabox/course-topics.php:110, views/metabox/course-topics.php:143, views/modal/review.php:19, views/modal/topic-form.php:46, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
 msgid "Cancel"
 msgstr ""
 
@@ -3970,13 +3922,6 @@ msgstr ""
 msgid "Yes, Delete This"
 msgstr ""
 
-<<<<<<< HEAD
-#: views/fragments/announcement-list.php:194
-msgid "Action"
-msgstr ""
-
-#: views/fragments/announcement-list.php:222
-=======
 #: views/fragments/announcement-list.php:233
 msgid "No Announcment"
 msgstr ""
@@ -3986,7 +3931,6 @@ msgid "Action"
 msgstr ""
 
 #: views/fragments/announcement-list.php:223
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
 msgid "Edit Announcment"
 msgstr ""
 
@@ -4710,7 +4654,6 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-<<<<<<< HEAD
 #: views/pages/__enable_disable_addons.php:3
 msgid "Addons List"
 msgstr ""
@@ -4719,10 +4662,7 @@ msgstr ""
 msgid "Required Plugin(s)"
 msgstr ""
 
-#: templates/dashboard/assignments/review.php:125
-=======
 #: templates/dashboard/assignments/review.php:142
->>>>>>> 65fefb068f4c4b3d0f3a3ef5549e87844d3a980b
 msgid "Assignments submission not found or not completed"
 msgstr ""
 

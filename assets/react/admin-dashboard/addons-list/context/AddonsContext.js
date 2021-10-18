@@ -123,7 +123,7 @@ export const AddonsContextProvider = (props) => {
 		toggleAddonStatus();
 	};
 
-	const getAddonsData = (btn) => {
+	const getTabStatus = (btn) => {
 		switch (btn) {
 			case 'active':
 				setActiveTab('active');
@@ -157,9 +157,7 @@ export const AddonsContextProvider = (props) => {
 
 	return (
 		<AddonsContext.Provider value={{ allAddons, addonList: addons, loading }}>
-			<AddonsUpdateContext.Provider
-				value={{ activeTab, getAddonsData, setActiveTab, setAllAddons, handleOnChange, filterAddons }}
-			>
+			<AddonsUpdateContext.Provider value={{ activeTab, getTabStatus, setActiveTab, setAllAddons, handleOnChange, filterAddons }}>
 				{props.children}
 			</AddonsUpdateContext.Provider>
 		</AddonsContext.Provider>

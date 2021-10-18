@@ -344,6 +344,8 @@ class Ajax{
             
                     $plugins_data[$base_name]['ext_required'] = $required;
                 }
+				// Add tutor plugin version to all addons.
+				$plugins_data[$base_name]['tutor_version'] = TUTOR_VERSION;
             }
         }
 

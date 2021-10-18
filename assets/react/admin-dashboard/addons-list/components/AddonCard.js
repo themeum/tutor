@@ -77,7 +77,7 @@ const AddonCard = ({ addon }) => {
 					)}
 				</div>
 				<div className="addon-version text-medium-small color-text-hints">
-					Version : <span className="text-bold-small color-text-primary">{addon.version}</span>
+					Version : <span className="text-bold-small color-text-primary">{addon.tutor_version}</span>
 				</div>
 			</div>
 		</div>

@@ -4,7 +4,7 @@ import { useAddons, useAddonsUpdate } from '../context/AddonsContext';
 const Header = () => {
 	const filterBtns = ['all', 'active', 'deactive', 'required'];
 	const {addonList} = useAddons();
-	const { activeTab, getAddonsData } = useAddonsUpdate();
+	const { activeTab, getTabStatus } = useAddonsUpdate();
 	const activeCount = addonList?.reduce((sum, addon) => sum + Number(addon.is_enabled), 0);
 	const deactiveCount = addonList?.reduce((sum, addon) => sum + Number(!addon.is_enabled), 0);
 	const requiredCount = addonList?.reduce((sum, addon) => sum + Number(addon.hasOwnProperty("depend_plugins") || 0), 0);
@@ -19,7 +19,7 @@ const Header = () => {
 							type="button"
 							className={`filter-btn ${btn === activeTab ? 'is-active' : ''}`}
 							key={index}
-							onClick={() => getAddonsData(btn)}
+							onClick={() => getTabStatus(btn)}
 						>
 							{btn} <span className="item-count">({'active' === btn ? activeCount : 'deactive' === btn ? deactiveCount : 'required' === btn ? requiredCount : addonList?.length })</span>
 						</button>
