@@ -63,22 +63,31 @@ $courses            = (current_user_can('administrator')) ? tutils()->get_course
 </div>
 <br/>
 
-<?php
-if ($assignments->count) { ?>
-
-    <div class="tutor-announcement-table-wrap">
-        <table class="tutor-dashboard-announcement-table" width="100%">
-            <thead>
-                <tr>
-                    <th><?php _e('Course Name', 'tutor') ?></th>
-                    <th width="15%"><?php _e('Total Points', 'tutor') ?></th>
-                    <th width="15%"><?php _e('Total Submits', 'tutor') ?></th>
-                    <th width="10%">&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                
+<?php if ($assignments->count): ?>
+    <table class="tutor-ui-table tutor-ui-table-responsive table-assignment">
+        <thead>
+            <tr>
+                <th>
+                    <span class="text-regular-small color-text-subsued">
+                        <?php _e('Assignment Name', 'tutor'); ?>
+                    </span>
+                </th>
+                <th>
+                    <div class="inline-flex-center color-text-subsued">
+                        <span class="text-regular-small"><?php _e('Total Marks', 'tutor'); ?></span>
+                    </div>
+                </th>
+                <th>
+                    <div class="inline-flex-center color-text-subsued">
+                        <span class="text-regular-small"><?php _e('Total Submit', 'tutor'); ?></span>
+                    </div>
+                </th>
+                <th class="tutor-shrink"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                    
                 $submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/submitted');
 
                 foreach ($assignments->results as $item) {
@@ -86,27 +95,42 @@ if ($assignments->count) { ?>
                     $course_id = tutor_utils()->get_course_id_by('assignment', $item->ID);
                     $comment_count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d", $item->ID));
                     // @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish
-                ?>
+                    ?>
                     <tr>
-                        <td>
-                            <h4><?php echo esc_html($item->post_title); ?></h4>
-                            <p><?php echo __('Course: ', 'tutor'); ?><a href='<?php echo get_the_permalink($course_id) ?>' target="_blank"><?php echo get_the_title($course_id); ?> </a></p>
+                        <td data-th="Course Name" class="column-fullwidth">
+                            <div class="color-text-primary td-course text-medium-body">
+                                <a href="#"><?php echo esc_html($item->post_title); ?></a>
+                                <div class="course-meta">
+                                    <span class="color-text-subsued text-regular-caption">
+                                        <strong class="text-medium-caption"><?php _e('Course', 'tutor'); ?>: </strong> 
+                                        <a href='<?php echo get_the_permalink($course_id) ?>' target="_blank"><?php echo get_the_title($course_id); ?> </a>
+                                    </span>
+                                </div>
+                            </div>
                         </td>
-                        <td><?php echo $max_mark ?></td>
-                        <td><?php echo $comment_count ?></td>
-                        <td>
-                            <a href="<?php echo esc_url($submitted_url . '?assignment=' . $item->ID); ?>" class="tutor-btn bordered-btn tutor-announcement-details">
-                                <?php _e('Details', 'tutor'); ?>
-                            </a>
+                        <td data-th="Total Points">
+                            <span class="color-text-primary text-medium-caption">
+                                <?php echo $max_mark ?>
+                            </span> 
+                        </td>
+                        <td data-th="Total SUbmits">
+                            <span class="color-text-primary text-medium-caption">
+                                <?php echo $comment_count ?>
+                            </span>
+                        </td>
+                        <td data-th="Details URL">
+                            <div class="inline-flex-center td-action-btns">
+                                <a href="<?php echo esc_url($submitted_url . '?assignment=' . $item->ID); ?>" class="btn-outline tutor-btn">
+                                    <?php _e('Details', 'tutor'); ?>
+                                </a>
+                            </div>
                         </td>
                     </tr>
-                <?php
+                    <?php
                 }
-                ?>
-            </tbody>
-        </table>
-    </div>
-
+            ?>
+        </tbody>
+    </table>
     <div class="tutor-pagination">
         <?php
 
@@ -118,6 +142,6 @@ if ($assignments->count) { ?>
         ?>
     </div>
 
-<?php } else {
-    echo '<p>' . __('No assignment available', 'tutor') . '</p>';
-}
+<?php else: ?>
+    <p><?php _w('No assignment available', 'tutor'); ?></p>
+<?php endif; ?>
