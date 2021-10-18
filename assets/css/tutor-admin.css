@@ -7083,6 +7083,56 @@ li.tutor-option-nav-item h4 {
   margin-bottom: 18px;
 }
 
+.loading-spinner {
+  position: absolute;
+  inset: 0;
+  background: #eff1f6;
+  border-radius: 3px;
+  z-index: 10;
+}
+
+.loading-spinner::before {
+  content: '';
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid #eee;
+  border-top-color: #1973aa;
+  -webkit-animation: spinner 0.8s linear infinite;
+          animation: spinner 0.8s linear infinite;
+}
+
+@-webkit-keyframes spinner {
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner {
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+.loading-spinner::before {
+  width: 50px;
+  height: 50px;
+  top: 30%;
+}
+
+.loading-spinner.hide {
+  display: none;
+}
+
 .tutor-backend-settings-page.email-manage-page {
   background: #ffffff;
   color: #212327;
@@ -7377,13 +7427,6 @@ li.tutor-option-nav-item h4 {
   border-top-color: #1a73aa;
   -webkit-animation: spinner 0.8s linear infinite;
           animation: spinner 0.8s linear infinite;
-}
-
-@-webkit-keyframes spinner {
-  to {
-    -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-  }
 }
 
 @keyframes spinner {
