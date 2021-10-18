@@ -66,14 +66,14 @@
 					<label for="tutor-backend-filter-date">
 						<?php esc_html_e( 'Date', 'tutor' ); ?>
 					</label>
-					<input type="date" name="tutor-backend-filter-date" id="tutor-backend-filter-date" value="<?php esc_html_e( tutor_get_formated_date( get_option( 'date_format' ), $date )); ?>">
+					<input type="date" name="tutor-backend-filter-date" id="tutor-backend-filter-date" value="<?php esc_html_e( tutor_get_formated_date( get_option( 'date_format' ), $date )); ?>" value="<?php esc_attr_e( $date ); ?>">
 				</div>
 				<form action="" method="get" id="tutor-admin-search-filter-form">
 					<div class="tutor-form-group">
 						<label for="tutor-backend-filter-search">
 							<?php esc_html_e( 'Search', 'tutor' ); ?>
 						</label>
-						<input type="search" id="tutor-backend-filter-search" name="tutor-backend-filter-search" value="<?php esc_html_e( $search ) ; ?>">
+						<input type="search" id="tutor-backend-filter-search" name="tutor-backend-filter-search" placeholder="<?php esc_html_e( 'Search...' ); ?>" value="<?php esc_html_e( $search ) ; ?>">
 					</div>
 				</form>
 			</div>
