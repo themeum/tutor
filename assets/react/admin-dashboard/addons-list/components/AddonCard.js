@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useAddonsUpdate } from '../context/AddonsContext';
 
 const AddonCard = ({addon}) => {
@@ -29,6 +29,17 @@ const AddonCard = ({addon}) => {
 				<div className="addon-toggle">
 					{addon.ext_required ? (
 						<>
+							<label className="tutor-form-toggle">
+								<input
+									type="checkbox"
+									className="tutor-form-toggle-input"
+									name={addon.basename}
+									checked={!!addon.is_enabled}
+									onChange={(event) => handleOnChange(event, addon.basename)}
+								/>
+								<span className="tutor-form-toggle-control"></span>
+								<span className="tutor-form-toggle-label color-text-primary tutor-ml-5">Active</span>
+							</label>
 							<p className="color-text-hints text-medium-small">Required Extension(s)</p>
 							{
 								addon.ext_required.map( (extension, index) => {

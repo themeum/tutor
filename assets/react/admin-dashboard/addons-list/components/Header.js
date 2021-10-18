@@ -3,31 +3,11 @@ import { useAddons, useAddonsUpdate } from '../context/AddonsContext';
 
 const Header = () => {
 	const filterBtns = ['all', 'active', 'deactive', 'required'];
-	const allAddons = useAddons();
+	const {addonList} = useAddons();
 	const { activeTab, getAddonsData } = useAddonsUpdate();
-
-	let activeAddonCount = 0;
-	let deactiveAddons = 0;
-	let requiredAddons = 0;
-	allAddons.forEach(addon => {
-		if (true === addon.is_enabled) {
-			activeAddonCount++;
-		}
-
-		return activeAddonCount;
-	})
-	allAddons.forEach(addon => {
-		if (true !== addon.is_enabled) {
-			deactiveAddons++;
-		}
-		return deactiveAddons;
-	})
-	allAddons.forEach(addon => {
-		if (addon.plugins_required.length > 0 ) {
-			requiredAddons++;
-		}
-		return requiredAddons;
-	})
+	const activeCount = addonList?.reduce((sum, addon) => sum + Number(addon.is_enabled), 0);
+	const deactiveCount = addonList?.reduce((sum, addon) => sum + Number(!addon.is_enabled), 0);
+	const requiredCount = addonList?.reduce((sum, addon) => sum + Number(addon.hasOwnProperty("depend_plugins") || 0), 0);
 
 	return (
 		<header className="tutor-addons-list-header d-flex justify-content-between align-items-center tutor-px-30 tutor-py-20">
@@ -41,19 +21,10 @@ const Header = () => {
 							key={index}
 							onClick={() => getAddonsData(btn)}
 						>
-							{btn} <span className="item-count">({'active' === btn ? activeAddonCount : 'deactive' === btn ? deactiveAddons : 'required' === btn ? requiredAddons : allAddons.length })</span>
+							{btn} <span className="item-count">({'active' === btn ? activeCount : 'deactive' === btn ? deactiveCount : 'required' === btn ? requiredCount : addonList?.length })</span>
 						</button>
 					);
 				})}
-				{/* <button type="button" className="filter-btn is-active" data-tab-filter-target="all">
-				All <span className="item-count">(220)</span>
-			</button>
-			<button type="button" className="filter-btn" data-tab-filter-target="active">
-				Active<span className="item-count">(12)</span>
-			</button>
-			<button type="button" className="filter-btn" data-tab-filter-target="deactive">
-				Deactive <span className="item-count">(5)</span>
-			</button> */}
 			</div>
 		</header>
 	);

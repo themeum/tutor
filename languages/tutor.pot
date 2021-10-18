@@ -205,7 +205,7 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:67, classes/Ajax.php:120, classes/Ajax.php:184, classes/Ajax.php:242, classes/Ajax.php:349, classes/Ajax.php:395, classes/Ajax.php:416, classes/Ajax.php:513, classes/Ajax.php:577, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1141, classes/Quiz.php:1201, classes/Q_and_A.php:71
+#: classes/Ajax.php:67, classes/Ajax.php:120, classes/Ajax.php:184, classes/Ajax.php:242, classes/Ajax.php:418, classes/Ajax.php:464, classes/Ajax.php:485, classes/Ajax.php:582, classes/Ajax.php:646, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1141, classes/Quiz.php:1201, classes/Q_and_A.php:71
 msgid "Access Denied"
 msgstr ""
 
@@ -237,47 +237,55 @@ msgstr ""
 msgid "Course removed from wish list"
 msgstr ""
 
-#: classes/Ajax.php:459, classes/Ajax.php:463
+#: classes/Ajax.php:338
+msgid "PHP 7.2.5 or greater is required"
+msgstr ""
+
+#: classes/Ajax.php:339
+msgid "Please install SSL certificate properly"
+msgstr ""
+
+#: classes/Ajax.php:528, classes/Ajax.php:532
 msgid "ERROR:"
 msgstr ""
 
-#: classes/Ajax.php:463
+#: classes/Ajax.php:532
 msgid "Username is required."
 msgstr ""
 
-#: classes/Ajax.php:531
+#: classes/Ajax.php:600
 msgid "Course name required"
 msgstr ""
 
-#: classes/Ajax.php:536
+#: classes/Ajax.php:605
 msgid "Announcement title required"
 msgstr ""
 
-#: classes/Ajax.php:540
+#: classes/Ajax.php:609
 msgid "Announcement summary required"
 msgstr ""
 
-#: classes/Ajax.php:547
+#: classes/Ajax.php:616
 msgid "All fields required!"
 msgstr ""
 
-#: classes/Ajax.php:561
+#: classes/Ajax.php:630
 msgid "Announcement created successfully"
 msgstr ""
 
-#: classes/Ajax.php:561
+#: classes/Ajax.php:630
 msgid "Announcement updated successfully"
 msgstr ""
 
-#: classes/Ajax.php:565
+#: classes/Ajax.php:634
 msgid "Something Went Wrong!"
 msgstr ""
 
-#: classes/Ajax.php:582
+#: classes/Ajax.php:651
 msgid "Announcement deleted successfully"
 msgstr ""
 
-#: classes/Ajax.php:585
+#: classes/Ajax.php:654
 msgid "Announcement delete failed"
 msgstr ""
 
@@ -2870,14 +2878,6 @@ msgstr ""
 
 #: classes/Utils.php:6945
 msgid "Withdraw Method"
-msgstr ""
-
-#: classes/Utils.php:7760
-msgid "PHP 7.2.5 or greater is required"
-msgstr ""
-
-#: classes/Utils.php:7761
-msgid "Please install SSL certificate properly"
 msgstr ""
 
 #: classes/Withdraw.php:34
