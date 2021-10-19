@@ -229,75 +229,8 @@
 	color: #cccccc;
   }
   
-  .single_add_to_cart_button i,
-  a.tutor-button i,
-  .tutor-button i,
-  a.tutor-btn i,
-  .tutor-btn i {
-	float: left;
-	line-height: 20px;
-	margin-right: 7px;
-	font-size: 20px;
-  }
-  
-  a.tutor-button.default-btn i,
-  .tutor-button.default-btn i,
-  a.tutor-btn.default-btn i,
-  .tutor-btn.default-btn i {
-	color: var(--tutor-primary-color);
-  }
-  
-  a.tutor-button:hover i,
-  .tutor-button:hover i,
-  a.tutor-btn:hover i,
-  .tutor-btn:hover i {
-	color: #fff;
-  }
-  
-  a.tutor-button.default-btn,
-  .tutor-button.default-btn,
-  a.tutor-btn.default-btn,
-  .tutor-btn.default-btn {
-	color: #393c40;
-	border: 1px solid #b8babe;
-	background: #fff;
-  }
-  
-  a.tutor-button.default-btn:hover,
-  .tutor-button.default-btn:hover,
-  a.tutor-btn.default-btn:hover,
-  .tutor-btn.default-btn:hover {
-	background-color: var(--tutor-primary-color);
-	border-color: var(--tutor-primary-color);
-	color: #fff;
-  }
-  
   .tutor-updating-message i {
 	display: none;
-  }
-  
-  .tutor-button.tutor-danger {
-	background-color: #e53935;
-	border-color: #e53935;
-  }
-  
-  .tutor-button.tutor-danger:hover {
-	background-color: #e53935;
-	border-color: #e53935;
-	-webkit-filter: brightness(0.9);
-			filter: brightness(0.9);
-  }
-  
-  .tutor-button.tutor-success {
-	background: var(--tutor-success-button-color);
-	border-color: var(--tutor-success-button-color);
-  }
-  
-  .tutor-button.tutor-success:hover {
-	background: var(--tutor-success-button-color);
-	border-color: var(--tutor-success-button-color);
-	-webkit-filter: brightness(0.9);
-			filter: brightness(0.9);
   }
   
   /**

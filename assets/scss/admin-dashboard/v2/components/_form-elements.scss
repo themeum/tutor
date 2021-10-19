@@ -40,7 +40,7 @@
 			font-weight: 500;
 			line-height: 1;
 			text-align: left;
-			color: #353535;
+			color: $text-title;
 			> .desc {
 				@include getTypography(13px, 400, 138%);
 				color: $text-subsued;
