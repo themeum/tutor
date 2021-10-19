@@ -51,6 +51,32 @@ trait Backend_Page_Trait {
 	}
 
 	/**
+	 * Bulk action published
+	 *
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function bulk_action_published(): array {
+		return array(
+			'value'  => 'published',
+			'option' => __( 'Published', 'tutor-pro' ),
+		);
+	}
+
+	/**
+	 * Bulk action draft
+	 *
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function bulk_action_draft(): array {
+		return array(
+			'value'  => 'draft',
+			'option' => __( 'Draft', 'tutor-pro' ),
+		);
+	}
+
+	/**
 	 * Bulk action on hold
 	 *
 	 * @return array
