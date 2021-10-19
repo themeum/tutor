@@ -282,7 +282,7 @@ table.tutor-ui-table {
 				text-decoration: none;
 				background: transparent;
 				padding: 8px 10px;
-				transition: 200ms ease;
+				transition: 100ms ease;
 
 				&:hover,
 				&.tutor-brand {
@@ -535,13 +535,15 @@ table.tutor-ui-table {
 	} // end Table Responsive Styles
 }
 
-
 table.tutor-ui-table-no-border {
-	&, td, th {
+	&,
+	td,
+	th {
 		border: none;
 	}
 
-	td, th {
+	td,
+	th {
 		padding: 0;
 		padding-top: 5px;
 		padding-bottom: 5px;
