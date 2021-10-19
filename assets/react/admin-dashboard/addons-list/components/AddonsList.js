@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useAddons } from '../context/AddonsContext';
 import AddonCard from './AddonCard';
 
-import emptyStateImg from '../../../../images/empty-state.svg';
+const emptyStateImg = `${_tutorobject.tutor_url}assets/images/empty-state.svg`;
 
 const AddonsList = () => {
 	const { allAddons, loading } = useAddons();
-
+	
 	return (
 		<div className={`tutor-addons-list-items tutor-mt-30 ${allAddons.length < 3 ? 'is-less-items' : ''}`}>
 			{allAddons.length ? (
