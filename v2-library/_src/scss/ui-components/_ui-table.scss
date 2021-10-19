@@ -284,9 +284,17 @@ table.tutor-ui-table {
 				padding: 8px 10px;
 				transition: 200ms ease;
 
-				&:hover {
+				&:hover,
+				&.tutor-brand {
 					color: $brand-wordpress;
 					border-color: $brand-wordpress;
+				}
+
+				&.tutor-danger {
+					&:hover {
+						color: $text-error;
+						border-color: $text-error;
+					}
 				}
 			}
 		}
@@ -525,4 +533,31 @@ table.tutor-ui-table {
 			}
 		}
 	} // end Table Responsive Styles
+}
+
+
+table.tutor-ui-table-no-border {
+	&, td, th {
+		border: none;
+	}
+
+	td, th {
+		padding: 0;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+
+	&.tutor-is-lefty {
+		td:not(:last-child) {
+			padding-right: 15px;
+		}
+	}
+
+	&.tutor-is-flexible {
+		width: auto;
+	}
+
+	&:not(.tutor-is-flexible) {
+		width: 100%;
+	}
 }
