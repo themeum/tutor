@@ -108,7 +108,7 @@ if(count($instructor_course)) {
             </a>
         </h3>
         <div class="tutor-dashboard-content-inner">
-            <table class="tutor-ui-table table-popular-courses">
+            <table class="tutor-ui-table tutor-ui-table-responsive table-popular-courses">
                 <thead>
                     <tr>
                         <th>
