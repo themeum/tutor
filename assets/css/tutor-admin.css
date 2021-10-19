@@ -7407,6 +7407,20 @@ li.tutor-option-nav-item h4 {
   grid-template-columns: repeat(auto-fit, minmax(350px, 390px));
 }
 
+.tutor-addons-list-items > .tutor-addons-card {
+  -webkit-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: 500ms;
+  transition: 500ms;
+}
+
+.tutor-addons-list-items.is-active > .tutor-addons-card {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transform: translateY(0px);
+          transform: translateY(0px);
+}
+
 .tutor-addons-card {
   background: #ffffff;
   border-radius: 6px;
@@ -7441,7 +7455,8 @@ li.tutor-option-nav-item h4 {
 .tutor-addons-loading {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 300px;
+  grid-area: 1/-1;
 }
 
 .tutor-addons-loading::before {
