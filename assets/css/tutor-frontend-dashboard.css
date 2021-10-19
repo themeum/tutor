@@ -2300,16 +2300,6 @@
   margin-left: 30px;
 }
 
-.tutor-dashboard .tutor-dashboard-header .tutor-dashboard-header-button {
-  padding-top: 15px;
-}
-
-@media (min-width: 768px) {
-  .tutor-dashboard .tutor-dashboard-header .tutor-dashboard-header-button {
-    text-align: right;
-  }
-}
-
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks {
   list-style: none;
   margin: 0px 0 20px;
@@ -2540,16 +2530,16 @@
 }
 
 @media (max-width: 767px) {
-  .tutor-dashboard .tutor-dashboard-left-menu:not(.is-sidebar-expanded) .tutor-dashboard-left-menu {
+  .tutor-dashboard:not(.is-sidebar-expanded) .tutor-dashboard-left-menu {
     display: none;
   }
 }
 
-.tutor-dashboard .tutor-dashboard-left-menu.is-sidebar-expanded ul.tutor-dashboard-permalinks {
+.tutor-dashboard.is-sidebar-expanded ul.tutor-dashboard-permalinks {
   border-right: none !important;
 }
 
-.tutor-dashboard .tutor-dashboard-left-menu.is-sidebar-expanded ul.tutor-dashboard-permalinks li.active a {
+.tutor-dashboard.is-sidebar-expanded ul.tutor-dashboard-permalinks li.active a {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -2561,7 +2551,7 @@
   right: 0;
   bottom: 0;
   background: white;
-  padding: 20px;
+  padding: 10px;
   -webkit-box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
           box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
   z-index: 9999999;
@@ -2575,7 +2565,7 @@
 
 @media (max-width: 767px) {
   .tutor-screen-frontend-dashboard {
-    padding-bottom: 90px;
+    padding-bottom: 94px;
   }
 }
 
@@ -2614,7 +2604,7 @@
 
 .tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a span {
   display: block;
-  padding: 7px;
+  padding: 0 7px 7px;
 }
 
 .tutor-dashboard .tutor-dashboard-content {

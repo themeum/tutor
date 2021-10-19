@@ -1,5 +1,10 @@
 # TutorLMS Changelog
 
+### 2.0.0 - November 15, 2021
+
+* Update: Overall Design System
+
+
 ### 1.9.11 - October 18, 2021
 
 * New: Certificate Builder plugin compatibility

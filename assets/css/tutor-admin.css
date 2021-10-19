@@ -3930,51 +3930,6 @@ table.tutor-table p {
   padding: 10px 20px !important;
 }
 
-.tutor-announcements-update-form .tutor-option-field-row,
-.tutor-announcements-form .tutor-option-field-row {
-  padding: 10px 18px 10px 18px;
-}
-
-.tutor-announcements-update-form .tutor-option-field-row input[type=text],
-.tutor-announcements-update-form textarea,
-.tutor-announcements-form .tutor-option-field-row input[type=text],
-.tutor-announcements-form textarea {
-  width: 100%;
-  margin-top: 8px;
-}
-
-.tutor-announcements-form select,
-.tutor-announcements-update-form select {
-  width: 100%;
-  max-width: 100% !important;
-  padding: 7px 12px;
-  margin-top: 8px;
-}
-
-.tutor-announcements-update-form .tutor-option-field-row,
-.tutor-announcements-form .tutor-option-field-row {
-  border: none !important;
-}
-
-.tutor-announcements-form .modal-footer button,
-.tutor-announcements-update-form .modal-footer button {
-  cursor: pointer !important;
-}
-
-.tutor-announcements-form .modal-footer,
-.tutor-announcements-update-form .modal-footer {
-  background-color: #fff !important;
-}
-
-.tutor-announcement-close-btn {
-  text-decoration: none;
-  color: #525252;
-}
-
-.tutor-announcement-table td {
-  vertical-align: middle !important;
-}
-
 .tutor-announcement-content {
   line-height: 10px;
 }
