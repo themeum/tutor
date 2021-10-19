@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { useAddonsUpdate } from '../context/AddonsContext';
 
-const AddonCard = ({ addon }) => {
+const AddonCard = ({ addon, addonId }) => {
 	const author = 'Themeum';
 	const url = 'https://www.themeum.com';
 	const { handleOnChange } = useAddonsUpdate();
 
 	return (
-		<div className={`tutor-addons-card ${addon.depend_plugins || addon.ext_required ? 'not-subscribed' : ''}`}>
+		<div
+			className={`tutor-addons-card ${
+				addon.depend_plugins || addon.ext_required ? 'not-subscribed' : ''
+			} tutor-addons-card-${addonId + 1}`}
+			style={{ transitionDelay: `${100 * addonId}ms` }}
+		>
 			<div className="card-body tutor-px-30 tutor-py-40">
 				<div className="addon-logo">
 					<img src={addon.thumb_url} alt={addon.name} />

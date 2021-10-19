@@ -47,7 +47,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AddonCard = function AddonCard(_ref) {
-  var addon = _ref.addon;
+  var addon = _ref.addon,
+      addonId = _ref.addonId;
   var author = 'Themeum';
   var url = 'https://www.themeum.com';
 
@@ -55,7 +56,10 @@ var AddonCard = function AddonCard(_ref) {
       handleOnChange = _useAddonsUpdate.handleOnChange;
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-card ".concat(addon.depend_plugins || addon.ext_required ? 'not-subscribed' : '')
+    className: "tutor-addons-card ".concat(addon.depend_plugins || addon.ext_required ? 'not-subscribed' : '', " tutor-addons-card-").concat(addonId + 1),
+    style: {
+      transitionDelay: "".concat(100 * addonId, "ms")
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "card-body tutor-px-30 tutor-py-40"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
@@ -156,11 +160,12 @@ var AddonsList = function AddonsList() {
       loading = _useAddons.loading;
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-list-items tutor-mt-30 ".concat(allAddons.length < 3 ? 'is-less-items' : '')
+    className: "tutor-addons-list-items tutor-mt-30 ".concat(allAddons.length < 3 ? 'is-less-items' : '', " ").concat(allAddons.length ? 'is-active' : '')
   }, allAddons.length ? allAddons.map(function (addon, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
       addon: addon,
-      key: index
+      key: index,
+      addonId: index
     });
   }) : loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "tutor-addons-loading"
