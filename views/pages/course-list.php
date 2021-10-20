@@ -177,7 +177,7 @@ $the_query = new WP_Query( $args );
 							$count_topic      = count( tutor_utils()->get_topics( $post->ID ) );
 							$student_details  = CourseAnalytics::course_enrollments_with_student_details( $post->ID );
 							$total_student    = $student_details['total_enrollments'];
-							$author_details	  = get_userdata( $post->post_author );
+							$author_details   = get_userdata( $post->post_author );
 							?>
 							<tr>
 								<td data-th="Checkbox">
@@ -246,7 +246,7 @@ $the_query = new WP_Query( $args );
 										$total_terms = count( $terms ) - 1;
 									foreach ( $terms as $key => $term ) {
 										$separator = $key < $total_terms ? ', ' : '';
-										echo $term->name . $separator;
+										echo esc_html( $term->name . $separator );
 									}
 									?>
 								</td>
@@ -259,11 +259,11 @@ $the_query = new WP_Query( $args );
 									<div class="text-regular-caption color-text-primary">
 										<?php
 											$price = tutor_utils()->get_course_price( $post->ID );
-											if ( NULL === $price ) {
-												esc_html_e( 'Free', 'tutor' );
-											} else {
-												echo wp_kses_post( wc_price( $price ) );
-											}
+										if ( null === $price ) {
+											esc_html_e( 'Free', 'tutor' );
+										} else {
+											echo wp_kses_post( wc_price( $price ) );
+										}
 										?>
 									</div>
 								</td>
