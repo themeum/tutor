@@ -177,6 +177,7 @@ $the_query = new WP_Query( $args );
 							$count_topic      = count( tutor_utils()->get_topics( $post->ID ) );
 							$student_details  = CourseAnalytics::course_enrollments_with_student_details( $post->ID );
 							$total_student    = $student_details['total_enrollments'];
+							$author_details	  = get_userdata( $post->post_author );
 							?>
 							<tr>
 								<td data-th="Checkbox">
@@ -224,9 +225,20 @@ $the_query = new WP_Query( $args );
 									</div>
 								</td>
 								<td data-th="Author">
-									<p>
-										<?php echo esc_html( $post->post_author ); ?>
-									</p>
+									<div class="td-avatar">
+										<?php
+											echo wp_kses_post( tutor_utils()->get_tutor_avatar( $post->post_author ) );
+										?>
+										<p class="text-medium-body color-text-primary">
+											<?php echo esc_html( $author_details->display_name ); ?>
+										</p>
+										<a
+										href="#"
+										class="btn-text btn-detail-link color-design-dark"
+										>
+										<span class="tutor-v2-icon-test icon-detail-link-filled"></span>
+										</a>
+									</div>
 								</td>
 								<td data-th="Course Categories">
 									<?php
