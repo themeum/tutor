@@ -7666,7 +7666,7 @@ body [data-testid] {
   line-height: 162%;
 }
 
-.text-medium-caption {
+.text-medium-caption, .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number {
   font-weight: 500;
   font-size: 15px;
   line-height: 160%;
@@ -7726,7 +7726,7 @@ body [data-testid] {
   line-height: 162%;
 }
 
-.text-bold-caption, .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number {
+.text-bold-caption, .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number.current {
   font-weight: 700;
   font-size: 15px;
   line-height: 160%;
@@ -9935,9 +9935,13 @@ select.tutor-form-select:focus {
   background: #3e64de;
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-prev:hover {
-  color: #ffffff;
-  background: #3e64de;
+@media (min-width: 1200px) {
+  .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-prev {
+    margin-right: 25px;
+  }
+  .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-next {
+    margin-left: 25px;
+  }
 }
 
 .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number {
