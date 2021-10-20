@@ -173,12 +173,12 @@ var AddonsList = function AddonsList() {
     className: "tutor-addons-card empty-state tutor-py-20"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "card-body"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "text-medium-caption tutor-mb-20"
-  }, "Nothing Found!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
     src: emptyStateImg,
     alt: "empty state illustration"
-  }))));
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "text-medium-caption tutor-mb-20"
+  }, "Nothing Found!"))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonsList);
@@ -653,6 +653,62 @@ var AddonsContextProvider = function AddonsContextProvider(props) {
     }
   }, props.children));
 };
+
+/***/ }),
+
+/***/ "./assets/react/admin-dashboard/segments/addonlist.js":
+/*!************************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/addonlist.js ***!
+  \************************************************************/
+/***/ (() => {
+
+var addonsData = _tutorobject.addons_data;
+var addonsList = document.getElementById('tutor-free-addons');
+var searchBar = document.getElementById('free-addons-search');
+var freeAddonsList = _tutorobject.addons_data || [];
+var searchString = '';
+var emptyStateImg = "".concat(_tutorobject.tutor_url, "assets/images/empty-state.svg");
+
+if (null !== searchBar) {
+  searchBar.addEventListener('input', function (e) {
+    searchString = e.target.value.toLowerCase();
+    var filteredAddons = freeAddonsList.filter(function (addon) {
+      return addon.name.toLowerCase().includes(searchString);
+    });
+
+    if (filteredAddons.length > 0) {
+      displayAddons(filteredAddons);
+    } else {
+      emptySearch();
+    }
+  });
+}
+
+var emptySearch = function emptySearch() {
+  var nothingFound = "\n        <div class=\"tutor-addons-card empty-state tutor-py-20\">\n            <div class=\"card-body\">\n                <img src=".concat(emptyStateImg, " alt=\"empty state illustration\" />\n                <div class=\"text-medium-caption tutor-mb-20\">Nothing Found!</div>\n            </div>\n        </div>");
+
+  if (null !== addonsList) {
+    addonsList.innerHTML = nothingFound;
+  }
+};
+
+var displayAddons = function displayAddons(addons) {
+  var htmlString = addons.map(function (addon) {
+    var name = addon.name,
+        url = addon.url,
+        description = addon.description;
+    var themeumUrl = 'https://www.themeum.com';
+    var author = 'Themeum';
+    return "\n            <div class=\"tutor-addons-card\">\n                <div class=\"card-body tutor-px-30 tutor-py-40\">\n                    <div class=\"addon-logo\">\n                        <img src=\"".concat(url, "\" alt=\"").concat(name, "\" /> \n                    </div>\n                    <div class=\"addon-title tutor-mt-20\">\n                        <h5 class=\"text-medium-h5 color-text-primary\">").concat(name, "</h5>\n                        <p class=\"text-medium-small color-text-hints tutor-mt-5\">\n                            By <a href=\"").concat(themeumUrl, "\" class=\"color-brand-wordpress\">").concat(author, "</a>\n                        </p>\n                    </div>\n                    <div class=\"addon-des text-regular-body color-text-subsued tutor-mt-20\">\n                        <p>").concat(description, "</p>\n                    </div>\n                </div>\n            </div>");
+  }).join('');
+
+  if (null !== addonsList) {
+    addons.length < 3 ? addonsList.classList.add('is-less-items') : addonsList.classList.remove('is-less-items');
+    addonsList.innerHTML = htmlString;
+  }
+};
+
+displayAddons(freeAddonsList);
 
 /***/ }),
 
@@ -31644,16 +31700,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
-/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
+/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_6__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 
 
 
- // import "./segments/addonlist-data";
-//import "./segments/addonlist";
+
 
 
 

@@ -43,6 +43,7 @@
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-">
 				<span class="ttr-search-filled tutor-input-group-icon"></span>
 				<input
+                    id="free-addons-search"
 					type="search"
 					class="tutor-form-control"
 					placeholder="<?php esc_attr_e( 'Search…', 'tutor' ); ?>"
@@ -50,47 +51,6 @@
 				/>
 			</div>
 		</div>
-    <?php
-		$addons = apply_filters( 'tutor_pro_addons_lists_for_display', array() );
-		if ( is_array( $addons ) && count( $addons ) ) {
-	?>
-        <div class="tutor-addons-list-items tutor-mt-30">
-        <?php
-            foreach ( $addons as $basName => $addon ) {
-                $addonConfig = tutor_utils()->get_addon_config( $basName );
-
-                $addons_path = trailingslashit( tutor()->path . "assets/addons/{$basName}" );
-                $addons_url  = trailingslashit( tutor()->url . "assets/addons/{$basName}" );
-
-                $thumbnailURL =  tutor()->url.'assets/images/tutor-plugin.png';
-
-                if ( file_exists( $addons_path . 'thumbnail.png' ) ) {
-                    $thumbnailURL = $addons_url . 'thumbnail.png';
-                } elseif ( file_exists( $addons_path . 'thumbnail.jpg' ) ) {
-                    $thumbnailURL = $addons_url.'thumbnail.jpg';
-                } elseif ( file_exists( $addons_path .'thumbnail.svg' ) ) {
-                    $thumbnailURL = $addons_url . 'thumbnail.svg';
-                }
-
-            ?>
-            <div class="tutor-addons-card">
-                <div class="card-body tutor-px-30 tutor-py-40">
-                    <div class="addon-logo">
-                        <img src="<?php echo esc_url( $thumbnailURL ); ?>" alt="<?php esc_attr_e( $addon['name'] ); ?>" />
-                    </div>
-                    <div class="addon-title tutor-mt-20">
-                        <h5 class="text-medium-h5 color-text-primary"><?php esc_html_e( $addon['name'] ); ?></h5>
-                        <p class="text-medium-small color-text-hints tutor-mt-5">
-                            By <a href="<?php echo esc_url( 'https://www.themeum.com' ); ?>" class="color-brand-wordpress"><?php esc_html_e( 'Themeum', 'tutor' ); ?></a>
-                        </p>
-                    </div>
-                    <div class="addon-des text-regular-body color-text-subsued tutor-mt-20">
-                        <p><?php esc_html_e( $addon['description'] ); ?></p>
-                    </div>
-                </div>
-            </div>
-            <?php } ?>
-		</div>
-        <?php } ?>
+        <div id="tutor-free-addons" class="tutor-addons-list-items tutor-mt-30" />
     </div>
 </main>

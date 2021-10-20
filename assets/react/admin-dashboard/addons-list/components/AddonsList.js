@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAddons } from '../context/AddonsContext';
 import AddonCard from './AddonCard';
 
@@ -22,8 +22,8 @@ const AddonsList = () => {
 			) : (
 				<div className="tutor-addons-card empty-state tutor-py-20">
 					<div className="card-body">
-						<div className="text-medium-caption tutor-mb-20">Nothing Found!</div>
 						<img src={emptyStateImg} alt="empty state illustration" />
+						<div className="text-medium-caption tutor-mb-20">Nothing Found!</div>
 					</div>
 				</div>
 			)}

@@ -2,8 +2,7 @@ import "../lib/common";
 import "./segments/image-preview";
 import "./segments/options";
 import "./segments/import-export";
-// import "./segments/addonlist-data";
-//import "./segments/addonlist";
+import "./segments/addonlist";
 import "./addons-list/addons-list-main";
 
 import '../modules/announcement';
