@@ -1,2 +1,21 @@
+// Global styles, pulled from _global.scss
+// We can't put it in the tutor css since it might override theme styles. 
+// It's for only docz
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	// docz
+	[data-testid] textarea,
+	[data-testid] {
+		font-family: 'Roboto', sans-serif;
+	}
+}
+
+// Load Other modules
 @import './vendors/bootstrap-grid';
-@import './loader.scss';
+@import './main_contents.scss';

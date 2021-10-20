@@ -1,16 +1,13 @@
 
-// core modules
-@import './core/variables';
-@import './_global';
-@import './core/typography';
-@import './core/general-utility';
-@import './core/utility';
+.w-100pc {
+	width: 100%;
+}
 
-// style ulities
-@import './utility/index';
+// Reusables loader, (variables and mixins)
+@import './reusables.scss';
 
-// mixins
-@import './mixins/index';
+// Legacy common styles
+@import './legacy/index.scss';
 
 // components
 @import './components/index';
