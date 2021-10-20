@@ -18,9 +18,6 @@ table.tutor-ui-table {
 		border: none;
 	}
 
-	border-radius: 6px;
-	overflow: hidden;
-
 	// Table utility classes
 	.inline-flex-center {
 		display: inline-flex;
@@ -82,8 +79,19 @@ table.tutor-ui-table {
 	border-spacing: 0;
 	min-width: 300px;
 	width: 100%;
-	// max-width: 825px;
-	overflow-x: auto;
+	border-radius: $radius;
+	overflow: hidden;
+
+	&.tutor-no-thead {
+		tr:first-child {
+			td:first-child {
+				border-top-left-radius: $radius;
+			}
+			td:last-child {
+				border-top-right-radius: $radius;
+			}
+		}
+	}
 
 	@include breakpoint-min(desktop-lg) {
 		tr:first-child {

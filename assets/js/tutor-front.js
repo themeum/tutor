@@ -13,10 +13,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _dashboard_mobile_nav__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_dashboard_mobile_nav__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard/withdrawal */ "./assets/react/front/dashboard/withdrawal.js");
 /* harmony import */ var _dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _dashboard_settings_profile__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dashboard/settings-profile */ "./assets/react/front/dashboard/settings-profile.js");
+/* harmony import */ var _dashboard_settings_profile__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dashboard/settings/profile */ "./assets/react/front/dashboard/settings/profile.js");
 /* harmony import */ var _dashboard_settings_profile__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_dashboard_settings_profile__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _dashboard_settings_passowrd_reset__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./dashboard/settings/passowrd-reset */ "./assets/react/front/dashboard/settings/passowrd-reset.js");
+/* harmony import */ var _dashboard_settings_passowrd_reset__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_dashboard_settings_passowrd_reset__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_4__);
+
 
 
 
@@ -47,9 +50,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /***/ }),
 
-/***/ "./assets/react/front/dashboard/settings-profile.js":
+/***/ "./assets/react/front/dashboard/settings/passowrd-reset.js":
+/*!*****************************************************************!*\
+  !*** ./assets/react/front/dashboard/settings/passowrd-reset.js ***!
+  \*****************************************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  $('.tutor-settings-pass-field [name="confirm_new_password"]').on('input', function () {
+    var original = $('[name="new_password"]');
+    var val = (original.val() || '').trim();
+    var matched = val && $(this).val() === val;
+    $(this).next()[matched ? 'show' : 'hide']();
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/front/dashboard/settings/profile.js":
 /*!**********************************************************!*\
-  !*** ./assets/react/front/dashboard/settings-profile.js ***!
+  !*** ./assets/react/front/dashboard/settings/profile.js ***!
   \**********************************************************/
 /***/ (() => {
 

@@ -243,7 +243,9 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 2.0.0 - November 15, 2021 =
 
+New: Certificate builder in frontend dashboard
 Update: Overall Design System
+Update: Backend dashboard settings rearranged with updated design
 
 = 1.9.11 - October 18, 2021 =
 
