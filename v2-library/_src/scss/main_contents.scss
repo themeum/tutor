@@ -6,6 +6,9 @@
 // Reusables loader, (variables and mixins)
 @import './reusables.scss';
 
+// Core
+@import './core/index.scss';
+
 // Legacy common styles
 @import './legacy/index.scss';
 
