@@ -3,6 +3,12 @@
 	overflow-x: auto;
 }
 
+@include breakpoint-minmax(1200, 1400) {
+	.tutor-ui-table-wrapper {
+		overflow-x: auto;
+	}
+}
+
 // Table Base Structure
 table.tutor-ui-table {
 	&,
@@ -79,7 +85,7 @@ table.tutor-ui-table {
 	// max-width: 825px;
 	overflow-x: auto;
 
-	@include breakpoint-min(desktop) {
+	@include breakpoint-min(desktop-lg) {
 		tr:first-child {
 			/* top-left border-radius */
 			th:first-child {
@@ -226,11 +232,13 @@ table.tutor-ui-table {
 table.tutor-ui-table {
 	&.table-dashboard-course-list {
 		td {
-			&:first-child {
-				@extend .v-align-top;
+			&:nth-child(1),
+			&:nth-child(2) {
+				vertical-align: top;
 			}
 		}
 	}
+
 	.td-tutor-rating {
 		.tutor-rating-stars {
 			align-items: flex-start;
@@ -262,6 +270,7 @@ table.tutor-ui-table {
 	}
 
 	.td-action-btns {
+		gap: 10px;
 		.btn-outline {
 			&.tutor-btn {
 				@extend .color-text-hints;
@@ -273,17 +282,25 @@ table.tutor-ui-table {
 				text-decoration: none;
 				background: transparent;
 				padding: 8px 10px;
-				transition: 200ms ease;
+				transition: 100ms ease;
 
-				&:hover {
+				&:hover,
+				&.tutor-brand {
 					color: $brand-wordpress;
 					border-color: $brand-wordpress;
+				}
+
+				&.tutor-danger {
+					&:hover {
+						color: $text-error;
+						border-color: $text-error;
+					}
 				}
 			}
 		}
 
 		> a:not(:last-child) {
-			margin-right: 13px;
+			// margin-right: 13px;
 		}
 
 		.btn-text {
@@ -296,7 +313,7 @@ table.tutor-ui-table {
 			}
 		}
 
-		.btn-icon {
+		.btn-delete {
 			background: transparent;
 			border: none;
 			outline: none;
@@ -312,71 +329,8 @@ table.tutor-ui-table {
 				background: #f4f6f9;
 			}
 		}
-
-		//.tutor-form-select-with-icon.select-#{variable} {...}
-		//success - eye, default - marks-total, primary - drop, danger - lock, warning - cross-circle, mark-circle
-		$variations: (
-			'primary' $primary-100 $primary-40 $primary-60 '\e978',
-			'default' $black-70 $black-05 $black-10 '\e9ab',
-			'success' $success-100 $success-40 $success-50 '\E982',
-			'warning' $warning-40 $warning-100 $warning-50 '\e966',
-			'danger' $danger-100 $danger-40 $danger-50 '\e9a3'
-		);
-		@each $suffix, $txtColor, $bgColor, $border, $icon in $variations {
-			.tutor-form-select-with-icon {
-				&.select-#{$suffix} {
-					color: #{$txtColor};
-					background: #{$bgColor};
-					border: 1px solid #{$border};
-					select {
-						color: #{$txtColor};
-					}
-					.icon1:before {
-						content: '#{$icon}';
-					}
-				}
-			}
-		}
-
 		.tutor-form-select-with-icon {
-			width: fit-content;
-			max-width: 117px;
-			position: relative;
-
-			border-radius: 42px;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			select {
-				display: block;
-				width: 100%;
-				min-width: max-content;
-				margin: 0;
-				padding: 0 25px;
-				border: none;
-				outline: none;
-				-webkit-appearance: none;
-				-moz-appearance: none;
-				appearance: none;
-				height: 24px;
-				position: relative;
-				z-index: 1;
-				background: transparent;
-				cursor: pointer;
-				/* color/success/fill/100 */
-				color: #075a2a;
-			}
-			> i {
-				position: absolute;
-				font-size: 14px;
-			}
-
-			.icon1 {
-				left: 6px;
-			}
-			.icon2 {
-				right: 4px;
-			}
+			margin-right: 10px;
 		}
 	}
 
@@ -395,15 +349,21 @@ table.tutor-ui-table {
 
 	.td-avatar {
 		@extend .inline-flex-center;
+		gap: 10px;
 		img {
 			width: 34px;
 			height: 34px;
 			border-radius: 50%;
-			margin-right: 14px;
 		}
 		.btn-text {
 			text-decoration: none;
 			color: inherit;
+		}
+
+		.btn-detail-link {
+			font-size: 24px;
+			margin-left: -5px;
+			margin-top: 3px;
 		}
 	}
 
@@ -443,6 +403,14 @@ table.tutor-ui-table {
 		}
 	}
 
+	.td-datetime {
+		@include breakpoint-max(991) {
+			br {
+				display: none;
+			}
+		}
+	}
+
 	// Form elements
 	select.tutor-form-select {
 		min-width: max-content;
@@ -471,7 +439,7 @@ table.tutor-ui-table {
 		/*
 		Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
 		*/
-		@media only screen and (max-width: 991px), (min-device-width: 992px) and (max-device-width: 1024px) {
+		@media only screen and (max-width: 1199px), (min-device-width: 1200px) and (max-device-width: 1200px) {
 			/* Force table to not be like tables anymore */
 			table,
 			thead,
@@ -567,13 +535,15 @@ table.tutor-ui-table {
 	} // end Table Responsive Styles
 }
 
-
 table.tutor-ui-table-no-border {
-	&, td, th {
+	&,
+	td,
+	th {
 		border: none;
 	}
 
-	td, th {
+	td,
+	th {
 		padding: 0;
 		padding-top: 5px;
 		padding-bottom: 5px;
